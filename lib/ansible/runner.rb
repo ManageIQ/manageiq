@@ -406,13 +406,21 @@ module Ansible
       end
 
       PYTHON3_MODULE_PATHS = %w[
-        /usr/lib64/python3.6/site-packages
         /var/lib/awx/venv/ansible/lib/python3.6/site-packages
         /var/lib/manageiq/venv/lib/python3.6/site-packages
+        /var/lib/manageiq/venv/lib/python3.8/site-packages
       ].freeze
       def python3_modules_path
         @python3_modules_path ||= begin
-          determine_existing_python_paths_for(*PYTHON3_MODULE_PATHS).join(File::PATH_SEPARATOR)
+          paths = [ansible_python_path.presence, *PYTHON3_MODULE_PATHS].compact
+          determine_existing_python_paths_for(*paths).join(File::PATH_SEPARATOR)
+        end
+      end
+
+      def ansible_python_path
+        @ansible_python_path ||= begin
+          path = `ansible --version 2>/dev/null`.split("\n").grep(/ansible python module location/).first.to_s.split(" = ").last.to_s
+          path.present? ? File.dirname(path) : path
         end
       end
 
