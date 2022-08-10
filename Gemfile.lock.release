@@ -127,11 +127,11 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-cisco_intersight
-  revision: e31dc4c73d6e04870db5689c916bf209ec60ccbb
+  revision: e423ab9a5064c3c40e91bfa1a6858d2bf6553186
   branch: najdorf
   specs:
     manageiq-providers-cisco_intersight (0.1.0)
-      intersight_client
+      intersight_client (~> 0.1, >= 0.1.5)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-foreman
@@ -264,11 +264,11 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-oracle_cloud
-  revision: eefe1bdb8e55ec4b94c4125b42a0acfe109aefa8
+  revision: db5edf9ebb662e7e3d1c584a25ab4351bed350d8
   branch: najdorf
   specs:
     manageiq-providers-oracle_cloud (0.1.0)
-      oci (~> 2.16)
+      oci (~> 2.18)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ovirt
@@ -723,7 +723,7 @@ GEM
       rest-client (~> 2.0)
     inifile (3.0.0)
     iniparse (1.5.0)
-    intersight_client (0.1.3)
+    intersight_client (0.1.5)
       typhoeus (~> 1.0, >= 1.0.1)
     inventory_refresh (0.2.3)
       activerecord (>= 5.0, < 6.1)
@@ -876,7 +876,7 @@ GEM
       racc (~> 1.4)
     nori (2.6.0)
     oauth (0.5.10)
-    oci (2.17.0)
+    oci (2.18.0)
       inifile (~> 3.0, >= 3.0.0)
       json (>= 1.4.6, < 3.0.0)
       jwt (~> 2.1)
@@ -992,7 +992,7 @@ GEM
     rufus-lru (1.0.7)
     rufus-scheduler (3.8.2)
       fugit (~> 1.1, >= 1.1.6)
-    rugged (1.4.4)
+    rugged (1.5.0.1)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
@@ -1242,7 +1242,7 @@ DEPENDENCIES
   ruby-progressbar (~> 1.7.0)
   rubyzip (~> 2.0.0)
   rufus-scheduler
-  rugged (~> 1.1)
+  rugged (~> 1.5.0)
   ruport (= 1.7.0.3)!
   sd_notify (~> 0.1.0)
   secure_headers (~> 3.9)
