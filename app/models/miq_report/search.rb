@@ -15,9 +15,10 @@ module MiqReport::Search
     parts = assoc.split(".")
     col = parts.pop
     klass = db_class.follow_associations_with_virtual(parts)
+    # Column is valid if it is accessible via virtual relations or directly.
     raise _("Invalid reflection <%{item}> on model <%{name}>") % {:item => assoc, :name => db_class} if klass.nil?
     # only return attribute if it is accessible directly (not through virtual columns)
-    [klass.arel_attribute(col), klass.type_for_attribute(col).type] if db_class.follow_associations(parts)
+    [klass.arel_table[col.to_sym], klass.type_for_attribute(col).type] if db_class.follow_associations(parts)
   end
 
   def limited_ids(limit, offset)

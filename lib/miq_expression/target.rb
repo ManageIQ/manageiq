@@ -125,7 +125,7 @@ class MiqExpression::Target
   # this should only be accessed in MiqExpression
   # please avoid using it
   def arel_attribute
-    target&.arel_attribute(column, arel_table)
+    target && target.arel_table[column, arel_table]
   end
 
   def virtual_attribute?

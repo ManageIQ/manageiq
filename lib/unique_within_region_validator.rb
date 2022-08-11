@@ -21,7 +21,7 @@ class UniqueWithinRegionValidator < ActiveModel::EachValidator
       if match_case
         record_base_class.where(attribute => value)
       else
-        record_base_class.where(record_base_class.arel_attribute(attribute).lower.eq(value.downcase))
+        record_base_class.where(record_base_class.arel_table[attribute.to_sym].lower.eq(value.downcase))
       end
     matches = matches.where(options[:scope] => record.public_send(options[:scope])) if options.key?(:scope)
     unless matches.in_region(record.region_id).where.not(:id => record.id).empty?

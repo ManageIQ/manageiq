@@ -809,9 +809,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def ws_find_template_or_vm(_values, src_name, src_guid, ems_guid)
     scope = VmOrTemplate
-    scope = scope.where(:guid => src_guid) unless src_guid.blank?
-    scope = scope.where(:uid_ems => ems_guid) unless ems_guid.blank?
-    scope = scope.where(VmOrTemplate.arel_attribute("name").lower.eq(src_name)) unless src_name.blank?
+    scope = scope.where(:guid => src_guid) if src_guid.present?
+    scope = scope.where(:uid_ems => ems_guid) if ems_guid.present?
+    scope = scope.where(VmOrTemplate.arel_table[:name].lower.eq(src_name)) if src_name.present?
 
     rbac_object = source_vm_rbac_filter(scope).first
     create_hash_struct_from_vm_or_template(rbac_object, :include_datacenter => true) if rbac_object

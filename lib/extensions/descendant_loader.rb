@@ -270,6 +270,18 @@ class DescendantLoader
 
       super
     end
+
+    # Rails 6.1 added an alias for subclasss to call direct_descendants in:
+    # https://github.com/rails/rails/commit/8f8aa857e084b76b1120edaa9bb9ce03ba1e6a19
+    # We need to get in front of it, like we do for descendants.
+    def subclasses
+      unless defined? @loaded_descendants
+        @loaded_descendants = true
+        DescendantLoader.instance.load_subclasses(self)
+      end
+
+      super
+    end
   end
 
   module AsDependenciesClearWithLoader

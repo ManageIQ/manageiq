@@ -109,7 +109,7 @@ shared_examples_for "OwnershipMixin" do
                        FROM "miq_groups"
                        WHERE "miq_groups"."id" = "#{described_class.table_name}"."miq_group_id")) = '#{group_name}'
                      SQL
-        attribute  = described_class.arel_attribute(:owned_by_current_ldap_group)
+        attribute  = described_class.arel_table[:owned_by_current_ldap_group]
         expect(stringify_arel(attribute)).to eq ["(#{sql})"]
       end
 
@@ -214,7 +214,7 @@ shared_examples_for "OwnershipMixin" do
                        FROM "users"
                        WHERE "users"."id" = "#{described_class.table_name}"."evm_owner_id")) = '#{userid}'
                      SQL
-        attribute  = described_class.arel_attribute(:owned_by_current_user)
+        attribute  = described_class.arel_table[:owned_by_current_user]
         expect(stringify_arel(attribute)).to eq ["(#{sql})"]
       end
 
