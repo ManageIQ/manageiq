@@ -29,7 +29,7 @@ module ActiveRecord
 
     def self.connectable?
       connection && connected?
-    rescue ActiveRecord::NoDatabaseError, PG::ConnectionBad
+    rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::NoDatabaseError, PG::ConnectionBad
       false
     end
   end
