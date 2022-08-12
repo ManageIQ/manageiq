@@ -274,7 +274,7 @@ end
 
 if ENV["APPLIANCE"]
   group :appliance do
-    gem "manageiq-appliance_console",     "~>7.0", ">=7.0.6",  :require => false
+    gem "manageiq-appliance_console",   "~>7.1",  :require => false
   end
 end
 
