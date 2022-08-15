@@ -154,7 +154,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
   end
 
   def raw_stdout_txt
-    raw_stdout_json.collect { |j| j["stdout"] }.join("\n")
+    Ansible::Runner::Response.parsed_stdout_to_human(raw_stdout_json)
   end
 
   def raw_stdout_html

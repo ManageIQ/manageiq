@@ -5,6 +5,11 @@ module Ansible
 
       attr_reader :base_dir, :debug, :ident
 
+      # @return [String] Stdout that is text, where the human readable part is extracted from the JSON encoded objects
+      def self.parsed_stdout_to_human(parsed_stdout)
+        parsed_stdout.map { |l| l["stdout"] }.join("\n")
+      end
+
       # Response object designed for holding full response from ansible-runner
       #
       # @param base_dir [String] ansible-runner private_data_dir parameter
@@ -31,6 +36,11 @@ module Ansible
       # @return [String] Stdout that is text, where each line should be JSON encoded object
       def stdout
         @stdout ||= load_stdout
+      end
+
+      # @return [String] Stdout that is text, where the human readable part is extracted from the JSON encoded objects
+      def human_stdout
+        @human_stdout ||= self.class.parsed_stdout_to_human(parsed_stdout)
       end
 
       # @return [Array<Hash>] Array of hashes as individual Ansible plays
