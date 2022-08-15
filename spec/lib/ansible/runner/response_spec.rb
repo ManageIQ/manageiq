@@ -31,8 +31,32 @@ RSpec.describe Ansible::Runner::Response do
     LINES
   end
 
+  let(:good_stdout_human) do
+    <<~LINES
+
+      \r\nPLAY [List Variables] **********************************************************
+      \r\nTASK [Gathering Facts] *********************************************************
+    LINES
+  end
+
   after do
     FileUtils.rm_rf(runner_dir) if Dir.exist?(runner_dir)
+  end
+
+  describe ".parsed_stdout_to_human" do
+    context "with no stdout content" do
+      it "returns an empty string" do
+        expect(described_class.parsed_stdout_to_human([])).to eq("")
+      end
+    end
+
+    context "with valid stdout (1 JSON object per line)" do
+      it "returns all the content" do
+        parsed_stdout = good_stdout.each_line.map { |l| JSON.parse(l) }
+
+        expect(described_class.parsed_stdout_to_human(parsed_stdout)).to eq(good_stdout_human)
+      end
+    end
   end
 
   describe "#stdout" do
@@ -50,6 +74,25 @@ RSpec.describe Ansible::Runner::Response do
 
       it "returns all the content" do
         expect(subject.stdout).to eq(good_stdout)
+      end
+    end
+  end
+
+  describe "#human_stdout" do
+    context "with no stdout file" do
+      it "returns an empty string" do
+        subject
+        FileUtils.rm_rf(Dir.glob(File.join(job_events_dir, "*.json")))
+
+        expect(subject.human_stdout).to eq("")
+      end
+    end
+
+    context "with valid stdout (1 JSON object per line)" do
+      let(:stdout_lines) { good_stdout }
+
+      it "returns all the content" do
+        expect(subject.human_stdout).to eq(good_stdout_human)
       end
     end
   end
