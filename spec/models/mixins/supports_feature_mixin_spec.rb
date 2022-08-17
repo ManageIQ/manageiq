@@ -28,14 +28,6 @@ RSpec.describe SupportsFeatureMixin do
       supports :std_accept
       supports_not :std_denial, :reason => "not available"
       supports(:dynamic_feature) { "dynamically unsupported" unless attr1 }
-
-      def validate_accept
-        {:available => true, :message => nil}
-      end
-
-      def validate_denial
-        {:available => false, :message => "deny via validate"}
-      end
     end
   end
 
@@ -96,11 +88,6 @@ RSpec.describe SupportsFeatureMixin do
   end
 
   describe '#supports?' do
-    it "translates availability" do
-      expect(test_inst.supports?(:accept)).to be_truthy
-      expect(test_inst.supports?(:denial)).to be_falsey
-    end
-
     it "handles base supports" do
       expect(test_inst.supports?(:std_accept)).to be_truthy
       expect(test_inst.supports?(:module_accept)).to be_truthy
@@ -199,11 +186,6 @@ RSpec.describe SupportsFeatureMixin do
   end
 
   describe '#unsupported_reason' do
-    it "handles availability" do
-      expect(test_inst.unsupported_reason(:accept)).to be_nil
-      expect(test_inst.unsupported_reason(:denial)).to eq "deny via validate"
-    end
-
     it "handles supports" do
       expect(test_inst.unsupported_reason(:std_accept)).to be_nil
       expect(test_inst.unsupported_reason(:module_accept)).to be_nil
