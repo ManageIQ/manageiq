@@ -198,7 +198,13 @@ namespace :release do
     end
 
     begin
-      FileUtils.cp(root.join("Gemfile.lock.release"), root.join("Gemfile.lock"))
+      if root.join("Gemfile.lock.release").exist?
+        FileUtils.cp(root.join("Gemfile.lock.release"), root.join("Gemfile.lock"))
+      else
+        # First time build of Gemfile.lock.release
+        update_gems = ["*"]
+        root.join("Gemfile.lock").delete
+      end
 
       if update_gems.any?
         cmd =
