@@ -209,9 +209,9 @@ namespace :release do
       if update_gems.any?
         cmd =
           if update_gems == ["*"]
-            "bundle update --conservative --patch #{update_gems.join(" ")}"
-          else
             "bundle update" # Update everything regardless of patch level
+          else
+            "bundle update --conservative --patch #{update_gems.join(" ")}"
           end
 
         Bundler.with_unbundled_env do
