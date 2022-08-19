@@ -224,6 +224,7 @@ namespace :release do
         ruby
         x86_64-linux
         x86_64-darwin
+        x86_64-darwin-21
         powerpc64le-linux
       ].sort_by { |p| [RUBY_PLATFORM.start_with?(p) ? 0 : 1, p] }
 
