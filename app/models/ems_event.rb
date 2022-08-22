@@ -138,6 +138,7 @@ class EmsEvent < EventStream
   end
 
   def self.process_physical_storage_in_event!(event, options = {})
+    event[:source] = PhysicalStorage.base_class.find_by(:ems_ref => event[:physical_storage_ems_ref]).name
     process_object_in_event!(PhysicalStorage, event, options)
   end
 
