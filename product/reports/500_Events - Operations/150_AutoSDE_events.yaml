@@ -1,0 +1,75 @@
+---
+# Report title
+title: "AutoSDE Events Last Week"
+
+# Menu name
+menu_name: "AutoSDE Events Last Week"
+rpt_group: Custom
+rpt_type: Custom
+template_type: report
+
+# Main DB table report is based on
+db: EventStream
+#db_options:  # another way to filter last week by seconds, didn't work
+#  :start_offset: 604800
+#  :end_offset: 0
+#  :interval: daily
+
+
+# Columns to fetch from the main table
+cols:
+  - timestamp
+  - event_type
+  - physical_storage_name
+  - source
+  - message
+  - fixed
+# Order of columns (from all tables)
+col_order:
+  - timestamp
+  - event_type
+  - physical_storage_name
+  - source
+  - message
+  - fixed
+
+# Column titles, in order
+headers:
+  - Date Time
+  - Event Type
+  - Storage System Name
+  - Source
+  - Message
+  - Fixed
+
+# Condition(s) string for the SQL query
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+      - "IS":
+          field: EmsEvent-timestamp
+          value: This Week
+      - INCLUDES:
+          field: EmsEvent-event_type
+          value: "autosde_critical_alert"
+
+# Order string for the SQL query
+order: Descending
+
+# Columns to sort the report on, in order
+sortby:
+  - fixed
+
+miq_schedule_options:
+  :run_at:
+    :interval:
+      :value: "1"
+      :unit: hourly
+
+# Dimensions of graph (1 or 2)
+#   Note: specifying 2 for a single dimension graph may not return expected results
+dims: 1
+graph:
+  :type: Pie
+  :count: 2
+  :other: true
