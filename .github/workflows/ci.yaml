@@ -13,7 +13,6 @@ jobs:
     strategy:
       matrix:
         ruby-version:
-        - '2.6'
         - '2.7'
         test-suite:
         - vmdb
