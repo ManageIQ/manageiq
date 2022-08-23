@@ -1,0 +1,57 @@
+---
+# Report title
+title: "AutoSDE Events"
+
+# Menu name
+menu_name: "AutoSDE Events"
+rpt_group: Custom
+rpt_type: Custom
+
+# Main DB table report is based on
+db: EventStream
+template_type: report
+
+# Columns to fetch from the main table
+cols:
+  - timestamp
+  - event_type
+  - physical_storage_name
+  - source
+  - message
+
+# Order of columns (from all tables)
+col_order:
+  - timestamp
+  - event_type
+  - physical_storage_name
+  - source
+  - message
+
+# Column titles, in order
+headers:
+  - Date Time
+  - Event Type
+  - Storage System Name
+  - Source
+  - Message
+
+# Condition(s) string for the SQL query
+conditions: !ruby/object:MiqExpression
+  exp:
+    INCLUDES:
+      field: EmsEvent-event_type
+      value: "autosde_critical_alert"
+
+# Order string for the SQL query
+order: Descending
+
+# Columns to sort the report on, in order
+sortby:
+  - timestamp
+  - physical_storage_name
+
+miq_schedule_options:
+  :run_at:
+    :interval:
+      :value: "1"
+      :unit: hourly
