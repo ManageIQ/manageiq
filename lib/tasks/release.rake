@@ -198,14 +198,20 @@ namespace :release do
     end
 
     begin
-      FileUtils.cp(root.join("Gemfile.lock.release"), root.join("Gemfile.lock"))
+      if root.join("Gemfile.lock.release").exist?
+        FileUtils.cp(root.join("Gemfile.lock.release"), root.join("Gemfile.lock"))
+      else
+        # First time build of Gemfile.lock.release
+        update_gems = ["*"]
+        root.join("Gemfile.lock").delete
+      end
 
       if update_gems.any?
         cmd =
           if update_gems == ["*"]
-            "bundle update --conservative --patch #{update_gems.join(" ")}"
-          else
             "bundle update" # Update everything regardless of patch level
+          else
+            "bundle update --conservative --patch #{update_gems.join(" ")}"
           end
 
         Bundler.with_unbundled_env do
@@ -218,6 +224,7 @@ namespace :release do
         ruby
         x86_64-linux
         x86_64-darwin
+        x86_64-darwin-21
         powerpc64le-linux
       ].sort_by { |p| [RUBY_PLATFORM.start_with?(p) ? 0 : 1, p] }
 
