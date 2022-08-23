@@ -272,40 +272,33 @@ group :web_socket, :manageiq_default do
   gem "websocket-driver",               "~>0.6.3",           :require => false
 end
 
-if ENV["APPLIANCE"]
-  group :appliance do
-    gem "manageiq-appliance_console",   "~>7.1",  :require => false
-  end
+group :appliance, :optional => true do
+  gem "manageiq-appliance_console",     "~>7.1",             :require => false
 end
 
-### Start of gems excluded from the appliances.
-# The gems listed below do not need to be packaged until we find it necessary or useful.
-# Only add gems here that we do not need on an appliance.
-#
-unless ENV["APPLIANCE"]
-  group :development do
-    gem "foreman"
-    gem "manageiq-style",               "~>1.2.0",           :require => false
-    gem "PoParser"
-    # ruby_parser is required for i18n string extraction
-    gem "ruby_parser",                                       :require => false
-    gem "yard"
-  end
+### Development and test gems are excluded from appliance and container builds to reduce size and license issues
+group :development do
+  gem "foreman"
+  gem "manageiq-style",                 "~>1.2.0",           :require => false
+  gem "PoParser"
+  # ruby_parser is required for i18n string extraction
+  gem "ruby_parser",                                         :require => false
+  gem "yard"
+end
 
-  group :test do
-    gem "brakeman",                     "~>5.0",             :require => false
-    gem "bundler-audit",                                     :require => false
-    gem "capybara",                     "~>2.5.0",           :require => false
-    gem "db-query-matchers",            "~>0.10.0"
-    gem "factory_bot",                  "~>5.1",             :require => false
-    gem "simplecov",                    ">=0.21.2",          :require => false
-    gem "timecop",                      "~>0.9",             :require => false
-    gem "vcr",                          "~>5.0",             :require => false
-    gem "webmock",                      "~>3.7",             :require => false
-  end
+group :test do
+  gem "brakeman",                       "~>5.0",             :require => false
+  gem "bundler-audit",                                       :require => false
+  gem "capybara",                       "~>2.5.0",           :require => false
+  gem "db-query-matchers",              "~>0.10.0"
+  gem "factory_bot",                    "~>5.1",             :require => false
+  gem "simplecov",                      ">=0.21.2",          :require => false
+  gem "timecop",                        "~>0.9",             :require => false
+  gem "vcr",                            "~>5.0",             :require => false
+  gem "webmock",                        "~>3.7",             :require => false
+end
 
-  group :development, :test do
-    gem "routes_lazy_routes"
-    gem "rspec-rails",                  "~>4.0.1"
-  end
+group :development, :test do
+  gem "routes_lazy_routes"
+  gem "rspec-rails",                    "~>4.0.1"
 end
