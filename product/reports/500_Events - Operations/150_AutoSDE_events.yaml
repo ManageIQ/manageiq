@@ -22,7 +22,7 @@ cols:
   - physical_storage_name
   - source
   - message
-
+  - fixed
 # Order of columns (from all tables)
 col_order:
   - timestamp
@@ -30,6 +30,7 @@ col_order:
   - physical_storage_name
   - source
   - message
+  - fixed
 
 # Column titles, in order
 headers:
@@ -38,6 +39,7 @@ headers:
   - Storage System Name
   - Source
   - Message
+  - fixed
 
 # Condition(s) string for the SQL query
 conditions: !ruby/object:MiqExpression
@@ -52,7 +54,6 @@ order: Descending
 # Columns to sort the report on, in order
 sortby:
   - timestamp
-  - physical_storage_name
 
 miq_schedule_options:
   :run_at:
