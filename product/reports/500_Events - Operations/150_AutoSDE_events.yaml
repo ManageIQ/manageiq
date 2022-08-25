@@ -1,15 +1,19 @@
 ---
 # Report title
-title: "AutoSDE Events"
+title: "AutoSDE Events Last Week"
 
 # Menu name
-menu_name: "AutoSDE Events"
+menu_name: "AutoSDE Events Last Week"
 rpt_group: Custom
 rpt_type: Custom
+template_type: report
 
 # Main DB table report is based on
 db: EventStream
-template_type: report
+db_options:
+  :start_offset: 604800  # seconds in a week
+  :end_offset: 0
+  :interval: daily
 
 # Columns to fetch from the main table
 cols:
