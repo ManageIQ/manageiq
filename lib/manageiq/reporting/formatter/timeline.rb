@@ -100,10 +100,12 @@ module ManageIQ
               e_title = rec[:name]
             when "EventStream"
               ems_cloud = false
+              ems_storage = false
               if rec[:ems_id] && ExtManagementSystem.exists?(rec[:ems_id])
                 ems = ExtManagementSystem.find(rec[:ems_id])
                 ems_cloud =  true if ems.kind_of?(EmsCloud)
                 ems_container = true if ems.kind_of?(::ManageIQ::Providers::ContainerManager)
+                ems_storage = true if ems.kind_of?(::ManageIQ::Providers::StorageManager)
               end
               if !ems_cloud
                 e_title = if rec[:vm_name] # Create the title using VM name
@@ -164,6 +166,7 @@ module ManageIQ
 
           flags = {:ems_cloud     => ems_cloud,
                    :ems_container => ems_container,
+                   :ems_storage   => ems_storage,
                    :time_zone     => tz}
           tl_message = TimelineMessage.new(row, rec, flags, mri.db)
           event_data = {}

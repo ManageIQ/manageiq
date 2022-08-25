@@ -110,6 +110,8 @@ module ManageIQ
               "<a href=/ems_container/#{provider_id}>#{text}</a>"
             elsif ems_mw
               "<a href=/ems_middleware/#{provider_id}>#{text}</a>"
+            elsif ems_storage
+              "<a href=/ems_storage/#{provider_id}>#{text}</a>"
             else
               "<a href=/ems_infra/#{provider_id}>#{text}</a>"
             end
@@ -147,6 +149,10 @@ module ManageIQ
 
         def ems_mw
           @flags[:ems_mw]
+        end
+
+        def ems_storage
+          @flags[:ems_storage]
         end
       end
     end
