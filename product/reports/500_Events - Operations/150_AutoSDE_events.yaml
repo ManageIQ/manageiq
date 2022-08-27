@@ -11,9 +11,10 @@ template_type: report
 # Main DB table report is based on
 db: EventStream
 #db_options:
-#  :start_offset: 604800  # seconds in a week
+#  :start_offset: 604800
 #  :end_offset: 0
 #  :interval: daily
+
 
 # Columns to fetch from the main table
 cols:
@@ -53,7 +54,7 @@ order: Descending
 
 # Columns to sort the report on, in order
 sortby:
-  - timestamp
+  - fixed
 
 miq_schedule_options:
   :run_at:
@@ -65,5 +66,6 @@ miq_schedule_options:
 #   Note: specifying 2 for a single dimension graph may not return expected results
 dims: 1
 graph:
-  - type: Pie
-  - count: 2
+  :type: Pie
+  :count: 2
+  :other: true

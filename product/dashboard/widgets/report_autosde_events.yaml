@@ -8,6 +8,7 @@ options:
   - physical_storage_name
   - source
   - message
+  - fixed
   :row_count: 10
 visibility:
   :roles:
