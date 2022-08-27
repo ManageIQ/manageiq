@@ -10,10 +10,10 @@ template_type: report
 
 # Main DB table report is based on
 db: EventStream
-db_options:
-  :start_offset: 604800  # seconds in a week
-  :end_offset: 0
-  :interval: daily
+#db_options:
+#  :start_offset: 604800  # seconds in a week
+#  :end_offset: 0
+#  :interval: daily
 
 # Columns to fetch from the main table
 cols:
@@ -39,7 +39,7 @@ headers:
   - Storage System Name
   - Source
   - Message
-  - fixed
+  - Fixed
 
 # Condition(s) string for the SQL query
 conditions: !ruby/object:MiqExpression
@@ -60,3 +60,10 @@ miq_schedule_options:
     :interval:
       :value: "1"
       :unit: hourly
+
+# Dimensions of graph (1 or 2)
+#   Note: specifying 2 for a single dimension graph may not return expected results
+dims: 1
+graph:
+  - type: Pie
+  - count: 2
