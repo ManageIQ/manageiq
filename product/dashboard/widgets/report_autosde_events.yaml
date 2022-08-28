@@ -1,0 +1,24 @@
+description: report_autosde_events
+title: AutoSDE Events Last Week
+content_type: report
+options:
+  :col_order:
+  - timestamp
+  - event_type
+  - physical_storage_name
+  - source
+  - message
+  :row_count: 10
+visibility:
+  :roles:
+  - _ALL_
+user_id:
+resource_name: AutoSDE Events Last Week
+resource_type: MiqReport
+miq_schedule_options:
+  :run_at:
+    :interval:
+      :value: "1"
+      :unit: hourly
+enabled: true
+read_only: true

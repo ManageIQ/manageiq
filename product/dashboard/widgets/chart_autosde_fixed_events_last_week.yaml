@@ -1,0 +1,18 @@
+description: chart_autosde_events_last_week
+title: "AutoSDE Events Last Week: Fixed vs Not-Fixed"
+content_type: chart
+options:
+  :timezone_matters: false
+visibility:
+  :roles:
+  - _ALL_
+user_id:
+resource_name: AutoSDE Events Last Week
+resource_type: MiqReport
+miq_schedule_options:
+  :run_at:
+    :interval:
+      :value: "1"
+      :unit: hourly
+enabled: true
+read_only: true
