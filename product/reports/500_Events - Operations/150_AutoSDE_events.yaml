@@ -10,7 +10,7 @@ template_type: report
 
 # Main DB table report is based on
 db: EventStream
-#db_options:
+#db_options:  # another way to filter last week by seconds, didn't work
 #  :start_offset: 604800
 #  :end_offset: 0
 #  :interval: daily
@@ -45,9 +45,13 @@ headers:
 # Condition(s) string for the SQL query
 conditions: !ruby/object:MiqExpression
   exp:
-    INCLUDES:
-      field: EmsEvent-event_type
-      value: "autosde_critical_alert"
+    and:
+      - "IS":
+          field: EmsEvent-timestamp
+          value: This Week
+      - INCLUDES:
+          field: EmsEvent-event_type
+          value: "autosde_critical_alert"
 
 # Order string for the SQL query
 order: Descending
