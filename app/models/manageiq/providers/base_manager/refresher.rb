@@ -264,7 +264,7 @@ module ManageIQ
       end
 
       def refresher_type
-        self.class.parent.short_token
+        self.class.module_parent.short_token
       end
 
       def full_refresh?(ems)
