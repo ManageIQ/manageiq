@@ -34,12 +34,12 @@ RSpec.describe PerEmsWorkerMixin do
   context ".start_worker_for_ems" do
     it "works when queue name is passed" do
       queue_name = "foo"
-      expect(@worker_class).to receive(:start_worker).with(:queue_name => queue_name)
+      expect(@worker_class).to receive(:start_worker).with({:queue_name => queue_name})
       @worker_class.start_worker_for_ems(queue_name)
     end
 
     it "works when ems is passed" do
-      expect(@worker_class).to receive(:start_worker).with(:queue_name => @ems_queue_name)
+      expect(@worker_class).to receive(:start_worker).with({:queue_name => @ems_queue_name})
       @worker_class.start_worker_for_ems(@ems)
     end
   end

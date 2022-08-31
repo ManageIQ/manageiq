@@ -149,7 +149,7 @@ RSpec.describe ServiceTemplateProvisionTask do
         }
         allow(@request).to receive(:approved?).and_return(true)
         allow(MiqServer).to receive(:my_zone).and_return('a_zone')
-        expect(MiqQueue).to receive(:put).with(
+        expect(MiqQueue).to receive(:put).with({
           :class_name     => 'ServiceTemplateProvisionTask',
           :instance_id    => @task_0.id,
           :method_name    => 'execute',
@@ -158,7 +158,8 @@ RSpec.describe ServiceTemplateProvisionTask do
           :zone           => 'a_zone',
           :tracking_label => tracking_label,
           :deliver_on     => nil,
-          :miq_callback   => miq_callback)
+          :miq_callback   => miq_callback
+        })
         @task_0.execute_queue
       end
 

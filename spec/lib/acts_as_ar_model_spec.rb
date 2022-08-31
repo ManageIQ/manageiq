@@ -61,7 +61,7 @@ RSpec.describe ActsAsArModel do
     end
 
     it "supports where (as an example)" do
-      expect(base_class).to receive(:find).with(:all, :conditions => {:id => 5}).and_return([])
+      expect(base_class).to receive(:find).with(:all, {:conditions => {:id => 5}}).and_return([])
       expect(base_class.all.where(:id => 5).to_a).to eq([])
     end
   end

@@ -927,7 +927,7 @@ RSpec.describe Service do
         "dialog_options",
         User.current_user,
         ra,
-        :target => service, :reconfigure => true
+        {:target => service, :reconfigure => true}
       )
       service.reconfigure_dialog
     end

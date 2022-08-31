@@ -181,16 +181,16 @@ RSpec.describe Authenticator::Httpd do
         end
 
         it "records two successful audit entries" do
-          expect(AuditEvent).to receive(:success).with(
+          expect(AuditEvent).to receive(:success).with({
             :event   => 'authenticate_httpd',
             :userid  => username,
             :message => "User alice successfully validated by External httpd",
-          ).and_call_original
-          expect(AuditEvent).to receive(:success).with(
+          }).and_call_original
+          expect(AuditEvent).to receive(:success).with({
             :event   => 'authenticate_httpd',
             :userid  => username,
             :message => "Authentication successful for user alice",
-          ).and_call_original
+          }).and_call_original
           expect(AuditEvent).not_to receive(:failure)
           authenticate
         end
@@ -209,16 +209,16 @@ RSpec.describe Authenticator::Httpd do
         end
 
         it "records two successful audit entries" do
-          expect(AuditEvent).to receive(:success).with(
+          expect(AuditEvent).to receive(:success).with({
             :event   => 'authenticate_httpd',
             :userid  => username,
             :message => "User alice successfully validated by External httpd",
-          ).and_call_original
-          expect(AuditEvent).to receive(:success).with(
+          }).and_call_original
+          expect(AuditEvent).to receive(:success).with({
             :event   => 'authenticate_httpd',
             :userid  => username,
             :message => "Authentication successful for user alice",
-          ).and_call_original
+          }).and_call_original
           expect(AuditEvent).not_to receive(:failure)
           authenticate
         end
@@ -254,16 +254,16 @@ RSpec.describe Authenticator::Httpd do
         end
 
         it "records two successful audit entries" do
-          expect(AuditEvent).to receive(:success).with(
+          expect(AuditEvent).to receive(:success).with({
             :event   => 'authenticate_httpd',
             :userid  => 'häåğēn.däzş',
             :message => "User häåğēn.däzş successfully validated by External httpd",
-          ).and_call_original
-          expect(AuditEvent).to receive(:success).with(
+          }).and_call_original
+          expect(AuditEvent).to receive(:success).with({
             :event   => 'authenticate_httpd',
             :userid  => 'häåğēn.däzş',
             :message => "Authentication successful for user häåğēn.däzş",
-          ).and_call_original
+          }).and_call_original
           expect(AuditEvent).not_to receive(:failure)
           authenticate
         end
@@ -282,16 +282,16 @@ RSpec.describe Authenticator::Httpd do
         end
 
         it "records two successful audit entries" do
-          expect(AuditEvent).to receive(:success).with(
+          expect(AuditEvent).to receive(:success).with({
             :event   => 'authenticate_httpd',
             :userid  => 'häåğēn.däzş',
             :message => "User häåğēn.däzş successfully validated by External httpd",
-          ).and_call_original
-          expect(AuditEvent).to receive(:success).with(
+          }).and_call_original
+          expect(AuditEvent).to receive(:success).with({
             :event   => 'authenticate_httpd',
             :userid  => 'häåğēn.däzş',
             :message => "Authentication successful for user häåğēn.däzş",
-          ).and_call_original
+          }).and_call_original
           expect(AuditEvent).not_to receive(:failure)
           authenticate
         end
@@ -316,11 +316,11 @@ RSpec.describe Authenticator::Httpd do
       end
 
       it "records one failing audit entry" do
-        expect(AuditEvent).to receive(:failure).with(
+        expect(AuditEvent).to receive(:failure).with({
           :event   => 'authenticate_httpd',
           :userid  => '',
           :message => "Authentication failed for userid ",
-        ).and_call_original
+        }).and_call_original
         expect(AuditEvent).not_to receive(:success)
         authenticate rescue nil
       end
@@ -329,11 +329,11 @@ RSpec.describe Authenticator::Httpd do
         let(:headers) { super().merge('X-External-Auth-Error' => 'because reasons') }
 
         it "reflects in the audit message" do
-          expect(AuditEvent).to receive(:failure).with(
+          expect(AuditEvent).to receive(:failure).with({
             :event   => 'authenticate_httpd',
             :userid  => '',
             :message => "Authentication failed for userid : because reasons",
-          ).and_call_original
+          }).and_call_original
           authenticate rescue nil
         end
       end
@@ -342,11 +342,11 @@ RSpec.describe Authenticator::Httpd do
         let(:headers) { super().merge('X-External-Auth-Error' => 'töø dëlıçiouş') }
 
         it "reflects in the audit message" do
-          expect(AuditEvent).to receive(:failure).with(
+          expect(AuditEvent).to receive(:failure).with({
             :event   => 'authenticate_httpd',
             :userid  => '',
             :message => "Authentication failed for userid : töø dëlıçiouş",
-          ).and_call_original
+          }).and_call_original
           authenticate rescue nil
         end
       end
@@ -360,11 +360,11 @@ RSpec.describe Authenticator::Httpd do
       end
 
       it "records one failing audit entry" do
-        expect(AuditEvent).to receive(:failure).with(
+        expect(AuditEvent).to receive(:failure).with({
           :event   => 'authenticate_httpd',
           :userid  => '',
           :message => "Authentication failed for userid ",
-        ).and_call_original
+        }).and_call_original
         expect(AuditEvent).not_to receive(:success)
         authenticate rescue nil
       end
@@ -373,11 +373,11 @@ RSpec.describe Authenticator::Httpd do
         let(:headers) { super().merge('X-External-Auth-Error' => 'because reasons') }
 
         it "reflects in the audit message" do
-          expect(AuditEvent).to receive(:failure).with(
+          expect(AuditEvent).to receive(:failure).with({
             :event   => 'authenticate_httpd',
             :userid  => '',
             :message => "Authentication failed for userid : because reasons",
-          ).and_call_original
+          }).and_call_original
           authenticate rescue nil
         end
       end
@@ -386,11 +386,11 @@ RSpec.describe Authenticator::Httpd do
         let(:headers) { super().merge('X-External-Auth-Error' => 'töø dëlıçiouş') }
 
         it "reflects in the audit message" do
-          expect(AuditEvent).to receive(:failure).with(
+          expect(AuditEvent).to receive(:failure).with({
             :event   => 'authenticate_httpd',
             :userid  => '',
             :message => "Authentication failed for userid : töø dëlıçiouş",
-          ).and_call_original
+          }).and_call_original
           authenticate rescue nil
         end
       end
@@ -495,16 +495,16 @@ RSpec.describe Authenticator::Httpd do
         end
 
         it "records one successful and one failing audit entry" do
-          expect(AuditEvent).to receive(:success).with(
+          expect(AuditEvent).to receive(:success).with({
             :event   => 'authenticate_httpd',
             :userid  => 'bob',
             :message => "User bob successfully validated by External httpd",
-          ).and_call_original
-          expect(AuditEvent).to receive(:failure).with(
+          }).and_call_original
+          expect(AuditEvent).to receive(:failure).with({
             :event   => 'authenticate_httpd',
             :userid  => 'bob',
             :message => "User bob authenticated but not defined in EVM",
-          ).and_call_original
+          }).and_call_original
           authenticate rescue nil
         end
         it "logs the failure" do
@@ -523,22 +523,22 @@ RSpec.describe Authenticator::Httpd do
         end
 
         it "records three successful audit entries" do
-          expect(AuditEvent).to receive(:success).with(
+          expect(AuditEvent).to receive(:success).with({
             :event   => 'authorize',
             :userid  => 'bob',
             :message => "User creation successful for User: Bob Builderson with ID: bob@example.com",
-          ).and_call_original
-          expect(AuditEvent).to receive(:success).with(
+          }).and_call_original
+          expect(AuditEvent).to receive(:success).with({
             :event   => 'authenticate_httpd',
             :userid  => 'bob',
             :message => "User bob successfully validated by External httpd",
-          ).and_call_original
+          }).and_call_original
 
-          expect(AuditEvent).to receive(:success).with(
+          expect(AuditEvent).to receive(:success).with({
             :event   => 'authenticate_httpd',
             :userid  => 'bob',
             :message => "Authentication successful for user bob",
-          ).and_call_original
+          }).and_call_original
           expect(AuditEvent).not_to receive(:failure)
           authenticate
         end
@@ -564,26 +564,26 @@ RSpec.describe Authenticator::Httpd do
           end
 
           it "records three successful audit entries plus one failure" do
-            expect(AuditEvent).to receive(:success).with(
+            expect(AuditEvent).to receive(:success).with({
               :event   => 'authorize',
               :userid  => 'bob',
               :message => "User creation successful for User: Bob Builderson with ID: bob@example.com",
-            ).and_call_original
-            expect(AuditEvent).to receive(:success).with(
+            }).and_call_original
+            expect(AuditEvent).to receive(:success).with({
               :event   => 'authenticate_httpd',
               :userid  => 'bob',
               :message => "User bob successfully validated by External httpd",
-            ).and_call_original
-            expect(AuditEvent).to receive(:success).with(
+            }).and_call_original
+            expect(AuditEvent).to receive(:success).with({
               :event   => 'authenticate_httpd',
               :userid  => 'bob',
               :message => "Authentication successful for user bob",
-            ).and_call_original
-            expect(AuditEvent).to receive(:failure).with(
+            }).and_call_original
+            expect(AuditEvent).to receive(:failure).with({
               :event   => 'authorize',
               :userid  => 'bob',
               :message => "Authentication failed for userid bob@example.com, unable to match user's group membership to an EVM role",
-            ).and_call_original
+            }).and_call_original
             authenticate
           end
 
@@ -687,16 +687,16 @@ RSpec.describe Authenticator::Httpd do
         let(:config) { {:httpd_role => true} }
 
         it "records two successful audit entries" do
-          expect(AuditEvent).to receive(:success).with(
+          expect(AuditEvent).to receive(:success).with({
             :event   => 'authenticate_httpd',
             :userid  => username,
             :message => "User testuser successfully validated by External httpd",
-          ).and_call_original
-          expect(AuditEvent).to receive(:success).with(
+          }).and_call_original
+          expect(AuditEvent).to receive(:success).with({
             :event   => 'authenticate_httpd',
             :userid  => username,
             :message => "Authentication successful for user testuser",
-          ).and_call_original
+          }).and_call_original
           expect(AuditEvent).not_to receive(:failure)
           authenticate
         end

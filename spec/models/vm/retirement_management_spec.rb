@@ -153,7 +153,7 @@ RSpec.describe "VM Retirement Management" do
     event_name = 'request_vm_retire'
     event_hash = {:userid => nil, :vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm"}
 
-    expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, :zone => @zone.name).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, {:zone => @zone.name}).once
 
     @vm.retire_now
   end
@@ -326,7 +326,7 @@ RSpec.describe "VM Retirement Management" do
     event_name = 'foo'
     event_hash = {:userid => nil, :vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm"}
 
-    expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, :zone => @zone.name).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, {:zone => @zone.name}).once
 
     @vm.raise_retirement_event(event_name)
   end

@@ -197,7 +197,7 @@ RSpec.describe MiqProvision do
             :method_name => :execute_callback
           }
           allow(@pr).to receive(:approved?).and_return(true)
-          expect(MiqQueue).to receive(:put).with(
+          expect(MiqQueue).to receive(:put).with({
             :class_name     => 'MiqProvision',
             :instance_id    => @vm_prov.id,
             :method_name    => 'execute',
@@ -208,7 +208,7 @@ RSpec.describe MiqProvision do
             :zone           => @vm_prov.my_zone,
             :deliver_on     => nil,
             :miq_callback   => miq_callback
-          )
+          })
           @vm_prov.execute_queue
         end
       end

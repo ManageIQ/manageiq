@@ -34,7 +34,7 @@ RSpec.describe PhysicalServerProvisionRequest do
 
     context 'when source is ok' do
       it do
-        expect(task).to receive(:new).with(:source_id => server.id)
+        expect(task).to receive(:new).with({:source_id => server.id})
         described_class.new_request_task(:source_id => server.id)
       end
     end
