@@ -99,7 +99,7 @@ class MiqReport < ApplicationRecord
 
   def conditions=(exp)
     exp = MiqExpression.new(exp) if exp && !exp.kind_of?(MiqExpression)
-    super
+    _write_attribute("conditions", exp)
   end
 
   # NOTE: this can by dynamically manipulated
