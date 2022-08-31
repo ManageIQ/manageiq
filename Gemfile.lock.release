@@ -965,7 +965,7 @@ GEM
       color (>= 1.4.0)
       transaction-simple (~> 1.3)
     pg (1.4.3)
-    pg-dsn_parser (0.1.0)
+    pg-dsn_parser (0.1.1)
     pg-logical_replication (1.2.0)
       pg
     po_to_json (1.0.1)
@@ -1366,7 +1366,7 @@ DEPENDENCIES
   openscap (~> 0.4.8)
   optimist (~> 3.0)
   pg (>= 1.4.1)
-  pg-dsn_parser (~> 0.1.0)
+  pg-dsn_parser (~> 0.1.1)
   pg-logical_replication (~> 1.2)
   puma (~> 4.2)
   qpid_proton (~> 0.30.0)
