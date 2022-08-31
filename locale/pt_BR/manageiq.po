@@ -599,8 +599,8 @@ msgstr "%{alert_profiles} com as Tags %{type}"
 #: ../app/views/layouts/_tag_edit_items.html.haml:115
 msgid "%{amount} %{object} Being Tagged"
 msgid_plural "%{amount} %{objects} Being Tagged"
-msgstr[0] "%{amount} %{object} está sendo marcado"
-msgstr[1] "%{amount} %{objects} estão sendo marcados"
+msgstr[0] "%{amount} %{object} sendo identificado"
+msgstr[1] "%{amount} %{objects} sendo identificados"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:7
 msgid "%{amount} Ansible Tower Job Being Tagged"
@@ -6845,7 +6845,7 @@ msgstr "Tem certeza de que deseja excluir os seguintes pares de chaves?"
 #: ../app/helpers/application_helper/toolbar/service/vmdb_mixin.rb:31
 #: ../app/helpers/application_helper/toolbar/service_center.rb:23
 msgid "Are you sure you want to delete the following Service?"
-msgstr "Tem certeza de que deseja excluir o Serviço a seguir?"
+msgstr "Tem certeza de que deseja excluir o serviço a seguir?"
 
 #: ../app/helpers/application_helper/toolbar/ansible_credential_center.rb:25
 msgid "Are you sure you want to delete the following credential?"
@@ -6964,7 +6964,7 @@ msgstr[1] ""
 
 #: ../app/javascript/components/dashboard-widgets/widget-wrapper/helper.jsx:171
 msgid "Are you sure you want to remove %s from the Dashboard?"
-msgstr "Tem certeza de que deseja remover %s a partir do Painel?"
+msgstr "Tem certeza de que deseja remover %s do painel?"
 
 #: ../app/presenters/widget_presenter.rb:30
 msgid "Are you sure you want to remove '%{title}'from the Dashboard?"
@@ -12915,7 +12915,7 @@ msgstr "Clonar item selecionado"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb:62
 msgid "Clone this Cloud Volume"
-msgstr "Clonar este Volume de nuvem"
+msgstr "Clonar este volume de nuvem"
 
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb:141
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:95
@@ -27781,7 +27781,7 @@ msgstr "Usuário do EVM \"%{name}\""
 
 #: src/rbac-forms/rbacAssignUserTags.jsx:166
 msgid "EVM User Being Tagged"
-msgstr "Usuário EVM sendo marcado"
+msgstr "Usuário EVM sendo identificado"
 
 #. TRANSLATORS: en.yml key: dictionary.model.User (plural form)
 #: ../config/dictionary_strings.rb:3796
@@ -34203,7 +34203,7 @@ msgstr[0] ""
 "Arquivo é muito grande, tamanho máximo permitido é de %sbytes. O arquivo atual"
 " tem %s byte"
 msgstr[1] ""
-"arquivo é muito grande, tamanho máximo permitido é %s bytes. Arquivo atual tem"
+"Arquivo é muito grande, tamanho máximo permitido é %s bytes. Arquivo atual tem"
 " %s bytes"
 
 #: ../app/javascript/forms/mappers/validatorMapper.jsx:20
@@ -67185,7 +67185,7 @@ msgstr "Serviço"
 
 #: ../app/javascript/components/edit-service-form/index.jsx:20
 msgid "Service \"%s\"  was saved\""
-msgstr "Serviço \"%s\" foi salvo\""
+msgstr "O serviço \"%s\" foi salvo\""
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:4735

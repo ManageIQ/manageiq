@@ -646,9 +646,9 @@ msgstr[1] ""
 msgid "%{amount} Cloud Object Store Object Being Tagged"
 msgid_plural "%{amount} Cloud Object Store Objects Being Tagged"
 msgstr[0] ""
-"%{amount} objeto del almacén de objetos en la nube que se está etiquetando"
+"Se está etiquetando %{amount} objeto del almacén de objetos en la nube"
 msgstr[1] ""
-"%{amount} objetos del almacén de objetos en la nube que se están etiquetando"
+"Se están etiquetando %{amount} objetos del almacén de objetos en la nube"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:19
 msgid "%{amount} Cloud Provider Being Tagged"
@@ -701,8 +701,8 @@ msgstr[1] "%{amount} gestores de configuración que se están etiquetando"
 #: ../app/views/layouts/_tag_edit_items.html.haml:35
 msgid "%{amount} Configured System Being Tagged"
 msgid_plural "%{amount} Configured Systems Being Tagged"
-msgstr[0] "%{amount} sistema configurado que se está etiquetando"
-msgstr[1] "%{amount} sistemas configurados que se están etiquetando"
+msgstr[0] "Se está etiquetando %{amount} sistema configurado"
+msgstr[1] "Se están etiquetando %{amount} sistemas configurados"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:37
 msgid "%{amount} Container Being Tagged"
@@ -713,8 +713,8 @@ msgstr[1] "%{amount} contenedores que se están etiquetando"
 #: ../app/views/layouts/_tag_edit_items.html.haml:39
 msgid "%{amount} Container Build Being Tagged"
 msgid_plural "%{amount} Container Builds Being Tagged"
-msgstr[0] "%{amount} compilación del contenedor que se está etiquetando"
-msgstr[1] "%{amount} compilaciones del contenedor que se están etiquetando"
+msgstr[0] "Se está etiquetando %{amount} compilación del contenedor"
+msgstr[1] "Se están etiquetando %{amount} compilaciones del contenedor"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:41
 msgid "%{amount} Container Image Being Tagged"
@@ -725,16 +725,14 @@ msgstr[1] "%{amount} imágenes de contenedores que se están etiquetando"
 #: ../app/views/layouts/_tag_edit_items.html.haml:43
 msgid "%{amount} Container Image Registry Being Tagged"
 msgid_plural "%{amount} Container Image Registries Being Tagged"
-msgstr[0] ""
-"%{amount} registro de la imagen del contenedor que se está etiquetando"
-msgstr[1] ""
-"%{amount} registros de imagen del contenedor que se están etiquetando"
+msgstr[0] "Se está etiquetando %{amount} registro de imagen del contenedor"
+msgstr[1] "Se están etiquetando %{amount} registros de imagen del contenedor"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:45
 msgid "%{amount} Container Node Being Tagged"
 msgid_plural "%{amount} Container Nodes Being Tagged"
-msgstr[0] "%{amount} nodo de contenedor que se está etiquetando"
-msgstr[1] "%{amount} nodos de contenedores que se están etiquetando"
+msgstr[0] "Se está etiquetando %{amount} nodo de contenedor"
+msgstr[1] "Se están etiquetando %{amount} nodos de contenedor"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:47
 msgid "%{amount} Container Pod Being Tagged"
@@ -745,14 +743,14 @@ msgstr[1] "%{amount} pods del contenedor que se están etiquetando"
 #: ../app/views/layouts/_tag_edit_items.html.haml:49
 msgid "%{amount} Container Project Being Tagged"
 msgid_plural "%{amount} Container Projects Being Tagged"
-msgstr[0] "%{amount} proyecto del contenedor que se está etiquetando"
-msgstr[1] "%{amount} proyectos del contenedor que se están etiquetando"
+msgstr[0] "Se está etiquetando %{amount} proyecto del contenedor"
+msgstr[1] "Se están etiquetando %{amount} proyectos del contenedor"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:51
 msgid "%{amount} Container Replicator Being Tagged"
 msgid_plural "%{amount} Container Replicators Being Tagged"
-msgstr[0] "%{amount} replicador del contenedor que se está etiquetando"
-msgstr[1] "%{amount} replicadores del contenedor que se están etiquetando"
+msgstr[0] "Se está etiquetando %{amount} replicador del contenedor"
+msgstr[1] "Se están etiquetando %{amount} replicadores del contenedor"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:53
 msgid "%{amount} Container Route Being Tagged"
@@ -763,8 +761,8 @@ msgstr[1] "%{amount} rutas del contenedor que se están etiquetando"
 #: ../app/views/layouts/_tag_edit_items.html.haml:55
 msgid "%{amount} Container Service Being Tagged"
 msgid_plural "%{amount} Container Services Being Tagged"
-msgstr[0] "%{amount} servicio del contenedor que se está etiquetando"
-msgstr[1] "%{amount} servicios del contenedor que se están etiquetando"
+msgstr[0] "Se está etiquetando %{amount} servicio del contenedor"
+msgstr[1] "Se están etiquetando %{amount} servicios del contenedor"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:57
 msgid "%{amount} Container Template Being Tagged"
@@ -1484,8 +1482,8 @@ msgstr[1] "%{number} Subredes de nube"
 #: ../app/decorators/manageiq/providers/autosde/storage_manager_decorator.rb:15
 msgid "%{number} Cloud Volume"
 msgid_plural "%{number} Cloud Volumes"
-msgstr[0] "%{number} Volumen de nube"
-msgstr[1] "%{number} Volúmenes de nube"
+msgstr[0] "%{number} volumen de nube"
+msgstr[1] "%{number} volúmenes de nube"
 
 #: ../app/decorators/manageiq/providers/storage_manager_decorator.rb:33
 msgid "%{number} Cloud Volume Snapshot"
@@ -3874,7 +3872,7 @@ msgstr "Añadir nuevo inquilino de nube"
 #: ../app/controllers/cloud_volume_controller.rb:95
 #: ../app/controllers/cloud_volume_controller.rb:123
 msgid "Add New Cloud Volume"
-msgstr "Añadir nuevo Volumen de nube"
+msgstr "Añadir nuevo volumen de nube"
 
 #: ../app/helpers/application_helper/toolbar/ansible_credentials_center.rb:12
 msgid "Add New Credential"
@@ -4727,7 +4725,7 @@ msgstr ""
 #: ../app/javascript/components/cloud-volume-form/index.jsx:50
 msgid "Add of Cloud Volume \"%s\" has been successfully queued."
 msgstr ""
-"La adición del volumen en la nube \"%s\" se ha puesto en cola correctamente."
+"La adición del volumen de nube \"%s\" se ha puesto en cola correctamente."
 
 #: ../app/javascript/components/ansible-credentials-form/index.jsx:59
 msgid "Add of Credential \"%s\" has been successfully queued."
@@ -4861,7 +4859,7 @@ msgstr ""
 #: ../app/javascript/components/cloud-volume-form/index.jsx:62
 msgid "Add of new Cloud Volume was cancelled by the user."
 msgstr ""
-"El proceso de Añadir nuevo Volumen de nube fue cancelado por el usuario."
+"El proceso de Añadir nuevo volumen de nube fue cancelado por el usuario."
 
 #: ../app/controllers/application_controller/buttons.rb:393
 msgid "Add of new Custom Button was cancelled by the user"
@@ -7650,7 +7648,7 @@ msgstr ""
 #:
 #: ../app/javascript/components/cloud-volume-form/attach-detach-cloud-volume-form.jsx:63
 msgid "Attaching Cloud Volume was cancelled by the user."
-msgstr "El usuario ha cancelado la conexión del volumen en la nube."
+msgstr "El usuario ha cancelado la conexión del volumen de nube."
 
 #: ../app/controllers/vm_cloud_controller.rb:73
 msgid "Attaching Cloud volume failed: Task start failed"
@@ -7677,7 +7675,7 @@ msgstr ""
 #:
 #: ../app/javascript/components/cloud-volume-form/attach-detach-cloud-volume-form.jsx:53
 msgid "Attachment of Cloud Volume has been successfully queued."
-msgstr "La conexión del volumen en la nube se ha puesto en cola correctamente."
+msgstr "La conexión del volumen de nube se ha puesto en cola correctamente."
 
 #: ../app/views/report/_schedule_email_options.html.haml:16
 msgid "Attachments"
@@ -8988,7 +8986,7 @@ msgstr "Nombre de copia de seguridad"
 #: ../app/javascript/components/cloud-volume-actions-form/helper.js:30
 msgid "Backup of Cloud Volume \"%s\" was canceled by the user."
 msgstr ""
-"El usuario ha cancelado la copia de seguridad del volumen en la nube \"%s\"."
+"El usuario ha cancelado la copia de seguridad del volumen de nube \"%s\"."
 
 #: ../app/models/manageiq/providers/azure_stack/manager_mixin.rb:276
 msgid "Bad response from %{log}"
@@ -12965,7 +12963,7 @@ msgstr "Clonar %{vm_or_template}"
 
 #: ../app/controllers/cloud_volume_controller.rb:68
 msgid "Clone Cloud Volume \"%{name}\""
-msgstr "Clonar volumen en la nube \"%{name}\""
+msgstr "Clonar volumen de nube \"%{name}\""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3972
@@ -12988,7 +12986,7 @@ msgstr "No se admite la operación de clonado"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb:80
 msgid "Clone selected Cloud Volume"
-msgstr "Clonar volumen en la nube seleccionado"
+msgstr "Clonar volumen de nube seleccionado"
 
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb:142
 msgid "Clone selected Template"
@@ -13000,7 +12998,7 @@ msgstr "Clonar ítem seleccionado"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb:62
 msgid "Clone this Cloud Volume"
-msgstr "Clonar este volumen en la nube"
+msgstr "Clonar este volumen de nube"
 
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb:141
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:95
@@ -13018,13 +13016,12 @@ msgstr "Clonar este elemento"
 #:
 #: ../app/javascript/components/cloud-volume-form/clone-cloud-volume-form.jsx:51
 msgid "Cloning Cloud Volume was cancelled by the user."
-msgstr "El usuario ha cancelado la clonación del volumen en la nube."
+msgstr "El usuario ha cancelado la clonación del volumen de nube."
 
 #:
 #: ../app/javascript/components/cloud-volume-form/clone-cloud-volume-form.jsx:42
 msgid "Cloning of Cloud Volume has been successfully queued."
-msgstr ""
-"La clonación del volumen en la nube se ha puesto en cola correctamente."
+msgstr "La clonación del volumen de nube se ha puesto en cola correctamente."
 
 #: ./src/dialog-editor/components/field/field.html:33
 #: ./src/dialog-editor/components/field/field.html:51
@@ -13573,13 +13570,11 @@ msgstr "Volumen de nube"
 
 #: ../app/helpers/application_helper/button/volume_attach.rb:4
 msgid "Cloud Volume \"%{name}\" cannot be attached because %{reason}"
-msgstr ""
-"El volumen en la nube \"%{name}\" no se puede conectar porque %{reason}"
+msgstr "El volumen de nube \"%{name}\" no se puede conectar porque %{reason}"
 
 #: ../app/helpers/application_helper/button/volume_clone.rb:4
 msgid "Cloud Volume \"%{name}\" cannot be cloned because %{reason}"
-msgstr ""
-"El volumen en la nube \"%{name}\" no se puede clonar debido a %{reason}"
+msgstr "El volumen de nube \"%{name}\" no se puede clonar debido a %{reason}"
 
 #: ../app/controllers/cloud_volume_controller.rb:148
 msgid "Cloud Volume \"%{name}\" created"
@@ -13592,13 +13587,12 @@ msgstr "Se ha actualizado el volumen de nube \"%{name}\""
 #: ../app/controllers/vm_cloud_controller.rb:77
 msgid "Cloud Volume \"%{volume_name}\" cannot be attached because %{reason}"
 msgstr ""
-"El volumen en la nube \"%{volume_name}\" no se puede conectar porque %{reason}"
+"El volumen de nube \"%{volume_name}\" no se puede conectar porque %{reason}"
 
 #: ../app/controllers/vm_cloud_controller.rb:130
 msgid "Cloud Volume \"%{volume_name}\" cannot be detached because %{reason}"
 msgstr ""
-"El volumen en la nube \"%{volume_name}\" no se puede desconectar porque %{"
-"reason}"
+"El volumen de nube \"%{volume_name}\" no se puede desconectar porque %{reason}"
 
 #: ../app/controllers/cloud_tenant_controller.rb:36
 msgid "Cloud Volume \"%{volume_name}\" is not attached to any Instances"
@@ -13732,8 +13726,7 @@ msgstr ""
 #: ../app/javascript/components/cloud-volume-actions-form/helper.js:52
 msgid "Cloud volume has been successfully restored from backup."
 msgstr ""
-"El volumen en la nube se ha restaurado correctamente desde la copia de "
-"seguridad."
+"El volumen de nube se ha restaurado correctamente desde la copia de seguridad."
 
 #: ../app/controllers/cloud_volume_backup_controller.rb:49
 msgid "Cloud volume restore failed: Task start failed"
@@ -20714,7 +20707,7 @@ msgstr "Crear una instantánea"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb:46
 msgid "Create a Snapshot of selected Cloud Volume"
-msgstr "Crear una instantánea de Volumen de nube seleccionado"
+msgstr "Crear una instantánea del volumen de nube seleccionado"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb:32
 msgid "Create a Snapshot of this Cloud Volume"
@@ -24378,7 +24371,7 @@ msgstr ""
 #:
 #: ../app/javascript/components/cloud-volume-form/attach-detach-cloud-volume-form.jsx:64
 msgid "Detaching Cloud Volume was cancelled by the user."
-msgstr "El usuario ha cancelado la desconexión del volumen en la nube."
+msgstr "El usuario ha cancelado la desconexión del volumen de nube."
 
 #: ../app/controllers/vm_cloud_controller.rb:126
 msgid "Detaching Cloud volume failed: Task start failed"
@@ -24414,8 +24407,8 @@ msgstr ""
 #: ../app/javascript/components/cloud-volume-form/attach-detach-cloud-volume-form.jsx:54
 msgid "Detachment of Cloud Volume of Host has been successfully queued."
 msgstr ""
-"La desconexión del volumen en la nube del host se ha puesto en cola "
-"correctamente."
+"La desconexión del volumen de nube del host se ha puesto en cola correctamente"
+"."
 
 #. TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
 #: ../config/yaml_strings.rb:6550
@@ -25039,7 +25032,7 @@ msgstr "Dirección"
 
 #: ../app/helpers/host_initiator_helper/textual_summary.rb:56
 msgid "Directly Attached Cloud Volumes"
-msgstr "Volúmenes en la nube conectados directamente"
+msgstr "Volúmenes de nube conectados directamente"
 
 #. TRANSLATORS: file: product/views/Storage.yaml
 #. TRANSLATORS: file: product/views/StorageCluster.yaml
@@ -33856,11 +33849,11 @@ msgstr "ExtManagementSystem|Admite inquilinos de nube"
 
 #: ../config/model_attributes.rb:1678
 msgid "ExtManagementSystem|Supports cloud volume"
-msgstr "ExtManagementSystem|Admite el volumen en la nube"
+msgstr "ExtManagementSystem|Admite el volumen de nube"
 
 #: ../config/model_attributes.rb:1679
 msgid "ExtManagementSystem|Supports cloud volume create"
-msgstr "ExtManagementSystem|Admite la creación del volumen en la nube"
+msgstr "ExtManagementSystem|Admite la creación del volumen de nube"
 
 #: ../config/model_attributes.rb:1680
 msgid "ExtManagementSystem|Supports create flavor"
@@ -34386,10 +34379,10 @@ msgid ""
 msgid_plural ""
 "File is too large, maximum allowed size is %s bytes. Current file has %s bytes"
 msgstr[0] ""
-"Archivo es demasiado grande, el tamaño máximo permitido es %s bytes. El "
+"El archivo es demasiado grande, el tamaño máximo permitido es %s bytes. El "
 "archivo actual tiene %s bytes"
 msgstr[1] ""
-"archivo es demasiado grande, el tamaño máximo permitido es %s bytes. El "
+"El archivo es demasiado grande, el tamaño máximo permitido es %s bytes. El "
 "archivo actual tiene %s bytes"
 
 #: ../app/javascript/forms/mappers/validatorMapper.jsx:20
@@ -34638,7 +34631,7 @@ msgstr "Se debe seleccionar un filtro."
 #: ../app/javascript/components/policy-profile-form/policy-profile-form.schema.js:22
 #: ../app/javascript/components/vm-edit-form/vm-edit-form.schema.js:61
 msgid "Filter options"
-msgstr "Opciones de filtro"
+msgstr "Filtrar opciones"
 
 #: ../app/controllers/report_controller/reports/editor.rb:1695
 msgid ""
@@ -34674,7 +34667,7 @@ msgstr "Se debe seleccionar un valor de filtro."
 #: ../app/javascript/components/policy-profile-form/policy-profile-form.schema.js:23
 #: ../app/javascript/components/vm-edit-form/vm-edit-form.schema.js:62
 msgid "Filter values"
-msgstr "Valores de filtro"
+msgstr "Filtrar valores"
 
 #: ../app/presenters/tree_node/miq_search.rb:4
 msgid "Filter: %{filter_description}"
@@ -64604,11 +64597,11 @@ msgstr "Restaurar a partir de la copia de respaldo de un volumen"
 msgid "Restore from backup of Cloud Volume \"%s\" was canceled by the user."
 msgstr ""
 "El usuario ha cancelado la restauración de la copia de seguridad del volumen "
-"en la nube \"%s\"."
+"de nube \"%s\"."
 
 #: ../app/javascript/components/cloud-volume-backup-form/helper.js:12
 msgid "Restore of Cloud Volume \"%s\" was canceled by the user."
-msgstr "El usuario ha cancelado la restauración del volumen en la nube \"%s\"."
+msgstr "El usuario ha cancelado la restauración del volumen de nube \"%s\"."
 
 #:
 #: ../app/javascript/oldjs/controllers/dialog_editor/dialog_editor_controller.js:47
@@ -64638,7 +64631,7 @@ msgstr ""
 
 #: ../app/javascript/components/cloud-volume-backup-form/helper.js:17
 msgid "Restoring Cloud Volume \"%s\" from backup"
-msgstr "Restaurando el volumen en la nube \"%s\" de la copia de seguridad"
+msgstr "Restaurando el volumen de nube \"%s\" de la copia de seguridad"
 
 #: ../app/controllers/cloud_volume_backup_controller.rb:65
 msgid "Restoring Cloud Volume \"%{name}\""
@@ -67444,7 +67437,7 @@ msgstr "Servicio"
 
 #: ../app/javascript/components/edit-service-form/index.jsx:20
 msgid "Service \"%s\"  was saved\""
-msgstr "El servicio \"%s\" se ha guardado\""
+msgstr "El servicio \"%s\" se ha guardado"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:4735
@@ -69606,7 +69599,7 @@ msgstr "Mostrar todas las instantáneas del volumen de nube"
 
 #: ../app/helpers/availability_zone_helper/textual_summary.rb:26
 msgid "Show all Cloud Volumes"
-msgstr "Mostrar todos los Volúmenes de nube"
+msgstr "Mostrar todos los volúmenes de nube"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:440
 msgid "Show all Cloud Volumes attached to this VM."
@@ -73962,7 +73955,7 @@ msgstr "La red de nube no está conectada a una %{table} activa"
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/vpc/storage_manager/cloud_volume.rb:5
 msgid "The Cloud Volume is not connected to an active %{table}"
-msgstr "El volumen en la nube no está conectado a una %{table} activa"
+msgstr "El volumen de nube no está conectado a una %{table} activa"
 
 #: ../app/helpers/miq_alert_set_helper.rb:16
 #: ../app/helpers/term_of_service_helper.rb:5

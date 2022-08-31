@@ -663,12 +663,12 @@ msgstr[0] "正在标记 %{amount} 个容器构建"
 #: ../app/views/layouts/_tag_edit_items.html.haml:41
 msgid "%{amount} Container Image Being Tagged"
 msgid_plural "%{amount} Container Images Being Tagged"
-msgstr[0] "正在标记 %{amount} 个容器镜像"
+msgstr[0] "正在标记 %{amount} 个容器映像"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:43
 msgid "%{amount} Container Image Registry Being Tagged"
 msgid_plural "%{amount} Container Image Registries Being Tagged"
-msgstr[0] "正在标记 %{amount} 个容器镜像注册表"
+msgstr[0] "正在标记 %{amount} 个容器映像注册表"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:45
 msgid "%{amount} Container Node Being Tagged"
@@ -2705,7 +2705,7 @@ msgstr "单个集群"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:703
 msgid "A single Container Image"
-msgstr "单个容器镜像"
+msgstr "单个容器映像"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:718
 msgid "A single Datastore"
@@ -4411,7 +4411,7 @@ msgstr "用户已取消添加%s"
 
 #: ../app/javascript/components/miq-alert-set-form/index.jsx:60
 msgid "Add of Alert Profile \"%s\" has been successfully queued."
-msgstr "添加警报概要文件 \"%s\" 的操作已成功排队。"
+msgstr "添加警报概要文件“%s”的操作已成功排队。"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1189
 msgid "Add of Automate Method was cancelled by the user"
@@ -4429,7 +4429,7 @@ msgstr "添加云数据库“%s”操作已成功排队。"
 #: ../app/javascript/components/cloud-object-store-container-form/index.jsx:46
 msgid ""
 "Add of Cloud Object Store Container \"%s\" has been successfully queued."
-msgstr "已成功将云对象存储容器“%s”添加到队列中。"
+msgstr "添加云对象存储容器“%s”的操作已成功排队。"
 
 #: ../app/javascript/components/cloud-object-store-container-form/index.jsx:50
 msgid "Add of Cloud Object Store Container \"%s\" has failed with error: %s"
@@ -4437,7 +4437,7 @@ msgstr "添加云对象存储容器“%s”失败，错误为：%s"
 
 #: ../app/javascript/components/subnet-form/index.jsx:65
 msgid "Add of Cloud Subnet \"%s\" has been successfully queued."
-msgstr "添加云子网 \"%s\" 的操作已成功排队。"
+msgstr "添加云子网“%s”的操作已成功排队。"
 
 #: ../app/javascript/components/cloud-tenant-form/index.jsx:26
 msgid "Add of Cloud Tenant \"%s\" has been successfully queued."
@@ -5364,11 +5364,11 @@ msgstr "基础架构供应商的所有集群"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:701
 msgid "All Container Images"
-msgstr "所有容器镜像"
+msgstr "所有容器映像"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:702
 msgid "All Container Images for Containers Provider"
-msgstr "容器供应商的所有容器镜像"
+msgstr "容器供应商的所有容器映像"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3350
@@ -7243,7 +7243,7 @@ msgstr "用户已取消连接云卷到实例“%{instance_name}”的操作"
 #:
 #: ../app/javascript/components/cloud-volume-form/attach-detach-cloud-volume-form.jsx:63
 msgid "Attaching Cloud Volume was cancelled by the user."
-msgstr "附加云卷已由用户取消。"
+msgstr "用户已取消附加云卷的操作。"
 
 #: ../app/controllers/vm_cloud_controller.rb:73
 msgid "Attaching Cloud volume failed: Task start failed"
@@ -8570,7 +8570,7 @@ msgid ""
 "Base name of the new cloned volume. The cloned Volume name will be prefixed "
 "with 'clone-' and suffixed with '-#####' (where ##### is a 5 digit random "
 "number)"
-msgstr "新克隆卷的基本名称。 克隆的卷名称将以 clone- 作为前缀，并以 -##### 作为后缀（其中 ##### 是 5 位随机数）"
+msgstr "新克隆的卷的基本名称。 克隆的卷名称将以“clone-”作为前缀，并以“-#####”作为后缀（其中 ##### 是 5 位随机数）"
 
 #: src/report-editor/configure-report-columns.jsx:20
 msgid "Base the report on"
@@ -12389,12 +12389,12 @@ msgstr "克隆此项"
 #:
 #: ../app/javascript/components/cloud-volume-form/clone-cloud-volume-form.jsx:51
 msgid "Cloning Cloud Volume was cancelled by the user."
-msgstr "克隆云卷已由用户取消。"
+msgstr "用户已取消克隆云卷的操作。"
 
 #:
 #: ../app/javascript/components/cloud-volume-form/clone-cloud-volume-form.jsx:42
 msgid "Cloning of Cloud Volume has been successfully queued."
-msgstr "已成功将云卷克隆排队。"
+msgstr "克隆云卷的操作已成功排队。"
 
 #: ./src/dialog-editor/components/field/field.html:33
 #: ./src/dialog-editor/components/field/field.html:51
@@ -15866,7 +15866,7 @@ msgstr[0] "容器映像"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:652
 msgid "Container Image Analysis"
-msgstr "容器镜像分析"
+msgstr "容器映像分析"
 
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:651
@@ -15885,7 +15885,7 @@ msgstr "容器映像分析请求"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:663
 msgid "Container Image Compliance Check"
-msgstr "容器镜像合规性检查"
+msgstr "容器映像合规性检查"
 
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:667
@@ -15905,23 +15905,23 @@ msgstr "已发现容器映像"
 #. TRANSLATORS: file: product/reports/170_Configuration Management - Containers/130_Images by Failed OpenSCAP Rule Results.yaml
 #: ../config/yaml_strings.rb:6465
 msgid "Container Image Name"
-msgstr "容器镜像名"
+msgstr "容器映像名"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ContainerImageRegistry (plural form)
 #: ../config/dictionary_strings.rb:2804
 msgid "Container Image Registries"
-msgstr "容器镜像注册表"
+msgstr "容器映像注册表"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ContainerImageRegistry
 #: ../config/model_display_names.rb:62 ../config/dictionary_strings.rb:2802
 msgid "Container Image Registry"
 msgid_plural "Container Image Registries"
-msgstr[0] "容器镜像注册表"
+msgstr[0] "容器映像注册表"
 
 #. TRANSLATORS: file: product/views/ContainerImage.yaml
 #: ../app/presenters/menu/default_menu.rb:131 ../config/yaml_strings.rb:738
 msgid "Container Images"
-msgstr "容器镜像"
+msgstr "容器映像"
 
 #: ../config/model_display_names.rb:63
 msgid "Container Limit"
@@ -16277,11 +16277,11 @@ msgstr "容器组容器服务"
 
 #: ../config/model_attributes.rb:808
 msgid "Container image"
-msgstr "容器镜像"
+msgstr "容器映像"
 
 #: ../config/model_attributes.rb:868
 msgid "Container image registry"
-msgstr "容器镜像注册表"
+msgstr "容器映像注册表"
 
 #: ../config/model_attributes.rb:876
 msgid "Container limit"
@@ -19866,7 +19866,7 @@ msgstr "创建卷 %{volume_name} 失败：%{error_message}"
 
 #: ../app/javascript/components/settings-time-profile-form/index.jsx:64
 msgid "Creating time profile %s has been successfully queued."
-msgstr "创建时间概要文件 %s 已成功排队。"
+msgstr "创建时间概要文件 %s 的操作已成功排队。"
 
 #. TRANSLATORS: file: product/reports/170_Configuration Management - Containers/040_Recently Discovered Container Groups.yaml
 #: ../config/yaml_strings.rb:6421
@@ -23224,7 +23224,7 @@ msgstr "从 %{vm_name} 拆离云卷“%{volume_name}”已完成"
 #:
 #: ../app/javascript/components/cloud-volume-form/attach-detach-cloud-volume-form.jsx:64
 msgid "Detaching Cloud Volume was cancelled by the user."
-msgstr "用户已取消对云卷的拆离。"
+msgstr "用户已取消拆离云卷的操作。"
 
 #: ../app/controllers/vm_cloud_controller.rb:126
 msgid "Detaching Cloud volume failed: Task start failed"
@@ -24944,7 +24944,7 @@ msgstr "显示单独的容器构建"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3230
 msgid "Display Individual Container Image Registries"
-msgstr "显示单独的容器镜像注册表"
+msgstr "显示单独的容器映像注册表"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3174
@@ -24974,7 +24974,7 @@ msgstr "显示单独的容模板"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3212
 msgid "Display Individual Container images"
-msgstr "显示单独的容器镜像"
+msgstr "显示单独的容器映像"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3354
@@ -25419,12 +25419,12 @@ msgstr "显示容器构建的列表"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3228
 msgid "Display Lists of Container Image Registries"
-msgstr "显示容器镜像注册表的列表"
+msgstr "显示容器映像注册表的列表"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3210
 msgid "Display Lists of Container Images"
-msgstr "显示容器镜像的列表"
+msgstr "显示容器映像的列表"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3172
@@ -27336,7 +27336,7 @@ msgstr "编辑服务标签"
 
 #: ../app/controllers/service_controller.rb:58
 msgid "Edit Service\"%{name}\""
-msgstr "编辑服务 \"%{name}\""
+msgstr "编辑服务“%{name}”"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1144
@@ -27665,7 +27665,7 @@ msgstr "为这些容器供应商编辑标签"
 #:
 #: ../app/helpers/application_helper/toolbar/container_image_registries_center.rb:14
 msgid "Edit Tags for these Image Registries"
-msgstr "编辑这些镜像注册表的标签"
+msgstr "编辑这些映像注册表的标签"
 
 #: ../app/helpers/application_helper/toolbar/container_nodes_center.rb:14
 msgid "Edit Tags for these Nodes"
@@ -27788,7 +27788,7 @@ msgstr "编辑此镜像的标签"
 #:
 #: ../app/helpers/application_helper/toolbar/container_image_registry_center.rb:12
 msgid "Edit Tags for this Image Registry"
-msgstr "编辑此镜像注册表的标签"
+msgstr "编辑此映像注册表的标签"
 
 #: ../app/helpers/application_helper/toolbar/ems_infra_center.rb:73
 msgid "Edit Tags for this Infrastructure Provider"
@@ -27972,12 +27972,12 @@ msgstr "编辑容器构建的标签"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3234
 msgid "Edit Tags of Container Image Registries"
-msgstr "编辑容器镜像注册表的标签"
+msgstr "编辑容器映像注册表的标签"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3216
 msgid "Edit Tags of Container Images"
-msgstr "编辑容器镜像的标签"
+msgstr "编辑容器映像的标签"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3182
@@ -28814,11 +28814,11 @@ msgstr "用户已取消针对安全组“%{name}”的编辑"
 
 #: ../app/javascript/components/edit-service-form/index.jsx:29
 msgid "Edit of Service \"%s\" was cancelled by the user"
-msgstr "用户已取消对服务 \"%s\" 的编辑"
+msgstr "用户已取消对服务“%s”的编辑"
 
 #: ../app/controllers/catalog_controller.rb:183
 msgid "Edit of Service Catalog Item \"%{name}\" was cancelled by the user"
-msgstr "用户已取消针对服务目录项“%{name}”的编辑"
+msgstr "用户已取消对服务目录项“%{name}”的编辑"
 
 #: ../app/javascript/components/pxe-image-type-form/index.jsx:45
 msgid "Edit of System Image Type \"%s\" was cancelled by the user"
@@ -29450,7 +29450,7 @@ msgstr "正在编辑区域“%{name}”"
 
 #: ../app/javascript/components/routers-form/index.jsx:131
 msgid "Editing of Network Router %s has been successfully queued"
-msgstr "网络路由器 %s 的编辑操作已成功排队。"
+msgstr "编辑网络路由器 %s 的操作已成功排队。"
 
 #: ../app/javascript/components/routers-form/index.jsx:143
 msgid "Editing of Network Router %s was cancelled by the user."
@@ -29458,7 +29458,7 @@ msgstr "用户已取消对网络路由器 %s 的编辑。"
 
 #: ../app/javascript/components/settings-time-profile-form/index.jsx:56
 msgid "Editing of time profile %s has been successfully queued."
-msgstr "编辑时间概要文件 %s 已成功排队。"
+msgstr "编辑时间概要文件 %s 的操作已成功排队。"
 
 #: ../app/javascript/components/settings-time-profile-form/index.jsx:26
 msgid "Editing of time profile %s was cancelled by the user."
@@ -31554,12 +31554,12 @@ msgstr "'容器构建' 下的任何内容"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3224
 msgid "Everything under Container Image Registries"
-msgstr "'容器镜像注册表' 下的任何内容"
+msgstr "“容器映像注册表”下的任何内容"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3206
 msgid "Everything under Container Images"
-msgstr "'容器镜像' 下的任何内容"
+msgstr "“容器映像”下的任何内容"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3168
@@ -37853,12 +37853,12 @@ msgstr "镜像引用"
 #: ../app/controllers/container_image_registry_controller.rb:36
 #: ../app/presenters/menu/default_menu.rb:130
 msgid "Image Registries"
-msgstr "镜像注册表"
+msgstr "映像注册表"
 
 #. TRANSLATORS: file: product/views/ContainerImage.yaml
 #: ../app/helpers/container_summary_helper.rb:156 ../config/yaml_strings.rb:744
 msgid "Image Registry"
-msgstr "镜像注册表"
+msgstr "映像注册表"
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager.rb:660
 msgid "Image Tag"
@@ -39381,7 +39381,7 @@ msgstr "标签为必填项"
 
 #: ../app/helpers/term_of_service_helper.rb:46
 msgid "Labeled Container Images"
-msgstr "已加标签的容器镜像"
+msgstr "已加标签的容器映像"
 
 #: ../app/helpers/container_summary_helper.rb:73
 #: ../app/helpers/vm_helper/textual_summary.rb:102
@@ -41160,7 +41160,7 @@ msgstr "管理此云供应商的策略"
 
 #: ../app/helpers/application_helper/toolbar/container_images_center.rb:44
 msgid "Manage Policies for this Container Image"
-msgstr "管理此容器镜像的策略"
+msgstr "管理此容器映像的策略"
 
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb:95
 msgid "Manage Policies for this Containers Provider"
@@ -41233,7 +41233,7 @@ msgstr "管理云供应商的策略"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3218
 msgid "Manage Policies of Container Images"
-msgstr "管理容器镜像的策略"
+msgstr "管理容器映像的策略"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3184
@@ -41689,7 +41689,7 @@ msgstr "最大统计容器组删除率"
 #. TRANSLATORS: en.yml key: dictionary.column.max_stat_container_image_registration_rate
 #: ../config/dictionary_strings.rb:1298
 msgid "Max Stat Container Image Registration Rate"
-msgstr "最大统计容器镜像注册率"
+msgstr "最大统计容器映像注册率"
 
 #: ../app/views/miq_ae_class/_method_inputs.html.haml:64
 msgid "Max TTL"
@@ -43249,7 +43249,7 @@ msgstr "最大统计容器组删除率"
 
 #: ../config/model_attributes.rb:2534
 msgid "MetricRollup|Max stat container image registration rate"
-msgstr "最大统计容器镜像注册率"
+msgstr "最大统计容器映像注册率"
 
 #: ../config/model_attributes.rb:2535
 msgid "MetricRollup|Max sys uptime absolute latest"
@@ -43525,7 +43525,7 @@ msgstr "最小统计容器组删除率"
 
 #: ../config/model_attributes.rb:2603
 msgid "MetricRollup|Min stat container image registration rate"
-msgstr "最小统计容器镜像注册率"
+msgstr "最小统计容器映像注册率"
 
 #: ../config/model_attributes.rb:2604
 msgid "MetricRollup|Min sys uptime absolute latest"
@@ -43561,7 +43561,7 @@ msgstr "统计容器组删除率"
 
 #: ../config/model_attributes.rb:2612
 msgid "MetricRollup|Stat container image registration rate"
-msgstr "统计容器镜像注册率"
+msgstr "统计容器映像注册率"
 
 #: ../config/model_attributes.rb:2613
 msgid "MetricRollup|Sys uptime absolute latest"
@@ -44134,7 +44134,7 @@ msgstr "最小统计容器组删除率"
 #. TRANSLATORS: en.yml key: dictionary.column.min_stat_container_image_registration_rate
 #: ../config/dictionary_strings.rb:1424
 msgid "Min Stat Container Image Registration Rate"
-msgstr "最小统计容器镜像注册率"
+msgstr "最小统计容器映像注册率"
 
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily.yaml
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily_cloud.yaml
@@ -47430,7 +47430,7 @@ msgstr "型号"
 
 #: ../app/javascript/components/cloud-database-form/cloud-database-form.jsx:49
 msgid "Modification of Cloud Database %s has been successfully queued"
-msgstr "云数据库 %s 的修改操作已成功排队"
+msgstr "修改云数据库 %s 的操作已成功排队"
 
 #: ../app/javascript/components/subnet-form/index.jsx:64
 msgid "Modification of Cloud Subnet %s has been successfully queued"
@@ -53679,12 +53679,12 @@ msgstr "对容器构建执行操作"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3232
 msgid "Perform Operations on Container Image Registries"
-msgstr "对容器镜像注册表执行操作"
+msgstr "对容器映像注册表执行操作"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3214
 msgid "Perform Operations on Container Images"
-msgstr "对容器镜像执行操作"
+msgstr "对容器映像执行操作"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3180
@@ -55452,7 +55452,7 @@ msgstr "已调度 Pod"
 #. TRANSLATORS: file: product/reports/170_Configuration Management - Containers/100_Pod counts For Container Images by Project.yaml
 #: ../config/yaml_strings.rb:6447
 msgid "Pod counts For Container Images by Project"
-msgstr "按项目显示容器镜像的 Pod 数"
+msgstr "按项目显示容器映像的 Pod 数"
 
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:723
@@ -65032,7 +65032,7 @@ msgstr "服务"
 
 #: ../app/javascript/components/edit-service-form/index.jsx:20
 msgid "Service \"%s\"  was saved\""
-msgstr "服务 %s 已保存"
+msgstr "已保存服务“%s”"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:4735
@@ -66801,7 +66801,7 @@ msgstr "显示此 %{model} 的合规性历史（最近 10 次检查）"
 
 #: ../app/helpers/container_image_helper/textual_summary.rb:84
 msgid "Show Compliance History of this Container Image (Last 10 Checks)"
-msgstr "显示此容器镜像的合规性历史（最近 10 次检查）"
+msgstr "显示此容器映像的合规性历史（最近 10 次检查）"
 
 #: ../app/helpers/host_helper/textual_summary.rb:370
 msgid "Show Compliance History of this Host (Last 10 Checks)"
@@ -68701,7 +68701,7 @@ msgstr "统计容器组删除率"
 #. TRANSLATORS: en.yml key: dictionary.column.stat_container_image_registration_rate
 #: ../config/dictionary_strings.rb:1842
 msgid "Stat Container Image Registration Rate"
-msgstr "统计容器镜像注册率"
+msgstr "统计容器映像注册率"
 
 #. TRANSLATORS: file: product/views/Container.yaml
 #. TRANSLATORS: file: product/views/MiqTask.yaml
@@ -70755,7 +70755,7 @@ msgstr "已标记的配置的系统"
 
 #: ../app/helpers/term_of_service_helper.rb:45
 msgid "Tagged Container Images"
-msgstr "已标记的容器镜像"
+msgstr "已标记的容器映像"
 
 #: ../app/helpers/term_of_service_helper.rb:26
 msgid "Tagged Datastores"
@@ -77480,12 +77480,12 @@ msgstr "查看容器构建"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3226
 msgid "View Container Image Registries"
-msgstr "查看容器镜像注册表"
+msgstr "查看容器映像注册表"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3208
 msgid "View Container Images"
-msgstr "查看容器镜像"
+msgstr "查看容器映像"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3170
