@@ -12388,7 +12388,7 @@ msgstr "クローン操作がサポートされていません"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb:80
 msgid "Clone selected Cloud Volume"
-msgstr "選択したクラウド・ボリュームを複製する"
+msgstr "選択したクラウド・ボリュームの複製"
 
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb:142
 msgid "Clone selected Template"
@@ -12400,7 +12400,7 @@ msgstr "選択した項目のクローン作成"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb:62
 msgid "Clone this Cloud Volume"
-msgstr "このクラウド・ボリュームを複製する"
+msgstr "このクラウド・ボリュームの複製"
 
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb:141
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:95
@@ -28607,7 +28607,7 @@ msgstr "%s \"%s\" の編集はユーザーにより取り消されました。"
 #: ../app/javascript/components/provider-form/index.jsx:140
 #: ../app/javascript/components/vm-edit-form/index.jsx:66
 msgid "Edit of %s \"%s\" was cancelled by the user"
-msgstr "%sの編集 \"%s\" はユーザーにより取り消されました"
+msgstr "%s \"%s\" の編集はユーザーにより取り消されました"
 
 #: ../app/controllers/condition_controller.rb:49
 msgid "Edit of %{model} Condition \"%{name}\" was cancelled by the user"

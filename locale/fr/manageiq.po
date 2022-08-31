@@ -303,7 +303,7 @@ msgstr " par %{user}"
 #:
 #: ../app/javascript/oldjs/controllers/dialog_editor/dialog_editor_controller.js:179
 msgid " was saved"
-msgstr " a été sauvegardé"
+msgstr " sauvegardé"
 
 #: ../app/controllers/miq_ae_class_controller.rb:135
 msgid "\"%s\""
@@ -515,7 +515,7 @@ msgstr[1] "%d notifications non lues"
 
 #: ../app/javascript/components/miq-pagination.jsx:5
 msgid "%d-%d of %d items"
-msgstr "%d-%d de %d éléments"
+msgstr "%d-%d sur %d éléments"
 
 #: ../app/javascript/components/ops-tenant-form/ops-tenant-form.jsx:69
 msgid "%s \"%s\" has been successfully added."
@@ -527,7 +527,7 @@ msgstr "%s \"%s\" a été sauvegardé."
 
 #: ../app/javascript/components/vm-edit-form/index.jsx:54
 msgid "%s \"%s\" was saved"
-msgstr "%s \"%s\" a été sauvegardé"
+msgstr "Le %s \"%s\" a été sauvegardé"
 
 #: ../app/javascript/components/provider-form/index.jsx:152
 msgid "%s %s was saved"
@@ -708,8 +708,8 @@ msgstr[1] "%{amount} conteneurs en cours de balisage"
 #: ../app/views/layouts/_tag_edit_items.html.haml:39
 msgid "%{amount} Container Build Being Tagged"
 msgid_plural "%{amount} Container Builds Being Tagged"
-msgstr[0] "%{amount} compilation de conteneur en cours de balisage"
-msgstr[1] "%{amount} compilations de conteneur en cours de balisage"
+msgstr[0] "%{amount} génération de conteneur en cours de balisage"
+msgstr[1] "%{amount} générations de conteneur en cours de balisage"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:41
 msgid "%{amount} Container Image Being Tagged"
@@ -4707,20 +4707,20 @@ msgstr "L'ajout d'un article du catalogue a été annulé par l'utilisateur"
 #: ../app/javascript/components/cloud-database-form/cloud-database-form.jsx:50
 msgid "Add of Cloud Database \"%s\" has been successfully queued."
 msgstr ""
-"La mise en file d'attente de l'ajout de la base de données cloud \"%s\" a "
-"abouti."
+"L'ajout de la base de données cloud \"%s\" a été mis en file d'attente."
 
 #: ../app/javascript/components/cloud-object-store-container-form/index.jsx:46
 msgid ""
 "Add of Cloud Object Store Container \"%s\" has been successfully queued."
 msgstr ""
-"L'ajout du conteneur Cloud Object Store\"%s\" a été correctement mis en file "
+"L'ajout du conteneur de magasin d'objets cloud \"%s\" a été mis en file "
 "d'attente."
 
 #: ../app/javascript/components/cloud-object-store-container-form/index.jsx:50
 msgid "Add of Cloud Object Store Container \"%s\" has failed with error: %s"
 msgstr ""
-"L'ajout du conteneur Cloud Object Store \"%s\" a échoué avec l'erreur : %s"
+"L'ajout du conteneur de magasin d'objets cloud \"%s\" a échoué avec l'erreur :"
+" %s"
 
 #: ../app/javascript/components/subnet-form/index.jsx:65
 msgid "Add of Cloud Subnet \"%s\" has been successfully queued."
@@ -4728,15 +4728,15 @@ msgstr "L'ajout du sous-réseau cloud \"%s\" a été mis en file d'attente."
 
 #: ../app/javascript/components/cloud-tenant-form/index.jsx:26
 msgid "Add of Cloud Tenant \"%s\" has been successfully queued."
-msgstr "L'ajout du locataire de cloud \"%s\" a été placé en file d'attente."
+msgstr "L'ajout du locataire de cloud \"%s\" a été mis en file d'attente."
 
 #: ../app/javascript/components/cloud-volume-form/index.jsx:50
 msgid "Add of Cloud Volume \"%s\" has been successfully queued."
-msgstr "L'ajout du volume de cloud \"%s\" a été placé en file d'attente."
+msgstr "L'ajout du volume de cloud \"%s\" a été mis en file d'attente."
 
 #: ../app/javascript/components/ansible-credentials-form/index.jsx:59
 msgid "Add of Credential \"%s\" has been successfully queued."
-msgstr "L'ajout de l'identifiant \"%s\" a été placé en file d'attente."
+msgstr "L'ajout de l'identifiant \"%s\" a été mis en file d'attente."
 
 #: ../app/javascript/oldjs/components/miq_ae_class/namespace-form.js:53
 msgid "Add of Domain was cancelled by user."
@@ -4756,7 +4756,7 @@ msgstr "L'ajout de l'agrégat d'hôtes \"%s\" a été mis en file d'attente."
 
 #: ../app/javascript/components/auth-key-pair-cloud/index.jsx:10
 msgid "Add of Key Pair \"%s\" has been successfully queued."
-msgstr "L'ajout de la paire de clés \"%s\" a été placé en file d'attente."
+msgstr "L'ajout de la paire de clés \"%s\" a été mis en file d'attente."
 
 #: ../app/javascript/oldjs/components/miq_ae_class/namespace-form.js:53
 msgid "Add of Namespace was cancelled by user."
@@ -5621,13 +5621,13 @@ msgstr "Tous les %{chargeback_type}"
 
 #: ../app/controllers/mixins/policy_mixin.rb:87
 msgid "All %{items}"
-msgstr "Tous les %{items}"
+msgstr "Tou(te)s les %{items}"
 
 #: ../app/controllers/catalog_controller.rb:1717
 #: ../app/controllers/generic_object_definition_controller.rb:203
 #: ../app/controllers/vm_common.rb:825
 msgid "All %{models}"
-msgstr "Tous les %{models}"
+msgstr "Tou(te)s les %{models}"
 
 #: ../app/controllers/mixins/policy_mixin.rb:355
 msgid "All %{typ} Alert Profiles"
@@ -7639,7 +7639,7 @@ msgstr ""
 #:
 #: ../app/javascript/components/cloud-volume-form/attach-detach-cloud-volume-form.jsx:63
 msgid "Attaching Cloud Volume was cancelled by the user."
-msgstr "La connexion du volume cloud a été annulée par l'utilisateur."
+msgstr "La connexion du volume de cloud a été annulée par l'utilisateur."
 
 #: ../app/controllers/vm_cloud_controller.rb:73
 msgid "Attaching Cloud volume failed: Task start failed"
@@ -7666,7 +7666,7 @@ msgstr ""
 #:
 #: ../app/javascript/components/cloud-volume-form/attach-detach-cloud-volume-form.jsx:53
 msgid "Attachment of Cloud Volume has been successfully queued."
-msgstr "La connexion du volume cloud a été mise en file d'attente."
+msgstr "La connexion du volume de cloud a été mise en file d'attente."
 
 #: ../app/views/report/_schedule_email_options.html.haml:16
 msgid "Attachments"
@@ -8966,7 +8966,8 @@ msgstr "Nom de la sauvegarde"
 
 #: ../app/javascript/components/cloud-volume-actions-form/helper.js:30
 msgid "Backup of Cloud Volume \"%s\" was canceled by the user."
-msgstr "La sauvegarde du volume cloud « %s » a été annulée par l'utilisateur."
+msgstr ""
+"La sauvegarde du volume de cloud « %s » a été annulée par l'utilisateur."
 
 #: ../app/models/manageiq/providers/azure_stack/manager_mixin.rb:276
 msgid "Bad response from %{log}"
@@ -9002,9 +9003,8 @@ msgid ""
 "with 'clone-' and suffixed with '-#####' (where ##### is a 5 digit random "
 "number)"
 msgstr ""
-"Nom de base du nouveau volume cloné. Le nom de volume cloné sera précédé du "
-"préfixe 'clone-' et du suffixe '-#####' (où ##### est un nombre aléatoire à 5 "
-"chiffres)"
+"Nom de base du nouveau volume cloné. Le nom du volume cloné aura le préfixe '"
+"clone-' et le suffixe '-#####' (où ##### est un nombre aléatoire à 5 chiffres)"
 
 #: src/report-editor/configure-report-columns.jsx:20
 msgid "Base the report on"
@@ -12969,7 +12969,7 @@ msgstr "Cloner %{vm_or_template}"
 
 #: ../app/controllers/cloud_volume_controller.rb:68
 msgid "Clone Cloud Volume \"%{name}\""
-msgstr "Clonage du volume de cloud \"%{name}\""
+msgstr "Cloner le volume de cloud \"%{name}\""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3972
@@ -12992,7 +12992,7 @@ msgstr "L'opération de clonage n’est pas prise en charge"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb:80
 msgid "Clone selected Cloud Volume"
-msgstr "Clonage du volume de cloud sélectionné"
+msgstr "Cloner le volume de cloud sélectionné"
 
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb:142
 msgid "Clone selected Template"
@@ -13004,7 +13004,7 @@ msgstr "Cloner l'élément sélectionné"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb:62
 msgid "Clone this Cloud Volume"
-msgstr "Clonage de ce volume de cloud"
+msgstr "Cloner ce volume de cloud"
 
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb:141
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:95
@@ -13733,11 +13733,11 @@ msgstr "Sauvegarde de volume de cloud"
 
 #: ../app/javascript/components/cloud-volume-actions-form/helper.js:36
 msgid "Cloud volume backup has been successfully queued."
-msgstr "La sauvegarde du volume cloud a été mise en file d'attente."
+msgstr "La sauvegarde du volume de cloud a été mise en file d'attente."
 
 #: ../app/javascript/components/cloud-volume-actions-form/helper.js:52
 msgid "Cloud volume has been successfully restored from backup."
-msgstr "Le volume cloud a été restauré à partir de la sauvegarde."
+msgstr "Le volume de cloud a été restauré à partir de la sauvegarde."
 
 #: ../app/controllers/cloud_volume_backup_controller.rb:49
 msgid "Cloud volume restore failed: Task start failed"
@@ -16531,8 +16531,8 @@ msgstr[1] "Conteneur"
 #: ../config/model_display_names.rb:57 ../config/dictionary_strings.rb:2758
 msgid "Container Build"
 msgid_plural "Container Builds"
-msgstr[0] "Compilation de conteneur"
-msgstr[1] "Compilations de conteneur"
+msgstr[0] "Génération de conteneur"
+msgstr[1] "Générations de conteneur"
 
 #: ../config/model_display_names.rb:58
 msgid "Container Build Pod"
@@ -16543,13 +16543,13 @@ msgstr[1] "Pods de génération de conteneur"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3272
 msgid "Container Build Scan"
-msgstr "Analyse de compilation de conteneur"
+msgstr "Analyse de génération de conteneur"
 
 #. TRANSLATORS: file: product/views/ContainerBuild.yaml
 #: ../app/controllers/container_build_controller.rb:26
 #: ../app/presenters/menu/default_menu.rb:129 ../config/yaml_strings.rb:704
 msgid "Container Builds"
-msgstr "Compilations de conteneur"
+msgstr "Générations de conteneur"
 
 #: ../config/model_display_names.rb:59
 msgid "Container Condition"
@@ -17004,11 +17004,11 @@ msgstr "Volumes de conteneur"
 
 #: ../config/model_attributes.rb:677
 msgid "Container build"
-msgstr "Compilation de conteneur"
+msgstr "Génération de conteneur"
 
 #: ../config/model_attributes.rb:705
 msgid "Container build pod"
-msgstr "Pod de compilation de conteneur"
+msgstr "Pod de génération de conteneur"
 
 #: ../config/model_attributes.rb:731
 msgid "Container condition"
@@ -20774,7 +20774,7 @@ msgid ""
 "Creating Cloud Object Store Container %{cloud_container_name} completed "
 "successfully"
 msgstr ""
-"La création du conteneur de magasin d'objets cloud%{cloud_container_name} a "
+"La création du conteneur de magasin d'objets cloud %{cloud_container_name} a "
 "abouti"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
@@ -23076,7 +23076,7 @@ msgstr "Supprimer la base de données cloud"
 
 #: ../app/helpers/application_helper/toolbar/cloud_database_center.rb:19
 msgid "Delete Cloud Databases"
-msgstr "Supprimer Cloud Databases"
+msgstr "Supprimer les bases de données cloud"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1294
@@ -24287,7 +24287,7 @@ msgstr ""
 #:
 #: ../app/javascript/components/cloud-volume-form/attach-detach-cloud-volume-form.jsx:64
 msgid "Detaching Cloud Volume was cancelled by the user."
-msgstr "La déconnexion du volume cloud a été annulée par l'utilisateur."
+msgstr "La déconnexion du volume de cloud a été annulée par l'utilisateur."
 
 #: ../app/controllers/vm_cloud_controller.rb:126
 msgid "Detaching Cloud volume failed: Task start failed"
@@ -24322,7 +24322,8 @@ msgstr ""
 #:
 #: ../app/javascript/components/cloud-volume-form/attach-detach-cloud-volume-form.jsx:54
 msgid "Detachment of Cloud Volume of Host has been successfully queued."
-msgstr "La déconnexion du volume cloud de l'hôte a été mise en file d'attente."
+msgstr ""
+"La déconnexion du volume de cloud de l'hôte a été mise en file d'attente."
 
 #. TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
 #: ../config/yaml_strings.rb:6550
@@ -25991,12 +25992,12 @@ msgstr "Afficher les différents réseaux cloud"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1282
 msgid "Display Individual Cloud Object Store Container"
-msgstr "Afficher les différents conteneurs de magasin d'objets cloud"
+msgstr "Afficher un conteneur de magasin d'objets cloud individuel"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1308
 msgid "Display Individual Cloud Object Store Object"
-msgstr "Afficher les différents objets de magasin d'objets cloud"
+msgstr "Afficher un objet de magasin d'objets cloud individuel"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1140
@@ -26051,7 +26052,7 @@ msgstr "Afficher les systèmes configurés individuels"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3266
 msgid "Display Individual Container Build"
-msgstr "Afficher les différentes compilations de conteneur"
+msgstr "Afficher une génération de conteneur individuelle"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3230
@@ -26528,7 +26529,7 @@ msgstr "Afficher les listes de systèmes configurés"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3264
 msgid "Display Lists of Container Build"
-msgstr "Afficher les listes de compilations de conteneur"
+msgstr "Afficher les listes de générations de conteneur"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3228
@@ -28801,7 +28802,7 @@ msgstr "Editer les balises pour les éléments sélectionnés"
 
 #: ../app/helpers/application_helper/toolbar/container_builds_center.rb:14
 msgid "Edit Tags for these Container Builds"
-msgstr "Editer les balises pour ces compilations de conteneur"
+msgstr "Editer les balises pour ces générations de conteneur"
 
 #: ../app/helpers/application_helper/toolbar/container_templates_center.rb:14
 msgid "Edit Tags for these Container Templates"
@@ -28900,7 +28901,7 @@ msgstr "Editer les balises pour ce conteneur"
 
 #: ../app/helpers/application_helper/toolbar/container_build_center.rb:12
 msgid "Edit Tags for this Container Build"
-msgstr "Editer les balises pour cette compilation de conteneur"
+msgstr "Editer les balises pour cette génération de conteneur"
 
 #: ../app/helpers/application_helper/toolbar/container_template_center.rb:30
 msgid "Edit Tags for this Container Template"
@@ -29118,7 +29119,7 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3270
 msgid "Edit Tags of Container Build"
-msgstr "Editer les balises de compilation de conteneur"
+msgstr "Editer les balises de génération de conteneur"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3234
@@ -30659,7 +30660,7 @@ msgstr "L'édition du routeur réseau %s a été mise en file d'attente"
 
 #: ../app/javascript/components/routers-form/index.jsx:143
 msgid "Editing of Network Router %s was cancelled by the user."
-msgstr "L'édition du routeur de réseau %s a été annulée par l'utilisateur."
+msgstr "L'édition du routeur réseau %s a été annulée par l'utilisateur."
 
 #: ../app/javascript/components/settings-time-profile-form/index.jsx:56
 msgid "Editing of time profile %s has been successfully queued."
@@ -32836,7 +32837,7 @@ msgstr "Tout sous Consommation"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3260
 msgid "Everything under Container Build"
-msgstr "Tout sous Compilation de conteneur"
+msgstr "Tout sous Génération de conteneur"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3224
@@ -34339,11 +34340,11 @@ msgid ""
 msgid_plural ""
 "File is too large, maximum allowed size is %s bytes. Current file has %s bytes"
 msgstr[0] ""
-"Fichier est trop volumineux, la taille maximale autorisée est de %s octets. Le"
-" fichier en cours a %s octet"
+"Fichier est trop volumineux ; la taille maximale autorisée est de %s octets. "
+"La taille du fichier en cours est de %s octet."
 msgstr[1] ""
-"Le fichier est trop volumineux, la taille maximale autorisée est de %s octets."
-" Le fichier en cours a %s octets"
+"Le fichier est trop volumineux ; la taille maximale autorisée est de %s octets"
+". La taille du fichier en cours est de %s octets."
 
 #: ../app/javascript/forms/mappers/validatorMapper.jsx:20
 msgid ""
@@ -35894,7 +35895,7 @@ msgstr "Définition d'objet générique"
 
 #: ../app/javascript/components/remove-generic-item-modal.jsx:46
 msgid "Generic object definition %s was successfully deleted"
-msgstr "La suppression de la définition d'objet générique %s a abouti"
+msgstr "La définition d'objet générique %s a été supprimée"
 
 #. TRANSLATORS: file: product/views/GenericObject.yaml
 #: ../config/yaml_strings.rb:1024
@@ -55596,7 +55597,7 @@ msgstr "Effectuer les opérations sur les systèmes configurés"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3268
 msgid "Perform Operations on Container Build"
-msgstr "Effectuer les opérations sur la compilation de conteneur"
+msgstr "Effectuer les opérations sur la génération de conteneur"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3232
@@ -64557,13 +64558,13 @@ msgstr "Restaurer à partir d'une sauvegarde de volume"
 #: ../app/javascript/components/cloud-volume-actions-form/helper.js:46
 msgid "Restore from backup of Cloud Volume \"%s\" was canceled by the user."
 msgstr ""
-"La restauration à partir de la sauvegarde du volume cloud « %s » a été annulée"
-" par l'utilisateur."
+"La restauration à partir de la sauvegarde du volume de cloud « %s » a été "
+"annulée par l'utilisateur."
 
 #: ../app/javascript/components/cloud-volume-backup-form/helper.js:12
 msgid "Restore of Cloud Volume \"%s\" was canceled by the user."
 msgstr ""
-"La restauration du volume cloud « %s » a été annulée par l'utilisateur."
+"La restauration du volume de cloud « %s » a été annulée par l'utilisateur."
 
 #:
 #: ../app/javascript/oldjs/controllers/dialog_editor/dialog_editor_controller.js:47
@@ -64593,7 +64594,7 @@ msgstr ""
 
 #: ../app/javascript/components/cloud-volume-backup-form/helper.js:17
 msgid "Restoring Cloud Volume \"%s\" from backup"
-msgstr "Restauration du volume cloud « %s » à partir de la sauvegarde"
+msgstr "Restauration du volume de cloud « %s » à partir de la sauvegarde"
 
 #: ../app/controllers/cloud_volume_backup_controller.rb:65
 msgid "Restoring Cloud Volume \"%{name}\""
@@ -64843,7 +64844,7 @@ msgstr "Date de retrait supprimée"
 
 #: ../app/javascript/components/retirement-form/index.jsx:61
 msgid "Retirement date set to %s"
-msgstr "Date de retraite définie sur %s"
+msgstr "Date de déclassement définie : %s"
 
 #. TRANSLATORS: en.yml key: dictionary.column.retires_on
 #. TRANSLATORS: file: product/compare/vms.yaml
@@ -67413,7 +67414,7 @@ msgstr "Service"
 
 #: ../app/javascript/components/edit-service-form/index.jsx:20
 msgid "Service \"%s\"  was saved\""
-msgstr "Le service \"%s\" a été sauvegardé\""
+msgstr "Le service \"%s\" a été sauvegardé"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:4735
@@ -80397,7 +80398,7 @@ msgstr "Afficher les systèmes configurés"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3262
 msgid "View Container Build"
-msgstr "Afficher la compilation de conteneur"
+msgstr "Afficher la génération de conteneur"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3226

@@ -491,7 +491,7 @@ msgstr[0] "%d 個未讀取的通知"
 
 #: ../app/javascript/components/miq-pagination.jsx:5
 msgid "%d-%d of %d items"
-msgstr "%d-%d 個項目（共 %d 個項目）"
+msgstr "%d-%d / %d 項"
 
 #: ../app/javascript/components/ops-tenant-form/ops-tenant-form.jsx:69
 msgid "%s \"%s\" has been successfully added."
@@ -1544,12 +1544,12 @@ msgstr "%{signal} 不允許處於狀態 %{state}"
 
 #: ../app/views/layouts/_paging_bar.html.haml:31
 msgid "%{start_number} of %{total_items}"
-msgstr "%{total_items} 之 %{start_number}"
+msgstr "%{start_number} / %{total_items}"
 
 #: ../app/views/layouts/_paging_bar.html.haml:33
 #: ../app/views/layouts/_paging_bar.html.haml:35
 msgid "%{start_number}-%{end_number} of %{total_items}"
-msgstr "%{total_items} 之 %{start_number} - %{end_number}"
+msgstr "%{start_number}-%{end_number} / %{total_items}"
 
 #: ../app/helpers/textual_mixins/textual_authentications_status.rb:13
 msgid "%{status} - %{time}"
@@ -8574,7 +8574,7 @@ msgid ""
 "with 'clone-' and suffixed with '-#####' (where ##### is a 5 digit random "
 "number)"
 msgstr ""
-"新複製磁區的基礎名稱。 複製的磁區名稱將以 'clone-' 作為字首，並以 '-#####' 作為字尾（其中 ##### 是 5 位數亂數）"
+"新複製磁區的基本名稱。 複製的磁區名稱將以 'clone-' 作為字首，並以 '-#####' 作為字尾（其中 ##### 是 5 位數亂數）"
 
 #: src/report-editor/configure-report-columns.jsx:20
 msgid "Base the report on"
@@ -34530,7 +34530,7 @@ msgstr "通用物件定義"
 
 #: ../app/javascript/components/remove-generic-item-modal.jsx:46
 msgid "Generic object definition %s was successfully deleted"
-msgstr "一般物件定義 %s 已順利刪除"
+msgstr "通用物件定義 %s 已順利刪除"
 
 #. TRANSLATORS: file: product/views/GenericObject.yaml
 #: ../config/yaml_strings.rb:1024
@@ -47981,7 +47981,7 @@ msgstr "星期一"
 #: ../app/controllers/alerts_overview_controller.rb:35
 #: ../app/presenters/menu/default_menu.rb:228
 msgid "Monitor"
-msgstr "監視器"
+msgstr "監視"
 
 #: ../app/helpers/application_helper/title.rb:51
 msgid "Monitor Alerts"
@@ -73970,7 +73970,7 @@ msgstr "已取消指派"
 #: ../app/javascript/components/catalog-form/catalog-form.schema.js:50
 #: ../app/views/shared/buttons/_column_lists.html.haml:4
 msgid "Unassigned:"
-msgstr "取消指派："
+msgstr "已取消指派："
 
 #: ../app/views/shared/views/_prov_dialog.html.haml:284
 msgid "Unattended GUI"
@@ -76995,7 +76995,7 @@ msgstr "有效"
 #: ../app/views/static/auth-credentials.html.haml:57
 #: ../app/views/static/verify-button.html.haml:1
 msgid "Validate"
-msgstr "檢驗"
+msgstr "驗證"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4286
@@ -79745,7 +79745,7 @@ msgstr "磁區備份"
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/storage_manager/cloud_volume.rb:116
 msgid "Volume Base Name"
-msgstr "磁區基礎名稱"
+msgstr "磁區基本名稱"
 
 #: ../app/helpers/persistent_volume_helper/textual_summary.rb:23
 msgid "Volume Claim"

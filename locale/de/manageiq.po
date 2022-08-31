@@ -85368,7 +85368,7 @@ msgstr "Objekt %{name} ist nicht eines von %{items}"
 msgid "of %d page"
 msgid_plural "of %d pages"
 msgstr[0] "von %d Seite"
-msgstr[1] " von %d Seiten"
+msgstr[1] "von %d Seiten"
 
 #: ../app/controllers/application_controller/performance.rb:565
 msgid "on %{date}"
