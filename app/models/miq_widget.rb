@@ -32,7 +32,6 @@ class MiqWidget < ApplicationRecord
   include YAMLImportExportMixin
   acts_as_miq_set_member
 
-  WIDGET_DIR =  File.expand_path(File.join(Rails.root, "product/dashboard/widgets"))
   WIDGET_REPORT_SOURCE = "Generated for widget".freeze
 
   before_destroy :destroy_schedule
@@ -458,7 +457,7 @@ class MiqWidget < ApplicationRecord
   end
 
   def self.sync_from_dir
-    Dir.glob(File.join(WIDGET_DIR, "*.yaml")).sort.each { |f| sync_from_file(f) }
+    Vmdb::Plugins.miq_widgets_content.sort.each { |f| sync_from_file(f) }
   end
 
   def self.sync_from_file(filename)
@@ -554,13 +553,6 @@ class MiqWidget < ApplicationRecord
 
   def self.seed
     sync_from_dir
-  end
-
-  def self.seed_widget(pattern)
-    files = Dir.glob(File.join(WIDGET_DIR, "*#{pattern}*"))
-    files.collect do |f|
-      sync_from_file(f)
-    end
   end
 
   def save_with_shortcuts(shortcuts)  # [[<shortcut.id>, <widget_shortcut.description>], ...]
