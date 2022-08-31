@@ -684,10 +684,11 @@ RSpec.describe MiqWidget do
 
   context "multiple groups" do
     let(:widget) { MiqWidget.find_by(:description => "chart_vendor_and_guest_os") }
+    let(:widget_path) { Rails.root.join("product/dashboard/widgets/chart_vendor_and_guest_os.yaml") }
 
     before do
       MiqReport.seed_report("Vendor and Guest OS")
-      MiqWidget.seed_widget("chart_vendor_and_guest_os")
+      MiqWidget.sync_from_file(widget_path)
 
       # tests are written for timezone_matters = true
       widget.options[:timezone_matters] = true if widget.options
