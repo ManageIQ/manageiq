@@ -8591,7 +8591,7 @@ msgid ""
 "number)"
 msgstr ""
 "복제된 새 볼륨의 기본 이름입니다. 복제된 볼륨 이름 앞에 'clone-'이 접두부로 붙고 '-#####' 접미부가 붙습니다(여기서, ###"
-"##은 5자리 난수임)."
+"##은 5자리 랜덤 숫자임)."
 
 #: src/report-editor/configure-report-columns.jsx:20
 msgid "Base the report on"

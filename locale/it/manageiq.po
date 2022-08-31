@@ -708,7 +708,7 @@ msgstr[1] "Aggiunta di tag a %{amount} immagini contenitore"
 msgid "%{amount} Container Image Registry Being Tagged"
 msgid_plural "%{amount} Container Image Registries Being Tagged"
 msgstr[0] "Aggiunta di tag a %{amount} registro immagine contenitore"
-msgstr[1] "Aggiunta di tag a %{amount} registri immagine contenitore"
+msgstr[1] "Aggiunta di tag a %{amount} registri immagini contenitore"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:45
 msgid "%{amount} Container Node Being Tagged"
@@ -1478,8 +1478,8 @@ msgstr[1] "%{number} Contenitori"
 #: ../app/decorators/manageiq/providers/container_manager_decorator.rb:18
 msgid "%{number} Container Node"
 msgid_plural "%{number} Container Nodes"
-msgstr[0] "%{number} Nodo Contenitore"
-msgstr[1] "%{number} Nodi Contenitore"
+msgstr[0] "%{number} nodo contenitore"
+msgstr[1] "%{number} nodi contenitore"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:231
 msgid "%{number} Day"
@@ -4423,7 +4423,7 @@ msgstr "Aggiungere una nuova rete cloud (NSX-T)"
 #:
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_containers_center.rb:15
 msgid "Add a new Cloud Object Store Container"
-msgstr "Aggiungi nuovo contenitore di archivio oggetti cloud"
+msgstr "Aggiungi nuovo contenitore archivio oggetti cloud"
 
 #: ../app/views/ems_cloud/show_list.html.haml:5
 msgid "Add a new Cloud Provider"
@@ -4678,13 +4678,14 @@ msgstr "L'aggiunta del database cloud \"%s\" è stata accodata correttamente."
 msgid ""
 "Add of Cloud Object Store Container \"%s\" has been successfully queued."
 msgstr ""
-"L'aggiunta di un contenitore Cloud Object Store \"%s\" è stata accodata "
+"L'aggiunta del contenitore archivio oggetti cloud \"%s\" è stata accodata "
 "correttamente."
 
 #: ../app/javascript/components/cloud-object-store-container-form/index.jsx:50
 msgid "Add of Cloud Object Store Container \"%s\" has failed with error: %s"
 msgstr ""
-"Aggiunta del contenitore Cloud Object Store \"%s\" non riuscita con errore: %s"
+"Aggiunta del contenitore archivio oggetti cloud \"%s\" non riuscita con errore"
+": %s"
 
 #: ../app/javascript/components/subnet-form/index.jsx:65
 msgid "Add of Cloud Subnet \"%s\" has been successfully queued."
@@ -5123,7 +5124,7 @@ msgstr "L'aggiunta del nuovo router di rete è stata annullata dall'utente."
 #: ../app/javascript/components/cloud-object-store-container-form/index.jsx:58
 msgid "Adding of new cloud object store container was cancelled by the user."
 msgstr ""
-"L'aggiunta di nuovo contenitore cloud object store è stata annullata "
+"L'aggiunta del nuovo contenitore archivio oggetti cloud è stata annullata "
 "dall'utente."
 
 #: ../app/javascript/components/network-routers-interfaces-form/index.jsx:28
@@ -6463,7 +6464,7 @@ msgstr "Ansible Tower"
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_AutomationManager_ConfiguredSystem.yaml
 #: ../config/yaml_strings.rb:1208
 msgid "Ansible Tower Configured System"
-msgstr "Sistema Ansible Tower Configurato"
+msgstr "Sistema Ansible Tower configurato"
 
 #: ../app/presenters/tree_builder_automation_manager_configured_systems.rb:19
 msgid "Ansible Tower Configured Systems"
@@ -6983,7 +6984,7 @@ msgstr[1] ""
 
 #: ../app/javascript/components/dashboard-widgets/widget-wrapper/helper.jsx:171
 msgid "Are you sure you want to remove %s from the Dashboard?"
-msgstr "Si è sicuri di voler rimuovere %s dal Dashboard?"
+msgstr "Si è sicuri di voler rimuovere %s dal dashboard?"
 
 #: ../app/presenters/widget_presenter.rb:30
 msgid "Are you sure you want to remove '%{title}'from the Dashboard?"
@@ -8949,7 +8950,7 @@ msgstr "DN base"
 #. TRANSLATORS: file: product/compare/vms.yaml
 #: ../config/dictionary_strings.rb:264 ../config/yaml_strings.rb:5511
 msgid "Base Name"
-msgstr "Nome base"
+msgstr "Nome di base"
 
 #: ../app/helpers/cloud_volume_helper/textual_summary.rb:75
 msgid "Base Snapshot"
@@ -8967,7 +8968,7 @@ msgid ""
 "with 'clone-' and suffixed with '-#####' (where ##### is a 5 digit random "
 "number)"
 msgstr ""
-"Nome base del nuovo volume clonato. Il nome del volume clonato avrà come "
+"Nome di base del nuovo volume clonato. Il nome del volume clonato avrà come "
 "prefisso 'clone-' e come suffisso '-#####' (dove ##### è un numero casuale di "
 "5 cifre)"
 
@@ -16436,7 +16437,7 @@ msgstr[1] "Contenitori"
 msgid "Container Build"
 msgid_plural "Container Builds"
 msgstr[0] "Build contenitore"
-msgstr[1] "Build contenitori"
+msgstr[1] "Build contenitore"
 
 #: ../config/model_display_names.rb:58
 msgid "Container Build Pod"
@@ -16447,13 +16448,13 @@ msgstr[1] "Pod di build contenitore"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3272
 msgid "Container Build Scan"
-msgstr "Scansione Build di Contenitore"
+msgstr "Scansione build contenitore"
 
 #. TRANSLATORS: file: product/views/ContainerBuild.yaml
 #: ../app/controllers/container_build_controller.rb:26
 #: ../app/presenters/menu/default_menu.rb:129 ../config/yaml_strings.rb:704
 msgid "Container Builds"
-msgstr "Build contenitori"
+msgstr "Build contenitore"
 
 #: ../config/model_display_names.rb:59
 msgid "Container Condition"
@@ -16541,14 +16542,14 @@ msgstr "Nome immagine contenitore"
 #. TRANSLATORS: en.yml key: dictionary.model.ContainerImageRegistry (plural form)
 #: ../config/dictionary_strings.rb:2804
 msgid "Container Image Registries"
-msgstr "Registri immagine contenitore"
+msgstr "Registri immagini contenitore"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ContainerImageRegistry
 #: ../config/model_display_names.rb:62 ../config/dictionary_strings.rb:2802
 msgid "Container Image Registry"
 msgid_plural "Container Image Registries"
 msgstr[0] "Registro immagine contenitore"
-msgstr[1] "Registri immagine contenitore"
+msgstr[1] "Registri immagini contenitore"
 
 #. TRANSLATORS: file: product/views/ContainerImage.yaml
 #: ../app/presenters/menu/default_menu.rb:131 ../config/yaml_strings.rb:738
@@ -16584,8 +16585,8 @@ msgstr "Namespace contenitore"
 #: ../config/yaml_strings.rb:7348
 msgid "Container Node"
 msgid_plural "Container Nodes"
-msgstr[0] "Nodo del contenitore"
-msgstr[1] "Nodi Contenitore"
+msgstr[0] "Nodo contenitore"
+msgstr[1] "Nodi contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:699
@@ -16652,7 +16653,7 @@ msgstr "Nodo contenitore pianificabile"
 #. TRANSLATORS: file: product/views/ContainerNode.yaml
 #: ../app/presenters/menu/default_menu.rb:127 ../config/yaml_strings.rb:772
 msgid "Container Nodes"
-msgstr "Nodi Contenitore"
+msgstr "Nodi contenitore"
 
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/058_VMs with invalid allocation of RAM.yaml
 #: ../config/yaml_strings.rb:6816
@@ -16835,7 +16836,7 @@ msgstr "Percorso contenitore"
 #. TRANSLATORS: file: product/views/ContainerProject.yaml
 #: ../config/yaml_strings.rb:791
 msgid "Container Routes"
-msgstr "Percorsi Contenitore"
+msgstr "Percorsi contenitore"
 
 #. TRANSLATORS: en.yml key: dictionary.column.container_runtime_version
 #: ../config/dictionary_strings.rb:408
@@ -16936,7 +16937,7 @@ msgstr "Immagine di contenitori"
 
 #: ../config/model_attributes.rb:868
 msgid "Container image registry"
-msgstr "Registro immagine di contenitori"
+msgstr "Registro immagine contenitore"
 
 #: ../config/model_attributes.rb:876
 msgid "Container limit"
@@ -16980,7 +16981,7 @@ msgstr "Percorso contenitore"
 
 #: ../config/model_attributes.rb:1109
 msgid "Container service"
-msgstr "Servizio container"
+msgstr "Servizio contenitore"
 
 #: ../config/model_attributes.rb:1155
 msgid "Container service port config"
@@ -20688,7 +20689,7 @@ msgid ""
 "Creating Cloud Object Store Container %{cloud_container_name} completed "
 "successfully"
 msgstr ""
-"Creazione del contenitore Cloud Object Store %{cloud_container_name} "
+"Creazione del contenitore archivio oggetti cloud %{cloud_container_name} "
 "completata correttamente"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
@@ -20697,7 +20698,7 @@ msgid ""
 "Creating Cloud Object Store Container %{cloud_container_name} failed: %{"
 "error_message}"
 msgstr ""
-"Creazione del contenitore Cloud Object Store %{cloud_container_name} non "
+"Creazione del contenitore archivio oggetti cloud %{cloud_container_name} non "
 "riuscita: %{error_message}"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
@@ -22991,7 +22992,7 @@ msgstr "Elimina database cloud"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1294
 msgid "Delete Cloud Object Store Container"
-msgstr "Elimina contenitore di archivio oggetti cloud"
+msgstr "Elimina contenitore archivio oggetti cloud"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1316
@@ -23372,8 +23373,10 @@ msgstr[1] "Eliminazione avviata per %{number} reti cloud."
 #: ../app/controllers/cloud_object_store_container_controller.rb:124
 msgid "Delete initiated for %{number} Cloud Object Store Container."
 msgid_plural "Delete initiated for %{number} Cloud Object Store Containers."
-msgstr[0] "Eliminazione avviata per %{number} contenitore Cloud Object Store."
-msgstr[1] "Eliminazione avviata per %{number} contenitori Cloud Object Store."
+msgstr[0] ""
+"Eliminazione avviata per %{number} contenitore archivio oggetti cloud."
+msgstr[1] ""
+"Eliminazione avviata per %{number} contenitori archivio oggetti cloud."
 
 #: ../app/controllers/cloud_tenant_controller.rb:152
 msgid "Delete initiated for %{number} Cloud Tenant."
@@ -25939,32 +25942,32 @@ msgstr "Visualizza sistemi configurati singoli"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3266
 msgid "Display Individual Container Build"
-msgstr "Visualizza singoli Build di Contenitore"
+msgstr "Visualizza singole build contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3230
 msgid "Display Individual Container Image Registries"
-msgstr "Visualizza singoli Registri Immagini Contenitori"
+msgstr "Visualizza singoli registri immagini contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3174
 msgid "Display Individual Container Nodes"
-msgstr "Visualizza singoli Nodi Contenitore"
+msgstr "Visualizza singoli nodi contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3194
 msgid "Display Individual Container Replicators"
-msgstr "Visualizza singoli Replicatori Contenitore"
+msgstr "Visualizza singoli replicatori contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3314
 msgid "Display Individual Container Routes"
-msgstr "Visualizza singoli Instradamenti Contenitore"
+msgstr "Visualizza singoli instradamenti contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3298
 msgid "Display Individual Container Services"
-msgstr "Visualizza singoli Servizi Contenitore"
+msgstr "Visualizza singoli servizi contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3282
@@ -25974,7 +25977,7 @@ msgstr "Visualizza singolo Modello Contenitore"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3212
 msgid "Display Individual Container images"
-msgstr "Visualizza singole Immagini Contenitore"
+msgstr "Visualizza singole immagini contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3354
@@ -26364,7 +26367,7 @@ msgstr "Visualizza elenchi di reti cloud"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1280
 msgid "Display Lists of Cloud Object Store Containers"
-msgstr "Visualizza liste di contenitori archivio oggetti cloud"
+msgstr "Visualizza elenchi di contenitori archivio oggetti cloud"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1306
@@ -26414,22 +26417,22 @@ msgstr "Visualizza elenchi di sistemi configurati"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3264
 msgid "Display Lists of Container Build"
-msgstr "Visualizza Elenchi di Build di Contenitore"
+msgstr "Visualizza elenchi di build contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3228
 msgid "Display Lists of Container Image Registries"
-msgstr "Visualizza Elenchi di Registri Immagini Contenitori"
+msgstr "Visualizza elenchi di registri immagini contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3210
 msgid "Display Lists of Container Images"
-msgstr "Visualizza Elenchi di Immagini Contenitore"
+msgstr "Visualizza elenchi di immagini contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3172
 msgid "Display Lists of Container Nodes"
-msgstr "Visualizza Elenchi di Nodi Contenitore"
+msgstr "Visualizza elenchi di nodi contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3330
@@ -26439,17 +26442,17 @@ msgstr "Visualizza Elenchi di Progetti Contenitore"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3192
 msgid "Display Lists of Container Replicators"
-msgstr "Visualizza Elenchi di Replicatori Contenitore"
+msgstr "Visualizza elenchi di replicatori contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3312
 msgid "Display Lists of Container Routes"
-msgstr "Visualizza Elenchi di Instradamenti Contenitore"
+msgstr "Visualizza elenchi di instradamenti contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3296
 msgid "Display Lists of Container Services"
-msgstr "Visualizza Elenchi di Servizi Contenitore"
+msgstr "Visualizza elenchi di servizi contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3280
@@ -26891,7 +26894,7 @@ msgstr "Visualizza sequenze temporali per i cluster"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3178
 msgid "Display Timelines for Container Nodes"
-msgstr "Visualizza le Sequenze Temporali per i Nodi Contenitore"
+msgstr "Visualizza le sequenze temporali per i nodi contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3356
@@ -26986,7 +26989,7 @@ msgstr "Visualizza le Sequenze Temporali per i Progetti Contenitore"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3198
 msgid "Display Timelines for container Replicators"
-msgstr "Visualizza le Sequenze Temporali per i Replicatori Contenitore"
+msgstr "Visualizza le sequenze temporali per i replicatori contenitore"
 
 #. TRANSLATORS: en.yml key: dictionary.column.display_type
 #: ../config/dictionary_strings.rb:770
@@ -28669,7 +28672,7 @@ msgstr "Modifica tag degli elementi selezionati"
 
 #: ../app/helpers/application_helper/toolbar/container_builds_center.rb:14
 msgid "Edit Tags for these Container Builds"
-msgstr "Modifica tag di queste build del contenitore"
+msgstr "Modifica tag di queste build contenitore"
 
 #: ../app/helpers/application_helper/toolbar/container_templates_center.rb:14
 msgid "Edit Tags for these Container Templates"
@@ -28767,7 +28770,7 @@ msgstr "Modifica tag di questo contenitore"
 
 #: ../app/helpers/application_helper/toolbar/container_build_center.rb:12
 msgid "Edit Tags for this Container Build"
-msgstr "Modifica tag di questa build del contenitore"
+msgstr "Modifica tag di questa build contenitore"
 
 #: ../app/helpers/application_helper/toolbar/container_template_center.rb:30
 msgid "Edit Tags for this Container Template"
@@ -28984,22 +28987,22 @@ msgstr "Modifica tag del provider del gestore configurazione"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3270
 msgid "Edit Tags of Container Build"
-msgstr "Modifica Tag dei Build di Contenitore"
+msgstr "Modifica tag delle build contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3234
 msgid "Edit Tags of Container Image Registries"
-msgstr "Modifica Tag dei Registri Immagini Contenitori"
+msgstr "Modifica tag dei registri immagini contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3216
 msgid "Edit Tags of Container Images"
-msgstr "Modifica Tag delle Immagini Contenitore"
+msgstr "Modifica tag delle immagini contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3182
 msgid "Edit Tags of Container Nodes"
-msgstr "Modifica Tag dei Nodi Contenitore"
+msgstr "Modifica tag dei nodi contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3338
@@ -29009,17 +29012,17 @@ msgstr "Modifica Tag dei Progetti Contenitore"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3202
 msgid "Edit Tags of Container Replicators"
-msgstr "Modifica Tag dei Replicatori Contenitore"
+msgstr "Modifica tag dei replicatori contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3318
 msgid "Edit Tags of Container Routes"
-msgstr "Modifica Tag degli Instradamenti Contenitore"
+msgstr "Modifica tag degli instradamenti contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3304
 msgid "Edit Tags of Container Services"
-msgstr "Modifica Tag dei Servizi Contenitore"
+msgstr "Modifica tag dei servizi contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3286
@@ -32693,22 +32696,22 @@ msgstr "Tutto sotto Utilizzo"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3260
 msgid "Everything under Container Build"
-msgstr "Tutto sotto Build di Contenitore"
+msgstr "Tutto sotto build contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3224
 msgid "Everything under Container Image Registries"
-msgstr "Tutto sotto Registri Immagini Contenitori"
+msgstr "Tutto sotto registri immagini contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3206
 msgid "Everything under Container Images"
-msgstr "Tutto sotto Immagini Contenitore"
+msgstr "Tutto sotto immagini contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3168
 msgid "Everything under Container Nodes"
-msgstr "Tutto sotto Nodi Contenitore"
+msgstr "Tutto sotto nodi contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3326
@@ -32718,17 +32721,17 @@ msgstr "Tutto sotto Progetti Contenitore"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3188
 msgid "Everything under Container Replicators"
-msgstr "Tutto sotto Replicatori Contenitore"
+msgstr "Tutto sotto replicatori contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3308
 msgid "Everything under Container Routes"
-msgstr "Tutto sotto Instradamenti Contenitore"
+msgstr "Tutto sotto instradamenti contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3292
 msgid "Everything under Container Services"
-msgstr "Tutto sotto Servizi Contenitore"
+msgstr "Tutto sotto servizi contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3276
@@ -34188,11 +34191,11 @@ msgid ""
 msgid_plural ""
 "File is too large, maximum allowed size is %s bytes. Current file has %s bytes"
 msgstr[0] ""
-"File troppo grande, la dimensione massima consentita è %s byte. Il file "
-"corrente ha %s byte"
+"File troppo grande, la dimensione massima consentita è %s byte. La dimensione "
+"del file corrente è %s byte"
 msgstr[1] ""
-"file troppo grande, la dimensione massima consentita è %s byte. Il file "
-"corrente ha %s byte"
+"File troppo grande, la dimensione massima consentita è %s byte. La dimensione "
+"del file corrente è %s byte"
 
 #: ../app/javascript/forms/mappers/validatorMapper.jsx:20
 msgid ""
@@ -34281,7 +34284,7 @@ msgstr "Atime"
 
 #: ../config/model_attributes.rb:1733
 msgid "Filesystem|Base name"
-msgstr "Nome Base"
+msgstr "Nome di base"
 
 #: ../config/model_attributes.rb:1734
 msgid "Filesystem|Contents"
@@ -42625,17 +42628,17 @@ msgstr "Gestisci politiche dei provider cloud"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3218
 msgid "Manage Policies of Container Images"
-msgstr "Gestisci Politiche delle Immagini Contenitore"
+msgstr "Gestisci politiche delle immagini contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3184
 msgid "Manage Policies of Container Nodes"
-msgstr "Gestisci Politiche dei Nodi Contenitore"
+msgstr "Gestisci politiche dei nodi contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3204
 msgid "Manage Policies of Container Replicators"
-msgstr "Gestisci Politiche dei Replicatori Contenitore"
+msgstr "Gestisci politiche dei replicatori contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2836
@@ -44719,7 +44722,7 @@ msgstr "Tasso massimo di eliminazione gruppo di container di stat"
 
 #: ../config/model_attributes.rb:2534
 msgid "MetricRollup|Max stat container image registration rate"
-msgstr "Tasso massimo di registrazione immagine di container di stat"
+msgstr "Tasso massimo di registrazione immagine contenitore di stat"
 
 #: ../config/model_attributes.rb:2535
 msgid "MetricRollup|Max sys uptime absolute latest"
@@ -45005,7 +45008,7 @@ msgstr "Tasso minimo di eliminazione gruppo di container di stat"
 
 #: ../config/model_attributes.rb:2603
 msgid "MetricRollup|Min stat container image registration rate"
-msgstr "Tasso minimo di registrazione immagine di container di stat"
+msgstr "Tasso minimo di registrazione immagine contenitore di stat"
 
 #: ../config/model_attributes.rb:2604
 msgid "MetricRollup|Min sys uptime absolute latest"
@@ -45041,7 +45044,7 @@ msgstr "Tasso di eliminazione gruppo di container di stat"
 
 #: ../config/model_attributes.rb:2612
 msgid "MetricRollup|Stat container image registration rate"
-msgstr "Tasso di registrazione immagine di container di stat"
+msgstr "Tasso di registrazione immagine contenitore stat"
 
 #: ../config/model_attributes.rb:2613
 msgid "MetricRollup|Sys uptime absolute latest"
@@ -52227,8 +52230,8 @@ msgstr "Nessun modello di origine trovato dai dati di input:<%{data}>"
 #: ../app/helpers/application_helper/button/cloud_object_store_container_new.rb:5
 msgid "No storage managers support creating cloud object store containers."
 msgstr ""
-"Nessun gestore di archiviazione supporta la creazione di contenitori di "
-"archivio oggetti cloud."
+"Nessun gestore di archiviazione supporta la creazione di contenitori archivio "
+"oggetti cloud."
 
 #: ../app/helpers/application_helper/button/host_initiator_group_new.rb:5
 msgid "No storage providers support creating host initiator groups."
@@ -55385,22 +55388,22 @@ msgstr "Esegui operazioni sui sistemi configurati"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3268
 msgid "Perform Operations on Container Build"
-msgstr "Esegui le operazioni sui Build di Contenitore"
+msgstr "Esegui le operazioni sulle build contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3232
 msgid "Perform Operations on Container Image Registries"
-msgstr "Esegui le operazioni sui Registri Immagini Contenitori"
+msgstr "Esegui le operazioni sui registri immagini contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3214
 msgid "Perform Operations on Container Images"
-msgstr "Esegui le operazioni sulle Immagini Contenitore"
+msgstr "Esegui le operazioni sulle immagini contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3180
 msgid "Perform Operations on Container Nodes"
-msgstr "Esegui le operazioni sui Nodi Contenitore"
+msgstr "Esegui le operazioni sui nodi contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3336
@@ -55410,17 +55413,17 @@ msgstr "Esegui le operazioni sugli Progetti Contenitore"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3200
 msgid "Perform Operations on Container Replicators"
-msgstr "Esegui le operazioni sui Replicatori Contenitore"
+msgstr "Esegui le operazioni sui replicatori contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3316
 msgid "Perform Operations on Container Routes"
-msgstr "Esegui le operazioni sugli Instradamenti Contenitore"
+msgstr "Esegui le operazioni sugli instradamenti contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3302
 msgid "Perform Operations on Container Services"
-msgstr "Esegui le operazioni sui Servizi Contenitore"
+msgstr "Esegui le operazioni sui servizi contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3284
@@ -55888,12 +55891,12 @@ msgstr[1] "Prestazioni - Contenitori"
 #. TRANSLATORS: en.yml key: dictionary.model.ContainerNodePerformance
 #: ../config/dictionary_strings.rb:2814
 msgid "Performance - Container Node"
-msgstr "Prestazioni - Nodo Contenitore"
+msgstr "Prestazioni - nodo contenitore"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ContainerNodePerformance (plural form)
 #: ../config/dictionary_strings.rb:2816
 msgid "Performance - Container Nodes"
-msgstr "Prestazioni - Nodi Contenitori"
+msgstr "Prestazioni - nodi contenitore"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ContainerProjectPerformance
 #: ../app/models/container_project_performance.rb:7
@@ -57202,7 +57205,7 @@ msgstr "Pod pianificato"
 #. TRANSLATORS: file: product/reports/170_Configuration Management - Containers/100_Pod counts For Container Images by Project.yaml
 #: ../config/yaml_strings.rb:6447
 msgid "Pod counts For Container Images by Project"
-msgstr "Conteggi Pod per le immagini contenitore per progetto"
+msgstr "Conteggi pod per le immagini contenitore per progetto"
 
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:723
@@ -67127,7 +67130,7 @@ msgstr "Servizio"
 
 #: ../app/javascript/components/edit-service-form/index.jsx:20
 msgid "Service \"%s\"  was saved\""
-msgstr "Il servizio \"%s\" è stato salvato\""
+msgstr "Il servizio \"%s\" è stato salvato"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:4735
@@ -68946,7 +68949,7 @@ msgstr ""
 #: ../app/helpers/container_image_helper/textual_summary.rb:84
 msgid "Show Compliance History of this Container Image (Last 10 Checks)"
 msgstr ""
-"Mostra Cronologia conformità di questa Immagine Contenitore (Ultimi 10 "
+"Mostra cronologia conformità di questa Immagine Contenitore (Ultimi 10 "
 "Controlli)"
 
 #: ../app/helpers/host_helper/textual_summary.rb:370
@@ -71474,7 +71477,7 @@ msgstr "Lo storage: [%{name}] non è collegato ad un EMS."
 
 #: ../config/model_attributes.rb:4345
 msgid "StorageFile|Base name"
-msgstr "Nome base"
+msgstr "Nome di base"
 
 #: ../config/model_attributes.rb:4346
 msgid "StorageFile|Ext name"
@@ -72991,7 +72994,7 @@ msgstr "Cluster con tag"
 
 #: ../app/helpers/term_of_service_helper.rb:44
 msgid "Tagged Configured Systems"
-msgstr "Sistemi Configurati etichettati"
+msgstr "Sistemi configurati con tag"
 
 #: ../app/helpers/term_of_service_helper.rb:45
 msgid "Tagged Container Images"
@@ -79912,27 +79915,27 @@ msgstr "Visualizza profili di configurazione"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3440
 msgid "View Configured Systems"
-msgstr "Visualizza Sistemi Configurati"
+msgstr "Visualizza sistemi configurati"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3262
 msgid "View Container Build"
-msgstr "Visualizza Build Contenitore"
+msgstr "Visualizza build contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3226
 msgid "View Container Image Registries"
-msgstr "Visualizza Registri Immagini Contenitori"
+msgstr "Visualizza registri immagini contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3208
 msgid "View Container Images"
-msgstr "Visualizza Immagini Contenitore"
+msgstr "Visualizza immagini contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3170
 msgid "View Container Nodes"
-msgstr "Visualizza Nodi Contenitore"
+msgstr "Visualizza nodi contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3322
@@ -79947,17 +79950,17 @@ msgstr "Visualizza Progetti Contenitore"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3190
 msgid "View Container Replicators"
-msgstr "Visualizza Replicatori Contenitore"
+msgstr "Visualizza replicatori contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3310
 msgid "View Container Routes"
-msgstr "Visualizza Instradamenti Contenitore"
+msgstr "Visualizza instradamenti contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3294
 msgid "View Container Services"
-msgstr "Visualizza Servizi Contenitore"
+msgstr "Visualizza servizi contenitore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3278
