@@ -82538,7 +82538,7 @@ msgstr "%{name} 오브젝트가 %{items} 중 하나가 아닙니다."
 #: ../app/javascript/components/miq-pagination.jsx:8
 msgid "of %d page"
 msgid_plural "of %d pages"
-msgstr[0] "%d 페이지 중"
+msgstr[0] "/ %d 페이지"
 
 #: ../app/controllers/application_controller/performance.rb:565
 msgid "on %{date}"

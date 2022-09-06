@@ -719,8 +719,8 @@ msgstr[1] "Se están etiquetando %{amount} compilaciones del contenedor"
 #: ../app/views/layouts/_tag_edit_items.html.haml:41
 msgid "%{amount} Container Image Being Tagged"
 msgid_plural "%{amount} Container Images Being Tagged"
-msgstr[0] "%{amount} imagen del contenedor que se está etiquetando"
-msgstr[1] "%{amount} imágenes de contenedores que se están etiquetando"
+msgstr[0] "Se está etiquetando %{amount} imagen del contenedor"
+msgstr[1] "Se están etiquetando %{amount} imágenes del contenedor"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:43
 msgid "%{amount} Container Image Registry Being Tagged"

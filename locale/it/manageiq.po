@@ -64567,7 +64567,7 @@ msgstr "Data di ritiro rimossa"
 
 #: ../app/javascript/components/retirement-form/index.jsx:61
 msgid "Retirement date set to %s"
-msgstr "Data di dismissione impostata su %s"
+msgstr "Data di ritiro impostata su %s"
 
 #. TRANSLATORS: en.yml key: dictionary.column.retires_on
 #. TRANSLATORS: file: product/compare/vms.yaml
