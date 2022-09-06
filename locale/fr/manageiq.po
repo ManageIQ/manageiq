@@ -9005,6 +9005,7 @@ msgid ""
 msgstr ""
 "Nom de base du nouveau volume cloné. Le nom du volume cloné aura le préfixe '"
 "clone-' et le suffixe '-#####' (où ##### est un nombre aléatoire à 5 chiffres)"
+"."
 
 #: src/report-editor/configure-report-columns.jsx:20
 msgid "Base the report on"
@@ -9475,11 +9476,11 @@ msgstr "Version du navigateur"
 #. TRANSLATORS: file: product/views/MiqServer.yaml
 #: ../config/yaml_strings.rb:1098
 msgid "Build"
-msgstr "Compilation"
+msgstr "Génération"
 
 #: ../app/helpers/container_build_helper/textual_summary.rb:21
 msgid "Build Instances"
-msgstr "Instances de compilation"
+msgstr "Instances de génération"
 
 #: ../app/helpers/textual_mixins/textual_os_info.rb:30
 #: ../app/helpers/textual_mixins/textual_vmm_info.rb:21
@@ -9489,27 +9490,27 @@ msgstr "Numéro de version"
 #. TRANSLATORS: en.yml key: dictionary.column.build_source_type
 #: ../config/dictionary_strings.rb:284
 msgid "Build Source Type"
-msgstr "Type de source de compilation"
+msgstr "Type de source de génération"
 
 #. TRANSLATORS: file: product/views/ConfiguredSystem.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_AutomationManager_ConfiguredSystem.yaml
 #: ../config/yaml_strings.rb:689
 msgid "Build State"
-msgstr "Etat de compilation"
+msgstr "Etat de la génération"
 
 #. TRANSLATORS: en.yml key: dictionary.column.build_time
 #: ../config/dictionary_strings.rb:288
 msgid "Build Time"
-msgstr "Durée de compilation"
+msgstr "Durée de la génération"
 
 #. TRANSLATORS: file: product/views/ContainerBuild.yaml
 #: ../config/yaml_strings.rb:715
 msgid "Build Type"
-msgstr "Type de compilation"
+msgstr "Type de génération"
 
 #: ../app/controllers/container_build_controller.rb:18
 msgid "Builds"
-msgstr "Compilations"
+msgstr "Générations"
 
 #: ../app/helpers/miq_ae_class_helper.rb:140
 msgid "Built-in"
@@ -16209,7 +16210,7 @@ msgstr "Systèmes configurés"
 
 #: ../config/model_attributes.rb:578
 msgid "ConfiguredSystem|Build state"
-msgstr "Etat de compilation"
+msgstr "Etat de la génération"
 
 #: ../config/model_attributes.rb:579
 msgid "ConfiguredSystem|Configuration architecture name"
@@ -17097,7 +17098,7 @@ msgstr "Volume de conteneur"
 #. TRANSLATORS: file: product/views/ContainerBuild.yaml
 #: ../config/yaml_strings.rb:706
 msgid "ContainerBuild"
-msgstr "Compilation de conteneur"
+msgstr "Génération de conteneur"
 
 #: ../config/model_attributes.rb:706
 msgid "ContainerBuildPod|Completion timestamp"
@@ -17201,7 +17202,7 @@ msgstr "Horodatage de début"
 
 #: ../config/model_attributes.rb:678
 msgid "ContainerBuild|Build source type"
-msgstr "Type de source de compilation"
+msgstr "Type de source de génération"
 
 #: ../config/model_attributes.rb:679
 msgid "ContainerBuild|Completion deadline seconds"
@@ -27761,7 +27762,7 @@ msgstr "Evénements d'audit EVM"
 #. TRANSLATORS: en.yml key: dictionary.table.server_builds
 #: ../config/dictionary_strings.rb:4298
 msgid "EVM Builds"
-msgstr "Compilations EVM"
+msgstr "Générations EVM"
 
 #. TRANSLATORS: en.yml key: dictionary.table.miq_custom_attribute
 #: ../config/dictionary_strings.rb:4166
@@ -34956,7 +34957,7 @@ msgstr "Microprogrammes"
 
 #: ../config/model_attributes.rb:1775
 msgid "Firmware|Build"
-msgstr "Compilation"
+msgstr "Génération"
 
 #: ../config/model_attributes.rb:1776
 msgid "Firmware|Href slug"
@@ -35867,7 +35868,7 @@ msgstr "Définition d'objet générique %{record_name}"
 #: ../app/views/layouts/listnav/_generic_object_definition_show_list_with_treeview.html.haml:2
 #: ../config/yaml_strings.rb:1035
 msgid "Generic Object Definitions"
-msgstr "Définitions d'objets génériques"
+msgstr "Définitions d'objet générique"
 
 #. TRANSLATORS: file: product/views/GenericObject.yaml
 #: ../app/controllers/generic_object_definition_controller.rb:309
@@ -36420,7 +36421,7 @@ msgstr "Architecture"
 
 #: ../config/model_attributes.rb:1878
 msgid "GuestApplication|Build time"
-msgstr "Heure de compilation"
+msgstr "Heure de la génération"
 
 #: ../config/model_attributes.rb:1879
 msgid "GuestApplication|Description"
@@ -38716,7 +38717,7 @@ msgstr "Nombre total de machines virtuelles (V)"
 
 #: ../config/model_attributes.rb:2086
 msgid "Host|Vmm buildnumber"
-msgstr "Numéro de compilation VMM"
+msgstr "Numéro de génération VMM"
 
 #: ../config/model_attributes.rb:2087
 msgid "Host|Vmm product"
@@ -48442,7 +48443,7 @@ msgstr "Type de recherche"
 
 #: ../config/model_attributes.rb:3239
 msgid "MiqServer|Build"
-msgstr "Compilation"
+msgstr "Génération"
 
 #: ../config/model_attributes.rb:3240
 msgid "MiqServer|Cpu time"
@@ -53113,7 +53114,7 @@ msgstr "Architecture de système d'exploitation"
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/059_Guest OS Information (any OS).yaml
 #: ../config/yaml_strings.rb:5925
 msgid "OS Build Number"
-msgstr "Numéro de compilation de système d'exploitation"
+msgstr "Numéro de génération de système d'exploitation"
 
 #: ../app/controllers/vm_common.rb:1124
 msgid "OS Info"
@@ -53890,7 +53891,7 @@ msgstr "Nombre de bits"
 
 #: ../config/model_attributes.rb:3525
 msgid "OperatingSystem|Build number"
-msgstr "Numéro de compilation"
+msgstr "Numéro de génération"
 
 #: ../config/model_attributes.rb:3526
 msgid "OperatingSystem|Distribution"
@@ -70431,7 +70432,7 @@ msgstr "Affinité SmartProxy"
 #. TRANSLATORS: en.yml key: dictionary.table.miq_proxy_builds
 #: ../config/dictionary_strings.rb:4218
 msgid "SmartProxy Builds"
-msgstr "Compilations SmartProxy"
+msgstr "Générations SmartProxy"
 
 #: ../app/javascript/components/zone-form/zone-form.schema.js:32
 #: ../app/views/ops/_settings_evm_servers_tab.html.haml:19
@@ -79371,13 +79372,13 @@ msgstr "Machine virtuelle : %{name} (cliquez pour afficher)"
 
 #: ../app/helpers/host_helper/textual_summary.rb:159
 msgid "VMM Build"
-msgstr "Compilation VMM"
+msgstr "Génération VMM"
 
 #. TRANSLATORS: en.yml key: dictionary.column.vmm_buildnumber
 #. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/010_Summary.yaml
 #: ../config/dictionary_strings.rb:2446 ../config/yaml_strings.rb:6011
 msgid "VMM Build Number"
-msgstr "Numéro de compilation VMM"
+msgstr "Numéro de génération VMM"
 
 #: ../app/helpers/textual_mixins/textual_vmm_info.rb:5
 msgid "VMM Information"
@@ -80214,7 +80215,7 @@ msgstr "Version"
 #: ../app/views/ops/_selected_by_servers.html.haml:58
 #: ../app/views/ops/_server_desc.html.haml:39
 msgid "Version / Build"
-msgstr "Version/Compilation"
+msgstr "Version/Génération"
 
 #: ../app/models/manageiq/providers/nuage/manager_mixin.rb:18
 msgid "Version 3.2"

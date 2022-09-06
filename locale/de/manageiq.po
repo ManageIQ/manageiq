@@ -67284,7 +67284,7 @@ msgstr "Service"
 
 #: ../app/javascript/components/edit-service-form/index.jsx:20
 msgid "Service \"%s\"  was saved\""
-msgstr "Service \"%s\" wurde gespeichert\""
+msgstr "Service \"%s\" wurde gespeichert"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:4735
