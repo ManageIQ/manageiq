@@ -54,7 +54,9 @@ class NotificationType < ApplicationRecord
   end
 
   def self.seed_data
-    fixture_file = File.join(FIXTURE_DIR, 'notification_types.yml')
-    File.exist?(fixture_file) ? YAML.load_file(fixture_file) : []
+    fixture_files = Vmdb::Plugins.flat_map { |plugin| plugin.root.join("content/notification_types.yml") }
+    fixture_files << FIXTURE_DIR.join('notification_types.yml')
+
+    fixture_files.select(&:exist?).flat_map { |f| YAML.load_file(f) }
   end
 end
