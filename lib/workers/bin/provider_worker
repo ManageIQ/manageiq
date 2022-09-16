@@ -56,4 +56,4 @@ $stdout.puts "Starting #{worker_type} with PID: #{Process.pid} and args: #{args}
 # Using exec here rather than fork+exec so that we can continue to use the
 # standard systemd service Type=notify and not have to use Type=forking which
 # can limit other systemd options available to the service.
-Kernel.exec(args)
+Bundler.unbundled_exec(args)
