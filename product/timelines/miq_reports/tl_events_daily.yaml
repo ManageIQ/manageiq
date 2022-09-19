@@ -37,6 +37,7 @@ cols:
 - container_namespace
 - container_name
 - container_replicator_name
+- physical_storage_name
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -54,6 +55,7 @@ col_order:
 - source
 - group_level
 - ext_management_system.name
+- physical_storage_name
 - message
 - ems_cluster_name
 - host_name
@@ -77,6 +79,7 @@ headers:
 - Event Source
 - Group Level
 - Provider
+- Storage System
 - Message
 - Cluster
 - Source Host
