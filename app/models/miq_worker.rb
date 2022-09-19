@@ -83,9 +83,10 @@ class MiqWorker < ApplicationRecord
     leaf_subclasses | descendants.select { |d| d.try(:acts_as_sti_leaf_class?) }
   end
 
-  class_attribute :default_queue_name, :required_roles, :maximum_workers_count, :include_stopping_workers_on_synchronize
+  class_attribute :default_queue_name, :required_roles, :maximum_workers_count, :include_stopping_workers_on_synchronize, :rails_worker
   self.include_stopping_workers_on_synchronize = false
   self.required_roles = []
+  self.rails_worker = true
 
   def self.server_scope
     return current_scope if current_scope && current_scope.where_values_hash.include?('miq_server_id')

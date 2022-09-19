@@ -92,8 +92,36 @@ class MiqWorker::Runner
   end
 
   def start
+    self.class.module_parent.rails_worker? ? start_rails_worker : start_non_rails_worker
+  end
+
+  def start_rails_worker
     prepare
     run
+  end
+
+  def start_non_rails_worker
+    # Create a temp file and immediately unlink it to create a
+    # secure hidden file to be used for the child process' stdin.
+    #
+    # Typically this is done using a pipe but because we are exec'ing
+    # the child worker not forking it we aren't able to have the child
+    # worker read from one side of the pipe while the parent is writing
+    # to the other side.  This means that the amount of data that can be
+    # written is limited to the buffer size of the pipe and if you write
+    # more than that it will hang.
+    stdin_tmp = Tempfile.new
+    File.unlink(stdin_tmp.path)
+
+    stdin_tmp.write(worker_options.to_json)
+    stdin_tmp.rewind
+
+    $stdin.reopen(stdin_tmp)
+
+    # Using exec here rather than fork+exec so that we can continue to use the
+    # standard systemd service Type=notify and not have to use Type=forking which
+    # can limit other systemd options available to the service.
+    Bundler.unbundled_exec(worker_cmdline)
   end
 
   def recover_from_temporary_failure
@@ -455,6 +483,17 @@ class MiqWorker::Runner
   end
 
   private
+
+  def worker_options
+    {
+      :messaging => MiqQueue.messaging_client_options,
+      :settings  => Settings.to_hash
+    }
+  end
+
+  def worker_cmdline
+    raise NotImplementedError, _("worker_cmdline must be implemented in a subclass")
+  end
 
   def skip_heartbeat?
     ENV["DISABLE_MIQ_WORKER_HEARTBEAT"]
