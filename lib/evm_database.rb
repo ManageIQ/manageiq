@@ -183,7 +183,6 @@ class EvmDatabase
     rails_handler = ManageIQ::PostgresHaAdmin::RailsConfigHandler.new(:file_path => file_path, :environment => Rails.env)
     _log.info("Configuring database failover for #{file_path}'s #{Rails.env} environment")
 
-    rails_handler.before_failover { LinuxAdmin::Service.new("evmserverd").stop }
     rails_handler.after_failover do |new_conn_info|
       # Actions to run upon success
       if new_conn_info.try(:key?, :dbname)
