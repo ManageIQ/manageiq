@@ -198,17 +198,17 @@ RSpec.describe MiqProvision do
           }
           allow(@pr).to receive(:approved?).and_return(true)
           expect(MiqQueue).to receive(:put).with({
-            :class_name     => 'MiqProvision',
-            :instance_id    => @vm_prov.id,
-            :method_name    => 'execute',
-            :role           => 'ems_operations',
-            :tracking_label => tracking_label,
-            :msg_timeout    => MiqQueue::TIMEOUT,
-            :queue_name     => @vm_prov.my_queue_name,
-            :zone           => @vm_prov.my_zone,
-            :deliver_on     => nil,
-            :miq_callback   => miq_callback
-          })
+                                                   :class_name     => 'MiqProvision',
+                                                   :instance_id    => @vm_prov.id,
+                                                   :method_name    => 'execute',
+                                                   :role           => 'ems_operations',
+                                                   :tracking_label => tracking_label,
+                                                   :msg_timeout    => MiqQueue::TIMEOUT,
+                                                   :queue_name     => @vm_prov.my_queue_name,
+                                                   :zone           => @vm_prov.my_zone,
+                                                   :deliver_on     => nil,
+                                                   :miq_callback   => miq_callback
+                                                 })
           @vm_prov.execute_queue
         end
       end

@@ -210,15 +210,15 @@ RSpec.describe Authenticator::Ldap do
 
         it "records two successful audit entries" do
           expect(AuditEvent).to receive(:success).with({
-            :event   => 'authenticate_ldap',
-            :userid  => 'alice',
-            :message => "User alice successfully validated by LDAP",
-          })
+                                                         :event   => 'authenticate_ldap',
+                                                         :userid  => 'alice',
+                                                         :message => "User alice successfully validated by LDAP",
+                                                       })
           expect(AuditEvent).to receive(:success).with({
-            :event   => 'authenticate_ldap',
-            :userid  => 'alice',
-            :message => "Authentication successful for user alice",
-          })
+                                                         :event   => 'authenticate_ldap',
+                                                         :userid  => 'alice',
+                                                         :message => "Authentication successful for user alice",
+                                                       })
           expect(AuditEvent).not_to receive(:failure)
           authenticate
         end
@@ -255,15 +255,15 @@ RSpec.describe Authenticator::Ldap do
 
         it "records three successful audit entries" do
           expect(AuditEvent).to receive(:success).with({
-            :event   => 'authenticate_ldap',
-            :userid  => 'alice',
-            :message => "User alice successfully validated by LDAP",
-          })
+                                                         :event   => 'authenticate_ldap',
+                                                         :userid  => 'alice',
+                                                         :message => "User alice successfully validated by LDAP",
+                                                       })
           expect(AuditEvent).to receive(:success).with({
-            :event   => 'authenticate_ldap',
-            :userid  => 'alice',
-            :message => "Authentication successful for user alice",
-          })
+                                                         :event   => 'authenticate_ldap',
+                                                         :userid  => 'alice',
+                                                         :message => "Authentication successful for user alice",
+                                                       })
           expect(AuditEvent).not_to receive(:failure)
           authenticate
         end
@@ -311,10 +311,10 @@ RSpec.describe Authenticator::Ldap do
 
       it "records one failing audit entry" do
         expect(AuditEvent).to receive(:failure).with({
-          :event   => 'authenticate_ldap',
-          :userid  => 'alice',
-          :message => "Authentication failed for userid alice",
-        })
+                                                       :event   => 'authenticate_ldap',
+                                                       :userid  => 'alice',
+                                                       :message => "Authentication failed for userid alice",
+                                                     })
         expect(AuditEvent).not_to receive(:success)
         authenticate rescue nil
       end
@@ -340,10 +340,10 @@ RSpec.describe Authenticator::Ldap do
 
         it "records one failing audit entry" do
           expect(AuditEvent).to receive(:failure).with({
-            :event   => 'authenticate_ldap',
-            :userid  => 'bob',
-            :message => "Authentication failed for userid bob",
-          })
+                                                         :event   => 'authenticate_ldap',
+                                                         :userid  => 'bob',
+                                                         :message => "Authentication failed for userid bob",
+                                                       })
           expect(AuditEvent).not_to receive(:success)
           authenticate rescue nil
         end
@@ -361,15 +361,15 @@ RSpec.describe Authenticator::Ldap do
 
         it "records one successful and one failing audit entry" do
           expect(AuditEvent).to receive(:success).with({
-            :event   => 'authenticate_ldap',
-            :userid  => 'bob',
-            :message => "User bob successfully validated by LDAP",
-          })
+                                                         :event   => 'authenticate_ldap',
+                                                         :userid  => 'bob',
+                                                         :message => "User bob successfully validated by LDAP",
+                                                       })
           expect(AuditEvent).to receive(:failure).with({
-            :event   => 'authenticate_ldap',
-            :userid  => 'bob',
-            :message => "User bob authenticated but not defined in EVM",
-          })
+                                                         :event   => 'authenticate_ldap',
+                                                         :userid  => 'bob',
+                                                         :message => "User bob authenticated but not defined in EVM",
+                                                       })
           authenticate rescue nil
         end
         it "logs the failure" do
@@ -387,15 +387,15 @@ RSpec.describe Authenticator::Ldap do
 
           it "records two successful audit entries" do
             expect(AuditEvent).to receive(:success).with({
-              :event   => 'authenticate_ldap',
-              :userid  => 'bob',
-              :message => "User bob successfully validated by LDAP",
-            })
+                                                           :event   => 'authenticate_ldap',
+                                                           :userid  => 'bob',
+                                                           :message => "User bob successfully validated by LDAP",
+                                                         })
             expect(AuditEvent).to receive(:success).with({
-              :event   => 'authenticate_ldap',
-              :userid  => 'bob',
-              :message => "Authentication successful for user bob",
-            })
+                                                           :event   => 'authenticate_ldap',
+                                                           :userid  => 'bob',
+                                                           :message => "Authentication successful for user bob",
+                                                         })
             expect(AuditEvent).not_to receive(:failure)
             authenticate
           end
@@ -425,20 +425,20 @@ RSpec.describe Authenticator::Ldap do
 
         it "records three successful audit entries" do
           expect(AuditEvent).to receive(:success).with({
-            :event   => 'authenticate_ldap',
-            :userid  => 'bob',
-            :message => "User bob successfully validated by LDAP",
-          })
+                                                         :event   => 'authenticate_ldap',
+                                                         :userid  => 'bob',
+                                                         :message => "User bob successfully validated by LDAP",
+                                                       })
           expect(AuditEvent).to receive(:success).with({
-            :event   => 'authorize',
-            :userid  => 'bob',
-            :message => "User creation successful for User: Bob Builderson with ID: bob",
-          })
+                                                         :event   => 'authorize',
+                                                         :userid  => 'bob',
+                                                         :message => "User creation successful for User: Bob Builderson with ID: bob",
+                                                       })
           expect(AuditEvent).to receive(:success).with({
-            :event   => 'authenticate_ldap',
-            :userid  => 'bob',
-            :message => "Authentication successful for user bob",
-          })
+                                                         :event   => 'authenticate_ldap',
+                                                         :userid  => 'bob',
+                                                         :message => "Authentication successful for user bob",
+                                                       })
           expect(AuditEvent).not_to receive(:failure)
           authenticate
         end
@@ -465,25 +465,25 @@ RSpec.describe Authenticator::Ldap do
 
           it "records three successful audit entries plus one failure" do
             expect(AuditEvent).to receive(:success).with({
-              :event   => 'authenticate_ldap',
-              :userid  => 'bob',
-              :message => "User bob successfully validated by LDAP",
-            })
+                                                           :event   => 'authenticate_ldap',
+                                                           :userid  => 'bob',
+                                                           :message => "User bob successfully validated by LDAP",
+                                                         })
             expect(AuditEvent).to receive(:success).with({
-              :event   => 'authorize',
-              :userid  => 'bob',
-              :message => "User creation successful for User: Bob Builderson with ID: bob",
-            })
+                                                           :event   => 'authorize',
+                                                           :userid  => 'bob',
+                                                           :message => "User creation successful for User: Bob Builderson with ID: bob",
+                                                         })
             expect(AuditEvent).to receive(:success).with({
-              :event   => 'authenticate_ldap',
-              :userid  => 'bob',
-              :message => "Authentication successful for user bob",
-            })
+                                                           :event   => 'authenticate_ldap',
+                                                           :userid  => 'bob',
+                                                           :message => "Authentication successful for user bob",
+                                                         })
             expect(AuditEvent).to receive(:failure).with({
-              :event   => 'authorize',
-              :userid  => 'bob',
-              :message => "Authentication failed for userid bob, unable to match user's group membership to an EVM role",
-            })
+                                                           :event   => 'authorize',
+                                                           :userid  => 'bob',
+                                                           :message => "Authentication failed for userid bob, unable to match user's group membership to an EVM role",
+                                                         })
             authenticate
           end
 

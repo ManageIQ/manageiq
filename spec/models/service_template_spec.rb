@@ -982,8 +982,8 @@ RSpec.describe ServiceTemplate do
           expect(resource_action_workflow).to receive(:validate_dialog).and_return([])
           expect(resource_action_workflow).to receive(:make_request).and_return(miq_request)
           expect(resource_action_workflow).to receive(:request_options=).with({
-            :init_defaults => true, :provision_workflow => true
-          })
+                                                                                :init_defaults => true, :provision_workflow => true
+                                                                              })
 
           expect(service_template.provision_request(user, arg1, arg2)).to eq(miq_request)
         end
@@ -991,8 +991,8 @@ RSpec.describe ServiceTemplate do
         it "provisions a service template with errors" do
           expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w(Error1 Error2))
           expect(resource_action_workflow).to receive(:request_options=).with({
-            :init_defaults => true, :provision_workflow => true
-          })
+                                                                                :init_defaults => true, :provision_workflow => true
+                                                                              })
 
           expect { service_template.provision_request(user, arg1, arg2) }.to raise_error(RuntimeError)
         end
@@ -1005,8 +1005,8 @@ RSpec.describe ServiceTemplate do
           expect(resource_action_workflow).to receive(:validate_dialog).and_return([])
           expect(resource_action_workflow).to receive(:make_request).and_return(miq_request)
           expect(resource_action_workflow).to receive(:request_options=).with({
-            :initiator => 'control', :submit_workflow => true
-          })
+                                                                                :initiator => 'control', :submit_workflow => true
+                                                                              })
 
           expect(service_template.provision_request(user, arg1, arg2)).to eq(miq_request)
         end
@@ -1014,8 +1014,8 @@ RSpec.describe ServiceTemplate do
         it "provisions a service template with errors" do
           expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w(Error1 Error2))
           expect(resource_action_workflow).to receive(:request_options=).with({
-            :initiator => 'control', :submit_workflow => true
-          })
+                                                                                :initiator => 'control', :submit_workflow => true
+                                                                              })
 
           expect { service_template.provision_request(user, arg1, arg2) }.to raise_error(RuntimeError)
         end
@@ -1028,8 +1028,8 @@ RSpec.describe ServiceTemplate do
           expect(resource_action_workflow).to receive(:validate_dialog).and_return([])
           expect(resource_action_workflow).to receive(:make_request).and_return(miq_request)
           expect(resource_action_workflow).to receive(:request_options=).with({
-            :initiator => 'control', :submit_workflow => true, :parent_id => miq_automation_request.id
-          })
+                                                                                :initiator => 'control', :submit_workflow => true, :parent_id => miq_automation_request.id
+                                                                              })
 
           expect(service_template.provision_request(user, arg1, arg2)).to eq(miq_request)
           expect(miq_request.parent).to eq(miq_automation_request)
@@ -1038,8 +1038,8 @@ RSpec.describe ServiceTemplate do
         it "provisions a service template with errors" do
           expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w[Error1 Error2])
           expect(resource_action_workflow).to receive(:request_options=).with({
-            :initiator => 'control', :submit_workflow => true, :parent_id => miq_automation_request.id
-          })
+                                                                                :initiator => 'control', :submit_workflow => true, :parent_id => miq_automation_request.id
+                                                                              })
 
           expect { service_template.provision_request(user, arg1, arg2) }.to raise_error(RuntimeError)
         end
@@ -1052,8 +1052,8 @@ RSpec.describe ServiceTemplate do
           expect(resource_action_workflow).to receive(:validate_dialog).and_return([])
           expect(resource_action_workflow).to receive(:make_request).and_return(miq_request)
           expect(resource_action_workflow).to receive(:request_options=).with({
-            :initiator => 'control', :provision_workflow => true
-          })
+                                                                                :initiator => 'control', :provision_workflow => true
+                                                                              })
 
           expect(service_template.provision_request(user, arg1, arg2)).to eq(miq_request)
         end
@@ -1061,8 +1061,8 @@ RSpec.describe ServiceTemplate do
         it "provisions a service template with errors" do
           expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w(Error1 Error2))
           expect(resource_action_workflow).to receive(:request_options=).with({
-            :initiator => 'control', :provision_workflow => true
-          })
+                                                                                :initiator => 'control', :provision_workflow => true
+                                                                              })
 
           expect { service_template.provision_request(user, arg1, arg2) }.to raise_error(RuntimeError)
         end
