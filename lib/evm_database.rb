@@ -184,19 +184,16 @@ class EvmDatabase
     _log.info("Configuring database failover for #{file_path}'s #{Rails.env} environment")
 
     rails_handler.after_failover do |new_conn_info|
-      # Actions to run upon success
-      if new_conn_info.try(:key?, :dbname)
-        # refresh the rails connection info after the config handler changed database.yml
-        begin
-          ActiveRecord::Base.remove_connection
-        rescue PG::Error
-          # We expect this to fail because it cannot access the database in the cached config
-        end
-        ActiveRecord::Base.establish_connection(Rails.application.config.database_configuration[Rails.env])
-
-        raise_server_event("db_failover_executed")
-        LinuxAdmin::Service.new("evmserverd").restart
+      # refresh the rails connection info after the config handler changed database.yml
+      begin
+        ActiveRecord::Base.remove_connection
+      rescue PG::Error
+        # We expect this to fail because it cannot access the database in the cached config
       end
+      ActiveRecord::Base.establish_connection(Rails.application.config.database_configuration[Rails.env])
+
+      raise_server_event("db_failover_executed")
+      LinuxAdmin::Service.new("evmserverd").restart
     end
 
     monitor.add_handler(rails_handler)
@@ -212,11 +209,8 @@ class EvmDatabase
       _log.info("Configuring database failover for replication subscription #{s.id} ")
 
       handler.after_failover do |new_conn_info|
-        # Actions to run upon success
-        if new_conn_info.try(:key?, :dbname)
-          s.delete
-          PglogicalSubscription.new(new_conn_info.slice(:dbname, :host, :user, :password, :port)).save
-        end
+        s.delete
+        PglogicalSubscription.new(new_conn_info.slice(:dbname, :host, :user, :password, :port)).save
       end
 
       monitor.add_handler(handler)
