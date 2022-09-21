@@ -193,7 +193,6 @@ class EvmDatabase
       ActiveRecord::Base.establish_connection(Rails.application.config.database_configuration[Rails.env])
 
       raise_server_event("db_failover_executed")
-      LinuxAdmin::Service.new("evmserverd").restart
     end
 
     monitor.add_handler(rails_handler)
