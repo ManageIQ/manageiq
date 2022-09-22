@@ -189,7 +189,7 @@ RSpec.describe "Service Retirement Management" do
         :type                => "OrchestrationStack",
       }
 
-      expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash, :zone => @zone.name)
+      expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash, {:zone => @zone.name})
       @stack.raise_retirement_event(event_name)
     end
 
@@ -201,7 +201,7 @@ RSpec.describe "Service Retirement Management" do
         :type                => "OrchestrationStack",
       }
 
-      expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash, :zone => @zone.name, :user_id => user.id, :group_id => user.current_group.id, :tenant_id => user.current_tenant.id)
+      expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash, {:zone => @zone.name, :user_id => user.id, :group_id => user.current_group.id, :tenant_id => user.current_tenant.id})
       @stack.raise_retirement_event(event_name, user.userid)
     end
 

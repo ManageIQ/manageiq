@@ -19,7 +19,7 @@ RSpec.describe MiqProvisionConfiguredSystemRequest do
 
   describe '.new_request_task' do
     it 'returns subclassed task' do
-      expect(ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionTask).to receive(:new).with(:request_type =>'ATTRS')
+      expect(ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionTask).to receive(:new).with({:request_type =>'ATTRS'})
       described_class.new_request_task(:request_type =>'ATTRS')
     end
   end
