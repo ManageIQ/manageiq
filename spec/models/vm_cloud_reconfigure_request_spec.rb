@@ -58,7 +58,7 @@ RSpec.describe VmCloudReconfigureRequest do
       expect(request).to                be_valid
       expect(request).to                be_a_kind_of(described_class)
       expect(request.request_type).to   eq("vm_cloud_reconfigure")
-      expect(request.description).to    eq("VM Cloud Reconfigure for: #{vm_amazon.name} - Flavor: ")
+      expect(request.description).to    eq("VM Cloud Reconfigure for: #{vm_amazon.name}")
       expect(request.requester).to      eq(admin)
       expect(request.userid).to         eq(admin.userid)
       expect(request.requester_name).to eq(admin.name)
