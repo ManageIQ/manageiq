@@ -1,0 +1,2 @@
+class StorageCapability < ApplicationRecord
+end
