@@ -10,8 +10,8 @@ module ProviderWorkerRunnerMixin
     super.merge(
       :ems => all_managers.map do |manager|
         manager.attributes.merge(
-          "endpoints"       => manager.endpoints,
-          "authentications" => manager.authentications
+          "endpoints"       => manager.endpoints.map(&:attributes),
+          "authentications" => manager.authentications.map(&:attributes)
         )
       end
     )
