@@ -5,6 +5,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
   class EventCatcherHandledException < StandardError
   end
 
+  include ProviderWorkerRunnerMixin
   include DuplicateBlocker
 
   def after_initialize

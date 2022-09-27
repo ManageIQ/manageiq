@@ -1,4 +1,6 @@
 class ManageIQ::Providers::BaseManager::RefreshWorker::Runner < ::MiqQueueWorkerBase::Runner
+  include ProviderWorkerRunnerMixin
+
   def after_initialize
     @emss = ExtManagementSystem.find([@cfg[:ems_id]])
     @emss.each do |ems|
