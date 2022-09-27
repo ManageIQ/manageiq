@@ -14,6 +14,7 @@ RSpec.describe OperatingSystem do
       "coreos-cloud"               => "linux_coreos",
       "linux debian"               => "linux_debian",
       "redhat coreos"              => "linux_coreos",
+      "rhcos-4.11.2"               => "linux_coreos",
     }.each do |image, expected|
       it "normalizes #{image}" do
         expect(described_class.normalize_os_name(image)).to eq(expected)
