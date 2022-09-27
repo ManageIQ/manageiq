@@ -50,7 +50,7 @@ gem "manageiq-api-client",              "~>0.3.6",           :require => false
 gem "manageiq-loggers",                 "~>1.0",             :require => false
 gem "manageiq-messaging",               "~>1.0", ">=1.1.0",  :require => false
 gem "manageiq-password",                "~>1.0",             :require => false
-gem "manageiq-postgres_ha_admin",       "~>3.1", ">=3.1.4",  :require => false
+gem "manageiq-postgres_ha_admin",       "~>3.2",             :require => false
 gem "manageiq-ssh-util",                "~>0.1.1",           :require => false
 gem "memoist",                          "~>0.16.0",          :require => false
 gem "money",                            "~>6.13.5",          :require => false
