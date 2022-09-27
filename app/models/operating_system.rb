@@ -20,7 +20,7 @@ class OperatingSystem < ApplicationRecord
     ["linux_chrome",    %w[chromeos]],
     ["linux_chromium",  %w[chromiumos]],
     ["linux_suse",      %w[suse sles]],
-    ["linux_coreos",    %w[coreos]],
+    ["linux_coreos",    %w[coreos rhcos]],
     ["linux_redhat",    %w[redhat rhel]],
     ["linux_fedora",    %w[fedora]],
     ["linux_gentoo",    %w[gentoo]],
