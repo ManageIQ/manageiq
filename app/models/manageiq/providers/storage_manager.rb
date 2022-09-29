@@ -46,6 +46,11 @@ module ManageIQ::Providers
     has_many :wwpn_candidates, :foreign_key => :ems_id, :dependent => :destroy,
              :inverse_of => :ext_management_system
 
+    has_many :storage_capabilities, :foreign_key => :ems_id, :dependent => :destroy,
+              :inverse_of => :ext_management_system
+    has_many :storage_capability_values, :foreign_key => :ems_id, :dependent => :destroy,
+             :inverse_of => :ext_management_system
+
     belongs_to :parent_manager,
                :foreign_key => :parent_ems_id,
                :class_name  => "ManageIQ::Providers::BaseManager",
