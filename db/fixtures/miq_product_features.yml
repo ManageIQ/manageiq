@@ -5911,6 +5911,11 @@
         :description: CPU/Memory Recommendations
         :feature_type: admin
         :identifier: vm_right_size
+      - :name: Resize VM
+        :description: Resize Cloud VM
+        :feature_type: admin
+        :identifier: vm_resize
+        :hidden: true
       - :name: Reconfigure VMs button
         :description: Reconfigure VM Memory/CPUs/...
         :feature_type: admin
