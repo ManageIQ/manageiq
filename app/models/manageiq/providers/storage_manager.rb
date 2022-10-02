@@ -12,6 +12,8 @@ module ManageIQ::Providers
     supports_not :storage_services
     supports_not :volume_multiattachment
     supports_not :volume_resizing
+    supports_not :storage_capabilities
+    supports_not :storage_capability_values
 
     has_many :cloud_tenants, :foreign_key => :ems_id, :dependent => :destroy
     has_many :volume_availability_zones, :class_name => "AvailabilityZone", :foreign_key => :ems_id, :dependent => :destroy
