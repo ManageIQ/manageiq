@@ -45,7 +45,7 @@ class MiqWorker < ApplicationRecord
   end
 
   class << self
-    attr_writer :workers
+    attr_writer :workers, :rails_worker
   end
 
   def self.bundler_groups
@@ -61,6 +61,10 @@ class MiqWorker < ApplicationRecord
     return @workers.call if @workers.kind_of?(Proc)
     return @workers unless @workers.nil?
     workers_configured_count
+  end
+
+  def self.rails_worker?
+    @rails_worker.kind_of?(Proc) ? @rails_worker.call : @rails_worker
   end
 
   def self.scalable?
@@ -83,7 +87,7 @@ class MiqWorker < ApplicationRecord
     leaf_subclasses | descendants.select { |d| d.try(:acts_as_sti_leaf_class?) }
   end
 
-  class_attribute :default_queue_name, :required_roles, :maximum_workers_count, :include_stopping_workers_on_synchronize, :rails_worker
+  class_attribute :default_queue_name, :required_roles, :maximum_workers_count, :include_stopping_workers_on_synchronize
   self.include_stopping_workers_on_synchronize = false
   self.required_roles = []
   self.rails_worker = true
