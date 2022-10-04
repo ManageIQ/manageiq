@@ -388,7 +388,6 @@ module Ansible
       end
 
       PYTHON_MODULE_PATHS = %w[
-        /var/lib/awx/venv/ansible/lib/python3.6/site-packages
         /var/lib/manageiq/venv/lib/python3.6/site-packages
         /var/lib/manageiq/venv/lib/python3.8/site-packages
         /usr/local/lib/python3.8/site-packages

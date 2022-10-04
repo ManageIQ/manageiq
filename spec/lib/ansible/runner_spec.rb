@@ -5,8 +5,8 @@ RSpec.describe Ansible::Runner do
   let(:tags)       { "tag" }
   let(:result)     { AwesomeSpawn::CommandResult.new("ansible-runner", "output", "", "0") }
 
-  let(:python_modules_path) { "/usr/lib64/python3.8/site-packages" }
-  let(:py3_awx_modules_path) { "/var/lib/awx/venv/ansible/lib/python3.6/site-packages" }
+  let(:ansible_python_path)   { "/usr/lib64/python3.9/site-packages" }
+  let(:python38_modules_path) { "/var/lib/manageiq/venv/lib/python3.8/site-packages" }
 
   after do
     Ansible::Runner.instance_variable_set(:@python_path, nil)
@@ -16,7 +16,7 @@ RSpec.describe Ansible::Runner do
   describe ".run" do
     let(:playbook) { "/path/to/my/playbook" }
     before do
-      allow(described_class).to receive(:ansible_python_path).and_return(python_modules_path)
+      allow(described_class).to receive(:ansible_python_path).and_return(ansible_python_path)
 
       allow(described_class).to receive(:wait_for).and_yield
       allow(File).to receive(:exist?).and_call_original
@@ -99,28 +99,15 @@ RSpec.describe Ansible::Runner do
       described_class.run(env_vars, extra_vars, playbook, :become_enabled => true)
     end
 
-    it "sets PYTHONPATH correctly with python3 awx modules only installed" do
-      expect(described_class).to receive(:ansible_python_path).and_return("")
-      expect(File).to receive(:exist?).with(py3_awx_modules_path).and_return(true)
-
-      expect(AwesomeSpawn).to receive(:run) do |command, options|
-        expect(command).to eq("ansible-runner")
-
-        expect(options[:env]["PYTHONPATH"]).to eq(py3_awx_modules_path)
-      end.and_return(result)
-
-      described_class.run(env_vars, extra_vars, playbook, :become_enabled => true)
-    end
-
     it "assigns multiple path values if they exist" do
-      expect(described_class).to receive(:ansible_python_path).and_return(python_modules_path)
-      expect(File).to receive(:exist?).with(python_modules_path).and_return(true)
-      expect(File).to receive(:exist?).with(py3_awx_modules_path).and_return(true)
+      expect(described_class).to receive(:ansible_python_path).and_return(ansible_python_path)
+      expect(File).to receive(:exist?).with(ansible_python_path).and_return(true)
+      expect(File).to receive(:exist?).with(python38_modules_path).and_return(true)
 
       expect(AwesomeSpawn).to receive(:run) do |command, options|
         expect(command).to eq("ansible-runner")
 
-        expected_path = [py3_awx_modules_path, python3_modules_path].join(File::PATH_SEPARATOR)
+        expected_path = [python38_modules_path, ansible_python_path].join(File::PATH_SEPARATOR)
         expect(options[:env]["PYTHONPATH"]).to eq(expected_path)
       end.and_return(result)
 
@@ -159,7 +146,7 @@ RSpec.describe Ansible::Runner do
   describe ".run_async" do
     let(:playbook) { "/path/to/my/playbook" }
     before do
-      allow(described_class).to receive(:ansible_python_path).and_return(python_modules_path)
+      allow(described_class).to receive(:ansible_python_path).and_return(ansible_python_path)
 
       allow(described_class).to receive(:wait_for).and_yield
       allow(File).to receive(:exist?).and_call_original
@@ -210,7 +197,7 @@ RSpec.describe Ansible::Runner do
     let(:role_name) { "my-custom-role" }
     let(:role_path) { "/path/to/my/roles" }
     before do
-      allow(described_class).to receive(:ansible_python_path).and_return(python_modules_path)
+      allow(described_class).to receive(:ansible_python_path).and_return(ansible_python_path)
 
       allow(described_class).to receive(:wait_for).and_yield
       allow(File).to receive(:exist?).and_call_original
@@ -269,7 +256,7 @@ RSpec.describe Ansible::Runner do
     let(:role_name) { "my-custom-role" }
     let(:role_path) { "/path/to/my/roles" }
     before do
-      allow(described_class).to receive(:ansible_python_path).and_return(python_modules_path)
+      allow(described_class).to receive(:ansible_python_path).and_return(ansible_python_path)
 
       allow(described_class).to receive(:wait_for).and_yield
       allow(File).to receive(:exist?).and_call_original
