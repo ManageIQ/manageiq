@@ -387,34 +387,17 @@ module Ansible
         res
       end
 
-      def python_path
-        if python3_modules_path.present?
-          python3_modules_path
-        else
-          python2_modules_path
-        end
-      end
-
-      PYTHON2_MODULE_PATHS = %w[
-        /var/lib/manageiq/venv/lib/python2.7/site-packages
-      ].freeze
-      def python2_modules_path
-        @python2_modules_path ||= begin
-          determine_existing_python_paths_for(*PYTHON2_MODULE_PATHS).join(File::PATH_SEPARATOR)
-        end
-      end
-
-      PYTHON3_MODULE_PATHS = %w[
+      PYTHON_MODULE_PATHS = %w[
         /var/lib/awx/venv/ansible/lib/python3.6/site-packages
         /var/lib/manageiq/venv/lib/python3.6/site-packages
         /var/lib/manageiq/venv/lib/python3.8/site-packages
         /usr/local/lib/python3.8/site-packages
       ].freeze
-      def python3_modules_path
-        @python3_modules_path ||= begin
-          paths = [*PYTHON3_MODULE_PATHS, ansible_python_path.presence].compact
-          determine_existing_python_paths_for(*paths).join(File::PATH_SEPARATOR)
-        end
+      def python_path
+        @python_path ||=
+          [*PYTHON_MODULE_PATHS, ansible_python_path.presence]
+            .select { |path| path && File.exist?(path) }
+            .join(File::PATH_SEPARATOR)
       end
 
       def ansible_python_path
@@ -422,10 +405,6 @@ module Ansible
           path = `ansible --version 2>/dev/null`.split("\n").grep(/ansible python module location/).first.to_s.split(" = ").last.to_s
           path.present? ? File.dirname(path) : path
         end
-      end
-
-      def determine_existing_python_paths_for(*paths)
-        paths.select { |path| File.exist?(path) }
       end
     end
   end
