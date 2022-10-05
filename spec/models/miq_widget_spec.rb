@@ -491,8 +491,7 @@ RSpec.describe MiqWidget do
     it "finished task should not be timed out" do
       @widget.queue_generate_content
       q = MiqQueue.first
-      status, message, result = q.deliver
-      q.delivered(status, message, result)
+      q.deliver_and_process
 
       task = MiqTask.first
       expect(task.status).to eq(MiqTask::STATUS_OK)
@@ -508,8 +507,7 @@ RSpec.describe MiqWidget do
     it "finished task should not be re-used" do
       @widget.queue_generate_content
       q = MiqQueue.first
-      status, message, result = q.deliver
-      q.delivered(status, message, result)
+      q.deliver_and_process
 
       task = MiqTask.first
       expect(task.pct_complete).to eq(100)
@@ -519,8 +517,7 @@ RSpec.describe MiqWidget do
 
       @widget.create_initial_content_for_user(new_user)
       q = MiqQueue.first
-      status, message, result = q.deliver
-      q.delivered(status, message, result)
+      q.deliver_and_process
 
       task.reload
       expect(task.state).to eq(MiqTask::STATE_FINISHED)

@@ -15,7 +15,7 @@ RSpec.describe VmScan do
         vm.scan
 
         job_item = MiqQueue.find_by(:class_name => "MiqAeEngine", :method_name => "deliver")
-        job_item.delivered(*job_item.deliver)
+        job_item.deliver_and_process
 
         # Allow the use of allow(job) and expect(job) instead of having to use
         # [allow/expect]_any_instance_of(VmScan) due to some signals being
@@ -40,13 +40,13 @@ RSpec.describe VmScan do
 
           # check_policy raises an miq_event, deliver the raise_evm_job_event
           job_item = MiqQueue.find_by(:class_name => "MiqAeEngine", :method_name => "deliver")
-          job_item.delivered(*job_item.deliver)
+          job_item.deliver_and_process
 
           expect(job).to receive(:before_scan)
 
           # Then deliver the signal from that event
           queue_item = MiqQueue.find_by(:class_name => job.class.name, :method_name => "signal")
-          queue_item.delivered(*queue_item.deliver)
+          queue_item.deliver_and_process
         end
       end
 
@@ -144,7 +144,7 @@ RSpec.describe VmScan do
         before do
           @vm.scan
           job_item = MiqQueue.find_by(:class_name => "MiqAeEngine", :method_name => "deliver")
-          job_item.delivered(*job_item.deliver)
+          job_item.deliver_and_process
 
           @job = Job.first
         end
@@ -177,7 +177,7 @@ RSpec.describe VmScan do
         before do
           @vm2.scan
           job_item = MiqQueue.find_by(:class_name => "MiqAeEngine", :method_name => "deliver")
-          job_item.delivered(*job_item.deliver)
+          job_item.deliver_and_process
 
           @job = Job.first
         end

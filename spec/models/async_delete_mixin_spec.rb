@@ -42,8 +42,7 @@ RSpec.describe AsyncDeleteMixin do
       expect_any_instance_of(@obj.class).to receive(:destroy).once
 
       queue_message = MiqQueue.where(cond).first
-      status, message, result = queue_message.deliver
-      queue_message.delivered(status, message, result)
+      queue_message.deliver_and_process
       expect(queue_message.state).to eq("ok")
     end
   end
@@ -59,8 +58,7 @@ RSpec.describe AsyncDeleteMixin do
 
       queue_messages = MiqQueue.where(cond)
       queue_messages.each do |queue_message|
-        status, message, result = queue_message.deliver
-        queue_message.delivered(status, message, result)
+        queue_message.deliver_and_process
         expect(queue_message.state).to eq("ok")
       end
       expect(@obj.class.count).to eq(count - ids.length)
@@ -76,8 +74,7 @@ RSpec.describe AsyncDeleteMixin do
       expect_any_instance_of(@obj.class).to receive(:delete).once
 
       queue_message = MiqQueue.where(cond).first
-      status, message, result = queue_message.deliver
-      queue_message.delivered(status, message, result)
+      queue_message.deliver_and_process
       expect(queue_message.state).to eq("ok")
     end
   end
@@ -93,8 +90,7 @@ RSpec.describe AsyncDeleteMixin do
 
       queue_messages = MiqQueue.where(cond)
       queue_messages.each do |queue_message|
-        status, message, result = queue_message.deliver
-        queue_message.delivered(status, message, result)
+        queue_message.deliver_and_process
         expect(queue_message.state).to eq("ok")
       end
       expect(@obj.class.count).to eq(count - ids.length)

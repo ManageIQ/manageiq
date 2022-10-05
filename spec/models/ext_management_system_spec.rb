@@ -724,9 +724,7 @@ RSpec.describe ExtManagementSystem do
       ems.orchestrate_destroy
 
       # Simulate another process delivering the worker kill message
-      queue_message = MiqQueue.order(:id).first
-      status, message, result = queue_message.deliver
-      queue_message.delivered(status, message, result)
+      MiqQueue.order(:id).first.deliver_and_process
 
       expect(ExtManagementSystem.count).to eq(0)
       expect(worker.class.exists?(worker.id)).to eq(false)
@@ -810,8 +808,7 @@ RSpec.describe ExtManagementSystem do
     end
 
     def deliver_queue_message(queue_message = MiqQueue.order(:id).first)
-      status, message, result = queue_message.deliver
-      queue_message.delivered(status, message, result)
+      queue_message.deliver_and_process
     end
   end
 

@@ -486,6 +486,14 @@ class MiqQueue < ApplicationRecord
     return status, message, result
   end
 
+  # @return status
+  def deliver_and_process(requester = nil, &block)
+    status, message, result = deliver(requester, &block)
+    delivered(status, message, result) unless status == STATUS_RETRY
+
+    status
+  end
+
   def dispatch_method(obj, args)
     Timeout.timeout(msg_timeout) do
       args = activate_miq_task(args)
