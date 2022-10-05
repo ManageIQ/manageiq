@@ -308,10 +308,7 @@ module Ansible
       end
 
       def runner_env
-        {
-          "ANSIBLE_STDOUT_CALLBACK" => "json",
-          "PYTHONPATH"              => python_path
-        }.delete_nils
+        {"PYTHONPATH" => python_path}.delete_nils
       end
 
       def credentials_info(credentials, base_dir)
