@@ -131,6 +131,22 @@ RSpec.describe MiqWorker do
     end
   end
 
+  describe ".rails_worker?" do
+    it "defaults to true" do
+      expect(described_class.rails_worker?).to be_truthy
+    end
+
+    it "can be set to false" do
+      described_class.rails_worker = false
+      expect(described_class.rails_worker?).to be_falsey
+    end
+
+    it "can be set to a lambda" do
+      described_class.rails_worker = -> { false }
+      expect(described_class.rails_worker?).to be_falsey
+    end
+  end
+
   describe ".worker_settings" do
     let(:settings) do
       {

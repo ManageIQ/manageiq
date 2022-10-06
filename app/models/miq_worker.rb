@@ -64,7 +64,10 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.rails_worker?
-    @rails_worker.kind_of?(Proc) ? @rails_worker.call : @rails_worker
+    return @rails_worker.call if @rails_worker.kind_of?(Proc)
+    return @rails_worker unless @rails_worker.nil?
+
+    true
   end
 
   def self.scalable?
@@ -90,7 +93,6 @@ class MiqWorker < ApplicationRecord
   class_attribute :default_queue_name, :required_roles, :maximum_workers_count, :include_stopping_workers_on_synchronize
   self.include_stopping_workers_on_synchronize = false
   self.required_roles = []
-  self.rails_worker = true
 
   def self.server_scope
     return current_scope if current_scope && current_scope.where_values_hash.include?('miq_server_id')
