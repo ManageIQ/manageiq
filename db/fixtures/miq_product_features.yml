@@ -907,7 +907,7 @@
   - :name: View
     :description: View Placement Group
     :feature_type: view
-    :identifier: placement_group_list
+    :identifier: placement_group_view
   - :name: Operate
     :description: Perform Operations on Placement Groups
     :feature_type: control
