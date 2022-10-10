@@ -907,7 +907,16 @@
   - :name: View
     :description: View Placement Group
     :feature_type: view
-    :identifier: placement_group_list
+    :identifier: placement_group_view
+    :children:
+    - :name: List
+      :description: Display Lists of Placement Groups
+      :feature_type: view
+      :identifier: placement_group_show_list
+    - :name: Show
+      :description: Display Individual Placement Groups
+      :feature_type: view
+      :identifier: placement_group_show
   - :name: Operate
     :description: Perform Operations on Placement Groups
     :feature_type: control
