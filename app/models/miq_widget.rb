@@ -34,10 +34,19 @@ class MiqWidget < ApplicationRecord
 
   WIDGET_REPORT_SOURCE = "Generated for widget".freeze
 
-  before_destroy :destroy_schedule
+  before_destroy :destroy_schedule, :prevent_orphaned_dashboard
 
   def destroy_schedule
     miq_schedule.destroy if miq_schedule
+  end
+
+  def prevent_orphaned_dashboard
+    dependent_sets = MiqWidgetSet.select(:name, :set_data).all.select { |set| set.has_widget_id_member?(id) }
+
+    unless dependent_sets.empty?
+      errors.add(:base, _("Widget: #{title}(#{id}) must be removed from these dashboards before it can be removed: #{dependent_sets.collect(&:name).join(", ")}"))
+      throw(:abort)
+    end
   end
 
   virtual_column :status,         :type => :string,    :uses => :miq_task
