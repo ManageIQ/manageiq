@@ -266,6 +266,34 @@ RSpec.describe MiqWidget do
     end
   end
 
+  context "#destroy validation" do
+    let(:widget) { MiqWidget.find_by(:description => "chart_vendor_and_guest_os") }
+    let(:widget_path) { Rails.root.join("product/dashboard/widgets/chart_vendor_and_guest_os.yaml") }
+
+    before do
+      MiqReport.seed_report("Vendor and Guest OS")
+      MiqWidget.sync_from_file(widget_path)
+    end
+
+    it "allows deletion of widgets not in a set/dashboard" do
+      widget.destroy!
+      expect { widget.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "prevents deletion of widgets in a set/dashboard" do
+      roles = %w[Default Operator User]
+      sets = roles.collect do |role_name|
+        FactoryBot.create(:miq_widget_set, :name => role_name, :read_only => true, :widget_id => widget.id)
+      end
+      expect { widget.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)
+
+      expect(widget.errors.full_messages.first).to include("must be removed from these dashboards")
+      roles.each do |role|
+        expect(widget.errors.full_messages.first).to include(role.to_s)
+      end
+    end
+  end
+
   context "#queue_generate_content" do
     before do
       MiqReport.seed_report("Top CPU Consumers weekly")
