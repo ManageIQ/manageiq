@@ -218,7 +218,7 @@ class ExtManagementSystem < ApplicationRecord
 
   # validation - Zone cannot be maintenance_zone when enabled == true
   def validate_zone_not_maintenance_when_ems_enabled?
-    if enabled? && zone.present? && zone == Zone.maintenance_zone
+    if enabled? && zone&.maintenance?
       errors.add(:zone, N_("cannot be the maintenance zone when provider is active"))
     end
   end
@@ -329,7 +329,7 @@ class ExtManagementSystem < ApplicationRecord
   #                            we need to specify original zone for children explicitly
   def pause!(orig_zone = nil)
     previous_zone = orig_zone || zone
-    if previous_zone == Zone.maintenance_zone
+    if previous_zone.maintenance?
       _log.warn("Trying to pause paused EMS [#{name}] id [#{id}]. Skipping.")
       return
     end
@@ -364,7 +364,7 @@ class ExtManagementSystem < ApplicationRecord
     _log.info("Resuming EMS [#{name}] id [#{id}].")
 
     new_zone = if zone_before_pause.nil?
-                 zone == Zone.maintenance_zone ? Zone.default_zone : zone
+                 zone.maintenance? ? Zone.default_zone : zone
                else
                  zone_before_pause
                end

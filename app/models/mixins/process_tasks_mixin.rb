@@ -202,7 +202,7 @@ module ProcessTasksMixin
 
     # default: validate retirement and maintenance zone, can be overridden
     def validate_task(task, instance, options)
-      if instance.try(:ext_management_system)&.zone == Zone.maintenance_zone
+      if instance.try(:ext_management_system)&.zone&.maintenance?
         task.error("#{instance.ext_management_system.name} is paused")
         return false
       end

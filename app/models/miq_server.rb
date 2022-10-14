@@ -57,7 +57,7 @@ class MiqServer < ApplicationRecord
   RESTART_EXIT_STATUS = 123
 
   def validate_zone_not_maintenance?
-    errors.add(:zone, N_('cannot be maintenance zone')) if zone == Zone.maintenance_zone
+    errors.add(:zone, N_('cannot be maintenance zone')) if zone&.maintenance?
   end
 
   def hostname
