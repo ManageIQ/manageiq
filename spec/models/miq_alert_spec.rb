@@ -555,8 +555,7 @@ RSpec.describe MiqAlert do
         :priority    => MiqQueue::HIGH_PRIORITY,
         :zone        => MiqServer.my_zone
       )
-      status, message, result = msg.deliver
-      msg.delivered(status, message, result)
+      msg.deliver_and_process
     end
   end
 

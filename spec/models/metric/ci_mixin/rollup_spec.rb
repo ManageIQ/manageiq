@@ -95,8 +95,7 @@ RSpec.describe Metric::CiMixin::Rollup do
             expect(m.miq_callback[:method_name]).to eq(:perf_capture_callback)
             expect(m.miq_callback[:args].first.sort).to eq(task_ids.sort)
 
-            status, message, result = m.deliver
-            m.delivered(status, message, result)
+            m.deliver_and_process
           end
         end
 

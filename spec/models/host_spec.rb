@@ -147,8 +147,7 @@ RSpec.describe Host do
 
         MiqQueue.delete_all
         @host.start
-        status, message, result = MiqQueue.first.deliver
-        MiqQueue.first.delivered(status, message, result)
+        MiqQueue.first.deliver_and_process
       end
 
       it "policy prevented" do
