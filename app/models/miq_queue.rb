@@ -140,7 +140,7 @@ class MiqQueue < ApplicationRecord
       :handler_id   => nil,
     )
 
-    if options[:zone].present? && options[:zone] == Zone.maintenance_zone&.name
+    if Zone.maintenance?(options[:zone])
       _log.debug("MiqQueue#put skipped: #{options.inspect}")
       return
     end

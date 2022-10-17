@@ -1273,7 +1273,7 @@ class Host < ApplicationRecord
   end
 
   def validate_task(task)
-    if ext_management_system&.zone == Zone.maintenance_zone
+    if ext_management_system&.zone&.maintenance?
       task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_ERROR, "#{ext_management_system.name} is paused")
       return false
     end
