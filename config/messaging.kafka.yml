@@ -2,8 +2,11 @@
 base: &base
   hostname: localhost
   port: 9092
-  username: admin
-  password: smartvm
+  protocol: Kafka
+  encoding: json
+  sasl.mechanism: PLAIN
+  sasl.username: admin
+  sasl.password: smartvm
 
 development:
   <<: *base

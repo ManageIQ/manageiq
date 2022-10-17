@@ -62,7 +62,6 @@ class MiqQueue < ApplicationRecord
     return if opts.nil?
 
     opts.transform_values! { |v| v.kind_of?(String) ? ManageIQ::Password.try_decrypt(v) : v }
-    opts.merge(:encoding => "json", :protocol => messaging_protocol)
   end
 
   def self.columns_for_requeue
@@ -664,16 +663,6 @@ class MiqQueue < ApplicationRecord
   end
 
   private_class_method :optional_values
-
-  def self.messaging_protocol
-    case messaging_type
-    when "artemis"
-      :Stomp
-    when "kafka"
-      :Kafka
-    end
-  end
-  private_class_method :messaging_protocol
 
   private_class_method def self.messaging_options_from_env
     return unless ENV["MESSAGING_HOSTNAME"] && ENV["MESSAGING_PORT"] && ENV["MESSAGING_USERNAME"] && ENV["MESSAGING_PASSWORD"]
