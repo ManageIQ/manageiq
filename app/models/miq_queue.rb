@@ -672,6 +672,8 @@ class MiqQueue < ApplicationRecord
       :port     => ENV["MESSAGING_PORT"].to_i,
       :username => ENV["MESSAGING_USERNAME"],
       :password => ENV["MESSAGING_PASSWORD"],
+      :protocol => ENV.fetch("MESSAGING_PROTOCOL", "Kafka"),
+      :encoding => ENV.fetch("MESSAGING_ENCODING", "json")
     }
   end
 
@@ -679,7 +681,7 @@ class MiqQueue < ApplicationRecord
   private_class_method def self.messaging_options_from_file
     return unless MESSAGING_CONFIG_FILE.file?
 
-    YAML.load_file(MESSAGING_CONFIG_FILE)[Rails.env].symbolize_keys.tap { |h| h[:host] = h.delete(:hostname) }
+    YAML.load_file(MESSAGING_CONFIG_FILE)[Rails.env].symbolize_keys
   end
 
   def destroy_potentially_stale_record
