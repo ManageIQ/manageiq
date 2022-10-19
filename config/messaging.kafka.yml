@@ -4,9 +4,8 @@ base: &base
   port: 9092
   protocol: Kafka
   encoding: json
-  sasl.mechanism: PLAIN
-  sasl.username: admin
-  sasl.password: smartvm
+  username: admin
+  password: smartvm
 
 development:
   <<: *base
