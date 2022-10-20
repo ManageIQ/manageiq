@@ -62,7 +62,6 @@ class MiqQueue < ApplicationRecord
     return if opts.nil?
 
     opts.transform_values! { |v| v.kind_of?(String) ? ManageIQ::Password.try_decrypt(v) : v }
-    opts.merge(:encoding => "json", :protocol => messaging_protocol)
   end
 
   def self.columns_for_requeue
@@ -665,16 +664,6 @@ class MiqQueue < ApplicationRecord
 
   private_class_method :optional_values
 
-  def self.messaging_protocol
-    case messaging_type
-    when "artemis"
-      :Stomp
-    when "kafka"
-      :Kafka
-    end
-  end
-  private_class_method :messaging_protocol
-
   private_class_method def self.messaging_options_from_env
     return unless ENV["MESSAGING_HOSTNAME"] && ENV["MESSAGING_PORT"] && ENV["MESSAGING_USERNAME"] && ENV["MESSAGING_PASSWORD"]
 
@@ -683,6 +672,8 @@ class MiqQueue < ApplicationRecord
       :port     => ENV["MESSAGING_PORT"].to_i,
       :username => ENV["MESSAGING_USERNAME"],
       :password => ENV["MESSAGING_PASSWORD"],
+      :protocol => ENV.fetch("MESSAGING_PROTOCOL", "Kafka"),
+      :encoding => ENV.fetch("MESSAGING_ENCODING", "json")
     }
   end
 
@@ -690,7 +681,7 @@ class MiqQueue < ApplicationRecord
   private_class_method def self.messaging_options_from_file
     return unless MESSAGING_CONFIG_FILE.file?
 
-    YAML.load_file(MESSAGING_CONFIG_FILE)[Rails.env].symbolize_keys.tap { |h| h[:host] = h.delete(:hostname) }
+    YAML.load_file(MESSAGING_CONFIG_FILE)[Rails.env].symbolize_keys
   end
 
   def destroy_potentially_stale_record

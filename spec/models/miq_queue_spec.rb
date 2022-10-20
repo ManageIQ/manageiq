@@ -979,7 +979,7 @@ RSpec.describe MiqQueue do
             :host     => "server.example.com",
             :password => "password",
             :port     => 9092,
-            :protocol => nil,
+            :protocol => "Kafka",
             :username => "admin"
           )
         end
@@ -995,7 +995,7 @@ RSpec.describe MiqQueue do
             :host     => "server.example.com",
             :password => "password",
             :port     => 9092,
-            :protocol => nil,
+            :protocol => "Kafka",
             :username => "admin"
           )
         end
@@ -1004,47 +1004,49 @@ RSpec.describe MiqQueue do
       it "prefers settings from file if any ENV vars are missing" do
         stub_const("ENV", env_vars) # No password
 
+        allow(MiqQueue::MESSAGING_CONFIG_FILE).to receive(:file?).and_return(true)
         allow(YAML).to receive(:load_file).and_call_original
-        expect(YAML).to receive(:load_file).with(MiqQueue::MESSAGING_CONFIG_FILE).and_return("test" => {"hostname" => "kafka.example.com", "port" => 9092, "username" => "user", "password" => "password"})
+        expect(YAML).to receive(:load_file).with(MiqQueue::MESSAGING_CONFIG_FILE).and_return("test" => {"host" => "kafka.example.com", "port" => 9092, "protocol" => "Kafka", "encoding" => "json", "username" => "user", "password" => "password"})
 
         expect(MiqQueue.send(:messaging_client_options)).to eq(
           :encoding => "json",
           :host     => "kafka.example.com",
           :password => "password",
           :port     => 9092,
-          :protocol => nil,
+          :protocol => "Kafka",
           :username => "user"
         )
       end
     end
 
-    context "prefers settings from file when ENV vars are missing" do
+    context "with messaging.yml" do
       it "with clear text password" do
+        allow(MiqQueue::MESSAGING_CONFIG_FILE).to receive(:file?).and_return(true)
         allow(YAML).to receive(:load_file).and_call_original
-        expect(YAML).to receive(:load_file).with(MiqQueue::MESSAGING_CONFIG_FILE).and_return("test" => {"hostname" => "kafka.example.com", "port" => 9092, "username" => "user", "password" => "password"})
-
-        expect(MiqQueue.send(:messaging_client_options)).to eq(
-          :encoding => "json",
-          :host     => "kafka.example.com",
-          :password => "password",
-          :port     => 9092,
-          :protocol => nil,
-          :username => "user"
-        )
-      end
-
-      it "with encrypted password" do
-        allow(YAML).to receive(:load_file).and_call_original
-        expect(YAML).to receive(:load_file).with(MiqQueue::MESSAGING_CONFIG_FILE).and_return("test" => {"hostname" => "kafka.example.com", "port" => 9092, "username" => "user", "password" => ManageIQ::Password.encrypt("password"), "sasl.password" => ManageIQ::Password.encrypt("password")})
+        expect(YAML).to receive(:load_file).with(MiqQueue::MESSAGING_CONFIG_FILE).and_return("test" => {"host" => "kafka.example.com", "port" => 9092, "protocol" => "Kafka", "encoding" => "json", "sasl.username" => "user", "sasl.password" => "password"})
 
         expect(MiqQueue.send(:messaging_client_options)).to eq(
           :encoding        => "json",
           :host            => "kafka.example.com",
-          :password        => "password",
           :port            => 9092,
-          :protocol        => nil,
-          :"sasl.password" => "password",
-          :username        => "user"
+          :protocol        => "Kafka",
+          :"sasl.username" => "user",
+          :"sasl.password" => "password"
+        )
+      end
+
+      it "with encrypted password" do
+        allow(MiqQueue::MESSAGING_CONFIG_FILE).to receive(:file?).and_return(true)
+        allow(YAML).to receive(:load_file).and_call_original
+        expect(YAML).to receive(:load_file).with(MiqQueue::MESSAGING_CONFIG_FILE).and_return("test" => {"host" => "kafka.example.com", "port" => 9092, "protocol" => "Kafka", "encoding" => "json", "sasl.username" => "user", "sasl.password" => ManageIQ::Password.encrypt("password")})
+
+        expect(MiqQueue.send(:messaging_client_options)).to eq(
+          :encoding        => "json",
+          :host            => "kafka.example.com",
+          :port            => 9092,
+          :protocol        => "Kafka",
+          :"sasl.username" => "user",
+          :"sasl.password" => "password"
         )
       end
     end
