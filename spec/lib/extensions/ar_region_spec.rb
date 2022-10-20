@@ -8,8 +8,6 @@ RSpec.describe ArRegion do
   end
 
   context "#miq_region" do
-    before { MiqRegion.seed }
-
     let!(:vm) { FactoryBot.create(:vm) }
 
     it "returns the MiqRegion record" do
@@ -26,12 +24,12 @@ RSpec.describe ArRegion do
 
   context "#region_description" do
     it "when the region exists" do
-      MiqRegion.seed
       vm = FactoryBot.create(:vm)
       expect(vm.region_description).to eq(MiqRegion.first.description)
     end
 
     it "when the region does not exist" do
+      MiqRegion.destroy_all
       vm = FactoryBot.create(:vm)
       expect(vm.region_description).to be_nil
     end

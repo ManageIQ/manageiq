@@ -36,7 +36,6 @@ RSpec.describe ChargebackContainerProject do
   end
 
   before do
-    MiqRegion.seed
     ChargebackRateDetailMeasure.seed
     ChargeableField.seed
     MiqEnterprise.seed

@@ -16,8 +16,6 @@ RSpec.describe MiqRequestTask::PostInstallCallback do
   end
 
   context "#post_install_callback_url" do
-    before { MiqRegion.seed }
-
     it "without remote ui url" do
       expect(task.post_install_callback_url).to be_nil
     end

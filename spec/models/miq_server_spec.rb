@@ -5,7 +5,6 @@ RSpec.describe MiqServer do
 
   context ".seed" do
     before do
-      MiqRegion.seed
       Zone.seed
     end
 
@@ -80,7 +79,6 @@ RSpec.describe MiqServer do
     end
 
     it "cannot assign to maintenance zone" do
-      MiqRegion.seed
       Zone.seed
 
       @miq_server.zone = Zone.maintenance_zone
@@ -399,8 +397,6 @@ RSpec.describe MiqServer do
   end
 
   context ".managed_resources" do
-    before { MiqRegion.seed }
-
     let(:ems) { FactoryBot.create(:ems_infra) }
     let!(:active_vm) { FactoryBot.create(:vm_infra, :ext_management_system => ems) }
     let!(:archived_vm) { FactoryBot.create(:vm_infra) }

@@ -3,7 +3,6 @@ RSpec.describe Zone do
   include_examples "AggregationMixin", "ext_management_systems"
 
   context ".seed" do
-    before { MiqRegion.seed }
     include_examples ".seed called multiple times", 2
   end
 
@@ -211,7 +210,6 @@ RSpec.describe Zone do
   end
 
   it "removes queued items on destroy" do
-    MiqRegion.seed
     Zone.seed
     zone = FactoryBot.create(:zone)
     FactoryBot.create(:miq_queue, :zone => zone.name)
@@ -226,8 +224,6 @@ RSpec.describe Zone do
   end
 
   describe "#destroy" do
-    before { MiqRegion.seed }
-
     it "fails for a zone with servers when not podified" do
       zone = FactoryBot.create(:zone)
       zone.miq_servers.create!(:name => "my_server")
@@ -273,7 +269,6 @@ RSpec.describe Zone do
     end
 
     it ".destroy deletes the server in the zone" do
-      MiqRegion.seed
       zone = Zone.create!(:name => "my_zone", :description => "some zone")
       server = zone.miq_servers.first
       zone.destroy!

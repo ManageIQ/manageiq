@@ -225,8 +225,6 @@ RSpec.describe Vmdb::Settings do
     end
 
     it "saving settings for Zone does not change saved Region or Server settings" do
-      MiqRegion.seed
-
       described_class.save!(miq_server.zone, :api => {:token_ttl => "2.hour"})
       miq_server.zone.reload
       expect(miq_server.zone.settings_changes.count).to eq 1
@@ -240,8 +238,6 @@ RSpec.describe Vmdb::Settings do
     end
 
     it "saving settings for Region does not change saved Zone or Server settings" do
-      MiqRegion.seed
-
       described_class.save!(miq_server.zone.miq_region, :api => {:token_ttl => "3.hour"})
       miq_server.zone.miq_region.reload
 
@@ -265,8 +261,6 @@ RSpec.describe Vmdb::Settings do
       let(:reset) { described_class::RESET_COMMAND }
 
       before do
-        MiqRegion.seed
-
         described_class.save!(
           MiqRegion.first,
           :api     => {
@@ -509,7 +503,6 @@ RSpec.describe Vmdb::Settings do
     end
 
     it "can load settings on each level from Region -> Zone -> Server hierarchy" do
-      MiqRegion.seed
       described_class.save!(server.zone.miq_region, :api => {:token_ttl => "3.hour"})
       described_class.save!(server.zone, :api => {:token_ttl => "4.hour"})
       described_class.save!(server, :api => {:token_ttl => "5.hour"})
@@ -525,8 +518,6 @@ RSpec.describe Vmdb::Settings do
     end
 
     it "applies settings from up the hierarchy: Region -> Zone -> Server" do
-      MiqRegion.seed
-
       described_class.save!(server.zone.miq_region, :api => {:token_ttl => "3.hour"})
       settings = Vmdb::Settings.for_resource(server)
       expect(settings.api.token_ttl).to eq "3.hour"

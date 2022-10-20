@@ -123,7 +123,7 @@ RSpec.describe MiqServer do
       let(:log_end)                   { Time.zone.parse("2018-05-11 15:34:16 UTC") }
       let(:daily_log)                 { Rails.root.join("data", "user", "system", "evm_server_daily.zip").to_s }
       let(:log_depot)                 { FactoryBot.create(:file_depot) }
-      let!(:region)                   { MiqRegion.seed }
+      let(:region)                    { MiqRegion.my_region }
       let(:zone)                      { @miq_server.zone }
       before do
         require 'vmdb/util'

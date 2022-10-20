@@ -3,7 +3,6 @@ RSpec.describe MetricRollup do
     let(:ems) { FactoryBot.build(:ems_vmware) }
 
     before do
-      MiqRegion.seed
       MiqEnterprise.seed
     end
 

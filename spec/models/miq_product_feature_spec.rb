@@ -190,10 +190,6 @@ RSpec.describe MiqProductFeature do
         end
 
         context "with tenants from remote region" do
-          before do
-            MiqRegion.seed
-          end
-
           def id_for_model_in_region(model, region)
             model.id_in_region(model.count + 1_000_000, region.region)
           end

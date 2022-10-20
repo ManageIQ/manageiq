@@ -18,7 +18,6 @@ RSpec.describe VmRetireTask do
 
   describe "deliver_to_automate" do
     before do
-      MiqRegion.seed
       allow(MiqServer).to receive(:my_zone).and_return(Zone.seed.name)
       miq_request.approve(approver, "why not??")
     end

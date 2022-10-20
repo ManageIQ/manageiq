@@ -1,11 +1,6 @@
 RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
   let(:job) { FactoryBot.create(:embedded_ansible_job) }
 
-  before do
-    region = MiqRegion.seed
-    allow(MiqRegion).to receive(:my_region).and_return(region)
-  end
-
   context "when embedded_ansible role is enabled" do
     before do
       EvmSpecHelper.assign_embedded_ansible_role
