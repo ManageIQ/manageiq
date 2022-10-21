@@ -17,7 +17,7 @@ RUN source /etc/default/evm && \
     echo "# This file intentionally left blank. ManageIQ maintains its own SSL configuration" > /etc/httpd/conf.d/ssl.conf
 
 ## Overwrite entrypoint from pods repo
-COPY docker-assets/entrypoint /usr/local/bin
+COPY container-assets/entrypoint /usr/local/bin
 
 EXPOSE 443
 
