@@ -9,8 +9,6 @@ module Metric::CiMixin::Processing
     interval_orig = interval_name
     interval_name = 'hourly' if interval_name == 'historical'
 
-    affected_timestamps = []
-
     transform_resources!(counters_data)
     resources = counters_data.keys
 
@@ -26,7 +24,6 @@ module Metric::CiMixin::Processing
 
         Benchmark.realtime_block(:process_counter_values) do
           counter_values.each do |ts, cv|
-            affected_timestamps << ts
             ts = Metric::Helper.nearest_realtime_timestamp(ts) if interval_name == 'realtime'
 
             col_vals = {}
@@ -56,8 +53,8 @@ module Metric::CiMixin::Processing
                 end
               end
 
-              # Create the hashes for the rows
-              rt = (rt_rows[ts] ||= {
+              # Create hashes for the rows
+              rt = (rt_rows[[ts, resource]] ||= {
                 :capture_interval_name => interval_name,
                 :capture_interval      => counter[:capture_interval],
                 :resource              => resource,
@@ -98,8 +95,6 @@ module Metric::CiMixin::Processing
       publish_metrics(rt_rows) if syndicate_metrics?
     end
     _log.info("#{log_header} Processing for #{log_specific_targets(resources)}, for range [#{start_time} - #{end_time}]...Complete - Timings: #{t.inspect}")
-
-    affected_timestamps
   end
 
   private
@@ -115,7 +110,7 @@ module Metric::CiMixin::Processing
   end
 
   def transform_parameters_row_per_metric(_resources, interval_name, _start_time, _end_time, rt_rows)
-    rt_rows.flat_map do |ts, rt|
+    rt_rows.flat_map do |(ts, _resource), rt|
       rt.merge!(Metric::Processing.process_derived_columns(rt[:resource], rt, interval_name == 'realtime' ? Metric::Helper.nearest_hourly_timestamp(ts) : nil))
       rt.delete_nils
       rt_tags   = rt.slice(:capture_interval_name, :capture_interval, :resource_name).symbolize_keys
@@ -169,7 +164,7 @@ module Metric::CiMixin::Processing
     end
 
     Benchmark.realtime_block(:process_perfs) do
-      rt_rows.each do |ts, rt|
+      rt_rows.each do |(ts, _resource), rt|
         rt[:resource_id]   = rt[:resource].id
         rt[:resource_type] = rt[:resource].class.base_class.name
 
