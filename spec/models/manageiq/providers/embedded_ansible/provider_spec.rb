@@ -4,7 +4,6 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::Provider do
   let(:miq_server) { FactoryBot.create(:miq_server) }
 
   before do
-    MiqRegion.seed
     Zone.seed
     EvmSpecHelper.assign_embedded_ansible_role(miq_server)
   end

@@ -1,7 +1,5 @@
 RSpec.describe Metric::Finders do
   before do
-    MiqRegion.seed
-
     @zone = EvmSpecHelper.local_miq_server.zone
   end
 

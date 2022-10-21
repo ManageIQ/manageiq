@@ -15,7 +15,6 @@ RSpec.describe ArPglogicalMigrationHelper do
 
   context "with a region seeded" do
     let!(:my_region) do
-      MiqRegion.seed
       MiqRegion.my_region
     end
 

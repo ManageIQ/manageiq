@@ -363,7 +363,6 @@ RSpec.describe MiqQueue do
 
   context "#put" do
     before do
-      MiqRegion.seed
       Zone.seed
       miq_server
     end

@@ -48,7 +48,6 @@ RSpec.describe MiqServer, "::AtStartup" do
   end
 
   it ".log_under_management (private)" do
-    MiqRegion.seed
     ems = FactoryBot.create(:ems_infra)
     FactoryBot.create(:host_vmware, :ext_management_system => ems)
     FactoryBot.create(:vm_vmware, :ext_management_system => ems)
@@ -57,7 +56,6 @@ RSpec.describe MiqServer, "::AtStartup" do
   end
 
   it ".log_not_under_management (private)" do
-    MiqRegion.seed
     FactoryBot.create(:host_vmware)
     FactoryBot.create(:vm_vmware)
     expect($log).to receive(:info).with(/VMs: \[1\], Hosts: \[1\]/)

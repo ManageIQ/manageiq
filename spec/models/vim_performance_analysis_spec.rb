@@ -33,7 +33,6 @@ RSpec.describe VimPerformanceAnalysis do
   end
 
   before do
-    MiqRegion.seed
     EvmSpecHelper.local_miq_server
   end
 

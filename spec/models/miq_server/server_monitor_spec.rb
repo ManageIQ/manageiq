@@ -1,7 +1,6 @@
 RSpec.describe "Server Monitor" do
   context "After Setup," do
     before do
-      MiqRegion.seed
       ServerRole.seed
 
       # Do this manually, to avoid caching at the class level

@@ -10,10 +10,6 @@ RSpec.describe MiqRegion do
     ApplicationRecord.region_to_range(remote_region_number).first
   end
   context "after seeding" do
-    before do
-      MiqRegion.seed
-    end
-
     it "should increment naming sequence number after each call" do
       expect(MiqRegion.my_region.next_naming_sequence("namingtest$n{3}", "naming")).to eq(1)
       expect(MiqRegion.my_region.next_naming_sequence("namingtest$n{3}", "naming")).to eq(2)
@@ -48,6 +44,7 @@ RSpec.describe MiqRegion do
 
   context ".seed" do
     before do
+      MiqRegion.destroy_all
       @region_number = 99
       allow(MiqRegion).to receive_messages(:my_region_number => @region_number)
       MiqRegion.seed

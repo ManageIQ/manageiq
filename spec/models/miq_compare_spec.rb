@@ -18,7 +18,6 @@ RSpec.describe MiqCompare do
       host1 = FactoryBot.create(:host_vmware)
       host2 = FactoryBot.create(:host_vmware)
 
-      MiqRegion.seed
       MiqReport.seed_report("hosts")
 
       report = MiqReport.find_by(:name => "Hosts: Compare Template")

@@ -30,7 +30,6 @@ RSpec.describe ChargebackContainerImage do
   let(:metric_rollup_params) { {:parent_ems_id => ems.id, :tag_names => ""} }
 
   before do
-    MiqRegion.seed
     ChargebackRateDetailMeasure.seed
     ChargeableField.seed
     MiqEnterprise.seed

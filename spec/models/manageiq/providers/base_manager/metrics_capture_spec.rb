@@ -22,10 +22,6 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
   end
 
   describe ".perf_capture_gap" do
-    before do
-      MiqRegion.seed
-    end
-
     let(:host) { FactoryBot.create(:host_vmware, :ext_management_system => ems, :perf_capture_enabled => true) }
     let!(:vm)   { FactoryBot.create(:vm_vmware, :ext_management_system => ems, :host => host) }
     let(:host2) do
@@ -123,10 +119,6 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
   end
 
   describe ".perf_capture_all_queue" do
-    before do
-      MiqRegion.seed
-    end
-
     let(:host) { FactoryBot.create(:host_vmware, :ext_management_system => ems, :perf_capture_enabled => true) }
     let(:vm)   { FactoryBot.create(:vm_vmware, :ext_management_system => ems, :host => host).tap { MiqQueue.delete_all } }
     let(:host2) do

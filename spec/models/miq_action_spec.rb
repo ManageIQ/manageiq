@@ -443,7 +443,6 @@ RSpec.describe MiqAction do
 
   context 'validate action email should have correct type' do
     before do
-      MiqRegion.seed
       ServerRole.seed
     end
 

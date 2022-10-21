@@ -1,7 +1,5 @@
 RSpec.describe Metric::CiMixin::Rollup do
   before do
-    MiqRegion.seed
-
     @zone = miq_server.zone
   end
 

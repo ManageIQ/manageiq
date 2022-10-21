@@ -672,7 +672,6 @@ RSpec.describe Host do
     let(:host) { FactoryBot.create(:host_vmware, :ext_management_system => ems) }
 
     before do
-      MiqRegion.seed
       Zone.seed
     end
 

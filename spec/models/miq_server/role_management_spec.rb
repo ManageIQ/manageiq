@@ -1,7 +1,6 @@
 RSpec.describe "Server Role Management" do
   context "After Setup," do
     before do
-      MiqRegion.seed
       ServerRole.seed
       @server_roles = ServerRole.all
       @miq_server   = EvmSpecHelper.local_miq_server

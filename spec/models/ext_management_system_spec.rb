@@ -513,7 +513,6 @@ RSpec.describe ExtManagementSystem do
 
   context "#pause!" do
     before do
-      MiqRegion.seed
       Zone.seed
     end
 
@@ -575,7 +574,6 @@ RSpec.describe ExtManagementSystem do
 
   context "#resume" do
     before do
-      MiqRegion.seed
       Zone.seed
     end
 
@@ -678,7 +676,6 @@ RSpec.describe ExtManagementSystem do
 
   context "changing zone" do
     before do
-      MiqRegion.seed
       Zone.seed
     end
 

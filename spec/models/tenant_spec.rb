@@ -933,6 +933,7 @@ RSpec.describe Tenant do
   end
 
   context "using more regions with factory" do
+    before { MiqRegion.destroy_all }
     let!(:other_region) { FactoryBot.create(:miq_region) }
 
     context "without MiqRegion.seed" do
