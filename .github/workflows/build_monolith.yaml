@@ -1,0 +1,17 @@
+name: Build Monolith
+on:
+  repository_dispatch:
+    types:
+    - build
+jobs:
+  build_monolith:
+    if: github.repository_owner == 'ManageIQ'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Docker login
+      run: echo ${{ secrets.REGISTRY_PASSWORD }} | docker login docker.io --password-stdin --username ${{ secrets.REGISTRY_USERNAME }}
+    - name: Build monolithic container
+      run: |
+        docker build . -t docker.io/manageiq/manageiq:latest
+        docker push docker.io/manageiq/manageiq:latest
