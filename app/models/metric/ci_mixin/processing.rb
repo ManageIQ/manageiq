@@ -9,7 +9,6 @@ module Metric::CiMixin::Processing
     interval_orig = interval_name
     interval_name = 'hourly' if interval_name == 'historical'
 
-    transform_resources!(counters_data)
     resources = counters_data.keys
 
     _log.info("#{log_header} Processing for #{log_specific_targets(resources)}, for range [#{start_time} - #{end_time}]...")
@@ -98,16 +97,6 @@ module Metric::CiMixin::Processing
   end
 
   private
-
-  def transform_resources!(counters_data)
-    # Fetch ActiveRecord object by 1 query per Model
-    grouped_resource_refs = counters_data.keys.each_with_object({}) { |x, obj| (obj[x.first] ||= []) << x.second }
-    fetched_records = grouped_resource_refs.keys.each_with_object({}) do |x, obj|
-      x.constantize.where(:id => grouped_resource_refs[x]).each { |rec| obj[[x, rec.id]] = rec }
-    end
-    # Transforming [Class, id] that were sent via the counters_data into the ActiveRecord objects
-    counters_data.transform_keys! { |x| fetched_records[x] }
-  end
 
   def transform_parameters_row_per_metric(_resources, interval_name, _start_time, _end_time, rt_rows)
     rt_rows.flat_map do |(ts, _resource), rt|
