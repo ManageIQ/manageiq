@@ -13,6 +13,7 @@ RUN dnf -y --setopt=tsflags=nodocs install \
     rm -rf /var/cache/dnf
 
 ## Copy/link the appliance files again so that we get ssl
+RUN cp -Rv /opt/manageiq/manageiq-appliance/COPY/* /
 RUN source /etc/default/evm && \
     echo "# This file intentionally left blank. ManageIQ maintains its own SSL configuration" > /etc/httpd/conf.d/ssl.conf
 
