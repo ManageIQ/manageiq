@@ -33,6 +33,8 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     perf_capture_queue('realtime')
   end
 
+  # @param [String] interval "realtime" or "historical". Storage uses "hourly"
+  # @param [Boolean] rollups: typically true
   def perf_capture_queue(interval, start_time: nil, end_time: nil, rollups: false)
     if interval == "realtime" && Metric::Capture.historical_days != 0
       historical_start = Metric::Capture.historical_start_time
@@ -44,17 +46,17 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     targets_by_class.each do |class_name, class_targets|
       class_interval = class_name == "Storage" ? "hourly" : interval
 
-      if class_name == "Host" && rollups # implied: class_interval == realtime
+      if class_name == "Host" && rollups # class_interval == realtime (only possible value if rollups == true)
         class_targets.group_by(&:ems_cluster).each do |ems_cluster, hosts|
           perf_capture_queue_targets(hosts, interval, :start_time => start_time, :end_time => end_time, :parent => ems_cluster)
         end
       elsif class_interval == "historical"
         perf_capture_queue_targets_hist(class_targets, class_interval, :start_time => start_time, :end_time => end_time)
-      else
+      else # class_interval == "realtime" or "hourly" (Storage)
         perf_capture_queue_targets(class_targets, class_interval, :start_time => start_time, :end_time => end_time)
       end
 
-      # handle scenarios that add historial captures to the realtime captures
+      # detect gaps and add add "historial" captures for a "realtime" capture
       if class_interval == "realtime" # implied: class_name != "Storage"
         targets_already_captured, targets_not_captured = class_targets.partition(&:last_perf_capture_on)
 
@@ -76,7 +78,8 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     end
   end
 
-  def perf_capture_queue_targets_hist(targets, interval, start_time: nil, end_time: nil)
+  # @param [String] interval only ever "historical"
+  def perf_capture_queue_targets_hist(targets, interval, start_time:, end_time:)
     split_capture_intervals(start_time, end_time).each do |st, ed|
       perf_capture_queue_targets(targets, interval, :start_time => st, :end_time => ed)
     end
@@ -157,7 +160,7 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     end
   end
 
-  def perf_capture_queue_targets(targets, interval, start_time: nil, end_time: nil, parent: nil)
+  def perf_capture_queue_targets(targets, interval, start_time:, end_time:, parent: nil)
     task = create_rollup_task_for_cluster(parent, targets) if parent
     targets.each do |target|
       perf_capture_queue_target(target, interval, :start_time => start_time, :end_time => end_time, :task_id => task&.id)
@@ -166,7 +169,7 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     end
   end
 
-  def perf_capture_queue_target(target, interval_name, start_time: nil, end_time: nil, task_id: nil)
+  def perf_capture_queue_target(target, interval_name, start_time:, end_time:, task_id: nil)
     # cb is the task used to group cluster realtime metrics
     cb = {:class_name => target.class.name, :instance_id => target.id, :method_name => :perf_capture_callback, :args => [[task_id]]} if task_id
 
@@ -186,6 +189,7 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     # reason for setting MiqQueue#miq_task_id is to initializes MiqTask.started_on column when message delivered.
     MiqQueue.create_with(:miq_task_id => task_id, :miq_callback => cb).put_or_update(queue_item) do |msg, qi|
       if msg.nil?
+        # no message on queue. put on queue, but with default state
         qi.delete(:state)
         qi
       elsif msg.state == "ready" && task_id
@@ -195,6 +199,8 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
         qi[:miq_callback] = cb.merge(:args => [existing_tasks + [task_id]])
         qi
       else
+        # either state == ready and no task ids, we have no change so let it be
+        # or state = dequeue, which means it is done
         _log.debug("Skipping capture of #{target.log_target} - Performance capture for interval #{interval_name} is still running")
         # NOTE: do not update the message queue
         nil
@@ -211,7 +217,7 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
   #  [[2017-01-03 12:00:00 UTC, 2017-01-04 12:00:00 UTC],
   #   [2017-01-02 12:00:00 UTC, 2017-01-03 12:00:00 UTC],
   #   [2017-01-01 12:00:00 UTC, 2017-01-02 12:00:00 UTC]]
-  def split_capture_intervals(start_time = nil, end_time = nil, threshold = 1.day)
+  def split_capture_intervals(start_time, end_time, threshold = 1.day)
     return [] unless start_time
 
     (start_time.utc..end_time.utc).step_value(threshold).each_cons(2).collect do |s_time, e_time|

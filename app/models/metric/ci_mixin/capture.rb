@@ -121,7 +121,7 @@ module Metric::CiMixin::Capture
 
       # Convert to format allowing to send multiple resources at once
       counters_data = {
-        [self.class.base_class.name, self.id] => {
+        self => {
           :counters       => counters,
           :counter_values => counter_values
         }
