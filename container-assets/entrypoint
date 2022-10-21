@@ -61,6 +61,8 @@ else
   generate_miq_server_cert.sh
 fi
 
+usr/sbin/httpd -DFOREGROUND &
+
 rm -f /var/www/miq/vmdb/tmp/pids/evm.pid
 
 exec ruby /var/www/miq/vmdb/lib/workers/bin/evm_server.rb
