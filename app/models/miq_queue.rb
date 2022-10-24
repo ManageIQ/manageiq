@@ -33,7 +33,7 @@ class MiqQueue < ApplicationRecord
   PRIORITY_DIR    = [:higher, :lower]
 
   def self.messaging_type
-    ENV["MESSAGING_TYPE"] || Settings.prototype.messaging_type
+    ENV.fetch("MESSAGING_TYPE", nil) || Settings.messaging_type
   end
 
   def self.messaging_client(client_ref)

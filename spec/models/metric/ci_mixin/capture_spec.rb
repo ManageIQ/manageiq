@@ -130,6 +130,10 @@ RSpec.describe Metric::CiMixin::Capture do
             # No to other warnings should be logged
             expect($log).not_to receive(:warn)
 
+            messaging_client = double("ManageIQ::Messaging")
+            expect(messaging_client).to receive(:publish_topic).at_least(:once)
+            expect(MiqQueue).to receive(:messaging_client).with('metrics_capture').and_return(messaging_client).at_least(:once)
+
             # sending no collection period overlap will cause hole in the data
             capture_data('2013-08-28T11:56:00Z', nil)
           end

@@ -862,6 +862,7 @@
   :level_policy: info
   :level_remote_console: info
   :secret_filter: []
+:messaging_type: kafka
 :notifications:
   :history:
     :purge_window_size: 1000
@@ -912,8 +913,6 @@
   :maindb: ExtManagementSystem
   :run_automate_methods_on_service_api_submit: false
   :allow_api_service_ordering: true
-:prototype:
-  :messaging_type: miq_queue
 :recommendations:
   :cpu_minimum: 1
   :mem_minimum: 32.megabytes
@@ -1105,6 +1104,7 @@
           :queue_timeout: 120.minutes
           :dequeue_method: sql
       :event_handler:
+        :dequeue_method: miq_messaging
         :nice_delta: 7
       :generic_worker:
         :count: 2
