@@ -257,6 +257,10 @@ class MiqWorker < ApplicationRecord
     fetch_worker_settings_from_server(MiqServer.my_server, options)
   end
 
+  def self.reload_worker_settings
+    # By default worker settings are reloaded periodically by the worker runner
+  end
+
   def self.start_workers
     return unless self.has_required_role?
     workers.times { start_worker }
