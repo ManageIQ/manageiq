@@ -6,6 +6,13 @@ module MiqServer::WorkerManagement::Monitor::Settings
     attr_reader :worker_monitor_settings
   end
 
+  def reload_worker_settings
+    sync_config
+    reset_queue_messages
+    notify_workers_of_config_change(Time.now.utc)
+    MiqWorkerType.worker_classes.each(&:reload_worker_settings)
+  end
+
   def sync_config
     sync_worker_monitor_settings
     sync_child_worker_settings
