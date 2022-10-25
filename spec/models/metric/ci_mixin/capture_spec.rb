@@ -122,20 +122,40 @@ RSpec.describe Metric::CiMixin::Capture do
         end
 
         context "2 collection periods total, there is data hole between periods" do
-          it "verifies that hole in the data is logged, corrupted data is logged and no other warnings are logged" do
-            # Hole in the data is logged
-            expect($log).to receive(:warn).with(/expected to get data as of/).exactly(:once)
-            # Corrupted data is logged NOTE: This is emitted from the provider
-            expect($log).to receive(:warn).with(/Distance of the multiple streams of data is invalid/).exactly(:once)
-            # No to other warnings should be logged
-            expect($log).not_to receive(:warn)
+          context "with syndication disabled" do
+            before { stub_settings_merge(:performance => {:syndicate_metrics => false}) }
 
-            messaging_client = double("ManageIQ::Messaging")
-            expect(messaging_client).to receive(:publish_topic).at_least(:once)
-            expect(MiqQueue).to receive(:messaging_client).with('metrics_capture').and_return(messaging_client).at_least(:once)
+            it "verifies that hole in the data is logged, corrupted data is logged and no other warnings are logged" do
+              # Hole in the data is logged
+              expect($log).to receive(:warn).with(/expected to get data as of/).exactly(:once)
+              # Corrupted data is logged NOTE: This is emitted from the provider
+              expect($log).to receive(:warn).with(/Distance of the multiple streams of data is invalid/).exactly(:once)
+              # No to other warnings should be logged
+              expect($log).not_to receive(:warn)
 
-            # sending no collection period overlap will cause hole in the data
-            capture_data('2013-08-28T11:56:00Z', nil)
+              # sending no collection period overlap will cause hole in the data
+              capture_data('2013-08-28T11:56:00Z', nil)
+            end
+          end
+
+          context "with syndication enabled" do
+            before { stub_settings_merge(:performance => {:syndicate_metrics => true}) }
+
+            it "verifies that hole in the data is logged, corrupted data is logged and no other warnings are logged" do
+              # Hole in the data is logged
+              expect($log).to receive(:warn).with(/expected to get data as of/).exactly(:once)
+              # Corrupted data is logged NOTE: This is emitted from the provider
+              expect($log).to receive(:warn).with(/Distance of the multiple streams of data is invalid/).exactly(:once)
+              # No to other warnings should be logged
+              expect($log).not_to receive(:warn)
+
+              messaging_client = double("ManageIQ::Messaging")
+              expect(messaging_client).to receive(:publish_topic).at_least(:once)
+              expect(MiqQueue).to receive(:messaging_client).with('metrics_capture').and_return(messaging_client).at_least(:once)
+
+              # sending no collection period overlap will cause hole in the data
+              capture_data('2013-08-28T11:56:00Z', nil)
+            end
           end
         end
 
