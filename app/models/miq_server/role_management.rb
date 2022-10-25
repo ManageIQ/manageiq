@@ -284,4 +284,20 @@ module MiqServer::RoleManagement
       synchronize_active_roles(region.active_miq_servers.includes([:active_roles, :inactive_roles]), ServerRole.region_scoped_roles)
     end
   end
+
+  def monitor_active_roles
+    return unless active_roles_changed?
+
+    roles_added, roles_deleted, _roles_unchanged = role_changes
+    roles_changed = roles_added | roles_deleted
+
+    log_role_changes
+    sync_active_roles
+    set_active_role_flags
+
+    EvmDatabase.restart_failover_monitor_service if roles_changed.include?("database_operations")
+
+    worker_manager.reset_queue_messages
+    worker_manager.notify_workers_of_config_change(Time.now.utc)
+  end
 end

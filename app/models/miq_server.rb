@@ -171,6 +171,10 @@ class MiqServer < ApplicationRecord
     ::Settings.server.server_log_frequency.to_i_with_method
   end
 
+  def server_role_monitor_frequency
+    ::Settings.server.server_role_monitor_frequency.to_i_with_method
+  end
+
   def worker_dequeue_frequency
     ::Settings.server.worker_dequeue_frequency.to_i_with_method
   end
@@ -206,6 +210,7 @@ class MiqServer < ApplicationRecord
     end if threshold_exceeded?(:server_monitor_frequency, now)
 
     Benchmark.realtime_block(:log_active_servers)      { log_active_servers }                     if threshold_exceeded?(:server_log_frequency, now)
+    Benchmark.realtime_block(:role_monitor)            { monitor_active_roles }                   if threshold_exceeded?(:server_role_monitor_frequency, now)
     Benchmark.realtime_block(:worker_monitor)          { worker_manager.monitor_workers }         if threshold_exceeded?(:worker_monitor_frequency, now)
     Benchmark.realtime_block(:worker_dequeue)          { worker_manager.populate_queue_messages } if threshold_exceeded?(:worker_dequeue_frequency, now)
     monitor_myself

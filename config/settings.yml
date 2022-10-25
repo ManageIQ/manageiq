@@ -971,6 +971,7 @@
   :server_log_frequency: 5.minutes
   :server_log_timings_threshold: 1.second
   :server_monitor_frequency: 60.seconds
+  :server_role_monitor_frequency: 15.seconds
   :session_store: cache
   :startup_timeout: 300
   :stop_poll: 10.seconds
