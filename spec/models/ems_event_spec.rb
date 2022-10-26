@@ -121,7 +121,7 @@ RSpec.describe EmsEvent do
       end
 
       context "messaging_type: artemis" do
-        before { stub_settings_merge(:messaging_type => 'artemis') }
+        before { stub_settings_merge(:messaging => {:type => 'artemis'}) }
 
         it "Adds event to Artemis queue" do
           messaging_client = double("ManageIQ::Messaging")
@@ -141,7 +141,7 @@ RSpec.describe EmsEvent do
       end
 
       context "messaging_type: kafka" do
-        before { stub_settings_merge(:messaging_type => 'kafka') }
+        before { stub_settings_merge(:messaging => {:type => 'kafka'}) }
 
         it "Adds event to Kafka topic" do
           messaging_client = double("ManageIQ::Messaging")
@@ -161,7 +161,7 @@ RSpec.describe EmsEvent do
       end
 
       context "messaging_type: miq_queue" do
-        before { stub_settings_merge(:messaging_type => 'miq_queue') }
+        before { stub_settings_merge(:messaging => {:type => 'miq_queue'}) }
 
         it "Adds event to MiqQueue" do
           expected_queue_payload = {

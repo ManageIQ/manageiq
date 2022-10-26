@@ -862,7 +862,8 @@
   :level_policy: info
   :level_remote_console: info
   :secret_filter: []
-:messaging_type: kafka
+:messaging:
+  :type: kafka
 :notifications:
   :history:
     :purge_window_size: 1000
