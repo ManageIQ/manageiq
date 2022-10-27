@@ -51,7 +51,7 @@ module Metric::CiMixin::Capture
       when "hourly" # Storage (value is ignored)
         last_perf_capture_on || 4.hours.ago.utc
       else # "realtime" for Vm or Host
-        [last_perf_capture_on, 4.hours.ago.utc.beginning_of_day].compact.max
+        [last_perf_capture_on, 4.hours.ago.utc].compact.max
       end
     [start_time&.utc, end_time&.utc]
   end
