@@ -35,7 +35,7 @@ module Metric::CiMixin::Capture
     end
 
     metrics_capture = perf_capture_object
-    start_time, end_time = fix_capture_start_end_time(interval_name, start_time, end_time)
+    start_time, end_time = fix_capture_start_end_time(interval_name, start_time, end_time, metrics_capture)
     start_range, end_range, counters_data = just_perf_capture(interval_name, start_time, end_time, metrics_capture)
 
     perf_process(interval_name, start_range, end_range, counters_data) if start_range
@@ -43,15 +43,15 @@ module Metric::CiMixin::Capture
 
   # Determine the start_time for capturing if not provided
   # interval_name == realtime is the only one that passes no start_time/end_time
-  def fix_capture_start_end_time(interval_name, start_time, end_time)
+  def fix_capture_start_end_time(interval_name, start_time, end_time, metrics_capture)
     start_time ||=
       case interval_name
       when "historical" # Vm or Host
         Metric::Capture.historical_start_time
       when "hourly" # Storage (value is ignored)
-        last_perf_capture_on || 4.hours.ago.utc
+        4.hours.ago.utc
       else # "realtime" for Vm or Host
-        [last_perf_capture_on, 4.hours.ago.utc].compact.max
+        [Array(metrics_capture.target).map(&:last_perf_capture_on).compact.min, 4.hours.ago.utc].compact.max
       end
     [start_time&.utc, end_time&.utc]
   end
