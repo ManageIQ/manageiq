@@ -188,23 +188,42 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     end
   end
 
+  # number of records to send at a time for a single capture message
+  # @return [Numeric] 0 for no batching.  (defaults to 0)
+  def batch_size
+    @batch_size ||= ::Settings.dig(:ems, "ems_#{ems.provider_name.underscore}", :capture_batch_size).to_i
+  end
+
   def perf_capture_queue_targets(targets, interval, start_time:, end_time:, parent: nil)
-    task = create_rollup_task_for_cluster(parent, targets) if parent
+    if batch_size > 1
+      # send all of the hosts in a cluster in one message and ignore batching
+      #   hosts will rollup into the cluster, so the entire batch must be together otherwise
+      #   we will require a create_rollup_task_for_cluster
+      current_batch_size = parent ? targets.size : batch_size
+      rollup = parent.present?
+      targets.each_slice(current_batch_size) do |targets_batch|
+        perf_capture_queue_target(targets_batch, interval, :start_time => start_time, :end_time => end_time, :rollup => rollup)
+      end
+    else # send individual messages
+      task = create_rollup_task_for_cluster(parent, targets) if parent
+      perf_capture_queue_targets_individually(targets, interval, :start_time => start_time, :end_time => end_time, :task_id => task&.id)
+    end
+  end
+
+  # standard one message per object to collect
+  def perf_capture_queue_targets_individually(targets, interval, start_time:, end_time:, task_id: nil)
     targets.each do |target|
-      perf_capture_queue_target(target, interval, :start_time => start_time, :end_time => end_time, :task_id => task&.id)
+      perf_capture_queue_target(target, interval, :start_time => start_time, :end_time => end_time, :task_id => task_id)
     rescue => err
       _log.warn("Failed to queue perf_capture for target [#{target.class.name}], [#{target.id}], [#{target.name}]: #{err}")
     end
   end
 
-  def perf_capture_queue_target(target, interval_name, start_time:, end_time:, task_id: nil)
+  def perf_capture_queue_target(target, interval_name, start_time:, end_time:, task_id: nil, rollup: false)
     if target.kind_of?(Array)
       target_ids = target.map(&:id) if target.size > 1
       target = target.first
     end
-
-    # cb is the task used to group cluster realtime metrics
-    cb = {:class_name => target.class.name, :instance_id => target.id, :method_name => :perf_capture_callback, :args => [[task_id]]} if task_id
 
     # Queue up the actual items
     queue_item = {
@@ -217,7 +236,12 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
       :zone        => my_zone,
       :state       => ['ready', 'dequeue'],
     }
-    queue_item[:args] = [start_time, end_time, target_ids] if start_time || target_ids.present?
+    queue_item[:args] = [start_time, end_time, target_ids, rollup] if start_time || target_ids.present? || rollup
+
+    return MiqQueue.put_unless_exists(queue_item) unless task_id
+
+    # cb is the task used to group cluster realtime metrics
+    cb = {:class_name => target.class.name, :instance_id => target.id, :method_name => :perf_capture_callback, :args => [[task_id]]}
 
     # reason for setting MiqQueue#miq_task_id is to initializes MiqTask.started_on column when message delivered.
     MiqQueue.create_with(:miq_task_id => task_id, :miq_callback => cb).put_or_update(queue_item) do |msg, qi|
@@ -225,15 +249,13 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
         # no message on queue. put on queue, but with default state
         qi.delete(:state)
         qi
-      elsif msg.state == "ready" && task_id
+      elsif msg.state == "ready"
         # rerun the job
         qi.delete(:state)
         existing_tasks = ((msg.miq_callback || {})[:args] || []).first || []
         qi[:miq_callback] = cb.merge(:args => [existing_tasks + [task_id]])
         qi
-      else
-        # either state == ready and no task ids, we have no change so let it be
-        # or state = dequeue, which means it is done
+      else # state == "dequeue"
         _log.debug("Skipping capture of #{target.log_target} - Performance capture for interval #{interval_name} is still running")
         # NOTE: do not update the message queue
         nil
