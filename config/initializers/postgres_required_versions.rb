@@ -5,14 +5,13 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.prepend Module.new {
   end
 
   def check_version
-    msg = "The version of PostgreSQL being connected to is incompatible with #{Vmdb::Appliance.PRODUCT_NAME} (13 required)"
+    msg = "The version of PostgreSQL being connected to (#{postgresql_version}) is incompatible with #{Vmdb::Appliance.PRODUCT_NAME} (130000 / 13 required)"
 
-    if postgresql_version < 100000
+    if postgresql_version < 10_00_00
       raise msg
     end
 
-    if postgresql_version < 130000 || postgresql_version >= 140000
-      raise msg if Rails.env.production? && !ENV["UNSAFE_PG_VERSION"]
+    if postgresql_version >= 14_00_00
       $stderr.puts msg
     end
   end
