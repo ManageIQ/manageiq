@@ -139,7 +139,7 @@ RSpec.describe Metric::CiMixin::Capture do
           end
 
           context "with syndication enabled" do
-            before { stub_settings_merge(:performance => {:syndicate_metrics => true}) }
+            before { stub_settings_merge(:performance => {:syndicate_metrics => true}, :messaging => {:type => "kafka"}) }
 
             it "verifies that hole in the data is logged, corrupted data is logged and no other warnings are logged" do
               # Hole in the data is logged
