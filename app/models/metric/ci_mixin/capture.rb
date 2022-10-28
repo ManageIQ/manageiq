@@ -22,7 +22,7 @@ module Metric::CiMixin::Capture
     perf_capture('historical', *args)
   end
 
-  def perf_capture(interval_name, start_time = nil, end_time = nil)
+  def perf_capture(interval_name, start_time = nil, end_time = nil, target_ids = nil)
     unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
       raise ArgumentError, _("invalid interval_name '%{name}'") % {:name => interval_name}
     end
@@ -34,7 +34,7 @@ module Metric::CiMixin::Capture
       return
     end
 
-    metrics_capture = perf_capture_object
+    metrics_capture = perf_capture_object(target_ids ? self.class.where(:id => target_ids).to_a : self)
     start_time, end_time = fix_capture_start_end_time(interval_name, start_time, end_time, metrics_capture)
     start_range, end_range, counters_data = just_perf_capture(interval_name, start_time, end_time, metrics_capture)
 
@@ -84,7 +84,7 @@ module Metric::CiMixin::Capture
     log_time << ", start_time: [#{start_time}]" unless start_time.nil?
     log_time << ", end_time: [#{end_time}]" unless end_time.nil?
 
-    _log.info("#{log_header} Capture for #{log_target}#{log_time}...")
+    _log.info("#{log_header} Capture for #{log_target}#{log_time}...") ### and log_target friends
 
     start_range = end_range = counters_by_mor = counter_values_by_mor_and_ts = target_ems = nil
     counters_data = {}
@@ -95,7 +95,7 @@ module Metric::CiMixin::Capture
       counters_by_mor, counter_values_by_mor_and_ts = metrics_capture.perf_collect_metrics(interval_name_for_capture, start_time, end_time)
     end
 
-    _log.info("#{log_header} Capture for #{log_target}#{log_time}...Complete - Timings: #{t.inspect}")
+    _log.info("#{log_header} Capture for #{log_target}#{log_time}...Complete - Timings: #{t.inspect}") # and log_target friends
 
     # ems lookup cache
     target_ems = nil
