@@ -7,6 +7,7 @@ module Metric::CiMixin::Capture
     end
   end
 
+  # delegate currently only used on Ems
   delegate :perf_collect_metrics, :to => :perf_capture_object
 
   def perf_capture_realtime(*args)
@@ -33,25 +34,26 @@ module Metric::CiMixin::Capture
       return
     end
 
+    metrics_capture = perf_capture_object
     start_time, end_time = fix_capture_start_end_time(interval_name, start_time, end_time)
-    start_range, end_range, counters_data = just_perf_capture(interval_name, start_time, end_time)
+    start_range, end_range, counters_data = just_perf_capture(interval_name, start_time, end_time, metrics_capture)
 
     perf_process(interval_name, start_range, end_range, counters_data) if start_range
   end
 
+  # Determine the start_time for capturing if not provided
+  # interval_name == realtime is the only one that passes no start_time/end_time
   def fix_capture_start_end_time(interval_name, start_time, end_time)
-    start_time = start_time.utc unless start_time.nil?
-    end_time = end_time.utc unless end_time.nil?
-
-    # Determine the start_time for capturing if not provided
-    if interval_name == 'historical'
-      start_time ||= Metric::Capture.historical_start_time
-    elsif interval_name == "hourly"
-      start_time ||= last_perf_capture_on || 4.hours.ago.utc
-    else # interval_name == realtime
-      start_time ||= [last_perf_capture_on, 4.hours.ago.utc.beginning_of_day].compact.max
-    end
-    [start_time, end_time]
+    start_time ||=
+      case interval_name
+      when "historical" # Vm or Host
+        Metric::Capture.historical_start_time
+      when "hourly" # Storage (value is ignored)
+        last_perf_capture_on || 4.hours.ago.utc
+      else # "realtime" for Vm or Host
+        [last_perf_capture_on, 4.hours.ago.utc.beginning_of_day].compact.max
+      end
+    [start_time&.utc, end_time&.utc]
   end
 
   # Determine the expected start time, so we can detect gaps or missing data
@@ -76,7 +78,7 @@ module Metric::CiMixin::Capture
     end
   end
 
-  def just_perf_capture(interval_name, start_time = nil, end_time = nil)
+  def just_perf_capture(interval_name, start_time, end_time, metrics_capture)
     log_header = "[#{interval_name}]"
     log_time = ''
     log_time << ", start_time: [#{start_time}]" unless start_time.nil?
@@ -84,48 +86,51 @@ module Metric::CiMixin::Capture
 
     _log.info("#{log_header} Capture for #{log_target}#{log_time}...")
 
-    start_range = end_range = counters = counter_values = counters_data = nil
+    start_range = end_range = counters_by_mor = counter_values_by_mor_and_ts = target_ems = nil
+    counters_data = {}
     _, t = Benchmark.realtime_block(:total_time) do
-      Benchmark.realtime_block(:capture_state) { perf_capture_state }
+      Benchmark.realtime_block(:capture_state) { VimPerformanceState.capture(metrics_capture.target) }
 
       interval_name_for_capture = interval_name == 'historical' ? 'hourly' : interval_name
-      counters_by_mor, counter_values_by_mor_and_ts = perf_collect_metrics(interval_name_for_capture, start_time, end_time)
-
-      counters       = counters_by_mor[ems_ref] || {}
-      counter_values = counter_values_by_mor_and_ts[ems_ref] || {}
-
-      ts = counter_values.keys.sort
-      start_range = ts.first
-      end_range   = ts.last
+      counters_by_mor, counter_values_by_mor_and_ts = metrics_capture.perf_collect_metrics(interval_name_for_capture, start_time, end_time)
     end
 
     _log.info("#{log_header} Capture for #{log_target}#{log_time}...Complete - Timings: #{t.inspect}")
 
-    if start_range.nil?
-      _log.info("#{log_header} Skipping processing for #{log_target}#{log_time} as no metrics were captured.")
-      # Set the last capture on to end_time to prevent forever queueing up the same collection range
-      update(:last_perf_capture_on => end_time || Time.now.utc) if interval_name == 'realtime'
-    else
-      expected_start_range = calculate_gap(interval_name, start_time)
-      if expected_start_range && start_range > expected_start_range
-        _log.warn("#{log_header} For #{log_target}#{log_time}, expected to get data as of [#{expected_start_range}], but got data as of [#{start_range}].")
+    # ems lookup cache
+    target_ems = nil
 
-        # Raise ems_performance_gap_detected alert event to enable notification.
-        MiqEvent.raise_evm_alert_event_queue(ext_management_system, "ems_performance_gap_detected",
-                                             :resource_class       => self.class.name,
-                                             :resource_id          => id,
-                                             :expected_start_range => expected_start_range,
-                                             :start_range          => start_range
-                                            )
-      end
+    Array(metrics_capture.target).each do |target|
+      counters       = counters_by_mor[target.ems_ref] || {}
+      counter_values = counter_values_by_mor_and_ts[target.ems_ref] || {}
 
-      # Convert to format allowing to send multiple resources at once
-      counters_data = {
-        self => {
+      ts = counter_values.keys.sort
+      start_range = ts.first
+      end_range   = ts.last
+
+      if start_range.nil?
+        _log.info("#{log_header} Skipping processing for #{target.log_target}#{log_time} as no metrics were captured.")
+        # Set the last capture on to end_time to prevent forever queueing up the same collection range
+        target.update(:last_perf_capture_on => end_time || Time.now.utc) if interval_name == 'realtime'
+      else
+        expected_start_range = target.calculate_gap(interval_name, start_time)
+        if expected_start_range && start_range > expected_start_range
+          _log.warn("#{log_header} For #{target.log_target}#{log_time}, expected to get data as of [#{expected_start_range}], but got data as of [#{start_range}].")
+
+          # Raise ems_performance_gap_detected alert event to enable notification.
+          target_ems ||= target.ext_management_system
+          MiqEvent.raise_evm_alert_event_queue(target_ems, "ems_performance_gap_detected",
+                                               :resource_class       => target.class.name,
+                                               :resource_id          => target.id,
+                                               :expected_start_range => expected_start_range,
+                                               :start_range          => start_range)
+        end
+
+        counters_data[target] = {
           :counters       => counters,
           :counter_values => counter_values
         }
-      }
+      end
     end
 
     [start_range, end_range, counters_data]
