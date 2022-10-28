@@ -22,7 +22,7 @@ module Metric::CiMixin::Capture
     perf_capture('historical', *args)
   end
 
-  def perf_capture(interval_name, start_time = nil, end_time = nil, target_ids = nil)
+  def perf_capture(interval_name, start_time = nil, end_time = nil, target_ids = nil, rollup = false)
     unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
       raise ArgumentError, _("invalid interval_name '%{name}'") % {:name => interval_name}
     end
@@ -39,6 +39,8 @@ module Metric::CiMixin::Capture
     start_range, end_range, counters_data = just_perf_capture(interval_name, start_time, end_time, metrics_capture)
 
     perf_process(interval_name, start_range, end_range, counters_data) if start_range
+    # rollup host metrics for the cluster
+    ems_cluster.perf_rollup_range_queue(start_time, end_time, interval_name) if rollup    
   end
 
   # Determine the start_time for capturing if not provided

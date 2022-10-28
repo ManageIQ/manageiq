@@ -5,6 +5,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
   let(:ems) { FactoryBot.create(:ems_vmware, :zone => miq_server.zone) }
 
   context ".perf_capture_health_check" do
+    before { stub_settings_merge(:ems => {:ems_vmware => {:capture_batch_size => 0}}) }
     let(:vm) { FactoryBot.create(:vm_perf, :ext_management_system => ems) }
     let(:vm2) { FactoryBot.create(:vm_perf, :ext_management_system => ems) }
 
@@ -22,6 +23,8 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
   end
 
   describe ".perf_capture_gap" do
+    before { stub_settings_merge(:ems => {:ems_vmware => {:capture_batch_size => 0}}) }
+
     let(:host) { FactoryBot.create(:host_vmware, :ext_management_system => ems, :perf_capture_enabled => true) }
     let!(:vm)   { FactoryBot.create(:vm_vmware, :ext_management_system => ems, :host => host) }
     let(:host2) do
@@ -42,11 +45,11 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
         Metric::Capture.perf_capture_gap(7.days.ago.utc, 5.days.ago.utc, nil, ems.id)
         expect(queue_timings).to eq(
           "historical" => {
-            vm    => arg_day_range(7.days.ago.utc, 5.days.ago.utc),
-            vm2   => arg_day_range(7.days.ago.utc, 5.days.ago.utc),
-            host  => arg_day_range(7.days.ago.utc, 5.days.ago.utc),
-            host2 => arg_day_range(7.days.ago.utc, 5.days.ago.utc),
-            host3 => arg_day_range(7.days.ago.utc, 5.days.ago.utc),
+            vm    => arg_day_range(7.days.ago.utc, 5.days.ago.utc, nil, false),
+            vm2   => arg_day_range(7.days.ago.utc, 5.days.ago.utc, nil, false),
+            host  => arg_day_range(7.days.ago.utc, 5.days.ago.utc, nil, false),
+            host2 => arg_day_range(7.days.ago.utc, 5.days.ago.utc, nil, false),
+            host3 => arg_day_range(7.days.ago.utc, 5.days.ago.utc, nil, false),
           }
         )
       end
@@ -136,7 +139,10 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
 
     context "with vmware targets" do
       it "should queue up targets properly" do
-        stub_settings_merge(:performance => {:history => {:initial_capture_days => 7}})
+        stub_settings_merge(
+          :performance => {:history => {:initial_capture_days => 7}},
+          :ems => {:ems_vmware => {:capture_batch_size => 0}}
+        )
         ems.perf_capture_object([vm, vm2, storage, host, host2, host3]).perf_capture_queue("realtime")
 
         bod = Time.now.utc.beginning_of_day
@@ -150,11 +156,11 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
             vm2   => [[]]
           },
           "historical" => {
-            host  => arg_day_range(bod - 7.days, bod + 1.day),
-            host2 => arg_day_range(bod - 7.days, bod + 1.day),
-            host3 => arg_day_range(bod - 7.days, bod + 1.day),
-            vm    => arg_day_range(bod - 7.days, bod + 1.day),
-            vm2   => arg_day_range(bod - 7.days, bod + 1.day)
+            host  => arg_day_range(bod - 7.days, bod + 1.day, nil, false),
+            host2 => arg_day_range(bod - 7.days, bod + 1.day, nil, false),
+            host3 => arg_day_range(bod - 7.days, bod + 1.day, nil, false),
+            vm    => arg_day_range(bod - 7.days, bod + 1.day, nil, false),
+            vm2   => arg_day_range(bod - 7.days, bod + 1.day, nil, false)
           },
           "hourly"     => {
             storage => [[]]
@@ -179,14 +185,17 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
 
       context "executing perf_capture_timer" do
         it "should queue up enabled targets" do
-          stub_settings(:performance => {:history => {:initial_capture_days => 7}})
+          stub_settings_merge(
+            :performance => {:history => {:initial_capture_days => 7}},
+            :ems => {:ems_vmware => {:capture_batch_size => 0}}
+          )
           ems.perf_capture_object(vms).perf_capture_queue("realtime")
 
           bod = Time.now.utc.beginning_of_day
 
           expect(queue_timings).to eq(
             "realtime"   => vms.each_with_object({}) { |k, h| h[k] = [[]] },
-            "historical" => vms.each_with_object({}) { |k, h| h[k] = arg_day_range(bod - 7.days, bod + 1.day) }
+            "historical" => vms.each_with_object({}) { |k, h| h[k] = arg_day_range(bod - 7.days, bod + 1.day, nil, false) }
           )
         end
       end
@@ -222,19 +231,25 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
     end
 
     it "creates realtime and historical with last_perf_capture_on.nil? (first time) with initial_capture" do
-      stub_performance_settings(:history => {:initial_capture_days => 7})
+      stub_settings_merge(
+        :performance => {:history => {:initial_capture_days => 7}},
+        :ems => {:ems_openstack => {:capture_batch_size => 0}}
+      )
       MiqQueue.delete_all
       Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
         trigger_capture("realtime")
 
         expect(queue_timings).to eq(
           "realtime"   => {vm => [[]]},
-          "historical" => {vm => arg_day_range(7.days.ago.utc.beginning_of_day, 1.day.from_now.utc.beginning_of_day)}
+          "historical" => {vm => arg_day_range(7.days.ago.utc.beginning_of_day, 1.day.from_now.utc.beginning_of_day, nil, false)}
         )
       end
     end
 
     it "creates realtime and historical with last_perf_capture_on older than the realtime_cut_off" do
+      stub_settings_merge(
+        :ems => {:ems_vmware => {:capture_batch_size => 0}}
+      )
       MiqQueue.delete_all
       Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
         last_perf_capture_on = (10.days + 5.hours + 23.minutes).ago
@@ -242,7 +257,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
 
         expect(queue_timings).to eq(
           "realtime"   => {vm => [[]]},
-          "historical" => {vm => arg_day_range(last_perf_capture_on, Time.now.utc.beginning_of_day)}
+          "historical" => {vm => arg_day_range(last_perf_capture_on, Time.now.utc.beginning_of_day, nil, false)}
         )
       end
     end
@@ -260,6 +275,10 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
     end
 
     it "creates one set of realtime and historical with multiple calls" do
+      stub_settings_merge(
+        :performance => {:history => {:initial_capture_days => 7}},
+        :ems => {:ems_openstack => {:capture_batch_size => 0}}
+      )
       MiqQueue.delete_all
       Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
         last_perf_capture_on = (10.days + 5.hours + 23.minutes).ago
@@ -267,7 +286,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
 
         expect(queue_timings).to eq(
           "realtime"   => {vm => [[]]},
-          "historical" => {vm => arg_day_range(last_perf_capture_on, Time.now.utc.beginning_of_day)}
+          "historical" => {vm => arg_day_range(last_perf_capture_on, Time.now.utc.beginning_of_day, nil, false)}
         )
 
         Timecop.travel(20.minutes)
@@ -275,30 +294,37 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
 
         expect(queue_timings).to eq(
           "realtime"   => {vm => [[]]},
-          "historical" => {vm => arg_day_range(last_perf_capture_on, Time.now.utc.beginning_of_day)}
+          "historical" => {vm => arg_day_range(last_perf_capture_on, Time.now.utc.beginning_of_day, nil, false)}
         )
       end
     end
 
     it "creates historical with no last_perf_capture_on" do
-      stub_performance_settings(:history => {:initial_capture_days => 7})
+      stub_settings_merge(
+        :performance => {:history => {:initial_capture_days => 7}},
+        :ems => {:ems_vmware => {:capture_batch_size => 0}}
+      )
       MiqQueue.delete_all
       Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
         trigger_capture("historical", :start_time => 4.days.ago.utc, :end_time => 2.days.ago.utc)
 
         expect(queue_timings).to eq(
-          "historical" => {vm => arg_day_range(4.days.ago.utc, 2.days.ago.utc)}
+          "historical" => {vm => arg_day_range(4.days.ago.utc, 2.days.ago.utc, nil, false)}
         )
       end
     end
 
     it "creates historical even with recent last_perf_capture_on" do
+      stub_settings_merge(
+        :performance => {:history => {:initial_capture_days => 7}},
+        :ems => {:ems_vmware => {:capture_batch_size => 0}}
+      )
       MiqQueue.delete_all
       Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
         last_perf_capture_on = (2.days + 5.hours + 23.minutes).ago
         trigger_capture("historical", last_perf_capture_on, :start_time => 4.days.ago.utc, :end_time => 2.days.ago.utc)
         expect(queue_timings).to eq(
-          "historical" => {vm => arg_day_range(4.days.ago.utc, 2.days.ago.utc)}
+          "historical" => {vm => arg_day_range(4.days.ago.utc, 2.days.ago.utc, nil, false)}
         )
       end
     end
