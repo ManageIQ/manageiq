@@ -17,6 +17,10 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     ems.zone.name
   end
 
+  def targets
+    Array(target)
+  end
+
   # Queue Capturing all metrics for an ems
   def perf_capture_all_queue
     perf_capture_health_check
@@ -97,6 +101,15 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
   def perf_capture_queue_targets_hosts(targets, interval, start_time:, end_time:)
     targets.group_by(&:ems_cluster).each do |ems_cluster, hosts|
       perf_capture_queue_targets(hosts, interval, :start_time => start_time, :end_time => end_time, :parent => ems_cluster)
+    end
+  end
+
+  # private, but called by ci_mixin/capture.rb
+  def log_targets
+    if targets.size == 1
+      "[#{targets.first.class.name}], [#{targets.first.id}], [#{targets.first.name}]"
+    else
+      "[#{targets.map { |obj| obj.class.name }.uniq.join(", ")}], [#{targets.size} targets]"
     end
   end
 
@@ -185,6 +198,11 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
   end
 
   def perf_capture_queue_target(target, interval_name, start_time:, end_time:, task_id: nil)
+    if target.kind_of?(Array)
+      target_ids = target.map(&:id) if target.size > 1
+      target = target.first
+    end
+
     # cb is the task used to group cluster realtime metrics
     cb = {:class_name => target.class.name, :instance_id => target.id, :method_name => :perf_capture_callback, :args => [[task_id]]} if task_id
 
@@ -199,7 +217,7 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
       :zone        => my_zone,
       :state       => ['ready', 'dequeue'],
     }
-    queue_item[:args] = [start_time, end_time] if start_time
+    queue_item[:args] = [start_time, end_time, target_ids] if start_time || target_ids.present?
 
     # reason for setting MiqQueue#miq_task_id is to initializes MiqTask.started_on column when message delivered.
     MiqQueue.create_with(:miq_task_id => task_id, :miq_callback => cb).put_or_update(queue_item) do |msg, qi|
