@@ -25,7 +25,10 @@ RSpec.describe Metric::CiMixin::Rollup do
 
     context "executing capture_ems_targets for realtime targets with parent objects" do
       before do
-        stub_settings_merge(:performance => {:history => {:initial_capture_days => 7}})
+        stub_settings_merge(
+          :performance => {:history => {:initial_capture_days => 7}},
+          :ems         => {:ems_vmware => {:capture_batch_size => 0}}
+        )
         vm
         vm2
         host3
@@ -114,6 +117,73 @@ RSpec.describe Metric::CiMixin::Rollup do
 
         t1, t2 = tasks
         expect(t2.context_data[:start]).to eq(t1.context_data[:end])
+      end
+    end
+
+    context "executing batched capture_ems_targets for realtime targets with parent objects" do
+      before do
+        stub_settings_merge(
+          :performance => {:history => {:initial_capture_days => 7}},
+          :ems         => {:ems_vmware => {:capture_batch_size => 3}}
+        )
+      end
+
+      it "groups all clustered hosts together and all non-clustered hosts together" do
+        host
+        host2
+        host3
+        host4
+
+        ems.perf_capture_object.perf_capture_all_queue
+
+        Host.all.group_by(&:ems_cluster).each do |cluster, hosts|
+          messages = MiqQueue.where(:class_name  => 'ManageIQ::Providers::Vmware::InfraManager::Host',
+                                    :instance_id => hosts.map(&:id),
+                                    :method_name => "perf_capture_realtime")
+
+          expect(messages.size).to eq(1)
+
+          # test data should have 2 non-clustered, and 2 clustered
+          expect(hosts.size).to eq(2)
+          # rollup clustered, don't rollup non-clustered
+          rollup = cluster.present?
+          messages.each do |m|
+            expect(m.args).to match_array([nil, nil, a_kind_of(Array), rollup])
+            expect(m.args[2]).to contain_exactly(*hosts.map(&:id))
+          end
+        end
+      end
+
+      it "skip targets for a single node in a cluster" do
+        host2
+
+        ems.perf_capture_object.perf_capture_all_queue
+
+        Host.all.group_by(&:ems_cluster).each do |_, hosts|
+          messages = MiqQueue.where(:class_name  => 'ManageIQ::Providers::Vmware::InfraManager::Host',
+                                    :instance_id => hosts.map(&:id),
+                                    :method_name => "perf_capture_realtime")
+
+          expect(messages.size).to eq(1)
+          expect(hosts.size).to eq(1)
+          messages.each do |m|
+            expect(m.args).to eq([nil, nil, nil, true])
+          end
+        end
+      end
+
+      it "batches objects together" do
+        FactoryBot.create_list(:vm_vmware, 6, :ext_management_system => ems, :host => host)
+        ems.perf_capture_object.perf_capture_all_queue
+
+        messages = MiqQueue.where(:class_name  => 'ManageIQ::Providers::Vmware::InfraManager::Vm',
+                                  :method_name => "perf_capture_realtime")
+
+        expect(messages.size).to eq(2)
+        messages.each do |m|
+          expect(m.args).to match_array([nil, nil, a_kind_of(Array), false])
+          expect(m.args[2].size).to eq(3)
+        end
       end
     end
 

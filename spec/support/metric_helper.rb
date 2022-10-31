@@ -37,9 +37,9 @@ module Spec
       end
 
       # sorry, stole from the code - not really testing
-      def arg_day_range(start_time, end_time, threshold = 1.day)
-        (start_time.utc..end_time.utc).step_value(threshold).each_cons(2).collect do |s_time, e_time|
-          [s_time, e_time]
+      def arg_day_range(start_time, end_time)
+        (start_time.utc..end_time.utc).step_value(1.day).each_cons(2).collect do |s_time, e_time|
+          [s_time, e_time, nil, false]
         end
       end
 

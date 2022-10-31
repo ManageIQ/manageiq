@@ -22,7 +22,7 @@ module Metric::CiMixin::Capture
     perf_capture('historical', *args)
   end
 
-  def perf_capture(interval_name, start_time = nil, end_time = nil)
+  def perf_capture(interval_name, start_time = nil, end_time = nil, target_ids = nil, rollup = false)
     unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
       raise ArgumentError, _("invalid interval_name '%{name}'") % {:name => interval_name}
     end
@@ -34,24 +34,28 @@ module Metric::CiMixin::Capture
       return
     end
 
-    metrics_capture = perf_capture_object
-    start_time, end_time = fix_capture_start_end_time(interval_name, start_time, end_time)
+    metrics_capture = perf_capture_object(target_ids ? self.class.where(:id => target_ids).to_a : self)
+    start_time, end_time = fix_capture_start_end_time(interval_name, start_time, end_time, metrics_capture.target)
     start_range, end_range, counters_data = just_perf_capture(interval_name, start_time, end_time, metrics_capture)
 
     perf_process(interval_name, start_range, end_range, counters_data) if start_range
+    # rollup host metrics for the cluster
+    ems_cluster.perf_rollup_range_queue(start_time, end_time, interval_name) if rollup
   end
 
   # Determine the start_time for capturing if not provided
   # interval_name == realtime is the only one that passes no start_time/end_time
-  def fix_capture_start_end_time(interval_name, start_time, end_time)
+  def fix_capture_start_end_time(interval_name, start_time, end_time, target)
     start_time ||=
       case interval_name
       when "historical" # Vm or Host
         Metric::Capture.historical_start_time
       when "hourly" # Storage (value is ignored)
-        last_perf_capture_on || 4.hours.ago.utc
+        4.hours.ago.utc
       else # "realtime" for Vm or Host
-        [last_perf_capture_on, 4.hours.ago.utc].compact.max
+        # pick the oldest last_perf_capture_on, but make sure it is within 4 hours
+        # if there is none, then choose 4 hours ago
+        [Array(target).map(&:last_perf_capture_on).compact.min, 4.hours.ago.utc].compact.max
       end
     [start_time&.utc, end_time&.utc]
   end
@@ -84,7 +88,7 @@ module Metric::CiMixin::Capture
     log_time << ", start_time: [#{start_time}]" unless start_time.nil?
     log_time << ", end_time: [#{end_time}]" unless end_time.nil?
 
-    _log.info("#{log_header} Capture for #{log_target}#{log_time}...")
+    _log.info("#{log_header} Capture for #{metrics_capture.log_targets}#{log_time}...")
 
     start_range = end_range = counters_by_mor = counter_values_by_mor_and_ts = target_ems = nil
     counters_data = {}
@@ -95,12 +99,12 @@ module Metric::CiMixin::Capture
       counters_by_mor, counter_values_by_mor_and_ts = metrics_capture.perf_collect_metrics(interval_name_for_capture, start_time, end_time)
     end
 
-    _log.info("#{log_header} Capture for #{log_target}#{log_time}...Complete - Timings: #{t.inspect}")
+    _log.info("#{log_header} Capture for #{metrics_capture.log_targets}#{log_time}...Complete - Timings: #{t.inspect}")
 
     # ems lookup cache
     target_ems = nil
 
-    Array(metrics_capture.target).each do |target|
+    metrics_capture.targets.each do |target|
       counters       = counters_by_mor[target.ems_ref] || {}
       counter_values = counter_values_by_mor_and_ts[target.ems_ref] || {}
 
