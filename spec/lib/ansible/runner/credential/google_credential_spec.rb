@@ -71,10 +71,14 @@ RSpec.describe Ansible::Runner::GoogleCredential do
 
         actual_data   = JSON.parse(File.read(File.join(@base_dir, "gce_credentials")))
         expected_data = {
-          "type"         => "service_account",
-          "private_key"  => "key_data",
-          "client_email" => "manageiq@gmail.com",
-          "project_id"   => "google_project",
+          "type"                        => "service_account",
+          "private_key"                 => "key_data",
+          "client_email"                => "manageiq@gmail.com",
+          "project_id"                  => "google_project",
+          "auth_uri"                    => "https://accounts.google.com/o/oauth2/auth",
+          "token_uri"                   => "https://oauth2.googleapis.com/token",
+          "auth_provider_x509_cert_url" => "https://www.googleapis.com/oauth2/v1/certs",
+          "client_x509_cert_url"        => "https://www.googleapis.com/robot/v1/metadata/x509/manageiq%40gmail.com"
         }
 
         expect(expected_data).to eq(actual_data)
@@ -86,10 +90,13 @@ RSpec.describe Ansible::Runner::GoogleCredential do
 
         actual_data   = JSON.parse(File.read(File.join(@base_dir, "gce_credentials")))
         expected_data = {
-          "type"         => "service_account",
-          "private_key"  => "",
-          "client_email" => "",
-          "project_id"   => "",
+          "type"                        => "service_account",
+          "private_key"                 => "",
+          "client_email"                => "",
+          "project_id"                  => "",
+          "auth_uri"                    => "https://accounts.google.com/o/oauth2/auth",
+          "token_uri"                   => "https://oauth2.googleapis.com/token",
+          "auth_provider_x509_cert_url" => "https://www.googleapis.com/oauth2/v1/certs"
         }
 
         expect(expected_data).to eq(actual_data)
@@ -101,10 +108,14 @@ RSpec.describe Ansible::Runner::GoogleCredential do
 
         actual_data   = JSON.parse(File.read(File.join(@base_dir, "gce_credentials")))
         expected_data = {
-          "type"         => "service_account",
-          "private_key"  => "key_data",
-          "client_email" => "manageiq@gmail.com",
-          "project_id"   => "",
+          "type"                        => "service_account",
+          "private_key"                 => "key_data",
+          "client_email"                => "manageiq@gmail.com",
+          "project_id"                  => "",
+          "auth_uri"                    => "https://accounts.google.com/o/oauth2/auth",
+          "token_uri"                   => "https://oauth2.googleapis.com/token",
+          "auth_provider_x509_cert_url" => "https://www.googleapis.com/oauth2/v1/certs",
+          "client_x509_cert_url"        => "https://www.googleapis.com/robot/v1/metadata/x509/manageiq%40gmail.com"
         }
 
         expect(expected_data).to eq(actual_data)
