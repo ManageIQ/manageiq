@@ -273,7 +273,7 @@ group :web_socket, :manageiq_default do
 end
 
 group :appliance, :optional => true do
-  gem "manageiq-appliance_console",     "~>8.0",  :require => false
+  gem "manageiq-appliance_console",     "~>7.1", ">=7.1.1",  :require => false
 end
 
 ### Development and test gems are excluded from appliance and container builds to reduce size and license issues
