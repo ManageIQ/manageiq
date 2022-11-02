@@ -5,7 +5,6 @@ RSpec.describe ManageIQ::Providers::InfraManager::MetricsCapture do
   let(:ems) { FactoryBot.create(:ems_vmware, :zone => miq_server.zone) }
 
   before do
-    MiqRegion.seed
     storages = FactoryBot.create_list(:storage_vmware, 2)
     storages.each_with_index { |st, i| st.perf_capture_enabled = i.even? }
     clusters = FactoryBot.create_list(:ems_cluster, 2, :ext_management_system => ems)

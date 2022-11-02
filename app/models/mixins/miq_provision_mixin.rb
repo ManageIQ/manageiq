@@ -45,7 +45,7 @@ module MiqProvisionMixin
     update_attribute(:options, options.merge(:vm_notes => notes))
   end
 
-  def call_automate_event(*args)
+  def call_automate_event(*args, **kwargs)
     super
   rescue MiqAeException::Error
     # Allow the state machine to complete.

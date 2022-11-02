@@ -25,8 +25,7 @@ RSpec.describe "VM Retirement Management" do
 
         allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'success', MiqAeEngine::MiqAeWorkspaceRuntime.new])
         vm_with_owner.retirement_check
-        status, message, result = MiqQueue.first.deliver
-        MiqQueue.first.delivered(status, message, result)
+        MiqQueue.first.deliver_and_process
 
         vm_with_owner.reload
         expect(vm_with_owner.retirement_last_warn).not_to be_nil
@@ -44,8 +43,7 @@ RSpec.describe "VM Retirement Management" do
         expect(vm_with_owner.retirement_last_warn).to be_nil
         allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'success', MiqAeEngine::MiqAeWorkspaceRuntime.new])
         vm_with_owner_no_group.retirement_check
-        status, message, result = MiqQueue.first.deliver
-        MiqQueue.first.delivered(status, message, result)
+        MiqQueue.first.deliver_and_process
 
         expect(vm_with_owner_no_group.retirement_last_warn).not_to be_nil
         # the next test is only nil because we're not creating a true super admin in these specs
@@ -65,8 +63,7 @@ RSpec.describe "VM Retirement Management" do
 
         allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'success', MiqAeEngine::MiqAeWorkspaceRuntime.new])
         vm_with_owner.retirement_check
-        status, message, result = MiqQueue.first.deliver
-        MiqQueue.first.delivered(status, message, result)
+        MiqQueue.first.deliver_and_process
 
         vm_with_owner.reload
         expect(vm_with_owner.retirement_last_warn).not_to be_nil
@@ -153,7 +150,7 @@ RSpec.describe "VM Retirement Management" do
     event_name = 'request_vm_retire'
     event_hash = {:userid => nil, :vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm"}
 
-    expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, :zone => @zone.name).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, {:zone => @zone.name}).once
 
     @vm.retire_now
   end
@@ -193,8 +190,7 @@ RSpec.describe "VM Retirement Management" do
 
       allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'success', ws])
       Vm.make_retire_request(@vm.id, user, :initiated_by => 'system')
-      status, message, result = MiqQueue.first.deliver
-      MiqQueue.first.delivered(status, message, result)
+      MiqQueue.first.deliver_and_process
     end
 
     it "with user as initiated_by" do
@@ -209,9 +205,7 @@ RSpec.describe "VM Retirement Management" do
       expect(q).to receive(:_log).and_return(log_stub).at_least(:once)
       expect(log_stub).to receive(:error).with(/Validation failed: VmRetireRequest: Initiated by is not included in the list/)
       expect(log_stub).to receive(:log_backtrace)
-      status, message, result = q.deliver
-
-      q.delivered(status, message, result)
+      q.deliver_and_process
     end
 
     it "with user as initiated_by, with unknown vm.id" do
@@ -227,8 +221,7 @@ RSpec.describe "VM Retirement Management" do
       expect(q).to receive(:_log).and_return(log_stub).at_least(:once)
       expect(log_stub).to receive(:error).with(/Validation failed: VmRetireRequest: Initiated by is not included in the list/)
       expect(log_stub).to receive(:log_backtrace)
-      status, message, result = q.deliver
-      q.delivered(status, message, result)
+      q.deliver_and_process
     end
 
     it "policy prevents" do
@@ -326,7 +319,7 @@ RSpec.describe "VM Retirement Management" do
     event_name = 'foo'
     event_hash = {:userid => nil, :vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm"}
 
-    expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, :zone => @zone.name).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, {:zone => @zone.name}).once
 
     @vm.raise_retirement_event(event_name)
   end

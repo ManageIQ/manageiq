@@ -80,6 +80,10 @@ module Vmdb
       end
     end
 
+    def miq_widgets_content
+      @miq_widgets_content ||= Dir.glob(Rails.root.join("product/dashboard/widgets", "*")) + flat_map { |engine| content_directories(engine, "dashboard/widgets") }
+    end
+
     def provider_plugins
       @provider_plugins ||= select { |engine| engine.name.start_with?("ManageIQ::Providers::") }
     end

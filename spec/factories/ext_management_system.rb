@@ -287,13 +287,6 @@ FactoryBot.define do
     authtype { "default" }
   end
 
-  factory :ems_amazon_with_cloud_networks,
-          :parent => :ems_amazon do
-    after(:create) do |x|
-      2.times { x.cloud_networks << FactoryBot.create(:cloud_network_amazon) }
-    end
-  end
-
   factory :ems_azure,
           :aliases => ["manageiq/providers/azure/cloud_manager"],
           :class   => "ManageIQ::Providers::Azure::CloudManager",

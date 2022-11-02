@@ -121,7 +121,7 @@ RSpec.describe EmsEvent do
       end
 
       context "messaging_type: artemis" do
-        before { stub_settings_merge(:prototype => {:messaging_type => 'artemis'}) }
+        before { stub_settings_merge(:messaging => {:type => 'artemis'}) }
 
         it "Adds event to Artemis queue" do
           messaging_client = double("ManageIQ::Messaging")
@@ -134,14 +134,14 @@ RSpec.describe EmsEvent do
           }
 
           expect(messaging_client).to receive(:publish_topic).with(expected_queue_payload)
-          expect(MiqQueue).to receive(:messaging_client).with('event_handler').and_return(messaging_client)
+          expect(MiqQueue).to receive(:messaging_client).with('event_handler').and_return(messaging_client).twice
 
           described_class.add_queue('add', ems.id, event_hash)
         end
       end
 
       context "messaging_type: kafka" do
-        before { stub_settings_merge(:prototype => {:messaging_type => 'kafka'}) }
+        before { stub_settings_merge(:messaging => {:type => 'kafka'}) }
 
         it "Adds event to Kafka topic" do
           messaging_client = double("ManageIQ::Messaging")
@@ -154,14 +154,14 @@ RSpec.describe EmsEvent do
           }
 
           expect(messaging_client).to receive(:publish_topic).with(expected_queue_payload)
-          expect(MiqQueue).to receive(:messaging_client).with('event_handler').and_return(messaging_client)
+          expect(MiqQueue).to receive(:messaging_client).with('event_handler').and_return(messaging_client).twice
 
           described_class.add_queue('add', ems.id, event_hash)
         end
       end
 
       context "messaging_type: miq_queue" do
-        before { stub_settings_merge(:prototype => {:messaging_type => 'miq_queue'}) }
+        before { stub_settings_merge(:messaging => {:type => 'miq_queue'}) }
 
         it "Adds event to MiqQueue" do
           expected_queue_payload = {

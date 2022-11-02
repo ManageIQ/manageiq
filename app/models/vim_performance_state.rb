@@ -45,17 +45,18 @@ class VimPerformanceState < ApplicationRecord
   # => host_count_total (derive from assoc_ids)
   # => host_sockets     (derive from assoc_ids)
 
-  def self.capture(obj)
+  # TODO: do a single query for the finds
+  # NOTE: a few calls (with a single object) do use the return and expect a single result
+  def self.capture(objs)
     ts = Time.now.utc
     ts = Time.utc(ts.year, ts.month, ts.day, ts.hour)
-    state = obj.vim_performance_states.find_by(:timestamp => ts)
-    return state unless state.nil?
 
-    state = obj.vim_performance_states.build(:timestamp => ts)
-    state.capture
-    state.save
+    states = Array(objs).map do |obj|
+      state = obj.vim_performance_states.find_by(:timestamp => ts)
+      state ||= obj.vim_performance_states.build(:timestamp => ts).capture_and_save
+    end
 
-    state
+    objs.kind_of?(Array) ? states : states.first
   end
 
   def capture
@@ -74,6 +75,14 @@ class VimPerformanceState < ApplicationRecord
     capture_tag_names
     capture_image_tag_names
     capture_host_sockets
+
+    self
+  end
+
+  def capture_and_save
+    capture
+    save
+    self
   end
 
   def vm_count_on

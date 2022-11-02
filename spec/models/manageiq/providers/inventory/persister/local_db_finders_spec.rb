@@ -114,7 +114,7 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
           ]
         )
       )
-      network2 = persister.networks.find(:hardware => lazy_find_hardware2, :description => "public")
+      network2 = persister.networks.find({:hardware => lazy_find_hardware2, :description => "public"})
       expect(persister.networks.index_proxy.send(:local_db_indexes)[:manager_ref].send(:index).keys).to(
         match_array(
           [
@@ -123,7 +123,7 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
           ]
         )
       )
-      network60 = persister.networks.find(:hardware => lazy_find_hardware60, :description => "public")
+      network60 = persister.networks.find({:hardware => lazy_find_hardware60, :description => "public"})
       expect(persister.networks.index_proxy.send(:local_db_indexes)[:manager_ref].send(:index).keys).to(
         match_array(
           [
@@ -258,7 +258,7 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
           :stack   => lazy_find_stack_1_11,
           :ems_ref => orchestration_stack_resource_data("1_11_1")[:ems_ref]
         },
-        {:ref => :by_stack_and_ems_ref}
+        :ref => :by_stack_and_ems_ref
       )
 
       # Assert all references are one by one
@@ -345,7 +345,7 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
         )
       )
 
-      vm1 = persister.vms.find({:name => vm_data(1)[:name]}, {:ref => :by_name})
+      vm1 = persister.vms.find({:name => vm_data(1)[:name]}, :ref => :by_name)
       expect(vm1[:ems_ref]).to eq "vm_ems_ref_1"
 
       expect(persister.vms.index_proxy.send(:local_db_indexes)[:by_name].send(:index).keys).to(
@@ -369,7 +369,7 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
         )
       )
 
-      vm1 = persister.vms.find({:uid_ems => vm_data(1)[:uid_ems], :name => vm_data(1)[:name]}, {:ref => :by_uid_ems_and_name})
+      vm1 = persister.vms.find({:uid_ems => vm_data(1)[:uid_ems], :name => vm_data(1)[:name]}, :ref => :by_uid_ems_and_name)
       expect(vm1[:ems_ref]).to eq "vm_ems_ref_1"
 
       expect(persister.vms.index_proxy.send(:local_db_indexes)[:by_uid_ems_and_name].send(:index).keys).to(

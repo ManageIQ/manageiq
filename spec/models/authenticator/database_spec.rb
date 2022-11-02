@@ -39,16 +39,16 @@ RSpec.describe Authenticator::Database do
       end
 
       it "records two successful audit entries" do
-        expect(AuditEvent).to receive(:success).with(
-          :event   => 'authenticate_database',
-          :userid  => 'alice',
-          :message => "User alice successfully validated by EVM",
-        )
-        expect(AuditEvent).to receive(:success).with(
-          :event   => 'authenticate_database',
-          :userid  => 'alice',
-          :message => "Authentication successful for user alice",
-        )
+        expect(AuditEvent).to receive(:success).with({
+                                                       :event   => 'authenticate_database',
+                                                       :userid  => 'alice',
+                                                       :message => "User alice successfully validated by EVM",
+                                                     })
+        expect(AuditEvent).to receive(:success).with({
+                                                       :event   => 'authenticate_database',
+                                                       :userid  => 'alice',
+                                                       :message => "Authentication successful for user alice",
+                                                     })
         expect(AuditEvent).not_to receive(:failure)
         authenticate
       end
@@ -92,11 +92,11 @@ RSpec.describe Authenticator::Database do
       end
 
       it "records one failing audit entry" do
-        expect(AuditEvent).to receive(:failure).with(
-          :event   => 'authenticate_database',
-          :userid  => 'alice',
-          :message => "Authentication failed for userid alice",
-        )
+        expect(AuditEvent).to receive(:failure).with({
+                                                       :event   => 'authenticate_database',
+                                                       :userid  => 'alice',
+                                                       :message => "Authentication failed for userid alice",
+                                                     })
         expect(AuditEvent).not_to receive(:success)
         authenticate rescue nil
       end
@@ -122,11 +122,11 @@ RSpec.describe Authenticator::Database do
       end
 
       it "records one failing audit entry" do
-        expect(AuditEvent).to receive(:failure).with(
-          :event   => 'authenticate_database',
-          :userid  => 'bob',
-          :message => "Authentication failed for userid bob",
-        )
+        expect(AuditEvent).to receive(:failure).with({
+                                                       :event   => 'authenticate_database',
+                                                       :userid  => 'bob',
+                                                       :message => "Authentication failed for userid bob",
+                                                     })
         expect(AuditEvent).not_to receive(:success)
         authenticate rescue nil
       end
@@ -146,16 +146,16 @@ RSpec.describe Authenticator::Database do
       end
 
       it "records two successful audit entries" do
-        expect(AuditEvent).to receive(:success).with(
-          :event   => 'authenticate_database',
-          :userid  => 'vincent',
-          :message => "User vincent successfully validated by EVM",
-        )
-        expect(AuditEvent).to receive(:success).with(
-          :event   => 'authenticate_database',
-          :userid  => 'vincent',
-          :message => "Authentication successful for user vincent",
-        )
+        expect(AuditEvent).to receive(:success).with({
+                                                       :event   => 'authenticate_database',
+                                                       :userid  => 'vincent',
+                                                       :message => "User vincent successfully validated by EVM",
+                                                     })
+        expect(AuditEvent).to receive(:success).with({
+                                                       :event   => 'authenticate_database',
+                                                       :userid  => 'vincent',
+                                                       :message => "Authentication successful for user vincent",
+                                                     })
         expect(AuditEvent).not_to receive(:failure)
         authenticate
       end

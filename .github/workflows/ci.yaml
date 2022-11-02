@@ -7,6 +7,9 @@ on:
   schedule:
   - cron: '0 0 * * *'
 
+permissions:
+  contents: read
+
 jobs:
   ci:
     runs-on: ubuntu-latest
@@ -14,6 +17,7 @@ jobs:
       matrix:
         ruby-version:
         - '2.7'
+        - '3.0'
         test-suite:
         - vmdb
         - security
@@ -33,7 +37,7 @@ jobs:
       PGPASSWORD: smartvm
       CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up system
       run: bin/before_install
     - name: Set up Ruby

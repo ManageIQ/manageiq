@@ -38,7 +38,6 @@ RSpec.describe ChargebackConfiguredSystem do
   end
 
   before do
-    MiqRegion.seed
     ChargebackRateDetailMeasure.seed
     ChargeableField.seed
     ManageIQ::Showback::InputMeasure.seed

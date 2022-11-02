@@ -3,11 +3,13 @@ RSpec.describe TaskHelpers::Exports::Widgets do
     Dir.mktmpdir('miq_exp_dir')
   end
 
+  let(:widget_path) { Rails.root.join("product/dashboard/widgets/chart_vendor_and_guest_os.yaml") }
+
   before do
     EvmSpecHelper.local_miq_server
 
     MiqReport.seed_report("Vendor and Guest OS")
-    MiqWidget.seed_widget("chart_vendor_and_guest_os")
+    MiqWidget.sync_from_file(widget_path)
     MiqWidget.sync_from_hash(YAML.safe_load("
     description: Test Widget
     title: Test Widget

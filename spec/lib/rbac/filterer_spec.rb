@@ -652,7 +652,7 @@ RSpec.describe Rbac::Filterer do
         end
 
         it "includes references" do
-          expect(subject).to receive(:include_references).with(anything, ::Vm, nil, :host => {})
+          expect(subject).to receive(:include_references).with(anything, ::Vm, nil, {:host => {}})
                                                          .and_call_original
           expect(subject).to receive(:warn).never
           results
@@ -2482,7 +2482,7 @@ RSpec.describe Rbac::Filterer do
     end
 
     it "support aaarm object" do
-      expect(VimPerformanceTrend).to receive(:find).with(:all, :include => {:a => {}}).and_return([:good])
+      expect(VimPerformanceTrend).to receive(:find).with(:all, {:include => {:a => {}}}).and_return([:good])
       expect(described_class.filtered(VimPerformanceTrend, :include_for_find => {:a => {}}).to_a).to match_array([:good])
     end
 

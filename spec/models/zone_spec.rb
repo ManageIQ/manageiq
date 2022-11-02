@@ -3,7 +3,6 @@ RSpec.describe Zone do
   include_examples "AggregationMixin", "ext_management_systems"
 
   context ".seed" do
-    before { MiqRegion.seed }
     include_examples ".seed called multiple times", 2
   end
 
@@ -164,11 +163,12 @@ RSpec.describe Zone do
     expect(described_class.new.settings).to be_kind_of(Hash)
   end
 
-  context "maintenance zone" do
-    before { MiqRegion.seed }
+  context "#maintenance_zone" do
+    before { described_class.seed }
+
+    let(:zone) { FactoryBot.create(:zone) }
 
     it "is seeded with relation to region" do
-      described_class.seed
       expect(Zone.maintenance_zone).to have_attributes(
         :name => a_string_starting_with("__maintenance__")
       )
@@ -177,13 +177,25 @@ RSpec.describe Zone do
     end
 
     it "is not visible" do
-      described_class.seed
       expect(described_class.maintenance_zone.visible).to eq(false)
     end
 
     it "cannot be destroyed" do
-      described_class.seed
       expect { described_class.maintenance_zone.destroy! }.to raise_error(RuntimeError)
+    end
+
+    it "properly detects" do
+      expect(zone.maintenance?).to eq(false)
+      expect(described_class.maintenance_zone.maintenance?).to eq(true)
+      expect(described_class.maintenance?(zone)).to eq(false)
+      expect(described_class.maintenance?(described_class.maintenance_zone)).to eq(true)
+      expect(described_class.maintenance?(zone.name)).to eq(false)
+      expect(described_class.maintenance?(described_class.maintenance_zone.name)).to eq(true)
+    end
+
+    it "is cached" do
+      described_class.maintenance_zone
+      expect { described_class.maintenance_zone }.to_not make_database_queries
     end
   end
 
@@ -198,7 +210,6 @@ RSpec.describe Zone do
   end
 
   it "removes queued items on destroy" do
-    MiqRegion.seed
     Zone.seed
     zone = FactoryBot.create(:zone)
     FactoryBot.create(:miq_queue, :zone => zone.name)
@@ -213,8 +224,6 @@ RSpec.describe Zone do
   end
 
   describe "#destroy" do
-    before { MiqRegion.seed }
-
     it "fails for a zone with servers when not podified" do
       zone = FactoryBot.create(:zone)
       zone.miq_servers.create!(:name => "my_server")
@@ -260,7 +269,6 @@ RSpec.describe Zone do
     end
 
     it ".destroy deletes the server in the zone" do
-      MiqRegion.seed
       zone = Zone.create!(:name => "my_zone", :description => "some zone")
       server = zone.miq_servers.first
       zone.destroy!

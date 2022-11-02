@@ -61,7 +61,6 @@ RSpec.describe ChargebackVm do
   end
 
   before do
-    MiqRegion.seed
     ChargebackRateDetailMeasure.seed
     ChargeableField.seed
     EvmSpecHelper.local_miq_server

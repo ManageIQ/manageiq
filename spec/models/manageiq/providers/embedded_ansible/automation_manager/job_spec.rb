@@ -1,11 +1,6 @@
 RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
   let(:job) { FactoryBot.create(:embedded_ansible_job) }
 
-  before do
-    region = MiqRegion.seed
-    allow(MiqRegion).to receive(:my_region).and_return(region)
-  end
-
   context "when embedded_ansible role is enabled" do
     before do
       EvmSpecHelper.assign_embedded_ansible_role
@@ -153,7 +148,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
         allow(MiqTask).to receive(:wait_for_taskid) do
           request = MiqQueue.find_by(:class_name => described_class.name)
           request.update(:state => MiqQueue::STATE_DEQUEUE)
-          request.delivered(*request.deliver)
+          request.deliver_and_process
         end
       end
 

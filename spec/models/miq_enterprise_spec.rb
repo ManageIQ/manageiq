@@ -9,8 +9,6 @@ RSpec.describe MiqEnterprise do
 
   context "with all existing records" do
     it "#miq_regions" do
-      MiqRegion.seed
-
       expect(enterprise.miq_regions.size).to eq(1)
     end
 

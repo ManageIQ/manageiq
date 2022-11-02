@@ -224,7 +224,7 @@ RSpec.describe MiqScheduleWorker::Runner do
           before do
             allow(@schedule_worker).to receive(:heartbeat)
 
-            @region = MiqRegion.seed
+            @region = MiqRegion.my_region
             allow(MiqRegion).to receive(:my_region).and_return(@region)
             @schedule_worker.instance_variable_set(:@active_roles, ["database_operations"])
 

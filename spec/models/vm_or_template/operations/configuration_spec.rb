@@ -21,7 +21,7 @@ RSpec.describe VmOrTemplate::Operations::Configuration do
 
       context "when storage exists" do
         it "adds a disk on the storage" do
-          expect(vm).to receive(:raw_add_disk).with(disk_name, disk_size, :datastore => storage_name).once
+          expect(vm).to receive(:raw_add_disk).with(disk_name, disk_size, {:datastore => storage_name}).once
           vm.add_disk(disk_name, disk_size, :datastore => storage_name)
         end
       end

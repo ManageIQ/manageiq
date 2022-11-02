@@ -101,16 +101,6 @@ RSpec.describe Ansible::Runner do
       described_class.run(env_vars, extra_vars, playbook, :become_enabled => true)
     end
 
-    it "sets ANSIBLE_STDOUT_CALLBACK to json" do
-      expect(AwesomeSpawn).to receive(:run) do |command, options|
-        expect(command).to eq("ansible-runner")
-
-        expect(options[:env]["ANSIBLE_STDOUT_CALLBACK"]).to eq("json")
-      end.and_return(result)
-
-      described_class.run(env_vars, extra_vars, playbook)
-    end
-
     it "sets PYTHONPATH correctly with python3 awx modules only installed" do
       expect(described_class).to receive(:ansible_python_path).and_return("")
       expect(File).to receive(:exist?).with(py3_awx_modules_path).and_return(true)

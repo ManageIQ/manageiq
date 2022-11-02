@@ -110,12 +110,12 @@
   :history:
     :keep_events: 6.months
     :purge_window_size: 1000
-  :syndicate_events: true
+  :syndicate_events: false
 :ems_refresh:
   :debug_trace: false
   :capture_vm_created_on_date: false
   :full_refresh_threshold: 100
-  :syndicate_inventory: true
+  :syndicate_inventory: false
   :raise_vm_snapshot_complete_if_created_within: 15.minutes
   :refresh_interval: 24.hours
 :event_handling:
@@ -862,6 +862,8 @@
   :level_policy: info
   :level_remote_console: info
   :secret_filter: []
+:messaging:
+  :type: miq_queue
 :notifications:
   :history:
     :purge_window_size: 1000
@@ -894,7 +896,7 @@
   :host_overhead:
     :memory: 2.01.percent
     :cpu: 0.15.percent
-  :syndicate_metrics: true
+  :syndicate_metrics: false
   :targets:
     :archived_for: 8.hours
   :vim_cache_ttl: 1.hour
@@ -912,8 +914,6 @@
   :maindb: ExtManagementSystem
   :run_automate_methods_on_service_api_submit: false
   :allow_api_service_ordering: true
-:prototype:
-  :messaging_type: miq_queue
 :recommendations:
   :cpu_minimum: 1
   :mem_minimum: 32.megabytes

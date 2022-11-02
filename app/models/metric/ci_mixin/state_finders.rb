@@ -18,18 +18,14 @@ module Metric::CiMixin::StateFinders
           state = vim_performance_states.detect { |s| s.timestamp == t }
         end
       else
-        state = vim_performance_states.find_by(:timestamp => ts)
+        state = @states_by_ts[Metric::Helper.nearest_hourly_timestamp(Time.now.utc)]
+        state ||= vim_performance_states.find_by(:timestamp => ts)
       end
-      # TODO: index perf_capture_state to avoid fetching it everytime for a missing ts and hour
       state ||= perf_capture_state
-      @states_by_ts[ts] = state
+      @states_by_ts[state.timestamp.utc.iso8601] = state
     end
 
     state
-  end
-
-  def preload_vim_performance_state_for_ts(conditions = {})
-    @states_by_ts = vim_performance_states.where(conditions).index_by(&:timestamp)
   end
 
   def preload_vim_performance_state_for_ts_iso8601(conditions = {})

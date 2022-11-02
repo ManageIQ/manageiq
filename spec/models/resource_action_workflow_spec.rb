@@ -73,12 +73,12 @@ RSpec.describe ResourceActionWorkflow do
           it "creates requests" do
             EvmSpecHelper.local_miq_server
             expect(subject).to receive(:make_request).and_call_original
-            expect(AuditEvent).to receive(:success).with(
-              :event        => "service_reconfigure_request_created",
-              :target_class => "Service",
-              :userid       => admin.userid,
-              :message      => "Service Reconfigure requested by <#{admin.userid}> for Service:[#{target.id}]"
-            )
+            expect(AuditEvent).to receive(:success).with({
+                                                           :event        => "service_reconfigure_request_created",
+                                                           :target_class => "Service",
+                                                           :userid       => admin.userid,
+                                                           :message      => "Service Reconfigure requested by <#{admin.userid}> for Service:[#{target.id}]"
+                                                         })
             expect(dialog_fields(@dialog)).to eq("field_1" => nil, "field_2" => nil)
             response = subject.submit_request(data)
             expect(response).to include(:errors => [])
@@ -143,12 +143,12 @@ RSpec.describe ResourceActionWorkflow do
           it "creates requests" do
             EvmSpecHelper.local_miq_server
             expect(subject).to receive(:make_request).and_call_original
-            expect(AuditEvent).to receive(:success).with(
-              :event        => "service_reconfigure_request_created",
-              :target_class => "Service",
-              :userid       => admin.userid,
-              :message      => "Service Reconfigure requested by <#{admin.userid}> for Service:[#{target.id}]"
-            )
+            expect(AuditEvent).to receive(:success).with({
+                                                           :event        => "service_reconfigure_request_created",
+                                                           :target_class => "Service",
+                                                           :userid       => admin.userid,
+                                                           :message      => "Service Reconfigure requested by <#{admin.userid}> for Service:[#{target.id}]"
+                                                         })
             response = subject.submit_request(data)
             expect(dialog_fields(@dialog)).to eq("field_1" => "new_value", "field_2" => nil)
             expect(response).to include(:errors => [])

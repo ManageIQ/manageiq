@@ -1,7 +1,9 @@
 ---
 base: &base
-  hostname: localhost
+  host: localhost
   port: 61616
+  protocol: Stomp
+  encoding: json
   username: admin
   password: smartvm
 

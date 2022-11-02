@@ -2,8 +2,6 @@ RSpec.describe Metric::Capture do
   include Spec::Support::MetricHelper
 
   before do
-    MiqRegion.seed
-
     @zone = EvmSpecHelper.local_miq_server.zone
   end
 

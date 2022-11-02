@@ -19,6 +19,10 @@ module MiqWidgetSet::SetData
       MiqWidget.where(:id => widget_ids)
     end
 
+    def has_widget_id_member?(widget_id)
+      widget_ids.include?(widget_id)
+    end
+
     private
 
     def init_set_data

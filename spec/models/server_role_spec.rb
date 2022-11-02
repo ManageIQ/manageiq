@@ -56,7 +56,6 @@ RSpec.describe ServerRole do
       CSV
 
       allow(File).to receive(:open).and_return(StringIO.new(@csv))
-      MiqRegion.seed
       ServerRole.seed
     end
 

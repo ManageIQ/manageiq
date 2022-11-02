@@ -216,7 +216,7 @@ RSpec.describe AuthenticationMixin do
               Host.authentication_check_schedule
               allow_any_instance_of(Host).to receive(:verify_credentials).and_raise
               msg = MiqQueue.find_by(queue_conditions)
-              msg.delivered(*msg.deliver)
+              msg.deliver_and_process
 
               # attempt 2, 3, 4, 5 should requeue, 6 should NOT
               2.upto(6) do |counter|
@@ -226,7 +226,7 @@ RSpec.describe AuthenticationMixin do
                   expect(msg.args.last).to eq(:attempt => counter)
                   expect(msg.deliver_on).to be_within(0.01).of(time + minutes)
 
-                  msg.delivered(*msg.deliver)
+                  msg.deliver_and_process
                 else
                   expect(MiqQueue).not_to exist(queue_conditions)
                 end

@@ -33,7 +33,7 @@ class MiqQueue < ApplicationRecord
   PRIORITY_DIR    = [:higher, :lower]
 
   def self.messaging_type
-    ENV["MESSAGING_TYPE"] || Settings.prototype.messaging_type
+    ENV.fetch("MESSAGING_TYPE", nil) || Settings.messaging.type
   end
 
   def self.messaging_client(client_ref)
@@ -62,7 +62,6 @@ class MiqQueue < ApplicationRecord
     return if opts.nil?
 
     opts.transform_values! { |v| v.kind_of?(String) ? ManageIQ::Password.try_decrypt(v) : v }
-    opts.merge(:encoding => "json", :protocol => messaging_protocol)
   end
 
   def self.columns_for_requeue
@@ -140,7 +139,7 @@ class MiqQueue < ApplicationRecord
       :handler_id   => nil,
     )
 
-    if options[:zone].present? && options[:zone] == Zone.maintenance_zone&.name
+    if Zone.maintenance?(options[:zone])
       _log.debug("MiqQueue#put skipped: #{options.inspect}")
       return
     end
@@ -486,6 +485,14 @@ class MiqQueue < ApplicationRecord
     return status, message, result
   end
 
+  # @return status
+  def deliver_and_process(requester = nil, &block)
+    status, message, result = deliver(requester, &block)
+    delivered(status, message, result) unless status == STATUS_RETRY
+
+    status
+  end
+
   def dispatch_method(obj, args)
     Timeout.timeout(msg_timeout) do
       args = activate_miq_task(args)
@@ -657,16 +664,6 @@ class MiqQueue < ApplicationRecord
 
   private_class_method :optional_values
 
-  def self.messaging_protocol
-    case messaging_type
-    when "artemis"
-      :Stomp
-    when "kafka"
-      :Kafka
-    end
-  end
-  private_class_method :messaging_protocol
-
   private_class_method def self.messaging_options_from_env
     return unless ENV["MESSAGING_HOSTNAME"] && ENV["MESSAGING_PORT"] && ENV["MESSAGING_USERNAME"] && ENV["MESSAGING_PASSWORD"]
 
@@ -675,6 +672,8 @@ class MiqQueue < ApplicationRecord
       :port     => ENV["MESSAGING_PORT"].to_i,
       :username => ENV["MESSAGING_USERNAME"],
       :password => ENV["MESSAGING_PASSWORD"],
+      :protocol => ENV.fetch("MESSAGING_PROTOCOL", "Kafka"),
+      :encoding => ENV.fetch("MESSAGING_ENCODING", "json")
     }
   end
 
@@ -682,7 +681,7 @@ class MiqQueue < ApplicationRecord
   private_class_method def self.messaging_options_from_file
     return unless MESSAGING_CONFIG_FILE.file?
 
-    YAML.load_file(MESSAGING_CONFIG_FILE)[Rails.env].symbolize_keys.tap { |h| h[:host] = h.delete(:hostname) }
+    YAML.load_file(MESSAGING_CONFIG_FILE)[Rails.env].symbolize_keys
   end
 
   def destroy_potentially_stale_record

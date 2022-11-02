@@ -81,7 +81,7 @@ RSpec.describe FileDepotFtp do
   end
 
   context "#upload_file" do
-    let(:region_key) { "Current_region_unknown_#{zone_name_id}_#{server_name_id}.txt".gsub(/\s+/, "_") }
+    let(:region_key) { "Current_region_#{MiqRegion.my_region_number}_#{zone_name_id}_#{server_name_id}.txt".gsub(/\s+/, "_") }
     it 'uploads file to vsftpd with existing directory structure' do
       vsftpd = vsftpd_mock.new('uploads' => {zone_name_id => {server_name_id => {}}})
       expect(file_depot_ftp).to receive(:connect).and_return(vsftpd)

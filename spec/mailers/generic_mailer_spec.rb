@@ -12,7 +12,6 @@ describe GenericMailer do
 
   context 'with a notifier within a region' do
     before do
-      MiqRegion.seed
       ServerRole.seed
       @miq_server.server_roles << ServerRole.where(:name => 'notifier')
       @miq_server.save!
@@ -37,8 +36,6 @@ describe GenericMailer do
   end
 
   context 'without a notifier within a region' do
-    before { MiqRegion.seed }
-
     it 'does not queue any mail notifications' do
       @args[:attachment] = [{:content_type => "text/plain", :filename => "generic_mailer_test.txt", :body => "generic_notification with text/plain attachment" * 10}]
       expect { GenericMailer.deliver_queue(:generic_notification, @args) }.not_to(change { MiqQueue.count })

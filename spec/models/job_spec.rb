@@ -32,8 +32,7 @@ RSpec.describe Job do
       context "after queue message is processed" do
         before do
           @msg = MiqQueue.get(:role => "smartstate", :zone => @zone.name)
-          status, message, result = @msg.deliver
-          @msg.delivered(status, message, result)
+          @msg.deliver_and_process
 
           @job.reload
         end
@@ -69,8 +68,7 @@ RSpec.describe Job do
         Job.check_jobs_for_timeout
 
         @msg = MiqQueue.get(:role => "smartstate", :zone => @zone.name)
-        status, message, result = @msg.deliver
-        @msg.delivered(status, message, result)
+        @msg.deliver_and_process
 
         @job.reload
       end
@@ -98,8 +96,7 @@ RSpec.describe Job do
         Job.check_jobs_for_timeout
 
         @msg = MiqQueue.get(:role => "smartstate", :zone => @zone.name)
-        status, message, result = @msg.deliver
-        @msg.delivered(status, message, result)
+        @msg.deliver_and_process
 
         @job.reload
       end

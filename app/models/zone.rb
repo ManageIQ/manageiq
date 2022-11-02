@@ -107,13 +107,25 @@ class Zone < ApplicationRecord
     miq_servers.flat_map(&:active_role_names).uniq
   end
 
+  def maintenance?
+    self.class.maintenance?(self)
+  end
+
   def self.default_zone
     in_my_region.find_by(:name => "default")
   end
 
   # Zone for paused providers (no servers in it), not visible by default
-  cache_with_timeout(:maintenance_zone) do
+  def self.maintenance_zone
     MiqRegion.my_region&.maintenance_zone
+  end
+
+  def self.maintenance?(zone)
+    case zone
+    when NilClass then false
+    when String then maintenance_zone&.name == zone
+    else maintenance_zone == zone
+    end
   end
 
   # The zone to use when inserting a record into MiqQueue
@@ -225,7 +237,7 @@ class Zone < ApplicationRecord
 
   def message_for_invalid_delete
     return _("cannot delete default zone") if name == "default"
-    return _("cannot delete maintenance zone") if self == self.class.maintenance_zone
+    return _("cannot delete maintenance zone") if maintenance?
     return _("zone name '%{name}' is used by a server") % {:name => name} if !MiqEnvironment::Command.is_podified? && miq_servers.present?
     _("zone name '%{name}' is used by a provider") % {:name => name} if ext_management_systems.present?
   end

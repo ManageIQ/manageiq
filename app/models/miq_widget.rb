@@ -32,13 +32,21 @@ class MiqWidget < ApplicationRecord
   include YAMLImportExportMixin
   acts_as_miq_set_member
 
-  WIDGET_DIR =  File.expand_path(File.join(Rails.root, "product/dashboard/widgets"))
   WIDGET_REPORT_SOURCE = "Generated for widget".freeze
 
-  before_destroy :destroy_schedule
+  before_destroy :destroy_schedule, :prevent_orphaned_dashboard
 
   def destroy_schedule
     miq_schedule.destroy if miq_schedule
+  end
+
+  def prevent_orphaned_dashboard
+    dependent_sets = MiqWidgetSet.select(:name, :set_data).all.select { |set| set.has_widget_id_member?(id) }
+
+    unless dependent_sets.empty?
+      errors.add(:base, _("Widget: #{title}(#{id}) must be removed from these dashboards before it can be removed: #{dependent_sets.collect(&:name).join(", ")}"))
+      throw(:abort)
+    end
   end
 
   virtual_column :status,         :type => :string,    :uses => :miq_task
@@ -458,7 +466,7 @@ class MiqWidget < ApplicationRecord
   end
 
   def self.sync_from_dir
-    Dir.glob(File.join(WIDGET_DIR, "*.yaml")).sort.each { |f| sync_from_file(f) }
+    Vmdb::Plugins.miq_widgets_content.sort.each { |f| sync_from_file(f) }
   end
 
   def self.sync_from_file(filename)
@@ -554,13 +562,6 @@ class MiqWidget < ApplicationRecord
 
   def self.seed
     sync_from_dir
-  end
-
-  def self.seed_widget(pattern)
-    files = Dir.glob(File.join(WIDGET_DIR, "*#{pattern}*"))
-    files.collect do |f|
-      sync_from_file(f)
-    end
   end
 
   def save_with_shortcuts(shortcuts)  # [[<shortcut.id>, <widget_shortcut.description>], ...]

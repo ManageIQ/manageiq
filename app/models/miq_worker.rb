@@ -45,7 +45,7 @@ class MiqWorker < ApplicationRecord
   end
 
   class << self
-    attr_writer :workers
+    attr_writer :workers, :rails_worker
   end
 
   def self.bundler_groups
@@ -61,6 +61,13 @@ class MiqWorker < ApplicationRecord
     return @workers.call if @workers.kind_of?(Proc)
     return @workers unless @workers.nil?
     workers_configured_count
+  end
+
+  def self.rails_worker?
+    return @rails_worker.call if @rails_worker.kind_of?(Proc)
+    return @rails_worker unless @rails_worker.nil?
+
+    true
   end
 
   def self.scalable?

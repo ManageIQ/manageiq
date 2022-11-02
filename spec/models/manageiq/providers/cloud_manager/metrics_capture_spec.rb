@@ -1,10 +1,6 @@
 RSpec.describe ManageIQ::Providers::CloudManager::MetricsCapture do
   include Spec::Support::MetricHelper
 
-  before do
-    MiqRegion.seed
-  end
-
   let(:miq_server) { EvmSpecHelper.local_miq_server }
   let(:ems)  { FactoryBot.create(:ems_openstack, :zone => miq_server.zone) }
 

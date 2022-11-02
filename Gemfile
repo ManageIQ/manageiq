@@ -1,5 +1,5 @@
-raise "Ruby versions < 2.6.0 are unsupported!" if RUBY_VERSION < "2.6.0"
-raise "Ruby versions >= 3.0.0 are unsupported!" if RUBY_VERSION >= "3.0.0"
+raise "Ruby versions < 2.7.0 are unsupported!" if RUBY_VERSION < "2.7.0"
+raise "Ruby versions >= 3.1.0 are unsupported!" if RUBY_VERSION >= "3.1.0"
 
 source 'https://rubygems.org'
 
@@ -42,13 +42,13 @@ gem "gettext_i18n_rails",               "~>1.7.2"
 gem "gettext_i18n_rails_js",            "~>1.3.0"
 gem "hamlit",                           "~>2.11.0"
 gem "inifile",                          "~>3.0",             :require => false
-gem "inventory_refresh",                "~>1.0",             :require => false
+gem "inventory_refresh",                "~>2.0",             :require => false
 gem "kubeclient",                       "~>4.0",             :require => false # For scaling pods at runtime
 gem "linux_admin",                      "~>2.0", ">=2.0.1",  :require => false
 gem "listen",                           "~>3.2",             :require => false
 gem "manageiq-api-client",              "~>0.3.6",           :require => false
 gem "manageiq-loggers",                 "~>1.0",             :require => false
-gem "manageiq-messaging",               "~>1.0", ">=1.1.0",  :require => false
+gem "manageiq-messaging",               "~>1.0", ">=1.2.0",  :require => false
 gem "manageiq-password",                "~>1.0",             :require => false
 gem "manageiq-postgres_ha_admin",       "~>3.2",             :require => false
 gem "manageiq-ssh-util",                "~>0.1.1",           :require => false
@@ -72,6 +72,7 @@ gem "ripper_ruby_parser",               "~>1.5.1",           :require => false
 gem "ruby-progressbar",                 "~>1.7.0",           :require => false
 gem "rubyzip",                          "~>2.0.0",           :require => false
 gem "rugged",                           "~>1.5.0",           :require => false
+gem "ruport",                           "~>1.8.0"
 gem "snmp",                             "~>1.2.0",           :require => false
 gem "sprockets",                        "~>3.7.2",           :require => false
 gem "sync",                             "~>0.5",             :require => false
@@ -85,7 +86,6 @@ gem "mime-types",                       "~>3.0",             :require => false, 
 
 # Modified gems (forked on Github)
 gem "handsoap",                         "=0.2.5.5",          :require => false, :source => "https://rubygems.manageiq.org" # for manageiq-gems-pending only
-gem "ruport",                           "=1.7.0.3",                             :source => "https://rubygems.manageiq.org"
 
 # In 1.9.3: Time.parse uses british version dd/mm/yyyy instead of american version mm/dd/yyyy
 # american_date fixes this to be compatible with 1.8.7 until all callers can be converted to the 1.9.3 format prior to parsing.
@@ -257,7 +257,7 @@ group :ui_dependencies do # Added to Bundler.require in config/application.rb
   manageiq_plugin "manageiq-decorators"
   manageiq_plugin "manageiq-ui-classic"
   # Modified gems (forked on Github)
-  gem "jquery-rjs",                     "=0.1.1.2",          :source => "https://rubygems.manageiq.org"
+  gem "jquery-rjs",                     "=0.1.1.3",          :source => "https://rubygems.manageiq.org"
 end
 
 group :web_server, :manageiq_default do
@@ -273,7 +273,7 @@ group :web_socket, :manageiq_default do
 end
 
 group :appliance, :optional => true do
-  gem "manageiq-appliance_console",     "~>7.1", ">=7.1.1",  :require => false
+  gem "manageiq-appliance_console",     "~>7.2",             :require => false
 end
 
 ### Development and test gems are excluded from appliance and container builds to reduce size and license issues

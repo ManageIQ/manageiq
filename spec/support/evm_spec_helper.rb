@@ -40,6 +40,7 @@ module EvmSpecHelper
     clear_instance_variable(MiqProductFeature, :@feature_cache) if defined?(MiqProductFeature)
     clear_instance_variable(MiqProductFeature, :@obj_cache) if defined?(MiqProductFeature)
     clear_instance_variable(BottleneckEvent, :@event_definitions) if defined?(BottleneckEvent)
+    clear_instance_variable(MiqWorker, :@rails_worker) if defined?(MiqWorker)
     clear_instance_variable(Tenant, :@root_tenant) if defined?(Tenant)
 
     MiqWorker.my_guid = nil

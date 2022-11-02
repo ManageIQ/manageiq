@@ -17,6 +17,10 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     ems.zone.name
   end
 
+  def targets
+    Array(target)
+  end
+
   # Queue Capturing all metrics for an ems
   def perf_capture_all_queue
     perf_capture_health_check
@@ -33,52 +37,79 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     perf_capture_queue('realtime')
   end
 
+  # @param [String] interval "realtime" or "historical". Storage uses "hourly"
+  # @param [Boolean] rollups: typically true
   def perf_capture_queue(interval, start_time: nil, end_time: nil, rollups: false)
     if interval == "realtime" && Metric::Capture.historical_days != 0
       historical_start = Metric::Capture.historical_start_time
       historical_end   = 1.day.from_now.utc.beginning_of_day
     end
-    realtime_cut_off = 4.hours.ago.utc.beginning_of_day
 
     targets_by_class = Array(@target).group_by { |t| t.class.base_class.name }
     targets_by_class.each do |class_name, class_targets|
       class_interval = class_name == "Storage" ? "hourly" : interval
 
-      if class_name == "Host" && rollups # implied: class_interval == realtime
-        class_targets.group_by(&:ems_cluster).each do |ems_cluster, hosts|
-          perf_capture_queue_targets(hosts, interval, :start_time => start_time, :end_time => end_time, :parent => ems_cluster)
-        end
+      if class_name == "Host" && rollups # class_interval == realtime (only possible value if rollups == true)
+        perf_capture_queue_targets_hosts(class_targets, class_interval, :start_time => start_time, :end_time => end_time)
       elsif class_interval == "historical"
         perf_capture_queue_targets_hist(class_targets, class_interval, :start_time => start_time, :end_time => end_time)
-      else
+      else # class_interval == "realtime" or "hourly" (Storage)
         perf_capture_queue_targets(class_targets, class_interval, :start_time => start_time, :end_time => end_time)
       end
 
-      # handle scenarios that add historial captures to the realtime captures
+      # detect gaps and add add "historial" captures for a "realtime" capture
       if class_interval == "realtime" # implied: class_name != "Storage"
-        targets_already_captured, targets_not_captured = class_targets.partition(&:last_perf_capture_on)
-
-        # targets with no captured metrics
-        if historical_start
-          perf_capture_queue_targets_hist(targets_not_captured, "historical", :start_time => historical_start, :end_time => historical_end)
-        end
-
-        # targets that haven't captured realtime metrics in a while
-        # TODO: send these in batches instead of one offs (use split_capture_intervals logic to send 1 day at a time)
-        # TODO: if it has been months, do we want a limit to the total time duration of these captures?
-        gapped_targets = targets_already_captured.select { |t| t.last_perf_capture_on < realtime_cut_off }
-        gapped_targets.each do |target|
-          split_capture_intervals(target.last_perf_capture_on, realtime_cut_off).each do |s, e|
-            perf_capture_queue_target(target, "historical", :start_time => s, :end_time => e)
-          end
-        end
+        perf_capture_queue_gap(class_targets, :historical_start => historical_start, :historical_end => historical_end)
       end
     end
   end
 
-  def perf_capture_queue_targets_hist(targets, interval, start_time: nil, end_time: nil)
+  # @param [Date|Nil] historical_start nil if no capture.
+  # @param [Date|Nil] historical_end
+  # @param [Date] realtime_cut_off
+  # TODO: group historicals by last_perf_capture_on groupings (by hour?)
+  # NOTE: if metrics is paused for a long time, we will send a lot of captures
+  def perf_capture_queue_gap(targets, historical_start:, historical_end:)
+    targets_already_captured, targets_not_captured = targets.partition(&:last_perf_capture_on)
+
+    # targets with no captured metrics
+    if historical_start
+      perf_capture_queue_targets_hist(targets_not_captured, "historical", :start_time => historical_start, :end_time => historical_end)
+    end
+
+    # targets that haven't captured realtime metrics in a while
+    # TODO: send these in batches instead of one offs (use split_capture_intervals logic to send 1 day at a time)
+    # TODO: if it has been months, do we want a limit to the total time duration of these captures?
+    realtime_cut_off = 4.hours.ago.utc.beginning_of_day
+    gapped_targets = targets_already_captured.select { |t| t.last_perf_capture_on < realtime_cut_off }
+    gapped_targets.each do |target|
+      split_capture_intervals(target.last_perf_capture_on, realtime_cut_off).each do |s, e|
+        perf_capture_queue_target(target, "historical", :start_time => s, :end_time => e)
+      end
+    end
+  end
+
+  # @param [String] interval only ever "historical"
+  def perf_capture_queue_targets_hist(targets, interval, start_time:, end_time:)
     split_capture_intervals(start_time, end_time).each do |st, ed|
       perf_capture_queue_targets(targets, interval, :start_time => st, :end_time => ed)
+    end
+  end
+
+  # @param [Array<Host>] targets for collection
+  # @param [String] interval only ever "realtime"
+  def perf_capture_queue_targets_hosts(targets, interval, start_time:, end_time:)
+    targets.group_by(&:ems_cluster).each do |ems_cluster, hosts|
+      perf_capture_queue_targets(hosts, interval, :start_time => start_time, :end_time => end_time, :parent => ems_cluster)
+    end
+  end
+
+  # private, but called by ci_mixin/capture.rb
+  def log_targets
+    if targets.size == 1
+      "[#{targets.first.class.name}], [#{targets.first.id}], [#{targets.first.name}]"
+    else
+      "[#{targets.map { |obj| obj.class.name }.uniq.join(", ")}], [#{targets.size} targets]"
     end
   end
 
@@ -157,18 +188,42 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     end
   end
 
-  def perf_capture_queue_targets(targets, interval, start_time: nil, end_time: nil, parent: nil)
-    task = create_rollup_task_for_cluster(parent, targets) if parent
+  # number of records to send at a time for a single capture message
+  # @return [Numeric] 0 for no batching.  (defaults to 0)
+  def batch_size
+    @batch_size ||= ::Settings.dig(:ems, "ems_#{ems.provider_name.underscore}", :capture_batch_size).to_i
+  end
+
+  def perf_capture_queue_targets(targets, interval, start_time:, end_time:, parent: nil)
+    if batch_size > 1
+      # send all of the hosts in a cluster in one message and ignore batching
+      #   hosts will rollup into the cluster, so the entire batch must be together otherwise
+      #   we will require a create_rollup_task_for_cluster
+      current_batch_size = parent ? targets.size : batch_size
+      rollup = parent.present?
+      targets.each_slice(current_batch_size) do |targets_batch|
+        perf_capture_queue_target(targets_batch, interval, :start_time => start_time, :end_time => end_time, :rollup => rollup)
+      end
+    else # send individual messages
+      task = create_rollup_task_for_cluster(parent, targets) if parent
+      perf_capture_queue_targets_individually(targets, interval, :start_time => start_time, :end_time => end_time, :task_id => task&.id)
+    end
+  end
+
+  # standard one message per object to collect
+  def perf_capture_queue_targets_individually(targets, interval, start_time:, end_time:, task_id: nil)
     targets.each do |target|
-      perf_capture_queue_target(target, interval, :start_time => start_time, :end_time => end_time, :task_id => task&.id)
+      perf_capture_queue_target(target, interval, :start_time => start_time, :end_time => end_time, :task_id => task_id)
     rescue => err
       _log.warn("Failed to queue perf_capture for target [#{target.class.name}], [#{target.id}], [#{target.name}]: #{err}")
     end
   end
 
-  def perf_capture_queue_target(target, interval_name, start_time: nil, end_time: nil, task_id: nil)
-    # cb is the task used to group cluster realtime metrics
-    cb = {:class_name => target.class.name, :instance_id => target.id, :method_name => :perf_capture_callback, :args => [[task_id]]} if task_id
+  def perf_capture_queue_target(target, interval_name, start_time:, end_time:, task_id: nil, rollup: false)
+    if target.kind_of?(Array)
+      target_ids = target.map(&:id) if target.size > 1
+      target = target.first
+    end
 
     # Queue up the actual items
     queue_item = {
@@ -181,20 +236,26 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
       :zone        => my_zone,
       :state       => ['ready', 'dequeue'],
     }
-    queue_item[:args] = [start_time, end_time] if start_time
+    queue_item[:args] = [start_time, end_time, target_ids, rollup] if start_time || target_ids.present? || rollup
+
+    return MiqQueue.put_unless_exists(queue_item) unless task_id
+
+    # cb is the task used to group cluster realtime metrics
+    cb = {:class_name => target.class.name, :instance_id => target.id, :method_name => :perf_capture_callback, :args => [[task_id]]}
 
     # reason for setting MiqQueue#miq_task_id is to initializes MiqTask.started_on column when message delivered.
     MiqQueue.create_with(:miq_task_id => task_id, :miq_callback => cb).put_or_update(queue_item) do |msg, qi|
       if msg.nil?
+        # no message on queue. put on queue, but with default state
         qi.delete(:state)
         qi
-      elsif msg.state == "ready" && task_id
+      elsif msg.state == "ready"
         # rerun the job
         qi.delete(:state)
         existing_tasks = ((msg.miq_callback || {})[:args] || []).first || []
         qi[:miq_callback] = cb.merge(:args => [existing_tasks + [task_id]])
         qi
-      else
+      else # state == "dequeue"
         _log.debug("Skipping capture of #{target.log_target} - Performance capture for interval #{interval_name} is still running")
         # NOTE: do not update the message queue
         nil
@@ -211,7 +272,7 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
   #  [[2017-01-03 12:00:00 UTC, 2017-01-04 12:00:00 UTC],
   #   [2017-01-02 12:00:00 UTC, 2017-01-03 12:00:00 UTC],
   #   [2017-01-01 12:00:00 UTC, 2017-01-02 12:00:00 UTC]]
-  def split_capture_intervals(start_time = nil, end_time = nil, threshold = 1.day)
+  def split_capture_intervals(start_time, end_time, threshold = 1.day)
     return [] unless start_time
 
     (start_time.utc..end_time.utc).step_value(threshold).each_cons(2).collect do |s_time, e_time|

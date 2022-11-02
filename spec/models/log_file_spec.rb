@@ -55,7 +55,7 @@ RSpec.describe LogFile do
 
         context "processing the delete queue message" do
           before do
-            message.delivered(*message.deliver)
+            message.deliver_and_process
           end
 
           include_examples("Log Collection should create 0 tasks and 0 queue items")
@@ -66,7 +66,7 @@ RSpec.describe LogFile do
       context "with _request_logs queue message raising exception due to stopped server" do
         before do
           allow_any_instance_of(MiqServer).to receive_messages(:status => "stopped")
-          @message.delivered(*@message.deliver)
+          @message.deliver_and_process
         end
 
         # How does a stopped server dequeue something???
@@ -81,13 +81,13 @@ RSpec.describe LogFile do
                                              :method_name => :queue_callback_on_exceptions, :args => ['Finished']}}
         expect_any_instance_of(MiqServer).to receive(:_post_my_logs).with(expected_options)
 
-        @message.delivered(*@message.deliver)
+        @message.deliver_and_process
       end
 
       context "with MiqServer._request_logs calling _post_my_logs to enqueue" do
         let(:message) { MiqQueue.where(:class_name => "MiqServer", :method_name => "post_logs", :instance_id => @miq_server.id, :server_guid => @miq_server.guid, :zone => @miq_server.my_zone).first }
         before do
-          @message.delivered(*@message.deliver)
+          @message.deliver_and_process
         end
 
         it "MiqServer#post_logs message should have correct args" do
@@ -104,7 +104,7 @@ RSpec.describe LogFile do
             expect_any_instance_of(MiqServer).to receive(:post_current_logs).once
             expect_any_instance_of(MiqServer).to receive(:post_automate_dialogs).once
             expect_any_instance_of(MiqServer).to receive(:post_automate_models).once
-            message.delivered(*message.deliver)
+            message.deliver_and_process
           end
 
           it "#post_logs will post both historical and current logs if flag nil" do
@@ -112,7 +112,7 @@ RSpec.describe LogFile do
             expect_any_instance_of(MiqServer).to receive(:post_current_logs).once
             expect_any_instance_of(MiqServer).to receive(:post_automate_dialogs).once
             expect_any_instance_of(MiqServer).to receive(:post_automate_models).once
-            message.delivered(*message.deliver)
+            message.deliver_and_process
           end
 
           it "#post_logs will post both historical and current logs if flag false" do
@@ -121,7 +121,7 @@ RSpec.describe LogFile do
             expect_any_instance_of(MiqServer).to receive(:post_current_logs).once
             expect_any_instance_of(MiqServer).to receive(:post_automate_dialogs).once
             expect_any_instance_of(MiqServer).to receive(:post_automate_models).once
-            message.delivered(*message.deliver)
+            message.deliver_and_process
           end
         end
       end
@@ -129,7 +129,7 @@ RSpec.describe LogFile do
       context "with MiqServer _post_my_logs raising exception" do
         before do
           allow_any_instance_of(MiqServer).to receive(:_post_my_logs).and_raise
-          @message.delivered(*@message.deliver)
+          @message.deliver_and_process
         end
 
         include_examples("Log Collection should error out task and queue item")
@@ -139,7 +139,7 @@ RSpec.describe LogFile do
       context "with MiqServer _post_my_logs raising timeout exception" do
         before do
           allow_any_instance_of(MiqServer).to receive(:_post_my_logs).and_raise(Timeout::Error)
-          @message.delivered(*@message.deliver)
+          @message.deliver_and_process
         end
 
         include_examples("Log Collection should error out task and queue item")
@@ -149,10 +149,10 @@ RSpec.describe LogFile do
       context "with MiqServer.post_logs raising missing log_depot settings exception" do
         before do
           allow_any_instance_of(MiqServer).to receive(:log_depot).and_return(nil)
-          @message.delivered(*@message.deliver)
+          @message.deliver_and_process
 
           @message = MiqQueue.where(:class_name => "MiqServer", :method_name => "post_logs").first
-          @message.delivered(*@message.deliver)
+          @message.deliver_and_process
         end
 
         include_examples("Log Collection should error out task and queue item")
@@ -161,7 +161,7 @@ RSpec.describe LogFile do
 
       context "with MiqServer.post_logs fully stubbed" do
         before do
-          @message.delivered(*@message.deliver)
+          @message.deliver_and_process
           @message = MiqQueue.where(:class_name => "MiqServer", :method_name => "post_logs").first
           allow(VMDB::Util).to receive(:zip_logs).and_return('/tmp/blah')
           allow(VMDB::Util).to receive(:get_evm_log_for_date).and_return('/tmp/blah')
@@ -171,7 +171,7 @@ RSpec.describe LogFile do
         context "with VMDB::Util.zip_logs raising exception" do
           before do
             allow(VMDB::Util).to receive(:zip_logs).and_raise("some error message")
-            @message.delivered(*@message.deliver)
+            @message.deliver_and_process
           end
 
           include_examples("Log Collection should error out task and queue item")
@@ -181,7 +181,7 @@ RSpec.describe LogFile do
         context "with VMDB::Util.zip_logs raising timeout exception" do
           before do
             allow(VMDB::Util).to receive(:zip_logs).and_raise(Timeout::Error)
-            @message.delivered(*@message.deliver)
+            @message.deliver_and_process
           end
 
           include_examples("Log Collection should error out task and queue item")
@@ -191,7 +191,7 @@ RSpec.describe LogFile do
         context "with MiqServer delete_old_requested_logs raising timeout exception" do
           before do
             allow_any_instance_of(MiqServer).to receive(:delete_old_requested_logs).and_raise(Timeout::Error)
-            @message.delivered(*@message.deliver)
+            @message.deliver_and_process
           end
 
           include_examples("Log Collection should error out task and queue item")
@@ -201,7 +201,7 @@ RSpec.describe LogFile do
         context "with MiqServer delete_old_requested_logs raising exception" do
           before do
             allow_any_instance_of(MiqServer).to receive(:delete_old_requested_logs).and_raise("some error message")
-            @message.delivered(*@message.deliver)
+            @message.deliver_and_process
           end
 
           include_examples("Log Collection should error out task and queue item")
@@ -211,7 +211,7 @@ RSpec.describe LogFile do
         context "with MiqServer base_zip_log_name raising exception" do
           before do
             allow_any_instance_of(MiqServer).to receive(:base_zip_log_name).and_raise("some error message")
-            @message.delivered(*@message.deliver)
+            @message.deliver_and_process
           end
 
           include_examples("Log Collection should error out task and queue item")
@@ -221,7 +221,7 @@ RSpec.describe LogFile do
         context "with MiqServer base_zip_log_name raising timeout exception" do
           before do
             allow_any_instance_of(MiqServer).to receive(:base_zip_log_name).and_raise(Timeout::Error)
-            @message.delivered(*@message.deliver)
+            @message.deliver_and_process
           end
 
           include_examples("Log Collection should error out task and queue item")
@@ -231,7 +231,7 @@ RSpec.describe LogFile do
         context "with MiqServer format_log_time raising exception" do
           before do
             allow_any_instance_of(MiqServer).to receive(:format_log_time).and_raise("some error message")
-            @message.delivered(*@message.deliver)
+            @message.deliver_and_process
           end
 
           include_examples("Log Collection should error out task and queue item")
@@ -241,7 +241,7 @@ RSpec.describe LogFile do
         context "with MiqServer format_log_time raising timeout exception" do
           before do
             allow_any_instance_of(MiqServer).to receive(:format_log_time).and_raise(Timeout::Error)
-            @message.delivered(*@message.deliver)
+            @message.deliver_and_process
           end
 
           include_examples("Log Collection should error out task and queue item")

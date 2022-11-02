@@ -243,7 +243,6 @@ class VmOrTemplate < ApplicationRecord
     'entitled_processors' => [:entitled_processors,  :float],
     'processor_type'      => [:processor_share_type, :string],
     'pin_policy'          => [:processor_pin_policy, :string],
-    'placement_group'     => [:placement_group,      :string],
     'software_licenses'   => [:software_licenses,    :string],
   }
   REQUIRED_ADVANCED_SETTINGS.each do |k, (m, t)|

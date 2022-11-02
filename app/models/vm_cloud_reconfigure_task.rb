@@ -22,9 +22,7 @@ class VmCloudReconfigureTask < MiqRequestTask
     else
       name = req_obj.source.name
     end
-    flavor = Flavor.find_by(:id => req_obj.options[:instance_type])
-
-    "#{request_class::TASK_DESCRIPTION} for: #{name} - Flavor: #{flavor.try(:name)}"
+    "#{request_class::TASK_DESCRIPTION} for: #{name}"
   end
 
   def after_request_task_create
@@ -32,9 +30,8 @@ class VmCloudReconfigureTask < MiqRequestTask
   end
 
   def do_request
-    flavor = Flavor.find_by!(:id => options[:instance_type])
-    _log.info("Reconfiguring VM #{vm.id}:#{vm.name} to flavor #{flavor.name}")
-    vm.resize(options[:instance_type])
+    _log.info("Reconfiguring VM #{vm.id}:#{vm.name}")
+    vm.resize(options["resizeValues"])
 
     if AUTOMATE_DRIVES
       update_and_notify_parent(:state => 'reconfigured', :message => "Finished #{request_class::TASK_DESCRIPTION}")
