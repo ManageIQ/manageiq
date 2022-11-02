@@ -121,7 +121,7 @@ class MiqWorker::Runner
     # Using exec here rather than fork+exec so that we can continue to use the
     # standard systemd service Type=notify and not have to use Type=forking which
     # can limit other systemd options available to the service.
-    Bundler.unbundled_exec(worker_cmdline)
+    Bundler.unbundled_exec(worker_env, worker_cmdline)
   end
 
   def recover_from_temporary_failure
@@ -488,6 +488,14 @@ class MiqWorker::Runner
     {
       :messaging => MiqQueue.messaging_client_options,
       :settings  => Settings.to_hash
+    }
+  end
+
+  def worker_env
+    {
+      "APP_ROOT"              => Rails.root.to_s,
+      "GUID"                  => @worker.guid,
+      "WORKER_HEARTBEAT_FILE" => @worker.heartbeat_file
     }
   end
 
