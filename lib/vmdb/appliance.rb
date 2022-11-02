@@ -11,7 +11,7 @@ module Vmdb
     end
 
     def self.CODENAME
-      "Petrosian".freeze
+      "Oparin".freeze
     end
 
     def self.RELEASE
