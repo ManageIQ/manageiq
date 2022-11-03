@@ -6,6 +6,25 @@ module PhysicalServer::Operations
   include_concern 'ConfigPattern'
   include_concern 'Lifecycle'
 
+  def remote_console_acquire_resource_queue(userid)
+    task_opts = {
+      :action => "Acquiring remote console file or url from a physical server with uuid #{ems_ref} for user #{userid}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => self.class.name,
+      :instance_id => id,
+      :method_name => 'remote_console_acquire_resource',
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => my_zone,
+      :args        => [userid, MiqServer.my_server.id]
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
   private
 
   def change_state(verb)
