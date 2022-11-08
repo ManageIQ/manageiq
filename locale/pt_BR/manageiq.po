@@ -9,8 +9,8 @@ msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-27 18:57-0400\n"
-"PO-Revision-Date: 2022-10-27 18:57-0400\n"
+"POT-Creation-Date: 2022-11-04 12:41-0400\n"
+"PO-Revision-Date: 2022-11-04 12:41-0400\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pt\n"
@@ -166,7 +166,7 @@ msgstr " - Filtrado por %{filter}"
 msgid " - Filtered by custom search"
 msgstr " - Filtrado pela procura customizada"
 
-#: ../app/models/physical_server/operations.rb:13
+#: ../app/models/physical_server/operations.rb:32
 msgid ""
 " A Server %{server} <%{name}> with Id: <%{id}> is not associated with a "
 "provider."
@@ -2020,7 +2020,7 @@ msgstr ""
 msgid "* Dashboard name cannot be changed"
 msgstr "* Não é possível mudar o nome do painel"
 
-#: ../app/views/layouts/_tl_show.html.haml:12
+#: ../app/views/layouts/_tl_show.html.haml:7
 msgid "* Dates/Times on this page are based on time zone: %{time_zone}."
 msgstr ""
 "* As datas e horas nesta página são baseadas no fuso horário: %{time_zone}."
@@ -2132,7 +2132,6 @@ msgid "* Requires image file in .png or .jpg format"
 msgstr "* Exige arquivo de imagem no formato .png ou .jpg"
 
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:72
-#: ../app/views/static/retirement-form.html.haml:48
 msgid "* Saving a blank date will remove all retirement dates"
 msgstr "* Salvar uma data em branco removerá todas as datas de desativação"
 
@@ -2633,10 +2632,10 @@ msgstr "<Por função>"
 #: ../app/javascript/components/cloud-volume-backup-form/cloud-volume-backup-form.schema.js:15
 #: ../app/javascript/components/generic-objects-form/generic-objects-form.schema.js:98
 #: ../app/javascript/components/generic-objects-form/generic-objects-form.schema.js:146
-#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:44
-#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:66
-#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:82
-#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:197
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:51
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:73
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:89
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:204
 #: ../app/javascript/components/host-initiator-group-form/host-initiator-group-form.schema.js:35
 #: ../app/javascript/components/host-initiator-group-form/host-initiator-group-form.schema.js:57
 #: ../app/javascript/components/miq-alert-set-form/miq-alert-set-form.schema.js:37
@@ -2650,8 +2649,8 @@ msgstr "<Por função>"
 #: ../app/javascript/components/vm-cloud-add-remove-security-group-form/vm-cloud-add-security-form.schema.js:10
 #: ../app/javascript/components/volume-mapping-form/volume-mapping-form.schema.js:56
 #: ../app/javascript/components/volume-mapping-form/volume-mapping-form.schema.js:70
-#: ../app/views/catalog/_form_basic_info.html.haml:60
-#: ../app/views/catalog/_form_basic_info.html.haml:73
+#: ../app/views/catalog/_form_basic_info.html.haml:61
+#: ../app/views/catalog/_form_basic_info.html.haml:74
 #: ../app/views/condition/_form.html.haml:27
 #: ../app/views/layouts/_adv_search_body.html.haml:37
 #: ../app/views/layouts/_edit_to_email.html.haml:38
@@ -3160,7 +3159,7 @@ msgstr "Valor usado de memória derivada mín. absoluta"
 msgid "Accept"
 msgstr "Aceitar"
 
-#: ../app/helpers/catalog_helper.rb:128
+#: ../app/helpers/catalog_helper.rb:141
 #: ../app/views/catalog/_form_ovf_template_options.html.haml:29
 msgid "Accept EULA"
 msgstr "Aceitar EULA"
@@ -4700,6 +4699,7 @@ msgstr "A inclusão de Volume de nuvem \"%s\" foi enfileirada com sucesso."
 msgid "Add of Credential \"%s\" has been successfully queued."
 msgstr "A inclusão da credencial \"%s\" foi enfileirada com sucesso."
 
+#: ../app/javascript/components/data-store-form/index.jsx:49
 #: ../app/javascript/oldjs/components/miq_ae_class/namespace-form.js:53
 msgid "Add of Domain was cancelled by user."
 msgstr "A adição do domínio foi cancelada pelo usuário."
@@ -4720,6 +4720,7 @@ msgstr "A inclusão do Agregado do Host \"%s\" foi enfileirada com sucesso."
 msgid "Add of Key Pair \"%s\" has been successfully queued."
 msgstr "A inclusão de Par de chaves \"%s\" foi enfileirada com sucesso."
 
+#: ../app/javascript/components/data-store-form/index.jsx:50
 #: ../app/javascript/oldjs/components/miq_ae_class/namespace-form.js:53
 msgid "Add of Namespace was cancelled by user."
 msgstr "A adição do namespace foi cancelada pelo usuário."
@@ -5132,7 +5133,7 @@ msgstr "Inclusão de Host cancelada pelo usuário."
 msgid "Addition of security group was canceled by the user."
 msgstr "A adição do grupo de segurança foi cancelada pelo usuário."
 
-#: ../app/helpers/catalog_helper.rb:122
+#: ../app/helpers/catalog_helper.rb:135
 #: ../app/views/catalog/_tenants_tree_show.html.haml:5
 msgid "Additional Tenants"
 msgstr "Locatários adicionais"
@@ -6442,7 +6443,7 @@ msgstr "Atualização de playbooks do Ansible"
 msgid "Ansible Repositories Refresh"
 msgstr "Atualização de repositórios do Ansible"
 
-#: ../app/views/catalog/_form_basic_info.html.haml:148
+#: ../app/views/catalog/_form_basic_info.html.haml:149
 msgid "Ansible Template"
 msgstr "Modelo do Ansible"
 
@@ -6485,7 +6486,7 @@ msgstr "Provedor Ansible Tower"
 msgid "Ansible Tower Providers"
 msgstr "Provedores do Ansible Tower"
 
-#: ../app/helpers/catalog_helper.rb:103
+#: ../app/helpers/catalog_helper.rb:116
 msgid "Ansible Tower Template"
 msgstr "Modelo do Ansible Tower"
 
@@ -7046,17 +7047,17 @@ msgstr "Tem certeza de que deseja remover este método?"
 msgid "Are you sure you want to remove this Namespace?"
 msgstr "Tem certeza de que deseja remover este namespace?"
 
-#: ../app/views/catalog/_form_basic_info.html.haml:179
+#: ../app/views/catalog/_form_basic_info.html.haml:180
 msgid "Are you sure you want to remove this Provisioning Entry Point?"
 msgstr ""
 "Tem certeza de que deseja remover este ponto de entrada de fornecimento?"
 
-#: ../app/views/catalog/_form_basic_info.html.haml:201
+#: ../app/views/catalog/_form_basic_info.html.haml:202
 msgid "Are you sure you want to remove this Reconfigure Entry Point?"
 msgstr ""
 "Tem certeza de que deseja remover este ponto de entrada de reconfiguração?"
 
-#: ../app/views/catalog/_form_basic_info.html.haml:222
+#: ../app/views/catalog/_form_basic_info.html.haml:223
 msgid "Are you sure you want to remove this Retirement Entry Point?"
 msgstr ""
 "Tem certeza de que deseja remover este ponto de entrada de desativação?"
@@ -8994,7 +8995,6 @@ msgstr "Volumes baseados"
 #: ../app/helpers/catalog_helper.rb:41
 #: ../app/javascript/components/copy-dashboard-form/copy-dashboard-form.schema.js:26
 #: ../app/javascript/components/firmware-registry/firmware-registry-form.schema.js:7
-#: ../app/views/catalog/_form.html.haml:4
 #: ../app/views/chargeback_assignment/_form.html.haml:7
 #: ../app/views/chargeback_rate/_cb_rate_show.html.haml:3
 #: ../app/views/chargeback_rate/_form.html.haml:6
@@ -9004,7 +9004,7 @@ msgstr "Volumes baseados"
 msgid "Basic Info"
 msgstr "Informações básicas"
 
-#: ../app/helpers/catalog_helper.rb:88 ../app/helpers/catalog_helper.rb:241
+#: ../app/helpers/catalog_helper.rb:101 ../app/helpers/catalog_helper.rb:254
 #: ../app/helpers/condition_helper.rb:3
 #: ../app/helpers/generic_object_definition_helper.rb:6
 #: ../app/helpers/generic_object_definition_helper.rb:20
@@ -9027,6 +9027,8 @@ msgstr "Informações básicas"
 #: ../app/javascript/components/pxe-iso-image-form/pxe-iso-image-form.schema.js:6
 #: ../app/javascript/components/pxe-servers-form/pxe-server-form.schema.js:57
 #: ../app/javascript/components/vm-edit-form/vm-edit-form.schema.js:8
+#: ../app/views/catalog/_form_basic_info.html.haml:3
+#: ../app/views/catalog/_st_angular_form.html.haml:15
 #: ../app/views/condition/_form.html.haml:7
 #: ../app/views/miq_ae_customization/_dialog_info.html.haml:4
 #: ../app/views/miq_ae_customization/_old_dialogs_details.html.haml:8
@@ -9336,10 +9338,6 @@ msgstr "Inicializável"
 #: ../config/yaml_strings.rb:589
 msgid "Bootable?"
 msgstr "Inicializável?"
-
-#: ../app/views/layouts/_tl_options.html.haml:71
-msgid "Both"
-msgstr "Ambos"
 
 #. TRANSLATORS: en.yml key: dictionary.model.BottleneckEvent
 #: ../config/model_display_names.rb:14 ../config/dictionary_strings.rb:2682
@@ -9661,17 +9659,17 @@ msgid "CD/DVD Drives"
 msgstr "Unidades de CD/DVD"
 
 #:
-#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:144
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:151
 msgid "CHAP Authentication"
 msgstr "Autenticação CHAP"
 
 #:
-#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:169
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:176
 msgid "CHAP Secret:"
 msgstr "Segredo do CHAP:"
 
 #:
-#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:154
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:161
 msgid "CHAP Username:"
 msgstr "Nome do usuário do CHAP:"
 
@@ -10498,7 +10496,7 @@ msgstr "CPUs"
 msgid "CSV"
 msgstr "CSV"
 
-#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:668
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:672
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:49
 msgid "CVE Location"
 msgstr "Localização do CVE"
@@ -11218,9 +11216,9 @@ msgid "Capture metrics related to this Containers Provider?"
 msgstr "Capturar métricas relacionadas a este provedor de contêineres?"
 
 #. TRANSLATORS: file: product/views/ServiceTemplate.yaml
-#: ../app/helpers/catalog_helper.rb:92
-#: ../app/views/catalog/_form_basic_info.html.haml:31
-#: ../app/views/catalog/_st_angular_form.html.haml:61
+#: ../app/helpers/catalog_helper.rb:105
+#: ../app/views/catalog/_form_basic_info.html.haml:32
+#: ../app/views/catalog/_st_angular_form.html.haml:67
 #: ../config/yaml_strings.rb:1767
 msgid "Catalog"
 msgstr "Catálogo"
@@ -11335,6 +11333,16 @@ msgstr "A Categoria '%{category_name}' não pode ser excluída"
 #: ../app/views/ops/_category_form.html.haml:3
 msgid "Category Information"
 msgstr "Informações sobre a categoria"
+
+#:
+#: ../app/javascript/components/timeline-options/timeline-options-simple.schema.js:30
+msgid "Category Managements"
+msgstr "Gerenciamentos de categoria"
+
+#:
+#: ../app/javascript/components/timeline-options/timeline-options-simple.schema.js:75
+msgid "Category Policy"
+msgstr "Política de categoria"
 
 #: ../app/views/ops/_ap_form_set.html.haml:4
 msgid "Category Selection"
@@ -12249,9 +12257,9 @@ msgstr "Opções"
 #: ../app/javascript/components/routers-form/RoutersForm.schema.js:44
 #: ../app/javascript/components/select/index.jsx:68
 #: ../app/javascript/components/subnet-form/subnet-form.schema.js:10
-#: ../app/views/catalog/_form_basic_info.html.haml:110
-#: ../app/views/catalog/_form_basic_info.html.haml:122
-#: ../app/views/catalog/_form_basic_info.html.haml:134
+#: ../app/views/catalog/_form_basic_info.html.haml:111
+#: ../app/views/catalog/_form_basic_info.html.haml:123
+#: ../app/views/catalog/_form_basic_info.html.haml:135
 #: ../app/views/catalog/_form_ovf_template_options.html.haml:5
 #: ../app/views/catalog/_form_ovf_template_options.html.haml:35
 #: ../app/views/catalog/_form_ovf_template_options.html.haml:47
@@ -12808,16 +12816,16 @@ msgstr "Clique para remover este recurso do item do catálogo"
 msgid "Click to remove this policy"
 msgstr "Clique para remover esta política"
 
-#: ../app/views/catalog/_form_basic_info.html.haml:174
+#: ../app/views/catalog/_form_basic_info.html.haml:175
 #: ../app/views/miq_ae_class/_copy_objects_form.html.haml:71
 msgid "Click to select Provisioning Entry Point"
 msgstr "Clique para selecionar o ponto de entrada de fornecimento"
 
-#: ../app/views/catalog/_form_basic_info.html.haml:196
+#: ../app/views/catalog/_form_basic_info.html.haml:197
 msgid "Click to select Reconfigure Entry Point"
 msgstr "Clique para selecionar o ponto de entrada de reconfiguração"
 
-#: ../app/views/catalog/_form_basic_info.html.haml:217
+#: ../app/views/catalog/_form_basic_info.html.haml:218
 msgid "Click to select Retirement Entry Point"
 msgstr "Clique para selecionar o ponto de entrada de desativação"
 
@@ -12998,7 +13006,7 @@ msgstr ""
 msgid "Cloud"
 msgstr "Cloud"
 
-#: ../app/helpers/catalog_helper.rb:184
+#: ../app/helpers/catalog_helper.rb:197
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml:123
 #: ../app/views/miq_ae_class/_method_inputs.html.haml:54
 msgid "Cloud Credential"
@@ -16800,7 +16808,7 @@ msgid_plural "Container Providers (IBM Cloud)"
 msgstr[0] "Provedor de contêiner (IBM Cloud)"
 msgstr[1] "Provedores de contêiner (IBM Cloud)"
 
-#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:77
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:81
 msgid "Container Provider (Kubernetes)"
 msgid_plural "Container Providers (Kubernetes)"
 msgstr[0] "Provedor de contêineres (Kubernetes)"
@@ -16921,8 +16929,8 @@ msgstr "Serviços do contêiner"
 msgid "Container Statuses Summary"
 msgstr "Resumo dos status do contêiner"
 
-#: ../app/helpers/catalog_helper.rb:106
-#: ../app/views/catalog/_form_basic_info.html.haml:148
+#: ../app/helpers/catalog_helper.rb:119
+#: ../app/views/catalog/_form_basic_info.html.haml:149
 msgid "Container Template"
 msgstr "Modelo do contêiner"
 
@@ -21281,7 +21289,7 @@ msgstr ""
 msgid "Currently Used Space"
 msgstr "Espaço usado no momento"
 
-#: ../app/helpers/catalog_helper.rb:97 ../app/helpers/report_helper.rb:131
+#: ../app/helpers/catalog_helper.rb:110 ../app/helpers/report_helper.rb:131
 msgid "Custom"
 msgstr "Custom"
 
@@ -21436,7 +21444,7 @@ msgstr "Favicon customizado"
 msgid "Custom Identifier"
 msgstr "Identificador customizado"
 
-#: ../app/helpers/catalog_helper.rb:157
+#: ../app/helpers/catalog_helper.rb:170
 #: ../app/views/catalog/_sandt_tree_custom_image_form.html.haml:3
 #: ../app/views/generic_object_definition/_show_god.html.haml:9
 msgid "Custom Image"
@@ -21500,7 +21508,7 @@ msgid "Custom Support URL and Description both must be entered."
 msgstr "É necessário inserir a URL de suporte customizada e a descrição."
 
 #:
-#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:227
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:234
 msgid "Custom WWPN"
 msgstr "WWPN customizado"
 
@@ -21533,7 +21541,7 @@ msgid "Custom logo image"
 msgstr "Imagem de logotipo customizada"
 
 #:
-#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:212
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:219
 msgid "Custom manually entered WWPNs"
 msgstr "Customizar WWPNs inseridos manualmente"
 
@@ -22185,7 +22193,7 @@ msgid "Databases"
 msgstr "Bancos de dados"
 
 #. TRANSLATORS: file: product/views/EmsCluster.yaml
-#: ../app/controllers/vm_common.rb:840 ../app/helpers/catalog_helper.rb:129
+#: ../app/controllers/vm_common.rb:840 ../app/helpers/catalog_helper.rb:142
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:136
 #: ../app/views/catalog/_form_ovf_template_options.html.haml:38
 #: ../app/views/miq_request/_prov_vm_migrate_dialog.html.haml:26
@@ -22584,6 +22592,11 @@ msgstr "Data: "
 msgid "Datepicker"
 msgstr "Seletor de data"
 
+#:
+#: ../app/javascript/components/timeline-options/timeline-options-simple.schema.js:116
+msgid "Dates Range"
+msgstr "Intervalo de datas"
+
 #: ../app/helpers/report_helper/timer.rb:3
 #: ../app/javascript/oldjs/miq_formatters.js:262
 #: ../app/views/report/_form_filter_chargeback.html.haml:205
@@ -22638,8 +22651,6 @@ msgstr "Dia da semana"
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js:46
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js:57
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js:71
-#: ../app/javascript/oldjs/components/datetime-delay-picker.js:34
-#: ../app/views/layouts/_tl_options.html.haml:81
 msgid "Days"
 msgstr "Dias"
 
@@ -24129,12 +24140,6 @@ msgstr "Descrição obrigatória"
 msgid "Descrption"
 msgstr "Descrição"
 
-#: ../app/views/layouts/_tl_options.html.haml:26
-#: ../app/views/layouts/_tl_options.html.haml:39
-#: ../app/views/layouts/_tl_options.html.haml:52
-msgid "Deselect All"
-msgstr "Cancelar a seleção de todos"
-
 #: ../app/helpers/container_project_helper/textual_summary.rb:28
 msgid "Desired"
 msgstr "Desejado"
@@ -24342,14 +24347,13 @@ msgstr ""
 msgid "Detailed Description"
 msgstr "Descrição Detalhada"
 
-#: ../app/helpers/catalog_helper.rb:163 ../app/helpers/catalog_helper.rb:242
+#: ../app/helpers/catalog_helper.rb:176 ../app/helpers/catalog_helper.rb:255
 #: ../app/helpers/cloud_volume_helper/textual_summary.rb:19
 #: ../app/helpers/service_helper/textual_summary.rb:21
 #: ../app/helpers/service_helper/textual_summary.rb:41
 #: ../app/helpers/service_helper/textual_summary.rb:61
 #: ../app/javascript/components/visual-settings-form/visual-settings-form.schema.js:28
 #: ../app/javascript/components/visual-settings-form/visual-settings-form.schema.js:50
-#: ../app/views/catalog/_form.html.haml:6
 #: ../app/views/generic_mailer/policy_action_email.html.haml:17
 #: ../app/views/generic_mailer/policy_action_email.text.haml:5
 #: ../app/views/miq_policy_export/import.html.haml:10
@@ -24453,10 +24457,10 @@ msgstr "Configurações do servidor de diagnósticos"
 msgid "Diagnostics Zone Settings"
 msgstr "Configurações da zona de diagnóstico"
 
-#: ../app/helpers/catalog_helper.rb:48 ../app/helpers/catalog_helper.rb:94
-#: ../app/helpers/catalog_helper.rb:212
+#: ../app/helpers/catalog_helper.rb:48 ../app/helpers/catalog_helper.rb:107
+#: ../app/helpers/catalog_helper.rb:225
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js:129
-#: ../app/views/catalog/_form_basic_info.html.haml:43
+#: ../app/views/catalog/_form_basic_info.html.haml:44
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml:294
 #: ../app/views/shared/buttons/_ab_options_form.html.haml:62
 #: ../app/views/shared/buttons/_ab_show.html.haml:46
@@ -25495,7 +25499,7 @@ msgstr "Porcentagem usada de arquivos do disco"
 msgid "Disk Files Space by Type"
 msgstr "Espaço dos arquivos do disco por tipo"
 
-#: ../app/helpers/catalog_helper.rb:134
+#: ../app/helpers/catalog_helper.rb:147
 #: ../app/views/catalog/_form_ovf_template_options.html.haml:97
 msgid "Disk Format"
 msgstr "Formato do Disco"
@@ -27111,11 +27115,11 @@ msgid "Display for"
 msgstr "Exibir para"
 
 #. TRANSLATORS: file: product/views/ServiceTemplate.yaml
-#: ../app/helpers/catalog_helper.rb:91
+#: ../app/helpers/catalog_helper.rb:104
 #: ../app/helpers/generic_object_definition_helper.rb:9
 #: ../app/helpers/generic_object_definition_helper.rb:23
-#: ../app/views/catalog/_form_basic_info.html.haml:27
-#: ../app/views/catalog/_st_angular_form.html.haml:39
+#: ../app/views/catalog/_form_basic_info.html.haml:28
+#: ../app/views/catalog/_st_angular_form.html.haml:45
 #: ../config/yaml_strings.rb:1765
 msgid "Display in Catalog"
 msgstr "Exibição no catálogo"
@@ -29837,6 +29841,7 @@ msgstr "A edição da sequência do painel foi cancelada pelo usuário"
 msgid "Edit of Dialog \"%{name}\" was cancelled by the user"
 msgstr "A edição do Diálogo \"%{name}\" foi cancelada pelo usuário"
 
+#: ../app/javascript/components/data-store-form/index.jsx:45
 #: ../app/javascript/oldjs/components/miq_ae_class/namespace-form.js:55
 msgid "Edit of Domain \"%s\" was cancelled by user."
 msgstr "A edição do domínio do \"%s\" foi cancelada pelo usuário."
@@ -29858,6 +29863,7 @@ msgstr "A edição do Host Agregado \"%s\" foi cancelada pelo usuário."
 msgid "Edit of ISO Image \"%s\" was cancelled by the user"
 msgstr "A edição da imagem ISO \"%s\" foi cancelada pelo usuário"
 
+#: ../app/javascript/components/data-store-form/index.jsx:46
 #: ../app/javascript/oldjs/components/miq_ae_class/namespace-form.js:55
 msgid "Edit of Namespace \"%s\" was cancelled by user."
 msgstr "A edição do namespace \"%s\" foi cancelada pelo usuário."
@@ -31271,6 +31277,7 @@ msgstr "Ativar este planejamento"
 #: ../app/helpers/host_helper/textual_summary.rb:201
 #: ../app/helpers/host_helper/textual_summary.rb:205
 #: ../app/helpers/report_helper/report_information_helper.rb:75
+#: ../app/javascript/components/data-store-form/data-store-form.schema.js:40
 #: ../app/javascript/components/data-tables/datastore/helper.js:12
 #: ../app/views/static/miq_ae_class/namespace_form.html.haml:39
 #: ../config/yaml_strings.rb:187
@@ -31379,7 +31386,7 @@ msgstr ""
 "xccdf_files/ Esperando encontrar o arquivo com.redhat.rhsa-RHEL7.ds.xml.bz2 lá"
 "."
 
-#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:669
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:673
 msgid ""
 "Enables defining a URL path prefix for XCCDF file instead of accessing the "
 "default location.\nexample: http://my_file_server.org:3333/xccdf_files/"
@@ -31406,6 +31413,8 @@ msgstr "Criptografado"
 msgid "End"
 msgstr "Encerrar"
 
+#:
+#: ../app/javascript/components/timeline-options/timeline-options-simple.schema.js:132
 #: ../app/views/ops/_diagnostics_cu_repair_tab.html.haml:33
 msgid "End Date"
 msgstr "Data de término"
@@ -31547,7 +31556,6 @@ msgid "Enter New Size"
 msgstr "Inserir novo tamanho"
 
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:12
-#: ../app/views/static/retirement-form.html.haml:13
 msgid "Enter Retirement Date as"
 msgstr "Inserir data de desativação como"
 
@@ -32122,7 +32130,7 @@ msgstr "Erro: o arquivo transferido por upload está vazio"
 msgid "Errors in Management Engine can be caused by:"
 msgstr "Os erros no mecanismo de gerenciamento podem ser causados por:"
 
-#: ../app/helpers/catalog_helper.rb:188
+#: ../app/helpers/catalog_helper.rb:201
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml:188
 #: ../app/views/miq_ae_class/_method_inputs.html.haml:56
 msgid "Escalate Privilege"
@@ -32267,6 +32275,11 @@ msgstr "Monitor de eventos para o Provedor: %{name}"
 msgid "Event Name"
 msgstr "Nome do evento"
 
+#:
+#: ../app/javascript/components/timeline-options/timeline-options-simple.schema.js:94
+msgid "Event Result"
+msgstr "Resultado do evento"
+
 #: ../app/views/miq_policy/_form.html.haml:123
 #: ../app/views/miq_policy/_miq_policy_edit_events.haml:8
 #: ../app/views/miq_policy_rsop/_rsop_form.html.haml:5
@@ -32323,6 +32336,11 @@ msgstr "Registro de data e hora do evento"
 #: ../config/dictionary_strings.rb:864 ../config/yaml_strings.rb:6710
 msgid "Event Type"
 msgstr "Tipo de evento"
+
+#:
+#: ../app/javascript/components/timeline-options/timeline-options-simple.schema.js:17
+msgid "Event Types"
+msgstr "Tipos de evento"
 
 #: ../config/model_attributes.rb:1559
 msgid "Event log"
@@ -34054,10 +34072,6 @@ msgstr "Com falha"
 msgid "Failed (%{number})"
 msgstr "Falha (%{number})"
 
-#: ../app/views/layouts/_tl_options.html.haml:68
-msgid "Failed Events"
-msgstr "Eventos com falha"
-
 #. TRANSLATORS: en.yml key: dictionary.column.failed_login_attempts
 #: ../config/dictionary_strings.rb:884
 msgid "Failed Login Attempts"
@@ -35341,7 +35355,7 @@ msgid "Floppy Drives"
 msgstr "Disquetes"
 
 #. TRANSLATORS: file: product/views/ConfiguredSystem.yaml
-#: ../app/helpers/catalog_helper.rb:131
+#: ../app/helpers/catalog_helper.rb:144
 #: ../app/views/catalog/_form_ovf_template_options.html.haml:62
 #: ../app/views/miq_request/_prov_vm_migrate_dialog.html.haml:50
 #: ../app/views/shared/views/_prov_dialog.html.haml:114
@@ -35591,6 +35605,7 @@ msgstr "Tela cheia"
 
 #. TRANSLATORS: file: product/views/MiqAeClass.yaml
 #: ../app/helpers/miq_ae_class_helper.rb:285
+#: ../app/javascript/components/data-store-form/data-store-form.schema.js:8
 #: ../app/views/miq_ae_class/_angular_method_form.html.haml:22
 #: ../app/views/miq_ae_class/_class_form.html.haml:8
 #: ../app/views/miq_ae_class/_instance_form.html.haml:8
@@ -36549,14 +36564,14 @@ msgstr "Modelo de orquestração HOT"
 msgid "HOT Orchestration Templates"
 msgstr "Modelos de orquestração HOT"
 
-#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:607
-#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:623
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:611
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:627
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:8
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:22
 msgid "HTTP Proxy"
 msgstr "Proxy HTTP"
 
-#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:608
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:612
 msgid ""
 "HTTP Proxy to connect ManageIQ to the provider. example: http://user:password@"
 "my_http_proxy"
@@ -36572,7 +36587,7 @@ msgstr ""
 "Proxy HTTP para conectar o ManageIQ ao provedor. Por exemplo: http://user:"
 "password@my_https_proxy"
 
-#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:624
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:628
 msgid ""
 "HTTP Proxy to connect image inspector pods to the internet. example: http://"
 "user:password@my_http_proxy"
@@ -36588,12 +36603,12 @@ msgstr ""
 "Proxy HTTP para conectar pods de inspetor de imagem à Internet. Por exemplo: "
 "http://user:password@my_https_proxy"
 
-#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:630
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:634
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:26
 msgid "HTTPS Proxy"
 msgstr "Proxy HTTPS"
 
-#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:631
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:635
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:27
 msgid ""
 "HTTPS Proxy to connect image inspector pods to the internet. example: https://"
@@ -37079,7 +37094,7 @@ msgstr "Diretório Inicial"
 #: ../app/controllers/host_controller.rb:468
 #: ../app/controllers/miq_action_controller.rb:265
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:147
-#: ../app/helpers/catalog_helper.rb:132 ../app/helpers/miq_action_helper.rb:63
+#: ../app/helpers/catalog_helper.rb:145 ../app/helpers/miq_action_helper.rb:63
 #: ../app/helpers/miq_alert_helper.rb:142
 #: ../app/helpers/physical_server_helper/textual_summary.rb:59
 #: ../app/helpers/vm_helper/textual_summary.rb:240
@@ -37371,6 +37386,7 @@ msgid "Host Initiator Group"
 msgstr "Grupo Inicializador do Host"
 
 #:
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:261
 #: ../app/javascript/components/volume-mapping-form/volume-mapping-form.schema.js:122
 msgid "Host Initiator Group:"
 msgstr "Grupo Inicializador do Host:"
@@ -38089,7 +38105,7 @@ msgstr "Nome do host ou endereço IPv4/IPv6"
 #: ../app/controllers/host_controller.rb:487
 #: ../app/controllers/mixins/explorer_show.rb:152
 #: ../app/helpers/application_helper/title.rb:47
-#: ../app/helpers/catalog_helper.rb:186
+#: ../app/helpers/catalog_helper.rb:199
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:141
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:93
 #: ../app/helpers/host_aggregate_helper/textual_summary.rb:18
@@ -38692,7 +38708,6 @@ msgstr "Cronômetro por hora"
 #: ../app/javascript/components/data-tables/time-profile-table/helper.js:28
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:51
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js:88
-#: ../app/javascript/oldjs/components/datetime-delay-picker.js:34
 msgid "Hours"
 msgstr "Horas"
 
@@ -38994,12 +39009,12 @@ msgid "IPv6 Address"
 msgstr "Endereço IPv6"
 
 #:
-#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:110
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:117
 msgid "IQN"
 msgstr "IQN"
 
 #:
-#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:93
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:100
 msgid "IQN:"
 msgstr "IQN:"
 
@@ -39261,7 +39276,7 @@ msgstr "Registros da imagem"
 msgid "Image Registry"
 msgstr "Registro da imagem"
 
-#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:660
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:664
 msgid "Image Tag"
 msgstr "Identificação de imagem"
 
@@ -39274,7 +39289,7 @@ msgstr "Tipo de imagem"
 msgid "Image shown at 25% of actual size"
 msgstr "Imagem mostrada a 25% do tamanho real"
 
-#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:617
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:621
 msgid "Image-Inspector"
 msgstr "Inspetor de imagem"
 
@@ -39286,7 +39301,7 @@ msgstr "Registro de inspetor de imagem"
 msgid "Image-Inspector Repository"
 msgstr "Repositório de inspetor de imagem"
 
-#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:645
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:649
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:35
 msgid "Image-Inspector Repository. example: openshift/image-inspector"
 msgstr ""
@@ -39296,7 +39311,7 @@ msgstr ""
 msgid "Image-Inspector Tag"
 msgstr "Tag de inspetor de imagem"
 
-#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:661
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:665
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:45
 msgid "Image-Inspector image tag. example: 2.1"
 msgstr "Tag de imagem do inspetor de imagem. Por exemplo: 2.1"
@@ -39524,7 +39539,7 @@ msgstr "Em meu grupo LDAP?"
 msgid "In Use"
 msgstr "Em uso"
 
-#: ../app/models/physical_server.rb:80
+#: ../app/models/physical_server.rb:82
 msgid "In use"
 msgstr "Em uso"
 
@@ -39595,7 +39610,8 @@ msgid "Infinity"
 msgstr "Infinito"
 
 #: ../app/controllers/miq_alert_controller.rb:18
-#: ../app/helpers/catalog_helper.rb:177 ../app/helpers/miq_alert_helper.rb:4
+#: ../app/helpers/catalog_helper.rb:190 ../app/helpers/miq_alert_helper.rb:4
+#: ../app/javascript/components/data-store-form/data-store-form.schema.js:59
 #: ../app/views/miq_alert/_form.html.haml:5
 #: ../app/views/ops/_ap_show.html.haml:4
 #: ../app/views/resource_pool/_config.html.haml:7
@@ -39684,7 +39700,7 @@ msgid_plural "Infrastructure Providers (Red Hat)"
 msgstr[0] "Provedor de infraestrutura (Red Hat)"
 msgstr[1] "Provedores de infraestrutura (Red Hat)"
 
-#: ../app/models/manageiq/providers/vmware/infra_manager.rb:826
+#: ../app/models/manageiq/providers/vmware/infra_manager.rb:830
 msgid "Infrastructure Provider (VMware)"
 msgid_plural "Infrastructure Providers (VMware)"
 msgstr[0] "Provedor de infraestrutura (VMware)"
@@ -40426,7 +40442,7 @@ msgstr[0] "Item"
 msgstr[1] "Itens"
 
 #. TRANSLATORS: file: product/views/ServiceTemplate.yaml
-#: ../app/helpers/catalog_helper.rb:96 ../config/yaml_strings.rb:1763
+#: ../app/helpers/catalog_helper.rb:109 ../config/yaml_strings.rb:1763
 msgid "Item Type"
 msgstr "Tipo de item"
 
@@ -41329,6 +41345,11 @@ msgstr "Provedor Lenovo"
 msgid "Level"
 msgstr "Nível"
 
+#:
+#: ../app/javascript/components/timeline-options/timeline-options-simple.schema.js:51
+msgid "Levels Management"
+msgstr "Gerenciamento de níveis"
+
 #: ../app/helpers/application_helper/toolbar/configured_systems_center.rb:6
 #: ../app/helpers/application_helper/toolbar/orchestration_stack_center.rb:38
 #: ../app/helpers/application_helper/toolbar/orchestration_stacks_center.rb:47
@@ -42202,7 +42223,7 @@ msgstr "LogFile|Atualizado em"
 msgid "Logging"
 msgstr "Criação de log"
 
-#: ../app/helpers/catalog_helper.rb:187
+#: ../app/helpers/catalog_helper.rb:200
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml:178
 #: ../app/views/miq_ae_class/_method_inputs.html.haml:70
 msgid "Logging Output"
@@ -42311,9 +42332,9 @@ msgid "Logs for this %{product} Server are not available for viewing"
 msgstr ""
 "Os Logs para este %{product} Server não estão disponíveis para visualização"
 
-#: ../app/helpers/catalog_helper.rb:47 ../app/helpers/catalog_helper.rb:164
+#: ../app/helpers/catalog_helper.rb:47 ../app/helpers/catalog_helper.rb:177
 #: ../app/views/catalog/_form_details_info.html.haml:4
-#: ../app/views/catalog/_st_angular_form.html.haml:50
+#: ../app/views/catalog/_st_angular_form.html.haml:56
 #: ../app/views/ops/_category_form.html.haml:22
 #: ../app/views/ops/_category_form.html.haml:80
 #: ../app/views/ops/_settings_co_tags_tab.html.haml:19
@@ -42428,7 +42449,7 @@ msgstr "Endereço MAC"
 msgid "Machine"
 msgstr "Máquina"
 
-#: ../app/helpers/catalog_helper.rb:181
+#: ../app/helpers/catalog_helper.rb:194
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml:75
 #: ../app/views/miq_ae_class/_method_inputs.html.haml:50
 msgid "Machine Credential"
@@ -43188,7 +43209,7 @@ msgstr "Taxa de registro de imagem de contêiner de stat. máximo"
 msgid "Max TTL"
 msgstr "Máximo do TTL"
 
-#: ../app/helpers/catalog_helper.rb:185
+#: ../app/helpers/catalog_helper.rb:198
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml:166
 msgid "Max TTL (mins)"
 msgstr "TTL máx (min)"
@@ -49739,8 +49760,6 @@ msgid "Monthly VM Count per Provider"
 msgstr "Contagem de máquinas virtuais mensal por provedor"
 
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:30
-#: ../app/javascript/oldjs/components/datetime-delay-picker.js:34
-#: ../app/views/layouts/_tl_options.html.haml:81
 msgid "Months"
 msgstr "Meses"
 
@@ -49946,7 +49965,7 @@ msgstr "Várias seleções"
 msgid "Must be a number (greater than 0)"
 msgstr "Deve ser um número (maior que 0)"
 
-#: ../app/views/catalog/_st_angular_form.html.haml:109
+#: ../app/views/catalog/_st_angular_form.html.haml:115
 msgid "Must be a numeric value"
 msgstr "Deve ser um valor numérico"
 
@@ -50178,8 +50197,8 @@ msgstr "NVMe"
 msgid "Name"
 msgstr "Nome"
 
-#: ../app/helpers/catalog_helper.rb:90
-#: ../app/views/catalog/_form_basic_info.html.haml:10
+#: ../app/helpers/catalog_helper.rb:103
+#: ../app/views/catalog/_form_basic_info.html.haml:11
 msgid "Name / Description"
 msgstr "Nome/descrição"
 
@@ -50252,7 +50271,7 @@ msgid "Name*"
 msgstr "Nome*"
 
 #:
-#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:56
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:63
 #: ../app/javascript/components/host-initiator-group-form/host-initiator-group-form.schema.js:47
 #: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js:49
 msgid "Name:"
@@ -51685,7 +51704,7 @@ msgstr "Nenhum valor de data/hora especificado"
 
 #: ../app/controllers/application_controller/buttons.rb:1025
 #: ../app/controllers/catalog_controller.rb:1772
-#: ../app/views/catalog/_form_basic_info.html.haml:47
+#: ../app/views/catalog/_form_basic_info.html.haml:48
 msgid "No Dialog"
 msgstr "Nenhuma caixa de diálogo"
 
@@ -51836,12 +51855,12 @@ msgstr "Nenhum provedor encontrado"
 msgid "No Provisioning Dialog Available."
 msgstr "Nenhum diálogo de fornecimento disponível."
 
-#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:637
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:641
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:30
 msgid "No Proxy"
 msgstr "Sem Proxy"
 
-#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:638
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:642
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:31
 msgid ""
 "No Proxy lists urls that should'nt be sent to any proxy. example: "
@@ -52015,10 +52034,6 @@ msgstr "Nenhum alarme encontrado para o provedor selecionado"
 #: ../app/javascript/components/vm-edit-form/vm-edit-form.schema.js:60
 msgid "No available options"
 msgstr "Nenhuma opção disponível"
-
-#: ../app/views/layouts/_tl_options.html.haml:26
-msgid "No category selected"
-msgstr "Nenhuma categoria selecionada"
 
 #: ../app/javascript/components/dashboard-widgets/widget-chart/index.jsx:14
 msgid "No chart data found."
@@ -52271,7 +52286,7 @@ msgstr "Nenhuma instância encontrada"
 msgid "No methods found"
 msgstr "Nenhum método encontrado"
 
-#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:42
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:46
 msgid "No metrics endpoint has been added"
 msgstr "Nenhum terminal de métrica foi incluído"
 
@@ -52385,10 +52400,6 @@ msgid "No scope defined, the scope of this condition includes all elements."
 msgstr ""
 "Nenhum escopo definido, o escopo desta condição inclui todos os elementos."
 
-#: ../app/views/layouts/_tl_options.html.haml:39
-msgid "No severity selected"
-msgstr "Nenhuma gravidade selecionada"
-
 #: ../app/javascript/components/dashboard-widgets/widget-menu/index.jsx:29
 msgid "No shortcuts are authorized for this user, contact your Administrator"
 msgstr ""
@@ -52479,7 +52490,7 @@ msgstr "Não foi fornecido nenhum valor para a opção :class"
 msgid "No value provided for option :feature_type"
 msgstr "Não foi fornecido nenhum valor para a opção :feature_type"
 
-#: ../app/helpers/catalog_helper.rb:204
+#: ../app/helpers/catalog_helper.rb:217
 msgid "No variables & default values available"
 msgstr "Não há variáveis e valores padrão disponíveis"
 
@@ -53161,7 +53172,7 @@ msgstr "Modelo de orquestração do OVF"
 msgid "OVF Orchestration Templates"
 msgstr "Modelos de orquestração do OVF"
 
-#: ../app/helpers/catalog_helper.rb:126
+#: ../app/helpers/catalog_helper.rb:139
 #: ../app/views/catalog/_form_ovf_template_options.html.haml:8
 msgid "OVF Template"
 msgstr "Modelo de OVF"
@@ -54148,9 +54159,9 @@ msgid "Orchestration Stacks (OpenStack)"
 msgstr "Pilhas de orquestração (OpenStack)"
 
 #. TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
-#: ../app/helpers/catalog_helper.rb:100
+#: ../app/helpers/catalog_helper.rb:113
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb:82
-#: ../app/views/catalog/_form_basic_info.html.haml:113
+#: ../app/views/catalog/_form_basic_info.html.haml:114
 #: ../config/yaml_strings.rb:1609
 msgid "Orchestration Template"
 msgstr "Modelo de orquestração"
@@ -54754,7 +54765,7 @@ msgid "Owned by Me?"
 msgstr "Pertencente a mim?"
 
 #. TRANSLATORS: file: product/views/Vm__restricted.yaml
-#: ../app/helpers/catalog_helper.rb:120
+#: ../app/helpers/catalog_helper.rb:133
 #: ../app/helpers/service_helper/textual_summary.rb:203
 #: ../app/javascript/oldjs/services/alerts_center_service.js:102
 #: ../app/javascript/oldjs/services/alerts_center_service.js:268
@@ -54783,7 +54794,7 @@ msgstr "E-mail do proprietário"
 msgid "Owner Name"
 msgstr "Nome do proprietário"
 
-#: ../app/helpers/catalog_helper.rb:121
+#: ../app/helpers/catalog_helper.rb:134
 msgid "Ownership Group"
 msgstr "Grupo de propriedade"
 
@@ -56588,7 +56599,7 @@ msgstr[0] "Família de armazenamento físico"
 msgstr[1] "Famílias de armazenamento físico"
 
 #:
-#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:64
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:71
 #: ../app/javascript/components/host-initiator-group-form/host-initiator-group-form.schema.js:55
 #: ../app/javascript/components/volume-mapping-form/volume-mapping-form.schema.js:68
 msgid "Physical Storage:"
@@ -57192,7 +57203,7 @@ msgstr "Ferramentas da plataforma"
 msgid "Platform Type"
 msgstr "Tipo de plataforma"
 
-#: ../app/helpers/catalog_helper.rb:180
+#: ../app/helpers/catalog_helper.rb:193
 #: ../app/helpers/miq_ae_class_helper.rb:142
 #: ../app/helpers/miq_ae_class_helper.rb:159
 #: ../app/helpers/service_helper/textual_summary.rb:238
@@ -57933,7 +57944,7 @@ msgid "Port Type"
 msgstr "Tipo da porta"
 
 #:
-#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:81
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:88
 msgid "Port type:"
 msgstr "Tipo de porta:"
 
@@ -58310,11 +58321,11 @@ msgid "Price / Month"
 msgstr "Preço / Mês"
 
 #: ../app/controllers/catalog_controller.rb:1402
-#: ../app/helpers/catalog_helper.rb:51 ../app/helpers/catalog_helper.rb:95
+#: ../app/helpers/catalog_helper.rb:51 ../app/helpers/catalog_helper.rb:108
 msgid "Price / Month (in %{currency})"
 msgstr "Preço / Mês (em %{currency})"
 
-#: ../app/views/catalog/_st_angular_form.html.haml:95
+#: ../app/views/catalog/_st_angular_form.html.haml:101
 msgid "Price / Month (in {{vm.catalogItemModel.currency_name}})"
 msgstr "Preço/mês (em {{vm.catalogItemModel.currency_name}})"
 
@@ -58937,7 +58948,7 @@ msgstr "Fornecer este item?"
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb:58
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb:66
 #: ../app/helpers/automation_manager_configured_system_helper.rb:30
-#: ../app/helpers/catalog_helper.rb:101 ../app/helpers/catalog_helper.rb:105
+#: ../app/helpers/catalog_helper.rb:114 ../app/helpers/catalog_helper.rb:118
 #: ../app/helpers/configuration_job_helper/textual_summary.rb:46
 #: ../app/helpers/configuration_script_helper.rb:30
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb:21
@@ -58947,8 +58958,8 @@ msgstr "Fornecer este item?"
 #: ../app/javascript/components/orchestration-template/orchestration-template-form.schema.js:82
 #: ../app/javascript/components/pxe-iso-datastore-form/pxe-iso-datastore-form.schema.js:13
 #: ../app/javascript/spec/prov-grid/prov-vm-grid-data.js:7
-#: ../app/views/catalog/_form_basic_info.html.haml:125
-#: ../app/views/catalog/_form_basic_info.html.haml:137
+#: ../app/views/catalog/_form_basic_info.html.haml:126
+#: ../app/views/catalog/_form_basic_info.html.haml:138
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml:22
 #: ../app/views/miq_ae_class/_method_inputs.html.haml:59
 #: ../app/views/report/_form_filter_chargeback.html.haml:123
@@ -59119,7 +59130,7 @@ msgid "Provider tag mapping"
 msgstr "Mapeamento de tag de provedor"
 
 #:
-#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:43
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:50
 #: ../app/javascript/components/host-initiator-group-form/host-initiator-group-form.schema.js:34
 #: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js:37
 #: ../app/javascript/components/volume-mapping-form/volume-mapping-form.schema.js:55
@@ -59409,8 +59420,8 @@ msgstr "Máquinas virtuais provisionadas"
 msgid "Provisioned VMs [%{description}]"
 msgstr "VMs provisionadas [%{description}]"
 
-#: ../app/helpers/catalog_helper.rb:110 ../app/helpers/catalog_helper.rb:245
-#: ../app/views/layouts/angular/_multi_tab_ansible_form_options.html.haml:5
+#: ../app/helpers/catalog_helper.rb:123 ../app/helpers/catalog_helper.rb:258
+#: ../app/views/layouts/angular/_multi_tab_ansible_form_options.html.haml:2
 #: ../app/views/service/_svcs_show.html.haml:10
 msgid "Provisioning"
 msgstr "Fornecimento"
@@ -59450,11 +59461,11 @@ msgstr "Caixas de diálogo de fornecimento"
 msgid "Provisioning Dialogs Accordion"
 msgstr "Sanfona de diálogos de fornecimento"
 
-#: ../app/views/catalog/_form_basic_info.html.haml:164
+#: ../app/views/catalog/_form_basic_info.html.haml:165
 msgid "Provisioning Entry Point"
 msgstr "fPonto de entrada de fornecimento"
 
-#: ../app/views/catalog/_form_basic_info.html.haml:163
+#: ../app/views/catalog/_form_basic_info.html.haml:164
 msgid "Provisioning Entry Point (NameSpace/Class/Instance)"
 msgstr "Ponto de entrada de fornecimento (namespace/classe/instância)"
 
@@ -60416,7 +60427,7 @@ msgid "Reconfigurable"
 msgstr "Reconfigurável"
 
 #: ../app/controllers/mixins/actions/vm_actions/reconfigure.rb:9
-#: ../app/helpers/catalog_helper.rb:112
+#: ../app/helpers/catalog_helper.rb:125
 msgid "Reconfigure"
 msgstr "Reconfigurar"
 
@@ -60432,11 +60443,11 @@ msgstr "Reconfigurar CPU"
 msgid "Reconfigure CPUs"
 msgstr "Reconfigurar CPUs"
 
-#: ../app/views/catalog/_form_basic_info.html.haml:186
+#: ../app/views/catalog/_form_basic_info.html.haml:187
 msgid "Reconfigure Entry Point"
 msgstr "Ponto de entrada de reconfiguração"
 
-#: ../app/views/catalog/_form_basic_info.html.haml:185
+#: ../app/views/catalog/_form_basic_info.html.haml:186
 msgid "Reconfigure Entry Point (NameSpace/Class/Instance)"
 msgstr "Reconfigurar ponto de entrada (namespace/classe/instância)"
 
@@ -61804,7 +61815,7 @@ msgstr "Erro de valor de registro: %{msg}"
 msgid "Registry item"
 msgstr "Item de registro"
 
-#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:653
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:657
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:40
 msgid "Registry to provide the image inspector repository. example: docker.io"
 msgstr ""
@@ -62062,9 +62073,9 @@ msgstr "A remoção do grupo de segurança foi cancelada pelo usuário."
 #: ../app/javascript/components/generic-objects-form/generic-objects-form.schema.js:125
 #: ../app/javascript/components/generic-objects-form/generic-objects-form.schema.js:170
 #: ../app/javascript/components/host-aggregate-form/add-remove-host-aggregate-form.jsx:49
-#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:99
-#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:186
-#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:216
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:106
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:193
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:223
 #: ../app/javascript/components/miq-alert-set-form/miq-alert-set-form.schema.js:57
 #: ../app/javascript/components/notification-drawer/notification-drawer.jsx:110
 #: ../app/javascript/components/notification-drawer/notification-drawer.jsx:111
@@ -63040,11 +63051,11 @@ msgstr "Remover este perfil de política"
 msgid "Remove this Provider from Inventory"
 msgstr "Remover este provedor do inventário"
 
-#: ../app/views/catalog/_form_basic_info.html.haml:178
+#: ../app/views/catalog/_form_basic_info.html.haml:179
 msgid "Remove this Provisioning Entry Point"
 msgstr "Remover este ponto de entrada de fornecimento"
 
-#: ../app/views/catalog/_form_basic_info.html.haml:200
+#: ../app/views/catalog/_form_basic_info.html.haml:201
 msgid "Remove this Reconfigure Entry Point"
 msgstr "Remover este ponto de entrada de reconfiguração"
 
@@ -63056,7 +63067,7 @@ msgstr "Remover este repositório do inventário"
 msgid "Remove this Resource Pool from Inventory"
 msgstr "Remover este conjunto de recursos do inventário"
 
-#: ../app/views/catalog/_form_basic_info.html.haml:221
+#: ../app/views/catalog/_form_basic_info.html.haml:222
 msgid "Remove this Retirement Entry Point"
 msgstr "Remover este ponto de entrada de desativação"
 
@@ -63427,7 +63438,7 @@ msgstr "Repositórios (Ansible incorporado)"
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAutomationManager_ConfigurationScriptSource.yaml
 #: ../app/controllers/ansible_repository_controller.rb:32
 #: ../app/helpers/ansible_playbook_helper/textual_summary.rb:31
-#: ../app/helpers/catalog_helper.rb:179
+#: ../app/helpers/catalog_helper.rb:192
 #: ../app/helpers/service_helper/textual_summary.rb:243
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml:47
 #: ../app/views/miq_ae_class/_method_inputs.html.haml:46
@@ -63537,7 +63548,7 @@ msgstr[1] "Eventos de solicitações"
 msgid "Request ID"
 msgstr "ID da solicitação"
 
-#: ../app/helpers/catalog_helper.rb:244 ../app/views/catalog/_form.html.haml:14
+#: ../app/helpers/catalog_helper.rb:257
 #: ../app/views/catalog/_form_request_info.html.haml:6
 #: ../app/views/catalog/_sandt_tree_request.html.haml:4
 msgid "Request Info"
@@ -63969,7 +63980,7 @@ msgid "Resource Label"
 msgstr "Rótulo do recurso"
 
 #: ../app/controllers/miq_action_controller.rb:267
-#: ../app/helpers/catalog_helper.rb:130
+#: ../app/helpers/catalog_helper.rb:143
 #: ../app/helpers/vm_helper/textual_summary.rb:250
 #: ../app/views/catalog/_form_ovf_template_options.html.haml:50
 #: ../app/views/miq_request/_prov_vm_migrate_dialog.html.haml:42
@@ -64282,10 +64293,9 @@ msgstr "Modelo de servidor sem recursos"
 
 #. TRANSLATORS: file: product/views/OrchestrationStackResource.yaml
 #: ../app/controllers/orchestration_stack_controller.rb:55
-#: ../app/helpers/catalog_helper.rb:170
+#: ../app/helpers/catalog_helper.rb:183
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb:132
 #: ../app/helpers/textual_mixins/vm_common.rb:160
-#: ../app/views/catalog/_form.html.haml:10
 #: ../app/views/catalog/_form_resources_info.html.haml:7
 #: ../config/yaml_strings.rb:1595
 msgid "Resources"
@@ -64770,8 +64780,8 @@ msgstr "Desativado?"
 
 #: ../app/controllers/application_controller/ci_processing.rb:384
 #: ../app/helpers/application_helper/tasks.rb:14
-#: ../app/helpers/catalog_helper.rb:112 ../app/helpers/catalog_helper.rb:246
-#: ../app/views/layouts/angular/_multi_tab_ansible_form_options.html.haml:8
+#: ../app/helpers/catalog_helper.rb:125 ../app/helpers/catalog_helper.rb:259
+#: ../app/views/layouts/angular/_multi_tab_ansible_form_options.html.haml:17
 #: ../app/views/service/_svcs_show.html.haml:13
 msgid "Retirement"
 msgstr "Desativação"
@@ -64783,16 +64793,11 @@ msgstr "Desativação"
 msgid "Retirement Date"
 msgstr "Data da desativação"
 
-#: ../app/views/static/retirement-form.html.haml:21
-#: ../app/views/static/retirement-form.html.haml:32
-msgid "Retirement Date and Time"
-msgstr "Data e hora da desativação"
-
-#: ../app/views/catalog/_form_basic_info.html.haml:207
+#: ../app/views/catalog/_form_basic_info.html.haml:208
 msgid "Retirement Entry Point"
 msgstr "Ponto de entrada da desativação"
 
-#: ../app/views/catalog/_form_basic_info.html.haml:206
+#: ../app/views/catalog/_form_basic_info.html.haml:207
 msgid "Retirement Entry Point (NameSpace/Class/Instance)"
 msgstr "Ponto de entrada da desativação (namespace/classe/instância)"
 
@@ -64823,7 +64828,6 @@ msgstr "Aviso de desativação"
 
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:111
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:131
-#: ../app/views/static/retirement-form.html.haml:37
 msgid "Retirement Warning"
 msgstr "Aviso de desativação"
 
@@ -66492,12 +66496,6 @@ msgstr "Selecionar"
 msgid "Select Alerts to be Evaluated"
 msgstr "Selecionar alertas para avaliar"
 
-#: ../app/views/layouts/_tl_options.html.haml:26
-#: ../app/views/layouts/_tl_options.html.haml:39
-#: ../app/views/layouts/_tl_options.html.haml:52
-msgid "Select All"
-msgstr "Selecionar todos"
-
 #:
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js:50
 msgid "Select All Days"
@@ -66797,8 +66795,8 @@ msgstr "Selecionar um ícone"
 msgid "Select credentials"
 msgstr "Selecionar credenciais"
 
-#: ../app/views/catalog/_form_basic_info.html.haml:69
-#: ../app/views/catalog/_st_angular_form.html.haml:84
+#: ../app/views/catalog/_form_basic_info.html.haml:70
+#: ../app/views/catalog/_st_angular_form.html.haml:90
 msgid "Select currency"
 msgstr "Selecionar moeda"
 
@@ -67009,7 +67007,7 @@ msgstr "Relatórios selecionados:"
 msgid "Selected Resource Pools"
 msgstr "Conjuntos de recursos selecionados"
 
-#: ../app/helpers/catalog_helper.rb:243
+#: ../app/helpers/catalog_helper.rb:256
 #: ../app/views/catalog/_form_resources_info.html.haml:27
 msgid "Selected Resources"
 msgstr "Recursos selecionados"
@@ -68727,7 +68725,6 @@ msgid "Set this item to manageable?"
 msgstr "Definir este item para o estado gerenciável?"
 
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:7
-#: ../app/views/static/retirement-form.html.haml:8
 msgid "Set/Remove Retirement Date"
 msgstr "Definir/remover a data de desativação"
 
@@ -70894,7 +70891,6 @@ msgid "Spaces are prohibited"
 msgstr "Espaços são proibidos"
 
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:17
-#: ../app/views/static/retirement-form.html.haml:15
 msgid "Specific Date and Time"
 msgstr "Data e hora específica"
 
@@ -71009,6 +71005,8 @@ msgstr "Iniciar conectado"
 msgid "Start Connected?"
 msgstr "Iniciar conectados?"
 
+#:
+#: ../app/javascript/components/timeline-options/timeline-options-simple.schema.js:124
 #: ../app/views/ops/_diagnostics_cu_repair_tab.html.haml:24
 msgid "Start Date"
 msgstr "Data de Início"
@@ -71464,7 +71462,7 @@ msgstr "VMs interrompidas"
 #: ../app/controllers/host_initiator_controller.rb:50
 #: ../app/controllers/host_initiator_group_controller.rb:54
 #: ../app/controllers/volume_mapping_controller.rb:46
-#: ../app/helpers/catalog_helper.rb:133
+#: ../app/helpers/catalog_helper.rb:146
 #: ../app/helpers/chargeback_rate_helper.rb:10
 #: ../app/presenters/menu/default_menu.rb:152
 #: ../app/views/catalog/_form_ovf_template_options.html.haml:86
@@ -72473,8 +72471,8 @@ msgstr "Inscrições"
 msgid "Substitution:"
 msgstr "Substituição:"
 
-#: ../app/helpers/catalog_helper.rb:97
-#: ../app/views/catalog/_form_basic_info.html.haml:96
+#: ../app/helpers/catalog_helper.rb:110
+#: ../app/views/catalog/_form_basic_info.html.haml:97
 msgid "Subtype"
 msgstr "Subtipo"
 
@@ -72489,10 +72487,6 @@ msgstr "Sucesso"
 #: ../app/views/vm_common/_policy_options.html.haml:28
 msgid "Successful"
 msgstr "Com sucesso"
-
-#: ../app/views/layouts/_tl_options.html.haml:65
-msgid "Successful Events"
-msgstr "Eventos com sucesso"
 
 #: ../app/controllers/application_controller.rb:1030
 msgid "Successfully deleted Saved Report from the %{product} Database"
@@ -73619,7 +73613,7 @@ msgstr "Ocupação"
 #: ../app/controllers/application_controller/miq_request_methods.rb:475
 #: ../app/controllers/ops_controller/ops_rbac.rb:509
 #: ../app/controllers/ops_controller/ops_rbac.rb:805
-#: ../app/helpers/catalog_helper.rb:119
+#: ../app/helpers/catalog_helper.rb:132
 #: ../app/helpers/ems_cloud_helper/textual_summary.rb:177
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:168
 #: ../app/javascript/components/data-tables/datastore/helper.js:14
@@ -74009,13 +74003,13 @@ msgid "The IBM VPC instance is being provisioned."
 msgstr "A instância do IBM VPC está sendo provisionada."
 
 #:
-#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:119
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:126
 msgid ""
 "The IQN should have the format: iqn.yyyy-mm.naming-authority:unique name"
 msgstr "O IQN deve ter o formato: iqn.yyyy-mm.naming-authority:nome exclusivo"
 
 #:
-#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:124
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:131
 msgid "The IQN should have up to 223 characters."
 msgstr "O IQN deve ter até 223 caracteres."
 
@@ -74194,7 +74188,7 @@ msgid "The Volume mapping is not connected to an active Manager"
 msgstr "O mapeamento de Volume não está conectado a um Gerenciador ativo"
 
 #:
-#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:241
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:248
 msgid "The WWPN should be a hexadecimal expression (0-9, A-F)"
 msgstr "O WWPN deve ser uma expressão hexadecimal (0 - 9, A - F)"
 
@@ -74289,7 +74283,7 @@ msgid "The item \"%s\" has been successfully deleted"
 msgstr "O item \"%s\" foi excluído com sucesso"
 
 #:
-#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:236
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:243
 msgid "The length of the WWPN should be exactly 16 characters."
 msgstr "O comprimento do WWPN deve ter exatamente 16 caracteres."
 
@@ -74975,13 +74969,8 @@ msgid "Time Delay"
 msgstr "Atraso no Tempo"
 
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:18
-#: ../app/views/static/retirement-form.html.haml:15
 msgid "Time Delay from Now"
 msgstr "Atraso a partir de agora"
-
-#: ../app/javascript/oldjs/components/datetime-delay-picker.js:46
-msgid "Time Delay:"
-msgstr "Atraso:"
 
 #: src/report-editor/sort-criteria.jsx:79
 msgid "Time Format"
@@ -76626,10 +76615,10 @@ msgstr "Remover designação do servidor"
 msgid "Unassign Server Profile"
 msgstr "Remover designação do perfil do servidor"
 
-#: ../app/helpers/catalog_helper.rb:92
+#: ../app/helpers/catalog_helper.rb:105
 #: ../app/javascript/oldjs/services/alerts_center_service.js:527
 #: ../app/javascript/oldjs/services/alerts_center_service.js:689
-#: ../app/views/catalog/_form_basic_info.html.haml:34
+#: ../app/views/catalog/_form_basic_info.html.haml:35
 #: ../app/views/static/edit_alert_dialog.html.haml:26
 msgid "Unassigned"
 msgstr "Não designado"
@@ -77806,7 +77795,7 @@ msgstr ""
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:245
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:391
-#: ../app/views/layouts/angular/_multi_tab_ansible_form_options.html.haml:23
+#: ../app/views/layouts/angular/_multi_tab_ansible_form_options.html.haml:14
 msgid "Used to gather Capacity & Utilization metrics."
 msgstr "Usado para coletar métricas de capacidade e utilização."
 
@@ -78587,7 +78576,7 @@ msgstr "Erro do console NATIVO da VM: %{error}"
 msgid "VM NATIVE Console not supported"
 msgstr "Console NATIVO de VM sem suporte"
 
-#: ../app/helpers/catalog_helper.rb:127
+#: ../app/helpers/catalog_helper.rb:140
 #: ../app/views/catalog/_form_ovf_template_options.html.haml:19
 msgid "VM Name"
 msgstr "Nome da máquina virtual"
@@ -79918,7 +79907,7 @@ msgstr "Valores"
 msgid "Vapp"
 msgstr "Vapp"
 
-#: ../app/helpers/catalog_helper.rb:196
+#: ../app/helpers/catalog_helper.rb:209
 #: ../app/helpers/configuration_script_helper.rb:98
 #: ../app/views/chargeback_rate/_cb_rate_edit_table.html.haml:22
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml:227
@@ -79944,7 +79933,7 @@ msgstr "O nome de variável deve ser exclusivo"
 msgid "Variables"
 msgstr "Variáveis"
 
-#: ../app/helpers/catalog_helper.rb:195
+#: ../app/helpers/catalog_helper.rb:208
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml:222
 msgid "Variables & Default Values"
 msgstr "Valores variáveis e padrão"
@@ -79953,7 +79942,7 @@ msgstr "Valores variáveis e padrão"
 msgid "Vault"
 msgstr "Área segura"
 
-#: ../app/helpers/catalog_helper.rb:182 ../app/helpers/catalog_helper.rb:183
+#: ../app/helpers/catalog_helper.rb:195 ../app/helpers/catalog_helper.rb:196
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml:88
 #: ../app/views/miq_ae_class/_method_inputs.html.haml:52
 msgid "Vault Credential"
@@ -79998,7 +79987,7 @@ msgstr "Fornecedor e S.O. convidado"
 msgid "Vendor and Type"
 msgstr "Fornecedor e tipo"
 
-#: ../app/helpers/catalog_helper.rb:189
+#: ../app/helpers/catalog_helper.rb:202
 #: ../app/helpers/service_helper/textual_summary.rb:247
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml:200
 #: ../app/views/miq_ae_class/_method_inputs.html.haml:74
@@ -81231,7 +81220,7 @@ msgstr "Máquinas virtuais (Red Hat)"
 msgid "Virtual Machines (VMware)"
 msgstr "Máquinas virtuais (VMware)"
 
-#: ../app/helpers/catalog_helper.rb:135
+#: ../app/helpers/catalog_helper.rb:148
 #: ../app/views/catalog/_form_ovf_template_options.html.haml:113
 msgid "Virtual Network"
 msgstr "Rede Virtual"
@@ -82841,7 +82830,7 @@ msgid "WWPN Candidates"
 msgstr "Candidatos WWPN"
 
 #:
-#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:182
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:189
 msgid "WWPNs detected by the storage"
 msgstr "WWPNs detectados pelo armazenamento"
 
@@ -83528,8 +83517,6 @@ msgid "Weekly Utilization Overview"
 msgstr "Visão geral da utilização semanal"
 
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:37
-#: ../app/javascript/oldjs/components/datetime-delay-picker.js:34
-#: ../app/views/layouts/_tl_options.html.haml:81
 msgid "Weeks"
 msgstr "Semanas"
 
@@ -83942,7 +83929,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ExternalAutomationManager.yaml
 #. TRANSLATORS: file: product/views/MiqServer.yaml
 #: ../app/helpers/automation_manager_configured_system_helper.rb:37
-#: ../app/helpers/catalog_helper.rb:93
+#: ../app/helpers/catalog_helper.rb:106
 #: ../app/helpers/configuration_script_helper.rb:37
 #: ../app/helpers/configured_system_helper/textual_summary.rb:45
 #: ../app/helpers/ems_automation_helper.rb:22
@@ -83951,8 +83938,8 @@ msgstr ""
 #: ../app/javascript/components/miq-about-modal/miq-about-modal.jsx:111
 #: ../app/javascript/components/provider-form/index.jsx:37
 #: ../app/javascript/components/settings-tasks-form/settings-tasks-form.schema.js:29
-#: ../app/views/catalog/_form_basic_info.html.haml:57
-#: ../app/views/catalog/_st_angular_form.html.haml:73
+#: ../app/views/catalog/_form_basic_info.html.haml:58
+#: ../app/views/catalog/_st_angular_form.html.haml:79
 #: ../app/views/ems_container/_form.html.haml:46
 #: ../app/views/ems_infra/_form.html.haml:55
 #: ../app/views/ems_physical_infra/_form.html.haml:45
@@ -84326,10 +84313,6 @@ msgstr "não é possível excluir a zona de manutenção"
 #: ../app/models/manageiq/providers/openstack/storage_manager/cinder_manager/cloud_volume.rb:10
 msgid "cannot delete volume that is in use."
 msgstr "Não é possível excluir um volume que esteja em uso."
-
-#: ../app/views/layouts/_tl_options.html.haml:88
-msgid "centered"
-msgstr "centralizado"
 
 #: ../app/models/service_generic.rb:16
 msgid "check_completed must be implemented in a subclass"
@@ -84746,13 +84729,9 @@ msgstr "ems_operations"
 msgid "ems_performance_gap_detected"
 msgstr "ems_performance_gap_detected"
 
-#: ../app/models/metric/ci_mixin/capture.rb:28
+#: ../app/models/metric/ci_mixin/capture.rb:29
 msgid "end_time cannot be specified if start_time is nil"
 msgstr "end_time não pode ser especificado quando start_time é nil"
-
-#: ../app/views/layouts/_tl_options.html.haml:88
-msgid "ending"
-msgstr "finalizando"
 
 #: ../app/models/classification.rb:269
 msgid "entries can only be added to classifications"
@@ -84936,7 +84915,7 @@ msgstr "extmanagementsystem_compliance_failed"
 msgid "extmanagementsystem_compliance_passed"
 msgstr "extmanagementsystem_compliance_passed"
 
-#: ../app/helpers/request_info_helper.rb:75
+#: ../app/helpers/request_info_helper.rb:107
 #: ../app/views/layouts/exp_atom/_edit_field.html.haml:54
 #: ../app/views/layouts/exp_atom/_edit_find.html.haml:39
 #: ../app/views/layouts/exp_atom/_edit_find.html.haml:153
@@ -84977,7 +84956,7 @@ msgstr "h"
 msgid "has been selected."
 msgstr "foi selecionado."
 
-#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:114
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:118
 msgid "has to be unique per provider type"
 msgstr "deve ser único por tipo de provedor"
 
@@ -85139,7 +85118,7 @@ msgstr "Ação inválida do botão"
 msgid "invalid interval name %{name}"
 msgstr "Nome de intervalo inválido %{name}"
 
-#: ../app/models/metric/ci_mixin/capture.rb:26
+#: ../app/models/metric/ci_mixin/capture.rb:27
 #: ../app/models/metric/ci_mixin/processing.rb:4 ../app/models/storage.rb:676
 msgid "invalid interval_name '%{name}'"
 msgstr "interval_name inválido '%{name}'"
@@ -85312,7 +85291,7 @@ msgstr "deve ser implementado em uma subclasse"
 #: ../app/models/manageiq/providers/base_manager/event_catcher/runner.rb:110
 #: ../app/models/manageiq/providers/base_manager/event_catcher/runner.rb:114
 #: ../app/models/manageiq/providers/base_manager/event_catcher/runner.rb:127
-#: ../app/models/manageiq/providers/base_manager/metrics_capture.rb:121
+#: ../app/models/manageiq/providers/base_manager/metrics_capture.rb:149
 #: ../app/models/san_address.rb:11
 msgid "must be implemented in subclass"
 msgstr "deve ser implementado na subclasse"
@@ -86089,10 +86068,6 @@ msgstr "campo de classificação da guia Resumo "
 msgid "started? not implemented for %{server_name}"
 msgstr "iniciado? Não implementado para %{server_name}"
 
-#: ../app/views/layouts/_tl_options.html.haml:88
-msgid "starting"
-msgstr "iniciando"
-
 #: ../app/controllers/application_controller/performance.rb:316
 msgid "stopped"
 msgstr "parado"
@@ -86122,7 +86097,7 @@ msgstr "sucesso"
 msgid "tags"
 msgstr "marcações"
 
-#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:975
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb:979
 msgid "target_class must be a class not an instance"
 msgstr "target_class deve ser uma classe, não uma instância"
 
@@ -86178,7 +86153,7 @@ msgstr "para parte inferior"
 msgid "to top"
 msgstr "para parte superior"
 
-#: ../app/helpers/request_info_helper.rb:75
+#: ../app/helpers/request_info_helper.rb:107
 #: ../app/views/layouts/exp_atom/_edit_field.html.haml:54
 #: ../app/views/layouts/exp_atom/_edit_find.html.haml:39
 #: ../app/views/layouts/exp_atom/_edit_find.html.haml:153
@@ -86621,7 +86596,7 @@ msgstr "semanas"
 msgid "which must be an Integer or one of %{priority}"
 msgstr "que deve ser um Número inteiro ou um de %{priority}"
 
-#: ../app/models/miq_worker/runner.rb:495
+#: ../app/models/miq_worker/runner.rb:503
 msgid "worker_cmdline must be implemented in a subclass"
 msgstr "O worker_cmdline deve ser implementado em uma subclasse"
 
