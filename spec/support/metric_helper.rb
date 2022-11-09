@@ -1,23 +1,6 @@
 module Spec
   module Support
     module MetricHelper
-      # given (enabled) capture_targets, compare with suggested queue entries
-      def metric_targets(expected_targets)
-        expected_targets.flat_map do |t|
-          # Storage is hourly only
-          # Non-storage historical is expecting 7 days back, plus partial day = 8
-          t.kind_of?(Storage) ? [[t, "hourly"]] : [[t, "realtime"]] + [[t, "historical"]] * 8
-        end
-      end
-
-      # @return [Array<Array<Object, String>>] List of object and interval names in miq queue
-      def queue_intervals(items = MiqQueue.where(:method_name => %w[perf_capture_hourly perf_capture_realtime perf_capture_historical]))
-        items.map do |q|
-          interval_name = q.method_name.sub("perf_capture_", "")
-          [Object.const_get(q.class_name).find(q.instance_id), interval_name]
-        end
-      end
-
       # method_name => {target => [timing1, timing2] }
       # for each capture type, what objects are submitted and what are their time frames
       #
