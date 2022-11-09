@@ -110,8 +110,11 @@ module Metric::CiMixin::Processing
 
   def rollup_to_parent_metrics(resources, interval_orig, start_time, end_time)
     # Raise <class>_perf_complete alert event if realtime so alerts can be evaluated.
+    # all resources are the same class and ems as each other
+    # NOTE: using parent ext_management_system
+    zone = ext_management_system.my_zone
     resources.each do |resource|
-      resource.perf_rollup_to_parents(interval_orig, start_time, end_time)
+      resource.perf_rollup_to_parents(interval_orig, start_time, end_time, :zone => zone)
     end
   end
 

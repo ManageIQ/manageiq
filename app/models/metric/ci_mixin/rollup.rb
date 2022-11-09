@@ -1,5 +1,5 @@
 module Metric::CiMixin::Rollup
-  def perf_rollup_to_parents(interval_name, start_time, end_time = nil)
+  def perf_rollup_to_parents(interval_name, start_time, end_time = nil, zone: nil)
     parent_rollups, next_rollup_interval = case interval_name
                                            when 'realtime'             then [perf_rollup_parents(interval_name), 'hourly']
                                            when 'hourly', 'historical' then [perf_rollup_parents('hourly'), 'daily']
@@ -20,14 +20,14 @@ module Metric::CiMixin::Rollup
 
         log_header = "Queueing [#{new_interval}] rollup to #{parent.class.name} id: [#{parent.id}] for times: #{times.inspect}"
         _log.info("#{log_header}...")
-        times.each { |t| parent.perf_rollup_queue(t, new_interval) }
+        times.each { |t| parent.perf_rollup_queue(t, new_interval, nil, :zone => zone) }
         _log.info("#{log_header}...Complete")
       when 'daily' then
         times_by_tp = Metric::Helper.days_from_range_by_time_profile(start_time, end_time)
         times_by_tp.each do |tp, times|
           log_header = "Queueing [#{new_interval}] rollup to #{parent.class.name} id: [#{parent.id}] in time profile: [#{tp.description}] for times: #{times.inspect}"
           _log.info("#{log_header}...")
-          times.each { |t| parent.perf_rollup_queue(t, new_interval, tp) }
+          times.each { |t| parent.perf_rollup_queue(t, new_interval, tp, :zone => zone) }
           _log.info("#{log_header}...Complete")
         end
       end
@@ -38,7 +38,7 @@ module Metric::CiMixin::Rollup
     raise NotImplementedError, _("perf_rollup_parents must be overridden in the mixed-in class")
   end
 
-  def perf_rollup_queue(time, interval_name, time_profile = nil)
+  def perf_rollup_queue(time, interval_name, time_profile = nil, zone: nil)
     if interval_name == 'daily' && time_profile.nil?
       raise ArgumentError, _("time_profile must be passed if interval name is 'daily'")
     end
@@ -59,7 +59,7 @@ module Metric::CiMixin::Rollup
       :method_name => 'perf_rollup',
       :args        => args,
       :msg_timeout => Metric::Rollup::TIMEOUT_PROCESS,
-      :zone        => my_zone,
+      :zone        => zone || my_zone,
       :role        => 'ems_metrics_processor',
       :queue_name  => 'ems_metrics_processor',
       :deliver_on  => deliver_on,
