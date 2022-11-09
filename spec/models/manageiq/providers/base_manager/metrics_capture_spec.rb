@@ -278,7 +278,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
 
         expect(queue_timings).to eq(
           "realtime"   => {queue_object(vm) => [[]]},
-          "historical" => {queue_object(vm) => arg_day_range(last_perf_capture_on, Time.now.utc.beginning_of_day)}
+          "historical" => {queue_object(vm) => arg_day_range(last_perf_capture_on.beginning_of_hour, Time.now.utc.beginning_of_day)}
         )
       end
     end
@@ -308,7 +308,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
 
         expect(queue_timings).to eq(
           "realtime"   => {queue_object(vm) => [[]]},
-          "historical" => {queue_object(vm) => arg_day_range(last_perf_capture_on, Time.now.utc.beginning_of_day)}
+          "historical" => {queue_object(vm) => arg_day_range(last_perf_capture_on.beginning_of_hour, Time.now.utc.beginning_of_day)}
         )
 
         Timecop.travel(20.minutes)
@@ -316,7 +316,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
 
         expect(queue_timings).to eq(
           "realtime"   => {queue_object(vm) => [[]]},
-          "historical" => {queue_object(vm) => arg_day_range(last_perf_capture_on, Time.now.utc.beginning_of_day)}
+          "historical" => {queue_object(vm) => arg_day_range(last_perf_capture_on.beginning_of_hour, Time.now.utc.beginning_of_day)}
         )
       end
     end

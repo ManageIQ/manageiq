@@ -1,4 +1,5 @@
 class ManageIQ::Providers::BaseManager::MetricsCapture
+  RECENTLY_CAPTURED = -1
   include Vmdb::Logging
 
   attr_reader :target, :ems
@@ -70,22 +71,32 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
   # TODO: group historicals by last_perf_capture_on groupings (by hour?)
   # NOTE: if metrics is paused for a long time, we will send a lot of captures
   def perf_capture_queue_gap(targets, historical_start:, historical_end:)
-    targets_already_captured, targets_not_captured = targets.partition(&:last_perf_capture_on)
+    realtime_cut_off = 4.hours.ago.utc.beginning_of_day
 
-    # targets with no captured metrics
-    if historical_start
+    # cut into buckets by hour of capture start
+    # also separate out those not captured and captured recently for special handling
+    gapped_targets = targets.group_by do |t|
+      if t.last_perf_capture_on.nil?
+        # never captured
+        nil
+      elsif t.last_perf_capture_on >= realtime_cut_off
+        # captured recently (will drop these)
+        RECENTLY_CAPTURED
+      else
+        # gapped targets need collection
+        t.last_perf_capture_on.beginning_of_hour
+      end
+    end
+
+    targets_not_captured = gapped_targets.delete(nil)
+    if historical_start && targets_not_captured.present?
       perf_capture_queue_targets_hist(targets_not_captured, "historical", :start_time => historical_start, :end_time => historical_end)
     end
 
-    # targets that haven't captured realtime metrics in a while
-    # TODO: send these in batches instead of one offs (use split_capture_intervals logic to send 1 day at a time)
-    # TODO: if it has been months, do we want a limit to the total time duration of these captures?
-    realtime_cut_off = 4.hours.ago.utc.beginning_of_day
-    gapped_targets = targets_already_captured.select { |t| t.last_perf_capture_on < realtime_cut_off }
-    gapped_targets.each do |target|
-      split_capture_intervals(target.last_perf_capture_on, realtime_cut_off).each do |s, e|
-        perf_capture_queue_target(target, "historical", :start_time => s, :end_time => e)
-      end
+    gapped_targets.delete(RECENTLY_CAPTURED)
+
+    gapped_targets.each do |start_time, target_group|
+      perf_capture_queue_targets_hist(target_group, "historical", :start_time => start_time, :end_time => realtime_cut_off)
     end
   end
 
