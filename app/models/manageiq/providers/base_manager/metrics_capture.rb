@@ -204,7 +204,7 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
       #   we will require a create_rollup_task_for_cluster
       current_batch_size = parent ? targets.size : batch_size
       rollup = parent.present?
-      targets.each_slice(current_batch_size) do |targets_batch|
+      targets.sort.each_slice(current_batch_size) do |targets_batch|
         perf_capture_queue_target(targets_batch, interval, :start_time => start_time, :end_time => end_time, :rollup => rollup)
       end
     else # send individual messages
