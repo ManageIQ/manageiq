@@ -118,6 +118,8 @@ class MiqAlert < ApplicationRecord
 
   def self.assigned_to_target(target, event = nil)
     # Get all assigned, enabled alerts based on target class and event
+    log_header = "[#{event}]"
+    log_target = "Target: #{target.class.name} Name: [#{target.name}], Id: [#{target.id}]"
 
     # event can be nil, so the compact removes event if it is nil
     key  = [target.class.base_model.name, target.id, event].compact.join("_")
@@ -129,8 +131,13 @@ class MiqAlert < ApplicationRecord
       if alert_ids.empty?
         none
       else
+        msg = "Filtering for enabled alerts"
         scope = where(:id => alert_ids, :enabled => true, :db => target.class.base_model.name)
-        scope = scope.where("responds_to_events like ?", "%#{event}%") if event
+        if event
+          scope = scope.where("responds_to_events like ?", "%#{event}%")
+          msg << " with responds_to_events LIKE: #{event}"
+        end
+        _log.info("#{log_header} #{log_target} #{msg}")
         scope
       end
     end
@@ -157,7 +164,10 @@ class MiqAlert < ApplicationRecord
     log_target = "Target: #{target.class.name} Name: [#{target.name}], Id: [#{target.id}]"
     _log.info("#{log_header} #{log_target}")
 
-    assigned_to_target(target, event).each do |a|
+    enabled_assigned_alerts = assigned_to_target(target, event)
+    _log.warn("#{log_header} #{log_target} Result: No enabled alerts are assigned to target!  Nothing to do.") if enabled_assigned_alerts.empty?
+
+    enabled_assigned_alerts.each do |a|
       next if a.postpone_evaluation?(target)
       _log.info("#{log_header} #{log_target} Queuing evaluation of Alert: [#{a.description}]")
       a.evaluate_queue(target, inputs)
