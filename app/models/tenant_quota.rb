@@ -5,27 +5,27 @@ class TenantQuota < ApplicationRecord
     :cpu_allocated       => {
       :unit          => :fixnum,
       :format        => :general_number_precision_0,
-      :text_modifier => "Count".freeze
+      :text_modifier => N_("Count").freeze
     },
     :mem_allocated       => {
       :unit          => :bytes,
       :format        => :gigabytes_human,
-      :text_modifier => "GB".freeze
+      :text_modifier => N_("GB").freeze
     },
     :storage_allocated   => {
       :unit          => :bytes,
       :format        => :gigabytes_human,
-      :text_modifier => "GB".freeze
+      :text_modifier => N_("GB").freeze
     },
     :vms_allocated       => {
       :unit          => :fixnum,
       :format        => :general_number_precision_0,
-      :text_modifier => "Count".freeze
+      :text_modifier => N_("Count").freeze
     },
     :templates_allocated => {
       :unit          => :fixnum,
       :format        => :general_number_precision_0,
-      :text_modifier => "Count".freeze
+      :text_modifier => N_("Count").freeze
     }
   }
 
@@ -87,8 +87,9 @@ class TenantQuota < ApplicationRecord
   end
 
   def self.quota_definitions
-    @quota_definitions ||= QUOTA_BASE.each_with_object({}) do |(name, value), h|
+    QUOTA_BASE.each_with_object({}) do |(name, value), h|
       h[name] = value.merge(:description => tenant_quota_description(name), :value => nil, :warn_value => nil)
+      h[name][:text_modifier] = _(value[:text_modifier])
     end
   end
 
