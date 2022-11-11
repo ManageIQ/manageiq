@@ -3359,6 +3359,11 @@
           :feature_type: control
           :hidden: true
           :identifier: delete_server
+        - :name: Delete Selected Servers
+          :description: Delete Selected Servers
+          :feature_type: control
+          :hidden: true
+          :identifier: servers_delete_server
         - :name: Start Role
           :description: Start Role
           :feature_type: control
@@ -3417,6 +3422,11 @@
           :feature_type: control
           :hidden: true
           :identifier: zone_delete_server
+        - :name: Delete Selected Servers
+          :description: Delete Selected Servers
+          :feature_type: control
+          :hidden: true
+          :identifier: servers_delete_server
         - :name: Edit Log Depot Settings
           :description: Edit Log Depot Settings
           :feature_type: control
