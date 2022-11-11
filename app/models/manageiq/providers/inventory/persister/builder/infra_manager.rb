@@ -99,14 +99,6 @@ module ManageIQ::Providers
           add_common_default_values
         end
 
-        def resource_pools
-          add_properties(
-            :manager_ref          => %i[uid_ems],
-            :attributes_blacklist => %i[parent]
-          )
-          add_common_default_values
-        end
-
         def clusters
           add_properties(
             :assocation           => :ems_clusters,
@@ -281,20 +273,8 @@ module ManageIQ::Providers
           add_dependency_attributes(:vms =>persister.collections.values_at(:vms, :miq_templates, :vms_and_templates).compact)
         end
 
-        def vm_resource_pools
-          skip_auto_inventory_attributes
-          skip_model_class
 
-          add_properties(
-            :custom_save_block => relationship_save_block(
-              :relationship_key => :resource_pool, :parent_type => "ResourcePool"
-            )
-          )
 
-          add_dependency_attributes(
-            :vms => persister.collections.values_at(:vms, :miq_templates, :vms_and_templates).compact
-          )
-        end
 
         private
 
