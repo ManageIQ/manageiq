@@ -322,20 +322,48 @@ RSpec.describe MiqAlert do
   end
 
   describe ".assigned_to_target" do
+    let(:alert)     { FactoryBot.create(:miq_alert_vm) }
+    let(:alert_set) { FactoryBot.create(:miq_alert_set_vm, :alerts =>[alert]) }
+    let(:category)  { FactoryBot.create(:classification, :description => "Environment", :name => "environment", :single_value => true) }
+    let(:cls)       { FactoryBot.create(:classification, :name => "prod", :description => "Production", :parent_id => category.id) }
+    let(:vm)        { FactoryBot.create(:vm_vmware) }
     it "gets assignment by tagged VM" do
-      cat = FactoryBot.create(:classification, :description => "Environment", :name => "environment", :single_value => true)
-      FactoryBot.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
+      cls.assign_entry_to(vm)
 
-      @vm   = FactoryBot.create(:vm_vmware)
-      @mode = @vm.class.base_model.name
-      @c    = Classification.where(:description => "Production").first
-      @c.assign_entry_to(@vm)
+      alert_set.assign_to_tags([cls.id], vm.class.base_model.name)
 
-      @alert = FactoryBot.create(:miq_alert_vm)
-      @ap    = FactoryBot.create(:miq_alert_set_vm, :alerts =>[@alert])
-      @ap.assign_to_tags([@c.id], @mode)
+      expect(MiqAlert.assigned_to_target(vm)).to eq([alert])
+    end
 
-      expect(MiqAlert.assigned_to_target(@vm)).to eq([@alert])
+    it "finds matching alerts by event" do
+      cls.assign_entry_to(vm)
+      alert.update!(:responds_to_events => "vm_does_something")
+
+      alert_set.assign_to_tags([cls.id], vm.class.base_model.name)
+
+      expect(MiqAlert.assigned_to_target(vm, "vm_does_something")).to eq([alert])
+    end
+
+    it "skips alerts based on different events" do
+      cls.assign_entry_to(vm)
+      alert.update!(:responds_to_events => "vm_does_something")
+      alert_set.assign_to_tags([cls.id], vm.class.base_model.name)
+
+      expect(Vmdb.logger).to receive(:info).with(/with responds_to_events LIKE: vm_does_something_else/)
+      expect(MiqAlert.assigned_to_target(vm, "vm_does_something_else")).to be_empty
+    end
+
+    it "skips disabled alerts" do
+      cls.assign_entry_to(vm)
+      alert.update!(:enabled => false)
+      alert_set.assign_to_tags([cls.id], vm.class.base_model.name)
+
+      expect(Vmdb.logger).to receive(:info).with(/Filtering for enabled/)
+      expect(MiqAlert.assigned_to_target(vm, "vm_does_something_else")).to be_empty
+    end
+
+    it "empty if none are assigned" do
+      expect(MiqAlert.assigned_to_target(vm)).to be_empty
     end
   end
 
@@ -541,6 +569,14 @@ RSpec.describe MiqAlert do
         :args        => [[@vm.class.name, @vm.id], {}],
         :zone        => MiqServer.my_zone
       )
+      MiqAlert.evaluate_alerts(@vm, 'request_vm_poweroff')
+    end
+
+    it 'warns if no enabled alerts are assigned' do
+      @alert.update(:enabled => false)
+      expect(MiqQueue).to receive(:put_unless_exists).never
+
+      expect(Vmdb.logger).to receive(:warn).with(/No enabled alerts are assigned to target/)
       MiqAlert.evaluate_alerts(@vm, 'request_vm_poweroff')
     end
 
