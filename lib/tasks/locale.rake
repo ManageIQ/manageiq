@@ -171,6 +171,20 @@ namespace :locale do
 
   desc "Update all ManageIQ gettext catalogs and merge them into one"
   task "update_all" do
+    def remove_line_numbers(path)
+      puts "Removing line numbers from #{path}"
+
+      # Remove line numbers from source references
+      path.write(
+        path.readlines.map { |l| l.gsub(/^(#.+):[0-9]+\n$/, "\\1\n") }.join
+      )
+
+      # Fix consecutive duplicate comment lines where there were multiple source references to the same file
+      path.write(
+        (path.readlines << nil).each_cons(2).map { |l1, l2| l1.start_with?("#") && l1 == l2 ? nil : l1 }.compact.join
+      )
+    end
+
     Rake::Task['locale:update'].invoke
 
     pot_files = []
@@ -207,6 +221,9 @@ namespace :locale do
     system('rmsgmerge', '--sort-by-msgid', '--no-fuzzy-matching', '-o', Rails.root.join('locale', 'en', 'manageiq-all.po').to_s, Rails.root.join('locale', 'en', 'manageiq.po').to_s, Rails.root.join('locale', 'manageiq.pot').to_s)
     system('mv', '-v', Rails.root.join('locale', 'en', 'manageiq-all.po').to_s, Rails.root.join('locale', 'en', 'manageiq.po').to_s)
     system('rm', '-rf', tmp_dir)
+
+    remove_line_numbers(Rails.root.join('locale/manageiq.pot'))
+    remove_line_numbers(Rails.root.join('locale/en/manageiq.po'))
   end
 
   desc "Show changes in gettext strings since last catalog update"
