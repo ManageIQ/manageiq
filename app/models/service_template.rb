@@ -52,6 +52,7 @@ class ServiceTemplate < ApplicationRecord
 
   has_many   :miq_requests, :as => :source, :dependent => :nullify
   has_many   :active_requests, -> { where(:request_state => MiqRequest::ACTIVE_STATES) }, :as => :source, :class_name => "MiqRequest"
+  has_many   :request_logs, :as => :resource
 
   virtual_column   :type_display,                 :type => :string
   virtual_column   :template_valid,               :type => :boolean

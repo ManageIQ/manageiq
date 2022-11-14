@@ -17,6 +17,7 @@ class MiqRequest < ApplicationRecord
   belongs_to :parent, :class_name => "MiqRequest"
   has_many   :miq_approvals,     :dependent   => :destroy
   has_many   :miq_request_tasks, :dependent   => :destroy
+  has_many   :request_logs, :as => :resource
 
   alias_attribute :state, :request_state
 

@@ -29,6 +29,7 @@ class Service < ApplicationRecord
   has_many :metric_rollups, :as => :resource
   has_many :metrics, :as => :resource
   has_many :vim_performance_states, :as => :resource
+  has_many   :request_logs, :as => :resource
 
   has_one :miq_request_task, :dependent => :nullify, :as => :destination
   has_one :miq_request, :through => :miq_request_task

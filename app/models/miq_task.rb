@@ -35,6 +35,7 @@ class MiqTask < ApplicationRecord
   has_one :miq_report_result
   has_one :job, :dependent => :destroy
   has_one :miq_queue
+  has_many   :request_logs, :as => :resource
 
   belongs_to :miq_server
 
