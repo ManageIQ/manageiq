@@ -6734,11 +6734,11 @@ msgstr "Aprobar y Denegar"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1012
 msgid "Approve and Deny Requests"
-msgstr "Aprobar y Denegar peticiones"
+msgstr "Aprobar y Denegar solicitudes"
 
 #: ../app/helpers/application_helper/toolbar/miq_request_center.rb:39
 msgid "Approve this Request"
-msgstr "Aprobar esta Petición"
+msgstr "Aprobar esta solicitud"
 
 #: ../app/controllers/miq_request_controller.rb:14
 msgid "Approved"
@@ -7000,7 +7000,7 @@ msgstr "¿Está seguro de que desea suprimir estos perfiles de política?"
 
 #: ../app/helpers/application_helper/toolbar/miq_request_center.rb:23
 msgid "Are you sure you want to delete this Request?"
-msgstr "¿Está seguro de que desea eliminar su petición?"
+msgstr "¿Está seguro de que desea eliminar su solicitud?"
 
 #: ../app/helpers/application_helper/toolbar/user_role_center.rb:26
 msgid "Are you sure you want to delete this Role?"
@@ -7475,7 +7475,7 @@ msgstr "Se ha cancelado la asociación de la IP flotante con la instancia."
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:27
 msgid "Association of Floating IP with Instance was queued up sucessfully."
 msgstr ""
-"La asociación de la IP flotante con instancia se ha puesto en cola "
+"La asociación de la IP flotante con la instancia se ha puesto en cola "
 "correctamente."
 
 #: ../app/helpers/generic_object_definition_helper/textual_summary.rb:47
@@ -8119,14 +8119,14 @@ msgstr "Automatizar la personalización"
 
 #: ../app/controllers/miq_ae_class_controller.rb:131
 msgid "Automate Domain"
-msgstr "Automatizar Dominio"
+msgstr "Dominio de automatización"
 
 #. TRANSLATORS: file: product/views/MiqAeDomain-nested_ae_namespaces.yaml
 #: ../app/controllers/ops_controller.rb:54
 #: ../app/helpers/ops_helper/textual_summary.rb:93
 #: ../config/yaml_strings.rb:1403
 msgid "Automate Domains"
-msgstr "Automatizar Dominios"
+msgstr "Dominios de automatización"
 
 #. TRANSLATORS: file: product/views/CustomButtonEvent.yaml
 #: ../config/yaml_strings.rb:834
@@ -22924,7 +22924,7 @@ msgstr "Repositorio SmartProxy predeterminado"
 
 #: ../app/helpers/container_project_helper/textual_summary.rb:51
 msgid "Default Request"
-msgstr "Petición predeterminada"
+msgstr "Solicitud predeterminada"
 
 #:
 #: ../app/models/manageiq/providers/vmware/infra_manager/vm_or_template_shared/operations/relocation.rb:27
@@ -25153,11 +25153,11 @@ msgstr "Desasociar una IP flotante de esta instancia"
 
 #: ../app/controllers/vm_common.rb:1194
 msgid "Disassociating Floating IP from %{model} \"%{name}\""
-msgstr "Desasociación de IP flotante de %{model} \"%{name}\""
+msgstr "Disociación de IP flotante de %{model} \"%{name}\""
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:38
 msgid "Disassociation of Floating IP with Instance was cancelled."
-msgstr "Se ha cancelado la desasociación de la IP flotante con la instancia."
+msgstr "Se ha cancelado la disociación de la IP flotante con la instancia."
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:28
 msgid "Disassociation of Floating IP with Instance was queued up sucessfully."
@@ -30046,7 +30046,7 @@ msgstr ""
 #: ../app/controllers/miq_policy_controller/policies.rb:163
 msgid "Edit of Policy's Event Assignment cancelled by user"
 msgstr ""
-"El usuario ha cancelado la edición de la asignación de sucesos de política"
+"El usuario ha cancelado la edición de la asignación de eventos de política"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1639
 msgid "Edit of Priority Order was cancelled by the user"
@@ -32444,7 +32444,7 @@ msgstr "Nombre del evento"
 #:
 #: ../app/javascript/components/timeline-options/timeline-options-simple.schema.js:94
 msgid "Event Result"
-msgstr "Resultado del suceso"
+msgstr "Resultado del evento"
 
 #: ../app/views/miq_policy/_form.html.haml:123
 #: ../app/views/miq_policy/_miq_policy_edit_events.haml:8
@@ -32506,7 +32506,7 @@ msgstr "Tipo de evento"
 #:
 #: ../app/javascript/components/timeline-options/timeline-options-simple.schema.js:17
 msgid "Event Types"
-msgstr "Tipos de suceso"
+msgstr "Tipos de evento"
 
 #: ../config/model_attributes.rb:1559
 msgid "Event log"
@@ -32738,11 +32738,11 @@ msgstr "Eventos"
 #: ../app/models/manageiq/providers/openstack/cloud_manager.rb:57
 #: ../app/models/manageiq/providers/openstack/infra_manager.rb:28
 msgid "Events are not supported"
-msgstr "Los sucesos no se admiten"
+msgstr "Los eventos no se admiten"
 
 #: ../app/models/manageiq/providers/azure/cloud_manager.rb:43
 msgid "Events are not supported for this region"
-msgstr "Los sucesos no están soportados para esta región"
+msgstr "Los eventos no están soportados para esta región"
 
 #. TRANSLATORS: file: product/reports/500_Events - Operations/120_Events_for_VM_prod_webserver.yaml
 #: ../config/yaml_strings.rb:6883
@@ -33277,7 +33277,7 @@ msgstr "Todo lo incluido en Repositorios"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:996
 msgid "Everything under Requests"
-msgstr "Todo bajo Peticiones"
+msgstr "Todo bajo Solicitudes"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2888
@@ -41646,7 +41646,7 @@ msgstr "Rangos límite"
 
 #: ../app/helpers/container_project_helper/textual_summary.rb:51
 msgid "Limit Request Ratio"
-msgstr "Radio límite de petición"
+msgstr "Relación de solicitud límite"
 
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/054_VM Uptime - longest running.yaml
@@ -50227,7 +50227,7 @@ msgstr "Debe especificar un href o ID de miq_server válido"
 
 #: ../app/controllers/api/vms_controller.rb:83
 msgid "Must specify an id for adding an event to a %{type} resource"
-msgstr "Debe especificar un ID para añadir un suceso a un recurso %{type}"
+msgstr "Debe especificar un ID para añadir un evento a un recurso %{type}"
 
 #: ../app/controllers/api/vms_controller.rb:137
 msgid "Must specify an id for requesting a console for a %{type} resource"
@@ -53505,7 +53505,7 @@ msgstr "Observado"
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js:161
 #: ../app/views/ops/_settings_server_tab.html.haml:103
 msgid "Off"
-msgstr "Desactivar"
+msgstr "Desactivado"
 
 #: ../app/views/shared/views/_alerts_list.html.haml:96
 msgid "Offending %{type}"
@@ -63787,7 +63787,7 @@ msgstr "ID de la solicitud"
 #: ../app/views/catalog/_form_request_info.html.haml:6
 #: ../app/views/catalog/_sandt_tree_request.html.haml:4
 msgid "Request Info"
-msgstr "Información de petición"
+msgstr "Información de solicitud"
 
 #: ../app/views/miq_request/_prov_configured_system_foreman_dialog.html.haml:11
 #: ../app/views/miq_request/_prov_physical_server_dialog.html.haml:11
@@ -63955,7 +63955,7 @@ msgstr "Solicitante:"
 #: ../app/presenters/menu/default_menu.rb:65
 #: ../app/presenters/menu/default_menu.rb:217 ../config/yaml_strings.rb:256
 msgid "Requests"
-msgstr "Peticiones"
+msgstr "Solicitudes"
 
 #: src/rbac-forms/rbacUserForm.jsx:46 src/rbac-forms/rbacUserForm.jsx:55
 #: src/rbac-forms/rbacUserForm.jsx:64
@@ -78341,7 +78341,7 @@ msgstr "Usuarios (%{users_count})"
 
 #: ../app/helpers/application_helper/button/miq_request_delete.rb:8
 msgid "Users are only allowed to delete their own requests"
-msgstr "A los usuarios no se les permite eliminar sus propias peticiones"
+msgstr "A los usuarios no se les permite eliminar sus propias solicitudes"
 
 #: ../app/views/ops/_rbac_group_details.html.haml:118
 msgid "Users in this Group"
@@ -79026,11 +79026,11 @@ msgstr "Reconfiguración de máquina virtual"
 
 #: ../app/controllers/mixins/actions/vm_actions/reconfigure.rb:361
 msgid "VM Reconfigure Request was cancelled by the user"
-msgstr "La petición de reconfiguración de la VM fue cancelada por el usuario"
+msgstr "La solicitud de reconfiguración de la VM fue cancelada por el usuario"
 
 #: ../app/controllers/mixins/actions/vm_actions/reconfigure.rb:430
 msgid "VM Reconfigure Request was saved"
-msgstr "La petición de reconfiguración de la VM fue almacenada"
+msgstr "La solicitud de reconfiguración de la VM fue almacenada"
 
 #. TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/010_VMs Relationships.yaml
 #: ../config/yaml_strings.rb:6857
@@ -79061,7 +79061,7 @@ msgstr "Solicitud de eliminación de la máquina virtual del inventario"
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:389
 msgid "VM Renamed Event"
-msgstr "Suceso de máquina virtual renombrado"
+msgstr "Evento de máquina virtual renombrado"
 
 #: ../app/views/shared/views/_prov_dialog.html.haml:166
 msgid "VM Reservations"

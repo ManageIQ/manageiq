@@ -4035,7 +4035,7 @@ msgstr "Aggiungi un provider cloud"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1102
 msgid "Add a Composite Catalog"
-msgstr "Aggiungi un Catalogo Composito"
+msgstr "Aggiungi un catalogo composito"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1052
@@ -4120,7 +4120,7 @@ msgstr "Aggiungi un gruppo di iniziatori host"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1418
 msgid "Add a Key Pair"
-msgstr "Aggiungi una Coppia di chiavi"
+msgstr "Aggiungi una coppia di chiavi"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2884
@@ -4148,11 +4148,11 @@ msgstr "Aggiungi un nuovo profilo di avviso"
 #:
 #: ../app/helpers/application_helper/toolbar/servicetemplatecatalogs_center.rb:12
 msgid "Add a New Catalog"
-msgstr "Aggiungi un Nuovo Catalogo"
+msgstr "Aggiungi un nuovo catalogo"
 
 #: ../app/helpers/application_helper/toolbar/servicetemplates_center.rb:18
 msgid "Add a New Catalog Bundle"
-msgstr "Aggiungi un Nuovo Bundle del Catalogo"
+msgstr "Aggiungi un nuovo bundle del catalogo"
 
 #: ../app/helpers/application_helper/toolbar/servicetemplates_center.rb:12
 msgid "Add a New Catalog Item"
@@ -4210,11 +4210,11 @@ msgstr "Aggiungi un nuovo provider di rete"
 
 #: ../app/helpers/application_helper/toolbar/pxe_servers_center.rb:12
 msgid "Add a New PXE Server"
-msgstr "Aggiungi un nuovo Server PXE"
+msgstr "Aggiungi un nuovo server PXE"
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infras_center.rb:23
 msgid "Add a New Physical Infrastructure Provider"
-msgstr "Aggiungi un nuovo Provider di Infrastrutture Fisiche"
+msgstr "Aggiungi un nuovo provider di infrastrutture fisiche"
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb:12
 msgid "Add a New Policy"
@@ -4231,7 +4231,7 @@ msgstr "Aggiungi un nuovo gestore dello spazio di archiviazione"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3256
 msgid "Add a Persistent Volume"
-msgstr "Aggiungi un Volume Permanente"
+msgstr "Aggiungi un volume permanente"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4206
@@ -4246,7 +4246,7 @@ msgstr "Aggiungi uno spazio fisico di archiviazione"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3500
 msgid "Add a Playbook"
-msgstr "Aggiungi un Playbook"
+msgstr "Aggiungi un playbook"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2017
@@ -4314,7 +4314,7 @@ msgstr "Aggiungi un gruppo di sicurezza"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:76
 msgid "Add a Security Group to this Instance"
-msgstr "Aggiungi un Gruppo di sicurezza a questa istanza"
+msgstr "Aggiungi un gruppo di sicurezza a questa istanza"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2924
@@ -4342,12 +4342,12 @@ msgstr "Aggiungi una sottorete"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1338
 msgid "Add a Tenant"
-msgstr "Aggiungi un Tenant"
+msgstr "Aggiungi un tenant"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2585
 msgid "Add a Tenant/Project"
-msgstr "Aggiungi un Tenant/Progetto"
+msgstr "Aggiungi un tenant/progetto"
 
 #: ../app/views/layouts/_edit_to_email.html.haml:33
 msgid "Add a User"
@@ -4428,7 +4428,7 @@ msgstr "Aggiungi nuovo contenitore archivio oggetti cloud"
 
 #: ../app/views/ems_cloud/show_list.html.haml:5
 msgid "Add a new Cloud Provider"
-msgstr "Aggiungi un nuovo Cloud Provider"
+msgstr "Aggiungi un nuovo provider cloud"
 
 #: ../app/helpers/application_helper/toolbar/cloud_subnets_center.rb:12
 msgid "Add a new Cloud Subnet"
@@ -4497,7 +4497,7 @@ msgstr "Aggiungi un nuovo profilo di analisi host"
 
 #: ../app/views/ems_infra/show_list.html.haml:5
 msgid "Add a new Infrastructure Provider"
-msgstr "Aggiungi un nuovo Provider Infrastruttura"
+msgstr "Aggiungi un nuovo provider Infrastruttura"
 
 #: ../app/helpers/application_helper/toolbar/auth_key_pair_clouds_center.rb:12
 msgid "Add a new Key Pair"
@@ -4566,11 +4566,11 @@ msgstr "Aggiungi un nuovo profilo di analisi VM"
 
 #: ../app/helpers/application_helper/toolbar/miq_widgets_center.rb:19
 msgid "Add a new Widget"
-msgstr "Aggiungi un nuovo Widget"
+msgstr "Aggiungi un nuovo widget"
 
 #: ../app/helpers/application_helper/toolbar/zones_center.rb:12
 msgid "Add a new Zone"
-msgstr "Aggiungi una nuova Zona"
+msgstr "Aggiungi una nuova zona"
 
 #: ../app/views/chargeback_rate/_cb_rate_edit_table.html.haml:61
 #: ../app/views/chargeback_rate/_tier_first_row.haml:32
@@ -4613,7 +4613,7 @@ msgstr "Aggiungi Provider di infrastruttura"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2688
 msgid "Add an PXE Server"
-msgstr "Aggiungi un Server PXE"
+msgstr "Aggiungi un server PXE"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1781
@@ -7371,12 +7371,12 @@ msgstr "Associa IP mobile all'istanza '%{name}'"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:64
 msgid "Associate a Floating IP with this Instance"
-msgstr "Associa un IP mobile con questa istanza"
+msgstr "Associa un IP mobile a questa istanza"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2970
 msgid "Associate/Disassociate a Floating IP"
-msgstr "Associa/Annulla associazione IP mobile"
+msgstr "Associa/Annulla associazione di un IP mobile"
 
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_tag_daily.yaml
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_tag_hourly.yaml
@@ -7420,12 +7420,12 @@ msgstr "Informazioni di associazione"
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:37
 msgid "Association of Floating IP with Instance was cancelled."
-msgstr "L'associazione dell'IP mobile con l'istanza è stata annullata."
+msgstr "L'associazione dell'IP mobile all'istanza è stata annullata."
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:27
 msgid "Association of Floating IP with Instance was queued up sucessfully."
 msgstr ""
-"L'associazione dell'IP mobile con l'istanza è stata accodata correttamente."
+"L'associazione dell'IP mobile all'istanza è stata accodata correttamente."
 
 #: ../app/helpers/generic_object_definition_helper/textual_summary.rb:47
 #: ../app/helpers/generic_object_helper/textual_summary.rb:36
@@ -11337,7 +11337,7 @@ msgstr "Informazioni categoria"
 #:
 #: ../app/javascript/components/timeline-options/timeline-options-simple.schema.js:30
 msgid "Category Managements"
-msgstr "Gestione categoria"
+msgstr "Gestione categorie"
 
 #:
 #: ../app/javascript/components/timeline-options/timeline-options-simple.schema.js:75
@@ -13290,27 +13290,27 @@ msgstr[1] "Provider Cloud (VMware vCloud)"
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
 #: ../app/controllers/ems_cloud_controller.rb:32 ../config/yaml_strings.rb:1235
 msgid "Cloud Providers"
-msgstr "Provider Cloud"
+msgstr "Provider cloud"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::CloudManager (plural form)
 #: ../config/dictionary_strings.rb:3276
 msgid "Cloud Providers (Amazon)"
-msgstr "Provider Cloud (Amazon)"
+msgstr "Provider cloud (Amazon)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::CloudManager (plural form)
 #: ../config/dictionary_strings.rb:3280
 msgid "Cloud Providers (Microsoft Azure)"
-msgstr "Provider Cloud (Microsoft Azure)"
+msgstr "Provider cloud (Microsoft Azure)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager (plural form)
 #: ../config/dictionary_strings.rb:3256
 msgid "Cloud Providers (OpenStack)"
-msgstr "Provider Cloud (OpenStack)"
+msgstr "Provider cloud (OpenStack)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::CloudManager (plural form)
 #: ../config/dictionary_strings.rb:3284
 msgid "Cloud Providers (VMware vCloud)"
-msgstr "Provider Cloud (VMware vCloud)"
+msgstr "Provider cloud (VMware vCloud)"
 
 #: ../app/views/miq_request/_prov_dialog_cloud_quota.html.haml:17
 msgid "Cloud Quota"
@@ -24270,7 +24270,7 @@ msgstr ""
 #:
 #: ../app/javascript/components/cloud-volume-form/attach-detach-cloud-volume-form.jsx:71
 msgid "Detachment of Cloud Volume has been successfully queued."
-msgstr "Il distacco del volume cloud è stato messo in coda con successo."
+msgstr "Lo scollegamento del volume cloud è stato accodato correttamente."
 
 #. TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
 #: ../config/yaml_strings.rb:6558
@@ -24972,20 +24972,22 @@ msgstr "Annulla associazione IP mobile dall'istanza"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:70
 msgid "Disassociate a Floating IP from this Instance"
-msgstr "Annulla associazione di un IP mobile da questa istanza"
+msgstr "Annulla associazione di un IP mobile a questa istanza"
 
 #: ../app/controllers/vm_common.rb:1194
 msgid "Disassociating Floating IP from %{model} \"%{name}\""
-msgstr "Annullamento dell'associazione dell'IP mobile da %{model} \"%{name}\""
+msgstr "Annullamento dell'associazione dell'IP mobile a %{model} \"%{name}\""
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:38
 msgid "Disassociation of Floating IP with Instance was cancelled."
-msgstr "La dissociazione dell'IP mobile con l'istanza è stata annullata."
+msgstr ""
+"L'annullamento dell'associazione dell'IP mobile all'istanza è stato annullato."
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:28
 msgid "Disassociation of Floating IP with Instance was queued up sucessfully."
 msgstr ""
-"La dissociazione dell'IP mobile con l'istanza è stata accodata correttamente."
+"L'annullamento dell'associazione dell'IP mobile all'istanza è stato accodato "
+"correttamente."
 
 #: ../app/views/layouts/exp_atom/_editor.html.haml:56
 #: ../app/views/ops/_settings_replication_tab.html.haml:98
@@ -26419,7 +26421,7 @@ msgstr "Visualizza liste di oggetti archivio oggetti cloud"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1172
 msgid "Display Lists of Cloud Providers"
-msgstr "Visualizza Elenchi di Cloud Provider"
+msgstr "Visualizza elenchi di provider cloud"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3046
@@ -29014,7 +29016,7 @@ msgstr "Modifica tag su oggetto archivio oggetti cloud"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1180
 msgid "Edit Tags of Cloud Providers"
-msgstr "Modifica Tag dei Provider cloud"
+msgstr "Modifica tag dei provider cloud"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3052
@@ -29312,7 +29314,7 @@ msgstr "Modifica un tasso di Chargeback"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1206
 msgid "Edit a Cloud Provider"
-msgstr "Modifica un provider Cloud"
+msgstr "Modifica un provider cloud"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1048
@@ -32686,7 +32688,7 @@ msgstr "Tutto sotto oggetti archivio oggetti cloud"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1168
 msgid "Everything under Cloud Providers"
-msgstr "Tutto sotto Cloud Provider"
+msgstr "Tutto sotto Provider cloud"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3042
@@ -33359,39 +33361,39 @@ msgstr "Sistema di gestione ext"
 
 #: ../config/model_attributes.rb:1607
 msgid "ExtManagementSystem|Aggregate cpu speed"
-msgstr "Velocità cpu aggregata"
+msgstr "ExtManagementSystem|Velocità cpu aggregata"
 
 #: ../config/model_attributes.rb:1608
 msgid "ExtManagementSystem|Aggregate cpu total cores"
-msgstr "Core totali cpu aggregata"
+msgstr "ExtManagementSystem|Core totali cpu aggregata"
 
 #: ../config/model_attributes.rb:1609
 msgid "ExtManagementSystem|Aggregate disk capacity"
-msgstr "Capacità del disco aggregato"
+msgstr "ExtManagementSystem|Capacità del disco aggregato"
 
 #: ../config/model_attributes.rb:1610
 msgid "ExtManagementSystem|Aggregate memory"
-msgstr "Memoria aggregata"
+msgstr "ExtManagementSystem|Memoria aggregata"
 
 #: ../config/model_attributes.rb:1611
 msgid "ExtManagementSystem|Aggregate physical cpus"
-msgstr "Cpu fisiche aggregate"
+msgstr "ExtManagementSystem|Cpu fisiche aggregate"
 
 #: ../config/model_attributes.rb:1612
 msgid "ExtManagementSystem|Aggregate vm cpus"
-msgstr "Cpus vm aggregato"
+msgstr "ExtManagementSystem|Cpu vm aggregate"
 
 #: ../config/model_attributes.rb:1613
 msgid "ExtManagementSystem|Aggregate vm memory"
-msgstr "Memoria vm aggregata"
+msgstr "ExtManagementSystem|Memoria vm aggregata"
 
 #: ../config/model_attributes.rb:1614
 msgid "ExtManagementSystem|Api version"
-msgstr "Versione Api"
+msgstr "ExtManagementSystem|Versione Api"
 
 #: ../config/model_attributes.rb:1615
 msgid "ExtManagementSystem|Authentication status"
-msgstr "Stato di autenticazione"
+msgstr "ExtManagementSystem|Stato di autenticazione"
 
 #: ../config/model_attributes.rb:1616
 msgid "ExtManagementSystem|Capabilities"
@@ -63493,7 +63495,7 @@ msgstr "Informazioni sulla richiesta"
 #: ../app/views/miq_request/_prov_vm_migrate_dialog.html.haml:11
 #: ../app/views/shared/views/_prov_dialog.html.haml:10
 msgid "Request Information"
-msgstr "Richiedi informazioni"
+msgstr "Informazioni sulla richiesta"
 
 #. TRANSLATORS: en.yml key: dictionary.column.request_memory_bytes
 #: ../config/dictionary_strings.rb:1730
@@ -70243,7 +70245,7 @@ msgstr "Dimensione sul disco"
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/vm.rb:144
 msgid "Size must be greater than or equal to .25"
-msgstr "La dimensione deve essere maggiore o uguale a .25"
+msgstr "La dimensione deve essere maggiore o uguale a 0,25"
 
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/storage_manager/cloud_volume.rb:38
@@ -74362,7 +74364,7 @@ msgstr[1] "Le seguenti pianificazioni sono state accodate per eseguire "
 
 #: ../app/controllers/report_controller/schedules.rb:109
 msgid "The selected Schedules have been queued to run"
-msgstr "Le pianificazioni selezionate sono in coda per l'esecuzione"
+msgstr "Le pianificazioni selezionate sono state accodate per l'esecuzione"
 
 #: ../app/controllers/report_controller/schedules.rb:84
 msgid "The selected Schedules were deleted"
@@ -74726,7 +74728,7 @@ msgstr "Questa Settimana (parziale)"
 #: ../app/helpers/application_helper/button/widget_generate_content.rb:14
 msgid "This Widget content generation is already running or queued up"
 msgstr ""
-"La generazione del contenuto di questo widget è già in esecuzione o in coda"
+"La generazione del contenuto di questo widget è già in esecuzione o accodata"
 
 #: ../app/helpers/view_helper.rb:115
 msgid "This Year"
@@ -85665,7 +85667,8 @@ msgstr "raw_delete_volume_mapping deve essere implementato in una sottoclasse"
 
 #: ../app/models/manageiq/providers/cloud_manager/vm.rb:164
 msgid "raw_disassociate_floating_ip must be implemented in a subclass"
-msgstr "raw_disassociate_floating_ip deve essere implementa in una sottoclasse"
+msgstr ""
+"raw_disassociate_floating_ip deve essere implementato in una sottoclasse"
 
 #: ../app/models/vm_or_template/operations/relocation.rb:21
 msgid "raw_evacuate must be implemented in a subclass"
