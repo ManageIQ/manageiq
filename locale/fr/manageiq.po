@@ -512,7 +512,7 @@ msgstr[1] "%d notifications non lues"
 #: ../app/javascript/components/miq-pagination.jsx:5
 msgid "%d-%d of %d item"
 msgid_plural "%d-%d of %d items"
-msgstr[0] "Elément %d à %d sur %d"
+msgstr[0] "%d-%d sur %d élément"
 msgstr[1] "%d-%d sur %d éléments"
 
 #: ../app/javascript/components/ops-tenant-form/ops-tenant-form.jsx:69
@@ -546,12 +546,12 @@ msgstr "%s balises"
 #:
 #: ../app/javascript/components/vm-cloud-add-remove-security-group-form/index.jsx:71
 msgid "%s has been successfully added."
-msgstr "%s a été ajouté avec succès."
+msgstr "%s a été ajouté."
 
 #:
 #: ../app/javascript/components/vm-cloud-add-remove-security-group-form/index.jsx:65
 msgid "%s has been successfully removed."
-msgstr "%s a été supprimé avec succès."
+msgstr "%s a été retiré."
 
 #: ../app/javascript/http_api/fetch.js:94
 msgid "%s logged out, redirecting to the login page"
@@ -7399,7 +7399,7 @@ msgstr "Associer une adresse IP flottante"
 
 #: ../app/controllers/floating_ip_controller.rb:110
 msgid "Associate Floating IP \"%{address}\""
-msgstr "Associer l'IP flottante \"%{address}\""
+msgstr "Associer l'adresse IP flottante \"%{address}\""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3724
@@ -7408,11 +7408,11 @@ msgstr "Associer une adresse IP flottante à l'instance"
 
 #: ../app/controllers/mixins/actions/vm_actions/associate_floating_ip.rb:37
 msgid "Associate Floating IP with Instance '%{name}'"
-msgstr "Associer une IP flottante à l'instance '%{name}'"
+msgstr "Associer une adresse IP flottante à l'instance '%{name}'"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:64
 msgid "Associate a Floating IP with this Instance"
-msgstr "Associer une IP flottante à cette instance"
+msgstr "Associer une adresse IP flottante à cette instance"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2970
@@ -7452,7 +7452,7 @@ msgstr "Profil de serveur associé"
 
 #: ../app/controllers/vm_common.rb:1188
 msgid "Associating Floating IP with %{model} \"%{name}\""
-msgstr "Association de l'IP flottante à %{model} \"%{name}\""
+msgstr "Association de l'adresse IP flottante à %{model} \"%{name}\""
 
 #: ../app/models/manageiq/providers/openstack/network_manager/floating_ip.rb:70
 #: ../app/models/manageiq/providers/openstack/network_manager/floating_ip.rb:152
@@ -7461,13 +7461,13 @@ msgstr "Information sur l'association"
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:37
 msgid "Association of Floating IP with Instance was cancelled."
-msgstr "L'association de l'IP flottante à l'instance a été annulée."
+msgstr "L'association de l'adresse IP flottante à l'instance a été annulée."
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:27
 msgid "Association of Floating IP with Instance was queued up sucessfully."
 msgstr ""
-"L'association de l'IP flottante à l'instance a été mise en file d'attente avec"
-" succès."
+"L'association de l'adresse IP flottante à l'instance a été mise en file "
+"d'attente."
 
 #: ../app/helpers/generic_object_definition_helper/textual_summary.rb:47
 #: ../app/helpers/generic_object_helper/textual_summary.rb:36
@@ -9049,7 +9049,7 @@ msgstr "Volumes basés"
 #: ../app/views/ops/_diagnostics_database_tab.html.haml:14
 #: ../app/views/ops/_logs_selected.html.haml:9
 msgid "Basic Info"
-msgstr "Infos de base"
+msgstr "Informations de base"
 
 #: ../app/helpers/catalog_helper.rb:101 ../app/helpers/catalog_helper.rb:254
 #: ../app/helpers/condition_helper.rb:3
@@ -9112,7 +9112,7 @@ msgstr "Options de base"
 
 #: src/report-editor/basic-info.jsx:11
 msgid "Basic Report Info"
-msgstr "Infos sur le rapport de base"
+msgstr "Informations sur le rapport de base"
 
 #. TRANSLATORS: en.yml key: dictionary.column.become_username
 #: ../config/dictionary_strings.rb:266
@@ -11416,7 +11416,7 @@ msgstr "Gestions de catégories"
 #:
 #: ../app/javascript/components/timeline-options/timeline-options-simple.schema.js:75
 msgid "Category Policy"
-msgstr "Règle de catégorie"
+msgstr "Stratégie de catégorie"
 
 #: ../app/views/ops/_ap_form_set.html.haml:4
 msgid "Category Selection"
@@ -19344,7 +19344,7 @@ msgstr "Numéro de la région"
 
 #: ../config/model_attributes.rb:1213
 msgid "ContainerTemplateParameter|Required"
-msgstr "Obligatoire"
+msgstr "Requis"
 
 #: ../config/model_attributes.rb:1214
 msgid "ContainerTemplateParameter|Value"
@@ -21424,7 +21424,7 @@ msgstr "Le bouton personnalisé \"%{name}\" a été sauvegardé"
 msgid ""
 "Custom Button %s has been successfully added under the selected button group."
 msgstr ""
-"Le bouton Personnalisé %s a été ajouté avec succès sous le groupe de boutons "
+"Le bouton Personnalisé %s a été ajouté avec sous le groupe de boutons "
 "sélectionné."
 
 #:
@@ -23793,7 +23793,7 @@ msgstr "Supprimer ce tableau de bord de la base de données"
 
 #: ../app/helpers/application_helper/toolbar/floating_ip_center.rb:24
 msgid "Delete this Floating IP"
-msgstr "Supprimer cette IP flottante"
+msgstr "Supprimer cette adresse IP flottante"
 
 #: ../app/helpers/application_helper/toolbar/miq_group_center.rb:18
 msgid "Delete this Group"
@@ -24364,31 +24364,32 @@ msgstr ""
 #:
 #: ../app/javascript/components/cloud-volume-form/attach-detach-cloud-volume-form.jsx:71
 msgid "Detachment of Cloud Volume has been successfully queued."
-msgstr "La déconnexion du volume cloud a été mise en file d'attente."
+msgstr "La déconnexion du volume de cloud a été mise en file d'attente."
 
 #. TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
 #: ../config/yaml_strings.rb:6558
 msgid "Detailed - VMs NOT migration ready"
-msgstr "Infos détaillées - Machines virtuelles NON prêtes pour la migration"
+msgstr ""
+"Informations détaillées - Machines virtuelles NON prêtes pour la migration"
 
 #. TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
 #: ../config/yaml_strings.rb:6556
 msgid "Detailed - VMs NOT migration ready - CD/DVD/Floppy connected"
 msgstr ""
-"Infos détaillées - Machines virtuelles NON prêtes pour la migration - CD/DVD/"
-"disquette connecté"
+"Informations détaillées - Machines virtuelles NON prêtes pour la migration - "
+"CD/DVD/disquette connecté"
 
 #. TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/020_Detailed - VMs migration ready.yaml
 #: ../config/yaml_strings.rb:6548
 msgid "Detailed - VMs migration ready"
-msgstr "Infos détaillées - Machines virtuelles prêts pour la migration"
+msgstr "Informations détaillées - Machines virtuelles prêts pour la migration"
 
 #. TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/020_Detailed - VMs migration ready.yaml
 #: ../config/yaml_strings.rb:6546
 msgid "Detailed - VMs migration ready - no CD/DVD/Floppy connected"
 msgstr ""
-"Infos détaillées - Machines virtuelles prêtes pour la migration - Aucun CD/DVD"
-"/disquette connecté"
+"Informations détaillées - Machines virtuelles prêtes pour la migration - Aucun"
+" CD/DVD/disquette connecté"
 
 #: ../app/views/ops/_rbac_group_details.html.haml:60
 msgid "Detailed Description"
@@ -24806,7 +24807,7 @@ msgstr "Numéro de la région"
 
 #: ../config/model_attributes.rb:1361
 msgid "DialogField|Required"
-msgstr "Obligatoire"
+msgstr "Requis"
 
 #: ../config/model_attributes.rb:1362
 msgid "DialogField|Required method"
@@ -25070,21 +25071,21 @@ msgstr "Dissocier une adresse IP flottante de l'instance"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:70
 msgid "Disassociate a Floating IP from this Instance"
-msgstr "Dissocier une IP flottante de cette instance"
+msgstr "Dissocier une adresse IP flottante de cette instance"
 
 #: ../app/controllers/vm_common.rb:1194
 msgid "Disassociating Floating IP from %{model} \"%{name}\""
-msgstr "Dissociation de l'IP flottante de %{model} \"%{name}\""
+msgstr "Dissociation de l'adresse IP flottante de l'%{model} \"%{name}\""
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:38
 msgid "Disassociation of Floating IP with Instance was cancelled."
-msgstr "La dissociation de l'IP flottante de l'instance a été annulée."
+msgstr "La dissociation de l'adresse IP flottante de l'instance a été annulée."
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:28
 msgid "Disassociation of Floating IP with Instance was queued up sucessfully."
 msgstr ""
-"La dissociation de l'IP flottante de l'instance a été mise en file d'attente "
-"avec succès."
+"La dissociation de l'adresse IP flottante de l'instance a été mise en file "
+"d'attente."
 
 #: ../app/views/layouts/exp_atom/_editor.html.haml:56
 #: ../app/views/ops/_settings_replication_tab.html.haml:98
@@ -27238,7 +27239,7 @@ msgstr "Afficher le lanceur d'application"
 
 #: ../app/controllers/mixins/actions/vm_actions/disassociate_floating_ip.rb:37
 msgid "Disssociate Floating IP from Instance '%{name}'"
-msgstr "Dissocier l'IP flottante de l'instance '%{name}'"
+msgstr "Dissocier l'adresse IP flottante de l'instance '%{name}'"
 
 #: ../app/helpers/textual_mixins/textual_devices.rb:113
 msgid "Distributed "
@@ -28059,7 +28060,7 @@ msgstr "Editer un schéma d'automatisation"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_center.rb:12
 msgid "Edit Basic Info, Scope, and Notes"
-msgstr "Editer les infos de base, la portée et les remarques"
+msgstr "Editer les informations de base, la portée et les remarques"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2337
@@ -28760,7 +28761,7 @@ msgstr "Editer les balises pour les versions sélectionnées"
 
 #: ../app/helpers/application_helper/toolbar/floating_ips_center.rb:56
 msgid "Edit Tags for the selected Floating IPs"
-msgstr "Editer les balises pour les IP flottantes sélectionnées"
+msgstr "Editer les balises pour les adresses IP flottantes sélectionnées"
 
 #: ../app/helpers/application_helper/toolbar/generic_objects_center.rb:14
 msgid "Edit Tags for the selected Generic Object Instances"
@@ -28970,7 +28971,7 @@ msgstr "Editer les balises pour cette version"
 
 #: ../app/helpers/application_helper/toolbar/floating_ip_center.rb:48
 msgid "Edit Tags for this Floating IP"
-msgstr "Editer les balises pour cette IP flottante"
+msgstr "Editer les balises pour cette adresse IP flottante"
 
 #: ../app/helpers/application_helper/toolbar/generic_object_center.rb:12
 msgid "Edit Tags for this Generic Object Instance"
@@ -31872,7 +31873,7 @@ msgstr "Erreur lors de la suppression de l'élément \"%s\" : %s"
 
 #: ../app/controllers/application_controller/filter.rb:106
 msgid "Error details: %{message}"
-msgstr "Infos erreur : %{message}"
+msgstr "Détails de l'erreur : %{message}"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1952
 msgid "Error during '%{record} copy': %{error_message}"
@@ -32138,7 +32139,8 @@ msgstr "Erreur lors de la demande de données auprès du serveur"
 
 #: ../app/controllers/miq_request_controller.rb:273
 msgid "Error retrieving LDAP info: %{error_message}"
-msgstr "Erreur lors de la récupération des infos LDAP : %{error_message}"
+msgstr ""
+"Erreur lors de la récupération des informations LDAP : %{error_message}"
 
 #: ../app/models/miq_request.rb:226
 msgid ""
@@ -32478,7 +32480,7 @@ msgstr "Type d'événement"
 #:
 #: ../app/javascript/components/timeline-options/timeline-options-simple.schema.js:17
 msgid "Event Types"
-msgstr "Types d'événements"
+msgstr "Types d'événement"
 
 #: ../config/model_attributes.rb:1559
 msgid "Event log"
@@ -34828,7 +34830,7 @@ msgstr "Numéro de la région"
 
 #: ../config/model_attributes.rb:1783
 msgid "FirewallRule|Required"
-msgstr "Obligatoire"
+msgstr "Requis"
 
 #: ../config/model_attributes.rb:1784
 msgid "FirewallRule|Resource type"
@@ -35401,7 +35403,8 @@ msgstr "Adresses IP flottantes"
 #: ../app/controllers/floating_ip_controller.rb:52
 msgid "Floating IP creation failed: Task start failed"
 msgstr ""
-"La création de l'IP flottante a échoué : échec du démarrage de la tâche"
+"La création de l'adresse IP flottante a échoué : échec du démarrage de la "
+"tâche"
 
 #: ../app/controllers/floating_ip_controller.rb:176
 #: ../app/controllers/vm_common.rb:358
@@ -37745,7 +37748,7 @@ msgstr "Récapitulatif hôte pour les machines virtuelles"
 #. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/011_Host Summary with VM info.yaml
 #: ../config/yaml_strings.rb:6021
 msgid "Host Summary with VM info"
-msgstr "Récapitulatif hôte avec infos machine virtuelle"
+msgstr "Récapitulatif hôte avec informations sur la machine virtuelle"
 
 #: ../config/model_display_names.rb:138
 msgid "Host Switch"
@@ -39763,7 +39766,7 @@ msgstr "Infinité"
 #: ../app/views/resource_pool/_config.html.haml:7
 #: ../app/views/static/miq_ae_class/namespace_form.html.haml:9
 msgid "Info"
-msgstr "Infos"
+msgstr "Informations"
 
 #: ../app/javascript/oldjs/services/alerts_center_service.js:36
 msgid "Information"
@@ -40079,7 +40082,7 @@ msgstr "Aucun volume de cloud n'est associé à l'instance \"%{instance_name}\""
 #:
 #: ../app/helpers/application_helper/button/instance_disassociate_floating_ip.rb:10
 msgid "Instance \"%{name}\" does not have any associated Floating IPs"
-msgstr "Aucune IP flottante n'est associée à l'instance \"%{name}\""
+msgstr "Aucune adresse IP flottante n'est associée à l'instance \"%{name}\""
 
 #: ../app/models/manageiq/providers/amazon/cloud_manager/vm.rb:64
 msgid "Instance (Amazon)"
@@ -40444,7 +40447,8 @@ msgstr "Type de dépôt de fichiers non valide ou non pris en charge."
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/provision_workflow.rb:197
 msgid "Invalid placement group - incompatible colocation policy"
-msgstr "Groupe de placement non valide - règle de colocalisation incompatible"
+msgstr ""
+"Groupe de placement non valide - stratégie de colocalisation incompatible"
 
 #: ../app/models/miq_report/search.rb:19
 msgid "Invalid reflection <%{item}> on model <%{name}>"
@@ -41466,7 +41470,7 @@ msgstr "Lancer la journalisation externe"
 
 #: ../app/views/layouts/_empty.html.haml:9
 msgid "Learn more about this"
-msgstr "Plus d'infos sur le sujet"
+msgstr "Plus d'informations sur le sujet"
 
 #. TRANSLATORS: en.yml key: dictionary.column.lease_expires
 #: ../config/dictionary_strings.rb:1128
@@ -42998,7 +43002,7 @@ msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/floating_ip_center.rb:14
 msgid "Manage the port association of this Floating"
-msgstr "Gérer l'association de port de cette IP flottante"
+msgstr "Gérer l'association de port de cette adresse IP flottante"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:649
 msgid "ManageIQ"
@@ -51198,7 +51202,7 @@ msgstr "Réf EMS"
 
 #: ../config/model_attributes.rb:3467
 msgid "NetworkRouter|External gateway info"
-msgstr "Infos passerelle externe"
+msgstr "Informations sur la passerelle externe"
 
 #: ../config/model_attributes.rb:3468
 msgid "NetworkRouter|Extra attributes"
@@ -57329,7 +57333,7 @@ msgstr "PlacementGroup|Nom"
 
 #: ../config/model_attributes.rb:3817
 msgid "PlacementGroup|Policy"
-msgstr "PlacementGroup|Règle"
+msgstr "PlacementGroup|Stratégie"
 
 #: ../config/model_attributes.rb:3818
 msgid "PlacementGroup|Region description"
@@ -57870,8 +57874,8 @@ msgstr[1] "Evénements de stratégie"
 #: ../config/model_display_names.rb:191
 msgid "Policy Event Content"
 msgid_plural "Policy Event Contents"
-msgstr[0] "Contenu de l'événement de règle"
-msgstr[1] "Contenus de l'événement de règle"
+msgstr[0] "Contenu de l'événement de stratégie"
+msgstr[1] "Contenus de l'événement de stratégie"
 
 #: ../app/controllers/application_controller/timelines/options.rb:2
 msgid "Policy Events"
@@ -60760,7 +60764,7 @@ msgstr "Reconfiguration non prise en charge"
 
 #: ../app/controllers/vm_common.rb:1279
 msgid "Reconfiguring %{vm_or_template} \"%{name}\""
-msgstr "Reconfiguration de %{vm_or_template} \"%{name}\""
+msgstr "Reconfiguration de l'%{vm_or_template} \"%{name}\""
 
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_topday.yaml
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_tophour.yaml
@@ -63419,7 +63423,7 @@ msgstr "Echec du réplicateur lors de la création du pod"
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:787
 msgid "Replicator Successfully Created Pod"
-msgstr "Le réplicateur a créé le pod avec succès"
+msgstr "Le réplicateur a créé le pod"
 
 #. TRANSLATORS: file: product/views/ContainerReplicator.yaml
 #: ../app/controllers/container_replicator_controller.rb:38
@@ -63923,7 +63927,7 @@ msgstr "Demandes"
 #: src/vm-snapshot-form/snapshot-form/snapshotForm.jsx:29
 #: src/vm-snapshot-form/snapshot-form/snapshotForm.jsx:40
 msgid "Required"
-msgstr "Obligatoire"
+msgstr "Requis"
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:463
 msgid "Required if SSH login is disabled for the Default account."
@@ -63946,7 +63950,7 @@ msgstr "Balise(s) obligatoire(s) : %{names}"
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:189
 msgid "Required. Used to gather Utilization data."
-msgstr "Obligatoire. Utilisé pour collecter des données d'utilisation."
+msgstr "Requis. Utilisé pour collecter des données d'utilisation."
 
 #: ../config/model_attributes.rb:3910
 msgid "Reserve"
@@ -64116,8 +64120,7 @@ msgstr ""
 #: ../app/javascript/components/vm-resize-form/vm-resize-form.jsx:41
 msgid "Resize of VM has been successfully queued."
 msgstr ""
-"Le redimensionnement de la machine virtuelle a été mis en file d'attente avec "
-"succès."
+"Le redimensionnement de la machine virtuelle a été mis en file d'attente."
 
 #: ../app/controllers/application_controller/automate.rb:123
 msgid "Resolve"
@@ -66383,20 +66386,20 @@ msgstr[1] "Règles de stratégie de sécurité (NSX-T)"
 #: ../config/model_display_names.rb:208
 msgid "Security Policy Rule Destination Security Group"
 msgid_plural "Security Policy Rule Destination Security Groups"
-msgstr[0] "Groupe de sécurité cible de la règle de politique de sécurité"
-msgstr[1] "Groupes de sécurité cible de la règle de politique de sécurité"
+msgstr[0] "Groupe de sécurité cible de la règle de stratégie de sécurité"
+msgstr[1] "Groupes de sécurité cible de règle de stratégie de sécurité"
 
 #: ../config/model_display_names.rb:209
 msgid "Security Policy Rule Network Service"
 msgid_plural "Security Policy Rule Network Services"
-msgstr[0] "Service réseau de la règle de politique de sécurité"
-msgstr[1] "Services réseau de la règle de politique de sécurité"
+msgstr[0] "Service réseau de la règle de stratégie de sécurité"
+msgstr[1] "Services réseau de la règle de stratégie de sécurité"
 
 #: ../config/model_display_names.rb:210
 msgid "Security Policy Rule Source Security Group"
 msgid_plural "Security Policy Rule Source Security Groups"
-msgstr[0] "Groupe de sécurité source de la règle de politique de sécurité"
-msgstr[1] "Groupes de sécurité source de la règle de politique de sécurité"
+msgstr[0] "Groupe de sécurité source de règle de stratégie de sécurité"
+msgstr[1] "Groupes de sécurité source de règle de stratégie de sécurité"
 
 #. TRANSLATORS: file: product/views/NetworkService.yaml
 #: ../app/helpers/network_service_helper/textual_summary.rb:60
@@ -69824,7 +69827,7 @@ msgstr "Afficher toutes les machines virtuelles de destination"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:375
 msgid "Show all Floating IPs"
-msgstr "Afficher toutes les IP flottantes"
+msgstr "Afficher toutes les adresses IP flottantes"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:143
 #: ../app/helpers/host_aggregate_helper/textual_summary.rb:21
@@ -70452,7 +70455,7 @@ msgstr "Simuler"
 #: ../app/helpers/application_helper/toolbar/catalogitem_button_center.rb:35
 #: ../app/helpers/application_helper/toolbar/custom_button_center.rb:34
 msgid "Simulate using Button details"
-msgstr "Simuler en utilisant les infos bouton"
+msgstr "Simuler en utilisant les informations bouton"
 
 #: ../app/controllers/application_controller/automate.rb:125
 #: ../app/controllers/miq_ae_tools_controller.rb:473
@@ -74184,7 +74187,7 @@ msgstr "L'entreprise"
 #: ../app/models/manageiq/providers/openstack/network_manager/floating_ip.rb:10
 #: ../app/models/manageiq/providers/openstack/network_manager/floating_ip.rb:18
 msgid "The Floating Ip is not connected to an active %{table}"
-msgstr "L'IP flottante n'est pas connectée à une %{table} active"
+msgstr "L'adresse IP flottante n'est pas connectée à une %{table} active"
 
 #:
 #: ../app/models/manageiq/providers/awx/automation_manager/google_credential.rb:26
@@ -74672,7 +74675,7 @@ msgstr "L'enregistrement de filtre sélectionné est introuvable"
 
 #: ../app/controllers/floating_ip_controller.rb:98
 msgid "The selected Floating IP was deleted"
-msgstr "L'IP flottante sélectionnée a été supprimée"
+msgstr "L'adresse IP flottante sélectionnée a été supprimée"
 
 #: ../app/views/miq_ae_class/_ns_details.html.haml:5
 msgid "The selected Namespace is empty"
@@ -74901,7 +74904,7 @@ msgstr ""
 #:
 #: ../app/helpers/application_helper/button/instance_associate_floating_ip.rb:10
 msgid "There are no Floating IPs available to this Instance."
-msgstr "Aucune IP flottante n'est disponible pour cette instance."
+msgstr "Aucune adresse IP flottante n'est disponible pour cette instance."
 
 #: ../app/views/ops/rbac_group/_customer_tags.html.haml:31
 msgid "There are not tags assigned to this group."
@@ -76602,7 +76605,8 @@ msgstr "Impossible d'ajouter des noeuds : %{error}"
 #: ../app/controllers/mixins/actions/vm_actions/associate_floating_ip.rb:23
 msgid "Unable to associate Floating IP with Instance \"%{name}\": %{details}"
 msgstr ""
-"Impossible d'associer l'IP flottante à l'instance \"%{name}\" : %{details}"
+"Impossible d'associer l'adresse IP flottante à l'instance \"%{name}\" : %{"
+"details}"
 
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/storage_manager/cloud_volume.rb:315
@@ -76627,7 +76631,7 @@ msgstr "Impossible de créer le volume de cloud \"%{name}\" : %{details}"
 
 #: ../app/controllers/floating_ip_controller.rb:76
 msgid "Unable to create Floating IP \"%{address}\": %{details}"
-msgstr "Impossible de créer l'IP flottante \"%{address}\" : %{details}"
+msgstr "Impossible de créer l'adresse IP flottante \"%{address}\" : %{details}"
 
 #: ../app/controllers/security_group_controller.rb:85
 msgid "Unable to create Security Group \"%{name}\": %{details}"
@@ -76684,7 +76688,8 @@ msgstr "Impossible de déconnecter un volume : %{error_message}"
 msgid ""
 "Unable to disassociate Floating IP from Instance \"%{name}\": %{details}"
 msgstr ""
-"Impossible de dissocier l'IP flottante de l'instance \"%{name}\" : %{details}"
+"Impossible de dissocier l'adresse IP flottante de l'instance \"%{name}\" : %{"
+"details}"
 
 #: ../app/javascript/components/ansible-repository-form/index.jsx:71
 msgid "Unable to edit Repository \"%s\": %s"
@@ -83675,7 +83680,8 @@ msgstr "Avertissement : Cette boîte de dialogue sera définitivement retirée."
 #: ../app/helpers/application_helper/toolbar/floating_ip_center.rb:28
 msgid "Warning: This Floating IP and ALL of its components will be removed!"
 msgstr ""
-"Avertissement : cette IP flottante et TOUS ses composants seront retirés."
+"Avertissement : cette adresse IP flottante et TOUS ses composants seront "
+"retirés."
 
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_center.rb:33
@@ -83786,7 +83792,7 @@ msgstr ""
 msgid ""
 "Warning: This Security Policy Rule and ALL of its components will be removed!"
 msgstr ""
-"Avertissement : Cette règle de stratégie de sécurité et TOUS ses composants "
+"Avertissement : cette règle de stratégie de sécurité et TOUS ses composants "
 "seront retirés."
 
 #: ../app/helpers/application_helper/toolbar/security_policies_center.rb:28
@@ -85500,7 +85506,7 @@ msgstr "entrant"
 
 #: ../app/views/ops/_settings_server_tab.html.haml:253
 msgid "info"
-msgstr "infos"
+msgstr "informations"
 
 #: ../app/views/miq_request/_prov_dialog_cloud_quota.html.haml:12
 msgid "instances"

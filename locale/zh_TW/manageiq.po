@@ -1469,7 +1469,7 @@ msgid ""
 "%{object_types} under %{datastore_or_provider} \"%{provider_or_datastore_name}"
 "\""
 msgstr ""
-"%{datastore_or_provider} \"%{provider_or_datastore_name}\" 下的 %{object_types}"
+"%{datastore_or_provider} \"%{provider_or_datastore_name}\" 下的「%{object_types}」"
 
 #: ../app/views/layouts/remote_console.html.haml:5
 msgid "%{product_name} HTML5 Remote Console"
@@ -13407,7 +13407,7 @@ msgstr "索引鍵"
 
 #: ../config/model_attributes.rb:349
 msgid "CloudObjectStoreObject|Last modified"
-msgstr "前次修改時間"
+msgstr "CloudObjectStoreObject|前次修改時間"
 
 #: ../config/model_attributes.rb:350
 msgid "CloudObjectStoreObject|Name"
@@ -17802,11 +17802,11 @@ msgstr "需要的配額顯示"
 
 #: ../config/model_attributes.rb:1039
 msgid "ContainerQuotaItem|Quota enforced"
-msgstr "施行的配額"
+msgstr "ContainerQuotaItem|已施行配額"
 
 #: ../config/model_attributes.rb:1040
 msgid "ContainerQuotaItem|Quota enforced display"
-msgstr "施行的配額顯示"
+msgstr "ContainerQuotaItem|已施行配額顯示"
 
 #: ../config/model_attributes.rb:1041
 msgid "ContainerQuotaItem|Quota observed"
@@ -19578,7 +19578,7 @@ msgstr "核心功能"
 #: ../app/javascript/spec/chart-card/chart-card.spec.js:36
 #: ../app/services/container_dashboard_service.rb:218
 msgid "Cores"
-msgstr "個核心"
+msgstr "核心"
 
 #: ../app/views/vm_common/_reconfigure.html.haml:84
 msgid "Cores Per Socket"
@@ -23350,7 +23350,7 @@ msgstr "詳細說明"
 #: ../app/views/service/_svcs_show.html.haml:5
 #: ../app/views/utilization/_utilization_tabs.html.haml:6
 msgid "Details"
-msgstr "明細"
+msgstr "詳細資料"
 
 #: ../app/helpers/application_helper/toolbar/compare_center.rb:32
 #: ../app/helpers/application_helper/toolbar/drift_center.rb:32
@@ -23995,7 +23995,7 @@ msgstr "使浮動 IP 與此實例取消關聯"
 
 #: ../app/controllers/vm_common.rb:1194
 msgid "Disassociating Floating IP from %{model} \"%{name}\""
-msgstr "解除浮動 IP 與 %{model} \"%{name}\" 的關聯"
+msgstr "取消浮動 IP 與%{model} \"%{name}\" 的關聯"
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:38
 msgid "Disassociation of Floating IP with Instance was cancelled."
@@ -30429,7 +30429,7 @@ msgstr "施行值"
 #: ../app/helpers/container_project_helper/textual_summary.rb:28
 #: ../app/javascript/components/tenant-quota-form/index.jsx:69
 msgid "Enforced"
-msgstr "強制執行"
+msgstr "已施行"
 
 #: ../app/views/miq_ae_tools/_results_tree.html.haml:7
 #: ../app/views/miq_ae_tools/_results_uri.html.haml:24
@@ -39276,7 +39276,7 @@ msgstr "核心版本"
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:53
 #: ./src/dialog-editor/components/modal-field-template/tag-control.html:65
 msgid "Key"
-msgstr "圖例"
+msgstr "索引鍵"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager::AuthKeyPair
 #. TRANSLATORS: en.yml key: dictionary.table.auth_key_pair_cloud
@@ -39794,7 +39794,7 @@ msgstr "前次度量更新日期"
 #. TRANSLATORS: file: product/views/Filesystem.yaml
 #: ../config/yaml_strings.rb:545
 msgid "Last Modified"
-msgstr "最後更新時間"
+msgstr "前次修改時間"
 
 #. TRANSLATORS: file: product/views/StorageFile-debris_files.yaml
 #. TRANSLATORS: file: product/views/StorageFile-disk_files.yaml
@@ -41452,11 +41452,11 @@ msgstr "管理租戶配額"
 
 #: ../app/controllers/ops_controller.rb:731
 msgid "Manage quotas for %{model} \"%{name}\""
-msgstr "管理 \"%{name}\" 的配額 %{model}"
+msgstr "管理%{model} \"%{name}\" 的配額"
 
 #: ../app/javascript/components/tenant-quota-form/index.jsx:61
 msgid "Manage quotas for Tenant \"%s\" was cancelled by the user"
-msgstr "使用者已取消租戶 \"%s\" 的管理配額"
+msgstr "使用者已取消管理租戶 \"%s\" 的配額"
 
 #: ../app/helpers/application_helper/toolbar/floating_ip_center.rb:14
 msgid "Manage the port association of this Floating"
@@ -50969,7 +50969,7 @@ msgstr "無法使用"
 
 #: ../app/javascript/components/tenant-quota-form/helper.js:86
 msgid "Not Enforced"
-msgstr "非強制"
+msgstr "未施行"
 
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily.yaml
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily_cloud.yaml
@@ -51616,7 +51616,7 @@ msgstr "觀察到的"
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js:161
 #: ../app/views/ops/_settings_server_tab.html.haml:103
 msgid "Off"
-msgstr "關"
+msgstr "關閉"
 
 #: ../app/views/shared/views/_alerts_list.html.haml:96
 msgid "Offending %{type}"
@@ -55337,7 +55337,7 @@ msgstr "Pin 狀態"
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/vm.rb:112
 msgid "Pinning"
-msgstr "釘選"
+msgstr "固定"
 
 #: ../app/views/shared/views/_prov_dialog.html.haml:83
 msgid "Placement"
@@ -57601,7 +57601,7 @@ msgstr "供應的 VM [%{description}]"
 #: ../app/views/layouts/angular/_multi_tab_ansible_form_options.html.haml:2
 #: ../app/views/service/_svcs_show.html.haml:10
 msgid "Provisioning"
-msgstr "佈建中"
+msgstr "佈建"
 
 #. TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
 #: ../config/yaml_strings.rb:7259
@@ -58720,7 +58720,7 @@ msgstr "不支援重新配置"
 
 #: ../app/controllers/vm_common.rb:1279
 msgid "Reconfiguring %{vm_or_template} \"%{name}\""
-msgstr "重新配置 %{vm_or_template} \"%{name}\""
+msgstr "重新配置%{vm_or_template} \"%{name}\""
 
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_topday.yaml
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_tophour.yaml
@@ -71300,12 +71300,12 @@ msgstr "承租權"
 #: ../app/views/report/_form_filter_chargeback.html.haml:162
 #: ../config/yaml_strings.rb:930
 msgid "Tenant"
-msgstr "承租戶"
+msgstr "租戶"
 
 #: ../app/models/manageiq/providers/oracle_cloud/cloud_manager.rb:96
 #: ../app/models/manageiq/providers/oracle_cloud/container_manager.rb:75
 msgid "Tenant ID"
-msgstr "承租戶 ID"
+msgstr "租戶 ID"
 
 #: ../app/views/ems_infra/_form.html.haml:116
 msgid ""
@@ -76687,7 +76687,7 @@ msgstr "VM 固定原則只能是 none、soft 或 hard"
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/inventory/parser/power_virtual_servers.rb:131
 msgid "VM pinning policy to use [none, soft, hard]"
-msgstr "VM 釘選原則以使用 [none、soft、hard]"
+msgstr "使用 [none、soft、hard] 的 VM 固定原則"
 
 #: ../app/controllers/vm_common.rb:577
 msgid "VM successfully removed from service \"%{name}\""

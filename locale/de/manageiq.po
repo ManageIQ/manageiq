@@ -57200,7 +57200,7 @@ msgstr "Status fixieren"
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/vm.rb:112
 msgid "Pinning"
-msgstr "Zuweisung"
+msgstr "Fixierung"
 
 #: ../app/views/shared/views/_prov_dialog.html.haml:83
 msgid "Placement"

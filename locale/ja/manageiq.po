@@ -490,7 +490,7 @@ msgstr[0] "%d 件の未読通知"
 #: ../app/javascript/components/miq-pagination.jsx:5
 msgid "%d-%d of %d item"
 msgid_plural "%d-%d of %d items"
-msgstr[0] "%d 項目中 %d-%d"
+msgstr[0] "%d-%d 件目のアイテム (全 %d 件中)"
 
 #: ../app/javascript/components/ops-tenant-form/ops-tenant-form.jsx:69
 msgid "%s \"%s\" has been successfully added."
@@ -7098,11 +7098,11 @@ msgstr "関連付け情報"
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:37
 msgid "Association of Floating IP with Instance was cancelled."
-msgstr "浮動 IP とインスタンスの関連付けは取り消されました"
+msgstr "フローティング IP とインスタンスの関連付けは取り消されました"
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:27
 msgid "Association of Floating IP with Instance was queued up sucessfully."
-msgstr "浮動 IP とインスタンスの関連付けは正常にキューに入れられました。"
+msgstr "フローティング IP とインスタンスの関連付けは正常にキューに入れられました。"
 
 #: ../app/helpers/generic_object_definition_helper/textual_summary.rb:47
 #: ../app/helpers/generic_object_helper/textual_summary.rb:36
@@ -23343,7 +23343,7 @@ msgstr ""
 #:
 #: ../app/javascript/components/cloud-volume-form/attach-detach-cloud-volume-form.jsx:71
 msgid "Detachment of Cloud Volume has been successfully queued."
-msgstr "クラウド・ボリュームの切り離しが正常にキューに入れられました。"
+msgstr "クラウド・ボリュームの割り当て解除が正常にキューに入れられました。"
 
 #. TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
 #: ../config/yaml_strings.rb:6558
@@ -24025,19 +24025,19 @@ msgstr "インスタンスとフローティング IP の関連付けを解除"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:70
 msgid "Disassociate a Floating IP from this Instance"
-msgstr "フローティング IP のこのインスタンスとの関連付けを解除"
+msgstr "このインスタンスのフローティング IP の関連付けを解除"
 
 #: ../app/controllers/vm_common.rb:1194
 msgid "Disassociating Floating IP from %{model} \"%{name}\""
-msgstr "フローティング IP の %{model} \"%{name}\" との関連付けを解除"
+msgstr "%{model} \"%{name}\" のフローティング IP の関連付けを解除"
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:38
 msgid "Disassociation of Floating IP with Instance was cancelled."
-msgstr "浮動 IP とインスタンスの関連付け解除は取り消されました。"
+msgstr "フローティング IP とインスタンスの関連付け解除は取り消されました。"
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:28
 msgid "Disassociation of Floating IP with Instance was queued up sucessfully."
-msgstr "浮動 IP とインスタンスの関連付け解除は正常にキューに入れられました。"
+msgstr "フローティング IP とインスタンスの関連付け解除は正常にキューに入れられました。"
 
 #: ../app/views/layouts/exp_atom/_editor.html.haml:56
 #: ../app/views/ops/_settings_replication_tab.html.haml:98
@@ -41504,7 +41504,7 @@ msgstr "%{model} \"%{name}\" のクォータの管理"
 
 #: ../app/javascript/components/tenant-quota-form/index.jsx:61
 msgid "Manage quotas for Tenant \"%s\" was cancelled by the user"
-msgstr "テナント「%s」の割り当て量の管理はユーザーにより取り消されました"
+msgstr "テナント「%s」のクォータの管理はユーザーにより取り消されました"
 
 #: ../app/helpers/application_helper/toolbar/floating_ip_center.rb:14
 msgid "Manage the port association of this Floating"
@@ -42012,7 +42012,7 @@ msgstr "メモリー %"
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/vm.rb:151
 msgid "Memory (GiB)"
-msgstr "メモリー(GiB)"
+msgstr "メモリー (GiB)"
 
 #:
 #: ../app/models/manageiq/providers/ibm_power_vc/inventory/parser/cloud_manager.rb:48
@@ -58110,7 +58110,7 @@ msgstr "クォータ"
 
 #: ../app/javascript/components/tenant-quota-form/index.jsx:45
 msgid "Quotas for Tenant \"%s\" were saved"
-msgstr "テナント「%s」の割り当て量が保存されました"
+msgstr "テナント「%s」のクォータが保存されました"
 
 #. TRANSLATORS: en.yml key: dictionary.column.memory_mb
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/010_VMs_ Hardware.yaml
@@ -61917,7 +61917,7 @@ msgstr "Resize VM %{subject} failed: %{error}"
 
 #: ../app/javascript/components/vm-resize-form/vm-resize-form.jsx:41
 msgid "Resize of VM has been successfully queued."
-msgstr "VMのサイズ変更が正常にキューに入れられました。"
+msgstr "VM のサイズ変更が正常にキューに入れられました。"
 
 #: ../app/controllers/application_controller/automate.rb:123
 msgid "Resolve"
@@ -68149,7 +68149,7 @@ msgstr "ディスク上のサイズ:"
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/vm.rb:144
 msgid "Size must be greater than or equal to .25"
-msgstr "サイズは.25 以上でなければなりません"
+msgstr "サイズは .25 以上でなければなりません"
 
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/storage_manager/cloud_volume.rb:38
@@ -68170,7 +68170,7 @@ msgstr "サイズは 10 以上でなければなりません"
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/vm.rb:160
 msgid "Size must be greater than or equal to 2"
-msgstr "サイズは2 以上でなければなりません"
+msgstr "サイズは 2 以上でなければなりません"
 
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/vpc/storage_manager/cloud_volume.rb:24
@@ -82753,7 +82753,7 @@ msgstr "オブジェクト %{name} は %{items} の 1 つではありません�
 #: ../app/javascript/components/miq-pagination.jsx:8
 msgid "of %d page"
 msgid_plural "of %d pages"
-msgstr[0] "of %d pages"
+msgstr[0] "/ %d ページ"
 
 #: ../app/controllers/application_controller/performance.rb:565
 msgid "on %{date}"
