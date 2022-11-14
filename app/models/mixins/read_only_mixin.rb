@@ -3,6 +3,8 @@ module ReadOnlyMixin
 
   included do
     before_destroy :reject_if_read_only
+    supports(:update) { _("Can not edit read only model") if read_only? }
+    supports(:delete) { _("Can not delete read only model") if read_only? }
   end
 
   private
