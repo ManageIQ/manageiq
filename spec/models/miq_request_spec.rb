@@ -197,7 +197,7 @@ RSpec.describe MiqRequest do
         allow(MiqServer).to receive_messages(:my_zone => "default")
 
         expect(request).to receive(:set_description)
-        expect(request).to receive(:log_request_success)
+        expect(request).to receive(:audit_request_success)
         expect(request).to receive(:call_automate_event_queue).with("request_created")
         expect(request).to receive(:call_automate_event_queue).with("request_approved")
         expect(request).to receive(:execute)
@@ -612,6 +612,145 @@ RSpec.describe MiqRequest do
       FactoryBot.create(:vm_migrate_request, :requester => FactoryBot.create(:user))
       FactoryBot.create(:vm_migrate_request, :requester => FactoryBot.create(:user), :id => regional_id + 1)
       expect(MiqRequest.user_owned(regional_user)).to match_array([request, regional_request])
+    end
+  end
+
+  describe ".request_log" do
+    describe ":info" do
+      it "with a resource_id" do
+        expect($log).to receive(:info).with("foo")
+
+        described_class.request_log(:info, "foo", :resource_id => 123)
+
+        expect(RequestLog.count).to eq(1)
+        log = RequestLog.first
+        expect(log.message).to     eq("foo")
+        expect(log.severity).to    eq("INFO")
+        expect(log.resource_id).to eq(123)
+      end
+
+      it "without a resource_id" do
+        expect($log).to receive(:info).with("foo")
+
+        described_class.request_log(:info, "foo")
+
+        expect(RequestLog.count).to eq(0)
+      end
+    end
+
+    describe ":error" do
+      it "with a resource_id" do
+        expect($log).to receive(:error).with("foo")
+
+        described_class.request_log(:error, "foo", :resource_id => 123)
+
+        expect(RequestLog.count).to eq(1)
+        log = RequestLog.first
+        expect(log.message).to     eq("foo")
+        expect(log.severity).to    eq("ERROR")
+        expect(log.resource_id).to eq(123)
+      end
+
+      it "without a resource_id" do
+        expect($log).to receive(:error).with("foo")
+
+        described_class.request_log(:error, "foo")
+
+        expect(RequestLog.count).to eq(0)
+      end
+    end
+
+    describe ":warn" do
+      it "with a resource_id" do
+        expect($log).to receive(:warn).with("foo")
+
+        described_class.request_log(:warn, "foo", :resource_id => 123)
+
+        expect(RequestLog.count).to eq(1)
+        log = RequestLog.first
+        expect(log.message).to     eq("foo")
+        expect(log.severity).to    eq("WARN")
+        expect(log.resource_id).to eq(123)
+      end
+
+      it "without a resource_id" do
+        expect($log).to receive(:warn).with("foo")
+
+        described_class.request_log(:warn, "foo")
+
+        expect(RequestLog.count).to eq(0)
+      end
+    end
+
+    describe ":fatal" do
+      it "with a resource_id" do
+        expect($log).to receive(:fatal).with("foo")
+
+        described_class.request_log(:fatal, "foo", :resource_id => 123)
+
+        expect(RequestLog.count).to eq(1)
+        log = RequestLog.first
+        expect(log.message).to     eq("foo")
+        expect(log.severity).to    eq("FATAL")
+        expect(log.resource_id).to eq(123)
+      end
+
+      it "without a resource_id" do
+        expect($log).to receive(:fatal).with("foo")
+
+        described_class.request_log(:fatal, "foo")
+
+        expect(RequestLog.count).to eq(0)
+      end
+    end
+
+    describe ":debug" do
+      context "when the level doesn't include DEBUG" do
+        it "with a resource_id" do
+          expect($log).to_not receive(:debug)
+
+          described_class.request_log(:debug, "foo", :resource_id => 123)
+
+          expect(RequestLog.count).to eq(0)
+        end
+
+        it "without a resource_id" do
+          expect($log).to_not receive(:debug)
+
+          described_class.request_log(:debug, "foo")
+
+          expect(RequestLog.count).to eq(0)
+        end
+      end
+
+      context "when the level includes DEBUG" do
+        around do |example|
+          old_level, $log.level = $log.level, Logger::DEBUG
+          example.run
+        ensure
+          $log.level = old_level
+        end
+
+        it "with a resource_id" do
+          expect($log).to receive(:debug).with("foo")
+
+          described_class.request_log(:debug, "foo", :resource_id => 123)
+
+          expect(RequestLog.count).to eq(1)
+          log = RequestLog.first
+          expect(log.message).to     eq("foo")
+          expect(log.severity).to    eq("DEBUG")
+          expect(log.resource_id).to eq(123)
+        end
+
+        it "without a resource_id" do
+          expect($log).to receive(:debug).with("foo")
+
+          described_class.request_log(:debug, "foo")
+
+          expect(RequestLog.count).to eq(0)
+        end
+      end
     end
   end
 end

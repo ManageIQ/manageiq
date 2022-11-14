@@ -18,6 +18,8 @@ class MiqRequest < ApplicationRecord
   has_many   :miq_approvals,     :dependent   => :destroy
   has_many   :miq_request_tasks, :dependent   => :destroy
 
+  has_many   :request_logs, :foreign_key => :resource_id, :dependent => :destroy
+
   alias_attribute :state, :request_state
 
   serialize   :options, Hash
@@ -218,13 +220,13 @@ class MiqRequest < ApplicationRecord
   end
 
   def call_automate_event(event_name, synchronous: false)
-    _log.info("Raising event [#{event_name}] to Automate#{' synchronously' if synchronous}")
+    request_log(:info, "Raising event [#{event_name}] to Automate#{' synchronously' if synchronous}", :resource_id => id)
     MiqAeEvent.raise_evm_event(event_name, self, build_request_event(event_name), :synchronous => synchronous).tap do
-      _log.info("Raised event [#{event_name}] to Automate")
+      request_log(:info, "Raised event [#{event_name}] to Automate", :resource_id => id)
     end
   rescue MiqAeException::Error => err
     message = _("Error returned from %{name} event processing in Automate: %{error_message}") % {:name => event_name, :error_message => err.message}
-    _log.error(message)
+    request_log(:error, message, :resource_id => id)
     raise
   end
 
@@ -232,12 +234,12 @@ class MiqRequest < ApplicationRecord
     ws = call_automate_event(event_name, :synchronous => true)
 
     if ws.nil?
-      _log.warn("Aborting because Automate failed for event <#{event_name}>")
+      request_log(:warn, "Aborting because Automate failed for event <#{event_name}>", :resource_id => id)
       return true
     end
 
     if ws.root['ae_result'] == 'error'
-      _log.warn("Aborting because Automate returned ae_result=<#{ws.root['ae_result']}> for event <#{event_name}>")
+      request_log(:warn, "Aborting because Automate returned ae_result=<#{ws.root['ae_result']}> for event <#{event_name}>", :resource_id => id)
       return true
     end
 
@@ -258,12 +260,12 @@ class MiqRequest < ApplicationRecord
     call_automate_event_queue("request_approved")
 
     # execute parent now that request is approved
-    _log.info("Request: [#{description}] has all approvals approved, proceeding with execution")
+    request_log(:info, "Request: [#{description}] has all approvals approved, proceeding with execution", :resource_id => id)
     begin
       execute
     rescue => err
-      _log.error("#{err.message}, attempting to execute request: [#{description}]")
-      _log.log_backtrace(err)
+      request_log(:error, "#{err.message}, attempting to execute request: [#{description}]", :resource_id => id)
+      _log.log_backtrace(err) # TODO: discuss adding this to request_log as well
     end
 
     true
@@ -454,7 +456,7 @@ class MiqRequest < ApplicationRecord
     # Quota denial will result in automate_event_failed? being true
     return if automate_event_failed?("request_starting")
 
-    _log.info("Creating request task instances for: <#{description}>...")
+    request_log(:info, "Creating request task instances for: <#{description}>...", :resource_id => id)
     # Create a MiqRequestTask object for each requested item
     options[:delivered_on] = Time.now.utc
     update_attribute(:options, options)
@@ -471,7 +473,7 @@ class MiqRequest < ApplicationRecord
       update_request_status
       post_create_request_tasks
     rescue
-      _log.log_backtrace($ERROR_INFO)
+      _log.log_backtrace($ERROR_INFO) # TODO: Add to Request Logs
       request_state, status = request_task_created.zero? ? %w(finished Error) : %w(active Warn)
       update(:request_state => request_state, :status => status, :message => "Error: #{$ERROR_INFO}")
     end
@@ -535,7 +537,7 @@ class MiqRequest < ApplicationRecord
   def post_create(auto_approve)
     set_description
 
-    log_request_success(requester, :created)
+    audit_request_success(requester, :created)
 
     if process_on_create?
       call_automate_event_queue("request_created")
@@ -565,7 +567,7 @@ class MiqRequest < ApplicationRecord
     }
   end
 
-  def log_request_success(requester_id, mode)
+  def audit_request_success(requester_id, mode)
     requester_id = requester_id.userid if requester_id.respond_to?(:userid)
     status_message = mode == :created ? "requested" : "request updated"
     event_message = "#{self.class::TASK_DESCRIPTION} #{status_message} by <#{requester_id}> for #{my_records}"
@@ -622,11 +624,28 @@ class MiqRequest < ApplicationRecord
     cancelation_status == CANCEL_STATUS_FINISHED
   end
 
+  # Helper method to log the request to both the request_logs table and $log
+  def self.request_log(severity, message = nil, resource_id: nil, &block)
+    formatted_severity = severity.to_s.upcase
+    level = Logger.const_get(formatted_severity)
+
+    # Partially copied from Logger#add
+    return true if level < $log.level
+    message = yield if message.nil? && block_given?
+
+    RequestLog.create(:message => message, :severity => formatted_severity, :resource_id => resource_id) if resource_id
+    $log.public_send(severity, message)
+  end
+
+  def request_log(severity, message = nil, resource_id: nil, &block)
+    self.class.request_log(severity, message, resource_id: resource_id, &block)
+  end
+
   private
 
   def do_cancel
     update(:cancelation_status => CANCEL_STATUS_FINISHED, :request_state => "finished", :status => "Error", :message => "Request is canceled by user.")
-    _log.info("Request #{description} is canceled by user.")
+    request_log(:info, "Request #{description} is canceled by user.", :resource_id => id)
   end
 
   def clean_up_keys_for_request_task
@@ -653,7 +672,7 @@ class MiqRequest < ApplicationRecord
   def after_update_options(requester)
     set_description(true)
 
-    log_request_success(requester, :updated)
+    audit_request_success(requester, :updated)
 
     call_automate_event_queue("request_updated")
   end
