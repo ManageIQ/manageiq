@@ -7354,7 +7354,7 @@ msgstr "Associar o IP flutuante à instância '%{name}'"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:64
 msgid "Associate a Floating IP with this Instance"
-msgstr "Associar IP flutuante a esta instância"
+msgstr "Associar um IP flutuante a esta instância"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2970
@@ -13260,7 +13260,7 @@ msgstr "Objetos de nuvem"
 #: ../app/javascript/components/cloud-tenant-form/cloud-tenant-form.schema.js:30
 #: ../config/yaml_strings.rb:378
 msgid "Cloud Provider"
-msgstr "Provedor de Nuvem"
+msgstr "Provedor de nuvem"
 
 #: ../app/models/manageiq/providers/amazon/cloud_manager.rb:295
 msgid "Cloud Provider (Amazon)"
@@ -25025,7 +25025,7 @@ msgstr "Desassociar um IP flutuante desta instância"
 
 #: ../app/controllers/vm_common.rb:1194
 msgid "Disassociating Floating IP from %{model} \"%{name}\""
-msgstr "Desassociando o IP flutuante do %{model} \"%{name}\""
+msgstr "Desassociando IP flutuante de %{model} \"%{name}\""
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:38
 msgid "Disassociation of Floating IP with Instance was cancelled."
@@ -57121,7 +57121,7 @@ msgstr "Estado de fixação"
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/vm.rb:112
 msgid "Pinning"
-msgstr "Fixando"
+msgstr "Fixação"
 
 #: ../app/views/shared/views/_prov_dialog.html.haml:83
 msgid "Placement"
@@ -60579,7 +60579,7 @@ msgstr "Reconfiguração não suportada"
 
 #: ../app/controllers/vm_common.rb:1279
 msgid "Reconfiguring %{vm_or_template} \"%{name}\""
-msgstr "Reconfigurando o %{vm_or_template} \"%{name}\""
+msgstr "Reconfiguração de %{vm_or_template} \"%{name}\""
 
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_topday.yaml
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_tophour.yaml
@@ -71009,7 +71009,7 @@ msgstr "Iniciar conectados?"
 #: ../app/javascript/components/timeline-options/timeline-options-simple.schema.js:124
 #: ../app/views/ops/_diagnostics_cu_repair_tab.html.haml:24
 msgid "Start Date"
-msgstr "Data de Início"
+msgstr "Data de início"
 
 #: ../app/models/miq_template/operations.rb:14
 msgid "Start Operation is not available for Images and VM Templates."

@@ -7028,7 +7028,7 @@ msgstr "将浮动 IP 与实例“%{name}”相关联"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:64
 msgid "Associate a Floating IP with this Instance"
-msgstr "关联浮动 IP 和此实例"
+msgstr "将浮动 IP 与此实例相关联"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2970
@@ -7077,11 +7077,11 @@ msgstr "关联信息"
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:37
 msgid "Association of Floating IP with Instance was cancelled."
-msgstr "已取消浮动 IP 与实例的关联。"
+msgstr "将浮动 IP 与实例关联的操作已被取消。"
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:27
 msgid "Association of Floating IP with Instance was queued up sucessfully."
-msgstr "浮动 IP 与实例的关联已成功排队。"
+msgstr "将浮动 IP 与实例关联的操作已成功排队。"
 
 #: ../app/helpers/generic_object_definition_helper/textual_summary.rb:47
 #: ../app/helpers/generic_object_helper/textual_summary.rb:36
@@ -23309,7 +23309,7 @@ msgstr "从实例 %{instance_name} 拆离卷 %{subject} 失败：%{error_message
 #:
 #: ../app/javascript/components/cloud-volume-form/attach-detach-cloud-volume-form.jsx:71
 msgid "Detachment of Cloud Volume has been successfully queued."
-msgstr "云卷分离已成功排队。"
+msgstr "云卷拆离操作已成功排队。"
 
 #. TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
 #: ../config/yaml_strings.rb:6558
@@ -23987,23 +23987,23 @@ msgstr "取消浮动 IP 的关联"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3728
 msgid "Disassociate Floating IP from Instance"
-msgstr "取消浮动 IP 和实例的关联"
+msgstr "取消浮动 IP 与实例的关联"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:70
 msgid "Disassociate a Floating IP from this Instance"
-msgstr "取消浮动 IP 和此实例的关联"
+msgstr "取消浮动 IP 与此实例的关联"
 
 #: ../app/controllers/vm_common.rb:1194
 msgid "Disassociating Floating IP from %{model} \"%{name}\""
-msgstr "正在解除浮动 IP 与 %{model}“%{name}”的关联"
+msgstr "取消浮动 IP 与%{model}“%{name}”的关联"
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:38
 msgid "Disassociation of Floating IP with Instance was cancelled."
-msgstr "已取消浮动 IP 与实例的解除关联。"
+msgstr "将浮动 IP 与实例取消关联的操作已被取消。"
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:28
 msgid "Disassociation of Floating IP with Instance was queued up sucessfully."
-msgstr "浮动IP与实例的解除关联已成功排队。"
+msgstr "将浮动 IP 与实例取消关联的操作已成功排队。"
 
 #: ../app/views/layouts/exp_atom/_editor.html.haml:56
 #: ../app/views/ops/_settings_replication_tab.html.haml:98
@@ -61493,7 +61493,7 @@ msgstr "请求 ID"
 #: ../app/views/catalog/_form_request_info.html.haml:6
 #: ../app/views/catalog/_sandt_tree_request.html.haml:4
 msgid "Request Info"
-msgstr "请求 ID"
+msgstr "请求信息"
 
 #: ../app/views/miq_request/_prov_configured_system_foreman_dialog.html.haml:11
 #: ../app/views/miq_request/_prov_physical_server_dialog.html.haml:11
@@ -61850,7 +61850,7 @@ msgstr "调整 VM%{subject} 的大小失败：%{error}"
 
 #: ../app/javascript/components/vm-resize-form/vm-resize-form.jsx:41
 msgid "Resize of VM has been successfully queued."
-msgstr "已成功将调整虚拟机的大小操作排队。"
+msgstr "调整虚拟机大小的操作已成功排队。"
 
 #: ../app/controllers/application_controller/automate.rb:123
 msgid "Resolve"
@@ -73977,7 +73977,7 @@ msgstr "无法删除只读窗口小部件集"
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/storage_manager/cloud_volume.rb:324
 msgid "Unable to detach volume: %{error_message}"
-msgstr "无法分离卷：%{error_message}"
+msgstr "无法拆离卷：%{error_message}"
 
 #: ../app/controllers/mixins/actions/vm_actions/disassociate_floating_ip.rb:23
 msgid ""
@@ -80149,7 +80149,7 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:4876
 msgid "VolumeMapping|Lun"
-msgstr "Lun"
+msgstr "VolumeMapping|Lun"
 
 #: ../config/model_attributes.rb:4877
 msgid "VolumeMapping|Region description"

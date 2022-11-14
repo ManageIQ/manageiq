@@ -4443,7 +4443,7 @@ msgstr "클라우드 데이터베이스 \"%s\"의 추가가 큐에 대기되었�
 #: ../app/javascript/components/cloud-object-store-container-form/index.jsx:46
 msgid ""
 "Add of Cloud Object Store Container \"%s\" has been successfully queued."
-msgstr "클라우드 오브젝트 저장소 컨테이너 \"%s\"이(가) 큐에 추가되었습니다."
+msgstr "클라우드 오브젝트 저장소 컨테이너 \"%s\"이(가) 큐에 대기되었습니다."
 
 #: ../app/javascript/components/cloud-object-store-container-form/index.jsx:50
 msgid "Add of Cloud Object Store Container \"%s\" has failed with error: %s"
@@ -4700,11 +4700,11 @@ msgstr "ESX/ESXi 호스트 추가가 지원되지 않음"
 
 #: ../app/controllers/miq_ae_class_controller.rb:2658
 msgid "Adding a new %{model}"
-msgstr "새 %{model} 추가 중"
+msgstr "새 %{model} 추가"
 
 #: ../app/controllers/ops_controller.rb:717
 msgid "Adding a new %{tenant}"
-msgstr "새 %{tenant} 추가 중"
+msgstr "새 %{tenant} 추가"
 
 #: ../app/controllers/miq_action_controller.rb:387
 msgid "Adding a new Action"
@@ -7095,11 +7095,11 @@ msgstr "연관 정보"
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:37
 msgid "Association of Floating IP with Instance was cancelled."
-msgstr "인스턴스와 부동 IP의 연관이 취소되었습니다."
+msgstr "유동 IP와 인스턴스의 연관이 취소되었습니다."
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:27
 msgid "Association of Floating IP with Instance was queued up sucessfully."
-msgstr "부동 IP와 인스턴스의 연관이 큐에 대기되었습니다."
+msgstr "유동 IP와 인스턴스의 연관이 큐에 대기되었습니다."
 
 #: ../app/helpers/generic_object_definition_helper/textual_summary.rb:47
 #: ../app/helpers/generic_object_helper/textual_summary.rb:36
@@ -24028,11 +24028,11 @@ msgstr "유동 IP를 %{model} \"%{name}\"에서 연관 해제 중"
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:38
 msgid "Disassociation of Floating IP with Instance was cancelled."
-msgstr "인스턴스와의 부동 IP 연결 해제가 취소되었습니다."
+msgstr "유동 IP와 인스턴스의 연결 해제가 취소되었습니다."
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx:28
 msgid "Disassociation of Floating IP with Instance was queued up sucessfully."
-msgstr "부동 IP와 인스턴스의 연결 해제가 큐에 대기되었습니다."
+msgstr "유동 IP와 인스턴스의 연결 해제가 큐에 대기되었습니다."
 
 #: ../app/views/layouts/exp_atom/_editor.html.haml:56
 #: ../app/views/ops/_settings_replication_tab.html.haml:98
@@ -61904,7 +61904,7 @@ msgstr "VM %{subject} 크기 조정 실패: %{error}"
 
 #: ../app/javascript/components/vm-resize-form/vm-resize-form.jsx:41
 msgid "Resize of VM has been successfully queued."
-msgstr "VM의 크기 조정이 큐에 있습니다."
+msgstr "VM의 크기 조정이 큐에 대기되었습니다."
 
 #: ../app/controllers/application_controller/automate.rb:123
 msgid "Resolve"
@@ -74318,7 +74318,7 @@ msgstr "단위"
 #: ../app/javascript/components/data-tables/chargeback-rate/helper.js:18
 #: ../app/javascript/components/tenant-quota-form/index.jsx:72
 msgid "Units"
-msgstr "장치"
+msgstr "단위"
 
 #: ../app/helpers/dashboard_helper.rb:19
 #: ../app/helpers/textual_mixins/textual_os_info.rb:11
