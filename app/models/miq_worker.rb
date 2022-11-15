@@ -224,6 +224,8 @@ class MiqWorker < ApplicationRecord
               settings[k] = settings[k].to_i_with_method
             elsif settings[k] =~ /\A\d+(.\d+)?\z/ # case where int/float saved as string
               settings[k] = settings[k].to_i
+            elsif ManageIQ::Password.encrypted?(settings[k])
+              settings[k] = ManageIQ::Password.decrypt(settings[k])
             end
           end
         end
