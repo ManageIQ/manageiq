@@ -487,7 +487,7 @@ class MiqWorker::Runner
   def worker_options
     {
       :messaging => MiqQueue.messaging_client_options,
-      :settings  => Settings.to_hash
+      :settings  => worker_settings.to_hash
     }
   end
 
