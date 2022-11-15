@@ -2398,6 +2398,10 @@ msgstr ""
 msgid ":provision section is missing from :config_info in options hash."
 msgstr ""
 
+#: ../lib/generators/manageiq/plugin/templates/lib/%plugin_path%/engine.rb
+msgid "<%= plugin_human_name %>"
+msgstr ""
+
 #: ../app/models/mixins/service_mixin.rb
 msgid "<%{class_name}> <%{id}>:<%{name}> is already connected to a service."
 msgstr ""
@@ -2469,8 +2473,8 @@ msgstr ""
 msgid "<Determine at Run Time>"
 msgstr ""
 
-#: ../app/models/miq_report/generator/html.rb
 #: ../app/models/chargeback.rb:121 ../app/models/chargeback.rb
+#: ../app/models/miq_report/generator/html.rb
 msgid "<Empty>"
 msgstr ""
 
@@ -2522,10 +2526,10 @@ msgstr ""
 msgid "<Same as import from>"
 msgstr ""
 
-#: ../app/models/dialog_field_text_box.rb
-#: ../app/models/dialog_field_sorted_item.rb
-#: ../app/models/dialog_field_date_control.rb
 #: ../app/models/dialog_field_check_box.rb
+#: ../app/models/dialog_field_date_control.rb
+#: ../app/models/dialog_field_sorted_item.rb
+#: ../app/models/dialog_field_text_box.rb
 msgid "<Script error>"
 msgstr ""
 
@@ -5142,7 +5146,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAlert
 #. TRANSLATORS: en.yml key: dictionary.table.miq_alert
-#: ../app/models/miq_alert.rb:859 ../config/dictionary_strings.rb
+#: ../app/models/miq_alert.rb:869 ../config/dictionary_strings.rb
 #: ../config/dictionary_strings.rb
 msgid "Alert"
 msgid_plural "Alerts"
@@ -6022,7 +6026,7 @@ msgstr ""
 msgid "Ancestry"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:448 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:458 ../app/models/miq_alert.rb
 msgid "And is Trending"
 msgstr ""
 
@@ -8868,6 +8872,10 @@ msgstr ""
 #. TRANSLATORS: file: product/views/CloudVolume.yaml
 #: ../config/yaml_strings.rb
 msgid "Bootable?"
+msgstr ""
+
+#: ../app/javascript/components/timeline-options/timeline-options.jsx
+msgid "Both"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.BottleneckEvent
@@ -12625,7 +12633,7 @@ msgid "Cloud Services"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/CloudSubnet.yaml
-#: ../app/helpers/vm_helper.rb:29 ../config/yaml_strings.rb
+#: ../app/helpers/vm_helper.rb:31 ../config/yaml_strings.rb
 #, fuzzy
 msgid "Cloud Subnet"
 msgstr ""
@@ -14223,8 +14231,8 @@ msgstr ""
 msgid "Compartment ID"
 msgstr ""
 
-#: ../app/models/miq_widget.rb:73 ../app/models/miq_task.rb
-#: ../app/models/miq_report_result.rb
+#: ../app/models/miq_report_result.rb:76 ../app/models/miq_task.rb
+#: ../app/models/miq_widget.rb
 msgid "Complete"
 msgstr ""
 
@@ -21574,7 +21582,7 @@ msgstr ""
 msgid "Debris Size"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:451 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:461 ../app/models/miq_alert.rb
 msgid "Debug Tracing"
 msgstr ""
 
@@ -22432,8 +22440,8 @@ msgstr ""
 msgid "Delete of Flavor \"%{name}\" was successfully initiated."
 msgstr ""
 
-#: ../app/models/cloud_object_store_object.rb
 #: ../app/models/cloud_object_store_container.rb
+#: ../app/models/cloud_object_store_object.rb
 msgid "Delete operation is not supported."
 msgstr ""
 
@@ -30880,7 +30888,7 @@ msgstr ""
 msgid "Event Assignment for Policy was saved"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:421 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:431 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Event Count Threshold"
 msgstr ""
@@ -30975,7 +30983,7 @@ msgstr ""
 #. TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
 #. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
 #. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-#: ../app/models/miq_alert.rb:430 ../config/dictionary_strings.rb
+#: ../app/models/miq_alert.rb:440 ../config/dictionary_strings.rb
 #: ../config/yaml_strings.rb
 msgid "Event Source"
 msgstr ""
@@ -32726,7 +32734,7 @@ msgstr ""
 msgid "Failover"
 msgstr ""
 
-#: ../app/models/miq_policy.rb
+#: ../app/javascript/components/timeline-options/timeline-options.jsx
 msgid "Failure"
 msgstr ""
 
@@ -32793,7 +32801,7 @@ msgstr ""
 msgid "Field Information"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:450 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:460 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Field Meets Criteria for"
 msgstr ""
@@ -37243,7 +37251,7 @@ msgstr ""
 msgid "Hours (PM)"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:420 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:430 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "How Far Back to Check"
 msgstr ""
@@ -42450,7 +42458,7 @@ msgstr ""
 msgid "Message Filter"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:425 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:435 ../app/models/miq_alert.rb
 msgid "Message Filter Type"
 msgstr ""
 
@@ -51298,6 +51306,7 @@ msgstr ""
 
 #:
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js
+#: ../app/javascript/components/tenant-quota-form/helper.js
 #: ../app/views/ops/_settings_server_tab.html.haml
 msgid "Off"
 msgstr ""
@@ -51328,6 +51337,7 @@ msgstr ""
 
 #:
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js
+#: ../app/javascript/components/tenant-quota-form/helper.js
 #: ../app/views/ops/_settings_server_tab.html.haml
 msgid "On"
 msgstr ""
@@ -51964,8 +51974,8 @@ msgstr ""
 msgid "Operations Worker for Provider: %{name}"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:446 ../app/models/miq_alert.rb
-#: ../app/models/miq_alert.rb:462 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:456 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:472 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Operator"
 msgstr ""
@@ -54099,7 +54109,7 @@ msgstr[1] ""
 msgid "Performance - VMs"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:445 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:455 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Performance Field"
 msgstr ""
@@ -57248,8 +57258,8 @@ msgstr ""
 msgid "Provision Virtual Machines - Select a Template"
 msgstr ""
 
-#: ../app/models/miq_request_workflow.rb
 #: ../app/models/miq_provision_virt_workflow.rb
+#: ../app/models/miq_request_workflow.rb
 msgid ""
 "Provision failed for the following reasons:\n"
 "%{errors}"
@@ -61492,6 +61502,10 @@ msgstr ""
 msgid "Resize of VM has been successfully queued."
 msgstr ""
 
+#: ../app/javascript/components/vm-resize-form/vm-resize-form.jsx
+msgid "Resize of VM was cancelled by the user"
+msgstr ""
+
 #: ../app/controllers/application_controller/automate.rb
 msgid "Resolve"
 msgstr ""
@@ -62746,6 +62760,11 @@ msgstr ""
 #: ../app/helpers/host_initiator_group_helper/textual_summary.rb
 #: ../app/helpers/host_initiator_helper/textual_summary.rb
 msgid "SAN Addresses"
+msgstr ""
+
+#:
+#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/vm.rb
+msgid "SAP VM resize not supported"
 msgstr ""
 
 #: ../app/helpers/ansible_repository_helper/textual_summary.rb
@@ -69768,6 +69787,7 @@ msgid "Subtype is required."
 msgstr ""
 
 #: ../app/helpers/textual_mixins/textual_metrics_status.rb
+#: ../app/javascript/components/timeline-options/timeline-options.jsx
 msgid "Success"
 msgstr ""
 
@@ -76810,7 +76830,7 @@ msgstr ""
 msgid "Value Name"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:447 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:457 ../app/models/miq_alert.rb
 msgid "Value Threshold"
 msgstr ""
 
@@ -81432,11 +81452,12 @@ msgstr ""
 msgid "ems_configuration"
 msgstr ""
 
-#: ../app/models/cloud_volume.rb:92 ../app/models/host_initiator.rb
-#: ../app/models/host_initiator_group.rb:49 ../app/models/placement_group.rb
-#: ../app/models/cloud_database.rb:38 ../app/models/physical_storage.rb
-#: ../app/models/physical_storage.rb:122 ../app/models/volume_mapping.rb
+#: ../app/models/cloud_database.rb
 #: ../app/models/cloud_object_store_container.rb
+#: ../app/models/cloud_volume.rb:92 ../app/models/host_initiator.rb
+#: ../app/models/host_initiator_group.rb
+#: ../app/models/physical_storage.rb:78 ../app/models/physical_storage.rb
+#: ../app/models/placement_group.rb:48 ../app/models/volume_mapping.rb
 msgid "ems_id cannot be nil"
 msgstr ""
 
@@ -81605,11 +81626,11 @@ msgid ""
 "'"
 msgstr ""
 
-#: ../app/models/cloud_volume.rb:94 ../app/models/host_initiator.rb
-#: ../app/models/host_initiator_group.rb:52 ../app/models/placement_group.rb
-#: ../app/models/physical_storage.rb:81 ../app/models/physical_storage.rb
-#: ../app/models/volume_mapping.rb
 #: ../app/models/cloud_object_store_container.rb
+#: ../app/models/cloud_volume.rb:94 ../app/models/host_initiator.rb
+#: ../app/models/host_initiator_group.rb
+#: ../app/models/physical_storage.rb:81 ../app/models/physical_storage.rb
+#: ../app/models/placement_group.rb:51 ../app/models/volume_mapping.rb
 msgid "ext_management_system cannot be found"
 msgstr ""
 
@@ -81828,8 +81849,8 @@ msgstr ""
 msgid "invalid interval name %{name}"
 msgstr ""
 
-#: ../app/models/storage.rb:676 ../app/models/metric/ci_mixin/processing.rb
 #: ../app/models/metric/ci_mixin/capture.rb
+#: ../app/models/metric/ci_mixin/processing.rb:4 ../app/models/storage.rb
 msgid "invalid interval_name '%{name}'"
 msgstr ""
 
@@ -81900,7 +81921,7 @@ msgstr ""
 msgid "may contain only alphanumeric and _ . - characters"
 msgstr ""
 
-#: ../app/models/miq_ae_method.rb:24 ../app/models/miq_ae_field.rb
+#: ../app/models/miq_ae_field.rb:12 ../app/models/miq_ae_method.rb
 msgid "may contain only alphanumeric and _ characters"
 msgstr ""
 
@@ -81941,24 +81962,24 @@ msgstr ""
 msgid "must be an OperatingSystem"
 msgstr ""
 
-#: ../app/models/ext_management_system.rb:441 ../app/models/service_order.rb
-#: ../app/models/miq_worker/runner.rb
-#: ../app/models/vm/operations/guest.rb
+#: ../app/models/ext_management_system.rb
 #: ../app/models/manageiq/providers/inventory/parser.rb
-#: ../app/models/vm_or_template/operations.rb
-#: ../app/models/vm_or_template/operations/power.rb
-#: ../app/models/vm_or_template/operations/snapshot.rb
+#: ../app/models/miq_worker/runner.rb:287 ../app/models/service_order.rb
+#: ../app/models/vm/operations/guest.rb
 #: ../app/models/vm_or_template/operations/configuration.rb
+#: ../app/models/vm_or_template/operations/power.rb
 #: ../app/models/vm_or_template/operations/relocation.rb
+#: ../app/models/vm_or_template/operations/snapshot.rb
+#: ../app/models/vm_or_template/operations.rb
 msgid "must be implemented in a subclass"
 msgstr ""
 
-#: ../app/models/san_address.rb
-#: ../app/models/cloud_object_store_object/operations.rb
-#: ../app/models/cloud_object_store_container.rb
 #: ../app/models/cloud_object_store_container/operations.rb
-#: ../app/models/manageiq/providers/base_manager/metrics_capture.rb
+#: ../app/models/cloud_object_store_container.rb
+#: ../app/models/cloud_object_store_object/operations.rb
 #: ../app/models/manageiq/providers/base_manager/event_catcher/runner.rb
+#: ../app/models/manageiq/providers/base_manager/metrics_capture.rb
+#: ../app/models/san_address.rb
 msgid "must be implemented in subclass"
 msgstr ""
 
@@ -82407,7 +82428,7 @@ msgstr ""
 msgid "raw_safe_delete_volume must be implemented in a subclass"
 msgstr ""
 
-#: ../app/models/orchestration_stack.rb:147 ../app/models/load_balancer.rb
+#: ../app/models/load_balancer.rb:78 ../app/models/orchestration_stack.rb
 msgid "raw_status must be implemented in a subclass"
 msgstr ""
 
@@ -82463,7 +82484,7 @@ msgstr ""
 msgid "refresh must be implemented in a subclass"
 msgstr ""
 
-#: ../app/models/ems_folder.rb:119 ../app/models/ems_cluster.rb
+#: ../app/models/ems_cluster.rb:74 ../app/models/ems_folder.rb
 msgid "register_host must be implemented by a subclass"
 msgstr ""
 
