@@ -218,4 +218,14 @@ RSpec.describe EvmDatabase do
       expect(handlers.first.subscription).not_to eq(handlers.last.subscription)
     end
   end
+
+  context "seeding?" do
+    it "detects seeding" do
+      expect(EvmDatabase.seeding?).to be(false)
+      EvmDatabase.with_seed do
+        expect(EvmDatabase.seeding?).to be(true)
+      end
+      expect(EvmDatabase.seeding?).to be(false)
+    end
+  end
 end

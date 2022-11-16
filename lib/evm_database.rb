@@ -58,15 +58,29 @@ class EvmDatabase
     Vmdb::Plugins.flat_map { |p| p.try(:seedable_classes) }.compact
   end
 
+  @@seeding = false
+  def self.seeding?
+    defined?(@@seeding) && @@seeding
+  end
+
+  def self.with_seed
+    @@seeding = true
+    yield
+  ensure
+    @@seeding = false
+  end
+
   def self.seed(classes = nil, exclude_list = [])
-    classes ||= seedable_classes
-    classes  -= exclude_list
-    classes   = classes.collect(&:constantize)
+    with_seed do
+      classes ||= seedable_classes
+      classes  -= exclude_list
+      classes   = classes.collect(&:constantize)
 
-    invalid = classes.reject { |c| c.respond_to?(:seed) }
-    raise ArgumentError, "class(es) #{invalid.join(", ")} do not respond to seed" if invalid.any?
+      invalid = classes.reject { |c| c.respond_to?(:seed) }
+      raise ArgumentError, "class(es) #{invalid.join(", ")} do not respond to seed" if invalid.any?
 
-    seed_classes(classes)
+      seed_classes(classes)
+    end
   end
 
   def self.seed_primordial

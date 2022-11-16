@@ -1,5 +1,6 @@
 class MiqAlert < ApplicationRecord
   include UuidMixin
+  include_concern "ReadOnlyMixin"
 
   SEVERITIES = [nil, "info", "warning", "error"]
 

@@ -2,6 +2,8 @@
 #
 
 class MiqWidget < ApplicationRecord
+  include_concern "ReadOnlyMixin"
+
   default_value_for :enabled, true
   default_value_for :read_only, false
 

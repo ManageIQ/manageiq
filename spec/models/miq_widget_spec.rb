@@ -273,6 +273,7 @@ RSpec.describe MiqWidget do
     before do
       MiqReport.seed_report("Vendor and Guest OS")
       MiqWidget.sync_from_file(widget_path)
+      widget.update!(:read_only => false)
     end
 
     it "allows deletion of widgets not in a set/dashboard" do
