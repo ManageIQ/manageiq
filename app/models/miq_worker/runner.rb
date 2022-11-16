@@ -485,9 +485,17 @@ class MiqWorker::Runner
   private
 
   def worker_options
+    settings = {
+      :worker_settings => worker_settings
+    }
+
+    worker.class.worker_settings_paths.to_a.each do |settings_path|
+      settings.store_path(settings_path, Settings.to_hash.dig(*settings_path))
+    end
+
     {
       :messaging => MiqQueue.messaging_client_options,
-      :settings  => worker_settings.to_hash
+      :settings  => worker.class.normalize_settings!(settings)
     }
   end
 

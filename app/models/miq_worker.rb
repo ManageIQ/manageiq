@@ -90,9 +90,10 @@ class MiqWorker < ApplicationRecord
     leaf_subclasses | descendants.select { |d| d.try(:acts_as_sti_leaf_class?) }
   end
 
-  class_attribute :default_queue_name, :required_roles, :maximum_workers_count, :include_stopping_workers_on_synchronize
+  class_attribute :default_queue_name, :required_roles, :maximum_workers_count, :include_stopping_workers_on_synchronize, :worker_settings_paths
   self.include_stopping_workers_on_synchronize = false
   self.required_roles = []
+  self.worker_settings_paths = []
 
   def self.server_scope
     return current_scope if current_scope && current_scope.where_values_hash.include?('miq_server_id')
@@ -225,7 +226,9 @@ class MiqWorker < ApplicationRecord
   # and decrypt any values which are encrypted with ManageIQ::Password.
   def self.normalize_settings!(settings)
     settings.each_key do |k|
-      if settings[k].kind_of?(String)
+      if settings[k].kind_of?(Hash)
+        normalize_settings!(settings[k])
+      elsif settings[k].kind_of?(String)
         if settings[k].number_with_method?
           settings[k] = settings[k].to_i_with_method
         elsif settings[k].match?(/\A\d+(.\d+)?\z/) # case where int/float saved as string
@@ -236,7 +239,6 @@ class MiqWorker < ApplicationRecord
       end
     end
   end
-  private_class_method :normalize_settings!
 
   def worker_settings(options = {})
     self.class.fetch_worker_settings_from_server(miq_server, options)
