@@ -277,7 +277,7 @@ RSpec.describe MiqWidget do
 
     it "allows deletion of widgets not in a set/dashboard" do
       widget.destroy!
-      expect { widget.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect(widget).to be_deleted
     end
 
     it "prevents deletion of widgets in a set/dashboard" do

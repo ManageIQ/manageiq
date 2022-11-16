@@ -115,28 +115,28 @@ RSpec.describe BottleneckEvent do
     context "for a host_redhat resource" do
       let(:resource_name) { :host_redhat }
       it "deletes the future event" do
-        expect { bottleneck_event.reload }.to raise_exception(ActiveRecord::RecordNotFound)
+        expect(bottleneck_event).to be_deleted
       end
     end
 
     context "for a host_vmware resource" do
       let(:resource_name) { :host_vmware }
       it "deletes the future event" do
-        expect { bottleneck_event.reload }.to raise_exception(ActiveRecord::RecordNotFound)
+        expect(bottleneck_event).to be_deleted
       end
     end
 
     context "for a miq_enterprise resource" do
       let(:resource_name) { :miq_enterprise }
       it "deletes the future event" do
-        expect { bottleneck_event.reload }.to raise_exception(ActiveRecord::RecordNotFound)
+        expect(bottleneck_event).to be_deleted
       end
     end
 
     context "for a ems_cluster_openstack resource" do
       let(:resource_name) { :ems_cluster_openstack }
       it "deletes the future event" do
-        expect { bottleneck_event.reload }.to raise_exception(ActiveRecord::RecordNotFound)
+        expect(bottleneck_event).to be_deleted
       end
     end
   end
