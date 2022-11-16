@@ -205,34 +205,38 @@ class MiqWorker < ApplicationRecord
       classes.each do |c|
         section = section[c]
         raise _("Missing config section %{section_name}") % {:section_name => c} if section.nil?
+
         defaults = section[:defaults]
         unless defaults.nil?
-          defaults.delete_if {|k, v| v == Vmdb::Settings::RESET_VALUE }
+          defaults.delete_if { |_k, v| v == Vmdb::Settings::RESET_VALUE }
           settings.merge!(defaults)
         end
       end
 
-      section.delete_if {|k, v| v == Vmdb::Settings::RESET_VALUE }
+      section.delete_if { |_k, v| v == Vmdb::Settings::RESET_VALUE }
       settings.merge!(section)
+      normalize_settings!(settings) unless raw == true
+    end
 
-      # If not specified, provide the worker_settings cleaned up in fixnums, etc. instead of 1.seconds, 10.megabytes
-      # Clean up the configuration values in a format like "30.seconds"
-      unless raw == true
-        settings.keys.each do |k|
-          if settings[k].kind_of?(String)
-            if settings[k].number_with_method?
-              settings[k] = settings[k].to_i_with_method
-            elsif settings[k] =~ /\A\d+(.\d+)?\z/ # case where int/float saved as string
-              settings[k] = settings[k].to_i
-            elsif ManageIQ::Password.encrypted?(settings[k])
-              settings[k] = ManageIQ::Password.decrypt(settings[k])
-            end
-          end
+    settings
+  end
+
+  # If not specified, provide the worker_settings cleaned up in fixnums, etc. instead of 1.seconds, 10.megabytes
+  # and decrypt any values which are encrypted with ManageIQ::Password.
+  def self.normalize_settings!(settings)
+    settings.each_key do |k|
+      if settings[k].kind_of?(String)
+        if settings[k].number_with_method?
+          settings[k] = settings[k].to_i_with_method
+        elsif settings[k].match?(/\A\d+(.\d+)?\z/) # case where int/float saved as string
+          settings[k] = settings[k].to_i
+        elsif ManageIQ::Password.encrypted?(settings[k])
+          settings[k] = ManageIQ::Password.decrypt(settings[k])
         end
       end
     end
-    settings
   end
+  private_class_method :normalize_settings!
 
   def worker_settings(options = {})
     self.class.fetch_worker_settings_from_server(miq_server, options)
