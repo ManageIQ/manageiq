@@ -51,9 +51,7 @@ class CloudVolume < ApplicationRecord
   end
 
   def self.class_by_ems(ext_management_system)
-    # TODO(lsmola) taken from OrchesTration stacks, correct approach should be to have a factory on ExtManagementSystem
-    # side, that would return correct class for each provider
-    ext_management_system && ext_management_system.class::CloudVolume
+    ext_management_system&.class_by_ems(:CloudVolume)
   end
 
   def self.my_zone(ems)
@@ -93,7 +91,7 @@ class CloudVolume < ApplicationRecord
     ext_management_system = ExtManagementSystem.find(ems_id)
     raise ArgumentError, _("ext_management_system cannot be found") if ext_management_system.nil?
 
-    klass = class_by_ems(ext_management_system)
+    klass = ext_management_system.class_by_ems(:CloudVolume)
     klass.raw_create_volume(ext_management_system, options)
   end
 

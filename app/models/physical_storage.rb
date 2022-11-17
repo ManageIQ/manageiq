@@ -104,14 +104,12 @@ class PhysicalStorage < ApplicationRecord
     ext_management_system = ExtManagementSystem.find_by(:id => ems_id)
     raise ArgumentError, _("ext_management_system cannot be found") if ext_management_system.nil?
 
-    klass = class_by_ems(ext_management_system)
+    klass = ext_management_system.class_by_ems(:PhysicalStorage)
     klass.raw_create_physical_storage(ext_management_system, options)
   end
 
   def self.class_by_ems(ext_management_system)
-    # TODO(lsmola) taken from Orchestration stacks, correct approach should be to have a factory on ExtManagementSystem
-    # side, that would return correct class for each provider
-    ext_management_system && ext_management_system.class::PhysicalStorage
+    ext_management_system&.class_by_ems(:PhysicalStorage)
   end
 
   def self.raw_create_physical_storage(_ext_management_system, _options = {})
