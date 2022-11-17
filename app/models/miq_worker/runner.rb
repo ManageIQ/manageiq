@@ -495,7 +495,7 @@ class MiqWorker::Runner
 
     {
       :messaging => MiqQueue.messaging_client_options,
-      :settings  => worker.class.normalize_settings!(settings)
+      :settings  => worker.class.normalize_settings!(settings, :recurse => true)
     }
   end
 

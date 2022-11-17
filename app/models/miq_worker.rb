@@ -224,9 +224,9 @@ class MiqWorker < ApplicationRecord
 
   # If not specified, provide the worker_settings cleaned up in fixnums, etc. instead of 1.seconds, 10.megabytes
   # and decrypt any values which are encrypted with ManageIQ::Password.
-  def self.normalize_settings!(settings)
+  def self.normalize_settings!(settings, recurse: false)
     settings.each_key do |k|
-      if settings[k].kind_of?(Hash)
+      if settings[k].kind_of?(Hash) && recurse
         normalize_settings!(settings[k])
       elsif settings[k].kind_of?(String)
         if settings[k].number_with_method?
