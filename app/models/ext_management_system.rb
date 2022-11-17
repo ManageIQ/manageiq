@@ -106,8 +106,6 @@ class ExtManagementSystem < ApplicationRecord
   has_many :customization_scripts, :foreign_key => "manager_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :cloud_subnets, :foreign_key => :ems_id, :dependent => :destroy
 
-  has_one  :iso_datastore, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
-
   belongs_to :zone
   belongs_to :zone_before_pause, :class_name => "Zone", :inverse_of => :paused_ext_management_systems # used for maintenance mode
 
@@ -128,6 +126,8 @@ class ExtManagementSystem < ApplicationRecord
 
   has_many :ems_licenses,   :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :ems_extensions, :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
+
+  has_many :iso_images, :through => :storages
 
   validates :name,     :presence => true, :uniqueness_when_changed => {:scope => [:tenant_id]}
   validates :hostname, :presence => true, :if => :hostname_required?
@@ -993,11 +993,6 @@ class ExtManagementSystem < ApplicationRecord
     nil
   end
   delegate :class_by_ems, :to => :class
-
-  # @return [Boolean] true if a datastore exists for this type of ems
-  def self.datastore?
-    IsoDatastore.where(:ems_id => all).exists?
-  end
 
   def tenant_identity
     User.super_admin.tap { |u| u.current_group = tenant.default_miq_group }
