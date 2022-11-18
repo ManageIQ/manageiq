@@ -34,6 +34,10 @@ module ManageIQ::Providers
           add_common_default_values
         end
 
+        def physical_server_profile_templates
+          add_common_default_values
+        end
+
         def customization_scripts
           skip_sti
           add_properties(:manager_ref => %i[manager_ref])
