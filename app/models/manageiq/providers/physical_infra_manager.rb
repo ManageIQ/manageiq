@@ -7,6 +7,7 @@ module ManageIQ::Providers
     has_many :physical_servers,  :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
     has_many :physical_switches, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
     has_many :physical_storages, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+    has_many :physical_server_profile_templates, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
 
     # Asset details
     has_many :physical_server_details,  :through => :physical_servers,  :source => :asset_detail
