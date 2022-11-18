@@ -9,8 +9,8 @@ msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-04 12:41-0400\n"
-"PO-Revision-Date: 2022-11-04 12:41-0400\n"
+"POT-Creation-Date: 2022-11-15 16:10-0500\n"
+"PO-Revision-Date: 2022-11-15 16:10-0500\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fr\n"
@@ -5401,7 +5401,7 @@ msgstr "Alarme"
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAlert
 #. TRANSLATORS: en.yml key: dictionary.table.miq_alert
-#: ../app/models/miq_alert.rb:859 ../config/dictionary_strings.rb
+#: ../app/models/miq_alert.rb:869 ../config/dictionary_strings.rb
 #: ../config/dictionary_strings.rb
 msgid "Alert"
 msgid_plural "Alerts"
@@ -6301,7 +6301,7 @@ msgstr "Analyser, puis vérifier la conformité pour cet élément ?"
 msgid "Ancestry"
 msgstr "Ascendance"
 
-#: ../app/models/miq_alert.rb:448 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:458 ../app/models/miq_alert.rb
 msgid "And is Trending"
 msgstr "Et correspond à la tendance"
 
@@ -9211,6 +9211,10 @@ msgstr "Amorçable"
 #: ../config/yaml_strings.rb
 msgid "Bootable?"
 msgstr "Amorçable ?"
+
+#: ../app/javascript/components/timeline-options/timeline-options.jsx
+msgid "Both"
+msgstr "Les deux"
 
 #. TRANSLATORS: en.yml key: dictionary.model.BottleneckEvent
 #: ../config/model_display_names.rb:14 ../config/dictionary_strings.rb
@@ -13144,7 +13148,7 @@ msgid "Cloud Services"
 msgstr "Services de cloud"
 
 #. TRANSLATORS: file: product/views/CloudSubnet.yaml
-#: ../app/helpers/vm_helper.rb:29 ../config/yaml_strings.rb
+#: ../app/helpers/vm_helper.rb:31 ../config/yaml_strings.rb
 msgid "Cloud Subnet"
 msgstr "Sous-réseau cloud"
 
@@ -22328,7 +22332,7 @@ msgstr "Jours"
 msgid "Debris Size"
 msgstr "Taille des débris"
 
-#: ../app/models/miq_alert.rb:451 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:461 ../app/models/miq_alert.rb
 msgid "Debug Tracing"
 msgstr "Traçage du débogage"
 
@@ -31884,7 +31888,7 @@ msgstr "Actions d'événement"
 msgid "Event Assignment for Policy was saved"
 msgstr "L'affectation d'événement pour la stratégie a été sauvegardée"
 
-#: ../app/models/miq_alert.rb:421 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:431 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Event Count Threshold"
 msgstr "Seuil du nombre d'événements"
@@ -31979,7 +31983,7 @@ msgstr "Sélection d'événement"
 #. TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
 #. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
 #. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-#: ../app/models/miq_alert.rb:430 ../config/dictionary_strings.rb
+#: ../app/models/miq_alert.rb:440 ../config/dictionary_strings.rb
 #: ../config/yaml_strings.rb
 msgid "Event Source"
 msgstr "Source d'événement"
@@ -33763,7 +33767,7 @@ msgstr "Echec de la suppression de %s %s."
 msgid "Failover"
 msgstr "Basculement"
 
-#: ../app/models/miq_policy.rb
+#: ../app/javascript/components/timeline-options/timeline-options.jsx
 msgid "Failure"
 msgstr "Echec"
 
@@ -33830,7 +33834,7 @@ msgstr "Zone %s"
 msgid "Field Information"
 msgstr "Informations sur la zone"
 
-#: ../app/models/miq_alert.rb:450 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:460 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Field Meets Criteria for"
 msgstr "La zone répond aux critères pour"
@@ -38352,7 +38356,7 @@ msgstr "Heures (AM)"
 msgid "Hours (PM)"
 msgstr "Heures (PM)"
 
-#: ../app/models/miq_alert.rb:420 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:430 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "How Far Back to Check"
 msgstr "Ancienneté des éléments à vérifier"
@@ -43676,7 +43680,7 @@ msgstr "Message"
 msgid "Message Filter"
 msgstr "Filtre de message"
 
-#: ../app/models/miq_alert.rb:425 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:435 ../app/models/miq_alert.rb
 msgid "Message Filter Type"
 msgstr "Type de filtre de message"
 
@@ -52716,6 +52720,7 @@ msgstr "Observé"
 
 #:
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js
+#: ../app/javascript/components/tenant-quota-form/helper.js
 #: ../app/views/ops/_settings_server_tab.html.haml
 msgid "Off"
 msgstr "Désactivé"
@@ -52746,6 +52751,7 @@ msgstr "OK"
 
 #:
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js
+#: ../app/javascript/components/tenant-quota-form/helper.js
 #: ../app/views/ops/_settings_server_tab.html.haml
 msgid "On"
 msgstr "Activé"
@@ -53414,8 +53420,8 @@ msgstr ""
 msgid "Operations Worker for Provider: %{name}"
 msgstr "Agent d'opérations pour fournisseur : %{name}"
 
-#: ../app/models/miq_alert.rb:446 ../app/models/miq_alert.rb
-#: ../app/models/miq_alert.rb:462 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:456 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:472 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Operator"
 msgstr "Opérateur"
@@ -55568,7 +55574,7 @@ msgstr[1] "Performance - Machines virtuelles"
 msgid "Performance - VMs"
 msgstr "Performance - Machine virtuelles"
 
-#: ../app/models/miq_alert.rb:445 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:455 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Performance Field"
 msgstr "Zone de performance"
@@ -63264,6 +63270,11 @@ msgid "Resize of VM has been successfully queued."
 msgstr ""
 "Le redimensionnement de la machine virtuelle a été mis en file d'attente."
 
+#: ../app/javascript/components/vm-resize-form/vm-resize-form.jsx
+msgid "Resize of VM was cancelled by the user"
+msgstr ""
+"Le redimensionnement de la machine virtuelle a été annulé par l'utilisateur"
+
 #: ../app/controllers/application_controller/automate.rb
 msgid "Resolve"
 msgstr "Résoudre"
@@ -64548,6 +64559,12 @@ msgstr "Version d'exécution"
 #: ../app/helpers/host_initiator_helper/textual_summary.rb
 msgid "SAN Addresses"
 msgstr "Adresses SAN"
+
+#:
+#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/vm.rb
+msgid "SAP VM resize not supported"
+msgstr ""
+"Le redimensionnement de la machine virtuelle SAP n'est pas pris en charge"
 
 #: ../app/helpers/ansible_repository_helper/textual_summary.rb
 #: ../app/javascript/components/ansible-repository-form/ansible-repository-form.schema.js
@@ -71753,6 +71770,7 @@ msgid "Subtype is required."
 msgstr "Le sous-type est obligatoire."
 
 #: ../app/helpers/textual_mixins/textual_metrics_status.rb
+#: ../app/javascript/components/timeline-options/timeline-options.jsx
 msgid "Success"
 msgstr "Réussite"
 
@@ -79150,7 +79168,7 @@ msgstr "Valeur interpolée"
 msgid "Value Name"
 msgstr "Nom de valeur"
 
-#: ../app/models/miq_alert.rb:447 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:457 ../app/models/miq_alert.rb
 msgid "Value Threshold"
 msgstr "Seuil de valeur"
 

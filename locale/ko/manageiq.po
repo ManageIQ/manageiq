@@ -9,8 +9,8 @@ msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-04 12:41-0400\n"
-"PO-Revision-Date: 2022-11-04 12:41-0400\n"
+"POT-Creation-Date: 2022-11-15 16:10-0500\n"
+"PO-Revision-Date: 2022-11-15 16:10-0500\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ko\n"
@@ -5094,7 +5094,7 @@ msgstr "알람"
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAlert
 #. TRANSLATORS: en.yml key: dictionary.table.miq_alert
-#: ../app/models/miq_alert.rb:859 ../config/dictionary_strings.rb
+#: ../app/models/miq_alert.rb:869 ../config/dictionary_strings.rb
 #: ../config/dictionary_strings.rb
 msgid "Alert"
 msgid_plural "Alerts"
@@ -5973,7 +5973,7 @@ msgstr "이 항목에 대한 규제 준수 분석 후 검사?"
 msgid "Ancestry"
 msgstr "계통"
 
-#: ../app/models/miq_alert.rb:448 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:458 ../app/models/miq_alert.rb
 msgid "And is Trending"
 msgstr "동향"
 
@@ -8797,6 +8797,10 @@ msgstr "부팅 가능"
 #: ../config/yaml_strings.rb
 msgid "Bootable?"
 msgstr "부트 가능?"
+
+#: ../app/javascript/components/timeline-options/timeline-options.jsx
+msgid "Both"
+msgstr "둘 모두"
 
 #. TRANSLATORS: en.yml key: dictionary.model.BottleneckEvent
 #: ../config/model_display_names.rb:14 ../config/dictionary_strings.rb
@@ -12514,7 +12518,7 @@ msgid "Cloud Services"
 msgstr "클라우드 서비스"
 
 #. TRANSLATORS: file: product/views/CloudSubnet.yaml
-#: ../app/helpers/vm_helper.rb:29 ../config/yaml_strings.rb
+#: ../app/helpers/vm_helper.rb:31 ../config/yaml_strings.rb
 msgid "Cloud Subnet"
 msgstr "클라우드 서브넷"
 
@@ -21352,7 +21356,7 @@ msgstr "일"
 msgid "Debris Size"
 msgstr "Debris 크기"
 
-#: ../app/models/miq_alert.rb:451 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:461 ../app/models/miq_alert.rb
 msgid "Debug Tracing"
 msgstr "디버그 추적"
 
@@ -30645,7 +30649,7 @@ msgstr "이벤트 조치"
 msgid "Event Assignment for Policy was saved"
 msgstr "정책에 대한 이벤트 지정이 저장되었습니다."
 
-#: ../app/models/miq_alert.rb:421 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:431 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Event Count Threshold"
 msgstr "이벤트 개수 임계값"
@@ -30737,7 +30741,7 @@ msgstr "이벤트 선택사항"
 #. TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
 #. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
 #. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-#: ../app/models/miq_alert.rb:430 ../config/dictionary_strings.rb
+#: ../app/models/miq_alert.rb:440 ../config/dictionary_strings.rb
 #: ../config/yaml_strings.rb
 msgid "Event Source"
 msgstr "이벤트 소스"
@@ -32482,7 +32486,7 @@ msgstr "%s %s 삭제에 실패했습니다."
 msgid "Failover"
 msgstr "장애 복구"
 
-#: ../app/models/miq_policy.rb
+#: ../app/javascript/components/timeline-options/timeline-options.jsx
 msgid "Failure"
 msgstr "실패"
 
@@ -32549,7 +32553,7 @@ msgstr "필드 %s"
 msgid "Field Information"
 msgstr "필드 정보"
 
-#: ../app/models/miq_alert.rb:450 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:460 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Field Meets Criteria for"
 msgstr "필드가 기준을 충족함"
@@ -36951,7 +36955,7 @@ msgstr "시간(오전)"
 msgid "Hours (PM)"
 msgstr "시간(오후)"
 
-#: ../app/models/miq_alert.rb:420 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:430 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "How Far Back to Check"
 msgstr "역추적 검사 지점"
@@ -42103,7 +42107,7 @@ msgstr "메시지"
 msgid "Message Filter"
 msgstr "메시지 필터"
 
-#: ../app/models/miq_alert.rb:425 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:435 ../app/models/miq_alert.rb
 msgid "Message Filter Type"
 msgstr "메시지 필터 유형"
 
@@ -50919,6 +50923,7 @@ msgstr "관찰됨"
 
 #:
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js
+#: ../app/javascript/components/tenant-quota-form/helper.js
 #: ../app/views/ops/_settings_server_tab.html.haml
 msgid "Off"
 msgstr "꺼짐"
@@ -50949,6 +50954,7 @@ msgstr "확인"
 
 #:
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js
+#: ../app/javascript/components/tenant-quota-form/helper.js
 #: ../app/views/ops/_settings_server_tab.html.haml
 msgid "On"
 msgstr "켜짐"
@@ -51584,8 +51590,8 @@ msgstr "지난 주의 오퍼레이션 VM 전원 공급/차단"
 msgid "Operations Worker for Provider: %{name}"
 msgstr "제공자에 대한 오퍼레이션 작업: %{name}"
 
-#: ../app/models/miq_alert.rb:446 ../app/models/miq_alert.rb
-#: ../app/models/miq_alert.rb:462 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:456 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:472 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Operator"
 msgstr "운영자"
@@ -53691,7 +53697,7 @@ msgstr[0] "성능 - VM"
 msgid "Performance - VMs"
 msgstr "성능 - VM"
 
-#: ../app/models/miq_alert.rb:445 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:455 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Performance Field"
 msgstr "성능 필드"
@@ -61044,6 +61050,10 @@ msgstr "VM %{subject} 크기 조정 실패: %{error}"
 msgid "Resize of VM has been successfully queued."
 msgstr "VM의 크기 조정이 큐에 대기되었습니다."
 
+#: ../app/javascript/components/vm-resize-form/vm-resize-form.jsx
+msgid "Resize of VM was cancelled by the user"
+msgstr "사용자가 VM 크기 조정을 취소했습니다."
+
 #: ../app/controllers/application_controller/automate.rb
 msgid "Resolve"
 msgstr "분석"
@@ -62293,6 +62303,11 @@ msgstr "런타임 버전"
 #: ../app/helpers/host_initiator_helper/textual_summary.rb
 msgid "SAN Addresses"
 msgstr "SAN 주소"
+
+#:
+#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/vm.rb
+msgid "SAP VM resize not supported"
+msgstr "SAP VM 크기 조정이 지원되지 않음"
 
 #: ../app/helpers/ansible_repository_helper/textual_summary.rb
 #: ../app/javascript/components/ansible-repository-form/ansible-repository-form.schema.js
@@ -69251,6 +69266,7 @@ msgid "Subtype is required."
 msgstr "하위 유형은 필수입니다."
 
 #: ../app/helpers/textual_mixins/textual_metrics_status.rb
+#: ../app/javascript/components/timeline-options/timeline-options.jsx
 msgid "Success"
 msgstr "성공"
 
@@ -76302,7 +76318,7 @@ msgstr "값이 삽입됨"
 msgid "Value Name"
 msgstr "값 이름"
 
-#: ../app/models/miq_alert.rb:447 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:457 ../app/models/miq_alert.rb
 msgid "Value Threshold"
 msgstr "값 임계값"
 
