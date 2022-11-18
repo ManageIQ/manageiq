@@ -23,7 +23,7 @@ jobs:
         - security
     services:
       postgres:
-        image: manageiq/postgresql:10
+        image: manageiq/postgresql:13
         env:
           POSTGRESQL_USER: root
           POSTGRESQL_PASSWORD: smartvm
