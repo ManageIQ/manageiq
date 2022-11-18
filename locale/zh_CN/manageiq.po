@@ -9,8 +9,8 @@ msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-04 12:41-0400\n"
-"PO-Revision-Date: 2022-11-04 12:41-0400\n"
+"POT-Creation-Date: 2022-11-15 16:10-0500\n"
+"PO-Revision-Date: 2022-11-15 16:10-0500\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh\n"
@@ -5080,7 +5080,7 @@ msgstr "警报"
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAlert
 #. TRANSLATORS: en.yml key: dictionary.table.miq_alert
-#: ../app/models/miq_alert.rb:859 ../config/dictionary_strings.rb
+#: ../app/models/miq_alert.rb:869 ../config/dictionary_strings.rb
 #: ../config/dictionary_strings.rb
 msgid "Alert"
 msgid_plural "Alerts"
@@ -5955,7 +5955,7 @@ msgstr "对这一项进行分析和合规性检查吗？"
 msgid "Ancestry"
 msgstr "祖先"
 
-#: ../app/models/miq_alert.rb:448 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:458 ../app/models/miq_alert.rb
 msgid "And is Trending"
 msgstr "并趋向于"
 
@@ -8776,6 +8776,10 @@ msgstr "可引导的"
 #: ../config/yaml_strings.rb
 msgid "Bootable?"
 msgstr "可引导？"
+
+#: ../app/javascript/components/timeline-options/timeline-options.jsx
+msgid "Both"
+msgstr "两者"
 
 #. TRANSLATORS: en.yml key: dictionary.model.BottleneckEvent
 #: ../config/model_display_names.rb:14 ../config/dictionary_strings.rb
@@ -12489,7 +12493,7 @@ msgid "Cloud Services"
 msgstr "云服务"
 
 #. TRANSLATORS: file: product/views/CloudSubnet.yaml
-#: ../app/helpers/vm_helper.rb:29 ../config/yaml_strings.rb
+#: ../app/helpers/vm_helper.rb:31 ../config/yaml_strings.rb
 msgid "Cloud Subnet"
 msgstr "云子网"
 
@@ -21323,7 +21327,7 @@ msgstr "日"
 msgid "Debris Size"
 msgstr "碎片大小"
 
-#: ../app/models/miq_alert.rb:451 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:461 ../app/models/miq_alert.rb
 msgid "Debug Tracing"
 msgstr "调试跟踪"
 
@@ -30609,7 +30613,7 @@ msgstr "事件操作"
 msgid "Event Assignment for Policy was saved"
 msgstr "已保存策略的事件分配"
 
-#: ../app/models/miq_alert.rb:421 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:431 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Event Count Threshold"
 msgstr "事件计数阈值"
@@ -30701,7 +30705,7 @@ msgstr "事件选择"
 #. TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
 #. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
 #. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-#: ../app/models/miq_alert.rb:430 ../config/dictionary_strings.rb
+#: ../app/models/miq_alert.rb:440 ../config/dictionary_strings.rb
 #: ../config/yaml_strings.rb
 msgid "Event Source"
 msgstr "事件源"
@@ -32446,7 +32450,7 @@ msgstr "未能删除 %s %s。"
 msgid "Failover"
 msgstr "故障转移"
 
-#: ../app/models/miq_policy.rb
+#: ../app/javascript/components/timeline-options/timeline-options.jsx
 msgid "Failure"
 msgstr "失败"
 
@@ -32513,7 +32517,7 @@ msgstr "字段 %s"
 msgid "Field Information"
 msgstr "字段信息"
 
-#: ../app/models/miq_alert.rb:450 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:460 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Field Meets Criteria for"
 msgstr "符合标准的字段"
@@ -36909,7 +36913,7 @@ msgstr "小时（上午）"
 msgid "Hours (PM)"
 msgstr "小时（下午）"
 
-#: ../app/models/miq_alert.rb:420 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:430 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "How Far Back to Check"
 msgstr "多久返回检查"
@@ -42056,7 +42060,7 @@ msgstr "消息"
 msgid "Message Filter"
 msgstr "消息过滤器"
 
-#: ../app/models/miq_alert.rb:425 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:435 ../app/models/miq_alert.rb
 msgid "Message Filter Type"
 msgstr "消息过滤类型"
 
@@ -50869,6 +50873,7 @@ msgstr "观察的"
 
 #:
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js
+#: ../app/javascript/components/tenant-quota-form/helper.js
 #: ../app/views/ops/_settings_server_tab.html.haml
 msgid "Off"
 msgstr "关"
@@ -50899,6 +50904,7 @@ msgstr "确定"
 
 #:
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js
+#: ../app/javascript/components/tenant-quota-form/helper.js
 #: ../app/views/ops/_settings_server_tab.html.haml
 msgid "On"
 msgstr "开"
@@ -51531,8 +51537,8 @@ msgstr "上周虚拟机开机/关机操作"
 msgid "Operations Worker for Provider: %{name}"
 msgstr "提供程序的操作工作程序：%{name}"
 
-#: ../app/models/miq_alert.rb:446 ../app/models/miq_alert.rb
-#: ../app/models/miq_alert.rb:462 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:456 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:472 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Operator"
 msgstr "操作者"
@@ -53638,7 +53644,7 @@ msgstr[0] "性能 - 虚拟机"
 msgid "Performance - VMs"
 msgstr "性能 - 虚拟机"
 
-#: ../app/models/miq_alert.rb:445 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:455 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Performance Field"
 msgstr "性能字段"
@@ -60990,6 +60996,10 @@ msgstr "调整 VM%{subject} 的大小失败：%{error}"
 msgid "Resize of VM has been successfully queued."
 msgstr "调整虚拟机大小的操作已成功排队。"
 
+#: ../app/javascript/components/vm-resize-form/vm-resize-form.jsx
+msgid "Resize of VM was cancelled by the user"
+msgstr "用户已取消调整 VM 大小"
+
 #: ../app/controllers/application_controller/automate.rb
 msgid "Resolve"
 msgstr "解决"
@@ -62239,6 +62249,11 @@ msgstr "运行时版本"
 #: ../app/helpers/host_initiator_helper/textual_summary.rb
 msgid "SAN Addresses"
 msgstr "SAN 地址"
+
+#:
+#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/vm.rb
+msgid "SAP VM resize not supported"
+msgstr "SAP VM 调整大小不受支持"
 
 #: ../app/helpers/ansible_repository_helper/textual_summary.rb
 #: ../app/javascript/components/ansible-repository-form/ansible-repository-form.schema.js
@@ -69195,6 +69210,7 @@ msgid "Subtype is required."
 msgstr "子类型为必填项。"
 
 #: ../app/helpers/textual_mixins/textual_metrics_status.rb
+#: ../app/javascript/components/timeline-options/timeline-options.jsx
 msgid "Success"
 msgstr "成功"
 
@@ -76238,7 +76254,7 @@ msgstr "内插值"
 msgid "Value Name"
 msgstr "值名称"
 
-#: ../app/models/miq_alert.rb:447 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:457 ../app/models/miq_alert.rb
 msgid "Value Threshold"
 msgstr "值的阈值"
 
