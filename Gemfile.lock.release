@@ -21,7 +21,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-automation_engine
-  revision: 9bb6efad43ad826894046d8d7940d2fd0b5311b0
+  revision: f17fec5db8a554252f8ba5709270103250cf4be6
   branch: oparin
   specs:
     manageiq-automation_engine (0.1.0)
@@ -98,7 +98,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-autosde
-  revision: 60873b5bf11092668c6f56633e1321037637f60f
+  revision: c4f7aadf6069d1f2235d2c439ef70319766e92a5
   branch: oparin
   specs:
     manageiq-providers-autosde (0.1.0)
@@ -165,7 +165,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_cloud
-  revision: c0ae8afd0ba483396f8dc972c7cd751f801b0aa8
+  revision: c58584dcdc16929c2bb47393fa7e1a0913a6dfe5
   branch: oparin
   specs:
     manageiq-providers-ibm_cloud (0.1.0)
@@ -226,7 +226,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-lenovo
-  revision: 4d84fc972bf2075b3bd99eb607ae1463387789a0
+  revision: 9551ba7102baf608224631219ee246b516fd224e
   branch: oparin
   specs:
     manageiq-providers-lenovo (0.2.0)
@@ -324,7 +324,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-schema
-  revision: 5f659d484c418af5013cddc288fbc17e7a613cb4
+  revision: 927644c70ac60062172b8f6846e67e6fc4036941
   branch: oparin
   specs:
     manageiq-schema (0.1.0)
@@ -338,7 +338,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-ui-classic
-  revision: 0ce0afadf7bc0129a60cd5b8bd29998643842239
+  revision: ca4a9aa69cfda7cb79c7b394ba24676baf55921c
   branch: oparin
   specs:
     manageiq-ui-classic (0.1.0)
@@ -355,13 +355,11 @@ GEM
   specs:
     handsoap (0.2.5.5)
       nokogiri (>= 1.2.3)
-    jquery-rjs (0.1.1.2)
+    jquery-rjs (0.1.1.3)
       jquery-rails
       rails (>= 3.2)
     mime-types (3.0.0)
       mini_mime (>= 0.1.1)
-    ruport (1.7.0.3)
-      pdf-writer (= 1.1.8)
 
 GEM
   remote: https://rubygems.org/
@@ -464,19 +462,19 @@ GEM
       typhoeus (~> 1.0, >= 1.0.1)
     awesome_spawn (1.5.0)
     aws-eventstream (1.2.0)
-    aws-partitions (1.655.0)
-    aws-sdk-cloudformation (1.72.0)
+    aws-partitions (1.664.0)
+    aws-sdk-cloudformation (1.73.0)
       aws-sdk-core (~> 3, >= 3.165.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-cloudwatch (1.68.0)
       aws-sdk-core (~> 3, >= 3.165.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-core (3.166.0)
+    aws-sdk-core (3.168.1)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.5)
       jmespath (~> 1, >= 1.6.1)
-    aws-sdk-ec2 (1.344.0)
+    aws-sdk-ec2 (1.351.0)
       aws-sdk-core (~> 3, >= 3.165.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-elasticloadbalancing (1.41.0)
@@ -488,14 +486,14 @@ GEM
     aws-sdk-kms (1.59.0)
       aws-sdk-core (~> 3, >= 3.165.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-rds (1.158.0)
+    aws-sdk-rds (1.160.0)
       aws-sdk-core (~> 3, >= 3.165.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-s3 (1.117.1)
       aws-sdk-core (~> 3, >= 3.165.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.4)
-    aws-sdk-servicecatalog (1.73.0)
+    aws-sdk-servicecatalog (1.74.0)
       aws-sdk-core (~> 3, >= 3.165.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-sns (1.56.0)
@@ -528,9 +526,9 @@ GEM
     bcrypt (3.1.18)
     bcrypt_pbkdf (1.1.0)
     binary_struct (2.1.0)
-    bootsnap (1.13.0)
+    bootsnap (1.14.0)
       msgpack (~> 1.2)
-    brakeman (5.3.1)
+    brakeman (5.4.0)
     builder (3.2.4)
     bundler-audit (0.9.1)
       bundler (>= 1.2.0, < 3)
@@ -570,41 +568,37 @@ GEM
       json
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
-    dry-configurable (0.16.1)
-      dry-core (~> 0.6)
+    dry-configurable (1.0.1)
+      dry-core (~> 1.0, < 2)
       zeitwerk (~> 2.6)
-    dry-container (0.11.0)
-      concurrent-ruby (~> 1.0)
-    dry-core (0.9.1)
+    dry-core (1.0.0)
       concurrent-ruby (~> 1.0)
       zeitwerk (~> 2.6)
-    dry-inflector (0.3.0)
+    dry-inflector (1.0.0)
     dry-initializer (3.1.1)
-    dry-logic (1.3.0)
+    dry-logic (1.4.0)
       concurrent-ruby (~> 1.0)
-      dry-core (~> 0.9, >= 0.9)
+      dry-core (~> 1.0, < 2)
       zeitwerk (~> 2.6)
-    dry-schema (1.11.3)
+    dry-schema (1.12.0)
       concurrent-ruby (~> 1.0)
-      dry-configurable (~> 0.16, >= 0.16)
-      dry-core (~> 0.9, >= 0.9)
+      dry-configurable (~> 1.0, < 2)
+      dry-core (~> 1.0, < 2)
       dry-initializer (~> 3.0)
-      dry-logic (~> 1.3)
-      dry-types (~> 1.6)
+      dry-logic (>= 1.4, < 2)
+      dry-types (>= 1.7, < 2)
       zeitwerk (~> 2.6)
-    dry-types (1.6.1)
+    dry-types (1.7.0)
       concurrent-ruby (~> 1.0)
-      dry-container (~> 0.3)
-      dry-core (~> 0.9, >= 0.9)
-      dry-inflector (~> 0.1, >= 0.1.2)
-      dry-logic (~> 1.3, >= 1.3)
+      dry-core (~> 1.0, < 2)
+      dry-inflector (~> 1.0, < 2)
+      dry-logic (>= 1.4, < 2)
       zeitwerk (~> 2.6)
-    dry-validation (1.9.0)
+    dry-validation (1.10.0)
       concurrent-ruby (~> 1.0)
-      dry-container (~> 0.7, >= 0.7.1)
-      dry-core (~> 0.9, >= 0.9)
+      dry-core (~> 1.0, < 2)
       dry-initializer (~> 3.0)
-      dry-schema (~> 1.11, >= 1.11.0)
+      dry-schema (>= 1.12, < 2)
       zeitwerk (~> 2.6)
     elif (0.1.0)
     erubi (1.11.0)
@@ -612,9 +606,9 @@ GEM
     escape_utils (1.3.0)
     et-orbi (1.2.7)
       tzinfo
-    ethon (0.15.0)
+    ethon (0.16.0)
       ffi (>= 1.15.0)
-    excon (0.93.1)
+    excon (0.94.0)
     execjs (2.8.1)
     factory_bot (5.2.0)
       activesupport (>= 4.2.0)
@@ -671,7 +665,7 @@ GEM
       rest-client (~> 2.0)
     formatador (0.3.0)
     forwardable (1.3.2)
-    fugit (1.7.1)
+    fugit (1.7.2)
       et-orbi (~> 1, >= 1.2.7)
       raabro (~> 1.4)
     gettext (3.4.3)
@@ -688,7 +682,7 @@ GEM
       rails (>= 3.2.0)
     globalid (1.0.0)
       activesupport (>= 5.0)
-    google-apis-compute_v1 (0.54.0)
+    google-apis-compute_v1 (0.55.0)
       google-apis-core (>= 0.9.1, < 2.a)
     google-apis-core (0.9.1)
       addressable (~> 2.5, >= 2.5.1)
@@ -703,11 +697,11 @@ GEM
       google-apis-core (>= 0.9.0, < 2.a)
     google-apis-iamcredentials_v1 (0.16.0)
       google-apis-core (>= 0.9.1, < 2.a)
-    google-apis-monitoring_v3 (0.37.0)
+    google-apis-monitoring_v3 (0.38.0)
       google-apis-core (>= 0.9.1, < 2.a)
     google-apis-pubsub_v1 (0.31.0)
       google-apis-core (>= 0.9.1, < 2.a)
-    google-apis-sqladmin_v1beta4 (0.39.0)
+    google-apis-sqladmin_v1beta4 (0.40.0)
       google-apis-core (>= 0.9.1, < 2.a)
     google-apis-storage_v1 (0.20.0)
       google-apis-core (>= 0.9.1, < 2.a)
@@ -793,7 +787,7 @@ GEM
     iniparse (1.5.0)
     intersight_client (0.1.5)
       typhoeus (~> 1.0, >= 1.0.1)
-    inventory_refresh (1.1.0)
+    inventory_refresh (2.0.0)
       activerecord (>= 5.0, < 7.0)
       more_core_extensions (>= 3.5, < 5)
       pg (> 0)
@@ -803,7 +797,7 @@ GEM
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
     jmespath (1.6.1)
-    jquery-rails (4.5.0)
+    jquery-rails (4.5.1)
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
@@ -863,7 +857,7 @@ GEM
       pg
       pg-logical_replication
       rbnacl (>= 3.2, < 5.0)
-    manageiq-loggers (1.0.1)
+    manageiq-loggers (1.1.0)
       activesupport (>= 5.0)
       manageiq-password (< 2)
     manageiq-messaging (1.2.0)
@@ -971,15 +965,18 @@ GEM
     parallel (1.22.1)
     parser (3.1.2.1)
       ast (~> 2.4.1)
-    pdf-writer (1.1.8)
-      color (>= 1.4.0)
-      transaction-simple (~> 1.3)
-    pg (1.4.4)
+    pdf-core (0.9.0)
+    pg (1.4.5)
     pg-dsn_parser (0.1.1)
     pg-logical_replication (1.2.0)
       pg
     po_to_json (1.0.1)
       json (>= 1.6.0)
+    prawn (2.4.0)
+      pdf-core (~> 0.9.0)
+      ttfunk (~> 1.7)
+    prawn-table (0.2.2)
+      prawn (>= 1.3.0, < 3.0.0)
     prime (0.1.2)
       forwardable
       singleton
@@ -1037,7 +1034,7 @@ GEM
       ffi (~> 1.0)
     rbnacl (4.0.2)
       ffi
-    rbvmomi2 (3.4.2)
+    rbvmomi2 (3.5.0)
       builder (~> 3.2)
       json (~> 2.3)
       nokogiri (~> 1.12, >= 1.12.5)
@@ -1115,6 +1112,9 @@ GEM
     rufus-scheduler (3.8.2)
       fugit (~> 1.1, >= 1.1.6)
     rugged (1.5.0.1)
+    ruport (1.8.0)
+      prawn (~> 2.4.0)
+      prawn-table (~> 0.2.0)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
@@ -1186,7 +1186,7 @@ GEM
     timecop (0.9.5)
     timeliness (0.3.10)
     trailblazer-option (0.1.2)
-    transaction-simple (1.4.0.2)
+    ttfunk (1.7.0)
     typhoeus (1.4.0)
       ethon (>= 0.9.0)
     tzinfo (2.0.5)
@@ -1278,7 +1278,7 @@ GEM
       nokogiri (~> 1.3)
     yard (0.9.28)
       webrick (~> 1.7.0)
-    zeitwerk (2.6.4)
+    zeitwerk (2.6.6)
 
 PLATFORMS
   powerpc64le-linux
@@ -1321,21 +1321,21 @@ DEPENDENCIES
   hamlit (~> 2.11.0)
   handsoap (= 0.2.5.5)!
   inifile (~> 3.0)
-  inventory_refresh (~> 1.0)
-  jquery-rjs (= 0.1.1.2)!
+  inventory_refresh (~> 2.0)
+  jquery-rjs (= 0.1.1.3)!
   kubeclient (~> 4.0)
   linux_admin (~> 2.0, >= 2.0.1)
   listen (~> 3.2)
   manageiq-api!
   manageiq-api-client (~> 0.3.6)
-  manageiq-appliance_console (~> 7.1, >= 7.1.1)
+  manageiq-appliance_console (~> 7.2)
   manageiq-automation_engine!
   manageiq-consumption!
   manageiq-content!
   manageiq-decorators!
   manageiq-gems-pending (> 0)!
   manageiq-loggers (~> 1.0)
-  manageiq-messaging (~> 1.0, >= 1.1.0)
+  manageiq-messaging (~> 1.0, >= 1.2.0)
   manageiq-password (~> 1.0)
   manageiq-postgres_ha_admin (~> 3.2)
   manageiq-providers-amazon!
@@ -1400,7 +1400,7 @@ DEPENDENCIES
   rubyzip (~> 2.0.0)
   rufus-scheduler
   rugged (~> 1.5.0)
-  ruport (= 1.7.0.3)!
+  ruport (~> 1.8.0)
   sd_notify (~> 0.1.0)
   secure_headers (~> 3.9)
   simplecov (>= 0.21.2)
