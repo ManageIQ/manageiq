@@ -8840,10 +8840,6 @@ msgstr "Media valore utilizzato"
 msgid "Avg VM Count"
 msgstr "Conteggio medio VM"
 
-#: ../lib/manageiq/providers/awx/engine.rb:19
-msgid "Awx Provider"
-msgstr "Provider Awx"
-
 #: ../app/models/manageiq/providers/azure/cloud_manager.rb:95
 msgid "Azure"
 msgstr "Azure"

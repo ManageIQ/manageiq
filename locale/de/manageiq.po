@@ -8898,10 +8898,6 @@ msgstr "Wert für durchschn. Belegung"
 msgid "Avg VM Count"
 msgstr "Durchschn. Anzahl VMs"
 
-#: ../lib/manageiq/providers/awx/engine.rb:19
-msgid "Awx Provider"
-msgstr "AWX Provider"
-
 #: ../app/models/manageiq/providers/azure/cloud_manager.rb:95
 msgid "Azure"
 msgstr "Azure"

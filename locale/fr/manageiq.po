@@ -8875,10 +8875,6 @@ msgstr "Valeur utilisée - Moyenne"
 msgid "Avg VM Count"
 msgstr "Nombre de machines virtuelles - Moyenne"
 
-#: ../lib/manageiq/providers/awx/engine.rb:19
-msgid "Awx Provider"
-msgstr "Awx Provider"
-
 #: ../app/models/manageiq/providers/azure/cloud_manager.rb:95
 msgid "Azure"
 msgstr "Azure"

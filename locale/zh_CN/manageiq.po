@@ -8449,10 +8449,6 @@ msgstr "平均已用值"
 msgid "Avg VM Count"
 msgstr "平均 VM 计数"
 
-#: ../lib/manageiq/providers/awx/engine.rb:19
-msgid "Awx Provider"
-msgstr "Awx 提供者"
-
 #: ../app/models/manageiq/providers/azure/cloud_manager.rb:95
 msgid "Azure"
 msgstr "Azure"
