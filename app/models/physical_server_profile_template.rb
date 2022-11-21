@@ -24,10 +24,10 @@ class PhysicalServerProfileTemplate < ApplicationRecord
     # Load the gem
     require 'intersight_client'
     # Setup authorization
-    #ManageIQ::Providers::CiscoIntersight::PhysicalInfraManager.first.connect
+    # ManageIQ::Providers::CiscoIntersight::PhysicalInfraManager.first.connect
     bulk = ManageIQ::Providers::CiscoIntersight::PhysicalInfraManager.first.connect(:service=>'BulkApi')
 
-    cloner = IntersightClient::BulkMoCloner.new({:sources=>[{"Moid" => template_id, "ObjectType" => 'server.ProfileTemplate'}],:targets=>[{"Name" => profile_name, "ObjectType": 'server.Profile'}]})
+    cloner = IntersightClient::BulkMoCloner.new({:sources => [{"Moid" => template_id, "ObjectType" => 'server.ProfileTemplate'}], :targets => [{"Name" => profile_name, :ObjectType => 'server.Profile'}]})
 
     result = bulk.create_bulk_mo_cloner(cloner)
     new_profile_moid = result.responses[0].body.moid
@@ -58,9 +58,6 @@ class PhysicalServerProfileTemplate < ApplicationRecord
     rescue IntersightClient::ApiError => e
       _log.error("#{action} server failed for server profile (ems_ref #{new_profile_moid})")
       raise MiqException::Error, "#{action} server failed: #{e.response_body}"
-
-
     end
   end
 end
-
