@@ -65,7 +65,7 @@ RSpec.describe ScanItem do
 
         described_class.seed
 
-        expect { scan_item.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect(scan_item).to be_deleted
       end
     end
   end

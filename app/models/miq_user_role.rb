@@ -1,4 +1,6 @@
 class MiqUserRole < ApplicationRecord
+  include_concern "ReadOnlyMixin"
+
   DEFAULT_TENANT_ROLE_NAME = "EvmRole-tenant_administrator"
 
   has_many                :entitlements, :dependent => :restrict_with_exception
@@ -12,13 +14,6 @@ class MiqUserRole < ApplicationRecord
   serialize :settings
 
   default_value_for :read_only, false
-
-  before_destroy do |r|
-    if r.read_only
-      errors.add(:base, _("Read only roles cannot be deleted."))
-      throw :abort
-    end
-  end
 
   FIXTURE_PATH = File.join(FIXTURE_DIR, table_name)
   FIXTURE_YAML = "#{FIXTURE_PATH}.yml"

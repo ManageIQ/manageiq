@@ -1,5 +1,7 @@
 class DialogField < ApplicationRecord
   include NewWithTypeStiMixin
+  include_concern "ReadOnlyMixin"
+
   attr_accessor :value
   attr_accessor :dialog
 

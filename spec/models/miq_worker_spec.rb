@@ -396,7 +396,7 @@ RSpec.describe MiqWorker do
 
           expect(miq_task.reload.active?).to be_falsey
           expect(miq_task.status_error?).to be_truthy
-          expect { message_linked_to_task.reload }.to raise_error(ActiveRecord::RecordNotFound)
+          expect(message_linked_to_task).to be_deleted
         end
 
         it "let's other handlers pick up tasks and messages not yet started" do

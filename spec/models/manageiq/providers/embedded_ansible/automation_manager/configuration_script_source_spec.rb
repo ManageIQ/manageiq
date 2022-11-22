@@ -431,7 +431,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
         # Run most recent queue item (`GitRepository#broadcast_repo_dir_delete`)
         MiqQueue.get.deliver
 
-        expect { record.reload }.to raise_error ActiveRecord::RecordNotFound
+        expect(record).to be_deleted
 
         expect(git_repo_dir).to_not exist
       end

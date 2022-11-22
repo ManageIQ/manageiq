@@ -116,7 +116,7 @@ RSpec.describe MiqProvisionRequest do
         end
 
         it "should not delete Approver" do
-          expect { approver.reload }.not_to raise_error
+          expect(approver).not_to be_deleted
         end
       end
 

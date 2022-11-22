@@ -64,7 +64,7 @@ RSpec.describe MiqDialog do
 
         described_class.seed
 
-        expect { dialog.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect(dialog).to be_deleted
       end
     end
   end

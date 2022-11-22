@@ -1,6 +1,8 @@
 # TODO: Import/Export support
 
 class MiqPolicy < ApplicationRecord
+  include_concern "ReadOnlyMixin"
+
   TOWHAT_APPLIES_TO_CLASSES = %w(ContainerGroup
                                  ContainerImage
                                  ContainerNode

@@ -1,4 +1,6 @@
 class AdvancedSetting < ApplicationRecord
+  include_concern "ReadOnlyMixin"
+
   belongs_to :resource, :polymorphic => true
 
   def self.add_elements(parent, xml_node)

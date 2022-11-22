@@ -1,5 +1,7 @@
 class Condition < ApplicationRecord
   include UuidMixin
+  include_concern "ReadOnlyMixin"
+
   before_validation :default_name_to_guid, :on => :create
 
   validates :name, :description, :expression, :towhat, :presence => true
