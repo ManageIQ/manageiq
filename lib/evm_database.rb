@@ -58,17 +58,18 @@ class EvmDatabase
     Vmdb::Plugins.flat_map { |p| p.try(:seedable_classes) }.compact
   end
 
-  @@seeding = false
-  def self.seeding?
-    defined?(@@seeding) && @@seeding
-  end
+  class << self
+    attr_accessor :seeding
+    alias seeding? seeding
 
-  def self.with_seed
-    @@seeding = true
-    yield
-  ensure
-    @@seeding = false
+    def with_seed
+      self.seeding = true
+      yield
+    ensure
+      self.seeding = false
+    end
   end
+  self.seeding = false
 
   def self.seed(classes = nil, exclude_list = [])
     with_seed do
