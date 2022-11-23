@@ -24664,7 +24664,7 @@ msgstr "Dissocier une adresse IP flottante de cette instance"
 
 #: ../app/controllers/vm_common.rb
 msgid "Disassociating Floating IP from %{model} \"%{name}\""
-msgstr "Dissociation de l'adresse IP flottante de l'%{model} \"%{name}\""
+msgstr "Dissociation de l'adresse IP flottante de %{model} \"%{name}\""
 
 #: ../app/javascript/components/vm-floating-ips/vm-floating-ips-form.jsx
 msgid "Disassociation of Floating IP with Instance was cancelled."

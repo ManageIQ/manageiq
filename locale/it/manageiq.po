@@ -490,7 +490,7 @@ msgstr[1] "%d notifiche non lette"
 #: ../app/javascript/components/miq-pagination.jsx
 msgid "%d-%d of %d item"
 msgid_plural "%d-%d of %d items"
-msgstr[0] "%d-%d of %d elemento"
+msgstr[0] "%d-%d di %d elemento"
 msgstr[1] "%d-%d di %d elementi"
 
 #: ../app/javascript/components/ops-tenant-form/ops-tenant-form.jsx

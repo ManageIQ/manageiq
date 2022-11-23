@@ -31099,7 +31099,7 @@ msgstr "Cumprir um valor"
 #: ../app/helpers/container_project_helper/textual_summary.rb
 #: ../app/javascript/components/tenant-quota-form/index.jsx
 msgid "Enforced"
-msgstr "Imposto"
+msgstr "Cumprido"
 
 #: ../app/views/miq_ae_tools/_results_tree.html.haml
 #: ../app/views/miq_ae_tools/_results_uri.html.haml
