@@ -28,7 +28,8 @@ RSpec.describe MiqProvisionWorkflow do
                                             :host => @host)
           @hardware    = FactoryBot.create(:hardware, :vm_or_template => @vm_template, :guest_os => "winxppro",
                                             :memory_mb => 512,
-                                            :cpu_sockets => 2)
+                                            :cpu_sockets => 2,
+                                            :disks => FactoryBot.create(:disks, [:device_type => "disk", :size => 16 * (1024**3)]))
           @switch      = FactoryBot.create(:switch, :name => 'vSwitch0', :ports => 32, :hosts => [@host])
           @lan         = FactoryBot.create(:lan, :name => "VM Network", :switch => @switch)
           @ethernet    = FactoryBot.create(:guest_device, :hardware => @hardware, :lan => @lan,
