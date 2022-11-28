@@ -180,7 +180,7 @@ RSpec.describe ServiceOrchestration do
   describe '#deploy_orchestration_stack' do
     it 'calls OrchestrationTemplateRunner' do
       job = double(:job, :id => 1, :orchestration_stack => FactoryBot.create(:orchestration_stack))
-      allow(job).to receive(:signal).with(:start)
+      allow(job).to receive(:signal_start)
       allow(service_with_dialog_options).to receive(:wait_on_orchestration_stack)
       allow(ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner).to receive(:create_job) do |options|
         expect(options).to include(
@@ -207,7 +207,7 @@ RSpec.describe ServiceOrchestration do
 
     it 'raises runtime error when job finishes with pre-existing stack' do
       job = double(:job, :id => 1, :status => 'error', :orchestration_stack => nil)
-      allow(job).to receive(:signal).with(:start)
+      allow(job).to receive(:signal_start)
       allow(ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner).to receive(:create_job).and_return(job)
       expect { service_with_dialog_options.deploy_orchestration_stack }.to raise_error(RuntimeError, /Orchestration template runner finished with error/)
     end

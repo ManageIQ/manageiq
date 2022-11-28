@@ -18,9 +18,7 @@ module Service::ResourceLinking
 
     _log.info("NAME [#{options[:name]}] for user #{evm_owner.userid}")
 
-    Service::LinkingWorkflow.create_job(options).tap do |job|
-      job.signal(:start)
-    end
+    Service::LinkingWorkflow.create_job(options).tap(&:signal_start)
   rescue => err
     _log.log_backtrace(err)
     raise

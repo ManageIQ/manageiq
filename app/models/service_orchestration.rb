@@ -38,7 +38,7 @@ class ServiceOrchestration < Service
 
     @deploy_stack_job = ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner.create_job(job_options)
     update(:options => options.merge(:deploy_stack_job_id => @deploy_stack_job.id))
-    @deploy_stack_job.signal(:start)
+    @deploy_stack_job.signal_start
 
     wait_on_orchestration_stack
     orchestration_stack

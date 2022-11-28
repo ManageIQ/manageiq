@@ -12,7 +12,7 @@ RSpec.describe Service do
       expect(Service::LinkingWorkflow).to receive(:create_job) do |args|
         expect(args).to match(hash_including(:target_class => provider.class.name, :target_id => provider.id))
         expect(args).to match(hash_including(:uid_ems_array => array_including(uid_ems_array)))
-      end.and_return(double(:signal => :start))
+      end.and_return(double(:signal_start => nil))
       service.add_provider_vms(provider, uid_ems_array)
     end
   end
