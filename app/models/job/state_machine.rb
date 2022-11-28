@@ -41,6 +41,10 @@ module Job::StateMachine
     signal(:abort, *args)
   end
 
+  def signal_start(*args)
+    signal(:start, *args)
+  end
+
   def signal(signal, *args)
     signal = :abort_job if signal == :abort
     if transit_state(signal)
