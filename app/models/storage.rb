@@ -67,7 +67,7 @@ class Storage < ApplicationRecord
 
   delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
 
-  SUPPORTED_STORAGE_TYPES = %w( VMFS NFS NFS41 FCP ISCSI GLUSTERFS )
+  SUPPORTED_STORAGE_TYPES = %w[VSAN VMFS NAS NFS NFS41 ISCSI DIR FCP CSVFS NTFS GLUSTERFS].freeze
 
   supports :smartstate_analysis do
     if !ext_management_system&.class&.supports?(:smartstate_analysis)

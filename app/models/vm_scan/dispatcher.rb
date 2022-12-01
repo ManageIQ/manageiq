@@ -252,7 +252,7 @@ class VmScan
           queue_signal(job, {:args => [:abort, msg, "error"]})
           return []
         else
-          unless %w[VSAN VMFS NAS NFS NFS41 ISCSI DIR FCP CSVFS NTFS GLUSTERFS].include?(@vm.storage.store_type)
+          unless @vm.storage.storage_type_supported_for_ssa?
             msg = "Vm storage type [#{@vm.storage.store_type}] unsupported [#{job.target_id}], aborting job [#{job.guid}]."
             queue_signal(job, {:args => [:abort, msg, "error"]})
             return []
