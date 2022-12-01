@@ -2,6 +2,7 @@ class PhysicalChassis < ApplicationRecord
   include SupportsFeatureMixin
   include EventMixin
   include EmsRefreshMixin
+  include CustomActionsMixin
 
   acts_as_miq_taggable
 
