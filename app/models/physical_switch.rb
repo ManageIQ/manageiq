@@ -2,7 +2,6 @@ class PhysicalSwitch < Switch
   include SupportsFeatureMixin
   include EventMixin
   include EmsRefreshMixin
-  include CustomActionsMixin
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :inverse_of => :physical_switches,
     :class_name => "ManageIQ::Providers::PhysicalInfraManager"
