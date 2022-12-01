@@ -506,4 +506,16 @@ RSpec.describe Storage do
       expect(storage.tenant_identity.current_tenant).to eq(Tenant.root_tenant)
     end
   end
+
+  describe "#storage_type_supported_for_ssa?" do
+    it "detects bad storage type" do
+      storage = FactoryBot.build(:storage, :store_type => "XYZ")
+      expect(storage.storage_type_supported_for_ssa?).to eq(false)
+    end
+
+    it "detects good storage type" do
+      storage = FactoryBot.build(:storage, :store_type => "NFS")
+      expect(storage.storage_type_supported_for_ssa?).to eq(true)
+    end
+  end
 end

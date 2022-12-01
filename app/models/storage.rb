@@ -343,7 +343,7 @@ class Storage < ApplicationRecord
   end
 
   def scan(userid = "system", _role = "ems_operations")
-    unless SUPPORTED_STORAGE_TYPES.include?(store_type.upcase)
+    unless storage_type_supported_for_ssa?
       raise(MiqException::MiqUnsupportedStorage,
             _("Action not supported for Datastore type [%{store_type}], [%{name}] with id: [%{id}]") %
               {:store_type => store_type, :name => name, :id => id})
@@ -815,9 +815,8 @@ class Storage < ApplicationRecord
     with_relationship_type("vm_scan_storage_affinity") { parents }
   end
 
-  # @param [String, Storage] store_type upcased version of the storage type
-  def self.supports?(store_type)
-    Storage::SUPPORTED_STORAGE_TYPES.include?(store_type)
+  def storage_type_supported_for_ssa?
+    SUPPORTED_STORAGE_TYPES.include?(store_type.upcase)
   end
 
   def self.display_name(number = 1)
