@@ -55,6 +55,11 @@ class CustomButton < ApplicationRecord
     Tenant,
     User,
     Vm,
+    PhysicalChassis,
+    PhysicalServer,
+    PhysicalStorage,
+    PhysicalRack,
+    PhysicalSwitch,
   ].freeze
 
   def self.buttons_for(other, applies_to_id = nil)
