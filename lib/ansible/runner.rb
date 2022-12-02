@@ -195,7 +195,7 @@ module Ansible
 
         validate_params!(env_vars, extra_vars, tags, ansible_runner_method, playbook_or_role_args)
 
-        base_dir = Pathname.new(Dir.mktmpdir("ansible-runner"))
+        base_dir = Pathname.new(Dir.mktmpdir("ansible-runner")).realpath
         debug    = verbosity.to_i >= 5 || env_vars["ANSIBLE_KEEP_REMOTE_FILES"]
 
         cred_command_line, cred_env_vars, cred_extra_vars = credentials_info(credentials, base_dir)
