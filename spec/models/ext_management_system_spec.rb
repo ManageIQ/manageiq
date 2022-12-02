@@ -131,6 +131,36 @@ RSpec.describe ExtManagementSystem do
     end
   end
 
+  describe ".ems_worker_types" do
+    let(:ems_infra) { FactoryBot.create(:ems_vmware) }
+
+    before do
+      MiqWorkerType.create!(
+        [
+          {:worker_type => "MiqGenericWorker"},
+          {:worker_type => "ManageIQ::Providers::BaseManager::EventCatcher"},
+          {:worker_type => "ManageIQ::Providers::BaseManager::RefreshWorker"},
+          {:worker_type => "ManageIQ::Providers::Amazon::CloudManager::RefreshWorker"},
+        ]
+      )
+    end
+
+    it "returns all workers for a provider type" do
+      expect(ManageIQ::Providers::BaseManager.ems_worker_types)
+        .to include(ManageIQ::Providers::BaseManager::EventCatcher, ManageIQ::Providers::BaseManager::RefreshWorker)
+    end
+
+    it "doesn't return non-provider workers" do
+      expect(ManageIQ::Providers::BaseManager.ems_worker_types)
+        .not_to include(MiqGenericWorker)
+    end
+
+    it "doesn't return workers for other providers" do
+      expect(ManageIQ::Providers::BaseManager.ems_worker_types)
+        .not_to include(ManageIQ::Providers::Amazon::CloudManager::RefreshWorker)
+    end
+  end
+
   it "does access database when unchanged model is saved" do
     r = FactoryBot.create(:ems_vmware)
     expect { r.valid? }.to make_database_queries(:count => 3)

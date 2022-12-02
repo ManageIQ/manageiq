@@ -694,6 +694,11 @@ class ExtManagementSystem < ApplicationRecord
     task.id
   end
 
+  def self.ems_worker_types
+    MiqWorkerType.worker_class_names.select { |klass_name| klass_name.start_with?(name) }.map(&:constantize)
+  end
+  delegate :ems_worker_types, :to => :class
+
   def ems_workers
     MiqWorker.find_alive.where(:queue_name => queue_name)
   end
