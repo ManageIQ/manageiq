@@ -1,8 +1,18 @@
 RSpec.describe Ansible::Runner::ResponseAsync do
-  subject { described_class.new(:base_dir => "fake") }
+  subject { described_class.new(:base_dir => "/path/to/results") }
 
-  it "serializes through dump and load" do
-    allow(AwesomeSpawn).to receive(:run).and_return(double(:success? => false))
-    described_class.load(subject.dump)
+  it "#dump" do
+    expect(subject.dump).to eq(
+      :base_dir => "/path/to/results",
+      :debug    => false,
+      :ident    => "result"
+    )
+  end
+
+  it ".load" do
+    response = described_class.load(subject.dump)
+
+    expect(response).to be_a(described_class)
+    expect(response.base_dir).to eq("/path/to/results")
   end
 end
