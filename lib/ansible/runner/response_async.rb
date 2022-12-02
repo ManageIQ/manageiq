@@ -54,10 +54,11 @@ module Ansible
 
       # Creates the Ansible::Runner::ResponseAsync object from hash data
       #
-      # @param [Hash] Dumped Ansible::Runner::ResponseAsync object
+      # @param hash [Hash] Dumped Ansible::Runner::ResponseAsync object
       # @return [Ansible::Runner::ResponseAsync] Ansible::Runner::ResponseAsync Object created from hash data
-      def self.load(kwargs)
-        new(kwargs)
+      def self.load(hash)
+        # Dump dumps a hash and load accepts a hash, so we must expand the hash to kwargs as new expects kwargs
+        new(**hash)
       end
     end
   end
