@@ -551,7 +551,7 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    dalli (3.1.6)
+    dalli (3.2.3)
     db-query-matchers (0.10.0)
       activesupport (>= 4.0, < 7)
       rspec (~> 3.0)
@@ -1306,7 +1306,7 @@ DEPENDENCIES
   color (~> 1.8)
   config (~> 2.2, >= 2.2.3)
   connection_pool
-  dalli (~> 3.1.0)
+  dalli (~> 3.2.3)
   db-query-matchers (~> 0.10.0)
   dbus-systemd (~> 1.1.0)
   default_value_for (~> 3.3)
