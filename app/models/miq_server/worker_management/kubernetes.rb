@@ -215,8 +215,31 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
 
     ch = Concurrent::Hash.new
     ch[:label_name]            = pod.metadata.labels.name
-    ch[:last_state_terminated] = pod.status.containerStatuses.any? { |cs| cs.lastState.terminated }
     ch[:container_restarts]    = pod.status.containerStatuses.sum { |cs| cs.restartCount.to_i }
+
+    ch[:last_state_terminated] = false
+    ch[:terminations] = []
+    pod.status.containerStatuses.each do |cs|
+      terminated = cs.lastState.terminated
+      if terminated
+        ch[:last_state_terminated] = true
+
+        # TODO: Right now, we capture all of the terminations for all containers in the pod. We're
+        # not accumulating them over time so whatever logs or monitors this would need to deal with
+        # already processed/logged terminations (uniq by finished_at?) or ones we missed because
+        # the last state was already reset because the container restarted again or the deployment
+        # was removed.  I don't know if we care about the cri-o container id.
+        ch[:terminations] << {
+          :container_id => terminated.containerID,
+          :exit_code    => terminated.exitCode,
+          :message      => terminated.message,
+          :reason       => terminated.reason,
+          :signal       => terminated.signal,
+          :started_at   => terminated.startedAt,
+          :finished_at  => terminated.finishedAt,
+        }
+      end
+    end
 
     name = pod.metadata.name
     current_pods[name] ||= ch
