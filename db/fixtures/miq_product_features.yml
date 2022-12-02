@@ -5838,6 +5838,10 @@
         :description: Reset VM
         :feature_type: control
         :identifier: vm_reset
+      - :name: Terminate
+        :description: Delete VM
+        :feature_type: control
+        :identifier: vm_terminate
       - :name: Shutdown Guest
         :description: Shutdown the Guest OS on VMs
         :feature_type: control
