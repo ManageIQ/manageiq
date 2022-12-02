@@ -167,21 +167,28 @@ RSpec.describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
     let(:state) { "execute" }
     let(:response_async) { Ansible::Runner::ResponseAsync.new(:base_dir => "/path/to/results") }
 
-    it "ansible-runner succeeds" do
-      response_async = Ansible::Runner::ResponseAsync.new(:base_dir => "/path/to/results")
+    it "forwards the options to Ansible::Runner parameters" do
       runner_options = [
+        %w[192.0.2.0 192.0.2.1],
+        [],
         {"ENV" => "VAR"},
         {"arg1" => "val1"},
-        "/path/to/playbook",
-        {
+        # NOTE: The following are actually keyword args, but RSpec sees them as a Hash
+        a_hash_including(
           :become_enabled => false,
-          :hosts          => %w[192.0.2.0 192.0.2.1],
-          :credentials    => [],
+          :playbook       => "/path/to/playbook",
           :verbosity      => 3
-        }
+        )
       ]
 
-      expect(Ansible::Runner).to receive(:run_async).with(*runner_options).and_return(response_async)
+      expect(Ansible::Runner).to receive(:run_via_cli).with(*runner_options).and_return(response_async)
+      expect(job).to receive(:queue_signal).with(:poll_runner, :deliver_on => nil)
+
+      job.signal(:execute)
+    end
+
+    it "ansible-runner succeeds" do
+      expect(Ansible::Runner).to receive(:run_via_cli).and_return(response_async)
       expect(job).to receive(:queue_signal).with(:poll_runner, :deliver_on => nil)
 
       job.signal(:execute)
@@ -190,7 +197,7 @@ RSpec.describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
     end
 
     it "ansible-runner fails" do
-      expect(Ansible::Runner).to receive(:run_async).and_return(nil)
+      expect(Ansible::Runner).to receive(:run_via_cli).and_return(nil)
       expect(job).to receive(:queue_signal).with(:abort, "Failed to run ansible playbook", "error", :deliver_on => nil)
 
       job.signal(:execute)
