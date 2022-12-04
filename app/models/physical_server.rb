@@ -9,6 +9,8 @@ class PhysicalServer < ApplicationRecord
   include ProviderObjectMixin
   include ComplianceMixin
   include EmsRefreshMixin
+  include CustomActionsMixin
+
 
   include_concern 'Operations'
 

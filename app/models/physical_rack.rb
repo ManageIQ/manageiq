@@ -1,6 +1,7 @@
 class PhysicalRack < ApplicationRecord
   include SupportsFeatureMixin
   include EmsRefreshMixin
+  include CustomActionsMixin
 
   acts_as_miq_taggable
 
