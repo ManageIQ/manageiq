@@ -922,6 +922,30 @@ class ExtManagementSystem < ApplicationRecord
     end
   end
 
+  def stop_workers_on_endpoint_change
+    return if new_record?
+    return if default_endpoint.changed.include_none?("hostname", "ipaddress")
+
+    _log.info("EMS: [#{name}], Hostname or IP address has changed, stopping workers.  They will be restarted by the WorkerMonitor.")
+
+    stop_workers_for_ems
+  end
+
+  def stop_workers_on_credential_change
+    return if new_record?
+    return unless credentials_changed?
+
+    _log.info("EMS: [#{name}], Credentials have changed, stopping workers.  They will be restarted by the WorkerMonitor.")
+
+    stop_workers_for_ems
+  end
+
+  def stop_workers_for_ems
+    ems_worker_types.select(&:restart_on_change?).each do |worker_klass|
+      worker_klass.stop_worker_for_ems(self)
+    end
+  end
+
   def blacklisted_event_names
     (
       self.class.blacklisted_events.where(:enabled => true).pluck(:event_name) +
