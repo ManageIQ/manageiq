@@ -4,6 +4,40 @@ RSpec.describe MiqQueue do
   let(:miq_server) { EvmSpecHelper.local_miq_server }
   let(:zone)       { miq_server.zone }
 
+  context "#validate" do
+    it "allows nil zones" do
+      msg = FactoryBot.build(:miq_queue)
+      expect(msg.zone).to be_nil
+      expect(msg).to be_valid
+    end
+
+    it "allows valid zone names" do
+      msg = FactoryBot.build(:miq_queue, :zone => zone.name)
+      expect(msg).to be_valid
+    end
+
+    it "complains about unknown zone names" do
+      msg = FactoryBot.build(:miq_queue, :zone => "#{zone.name}x")
+      expect(msg).not_to be_valid
+    end
+
+    it "only queries a single zone one time" do
+      # cache the value
+      msg = FactoryBot.build(:miq_queue, :zone => zone.name)
+      expect(msg).to be_valid
+      expect { expect(FactoryBot.build(:miq_queue, :zone => zone.name)).to be_valid }.not_to make_database_queries
+    end
+
+    it "can find new zones" do
+      # potentially load the cached
+      msg = FactoryBot.build(:miq_queue, :zone => zone.name)
+      expect(msg).to be_valid
+      zone2 = FactoryBot.create(:zone)
+      msg = FactoryBot.build(:miq_queue, :zone => zone2.name)
+      expect(msg).to be_valid
+    end
+  end
+
   context "#deliver" do
     before { miq_server }
     it "requires class_name" do

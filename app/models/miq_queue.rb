@@ -105,7 +105,7 @@ class MiqQueue < ApplicationRecord
   serialize :args, Array
   serialize :miq_callback, Hash
 
-  validates :zone, :inclusion => {:in => proc { Zone.in_my_region.pluck(:name) }}, :allow_nil => true
+  validate :validate_zone_name
 
   STATE_READY   = 'ready'.freeze
   STATE_DEQUEUE = 'dequeue'.freeze
@@ -622,6 +622,16 @@ class MiqQueue < ApplicationRecord
   end
 
   private
+
+  # NOTE: this will intentionally lookup missing zones every time
+  def validate_zone_name
+    if zone && !self.class.valid_zone_names[zone]
+      found = self.class.valid_zone_names[zone] = Zone.in_my_region.exists?(:name => zone)
+      errors.add(:zone, N_("Unknown Zone")) unless found
+    end
+  end
+
+  cache_with_timeout(:valid_zone_names, 1.minute) { Hash.new }
 
   def activate_miq_task(args)
     MiqTask.update_status(miq_task_id, MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, "Task starting") if miq_task_id
