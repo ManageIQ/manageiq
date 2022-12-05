@@ -48,7 +48,7 @@ describe GenericMailer do
       # raises error when delivered
       msg = @args.merge(:to => 'me@bedrock.gov, you@bedrock.gov')
       notification = GenericMailer.generic_notification(msg)
-      allow(notification).to receive(:deliver_now).and_raise(Net::SMTPFatalError)
+      allow(notification).to receive(:deliver_now).and_raise(Net::SMTPFatalError.new("fake_response"))
 
       # send error msg first...
       expect(GenericMailer)
