@@ -20,4 +20,8 @@ class ManageIQ::Providers::BaseManager::EventCatcher < MiqWorker
   def self.kill_priority
     MiqWorkerType::KILL_PRIORITY_EVENT_CATCHERS
   end
+
+  def self.restart_on_change?
+    true
+  end
 end

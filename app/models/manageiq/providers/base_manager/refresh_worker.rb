@@ -26,4 +26,8 @@ class ManageIQ::Providers::BaseManager::RefreshWorker < MiqQueueWorkerBase
   def self.kill_priority
     MiqWorkerType::KILL_PRIORITY_REFRESH_WORKERS
   end
+
+  def self.restart_on_change?
+    module_parent.supports?(:streaming_refresh)
+  end
 end
