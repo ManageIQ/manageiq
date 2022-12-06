@@ -83,12 +83,13 @@ RSpec.describe "VmScanDispatcherVmStorage2Proxies" do
 
             context "a vm template and invalid VC authentication" do
               before do
-                allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive_messages(:missing_credentials? => true)
-                allow(@vm).to receive_messages(:template? => true)
+                @vm.template = true
+                @hosts.each { |host| host.authentications.destroy_all }
                 @ems1 = FactoryBot.create(:ems_vmware, :name => "Ems1")
                 @vm.ext_management_system = @ems1
                 @vm.save
               end
+
               it "Vm#storage2active_proxies will return an empty list" do
                 expect(@vm.storage2active_proxies).to be_empty
               end
@@ -96,7 +97,7 @@ RSpec.describe "VmScanDispatcherVmStorage2Proxies" do
 
             context "a vm and invalid host authentication" do
               before do
-                allow_any_instance_of(Host).to receive_messages(:missing_credentials? => true)
+                @hosts.each { |host| host.authentications.destroy_all }
                 allow(@vm).to receive_messages(:template? => false)
               end
               it "Vm#storage2active_proxies will return an empty list" do

@@ -2,7 +2,7 @@ RSpec.describe ManageIQ::Providers::InfraManager::MetricsCapture do
   include Spec::Support::MetricHelper
 
   let(:miq_server) { EvmSpecHelper.local_miq_server }
-  let(:ems) { FactoryBot.create(:ems_vmware, :zone => miq_server.zone) }
+  let(:ems) { FactoryBot.create(:ems_vmware_with_authentication, :zone => miq_server.zone) }
 
   before do
     storages = FactoryBot.create_list(:storage_vmware, 2)
