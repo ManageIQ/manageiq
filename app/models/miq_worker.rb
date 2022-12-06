@@ -90,9 +90,10 @@ class MiqWorker < ApplicationRecord
     leaf_subclasses | descendants.select { |d| d.try(:acts_as_sti_leaf_class?) }
   end
 
-  class_attribute :default_queue_name, :required_roles, :maximum_workers_count, :include_stopping_workers_on_synchronize
+  class_attribute :default_queue_name, :required_roles, :maximum_workers_count, :include_stopping_workers_on_synchronize, :worker_settings_paths
   self.include_stopping_workers_on_synchronize = false
   self.required_roles = []
+  self.worker_settings_paths = []
 
   def self.server_scope
     return current_scope if current_scope && current_scope.where_values_hash.include?('miq_server_id')
@@ -205,31 +206,38 @@ class MiqWorker < ApplicationRecord
       classes.each do |c|
         section = section[c]
         raise _("Missing config section %{section_name}") % {:section_name => c} if section.nil?
+
         defaults = section[:defaults]
         unless defaults.nil?
-          defaults.delete_if {|k, v| v == Vmdb::Settings::RESET_VALUE }
+          defaults.delete_if { |_k, v| v == Vmdb::Settings::RESET_VALUE }
           settings.merge!(defaults)
         end
       end
 
-      section.delete_if {|k, v| v == Vmdb::Settings::RESET_VALUE }
+      section.delete_if { |_k, v| v == Vmdb::Settings::RESET_VALUE }
       settings.merge!(section)
+      normalize_settings!(settings) unless raw == true
+    end
 
-      # If not specified, provide the worker_settings cleaned up in fixnums, etc. instead of 1.seconds, 10.megabytes
-      # Clean up the configuration values in a format like "30.seconds"
-      unless raw == true
-        settings.keys.each do |k|
-          if settings[k].kind_of?(String)
-            if settings[k].number_with_method?
-              settings[k] = settings[k].to_i_with_method
-            elsif settings[k] =~ /\A\d+(.\d+)?\z/ # case where int/float saved as string
-              settings[k] = settings[k].to_i
-            end
-          end
+    settings
+  end
+
+  # If not specified, provide the worker_settings cleaned up in fixnums, etc. instead of 1.seconds, 10.megabytes
+  # and decrypt any values which are encrypted with ManageIQ::Password.
+  def self.normalize_settings!(settings, recurse: false)
+    settings.each_key do |k|
+      if settings[k].kind_of?(Hash) && recurse
+        normalize_settings!(settings[k])
+      elsif settings[k].kind_of?(String)
+        if settings[k].number_with_method?
+          settings[k] = settings[k].to_i_with_method
+        elsif settings[k].match?(/\A\d+(.\d+)?\z/) # case where int/float saved as string
+          settings[k] = settings[k].to_i
+        elsif ManageIQ::Password.encrypted?(settings[k])
+          settings[k] = ManageIQ::Password.decrypt(settings[k])
         end
       end
     end
-    settings
   end
 
   def worker_settings(options = {})

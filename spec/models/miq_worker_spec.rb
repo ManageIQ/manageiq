@@ -267,6 +267,35 @@ RSpec.describe MiqWorker do
                .worker_settings(:config => settings)[:memory_threshold]
       expect(actual).to eq(1.terabyte)
     end
+
+    context "with encrypted values" do
+      let(:settings) do
+        {
+          :workers => {
+            :worker_base => {
+              :defaults          => {:memory_threshold => "100.megabytes"},
+              :queue_worker_base => {
+                :defaults           => {:memory_threshold => "300.megabytes"},
+                :ems_refresh_worker => {
+                  :defaults                  => {:memory_threshold => "500.megabytes"},
+                  :ems_refresh_worker_amazon => {
+                    :memory_threshold => "700.megabytes",
+                    :proxy_password   => ManageIQ::Password.encrypt("password")
+                  }
+                }
+              }
+            }
+          },
+          :ems     => {:ems_amazon => {}}
+        }
+      end
+
+      it "decrypts values" do
+        expect(
+          ManageIQ::Providers::Amazon::CloudManager::RefreshWorker.worker_settings[:proxy_password]
+        ).to eq("password")
+      end
+    end
   end
 
   context "with two servers" do
