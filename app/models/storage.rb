@@ -74,6 +74,8 @@ class Storage < ApplicationRecord
       _("Smartstate Analysis cannot be performed on selected Datastore")
     elsif !ext_management_system&.authentication_status_ok?
       _("There are no EMSs with valid credentials for this Datastore")
+    elsif !storage_type_supported_for_ssa?
+      _("Smartstate Analysis unsupported for storage type %{store_type}" % {:store_type => store_type})
     end
   end
 
@@ -343,17 +345,12 @@ class Storage < ApplicationRecord
   end
 
   def scan(userid = "system", _role = "ems_operations")
-    unless storage_type_supported_for_ssa?
+    unless supports?(:smartstate_analysis)
       raise(MiqException::MiqUnsupportedStorage,
-            _("Action not supported for Datastore type [%{store_type}], [%{name}] with id: [%{id}]") %
-              {:store_type => store_type, :name => name, :id => id})
+            _("Action not supported for Datastore type [%{store_type}], [%{name}] with id: [%{id}] %{error}") %
+              {:store_type => store_type, :name => name, :id => id, :error => unsupported_reason(:smartstate_analysis)})
     end
 
-    unless ext_management_system&.authentication_status_ok?
-      raise(MiqException::MiqStorageError,
-            _("Check that an EMS has valid credentials for Datastore [%{name}] with id: [%{id}]") %
-              {:name => name, :id => id})
-    end
     task_name = "SmartState Analysis for [#{name}]"
     self.class.create_scan_task(task_name, userid, [self])
   end

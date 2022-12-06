@@ -395,13 +395,26 @@ RSpec.describe Storage do
   end
 
   context "#supports?(:smartstate_analysis)" do
-    it "returns true for VMware Storage when queried whether it supports smartstate analysis" do
-      storage = FactoryBot.create(:storage, :ext_management_system => FactoryBot.create(:ems_vmware_with_authentication))
+    it "supports smartstate if the ems supports smartstate analysis" do
+      ems = FactoryBot.create(:ems_vmware_with_authentication)
+      expect(ems.supports?(:smartstate_analysis)).to eq(true)
+      storage = FactoryBot.create(:storage_nfs, :ext_management_system => ems)
+
       expect(storage.supports?(:smartstate_analysis)).to eq(true)
     end
 
-    it "returns false for non-vmware Storage when queried whether it supports smartstate analysis" do
-      storage = FactoryBot.create(:storage, :ext_management_system => FactoryBot.create(:ems_microsoft_with_authentication))
+    it "doesn't support smartstate for an unknown store_type" do
+      ems = FactoryBot.create(:ems_vmware_with_authentication)
+      storage = FactoryBot.create(:storage_unknown, :ext_management_system => ems)
+
+      expect(storage.supports?(:smartstate_analysis)).to eq(false)
+    end
+
+    it "doesn't support smartstate for an ems that doesn't support smartstate analysis" do
+      ems = FactoryBot.create(:ems_microsoft_with_authentication)
+      expect(ems.supports?(:smartstate_analysis)).not_to eq(true)
+      storage = FactoryBot.create(:storage_nfs, :ext_management_system => ems)
+
       expect(storage.supports?(:smartstate_analysis)).to_not eq(true)
     end
   end

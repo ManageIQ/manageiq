@@ -252,8 +252,8 @@ class VmScan
           queue_signal(job, {:args => [:abort, msg, "error"]})
           return []
         else
-          unless @vm.storage.storage_type_supported_for_ssa?
-            msg = "Vm storage type [#{@vm.storage.store_type}] unsupported [#{job.target_id}], aborting job [#{job.guid}]."
+          unless @vm.storage.supports?(:smartstate_analysis)
+            msg = @vm.storage.unsupported_reason(:smartstate_analysis)
             queue_signal(job, {:args => [:abort, msg, "error"]})
             return []
           end
