@@ -851,7 +851,7 @@ RSpec.describe ExtManagementSystem do
     let(:default_authentication) { {"authtype" => "default", "userid" => ems.default_authentication.userid, "password" => ems.default_authentication.password} }
 
     context "with no changes" do
-      it "doesn't call endpoints or authentications changed callbaks" do
+      it "doesn't call endpoints or authentications changed callbacks" do
         expect(ems).not_to receive(:after_update_endpoints)
         expect(ems).not_to receive(:after_update_authentication)
 
@@ -921,6 +921,12 @@ RSpec.describe ExtManagementSystem do
 
         ems.edit_with_params(params, endpoints, authentications)
       end
+
+      it "stops the event monitor" do
+        expect(ems).to receive(:stop_event_monitor_queue)
+
+        ems.edit_with_params(params, endpoints, authentications)
+      end
     end
 
     context "adding an authentication" do
@@ -972,6 +978,12 @@ RSpec.describe ExtManagementSystem do
       it "calls after_update_authentication" do
         expect(ems).to receive(:after_update_authentication)
         expect(ems).not_to receive(:after_update_endpoints)
+
+        ems.edit_with_params(params, endpoints, authentications)
+      end
+
+      it "stops the event monitor" do
+        expect(ems).to receive(:stop_event_monitor_queue)
 
         ems.edit_with_params(params, endpoints, authentications)
       end
