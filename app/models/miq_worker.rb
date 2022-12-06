@@ -226,15 +226,16 @@ class MiqWorker < ApplicationRecord
   # and decrypt any values which are encrypted with ManageIQ::Password.
   def self.normalize_settings!(settings, recurse: false)
     settings.each_key do |k|
-      if settings[k].kind_of?(Hash) && recurse
-        normalize_settings!(settings[k])
-      elsif settings[k].kind_of?(String)
-        if settings[k].number_with_method?
-          settings[k] = settings[k].to_i_with_method
-        elsif settings[k].match?(/\A\d+(.\d+)?\z/) # case where int/float saved as string
-          settings[k] = settings[k].to_i
-        elsif ManageIQ::Password.encrypted?(settings[k])
-          settings[k] = ManageIQ::Password.decrypt(settings[k])
+      v = settings[k]
+      if v.kind_of?(Hash) && recurse
+        normalize_settings!(v, :recurse => true)
+      elsif v.kind_of?(String)
+        if v.number_with_method?
+          settings[k] = v.to_i_with_method
+        elsif v.match?(/\A\d+(.\d+)?\z/) # case where int/float saved as string
+          settings[k] = v.to_i
+        elsif ManageIQ::Password.encrypted?(v)
+          settings[k] = ManageIQ::Password.decrypt(v)
         end
       end
     end
