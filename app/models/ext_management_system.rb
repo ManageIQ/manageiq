@@ -176,18 +176,30 @@ class ExtManagementSystem < ApplicationRecord
 
   def edit_with_params(params, endpoints, authentications)
     tap do |ems|
+      endpoints_changed       = false
+      authentications_changed = false
+
       transaction do
         # Remove endpoints/attributes that are not arriving in the arguments above
-        ems.endpoints.where.not(:role => nil).where.not(:role => endpoints.map { |ep| ep['role'] }).delete_all
-        ems.authentications.where.not(:authtype => nil).where.not(:authtype => authentications.map { |au| au['authtype'] }).delete_all
+        endpoints_to_delete       = ems.endpoints.where.not(:role => nil).where.not(:role => endpoints.map { |ep| ep['role'] })
+        authentications_to_delete = ems.authentications.where.not(:authtype => nil).where.not(:authtype => authentications.map { |au| au['authtype'] })
+
+        endpoints_changed       ||= endpoints_to_delete.delete_all > 0
+        authentications_changed ||= authentications_to_delete.delete_all > 0
 
         ems.assign_attributes(params)
-        ems.endpoints = endpoints.map(&method(:assign_nested_endpoint))
+        ems.endpoints       = endpoints.map(&method(:assign_nested_endpoint))
         ems.authentications = authentications.map(&method(:assign_nested_authentication))
+
+        endpoints_changed       ||= ems.endpoints.any?(&:changed?)
+        authentications_changed ||= ems.authentications.any?(&:changed?)
 
         ems.provider.save! if ems.provider.present? && ems.provider.changed?
         ems.save!
       end
+
+      after_update_endpoints      if endpoints_changed
+      after_update_authentication if authentications_changed
     end
   end
 
@@ -836,6 +848,10 @@ class ExtManagementSystem < ApplicationRecord
   # restarted manually for the new credentials to be used.
   def after_update_authentication
     stop_event_monitor_queue_on_credential_change
+  end
+
+  def after_update_endpoints
+    stop_event_monitor_queue_on_change
   end
 
   ###################################
