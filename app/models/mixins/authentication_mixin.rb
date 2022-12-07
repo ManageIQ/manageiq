@@ -243,17 +243,17 @@ module AuthenticationMixin
       cred.auth_key        = value[:auth_key]
       cred.service_account = value[:service_account].presence
 
-      changes = {type => cred.changes} if cred.changed?
+      changes = [type.to_sym, cred.changes] if cred.changed?
 
       cred.save if options[:save] && id
 
       changes
-    end.compact
+    end.compact.to_h
 
     return if authentication_changes.blank? || !options[:save]
 
     # Invoke callback
-    after_update_authentication if respond_to?(:after_update_authentication)
+    after_update_authentication(authentication_changes) if respond_to?(:after_update_authentication)
   end
 
   def authentication_type(type)
