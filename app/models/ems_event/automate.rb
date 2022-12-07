@@ -3,6 +3,8 @@ class EmsEvent
     extend ActiveSupport::Concern
 
     def manager_refresh(sync: false)
+      return if ext_management_system&.supports?(:streaming_refresh)
+
       refresh_targets = manager_refresh_targets
 
       return if refresh_targets.blank?
