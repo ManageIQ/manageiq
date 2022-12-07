@@ -1143,14 +1143,10 @@ class VmOrTemplate < ApplicationRecord
     # Return location for RHEV-M VMs
     return rhevm_config_path if vendor.to_s.downcase == 'redhat'
 
-    case storage.store_type
-    when "VMFS"  then "[#{storage.name}] #{location}"
-    when "VSAN"  then "[#{storage.name}] #{location}"
-    when "NFS"   then "[#{storage.name}] #{location}"
-    when "NFS41" then "[#{storage.name}] #{location}"
-    when "NTFS"  then "[#{storage.name}] #{location}"
-    when "CSVFS" then "[#{storage.name}] #{location}"
-    when "NAS"   then File.join(storage.name, location)
+    if storage.store_type == "NAS"
+      File.join(storage.name, location)
+    elsif storage.storage_type_supported_for_ssa?
+      "[#{storage.name}] #{location}"
     else
       _log.warn("VM [#{name}] storage type [#{storage.store_type}] not supported")
       @path = location

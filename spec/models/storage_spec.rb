@@ -395,13 +395,26 @@ RSpec.describe Storage do
   end
 
   context "#supports?(:smartstate_analysis)" do
-    it "returns true for VMware Storage when queried whether it supports smartstate analysis" do
-      storage = FactoryBot.create(:storage, :ext_management_system => FactoryBot.create(:ems_vmware_with_authentication))
+    it "supports smartstate if the ems supports smartstate analysis" do
+      ems = FactoryBot.create(:ems_vmware_with_authentication)
+      expect(ems.supports?(:smartstate_analysis)).to eq(true)
+      storage = FactoryBot.create(:storage_nfs, :ext_management_system => ems)
+
       expect(storage.supports?(:smartstate_analysis)).to eq(true)
     end
 
-    it "returns false for non-vmware Storage when queried whether it supports smartstate analysis" do
-      storage = FactoryBot.create(:storage, :ext_management_system => FactoryBot.create(:ems_microsoft_with_authentication))
+    it "doesn't support smartstate for an unknown store_type" do
+      ems = FactoryBot.create(:ems_vmware_with_authentication)
+      storage = FactoryBot.create(:storage_unknown, :ext_management_system => ems)
+
+      expect(storage.supports?(:smartstate_analysis)).to eq(false)
+    end
+
+    it "doesn't support smartstate for an ems that doesn't support smartstate analysis" do
+      ems = FactoryBot.create(:ems_microsoft_with_authentication)
+      expect(ems.supports?(:smartstate_analysis)).not_to eq(true)
+      storage = FactoryBot.create(:storage_nfs, :ext_management_system => ems)
+
       expect(storage.supports?(:smartstate_analysis)).to_not eq(true)
     end
   end
@@ -504,6 +517,18 @@ RSpec.describe Storage do
       expect(storage.tenant_identity).to                eq(admin)
       expect(storage.tenant_identity.current_group).to  eq(Tenant.root_tenant.default_miq_group)
       expect(storage.tenant_identity.current_tenant).to eq(Tenant.root_tenant)
+    end
+  end
+
+  describe "#storage_type_supported_for_ssa?" do
+    it "detects bad storage type" do
+      storage = FactoryBot.build(:storage, :store_type => "XYZ")
+      expect(storage.storage_type_supported_for_ssa?).to eq(false)
+    end
+
+    it "detects good storage type" do
+      storage = FactoryBot.build(:storage, :store_type => "NFS")
+      expect(storage.storage_type_supported_for_ssa?).to eq(true)
     end
   end
 end

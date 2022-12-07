@@ -71,11 +71,9 @@ RSpec.describe VmScan::Dispatcher do
 
       context "with a vm without a storage" do
         before do
-          # Test a vm without a storage (ie, removed from VC but retained in the VMDB)
-          @vm = @vms.first
-          @vm.storage = nil
-          @vm.save
-          @vm.raw_scan
+          vm = @vms.first
+          vm.update(:storage => nil)
+          vm.raw_scan
         end
 
         it "should expect queue_signal and dispatch without errors" do
@@ -86,47 +84,42 @@ RSpec.describe VmScan::Dispatcher do
 
       context "with a Microsoft vm without a storage" do
         before do
-          # Test a Microsoft vm without a storage
-          @vm = @vms.first
-          @vm.storage = nil
-          @vm.vendor = "microsoft"
-          @vm.save
-          @vm.raw_scan
+          vm = @vms.first
+          vm.update(:storage => nil, :vendor => "microsoft")
+          vm.raw_scan
         end
 
-        it "should run dispatch without calling queue_signal" do
-          expect(dispatcher).not_to receive(:queue_signal)
+        it "triggers an error" do
+          expect(dispatcher).to receive(:queue_signal).with(anything, hash_including(:args => [:abort, /not located on a storage/, "error"]))
+          dispatcher.dispatch
         end
       end
 
       context "with a Microsoft vm with a Microsoft storage" do
         before do
-          # Test a Microsoft vm without a storage
-          @vm = @vms.first
-          @vm.storage.store_type = "CSVFS"
-          @vm.vendor = "microsoft"
-          @vm.save
-          @vm.raw_scan
+          vm = @vms.first
+          vm.storage.update(:store_type => "CSVFS")
+          vm.update(:vendor => "microsoft")
+          vm.raw_scan
         end
 
-        it "should run dispatch without calling queue_signal" do
-          expect(dispatcher).not_to receive(:queue_signal)
+        it "start collecting" do
+          expect(dispatcher).to receive(:queue_signal).with(anything, hash_including(:args => ["start"]))
+          dispatcher.dispatch
         end
       end
 
       context "with a Microsoft vm with an invalid storage" do
         before do
-          # Test a Microsoft vm without a storage
           @vm = @vms.first
-          @vm.storage.store_type = "XFS"
-          @vm.vendor = "microsoft"
-          @vm.save
+          @vm.storage.update(:store_type => "ABC")
+          @vm.update(:vendor => "microsoft")
           @vm.raw_scan
         end
 
-        it "should expect queue_signal and dispatch without errors" do
-          expect(dispatcher).to receive(:queue_signal)
-          expect { dispatcher.dispatch }.not_to raise_error
+        it "triggers an error" do
+          expect(dispatcher).to receive(:queue_signal).with(anything, hash_including(:args => [:abort, /unsupported/, "error"]))
+          dispatcher.dispatch
         end
       end
 

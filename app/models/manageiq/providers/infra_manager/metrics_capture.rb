@@ -78,7 +78,7 @@ class ManageIQ::Providers::InfraManager::MetricsCapture < ManageIQ::Providers::B
   # @return [Array<Storage>] supported storages
   # hosts preloaded storages and tags
   def capture_storage_targets(hosts)
-    hosts.flat_map(&:storages).uniq.select { |s| Storage.supports?(s.store_type) & s.perf_capture_enabled? }
+    hosts.flat_map(&:storages).uniq.select { |s| s.supports?(:smartstate_analysis) & s.perf_capture_enabled? }
   end
 
   # @param [ExtManagementSystem] ems
