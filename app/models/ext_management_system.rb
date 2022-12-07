@@ -194,12 +194,12 @@ class ExtManagementSystem < ApplicationRecord
         endpoints_changed       ||= ems.endpoints.any?(&:changed?)
         authentications_changed ||= ems.authentications.any?(&:changed?)
 
-        after_update_endpoints      if endpoints_changed
-        after_update_authentication if authentications_changed
-
         ems.provider.save! if ems.provider.present? && ems.provider.changed?
         ems.save!
       end
+
+      after_update_endpoints      if endpoints_changed
+      after_update_authentication if authentications_changed
     end
   end
 
@@ -891,14 +891,14 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def stop_event_monitor_queue_on_change
-    if event_monitor_class && !new_record? && default_endpoint.changed.include_any?("hostname", "ipaddress")
+    if event_monitor_class && !new_record?
       _log.info("EMS: [#{name}], Hostname or IP address has changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
       stop_event_monitor_queue
     end
   end
 
   def stop_event_monitor_queue_on_credential_change
-    if event_monitor_class && !new_record? && default_authentication&.changed?
+    if event_monitor_class && !new_record?
       _log.info("EMS: [#{name}], Credentials have changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
       stop_event_monitor_queue
     end

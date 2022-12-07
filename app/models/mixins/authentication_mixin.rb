@@ -186,7 +186,7 @@ module AuthenticationMixin
     # Invoke before callback
     before_update_authentication if self.respond_to?(:before_update_authentication) && options[:save]
 
-    data.each_pair do |type, value|
+    authentication_changes = data.each_pair.map do |type, value|
       cred = authentication_type(type)
       current = {:new => nil, :old => nil}
 
@@ -243,11 +243,17 @@ module AuthenticationMixin
       cred.auth_key        = value[:auth_key]
       cred.service_account = value[:service_account].presence
 
+      changes = {type => cred.changes} if cred.changed?
+
       cred.save if options[:save] && id
-    end
+
+      changes
+    end.compact
+
+    return if authentication_changes.blank? || !options[:save]
 
     # Invoke callback
-    after_update_authentication if self.respond_to?(:after_update_authentication) && options[:save]
+    after_update_authentication if respond_to?(:after_update_authentication)
   end
 
   def authentication_type(type)
