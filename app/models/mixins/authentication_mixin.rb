@@ -183,8 +183,6 @@ module AuthenticationMixin
 
     options.reverse_merge!(:save => true)
 
-    @orig_credentials ||= auth_user_pwd || "none"
-
     # Invoke before callback
     before_update_authentication if self.respond_to?(:before_update_authentication) && options[:save]
 
@@ -250,13 +248,6 @@ module AuthenticationMixin
 
     # Invoke callback
     after_update_authentication if self.respond_to?(:after_update_authentication) && options[:save]
-    @orig_credentials = nil if options[:save]
-  end
-
-  def credentials_changed?
-    @orig_credentials ||= auth_user_pwd || "none"
-    new_credentials = auth_user_pwd || "none"
-    @orig_credentials != new_credentials
   end
 
   def authentication_type(type)
