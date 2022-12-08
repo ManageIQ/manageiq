@@ -581,6 +581,7 @@
   - vm_tag
   - vm_timeline
   - vm_chargeback
+  - vm_terminate
   - sui_services_view
   - sui_vm_details_view
   - sui_vm_html5_console
