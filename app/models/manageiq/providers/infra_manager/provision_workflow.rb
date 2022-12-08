@@ -5,8 +5,17 @@ class ManageIQ::Providers::InfraManager::ProvisionWorkflow < ::MiqProvisionVirtW
       :cpu_limit      => vm.cpu_limit,
       :memory_limit   => vm.memory_limit,
       :cpu_reserve    => vm.cpu_reserve,
-      :memory_reserve => vm.memory_reserve
+      :memory_reserve => vm.memory_reserve,
     }.merge!(get_cpu_values_hash(vm))
+
+    # TODO: short-term fix to only enable :allocated_disk_storage in machines that have a single hard disk
+    #   in the long-term it should be able to deal with multiple hard disks
+    virtual_disk_array = vm.hardware.disks.where(:device_type => "disk")
+    if virtual_disk_array.length == 1
+      default_size = (vm.hardware.disks.find_by(:device_type => "disk").size / 1.gigabyte).to_s
+      update_values.update({:allocated_disk_storage => default_size})
+    end
+
     set_or_default_field_values(update_values)
   end
 
