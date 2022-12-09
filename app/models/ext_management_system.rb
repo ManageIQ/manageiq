@@ -191,8 +191,8 @@ class ExtManagementSystem < ApplicationRecord
         authentications_changed ||= authentications_to_delete.delete_all > 0
 
         ems.assign_attributes(params)
-        ems.endpoints       = endpoints.map(&method(:assign_nested_endpoint))
-        ems.authentications = authentications.map(&method(:assign_nested_authentication))
+        ems.endpoints       = endpoints.map       { |ep| assign_nested_endpoint(ep) }
+        ems.authentications = authentications.map { |auth| assign_nested_authentication(auth) }
 
         endpoint_changes = ems.endpoints.select(&:changed?).to_h do |ep|
           [ep.role.to_sym, ep.changes]
