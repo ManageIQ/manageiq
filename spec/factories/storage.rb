@@ -1,5 +1,6 @@
 FactoryBot.define do
   factory :storage do
+    store_type { "NTFS" }
     sequence(:name) { |n| "storage_#{seq_padded_for_sorting(n)}" }
   end
 
