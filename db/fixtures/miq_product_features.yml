@@ -6289,7 +6289,6 @@
         :feature_type: admin
         :identifier: ems_object_storage_delete
 
-
   # Storage Resource
 - :name: Storage Resources
   :description: Everything under Storage Resources
@@ -6319,6 +6318,25 @@
       :feature_type: control
       :identifier: storage_resource_tag
 
+  # Storage Service
+- :name: Storage Services
+  :description: Everything under Storage Services
+  :feature_type: node
+  :identifier: storage_service
+  :children:
+  - :name: View
+    :description: View Storage Services
+    :feature_type: view
+    :identifier: storage_service_view
+    :children:
+    - :name: List
+      :description: Display Lists of Storage Services
+      :feature_type: view
+      :identifier: storage_service_show_list
+    - :name: Show
+      :description: Display Individual Storage Services
+      :feature_type: view
+      :identifier: storage_service_show
 
   # Volume Mapping
 - :name: Volume Mapping
@@ -6644,6 +6662,26 @@
       :feature_type: control
       :identifier: physical_switch_restart
 
+  # Physical Storages Families
+- :name: Physical Storage Families
+  :description: Everything under Physical Storage Families
+  :feature_type: node
+  :identifier: physical_storage_family
+  :children:
+  - :name: View
+    :description: View Physical Storage Families
+    :feature_type: view
+    :identifier: physical_storage_family_view
+    :children:
+    - :name: List
+      :description: Display Lists of Physical Storage Families
+      :feature_type: view
+      :identifier: physical_storage_family_show_list
+    - :name: Show
+      :description: Display Individual Physical Storage Families
+      :feature_type: view
+      :identifier: physical_storage_family_show
+
 # Physical Storages
 - :name: Physical Storages
   :description: Everything under Physical Storages
@@ -6701,6 +6739,7 @@
       :description: Validate a Physical Storage
       :feature_type: admin
       :identifier: physical_storage_validate
+
 # Physical Servers
 - :name: Physical Servers
   :description: Everything under Physical Servers
