@@ -22,6 +22,7 @@ class Storage < ApplicationRecord
   has_many :storage_files,       :dependent => :destroy
   has_many :storage_files_files, -> { where("rsc_type = 'file'") }, :class_name => "StorageFile", :foreign_key => "storage_id"
   has_many :files,               -> { where("rsc_type = 'file'") }, :class_name => "StorageFile", :foreign_key => "storage_id"
+  has_many :iso_images, :dependent => :destroy
 
   has_many :miq_events, :as => :target, :dependent => :destroy
 
@@ -82,6 +83,7 @@ class Storage < ApplicationRecord
   supports(:delete) { _("Only storage without VMs and Hosts can be removed") if vms_and_templates.any? || hosts.any? }
 
   supports_not :evacuate
+  supports_not :iso_datastore
 
   def to_s
     name

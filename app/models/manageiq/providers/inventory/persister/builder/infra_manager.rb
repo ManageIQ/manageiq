@@ -276,6 +276,14 @@ module ManageIQ::Providers
 
 
 
+        def iso_images
+          add_properties(
+            :parent_inventory_collections => %i[storages],
+            :manager_ref                  => %i[name],
+            :model_class                  => IsoImage
+          )
+        end
+
         private
 
         def root_folder_relationship_save_block

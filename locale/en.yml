@@ -1456,7 +1456,6 @@ en:
       Host:                           Host
       HostInitiator:                  Host Initiators
       HostPerformance:                Performance - Host
-      IsoDatastore:                   ISO Datastore
       IsoImage:                       ISO Image
       LdapDomain:                     LDAP Domain
       LdapRegion:                     LDAP Region
@@ -1778,7 +1777,6 @@ en:
       hosts:                       Hosts
       host_initiator:              Host Initiator
       host_services:               Services
-      iso_datastore:               ISO Datastore
       iso_image:                   ISO Image
       lans:                        vLANs
       last_compliance:             Last Compliance History

@@ -1405,7 +1405,7 @@ class MiqRequestWorkflow
 
   def get_iso_images
     template = VmOrTemplate.find_by(:id => get_value(@values[:src_vm_id]))
-    template.try(:ext_management_system).try(:iso_datastore).try(:iso_images) || []
+    template.try(:ext_management_system).try(:iso_images) || []
   end
 
   def allowed_iso_images(_options = {})
