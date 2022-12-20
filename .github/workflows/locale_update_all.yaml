@@ -57,4 +57,4 @@ jobs:
         push-to-fork: miq-bot/manageiq
         title: Update English Translations ${{github.event.repository.updated_at}}
         body: Update the English Translations in the manageiq.po and manageiq.pot files.
-        token: ${{ secrets.DEPLOY_TOKEN }}
+        token: ${{ secrets.PR_TOKEN }}
