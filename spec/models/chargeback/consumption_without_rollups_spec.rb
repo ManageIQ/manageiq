@@ -4,11 +4,11 @@ RSpec.describe Chargeback::ConsumptionWithoutRollups do
   let(:disk_size) { 12_345 }
   let(:hardware) do
     FactoryBot.build(:hardware,
-                      :cpu_total_cores => cores,
-                      :memory_mb       => mem_mb,
-                      :disks           => [FactoryBot.build(:disk, :size => disk_size)])
+                     :cpu_total_cores => cores,
+                     :memory_mb       => mem_mb,
+                     :disks           => [FactoryBot.build(:disk, :size => disk_size)])
   end
-  let(:vm) { FactoryBot.build(:vm_microsoft, :hardware => hardware) }
+  let(:vm)          { FactoryBot.build(:vm_infra, :hardware => hardware) }
   let(:consumption) { described_class.new(vm, nil, nil) }
 
   describe '#avg' do

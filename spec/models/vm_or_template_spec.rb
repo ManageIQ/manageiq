@@ -641,11 +641,6 @@ RSpec.describe VmOrTemplate do
       expect(vm.supports?(:migrate)).to eq(true)
     end
 
-    it "returns false for SCVMM VM when queried if it supports migrate operation" do
-      vm = FactoryBot.create(:vm_microsoft)
-      expect(vm.supports?(:migrate)).to eq(false)
-    end
-
     it "returns false for openstack VM  when queried if it supports migrate operation" do
       vm = FactoryBot.create(:vm_openstack)
       expect(vm.supports?(:migrate)).to eq(false)
@@ -657,21 +652,11 @@ RSpec.describe VmOrTemplate do
       vm = FactoryBot.create(:vm_vmware)
       expect(vm.supports?(:live_migrate)).to eq(false)
     end
-
-    it "returns false for SCVMM VM" do
-      vm = FactoryBot.create(:vm_microsoft)
-      expect(vm.supports?(:live_migrate)).to eq(false)
-    end
   end
 
   context "#supports?(:evacuate)" do
     it "returns false for querying vmware VM if it supports evacuate operation" do
       vm =  FactoryBot.create(:vm_vmware)
-      expect(vm.supports?(:evacuate)).to eq(false)
-    end
-
-    it "returns false for querying SCVMM VM if it supports evacuate operation" do
-      vm =  FactoryBot.create(:vm_microsoft)
       expect(vm.supports?(:evacuate)).to eq(false)
     end
   end

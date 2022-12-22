@@ -1552,7 +1552,7 @@ RSpec.describe ChargebackVm do
       context "group by tags" do
         let!(:tag_category_qa) { FactoryBot.create(:classification_tag, :parent => @tag.category, :name => "qa", :description => "QA") }
 
-        let!(:vm_qa)  { FactoryBot.create(:vm_microsoft, :hardware => hardware, :created_on => report_run_time - 1.day) }
+        let!(:vm_qa)  { FactoryBot.create(:vm_infra, :hardware => hardware, :created_on => report_run_time - 1.day) }
         let(:options) { base_options.except(:tag, :userid).merge(:groupby => "tag", :tenant_id => vm1.tenant.id.to_s, :interval => 'daily', :groupby_tag => 'environment') }
 
         let(:rate_assignment_options) { {:cb_rate => chargeback_rate, :object => MiqEnterprise.first} }

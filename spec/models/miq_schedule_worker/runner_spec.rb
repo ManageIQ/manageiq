@@ -498,19 +498,19 @@ RSpec.describe MiqScheduleWorker::Runner do
     end
 
     it "#schedule_settings_for_ems_refresh (private)" do
-      _ = ManageIQ::Providers::Microsoft::InfraManager # FIXME: Loader
+      _ = ManageIQ::Providers::Amazon::CloudManager # FIXME: Loader
 
       stub_settings(
         :ems_refresh => {
           :refresh_interval => 24.hours,
-          :scvmm            => {:refresh_interval => 15.minutes}
+          :ec2              => {:refresh_interval => 15.minutes}
         }
       )
 
       settings = @schedule_worker.send(:schedule_settings_for_ems_refresh)
 
-      expect(settings[ManageIQ::Providers::Vmware::InfraManager]).to    eq(86_400) # Uses default
-      expect(settings[ManageIQ::Providers::Microsoft::InfraManager]).to eq(900)    # Uses override
+      expect(settings[ManageIQ::Providers::Vmware::InfraManager]).to eq(86_400) # Uses default
+      expect(settings[ManageIQ::Providers::Amazon::CloudManager]).to eq(900)    # Uses override
     end
 
     def while_calling_job(job)

@@ -163,16 +163,6 @@ FactoryBot.define do
     authtype { "default" }
   end
 
-  factory :ems_microsoft,
-          :aliases => ["manageiq/providers/microsoft/infra_manager"],
-          :class   => "ManageIQ::Providers::Microsoft::InfraManager",
-          :parent  => :ems_infra
-
-  factory :ems_microsoft_with_authentication,
-          :parent => :ems_microsoft do
-    authtype { "default" }
-  end
-
   factory :ems_redhat,
           :aliases => ["manageiq/providers/redhat/infra_manager"],
           :class   => "ManageIQ::Providers::Redhat::InfraManager",

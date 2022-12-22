@@ -1525,8 +1525,8 @@ RSpec.describe Rbac::Filterer do
           end
 
           it "returns the correct class for different classes of targets" do
-            @ems3 = FactoryBot.create(:ems_vmware, :name => 'ems3')
-            @ems4 = FactoryBot.create(:ems_microsoft, :name => 'ems4')
+            @ems3 = FactoryBot.create(:ems_infra, :name => 'ems3')
+            @ems4 = FactoryBot.create(:ems_cloud, :name => 'ems4')
 
             targets = [@ems2, @ems4, @ems3, @ems]
 

@@ -52,17 +52,6 @@
     search_key: _hidden_
     db: Vm
 - attributes:
-    name: default_Platform / Microsoft
-    description: Platform / Microsoft
-    filter: !ruby/object:MiqExpression
-      exp:
-        "=":
-          field: Vm-type
-          value: ManageIQ::Providers::Microsoft::InfraManager::Vm
-    search_type: default
-    search_key: _hidden_
-    db: Vm
-- attributes:
     name: default_Status / Running
     description: Status / Running
     filter: !ruby/object:MiqExpression
@@ -242,17 +231,6 @@
             field: Host-vmm_version
             value: 6.7.0
     search_type: default
-    db: Host
-- attributes:
-    name: default_Platform / HyperV
-    description: Platform / HyperV
-    filter: !ruby/object:MiqExpression
-      exp:
-        "=":
-          field: Host-vmm_vendor
-          value: microsoft
-    search_type: default
-    search_key: _hidden_
     db: Host
 - attributes:
     name: default_Environment / Dev
@@ -462,17 +440,6 @@
     search_key: _hidden_
     db: MiqTemplate
 - attributes:
-    name: default_Platform / Microsoft
-    description: Platform / Microsoft
-    filter: !ruby/object:MiqExpression
-      exp:
-        "=":
-          field: MiqTemplate-type
-          value: ManageIQ::Providers::Microsoft::InfraManager::Template
-    search_type: default
-    search_key: _hidden_
-    db: MiqTemplate
-- attributes:
     name: default_Status / Retired
     description: Status / Retired
     filter: !ruby/object:MiqExpression
@@ -617,17 +584,6 @@
         "=":
           field: TemplateInfra-type
           value: ManageIQ::Providers::Vmware::InfraManager::Template
-    search_type: default
-    search_key: _hidden_
-    db: ManageIQ::Providers::InfraManager::Template
-- attributes:
-    name: default_Platform / Microsoft
-    description: Platform / Microsoft
-    filter: !ruby/object:MiqExpression
-      exp:
-        "=":
-          field: TemplateInfra-type
-          value: ManageIQ::Providers::Microsoft::InfraManager::Template
     search_type: default
     search_key: _hidden_
     db: ManageIQ::Providers::InfraManager::Template
@@ -1077,17 +1033,6 @@
         "=":
           field: VmInfra-type
           value: ManageIQ::Providers::Vmware::InfraManager::Vm
-    search_type: default
-    search_key: _hidden_
-    db: ManageIQ::Providers::InfraManager::Vm
-- attributes:
-    name: default_Platform / Microsoft
-    description: Platform / Microsoft
-    filter: !ruby/object:MiqExpression
-      exp:
-        "=":
-          field: VmInfra-type
-          value: ManageIQ::Providers::Microsoft::InfraManager::Vm
     search_type: default
     search_key: _hidden_
     db: ManageIQ::Providers::InfraManager::Vm

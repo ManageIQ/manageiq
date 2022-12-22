@@ -497,7 +497,7 @@ RSpec.describe ExtManagementSystem do
       end
 
       it "allowing duplicate hostname for different type providers" do
-        FactoryBot.create(:ems_microsoft, :hostname => @ems.hostname, :tenant => @tenant2)
+        FactoryBot.create(:ems_ovirt, :hostname => @ems.hostname, :tenant => @tenant2)
         expect(ExtManagementSystem.count).to eq(2)
       end
     end
