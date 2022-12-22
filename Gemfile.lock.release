@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/ManageIQ/amazon_ssa_support.git
   revision: 9de12806cefdc3ef0ad7c0c9b8e7b779196091d7
-  branch: oparin
+  tag: oparin-1
   specs:
     amazon_ssa_support (0.1.0)
       aws-sdk-ec2 (~> 1.0)
@@ -13,7 +13,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-api
   revision: f9a4f13083c7f2b76f6044cb12b380e8bcf47ed1
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-api (4.4.0.pre.pre)
       config
@@ -22,7 +22,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-automation_engine
   revision: f17fec5db8a554252f8ba5709270103250cf4be6
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-automation_engine (0.1.0)
       rubyzip (~> 2.0.0)
@@ -30,7 +30,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-consumption
   revision: 27b0cab612d3f8b23b30fe9824977e9ef2299a13
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-consumption (0.0.1)
       hashdiff (~> 1.0)
@@ -39,7 +39,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-content
   revision: f03a3ceca9333d33ecab0ace248abcbb390c8f81
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-content (0.1.0)
       savon (~> 2.11.1)
@@ -47,14 +47,14 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-decorators
   revision: 78a62a01c91300dbc1cdfec503c3b059473dbd34
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-decorators (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-gems-pending.git
   revision: 6e2d7ce4c10ef0d57cda1d0905092f44838806b5
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-gems-pending (0.1.0)
       activesupport (~> 6.0)
@@ -73,7 +73,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-amazon
   revision: 4b2eb349a761e49904c77701ee98f1927acadd2e
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-providers-amazon (0.1.0)
       aws-sdk-cloudformation (~> 1.0)
@@ -91,7 +91,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ansible_tower
   revision: c8d273407591342b390a070780f2a2fe0f6457a1
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-providers-ansible_tower (0.1.0)
       ansible_tower_client (~> 0.20, >= 0.21.2)
@@ -99,7 +99,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-autosde
   revision: c4f7aadf6069d1f2235d2c439ef70319766e92a5
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-providers-autosde (0.1.0)
       autosde_openapi_client (~> 1.2.0)
@@ -108,7 +108,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-awx
   revision: efc6c521c267bd1b527ede43e44f3e36a3f7ec95
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-providers-awx (0.1.0)
       ansible_tower_client (~> 0.20, >= 0.21.2)
@@ -116,7 +116,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure
   revision: 87afa22c18dd0a6cfe271963a51c56a1bf8f8ed3
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-providers-azure (0.1.0)
       azure-armrest (~> 0.14)
@@ -124,7 +124,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure_stack
   revision: 65c6c77ce87f1f1d204a18771930d30d7028a592
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-providers-azure_stack (0.1.0)
       azure_mgmt_compute (~> 0.20)
@@ -135,7 +135,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-cisco_intersight
   revision: f6c3311521686b68b829addcf1ff67a36108084e
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-providers-cisco_intersight (0.1.0)
       intersight_client (~> 0.1, >= 0.1.5)
@@ -143,7 +143,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-foreman
   revision: db00c19cd3a6fe081e2dd9543f2694d75cb20da3
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-providers-foreman (0.1.0)
       foreman_api_client (~> 1.0.2)
@@ -151,7 +151,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-google
   revision: d86eca6a1b70a970aedf76db959fb22f66412f93
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-providers-google (0.1.0)
       fog-google (~> 1.18)
@@ -159,14 +159,14 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_cic
   revision: 93283a717312f429b7f0ada6180d2d5130a3be1e
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-providers-ibm_cic (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_cloud
-  revision: c58584dcdc16929c2bb47393fa7e1a0913a6dfe5
-  branch: oparin
+  revision: 9189f533bd3a962bb4ae1f38f27a4135cfdea045
+  tag: oparin-1
   specs:
     manageiq-providers-ibm_cloud (0.1.0)
       ibm-cloud-sdk (~> 0.1)
@@ -183,8 +183,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_power_hmc
-  revision: 479edc531c34648355900880ee3926d4a30360e0
-  branch: oparin
+  revision: d120b177755644bc3d8d3e3673fcb48d8876f30b
+  tag: oparin-1
   specs:
     manageiq-providers-ibm_power_hmc (0.1.0)
       ibm_power_hmc (~> 0.20.0)
@@ -192,21 +192,21 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_power_vc
   revision: aaf1d8a6c03ec479673edfe75dad2f16771ca16b
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-providers-ibm_power_vc (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_terraform
   revision: 7e1126593e8c69460fadc942740bc109e7e222f0
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-providers-ibm_terraform (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubernetes
-  revision: 5be2104dfa8c3dc2539381fb12886603eee49440
-  branch: oparin
+  revision: ef6f0dee2ffa957840bca24b6f809bdc09fd56ce
+  tag: oparin-1
   specs:
     manageiq-providers-kubernetes (0.1.0)
       image-inspector-client (~> 2.0)
@@ -218,7 +218,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubevirt
   revision: 7bebbeac7aae6936853c09d6855417ff6384423a
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-providers-kubevirt (0.1.0)
       fog-kubevirt (~> 1.0, >= 1.3.5)
@@ -227,7 +227,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-lenovo
   revision: 9551ba7102baf608224631219ee246b516fd224e
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-providers-lenovo (0.2.0)
       xclarity_client (~> 0.6.0)
@@ -235,30 +235,30 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nsxt
   revision: b0d03293e779531a23ce91ec06782a658f7cc586
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-providers-nsxt (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nuage
-  revision: 51b212d572a754848c3b2af1c79c2d5546918b67
-  branch: oparin
+  revision: c14c6c35b40243787ffbb816bdea6c2feacd52ee
+  tag: oparin-1
   specs:
     manageiq-providers-nuage (0.1.0)
       excon (~> 0.71)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openshift
-  revision: c7a3f234bdc7d8dcb45cadd37da12117253569cb
-  branch: oparin
+  revision: 24acafe57565c2436a5f626974b54d3bd684c460
+  tag: oparin-1
   specs:
     manageiq-providers-openshift (0.1.0)
       manageiq-providers-kubernetes (~> 0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openstack
-  revision: ccd4c75743c3ad736e19c9829334f6370318d9e1
-  branch: oparin
+  revision: 86b5f73e001f921a45dd7e8b3b13b86d4766e958
+  tag: oparin-1
   specs:
     manageiq-providers-openstack (0.1.0)
       activesupport (~> 6.0)
@@ -271,7 +271,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-oracle_cloud
   revision: f0ea8cedb612a41dab650f117edc74a51cffbdcf
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-providers-oracle_cloud (0.1.0)
       oci (~> 2.18)
@@ -279,7 +279,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ovirt
   revision: e1d90827785f19659859a5c396b766f82d1c5fab
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-providers-ovirt (0.1.0)
       ovirt-engine-sdk (~> 4.4.0)
@@ -288,7 +288,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-red_hat_virtualization
   revision: c457b73e7462697eb8abbc6087c16158e167e436
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-providers-red_hat_virtualization (0.1.0)
       ovirt-engine-sdk (~> 4.4.0)
@@ -297,7 +297,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-redfish
   revision: 8244e436c117bfc461153717dd2a583f9c0977e8
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-providers-redfish (0.1.0)
       redfish_client (~> 0.5.1)
@@ -305,7 +305,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-scvmm
   revision: a6fb1408d8111529352a468ca9cd4678a7fed922
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-providers-scvmm (0.1.0)
       addressable (~> 2.4)
@@ -313,7 +313,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-vmware
   revision: 1f52e4394b2eabf56a29a8236a4573093de1722d
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-providers-vmware (0.1.0)
       ffi-vix_disk_lib (~> 1.1)
@@ -325,7 +325,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-schema
   revision: 927644c70ac60062172b8f6846e67e6fc4036941
-  branch: oparin
+  tag: oparin-1
   specs:
     manageiq-schema (0.1.0)
       activerecord-id_regions (~> 0.3.2)
@@ -338,8 +338,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-ui-classic
-  revision: ca4a9aa69cfda7cb79c7b394ba24676baf55921c
-  branch: oparin
+  revision: ca2f0ad3d9a27e9ae167de895e38d10fd18fbccc
+  tag: oparin-1
   specs:
     manageiq-ui-classic (0.1.0)
       execjs (= 2.8.1)
@@ -489,7 +489,7 @@ GEM
     aws-sdk-rds (1.160.0)
       aws-sdk-core (~> 3, >= 3.165.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.117.1)
+    aws-sdk-s3 (1.117.2)
       aws-sdk-core (~> 3, >= 3.165.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.4)
@@ -1104,7 +1104,7 @@ GEM
     ruby-dbus (0.18.1)
       rexml
     ruby-progressbar (1.7.5)
-    ruby_parser (3.19.1)
+    ruby_parser (3.19.2)
       sexp_processor (~> 4.16)
     rubyntlm (0.6.3)
     rubyzip (2.0.0)
@@ -1183,7 +1183,7 @@ GEM
     text (1.3.1)
     thor (1.2.1)
     tilt (2.0.11)
-    timecop (0.9.5)
+    timecop (0.9.6)
     timeliness (0.3.10)
     trailblazer-option (0.1.2)
     ttfunk (1.7.0)
