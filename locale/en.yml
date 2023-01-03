@@ -1,11 +1,8 @@
-# Sample localization file for English. Add more files in this directory for other locales.
-# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
-
 en:
   product:
     name: ManageIQ
     name_full: ManageIQ
-    copyright: "Copyright (c) 2022 ManageIQ. Sponsored by Red Hat Inc."
+    copyright: "Copyright (c) 2014-present ManageIQ Authors."
   activerecord:
     attributes:
       ems_cloud:
