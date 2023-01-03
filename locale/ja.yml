@@ -1,11 +1,8 @@
-# Sample localization file for Japanese. Add more files in this directory for other locales.
-# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
-
 ja:
   product:
     name: ManageIQ
     name_full: ManageIQ
-    copyright: "Copyright (c) 2022 ManageIQ. Sponsored by Red Hat Inc."
+    copyright: "Copyright (c) 2014-present ManageIQ Authors."
 
   # Used in NumberHelper.number_to_human_size() and NumberHelper.number_to_human()
   number:
