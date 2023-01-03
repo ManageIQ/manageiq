@@ -1,6 +1,20 @@
 class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
   def sync_from_system
     self.miq_services = systemd_services.select { |unit| manageiq_service?(unit) }
+    self.miq_services_by_guid = miq_services.index_by { |w| w[:name].match(/^.+@(?<guid>.+)\.service$/).named_captures["guid"] }
+  end
+
+  def sync_starting_workers!(starting)
+    sync_from_system
+    starting.each do |worker|
+      next if worker.class.rails_worker?
+
+      systemd_worker = miq_services_by_guid[worker[:guid]]
+      if systemd_worker[:load_state] == "loaded" && systemd_worker[:active_state] == "active" && systemd_worker[:sub_state] == "running"
+        worker.update!(:status => "started")
+        starting.delete(worker)
+      end
+    end
   end
 
   def cleanup_failed_workers
@@ -19,7 +33,7 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
 
   private
 
-  attr_accessor :miq_services
+  attr_accessor :miq_services, :miq_services_by_guid
 
   def systemd_manager
     @systemd_manager ||= begin
