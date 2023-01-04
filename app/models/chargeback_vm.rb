@@ -98,8 +98,8 @@ class ChargebackVm < Chargeback
   end
 
   def self.extra_resources_without_rollups(region)
-    # support hyper-v for which we do not collect metrics yet (also when we are including metrics in calculations)
-    scope = @options.include_metrics? ? ManageIQ::Providers::Microsoft::InfraManager::Vm : vms(region)
+    # support VM types for which we do not collect metrics yet (also when we are including metrics in calculations)
+    scope = @options.include_metrics? ? Vm.where.not(:type => Vm.types_supporting(:capture)) : vms(region)
     scope = scope.eager_load(:hardware, :taggings, :tags, :host, :ems_cluster, :storage, :ext_management_system,
                              :tenant)
 

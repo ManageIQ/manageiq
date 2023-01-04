@@ -1,5 +1,6 @@
 RSpec.describe ChargebackVm do
   include Spec::Support::ChargebackHelper
+  include Spec::Support::SupportsHelper
 
   let(:admin) { FactoryBot.create(:user_admin) }
   let(:base_options) do
@@ -1520,11 +1521,12 @@ RSpec.describe ChargebackVm do
     let(:cpu_cost) { cores * count_hourly_rate * 24 }
     let(:disk_cost) { disk_gb * count_hourly_rate * 24 }
 
-    context 'for SCVMM (hyper-v)' do
+    context 'for VMs not supporting metrics capture' do
       let!(:vm1) do
-        vm = FactoryBot.create(:vm_microsoft, :hardware => hardware, :created_on => report_run_time - 1.day)
-        vm.tag_with(@tag.name, :ns => '*')
-        vm
+        FactoryBot.create(:vm_infra, :hardware => hardware, :created_on => report_run_time - 1.day).tap do |vm|
+          vm.tag_with(@tag.name, :ns => '*')
+          stub_supports_not(vm, :capture)
+        end
       end
 
       let(:options) { base_options.merge(:interval => 'daily') }
