@@ -1,4 +1,6 @@
 class <%= class_name %>::<%= manager_type %>::Vm < ManageIQ::Providers::<%= manager_type %>::Vm
+  supports :capture
+
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect
     connection.find_vm(ems_ref)
