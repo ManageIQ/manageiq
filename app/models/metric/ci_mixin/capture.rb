@@ -93,7 +93,7 @@ module Metric::CiMixin::Capture
     start_range = end_range = counters_by_mor = counter_values_by_mor_and_ts = target_ems = nil
     counters_data = {}
     _, t = Benchmark.realtime_block(:total_time) do
-      Benchmark.realtime_block(:capture_state) { VimPerformanceState.capture(metrics_capture.target) }
+      perf_capture_states(metrics_capture.target)
 
       interval_name_for_capture = interval_name == 'historical' ? 'hourly' : interval_name
       counters_by_mor, counter_values_by_mor_and_ts = metrics_capture.perf_collect_metrics(interval_name_for_capture, start_time, end_time)
@@ -166,6 +166,10 @@ module Metric::CiMixin::Capture
         task.save!
       end
     end
+  end
+
+  def perf_capture_states(targets)
+    Benchmark.realtime_block(:capture_state) { VimPerformanceState.capture(targets) }
   end
 
   def perf_capture_state
