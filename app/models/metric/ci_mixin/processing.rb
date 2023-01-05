@@ -25,6 +25,8 @@ module Metric::CiMixin::Processing
     _log.info("#{log_header} Processing for #{log_specific_targets(resources)}, for range [#{start_time} - #{end_time}]...Complete - Timings: #{t.inspect}")
   end
 
+  private
+
   def process_counter_values(counters_data, interval_name)
     counters_data.each_with_object({}) do |(resource, data), rt_rows|
       log_header = "[#{interval_name}]"
@@ -112,8 +114,6 @@ module Metric::CiMixin::Processing
       resource.perf_rollup_to_parents(interval_orig, start_time, end_time)
     end
   end
-
-  private
 
   def transform_parameters_row_per_metric(_resources, interval_name, _start_time, _end_time, rt_rows)
     rt_rows.flat_map do |(ts, _resource), rt|
