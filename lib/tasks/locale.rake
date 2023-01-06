@@ -209,19 +209,20 @@ namespace :locale do
     ]
 
     tmp_dir = Rails.root.join('locale', 'tmp').to_s
-    Dir.mkdir(tmp_dir, 0o700)
+    FileUtils.rm_rf(tmp_dir)
+    FileUtils.mkdir(tmp_dir)
     extra_pots.each do |url|
       pot_file = "#{tmp_dir}/#{url.split('/')[-1]}"
       ManageIQ::Environment.system!('curl', '-f', '-o', pot_file, url)
       pot_files << pot_file
     end
 
-    system('rmsgcat', '--sort-by-msgid', '-o', Rails.root.join('locale', 'manageiq-all.pot').to_s, Rails.root.join('locale', 'manageiq.pot').to_s, *pot_files)
-    system('mv', '-v', Rails.root.join('locale', 'manageiq-all.pot').to_s, Rails.root.join('locale', 'manageiq.pot').to_s)
-    system('rmsgmerge', '--sort-by-msgid', '--no-fuzzy-matching', '-o', Rails.root.join('locale', 'en', 'manageiq-all.po').to_s, Rails.root.join('locale', 'en', 'manageiq.po').to_s, Rails.root.join('locale', 'manageiq.pot').to_s)
-    system('mv', '-v', Rails.root.join('locale', 'en', 'manageiq-all.po').to_s, Rails.root.join('locale', 'en', 'manageiq.po').to_s)
-    system('rm', '-rf', tmp_dir)
+    system('rmsgcat', '--sort-by-msgid', '-o', Rails.root.join('locale', 'tmp', 'manageiq-all.pot').to_s, Rails.root.join('locale', 'manageiq.pot').to_s, *pot_files)
+    system('mv', '-v', Rails.root.join('locale', 'tmp', 'manageiq-all.pot').to_s, Rails.root.join('locale', 'manageiq.pot').to_s)
+    system('rmsgmerge', '--sort-by-msgid', '--no-fuzzy-matching', '-o', Rails.root.join('locale', 'tmp', 'manageiq-all.po').to_s, Rails.root.join('locale', 'en', 'manageiq.po').to_s, Rails.root.join('locale', 'manageiq.pot').to_s)
+    system('mv', '-v', Rails.root.join('locale', 'tmp', 'manageiq-all.po').to_s, Rails.root.join('locale', 'en', 'manageiq.po').to_s)
 
+    FileUtils.rm_rf(tmp_dir)
     remove_line_numbers(Rails.root.join('locale/manageiq.pot'))
     remove_line_numbers(Rails.root.join('locale/en/manageiq.po'))
   end
