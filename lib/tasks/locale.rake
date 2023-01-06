@@ -217,6 +217,10 @@ namespace :locale do
       pot_files << pot_file
     end
 
+    # Generate the file locations for reference.
+    # msgcat will concatenate and retain all file location information, whereas rmsgcat will only retain file locations from the last file ARG
+    system('msgcat', '--sort-output', '-o', Rails.root.join('locale', 'manageiq-with-file-locations.pot').to_s, Rails.root.join('locale', 'manageiq.pot').to_s, *pot_files)
+
     system('rmsgcat', '--sort-by-msgid', '-o', Rails.root.join('locale', 'tmp', 'manageiq-all.pot').to_s, Rails.root.join('locale', 'manageiq.pot').to_s, *pot_files)
     system('mv', '-v', Rails.root.join('locale', 'tmp', 'manageiq-all.pot').to_s, Rails.root.join('locale', 'manageiq.pot').to_s)
     system('rmsgmerge', '--sort-by-msgid', '--no-fuzzy-matching', '-o', Rails.root.join('locale', 'tmp', 'manageiq-all.po').to_s, Rails.root.join('locale', 'en', 'manageiq.po').to_s, Rails.root.join('locale', 'manageiq.pot').to_s)
