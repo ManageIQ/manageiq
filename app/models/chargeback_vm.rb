@@ -99,6 +99,10 @@ class ChargebackVm < Chargeback
 
   def self.extra_resources_without_rollups(region)
     # support VM types for which we do not collect metrics yet (also when we are including metrics in calculations)
+    #
+    # NOTE since this scope is used later on as part of other queries this has to be an
+    # ActiveRecord::Relation not an array.  The SupportsFeatureMixin.supporting method
+    # checks instance-level supports which returns an array thus cannot be used here.
     scope = @options.include_metrics? ? Vm.where.not(:type => Vm.types_supporting(:capture)) : vms(region)
     scope = scope.eager_load(:hardware, :taggings, :tags, :host, :ems_cluster, :storage, :ext_management_system,
                              :tenant)
