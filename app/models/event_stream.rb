@@ -73,23 +73,28 @@ class EventStream < ApplicationRecord
 
   # TODO: Consider moving since this is EmsEvent specific. group, group_level and group_name exposed as a virtual columns for reports/api.
   def self.group_and_level(event_type)
-    level = DEFAULT_GROUP_LEVEL # the level is detail as default
-    egroups = event_groups
+    @group_and_level ||= {}
+    unless @group_and_level.key?(event_type)
+      level = DEFAULT_GROUP_LEVEL # the level is detail as default
+      egroups = event_groups
 
-    group = egroups.detect do |_, value|
-      group_levels
-        .detect { |lvl| value[lvl]&.any? { |typ| !typ.starts_with?("/") && typ == event_type } }
-        .tap { |level_found| level = level_found || level }
-    end&.first
+      group = egroups.detect do |_, value|
+        group_levels
+          .detect { |lvl| value[lvl]&.any? { |typ| !typ.starts_with?("/") && typ == event_type } }
+          .tap { |level_found| level = level_found || level }
+      end&.first
 
-    group ||= egroups.detect do |_, value|
-      group_levels
-        .detect { |lvl| value[lvl]&.any? { |typ| typ.starts_with?("/") && Regexp.new(typ[1..-2]).match?(event_type) } }
-        .tap { |level_found| level = level_found || level }
-    end&.first
+      group ||= egroups.detect do |_, value|
+        group_levels
+          .detect { |lvl| value[lvl]&.any? { |typ| typ.starts_with?("/") && Regexp.new(typ[1..-2]).match?(event_type) } }
+          .tap { |level_found| level = level_found || level }
+      end&.first
 
-    group ||= DEFAULT_GROUP_NAME
-    return group, level
+      group ||= DEFAULT_GROUP_NAME
+      @group_and_level[event_type] = [group, level]
+    end
+
+    return *@group_and_level[event_type]
   end
 
   def self.group_name(group)
