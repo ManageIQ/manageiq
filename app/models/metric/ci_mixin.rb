@@ -20,12 +20,7 @@ module Metric::CiMixin
       virtual_column vcol, :type => :float, :uses => :vim_performance_operating_ranges
     end
 
-    supports :capture do
-      metrics_capture_klass = "#{self.class.module_parent.name}::MetricsCapture".safe_constantize
-      unless metrics_capture_klass&.method_defined?(:perf_collect_metrics)
-        _('This provider does not support metrics collection')
-      end
-    end
+    supports_not :capture
   end
 
   def has_perf_data?
