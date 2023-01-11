@@ -187,16 +187,16 @@ module Rbac
     # @param  options filtering options
     # @option options :targets       [nil|Array<Numeric|Object>|scope] Objects to be filtered
     #   - an nil entry uses the optional where_clause
-    #   - Array<Numeric> list if ids. :class is required. results are returned as ids
-    #   - Array<Object> list of objects. results are returned as objects
+    #   - Array<Numeric> list of ids. :class is required.
+    #   - Array<Object> list of objects.
     # @option options :named_scope   [Symbol|Array<String,Integer>] support for using named scope in search
     #     Example one scope without args:     :named_scope => :in_my_region
     #     Example one scope with args:        :named_scope => [[:in_region, 1]]
     #     Example more scopes without args:   :named_scope => [:in_my_region, :active]
     #     Example more scopes some with args: :named_scope => [[:in_region, 1], :active, [:with_manager, "X"]]
     # @option options :conditions    [Hash|String|Array<String>]
-    # @option options :where_clause  []
-    # @option options :sub_filter
+    # @option options :where_clause  [] same as conditions. used in one place. would like to remove
+    # @option options :sub_filter    [Nil|Array<String>] ui advanced search filter
     # @option options :include_for_find [Array<Symbol>, Hash{Symbol => Symbol,Hash,Array}] models included but not in query
     # @option options :references   [Array<Symbol>], models used by select and where. If not passed, uses include_for_find instead
     # @option options :filter       [MiqExpression] (optional)
@@ -209,23 +209,18 @@ module Rbac
     # @option options :order        [Numeric] (default: no order)
     # @option options :limit        [Numeric] (default: no limit)
     # @option options :offset       [Numeric] (default: no offset)
-    # @option options :apply_limit_in_sql [Boolean]
-    # @option options :ext_options
     # @option options :skip_count   [Boolean] (default: false)
+    #
     # @return [Array<Array<Object>,Hash>] list of object and the associated search options
     #   Array<Object> list of object in the same order as input targets if possible
     # @option attrs :auth_count [Numeric]
     # @option attrs :user_filters
-    # @option attrs apply_limit_in_sql
-    # @option attrs target_ids_for_paging
+    # @option attrs :apply_limit_in_sql [Boolean] true if this limit was applied in sql
+    # @option attrs :target_ids_for_paging [Array[Numeric]] the list of target ids (only if we can't apply limits in sql)
     def search(options = {})
       if options.key?(:targets) && options[:targets].kind_of?(Array) && options[:targets].empty?
         return [], {:auth_count => 0}
       end
-      # => empty inputs - normal find with optional where_clause
-      # => list if ids - :class is required for this format.
-      # => list of objects
-      # results are returned in the same format as the targets. for empty targets, the default result format is a list of ids.
       targets           = options[:targets]
       scope             = options[:named_scope]
 
@@ -296,6 +291,14 @@ module Rbac
       scope = include_references(scope, klass, references, exp_includes)
       scope = scope.limit(limit).offset(offset) if attrs[:apply_limit_in_sql]
 
+      # old: (single view)
+      #   virtual attribute subqueries were calculated for every row in whole table
+      #     limit/offset was calculated later - this is a lot of extra subqueries
+      # inline_view (inner and outer view)
+      #   inner view has limiter, outer view only sees $limit (i.e.: 20) rows.
+      #     1. virtual attributes in outer view only performs ~20 subqueries
+      #     2. SQL COUNT on the outer view only sees ~20 rows.
+      #        hence auth_count calculated from inner_scope.
       if inline_view?(options, scope)
         inner_scope = scope.except(:select, :includes, :references)
         scope.includes_values.each { |hash| inner_scope = add_joins(klass, inner_scope, hash) }
@@ -317,23 +320,32 @@ module Rbac
       end
 
       if search_filter && targets && (!exp_attrs || !exp_attrs[:supported_by_sql])
-        rejects     = targets.reject { |obj| matches_search_filters?(obj, search_filter, tz) }
-        auth_count -= rejects.length unless options[:skip_counts]
-        targets -= rejects
+        targets = targets.lazy.select { |obj| matches_search_filters?(obj, search_filter, tz) }
+        unless options[:skip_counts]
+          # NOTE: the filter is not supported by sql (also means limit will be applied in ruby, too)
+          #       so: our count is calculated locally in ruby
+          #       also: use to_a to undo the lazy and filter one time before the count and applying the limit
+          targets    = targets.to_a
+          auth_count = targets.length
+        end
       end
+      attrs[:auth_count] = auth_count unless options[:skip_counts]
 
       if limit && !attrs[:apply_limit_in_sql]
-        attrs[:target_ids_for_paging] = targets.collect(&:id) # Save ids of targets, since we have then all, to avoid going back to SQL for the next page
-        offset = offset.to_i
-        targets = targets[offset...(offset + limit.to_i)] || []
+        unless options[:skip_counts]
+          # developer note: when changing code, ensure targets is not a lazy enumeration
+          # When we are applying limits in sql, that means we brought back every row.
+          #      we save the ids of the targets to avoid downloading them all again for the next page.
+          attrs[:target_ids_for_paging] = targets.collect(&:id)
+        end
+        targets = targets.drop(offset.to_i).take(limit.to_i)
       end
 
       # Preserve sort order of incoming target_ids
       if !target_ids.nil? && !order
         targets = targets.sort_by { |a| target_ids.index(a.id) }
       end
-
-      attrs[:auth_count] = auth_count unless options[:skip_counts]
+      targets = targets.to_a if targets.kind_of?(Enumerator::Lazy)
 
       return targets, attrs
     rescue ActiveRecord::EagerLoadPolymorphicError
@@ -454,6 +466,9 @@ module Rbac
       nil
     end
 
+    # this initially is here to show where sql queries could work.
+    # so for calc_filtered_ids the row without pluck_ids is the one
+    # that needs to change to convert that over to sql friendly query
     def pluck_ids(targets)
       targets.pluck(:id) if targets
     end

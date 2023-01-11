@@ -349,7 +349,7 @@ module MiqReport::Generator
                                  db_options[:use_sql_view]
                                end
 
-    results, attrs = Rbac.search(rbac_opts)
+    results, attrs = Rbac.search(rbac_opts) # NOTE: :skip_counts => true, only want :user_filters["managed"]
     results = Metric::Helper.remove_duplicate_timestamps(results)
     results = BottleneckEvent.remove_duplicate_find_results(results) if db == "BottleneckEvent"
     @user_categories = attrs[:user_filters]["managed"]
