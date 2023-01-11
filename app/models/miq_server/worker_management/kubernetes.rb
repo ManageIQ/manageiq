@@ -20,6 +20,10 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
     sync_deployment_settings
   end
 
+  # TODO: Synchronize worker records and status as they are starting up
+  def sync_starting_workers!
+  end
+
   def enough_resource_to_start_worker?(_worker_class)
     true
   end
