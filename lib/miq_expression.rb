@@ -156,10 +156,19 @@ class MiqExpression
   end
 
   def to_ruby(tz = nil)
-    return "" unless valid?
     tz ||= "UTC"
-    @ruby ||= self.class._to_ruby(exp.deep_clone, context_type, tz)
+    @ruby ||= valid? ? self.class._to_ruby(exp.deep_clone, context_type, tz) : ""
     @ruby.dup
+
+    # Caching valid? is good
+    # not sure about TZ support as we're caching it regardless of tz
+    # not sure about the dup... freeze is only for detecting who's modifying the string
+    
+      # if valid?
+      #   self.class._to_ruby(exp.deep_clone, context_type, tz || "UTC")
+      # else
+      #   ""
+      # end
   end
 
   def self._to_ruby(exp, context_type, tz)
