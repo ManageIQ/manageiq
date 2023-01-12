@@ -55,10 +55,10 @@ RSpec.describe ManageIQ::Providers::ContainerManager::MetricsCapture do
 
             expect(queue_timings).to include(
               "realtime" => {
-                container_node  => [[]],
-                container_group => [[]],
-                container       => [[]],
-                container_image => [[]]
+                queue_object(container_node)  => [[]],
+                queue_object(container_group) => [[]],
+                queue_object(container)       => [[]],
+                queue_object(container_image) => [[]]
               }
             )
           end

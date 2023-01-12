@@ -30,12 +30,12 @@ module Spec
       def queue_timings(items = MiqQueue.where(:method_name => %w[perf_capture_hourly perf_capture_realtime perf_capture_historical]))
         messages = {}
         items.each do |q|
-          klass = q.class_name.constantize
+          klass = q.class_name.constantize.base_class.name
           # If the third argument contains a list of object ids
           # we denormalize to one message per object_id
           date_first, date_end, ids, *_ = q.args
-          ids = q.instance_id if ids.blank?
-          objs = ids.blank? ? [klass] : klass.where(:id => ids)
+          ids = [q.instance_id] if ids.blank?
+          objs = ids.sort.map { |id| "#{klass}:#{id}" }
 
           objs.each do |obj|
             interval_name = q.method_name.sub("perf_capture_", "")
@@ -50,6 +50,11 @@ module Spec
         messages["historical"]&.transform_values! { |v| combine_consecutive(v) }
 
         messages
+      end
+
+      # to make test failures easier to read, use parent_class:id
+      def queue_object(object)
+        "#{object.class.base_class.name}:#{object.id}"
       end
 
       def arg_day_range(start_time, end_time)
