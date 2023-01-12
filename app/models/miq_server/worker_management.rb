@@ -49,6 +49,10 @@ class MiqServer::WorkerManagement
     wait_for_started_workers
   end
 
+  def sync_starting_workers!(_starting)
+    raise NotImplementedError, _("must be implemented in a subclass")
+  end
+
   def start_drb_server
     require 'drb'
     require 'drb/acl'

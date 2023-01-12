@@ -4,7 +4,7 @@ class MiqServer::WorkerManagement::Process < MiqServer::WorkerManagement
     self.miq_processes = Sys::ProcTable.ps.select { |proc| proc.ppid == my_server.pid }
   end
 
-  def sync_starting_workers!
+  def sync_starting_workers!(_starting)
   end
 
   def monitor_workers
