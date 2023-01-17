@@ -7233,6 +7233,10 @@
         :description: Open Web Console
         :feature_type: control
         :identifier: sui_vm_web_console
+      - :name: Open Native Console
+        :description: Open Native Console
+        :feature_type: control
+        :identifier: sui_vm_native_console
       - :name: Edit Tag
         :description: Edit VM Tags
         :feature_type: control
