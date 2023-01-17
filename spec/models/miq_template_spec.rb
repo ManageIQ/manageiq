@@ -59,10 +59,7 @@ RSpec.describe MiqTemplate do
     template = FactoryBot.create(:template_openstack)
     expect(template.supports?(:provisioning)).to be_falsey
 
-    template = FactoryBot.create(:template_microsoft)
-    expect(template.supports?(:provisioning)).to be_falsey
-
-    template = FactoryBot.create(:template_microsoft)
+    template = FactoryBot.create(:template_openstack)
     FactoryBot.create(:ems_openstack, :miq_templates => [template])
     expect(template.supports?(:provisioning)).to be_truthy
   end

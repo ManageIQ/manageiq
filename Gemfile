@@ -208,10 +208,6 @@ group :ovirt, :manageiq_default do
   manageiq_plugin "manageiq-providers-ovirt"
 end
 
-group :scvmm, :manageiq_default do
-  manageiq_plugin "manageiq-providers-scvmm"
-end
-
 group :vmware, :manageiq_default do
   manageiq_plugin "manageiq-providers-vmware"
 end

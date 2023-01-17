@@ -411,7 +411,7 @@ RSpec.describe Storage do
     end
 
     it "doesn't support smartstate for an ems that doesn't support smartstate analysis" do
-      ems = FactoryBot.create(:ems_microsoft_with_authentication)
+      ems = FactoryBot.create(:ems_cloud)
       expect(ems.supports?(:smartstate_analysis)).not_to eq(true)
       storage = FactoryBot.create(:storage_nfs, :ext_management_system => ems)
 

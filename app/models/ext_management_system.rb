@@ -405,9 +405,7 @@ class ExtManagementSystem < ApplicationRecord
     unless with_ipaddress(ip).exists?
       hostname = Socket.getaddrinfo(ip, nil)[0][2]
 
-      ems_klass, ems_name = if ost.hypervisor.include?(:scvmm)
-                              [ManageIQ::Providers::Microsoft::InfraManager, 'SCVMM']
-                            elsif ost.hypervisor.include?(:rhevm)
+      ems_klass, ems_name = if ost.hypervisor.include?(:rhevm)
                               [ManageIQ::Providers::Ovirt::InfraManager, 'RHEV-M']
                             elsif ost.hypervisor.include?(:openstack_infra)
                               [ManageIQ::Providers::Openstack::InfraManager, 'OpenStack Director']

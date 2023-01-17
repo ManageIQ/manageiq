@@ -8,7 +8,6 @@ FactoryBot.define do
   factory :miq_provision,      :parent => :miq_provision_task, :class => "MiqProvision"
 
   # Infra
-  factory :miq_provision_microsoft,      :parent => :miq_provision,        :class => "ManageIQ::Providers::Microsoft::InfraManager::Provision"
   factory :miq_provision_redhat,         :parent => :miq_provision,        :class => "ManageIQ::Providers::Redhat::InfraManager::Provision"
   factory :miq_provision_redhat_via_iso, :parent => :miq_provision_redhat, :class => "ManageIQ::Providers::Redhat::InfraManager::ProvisionViaIso"
   factory :miq_provision_redhat_via_pxe, :parent => :miq_provision_redhat, :class => "ManageIQ::Providers::Redhat::InfraManager::ProvisionViaPxe"

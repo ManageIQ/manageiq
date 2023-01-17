@@ -66,7 +66,7 @@ RSpec.describe Metric::CiMixin do
 
   context "#supports?(:capture)" do
     context "with a VM" do
-      let(:unsupported_vm) { FactoryBot.create(:vm_microsoft) }
+      let(:unsupported_vm) { FactoryBot.create(:vm_kubevirt) }
       let(:supported_vm)   { FactoryBot.create(:vm_vmware) }
 
       it "correctly checks capture support" do
@@ -76,8 +76,8 @@ RSpec.describe Metric::CiMixin do
     end
 
     context "with a Host" do
-      let(:unsupported_host) { FactoryBot.create(:host_microsoft) }
-      let(:supported_host)   { FactoryBot.create(:vm_vmware) }
+      let(:unsupported_host) { FactoryBot.create(:ibm_power_hmc_host) }
+      let(:supported_host)   { FactoryBot.create(:host_vmware) }
 
       it "correctly checks capture support" do
         expect(unsupported_host.supports?(:capture)).to be_falsy

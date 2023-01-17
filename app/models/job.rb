@@ -170,10 +170,7 @@ class Job < ApplicationRecord
   def timeout_adjustment
     timeout_adjustment = 1
     target = target_entity
-    if target.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm) ||
-       target.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Template)
-      timeout_adjustment = 4
-    elsif target.kind_of?(ManageIQ::Providers::Azure::CloudManager::Vm) ||
+    if target.kind_of?(ManageIQ::Providers::Azure::CloudManager::Vm) ||
           target.kind_of?(ManageIQ::Providers::Azure::CloudManager::Template)
       timeout_adjustment = 4
     end

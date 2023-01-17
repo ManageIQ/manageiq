@@ -1,5 +1,5 @@
 RSpec.describe Chargeback::ConsumptionWithRollups do
-  let(:vm)          { FactoryBot.create(:vm_microsoft) }
+  let(:vm)          { FactoryBot.create(:vm_infra) }
   let(:consumption) { described_class.new(pluck_rollup([metric_rollup]), starting_date, starting_date + 1.day) }
 
   describe '#sub_metric_rollups' do
