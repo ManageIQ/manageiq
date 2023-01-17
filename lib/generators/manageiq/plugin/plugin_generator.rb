@@ -85,6 +85,16 @@ module ManageIQ
         end
       GEMFILE
       inject_into_file Rails.root.join('Gemfile'), "\n#{data}\n", :after => "### providers\n"
+
+      bundler_d_dir       = Rails.root.join("bundler.d")
+      plugin_overrides_rb = bundler_d_dir.glob("*.rb").first || bundler_d_dir.join("plugins.rb")
+
+      data = "override_gem \"#{plugin_name}\", :path => \"#{destination_root}\"\n"
+      if plugin_overrides_rb.exist?
+        inject_into_file plugin_overrides_rb, data
+      else
+        plugin_overrides_rb.write(data)
+      end
     end
 
     private
