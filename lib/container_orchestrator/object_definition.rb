@@ -17,9 +17,17 @@ class ContainerOrchestrator
             :spec     => {
               :serviceAccountName => ENV["WORKER_SERVICE_ACCOUNT"],
               :containers         => [{
-                :name          => name,
-                :env           => default_environment,
-                :livenessProbe => liveness_probe
+                :name            => name,
+                :env             => default_environment,
+                :livenessProbe   => liveness_probe,
+                :securityContext => {
+                  :allowPrivilegeEscalation => false,
+                  :privileged               => false,
+                  :runAsNonRoot             => true,
+                  :capabilities             => {
+                    :drop => ["ALL"]
+                  }
+                }
               }]
             }
           }
