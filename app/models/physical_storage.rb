@@ -160,7 +160,7 @@ class PhysicalStorage < ApplicationRecord
   end
 
   def raw_update_physical_storage(_options = {})
-    raise NotImplementedError, _("raw_update_volume must be implemented in a subclass")
+    raise NotImplementedError, _("raw_update_physical_storage must be implemented in a subclass")
   end
 
   def event_where_clause(assoc = :ems_events)

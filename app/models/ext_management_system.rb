@@ -154,6 +154,7 @@ class ExtManagementSystem < ApplicationRecord
   supports_not :cloud_subnet_create
   supports_not :cloud_tenant_mapping
   supports_not :cloud_volume_create
+  supports_not :storage_service_create
   supports_not :console
   supports_not :create_iso_datastore
   supports_not :discovery
@@ -310,6 +311,7 @@ class ExtManagementSystem < ApplicationRecord
   supports_attribute :feature => :create_network_router
   supports_attribute :feature => :create_iso_datastore
   supports_attribute :feature => :storage_services
+  supports_attribute :feature => :storage_service_create
   supports_attribute :feature => :add_storage
   supports_attribute :feature => :add_host_initiator
   supports_attribute :supports_create_host_initiator_group, :child_model => "HostInitiatorGroup"
