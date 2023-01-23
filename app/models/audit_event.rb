@@ -8,26 +8,26 @@ class AuditEvent < ApplicationRecord
       :severity => "info",
       :status   => "success",
       :userid   => "system",
-      :source   => AuditEvent.source(caller)
     }.merge(attrs)
+
+    attrs[:source] ||= source(caller_locations(1, 1).first)
 
     event = AuditEvent.create(attrs)
 
     # Cut an Audit log message
-    $audit_log.send(attrs[:status], "MIQ(#{attrs[:source]}) userid: [#{attrs[:userid]}] - #{attrs[:message]}")
+    $audit_log.send(attrs[:status], "Username [#{attrs[:userid]}], from: [#{attrs[:source]}], #{attrs[:message]}")
     event
   end
 
   def self.success(attrs)
-    AuditEvent.generate(attrs.merge(:status => "success", :source => AuditEvent.source(caller)))
+    AuditEvent.generate(attrs.merge(:status => "success", :source => source(caller_locations(1, 1).first)))
   end
 
   def self.failure(attrs)
-    AuditEvent.generate(attrs.merge(:status => "failure", :severity => "warn", :source => AuditEvent.source(caller)))
+    AuditEvent.generate(attrs.merge(:status => "failure", :severity => "warn", :source => source(caller_locations(1, 1).first)))
   end
 
-  def self.source(source)
-    /^([^:]+):[^`]+`([^']+).*$/ =~ source[0]
-    "#{File.basename($1, ".*").camelize}.#{$2}"
+  def self.source(one_caller_location)
+    "#{File.basename(one_caller_location.path, '.*').classify}.#{one_caller_location.label}"
   end
 end
