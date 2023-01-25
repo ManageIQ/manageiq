@@ -9,7 +9,7 @@ class MiqExpression::Field < MiqExpression::Target
   (?<virtual_custom_column>#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}[a-z0-9A-Z]+[:_\-.\/[:alnum:]]*)|
   (?<column>[a-z]+(_[[:alnum:]]+)*)
 )
-/x
+/x.freeze
 
   def self.parse(field)
     parsed_params = parse_params(field) || return
