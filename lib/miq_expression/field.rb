@@ -1,6 +1,6 @@
 class MiqExpression::Field < MiqExpression::Target
   REGEX = /
-(?<model_name>([[:upper:]][[:alnum:]]*(::)?)+)
+(?<model_name>[[:upper:]][[:alnum:]]+(?:::[[:upper:]][[:alnum:]]+)*)
 (?!.*\b(managed|user_tag)\b)
 \.?(?<associations>[a-z][0-9a-z_\.]+)?
 -
