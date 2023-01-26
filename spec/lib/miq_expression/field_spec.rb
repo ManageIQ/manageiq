@@ -97,6 +97,12 @@ RSpec.describe MiqExpression::Field do
                                                               :associations => %w(win32_services),
                                                               :column       => 'dependencies')
     end
+
+    # This test is here because of the complexity of the MiqExpression::Field::REGEX.
+    # If the regex is removed or greatly simplified, then this test can also be removed.
+    it "avoids catastrophic backtracking" do
+      expect(Benchmark.realtime { MiqExpression::Field.parse("XXXXXXXXXXXXXXXXXXXXXXXXX-") }).to be < 1.second
+    end
   end
 
   describe "#to_s" do
