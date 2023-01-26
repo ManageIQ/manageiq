@@ -11,6 +11,7 @@ class MiqExpression::Target
   def self.parse_params(field)
     return unless field.kind_of?(String)
     match = self::REGEX.match(field) || return
+    return if match[:associations] =~ /(managed|user_tag)$/
     # convert matches to hash to format
     # {:model_name => 'User', :associations => ...}
     parsed_params = Hash[match.names.map(&:to_sym).zip(match.to_a[1..-1])]
