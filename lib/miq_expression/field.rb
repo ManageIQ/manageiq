@@ -1,7 +1,7 @@
 class MiqExpression::Field < MiqExpression::Target
   REGEX = /
 (?<model_name>[[:upper:]][[:alnum:]]+(?:::[[:upper:]][[:alnum:]]+)*)
-\.?(?<associations>[a-z][0-9a-z_\.]+)?
+(?<associations>\.[a-z][0-9a-z_\.]+)?
 -
 (?:
   (?<virtual_custom_column>#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}[a-z0-9A-Z]+[:_\-.\/[:alnum:]]*)|

@@ -20,7 +20,11 @@ class MiqExpression::Target
     rescue LoadError # issues for case sensitivity (e.g.: VM vs vm)
       parsed_params[:model_name] = nil
     end
-    parsed_params[:associations] = parsed_params[:associations].to_s.split(".")
+    parsed_params[:associations] = if parsed_params[:associations]
+                                     parsed_params[:associations][1..].split(".")
+                                   else
+                                     []
+                                   end
     parsed_params
   end
 
