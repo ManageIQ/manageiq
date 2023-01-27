@@ -156,10 +156,15 @@ class MiqExpression
   end
 
   def to_ruby(tz = nil)
-    return "" unless valid?
-    tz ||= "UTC"
-    @ruby ||= self.class._to_ruby(exp.deep_clone, context_type, tz)
-    @ruby.dup
+    # TODO: we cache the ruby expression regardless if the tz is different
+    if @ruby
+      @ruby.dup
+    elsif valid?
+      @ruby ||= self.class._to_ruby(exp.deep_clone, context_type, tz || "UTC".freeze)
+      @ruby.dup
+    else
+      ""
+    end
   end
 
   def self._to_ruby(exp, context_type, tz)
