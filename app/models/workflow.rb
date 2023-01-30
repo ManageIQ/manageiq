@@ -6,4 +6,8 @@ class Workflow < ApplicationRecord
   belongs_to :tenant
 
   has_many :workflow_instances, :dependent => :destroy
+
+  def self.create_from_json!(json)
+    create!(:payload => JSON.parse(json))
+  end
 end
