@@ -113,6 +113,10 @@ class MiqWorker < ApplicationRecord
     server_scope.where(:status => STATUSES_STARTING)
   end
 
+  def self.find_all_starting
+    find_starting.where(:type => MiqWorkerType.worker_class_names)
+  end
+
   def self.find_current_or_starting
     server_scope.where(:status => STATUSES_CURRENT_OR_STARTING)
   end
