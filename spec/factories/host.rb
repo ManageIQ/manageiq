@@ -11,14 +11,17 @@ FactoryBot.define do
       storage_count { nil }
     end
 
+    trait :with_ref do
+      ems_ref_type { "HostSystem" }
+      sequence(:ems_ref) { |n| "host-#{seq_padded_for_sorting(n)}" }
+    end
+
     after :create do |host, ev|
       host.storages = create_list :storage, ev.storage_count if ev.storage_count
     end
   end
 
-  factory :host_with_ref, :parent => :host do
-    sequence(:ems_ref) { |n| "host-#{seq_padded_for_sorting(n)}" }
-  end
+  factory :host_with_ref, :parent => :host, :traits => [:with_ref]
 
   factory :host_with_authentication, :parent => :host do
     after(:create) do |x|
@@ -49,13 +52,11 @@ FactoryBot.define do
     vmm_product  { "ESX" }
   end
 
-  factory :host_redhat, :parent => :host, :class => "ManageIQ::Providers::Redhat::InfraManager::Host" do
-    sequence(:ems_ref) { |n| "host-#{seq_padded_for_sorting(n)}" }
+  factory :host_redhat, :parent => :host, :class => "ManageIQ::Providers::Redhat::InfraManager::Host", :traits => [:with_ref] do
     vmm_vendor { "redhat" }
   end
 
-  factory :host_ovirt, :parent => :host, :class => "ManageIQ::Providers::Ovirt::InfraManager::Host" do
-    sequence(:ems_ref) { |n| "host-#{seq_padded_for_sorting(n)}" }
+  factory :host_ovirt, :parent => :host, :class => "ManageIQ::Providers::Ovirt::InfraManager::Host", :traits => [:with_ref] do
     vmm_vendor { "ovirt" }
   end
 
