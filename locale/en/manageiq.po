@@ -1799,10 +1799,6 @@ msgstr ""
 msgid "(missing)"
 msgstr ""
 
-#: ../app/views/ops/_category_form.html.haml
-msgid "* 'Name' and 'Single Value' fields cannot be edited after adding a category."
-msgstr ""
-
 #: ../app/views/report/_form_columns.html.haml
 msgid "* Base the report on"
 msgstr ""
@@ -1909,6 +1905,10 @@ msgstr ""
 msgid ""
 "* Items in <font color=\"red\"><i>red italics</i></font> do not change the outco"
 "me of the scope or expression."
+msgstr ""
+
+#: ../app/javascript/components/settings-category-form/schema.js
+msgid "* Name and Single Value fields cannot be edited after adding a category."
 msgstr ""
 
 #: ../app/views/report/_form_columns_performance.html.haml
@@ -2446,10 +2446,6 @@ msgstr ""
 #: ../app/views/miq_ae_class/_method_form.html.haml
 #: ../app/views/miq_alert/_form.html.haml
 msgid "<Choose>"
-msgstr ""
-
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
-msgid "<Click on this row to create a new category>"
 msgstr ""
 
 #: ../app/views/ops/_classification_entry.html.haml
@@ -3235,6 +3231,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/MiqAction.yaml
 #: ../app/controllers/miq_action_controller.rb
 #: ../app/helpers/miq_policy_helper.rb
+#: ../app/helpers/settings_tags_tabs_helper.rb
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/views/chargeback_rate/_cb_rate_edit_table.html.haml
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
@@ -3244,7 +3241,6 @@ msgstr ""
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 #: ../app/views/ops/_ap_form_registry.html.haml
 #: ../app/views/ops/_classification_entries.html.haml
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
 #: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 #: ../app/views/vm_common/_reconfigure.html.haml
@@ -3407,6 +3403,10 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Add Catalog"
+msgstr ""
+
+#: ../app/javascript/components/settings-company-categories/index.jsx
+msgid "Add Category"
 msgstr ""
 
 #:
@@ -5648,7 +5648,6 @@ msgstr ""
 #: ../app/controllers/ops_controller/settings/common.rb
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb
 #: ../app/controllers/ops_controller/settings/schedules.rb
-#: ../app/controllers/ops_controller/settings/tags.rb
 #: ../app/controllers/pxe_controller/pxe_servers.rb
 #: ../app/controllers/report_controller/dashboards.rb
 #: ../app/controllers/report_controller/menus.rb
@@ -5665,7 +5664,6 @@ msgstr ""
 #: ../app/javascript/components/tenant-quota-form/index.jsx
 #: ../app/javascript/forms/data-driven-form.jsx
 #: ../app/javascript/oldjs/components/miq_ae_class/namespace-form.js
-#: ../app/javascript/oldjs/components/ops/log-collection-form.js
 #: ../app/javascript/oldjs/controllers/catalog/catalog_item_form_controller.js
 #: ../app/javascript/oldjs/controllers/host/host_form_controller.js
 #: ../app/javascript/oldjs/controllers/ops/pglogical_replication_form_controller.js
@@ -6414,7 +6412,7 @@ msgid ""
 "olicy?"
 msgstr ""
 
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
+#: ../app/helpers/settings_tags_tabs_helper.rb
 msgid "Are you sure you want to delete category '%{category_name}'?"
 msgstr ""
 
@@ -8554,6 +8552,7 @@ msgstr ""
 #: ../app/helpers/ops_helper.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
+#: ../app/helpers/settings_analysis_profile_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/javascript/components/cloud-volume-actions-form/create-backup.schema.js
 #: ../app/javascript/components/cloud-volume-actions-form/create-snapshot.schema.js
@@ -9830,7 +9829,7 @@ msgid "CPU Max Used MHz Trend"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
-#: ../app/helpers/ops_helper.rb:211 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb:213 ../app/views/ops/_server_desc.html.haml
 #: ../config/yaml_strings.rb
 msgid "CPU Percent"
 msgstr ""
@@ -9879,7 +9878,7 @@ msgstr ""
 
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
 #. TRANSLATORS: file: product/views/OsProcess-processes.yaml
-#: ../app/helpers/ops_helper.rb:210 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb:212 ../app/views/ops/_server_desc.html.haml
 #: ../config/yaml_strings.rb
 msgid "CPU Time"
 msgstr ""
@@ -10359,6 +10358,10 @@ msgid ""
 "ate signed by the root Openshift Cert.error message: %{err}"
 msgstr ""
 
+#: ../app/helpers/storage_resource_helper/textual_summary.rb
+msgid "Capabilities"
+msgstr ""
+
 #. TRANSLATORS: en.yml key: dictionary.column.capabilities_add
 #: ../config/dictionary_strings.rb
 msgid "Capabilities Add"
@@ -10624,11 +10627,11 @@ msgstr ""
 msgid "Capacity and Utilization Collection settings saved"
 msgstr ""
 
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
+#: ../app/helpers/settings_tags_tabs_helper.rb
 msgid "Capture C & U Data"
 msgstr ""
 
-#: ../app/views/ops/_category_form.html.haml
+#: ../app/javascript/components/settings-category-form/schema.js
 msgid "Capture C & U Data by Tag"
 msgstr ""
 
@@ -10730,9 +10733,10 @@ msgid "Catalogs Explorer"
 msgstr ""
 
 #: ../app/helpers/miq_action_helper.rb
+#: ../app/helpers/settings_analysis_profile_helper.rb
+#: ../app/helpers/settings_tags_tabs_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/views/ops/_all_tabs.html.haml
-#: ../app/views/ops/_ap_show.html.haml
 msgid "Categories"
 msgstr ""
 
@@ -10766,11 +10770,11 @@ msgstr ""
 msgid "Category %{description} [%{name}] record updated ("
 msgstr ""
 
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
+#: ../app/helpers/settings_tags_tabs_helper.rb
 msgid "Category '%{category_name}' cannot be deleted"
 msgstr ""
 
-#: ../app/views/ops/_category_form.html.haml
+#: ../app/javascript/components/settings-category-form/schema.js
 msgid "Category Information"
 msgstr ""
 
@@ -10790,6 +10794,10 @@ msgstr ""
 
 #: ../app/views/miq_ae_customization/_tag_field_values.html.haml
 msgid "Category Tag Entries"
+msgstr ""
+
+#: ../app/javascript/spec/settings-compan-categories/data.js
+msgid "Category cannot be deleted"
 msgstr ""
 
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb
@@ -11617,6 +11625,7 @@ msgstr ""
 #: ../app/javascript/components/cloud-network-form/cloud-network-form.schema.js
 #: ../app/javascript/components/cloud-object-store-container-form/cloud-object-store-container-form.schema.js
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+#: ../app/javascript/components/diagnostics-collect-log-form/schema.js
 #: ../app/javascript/components/network-floatingIPs-form/network-floatingIPs-form.schema.js
 #: ../app/javascript/components/network-security-groups-form/network-security-groups-form.schema.js
 #: ../app/javascript/components/provider-form/index.jsx
@@ -12024,7 +12033,7 @@ msgstr ""
 msgid "Click on a Host to fetch its settings"
 msgstr ""
 
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
+#: ../app/javascript/components/settings-company-categories/index.jsx
 msgid "Click to add a new category"
 msgstr ""
 
@@ -12057,7 +12066,8 @@ msgstr ""
 msgid "Click to delete Orphaned Records for this user"
 msgstr ""
 
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
+#: ../app/helpers/settings_tags_tabs_helper.rb
+#: ../app/javascript/spec/settings-compan-categories/data.js
 msgid "Click to delete this category"
 msgstr ""
 
@@ -12083,10 +12093,6 @@ msgstr ""
 
 #: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
 msgid "Click to delete this mapping"
-msgstr ""
-
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
-msgid "Click to edit this category"
 msgstr ""
 
 #: ../app/views/ops/_ldap_forest_entries.html.haml
@@ -13954,8 +13960,8 @@ msgstr ""
 msgid "Collect All Logs"
 msgstr ""
 
+#: ../app/helpers/settings_analysis_profile_helper.rb
 #: ../app/views/ops/_ap_form_file.html.haml
-#: ../app/views/ops/_ap_show.html.haml
 msgid "Collect Contents?"
 msgstr ""
 
@@ -15709,6 +15715,10 @@ msgstr ""
 
 #: ../app/models/vm_or_template.rb
 msgid "Console not supported"
+msgstr ""
+
+#: ../app/controllers/api/vms_controller.rb
+msgid "Console protocol %{protocol} is not supported"
 msgstr ""
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
@@ -21092,7 +21102,7 @@ msgstr ""
 msgid "Data:"
 msgstr ""
 
-#: ../app/helpers/ops_helper.rb:103 ../app/views/ops/_all_tabs.html.haml
+#: ../app/helpers/ops_helper.rb:105 ../app/views/ops/_all_tabs.html.haml
 #: ../app/views/ops/_settings_authentication_tab.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 #, fuzzy
@@ -21644,12 +21654,12 @@ msgstr ""
 #: ../app/helpers/configuration_script_helper.rb
 #: ../app/helpers/miq_action_helper.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
+#: ../app/helpers/settings_tags_tabs_helper.rb
 #: ../app/helpers/textual_summary_helper.rb
 #: ../app/views/layouts/_container_auth.html.haml
 #: ../app/views/layouts/_edit_form_buttons.html.haml
 #: ../app/views/layouts/_x_edit_buttons.html.haml
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
 #: ../app/views/report/_form_styling.html.haml
 #: ../config/yaml_strings.rb
 msgid "Default"
@@ -21884,6 +21894,7 @@ msgstr ""
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb
+#: ../app/helpers/settings_tags_tabs_helper.rb
 #: ../app/javascript/components/remove-generic-item-modal.jsx
 #: ../app/views/chargeback_rate/_cb_rate_edit_table.html.haml
 #: ../app/views/chargeback_rate/_tier_row.haml
@@ -21891,7 +21902,6 @@ msgstr ""
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 #: ../app/views/ops/_ap_form_registry.html.haml
 #: ../app/views/ops/_classification_entry.html.haml
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
 #: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 #: ../app/views/vm_common/_reconfigure.html.haml
@@ -22755,6 +22765,10 @@ msgstr ""
 msgid "Delete this Zone"
 msgstr ""
 
+#: ../app/helpers/settings_tags_tabs_helper.rb
+msgid "Delete this category"
+msgstr ""
+
 #: ../app/helpers/application_helper/toolbar/tenant_center.rb
 msgid "Delete this item"
 msgstr ""
@@ -23020,7 +23034,6 @@ msgstr ""
 
 #: ../app/controllers/chargeback_rate_controller.rb
 #: ../app/controllers/miq_action_controller.rb
-#: ../app/controllers/ops_controller/settings/tags.rb
 msgid "Description is required"
 msgstr ""
 
@@ -29394,8 +29407,8 @@ msgstr ""
 msgid "Editing Group \"%{name}\""
 msgstr ""
 
-#: ../app/views/ops/_log_collection.html.haml
-msgid "Editing Log Depot Settings for %{class}: %{display}"
+#: ../app/javascript/components/diagnostics-collect-log-form/schema.js
+msgid "Editing Log Depot Settings for %s: %s"
 msgstr ""
 
 #: ../app/controllers/ops_controller.rb
@@ -30655,7 +30668,6 @@ msgstr ""
 
 #: ../app/controllers/miq_ae_class_controller.rb
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb
-#: ../app/controllers/ops_controller/settings/tags.rb
 msgid "Error during 'add': %{message}"
 msgstr ""
 
@@ -31020,7 +31032,7 @@ msgstr[1] ""
 msgid "Event Log Entry"
 msgstr ""
 
-#: ../app/views/ops/_ap_show.html.haml
+#: ../app/helpers/settings_analysis_profile_helper.rb
 msgid "Event Log Items"
 msgstr ""
 
@@ -32956,7 +32968,7 @@ msgstr ""
 msgid "File Entry is required"
 msgstr ""
 
-#: ../app/views/ops/_ap_show.html.haml
+#: ../app/helpers/settings_analysis_profile_helper.rb
 msgid "File Items"
 msgstr ""
 
@@ -35827,12 +35839,11 @@ msgstr ""
 msgid "Host (Authentication URL)"
 msgstr ""
 
-#: ../app/models/manageiq/providers/microsoft/infra_manager/host.rb
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Microsoft::InfraManager::Host
+#: ../config/dictionary_strings.rb
 #, fuzzy
 msgid "Host (Microsoft)"
-msgid_plural "Hosts (Microsoft)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr ""
 
 #: ../app/models/manageiq/providers/openstack/infra_manager/host.rb
 #, fuzzy
@@ -36090,7 +36101,9 @@ msgid "Host Initiator Group:"
 msgstr ""
 
 #: ../app/controllers/host_initiator_group_controller.rb
+#: ../app/helpers/ems_storage_helper/textual_summary.rb
 #: ../app/presenters/menu/default_menu.rb
+#: ../app/services/ems_storage_dashboard_service.rb
 msgid "Host Initiator Groups"
 msgstr ""
 
@@ -36713,7 +36726,7 @@ msgstr ""
 #: ../app/helpers/configured_system_helper/textual_summary.rb
 #: ../app/helpers/host_helper.rb
 #: ../app/helpers/host_helper/textual_summary.rb
-#: ../app/helpers/ops_helper.rb:21 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:23 ../app/helpers/ops_helper.rb
 #: ../app/views/ops/_server_desc.html.haml
 #: ../app/views/ops/_settings_server_tab.html.haml
 #: ../config/yaml_strings.rb
@@ -38226,7 +38239,6 @@ msgstr ""
 #: ../app/helpers/catalog_helper.rb:190 ../app/helpers/miq_alert_helper.rb
 #: ../app/javascript/components/data-store-form/data-store-form.schema.js
 #: ../app/views/miq_alert/_form.html.haml
-#: ../app/views/ops/_ap_show.html.haml
 #: ../app/views/resource_pool/_config.html.haml
 #: ../app/views/static/miq_ae_class/namespace_form.html.haml
 msgid "Info"
@@ -38295,12 +38307,11 @@ msgid_plural "Infrastructure Providers (Kubevirt)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../app/models/manageiq/providers/microsoft/infra_manager.rb
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Microsoft::InfraManager
+#: ../config/dictionary_strings.rb
 #, fuzzy
 msgid "Infrastructure Provider (Microsoft)"
-msgid_plural "Infrastructure Providers (Microsoft)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr ""
 
 #: ../app/models/manageiq/providers/openstack/infra_manager.rb
 #, fuzzy
@@ -38890,6 +38901,11 @@ msgstr ""
 msgid "Invalid placement group - incompatible colocation policy"
 msgstr ""
 
+#:
+#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/provision_workflow.rb
+msgid "Invalid processor pool - incompatible machine type (host)"
+msgstr ""
+
 #: ../app/models/miq_report/search.rb
 msgid "Invalid reflection <%{item}> on model <%{name}>"
 msgstr ""
@@ -39153,10 +39169,6 @@ msgstr ""
 #:
 #: ../app/javascript/components/pvc-import-image-form/pvc-import-image-form.schema.js
 msgid "Keep OVA file on completion"
-msgstr ""
-
-#: ../app/models/manageiq/providers/microsoft/infra_manager.rb
-msgid "Kerberos"
 msgstr ""
 
 #: ../app/helpers/pxe_helper/textual_summary.rb
@@ -39643,7 +39655,7 @@ msgstr ""
 msgid "Last Known Size"
 msgstr ""
 
-#: ../app/helpers/ops_helper.rb:39 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:41 ../app/helpers/ops_helper.rb
 msgid "Last Log Collection"
 msgstr ""
 
@@ -40609,7 +40621,7 @@ msgstr ""
 msgid "Log Depot Settings were validated"
 msgstr ""
 
-#: ../app/helpers/ops_helper.rb:38 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:40 ../app/helpers/ops_helper.rb
 msgid "Log Depot URI"
 msgstr ""
 
@@ -40843,15 +40855,11 @@ msgid "Logs for this %{product} Server are not available for viewing"
 msgstr ""
 
 #: ../app/helpers/catalog_helper.rb:47 ../app/helpers/catalog_helper.rb
+#: ../app/javascript/components/settings-category-form/schema.js
 #: ../app/views/catalog/_form_details_info.html.haml
 #: ../app/views/catalog/_st_angular_form.html.haml
-#: ../app/views/ops/_category_form.html.haml
 #: ../app/views/ops/_settings_co_tags_tab.html.haml
 msgid "Long Description"
-msgstr ""
-
-#: ../app/controllers/ops_controller/settings/tags.rb
-msgid "Long Description is required"
 msgstr ""
 
 #: ../app/views/miq_request/_prov_field.html.haml
@@ -41591,7 +41599,7 @@ msgstr ""
 msgid "Max Available"
 msgstr ""
 
-#: ../app/helpers/ops_helper.rb:168 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:170 ../app/helpers/ops_helper.rb
 msgid "Max Concurrent"
 msgstr ""
 
@@ -43954,10 +43962,6 @@ msgstr ""
 
 #: ../config/model_attributes.rb
 msgid "Metric|V time"
-msgstr ""
-
-#: ../lib/manageiq/providers/scvmm/engine.rb
-msgid "Microsoft SCVMM Provider"
 msgstr ""
 
 #: ../app/controllers/vm_common.rb
@@ -48330,6 +48334,10 @@ msgstr ""
 msgid "Must specify new resize value/s"
 msgstr ""
 
+#: ../app/javascript/spec/settings-compan-categories/data.js
+msgid "My Company Categories"
+msgstr ""
+
 #: ../app/controllers/report_controller/menus.rb
 msgid "My EVM Group"
 msgstr ""
@@ -48457,7 +48465,6 @@ msgstr ""
 #: ../app/controllers/catalog_controller.rb
 #: ../app/controllers/miq_ae_class_controller.rb
 #: ../app/controllers/miq_ae_customization_controller/old_dialogs.rb
-#: ../app/controllers/ops_controller/settings/tags.rb
 #: ../app/controllers/pxe_controller/pxe_image_types.rb
 msgid "Name is required"
 msgstr ""
@@ -51566,6 +51573,11 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Open External Logging from Container Provider"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Open Native Console"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -56453,7 +56465,7 @@ msgstr ""
 msgid "Print the full report (all rows) or export it as a PDF file"
 msgstr ""
 
-#: ../app/helpers/ops_helper.rb:165 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:167 ../app/helpers/ops_helper.rb
 msgid "Priority"
 msgstr ""
 
@@ -59061,16 +59073,16 @@ msgid ""
 "tems?"
 msgstr ""
 
+#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
+msgid ""
+"Refresh relationships and power states for all items related to these Host Ini"
+"tiator Groups"
+msgstr ""
+
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
 msgid ""
 "Refresh relationships and power states for all items related to these Host Ini"
 "tiators"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to these Host Ini"
-"tiators Cluster"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
@@ -59142,13 +59154,13 @@ msgstr ""
 #: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
 msgid ""
 "Refresh relationships and power states for all items related to this Host Init"
-"iator Cluster"
+"iator Cluster?"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
 msgid ""
 "Refresh relationships and power states for all items related to this Host Init"
-"iator Cluster?"
+"iator Group"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb
@@ -59574,7 +59586,7 @@ msgstr ""
 msgid "Registry Item Value Name"
 msgstr ""
 
-#: ../app/views/ops/_ap_show.html.haml
+#: ../app/helpers/settings_analysis_profile_helper.rb
 msgid "Registry Items"
 msgstr ""
 
@@ -59585,6 +59597,10 @@ msgstr ""
 
 #: ../app/javascript/oldjs/miq_application.js
 msgid "Registry Key Value"
+msgstr ""
+
+#: ../app/helpers/settings_analysis_profile_helper.rb
+msgid "Registry Keys"
 msgstr ""
 
 #:
@@ -59598,6 +59614,10 @@ msgstr ""
 
 #: ../app/controllers/application_controller/filter.rb
 msgid "Registry Value Error: %{msg}"
+msgstr ""
+
+#: ../app/helpers/settings_analysis_profile_helper.rb
+msgid "Registry Values"
 msgstr ""
 
 #: ../config/model_attributes.rb
@@ -61469,6 +61489,10 @@ msgstr ""
 msgid "Required"
 msgstr ""
 
+#: ../app/models/manageiq/providers/autosde/storage_manager/cloud_volume.rb
+msgid "Required Capabilities (filters by exact match)"
+msgstr ""
+
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 msgid "Required if SSH login is disabled for the Default account."
 msgstr ""
@@ -62949,10 +62973,6 @@ msgstr ""
 
 #: ../app/presenters/tree_node/miq_scsi_target.rb
 msgid "SCSI Target %{target} (%{name})"
-msgstr ""
-
-#: ../app/models/manageiq/providers/microsoft/infra_manager.rb
-msgid "SCVMM"
 msgstr ""
 
 #: ../app/helpers/container_helper/textual_summary.rb
@@ -65179,9 +65199,8 @@ msgid_plural "Service Linking Workflows"
 msgstr[0] ""
 msgstr[1] ""
 
-#. TRANSLATORS: en.yml key: dictionary.column.service_name
-#. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/015_Host - ESX Services.yaml
-#: ../config/dictionary_strings.rb:1788 ../config/yaml_strings.rb
+#:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
 msgid "Service Name"
 msgstr ""
 
@@ -66460,6 +66479,10 @@ msgstr ""
 msgid "Shared"
 msgstr ""
 
+#: ../app/views/shared/views/_prov_dialog.html.haml
+msgid "Shared Processor Pools"
+msgstr ""
+
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/vm.rb
 msgid "Shared capped"
@@ -67299,10 +67322,13 @@ msgstr ""
 msgid "Show hourly data from"
 msgstr ""
 
-#: ../app/views/ops/_category_form.html.haml
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
+#: ../app/helpers/settings_tags_tabs_helper.rb
 #: ../app/views/ops/_settings_co_tags_tab.html.haml
 msgid "Show in Console"
+msgstr ""
+
+#: ../app/javascript/components/settings-category-form/schema.js
+msgid "Show in console"
 msgstr ""
 
 #: ../app/helpers/host_helper/textual_summary.rb
@@ -67796,8 +67822,7 @@ msgstr ""
 msgid "Single VM/Instance"
 msgstr ""
 
-#: ../app/views/ops/_category_form.html.haml
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
+#: ../app/helpers/settings_tags_tabs_helper.rb
 msgid "Single Value"
 msgstr ""
 
@@ -68646,7 +68671,7 @@ msgstr ""
 msgid "Started At"
 msgstr ""
 
-#: ../app/helpers/ops_helper.rb:206 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb:208 ../app/views/ops/_server_desc.html.haml
 msgid "Started On"
 msgstr ""
 
@@ -68843,7 +68868,7 @@ msgstr ""
 #: ../app/helpers/ems_network_helper/textual_summary.rb
 #: ../app/helpers/ems_physical_infra_helper/textual_summary.rb
 #: ../app/helpers/ems_storage_helper/textual_summary.rb
-#: ../app/helpers/ops_helper.rb:163 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:165 ../app/helpers/ops_helper.rb
 #: ../app/helpers/ops_helper.rb
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb
 #: ../app/helpers/physical_server_helper/textual_summary.rb
@@ -69194,17 +69219,24 @@ msgid_plural "Storage Resources"
 msgstr[0] ""
 msgstr[1] ""
 
+#:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+msgid ""
+"Storage Resource (if no option appears then no storage resource with selected "
+"capabilities was found)"
+msgstr ""
+
 #. TRANSLATORS: file: product/views/StorageResource.yaml
 #: ../app/controllers/storage_resource_controller.rb
 #: ../app/presenters/menu/default_menu.rb:162 ../config/yaml_strings.rb
 msgid "Storage Resources"
 msgstr ""
 
-#: ../config/model_display_names.rb
+#:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+#, fuzzy
 msgid "Storage Service"
-msgid_plural "Storage Services"
-msgstr[0] ""
-msgstr[1] ""
+msgstr ""
 
 #: ../config/model_display_names.rb
 msgid "Storage Service Resource Attachment"
@@ -71711,6 +71743,10 @@ msgstr ""
 msgid "The login group cannot be deleted"
 msgstr ""
 
+#: ../app/javascript/helpers/validate-names.js
+msgid "The name \"%s\" already exists in \"%s\""
+msgstr ""
+
 #:
 #: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb
 msgid "The number of entitled processors assigned to the VM"
@@ -72230,10 +72266,6 @@ msgstr ""
 
 #: ../app/helpers/miq_policy_helper.rb
 msgid "This policy does not currently respond to any Events."
-msgstr ""
-
-#: ../app/models/metric/ci_mixin.rb
-msgid "This provider does not support metrics collection"
 msgstr ""
 
 #: ../app/controllers/application_controller.rb
@@ -73413,9 +73445,11 @@ msgstr ""
 #: ../app/helpers/security_group_helper/textual_summary.rb
 #: ../app/helpers/security_policy_helper/textual_summary.rb
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
+#: ../app/helpers/settings_analysis_profile_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/javascript/components/data-tables/button-group-list/helper.js
 #: ../app/javascript/components/data-tables/time-profile-table/helper.js
+#: ../app/javascript/components/diagnostics-collect-log-form/schema.js
 #: ../app/javascript/components/generic-objects-form/generic-objects-form.schema.js
 #: ../app/javascript/components/provider-form/index.jsx
 #: ../app/javascript/components/pxe-customization-template-form/pxe-customization-template-form.schema.js
@@ -73436,7 +73470,6 @@ msgstr ""
 #: ../app/views/miq_alert/_alert_snmp.html.haml
 #: ../app/views/miq_policy_rsop/_rsop_form.html.haml
 #: ../app/views/ops/_ap_form.html.haml
-#: ../app/views/ops/_ap_show.html.haml
 #: ../app/views/ops/_settings_import_tab.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 #: ../app/views/pxe/_pxe_img_form.html.haml
@@ -75272,10 +75305,6 @@ msgstr ""
 
 #: ../app/controllers/ops_controller/ops_rbac.rb
 msgid "Username must be entered to perform LDAP Group Look Up"
-msgstr ""
-
-#: ../app/models/manageiq/providers/microsoft/infra_manager.rb
-msgid "Username must be in the format: name@realm"
 msgstr ""
 
 #: ../app/models/manageiq/providers/awx/provider.rb
@@ -77208,7 +77237,7 @@ msgstr ""
 msgid "Version"
 msgstr ""
 
-#: ../app/helpers/ops_helper.rb:212 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb:214 ../app/views/ops/_server_desc.html.haml
 msgid "Version / Build"
 msgstr ""
 
@@ -78302,12 +78331,11 @@ msgid_plural "Virtual Machines (Kubevirt)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../app/models/manageiq/providers/microsoft/infra_manager/vm.rb
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Microsoft::InfraManager::Vm
+#: ../config/dictionary_strings.rb
 #, fuzzy
 msgid "Virtual Machine (Microsoft)"
-msgid_plural "Virtual Machines (Microsoft)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr ""
 
 #: ../app/models/manageiq/providers/redhat/infra_manager/vm.rb
 #, fuzzy
@@ -82171,6 +82199,7 @@ msgstr ""
 
 #: ../app/models/ext_management_system.rb
 #: ../app/models/manageiq/providers/inventory/parser.rb
+#: ../app/models/miq_server/worker_management.rb
 #: ../app/models/miq_worker/runner.rb:287 ../app/models/service_order.rb
 #: ../app/models/vm/operations/guest.rb
 #: ../app/models/vm_or_template/operations/configuration.rb
@@ -82215,7 +82244,7 @@ msgid "new element"
 msgstr ""
 
 #: ../app/models/ext_management_system.rb
-#: ../app/models/ext_management_system.rb:656 ../app/models/provider.rb
+#: ../app/models/ext_management_system.rb:654 ../app/models/provider.rb
 msgid "no Provider credentials defined"
 msgstr ""
 
@@ -82308,7 +82337,7 @@ msgstr ""
 msgid "open and close options"
 msgstr ""
 
-#: ../lib/miq_expression.rb:289 ../lib/miq_expression.rb
+#: ../lib/miq_expression.rb:294 ../lib/miq_expression.rb
 msgid "operator '%{operator_name}' is not supported"
 msgstr ""
 
@@ -83097,7 +83126,7 @@ msgstr ""
 msgid "unknown zone %{zone_name}"
 msgstr ""
 
-#: ../app/helpers/ops_helper.rb:168 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:170 ../app/helpers/ops_helper.rb
 msgid "unlimited"
 msgstr ""
 
