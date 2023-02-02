@@ -49,7 +49,7 @@ class MiqServer::WorkerManagement
     wait_for_started_workers
   end
 
-  def sync_starting_workers!(_starting)
+  def sync_starting_workers
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 

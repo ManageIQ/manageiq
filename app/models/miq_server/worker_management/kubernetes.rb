@@ -20,8 +20,20 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
     sync_deployment_settings
   end
 
-  # TODO: Synchronize worker records and status as they are starting up
-  def sync_starting_workers!(_starting)
+  def sync_starting_workers
+    starting = MiqWorker.find_all_starting.to_a
+    starting.each do |worker|
+      next if worker.class.rails_worker?
+
+      worker_pod = get_pod(worker[:system_uid])
+      container_status = worker_pod.status.containerStatuses.find { |container| container.name == worker.worker_deployment_name }
+      if worker_pod.status.phase == "Running" && container_status.ready && container_status.started
+        worker.update!(:status => "started")
+        starting.delete(worker)
+      end
+    end
+
+    starting
   end
 
   def enough_resource_to_start_worker?(_worker_class)
@@ -229,5 +241,9 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
 
   def delete_pod(pod)
     current_pods.delete(pod.metadata.name)
+  end
+
+  def get_pod(pod_name)
+    orchestrator.get_pods.find { |pod| pod.metadata[:name] == pod_name }
   end
 end

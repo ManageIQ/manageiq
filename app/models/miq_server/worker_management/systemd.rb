@@ -4,7 +4,8 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
     self.miq_services_by_guid = miq_services.index_by { |w| w[:name].match(/^.+@(?<guid>.+)\.service$/).named_captures["guid"] }
   end
 
-  def sync_starting_workers!(starting)
+  def sync_starting_workers
+    starting = MiqWorker.find_all_starting.to_a
     sync_from_system
     starting.each do |worker|
       next if worker.class.rails_worker?
@@ -15,6 +16,8 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
         starting.delete(worker)
       end
     end
+
+    starting
   end
 
   def cleanup_failed_workers
