@@ -492,7 +492,7 @@ RSpec.describe AuthenticationMixin do
         it "(:save => true) updates status" do
           @host.authentications.first.update(:status => nil) # start unauthorized
           allow(@host).to receive(:verify_credentials).and_return(true)
-          @host.authentication_check(:save => true)
+          @host.authentication_check(:default, :save => true)
           expect(@host.authentication_type(:default).status).to eq("Valid")
           expect(MiqQueue.where(:class_name => "MiqEvent").where(:method_name => "raise_evm_event").count).to eq(1)
         end
@@ -500,7 +500,7 @@ RSpec.describe AuthenticationMixin do
         it "(:save => false) does not update status" do
           @host.authentications.first.update(:status => nil) # start unauthorized
           allow(@host).to receive(:missing_credentials?).and_return(false)
-          @host.authentication_check(:save => false)
+          @host.authentication_check(:default, :save => false)
           expect(@host.authentication_type(:default).status).to be_nil
           expect(MiqQueue.where(:class_name => "MiqEvent").where(:method_name => "raise_evm_event").count).to eq(0)
         end
