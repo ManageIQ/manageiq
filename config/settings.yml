@@ -1,4 +1,8 @@
 ---
+:audit_events:
+  :history:
+    :keep_events: 6.months
+    :purge_window_size: 1000
 :authentication:
   :basedn:
   :bind_dn:
@@ -1122,6 +1126,7 @@
         :heartbeat_thread_shutdown_timeout: 10.seconds
     :schedule_worker:
       :audit_managed_resources: 1.days
+      :audit_events_purge_interval: 1.day
       :container_entities_purge_interval: 1.day
       :binary_blob_purge_interval: 1.hour
       :authentication_check_interval: 1.hour

@@ -238,6 +238,14 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue(:binary_blob_purge_timer)
     end
 
+    # Schedule - Purging of audit events
+    scheduler.schedule_every(
+      :audit_event_purge_timer,
+      worker_settings[:audit_events_purge_interval]
+    ) do
+      enqueue(:audit_event_purge_timer)
+    end
+
     # Schedule - Purging of notifications
     scheduler.schedule_every(
       :notification_purge_timer,

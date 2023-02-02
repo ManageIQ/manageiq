@@ -101,6 +101,10 @@ class MiqScheduleWorker::Jobs
     queue_work(:class_name => "DriftState", :method_name => "purge_timer", :zone => nil)
   end
 
+  def audit_event_purge_timer
+    queue_work(:class_name => "AuditEvent", :method_name => "purge_timer", :zone => nil)
+  end
+
   def event_stream_purge_timer
     queue_work(:class_name => "EventStream", :method_name => "purge_timer", :zone => nil)
   end
