@@ -863,7 +863,7 @@
   :level_remote_console: info
   :secret_filter: []
 :messaging:
-  :type: miq_queue
+  :type: kafka
 :notifications:
   :history:
     :purge_window_size: 1000
@@ -1105,6 +1105,7 @@
           :queue_timeout: 120.minutes
           :dequeue_method: sql
       :event_handler:
+        :dequeue_method: miq_messaging
         :nice_delta: 7
       :generic_worker:
         :count: 2
