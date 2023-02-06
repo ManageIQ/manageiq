@@ -85,23 +85,12 @@ RSpec.describe ContainerOrchestrator do
 
     it "sets database environment variables" do
       stub_const("ENV", ENV.to_h.merge(
-        "DATABASE_HOSTNAME" => "postgres",
         "DATABASE_NAME"     => "vmdb_production",
-        "DATABASE_PASSWORD" => "password",
-        "DATABASE_PORT"     => "5432",
-        "DATABASE_REGION"   => "0",
         "DATABASE_SSL_MODE" => "verify-full",
-        "DATABASE_USER"     => "postgres",
       ))
 
-      expect(subject.send(:default_environment)).to include(
-        {:name => "DATABASE_PORT",     :value => "5432"},
-        {:name => "DATABASE_SSL_MODE", :value => "verify-full"},
-        {:name => "DATABASE_HOSTNAME", :valueFrom => {:secretKeyRef => {:key => "hostname", :name => "postgresql-secrets"}}},
-        {:name => "DATABASE_NAME",     :valueFrom => {:secretKeyRef => {:key => "dbname",   :name => "postgresql-secrets"}}},
-        {:name => "DATABASE_PASSWORD", :valueFrom => {:secretKeyRef => {:key => "password", :name => "postgresql-secrets"}}},
-        {:name => "DATABASE_USER",     :valueFrom => {:secretKeyRef => {:key => "username", :name => "postgresql-secrets"}}},
-      )
+      expect(subject.send(:default_environment)).to include({:name => "DATABASE_SSL_MODE", :value => "verify-full"})
+      expect(subject.send(:default_environment)).not_to include({:name => "DATABASE_NAME", :valueFrom => {:secretKeyRef => {:key => "dbname", :name => "postgresql-secrets"}}})
     end
 
     it "doesn't include memcached env vars by default" do
@@ -130,8 +119,8 @@ RSpec.describe ContainerOrchestrator do
 
       deployment_definition = subject.send(:deployment_definition, "test")
 
-      expect(deployment_definition.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts, 0)).to be_nil
-      expect(deployment_definition.fetch_path(:spec, :template, :spec, :volumes, 0)).to be_nil
+      expect(deployment_definition.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts).length).to eq(2)
+      expect(deployment_definition.fetch_path(:spec, :template, :spec, :volumes).length).to eq(2)
     end
 
     it "mounts the database root certificate" do
@@ -140,12 +129,12 @@ RSpec.describe ContainerOrchestrator do
 
       deployment_definition = subject.send(:deployment_definition, "test")
 
-      expect(deployment_definition.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts, 0)).to eq(
+      expect(deployment_definition.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts)).to include({
         :mountPath => "/.postgresql",
         :name      => "pg-root-certificate",
         :readOnly  => true
-      )
-      expect(deployment_definition.fetch_path(:spec, :template, :spec, :volumes, 0)).to eq(
+      })
+      expect(deployment_definition.fetch_path(:spec, :template, :spec, :volumes)).to include({
         :name   => "pg-root-certificate",
         :secret => {
           :secretName => "postgresql-secrets",
@@ -154,7 +143,7 @@ RSpec.describe ContainerOrchestrator do
             :path => "root.crt",
           ],
         }
-      )
+      })
     end
 
     it "mounts the root CA certificate" do
@@ -162,12 +151,12 @@ RSpec.describe ContainerOrchestrator do
 
       deployment_definition = subject.send(:deployment_definition, "test")
 
-      expect(deployment_definition.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts, 0)).to eq(
+      expect(deployment_definition.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts)).to include({
         :mountPath => "/etc/pki/ca-trust/source/anchors",
         :name      => "internal-root-certificate",
         :readOnly  => true
-      )
-      expect(deployment_definition.fetch_path(:spec, :template, :spec, :volumes, 0)).to eq(
+      })
+      expect(deployment_definition.fetch_path(:spec, :template, :spec, :volumes)).to include({
         :name   => "internal-root-certificate",
         :secret => {
           :secretName => "some-secret-name",
@@ -176,7 +165,7 @@ RSpec.describe ContainerOrchestrator do
             :path => "root.crt",
           ],
         }
-      )
+      })
     end
   end
 
