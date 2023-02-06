@@ -44,13 +44,21 @@ module Vmdb
       deliver_on = MiqQueue.arel_table[:deliver_on]
       loop do
         q = with_console_sql_logging_level(quiet_polling ? 1 : ActiveRecord::Base.logger.level) do
-          MiqQueue.where(deliver_on.eq(nil).or(deliver_on.lteq(Time.now.utc)))
-                  .where.not(:queue_name => "miq_server").order(:id).first
+          MiqQueue.where.not(:state => MiqQueue::STATE_DEQUEUE)
+                  .where(deliver_on.eq(nil).or(deliver_on.lteq(Time.now.utc)))
+                  .where.not(:queue_name => "miq_server")
+                  .order(:id)
+                  .first
         end
         if q
           puts "\e[33;1m\n** Delivering #{MiqQueue.format_full_log_msg(q)}\n\e[0;m"
-          q.update!(:state => MiqQueue::STATE_DEQUEUE, :handler => MiqServer.my_server)
-          q.deliver_and_process
+          begin
+            q.update!(:state => MiqQueue::STATE_DEQUEUE, :handler => MiqServer.my_server)
+          rescue ActiveRecord::StaleObjectError
+            puts "\e[33;1m\n** Skipping delivery since it is being processed by another simulator\n\e[0;m"
+          else
+            q.deliver_and_process
+          end
         else
           break_on_complete ? break : sleep(1.second)
         end
