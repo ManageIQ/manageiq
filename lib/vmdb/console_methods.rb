@@ -51,12 +51,11 @@ module Vmdb
                   .first
         end
         if q
-          puts "\e[33;1m\n** Delivering #{MiqQueue.format_full_log_msg(q)}\n\e[0;m"
           begin
             q.update!(:state => MiqQueue::STATE_DEQUEUE, :handler => MiqServer.my_server)
           rescue ActiveRecord::StaleObjectError
-            puts "\e[33;1m\n** Skipping delivery since it is being processed by another simulator\n\e[0;m"
           else
+            puts "\e[33;1m\n** Delivering #{MiqQueue.format_full_log_msg(q)}\n\e[0;m"
             q.deliver_and_process
           end
         else
