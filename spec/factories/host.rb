@@ -8,6 +8,7 @@ FactoryBot.define do
     power_state         { "on" }
 
     transient do
+      authtype { nil }
       storage_count { nil }
     end
 
@@ -18,29 +19,24 @@ FactoryBot.define do
 
     after :create do |host, ev|
       host.storages = create_list :storage, ev.storage_count if ev.storage_count
+      Array(ev.authtype).each { |a| host.authentications << FactoryBot.create(:authentication, :authtype => a, :resource => host) } if ev.authtype
     end
   end
 
   factory :host_with_ref, :parent => :host, :traits => [:with_ref]
 
   factory :host_with_authentication, :parent => :host do
-    after(:create) do |x|
-      x.authentications = [FactoryBot.build(:authentication, :resource => x)]
-    end
+    authtype { "default" }
   end
 
   factory :host_vmware_esx_with_authentication, :parent => :host_vmware_esx do
-    after(:create) do |x|
-      x.authentications = [FactoryBot.build(:authentication, :resource => x)]
-    end
+    authtype { "default" }
   end
 
   factory :host_with_ipmi, :parent => :host do
     ipmi_address { "127.0.0.1" }
     mac_address  { "aa:bb:cc:dd:ee:ff" }
-    after(:create) do |x|
-      x.authentications = [FactoryBot.build(:authentication_ipmi, :resource => x)]
-    end
+    authtype     { "ipmi" }
   end
 
   # Type specific subclasses
