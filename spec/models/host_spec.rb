@@ -200,23 +200,27 @@ RSpec.describe Host do
   end
 
   context "host validation" do
+    let(:password)      { "v2:{/OViaBJ0Ug+RSW9n7EFGqw==}" }
+    # use this to ensure that the latest creds are being used
+    let(:old_creds)     { {:default => {:userid => "bad", :password => password}} }
+    let(:default_creds) { {:default => {:userid => "root", :password => password}} }
+    let(:remote_creds)  { {:remote => {:userid => "root", :password => password}} }
+    let(:both_creds)    { remote_creds.merge(default_creds) }
+
     before do
       EvmSpecHelper.local_miq_server
 
-      @password = "v2:{/OViaBJ0Ug+RSW9n7EFGqw==}"
       @ems = FactoryBot.create(:ems_vmware)
       @host = FactoryBot.create(:host_vmware_esx, :ext_management_system => @ems)
-      @data = {:default => {:userid => "root", :password => @password}}
-      @options = {:save => false}
     end
 
-    context "#verify_credentials_task" do
+    describe "#verify_credentials_task" do
       it "verifies the credentials" do
-        @host.update_authentication(@data, @options)
-        @host.save
-        @host.verify_credentials_task(FactoryBot.create(:user).userid)
+        @host.update_authentication(default_creds)
+        @host.verify_credentials_task(FactoryBot.create(:user).userid, :default)
 
         expect(MiqQueue.last).to have_attributes(
+          :args        => [:default, {}],
           :method_name => "verify_credentials?",
           :instance_id => @host.id,
           :class_name  => @host.class.name,
@@ -228,14 +232,20 @@ RSpec.describe Host do
     end
 
     context "default credentials" do
-      it "save" do
-        @host.update_authentication(@data, @options)
+      it "#update_authentication" do
+        @host.update_authentication(default_creds)
+        expect(@host.authentications.count).to eq(1)
+      end
+
+      it "#update_authentication (:save => false)" do
+        @host.update_authentication(default_creds, :save => false)
+        expect(@host.authentications.count).to eq(0)
         @host.save
         expect(@host.authentications.count).to eq(1)
       end
 
-      it "validate" do
-        allow(@host).to receive(:connect_ssh)
+      it "#validate does not save credentials" do
+        @host.update_authentication(default_creds, :save => false)
         assert_default_credentials_validated
         expect(@host.authentications.count).to eq(0)
       end
@@ -243,48 +253,45 @@ RSpec.describe Host do
 
     context "default and remote credentials" do
       it "save default, then save remote" do
-        @host.update_authentication(@data, @options)
-        @host.save
+        @host.update_authentication(default_creds)
         expect(@host.authentications.count).to eq(1)
 
-        @data[:remote] = {:userid => "root", :password => @password}
-        @host.update_authentication(@data, @options)
-        @host.save
+        @host.update_authentication(both_creds)
         expect(@host.authentications.count).to eq(2)
       end
 
       it "save both together" do
-        @data[:remote] = {:userid => "root", :password => @password}
-        @host.update_authentication(@data, @options)
-        @host.save
+        @host.update_authentication(both_creds)
         expect(@host.authentications.count).to eq(2)
       end
 
       it "validate remote with both credentials" do
-        @data[:remote] = {:userid => "root", :password => @password}
+        @host.update_authentication(both_creds, :save => false)
         assert_remote_credentials_validated
       end
 
       it "validate default with both credentials" do
-        @data[:remote] = {:userid => "root", :password => @password}
+        @host.update_authentication(both_creds, :save => false)
         assert_default_credentials_validated
       end
 
       it "validate default, then validate remote" do
-        allow(@host).to receive(:connect_ssh)
+        @host.update_authentication(default_creds, :save => false)
         assert_default_credentials_validated
 
-        @data[:remote] = {:userid => "root", :password => @password}
+        @host.update_authentication(both_creds, :save => false)
         assert_remote_credentials_validated
       end
 
       it "validate remote, then validate default" do
-        @data = {:default => {:userid => "", :password => ""},
-                 :remote  => {:userid => "root", :password => @password},
+        data = {:default => {:userid => "", :password => ""},
+                :remote  => {:userid => "root", :password => password},
         }
+        @host.update_authentication(data, :save => false)
         assert_remote_credentials_validated
 
-        @data[:default] = {:userid => "root", :password => @password}
+        data[:default] = {:userid => "root", :password => password}
+        @host.update_authentication(data, :save => false)
         assert_default_credentials_validated
       end
     end
@@ -304,17 +311,19 @@ RSpec.describe Host do
     it("#enabled_inbound_ports")      { expect(subject.enabled_inbound_ports).to      match_array([1003, 1001]) }
   end
 
-
-  def assert_default_credentials_validated
-    allow(@host).to receive(:verify_credentials_with_ws)
-    @host.update_authentication(@data, @options)
-    expect(@host.verify_credentials(:default)).to be_truthy
+  def assert_default_credentials_validated(options = {})
+    # all but openstack use ws as the default authentication type
+    expect(@host).to receive(:verify_credentials_with_ws).with(:default)
+    expect(@host.verify_credentials?(:default, options)).to be_truthy
+    # make sure we got the right userid
+    expect(@host.authentication_type(:default).userid).to eq("root")
   end
 
-  def assert_remote_credentials_validated
-    allow(@host).to receive(:connect_ssh)
-    @host.update_authentication(@data, @options)
-    expect(@host.verify_credentials(:remote)).to be_truthy
+  def assert_remote_credentials_validated(options = {})
+    expect(@host).to receive(:connect_ssh).with({})
+    expect(@host.verify_credentials?(:remote, options)).to be_truthy
+    # make sure we got the right userid
+    expect(@host.authentication_type(:remote).userid).to eq("root")
   end
 
   context "#tenant_identity" do
