@@ -8,6 +8,9 @@ class Workflow < ApplicationRecord
   has_many :workflow_instances, :dependent => :destroy
 
   def self.create_from_json!(json)
-    create!(:payload => JSON.parse(json))
+    json = JSON.parse(json) if json.kind_of?(String)
+    name = json["Comment"]
+
+    create!(:name => name, :payload => json)
   end
 end
