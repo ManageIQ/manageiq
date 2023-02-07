@@ -6,6 +6,14 @@ FactoryBot.define do
     ipaddress           { "127.0.0.1" }
     user_assigned_os    { "linux_generic" }
     power_state         { "on" }
+
+    transient do
+      storage_count { nil }
+    end
+
+    after :create do |host, ev|
+      host.storages = create_list :storage, ev.storage_count if ev.storage_count
+    end
   end
 
   factory :host_with_ref, :parent => :host do
@@ -67,25 +75,5 @@ FactoryBot.define do
                                                      :class  => "ManageIQ::Providers::Openstack::InfraManager::Host" do
     name        { "host1 (NovaCompute)" }
     maintenance { true }
-  end
-
-  trait :storage do
-    transient do
-      storage_count { 1 }
-    end
-
-    after :create do |h, evaluator|
-      h.storages = create_list :storage, evaluator.storage_count
-    end
-  end
-
-  trait :storage_redhat do
-    transient do
-      storage_count { 1 }
-    end
-
-    after :create do |h, evaluator|
-      h.storages = create_list :storage_redhat, evaluator.storage_count
-    end
   end
 end

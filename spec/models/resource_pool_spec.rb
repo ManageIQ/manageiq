@@ -4,7 +4,7 @@ RSpec.describe ResourcePool do
   include_examples "MiqPolicyMixin"
 
   describe "AggregationMixin methods" do
-    let(:host) { FactoryBot.create(:host, :storage) }
+    let(:host) { FactoryBot.create(:host, :storage_count => 1) }
     let(:rp) { FactoryBot.create(:resource_pool) }
     let(:vm) { FactoryBot.create(:vm_vmware, :hardware => FactoryBot.create(:hardware, :cpu2x2, :memory_mb => 2048)) }
     let(:vm2) { FactoryBot.create(:vm_vmware, :hardware => FactoryBot.create(:hardware, :cpu2x2, :memory_mb => 1024)) }
