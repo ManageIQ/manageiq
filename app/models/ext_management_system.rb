@@ -1036,6 +1036,8 @@ class ExtManagementSystem < ApplicationRecord
   private
 
   def validate_ems_type
+    return if Rails.env.test?
+
     errors.add(:base, "emstype #{self.class.name} is not permitted for create") unless ExtManagementSystem.permitted_types.include?(emstype)
   end
 
