@@ -6337,6 +6337,32 @@
       :description: Display Individual Storage Services
       :feature_type: view
       :identifier: storage_service_show
+  - :name: Operate
+    :description: Perform Operations on Storage Services
+    :feature_type: control
+    :identifier: storage_service_control
+    :children:
+    - :name: Refresh
+      :description: Refresh relationships and power states for all items related to Physical Storages
+      :feature_type: control
+      :identifier: storage_service_refresh
+    - :name: Edit Tags
+      :description: Edit Tags of Storage Services
+      :feature_type: control
+      :identifier: storage_service_tag
+  - :name: Modify
+    :description: Modify Storage Services
+    :feature_type: admin
+    :identifier: storage_service_admin
+    :children:
+    - :name: Add
+      :description: Add a Storage Service
+      :feature_type: admin
+      :identifier: storage_service_new
+    - :name: Remove
+      :description: Remove a Storage Service
+      :feature_type: admin
+      :identifier: storage_service_delete
 
   # Volume Mapping
 - :name: Volume Mapping

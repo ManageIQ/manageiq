@@ -170,6 +170,7 @@
   - storage_show_list
   - storage_perf
   - storage_resource
+  - storage_service
   - storage_tag
   - tasks_view
   - timeline
@@ -1087,6 +1088,11 @@
   - storage_show_list
   - storage_perf
   - storage_resource
+  - storage_service_view
+  - storage_service_control
+  - storage_service_new
+  - storage_service_show
+  - storage_service_show_list
   - storage_tag
   - tasks_view
   - timeline
