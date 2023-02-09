@@ -55,6 +55,10 @@ module ManageIQ::Providers
           add_common_default_values
         end
 
+        def storage_service_resource_attachments
+          add_common_default_values
+        end
+
         def volume_mappings
           add_common_default_values
         end
