@@ -114,7 +114,7 @@ class Condition < ApplicationRecord
   end
 
   def self._subst(rec, opts, tag, mode)
-    ohash, ref, _object = options2hash(opts, rec)
+    ohash, ref = options2hash(opts, rec)
 
     case mode.downcase
     when "exist"
@@ -157,7 +157,7 @@ class Condition < ApplicationRecord
 
     listexp = /<value([^>]*)>(.+)<\/value>/im
     search =~ listexp
-    opts, _ref, _object = options2hash($1, rec)
+    opts, _ref = options2hash($1, rec)
     methods = $2.split("/")
     methods.shift
     methods.shift
@@ -204,7 +204,7 @@ class Condition < ApplicationRecord
 
     result = true
     list.each do |obj|
-      opts, _ref, _object = options2hash(raw_opts, obj)
+      opts, _ref = options2hash(raw_opts, obj)
       value = MiqExpression.quote(obj.send(checkattr), opts[:type])
       value = value.gsub(/\\/, '\&\&') if value.kind_of?(String)
       e = check.gsub(/<value[^>]*>.+<\/value>/im, value.to_s)
@@ -231,13 +231,8 @@ class Condition < ApplicationRecord
       if ohash[:ref] != rec.class.to_s.downcase && !exclude_from_object_ref_substitution(ohash[:ref], rec)
         ref = rec.send(val) if val && rec.respond_to?(val)
       end
-
-      if ohash[:object]
-        object = val.to_sym
-        ref = inputs[object]
-      end
     end
-    return ohash, ref, object
+    return ohash, ref
   end
 
   def self.exclude_from_object_ref_substitution(reference, rec)
