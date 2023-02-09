@@ -462,12 +462,7 @@ class MiqExpression
 
   def evaluate(obj, tz = nil)
     ruby_exp = to_ruby(tz)
-    _log.debug("Expression before substitution: #{ruby_exp}")
-    subst_expr = Condition.subst(ruby_exp, obj)
-    _log.debug("Expression after substitution: #{subst_expr}")
-    result = Condition.do_eval(subst_expr)
-    _log.debug("Expression evaluation result: [#{result}]")
-    result
+    Condition.subst_matches?(ruby_exp, obj)
   end
 
   def self.evaluate_atoms(exp, obj)

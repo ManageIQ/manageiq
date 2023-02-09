@@ -74,14 +74,7 @@ class Condition < ApplicationRecord
              when "object"
                expression.to_ruby
              end
-
-      MiqPolicy.logger.debug("MIQ(condition-eval): Name: #{name}, Expression before substitution: [#{expr.gsub(/\n/, " ")}]")
-
-      subst(expr, rec)
-
-      MiqPolicy.logger.debug("MIQ(condition-eval): Name: #{name}, Expression after substitution: [#{expr.gsub(/\n/, " ")}]")
-      result = do_eval(expr)
-      MiqPolicy.logger.info("MIQ(condition-eval): Name: #{name}, Expression evaluation result: [#{result}]")
+      result = subst_matches?(expr, rec)
     end
     result
   end
