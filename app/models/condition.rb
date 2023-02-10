@@ -74,14 +74,7 @@ class Condition < ApplicationRecord
              when "object"
                expression.to_ruby
              end
-
-      MiqPolicy.logger.debug("MIQ(condition-eval): Name: #{name}, Expression before substitution: [#{expr.gsub(/\n/, " ")}]")
-
-      subst(expr, rec)
-
-      MiqPolicy.logger.debug("MIQ(condition-eval): Name: #{name}, Expression after substitution: [#{expr.gsub(/\n/, " ")}]")
-      result = do_eval(expr)
-      MiqPolicy.logger.info("MIQ(condition-eval): Name: #{name}, Expression evaluation result: [#{result}]")
+      result = subst_matches?(expr, rec)
     end
     result
   end
@@ -95,6 +88,7 @@ class Condition < ApplicationRecord
   def self.do_eval(expr)
     !!eval(expr)
   end
+  private_class_method :do_eval
 
   def self.subst(expr, rec)
     findexp = /<find>(.+?)<\/find>/im
@@ -112,6 +106,7 @@ class Condition < ApplicationRecord
 
     expr
   end
+  private_class_method :subst
 
   def self._subst(rec, opts, tag, mode)
     ohash, ref, _object = options2hash(opts, rec)
@@ -134,6 +129,7 @@ class Condition < ApplicationRecord
     end
     value
   end
+  private_class_method :_subst
 
   def self.collect_children(ref, methods)
     method = methods.shift
@@ -147,6 +143,7 @@ class Condition < ApplicationRecord
     end
     result
   end
+  private_class_method :collect_children
 
   def self._subst_find(rec, expr)
     MiqPolicy.logger.debug("MIQ(condition-_subst_find): Find Expression before substitution: [#{expr}]")

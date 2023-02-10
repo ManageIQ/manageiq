@@ -1701,58 +1701,6 @@ RSpec.describe MiqExpression do
       expect(filter.to_ruby).to eq('<value ref=vm, type=integer>/virtual/used_disk_storage</value> >= 1048576000')
     end
 
-    context "integration" do
-      it "should escape strings" do
-        filter = YAML.load '--- !ruby/object:MiqExpression
-        exp:
-          INCLUDES:
-            field: Vm.registry_items-data
-            value: $foo
-        '
-        expect(filter.to_ruby).to eq("<value ref=vm, type=text>/virtual/registry_items/data</value> =~ /\\$foo/")
-
-        data = {"registry_items.data" => "C:\\Documents and Users\\O'Neill, April\\", "/virtual/registry_items/data" => "C:\\Documents and Users\\O'Neill, April\\"}
-        expect(Condition.subst(filter.to_ruby, data)).to eq("\"C:\\\\Documents and Users\\\\O'Neill, April\\\\\" =~ /\\$foo/")
-      end
-
-      context "when context_type is 'hash'" do
-        let(:data) do
-          {
-            "name"                            => "VM_1",
-            "guest_applications.version"      => "3.1.2.7193",
-            "guest_applications.release"      => nil,
-            "guest_applications.vendor"       => "VMware, Inc.", "id" => 9,
-            "guest_applications.name"         => "VMware Tools",
-            "guest_applications.package_name" => nil
-          }
-        end
-
-        it "should test context hash with EQUAL" do
-          filter = YAML.load '--- !ruby/object:MiqExpression
-          exp:
-            "=":
-              field: Vm.guest_applications-name
-              value: VMware Tools
-          context_type: hash
-          '
-          expect(filter.to_ruby).to eq("<value type=string>guest_applications.name</value> == \"VMware Tools\"")
-          expect(Condition.subst(filter.to_ruby, data)).to eq("\"VMware Tools\" == \"VMware Tools\"")
-        end
-
-        it "should test context hash with REGULAR EXPRESSION MATCHES" do
-          filter = YAML.load '--- !ruby/object:MiqExpression
-          exp:
-            REGULAR EXPRESSION MATCHES:
-              field: Vm.guest_applications-vendor
-              value: /^[^.]*ware.*$/
-          context_type: hash
-          '
-          expect(filter.to_ruby).to eq("<value type=string>guest_applications.vendor</value> =~ /^[^.]*ware.*$/")
-          expect(Condition.subst(filter.to_ruby, data)).to eq('"VMware, Inc." =~ /^[^.]*ware.*$/')
-        end
-      end
-    end
-
     it "generates the ruby for a STARTS WITH expression" do
       actual = described_class.new("STARTS WITH" => {"field" => "Vm-name", "value" => "foo"}).to_ruby
       expected = "<value ref=vm, type=string>/virtual/name</value> =~ /^foo/"
