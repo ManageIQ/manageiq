@@ -27,34 +27,58 @@ class ContainerOrchestrator
                   :capabilities             => {
                     :drop => ["ALL"]
                   }
+                },
+                :volumeMounts    => [
+                  {:name => "database-secret", :readOnly => true, :mountPath => "/run/secrets/postgresql"},
+                  {:name => "encryption-key", :readOnly => true, :mountPath => "/run/secrets/manageiq/application"},
+                ]
+              }],
+              :volumes => [
+                {
+                  :name   => "database-secret",
+                  :secret => {
+                    :secretName => "postgresql-secrets",
+                    :items      => [
+                      {:key => "dbname",   :path => "POSTGRESQL_DATABASE"},
+                      {:key => "hostname", :path => "POSTGRESQL_HOSTNAME"},
+                      {:key => "password", :path => "POSTGRESQL_PASSWORD"},
+                      {:key => "port",     :path => "POSTGRESQL_PORT"},
+                      {:key => "username", :path => "POSTGRESQL_USER"},
+                    ],
+                  }
+                },
+                {
+                  :name   => "encryption-key",
+                  :secret => {
+                    :secretName => "app-secrets",
+                    :items      => [
+                      {:key => "encryption-key", :path => "encryption_key"},
+                    ],
+                  }
                 }
-              }]
-            }
+              ]
+            },
           }
         }
       }
 
       if File.file?("/.postgresql/root.crt")
-        deployment[:spec][:template][:spec][:containers][0][:volumeMounts] = [
-          {
-            :mountPath => "/.postgresql",
-            :name      => "pg-root-certificate",
-            :readOnly  => true,
-          }
-        ]
+        deployment[:spec][:template][:spec][:containers][0][:volumeMounts] << {
+          :mountPath => "/.postgresql",
+          :name      => "pg-root-certificate",
+          :readOnly  => true,
+        }
 
-        deployment[:spec][:template][:spec][:volumes] = [
-          {
-            :name   => "pg-root-certificate",
-            :secret => {
-              :secretName => "postgresql-secrets",
-              :items      => [
-                :key  => "rootcertificate",
-                :path => "root.crt",
-              ],
-            }
+        deployment[:spec][:template][:spec][:volumes] << {
+          :name   => "pg-root-certificate",
+          :secret => {
+            :secretName => "postgresql-secrets",
+            :items      => [
+              :key  => "rootcertificate",
+              :path => "root.crt",
+            ],
           }
-        ]
+        }
       end
 
       if ENV["SSL_SECRET_NAME"].present?
@@ -120,18 +144,12 @@ class ContainerOrchestrator
         {:name => "MEMCACHED_SERVICE_NAME",  :value => ENV["MEMCACHED_SERVICE_NAME"]},
         {:name => "WORKER_HEARTBEAT_FILE",   :value => Rails.root.join("tmp", "worker.hb").to_s},
         {:name => "WORKER_HEARTBEAT_METHOD", :value => "file"},
-        {:name => "ENCRYPTION_KEY",          :valueFrom => {:secretKeyRef=>{:name => "app-secrets", :key => "encryption-key"}}}
       ] + database_environment + memcached_environment + messaging_environment
     end
 
     def database_environment
       [
-        {:name => "DATABASE_PORT",     :value => ENV["DATABASE_PORT"]},
         {:name => "DATABASE_SSL_MODE", :value => ENV["DATABASE_SSL_MODE"]},
-        {:name => "DATABASE_HOSTNAME", :valueFrom => {:secretKeyRef=>{:name => "postgresql-secrets", :key => "hostname"}}},
-        {:name => "DATABASE_NAME",     :valueFrom => {:secretKeyRef=>{:name => "postgresql-secrets", :key => "dbname"}}},
-        {:name => "DATABASE_PASSWORD", :valueFrom => {:secretKeyRef=>{:name => "postgresql-secrets", :key => "password"}}},
-        {:name => "DATABASE_USER",     :valueFrom => {:secretKeyRef=>{:name => "postgresql-secrets", :key => "username"}}},
       ]
     end
 

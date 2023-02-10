@@ -53,8 +53,8 @@ RSpec.describe MiqWorker::ContainerCommon do
       expect(container_orchestrator).to receive(:raw_connect).and_return(kubeclient)
 
       expect(kubeclient).to receive(:create_deployment) do |deployment|
-        expect(deployment.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts)).to match_array([{:name => "ui-httpd-configs", :mountPath => "/etc/httpd/conf.d"}])
-        expect(deployment.fetch_path(:spec, :template, :spec, :volumes)).to match_array([{:name=>"ui-httpd-configs", :configMap=>{:name=>"ui-httpd-configs", :defaultMode=>420}}])
+        expect(deployment.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts)).to include({:name => "ui-httpd-configs", :mountPath => "/etc/httpd/conf.d"})
+        expect(deployment.fetch_path(:spec, :template, :spec, :volumes)).to include({:name => "ui-httpd-configs", :configMap => {:name => "ui-httpd-configs", :defaultMode => 420}})
       end
 
       ui_worker = MiqUiWorker.new
