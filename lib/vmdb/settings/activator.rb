@@ -25,6 +25,11 @@ module Vmdb
         Vmdb::Loggers.apply_config(data)
       end
 
+      def event_handling(_data)
+        EmsEvent.clear_event_groups_cache
+        EventStream.clear_event_groups_cache
+      end
+
       def session(data)
         Session.timeout(data.timeout)
         Session.interval(data.interval)

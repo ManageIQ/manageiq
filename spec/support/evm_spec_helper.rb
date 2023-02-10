@@ -43,6 +43,9 @@ module EvmSpecHelper
     clear_instance_variable(MiqWorker, :@rails_worker) if defined?(MiqWorker)
     clear_instance_variable(Tenant, :@root_tenant) if defined?(Tenant)
 
+    EmsEvent.clear_event_groups_cache if defined?(EmsEvent)
+    EventStream.clear_event_groups_cache if defined?(EventStream)
+
     MiqWorker.my_guid = nil
 
     # Clear the thread local variable to prevent test contamination
