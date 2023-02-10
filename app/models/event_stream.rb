@@ -60,7 +60,7 @@ class EventStream < ApplicationRecord
 
   # TODO: Consider moving since this is EmsEvent specific. group, group_level and group_name exposed as a virtual columns for reports/api.
   def self.event_groups
-    @event_groups ||= begin # TODO: this cache needs to be busted whenever settings are changed (and also in test)
+    @event_groups ||= begin
       core_event_groups = ::Settings.event_handling.event_groups.to_hash
       Settings.ems.each_with_object(core_event_groups) do |(_provider_type, provider_settings), event_groups|
         provider_event_groups = provider_settings.fetch_path(:event_handling, :event_groups)
@@ -76,7 +76,6 @@ class EventStream < ApplicationRecord
   end
 
   private_class_method def self.partition_group_and_level_by_event_type
-    # TODO: this cache needs to be busted whenever settings are changed (and also in test)
     return @literal_group_and_level_by_event_type, @regex_group_and_level_by_event_type if @literal_group_and_level_by_event_type
 
     @literal_group_and_level_by_event_type = {}
