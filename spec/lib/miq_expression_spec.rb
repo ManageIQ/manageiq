@@ -241,6 +241,43 @@ RSpec.describe MiqExpression do
     end
   end
 
+  describe "#preprocess_for_sql" do
+    let(:sql_field)  { {"=" => {"field" => "Vm-name", "value" => "foo"}.freeze}.freeze }
+    let(:ruby_field) { {"=" => {"field" => "Vm-platform", "value" => "bar"}.freeze}.freeze }
+
+    context "mode: :sql" do
+      it "(sql AND ruby) => (sql)" do
+        expect(sql_reduced_exp("AND" => [sql_field, ruby_field.clone])).to eq("AND" => [sql_field])
+      end
+
+      it "(ruby AND ruby) => ()" do
+        expect(sql_reduced_exp("AND" => [ruby_field.clone, ruby_field.clone])).to be_nil
+      end
+
+      it "(sql OR sql) => (sql OR sql)" do
+        expect(sql_reduced_exp("OR" => [sql_field, sql_field])).to eq("OR" => [sql_field, sql_field])
+      end
+
+      it "(sql OR ruby) => ()" do
+        expect(sql_reduced_exp("OR" => [sql_field, ruby_field])).to be_nil
+      end
+
+      it "(ruby OR ruby) => ()" do
+        expect(sql_reduced_exp("OR" => [ruby_field.clone, ruby_field.clone].deep_clone)).to be_nil
+      end
+
+      it "!(sql OR ruby) => (!(sql) AND !(ruby)) => !(sql)" do
+        expect(sql_reduced_exp("NOT" => {"OR" => [sql_field, ruby_field.clone]})).to be_nil
+        # TODO: eq("NOT" => sql_field)
+      end
+
+      it "!(sql AND ruby) => (!(sql) OR !(ruby)) => nil" do
+        expect(sql_reduced_exp("NOT" => {"AND" => [sql_field, ruby_field.clone]})).to eq("NOT" => {"AND" => [sql_field]})
+        # TODO:  be_nil
+      end
+    end
+  end
+
   describe "#to_sql" do
     it "returns nil if SQL generation for that expression is not supported" do
       sql, * = MiqExpression.new("=" => {"field" => "Service-custom_1", "value" => ""}).to_sql
@@ -402,6 +439,7 @@ RSpec.describe MiqExpression do
       expect(sql).to eq("(\"vms\".\"name\" LIKE 'foo%' AND \"vms\".\"name\" LIKE '%bar')")
     end
 
+    # these overlap the preprocessor tests
     it "generates the SQL for an AND expression where only one is supported by SQL" do
       exp1 = {"STARTS WITH" => {"field" => "Vm-name", "value" => "foo"}}
       exp2 = {"ENDS WITH" => {"field" => "Vm-platform", "value" => "bar"}}
@@ -3428,5 +3466,13 @@ RSpec.describe MiqExpression do
       result = described_class.miq_adv_search_lists(Vm, :exp_available_fields, :include_id_columns => true)
       expect(result.map(&:first)).to include("VM and Instance : Id")
     end
+  end
+
+  private
+
+  def sql_reduced_exp(input)
+    mexp = MiqExpression.new(input)
+    pexp = mexp.preprocess_exp!(mexp.exp.deep_clone)
+    mexp.preprocess_for_sql(pexp).first
   end
 end
