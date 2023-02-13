@@ -300,14 +300,30 @@ class MiqExpression
 
   def to_sql(tz = nil)
     tz ||= "UTC"
-    pexp, attrs = preprocess_for_sql(exp.deep_clone)
+    pexp = preprocess_exp!(exp.deep_clone)
+    pexp, attrs = preprocess_for_sql(pexp)
     sql = to_arel(pexp, tz).to_sql if pexp.present?
     incl = includes_for_sql unless sql.blank?
     [sql, incl, attrs]
   end
 
-  def preprocess_for_sql(exp, attrs = nil)
+  def preprocess_exp!(exp)
     exp.delete(:token)
+    operator = exp.keys.first
+    operator_values = exp[operator]
+    case operator.downcase
+    when "and", "or"
+      operator_values.each { |atom| preprocess_exp!(atom) }
+    when "not", "!"
+      preprocess_exp!(operator_values)
+      exp
+    else # field
+      convert_size_in_units_to_integer(exp) if %w[= != <= >= > <].include?(operator)
+    end
+    exp
+  end
+
+  def preprocess_for_sql(exp, attrs = nil)
     attrs ||= {:supported_by_sql => true}
     operator = exp.keys.first
     case operator.downcase
@@ -325,11 +341,7 @@ class MiqExpression
       preprocess_for_sql(exp[operator], attrs)
       exp.delete(operator) if exp[operator].empty? # Clean out empty operands
     else
-      if sql_supports_atom?(exp)
-        # if field type is Integer and value is String representing size in units (like "2.megabytes") than convert
-        # this string to correct number using sub_type mappong defined in db/fixtures/miq_report_formats.yml:sub_types_by_column:
-        convert_size_in_units_to_integer(exp) if %w[= != <= >= > <].include?(operator)
-      else
+      unless sql_supports_atom?(exp)
         attrs[:supported_by_sql] = false
         exp.delete(operator)
       end
