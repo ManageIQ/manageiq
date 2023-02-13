@@ -379,11 +379,11 @@ class MiqExpression
   #   sql1, ruby1  | sql1       | ruby1        |
   #   ruby1, ruby2 |            | ruby1, ruby1 |
   #
-  def prune_exp_children(children, mode)
+  def prune_exp_children(children, mode, swap:)
     seen = MODE_NONE
     filtered_children = []
     children.each do |child|
-      child_exp, child_seen = prune_exp(child, mode)
+      child_exp, child_seen = prune_exp(child, mode, :swap => swap)
       seen |= child_seen
       filtered_children << child_exp if child_exp
     end
@@ -423,19 +423,35 @@ class MiqExpression
   # The OR case uses all nodes that match the input mode with one exception:
   # mixed mode expressions are completely applied in ruby to keep the same logical result.
   #
-  def prune_exp(exp, mode)
+  #
+  # exp                |==>| exp (mode=sql) |and| exp (mode=ruby)
+  # -------------------|---|----------------|---|-----------------
+  # !(sql  OR sql)     |==>| !(sql OR sql)  |AND|
+  # !(sql  OR ruby)    |==>| !(sql)         |AND| !(ruby)
+  # !(ruby1 OR ruby2)  |==>|                |AND| !(ruby1 OR ruby2)
+  #
+  # exp                |==>| exp (mode=sql) |and| exp (mode=ruby)
+  # -------------------|---|----------------|---|-----------------
+  # !(sql   AND sql)   |==>| !(sql AND sql) |AND|
+  # !(sql   AND ruby)  |==>|                |AND| !(sql AND ruby)
+  # !(ruby1 AND ruby2) |==>|                |AND| !(ruby1 AND ruby2)
+  #
+  # Inside a NOT, the OR acts like the AND, and the AND acts like the OR
+  # so follow the AND logic if we are not swapping (and vice versa)
+  #
+  def prune_exp(exp, mode, swap: false)
     operator = exp.keys.first
     down_operator = operator.downcase
     case down_operator
     when "and", "or"
-      children, seen = prune_exp_children(exp[operator], mode)
-      if down_operator == "and" || seen != MODE_BOTH
+      children, seen = prune_exp_children(exp[operator], mode, :swap => swap)
+      if (down_operator == "and") != swap || seen != MODE_BOTH
         [operator_hash(operator, children), seen]
       else
         [mode == MODE_RUBY ? exp : nil, seen]
       end
     when "not", "!"
-      children, seen = prune_exp(exp[operator], mode)
+      children, seen = prune_exp(exp[operator], mode, :swap => !swap)
       [operator_hash(operator, children, :unary => true), seen]
     else
       if sql_supports_atom?(exp)
