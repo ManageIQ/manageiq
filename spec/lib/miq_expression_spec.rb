@@ -782,6 +782,8 @@ RSpec.describe MiqExpression do
           _vm2 = FactoryBot.create(:vm, :memory_reserve => 0)
           name_of_attribute = "VmOrTemplate-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}example"
           filter = MiqExpression.new("<" => {"field" => "VmOrTemplate-memory_reserve", "value" => name_of_attribute})
+          # This is basically calling Rbac.filtered_object
+          # Leaving this as search to exercise the :skip_count methods
           result = Rbac.search(:targets => Vm, :filter => filter).first.first
           expect(filter.to_sql.last).to eq(:supported_by_sql => false)
           expect(result).to eq(vm1)
