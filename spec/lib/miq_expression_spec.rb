@@ -241,13 +241,13 @@ RSpec.describe MiqExpression do
     end
   end
 
-  describe "#preprocess_for_sql" do
+  describe "#reduce_exp" do
     let(:sql_field)  { {"=" => {"field" => "Vm-name", "value" => "foo"}.freeze}.freeze }
     let(:ruby_field) { {"=" => {"field" => "Vm-platform", "value" => "bar"}.freeze}.freeze }
 
     context "mode: :sql" do
       it "(sql AND ruby) => (sql)" do
-        expect(sql_pruned_exp("AND" => [sql_field, ruby_field.clone])).to eq("AND" => [sql_field])
+        expect(sql_pruned_exp("AND" => [sql_field, ruby_field.clone])).to eq(sql_field)
       end
 
       it "(ruby AND ruby) => ()" do
@@ -272,15 +272,10 @@ RSpec.describe MiqExpression do
       end
 
       it "!(sql AND ruby) => (!(sql) OR !(ruby)) => nil" do
-        expect(sql_pruned_exp("NOT" => {"AND" => [sql_field, ruby_field.clone]})).to eq("NOT" => {"AND" => [sql_field]})
+        expect(sql_pruned_exp("NOT" => {"AND" => [sql_field, ruby_field.clone]})).to eq("NOT" => sql_field)
         # TODO:  be_nil
       end
     end
-  end
-
-  describe "#prune_exp" do
-    let(:sql_field)  { {"=" => {"field" => "Vm-name", "value" => "foo"}.freeze}.freeze }
-    let(:ruby_field) { {"=" => {"field" => "Vm-platform", "value" => "bar"}.freeze}.freeze }
 
     context "mode: ruby" do
       it "(sql) => ()" do
@@ -360,7 +355,7 @@ RSpec.describe MiqExpression do
 
     it "does not raise error for SQL generation if expression has a count in it" do
       sql, _ = MiqExpression.new("AND" => [{"=" => {"field" => "Vm-name", "value" => "foo"}}, {"=" => {"count" => "Vm.snapshots", "value" => "1"}}]).to_sql
-      expect(sql).to eq("(\"vms\".\"name\" = 'foo')")
+      expect(sql).to eq("\"vms\".\"name\" = 'foo'")
     end
 
     it "generates the SQL for an = expression if SQL generation for expression supported and 'token' key present in expression's Hash" do
@@ -513,7 +508,7 @@ RSpec.describe MiqExpression do
       exp1 = {"STARTS WITH" => {"field" => "Vm-name", "value" => "foo"}}
       exp2 = {"ENDS WITH" => {"field" => "Vm-platform", "value" => "bar"}}
       sql, * = MiqExpression.new("AND" => [exp1, exp2]).to_sql
-      expect(sql).to eq("(\"vms\".\"name\" LIKE 'foo%')")
+      expect(sql).to eq("\"vms\".\"name\" LIKE 'foo%'")
     end
 
     it "returns nil for an AND expression where none is supported by SQL" do
@@ -3551,7 +3546,7 @@ RSpec.describe MiqExpression do
   def sql_pruned_exp(input)
     mexp = MiqExpression.new(input)
     pexp = mexp.preprocess_exp!(mexp.exp.deep_clone)
-    mexp.preprocess_for_sql(pexp).first
+    mexp.prune_exp(pexp, MiqExpression::MODE_SQL).first
   end
 
   def ruby_pruned_exp(input)

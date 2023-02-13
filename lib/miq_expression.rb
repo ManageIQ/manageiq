@@ -322,7 +322,8 @@ class MiqExpression
   def to_sql(tz = nil)
     tz ||= "UTC"
     pexp = preprocess_exp!(exp.deep_clone)
-    pexp, attrs = preprocess_for_sql(pexp)
+    pexp, seen = prune_exp(pexp, MODE_SQL)
+    attrs = {:supported_by_sql => (seen == MODE_SQL)}
     sql = to_arel(pexp, tz).to_sql if pexp.present?
     incl = includes_for_sql unless sql.blank?
     [sql, incl, attrs]
@@ -342,33 +343,6 @@ class MiqExpression
       convert_size_in_units_to_integer(exp) if %w[= != <= >= > <].include?(operator)
     end
     exp
-  end
-
-  def preprocess_for_sql(exp, attrs = nil)
-    attrs ||= {:supported_by_sql => true}
-    operator = exp.keys.first
-    case operator.downcase
-    when "and"
-      exp[operator].dup.each { |atom| preprocess_for_sql(atom, attrs) }
-      exp[operator].reject!(&:blank?)
-      exp.delete(operator) if exp[operator].empty?
-    when "or"
-      or_attrs = {:supported_by_sql => true}
-      exp[operator].each { |atom| preprocess_for_sql(atom, or_attrs) }
-      exp[operator].reject!(&:blank?)
-      attrs.merge!(or_attrs)
-      exp.delete(operator) if !or_attrs[:supported_by_sql] || exp[operator].empty? # Clean out unsupported or empty operands
-    when "not", "!"
-      preprocess_for_sql(exp[operator], attrs)
-      exp.delete(operator) if exp[operator].empty? # Clean out empty operands
-    else
-      unless sql_supports_atom?(exp)
-        attrs[:supported_by_sql] = false
-        exp.delete(operator)
-      end
-    end
-
-    exp.empty? ? [nil, attrs] : [exp, attrs]
   end
 
   # @param operator [String]      operator (i.e.: AND, OR, NOT)
