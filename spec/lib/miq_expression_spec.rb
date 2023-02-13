@@ -252,6 +252,11 @@ RSpec.describe MiqExpression do
       expect(sql).to be_nil
     end
 
+    it "does not raise error for SQL generation if expression has a count in it" do
+      sql, _ = MiqExpression.new("AND" => [{"=" => {"field" => "Vm-name", "value" => "foo"}}, {"=" => {"count" => "Vm.snapshots", "value" => "1"}}]).to_sql
+      expect(sql).to eq("(\"vms\".\"name\" = 'foo')")
+    end
+
     it "generates the SQL for an = expression if SQL generation for expression supported and 'token' key present in expression's Hash" do
       sql, * = MiqExpression.new("=" => {"field" => "Vm-name", "value" => "foo"}, :token => 1).to_sql
       expect(sql).to eq("\"vms\".\"name\" = 'foo'")
@@ -1717,6 +1722,12 @@ RSpec.describe MiqExpression do
       actual = described_class.new("AND" => [{"=" => {"field" => "Vm-name", "value" => "foo"}},
                                              {"=" => {"field" => "Vm-vendor", "value" => "bar"}}]).to_ruby
       expected = "(<value ref=vm, type=string>/virtual/name</value> == \"foo\" and <value ref=vm, type=string>/virtual/vendor</value> == \"bar\")"
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for an OR with a count" do
+      actual = described_class.new("OR" => [{"=" => {"field" => "Vm-name", "value" => "foo"}}, {"=" => {"count" => "Vm.snapshots", "value" => "1"}}]).to_ruby
+      expected = "(<value ref=vm, type=string>/virtual/name</value> == \"foo\" or <count ref=vm>/virtual/snapshots</count> == 1)"
       expect(actual).to eq(expected)
     end
 

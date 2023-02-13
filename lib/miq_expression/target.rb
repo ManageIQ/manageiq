@@ -36,6 +36,10 @@ class MiqExpression::Target
     @column = column
   end
 
+  def sub_type
+    column_type
+  end
+
   def date?
     column_type == :date
   end
