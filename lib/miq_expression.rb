@@ -642,10 +642,11 @@ class MiqExpression
       val.to_s.inspect
     when "date"
       return "nil" if val.blank? # treat nil value as empty string
-      "\'#{val}\'.to_date"
+      "Date.new(#{val.year},#{val.month},#{val.day})"
     when "datetime"
       return "nil" if val.blank? # treat nil value as empty string
-      "\'#{val.iso8601}\'.to_time(:utc)"
+      val = val.utc
+      "Time.utc(#{val.year},#{val.month},#{val.day},#{val.hour},#{val.min},#{val.sec})"
     when "integer", "decimal", "fixnum"
       val.to_s.to_i_with_method
     when "float"
@@ -1293,20 +1294,18 @@ class MiqExpression
 
   # example:
   #   ruby_for_date_compare(:updated_at, :date, tz, "==", Time.now)
-  #   # => "val=update_at; !val.nil? && val.to_date == '2016-10-05'"
+  #   # => "!(val=update_at&.to_date).nil? && val == Date.new(2016,10,5)"
   #
   #   ruby_for_date_compare(:updated_at, :time, tz, ">", Time.yesterday, "<", Time.now)
-  #   # => "val=update_at; !val.nil? && val.utc > '2016-10-04T13:08:00-04:00' && val.utc < '2016-10-05T13:08:00-04:00'"
-
+  #   # => "!(val=update_at&.to_time).nil? && val.utc > Time.utc(2016,10,04,13,08) && val.utc < Time.utc(2016,10,05,13,08,0)"
   def self.ruby_for_date_compare(col_ruby, col_type, tz, op1, val1, op2 = nil, val2 = nil)
-    val_with_cast = "val.#{col_type == :date ? "to_date" : "to_time"}"
     val1 = RelativeDatetime.normalize(val1, tz, "beginning", col_type == :date) if val1
     val2 = RelativeDatetime.normalize(val2, tz, "end",       col_type == :date) if val2
     [
-      "val=#{col_ruby}; !val.nil?",
-      op1 ? "#{val_with_cast} #{op1} #{quote(val1, col_type)}" : nil,
-      op2 ? "#{val_with_cast} #{op2} #{quote(val2, col_type)}" : nil,
-    ].compact.join(" && ")
+      "!(val=#{col_ruby}&.#{col_type == :date ? "to_date" : "to_time"}).nil?",
+      op1 ? "val #{op1} #{quote(val1, col_type)}" : nil,
+      op2 ? "val #{op2} #{quote(val2, col_type)}" : nil,
+    ].compact.join(" and ")
   end
   private_class_method :ruby_for_date_compare
 
