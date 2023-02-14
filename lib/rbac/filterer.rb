@@ -337,23 +337,29 @@ module Rbac
       #
       # NOTE: if supported_by_sql is false then apply_limit_in_sql is also false
       if search_filter && targets && (!exp_attrs || !exp_attrs[:supported_by_sql])
-        rejects     = targets.reject { |obj| matches_search_filters?(obj, search_filter, tz) }
-        auth_count -= rejects.length unless options[:skip_counts]
-        targets -= rejects
+        targets = targets.lazy.select { |obj| matches_search_filters?(obj, search_filter, tz) }
+        unless options[:skip_counts]
+          # use to_a to run filters once. otherwise will filter for:
+          # length, (possible) pagination ids, and final taget results
+          targets    = targets.to_a
+          auth_count = targets.length
+        end
       end
+      attrs[:auth_count] = auth_count unless options[:skip_counts]
 
       if limit && !attrs[:apply_limit_in_sql]
-        attrs[:target_ids_for_paging] = targets.collect(&:id) # Save ids of targets, since we have then all, to avoid going back to SQL for the next page
-        offset = offset.to_i
-        targets = targets[offset...(offset + limit.to_i)] || []
+        unless options[:skip_counts]
+          # to_a in search_filter ensured this is not lazy
+          attrs[:target_ids_for_paging] = targets.collect(&:id)
+        end
+        targets = targets.drop(offset.to_i).take(limit.to_i)
       end
 
       # Preserve sort order of incoming target_ids
       if !target_ids.nil? && !order
         targets = targets.sort_by { |a| target_ids.index(a.id) }
       end
-
-      attrs[:auth_count] = auth_count unless options[:skip_counts]
+      targets = targets.to_a if targets.kind_of?(Enumerator::Lazy)
 
       return targets, attrs
     rescue ActiveRecord::EagerLoadPolymorphicError
