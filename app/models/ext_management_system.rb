@@ -154,6 +154,7 @@ class ExtManagementSystem < ApplicationRecord
   supports_not :cloud_subnet_create
   supports_not :cloud_tenant_mapping
   supports_not :cloud_volume_create
+  supports_not :cloud_volume_snapshots_create
   supports_not :storage_service_create
   supports_not :console
   supports_not :create_iso_datastore
@@ -302,6 +303,8 @@ class ExtManagementSystem < ApplicationRecord
   supports_attribute :feature => :cloud_subnet_create
   supports_attribute :feature => :cloud_volume
   supports_attribute :feature => :cloud_volume_create
+  supports_attribute :feature => :cloud_volume_snapshots
+  supports_attribute :feature => :cloud_volume_snapshots_create
   supports_attribute :supports_cloud_database_create, :child_model => "CloudDatabase"
   supports_attribute :supports_create_flavor, :child_model => "Flavor"
   supports_attribute :supports_create_floating_ip, :child_model => "FloatingIp"

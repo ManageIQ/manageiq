@@ -971,8 +971,13 @@
       :description: Edit Tags of Snapshots
       :feature_type: control
       :identifier: cloud_volume_snapshot_tag
+  - :name: Modify
+    :description: Modify Volume Snapshots
+    :feature_type: admin
+    :identifier: cloud_volume_snapshot_admin
+    :children:
     - :name: Remove
-      :description: Remove Snapshot
+      :description: Remove a Volume Snapshot
       :feature_type: admin
       :identifier: cloud_volume_snapshot_delete
 
