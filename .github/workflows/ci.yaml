@@ -1,22 +1,19 @@
+---
 name: CI
-
 on:
   push:
   pull_request:
   workflow_dispatch:
   schedule:
-  - cron: '0 0 * * *'
-
+  - cron: 0 0 * * *
 permissions:
   contents: read
-
 jobs:
   ci:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         ruby-version:
-        - '2.7'
         - '3.0'
         test-suite:
         - vmdb
@@ -28,14 +25,15 @@ jobs:
           POSTGRESQL_USER: root
           POSTGRESQL_PASSWORD: smartvm
           POSTGRESQL_DATABASE: vmdb_test
-        options: --health-cmd pg_isready --health-interval 2s --health-timeout 5s --health-retries 5
+        options: "--health-cmd pg_isready --health-interval 2s --health-timeout 5s
+          --health-retries 5"
         ports:
         - 5432:5432
     env:
-      TEST_SUITE: ${{ matrix.test-suite }}
+      TEST_SUITE: "${{ matrix.test-suite }}"
       PGHOST: localhost
       PGPASSWORD: smartvm
-      CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      CC_TEST_REPORTER_ID: "${{ secrets.CC_TEST_REPORTER_ID }}"
     steps:
     - uses: actions/checkout@v3
     - name: Set up system
@@ -43,7 +41,7 @@ jobs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: ${{ matrix.ruby-version }}
+        ruby-version: "${{ matrix.ruby-version }}"
         bundler-cache: true
       timeout-minutes: 30
     - name: Prepare tests
@@ -53,6 +51,5 @@ jobs:
     - name: Run tests
       run: bundle exec rake
     - name: Report code coverage
-      if: ${{ github.ref == 'refs/heads/master' && matrix.ruby-version == '2.7' && matrix.test-suite == 'vmdb' }}
       continue-on-error: true
       uses: paambaati/codeclimate-action@v3.0.0
