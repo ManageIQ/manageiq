@@ -17,6 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: ../app/javascript/components/action-form/action-form.schema.js
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 msgid " "
 msgstr ""
 
@@ -125,10 +126,6 @@ msgstr ""
 
 #: ../app/controllers/vm_common.rb
 msgid " (Summary)"
-msgstr ""
-
-#: ../app/views/ops/_settings_list_tab.html.haml
-msgid " (current)"
 msgstr ""
 
 #: ../app/controllers/miq_ae_class_controller.rb
@@ -374,6 +371,10 @@ msgstr ""
 #. TRANSLATORS: file: product/reports/170_Configuration Management - Containers/060_Pods per Ready Status.yaml
 #: ../config/yaml_strings.rb
 msgid "# Pods per Ready Status"
+msgstr ""
+
+#: ../app/javascript/components/timeline-options/timeline-helper.js
+msgid "# of Events"
 msgstr ""
 
 #: ../app/javascript/oldjs/miq_angular_application.js
@@ -1605,11 +1606,11 @@ msgid_plural "%{task} initiated for %{number} %{models} from the %{product} Data
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../app/models/miq_request.rb:422 ../app/models/miq_request_task.rb
+#: ../app/models/miq_request.rb:424 ../app/models/miq_request_task.rb
 msgid "%{task} request has already been processed"
 msgstr ""
 
-#: ../app/models/miq_request.rb:419 ../app/models/miq_request_task.rb
+#: ../app/models/miq_request.rb:421 ../app/models/miq_request_task.rb
 msgid "%{task} request is already being processed"
 msgstr ""
 
@@ -1983,6 +1984,10 @@ msgstr ""
 
 #: ../app/views/report/_form_styling.html.haml
 msgid "* Style \"If\" conditions are evaluated top to bottom for each column"
+msgstr ""
+
+#: ../app/javascript/components/timeline-options/timeline-chart.jsx
+msgid "*Only 5000 events shown. Limit date range to avoid \\\"missing\\\" events."
 msgstr ""
 
 #: ../app/views/layouts/_container_template_note.html.haml
@@ -2436,6 +2441,8 @@ msgstr ""
 #: ../app/javascript/components/pxe-iso-datastore-form/pxe-iso-datastore-form.schema.js
 #: ../app/javascript/components/pxe-iso-image-form/pxe-iso-image-form.schema.js
 #: ../app/javascript/components/routers-form/RoutersForm.schema.js
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 #: ../app/javascript/components/vm-cloud-add-remove-security-group-form/vm-cloud-add-security-form.schema.js
 #: ../app/javascript/components/volume-mapping-form/volume-mapping-form.schema.js
 #: ../app/views/catalog/_form_basic_info.html.haml
@@ -3162,9 +3169,9 @@ msgstr ""
 #. TRANSLATORS: file: product/views/MiqAction.yaml
 #: ../app/controllers/optimization_controller.rb
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/presenters/tree_builder_policy_simulation_results.rb
 #: ../app/views/catalog/_form_resources_info.html.haml
-#: ../app/views/ops/_schedule_form.html.haml
 #: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/views/_alerts_list.html.haml
 #: ../config/yaml_strings.rb
@@ -3272,11 +3279,11 @@ msgstr ""
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
 #: ../app/helpers/report_helper/report_schedule_helper.rb
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/presenters/tree_builder_snapshots.rb
 #: ../app/presenters/tree_node/snapshot.rb
 #: ../app/views/miq_alert/_form.html.haml
 #: ../app/views/miq_policy/_form.html.haml
-#: ../app/views/ops/_schedule_form.html.haml
 #: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/report/_schedule_form.html.haml
 #: ../app/views/report/_widget_form.html.haml:33 ../config/yaml_strings.rb
@@ -4041,6 +4048,11 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Add a Storage Service"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Add a Subnet"
 msgstr ""
 
@@ -4441,6 +4453,10 @@ msgstr ""
 msgid "Add of Repository cancelled by user."
 msgstr ""
 
+#: ../app/javascript/components/storage-service-form/index.jsx
+msgid "Add of Storage Service \"%s\" has been successfully queued."
+msgstr ""
+
 #: ../app/javascript/components/zone-form/index.jsx
 msgid "Add of Zone \"%s\" has been successfully queued."
 msgstr ""
@@ -4579,6 +4595,10 @@ msgstr ""
 msgid "Add of new Service Catalog Item was cancelled by the user"
 msgstr ""
 
+#: ../app/javascript/components/storage-service-form/index.jsx
+msgid "Add of new Storage Service was cancelled by the user."
+msgstr ""
+
 #: ../app/javascript/components/pxe-image-type-form/index.jsx
 msgid "Add of new System Image Type was cancelled by the user"
 msgstr ""
@@ -4617,6 +4637,10 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Add to Shopping Cart"
+msgstr ""
+
+#: ../app/javascript/components/schedule-form/index.jsx
+msgid "Add was cancelled by the user"
 msgstr ""
 
 #: ../app/javascript/components/dashboard_toolbar.jsx
@@ -5179,7 +5203,7 @@ msgstr ""
 
 #. TRANSLATORS: file: product/views/MiqAlertSet.yaml
 #: ../app/controllers/miq_alert_set_controller.rb
-#: ../app/presenters/menu/default_menu.rb:175 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:178 ../config/yaml_strings.rb
 msgid "Alert Profiles"
 msgstr ""
 
@@ -5661,6 +5685,7 @@ msgstr ""
 #: ../app/javascript/components/physical-storage-form/index.jsx
 #: ../app/javascript/components/retirement-form/index.jsx
 #: ../app/javascript/components/settings-tasks-form/index.jsx
+#: ../app/javascript/components/storage-service-form/index.jsx
 #: ../app/javascript/components/tenant-quota-form/index.jsx
 #: ../app/javascript/forms/data-driven-form.jsx
 #: ../app/javascript/oldjs/components/miq_ae_class/namespace-form.js
@@ -6276,7 +6301,7 @@ msgstr[1] ""
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
-#: ../app/views/miq_request/_request.html.haml:62 ../config/yaml_strings.rb
+#: ../app/views/miq_request/_request.html.haml:68 ../config/yaml_strings.rb
 msgid "Approval State"
 msgstr ""
 
@@ -6559,6 +6584,11 @@ msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/user_role_center.rb
 msgid "Are you sure you want to delete this Role?"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/storage_service_center.rb
+#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
+msgid "Are you sure you want to delete this Storage Service?"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/user_center.rb
@@ -7224,6 +7254,7 @@ msgstr ""
 #: ../app/helpers/miq_action_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
 #: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
@@ -8564,6 +8595,7 @@ msgstr ""
 #: ../app/javascript/components/pxe-iso-datastore-form/pxe-iso-datastore-form.schema.js
 #: ../app/javascript/components/pxe-iso-image-form/pxe-iso-image-form.schema.js
 #: ../app/javascript/components/pxe-servers-form/pxe-server-form.schema.js
+#: ../app/javascript/components/schedule-form/schedule-form.schema.js
 #: ../app/javascript/components/vm-edit-form/vm-edit-form.schema.js
 #: ../app/views/catalog/_form_basic_info.html.haml
 #: ../app/views/catalog/_st_angular_form.html.haml
@@ -9829,7 +9861,7 @@ msgid "CPU Max Used MHz Trend"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
-#: ../app/helpers/ops_helper.rb:213 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb:214 ../app/views/ops/_server_desc.html.haml
 #: ../config/yaml_strings.rb
 msgid "CPU Percent"
 msgstr ""
@@ -9878,7 +9910,7 @@ msgstr ""
 
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
 #. TRANSLATORS: file: product/views/OsProcess-processes.yaml
-#: ../app/helpers/ops_helper.rb:212 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb:213 ../app/views/ops/_server_desc.html.haml
 #: ../config/yaml_strings.rb
 msgid "CPU Time"
 msgstr ""
@@ -10104,7 +10136,7 @@ msgstr ""
 msgid "Cancel client key change"
 msgstr ""
 
-#: ../app/models/miq_request.rb:610 ../app/models/miq_request_task.rb
+#: ../app/models/miq_request.rb:612 ../app/models/miq_request_task.rb
 msgid "Cancel operation is not supported for %{class}"
 msgstr ""
 
@@ -10359,6 +10391,7 @@ msgid ""
 msgstr ""
 
 #: ../app/helpers/storage_resource_helper/textual_summary.rb
+#: ../app/helpers/storage_service_helper/textual_summary.rb
 msgid "Capabilities"
 msgstr ""
 
@@ -10370,6 +10403,11 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.column.capabilities_drop
 #: ../config/dictionary_strings.rb
 msgid "Capabilities Drop"
+msgstr ""
+
+#: ../app/helpers/storage_resource_helper/textual_summary.rb
+#: ../app/helpers/storage_service_helper/textual_summary.rb
+msgid "Capability"
 msgstr ""
 
 #: ../app/helpers/persistent_volume_helper/textual_summary.rb
@@ -10723,7 +10761,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ServiceTemplateCatalog.yaml
 #: ../app/controllers/catalog_controller.rb
 #: ../app/helpers/application_helper/title.rb
-#: ../app/presenters/menu/default_menu.rb:63 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:65 ../config/yaml_strings.rb
 msgid "Catalogs"
 msgstr ""
 
@@ -11698,6 +11736,11 @@ msgstr ""
 msgid "Choose a Category"
 msgstr ""
 
+#: ../app/javascript/components/filter-dropdown/index.js
+#: ../app/javascript/menu/search.jsx:39 ../app/javascript/menu/search.jsx
+msgid "Choose a Filter"
+msgstr ""
+
 #: ../app/views/report/_export.html.haml
 msgid "Choose a Import/Export type from the menus on the left."
 msgstr ""
@@ -11747,7 +11790,6 @@ msgid "Choose a Template"
 msgstr ""
 
 #: ../app/helpers/application_helper/button/timeline_download.rb
-#: ../app/views/dashboard/_tl_detail.html.haml
 msgid "Choose a Timeline from the menus on the left."
 msgstr ""
 
@@ -14256,7 +14298,7 @@ msgstr ""
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
-#: ../app/views/miq_request/_request.html.haml:57 ../config/yaml_strings.rb
+#: ../app/views/miq_request/_request.html.haml:63 ../config/yaml_strings.rb
 msgid "Completed"
 msgstr ""
 
@@ -14619,7 +14661,7 @@ msgstr ""
 #: ../app/helpers/container_group_helper/textual_summary.rb
 #: ../app/helpers/container_node_helper/textual_summary.rb
 #: ../app/helpers/miq_policy_helper.rb
-#: ../app/presenters/menu/default_menu.rb:173 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:176 ../config/yaml_strings.rb
 msgid "Conditions"
 msgstr ""
 
@@ -14860,6 +14902,8 @@ msgstr ""
 #: ../app/helpers/application_helper/toolbar/servicetemplates_center.rb
 #: ../app/helpers/application_helper/toolbar/stack_orchestration_template_center.rb
 #: ../app/helpers/application_helper/toolbar/storage_center.rb
+#: ../app/helpers/application_helper/toolbar/storage_service_center.rb
+#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
 #: ../app/helpers/application_helper/toolbar/storages_center.rb
 #: ../app/helpers/application_helper/toolbar/template_clouds_center.rb
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb
@@ -15792,7 +15836,7 @@ msgstr ""
 
 #. TRANSLATORS: file: product/views/ContainerBuild.yaml
 #: ../app/controllers/container_build_controller.rb
-#: ../app/presenters/menu/default_menu.rb:130 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:132 ../config/yaml_strings.rb
 msgid "Container Builds"
 msgstr ""
 
@@ -15894,7 +15938,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. TRANSLATORS: file: product/views/ContainerImage.yaml
-#: ../app/presenters/menu/default_menu.rb:132 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:134 ../config/yaml_strings.rb
 msgid "Container Images"
 msgstr ""
 
@@ -15994,7 +16038,7 @@ msgid "Container Node Schedulable"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/ContainerNode.yaml
-#: ../app/presenters/menu/default_menu.rb:128 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:130 ../config/yaml_strings.rb
 msgid "Container Nodes"
 msgstr ""
 
@@ -16208,7 +16252,7 @@ msgstr[1] ""
 
 #. TRANSLATORS: file: product/views/ContainerProject.yaml
 #. TRANSLATORS: file: product/views/ContainerService.yaml
-#: ../app/presenters/menu/default_menu.rb:124 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:126 ../config/yaml_strings.rb
 msgid "Container Services"
 msgstr ""
 
@@ -16237,7 +16281,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. TRANSLATORS: file: product/views/ContainerTemplate.yaml
-#: ../app/presenters/menu/default_menu.rb:133 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:135 ../config/yaml_strings.rb
 msgid "Container Templates"
 msgstr ""
 
@@ -19603,6 +19647,10 @@ msgstr ""
 msgid "Create New"
 msgstr ""
 
+#: ../app/controllers/storage_service_controller.rb
+msgid "Create New %{table}"
+msgstr ""
+
 #: ../app/controllers/host_aggregate_controller.rb
 msgid "Create New Host Aggregate"
 msgstr ""
@@ -19716,6 +19764,10 @@ msgstr ""
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb
 #: ../app/helpers/application_helper/toolbar/x_vm_snapshot_center.rb
 msgid "Create a new snapshot for this VM"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
+msgid "Create a new storage service"
 msgstr ""
 
 #:
@@ -21102,7 +21154,7 @@ msgstr ""
 msgid "Data:"
 msgstr ""
 
-#: ../app/helpers/ops_helper.rb:105 ../app/views/ops/_all_tabs.html.haml
+#: ../app/helpers/ops_helper.rb:106 ../app/views/ops/_all_tabs.html.haml
 #: ../app/views/ops/_settings_authentication_tab.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 #, fuzzy
@@ -21401,8 +21453,8 @@ msgstr ""
 msgid "Datawarehouse Providers"
 msgstr ""
 
+#: ../app/javascript/components/timeline-options/timeline-helper.js
 #: ../app/javascript/oldjs/miq_application.js
-#: ../app/javascript/oldjs/miq_timeline.js
 #: ../app/views/layouts/_perf_options.html.haml
 msgid "Date"
 msgstr ""
@@ -21477,6 +21529,7 @@ msgid "Date Range (M/D/Y - M/D/Y)"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/EventLog-event_logs.yaml
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
 #: ../config/yaml_strings.rb
 msgid "Date Time"
 msgstr ""
@@ -21530,10 +21583,6 @@ msgstr ""
 msgid "Date/Time value must not be blank"
 msgstr ""
 
-#: ../app/javascript/oldjs/miq_timeline.js
-msgid "Date: "
-msgstr ""
-
 #: ./dist/js/ui-components.js
 msgid "Datepicker"
 msgstr ""
@@ -21544,6 +21593,7 @@ msgid "Dates Range"
 msgstr ""
 
 #: ../app/helpers/report_helper/timer.rb
+#: ../app/javascript/components/schedule-form/helper.js
 #: ../app/javascript/oldjs/miq_formatters.js
 #: ../app/views/report/_form_filter_chargeback.html.haml
 msgid "Day"
@@ -21594,6 +21644,7 @@ msgstr ""
 
 #: ../app/javascript/components/data-tables/time-profile-table/helper.js
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js
+#: ../app/javascript/components/schedule-form/helper.js
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js
 msgid "Days"
 msgstr ""
@@ -22611,6 +22662,11 @@ msgstr ""
 msgid "Delete the Physical Storage"
 msgstr ""
 
+#: ../app/helpers/application_helper/toolbar/storage_service_center.rb
+#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
+msgid "Delete the Storage Service"
+msgstr ""
+
 #: ../app/views/layouts/_adv_search_footer.html.haml
 msgid "Delete the filter named %{filter_name}"
 msgstr ""
@@ -23059,6 +23115,11 @@ msgstr ""
 
 #: src/amazon-security-form-group/amazon-security-form-group.jsx
 msgid "Description required"
+msgstr ""
+
+#:
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
+msgid "Description:"
 msgstr ""
 
 #: ../app/helpers/generic_object_definition_helper.rb
@@ -26589,6 +26650,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/HostInitiator.yaml
 #. TRANSLATORS: file: product/views/HostInitiatorGroup.yaml
 #. TRANSLATORS: file: product/views/StorageResource.yaml
+#. TRANSLATORS: file: product/views/StorageService.yaml
 #: ../config/yaml_strings.rb
 msgid "EMS Name"
 msgstr ""
@@ -28181,6 +28243,11 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Edit Tags of Storage Services"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Edit Tags of Tenants"
 msgstr ""
 
@@ -28565,6 +28632,10 @@ msgstr ""
 msgid "Edit assignments for this Alert Profile"
 msgstr ""
 
+#: ../app/javascript/components/schedule-form/index.jsx
+msgid "Edit of \"%s\" was cancelled by the user"
+msgstr ""
+
 #: ../app/javascript/components/ops-tenant-form/ops-tenant-form.jsx
 msgid "Edit of %s \"%s\" was canceled by the user."
 msgstr ""
@@ -28822,6 +28893,10 @@ msgstr ""
 
 #: ../app/controllers/catalog_controller.rb
 msgid "Edit of Service Catalog Item \"%{name}\" was cancelled by the user"
+msgstr ""
+
+#: ../app/javascript/components/storage-service-form/index.jsx
+msgid "Edit of Storage Service \"%s\" was canceled by the user."
 msgstr ""
 
 #: ../app/javascript/components/pxe-image-type-form/index.jsx
@@ -30967,7 +31042,6 @@ msgid "Evaluate Alerts"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/MiqEventDefinition.yaml
-#: ../app/javascript/oldjs/miq_timeline.js
 #: ../app/views/miq_policy_rsop/_rsop_form.html.haml
 #: ../config/yaml_strings.rb
 #, fuzzy
@@ -31079,12 +31153,7 @@ msgstr ""
 msgid "Event Selection"
 msgstr ""
 
-#. TRANSLATORS: en.yml key: dictionary.column.event_src
-#. TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-#: ../app/models/miq_alert.rb:441 ../config/dictionary_strings.rb
-#: ../config/yaml_strings.rb
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
 msgid "Event Source"
 msgstr ""
 
@@ -31113,20 +31182,7 @@ msgstr ""
 msgid "Event Timestamp"
 msgstr ""
 
-#. TRANSLATORS: en.yml key: dictionary.column.event_type
-#. TRANSLATORS: file: product/reports/420_Operations - Clusters/010_Cluster - DRS migrations.yaml
-#. TRANSLATORS: file: product/reports/421_Operations - Events/VC Snapshot Events by User.yaml
-#. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/059_Summary of VM Create and Deletes.yaml
-#. TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
-#. TRANSLATORS: file: product/reports/500_Events - Operations/120_Events_for_VM_prod_webserver.yaml
-#. TRANSLATORS: file: product/reports/500_Events - Operations/140_VC_Events_initiated_by_username_EVM.yaml
-#. TRANSLATORS: file: product/reports/520_Events - Policy/110_Policy Events.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_bottleneck_events.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_daily.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_hourly.yaml
-#: ../config/dictionary_strings.rb:864 ../config/yaml_strings.rb
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
 msgid "Event Type"
 msgstr ""
 
@@ -31371,6 +31427,10 @@ msgstr ""
 #. TRANSLATORS: file: product/reports/500_Events - Operations/120_Events_for_VM_prod_webserver.yaml
 #: ../config/yaml_strings.rb
 msgid "Events for VM prod_webserver"
+msgstr ""
+
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
+msgid "Every"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -32542,6 +32602,10 @@ msgid "ExtManagementSystem|Supports object storage"
 msgstr ""
 
 #: ../config/model_attributes.rb
+msgid "ExtManagementSystem|Supports storage service create"
+msgstr ""
+
+#: ../config/model_attributes.rb
 msgid "ExtManagementSystem|Supports storage services"
 msgstr ""
 
@@ -33192,6 +33256,7 @@ msgstr ""
 
 #: ../app/controllers/report_controller/reports/editor.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/ops/_schedule_form_filter.html.haml
 #: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/report/_schedule_form_filter.html.haml
@@ -33202,6 +33267,10 @@ msgstr ""
 
 #: ../app/views/layouts/_group_filter_expression.html.haml
 msgid "Filter Expression"
+msgstr ""
+
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
+msgid "Filter Item"
 msgstr ""
 
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
@@ -33301,7 +33370,7 @@ msgid "Filters"
 msgstr ""
 
 #: ../app/helpers/exp_atom_helper.rb:6 ../app/javascript/menu/search.jsx
-#: ../app/javascript/menu/search.jsx:88 ../app/javascript/menu/search.jsx
+#: ../app/javascript/menu/search.jsx:96 ../app/javascript/menu/search.jsx
 msgid "Find"
 msgstr ""
 
@@ -34251,6 +34320,10 @@ msgstr ""
 msgid "Free Disk Space (bytes)"
 msgstr ""
 
+#: ../app/helpers/storage_service_helper/textual_summary.rb
+msgid "Free Logical Space (%)"
+msgstr ""
+
 #. TRANSLATORS: file: product/views/Storage.yaml
 #. TRANSLATORS: file: product/views/StorageCluster.yaml
 #. TRANSLATORS: file: product/views/StorageResource.yaml
@@ -34518,7 +34591,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/GenericObject.yaml
 #: ../app/controllers/generic_object_definition_controller.rb
 #: ../app/helpers/service_helper/textual_summary.rb
-#: ../app/presenters/menu/default_menu.rb:213 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:216 ../config/yaml_strings.rb
 msgid "Generic Objects"
 msgstr ""
 
@@ -34867,10 +34940,7 @@ msgstr ""
 msgid "Group Information"
 msgstr ""
 
-#. TRANSLATORS: en.yml key: dictionary.column.group_level
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-#: ../config/dictionary_strings.rb:942 ../config/yaml_strings.rb
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
 msgid "Group Level"
 msgstr ""
 
@@ -34910,10 +34980,6 @@ msgstr ""
 
 #: src/amazon-security-form-group/amazon-security-form-group.jsx
 msgid "Group name required"
-msgstr ""
-
-#: ../app/javascript/oldjs/miq_timeline.js
-msgid "Group of %s events"
 msgstr ""
 
 #: src/rbac-forms/rbacUserPreview.jsx
@@ -36726,7 +36792,7 @@ msgstr ""
 #: ../app/helpers/configured_system_helper/textual_summary.rb
 #: ../app/helpers/host_helper.rb
 #: ../app/helpers/host_helper/textual_summary.rb
-#: ../app/helpers/ops_helper.rb:23 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:24 ../app/helpers/ops_helper.rb
 #: ../app/views/ops/_server_desc.html.haml
 #: ../app/views/ops/_settings_server_tab.html.haml
 #: ../config/yaml_strings.rb
@@ -37316,6 +37382,7 @@ msgid "Host|Vmm version"
 msgstr ""
 
 #: ../app/helpers/report_helper/timer.rb
+#: ../app/javascript/components/schedule-form/helper.js
 #: ../app/javascript/oldjs/miq_formatters.js
 msgid "Hour"
 msgstr ""
@@ -37357,6 +37424,7 @@ msgstr ""
 
 #: ../app/javascript/components/data-tables/time-profile-table/helper.js
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js
+#: ../app/javascript/components/schedule-form/helper.js
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js
 msgid "Hours"
 msgstr ""
@@ -37809,7 +37877,7 @@ msgstr ""
 #: ../app/helpers/generic_object_definition_helper.rb
 #: ../app/views/shared/buttons/_ab_list.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
-#: ../config/yaml_strings.rb:703 ../lib/gtl_formatter.rb
+#: ../config/yaml_strings.rb:708 ../lib/gtl_formatter.rb
 #, fuzzy
 msgid "Image"
 msgstr ""
@@ -39655,7 +39723,7 @@ msgstr ""
 msgid "Last Known Size"
 msgstr ""
 
-#: ../app/helpers/ops_helper.rb:41 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:42 ../app/helpers/ops_helper.rb
 msgid "Last Log Collection"
 msgstr ""
 
@@ -40621,7 +40689,7 @@ msgstr ""
 msgid "Log Depot Settings were validated"
 msgstr ""
 
-#: ../app/helpers/ops_helper.rb:40 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:41 ../app/helpers/ops_helper.rb
 msgid "Log Depot URI"
 msgstr ""
 
@@ -41599,7 +41667,7 @@ msgstr ""
 msgid "Max Available"
 msgstr ""
 
-#: ../app/helpers/ops_helper.rb:170 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:171 ../app/helpers/ops_helper.rb
 msgid "Max Concurrent"
 msgstr ""
 
@@ -42535,7 +42603,10 @@ msgstr ""
 #: ../app/helpers/container_helper/textual_summary.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
 #: ../app/javascript/components/data-tables/datastore/helper.js
+#: ../app/javascript/components/data-tables/requests-table/index.jsx
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
 #: ../app/views/layouts/_ae_resolve_options.html.haml
 #: ../app/views/miq_ae_class/_class_fields.html.haml
 #: ../app/views/miq_policy_export/import.html.haml
@@ -47433,6 +47504,10 @@ msgstr ""
 msgid "Modification of Physical Storage \"%s\" has been successfully queued."
 msgstr ""
 
+#: ../app/javascript/components/storage-service-form/index.jsx
+msgid "Modification of Storage Service \"%s\" has been successfully queued."
+msgstr ""
+
 #: ../app/javascript/components/pxe-image-type-form/index.jsx
 msgid "Modification of System Image Type \"%s\" has been successfully queued."
 msgstr ""
@@ -47859,6 +47934,11 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Modify Storage Services"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Modify Subnets"
 msgstr ""
 
@@ -47985,6 +48065,7 @@ msgid "Monitoring"
 msgstr ""
 
 #: ../app/helpers/report_helper/timer.rb
+#: ../app/javascript/components/schedule-form/helper.js
 #: ../app/views/report/_form_filter_chargeback.html.haml
 msgid "Month"
 msgstr ""
@@ -48045,6 +48126,7 @@ msgid "Monthly VM Count per Provider"
 msgstr ""
 
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js
+#: ../app/javascript/components/schedule-form/helper.js
 msgid "Months"
 msgstr ""
 
@@ -48501,6 +48583,7 @@ msgstr ""
 #: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js
 #: ../app/javascript/components/host-initiator-group-form/host-initiator-group-form.schema.js
 #: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 msgid "Name:"
 msgstr ""
 
@@ -49677,6 +49760,11 @@ msgstr ""
 msgid "No %s Tags have been assigned"
 msgstr ""
 
+#:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+msgid "No %s with selected capabilities."
+msgstr ""
+
 #: ../app/models/miq_report/generator.rb
 msgid "No %{class_name} object provided"
 msgstr ""
@@ -50195,7 +50283,6 @@ msgid "No Widgets available to add"
 msgstr ""
 
 #: ../app/views/ops/_diagnostics_zones_tab.html.haml
-#: ../app/views/ops/_settings_list_tab.html.haml
 msgid "No Zones found."
 msgstr ""
 
@@ -50570,6 +50657,10 @@ msgstr ""
 
 #: ../app/helpers/application_helper/button/host_initiator_new.rb
 msgid "No storage providers support creating host initiators."
+msgstr ""
+
+#: ../app/helpers/application_helper/button/storage_service_new.rb
+msgid "No storage providers support creating storage services."
 msgstr ""
 
 #: ../app/helpers/application_helper/button/volume_mapping_new.rb
@@ -51283,6 +51374,7 @@ msgstr ""
 msgid "OVF Templates"
 msgstr ""
 
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/miq_ae_tools/_results_tabs.html.haml
 msgid "Object"
 msgstr ""
@@ -51309,6 +51401,7 @@ msgid "Object Count"
 msgstr ""
 
 #: ../app/helpers/miq_action_helper.rb
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
 #: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
@@ -51469,6 +51562,7 @@ msgstr ""
 msgid "On Shared Storage"
 msgstr ""
 
+#: ../app/javascript/components/schedule-form/helper.js
 #: ../app/views/ops/_schedule_form_timer.html.haml
 #: ../app/views/report/_schedule_form_timer.html.haml
 msgid "Once"
@@ -53017,6 +53111,10 @@ msgstr ""
 msgid "Page Size"
 msgstr ""
 
+#: ../app/javascript/components/miq-pagination.jsx
+msgid "Pagination"
+msgstr ""
+
 #. TRANSLATORS: file: product/views/OrchestrationStackParameter.yaml
 #: ../app/controllers/configuration_job_controller.rb
 #: ../app/controllers/orchestration_stack_controller.rb
@@ -53120,6 +53218,10 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.column.parent_name
 #: ../config/dictionary_strings.rb
 msgid "Parent Name"
+msgstr ""
+
+#: ../app/views/miq_request/_request.html.haml
+msgid "Parent Request"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.column.v_owning_resource_pool
@@ -53924,6 +54026,11 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Perform Operations on Storage Services"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Perform Operations on Template Snapshots"
 msgstr ""
 
@@ -54645,6 +54752,7 @@ msgstr ""
 msgid "Physical Servers with Host"
 msgstr ""
 
+#. TRANSLATORS: file: product/views/CloudVolume.yaml
 #. TRANSLATORS: file: product/views/PhysicalStorage.yaml
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb
 #: ../config/yaml_strings.rb
@@ -55359,7 +55467,7 @@ msgstr ""
 #: ../app/controllers/ansible_repository_controller.rb
 #: ../app/helpers/ansible_repository_helper/textual_summary.rb
 #: ../app/helpers/application_helper/title.rb
-#: ../app/presenters/menu/default_menu.rb:203 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:206 ../config/yaml_strings.rb
 msgid "Playbooks"
 msgstr ""
 
@@ -55590,7 +55698,7 @@ msgstr ""
 #: ../app/javascript/components/container-projects/helper.jsx
 #: ../app/javascript/components/ems_container_dashboard/helper.js
 #: ../app/javascript/oldjs/controllers/container_dashboard/util/dashboard-utils-factory.js
-#: ../app/presenters/menu/default_menu.rb:126 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:128 ../config/yaml_strings.rb
 msgid "Pods"
 msgstr ""
 
@@ -56051,7 +56159,7 @@ msgstr ""
 #: ../app/controllers/vm_common.rb
 #: ../app/helpers/guest_device_helper/textual_summary.rb
 #: ../app/helpers/physical_switch_helper/textual_summary.rb
-#: ../app/presenters/menu/default_menu.rb:147 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:149 ../config/yaml_strings.rb
 msgid "Ports"
 msgstr ""
 
@@ -56465,7 +56573,7 @@ msgstr ""
 msgid "Print the full report (all rows) or export it as a PDF file"
 msgstr ""
 
-#: ../app/helpers/ops_helper.rb:167 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:168 ../app/helpers/ops_helper.rb
 msgid "Priority"
 msgstr ""
 
@@ -56896,6 +57004,7 @@ msgstr ""
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/helpers/storage_helper/textual_summary.rb
 #: ../app/helpers/storage_resource_helper/textual_summary.rb
+#: ../app/helpers/storage_service_helper/textual_summary.rb
 #: ../app/helpers/vm_cloud_helper/textual_summary.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb
@@ -57015,6 +57124,7 @@ msgstr ""
 #: ../app/javascript/components/host-aggregate-form/host-aggregate-form.schema.js
 #: ../app/javascript/components/orchestration-template/orchestration-template-form.schema.js
 #: ../app/javascript/components/pxe-iso-datastore-form/pxe-iso-datastore-form.schema.js
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
 #: ../app/javascript/spec/prov-grid/prov-vm-grid-data.js
 #: ../app/views/catalog/_form_basic_info.html.haml
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
@@ -57151,9 +57261,7 @@ msgstr ""
 msgid "Provider Uid"
 msgstr ""
 
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-#: ../config/yaml_strings.rb
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
 msgid "Provider User Name"
 msgstr ""
 
@@ -58756,6 +58864,8 @@ msgstr ""
 #: ../app/helpers/application_helper/toolbar/physical_storages_center.rb
 #: ../app/helpers/application_helper/toolbar/physical_switch_center.rb
 #: ../app/helpers/application_helper/toolbar/physical_switches_center.rb
+#: ../app/helpers/application_helper/toolbar/storage_service_center.rb
+#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
 #: ../app/helpers/application_helper/toolbar/template_clouds_center.rb
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb
@@ -59121,6 +59231,18 @@ msgid ""
 " Switches?"
 msgstr ""
 
+#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
+msgid ""
+"Refresh relationships and power states for all items related to these Storage "
+"Services"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
+msgid ""
+"Refresh relationships and power states for all items related to these Storage "
+"Services?"
+msgstr ""
+
 #: ../app/helpers/application_helper/toolbar/volume_mappings_center.rb
 msgid ""
 "Refresh relationships and power states for all items related to these Volume M"
@@ -59253,6 +59375,18 @@ msgstr ""
 msgid ""
 "Refresh relationships and power states for all items related to this Storage M"
 "anager?"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/storage_service_center.rb
+msgid ""
+"Refresh relationships and power states for all items related to this Storage S"
+"ervice"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/storage_service_center.rb
+msgid ""
+"Refresh relationships and power states for all items related to this Storage S"
+"ervice?"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb
@@ -59740,6 +59874,8 @@ msgstr[1] ""
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/helpers/storage_helper/textual_summary.rb
+#: ../app/helpers/storage_resource_helper/textual_summary.rb
+#: ../app/helpers/storage_service_helper/textual_summary.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
 #: ../app/views/configuration_profile/show.html.haml
 #: ../app/views/ems_configuration/show.html.haml
@@ -60457,6 +60593,11 @@ msgstr ""
 msgid "Remove a Security Group from this Instance"
 msgstr ""
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Remove a Storage Service"
+msgstr ""
+
 #: ../app/javascript/components/button-group/group-form.schema.js
 msgid "Remove all"
 msgstr ""
@@ -61010,7 +61151,7 @@ msgstr ""
 
 #. TRANSLATORS: file: product/views/ContainerReplicator.yaml
 #: ../app/controllers/container_replicator_controller.rb
-#: ../app/presenters/menu/default_menu.rb:125 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:127 ../config/yaml_strings.rb
 msgid "Replicators"
 msgstr ""
 
@@ -61238,6 +61379,7 @@ msgstr ""
 
 #: ../app/helpers/miq_action_helper.rb
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
 #: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
@@ -61328,6 +61470,16 @@ msgstr ""
 msgid "Request Information"
 msgstr ""
 
+#: ../config/model_display_names.rb
+msgid "Request Log"
+msgid_plural "Request Logs"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../app/views/miq_request/_request.html.haml
+msgid "Request Logs"
+msgstr ""
+
 #. TRANSLATORS: en.yml key: dictionary.column.request_memory_bytes
 #: ../config/dictionary_strings.rb
 msgid "Request Memory Bytes"
@@ -61381,6 +61533,10 @@ msgstr ""
 msgid "Request is required"
 msgstr ""
 
+#: ../config/model_attributes.rb
+msgid "Request log"
+msgstr ""
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Request to Archive Services"
@@ -61425,6 +61581,26 @@ msgstr ""
 
 #: ../app/javascript/components/action-form/action-form.schema.js
 msgid "Request:"
+msgstr ""
+
+#: ../config/model_attributes.rb
+msgid "RequestLog|Href slug"
+msgstr ""
+
+#: ../config/model_attributes.rb
+msgid "RequestLog|Message"
+msgstr ""
+
+#: ../config/model_attributes.rb
+msgid "RequestLog|Region description"
+msgstr ""
+
+#: ../config/model_attributes.rb
+msgid "RequestLog|Region number"
+msgstr ""
+
+#: ../config/model_attributes.rb
+msgid "RequestLog|Severity"
 msgstr ""
 
 #: ../app/javascript/toolbar-actions/custom-action.js
@@ -61479,7 +61655,7 @@ msgstr ""
 #: ../app/controllers/miq_request_controller.rb
 #: ../app/helpers/application_helper/title.rb
 #: ../app/presenters/menu/default_menu.rb
-#: ../app/presenters/menu/default_menu.rb:217 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:220 ../config/yaml_strings.rb
 msgid "Requests"
 msgstr ""
 
@@ -61489,7 +61665,13 @@ msgstr ""
 msgid "Required"
 msgstr ""
 
+#:
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
+msgid "Required Capabilities"
+msgstr ""
+
 #: ../app/models/manageiq/providers/autosde/storage_manager/cloud_volume.rb
+#: ../app/models/manageiq/providers/autosde/storage_manager/storage_service.rb
 msgid "Required Capabilities (filters by exact match)"
 msgstr ""
 
@@ -61760,7 +61942,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ResourcePool.yaml
 #: ../app/controllers/resource_pool_controller.rb
 #: ../app/helpers/resource_pool_helper/textual_summary.rb
-#: ../app/presenters/menu/default_menu.rb:98 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:100 ../config/yaml_strings.rb
 msgid "Resource Pools"
 msgstr ""
 
@@ -62807,6 +62989,7 @@ msgstr ""
 msgid "Rules"
 msgstr ""
 
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/ops/_schedule_form_timer.html.haml
 #: ../app/views/report/_schedule_form_timer.html.haml
 msgid "Run"
@@ -63302,7 +63485,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ScanItem
-#: ../config/model_display_names.rb:203 ../config/dictionary_strings.rb
+#: ../config/model_display_names.rb:204 ../config/dictionary_strings.rb
 #, fuzzy
 msgid "Scan Item"
 msgid_plural "Scan Items"
@@ -64611,10 +64794,6 @@ msgstr ""
 msgid "Select up to 10 timestamps for Drift Analysis"
 msgstr ""
 
-#: ../app/views/layouts/_tl_detail.html.haml
-msgid "Select your desired settings and click the apply button to view timeline data."
-msgstr ""
-
 #: ../app/views/host/_form.html.haml
 msgid "Selected"
 msgstr ""
@@ -65359,6 +65538,12 @@ msgstr ""
 msgid "Service UI"
 msgstr ""
 
+#. TRANSLATORS: file: product/views/StorageService.yaml
+#: ../app/helpers/storage_service_helper/textual_summary.rb
+#: ../config/yaml_strings.rb
+msgid "Service Version"
+msgstr ""
+
 #: ../app/controllers/miq_ae_customization_controller.rb
 msgid "Service dialog import cancelled"
 msgstr ""
@@ -65760,7 +65945,7 @@ msgstr ""
 #: ../app/javascript/components/ems_container_dashboard/helper.js
 #: ../app/javascript/oldjs/controllers/container_dashboard/util/dashboard-utils-factory.js
 #: ../app/presenters/menu/default_menu.rb
-#: ../app/presenters/menu/default_menu.rb:143 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:145 ../config/yaml_strings.rb
 msgid "Services"
 msgstr ""
 
@@ -66452,6 +66637,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/MiqAlert.yaml
 #. TRANSLATORS: file: product/views/OpenscapRuleResult.yaml
 #: ../app/helpers/miq_alert_helper.rb
+#: ../app/javascript/components/data-tables/requests-table/index.jsx
 #: ../app/javascript/oldjs/controllers/alerts/alerts_overview_controller.js
 #: ../app/javascript/oldjs/services/alerts_center_service.js
 #: ../app/views/miq_alert/_form.html.haml:26 ../config/yaml_strings.rb
@@ -66462,7 +66648,7 @@ msgstr ""
 msgid "Severity must be selected"
 msgstr ""
 
-#: ../config/model_display_names.rb:230 ../config/model_attributes.rb
+#: ../config/model_display_names.rb:231 ../config/model_attributes.rb
 #, fuzzy
 msgid "Share"
 msgid_plural "Shares"
@@ -67856,6 +68042,8 @@ msgstr ""
 #: ../app/helpers/cloud_volume_backup_helper/textual_summary.rb
 #: ../app/helpers/cloud_volume_helper/textual_summary.rb
 #: ../app/helpers/cloud_volume_snapshot_helper/textual_summary.rb
+#: ../app/helpers/storage_resource_helper/textual_summary.rb
+#: ../app/helpers/storage_service_helper/textual_summary.rb
 #: ../app/views/vm_common/_reconfigure.html.haml
 #: ../app/views/vm_common/_snapshots_desc.html.haml
 #: ../config/yaml_strings.rb
@@ -68362,9 +68550,7 @@ msgstr ""
 msgid "Source Groups"
 msgstr ""
 
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-#: ../config/yaml_strings.rb
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
 msgid "Source Host"
 msgstr ""
 
@@ -68409,16 +68595,11 @@ msgstr ""
 msgid "Source Type"
 msgstr ""
 
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-#: ../config/yaml_strings.rb
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
 msgid "Source VM"
 msgstr ""
 
-#. TRANSLATORS: en.yml key: dictionary.column.src_vm_location
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-#: ../config/dictionary_strings.rb:2290 ../config/yaml_strings.rb
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
 msgid "Source VM Location"
 msgstr ""
 
@@ -68671,7 +68852,7 @@ msgstr ""
 msgid "Started At"
 msgstr ""
 
-#: ../app/helpers/ops_helper.rb:208 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb:209 ../app/views/ops/_server_desc.html.haml
 msgid "Started On"
 msgstr ""
 
@@ -68679,6 +68860,7 @@ msgstr ""
 msgid "Starting Class must be selected"
 msgstr ""
 
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/ops/_schedule_form_timer.html.haml
 #: ../app/views/report/_schedule_form_timer.html.haml
 msgid "Starting Date"
@@ -68698,6 +68880,7 @@ msgstr ""
 msgid "Starting Process is required"
 msgstr ""
 
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/ops/_schedule_form_timer.html.haml
 #: ../app/views/report/_schedule_form_timer.html.haml
 msgid "Starting Time"
@@ -68868,7 +69051,7 @@ msgstr ""
 #: ../app/helpers/ems_network_helper/textual_summary.rb
 #: ../app/helpers/ems_physical_infra_helper/textual_summary.rb
 #: ../app/helpers/ems_storage_helper/textual_summary.rb
-#: ../app/helpers/ops_helper.rb:165 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:166 ../app/helpers/ops_helper.rb
 #: ../app/helpers/ops_helper.rb
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb
 #: ../app/helpers/physical_server_helper/textual_summary.rb
@@ -68994,6 +69177,8 @@ msgstr ""
 #: ../app/controllers/ems_storage_controller.rb
 #: ../app/controllers/host_initiator_controller.rb
 #: ../app/controllers/host_initiator_group_controller.rb
+#: ../app/controllers/storage_resource_controller.rb
+#: ../app/controllers/storage_service_controller.rb
 #: ../app/controllers/volume_mapping_controller.rb
 #: ../app/helpers/catalog_helper.rb
 #: ../app/helpers/chargeback_rate_helper.rb
@@ -69139,6 +69324,7 @@ msgstr ""
 #:
 #: ../app/javascript/components/cloud-object-store-container-form/cloud-object-store-container-form.schema.js
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 #: ../config/yaml_strings.rb
 #, fuzzy
 msgid "Storage Manager"
@@ -69213,26 +69399,20 @@ msgstr[1] ""
 msgid "Storage Providers"
 msgstr ""
 
-#: ../config/model_display_names.rb
-msgid "Storage Resource"
-msgid_plural "Storage Resources"
-msgstr[0] ""
-msgstr[1] ""
-
-#:
+#: ../app/helpers/storage_service_helper/textual_summary.rb
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
-msgid ""
-"Storage Resource (if no option appears then no storage resource with selected "
-"capabilities was found)"
+#, fuzzy
+msgid "Storage Resource"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/StorageResource.yaml
 #: ../app/controllers/storage_resource_controller.rb
-#: ../app/presenters/menu/default_menu.rb:162 ../config/yaml_strings.rb
+#: ../app/helpers/storage_service_helper/textual_summary.rb
+#: ../app/presenters/menu/default_menu.rb:164 ../config/yaml_strings.rb
 msgid "Storage Resources"
 msgstr ""
 
-#:
+#: ../app/helpers/storage_resource_helper/textual_summary.rb
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
 #, fuzzy
 msgid "Storage Service"
@@ -69244,7 +69424,12 @@ msgid_plural "Storage Service Resource Attachments"
 msgstr[0] ""
 msgstr[1] ""
 
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#. TRANSLATORS: file: product/views/StorageService.yaml
+#: ../app/controllers/storage_service_controller.rb
+#: ../app/helpers/ems_storage_helper/textual_summary.rb
+#: ../app/helpers/storage_resource_helper/textual_summary.rb
+#: ../app/presenters/menu/default_menu.rb
+#: ../app/services/ems_storage_dashboard_service.rb
 #: ../config/yaml_strings.rb
 msgid "Storage Services"
 msgstr ""
@@ -69443,6 +69628,11 @@ msgstr ""
 
 #: ../config/model_attributes.rb
 msgid "StorageResource|Uid ems"
+msgstr ""
+
+#. TRANSLATORS: file: product/views/StorageService.yaml
+#: ../config/yaml_strings.rb
+msgid "StorageService"
 msgstr ""
 
 #: ../config/model_attributes.rb
@@ -69886,7 +70076,7 @@ msgstr ""
 msgid "Submit this provisioning request"
 msgstr ""
 
-#: ../config/model_display_names.rb:237 ../config/model_attributes.rb
+#: ../config/model_display_names.rb:238 ../config/model_attributes.rb
 #, fuzzy
 msgid "Subnet"
 msgid_plural "Subnets"
@@ -69933,7 +70123,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/NetworkPort.yaml
 #: ../app/controllers/cloud_subnet_controller.rb
 #: ../app/controllers/vm_common.rb
-#: ../app/presenters/menu/default_menu.rb:141 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:143 ../config/yaml_strings.rb
 msgid "Subnets"
 msgstr ""
 
@@ -70519,6 +70709,10 @@ msgstr ""
 msgid "System/Process/"
 msgstr ""
 
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
+msgid "System/Proess"
+msgstr ""
+
 #: ../config/model_attributes.rb
 msgid "SystemConsole|Host name"
 msgstr ""
@@ -70824,7 +71018,7 @@ msgstr ""
 msgid "Tagged VMs and Instances"
 msgstr ""
 
-#: ../config/model_display_names.rb:242 ../config/model_attributes.rb
+#: ../config/model_display_names.rb:243 ../config/model_attributes.rb
 #, fuzzy
 msgid "Tagging"
 msgid_plural "Taggings"
@@ -71748,6 +71942,21 @@ msgid "The name \"%s\" already exists in \"%s\""
 msgstr ""
 
 #:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+msgid "The name can contain letters, numbers, spaces, periods, dashes and underscores"
+msgstr ""
+
+#:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+msgid "The name must begin with a letter or an underscore"
+msgstr ""
+
+#:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+msgid "The name must not begin or end with a space"
+msgstr ""
+
+#:
 #: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb
 msgid "The number of entitled processors assigned to the VM"
 msgstr ""
@@ -71950,7 +72159,6 @@ msgstr ""
 
 #: ../app/controllers/application_controller.rb
 #: ../app/controllers/dashboard_controller.rb
-#: ../app/controllers/mixins/actions/vm_actions/reconfigure.rb
 #: ../app/controllers/mixins/actions/vm_actions/resize.rb
 msgid "The user is not authorized for this task or item."
 msgstr ""
@@ -72239,10 +72447,6 @@ msgstr ""
 msgid "This field is required"
 msgstr ""
 
-#: ../app/javascript/oldjs/miq_timeline.js
-msgid "This is a group of %s events starting on %s"
-msgstr ""
-
 #:
 #: ../app/models/manageiq/providers/awx/automation_manager/openstack_credential.rb
 msgid "This is the tenant name. This value is usually the same as the username"
@@ -72341,6 +72545,7 @@ msgstr ""
 msgid "Tier"
 msgstr ""
 
+#: ../app/javascript/components/data-tables/requests-table/index.jsx
 #: ../app/javascript/oldjs/services/alerts_center_service.js
 #: ../app/views/shared/views/_alerts_list.html.haml
 msgid "Time"
@@ -72386,6 +72591,7 @@ msgid "Time Stamp"
 msgstr ""
 
 #: ../app/controllers/application_controller/performance.rb
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/ops/_schedule_form_timer.html.haml
 #: ../app/views/report/_form_filter_chargeback.html.haml
 #: ../app/views/report/_schedule_form_timer.html.haml
@@ -72463,6 +72669,10 @@ msgstr ""
 msgid "Timeline All Policy Events"
 msgstr ""
 
+#: ../app/javascript/components/timeline-options/timeline-page.jsx
+msgid "Timeline Data"
+msgstr ""
+
 #: ../app/helpers/miq_alert_helper.rb
 #: ../app/views/miq_alert/_alert_evm_event.html.haml
 msgid "Timeline Event"
@@ -72476,10 +72686,6 @@ msgstr ""
 #. TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_hourly.yaml
 #: ../config/yaml_strings.rb
 msgid "Timeline Policy Events Hourly"
-msgstr ""
-
-#: ../app/views/layouts/_tl_detail.html.haml
-msgid "Timeline View"
 msgstr ""
 
 #: src/report-editor/timeline-warning.jsx
@@ -72846,6 +73052,10 @@ msgstr ""
 msgid "Total Disk Capacity (bytes)"
 msgstr ""
 
+#: ../app/javascript/components/timeline-options/timeline-helper.js
+msgid "Total Events"
+msgstr ""
+
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb
 #: ../app/helpers/resource_pool_helper/textual_summary.rb
 msgid "Total Host CPU Cores"
@@ -72881,6 +73091,10 @@ msgstr ""
 #: ../config/dictionary_strings.rb:8 ../config/dictionary_strings.rb
 #: ../config/dictionary_strings.rb:14 ../config/dictionary_strings.rb
 msgid "Total Instances"
+msgstr ""
+
+#: ../app/helpers/storage_service_helper/textual_summary.rb
+msgid "Total Logical Space"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.column.total_managed_registered_vms
@@ -73455,6 +73669,7 @@ msgstr ""
 #: ../app/javascript/components/pxe-customization-template-form/pxe-customization-template-form.schema.js
 #: ../app/javascript/components/pxe-image-type-form/pxe-image-type-form.schema.js
 #: ../app/javascript/components/pxe-iso-image-form/pxe-iso-image-form.schema.js
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/javascript/oldjs/controllers/alerts/alerts_overview_controller.js
 #: ../app/views/chargeback_rate/_cb_rate_show.html.haml
 #: ../app/views/chargeback_rate/_form.html.haml
@@ -77237,7 +77452,7 @@ msgstr ""
 msgid "Version"
 msgstr ""
 
-#: ../app/helpers/ops_helper.rb:214 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb:215 ../app/views/ops/_server_desc.html.haml
 msgid "Version / Build"
 msgstr ""
 
@@ -78166,10 +78381,6 @@ msgstr ""
 msgid "View this Zone"
 msgstr ""
 
-#: ../app/views/ops/_settings_list_tab.html.haml
-msgid "View this Zone's settings"
-msgstr ""
-
 #: ../lib/gtl_formatter.rb
 msgid "View this item"
 msgstr ""
@@ -78398,7 +78609,7 @@ msgstr ""
 #: ../app/helpers/ems_infra_helper/textual_summary.rb
 #: ../app/helpers/ems_physical_infra_helper/textual_summary.rb
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
-#: ../app/presenters/menu/default_menu.rb:97 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:99 ../config/yaml_strings.rb
 msgid "Virtual Machines"
 msgstr ""
 
@@ -79640,7 +79851,8 @@ msgid "Vnc Port"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/VolumeMapping.yaml
-#:
+#: ../app/helpers/storage_resource_helper/textual_summary.rb
+#: ../app/helpers/storage_service_helper/textual_summary.rb
 #: ../app/javascript/components/cloud-volume-backup-form/cloud-volume-backup-form.schema.js
 #: ../app/views/static/cloud_volume_backup/volume_select.html.haml
 #: ../config/yaml_strings.rb
@@ -79743,7 +79955,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.volume_mapping
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/model_display_names.rb:255 ../config/dictionary_strings.rb
+#: ../config/model_display_names.rb:256 ../config/dictionary_strings.rb
 #: ../config/yaml_strings.rb
 #, fuzzy
 msgid "Volume Mapping"
@@ -79904,6 +80116,8 @@ msgstr ""
 #: ../app/helpers/cloud_tenant_helper/textual_summary.rb
 #: ../app/helpers/container_group_helper/textual_summary.rb
 #: ../app/helpers/ems_container_helper/textual_summary.rb
+#: ../app/helpers/storage_resource_helper/textual_summary.rb
+#: ../app/helpers/storage_service_helper/textual_summary.rb
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/services/ems_storage_dashboard_service.rb
 #: ../app/views/shared/views/_prov_dialog.html.haml
@@ -80500,6 +80714,7 @@ msgid "Wedensday"
 msgstr ""
 
 #: ../app/helpers/report_helper/timer.rb
+#: ../app/javascript/components/schedule-form/helper.js
 #: ../app/views/report/_form_filter_chargeback.html.haml
 msgid "Week"
 msgstr ""
@@ -80529,6 +80744,7 @@ msgid "Weekly Utilization Overview"
 msgstr ""
 
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js
+#: ../app/javascript/components/schedule-form/helper.js
 msgid "Weeks"
 msgstr ""
 
@@ -80939,6 +81155,7 @@ msgstr ""
 #: ../app/helpers/report_helper/report_schedule_helper.rb
 #: ../app/javascript/components/miq-about-modal/miq-about-modal.jsx
 #: ../app/javascript/components/provider-form/index.jsx
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/javascript/components/settings-tasks-form/settings-tasks-form.schema.js
 #: ../app/views/catalog/_form_basic_info.html.haml
 #: ../app/views/catalog/_st_angular_form.html.haml
@@ -80977,6 +81194,7 @@ msgstr ""
 msgid "Zone:"
 msgstr ""
 
+#: ../app/helpers/zones_helper.rb
 #: ../app/presenters/tree_builder_ops_settings.rb
 #: ../app/views/ops/_all_tabs.html.haml
 #: ../app/views/ops/_settings_details_tab.html.haml
@@ -81198,7 +81416,7 @@ msgstr ""
 msgid "amqp"
 msgstr ""
 
-#: ../app/models/miq_request.rb:424 ../app/models/miq_request_task.rb
+#: ../app/models/miq_request.rb:426 ../app/models/miq_request_task.rb
 msgid "approval is required for %{task}"
 msgstr ""
 
@@ -81573,7 +81791,7 @@ msgstr ""
 msgid "create_aggregate must be implemented in a subclass"
 msgstr ""
 
-#: ../app/presenters/tree_node/zone.rb
+#: ../app/helpers/zones_helper.rb:18 ../app/presenters/tree_node/zone.rb
 msgid "current"
 msgstr ""
 
@@ -81692,7 +81910,8 @@ msgstr ""
 #: ../app/models/cloud_volume.rb:92 ../app/models/host_initiator.rb
 #: ../app/models/host_initiator_group.rb
 #: ../app/models/physical_storage.rb:78 ../app/models/physical_storage.rb
-#: ../app/models/placement_group.rb:48 ../app/models/volume_mapping.rb
+#: ../app/models/placement_group.rb:48 ../app/models/storage_service.rb
+#: ../app/models/volume_mapping.rb
 msgid "ems_id cannot be nil"
 msgstr ""
 
@@ -81865,7 +82084,8 @@ msgstr ""
 #: ../app/models/cloud_volume.rb:94 ../app/models/host_initiator.rb
 #: ../app/models/host_initiator_group.rb
 #: ../app/models/physical_storage.rb:81 ../app/models/physical_storage.rb
-#: ../app/models/placement_group.rb:51 ../app/models/volume_mapping.rb
+#: ../app/models/placement_group.rb:51 ../app/models/storage_service.rb
+#: ../app/models/volume_mapping.rb
 msgid "ext_management_system cannot be found"
 msgstr ""
 
@@ -82244,7 +82464,7 @@ msgid "new element"
 msgstr ""
 
 #: ../app/models/ext_management_system.rb
-#: ../app/models/ext_management_system.rb:654 ../app/models/provider.rb
+#: ../app/models/ext_management_system.rb:656 ../app/models/provider.rb
 msgid "no Provider credentials defined"
 msgstr ""
 
@@ -82542,6 +82762,10 @@ msgstr ""
 msgid "raw_create_stack must be implemented in a subclass"
 msgstr ""
 
+#: ../app/models/storage_service.rb
+msgid "raw_create_storage_service must be implemented in a subclass"
+msgstr ""
+
 #: ../app/models/cloud_volume.rb
 msgid "raw_create_volume must be implemented in a subclass"
 msgstr ""
@@ -82618,6 +82842,10 @@ msgstr ""
 msgid "raw_delete_stack must be implemented in a subclass"
 msgstr ""
 
+#: ../app/models/storage_service.rb
+msgid "raw_delete_storage_service must be implemented in a subclass"
+msgstr ""
+
 #: ../app/models/cloud_volume.rb
 msgid "raw_delete_volume must be implemented in a subclass"
 msgstr ""
@@ -82678,6 +82906,10 @@ msgstr ""
 msgid "raw_update_load_balancer must be implemented in a subclass"
 msgstr ""
 
+#: ../app/models/physical_storage.rb
+msgid "raw_update_physical_storage must be implemented in a subclass"
+msgstr ""
+
 #: ../app/models/security_group.rb
 msgid "raw_update_security_group must be implemented in a subclass"
 msgstr ""
@@ -82694,7 +82926,11 @@ msgstr ""
 msgid "raw_update_stack must be implemented in a subclass"
 msgstr ""
 
-#: ../app/models/cloud_volume.rb:131 ../app/models/physical_storage.rb
+#: ../app/models/storage_service.rb
+msgid "raw_update_storage_service must be implemented in a subclass"
+msgstr ""
+
+#: ../app/models/cloud_volume.rb
 msgid "raw_update_volume must be implemented in a subclass"
 msgstr ""
 
@@ -83126,7 +83362,7 @@ msgstr ""
 msgid "unknown zone %{zone_name}"
 msgstr ""
 
-#: ../app/helpers/ops_helper.rb:170 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:171 ../app/helpers/ops_helper.rb
 msgid "unlimited"
 msgstr ""
 
