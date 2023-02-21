@@ -8,9 +8,9 @@ RSpec.describe Vmdb::Appliance do
       let(:fake_settings) do
         {
           :authentication => {
-            :username  => "foobar",
-            :password  => "12345",  # "That's the same combination I have on my luggage!"
-            :api_token => "abc123"
+            :username => "foobar",
+            :password => "passw0rd",
+            :ldaphost => "my_ldap_host",
           },
           :database => {
             :maintenance => {
@@ -32,15 +32,15 @@ RSpec.describe Vmdb::Appliance do
 
       it "filters out secrets" do
         expect(logger_io.string).to include("password: [FILTERED]")
-        expect(logger_io.string).to include("api_token: abc123")
+        expect(logger_io.string).to include("ldaphost: my_ldap_host")
       end
 
       context "with a user configured secret_filter" do
-        let(:secret_filter) { ["api_token"] }
+        let(:secret_filter) { ["ldaphost"] }
 
         it "will use user configured secret_filter" do
           expect(logger_io.string).to include("password: [FILTERED]")
-          expect(logger_io.string).to include("api_token: [FILTERED]")
+          expect(logger_io.string).to include("ldaphost: [FILTERED]")
         end
       end
     end

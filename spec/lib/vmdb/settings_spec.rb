@@ -441,6 +441,16 @@ RSpec.describe Vmdb::Settings do
       expect(subject).to eq(:level1 => {:level2 => [{:password => expected}]})
     end
 
+    it "handles nested passwords where the parent key matches and the child is a Hash" do
+      stub_settings(:level_password => {:password => initial})
+      expect(subject).to eq(:level_password => {:password => expected})
+    end
+
+    it "handles nested passwords where the parent key matches and the child is an Array" do
+      stub_settings(:level_password => [{:password => initial}])
+      expect(subject).to eq(:level_password => [{:password => expected}])
+    end
+
     it "handles all password keys" do
       initial_hash = described_class::PASSWORD_FIELDS.map { |key| [key.to_sym, initial] }.to_h
       stub_settings(initial_hash)
@@ -479,6 +489,48 @@ RSpec.describe Vmdb::Settings do
       stub_settings(:password => nil)
       filtered = described_class.filter_passwords!(Settings.to_h)
       expect(filtered.keys).to_not include(:password)
+    end
+  end
+
+  describe ".secret_filter" do
+    it "contains PASSWORD_FIELDS" do
+      expect(described_class.secret_filter).to eq(described_class::PASSWORD_FIELDS)
+    end
+
+    it "contains single custom change and PASSWORD_FIELDS" do
+      stub_settings_merge(:log => {:secret_filter => "bar"})
+      expect(described_class.secret_filter).to eq(["bar"] + described_class::PASSWORD_FIELDS)
+    end
+
+    it "contains multiple custom changes and PASSWORD_FIELDS" do
+      stub_settings_merge(:log => {:secret_filter => ["bar", "baz"]})
+      expect(described_class.secret_filter).to eq(["bar", "baz"] + described_class::PASSWORD_FIELDS)
+    end
+
+    it "can be passed to log_hashes" do
+      stub_settings_merge(:log => {:secret_filter => "bar"})
+
+      hash = {
+        :my_passwords => {           # Doesn't match on non-scalar values
+          :password   => "passw0rd", # Exact match
+          :foo_secret => "passw0rd", # Partial match
+          :bar        => "passw0rd", # Match on custom filter
+          :other      => "no change" # No change
+        }
+      }
+
+      io = StringIO.new
+      logger = ManageIQ::Loggers::Base.new(io)
+      logger.log_hashes(hash, :filter => described_class.secret_filter)
+
+      expect(io.string).to end_with <<~LOG
+        ---
+        :my_passwords:
+          :password: [FILTERED]
+          :foo_secret: [FILTERED]
+          :bar: [FILTERED]
+          :other: no change
+      LOG
     end
   end
 
