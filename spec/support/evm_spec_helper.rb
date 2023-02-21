@@ -44,7 +44,6 @@ module EvmSpecHelper
     clear_instance_variable(Tenant, :@root_tenant) if defined?(Tenant)
 
     EmsEvent.clear_event_groups_cache if defined?(EmsEvent)
-    EventStream.clear_event_groups_cache if defined?(EventStream)
     MiqEvent.clear_event_groups_cache if defined?(MiqEvent)
 
     MiqWorker.my_guid = nil
