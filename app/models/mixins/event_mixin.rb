@@ -36,10 +36,39 @@ module EventMixin
     events_assoc_class(assoc).table_name
   end
 
+  def event_stream_filters
+    {
+      "EmsEvent".freeze => ems_event_filter,
+      "MiqEvent".freeze => miq_event_filter
+    }
+  end
+
+  private
+
+  def ems_event_filter
+    {self.class.ems_event_filter_column => id}
+  end
+
+  def miq_event_filter
+    filter = {self.class.miq_event_filter_column => id}
+    filter["target_type"] = self.class.base_class.name if filter.key?("target_id")
+    filter
+  end
+
   private
 
   def find_one_event(assoc, order)
     ewc = event_where_clause(assoc)
     events_assoc_class(assoc).where(ewc).order(order).first unless ewc.blank?
+  end
+
+  module ClassMethods
+    def ems_event_filter_column
+      @ems_event_filter_column ||= reflect_on_association(:ems_events).try(:foreign_key) || name.foreign_key
+    end
+
+    def miq_event_filter_column
+      @miq_event_filter_column ||= reflect_on_association(:miq_events).try(:foreign_key) || "target_id".freeze
+    end
   end
 end

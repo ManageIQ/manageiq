@@ -208,4 +208,51 @@ RSpec.describe MiqEvent do
       end
     end
   end
+
+  context "with seeded event definitions" do
+    let(:seeded) do
+      MiqEventDefinitionSet.seed
+      MiqEventDefinition.seed
+    end
+
+    context "group_and_level" do
+      it "defaults for non-existing event" do
+        expect(MiqEvent.group_and_level("something")).to eq([described_class::DEFAULT_GROUP_NAME, described_class::DEFAULT_GROUP_LEVEL])
+      end
+
+      it "vm_start (string)" do
+        seeded
+        expect(MiqEvent.group_and_level("vm_start")).to eq([:vm_operational, described_class::DEFAULT_GROUP_LEVEL])
+      end
+
+      it ":vm_start (symbol)" do
+        seeded
+        expect(MiqEvent.group_and_level(:vm_start)).to eq([:vm_operational, described_class::DEFAULT_GROUP_LEVEL])
+      end
+    end
+
+    context "group_name" do
+      it "uses defaults for non-existing group" do
+        expect(described_class.group_name(:non_existing)).to eq(described_class::DEFAULT_GROUP_NAME_STR)
+      end
+
+      it "vm_operational (string)" do
+        seeded
+        expect(described_class.group_name("vm_operational")).to eq("VM Operation")
+      end
+
+      it ":vm_operational (symbol)" do
+        seeded
+        expect(described_class.group_name(:vm_operational)).to eq("VM Operation")
+      end
+    end
+  end
+
+  it "group_names_and_levels" do
+    result = described_class.group_names_and_levels
+    expect(result.keys).to match_array(%i[description group_names group_levels])
+    expect(result[:description]).to eq("Policy Events")
+    expect(result[:group_names].keys).to include(:other)
+    expect(result[:group_levels].keys).to include(described_class::DEFAULT_GROUP_LEVEL)
+  end
 end
