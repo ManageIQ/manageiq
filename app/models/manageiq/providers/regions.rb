@@ -21,7 +21,7 @@ module ManageIQ::Providers
       end
 
       def additional_regions
-        Settings.dig(:ems, ems_type, :additional_regions).to_h.stringify_keys
+        Settings.dig(:ems, ems_type, :additional_regions).to_hash.stringify_keys
       end
 
       def disabled_regions
