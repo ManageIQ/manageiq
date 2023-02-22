@@ -1,6 +1,18 @@
 module Vmdb
   module SettingsWalker
-    PASSWORD_FIELDS = %i(bind_pwd password amazon_secret ssh_key_data ssh_key_unlock become_password vault_password security_token).to_set.freeze
+    PASSWORD_FIELDS = %w[
+      password
+      _pwd
+      _protected
+      _secret
+      _token
+      auth_key
+      ssh_key_data
+      ssh_key_unlock
+      verify
+    ].freeze
+
+    PASSWORD_MASK = "********".freeze
 
     module ClassMethods
       # Walks the settings and yields each value along the way
@@ -39,15 +51,15 @@ module Vmdb
       # @param settings (see .walk)
       def walk_passwords(settings)
         walk(settings) do |key, value, _path, owner|
-          yield(key, value, owner) if PASSWORD_FIELDS.include?(key.to_sym)
+          yield(key, value, owner) if PASSWORD_FIELDS.any? { |p| key.to_s.include?(p.to_s) } && !(value.is_a?(settings.class) || value.is_a?(Array))
         end
       end
 
       # Walks the settings and masks out passwords it finds
       #
       # @param settings (see .walk)
-      def mask_passwords!(settings)
-        walk_passwords(settings) { |k, v, h| h[k] = "********" if v.present? }
+      def mask_passwords!(settings, mask = PASSWORD_MASK)
+        walk_passwords(settings) { |k, v, h| h[k] = mask if v.present? }
       end
 
       # Filter out any password attributes from the settings
