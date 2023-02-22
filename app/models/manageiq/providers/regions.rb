@@ -21,7 +21,7 @@ module ManageIQ::Providers
       end
 
       def additional_regions
-        Settings.dig(:ems, ems_type, :additional_regions).to_h.stringify_keys
+        Settings.dig(:ems, ems_type, :additional_regions).to_hash.stringify_keys
       end
 
       def disabled_regions
@@ -29,7 +29,7 @@ module ManageIQ::Providers
       end
 
       def ems_type
-        vendor = module_parent.name.sub("ManageIQ::Providers::", "").sub("::", "_").downcase
+        vendor = module_parent.name.sub("ManageIQ::Providers::", "").sub("::", "_").underscore
 
         "ems_#{vendor}".to_sym
       end
