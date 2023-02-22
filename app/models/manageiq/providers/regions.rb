@@ -29,7 +29,7 @@ module ManageIQ::Providers
       end
 
       def ems_type
-        vendor = module_parent.name.sub("ManageIQ::Providers::", "").sub("::", "_").downcase
+        vendor = module_parent.name.sub("ManageIQ::Providers::", "").sub("::", "_").underscore
 
         "ems_#{vendor}".to_sym
       end
