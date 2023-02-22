@@ -40,6 +40,23 @@ RSpec.describe EventMixin do
     end
   end
 
+  context "event_stream_filters" do
+    %w[
+      EmsCluster          ems_cluster_id
+      ExtManagementSystem ems_id
+      Host                host_id
+      VmOrTemplate        vm_or_template_id
+      Vm                  vm_or_template_id
+    ].each_slice(2) do |klass, column|
+      it "#{klass} uses #{column} and target_id and target_type" do
+        obj = FactoryBot.create(klass.tableize.singularize)
+        expect(obj.event_stream_filters["EmsEvent"]).to eq(column => obj.id)
+        expect(obj.event_stream_filters.dig("MiqEvent", "target_id")).to eq(obj.id)
+        expect(obj.event_stream_filters.dig("MiqEvent", "target_type")).to eq(obj.class.base_class.name)
+      end
+    end
+  end
+
   context "Included in a test class with no events" do
     let(:test_class) do
       Class.new do

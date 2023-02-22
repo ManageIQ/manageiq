@@ -452,6 +452,13 @@ RSpec.describe EmsEvent do
     end
   end
 
+  it "group_names_and_levels" do
+    result = described_class.group_names_and_levels
+    expect(result.keys).to match_array(%i[description group_names group_levels])
+    expect(result[:description]).to eq("Management Events")
+    expect(result[:group_names].keys).to include(:other)
+  end
+
   context 'refresh target' do
     describe 'src_vm_or_dest_host_refresh_target' do
       let(:ems)   { FactoryBot.create(:ems_vmware) }
