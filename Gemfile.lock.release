@@ -1391,7 +1391,7 @@ DEPENDENCIES
   query_relation (~> 0.1.0)
   rack (>= 2.2.3.1)
   rack-attack (~> 6.5.0)
-  rails (~> 6.1.7, >= 6.1.7.1)
+  rails (~> 6.1.7, >= 6.1.7.2)
   rails-i18n (~> 6.x)
   rake (>= 12.3.3)
   responders (~> 3.0)
