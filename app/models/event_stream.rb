@@ -48,6 +48,10 @@ class EventStream < ApplicationRecord
     []
   end
 
+  def self.clear_event_groups_cache
+    descendants.each { |c| c.clear_event_groups_cache if c.respond_to?(:clear_event_groups_cache) }
+  end
+
   def self.group_levels
     class_group_levels + [DEFAULT_GROUP_LEVEL]
   end
@@ -58,70 +62,14 @@ class EventStream < ApplicationRecord
     _log.log_backtrace(err)
   end
 
-  # TODO: Consider moving since this is EmsEvent specific. group, group_level and group_name exposed as a virtual columns for reports/api.
   def self.event_groups
-    @event_groups ||= begin
-      core_event_groups = ::Settings.event_handling.event_groups.to_hash
-      Settings.ems.each_with_object(core_event_groups) do |(_provider_type, provider_settings), event_groups|
-        provider_event_groups = provider_settings.fetch_path(:event_handling, :event_groups)
-        next unless provider_event_groups
-
-        DeepMerge.deep_merge!(
-          provider_event_groups.to_hash, event_groups,
-          :preserve_unmergeables => false,
-          :overwrite_arrays      => false
-        )
-      end
-    end
+    raise NotImplementedError, "event_groups must be implemented in a subclass"
   end
 
-  private_class_method def self.partition_group_and_level_by_event_type
-    return @literal_group_and_level_by_event_type, @regex_group_and_level_by_event_type if @literal_group_and_level_by_event_type
-
-    @literal_group_and_level_by_event_type = {}
-    @regex_group_and_level_by_event_type = {}
-
-    event_groups.each do |group_name, group_contents|
-      group_contents.each do |group_level, event_types|
-        next if group_level == :name
-
-        event_types.each do |event_type|
-          if event_type.starts_with?("/")
-            @regex_group_and_level_by_event_type[Regexp.new(event_type[1..-2])] ||= [group_name, group_level]
-          else
-            @literal_group_and_level_by_event_type[event_type] ||= [group_name, group_level]
-          end
-        end
-      end
-    end
-
-    return @literal_group_and_level_by_event_type, @regex_group_and_level_by_event_type
-  end
-
-  def self.clear_event_groups_cache
-    @event_groups = @literal_group_and_level_by_event_type = @regex_group_and_level_by_event_type = nil
-  end
-
-  # TODO: Consider moving since this is EmsEvent specific. group, group_level and group_name exposed as a virtual columns for reports/api.
-  def self.group_and_level(event_type)
-    by_literal, by_regex = partition_group_and_level_by_event_type
-    by_literal[event_type] ||
-      by_regex.detect { |regex, _| regex.match?(event_type) }&.last ||
-      [DEFAULT_GROUP_NAME, DEFAULT_GROUP_LEVEL]
-  end
-
-  def self.group_name(group)
-    return if group.nil?
-
-    event_groups.dig(group.to_sym, :name) || DEFAULT_GROUP_NAME_STR
-  end
-
-  # TODO: Consider moving since this is EmsEvent specific. group, group_level and group_name exposed as a virtual columns for reports/api.
   def group
     group_and_level.first
   end
 
-  # TODO: Consider moving since this is EmsEvent specific. group, group_level and group_name exposed as a virtual columns for reports/api.
   def group_level
     group_and_level.last
   end
@@ -130,9 +78,18 @@ class EventStream < ApplicationRecord
     @group_and_level ||= self.class.group_and_level(event_type)
   end
 
-  # TODO: Consider moving since this is EmsEvent specific. group, group_level and group_name exposed as a virtual columns for reports/api.
   def group_name
     @group_name ||= self.class.group_name(group)
+  end
+
+  def self.group_and_level(event_type)
+    # Given a specific event_type, return the group and level for it
+    raise NotImplementedError, "group_and_level must be implemented in a subclass"
+  end
+
+  def self.group_name(group)
+    # Return the name for a specific event group
+    raise NotImplementedError, "group_name must be implemented in a subclass"
   end
 
   def self.timeline_classes
