@@ -309,6 +309,31 @@ RSpec.describe EmsEvent do
     end
   end
 
+  # NOTE: Do not use Settings stubs here (e.g. stub_settings_merge), as this test is meant to
+  # test the actual Settings across all providers.
+  describe ".event_groups (actual Settings)" do
+    described_class.event_groups.each do |group_name, group_data|
+      described_class.group_levels.each do |level|
+        group_data[level]&.each do |typ|
+          it ":#{group_name}/:#{level}/#{typ} is string or regex", :providers_common => true do
+            expect(typ.kind_of?(Regexp) || typ.kind_of?(String)).to eq(true)
+          end
+
+          if typ.kind_of?(Regexp)
+            it ":#{group_name}/:#{level}/#{typ} is usable in SQL queries", :providers_common => true do
+              expect { described_class.where("event_type ~ ?", typ.source).to_a }
+                .to_not raise_error
+            end
+
+            it ":#{group_name}/:#{level}/#{typ} only uses case insensitivity option", :providers_common => true do
+              expect(typ.options & (Regexp::EXTENDED | Regexp::MULTILINE)).to eq(0)
+            end
+          end
+        end
+      end
+    end
+  end
+
   context '.event_groups' do
     before(:each) do
       stub_settings_merge(
