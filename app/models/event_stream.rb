@@ -82,6 +82,16 @@ class EventStream < ApplicationRecord
     @group_name ||= self.class.group_name(group)
   end
 
+  def self.group_and_level(event_type)
+    # Given a specific event_type, return the group and level for it
+    raise NotImplementedError, "group_and_level must be implemented in a subclass"
+  end
+
+  def self.group_name(group)
+    # Return the name for a specific event group
+    raise NotImplementedError, "group_name must be implemented in a subclass"
+  end
+
   def self.timeline_classes
     EventStream.subclasses.select { |e| e.respond_to?(:group_names_and_levels) }
   end
