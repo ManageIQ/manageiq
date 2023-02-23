@@ -71,6 +71,17 @@ class ContainerNode < ApplicationRecord
     end
   end
 
+  def ems_event_filter
+    {
+      "container_node_name" => name,
+      "ems_id"              => ext_management_system.id
+    }
+  end
+
+  def miq_event_filter
+    {"ems_id" => ext_management_system.id}
+  end
+
   # TODO: children will be container groups
   PERF_ROLLUP_CHILDREN = []
 

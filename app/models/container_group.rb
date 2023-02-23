@@ -78,6 +78,18 @@ class ContainerGroup < ApplicationRecord
     end
   end
 
+  def ems_event_filter
+    {
+      "container_group_name" => name,
+      "container_namespace"  => container_project.name,
+      "ems_id"               => ext_management_system.id
+    }
+  end
+
+  def miq_event_filter
+    {"ems_id" => ext_management_system.id}
+  end
+
   PERF_ROLLUP_CHILDREN = []
 
   def perf_rollup_parents(interval_name = nil)
