@@ -309,7 +309,9 @@ RSpec.describe EmsEvent do
     end
   end
 
-  describe ".event_groups (no stubbing)" do
+  # NOTE: Do not use Settings stubs here (e.g. stub_settings_merge), as this test is meant to
+  # test the actual Settings across all providers.
+  describe ".event_groups (actual Settings)" do
     described_class.event_groups.each do |group_name, group_data|
       described_class.group_levels.each do |level|
         group_data[level]&.each do |typ|
