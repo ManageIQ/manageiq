@@ -49,7 +49,7 @@ class EventStream < ApplicationRecord
   end
 
   def self.clear_event_groups_cache
-    # subclasses can implement their own cache clearing
+    descendants.each { |c| c.clear_event_groups_cache if c.respond_to?(:clear_event_groups_cache) }
   end
 
   def self.group_levels
