@@ -37211,7 +37211,7 @@ msgstr "ハイパーバイザー ID"
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/object_storage/storage_manager.rb
 msgid "IAM authentication failed: %{error_code} %{error_message}"
-msgstr "IAM 認証に失敗しました: %{error_code} % {error_message}"
+msgstr "IAM 認証に失敗しました: %{error_code} %{error_message}"
 
 #: ../lib/manageiq/providers/ibm_cic/engine.rb
 msgid "IBM CIC Provider"

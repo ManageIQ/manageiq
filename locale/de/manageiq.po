@@ -4614,7 +4614,7 @@ msgstr ""
 #: ../app/javascript/components/cloud-object-store-container-form/index.jsx
 msgid "Add of Cloud Object Store Container \"%s\" has failed with error: %s"
 msgstr ""
-"Hinzufügen von Cloud Object Store Container \" % s\" ist mit folgendem Fehler "
+"Hinzufügen von Cloud Object Store Container \"%s\" ist mit folgendem Fehler "
 "fehlgeschlagen: %s"
 
 #: ../app/javascript/components/subnet-form/index.jsx
