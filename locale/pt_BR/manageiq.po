@@ -9,8 +9,8 @@ msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-15 16:10-0500\n"
-"PO-Revision-Date: 2022-11-15 16:10-0500\n"
+"POT-Creation-Date: 2023-02-16 19:20+0000\n"
+"PO-Revision-Date: 2023-02-16 19:20+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pt\n"
@@ -20,6 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n>1;\n"
 
 #: ../app/javascript/components/action-form/action-form.schema.js
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 msgid " "
 msgstr " "
 
@@ -136,10 +137,6 @@ msgstr " (Capturas instantâneas)"
 #: ../app/controllers/vm_common.rb
 msgid " (Summary)"
 msgstr " (Resumo)"
-
-#: ../app/views/ops/_settings_list_tab.html.haml
-msgid " (current)"
-msgstr " (atual)"
 
 #: ../app/controllers/miq_ae_class_controller.rb
 msgid " (filtered)"
@@ -399,6 +396,10 @@ msgstr "\"%{task}\": não suportado para %{hostname}"
 #: ../config/yaml_strings.rb
 msgid "# Pods per Ready Status"
 msgstr "Nº de pods por status Pronto"
+
+#: ../app/javascript/components/timeline-options/timeline-helper.js
+msgid "# of Events"
+msgstr "Nº de eventos"
 
 #: ../app/javascript/oldjs/miq_angular_application.js
 msgid "$http"
@@ -1012,7 +1013,7 @@ msgid "%{description} Reservation is larger than VM Memory"
 msgstr "A reserva do %{description} é maior que a Memória da VM"
 
 #:
-#: ../app/models/manageiq/providers/redhat/infra_manager/provision_workflow.rb
+#: ../app/models/manageiq/providers/ovirt/infra_manager/provision_workflow.rb
 msgid "%{description} VM Memory is larger than Memory Limit"
 msgstr "%{description} A memória da VM é maior que limite de memória"
 
@@ -1614,10 +1615,6 @@ msgstr "%{record} - \"%{button_text}\""
 msgid "%{record} no longer exists"
 msgstr "O %{record} não existe mais"
 
-#: ../app/views/ops/_selected_by_servers.html.haml
-msgid "%{role} on Server: %{name} [%{id}]"
-msgstr "%{role} no Servidor: %{name} [%{id}]"
-
 #: ../app/models/mixins/custom_attribute_mixin.rb
 msgid "%{section}: %{custom_key}"
 msgstr "%{section}: %{custom_key}"
@@ -1684,11 +1681,11 @@ msgstr[1] ""
 "%{task} iniciados para %{number} %{models} a partir do banco de dados %{"
 "product}"
 
-#: ../app/models/miq_request.rb:422 ../app/models/miq_request_task.rb
+#: ../app/models/miq_request.rb:424 ../app/models/miq_request_task.rb
 msgid "%{task} request has already been processed"
 msgstr "A solicitação de %{task} já foi processada"
 
-#: ../app/models/miq_request.rb:419 ../app/models/miq_request_task.rb
+#: ../app/models/miq_request.rb:421 ../app/models/miq_request_task.rb
 msgid "%{task} request is already being processed"
 msgstr "A solicitação %{task} já está sendo processada"
 
@@ -1885,13 +1882,6 @@ msgstr "(deixe em branco para usar o padrão)"
 msgid "(missing)"
 msgstr "(ausente)"
 
-#: ../app/views/ops/_category_form.html.haml
-msgid ""
-"* 'Name' and 'Single Value' fields cannot be edited after adding a category."
-msgstr ""
-"* Os campos 'Nome' e 'Valor único' não podem ser editados depois de incluir "
-"uma categoria."
-
 #: ../app/views/report/_form_columns.html.haml
 msgid "* Base the report on"
 msgstr "* Basear o relatório em"
@@ -2030,6 +2020,13 @@ msgstr ""
 "* Itens em <font color=\"red\"><i>itálico e vermelho</i></font> não mudam o "
 "resultado do escopo ou da expressão."
 
+#: ../app/javascript/components/settings-category-form/schema.js
+msgid ""
+"* Name and Single Value fields cannot be edited after adding a category."
+msgstr ""
+"* Os campos Nome e Valor Único não podem ser editados após a inclusão de uma "
+"categoria."
+
 #: ../app/views/report/_form_columns_performance.html.haml
 msgid "* Performance Interval"
 msgstr "* Intervalo de desempenho"
@@ -2114,6 +2111,13 @@ msgstr ""
 msgid "* Style \"If\" conditions are evaluated top to bottom for each column"
 msgstr ""
 "* Estilo \"Se\" as condições são avaliadas de cima para baixo para cada coluna"
+
+#: ../app/javascript/components/timeline-options/timeline-chart.jsx
+msgid ""
+"*Only 5000 events shown. Limit date range to avoid \\\"missing\\\" events."
+msgstr ""
+"*Apenas 5000 eventos mostrados. Limite o intervalo de data para evitar eventos"
+" \\\"ausentes \\\"."
 
 #: ../app/views/layouts/_container_template_note.html.haml
 msgid ""
@@ -2569,6 +2573,8 @@ msgstr "<Por função>"
 #: ../app/javascript/components/pxe-iso-datastore-form/pxe-iso-datastore-form.schema.js
 #: ../app/javascript/components/pxe-iso-image-form/pxe-iso-image-form.schema.js
 #: ../app/javascript/components/routers-form/RoutersForm.schema.js
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 #: ../app/javascript/components/vm-cloud-add-remove-security-group-form/vm-cloud-add-security-form.schema.js
 #: ../app/javascript/components/volume-mapping-form/volume-mapping-form.schema.js
 #: ../app/views/catalog/_form_basic_info.html.haml
@@ -2580,10 +2586,6 @@ msgstr "<Por função>"
 #: ../app/views/miq_alert/_form.html.haml
 msgid "<Choose>"
 msgstr "<Escolher>"
-
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
-msgid "<Click on this row to create a new category>"
-msgstr "<Clique nesta linha para criar uma categoria>"
 
 #: ../app/views/ops/_classification_entry.html.haml
 msgid "<Click on this row to create a new entry>"
@@ -3207,6 +3209,12 @@ msgstr ""
 msgid "Access to Everything"
 msgstr "Acesso a tudo"
 
+#:
+#: ../app/models/manageiq/providers/ibm_cloud/object_storage/storage_manager.rb
+msgid "Access/Secret authentication failed: %{error_code}%{error_message}"
+msgstr ""
+"Falha de acesso / autenticação de segredo: %{error_code}%{error_message}"
+
 #: ../app/views/layouts/_exception_contents.html.haml
 msgid ""
 "Accessing Management Engine from multiple tabs or windows of the same browser "
@@ -3334,9 +3342,9 @@ msgstr "Reconhecido"
 #. TRANSLATORS: file: product/views/MiqAction.yaml
 #: ../app/controllers/optimization_controller.rb
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/presenters/tree_builder_policy_simulation_results.rb
 #: ../app/views/catalog/_form_resources_info.html.haml
-#: ../app/views/ops/_schedule_form.html.haml
 #: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/views/_alerts_list.html.haml
 #: ../config/yaml_strings.rb
@@ -3387,10 +3395,10 @@ msgstr "Ação não implementada"
 #: ../app/models/storage.rb
 msgid ""
 "Action not supported for Datastore type [%{store_type}], [%{name}] with id: [%"
-"{id}]"
+"{id}] %{error}"
 msgstr ""
-"Ação não suportada para o tipo de armazenamento de dados [%{store_type}], [%{"
-"name}] com o ID: [%{id}]"
+"Ação não suportada para o tipo Datastore [%{store_type}], [%{name}] com ID: [%"
+"{id}]%{error}"
 
 #: ../app/models/miq_action.rb
 msgid "Action script exited with rc=%{rc_value}, error=%{error_text}"
@@ -3404,6 +3412,7 @@ msgstr "ActionSet"
 #. TRANSLATORS: file: product/views/MiqAction.yaml
 #: ../app/controllers/miq_action_controller.rb
 #: ../app/helpers/miq_policy_helper.rb
+#: ../app/helpers/settings_tags_tabs_helper.rb
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/views/chargeback_rate/_cb_rate_edit_table.html.haml
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
@@ -3413,7 +3422,6 @@ msgstr "ActionSet"
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 #: ../app/views/ops/_ap_form_registry.html.haml
 #: ../app/views/ops/_classification_entries.html.haml
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
 #: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 #: ../app/views/vm_common/_reconfigure.html.haml
@@ -3447,11 +3455,11 @@ msgstr ""
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
 #: ../app/helpers/report_helper/report_schedule_helper.rb
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/presenters/tree_builder_snapshots.rb
 #: ../app/presenters/tree_node/snapshot.rb
 #: ../app/views/miq_alert/_form.html.haml
 #: ../app/views/miq_policy/_form.html.haml
-#: ../app/views/ops/_schedule_form.html.haml
 #: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/report/_schedule_form.html.haml
 #: ../app/views/report/_widget_form.html.haml:33 ../config/yaml_strings.rb
@@ -3579,6 +3587,10 @@ msgstr "Incluir recursos"
 #: ../config/yaml_strings.rb
 msgid "Add Catalog"
 msgstr "Incluir catálogo"
+
+#: ../app/javascript/components/settings-company-categories/index.jsx
+msgid "Add Category"
+msgstr "Incluir categoria"
 
 #:
 #: ../app/helpers/helper/manageiq/providers/nsxt/toolbar_overrides/cloud_networks_center.rb
@@ -4072,10 +4084,6 @@ msgstr "Incluir um novo domínio"
 msgid "Add a New Host Aggregate"
 msgstr "Incluir um novo agregado do host"
 
-#: ../app/helpers/application_helper/toolbar/iso_datastores_center.rb
-msgid "Add a New ISO Datastore"
-msgstr "Incluir um novo armazenamento de dados ISO"
-
 #: ../app/helpers/application_helper/toolbar/ems_infras_center.rb
 msgid "Add a New Infrastructure Provider"
 msgstr "Incluir um novo provedor de infraestrutura"
@@ -4221,6 +4229,11 @@ msgstr "Incluir um atalho"
 #: ../app/views/ems_storage/show_list.html.haml
 msgid "Add a Storage Manager"
 msgstr "Incluir um gerenciador de armazenamento"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Add a Storage Service"
+msgstr "Incluir um serviço de armazenamento"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -4465,10 +4478,6 @@ msgstr "Incluir uma nova zona"
 msgid "Add a new tier"
 msgstr "Incluir uma nova camada"
 
-#: ../app/javascript/components/dashboard_toolbar.jsx
-msgid "Add a widget"
-msgstr "Incluir um widget"
-
 #: ../app/javascript/components/button-group/group-form.schema.js
 msgid "Add all"
 msgstr "Incluir todos"
@@ -4631,6 +4640,11 @@ msgstr "A inclusão do repositório \"%s\" foi iniciada com sucesso."
 msgid "Add of Repository cancelled by user."
 msgstr "A adição do repositório foi cancelada pelo usuário."
 
+#: ../app/javascript/components/storage-service-form/index.jsx
+msgid "Add of Storage Service \"%s\" has been successfully queued."
+msgstr ""
+"A inclusão do serviço de armazenamento \"%s\" foi enfileirada com sucesso."
+
 #: ../app/javascript/components/zone-form/index.jsx
 msgid "Add of Zone \"%s\" has been successfully queued."
 msgstr "A inclusão da Zona \"%s\" foi enfileirada com sucesso."
@@ -4773,6 +4787,11 @@ msgid "Add of new Service Catalog Item was cancelled by the user"
 msgstr ""
 "A adição do novo item do catálogo de serviços foi cancelada pelo usuário"
 
+#: ../app/javascript/components/storage-service-form/index.jsx
+msgid "Add of new Storage Service was cancelled by the user."
+msgstr ""
+"A inclusão de um novo serviço de armazenamento foi cancelado pelo usuário."
+
 #: ../app/javascript/components/pxe-image-type-form/index.jsx
 msgid "Add of new System Image Type was cancelled by the user"
 msgstr "A adição do novo tipo de imagem do sistema foi cancelada pelo usuário"
@@ -4812,6 +4831,10 @@ msgstr "Incluir esta entrada"
 #: ../config/yaml_strings.rb
 msgid "Add to Shopping Cart"
 msgstr "Incluir no carrinho de compras"
+
+#: ../app/javascript/components/schedule-form/index.jsx
+msgid "Add was cancelled by the user"
+msgstr "A inclusão foi cancelada pelo usuário"
 
 #: ../app/javascript/components/dashboard_toolbar.jsx
 msgid "Add widget"
@@ -5342,7 +5365,7 @@ msgstr "Alarme"
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAlert
 #. TRANSLATORS: en.yml key: dictionary.table.miq_alert
-#: ../app/models/miq_alert.rb:869 ../config/dictionary_strings.rb
+#: ../app/models/miq_alert.rb:870 ../config/dictionary_strings.rb
 #: ../config/dictionary_strings.rb
 msgid "Alert"
 msgid_plural "Alerts"
@@ -5384,7 +5407,7 @@ msgstr ""
 
 #. TRANSLATORS: file: product/views/MiqAlertSet.yaml
 #: ../app/controllers/miq_alert_set_controller.rb
-#: ../app/presenters/menu/default_menu.rb:175 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:178 ../config/yaml_strings.rb
 msgid "Alert Profiles"
 msgstr "Perfis de alerta"
 
@@ -5857,7 +5880,6 @@ msgstr "Todos os atributos"
 #: ../app/controllers/ops_controller/settings/common.rb
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb
 #: ../app/controllers/ops_controller/settings/schedules.rb
-#: ../app/controllers/ops_controller/settings/tags.rb
 #: ../app/controllers/pxe_controller/pxe_servers.rb
 #: ../app/controllers/report_controller/dashboards.rb
 #: ../app/controllers/report_controller/menus.rb
@@ -5871,10 +5893,10 @@ msgstr "Todos os atributos"
 #: ../app/javascript/components/physical-storage-form/index.jsx
 #: ../app/javascript/components/retirement-form/index.jsx
 #: ../app/javascript/components/settings-tasks-form/index.jsx
+#: ../app/javascript/components/storage-service-form/index.jsx
 #: ../app/javascript/components/tenant-quota-form/index.jsx
 #: ../app/javascript/forms/data-driven-form.jsx
 #: ../app/javascript/oldjs/components/miq_ae_class/namespace-form.js
-#: ../app/javascript/oldjs/components/ops/log-collection-form.js
 #: ../app/javascript/oldjs/controllers/catalog/catalog_item_form_controller.js
 #: ../app/javascript/oldjs/controllers/host/host_form_controller.js
 #: ../app/javascript/oldjs/controllers/ops/pglogical_replication_form_controller.js
@@ -6046,7 +6068,7 @@ msgstr "Permitir promíscuo"
 msgid "Allowed Tags"
 msgstr "Tags permitidas"
 
-#: ../app/models/manageiq/providers/redhat/infra_manager.rb
+#: ../app/models/manageiq/providers/ovirt/infra_manager.rb
 msgid "Already has an ISO datastore"
 msgstr "Já tem um armazenamento de dados ISO"
 
@@ -6242,7 +6264,7 @@ msgstr "Deseja analisar e depois verificar a conformidade deste item?"
 msgid "Ancestry"
 msgstr "Ancestral"
 
-#: ../app/models/miq_alert.rb:458 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:459 ../app/models/miq_alert.rb
 msgid "And is Trending"
 msgstr "A tendência é"
 
@@ -6507,7 +6529,7 @@ msgstr[1] "Aprovações"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
-#: ../app/views/miq_request/_request.html.haml:62 ../config/yaml_strings.rb
+#: ../app/views/miq_request/_request.html.haml:68 ../config/yaml_strings.rb
 msgid "Approval State"
 msgstr "Estado de aprovação"
 
@@ -6649,7 +6671,7 @@ msgstr ""
 "Tem certeza de que deseja criar a Política [%{new_policy_description}] a "
 "partir desta Política?"
 
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
+#: ../app/helpers/settings_tags_tabs_helper.rb
 msgid "Are you sure you want to delete category '%{category_name}'?"
 msgstr "Tem certeza de que deseja excluir a categoria '%{category_name}'?"
 
@@ -6747,6 +6769,15 @@ msgstr "Tem certeza de que deseja excluir os repositórios a seguir?"
 msgid "Are you sure you want to delete the following repository?"
 msgstr "Tem certeza de que deseja excluir o repositório a seguir?"
 
+#: ../app/helpers/application_helper/toolbar/diagnostics_region_center.rb
+#: ../app/helpers/application_helper/toolbar/diagnostics_zone_center.rb
+msgid "Are you sure you want to delete the selected Servers?"
+msgstr "Tem certeza de que deseja excluir os servidores selecionados?"
+
+#: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
+msgid "Are you sure you want to delete these Policies?"
+msgstr "Tem certeza de que deseja excluir essas políticas?"
+
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb
 msgid "Are you sure you want to delete these volumes?"
 msgstr "Tem certeza de que deseja excluir esses volumes?"
@@ -6794,6 +6825,11 @@ msgstr "Tem certeza de que deseja excluir esta solicitação?"
 #: ../app/helpers/application_helper/toolbar/user_role_center.rb
 msgid "Are you sure you want to delete this Role?"
 msgstr "Tem certeza de que deseja excluir esta função?"
+
+#: ../app/helpers/application_helper/toolbar/storage_service_center.rb
+#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
+msgid "Are you sure you want to delete this Storage Service?"
+msgstr "Tem certeza de que deseja excluir este serviço de Armazenamento?"
 
 #: ../app/helpers/application_helper/toolbar/user_center.rb
 msgid "Are you sure you want to delete this User?"
@@ -7487,6 +7523,7 @@ msgstr "Atributo ausente para %{field}"
 #: ../app/helpers/miq_action_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
 #: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
@@ -8066,7 +8103,7 @@ msgstr[1] "Campos de automação"
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AutomationManager
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::ExternalAutomationManager
 #. TRANSLATORS: en.yml key: dictionary.table.ems_automation
-#: ../config/dictionary_strings.rb:2958 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:2954 ../config/dictionary_strings.rb
 #: ../config/dictionary_strings.rb
 msgid "Automation Manager"
 msgstr "Gerenciador de automação"
@@ -8825,8 +8862,6 @@ msgstr "Volumes baseados"
 #: ../app/views/chargeback_rate/_cb_rate_show.html.haml
 #: ../app/views/chargeback_rate/_form.html.haml
 #: ../app/views/miq_ae_customization/_dialog_details.html.haml
-#: ../app/views/ops/_diagnostics_database_tab.html.haml
-#: ../app/views/ops/_logs_selected.html.haml
 msgid "Basic Info"
 msgstr "Informações básicas"
 
@@ -8837,9 +8872,11 @@ msgstr "Informações básicas"
 #: ../app/helpers/miq_alert_set_helper.rb
 #: ../app/helpers/miq_event_definition_helper.rb
 #: ../app/helpers/miq_policy_helper.rb
-#: ../app/helpers/miq_policy_set_helper.rb
+#: ../app/helpers/miq_policy_set_helper.rb:3 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
+#: ../app/helpers/settings_analysis_profile_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/javascript/components/cloud-volume-actions-form/create-backup.schema.js
 #: ../app/javascript/components/cloud-volume-actions-form/create-snapshot.schema.js
@@ -8851,6 +8888,7 @@ msgstr "Informações básicas"
 #: ../app/javascript/components/pxe-iso-datastore-form/pxe-iso-datastore-form.schema.js
 #: ../app/javascript/components/pxe-iso-image-form/pxe-iso-image-form.schema.js
 #: ../app/javascript/components/pxe-servers-form/pxe-server-form.schema.js
+#: ../app/javascript/components/schedule-form/schedule-form.schema.js
 #: ../app/javascript/components/vm-edit-form/vm-edit-form.schema.js
 #: ../app/views/catalog/_form_basic_info.html.haml
 #: ../app/views/catalog/_st_angular_form.html.haml
@@ -9090,7 +9128,7 @@ msgstr "Gerenciador de armazenamento em bloco"
 #. TRANSLATORS: en.yml key: dictionary.table.ems_block_storage (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.ems_block_storages
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:3994 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3990 ../config/dictionary_strings.rb
 #: ../config/yaml_strings.rb
 msgid "Block Storage Managers"
 msgstr "Gerenciadores de armazenamento de bloco"
@@ -10164,9 +10202,8 @@ msgid "CPU Max Used MHz Trend"
 msgstr "Tendência de uso máximo de MHz na CPU"
 
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
-#: ../app/views/ops/_selected_by_roles.html.haml
-#: ../app/views/ops/_selected_by_servers.html.haml
-#: ../app/views/ops/_server_desc.html.haml:35 ../config/yaml_strings.rb
+#: ../app/helpers/ops_helper.rb:214 ../app/views/ops/_server_desc.html.haml
+#: ../config/yaml_strings.rb
 msgid "CPU Percent"
 msgstr "Porcentagem da CPU"
 
@@ -10214,9 +10251,8 @@ msgstr "Velocidade da CPU"
 
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
 #. TRANSLATORS: file: product/views/OsProcess-processes.yaml
-#: ../app/views/ops/_selected_by_roles.html.haml
-#: ../app/views/ops/_selected_by_servers.html.haml
-#: ../app/views/ops/_server_desc.html.haml:31 ../config/yaml_strings.rb
+#: ../app/helpers/ops_helper.rb:213 ../app/views/ops/_server_desc.html.haml
+#: ../config/yaml_strings.rb
 msgid "CPU Time"
 msgstr "Tempo da CPU"
 
@@ -10314,6 +10350,11 @@ msgstr "Recomendações de memória/CPU desta máquina virtual"
 #: ../config/yaml_strings.rb
 msgid "CPUs"
 msgstr "CPUs"
+
+#:
+#: ../app/models/manageiq/providers/ibm_cloud/object_storage/storage_manager.rb
+msgid "CRN resource lookup failed: %{error_code} %{error_message}"
+msgstr "Falha na consulta do recurso CRN: %{error_code} %{error_message}"
 
 #: ../app/views/report/_schedule_email_options.html.haml
 msgid "CSV"
@@ -10438,7 +10479,7 @@ msgstr "Cancelar depois"
 msgid "Cancel client key change"
 msgstr "Cancelar mudança de chave do cliente"
 
-#: ../app/models/miq_request.rb:610 ../app/models/miq_request_task.rb
+#: ../app/models/miq_request.rb:612 ../app/models/miq_request_task.rb
 msgid "Cancel operation is not supported for %{class}"
 msgstr "A operação de cancelamento não é suportada para %{class}"
 
@@ -10614,6 +10655,10 @@ msgid "Cannot create Request Info, error: %{error_message}"
 msgstr ""
 "Não é possível criar as Informações da solicitação, erro: %{error_message}"
 
+#: ../app/models/manageiq/providers/ibm_power_hmc/infra_manager/lpar.rb
+msgid "Cannot delete a running partition"
+msgstr "Não é possível excluir uma partição em execução"
+
 #: ../app/models/service_template.rb
 msgid "Cannot delete a service that is the child of another service."
 msgstr "Não é possível excluir um serviço que seja filho de outro serviço."
@@ -10706,6 +10751,11 @@ msgstr ""
 "Não é possível validar o certificado para '%{hostname}. Certifique-se de usar "
 "um certificado assinado pela mensagem raiz Cert.error do Openshift: %{err}"
 
+#: ../app/helpers/storage_resource_helper/textual_summary.rb
+#: ../app/helpers/storage_service_helper/textual_summary.rb
+msgid "Capabilities"
+msgstr "Recursos"
+
 #. TRANSLATORS: en.yml key: dictionary.column.capabilities_add
 #: ../config/dictionary_strings.rb
 msgid "Capabilities Add"
@@ -10715,6 +10765,11 @@ msgstr "Inclusão de recursos"
 #: ../config/dictionary_strings.rb
 msgid "Capabilities Drop"
 msgstr "Queda de recursos"
+
+#: ../app/helpers/storage_resource_helper/textual_summary.rb
+#: ../app/helpers/storage_service_helper/textual_summary.rb
+msgid "Capability"
+msgstr "Recurso"
 
 #: ../app/helpers/persistent_volume_helper/textual_summary.rb
 msgid "Capacity"
@@ -10989,11 +11044,11 @@ msgstr "Capacidade - Espaço usado (B)"
 msgid "Capacity and Utilization Collection settings saved"
 msgstr "As configurações de coleta de capacidade e utilização foram salvas"
 
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
+#: ../app/helpers/settings_tags_tabs_helper.rb
 msgid "Capture C & U Data"
 msgstr "Capturar dados de capacidade e utilização"
 
-#: ../app/views/ops/_category_form.html.haml
+#: ../app/javascript/components/settings-category-form/schema.js
 msgid "Capture C & U Data by Tag"
 msgstr "Capturar dados de capacidade e utilização por tag"
 
@@ -11084,7 +11139,7 @@ msgstr "Operações do catálogo"
 #. TRANSLATORS: file: product/views/ServiceTemplateCatalog.yaml
 #: ../app/controllers/catalog_controller.rb
 #: ../app/helpers/application_helper/title.rb
-#: ../app/presenters/menu/default_menu.rb:63 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:65 ../config/yaml_strings.rb
 msgid "Catalogs"
 msgstr "Catálogos"
 
@@ -11094,9 +11149,10 @@ msgid "Catalogs Explorer"
 msgstr "Explorador de catálogos"
 
 #: ../app/helpers/miq_action_helper.rb
+#: ../app/helpers/settings_analysis_profile_helper.rb
+#: ../app/helpers/settings_tags_tabs_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/views/ops/_all_tabs.html.haml
-#: ../app/views/ops/_ap_show.html.haml
 msgid "Categories"
 msgstr "Categorias"
 
@@ -11129,11 +11185,11 @@ msgstr "O registro da Categoria %{description} [%{name}] foi excluído"
 msgid "Category %{description} [%{name}] record updated ("
 msgstr "O registro da categoria %{description} [%{name}] foi atualizado ("
 
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
+#: ../app/helpers/settings_tags_tabs_helper.rb
 msgid "Category '%{category_name}' cannot be deleted"
 msgstr "A Categoria '%{category_name}' não pode ser excluída"
 
-#: ../app/views/ops/_category_form.html.haml
+#: ../app/javascript/components/settings-category-form/schema.js
 msgid "Category Information"
 msgstr "Informações sobre a categoria"
 
@@ -11154,6 +11210,10 @@ msgstr "Seleção da categoria"
 #: ../app/views/miq_ae_customization/_tag_field_values.html.haml
 msgid "Category Tag Entries"
 msgstr "Entradas de tag da categoria"
+
+#: ../app/javascript/spec/settings-compan-categories/data.js
+msgid "Category cannot be deleted"
+msgstr "Categoria não pode ser excluída"
 
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb
 msgid "Category is required"
@@ -12000,14 +12060,6 @@ msgstr "Erro de verificação de valor: %{msg}"
 msgid "Check input"
 msgstr "Verificar entrada"
 
-#: ../app/models/storage.rb
-msgid ""
-"Check that an EMS has valid credentials for Datastore [%{name}] with id: [%{id"
-"}]"
-msgstr ""
-"Verifique se um EMS tem credenciais válidas para o Armazenamento de dados [%{"
-"name}] com o ID: [%{id}]"
-
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb
 msgid "Child Orchestration Stacks"
 msgstr "Pilhas de orquestração filho"
@@ -12047,6 +12099,7 @@ msgstr "Opções"
 #: ../app/javascript/components/cloud-network-form/cloud-network-form.schema.js
 #: ../app/javascript/components/cloud-object-store-container-form/cloud-object-store-container-form.schema.js
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+#: ../app/javascript/components/diagnostics-collect-log-form/schema.js
 #: ../app/javascript/components/network-floatingIPs-form/network-floatingIPs-form.schema.js
 #: ../app/javascript/components/network-security-groups-form/network-security-groups-form.schema.js
 #: ../app/javascript/components/provider-form/index.jsx
@@ -12056,6 +12109,7 @@ msgstr "Opções"
 #: ../app/views/catalog/_form_basic_info.html.haml
 #: ../app/views/catalog/_form_ovf_template_options.html.haml
 #: ../app/views/catalog/_form_resources_info.html.haml
+#: ../app/views/catalog/_form_server_profile_template_options.html.haml
 #: ../app/views/catalog/_st_form.html.haml
 #: ../app/views/ems_container/_form.html.haml
 #: ../app/views/ems_infra/_form.html.haml
@@ -12118,6 +12172,11 @@ msgstr "Escolha um filtro de relatório %{model}"
 msgid "Choose a Category"
 msgstr "Escolha uma categoria"
 
+#: ../app/javascript/components/filter-dropdown/index.js
+#: ../app/javascript/menu/search.jsx:39 ../app/javascript/menu/search.jsx
+msgid "Choose a Filter"
+msgstr "Escolher um filtro"
+
 #: ../app/views/report/_export.html.haml
 msgid "Choose a Import/Export type from the menus on the left."
 msgstr "Escolha um tipo de importação/exportação nos menus à esquerda."
@@ -12167,7 +12226,6 @@ msgid "Choose a Template"
 msgstr "Escolher um Modelo"
 
 #: ../app/helpers/application_helper/button/timeline_download.rb
-#: ../app/views/dashboard/_tl_detail.html.haml
 msgid "Choose a Timeline from the menus on the left."
 msgstr "Escolha uma linha do tempo nos menus à esquerda."
 
@@ -12293,6 +12351,11 @@ msgstr "IP Cird"
 msgid "Cird ip required"
 msgstr "IP Cird obrigatório"
 
+#:
+#: ../app/models/manageiq/providers/cisco_intersight/physical_infra_manager.rb
+msgid "Cisco Intersight"
+msgstr "Cisco Intersight"
+
 #: ../lib/manageiq/providers/cisco_intersight/engine.rb
 msgid "Cisco Intersight Provider"
 msgstr "Provedor do Cisco Intersight"
@@ -12307,7 +12370,7 @@ msgstr "Nome da solicitação"
 msgid "Class"
 msgstr "Classe"
 
-#: ../app/models/classification.rb:226 ../app/models/classification.rb
+#: ../app/models/classification.rb:227 ../app/models/classification.rb
 msgid "Class '%{name}' is not eligible for classification"
 msgstr "A classe '%{name}' não é elegível para classificação"
 
@@ -12447,7 +12510,7 @@ msgstr "Limpar contêineres de armazenamento de objetos selecionados"
 msgid "Click on a Host to fetch its settings"
 msgstr "Clique em um host para buscar suas configurações"
 
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
+#: ../app/javascript/components/settings-company-categories/index.jsx
 msgid "Click to add a new category"
 msgstr "Clique para incluir uma nova categoria"
 
@@ -12480,7 +12543,8 @@ msgstr "Clique para mudar para um formato de data/hora específico"
 msgid "Click to delete Orphaned Records for this user"
 msgstr "Clique para excluir os registros órfãos para este usuário"
 
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
+#: ../app/helpers/settings_tags_tabs_helper.rb
+#: ../app/javascript/spec/settings-compan-categories/data.js
 msgid "Click to delete this category"
 msgstr "Clique para excluir esta categoria"
 
@@ -12507,10 +12571,6 @@ msgstr "Clique para excluir este campo de entrada do método"
 #: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
 msgid "Click to delete this mapping"
 msgstr "Clique para excluir este mapeamento"
-
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
-msgid "Click to edit this category"
-msgstr "Clique para editar esta categoria"
 
 #: ../app/views/ops/_ldap_forest_entries.html.haml
 msgid "Click to edit this forest"
@@ -12774,7 +12834,7 @@ msgstr "Bancos de dados da nuvem"
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_cloud_manager
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_network_manager
 #: ../app/models/manageiq/providers/cloud_manager.rb
-#: ../config/dictionary_strings.rb:4188 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:4180 ../config/dictionary_strings.rb
 msgid "Cloud Manager"
 msgid_plural "Cloud Managers"
 msgstr[0] "Gerenciador de nuvem"
@@ -12782,7 +12842,7 @@ msgstr[1] "Gerenciadores de nuvem"
 
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_cloud_manager (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_network_manager (plural form)
-#: ../config/dictionary_strings.rb:4190 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:4182 ../config/dictionary_strings.rb
 msgid "Cloud Managers"
 msgstr "Gerenciadores de nuvem"
 
@@ -12907,7 +12967,7 @@ msgstr "Redes na nuvem (Microsoft Azure)"
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_openstack_infra_manager_cloud_networks
-#: ../config/dictionary_strings.rb:3264 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3260 ../config/dictionary_strings.rb
 #: ../config/dictionary_strings.rb
 msgid "Cloud Networks (OpenStack)"
 msgstr "Redes na nuvem (OpenStack)"
@@ -13206,7 +13266,7 @@ msgstr "Locatários de nuvem"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager::CloudTenant (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_openstack_cloud_manager_cloud_tenant
-#: ../config/dictionary_strings.rb:3408 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3404 ../config/dictionary_strings.rb
 msgid "Cloud Tenants (OpenStack)"
 msgstr "Locatários de nuvem (OpenStack)"
 
@@ -14336,6 +14396,10 @@ msgstr "Clusters: Modelo de comparação"
 msgid "Cold HDD (SC1)"
 msgstr "Cold HDD (SC1)"
 
+#: ../app/javascript/menu/menu-collapse.jsx
+msgid "Collapse"
+msgstr "Reduzir"
+
 #: ../app/javascript/oldjs/miq_tree.js
 #: ../app/views/miq_policy_rsop/_rsop_results.html.haml
 #: ../app/views/vm_common/_policies.html.haml
@@ -14355,8 +14419,8 @@ msgstr "Coletar"
 msgid "Collect All Logs"
 msgstr "Coletar todos os logs"
 
+#: ../app/helpers/settings_analysis_profile_helper.rb
 #: ../app/views/ops/_ap_form_file.html.haml
-#: ../app/views/ops/_ap_show.html.haml
 msgid "Collect Contents?"
 msgstr "Coletar conteúdos?"
 
@@ -14651,7 +14715,7 @@ msgstr "completo"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
-#: ../app/views/miq_request/_request.html.haml:57 ../config/yaml_strings.rb
+#: ../app/views/miq_request/_request.html.haml:63 ../config/yaml_strings.rb
 msgid "Completed"
 msgstr "Completo"
 
@@ -15014,7 +15078,7 @@ msgstr "ConditionSet|ID de usuário"
 #: ../app/helpers/container_group_helper/textual_summary.rb
 #: ../app/helpers/container_node_helper/textual_summary.rb
 #: ../app/helpers/miq_policy_helper.rb
-#: ../app/presenters/menu/default_menu.rb:173 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:176 ../config/yaml_strings.rb
 msgid "Conditions"
 msgstr "Condições"
 
@@ -15255,6 +15319,8 @@ msgstr "Versão da configuração"
 #: ../app/helpers/application_helper/toolbar/servicetemplates_center.rb
 #: ../app/helpers/application_helper/toolbar/stack_orchestration_template_center.rb
 #: ../app/helpers/application_helper/toolbar/storage_center.rb
+#: ../app/helpers/application_helper/toolbar/storage_service_center.rb
+#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
 #: ../app/helpers/application_helper/toolbar/storages_center.rb
 #: ../app/helpers/application_helper/toolbar/template_clouds_center.rb
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb
@@ -15352,7 +15418,7 @@ msgstr "Gerenciamento de configuração"
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::ConfigurationManager
 #. TRANSLATORS: en.yml key: dictionary.table.ems_configuration
 #: ../app/models/manageiq/providers/configuration_manager.rb
-#: ../config/dictionary_strings.rb:3102 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3098 ../config/dictionary_strings.rb
 msgid "Configuration Manager"
 msgid_plural "Configuration Managers"
 msgstr[0] "Gerenciador de configuração"
@@ -15374,8 +15440,8 @@ msgstr[1] "Gerenciadores de configuração (IBM Terraform)"
 #. TRANSLATORS: en.yml key: dictionary.table.ems_configuration (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.ems_configurations
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:3104 ../config/dictionary_strings.rb
-#: ../config/dictionary_strings.rb:4014 ../config/yaml_strings.rb
+#: ../config/dictionary_strings.rb:3100 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:4010 ../config/yaml_strings.rb
 msgid "Configuration Managers"
 msgstr "Gerenciadores de configuração"
 
@@ -16117,6 +16183,10 @@ msgstr ""
 msgid "Console not supported"
 msgstr "Não há suporte para o console"
 
+#: ../app/controllers/api/vms_controller.rb
+msgid "Console protocol %{protocol} is not supported"
+msgstr "O protocolo do console %{protocol} não é suportado"
+
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 msgid "Console userid and password fields are needed to perform validation."
 msgstr ""
@@ -16192,7 +16262,7 @@ msgstr "Varredura da Compilação do contêiner"
 
 #. TRANSLATORS: file: product/views/ContainerBuild.yaml
 #: ../app/controllers/container_build_controller.rb
-#: ../app/presenters/menu/default_menu.rb:130 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:132 ../config/yaml_strings.rb
 msgid "Container Builds"
 msgstr "Compilações de contêiner"
 
@@ -16292,7 +16362,7 @@ msgstr[0] "Registro da imagem do contêiner"
 msgstr[1] "Registros da imagem do contêiner"
 
 #. TRANSLATORS: file: product/views/ContainerImage.yaml
-#: ../app/presenters/menu/default_menu.rb:132 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:134 ../config/yaml_strings.rb
 msgid "Container Images"
 msgstr "Imagens do contêiner"
 
@@ -16391,7 +16461,7 @@ msgid "Container Node Schedulable"
 msgstr "Nó do contêiner programável"
 
 #. TRANSLATORS: file: product/views/ContainerNode.yaml
-#: ../app/presenters/menu/default_menu.rb:128 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:130 ../config/yaml_strings.rb
 msgid "Container Nodes"
 msgstr "Nós do contêiner"
 
@@ -16598,7 +16668,7 @@ msgstr[1] "Configurações da porta de serviço do contêiner"
 
 #. TRANSLATORS: file: product/views/ContainerProject.yaml
 #. TRANSLATORS: file: product/views/ContainerService.yaml
-#: ../app/presenters/menu/default_menu.rb:124 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:126 ../config/yaml_strings.rb
 msgid "Container Services"
 msgstr "Serviços do contêiner"
 
@@ -16625,7 +16695,7 @@ msgstr[0] "Parâmetro de modelo do contêiner"
 msgstr[1] "Parâmetros de modelo do contêiner"
 
 #. TRANSLATORS: file: product/views/ContainerTemplate.yaml
-#: ../app/presenters/menu/default_menu.rb:133 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:135 ../config/yaml_strings.rb
 msgid "Container Templates"
 msgstr "Modelos de contêiner"
 
@@ -19259,7 +19329,7 @@ msgstr[1] "Gerenciadores de contêineres"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::ContainerManager
 #. TRANSLATORS: en.yml key: dictionary.table.ems_container
-#: ../config/dictionary_strings.rb:3202 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3198 ../config/dictionary_strings.rb
 msgid "Containers Provider"
 msgstr "Provedor de contêineres"
 
@@ -20250,6 +20320,10 @@ msgstr "Criar sub-rede na nuvem L3"
 msgid "Create New"
 msgstr "Criar novo"
 
+#: ../app/controllers/storage_service_controller.rb
+msgid "Create New %{table}"
+msgstr "Criar nova %{table}"
+
 #: ../app/controllers/host_aggregate_controller.rb
 msgid "Create New Host Aggregate"
 msgstr "Criar novo agregado do host"
@@ -20364,6 +20438,10 @@ msgstr "Criar uma nova captura instantânea para esta instância"
 #: ../app/helpers/application_helper/toolbar/x_vm_snapshot_center.rb
 msgid "Create a new snapshot for this VM"
 msgstr "Criar uma captura instantânea para esta máquina virtual"
+
+#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
+msgid "Create a new storage service"
+msgstr "Criar um novo serviço de armazenamento"
 
 #:
 #: ../app/helpers/application_helper/toolbar/orchestration_templates_center.rb
@@ -20662,7 +20740,7 @@ msgstr[1] "Credenciais (RHV)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::RackspaceCredential
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::RackspaceCredential
-#: ../config/dictionary_strings.rb:3006 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3002 ../config/dictionary_strings.rb
 msgid "Credential (Rackspace)"
 msgstr "Credencial (Rackspace)"
 
@@ -20729,37 +20807,37 @@ msgstr "Credenciais"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AmazonCredential (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::AmazonCredential (plural form)
-#: ../config/dictionary_strings.rb:2980 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:2976 ../config/dictionary_strings.rb
 msgid "Credentials (Amazon)"
 msgstr "Credenciais (Amazon)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::GoogleCredential (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::GoogleCredential (plural form)
-#: ../config/dictionary_strings.rb:2988 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:2984 ../config/dictionary_strings.rb
 msgid "Credentials (Google)"
 msgstr "Credenciais (Google)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::MachineCredential (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential (plural form)
-#: ../config/dictionary_strings.rb:2992 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:2988 ../config/dictionary_strings.rb
 msgid "Credentials (Machine)"
 msgstr "Credenciais (máquina)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AzureCredential (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::AzureCredential (plural form)
-#: ../config/dictionary_strings.rb:2984 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:2980 ../config/dictionary_strings.rb
 msgid "Credentials (Microsoft Azure)"
 msgstr "Credenciais (Microsoft Azure)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::NetworkCredential (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::NetworkCredential (plural form)
-#: ../config/dictionary_strings.rb:2996 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:2992 ../config/dictionary_strings.rb
 msgid "Credentials (Network)"
 msgstr "Credenciais (rede)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::OpenstackCredential (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::OpenstackCredential (plural form)
-#: ../config/dictionary_strings.rb:3004 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3000 ../config/dictionary_strings.rb
 msgid "Credentials (OpenStack)"
 msgstr "Credenciais (OpenStack)"
 
@@ -20770,25 +20848,25 @@ msgstr "Credenciais (RHV)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::RackspaceCredential (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::RackspaceCredential (plural form)
-#: ../config/dictionary_strings.rb:3008 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3004 ../config/dictionary_strings.rb
 msgid "Credentials (Rackspace)"
 msgstr "Credenciais (Rackspace)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ScmCredential (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::ScmCredential (plural form)
-#: ../config/dictionary_strings.rb:3020 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3016 ../config/dictionary_strings.rb
 msgid "Credentials (SCM)"
 msgstr "Credenciais (SCM)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Satellite6Credential (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::Satellite6Credential (plural form)
-#: ../config/dictionary_strings.rb:3016 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3012 ../config/dictionary_strings.rb
 msgid "Credentials (Satellite)"
 msgstr "Credenciais (Satellite)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VmwareCredential (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::VmwareCredential (plural form)
-#: ../config/dictionary_strings.rb:3024 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3020 ../config/dictionary_strings.rb
 msgid "Credentials (VMware)"
 msgstr "Credenciais (VMware)"
 
@@ -21776,7 +21854,7 @@ msgstr "Dados validados com sucesso"
 msgid "Data:"
 msgstr "Dados:"
 
-#: ../app/helpers/ops_helper.rb:58 ../app/views/ops/_all_tabs.html.haml
+#: ../app/helpers/ops_helper.rb:106 ../app/views/ops/_all_tabs.html.haml
 #: ../app/views/ops/_settings_authentication_tab.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 msgid "Database"
@@ -21800,7 +21878,6 @@ msgstr[0] "Bloqueio do banco de dados"
 msgstr[1] "Bloqueios do banco de dados"
 
 #: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
-#: ../app/views/ops/_diagnostics_database_tab.html.haml
 msgid "Database Name"
 msgstr "Nome do banco de dados"
 
@@ -21818,7 +21895,7 @@ msgstr "Nome da forma do banco de dados"
 msgid "Database Type"
 msgstr "Tipo de banco de dados"
 
-#: ../app/models/manageiq/providers/ovirt/infra_manager.rb
+#: ../app/helpers/ops_helper.rb
 msgid "Database name"
 msgstr "Nome de banco de dados"
 
@@ -22082,8 +22159,8 @@ msgstr "Provedor de data warehouse"
 msgid "Datawarehouse Providers"
 msgstr "Provedores de data warehouse"
 
+#: ../app/javascript/components/timeline-options/timeline-helper.js
 #: ../app/javascript/oldjs/miq_application.js
-#: ../app/javascript/oldjs/miq_timeline.js
 #: ../app/views/layouts/_perf_options.html.haml
 msgid "Date"
 msgstr "Data"
@@ -22158,6 +22235,7 @@ msgid "Date Range (M/D/Y - M/D/Y)"
 msgstr "Intervalo de datas (M/D/A - M/D/A)"
 
 #. TRANSLATORS: file: product/views/EventLog-event_logs.yaml
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
 #: ../config/yaml_strings.rb
 msgid "Date Time"
 msgstr "Data e hora"
@@ -22211,10 +22289,6 @@ msgstr "Controle de data/hora"
 msgid "Date/Time value must not be blank"
 msgstr "O valor de data/hora não pode estar em branco"
 
-#: ../app/javascript/oldjs/miq_timeline.js
-msgid "Date: "
-msgstr "Data: "
-
 #: ./dist/js/ui-components.js
 msgid "Datepicker"
 msgstr "Seletor de data"
@@ -22225,6 +22299,7 @@ msgid "Dates Range"
 msgstr "Intervalo de datas"
 
 #: ../app/helpers/report_helper/timer.rb
+#: ../app/javascript/components/schedule-form/helper.js
 #: ../app/javascript/oldjs/miq_formatters.js
 #: ../app/views/report/_form_filter_chargeback.html.haml
 msgid "Day"
@@ -22275,6 +22350,7 @@ msgstr "Dia da semana"
 
 #: ../app/javascript/components/data-tables/time-profile-table/helper.js
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js
+#: ../app/javascript/components/schedule-form/helper.js
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js
 msgid "Days"
 msgstr "Dias"
@@ -22284,7 +22360,7 @@ msgstr "Dias"
 msgid "Debris Size"
 msgstr "Tamanho dos fragmentos"
 
-#: ../app/models/miq_alert.rb:461 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:462 ../app/models/miq_alert.rb
 msgid "Debug Tracing"
 msgstr "Rastreamento para depuração"
 
@@ -22319,18 +22395,28 @@ msgstr "Desatribuir este servidor?"
 msgid "Decorators"
 msgstr "Decoradores"
 
+#:
+#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/vm.rb
+msgid "Dedicated"
+msgstr "Dedicated"
+
+#:
+#: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb
+msgid "Dedicated or shared"
+msgstr "Dedicado ou compartilhado"
+
 #. TRANSLATORS: file: product/views/MiqDialog.yaml
 #. TRANSLATORS: file: product/views/MiqWidget-all.yaml
 #. TRANSLATORS: file: product/views/MiqWidget.yaml
 #: ../app/helpers/configuration_script_helper.rb
 #: ../app/helpers/miq_action_helper.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
+#: ../app/helpers/settings_tags_tabs_helper.rb
 #: ../app/helpers/textual_summary_helper.rb
 #: ../app/views/layouts/_container_auth.html.haml
 #: ../app/views/layouts/_edit_form_buttons.html.haml
 #: ../app/views/layouts/_x_edit_buttons.html.haml
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
 #: ../app/views/report/_form_styling.html.haml
 #: ../config/yaml_strings.rb
 msgid "Default"
@@ -22567,6 +22653,9 @@ msgstr "Atrasar parada (minutos)"
 #: ../app/helpers/application_helper/toolbar/cloud/instance_operations_button_group_mixin.rb
 #: ../app/helpers/application_helper/toolbar/tasks_center.rb
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb
+#: ../app/helpers/application_helper/toolbar/vm_infras_center.rb
+#: ../app/helpers/application_helper/toolbar/x_vm_center.rb
+#: ../app/helpers/settings_tags_tabs_helper.rb
 #: ../app/javascript/components/remove-generic-item-modal.jsx
 #: ../app/views/chargeback_rate/_cb_rate_edit_table.html.haml
 #: ../app/views/chargeback_rate/_tier_row.haml
@@ -22574,7 +22663,6 @@ msgstr "Atrasar parada (minutos)"
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 #: ../app/views/ops/_ap_form_registry.html.haml
 #: ../app/views/ops/_classification_entry.html.haml
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
 #: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 #: ../app/views/vm_common/_reconfigure.html.haml
@@ -22818,6 +22906,10 @@ msgstr "Excluir pedido"
 msgid "Delete Placement Group"
 msgstr "Excluir grupo de colocação"
 
+#: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
+msgid "Delete Policies"
+msgstr "Excluir políticas"
+
 #: ../app/helpers/application_helper/toolbar/miq_alerts_center.rb
 msgid "Delete Policy Alerts"
 msgstr "Excluir alertas de política"
@@ -22867,6 +22959,11 @@ msgstr "Excluir servidor"
 msgid "Delete Server %{server_name} [%{server_id}]"
 msgstr "Excluir o Servidor %{server_name} [%{server_id}]"
 
+#: ../app/helpers/application_helper/toolbar/diagnostics_region_center.rb
+#: ../app/helpers/application_helper/toolbar/diagnostics_zone_center.rb
+msgid "Delete Servers"
+msgstr "Excluir servidores"
+
 #: ../app/controllers/application_controller/ci_processing.rb
 msgid "Delete Snapshot"
 msgstr "Excluir captura instantânea"
@@ -22897,6 +22994,11 @@ msgstr "Excluir tarefas"
 #: ../config/yaml_strings.rb
 msgid "Delete Time Profiles"
 msgstr "Excluir perfis de horário"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Delete VM"
+msgstr "Excluir VM"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -23236,6 +23338,11 @@ msgstr "Excluir roteadores selecionados"
 msgid "Delete selected Saved Reports"
 msgstr "Excluir relatórios salvos selecionados"
 
+#: ../app/helpers/application_helper/toolbar/diagnostics_region_center.rb
+#: ../app/helpers/application_helper/toolbar/diagnostics_zone_center.rb
+msgid "Delete selected Servers"
+msgstr "Excluir servidores selecionados"
+
 #: ../app/helpers/application_helper/toolbar/time_profiles_center.rb
 msgid "Delete selected Time Profiles"
 msgstr "Excluir perfis de tempo selecionados"
@@ -23284,6 +23391,11 @@ msgstr "Excluir o Iniciador de host"
 msgid "Delete the Physical Storage"
 msgstr "Excluir o armazenamento físico"
 
+#: ../app/helpers/application_helper/toolbar/storage_service_center.rb
+#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
+msgid "Delete the Storage Service"
+msgstr "Excluir o serviço de armazenamento"
+
 #: ../app/views/layouts/_adv_search_footer.html.haml
 msgid "Delete the filter named %{filter_name}"
 msgstr "Excluir o filtro chamado %{filter_name}"
@@ -23291,6 +23403,10 @@ msgstr "Excluir o filtro chamado %{filter_name}"
 #: ../app/helpers/application_helper/toolbar/scan_profiles_center.rb
 msgid "Delete the selected Analysis Profiles"
 msgstr "Excluir os perfis de análise selecionados"
+
+#: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
+msgid "Delete the selected Policies"
+msgstr "Excluir as políticas selecionadas"
 
 #: ../app/helpers/application_helper/toolbar/user_roles_center.rb
 msgid "Delete the selected Roles from the VMDB"
@@ -23302,10 +23418,12 @@ msgid "Delete the selected Schedules"
 msgstr "Excluir os planejamentos selecionados"
 
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb
+#: ../app/helpers/application_helper/toolbar/vm_infras_center.rb
 msgid "Delete the selected items"
 msgstr "Excluir os itens selecionados"
 
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb
+#: ../app/helpers/application_helper/toolbar/vm_infras_center.rb
 msgid "Delete the selected items?"
 msgstr "Excluir os itens selecionados?"
 
@@ -23416,6 +23534,14 @@ msgstr "Excluir esta regra de política de segurança"
 msgid "Delete this User"
 msgstr "Excluir este usuário"
 
+#: ../app/helpers/application_helper/toolbar/x_vm_center.rb
+msgid "Delete this VM"
+msgstr "Excluir esta VM"
+
+#: ../app/helpers/application_helper/toolbar/x_vm_center.rb
+msgid "Delete this VM?"
+msgstr "Excluir esta VM?"
+
 #: ../app/helpers/application_helper/toolbar/miq_widget_center.rb
 msgid "Delete this Widget from the Database"
 msgstr "Excluir este widget do banco de dados"
@@ -23423,6 +23549,10 @@ msgstr "Excluir este widget do banco de dados"
 #: ../app/helpers/application_helper/toolbar/zone_center.rb
 msgid "Delete this Zone"
 msgstr "Excluir esta zona"
+
+#: ../app/helpers/settings_tags_tabs_helper.rb
+msgid "Delete this category"
+msgstr "Excluir esta categoria"
 
 #: ../app/helpers/application_helper/toolbar/tenant_center.rb
 msgid "Delete this item"
@@ -23710,7 +23840,6 @@ msgstr "Descrição (Nome da coluna no Relatório)"
 
 #: ../app/controllers/chargeback_rate_controller.rb
 #: ../app/controllers/miq_action_controller.rb
-#: ../app/controllers/ops_controller/settings/tags.rb
 msgid "Description is required"
 msgstr "A descrição é necessária"
 
@@ -23737,6 +23866,11 @@ msgstr "Descrição da regra de política de segurança"
 #: src/amazon-security-form-group/amazon-security-form-group.jsx
 msgid "Description required"
 msgstr "Descrição obrigatória"
+
+#:
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
+msgid "Description:"
+msgstr "Descrição:"
 
 #: ../app/helpers/generic_object_definition_helper.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
@@ -25842,6 +25976,11 @@ msgstr "Exibir armazenamento físico individual"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Display Individual Physical Storage Families"
+msgstr "Exibir famílias de armazenamento físico individual"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Display Individual Physical Switch"
 msgstr "Exibir comutador físico individual"
 
@@ -25914,6 +26053,11 @@ msgstr "Exibir gerenciadores de armazenamento individuais"
 #: ../config/yaml_strings.rb
 msgid "Display Individual Storage Resources"
 msgstr "Exibir recursos de armazenamento individuais"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display Individual Storage Services"
+msgstr "Exibir serviços de armazenamento individual"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -26322,6 +26466,11 @@ msgstr "Exibir listas de servidores físicos"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Display Lists of Physical Storage Families"
+msgstr "Exibir listas de famílias de armazenamento físico"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Display Lists of Physical Storages"
 msgstr "Exibir listas de armazenamentos físicos"
 
@@ -26404,6 +26553,11 @@ msgstr "Exibir listas de gerenciadores de armazenamento"
 #: ../config/yaml_strings.rb
 msgid "Display Lists of Storage Resources"
 msgstr "Exibir listas de recursos de armazenamento"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display Lists of Storage Services"
+msgstr "Exibir listas de serviços de armazenamento"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -27276,6 +27430,7 @@ msgstr "Endereço IP de EMS"
 #. TRANSLATORS: file: product/views/HostInitiator.yaml
 #. TRANSLATORS: file: product/views/HostInitiatorGroup.yaml
 #. TRANSLATORS: file: product/views/StorageResource.yaml
+#. TRANSLATORS: file: product/views/StorageService.yaml
 #: ../config/yaml_strings.rb
 msgid "EMS Name"
 msgstr "Nome de EMS"
@@ -27323,7 +27478,7 @@ msgstr "Atributo customizado do EVM"
 
 #. TRANSLATORS: en.yml key: dictionary.table.miq_custom_attribute (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.miq_custom_attributes
-#: ../config/dictionary_strings.rb:4168 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:4160 ../config/dictionary_strings.rb
 msgid "EVM Custom Attributes"
 msgstr "Atributos customizados do EVM"
 
@@ -27502,6 +27657,10 @@ msgstr "Editar as Ações para Evento"
 #: ../config/yaml_strings.rb
 msgid "Edit Actions for Policy Event"
 msgstr "Editar ações para evento de política"
+
+#: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
+msgid "Edit Actions for the selected Policy's Event"
+msgstr "Editar ações para o evento de política selecionado"
 
 #: ../app/helpers/application_helper/toolbar/miq_event_center.rb
 msgid "Edit Actions for this Policy Event"
@@ -28871,6 +29030,11 @@ msgstr "Editar tags de recursos de armazenamento"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Edit Tags of Storage Services"
+msgstr "Editar tags de serviços de armazenamento"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Edit Tags of Tenants"
 msgstr "Editar tags de locatários"
 
@@ -29259,6 +29423,10 @@ msgstr "Editar designações"
 msgid "Edit assignments for this Alert Profile"
 msgstr "Editar designações para este perfil de alerta"
 
+#: ../app/javascript/components/schedule-form/index.jsx
+msgid "Edit of \"%s\" was cancelled by the user"
+msgstr "A edição de \"%s\" foi cancelada pelo usuário"
+
 #: ../app/javascript/components/ops-tenant-form/ops-tenant-form.jsx
 msgid "Edit of %s \"%s\" was canceled by the user."
 msgstr "A edição do %s \"%s\" foi cancelada pelo usuário."
@@ -29533,6 +29701,11 @@ msgstr ""
 "A edição do Item de catálogo de serviços \"%{name}\" foi cancelada pelo "
 "usuário"
 
+#: ../app/javascript/components/storage-service-form/index.jsx
+msgid "Edit of Storage Service \"%s\" was canceled by the user."
+msgstr ""
+"A edição do serviço de armazenamento \"%s\" foi cancelada pelo usuário."
+
 #: ../app/javascript/components/pxe-image-type-form/index.jsx
 msgid "Edit of System Image Type \"%s\" was cancelled by the user"
 msgstr ""
@@ -29732,6 +29905,14 @@ msgstr "Editar o alerta de política selecionado"
 #: ../app/helpers/application_helper/toolbar/miq_policy_sets_center.rb
 msgid "Edit the selected Policy Profile"
 msgstr "Editar o perfil de política selecionado"
+
+#: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
+msgid "Edit the selected Policy's Condition assignments"
+msgstr "Editar as designações de condicionamento de políticas selecionadas"
+
+#: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
+msgid "Edit the selected Policy's Event assignments"
+msgstr "Editar as designações do evento de política selecionada"
 
 #: ../app/helpers/application_helper/toolbar/user_roles_center.rb
 msgid "Edit the selected Role"
@@ -30112,9 +30293,9 @@ msgstr "Editando o grupo do EVM \"%{name}\""
 msgid "Editing Group \"%{name}\""
 msgstr "Editando o Grupo \"%{name}\""
 
-#: ../app/views/ops/_log_collection.html.haml
-msgid "Editing Log Depot Settings for %{class}: %{display}"
-msgstr "Editando Configurações do depósito de log para %{class}: %{display}"
+#: ../app/javascript/components/diagnostics-collect-log-form/schema.js
+msgid "Editing Log Depot Settings for %s: %s"
+msgstr "Editando configurações do depósito de log para %s: %s"
 
 #: ../app/controllers/ops_controller.rb
 msgid "Editing Log Depot settings"
@@ -30241,7 +30422,7 @@ msgstr "Automatização integrada"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAutomationManager
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:2966 ../config/yaml_strings.rb
+#: ../config/dictionary_strings.rb:2962 ../config/yaml_strings.rb
 msgid "Embedded Automation Manager"
 msgstr "Gerenciador de automação incorporado"
 
@@ -31099,7 +31280,7 @@ msgstr "Cumprir um valor"
 #: ../app/helpers/container_project_helper/textual_summary.rb
 #: ../app/javascript/components/tenant-quota-form/index.jsx
 msgid "Enforced"
-msgstr "Imposto"
+msgstr "Cumprido"
 
 #: ../app/views/miq_ae_tools/_results_tree.html.haml
 #: ../app/views/miq_ae_tools/_results_uri.html.haml
@@ -31404,7 +31585,6 @@ msgstr "Erro durante 'add': %{error_message}"
 
 #: ../app/controllers/miq_ae_class_controller.rb
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb
-#: ../app/controllers/ops_controller/settings/tags.rb
 msgid "Error during 'add': %{message}"
 msgstr "Erro durante 'add': %{message}"
 
@@ -31724,7 +31904,6 @@ msgid "Evaluate Alerts"
 msgstr "Avaliar alertas"
 
 #. TRANSLATORS: file: product/views/MiqEventDefinition.yaml
-#: ../app/javascript/oldjs/miq_timeline.js
 #: ../app/views/miq_policy_rsop/_rsop_form.html.haml
 #: ../config/yaml_strings.rb
 msgid "Event"
@@ -31744,7 +31923,7 @@ msgstr "Ações do evento"
 msgid "Event Assignment for Policy was saved"
 msgstr "A designação de evento para política foi salva"
 
-#: ../app/models/miq_alert.rb:431 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:432 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Event Count Threshold"
 msgstr "Limite de contagem de eventos"
@@ -31788,7 +31967,7 @@ msgstr[1] "Logs de eventos"
 msgid "Event Log Entry"
 msgstr "Entrada de log de eventos"
 
-#: ../app/views/ops/_ap_show.html.haml
+#: ../app/helpers/settings_analysis_profile_helper.rb
 msgid "Event Log Items"
 msgstr "Itens do log de eventos"
 
@@ -31835,12 +32014,7 @@ msgstr "Resultado do evento"
 msgid "Event Selection"
 msgstr "Seleção do evento"
 
-#. TRANSLATORS: en.yml key: dictionary.column.event_src
-#. TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-#: ../app/models/miq_alert.rb:440 ../config/dictionary_strings.rb
-#: ../config/yaml_strings.rb
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
 msgid "Event Source"
 msgstr "Origem do evento"
 
@@ -31869,20 +32043,7 @@ msgstr "Registro de data e hora do evento"
 msgid "Event Timestamp"
 msgstr "Registro de data e hora do evento"
 
-#. TRANSLATORS: en.yml key: dictionary.column.event_type
-#. TRANSLATORS: file: product/reports/420_Operations - Clusters/010_Cluster - DRS migrations.yaml
-#. TRANSLATORS: file: product/reports/421_Operations - Events/VC Snapshot Events by User.yaml
-#. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/059_Summary of VM Create and Deletes.yaml
-#. TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
-#. TRANSLATORS: file: product/reports/500_Events - Operations/120_Events_for_VM_prod_webserver.yaml
-#. TRANSLATORS: file: product/reports/500_Events - Operations/140_VC_Events_initiated_by_username_EVM.yaml
-#. TRANSLATORS: file: product/reports/520_Events - Policy/110_Policy Events.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_bottleneck_events.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_daily.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_hourly.yaml
-#: ../config/dictionary_strings.rb:864 ../config/yaml_strings.rb
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
 msgid "Event Type"
 msgstr "Tipo de evento"
 
@@ -32128,6 +32289,10 @@ msgstr "Eventos não são suportados para esta região"
 #: ../config/yaml_strings.rb
 msgid "Events for VM prod_webserver"
 msgstr "Eventos de prod_webserver da máquina virtual"
+
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
+msgid "Every"
+msgstr "Cada"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -32571,6 +32736,11 @@ msgstr "Tudo em Servidores físicos"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Everything under Physical Storage Families"
+msgstr "Tudo sob famílias de armazenamento físico"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Everything under Physical Storages"
 msgstr "Tudo em Armazenamentos físicos"
 
@@ -32706,6 +32876,11 @@ msgstr "Tudo em recursos de armazenamento"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Everything under Storage Services"
+msgstr "Tudo sob serviços de armazenamento"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Everything under System Image Types"
 msgstr "Tudo em Tipos de imagem do sistema"
 
@@ -32782,6 +32957,10 @@ msgstr "Código de saída"
 #: ../app/helpers/application_helper/toolbar/host_center.rb
 msgid "Exit Maintenance Mode"
 msgstr "Sair do modo de manutenção"
+
+#: ../app/javascript/menu/menu-collapse.jsx
+msgid "Expand"
+msgstr "Expanda"
 
 #: ../app/javascript/oldjs/miq_tree.js
 #: ../app/views/configuration/_ui_3.html.haml
@@ -33322,6 +33501,10 @@ msgid "ExtManagementSystem|Supports object storage"
 msgstr "ExtManagementSystem | Suporta armazenamento de objetos"
 
 #: ../config/model_attributes.rb
+msgid "ExtManagementSystem|Supports storage service create"
+msgstr "ExtManagementSystem| Suporta a criação de serviço de armazenamento"
+
+#: ../config/model_attributes.rb
 msgid "ExtManagementSystem|Supports storage services"
 msgstr "ExtManagementSystem | Suporta serviços de armazenamento"
 
@@ -33465,7 +33648,7 @@ msgstr[1] "Redes de nuvem externa (oVirt)"
 msgid "External Cloud Networks (OpenStack)"
 msgstr "Redes externas da nuvem (OpenStack)"
 
-#: ../app/controllers/ops_controller/diagnostics.rb
+#: ../app/helpers/ops_helper.rb
 msgid "External Database"
 msgstr "Banco de dados externo"
 
@@ -33694,7 +33877,7 @@ msgstr "Campo %s"
 msgid "Field Information"
 msgstr "Informações do campo"
 
-#: ../app/models/miq_alert.rb:460 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:461 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Field Meets Criteria for"
 msgstr "O campo atende aos critérios de"
@@ -33749,7 +33932,7 @@ msgstr "Entrada do arquivo"
 msgid "File Entry is required"
 msgstr "A entrada do arquivo é necessária"
 
-#: ../app/views/ops/_ap_show.html.haml
+#: ../app/helpers/settings_analysis_profile_helper.rb
 msgid "File Items"
 msgstr "Itens do arquivo"
 
@@ -33980,6 +34163,7 @@ msgstr "Filesystem|Atualizado em"
 
 #: ../app/controllers/report_controller/reports/editor.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/ops/_schedule_form_filter.html.haml
 #: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/report/_schedule_form_filter.html.haml
@@ -33991,6 +34175,10 @@ msgstr "Filtro"
 #: ../app/views/layouts/_group_filter_expression.html.haml
 msgid "Filter Expression"
 msgstr "Filtrar expressão"
+
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
+msgid "Filter Item"
+msgstr "Filtrar item"
 
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 msgid "Filter Message"
@@ -34096,7 +34284,7 @@ msgid "Filters"
 msgstr "Filtros"
 
 #: ../app/helpers/exp_atom_helper.rb:6 ../app/javascript/menu/search.jsx
-#: ../app/javascript/menu/search.jsx:82 ../app/javascript/menu/search.jsx
+#: ../app/javascript/menu/search.jsx:96 ../app/javascript/menu/search.jsx
 msgid "Find"
 msgstr "Localizar"
 
@@ -35038,12 +35226,17 @@ msgstr "Disco livre"
 msgid "Free Disk Space (bytes)"
 msgstr "Espaço em disco livre (bytes)"
 
+#: ../app/helpers/storage_service_helper/textual_summary.rb
+msgid "Free Logical Space (%)"
+msgstr "Espaço lógico livre (%)"
+
 #. TRANSLATORS: file: product/views/Storage.yaml
 #. TRANSLATORS: file: product/views/StorageCluster.yaml
 #. TRANSLATORS: file: product/views/StorageResource.yaml
 #: ../app/controllers/application_controller/miq_request_methods.rb
 #: ../app/helpers/storage_helper/textual_summary.rb
 #: ../app/helpers/storage_resource_helper/textual_summary.rb
+#: ../app/javascript/spec/prov-grid/prov-vm-grid-data.js
 #: ../config/yaml_strings.rb
 msgid "Free Space"
 msgstr "Espaço livre"
@@ -35308,7 +35501,7 @@ msgstr "Definições de objetos genéricos"
 #. TRANSLATORS: file: product/views/GenericObject.yaml
 #: ../app/controllers/generic_object_definition_controller.rb
 #: ../app/helpers/service_helper/textual_summary.rb
-#: ../app/presenters/menu/default_menu.rb:213 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:216 ../config/yaml_strings.rb
 msgid "Generic Objects"
 msgstr "Objetos genéricos"
 
@@ -35656,10 +35849,7 @@ msgstr "Diretório inicial do grupo"
 msgid "Group Information"
 msgstr "Informações do grupo"
 
-#. TRANSLATORS: en.yml key: dictionary.column.group_level
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-#: ../config/dictionary_strings.rb:942 ../config/yaml_strings.rb
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
 msgid "Group Level"
 msgstr "Nível de grupos"
 
@@ -35700,10 +35890,6 @@ msgstr "Agrupar por tag"
 #: src/amazon-security-form-group/amazon-security-form-group.jsx
 msgid "Group name required"
 msgstr "O nome do grupo é obrigatório"
-
-#: ../app/javascript/oldjs/miq_timeline.js
-msgid "Group of %s events"
-msgstr "Grupo de eventos do %s"
 
 #: src/rbac-forms/rbacUserPreview.jsx
 msgid "Groups"
@@ -36135,6 +36321,11 @@ msgstr "Ativado por Ha"
 #: ../config/dictionary_strings.rb
 msgid "Ha Max Failures"
 msgstr "Falhas máximas de Ha"
+
+#:
+#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/vm.rb
+msgid "Hard"
+msgstr "Difícil"
 
 #: ../app/helpers/textual_mixins/textual_devices.rb
 msgid "Hard Disk"
@@ -36629,11 +36820,10 @@ msgstr "Host \"%{name}\": erro durante '%{task}': %{message}"
 msgid "Host (Authentication URL)"
 msgstr "Host (URL de autenticação)"
 
-#: ../app/models/manageiq/providers/microsoft/infra_manager/host.rb
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Microsoft::InfraManager::Host
+#: ../config/dictionary_strings.rb
 msgid "Host (Microsoft)"
-msgid_plural "Hosts (Microsoft)"
-msgstr[0] "Host (Microsoft)"
-msgstr[1] "Hosts (Microsoft)"
+msgstr "Host (Microsoft)"
 
 #: ../app/models/manageiq/providers/openstack/infra_manager/host.rb
 msgid "Host (OpenStack)"
@@ -36885,7 +37075,9 @@ msgid "Host Initiator Group:"
 msgstr "Grupo Inicializador do Host:"
 
 #: ../app/controllers/host_initiator_group_controller.rb
+#: ../app/helpers/ems_storage_helper/textual_summary.rb
 #: ../app/presenters/menu/default_menu.rb
+#: ../app/services/ems_storage_dashboard_service.rb
 msgid "Host Initiator Groups"
 msgstr "Grupos Inicializadores de Host"
 
@@ -37539,8 +37731,7 @@ msgstr "Banco de dados hospedado"
 #: ../app/helpers/configured_system_helper/textual_summary.rb
 #: ../app/helpers/host_helper.rb
 #: ../app/helpers/host_helper/textual_summary.rb
-#: ../app/views/ops/_diagnostics_database_tab.html.haml
-#: ../app/views/ops/_selected_by_servers.html.haml
+#: ../app/helpers/ops_helper.rb:24 ../app/helpers/ops_helper.rb
 #: ../app/views/ops/_server_desc.html.haml
 #: ../app/views/ops/_settings_server_tab.html.haml
 #: ../config/yaml_strings.rb
@@ -37622,7 +37813,7 @@ msgstr "Hosts (Redhat)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::InfraManager::Host (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::InfraManager::HostEsx (plural form)
-#: ../config/dictionary_strings.rb:3472 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3468 ../config/dictionary_strings.rb
 msgid "Hosts (Vmware)"
 msgstr "Hosts (Vmware)"
 
@@ -38147,6 +38338,7 @@ msgid "Host|Vmm version"
 msgstr "Host|Versão do VMM"
 
 #: ../app/helpers/report_helper/timer.rb
+#: ../app/javascript/components/schedule-form/helper.js
 #: ../app/javascript/oldjs/miq_formatters.js
 msgid "Hour"
 msgstr "Hora"
@@ -38188,6 +38380,7 @@ msgstr "Cronômetro por hora"
 
 #: ../app/javascript/components/data-tables/time-profile-table/helper.js
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js
+#: ../app/javascript/components/schedule-form/helper.js
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js
 msgid "Hours"
 msgstr "Horas"
@@ -38202,7 +38395,7 @@ msgstr "Horas (AM)"
 msgid "Hours (PM)"
 msgstr "Horas (PM)"
 
-#: ../app/models/miq_alert.rb:430 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:431 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "How Far Back to Check"
 msgstr "Primeiro horário a verificar"
@@ -38252,6 +38445,11 @@ msgstr "Nome do host do hypervisor"
 #: ../config/yaml_strings.rb
 msgid "Hypervisor ID"
 msgstr "ID do hypervisor"
+
+#:
+#: ../app/models/manageiq/providers/ibm_cloud/object_storage/storage_manager.rb
+msgid "IAM authentication failed: %{error_code} %{error_message}"
+msgstr "Falha na autenticação do IAM: %{error_code} %{error_message}"
 
 #: ../lib/manageiq/providers/ibm_cic/engine.rb
 msgid "IBM CIC Provider"
@@ -38374,9 +38572,9 @@ msgstr "IP"
 #: ../app/helpers/container_group_helper/textual_summary.rb
 #: ../app/helpers/ems_automation_helper.rb:18 ../app/helpers/host_helper.rb
 #: ../app/helpers/host_helper/textual_summary.rb
+#: ../app/helpers/ops_helper.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
 #: ../app/javascript/components/subnet-form/subnet-form.schema.js
-#: ../app/views/ops/_selected_by_servers.html.haml
 #: ../app/views/ops/_server_desc.html.haml
 #: ../app/views/ops/_settings_server_tab.html.haml
 #: ../app/views/vm_common/_config.html.haml:101 ../config/yaml_strings.rb
@@ -38520,10 +38718,7 @@ msgstr "Nome qualificado de destino ISCSI"
 msgid "ISO"
 msgstr "ISO"
 
-#. TRANSLATORS: en.yml key: dictionary.model.IsoDatastore
-#. TRANSLATORS: en.yml key: dictionary.table.iso_datastore
-#: ../app/models/iso_datastore.rb:51 ../config/dictionary_strings.rb
-#: ../config/dictionary_strings.rb
+#: ../app/models/manageiq/providers/ovirt/infra_manager/iso_datastore.rb
 msgid "ISO Datastore"
 msgid_plural "ISO Datastores"
 msgstr[0] "Armazenamento de dados ISO"
@@ -38541,8 +38736,7 @@ msgstr "Armazenamento de dados ISO \"%{name}\""
 msgid "ISO Datastore no longer exists"
 msgstr "O armazenamento de dados ISO não existe mais"
 
-#. TRANSLATORS: file: product/views/IsoDatastore.yaml
-#: ../app/controllers/pxe_controller.rb:124 ../config/yaml_strings.rb
+#: ../app/controllers/pxe_controller.rb
 msgid "ISO Datastores"
 msgstr "Armazenamentos de dados ISO"
 
@@ -38646,7 +38840,7 @@ msgstr "Operador ilegal, '%{operator}'"
 #: ../app/helpers/generic_object_definition_helper.rb
 #: ../app/views/shared/buttons/_ab_list.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
-#: ../config/yaml_strings.rb:704 ../lib/gtl_formatter.rb
+#: ../config/yaml_strings.rb:708 ../lib/gtl_formatter.rb
 msgid "Image"
 msgstr "Imagem"
 
@@ -39075,7 +39269,6 @@ msgstr "Infinito"
 #: ../app/helpers/catalog_helper.rb:190 ../app/helpers/miq_alert_helper.rb
 #: ../app/javascript/components/data-store-form/data-store-form.schema.js
 #: ../app/views/miq_alert/_form.html.haml
-#: ../app/views/ops/_ap_show.html.haml
 #: ../app/views/resource_pool/_config.html.haml
 #: ../app/views/static/miq_ae_class/namespace_form.html.haml
 msgid "Info"
@@ -39134,7 +39327,7 @@ msgstr "Produto da infraestrutura"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::InfraManager
 #. TRANSLATORS: en.yml key: dictionary.table.ems_infra
-#: ../config/dictionary_strings.rb:3206 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3202 ../config/dictionary_strings.rb
 msgid "Infrastructure Provider"
 msgstr "Provedor de infraestrutura"
 
@@ -39144,11 +39337,10 @@ msgid_plural "Infrastructure Providers (Kubevirt)"
 msgstr[0] "Provedor de infraestrutura (Kubevirt)"
 msgstr[1] "Provedores de infraestrutura (Kubevirt)"
 
-#: ../app/models/manageiq/providers/microsoft/infra_manager.rb
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Microsoft::InfraManager
+#: ../config/dictionary_strings.rb
 msgid "Infrastructure Provider (Microsoft)"
-msgid_plural "Infrastructure Providers (Microsoft)"
-msgstr[0] "Provedor de infraestrutura (Microsoft)"
-msgstr[1] "Provedores de infraestrutura (Microsoft)"
+msgstr "Provedor de infraestrutura (Microsoft)"
 
 #: ../app/models/manageiq/providers/openstack/infra_manager.rb
 msgid "Infrastructure Provider (OpenStack)"
@@ -39458,7 +39650,7 @@ msgstr "Clone da instância com falha"
 msgid "Instance evacuation task failed."
 msgstr "Falha na tarefa de evacuação da instância"
 
-#: ../app/models/custom_button.rb:66 ../app/models/custom_button.rb
+#: ../app/models/custom_button.rb:70 ../app/models/custom_button.rb
 msgid "Instance has no id"
 msgstr "A instância não tem ID"
 
@@ -39586,7 +39778,7 @@ msgstr "Interativo"
 msgid "Internal"
 msgstr "Opcionais"
 
-#: ../app/controllers/ops_controller/diagnostics.rb
+#: ../app/helpers/ops_helper.rb
 msgid "Internal Database"
 msgstr "Banco de dados interno"
 
@@ -39750,6 +39942,11 @@ msgstr "Tipo de depósito de arquivos inválido ou não suportado."
 msgid "Invalid placement group - incompatible colocation policy"
 msgstr "Grupo de posicionamento inválido - política de colocação incompatível"
 
+#:
+#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/provision_workflow.rb
+msgid "Invalid processor pool - incompatible machine type (host)"
+msgstr "Conjunto de processador inválido, tipo de máquina incompatível (host)"
+
 #: ../app/models/miq_report/search.rb
 msgid "Invalid reflection <%{item}> on model <%{name}>"
 msgstr "Reflexo inválido <%{item}> no modelo <%{name}>"
@@ -39837,32 +40034,8 @@ msgid "Iscsi Target Portal"
 msgstr "Portal de destino de Iscsi"
 
 #: ../config/model_attributes.rb
-msgid "Iso datastore"
-msgstr "Armazenamento de dados ISO"
-
-#: ../config/model_attributes.rb
 msgid "Iso image"
 msgstr "Imagem ISO"
-
-#: ../config/model_attributes.rb
-msgid "IsoDatastore|Href slug"
-msgstr "IsoDatastore|Slug Href"
-
-#: ../config/model_attributes.rb
-msgid "IsoDatastore|Last refresh on"
-msgstr "IsoDatastore|Última atualização em"
-
-#: ../config/model_attributes.rb
-msgid "IsoDatastore|Name"
-msgstr "IsoDatastore|Nome"
-
-#: ../config/model_attributes.rb
-msgid "IsoDatastore|Region description"
-msgstr "IsoDatastore|Descrição da região"
-
-#: ../config/model_attributes.rb
-msgid "IsoDatastore|Region number"
-msgstr "IsoDatastore|Número da região"
 
 #: ../config/model_attributes.rb
 msgid "IsoImage|Href slug"
@@ -40037,10 +40210,6 @@ msgstr "KBps"
 msgid "Keep OVA file on completion"
 msgstr "Manter arquivo OVA na conclusão"
 
-#: ../app/models/manageiq/providers/microsoft/infra_manager.rb
-msgid "Kerberos"
-msgstr "Kerberos"
-
 #: ../app/helpers/pxe_helper/textual_summary.rb
 #: ../app/views/pxe/_pxe_server_details.html.haml
 msgid "Kernel"
@@ -40072,7 +40241,7 @@ msgstr "Chave"
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager::AuthKeyPair
 #. TRANSLATORS: en.yml key: dictionary.table.auth_key_pair_cloud
 #: ../app/models/manageiq/providers/cloud_manager/auth_key_pair.rb
-#: ../config/dictionary_strings.rb:3122 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3118 ../config/dictionary_strings.rb
 msgid "Key Pair"
 msgid_plural "Key Pairs"
 msgstr[0] "Par de chaves"
@@ -40530,7 +40699,7 @@ msgstr "Último caminho conhecido do armazenamento de dados"
 msgid "Last Known Size"
 msgstr "Último tamanho conhecido"
 
-#: ../app/views/ops/_logs_selected.html.haml
+#: ../app/helpers/ops_helper.rb:42 ../app/helpers/ops_helper.rb
 msgid "Last Log Collection"
 msgstr "Última coleta de log"
 
@@ -40548,9 +40717,10 @@ msgstr "Último logon"
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqProvision.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/ops_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
-#: ../app/views/ops/_logs_selected.html.haml:21 ../config/yaml_strings.rb
+#: ../config/yaml_strings.rb
 msgid "Last Message"
 msgstr "Última mensagem"
 
@@ -40635,7 +40805,6 @@ msgid "Last Refresh Status"
 msgstr "Último status de atualização"
 
 #. TRANSLATORS: file: product/views/FirmwareRegistry.yaml
-#. TRANSLATORS: file: product/views/IsoDatastore.yaml
 #. TRANSLATORS: file: product/views/PxeServer.yaml
 #: ../app/helpers/pxe_helper/textual_summary.rb
 #: ../config/yaml_strings.rb
@@ -40709,6 +40878,7 @@ msgstr "Código de status da última atualização"
 
 #: ../app/controllers/application_controller/miq_request_methods.rb
 #: ../app/helpers/miq_policy_helper.rb
+#: ../app/javascript/spec/prov-grid/prov-vm-grid-data.js
 msgid "Last Updated"
 msgstr "Atualizado pela última vez"
 
@@ -41073,7 +41243,7 @@ msgstr "Status do balanceador de carga"
 #. TRANSLATORS: en.yml key: dictionary.model.LoadBalancer (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.load_balancer (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:2956 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:2952 ../config/dictionary_strings.rb
 #: ../config/yaml_strings.rb
 msgid "Load Balancers"
 msgstr "Balanceadores de carga"
@@ -41504,7 +41674,7 @@ msgstr "As configurações do repositório de logs foram salvas"
 msgid "Log Depot Settings were validated"
 msgstr "As configurações do repositório de logs foram validadas"
 
-#: ../app/views/ops/_logs_selected.html.haml
+#: ../app/helpers/ops_helper.rb:41 ../app/helpers/ops_helper.rb
 msgid "Log Depot URI"
 msgstr "URI do repositório de logs"
 
@@ -41747,16 +41917,12 @@ msgstr ""
 "Os Logs para este %{product} Server não estão disponíveis para visualização"
 
 #: ../app/helpers/catalog_helper.rb:47 ../app/helpers/catalog_helper.rb
+#: ../app/javascript/components/settings-category-form/schema.js
 #: ../app/views/catalog/_form_details_info.html.haml
 #: ../app/views/catalog/_st_angular_form.html.haml
-#: ../app/views/ops/_category_form.html.haml
 #: ../app/views/ops/_settings_co_tags_tab.html.haml
 msgid "Long Description"
 msgstr "Descrição longa"
-
-#: ../app/controllers/ops_controller/settings/tags.rb
-msgid "Long Description is required"
-msgstr "A descrição longa é necessária"
 
 #: ../app/views/miq_request/_prov_field.html.haml
 msgid "Lookup"
@@ -41897,6 +42063,7 @@ msgid "Main Route Table"
 msgstr "Tabela de rotas principal"
 
 #: ../app/controllers/application_controller/miq_request_methods.rb
+#: ../app/javascript/spec/prov-grid/prov-vm-grid-data.js
 #: ../app/views/ems_infra/scaledown.html.haml
 msgid "Maintenance"
 msgstr "Manutenção"
@@ -42501,8 +42668,7 @@ msgstr "Máximo de varreduras da máquina virtual ativa"
 msgid "Max Available"
 msgstr "Máx. Disponível"
 
-#: ../app/views/ops/_selected_by_roles.html.haml
-#: ../app/views/ops/_selected_by_servers.html.haml
+#: ../app/helpers/ops_helper.rb:171 ../app/helpers/ops_helper.rb
 msgid "Max Concurrent"
 msgstr "Máx. simultâneo"
 
@@ -42672,6 +42838,13 @@ msgstr "Unidade Máxima de Transmissão"
 #: ../config/dictionary_strings.rb
 msgid "Md5"
 msgstr "Md5"
+
+#:
+#: ../app/models/manageiq/providers/ibm_power_hmc/infra_manager/media_repository.rb
+msgid "Media Repository"
+msgid_plural "Media Repositories"
+msgstr[0] "Repositório de mídia"
+msgstr[1] "Repositórios de mídia"
 
 #: ../app/helpers/configuration_script_helper.rb
 #: ../app/helpers/configured_system_helper/textual_summary.rb
@@ -43317,22 +43490,13 @@ msgid "Memory Limit"
 msgstr "Limite de memória"
 
 #:
-#: ../app/models/manageiq/providers/redhat/infra_manager/provision_workflow.rb
-msgid ""
-"Memory Limit is supported for RHV 4.1 and above. Current provider version is %"
-"{version}."
-msgstr ""
-"O Limite de Memória é suportado para o RHV 4.1 e superior. A versão do "
-"provedor atual é %{version}."
-
-#:
 #: ../app/models/manageiq/providers/ovirt/infra_manager/provision_workflow.rb
 msgid ""
-"Memory Limit is supported for oVirt 4.1 and above. Current provider version is"
-" %{version}."
+"Memory Limit is supported for %{provider} 4.1 and above. Current provider "
+"version is %{version}."
 msgstr ""
-"O Limite de memória é suportado para oVirt 4.1 e acima. A versão do provedor "
-"atual é%{version}."
+"O limite de memória é suportado para %{provider} 4.1 e superiores. A versão do"
+" provedor atual é%{version}."
 
 #. TRANSLATORS: en.yml key: dictionary.column.VmPerformance.max_derived_memory_available
 #: ../config/dictionary_strings.rb
@@ -43384,10 +43548,8 @@ msgid "Memory Shares Level"
 msgstr "Nível de compartilhamentos de memória"
 
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
-#: ../app/helpers/miq_action_helper.rb
+#: ../app/helpers/miq_action_helper.rb:55 ../app/helpers/ops_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
-#: ../app/views/ops/_selected_by_roles.html.haml
-#: ../app/views/ops/_selected_by_servers.html.haml
 #: ../app/views/ops/_server_desc.html.haml:27 ../config/yaml_strings.rb
 msgid "Memory Size"
 msgstr "Tamanho da memória"
@@ -43405,9 +43567,8 @@ msgstr "Custo total da memória"
 
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
 #. TRANSLATORS: file: product/views/OsProcess-processes.yaml
+#: ../app/helpers/ops_helper.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
-#: ../app/views/ops/_selected_by_roles.html.haml
-#: ../app/views/ops/_selected_by_servers.html.haml
 #: ../app/views/ops/_server_desc.html.haml
 #: ../app/views/vm_common/_right_size.html.haml
 #: ../config/yaml_strings.rb
@@ -43455,6 +43616,11 @@ msgstr "Memória no disco"
 msgid "Memory threshold"
 msgstr "Limite de memória"
 
+#:
+#: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb
+msgid "Memory type"
+msgstr "Tipo de memória"
+
 #. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/AvailabilityZone.yaml
 #. TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/AvailabilityZone.yaml
 #: ../config/yaml_strings.rb
@@ -43498,7 +43664,10 @@ msgstr "Menus"
 #: ../app/helpers/container_helper/textual_summary.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
 #: ../app/javascript/components/data-tables/datastore/helper.js
+#: ../app/javascript/components/data-tables/requests-table/index.jsx
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
 #: ../app/views/layouts/_ae_resolve_options.html.haml
 #: ../app/views/miq_ae_class/_class_fields.html.haml
 #: ../app/views/miq_policy_export/import.html.haml
@@ -43516,7 +43685,7 @@ msgstr "Mensagem"
 msgid "Message Filter"
 msgstr "Filtro de mensagens"
 
-#: ../app/models/miq_alert.rb:435 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:436 ../app/models/miq_alert.rb
 msgid "Message Filter Type"
 msgstr "Tipo de filtro de mensagens"
 
@@ -44986,10 +45155,6 @@ msgstr "Métrica|Adição do delta em espera da porc. de CPU V"
 #: ../config/model_attributes.rb
 msgid "Metric|V time"
 msgstr "Métrica|Tempo V"
-
-#: ../lib/manageiq/providers/scvmm/engine.rb
-msgid "Microsoft SCVMM Provider"
-msgstr "Provedor Microsoft SCVMM"
 
 #: ../app/controllers/vm_common.rb
 msgid "Migrate %{vm_or_template}"
@@ -48515,6 +48680,11 @@ msgid "Modification of Physical Storage \"%s\" has been successfully queued."
 msgstr ""
 "A modificação do Armazenamento Físico \"%s\" foi enfileirada com sucesso."
 
+#: ../app/javascript/components/storage-service-form/index.jsx
+msgid "Modification of Storage Service \"%s\" has been successfully queued."
+msgstr ""
+"A modificação do serviço de armazenamento \"%s\" foi enfileirada com êxito."
+
 #: ../app/javascript/components/pxe-image-type-form/index.jsx
 msgid "Modification of System Image Type \"%s\" has been successfully queued."
 msgstr ""
@@ -48942,6 +49112,11 @@ msgstr "Modificar gerenciadores de armazenamento"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Modify Storage Services"
+msgstr "Modificar serviços de armazenamento"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Modify Subnets"
 msgstr "Modificar sub-redes"
 
@@ -49068,6 +49243,7 @@ msgid "Monitoring"
 msgstr "Monitoramento"
 
 #: ../app/helpers/report_helper/timer.rb
+#: ../app/javascript/components/schedule-form/helper.js
 #: ../app/views/report/_form_filter_chargeback.html.haml
 msgid "Month"
 msgstr "Mês"
@@ -49128,6 +49304,7 @@ msgid "Monthly VM Count per Provider"
 msgstr "Contagem de máquinas virtuais mensal por provedor"
 
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js
+#: ../app/javascript/components/schedule-form/helper.js
 msgid "Months"
 msgstr "Meses"
 
@@ -49423,6 +49600,10 @@ msgstr "Deve especificar um proprietário"
 msgid "Must specify new resize value/s"
 msgstr "Deve especificar novos valores de redimensionamento"
 
+#: ../app/javascript/spec/settings-compan-categories/data.js
+msgid "My Company Categories"
+msgstr "Minhas categorias de empresa"
+
 #: ../app/controllers/report_controller/menus.rb
 msgid "My EVM Group"
 msgstr "Meu grupo EVM"
@@ -49550,7 +49731,6 @@ msgstr "O nome já foi usado"
 #: ../app/controllers/catalog_controller.rb
 #: ../app/controllers/miq_ae_class_controller.rb
 #: ../app/controllers/miq_ae_customization_controller/old_dialogs.rb
-#: ../app/controllers/ops_controller/settings/tags.rb
 #: ../app/controllers/pxe_controller/pxe_image_types.rb
 msgid "Name is required"
 msgstr "O nome é necessário"
@@ -49587,6 +49767,7 @@ msgstr "Nome*"
 #: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js
 #: ../app/javascript/components/host-initiator-group-form/host-initiator-group-form.schema.js
 #: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 msgid "Name:"
 msgstr "Nome:"
 
@@ -50595,7 +50776,7 @@ msgstr "Rede|Número da região"
 msgid "Network|Subnet mask"
 msgstr "Rede|Máscara de sub-rede"
 
-#: ../app/helpers/dashboard_helper.rb
+#: ../app/helpers/dashboard_helper.rb:13 ../app/helpers/ops_helper.rb
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/helpers/textual_mixins/textual_authentications_status.rb
@@ -50603,7 +50784,7 @@ msgstr "Rede|Máscara de sub-rede"
 #: ../app/helpers/view_helper.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
 #: ../app/javascript/oldjs/controllers/playbook-reusable-code-mixin.js
-#: ../app/views/ops/_logs_selected.html.haml:4 ../lib/gtl_formatter.rb
+#: ../lib/gtl_formatter.rb
 msgid "Never"
 msgstr "Nunca"
 
@@ -50754,6 +50935,11 @@ msgstr "Não"
 #: src/rbac-forms/rbacUserTagsList.jsx
 msgid "No %s Tags have been assigned"
 msgstr "Nenhuma tag %s foi designada"
+
+#:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+msgid "No %s with selected capabilities."
+msgstr "Nenhum %s com os recursos selecionados."
 
 #: ../app/models/miq_report/generator.rb
 msgid "No %{class_name} object provided"
@@ -51196,6 +51382,10 @@ msgstr "Nenhum agendamento foi selecionado para exclusão"
 msgid "No Security Group were selected for deletion."
 msgstr "Nenhum grupo de segurança selecionado para exclusão."
 
+#: ../app/views/ops/_diagnostics_servers_roles_tab.html.haml
+msgid "No Servers Assigned to Roles found."
+msgstr "Nenhum servidor designado a funções localizado."
+
 #: ../app/views/ops/_settings_evm_servers_tab.html.haml
 msgid "No Servers Found."
 msgstr "Nenhum servidor localizado."
@@ -51308,7 +51498,6 @@ msgid "No Widgets available to add"
 msgstr "Nenhum widget disponível para incluir"
 
 #: ../app/views/ops/_diagnostics_zones_tab.html.haml
-#: ../app/views/ops/_settings_list_tab.html.haml
 msgid "No Zones found."
 msgstr "Nenhuma zona encontrada."
 
@@ -51657,6 +51846,11 @@ msgid "No records found for this timeline"
 msgstr "Nenhum registro encontrado para esta linha do tempo"
 
 #:
+#: ../app/models/manageiq/providers/autosde/storage_manager/ems_refresh_workflow.rb
+msgid "No refresh task found"
+msgstr "Nenhuma tarefa de atualização localizada"
+
+#:
 #: ../app/javascript/oldjs/controllers/ops/pglogical_replication_form_controller.js
 msgid "No replication role has been set"
 msgstr "Nenhuma função de replicação foi definida"
@@ -51714,6 +51908,12 @@ msgid "No storage providers support creating host initiators."
 msgstr ""
 "Nenhum provedor de armazenamento suporta a criação de inicializadores de hosts"
 "."
+
+#: ../app/helpers/application_helper/button/storage_service_new.rb
+msgid "No storage providers support creating storage services."
+msgstr ""
+"Nenhum provedor de armazenamento suporta a criação de serviços de "
+"armazenamento."
 
 #: ../app/helpers/application_helper/button/volume_mapping_new.rb
 msgid "No storage providers support creating volume mapping."
@@ -52452,6 +52652,7 @@ msgstr "Modelo de OVF é necessário, selecione um na lista"
 msgid "OVF Templates"
 msgstr "Modelos OVF"
 
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/miq_ae_tools/_results_tabs.html.haml
 msgid "Object"
 msgstr "Objeto"
@@ -52478,6 +52679,7 @@ msgid "Object Count"
 msgstr "Contagem de objetos"
 
 #: ../app/helpers/miq_action_helper.rb
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
 #: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
@@ -52526,7 +52728,7 @@ msgstr "Gerenciador de armazenamento do objeto"
 #. TRANSLATORS: en.yml key: dictionary.table.ems_object_storage (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.ems_object_storages
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:4052 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:4048 ../config/dictionary_strings.rb
 #: ../config/yaml_strings.rb
 msgid "Object Storage Managers"
 msgstr "Gerenciadores de armazenamento de objetos"
@@ -52643,6 +52845,7 @@ msgstr "Na saída"
 msgid "On Shared Storage"
 msgstr "No armazenamento compartilhado"
 
+#: ../app/javascript/components/schedule-form/helper.js
 #: ../app/views/ops/_schedule_form_timer.html.haml
 #: ../app/views/report/_schedule_form_timer.html.haml
 msgid "Once"
@@ -52757,6 +52960,11 @@ msgstr "Abrir IU de administração para este provedor de infraestrutura"
 #: ../config/yaml_strings.rb
 msgid "Open External Logging from Container Provider"
 msgstr "Abrir criação de log externa do provedor de contêineres"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Open Native Console"
+msgstr "Abrir console nativo"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -53269,8 +53477,8 @@ msgstr "Operações de máquinas virtuais ligadas/desligadas na última semana"
 msgid "Operations Worker for Provider: %{name}"
 msgstr "Trabalhador de operações para provedor: %{name}"
 
-#: ../app/models/miq_alert.rb:456 ../app/models/miq_alert.rb
-#: ../app/models/miq_alert.rb:472 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:457 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:473 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Operator"
 msgstr "Operador"
@@ -53411,7 +53619,7 @@ msgstr "Pilhas de orquestração (Microsoft Azure)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack (plural form)
-#: ../config/dictionary_strings.rb:3404 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3400 ../config/dictionary_strings.rb
 msgid "Orchestration Stacks (OpenStack)"
 msgstr "Pilhas de orquestração (OpenStack)"
 
@@ -53446,7 +53654,7 @@ msgid "Orchestration Template is required, please select one from the list"
 msgstr "O modelo de orquestração é obrigatório, selecione um na lista"
 
 #. TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
-#: ../app/controllers/catalog_controller.rb:925 ../config/yaml_strings.rb
+#: ../app/controllers/catalog_controller.rb:924 ../config/yaml_strings.rb
 msgid "Orchestration Templates"
 msgstr "Modelos de orquestração"
 
@@ -54204,6 +54412,10 @@ msgstr "Página %{page_number} de %{total_pages}"
 msgid "Page Size"
 msgstr "Tamanho da página"
 
+#: ../app/javascript/components/miq-pagination.jsx
+msgid "Pagination"
+msgstr "Paginação"
+
 #. TRANSLATORS: file: product/views/OrchestrationStackParameter.yaml
 #: ../app/controllers/configuration_job_controller.rb
 #: ../app/controllers/orchestration_stack_controller.rb
@@ -54308,6 +54520,10 @@ msgstr "Plataforma de host pai"
 #: ../config/dictionary_strings.rb
 msgid "Parent Name"
 msgstr "Nome do pai"
+
+#: ../app/views/miq_request/_request.html.haml
+msgid "Parent Request"
+msgstr "Solicitação pai"
 
 #. TRANSLATORS: en.yml key: dictionary.column.v_owning_resource_pool
 #. TRANSLATORS: en.yml key: dictionary.column.v_parent_resource_pool
@@ -55118,6 +55334,11 @@ msgstr "Executar operações em recursos de armazenamento"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Perform Operations on Storage Services"
+msgstr "Executar operações em serviços de armazenamento"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Perform Operations on Template Snapshots"
 msgstr "Executar operações em Capturas instantâneas de modelos"
 
@@ -55411,7 +55632,7 @@ msgstr[1] "Desempenho - VMs"
 msgid "Performance - VMs"
 msgstr "Desempenho - Máquinas virtuais"
 
-#: ../app/models/miq_alert.rb:455 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:456 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Performance Field"
 msgstr "Campo de desempenho"
@@ -55599,7 +55820,7 @@ msgstr[1] "Gerenciadores de infraestrutura física"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::PhysicalInfraManager
 #. TRANSLATORS: en.yml key: dictionary.table.ems_physical_infra
-#: ../config/dictionary_strings.rb:3222 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3218 ../config/dictionary_strings.rb
 msgid "Physical Infrastructure Provider"
 msgstr "Provedor de infraestrutura física"
 
@@ -55760,6 +55981,19 @@ msgid_plural "Physical Server Profile (CiscoIntersight)"
 msgstr[0] "Perfil do servidor físico (CiscoIntersight)"
 msgstr[1] "Perfil do servidor físico (CiscoIntersight)"
 
+#: ../config/model_display_names.rb
+msgid "Physical Server Profile Template"
+msgid_plural "Physical Server Profile Templates"
+msgstr[0] "Modelo de perfil do servidor físico"
+msgstr[1] "Modelos de perfil do servidor físico"
+
+#:
+#: ../app/models/manageiq/providers/cisco_intersight/physical_infra_manager/physical_server_profile_template.rb
+msgid "Physical Server Profile Template (Cisco Intersight)"
+msgid_plural "Physical Server Profile Template (Cisco Intersight)"
+msgstr[0] "Modelo de perfil do servidor físico (Cisco Intersight)"
+msgstr[1] "Modelo de perfil do servidor físico (Cisco Intersight)"
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Physical Server Profiles"
@@ -55818,6 +56052,7 @@ msgstr "Servidores físicos (Redfish)"
 msgid "Physical Servers with Host"
 msgstr "Servidores físicos com host"
 
+#. TRANSLATORS: file: product/views/CloudVolume.yaml
 #. TRANSLATORS: file: product/views/PhysicalStorage.yaml
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb
 #: ../config/yaml_strings.rb
@@ -55830,6 +56065,11 @@ msgid "Physical Storage (Lenovo)"
 msgid_plural "Physical Storages (Lenovo)"
 msgstr[0] "Armazenamento físico (Lenovo)"
 msgstr[1] "Armazenamentos físicos (Lenovo)"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Physical Storage Families"
+msgstr "Famílias de armazenamento físico"
 
 #: ../config/model_display_names.rb
 msgid "Physical Storage Family"
@@ -55918,6 +56158,10 @@ msgstr "Servidor físico"
 #: ../config/model_attributes.rb
 msgid "Physical server profile"
 msgstr "Perfil do servidor físico"
+
+#: ../config/model_attributes.rb
+msgid "Physical server profile template"
+msgstr "Modelo de perfil do servidor físico"
 
 #: ../config/model_attributes.rb
 msgid "Physical storage"
@@ -56112,6 +56356,26 @@ msgid "PhysicalRack|Uid ems"
 msgstr "PhysicalRack|EMS de Uid"
 
 #: ../config/model_attributes.rb
+msgid "PhysicalServerProfileTemplate|Ems ref"
+msgstr "PhysicalServerProfileTemplate|Ems ref"
+
+#: ../config/model_attributes.rb
+msgid "PhysicalServerProfileTemplate|Href slug"
+msgstr "PhysicalServerProfileTemplate|Href slug"
+
+#: ../config/model_attributes.rb
+msgid "PhysicalServerProfileTemplate|Name"
+msgstr "PhysicalServerProfileTemplate| Nome"
+
+#: ../config/model_attributes.rb
+msgid "PhysicalServerProfileTemplate|Region description"
+msgstr "PhysicalServerProfileTemplate| Descrição da região"
+
+#: ../config/model_attributes.rb
+msgid "PhysicalServerProfileTemplate|Region number"
+msgstr "PhysicalServerProfileTemplate| Número da região"
+
+#: ../config/model_attributes.rb
 msgid "PhysicalServerProfile|Ems ref"
 msgstr "PhysicalServerProfile | Ref. do EMS"
 
@@ -56232,6 +56496,10 @@ msgid "PhysicalServer|Vendor"
 msgstr "PhysicalServer|Fornecedor"
 
 #: ../config/model_attributes.rb
+msgid "PhysicalStorageFamily|Capabilities"
+msgstr "PhysicalStorageFamily | Recursos"
+
+#: ../config/model_attributes.rb
 msgid "PhysicalStorageFamily|Ems ref"
 msgstr "PhysicalStorageFamily | Ref. do Ems"
 
@@ -56262,6 +56530,10 @@ msgstr "PhysicalStorage|Estado de acesso"
 #: ../config/model_attributes.rb
 msgid "PhysicalStorage|Canister slots"
 msgstr "PhysicalStorage|Slots de caixa"
+
+#: ../config/model_attributes.rb
+msgid "PhysicalStorage|Capabilities"
+msgstr "PhysicalStorage| Recursos"
 
 #: ../config/model_attributes.rb
 msgid "PhysicalStorage|Drive bays"
@@ -56307,7 +56579,7 @@ msgstr "PhysicalStorage|Espaço total"
 msgid "PhysicalStorage|Uid ems"
 msgstr "PhysicalStorage|EMS de UID"
 
-#: ../config/model_display_names.rb:188 ../config/model_attributes.rb
+#: ../config/model_display_names.rb:189 ../config/model_attributes.rb
 msgid "Picture"
 msgid_plural "Pictures"
 msgstr[0] "Figura"
@@ -56493,7 +56765,7 @@ msgstr "Item do catálogo do playbook"
 #: ../app/controllers/ansible_repository_controller.rb
 #: ../app/helpers/ansible_repository_helper/textual_summary.rb
 #: ../app/helpers/application_helper/title.rb
-#: ../app/presenters/menu/default_menu.rb:203 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:206 ../config/yaml_strings.rb
 msgid "Playbooks"
 msgstr "Playbooks"
 
@@ -56726,7 +56998,7 @@ msgstr "Incompatibilidade de nodeSelector do pod"
 #: ../app/javascript/components/container-projects/helper.jsx
 #: ../app/javascript/components/ems_container_dashboard/helper.js
 #: ../app/javascript/oldjs/controllers/container_dashboard/util/dashboard-utils-factory.js
-#: ../app/presenters/menu/default_menu.rb:126 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:128 ../config/yaml_strings.rb
 msgid "Pods"
 msgstr "Pods"
 
@@ -56922,7 +57194,7 @@ msgstr[0] "Conteúdo de política"
 msgstr[1] "Conteúdos de política"
 
 #. TRANSLATORS: en.yml key: dictionary.model.PolicyEvent
-#: ../config/model_display_names.rb:190 ../config/dictionary_strings.rb
+#: ../config/model_display_names.rb:191 ../config/dictionary_strings.rb
 msgid "Policy Event"
 msgid_plural "Policy Events"
 msgstr[0] "Evento de política"
@@ -57184,7 +57456,7 @@ msgstr "IP do portal"
 #: ../app/controllers/vm_common.rb
 #: ../app/helpers/guest_device_helper/textual_summary.rb
 #: ../app/helpers/physical_switch_helper/textual_summary.rb
-#: ../app/presenters/menu/default_menu.rb:147 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:149 ../config/yaml_strings.rb
 msgid "Ports"
 msgstr "Portas"
 
@@ -57613,8 +57885,7 @@ msgid "Print the full report (all rows) or export it as a PDF file"
 msgstr ""
 "Imprimir relatório completo (todas as linhas) ou exportá-lo como arquivo PDF"
 
-#: ../app/views/ops/_selected_by_roles.html.haml
-#: ../app/views/ops/_selected_by_servers.html.haml
+#: ../app/helpers/ops_helper.rb:168 ../app/helpers/ops_helper.rb
 msgid "Priority"
 msgstr "Prioridade"
 
@@ -57711,7 +57982,7 @@ msgstr "Data de criação do processo"
 msgid "Process Date Updated"
 msgstr "Data de atualização do processo"
 
-#: ../app/views/ops/_selected_by_roles.html.haml
+#: ../app/helpers/ops_helper.rb
 msgid "Process ID"
 msgstr "ID do processo"
 
@@ -57867,7 +58138,7 @@ msgstr "Atualização do produto"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ProductUpdate (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:3708 ../config/yaml_strings.rb
+#: ../config/dictionary_strings.rb:3704 ../config/yaml_strings.rb
 msgid "Product Updates"
 msgstr "Atualizações de produto"
 
@@ -58049,6 +58320,7 @@ msgstr ""
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/helpers/storage_helper/textual_summary.rb
 #: ../app/helpers/storage_resource_helper/textual_summary.rb
+#: ../app/helpers/storage_service_helper/textual_summary.rb
 #: ../app/helpers/vm_cloud_helper/textual_summary.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb
@@ -58168,6 +58440,7 @@ msgstr "Fornecer este item?"
 #: ../app/javascript/components/host-aggregate-form/host-aggregate-form.schema.js
 #: ../app/javascript/components/orchestration-template/orchestration-template-form.schema.js
 #: ../app/javascript/components/pxe-iso-datastore-form/pxe-iso-datastore-form.schema.js
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
 #: ../app/javascript/spec/prov-grid/prov-vm-grid-data.js
 #: ../app/views/catalog/_form_basic_info.html.haml
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
@@ -58303,9 +58576,7 @@ msgstr "Tipo de provedor:"
 msgid "Provider Uid"
 msgstr "ID do usuário do provedor"
 
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-#: ../config/yaml_strings.rb
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
 msgid "Provider User Name"
 msgstr "Nome de usuário do provedor"
 
@@ -59431,13 +59702,13 @@ msgstr "O domínio somente leitura não pode ser editado"
 msgid "Read only"
 msgstr "Somente leitura"
 
-#: ../app/controllers/condition_controller.rb
-msgid "Read only condition can not be edited"
-msgstr "A condição somente leitura não pode ser editada"
+#: ../app/models/mixins/read_only_mixin.rb
+msgid "Read only %{model_name} cannot be deleted."
+msgstr "A leitura apenas%{model_name} não pode ser excluída."
 
-#: ../app/models/miq_user_role.rb
-msgid "Read only roles cannot be deleted."
-msgstr "As funções somente leitura não podem ser excluídas."
+#: ../app/controllers/condition_controller.rb
+msgid "Read only condition cannot be edited"
+msgstr "A condição de somente leitura não pode ser editada"
 
 #: ../app/helpers/container_group_helper/textual_summary.rb
 #: ../app/helpers/persistent_volume_helper/textual_summary.rb
@@ -59950,6 +60221,8 @@ msgstr "Atualizar relacionamentos"
 #: ../app/helpers/application_helper/toolbar/physical_storages_center.rb
 #: ../app/helpers/application_helper/toolbar/physical_switch_center.rb
 #: ../app/helpers/application_helper/toolbar/physical_switches_center.rb
+#: ../app/helpers/application_helper/toolbar/storage_service_center.rb
+#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
 #: ../app/helpers/application_helper/toolbar/template_clouds_center.rb
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb
@@ -60346,6 +60619,14 @@ msgstr ""
 "Atualizar relacionamentos e estados de energia para todos os itens "
 "relacionados aos itens selecionados?"
 
+#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
+msgid ""
+"Refresh relationships and power states for all items related to these Host "
+"Initiator Groups"
+msgstr ""
+"Atualizar relacionamentos e estados de energia para todos os itens "
+"relacionados a estes grupos de iniciadores de host"
+
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
 msgid ""
 "Refresh relationships and power states for all items related to these Host "
@@ -60353,14 +60634,6 @@ msgid ""
 msgstr ""
 "Atualizar relacionamentos e estados da energia para todos os itens "
 "relacionados aos inicializadores de host"
-
-#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to these Host "
-"Initiators Cluster"
-msgstr ""
-"Atualize os relacionamentos e os estados de energia para todos os itens "
-"relacionados aos grupos inicializadores de host"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
 msgid ""
@@ -60410,6 +60683,22 @@ msgstr ""
 "Atualizar relacionamentos e estados de energia de todos os itens relacionados "
 "a comutadores físicos?"
 
+#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
+msgid ""
+"Refresh relationships and power states for all items related to these Storage "
+"Services"
+msgstr ""
+"Atualizar relacionamentos e estados de energia para todos os itens "
+"relacionados a estes serviços de armazenamento"
+
+#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
+msgid ""
+"Refresh relationships and power states for all items related to these Storage "
+"Services?"
+msgstr ""
+"Atualizar relacionamentos e estados de energia para todos os itens "
+"relacionados a esses serviços de armazenamento?"
+
 #: ../app/helpers/application_helper/toolbar/volume_mappings_center.rb
 msgid ""
 "Refresh relationships and power states for all items related to these Volume "
@@ -60453,18 +60742,18 @@ msgstr ""
 #: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
 msgid ""
 "Refresh relationships and power states for all items related to this Host "
-"Initiator Cluster"
-msgstr ""
-"Atualize os relacionamentos e os estados de energia para todos os itens "
-"relacionados aos clusters inicializadores de host"
-
-#: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to this Host "
 "Initiator Cluster?"
 msgstr ""
 "Deseja atualizar os relacionamentos e os estados de energia para todos os "
 "itens relacionados aos clusters inicializadores de host?"
+
+#: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
+msgid ""
+"Refresh relationships and power states for all items related to this Host "
+"Initiator Group"
+msgstr ""
+"Atualizar relacionamentos e estados de energia para todos os itens "
+"relacionados a este grupo de iniciadores de host"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb
 msgid ""
@@ -60593,6 +60882,22 @@ msgid ""
 msgstr ""
 "Atualizar relacionamentos e estados de energia para todos os itens "
 "relacionados a este gerenciador de armazenamento?"
+
+#: ../app/helpers/application_helper/toolbar/storage_service_center.rb
+msgid ""
+"Refresh relationships and power states for all items related to this Storage "
+"Service"
+msgstr ""
+"Atualizar relacionamentos e estados de energia para todos os itens "
+"relacionados a este serviço de armazenamento"
+
+#: ../app/helpers/application_helper/toolbar/storage_service_center.rb
+msgid ""
+"Refresh relationships and power states for all items related to this Storage "
+"Service?"
+msgstr ""
+"Atualizar relacionamentos e estados de energia para todos os itens "
+"relacionados a este serviço de armazenamento?"
 
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb
 msgid ""
@@ -60838,8 +61143,8 @@ msgstr "RegionOne"
 #. TRANSLATORS: en.yml key: dictionary.table.miq_region (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.miq_regions
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:3590 ../config/dictionary_strings.rb
-#: ../config/dictionary_strings.rb:4224 ../config/yaml_strings.rb
+#: ../config/dictionary_strings.rb:3586 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:4216 ../config/yaml_strings.rb
 msgid "Regions"
 msgstr "Regiões"
 
@@ -60957,7 +61262,7 @@ msgstr "Nome do item de registro"
 msgid "Registry Item Value Name"
 msgstr "Nome do valor do item de registro"
 
-#: ../app/views/ops/_ap_show.html.haml
+#: ../app/helpers/settings_analysis_profile_helper.rb
 msgid "Registry Items"
 msgstr "Itens de registro"
 
@@ -60969,6 +61274,10 @@ msgstr "Chave de registro"
 #: ../app/javascript/oldjs/miq_application.js
 msgid "Registry Key Value"
 msgstr "Valor da chave de registro"
+
+#: ../app/helpers/settings_analysis_profile_helper.rb
+msgid "Registry Keys"
+msgstr "Registrar chaves"
 
 #:
 #: ../app/javascript/components/firmware-registry/firmware-registry-form.schema.js
@@ -60982,6 +61291,10 @@ msgstr "Valor de registro"
 #: ../app/controllers/application_controller/filter.rb
 msgid "Registry Value Error: %{msg}"
 msgstr "Erro de valor de registro: %{msg}"
+
+#: ../app/helpers/settings_analysis_profile_helper.rb
+msgid "Registry Values"
+msgstr "Registrar valores"
 
 #: ../config/model_attributes.rb
 msgid "Registry item"
@@ -61034,7 +61347,7 @@ msgstr "RegistryItem|Nome do valor"
 msgid "Regular expression '%{value}' is invalid, '%{error_message}'"
 msgstr "A expressão regular '%{value}' é inválida, '%{error_message}'"
 
-#: ../config/model_display_names.rb:195 ../config/model_attributes.rb
+#: ../config/model_display_names.rb:196 ../config/model_attributes.rb
 msgid "Relationship"
 msgid_plural "Relationships"
 msgstr[0] "Relacionamento"
@@ -61104,6 +61417,8 @@ msgstr[1] "Relacionamentos"
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/helpers/storage_helper/textual_summary.rb
+#: ../app/helpers/storage_resource_helper/textual_summary.rb
+#: ../app/helpers/storage_service_helper/textual_summary.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
 #: ../app/views/configuration_profile/show.html.haml
 #: ../app/views/ems_configuration/show.html.haml
@@ -61832,6 +62147,11 @@ msgstr "Remover um repositório"
 msgid "Remove a Security Group from this Instance"
 msgstr "Remover um grupo de segurança desta instância"
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Remove a Storage Service"
+msgstr "Remover um serviço de armazenamento"
+
 #: ../app/javascript/components/button-group/group-form.schema.js
 msgid "Remove all"
 msgstr "Remover todos"
@@ -62389,7 +62709,7 @@ msgstr "O replicador criou o pod com sucesso"
 
 #. TRANSLATORS: file: product/views/ContainerReplicator.yaml
 #: ../app/controllers/container_replicator_controller.rb
-#: ../app/presenters/menu/default_menu.rb:125 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:127 ../config/yaml_strings.rb
 msgid "Replicators"
 msgstr "Replicadores"
 
@@ -62628,6 +62948,7 @@ msgstr "Opções de repositório"
 
 #: ../app/helpers/miq_action_helper.rb
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
 #: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
@@ -62717,6 +63038,16 @@ msgstr "Informações da solicitação"
 msgid "Request Information"
 msgstr "Informações da solicitação"
 
+#: ../config/model_display_names.rb
+msgid "Request Log"
+msgid_plural "Request Logs"
+msgstr[0] "Solicitar log"
+msgstr[1] "Solicitar logs"
+
+#: ../app/views/miq_request/_request.html.haml
+msgid "Request Logs"
+msgstr "Solicitar logs"
+
 #. TRANSLATORS: en.yml key: dictionary.column.request_memory_bytes
 #: ../config/dictionary_strings.rb
 msgid "Request Memory Bytes"
@@ -62770,6 +63101,10 @@ msgstr "A solicitação está ausente para o item selecionado"
 msgid "Request is required"
 msgstr "A solicitação é necessária"
 
+#: ../config/model_attributes.rb
+msgid "Request log"
+msgstr "Solicitar log"
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Request to Archive Services"
@@ -62815,6 +63150,26 @@ msgstr "Solicitação de desarquivamento de serviços"
 #: ../app/javascript/components/action-form/action-form.schema.js
 msgid "Request:"
 msgstr "Pedido:"
+
+#: ../config/model_attributes.rb
+msgid "RequestLog|Href slug"
+msgstr "RequestLog| Href slug"
+
+#: ../config/model_attributes.rb
+msgid "RequestLog|Message"
+msgstr "RequestLog| Mensagem"
+
+#: ../config/model_attributes.rb
+msgid "RequestLog|Region description"
+msgstr "RequestLog| Descrição da região"
+
+#: ../config/model_attributes.rb
+msgid "RequestLog|Region number"
+msgstr "RequestLog| Número da região"
+
+#: ../config/model_attributes.rb
+msgid "RequestLog|Severity"
+msgstr "RequestLog| Severidade"
 
 #: ../app/javascript/toolbar-actions/custom-action.js
 msgid "Requested %s of selected item."
@@ -62872,7 +63227,7 @@ msgstr "Solicitante:"
 #: ../app/controllers/miq_request_controller.rb
 #: ../app/helpers/application_helper/title.rb
 #: ../app/presenters/menu/default_menu.rb
-#: ../app/presenters/menu/default_menu.rb:217 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:220 ../config/yaml_strings.rb
 msgid "Requests"
 msgstr "Solicitações"
 
@@ -62881,6 +63236,16 @@ msgstr "Solicitações"
 #: src/vm-snapshot-form/snapshot-form/snapshotForm.jsx
 msgid "Required"
 msgstr "Obrigatório"
+
+#:
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
+msgid "Required Capabilities"
+msgstr "Recursos necessários"
+
+#: ../app/models/manageiq/providers/autosde/storage_manager/cloud_volume.rb
+#: ../app/models/manageiq/providers/autosde/storage_manager/storage_service.rb
+msgid "Required Capabilities (filters by exact match)"
+msgstr "Recursos necessários (filtros por correspondência exata)"
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 msgid "Required if SSH login is disabled for the Default account."
@@ -63150,7 +63515,7 @@ msgstr "O conjunto de recursos é necessário, selecione um da lista"
 #. TRANSLATORS: file: product/views/ResourcePool.yaml
 #: ../app/controllers/resource_pool_controller.rb
 #: ../app/helpers/resource_pool_helper/textual_summary.rb
-#: ../app/presenters/menu/default_menu.rb:98 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:100 ../config/yaml_strings.rb
 msgid "Resource Pools"
 msgstr "Conjuntos de recursos"
 
@@ -64216,6 +64581,7 @@ msgstr "Nome da regra"
 msgid "Rules"
 msgstr "Regras"
 
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/ops/_schedule_form_timer.html.haml
 #: ../app/views/report/_schedule_form_timer.html.haml
 msgid "Run"
@@ -64384,10 +64750,6 @@ msgstr "Destino do SCSI %{target}"
 #: ../app/presenters/tree_node/miq_scsi_target.rb
 msgid "SCSI Target %{target} (%{name})"
 msgstr "Destino do SCSI %{target} (%{name})"
-
-#: ../app/models/manageiq/providers/microsoft/infra_manager.rb
-msgid "SCVMM"
-msgstr "SCVMM"
 
 #: ../app/helpers/container_helper/textual_summary.rb
 msgid "SELinux Level"
@@ -64721,7 +65083,7 @@ msgstr[0] "Histórico de varredura"
 msgstr[1] "Histórico de varredura"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ScanItem
-#: ../config/model_display_names.rb:202 ../config/dictionary_strings.rb
+#: ../config/model_display_names.rb:204 ../config/dictionary_strings.rb
 msgid "Scan Item"
 msgid_plural "Scan Items"
 msgstr[0] "Escanear item"
@@ -66040,13 +66402,6 @@ msgstr "Selecionar dois ou mais itens para comparar"
 msgid "Select up to 10 timestamps for Drift Analysis"
 msgstr "Selecione até 10 registros de data/hora para análise de desvio"
 
-#: ../app/views/layouts/_tl_detail.html.haml
-msgid ""
-"Select your desired settings and click the apply button to view timeline data."
-msgstr ""
-"Selecione as configurações desejadas e clique no botão Aplicar para visualizar"
-" os dados da linha do tempo."
-
 #: ../app/views/host/_form.html.haml
 msgid "Selected"
 msgstr "Selecionado"
@@ -66229,12 +66584,10 @@ msgid "Serial Number"
 msgstr "Número de série"
 
 #. TRANSLATORS: file: product/views/MiqTask.yaml
+#: ../app/helpers/ops_helper.rb
 #: ../app/javascript/components/provider-dashboard-charts/charts_config.js
 #: ../app/presenters/tree_node/assigned_server_role.rb
-#: ../app/views/ops/_all_tabs.html.haml
-#: ../app/views/ops/_selected_by_roles.html.haml
-#: ../app/views/ops/_selected_by_servers.html.haml
-#: ../config/yaml_strings.rb
+#: ../app/views/ops/_all_tabs.html.haml:26 ../config/yaml_strings.rb
 msgid "Server"
 msgstr "Servidor"
 
@@ -66343,6 +66696,10 @@ msgid ""
 msgstr ""
 "O perfil do servidor%{profile} <%{name}> com ID: <%{id}> não está associado a "
 "um provedor."
+
+#: ../app/views/catalog/_form_server_profile_template_options.html.haml
+msgid "Server Profile Template"
+msgstr "Modelo de perfil do servidor"
 
 #: ../config/model_display_names.rb
 msgid "Server Role"
@@ -66638,9 +66995,8 @@ msgid_plural "Service Linking Workflows"
 msgstr[0] "Fluxo de Trabalho de Vinculação de Serviço"
 msgstr[1] "Fluxos de Trabalho de Vinculação de Serviço"
 
-#. TRANSLATORS: en.yml key: dictionary.column.service_name
-#. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/015_Host - ESX Services.yaml
-#: ../config/dictionary_strings.rb:1788 ../config/yaml_strings.rb
+#:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
 msgid "Service Name"
 msgstr "Nome do serviço"
 
@@ -66798,6 +67154,12 @@ msgstr "Tipo de serviço"
 #: ../config/yaml_strings.rb
 msgid "Service UI"
 msgstr "IU do serviço"
+
+#. TRANSLATORS: file: product/views/StorageService.yaml
+#: ../app/helpers/storage_service_helper/textual_summary.rb
+#: ../config/yaml_strings.rb
+msgid "Service Version"
+msgstr "Versão de serviço"
 
 #: ../app/controllers/miq_ae_customization_controller.rb
 msgid "Service dialog import cancelled"
@@ -67200,7 +67562,7 @@ msgstr "ServiceTemplate|Exibição de tipo"
 #: ../app/javascript/components/ems_container_dashboard/helper.js
 #: ../app/javascript/oldjs/controllers/container_dashboard/util/dashboard-utils-factory.js
 #: ../app/presenters/menu/default_menu.rb
-#: ../app/presenters/menu/default_menu.rb:143 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:145 ../config/yaml_strings.rb
 msgid "Services"
 msgstr "Serviços"
 
@@ -67925,6 +68287,7 @@ msgstr "SettingsChange|Valor"
 #. TRANSLATORS: file: product/views/MiqAlert.yaml
 #. TRANSLATORS: file: product/views/OpenscapRuleResult.yaml
 #: ../app/helpers/miq_alert_helper.rb
+#: ../app/javascript/components/data-tables/requests-table/index.jsx
 #: ../app/javascript/oldjs/controllers/alerts/alerts_overview_controller.js
 #: ../app/javascript/oldjs/services/alerts_center_service.js
 #: ../app/views/miq_alert/_form.html.haml:26 ../config/yaml_strings.rb
@@ -67935,7 +68298,7 @@ msgstr "Gravidade"
 msgid "Severity must be selected"
 msgstr "A severidade deve ser selecionada"
 
-#: ../config/model_display_names.rb:229 ../config/model_attributes.rb
+#: ../config/model_display_names.rb:231 ../config/model_attributes.rb
 msgid "Share"
 msgid_plural "Shares"
 msgstr[0] "Compartilhar"
@@ -67951,10 +68314,24 @@ msgstr "Compartilhável"
 msgid "Shared"
 msgstr "Compartilhado"
 
+#: ../app/views/shared/views/_prov_dialog.html.haml
+msgid "Shared Processor Pools"
+msgstr "Grupos de processadores compartilhados"
+
+#:
+#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/vm.rb
+msgid "Shared capped"
+msgstr "Compartilhado limitado"
+
 #:
 #: ../app/models/manageiq/providers/ibm_power_vc/inventory/parser/cloud_manager.rb
 msgid "Shared processor pool"
 msgstr "Conjunto de processadores compartilhados"
+
+#:
+#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/vm.rb
+msgid "Shared uncapped"
+msgstr "Compartilhado ilimitado"
 
 #:
 #: ../app/models/manageiq/providers/ibm_power_vc/inventory/parser/cloud_manager.rb
@@ -68798,10 +69175,13 @@ msgstr "Mostrar inicializadores do host mapeados para este volume"
 msgid "Show hourly data from"
 msgstr "Mostrar dados por hora de"
 
-#: ../app/views/ops/_category_form.html.haml
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
+#: ../app/helpers/settings_tags_tabs_helper.rb
 #: ../app/views/ops/_settings_co_tags_tab.html.haml
 msgid "Show in Console"
+msgstr "Mostrar no console"
+
+#: ../app/javascript/components/settings-category-form/schema.js
+msgid "Show in console"
 msgstr "Mostrar no console"
 
 #: ../app/helpers/host_helper/textual_summary.rb
@@ -69306,8 +69686,7 @@ msgstr "Entidade única"
 msgid "Single VM/Instance"
 msgstr "Máquina virtual/instância única"
 
-#: ../app/views/ops/_category_form.html.haml
-#: ../app/views/ops/_settings_co_categories_tab.html.haml
+#: ../app/helpers/settings_tags_tabs_helper.rb
 msgid "Single Value"
 msgstr "Valor único"
 
@@ -69341,6 +69720,8 @@ msgstr "Valor único"
 #: ../app/helpers/cloud_volume_backup_helper/textual_summary.rb
 #: ../app/helpers/cloud_volume_helper/textual_summary.rb
 #: ../app/helpers/cloud_volume_snapshot_helper/textual_summary.rb
+#: ../app/helpers/storage_resource_helper/textual_summary.rb
+#: ../app/helpers/storage_service_helper/textual_summary.rb
 #: ../app/views/vm_common/_reconfigure.html.haml
 #: ../app/views/vm_common/_snapshots_desc.html.haml
 #: ../config/yaml_strings.rb
@@ -69497,6 +69878,11 @@ msgid "Smartstate Analysis cannot be performed on selected Datastore"
 msgstr ""
 "A análise SmartState não pode ser executada no armazenamento de dados "
 "selecionado"
+
+#: ../app/models/storage.rb
+msgid "Smartstate Analysis unsupported for storage type %{store_type}"
+msgstr ""
+"Análise do Smartstate não suportada para o tipo de armazenamento %{store_type}"
 
 #. TRANSLATORS: file: product/views/ProvisionCloudTemplates.yaml
 #. TRANSLATORS: file: product/views/ProvisionInfraTemplates.yaml
@@ -69743,6 +70129,11 @@ msgid "Sockets"
 msgstr "Sockets"
 
 #:
+#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/vm.rb
+msgid "Soft"
+msgstr "Soft"
+
+#:
 #: ../app/helpers/application_helper/toolbar/cloud/instance_operations_button_group_mixin.rb
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb
 msgid "Soft Reboot"
@@ -69843,9 +70234,7 @@ msgstr "Git de origem"
 msgid "Source Groups"
 msgstr "Grupos de Origem"
 
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-#: ../config/yaml_strings.rb
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
 msgid "Source Host"
 msgstr "Host de origem"
 
@@ -69890,16 +70279,11 @@ msgstr "Modelo de origem"
 msgid "Source Type"
 msgstr "Tipo da Origem"
 
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-#: ../config/yaml_strings.rb
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
 msgid "Source VM"
 msgstr "Máquina virtual de origem"
 
-#. TRANSLATORS: en.yml key: dictionary.column.src_vm_location
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-#: ../config/dictionary_strings.rb:2290 ../config/yaml_strings.rb
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
 msgid "Source VM Location"
 msgstr "Local da máquina virtual de origem"
 
@@ -70160,9 +70544,7 @@ msgstr "Iniciado"
 msgid "Started At"
 msgstr "Iniciou em"
 
-#: ../app/views/ops/_selected_by_roles.html.haml
-#: ../app/views/ops/_selected_by_servers.html.haml
-#: ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb:209 ../app/views/ops/_server_desc.html.haml
 msgid "Started On"
 msgstr "Iniciado em"
 
@@ -70170,6 +70552,7 @@ msgstr "Iniciado em"
 msgid "Starting Class must be selected"
 msgstr "A classe inicial deve ser selecionada"
 
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/ops/_schedule_form_timer.html.haml
 #: ../app/views/report/_schedule_form_timer.html.haml
 msgid "Starting Date"
@@ -70189,6 +70572,7 @@ msgstr "Mensagem inicial"
 msgid "Starting Process is required"
 msgstr "Iniciar o processo é necessário"
 
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/ops/_schedule_form_timer.html.haml
 #: ../app/views/report/_schedule_form_timer.html.haml
 msgid "Starting Time"
@@ -70230,6 +70614,7 @@ msgstr "Taxa de registro de imagem de contêiner de stat"
 #: ../app/controllers/application_controller/miq_request_methods.rb
 #: ../app/helpers/network_router_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
+#: ../app/javascript/spec/prov-grid/prov-vm-grid-data.js
 #: ../app/views/miq_request/_ae_prov_show.html.haml
 #: ../config/yaml_strings.rb
 msgid "State"
@@ -70374,6 +70759,8 @@ msgstr "Estados de pilhas de orquestração raiz"
 #: ../app/helpers/ems_network_helper/textual_summary.rb
 #: ../app/helpers/ems_physical_infra_helper/textual_summary.rb
 #: ../app/helpers/ems_storage_helper/textual_summary.rb
+#: ../app/helpers/ops_helper.rb:166 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb
 #: ../app/helpers/physical_server_helper/textual_summary.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
@@ -70386,8 +70773,6 @@ msgstr "Estados de pilhas de orquestração raiz"
 #: ../app/views/miq_request/_ae_prov_show.html.haml
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
-#: ../app/views/ops/_selected_by_roles.html.haml
-#: ../app/views/ops/_selected_by_servers.html.haml
 #: ../app/views/ops/_server_desc.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 #: ../app/views/report/_export_widgets.html.haml
@@ -70480,8 +70865,7 @@ msgstr "Hosts interrompidos"
 msgid "Stopped Instances"
 msgstr "Instâncias interrompidas"
 
-#: ../app/views/ops/_selected_by_roles.html.haml
-#: ../app/views/ops/_selected_by_servers.html.haml
+#: ../app/helpers/ops_helper.rb
 msgid "Stopped On"
 msgstr "Parado em"
 
@@ -70501,6 +70885,8 @@ msgstr "VMs interrompidas"
 #: ../app/controllers/ems_storage_controller.rb
 #: ../app/controllers/host_initiator_controller.rb
 #: ../app/controllers/host_initiator_group_controller.rb
+#: ../app/controllers/storage_resource_controller.rb
+#: ../app/controllers/storage_service_controller.rb
 #: ../app/controllers/volume_mapping_controller.rb
 #: ../app/helpers/catalog_helper.rb
 #: ../app/helpers/chargeback_rate_helper.rb
@@ -70622,6 +71008,7 @@ msgid "Storage Capacity"
 msgstr "Capacidade de armazenamento"
 
 #: ../app/controllers/application_controller/miq_request_methods.rb
+#: ../app/javascript/spec/prov-grid/prov-vm-grid-data.js
 msgid "Storage Clusters"
 msgstr "Clusters de armazenamento"
 
@@ -70645,6 +71032,7 @@ msgstr "Tipo de domínio de armazenamento"
 #:
 #: ../app/javascript/components/cloud-object-store-container-form/cloud-object-store-container-form.schema.js
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 #: ../config/yaml_strings.rb
 msgid "Storage Manager"
 msgstr "Gerenciador de armazenamento"
@@ -70716,29 +71104,38 @@ msgstr[1] "Armazenamentos do perfil de armazenamento"
 msgid "Storage Providers"
 msgstr "Provedores de armazenamento"
 
-#: ../config/model_display_names.rb
+#: ../app/helpers/storage_service_helper/textual_summary.rb
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
 msgid "Storage Resource"
-msgid_plural "Storage Resources"
-msgstr[0] "Recurso de armazenamento"
-msgstr[1] "Recursos de Armazenamento"
+msgstr "Recurso de armazenamento"
 
 #. TRANSLATORS: file: product/views/StorageResource.yaml
 #: ../app/controllers/storage_resource_controller.rb
-#: ../app/presenters/menu/default_menu.rb:162 ../config/yaml_strings.rb
+#: ../app/helpers/storage_service_helper/textual_summary.rb
+#: ../app/presenters/menu/default_menu.rb:164 ../config/yaml_strings.rb
 msgid "Storage Resources"
 msgstr "Recursos de Armazenamento"
 
-#: ../config/model_display_names.rb
+#: ../app/helpers/storage_resource_helper/textual_summary.rb
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
 msgid "Storage Service"
-msgid_plural "Storage Services"
-msgstr[0] "Serviço de Armazenamento"
-msgstr[1] "Serviços de armazenamento"
+msgstr "Serviço de Armazenamento"
 
 #: ../config/model_display_names.rb
 msgid "Storage Service Resource Attachment"
 msgid_plural "Storage Service Resource Attachments"
 msgstr[0] "Anexo de recurso de serviço de armazenamento"
 msgstr[1] "Anexos de recurso de serviço de armazenamento"
+
+#. TRANSLATORS: file: product/views/StorageService.yaml
+#: ../app/controllers/storage_service_controller.rb
+#: ../app/helpers/ems_storage_helper/textual_summary.rb
+#: ../app/helpers/storage_resource_helper/textual_summary.rb
+#: ../app/presenters/menu/default_menu.rb
+#: ../app/services/ems_storage_dashboard_service.rb
+#: ../config/yaml_strings.rb
+msgid "Storage Services"
+msgstr "Serviços de armazenamento"
 
 #:
 #: ../app/models/manageiq/providers/oracle_cloud/cloud_manager/cloud_database.rb
@@ -70901,6 +71298,10 @@ msgid "StorageResource"
 msgstr "StorageResource"
 
 #: ../config/model_attributes.rb
+msgid "StorageResource|Capabilities"
+msgstr "StorageResource| Recursos"
+
+#: ../config/model_attributes.rb
 msgid "StorageResource|Ems ref"
 msgstr "StorageResource|Ems ref"
 
@@ -70932,6 +71333,11 @@ msgstr "StorageResource|Número da região"
 msgid "StorageResource|Uid ems"
 msgstr "StorageResource|Uid ems"
 
+#. TRANSLATORS: file: product/views/StorageService.yaml
+#: ../config/yaml_strings.rb
+msgid "StorageService"
+msgstr "StorageService"
+
 #: ../config/model_attributes.rb
 msgid "StorageServiceResourceAttachment|Ems ref"
 msgstr "StorageServiceResourceAttachment|Ems ref"
@@ -70947,6 +71353,10 @@ msgstr "StorageServiceResourceAttachment|Descrição da região"
 #: ../config/model_attributes.rb
 msgid "StorageServiceResourceAttachment|Region number"
 msgstr "StorageServiceResourceAttachment|Número da região"
+
+#: ../config/model_attributes.rb
+msgid "StorageService|Capabilities"
+msgstr "StorageService| Recursos"
 
 #: ../config/model_attributes.rb
 msgid "StorageService|Description"
@@ -71404,7 +71814,7 @@ msgstr "Enviar todos"
 msgid "Submit this provisioning request"
 msgstr "Enviar esta solicitação de fornecimento"
 
-#: ../config/model_display_names.rb:236 ../config/model_attributes.rb
+#: ../config/model_display_names.rb:238 ../config/model_attributes.rb
 msgid "Subnet"
 msgid_plural "Subnets"
 msgstr[0] "Sub-rede"
@@ -71450,7 +71860,7 @@ msgstr "Subnetpool"
 #. TRANSLATORS: file: product/views/NetworkPort.yaml
 #: ../app/controllers/cloud_subnet_controller.rb
 #: ../app/controllers/vm_common.rb
-#: ../app/presenters/menu/default_menu.rb:141 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:143 ../config/yaml_strings.rb
 msgid "Subnets"
 msgstr "Sub-redes"
 
@@ -72048,6 +72458,10 @@ msgstr "Sistema/Processo"
 msgid "System/Process/"
 msgstr "Sistema/Processo/"
 
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
+msgid "System/Proess"
+msgstr "Sistema / Proess"
+
 #: ../config/model_attributes.rb
 msgid "SystemConsole|Host name"
 msgstr "SystemConsole|Nome do host"
@@ -72243,7 +72657,7 @@ msgstr "Visualização Tabular"
 msgid "Tag"
 msgstr "Tag"
 
-#: ../app/models/classification.rb:121 ../app/models/classification.rb
+#: ../app/models/classification.rb:122 ../app/models/classification.rb
 msgid "Tag %{tag} is not a category entry"
 msgstr "A tag %{tag} não é uma entrada de categoria"
 
@@ -72352,7 +72766,7 @@ msgstr "Conjuntos de recursos marcados"
 msgid "Tagged VMs and Instances"
 msgstr "Máquinas virtuais e instâncias marcadas"
 
-#: ../config/model_display_names.rb:241 ../config/model_attributes.rb
+#: ../config/model_display_names.rb:243 ../config/model_attributes.rb
 msgid "Tagging"
 msgid_plural "Taggings"
 msgstr[0] "Identificação"
@@ -72501,7 +72915,7 @@ msgstr "Tarefas do %{name}"
 #. TRANSLATORS: en.yml key: dictionary.table.template_infra
 #: ../app/models/manageiq/providers/infra_manager/template.rb
 #: ../config/dictionary_strings.rb:1924 ../config/dictionary_strings.rb
-#: ../config/dictionary_strings.rb:3972 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3968 ../config/dictionary_strings.rb
 msgid "Template"
 msgid_plural "Templates"
 msgstr[0] "Modelo"
@@ -72576,7 +72990,7 @@ msgid "Template is required, please select one from the list"
 msgstr "O modelo é obrigatório, selecione um na lista"
 
 #:
-#: ../app/models/manageiq/providers/redhat/infra_manager/provision_workflow.rb
+#: ../app/models/manageiq/providers/ovirt/infra_manager/provision_workflow.rb
 msgid "Template sealing is supported only for non-Windows OS."
 msgstr ""
 "A selagem de modelo é suportada apenas para os SOs que não são Windows."
@@ -73029,6 +73443,10 @@ msgstr ""
 "A instância não pode ser redimensionada, o estado atual deve ser ativo ou "
 "desligado."
 
+#: ../app/models/manageiq/providers/ibm_power_hmc/infra_manager/lpar.rb
+msgid "The LPAR is not connected to an active Provider"
+msgstr "A LPAR não está conectada a um provedor ativo"
+
 #:
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb
 msgid "The Network Router is not connected to an active %{table}"
@@ -73078,6 +73496,10 @@ msgstr "O ID da assinatura para a conta do Microsoft Azure"
 #: ../app/models/manageiq/providers/awx/automation_manager/azure_credential.rb
 msgid "The Subscription UUID for the Microsoft Azure account"
 msgstr "A UUID de subscrição da conta do Microsoft Azure"
+
+#: ../app/models/manageiq/providers/ibm_power_hmc/infra_manager/template.rb
+msgid "The Template is not connected to an active Provider"
+msgstr "O modelo não está conectado a um provedor ativo"
 
 #:
 #: ../app/models/manageiq/providers/awx/automation_manager/azure_credential.rb
@@ -73293,6 +73715,27 @@ msgstr "O código de referência da partição lógica"
 #: ../app/models/miq_group.rb
 msgid "The login group cannot be deleted"
 msgstr "O grupo de login não pode ser excluído"
+
+#: ../app/javascript/helpers/validate-names.js
+msgid "The name \"%s\" already exists in \"%s\""
+msgstr "O nome \"%s\" já existe em \"%s\""
+
+#:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+msgid ""
+"The name can contain letters, numbers, spaces, periods, dashes and underscores"
+msgstr ""
+"O nome pode conter letras, números, espaços, pontos, traços e sublinhados"
+
+#:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+msgid "The name must begin with a letter or an underscore"
+msgstr "O nome deve iniciar com uma letra ou um sublinhado"
+
+#:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+msgid "The name must not begin or end with a space"
+msgstr "O nome não deve iniciar ou terminar com um espaço"
 
 #:
 #: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb
@@ -73519,7 +73962,6 @@ msgstr ""
 
 #: ../app/controllers/application_controller.rb
 #: ../app/controllers/dashboard_controller.rb
-#: ../app/controllers/mixins/actions/vm_actions/reconfigure.rb
 #: ../app/controllers/mixins/actions/vm_actions/resize.rb
 msgid "The user is not authorized for this task or item."
 msgstr "O usuário não tem autorização para esta tarefa ou item."
@@ -73739,6 +74181,7 @@ msgstr "Este mês (parcial)"
 msgid "This Policy is not assigned to any Profiles."
 msgstr "Esta política não está designada a nenhum perfil."
 
+#: ../app/controllers/miq_policy_controller/events.rb
 #: ../app/controllers/miq_policy_controller/policies.rb
 msgid "This Policy is read only and cannot be modified"
 msgstr "Esta Política é somente leitura e não pode ser modificada"
@@ -73828,10 +74271,6 @@ msgstr "Este recurso não é suportado pela versão da API do provedor"
 msgid "This field is required"
 msgstr "Este campo é obrigatório"
 
-#: ../app/javascript/oldjs/miq_timeline.js
-msgid "This is a group of %s events starting on %s"
-msgstr "Este é um grupo de eventos do %s que se iniciam em %s"
-
 #:
 #: ../app/models/manageiq/providers/awx/automation_manager/openstack_credential.rb
 msgid "This is the tenant name. This value is usually the same as the username"
@@ -73858,10 +74297,6 @@ msgstr "O objeto tem políticas designadas."
 #: ../app/helpers/miq_policy_helper.rb
 msgid "This policy does not currently respond to any Events."
 msgstr "No momento, esta política não responde a nenhum evento."
-
-#: ../app/models/metric/ci_mixin.rb
-msgid "This provider does not support metrics collection"
-msgstr "O provedor não oferece suporte para a coleta de métricas"
 
 #: ../app/controllers/application_controller.rb
 msgid "This report isn't generated yet. It cannot be rendered."
@@ -73942,6 +74377,7 @@ msgstr "Quinta-feira"
 msgid "Tier"
 msgstr "Camada"
 
+#: ../app/javascript/components/data-tables/requests-table/index.jsx
 #: ../app/javascript/oldjs/services/alerts_center_service.js
 #: ../app/views/shared/views/_alerts_list.html.haml
 msgid "Time"
@@ -73986,6 +74422,7 @@ msgid "Time Stamp"
 msgstr "Registro de data e hora"
 
 #: ../app/controllers/application_controller/performance.rb
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/ops/_schedule_form_timer.html.haml
 #: ../app/views/report/_form_filter_chargeback.html.haml
 #: ../app/views/report/_schedule_form_timer.html.haml
@@ -74063,6 +74500,10 @@ msgstr "Todos os eventos da linha do tempo"
 msgid "Timeline All Policy Events"
 msgstr "Todos os eventos de política da linha do tempo"
 
+#: ../app/javascript/components/timeline-options/timeline-page.jsx
+msgid "Timeline Data"
+msgstr "Dados da linha do tempo"
+
 #: ../app/helpers/miq_alert_helper.rb
 #: ../app/views/miq_alert/_alert_evm_event.html.haml
 msgid "Timeline Event"
@@ -74077,10 +74518,6 @@ msgstr "Eventos da linha do tempo por hora"
 #: ../config/yaml_strings.rb
 msgid "Timeline Policy Events Hourly"
 msgstr "Eventos de política da linha do tempo por hora"
-
-#: ../app/views/layouts/_tl_detail.html.haml
-msgid "Timeline View"
-msgstr "Exibição da linha do tempo"
 
 #: src/report-editor/timeline-warning.jsx
 msgid "Timeline component has been loaded."
@@ -74454,6 +74891,10 @@ msgstr "Total do disco"
 msgid "Total Disk Capacity (bytes)"
 msgstr "Capacidade total do disco (bytes)"
 
+#: ../app/javascript/components/timeline-options/timeline-helper.js
+msgid "Total Events"
+msgstr "Total de eventos"
+
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb
 #: ../app/helpers/resource_pool_helper/textual_summary.rb
 msgid "Total Host CPU Cores"
@@ -74490,6 +74931,10 @@ msgstr "Total de imagens"
 #: ../config/dictionary_strings.rb:14 ../config/dictionary_strings.rb
 msgid "Total Instances"
 msgstr "Total de instâncias"
+
+#: ../app/helpers/storage_service_helper/textual_summary.rb
+msgid "Total Logical Space"
+msgstr "Espaço lógico total"
 
 #. TRANSLATORS: en.yml key: dictionary.column.total_managed_registered_vms
 #: ../config/dictionary_strings.rb
@@ -74593,6 +75038,7 @@ msgstr "Total de capturas instantâneas"
 #. TRANSLATORS: file: product/views/StorageCluster.yaml
 #: ../app/controllers/application_controller/miq_request_methods.rb
 #: ../app/helpers/storage_helper/textual_summary.rb
+#: ../app/javascript/spec/prov-grid/prov-vm-grid-data.js
 #: ../config/yaml_strings.rb
 msgid "Total Space"
 msgstr "Espaço total"
@@ -74660,6 +75106,7 @@ msgstr "Memória total da máquina virtual no disco"
 #. TRANSLATORS: file: product/views/ResourcePool.yaml
 #. TRANSLATORS: file: product/views/Service.yaml
 #: ../app/controllers/application_controller/miq_request_methods.rb
+#: ../app/javascript/spec/prov-grid/prov-vm-grid-data.js
 #: ../config/yaml_strings.rb
 msgid "Total VMs"
 msgstr "Total de máquinas virtuais"
@@ -75051,14 +75498,17 @@ msgstr "Dois valores de data/hora devem ser especificados"
 #: ../app/helpers/security_group_helper/textual_summary.rb
 #: ../app/helpers/security_policy_helper/textual_summary.rb
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
+#: ../app/helpers/settings_analysis_profile_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/javascript/components/data-tables/button-group-list/helper.js
 #: ../app/javascript/components/data-tables/time-profile-table/helper.js
+#: ../app/javascript/components/diagnostics-collect-log-form/schema.js
 #: ../app/javascript/components/generic-objects-form/generic-objects-form.schema.js
 #: ../app/javascript/components/provider-form/index.jsx
 #: ../app/javascript/components/pxe-customization-template-form/pxe-customization-template-form.schema.js
 #: ../app/javascript/components/pxe-image-type-form/pxe-image-type-form.schema.js
 #: ../app/javascript/components/pxe-iso-image-form/pxe-iso-image-form.schema.js
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/javascript/oldjs/controllers/alerts/alerts_overview_controller.js
 #: ../app/views/chargeback_rate/_cb_rate_show.html.haml
 #: ../app/views/chargeback_rate/_form.html.haml
@@ -75074,8 +75524,6 @@ msgstr "Dois valores de data/hora devem ser especificados"
 #: ../app/views/miq_alert/_alert_snmp.html.haml
 #: ../app/views/miq_policy_rsop/_rsop_form.html.haml
 #: ../app/views/ops/_ap_form.html.haml
-#: ../app/views/ops/_ap_show.html.haml
-#: ../app/views/ops/_diagnostics_database_tab.html.haml
 #: ../app/views/ops/_settings_import_tab.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 #: ../app/views/pxe/_pxe_img_form.html.haml
@@ -75468,6 +75916,13 @@ msgstr "Não é possível iniciar a diminuição de capacidade: %{message}"
 msgid "Unable to initiate scale up: %{message}"
 msgstr "Não é possível iniciar o aumento de capacidade: %{message}"
 
+#:
+#: ../app/models/manageiq/providers/ibm_cloud/object_storage/storage_manager.rb
+msgid "Unable to list COS bucket data from the endpoint: %{error_message}"
+msgstr ""
+"Não é possível listar dados do depósito COS a partir do terminal: %{"
+"error_message}"
+
 #: ../app/controllers/mixins/actions/vm_actions/live_migrate.rb
 msgid "Unable to live migrate Instance \"%{name}\": %{details}"
 msgstr ""
@@ -75692,6 +76147,10 @@ msgstr "Imagem desconhecida"
 msgid "Unknown Project"
 msgstr "Projeto desconhecido"
 
+#: ../app/models/miq_queue.rb
+msgid "Unknown Zone"
+msgstr "Zona desconhecida"
+
 #:
 #: ../app/models/manageiq/providers/openstack/cloud_manager/orchestration_template.rb
 msgid "Unknown constraint %{constraint}"
@@ -75818,7 +76277,7 @@ msgstr "Intervalo não suportado '%{interval}'"
 msgid "Unsupported log depot protocol: %{protocol}"
 msgstr "Protocolo de depósito de log não suportado: %{protocol}"
 
-#: ../app/models/vm_or_template.rb:1571 ../app/models/vm_or_template.rb
+#: ../app/models/vm_or_template.rb:1567 ../app/models/vm_or_template.rb
 msgid "Unsupported property type [%{property}]"
 msgstr "Tipo de propriedade não suportado [%{property}]"
 
@@ -75942,6 +76401,7 @@ msgstr "Atualizado - %{update_time}, Última conexão válida - %{valid_time}"
 #: ../app/helpers/firmware_binary_helper/textual_summary.rb
 #: ../app/helpers/firmware_registry_helper/textual_summary.rb
 #: ../app/helpers/firmware_target_helper/textual_summary.rb
+#: ../app/helpers/pxe_helper/textual_summary.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
 #: ../app/views/catalog/_ot_tree_show.html.haml
 #: ../app/views/miq_ae_customization/_dialog_info.html.haml
@@ -76966,10 +77426,6 @@ msgstr "Nome de usuário desta credencial"
 #: ../app/controllers/ops_controller/ops_rbac.rb
 msgid "Username must be entered to perform LDAP Group Look Up"
 msgstr "Deve-se inserir o nome de usuário para fazer consultas no grupo LDAP"
-
-#: ../app/models/manageiq/providers/microsoft/infra_manager.rb
-msgid "Username must be in the format: name@realm"
-msgstr "O nome do usuário deve estar no formato: nome@realm"
 
 #: ../app/models/manageiq/providers/awx/provider.rb
 msgid "Username or password is not valid"
@@ -78110,7 +78566,7 @@ msgid "VM operations"
 msgstr "Operações da MV"
 
 #. TRANSLATORS: en.yml key: dictionary.model.VmOrTemplate
-#: ../app/models/vm_or_template.rb:1688 ../config/dictionary_strings.rb
+#: ../app/models/vm_or_template.rb:1684 ../config/dictionary_strings.rb
 msgid "VM or Template"
 msgid_plural "VMs or Templates"
 msgstr[0] "VM ou modelo"
@@ -78287,7 +78743,7 @@ msgstr "Resumo de capturas instantâneas de máquinas virtuais"
 
 #. TRANSLATORS: en.yml key: dictionary.model.Vm (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.vm (plural form)
-#: ../config/dictionary_strings.rb:3804 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3800 ../config/dictionary_strings.rb
 msgid "VMs and Instances"
 msgstr "VMs e instâncias"
 
@@ -78778,7 +79234,7 @@ msgstr "Valor interpolado"
 msgid "Value Name"
 msgstr "Nome do valor"
 
-#: ../app/models/miq_alert.rb:457 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:458 ../app/models/miq_alert.rb
 msgid "Value Threshold"
 msgstr "Limite de valor"
 
@@ -78956,14 +79412,13 @@ msgstr "Verificar certificados TLS"
 #: ../app/helpers/textual_mixins/textual_vmm_info.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/javascript/components/miq-about-modal/miq-about-modal.jsx
+#: ../app/javascript/spec/prov-grid/prov-vm-grid-data.js
 #: ../app/views/miq_alert/_alert_snmp.html.haml
 #: ../config/yaml_strings.rb
 msgid "Version"
 msgstr "Versão"
 
-#: ../app/views/ops/_selected_by_roles.html.haml
-#: ../app/views/ops/_selected_by_servers.html.haml
-#: ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb:215 ../app/views/ops/_server_desc.html.haml
 msgid "Version / Build"
 msgstr "Versão/compilação"
 
@@ -79491,6 +79946,11 @@ msgstr "Visualizar armazenamento físico"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "View Physical Storage Families"
+msgstr "Visualizar famílias de armazenamento físico"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "View Physical Switch"
 msgstr "Visualizar comutador físico"
 
@@ -79677,6 +80137,11 @@ msgstr "Visualizar taxas de armazenamento"
 #: ../config/yaml_strings.rb
 msgid "View Storage Resources"
 msgstr "Visualizar recursos de armazenamento"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "View Storage Services"
+msgstr "Visualizar serviços de armazenamento"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -79883,10 +80348,6 @@ msgstr "Visualizar esta imagem do Windows"
 msgid "View this Zone"
 msgstr "Visualizar esta zona"
 
-#: ../app/views/ops/_settings_list_tab.html.haml
-msgid "View this Zone's settings"
-msgstr "Visualizar as configurações desta zona"
-
 #: ../lib/gtl_formatter.rb
 msgid "View this item"
 msgstr "Visualizar este item"
@@ -80047,11 +80508,10 @@ msgid_plural "Virtual Machines (Kubevirt)"
 msgstr[0] "Máquina virtual (Kubevirt)"
 msgstr[1] "Máquinas virtuais (Kubevirt)"
 
-#: ../app/models/manageiq/providers/microsoft/infra_manager/vm.rb
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Microsoft::InfraManager::Vm
+#: ../config/dictionary_strings.rb
 msgid "Virtual Machine (Microsoft)"
-msgid_plural "Virtual Machines (Microsoft)"
-msgstr[0] "Máquina virtual (Microsoft)"
-msgstr[1] "Máquinas virtuais (Microsoft)"
+msgstr "Máquina virtual (Microsoft)"
 
 #: ../app/models/manageiq/providers/redhat/infra_manager/vm.rb
 msgid "Virtual Machine (Red Hat)"
@@ -80112,7 +80572,7 @@ msgstr "Exibições de máquina virtual"
 #: ../app/helpers/ems_infra_helper/textual_summary.rb
 #: ../app/helpers/ems_physical_infra_helper/textual_summary.rb
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
-#: ../app/presenters/menu/default_menu.rb:97 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:99 ../config/yaml_strings.rb
 msgid "Virtual Machines"
 msgstr "Máquinas virtuais"
 
@@ -81381,7 +81841,8 @@ msgid "Vnc Port"
 msgstr "Porta de VNC"
 
 #. TRANSLATORS: file: product/views/VolumeMapping.yaml
-#:
+#: ../app/helpers/storage_resource_helper/textual_summary.rb
+#: ../app/helpers/storage_service_helper/textual_summary.rb
 #: ../app/javascript/components/cloud-volume-backup-form/cloud-volume-backup-form.schema.js
 #: ../app/views/static/cloud_volume_backup/volume_select.html.haml
 #: ../config/yaml_strings.rb
@@ -81490,7 +81951,7 @@ msgstr "ID do volume"
 
 #. TRANSLATORS: en.yml key: dictionary.table.volume_mapping
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/model_display_names.rb:254 ../config/dictionary_strings.rb
+#: ../config/model_display_names.rb:256 ../config/dictionary_strings.rb
 #: ../config/yaml_strings.rb
 msgid "Volume Mapping"
 msgid_plural "Volume Mappings"
@@ -81648,6 +82109,8 @@ msgstr "VolumeMapping|ems do ID do usuário"
 #: ../app/helpers/cloud_tenant_helper/textual_summary.rb
 #: ../app/helpers/container_group_helper/textual_summary.rb
 #: ../app/helpers/ems_container_helper/textual_summary.rb
+#: ../app/helpers/storage_resource_helper/textual_summary.rb
+#: ../app/helpers/storage_service_helper/textual_summary.rb
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/services/ems_storage_dashboard_service.rb
 #: ../app/views/shared/views/_prov_dialog.html.haml
@@ -82390,6 +82853,7 @@ msgid "Wedensday"
 msgstr "Quarta-feira"
 
 #: ../app/helpers/report_helper/timer.rb
+#: ../app/javascript/components/schedule-form/helper.js
 #: ../app/views/report/_form_filter_chargeback.html.haml
 msgid "Week"
 msgstr "Semana"
@@ -82419,6 +82883,7 @@ msgid "Weekly Utilization Overview"
 msgstr "Visão geral da utilização semanal"
 
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js
+#: ../app/javascript/components/schedule-form/helper.js
 msgid "Weeks"
 msgstr "Semanas"
 
@@ -82433,7 +82898,7 @@ msgid "What to Evaluate"
 msgstr "O que avaliar"
 
 #:
-#: ../app/models/manageiq/providers/redhat/infra_manager/provision_workflow/dialog_field_validation.rb
+#: ../app/models/manageiq/providers/ovirt/infra_manager/provision_workflow/dialog_field_validation.rb
 msgid ""
 "When the 'Linked Clone' option is set, disks and storage configuration cannot "
 "be changed"
@@ -82455,7 +82920,7 @@ msgid "Whether to use the authorize mechanism"
 msgstr "Se deve usar o mecanismo de autorização"
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqWidget
-#: ../app/models/miq_widget.rb:592 ../config/dictionary_strings.rb
+#: ../app/models/miq_widget.rb:594 ../config/dictionary_strings.rb
 msgid "Widget"
 msgid_plural "Widgets"
 msgstr[0] "Widget"
@@ -82834,6 +83299,7 @@ msgstr ""
 #: ../app/helpers/report_helper/report_schedule_helper.rb
 #: ../app/javascript/components/miq-about-modal/miq-about-modal.jsx
 #: ../app/javascript/components/provider-form/index.jsx
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/javascript/components/settings-tasks-form/settings-tasks-form.schema.js
 #: ../app/views/catalog/_form_basic_info.html.haml
 #: ../app/views/catalog/_st_angular_form.html.haml
@@ -82871,6 +83337,7 @@ msgstr "Zona*"
 msgid "Zone:"
 msgstr "Zona:"
 
+#: ../app/helpers/zones_helper.rb
 #: ../app/presenters/tree_builder_ops_settings.rb
 #: ../app/views/ops/_all_tabs.html.haml
 #: ../app/views/ops/_settings_details_tab.html.haml
@@ -83088,7 +83555,7 @@ msgstr ""
 "aceit_all_eula é necessário para a implementação do item da biblioteca de "
 "conteúdo."
 
-#: ../app/views/ops/_selected_by_servers.html.haml
+#: ../app/helpers/ops_helper.rb
 msgid "active"
 msgstr "ativo"
 
@@ -83109,7 +83576,7 @@ msgstr "após um ano"
 msgid "amqp"
 msgstr "amqp"
 
-#: ../app/models/miq_request.rb:424 ../app/models/miq_request_task.rb
+#: ../app/models/miq_request.rb:426 ../app/models/miq_request_task.rb
 msgid "approval is required for %{task}"
 msgstr "Aprovação é necessária para %{task}"
 
@@ -83159,8 +83626,8 @@ msgstr "autenticação"
 msgid "authorization"
 msgstr "autorização"
 
+#: ../app/helpers/ops_helper.rb
 #: ../app/views/miq_request/_prov_dialog_cloud_quota.html.haml
-#: ../app/views/ops/_selected_by_servers.html.haml
 msgid "available"
 msgstr "disponível"
 
@@ -83488,7 +83955,7 @@ msgstr "cpu_total_cores"
 msgid "create_aggregate must be implemented in a subclass"
 msgstr "create_agregado precisa ser implementado em uma subclasse"
 
-#: ../app/presenters/tree_node/zone.rb
+#: ../app/helpers/zones_helper.rb:18 ../app/presenters/tree_node/zone.rb
 msgid "current"
 msgstr "Atual"
 
@@ -83609,7 +84076,8 @@ msgstr "ems_configuration"
 #: ../app/models/cloud_volume.rb:92 ../app/models/host_initiator.rb
 #: ../app/models/host_initiator_group.rb
 #: ../app/models/physical_storage.rb:78 ../app/models/physical_storage.rb
-#: ../app/models/placement_group.rb:48 ../app/models/volume_mapping.rb
+#: ../app/models/placement_group.rb:48 ../app/models/storage_service.rb
+#: ../app/models/volume_mapping.rb
 msgid "ems_id cannot be nil"
 msgstr "ems_id não pode ser nil"
 
@@ -83783,7 +84251,8 @@ msgstr ""
 #: ../app/models/cloud_volume.rb:94 ../app/models/host_initiator.rb
 #: ../app/models/host_initiator_group.rb
 #: ../app/models/physical_storage.rb:81 ../app/models/physical_storage.rb
-#: ../app/models/placement_group.rb:51 ../app/models/volume_mapping.rb
+#: ../app/models/placement_group.rb:51 ../app/models/storage_service.rb
+#: ../app/models/volume_mapping.rb
 msgid "ext_management_system cannot be found"
 msgstr "ext_management_system não pôde ser localizado"
 
@@ -84097,7 +84566,7 @@ msgstr "O md5 do ID do %{name} [%{number}] está incorreto"
 msgid "memory_mb"
 msgstr "memory_mb"
 
-#: ../app/models/classification.rb:276 ../app/models/classification.rb
+#: ../app/models/classification.rb:277 ../app/models/classification.rb
 msgid "method is only available for an entry"
 msgstr "O método está disponível somente para uma entrada"
 
@@ -84123,6 +84592,7 @@ msgstr "deve ser um OperatingSystem"
 
 #: ../app/models/ext_management_system.rb
 #: ../app/models/manageiq/providers/inventory/parser.rb
+#: ../app/models/miq_server/worker_management.rb
 #: ../app/models/miq_worker/runner.rb:287 ../app/models/service_order.rb
 #: ../app/models/vm/operations/guest.rb
 #: ../app/models/vm_or_template/operations/configuration.rb
@@ -84170,7 +84640,7 @@ msgid "new element"
 msgstr "novo elemento"
 
 #: ../app/models/ext_management_system.rb
-#: ../app/models/ext_management_system.rb:655 ../app/models/provider.rb
+#: ../app/models/ext_management_system.rb:656 ../app/models/provider.rb
 msgid "no Provider credentials defined"
 msgstr "nenhuma credencial de provedor definida"
 
@@ -84215,11 +84685,6 @@ msgstr "sem valor"
 #: ../app/views/ops/_settings_server_tab.html.haml
 msgid "none"
 msgstr "nenhum"
-
-#: ../app/views/ops/_selected_by_roles.html.haml
-#: ../app/views/ops/_selected_by_servers.html.haml
-msgid "normal"
-msgstr "normal"
 
 #:
 #: ../app/javascript/oldjs/controllers/reconfigure/reconfigure_form_controller.js
@@ -84268,7 +84733,7 @@ msgstr "em %{date} em %{time}"
 msgid "open and close options"
 msgstr "opções de abertura e fechamento"
 
-#: ../lib/miq_expression.rb:289 ../lib/miq_expression.rb
+#: ../lib/miq_expression.rb:294 ../lib/miq_expression.rb
 msgid "operator '%{operator_name}' is not supported"
 msgstr "O operador '%{operator_name}' não é suportado"
 
@@ -84403,11 +84868,6 @@ msgstr "O método de pesquisa '%{value}' não foi definido"
 msgid "poll_native_task must be implemented by a subclass"
 msgstr "poll_native_task deve ser implementada por uma subclasse"
 
-#: ../app/views/ops/_selected_by_roles.html.haml
-#: ../app/views/ops/_selected_by_servers.html.haml
-msgid "primary"
-msgstr "primário"
-
 #: ../app/presenters/tree_node/assigned_server_role.rb
 msgid "primary, "
 msgstr "primário, "
@@ -84483,6 +84943,10 @@ msgstr "raw_create_snapshot precisa ser implementado em uma subclasse"
 #: ../app/models/orchestration_stack.rb
 msgid "raw_create_stack must be implemented in a subclass"
 msgstr "raw_create_stack deve ser implementado em uma subclasse"
+
+#: ../app/models/storage_service.rb
+msgid "raw_create_storage_service must be implemented in a subclass"
+msgstr "raw_create_storage_service deve ser implementado em uma subclasse"
 
 #: ../app/models/cloud_volume.rb
 msgid "raw_create_volume must be implemented in a subclass"
@@ -84560,6 +85024,10 @@ msgstr "raw_delete_snapshot deve ser implementada em uma subclasse"
 msgid "raw_delete_stack must be implemented in a subclass"
 msgstr "raw_delete_stack deve ser implementado em uma subclasse"
 
+#: ../app/models/storage_service.rb
+msgid "raw_delete_storage_service must be implemented in a subclass"
+msgstr "raw_delete_storage_service deve ser implementado em uma subclasse"
+
 #: ../app/models/cloud_volume.rb
 msgid "raw_delete_volume must be implemented in a subclass"
 msgstr "raw_delete_volume deve ser implementado em uma subclasse"
@@ -84620,6 +85088,10 @@ msgstr "raw_update_image deve ser implementada em uma subclasse"
 msgid "raw_update_load_balancer must be implemented in a subclass"
 msgstr "raw_update_load_balancer deve ser implementado em uma subclasse"
 
+#: ../app/models/physical_storage.rb
+msgid "raw_update_physical_storage must be implemented in a subclass"
+msgstr "raw_update_physical_storage deve ser implementado em uma subclasse"
+
 #: ../app/models/security_group.rb
 msgid "raw_update_security_group must be implemented in a subclass"
 msgstr "raw_update_security_group deve ser implementado em uma subclasse"
@@ -84636,7 +85108,11 @@ msgstr "raw_update_security_policy_rule deve ser implementado em uma subclasse"
 msgid "raw_update_stack must be implemented in a subclass"
 msgstr "raw_update_stack deve ser implementado em uma subclasse"
 
-#: ../app/models/cloud_volume.rb:131 ../app/models/physical_storage.rb
+#: ../app/models/storage_service.rb
+msgid "raw_update_storage_service must be implemented in a subclass"
+msgstr "raw_update_storage_service deve ser implementado em uma subclasse"
+
+#: ../app/models/cloud_volume.rb
 msgid "raw_update_volume must be implemented in a subclass"
 msgstr "raw_update_volume deve ser implementado em uma subclasse"
 
@@ -84841,11 +85317,6 @@ msgstr "executando"
 #: ../app/javascript/components/action-form/helper.js
 msgid "sample"
 msgstr "amostra"
-
-#: ../app/views/ops/_selected_by_roles.html.haml
-#: ../app/views/ops/_selected_by_servers.html.haml
-msgid "secondary"
-msgstr "secundário"
 
 #: ../app/presenters/tree_node/assigned_server_role.rb
 msgid "secondary, "
@@ -85053,7 +85524,7 @@ msgstr "unassigned_company_tag_parent_resource_pool"
 msgid "unassigned_company_tag_parent_storage"
 msgstr "unassigned_company_tag_parent_storage"
 
-#: ../app/views/ops/_selected_by_servers.html.haml
+#: ../app/helpers/ops_helper.rb
 msgid "unavailable"
 msgstr "não disponível"
 
@@ -85074,8 +85545,7 @@ msgstr "Tipo de objeto desconhecido: %{class}"
 msgid "unknown zone %{zone_name}"
 msgstr "Zona desconhecida %{zone_name}"
 
-#: ../app/views/ops/_selected_by_roles.html.haml
-#: ../app/views/ops/_selected_by_servers.html.haml
+#: ../app/helpers/ops_helper.rb:171 ../app/helpers/ops_helper.rb
 msgid "unlimited"
 msgstr "ilimitado"
 
