@@ -6501,7 +6501,14 @@
       :description: Add a Host Initiator Group
       :feature_type: admin
       :identifier: host_initiator_group_new
-
+    - :name: Edit
+      :description: Edit a Host Initiator Group
+      :feature_type: admin
+      :identifier: host_initiator_group_edit
+    - :name: Remove
+      :description: Remove a Host Initiator Group
+      :feature_type: admin
+      :identifier: host_initiator_group_delete
 
 # EmsPhysicalInfra
 - :name: Physical Infrastructure Providers

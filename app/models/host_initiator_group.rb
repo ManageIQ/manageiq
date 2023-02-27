@@ -16,6 +16,7 @@ class HostInitiatorGroup < ApplicationRecord
   virtual_total :v_total_addresses, :san_addresses
 
   supports_not :create
+  supports_not :delete
   acts_as_miq_taggable
 
   def my_zone
@@ -57,5 +58,57 @@ class HostInitiatorGroup < ApplicationRecord
 
   def self.raw_create_host_initiator_group(_ext_management_system, _options = {})
     raise NotImplementedError, _("raw_create_host_initiator_group must be implemented in a subclass")
+  end
+
+  def delete_host_initiator_group_queue(userid)
+    task_opts = {
+      :action => "deleting Host Initiator Group for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'delete_host_initiator_group',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
+      :zone        => ext_management_system.my_zone,
+      :args        => []
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def raw_delete_host_initiator_group
+    raise NotImplementedError, _("raw_delete_host_initiator_group must be implemented in a subclass")
+  end
+
+  def delete_host_initiator_group
+    raw_delete_host_initiator_group
+  end
+
+  def update_host_initiator_group_queue(userid, options = {})
+    task_opts = {
+      :action => "updating Host Initiator Group for user #{userid}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'update_host_initiator_group',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
+      :zone        => ext_management_system.my_zone,
+      :args        => [options]
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def update_host_initiator_group(options = {})
+    raw_update_host_initiator_group(options)
+  end
+
+  def raw_update_host_initiator_group(_options = {})
+    raise NotImplementedError, _("raw_update_host_initiator_group must be implemented in a subclass")
   end
 end
