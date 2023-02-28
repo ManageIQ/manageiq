@@ -582,7 +582,7 @@ RSpec.describe Authenticator::Httpd do
             expect(AuditEvent).to receive(:failure).with({
                                                            :event   => 'authorize',
                                                            :userid  => 'bob',
-                                                           :message => "Authentication failed for userid bob@example.com, unable to match user's group membership to an EVM role",
+                                                           :message => "Authentication failed for userid bob@example.com, unable to match user's group membership to an EVM role. The incoming groups are: bubble, trouble",
                                                          }).and_call_original
             authenticate
           end
