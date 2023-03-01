@@ -229,6 +229,21 @@ RSpec.describe Host do
           :queue_name  => @ems.queue_name_for_ems_operations,
         )
       end
+
+      it "passes the new credentials" do
+        @host.update_authentication(old_creds)
+        @host.verify_credentials_task(FactoryBot.create(:user).userid, :default, :credentials => default_creds)
+
+        expect(MiqQueue.last).to have_attributes(
+          :args        => [:default, {:credentials => default_creds}],
+          :method_name => "verify_credentials?",
+          :instance_id => @host.id,
+          :class_name  => @host.class.name,
+          :role        => "ems_operations",
+          :zone        => @ems.zone.name,
+          :queue_name  => @ems.queue_name_for_ems_operations
+        )
+      end
     end
 
     context "default credentials" do
@@ -248,6 +263,21 @@ RSpec.describe Host do
         @host.update_authentication(default_creds, :save => false)
         assert_default_credentials_validated
         expect(@host.authentications.count).to eq(0)
+      end
+    end
+
+    context "passing credentials" do
+      # keeping us honest
+      it "assert_default fails by default" do
+        @host.update_authentication(old_creds)
+        expect do
+          assert_default_credentials_validated
+        end.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+      end
+
+      it "updates credentials via validate_credential options" do
+        @host.update_authentication(old_creds)
+        assert_default_credentials_validated(:credentials => default_creds)
       end
     end
 
