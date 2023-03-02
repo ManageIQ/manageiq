@@ -639,10 +639,13 @@ class Host < ApplicationRecord
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
-  def verify_credentials?(*args)
+  def verify_credentials?(auth_type = nil, options = {})
     # Prevent the connection details, including the password, from being leaked into the logs
     # and MiqQueue by only returning true/false
-    !!verify_credentials(*args)
+    auth = options.delete(:credentials)
+    update_authentication(auth, :save => false) if auth.present?
+
+    !!verify_credentials(auth_type, options)
   end
 
   def verify_credentials(auth_type = nil, options = {})
@@ -656,10 +659,15 @@ class Host < ApplicationRecord
     when 'ws'     then verify_credentials_with_ws(auth_type)
     when 'ipmi'   then verify_credentials_with_ipmi(auth_type)
     else
-      verify_credentials_with_ws(auth_type)
+      verify_credentials_default(auth_type, options)
     end
 
     true
+  end
+
+  # different providers use different default credential checks
+  def verify_credentials_default(auth_type, options)
+    verify_credentials_with_ssh(auth_type, options)
   end
 
   def verify_credentials_with_ws(_auth_type = nil, _options = {})
