@@ -202,6 +202,7 @@ class MiqServer < ApplicationRecord
     Benchmark.realtime_block(:server_monitor) do
       server_monitor.monitor_servers
       monitor_server_roles if self.is_master?
+      messaging_health_check
     end if threshold_exceeded?(:server_monitor_frequency, now)
 
     Benchmark.realtime_block(:log_active_servers)      { log_active_servers }                     if threshold_exceeded?(:server_log_frequency, now)
@@ -543,5 +544,16 @@ class MiqServer < ApplicationRecord
     return unless MiqEnvironment::Command.is_podified?
 
     errors.add(:zone, N_('cannot be changed when running in containers')) if zone_id_changed?
+  end
+
+  def messaging_health_check
+    broker = MiqQueue.messaging_client("health_check")
+    return if broker.nil?
+
+    broker.publish_message(:service => "messaging-health-check", :message => "health check", :payload => {})
+    broker.subscribe_messages(:service => "messaging-health-check") { break }
+  rescue => err
+    _log.error("Messaging health check failed: #{err}")
+    shutdown_and_exit(1)
   end
 end # class MiqServer
