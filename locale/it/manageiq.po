@@ -41,7 +41,7 @@ msgstr " Numero di giorni"
 
 #: ../app/controllers/ems_infra_controller.rb
 msgid " %{host_uid_ems} is not a compute node "
-msgstr " %{host_uid_ems} non è un nodo di elaborazione "
+msgstr " %{host_uid_ems} non è un nodo di calcolo "
 
 #: ../app/controllers/ems_infra_controller.rb
 msgid " %{host_uid_ems} needs to be evacuated before it can be removed "
@@ -254,7 +254,7 @@ msgstr " Opzioni del processore"
 
 #: ../app/controllers/ems_infra_controller.rb
 msgid " Scaling down to %{a} compute nodes"
-msgstr " Scaling down a %{a} nodi di elaborazione"
+msgstr " Scaling down a %{a} nodi di calcolo"
 
 #: ../app/views/miq_policy/_event_edit.html.haml
 msgid " Selected Actions:"
@@ -5927,7 +5927,7 @@ msgstr "Tutti gli attributi"
 #: ../app/javascript/oldjs/controllers/reconfigure/reconfigure_form_controller.js
 #: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
 msgid "All changes have been reset"
-msgstr "Tutte le modifiche sono state ripristinate"
+msgstr "Tutte le modifiche sono state reimpostate"
 
 #:
 #: ../app/javascript/oldjs/controllers/ops/pglogical_replication_form_controller.js
@@ -6051,7 +6051,7 @@ msgstr "Spazio allocato"
 #. TRANSLATORS: file: product/views/Vm__restricted.yaml
 #: ../config/yaml_strings.rb
 msgid "Allocated Storage"
-msgstr "Memoria assegnata"
+msgstr "Spazio di archiviazione assegnato"
 
 #: ../app/models/tenant_quota.rb
 msgid "Allocated Storage in GB"
@@ -6613,22 +6613,22 @@ msgstr "Data approvazione"
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
 #: ../config/yaml_strings.rb
 msgid "Approved/Denied By"
-msgstr "Approvato/Rifiutato da"
+msgstr "Approvata/rifiutata da"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
 #: ../config/yaml_strings.rb
 msgid "Approved/Denied On"
-msgstr "Approvato/Rifiutato il"
+msgstr "Data/ora approvazione/rifiuto"
 
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
 msgid "Approved/Denied by"
-msgstr "Approvato/Rifiutato da"
+msgstr "Approvata/rifiutata da"
 
 #: ../app/views/miq_request/_request.html.haml
 msgid "Approved/Denied on"
-msgstr "Approvato/Rifiutato il"
+msgstr "Data/ora approvazione/rifiuto"
 
 #. TRANSLATORS: en.yml key: dictionary.column.arch
 #: ../config/dictionary_strings.rb
@@ -6974,7 +6974,7 @@ msgstr "Si è sicuri di voler rimuovere questo Punto di ingresso in ritiro?"
 msgid ""
 "Are you sure you want to reset this Dashboard's Widgets to the defaults?"
 msgstr ""
-"Si è sicuri di voler ripristinare i widget di questo dashboard ai valori "
+"Si è sicuri di voler reimpostare i widget di questo dashboard ai valori "
 "predefiniti?"
 
 #: ../app/models/metric/ci_mixin.rb
@@ -9502,7 +9502,7 @@ msgstr "Dall'utente con nome %{username} %{updated_on}"
 
 #: ../app/views/ops/_all_tabs.html.haml
 msgid "C & U Collection"
-msgstr "Raccolte C & U"
+msgstr "Raccolta C & U"
 
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb
@@ -14941,7 +14941,7 @@ msgstr "Vista compressa"
 #: ../app/controllers/vm_infra_controller.rb
 #: ../app/presenters/menu/default_menu.rb
 msgid "Compute"
-msgstr "Elaborazione"
+msgstr "Calcolo"
 
 #: ../app/helpers/configured_system_helper/textual_summary.rb
 msgid "Compute Profile"
@@ -20394,7 +20394,7 @@ msgstr "Crea una nuova istantanea per questa VM"
 
 #: ../app/helpers/application_helper/toolbar/storage_services_center.rb
 msgid "Create a new storage service"
-msgstr "Creare un nuovo servizio di archiviazione"
+msgstr "Crea un nuovo servizio di archiviazione"
 
 #:
 #: ../app/helpers/application_helper/toolbar/orchestration_templates_center.rb
@@ -20457,7 +20457,7 @@ msgstr "Data di creazione"
 #: ../app/views/vm_common/_snapshots_desc.html.haml
 #: ../config/yaml_strings.rb
 msgid "Created On"
-msgstr "Creato il"
+msgstr "Data/ora creazione"
 
 #. TRANSLATORS: en.yml key: dictionary.column.ems_created_on
 #: ../config/dictionary_strings.rb
@@ -22153,7 +22153,7 @@ msgstr "Data aggiunta"
 
 #: ../app/views/miq_request/_request_details.html.haml
 msgid "Date Approved/Denied"
-msgstr "Data Approvato/Negato"
+msgstr "Data approvazione/rifiuto"
 
 #: ../app/models/dialog_field.rb
 msgid "Date Control"
@@ -23290,7 +23290,7 @@ msgstr "Elimina report salvati selezionati"
 #: ../app/helpers/application_helper/toolbar/diagnostics_region_center.rb
 #: ../app/helpers/application_helper/toolbar/diagnostics_zone_center.rb
 msgid "Delete selected Servers"
-msgstr "Eliminare i server selezionati"
+msgstr "Elimina i server selezionati"
 
 #: ../app/helpers/application_helper/toolbar/time_profiles_center.rb
 msgid "Delete selected Time Profiles"
@@ -23343,7 +23343,7 @@ msgstr "Elimina spazio fisico di archiviazione"
 #: ../app/helpers/application_helper/toolbar/storage_service_center.rb
 #: ../app/helpers/application_helper/toolbar/storage_services_center.rb
 msgid "Delete the Storage Service"
-msgstr "Eliminare il servizio di archiviazione"
+msgstr "Elimina il servizio di archiviazione"
 
 #: ../app/views/layouts/_adv_search_footer.html.haml
 msgid "Delete the filter named %{filter_name}"
@@ -23651,7 +23651,7 @@ msgstr ""
 
 #: ../app/controllers/miq_request_controller.rb
 msgid "Denied"
-msgstr "Respinto"
+msgstr "Rifiutata"
 
 #: ../app/helpers/application_helper/toolbar/miq_request_center.rb
 msgid "Deny this Request"
@@ -23731,11 +23731,11 @@ msgstr "Nome depot"
 #: ../app/controllers/application_controller.rb
 #: ../app/controllers/ops_controller/settings/schedules.rb
 msgid "Depot Settings successfuly validated"
-msgstr "Impostazioni del deposito correttamente convalidate"
+msgstr "Impostazioni del depot convalidate correttamente"
 
 #: ../app/models/file_depot_ftp.rb
 msgid "Depot Settings validation failed"
-msgstr "Le impostazioni Depot non hanno superato la convalida"
+msgstr "Convalida delle impostazioni del depot non riuscita"
 
 #: ../app/models/file_depot_smb.rb
 msgid "Depot Settings validation failed with error: %{error}"
@@ -27614,7 +27614,7 @@ msgstr "Modifica azioni per evento della politica"
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
 msgid "Edit Actions for the selected Policy's Event"
-msgstr "Modificare azioni per l'evento della politica selezionato"
+msgstr "Modifica le azioni per l'evento della politica selezionata"
 
 #: ../app/helpers/application_helper/toolbar/miq_event_center.rb
 msgid "Edit Actions for this Policy Event"
@@ -27726,7 +27726,7 @@ msgstr "Modifica Elemento Catalogo Composito"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Edit Condition Assignment"
-msgstr "Modifica Condizione Assegnazione"
+msgstr "Modifica assegnazione condizioni"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -27746,7 +27746,7 @@ msgstr "Modifica tag profili di configurazione"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Edit Configured Systems Tags"
-msgstr "Modifica Tag dei sistemi configurati"
+msgstr "Modifica tag dei sistemi configurati"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -27779,12 +27779,12 @@ msgstr "Modifica modello di personalizzazione"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Edit Datastore Cluster Tags"
-msgstr "Modifica Tag Cluster Datastore"
+msgstr "Modifica tag cluster datastore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Edit Datastore Tags"
-msgstr "Modifica Tag Datastore"
+msgstr "Modifica tag datastore"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -27884,12 +27884,12 @@ msgstr "Modifica Tag modelli di lavoro"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Edit Log Depot Settings"
-msgstr "Modifica delle impostazioni di Log Depot"
+msgstr "Modifica delle impostazioni del depot di log"
 
 #: ../app/controllers/ops_controller/diagnostics.rb
 msgid "Edit Log Depot settings was cancelled by the user"
 msgstr ""
-"La modifica delle impostazioni di Log Depot è stata annullata dall'utente"
+"La modifica delle impostazioni del depot di log è stata annullata dall'utente"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb
@@ -27948,7 +27948,7 @@ msgstr "Modifica le assegnazioni delle condizioni della politica"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Edit Policy's Event assignments"
-msgstr "Modifica le assegnazioni dell'evento della politica"
+msgstr "Modifica le assegnazioni degli eventi della politica"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_domains_center.rb
 msgid "Edit Priority Order of Domains"
@@ -28366,7 +28366,7 @@ msgstr "Modifica tag per le sottoreti cloud selezionate"
 
 #: ../app/helpers/application_helper/toolbar/storages_center.rb
 msgid "Edit Tags for the selected Datastores"
-msgstr "Modifica Tag dei Datastore selezionati"
+msgstr "Modifica tag dei datastore selezionati"
 
 #: ../app/helpers/application_helper/toolbar/flavors_center.rb
 msgid "Edit Tags for the selected Flavors"
@@ -28382,7 +28382,7 @@ msgstr "Modifica Tag per le istanze oggetto generico selezionate"
 
 #: ../app/helpers/application_helper/toolbar/host_aggregates_center.rb
 msgid "Edit Tags for the selected Host Aggregates"
-msgstr "Modifica Tag per gli Aggregati di Host selezionati"
+msgstr "Modifica tag per gli aggregati di host selezionati"
 
 #: ../app/helpers/application_helper/toolbar/ems_infras_center.rb
 msgid "Edit Tags for the selected Infrastructure Providers"
@@ -28394,19 +28394,19 @@ msgstr "Modifica tag dei lavori selezionati"
 
 #: ../app/helpers/application_helper/toolbar/infra_networking_center.rb
 msgid "Edit Tags for the selected Network Element"
-msgstr "Modifica Tag per l'elemento di rete selezionato"
+msgstr "Modifica tag per l'elemento di rete selezionato"
 
 #: ../app/helpers/application_helper/toolbar/infra_networkings_center.rb
 msgid "Edit Tags for the selected Network Elements"
-msgstr "Modifica Tag per gli Elementi di rete selezionati"
+msgstr "Modifica tag per gli elementi di rete selezionati"
 
 #: ../app/helpers/application_helper/toolbar/network_ports_center.rb
 msgid "Edit Tags for the selected Network Ports"
-msgstr "Modifica Tag per le porte di rete selezionate"
+msgstr "Modifica tag per le porte di rete selezionate"
 
 #: ../app/helpers/application_helper/toolbar/ems_networks_center.rb
 msgid "Edit Tags for the selected Network Providers"
-msgstr "Modifica Tag dei Provider di Rete selezionati"
+msgstr "Modifica tag dei provider di rete selezionati"
 
 #: ../app/helpers/application_helper/toolbar/network_routers_center.rb
 msgid "Edit Tags for the selected Network Routers"
@@ -28671,7 +28671,7 @@ msgstr "Modifica tag di questo replicatore"
 
 #: ../app/helpers/application_helper/toolbar/resource_pool_center.rb
 msgid "Edit Tags for this Resource Pool"
-msgstr "Modifica Tag di questo Pool di Risorse"
+msgstr "Modifica tag di questo pool di risorse"
 
 #: ../app/helpers/application_helper/toolbar/container_route_center.rb
 msgid "Edit Tags for this Route"
@@ -28965,12 +28965,12 @@ msgstr "Modifica tag della regola della politica di sicurezza"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Edit Tags of Services"
-msgstr "Modifica Tag dei servizi"
+msgstr "Modifica tag dei servizi"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Edit Tags of Snapshots"
-msgstr "Modifica Tag di istantanee"
+msgstr "Modifica tag di istantanee"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -28990,7 +28990,7 @@ msgstr "Modifica tag di servizi di archiviazione"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Edit Tags of Tenants"
-msgstr "Modifica Tag dei tenant"
+msgstr "Modifica tag dei tenant"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -29005,7 +29005,7 @@ msgstr "Modifica tag dei tipi di volume"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Edit Tags of Volumes"
-msgstr "Modifica Tag dei volumi"
+msgstr "Modifica tag dei volumi"
 
 #: ../app/helpers/application_helper/toolbar/pxe_servers_center.rb
 msgid "Edit Tags selected Pxe Servers"
@@ -29784,7 +29784,7 @@ msgstr "Modifica i tag degli elementi selezionati"
 #: ../app/helpers/application_helper/toolbar/miq_templates_center.rb
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb
 msgid "Edit tags for the selected Templates"
-msgstr "Modifica i tag per i Modelli selezionati"
+msgstr "Modifica tag per i modelli selezionati"
 
 #: ../app/helpers/application_helper/toolbar/auth_key_pair_clouds_center.rb
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_containers_center.rb
@@ -29839,11 +29839,11 @@ msgstr "Modifica tag di questa coppia di chiavi"
 
 #: ../app/helpers/application_helper/toolbar/diagnostics_server_center.rb
 msgid "Edit the Log Depot settings for the selected Server"
-msgstr "Modifica le impostazioni di Log Depot del Server selezionato"
+msgstr "Modifica le impostazioni del depot di log per il server selezionato"
 
 #: ../app/helpers/application_helper/toolbar/diagnostics_zone_center.rb
 msgid "Edit the Log Depot settings for the selected Zone"
-msgstr "Modifica le impostazioni di Log Depot della Zona selezionata"
+msgstr "Modifica le impostazioni del depot di log per la zona selezionata"
 
 #: ../app/helpers/application_helper/toolbar/miq_request_center.rb
 msgid "Edit the original Request"
@@ -29892,11 +29892,11 @@ msgstr "Modifica il profilo della politica selezionato"
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
 msgid "Edit the selected Policy's Condition assignments"
-msgstr "Modificare le assegnazioni della condizione della politica selezionate"
+msgstr "Modifica le assegnazioni delle condizioni della politica selezionata"
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
 msgid "Edit the selected Policy's Event assignments"
-msgstr "Modificare le assegnazioni dell'evento della politica selezionate"
+msgstr "Modifica le assegnazioni degli eventi della politica selezionata"
 
 #: ../app/helpers/application_helper/toolbar/user_roles_center.rb
 msgid "Edit the selected Role"
@@ -30077,11 +30077,11 @@ msgstr "Modifica questo profilo di politica"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_center.rb
 msgid "Edit this Policy's Condition assignments"
-msgstr "Modifica le assegnazioni di condizione di questa politica"
+msgstr "Modifica le assegnazioni delle condizioni di questa politica"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_center.rb
 msgid "Edit this Policy's Event assignments"
-msgstr "Modifica le assegnazioni dell'evento di questa politica"
+msgstr "Modifica le assegnazioni degli eventi di questa politica"
 
 #: ../app/helpers/application_helper/toolbar/ems_automation_center.rb
 #: ../app/helpers/application_helper/toolbar/ems_configuration_center.rb
@@ -30279,11 +30279,11 @@ msgstr "Modifica del gruppo \"%{name}\""
 
 #: ../app/javascript/components/diagnostics-collect-log-form/schema.js
 msgid "Editing Log Depot Settings for %s: %s"
-msgstr "Modifica delle impostazioni del deposito dei log per %s: %s"
+msgstr "Modifica delle impostazioni del depot di log per %s: %s"
 
 #: ../app/controllers/ops_controller.rb
 msgid "Editing Log Depot settings"
-msgstr "Modifica delle impostazioni di Log Depot"
+msgstr "Modifica delle impostazioni del depot di log"
 
 #: ../app/controllers/pxe_controller.rb
 msgid "Editing PXE Server \"%{name}\""
@@ -31138,7 +31138,7 @@ msgstr "Numero di enclosure"
 #:
 #: ../app/models/manageiq/providers/amazon/storage_manager/ebs/cloud_volume.rb
 msgid "Encrypted"
-msgstr "Codificato"
+msgstr "Crittografato"
 
 #:
 #: ../app/models/manageiq/providers/openstack/network_manager/cloud_subnet.rb
@@ -31659,7 +31659,8 @@ msgstr "Errore durante l'impostazione del repository: %{error_message}"
 
 #: ../app/controllers/miq_ae_tools_controller.rb
 msgid "Error during reset: Status [%{status}] Message [%{message}]"
-msgstr "Errore durante il ripristino: stato [%{status}] Messaggio [%{message}]"
+msgstr ""
+"Errore durante la reimpostazione: stato [%{status}] messaggio [%{message}]"
 
 #: ../app/controllers/ops_controller/settings/common.rb
 msgid "Error during sending test email: %{class_name}, %{error_message}"
@@ -33961,7 +33962,7 @@ msgstr "Versione file"
 
 #: ../config/model_attributes.rb
 msgid "File depot"
-msgstr "depot del file"
+msgstr "Depot di file"
 
 #: ../app/models/miq_bulk_import.rb
 msgid "File is empty"
@@ -37146,11 +37147,11 @@ msgstr "Informazioni di rete host"
 
 #: ../app/models/host.rb
 msgid "Host Not Resettable - No IPMI Address"
-msgstr "Host non ripristinabile - Nessun indirizzo IPMI"
+msgstr "Host non reimpostabile - nessun indirizzo IPMI"
 
 #: ../app/models/host.rb
 msgid "Host Not Resettable - No IPMI Credentials"
-msgstr "Host non ripristinabile - Nessuna credenziale IPMI"
+msgstr "Host non reimpostabile - Nessuna credenziale IPMI"
 
 #. TRANSLATORS: file: product/reports/190_Configuration Management - Physical Servers/030_Server Availability.yaml
 #: ../config/yaml_strings.rb
@@ -39130,7 +39131,7 @@ msgstr "Importa VM"
 
 #: ../app/views/ops/_all_tabs.html.haml
 msgid "Import Variables"
-msgstr "Importa Variabili"
+msgstr "Importa variabili"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -39411,7 +39412,7 @@ msgstr "Eredita tag"
 
 #: ../app/javascript/components/action-form/action-form.schema.js
 msgid "Inherit Tags Settings"
-msgstr "Eredita impostazioni Tag"
+msgstr "Eredita impostazioni tag"
 
 #. TRANSLATORS: file: product/views/MiqAeClass.yaml
 #: ../config/yaml_strings.rb
@@ -39931,7 +39932,7 @@ msgstr "Formato di input non valido, immettere un GUID"
 #: ../app/controllers/ops_controller/diagnostics.rb
 #: ../app/controllers/ops_controller/settings/schedules.rb
 msgid "Invalid or unsupported file depot type."
-msgstr "Tipo di depot del file non valido o non supportato."
+msgstr "Tipo di depot di file non valido o non supportato."
 
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/provision_workflow.rb
@@ -41665,19 +41666,19 @@ msgstr "Log"
 
 #: ../app/controllers/ops_controller/diagnostics.rb
 msgid "Log Depot Settings were saved"
-msgstr "Le impostazioni di Log Depot sono state salvate"
+msgstr "Le impostazioni del depot di log sono state salvate"
 
 #: ../app/controllers/ops_controller/diagnostics.rb
 msgid "Log Depot Settings were validated"
-msgstr "Impostazioni Log Depot convalidate"
+msgstr "Le impostazioni del depot di log sono state convalidate"
 
 #: ../app/helpers/ops_helper.rb:41 ../app/helpers/ops_helper.rb
 msgid "Log Depot URI"
-msgstr "URI Log Depot"
+msgstr "URI depot di log"
 
 #: ../app/models/log_file.rb
 msgid "Log Depot settings not configured"
-msgstr "Impostazioni Log Depot non configurate"
+msgstr "Impostazioni depot di log non configurate"
 
 #: ../config/model_display_names.rb
 msgid "Log File"
@@ -41723,12 +41724,12 @@ msgstr "La raccolta dei log è già in corso per questo server"
 #: ../app/helpers/application_helper/button/collect_logs.rb
 msgid "Log collection requires the Log Depot settings to be configured"
 msgstr ""
-"La raccolta dei log richiede la configurazione delle impostazioni del log "
-"depot"
+"La raccolta dei log richiede la configurazione delle impostazioni del depot di"
+" log"
 
 #: ../app/models/miq_server/log_management.rb
 msgid "Log depot settings not configured"
-msgstr "Impostazioni del log depot non configurate"
+msgstr "Impostazioni del depot di log non configurate"
 
 #: ../config/model_attributes.rb
 msgid "Log file"
@@ -42590,7 +42591,7 @@ msgstr "Produttore/Modello"
 
 #: ../app/views/ops/_all_tabs.html.haml
 msgid "Map Tags"
-msgstr "Associa Tag"
+msgstr "Associa tag"
 
 #: ../app/helpers/cloud_volume_helper/textual_summary.rb
 msgid "Mapping"
@@ -52419,7 +52420,7 @@ msgstr "Numero di Host con Spazio di archiviazione Ceph"
 #: ../app/helpers/ems_infra_helper.rb
 #: ../app/views/ems_infra/scaledown.html.haml
 msgid "Number of Compute Hosts"
-msgstr "Numero di host di elaborazione"
+msgstr "Numero di host di calcolo"
 
 #: ../app/helpers/ems_infra_helper.rb
 msgid "Number of Controller Hosts"
@@ -53380,7 +53381,7 @@ msgstr "Numero Regione"
 
 #: ../config/model_attributes.rb
 msgid "OperatingSystem|Reset lockout counter"
-msgstr "Ripristino conteggio blocco"
+msgstr "Sistema operativo\\Reimpostazione conteggio blocchi"
 
 #: ../config/model_attributes.rb
 msgid "OperatingSystem|Service pack"
@@ -60570,8 +60571,8 @@ msgid ""
 "Refresh relationships and power states for all items related to these Host "
 "Initiator Groups"
 msgstr ""
-"Aggiornare relazioni e stati di alimentazione per tutti gli elementi correlati"
-" a questi gruppi di iniziatori host"
+"Aggiorna relazioni e stati di alimentazione per tutti gli elementi correlati a"
+" questi gruppi di iniziatori host"
 
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
 msgid ""
@@ -60634,8 +60635,8 @@ msgid ""
 "Refresh relationships and power states for all items related to these Storage "
 "Services"
 msgstr ""
-"Aggiornare relazioni e stati di alimentazione per tutti gli elementi correlati"
-" a questi servizi di archiviazione"
+"Aggiorna relazioni e stati di alimentazione per tutti gli elementi correlati a"
+" questi servizi di archiviazione"
 
 #: ../app/helpers/application_helper/toolbar/storage_services_center.rb
 msgid ""
@@ -60698,8 +60699,8 @@ msgid ""
 "Refresh relationships and power states for all items related to this Host "
 "Initiator Group"
 msgstr ""
-"Aggiornare relazioni e stati di alimentazione per tutti gli elementi correlati"
-" a questo gruppo di iniziatori host"
+"Aggiorna relazioni e stati di alimentazione per tutti gli elementi correlati a"
+" questo gruppo di iniziatori host"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb
 msgid ""
@@ -60834,8 +60835,8 @@ msgid ""
 "Refresh relationships and power states for all items related to this Storage "
 "Service"
 msgstr ""
-"Aggiornare relazioni e stati di alimentazione per tutti gli elementi correlati"
-" a questo servizio di archiviazione"
+"Aggiorna relazioni e stati di alimentazione per tutti gli elementi correlati a"
+" questo servizio di archiviazione"
 
 #: ../app/helpers/application_helper/toolbar/storage_service_center.rb
 msgid ""
@@ -63230,7 +63231,7 @@ msgstr "Tipo di risorsa"
 #: src/rbac-forms/rbacAssignUserTags.jsx
 #: src/rbac-forms/rbacUserForm.jsx
 msgid "Reset"
-msgstr "Ripristina"
+msgstr "Reimposta"
 
 #: ../app/views/layouts/_x_edit_buttons.html.haml
 msgid "Reset All menus to %{product} defaults"
@@ -63246,7 +63247,7 @@ msgstr "Reimposta tutti i menu ai valori predefiniti"
 #: ../app/views/layouts/_x_dialog_buttons.html.haml
 #: ../app/views/layouts/_x_edit_buttons.html.haml
 msgid "Reset Changes"
-msgstr "Ripristina modifiche"
+msgstr "Reimposta modifiche"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -63255,21 +63256,21 @@ msgstr "Reimposta Widget Dashboard"
 
 #: ../app/javascript/components/dashboard_toolbar.jsx
 msgid "Reset Dashboard Widgets to the defaults"
-msgstr "Reimpostare Widget Dashboard ai valori predefiniti"
+msgstr "Reimposta i widget del dashboard ai valori predefiniti"
 
 #: ../app/views/report/_db_form.html.haml
 #: ../app/views/report/_db_show.html.haml
 msgid "Reset Dashboard upon login"
-msgstr "Ripristina Dashboard al momento dell'accesso"
+msgstr "Reimposta dashboard al momento dell'accesso"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Reset Instance"
-msgstr "Ripristina istanza"
+msgstr "Reimposta istanza"
 
 #: ../app/helpers/textual_mixins/textual_os_info.rb
 msgid "Reset Lockout Counter"
-msgstr "Ripristino conteggio blocco"
+msgstr "Reimposta conteggio blocco"
 
 #: ../app/models/miq_template/operations.rb
 msgid "Reset Operation is not available for Images and VM Templates."
@@ -63279,7 +63280,7 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Reset VM"
-msgstr "Ripristina VM"
+msgstr "Reimposta VM"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -63288,15 +63289,15 @@ msgstr "Reimposta un host"
 
 #: ../app/views/miq_policy_rsop/_rsop_options.html.haml
 msgid "Reset all Policy Simulation options"
-msgstr "Ripristina tutte le opzioni della Simulazione della Politica"
+msgstr "Reimposta tutte le opzioni della simulazione della politica"
 
 #: ../app/views/miq_ae_tools/_import_export.html.haml
 msgid "Reset all components in the following domains: %{domains}"
-msgstr "Ripristina tutti i componenti nei seguenti domini: %{domains}"
+msgstr "Reimposta tutti i componenti nei seguenti domini: %{domains}"
 
 #: ../app/views/miq_ae_tools/_resolve_form_buttons.html.haml
 msgid "Reset all options"
-msgstr "Ripristina tutte le opzioni"
+msgstr "Reimposta tutte le opzioni"
 
 #: ../app/views/layouts/_adv_search_footer.html.haml
 msgid "Reset the filter"
@@ -63314,28 +63315,28 @@ msgstr "Reimpostare gli elementi selezionati?"
 
 #: ../app/views/report/_widget_form_menu.html.haml
 msgid "Reset this Shortcut's text"
-msgstr "Ripristina il testo di questo taso di scelta rapida"
+msgstr "Reimposta il testo di questo tasto di scelta rapida"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb
 msgid "Reset this VM"
-msgstr "Ripristina questa VM"
+msgstr "Reimposta questa VM"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb
 msgid "Reset this VM?"
-msgstr "Ripristinare questa VM?"
+msgstr "Reimpostare questa VM?"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb
 msgid "Reset this item"
-msgstr "Ripristina questo elemento"
+msgstr "Reimposta questo elemento"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb
 msgid "Reset this item?"
-msgstr "Ripristinare questo elemento?"
+msgstr "Reimpostare questo elemento?"
 
 #: ../app/views/report/_form_formatting.html.haml
 #: ../app/views/report/_form_sort.html.haml
 msgid "Reset to Default"
-msgstr "Ripristina i valori predefiniti"
+msgstr "Reimposta i valori predefiniti"
 
 #: ../app/views/ops/_settings_server_tab.html.haml
 msgid "Resides on VM"
@@ -68194,7 +68195,7 @@ msgstr "Pianificazione delle impostazioni \"%{name}\""
 
 #: ../app/controllers/ops_controller/settings/common.rb
 msgid "Settings Schedules"
-msgstr "Pianificazioni Impostazioni"
+msgstr "Pianificazioni impostazioni"
 
 #: ../app/controllers/ops_controller/settings/common.rb
 msgid "Settings Zones"
@@ -74178,8 +74179,8 @@ msgstr "Quest'anno"
 msgid ""
 "This Zone do not have Log Depot settings configured, collection not allowed"
 msgstr ""
-"Questa zona ha le impostazioni di Log Depot configurate, la raccolta non è "
-"consentita"
+"Questa zona non ha impostazioni del depot di log configurate, la raccolta non "
+"è consentita"
 
 #: ../app/controllers/application_controller/filter.rb
 msgid ""
@@ -74313,7 +74314,7 @@ msgstr "Livello"
 #: ../app/javascript/oldjs/services/alerts_center_service.js
 #: ../app/views/shared/views/_alerts_list.html.haml
 msgid "Time"
-msgstr "Tempo"
+msgstr "Data/ora"
 
 #. TRANSLATORS: file: db/fixtures/miq_report_formats.yml
 #: ../config/yaml_strings.rb
@@ -78432,32 +78433,34 @@ msgstr "VM non ha EMS, impossibile impostare l'attributo personalizzato"
 
 #: ../app/models/vm_or_template/operations.rb
 msgid "VM has no Provider, unable to destroy VM"
-msgstr "VM non ha Provider, impossibile eliminare VM"
+msgstr "La VM non ha provider, impossibile eliminare la VM"
 
 #: ../app/models/vm/operations/guest.rb
 msgid "VM has no Provider, unable to reboot guest OS"
-msgstr "VM non ha Provider, impossibile riavviare il sistema operativo guest"
+msgstr ""
+"La VM non ha provider, impossibile riavviare il sistema operativo guest"
 
 #: ../app/models/vm_or_template/operations.rb
 msgid "VM has no Provider, unable to rename VM"
-msgstr "VM non ha Provider, impossibile rinominare VM"
+msgstr "La VM non ha provider, impossibile rinominare la VM"
 
 #: ../app/models/vm/operations/guest.rb
 msgid "VM has no Provider, unable to reset VM"
-msgstr "VM non ha Provider, impossibile ripristinare la VM"
+msgstr "La VM non ha provider, impossibile reimpostare la VM"
 
 #: ../app/models/vm/operations/guest.rb
 msgid "VM has no Provider, unable to shutdown guest OS"
-msgstr "VM non ha Provider, impossibile arrestare il sistema operativo guest"
+msgstr ""
+"La VM non ha provider, impossibile arrestare il sistema operativo guest"
 
 #: ../app/models/vm/operations/guest.rb
 msgid "VM has no Provider, unable to standby guest OS"
 msgstr ""
-"VM non ha Provider, impossibile mettere in pausa il sistema operativo guest"
+"La VM non ha provider, impossibile mettere in pausa il sistema operativo guest"
 
 #: ../app/models/vm_or_template/operations.rb
 msgid "VM has no Provider, unable to unregister VM"
-msgstr "VM non ha Provider, impossibile annullare la registrazione della VM"
+msgstr "La VM non ha provider, impossibile annullare la registrazione della VM"
 
 #: ../app/controllers/vm_common.rb
 msgid "VM has too many parents."
@@ -85351,7 +85354,7 @@ msgstr "successo"
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_sets.yml
 #: ../config/yaml_strings.rb
 msgid "tags"
-msgstr "tags"
+msgstr "tag"
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager.rb
 msgid "target_class must be a class not an instance"

@@ -26,12 +26,12 @@ msgstr " "
 
 #: ../app/models/classification.rb
 msgid "  Unable to add the following tags to %{class_name} %{id}: %{names}."
-msgstr "  次のタグを %{class_name} %{id} に追加できません: %{names}。"
+msgstr "次のタグを %{class_name} %{id} に追加できません: %{names}。"
 
 #: ../app/models/classification.rb
 msgid ""
 "  Unable to remove the following tags from %{class_name} %{id}: %{names}."
-msgstr "  次のタグを %{class_name} %{id} から削除できません: %{names}。"
+msgstr "次のタグを %{class_name} %{id} から削除できません: %{names}。"
 
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 msgid " # of Days"
@@ -39,32 +39,32 @@ msgstr " 日数"
 
 #: ../app/controllers/ems_infra_controller.rb
 msgid " %{host_uid_ems} is not a compute node "
-msgstr " %{host_uid_ems} はコンピュート・ノードではありません "
+msgstr "%{host_uid_ems} はコンピュート・ノードではありません"
 
 #: ../app/controllers/ems_infra_controller.rb
 msgid " %{host_uid_ems} needs to be evacuated before it can be removed "
-msgstr " %{host_uid_ems} は削除する前に退避させる必要があります "
+msgstr "%{host_uid_ems} は削除する前に退避させる必要があります"
 
 #: ../app/controllers/ems_infra_controller.rb
 msgid ""
 " %{host_uid_ems} needs to be in maintenance mode before it can be removed "
-msgstr " %{host_uid_ems} は削除する前にメンテナンス・モードにする必要があります "
+msgstr "%{host_uid_ems} は削除する前にメンテナンス・モードにする必要があります"
 
 #: ../app/controllers/ems_infra_controller.rb
 msgid " %{name} from %{value} to %{parameters} "
-msgstr " %{value} から %{parameters} の %{name} "
+msgstr "%{value} から %{parameters} の %{name}"
 
 #: ../app/presenters/tree_node/assigned_server_role.rb
 msgid " (%{priority}active, PID=%{number})"
-msgstr " (%{priority} アクティブ、PID=%{number})"
+msgstr "(%{priority} アクティブ、PID=%{number})"
 
 #: ../app/presenters/tree_node/assigned_server_role.rb
 msgid " (%{priority}available, PID=%{number})"
-msgstr " (%{priority} 利用可、PID=%{number})"
+msgstr "(%{priority} 利用可、PID=%{number})"
 
 #: ../app/presenters/tree_node/assigned_server_role.rb
 msgid " (%{priority}unavailable)"
-msgstr " (%{priority} 利用不可)"
+msgstr "(%{priority} 利用不可)"
 
 #: ../app/controllers/vm_common.rb:628 ../app/controllers/vm_common.rb
 msgid " (Analysis History)"
@@ -72,7 +72,7 @@ msgstr " (分析履歴)"
 
 #: ../app/controllers/vm_common.rb
 msgid " (Compliance History - Last %{number} Checks)"
-msgstr " (コンプライアンス履歴 ｰ 最後の %{number} チェック)"
+msgstr "(コンプライアンス履歴 ｰ 最後の %{number} チェック)"
 
 #: ../app/controllers/vm_common.rb
 msgid " (Container)"
@@ -80,7 +80,7 @@ msgstr " (コンテナー)"
 
 #: ../app/controllers/vm_common.rb
 msgid " (Custom Button Events)"
-msgstr " (カスタム・ボタン・イベント)"
+msgstr "(カスタム・ボタン・イベント)"
 
 #: ../app/controllers/mixins/dashboard_view_mixin.rb
 msgid " (Dashboard)"
@@ -97,7 +97,7 @@ msgstr " (系図)"
 #: ../app/presenters/tree_builder_policy_simulation.rb
 #: ../app/presenters/tree_builder_policy_simulation_results.rb
 msgid " (Inactive)"
-msgstr " (休止中)"
+msgstr "(休止中)"
 
 #: ../app/controllers/vm_common.rb
 msgid " (Latest Compliance Check)"
@@ -107,7 +107,7 @@ msgstr " (最新のコンプライアンス・チェック)"
 #: ../app/controllers/storage_controller.rb
 #: ../app/controllers/vm_common.rb
 msgid " (Names with \"%{search_text}\")"
-msgstr " (\"%{search_text}\" を含む名前)"
+msgstr "(\"%{search_text}\" を含む名前)"
 
 #: ../app/controllers/vm_common.rb
 msgid " (Networks)"
@@ -123,7 +123,7 @@ msgstr " (プロパティー)"
 
 #: ../app/controllers/vm_common.rb
 msgid " (Resources)"
-msgstr " (リソース)"
+msgstr "(リソース)"
 
 #: ../app/controllers/vm_common.rb
 msgid " (Snapshots)"
@@ -139,33 +139,33 @@ msgstr " (フィルター済み)"
 
 #: ../app/helpers/textual_mixins/textual_refresh_status.rb
 msgid " - %{last_refresh_date} Ago"
-msgstr " - %{last_refresh_date} 前"
+msgstr "- %{last_refresh_date} 前"
 
 #: ../app/controllers/application_controller/filter.rb
 msgid " - Filtered by \"%{text}\""
-msgstr " - \"%{text}\" でフィルター"
+msgstr "- \"%{text}\" でフィルター"
 
 #: ../app/controllers/application_controller/filter.rb
 msgid " - Filtered by \"%{text}\" report"
-msgstr " - \"%{text}\" レポートでフィルター"
+msgstr "- \"%{text}\" レポートでフィルター"
 
 #: ../app/controllers/utilization_controller.rb
 msgid " - Filtered by %{filter}"
-msgstr " - %{filter} でフィルター"
+msgstr "- %{filter} でフィルター"
 
 #: ../app/controllers/application_controller/filter.rb
 msgid " - Filtered by custom search"
-msgstr " - カスタム検索でフィルター"
+msgstr "- カスタム検索でフィルター"
 
 #: ../app/models/physical_server/operations.rb
 msgid ""
 " A Server %{server} <%{name}> with Id: <%{id}> is not associated with a "
 "provider."
-msgstr " サーバー %{server} <%{name}>、ID: <%{id}> がプロバイダーに関連付けられていません。"
+msgstr "サーバー %{server} <%{name}>、ID: <%{id}> がプロバイダーに関連付けられていません。"
 
 #: ../app/views/vm_common/_reconfigure.html.haml
 msgid " Add "
-msgstr " 追加 "
+msgstr "追加"
 
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
 #: ../config/yaml_strings.rb
@@ -175,7 +175,7 @@ msgstr " CPU -収集間隔におけるピーク使用率平均 (%) (最大)"
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/190_VM Resource Utilization.yaml
 #: ../config/yaml_strings.rb
 msgid " CPU - Usage (%)"
-msgstr " CPU - 使用率 (%)"
+msgstr "CPU - 使用率 (%)"
 
 #: ../app/helpers/miq_policy_helper.rb
 msgid " Day"
@@ -223,7 +223,7 @@ msgstr " メモリー -収集間隔における割り振り済みのピーク使
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/190_VM Resource Utilization.yaml
 #: ../config/yaml_strings.rb
 msgid " Memory - Usage (%)"
-msgstr " メモリー - 使用率 (%)"
+msgstr "メモリー - 使用率 (%)"
 
 #: ../app/views/vm_common/_reconfigure.html.haml
 msgid " Memory value not in range or not a multiple of 4"
@@ -244,11 +244,11 @@ msgstr " プロセッサー・オプション"
 
 #: ../app/controllers/ems_infra_controller.rb
 msgid " Scaling down to %{a} compute nodes"
-msgstr " %{a} コンピュート・ノードにスケールダウン"
+msgstr "%{a} コンピュート・ノードにスケールダウン"
 
 #: ../app/views/miq_policy/_event_edit.html.haml
 msgid " Selected Actions:"
-msgstr " 選択したアクション:"
+msgstr "選択したアクション:"
 
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/180_Top Storage Consumers.yaml
 #: ../config/yaml_strings.rb
@@ -277,7 +277,7 @@ msgstr " 週"
 
 #: ../app/controllers/miq_ae_class_controller.rb
 msgid " by %{user}"
-msgstr " %{user}別"
+msgstr "%{user}別"
 
 #:
 #: ../app/javascript/oldjs/controllers/dialog_editor/dialog_editor_controller.js
@@ -3517,7 +3517,7 @@ msgstr "新規クラウド・ネットワークの追加"
 
 #: ../app/controllers/cloud_network_controller.rb
 msgid "Add New Cloud Network "
-msgstr "新規クラウド・ネットワークの追加 "
+msgstr "新規クラウド・ネットワークの追加"
 
 #: ../app/controllers/cloud_object_store_container_controller.rb
 msgid "Add New Cloud Object Store Container"
@@ -3541,7 +3541,7 @@ msgstr "新規フローティング IP の追加"
 
 #: ../app/controllers/floating_ip_controller.rb
 msgid "Add New Floating IP "
-msgstr "新規フローティング IP の追加 "
+msgstr "新規フローティング IP の追加"
 
 #: ../app/controllers/auth_key_pair_cloud_controller.rb
 msgid "Add New Key Pair"
@@ -3561,7 +3561,7 @@ msgstr "新規セキュリティー・グループの追加"
 
 #: ../app/controllers/security_group_controller.rb
 msgid "Add New Security Group "
-msgstr "新規セキュリティー・グループの追加 "
+msgstr "新規セキュリティー・グループの追加"
 
 #: ../app/controllers/cloud_subnet_controller.rb
 msgid "Add New Subnet"
@@ -6481,11 +6481,11 @@ msgstr "以下のリポジトリーを削除しますか?"
 #: ../app/helpers/application_helper/toolbar/diagnostics_region_center.rb
 #: ../app/helpers/application_helper/toolbar/diagnostics_zone_center.rb
 msgid "Are you sure you want to delete the selected Servers?"
-msgstr "選択されたサーバーを削除しますか。"
+msgstr "選択したサーバーを削除しますか?"
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
 msgid "Are you sure you want to delete these Policies?"
-msgstr "これらのポリシーを削除しますか。"
+msgstr "これらのポリシーを削除しますか?"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb
 msgid "Are you sure you want to delete these volumes?"
@@ -9366,7 +9366,7 @@ msgstr "CPU - 収集間隔における子 VM の合計使用率の 30 日間の�
 #. TRANSLATORS: file: product/reports/200_Optimization - Virtual Machines/001_CPU Right Sizing Recommendations.yaml
 #: ../config/yaml_strings.rb
 msgid "CPU - Aggressive "
-msgstr "CPU - アグレッシブ "
+msgstr "CPU - アグレッシブ"
 
 #. TRANSLATORS: en.yml key: dictionary.column.aggressive_recommended_vcpus
 #: ../config/dictionary_strings.rb
@@ -9447,7 +9447,7 @@ msgstr "CPU - 収集間隔における最小使用率 (MHz)"
 #. TRANSLATORS: file: product/reports/200_Optimization - Virtual Machines/001_CPU Right Sizing Recommendations.yaml
 #: ../config/yaml_strings.rb
 msgid "CPU - Moderate "
-msgstr "CPU - 中程度 "
+msgstr "CPU - 中程度"
 
 #. TRANSLATORS: en.yml key: dictionary.column.moderate_recommended_vcpus
 #: ../config/dictionary_strings.rb
@@ -25904,7 +25904,7 @@ msgstr "フローティング IP とインスタンス '%{name}' との関連付
 
 #: ../app/helpers/textual_mixins/textual_devices.rb
 msgid "Distributed "
-msgstr "分散 "
+msgstr "分散"
 
 #. TRANSLATORS: file: product/compare/hosts.yaml
 #: ../config/yaml_strings.rb
@@ -26645,7 +26645,7 @@ msgstr "ポリシー・イベントのアクションを編集"
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
 msgid "Edit Actions for the selected Policy's Event"
-msgstr "選択したポリシーのイベントのアクションを編集します"
+msgstr "選択したポリシーのイベントのアクションの編集"
 
 #: ../app/helpers/application_helper/toolbar/miq_event_center.rb
 msgid "Edit Actions for this Policy Event"
@@ -29253,7 +29253,7 @@ msgstr "グループ \"%{name}\" の編集中"
 
 #: ../app/javascript/components/diagnostics-collect-log-form/schema.js
 msgid "Editing Log Depot Settings for %s: %s"
-msgstr "%s のログ・デポ設定の編集: %s"
+msgstr "%s: %sのログ・デポ設定の編集"
 
 #: ../app/controllers/ops_controller.rb
 msgid "Editing Log Depot settings"
@@ -33996,7 +33996,7 @@ msgstr "専用プロセッサーの場合、形式は「正整数」です"
 
 #: ../app/views/support/show.html.haml
 msgid "For questions or problem reporting, visit "
-msgstr "ご質問や問題の報告は以下にお願いいたします: "
+msgstr "ご質問や問題の報告は以下にお願いいたします:"
 
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/provision_workflow.rb
@@ -49250,7 +49250,7 @@ msgstr "未検証"
 #: ../app/views/layouts/angular-bootstrap/_auth_credentials_angular_bootstrap.html.haml
 #: ../app/views/layouts/angular-bootstrap/_auth_keypair_angular_bootstrap.html.haml
 msgid "New "
-msgstr "新規 "
+msgstr "新規"
 
 #: ../app/javascript/components/miq-alert-set-form/index.jsx
 msgid "New Alert Profile \"%s\" has been successfully queued."
@@ -50293,7 +50293,7 @@ msgstr "ホスト・イニシエーターの作成をサポートするストレ
 
 #: ../app/helpers/application_helper/button/storage_service_new.rb
 msgid "No storage providers support creating storage services."
-msgstr "ストレージ・サービスの作成をサポートするストレージ・プロバイダーはありません。"
+msgstr "ストレージ・サービスの作成をサポートするストレージ・プロバイダーがありません。"
 
 #: ../app/helpers/application_helper/button/volume_mapping_new.rb
 msgid "No storage providers support creating volume mapping."
@@ -57780,7 +57780,7 @@ msgstr "選択したクラウド・プロバイダーの認証ステータスを
 
 #: ../app/helpers/application_helper/toolbar/ems_containers_center.rb
 msgid "Re-check Authentication Status for the selected Containers Providers "
-msgstr "選択したコンテナー・プロバイダーの認証ステータスを再チェック "
+msgstr "選択したコンテナー・プロバイダーの認証ステータスを再チェック"
 
 #: ../app/helpers/application_helper/toolbar/ems_infras_center.rb
 msgid ""
@@ -61040,11 +61040,11 @@ msgstr "要求情報"
 #: ../config/model_display_names.rb
 msgid "Request Log"
 msgid_plural "Request Logs"
-msgstr[0] "Request Logs"
+msgstr[0] "要求ログ"
 
 #: ../app/views/miq_request/_request.html.haml
 msgid "Request Logs"
-msgstr "Request Logs"
+msgstr "要求ログ"
 
 #. TRANSLATORS: en.yml key: dictionary.column.request_memory_bytes
 #: ../config/dictionary_strings.rb
@@ -64215,7 +64215,7 @@ msgstr "通貨の選択"
 
 #: ../app/views/chargeback_rate/_form.html.haml
 msgid "Select currency: "
-msgstr "通貨の選択: "
+msgstr "通貨の選択:"
 
 #: ../app/views/miq_ae_tools/_import_export.html.haml
 msgid "Select domain you wish to import from:"
@@ -64522,7 +64522,7 @@ msgstr "サーバー \"%{name}\": 削除が正常に行われました"
 
 #: ../app/controllers/ops_controller/diagnostics.rb
 msgid "Server \"%{name}\": Error during 'destroy': "
-msgstr "サーバー \"%{name}\": 「破棄」の実行中にエラーが発生しました: "
+msgstr "サーバー \"%{name}\": 「破棄」の実行中にエラーが発生しました:"
 
 #: ../app/helpers/application_helper/button/delete_server.rb
 msgid ""
@@ -68925,7 +68925,7 @@ msgstr[0] "Storage Service Resource Attachments"
 #: ../app/services/ems_storage_dashboard_service.rb
 #: ../config/yaml_strings.rb
 msgid "Storage Services"
-msgstr "Storage Services"
+msgstr "ストレージ・サービス"
 
 #:
 #: ../app/models/manageiq/providers/oracle_cloud/cloud_manager/cloud_database.rb
@@ -69975,7 +69975,7 @@ msgstr "UUID の切り替え"
 
 #: ../app/helpers/textual_mixins/textual_devices.rb
 msgid "Switch: "
-msgstr "スイッチ: "
+msgstr "スイッチ:"
 
 #: ../app/presenters/tree_node/switch.rb
 msgid "Switch: %{name}"
@@ -71769,7 +71769,7 @@ msgstr "順序を編集するには 2 つ以上のダッシュボードがなけ
 #:
 #: ../app/javascript/oldjs/controllers/dialog_editor/dialog_editor_controller.js
 msgid "There was an error editing this dialog: "
-msgstr "このダイアログの編集時にエラーが発生しました: "
+msgstr "このダイアログの編集時にエラーが発生しました:"
 
 #: ../app/controllers/application_controller.rb
 msgid "These VMs can not be migrated together."
@@ -71991,7 +71991,7 @@ msgstr "このタスクは取り消すことができません"
 
 #: ../app/views/ops/rbac_group/_customer_tags.html.haml
 msgid "This user is limited to "
-msgstr "ユーザーは次に制限: "
+msgstr "ユーザーは次に制限:"
 
 #: ../app/views/ops/rbac_group/_customer_tags.html.haml
 msgid "This user is limited to items with the selected tags."
@@ -82199,7 +82199,7 @@ msgstr "poll_native_task はサブクラスで実装されている必要があ�
 
 #: ../app/presenters/tree_node/assigned_server_role.rb
 msgid "primary, "
-msgstr "プライマリー、 "
+msgstr "プライマリー、"
 
 #:
 #: ../app/models/manageiq/providers/ibm_power_vc/inventory/parser/cloud_manager.rb
@@ -82646,7 +82646,7 @@ msgstr "サンプル"
 
 #: ../app/presenters/tree_node/assigned_server_role.rb
 msgid "secondary, "
-msgstr "セカンダリー、 "
+msgstr "セカンダリー、"
 
 #: ../app/views/miq_ae_class/_copy_objects_form.html.haml
 msgid "selected to copy"
@@ -82697,7 +82697,7 @@ msgstr "%{name} id [%{number}] のサイズが正しくありません"
 
 #: src/report-editor/charts-warning.jsx
 msgid "sort field from Summary tab "
-msgstr "サマリー・タブのソート・フィールドが "
+msgstr "サマリー・タブのソート・フィールドが"
 
 #: ../app/models/log_file.rb
 msgid "started? not implemented for %{server_name}"
