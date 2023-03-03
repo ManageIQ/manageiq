@@ -1859,7 +1859,7 @@ msgstr ""
 #: ../app/javascript/components/settings-category-form/schema.js
 msgid ""
 "* Name and Single Value fields cannot be edited after adding a category."
-msgstr "* 카테고리를 추가하고 나면 이름 및 단일 값 필드를 편집할 수 없습니다."
+msgstr "* 카테고리를 추가한 후에는 이름 및 단일 값 필드를 편집할 수 없습니다."
 
 #: ../app/views/report/_form_columns_performance.html.haml
 msgid "* Performance Interval"
@@ -26636,7 +26636,7 @@ msgstr "정책 이벤트에 대한 조치 편집"
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
 msgid "Edit Actions for the selected Policy's Event"
-msgstr "선택된 정책의 이벤트에 대한 조치 편집"
+msgstr "선택한 정책의 이벤트에 대한 조치 편집"
 
 #: ../app/helpers/application_helper/toolbar/miq_event_center.rb
 msgid "Edit Actions for this Policy Event"
@@ -28857,11 +28857,11 @@ msgstr "선택한 정책 프로파일 편집"
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
 msgid "Edit the selected Policy's Condition assignments"
-msgstr "선택된 정책의 조건 지정 편집"
+msgstr "선택한 정책의 조건 지정 편집"
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
 msgid "Edit the selected Policy's Event assignments"
-msgstr "선택된 정책의 이벤트 지정 편집"
+msgstr "선택한 정책의 이벤트 지정 편집"
 
 #: ../app/helpers/application_helper/toolbar/user_roles_center.rb
 msgid "Edit the selected Role"
@@ -68906,7 +68906,7 @@ msgstr[0] "Storage Service Resource Attachments"
 #: ../app/services/ems_storage_dashboard_service.rb
 #: ../config/yaml_strings.rb
 msgid "Storage Services"
-msgstr "Storage Services"
+msgstr "스토리지 서비스"
 
 #:
 #: ../app/models/manageiq/providers/oracle_cloud/cloud_manager/cloud_database.rb

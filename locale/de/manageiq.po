@@ -2037,8 +2037,8 @@ msgstr ""
 msgid ""
 "* Name and Single Value fields cannot be edited after adding a category."
 msgstr ""
-"* Felder für Namen und Einzelwerte können nach dem Hinzufügen einer Kategorie "
-"nicht bearbeitet werden."
+"* Die Felder 'Name' und 'Einzelwert' können nach dem Hinzufügen einer "
+"Kategorie nicht bearbeitet werden."
 
 #: ../app/views/report/_form_columns_performance.html.haml
 msgid "* Performance Interval"
@@ -2802,13 +2802,13 @@ msgstr "Eine schreibgeschützte Gruppe kann nicht gelöscht werden."
 #: ../app/controllers/application_controller/filter.rb
 msgid "A registry key name must be entered to commit this expression element"
 msgstr ""
-"Zum Festschreiben dieses Ausdruckselements muss ein "
-"Registrierungsschlüsselname eingegeben werden"
+"Zum Festschreiben dieses Ausdruckselements muss ein Registry-Schlüsselname "
+"eingegeben werden"
 
 #: ../app/controllers/application_controller/filter.rb
 msgid "A registry value name must be entered to commit this expression element"
 msgstr ""
-"Zum Festschreiben dieses Ausdruckselements muss ein Registrierungswertname "
+"Zum Festschreiben dieses Ausdruckselements muss ein Registry-Wertname "
 "eingegeben werden"
 
 #: ../app/controllers/mixins/containers_external_logging_support_mixin.rb
@@ -61359,15 +61359,15 @@ msgstr "Registry-Elemente"
 #: ../app/javascript/oldjs/miq_application.js
 #: ../app/views/ops/_ap_form_registry.html.haml
 msgid "Registry Key"
-msgstr "Registrierungsschlüssel"
+msgstr "Registry-Schlüssel"
 
 #: ../app/javascript/oldjs/miq_application.js
 msgid "Registry Key Value"
-msgstr "Registrierungsschlüsselwert"
+msgstr "Registry-Schlüsselwert"
 
 #: ../app/helpers/settings_analysis_profile_helper.rb
 msgid "Registry Keys"
-msgstr "Registrierungsschlüssel"
+msgstr "Registry-Schlüssel"
 
 #:
 #: ../app/javascript/components/firmware-registry/firmware-registry-form.schema.js
