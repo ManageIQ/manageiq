@@ -26,12 +26,12 @@ msgstr " "
 
 #: ../app/models/classification.rb
 msgid "  Unable to add the following tags to %{class_name} %{id}: %{names}."
-msgstr "  无法将以下标记添加到 %{class_name} %{id}：%{names}。"
+msgstr "无法将以下标记添加到 %{class_name} %{id}：%{names}。"
 
 #: ../app/models/classification.rb
 msgid ""
 "  Unable to remove the following tags from %{class_name} %{id}: %{names}."
-msgstr "  无法从 %{class_name} %{id} 移除以下标记：%{names}。"
+msgstr "无法从 %{class_name} %{id} 移除以下标记：%{names}。"
 
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 msgid " # of Days"
@@ -39,32 +39,32 @@ msgstr " 天数"
 
 #: ../app/controllers/ems_infra_controller.rb
 msgid " %{host_uid_ems} is not a compute node "
-msgstr " %{host_uid_ems} 不是一个计算节点 "
+msgstr "%{host_uid_ems} 不是一个计算节点"
 
 #: ../app/controllers/ems_infra_controller.rb
 msgid " %{host_uid_ems} needs to be evacuated before it can be removed "
-msgstr " %{host_uid_ems} 在移除前需要先撤除 "
+msgstr "%{host_uid_ems} 在移除前需要先撤除"
 
 #: ../app/controllers/ems_infra_controller.rb
 msgid ""
 " %{host_uid_ems} needs to be in maintenance mode before it can be removed "
-msgstr " %{host_uid_ems} 在移除前需要先处于维护方式 "
+msgstr "%{host_uid_ems} 在移除前需要先处于维护方式"
 
 #: ../app/controllers/ems_infra_controller.rb
 msgid " %{name} from %{value} to %{parameters} "
-msgstr " %{name} 从 %{value} 到 %{parameters} "
+msgstr "%{name} 从 %{value} 到 %{parameters}"
 
 #: ../app/presenters/tree_node/assigned_server_role.rb
 msgid " (%{priority}active, PID=%{number})"
-msgstr " （%{priority} 活动，PID=%{number}）"
+msgstr "（%{priority} 活动，PID=%{number}）"
 
 #: ../app/presenters/tree_node/assigned_server_role.rb
 msgid " (%{priority}available, PID=%{number})"
-msgstr " （%{priority} 可用，PID=%{number}）"
+msgstr "（%{priority} 可用，PID=%{number}）"
 
 #: ../app/presenters/tree_node/assigned_server_role.rb
 msgid " (%{priority}unavailable)"
-msgstr " （%{priority} 不可用）"
+msgstr "（%{priority} 不可用）"
 
 #: ../app/controllers/vm_common.rb:628 ../app/controllers/vm_common.rb
 msgid " (Analysis History)"
@@ -72,11 +72,11 @@ msgstr " （分析历史记录）"
 
 #: ../app/controllers/vm_common.rb
 msgid " (Compliance History - Last %{number} Checks)"
-msgstr " （合规性历史记录 - 前 %{number} 个检查）"
+msgstr "（合规性历史记录 - 前 %{number} 个检查）"
 
 #: ../app/controllers/vm_common.rb
 msgid " (Container)"
-msgstr " （容器）"
+msgstr "（容器）"
 
 #: ../app/controllers/vm_common.rb
 msgid " (Custom Button Events)"
@@ -84,7 +84,7 @@ msgstr " （定制按钮事件）"
 
 #: ../app/controllers/mixins/dashboard_view_mixin.rb
 msgid " (Dashboard)"
-msgstr " （仪表板）"
+msgstr "（仪表板）"
 
 #: ../app/controllers/vm_common.rb
 msgid " (Devices)"
@@ -97,7 +97,7 @@ msgstr " （系谱）"
 #: ../app/presenters/tree_builder_policy_simulation.rb
 #: ../app/presenters/tree_builder_policy_simulation_results.rb
 msgid " (Inactive)"
-msgstr " （不活动）"
+msgstr "（不活动）"
 
 #: ../app/controllers/vm_common.rb
 msgid " (Latest Compliance Check)"
@@ -107,7 +107,7 @@ msgstr " （最新合规性检查）"
 #: ../app/controllers/storage_controller.rb
 #: ../app/controllers/vm_common.rb
 msgid " (Names with \"%{search_text}\")"
-msgstr " （包含“%{search_text}”的名称）"
+msgstr "（包含“%{search_text}”的名称）"
 
 #: ../app/controllers/vm_common.rb
 msgid " (Networks)"
@@ -119,11 +119,11 @@ msgstr " （操作系统信息）"
 
 #: ../app/controllers/mixins/ems_common.rb
 msgid " (Properties)"
-msgstr " （属性）"
+msgstr "（属性）"
 
 #: ../app/controllers/vm_common.rb
 msgid " (Resources)"
-msgstr " （资源）"
+msgstr "（资源）"
 
 #: ../app/controllers/vm_common.rb
 msgid " (Snapshots)"
@@ -131,7 +131,7 @@ msgstr " （快照）"
 
 #: ../app/controllers/vm_common.rb
 msgid " (Summary)"
-msgstr " （摘要）"
+msgstr "（摘要）"
 
 #: ../app/controllers/miq_ae_class_controller.rb
 msgid " (filtered)"
@@ -139,19 +139,19 @@ msgstr " （已过滤）"
 
 #: ../app/helpers/textual_mixins/textual_refresh_status.rb
 msgid " - %{last_refresh_date} Ago"
-msgstr " - %{last_refresh_date} 以前"
+msgstr "- %{last_refresh_date} 以前"
 
 #: ../app/controllers/application_controller/filter.rb
 msgid " - Filtered by \"%{text}\""
-msgstr " - 按“%{text}”过滤"
+msgstr "- 按“%{text}”过滤"
 
 #: ../app/controllers/application_controller/filter.rb
 msgid " - Filtered by \"%{text}\" report"
-msgstr " - 按“%{text}”报告过滤"
+msgstr "- 按“%{text}”报告过滤"
 
 #: ../app/controllers/utilization_controller.rb
 msgid " - Filtered by %{filter}"
-msgstr " - 按 %{filter} 过滤"
+msgstr "- 按 %{filter} 过滤"
 
 #: ../app/controllers/application_controller/filter.rb
 msgid " - Filtered by custom search"
@@ -161,11 +161,11 @@ msgstr " - 按定制搜索过滤"
 msgid ""
 " A Server %{server} <%{name}> with Id: <%{id}> is not associated with a "
 "provider."
-msgstr " 服务器 %{server} <%{name}>（标识：<%{id}>）没有和供应商相关联。"
+msgstr "服务器 %{server} <%{name}>（标识：<%{id}>）没有和供应商相关联。"
 
 #: ../app/views/vm_common/_reconfigure.html.haml
 msgid " Add "
-msgstr " 添加 "
+msgstr "添加"
 
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
 #: ../config/yaml_strings.rb
@@ -183,7 +183,7 @@ msgstr " 日"
 
 #: ../app/helpers/miq_policy_helper.rb
 msgid " Days"
-msgstr " 日"
+msgstr "日"
 
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/009_VM Disk Usage.yaml
 #: ../config/yaml_strings.rb
@@ -201,7 +201,7 @@ msgstr " 小时"
 
 #: ../app/helpers/miq_policy_helper.rb
 msgid " Hours"
-msgstr " 小时"
+msgstr "小时"
 
 #: ../app/javascript/components/dashboard-widgets/widget-chart/index.jsx
 #: ../app/javascript/components/dashboard-widgets/widget-report/index.jsx
@@ -223,7 +223,7 @@ msgstr " 内存 - 收集间隔的分配内存峰值使用率 (%)（最大值）"
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/190_VM Resource Utilization.yaml
 #: ../config/yaml_strings.rb
 msgid " Memory - Usage (%)"
-msgstr " 内存 - 使用率 (%)"
+msgstr "内存 - 使用率 (%)"
 
 #: ../app/views/vm_common/_reconfigure.html.haml
 msgid " Memory value not in range or not a multiple of 4"
@@ -244,7 +244,7 @@ msgstr " 处理器选项"
 
 #: ../app/controllers/ems_infra_controller.rb
 msgid " Scaling down to %{a} compute nodes"
-msgstr " 缩减至 %{a} 个计算节点"
+msgstr "缩减至 %{a} 个计算节点"
 
 #: ../app/views/miq_policy/_event_edit.html.haml
 msgid " Selected Actions:"
@@ -277,7 +277,7 @@ msgstr " 周"
 
 #: ../app/controllers/miq_ae_class_controller.rb
 msgid " by %{user}"
-msgstr " 由 %{user}"
+msgstr "由 %{user}"
 
 #:
 #: ../app/javascript/oldjs/controllers/dialog_editor/dialog_editor_controller.js
@@ -3499,7 +3499,7 @@ msgstr "添加新的云网络"
 
 #: ../app/controllers/cloud_network_controller.rb
 msgid "Add New Cloud Network "
-msgstr "添加新的云网络 "
+msgstr "添加新的云网络"
 
 #: ../app/controllers/cloud_object_store_container_controller.rb
 msgid "Add New Cloud Object Store Container"
@@ -3543,7 +3543,7 @@ msgstr "添加新的安全组"
 
 #: ../app/controllers/security_group_controller.rb
 msgid "Add New Security Group "
-msgstr "添加新的安全组 "
+msgstr "添加新的安全组"
 
 #: ../app/controllers/cloud_subnet_controller.rb
 msgid "Add New Subnet"
@@ -9340,7 +9340,7 @@ msgstr "CPU - 子虚拟机收集间隔 30 天最大值的总使用率 (MHz)"
 #. TRANSLATORS: file: product/reports/200_Optimization - Virtual Machines/001_CPU Right Sizing Recommendations.yaml
 #: ../config/yaml_strings.rb
 msgid "CPU - Aggressive "
-msgstr "CPU - 激进 "
+msgstr "CPU - 激进"
 
 #. TRANSLATORS: en.yml key: dictionary.column.aggressive_recommended_vcpus
 #: ../config/dictionary_strings.rb
@@ -9421,7 +9421,7 @@ msgstr "CPU - 收集间隔的最小使用率 (MHz)"
 #. TRANSLATORS: file: product/reports/200_Optimization - Virtual Machines/001_CPU Right Sizing Recommendations.yaml
 #: ../config/yaml_strings.rb
 msgid "CPU - Moderate "
-msgstr "CPU - 适中 "
+msgstr "CPU - 适中"
 
 #. TRANSLATORS: en.yml key: dictionary.column.moderate_recommended_vcpus
 #: ../config/dictionary_strings.rb
@@ -25865,7 +25865,7 @@ msgstr "解除浮动 IP 与实例“%{name}”的关联"
 
 #: ../app/helpers/textual_mixins/textual_devices.rb
 msgid "Distributed "
-msgstr "分布式 "
+msgstr "分布式"
 
 #. TRANSLATORS: file: product/compare/hosts.yaml
 #: ../config/yaml_strings.rb
@@ -29212,11 +29212,11 @@ msgstr "正在编辑组“%{name}”"
 
 #: ../app/javascript/components/diagnostics-collect-log-form/schema.js
 msgid "Editing Log Depot Settings for %s: %s"
-msgstr "编辑 %s 的日志库设置：%s"
+msgstr "编辑以下%s的日志库设置：%s"
 
 #: ../app/controllers/ops_controller.rb
 msgid "Editing Log Depot settings"
-msgstr "正在编辑日志库设置"
+msgstr "编辑日志库设置"
 
 #: ../app/controllers/pxe_controller.rb
 msgid "Editing PXE Server \"%{name}\""
@@ -33950,7 +33950,7 @@ msgstr "对于专用处理器，格式为：“正整数”"
 
 #: ../app/views/support/show.html.haml
 msgid "For questions or problem reporting, visit "
-msgstr "对于疑问或问题报告，请访问 "
+msgstr "对于疑问或问题报告，请访问"
 
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/provision_workflow.rb
@@ -49188,7 +49188,7 @@ msgstr "从未验证的"
 #: ../app/views/layouts/angular-bootstrap/_auth_credentials_angular_bootstrap.html.haml
 #: ../app/views/layouts/angular-bootstrap/_auth_keypair_angular_bootstrap.html.haml
 msgid "New "
-msgstr "新建 "
+msgstr "新建"
 
 #: ../app/javascript/components/miq-alert-set-form/index.jsx
 msgid "New Alert Profile \"%s\" has been successfully queued."
@@ -57709,7 +57709,7 @@ msgstr "重新检查所选云供应商的认证状态"
 
 #: ../app/helpers/application_helper/toolbar/ems_containers_center.rb
 msgid "Re-check Authentication Status for the selected Containers Providers "
-msgstr "重新检查所选容器供应商的认证状态 "
+msgstr "重新检查所选容器供应商的认证状态"
 
 #: ../app/helpers/application_helper/toolbar/ems_infras_center.rb
 msgid ""
@@ -58679,7 +58679,7 @@ msgstr "是否刷新与所选项相关的所有项的关系和电源状态?"
 msgid ""
 "Refresh relationships and power states for all items related to these Host "
 "Initiator Groups"
-msgstr "刷新与这些主机发起方组相关的所有项的关系和电源状态"
+msgstr "刷新与这些主机发起者组相关的所有项的关系和电源状态"
 
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
 msgid ""
@@ -58775,7 +58775,7 @@ msgstr "是否刷新与此主机发起者集群相关的所有项的关系和电
 msgid ""
 "Refresh relationships and power states for all items related to this Host "
 "Initiator Group"
-msgstr "刷新与此主机发起方组相关的所有项的关系和电源状态"
+msgstr "刷新与此主机发起者组相关的所有项的关系和电源状态"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb
 msgid ""
@@ -64140,7 +64140,7 @@ msgstr "选择币种"
 
 #: ../app/views/chargeback_rate/_form.html.haml
 msgid "Select currency: "
-msgstr "选择币种： "
+msgstr "选择币种："
 
 #: ../app/views/miq_ae_tools/_import_export.html.haml
 msgid "Select domain you wish to import from:"
@@ -64447,7 +64447,7 @@ msgstr "服务器“%{name}”：成功删除"
 
 #: ../app/controllers/ops_controller/diagnostics.rb
 msgid "Server \"%{name}\": Error during 'destroy': "
-msgstr "服务器“%{name}”：“销毁”期间出错： "
+msgstr "服务器“%{name}”：“销毁”期间出错："
 
 #: ../app/helpers/application_helper/button/delete_server.rb
 msgid ""
@@ -66953,11 +66953,11 @@ msgstr "显示每小时数据："
 #: ../app/helpers/settings_tags_tabs_helper.rb
 #: ../app/views/ops/_settings_co_tags_tab.html.haml
 msgid "Show in Console"
-msgstr "在控制台里显示"
+msgstr "在控制台中显示"
 
 #: ../app/javascript/components/settings-category-form/schema.js
 msgid "Show in console"
-msgstr "在控制台里显示"
+msgstr "在控制台中显示"
 
 #: ../app/helpers/host_helper/textual_summary.rb
 msgid "Show list of all %{name}"
@@ -69898,7 +69898,7 @@ msgstr "交换机 Uuid"
 
 #: ../app/helpers/textual_mixins/textual_devices.rb
 msgid "Switch: "
-msgstr "交换机： "
+msgstr "交换机："
 
 #: ../app/presenters/tree_node/switch.rb
 msgid "Switch: %{name}"
@@ -71358,17 +71358,17 @@ msgstr "名称“%s”已存在于“%s”中"
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
 msgid ""
 "The name can contain letters, numbers, spaces, periods, dashes and underscores"
-msgstr "名称可以包含字母、数字、空格、句点、短划线和下划线"
+msgstr "该名称可以包含字母、数字、空格、句点、短划线和下划线"
 
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
 msgid "The name must begin with a letter or an underscore"
-msgstr "名称必须以字母或下划线开头"
+msgstr "该名称必须以字母或下划线开头"
 
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
 msgid "The name must not begin or end with a space"
-msgstr "名称不得以空格开头或结尾"
+msgstr "该名称不得以空格开头或结尾"
 
 #:
 #: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb
@@ -71689,7 +71689,7 @@ msgstr "应当至少有 2 个仪表板才能编辑序列"
 #:
 #: ../app/javascript/oldjs/controllers/dialog_editor/dialog_editor_controller.js
 msgid "There was an error editing this dialog: "
-msgstr "编辑此对话框时出错： "
+msgstr "编辑此对话框时出错："
 
 #: ../app/controllers/application_controller.rb
 msgid "These VMs can not be migrated together."
@@ -71911,7 +71911,7 @@ msgstr "此任务无法取消"
 
 #: ../app/views/ops/rbac_group/_customer_tags.html.haml
 msgid "This user is limited to "
-msgstr "此用户受限于 "
+msgstr "此用户受限于"
 
 #: ../app/views/ops/rbac_group/_customer_tags.html.haml
 msgid "This user is limited to items with the selected tags."
@@ -82105,7 +82105,7 @@ msgstr "子类必须实现 poll_native_task"
 
 #: ../app/presenters/tree_node/assigned_server_role.rb
 msgid "primary, "
-msgstr "主要的， "
+msgstr "主要的，"
 
 #:
 #: ../app/models/manageiq/providers/ibm_power_vc/inventory/parser/cloud_manager.rb
@@ -82552,7 +82552,7 @@ msgstr "样本"
 
 #: ../app/presenters/tree_node/assigned_server_role.rb
 msgid "secondary, "
-msgstr "次要的， "
+msgstr "次要的，"
 
 #: ../app/views/miq_ae_class/_copy_objects_form.html.haml
 msgid "selected to copy"
@@ -82603,7 +82603,7 @@ msgstr "%{name} 标识 [%{number}] 的大小不正确"
 
 #: src/report-editor/charts-warning.jsx
 msgid "sort field from Summary tab "
-msgstr "“摘要”选项卡中的排序字段 "
+msgstr "“摘要”选项卡中的排序字段"
 
 #: ../app/models/log_file.rb
 msgid "started? not implemented for %{server_name}"

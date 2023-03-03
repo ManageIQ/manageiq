@@ -2041,7 +2041,7 @@ msgstr ""
 msgid ""
 "* Name and Single Value fields cannot be edited after adding a category."
 msgstr ""
-"* Les zones de nom et de valeur unique ne peuvent pas être modifiées après "
+"* Les zones de nom et de valeur unique ne peuvent pas être éditées après "
 "l'ajout d'une catégorie."
 
 #: ../app/views/report/_form_columns_performance.html.haml
@@ -3623,7 +3623,7 @@ msgstr "Ajouter un catalogue"
 
 #: ../app/javascript/components/settings-company-categories/index.jsx
 msgid "Add Category"
-msgstr "Ajouter la catégorie"
+msgstr "Ajouter une catégorie"
 
 #:
 #: ../app/helpers/helper/manageiq/providers/nsxt/toolbar_overrides/cloud_networks_center.rb
@@ -6838,7 +6838,7 @@ msgstr "Voulez-vous vraiment supprimer les serveurs sélectionnés ?"
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
 msgid "Are you sure you want to delete these Policies?"
-msgstr "Voulez-vous vraiment supprimer ces règles ?"
+msgstr "Voulez-vous vraiment supprimer ces stratégies ?"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb
 msgid "Are you sure you want to delete these volumes?"
@@ -20480,7 +20480,7 @@ msgstr "Créer un cliché pour cette machine virtuelle"
 
 #: ../app/helpers/application_helper/toolbar/storage_services_center.rb
 msgid "Create a new storage service"
-msgstr "Créer un nouveau service de stockage"
+msgstr "Créer un service de stockage"
 
 #:
 #: ../app/helpers/application_helper/toolbar/orchestration_templates_center.rb
@@ -22959,7 +22959,7 @@ msgstr "Supprimer le groupe de placement"
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
 msgid "Delete Policies"
-msgstr "Supprimer les règles"
+msgstr "Supprimer les stratégies"
 
 #: ../app/helpers/application_helper/toolbar/miq_alerts_center.rb
 msgid "Delete Policy Alerts"
@@ -23458,7 +23458,7 @@ msgstr "Supprimer les profils d'analyse sélectionnés"
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
 msgid "Delete the selected Policies"
-msgstr "Supprimer les règles sélectionnées"
+msgstr "Supprimer les stratégies sélectionnées"
 
 #: ../app/helpers/application_helper/toolbar/user_roles_center.rb
 msgid "Delete the selected Roles from the VMDB"
@@ -27740,7 +27740,7 @@ msgstr "Editer les actions pour l'événement de stratégie"
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
 msgid "Edit Actions for the selected Policy's Event"
-msgstr "Editer les actions pour l'événement de la règle sélectionnée"
+msgstr "Editer les actions pour l'événement de la stratégie sélectionnée"
 
 #: ../app/helpers/application_helper/toolbar/miq_event_center.rb
 msgid "Edit Actions for this Policy Event"
@@ -28010,12 +28010,13 @@ msgstr "Editer les balises des modèles de travaux"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Edit Log Depot Settings"
-msgstr "Editer les paramètres de dépôt de journaux"
+msgstr "Modifier les paramètres du dépôt de journaux"
 
 #: ../app/controllers/ops_controller/diagnostics.rb
 msgid "Edit Log Depot settings was cancelled by the user"
 msgstr ""
-"L'édition des paramètres du dépôt de journaux a été annulée par l'utilisateur"
+"La modification des paramètres du dépôt de journaux a été annulée par "
+"l'utilisateur"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb
@@ -29973,11 +29974,12 @@ msgstr "Editer les balises pour cette paire de clés"
 
 #: ../app/helpers/application_helper/toolbar/diagnostics_server_center.rb
 msgid "Edit the Log Depot settings for the selected Server"
-msgstr "Editer les paramètres du dépôt de journaux pour le serveur sélectionné"
+msgstr ""
+"Modifier les paramètres du dépôt de journaux pour le serveur sélectionné"
 
 #: ../app/helpers/application_helper/toolbar/diagnostics_zone_center.rb
 msgid "Edit the Log Depot settings for the selected Zone"
-msgstr "Editer les paramètres du dépôt de journaux pour la zone sélectionnée"
+msgstr "Modifier les paramètres du dépôt de journaux pour la zone sélectionnée"
 
 #: ../app/helpers/application_helper/toolbar/miq_request_center.rb
 msgid "Edit the original Request"
@@ -30026,11 +30028,11 @@ msgstr "Editer le profil de stratégie sélectionné"
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
 msgid "Edit the selected Policy's Condition assignments"
-msgstr "Editer les affectations de condition de la règle sélectionnée"
+msgstr "Editer les affectations de condition de la stratégie sélectionnée"
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
 msgid "Edit the selected Policy's Event assignments"
-msgstr "Editer les affectations d'événement de la règle sélectionnée"
+msgstr "Editer les affectations d'événement de la stratégie sélectionnée"
 
 #: ../app/helpers/application_helper/toolbar/user_roles_center.rb
 msgid "Edit the selected Role"
@@ -30413,11 +30415,11 @@ msgstr "Edition du groupe \"%{name}\""
 
 #: ../app/javascript/components/diagnostics-collect-log-form/schema.js
 msgid "Editing Log Depot Settings for %s: %s"
-msgstr "Edition des paramètres de dépôt de journaux pour %s : %s"
+msgstr "Modification des paramètres du dépôt de journaux pour %s : %s"
 
 #: ../app/controllers/ops_controller.rb
 msgid "Editing Log Depot settings"
-msgstr "Edition des paramètres du dépôt de journaux"
+msgstr "Modification des paramètres du dépôt de journaux"
 
 #: ../app/controllers/pxe_controller.rb
 msgid "Editing PXE Server \"%{name}\""
@@ -41830,7 +41832,7 @@ msgstr "Les paramètres du dépôt de journaux ont été validés"
 
 #: ../app/helpers/ops_helper.rb:41 ../app/helpers/ops_helper.rb
 msgid "Log Depot URI"
-msgstr "URI de dépôt de journaux"
+msgstr "URI du dépôt de journaux"
 
 #: ../app/models/log_file.rb
 msgid "Log Depot settings not configured"
@@ -52051,7 +52053,8 @@ msgstr ""
 #: ../app/helpers/application_helper/button/storage_service_new.rb
 msgid "No storage providers support creating storage services."
 msgstr ""
-"Aucun fournisseur de stockage ne permet la création de services de stockage."
+"Aucun fournisseur de stockage ne prend en charge la création de services de "
+"stockage."
 
 #: ../app/helpers/application_helper/button/volume_mapping_new.rb
 msgid "No storage providers support creating volume mapping."
@@ -60818,7 +60821,7 @@ msgid ""
 "Initiator Groups"
 msgstr ""
 "Actualiser les relations et les états d'alimentation pour tous les éléments "
-"associés à ces groupes d'initiateurs d'hôte"
+"associés à ces groupes d'initiateurs hôtes"
 
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
 msgid ""
@@ -60946,7 +60949,7 @@ msgid ""
 "Initiator Group"
 msgstr ""
 "Actualiser les relations et les états d'alimentation pour tous les éléments "
-"associés à ce groupe d'initiateurs d'hôte"
+"associés à ce groupe d'initiateurs hôtes"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb
 msgid ""

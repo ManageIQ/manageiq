@@ -2024,7 +2024,7 @@ msgstr ""
 msgid ""
 "* Name and Single Value fields cannot be edited after adding a category."
 msgstr ""
-"* Os campos Nome e Valor Único não podem ser editados após a inclusão de uma "
+"* Os campos Nome e Valor único não podem ser editados após a inclusão de uma "
 "categoria."
 
 #: ../app/views/report/_form_columns_performance.html.haml
@@ -27660,7 +27660,7 @@ msgstr "Editar ações para evento de política"
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
 msgid "Edit Actions for the selected Policy's Event"
-msgstr "Editar ações para o evento de política selecionado"
+msgstr "Editar ações para o evento da política selecionada"
 
 #: ../app/helpers/application_helper/toolbar/miq_event_center.rb
 msgid "Edit Actions for this Policy Event"
@@ -29908,11 +29908,11 @@ msgstr "Editar o perfil de política selecionado"
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
 msgid "Edit the selected Policy's Condition assignments"
-msgstr "Editar as designações de condicionamento de políticas selecionadas"
+msgstr "Editar as designações de condição da política selecionada"
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
 msgid "Edit the selected Policy's Event assignments"
-msgstr "Editar as designações do evento de política selecionada"
+msgstr "Editar as designações de eventos da política selecionada"
 
 #: ../app/helpers/application_helper/toolbar/user_roles_center.rb
 msgid "Edit the selected Role"
@@ -61277,7 +61277,7 @@ msgstr "Valor da chave de registro"
 
 #: ../app/helpers/settings_analysis_profile_helper.rb
 msgid "Registry Keys"
-msgstr "Registrar chaves"
+msgstr "Chaves de registro"
 
 #:
 #: ../app/javascript/components/firmware-registry/firmware-registry-form.schema.js
@@ -61294,7 +61294,7 @@ msgstr "Erro de valor de registro: %{msg}"
 
 #: ../app/helpers/settings_analysis_profile_helper.rb
 msgid "Registry Values"
-msgstr "Registrar valores"
+msgstr "Valores de registro"
 
 #: ../config/model_attributes.rb
 msgid "Registry item"
@@ -71114,7 +71114,7 @@ msgstr "Recurso de armazenamento"
 #: ../app/helpers/storage_service_helper/textual_summary.rb
 #: ../app/presenters/menu/default_menu.rb:164 ../config/yaml_strings.rb
 msgid "Storage Resources"
-msgstr "Recursos de Armazenamento"
+msgstr "Recursos de armazenamento"
 
 #: ../app/helpers/storage_resource_helper/textual_summary.rb
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js

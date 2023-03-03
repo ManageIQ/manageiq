@@ -30451,7 +30451,7 @@ msgstr "Edición del grupo \"%{name}\""
 
 #: ../app/javascript/components/diagnostics-collect-log-form/schema.js
 msgid "Editing Log Depot Settings for %s: %s"
-msgstr "Editando valores de depósito de registro para %s: %s"
+msgstr "Editando valores del almacén de registro para %s: %s"
 
 #: ../app/controllers/ops_controller.rb
 msgid "Editing Log Depot settings"
@@ -63286,11 +63286,11 @@ msgstr "Información de la solicitud"
 msgid "Request Log"
 msgid_plural "Request Logs"
 msgstr[0] "Request Log"
-msgstr[1] "Request Logs"
+msgstr[1] "Registros de solicitud"
 
 #: ../app/views/miq_request/_request.html.haml
 msgid "Request Logs"
-msgstr "Request Logs"
+msgstr "Registros de solicitud"
 
 #. TRANSLATORS: en.yml key: dictionary.column.request_memory_bytes
 #: ../config/dictionary_strings.rb
@@ -74000,8 +74000,8 @@ msgstr "El nombre \"%s\" ya existe en \"%s\""
 msgid ""
 "The name can contain letters, numbers, spaces, periods, dashes and underscores"
 msgstr ""
-"El nombre puede contener letras, números, espacios, puntos, guiones y guiones "
-"bajos"
+"El nombre puede contener letras, números, espacios, puntos, guiones y "
+"subrayados"
 
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
@@ -74535,7 +74535,7 @@ msgstr "Este año"
 msgid ""
 "This Zone do not have Log Depot settings configured, collection not allowed"
 msgstr ""
-"Esta zona no tiene establecida la configuración del depósito de registro, la "
+"Esta zona no tiene establecida la configuración del almacén de registro, la "
 "recolección no está permitida"
 
 #: ../app/controllers/application_controller/filter.rb
@@ -76571,7 +76571,7 @@ msgstr "Intervalo no compatible '%{interval}'"
 
 #: ../app/controllers/ops_controller/diagnostics.rb
 msgid "Unsupported log depot protocol: %{protocol}"
-msgstr "Protocolo de depósito de registro no soportado: %{protocol}"
+msgstr "Protocolo del almacén de registro no soportado: %{protocol}"
 
 #: ../app/models/vm_or_template.rb:1567 ../app/models/vm_or_template.rb
 msgid "Unsupported property type [%{property}]"
