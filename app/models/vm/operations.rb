@@ -6,18 +6,13 @@ module Vm::Operations
   include_concern 'Lifecycle'
 
   included do
-    supports :html5_console do
-      consup = %w[vnc webmks spice].any? { |type| send(:console_supported?, type) }
-      _("The web-based HTML5 Console is not supported") unless consup
-    end
-
-    supports :vmrc_console do
-      _("VMRC Console not supported") unless console_supported?('VMRC')
-    end
-
-    supports :native_console do
-      _("VM NATIVE Console not supported") unless console_supported?('NATIVE')
-    end
+    supports_not :console
+    supports_not :html5_console
+    supports_not :native_console
+    supports_not :spice_console
+    supports_not :vmrc_console
+    supports_not :vnc_console
+    supports_not :webmks_console
 
     supports :launch_html5_console do
       _("The web-based HTML5 Console is not available because the VM is not powered on") unless power_state == 'on'

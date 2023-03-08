@@ -53,49 +53,6 @@ RSpec.describe 'VM::Operations' do
     end
   end
 
-  describe '#supports?(:vmrc_console)' do
-    it 'returns false if type is not supported' do
-      allow(@vm).to receive(:console_supported?).with('VMRC').and_return(false)
-
-      expect(@vm.supports?(:vmrc_console)).to be_falsey
-      expect(@vm.unsupported_reason(:vmrc_console)).to include('VMRC Console not supported')
-    end
-
-    it 'supports it if all conditions are met' do
-      allow(@vm).to receive(:console_supported?).with('VMRC').and_return(true)
-
-      expect(@vm.supports?(:vmrc_console)).to be_truthy
-    end
-  end
-
-  describe '#supports?(:html5_console)' do
-    it 'supports it if all conditions are met' do
-      allow(@vm).to receive(:console_supported?).and_return(true)
-      expect(@vm.supports?(:html5_console)).to be_truthy
-    end
-
-    it 'returns false if type is not supported' do
-      allow(@vm).to receive(:console_supported?).and_return(false)
-      expect(@vm.supports?(:html5_console)).to be_falsey
-      expect(@vm.unsupported_reason(:html5_console)).to include('HTML5 Console is not supported')
-    end
-  end
-
-  describe '#supports?(:native_console)' do
-    it 'returns false if type is not supported' do
-      allow(@vm).to receive(:console_supported?).with('NATIVE').and_return(false)
-
-      expect(@vm.supports?(:native_console)).to be_falsey
-      expect(@vm.unsupported_reason(:native_console)).to include('NATIVE Console not supported')
-    end
-
-    it 'supports it if all conditions are met' do
-      allow(@vm).to receive(:console_supported?).with('NATIVE').and_return(true)
-
-      expect(@vm.supports?(:native_console)).to be_truthy
-    end
-  end
-
   describe '#supports?(:launch_vmrc_console)' do
     it 'does not support it if validate_remote_console_vmrc_support raises an error' do
       allow(@vm).to receive(:validate_remote_console_vmrc_support).and_raise(StandardError)
