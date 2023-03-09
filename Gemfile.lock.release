@@ -304,14 +304,14 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-vmware
-  revision: 449320096a1f97850b875051f9d4ed867c39f21a
+  revision: 22b079017d61ef7bf06739d3f84bb076cefd788f
   branch: petrosian
   specs:
     manageiq-providers-vmware (0.1.0)
       ffi-vix_disk_lib (~> 1.1)
       fog-vcloud-director (~> 0.3.0)
       rbvmomi2 (~> 3.5)
-      vmware_web_service (~> 3.0)
+      vmware_web_service (~> 3.2)
       vsphere-automation-sdk (~> 0.4.7)
 
 GIT
@@ -1210,7 +1210,7 @@ GEM
     uuidtools (2.2.0)
     vcr (5.1.0)
     version_gem (1.1.1)
-    vmware_web_service (3.1.0)
+    vmware_web_service (3.2.0)
       activesupport (>= 5.2.4.3, < 7.0)
       ffi-vix_disk_lib (~> 1.1)
       handsoap (~> 0.2.5)
