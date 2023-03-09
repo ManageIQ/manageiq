@@ -30,6 +30,10 @@ class EventStream < ApplicationRecord
   belongs_to :physical_chassis, :inverse_of => :event_streams
   belongs_to :physical_switch, :inverse_of => :event_streams
 
+  virtual_delegate :name, :to => :ext_management_system, :prefix => true, :allow_nil => true, :type => :string
+  virtual_delegate :name, :to => :host,                  :prefix => true, :allow_nil => true, :type => :string
+  virtual_delegate :name, :to => :vm_or_template,        :prefix => true, :allow_nil => true, :type => :string
+
   virtual_column :group,       :type => :string
   virtual_column :group_level, :type => :string
   virtual_column :group_name,  :type => :string
