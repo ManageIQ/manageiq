@@ -1389,7 +1389,7 @@ DEPENDENCIES
   puma (~> 4.2)
   qpid_proton (~> 0.30.0)
   query_relation (~> 0.1.0)
-  rack (>= 2.2.3.1)
+  rack (>= 2.2.6.3)
   rack-attack (~> 6.5.0)
   rails (~> 6.1.7, >= 6.1.7.2)
   rails-i18n (~> 6.x)
