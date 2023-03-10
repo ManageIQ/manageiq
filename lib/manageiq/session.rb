@@ -59,7 +59,10 @@ module ManageIQ
     # of session ids provided and sent to be delete from the session @store.
     #
     def self.revoke(*session_ids)
-      store.delete_sessions(session_ids.flatten)
+      req = ManageIQ::Session.fake_request
+      session_ids.flatten.each do |session_id|
+        store.delete_session(req, session_id, :drop => true)
+      end
     end
 
     # Create a fake request that can be passed to methods in the SessionStore

@@ -8,12 +8,6 @@ module ActionDispatch
       def initialize(app, options)
         super(app, options.reverse_merge(:cache => ActiveSupport::Cache::MemoryStore.new))
       end
-
-      def delete_sessions(session_ids)
-        session_ids.each do |session_id|
-          delete_session(ManageIQ::Session.fake_request, session_id, :drop => true)
-        end
-      end
     end
   end
 end
