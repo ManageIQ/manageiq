@@ -69799,7 +69799,7 @@ msgstr "Einzelne Entität"
 
 #: ./src/dialog-editor/components/modal-field-template/tag-control.html
 msgid "Single value"
-msgstr "Einzelner Wert"
+msgstr "Einzelwert"
 
 #. TRANSLATORS: file: product/views/CloudVolume-based_volumes.yaml
 #. TRANSLATORS: file: product/views/CloudVolume.yaml
