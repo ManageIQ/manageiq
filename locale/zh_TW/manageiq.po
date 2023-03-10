@@ -68856,7 +68856,7 @@ msgstr[0] "儲存服務資源附件"
 #: ../app/services/ems_storage_dashboard_service.rb
 #: ../config/yaml_strings.rb
 msgid "Storage Services"
-msgstr "儲存服務"
+msgstr "儲存體服務"
 
 #:
 #: ../app/models/manageiq/providers/oracle_cloud/cloud_manager/cloud_database.rb
@@ -69771,7 +69771,7 @@ msgstr "支援 Paravirtual"
 #. TRANSLATORS: en.yml key: dictionary.column.supports_storage_services
 #: ../config/dictionary_strings.rb
 msgid "Supports Storage Services"
-msgstr "支援儲存服務"
+msgstr "支援儲存體服務"
 
 #. TRANSLATORS: en.yml key: dictionary.column.supports_volume_availability_zones
 #: ../config/dictionary_strings.rb
