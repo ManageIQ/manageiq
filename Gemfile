@@ -283,7 +283,7 @@ group :development do
 end
 
 group :test do
-  gem "brakeman",                       "~>5.0",             :require => false
+  gem "brakeman",                       "~>5.4",             :require => false
   gem "bundler-audit",                                       :require => false
   gem "capybara",                       "~>2.5.0",           :require => false
   gem "db-query-matchers",              "~>0.10.0"
