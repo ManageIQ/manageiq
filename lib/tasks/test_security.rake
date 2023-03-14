@@ -9,9 +9,8 @@ namespace :test do
       require "vmdb/plugins"
       require "brakeman"
 
-      # Brakeman 5.0+ excludes files in the vendor directory even if they're included
-      # via engine paths.  We patch it below so that requested engine paths are not excluded.
-      require 'brakeman/app_tree'
+      # Brakeman's engine_paths check does not work properly with engines
+      require "brakeman/app_tree"
       require Rails.root.join('lib/extensions/brakeman_excludes_patch')
       Brakeman::AppTree.prepend(BrakemanExcludesPatch)
 
