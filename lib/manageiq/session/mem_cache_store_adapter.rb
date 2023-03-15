@@ -1,5 +1,3 @@
-require "extensions/rack_session_dalli_patch"
-
 module ManageIQ
   module Session
     class MemCacheStoreAdapter < AbstractStoreAdapter
