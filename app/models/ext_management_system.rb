@@ -302,6 +302,7 @@ class ExtManagementSystem < ApplicationRecord
   supports_attribute :feature => :cloud_subnet_create
   supports_attribute :feature => :cloud_volume
   supports_attribute :feature => :cloud_volume_create
+  supports_attribute :feature => :cloud_volume_snapshots
   supports_attribute :supports_cloud_database_create, :child_model => "CloudDatabase"
   supports_attribute :supports_create_flavor, :child_model => "Flavor"
   supports_attribute :supports_create_floating_ip, :child_model => "FloatingIp"
