@@ -15,7 +15,7 @@ class PidFile
 
   def pid
     return nil unless File.file?(@fname)
-    data = IO.read(@fname).strip
+    data = File.read(@fname).strip
     return nil if data.empty? || !/\d+/.match(data)
     data.to_i
   end
