@@ -136,7 +136,7 @@ RSpec.describe Ansible::Runner do
       expect(AwesomeSpawn).to receive(:run) do |command, options|
         expect(command).to eq("ansible-runner")
 
-        expected_path = [python3_modules_path, py3_awx_modules_path].join(File::PATH_SEPARATOR)
+        expected_path = [py3_awx_modules_path, python3_modules_path].join(File::PATH_SEPARATOR)
         expect(options[:env]["PYTHONPATH"]).to eq(expected_path)
       end.and_return(result)
 
