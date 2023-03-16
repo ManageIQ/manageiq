@@ -408,10 +408,11 @@ module Ansible
         /var/lib/awx/venv/ansible/lib/python3.6/site-packages
         /var/lib/manageiq/venv/lib/python3.6/site-packages
         /var/lib/manageiq/venv/lib/python3.8/site-packages
+        /usr/local/lib/python3.8/site-packages
       ].freeze
       def python3_modules_path
         @python3_modules_path ||= begin
-          paths = [ansible_python_path.presence, *PYTHON3_MODULE_PATHS].compact
+          paths = [*PYTHON3_MODULE_PATHS, ansible_python_path.presence].compact
           determine_existing_python_paths_for(*paths).join(File::PATH_SEPARATOR)
         end
       end
