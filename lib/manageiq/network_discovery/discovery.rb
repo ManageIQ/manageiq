@@ -5,9 +5,6 @@ module ManageIQ
     module Discovery
       PROVIDERS_BY_TYPE = {
         :ipmi            => "ManageIQ::Util::IPMI::Discovery",
-        :msvirtualserver => "ManageIQ::Providers::Microsoft::Discovery",
-        :mswin           => "ManageIQ::Providers::Microsoft::Discovery",
-        :scvmm           => "ManageIQ::Providers::Microsoft::Discovery",
         :openstack_infra => "ManageIQ::Providers::Openstack::Discovery",
         :ovirt           => "ManageIQ::Providers::Ovirt::Discovery",
         :rhevm           => "ManageIQ::Providers::Redhat::Discovery",
