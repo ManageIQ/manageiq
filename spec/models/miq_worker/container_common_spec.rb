@@ -113,6 +113,30 @@ RSpec.describe MiqWorker::ContainerCommon do
         expect(klass.constantize.new.worker_deployment_name.length).to be <= 60
       end
     end
+
+    context "ems_id" do
+      let(:subject) { ManageIQ::Providers::BaseManager::EventCatcher.new }
+
+      it "is appended" do
+        subject.queue_name = "ems_1"
+        expect(subject.worker_deployment_name[-2..]).to eq("-1")
+      end
+
+      it "isn't appended for nil queue_name" do
+        subject.queue_name = nil
+        expect(subject.worker_deployment_name[-7..]).to eq("catcher")
+      end
+
+      it "isn't appended for blank queue_name" do
+        subject.queue_name = " "
+        expect(subject.worker_deployment_name[-7..]).to eq("catcher")
+      end
+
+      it "isn't appended for invalid queue_name prefix" do
+        subject.queue_name = "notems_1"
+        expect(subject.worker_deployment_name[-7..]).to eq("catcher")
+      end
+    end
   end
 
   describe "#scale_deployment" do
