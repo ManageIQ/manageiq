@@ -387,23 +387,34 @@ module Ansible
         res
       end
 
-      PYTHON_MODULE_PATHS = %w[
-        /var/lib/manageiq/venv/lib/python3.6/site-packages
-        /var/lib/manageiq/venv/lib/python3.8/site-packages
-        /usr/local/lib/python3.8/site-packages
-      ].freeze
       def python_path
-        @python_path ||=
-          [*PYTHON_MODULE_PATHS, ansible_python_path.presence]
-            .select { |path| path && File.exist?(path) }
-            .join(File::PATH_SEPARATOR)
+        @python_path ||= [manageiq_venv_path, *ansible_python_paths].compact.join(File::PATH_SEPARATOR)
       end
 
-      def ansible_python_path
-        @ansible_python_path ||= begin
-          path = `ansible --version 2>/dev/null`.split("\n").grep(/ansible python module location/).first.to_s.split(" = ").last.to_s
-          path.present? ? File.dirname(path) : path
-        end
+      def manageiq_venv_path
+        Dir.glob("/var/lib/manageiq/venv/lib/python*/site-packages").first
+      end
+
+      def ansible_python_paths
+        ansible_python_paths_raw(ansible_python_version).chomp.split(":")
+      end
+
+      # NOTE: This method is ignored by brakeman in the config/brakeman.ignore
+      def ansible_python_paths_raw(version)
+        return "" if version.blank?
+
+        # This check allows us to ignore the brakeman warning about command line injection
+        raise "ansible python version is not a number: #{version}" unless version.match?(/^\d+\.\d+$/)
+
+        `python#{version} -c 'import site; print(":".join(site.getsitepackages()))'`.chomp
+      end
+
+      def ansible_python_version
+        ansible_python_version_raw.match(/python version = (\d+\.\d+)\./)&.captures&.first
+      end
+
+      def ansible_python_version_raw
+        `ansible --version 2>/dev/null`.chomp
       end
     end
   end
