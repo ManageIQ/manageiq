@@ -1,0 +1,29 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "1d1f63511c528d6d28a292a8b3ff2a91b5e0c4104112fb06631a00ca89f03e2f",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "lib/ansible/runner.rb",
+      "line": 409,
+      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "`python#{version} -c 'import site; print(\":\".join(site.getsitepackages()))'`",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Ansible::Runner",
+        "method": "ansible_python_paths_raw"
+      },
+      "user_input": "version",
+      "confidence": "Medium",
+      "cwe_id": [
+        77
+      ],
+      "note": "This method is safe because it verifies that the version is in the form #.#."
+    }
+  ],
+  "updated": "2023-03-20 10:30:55 -0400",
+  "brakeman_version": "5.4.1"
+}

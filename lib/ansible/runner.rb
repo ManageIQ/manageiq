@@ -388,44 +388,33 @@ module Ansible
       end
 
       def python_path
-        if python3_modules_path.present?
-          python3_modules_path
-        else
-          python2_modules_path
-        end
+        @python_path ||= [manageiq_venv_path, *ansible_python_paths].compact.join(File::PATH_SEPARATOR)
       end
 
-      PYTHON2_MODULE_PATHS = %w[
-        /var/lib/manageiq/venv/lib/python2.7/site-packages
-      ].freeze
-      def python2_modules_path
-        @python2_modules_path ||= begin
-          determine_existing_python_paths_for(*PYTHON2_MODULE_PATHS).join(File::PATH_SEPARATOR)
-        end
+      def manageiq_venv_path
+        Dir.glob("/var/lib/manageiq/venv/lib/python*/site-packages").first
       end
 
-      PYTHON3_MODULE_PATHS = %w[
-        /var/lib/awx/venv/ansible/lib/python3.6/site-packages
-        /var/lib/manageiq/venv/lib/python3.6/site-packages
-        /var/lib/manageiq/venv/lib/python3.8/site-packages
-        /usr/local/lib/python3.8/site-packages
-      ].freeze
-      def python3_modules_path
-        @python3_modules_path ||= begin
-          paths = [*PYTHON3_MODULE_PATHS, ansible_python_path.presence].compact
-          determine_existing_python_paths_for(*paths).join(File::PATH_SEPARATOR)
-        end
+      def ansible_python_paths
+        ansible_python_paths_raw(ansible_python_version).chomp.split(":")
       end
 
-      def ansible_python_path
-        @ansible_python_path ||= begin
-          path = `ansible --version 2>/dev/null`.split("\n").grep(/ansible python module location/).first.to_s.split(" = ").last.to_s
-          path.present? ? File.dirname(path) : path
-        end
+      # NOTE: This method is ignored by brakeman in the config/brakeman.ignore
+      def ansible_python_paths_raw(version)
+        return "" if version.blank?
+
+        # This check allows us to ignore the brakeman warning about command line injection
+        raise "ansible python version is not a number: #{version}" unless version.match?(/^\d+\.\d+$/)
+
+        `python#{version} -c 'import site; print(":".join(site.getsitepackages()))'`.chomp
       end
 
-      def determine_existing_python_paths_for(*paths)
-        paths.select { |path| File.exist?(path) }
+      def ansible_python_version
+        ansible_python_version_raw.match(/python version = (\d+\.\d+)\./)&.captures&.first
+      end
+
+      def ansible_python_version_raw
+        `ansible --version 2>/dev/null`.chomp
       end
     end
   end
