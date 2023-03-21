@@ -135,14 +135,15 @@ module Authenticator
             return nil
           end
 
-          matching_groups = match_groups(groups_for(identity))
+          incoming_groups = groups_for(identity)
+          matching_groups = match_groups(incoming_groups)
           userid, user = find_or_initialize_user(identity, username)
           update_user_attributes(user, userid, identity)
           audit_new_user(audit, user) if user.new_record?
           user.miq_groups = matching_groups
 
           if matching_groups.empty?
-            msg = "Authentication failed for userid #{user.userid}, unable to match user's group membership to an EVM role"
+            msg = "Authentication failed for userid #{user.userid}, unable to match user's group membership to an EVM role. The incoming groups are: #{incoming_groups.join(", ")}"
             _log.warn(msg)
             audit_failure(audit.merge(:message => msg))
             task.error(msg)
@@ -309,12 +310,12 @@ module Authenticator
     # TODO: Fix this icky select matching with tenancy
     def match_groups(external_group_names)
       return [] if external_group_names.empty?
-      external_group_names = external_group_names.collect(&:downcase)
 
+      external_group_names = external_group_names.collect(&:downcase)
       internal_groups = MiqGroup.in_my_region.order(:sequence).to_a
 
-      external_group_names.each { |g| _log.debug("External Group: #{g}") }
-      internal_groups.each      { |g| _log.debug("Internal Group: #{g.description.downcase}") }
+      _log.debug("External Groups: #{external_group_names.join(", ")}")
+      _log.debug("Internal Groups: #{internal_groups.map { |g| g.description.downcase }.join(", ")}")
 
       internal_groups.select { |g| external_group_names.include?(g.description.downcase) }
     end

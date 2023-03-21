@@ -482,7 +482,7 @@ RSpec.describe Authenticator::Ldap do
             expect(AuditEvent).to receive(:failure).with({
                                                            :event   => 'authorize',
                                                            :userid  => 'bob',
-                                                           :message => "Authentication failed for userid bob, unable to match user's group membership to an EVM role",
+                                                           :message => "Authentication failed for userid bob, unable to match user's group membership to an EVM role. The incoming groups are: bubble, trouble",
                                                          })
             authenticate
           end
