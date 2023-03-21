@@ -6359,6 +6359,10 @@
       :description: Add a Storage Service
       :feature_type: admin
       :identifier: storage_service_new
+    - :name: Edit
+      :description: Edit a Storage Service
+      :feature_type: admin
+      :identifier: storage_service_edit
     - :name: Remove
       :description: Remove a Storage Service
       :feature_type: admin
