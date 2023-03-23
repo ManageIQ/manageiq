@@ -31,7 +31,9 @@ if [ $? -eq 0 ]; then
   su postgres -c "pg_ctl -D ${APPLIANCE_PG_DATA} start"
   test $? -ne 0 && echo "!! Failed to start postgresql service" && exit 1
 
-  bundle exec rake db:migrate
+  pushd ${APP_ROOT}
+    bundle exec rake db:migrate
+  popd
 else
   echo "** DB has not been initialized"
 
