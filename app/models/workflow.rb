@@ -11,10 +11,11 @@ class Workflow < ApplicationRecord
   # during development.
   # In the future these will be imported from a git repository
   # or authored by users via our UI.
-  def self.create_from_json!(json)
+  def self.create_from_json!(json, **kwargs)
     json = JSON.parse(json) if json.kind_of?(String)
     name = json["Comment"]
 
-    create!(:ext_management_system => ManageIQ::Providers::Workflows::AutomationManager.first, :name => name, :workflow_content => json)
+    workflows_automation_manager = ManageIQ::Providers::Workflows::AutomationManager.first
+    workflows_automation_manager.workflows.create!(:name => name, :workflow_content => json, **kwargs)
   end
 end
