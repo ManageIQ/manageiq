@@ -7,10 +7,14 @@ class Workflow < ApplicationRecord
 
   has_many :workflow_instances, :dependent => :destroy
 
+  # For now this is a convenience method for creating these
+  # during development.
+  # In the future these will be imported from a git repository
+  # or authored by users via our UI.
   def self.create_from_json!(json)
     json = JSON.parse(json) if json.kind_of?(String)
     name = json["Comment"]
 
-    create!(:name => name, :payload => json)
+    create!(:ext_management_system => ManageIQ::Providers::Workflows::AutomationManager.first, :name => name, :workflow_content => json)
   end
 end
