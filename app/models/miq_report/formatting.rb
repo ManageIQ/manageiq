@@ -191,6 +191,12 @@ module MiqReport::Formatting
     val.strftime(options[:format])
   end
 
+  def format_relative_date(val, _options)
+    return val unless val.kind_of?(Time) || val.kind_of?(Date) || val.kind_of?(DateTime)
+
+    "#{ApplicationController.helpers.time_ago_in_words(val)} ago"
+  end
+
   def format_datetime_range(val, options)
     return val if options[:format].nil?
     return val unless val.kind_of?(Time) || stime.kind_of?(Date)
