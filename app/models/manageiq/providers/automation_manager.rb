@@ -19,6 +19,9 @@ class ManageIQ::Providers::AutomationManager < ManageIQ::Providers::BaseManager
   has_many :configuration_script_sources, :dependent => :destroy, :foreign_key => "manager_id"
   has_many :configuration_script_payloads, :through => :configuration_script_sources
 
+  has_many :workflows,          :dependent => :destroy, :foreign_key => :ems_id, :inverse_of => :ext_management_system
+  has_many :workflow_instances, :dependent => :destroy, :foreign_key => :ems_id, :inverse_of => :ext_management_system
+
   delegate :url, :to => :provider
 
   virtual_column  :total_configuration_profiles, :type => :integer

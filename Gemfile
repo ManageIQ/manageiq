@@ -212,6 +212,10 @@ group :vmware, :manageiq_default do
   manageiq_plugin "manageiq-providers-vmware"
 end
 
+group :workflows, :manageiq_default do
+  manageiq_plugin "manageiq-providers-workflows"
+end
+
 ### shared dependencies
 group :google, :openshift, :manageiq_default do
   gem "sshkey",                         "~>1.8.0",           :require => false
