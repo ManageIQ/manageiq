@@ -129,6 +129,7 @@ module MiqReport::Formatting
     helper_options[:separator] = options[:separator] if options.key?(:separator)
     val = apply_format_precision(val, options[:precision])
     val = ApplicationController.helpers.number_with_delimiter(val, helper_options)
+    # TODO: val = ActiveSupport::NumberHelper.number_to_delimited(val, helper_options)
     apply_prefix_and_suffix(val, options)
   end
 
@@ -139,6 +140,7 @@ module MiqReport::Formatting
     helper_options[:unit] = options[:unit] if options.key?(:unit)
     val = apply_format_precision(val, options[:precision])
     val = ApplicationController.helpers.number_to_currency(val, helper_options)
+    # TODO: val = ActiveSupport::NumberHelper.number_to_currency(val, helper_options)
     apply_prefix_and_suffix(val, options)
   end
 
@@ -146,6 +148,9 @@ module MiqReport::Formatting
     helper_options = {}
     helper_options[:precision] = options[:precision] || 0 # Precision of 0 returns the significant digits
     val = ApplicationController.helpers.number_to_human_size(val, helper_options)
+    # TODO: precision is handled a little differently
+    # helper_options = options.slice(:precision)
+    # val = ActiveSupport::NumberHelper.number_to_human_size(val, helper_options)
     apply_prefix_and_suffix(val, options)
   end
 
