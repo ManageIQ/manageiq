@@ -1,5 +1,6 @@
 class Workflow < ApplicationRecord
   include NewWithTypeStiMixin
+  include OwnershipMixin
   include TenancyMixin
 
   belongs_to :ext_management_system, :inverse_of => :workflows, :class_name => "ManageIQ::Providers::AutomationManager", :foreign_key => :ems_id
