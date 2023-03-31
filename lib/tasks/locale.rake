@@ -337,7 +337,7 @@ namespace :locale do
       end
 
       # This depends on PoToJson overrides as defined in lib/tasks/po_to_json_override.rb
-      Rake::Task['gettext:po_to_json'].invoke
+      Rake::Task[defined?(ENGINE_ROOT) ? "app:gettext:po_to_json" : "gettext:po_to_json"].invoke
     ensure
       system "rm -rf #{combined_dir}"
     end
