@@ -1008,6 +1008,7 @@
   - cloud_volume_attach
   - cloud_volume_detach
   - cloud_volume_reload
+  - cloud_volume_refresh
   - cloud_volume_type
   - chargeback
   - chargeback_reports
