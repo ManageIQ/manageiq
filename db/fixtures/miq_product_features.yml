@@ -848,7 +848,7 @@
       :feature_type: admin
       :identifier: cloud_volume_reload
     - :name: Refresh
-      :description: Reload the cloud volumes
+      :description: Refresh Cloud Volumes
       :feature_type: admin
       :identifier: cloud_volume_refresh
 
