@@ -847,6 +847,10 @@
       :description: Reload the current display
       :feature_type: admin
       :identifier: cloud_volume_reload
+    - :name: Refresh
+      :description: Refresh Cloud Volumes
+      :feature_type: admin
+      :identifier: cloud_volume_refresh
 
 # AuthKeyPair
 - :name: Auth Key Pairs
