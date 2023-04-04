@@ -239,8 +239,8 @@ class Chargeback < ActsAsArModel
 
   def self.set_chargeback_report_options(rpt, group_by, header_for_tag, groupby_label, tz)
     static_cols = case group_by
-                  when "project"   then report_static_cols - ["image_name"]
-                  when "date-only" then report_static_cols - ["vm_name"]
+                  when "project"   then ["project_name"]
+                  when "date-only" then []
                   when "tag"       then [report_tag_field]
                   when "label"     then [report_label_field]
                   when "tenant"    then ["tenant_name"]

@@ -18,9 +18,9 @@ describe Chargeback do
       it "groups by project" do
         chargeback_model.set_chargeback_report_options(rpt, "project", "Tag", "Group By", "UTF")
 
-        expect(rpt.cols).to eq(%w[start_date display_range vm_name])
-        expect(rpt.col_order).to eq(%w[vm_name display_range])
-        expect(rpt.sortby).to eq(%w[vm_name start_date])
+        expect(rpt.cols).to eq(%w[start_date display_range project_name])
+        expect(rpt.col_order).to eq(%w[project_name display_range])
+        expect(rpt.sortby).to eq(%w[project_name start_date])
       end
 
       it "groups by other" do
@@ -37,9 +37,9 @@ describe Chargeback do
       it "groups by date-only" do
         chargeback_model.set_chargeback_report_options(rpt, "date-only", "Tag", "Group By", "UTF")
 
-        expect(rpt.cols).to eq(%w[start_date display_range project_name])
-        expect(rpt.col_order).to eq(%w[project_name display_range])
-        expect(rpt.sortby).to eq(%w[project_name start_date])
+        expect(rpt.cols).to eq(%w[start_date display_range])
+        expect(rpt.col_order).to eq(%w[display_range])
+        expect(rpt.sortby).to eq(%w[start_date])
       end
 
       it "groups by project" do
