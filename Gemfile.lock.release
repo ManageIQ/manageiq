@@ -520,7 +520,7 @@ GEM
     binary_struct (2.1.0)
     bootsnap (1.16.0)
       msgpack (~> 1.2)
-    brakeman (5.4.0)
+    brakeman (5.4.1)
     builder (3.2.4)
     bundler-audit (0.9.1)
       bundler (>= 1.2.0, < 3)
@@ -1304,7 +1304,7 @@ DEPENDENCIES
   aws-sdk-s3 (~> 1.0)
   bcrypt (~> 3.1.10)
   bootsnap (>= 1.8.1)
-  brakeman (~> 5.0)
+  brakeman (~> 5.4)
   bundler (~> 2.1, >= 2.1.4, != 2.2.10)
   bundler-audit
   byebug
