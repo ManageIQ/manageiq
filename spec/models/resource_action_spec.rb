@@ -1,5 +1,5 @@
 RSpec.describe ResourceAction do
-  context "#deliver_to_automate_from_dialog" do
+  context "#deliver_queue" do
     let(:user) { FactoryBot.create(:user_with_group) }
     let(:zone_name) { "default" }
     let(:ra) { FactoryBot.create(:resource_action) }
@@ -43,7 +43,7 @@ RSpec.describe ResourceAction do
       it "validates queue entry" do
         target             = nil
         expect(MiqQueue).to receive(:put).with(q_options).once
-        ra.deliver_to_automate_from_dialog({}, target, user)
+        ra.deliver_queue({}, target, user)
       end
     end
 
@@ -53,7 +53,7 @@ RSpec.describe ResourceAction do
         q_args[:object_type] = target.class.base_class.name
         q_args[:object_id]   = target.id
         expect(MiqQueue).to receive(:put).with(q_options).once
-        ra.deliver_to_automate_from_dialog({}, target, user)
+        ra.deliver_queue({}, target, user)
       end
     end
 
@@ -65,14 +65,14 @@ RSpec.describe ResourceAction do
         klass = targets.first.id.class
         ae_attributes['Array::target_object_ids'] = targets.collect { |t| "#{klass}::#{t.id}" }.join(",")
         expect(MiqQueue).to receive(:put).with(q_options).once
-        ra.deliver_to_automate_from_dialog({}, targets, user)
+        ra.deliver_queue({}, targets, user)
       end
     end
 
-    context '#deliver_to_automate_from_dialog_with_miq_task' do
-      it '' do
-        allow(ra).to(receive(:deliver_to_automate_from_dialog))
-        miq_task = MiqTask.find(ra.deliver_to_automate_from_dialog_with_miq_task({}, nil, user))
+    context '#deliver_task' do
+      it 'creates a task' do
+        allow(ra).to(receive(:deliver_queue))
+        miq_task = MiqTask.find(ra.deliver_task({}, nil, user))
         expect(miq_task.state).to(eq(MiqTask::STATE_QUEUED))
         expect(miq_task.status).to(eq(MiqTask::STATUS_OK))
         expect(miq_task.message).to(eq('MiqTask has been queued.'))

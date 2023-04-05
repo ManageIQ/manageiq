@@ -42,7 +42,7 @@ RSpec.describe DynamicDialogFieldValueProcessor do
 
       before do
         User.current_user = user
-        allow(resource_action).to receive(:deliver_to_automate_from_dialog_field).with(
+        allow(resource_action).to receive(:deliver).with(
           {:dialog => "automate_values_hash"},
           "target_resource",
           user
@@ -60,7 +60,7 @@ RSpec.describe DynamicDialogFieldValueProcessor do
 
     context "when there is an error delivering to automate from dialog field" do
       before do
-        allow(resource_action).to receive(:deliver_to_automate_from_dialog_field).and_raise("O noes")
+        allow(resource_action).to receive(:deliver).and_raise("O noes")
       end
 
       it "returns the dialog field's script error values" do

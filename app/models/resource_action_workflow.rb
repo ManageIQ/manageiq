@@ -44,9 +44,9 @@ class ResourceActionWorkflow < MiqRequestWorkflow
     else
       ra = load_resource_action(values)
       if ra.resource.try(:open_url?)
-        result[:task_id] = ra.deliver_to_automate_from_dialog_with_miq_task(values, @target, @requester)
+        result[:task_id] = ra.deliver_task(values, @target, @requester)
       else
-        ra.deliver_to_automate_from_dialog(values, @target, @requester)
+        ra.deliver_queue(values, @target, @requester)
       end
     end
 
