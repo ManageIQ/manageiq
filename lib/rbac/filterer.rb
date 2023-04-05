@@ -120,12 +120,16 @@ module Rbac
     }
 
     # These classes should accept any of the relationship_mixin methods including:
-    #   :parent_ids
-    #   :ancestor_ids
-    #   :child_ids
-    #   :sibling_ids
-    #   :descendant_ids
-    #   ...
+    # |   | Relationship method| Which tenants can see these resources |
+    # |---|--------------------|---------------------------------------|
+    # | * | :ancestor_ids      | children can see these resources |
+    # |   | :child_ids         | direct parent can see these resources |
+    # | * | :descendant_ids    | all parents can see these resources |
+    # |   | :parent_ids        | only direct children can see these resources |
+    # |   | :sibling_ids       | all tenants of the same level can see these |
+    # | * | nil                | only the same tenant can see the resources |
+    #
+    # Star * highlights most relevant methods
     TENANT_ACCESS_STRATEGY = {
       'CloudSnapshot'          => :descendant_ids,
       'CloudTenant'            => :descendant_ids,
