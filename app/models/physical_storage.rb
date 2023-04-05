@@ -85,6 +85,8 @@ class PhysicalStorage < ApplicationRecord
   end
 
   def self.validate_storage_queue(userid, ext_management_system, options = {})
+    options["password"] = ManageIQ::Password.encrypt(options["password"])
+
     task_opts = {
       :action => "validating PhysicalStorage for user #{userid}",
       :userid => userid
@@ -101,6 +103,8 @@ class PhysicalStorage < ApplicationRecord
   end
 
   def self.create_physical_storage_queue(userid, ext_management_system, options = {})
+    options["password"] = ManageIQ::Password.encrypt(options["password"])
+
     task_opts = {
       :action => "creating PhysicalStorage for user #{userid}",
       :userid => userid
