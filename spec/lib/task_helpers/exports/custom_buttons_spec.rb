@@ -236,6 +236,8 @@ RSpec.describe TaskHelpers::Exports::CustomButtons do
                     "ae_attributes"               => {},
                     "configuration_template_id"   => nil,
                     "configuration_template_type" => nil,
+                    "workflow_id"                 => nil,
+                    "type"                        => nil,
                     "resource_type"               => "CustomButton"
                   }
                 }]
@@ -270,6 +272,8 @@ RSpec.describe TaskHelpers::Exports::CustomButtons do
                 "ae_attributes"               => {},
                 "configuration_template_id"   => nil,
                 "configuration_template_type" => nil,
+                "workflow_id"                 => nil,
+                "type"                        => nil,
                 "dialog_label"                => "label1"
               }
             }]
