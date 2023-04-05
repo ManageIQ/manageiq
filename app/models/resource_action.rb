@@ -10,6 +10,14 @@ class ResourceAction < ApplicationRecord
   RETIREMENT  = 'Retirement'.freeze
   RECONFIGURE = 'Reconfigure'.freeze
 
+  validate :ensure_workflow_or_automate
+
+  def ensure_workflow_or_automate
+    return if workflow_id.nil? || (ae_namespace.nil? && ae_class.nil? && ae_instance.nil?)
+
+    errors.add(:workflow_id, N_("Cannot have workflow_id and ae_namespace, ae_class, and ae_instance present"))
+  end
+
   def readonly?
     return true if super
     resource.readonly? if resource.kind_of?(ServiceTemplate)
