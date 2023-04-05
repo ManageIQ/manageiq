@@ -74,10 +74,14 @@ class ResourceAction < ApplicationRecord
 
   def deliver_queue(dialog_hash_values, target, user, task_id = nil)
     _log.info("Queuing <#{self.class.name}:#{id}> for <#{resource_type}:#{resource_id}>")
-    MiqAeEngine.deliver_queue(automate_queue_hash(target, dialog_hash_values[:dialog], user, task_id),
-                              :zone     => target.try(:my_zone),
-                              :priority => MiqQueue::HIGH_PRIORITY,
-                              :task_id  => "#{self.class.name.underscore}_#{id}")
+    if workflow
+      workflow.execute(:userid => user.userid, :inputs => dialog_hash_values)
+    else
+      MiqAeEngine.deliver_queue(automate_queue_hash(target, dialog_hash_values[:dialog], user, task_id),
+                                :zone     => target.try(:my_zone),
+                                :priority => MiqQueue::HIGH_PRIORITY,
+                                :task_id  => "#{self.class.name.underscore}_#{id}")
+    end
   end
 
   def deliver_task(dialog_hash_values, target, user)
@@ -90,7 +94,13 @@ class ResourceAction < ApplicationRecord
   def deliver(dialog_hash_values, target, user)
     _log.info("Running <#{self.class.name}:#{id}> for <#{resource_type}:#{resource_id}>")
 
-    workflow = MiqAeEngine.deliver(automate_queue_hash(target, dialog_hash_values[:dialog], user))
-    workflow.root.attributes
+    if workflow
+      task = MiqTask.wait_for_taskid(deliver_queue(dialog_hash_values, target, user))
+      workflow_instances = WorkflowInstance.find(task.context_data[:workflow_instance_id])
+      workflow_instances.output
+    else
+      workflow = MiqAeEngine.deliver(automate_queue_hash(target, dialog_hash_values[:dialog], user))
+      workflow.root.attributes
+    end
   end
 end
