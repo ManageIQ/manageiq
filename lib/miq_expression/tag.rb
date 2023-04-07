@@ -28,10 +28,6 @@ class MiqExpression::Tag < MiqExpression::Target
     "#{[model, *associations, base_namespace].compact.join(".")}-#{column}"
   end
 
-  def numeric?
-    false
-  end
-
   def column_type
     :string
   end
