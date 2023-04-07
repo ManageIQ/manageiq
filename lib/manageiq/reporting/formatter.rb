@@ -31,7 +31,7 @@ module ReportFormatter
   deprecate_constant 'C3Charting',        'ManageIQ::Reporting::Formatter::C3Charting'
   deprecate_constant 'ChartCommon',       'ManageIQ::Reporting::Formatter::ChartCommon'
   deprecate_constant 'Converter',         'ManageIQ::Reporting::Formatter::Converter'
-  deprecate_constant 'ReportHTML',        'ManageIQ::Reporting::Formatter::HTML'
+  deprecate_constant 'ReportHTML',        'ManageIQ::Reporting::Formatter::Html'
   deprecate_constant 'ReportRenderer',    'ManageIQ::Reporting::Formatter::ReportRenderer'
   deprecate_constant 'ReportText',        'ManageIQ::Reporting::Formatter::Text'
   deprecate_constant 'ReportTimeline',    'ManageIQ::Reporting::Formatter::Timeline'
