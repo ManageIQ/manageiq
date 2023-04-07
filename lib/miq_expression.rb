@@ -558,7 +558,7 @@ class MiqExpression
   end
 
   def self.get_col_info(field, options = {})
-    f = parse_field_or_tag(field) or raise ArgumentError
+    f = MiqExpression::Target.parse!(field)
 
     {
       :include                        => f.includes,
@@ -568,7 +568,7 @@ class MiqExpression
       :excluded_by_preprocess_options => f.exclude_col_by_preprocess_options?(options),
       :tag                            => f.kind_of?(MiqExpression::Tag),
     }
-  rescue ArgumentError
+  rescue MiqExpression::Target::ParseError, ArgumentError
     # not thrilled with these values. but making tests pass for now
     {
       :data_type                      => nil,
@@ -1357,8 +1357,7 @@ class MiqExpression
   end
 
   def self.parse_field_or_tag(str)
-    # managed.location, Model.x.y.managed-location
-    MiqExpression::Field.parse(str) || MiqExpression::CountField.parse(str) || MiqExpression::Tag.parse(str)
+    MiqExpression::Target.parse(str)
   end
 
   def fields(expression = exp)

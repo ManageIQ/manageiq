@@ -1,6 +1,12 @@
 class MiqExpression::Target
   ParseError = Class.new(StandardError)
 
+  # TODO: fix to run against a single regular expression
+  # supports strange syntax like: managed.location, Model.x.y.managed-location
+  def self.parse(field)
+    MiqExpression::Field.parse(field) || MiqExpression::CountField.parse(field) || MiqExpression::Tag.parse(field)
+  end
+
   def self.parse!(field)
     parse(field) || raise(ParseError, field)
   end

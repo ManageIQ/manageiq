@@ -276,7 +276,7 @@ module MiqReport::Formatting
     expression_col = col_to_expression_col(col)
 
     unless @miq_exp_dt_map.key?(col)
-      @miq_exp_dt_map[col] = MiqExpression.parse_field_or_tag(expression_col).try(:column_type)
+      @miq_exp_dt_map[col] = MiqExpression::Target.parse(expression_col)&.column_type
     end
     dt = @miq_exp_dt_map[col]
     dt = value.class.to_s.downcase if dt.nil?

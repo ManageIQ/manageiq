@@ -1283,7 +1283,7 @@ RSpec.describe MiqReport do
 
   context '.get_col_info' do
     it "calls MiqExpression" do
-      expect(MiqExpression).to receive(:parse_field_or_tag).once
+      expect(MiqExpression::Target).to receive(:parse).once
       MiqReport.get_col_info('Vm-name')
     end
 

@@ -28,7 +28,7 @@ module MiqReport::Generator
     end
 
     def get_col_break_suffixes(col)
-      col_type = MiqExpression.parse_field_or_tag(col).try(:column_type)
+      col_type = MiqExpression::Target.parse(col)&.column_type
       case col_type
       when :date
         date_time_break_suffixes.select { |_name, suffix| !suffix.to_s.starts_with?("hour") }
