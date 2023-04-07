@@ -238,17 +238,17 @@ class Chargeback < ActsAsArModel
   end
 
   def self.set_chargeback_report_options(rpt, group_by, header_for_tag, groupby_label, tz)
-    rpt.cols = %w(start_date display_range)
-
-    static_cols       = report_static_cols
-    static_cols      -= ["image_name"] if group_by == "project"
-    static_cols      -= ["vm_name"] if group_by == "date-only"
-    static_cols       = group_by == "tag" ? [report_tag_field] : static_cols
-    static_cols       = group_by == "label" ? [report_label_field] : static_cols
-    static_cols       = group_by == "tenant" ? ['tenant_name'] : static_cols
-    rpt.cols         += static_cols
-    rpt.col_order     = static_cols + ["display_range"]
-    rpt.sortby        = static_cols + ["start_date"]
+    static_cols = case group_by
+                  when "project"   then report_static_cols - ["image_name"]
+                  when "date-only" then report_static_cols - ["vm_name"]
+                  when "tag"       then [report_tag_field]
+                  when "label"     then [report_label_field]
+                  when "tenant"    then ["tenant_name"]
+                  else                  report_static_cols
+                  end
+    rpt.cols      = %w(start_date display_range) + static_cols
+    rpt.col_order = static_cols + ["display_range"]
+    rpt.sortby    = static_cols + ["start_date"]
 
     rpt.col_order.each do |c|
       header_column = if (c == report_tag_field && header_for_tag)
