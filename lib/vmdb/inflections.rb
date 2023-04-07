@@ -46,7 +46,24 @@ module Vmdb
         inflect.plural(/quota$/, "quotas")
         inflect.irregular("container_quota", "container_quotas")
 
+        inflect.acronym('DBus')
+        inflect.acronym('DDF')
+        inflect.acronym('GHT')
+        inflect.acronym('IPMI')
         inflect.acronym('ManageIQ')
+        inflect.acronym('MKS')
+        inflect.acronym('OAuth')
+        inflect.acronym('REXML')
+        inflect.acronym('SAP')
+        inflect.acronym('SSL')
+        inflect.acronym('UI')
+      end
+
+      # ActiveSupport::Inflector.inflections doesn't allow us to blanket tell how to autoload a constant from a file
+      # This works around the UI acronym above.
+      Rails.autoloaders.each do |autoloader|
+        autoloader.inflector.inflect('miq_ui_worker' => "MiqUiWorker")
+        autoloader.inflector.inflect('vpc' => "VPC")
       end
     end
 
