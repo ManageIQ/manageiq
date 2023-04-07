@@ -1,4 +1,4 @@
-module YAMLImportExportMixin
+module YamlImportExportMixin
   extend ActiveSupport::Concern
 
   module ClassMethods
