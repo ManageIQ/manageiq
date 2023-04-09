@@ -6473,6 +6473,10 @@
       :description: Remove a Storage Service
       :feature_type: admin
       :identifier: storage_service_delete
+    - :name: Check Compliant Resources
+      :description: Given a set of capabilities, check which attached resources will comply
+      :feature_type: admin
+      :identifier: check_compliant_resources
 
   # Volume Mapping
 - :name: Volume Mapping
