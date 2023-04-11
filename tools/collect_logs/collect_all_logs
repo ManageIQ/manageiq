@@ -90,7 +90,7 @@ class CollectAllLogs
 
   def log_path(stdout)
     path = stdout.match(/Archive Written To: (.+)\n/).captures.first
-    raise if path.nil?
+    raise "Archive path not found" if path.nil?
 
     Pathname.new(path)
   end
