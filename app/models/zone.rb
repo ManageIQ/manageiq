@@ -7,6 +7,7 @@ class Zone < ApplicationRecord
   belongs_to :log_file_depot, :class_name => "FileDepot"
 
   has_many :miq_servers
+  has_many :active_miq_servers, -> { is_active }, :class_name => "MiqServer", :inverse_of => :zone, :dependent => nil
   has_many :ext_management_systems
   has_many :paused_ext_management_systems, :class_name => 'ExtManagementSystem', :foreign_key => :zone_before_pause_id
   has_many :container_managers, :class_name => "ManageIQ::Providers::ContainerManager"
@@ -29,7 +30,6 @@ class Zone < ApplicationRecord
   has_many :containers,            :through => :container_managers
   has_many :host_hardwares, :class_name => 'Hardware', :through => :hosts, :source => :hardware
   has_many :vm_hardwares, :class_name => 'Hardware', :through => :vms_and_templates, :source => :hardware
-  virtual_has_many :active_miq_servers, :class_name => "MiqServer"
 
   before_destroy :remove_servers_if_podified
   before_destroy :check_zone_in_use_on_destroy
@@ -44,10 +44,6 @@ class Zone < ApplicationRecord
 
   scope :visible, -> { where(:visible => true) }
   default_value_for :visible, true
-
-  def active_miq_servers
-    MiqServer.is_active.where(:zone_id => id)
-  end
 
   def servers_for_settings_reload
     miq_servers.where(:status => "started")
