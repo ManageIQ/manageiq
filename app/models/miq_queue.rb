@@ -178,7 +178,7 @@ class MiqQueue < ApplicationRecord
     raise ArgumentError, "invalid key :zone" if options.key?(:zone)
     raise ArgumentError, "invalid key :role" if options.key?(:role)
 
-    MiqServer.active_miq_servers.select(:id, :guid).each do |server|
+    MiqServer.is_active.select(:id, :guid).each do |server|
       put(options.merge(:server_guid => server.guid, :zone => nil, :role => nil))
     end
   end

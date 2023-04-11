@@ -46,7 +46,7 @@ class Zone < ApplicationRecord
   default_value_for :visible, true
 
   def active_miq_servers
-    MiqServer.active_miq_servers.where(:zone_id => id)
+    MiqServer.is_active.where(:zone_id => id)
   end
 
   def servers_for_settings_reload

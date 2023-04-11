@@ -66,7 +66,7 @@ class MiqRegion < ApplicationRecord
   end
 
   def active_miq_servers
-    MiqServer.in_region(region_number).active_miq_servers
+    MiqServer.in_region(region_number).is_active
   end
 
   def vms_and_templates

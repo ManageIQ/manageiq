@@ -32,9 +32,9 @@ class MiqServer < ApplicationRecord
   default_value_for(:name, "EVM")
   default_value_for(:zone) { Zone.default_zone }
 
-  scope :active_miq_servers, -> { where(:status => STATUSES_ACTIVE) }
-  scope :recently_active,    -> { where(:last_heartbeat => 10.minutes.ago.utc...Time.now.utc) }
-  scope :with_zone_id, ->(zone_id) { where(:zone_id => zone_id) }
+  scope :is_active,       -> { where(:status => STATUSES_ACTIVE) }
+  scope :recently_active, -> { where(:last_heartbeat => 10.minutes.ago.utc...Time.now.utc) }
+  scope :with_zone_id,    ->(zone_id) { where(:zone_id => zone_id) }
   virtual_delegate :description, :to => :zone, :prefix => true, :allow_nil => true, :type => :string
 
   validate :validate_zone_not_maintenance?
@@ -462,15 +462,15 @@ class MiqServer < ApplicationRecord
   end
 
   def find_other_started_servers_in_region
-    self.class.active_miq_servers.in_my_region.where.not(:id => id).to_a
+    self.class.is_active.in_my_region.where.not(:id => id).to_a
   end
 
   def find_other_servers_in_region
-    self.class.active_miq_servers.where.not(:id => id).to_a
+    self.class.is_active.where.not(:id => id).to_a
   end
 
   def find_other_started_servers_in_zone
-    self.class.active_miq_servers.where(:zone_id => zone_id).where.not(:id => id).to_a
+    self.class.is_active.where(:zone_id => zone_id).where.not(:id => id).to_a
   end
 
   def find_other_servers_in_zone

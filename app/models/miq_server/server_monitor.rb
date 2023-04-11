@@ -18,7 +18,7 @@ class MiqServer::ServerMonitor
     parent = MiqRegion.my_region(true)
     parent.lock do
       # See if an ACTIVE server has already taken over
-      active_servers = parent.active_miq_servers
+      active_servers = parent.is_active
 
       _log.debug("Double checking that nothing has changed")
       master = active_servers.detect(&:is_master?)
