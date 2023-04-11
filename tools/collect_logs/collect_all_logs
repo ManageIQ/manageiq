@@ -2,12 +2,15 @@
 require File.expand_path("../../config/environment", __dir__)
 
 require "optimist"
+require "awesome_spawn"
+require "manageiq-ssh-util"
 
 class CollectAllLogs
   def initialize(opts = {})
-    @remote_user    = opts.fetch(:remote_user, "root")
-    @vmdb_log_dir   = Rails.root.join("log")
-    @target_log_dir = vmdb_log_dir.join("evm_current_region_#{MiqRegion.my_region&.id}_#{Time.now.utc.strftime("%Y%m%d_%H%M%S")}")
+    @remote_user     = opts.fetch(:remote_user, "root")
+    @remote_password = opts.fetch(:remote_password, "smartvm")
+    @vmdb_log_dir    = Rails.root.join("log")
+    @target_log_dir  = vmdb_log_dir.join("evm_current_region_#{MiqRegion.my_region&.id}_#{Time.now.utc.strftime("%Y%m%d_%H%M%S")}")
   end
 
   def self.collect_all_logs!(opts = {})
@@ -45,7 +48,7 @@ class CollectAllLogs
 
   private
 
-  attr_reader :remote_user, :target_log_dir, :vmdb_log_dir
+  attr_reader :remote_user, :remote_password, :target_log_dir, :vmdb_log_dir
 
   def collect_logs(miq_server)
     server_ident = miq_server.hostname || miq_server.ipaddress
@@ -76,21 +79,28 @@ class CollectAllLogs
       return
     end
 
-    stdout = `ssh #{remote_user}@#{address} 'cd /var/www/miq/vmdb/tools/collect_logs && ./collect_current_logs.sh 2>&1'`
-    exit $?.exitstatus unless $?.success?
+    ssh = ManageIQ::SSH::Util.new(address, remote_user, remote_password)
 
+    stdout = ssh.exec("cd /var/www/miq/vmdb/tools/collect_logs && ./collect_current_logs.sh 2>&1")
     log_bundle = log_path(stdout)
 
-    `scp #{remote_user}@#{address}:#{log_bundle} #{target_log_dir}`
+    ssh = ManageIQ::SSH::Util.new(address, remote_user, remote_password)
+    ssh.get_file(log_bundle, target_log_dir.join(log_bundle.basename).to_s)
+  rescue => err
+    abort(err)
   end
 
   def log_path(stdout)
-    stdout.match(/Archive Written To: (.+)\n/).captures.first
+    path = stdout.match(/Archive Written To: (.+)\n/).captures.first
+    raise if path.nil?
+
+    Pathname.new(path)
   end
 end
 
 opts = Optimist.options do
   opt :remote_user, "The username to use to connect to remote servers", :type => :string, :default => "root"
+  opt :remote_password, "The password to use to connect to remote servers", :type => :string, :default => "smartvm"
 end
 
 CollectAllLogs.collect_all_logs!(opts)
