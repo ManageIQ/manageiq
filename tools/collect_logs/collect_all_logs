@@ -63,11 +63,12 @@ class CollectAllLogs
     end
 
     $stdout.puts("Collecting logs from #{server_ident}...Complete")
+  rescue => err
+    abort("Collecting logs from #{server_ident}...Failed - #{err}")
   end
 
   def collect_local_logs
-    result = AwesomeSpawn.run("./collect_current_logs.sh", :chdir => "/var/www/miq/vmdb/tools/collect_logs")
-    abort(result.error) unless result.success?
+    result = AwesomeSpawn.run!("./collect_current_logs.sh", :chdir => "/var/www/miq/vmdb/tools/collect_logs")
 
     FileUtils.mv(log_path(result.output), target_log_dir)
   end
@@ -85,8 +86,6 @@ class CollectAllLogs
     log_bundle = log_path(stdout)
 
     ssh.get_file(log_bundle, target_log_dir.join(log_bundle.basename).to_s)
-  rescue => err
-    abort(err)
   end
 
   def log_path(stdout)
