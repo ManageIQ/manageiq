@@ -63,10 +63,10 @@ class CollectAllLogs
   end
 
   def collect_local_logs
-    stdout = `cd /var/www/miq/vmdb/tools/collect_logs && ./collect_current_logs.sh 2>&1`
-    log_bundle = log_path(stdout)
+    result = AwesomeSpawn.run("./collect_current_logs.sh", :chdir => "/var/www/miq/vmdb/tools/collect_logs")
+    abort(result.error) unless result.success?
 
-    FileUtils.mv(log_bundle, target_log_dir)
+    FileUtils.mv(log_path(result.output), target_log_dir)
   end
 
   def collect_remote_logs(miq_server)
@@ -77,6 +77,8 @@ class CollectAllLogs
     end
 
     stdout = `ssh #{remote_user}@#{address} 'cd /var/www/miq/vmdb/tools/collect_logs && ./collect_current_logs.sh 2>&1'`
+    exit $?.exitstatus unless $?.success?
+
     log_bundle = log_path(stdout)
 
     `scp #{remote_user}@#{address}:#{log_bundle} #{target_log_dir}`
