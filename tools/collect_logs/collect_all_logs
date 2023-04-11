@@ -98,7 +98,7 @@ end
 
 opts = Optimist.options do
   opt :remote_user, "The username to use to connect to remote servers", :type => :string, :default => "root"
-  opt :remote_password, "The password to use to connect to remote servers", :type => :string, :default => "smartvm"
+  opt :remote_password, "The password to use to connect to remote servers", :type => :string
 end
 
 CollectAllLogs.collect_all_logs!(opts)
