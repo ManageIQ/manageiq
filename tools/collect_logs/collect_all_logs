@@ -18,16 +18,21 @@ class CollectAllLogs
     # Create the directory to copy all log bundles into
     target_log_dir.mkdir
 
-    $stdout.puts("Collecting logs from all servers in #{MiqRegion.my_region.description}...")
+    active_miq_servers = MiqServer.active_miq_servers
+
+    $stdout.puts("Collecting logs from [#{active_miq_servers.count}] servers in #{MiqRegion.my_region.description}...")
 
     # Loop through all active servers in the region
-    MiqServer.active_miq_servers.each do |miq_server|
+    active_miq_servers.each do |miq_server|
       fork do
         collect_logs(miq_server)
       end
     end
 
-    Process.waitall
+    results = Process.waitall.map(&:last)
+
+    # Don't bundle up logs if all child processes failed
+    abort("Collecting logs from [#{active_miq_servers.count}] servers in #{MiqRegion.my_region.description}...Failed") if results.none?(&:success?)
 
     # Tar up all of the logs we have collected from the servers
     `cd #{vmdb_log_dir} && tar cfJ #{target_log_dir.basename}.tar.xz #{target_log_dir.basename} 2>&1`
@@ -35,7 +40,7 @@ class CollectAllLogs
     # Cleanup the directory that we created the tar from
     FileUtils.rm_r(target_log_dir)
 
-    $stdout.puts("Collecting logs from all servers in #{MiqRegion.my_region.description}...Complete - [#{target_log_dir}.tar.xz]")
+    $stdout.puts("Collecting logs from [#{active_miq_servers.count}] servers in #{MiqRegion.my_region.description}...Complete - [#{target_log_dir}.tar.xz]")
   end
 
   private
