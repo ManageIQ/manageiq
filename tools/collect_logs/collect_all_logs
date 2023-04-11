@@ -8,7 +8,7 @@ require "manageiq-ssh-util"
 class CollectAllLogs
   def initialize(opts = {})
     @remote_user     = opts.fetch(:remote_user, "root")
-    @remote_password = opts.fetch(:remote_password, "smartvm")
+    @remote_password = opts.fetch(:remote_password, nil)
     @vmdb_log_dir    = Rails.root.join("log")
     @target_log_dir  = vmdb_log_dir.join("evm_current_region_#{MiqRegion.my_region&.id}_#{Time.now.utc.strftime("%Y%m%d_%H%M%S")}")
   end
@@ -79,12 +79,11 @@ class CollectAllLogs
       return
     end
 
-    ssh = ManageIQ::SSH::Util.new(address, remote_user, remote_password)
+    ssh = ManageIQ::SSH::Util.new(address, remote_user, remote_password, :use_agent => true, :verbose => :error)
 
     stdout = ssh.exec("cd /var/www/miq/vmdb/tools/collect_logs && ./collect_current_logs.sh 2>&1")
     log_bundle = log_path(stdout)
 
-    ssh = ManageIQ::SSH::Util.new(address, remote_user, remote_password)
     ssh.get_file(log_bundle, target_log_dir.join(log_bundle.basename).to_s)
   rescue => err
     abort(err)
