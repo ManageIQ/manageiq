@@ -22,7 +22,9 @@ class ServiceReconfigureTask < MiqRequestTask
     dialog_values = options[:dialog] || {}
 
     ra = source.service_template.resource_actions.find_by(:action => 'Reconfigure')
-    if ra
+    if ra&.workflow
+      ra.deliver_queue(dialog_values, self, get_user)
+    elsif ra
       dialog_values["request"] = req_type
       args = {
         :object_type      => self.class.name,
