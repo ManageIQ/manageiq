@@ -2,33 +2,6 @@ module VerifyCredentialsMixin
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def validate_credentials_task(args, user_id, zone)
-      task_opts = {
-        :action => "Validate EMS Provider Credentials",
-        :userid => user_id
-      }
-
-      queue_opts = {
-        :args        => [*args],
-        :class_name  => name,
-        :method_name => "raw_connect?",
-        :queue_name  => "generic",
-        :role        => "ems_operations",
-        :zone        => zone
-      }
-
-      task_id = MiqTask.generic_action_with_callback(task_opts, queue_opts)
-      task = MiqTask.wait_for_taskid(task_id, :timeout => 30)
-
-      if task.nil?
-        error_message = "Task Error"
-      elsif MiqTask.status_error?(task.status) || MiqTask.status_timeout?(task.status)
-        error_message = task.message
-      end
-
-      [error_message.blank?, error_message]
-    end
-
     def verify_credentials_task(userid, zone, options)
       task_opts = {
         :action => "Verify EMS Provider Credentials",
