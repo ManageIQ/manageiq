@@ -83,7 +83,10 @@ class ResourceAction < ApplicationRecord
   def deliver_queue(dialog_hash_values, target, user, task_id = nil)
     _log.info("Queuing <#{self.class.name}:#{id}> for <#{resource_type}:#{resource_id}>")
     if workflow
-      workflow.execute(:userid => user.userid, :inputs => dialog_hash_values)
+      args = {:object_type => target.class.name, :object_id => target.id}
+      queue_opts = {:zone => target.try(:my_zone)}
+
+      workflow.execute(:userid => user.userid, :inputs => dialog_hash_values, :queue_opts => queue_opts, :args => args)
     else
       MiqAeEngine.deliver_queue(automate_queue_hash(target, dialog_hash_values[:dialog], user, task_id),
                                 :zone     => target.try(:my_zone),
