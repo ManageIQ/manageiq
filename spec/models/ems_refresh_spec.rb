@@ -1,6 +1,8 @@
 require "inventory_refresh"
 
 RSpec.describe EmsRefresh do
+  include Spec::Support::SupportsHelper
+
   context ".queue_refresh" do
     before do
       zone = EvmSpecHelper.local_miq_server.zone
@@ -10,6 +12,12 @@ RSpec.describe EmsRefresh do
     it "with Ems" do
       target = @ems
       queue_refresh_and_assert_queue_item(target, [target])
+    end
+
+    it "with Ems that doesn't support refresh_ems" do
+      stub_supports_not(@ems, :refresh_ems)
+      described_class.queue_refresh(@ems)
+      expect(MiqQueue.count).to be_zero
     end
 
     it "with InventoryRefresh::Target" do
