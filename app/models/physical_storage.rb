@@ -102,10 +102,10 @@ class PhysicalStorage < ApplicationRecord
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
-  def self.create_physical_storage_queue(userid, ext_management_system, options = {})
+  def self.create_physical_storage_queue(userid, ext_management_system, options = {}, task_opts = nil)
     options["password"] = ManageIQ::Password.encrypt(options["password"])
 
-    task_opts = {
+    task_opts ||= {
       :action => "creating PhysicalStorage for user #{userid}",
       :userid => userid
     }

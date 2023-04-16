@@ -27,8 +27,8 @@ class HostInitiator < ApplicationRecord
     ext_management_system&.class_by_ems(:HostInitiator)
   end
 
-  def self.create_host_initiator_queue(userid, ext_management_system, options = {})
-    task_opts = {
+  def self.create_host_initiator_queue(userid, ext_management_system, options = {}, task_opts = nil)
+    task_opts ||= {
       :action => "creating HostInitiator for user #{userid}",
       :userid => userid
     }

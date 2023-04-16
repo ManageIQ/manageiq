@@ -20,8 +20,8 @@ class StorageService < ApplicationRecord
     ext_management_system&.class_by_ems(:StorageService)
   end
 
-  def self.create_storage_service_queue(userid, ext_management_system, options = {})
-    task_opts = {
+  def self.create_storage_service_queue(userid, ext_management_system, options = {}, task_opts = nil)
+    task_opts ||= {
       :action => "creating Storage Service for user #{userid}",
       :userid => userid
     }
