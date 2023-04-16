@@ -70,9 +70,9 @@ class CloudVolume < ApplicationRecord
   # instance and a userid are mandatory. Any +options+ are forwarded as
   # arguments to the +create_volume+ method.
   #
-  def self.create_volume_queue(userid, ext_management_system, options = {})
-    task_opts = {
-      :action => "creating Cloud Volume for user #{userid}",
+  def self.create_volume_queue(userid, ext_management_system, options = {}, task_opts = nil)
+    task_opts ||= {
+      :action => "Creating Cloud Volume for user #{userid}",
       :userid => userid
     }
 
