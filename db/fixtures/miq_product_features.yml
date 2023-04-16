@@ -6449,7 +6449,7 @@
     :identifier: storage_service_control
     :children:
     - :name: Refresh
-      :description: Refresh relationships and power states for all items related to Physical Storages
+      :description: Refresh the storage manager of this storage service
       :feature_type: control
       :identifier: storage_service_refresh
     - :name: Edit Tags
@@ -6499,7 +6499,7 @@
     :identifier: volume_mapping_control
     :children:
     - :name: Refresh
-      :description: Refresh relationships and power states for all items related to Volume Mapping
+      :description: Refresh the storage manager of this volume mapping
       :feature_type: control
       :identifier: volume_mapping_refresh
     - :name: Edit Tags
@@ -6545,7 +6545,7 @@
     :identifier: host_initiator_control
     :children:
     - :name: Refresh
-      :description: Refresh relationships and power states for all items related to Host Initiators
+      :description: Refresh the storage manager of this host initiator
       :feature_type: control
       :identifier: host_initiator_refresh
     - :name: Edit Tags
@@ -6595,7 +6595,7 @@
     :identifier: host_initiator_group_control
     :children:
     - :name: Refresh
-      :description: Refresh relationships and power states for all items related to Host Initiator Groups
+      :description: Refresh the storage manager of this host initiator group
       :feature_type: control
       :identifier: host_initiator_group_refresh
     - :name: Edit Tags
@@ -6854,7 +6854,7 @@
     :identifier: physical_storage_control
     :children:
     - :name: Refresh
-      :description: Refresh relationships and power states for all items related to Physical Storages
+      :description: Refresh the storage manager of this physical storages
       :feature_type: control
       :identifier: physical_storage_refresh
     - :name: Edit Tags
