@@ -17,5 +17,5 @@
     "node": "<%= node_version %>",
     "npm": "<%= npm_version %>"
   },
-  "packageManager": "<%= package_managaer %>"
+  "packageManager": "<%= package_manager %>"
 }
