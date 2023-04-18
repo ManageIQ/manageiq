@@ -16,8 +16,8 @@ module EmsRefresh
 
   cache_with_timeout(:queue_timeout) { MiqEmsRefreshWorker.worker_settings[:queue_timeout] || 60.minutes }
 
-  def self.queue_refresh_task(target, id = nil)
-    queue_refresh(target, id, :create_task => true)
+  def self.queue_refresh_task(targets, id = nil)
+    queue_refresh(targets, id, :create_task => true)
   end
 
   def self.queue_refresh(target, id = nil, opts = {})
