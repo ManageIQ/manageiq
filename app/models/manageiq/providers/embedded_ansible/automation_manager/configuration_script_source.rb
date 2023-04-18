@@ -10,9 +10,10 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   end
 
   def sync
-    update!(:status => "running")
-    transaction do
-      current = configuration_script_payloads.index_by(&:name)
+    super do |current, worktree|
+      playbooks_in_git_repository = worktree.blob_list.select do |filename|
+        playbook_dir?(filename) && playbook?(filename, worktree)
+      end
 
       git_repository.update_repo
       git_repository.with_worktree do |worktree|
@@ -34,37 +35,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
           found.update!(attrs)
         end
       end
-
-      current.values.each(&:destroy)
-
-      configuration_script_payloads.reload
     end
-    update!(:status            => "successful",
-            :last_updated_on   => Time.zone.now,
-            :last_update_error => nil)
-  rescue => error
-    update!(:status            => "error",
-            :last_updated_on   => Time.zone.now,
-            :last_update_error => format_sync_error(error))
-    raise error
-  end
-
-  def playbooks_in_git_repository
-    git_repository.update_repo
-    git_repository.with_worktree do |worktree|
-      worktree.ref = scm_branch
-      worktree.blob_list.select do |filename|
-        playbook_dir?(filename) && playbook?(filename, worktree)
-      end
-    end
-  end
-
-  ERROR_MAX_SIZE = 50.kilobytes
-  def format_sync_error(error)
-    result = error.message.dup
-    result << "\n\n"
-    result << error.backtrace.join("\n")
-    result.mb_chars.limit(ERROR_MAX_SIZE)
   end
 
   private
