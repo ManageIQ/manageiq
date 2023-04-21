@@ -82,17 +82,16 @@ class ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource 
   def sync
     update!(:status => "running")
     transaction do
-      current = configuration_script_payloads.index_by(&:name)
+      current = []
 
       git_repository.update_repo
       git_repository.with_worktree do |worktree|
         worktree.ref = scm_branch
 
-        yield current, worktree
+        current += yield worktree
       end
 
-      current.values.each(&:destroy)
-
+      (configuration_script_payloads - current).each(&:destroy)
       configuration_script_payloads.reload
     end
     update!(:status => "successful", :last_updated_on   => Time.zone.now, :last_update_error => nil)

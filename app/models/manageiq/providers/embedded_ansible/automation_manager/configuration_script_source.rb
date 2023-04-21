@@ -10,30 +10,15 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   end
 
   def sync
-    super do |current, worktree|
+    super do |worktree|
       playbooks_in_git_repository = worktree.blob_list.select do |filename|
         playbook_dir?(filename) && playbook?(filename, worktree)
       end
 
-      git_repository.update_repo
-      git_repository.with_worktree do |worktree|
-        worktree.ref = scm_branch
-        worktree.blob_list.each do |filename|
-          next unless playbook_dir?(filename)
-
-          content = worktree.read_file(filename)
-          next unless playbook?(filename, content)
-
-          found = current.delete(filename) || self.class.module_parent::Playbook.new(:configuration_script_source_id => id)
-
-          attrs = {:name => filename, :manager_id => manager_id}
-          unless encrypted_playbook?(content)
-            attrs[:payload]      = content
-            attrs[:payload_type] = "yaml"
-          end
-
-          found.update!(attrs)
-        end
+      playbooks_in_git_repository.map do |f|
+        configuration_script_payloads
+          .create_with(:type => self.class.module_parent::Playbook.name, :manager_id => manager_id)
+          .find_or_create_by(:name => f)
       end
     end
   end

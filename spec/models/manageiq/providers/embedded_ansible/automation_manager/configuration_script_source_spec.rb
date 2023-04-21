@@ -223,6 +223,14 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
         )
       end
 
+      it "deletes old playbooks" do
+        record = build_record
+        record.configuration_script_payloads.create!(:name => "deleted.yaml")
+        record.sync
+
+        expect(playbooks_for(record)).to eq(%w[hello_world.yaml])
+      end
+
       context "with a nested playbooks dir" do
         let(:nested_repo) { File.join(clone_dir, "hello_world_nested") }
 
