@@ -160,6 +160,7 @@ class ExtManagementSystem < ApplicationRecord
   supports_not :discovery
   supports_not :events
   supports_not :label_mapping
+  supports_not :management_console
   supports_not :metrics
   supports_not :object_storage
   supports_not :provisioning

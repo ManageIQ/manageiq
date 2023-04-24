@@ -278,6 +278,7 @@
   - vm_infra_explorer
   - vm_html5_console
   - vm_vmrc_console
+  - vm_management_console
   - vm_native_console
   - vm_perf
   - vm_policy_sim
