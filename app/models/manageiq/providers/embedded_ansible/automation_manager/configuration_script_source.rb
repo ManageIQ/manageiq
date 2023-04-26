@@ -15,7 +15,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   belongs_to :git_repository, :autosave => true, :dependent => :destroy
   before_validation :sync_git_repository
 
-  include ManageIQ::Providers::EmbeddedAnsible::CrudCommon
+  include ManageIQ::Providers::EmbeddedAutomationManager::CrudCommon
 
   def self.display_name(number = 1)
     n_('Repository (Embedded Ansible)', 'Repositories (Embedded Ansible)', number)

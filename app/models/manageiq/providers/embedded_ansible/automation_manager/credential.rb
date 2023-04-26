@@ -16,7 +16,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential < Mana
 
   FRIENDLY_NAME = "Embedded Ansible Credential".freeze
 
-  include ManageIQ::Providers::EmbeddedAnsible::CrudCommon
+  include ManageIQ::Providers::EmbeddedAutomationManager::CrudCommon
 
   def self.params_to_attributes(_params)
     raise NotImplementedError, "must be implemented in a subclass"
