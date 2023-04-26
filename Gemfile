@@ -38,10 +38,9 @@ gem "default_value_for",                "~>3.3"
 gem "docker-api",                       "~>1.33.6",          :require => false
 gem "elif",                             "=0.1.0",            :require => false
 gem "fast_gettext",                     "~>2.0.1"
-gem "gettext_i18n_rails",               "~>1.7.2"
+gem "gettext_i18n_rails",               "~>1.10.1"
 gem "gettext_i18n_rails_js",            "~>1.3.0"
 gem "hamlit",                           "~>2.11.0"
-gem "i18n",                             "=1.12.0"  # Temporary hack because 1.13.0 is causing can't modify frozen String: "Bytes" in ui-classic spec/helpers/storage_helper/textual_summary_spec.rb
 gem "inifile",                          "~>3.0",             :require => false
 gem "inventory_refresh",                "~>2.0",             :require => false
 gem "kubeclient",                       "~>4.0",             :require => false # For scaling pods at runtime
