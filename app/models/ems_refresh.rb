@@ -34,7 +34,10 @@ module EmsRefresh
             t.manager
           end
 
-      h[e] << t unless e.nil?
+      next if e.nil?
+      next unless e.supports?(:refresh_ems) # Remove targets from any EMS that doesn't support refresh_ems
+
+      h[e] << t
     end
 
     # Queue the refreshes
