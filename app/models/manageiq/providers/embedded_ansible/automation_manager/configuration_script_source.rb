@@ -110,9 +110,18 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
     transaction do
       current = configuration_script_payloads.index_by(&:name)
 
-      playbooks_in_git_repository.each do |f|
-        found = current.delete(f) || self.class.module_parent::Playbook.new(:configuration_script_source_id => id)
-        found.update!(:name => f, :manager_id => manager_id)
+      git_repository.update_repo
+      git_repository.with_worktree do |worktree|
+        worktree.ref = scm_branch
+        worktree.blob_list.each do |filename|
+          next unless playbook_dir?(filename)
+
+          content = worktree.read_file(filename)
+          next unless playbook?(filename, content)
+
+          found = current.delete(filename) || self.class.module_parent::Playbook.new(:configuration_script_source_id => id)
+          found.update!(:name => filename, :manager_id => manager_id, :payload => content, :payload_type => "yaml")
+        end
       end
 
       current.values.each(&:destroy)
@@ -174,10 +183,8 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   # it is an encrypted file which it isn't possible to discern if it is a
   # playbook or a different type of yaml file.
   #
-  def playbook?(filename, worktree)
+  def playbook?(filename, content)
     return false unless filename.match?(/\.ya?ml$/)
-
-    content = worktree.read_file(filename)
     return true if content.start_with?("$ANSIBLE_VAULT")
 
     content.each_line do |line|
