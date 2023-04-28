@@ -53,7 +53,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-gems-pending.git
-  revision: 10bad03b5ea75dea121b1533c1f174234051b285
+  revision: 1393e875e1babf59df3b04465d9719799cd0d5ee
   branch: petrosian
   specs:
     manageiq-gems-pending (0.1.0)
@@ -64,7 +64,7 @@ GIT
       erubis (= 2.7.0)
       fog-openstack (~> 0.3)
       more_core_extensions (~> 4.4)
-      nokogiri (~> 1.13, >= 1.13.10)
+      nokogiri (~> 1.14, >= 1.14.3)
       sys-proctable (~> 1.2.5)
       sys-uname (~> 1.2.1)
       winrm (~> 2.1)
@@ -940,12 +940,12 @@ GEM
     net-ssh (4.2.0)
     netrc (0.11.0)
     nio4r (2.5.8)
-    nokogiri (1.14.2)
+    nokogiri (1.14.3)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
-    nokogiri (1.14.2-x86_64-darwin)
+    nokogiri (1.14.3-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.14.2-x86_64-linux)
+    nokogiri (1.14.3-x86_64-linux)
       racc (~> 1.4)
     nori (2.6.0)
     oauth (1.1.0)
