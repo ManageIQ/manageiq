@@ -6,6 +6,14 @@ class ResourceAction < ApplicationRecord
 
   serialize  :ae_attributes, Hash
 
+  validate :ensure_configuration_script_or_automate
+
+  def ensure_configuration_script_or_automate
+    return if configuration_script_id.nil? || fqname.nil?
+
+    errors.add(:configuration_script_id, N_("Cannot have configuration_script_id and ae_namespace, ae_class, and ae_instance present"))
+  end
+
   PROVISION   = 'Provision'.freeze
   RETIREMENT  = 'Retirement'.freeze
   RECONFIGURE = 'Reconfigure'.freeze
@@ -52,10 +60,13 @@ class ResourceAction < ApplicationRecord
   end
 
   def fqname
+    return if ae_namespace.nil? && ae_class.nil? && ae_instance.nil?
+
     MiqAeEngine::MiqAePath.new(
       :ae_namespace => ae_namespace,
       :ae_class     => ae_class,
-      :ae_instance  => ae_instance).to_s
+      :ae_instance  => ae_instance
+    ).to_s
   end
   alias_method :ae_path, :fqname
 
