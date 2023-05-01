@@ -1,7 +1,7 @@
 class ResourceAction < ApplicationRecord
   belongs_to :resource, :polymorphic => true
   belongs_to :configuration_template, :polymorphic => true
-  belongs_to :configuration_script
+  belongs_to :configuration_script_payload, :foreign_key => :configuration_script_id
   belongs_to :dialog
 
   serialize  :ae_attributes, Hash
@@ -9,7 +9,7 @@ class ResourceAction < ApplicationRecord
   validate :ensure_configuration_script_or_automate
 
   def ensure_configuration_script_or_automate
-    return if configuration_script_id.nil? || fqname.nil?
+    return if configuration_script_payload.nil? || fqname.blank?
 
     errors.add(:configuration_script_id, N_("Cannot have configuration_script_id and ae_namespace, ae_class, and ae_instance present"))
   end
@@ -60,8 +60,6 @@ class ResourceAction < ApplicationRecord
   end
 
   def fqname
-    return if ae_namespace.nil? && ae_class.nil? && ae_instance.nil?
-
     MiqAeEngine::MiqAePath.new(
       :ae_namespace => ae_namespace,
       :ae_class     => ae_class,
@@ -85,10 +83,15 @@ class ResourceAction < ApplicationRecord
 
   def deliver_queue(dialog_hash_values, target, user, task_id = nil)
     _log.info("Queuing <#{self.class.name}:#{id}> for <#{resource_type}:#{resource_id}>")
-    MiqAeEngine.deliver_queue(automate_queue_hash(target, dialog_hash_values[:dialog], user, task_id),
-                              :zone     => target.try(:my_zone),
-                              :priority => MiqQueue::HIGH_PRIORITY,
-                              :task_id  => "#{self.class.name.underscore}_#{id}")
+
+    if configuration_script_payload
+      configuration_script_payload.execute(:run_by_userid => user.userid, :inputs => dialog_hash_values)
+    else
+      MiqAeEngine.deliver_queue(automate_queue_hash(target, dialog_hash_values[:dialog], user, task_id),
+                                :zone     => target.try(:my_zone),
+                                :priority => MiqQueue::HIGH_PRIORITY,
+                                :task_id  => "#{self.class.name.underscore}_#{id}")
+    end
   end
 
   def deliver_task(dialog_hash_values, target, user)
@@ -101,7 +104,13 @@ class ResourceAction < ApplicationRecord
   def deliver(dialog_hash_values, target, user)
     _log.info("Running <#{self.class.name}:#{id}> for <#{resource_type}:#{resource_id}>")
 
-    workflow = MiqAeEngine.deliver(automate_queue_hash(target, dialog_hash_values[:dialog], user))
-    workflow.root.attributes
+    if configuration_script_payload
+      task = MiqTask.wait_for_taskid(deliver_queue(dialog_hash_values, target, user))
+      configuration_script = ConfigurationScript.find(task.context_data[:workflow_instance_id])
+      configuration_script.output
+    else
+      workflow = MiqAeEngine.deliver(automate_queue_hash(target, dialog_hash_values[:dialog], user))
+      workflow.root.attributes
+    end
   end
 end
