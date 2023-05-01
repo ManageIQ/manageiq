@@ -120,7 +120,14 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
           next unless playbook?(filename, content)
 
           found = current.delete(filename) || self.class.module_parent::Playbook.new(:configuration_script_source_id => id)
-          found.update!(:name => filename, :manager_id => manager_id, :payload => content, :payload_type => "yaml")
+
+          attrs = {:name => filename, :manager_id => manager_id}
+          unless encrypted_playbook?(content)
+            attrs[:payload]      = content
+            attrs[:payload_type] = "yaml"
+          end
+
+          found.update!(attrs)
         end
       end
 
@@ -185,7 +192,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   #
   def playbook?(filename, content)
     return false unless filename.match?(/\.ya?ml$/)
-    return true if content.start_with?("$ANSIBLE_VAULT")
+    return true if encrypted_playbook?(content)
 
     content.each_line do |line|
       return true if line.match?(VALID_PLAYBOOK_CHECK)
@@ -195,6 +202,11 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   end
 
   INVALID_DIRS = %w[roles tasks group_vars host_vars].freeze
+
+  # Check for an encrypted playbook
+  def encrypted_playbook?(content)
+    content.start_with?("$ANSIBLE_VAULT")
+  end
 
   # Given a Pathname, determine if it includes invalid directories so it can be
   # removed from consideration, and also ignore hidden files and directories.
