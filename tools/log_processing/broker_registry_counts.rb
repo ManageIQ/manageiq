@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 RAILS_ROOT = File.expand_path(File.join(__dir__, %w(.. ..)))
-require 'manageiq-gems-pending'
+require 'manageiq/gems/pending'
 require 'miq_logger_processor'
 
 logfile = ARGV[0] || File.join(RAILS_ROOT, "log/vim.log")

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 RAILS_ROOT = File.expand_path(File.join(__dir__, %w(.. ..)))
 
-require 'manageiq-gems-pending'
+require 'manageiq/gems/pending'
 require 'miq_logger_processor'
 require 'active_support/core_ext/enumerable' # Pull in Enumerable sum method
 require 'more_core_extensions/core_ext/array'
