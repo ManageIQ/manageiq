@@ -97,6 +97,22 @@ RSpec.describe ResourceAction do
     end
   end
 
+  describe "#deliver" do
+    context 'with configuration_script_payload' do
+      let(:configuration_script_payload) { FactoryBot.create(:configuration_script_payload) }
+      let(:configuration_script)         { FactoryBot.create(:configuration_script, :parent => configuration_script_payload, :output => output) }
+      let(:output)                       { {"hello" => "world"} }
+
+      let(:ra)   { FactoryBot.create(:resource_action, :configuration_script_payload => configuration_script_payload) }
+      let(:task) { FactoryBot.create(:miq_task, :state => MiqTask::STATE_FINISHED, :context_data => {:workflow_instance_id => configuration_script.id}) }
+
+      it "calls deliver_queue" do
+        expect(configuration_script_payload).to receive(:run).with({}, user.userid).and_return(task.id)
+        expect(ra.deliver({}, nil, user)).to eq(output)
+      end
+    end
+  end
+
   context "uri validation" do
     let(:ra) do
       FactoryBot.build(:resource_action,
