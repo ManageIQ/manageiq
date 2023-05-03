@@ -189,13 +189,14 @@ class ChargebackVm < Chargeback
           # i.e.: Tenant.where(:id => tenant.id, :name => tenant.name).exists? could be false
           if tenant.region_number != region
             tenant = Tenant.in_region(region).find_by(:name => tenant.name)
-            if tenant.nil?
-              error_message = "Unable to find tenant '#{tenant_name}' (based on tenant id '#{@options[:tenant_id]}' from default region) in region #{region}"
-              _log.info("#{error_message}. Calculating chargeback costs skipped for #{@options[:tenant_id]} in region #{region}.")
-              return Vm.none
-            end
           end
-          Vm.where(:id => tenant.subtree.map { |t| t.vms.ids }.flatten)
+          if tenant.nil?
+            error_message = "Unable to find tenant '#{tenant_name}' (based on tenant id '#{@options[:tenant_id]}' from default region) in region #{region}"
+            _log.info("#{error_message}. Calculating chargeback costs skipped for #{@options[:tenant_id]} in region #{region}.")
+            Vm.none
+          else
+            Vm.where(:id => tenant.subtree.map { |t| t.vms.ids }.flatten)
+          end
         elsif @options[:service_id]
           service = Service.find(@options[:service_id])
           if service.nil?
