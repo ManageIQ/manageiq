@@ -1,4 +1,10 @@
 class MiqExpression
+  # bit array of the types of nodes available/desired
+  MODE_NONE = 0
+  MODE_RUBY = 1
+  MODE_SQL  = 2
+  MODE_BOTH = MODE_RUBY | MODE_SQL
+
   require_nested :Tag
   include Vmdb::Logging
   attr_accessor :exp, :context_type, :preprocess_options
@@ -155,19 +161,28 @@ class MiqExpression
     clause
   end
 
-  def to_ruby(timezone = nil)
+  # @param timezone [String]   (default: "UTC")
+  # @param prune_sql [boolean] (default: false) remove expressions that are sql friendly
+  #
+  # when prune_sql is true, then the sql friendly expression was used to filter the
+  #                         records already. no reason to do that again in ruby
+  def to_ruby(timezone = nil, prune_sql: false)
     timezone ||= "UTC".freeze
-    cached_args = timezone
+    cached_args = prune_sql ? "#{timezone}P" : timezone
     # clear out the cache if the args changed
     if @chached_args != cached_args
       @ruby = nil
       @chached_args = cached_args
     end
-    if @ruby
+    if @ruby == true
+      nil
+    elsif @ruby
       @ruby.dup
     elsif valid?
-      @ruby ||= self.class._to_ruby(exp.deep_clone, context_type, tz || "UTC".freeze)
-      @ruby.dup
+      pexp = preprocess_exp!(exp.deep_clone)
+      pexp, _ = prune_exp(pexp, MODE_RUBY) if prune_sql
+      @ruby = self.class._to_ruby(pexp, context_type, timezone) || true
+      @ruby == true ? nil : @ruby.dup
     else
       ""
     end
@@ -354,6 +369,107 @@ class MiqExpression
     end
 
     exp.empty? ? [nil, attrs] : [exp, attrs]
+  end
+
+  # @param operator [String]      operator (i.e.: AND, OR, NOT)
+  # @param children [Array[Hash]] array of child nodes
+  # @param unary [boolean]       true if we are dealing with a unary operator (i.e.: not)
+  #            unary:true  (i.e.: NOT),     don't collapse single child nodes
+  #            unary:false (i.e.: AND, OR), drop binary operators with a single node
+  def operator_hash(operator, children, unary: false)
+    case children&.size
+    when nil, 0
+      nil
+    when 1
+      unary ? {operator => children} : children.first
+    else
+      {operator => children}
+    end
+  end
+
+  # prune child nodes (OR, NOT, AND) using prune_exp
+  # This method simplifies the aggregate of the modes seen in the children
+  #
+  # @param children [Array<Hash>] child nodes
+  # @param mode [MODE_SQL|MODE_RUBY]  which nodes we want to keep
+  #
+  # @return
+  #   [Array] children that can be used in the given mode
+  #   [MODE_SQL|MODE_RUBY|MODE_BOTH]: mode summary for the children
+  #
+  # filtered_children:
+  #
+  #   children     | mode=sql   | mode=ruby    |
+  #   -------------|------------|--------------|
+  #   sql1, sql2   | sql1, sql2 |              |
+  #   sql1, ruby1  | sql1       | ruby1        |
+  #   ruby1, ruby2 |            | ruby1, ruby1 |
+  #
+  def prune_exp_children(children, mode)
+    seen = MODE_NONE
+    filtered_children = []
+    children.each do |child|
+      child_exp, child_seen = prune_exp(child, mode)
+      seen |= child_seen
+      filtered_children << child_exp if child_exp
+    end
+    [filtered_children, seen]
+  end
+  private :prune_exp_children
+
+  # Cut up an expression into 2 expressions that can be applied sequentially:
+  # orig_exp == (exp mode sql) AND (exp mode=ruby)
+  #
+  # the sql expression is applied in the db
+  #
+  # @param exp  [Hash]               ast for miq_expression
+  # @param mode [MODE_RUBY|MODE_SQL] whether we are pruning for a sql or ruby generation
+  # @param swap [boolean]            true if we are in a NOT clause and applying Demorgan's law
+  #
+  # @returns [Hash, mode]
+  #   Hash: expression that works for the given mode
+  #   [MODE_SQL|MODE_RUBY|MODE_BOTH]: mode summary for the children
+  #
+  # NOTE on Compound nodes:
+  #
+  # exp             |==>| output (mode=sql) |and| output (mode=ruby)
+  # ----------------|---|-------------------|---|-----------------
+  # sql1  AND sql2  |==>| sql1 AND sql2     |AND|
+  # sql1  AND ruby1 |==>| sql1              |AND| ruby1
+  # ruby1 AND ruby2 |==>|                   |AND| ruby1 AND ruby2
+  #
+  # The AND case uses all nodes that match the input mode
+  #
+  # exp            |==>| output (mode=sql) |and| output (mode=ruby)
+  # ---------------|---|-------------------|---|-----------------
+  # sql1  OR sql2  |==>| sql1 OR sql2      |AND|
+  # sql1  OR ruby1 |==>|                   |AND| sql1 OR ruby1
+  # ruby1 OR ruby2 |==>|                   |AND| ruby1 OR ruby2
+  #
+  # The OR case uses all nodes that match the input mode with one exception:
+  # mixed mode expressions are completely applied in ruby to keep the same logical result.
+  #
+  def prune_exp(exp, mode)
+    operator = exp.keys.first
+    down_operator = operator.downcase
+    case down_operator
+    when "and", "or"
+      children, seen = prune_exp_children(exp[operator], mode)
+      if down_operator == "and" || seen != MODE_BOTH
+        [operator_hash(operator, children), seen]
+      else
+        [mode == MODE_RUBY ? exp : nil, seen]
+      end
+    when "not", "!"
+      children, seen = prune_exp(exp[operator], mode)
+      [operator_hash(operator, children, :unary => true), seen]
+    else
+      if sql_supports_atom?(exp)
+        [mode == MODE_SQL ? exp : nil, MODE_SQL]
+      else
+        [mode == MODE_RUBY ? exp : nil, MODE_RUBY]
+      end
+    end
   end
 
   def sql_supports_atom?(exp)
