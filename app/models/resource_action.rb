@@ -11,7 +11,7 @@ class ResourceAction < ApplicationRecord
   def ensure_configuration_script_or_automate
     return if configuration_script_payload.nil? || fqname.blank?
 
-    errors.add(:configuration_script_id, N_("Cannot have configuration_script_id and ae_namespace, ae_class, and ae_instance present"))
+    errors.add(:configuration_script_id, N_("cannot have configuration_script_id and ae_namespace, ae_class, and ae_instance present"))
   end
 
   PROVISION   = 'Provision'.freeze

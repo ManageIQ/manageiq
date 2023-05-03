@@ -69,6 +69,17 @@ RSpec.describe ResourceAction do
       end
     end
 
+    context 'with configuration_script_payload' do
+      let(:configuration_script_payload) { FactoryBot.create(:configuration_script_payload) }
+
+      it 'prevents both configuration_script_payload and ae_path from being set' do
+        ra.configuration_script_payload = configuration_script_payload
+        ra.fqname = "/NAMESPACE/CLASS/INSTANCE"
+
+        expect { ra.save! }.to raise_exception(ActiveRecord::RecordInvalid, "Validation failed: ResourceAction: Configuration script cannot have configuration_script_id and ae_namespace, ae_class, and ae_instance present")
+      end
+    end
+
     context '#deliver_task' do
       it 'creates a task' do
         allow(ra).to(receive(:deliver_queue))
