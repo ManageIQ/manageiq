@@ -9,7 +9,7 @@ class MiqReport < ApplicationRecord
   include_concern 'Notification'
   include_concern 'Schedule'
   include_concern 'Search'
-  include YAMLImportExportMixin
+  include YamlImportExportMixin
 
   serialize :cols
   serialize :conditions

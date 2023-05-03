@@ -1,5 +1,5 @@
-RSpec.describe YAMLImportExportMixin do
-  let(:test_class) { Class.new { include YAMLImportExportMixin } }
+RSpec.describe YamlImportExportMixin do
+  let(:test_class) { Class.new { include YamlImportExportMixin } }
 
   before do
     @report1 = FactoryBot.create(:miq_report, :name => "test_report_1")

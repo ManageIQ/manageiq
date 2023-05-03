@@ -31,7 +31,7 @@ class MiqWidget < ApplicationRecord
 
   include_concern 'ImportExport'
   include UuidMixin
-  include YAMLImportExportMixin
+  include YamlImportExportMixin
   acts_as_miq_set_member
 
   WIDGET_REPORT_SOURCE = "Generated for widget".freeze

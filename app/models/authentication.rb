@@ -1,7 +1,7 @@
 class Authentication < ApplicationRecord
   acts_as_miq_taggable
   include_concern 'ImportExport'
-  include YAMLImportExportMixin
+  include YamlImportExportMixin
   include SupportsFeatureMixin
   include NewWithTypeStiMixin
   def self.new(*args, &block)
