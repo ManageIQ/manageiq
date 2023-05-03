@@ -5,7 +5,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook < Manage
     n_('Playbook (Embedded Ansible)', 'Playbooks (Embedded Ansible)', number)
   end
 
-  def run(vars = {})
+  def run(vars = {}, _userid = nil)
     workflow = ManageIQ::Providers::AnsiblePlaybookWorkflow
 
     extra_vars = build_extra_vars(vars[:extra_vars])
