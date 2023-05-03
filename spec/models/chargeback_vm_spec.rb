@@ -460,6 +460,16 @@ RSpec.describe ChargebackVm do
       it "report a chargeback of a subtenant" do
         expect(subject.vm_name).to eq(vm.name)
       end
+
+      context "with settings derived tenant name" do
+        let(:tenant) { FactoryBot.create(:tenant, :use_config_for_attributes => true) }
+
+        before { stub_settings_merge(:server => {:company => "Special Name"}) }
+
+        it "report a chargeback of a subtenant" do
+          expect(subject&.vm_name).to eq(vm.name)
+        end
+      end
     end
 
     context "Monthly" do
