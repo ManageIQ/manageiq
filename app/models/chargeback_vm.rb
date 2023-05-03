@@ -195,7 +195,7 @@ class ChargebackVm < Chargeback
             _log.info("#{error_message}. Calculating chargeback costs skipped for #{@options[:tenant_id]} in region #{region}.")
             Vm.none
           else
-            Vm.where(:id => tenant.subtree.map { |t| t.vms.ids }.flatten)
+            Vm.where(:tenant_id => tenant.subtree.select(:id))
           end
         elsif @options[:service_id]
           service = Service.find(@options[:service_id])
