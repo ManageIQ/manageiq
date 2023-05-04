@@ -23,25 +23,22 @@ class ChargebackRateDetail < ApplicationRecord
     'yearly'  => N_('Yearly')
   }.freeze
 
-  # gigabytes -> GiB
-  #
-  def showback_unit(p_per_unit = nil)
-    return '' unless chargeable_field.detail_measure
-    {'bytes'     => '',
-     'kilobytes' => 'KiB',
-     'megabytes' => 'MiB',
-     'gigabytes' => 'GiB',
-     'terabytes' => 'TiB',
-     'hertz'     => '',
-     'kilohertz' => 'KHz',
-     'megahertz' => 'MHz',
-     'gigahertz' => 'GHz',
-     'teraherts' => 'THz',
-     'bps'       => '',
-     'kbps'      => 'Mbps',
-     'mbps'      => 'Gbps',
-     'gbps'      => 'Tbps'}[p_per_unit || per_unit]
-  end
+  FORMATTED_UNITS = {
+    'bytes'     => '',
+    'kilobytes' => 'KiB',
+    'megabytes' => 'MiB',
+    'gigabytes' => 'GiB',
+    'terabytes' => 'TiB',
+    'hertz'     => '',
+    'kilohertz' => 'KHz',
+    'megahertz' => 'MHz',
+    'gigahertz' => 'GHz',
+    'teraherts' => 'THz',
+    'bps'       => '',
+    'kbps'      => 'Mbps',
+    'mbps'      => 'Gbps',
+    'gbps'      => 'Tbps'
+  }.freeze
 
   def sub_metrics
     if metric == 'derived_vm_allocated_disk_storage'
@@ -65,7 +62,7 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   def format_unit(rate_unit)
-    unit = showback_unit(rate_unit)
+    unit = chargeable_field.detail_measure ? FORMATTED_UNITS[rate_unit || per_unit] : ""
     unit.presence || Dictionary.gettext(per_unit, :notfound => :titleize)
   end
 
