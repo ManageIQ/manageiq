@@ -155,8 +155,14 @@ class MiqExpression
     clause
   end
 
-  def to_ruby(tz = nil)
-    # TODO: we cache the ruby expression regardless if the tz is different
+  def to_ruby(timezone = nil)
+    timezone ||= "UTC".freeze
+    cached_args = timezone
+    # clear out the cache if the args changed
+    if @chached_args != cached_args
+      @ruby = nil
+      @chached_args = cached_args
+    end
     if @ruby
       @ruby.dup
     elsif valid?
