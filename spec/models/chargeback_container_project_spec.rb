@@ -39,7 +39,6 @@ RSpec.describe ChargebackContainerProject do
     ChargebackRateDetailMeasure.seed
     ChargeableField.seed
     MiqEnterprise.seed
-    ManageIQ::Showback::InputMeasure.seed
 
     EvmSpecHelper.local_miq_server
     @project = FactoryBot.create(:container_project, :name => "my project", :ext_management_system => ems,

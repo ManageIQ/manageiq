@@ -69,9 +69,6 @@
 - Switch
 - ManageIQ::Providers::CloudManager::Template
 - ManageIQ::Providers::InfraManager::Template
-- MeteringContainerProject
-- MeteringContainerImage
-- MeteringVm
 - Tenant
 - User
 - VimPerformanceTrend

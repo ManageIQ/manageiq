@@ -3,8 +3,8 @@ RSpec.describe Metric::CiMixin::Capture do
   let(:zone) { EvmSpecHelper.local_miq_server.zone }
   let(:mock_meter_list) { OpenstackMeterListData.new }
   let(:mock_stats_data) { OpenstackMetricStatsData.new }
-  let(:metering) do
-    double(:metering,
+  let(:openstack_metering_service) do
+    double(:openstack_metering_service,
            :list_meters => OpenstackApiResult.new((mock_meter_list.list_meters("resource_counters") +
                               mock_meter_list.list_meters("metadata_counters"))))
   end
@@ -12,7 +12,7 @@ RSpec.describe Metric::CiMixin::Capture do
   let(:vm) { FactoryBot.create(:vm_perf_openstack, :ext_management_system => ems_openstack) }
 
   before do
-    allow(ems_openstack).to receive(:connect).with(:service => "Metering").and_return(metering)
+    allow(ems_openstack).to receive(:connect).with(:service => "Metering").and_return(openstack_metering_service)
   end
 
   describe "#perf_capture_realtime integration tests" do
@@ -22,7 +22,7 @@ RSpec.describe Metric::CiMixin::Capture do
 
     def capture_data(second_collection_period_start, collection_overlap_period)
       # 1.collection period, save all metrics
-      allow(metering).to receive(:get_statistics) do |name, _options|
+      allow(openstack_metering_service).to receive(:get_statistics) do |name, _options|
         first_collection_period = filter_statistics(mock_stats_data.get_statistics(name, "multiple_collection_periods"),
                                                     '<=',
                                                     second_collection_period_start)
@@ -34,7 +34,7 @@ RSpec.describe Metric::CiMixin::Capture do
       vm.perf_capture_realtime(Time.parse('2013-08-28T11:01:40Z').utc, Time.parse(second_collection_period_start).utc)
 
       # 2.collection period, save all metrics
-      allow(metering).to receive(:get_statistics) do |name, _options|
+      allow(openstack_metering_service).to receive(:get_statistics) do |name, _options|
         second_collection_period = filter_statistics(mock_stats_data.get_statistics(name, "multiple_collection_periods"),
                                                      '>',
                                                      second_collection_period_start,

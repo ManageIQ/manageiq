@@ -31,7 +31,6 @@ class ChargeableField < ApplicationRecord
      "derived_vm_numvcpus"               => ['derived_vm_numvcpus', '', 'duration'],
      "derived_memory_used"               => ['derived_memory_used', 'Gi', 'duration'],
      "derived_memory_available"          => ['derived_memory_available', 'B', 'duration'],
-     "metering_used_hours"               => ['metering_used_hours', '', 'quantity'],
      "net_usage_rate_average"            => ['net_usage_rate_average', '', 'duration'],
      "disk_usage_rate_average"           => ['disk_usage_rate_average', '', 'duration'],
      "fixed_compute_1"                   => ['fixed_compute_1', '', 'occurrence'],
@@ -42,12 +41,7 @@ class ChargeableField < ApplicationRecord
      "fixed_storage_2"                   => ['fixed_storage_2', '', 'occurrence']}[metric_index]
   end
 
-  def measure_metering(consumption, options, sub_metric = nil)
-    used? ? consumption.sum(metric) : measure(consumption, options, sub_metric)
-  end
-
   def measure(consumption, options, sub_metric = nil)
-    return consumption.consumed_hours_in_interval if metering?
     return 1.0 if fixed?
     return 0 if options.method_for_allocated_metrics != :current_value && consumption.none?(metric, sub_metric)
     return consumption.send(options.method_for_allocated_metrics, metric, sub_metric) if allocated?
@@ -83,10 +77,6 @@ class ChargeableField < ApplicationRecord
             'total_cost']
 
     sub_metric ? keys : keys + ["#{group}_cost"] # cost associated with metric's group (e.g. Storage Total Cost)
-  end
-
-  def metering?
-    group == 'metering' && source == 'used'
   end
 
   def rate_name

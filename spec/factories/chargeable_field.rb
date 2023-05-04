@@ -89,11 +89,4 @@ FactoryBot.define do
     source      { 'used' }
     detail_measure { FactoryBot.build(:chargeback_measure_bytes) }
   end
-
-  factory :chargeable_field_metering_used, :parent => :chargeable_field do
-    description { 'Metering Used Hours' }
-    metric      { 'metering_used_hours' }
-    group       { 'metering' }
-    source      { 'used' }
-  end
 end

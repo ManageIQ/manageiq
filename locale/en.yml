@@ -475,7 +475,6 @@ en:
       evm_owner_email: Evm Owner Email
       evm_owner_name: Evm Owner Name
       evm_owner_userid: Evm Owner Userid
-      existence_hours_metric: Existence Hours Metric
       exit_code: Exit Code
       exposed_ports: Exposed Ports
       ext_name: Ext Name
@@ -719,10 +718,6 @@ en:
       memory_size: Memory Usage
       message: Message
       metadata: Metadata
-      metering_allocated_cpu_cores_metric: Metering Allocated CPU Cores Metric
-      metering_allocated_cpu_metric: Metering Allocated CPU Metric
-      metering_allocated_memory_metric: Metering Allocated Memory Metric
-      metering_used_metric: Metering Used Metric
       min_cpu_usage_rate_average: CPU - Min Usage Rate for Collected Intervals (%)
       min_cpu_usagemhz_rate_average: CPU - Min Usage for Collected Intervals (MHz)
       min_derived_host_count_off: State - Min Number of Hosts Powered Off  - Hourly Count / Daily Avg
@@ -1596,9 +1591,6 @@ en:
       ManageIQ::Providers::Redfish::PhysicalInfraManager::PhysicalServer:                 Physical Server (Redfish)
       ManageIQ::Providers::Openstack::CloudManager::VolumeSnapshotTemplate:               Volume Snapshot Template (Openstack)
       ManageIQ::Providers::Openstack::CloudManager::VolumeTemplate:                       Volume Template (Openstack)
-      MeteringContainerImage:   Metering for Image
-      MeteringContainerProject: Metering for Project
-      MeteringVm:               Metering for VM
       MiqAction:                Action
       MiqAeClass:               Automate Class
       MiqAeDomain:              Automate Domain

@@ -40,7 +40,6 @@ RSpec.describe ChargebackConfiguredSystem do
   before do
     ChargebackRateDetailMeasure.seed
     ChargeableField.seed
-    ManageIQ::Showback::InputMeasure.seed
     MiqEnterprise.seed
 
     EvmSpecHelper.local_miq_server

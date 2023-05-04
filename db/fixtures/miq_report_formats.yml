@@ -199,7 +199,6 @@
     :memory_used_metric: :megabytes_precision_2
     :memory_mb: :megabytes
     :mem_cpu: :megabytes
-    :metering_used_metric: :hours
     :min_derived_memory_used: :megabytes
     :ram_size: :megabytes
     :trend_derived_memory_used: :megabytes

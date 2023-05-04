@@ -119,25 +119,6 @@ class Chargeback
       end
     end
 
-    def metering_used_fields_present?(rollup_record)
-      MetricRollup::METERING_USED_METRIC_FIELDS.any? do |field|
-        rollup = rollup_field(rollup_record, field)
-        rollup.present? && rollup.nonzero?
-      end
-    end
-
-    def metering_used_fields_present
-      @metering_used_fields_present ||= rollup_records.count { |rollup| metering_used_fields_present?(rollup) }
-    end
-
-    def metering_allocated_for(metric)
-      @metering_allocated_metric ||= {}
-      @metering_allocated_metric[metric] ||= rollup_records.count do |rollup|
-        rollup_record = rollup_field(rollup, metric)
-        rollup_record.present? && rollup_record.nonzero?
-      end
-    end
-
     def resource_tag_names(rollup)
       tags_names = rollup[ChargeableField.col_index(:tag_names)]
       tags_names ? tags_names.split('|') : []

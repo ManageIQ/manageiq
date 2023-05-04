@@ -12,8 +12,6 @@ class MetricRollup < ApplicationRecord
                                 net_usage_rate_average derived_vm_used_disk_storage
                                 derived_vm_allocated_disk_storage).freeze
 
-  METERING_USED_METRIC_FIELDS = %w(cpu_usagemhz_rate_average derived_memory_used net_usage_rate_average).freeze
-
   CAPTURE_INTERVAL_NAMES = %w(hourly daily).freeze
 
   #
@@ -69,9 +67,5 @@ class MetricRollup < ApplicationRecord
                     :timestamp             => start_date.beginning_of_day...end_date.end_of_day)
     metrics = metrics.where(:resource_id => resource_ids) if resource_ids
     metrics.order(:resource_id, :timestamp => :desc)
-  end
-
-  def metering_used_fields_present?
-    @metering_used_fields_present ||= METERING_USED_METRIC_FIELDS.any? { |field| send(field).present? && send(field).nonzero? }
   end
 end
