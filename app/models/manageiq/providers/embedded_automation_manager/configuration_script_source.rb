@@ -2,7 +2,7 @@ class ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource 
   virtual_attribute :verify_ssl, :integer
 
   validates :name,       :presence => true # TODO: unique within region?
-  validates :scm_type,   :presence => true, :inclusion => { :in => %w[git] }
+  validates :scm_type,   :presence => true, :inclusion => {:in => %w[git]}
   validates :scm_branch, :presence => true
 
   default_value_for :scm_type,   "git"
