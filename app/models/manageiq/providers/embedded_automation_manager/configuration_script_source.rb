@@ -1,4 +1,8 @@
 class ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource < ManageIQ::Providers::AutomationManager::ConfigurationScriptSource
+  include ManageIQ::Providers::EmbeddedAutomationManager::CrudCommon
+
+  supports :create
+
   virtual_attribute :verify_ssl, :integer
 
   validates :name,       :presence => true # TODO: unique within region?
@@ -15,11 +19,19 @@ class ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource 
     n_('Repository', 'Repositories', number)
   end
 
+  def self.create_in_provider(manager_id, params)
+    super.tap(&:sync_and_notify)
+  end
+
   def self.raw_create_in_provider(manager, params)
     params.delete(:scm_type)   if params[:scm_type].blank?
     params.delete(:scm_branch) if params[:scm_branch].blank?
 
     transaction { create!(params.merge(:manager => manager, :status => "new")) }
+  end
+
+  def update_in_provider(params)
+    super.tap(&:sync_and_notify)
   end
 
   def raw_update_in_provider(params)
@@ -30,6 +42,10 @@ class ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource 
 
   def raw_delete_in_provider
     destroy!
+  end
+
+  def sync_and_notify
+    notify("syncing") { sync }
   end
 
   def git_repository
@@ -57,6 +73,10 @@ class ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource 
     else
       @verify_ssl ||= OpenSSL::SSL::VERIFY_NONE
     end
+  end
+
+  def sync_queue(auth_user = nil)
+    queue("sync", [], "Synchronizing", auth_user)
   end
 
   def sync

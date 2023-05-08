@@ -1,24 +1,12 @@
 class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource < ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource
   FRIENDLY_NAME = "Embedded Ansible Project".freeze
 
-  supports :create
-
-  include ManageIQ::Providers::EmbeddedAutomationManager::CrudCommon
-
   def self.display_name(number = 1)
     n_('Repository (Embedded Ansible)', 'Repositories (Embedded Ansible)', number)
   end
 
   def self.notify_on_provider_interaction?
     true
-  end
-
-  def self.create_in_provider(manager_id, params)
-    super.tap(&:sync_and_notify)
-  end
-
-  def update_in_provider(params)
-    super.tap(&:sync_and_notify)
   end
 
   def sync
@@ -43,14 +31,6 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
             :last_updated_on   => Time.zone.now,
             :last_update_error => format_sync_error(error))
     raise error
-  end
-
-  def sync_and_notify
-    notify("syncing") { sync }
-  end
-
-  def sync_queue(auth_user = nil)
-    queue("sync", [], "Synchronizing", auth_user)
   end
 
   def playbooks_in_git_repository
