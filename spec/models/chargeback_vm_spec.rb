@@ -443,24 +443,32 @@ RSpec.describe ChargebackVm do
     end
 
     context "Report a chargeback of a tenant" do
-      let(:options_tenant) { base_options.merge(:tenant_id => @tenant.id).tap { |t| t.delete(:tag) } }
+      let(:tenant) { FactoryBot.create(:tenant) }
+      let(:tenant_child) { FactoryBot.create(:tenant, :parent => tenant) }
+      let(:options_tenant) { base_options.merge(:tenant_id => tenant).tap { |t| t.delete(:tag) } }
 
       let(:start_time)  { report_run_time - 17.hours }
       let(:finish_time) { report_run_time - 14.hours }
-
-      before do
-        @tenant = FactoryBot.create(:tenant)
-        @tenant_child = FactoryBot.create(:tenant, :parent => @tenant)
-        @vm_tenant = FactoryBot.create(:vm_vmware, :tenant_id => @tenant_child.id,
-                                        :name => "test_vm_tenant", :created_on => month_beginning)
-
-        add_metric_rollups_for(@vm_tenant, start_time...finish_time, 1.hour, metric_rollup_params)
+      let!(:vm) do
+        FactoryBot.create(:vm_vmware, :tenant => tenant_child, :created_on => month_beginning).tap do |vm|
+          add_metric_rollups_for(vm, start_time...finish_time, 1.hour, metric_rollup_params)
+        end
       end
 
       subject { ChargebackVm.build_results_for_report_ChargebackVm(options_tenant).first.first }
 
       it "report a chargeback of a subtenant" do
-        expect(subject.vm_name).to eq(@vm_tenant.name)
+        expect(subject.vm_name).to eq(vm.name)
+      end
+
+      context "with settings derived tenant name" do
+        let(:tenant) { FactoryBot.create(:tenant, :use_config_for_attributes => true) }
+
+        before { stub_settings_merge(:server => {:company => "Special Name"}) }
+
+        it "report a chargeback of a subtenant" do
+          expect(subject&.vm_name).to eq(vm.name)
+        end
       end
     end
 
