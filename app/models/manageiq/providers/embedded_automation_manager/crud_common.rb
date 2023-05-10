@@ -1,4 +1,4 @@
-module ManageIQ::Providers::EmbeddedAnsible::CrudCommon
+module ManageIQ::Providers::EmbeddedAutomationManager::CrudCommon
   extend ActiveSupport::Concern
 
   module ClassMethods
