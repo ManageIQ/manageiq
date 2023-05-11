@@ -1,5 +1,5 @@
 class PhysicalServerFirmwareUpdateRequest < MiqRequest
-  TASK_DESCRIPTION  = 'Physical Server Firmware Update'.freeze
+  TASK_DESCRIPTION  = N_('Physical Server Firmware Update').freeze
   SOURCE_CLASS_NAME = 'PhysicalServer'.freeze
 
   def description

@@ -1,5 +1,5 @@
 class VmRetireRequest < MiqRetireRequest
-  TASK_DESCRIPTION  = 'VM Retire'.freeze
+  TASK_DESCRIPTION  = N_('VM Retire').freeze
   SOURCE_CLASS_NAME = 'Vm'.freeze
   ACTIVE_STATES     = %w(retired) + base_class::ACTIVE_STATES
 

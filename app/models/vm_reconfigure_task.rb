@@ -13,26 +13,27 @@ class VmReconfigureTask < MiqRequestTask
     options = req.options
 
     msg = []
-    msg << build_message(options, :vm_memory, "Memory: %d MB")
-    msg << build_message(options, :number_of_sockets, "Processor Sockets: %d")
-    msg << build_message(options, :cores_per_socket, "Processor Cores Per Socket: %d")
-    msg << build_message(options, :number_of_cpus, "Total Processors: %d")
+    msg << build_message(options, :vm_memory, N_("Memory: %{value} MB"))
+    msg << build_message(options, :number_of_sockets, N_("Processor Sockets: %{value}"))
+    msg << build_message(options, :cores_per_socket, N_("Processor Cores Per Socket: %{value}"))
+    msg << build_message(options, :number_of_cpus, N_("Total Processors: %{value}"))
     msg << build_disk_message(options)
-    msg << build_message(options, :disk_remove, "Remove Disks: %d", :length)
-    msg << build_message(options, :disk_resize, "Resize Disks: %d", :length)
-    msg << build_message(options, :network_adapter_add, "Add Network Adapters: %d", :length)
-    msg << build_message(options, :network_adapter_remove, "Remove Network Adapters: %d", :length)
-    msg << build_message(options, :network_adapter_edit, "Edit Network Adapters: %d", :length)
-    msg << build_message(options, :cdrom_connect, "Attach CD/DVDs: %d", :length)
-    msg << build_message(options, :cdrom_disconnect, "Detach CD/DVDs: %d", :length)
-    "#{request_class::TASK_DESCRIPTION} for: #{resource_name(req)} - #{msg.compact.join(", ")}"
+    msg << build_message(options, :disk_remove, N_("Remove Disks: %{value}"), :length)
+    msg << build_message(options, :disk_resize, N_("Resize Disks: %{value}"), :length)
+    msg << build_message(options, :network_adapter_add, N_("Add Network Adapters: %{value}"), :length)
+    msg << build_message(options, :network_adapter_remove, N_("Remove Network Adapters: %{value}"), :length)
+    msg << build_message(options, :network_adapter_edit, N_("Edit Network Adapters: %{value}"), :length)
+    msg << build_message(options, :cdrom_connect, N_("Attach CD/DVDs: %{value}"), :length)
+    msg << build_message(options, :cdrom_disconnect, N_("Detach CD/DVDs: %{value}"), :length)
+
+    _("%{request_description} for: %{resource_name} - %{message}") % {:request_description => _(request_class::TASK_DESCRIPTION), :resource_name => resource_name(req), :message => msg.compact.join(", ")}
   end
 
   def self.build_message(options, key, message, modifier = nil)
     if options[key].present?
       value = options[key]
       value = value.send(modifier) if modifier
-      message % value
+      _(message) % {:value => value}
     end
   end
   private_class_method :build_message

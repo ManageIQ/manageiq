@@ -40,7 +40,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
     end
 
     if req_obj.kind_of?(ServiceTemplateProvisionRequest)
-      result = "Provisioning Service [#{svc_target_name}] from [#{prov_source.name}]"
+      result = _("Provisioning Service [%{svc_target_name}] from [%{prov_source_name}]") % {:svc_target_name => svc_target_name, :prov_source_name => prov_source.name}
     else
       service_resource = prov_source
       rsc_name = service_resource.name if service_resource.respond_to?(:name)
@@ -56,11 +56,11 @@ class ServiceTemplateProvisionTask < MiqRequestTask
 
       result = case req_template
                when ServiceTemplate
-                 "Provisioning Service [#{rsc_name}] for Service [#{svc_target_name}]"
+                 _("Provisioning Service [%{rsc_name}] for Service [%{svc_target_name}]") % {:rsc_name => rsc_name, :svc_target_name => svc_target_name}
                when MiqProvisionRequestTemplate
-                 "Provisioning VM [#{rsc_name}] for Service [#{svc_target_name}]"
+                 _("Provisioning VM [%{rsc_name}] for Service [%{svc_target_name}]") % {:rsc_name => rsc_name, :svc_target_name => svc_target_name}
                else
-                 "Provisioning [#{rsc_name}] for Service [#{svc_target_name}]"
+                 _("Provisioning [%{rsc_name}] for Service [%{svc_target_name}]") % {:rsc_name => rsc_name, :svc_target_name => svc_target_name}
                end
     end
 
