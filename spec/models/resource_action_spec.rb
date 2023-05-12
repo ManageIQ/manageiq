@@ -1,8 +1,9 @@
 RSpec.describe ResourceAction do
+  let(:user) { FactoryBot.create(:user_with_group) }
+  let(:ra)   { FactoryBot.create(:resource_action) }
+
   context "#deliver_queue" do
-    let(:user) { FactoryBot.create(:user_with_group) }
     let(:zone_name) { "default" }
-    let(:ra) { FactoryBot.create(:resource_action) }
     let(:miq_server) { FactoryBot.create(:miq_server) }
     let(:ae_attributes) { {} }
     let(:q_args) do
@@ -41,7 +42,7 @@ RSpec.describe ResourceAction do
       let(:zone_name) { nil }
 
       it "validates queue entry" do
-        target             = nil
+        target = nil
         expect(MiqQueue).to receive(:put).with(q_options).once
         ra.deliver_queue({}, target, user)
       end
@@ -69,13 +70,45 @@ RSpec.describe ResourceAction do
       end
     end
 
-    context '#deliver_task' do
-      it 'creates a task' do
-        allow(ra).to(receive(:deliver_queue))
-        miq_task = MiqTask.find(ra.deliver_task({}, nil, user))
-        expect(miq_task.state).to(eq(MiqTask::STATE_QUEUED))
-        expect(miq_task.status).to(eq(MiqTask::STATUS_OK))
-        expect(miq_task.message).to(eq('MiqTask has been queued.'))
+    context 'with configuration_script_payload' do
+      let(:configuration_script_payload) { FactoryBot.create(:configuration_script_payload) }
+      let(:ra) { FactoryBot.create(:resource_action, :configuration_script_payload => configuration_script_payload) }
+
+      it 'prevents both configuration_script_payload and ae_path from being set' do
+        ra.fqname = "/NAMESPACE/CLASS/INSTANCE"
+
+        expect { ra.save! }.to raise_exception(ActiveRecord::RecordInvalid, "Validation failed: ResourceAction: Configuration script cannot have configuration_script_id and ae_namespace, ae_class, and ae_instance present")
+      end
+
+      it 'calls execute on the configuration_script_payload' do
+        expect(configuration_script_payload).to receive(:run).with({}, user.userid)
+        ra.deliver_queue({}, nil, user)
+      end
+    end
+  end
+
+  context '#deliver_task' do
+    it 'creates a task' do
+      allow(ra).to(receive(:deliver_queue))
+      miq_task = MiqTask.find(ra.deliver_task({}, nil, user))
+      expect(miq_task.state).to(eq(MiqTask::STATE_QUEUED))
+      expect(miq_task.status).to(eq(MiqTask::STATUS_OK))
+      expect(miq_task.message).to(eq('MiqTask has been queued.'))
+    end
+  end
+
+  describe "#deliver" do
+    context 'with configuration_script_payload' do
+      let(:configuration_script_payload) { FactoryBot.create(:configuration_script_payload) }
+      let(:configuration_script)         { FactoryBot.create(:configuration_script, :parent => configuration_script_payload, :output => output) }
+      let(:output)                       { {"hello" => "world"} }
+
+      let(:ra)   { FactoryBot.create(:resource_action, :configuration_script_payload => configuration_script_payload) }
+      let(:task) { FactoryBot.create(:miq_task, :state => MiqTask::STATE_FINISHED, :context_data => {:workflow_instance_id => configuration_script.id}) }
+
+      it "calls deliver_queue" do
+        expect(configuration_script_payload).to receive(:run).with({}, user.userid).and_return(task.id)
+        expect(ra.deliver({}, nil, user)).to eq(output)
       end
     end
   end
