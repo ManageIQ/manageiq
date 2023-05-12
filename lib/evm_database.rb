@@ -30,6 +30,7 @@ class EvmDatabase
     ChargeableField
     Currency
     ChargebackRate
+    ServiceTemplateCatalog
 
     BlacklistedEvent
     Classification

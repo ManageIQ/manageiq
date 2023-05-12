@@ -7,6 +7,10 @@ class ServiceTemplateCatalog < ApplicationRecord
 
   acts_as_miq_taggable
 
+  def self.seed
+    create!(:name => "My Catalog", :tenant => Tenant.root_tenant) unless any?
+  end
+
   def self.display_name(number = 1)
     n_('Catalog', 'Catalogs', number)
   end
