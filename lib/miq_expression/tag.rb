@@ -43,6 +43,10 @@ class MiqExpression::Tag < MiqExpression::Target
     false
   end
 
+  def tag?
+    true
+  end
+
   def report_column
     "#{@base_namespace}.#{column}"
   end

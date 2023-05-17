@@ -60,6 +60,10 @@ class MiqExpression::Target
     column_type == :decimal
   end
 
+  def tag?
+    false
+  end
+
   def numeric?
     %i(fixnum integer decimal float).include?(column_type)
   end

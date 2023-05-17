@@ -566,7 +566,7 @@ class MiqExpression
       :format_sub_type                => f.sub_type,
       :sql_support                    => f.attribute_supported_by_sql?,
       :excluded_by_preprocess_options => f.exclude_col_by_preprocess_options?(options),
-      :tag                            => f.kind_of?(MiqExpression::Tag),
+      :tag                            => f.tag?
     }
   rescue ArgumentError
     # not thrilled with these values. but making tests pass for now
