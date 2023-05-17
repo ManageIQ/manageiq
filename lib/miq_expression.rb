@@ -572,6 +572,7 @@ class MiqExpression
     # not thrilled with these values. but making tests pass for now
     {
       :data_type                      => nil,
+      :format_sub_type                => nil,
       :sql_support                    => false,
       :excluded_by_preprocess_options => false,
       :tag                            => false,

@@ -2925,6 +2925,7 @@ RSpec.describe MiqExpression do
       expect(col_info).to match(
         :data_type                      => nil,
         :excluded_by_preprocess_options => false,
+        :format_sub_type                => nil,
         :include                        => {},
         :tag                            => false,
         :sql_support                    => false,
@@ -3068,6 +3069,7 @@ RSpec.describe MiqExpression do
       expect(col_info).to match(
         :data_type                      => nil,
         :excluded_by_preprocess_options => false,
+        :format_sub_type                => nil,
         :include                        => {},
         :tag                            => false,
         :sql_support                    => false,
