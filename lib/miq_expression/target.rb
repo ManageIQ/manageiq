@@ -73,6 +73,10 @@ class MiqExpression::Target
     [:has_many, :has_and_belongs_to_many].include?(reflections.last.macro)
   end
 
+  def attribute_supported_by_sql?
+    reflection_supported_by_sql?
+  end
+
   def reflection_supported_by_sql?
     model&.follow_associations(associations).present?
   rescue ArgumentError
