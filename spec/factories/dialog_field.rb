@@ -6,6 +6,10 @@ FactoryBot.define do
   factory :dialog_field_sorted_item, :parent => :dialog_field, :class => "DialogFieldSortedItem"
   factory :dialog_field_tag_control, :parent => :dialog_field, :class => "DialogFieldTagControl"
   factory :dialog_field_text_box,    :parent => :dialog_field, :class => "DialogFieldTextBox"
+  factory :dialog_field_protected,   :parent => :dialog_field_text_box do
+    # using longer form to set protected since it is a keyword
+    add_attribute(:protected) { true }
+  end
 
   factory :dialog_field_drop_down_list, :parent => :dialog_field_sorted_item, :class => "DialogFieldDropDownList"
 end
