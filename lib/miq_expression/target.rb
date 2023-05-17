@@ -36,6 +36,10 @@ class MiqExpression::Target
     @column = column
   end
 
+  def column_type
+    nil
+  end
+
   def sub_type
     column_type
   end
