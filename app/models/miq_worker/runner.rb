@@ -429,7 +429,9 @@ class MiqWorker::Runner
 
   def self.ruby_object_usage
     types = Hash.new { |h, k| h[k] = 0 }
-    ObjectSpace.each_object do |obj|
+    ObjectSpace.each_object(Object) do |obj|
+      next unless defined?(obj.class)
+
       types[obj.class.name] += 1
     end
     types
