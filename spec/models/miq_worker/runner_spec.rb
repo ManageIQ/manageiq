@@ -48,13 +48,23 @@ RSpec.describe MiqWorker::Runner do
     end
   end
 
+  context ".ruby_object_usage" do
+    it "handles BasicObjects in memory" do
+      10.times { BasicObject.new }
+      usage = described_class.ruby_object_usage
+      %w[String Array Class Regexp Hash].each do |klass|
+        expect(usage[klass]).to be > 0
+      end
+    end
+  end
+
   context "#initialize" do
     let(:worker) do
       server_id = EvmSpecHelper.local_miq_server.id
       FactoryBot.create(:miq_worker, :miq_server_id => server_id, :type => "MiqGenericWorker")
     end
 
-    let!(:runner) { MiqWorker::Runner.new(:guid => worker.guid) }
+    let!(:runner) { MiqGenericWorker::Runner.new(:guid => worker.guid) }
 
     it "configures the #worker attribute correctly" do
       expect(runner.worker.id).to eq(worker.id)
