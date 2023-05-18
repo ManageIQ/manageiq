@@ -467,7 +467,7 @@ class MiqRequest < ApplicationRecord
       requested_tasks.each do |idx|
         req_task = create_request_task(idx)
         miq_request_tasks << req_task
-        req_task.deliver_to_automate
+        req_task.deliver_queue
         request_task_created += 1
       end
       update_request_status

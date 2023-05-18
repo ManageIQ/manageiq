@@ -134,35 +134,39 @@ class MiqRequestTask < ApplicationRecord
     raise _("approval is required for %{task}") % {:task => request_class::TASK_DESCRIPTION} unless approved?
   end
 
-  def deliver_to_automate(req_type = request_type, zone = nil)
+  def deliver_queue(req_type = request_type, zone = nil)
     task_check_on_delivery
 
     _log.info("Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
 
     if self.class::AUTOMATE_DRIVES
-      args = {
-        :object_type   => self.class.name,
-        :object_id     => id,
-        :attrs         => {"request" => req_type},
-        :instance_name => "AUTOMATION",
-        :user_id       => get_user.id,
-        :miq_group_id  => get_user.current_group.id,
-        :tenant_id     => get_user.current_tenant.id,
-      }
-
-      zone ||= source.respond_to?(:my_zone) ? source.my_zone : MiqServer.my_zone
-      MiqQueue.put(
-        :class_name     => 'MiqAeEngine',
-        :method_name    => 'deliver',
-        :args           => [args],
-        :role           => 'automate',
-        :zone           => options.fetch(:miq_zone, zone),
-        :tracking_label => tracking_label_id,
-      )
-      update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
+      deliver_to_automate(req_type, zone)
     else
       execute_queue
     end
+  end
+
+  def deliver_to_automate(req_type = request_type, zone = nil)
+    args = {
+      :object_type   => self.class.name,
+      :object_id     => id,
+      :attrs         => {"request" => req_type},
+      :instance_name => "AUTOMATION",
+      :user_id       => get_user.id,
+      :miq_group_id  => get_user.current_group.id,
+      :tenant_id     => get_user.current_tenant.id,
+    }
+
+    zone ||= source.respond_to?(:my_zone) ? source.my_zone : MiqServer.my_zone
+    MiqQueue.put(
+      :class_name     => 'MiqAeEngine',
+      :method_name    => 'deliver',
+      :args           => [args],
+      :role           => 'automate',
+      :zone           => options.fetch(:miq_zone, zone),
+      :tracking_label => tracking_label_id,
+    )
+    update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
   end
 
   def execute_queue(queue_options = {})

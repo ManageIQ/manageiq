@@ -50,7 +50,7 @@ class ServiceRetireTask < MiqRetireTask
       new_task = create_task(svc_rsc, parent_service, nh, parent_task)
       new_task.after_request_task_create
       miq_request.miq_request_tasks << new_task
-      new_task.tap(&:deliver_to_automate)
+      new_task.tap(&:deliver_queue)
     end.compact!
   end
 

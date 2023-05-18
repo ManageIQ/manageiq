@@ -16,9 +16,6 @@ class ServiceReconfigureTask < MiqRequestTask
   end
 
   def deliver_to_automate(req_type = request_type, zone = nil)
-    task_check_on_execute
-
-    _log.info("Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
     dialog_values = options[:dialog] || {}
 
     ra = source.service_template.resource_actions.find_by(:action => 'Reconfigure')
