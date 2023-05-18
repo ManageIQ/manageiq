@@ -116,10 +116,19 @@ class ServiceTemplateProvisionTask < MiqRequestTask
     queue_post_provision unless state == "finished"
   end
 
-  def deliver_to_automate(req_type = request_type, _zone = nil)
-    dialog_values = options[:dialog] || {}
-    dialog_values["request"] = req_type
+  def deliver_queue(req_type = request_type, zone = nil)
+    task_check_on_delivery
 
+    _log.info("Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
+
+    if resource_action&.configuration_script_payload
+      resource_action.configuration_script_payload.run(dialog_values, get_user.userid)
+    else
+      deliver_to_automate(req_type, zone)
+    end
+  end
+
+  def deliver_to_automate(req_type = request_type, _zone = nil)
     args = {
       :object_type      => self.class.name,
       :object_id        => id,
@@ -127,7 +136,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
       :class_name       => "ServiceProvision_Template",
       :instance_name    => req_type,
       :automate_message => "create",
-      :attrs            => dialog_values
+      :attrs            => dialog_values.merge("request" => req_type)
     }
 
     # Automate entry point overrides from the resource_action
@@ -158,7 +167,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
   end
 
   def resource_action
-    source.resource_actions.detect { |ra| ra.action == 'Provision' } if source.respond_to?(:resource_actions)
+    @resource_action ||= source.resource_actions.find_by(:action => 'Provision') if source.respond_to?(:resource_actions)
   end
 
   def service_resource
@@ -219,5 +228,9 @@ class ServiceTemplateProvisionTask < MiqRequestTask
 
   def valid_states
     super + ["provisioned"]
+  end
+
+  def dialog_values
+    options[:dialog] || {}
   end
 end
