@@ -739,26 +739,26 @@ class MiqExpression
       reference_attribute = target ? "ref=#{target.model.to_s.downcase}, " : " "
       return "<value #{reference_attribute}type=#{col_type}>#{value}</value>"
     end
-    case typ&.to_s
-    when "string", "text", "boolean", nil
+    case typ&.to_sym
+    when :string, :text, :boolean, nil
       # escape any embedded single quotes, etc. - needs to be able to handle even values with trailing backslash
       val.to_s.inspect
-    when "date"
+    when :date
       return "nil" if val.blank? # treat nil value as empty string
       "Date.new(#{val.year},#{val.month},#{val.day})"
-    when "datetime"
+    when :datetime
       return "nil" if val.blank? # treat nil value as empty string
       val = val.utc
       "Time.utc(#{val.year},#{val.month},#{val.day},#{val.hour},#{val.min},#{val.sec})"
-    when "integer", "decimal", "fixnum"
+    when :integer, :decimal, :fixnum
       val.to_s.to_i_with_method
-    when "float"
+    when :float
       val.to_s.to_f_with_method
-    when "numeric_set"
+    when :numeric_set
       val = val.split(",") if val.kind_of?(String)
       v_arr = Array.wrap(val).flat_map { |v| quote_numeric_set_atom(v) }.compact.uniq.sort
       "[#{v_arr.join(",")}]"
-    when "string_set"
+    when :string_set
       val = val.split(",") if val.kind_of?(String)
       v_arr = Array.wrap(val).flat_map { |v| "'#{v.to_s.strip}'" }.uniq.sort
       "[#{v_arr.join(",")}]"
