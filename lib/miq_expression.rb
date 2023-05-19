@@ -794,9 +794,9 @@ class MiqExpression
   end
 
   def self.quote_human(val, typ)
-    case typ&.to_s
-    when "integer", "decimal", "fixnum", "float"
-      return val.to_i unless val.to_s.number_with_method? || typ.to_s == "float"
+    case typ&.to_sym
+    when :integer, :decimal, :fixnum, :float
+      return val.to_i unless val.to_s.number_with_method? || typ == :float
       if val =~ /^([0-9\.,]+)\.([a-z]+)$/
         val, sfx = $1, $2
         if sfx.ends_with?("bytes") && FORMAT_BYTE_SUFFIXES.key?(sfx.to_sym)
@@ -807,7 +807,7 @@ class MiqExpression
       else
         val
       end
-    when "string", "date", "datetime", nil
+    when :string, :date, :datetime, nil
       "\"#{val}\""
     else
       quote(val, typ)
