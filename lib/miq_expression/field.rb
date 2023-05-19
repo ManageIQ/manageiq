@@ -52,6 +52,9 @@ class MiqExpression::Field < MiqExpression::Target
     else
       target.type_for_attribute(column).type
     end
+  rescue ArgumentError
+    # since the association chain is not legal, it has no type
+    nil
   end
 
   def virtual_attribute?

@@ -83,13 +83,15 @@ class MiqExpression::Target
     false
   end
 
-  # AR or virtual reflections
+  # @returns AR or virtual reflections
+  # @raises ArgumentError
   def reflections
     model.collect_reflections_with_virtual(associations) ||
       raise(ArgumentError, "One or more associations are invalid: #{associations.join(", ")}")
   end
 
-  # only AR reflections
+  # @returns only AR reflections
+  # @raises ArgumentError
   def collect_reflections
     model.collect_reflections(associations) ||
       raise(ArgumentError, "One or more associations are invalid: #{associations.join(", ")}")
@@ -99,8 +101,12 @@ class MiqExpression::Target
     ret = {}
     model && collect_reflections.map(&:name).inject(ret) { |a, p| a[p] ||= {} }
     ret
+  rescue ArgumentError
+    # since the reflections are not valid, we don't have any includes
+    {}
   end
 
+  # @raises ArgumentError
   def target
     if associations.none?
       model
@@ -122,6 +128,8 @@ class MiqExpression::Target
     else
       false
     end
+  rescue ArgumentError # reflections are not valid when looking up target
+    false
   end
 
   # this should only be accessed in MiqExpression

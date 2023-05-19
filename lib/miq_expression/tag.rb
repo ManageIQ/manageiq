@@ -51,6 +51,10 @@ class MiqExpression::Tag < MiqExpression::Target
     target && target.arel_table[:id, arel_table]
   end
 
+  def valid?
+    !!target
+  end
+
   private
 
   def tag_path
