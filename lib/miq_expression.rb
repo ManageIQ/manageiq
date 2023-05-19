@@ -1146,22 +1146,21 @@ class MiqExpression
       else
         Target.parse(field.to_s).column_type || :string
       end
-
-    case col_type.to_s.downcase.to_sym
+    case col_type
     when :string
-      return STRING_OPERATORS
+      STRING_OPERATORS
     when :integer, :float, :fixnum, :count
-      return NUM_OPERATORS
+      NUM_OPERATORS
     when :numeric_set, :string_set
-      return SET_OPERATORS
+      SET_OPERATORS
     when :regkey
-      return STRING_OPERATORS + REGKEY_OPERATORS
+      STRING_OPERATORS + REGKEY_OPERATORS
     when :boolean
-      return BOOLEAN_OPERATORS
+      BOOLEAN_OPERATORS
     when :date, :datetime
-      return DATE_TIME_OPERATORS
+      DATE_TIME_OPERATORS
     else
-      return STRING_OPERATORS
+      STRING_OPERATORS
     end
   end
 
