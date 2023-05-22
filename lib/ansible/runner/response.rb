@@ -3,7 +3,7 @@ module Ansible
     class Response
       include Vmdb::Logging
 
-      attr_reader :base_dir, :command_line, :debug, :ident
+      attr_reader :base_dir, :command_line, :stderr, :debug, :ident
 
       # @return [String] Stdout that is text, where the human readable part is extracted from the JSON encoded objects
       def self.parsed_stdout_to_human(parsed_stdout)

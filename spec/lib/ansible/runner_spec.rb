@@ -8,6 +8,23 @@ RSpec.describe Ansible::Runner do
   let(:manageiq_venv_path)  { "/var/lib/manageiq/venv/python3.8/site-packages" }
   let(:ansible_python_path) { "/usr/local/lib64/python3.8/site-packages:/usr/local/lib/python3.8/site-packages:/usr/lib64/python3.8/site-packages:/usr/lib/python3.8/site-packages" }
 
+  describe ".available?" do
+    before { begin; described_class.remove_instance_variable(:@available); rescue NameError; end }
+    after  { begin; described_class.remove_instance_variable(:@available); rescue NameError; end }
+
+    it "when available" do
+      expect(described_class).to receive(:system).with(/^which ansible-runner/).and_return(true)
+
+      expect(described_class.available?).to be true
+    end
+
+    it "when not available" do
+      expect(described_class).to receive(:system).with(/^which ansible-runner/).and_return(false)
+
+      expect(described_class.available?).to be false
+    end
+  end
+
   describe ".run" do
     let(:playbook) { "/path/to/my/playbook" }
     before do
@@ -94,21 +111,26 @@ RSpec.describe Ansible::Runner do
       described_class.run(env_vars, extra_vars, playbook, :become_enabled => true)
     end
 
-    it "sets PYTHON_PATH correctly" do
-      # Undo stubbing of python_path in this particular test
-      expect(described_class).to receive(:python_path).and_call_original
+    context "without PYTHON_PATH stubbing" do
+      before { described_class.instance_variable_set(:@python_path, nil) }
+      after  { described_class.instance_variable_set(:@python_path, nil) }
 
-      expect(described_class).to receive(:manageiq_venv_path).and_return(manageiq_venv_path)
-      stub_ansible_raw(ansible_exists: true)
+      it "sets PYTHON_PATH correctly" do
+        # Undo stubbing of python_path in this particular test
+        expect(described_class).to receive(:python_path).and_call_original
 
-      expect(AwesomeSpawn).to receive(:run) do |command, options|
-        expect(command).to eq("ansible-runner")
+        expect(described_class).to receive(:manageiq_venv_path).and_return(manageiq_venv_path)
+        stub_ansible_raw(ansible_exists: true)
 
-        expected_path = [manageiq_venv_path, ansible_python_path].join(File::PATH_SEPARATOR)
-        expect(options[:env]["PYTHONPATH"]).to eq(expected_path)
-      end.and_return(result)
+        expect(AwesomeSpawn).to receive(:run) do |command, options|
+          expect(command).to eq("ansible-runner")
 
-      described_class.run(env_vars, extra_vars, playbook, :become_enabled => true)
+          expected_path = [manageiq_venv_path, ansible_python_path].join(File::PATH_SEPARATOR)
+          expect(options[:env]["PYTHONPATH"]).to eq(expected_path)
+        end.and_return(result)
+
+        described_class.run(env_vars, extra_vars, playbook, :become_enabled => true)
+      end
     end
 
     context "with special characters" do

@@ -1,0 +1,6 @@
+---
+- name: Echo Hello, world!
+  hosts: localhost
+
+  tasks:
+  - debug: msg="Hello, world!"
