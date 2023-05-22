@@ -34,18 +34,18 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
 
       lazy_find_network1 = persister.networks.lazy_find(
         {:hardware => lazy_find_hardware1, :description => "public"},
-        {:key     => :hostname,
-         :default => 'default_value_unknown'}
+        :key     => :hostname,
+        :default => 'default_value_unknown'
       )
       lazy_find_network2 = persister.networks.lazy_find(
         {:hardware => lazy_find_hardware2, :description => "public"},
-        {:key     => :hostname,
-         :default => 'default_value_unknown'}
+        :key     => :hostname,
+        :default => 'default_value_unknown'
       )
       lazy_find_network60 = persister.networks.lazy_find(
         {:hardware => lazy_find_hardware60, :description => "public"},
-        {:key     => :hostname,
-         :default => 'default_value_unknown'}
+        :key     => :hostname,
+        :default => 'default_value_unknown'
       )
 
       @vm_data101 = vm_data(101).merge(
@@ -158,29 +158,29 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
           :stack   => lazy_find_stack_1_11,
           :ems_ref => orchestration_stack_resource_data("1_11_1")[:ems_ref]
         },
-        {:ref => :by_stack_and_ems_ref}
+        :ref => :by_stack_and_ems_ref
       )
       stack_resource_1_11_2 = persister.orchestration_stacks_resources.lazy_find(
         {
           :stack   => lazy_find_stack_1_11,
           :ems_ref => orchestration_stack_resource_data("1_11_2")[:ems_ref]
         },
-        {:ref => :by_stack_and_ems_ref}
+        :ref => :by_stack_and_ems_ref
       )
       stack_resource_1_11_3 = persister.orchestration_stacks_resources.lazy_find(
         {
           :stack   => lazy_find_stack_1_11,
           :ems_ref => orchestration_stack_resource_data("1_11_3")[:ems_ref]
         },
-        {:ref => :by_stack_and_ems_ref}
+        :ref => :by_stack_and_ems_ref
       )
       stack_1_12 = persister.orchestration_stacks_resources.lazy_find(
         {
           :stack   => lazy_find_stack_1_12,
           :ems_ref => orchestration_stack_resource_data("1_12_1")[:ems_ref]
         },
-        {:ref => :by_stack_and_ems_ref,
-         :key => :stack},
+        :ref => :by_stack_and_ems_ref,
+        :key => :stack,
       )
 
       @network_port1 = network_port_data(1).merge(
@@ -223,7 +223,7 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
           :stack   => lazy_find_stack_1_11,
           :ems_ref => orchestration_stack_resource_data("1_11_3")[:ems_ref]
         },
-        {:ref => :by_stack_and_ems_ref}
+        :ref => :by_stack_and_ems_ref
       ).load
 
       expect(persister.orchestration_stacks_resources.index_proxy.send(:local_db_indexes)[:by_stack_and_ems_ref].send(:index).keys).to(
@@ -275,7 +275,7 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
           :stack   => lazy_find_stack_1_11,
           :ems_ref => orchestration_stack_resource_data("1_11_2")[:ems_ref]
         },
-        {:ref => :by_stack_and_ems_ref}
+        :ref => :by_stack_and_ems_ref
       ).load
 
       expect(persister.orchestration_stacks_resources.index_proxy.send(:local_db_indexes)[:by_stack_and_ems_ref].send(:index).keys).to(
@@ -292,7 +292,7 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
           :stack   => lazy_find_stack_1_11,
           :ems_ref => orchestration_stack_resource_data("1_11_3")[:ems_ref]
         },
-        {:ref => :by_stack_and_ems_ref}
+        :ref => :by_stack_and_ems_ref
       ).load
 
       expect(persister.orchestration_stacks_resources.index_proxy.send(:local_db_indexes)[:by_stack_and_ems_ref].send(:index).keys).to(
@@ -309,8 +309,8 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
           :stack   => lazy_find_stack_1_12,
           :ems_ref => orchestration_stack_resource_data("1_12_1")[:ems_ref]
         },
-        {:ref => :by_stack_and_ems_ref,
-         :key => :stack},
+        :ref => :by_stack_and_ems_ref,
+        :key => :stack,
       ).load
 
       expect(persister.orchestration_stacks_resources.index_proxy.send(:local_db_indexes)[:by_stack_and_ems_ref].send(:index).keys).to(
@@ -334,7 +334,7 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
 
   context "check secondary indexes on Vms" do
     it "finds Vm by name" do
-      vm1 = persister.vms.lazy_find({:name => vm_data(1)[:name]}, {:ref => :by_name}).load
+      vm1 = persister.vms.lazy_find({:name => vm_data(1)[:name]}, :ref => :by_name).load
       expect(vm1[:ems_ref]).to eq "vm_ems_ref_1"
 
       expect(persister.vms.index_proxy.send(:local_db_indexes)[:by_name].send(:index).keys).to(
@@ -358,7 +358,7 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
     end
 
     it "finds Vm by uid_ems and name" do
-      vm1 = persister.vms.lazy_find({:name => vm_data(1)[:name], :uid_ems => vm_data(1)[:uid_ems]}, {:ref => :by_uid_ems_and_name}).load
+      vm1 = persister.vms.lazy_find({:name => vm_data(1)[:name], :uid_ems => vm_data(1)[:uid_ems]}, :ref => :by_uid_ems_and_name).load
       expect(vm1[:ems_ref]).to eq "vm_ems_ref_1"
 
       expect(persister.vms.index_proxy.send(:local_db_indexes)[:by_uid_ems_and_name].send(:index).keys).to(
@@ -391,7 +391,7 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
       # relations?
       # TODO(lsmola) We should probably assert this sooner? Now we are getting a failure trying to add :device in
       # .includes
-      expect { persister.network_ports.lazy_find({:device => lazy_find_vm1}, {:ref => :by_device}).load }.to(
+      expect { persister.network_ports.lazy_find({:device => lazy_find_vm1}, :ref => :by_device).load }.to(
         raise_error(ActiveRecord::EagerLoadPolymorphicError,
                     "Cannot eagerly load the polymorphic association :device")
       )
