@@ -31,7 +31,8 @@ class OperatingSystem < ApplicationRecord
     ["linux_oracle",    %w[oracle]],
     ["linux_generic",   %w[linux]],
     ["unix_aix",        %w[aix vios]],
-    ["ibm_i",           %w[ibmi]]
+    ["ibm_i",           %w[ibmi]],
+    ["ibm_power_vm",    %w[phyp]]
   ].freeze
 
   def self.add_elements(vm, xmlNode)
