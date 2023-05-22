@@ -93,7 +93,7 @@ module MiqReport::Generator
       top_level_rels = Array(get_include.try(:keys)) + Array(get_include_for_find.try(:keys))
 
       top_level_rels.uniq.each_with_object([]) do |assoc, polymorphic_rels|
-        reflection = db_klass.reflect_on_association(assoc)
+        reflection = db_class.reflect_on_association(assoc)
         polymorphic_rels << assoc if reflection && reflection.polymorphic?
       end
     end
@@ -219,7 +219,7 @@ module MiqReport::Generator
                 generate_custom_method_results(options)
               elsif performance
                 generate_performance_results(options)
-              elsif interval == 'daily' && db_klass <= MetricRollup
+              elsif interval == 'daily' && db_class <= MetricRollup
                 generate_daily_metric_rollup_results(options)
               elsif interval
                 generate_interval_metric_results(options)
@@ -237,9 +237,9 @@ module MiqReport::Generator
   end
 
   def generate_custom_method_results(options = {})
-    if db_klass.respond_to?(custom_results_method)
+    if db_class.respond_to?(custom_results_method)
       # Use custom method in DB class to get report results if defined
-      results, ext = db_klass.send(custom_results_method, db_options[:options].merge(:userid      => options[:userid],
+      results, ext = db_class.send(custom_results_method, db_options[:options].merge(:userid      => options[:userid],
                                                                                      :ext_options => ext_options,
                                                                                      :report_cols => cols))
     elsif respond_to?(custom_results_method)
@@ -283,12 +283,12 @@ module MiqReport::Generator
       conditions.preprocess_options = {:vim_performance_daily_adhoc => (time_profile && time_profile.rollup_daily_metrics)}
     end
 
-    results = Metric::Helper.find_for_interval_name('daily', time_profile || tz, db_klass)
+    results = Metric::Helper.find_for_interval_name('daily', time_profile || tz, db_class)
                             .where(where_clause)
                             .where(options[:where_clause])
                             .where(:timestamp => performance_report_time_range)
                             .includes(get_include_for_find)
-                            .references(db_klass.includes_to_references(get_include))
+                            .references(db_class.includes_to_references(get_include))
                             .limit(options[:limit])
     results = Rbac.filtered(results, :class        => db,
                                      :filter       => conditions,
@@ -299,11 +299,11 @@ module MiqReport::Generator
 
   # Ad-hoc performance reports
   def generate_interval_metric_results(options = {})
-    results = db_klass.with_interval_and_time_range(interval, performance_report_time_range)
+    results = db_class.with_interval_and_time_range(interval, performance_report_time_range)
                       .where(where_clause)
                       .where(options[:where_clause])
                       .includes(get_include_for_find)
-                      .references(db_klass.includes_to_references(get_include))
+                      .references(db_class.includes_to_references(get_include))
                       .limit(options[:limit])
 
     # Rbac will only add miq_expression for hourly report. It will not work properly for daily because many values are rolled up from hourly.
@@ -409,12 +409,12 @@ module MiqReport::Generator
 
   def build_table(data, _db, options = {})
     data = data.to_a
-    objs = data[0] && data[0].kind_of?(Integer) ? db_klass.where(:id => data) : data.compact
+    objs = data[0] && data[0].kind_of?(Integer) ? db_class.where(:id => data) : data.compact
 
     remove_loading_relations_for_virtual_custom_attributes
 
     # Add resource columns to performance reports cols and col_order arrays for widget click thru support
-    if db_klass.to_s.ends_with?("Performance")
+    if db_class.to_s.ends_with?("Performance")
       res_cols = ['resource_name', 'resource_type', 'resource_id']
       self.cols = (cols + res_cols).uniq
       orig_col_order = col_order.dup
@@ -915,7 +915,7 @@ module MiqReport::Generator
 
   # Preps the current instance and db class for building a report
   def _generate_table_prep
-    # Make sure the db_klass has the custom_attribute definitions defined for
+    # Make sure the db_class has the custom_attribute definitions defined for
     # the report being built.
     load_custom_attributes
 

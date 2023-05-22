@@ -166,7 +166,7 @@ class MiqReport < ApplicationRecord
   end
 
   def db_class
-    db.kind_of?(Class) ? db : Object.const_get(db)
+    @db_class ||= db.kind_of?(Class) ? db : Object.const_get(db)
   end
 
   def contains_records?
@@ -226,9 +226,9 @@ class MiqReport < ApplicationRecord
   end
 
   def load_custom_attributes
-    return unless db_klass < CustomAttributeMixin || Chargeback.db_is_chargeback?(db)
+    return unless db_class < CustomAttributeMixin || Chargeback.db_is_chargeback?(db)
 
-    db_klass.load_custom_attributes_for(cols.uniq)
+    db_class.load_custom_attributes_for(cols.uniq)
   end
 
   # this method adds :custom_attributes => {} to MiqReport#include
@@ -330,9 +330,5 @@ class MiqReport < ApplicationRecord
     @va_sql_cols ||= cols.select do |col|
       db_class.virtual_attribute?(col) && db_class.attribute_supported_by_sql?(col)
     end
-  end
-
-  def db_klass
-    @db_klass ||= db.kind_of?(Class) ? db : Object.const_get(db)
   end
 end
