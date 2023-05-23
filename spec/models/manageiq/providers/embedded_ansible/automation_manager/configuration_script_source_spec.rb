@@ -1,5 +1,3 @@
-require_relative "fake_ansible_repo"
-
 RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource do
   context "with a local repo" do
     let(:manager) do
@@ -22,7 +20,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
     before do
       FileUtils.mkdir_p(local_repo)
 
-      repo = FakeAnsibleRepo.new(local_repo, repo_dir_structure)
+      repo = Spec::Support::FakeAnsibleRepo.new(local_repo, repo_dir_structure)
       repo.generate
       repo.git_branch_create("other_branch")
 
@@ -235,7 +233,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
         end
 
         it "finds all playbooks" do
-          FakeAnsibleRepo.generate(nested_repo, nested_repo_structure)
+          Spec::Support::FakeAnsibleRepo.generate(nested_repo, nested_repo_structure)
 
           params[:scm_url] = "file://#{nested_repo}"
           record           = build_record
@@ -255,7 +253,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
         end
 
         it "finds only playbooks" do
-          FakeAnsibleRepo.generate(requirements_repo, requirements_repo_structure)
+          Spec::Support::FakeAnsibleRepo.generate(requirements_repo, requirements_repo_structure)
 
           params[:scm_url] = "file://#{requirements_repo}"
           record           = build_record
@@ -275,7 +273,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
         end
 
         it "finds all playbooks" do
-          FakeAnsibleRepo.generate(encrypted_repo, encrypted_repo_structure)
+          Spec::Support::FakeAnsibleRepo.generate(encrypted_repo, encrypted_repo_structure)
 
           params[:scm_url] = "file://#{encrypted_repo}"
           record           = build_record
@@ -301,7 +299,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
         end
 
         it "finds only playbooks" do
-          FakeAnsibleRepo.generate(roles_repo, roles_repo_structure)
+          Spec::Support::FakeAnsibleRepo.generate(roles_repo, roles_repo_structure)
 
           params[:scm_url] = "file://#{roles_repo}"
           record           = build_record
@@ -322,7 +320,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
         end
 
         it "finds only playbooks" do
-          FakeAnsibleRepo.generate(hide_and_seek_repo, hide_and_seek_repo_structure)
+          Spec::Support::FakeAnsibleRepo.generate(hide_and_seek_repo, hide_and_seek_repo_structure)
 
           params[:scm_url] = "file://#{hide_and_seek_repo}"
           record           = build_record
