@@ -9,8 +9,8 @@ msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-16 19:20+0000\n"
-"PO-Revision-Date: 2023-02-16 19:20+0000\n"
+"POT-Creation-Date: 2023-05-15 00:54+0000\n"
+"PO-Revision-Date: 2023-05-15 00:54+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ko\n"
@@ -21,6 +21,7 @@ msgstr ""
 
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
+#: ../app/javascript/components/storage-service-form/get-compliant-resources.jsx
 msgid " "
 msgstr " "
 
@@ -501,6 +502,20 @@ msgstr "%s(사용자 정의)"
 msgid "%s - %s %s Used"
 msgstr "%s - %s %s 사용됨"
 
+#:
+#: ../app/javascript/components/provider-dashboard-charts/heat-map-chart/HeatMapChartGraph.js
+msgid "%s - CPU"
+msgstr "%s - CPU"
+
+#:
+#: ../app/javascript/components/provider-dashboard-charts/heat-map-chart/HeatMapChartGraph.js
+msgid "%s - Memory"
+msgstr "%s - 메모리"
+
+#: ../app/javascript/components/settings-company-tags/index.jsx
+msgid "%s Entries"
+msgstr "%s 항목"
+
 #: src/rbac-forms/rbacUserTagsList.jsx
 msgid "%s Tags"
 msgstr "%s 태그"
@@ -522,6 +537,10 @@ msgstr "%s이(가) 로그아웃됨, 로그인 페이지로 경로 재지정 중"
 #: ../app/javascript/toolbar-actions/delete.js
 msgid "%s: \"%s\" was successfully deleted"
 msgstr "%s:\"%s\"이(가) 정상적으로 삭제되었습니다."
+
+#: ../app/javascript/helpers/storage_manager/load-provider-capabilities.js
+msgid "%s: %s"
+msgstr "%s: %s"
 
 #: ../app/controllers/application_controller/ci_processing.rb
 msgid "%{action_name} action does not apply to selected items"
@@ -1727,7 +1746,7 @@ msgid ""
 "route table, for this VPC)"
 msgstr "(라우트 테이블에 명시적으로 지정되지 않은 서브넷이 이 VPC에 대한 기본 라우트 테이블에 지정됨)"
 
-#: ../app/views/ops/_diagnostics_zones_tab.html.haml
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 msgid "(current)"
 msgstr "(현재)"
 
@@ -1807,10 +1826,6 @@ msgstr "* 일일 차트에는 전체 24시간의 데이터가 수집된 일만 �
 #: ../app/views/report/_db_form.html.haml
 msgid "* Dashboard name cannot be changed"
 msgstr "* 대시보드 이름을 변경할 수 없습니다."
-
-#: ../app/views/layouts/_tl_show.html.haml
-msgid "* Dates/Times on this page are based on time zone: %{time_zone}."
-msgstr "* 이 페이지의 날짜/시간은 시간대에 기반을 둠: %{time_zone}."
 
 #: ../app/views/miq_policy_rsop/_rsop_results.html.haml
 msgid "* Enter Policy Simulation options on the left and press Submit"
@@ -2380,9 +2395,11 @@ msgstr "<역할별>"
 #: ../app/javascript/components/ansible-credentials-form/ansible-credentials-form.schema.js
 #: ../app/javascript/components/cloud-volume-actions-form/restore-from-backup.schema.js
 #: ../app/javascript/components/cloud-volume-backup-form/cloud-volume-backup-form.schema.js
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
 #: ../app/javascript/components/generic-objects-form/generic-objects-form.schema.js
 #: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js
 #: ../app/javascript/components/host-initiator-group-form/host-initiator-group-form.schema.js
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 #: ../app/javascript/components/miq-alert-set-form/miq-alert-set-form.schema.js
 #: ../app/javascript/components/network-routers-interfaces-form/network-routers-interfaces-form.schema.js
 #: ../app/javascript/components/pxe-customization-template-form/pxe-customization-template-form.schema.js
@@ -2391,7 +2408,6 @@ msgstr "<역할별>"
 #: ../app/javascript/components/pxe-iso-image-form/pxe-iso-image-form.schema.js
 #: ../app/javascript/components/routers-form/RoutersForm.schema.js
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
-#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 #: ../app/javascript/components/vm-cloud-add-remove-security-group-form/vm-cloud-add-security-form.schema.js
 #: ../app/javascript/components/volume-mapping-form/volume-mapping-form.schema.js
 #: ../app/views/catalog/_form_basic_info.html.haml
@@ -2411,10 +2427,6 @@ msgstr "<이 행을 클릭하여 새 항목 작성>"
 #: ../app/views/ops/_ldap_forest_entries.html.haml
 msgid "<Click on this row to create a new forest>"
 msgstr "<이 행을 클릭하여 새 포레스트 작성>"
-
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
-msgid "<Click on this row to create a new mapping rule>"
-msgstr "<이 행을 클릭하여 새 맵핑 규칙 작성>"
 
 #:
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js
@@ -2935,6 +2947,7 @@ msgstr "액세스 모드"
 msgid "Access Physical Server Remote Console"
 msgstr "물리적 서버 원격 콘솔 액세스"
 
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
 #: ../app/views/ops/_rbac_role_details.html.haml
 msgid ""
 "Access Restriction for Catalog Items, Orchestration Stacks, Key Pairs, "
@@ -3118,10 +3131,10 @@ msgstr "수신확인됨"
 #. TRANSLATORS: file: product/views/MiqAction.yaml
 #: ../app/controllers/optimization_controller.rb
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/presenters/tree_builder_policy_simulation_results.rb
 #: ../app/views/catalog/_form_resources_info.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/views/_alerts_list.html.haml
 #: ../config/yaml_strings.rb
 msgid "Action"
@@ -3131,6 +3144,10 @@ msgstr "조치"
 #: ../app/views/catalog/_form_resources_info.html.haml
 msgid "Action Order"
 msgstr "조치 순서"
+
+#: ../app/javascript/components/async-action-button.jsx
+msgid "Action Required"
+msgstr "필요한 조치"
 
 #: ../app/models/miq_action_set.rb
 msgid "Action Set"
@@ -3178,6 +3195,10 @@ msgstr ""
 msgid "Action script exited with rc=%{rc_value}, error=%{error_text}"
 msgstr "조치 스크립트가 종료됨, rc=%{rc_value}, 오류=%{error_text}"
 
+#: ../app/javascript/components/async-action-button.jsx
+msgid "Action successful"
+msgstr "작업 성공"
+
 #. TRANSLATORS: file: product/views/MiqActionSet.yaml
 #: ../config/yaml_strings.rb
 msgid "ActionSet"
@@ -3186,7 +3207,11 @@ msgstr "ActionSet"
 #. TRANSLATORS: file: product/views/MiqAction.yaml
 #: ../app/controllers/miq_action_controller.rb
 #: ../app/helpers/miq_policy_helper.rb
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+#: ../app/helpers/ops_helper/settings_tab_helper.rb
 #: ../app/helpers/settings_tags_tabs_helper.rb
+#: ../app/javascript/components/settings-company-tags/helper.js
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/views/chargeback_rate/_cb_rate_edit_table.html.haml
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
@@ -3196,7 +3221,6 @@ msgstr "ActionSet"
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 #: ../app/views/ops/_ap_form_registry.html.haml
 #: ../app/views/ops/_classification_entries.html.haml
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 #: ../app/views/vm_common/_reconfigure.html.haml
 #: ../config/yaml_strings.rb
@@ -3229,12 +3253,12 @@ msgstr ""
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
 #: ../app/helpers/report_helper/report_schedule_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/presenters/tree_builder_snapshots.rb
 #: ../app/presenters/tree_node/snapshot.rb
 #: ../app/views/miq_alert/_form.html.haml
 #: ../app/views/miq_policy/_form.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/report/_schedule_form.html.haml
 #: ../app/views/report/_widget_form.html.haml:33 ../config/yaml_strings.rb
 msgid "Active"
@@ -3409,6 +3433,10 @@ msgstr "디스크 추가"
 msgid "Add Disks"
 msgstr "디스크 추가"
 
+#: ../app/javascript/components/settings-company-tags/index.jsx
+msgid "Add Entry"
+msgstr "항목 추가"
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Add Flavor"
@@ -3486,6 +3514,10 @@ msgstr "라우터 \"%{name}\"에 인터페이스 추가"
 #: ../app/helpers/application_helper/toolbar/network_router_center.rb
 msgid "Add Interface to this Router"
 msgstr "이 라우터에 인터페이스 추가"
+
+#: ../app/javascript/components/settings-label-tag-mapping/index.jsx
+msgid "Add Mapping Rule"
+msgstr "맵핑 규칙 추가"
 
 #: ../app/views/miq_ae_class/_embedded_methods.html.haml
 msgid "Add Method"
@@ -4037,6 +4069,11 @@ msgstr "위젯 추가"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Add a Workflow"
+msgstr "워크플로우 추가"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Add a Zone"
 msgstr "구역 추가"
 
@@ -4263,6 +4300,10 @@ msgstr "경보 정의 프로파일 추가"
 msgid "Add an Customization Template"
 msgstr "사용자 정의 템플리트 추가"
 
+#: ../app/javascript/components/settings-company-tags-entry-form/schema.js
+msgid "Add an Entry"
+msgstr "항목 추가"
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Add an ISO Datastore"
@@ -4378,6 +4419,10 @@ msgstr "사용자가 플레이버 추가를 취소했습니다."
 #: ../app/javascript/components/host-aggregate-form/index.jsx
 msgid "Add of Host Aggregate \"%s\" has been successfully queued."
 msgstr "호스트 집계 \"%s\"의 추가가 큐에 대기되었습니다."
+
+#: ../app/javascript/components/host-initiator-group-form/index.jsx
+msgid "Add of Host Initiator Group has been successfully queued."
+msgstr "호스트 개시자 그룹 추가가 대기열에 추가되었습니다."
 
 #: ../app/javascript/components/auth-key-pair-cloud/index.jsx
 msgid "Add of Key Pair \"%s\" has been successfully queued."
@@ -4805,11 +4850,16 @@ msgstr "추가 테넌트"
 msgid "Address"
 msgstr "주소"
 
+#:
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js
+msgid "Address %s is already in use"
+msgstr "이미 사용 중인 %s 주소입니다."
+
 #: ../app/helpers/host_initiator_group_helper/textual_summary.rb
 msgid "Addresses"
 msgstr "주소"
 
-#: ../app/views/static/evacuate-form.html.haml
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
 msgid "Admin Password"
 msgstr "관리 비밀번호"
 
@@ -5177,7 +5227,6 @@ msgstr[0] "경보 상태 조치"
 #: ../app/helpers/ems_container_helper/textual_summary.rb
 #: ../app/helpers/miq_alert_set_helper.rb
 #: ../app/helpers/textual_mixins/textual_authentications_status.rb
-#: ../app/javascript/components/ems_container_dashboard/helper.js
 #: ../app/javascript/oldjs/controllers/container_dashboard/util/dashboard-utils-factory.js
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/views/ems_container/_form.html.haml
@@ -5216,6 +5265,7 @@ msgstr "평가할 경보"
 
 #: ../app/controllers/miq_request_controller.rb
 #: ../app/helpers/security_group_helper/textual_summary.rb
+#: ../app/javascript/components/service-request-default/service-request-default.schema.js
 #: ../app/views/miq_task/_tasks_options.html.haml
 #: ../app/views/report/_form_sort.html.haml
 msgid "All"
@@ -5604,7 +5654,6 @@ msgstr "모든 속성"
 #: ../app/controllers/chargeback_rate_controller.rb
 #: ../app/controllers/condition_controller.rb
 #: ../app/controllers/configuration_controller.rb
-#: ../app/controllers/host_controller.rb
 #: ../app/controllers/miq_action_controller.rb
 #: ../app/controllers/miq_ae_class_controller.rb
 #: ../app/controllers/miq_ae_customization_controller/old_dialogs.rb
@@ -5628,6 +5677,7 @@ msgstr "모든 속성"
 #: ../app/javascript/components/button-group/index.jsx
 #: ../app/javascript/components/cloud-volume-form/index.jsx
 #: ../app/javascript/components/generic-objects-form/custom-button-form/index.jsx
+#: ../app/javascript/components/host-initiator-group-form/index.jsx
 #: ../app/javascript/components/physical-storage-form/index.jsx
 #: ../app/javascript/components/retirement-form/index.jsx
 #: ../app/javascript/components/settings-tasks-form/index.jsx
@@ -5636,10 +5686,8 @@ msgstr "모든 속성"
 #: ../app/javascript/forms/data-driven-form.jsx
 #: ../app/javascript/oldjs/components/miq_ae_class/namespace-form.js
 #: ../app/javascript/oldjs/controllers/catalog/catalog_item_form_controller.js
-#: ../app/javascript/oldjs/controllers/host/host_form_controller.js
 #: ../app/javascript/oldjs/controllers/ops/pglogical_replication_form_controller.js
 #: ../app/javascript/oldjs/controllers/reconfigure/reconfigure_form_controller.js
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
 msgid "All changes have been reset"
 msgstr "모든 변경사항이 재설정됨"
 
@@ -5913,7 +5961,7 @@ msgstr ""
 #: ../app/controllers/application_controller/ci_processing.rb
 #: ../app/controllers/mixins/actions/host_actions/misc.rb
 #: ../app/helpers/application_helper/tasks.rb
-#: ../app/views/ops/_schedule_show.html.haml
+#: ../app/helpers/settings_schedule_helper.rb
 msgid "Analysis"
 msgstr "분석"
 
@@ -6246,6 +6294,7 @@ msgstr[0] "승인"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml:68 ../config/yaml_strings.rb
 msgid "Approval State"
 msgstr "승인 상태"
@@ -6315,11 +6364,13 @@ msgstr "승인/거부자"
 msgid "Approved/Denied On"
 msgstr "승인/거부된 시점"
 
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
 msgid "Approved/Denied by"
 msgstr "승인/거부자"
 
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 msgid "Approved/Denied on"
 msgstr "승인/거부된 시점"
@@ -6383,6 +6434,7 @@ msgid ""
 "Policy?"
 msgstr "이 정책에서 [%{new_policy_description}] 정책을 작성하시겠습니까?"
 
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
 #: ../app/helpers/settings_tags_tabs_helper.rb
 msgid "Are you sure you want to delete category '%{category_name}'?"
 msgstr "'%{category_name}' 카테고리를 삭제하시겠습니까?"
@@ -6399,7 +6451,7 @@ msgstr "%{ldaphost} 포레스트를 삭제하시겠습니까?"
 msgid "Are you sure you want to delete input field from method?"
 msgstr "메소드에서 입력 필드를 삭제하시겠습니까?"
 
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
 msgid "Are you sure you want to delete mapping '%{label_name}'?"
 msgstr "'%{label_name}' 맵핑을 삭제하시겠습니까?"
 
@@ -6512,6 +6564,11 @@ msgstr "이 경보를 삭제하시겠습니까?"
 msgid "Are you sure you want to delete this Group?"
 msgstr "이 그룹을 삭제하시겠습니까?"
 
+#: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
+#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
+msgid "Are you sure you want to delete this Host Initiator Group?"
+msgstr "정말 이 호스트 개시자 그룹(Host Initiator Group)을 삭제하시겠어요?"
+
 #: ../app/helpers/application_helper/toolbar/miq_alerts_center.rb
 msgid "Are you sure you want to delete this Policy Alerts?"
 msgstr "이 정책 경보를 삭제하시겠습니까?"
@@ -6544,6 +6601,15 @@ msgstr "이 사용자를 삭제하시겠습니까?"
 #: ../app/helpers/application_helper/toolbar/zone_center.rb
 msgid "Are you sure you want to delete this Zone?"
 msgstr "이 구역을 삭제하시겠습니까?"
+
+#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshot_center.rb
+#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshots_center.rb
+msgid "Are you sure you want to delete this cloud volume snapshot?"
+msgstr "정말 이 클라우드 볼륨 스냅샷을 삭제하시겠어요?"
+
+#: ../app/javascript/components/settings-company-tags/index.jsx
+msgid "Are you sure you want to delete this entry?"
+msgstr "정말 이 항목을 삭제하시겠어요?"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb
 msgid "Are you sure you want to delete this host initiator?"
@@ -7198,11 +7264,11 @@ msgid "Attribute missing for %{field}"
 msgstr "%{field}의 속성이 누락됨"
 
 #: ../app/helpers/miq_action_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "Attribute/Value Pairs"
@@ -7567,8 +7633,8 @@ msgstr "권한 부여 비밀번호"
 msgid "Authtype"
 msgstr "인증 유형"
 
-#: ../app/views/static/evacuate-form.html.haml
-#: ../app/views/vm_common/_live_migrate.html.haml
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 msgid "Auto-select Host?"
 msgstr "호스트 자동 선택?"
 
@@ -7685,13 +7751,9 @@ msgstr "자동화 스키마"
 msgid "Automate Simulation"
 msgstr "자동화 시뮬레이션"
 
-#: ../app/views/ops/_schedule_show.html.haml
+#: ../app/helpers/settings_schedule_helper.rb
 msgid "Automate Task"
 msgstr "태스크 자동화"
-
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
-msgid "Automate Tasks Selection"
-msgstr "자동화 태스크 선택사항"
 
 #: ../config/model_display_names.rb
 msgid "Automate Workspace"
@@ -8510,9 +8572,11 @@ msgstr "기본 정보"
 #: ../app/helpers/miq_policy_helper.rb
 #: ../app/helpers/miq_policy_set_helper.rb:3 ../app/helpers/ops_helper.rb
 #: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
 #: ../app/helpers/settings_analysis_profile_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/javascript/components/cloud-volume-actions-form/create-backup.schema.js
 #: ../app/javascript/components/cloud-volume-actions-form/create-snapshot.schema.js
@@ -8535,7 +8599,6 @@ msgstr "기본 정보"
 #: ../app/views/miq_policy/_event_edit.html.haml
 #: ../app/views/miq_policy/_form.html.haml
 #: ../app/views/ops/_ap_form.html.haml
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 #: ../app/views/ops/_settings_server_tab.html.haml
 #: ../app/views/pxe/_iso_datastore_details.html.haml
 #: ../app/views/pxe/_pxe_image_type_details.html.haml
@@ -8738,7 +8801,8 @@ msgstr "식별 LED 깜박임"
 msgid "Blink the Identify LED?"
 msgstr "식별 LED 깜박임?"
 
-#: ../app/views/vm_common/_live_migrate.html.haml
+#:
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 msgid "Block Migration"
 msgstr "블록 마이그레이션"
 
@@ -8831,10 +8895,6 @@ msgstr "부팅 가능"
 #: ../config/yaml_strings.rb
 msgid "Bootable?"
 msgstr "부트 가능?"
-
-#: ../app/javascript/components/timeline-options/timeline-options.jsx
-msgid "Both"
-msgstr "둘 모두"
 
 #. TRANSLATORS: en.yml key: dictionary.model.BottleneckEvent
 #: ../config/model_display_names.rb:14 ../config/dictionary_strings.rb
@@ -9783,7 +9843,8 @@ msgid "CPU Max Used MHz Trend"
 msgstr "CPU 최대 사용 MHz 동향"
 
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
-#: ../app/helpers/ops_helper.rb:214 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../config/yaml_strings.rb
 msgid "CPU Percent"
 msgstr "CPU 백분율"
@@ -9832,7 +9893,8 @@ msgstr "CPU 속도"
 
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
 #. TRANSLATORS: file: product/views/OsProcess-processes.yaml
-#: ../app/helpers/ops_helper.rb:213 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../config/yaml_strings.rb
 msgid "CPU Time"
 msgstr "CPU 시간"
@@ -10317,6 +10379,7 @@ msgstr ""
 
 #: ../app/helpers/storage_resource_helper/textual_summary.rb
 #: ../app/helpers/storage_service_helper/textual_summary.rb
+#: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
 msgid "Capabilities"
 msgstr "기능"
 
@@ -10724,10 +10787,6 @@ msgid "Category %{description} [%{name}] record created ("
 msgstr "카테고리 %{description} [%{name}] 레코드가 작성됨("
 
 #: ../app/controllers/ops_controller/settings/tags.rb
-msgid "Category %{description} [%{name}] record deleted"
-msgstr "카테고리 %{description} [%{name}] 레코드가 삭제됨"
-
-#: ../app/controllers/ops_controller/settings/tags.rb
 msgid "Category %{description} [%{name}] record updated ("
 msgstr "카테고리 %{description} [%{name}] 레코드가 업데이트됨("
 
@@ -10761,6 +10820,18 @@ msgstr "카테고리 태그 항목"
 msgid "Category cannot be deleted"
 msgstr "카테고리를 삭제할 수 없음"
 
+#: ../app/javascript/components/settings-company-tags-entry-form/index.jsx
+msgid "Category entry \"%s\" was created successfully"
+msgstr "\"%s\" 카테고리 항목이 생성되었습니다."
+
+#: ../app/javascript/components/settings-company-tags-entry-form/index.jsx
+msgid "Category entry \"%s\" was saved successfully"
+msgstr "\"%s\" 카테고리 항목이 저장되었습니다."
+
+#: ../app/javascript/components/settings-company-tags/index.jsx
+msgid "Category entry was successfully deleted"
+msgstr "카테고리 항목이 삭제되었습니다."
+
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb
 msgid "Category is required"
 msgstr "카테고리는 필수입니다."
@@ -10789,7 +10860,7 @@ msgstr "주의: 구성 파일을 수동으로 변경하면 서버가 사용 안�
 msgid "Caution: Manual changes to configuration files can disable the Zone!"
 msgstr "주의: 구성 파일을 수동으로 변경하면 구역이 사용 안함으로 설정될 수 있습니다!"
 
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
+#: ../app/javascript/components/settings-label-tag-mapping/index.jsx
 msgid ""
 "Caution: Mappings with Resource Entity 'All-Entities' could cause overwriting "
 "existing tags on resources with mapped provider labels."
@@ -11109,7 +11180,7 @@ msgstr "비용 상환율 세부사항 측정"
 msgid "Chargeback tier"
 msgstr "비용 상환 티어"
 
-#: ../app/controllers/mixins/chargeback_preview.rb
+#: ../app/controllers/mixins/chargeback_preview_mixin.rb
 msgid "Chargeback was calculated based on flat allocation"
 msgstr "일반 할당에 기반하여 비용 상환이 계산되었습니다."
 
@@ -11526,6 +11597,11 @@ msgstr "이 VM에 대한 최근 알려진 구성의 규제 준수 검사"
 msgid "Check Compliance of the last known configuration for this item"
 msgstr "이 항목에 대한 최근 알려진 구성의 규제 준수 검사"
 
+#:
+#: ../app/javascript/components/storage-service-form/get-compliant-resources.jsx
+msgid "Check Compliant Resources"
+msgstr "규정 준수 리소스 확인"
+
 #: ../app/views/layouts/exp_atom/_edit_find.html.haml
 msgid "Check Count"
 msgstr "선택 개수"
@@ -11541,6 +11617,11 @@ msgstr "값 검사 오류: %{msg}"
 #: src/report-editor/sort-criteria.jsx
 msgid "Check input"
 msgstr "입력 확인"
+
+#:
+#: ../app/javascript/components/storage-service-form/get-compliant-resources.jsx
+msgid "Checking"
+msgstr "확인 중"
 
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb
 msgid "Child Orchestration Stacks"
@@ -11582,12 +11663,15 @@ msgstr "선택사항"
 #: ../app/javascript/components/cloud-object-store-container-form/cloud-object-store-container-form.schema.js
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
 #: ../app/javascript/components/diagnostics-collect-log-form/schema.js
+#: ../app/javascript/components/host-edit-form/host-edit-form.schema.js
 #: ../app/javascript/components/network-floatingIPs-form/network-floatingIPs-form.schema.js
 #: ../app/javascript/components/network-security-groups-form/network-security-groups-form.schema.js
 #: ../app/javascript/components/provider-form/index.jsx
 #: ../app/javascript/components/routers-form/RoutersForm.schema.js
 #: ../app/javascript/components/select/index.jsx
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 #: ../app/javascript/components/subnet-form/subnet-form.schema.js
+#: ../app/javascript/helpers/storage_manager/filter-service-by-capabilities.js
 #: ../app/views/catalog/_form_basic_info.html.haml
 #: ../app/views/catalog/_form_ovf_template_options.html.haml
 #: ../app/views/catalog/_form_resources_info.html.haml
@@ -11596,7 +11680,6 @@ msgstr "선택사항"
 #: ../app/views/ems_container/_form.html.haml
 #: ../app/views/ems_infra/_form.html.haml
 #: ../app/views/ems_physical_infra/_form.html.haml
-#: ../app/views/host/_form.html.haml:47 ../app/views/host/_form.html.haml
 #: ../app/views/layouts/_ae_resolve_options.html.haml
 #: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
@@ -11649,7 +11732,6 @@ msgid "Choose a %{model} report filter"
 msgstr "%{model} 보고서 필터 선택"
 
 #: ../app/views/chargeback_assignment/_form.html.haml
-#: ../app/views/ops/_settings_co_tags_tab.html.haml
 #: ../app/views/report/_form_filter_chargeback.html.haml
 msgid "Choose a Category"
 msgstr "카테고리 선택"
@@ -11991,10 +12073,15 @@ msgstr "선택한 Object Storage 컨테이너 지우기"
 msgid "Click on a Host to fetch its settings"
 msgstr "호스트 설정을 페치하려면 호스트를 클릭하십시오."
 
+#: ../app/javascript/components/settings-label-tag-mapping/index.jsx
+msgid "Click on this row to create a new mapping rule"
+msgstr "새 맵핑 규칙을 작성하려면 이 행을 클릭하십시오."
+
 #: ../app/javascript/components/settings-company-categories/index.jsx
 msgid "Click to add a new category"
 msgstr "새 카테고리를 추가하려면 클릭하십시오."
 
+#: ../app/javascript/components/settings-company-tags/index.jsx
 #: ../app/views/ops/_ap_form_file.html.haml
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 #: ../app/views/ops/_ap_form_registry.html.haml
@@ -12029,6 +12116,8 @@ msgstr "이 사용자에 대한 고아 레코드를 삭제하려면 클릭하십
 msgid "Click to delete this category"
 msgstr "이 카테고리를 삭제하려면 클릭하십시오."
 
+#: ../app/helpers/ops_helper/settings_tab_helper.rb
+#: ../app/javascript/components/settings-company-tags/helper.js
 #: ../app/views/ops/_ap_form_file.html.haml
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 #: ../app/views/ops/_ap_form_registry.html.haml
@@ -12049,17 +12138,13 @@ msgstr "이 포레스트를 삭제하려면 클릭하십시오."
 msgid "Click to delete this input field from method"
 msgstr "메소드에서 이 입력 필드를 삭제하려면 클릭하십시오."
 
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 msgid "Click to delete this mapping"
 msgstr "이 맵핑을 삭제하려면 클릭하십시오."
 
 #: ../app/views/ops/_ldap_forest_entries.html.haml
 msgid "Click to edit this forest"
 msgstr "이 포레스트를 편집하려면 클릭하십시오."
-
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
-msgid "Click to edit this mapping rule"
-msgstr "이 맵핑 규칙을 편집하려면 클릭하십시오."
 
 #: ../app/javascript/components/dashboard-widgets/widget-menu/index.jsx
 msgid "Click to go this location"
@@ -12113,8 +12198,8 @@ msgstr "%{name} 테넌트를 보려면 클릭하십시오."
 msgid "Click to view %{name} TenantProject"
 msgstr "%{name} 테넌트 프로젝트를 보려면 클릭하십시오."
 
+#: ../app/helpers/request_details_helper.rb
 #: ../app/javascript/components/miq-data-table/index.jsx
-#: ../app/views/miq_request/_request.html.haml
 msgid "Click to view details"
 msgstr "세부사항을 보려면 클릭하십시오."
 
@@ -13763,10 +13848,6 @@ msgstr "클러스터 관계"
 msgid "Cluster Resources"
 msgstr "클러스터 리소스"
 
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
-msgid "Cluster Selection"
-msgstr "클러스터 선택사항"
-
 #: ../app/services/ems_infra_dashboard_service.rb
 #: ../app/views/ems_infra/_show_dashboard.html.haml
 msgid "Cluster Utilization"
@@ -14161,6 +14242,7 @@ msgstr "완료"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml:63 ../config/yaml_strings.rb
 msgid "Completed"
 msgstr "완료됨"
@@ -14185,7 +14267,7 @@ msgid "Compliance"
 msgstr "규정 준수"
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb
-#: ../app/views/ops/_schedule_show.html.haml
+#: ../app/helpers/settings_schedule_helper.rb
 msgid "Compliance Check"
 msgstr "규제 준수 검사"
 
@@ -14324,6 +14406,11 @@ msgstr "규제 준수"
 #: ../app/helpers/compliance_summary_helper.rb
 msgid "Compliant as of %{time} Ago"
 msgstr "%{time} 전부터 준수함"
+
+#:
+#: ../app/javascript/components/storage-service-form/get-compliant-resources.jsx
+msgid "Compliant resources: "
+msgstr "규정 준수 리소스: "
 
 #:
 #: ../app/javascript/components/visual-settings-form/visual-settings-form.schema.js
@@ -14624,6 +14711,7 @@ msgstr "구성 버전"
 #: ../app/helpers/application_helper/toolbar/cloud_volume_backups_center.rb
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb
 #: ../app/helpers/application_helper/toolbar/cloud_volume_snapshot_center.rb
+#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshots_center.rb
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb
 #: ../app/helpers/application_helper/toolbar/condition_center.rb
 #: ../app/helpers/application_helper/toolbar/conditions_center.rb
@@ -15146,6 +15234,14 @@ msgid "ConfigurationProfile|Total configured systems"
 msgstr "ConfigurationProfile|구성된 시스템 총계"
 
 #: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Context"
+msgstr "ConfigurationScriptBase|컨텍스트"
+
+#: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Credentials"
+msgstr "ConfigurationScriptBase|자격 증명"
+
+#: ../config/model_attributes.rb
 msgid "ConfigurationScriptBase|Description"
 msgstr "ConfigurationScriptBase|설명"
 
@@ -15162,12 +15258,32 @@ msgid "ConfigurationScriptBase|Name"
 msgstr "ConfigurationScriptBase|이름"
 
 #: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Output"
+msgstr "ConfigurationScriptBase|출력"
+
+#: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Payload"
+msgstr "ConfigurationScriptBase|페이로드"
+
+#: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Payload type"
+msgstr "ConfigurationScriptBase|페이로드 유형"
+
+#: ../config/model_attributes.rb
 msgid "ConfigurationScriptBase|Region description"
 msgstr "ConfigurationScriptBase|지역 설명"
 
 #: ../config/model_attributes.rb
 msgid "ConfigurationScriptBase|Region number"
 msgstr "ConfigurationScriptBase|지역 번호"
+
+#: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Run by userid"
+msgstr "ConfigurationScriptBase|사용자 ID로 실행"
+
+#: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Status"
+msgstr "ConfigurationScriptBase|상태"
 
 #: ../config/model_attributes.rb
 msgid "ConfigurationScriptBase|Survey spec"
@@ -19623,6 +19739,7 @@ msgstr "작성됨"
 #: ../app/helpers/firmware_binary_helper/textual_summary.rb
 #: ../app/helpers/firmware_registry_helper/textual_summary.rb
 #: ../app/helpers/firmware_target_helper/textual_summary.rb
+#: ../app/helpers/request_details_helper.rb
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/views/catalog/_ot_tree_show.html.haml
 #: ../app/views/miq_ae_class/_method_form.html.haml
@@ -19888,7 +20005,6 @@ msgstr "인증 정보 유형"
 msgid "Credential validation was not successful: %{details}"
 msgstr "인증 정보 유효성 검증 실패: %{details}"
 
-#: ../app/controllers/host_controller.rb
 #: ../app/controllers/mixins/manager_controller_mixin.rb
 msgid "Credential validation was successful"
 msgstr "인증 정보 유효성 검증에 성공했습니다."
@@ -19994,10 +20110,6 @@ msgstr "제공자를 새로 고치려면 인증 정보가 유효해야 합니다
 msgid "Credentials/Settings"
 msgstr "인증 정보/설정"
 
-#: ../app/controllers/host_controller.rb
-msgid "Credentials/Settings saved successfully"
-msgstr "인증 정보/설정이 정상적으로 저장되었습니다."
-
 #: src/topology/topologyCanvas.jsx
 msgid "Critical"
 msgstr "심각"
@@ -20070,8 +20182,8 @@ msgid "Current Flavor"
 msgstr "현재 플레이버"
 
 #. TRANSLATORS: file: product/views/User.yaml
-#: ../app/views/ops/_rbac_user_details.html.haml
-#: ../config/yaml_strings.rb
+#: ../app/helpers/settings_users_helper.rb
+#: ../app/helpers/settings_users_helper.rb:38 ../config/yaml_strings.rb
 msgid "Current Group"
 msgstr "현재 그룹"
 
@@ -20115,6 +20227,7 @@ msgid "Currently Used Space"
 msgstr "현재 사용한 공간"
 
 #: ../app/helpers/catalog_helper.rb:110 ../app/helpers/report_helper.rb
+#: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
 msgid "Custom"
 msgstr "사용자 정의"
 
@@ -20259,9 +20372,12 @@ msgstr "사용자 정의 파비콘"
 #: ../app/helpers/host_helper/textual_summary.rb
 #: ../app/helpers/textual_mixins/vm_common.rb
 #: ../app/javascript/components/vm-edit-form/vm-edit-form.schema.js
-#: ../app/views/host/_form.html.haml
 msgid "Custom Identifier"
 msgstr "사용자 정의 ID"
+
+#: ../app/javascript/components/host-edit-form/host-edit-form.schema.js
+msgid "Custom Identifier:"
+msgstr "사용자 정의 ID:"
 
 #: ../app/helpers/catalog_helper.rb
 #: ../app/views/catalog/_sandt_tree_custom_image_form.html.haml
@@ -20934,7 +21050,7 @@ msgstr "데이터의 유효성 검증 성공"
 msgid "Data:"
 msgstr "데이터:"
 
-#: ../app/helpers/ops_helper.rb:106 ../app/views/ops/_all_tabs.html.haml
+#: ../app/helpers/ops_helper.rb:115 ../app/views/ops/_all_tabs.html.haml
 #: ../app/views/ops/_settings_authentication_tab.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 msgid "Database"
@@ -21129,10 +21245,6 @@ msgstr "데이터 저장소 기타 VM 파일"
 msgid "Datastore Path"
 msgstr "데이터 저장소 경로"
 
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
-msgid "Datastore Selection"
-msgstr "데이터 저장소 선택사항"
-
 #. TRANSLATORS: file: product/reports/150_Configuration Management - Storage/020_Summary for VMs.yaml
 #: ../config/yaml_strings.rb
 msgid "Datastore Size"
@@ -21305,7 +21417,6 @@ msgid "Date Range (M/D/Y - M/D/Y)"
 msgstr "날짜 범위(M/D/Y - M/D/Y)"
 
 #. TRANSLATORS: file: product/views/EventLog-event_logs.yaml
-#: ../app/javascript/components/timeline-options/timeline-table.jsx
 #: ../config/yaml_strings.rb
 msgid "Date Time"
 msgstr "날짜 시간"
@@ -21362,11 +21473,6 @@ msgstr "날짜/시간 값이 공백이면 안됩니다."
 #: ./dist/js/ui-components.js
 msgid "Datepicker"
 msgstr "날짜 선택기"
-
-#:
-#: ../app/javascript/components/timeline-options/timeline-options-simple.schema.js
-msgid "Dates Range"
-msgstr "날짜 범위"
 
 #: ../app/helpers/report_helper/timer.rb
 #: ../app/javascript/components/schedule-form/helper.js
@@ -21483,6 +21589,7 @@ msgstr "Dedicated 또는 Shared"
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
 #: ../app/helpers/settings_tags_tabs_helper.rb
 #: ../app/helpers/textual_summary_helper.rb
+#: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
 #: ../app/views/layouts/_container_auth.html.haml
 #: ../app/views/layouts/_edit_form_buttons.html.haml
 #: ../app/views/layouts/_x_edit_buttons.html.haml
@@ -21722,15 +21829,18 @@ msgstr "지연(분) 중지"
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+#: ../app/helpers/ops_helper/settings_tab_helper.rb
 #: ../app/helpers/settings_tags_tabs_helper.rb
 #: ../app/javascript/components/remove-generic-item-modal.jsx
+#: ../app/javascript/components/settings-company-tags/helper.js
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 #: ../app/views/chargeback_rate/_cb_rate_edit_table.html.haml
 #: ../app/views/chargeback_rate/_tier_row.haml
 #: ../app/views/ops/_ap_form_file.html.haml
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 #: ../app/views/ops/_ap_form_registry.html.haml
 #: ../app/views/ops/_classification_entry.html.haml
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 #: ../app/views/vm_common/_reconfigure.html.haml
 msgid "Delete"
@@ -21887,10 +21997,6 @@ msgstr "클라우드 테넌트 삭제"
 #: ../app/helpers/application_helper/toolbar/cloud_tenants_center.rb
 msgid "Delete Cloud Tenants"
 msgstr "클라우드 테넌트 삭제"
-
-#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshot_center.rb
-msgid "Delete Cloud Volume Snapshot"
-msgstr "클라우드 볼륨 스냅샷 삭제"
 
 #: ../app/helpers/application_helper/toolbar/conditions_center.rb
 msgid "Delete Conditions"
@@ -22181,6 +22287,11 @@ msgstr "위젯 삭제"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Delete a Workflow"
+msgstr "워크플로우 삭제"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Delete a Zone"
 msgstr "구역 삭제"
 
@@ -22419,10 +22530,20 @@ msgstr "선택한 태스크보다 오래된 태스크 삭제"
 msgid "Delete the %{model} filter named %{filter}?"
 msgstr "이름이 %{filter}인 %{model} 필터 삭제?"
 
+#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshot_center.rb
+#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshots_center.rb
+msgid "Delete the Cloud Volume Snapshot"
+msgstr "클라우드 볼륨 스냅샷 삭제"
+
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
 msgid "Delete the Host Initiator"
 msgstr "호스트 이니시에이터 삭제"
+
+#: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
+#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
+msgid "Delete the Host Initiator Group"
+msgstr "호스트 개시자 그룹 삭제"
 
 #: ../app/helpers/application_helper/toolbar/physical_storage_center.rb
 #: ../app/helpers/application_helper/toolbar/physical_storages_center.rb
@@ -22592,9 +22713,17 @@ msgstr "이 구역 삭제"
 msgid "Delete this category"
 msgstr "이 카테고리 삭제"
 
+#: ../app/javascript/components/settings-company-tags/helper.js
+msgid "Delete this entry"
+msgstr "이 항목 삭제"
+
 #: ../app/helpers/application_helper/toolbar/tenant_center.rb
 msgid "Delete this item"
 msgstr "이 항목 삭제"
+
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+msgid "Delete this mapping"
+msgstr "이 맵핑 삭제"
 
 #: ../app/helpers/application_helper/toolbar/volume_mapping_center.rb
 msgid "Delete volume mapping"
@@ -22695,6 +22824,7 @@ msgid ""
 "Deleting all Tasks older than %{date} from the %{product} Database initiated"
 msgstr "%{date}보다 오래된 모든 태스크를 %{product} 데이터베이스에서 삭제하는 작업이 시작됨"
 
+#: ../app/helpers/ops_helper/settings_tab_helper.rb
 #: ../app/views/ops/_classification_entry.html.haml
 msgid ""
 "Deleting the '%{entry_name}' entry will also unassign it from all items, are "
@@ -22937,8 +23067,9 @@ msgstr "대상 Ems 클러스터 Uid"
 msgid "Destination Groups"
 msgstr "대상 그룹"
 
-#: ../app/views/static/evacuate-form.html.haml
-#: ../app/views/vm_common/_live_migrate.html.haml
+#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
+#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
+#: ../config/yaml_strings.rb
 msgid "Destination Host"
 msgstr "대상 호스트"
 
@@ -23094,6 +23225,7 @@ msgstr "세부사항 - VM 마이그레이션 준비"
 msgid "Detailed - VMs migration ready - no CD/DVD/Floppy connected"
 msgstr "세부사항 - VM 마이그레이션 준비 - 연결된 CD/DVD/플로피 없음"
 
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 #: ../app/views/ops/_rbac_group_details.html.haml
 msgid "Detailed Description"
 msgstr "자세한 설명"
@@ -23101,6 +23233,7 @@ msgstr "자세한 설명"
 #: ../app/helpers/catalog_helper.rb:176 ../app/helpers/catalog_helper.rb
 #: ../app/helpers/cloud_volume_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
+#: ../app/helpers/utilization_helper.rb
 #: ../app/javascript/components/visual-settings-form/visual-settings-form.schema.js
 #: ../app/views/generic_mailer/policy_action_email.html.haml
 #: ../app/views/generic_mailer/policy_action_email.text.haml
@@ -23108,7 +23241,6 @@ msgstr "자세한 설명"
 #: ../app/views/ops/_all_tabs.html.haml
 #: ../app/views/orchestration_stack/_stack_orchestration_template.html.haml
 #: ../app/views/service/_svcs_show.html.haml
-#: ../app/views/utilization/_utilization_tabs.html.haml
 msgid "Details"
 msgstr "세부사항"
 
@@ -24356,7 +24488,8 @@ msgstr "디스크 커널 대기 시간 - 평균(ms)"
 msgid "Disk Latency - Avg (ms)"
 msgstr "디스크 대기 시간 - 평균(ms)"
 
-#: ../app/views/vm_common/_live_migrate.html.haml
+#:
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 msgid "Disk Over Commit"
 msgstr "디스크 오버커미트"
 
@@ -25832,6 +25965,46 @@ msgstr "VM 드리프트 표시"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Display a list of Credentials"
+msgstr "자격 증명 목록 표시"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display a list of Repositories"
+msgstr "저장소 목록 표시"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display a list of Workflow Instances"
+msgstr "워크플로우 인스턴스 목록 표시"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display a list of Workflows"
+msgstr "워크플로우 목록 표시"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display an Individual Credential"
+msgstr "개별 자격 증명 표시"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display an Individual Repository"
+msgstr "개별 저장소 표시"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display an Individual Workflow"
+msgstr "개별 워크플로우 표시"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display an Individual Workflow Instance"
+msgstr "개별 워크플로우 인스턴스 표시"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Display any dashboards"
 msgstr "대시보드 표시"
 
@@ -26868,6 +27041,10 @@ msgstr "호스트 집계 편집"
 msgid "Edit Host Aggregate \"%{name}\""
 msgstr "호스트 집계 \"%{name}\" 편집"
 
+#: ../app/controllers/host_initiator_group_controller.rb
+msgid "Edit Host Initiator group \"%{name}\""
+msgstr "호스트 개시자 그룹 \"%{name}\" 편집"
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Edit Host Tags"
@@ -27167,6 +27344,10 @@ msgstr "서비스 \"%{name}\" 편집"
 #: ../config/yaml_strings.rb
 msgid "Edit Services"
 msgstr "서비스 편집"
+
+#: ../app/controllers/storage_service_controller.rb
+msgid "Edit Storage Service \"%{name}\""
+msgstr "스토리지 서비스 \"%{name}\" 편집"
 
 #: ../app/controllers/cloud_subnet_controller.rb
 msgid "Edit Subnet \"%{name}\""
@@ -28147,6 +28328,11 @@ msgstr "호스트 집계 편집"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Edit a Host Initiator Group"
+msgstr "호스트 개시자 그룹 편집"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Edit a Image"
 msgstr "이미지 편집"
 
@@ -28286,6 +28472,11 @@ msgstr "스토리지 관리자 편집"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Edit a Storage Service"
+msgstr "스토리지 서비스 편집"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Edit a Subnet"
 msgstr "서브넷 편집"
 
@@ -28323,6 +28514,11 @@ msgstr "볼륨 편집"
 #: ../config/yaml_strings.rb
 msgid "Edit a Widget"
 msgstr "위젯 편집"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Edit a Workflow"
+msgstr "워크플로우 편집"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -28552,13 +28748,21 @@ msgstr "사용자가 도메인 \"%s\"의 편집을 취소했습니다."
 msgid "Edit of Generic Object Definition \"%s\" was cancelled by the user."
 msgstr "사용자가 일반 오브젝트 정의 \"%s\"의 편집을 취소했습니다."
 
-#: ../app/controllers/host_controller.rb
-msgid "Edit of Host \"%{name}\" was cancelled by the user"
-msgstr "사용자가 호스트 \"%{name}\"의 편집을 취소했습니다."
+#: ../app/javascript/components/host-edit-form/host-edit-form.jsx
+msgid "Edit of Host \"%s\" was cancelled."
+msgstr "\"%s\" 호스트 편집이 취소되었습니다."
 
 #: ../app/javascript/components/host-aggregate-form/index.jsx
 msgid "Edit of Host Aggregate \"%s\" was canceled by the user."
 msgstr "사용자가 호스트 집계 \"%s\"의 편집을 취소했습니다."
+
+#: ../app/javascript/components/host-initiator-group-form/index.jsx
+msgid "Edit of Host Initiator Group \"%s\" was canceled by the user."
+msgstr "사용자가 호스트 개시자 그룹 \"%s\" 편집을 취소했습니다."
+
+#: ../app/javascript/components/host-edit-form/host-edit-form.jsx
+msgid "Edit of Hosts was cancelled."
+msgstr "호스트 편집이 취소되었습니다."
 
 #: ../app/javascript/components/pxe-iso-image-form/index.jsx
 msgid "Edit of ISO Image \"%s\" was cancelled by the user"
@@ -28675,10 +28879,6 @@ msgstr "사용자가 Windows 이미지 \"%{name}\"의 편집을 취소했습니�
 msgid "Edit of Zone \"%s\" was canceled by the user."
 msgstr "사용자가 \"%s\" 구역 편집을 취소했습니다."
 
-#: ../app/controllers/host_controller.rb
-msgid "Edit of credentials for selected Hosts was cancelled by the user"
-msgstr "사용자가 선택된 호스트에 대한 인증 정보 편집을 취소했습니다."
-
 #: ../app/javascript/components/network-floatingIPs-form/index.jsx
 msgid "Edit of floating IPs \"%s\" was canceled by the user."
 msgstr "사용자가 유동 IP \"%s\"의 편집을 취소했습니다."
@@ -28704,6 +28904,10 @@ msgstr "선택한 클라우드 볼륨 편집"
 msgid "Edit selected Generic Object Definition"
 msgstr "선택한 일반 오브젝트 정의 편집"
 
+#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
+msgid "Edit selected Host Initiator Group"
+msgstr "선택한 호스트 개시자 그룹 편집"
+
 #:
 #: ../app/helpers/application_helper/toolbar/orchestration_templates_center.rb
 msgid "Edit selected Orchestration Template"
@@ -28716,6 +28920,10 @@ msgstr "선택된 물리적 스토리지 편집"
 #: ../app/helpers/application_helper/toolbar/miq_ae_fields_center.rb
 msgid "Edit selected Schema"
 msgstr "선택한 스키마 편집"
+
+#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
+msgid "Edit selected Storage Service"
+msgstr "선택한 스토리지 서비스 편집"
 
 #: ../app/helpers/application_helper/toolbar/time_profiles_center.rb
 msgid "Edit selected Time Profile"
@@ -28975,6 +29183,10 @@ msgstr "이 대화 상자 편집"
 msgid "Edit this Domain"
 msgstr "이 도메인 편집"
 
+#: ../app/javascript/components/settings-company-tags-entry-form/schema.js
+msgid "Edit this Entry"
+msgstr "이 항목 편집"
+
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_center.rb
 msgid "Edit this Generic Object Definition"
@@ -28983,6 +29195,10 @@ msgstr "이 일반 오브젝트 정의 편집"
 #: ../app/helpers/application_helper/toolbar/miq_group_center.rb
 msgid "Edit this Group"
 msgstr "이 그룹 편집"
+
+#: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
+msgid "Edit this Host Initiator Group"
+msgstr "이 호스트 개시자 그룹 편집"
 
 #: ../app/helpers/application_helper/toolbar/iso_image_center.rb
 msgid "Edit this ISO Image"
@@ -29104,6 +29320,10 @@ msgstr "이 서비스 편집"
 #: ../app/helpers/application_helper/toolbar/ems_storage_center.rb
 msgid "Edit this Storage Manager"
 msgstr "이 스토리지 관리자 편집"
+
+#: ../app/helpers/application_helper/toolbar/storage_service_center.rb
+msgid "Edit this Storage Service"
+msgstr "스토리지 서비스 편집"
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_type_center.rb
 msgid "Edit this System Image Type"
@@ -29382,6 +29602,10 @@ msgstr "임베디드 자동화 관리자"
 #: ../app/views/miq_ae_class/_embedded_methods.html.haml
 msgid "Embedded Methods"
 msgstr "임베디드 메소드"
+
+#: ../lib/manageiq/providers/workflows/engine.rb
+msgid "Embedded Workflows Provider"
+msgstr "임베디드 워크플로우 제공자"
 
 #. TRANSLATORS: en.yml key: dictionary.column.empty_dir_medium_type
 #: ../config/dictionary_strings.rb
@@ -30027,6 +30251,11 @@ msgstr "Udp 인바운드 포트 사용"
 msgid "Enabled Udp Outbound Ports"
 msgstr "Udp 아웃바운드 포트 사용"
 
+#:
+#: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
+msgid "Enabled capability values:"
+msgstr "사용 가능한 기능 값:"
+
 #. TRANSLATORS: file: product/views/SystemService.yaml
 #: ../config/yaml_strings.rb
 msgid "Enabled run levels"
@@ -30110,14 +30339,6 @@ msgstr "엔디안"
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/network_manager/cloud_subnet.rb
 msgid "Ending IP Address"
 msgstr "종료 IP 주소"
-
-#: ../app/models/host.rb
-msgid "Ending address is malformed"
-msgstr "끝 주소의 양식이 올바르지 않습니다."
-
-#: ../app/models/host.rb
-msgid "Ending address must be greater than starting address"
-msgstr "끝 주소는 시작 주소보다 커야 합니다."
 
 #: ../app/models/manageiq/providers/ibm_terraform/provider.rb
 msgid "Endpoint"
@@ -30767,7 +30988,7 @@ msgstr "관리 엔진의 오류는 다음으로 인해 초래될 수 있음:"
 msgid "Escalate Privilege"
 msgstr "권한 상승"
 
-#: ../app/views/static/evacuate-form.html.haml
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
 msgid "Evacuate Host"
 msgstr "호스트 비우기"
 
@@ -30798,6 +31019,7 @@ msgid "Evacuating Instance %{instance_name} failed: %{error_message}"
 msgstr "인스턴스 %{instance_name} 비우기 실패: %{error_message}"
 
 #: ../app/controllers/mixins/actions/vm_actions/evacuate.rb
+#: ../app/javascript/components/evacuate-form/index.jsx
 msgid "Evacuation of Instances was cancelled by the user"
 msgstr "사용자가 인스턴스 비우기를 취소했습니다."
 
@@ -31093,6 +31315,10 @@ msgid "EventStream|Event type"
 msgstr "EventStream|이벤트 유형"
 
 #: ../config/model_attributes.rb
+msgid "EventStream|Ext management system name"
+msgstr "EventStream|Ext 관리 시스템 이름"
+
+#: ../config/model_attributes.rb
 msgid "EventStream|Full data"
 msgstr "EventStream|전체 데이터"
 
@@ -31163,6 +31389,10 @@ msgstr "EventStream|Vm 위치"
 #: ../config/model_attributes.rb
 msgid "EventStream|Vm name"
 msgstr "EventStream|Vm 이름"
+
+#: ../config/model_attributes.rb
+msgid "EventStream|Vm or template name"
+msgstr "EventStream|Vm 또는 템플리트 이름"
 
 #. TRANSLATORS: file: product/views/MiqEventDefinition.yaml
 #: ../app/controllers/miq_event_definition_controller.rb
@@ -31802,6 +32032,21 @@ msgstr "타임라인 아래의 모든 항목"
 msgid "Everything under Volume Mapping"
 msgstr "볼륨 맵핑 아래의 모든 항목"
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Everything under Workflow Instances"
+msgstr "워크플로우 인스턴스의 모든 인스턴스"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Everything under Workflows"
+msgstr "워크플로우의 모든 항목"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Everything under Workflows Automation Manager"
+msgstr "워크플로우 자동화 관리자의 모든 항목"
+
 #. TRANSLATORS: en.yml key: dictionary.column.evm_owner_email
 #: ../config/dictionary_strings.rb
 msgid "Evm Owner Email"
@@ -32330,6 +32575,10 @@ msgid "ExtManagementSystem|Supports cloud volume create"
 msgstr "ExtManagementSystem|클라우드 볼륨 작성 지원"
 
 #: ../config/model_attributes.rb
+msgid "ExtManagementSystem|Supports cloud volume snapshots"
+msgstr "ExtManagementSystem|클라우드 볼륨 스냅샷 지원"
+
+#: ../config/model_attributes.rb
 msgid "ExtManagementSystem|Supports create flavor"
 msgstr "ExtManagementSystem|플레이버 작성 지원"
 
@@ -32666,7 +32915,7 @@ msgstr "%s %s 삭제에 실패했습니다."
 msgid "Failover"
 msgstr "장애 복구"
 
-#: ../app/javascript/components/timeline-options/timeline-options.jsx
+#: ../app/models/miq_policy.rb
 msgid "Failure"
 msgstr "실패"
 
@@ -33008,9 +33257,9 @@ msgstr "파일 시스템|업데이트 날짜"
 
 #: ../app/controllers/report_controller/reports/editor.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/ops/_schedule_form_filter.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/report/_schedule_form_filter.html.haml
 #: ../app/views/report/_widget_form_chart.html.haml
 #: ../app/views/report/_widget_form_report.html.haml
@@ -34528,6 +34777,11 @@ msgstr "GitRepository|Url"
 msgid "GitRepository|Verify ssl"
 msgstr "GitRepository|SSL 확인"
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Given a set of capabilities, check which attached resources will comply"
+msgstr "기능 세트가 주어지면, 연결된 어떤 리소스가 이를 준수하는지 확인합니다."
+
 #:
 #: ../app/javascript/components/visual-settings-form/visual-settings-form.schema.js
 msgid "Global Default"
@@ -34659,6 +34913,7 @@ msgstr "그룹 만료됨"
 msgid "Group Home Directory"
 msgstr "그룹 홈 디렉토리"
 
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 #: ../app/views/ops/_rbac_group_details.html.haml
 msgid "Group Information"
 msgstr "그룹 정보"
@@ -34718,7 +34973,7 @@ msgstr "그룹(%{groups_count})"
 msgid "Groups Count"
 msgstr "그룹 개수"
 
-#: ../app/views/ops/_rbac_role_details.html.haml
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
 msgid "Groups Using this Role"
 msgstr "이 역할을 사용하는 그룹"
 
@@ -35611,10 +35866,6 @@ msgstr "호스트 집계 \"%{name}\"에 호스트 \"%{hostname}\"이(가) 추가
 msgid "Host \"%{hostname}\" removed from Host Aggregate \"%{name}\""
 msgstr "호스트 집계 \"%{name}\"에서 호스트 \"%{hostname}\"이(가) 제거되었습니다."
 
-#: ../app/controllers/host_controller.rb
-msgid "Host \"%{name}\" was saved"
-msgstr "호스트 \"%{name}\"이(가) 저장되었습니다."
-
 #: ../app/controllers/mixins/actions/host_actions/misc.rb
 msgid "Host \"%{name}\": Error during '%{task}': %{message}"
 msgstr "호스트 \"%{name}\": '%{task}' 중 오류: %{message}"
@@ -35945,14 +36196,6 @@ msgstr "호스트 이름"
 msgid "Host Network Information"
 msgstr "호스트 네트워크 정보"
 
-#: ../app/models/host.rb
-msgid "Host Not Resettable - No IPMI Address"
-msgstr "호스트 재설정 불가능 - IPMI 주소 없음"
-
-#: ../app/models/host.rb
-msgid "Host Not Resettable - No IPMI Credentials"
-msgstr "호스트 재설정 불가능 - IPMI 인증 정보 없음"
-
 #. TRANSLATORS: file: product/reports/190_Configuration Management - Physical Servers/030_Server Availability.yaml
 #: ../config/yaml_strings.rb
 msgid "Host OS"
@@ -36025,10 +36268,6 @@ msgstr "호스트 재설정 요청"
 #: ../app/models/manageiq/providers/openstack/network_manager/cloud_subnet.rb
 msgid "Host Routes"
 msgstr "호스트 라우트"
-
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
-msgid "Host Selection"
-msgstr "호스트 선택사항"
 
 #: ../config/model_display_names.rb
 msgid "Host Service Group"
@@ -36155,10 +36394,6 @@ msgstr "데이터 저장소 파일을 새로 고치려면 호스트가 EMS에 �
 #: ../app/models/manageiq/providers/vmware/infra_manager/vm_or_template_shared/operations/relocation.rb
 msgid "Host not specified, unable to migrate VM"
 msgstr "호스트가 지정되지 않음, VM을 마이그레이션할 수 없습니다."
-
-#: ../app/views/host/_form.html.haml
-msgid "Host platform"
-msgstr "호스트 플랫폼"
 
 #: ../config/model_attributes.rb
 msgid "Host service group"
@@ -36497,18 +36732,21 @@ msgstr "호스팅 데이터베이스"
 #: ../app/helpers/configured_system_helper/textual_summary.rb
 #: ../app/helpers/host_helper.rb
 #: ../app/helpers/host_helper/textual_summary.rb
-#: ../app/helpers/ops_helper.rb:24 ../app/helpers/ops_helper.rb
-#: ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb:33 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../app/views/ops/_settings_server_tab.html.haml
 #: ../config/yaml_strings.rb
 msgid "Hostname"
 msgid_plural "Hostnames"
 msgstr[0] "호스트 이름"
 
-#: ../app/views/host/_form.html.haml
 #: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
 msgid "Hostname (or IPv4 or IPv6 address)"
 msgstr "호스트 이름(또는 IPv4 또는 IPv6 주소)"
+
+#: ../app/javascript/components/host-edit-form/host-edit-form.schema.js
+msgid "Hostname (or IPv4 or IPv6 address:"
+msgstr "호스트 이름(또는 IPv4 또는 IPv6 주소):"
 
 #: ../app/views/ems_container/_form_fields.html.haml
 #: ../app/views/ems_infra/_form_fields.html.haml
@@ -36550,6 +36788,8 @@ msgstr "호스트 이름 또는 IPv4/IPv6 주소"
 #: ../app/helpers/infra_networking_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/helpers/storage_helper/textual_summary.rb
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 #: ../app/javascript/components/provider-dashboard-charts/charts_config.js
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/services/ems_infra_dashboard_service.rb
@@ -37248,6 +37488,10 @@ msgstr "IBM Cloud 제공자"
 msgid "IBM Power HMC Provider"
 msgstr "IBM Power HMC 제공자"
 
+#: ../app/models/manageiq/providers/ibm_power_vc/cloud_manager.rb
+msgid "IBM PowerVC"
+msgstr "IBM PowerVC"
+
 #: ../lib/manageiq/providers/ibm_power_vc/engine.rb
 msgid "IBM PowerVC Provider"
 msgstr "IBM PowerVC 제공자"
@@ -37279,11 +37523,11 @@ msgstr "ICMP"
 #. TRANSLATORS: file: product/views/MiqReportResult.yaml
 #. TRANSLATORS: file: product/views/MiqWidget.yaml
 #. TRANSLATORS: file: product/views/PlacementGroup.yaml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
+#: ../app/helpers/settings_users_helper.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
-#: ../app/views/ops/_rbac_group_details.html.haml
-#: ../app/views/ops/_rbac_role_details.html.haml
-#: ../app/views/ops/_rbac_user_details.html.haml
 #: ../config/yaml_strings.rb
 msgid "ID"
 msgstr "ID"
@@ -37319,9 +37563,9 @@ msgstr "IP"
 #: ../app/helpers/ems_automation_helper.rb:18 ../app/helpers/host_helper.rb
 #: ../app/helpers/host_helper/textual_summary.rb
 #: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
 #: ../app/javascript/components/subnet-form/subnet-form.schema.js
-#: ../app/views/ops/_server_desc.html.haml
 #: ../app/views/ops/_settings_server_tab.html.haml
 #: ../app/views/vm_common/_config.html.haml:101 ../config/yaml_strings.rb
 msgid "IP Address"
@@ -37356,10 +37600,6 @@ msgstr "IP 범위"
 msgid "IP Version"
 msgstr "IP 버전"
 
-#: ../app/models/host.rb
-msgid "IP address octets must be 0 to 255"
-msgstr "IP 주소 옥텟은 0 ~ 255여야 합니다."
-
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
 msgid "IP protocol"
 msgstr "IP 프로토콜"
@@ -37370,7 +37610,6 @@ msgid "IP-address field has to be either blank or a valid IPv4 address"
 msgstr "IP 주소 필드는 비어 있거나 올바른 IPv4 주소여야 함"
 
 #: ../app/helpers/textual_summary_helper.rb
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 msgid "IPMI"
 msgstr "IPMI"
 
@@ -37381,15 +37620,8 @@ msgid "IPMI Enabled"
 msgstr "IPMI 사용"
 
 #: ../app/helpers/host_helper/textual_summary.rb
-#: ../app/views/host/_form.html.haml
 msgid "IPMI IP Address"
 msgstr "IPMI IP 주소"
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid ""
-"IPMI IP Address, Username and matching password fields are needed to perform "
-"verification of credentials"
-msgstr "인증 정보의 유효성 검증을 수행하려면 IPMI IP 주소, 사용자 이름, 일치하는 비밀번호 필드가 필요합니다."
 
 #: ../app/helpers/automation_manager_configured_system_helper.rb
 #: ../app/helpers/configuration_script_helper.rb
@@ -37924,6 +38156,10 @@ msgstr "git에서 가져옴"
 #: ../config/dictionary_strings.rb
 msgid "In My LDAP Group?"
 msgstr "내 LDAP 그룹에?"
+
+#: ../app/javascript/components/async-action-button.jsx
+msgid "In Progress"
+msgstr "진행 중"
 
 #: ../app/helpers/ops_helper/textual_summary.rb
 msgid "In Use"
@@ -39387,7 +39623,7 @@ msgstr "마지막 알려진 데이터 저장소 경로"
 msgid "Last Known Size"
 msgstr "마지막 알려진 크기"
 
-#: ../app/helpers/ops_helper.rb:42 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:51 ../app/helpers/ops_helper.rb
 msgid "Last Log Collection"
 msgstr "마지막 로그 수집"
 
@@ -39405,7 +39641,7 @@ msgstr "마지막 로그온"
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqProvision.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
-#: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:57 ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
 #: ../config/yaml_strings.rb
@@ -39548,6 +39784,7 @@ msgstr "마지막 상태 전이 시간"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
 #: ../config/yaml_strings.rb
@@ -39815,6 +40052,7 @@ msgid "Live migrating Instance %{instance_name} failed: %{error_message}"
 msgstr "라이브 마이그레이션 인스턴스 %{instance_name} 실패: %{error_message}"
 
 #: ../app/controllers/mixins/actions/vm_actions/live_migrate.rb
+#: ../app/javascript/components/live-migrate-form/index.jsx
 msgid "Live migration of Instances was cancelled by the user"
 msgstr "사용자가 인스턴스의 라이브 마이그레이션을 취소했습니다."
 
@@ -40338,7 +40576,7 @@ msgstr "로그 저장소(Depot) 설정이 저장되었습니다."
 msgid "Log Depot Settings were validated"
 msgstr "로그 저장소(Depot) 설정의 유효성이 검증되었습니다."
 
-#: ../app/helpers/ops_helper.rb:41 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:50 ../app/helpers/ops_helper.rb
 msgid "Log Depot URI"
 msgstr "로그 저장소(Depot) URI"
 
@@ -40557,7 +40795,7 @@ msgstr "로고 파일 크기"
 msgid "Logo Updated At"
 msgstr "로고 업데이트 시간"
 
-#: ../app/models/host.rb:651 ../app/models/host.rb
+#: ../app/models/host.rb:654 ../app/models/host.rb
 msgid "Logon to platform [%{os_name}] not supported"
 msgstr "플랫폼 [%{os_name}]에 대한 로그온이 지원되지 않음"
 
@@ -40573,9 +40811,9 @@ msgstr "이 %{product} Server에 대한 로그를 볼 수 없습니다."
 
 #: ../app/helpers/catalog_helper.rb:47 ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/settings-category-form/schema.js
+#: ../app/javascript/components/settings-company-tags/helper.js
 #: ../app/views/catalog/_form_details_info.html.haml
 #: ../app/views/catalog/_st_angular_form.html.haml
-#: ../app/views/ops/_settings_co_tags_tab.html.haml
 msgid "Long Description"
 msgstr "자세한 설명"
 
@@ -40612,7 +40850,6 @@ msgstr "가장 낮은 랙 이름"
 #: ../app/helpers/textual_mixins/vm_common.rb
 #: ../app/helpers/guest_device_helper/textual_summary.rb
 #: ../app/helpers/physical_server_helper/textual_summary.rb
-#: ../app/views/host/_form.html.haml
 #: ../app/views/vm_common/_reconfigure.html.haml
 msgid "MAC Address"
 msgid_plural "MAC Addresses"
@@ -41240,6 +41477,7 @@ msgstr "제조업체"
 msgid "Manufacturer / Model"
 msgstr "제조업체/모델"
 
+#: ../app/javascript/components/settings-label-tag-mapping/index.jsx
 #: ../app/views/ops/_all_tabs.html.haml
 msgid "Map Tags"
 msgstr "태그 맵핑"
@@ -41315,7 +41553,7 @@ msgstr "최대 활성 VM 스캔 수"
 msgid "Max Available"
 msgstr "최대 사용 가능"
 
-#: ../app/helpers/ops_helper.rb:171 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:180 ../app/helpers/ops_helper.rb
 msgid "Max Concurrent"
 msgstr "최대 동시 수"
 
@@ -41459,7 +41697,7 @@ msgstr "최대 사용"
 msgid "Max Used Value"
 msgstr "최대 사용된 값"
 
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 msgid "Max active VM Scans"
 msgstr "최대 활성 VM 스캔 수"
 
@@ -42140,8 +42378,9 @@ msgstr "메모리 공유 레벨"
 
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
 #: ../app/helpers/miq_action_helper.rb:55 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
-#: ../app/views/ops/_server_desc.html.haml:27 ../config/yaml_strings.rb
+#: ../config/yaml_strings.rb
 msgid "Memory Size"
 msgstr "메모리 크기"
 
@@ -42159,8 +42398,8 @@ msgstr "메모리 총 비용"
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
 #. TRANSLATORS: file: product/views/OsProcess-processes.yaml
 #: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
-#: ../app/views/ops/_server_desc.html.haml
 #: ../app/views/vm_common/_right_size.html.haml
 #: ../config/yaml_strings.rb
 msgid "Memory Usage"
@@ -42254,6 +42493,7 @@ msgstr "메뉴"
 #: ../app/helpers/container_build_helper/textual_summary.rb
 #: ../app/helpers/container_helper/textual_summary.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/data-tables/datastore/helper.js
 #: ../app/javascript/components/data-tables/requests-table/index.jsx
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
@@ -42263,7 +42503,6 @@ msgstr "메뉴"
 #: ../app/views/miq_ae_class/_class_fields.html.haml
 #: ../app/views/miq_policy_export/import.html.haml
 #: ../app/views/miq_request/_ae_prov_show.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 #: ../app/views/static/edit_alert_dialog.html.haml
@@ -43686,7 +43925,7 @@ msgid "Migrate %{vm_or_template}"
 msgstr "%{vm_or_template} 마이그레이션"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb
-#: ../app/views/vm_common/_live_migrate.html.haml
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 msgid "Migrate Instance"
 msgstr "인스턴스 마이그레이션"
 
@@ -47119,6 +47358,12 @@ msgstr "모달"
 msgid "Mode"
 msgstr "모드"
 
+#: ../app/models/manageiq/providers/autosde/storage_manager/cloud_volume.rb
+msgid ""
+"Mode: Create volume(s) using an existing storage service or create a new "
+"service as well"
+msgstr "모드: 기존 스토리지 서비스를 사용하여 볼륨 또는 새 서비스를 생성합니다."
+
 #. TRANSLATORS: file: product/views/FirmwareTarget.yaml
 #: ../app/helpers/firmware_binary_helper/textual_summary.rb
 #: ../app/helpers/physical_server_helper/textual_summary.rb
@@ -47147,9 +47392,18 @@ msgstr "클라우드 볼륨 \"%s\"의 수정이 정상적으로 큐에 대기되
 msgid "Modification of Credential \"%s\" has been successfully queued."
 msgstr "인증 정보 \"%s\"의 수정이 정상적으로 큐에 대기되었습니다."
 
+#: ../app/javascript/components/host-edit-form/host-edit-form.jsx
+msgid "Modification of Host %s has been successfully queued."
+msgstr "%s 호스트 수정이 대기열에 추가되었습니다."
+
 #: ../app/javascript/components/host-aggregate-form/index.jsx
 msgid "Modification of Host Aggregate %s has been successfully queued"
 msgstr "호스트 집계 %s의 수정이 큐에 대기되었습니다."
+
+#: ../app/javascript/components/host-initiator-group-form/index.jsx
+msgid ""
+"Modification of Host Initiator Group \"%s\" has been successfully queued."
+msgstr "호스트 개시자 그룹 \"%s\"의 수정이 성공적으로 대기열에 추가되었습니다."
 
 #: ../app/javascript/components/physical-storage-form/index.jsx
 msgid "Modification of Physical Storage \"%s\" has been successfully queued."
@@ -47162,6 +47416,10 @@ msgstr "스토리지 서비스 \"%s\"의 수정이 큐에 대기되었습니다.
 #: ../app/javascript/components/pxe-image-type-form/index.jsx
 msgid "Modification of System Image Type \"%s\" has been successfully queued."
 msgstr "시스템 이미지 유형 \"%s\"의 수정이 큐에 대기되었습니다."
+
+#: ../app/javascript/components/host-edit-form/host-edit-form.jsx
+msgid "Modification of multiple Hosts has been successfully queued."
+msgstr "여러 호스트 수정이 대기열에 추가되었습니다."
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -47645,6 +47903,11 @@ msgstr "볼륨 맵핑 수정"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Modify Volume Snapshots"
+msgstr "볼륨 스냅샷 수정"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Modify Volumes"
 msgstr "볼륨 수정"
 
@@ -47652,6 +47915,11 @@ msgstr "볼륨 수정"
 #: ../config/yaml_strings.rb
 msgid "Modify Widgets"
 msgstr "위젯 수정"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Modify Workflows"
+msgstr "워크플로우 수정"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -48230,11 +48498,10 @@ msgstr "보안 정책 규칙의 이름"
 msgid "Name*"
 msgstr "이름*"
 
-#:
+#: ../app/javascript/components/host-edit-form/host-edit-form.schema.js
 #: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js
 #: ../app/javascript/components/host-initiator-group-form/host-initiator-group-form.schema.js
 #: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
-#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 msgid "Name:"
 msgstr "이름:"
 
@@ -49327,6 +49594,10 @@ msgstr[0] "새 설정이 VM에 영향을 미칩니다."
 msgid "New tab"
 msgstr "새 탭"
 
+#: ../app/models/manageiq/providers/autosde/storage_manager/cloud_volume.rb
+msgid "New volume name"
+msgstr "새 볼륨 이름"
+
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/vpc/cloud_manager/provision_workflow/volumes.rb
 msgid "New volumes has the following problems: %{error}"
@@ -49373,11 +49644,6 @@ msgstr "아니오"
 #: src/rbac-forms/rbacUserTagsList.jsx
 msgid "No %s Tags have been assigned"
 msgstr "%s 태그가 지정되지 않았습니다."
-
-#:
-#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
-msgid "No %s with selected capabilities."
-msgstr "선택한 기능이 포함된 %s이(가) 없습니다."
 
 #: ../app/models/miq_report/generator.rb
 msgid "No %{class_name} object provided"
@@ -49453,7 +49719,7 @@ msgstr "%{tag} %{model}이(가) %{time}을(를) 실행 중이지 않음"
 msgid "No %{tag} %{model} were running %{time}"
 msgstr "%{tag} %{model}이(가) %{time}을(를) 실행 중이지 않음"
 
-#: ../app/views/ops/_rbac_tag_box.html.haml
+#: ../app/helpers/settings_rbac_tag_helper.rb
 msgid "No %{tenant_name} Tags have been assigned"
 msgstr "%{tenant_name} 태그가 지정되지 않았습니다."
 
@@ -49527,7 +49793,7 @@ msgstr "이 호스트의 용량 & 사용률 데이터가 수집되지 않았습�
 msgid "No Capacity & Utilization data has been collected for this Template"
 msgstr "이 템플리트의 용량 & 사용률 데이터가 수집되지 않았습니다."
 
-#: ../app/controllers/mixins/chargeback_preview.rb
+#: ../app/controllers/mixins/chargeback_preview_mixin.rb
 #: ../app/helpers/application_helper/button/vm_perf.rb
 msgid "No Capacity & Utilization data has been collected for this VM"
 msgstr "이 VM의 용량 & 사용률 데이터가 수집되지 않았습니다."
@@ -49796,7 +50062,7 @@ msgstr "삭제할 보안 그룹이 선택되지 않았습니다."
 msgid "No Servers Assigned to Roles found."
 msgstr "역할에 지정된 서버를 찾을 수 없습니다."
 
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 msgid "No Servers Found."
 msgstr "서버를 찾을 수 없습니다."
 
@@ -49899,10 +50165,6 @@ msgstr "가져올 위젯 없음"
 #: ../app/javascript/components/dashboard_toolbar.jsx
 msgid "No Widgets available to add"
 msgstr "추가 가능한 위젯 없음"
-
-#: ../app/views/ops/_diagnostics_zones_tab.html.haml
-msgid "No Zones found."
-msgstr "구역을 찾을 수 없습니다."
 
 #: ../app/views/miq_alert/_alert_builtin_exp.html.haml
 msgid "No alarms found for the selected Provider"
@@ -50050,10 +50312,6 @@ msgstr "이 %{model}에 사용 가능한 이벤트 없음"
 #: ../app/controllers/application_controller/performance.rb
 msgid "No events available for this Cluster"
 msgstr "이 클러스터에 사용 가능한 이벤트 없음"
-
-#: ../app/controllers/application_controller/timelines.rb
-msgid "No events available for this timeline"
-msgstr "이 타임라인에 사용 가능한 이벤트 없음"
 
 #: ../app/controllers/report_controller/reports/editor.rb
 msgid "No fields were moved up"
@@ -50286,6 +50544,11 @@ msgstr "스토리지 서비스 작성을 지원하는 스토리지 제공자가 
 msgid "No storage providers support creating volume mapping."
 msgstr "스토리지 제공자가 볼륨 맵핑 작성을 지원하지 않습니다."
 
+#:
+#: ../app/javascript/helpers/storage_manager/filter-resources-by-capabilities.js
+msgid "No storage resource with selected capabilities."
+msgstr "선택한 기능이 있는 스토리지 리소스가 없습니다."
+
 #: ../app/controllers/network_router_controller.rb
 msgid "No subnets available to add interfaces to Router \"%{name}\""
 msgstr "라우터 \"%{name}\"에 인터페이스를 추가할 수 있는 서브넷이 없습니다."
@@ -50503,6 +50766,11 @@ msgstr "배치에서 일부 호스트를 제거할 수 없습니다."
 #: ../app/helpers/host_helper/textual_summary.rb
 msgid "Not available. Did you assigned Cloud Provider and run SSA?"
 msgstr "사용할 수 없습니다. 클라우드 제공자를 지정하고 SSA를 실행했습니까?"
+
+#:
+#: ../app/javascript/helpers/storage_manager/filter-service-by-capabilities.js
+msgid "Not found"
+msgstr "찾을 수 없음"
 
 #: ../app/views/shared/views/_alerts_list.html.haml
 #: ../app/views/static/edit_alert_dialog.html.haml
@@ -50998,8 +51266,8 @@ msgstr "OVF 템플리트"
 msgid "Object"
 msgstr "오브젝트"
 
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "Object Attribute"
@@ -51020,9 +51288,9 @@ msgid "Object Count"
 msgstr "오브젝트 개수"
 
 #: ../app/helpers/miq_action_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "Object Details"
@@ -51057,7 +51325,7 @@ msgstr "오브젝트 레이블"
 msgid "Object Name"
 msgstr "오브젝트 이름"
 
-#: ../app/views/ops/_schedule_show.html.haml
+#: ../app/helpers/settings_schedule_helper.rb
 msgid "Object Selection"
 msgstr "오브젝트 선택사항"
 
@@ -51084,8 +51352,8 @@ msgstr "오브젝트 저장소 컨테이너"
 msgid "Object Store Objects"
 msgstr "오브젝트 저장소 오브젝트"
 
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/oldjs/controllers/alerts/alerts_overview_controller.js
-#: ../app/views/ops/_schedule_show.html.haml
 msgid "Object Type"
 msgstr "오브젝트 유형"
 
@@ -51178,7 +51446,7 @@ msgstr "오류 상태"
 msgid "On Exit"
 msgstr "종료"
 
-#: ../app/views/static/evacuate-form.html.haml
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
 msgid "On Shared Storage"
 msgstr "공유 스토리지에"
 
@@ -52821,6 +53089,7 @@ msgstr "상위 호스트 플랫폼"
 msgid "Parent Name"
 msgstr "상위 이름"
 
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 msgid "Parent Request"
 msgstr "상위 요청"
@@ -53254,6 +53523,10 @@ msgstr "백분율, 2개 10진수(99.00%)"
 #: ../config/yaml_strings.rb
 msgid "Percentage (99%)"
 msgstr "백분율(99%)"
+
+#: ../app/javascript/components/async-action-button.jsx
+msgid "Perform Action"
+msgstr "작업 이행"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -54379,7 +54652,7 @@ msgid_plural "Physical Switches (Lenovo)"
 msgstr[0] "물리적 스위치(Lenovo)"
 
 #:
-#: ../app/models/manageiq/providers/cisco_intersight/physical_infra_manager/physical_switch_network_ports.rb
+#: ../app/models/manageiq/providers/cisco_intersight/physical_infra_manager/physical_switch_network_port.rb
 msgid "Physical Switch Network Port (CiscoIntersight)"
 msgid_plural "Physical Switches Network Ports (CiscoIntersight)"
 msgstr[0] "물리적 스위치 네트워크 포트(CiscoIntersight)"
@@ -56118,7 +56391,7 @@ msgstr "PDF로 인쇄 또는 내보내기"
 msgid "Print the full report (all rows) or export it as a PDF file"
 msgstr "전체 보고서(모든 행)를 인쇄하거나 PDF 파일로 내보내기"
 
-#: ../app/helpers/ops_helper.rb:168 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:177 ../app/helpers/ops_helper.rb
 msgid "Priority"
 msgstr "우선순위"
 
@@ -56324,7 +56597,7 @@ msgstr[0] "제품 기능"
 msgid "Product Features (Editing)"
 msgstr "제품 기능(편집)"
 
-#: ../app/views/ops/_rbac_role_details.html.haml
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
 msgid "Product Features (Read Only)"
 msgstr "제품 기능(읽기 전용)"
 
@@ -56425,6 +56698,7 @@ msgstr "프로젝트 이름"
 msgid "Project Uid"
 msgstr "프로젝트 Uid"
 
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 #: ../app/views/ops/_rbac_group_details.html.haml
 msgid "Project/Tenant"
 msgstr "프로젝트/테넌트"
@@ -56876,13 +57150,13 @@ msgstr "ProviderTagMapping|지역 번호"
 #: ../app/controllers/ems_network_controller.rb
 #: ../app/controllers/ems_physical_infra_controller.rb
 #: ../app/controllers/ops_controller.rb
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/helpers/ops_helper/textual_summary.rb
 #: ../app/helpers/pxe_helper/textual_summary.rb
 #: ../app/javascript/oldjs/controllers/container_dashboard/util/dashboard-utils-factory.js
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/presenters/tree_builder_utilization.rb
 #: ../app/services/ems_physical_infra_dashboard_service.rb
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 #: ../config/yaml_strings.rb
 msgid "Providers"
 msgstr "제공자"
@@ -57100,7 +57374,7 @@ msgstr "프로비저닝된 크기"
 msgid "Provisioned Space Percent of Total"
 msgstr "총계의 프로비저닝된 공간 백분율"
 
-#: ../app/views/miq_request/_request.html.haml
+#: ../app/helpers/request_details_helper.rb
 msgid "Provisioned VMs"
 msgstr "프로비저닝된 VM"
 
@@ -57943,6 +58217,7 @@ msgstr "영역"
 #: ../app/helpers/container_build_helper/textual_summary.rb
 #: ../app/helpers/container_helper/textual_summary.rb
 #: ../app/helpers/container_node_helper/textual_summary.rb
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
 #: ../config/yaml_strings.rb
@@ -58291,6 +58566,11 @@ msgstr "Block Storage 관리자 새로 고치기"
 #: ../config/yaml_strings.rb
 msgid "Refresh Cloud Providers"
 msgstr "클라우드 제공자 새로 고치기"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Refresh Cloud Volumes"
+msgstr "클라우드 볼륨 새로 고침"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -58732,6 +59012,12 @@ msgstr "선택한 항목에 관련된 모든 항목에 대한 관계 및 전원 
 #: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
 msgid ""
 "Refresh relationships and power states for all items related to these Host "
+"Initiator Clusters?"
+msgstr "이러한 호스트 개시자 클러스터와 관련된 모든 항목에 대한 관계 및 전원 상태를 새로 고치시겠어요?"
+
+#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
+msgid ""
+"Refresh relationships and power states for all items related to these Host "
 "Initiator Groups"
 msgstr "이러한 호스트 이니시에이터 그룹과 관련된 모든 항목에 대한 관계 및 전원 상태 새로 고치기"
 
@@ -58740,12 +59026,6 @@ msgid ""
 "Refresh relationships and power states for all items related to these Host "
 "Initiators"
 msgstr "해당 호스트 이니시에이터와 관련된 모든 항목에 대한 관계 및 전원 상태 새로 고치기"
-
-#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to these Host "
-"Initiators Cluster?"
-msgstr "이러한 호스트 이니시에이터 클러스터와 관련된 모든 항목에 대한 관계 및 전원 상태를 새로 고치시겠습니까?"
 
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
 msgid ""
@@ -59410,6 +59690,7 @@ msgstr[0] "관계"
 #: ../app/helpers/network_port_helper/textual_summary.rb
 #: ../app/helpers/network_router_helper/textual_summary.rb
 #: ../app/helpers/network_service_helper/textual_summary.rb
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/helpers/ops_helper/textual_summary.rb
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb
 #: ../app/helpers/persistent_volume_helper/textual_summary.rb
@@ -59430,7 +59711,6 @@ msgstr[0] "관계"
 #: ../app/helpers/vm_helper/textual_summary.rb
 #: ../app/views/configuration_profile/show.html.haml
 #: ../app/views/ems_configuration/show.html.haml
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 msgid "Relationships"
 msgstr "관계"
 
@@ -59518,6 +59798,10 @@ msgstr "현재 표시 다시 로드"
 msgid "Relocate not supported because VM is not active"
 msgstr "VM이 활성 상태가 아니므로 재배치가 지원되지 않음"
 
+#: ../app/models/manageiq/providers/vmware/infra_manager/host.rb
+msgid "Remote"
+msgstr "원격"
+
 #: ../app/helpers/application_helper/toolbar/ems_cloud_center.rb
 #: ../app/helpers/application_helper/toolbar/ems_infra_center.rb
 #: ../app/helpers/application_helper/toolbar/ems_physical_infra_center.rb
@@ -59529,7 +59813,6 @@ msgid "Remote Console Workers"
 msgstr "원격 콘솔 작업자"
 
 #: ../app/helpers/textual_summary_helper.rb
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 msgid "Remote Login"
 msgstr "원격 로그인"
 
@@ -60048,11 +60331,6 @@ msgstr "서비스 제거"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
-msgid "Remove Snapshot"
-msgstr "스냅샷 제거"
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
 msgid "Remove Storage Manager"
 msgstr "스토리지 관리자 제거"
 
@@ -60129,6 +60407,11 @@ msgstr "호스트 이니시에이터 제거"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Remove a Host Initiator Group"
+msgstr "호스트 개시자 그룹 삭제"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Remove a Network Service"
 msgstr "네트워크 서비스 제거"
 
@@ -60150,6 +60433,11 @@ msgstr "이 인스턴스에서 보안 그룹 제거"
 #: ../config/yaml_strings.rb
 msgid "Remove a Storage Service"
 msgstr "스토리지 서비스 제거"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Remove a Volume Snapshot"
+msgstr "볼륨 스냅샷 삭제"
 
 #: ../app/javascript/components/button-group/group-form.schema.js
 msgid "Remove all"
@@ -60714,7 +61002,7 @@ msgid "Replicators Count"
 msgstr "복제자 개수"
 
 #: ../app/controllers/optimization_controller.rb
-#: ../app/views/utilization/_utilization_tabs.html.haml
+#: ../app/helpers/utilization_helper.rb
 msgid "Report"
 msgstr "보고서"
 
@@ -60852,7 +61140,7 @@ msgstr "보고서 이름"
 msgid "Report no longer exists"
 msgstr "보고서가 더 이상 존재하지 않습니다."
 
-#: ../app/controllers/mixins/chargeback_preview.rb
+#: ../app/controllers/mixins/chargeback_preview_mixin.rb
 #: ../app/controllers/report_controller/reports.rb
 msgid ""
 "Report preview generation returned: Status [%{status}] Message [%{message}]"
@@ -60930,10 +61218,10 @@ msgid "Repository Options"
 msgstr "저장소 옵션"
 
 #: ../app/helpers/miq_action_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "Request"
@@ -60991,6 +61279,7 @@ msgstr "요청 날짜:"
 msgid "Request Denial"
 msgstr "요청 거부"
 
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
 msgid "Request Details"
@@ -61003,6 +61292,7 @@ msgstr[0] "요청 이벤트"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml:10 ../config/yaml_strings.rb
 msgid "Request ID"
 msgstr "요청 ID"
@@ -61039,6 +61329,7 @@ msgid "Request Memory bytes"
 msgstr "메모리 바이트 요청"
 
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../config/yaml_strings.rb
 msgid "Request State"
@@ -61051,6 +61342,7 @@ msgstr[0] "요청 태스크"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml:31 ../config/yaml_strings.rb
 msgid "Request Type"
 msgstr "요청 유형"
@@ -61180,6 +61472,7 @@ msgstr "요청된 팟(Pod)"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml:26 ../config/yaml_strings.rb
 msgid "Requester"
 msgstr "요청자"
@@ -61213,17 +61506,12 @@ msgstr "요청"
 msgid "Required"
 msgstr "필수"
 
-#:
-#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
+#: ../app/models/manageiq/providers/autosde/storage_manager/cloud_volume.rb
+#: ../app/models/manageiq/providers/autosde/storage_manager/storage_service.rb
 msgid "Required Capabilities"
 msgstr "필수 기능"
 
-#: ../app/models/manageiq/providers/autosde/storage_manager/cloud_volume.rb
-#: ../app/models/manageiq/providers/autosde/storage_manager/storage_service.rb
-msgid "Required Capabilities (filters by exact match)"
-msgstr "필수 기능(정확한 일치로 필터링)"
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
+#: ../app/models/manageiq/providers/ovirt/infra_manager/host.rb
 msgid "Required if SSH login is disabled for the Default account."
 msgstr "기본 계정의 SSH 로그인이 사용 안함으로 설정되어 있을 경우에 필요합니다."
 
@@ -61438,7 +61726,8 @@ msgstr[0] "리소스 조치"
 msgid "Resource Category"
 msgstr "리소스 카테고리"
 
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 msgid "Resource Entity"
 msgstr "리소스 엔티티"
 
@@ -61456,8 +61745,9 @@ msgstr "리소스  그룹"
 msgid "Resource Instance Id"
 msgstr "자원 인스턴스 ID"
 
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 #: ../app/views/ops/_label_tag_mapping_form.html.haml
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
 msgid "Resource Label"
 msgstr "리소스 레이블"
 
@@ -62411,6 +62701,7 @@ msgstr "역할 \"%{name}\""
 msgid "Role Access"
 msgstr "역할 액세스"
 
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
 #: ../app/views/ops/_rbac_role_details.html.haml
 msgid "Role Information"
 msgstr "역할 정보"
@@ -62741,6 +63032,10 @@ msgstr "SPID"
 
 #: ../app/helpers/textual_summary_helper.rb
 msgid "SSH Key Pair"
+msgstr "SSH 키 쌍"
+
+#: ../app/models/manageiq/providers/openstack/infra_manager/host.rb
+msgid "SSH Keypair"
 msgstr "SSH 키 쌍"
 
 #: ../app/helpers/host_helper/textual_summary.rb
@@ -63290,10 +63585,10 @@ msgstr ""
 
 #. TRANSLATORS: file: product/views/MiqSchedule.yaml
 #: ../app/controllers/report_controller.rb
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
 #: ../app/presenters/tree_builder_ops_settings.rb
 #: ../app/views/ops/_settings_details_tab.html.haml
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 #: ../config/yaml_strings.rb
 msgid "Schedules"
 msgstr "스케줄"
@@ -63913,11 +64208,6 @@ msgstr "AMQP에서 이벤팅이 사용 가능하게 설정되어 있지 않은 �
 msgid "Select Classes to copy"
 msgstr "복사할 클래스 선택"
 
-#: ../app/views/static/evacuate-form.html.haml
-#: ../app/views/vm_common/_live_migrate.html.haml
-msgid "Select Destination Host"
-msgstr "대상 호스트 선택"
-
 #: ../app/controllers/miq_ae_customization_controller.rb
 msgid "Select Dialogs to import"
 msgstr "가져올 대화 상자 선택"
@@ -63977,6 +64267,10 @@ msgstr "펌웨어 2진 선택"
 #: ../app/javascript/components/set-ownership-form/ownership-form.schema.js
 msgid "Select a Group:"
 msgstr "그룹 선택:"
+
+#: ../app/javascript/components/host-edit-form/host-edit-form.schema.js
+msgid "Select a Host to validate against"
+msgstr "유효성을 검증할 호스트를 선택합니다"
 
 #: ../app/javascript/components/server-provision.schema.js
 msgid "Select a PXE Image"
@@ -64269,6 +64563,20 @@ msgstr "맨 위로 이동시킬 필드를 하나만 또는 연속으로 선택�
 #: ../app/controllers/report_controller/menus.rb
 msgid "Select only one or consecutive fields to move up"
 msgstr "위로 이동시킬 필드를 하나만 또는 연속으로 선택하십시오."
+
+#:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+msgid ""
+"Select storage resources to attach to the service. The new Volume(s) will be "
+"created on these resources."
+msgstr "서비스에 첨부할 스토리지 리소스를 선택합니다. 이 리소스에 새 볼륨이 생성됩니다."
+
+#:
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
+msgid ""
+"Select storage resources to attach to the service. Volumes for this service "
+"will be created on these resources."
+msgstr "서비스에 첨부할 스토리지 리소스를 선택합니다. 이 서비스용 볼륨이 이 리소스에 생성됩니다."
 
 #: src/tagging/components/InnerComponents/TagSelector.js
 msgid "Select tag category"
@@ -64697,11 +65005,11 @@ msgstr "ServerRole|업데이트 날짜"
 
 #: ../app/controllers/physical_server_controller.rb
 #: ../app/helpers/application_helper/title.rb
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/javascript/components/provider-dashboard-charts/charts_config.js
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/services/ems_physical_infra_dashboard_service.rb
 #: ../app/views/ops/_all_tabs.html.haml
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 #: ../app/views/vm_common/_evm_relationship.html.haml
 msgid "Servers"
 msgstr "서버"
@@ -64887,6 +65195,7 @@ msgstr[0] "서비스 연계 워크플로우"
 
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 msgid "Service Name"
 msgstr "서비스 이름"
 
@@ -67008,7 +67317,7 @@ msgid "Show hourly data from"
 msgstr "시간별 데이터 표시"
 
 #: ../app/helpers/settings_tags_tabs_helper.rb
-#: ../app/views/ops/_settings_co_tags_tab.html.haml
+#: ../app/javascript/components/settings-company-tags/helper.js
 msgid "Show in Console"
 msgstr "콘솔에 표시"
 
@@ -67652,8 +67961,8 @@ msgstr "SmartProxy 선호도"
 msgid "SmartProxy Builds"
 msgstr "SmartProxy 빌드"
 
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/javascript/components/zone-form/zone-form.schema.js
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 msgid "SmartProxy Server IP"
 msgstr "SmartProxy 서버 IP"
 
@@ -68233,6 +68542,10 @@ msgstr "시작 연결됨?"
 msgid "Start Date"
 msgstr "시작 날짜"
 
+#: ../app/javascript/forms/mappers/validatorMapper.jsx
+msgid "Start Date must come before End Date"
+msgstr "시작 날짜는 종료 날짜보다 이전이어야 합니다."
+
 #: ../app/models/miq_template/operations.rb
 msgid "Start Operation is not available for Images and VM Templates."
 msgstr "이미지 및 VM 템플리트에 대해 시작 조작을 사용할 수 없습니다."
@@ -68334,7 +68647,8 @@ msgstr "시작됨"
 msgid "Started At"
 msgstr "시작 시간"
 
-#: ../app/helpers/ops_helper.rb:209 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 msgid "Started On"
 msgstr "시작일"
 
@@ -68367,10 +68681,6 @@ msgstr "시작 프로세스는 필수입니다."
 #: ../app/views/report/_schedule_form_timer.html.haml
 msgid "Starting Time"
 msgstr "시작 시간"
-
-#: ../app/models/host.rb
-msgid "Starting address is malformed"
-msgstr "시작 주소의 양식이 올바르지 않습니다."
 
 #: ../app/views/miq_ae_tools/_resolve_form_buttons.html.haml
 msgid "Starting process must be specified"
@@ -68533,11 +68843,13 @@ msgstr "루트 오케스트레이션 스택의 상태"
 #: ../app/helpers/ems_network_helper/textual_summary.rb
 #: ../app/helpers/ems_physical_infra_helper/textual_summary.rb
 #: ../app/helpers/ems_storage_helper/textual_summary.rb
-#: ../app/helpers/ops_helper.rb:166 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:175 ../app/helpers/ops_helper.rb
 #: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb
 #: ../app/helpers/physical_server_helper/textual_summary.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
+#: ../app/helpers/request_details_helper.rb
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/javascript/components/container-projects/helper.jsx
@@ -68547,7 +68859,6 @@ msgstr "루트 오케스트레이션 스택의 상태"
 #: ../app/views/miq_request/_ae_prov_show.html.haml
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
-#: ../app/views/ops/_server_desc.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 #: ../app/views/report/_export_widgets.html.haml
 #: ../config/yaml_strings.rb
@@ -68877,13 +69188,18 @@ msgid "Storage Providers"
 msgstr "스토리지 제공자"
 
 #: ../app/helpers/storage_service_helper/textual_summary.rb
-#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
 msgid "Storage Resource"
 msgstr "스토리지 자원"
+
+#:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+msgid "Storage Resource(s)"
+msgstr "스토리지 리소스"
 
 #. TRANSLATORS: file: product/views/StorageResource.yaml
 #: ../app/controllers/storage_resource_controller.rb
 #: ../app/helpers/storage_service_helper/textual_summary.rb
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 #: ../app/presenters/menu/default_menu.rb:164 ../config/yaml_strings.rb
 msgid "Storage Resources"
 msgstr "스토리지 리소스"
@@ -68973,6 +69289,11 @@ msgstr "스토리지 리소스"
 #: ../config/model_attributes.rb
 msgid "Storage service"
 msgstr "스토리지 서비스"
+
+#:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+msgid "Storage service \"%s\" has no attached storage resources"
+msgstr "\"%s\" 스토리지 서비스에 연결된 스토리지 리소스가 없습니다."
 
 #: ../config/model_attributes.rb
 msgid "Storage service resource attachment"
@@ -69665,7 +69986,6 @@ msgid "Subtype is required."
 msgstr "하위 유형은 필수입니다."
 
 #: ../app/helpers/textual_mixins/textual_metrics_status.rb
-#: ../app/javascript/components/timeline-options/timeline-options.jsx
 msgid "Success"
 msgstr "성공"
 
@@ -70171,10 +70491,10 @@ msgstr "시스템 도메인 가져오기가 지원되지 않습니다."
 msgid "System service"
 msgstr "시스템 서비스"
 
-#:
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "System/Process"
 msgstr "시스템/프로세스"
@@ -70182,10 +70502,6 @@ msgstr "시스템/프로세스"
 #: ../app/views/shared/buttons/_ab_show.html.haml
 msgid "System/Process/"
 msgstr "시스템/프로세스/"
-
-#: ../app/javascript/components/schedule-form/schedule-form-fields.js
-msgid "System/Proess"
-msgstr "시스템/프로세스"
 
 #: ../config/model_attributes.rb
 msgid "SystemConsole|Host name"
@@ -70394,9 +70710,10 @@ msgstr "태그 지정"
 msgid "Tag Assignment (Tags common to all selected items)"
 msgstr "태그 지정(선택된 모든 항목에 공통된 태그)"
 
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 #: ../app/views/chargeback_assignment/_form.html.haml
 #: ../app/views/miq_alert_set/_alert_profile_assign.html.haml
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
 #: ../app/views/ops/label_tag_mapping/_tag_category.html.haml
 #: ../app/views/report/_form_filter_chargeback.html.haml
 msgid "Tag Category"
@@ -70512,11 +70829,13 @@ msgstr "태그 지정|지역 번호"
 msgid "Tagging|Taggable type"
 msgstr "태그 지정|태그 지정 가능 유형"
 
+#: ../app/helpers/ops_helper/settings_tab_helper.rb
+#: ../app/helpers/settings_rbac_tag_helper.rb
 #: ../app/presenters/tree_builder_alert_profile_obj.rb
 #: ../app/views/miq_ae_class/_git_domain_refresh.html.haml
 #: ../app/views/miq_ae_tools/_import_export.html.haml
 #: ../app/views/ops/_all_tabs.html.haml
-#: ../app/views/ops/_rbac_tag_box.html.haml
+#: ../app/views/ops/_settings_co_tags_tab.html.haml
 msgid "Tags"
 msgstr "태그"
 
@@ -70671,10 +70990,6 @@ msgstr "템플리트 분석"
 #: ../config/yaml_strings.rb
 msgid "Template Name"
 msgstr "템플리트 이름"
-
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
-msgid "Template Selection"
-msgstr "템플리트 선택사항"
 
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Amazon_CloudManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AzureStack_CloudManager_OrchestrationTemplate.yaml
@@ -71078,10 +71393,6 @@ msgstr ""
 "GCE 지정 ID입니다. 두 개의 단어 뒤에 세 자리 숫자가 오는 방식으로 구성됩니다(예를 들어, squeamish-ossifrage-123"
 ")"
 
-#: ../app/controllers/host_controller.rb
-msgid "The Host SSH key has changed, do you want to accept the new key?"
-msgstr "호스트 SSH 키가 변경되었습니다. 새 키를 승인하시겠습니까?"
-
 #: ../app/models/host.rb
 msgid "The Host has invalid IPMI credentials"
 msgstr "호스트에 올바르지 않은 IPMI 인증 정보가 있습니다."
@@ -71408,9 +71719,16 @@ msgstr "논리 파티션 참조 코드"
 msgid "The login group cannot be deleted"
 msgstr "로그인 그룹을 삭제할 수 없습니다."
 
-#: ../app/javascript/helpers/validate-names.js
+#: ../app/javascript/helpers/storage_manager/validate-names.js
 msgid "The name \"%s\" already exists in \"%s\""
 msgstr "\"%s\" 이름은 이미 \"%s\"에 있음"
+
+#:
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
+msgid ""
+"The name can contain letters, numbers, spaces, periods, colons, dashes and "
+"underscores"
+msgstr "이름에는 문자, 숫자, 공백, 마침표, 콜론, 대시, 밑줄이 포함될 수 있습니다."
 
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
@@ -71420,13 +71738,20 @@ msgstr "이름에는 문자, 숫자, 공백, 마침표, 대시 및 밑줄이 포
 
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 msgid "The name must begin with a letter or an underscore"
 msgstr "이름은 문자 또는 밑줄로 시작해야 함"
 
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 msgid "The name must not begin or end with a space"
 msgstr "이름은 공백으로 시작하거나 끝날 수 없음"
+
+#:
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js
+msgid "The name should have up to 15 characters."
+msgstr "이름은 최대 15자여야 합니다."
 
 #:
 #: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb
@@ -71633,6 +71958,10 @@ msgid ""
 "The test email is being delivered, check \"%{email}\" to verify it was "
 "successful"
 msgstr "테스트 이메일을 전달하는 중입니다. \"%{email}\"에서 전달에 성공했는지 확인하십시오."
+
+#: ../app/controllers/application_controller.rb
+msgid "The user is not authorized for this task or item"
+msgstr "사용자에게 이 작업 또는 항목에 대한 권한이 없습니다."
 
 #: ../app/controllers/application_controller.rb
 #: ../app/controllers/dashboard_controller.rb
@@ -71926,6 +72255,10 @@ msgstr "제공자의 api 버전에서 이 기능이 지원되지 않습니다."
 #: ./dist/js/ui-components.js
 msgid "This field is required"
 msgstr "이 필드는 필수입니다."
+
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
+msgid "This is a group of events that happened on %s."
+msgstr "이는 %s에 발생한 이벤트 그룹입니다."
 
 #:
 #: ../app/models/manageiq/providers/awx/automation_manager/openstack_credential.rb
@@ -73796,9 +74129,9 @@ msgstr "알 수 없는 대상 API 세트: '%{service_type}'"
 msgid "Unknown task, %{task}"
 msgstr "알 수 없는 태스크, %{task}"
 
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/helpers/resource_pool_helper/textual_summary.rb
 #: ../app/javascript/components/zone-form/zone-form.schema.js
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 msgid "Unlimited"
 msgstr "무제한"
 
@@ -73869,6 +74202,10 @@ msgstr "지원되지 않는 API 버전: %{api_version}"
 #: ../app/models/vim_performance_analysis.rb
 msgid "Unsupported Mode (%{mode}) for %{class} %{type} options"
 msgstr "%{class} %{type} 옵션에 대해 지원되지 않는 모드(%{mode})"
+
+#: ../app/models/manageiq/providers/openshift/container_manager.rb
+msgid "Unsupported OpenShift version"
+msgstr "지원되지 않는 OpenShift 버전"
 
 #: ../app/models/manageiq/providers/vmware/container_manager.rb
 msgid "Unsupported endpoint"
@@ -74758,6 +75095,10 @@ msgid ""
 "on AWS."
 msgstr "AWS에 대한 SmartState 분석을 수행하는 데 필요한 Docker 레지스트리 인증 정보에 사용됩니다."
 
+#: ../app/models/manageiq/providers/vmware/infra_manager/host.rb
+msgid "Used for SSH login."
+msgstr "SSH 로그인에 사용됩니다."
+
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 msgid ""
 "Used for VMRC connections to all VMs on this provider. If not set, the VMRC "
@@ -74766,11 +75107,7 @@ msgstr ""
 "이 제공자의 모든 VM에 대한 VMRC 연결에 사용됩니다. 설정하지 않을 경우 이 제공자에 대한 VMRC 콘솔 액세스가 사용 안함으로 "
 "설정됩니다."
 
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "Used for access to IPMI."
-msgstr "IPMI에 액세스하는 데 사용됩니다."
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
+#: ../app/models/manageiq/providers/vmware/infra_manager/host.rb
 msgid "Used for access to Web Services."
 msgstr "웹 서비스에 액세스하는 데 필요합니다."
 
@@ -74893,6 +75230,7 @@ msgstr "LDAP 검색을 위한 사용자 그룹 순서 지정:"
 msgid "User ID"
 msgstr "사용자 ID"
 
+#: ../app/helpers/settings_users_helper.rb
 #: ../app/views/ops/_rbac_user_details.html.haml
 msgid "User Information"
 msgstr "사용자 정보"
@@ -75031,7 +75369,7 @@ msgstr "사용자(%{users_count})"
 msgid "Users are only allowed to delete their own requests"
 msgstr "사용자는 자신의 요청만 삭제할 수 있습니다."
 
-#: ../app/views/ops/_rbac_group_details.html.haml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 msgid "Users in this Group"
 msgstr "이 그룹의 사용자"
 
@@ -75796,7 +76134,6 @@ msgstr "VM 폐기일"
 msgid "VM Right-sizing"
 msgstr "VM 적정 크기 조정"
 
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
 #: ../app/views/miq_policy_rsop/_rsop_form.html.haml
 msgid "VM Selection"
 msgstr "VM 선택사항"
@@ -76717,13 +77054,13 @@ msgstr "지역 누락으로 인해 유효성 검증에 실패함"
 msgid "Validation failed with error: '%{error_message}"
 msgstr "다음 오류로 유효성 검증 실패: '%{error_message}"
 
-#:
+#: ../app/javascript/components/host-edit-form/validate-host-credentials.jsx
 #: ../app/javascript/components/physical-storage-form/validate-storage-credentials.jsx
 #: ../app/javascript/components/provider-form/validate-provider-credentials.jsx
 msgid "Validation failed:"
 msgstr "유효성 검증 실패:"
 
-#:
+#: ../app/javascript/components/host-edit-form/validate-host-credentials.jsx
 #: ../app/javascript/components/physical-storage-form/validate-storage-credentials.jsx
 #: ../app/javascript/components/provider-form/validate-provider-credentials.jsx
 msgid "Validation failed: unknown error"
@@ -76942,7 +77279,8 @@ msgstr "TLS 인증서 확인"
 msgid "Version"
 msgstr "버전"
 
-#: ../app/helpers/ops_helper.rb:215 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 msgid "Version / Build"
 msgstr "버전/빌드"
 
@@ -77744,6 +78082,16 @@ msgstr "볼륨 유형 보기"
 msgid "View Volumes"
 msgstr "볼륨 보기"
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "View Workflow Instances"
+msgstr "워크플로우 인스턴스 보기"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "View Workflows"
+msgstr "워크플로우 보기"
+
 #: ../app/views/ops/_settings_details_tab.html.haml
 msgid "View Zones"
 msgstr "구역 보기"
@@ -77808,12 +78156,12 @@ msgstr "이 경보 프로파일 보기"
 msgid "View this Event"
 msgstr "이 이벤트 보기"
 
-#: ../app/views/ops/_rbac_role_details.html.haml
-#: ../app/views/ops/_rbac_user_details.html.haml
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
+#: ../app/helpers/settings_users_helper.rb
 msgid "View this Group"
 msgstr "이 그룹 보기"
 
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 msgid "View this MiqServer"
 msgstr "이 MiqServer 보기"
 
@@ -77830,7 +78178,7 @@ msgstr "이 PXE 이미지 보기"
 msgid "View this Policy Profile"
 msgstr "이 정책 프로파일 보기"
 
-#: ../app/views/ops/_rbac_group_details.html.haml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 msgid "View this Project"
 msgstr "이 프로젝트 보기"
 
@@ -77838,8 +78186,8 @@ msgstr "이 프로젝트 보기"
 msgid "View this Report"
 msgstr "이 보고서 보기"
 
-#: ../app/views/ops/_rbac_group_details.html.haml
-#: ../app/views/ops/_rbac_user_details.html.haml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
+#: ../app/helpers/settings_users_helper.rb
 msgid "View this Role"
 msgstr "이 역할 보기"
 
@@ -77851,11 +78199,11 @@ msgstr "이 스케줄 보기"
 msgid "View this Service"
 msgstr "이 서비스 보기"
 
-#: ../app/views/ops/_rbac_group_details.html.haml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 msgid "View this Tenant"
 msgstr "이 테넌트 보기"
 
-#: ../app/views/ops/_rbac_group_details.html.haml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 msgid "View this User"
 msgstr "이 사용자 보기"
 
@@ -77866,10 +78214,6 @@ msgstr "이 위젯 보기"
 #: ../app/views/pxe/_pxe_server_details.html.haml
 msgid "View this Windows Image"
 msgstr "이 Windows 이미지 보기"
-
-#: ../app/views/ops/_diagnostics_zones_tab.html.haml
-msgid "View this Zone"
-msgstr "이 구역 보기"
 
 #: ../lib/gtl_formatter.rb
 msgid "View this item"
@@ -79490,6 +79834,7 @@ msgstr "볼륨 스냅샷 템플리트(Openstack)"
 #: ../app/controllers/cloud_volume_snapshot_controller.rb
 #: ../app/helpers/cloud_tenant_helper/textual_summary.rb
 #: ../app/presenters/menu/default_menu.rb
+#: ../app/services/ems_storage_dashboard_service.rb
 msgid "Volume Snapshots"
 msgstr "볼륨 스냅샷"
 
@@ -80176,12 +80521,15 @@ msgid ""
 "with this action"
 msgstr "경고: 이 조치를 계속하는 경우 현재의 모든 폐기 옵션이 유실됩니다."
 
+#: ../app/models/manageiq/providers/vmware/infra_manager/host.rb
+msgid "Web Service"
+msgstr "웹 서비스"
+
 #: ../app/javascript/components/workers-form/workers.schema.js
 msgid "Web Service Workers"
 msgstr "웹 서비스 작업자"
 
 #: ../app/helpers/textual_summary_helper.rb
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 #: ../app/views/ops/_settings_server_tab.html.haml
 msgid "Web Services"
 msgstr "웹 서비스"
@@ -80458,10 +80806,25 @@ msgstr "작업자가 중지됨"
 msgid "Workers"
 msgstr "작업자"
 
+#: ../config/model_display_names.rb:258 ../config/model_attributes.rb
+msgid "Workflow"
+msgid_plural "Workflows"
+msgstr[0] "워크플로우"
+
 #. TRANSLATORS: en.yml key: dictionary.column.v_workflow_class
 #: ../config/dictionary_strings.rb
 msgid "Workflow Class"
 msgstr "워크플로우 클래스"
+
+#: ../config/model_display_names.rb
+msgid "Workflow Instance"
+msgid_plural "Workflow Instances"
+msgstr[0] "워크플로우 인스턴스"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Workflow Instances"
+msgstr "워크플로우 인스턴스"
 
 #: ../app/helpers/miq_ae_class_helper.rb
 msgid "Workflow Template"
@@ -80484,10 +80847,84 @@ msgstr[0] "워크플로우 템플리트(Ansible Tower)"
 msgid "Workflow Templates (Ansible Tower)"
 msgstr "워크플로우 템플리트(Ansible Tower)"
 
+#: ../config/model_attributes.rb
+msgid "Workflow instance"
+msgstr "워크플로우 인스턴스"
+
 #:
 #: ../app/javascript/components/pvc-import-image-form/pvc-import-image-form.schema.js
 msgid "Workflow max. timeout"
 msgstr "워크플로우 최대 제한시간"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Context"
+msgstr "WorkflowInstance|컨텍스트"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Credentials"
+msgstr "WorkflowInstance|자격 증명"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Href slug"
+msgstr "WorkflowInstance|Href 슬러그"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Output"
+msgstr "WorkflowInstance|출력"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Region description"
+msgstr "WorkflowInstance|지역 설명"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Region number"
+msgstr "WorkflowInstance|지역 번호"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Status"
+msgstr "WorkflowInstance|상태"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Userid"
+msgstr "WorkflowInstance|사용자 ID"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Workflow content"
+msgstr "WorkflowInstance|워크플로우 콘텐츠"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Workflows"
+msgstr "워크플로우"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Workflows Automation Manager"
+msgstr "워크플로우 자동화 관리자"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Credentials"
+msgstr "워크플로우|자격 증명"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Href slug"
+msgstr "워크플로우|Href 슬러그"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Name"
+msgstr "워크플로우|이름"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Region description"
+msgstr "워크플로우|지역 설명"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Region number"
+msgstr "워크플로우|지역 번호"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Workflow content"
+msgstr "워크플로우|워크플로우 콘텐츠"
 
 #: ../app/views/shared/views/_prov_dialog.html.haml
 msgid "Workgroup Information"
@@ -80675,7 +81112,7 @@ msgstr "구역*"
 msgid "Zone:"
 msgstr "구역:"
 
-#: ../app/helpers/zones_helper.rb
+#: ../app/helpers/settings_zone_list_helper.rb
 #: ../app/presenters/tree_builder_ops_settings.rb
 #: ../app/views/ops/_all_tabs.html.haml
 #: ../app/views/ops/_settings_details_tab.html.haml
@@ -81001,6 +81438,13 @@ msgstr "유지보수 구역을 삭제할 수 없음"
 msgid "cannot delete volume that is in use."
 msgstr "사용 중인 볼륨은 삭제할 수 없습니다."
 
+#: ../app/models/resource_action.rb
+msgid ""
+"cannot have configuration_script_id and ae_namespace, ae_class, and "
+"ae_instance present"
+msgstr ""
+"configuration_script_id, ae_namespace, ae_class 및 ae_instance는 있을 수 없습니다."
+
 #: ../app/models/service_generic.rb
 msgid "check_completed must be implemented in a subclass"
 msgstr "check_completed가 서브클래스에 구현되어야 합니다."
@@ -81031,6 +81475,11 @@ msgstr "cloud_volume이 0이면 안됩니다."
 #: ../config/yaml_strings.rb
 msgid "compliance"
 msgstr "compliance"
+
+#:
+#: ../app/javascript/components/storage-service-form/get-compliant-resources.jsx
+msgid "compliance check failed:"
+msgstr "규정 준수 확인 실패:"
 
 #: ../app/models/condition.rb
 msgid ""
@@ -81277,7 +81726,8 @@ msgstr "cpu_total_cores"
 msgid "create_aggregate must be implemented in a subclass"
 msgstr "create_aggregate는 서브클래스에서 구현되어야 함"
 
-#: ../app/helpers/zones_helper.rb:18 ../app/presenters/tree_node/zone.rb
+#: ../app/helpers/settings_zone_list_helper.rb
+#: ../app/presenters/tree_node/zone.rb
 msgid "current"
 msgstr "현재"
 
@@ -81397,7 +81847,7 @@ msgstr "ems_configuration"
 #: ../app/models/host_initiator_group.rb
 #: ../app/models/physical_storage.rb:78 ../app/models/physical_storage.rb
 #: ../app/models/placement_group.rb:48 ../app/models/storage_service.rb
-#: ../app/models/volume_mapping.rb
+#: ../app/models/storage_service.rb:113 ../app/models/volume_mapping.rb
 msgid "ems_id cannot be nil"
 msgstr "ems_id가 0이면 안됩니다."
 
@@ -81555,12 +82005,16 @@ msgstr "evm_worker_stop"
 msgid "evm_worker_uptime_exceeded"
 msgstr "evm_worker_uptime_exceeded"
 
+#: ../app/models/manageiq/providers/workflows/automation_manager/workflow.rb
+msgid "execute is not enabled"
+msgstr "이행을 사용할 수 없습니다"
+
 #:
 #: ../lib/miq_automation_engine/engine/miq_ae_engine/miq_ae_ansible_method_base.rb
 msgid "execute must be implemented in a subclass"
 msgstr "execute가 서브클래스에 구현되어야 합니다."
 
-#: ../lib/miq_expression.rb:129 ../lib/miq_expression.rb
+#: ../lib/miq_expression.rb:135 ../lib/miq_expression.rb
 msgid ""
 "expression malformed,  must contain one of 'checkall', 'checkany', 'checkcount"
 "'"
@@ -81572,7 +82026,7 @@ msgstr ""
 #: ../app/models/host_initiator_group.rb
 #: ../app/models/physical_storage.rb:81 ../app/models/physical_storage.rb
 #: ../app/models/placement_group.rb:51 ../app/models/storage_service.rb
-#: ../app/models/volume_mapping.rb
+#: ../app/models/storage_service.rb:116 ../app/models/volume_mapping.rb
 msgid "ext_management_system cannot be found"
 msgstr "ext_management_system을 찾을 수 없습니다."
 
@@ -81850,10 +82304,6 @@ msgstr "login_failed"
 msgid "m"
 msgstr "m"
 
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
-msgid "map a new label to tag"
-msgstr "새 레이블을 태그로 맵핑"
-
 #: ../app/models/miq_ae_namespace.rb
 msgid "may contain only alphanumeric and _ . - $ characters"
 msgstr "영숫자와 _ . - $ 문자만 포함할 수 있습니다."
@@ -81951,7 +82401,7 @@ msgid "new element"
 msgstr "새 요소"
 
 #: ../app/models/ext_management_system.rb
-#: ../app/models/ext_management_system.rb:656 ../app/models/provider.rb
+#: ../app/models/ext_management_system.rb:627 ../app/models/provider.rb
 msgid "no Provider credentials defined"
 msgstr "제공자 인증 정보가 정의되지 않음"
 
@@ -82043,7 +82493,7 @@ msgstr "%{time}의 %{date}에"
 msgid "open and close options"
 msgstr "옵션 열기 및 닫기"
 
-#: ../lib/miq_expression.rb:294 ../lib/miq_expression.rb
+#: ../lib/miq_expression.rb:315 ../lib/miq_expression.rb
 msgid "operator '%{operator_name}' is not supported"
 msgstr "'%{operator_name}' 연산자가 지원되지 않습니다."
 
@@ -82217,6 +82667,10 @@ msgstr "raw_add_security_group이 서브클래스에 구현되어야 합니다."
 msgid "raw_associate_floating_ip must be implemented in a subclass"
 msgstr "raw_associate_floating_ip가 서브클래스에 구현되어야 합니다."
 
+#: ../app/models/storage_service.rb
+msgid "raw_check_compliant_resources must be implemented in a subclass"
+msgstr "raw_check_compliant_resources는 서브 클래스에서 구현되어야 합니다."
+
 #: ../app/models/cloud_database.rb
 msgid "raw_create_cloud_database must be implemented in a subclass"
 msgstr "raw_create_cloud_database는 서브클래스에서 구현되어야 함"
@@ -82288,6 +82742,10 @@ msgstr "raw_delete_flavor가 서브클래스에 구현되어야 합니다."
 #: ../app/models/host_initiator.rb
 msgid "raw_delete_host_initiator must be implemented in a subclass"
 msgstr "raw_delete_host_initiator는 서브클래스에서 구현되어야 함"
+
+#: ../app/models/host_initiator_group.rb
+msgid "raw_delete_host_initiator_group must be implemented in a subclass"
+msgstr "raw_delete_host_initiator_group은 서브 클래스에서 구현되어야 합니다."
 
 #: ../app/models/manageiq/providers/cloud_manager/template.rb
 msgid "raw_delete_image must be implemented in a subclass"
@@ -82384,6 +82842,10 @@ msgstr "raw_update_cloud_network가 서브클래스에 구현되어야 합니다
 #: ../app/models/cloud_tenant.rb
 msgid "raw_update_cloud_tenant must be implemented in a subclass"
 msgstr "raw_update_cloud_tenant가 서브클래스에 구현되어야 합니다."
+
+#: ../app/models/host_initiator_group.rb
+msgid "raw_update_host_initiator_group must be implemented in a subclass"
+msgstr "raw_update_host_initiator_group은 서브 클래스에서 구현되어야 합니다."
 
 #: ../app/models/manageiq/providers/cloud_manager/template.rb
 msgid "raw_update_image must be implemented in a subclass"
@@ -82615,6 +83077,20 @@ msgstr "request_vm_unregister"
 msgid "resize value options cannot be nil"
 msgstr "크기 조정 옵션은 nil일 수 없음"
 
+#:
+#: ../app/models/manageiq/providers/workflows/automation_manager/workflow_instance.rb
+msgid "run is not enabled"
+msgstr "실행을 사용할 수 없습니다"
+
+#: ../app/models/configuration_script_payload.rb
+msgid "run must be implemented in a subclass"
+msgstr "실행은 서브 클래스에서 구현되어야 합니다."
+
+#:
+#: ../app/models/manageiq/providers/workflows/automation_manager/workflow_instance.rb
+msgid "run_queue is not enabled"
+msgstr "run_queue를 사용할 수 없습니다"
+
 #: ../app/controllers/application_controller/performance.rb
 msgid "running"
 msgstr "실행 중"
@@ -82705,6 +83181,11 @@ msgstr "storage_scan_complete"
 msgid "success"
 msgstr "성공"
 
+#:
+#: ../app/models/manageiq/providers/embedded_automation_manager/configuration_script_source.rb
+msgid "sync must be implemented in a subclass"
+msgstr "동기화는 서브 클래스에서 구현되어야 합니다."
+
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_sets.yml
 #: ../config/yaml_strings.rb
@@ -82714,6 +83195,11 @@ msgstr "tags"
 #: ../app/models/manageiq/providers/kubernetes/container_manager.rb
 msgid "target_class must be a class not an instance"
 msgstr "target_class는 인스턴스가 아닌 클래스여야 함"
+
+#:
+#: ../app/models/manageiq/providers/autosde/storage_manager/host_initiator_group.rb
+msgid "the host initiator group is not connected to an active provider"
+msgstr "호스트 개시자 그룹이 활성 제공자에 연결되지 않았습니다."
 
 #:
 #: ../app/models/manageiq/providers/openstack/storage_manager/cinder_manager/cloud_volume.rb
@@ -82849,7 +83335,7 @@ msgstr "알 수 없는 오브젝트 유형: %{class}"
 msgid "unknown zone %{zone_name}"
 msgstr "알수 없는 구역 %{zone_name}"
 
-#: ../app/helpers/ops_helper.rb:171 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:180 ../app/helpers/ops_helper.rb
 msgid "unlimited"
 msgstr "무제한"
 
