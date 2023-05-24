@@ -886,10 +886,6 @@
     :default: 1.minutes
     :host: 20.minutes
     :vm: 20.minutes
-  :concurrent_requests:
-    :historical: 1
-    :hourly: 1
-    :realtime: 20
   :history:
     :initial_capture_days: 0
     :keep_daily_performances: 6.months

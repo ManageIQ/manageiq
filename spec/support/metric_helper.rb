@@ -46,6 +46,19 @@ module Spec
       def stub_performance_settings(hash)
         stub_settings(:performance => hash)
       end
+
+      # @param batch_size [Numeric] defaults to nil / no batching
+      def ems_concurrent_requests(ems, batch_size = nil)
+        {
+          "ems_#{ems}".to_sym => {
+            :concurrent_requests => {
+              :historical => batch_size,
+              :hourly     => batch_size,
+              :realtime   => batch_size
+            }
+          }
+        }
+      end
     end
   end
 end
