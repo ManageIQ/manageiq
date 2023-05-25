@@ -558,7 +558,7 @@ class MiqExpression
   end
 
   def self.get_col_info(field, options = {})
-    f = parse_field_or_tag(field) or raise ArgumentError
+    f = Target.parse(field)
 
     {
       :include                        => f.includes,
@@ -567,16 +567,6 @@ class MiqExpression
       :sql_support                    => f.attribute_supported_by_sql?,
       :excluded_by_preprocess_options => f.exclude_col_by_preprocess_options?(options),
       :tag                            => f.tag?
-    }
-  rescue ArgumentError
-    # not thrilled with these values. but making tests pass for now
-    {
-      :data_type                      => nil,
-      :format_sub_type                => nil,
-      :sql_support                    => false,
-      :excluded_by_preprocess_options => false,
-      :tag                            => false,
-      :include                        => {}
     }
   end
 
@@ -1361,6 +1351,7 @@ class MiqExpression
     # managed.location, Model.x.y.managed-location
     MiqExpression::Field.parse(str) || MiqExpression::CountField.parse(str) || MiqExpression::Tag.parse(str)
   end
+  Vmdb::Deprecation.deprecate_methods(self, :parse_field_or_tag => "MiqExpression::Target.parse")
 
   def fields(expression = exp)
     case expression
