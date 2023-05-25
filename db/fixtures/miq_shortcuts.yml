@@ -459,11 +459,6 @@
   :url: /ansible_repository
   :rbac_feature_name: embedded_configuration_script_source
   :startup: true
-- :name: embedded_workflow
-  :description: Automation / Embedded Workflows / Workflows
-  :url: /embedded_workflow
-  :rbac_feature_name: embedded_workflow
-  :startup: true
 - :name: embedded_automation_manager_credentials
   :description: Automation / Ansible / Credentials
   :url: /ansible_credential
