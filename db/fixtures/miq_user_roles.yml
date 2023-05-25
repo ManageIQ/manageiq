@@ -1521,9 +1521,6 @@
   - embedded_automation_manager_credentials_view
   - embedded_configuration_script_payload_view
   - embedded_configuration_script_source_view
-  - embedded_workflow_view
-  - embedded_repositories_view
-  - embedded_credentials_view
   - ems_block_storage_view
   - ems_cloud_view
   - ems_cluster_view
