@@ -139,7 +139,9 @@ class MiqRequestTask < ApplicationRecord
 
     _log.info("Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
 
-    if self.class::AUTOMATE_DRIVES
+    if resource_action&.configuration_script_payload
+      resource_action.configuration_script_payload.run(dialog_values, get_user.userid)
+    elsif self.class::AUTOMATE_DRIVES
       deliver_to_automate(req_type, zone)
     else
       execute_queue
@@ -218,6 +220,11 @@ class MiqRequestTask < ApplicationRecord
     end
   end
 
+  def resource_action
+    # Override in child class if the source has resource_actions
+    nil
+  end
+
   def self.display_name(number = 1)
     n_('Request Task', 'Request Tasks', number)
   end
@@ -250,5 +257,9 @@ class MiqRequestTask < ApplicationRecord
 
   def valid_states
     %w(pending finished) + request_class::ACTIVE_STATES
+  end
+
+  def dialog_values
+    options[:dialog] || {}
   end
 end

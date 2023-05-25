@@ -116,18 +116,6 @@ class ServiceTemplateProvisionTask < MiqRequestTask
     queue_post_provision unless state == "finished"
   end
 
-  def deliver_queue(req_type = request_type, zone = nil)
-    task_check_on_delivery
-
-    _log.info("Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
-
-    if resource_action&.configuration_script_payload
-      resource_action.configuration_script_payload.run(dialog_values, get_user.userid)
-    else
-      deliver_to_automate(req_type, zone)
-    end
-  end
-
   def deliver_to_automate(req_type = request_type, _zone = nil)
     args = {
       :object_type      => self.class.name,
@@ -228,9 +216,5 @@ class ServiceTemplateProvisionTask < MiqRequestTask
 
   def valid_states
     super + ["provisioned"]
-  end
-
-  def dialog_values
-    options[:dialog] || {}
   end
 end
