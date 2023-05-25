@@ -101,9 +101,6 @@ module Metric::CiMixin::Capture
 
     _log.info("#{log_header} Capture for #{metrics_capture.log_targets}#{log_time}...Complete - Timings: #{t.inspect}")
 
-    # ems lookup cache
-    target_ems = nil
-
     metrics_capture.targets.each do |target|
       counters       = counters_by_mor[target.ems_ref] || {}
       counter_values = counter_values_by_mor_and_ts[target.ems_ref] || {}
@@ -122,8 +119,8 @@ module Metric::CiMixin::Capture
           _log.warn("#{log_header} For #{target.log_target}#{log_time}, expected to get data as of [#{expected_start_range}], but got data as of [#{start_range}].")
 
           # Raise ems_performance_gap_detected alert event to enable notification.
-          target_ems ||= target.ext_management_system
-          MiqEvent.raise_evm_alert_event_queue(target_ems, "ems_performance_gap_detected",
+          # NOTE: using parent ext_management_system
+          MiqEvent.raise_evm_alert_event_queue(ext_management_system, "ems_performance_gap_detected",
                                                :resource_class       => target.class.name,
                                                :resource_id          => target.id,
                                                :expected_start_range => expected_start_range,
