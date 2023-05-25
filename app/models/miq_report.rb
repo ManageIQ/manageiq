@@ -91,7 +91,7 @@ class MiqReport < ApplicationRecord
       else
         column = Chargeback.default_column_for_format(column.to_s) if Chargeback.db_is_chargeback?(db)
         expression_col = col_to_expression_col(column)
-        column_type = MiqExpression.parse_field_or_tag(expression_col).try(:column_type)&.to_sym
+        column_type = MiqExpression::Target.parse(expression_col).column_type
         MiqReport::Formats.default_format_for_path(expression_col, column_type)
       end
     end
@@ -137,7 +137,7 @@ class MiqReport < ApplicationRecord
   end
 
   def self.get_col_info(path)
-    data_type = MiqExpression.parse_field_or_tag(path).try(:column_type)
+    data_type = MiqExpression::Target.parse(path).column_type
     {
       :data_type         => data_type,
       :available_formats => get_available_formats(path, data_type),
