@@ -90,6 +90,7 @@ module Metric::CiMixin::Capture
 
     _log.info("#{log_header} Capture for #{metrics_capture.log_targets}#{log_time}...")
 
+    new_last_perf_capture_on = Time.new.utc
     start_range = end_range = counters_by_mor = counter_values_by_mor_and_ts = target_ems = nil
     counters_data = {}
     _, t = Benchmark.realtime_block(:total_time) do
@@ -112,7 +113,7 @@ module Metric::CiMixin::Capture
       if start_range.nil?
         _log.info("#{log_header} Skipping processing for #{target.log_target}#{log_time} as no metrics were captured.")
         # Set the last capture on to end_time to prevent forever queueing up the same collection range
-        target.update(:last_perf_capture_on => end_time || Time.now.utc) if interval_name == 'realtime'
+        target.update(:last_perf_capture_on => end_time || new_last_perf_capture_on) if interval_name == 'realtime'
       else
         expected_start_range = target.calculate_gap(interval_name, start_time)
         if expected_start_range && start_range > expected_start_range
