@@ -3469,7 +3469,7 @@ RSpec.describe MiqExpression do
   describe ".quote" do
     [
       ["abc", :string, "\"abc\""],
-#       ["abc", nil, "\"abc\""],
+      ["abc", nil, "\"abc\""],
       ["123", :integer, 123],
       ["1.minute", :integer, 60],
     ].each do |src, type, target|
@@ -3482,7 +3482,7 @@ RSpec.describe MiqExpression do
   describe ".quote_human" do
     [
       ["abc", :string, "\"abc\""],
-#       ["abc", nil, "\"abc\""],
+      ["abc", nil, "\"abc\""],
       ["123", :integer, 123],
       ["1.minute", :integer, "1 Minute"],
     ].each do |src, type, target|

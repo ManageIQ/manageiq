@@ -274,7 +274,7 @@ class MiqExpression
                    end
                    val = op_args["tag"].split(".").last.split("-").join(".")
                    fld = "<value type=string>#{val}</value>"
-                   [fld, quote(description, "string")]
+                   [fld, quote(description, :string)]
                  end
       clause = operands.join(" #{normalize_operator(operator)} ")
     when "find"
@@ -624,7 +624,7 @@ class MiqExpression
         if ops["value"] == :user_input
           ret.push("<user input>")
         else
-          col_type = Target.parse(ops["field"]).column_type || "string"
+          col_type = Target.parse(ops["field"]).column_type
           ret.push(quote_human(ops["value"], col_type))
         end
       end
@@ -698,17 +698,17 @@ class MiqExpression
     if UNQUOTABLE_OPERATORS.map(&:downcase).include?(operator)
       value
     else
-      quote(value, column_type.to_s)
+      quote(value, column_type)
     end
   end
 
   def self.operands2rubyvalue(operator, ops, context_type)
     if ops["field"]
       if ops["field"] == "<count>"
-        ["<count>", quote(ops["value"], "integer")]
+        ["<count>", quote(ops["value"], :integer)]
       else
         target = Target.parse(ops["field"])
-        col_type = target.column_type || "string"
+        col_type = target.column_type || :string
 
         [if context_type == "hash"
            "<value type=#{col_type}>#{ops["field"].split(".").last.split("-").join(".")}</value>"
@@ -725,7 +725,7 @@ class MiqExpression
       elsif operator == "value exists"
         ["<registry value_exists=1, type=boolean>#{ops["regkey"].strip} : #{ops["regval"]}</registry>  == 'true'", nil]
       else
-        ["<registry>#{ops["regkey"].strip} : #{ops["regval"]}</registry>", quote_by(operator, ops["value"], "string")]
+        ["<registry>#{ops["regkey"].strip} : #{ops["regval"]}</registry>", quote_by(operator, ops["value"], :string)]
       end
     end
   end
@@ -734,12 +734,12 @@ class MiqExpression
     if Field.is_field?(val)
       target = Target.parse(val)
       value = target.tag_path_with
-      col_type = target.column_type || "string"
+      col_type = target.column_type || :string
 
       reference_attribute = target ? "ref=#{target.model.to_s.downcase}, " : " "
       return "<value #{reference_attribute}type=#{col_type}>#{value}</value>"
     end
-    case typ.to_s
+    case typ&.to_s
     when "string", "text", "boolean", nil
       # escape any embedded single quotes, etc. - needs to be able to handle even values with trailing backslash
       val.to_s.inspect
@@ -794,7 +794,7 @@ class MiqExpression
   end
 
   def self.quote_human(val, typ)
-    case typ.to_s
+    case typ&.to_s
     when "integer", "decimal", "fixnum", "float"
       return val.to_i unless val.to_s.number_with_method? || typ.to_s == "float"
       if val =~ /^([0-9\.,]+)\.([a-z]+)$/
@@ -807,7 +807,7 @@ class MiqExpression
       else
         val
       end
-    when "string", "date", "datetime"
+    when "string", "date", "datetime", nil
       "\"#{val}\""
     else
       quote(val, typ)
