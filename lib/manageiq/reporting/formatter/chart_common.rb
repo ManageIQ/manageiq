@@ -3,7 +3,12 @@ module ManageIQ
     module Formatter
       module ChartCommon
         def slice_legend(string, limit = LEGEND_LENGTH)
-          string.to_s.gsub(/\n/, ' ').truncate(limit)
+          case string
+          when Date, Time, DateTime, ActiveSupport::TimeWithZone
+            string.iso8601(3)
+          else
+            string.to_s.gsub(/\n/, ' ').truncate(limit)
+          end
         end
 
         def nonblank_or_default(value)
@@ -51,14 +56,7 @@ module ManageIQ
             series = series_class.new
             mri.table.data.each_with_index do |r, d_idx|
               rec_time = r["timestamp"].in_time_zone(tz)
-
-              if mri.db.include?("Daily") || (mri.where_clause && mri.where_clause.include?("daily"))
-                categories.push(rec_time.month.to_s + "/" + rec_time.day.to_s)
-              elsif mri.extras[:realtime] == true
-                categories.push(rec_time.strftime("%H:%M:%S"))
-              else
-                categories.push(rec_time.hour.to_s + ":00")
-              end
+              categories.push(rec_time)
               val = r[col]
 
               if d_idx == mri.table.data.length - 1 && !tip.nil?
