@@ -964,7 +964,14 @@ GEM
     net-ssh (4.2.0)
     netrc (0.11.0)
     nio4r (2.5.9)
+    nokogiri (1.15.2)
+      mini_portile2 (~> 2.8.2)
+      racc (~> 1.4)
     nokogiri (1.15.2-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.15.2-x86_64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.15.2-x86_64-linux)
       racc (~> 1.4)
     nori (2.6.0)
     oauth (1.1.0)
@@ -1287,7 +1294,12 @@ GEM
     zeitwerk (2.6.8)
 
 PLATFORMS
+  arm64-darwin
   arm64-darwin-22
+  powerpc64le-linux
+  ruby
+  x86_64-darwin
+  x86_64-linux
 
 DEPENDENCIES
   PoParser
