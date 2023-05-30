@@ -120,12 +120,12 @@ class Condition < ApplicationRecord
       else
         value = ref.nil? ? "" : Tag.list(ref, :ns => tag)
       end
-      value = MiqExpression.quote(value, ohash[:type] || "string")
+      value = MiqExpression.quote(value, ohash[:type]&.to_sym)
     when "count"
       ref.nil? ? value = 0 : value = ref.tag_list(:ns => tag).length
     when "registry"
       ref.nil? ? value = "" : value = registry_data(ref, tag, ohash)
-      value = MiqExpression.quote(value, ohash[:type] || "string")
+      value = MiqExpression.quote(value, ohash[:type]&.to_sym)
     end
     value
   end
@@ -164,7 +164,7 @@ class Condition < ApplicationRecord
     return false if l.empty?
 
     list = l.collect do |obj|
-      value = MiqExpression.quote(obj.send(attr), opts[:type])
+      value = MiqExpression.quote(obj.send(attr), opts[:type]&.to_sym)
       value = value.gsub(/\\/, '\&\&') if value.kind_of?(String)
       e = search.gsub(/<value[^>]*>.+<\/value>/im, value.to_s)
       obj if do_eval(e)
@@ -202,7 +202,7 @@ class Condition < ApplicationRecord
     result = true
     list.each do |obj|
       opts, _ref = options2hash(raw_opts, obj)
-      value = MiqExpression.quote(obj.send(checkattr), opts[:type])
+      value = MiqExpression.quote(obj.send(checkattr), opts[:type]&.to_sym)
       value = value.gsub(/\\/, '\&\&') if value.kind_of?(String)
       e = check.gsub(/<value[^>]*>.+<\/value>/im, value.to_s)
       MiqPolicy.logger.debug("MIQ(condition-_subst_find): Check Expression after substitution: [#{e}]")

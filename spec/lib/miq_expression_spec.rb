@@ -2598,79 +2598,6 @@ RSpec.describe MiqExpression do
     end
   end
 
-  describe ".parse_field_or_tag" do
-    subject { described_class.parse_field_or_tag(@field).try(:column_type) }
-    let(:string_custom_attribute) do
-      FactoryBot.create(:custom_attribute,
-                         :name          => "foo",
-                         :value         => "string",
-                         :resource_type => 'ExtManagementSystem')
-    end
-    let(:date_custom_attribute) do
-      FactoryBot.create(:custom_attribute,
-                         :name          => "foo",
-                         :value         => DateTime.current,
-                         :resource_type => 'ExtManagementSystem')
-    end
-
-    it "with model-field__with_pivot_table_suffix" do
-      @field = "Vm-name__pv"
-      expect(subject).to eq(described_class.parse_field_or_tag("Vm-name").try(:column_type))
-    end
-
-    it "with custom attribute without value_type" do
-      string_custom_attribute
-      @field = "ExtManagementSystem-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}foo"
-      expect(subject).to eq(:string)
-    end
-
-    it "with custom attribute with value_type" do
-      date_custom_attribute
-      @field = "ExtManagementSystem-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}foo"
-      expect(subject).to eq(:datetime)
-    end
-
-    it "with model.managed-in_field" do
-      @field = "Vm.managed-service_level"
-      expect(subject).to eq(:string)
-    end
-
-    it "with model.last.managed-in_field" do
-      @field = "Vm.host.managed-environment"
-      expect(subject).to eq(:string)
-    end
-
-    it "with valid model-in_field" do
-      @field = "Vm-cpu_limit"
-      expect(subject).to eq(:integer)
-    end
-
-    it "with invalid model-in_field" do
-      @field = "abc-name"
-      expect(subject).to be_nil
-    end
-
-    it "with valid model.association-in_field" do
-      @field = "Vm.guest_applications-vendor"
-      expect(subject).to eq(:string)
-    end
-
-    it "with invalid model.association-in_field" do
-      @field = "abc.host-name"
-      expect(subject).to be_nil
-    end
-
-    it "with model-invalid_field" do
-      @field = "Vm-abc"
-      expect(subject).to be_nil
-    end
-
-    it "with field without model" do
-      @field = "storage"
-      expect(subject).to be_nil
-    end
-  end
-
   describe ".model_details" do
     before do
       # tags contain the root tenant's name
@@ -2925,6 +2852,7 @@ RSpec.describe MiqExpression do
       expect(col_info).to match(
         :data_type                      => nil,
         :excluded_by_preprocess_options => false,
+        :format_sub_type                => nil,
         :include                        => {},
         :tag                            => false,
         :sql_support                    => false,
@@ -3068,6 +2996,7 @@ RSpec.describe MiqExpression do
       expect(col_info).to match(
         :data_type                      => nil,
         :excluded_by_preprocess_options => false,
+        :format_sub_type                => nil,
         :include                        => {},
         :tag                            => false,
         :sql_support                    => false,
@@ -3534,6 +3463,32 @@ RSpec.describe MiqExpression do
     it ":exp_available_fields with include_id_columns" do
       result = described_class.miq_adv_search_lists(Vm, :exp_available_fields, :include_id_columns => true)
       expect(result.map(&:first)).to include("VM and Instance : Id")
+    end
+  end
+
+  describe ".quote" do
+    [
+      ["abc", :string, "\"abc\""],
+      ["abc", nil, "\"abc\""],
+      ["123", :integer, 123],
+      ["1.minute", :integer, 60],
+    ].each do |src, type, target|
+      it "escapes #{src} as a #{type || "nil"}" do
+        expect(described_class.quote(src, type)).to eq(target)
+      end
+    end
+  end
+
+  describe ".quote_human" do
+    [
+      ["abc", :string, "\"abc\""],
+      ["abc", nil, "\"abc\""],
+      ["123", :integer, 123],
+      ["1.minute", :integer, "1 Minute"],
+    ].each do |src, type, target|
+      it "escapes #{src} as a #{type || "nil"}" do
+        expect(described_class.quote_human(src, type)).to eq(target)
+      end
     end
   end
 

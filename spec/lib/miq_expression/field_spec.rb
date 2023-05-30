@@ -124,20 +124,6 @@ RSpec.describe MiqExpression::Field do
     end
   end
 
-  describe "#parse!" do
-    it "can parse the model name" do
-      field = "Vm-name"
-      expect(described_class.parse(field).model).to be(Vm)
-    end
-
-    # this calls out to parse, so just needed to make sure one value worked
-
-    it "will raise a parse error when given a field with unsupported syntax" do
-      field = "Vm,host+name"
-      expect { described_class.parse!(field) }.to raise_error(MiqExpression::Field::ParseError)
-    end
-  end
-
   describe "#valid?" do
     it "returns true when the column belongs to the set of column names" do
       field = described_class.new(Vm, [], "name")
