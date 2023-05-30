@@ -1032,6 +1032,29 @@ RSpec.describe MiqQueue do
             :username => "admin"
           )
         end
+
+        it "with SSL enabled" do
+          stub_const("ENV", env_vars.to_h.merge("MESSAGING_PASSWORD" => "password",
+                                                "MESSAGING_SSL_CA" => "/path/root.crt",
+                                                "MESSAGING_KEYSTORE" => "/path/keystore.jks",
+                                                "MESSAGING_KEYSTORE_PASSWORD" => "keystore_password"
+                                                ))
+
+          expect(YAML).not_to receive(:load_file).with(MiqQueue::MESSAGING_CONFIG_FILE)
+
+          expect(MiqQueue.send(:messaging_client_options)).to eq(
+            :encoding          => "json",
+            :host              => "server.example.com",
+            :password          => "password",
+            :port              => 9092,
+            :protocol          => "Kafka",
+            :username          => "admin",
+            :ssl               => true,
+            :ca_file           => "/path/root.crt",
+            :keystore_location => "/path/keystore.jks",
+            :keystore_password => "keystore_password"
+          )
+        end
       end
 
       it "prefers settings from file if any ENV vars are missing" do

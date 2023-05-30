@@ -32,7 +32,7 @@ class MiqPolicy < ApplicationRecord
   include_concern 'ImportExport'
 
   include UuidMixin
-  include YAMLImportExportMixin
+  include YamlImportExportMixin
   before_validation :default_name_to_guid, :on => :create
 
   default_value_for :towhat, 'Vm'

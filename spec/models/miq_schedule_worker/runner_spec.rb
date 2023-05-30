@@ -499,6 +499,7 @@ RSpec.describe MiqScheduleWorker::Runner do
 
     it "#schedule_settings_for_ems_refresh (private)" do
       _ = ManageIQ::Providers::Amazon::CloudManager # FIXME: Loader
+      _ = ManageIQ::Providers::EmbeddedAnsible::AutomationManager # FIXME: Loader
 
       stub_settings(
         :ems_refresh => {
@@ -509,8 +510,14 @@ RSpec.describe MiqScheduleWorker::Runner do
 
       settings = @schedule_worker.send(:schedule_settings_for_ems_refresh)
 
-      expect(settings[ManageIQ::Providers::Vmware::InfraManager]).to eq(86_400) # Uses default
-      expect(settings[ManageIQ::Providers::Amazon::CloudManager]).to eq(900)    # Uses override
+      # Uses default
+      expect(settings[ManageIQ::Providers::Vmware::InfraManager]).to eq(86_400)
+
+      # Uses override
+      expect(settings[ManageIQ::Providers::Amazon::CloudManager]).to eq(900)
+
+      # Skips providers not supporting refresh_ems
+      expect(settings.keys).not_to include(ManageIQ::Providers::EmbeddedAnsible::AutomationManager)
     end
 
     def while_calling_job(job)

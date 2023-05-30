@@ -26,12 +26,6 @@ module Metric::Capture
     historical_days.days.ago.utc.beginning_of_day
   end
 
-  def self.concurrent_requests(interval_name)
-    requests = ::Settings.performance.concurrent_requests[interval_name]
-    requests = 20 if requests < 20 && interval_name == 'realtime'
-    requests
-  end
-
   def self.standard_capture_threshold(target)
     target_key = target.class.base_model.to_s.underscore.to_sym
     minutes_ago(::Settings.performance.capture_threshold[target_key] ||

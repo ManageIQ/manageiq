@@ -213,6 +213,16 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
         expect(playbooks_for(record)).to eq(%w[hello_world.yaml])
       end
 
+      it "saves the playbook payload" do
+        record = build_record
+
+        expect(record.configuration_script_payloads.first).to have_attributes(
+          :name         => "hello_world.yaml",
+          :payload      => a_string_including("msg: \"Hello World! (from hello_world.yaml)\""),
+          :payload_type => "yaml"
+        )
+      end
+
       context "with a nested playbooks dir" do
         let(:nested_repo) { File.join(clone_dir, "hello_world_nested") }
 

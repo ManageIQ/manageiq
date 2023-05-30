@@ -120,12 +120,16 @@ module Rbac
     }
 
     # These classes should accept any of the relationship_mixin methods including:
-    #   :parent_ids
-    #   :ancestor_ids
-    #   :child_ids
-    #   :sibling_ids
-    #   :descendant_ids
-    #   ...
+    # |   | Relationship method| Which tenants can see these resources |
+    # |---|--------------------|---------------------------------------|
+    # | * | :ancestor_ids      | children can see these resources |
+    # |   | :child_ids         | direct parent can see these resources |
+    # | * | :descendant_ids    | all parents can see these resources |
+    # |   | :parent_ids        | only direct children can see these resources |
+    # |   | :sibling_ids       | all tenants of the same level can see these |
+    # | * | nil                | only the same tenant can see the resources |
+    #
+    # Star * highlights most relevant methods
     TENANT_ACCESS_STRATEGY = {
       'CloudSnapshot'          => :descendant_ids,
       'CloudTenant'            => :descendant_ids,
@@ -210,6 +214,7 @@ module Rbac
     # @option options :limit        [Numeric] (default: no limit)
     # @option options :offset       [Numeric] (default: no offset)
     # @option options :skip_count   [Boolean] (default: false)
+    # @option options :prune_sql    [Boolean] (default: true) true to remove sql from ruby filter
     #
     # @return [Array<Array<Object>,Hash>] list of object and the associated search options
     #   Array<Object> list of object in the same order as input targets if possible
@@ -235,6 +240,8 @@ module Rbac
       limit             = options[:limit]  || targets.try(:limit_value)
       offset            = options[:offset] || targets.try(:offset_value)
       order             = options[:order]  || targets.try(:order_values)
+
+      prune_sql = options.key?(:prune_sql) ? options[:prune_sql] : true
 
       user, miq_group, user_filters = get_user_info(options[:user],
                                                     options[:userid],
@@ -337,7 +344,7 @@ module Rbac
       #
       # NOTE: if supported_by_sql is false then apply_limit_in_sql is also false
       if search_filter && targets && (!exp_attrs || !exp_attrs[:supported_by_sql])
-        targets = targets.lazy.select { |obj| matches_search_filters?(obj, search_filter, tz) }
+        targets = targets.lazy.select { |obj| matches_search_filters?(obj, search_filter, tz, :prune_sql => prune_sql) }
         unless options[:skip_counts]
           # use to_a to run filters once. otherwise will filter for:
           # length, (possible) pagination ids, and final taget results
@@ -873,8 +880,8 @@ module Rbac
       MiqPreloader.preload_and_map(sources, :storages)
     end
 
-    def matches_search_filters?(obj, filter, tz)
-      filter.nil? || filter.lenient_evaluate(obj, tz)
+    def matches_search_filters?(obj, filter, timezone, prune_sql: true)
+      filter.nil? || filter.lenient_evaluate(obj, timezone, :prune_sql => prune_sql)
     end
   end
 end

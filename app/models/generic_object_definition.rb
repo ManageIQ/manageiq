@@ -1,5 +1,5 @@
 class GenericObjectDefinition < ApplicationRecord
-  include YAMLImportExportMixin
+  include YamlImportExportMixin
   include_concern 'ImportExport'
 
   TYPE_MAP = {

@@ -130,6 +130,7 @@
   - host_tag
   - host_timeline
   - host_initiator
+  - host_initiator_group
   - miq_task_my_ui
   - my_settings_default_views
   - my_settings_time_profiles
@@ -1007,6 +1008,7 @@
   - cloud_volume_attach
   - cloud_volume_detach
   - cloud_volume_reload
+  - cloud_volume_refresh
   - cloud_volume_type
   - chargeback
   - chargeback_reports
@@ -1043,6 +1045,12 @@
   - host_initiator_view
   - host_initiator_control
   - host_initiator_new
+  - host_initiator_group_view
+  - host_initiator_group_control
+  - host_initiator_group_new
+  - host_initiator_group_show
+  - host_initiator_group_show_list
+  - host_initiator_group_edit
   - miq_task_my_ui
   - my_settings_default_views
   - my_settings_time_profiles

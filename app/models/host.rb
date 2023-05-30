@@ -639,10 +639,13 @@ class Host < ApplicationRecord
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
-  def verify_credentials?(*args)
+  def verify_credentials?(auth_type = nil, options = {})
     # Prevent the connection details, including the password, from being leaked into the logs
     # and MiqQueue by only returning true/false
-    !!verify_credentials(*args)
+    auth = options.delete(:credentials)
+    update_authentication(auth, :save => false) if auth.present?
+
+    !!verify_credentials(auth_type, options)
   end
 
   def verify_credentials(auth_type = nil, options = {})
@@ -656,10 +659,15 @@ class Host < ApplicationRecord
     when 'ws'     then verify_credentials_with_ws(auth_type)
     when 'ipmi'   then verify_credentials_with_ipmi(auth_type)
     else
-      verify_credentials_with_ws(auth_type)
+      verify_credentials_default(auth_type, options)
     end
 
     true
+  end
+
+  # different providers use different default credential checks
+  def verify_credentials_default(auth_type, options)
+    verify_credentials_with_ssh(auth_type, options)
   end
 
   def verify_credentials_with_ws(_auth_type = nil, _options = {})
@@ -702,185 +710,6 @@ class Host < ApplicationRecord
       end
     else
       raise MiqException::MiqHostError, _("IPMI is not available on this Host")
-    end
-  end
-
-  def self.discoverByIpRange(starting, ending, options = {:ping => true})
-    options[:timeout] ||= 10
-    pattern = /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/
-    raise _("Starting address is malformed") if (starting =~ pattern).nil?
-    raise _("Ending address is malformed") if (ending =~ pattern).nil?
-
-    starting.split(".").each_index do |i|
-      if starting.split(".")[i].to_i > 255 || ending.split(".")[i].to_i > 255
-        raise _("IP address octets must be 0 to 255")
-      end
-      if starting.split(".")[i].to_i > ending.split(".")[i].to_i
-        raise _("Ending address must be greater than starting address")
-      end
-    end
-
-    network_id = starting.split(".")[0..2].join(".")
-    host_start = starting.split(".").last.to_i
-    host_end = ending.split(".").last.to_i
-
-    host_start.upto(host_end) do |h|
-      ipaddr = network_id + "." + h.to_s
-
-      unless Host.find_by(:ipaddress => ipaddr).nil? # skip discover for existing hosts
-        _log.info("ipaddress '#{ipaddr}' exists, skipping discovery")
-        next
-      end
-
-      discover_options = {:ipaddr         => ipaddr,
-                          :ping           => options[:ping],
-                          :timeout        => options[:timeout],
-                          :discover_types => options[:discover_types],
-                          :credentials    => options[:credentials]
-      }
-
-      # Add Windows domain credentials for HyperV WMI checks
-      default_zone = Zone.find_by(:name => 'default')
-      if !default_zone.nil? && default_zone.has_authentication_type?(:windows_domain)
-        discover_options[:windows_domain] = [default_zone.authentication_userid(:windows_domain), default_zone.authentication_password_encrypted(:windows_domain)]
-      end
-
-      MiqQueue.put(:class_name => "Host", :method_name => "discoverHost", :data => Marshal.dump(discover_options), :server_guid => MiqServer.my_guid)
-    end
-  end
-
-  def reset_discoverable_fields
-    raise _("Host Not Resettable - No IPMI Address") if ipmi_address.blank?
-    cred = authentication_type(:ipmi)
-    raise _("Host Not Resettable - No IPMI Credentials") if cred.nil?
-
-    run_callbacks(:destroy) { false } # Run only the before_destroy callbacks to destroy all associations
-    reload
-
-    attributes.each do |key, _value|
-      next if %w(id guid ipmi_address mac_address name created_on updated_on vmm_vendor).include?(key)
-      send("#{key}=", nil)
-    end
-
-    make_smart # before_create callback
-    self.settings   = nil
-    self.name       = "IPMI <#{ipmi_address}>"
-    self.vmm_vendor = 'unknown'
-    save!
-
-    authentications.create(cred.attributes) unless cred.nil?
-    self
-  end
-
-  def detect_discovered_os(ost)
-    # Determine os
-    os_type = nil
-    if is_vmware?
-      os_name = "VMware ESX Server"
-    elsif ost.os.include?(:linux)
-      os_name = "linux"
-    elsif ost.os.include?(:mswin)
-      os_name = "windows"
-      os_type = os_name
-    else
-      os_name = nil
-    end
-
-    return os_name, os_type
-  end
-
-  def detect_discovered_hypervisor(ost, ipaddr)
-    find_method = :find_by_ipaddress
-    if ost.hypervisor.include?(:esx)
-      self.name        = "VMware ESX Server (#{ipaddr})"
-      self.ipaddress   = ipaddr
-      self.vmm_vendor  = "vmware"
-      self.vmm_product = "Esx"
-      self.type        = "ManageIQ::Providers::Vmware::InfraManager::HostEsx"
-    elsif ost.hypervisor.include?(:ipmi)
-      find_method       = :find_by_ipmi_address
-      self.name         = "IPMI (#{ipaddr})"
-      self.type         = "Host"
-      self.vmm_vendor   = "unknown"
-      self.vmm_product  = nil
-      self.ipmi_address = ipaddr
-      self.ipaddress    = nil
-      self.hostname     = nil
-    else
-      self.vmm_vendor = ost.hypervisor.join(", ")
-      self.type       = "Host"
-    end
-
-    find_method
-  end
-
-  def self.ost_inspect(ost)
-    hash = ost.marshal_dump.dup
-    hash.delete(:credentials)
-    OpenStruct.new(hash).inspect
-  end
-
-  def self.discoverHost(options)
-    require 'manageiq/network_discovery/discovery'
-    ost = OpenStruct.new(Marshal.load(options))
-    _log.info("Discovering Host: #{ost_inspect(ost)}")
-    begin
-      ManageIQ::NetworkDiscovery::Discovery.scan_host(ost)
-
-      if ost.hypervisor.empty?
-        _log.info("NOT Discovered: #{ost_inspect(ost)}")
-      else
-        _log.info("Discovered: #{ost_inspect(ost)}")
-
-        if %i(virtualcenter scvmm rhevm openstack_infra).any? { |ems_type| ost.hypervisor.include?(ems_type) }
-          ExtManagementSystem.create_discovered_ems(ost)
-          return # only create ems instance, no host.
-        end
-
-        host = new(
-          :name      => "#{ost.ipaddr} - discovered #{Time.now.utc.strftime("%Y-%m-%d %H:%M %Z")}",
-          :ipaddress => ost.ipaddr,
-          :hostname  => Socket.getaddrinfo(ost.ipaddr, nil)[0][2]
-        )
-
-        find_method        = host.detect_discovered_hypervisor(ost, ost.ipaddr)
-        os_name, os_type = host.detect_discovered_os(ost)
-
-        if Host.send(find_method, ost.ipaddr).nil?
-          # It may have been added by someone else while we were discovering
-          host.save!
-
-          if ost.hypervisor.include?(:ipmi)
-            # IPMI - Check if credentials were passed and try to scan host
-            cred = (ost.credentials || {})[:ipmi]
-            unless cred.nil? || cred[:userid].blank?
-              ipmi = MiqIPMI.new(host.ipmi_address, cred[:userid], cred[:password])
-              if ipmi.connected?
-                _log.warn("IPMI connected to Host:<#{host.ipmi_address}> with User:<#{cred[:userid]}>")
-                host.update_authentication(:ipmi => cred)
-                host.scan
-              else
-                _log.warn("IPMI did not connect to Host:<#{host.ipmi_address}> with User:<#{cred[:userid]}>")
-              end
-            end
-          else
-            # Try to convert IP address to hostname and update host data
-            netHostName = Host.get_hostname(ost.ipaddr)
-            host.name = netHostName if netHostName
-
-            EmsRefresh.save_operating_system_inventory(host, :product_name => os_name, :product_type => os_type) unless os_name.nil?
-            EmsRefresh.save_hardware_inventory(host, {:cpu_type => "intel"})
-
-            host.save!
-          end
-
-          _log.info("#{host.name} created")
-          AuditEvent.success(:event => "host_created", :target_id => host.id, :target_class => "Host", :message => "#{host.name} created")
-        end
-      end
-    rescue => err
-      _log.log_backtrace(err)
-      AuditEvent.failure(:event => "host_created", :target_class => "Host", :message => "creating host, #{err}")
     end
   end
 
@@ -1570,15 +1399,6 @@ class Host < ApplicationRecord
   def cpu_percent_available?
     false
   end
-
-  # Host Discovery Types and Platforms
-
-  def self.host_create_os_types
-    # TODO: This feature has been removed, once the UI no longer calls this
-    # method we can delete it
-    []
-  end
-  Vmdb::Deprecation.deprecate_methods(self, :host_create_os_types)
 
   def writable_storages
     if host_storages.loaded? && host_storages.all? { |hs| hs.association(:storage).loaded? }

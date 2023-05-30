@@ -189,12 +189,15 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
   end
 
   # number of records to send at a time for a single capture message
-  # @return [Numeric] 0 for no batching.  (defaults to 0)
-  def batch_size
-    @batch_size ||= ::Settings.dig(:ems, "ems_#{ems.provider_name.underscore}", :capture_batch_size).to_i
+  # @return [Numeric] 1 for no batching.  (defaults to 1)
+  def concurrent_requests(interval_name)
+    @concurrent_requests ||= ::Settings.dig(:ems, "ems_#{ems.provider_name.underscore}", :concurrent_requests) || {}
+    ret = @concurrent_requests[interval_name].to_i
+    ret == 0 ? 1 : ret
   end
 
   def perf_capture_queue_targets(targets, interval, start_time:, end_time:, parent: nil)
+    batch_size = concurrent_requests(interval)
     if batch_size > 1
       # send all of the hosts in a cluster in one message and ignore batching
       #   hosts will rollup into the cluster, so the entire batch must be together otherwise

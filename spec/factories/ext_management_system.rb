@@ -387,12 +387,16 @@ FactoryBot.define do
     end
   end
 
-  # Leaf classes for automation_manager
+  factory :embedded_automation_manager,
+          :aliases => ["manageiq/providers/embedded_automation_manager"],
+          :class   => "ManageIQ::Providers::EmbeddedAutomationManager",
+          :parent  => :automation_manager
 
+  # Leaf classes for automation_manager
   factory :embedded_automation_manager_ansible,
           :aliases => ["manageiq/providers/embedded_ansible/automation_manager"],
           :class   => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager",
-          :parent  => :automation_manager do
+          :parent  => :embedded_automation_manager do
     provider {
       raise "DO NOT USE!  Use :provider_embedded_ansible and reference the automation_manager from that record"
     }

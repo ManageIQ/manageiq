@@ -9,8 +9,8 @@ msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-16 19:20+0000\n"
-"PO-Revision-Date: 2023-02-16 19:20+0000\n"
+"POT-Creation-Date: 2023-05-15 00:54+0000\n"
+"PO-Revision-Date: 2023-05-15 00:54+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ja\n"
@@ -21,6 +21,7 @@ msgstr ""
 
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
+#: ../app/javascript/components/storage-service-form/get-compliant-resources.jsx
 msgid " "
 msgstr " "
 
@@ -501,6 +502,20 @@ msgstr "%s (カスタム)"
 msgid "%s - %s %s Used"
 msgstr "%s - %s %s が使用済み"
 
+#:
+#: ../app/javascript/components/provider-dashboard-charts/heat-map-chart/HeatMapChartGraph.js
+msgid "%s - CPU"
+msgstr "%s - CPU"
+
+#:
+#: ../app/javascript/components/provider-dashboard-charts/heat-map-chart/HeatMapChartGraph.js
+msgid "%s - Memory"
+msgstr "%s - メモリー"
+
+#: ../app/javascript/components/settings-company-tags/index.jsx
+msgid "%s Entries"
+msgstr "%s エントリー"
+
 #: src/rbac-forms/rbacUserTagsList.jsx
 msgid "%s Tags"
 msgstr "%s タグ"
@@ -522,6 +537,10 @@ msgstr "%s がログアウトしています。ログイン・ページへリダ
 #: ../app/javascript/toolbar-actions/delete.js
 msgid "%s: \"%s\" was successfully deleted"
 msgstr "%s:\"%s\" が正常に削除されました"
+
+#: ../app/javascript/helpers/storage_manager/load-provider-capabilities.js
+msgid "%s: %s"
+msgstr "%s: %s"
 
 #: ../app/controllers/application_controller/ci_processing.rb
 msgid "%{action_name} action does not apply to selected items"
@@ -1727,7 +1746,7 @@ msgid ""
 "route table, for this VPC)"
 msgstr "(ルート・テーブルに明示的に割り当てられていないサブネットが、この VPC についてこのメイン・ルート・テーブルに割り当てられます)"
 
-#: ../app/views/ops/_diagnostics_zones_tab.html.haml
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 msgid "(current)"
 msgstr "(現在)"
 
@@ -1807,10 +1826,6 @@ msgstr "* 日次チャートには、24 時間分のデータが収集される�
 #: ../app/views/report/_db_form.html.haml
 msgid "* Dashboard name cannot be changed"
 msgstr "* ダッシュボード名は変更できません"
-
-#: ../app/views/layouts/_tl_show.html.haml
-msgid "* Dates/Times on this page are based on time zone: %{time_zone}."
-msgstr "* このページの日付/時間は、タイム・ゾーン %{time_zone} に基づいています。"
 
 #: ../app/views/miq_policy_rsop/_rsop_results.html.haml
 msgid "* Enter Policy Simulation options on the left and press Submit"
@@ -2380,9 +2395,11 @@ msgstr "<ロール別>"
 #: ../app/javascript/components/ansible-credentials-form/ansible-credentials-form.schema.js
 #: ../app/javascript/components/cloud-volume-actions-form/restore-from-backup.schema.js
 #: ../app/javascript/components/cloud-volume-backup-form/cloud-volume-backup-form.schema.js
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
 #: ../app/javascript/components/generic-objects-form/generic-objects-form.schema.js
 #: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js
 #: ../app/javascript/components/host-initiator-group-form/host-initiator-group-form.schema.js
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 #: ../app/javascript/components/miq-alert-set-form/miq-alert-set-form.schema.js
 #: ../app/javascript/components/network-routers-interfaces-form/network-routers-interfaces-form.schema.js
 #: ../app/javascript/components/pxe-customization-template-form/pxe-customization-template-form.schema.js
@@ -2391,7 +2408,6 @@ msgstr "<ロール別>"
 #: ../app/javascript/components/pxe-iso-image-form/pxe-iso-image-form.schema.js
 #: ../app/javascript/components/routers-form/RoutersForm.schema.js
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
-#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 #: ../app/javascript/components/vm-cloud-add-remove-security-group-form/vm-cloud-add-security-form.schema.js
 #: ../app/javascript/components/volume-mapping-form/volume-mapping-form.schema.js
 #: ../app/views/catalog/_form_basic_info.html.haml
@@ -2411,10 +2427,6 @@ msgstr "<この行をクリックして新規エントリーを作成してく�
 #: ../app/views/ops/_ldap_forest_entries.html.haml
 msgid "<Click on this row to create a new forest>"
 msgstr "<この行をクリックして新規フォレストを作成してください>"
-
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
-msgid "<Click on this row to create a new mapping rule>"
-msgstr "<この行をクリックして新規マッピング・ルールを作成してください>"
 
 #:
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js
@@ -2938,6 +2950,7 @@ msgstr "アクセス・モード"
 msgid "Access Physical Server Remote Console"
 msgstr "物理サーバーのリモート・コンソールにアクセス"
 
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
 #: ../app/views/ops/_rbac_role_details.html.haml
 msgid ""
 "Access Restriction for Catalog Items, Orchestration Stacks, Key Pairs, "
@@ -3121,10 +3134,10 @@ msgstr "確認"
 #. TRANSLATORS: file: product/views/MiqAction.yaml
 #: ../app/controllers/optimization_controller.rb
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/presenters/tree_builder_policy_simulation_results.rb
 #: ../app/views/catalog/_form_resources_info.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/views/_alerts_list.html.haml
 #: ../config/yaml_strings.rb
 msgid "Action"
@@ -3134,6 +3147,10 @@ msgstr "アクション"
 #: ../app/views/catalog/_form_resources_info.html.haml
 msgid "Action Order"
 msgstr "アクションの順序"
+
+#: ../app/javascript/components/async-action-button.jsx
+msgid "Action Required"
+msgstr "必要なアクション"
 
 #: ../app/models/miq_action_set.rb
 msgid "Action Set"
@@ -3181,6 +3198,10 @@ msgstr ""
 msgid "Action script exited with rc=%{rc_value}, error=%{error_text}"
 msgstr "アクション・スクリプトが rc=%{rc_value}、error=%{error_text} で終了しました"
 
+#: ../app/javascript/components/async-action-button.jsx
+msgid "Action successful"
+msgstr "アクションが成功しました"
+
 #. TRANSLATORS: file: product/views/MiqActionSet.yaml
 #: ../config/yaml_strings.rb
 msgid "ActionSet"
@@ -3189,7 +3210,11 @@ msgstr "ActionSet"
 #. TRANSLATORS: file: product/views/MiqAction.yaml
 #: ../app/controllers/miq_action_controller.rb
 #: ../app/helpers/miq_policy_helper.rb
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+#: ../app/helpers/ops_helper/settings_tab_helper.rb
 #: ../app/helpers/settings_tags_tabs_helper.rb
+#: ../app/javascript/components/settings-company-tags/helper.js
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/views/chargeback_rate/_cb_rate_edit_table.html.haml
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
@@ -3199,7 +3224,6 @@ msgstr "ActionSet"
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 #: ../app/views/ops/_ap_form_registry.html.haml
 #: ../app/views/ops/_classification_entries.html.haml
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 #: ../app/views/vm_common/_reconfigure.html.haml
 #: ../config/yaml_strings.rb
@@ -3232,12 +3256,12 @@ msgstr ""
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
 #: ../app/helpers/report_helper/report_schedule_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/presenters/tree_builder_snapshots.rb
 #: ../app/presenters/tree_node/snapshot.rb
 #: ../app/views/miq_alert/_form.html.haml
 #: ../app/views/miq_policy/_form.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/report/_schedule_form.html.haml
 #: ../app/views/report/_widget_form.html.haml:33 ../config/yaml_strings.rb
 msgid "Active"
@@ -3412,6 +3436,10 @@ msgstr "ディスクの追加"
 msgid "Add Disks"
 msgstr "ディスクの追加"
 
+#: ../app/javascript/components/settings-company-tags/index.jsx
+msgid "Add Entry"
+msgstr "エントリーの追加"
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Add Flavor"
@@ -3489,6 +3517,10 @@ msgstr "ルーター \"%{name}\" へのインターフェースの追加"
 #: ../app/helpers/application_helper/toolbar/network_router_center.rb
 msgid "Add Interface to this Router"
 msgstr "このルーターへのインターフェースの追加"
+
+#: ../app/javascript/components/settings-label-tag-mapping/index.jsx
+msgid "Add Mapping Rule"
+msgstr "マッピング・ルールの追加"
 
 #: ../app/views/miq_ae_class/_embedded_methods.html.haml
 msgid "Add Method"
@@ -4040,6 +4072,11 @@ msgstr "ウィジェットの追加"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Add a Workflow"
+msgstr "ワークフローの追加"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Add a Zone"
 msgstr "ゾーンの追加"
 
@@ -4266,6 +4303,10 @@ msgstr "アラート定義プロファイルの追加"
 msgid "Add an Customization Template"
 msgstr "カスタマイズ・テンプレートの追加"
 
+#: ../app/javascript/components/settings-company-tags-entry-form/schema.js
+msgid "Add an Entry"
+msgstr "エントリーの追加"
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Add an ISO Datastore"
@@ -4381,6 +4422,10 @@ msgstr "フレーバーの追加はユーザーにより取り消されました
 #: ../app/javascript/components/host-aggregate-form/index.jsx
 msgid "Add of Host Aggregate \"%s\" has been successfully queued."
 msgstr "ホスト・アグリゲート「%s」の追加が正常にキューに入れられました。"
+
+#: ../app/javascript/components/host-initiator-group-form/index.jsx
+msgid "Add of Host Initiator Group has been successfully queued."
+msgstr "ホスト・イニシエーター・グループの追加が正常にキューに入れられました。"
 
 #: ../app/javascript/components/auth-key-pair-cloud/index.jsx
 msgid "Add of Key Pair \"%s\" has been successfully queued."
@@ -4808,11 +4853,16 @@ msgstr "追加のテナント"
 msgid "Address"
 msgstr "アドレス"
 
+#:
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js
+msgid "Address %s is already in use"
+msgstr "アドレス %s は既に使用されています"
+
 #: ../app/helpers/host_initiator_group_helper/textual_summary.rb
 msgid "Addresses"
 msgstr "アドレス"
 
-#: ../app/views/static/evacuate-form.html.haml
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
 msgid "Admin Password"
 msgstr "管理パスワード"
 
@@ -5180,7 +5230,6 @@ msgstr[0] "アラート・ステータスのアクション"
 #: ../app/helpers/ems_container_helper/textual_summary.rb
 #: ../app/helpers/miq_alert_set_helper.rb
 #: ../app/helpers/textual_mixins/textual_authentications_status.rb
-#: ../app/javascript/components/ems_container_dashboard/helper.js
 #: ../app/javascript/oldjs/controllers/container_dashboard/util/dashboard-utils-factory.js
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/views/ems_container/_form.html.haml
@@ -5219,6 +5268,7 @@ msgstr "評価するアラート"
 
 #: ../app/controllers/miq_request_controller.rb
 #: ../app/helpers/security_group_helper/textual_summary.rb
+#: ../app/javascript/components/service-request-default/service-request-default.schema.js
 #: ../app/views/miq_task/_tasks_options.html.haml
 #: ../app/views/report/_form_sort.html.haml
 msgid "All"
@@ -5607,7 +5657,6 @@ msgstr "すべての属性"
 #: ../app/controllers/chargeback_rate_controller.rb
 #: ../app/controllers/condition_controller.rb
 #: ../app/controllers/configuration_controller.rb
-#: ../app/controllers/host_controller.rb
 #: ../app/controllers/miq_action_controller.rb
 #: ../app/controllers/miq_ae_class_controller.rb
 #: ../app/controllers/miq_ae_customization_controller/old_dialogs.rb
@@ -5631,6 +5680,7 @@ msgstr "すべての属性"
 #: ../app/javascript/components/button-group/index.jsx
 #: ../app/javascript/components/cloud-volume-form/index.jsx
 #: ../app/javascript/components/generic-objects-form/custom-button-form/index.jsx
+#: ../app/javascript/components/host-initiator-group-form/index.jsx
 #: ../app/javascript/components/physical-storage-form/index.jsx
 #: ../app/javascript/components/retirement-form/index.jsx
 #: ../app/javascript/components/settings-tasks-form/index.jsx
@@ -5639,10 +5689,8 @@ msgstr "すべての属性"
 #: ../app/javascript/forms/data-driven-form.jsx
 #: ../app/javascript/oldjs/components/miq_ae_class/namespace-form.js
 #: ../app/javascript/oldjs/controllers/catalog/catalog_item_form_controller.js
-#: ../app/javascript/oldjs/controllers/host/host_form_controller.js
 #: ../app/javascript/oldjs/controllers/ops/pglogical_replication_form_controller.js
 #: ../app/javascript/oldjs/controllers/reconfigure/reconfigure_form_controller.js
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
 msgid "All changes have been reset"
 msgstr "すべての変更がリセットされました"
 
@@ -5916,7 +5964,7 @@ msgstr ""
 #: ../app/controllers/application_controller/ci_processing.rb
 #: ../app/controllers/mixins/actions/host_actions/misc.rb
 #: ../app/helpers/application_helper/tasks.rb
-#: ../app/views/ops/_schedule_show.html.haml
+#: ../app/helpers/settings_schedule_helper.rb
 msgid "Analysis"
 msgstr "分析"
 
@@ -6249,6 +6297,7 @@ msgstr[0] "承認"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml:68 ../config/yaml_strings.rb
 msgid "Approval State"
 msgstr "承認状態"
@@ -6318,11 +6367,13 @@ msgstr "承認者/拒否者"
 msgid "Approved/Denied On"
 msgstr "承認日/拒否日"
 
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
 msgid "Approved/Denied by"
 msgstr "承認者/拒否者"
 
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 msgid "Approved/Denied on"
 msgstr "承認日/拒否日"
@@ -6386,6 +6437,7 @@ msgid ""
 "Policy?"
 msgstr "このポリシーからポリシー [%{new_policy_description}] を作成しますか?"
 
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
 #: ../app/helpers/settings_tags_tabs_helper.rb
 msgid "Are you sure you want to delete category '%{category_name}'?"
 msgstr "カテゴリー '%{category_name}' を削除しますか?"
@@ -6402,7 +6454,7 @@ msgstr "フォレスト %{ldaphost} を削除しますか?"
 msgid "Are you sure you want to delete input field from method?"
 msgstr "メソッドから入力フィールドを削除しますか?"
 
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
 msgid "Are you sure you want to delete mapping '%{label_name}'?"
 msgstr "マッピング '%{label_name}' を削除しますか?"
 
@@ -6515,6 +6567,11 @@ msgstr "このアラートを削除しますか?"
 msgid "Are you sure you want to delete this Group?"
 msgstr "このグループを削除しますか?"
 
+#: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
+#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
+msgid "Are you sure you want to delete this Host Initiator Group?"
+msgstr "このホスト・イニシエーター・グループを削除してもよろしいですか?"
+
 #: ../app/helpers/application_helper/toolbar/miq_alerts_center.rb
 msgid "Are you sure you want to delete this Policy Alerts?"
 msgstr "このポリシー・アラートを削除しますか?"
@@ -6547,6 +6604,15 @@ msgstr "このユーザーを削除しますか?"
 #: ../app/helpers/application_helper/toolbar/zone_center.rb
 msgid "Are you sure you want to delete this Zone?"
 msgstr "このゾーンを削除しますか?"
+
+#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshot_center.rb
+#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshots_center.rb
+msgid "Are you sure you want to delete this cloud volume snapshot?"
+msgstr "このクラウド・ボリューム・スナップショットを削除してもよろしいですか?"
+
+#: ../app/javascript/components/settings-company-tags/index.jsx
+msgid "Are you sure you want to delete this entry?"
+msgstr "このエントリーを削除してもよろしいですか?"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb
 msgid "Are you sure you want to delete this host initiator?"
@@ -7202,11 +7268,11 @@ msgid "Attribute missing for %{field}"
 msgstr "%{field} に属性がありません"
 
 #: ../app/helpers/miq_action_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "Attribute/Value Pairs"
@@ -7571,8 +7637,8 @@ msgstr "認証パスワード"
 msgid "Authtype"
 msgstr "認証タイプ"
 
-#: ../app/views/static/evacuate-form.html.haml
-#: ../app/views/vm_common/_live_migrate.html.haml
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 msgid "Auto-select Host?"
 msgstr "ホストを自動選択しますか?"
 
@@ -7689,13 +7755,9 @@ msgstr "自動化スキーマ"
 msgid "Automate Simulation"
 msgstr "自動化シミュレーション"
 
-#: ../app/views/ops/_schedule_show.html.haml
+#: ../app/helpers/settings_schedule_helper.rb
 msgid "Automate Task"
 msgstr "自動化タスク"
-
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
-msgid "Automate Tasks Selection"
-msgstr "自動化タスクの選択"
 
 #: ../config/model_display_names.rb
 msgid "Automate Workspace"
@@ -8514,9 +8576,11 @@ msgstr "基本情報"
 #: ../app/helpers/miq_policy_helper.rb
 #: ../app/helpers/miq_policy_set_helper.rb:3 ../app/helpers/ops_helper.rb
 #: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
 #: ../app/helpers/settings_analysis_profile_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/javascript/components/cloud-volume-actions-form/create-backup.schema.js
 #: ../app/javascript/components/cloud-volume-actions-form/create-snapshot.schema.js
@@ -8539,7 +8603,6 @@ msgstr "基本情報"
 #: ../app/views/miq_policy/_event_edit.html.haml
 #: ../app/views/miq_policy/_form.html.haml
 #: ../app/views/ops/_ap_form.html.haml
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 #: ../app/views/ops/_settings_server_tab.html.haml
 #: ../app/views/pxe/_iso_datastore_details.html.haml
 #: ../app/views/pxe/_pxe_image_type_details.html.haml
@@ -8742,7 +8805,8 @@ msgstr "識別 LED の点滅"
 msgid "Blink the Identify LED?"
 msgstr "識別 LED を点滅させますか?"
 
-#: ../app/views/vm_common/_live_migrate.html.haml
+#:
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 msgid "Block Migration"
 msgstr "ブロック移行"
 
@@ -8835,10 +8899,6 @@ msgstr "起動可能"
 #: ../config/yaml_strings.rb
 msgid "Bootable?"
 msgstr "起動可能?"
-
-#: ../app/javascript/components/timeline-options/timeline-options.jsx
-msgid "Both"
-msgstr "両方"
 
 #. TRANSLATORS: en.yml key: dictionary.model.BottleneckEvent
 #: ../config/model_display_names.rb:14 ../config/dictionary_strings.rb
@@ -9787,7 +9847,8 @@ msgid "CPU Max Used MHz Trend"
 msgstr "CPU 最大使用 MHz のトレンド"
 
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
-#: ../app/helpers/ops_helper.rb:214 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../config/yaml_strings.rb
 msgid "CPU Percent"
 msgstr "CPU パーセント"
@@ -9836,7 +9897,8 @@ msgstr "CPU 速度"
 
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
 #. TRANSLATORS: file: product/views/OsProcess-processes.yaml
-#: ../app/helpers/ops_helper.rb:213 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../config/yaml_strings.rb
 msgid "CPU Time"
 msgstr "CPU 時間"
@@ -10321,6 +10383,7 @@ msgstr ""
 
 #: ../app/helpers/storage_resource_helper/textual_summary.rb
 #: ../app/helpers/storage_service_helper/textual_summary.rb
+#: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
 msgid "Capabilities"
 msgstr "機能"
 
@@ -10728,10 +10791,6 @@ msgid "Category %{description} [%{name}] record created ("
 msgstr "カテゴリー %{description} [%{name}] のレコードが作成されました ("
 
 #: ../app/controllers/ops_controller/settings/tags.rb
-msgid "Category %{description} [%{name}] record deleted"
-msgstr "カテゴリー %{description} [%{name}] のレコードが削除されました"
-
-#: ../app/controllers/ops_controller/settings/tags.rb
 msgid "Category %{description} [%{name}] record updated ("
 msgstr "カテゴリー %{description} [%{name}] のレコードが更新されました ("
 
@@ -10765,6 +10824,18 @@ msgstr "カテゴリー・タグ・エントリー"
 msgid "Category cannot be deleted"
 msgstr "カテゴリーは削除できません"
 
+#: ../app/javascript/components/settings-company-tags-entry-form/index.jsx
+msgid "Category entry \"%s\" was created successfully"
+msgstr "カテゴリー・エントリー \"%s\" が正常に作成されました"
+
+#: ../app/javascript/components/settings-company-tags-entry-form/index.jsx
+msgid "Category entry \"%s\" was saved successfully"
+msgstr "カテゴリー・エントリー \"%s\" は正常に保存されました"
+
+#: ../app/javascript/components/settings-company-tags/index.jsx
+msgid "Category entry was successfully deleted"
+msgstr "カテゴリー・エントリーが正常に削除されました"
+
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb
 msgid "Category is required"
 msgstr "カテゴリーが必要です"
@@ -10793,7 +10864,7 @@ msgstr "注意: 構成ファイルを手動で変更すると、サーバーが�
 msgid "Caution: Manual changes to configuration files can disable the Zone!"
 msgstr "注意: 構成ファイルを手動で変更すると、ゾーンが無効になる可能性があります。"
 
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
+#: ../app/javascript/components/settings-label-tag-mapping/index.jsx
 msgid ""
 "Caution: Mappings with Resource Entity 'All-Entities' could cause overwriting "
 "existing tags on resources with mapped provider labels."
@@ -11115,7 +11186,7 @@ msgstr "チャージバック・レートの詳細: 測定"
 msgid "Chargeback tier"
 msgstr "チャージバック階層"
 
-#: ../app/controllers/mixins/chargeback_preview.rb
+#: ../app/controllers/mixins/chargeback_preview_mixin.rb
 msgid "Chargeback was calculated based on flat allocation"
 msgstr "チャージバックは一律の割り振りに基づいて検索されました"
 
@@ -11532,6 +11603,11 @@ msgstr "この VM の既知の最終構成についてのコンプライアン�
 msgid "Check Compliance of the last known configuration for this item"
 msgstr "この項目の既知の最終構成についてのコンプライアンス・チェック"
 
+#:
+#: ../app/javascript/components/storage-service-form/get-compliant-resources.jsx
+msgid "Check Compliant Resources"
+msgstr "準拠リソースの確認"
+
 #: ../app/views/layouts/exp_atom/_edit_find.html.haml
 msgid "Check Count"
 msgstr "チェック・カウント"
@@ -11547,6 +11623,11 @@ msgstr "値チェックのエラー: %{msg}"
 #: src/report-editor/sort-criteria.jsx
 msgid "Check input"
 msgstr "入力のチェック"
+
+#:
+#: ../app/javascript/components/storage-service-form/get-compliant-resources.jsx
+msgid "Checking"
+msgstr "検査中"
 
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb
 msgid "Child Orchestration Stacks"
@@ -11588,12 +11669,15 @@ msgstr "選択肢"
 #: ../app/javascript/components/cloud-object-store-container-form/cloud-object-store-container-form.schema.js
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
 #: ../app/javascript/components/diagnostics-collect-log-form/schema.js
+#: ../app/javascript/components/host-edit-form/host-edit-form.schema.js
 #: ../app/javascript/components/network-floatingIPs-form/network-floatingIPs-form.schema.js
 #: ../app/javascript/components/network-security-groups-form/network-security-groups-form.schema.js
 #: ../app/javascript/components/provider-form/index.jsx
 #: ../app/javascript/components/routers-form/RoutersForm.schema.js
 #: ../app/javascript/components/select/index.jsx
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 #: ../app/javascript/components/subnet-form/subnet-form.schema.js
+#: ../app/javascript/helpers/storage_manager/filter-service-by-capabilities.js
 #: ../app/views/catalog/_form_basic_info.html.haml
 #: ../app/views/catalog/_form_ovf_template_options.html.haml
 #: ../app/views/catalog/_form_resources_info.html.haml
@@ -11602,7 +11686,6 @@ msgstr "選択肢"
 #: ../app/views/ems_container/_form.html.haml
 #: ../app/views/ems_infra/_form.html.haml
 #: ../app/views/ems_physical_infra/_form.html.haml
-#: ../app/views/host/_form.html.haml:47 ../app/views/host/_form.html.haml
 #: ../app/views/layouts/_ae_resolve_options.html.haml
 #: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
@@ -11655,7 +11738,6 @@ msgid "Choose a %{model} report filter"
 msgstr "%{model}のレポート・フィルターの選択"
 
 #: ../app/views/chargeback_assignment/_form.html.haml
-#: ../app/views/ops/_settings_co_tags_tab.html.haml
 #: ../app/views/report/_form_filter_chargeback.html.haml
 msgid "Choose a Category"
 msgstr "カテゴリーの選択"
@@ -11997,10 +12079,15 @@ msgstr "選択したオブジェクト・ストレージ・コンテナーのク
 msgid "Click on a Host to fetch its settings"
 msgstr "ホストをクリックして設定を取り出す"
 
+#: ../app/javascript/components/settings-label-tag-mapping/index.jsx
+msgid "Click on this row to create a new mapping rule"
+msgstr "新規マッピング・ルールを作成するには、この行をクリックします"
+
 #: ../app/javascript/components/settings-company-categories/index.jsx
 msgid "Click to add a new category"
 msgstr "クリックして新しいカテゴリーを追加する"
 
+#: ../app/javascript/components/settings-company-tags/index.jsx
 #: ../app/views/ops/_ap_form_file.html.haml
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 #: ../app/views/ops/_ap_form_registry.html.haml
@@ -12035,6 +12122,8 @@ msgstr "クリックしてこのユーザーの孤立したレコードを削除
 msgid "Click to delete this category"
 msgstr "クリックしてこのカテゴリーを削除する"
 
+#: ../app/helpers/ops_helper/settings_tab_helper.rb
+#: ../app/javascript/components/settings-company-tags/helper.js
 #: ../app/views/ops/_ap_form_file.html.haml
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 #: ../app/views/ops/_ap_form_registry.html.haml
@@ -12055,17 +12144,13 @@ msgstr "クリックしてこのフォレストを削除する"
 msgid "Click to delete this input field from method"
 msgstr "クリックしてこの入力フィールドをメソッドから削除する"
 
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 msgid "Click to delete this mapping"
 msgstr "クリックしてこのマッピングを削除する"
 
 #: ../app/views/ops/_ldap_forest_entries.html.haml
 msgid "Click to edit this forest"
 msgstr "クリックしてこのフォレストを編集する"
-
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
-msgid "Click to edit this mapping rule"
-msgstr "クリックしてこのマッピング・ルールを編集する"
 
 #: ../app/javascript/components/dashboard-widgets/widget-menu/index.jsx
 msgid "Click to go this location"
@@ -12119,8 +12204,8 @@ msgstr "クリックして %{name} テナントを表示する"
 msgid "Click to view %{name} TenantProject"
 msgstr "クリックして%{name}テナント・プロジェクトを表示する"
 
+#: ../app/helpers/request_details_helper.rb
 #: ../app/javascript/components/miq-data-table/index.jsx
-#: ../app/views/miq_request/_request.html.haml
 msgid "Click to view details"
 msgstr "クリックして詳細を表示する"
 
@@ -13769,10 +13854,6 @@ msgstr "クラスターのリレーションシップ"
 msgid "Cluster Resources"
 msgstr "クラスター・リソース"
 
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
-msgid "Cluster Selection"
-msgstr "クラスターの選択"
-
 #: ../app/services/ems_infra_dashboard_service.rb
 #: ../app/views/ems_infra/_show_dashboard.html.haml
 msgid "Cluster Utilization"
@@ -14167,6 +14248,7 @@ msgstr "完了"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml:63 ../config/yaml_strings.rb
 msgid "Completed"
 msgstr "完了"
@@ -14191,7 +14273,7 @@ msgid "Compliance"
 msgstr "コンプライアンス"
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb
-#: ../app/views/ops/_schedule_show.html.haml
+#: ../app/helpers/settings_schedule_helper.rb
 msgid "Compliance Check"
 msgstr "コンプライアンス・チェック"
 
@@ -14330,6 +14412,11 @@ msgstr "コンプライアンス"
 #: ../app/helpers/compliance_summary_helper.rb
 msgid "Compliant as of %{time} Ago"
 msgstr "%{time} 時点前のコンプライアンス"
+
+#:
+#: ../app/javascript/components/storage-service-form/get-compliant-resources.jsx
+msgid "Compliant resources: "
+msgstr "準拠リソース: "
 
 #:
 #: ../app/javascript/components/visual-settings-form/visual-settings-form.schema.js
@@ -14630,6 +14717,7 @@ msgstr "構成バージョン"
 #: ../app/helpers/application_helper/toolbar/cloud_volume_backups_center.rb
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb
 #: ../app/helpers/application_helper/toolbar/cloud_volume_snapshot_center.rb
+#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshots_center.rb
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb
 #: ../app/helpers/application_helper/toolbar/condition_center.rb
 #: ../app/helpers/application_helper/toolbar/conditions_center.rb
@@ -15152,6 +15240,14 @@ msgid "ConfigurationProfile|Total configured systems"
 msgstr "構成済みシステムの合計"
 
 #: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Context"
+msgstr "ConfigurationScript ベース | コンテキスト"
+
+#: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Credentials"
+msgstr "ConfigurationScript ベース | 資格情報"
+
+#: ../config/model_attributes.rb
 msgid "ConfigurationScriptBase|Description"
 msgstr "説明"
 
@@ -15168,12 +15264,32 @@ msgid "ConfigurationScriptBase|Name"
 msgstr "名前"
 
 #: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Output"
+msgstr "ConfigurationScript ベース | 出力"
+
+#: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Payload"
+msgstr "ConfigurationScript ベース | ペイロード"
+
+#: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Payload type"
+msgstr "ConfigurationScript ベース | ペイロード・タイプ"
+
+#: ../config/model_attributes.rb
 msgid "ConfigurationScriptBase|Region description"
 msgstr "リージョンの説明"
 
 #: ../config/model_attributes.rb
 msgid "ConfigurationScriptBase|Region number"
 msgstr "リージョン番号"
+
+#: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Run by userid"
+msgstr "ConfigurationScript ベース | ユーザー ID による実行"
+
+#: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Status"
+msgstr "ConfigurationScript ベース | 状況"
 
 #: ../config/model_attributes.rb
 msgid "ConfigurationScriptBase|Survey spec"
@@ -19629,6 +19745,7 @@ msgstr "作成"
 #: ../app/helpers/firmware_binary_helper/textual_summary.rb
 #: ../app/helpers/firmware_registry_helper/textual_summary.rb
 #: ../app/helpers/firmware_target_helper/textual_summary.rb
+#: ../app/helpers/request_details_helper.rb
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/views/catalog/_ot_tree_show.html.haml
 #: ../app/views/miq_ae_class/_method_form.html.haml
@@ -19895,7 +20012,6 @@ msgstr "資格情報タイプ"
 msgid "Credential validation was not successful: %{details}"
 msgstr "資格情報の検証に失敗しました: %{details}"
 
-#: ../app/controllers/host_controller.rb
 #: ../app/controllers/mixins/manager_controller_mixin.rb
 msgid "Credential validation was successful"
 msgstr "資格情報の検証に成功しました"
@@ -20001,10 +20117,6 @@ msgstr "プロバイダーを更新するには、資格情報が有効でなけ
 msgid "Credentials/Settings"
 msgstr "資格情報/設定"
 
-#: ../app/controllers/host_controller.rb
-msgid "Credentials/Settings saved successfully"
-msgstr "資格情報/設定が正常に保存されました"
-
 #: src/topology/topologyCanvas.jsx
 msgid "Critical"
 msgstr "クリティカル"
@@ -20077,8 +20189,8 @@ msgid "Current Flavor"
 msgstr "現在のフレーバー"
 
 #. TRANSLATORS: file: product/views/User.yaml
-#: ../app/views/ops/_rbac_user_details.html.haml
-#: ../config/yaml_strings.rb
+#: ../app/helpers/settings_users_helper.rb
+#: ../app/helpers/settings_users_helper.rb:38 ../config/yaml_strings.rb
 msgid "Current Group"
 msgstr "現在のグループ"
 
@@ -20122,6 +20234,7 @@ msgid "Currently Used Space"
 msgstr "現在使用されているスペース"
 
 #: ../app/helpers/catalog_helper.rb:110 ../app/helpers/report_helper.rb
+#: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
 msgid "Custom"
 msgstr "カスタム"
 
@@ -20266,9 +20379,12 @@ msgstr "カスタム・ファビコン"
 #: ../app/helpers/host_helper/textual_summary.rb
 #: ../app/helpers/textual_mixins/vm_common.rb
 #: ../app/javascript/components/vm-edit-form/vm-edit-form.schema.js
-#: ../app/views/host/_form.html.haml
 msgid "Custom Identifier"
 msgstr "カスタム識別子"
+
+#: ../app/javascript/components/host-edit-form/host-edit-form.schema.js
+msgid "Custom Identifier:"
+msgstr "カスタム ID:"
 
 #: ../app/helpers/catalog_helper.rb
 #: ../app/views/catalog/_sandt_tree_custom_image_form.html.haml
@@ -20941,7 +21057,7 @@ msgstr "データが正常に検証されました"
 msgid "Data:"
 msgstr "データ:"
 
-#: ../app/helpers/ops_helper.rb:106 ../app/views/ops/_all_tabs.html.haml
+#: ../app/helpers/ops_helper.rb:115 ../app/views/ops/_all_tabs.html.haml
 #: ../app/views/ops/_settings_authentication_tab.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 msgid "Database"
@@ -21135,10 +21251,6 @@ msgstr "データ・ストアの他の VM ファイル"
 #: ../config/dictionary_strings.rb:2348 ../config/yaml_strings.rb
 msgid "Datastore Path"
 msgstr "データ・ストア・パス"
-
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
-msgid "Datastore Selection"
-msgstr "データ・ストアの選択"
 
 #. TRANSLATORS: file: product/reports/150_Configuration Management - Storage/020_Summary for VMs.yaml
 #: ../config/yaml_strings.rb
@@ -21370,11 +21482,6 @@ msgstr "日付/時間の値は空白にしないでください"
 msgid "Datepicker"
 msgstr "日付ピッカー"
 
-#:
-#: ../app/javascript/components/timeline-options/timeline-options-simple.schema.js
-msgid "Dates Range"
-msgstr "日付範囲"
-
 #: ../app/helpers/report_helper/timer.rb
 #: ../app/javascript/components/schedule-form/helper.js
 #: ../app/javascript/oldjs/miq_formatters.js
@@ -21490,6 +21597,7 @@ msgstr "専用または共有"
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
 #: ../app/helpers/settings_tags_tabs_helper.rb
 #: ../app/helpers/textual_summary_helper.rb
+#: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
 #: ../app/views/layouts/_container_auth.html.haml
 #: ../app/views/layouts/_edit_form_buttons.html.haml
 #: ../app/views/layouts/_x_edit_buttons.html.haml
@@ -21729,15 +21837,18 @@ msgstr "遅延 (分) 停止"
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+#: ../app/helpers/ops_helper/settings_tab_helper.rb
 #: ../app/helpers/settings_tags_tabs_helper.rb
 #: ../app/javascript/components/remove-generic-item-modal.jsx
+#: ../app/javascript/components/settings-company-tags/helper.js
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 #: ../app/views/chargeback_rate/_cb_rate_edit_table.html.haml
 #: ../app/views/chargeback_rate/_tier_row.haml
 #: ../app/views/ops/_ap_form_file.html.haml
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 #: ../app/views/ops/_ap_form_registry.html.haml
 #: ../app/views/ops/_classification_entry.html.haml
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 #: ../app/views/vm_common/_reconfigure.html.haml
 msgid "Delete"
@@ -21894,10 +22005,6 @@ msgstr "クラウド・テナントの削除"
 #: ../app/helpers/application_helper/toolbar/cloud_tenants_center.rb
 msgid "Delete Cloud Tenants"
 msgstr "クラウド・テナントの削除"
-
-#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshot_center.rb
-msgid "Delete Cloud Volume Snapshot"
-msgstr "クラウド・ボリューム・スナップショットの削除"
 
 #: ../app/helpers/application_helper/toolbar/conditions_center.rb
 msgid "Delete Conditions"
@@ -22188,6 +22295,11 @@ msgstr "ウィジェットの削除"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Delete a Workflow"
+msgstr "ワークフローの削除"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Delete a Zone"
 msgstr "ゾーンの削除"
 
@@ -22426,10 +22538,20 @@ msgstr "選択されたタスクよりも古いタスクの削除"
 msgid "Delete the %{model} filter named %{filter}?"
 msgstr "%{filter}という名前の %{model}フィルターを削除しますか?"
 
+#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshot_center.rb
+#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshots_center.rb
+msgid "Delete the Cloud Volume Snapshot"
+msgstr "クラウド・ボリューム・スナップショットの削除"
+
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
 msgid "Delete the Host Initiator"
 msgstr "ホスト・イニシエーターの削除"
+
+#: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
+#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
+msgid "Delete the Host Initiator Group"
+msgstr "ホスト・イニシエーター・グループの削除"
 
 #: ../app/helpers/application_helper/toolbar/physical_storage_center.rb
 #: ../app/helpers/application_helper/toolbar/physical_storages_center.rb
@@ -22599,9 +22721,17 @@ msgstr "このゾーンを削除"
 msgid "Delete this category"
 msgstr "このカテゴリーを削除"
 
+#: ../app/javascript/components/settings-company-tags/helper.js
+msgid "Delete this entry"
+msgstr "このエントリーを削除"
+
 #: ../app/helpers/application_helper/toolbar/tenant_center.rb
 msgid "Delete this item"
 msgstr "この項目を削除"
+
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+msgid "Delete this mapping"
+msgstr "このマッピングを削除"
 
 #: ../app/helpers/application_helper/toolbar/volume_mapping_center.rb
 msgid "Delete volume mapping"
@@ -22702,6 +22832,7 @@ msgid ""
 "Deleting all Tasks older than %{date} from the %{product} Database initiated"
 msgstr "%{date} よりも古いすべてのタスクの %{product} データベースからの削除が開始されました"
 
+#: ../app/helpers/ops_helper/settings_tab_helper.rb
 #: ../app/views/ops/_classification_entry.html.haml
 msgid ""
 "Deleting the '%{entry_name}' entry will also unassign it from all items, are "
@@ -22945,8 +23076,9 @@ msgstr "宛先 EMS クラスター UID"
 msgid "Destination Groups"
 msgstr "宛先グループ"
 
-#: ../app/views/static/evacuate-form.html.haml
-#: ../app/views/vm_common/_live_migrate.html.haml
+#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
+#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
+#: ../config/yaml_strings.rb
 msgid "Destination Host"
 msgstr "宛先ホスト"
 
@@ -23103,6 +23235,7 @@ msgstr "詳細 - VM の移行の準備ができています"
 msgid "Detailed - VMs migration ready - no CD/DVD/Floppy connected"
 msgstr "詳細 - VM の移行の準備ができています - CD/DVD/フロッピーが接続されていません"
 
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 #: ../app/views/ops/_rbac_group_details.html.haml
 msgid "Detailed Description"
 msgstr "詳細な説明"
@@ -23110,6 +23243,7 @@ msgstr "詳細な説明"
 #: ../app/helpers/catalog_helper.rb:176 ../app/helpers/catalog_helper.rb
 #: ../app/helpers/cloud_volume_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
+#: ../app/helpers/utilization_helper.rb
 #: ../app/javascript/components/visual-settings-form/visual-settings-form.schema.js
 #: ../app/views/generic_mailer/policy_action_email.html.haml
 #: ../app/views/generic_mailer/policy_action_email.text.haml
@@ -23117,7 +23251,6 @@ msgstr "詳細な説明"
 #: ../app/views/ops/_all_tabs.html.haml
 #: ../app/views/orchestration_stack/_stack_orchestration_template.html.haml
 #: ../app/views/service/_svcs_show.html.haml
-#: ../app/views/utilization/_utilization_tabs.html.haml
 msgid "Details"
 msgstr "詳細"
 
@@ -24365,7 +24498,8 @@ msgstr "ディスク・カーネル待機時間 - 平均 (ms)"
 msgid "Disk Latency - Avg (ms)"
 msgstr "ディスク待機時間 - 平均 (ms)"
 
-#: ../app/views/vm_common/_live_migrate.html.haml
+#:
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 msgid "Disk Over Commit"
 msgstr "ディスクのオーバーコミット"
 
@@ -25841,6 +25975,46 @@ msgstr "VM ドリフトの表示"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Display a list of Credentials"
+msgstr "資格情報のリストの表示"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display a list of Repositories"
+msgstr "リポジトリーのリストの表示"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display a list of Workflow Instances"
+msgstr "ワークフロー・インスタンスのリストの表示"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display a list of Workflows"
+msgstr "ワークフローのリストの表示"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display an Individual Credential"
+msgstr "個々の資格情報の表示"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display an Individual Repository"
+msgstr "個々のリポジトリーの表示"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display an Individual Workflow"
+msgstr "個々のワークフローの表示"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display an Individual Workflow Instance"
+msgstr "個々のワークフロー・インスタンスの表示"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Display any dashboards"
 msgstr "ダッシュボードの表示"
 
@@ -26877,6 +27051,10 @@ msgstr "ホスト・アグリゲートの編集"
 msgid "Edit Host Aggregate \"%{name}\""
 msgstr "ホスト・アグリゲート \"%{name}\" の編集"
 
+#: ../app/controllers/host_initiator_group_controller.rb
+msgid "Edit Host Initiator group \"%{name}\""
+msgstr "ホスト・イニシエーター・グループ \"%{name}\" の編集"
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Edit Host Tags"
@@ -27176,6 +27354,10 @@ msgstr "サービス \"%{name}\" の編集"
 #: ../config/yaml_strings.rb
 msgid "Edit Services"
 msgstr "サービスの編集"
+
+#: ../app/controllers/storage_service_controller.rb
+msgid "Edit Storage Service \"%{name}\""
+msgstr "ストレージ・サービス \"%{name}\" の編集"
 
 #: ../app/controllers/cloud_subnet_controller.rb
 msgid "Edit Subnet \"%{name}\""
@@ -28156,6 +28338,11 @@ msgstr "ホスト・アグリゲートの編集"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Edit a Host Initiator Group"
+msgstr "ホスト・イニシエーター・グループの編集"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Edit a Image"
 msgstr "イメージの編集"
 
@@ -28295,6 +28482,11 @@ msgstr "ストレージ・マネージャーの編集"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Edit a Storage Service"
+msgstr "ストレージ・サービスの編集"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Edit a Subnet"
 msgstr "サブネットの編集"
 
@@ -28332,6 +28524,11 @@ msgstr "ボリュームの編集"
 #: ../config/yaml_strings.rb
 msgid "Edit a Widget"
 msgstr "ウィジェットの編集"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Edit a Workflow"
+msgstr "ワークフローの編集"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -28561,13 +28758,21 @@ msgstr "ドメイン \"%s\" の編集はユーザーにより取り消されま�
 msgid "Edit of Generic Object Definition \"%s\" was cancelled by the user."
 msgstr "汎用オブジェクト定義「%s」の編集はユーザーによって取り消されました。"
 
-#: ../app/controllers/host_controller.rb
-msgid "Edit of Host \"%{name}\" was cancelled by the user"
-msgstr "ホスト \"%{name}\" の編集はユーザーにより取り消されました"
+#: ../app/javascript/components/host-edit-form/host-edit-form.jsx
+msgid "Edit of Host \"%s\" was cancelled."
+msgstr "ホスト \"%s\" の編集は取り消されました。"
 
 #: ../app/javascript/components/host-aggregate-form/index.jsx
 msgid "Edit of Host Aggregate \"%s\" was canceled by the user."
 msgstr "ホスト・アグリゲート 「%s」 の編集はユーザーによって取り消されました。"
+
+#: ../app/javascript/components/host-initiator-group-form/index.jsx
+msgid "Edit of Host Initiator Group \"%s\" was canceled by the user."
+msgstr "ホスト・イニシエーター・グループ \"%s\" の編集はユーザーにより取り消されました。"
+
+#: ../app/javascript/components/host-edit-form/host-edit-form.jsx
+msgid "Edit of Hosts was cancelled."
+msgstr "ホストの編集は取り消されました。"
 
 #: ../app/javascript/components/pxe-iso-image-form/index.jsx
 msgid "Edit of ISO Image \"%s\" was cancelled by the user"
@@ -28684,10 +28889,6 @@ msgstr "Windows イメージ \"%{name}\" の編集はユーザーにより取り
 msgid "Edit of Zone \"%s\" was canceled by the user."
 msgstr "ゾーン「%s」 の編集はユーザーによって取り消されました。"
 
-#: ../app/controllers/host_controller.rb
-msgid "Edit of credentials for selected Hosts was cancelled by the user"
-msgstr "選択したホストの資格情報の編集はユーザーにより取り消されました"
-
 #: ../app/javascript/components/network-floatingIPs-form/index.jsx
 msgid "Edit of floating IPs \"%s\" was canceled by the user."
 msgstr "フローティング IP「%s」の編集はユーザーによって取り消されました。"
@@ -28713,6 +28914,10 @@ msgstr "選択したクラウド・ボリュームの編集"
 msgid "Edit selected Generic Object Definition"
 msgstr "選択した汎用オブジェクトの定義の編集"
 
+#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
+msgid "Edit selected Host Initiator Group"
+msgstr "選択したホスト・イニシエーター・グループの編集"
+
 #:
 #: ../app/helpers/application_helper/toolbar/orchestration_templates_center.rb
 msgid "Edit selected Orchestration Template"
@@ -28725,6 +28930,10 @@ msgstr "選択した物理ストレージの編集"
 #: ../app/helpers/application_helper/toolbar/miq_ae_fields_center.rb
 msgid "Edit selected Schema"
 msgstr "選択したスキーマの編集"
+
+#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
+msgid "Edit selected Storage Service"
+msgstr "選択したストレージ・サービスの編集"
 
 #: ../app/helpers/application_helper/toolbar/time_profiles_center.rb
 msgid "Edit selected Time Profile"
@@ -28984,6 +29193,10 @@ msgstr "このダイアログの編集"
 msgid "Edit this Domain"
 msgstr "このドメインの編集"
 
+#: ../app/javascript/components/settings-company-tags-entry-form/schema.js
+msgid "Edit this Entry"
+msgstr "このエントリーの編集"
+
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_center.rb
 msgid "Edit this Generic Object Definition"
@@ -28992,6 +29205,10 @@ msgstr "この汎用オブジェクトの定義の編集"
 #: ../app/helpers/application_helper/toolbar/miq_group_center.rb
 msgid "Edit this Group"
 msgstr "このグループの編集"
+
+#: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
+msgid "Edit this Host Initiator Group"
+msgstr "このホスト・イニシエーター・グループの編集"
 
 #: ../app/helpers/application_helper/toolbar/iso_image_center.rb
 msgid "Edit this ISO Image"
@@ -29113,6 +29330,10 @@ msgstr "このサービスの編集"
 #: ../app/helpers/application_helper/toolbar/ems_storage_center.rb
 msgid "Edit this Storage Manager"
 msgstr "このストレージ・マネージャーの編集"
+
+#: ../app/helpers/application_helper/toolbar/storage_service_center.rb
+msgid "Edit this Storage Service"
+msgstr "このストレージ・サービスの編集"
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_type_center.rb
 msgid "Edit this System Image Type"
@@ -29391,6 +29612,10 @@ msgstr "組み込みの自動化マネージャー"
 #: ../app/views/miq_ae_class/_embedded_methods.html.haml
 msgid "Embedded Methods"
 msgstr "組み込みメソッド"
+
+#: ../lib/manageiq/providers/workflows/engine.rb
+msgid "Embedded Workflows Provider"
+msgstr "組み込みワークフロー・プロバイダー"
 
 #. TRANSLATORS: en.yml key: dictionary.column.empty_dir_medium_type
 #: ../config/dictionary_strings.rb
@@ -30035,6 +30260,11 @@ msgstr "有効にされた UDP インバウンド・ポート"
 msgid "Enabled Udp Outbound Ports"
 msgstr "有効にされた UDP アウトバウンド・ポート"
 
+#:
+#: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
+msgid "Enabled capability values:"
+msgstr "使用可能な機能の値:"
+
 #. TRANSLATORS: file: product/views/SystemService.yaml
 #: ../config/yaml_strings.rb
 msgid "Enabled run levels"
@@ -30117,14 +30347,6 @@ msgstr "エンディアン"
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/network_manager/cloud_subnet.rb
 msgid "Ending IP Address"
 msgstr "終了 IP アドレス"
-
-#: ../app/models/host.rb
-msgid "Ending address is malformed"
-msgstr "終了アドレスの形式が正しくありません"
-
-#: ../app/models/host.rb
-msgid "Ending address must be greater than starting address"
-msgstr "終了アドレスは開始アドレスより大きくなければなりません"
 
 #: ../app/models/manageiq/providers/ibm_terraform/provider.rb
 msgid "Endpoint"
@@ -30774,7 +30996,7 @@ msgstr "管理エンジンのエラーについて考えられる原因:"
 msgid "Escalate Privilege"
 msgstr "特権昇格"
 
-#: ../app/views/static/evacuate-form.html.haml
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
 msgid "Evacuate Host"
 msgstr "ホストの退避"
 
@@ -30805,6 +31027,7 @@ msgid "Evacuating Instance %{instance_name} failed: %{error_message}"
 msgstr "インスタンス %{instance_name} の退避に失敗しました: %{error_message}"
 
 #: ../app/controllers/mixins/actions/vm_actions/evacuate.rb
+#: ../app/javascript/components/evacuate-form/index.jsx
 msgid "Evacuation of Instances was cancelled by the user"
 msgstr "インスタンスの退避はユーザーにより取り消されました"
 
@@ -31100,6 +31323,10 @@ msgid "EventStream|Event type"
 msgstr "イベント・タイプ"
 
 #: ../config/model_attributes.rb
+msgid "EventStream|Ext management system name"
+msgstr "EventStream| 外部管理システム名"
+
+#: ../config/model_attributes.rb
 msgid "EventStream|Full data"
 msgstr "完全データ"
 
@@ -31170,6 +31397,10 @@ msgstr "VM の場所"
 #: ../config/model_attributes.rb
 msgid "EventStream|Vm name"
 msgstr "VM 名"
+
+#: ../config/model_attributes.rb
+msgid "EventStream|Vm or template name"
+msgstr "EventStream| VM またはテンプレート名"
 
 #. TRANSLATORS: file: product/views/MiqEventDefinition.yaml
 #: ../app/controllers/miq_event_definition_controller.rb
@@ -31809,6 +32040,21 @@ msgstr "タイムライン下のすべて"
 msgid "Everything under Volume Mapping"
 msgstr "ボリューム・マッピング下のすべて"
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Everything under Workflow Instances"
+msgstr "ワークフロー・インスタンス下のすべて"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Everything under Workflows"
+msgstr "ワークフロー下のすべて"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Everything under Workflows Automation Manager"
+msgstr "ワークフロー自動化マネージャー下のすべて"
+
 #. TRANSLATORS: en.yml key: dictionary.column.evm_owner_email
 #: ../config/dictionary_strings.rb
 msgid "Evm Owner Email"
@@ -32337,6 +32583,10 @@ msgid "ExtManagementSystem|Supports cloud volume create"
 msgstr "クラウド・ボリューム作成のサポート"
 
 #: ../config/model_attributes.rb
+msgid "ExtManagementSystem|Supports cloud volume snapshots"
+msgstr "ExtManagement システム | クラウド・ボリューム・スナップショットをサポート"
+
+#: ../config/model_attributes.rb
 msgid "ExtManagementSystem|Supports create flavor"
 msgstr "フレーバー作成のサポート"
 
@@ -32673,7 +32923,7 @@ msgstr "%s %sの削除に失敗しました。"
 msgid "Failover"
 msgstr "フェイルオーバー"
 
-#: ../app/javascript/components/timeline-options/timeline-options.jsx
+#: ../app/models/miq_policy.rb
 msgid "Failure"
 msgstr "失敗"
 
@@ -33016,9 +33266,9 @@ msgstr "更新"
 
 #: ../app/controllers/report_controller/reports/editor.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/ops/_schedule_form_filter.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/report/_schedule_form_filter.html.haml
 #: ../app/views/report/_widget_form_chart.html.haml
 #: ../app/views/report/_widget_form_report.html.haml
@@ -34536,6 +34786,11 @@ msgstr "URL"
 msgid "GitRepository|Verify ssl"
 msgstr "SSL の確認"
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Given a set of capabilities, check which attached resources will comply"
+msgstr "一連の機能を使用して、どの接続リソースが準拠するかを確認します。"
+
 #:
 #: ../app/javascript/components/visual-settings-form/visual-settings-form.schema.js
 msgid "Global Default"
@@ -34667,6 +34922,7 @@ msgstr "グループの期限切れ"
 msgid "Group Home Directory"
 msgstr "グループ・ホーム・ディレクトリー"
 
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 #: ../app/views/ops/_rbac_group_details.html.haml
 msgid "Group Information"
 msgstr "グループ情報"
@@ -34726,7 +34982,7 @@ msgstr "グループ (%{groups_count})"
 msgid "Groups Count"
 msgstr "グループ数"
 
-#: ../app/views/ops/_rbac_role_details.html.haml
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
 msgid "Groups Using this Role"
 msgstr "このロールを使用するグループ"
 
@@ -35624,10 +35880,6 @@ msgstr "ホスト \"%{hostname}\" がホスト・アグリゲート \"%{name}\" 
 msgid "Host \"%{hostname}\" removed from Host Aggregate \"%{name}\""
 msgstr "ホスト \"%{hostname}\" がホスト・アグリゲート \"%{name}\" から削除されました"
 
-#: ../app/controllers/host_controller.rb
-msgid "Host \"%{name}\" was saved"
-msgstr "ホスト \"%{name}\" が保存されました"
-
 #: ../app/controllers/mixins/actions/host_actions/misc.rb
 msgid "Host \"%{name}\": Error during '%{task}': %{message}"
 msgstr "ホスト \"%{name}\": '%{task}' の実行中にエラーが発生しました: %{message}"
@@ -35958,14 +36210,6 @@ msgstr "ホスト名"
 msgid "Host Network Information"
 msgstr "ホスト・ネットワーク情報"
 
-#: ../app/models/host.rb
-msgid "Host Not Resettable - No IPMI Address"
-msgstr "ホストを再設定できません - IPMI アドレスなし"
-
-#: ../app/models/host.rb
-msgid "Host Not Resettable - No IPMI Credentials"
-msgstr "ホストを再設定できません - IPMI 資格情報なし"
-
 #. TRANSLATORS: file: product/reports/190_Configuration Management - Physical Servers/030_Server Availability.yaml
 #: ../config/yaml_strings.rb
 msgid "Host OS"
@@ -36038,10 +36282,6 @@ msgstr "ホスト・リセット要求"
 #: ../app/models/manageiq/providers/openstack/network_manager/cloud_subnet.rb
 msgid "Host Routes"
 msgstr "ホスト・ルート"
-
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
-msgid "Host Selection"
-msgstr "ホストの選択"
 
 #: ../config/model_display_names.rb
 msgid "Host Service Group"
@@ -36168,10 +36408,6 @@ msgstr "データ・ストア・ファイルをリフレッシュするには、
 #: ../app/models/manageiq/providers/vmware/infra_manager/vm_or_template_shared/operations/relocation.rb
 msgid "Host not specified, unable to migrate VM"
 msgstr "ホストが指定されていないため、VM を移行できません"
-
-#: ../app/views/host/_form.html.haml
-msgid "Host platform"
-msgstr "ホスト・プラットフォーム"
 
 #: ../config/model_attributes.rb
 msgid "Host service group"
@@ -36510,18 +36746,21 @@ msgstr "ホストされているデータベース"
 #: ../app/helpers/configured_system_helper/textual_summary.rb
 #: ../app/helpers/host_helper.rb
 #: ../app/helpers/host_helper/textual_summary.rb
-#: ../app/helpers/ops_helper.rb:24 ../app/helpers/ops_helper.rb
-#: ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb:33 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../app/views/ops/_settings_server_tab.html.haml
 #: ../config/yaml_strings.rb
 msgid "Hostname"
 msgid_plural "Hostnames"
 msgstr[0] "ホスト名"
 
-#: ../app/views/host/_form.html.haml
 #: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
 msgid "Hostname (or IPv4 or IPv6 address)"
 msgstr "ホスト名 (または IPv4/IPv6 アドレス)"
+
+#: ../app/javascript/components/host-edit-form/host-edit-form.schema.js
+msgid "Hostname (or IPv4 or IPv6 address:"
+msgstr "ホスト名 (または IPv4 または IPv6 アドレス):"
 
 #: ../app/views/ems_container/_form_fields.html.haml
 #: ../app/views/ems_infra/_form_fields.html.haml
@@ -36563,6 +36802,8 @@ msgstr "ホスト名または IPv4/IPv6 アドレス"
 #: ../app/helpers/infra_networking_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/helpers/storage_helper/textual_summary.rb
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 #: ../app/javascript/components/provider-dashboard-charts/charts_config.js
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/services/ems_infra_dashboard_service.rb
@@ -37261,6 +37502,10 @@ msgstr "IBM Cloud Provider"
 msgid "IBM Power HMC Provider"
 msgstr "IBM Power HMC プロバイダー"
 
+#: ../app/models/manageiq/providers/ibm_power_vc/cloud_manager.rb
+msgid "IBM PowerVC"
+msgstr "IBM PowerVC"
+
 #: ../lib/manageiq/providers/ibm_power_vc/engine.rb
 msgid "IBM PowerVC Provider"
 msgstr "IBM PowerVC Provider"
@@ -37292,11 +37537,11 @@ msgstr "ICMP"
 #. TRANSLATORS: file: product/views/MiqReportResult.yaml
 #. TRANSLATORS: file: product/views/MiqWidget.yaml
 #. TRANSLATORS: file: product/views/PlacementGroup.yaml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
+#: ../app/helpers/settings_users_helper.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
-#: ../app/views/ops/_rbac_group_details.html.haml
-#: ../app/views/ops/_rbac_role_details.html.haml
-#: ../app/views/ops/_rbac_user_details.html.haml
 #: ../config/yaml_strings.rb
 msgid "ID"
 msgstr "ID"
@@ -37332,9 +37577,9 @@ msgstr "IP"
 #: ../app/helpers/ems_automation_helper.rb:18 ../app/helpers/host_helper.rb
 #: ../app/helpers/host_helper/textual_summary.rb
 #: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
 #: ../app/javascript/components/subnet-form/subnet-form.schema.js
-#: ../app/views/ops/_server_desc.html.haml
 #: ../app/views/ops/_settings_server_tab.html.haml
 #: ../app/views/vm_common/_config.html.haml:101 ../config/yaml_strings.rb
 msgid "IP Address"
@@ -37369,10 +37614,6 @@ msgstr "IP 範囲"
 msgid "IP Version"
 msgstr "IP バージョン"
 
-#: ../app/models/host.rb
-msgid "IP address octets must be 0 to 255"
-msgstr "IP アドレスのオクテットは 0 から 255 までの値にしてください"
-
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
 msgid "IP protocol"
 msgstr "IP プロトコル"
@@ -37383,7 +37624,6 @@ msgid "IP-address field has to be either blank or a valid IPv4 address"
 msgstr "IP アドレス・フィールドは、空白または有効な IPv4 アドレスのいずれかでなければなりません"
 
 #: ../app/helpers/textual_summary_helper.rb
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 msgid "IPMI"
 msgstr "IPMI"
 
@@ -37394,15 +37634,8 @@ msgid "IPMI Enabled"
 msgstr "IPMI 有効化"
 
 #: ../app/helpers/host_helper/textual_summary.rb
-#: ../app/views/host/_form.html.haml
 msgid "IPMI IP Address"
 msgstr "IPMI IP アドレス"
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid ""
-"IPMI IP Address, Username and matching password fields are needed to perform "
-"verification of credentials"
-msgstr "IPMI IP アドレス、ユーザー名および一致するパスワード・フィールドは資格情報の検証を実行する際に必要です。"
 
 #: ../app/helpers/automation_manager_configured_system_helper.rb
 #: ../app/helpers/configuration_script_helper.rb
@@ -37937,6 +38170,10 @@ msgstr "git からインポート"
 #: ../config/dictionary_strings.rb
 msgid "In My LDAP Group?"
 msgstr "マイ LDAP グループ内?"
+
+#: ../app/javascript/components/async-action-button.jsx
+msgid "In Progress"
+msgstr "「進行中」"
 
 #: ../app/helpers/ops_helper/textual_summary.rb
 msgid "In Use"
@@ -39400,7 +39637,7 @@ msgstr "既知の最終データ・ストア・パス"
 msgid "Last Known Size"
 msgstr "既知の最終サイズ"
 
-#: ../app/helpers/ops_helper.rb:42 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:51 ../app/helpers/ops_helper.rb
 msgid "Last Log Collection"
 msgstr "最終ログ収集"
 
@@ -39418,7 +39655,7 @@ msgstr "最終ログオン"
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqProvision.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
-#: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:57 ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
 #: ../config/yaml_strings.rb
@@ -39561,6 +39798,7 @@ msgstr "最終移行時間"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
 #: ../config/yaml_strings.rb
@@ -39828,6 +40066,7 @@ msgid "Live migrating Instance %{instance_name} failed: %{error_message}"
 msgstr "インスタンス %{instance_name} のライブ・マイグレーションに失敗しました: %{error_message}"
 
 #: ../app/controllers/mixins/actions/vm_actions/live_migrate.rb
+#: ../app/javascript/components/live-migrate-form/index.jsx
 msgid "Live migration of Instances was cancelled by the user"
 msgstr "インスタンスのライブ・マイグレーションはユーザーにより取り消されました"
 
@@ -40351,7 +40590,7 @@ msgstr "ログ・デポ設定が保存されました"
 msgid "Log Depot Settings were validated"
 msgstr "ログ・デポ設定が検証されました"
 
-#: ../app/helpers/ops_helper.rb:41 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:50 ../app/helpers/ops_helper.rb
 msgid "Log Depot URI"
 msgstr "ログ・デポ URI"
 
@@ -40570,7 +40809,7 @@ msgstr "ロゴ・ファイル・サイズ"
 msgid "Logo Updated At"
 msgstr "ロゴ更新時"
 
-#: ../app/models/host.rb:651 ../app/models/host.rb
+#: ../app/models/host.rb:654 ../app/models/host.rb
 msgid "Logon to platform [%{os_name}] not supported"
 msgstr "プラットフォーム [%{os_name}] へのログオンはサポートされていません"
 
@@ -40586,9 +40825,9 @@ msgstr "この %{product} サーバーのログは表示できません"
 
 #: ../app/helpers/catalog_helper.rb:47 ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/settings-category-form/schema.js
+#: ../app/javascript/components/settings-company-tags/helper.js
 #: ../app/views/catalog/_form_details_info.html.haml
 #: ../app/views/catalog/_st_angular_form.html.haml
-#: ../app/views/ops/_settings_co_tags_tab.html.haml
 msgid "Long Description"
 msgstr "詳細な説明"
 
@@ -40625,7 +40864,6 @@ msgstr "最も低いラック名"
 #: ../app/helpers/textual_mixins/vm_common.rb
 #: ../app/helpers/guest_device_helper/textual_summary.rb
 #: ../app/helpers/physical_server_helper/textual_summary.rb
-#: ../app/views/host/_form.html.haml
 #: ../app/views/vm_common/_reconfigure.html.haml
 msgid "MAC Address"
 msgid_plural "MAC Addresses"
@@ -41253,6 +41491,7 @@ msgstr "製造元"
 msgid "Manufacturer / Model"
 msgstr "製造元 / モデル"
 
+#: ../app/javascript/components/settings-label-tag-mapping/index.jsx
 #: ../app/views/ops/_all_tabs.html.haml
 msgid "Map Tags"
 msgstr "タグのマップ"
@@ -41328,7 +41567,7 @@ msgstr "アクティブな VM の最大スキャン回数"
 msgid "Max Available"
 msgstr "最大利用可能"
 
-#: ../app/helpers/ops_helper.rb:171 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:180 ../app/helpers/ops_helper.rb
 msgid "Max Concurrent"
 msgstr "並列の最大値"
 
@@ -41472,7 +41711,7 @@ msgstr "最大使用"
 msgid "Max Used Value"
 msgstr "最大使用値"
 
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 msgid "Max active VM Scans"
 msgstr "アクティブな VM の最大スキャン回数"
 
@@ -42153,8 +42392,9 @@ msgstr "メモリー共有レベル"
 
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
 #: ../app/helpers/miq_action_helper.rb:55 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
-#: ../app/views/ops/_server_desc.html.haml:27 ../config/yaml_strings.rb
+#: ../config/yaml_strings.rb
 msgid "Memory Size"
 msgstr "メモリー・サイズ"
 
@@ -42172,8 +42412,8 @@ msgstr "メモリー合計コスト"
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
 #. TRANSLATORS: file: product/views/OsProcess-processes.yaml
 #: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
-#: ../app/views/ops/_server_desc.html.haml
 #: ../app/views/vm_common/_right_size.html.haml
 #: ../config/yaml_strings.rb
 msgid "Memory Usage"
@@ -42267,6 +42507,7 @@ msgstr "メニュー"
 #: ../app/helpers/container_build_helper/textual_summary.rb
 #: ../app/helpers/container_helper/textual_summary.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/data-tables/datastore/helper.js
 #: ../app/javascript/components/data-tables/requests-table/index.jsx
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
@@ -42276,7 +42517,6 @@ msgstr "メニュー"
 #: ../app/views/miq_ae_class/_class_fields.html.haml
 #: ../app/views/miq_policy_export/import.html.haml
 #: ../app/views/miq_request/_ae_prov_show.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 #: ../app/views/static/edit_alert_dialog.html.haml
@@ -43699,7 +43939,7 @@ msgid "Migrate %{vm_or_template}"
 msgstr "%{vm_or_template}の移行"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb
-#: ../app/views/vm_common/_live_migrate.html.haml
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 msgid "Migrate Instance"
 msgstr "インスタンスの移行"
 
@@ -47132,6 +47372,12 @@ msgstr "モーダル"
 msgid "Mode"
 msgstr "モード"
 
+#: ../app/models/manageiq/providers/autosde/storage_manager/cloud_volume.rb
+msgid ""
+"Mode: Create volume(s) using an existing storage service or create a new "
+"service as well"
+msgstr "モード: 既存のストレージ・サービスを使用してボリュームを作成するか、新規サービスも作成します"
+
 #. TRANSLATORS: file: product/views/FirmwareTarget.yaml
 #: ../app/helpers/firmware_binary_helper/textual_summary.rb
 #: ../app/helpers/physical_server_helper/textual_summary.rb
@@ -47160,9 +47406,18 @@ msgstr "クラウド・ボリューム「%s」の変更が正常にキューに�
 msgid "Modification of Credential \"%s\" has been successfully queued."
 msgstr "資格情報「%s」の変更が正常にキューに入れられました。"
 
+#: ../app/javascript/components/host-edit-form/host-edit-form.jsx
+msgid "Modification of Host %s has been successfully queued."
+msgstr "ホスト %s の変更が正常にキューに入れられました。"
+
 #: ../app/javascript/components/host-aggregate-form/index.jsx
 msgid "Modification of Host Aggregate %s has been successfully queued"
 msgstr "ホスト・アグリゲート「%s」の変更が正常にキューに入れられました"
+
+#: ../app/javascript/components/host-initiator-group-form/index.jsx
+msgid ""
+"Modification of Host Initiator Group \"%s\" has been successfully queued."
+msgstr "ホスト・イニシエーター・グループ \"%s\" の変更が正常にキューに入れられました。"
 
 #: ../app/javascript/components/physical-storage-form/index.jsx
 msgid "Modification of Physical Storage \"%s\" has been successfully queued."
@@ -47175,6 +47430,10 @@ msgstr "ストレージ・サービス「%s」の変更が正常にキューに�
 #: ../app/javascript/components/pxe-image-type-form/index.jsx
 msgid "Modification of System Image Type \"%s\" has been successfully queued."
 msgstr "システム・イメージ・タイプ「%s」の変更が正常にキューに入れられました。"
+
+#: ../app/javascript/components/host-edit-form/host-edit-form.jsx
+msgid "Modification of multiple Hosts has been successfully queued."
+msgstr "複数のホストの変更が正常にキューに入れられました。"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -47658,6 +47917,11 @@ msgstr "ボリューム・マッピングの変更"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Modify Volume Snapshots"
+msgstr "ボリューム・スナップショットの変更"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Modify Volumes"
 msgstr "ボリュームの変更"
 
@@ -47665,6 +47929,11 @@ msgstr "ボリュームの変更"
 #: ../config/yaml_strings.rb
 msgid "Modify Widgets"
 msgstr "ウィジェットの変更"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Modify Workflows"
+msgstr "ワークフローの変更"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -48243,7 +48512,7 @@ msgstr "セキュリティー・ポリシー・ルールの名前"
 msgid "Name*"
 msgstr "名前*"
 
-#:
+#: ../app/javascript/components/host-edit-form/host-edit-form.schema.js
 #: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js
 #: ../app/javascript/components/host-initiator-group-form/host-initiator-group-form.schema.js
 #: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
@@ -49340,6 +49609,10 @@ msgstr[0] "新しい設定は VM に影響を与えます"
 msgid "New tab"
 msgstr "新しいタブ"
 
+#: ../app/models/manageiq/providers/autosde/storage_manager/cloud_volume.rb
+msgid "New volume name"
+msgstr "新しいボリューム名"
+
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/vpc/cloud_manager/provision_workflow/volumes.rb
 msgid "New volumes has the following problems: %{error}"
@@ -49466,7 +49739,7 @@ msgstr "実行中の %{tag} %{model} はありません。 %{time}"
 msgid "No %{tag} %{model} were running %{time}"
 msgstr "実行中の %{tag} %{model} はありません。%{time}"
 
-#: ../app/views/ops/_rbac_tag_box.html.haml
+#: ../app/helpers/settings_rbac_tag_helper.rb
 msgid "No %{tenant_name} Tags have been assigned"
 msgstr "%{tenant_name} タグが割り当てられていません"
 
@@ -49540,7 +49813,7 @@ msgstr "このホストについての容量と使用状況データは収集さ
 msgid "No Capacity & Utilization data has been collected for this Template"
 msgstr "このテンプレートについての容量と使用状況データは収集されていません"
 
-#: ../app/controllers/mixins/chargeback_preview.rb
+#: ../app/controllers/mixins/chargeback_preview_mixin.rb
 #: ../app/helpers/application_helper/button/vm_perf.rb
 msgid "No Capacity & Utilization data has been collected for this VM"
 msgstr "この VM に収集されている容量と使用状況データはありません"
@@ -49809,7 +50082,7 @@ msgstr "削除するセキュリティー・グループが選択されていま
 msgid "No Servers Assigned to Roles found."
 msgstr "役割に割り当てられたサーバーが見つかりません。"
 
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 msgid "No Servers Found."
 msgstr "サーバーが見つかりませんでした"
 
@@ -49912,10 +50185,6 @@ msgstr "インポートするウィジェットがありません"
 #: ../app/javascript/components/dashboard_toolbar.jsx
 msgid "No Widgets available to add"
 msgstr "追加する利用可能なウィジェットはありません"
-
-#: ../app/views/ops/_diagnostics_zones_tab.html.haml
-msgid "No Zones found."
-msgstr "ゾーンが見つかりませんでした。"
 
 #: ../app/views/miq_alert/_alert_builtin_exp.html.haml
 msgid "No alarms found for the selected Provider"
@@ -50063,10 +50332,6 @@ msgstr "この %{model}に利用できるイベントはありません"
 #: ../app/controllers/application_controller/performance.rb
 msgid "No events available for this Cluster"
 msgstr "このクラスターに利用できるイベントはありません"
-
-#: ../app/controllers/application_controller/timelines.rb
-msgid "No events available for this timeline"
-msgstr "このタイムラインに利用できるイベントはありません"
 
 #: ../app/controllers/report_controller/reports/editor.rb
 msgid "No fields were moved up"
@@ -50299,6 +50564,11 @@ msgstr "ストレージ・サービスの作成をサポートするストレー
 msgid "No storage providers support creating volume mapping."
 msgstr "ボリューム・マッピングの作成をサポートするストレージ・プロバイダーがありません。"
 
+#:
+#: ../app/javascript/helpers/storage_manager/filter-resources-by-capabilities.js
+msgid "No storage resource with selected capabilities."
+msgstr "機能が選択されたストレージ・リソースがありません。"
+
 #: ../app/controllers/network_router_controller.rb
 msgid "No subnets available to add interfaces to Router \"%{name}\""
 msgstr "インターフェースをルーター \"%{name}\" に追加するために使用できるサブネットがありません"
@@ -50516,6 +50786,11 @@ msgstr "一部のホストはデプロイメントから削除できません。
 #: ../app/helpers/host_helper/textual_summary.rb
 msgid "Not available. Did you assigned Cloud Provider and run SSA?"
 msgstr "利用できません。クラウド・プロバイダーを割り当て、SSA を実行しましたか?"
+
+#:
+#: ../app/javascript/helpers/storage_manager/filter-service-by-capabilities.js
+msgid "Not found"
+msgstr "見つかりませんでした"
 
 #: ../app/views/shared/views/_alerts_list.html.haml
 #: ../app/views/static/edit_alert_dialog.html.haml
@@ -51012,8 +51287,8 @@ msgstr "OVF テンプレート"
 msgid "Object"
 msgstr "オブジェクト"
 
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "Object Attribute"
@@ -51034,9 +51309,9 @@ msgid "Object Count"
 msgstr "オブジェクト数"
 
 #: ../app/helpers/miq_action_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "Object Details"
@@ -51071,7 +51346,7 @@ msgstr "オブジェクト・ラベル"
 msgid "Object Name"
 msgstr "オブジェクト名"
 
-#: ../app/views/ops/_schedule_show.html.haml
+#: ../app/helpers/settings_schedule_helper.rb
 msgid "Object Selection"
 msgstr "オブジェクト選択"
 
@@ -51098,8 +51373,8 @@ msgstr "オブジェクト・ストア・コンテナー"
 msgid "Object Store Objects"
 msgstr "オブジェクト・ストア・オブジェクト"
 
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/oldjs/controllers/alerts/alerts_overview_controller.js
-#: ../app/views/ops/_schedule_show.html.haml
 msgid "Object Type"
 msgstr "オブジェクトのタイプ"
 
@@ -51194,7 +51469,7 @@ msgstr "エラー時"
 msgid "On Exit"
 msgstr "終了時"
 
-#: ../app/views/static/evacuate-form.html.haml
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
 msgid "On Shared Storage"
 msgstr "共有ストレージ上"
 
@@ -52836,6 +53111,7 @@ msgstr "親ホスト・プラットフォーム"
 msgid "Parent Name"
 msgstr "親名"
 
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 msgid "Parent Request"
 msgstr "親要求"
@@ -53269,6 +53545,10 @@ msgstr "割合、小数点第二位 (99.00%)"
 #: ../config/yaml_strings.rb
 msgid "Percentage (99%)"
 msgstr "割合 (99%)"
+
+#: ../app/javascript/components/async-action-button.jsx
+msgid "Perform Action"
+msgstr "アクションの実行"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -54394,7 +54674,7 @@ msgid_plural "Physical Switches (Lenovo)"
 msgstr[0] "物理スイッチ (Lenovo)"
 
 #:
-#: ../app/models/manageiq/providers/cisco_intersight/physical_infra_manager/physical_switch_network_ports.rb
+#: ../app/models/manageiq/providers/cisco_intersight/physical_infra_manager/physical_switch_network_port.rb
 msgid "Physical Switch Network Port (CiscoIntersight)"
 msgid_plural "Physical Switches Network Ports (CiscoIntersight)"
 msgstr[0] "物理スイッチ・ネットワーク・ポート (CiscoIntersight)"
@@ -56134,7 +56414,7 @@ msgstr "PDF として印刷またはエクスポートする"
 msgid "Print the full report (all rows) or export it as a PDF file"
 msgstr "フルレポート (すべての行) を PDF ファイルとして印刷またはエクスポートする"
 
-#: ../app/helpers/ops_helper.rb:168 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:177 ../app/helpers/ops_helper.rb
 msgid "Priority"
 msgstr "優先順位"
 
@@ -56340,7 +56620,7 @@ msgstr[0] "製品機能"
 msgid "Product Features (Editing)"
 msgstr "製品機能 (編集可)"
 
-#: ../app/views/ops/_rbac_role_details.html.haml
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
 msgid "Product Features (Read Only)"
 msgstr "製品機能 (読み取り専用)"
 
@@ -56441,6 +56721,7 @@ msgstr "プロジェクト名"
 msgid "Project Uid"
 msgstr "プロジェクト UID"
 
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 #: ../app/views/ops/_rbac_group_details.html.haml
 msgid "Project/Tenant"
 msgstr "プロジェクト/テナント"
@@ -56893,13 +57174,13 @@ msgstr "リージョン番号"
 #: ../app/controllers/ems_network_controller.rb
 #: ../app/controllers/ems_physical_infra_controller.rb
 #: ../app/controllers/ops_controller.rb
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/helpers/ops_helper/textual_summary.rb
 #: ../app/helpers/pxe_helper/textual_summary.rb
 #: ../app/javascript/oldjs/controllers/container_dashboard/util/dashboard-utils-factory.js
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/presenters/tree_builder_utilization.rb
 #: ../app/services/ems_physical_infra_dashboard_service.rb
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 #: ../config/yaml_strings.rb
 msgid "Providers"
 msgstr "プロバイダー"
@@ -57117,7 +57398,7 @@ msgstr "プロビジョニングされたサイズ"
 msgid "Provisioned Space Percent of Total"
 msgstr "プロビジョニングされたスペースの割合 (合計)"
 
-#: ../app/views/miq_request/_request.html.haml
+#: ../app/helpers/request_details_helper.rb
 msgid "Provisioned VMs"
 msgstr "プロビジョニングされた VM"
 
@@ -57960,6 +58241,7 @@ msgstr "レルム"
 #: ../app/helpers/container_build_helper/textual_summary.rb
 #: ../app/helpers/container_helper/textual_summary.rb
 #: ../app/helpers/container_node_helper/textual_summary.rb
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
 #: ../config/yaml_strings.rb
@@ -58308,6 +58590,11 @@ msgstr "ブロック・ストレージ・マネージャーの更新"
 #: ../config/yaml_strings.rb
 msgid "Refresh Cloud Providers"
 msgstr "クラウド・プロバイダーの更新"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Refresh Cloud Volumes"
+msgstr "クラウド・ボリュームのリフレッシュ"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -58749,6 +59036,12 @@ msgstr "選択した項目に関連するすべての項目のリレーション
 #: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
 msgid ""
 "Refresh relationships and power states for all items related to these Host "
+"Initiator Clusters?"
+msgstr "これらのホスト・イニシエーター・クラスターに関連するすべての項目のリレーションシップと電源状態を更新しますか?"
+
+#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
+msgid ""
+"Refresh relationships and power states for all items related to these Host "
 "Initiator Groups"
 msgstr "これらのホスト・イニシエーター・グループに関連するすべての項目のリレーションシップと電源状態の更新"
 
@@ -58757,12 +59050,6 @@ msgid ""
 "Refresh relationships and power states for all items related to these Host "
 "Initiators"
 msgstr "これらのホスト・イニシエーターに関連するすべての項目のリレーションシップと電源状態の更新"
-
-#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to these Host "
-"Initiators Cluster?"
-msgstr "これらのホスト・イニシエーター・クラスターに関連するすべての項目のリレーションシップと電源状態を更新しますか?"
 
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
 msgid ""
@@ -59427,6 +59714,7 @@ msgstr[0] "リレーションシップ"
 #: ../app/helpers/network_port_helper/textual_summary.rb
 #: ../app/helpers/network_router_helper/textual_summary.rb
 #: ../app/helpers/network_service_helper/textual_summary.rb
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/helpers/ops_helper/textual_summary.rb
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb
 #: ../app/helpers/persistent_volume_helper/textual_summary.rb
@@ -59447,7 +59735,6 @@ msgstr[0] "リレーションシップ"
 #: ../app/helpers/vm_helper/textual_summary.rb
 #: ../app/views/configuration_profile/show.html.haml
 #: ../app/views/ems_configuration/show.html.haml
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 msgid "Relationships"
 msgstr "リレーションシップ"
 
@@ -59535,6 +59822,10 @@ msgstr "現在の表示のリロード"
 msgid "Relocate not supported because VM is not active"
 msgstr "VM がアクティブでないため、再配置はサポートされません"
 
+#: ../app/models/manageiq/providers/vmware/infra_manager/host.rb
+msgid "Remote"
+msgstr "リモート"
+
 #: ../app/helpers/application_helper/toolbar/ems_cloud_center.rb
 #: ../app/helpers/application_helper/toolbar/ems_infra_center.rb
 #: ../app/helpers/application_helper/toolbar/ems_physical_infra_center.rb
@@ -59546,7 +59837,6 @@ msgid "Remote Console Workers"
 msgstr "リモート・コンソール・ワーカー"
 
 #: ../app/helpers/textual_summary_helper.rb
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 msgid "Remote Login"
 msgstr "リモート・ログイン"
 
@@ -60065,11 +60355,6 @@ msgstr "サービスの削除"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
-msgid "Remove Snapshot"
-msgstr "スナップショットの削除"
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
 msgid "Remove Storage Manager"
 msgstr "ストレージ・マネージャーの削除"
 
@@ -60146,6 +60431,11 @@ msgstr "ホスト・イニシエーターの削除"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Remove a Host Initiator Group"
+msgstr "ホスト・イニシエーター・グループの除去"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Remove a Network Service"
 msgstr "ネットワーク・サービスの削除"
 
@@ -60167,6 +60457,11 @@ msgstr "このインスタンスからのセキュリティー・グループの
 #: ../config/yaml_strings.rb
 msgid "Remove a Storage Service"
 msgstr "ストレージ・サービスの削除"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Remove a Volume Snapshot"
+msgstr "ボリューム・スナップショットの削除"
 
 #: ../app/javascript/components/button-group/group-form.schema.js
 msgid "Remove all"
@@ -60731,7 +61026,7 @@ msgid "Replicators Count"
 msgstr "レプリケーター数"
 
 #: ../app/controllers/optimization_controller.rb
-#: ../app/views/utilization/_utilization_tabs.html.haml
+#: ../app/helpers/utilization_helper.rb
 msgid "Report"
 msgstr "レポート"
 
@@ -60869,7 +61164,7 @@ msgstr "レポート名"
 msgid "Report no longer exists"
 msgstr "レポートは存在しません"
 
-#: ../app/controllers/mixins/chargeback_preview.rb
+#: ../app/controllers/mixins/chargeback_preview_mixin.rb
 #: ../app/controllers/report_controller/reports.rb
 msgid ""
 "Report preview generation returned: Status [%{status}] Message [%{message}]"
@@ -60947,10 +61242,10 @@ msgid "Repository Options"
 msgstr "リポジトリーのオプション"
 
 #: ../app/helpers/miq_action_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "Request"
@@ -61008,6 +61303,7 @@ msgstr "要求日:"
 msgid "Request Denial"
 msgstr "拒否要求"
 
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
 msgid "Request Details"
@@ -61020,6 +61316,7 @@ msgstr[0] "イベントの要求"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml:10 ../config/yaml_strings.rb
 msgid "Request ID"
 msgstr "要求 ID"
@@ -61056,6 +61353,7 @@ msgid "Request Memory bytes"
 msgstr "メモリー・バイトの要求"
 
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../config/yaml_strings.rb
 msgid "Request State"
@@ -61068,6 +61366,7 @@ msgstr[0] "要求タスク"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml:31 ../config/yaml_strings.rb
 msgid "Request Type"
 msgstr "要求タイプ"
@@ -61197,6 +61496,7 @@ msgstr "要求されたポッド"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml:26 ../config/yaml_strings.rb
 msgid "Requester"
 msgstr "要求者"
@@ -61230,17 +61530,12 @@ msgstr "要求"
 msgid "Required"
 msgstr "必須"
 
-#:
-#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
+#: ../app/models/manageiq/providers/autosde/storage_manager/cloud_volume.rb
+#: ../app/models/manageiq/providers/autosde/storage_manager/storage_service.rb
 msgid "Required Capabilities"
 msgstr "必要な機能"
 
-#: ../app/models/manageiq/providers/autosde/storage_manager/cloud_volume.rb
-#: ../app/models/manageiq/providers/autosde/storage_manager/storage_service.rb
-msgid "Required Capabilities (filters by exact match)"
-msgstr "必須機能 (完全一致によるフィルター)"
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
+#: ../app/models/manageiq/providers/ovirt/infra_manager/host.rb
 msgid "Required if SSH login is disabled for the Default account."
 msgstr "SSH ログインがデフォルト・アカウントに対して無効にされている場合に必須です。"
 
@@ -61455,7 +61750,8 @@ msgstr[0] "リソース・アクション"
 msgid "Resource Category"
 msgstr "リソース・カテゴリー"
 
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 msgid "Resource Entity"
 msgstr "リソース・エンティティー"
 
@@ -61473,8 +61769,9 @@ msgstr "リソース・グループ"
 msgid "Resource Instance Id"
 msgstr "リソース・インスタンス ID"
 
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 #: ../app/views/ops/_label_tag_mapping_form.html.haml
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
 msgid "Resource Label"
 msgstr "リソース・ラベル"
 
@@ -62428,6 +62725,7 @@ msgstr "ロール \"%{name}\""
 msgid "Role Access"
 msgstr "ロール・アクセス"
 
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
 #: ../app/views/ops/_rbac_role_details.html.haml
 msgid "Role Information"
 msgstr "ロール情報"
@@ -62758,6 +63056,10 @@ msgstr "SPID"
 
 #: ../app/helpers/textual_summary_helper.rb
 msgid "SSH Key Pair"
+msgstr "SSH 鍵ペア"
+
+#: ../app/models/manageiq/providers/openstack/infra_manager/host.rb
+msgid "SSH Keypair"
 msgstr "SSH 鍵ペア"
 
 #: ../app/helpers/host_helper/textual_summary.rb
@@ -63308,10 +63610,10 @@ msgstr ""
 
 #. TRANSLATORS: file: product/views/MiqSchedule.yaml
 #: ../app/controllers/report_controller.rb
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
 #: ../app/presenters/tree_builder_ops_settings.rb
 #: ../app/views/ops/_settings_details_tab.html.haml
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 #: ../config/yaml_strings.rb
 msgid "Schedules"
 msgstr "スケジュール"
@@ -63931,11 +64233,6 @@ msgstr "AMQP で有効にされているものがない場合は Ceilometer を�
 msgid "Select Classes to copy"
 msgstr "コピーするクラスの選択"
 
-#: ../app/views/static/evacuate-form.html.haml
-#: ../app/views/vm_common/_live_migrate.html.haml
-msgid "Select Destination Host"
-msgstr "宛先ホストの選択"
-
 #: ../app/controllers/miq_ae_customization_controller.rb
 msgid "Select Dialogs to import"
 msgstr "インポートするダイアログの選択"
@@ -63995,6 +64292,10 @@ msgstr "ファームウェアのバイナリーの選択"
 #: ../app/javascript/components/set-ownership-form/ownership-form.schema.js
 msgid "Select a Group:"
 msgstr "グループの選択:"
+
+#: ../app/javascript/components/host-edit-form/host-edit-form.schema.js
+msgid "Select a Host to validate against"
+msgstr "検証対象のホストを選択してください"
 
 #: ../app/javascript/components/server-provision.schema.js
 msgid "Select a PXE Image"
@@ -64287,6 +64588,20 @@ msgstr "1 つまたは連続するフィールドのみを選択して一番上�
 #: ../app/controllers/report_controller/menus.rb
 msgid "Select only one or consecutive fields to move up"
 msgstr "1 つまたは連続するフィールドのみを選択して上に移動する"
+
+#:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+msgid ""
+"Select storage resources to attach to the service. The new Volume(s) will be "
+"created on these resources."
+msgstr "サービスに接続するストレージ・リソースを選択します。 これらのリソースに新規ボリュームが作成されます。"
+
+#:
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
+msgid ""
+"Select storage resources to attach to the service. Volumes for this service "
+"will be created on these resources."
+msgstr "サービスに接続するストレージ・リソースを選択します。 このサービスのボリュームは、これらのリソース上に作成されます。"
 
 #: src/tagging/components/InnerComponents/TagSelector.js
 msgid "Select tag category"
@@ -64716,11 +65031,11 @@ msgstr "更新"
 
 #: ../app/controllers/physical_server_controller.rb
 #: ../app/helpers/application_helper/title.rb
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/javascript/components/provider-dashboard-charts/charts_config.js
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/services/ems_physical_infra_dashboard_service.rb
 #: ../app/views/ops/_all_tabs.html.haml
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 #: ../app/views/vm_common/_evm_relationship.html.haml
 msgid "Servers"
 msgstr "サーバー"
@@ -64906,6 +65221,7 @@ msgstr[0] "サービスにリンクしたワークフロー"
 
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 msgid "Service Name"
 msgstr "サービス名"
 
@@ -67027,7 +67343,7 @@ msgid "Show hourly data from"
 msgstr "毎時データの表示元"
 
 #: ../app/helpers/settings_tags_tabs_helper.rb
-#: ../app/views/ops/_settings_co_tags_tab.html.haml
+#: ../app/javascript/components/settings-company-tags/helper.js
 msgid "Show in Console"
 msgstr "コンソールに表示"
 
@@ -67671,8 +67987,8 @@ msgstr "SmartProxy アフィニティー"
 msgid "SmartProxy Builds"
 msgstr "SmartProxy ビルド"
 
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/javascript/components/zone-form/zone-form.schema.js
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 msgid "SmartProxy Server IP"
 msgstr "SmartProxy サーバー IP"
 
@@ -68251,6 +68567,10 @@ msgstr "接続を開始しますか?"
 msgid "Start Date"
 msgstr "開始日"
 
+#: ../app/javascript/forms/mappers/validatorMapper.jsx
+msgid "Start Date must come before End Date"
+msgstr "開始日は終了日より前にする必要があります"
+
 #: ../app/models/miq_template/operations.rb
 msgid "Start Operation is not available for Images and VM Templates."
 msgstr "開始操作は、イメージおよび VM テンプレートには使用できません。"
@@ -68353,7 +68673,8 @@ msgstr "開始"
 msgid "Started At"
 msgstr "開始:"
 
-#: ../app/helpers/ops_helper.rb:209 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 msgid "Started On"
 msgstr "開始日"
 
@@ -68386,10 +68707,6 @@ msgstr "開始プロセスが必要です"
 #: ../app/views/report/_schedule_form_timer.html.haml
 msgid "Starting Time"
 msgstr "開始時間"
-
-#: ../app/models/host.rb
-msgid "Starting address is malformed"
-msgstr "開始アドレスの形式が正しくありません"
 
 #: ../app/views/miq_ae_tools/_resolve_form_buttons.html.haml
 msgid "Starting process must be specified"
@@ -68552,11 +68869,13 @@ msgstr "ルート・オーケストレーション・スタックの状態"
 #: ../app/helpers/ems_network_helper/textual_summary.rb
 #: ../app/helpers/ems_physical_infra_helper/textual_summary.rb
 #: ../app/helpers/ems_storage_helper/textual_summary.rb
-#: ../app/helpers/ops_helper.rb:166 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:175 ../app/helpers/ops_helper.rb
 #: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb
 #: ../app/helpers/physical_server_helper/textual_summary.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
+#: ../app/helpers/request_details_helper.rb
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/javascript/components/container-projects/helper.jsx
@@ -68566,7 +68885,6 @@ msgstr "ルート・オーケストレーション・スタックの状態"
 #: ../app/views/miq_request/_ae_prov_show.html.haml
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
-#: ../app/views/ops/_server_desc.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 #: ../app/views/report/_export_widgets.html.haml
 #: ../config/yaml_strings.rb
@@ -68896,13 +69214,18 @@ msgid "Storage Providers"
 msgstr "ストレージ・プロバイダー"
 
 #: ../app/helpers/storage_service_helper/textual_summary.rb
-#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
 msgid "Storage Resource"
 msgstr "ストレージ・リソース"
+
+#:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+msgid "Storage Resource(s)"
+msgstr "ストレージ・リソース (複数可)"
 
 #. TRANSLATORS: file: product/views/StorageResource.yaml
 #: ../app/controllers/storage_resource_controller.rb
 #: ../app/helpers/storage_service_helper/textual_summary.rb
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 #: ../app/presenters/menu/default_menu.rb:164 ../config/yaml_strings.rb
 msgid "Storage Resources"
 msgstr "ストレージ・リソース"
@@ -68992,6 +69315,11 @@ msgstr "ストレージ・リソース"
 #: ../config/model_attributes.rb
 msgid "Storage service"
 msgstr "ストレージ・サービス"
+
+#:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+msgid "Storage service \"%s\" has no attached storage resources"
+msgstr "ストレージ・サービス \"%s\" には接続されたストレージ・リソースがありません"
 
 #: ../config/model_attributes.rb
 msgid "Storage service resource attachment"
@@ -69684,7 +70012,6 @@ msgid "Subtype is required."
 msgstr "サブタイプが必要です。"
 
 #: ../app/helpers/textual_mixins/textual_metrics_status.rb
-#: ../app/javascript/components/timeline-options/timeline-options.jsx
 msgid "Success"
 msgstr "成功"
 
@@ -70192,10 +70519,10 @@ msgstr "システム・ドメイン・インポートはサポートされてい
 msgid "System service"
 msgstr "システム・サービス"
 
-#:
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "System/Process"
 msgstr "システム/プロセス"
@@ -70415,9 +70742,10 @@ msgstr "タグの割り当て"
 msgid "Tag Assignment (Tags common to all selected items)"
 msgstr "タグの割り当て (選択したすべての項目に共通のタグ)"
 
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 #: ../app/views/chargeback_assignment/_form.html.haml
 #: ../app/views/miq_alert_set/_alert_profile_assign.html.haml
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
 #: ../app/views/ops/label_tag_mapping/_tag_category.html.haml
 #: ../app/views/report/_form_filter_chargeback.html.haml
 msgid "Tag Category"
@@ -70533,11 +70861,13 @@ msgstr "リージョン番号"
 msgid "Tagging|Taggable type"
 msgstr "タグ付け"
 
+#: ../app/helpers/ops_helper/settings_tab_helper.rb
+#: ../app/helpers/settings_rbac_tag_helper.rb
 #: ../app/presenters/tree_builder_alert_profile_obj.rb
 #: ../app/views/miq_ae_class/_git_domain_refresh.html.haml
 #: ../app/views/miq_ae_tools/_import_export.html.haml
 #: ../app/views/ops/_all_tabs.html.haml
-#: ../app/views/ops/_rbac_tag_box.html.haml
+#: ../app/views/ops/_settings_co_tags_tab.html.haml
 msgid "Tags"
 msgstr "タグ"
 
@@ -70692,10 +71022,6 @@ msgstr "テンプレート分析"
 #: ../config/yaml_strings.rb
 msgid "Template Name"
 msgstr "テンプレート名"
-
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
-msgid "Template Selection"
-msgstr "テンプレートの選択"
 
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Amazon_CloudManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AzureStack_CloudManager_OrchestrationTemplate.yaml
@@ -71098,10 +71424,6 @@ msgid ""
 msgstr ""
 "GCE で割り当てられる ID。これは 2 語とそれに続く 3 桁の数字で構成されます (例: squeamish-ossifrage-123)"
 
-#: ../app/controllers/host_controller.rb
-msgid "The Host SSH key has changed, do you want to accept the new key?"
-msgstr "ホスト SSH 鍵が変更されました。新規鍵を受け入れますか?"
-
 #: ../app/models/host.rb
 msgid "The Host has invalid IPMI credentials"
 msgstr "ホストには有効な IPMI 資格情報がありません"
@@ -71430,9 +71752,16 @@ msgstr "ロジカル・パーティション・参照コード"
 msgid "The login group cannot be deleted"
 msgstr "ログイン・グループは削除できません"
 
-#: ../app/javascript/helpers/validate-names.js
+#: ../app/javascript/helpers/storage_manager/validate-names.js
 msgid "The name \"%s\" already exists in \"%s\""
 msgstr "名前「%s」は「%s」に既に存在します"
+
+#:
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
+msgid ""
+"The name can contain letters, numbers, spaces, periods, colons, dashes and "
+"underscores"
+msgstr "名前には文字、数字、スペース、ピリオド、コロン、ダッシュ、および下線を使用できます"
 
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
@@ -71442,13 +71771,20 @@ msgstr "名前には文字、数字、スペース、ピリオド、ダッシュ
 
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 msgid "The name must begin with a letter or an underscore"
 msgstr "名前の先頭は文字または下線でなければなりません"
 
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 msgid "The name must not begin or end with a space"
 msgstr "名前の先頭または末尾をスペースにすることはできません"
+
+#:
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js
+msgid "The name should have up to 15 characters."
+msgstr "名前は最大 15 文字である必要があります。"
 
 #:
 #: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb
@@ -71655,6 +71991,10 @@ msgid ""
 "The test email is being delivered, check \"%{email}\" to verify it was "
 "successful"
 msgstr "テスト E メールが送信されています。正常に送信されたかを確認するために \"%{email}\" をチェックしてください"
+
+#: ../app/controllers/application_controller.rb
+msgid "The user is not authorized for this task or item"
+msgstr "ユーザーはこのタスクまたは項目に対して許可されていません"
 
 #: ../app/controllers/application_controller.rb
 #: ../app/controllers/dashboard_controller.rb
@@ -71948,6 +72288,10 @@ msgstr "この機能はプロバイダーの API バージョンでサポート�
 #: ./dist/js/ui-components.js
 msgid "This field is required"
 msgstr "このフィールドは必要です"
+
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
+msgid "This is a group of events that happened on %s."
+msgstr "これは、%s で発生したイベントのグループです。"
 
 #:
 #: ../app/models/manageiq/providers/awx/automation_manager/openstack_credential.rb
@@ -73818,9 +74162,9 @@ msgstr "不明なターゲット API セットです: '%{service_type}'"
 msgid "Unknown task, %{task}"
 msgstr "不明なタスク %{task}"
 
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/helpers/resource_pool_helper/textual_summary.rb
 #: ../app/javascript/components/zone-form/zone-form.schema.js
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 msgid "Unlimited"
 msgstr "無制限"
 
@@ -73891,6 +74235,10 @@ msgstr "サポートされない API バージョン: %{api_version}"
 #: ../app/models/vim_performance_analysis.rb
 msgid "Unsupported Mode (%{mode}) for %{class} %{type} options"
 msgstr "%{class} %{type}オプションに対してサポートされないモード (%{mode})"
+
+#: ../app/models/manageiq/providers/openshift/container_manager.rb
+msgid "Unsupported OpenShift version"
+msgstr "サポートされていない OpenShift バージョン"
 
 #: ../app/models/manageiq/providers/vmware/container_manager.rb
 msgid "Unsupported endpoint"
@@ -74780,6 +75128,10 @@ msgid ""
 "on AWS."
 msgstr "AWS での SmartState 分析を実行するために Docker レジストリーの資格情報に使用されます。"
 
+#: ../app/models/manageiq/providers/vmware/infra_manager/host.rb
+msgid "Used for SSH login."
+msgstr "SSH ログインに使用されます。"
+
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 msgid ""
 "Used for VMRC connections to all VMs on this provider. If not set, the VMRC "
@@ -74788,11 +75140,7 @@ msgstr ""
 "このプロバイダーのすべての VM に対する VMRC 接続に使用されます。設定されていない場合は、このプロバイダーの VMRC コンソールのアクセスが無効"
 "にされます。"
 
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "Used for access to IPMI."
-msgstr "IPMI へのアクセスに使用されます。"
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
+#: ../app/models/manageiq/providers/vmware/infra_manager/host.rb
 msgid "Used for access to Web Services."
 msgstr "Web サービスへのアクセスに使用されます。"
 
@@ -74915,6 +75263,7 @@ msgstr "LDAP 検索でのユーザー・グループの順序:"
 msgid "User ID"
 msgstr "ユーザー ID"
 
+#: ../app/helpers/settings_users_helper.rb
 #: ../app/views/ops/_rbac_user_details.html.haml
 msgid "User Information"
 msgstr "ユーザー情報"
@@ -75053,7 +75402,7 @@ msgstr "ユーザー (%{users_count})"
 msgid "Users are only allowed to delete their own requests"
 msgstr "ユーザーには各自の要求を削除することのみが許可されます。"
 
-#: ../app/views/ops/_rbac_group_details.html.haml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 msgid "Users in this Group"
 msgstr "このグループのユーザー"
 
@@ -75818,7 +76167,6 @@ msgstr "VM のリタイヤ日"
 msgid "VM Right-sizing"
 msgstr "VM のライト・サイジング"
 
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
 #: ../app/views/miq_policy_rsop/_rsop_form.html.haml
 msgid "VM Selection"
 msgstr "VM の選択"
@@ -76738,13 +77086,13 @@ msgstr "リージョンが不明なため、検証に失敗しました"
 msgid "Validation failed with error: '%{error_message}"
 msgstr "検証に失敗しました。エラー: '%{error_message}"
 
-#:
+#: ../app/javascript/components/host-edit-form/validate-host-credentials.jsx
 #: ../app/javascript/components/physical-storage-form/validate-storage-credentials.jsx
 #: ../app/javascript/components/provider-form/validate-provider-credentials.jsx
 msgid "Validation failed:"
 msgstr "検証に失敗しました:"
 
-#:
+#: ../app/javascript/components/host-edit-form/validate-host-credentials.jsx
 #: ../app/javascript/components/physical-storage-form/validate-storage-credentials.jsx
 #: ../app/javascript/components/provider-form/validate-provider-credentials.jsx
 msgid "Validation failed: unknown error"
@@ -76963,7 +77311,8 @@ msgstr "TLS 証明書の確認"
 msgid "Version"
 msgstr "バージョン"
 
-#: ../app/helpers/ops_helper.rb:215 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 msgid "Version / Build"
 msgstr "バージョン / ビルド"
 
@@ -77765,6 +78114,16 @@ msgstr "ボリューム・タイプの表示"
 msgid "View Volumes"
 msgstr "ボリュームの表示"
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "View Workflow Instances"
+msgstr "ワークフロー・インスタンスの表示"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "View Workflows"
+msgstr "ワークフローの表示"
+
 #: ../app/views/ops/_settings_details_tab.html.haml
 msgid "View Zones"
 msgstr "ゾーンの表示"
@@ -77829,12 +78188,12 @@ msgstr "このアラート・プロファイルの表示"
 msgid "View this Event"
 msgstr "このイベントの表示"
 
-#: ../app/views/ops/_rbac_role_details.html.haml
-#: ../app/views/ops/_rbac_user_details.html.haml
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
+#: ../app/helpers/settings_users_helper.rb
 msgid "View this Group"
 msgstr "このグループの表示"
 
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 msgid "View this MiqServer"
 msgstr "この Miq サーバーの表示"
 
@@ -77851,7 +78210,7 @@ msgstr "この PXE イメージの表示"
 msgid "View this Policy Profile"
 msgstr "このポリシー・プロファイルの表示"
 
-#: ../app/views/ops/_rbac_group_details.html.haml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 msgid "View this Project"
 msgstr "このプロジェクトの表示"
 
@@ -77859,8 +78218,8 @@ msgstr "このプロジェクトの表示"
 msgid "View this Report"
 msgstr "このレポートの表示"
 
-#: ../app/views/ops/_rbac_group_details.html.haml
-#: ../app/views/ops/_rbac_user_details.html.haml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
+#: ../app/helpers/settings_users_helper.rb
 msgid "View this Role"
 msgstr "このロールの表示"
 
@@ -77872,11 +78231,11 @@ msgstr "このスケジュールの表示"
 msgid "View this Service"
 msgstr "このサービスの表示"
 
-#: ../app/views/ops/_rbac_group_details.html.haml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 msgid "View this Tenant"
 msgstr "このテナントの表示"
 
-#: ../app/views/ops/_rbac_group_details.html.haml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 msgid "View this User"
 msgstr "このユーザーの表示"
 
@@ -77887,10 +78246,6 @@ msgstr "このウィジェットの表示"
 #: ../app/views/pxe/_pxe_server_details.html.haml
 msgid "View this Windows Image"
 msgstr "この Windows イメージの表示"
-
-#: ../app/views/ops/_diagnostics_zones_tab.html.haml
-msgid "View this Zone"
-msgstr "このゾーンの表示"
 
 #: ../lib/gtl_formatter.rb
 msgid "View this item"
@@ -79513,6 +79868,7 @@ msgstr "ボリューム・スナップショット・テンプレート (Opensta
 #: ../app/controllers/cloud_volume_snapshot_controller.rb
 #: ../app/helpers/cloud_tenant_helper/textual_summary.rb
 #: ../app/presenters/menu/default_menu.rb
+#: ../app/services/ems_storage_dashboard_service.rb
 msgid "Volume Snapshots"
 msgstr "ボリューム・スナップショット"
 
@@ -80199,12 +80555,15 @@ msgid ""
 "with this action"
 msgstr "警告: このアクションを続行する場合、現在のリタイヤ・オプションはすべて失われます。"
 
+#: ../app/models/manageiq/providers/vmware/infra_manager/host.rb
+msgid "Web Service"
+msgstr "Web サービス"
+
 #: ../app/javascript/components/workers-form/workers.schema.js
 msgid "Web Service Workers"
 msgstr "Web サービス・ワーカー"
 
 #: ../app/helpers/textual_summary_helper.rb
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 #: ../app/views/ops/_settings_server_tab.html.haml
 msgid "Web Services"
 msgstr "Web サービス"
@@ -80481,10 +80840,25 @@ msgstr "ワーカーが停止しました"
 msgid "Workers"
 msgstr "ワーカー"
 
+#: ../config/model_display_names.rb:258 ../config/model_attributes.rb
+msgid "Workflow"
+msgid_plural "Workflows"
+msgstr[0] "ワークフロー"
+
 #. TRANSLATORS: en.yml key: dictionary.column.v_workflow_class
 #: ../config/dictionary_strings.rb
 msgid "Workflow Class"
 msgstr "ワークフロー・クラス"
+
+#: ../config/model_display_names.rb
+msgid "Workflow Instance"
+msgid_plural "Workflow Instances"
+msgstr[0] "ワークフロー・インスタンス"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Workflow Instances"
+msgstr "ワークフロー・インスタンス"
 
 #: ../app/helpers/miq_ae_class_helper.rb
 msgid "Workflow Template"
@@ -80507,10 +80881,84 @@ msgstr[0] "ワークフロー・テンプレート (Ansible Tower)"
 msgid "Workflow Templates (Ansible Tower)"
 msgstr "ワークフロー・テンプレート (Ansible Tower)"
 
+#: ../config/model_attributes.rb
+msgid "Workflow instance"
+msgstr "ワークフロー・インスタンス"
+
 #:
 #: ../app/javascript/components/pvc-import-image-form/pvc-import-image-form.schema.js
 msgid "Workflow max. timeout"
 msgstr "ワークフローの最大 タイムアウト"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Context"
+msgstr "WorkflowInstance| コンテキスト"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Credentials"
+msgstr "WorkflowInstance| 資格情報"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Href slug"
+msgstr "WorkflowInstance| Href スラッグ"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Output"
+msgstr "WorkflowInstance| 出力"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Region description"
+msgstr "WorkflowInstance| 領域の説明"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Region number"
+msgstr "WorkflowInstance| 領域番号"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Status"
+msgstr "WorkflowInstance| 状況"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Userid"
+msgstr "WorkflowInstance| ユーザー ID"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Workflow content"
+msgstr "WorkflowInstance| ワークフロー・コンテンツ"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Workflows"
+msgstr "ワークフロー"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Workflows Automation Manager"
+msgstr "ワークフロー自動化マネージャー"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Credentials"
+msgstr "ワークフロー | 資格情報"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Href slug"
+msgstr "ワークフロー | Href スラッグ"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Name"
+msgstr "ワークフロー | 名前"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Region description"
+msgstr "ワークフロー | 地域の説明"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Region number"
+msgstr "ワークフロー | 地域番号"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Workflow content"
+msgstr "ワークフロー | ワークフロー・コンテンツ"
 
 #: ../app/views/shared/views/_prov_dialog.html.haml
 msgid "Workgroup Information"
@@ -80698,7 +81146,7 @@ msgstr "ゾーン*"
 msgid "Zone:"
 msgstr "ゾーン:"
 
-#: ../app/helpers/zones_helper.rb
+#: ../app/helpers/settings_zone_list_helper.rb
 #: ../app/presenters/tree_builder_ops_settings.rb
 #: ../app/views/ops/_all_tabs.html.haml
 #: ../app/views/ops/_settings_details_tab.html.haml
@@ -81024,6 +81472,13 @@ msgstr "メンテナンス・ゾーンを削除できません"
 msgid "cannot delete volume that is in use."
 msgstr "使用中のボリュームを削除することはできません。"
 
+#: ../app/models/resource_action.rb
+msgid ""
+"cannot have configuration_script_id and ae_namespace, ae_class, and "
+"ae_instance present"
+msgstr ""
+"configuration_script_id と ae_namespace、ae_class、および ae_instance を指定することはできません"
+
 #: ../app/models/service_generic.rb
 msgid "check_completed must be implemented in a subclass"
 msgstr "check_completed はサブクラスに実装する必要があります"
@@ -81054,6 +81509,11 @@ msgstr "cloud_volume を nil にすることはできません"
 #: ../config/yaml_strings.rb
 msgid "compliance"
 msgstr "準拠"
+
+#:
+#: ../app/javascript/components/storage-service-form/get-compliant-resources.jsx
+msgid "compliance check failed:"
+msgstr "準拠検査に失敗しました。"
 
 #: ../app/models/condition.rb
 msgid ""
@@ -81299,7 +81759,8 @@ msgstr "cpu_total_cores"
 msgid "create_aggregate must be implemented in a subclass"
 msgstr "create_aggregate はサブクラスに実装する必要があります"
 
-#: ../app/helpers/zones_helper.rb:18 ../app/presenters/tree_node/zone.rb
+#: ../app/helpers/settings_zone_list_helper.rb
+#: ../app/presenters/tree_node/zone.rb
 msgid "current"
 msgstr "現在"
 
@@ -81419,7 +81880,7 @@ msgstr "ems_configuration"
 #: ../app/models/host_initiator_group.rb
 #: ../app/models/physical_storage.rb:78 ../app/models/physical_storage.rb
 #: ../app/models/placement_group.rb:48 ../app/models/storage_service.rb
-#: ../app/models/volume_mapping.rb
+#: ../app/models/storage_service.rb:113 ../app/models/volume_mapping.rb
 msgid "ems_id cannot be nil"
 msgstr "ems_id を nil にすることはできません"
 
@@ -81577,12 +82038,16 @@ msgstr "evm_worker_stop"
 msgid "evm_worker_uptime_exceeded"
 msgstr "evm_worker_uptime_exceeded"
 
+#: ../app/models/manageiq/providers/workflows/automation_manager/workflow.rb
+msgid "execute is not enabled"
+msgstr "実行が有効になっていません"
+
 #:
 #: ../lib/miq_automation_engine/engine/miq_ae_engine/miq_ae_ansible_method_base.rb
 msgid "execute must be implemented in a subclass"
 msgstr "execute はサブクラスに実装する必要があります"
 
-#: ../lib/miq_expression.rb:129 ../lib/miq_expression.rb
+#: ../lib/miq_expression.rb:135 ../lib/miq_expression.rb
 msgid ""
 "expression malformed,  must contain one of 'checkall', 'checkany', 'checkcount"
 "'"
@@ -81593,7 +82058,7 @@ msgstr "式の形式が正しくありません。'checkall'、'checkany'、'che
 #: ../app/models/host_initiator_group.rb
 #: ../app/models/physical_storage.rb:81 ../app/models/physical_storage.rb
 #: ../app/models/placement_group.rb:51 ../app/models/storage_service.rb
-#: ../app/models/volume_mapping.rb
+#: ../app/models/storage_service.rb:116 ../app/models/volume_mapping.rb
 msgid "ext_management_system cannot be found"
 msgstr "ext_management_system が見つかりません"
 
@@ -81871,10 +82336,6 @@ msgstr "login_failed"
 msgid "m"
 msgstr "m"
 
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
-msgid "map a new label to tag"
-msgstr "新規ラベルをタグにマップ"
-
 #: ../app/models/miq_ae_namespace.rb
 msgid "may contain only alphanumeric and _ . - $ characters"
 msgstr "英数字および _ . - $ 文字のみを使用できます"
@@ -81972,7 +82433,7 @@ msgid "new element"
 msgstr "新しい要素"
 
 #: ../app/models/ext_management_system.rb
-#: ../app/models/ext_management_system.rb:656 ../app/models/provider.rb
+#: ../app/models/ext_management_system.rb:627 ../app/models/provider.rb
 msgid "no Provider credentials defined"
 msgstr "プロバイダーの資格情報が定義されていません"
 
@@ -82064,7 +82525,7 @@ msgstr "%{date}、 %{time}"
 msgid "open and close options"
 msgstr "オープンおよびクローズ・オプション"
 
-#: ../lib/miq_expression.rb:294 ../lib/miq_expression.rb
+#: ../lib/miq_expression.rb:315 ../lib/miq_expression.rb
 msgid "operator '%{operator_name}' is not supported"
 msgstr "オペレーター '%{operator_name}' はサポートされていません"
 
@@ -82238,6 +82699,10 @@ msgstr "raw_add_security_group はサブクラスに実装する必要があり�
 msgid "raw_associate_floating_ip must be implemented in a subclass"
 msgstr "raw_associate_floating_ip はサブクラスに実装する必要があります"
 
+#: ../app/models/storage_service.rb
+msgid "raw_check_compliant_resources must be implemented in a subclass"
+msgstr "raw_check_compliant_resources はサブクラスに実装する必要があります"
+
 #: ../app/models/cloud_database.rb
 msgid "raw_create_cloud_database must be implemented in a subclass"
 msgstr "raw_create_cloud_database はサブクラスに実装する必要があります"
@@ -82309,6 +82774,10 @@ msgstr "raw_delete_flavor はサブクラスに実装する必要があります
 #: ../app/models/host_initiator.rb
 msgid "raw_delete_host_initiator must be implemented in a subclass"
 msgstr "raw_delete_host_initiator はサブクラスに実装する必要があります"
+
+#: ../app/models/host_initiator_group.rb
+msgid "raw_delete_host_initiator_group must be implemented in a subclass"
+msgstr "raw_delete_host_initiator_group はサブクラスに実装する必要があります"
 
 #: ../app/models/manageiq/providers/cloud_manager/template.rb
 msgid "raw_delete_image must be implemented in a subclass"
@@ -82405,6 +82874,10 @@ msgstr "raw_update_cloud_network はサブクラスに実装する必要があ�
 #: ../app/models/cloud_tenant.rb
 msgid "raw_update_cloud_tenant must be implemented in a subclass"
 msgstr "raw_update_cloud_tenant はサブクラスに実装する必要があります"
+
+#: ../app/models/host_initiator_group.rb
+msgid "raw_update_host_initiator_group must be implemented in a subclass"
+msgstr "raw_update_host_initiator_group はサブクラスに実装する必要があります"
 
 #: ../app/models/manageiq/providers/cloud_manager/template.rb
 msgid "raw_update_image must be implemented in a subclass"
@@ -82636,6 +83109,20 @@ msgstr "request_vm_unregister"
 msgid "resize value options cannot be nil"
 msgstr "サイズ変更値オプションをnilにすることはできません"
 
+#:
+#: ../app/models/manageiq/providers/workflows/automation_manager/workflow_instance.rb
+msgid "run is not enabled"
+msgstr "実行が有効になっていません"
+
+#: ../app/models/configuration_script_payload.rb
+msgid "run must be implemented in a subclass"
+msgstr "実行はサブクラスに実装する必要があります"
+
+#:
+#: ../app/models/manageiq/providers/workflows/automation_manager/workflow_instance.rb
+msgid "run_queue is not enabled"
+msgstr "run_queue が有効になっていません"
+
 #: ../app/controllers/application_controller/performance.rb
 msgid "running"
 msgstr "実行中"
@@ -82726,6 +83213,11 @@ msgstr "storage_scan_complete"
 msgid "success"
 msgstr "成功"
 
+#:
+#: ../app/models/manageiq/providers/embedded_automation_manager/configuration_script_source.rb
+msgid "sync must be implemented in a subclass"
+msgstr "sync はサブクラスに実装する必要があります"
+
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_sets.yml
 #: ../config/yaml_strings.rb
@@ -82735,6 +83227,11 @@ msgstr "タグ"
 #: ../app/models/manageiq/providers/kubernetes/container_manager.rb
 msgid "target_class must be a class not an instance"
 msgstr "target_class はインスタンスではなくクラスでなければなりません"
+
+#:
+#: ../app/models/manageiq/providers/autosde/storage_manager/host_initiator_group.rb
+msgid "the host initiator group is not connected to an active provider"
+msgstr "ホスト・イニシエーター・グループがアクティブ・プロバイダーに接続されていない"
 
 #:
 #: ../app/models/manageiq/providers/openstack/storage_manager/cinder_manager/cloud_volume.rb
@@ -82870,7 +83367,7 @@ msgstr "不明なオブジェクト・タイプ: %{class}"
 msgid "unknown zone %{zone_name}"
 msgstr "不明なゾーン %{zone_name}"
 
-#: ../app/helpers/ops_helper.rb:171 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:180 ../app/helpers/ops_helper.rb
 msgid "unlimited"
 msgstr "無制限"
 

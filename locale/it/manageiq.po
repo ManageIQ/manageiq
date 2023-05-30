@@ -9,8 +9,8 @@ msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-16 19:20+0000\n"
-"PO-Revision-Date: 2023-02-16 19:20+0000\n"
+"POT-Creation-Date: 2023-05-15 00:54+0000\n"
+"PO-Revision-Date: 2023-05-15 00:54+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: it\n"
@@ -21,6 +21,7 @@ msgstr ""
 
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
+#: ../app/javascript/components/storage-service-form/get-compliant-resources.jsx
 msgid " "
 msgstr " "
 
@@ -518,6 +519,20 @@ msgstr "%s (Personalizzato)"
 msgid "%s - %s %s Used"
 msgstr "%s - %s %s utilizzato"
 
+#:
+#: ../app/javascript/components/provider-dashboard-charts/heat-map-chart/HeatMapChartGraph.js
+msgid "%s - CPU"
+msgstr "%s - CPU"
+
+#:
+#: ../app/javascript/components/provider-dashboard-charts/heat-map-chart/HeatMapChartGraph.js
+msgid "%s - Memory"
+msgstr "%s - Memoria"
+
+#: ../app/javascript/components/settings-company-tags/index.jsx
+msgid "%s Entries"
+msgstr "%s Voci"
+
 #: src/rbac-forms/rbacUserTagsList.jsx
 msgid "%s Tags"
 msgstr "Tag %s"
@@ -539,6 +554,10 @@ msgstr "%s disconnesso, reindirizzamento alla pagina di  accesso"
 #: ../app/javascript/toolbar-actions/delete.js
 msgid "%s: \"%s\" was successfully deleted"
 msgstr "%s: \"%s\" è stato eliminato correttamente"
+
+#: ../app/javascript/helpers/storage_manager/load-provider-capabilities.js
+msgid "%s: %s"
+msgstr "%s: %s"
 
 #: ../app/controllers/application_controller/ci_processing.rb
 msgid "%{action_name} action does not apply to selected items"
@@ -1858,7 +1877,7 @@ msgstr ""
 "(Le sottoreti non esplicitamente assegnate ad una tabella di instradamenti "
 "sono assegnate a questa tabella di instradamenti principale, per questo VPC)"
 
-#: ../app/views/ops/_diagnostics_zones_tab.html.haml
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 msgid "(current)"
 msgstr "(corrente)"
 
@@ -1958,11 +1977,6 @@ msgstr ""
 #: ../app/views/report/_db_form.html.haml
 msgid "* Dashboard name cannot be changed"
 msgstr "* Il nome Dashboard non può essere modificato"
-
-#: ../app/views/layouts/_tl_show.html.haml
-msgid "* Dates/Times on this page are based on time zone: %{time_zone}."
-msgstr ""
-"* Le date/ore in questa pagina sono basate sul fuso orario: %{time_zone}."
 
 #: ../app/views/miq_policy_rsop/_rsop_results.html.haml
 msgid "* Enter Policy Simulation options on the left and press Submit"
@@ -2561,9 +2575,11 @@ msgstr "<Per Ruolo>"
 #: ../app/javascript/components/ansible-credentials-form/ansible-credentials-form.schema.js
 #: ../app/javascript/components/cloud-volume-actions-form/restore-from-backup.schema.js
 #: ../app/javascript/components/cloud-volume-backup-form/cloud-volume-backup-form.schema.js
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
 #: ../app/javascript/components/generic-objects-form/generic-objects-form.schema.js
 #: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js
 #: ../app/javascript/components/host-initiator-group-form/host-initiator-group-form.schema.js
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 #: ../app/javascript/components/miq-alert-set-form/miq-alert-set-form.schema.js
 #: ../app/javascript/components/network-routers-interfaces-form/network-routers-interfaces-form.schema.js
 #: ../app/javascript/components/pxe-customization-template-form/pxe-customization-template-form.schema.js
@@ -2572,7 +2588,6 @@ msgstr "<Per Ruolo>"
 #: ../app/javascript/components/pxe-iso-image-form/pxe-iso-image-form.schema.js
 #: ../app/javascript/components/routers-form/RoutersForm.schema.js
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
-#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 #: ../app/javascript/components/vm-cloud-add-remove-security-group-form/vm-cloud-add-security-form.schema.js
 #: ../app/javascript/components/volume-mapping-form/volume-mapping-form.schema.js
 #: ../app/views/catalog/_form_basic_info.html.haml
@@ -2592,10 +2607,6 @@ msgstr "<Fare clic su questa riga per creare una nuova voce>"
 #: ../app/views/ops/_ldap_forest_entries.html.haml
 msgid "<Click on this row to create a new forest>"
 msgstr "<Fare clic su questa riga per creare una nuova foresta>"
-
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
-msgid "<Click on this row to create a new mapping rule>"
-msgstr "<Fare clic su questa riga per creare una nuova regola di associazione>"
 
 #:
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js
@@ -3148,6 +3159,7 @@ msgstr "Modalità di accesso"
 msgid "Access Physical Server Remote Console"
 msgstr "Accedi a console remota server fisico"
 
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
 #: ../app/views/ops/_rbac_role_details.html.haml
 msgid ""
 "Access Restriction for Catalog Items, Orchestration Stacks, Key Pairs, "
@@ -3341,10 +3353,10 @@ msgstr "Confermato"
 #. TRANSLATORS: file: product/views/MiqAction.yaml
 #: ../app/controllers/optimization_controller.rb
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/presenters/tree_builder_policy_simulation_results.rb
 #: ../app/views/catalog/_form_resources_info.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/views/_alerts_list.html.haml
 #: ../config/yaml_strings.rb
 msgid "Action"
@@ -3354,6 +3366,10 @@ msgstr "Azione"
 #: ../app/views/catalog/_form_resources_info.html.haml
 msgid "Action Order"
 msgstr "Ordine azione"
+
+#: ../app/javascript/components/async-action-button.jsx
+msgid "Action Required"
+msgstr "Azione richiesta"
 
 #: ../app/models/miq_action_set.rb
 msgid "Action Set"
@@ -3404,6 +3420,10 @@ msgid "Action script exited with rc=%{rc_value}, error=%{error_text}"
 msgstr ""
 "Uscita dallo script dell'azione con rc=%{rc_value}, errore=%{error_text}"
 
+#: ../app/javascript/components/async-action-button.jsx
+msgid "Action successful"
+msgstr "Azione riuscita"
+
 #. TRANSLATORS: file: product/views/MiqActionSet.yaml
 #: ../config/yaml_strings.rb
 msgid "ActionSet"
@@ -3412,7 +3432,11 @@ msgstr "ActionSet"
 #. TRANSLATORS: file: product/views/MiqAction.yaml
 #: ../app/controllers/miq_action_controller.rb
 #: ../app/helpers/miq_policy_helper.rb
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+#: ../app/helpers/ops_helper/settings_tab_helper.rb
 #: ../app/helpers/settings_tags_tabs_helper.rb
+#: ../app/javascript/components/settings-company-tags/helper.js
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/views/chargeback_rate/_cb_rate_edit_table.html.haml
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
@@ -3422,7 +3446,6 @@ msgstr "ActionSet"
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 #: ../app/views/ops/_ap_form_registry.html.haml
 #: ../app/views/ops/_classification_entries.html.haml
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 #: ../app/views/vm_common/_reconfigure.html.haml
 #: ../config/yaml_strings.rb
@@ -3455,12 +3478,12 @@ msgstr ""
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
 #: ../app/helpers/report_helper/report_schedule_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/presenters/tree_builder_snapshots.rb
 #: ../app/presenters/tree_node/snapshot.rb
 #: ../app/views/miq_alert/_form.html.haml
 #: ../app/views/miq_policy/_form.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/report/_schedule_form.html.haml
 #: ../app/views/report/_widget_form.html.haml:33 ../config/yaml_strings.rb
 msgid "Active"
@@ -3635,6 +3658,10 @@ msgstr "Aggiungi disco"
 msgid "Add Disks"
 msgstr "Aggiungi Dischi"
 
+#: ../app/javascript/components/settings-company-tags/index.jsx
+msgid "Add Entry"
+msgstr "Aggiungi voce"
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Add Flavor"
@@ -3720,6 +3747,10 @@ msgstr "Aggiungi interfaccia al router \"%{name}\""
 #: ../app/helpers/application_helper/toolbar/network_router_center.rb
 msgid "Add Interface to this Router"
 msgstr "Aggiungi interfaccia a questo router"
+
+#: ../app/javascript/components/settings-label-tag-mapping/index.jsx
+msgid "Add Mapping Rule"
+msgstr "Aggiungi regola di associazione"
 
 #: ../app/views/miq_ae_class/_embedded_methods.html.haml
 msgid "Add Method"
@@ -4273,6 +4304,11 @@ msgstr "Aggiungi un widget"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Add a Workflow"
+msgstr "Aggiungi un flusso di lavoro"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Add a Zone"
 msgstr "Aggiungi una Zona"
 
@@ -4499,6 +4535,10 @@ msgstr "Aggiungi un profilo di definizione degli avvisi"
 msgid "Add an Customization Template"
 msgstr "Aggiungi un modello di personalizzazione"
 
+#: ../app/javascript/components/settings-company-tags-entry-form/schema.js
+msgid "Add an Entry"
+msgstr "Aggiungi una voce"
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Add an ISO Datastore"
@@ -4620,6 +4660,10 @@ msgstr "Aggiunta del flavor annullata dall'utente."
 #: ../app/javascript/components/host-aggregate-form/index.jsx
 msgid "Add of Host Aggregate \"%s\" has been successfully queued."
 msgstr "L'aggiunta dell'aggregato host \"%s\" è stata accodata correttamente."
+
+#: ../app/javascript/components/host-initiator-group-form/index.jsx
+msgid "Add of Host Initiator Group has been successfully queued."
+msgstr "L'aggiunta del gruppo iniziatore host è stata accodata correttamente."
 
 #: ../app/javascript/components/auth-key-pair-cloud/index.jsx
 msgid "Add of Key Pair \"%s\" has been successfully queued."
@@ -5080,11 +5124,16 @@ msgstr "Tenant aggiuntivi"
 msgid "Address"
 msgstr "Indirizzo"
 
+#:
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js
+msgid "Address %s is already in use"
+msgstr "L'indirizzo %s è già in uso"
+
 #: ../app/helpers/host_initiator_group_helper/textual_summary.rb
 msgid "Addresses"
 msgstr "Indirizzi"
 
-#: ../app/views/static/evacuate-form.html.haml
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
 msgid "Admin Password"
 msgstr "Password Admin"
 
@@ -5459,7 +5508,6 @@ msgstr[1] "Azioni per lo stato di Avviso"
 #: ../app/helpers/ems_container_helper/textual_summary.rb
 #: ../app/helpers/miq_alert_set_helper.rb
 #: ../app/helpers/textual_mixins/textual_authentications_status.rb
-#: ../app/javascript/components/ems_container_dashboard/helper.js
 #: ../app/javascript/oldjs/controllers/container_dashboard/util/dashboard-utils-factory.js
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/views/ems_container/_form.html.haml
@@ -5499,6 +5547,7 @@ msgstr "Avvisi da valutare"
 
 #: ../app/controllers/miq_request_controller.rb
 #: ../app/helpers/security_group_helper/textual_summary.rb
+#: ../app/javascript/components/service-request-default/service-request-default.schema.js
 #: ../app/views/miq_task/_tasks_options.html.haml
 #: ../app/views/report/_form_sort.html.haml
 msgid "All"
@@ -5890,7 +5939,6 @@ msgstr "Tutti gli attributi"
 #: ../app/controllers/chargeback_rate_controller.rb
 #: ../app/controllers/condition_controller.rb
 #: ../app/controllers/configuration_controller.rb
-#: ../app/controllers/host_controller.rb
 #: ../app/controllers/miq_action_controller.rb
 #: ../app/controllers/miq_ae_class_controller.rb
 #: ../app/controllers/miq_ae_customization_controller/old_dialogs.rb
@@ -5914,6 +5962,7 @@ msgstr "Tutti gli attributi"
 #: ../app/javascript/components/button-group/index.jsx
 #: ../app/javascript/components/cloud-volume-form/index.jsx
 #: ../app/javascript/components/generic-objects-form/custom-button-form/index.jsx
+#: ../app/javascript/components/host-initiator-group-form/index.jsx
 #: ../app/javascript/components/physical-storage-form/index.jsx
 #: ../app/javascript/components/retirement-form/index.jsx
 #: ../app/javascript/components/settings-tasks-form/index.jsx
@@ -5922,10 +5971,8 @@ msgstr "Tutti gli attributi"
 #: ../app/javascript/forms/data-driven-form.jsx
 #: ../app/javascript/oldjs/components/miq_ae_class/namespace-form.js
 #: ../app/javascript/oldjs/controllers/catalog/catalog_item_form_controller.js
-#: ../app/javascript/oldjs/controllers/host/host_form_controller.js
 #: ../app/javascript/oldjs/controllers/ops/pglogical_replication_form_controller.js
 #: ../app/javascript/oldjs/controllers/reconfigure/reconfigure_form_controller.js
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
 msgid "All changes have been reset"
 msgstr "Tutte le modifiche sono state reimpostate"
 
@@ -6210,7 +6257,7 @@ msgstr ""
 #: ../app/controllers/application_controller/ci_processing.rb
 #: ../app/controllers/mixins/actions/host_actions/misc.rb
 #: ../app/helpers/application_helper/tasks.rb
-#: ../app/views/ops/_schedule_show.html.haml
+#: ../app/helpers/settings_schedule_helper.rb
 msgid "Analysis"
 msgstr "Analisi"
 
@@ -6552,6 +6599,7 @@ msgstr[1] "Approvazioni"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml:68 ../config/yaml_strings.rb
 msgid "Approval State"
 msgstr "Stato approvazione"
@@ -6621,11 +6669,13 @@ msgstr "Approvata/rifiutata da"
 msgid "Approved/Denied On"
 msgstr "Data/ora approvazione/rifiuto"
 
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
 msgid "Approved/Denied by"
 msgstr "Approvata/rifiutata da"
 
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 msgid "Approved/Denied on"
 msgstr "Data/ora approvazione/rifiuto"
@@ -6694,6 +6744,7 @@ msgstr ""
 "Si è sicuri di voler creare la politica [%{new_policy_description}] da questa "
 "politica?"
 
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
 #: ../app/helpers/settings_tags_tabs_helper.rb
 msgid "Are you sure you want to delete category '%{category_name}'?"
 msgstr "Si è sicuri di voler eliminare la categoria '%{category_name}'?"
@@ -6710,7 +6761,7 @@ msgstr "Si è sicuri di voler eliminare la foresta %{ldaphost}?"
 msgid "Are you sure you want to delete input field from method?"
 msgstr "Si è sicuri di voler eliminare il campo di input dal metodo?"
 
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
 msgid "Are you sure you want to delete mapping '%{label_name}'?"
 msgstr "Si è sicuri di voler eliminare l'associazione '%{label_name}'?"
 
@@ -6826,6 +6877,11 @@ msgstr "Si è sicuri di voler eliminare questo avviso?"
 msgid "Are you sure you want to delete this Group?"
 msgstr "Si è sicuri di voler eliminare questo Gruppo?"
 
+#: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
+#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
+msgid "Are you sure you want to delete this Host Initiator Group?"
+msgstr "Eliminare questo gruppo iniziatore host?"
+
 #: ../app/helpers/application_helper/toolbar/miq_alerts_center.rb
 msgid "Are you sure you want to delete this Policy Alerts?"
 msgstr "Si è sicuri di voler eliminare questi avvisi della politica?"
@@ -6858,6 +6914,15 @@ msgstr "Si è sicuri di voler eliminare questo utente?"
 #: ../app/helpers/application_helper/toolbar/zone_center.rb
 msgid "Are you sure you want to delete this Zone?"
 msgstr "Si è sicuri di voler eliminare questa Zona?"
+
+#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshot_center.rb
+#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshots_center.rb
+msgid "Are you sure you want to delete this cloud volume snapshot?"
+msgstr "Eliminare questa istantanea del volume cloud?"
+
+#: ../app/javascript/components/settings-company-tags/index.jsx
+msgid "Are you sure you want to delete this entry?"
+msgstr "Eliminare questa voce?"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb
 msgid "Are you sure you want to delete this host initiator?"
@@ -7540,11 +7605,11 @@ msgid "Attribute missing for %{field}"
 msgstr "Attributo mancante per %{field}"
 
 #: ../app/helpers/miq_action_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "Attribute/Value Pairs"
@@ -7916,8 +7981,8 @@ msgstr "Password autorizzazione"
 msgid "Authtype"
 msgstr "Authtype"
 
-#: ../app/views/static/evacuate-form.html.haml
-#: ../app/views/vm_common/_live_migrate.html.haml
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 msgid "Auto-select Host?"
 msgstr "Selezionare automaticamente l'host?"
 
@@ -8034,13 +8099,9 @@ msgstr "Automazione Schema"
 msgid "Automate Simulation"
 msgstr "Automazione Simulazione"
 
-#: ../app/views/ops/_schedule_show.html.haml
+#: ../app/helpers/settings_schedule_helper.rb
 msgid "Automate Task"
 msgstr "Automatizza attività"
-
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
-msgid "Automate Tasks Selection"
-msgstr "Selezione attività di automazione"
 
 #: ../config/model_display_names.rb
 msgid "Automate Workspace"
@@ -8890,9 +8951,11 @@ msgstr "Informazioni di base"
 #: ../app/helpers/miq_policy_helper.rb
 #: ../app/helpers/miq_policy_set_helper.rb:3 ../app/helpers/ops_helper.rb
 #: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
 #: ../app/helpers/settings_analysis_profile_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/javascript/components/cloud-volume-actions-form/create-backup.schema.js
 #: ../app/javascript/components/cloud-volume-actions-form/create-snapshot.schema.js
@@ -8915,7 +8978,6 @@ msgstr "Informazioni di base"
 #: ../app/views/miq_policy/_event_edit.html.haml
 #: ../app/views/miq_policy/_form.html.haml
 #: ../app/views/ops/_ap_form.html.haml
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 #: ../app/views/ops/_settings_server_tab.html.haml
 #: ../app/views/pxe/_iso_datastore_details.html.haml
 #: ../app/views/pxe/_pxe_image_type_details.html.haml
@@ -9121,7 +9183,8 @@ msgstr "Fai lampeggiare il LED Identifica"
 msgid "Blink the Identify LED?"
 msgstr "Far lampeggiare LED Identifica?"
 
-#: ../app/views/vm_common/_live_migrate.html.haml
+#:
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 msgid "Block Migration"
 msgstr "Migrazione dei blocchi"
 
@@ -9214,10 +9277,6 @@ msgstr "Avviabile"
 #: ../config/yaml_strings.rb
 msgid "Bootable?"
 msgstr "Avviabile?"
-
-#: ../app/javascript/components/timeline-options/timeline-options.jsx
-msgid "Both"
-msgstr "Entrambi"
 
 #. TRANSLATORS: en.yml key: dictionary.model.BottleneckEvent
 #: ../config/model_display_names.rb:14 ../config/dictionary_strings.rb
@@ -10222,7 +10281,8 @@ msgid "CPU Max Used MHz Trend"
 msgstr "Tendenza MHz di utilizzo massimo della CPU"
 
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
-#: ../app/helpers/ops_helper.rb:214 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../config/yaml_strings.rb
 msgid "CPU Percent"
 msgstr "Percentuale CPU"
@@ -10271,7 +10331,8 @@ msgstr "Velocità CPU"
 
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
 #. TRANSLATORS: file: product/views/OsProcess-processes.yaml
-#: ../app/helpers/ops_helper.rb:213 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../config/yaml_strings.rb
 msgid "CPU Time"
 msgstr "Ora CPU"
@@ -10774,6 +10835,7 @@ msgstr ""
 
 #: ../app/helpers/storage_resource_helper/textual_summary.rb
 #: ../app/helpers/storage_service_helper/textual_summary.rb
+#: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
 msgid "Capabilities"
 msgstr "Funzionalità"
 
@@ -11183,10 +11245,6 @@ msgid "Category %{description} [%{name}] record created ("
 msgstr "Record della categoria %{description} [%{name}] creato ("
 
 #: ../app/controllers/ops_controller/settings/tags.rb
-msgid "Category %{description} [%{name}] record deleted"
-msgstr "Record della categoria %{description} [%{name}] eliminato"
-
-#: ../app/controllers/ops_controller/settings/tags.rb
 msgid "Category %{description} [%{name}] record updated ("
 msgstr "Record della categoria %{description} [%{name}] aggiornato ("
 
@@ -11219,6 +11277,18 @@ msgstr "Voci tag categoria"
 #: ../app/javascript/spec/settings-compan-categories/data.js
 msgid "Category cannot be deleted"
 msgstr "Impossibile eliminare la categoria"
+
+#: ../app/javascript/components/settings-company-tags-entry-form/index.jsx
+msgid "Category entry \"%s\" was created successfully"
+msgstr "La voce di categoria \"%s\" è stata creata correttamente"
+
+#: ../app/javascript/components/settings-company-tags-entry-form/index.jsx
+msgid "Category entry \"%s\" was saved successfully"
+msgstr "La voce di categoria \"%s\" è stata salvata correttamente"
+
+#: ../app/javascript/components/settings-company-tags/index.jsx
+msgid "Category entry was successfully deleted"
+msgstr "La voce di categoria è stata eliminata correttamente"
 
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb
 msgid "Category is required"
@@ -11254,7 +11324,7 @@ msgstr ""
 "Attenzione: le modifiche manuali ai file di configurazione possono "
 "disabilitare la zona."
 
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
+#: ../app/javascript/components/settings-label-tag-mapping/index.jsx
 msgid ""
 "Caution: Mappings with Resource Entity 'All-Entities' could cause overwriting "
 "existing tags on resources with mapped provider labels."
@@ -11603,7 +11673,7 @@ msgstr "Misura dettagli tasso di chargeback"
 msgid "Chargeback tier"
 msgstr "Livello di chargeback"
 
-#: ../app/controllers/mixins/chargeback_preview.rb
+#: ../app/controllers/mixins/chargeback_preview_mixin.rb
 msgid "Chargeback was calculated based on flat allocation"
 msgstr "Chargeback calcolato in base all'allocazione flat"
 
@@ -12049,6 +12119,11 @@ msgid "Check Compliance of the last known configuration for this item"
 msgstr ""
 "Verifica la conformità dell'ultima configurazione nota di questo elemento"
 
+#:
+#: ../app/javascript/components/storage-service-form/get-compliant-resources.jsx
+msgid "Check Compliant Resources"
+msgstr "Verifica risorse conformi"
+
 #: ../app/views/layouts/exp_atom/_edit_find.html.haml
 msgid "Check Count"
 msgstr "Verifica numero"
@@ -12064,6 +12139,11 @@ msgstr "Errore Verifica valore: %{msg}"
 #: src/report-editor/sort-criteria.jsx
 msgid "Check input"
 msgstr "Controllo input"
+
+#:
+#: ../app/javascript/components/storage-service-form/get-compliant-resources.jsx
+msgid "Checking"
+msgstr "Controllo"
 
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb
 msgid "Child Orchestration Stacks"
@@ -12105,12 +12185,15 @@ msgstr "Opzioni"
 #: ../app/javascript/components/cloud-object-store-container-form/cloud-object-store-container-form.schema.js
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
 #: ../app/javascript/components/diagnostics-collect-log-form/schema.js
+#: ../app/javascript/components/host-edit-form/host-edit-form.schema.js
 #: ../app/javascript/components/network-floatingIPs-form/network-floatingIPs-form.schema.js
 #: ../app/javascript/components/network-security-groups-form/network-security-groups-form.schema.js
 #: ../app/javascript/components/provider-form/index.jsx
 #: ../app/javascript/components/routers-form/RoutersForm.schema.js
 #: ../app/javascript/components/select/index.jsx
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 #: ../app/javascript/components/subnet-form/subnet-form.schema.js
+#: ../app/javascript/helpers/storage_manager/filter-service-by-capabilities.js
 #: ../app/views/catalog/_form_basic_info.html.haml
 #: ../app/views/catalog/_form_ovf_template_options.html.haml
 #: ../app/views/catalog/_form_resources_info.html.haml
@@ -12119,7 +12202,6 @@ msgstr "Opzioni"
 #: ../app/views/ems_container/_form.html.haml
 #: ../app/views/ems_infra/_form.html.haml
 #: ../app/views/ems_physical_infra/_form.html.haml
-#: ../app/views/host/_form.html.haml:47 ../app/views/host/_form.html.haml
 #: ../app/views/layouts/_ae_resolve_options.html.haml
 #: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
@@ -12172,7 +12254,6 @@ msgid "Choose a %{model} report filter"
 msgstr "Scegli un filtro di report %{model}"
 
 #: ../app/views/chargeback_assignment/_form.html.haml
-#: ../app/views/ops/_settings_co_tags_tab.html.haml
 #: ../app/views/report/_form_filter_chargeback.html.haml
 msgid "Choose a Category"
 msgstr "Scegliere una categoria"
@@ -12515,10 +12596,15 @@ msgstr "Cancellare i contenitori archivio oggetti selezionati"
 msgid "Click on a Host to fetch its settings"
 msgstr "Fai clic su un Host per recuperare le relative impostazioni"
 
+#: ../app/javascript/components/settings-label-tag-mapping/index.jsx
+msgid "Click on this row to create a new mapping rule"
+msgstr "Fare clic su questa riga per creare una nuova regola di associazione"
+
 #: ../app/javascript/components/settings-company-categories/index.jsx
 msgid "Click to add a new category"
 msgstr "Fare clic per aggiungere una nuova categoria"
 
+#: ../app/javascript/components/settings-company-tags/index.jsx
 #: ../app/views/ops/_ap_form_file.html.haml
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 #: ../app/views/ops/_ap_form_registry.html.haml
@@ -12553,6 +12639,8 @@ msgstr "Fare clic per eliminare i record Orfani per questo utente"
 msgid "Click to delete this category"
 msgstr "Fare clic per eliminare questa categoria"
 
+#: ../app/helpers/ops_helper/settings_tab_helper.rb
+#: ../app/javascript/components/settings-company-tags/helper.js
 #: ../app/views/ops/_ap_form_file.html.haml
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 #: ../app/views/ops/_ap_form_registry.html.haml
@@ -12573,17 +12661,13 @@ msgstr "Fare clic per eliminare questa foresta"
 msgid "Click to delete this input field from method"
 msgstr "Fare clic per eliminare questo campo di input dal metodo"
 
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 msgid "Click to delete this mapping"
 msgstr "Fare clic per eliminare questa associazione"
 
 #: ../app/views/ops/_ldap_forest_entries.html.haml
 msgid "Click to edit this forest"
 msgstr "Fare clic per modificare questa foresta"
-
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
-msgid "Click to edit this mapping rule"
-msgstr "Fare clic per modificare questa regola di associazione"
 
 #: ../app/javascript/components/dashboard-widgets/widget-menu/index.jsx
 msgid "Click to go this location"
@@ -12637,8 +12721,8 @@ msgstr "Fare clic per visualizzare il tenant %{name}"
 msgid "Click to view %{name} TenantProject"
 msgstr "Fare clic per visualizzare il TenantProject%{name}"
 
+#: ../app/helpers/request_details_helper.rb
 #: ../app/javascript/components/miq-data-table/index.jsx
-#: ../app/views/miq_request/_request.html.haml
 msgid "Click to view details"
 msgstr "Fare clic per visualizzare i dettagli"
 
@@ -14324,10 +14408,6 @@ msgstr "Relazioni Cluster"
 msgid "Cluster Resources"
 msgstr "Risorse cluster"
 
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
-msgid "Cluster Selection"
-msgstr "Selezione cluster"
-
 #: ../app/services/ems_infra_dashboard_service.rb
 #: ../app/views/ems_infra/_show_dashboard.html.haml
 msgid "Cluster Utilization"
@@ -14722,6 +14802,7 @@ msgstr "Completo"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml:63 ../config/yaml_strings.rb
 msgid "Completed"
 msgstr "Completato"
@@ -14746,7 +14827,7 @@ msgid "Compliance"
 msgstr "Conformità"
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb
-#: ../app/views/ops/_schedule_show.html.haml
+#: ../app/helpers/settings_schedule_helper.rb
 msgid "Compliance Check"
 msgstr "Verifica conformità"
 
@@ -14887,6 +14968,11 @@ msgstr "Conforme"
 #: ../app/helpers/compliance_summary_helper.rb
 msgid "Compliant as of %{time} Ago"
 msgstr "Conforme a partire da %{time} fa"
+
+#:
+#: ../app/javascript/components/storage-service-form/get-compliant-resources.jsx
+msgid "Compliant resources: "
+msgstr "Risorse conformi: "
 
 #:
 #: ../app/javascript/components/visual-settings-form/visual-settings-form.schema.js
@@ -15189,6 +15275,7 @@ msgstr "Versione configurazione"
 #: ../app/helpers/application_helper/toolbar/cloud_volume_backups_center.rb
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb
 #: ../app/helpers/application_helper/toolbar/cloud_volume_snapshot_center.rb
+#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshots_center.rb
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb
 #: ../app/helpers/application_helper/toolbar/condition_center.rb
 #: ../app/helpers/application_helper/toolbar/conditions_center.rb
@@ -15728,6 +15815,14 @@ msgid "ConfigurationProfile|Total configured systems"
 msgstr "Numero totale di sistemi configurati"
 
 #: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Context"
+msgstr "ConfigurationScriptBase|Contesto"
+
+#: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Credentials"
+msgstr "ConfigurationScriptBase|Credenziali"
+
+#: ../config/model_attributes.rb
 msgid "ConfigurationScriptBase|Description"
 msgstr "Descrizione"
 
@@ -15744,12 +15839,32 @@ msgid "ConfigurationScriptBase|Name"
 msgstr "Nome"
 
 #: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Output"
+msgstr "ConfigurationScriptBase|Output"
+
+#: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Payload"
+msgstr "ConfigurationScriptBase|Payload"
+
+#: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Payload type"
+msgstr "ConfigurationScriptBase|Tipo di payload"
+
+#: ../config/model_attributes.rb
 msgid "ConfigurationScriptBase|Region description"
 msgstr "Descrizione Regione"
 
 #: ../config/model_attributes.rb
 msgid "ConfigurationScriptBase|Region number"
 msgstr "Numero Regione"
+
+#: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Run by userid"
+msgstr "ConfigurationScriptBase|Esegui per id utente"
+
+#: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Status"
+msgstr "ConfigurationScriptBase|Stato"
 
 #: ../config/model_attributes.rb
 msgid "ConfigurationScriptBase|Survey spec"
@@ -20447,6 +20562,7 @@ msgstr "Data di creazione"
 #: ../app/helpers/firmware_binary_helper/textual_summary.rb
 #: ../app/helpers/firmware_registry_helper/textual_summary.rb
 #: ../app/helpers/firmware_target_helper/textual_summary.rb
+#: ../app/helpers/request_details_helper.rb
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/views/catalog/_ot_tree_show.html.haml
 #: ../app/views/miq_ae_class/_method_form.html.haml
@@ -20747,7 +20863,6 @@ msgstr "Tipo di credenziali"
 msgid "Credential validation was not successful: %{details}"
 msgstr "La convalida delle credenziali ha avuto esito negativo: %{details}"
 
-#: ../app/controllers/host_controller.rb
 #: ../app/controllers/mixins/manager_controller_mixin.rb
 msgid "Credential validation was successful"
 msgstr "La convalida delle credenziali ha avuto esito positivo"
@@ -20853,10 +20968,6 @@ msgstr "Le credenziali devono essere valide per aggiornare un provider"
 msgid "Credentials/Settings"
 msgstr "Credenziali/Impostazioni"
 
-#: ../app/controllers/host_controller.rb
-msgid "Credentials/Settings saved successfully"
-msgstr "Credenziali/Impostazioni correttamente salvate"
-
 #: src/topology/topologyCanvas.jsx
 msgid "Critical"
 msgstr "Critico"
@@ -20930,8 +21041,8 @@ msgid "Current Flavor"
 msgstr "Flavor corrente"
 
 #. TRANSLATORS: file: product/views/User.yaml
-#: ../app/views/ops/_rbac_user_details.html.haml
-#: ../config/yaml_strings.rb
+#: ../app/helpers/settings_users_helper.rb
+#: ../app/helpers/settings_users_helper.rb:38 ../config/yaml_strings.rb
 msgid "Current Group"
 msgstr "Gruppo corrente"
 
@@ -20977,6 +21088,7 @@ msgid "Currently Used Space"
 msgstr "Spazio attualmente utilizzato"
 
 #: ../app/helpers/catalog_helper.rb:110 ../app/helpers/report_helper.rb
+#: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
 msgid "Custom"
 msgstr "Personalizza"
 
@@ -21130,9 +21242,12 @@ msgstr "Favicon personalizzata"
 #: ../app/helpers/host_helper/textual_summary.rb
 #: ../app/helpers/textual_mixins/vm_common.rb
 #: ../app/javascript/components/vm-edit-form/vm-edit-form.schema.js
-#: ../app/views/host/_form.html.haml
 msgid "Custom Identifier"
 msgstr "Identificativo personalizzato"
+
+#: ../app/javascript/components/host-edit-form/host-edit-form.schema.js
+msgid "Custom Identifier:"
+msgstr "Identificativo personalizzato:"
 
 #: ../app/helpers/catalog_helper.rb
 #: ../app/views/catalog/_sandt_tree_custom_image_form.html.haml
@@ -21820,7 +21935,7 @@ msgstr "Dati convalidati correttamente"
 msgid "Data:"
 msgstr "Dati:"
 
-#: ../app/helpers/ops_helper.rb:106 ../app/views/ops/_all_tabs.html.haml
+#: ../app/helpers/ops_helper.rb:115 ../app/views/ops/_all_tabs.html.haml
 #: ../app/views/ops/_settings_authentication_tab.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 msgid "Database"
@@ -22017,10 +22132,6 @@ msgstr "Datastore Altri file VM"
 #: ../config/dictionary_strings.rb:2348 ../config/yaml_strings.rb
 msgid "Datastore Path"
 msgstr "Percorso datastore"
-
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
-msgid "Datastore Selection"
-msgstr "Selezione datastore"
 
 #. TRANSLATORS: file: product/reports/150_Configuration Management - Storage/020_Summary for VMs.yaml
 #: ../config/yaml_strings.rb
@@ -22254,11 +22365,6 @@ msgstr "Il valore Data/ora non deve essere vuoto"
 msgid "Datepicker"
 msgstr "Selettore data"
 
-#:
-#: ../app/javascript/components/timeline-options/timeline-options-simple.schema.js
-msgid "Dates Range"
-msgstr "Intervallo di date"
-
 #: ../app/helpers/report_helper/timer.rb
 #: ../app/javascript/components/schedule-form/helper.js
 #: ../app/javascript/oldjs/miq_formatters.js
@@ -22374,6 +22480,7 @@ msgstr "Dedicato o condiviso"
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
 #: ../app/helpers/settings_tags_tabs_helper.rb
 #: ../app/helpers/textual_summary_helper.rb
+#: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
 #: ../app/views/layouts/_container_auth.html.haml
 #: ../app/views/layouts/_edit_form_buttons.html.haml
 #: ../app/views/layouts/_x_edit_buttons.html.haml
@@ -22618,15 +22725,18 @@ msgstr "Arresto ritardato (min)"
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+#: ../app/helpers/ops_helper/settings_tab_helper.rb
 #: ../app/helpers/settings_tags_tabs_helper.rb
 #: ../app/javascript/components/remove-generic-item-modal.jsx
+#: ../app/javascript/components/settings-company-tags/helper.js
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 #: ../app/views/chargeback_rate/_cb_rate_edit_table.html.haml
 #: ../app/views/chargeback_rate/_tier_row.haml
 #: ../app/views/ops/_ap_form_file.html.haml
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 #: ../app/views/ops/_ap_form_registry.html.haml
 #: ../app/views/ops/_classification_entry.html.haml
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 #: ../app/views/vm_common/_reconfigure.html.haml
 msgid "Delete"
@@ -22783,10 +22893,6 @@ msgstr "Elimina tenant cloud"
 #: ../app/helpers/application_helper/toolbar/cloud_tenants_center.rb
 msgid "Delete Cloud Tenants"
 msgstr "Elimina tenant cloud"
-
-#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshot_center.rb
-msgid "Delete Cloud Volume Snapshot"
-msgstr "Elimina istantanea del volume cloud"
 
 #: ../app/helpers/application_helper/toolbar/conditions_center.rb
 msgid "Delete Conditions"
@@ -23078,6 +23184,11 @@ msgstr "Elimina un Widget"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Delete a Workflow"
+msgstr "Elimina un flusso di lavoro"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Delete a Zone"
 msgstr "Elimina una zona"
 
@@ -23330,10 +23441,20 @@ msgstr "Eliminare le attività più vecchie dell'attività selezionata"
 msgid "Delete the %{model} filter named %{filter}?"
 msgstr "Elimina il filtro %{model} denominato %{filter}?"
 
+#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshot_center.rb
+#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshots_center.rb
+msgid "Delete the Cloud Volume Snapshot"
+msgstr "Elimina l'istantanea del volume cloud"
+
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
 msgid "Delete the Host Initiator"
 msgstr "Elimina iniziatore host"
+
+#: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
+#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
+msgid "Delete the Host Initiator Group"
+msgstr "Elimina il gruppo iniziatore host"
 
 #: ../app/helpers/application_helper/toolbar/physical_storage_center.rb
 #: ../app/helpers/application_helper/toolbar/physical_storages_center.rb
@@ -23503,9 +23624,17 @@ msgstr "Elimina questa zona"
 msgid "Delete this category"
 msgstr "Eliminare questa categoria"
 
+#: ../app/javascript/components/settings-company-tags/helper.js
+msgid "Delete this entry"
+msgstr "Elimina questa voce"
+
 #: ../app/helpers/application_helper/toolbar/tenant_center.rb
 msgid "Delete this item"
 msgstr "Elimina questo elemento"
+
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+msgid "Delete this mapping"
+msgstr "Elimina questa associazione"
 
 #: ../app/helpers/application_helper/toolbar/volume_mapping_center.rb
 msgid "Delete volume mapping"
@@ -23623,6 +23752,7 @@ msgstr ""
 "Eliminazione di tutte le attività più vecchie di %{date} dal database %{"
 "product} avviata"
 
+#: ../app/helpers/ops_helper/settings_tab_helper.rb
 #: ../app/views/ops/_classification_entry.html.haml
 msgid ""
 "Deleting the '%{entry_name}' entry will also unassign it from all items, are "
@@ -23869,8 +23999,9 @@ msgstr "Uid cluster Ems di destinazione"
 msgid "Destination Groups"
 msgstr "Gruppi di destinazione"
 
-#: ../app/views/static/evacuate-form.html.haml
-#: ../app/views/vm_common/_live_migrate.html.haml
+#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
+#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
+#: ../config/yaml_strings.rb
 msgid "Destination Host"
 msgstr "Host di destinazione"
 
@@ -24033,6 +24164,7 @@ msgstr "Dettagliato - VM pronte per la migrazione"
 msgid "Detailed - VMs migration ready - no CD/DVD/Floppy connected"
 msgstr "Dettagliato - VM pronte per la migrazione - no CD/DVD/Floppy connesso"
 
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 #: ../app/views/ops/_rbac_group_details.html.haml
 msgid "Detailed Description"
 msgstr "Descrizione dettagliata"
@@ -24040,6 +24172,7 @@ msgstr "Descrizione dettagliata"
 #: ../app/helpers/catalog_helper.rb:176 ../app/helpers/catalog_helper.rb
 #: ../app/helpers/cloud_volume_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
+#: ../app/helpers/utilization_helper.rb
 #: ../app/javascript/components/visual-settings-form/visual-settings-form.schema.js
 #: ../app/views/generic_mailer/policy_action_email.html.haml
 #: ../app/views/generic_mailer/policy_action_email.text.haml
@@ -24047,7 +24180,6 @@ msgstr "Descrizione dettagliata"
 #: ../app/views/ops/_all_tabs.html.haml
 #: ../app/views/orchestration_stack/_stack_orchestration_template.html.haml
 #: ../app/views/service/_svcs_show.html.haml
-#: ../app/views/utilization/_utilization_tabs.html.haml
 msgid "Details"
 msgstr "Dettagli"
 
@@ -25320,7 +25452,8 @@ msgstr "Latenza Disco Kernel - Avg (ms)"
 msgid "Disk Latency - Avg (ms)"
 msgstr "Latenza disco - Avg (ms)"
 
-#: ../app/views/vm_common/_live_migrate.html.haml
+#:
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 msgid "Disk Over Commit"
 msgstr "Over Commit del disco"
 
@@ -26800,6 +26933,46 @@ msgstr "Visualizza drift VM"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Display a list of Credentials"
+msgstr "Visualizza un elenco di credenziali"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display a list of Repositories"
+msgstr "Visualizza un elenco di repository"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display a list of Workflow Instances"
+msgstr "Visualizza un elenco di istanze del flusso di lavoro"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display a list of Workflows"
+msgstr "Visualizza un elenco di flussi di lavoro"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display an Individual Credential"
+msgstr "Visualizza una singola credenziale"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display an Individual Repository"
+msgstr "Visualizza un singolo repository"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display an Individual Workflow"
+msgstr "Visualizza un singolo flusso di lavoro"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display an Individual Workflow Instance"
+msgstr "Visualizza una singola istanza del flusso di lavoro"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Display any dashboards"
 msgstr "Visualizza qualsiasi dashboard"
 
@@ -27847,6 +28020,10 @@ msgstr "Modifica Aggregato di host"
 msgid "Edit Host Aggregate \"%{name}\""
 msgstr "Modifica aggregato host \"%{name}\""
 
+#: ../app/controllers/host_initiator_group_controller.rb
+msgid "Edit Host Initiator group \"%{name}\""
+msgstr "Modifica gruppo iniziatore host \"%{name}\""
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Edit Host Tags"
@@ -28150,6 +28327,10 @@ msgstr "Modifica servizio \"%{name}\""
 #: ../config/yaml_strings.rb
 msgid "Edit Services"
 msgstr "Modifica servizi"
+
+#: ../app/controllers/storage_service_controller.rb
+msgid "Edit Storage Service \"%{name}\""
+msgstr "Modifica servizio di archiviazione \"%{name}\""
 
 #: ../app/controllers/cloud_subnet_controller.rb
 msgid "Edit Subnet \"%{name}\""
@@ -29131,6 +29312,11 @@ msgstr "Modifica Aggregato di host"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Edit a Host Initiator Group"
+msgstr "Modifica un gruppo iniziatore host"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Edit a Image"
 msgstr "Modifica un'immagine"
 
@@ -29270,6 +29456,11 @@ msgstr "Modifica un gestore dello spazio di archiviazione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Edit a Storage Service"
+msgstr "Modifica un servizio di archiviazione"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Edit a Subnet"
 msgstr "Modifica una sottorete"
 
@@ -29307,6 +29498,11 @@ msgstr "Modifica un volume"
 #: ../config/yaml_strings.rb
 msgid "Edit a Widget"
 msgstr "Modifica un Widget"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Edit a Workflow"
+msgstr "Modifica un flusso di lavoro"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -29560,13 +29756,22 @@ msgstr ""
 "La modifica della definizione di oggetto generico \"%s\" è stata annullata "
 "dall'utente."
 
-#: ../app/controllers/host_controller.rb
-msgid "Edit of Host \"%{name}\" was cancelled by the user"
-msgstr "Modifica dell'host \"%{name}\" annullata dall'utente"
+#: ../app/javascript/components/host-edit-form/host-edit-form.jsx
+msgid "Edit of Host \"%s\" was cancelled."
+msgstr "La modifica dell'host \"%s\" è stata annullata."
 
 #: ../app/javascript/components/host-aggregate-form/index.jsx
 msgid "Edit of Host Aggregate \"%s\" was canceled by the user."
 msgstr "La modifica dell'aggregato host \"%s\" è stata annullata dall'utente."
+
+#: ../app/javascript/components/host-initiator-group-form/index.jsx
+msgid "Edit of Host Initiator Group \"%s\" was canceled by the user."
+msgstr ""
+"La modifica del gruppo iniziatore host \"%s\" è stata annullata dall'utente."
+
+#: ../app/javascript/components/host-edit-form/host-edit-form.jsx
+msgid "Edit of Hosts was cancelled."
+msgstr "La modifica degli host è stata annullata."
 
 #: ../app/javascript/components/pxe-iso-image-form/index.jsx
 msgid "Edit of ISO Image \"%s\" was cancelled by the user"
@@ -29705,11 +29910,6 @@ msgstr ""
 msgid "Edit of Zone \"%s\" was canceled by the user."
 msgstr "La modifica della zona \"%s\" è stata annullata dall'utente."
 
-#: ../app/controllers/host_controller.rb
-msgid "Edit of credentials for selected Hosts was cancelled by the user"
-msgstr ""
-"Modifica delle credenziali per gli host selezionati annullata dall'utente"
-
 #: ../app/javascript/components/network-floatingIPs-form/index.jsx
 msgid "Edit of floating IPs \"%s\" was canceled by the user."
 msgstr "La modifica degli IP mobili \"%s\" è stata annullata dall'utente."
@@ -29739,6 +29939,10 @@ msgstr "Modifica volume cloud selezionato"
 msgid "Edit selected Generic Object Definition"
 msgstr "Modifica definizione di oggetto generico selezionata"
 
+#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
+msgid "Edit selected Host Initiator Group"
+msgstr "Modifica il gruppo iniziatore host selezionato"
+
 #:
 #: ../app/helpers/application_helper/toolbar/orchestration_templates_center.rb
 msgid "Edit selected Orchestration Template"
@@ -29751,6 +29955,10 @@ msgstr "Modifica spazio fisico di archiviazione selezionato"
 #: ../app/helpers/application_helper/toolbar/miq_ae_fields_center.rb
 msgid "Edit selected Schema"
 msgstr "Modifica schema selezionato"
+
+#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
+msgid "Edit selected Storage Service"
+msgstr "Modifica il servizio di archiviazione selezionato"
 
 #: ../app/helpers/application_helper/toolbar/time_profiles_center.rb
 msgid "Edit selected Time Profile"
@@ -30010,6 +30218,10 @@ msgstr "Modifica questa finestra di dialogo"
 msgid "Edit this Domain"
 msgstr "Modifica questo dominio"
 
+#: ../app/javascript/components/settings-company-tags-entry-form/schema.js
+msgid "Edit this Entry"
+msgstr "Modifica questa voce"
+
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_center.rb
 msgid "Edit this Generic Object Definition"
@@ -30018,6 +30230,10 @@ msgstr "Modifica questa definizione di oggetto generico"
 #: ../app/helpers/application_helper/toolbar/miq_group_center.rb
 msgid "Edit this Group"
 msgstr "Modifica questo gruppo"
+
+#: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
+msgid "Edit this Host Initiator Group"
+msgstr "Modifica questo gruppo iniziatore host"
 
 #: ../app/helpers/application_helper/toolbar/iso_image_center.rb
 msgid "Edit this ISO Image"
@@ -30139,6 +30355,10 @@ msgstr "Modifica questo Servizio"
 #: ../app/helpers/application_helper/toolbar/ems_storage_center.rb
 msgid "Edit this Storage Manager"
 msgstr "Modifica questo gestore dello spazio di archiviazione"
+
+#: ../app/helpers/application_helper/toolbar/storage_service_center.rb
+msgid "Edit this Storage Service"
+msgstr "Modifica questo servizio di archiviazione"
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_type_center.rb
 msgid "Edit this System Image Type"
@@ -30418,6 +30638,10 @@ msgstr "Gestori automazione incorporati"
 #: ../app/views/miq_ae_class/_embedded_methods.html.haml
 msgid "Embedded Methods"
 msgstr "Metodi incorporati"
+
+#: ../lib/manageiq/providers/workflows/engine.rb
+msgid "Embedded Workflows Provider"
+msgstr "Provider flussi di lavoro integrati"
 
 #. TRANSLATORS: en.yml key: dictionary.column.empty_dir_medium_type
 #: ../config/dictionary_strings.rb
@@ -31087,6 +31311,11 @@ msgstr "Porte in entrata Udp abilitate"
 msgid "Enabled Udp Outbound Ports"
 msgstr "Porte in uscita Udp abilitate"
 
+#:
+#: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
+msgid "Enabled capability values:"
+msgstr "Valori di funzionalità abilitati:"
+
 #. TRANSLATORS: file: product/views/SystemService.yaml
 #: ../config/yaml_strings.rb
 msgid "Enabled run levels"
@@ -31174,15 +31403,6 @@ msgstr "Ordine dei byte"
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/network_manager/cloud_subnet.rb
 msgid "Ending IP Address"
 msgstr "Indirizzo IP finale"
-
-#: ../app/models/host.rb
-msgid "Ending address is malformed"
-msgstr "L'indirizzo di chiusura ha un formato errato"
-
-#: ../app/models/host.rb
-msgid "Ending address must be greater than starting address"
-msgstr ""
-"L'indirizzo di chiusura deve essere superiore all'indirizzo di partenza"
 
 #: ../app/models/manageiq/providers/ibm_terraform/provider.rb
 msgid "Endpoint"
@@ -31868,7 +32088,7 @@ msgstr "Gli errori in Management Engine possono essere causati da:"
 msgid "Escalate Privilege"
 msgstr "Esegui l'escalation del privilegio"
 
-#: ../app/views/static/evacuate-form.html.haml
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
 msgid "Evacuate Host"
 msgstr "Evacua Host"
 
@@ -31900,6 +32120,7 @@ msgstr ""
 "Evacuazione dell'istanza %{instance_name} non riuscita: %{error_message}"
 
 #: ../app/controllers/mixins/actions/vm_actions/evacuate.rb
+#: ../app/javascript/components/evacuate-form/index.jsx
 msgid "Evacuation of Instances was cancelled by the user"
 msgstr "L'evacuazione delle istanze è stata annullata dall'utente"
 
@@ -32199,6 +32420,10 @@ msgid "EventStream|Event type"
 msgstr "Tipo di evento"
 
 #: ../config/model_attributes.rb
+msgid "EventStream|Ext management system name"
+msgstr "EventStream|Nome sistema di gestione Ext"
+
+#: ../config/model_attributes.rb
 msgid "EventStream|Full data"
 msgstr "Dati completi"
 
@@ -32269,6 +32494,10 @@ msgstr "Posizione Vm"
 #: ../config/model_attributes.rb
 msgid "EventStream|Vm name"
 msgstr "Nome Vm"
+
+#: ../config/model_attributes.rb
+msgid "EventStream|Vm or template name"
+msgstr "EventStream|Nome modello o Vm"
 
 #. TRANSLATORS: file: product/views/MiqEventDefinition.yaml
 #: ../app/controllers/miq_event_definition_controller.rb
@@ -32908,6 +33137,21 @@ msgstr "Tutto sotto Sequenze Temporali"
 msgid "Everything under Volume Mapping"
 msgstr "Tutto sotto associazione volume"
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Everything under Workflow Instances"
+msgstr "Tutto sotto le istanze del flusso di lavoro"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Everything under Workflows"
+msgstr "Tutto sotto i flussi di lavoro"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Everything under Workflows Automation Manager"
+msgstr "Tutto sotto Workflows Automation Manager"
+
 #. TRANSLATORS: en.yml key: dictionary.column.evm_owner_email
 #: ../config/dictionary_strings.rb
 msgid "Evm Owner Email"
@@ -33459,6 +33703,10 @@ msgid "ExtManagementSystem|Supports cloud volume create"
 msgstr "ExtManagementSystem|Supporta creazione volume cloud"
 
 #: ../config/model_attributes.rb
+msgid "ExtManagementSystem|Supports cloud volume snapshots"
+msgstr "ExtManagementSystem|Supporta le istantanee del volume cloud"
+
+#: ../config/model_attributes.rb
 msgid "ExtManagementSystem|Supports create flavor"
 msgstr "ExtManagementSystem|Supporta creazione flavor"
 
@@ -33802,7 +34050,7 @@ msgstr "Eliminazione di %s %s non riuscita."
 msgid "Failover"
 msgstr "Failover"
 
-#: ../app/javascript/components/timeline-options/timeline-options.jsx
+#: ../app/models/miq_policy.rb
 msgid "Failure"
 msgstr "Operazione non riuscita"
 
@@ -34155,9 +34403,9 @@ msgstr "Aggiornato il"
 
 #: ../app/controllers/report_controller/reports/editor.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/ops/_schedule_form_filter.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/report/_schedule_form_filter.html.haml
 #: ../app/views/report/_widget_form_chart.html.haml
 #: ../app/views/report/_widget_form_report.html.haml
@@ -35706,6 +35954,13 @@ msgstr "Url"
 msgid "GitRepository|Verify ssl"
 msgstr "Verifica ssl"
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Given a set of capabilities, check which attached resources will comply"
+msgstr ""
+"Data una serie di funzioni, verificare quali risorse collegate saranno "
+"conformi"
+
 #:
 #: ../app/javascript/components/visual-settings-form/visual-settings-form.schema.js
 msgid "Global Default"
@@ -35838,6 +36093,7 @@ msgstr "Scadenza Gruppo"
 msgid "Group Home Directory"
 msgstr "Directory home di gruppo"
 
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 #: ../app/views/ops/_rbac_group_details.html.haml
 msgid "Group Information"
 msgstr "Informazioni gruppo"
@@ -35897,7 +36153,7 @@ msgstr "Gruppi (%{groups_count})"
 msgid "Groups Count"
 msgstr "Conteggio gruppi"
 
-#: ../app/views/ops/_rbac_role_details.html.haml
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
 msgid "Groups Using this Role"
 msgstr "Gruppi che utilizzano questo Ruolo"
 
@@ -36805,10 +37061,6 @@ msgstr "Host \"%{hostname}\" aggiunto all'aggregato host \"%{name}\""
 msgid "Host \"%{hostname}\" removed from Host Aggregate \"%{name}\""
 msgstr "Host \"%{hostname}\" rimosso dall'aggregato host \"%{name}\""
 
-#: ../app/controllers/host_controller.rb
-msgid "Host \"%{name}\" was saved"
-msgstr "L'host \"%{name}\" è stato salvato"
-
 #: ../app/controllers/mixins/actions/host_actions/misc.rb
 msgid "Host \"%{name}\": Error during '%{task}': %{message}"
 msgstr "Host \"%{name}\": Errore durante '%{task}': %{message}"
@@ -37145,14 +37397,6 @@ msgstr "Nomi host"
 msgid "Host Network Information"
 msgstr "Informazioni di rete host"
 
-#: ../app/models/host.rb
-msgid "Host Not Resettable - No IPMI Address"
-msgstr "Host non reimpostabile - nessun indirizzo IPMI"
-
-#: ../app/models/host.rb
-msgid "Host Not Resettable - No IPMI Credentials"
-msgstr "Host non reimpostabile - Nessuna credenziale IPMI"
-
 #. TRANSLATORS: file: product/reports/190_Configuration Management - Physical Servers/030_Server Availability.yaml
 #: ../config/yaml_strings.rb
 msgid "Host OS"
@@ -37225,10 +37469,6 @@ msgstr "Richiesta di reimpostazione host"
 #: ../app/models/manageiq/providers/openstack/network_manager/cloud_subnet.rb
 msgid "Host Routes"
 msgstr "Instradamenti host"
-
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
-msgid "Host Selection"
-msgstr "Selezione host"
 
 #: ../config/model_display_names.rb
 msgid "Host Service Group"
@@ -37359,10 +37599,6 @@ msgstr ""
 #: ../app/models/manageiq/providers/vmware/infra_manager/vm_or_template_shared/operations/relocation.rb
 msgid "Host not specified, unable to migrate VM"
 msgstr "Host non specificato, impossibile migrare VM"
-
-#: ../app/views/host/_form.html.haml
-msgid "Host platform"
-msgstr "Piattaforma host"
 
 #: ../config/model_attributes.rb
 msgid "Host service group"
@@ -37724,8 +37960,8 @@ msgstr "Database ospitato"
 #: ../app/helpers/configured_system_helper/textual_summary.rb
 #: ../app/helpers/host_helper.rb
 #: ../app/helpers/host_helper/textual_summary.rb
-#: ../app/helpers/ops_helper.rb:24 ../app/helpers/ops_helper.rb
-#: ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb:33 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../app/views/ops/_settings_server_tab.html.haml
 #: ../config/yaml_strings.rb
 msgid "Hostname"
@@ -37733,10 +37969,13 @@ msgid_plural "Hostnames"
 msgstr[0] "Nome host"
 msgstr[1] "Nomi Host"
 
-#: ../app/views/host/_form.html.haml
 #: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
 msgid "Hostname (or IPv4 or IPv6 address)"
 msgstr "Nome Host (o indirizzo IPv4 o IPv6)"
+
+#: ../app/javascript/components/host-edit-form/host-edit-form.schema.js
+msgid "Hostname (or IPv4 or IPv6 address:"
+msgstr "Nome host (o indirizzo IPv4 o IPv6:"
 
 #: ../app/views/ems_container/_form_fields.html.haml
 #: ../app/views/ems_infra/_form_fields.html.haml
@@ -37780,6 +38019,8 @@ msgstr "Nome host o indirizzo IPv4/IPv6"
 #: ../app/helpers/infra_networking_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/helpers/storage_helper/textual_summary.rb
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 #: ../app/javascript/components/provider-dashboard-charts/charts_config.js
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/services/ems_infra_dashboard_service.rb
@@ -38503,6 +38744,10 @@ msgstr "Provider IBM Cloud"
 msgid "IBM Power HMC Provider"
 msgstr "Provider IBM Power HMC"
 
+#: ../app/models/manageiq/providers/ibm_power_vc/cloud_manager.rb
+msgid "IBM PowerVC"
+msgstr "IBM PowerVC"
+
 #: ../lib/manageiq/providers/ibm_power_vc/engine.rb
 msgid "IBM PowerVC Provider"
 msgstr "Provider IBM PowerVC"
@@ -38534,11 +38779,11 @@ msgstr "ICMP"
 #. TRANSLATORS: file: product/views/MiqReportResult.yaml
 #. TRANSLATORS: file: product/views/MiqWidget.yaml
 #. TRANSLATORS: file: product/views/PlacementGroup.yaml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
+#: ../app/helpers/settings_users_helper.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
-#: ../app/views/ops/_rbac_group_details.html.haml
-#: ../app/views/ops/_rbac_role_details.html.haml
-#: ../app/views/ops/_rbac_user_details.html.haml
 #: ../config/yaml_strings.rb
 msgid "ID"
 msgstr "ID"
@@ -38574,9 +38819,9 @@ msgstr "IP"
 #: ../app/helpers/ems_automation_helper.rb:18 ../app/helpers/host_helper.rb
 #: ../app/helpers/host_helper/textual_summary.rb
 #: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
 #: ../app/javascript/components/subnet-form/subnet-form.schema.js
-#: ../app/views/ops/_server_desc.html.haml
 #: ../app/views/ops/_settings_server_tab.html.haml
 #: ../app/views/vm_common/_config.html.haml:101 ../config/yaml_strings.rb
 msgid "IP Address"
@@ -38612,10 +38857,6 @@ msgstr "Intervallo IP"
 msgid "IP Version"
 msgstr "Versione IP"
 
-#: ../app/models/host.rb
-msgid "IP address octets must be 0 to 255"
-msgstr "Gli ottetti dell'indirizzo IP devono essere compresi tra 0 e 255"
-
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
 msgid "IP protocol"
 msgstr "Protocollo IP"
@@ -38628,7 +38869,6 @@ msgstr ""
 "valido"
 
 #: ../app/helpers/textual_summary_helper.rb
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 msgid "IPMI"
 msgstr "IPMI"
 
@@ -38639,17 +38879,8 @@ msgid "IPMI Enabled"
 msgstr "IPMI Abilitato"
 
 #: ../app/helpers/host_helper/textual_summary.rb
-#: ../app/views/host/_form.html.haml
 msgid "IPMI IP Address"
 msgstr "Indirizzo IP IPMI"
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid ""
-"IPMI IP Address, Username and matching password fields are needed to perform "
-"verification of credentials"
-msgstr ""
-"L'indirizzo IP IPMI, il nome utente e i campi della password corrispondenti "
-"sono necessari per eseguire la verifica delle credenziali"
 
 #: ../app/helpers/automation_manager_configured_system_helper.rb
 #: ../app/helpers/configuration_script_helper.rb
@@ -39193,6 +39424,10 @@ msgstr "Importato da git"
 #: ../config/dictionary_strings.rb
 msgid "In My LDAP Group?"
 msgstr "Nel mio gruppo LDAP?"
+
+#: ../app/javascript/components/async-action-button.jsx
+msgid "In Progress"
+msgstr "In corso"
 
 #: ../app/helpers/ops_helper/textual_summary.rb
 msgid "In Use"
@@ -40699,7 +40934,7 @@ msgstr "Ultimo Percorso Datastore"
 msgid "Last Known Size"
 msgstr "Ultima Dimensione nota"
 
-#: ../app/helpers/ops_helper.rb:42 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:51 ../app/helpers/ops_helper.rb
 msgid "Last Log Collection"
 msgstr "Raccolta Last Log"
 
@@ -40717,7 +40952,7 @@ msgstr "Ultimo accesso"
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqProvision.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
-#: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:57 ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
 #: ../config/yaml_strings.rb
@@ -40860,6 +41095,7 @@ msgstr "Data/ora ultima transizione"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
 #: ../config/yaml_strings.rb
@@ -41134,6 +41370,7 @@ msgstr ""
 "error_message}"
 
 #: ../app/controllers/mixins/actions/vm_actions/live_migrate.rb
+#: ../app/javascript/components/live-migrate-form/index.jsx
 msgid "Live migration of Instances was cancelled by the user"
 msgstr "La migrazione live delle istanze è stata annullata dall'utente"
 
@@ -41672,7 +41909,7 @@ msgstr "Le impostazioni del depot di log sono state salvate"
 msgid "Log Depot Settings were validated"
 msgstr "Le impostazioni del depot di log sono state convalidate"
 
-#: ../app/helpers/ops_helper.rb:41 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:50 ../app/helpers/ops_helper.rb
 msgid "Log Depot URI"
 msgstr "URI depot di log"
 
@@ -41900,7 +42137,7 @@ msgstr "Dimensione file logo"
 msgid "Logo Updated At"
 msgstr "Logo aggiornato alle"
 
-#: ../app/models/host.rb:651 ../app/models/host.rb
+#: ../app/models/host.rb:654 ../app/models/host.rb
 msgid "Logon to platform [%{os_name}] not supported"
 msgstr "Accesso alla piattaforma [%{os_name}] non supportato"
 
@@ -41917,9 +42154,9 @@ msgstr ""
 
 #: ../app/helpers/catalog_helper.rb:47 ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/settings-category-form/schema.js
+#: ../app/javascript/components/settings-company-tags/helper.js
 #: ../app/views/catalog/_form_details_info.html.haml
 #: ../app/views/catalog/_st_angular_form.html.haml
-#: ../app/views/ops/_settings_co_tags_tab.html.haml
 msgid "Long Description"
 msgstr "Descrizione estesa"
 
@@ -41956,7 +42193,6 @@ msgstr "Nome rack più basso"
 #: ../app/helpers/textual_mixins/vm_common.rb
 #: ../app/helpers/guest_device_helper/textual_summary.rb
 #: ../app/helpers/physical_server_helper/textual_summary.rb
-#: ../app/views/host/_form.html.haml
 #: ../app/views/vm_common/_reconfigure.html.haml
 msgid "MAC Address"
 msgid_plural "MAC Addresses"
@@ -42589,6 +42825,7 @@ msgstr "Produttore"
 msgid "Manufacturer / Model"
 msgstr "Produttore/Modello"
 
+#: ../app/javascript/components/settings-label-tag-mapping/index.jsx
 #: ../app/views/ops/_all_tabs.html.haml
 msgid "Map Tags"
 msgstr "Associa tag"
@@ -42664,7 +42901,7 @@ msgstr "Numero massimo di scansioni VM attive"
 msgid "Max Available"
 msgstr "Quantità massima disponibile"
 
-#: ../app/helpers/ops_helper.rb:171 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:180 ../app/helpers/ops_helper.rb
 msgid "Max Concurrent"
 msgstr "Numero massimo processi simultanei"
 
@@ -42808,7 +43045,7 @@ msgstr "Quantità massima utilizzata"
 msgid "Max Used Value"
 msgstr "Valore utilizzato massimo"
 
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 msgid "Max active VM Scans"
 msgstr "Numeo massimo di scansioni VM attive"
 
@@ -43543,8 +43780,9 @@ msgstr "Livello di condivisioni memoria"
 
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
 #: ../app/helpers/miq_action_helper.rb:55 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
-#: ../app/views/ops/_server_desc.html.haml:27 ../config/yaml_strings.rb
+#: ../config/yaml_strings.rb
 msgid "Memory Size"
 msgstr "Dimensione memoria"
 
@@ -43562,8 +43800,8 @@ msgstr "Costo totale della memoria"
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
 #. TRANSLATORS: file: product/views/OsProcess-processes.yaml
 #: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
-#: ../app/views/ops/_server_desc.html.haml
 #: ../app/views/vm_common/_right_size.html.haml
 #: ../config/yaml_strings.rb
 msgid "Memory Usage"
@@ -43657,6 +43895,7 @@ msgstr "Menu"
 #: ../app/helpers/container_build_helper/textual_summary.rb
 #: ../app/helpers/container_helper/textual_summary.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/data-tables/datastore/helper.js
 #: ../app/javascript/components/data-tables/requests-table/index.jsx
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
@@ -43666,7 +43905,6 @@ msgstr "Menu"
 #: ../app/views/miq_ae_class/_class_fields.html.haml
 #: ../app/views/miq_policy_export/import.html.haml
 #: ../app/views/miq_request/_ae_prov_show.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 #: ../app/views/static/edit_alert_dialog.html.haml
@@ -45116,7 +45354,7 @@ msgid "Migrate %{vm_or_template}"
 msgstr "Migra %{vm_or_template}"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb
-#: ../app/views/vm_common/_live_migrate.html.haml
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 msgid "Migrate Instance"
 msgstr "Migra istanza"
 
@@ -48595,6 +48833,14 @@ msgstr "Modale"
 msgid "Mode"
 msgstr "Modalità"
 
+#: ../app/models/manageiq/providers/autosde/storage_manager/cloud_volume.rb
+msgid ""
+"Mode: Create volume(s) using an existing storage service or create a new "
+"service as well"
+msgstr ""
+"Modalità: creare volumi utilizzando un servizio di archiviazione esistente o "
+"creare anche un nuovo servizio"
+
 #. TRANSLATORS: file: product/views/FirmwareTarget.yaml
 #: ../app/helpers/firmware_binary_helper/textual_summary.rb
 #: ../app/helpers/physical_server_helper/textual_summary.rb
@@ -48623,9 +48869,19 @@ msgstr "La modifica del Volume Cloud \"%s\" è stata accodata correttamente."
 msgid "Modification of Credential \"%s\" has been successfully queued."
 msgstr "La modifica delle credenziali \"%s\" è stata accodata correttamente."
 
+#: ../app/javascript/components/host-edit-form/host-edit-form.jsx
+msgid "Modification of Host %s has been successfully queued."
+msgstr "La modifica dell'host %s è stata accodata correttamente."
+
 #: ../app/javascript/components/host-aggregate-form/index.jsx
 msgid "Modification of Host Aggregate %s has been successfully queued"
 msgstr "La modifica dell'aggregato host %s è stata accodata correttamente"
+
+#: ../app/javascript/components/host-initiator-group-form/index.jsx
+msgid ""
+"Modification of Host Initiator Group \"%s\" has been successfully queued."
+msgstr ""
+"La modifica del gruppo iniziatore host \"%s\" è stata accodata correttamente."
 
 #: ../app/javascript/components/physical-storage-form/index.jsx
 msgid "Modification of Physical Storage \"%s\" has been successfully queued."
@@ -48644,6 +48900,10 @@ msgid "Modification of System Image Type \"%s\" has been successfully queued."
 msgstr ""
 "La modifica del tipo di immagine di sistema \"%s\" è stata accodata "
 "correttamente."
+
+#: ../app/javascript/components/host-edit-form/host-edit-form.jsx
+msgid "Modification of multiple Hosts has been successfully queued."
+msgstr "La modifica di più host è stata accodata correttamente."
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -49127,6 +49387,11 @@ msgstr "Modifica associazione volume"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Modify Volume Snapshots"
+msgstr "Modifica istantanee volume"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Modify Volumes"
 msgstr "Modifica Volumi"
 
@@ -49134,6 +49399,11 @@ msgstr "Modifica Volumi"
 #: ../config/yaml_strings.rb
 msgid "Modify Widgets"
 msgstr "Modifica Widget"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Modify Workflows"
+msgstr "Modifica flussi di lavoro"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -49718,7 +49988,7 @@ msgstr "Nome della regola della politica di sicurezza"
 msgid "Name*"
 msgstr "Nome*"
 
-#:
+#: ../app/javascript/components/host-edit-form/host-edit-form.schema.js
 #: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js
 #: ../app/javascript/components/host-initiator-group-form/host-initiator-group-form.schema.js
 #: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
@@ -50844,6 +51114,10 @@ msgstr[1] "Le nuove impostazioni avranno effetto sulle VM"
 msgid "New tab"
 msgstr "Nuova scheda"
 
+#: ../app/models/manageiq/providers/autosde/storage_manager/cloud_volume.rb
+msgid "New volume name"
+msgstr "Nuovo nome volume"
+
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/vpc/cloud_manager/provision_workflow/volumes.rb
 msgid "New volumes has the following problems: %{error}"
@@ -50970,7 +51244,7 @@ msgstr "Nessun %{tag} %{model} in esecuzione %{time}"
 msgid "No %{tag} %{model} were running %{time}"
 msgstr "Nessun %{tag} %{model} in esecuzione %{time}"
 
-#: ../app/views/ops/_rbac_tag_box.html.haml
+#: ../app/helpers/settings_rbac_tag_helper.rb
 msgid "No %{tenant_name} Tags have been assigned"
 msgstr "Nessun Tag %{tenant_name} è stato assegnato"
 
@@ -51049,7 +51323,7 @@ msgstr "Non sono stati raccolti dati di Capacità & Utilizzo per questo Host"
 msgid "No Capacity & Utilization data has been collected for this Template"
 msgstr "Non sono stati raccolti dati di Capacità & Utilizzo per questo Modello"
 
-#: ../app/controllers/mixins/chargeback_preview.rb
+#: ../app/controllers/mixins/chargeback_preview_mixin.rb
 #: ../app/helpers/application_helper/button/vm_perf.rb
 msgid "No Capacity & Utilization data has been collected for this VM"
 msgstr "Nessun dato di Capacità & Utilizzo raccolto per questa VM"
@@ -51335,7 +51609,7 @@ msgstr "Nessun gruppo di sicurezza è stato selezionato per l'eliminazione."
 msgid "No Servers Assigned to Roles found."
 msgstr "Non è stato trovato alcun server assegnato ai ruoli."
 
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 msgid "No Servers Found."
 msgstr "Nessun server trovato."
 
@@ -51451,10 +51725,6 @@ msgstr "Nessun Widget da importare"
 #: ../app/javascript/components/dashboard_toolbar.jsx
 msgid "No Widgets available to add"
 msgstr "Nessun Widget disponibile da aggiungere"
-
-#: ../app/views/ops/_diagnostics_zones_tab.html.haml
-msgid "No Zones found."
-msgstr "Nessuna Zona trovata."
 
 #: ../app/views/miq_alert/_alert_builtin_exp.html.haml
 msgid "No alarms found for the selected Provider"
@@ -51619,10 +51889,6 @@ msgstr "Nessun evento disponibile per questo %{model}"
 #: ../app/controllers/application_controller/performance.rb
 msgid "No events available for this Cluster"
 msgstr "Nessun evento disponibile per questo Cluster"
-
-#: ../app/controllers/application_controller/timelines.rb
-msgid "No events available for this timeline"
-msgstr "Nessun evento disponibile per questa sequenza temporale"
 
 #: ../app/controllers/report_controller/reports/editor.rb
 msgid "No fields were moved up"
@@ -51870,6 +52136,11 @@ msgstr ""
 "Nessun provider di archiviazione supporta la creazione dell'associazione "
 "volume."
 
+#:
+#: ../app/javascript/helpers/storage_manager/filter-resources-by-capabilities.js
+msgid "No storage resource with selected capabilities."
+msgstr "Nessuna risorsa di archiviazione con funzionalità selezionate."
+
 #: ../app/controllers/network_router_controller.rb
 msgid "No subnets available to add interfaces to Router \"%{name}\""
 msgstr ""
@@ -52095,6 +52366,11 @@ msgstr "Non tutti gli host possono essere rimossi dalla distribuzione."
 msgid "Not available. Did you assigned Cloud Provider and run SSA?"
 msgstr ""
 "Non disponibile. È stato assegnato il provider cloud ed eseguito l'SSA?"
+
+#:
+#: ../app/javascript/helpers/storage_manager/filter-service-by-capabilities.js
+msgid "Not found"
+msgstr "Non trovato"
 
 #: ../app/views/shared/views/_alerts_list.html.haml
 #: ../app/views/static/edit_alert_dialog.html.haml
@@ -52609,8 +52885,8 @@ msgstr "Modelli OVF"
 msgid "Object"
 msgstr "Oggetto"
 
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "Object Attribute"
@@ -52631,9 +52907,9 @@ msgid "Object Count"
 msgstr "Numero oggetti"
 
 #: ../app/helpers/miq_action_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "Object Details"
@@ -52668,7 +52944,7 @@ msgstr "Etichette oggetto"
 msgid "Object Name"
 msgstr "Nome oggetto"
 
-#: ../app/views/ops/_schedule_show.html.haml
+#: ../app/helpers/settings_schedule_helper.rb
 msgid "Object Selection"
 msgstr "Selezione oggetto"
 
@@ -52695,8 +52971,8 @@ msgstr "Contenitori archivio oggetti"
 msgid "Object Store Objects"
 msgstr "Oggetti archivio oggetti"
 
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/oldjs/controllers/alerts/alerts_overview_controller.js
-#: ../app/views/ops/_schedule_show.html.haml
 msgid "Object Type"
 msgstr "Tipo oggetto"
 
@@ -52793,7 +53069,7 @@ msgstr "Al momento dell'errore"
 msgid "On Exit"
 msgstr "All'uscita"
 
-#: ../app/views/static/evacuate-form.html.haml
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
 msgid "On Shared Storage"
 msgstr "Su spazio di archiviazione condiviso"
 
@@ -54475,6 +54751,7 @@ msgstr "Piattaforma host parent"
 msgid "Parent Name"
 msgstr "Nome parent"
 
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 msgid "Parent Request"
 msgstr "Richiesta parent"
@@ -54914,6 +55191,10 @@ msgstr "Percentuale, 2 decimali (99,00%)"
 #: ../config/yaml_strings.rb
 msgid "Percentage (99%)"
 msgstr "Percentuale (99%)"
+
+#: ../app/javascript/components/async-action-button.jsx
+msgid "Perform Action"
+msgstr "Esegui azione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -56068,7 +56349,7 @@ msgstr[0] "Switch Fisico (Lenovo)"
 msgstr[1] "Switch Fisici (Lenovo)"
 
 #:
-#: ../app/models/manageiq/providers/cisco_intersight/physical_infra_manager/physical_switch_network_ports.rb
+#: ../app/models/manageiq/providers/cisco_intersight/physical_infra_manager/physical_switch_network_port.rb
 msgid "Physical Switch Network Port (CiscoIntersight)"
 msgid_plural "Physical Switches Network Ports (CiscoIntersight)"
 msgstr[0] "Porta di rete switch fisico (CiscoIntersight)"
@@ -57840,7 +58121,7 @@ msgstr "Stampa o esporta in PDF"
 msgid "Print the full report (all rows) or export it as a PDF file"
 msgstr "Stampa il report completo (tutte le righe) o esportarlo come file PDF"
 
-#: ../app/helpers/ops_helper.rb:168 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:177 ../app/helpers/ops_helper.rb
 msgid "Priority"
 msgstr "Priorità"
 
@@ -58049,7 +58330,7 @@ msgstr[1] "Funzioni prodotto"
 msgid "Product Features (Editing)"
 msgstr "Funzioni Prodotto (Modifica)"
 
-#: ../app/views/ops/_rbac_role_details.html.haml
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
 msgid "Product Features (Read Only)"
 msgstr "Funzioni Prodotto (Solo lettura)"
 
@@ -58151,6 +58432,7 @@ msgstr "Nome progetto"
 msgid "Project Uid"
 msgstr "Uid progetto"
 
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 #: ../app/views/ops/_rbac_group_details.html.haml
 msgid "Project/Tenant"
 msgstr "Progetto/Tenant"
@@ -58607,13 +58889,13 @@ msgstr "ProviderTagMapping|Numero regione"
 #: ../app/controllers/ems_network_controller.rb
 #: ../app/controllers/ems_physical_infra_controller.rb
 #: ../app/controllers/ops_controller.rb
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/helpers/ops_helper/textual_summary.rb
 #: ../app/helpers/pxe_helper/textual_summary.rb
 #: ../app/javascript/oldjs/controllers/container_dashboard/util/dashboard-utils-factory.js
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/presenters/tree_builder_utilization.rb
 #: ../app/services/ems_physical_infra_dashboard_service.rb
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 #: ../config/yaml_strings.rb
 msgid "Providers"
 msgstr "Provider"
@@ -58836,7 +59118,7 @@ msgstr "Dimensione di provisioning"
 msgid "Provisioned Space Percent of Total"
 msgstr "Percentuale di Spazio provisioned rispetto al totale"
 
-#: ../app/views/miq_request/_request.html.haml
+#: ../app/helpers/request_details_helper.rb
 msgid "Provisioned VMs"
 msgstr "VM di cui si è effettuato il provisioning"
 
@@ -59706,6 +59988,7 @@ msgstr "Realm"
 #: ../app/helpers/container_build_helper/textual_summary.rb
 #: ../app/helpers/container_helper/textual_summary.rb
 #: ../app/helpers/container_node_helper/textual_summary.rb
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
 #: ../config/yaml_strings.rb
@@ -60058,6 +60341,11 @@ msgstr "Aggiorna gestori dello spazio di archiviazione a blocchi"
 #: ../config/yaml_strings.rb
 msgid "Refresh Cloud Providers"
 msgstr "Visualizza provider cloud"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Refresh Cloud Volumes"
+msgstr "Aggiorna volumi cloud"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -60569,6 +60857,14 @@ msgstr ""
 #: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
 msgid ""
 "Refresh relationships and power states for all items related to these Host "
+"Initiator Clusters?"
+msgstr ""
+"Aggiornare le relazioni e gli stati di alimentazione per tutti gli elementi "
+"relativi a questi cluster di iniziatori host?"
+
+#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
+msgid ""
+"Refresh relationships and power states for all items related to these Host "
 "Initiator Groups"
 msgstr ""
 "Aggiorna relazioni e stati di alimentazione per tutti gli elementi correlati a"
@@ -60581,14 +60877,6 @@ msgid ""
 msgstr ""
 "Aggiorna le relazioni e gli stati di alimentazione per tutti gli elementi "
 "correlati a questi iniziatori host"
-
-#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to these Host "
-"Initiators Cluster?"
-msgstr ""
-"Aggiornare le relazioni e gli stati di alimentazione per tutti gli elementi "
-"correlati a questo cluster di iniziatori host?"
 
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
 msgid ""
@@ -61345,6 +61633,7 @@ msgstr[1] "Relazioni"
 #: ../app/helpers/network_port_helper/textual_summary.rb
 #: ../app/helpers/network_router_helper/textual_summary.rb
 #: ../app/helpers/network_service_helper/textual_summary.rb
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/helpers/ops_helper/textual_summary.rb
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb
 #: ../app/helpers/persistent_volume_helper/textual_summary.rb
@@ -61365,7 +61654,6 @@ msgstr[1] "Relazioni"
 #: ../app/helpers/vm_helper/textual_summary.rb
 #: ../app/views/configuration_profile/show.html.haml
 #: ../app/views/ems_configuration/show.html.haml
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 msgid "Relationships"
 msgstr "Relazioni"
 
@@ -61453,6 +61741,10 @@ msgstr "Ricarica il display corrente"
 msgid "Relocate not supported because VM is not active"
 msgstr "Spostamento non supportato perché la VM non è attiva"
 
+#: ../app/models/manageiq/providers/vmware/infra_manager/host.rb
+msgid "Remote"
+msgstr "Remoto"
+
 #: ../app/helpers/application_helper/toolbar/ems_cloud_center.rb
 #: ../app/helpers/application_helper/toolbar/ems_infra_center.rb
 #: ../app/helpers/application_helper/toolbar/ems_physical_infra_center.rb
@@ -61464,7 +61756,6 @@ msgid "Remote Console Workers"
 msgstr "Operatori della console remota"
 
 #: ../app/helpers/textual_summary_helper.rb
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 msgid "Remote Login"
 msgstr "Accesso remoto"
 
@@ -61991,11 +62282,6 @@ msgstr "Rimuovi servizi"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
-msgid "Remove Snapshot"
-msgstr "Rimuovi istantanea"
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
 msgid "Remove Storage Manager"
 msgstr "Rimuovi gestori dello spazio di archiviazione"
 
@@ -62072,6 +62358,11 @@ msgstr "Rimuovi un iniziatore host"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Remove a Host Initiator Group"
+msgstr "Rimuovi un gruppo iniziatore host"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Remove a Network Service"
 msgstr "Rimuovi un servizio di rete"
 
@@ -62093,6 +62384,11 @@ msgstr "Rimuovi un Gruppo di sicurezza da questa istanza"
 #: ../config/yaml_strings.rb
 msgid "Remove a Storage Service"
 msgstr "Rimuovere un servizio di archiviazione"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Remove a Volume Snapshot"
+msgstr "Rimuovi un'istantanea del volume"
 
 #: ../app/javascript/components/button-group/group-form.schema.js
 msgid "Remove all"
@@ -62665,7 +62961,7 @@ msgid "Replicators Count"
 msgstr "Conteggio replicatori"
 
 #: ../app/controllers/optimization_controller.rb
-#: ../app/views/utilization/_utilization_tabs.html.haml
+#: ../app/helpers/utilization_helper.rb
 msgid "Report"
 msgstr "Report"
 
@@ -62810,7 +63106,7 @@ msgstr "Nome report"
 msgid "Report no longer exists"
 msgstr "Il report non esiste più"
 
-#: ../app/controllers/mixins/chargeback_preview.rb
+#: ../app/controllers/mixins/chargeback_preview_mixin.rb
 #: ../app/controllers/report_controller/reports.rb
 msgid ""
 "Report preview generation returned: Status [%{status}] Message [%{message}]"
@@ -62892,10 +63188,10 @@ msgid "Repository Options"
 msgstr "Opzioni del repository"
 
 #: ../app/helpers/miq_action_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "Request"
@@ -62953,6 +63249,7 @@ msgstr "Data richiesta:"
 msgid "Request Denial"
 msgstr "Rifiuto richiesta"
 
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
 msgid "Request Details"
@@ -62966,6 +63263,7 @@ msgstr[1] "Eventi di richiesta"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml:10 ../config/yaml_strings.rb
 msgid "Request ID"
 msgstr "ID richiesta"
@@ -63003,6 +63301,7 @@ msgid "Request Memory bytes"
 msgstr "Richiedi byte di memoria"
 
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../config/yaml_strings.rb
 msgid "Request State"
@@ -63016,6 +63315,7 @@ msgstr[1] "Richiesta attività"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml:31 ../config/yaml_strings.rb
 msgid "Request Type"
 msgstr "Tipo di richiesta"
@@ -63147,6 +63447,7 @@ msgstr "Pod richiesti"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml:26 ../config/yaml_strings.rb
 msgid "Requester"
 msgstr "Richiedente"
@@ -63180,17 +63481,12 @@ msgstr "Richieste"
 msgid "Required"
 msgstr "Obbligatorio"
 
-#:
-#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
+#: ../app/models/manageiq/providers/autosde/storage_manager/cloud_volume.rb
+#: ../app/models/manageiq/providers/autosde/storage_manager/storage_service.rb
 msgid "Required Capabilities"
 msgstr "Funzionalità richieste"
 
-#: ../app/models/manageiq/providers/autosde/storage_manager/cloud_volume.rb
-#: ../app/models/manageiq/providers/autosde/storage_manager/storage_service.rb
-msgid "Required Capabilities (filters by exact match)"
-msgstr "Funzionalità richieste (filtri per corrispondenza esatta)"
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
+#: ../app/models/manageiq/providers/ovirt/infra_manager/host.rb
 msgid "Required if SSH login is disabled for the Default account."
 msgstr "Richiesto se l'accesso SSH è disabilitato per l'account predefinito."
 
@@ -63410,7 +63706,8 @@ msgstr[1] "Azioni di risorsa"
 msgid "Resource Category"
 msgstr "Categoria delle risorse"
 
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 msgid "Resource Entity"
 msgstr "Entità Risorsa"
 
@@ -63428,8 +63725,9 @@ msgstr "Gruppo di risorse"
 msgid "Resource Instance Id"
 msgstr "ID istanza della risorsa"
 
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 #: ../app/views/ops/_label_tag_mapping_form.html.haml
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
 msgid "Resource Label"
 msgstr "Etichetta risorsa"
 
@@ -64401,6 +64699,7 @@ msgstr "Ruolo \"%{name}\""
 msgid "Role Access"
 msgstr "Accesso ai ruoli"
 
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
 #: ../app/views/ops/_rbac_role_details.html.haml
 msgid "Role Information"
 msgstr "Informazioni ruolo"
@@ -64739,6 +65038,10 @@ msgstr "SPID"
 #: ../app/helpers/textual_summary_helper.rb
 msgid "SSH Key Pair"
 msgstr "Coppia Chiavi SSH"
+
+#: ../app/models/manageiq/providers/openstack/infra_manager/host.rb
+msgid "SSH Keypair"
+msgstr "Coppia di chiavi SSH"
 
 #: ../app/helpers/host_helper/textual_summary.rb
 msgid "SSH Root"
@@ -65298,10 +65601,10 @@ msgstr ""
 
 #. TRANSLATORS: file: product/views/MiqSchedule.yaml
 #: ../app/controllers/report_controller.rb
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
 #: ../app/presenters/tree_builder_ops_settings.rb
 #: ../app/views/ops/_settings_details_tab.html.haml
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 #: ../config/yaml_strings.rb
 msgid "Schedules"
 msgstr "Pianificazioni"
@@ -65943,11 +66246,6 @@ msgstr "Selezionare Ceilometer se l'eventuale evento non è abilitato su AMQP."
 msgid "Select Classes to copy"
 msgstr "Seleziona Classi da copiare"
 
-#: ../app/views/static/evacuate-form.html.haml
-#: ../app/views/vm_common/_live_migrate.html.haml
-msgid "Select Destination Host"
-msgstr "Seleziona host di destinazione"
-
 #: ../app/controllers/miq_ae_customization_controller.rb
 msgid "Select Dialogs to import"
 msgstr "Selezionare le Finestre di dialogo da importare"
@@ -66007,6 +66305,10 @@ msgstr "Selezionare un binario del firmware"
 #: ../app/javascript/components/set-ownership-form/ownership-form.schema.js
 msgid "Select a Group:"
 msgstr "Selezionare un gruppo:"
+
+#: ../app/javascript/components/host-edit-form/host-edit-form.schema.js
+msgid "Select a Host to validate against"
+msgstr "Selezionare un host rispetto al quale eseguire la convalida"
 
 #: ../app/javascript/components/server-provision.schema.js
 msgid "Select a PXE Image"
@@ -66304,6 +66606,24 @@ msgstr "Selezionare solo uno o campi consecutivi da spostare in cima"
 #: ../app/controllers/report_controller/menus.rb
 msgid "Select only one or consecutive fields to move up"
 msgstr "Selezionare solo uno o campi consecutivi da spostare in alto"
+
+#:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+msgid ""
+"Select storage resources to attach to the service. The new Volume(s) will be "
+"created on these resources."
+msgstr ""
+"Selezionare le risorse di archiviazione da collegare al servizio. I nuovi "
+"volumi verranno creati su queste risorse."
+
+#:
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
+msgid ""
+"Select storage resources to attach to the service. Volumes for this service "
+"will be created on these resources."
+msgstr ""
+"Selezionare le risorse di archiviazione da collegare al servizio. I volumi per"
+" questo servizio verranno creati su queste risorse."
 
 #: src/tagging/components/InnerComponents/TagSelector.js
 msgid "Select tag category"
@@ -66747,11 +67067,11 @@ msgstr "Aggiornato il"
 
 #: ../app/controllers/physical_server_controller.rb
 #: ../app/helpers/application_helper/title.rb
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/javascript/components/provider-dashboard-charts/charts_config.js
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/services/ems_physical_infra_dashboard_service.rb
 #: ../app/views/ops/_all_tabs.html.haml
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 #: ../app/views/vm_common/_evm_relationship.html.haml
 msgid "Servers"
 msgstr "Server"
@@ -66946,6 +67266,7 @@ msgstr[1] "Flussi di lavoro di collegamento servizio"
 
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 msgid "Service Name"
 msgstr "Nome del servizio"
 
@@ -69117,7 +69438,7 @@ msgid "Show hourly data from"
 msgstr "Mostra dati orari da"
 
 #: ../app/helpers/settings_tags_tabs_helper.rb
-#: ../app/views/ops/_settings_co_tags_tab.html.haml
+#: ../app/javascript/components/settings-company-tags/helper.js
 msgid "Show in Console"
 msgstr "Mostra nella console"
 
@@ -69785,8 +70106,8 @@ msgstr "Affinità SmartProxy"
 msgid "SmartProxy Builds"
 msgstr "Build SmartProxy"
 
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/javascript/components/zone-form/zone-form.schema.js
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 msgid "SmartProxy Server IP"
 msgstr "IP server SmartProxy"
 
@@ -70371,6 +70692,10 @@ msgstr "Avviare Connesso?"
 msgid "Start Date"
 msgstr "Data di inizio"
 
+#: ../app/javascript/forms/mappers/validatorMapper.jsx
+msgid "Start Date must come before End Date"
+msgstr "La data di inizio deve essere precedente alla data di fine"
+
 #: ../app/models/miq_template/operations.rb
 msgid "Start Operation is not available for Images and VM Templates."
 msgstr "Operazione di avvio non disponibile per immagini e modelli VM."
@@ -70476,7 +70801,8 @@ msgstr "Avviata"
 msgid "Started At"
 msgstr "Avviato alle"
 
-#: ../app/helpers/ops_helper.rb:209 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 msgid "Started On"
 msgstr "Avviato il"
 
@@ -70509,10 +70835,6 @@ msgstr "Il processo di avvio è obbligatorio"
 #: ../app/views/report/_schedule_form_timer.html.haml
 msgid "Starting Time"
 msgstr "Ora di inizio"
-
-#: ../app/models/host.rb
-msgid "Starting address is malformed"
-msgstr "L'indirizzo di partenza ha un formato errato"
 
 #: ../app/views/miq_ae_tools/_resolve_form_buttons.html.haml
 msgid "Starting process must be specified"
@@ -70688,11 +71010,13 @@ msgstr "Stati degli stack di orchestrazione root"
 #: ../app/helpers/ems_network_helper/textual_summary.rb
 #: ../app/helpers/ems_physical_infra_helper/textual_summary.rb
 #: ../app/helpers/ems_storage_helper/textual_summary.rb
-#: ../app/helpers/ops_helper.rb:166 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:175 ../app/helpers/ops_helper.rb
 #: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb
 #: ../app/helpers/physical_server_helper/textual_summary.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
+#: ../app/helpers/request_details_helper.rb
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/javascript/components/container-projects/helper.jsx
@@ -70702,7 +71026,6 @@ msgstr "Stati degli stack di orchestrazione root"
 #: ../app/views/miq_request/_ae_prov_show.html.haml
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
-#: ../app/views/ops/_server_desc.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 #: ../app/views/report/_export_widgets.html.haml
 #: ../config/yaml_strings.rb
@@ -71034,13 +71357,18 @@ msgid "Storage Providers"
 msgstr "Provider dello spazio di archiviazione"
 
 #: ../app/helpers/storage_service_helper/textual_summary.rb
-#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
 msgid "Storage Resource"
 msgstr "Risorsa di archiviazione"
+
+#:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+msgid "Storage Resource(s)"
+msgstr "Risorse di archiviazione"
 
 #. TRANSLATORS: file: product/views/StorageResource.yaml
 #: ../app/controllers/storage_resource_controller.rb
 #: ../app/helpers/storage_service_helper/textual_summary.rb
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 #: ../app/presenters/menu/default_menu.rb:164 ../config/yaml_strings.rb
 msgid "Storage Resources"
 msgstr "Risorse di archiviazione"
@@ -71131,6 +71459,13 @@ msgstr "Risorsa di archiviazione"
 #: ../config/model_attributes.rb
 msgid "Storage service"
 msgstr "Servizio di archiviazione"
+
+#:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+msgid "Storage service \"%s\" has no attached storage resources"
+msgstr ""
+"Il servizio di archiviazione \"%s\" non dispone di risorse di archiviazione "
+"collegate"
 
 #: ../config/model_attributes.rb
 msgid "Storage service resource attachment"
@@ -71851,7 +72186,6 @@ msgid "Subtype is required."
 msgstr "Il sottotipo è obbligatorio."
 
 #: ../app/helpers/textual_mixins/textual_metrics_status.rb
-#: ../app/javascript/components/timeline-options/timeline-options.jsx
 msgid "Success"
 msgstr "Riuscito"
 
@@ -72366,10 +72700,10 @@ msgstr "Importazione del dominio di sistema non supportata."
 msgid "System service"
 msgstr "Servizio di sistema"
 
-#:
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "System/Process"
 msgstr "Sistema/Processo"
@@ -72589,9 +72923,10 @@ msgstr "Assegnazione tag"
 msgid "Tag Assignment (Tags common to all selected items)"
 msgstr "Assegnazione tag (Tag comune a tutti gli elementi selezionati)"
 
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 #: ../app/views/chargeback_assignment/_form.html.haml
 #: ../app/views/miq_alert_set/_alert_profile_assign.html.haml
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
 #: ../app/views/ops/label_tag_mapping/_tag_category.html.haml
 #: ../app/views/report/_form_filter_chargeback.html.haml
 msgid "Tag Category"
@@ -72708,11 +73043,13 @@ msgstr "Numero Regione"
 msgid "Tagging|Taggable type"
 msgstr "Tipo Taggabile"
 
+#: ../app/helpers/ops_helper/settings_tab_helper.rb
+#: ../app/helpers/settings_rbac_tag_helper.rb
 #: ../app/presenters/tree_builder_alert_profile_obj.rb
 #: ../app/views/miq_ae_class/_git_domain_refresh.html.haml
 #: ../app/views/miq_ae_tools/_import_export.html.haml
 #: ../app/views/ops/_all_tabs.html.haml
-#: ../app/views/ops/_rbac_tag_box.html.haml
+#: ../app/views/ops/_settings_co_tags_tab.html.haml
 msgid "Tags"
 msgstr "Tag"
 
@@ -72870,10 +73207,6 @@ msgstr "Analisi del modello"
 #: ../config/yaml_strings.rb
 msgid "Template Name"
 msgstr "Nome modello"
-
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
-msgid "Template Selection"
-msgstr "Selezione Modello"
 
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Amazon_CloudManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AzureStack_CloudManager_OrchestrationTemplate.yaml
@@ -73286,12 +73619,6 @@ msgstr ""
 "L'identificazione assegnata GCE. È costituita da due parole seguite da un "
 "numero di tre cifre, come ad esempio: squeamish-ossifrage-123"
 
-#: ../app/controllers/host_controller.rb
-msgid "The Host SSH key has changed, do you want to accept the new key?"
-msgstr ""
-"La chiave SSH dell'host è stata modificata, si desidera accettare la nuova "
-"chiave?"
-
 #: ../app/models/host.rb
 msgid "The Host has invalid IPMI credentials"
 msgstr "L'Host ha credenziali IPMI non valide"
@@ -73640,9 +73967,18 @@ msgstr "Il codice di riferimento della partizione logica"
 msgid "The login group cannot be deleted"
 msgstr "Il gruppo di accesso non può essere eliminato"
 
-#: ../app/javascript/helpers/validate-names.js
+#: ../app/javascript/helpers/storage_manager/validate-names.js
 msgid "The name \"%s\" already exists in \"%s\""
 msgstr "Il nome \"%s\" esiste già in \"%s\""
+
+#:
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
+msgid ""
+"The name can contain letters, numbers, spaces, periods, colons, dashes and "
+"underscores"
+msgstr ""
+"Il nome può contenere lettere, numeri, spazi, punti, due punti, trattini e "
+"caratteri di sottolineatura"
 
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
@@ -73654,13 +73990,20 @@ msgstr ""
 
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 msgid "The name must begin with a letter or an underscore"
 msgstr "Il nome deve iniziare con una lettera o un carattere di sottolineatura"
 
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 msgid "The name must not begin or end with a space"
 msgstr "Il nome non deve iniziare o terminare con uno spazio"
+
+#:
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js
+msgid "The name should have up to 15 characters."
+msgstr "Il nome deve contenere un massimo di 15 caratteri."
 
 #:
 #: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb
@@ -73888,6 +74231,10 @@ msgid ""
 msgstr ""
 "L'email di test è in fase di consegna, controllare \"%{email}\" per verificare"
 " che l'operazione sia stata eseguita correttamente"
+
+#: ../app/controllers/application_controller.rb
+msgid "The user is not authorized for this task or item"
+msgstr "L'utente non è autorizzato per questa attività o elemento"
 
 #: ../app/controllers/application_controller.rb
 #: ../app/controllers/dashboard_controller.rb
@@ -74201,6 +74548,10 @@ msgstr "Questa funzione non è supportata dalla versione api del provider"
 #: ./dist/js/ui-components.js
 msgid "This field is required"
 msgstr "Questo campo è obbligatorio"
+
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
+msgid "This is a group of events that happened on %s."
+msgstr "Questo è un gruppo di eventi che si sono verificati il %s."
 
 #:
 #: ../app/models/manageiq/providers/awx/automation_manager/openstack_credential.rb
@@ -76122,9 +76473,9 @@ msgstr "API di destinazione sconosciuta impostata: '%{service_type}'"
 msgid "Unknown task, %{task}"
 msgstr "Attività sconosciuta, %{task}"
 
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/helpers/resource_pool_helper/textual_summary.rb
 #: ../app/javascript/components/zone-form/zone-form.schema.js
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 msgid "Unlimited"
 msgstr "Senza limiti"
 
@@ -76195,6 +76546,10 @@ msgstr "Versione API non supportata: %{api_version}"
 #: ../app/models/vim_performance_analysis.rb
 msgid "Unsupported Mode (%{mode}) for %{class} %{type} options"
 msgstr "Modalità non supportata (%{mode}) per le opzioni %{class} %{type}"
+
+#: ../app/models/manageiq/providers/openshift/container_manager.rb
+msgid "Unsupported OpenShift version"
+msgstr "Versione OpenShift non supportata"
 
 #: ../app/models/manageiq/providers/vmware/container_manager.rb
 msgid "Unsupported endpoint"
@@ -77106,6 +77461,10 @@ msgstr ""
 "Utilizzato per le credenziali di registro Docker necessarie per eseguire "
 "l'analisi SmartState su AWS."
 
+#: ../app/models/manageiq/providers/vmware/infra_manager/host.rb
+msgid "Used for SSH login."
+msgstr "Utilizzato per l'accesso SSH."
+
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 msgid ""
 "Used for VMRC connections to all VMs on this provider. If not set, the VMRC "
@@ -77114,11 +77473,7 @@ msgstr ""
 "Utilizzato per le connessioni VMRC a tutte le VM su questo provider. Se non "
 "impostato, l'accesso alla console VMRC sarà disabilitato per questo provider."
 
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "Used for access to IPMI."
-msgstr "Utilizzato per l'accesso a IPMI."
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
+#: ../app/models/manageiq/providers/vmware/infra_manager/host.rb
 msgid "Used for access to Web Services."
 msgstr "Utilizzato per l'accesso ai servizi Web."
 
@@ -77248,6 +77603,7 @@ msgstr "Sequenza gruppo utente per la ricerca in LDAP:"
 msgid "User ID"
 msgstr "ID utente"
 
+#: ../app/helpers/settings_users_helper.rb
 #: ../app/views/ops/_rbac_user_details.html.haml
 msgid "User Information"
 msgstr "Informazioni utente"
@@ -77392,7 +77748,7 @@ msgstr "Utenti (%{users_count})"
 msgid "Users are only allowed to delete their own requests"
 msgstr "Gli utenti possono eliminare solo le proprie richieste"
 
-#: ../app/views/ops/_rbac_group_details.html.haml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 msgid "Users in this Group"
 msgstr "Utenti in questo gruppo"
 
@@ -78159,7 +78515,6 @@ msgstr "VM viene ritirata il"
 msgid "VM Right-sizing"
 msgstr "Dimensionamento corretto VM"
 
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
 #: ../app/views/miq_policy_rsop/_rsop_form.html.haml
 msgid "VM Selection"
 msgstr "Selezione VM"
@@ -79100,13 +79455,13 @@ msgstr "Convalida non riuscita a causa della regione mancante"
 msgid "Validation failed with error: '%{error_message}"
 msgstr "Convalida non riuscita con errore: '%{error_message}"
 
-#:
+#: ../app/javascript/components/host-edit-form/validate-host-credentials.jsx
 #: ../app/javascript/components/physical-storage-form/validate-storage-credentials.jsx
 #: ../app/javascript/components/provider-form/validate-provider-credentials.jsx
 msgid "Validation failed:"
 msgstr "Convalida non riuscita:"
 
-#:
+#: ../app/javascript/components/host-edit-form/validate-host-credentials.jsx
 #: ../app/javascript/components/physical-storage-form/validate-storage-credentials.jsx
 #: ../app/javascript/components/provider-form/validate-provider-credentials.jsx
 msgid "Validation failed: unknown error"
@@ -79327,7 +79682,8 @@ msgstr "Verifica Certificati TLS"
 msgid "Version"
 msgstr "Versione"
 
-#: ../app/helpers/ops_helper.rb:215 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 msgid "Version / Build"
 msgstr "Versione / Build"
 
@@ -80129,6 +80485,16 @@ msgstr "Visualizza tipi di volume"
 msgid "View Volumes"
 msgstr "Visualizza volumi"
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "View Workflow Instances"
+msgstr "Visualizza istanze dei flussi di lavoro"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "View Workflows"
+msgstr "Visualizza flussi di lavoro"
+
 #: ../app/views/ops/_settings_details_tab.html.haml
 msgid "View Zones"
 msgstr "Visualizza Zone"
@@ -80193,12 +80559,12 @@ msgstr "Visualizza questo profilo di avviso"
 msgid "View this Event"
 msgstr "Visualizza questo evento"
 
-#: ../app/views/ops/_rbac_role_details.html.haml
-#: ../app/views/ops/_rbac_user_details.html.haml
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
+#: ../app/helpers/settings_users_helper.rb
 msgid "View this Group"
 msgstr "Visualizza questo gruppo"
 
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 msgid "View this MiqServer"
 msgstr "Visualizza questo MiqServer"
 
@@ -80215,7 +80581,7 @@ msgstr "Visualizza questa immagine PXE"
 msgid "View this Policy Profile"
 msgstr "Visualizza questo profilo di politica"
 
-#: ../app/views/ops/_rbac_group_details.html.haml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 msgid "View this Project"
 msgstr "Visualizza questo progetto"
 
@@ -80223,8 +80589,8 @@ msgstr "Visualizza questo progetto"
 msgid "View this Report"
 msgstr "Visualizza questo report"
 
-#: ../app/views/ops/_rbac_group_details.html.haml
-#: ../app/views/ops/_rbac_user_details.html.haml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
+#: ../app/helpers/settings_users_helper.rb
 msgid "View this Role"
 msgstr "Visualizza questo Ruolo"
 
@@ -80236,11 +80602,11 @@ msgstr "Visualizza questa pianificazione"
 msgid "View this Service"
 msgstr "Visualizza questo servizio"
 
-#: ../app/views/ops/_rbac_group_details.html.haml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 msgid "View this Tenant"
 msgstr "Visualizza questo tenant"
 
-#: ../app/views/ops/_rbac_group_details.html.haml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 msgid "View this User"
 msgstr "Visualizza questo utente"
 
@@ -80251,10 +80617,6 @@ msgstr "Visualizza questo Widget"
 #: ../app/views/pxe/_pxe_server_details.html.haml
 msgid "View this Windows Image"
 msgstr "Visualizza questa immagine di Windows"
-
-#: ../app/views/ops/_diagnostics_zones_tab.html.haml
-msgid "View this Zone"
-msgstr "Visualizza questa zona"
 
 #: ../lib/gtl_formatter.rb
 msgid "View this item"
@@ -81928,6 +82290,7 @@ msgstr "Modelli istantanea volume (Openstack)"
 #: ../app/controllers/cloud_volume_snapshot_controller.rb
 #: ../app/helpers/cloud_tenant_helper/textual_summary.rb
 #: ../app/presenters/menu/default_menu.rb
+#: ../app/services/ems_storage_dashboard_service.rb
 msgid "Volume Snapshots"
 msgstr "Istantanee del volume"
 
@@ -82757,12 +83120,15 @@ msgstr ""
 "Attenzione: tutte le opzioni di pensionamento corrente saranno perse se si "
 "continua con questa azione"
 
+#: ../app/models/manageiq/providers/vmware/infra_manager/host.rb
+msgid "Web Service"
+msgstr "Servizio web"
+
 #: ../app/javascript/components/workers-form/workers.schema.js
 msgid "Web Service Workers"
 msgstr "Operatori del servizio Web"
 
 #: ../app/helpers/textual_summary_helper.rb
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 #: ../app/views/ops/_settings_server_tab.html.haml
 msgid "Web Services"
 msgstr "Servizi web"
@@ -83047,10 +83413,27 @@ msgstr "Worker arrestato"
 msgid "Workers"
 msgstr "Operatori"
 
+#: ../config/model_display_names.rb:258 ../config/model_attributes.rb
+msgid "Workflow"
+msgid_plural "Workflows"
+msgstr[0] "Flusso di lavoro"
+msgstr[1] "Flussi di lavoro"
+
 #. TRANSLATORS: en.yml key: dictionary.column.v_workflow_class
 #: ../config/dictionary_strings.rb
 msgid "Workflow Class"
 msgstr "Classe flusso di lavoro"
+
+#: ../config/model_display_names.rb
+msgid "Workflow Instance"
+msgid_plural "Workflow Instances"
+msgstr[0] "Istanza flusso di lavoro"
+msgstr[1] "Istanze flussi di lavoro"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Workflow Instances"
+msgstr "Istanze flussi di lavoro"
 
 #: ../app/helpers/miq_ae_class_helper.rb
 msgid "Workflow Template"
@@ -83075,10 +83458,84 @@ msgstr[1] "Modelli di flusso di lavoro (Ansible Tower)"
 msgid "Workflow Templates (Ansible Tower)"
 msgstr "Modelli di flusso di lavoro (Ansible Tower)"
 
+#: ../config/model_attributes.rb
+msgid "Workflow instance"
+msgstr "Istanza flusso di lavoro"
+
 #:
 #: ../app/javascript/components/pvc-import-image-form/pvc-import-image-form.schema.js
 msgid "Workflow max. timeout"
 msgstr "Timeout massimo del flusso di lavoro"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Context"
+msgstr "WorkflowInstance|Contesto"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Credentials"
+msgstr "WorkflowInstance|Credenziali"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Href slug"
+msgstr "WorkflowInstance|Href slug"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Output"
+msgstr "WorkflowInstance|Output"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Region description"
+msgstr "WorkflowInstance|Descrizione della regione"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Region number"
+msgstr "WorkflowInstance|Numero regione"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Status"
+msgstr "WorkflowInstance|Stato"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Userid"
+msgstr "WorkflowInstance|ID utente"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Workflow content"
+msgstr "WorkflowInstance|Contenuto del flusso di lavoro"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Workflows"
+msgstr "Flussi di lavoro"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Workflows Automation Manager"
+msgstr "Workflows Automation Manager"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Credentials"
+msgstr "Workflow|Credenziali"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Href slug"
+msgstr "Workflow|Href slug"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Name"
+msgstr "Workflow|Nome"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Region description"
+msgstr "Workflow|Descrizione della regione"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Region number"
+msgstr "Workflow|Numero regione"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Workflow content"
+msgstr "Workflow|Contenuto del flusso di lavoro"
 
 #: ../app/views/shared/views/_prov_dialog.html.haml
 msgid "Workgroup Information"
@@ -83269,7 +83726,7 @@ msgstr "Zona *"
 msgid "Zone:"
 msgstr "Zona:"
 
-#: ../app/helpers/zones_helper.rb
+#: ../app/helpers/settings_zone_list_helper.rb
 #: ../app/presenters/tree_builder_ops_settings.rb
 #: ../app/views/ops/_all_tabs.html.haml
 #: ../app/views/ops/_settings_details_tab.html.haml
@@ -83618,6 +84075,14 @@ msgstr "impossibile eliminare la zona di manutenzione"
 msgid "cannot delete volume that is in use."
 msgstr "impossibile eliminare un volume in uso."
 
+#: ../app/models/resource_action.rb
+msgid ""
+"cannot have configuration_script_id and ae_namespace, ae_class, and "
+"ae_instance present"
+msgstr ""
+"impossibile avere configuration_script_id e ae_namespace, ae_class e "
+"ae_instance presenti"
+
 #: ../app/models/service_generic.rb
 msgid "check_completed must be implemented in a subclass"
 msgstr "check_completed deve essere implementa in una sottoclasse"
@@ -83650,6 +84115,11 @@ msgstr "cloud_volume non può essere nullo"
 #: ../config/yaml_strings.rb
 msgid "compliance"
 msgstr "compliance"
+
+#:
+#: ../app/javascript/components/storage-service-form/get-compliant-resources.jsx
+msgid "compliance check failed:"
+msgstr "controllo di compatibilità non riuscito:"
 
 #: ../app/models/condition.rb
 msgid ""
@@ -83896,7 +84366,8 @@ msgstr "cpu_total_cores"
 msgid "create_aggregate must be implemented in a subclass"
 msgstr "è necessario implementare create_aggregate in una sottoclasse"
 
-#: ../app/helpers/zones_helper.rb:18 ../app/presenters/tree_node/zone.rb
+#: ../app/helpers/settings_zone_list_helper.rb
+#: ../app/presenters/tree_node/zone.rb
 msgid "current"
 msgstr "corrente"
 
@@ -84018,7 +84489,7 @@ msgstr "ems_configuration"
 #: ../app/models/host_initiator_group.rb
 #: ../app/models/physical_storage.rb:78 ../app/models/physical_storage.rb
 #: ../app/models/placement_group.rb:48 ../app/models/storage_service.rb
-#: ../app/models/volume_mapping.rb
+#: ../app/models/storage_service.rb:113 ../app/models/volume_mapping.rb
 msgid "ems_id cannot be nil"
 msgstr "ems_id non può essere nullo"
 
@@ -84176,12 +84647,16 @@ msgstr "evm_worker_stop"
 msgid "evm_worker_uptime_exceeded"
 msgstr "evm_worker_uptime_exceeded"
 
+#: ../app/models/manageiq/providers/workflows/automation_manager/workflow.rb
+msgid "execute is not enabled"
+msgstr "l'esecuzione non è abilitata"
+
 #:
 #: ../lib/miq_automation_engine/engine/miq_ae_engine/miq_ae_ansible_method_base.rb
 msgid "execute must be implemented in a subclass"
 msgstr "l'esecuzione deve essere implementata in una sottoclasse"
 
-#: ../lib/miq_expression.rb:129 ../lib/miq_expression.rb
+#: ../lib/miq_expression.rb:135 ../lib/miq_expression.rb
 msgid ""
 "expression malformed,  must contain one of 'checkall', 'checkany', 'checkcount"
 "'"
@@ -84194,7 +84669,7 @@ msgstr ""
 #: ../app/models/host_initiator_group.rb
 #: ../app/models/physical_storage.rb:81 ../app/models/physical_storage.rb
 #: ../app/models/placement_group.rb:51 ../app/models/storage_service.rb
-#: ../app/models/volume_mapping.rb
+#: ../app/models/storage_service.rb:116 ../app/models/volume_mapping.rb
 msgid "ext_management_system cannot be found"
 msgstr "Impossibile trovare ext_management_system"
 
@@ -84477,10 +84952,6 @@ msgstr "login_failed"
 msgid "m"
 msgstr "m"
 
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
-msgid "map a new label to tag"
-msgstr "associa una nuova etichetta al tag"
-
 #: ../app/models/miq_ae_namespace.rb
 msgid "may contain only alphanumeric and _ . - $ characters"
 msgstr "può contenere solo caratteri alfanumerici e _ . - $"
@@ -84580,7 +85051,7 @@ msgid "new element"
 msgstr "nuovo elemento"
 
 #: ../app/models/ext_management_system.rb
-#: ../app/models/ext_management_system.rb:656 ../app/models/provider.rb
+#: ../app/models/ext_management_system.rb:627 ../app/models/provider.rb
 msgid "no Provider credentials defined"
 msgstr "Nessuna credenziale del provider disponibile."
 
@@ -84673,7 +85144,7 @@ msgstr "il %{date} alle %{time}"
 msgid "open and close options"
 msgstr "opzioni di apertura e chiusura"
 
-#: ../lib/miq_expression.rb:294 ../lib/miq_expression.rb
+#: ../lib/miq_expression.rb:315 ../lib/miq_expression.rb
 msgid "operator '%{operator_name}' is not supported"
 msgstr "operatore '%{operator_name}' non supportato"
 
@@ -84854,6 +85325,11 @@ msgstr "raw_add_security_group deve essere implementa in una sottoclasse"
 msgid "raw_associate_floating_ip must be implemented in a subclass"
 msgstr "raw_associate_floating_ip deve essere implementa in una sottoclasse"
 
+#: ../app/models/storage_service.rb
+msgid "raw_check_compliant_resources must be implemented in a subclass"
+msgstr ""
+"raw_check_compliant_resources deve essere implementato in una sottoclasse"
+
 #: ../app/models/cloud_database.rb
 msgid "raw_create_cloud_database must be implemented in a subclass"
 msgstr "è necessario implementare raw_create_cloud_database in una sottoclasse"
@@ -84927,6 +85403,11 @@ msgstr "raw_delete_flavor deve essere implementa in una sottoclasse"
 #: ../app/models/host_initiator.rb
 msgid "raw_delete_host_initiator must be implemented in a subclass"
 msgstr "è necessario implementare raw_delete_host_initiator in una sottoclasse"
+
+#: ../app/models/host_initiator_group.rb
+msgid "raw_delete_host_initiator_group must be implemented in a subclass"
+msgstr ""
+"raw_delete_host_initiator_group deve essere implementato in una sottoclasse"
 
 #: ../app/models/manageiq/providers/cloud_manager/template.rb
 msgid "raw_delete_image must be implemented in a subclass"
@@ -85026,6 +85507,11 @@ msgstr "raw_update_cloud_network deve essere implementato in una sottoclasse"
 #: ../app/models/cloud_tenant.rb
 msgid "raw_update_cloud_tenant must be implemented in a subclass"
 msgstr "raw_update_cloud_tenant deve essere implementato in una sottoclasse"
+
+#: ../app/models/host_initiator_group.rb
+msgid "raw_update_host_initiator_group must be implemented in a subclass"
+msgstr ""
+"raw_update_host_initiator_group deve essere implementato in una sottoclasse"
 
 #: ../app/models/manageiq/providers/cloud_manager/template.rb
 msgid "raw_update_image must be implemented in a subclass"
@@ -85260,6 +85746,20 @@ msgstr "request_vm_unregister"
 msgid "resize value options cannot be nil"
 msgstr "le opzioni di ridimensionamento del valore non possono essere nil"
 
+#:
+#: ../app/models/manageiq/providers/workflows/automation_manager/workflow_instance.rb
+msgid "run is not enabled"
+msgstr "l'esecuzione non è abilitata"
+
+#: ../app/models/configuration_script_payload.rb
+msgid "run must be implemented in a subclass"
+msgstr "l'esecuzione deve essere implementata in una sottoclasse"
+
+#:
+#: ../app/models/manageiq/providers/workflows/automation_manager/workflow_instance.rb
+msgid "run_queue is not enabled"
+msgstr "run_queue non è abilitato"
+
 #: ../app/controllers/application_controller/performance.rb
 msgid "running"
 msgstr "in esecuzione"
@@ -85350,6 +85850,11 @@ msgstr "storage_scan_complete"
 msgid "success"
 msgstr "successo"
 
+#:
+#: ../app/models/manageiq/providers/embedded_automation_manager/configuration_script_source.rb
+msgid "sync must be implemented in a subclass"
+msgstr "la sincronizzazione deve essere implementata in una sottoclasse"
+
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_sets.yml
 #: ../config/yaml_strings.rb
@@ -85359,6 +85864,11 @@ msgstr "tag"
 #: ../app/models/manageiq/providers/kubernetes/container_manager.rb
 msgid "target_class must be a class not an instance"
 msgstr "target_class deve essere una classe e non un'istanza"
+
+#:
+#: ../app/models/manageiq/providers/autosde/storage_manager/host_initiator_group.rb
+msgid "the host initiator group is not connected to an active provider"
+msgstr "il gruppo iniziatore host non è connesso a un fornitore attivo"
 
 #:
 #: ../app/models/manageiq/providers/openstack/storage_manager/cinder_manager/cloud_volume.rb
@@ -85496,7 +86006,7 @@ msgstr "tipo di oggetto sconosciuto: %{class}"
 msgid "unknown zone %{zone_name}"
 msgstr "zona sconosciuta %{zone_name}"
 
-#: ../app/helpers/ops_helper.rb:171 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:180 ../app/helpers/ops_helper.rb
 msgid "unlimited"
 msgstr "illimitato"
 

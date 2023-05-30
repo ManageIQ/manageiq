@@ -847,6 +847,10 @@
       :description: Reload the current display
       :feature_type: admin
       :identifier: cloud_volume_reload
+    - :name: Refresh
+      :description: Refresh Cloud Volumes
+      :feature_type: admin
+      :identifier: cloud_volume_refresh
 
 # AuthKeyPair
 - :name: Auth Key Pairs
@@ -971,8 +975,13 @@
       :description: Edit Tags of Snapshots
       :feature_type: control
       :identifier: cloud_volume_snapshot_tag
+  - :name: Modify
+    :description: Modify Volume Snapshots
+    :feature_type: admin
+    :identifier: cloud_volume_snapshot_admin
+    :children:
     - :name: Remove
-      :description: Remove Snapshot
+      :description: Remove a Volume Snapshot
       :feature_type: admin
       :identifier: cloud_volume_snapshot_delete
 
@@ -6359,10 +6368,18 @@
       :description: Add a Storage Service
       :feature_type: admin
       :identifier: storage_service_new
+    - :name: Edit
+      :description: Edit a Storage Service
+      :feature_type: admin
+      :identifier: storage_service_edit
     - :name: Remove
       :description: Remove a Storage Service
       :feature_type: admin
       :identifier: storage_service_delete
+    - :name: Check Compliant Resources
+      :description: Given a set of capabilities, check which attached resources will comply
+      :feature_type: admin
+      :identifier: check_compliant_resources
 
   # Volume Mapping
 - :name: Volume Mapping
@@ -6501,7 +6518,14 @@
       :description: Add a Host Initiator Group
       :feature_type: admin
       :identifier: host_initiator_group_new
-
+    - :name: Edit
+      :description: Edit a Host Initiator Group
+      :feature_type: admin
+      :identifier: host_initiator_group_edit
+    - :name: Remove
+      :description: Remove a Host Initiator Group
+      :feature_type: admin
+      :identifier: host_initiator_group_delete
 
 # EmsPhysicalInfra
 - :name: Physical Infrastructure Providers

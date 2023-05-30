@@ -34,7 +34,10 @@ module EmsRefresh
             t.manager
           end
 
-      h[e] << t unless e.nil?
+      next if e.nil?
+      next unless e.supports?(:refresh_ems) # Remove targets from any EMS that doesn't support refresh_ems
+
+      h[e] << t
     end
 
     # Queue the refreshes
@@ -84,7 +87,7 @@ module EmsRefresh
       target_class = target_class.to_s.constantize unless target_class.kind_of?(Class)
 
       if ManageIQ::Providers::Inventory.persister_class_for(target_class).blank? &&
-         [VmOrTemplate, Host, PhysicalServer, PhysicalStorage, CloudVolume, ExtManagementSystem, InventoryRefresh::Target].none? { |k| target_class <= k }
+         [VmOrTemplate, Host, PhysicalServer, PhysicalStorage, CloudVolume, ExtManagementSystem, StorageService, HostInitiatorGroup, HostInitiator, VolumeMapping, InventoryRefresh::Target].none? { |k| target_class <= k }
         _log.warn("Unknown target type: [#{target_class}].")
         next
       end

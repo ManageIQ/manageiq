@@ -9,8 +9,8 @@ msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-16 19:20+0000\n"
-"PO-Revision-Date: 2023-02-16 19:20+0000\n"
+"POT-Creation-Date: 2023-05-15 00:54+0000\n"
+"PO-Revision-Date: 2023-05-15 00:54+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh\n"
@@ -21,6 +21,7 @@ msgstr ""
 
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
+#: ../app/javascript/components/storage-service-form/get-compliant-resources.jsx
 msgid " "
 msgstr " "
 
@@ -499,6 +500,20 @@ msgstr "%s（定制）"
 msgid "%s - %s %s Used"
 msgstr "%s - %s %s 已使用"
 
+#:
+#: ../app/javascript/components/provider-dashboard-charts/heat-map-chart/HeatMapChartGraph.js
+msgid "%s - CPU"
+msgstr "%s - CPU"
+
+#:
+#: ../app/javascript/components/provider-dashboard-charts/heat-map-chart/HeatMapChartGraph.js
+msgid "%s - Memory"
+msgstr "%s - 内存"
+
+#: ../app/javascript/components/settings-company-tags/index.jsx
+msgid "%s Entries"
+msgstr "%s 个条目"
+
 #: src/rbac-forms/rbacUserTagsList.jsx
 msgid "%s Tags"
 msgstr "%s 个标记"
@@ -520,6 +535,10 @@ msgstr "%s 已注销，重新返回到登录页面"
 #: ../app/javascript/toolbar-actions/delete.js
 msgid "%s: \"%s\" was successfully deleted"
 msgstr "已成功删除 %s：“%s”"
+
+#: ../app/javascript/helpers/storage_manager/load-provider-capabilities.js
+msgid "%s: %s"
+msgstr "%s: %s"
 
 #: ../app/controllers/application_controller/ci_processing.rb
 msgid "%{action_name} action does not apply to selected items"
@@ -1720,7 +1739,7 @@ msgid ""
 "route table, for this VPC)"
 msgstr "(对于此 VPC，没有被明确分配到一个路由表的子网会被分配到此主路由表)"
 
-#: ../app/views/ops/_diagnostics_zones_tab.html.haml
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 msgid "(current)"
 msgstr "（当前）"
 
@@ -1798,10 +1817,6 @@ msgstr "* 每日图表只包含收集全部 24 小时数据的那些天数"
 #: ../app/views/report/_db_form.html.haml
 msgid "* Dashboard name cannot be changed"
 msgstr "* 仪表板名称不能被修改"
-
-#: ../app/views/layouts/_tl_show.html.haml
-msgid "* Dates/Times on this page are based on time zone: %{time_zone}."
-msgstr "* 此页面上的日期/时间基于时区：%{time_zone}。"
 
 #: ../app/views/miq_policy_rsop/_rsop_results.html.haml
 msgid "* Enter Policy Simulation options on the left and press Submit"
@@ -2369,9 +2384,11 @@ msgstr "<按角色>"
 #: ../app/javascript/components/ansible-credentials-form/ansible-credentials-form.schema.js
 #: ../app/javascript/components/cloud-volume-actions-form/restore-from-backup.schema.js
 #: ../app/javascript/components/cloud-volume-backup-form/cloud-volume-backup-form.schema.js
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
 #: ../app/javascript/components/generic-objects-form/generic-objects-form.schema.js
 #: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js
 #: ../app/javascript/components/host-initiator-group-form/host-initiator-group-form.schema.js
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 #: ../app/javascript/components/miq-alert-set-form/miq-alert-set-form.schema.js
 #: ../app/javascript/components/network-routers-interfaces-form/network-routers-interfaces-form.schema.js
 #: ../app/javascript/components/pxe-customization-template-form/pxe-customization-template-form.schema.js
@@ -2380,7 +2397,6 @@ msgstr "<按角色>"
 #: ../app/javascript/components/pxe-iso-image-form/pxe-iso-image-form.schema.js
 #: ../app/javascript/components/routers-form/RoutersForm.schema.js
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
-#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 #: ../app/javascript/components/vm-cloud-add-remove-security-group-form/vm-cloud-add-security-form.schema.js
 #: ../app/javascript/components/volume-mapping-form/volume-mapping-form.schema.js
 #: ../app/views/catalog/_form_basic_info.html.haml
@@ -2400,10 +2416,6 @@ msgstr "<点这一行新增一个条目>"
 #: ../app/views/ops/_ldap_forest_entries.html.haml
 msgid "<Click on this row to create a new forest>"
 msgstr "<单击此行以创建一个新森林"
-
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
-msgid "<Click on this row to create a new mapping rule>"
-msgstr "<点这一行新增一个映射规则>"
 
 #:
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js
@@ -2922,6 +2934,7 @@ msgstr "访问模式"
 msgid "Access Physical Server Remote Console"
 msgstr "访问物理服务器远程控制台"
 
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
 #: ../app/views/ops/_rbac_role_details.html.haml
 msgid ""
 "Access Restriction for Catalog Items, Orchestration Stacks, Key Pairs, "
@@ -3105,10 +3118,10 @@ msgstr "已确认"
 #. TRANSLATORS: file: product/views/MiqAction.yaml
 #: ../app/controllers/optimization_controller.rb
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/presenters/tree_builder_policy_simulation_results.rb
 #: ../app/views/catalog/_form_resources_info.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/views/_alerts_list.html.haml
 #: ../config/yaml_strings.rb
 msgid "Action"
@@ -3118,6 +3131,10 @@ msgstr "操作"
 #: ../app/views/catalog/_form_resources_info.html.haml
 msgid "Action Order"
 msgstr "操作顺序"
+
+#: ../app/javascript/components/async-action-button.jsx
+msgid "Action Required"
+msgstr "所需操作"
 
 #: ../app/models/miq_action_set.rb
 msgid "Action Set"
@@ -3164,6 +3181,10 @@ msgstr "标识为 [%{id}] %{error} 的数据存储器类型 [%{store_type}] [%{n
 msgid "Action script exited with rc=%{rc_value}, error=%{error_text}"
 msgstr "操作脚本退出：rc=%{rc_value}，错误 = %{error_text}"
 
+#: ../app/javascript/components/async-action-button.jsx
+msgid "Action successful"
+msgstr "操作成功"
+
 #. TRANSLATORS: file: product/views/MiqActionSet.yaml
 #: ../config/yaml_strings.rb
 msgid "ActionSet"
@@ -3172,7 +3193,11 @@ msgstr "ActionSet"
 #. TRANSLATORS: file: product/views/MiqAction.yaml
 #: ../app/controllers/miq_action_controller.rb
 #: ../app/helpers/miq_policy_helper.rb
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+#: ../app/helpers/ops_helper/settings_tab_helper.rb
 #: ../app/helpers/settings_tags_tabs_helper.rb
+#: ../app/javascript/components/settings-company-tags/helper.js
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/views/chargeback_rate/_cb_rate_edit_table.html.haml
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
@@ -3182,7 +3207,6 @@ msgstr "ActionSet"
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 #: ../app/views/ops/_ap_form_registry.html.haml
 #: ../app/views/ops/_classification_entries.html.haml
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 #: ../app/views/vm_common/_reconfigure.html.haml
 #: ../config/yaml_strings.rb
@@ -3214,12 +3238,12 @@ msgstr ""
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
 #: ../app/helpers/report_helper/report_schedule_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/presenters/tree_builder_snapshots.rb
 #: ../app/presenters/tree_node/snapshot.rb
 #: ../app/views/miq_alert/_form.html.haml
 #: ../app/views/miq_policy/_form.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/report/_schedule_form.html.haml
 #: ../app/views/report/_widget_form.html.haml:33 ../config/yaml_strings.rb
 msgid "Active"
@@ -3394,6 +3418,10 @@ msgstr "添加磁盘"
 msgid "Add Disks"
 msgstr "添加磁盘"
 
+#: ../app/javascript/components/settings-company-tags/index.jsx
+msgid "Add Entry"
+msgstr "添加条目"
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Add Flavor"
@@ -3471,6 +3499,10 @@ msgstr "向路由器“%{name}”添加接口"
 #: ../app/helpers/application_helper/toolbar/network_router_center.rb
 msgid "Add Interface to this Router"
 msgstr "添加接口到此路由器"
+
+#: ../app/javascript/components/settings-label-tag-mapping/index.jsx
+msgid "Add Mapping Rule"
+msgstr "添加映射规则"
 
 #: ../app/views/miq_ae_class/_embedded_methods.html.haml
 msgid "Add Method"
@@ -4022,6 +4054,11 @@ msgstr "添加窗口小部件"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Add a Workflow"
+msgstr "添加工作流程"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Add a Zone"
 msgstr "添加区域"
 
@@ -4248,6 +4285,10 @@ msgstr "添加警报定义概要文件"
 msgid "Add an Customization Template"
 msgstr "添加定制模板"
 
+#: ../app/javascript/components/settings-company-tags-entry-form/schema.js
+msgid "Add an Entry"
+msgstr "添加条目"
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Add an ISO Datastore"
@@ -4363,6 +4404,10 @@ msgstr "用户已取消添加风格的操作。"
 #: ../app/javascript/components/host-aggregate-form/index.jsx
 msgid "Add of Host Aggregate \"%s\" has been successfully queued."
 msgstr "添加主机聚集 \"%s\" 的操作已成功排队。"
+
+#: ../app/javascript/components/host-initiator-group-form/index.jsx
+msgid "Add of Host Initiator Group has been successfully queued."
+msgstr "“添加主机发起方组”已成功排队。"
 
 #: ../app/javascript/components/auth-key-pair-cloud/index.jsx
 msgid "Add of Key Pair \"%s\" has been successfully queued."
@@ -4790,11 +4835,16 @@ msgstr "其他租户"
 msgid "Address"
 msgstr "地址"
 
+#:
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js
+msgid "Address %s is already in use"
+msgstr "地址 %s 已在使用中"
+
 #: ../app/helpers/host_initiator_group_helper/textual_summary.rb
 msgid "Addresses"
 msgstr "地址"
 
-#: ../app/views/static/evacuate-form.html.haml
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
 msgid "Admin Password"
 msgstr "管理密码"
 
@@ -5162,7 +5212,6 @@ msgstr[0] "警报状态操作"
 #: ../app/helpers/ems_container_helper/textual_summary.rb
 #: ../app/helpers/miq_alert_set_helper.rb
 #: ../app/helpers/textual_mixins/textual_authentications_status.rb
-#: ../app/javascript/components/ems_container_dashboard/helper.js
 #: ../app/javascript/oldjs/controllers/container_dashboard/util/dashboard-utils-factory.js
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/views/ems_container/_form.html.haml
@@ -5201,6 +5250,7 @@ msgstr "要评估的警报"
 
 #: ../app/controllers/miq_request_controller.rb
 #: ../app/helpers/security_group_helper/textual_summary.rb
+#: ../app/javascript/components/service-request-default/service-request-default.schema.js
 #: ../app/views/miq_task/_tasks_options.html.haml
 #: ../app/views/report/_form_sort.html.haml
 msgid "All"
@@ -5589,7 +5639,6 @@ msgstr "所有属性"
 #: ../app/controllers/chargeback_rate_controller.rb
 #: ../app/controllers/condition_controller.rb
 #: ../app/controllers/configuration_controller.rb
-#: ../app/controllers/host_controller.rb
 #: ../app/controllers/miq_action_controller.rb
 #: ../app/controllers/miq_ae_class_controller.rb
 #: ../app/controllers/miq_ae_customization_controller/old_dialogs.rb
@@ -5613,6 +5662,7 @@ msgstr "所有属性"
 #: ../app/javascript/components/button-group/index.jsx
 #: ../app/javascript/components/cloud-volume-form/index.jsx
 #: ../app/javascript/components/generic-objects-form/custom-button-form/index.jsx
+#: ../app/javascript/components/host-initiator-group-form/index.jsx
 #: ../app/javascript/components/physical-storage-form/index.jsx
 #: ../app/javascript/components/retirement-form/index.jsx
 #: ../app/javascript/components/settings-tasks-form/index.jsx
@@ -5621,10 +5671,8 @@ msgstr "所有属性"
 #: ../app/javascript/forms/data-driven-form.jsx
 #: ../app/javascript/oldjs/components/miq_ae_class/namespace-form.js
 #: ../app/javascript/oldjs/controllers/catalog/catalog_item_form_controller.js
-#: ../app/javascript/oldjs/controllers/host/host_form_controller.js
 #: ../app/javascript/oldjs/controllers/ops/pglogical_replication_form_controller.js
 #: ../app/javascript/oldjs/controllers/reconfigure/reconfigure_form_controller.js
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
 msgid "All changes have been reset"
 msgstr "所有修改已被重置"
 
@@ -5894,7 +5942,7 @@ msgstr "更新后的订阅必须指向最初创建它的相同数据库。如果
 #: ../app/controllers/application_controller/ci_processing.rb
 #: ../app/controllers/mixins/actions/host_actions/misc.rb
 #: ../app/helpers/application_helper/tasks.rb
-#: ../app/views/ops/_schedule_show.html.haml
+#: ../app/helpers/settings_schedule_helper.rb
 msgid "Analysis"
 msgstr "分析"
 
@@ -6227,6 +6275,7 @@ msgstr[0] "批准"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml:68 ../config/yaml_strings.rb
 msgid "Approval State"
 msgstr "批准状态"
@@ -6296,11 +6345,13 @@ msgstr "批准者/拒绝者"
 msgid "Approved/Denied On"
 msgstr "批准/拒绝日期"
 
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
 msgid "Approved/Denied by"
 msgstr "批准者/拒绝者"
 
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 msgid "Approved/Denied on"
 msgstr "批准/拒绝日期"
@@ -6364,6 +6415,7 @@ msgid ""
 "Policy?"
 msgstr "确认是否想要从该策略创建策略 [%{new_policy_description}]？"
 
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
 #: ../app/helpers/settings_tags_tabs_helper.rb
 msgid "Are you sure you want to delete category '%{category_name}'?"
 msgstr "是否确定要删除类别“%{category_name}”？"
@@ -6380,7 +6432,7 @@ msgstr "确定要删除森林 %{ldaphost} 吗？"
 msgid "Are you sure you want to delete input field from method?"
 msgstr "确定要从方法里删除输入字段吗？"
 
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
 msgid "Are you sure you want to delete mapping '%{label_name}'?"
 msgstr "是否确定要删除映射“%{label_name}”？"
 
@@ -6493,6 +6545,11 @@ msgstr "您确定要删除此警报吗？"
 msgid "Are you sure you want to delete this Group?"
 msgstr "您确定要删除此组吗？"
 
+#: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
+#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
+msgid "Are you sure you want to delete this Host Initiator Group?"
+msgstr "确定要删除此主机发起方组吗？"
+
 #: ../app/helpers/application_helper/toolbar/miq_alerts_center.rb
 msgid "Are you sure you want to delete this Policy Alerts?"
 msgstr "您确定要删除此策略警报吗？"
@@ -6525,6 +6582,15 @@ msgstr "您确定要删除此用户吗？"
 #: ../app/helpers/application_helper/toolbar/zone_center.rb
 msgid "Are you sure you want to delete this Zone?"
 msgstr "您确定要删除此区吗？"
+
+#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshot_center.rb
+#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshots_center.rb
+msgid "Are you sure you want to delete this cloud volume snapshot?"
+msgstr "确定要删除此云卷快照吗？"
+
+#: ../app/javascript/components/settings-company-tags/index.jsx
+msgid "Are you sure you want to delete this entry?"
+msgstr "确定要删除此条目吗？"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb
 msgid "Are you sure you want to delete this host initiator?"
@@ -7179,11 +7245,11 @@ msgid "Attribute missing for %{field}"
 msgstr "%{field} 缺失属性"
 
 #: ../app/helpers/miq_action_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "Attribute/Value Pairs"
@@ -7547,8 +7613,8 @@ msgstr "授权密码"
 msgid "Authtype"
 msgstr "Authtype"
 
-#: ../app/views/static/evacuate-form.html.haml
-#: ../app/views/vm_common/_live_migrate.html.haml
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 msgid "Auto-select Host?"
 msgstr "自动选择主机？"
 
@@ -7665,13 +7731,9 @@ msgstr "Automate 模式"
 msgid "Automate Simulation"
 msgstr "Automate 模拟"
 
-#: ../app/views/ops/_schedule_show.html.haml
+#: ../app/helpers/settings_schedule_helper.rb
 msgid "Automate Task"
 msgstr "自动化任务"
-
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
-msgid "Automate Tasks Selection"
-msgstr "自动化任务选择"
 
 #: ../config/model_display_names.rb
 msgid "Automate Workspace"
@@ -8488,9 +8550,11 @@ msgstr "基本信息"
 #: ../app/helpers/miq_policy_helper.rb
 #: ../app/helpers/miq_policy_set_helper.rb:3 ../app/helpers/ops_helper.rb
 #: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
 #: ../app/helpers/settings_analysis_profile_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/javascript/components/cloud-volume-actions-form/create-backup.schema.js
 #: ../app/javascript/components/cloud-volume-actions-form/create-snapshot.schema.js
@@ -8513,7 +8577,6 @@ msgstr "基本信息"
 #: ../app/views/miq_policy/_event_edit.html.haml
 #: ../app/views/miq_policy/_form.html.haml
 #: ../app/views/ops/_ap_form.html.haml
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 #: ../app/views/ops/_settings_server_tab.html.haml
 #: ../app/views/pxe/_iso_datastore_details.html.haml
 #: ../app/views/pxe/_pxe_image_type_details.html.haml
@@ -8716,7 +8779,8 @@ msgstr "闪烁识别 LED"
 msgid "Blink the Identify LED?"
 msgstr "闪烁识别 LED？"
 
-#: ../app/views/vm_common/_live_migrate.html.haml
+#:
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 msgid "Block Migration"
 msgstr "块迁移"
 
@@ -8809,10 +8873,6 @@ msgstr "可引导的"
 #: ../config/yaml_strings.rb
 msgid "Bootable?"
 msgstr "可引导？"
-
-#: ../app/javascript/components/timeline-options/timeline-options.jsx
-msgid "Both"
-msgstr "两者"
 
 #. TRANSLATORS: en.yml key: dictionary.model.BottleneckEvent
 #: ../config/model_display_names.rb:14 ../config/dictionary_strings.rb
@@ -9761,7 +9821,8 @@ msgid "CPU Max Used MHz Trend"
 msgstr "CPU 最大使用的 MHz 趋势"
 
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
-#: ../app/helpers/ops_helper.rb:214 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../config/yaml_strings.rb
 msgid "CPU Percent"
 msgstr "CPU 百分比"
@@ -9810,7 +9871,8 @@ msgstr "CPU 速度"
 
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
 #. TRANSLATORS: file: product/views/OsProcess-processes.yaml
-#: ../app/helpers/ops_helper.rb:213 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../config/yaml_strings.rb
 msgid "CPU Time"
 msgstr "CPU 时间"
@@ -10293,6 +10355,7 @@ msgstr "无法向“%{hostname}”验证证书。确保使用根 Openshift Cert.
 
 #: ../app/helpers/storage_resource_helper/textual_summary.rb
 #: ../app/helpers/storage_service_helper/textual_summary.rb
+#: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
 msgid "Capabilities"
 msgstr "功能"
 
@@ -10700,10 +10763,6 @@ msgid "Category %{description} [%{name}] record created ("
 msgstr "类别 %{description} [%{name}] 记录已创建 ("
 
 #: ../app/controllers/ops_controller/settings/tags.rb
-msgid "Category %{description} [%{name}] record deleted"
-msgstr "类别 %{description} [%{name}] 记录已删除"
-
-#: ../app/controllers/ops_controller/settings/tags.rb
 msgid "Category %{description} [%{name}] record updated ("
 msgstr "类别 %{description} [%{name}] 记录已更新 ("
 
@@ -10737,6 +10796,18 @@ msgstr "类别标签条目"
 msgid "Category cannot be deleted"
 msgstr "无法删除类别"
 
+#: ../app/javascript/components/settings-company-tags-entry-form/index.jsx
+msgid "Category entry \"%s\" was created successfully"
+msgstr "已成功创建类别条目“%s”"
+
+#: ../app/javascript/components/settings-company-tags-entry-form/index.jsx
+msgid "Category entry \"%s\" was saved successfully"
+msgstr "已成功保存类别条目“%s”"
+
+#: ../app/javascript/components/settings-company-tags/index.jsx
+msgid "Category entry was successfully deleted"
+msgstr "已成功删除类别条目"
+
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb
 msgid "Category is required"
 msgstr "类别是必填项"
@@ -10765,7 +10836,7 @@ msgstr "注意：对配置文件的手动修改可以禁用服务器！"
 msgid "Caution: Manual changes to configuration files can disable the Zone!"
 msgstr "注意：对配置文件的手动修改可以禁用区域！"
 
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
+#: ../app/javascript/components/settings-label-tag-mapping/index.jsx
 msgid ""
 "Caution: Mappings with Resource Entity 'All-Entities' could cause overwriting "
 "existing tags on resources with mapped provider labels."
@@ -11085,7 +11156,7 @@ msgstr "计费费率详细信息度量"
 msgid "Chargeback tier"
 msgstr "计费层"
 
-#: ../app/controllers/mixins/chargeback_preview.rb
+#: ../app/controllers/mixins/chargeback_preview_mixin.rb
 msgid "Chargeback was calculated based on flat allocation"
 msgstr "拒付是按固定分配计算的"
 
@@ -11502,6 +11573,11 @@ msgstr "检查此虚拟机的最后已知配置的合规性"
 msgid "Check Compliance of the last known configuration for this item"
 msgstr "检查此项的最后已知配置的合规性"
 
+#:
+#: ../app/javascript/components/storage-service-form/get-compliant-resources.jsx
+msgid "Check Compliant Resources"
+msgstr "检查合规性资源"
+
 #: ../app/views/layouts/exp_atom/_edit_find.html.haml
 msgid "Check Count"
 msgstr "检查计数"
@@ -11517,6 +11593,11 @@ msgstr "检查值错误：%{msg}"
 #: src/report-editor/sort-criteria.jsx
 msgid "Check input"
 msgstr "检查输入"
+
+#:
+#: ../app/javascript/components/storage-service-form/get-compliant-resources.jsx
+msgid "Checking"
+msgstr "正在检查"
 
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb
 msgid "Child Orchestration Stacks"
@@ -11558,12 +11639,15 @@ msgstr "选择"
 #: ../app/javascript/components/cloud-object-store-container-form/cloud-object-store-container-form.schema.js
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
 #: ../app/javascript/components/diagnostics-collect-log-form/schema.js
+#: ../app/javascript/components/host-edit-form/host-edit-form.schema.js
 #: ../app/javascript/components/network-floatingIPs-form/network-floatingIPs-form.schema.js
 #: ../app/javascript/components/network-security-groups-form/network-security-groups-form.schema.js
 #: ../app/javascript/components/provider-form/index.jsx
 #: ../app/javascript/components/routers-form/RoutersForm.schema.js
 #: ../app/javascript/components/select/index.jsx
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 #: ../app/javascript/components/subnet-form/subnet-form.schema.js
+#: ../app/javascript/helpers/storage_manager/filter-service-by-capabilities.js
 #: ../app/views/catalog/_form_basic_info.html.haml
 #: ../app/views/catalog/_form_ovf_template_options.html.haml
 #: ../app/views/catalog/_form_resources_info.html.haml
@@ -11572,7 +11656,6 @@ msgstr "选择"
 #: ../app/views/ems_container/_form.html.haml
 #: ../app/views/ems_infra/_form.html.haml
 #: ../app/views/ems_physical_infra/_form.html.haml
-#: ../app/views/host/_form.html.haml:47 ../app/views/host/_form.html.haml
 #: ../app/views/layouts/_ae_resolve_options.html.haml
 #: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
@@ -11625,7 +11708,6 @@ msgid "Choose a %{model} report filter"
 msgstr "选择 %{model} 报告过滤器"
 
 #: ../app/views/chargeback_assignment/_form.html.haml
-#: ../app/views/ops/_settings_co_tags_tab.html.haml
 #: ../app/views/report/_form_filter_chargeback.html.haml
 msgid "Choose a Category"
 msgstr "选择类别"
@@ -11967,10 +12049,15 @@ msgstr "清除所选的对象存储容器"
 msgid "Click on a Host to fetch its settings"
 msgstr "点击主机以获取它的设置"
 
+#: ../app/javascript/components/settings-label-tag-mapping/index.jsx
+msgid "Click on this row to create a new mapping rule"
+msgstr "单击此行以创建新的映射规则"
+
 #: ../app/javascript/components/settings-company-categories/index.jsx
 msgid "Click to add a new category"
 msgstr "点击以添加新的类别"
 
+#: ../app/javascript/components/settings-company-tags/index.jsx
 #: ../app/views/ops/_ap_form_file.html.haml
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 #: ../app/views/ops/_ap_form_registry.html.haml
@@ -12005,6 +12092,8 @@ msgstr "点击以删除此用户的孤立的记录"
 msgid "Click to delete this category"
 msgstr "点击以删除此类别"
 
+#: ../app/helpers/ops_helper/settings_tab_helper.rb
+#: ../app/javascript/components/settings-company-tags/helper.js
 #: ../app/views/ops/_ap_form_file.html.haml
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 #: ../app/views/ops/_ap_form_registry.html.haml
@@ -12025,17 +12114,13 @@ msgstr "点击以删除此森林"
 msgid "Click to delete this input field from method"
 msgstr "点击以从方法里删除此输入字段"
 
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 msgid "Click to delete this mapping"
 msgstr "点击删除此映射"
 
 #: ../app/views/ops/_ldap_forest_entries.html.haml
 msgid "Click to edit this forest"
 msgstr "单击以编辑此森林"
-
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
-msgid "Click to edit this mapping rule"
-msgstr "点击以编辑此映射规则"
 
 #: ../app/javascript/components/dashboard-widgets/widget-menu/index.jsx
 msgid "Click to go this location"
@@ -12089,8 +12174,8 @@ msgstr "点击查看 %{name} 租户"
 msgid "Click to view %{name} TenantProject"
 msgstr "点击查看 %{name} 租户项目"
 
+#: ../app/helpers/request_details_helper.rb
 #: ../app/javascript/components/miq-data-table/index.jsx
-#: ../app/views/miq_request/_request.html.haml
 msgid "Click to view details"
 msgstr "点击以查看详情"
 
@@ -13737,10 +13822,6 @@ msgstr "集群关系"
 msgid "Cluster Resources"
 msgstr "集群资源"
 
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
-msgid "Cluster Selection"
-msgstr "集群选择"
-
 #: ../app/services/ems_infra_dashboard_service.rb
 #: ../app/views/ems_infra/_show_dashboard.html.haml
 msgid "Cluster Utilization"
@@ -14135,6 +14216,7 @@ msgstr "完整"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml:63 ../config/yaml_strings.rb
 msgid "Completed"
 msgstr "完成"
@@ -14159,7 +14241,7 @@ msgid "Compliance"
 msgstr "合规"
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb
-#: ../app/views/ops/_schedule_show.html.haml
+#: ../app/helpers/settings_schedule_helper.rb
 msgid "Compliance Check"
 msgstr "合规性检查"
 
@@ -14298,6 +14380,11 @@ msgstr "合规"
 #: ../app/helpers/compliance_summary_helper.rb
 msgid "Compliant as of %{time} Ago"
 msgstr "%{time} 以前合规"
+
+#:
+#: ../app/javascript/components/storage-service-form/get-compliant-resources.jsx
+msgid "Compliant resources: "
+msgstr "合规资源： "
 
 #:
 #: ../app/javascript/components/visual-settings-form/visual-settings-form.schema.js
@@ -14598,6 +14685,7 @@ msgstr "配置版本"
 #: ../app/helpers/application_helper/toolbar/cloud_volume_backups_center.rb
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb
 #: ../app/helpers/application_helper/toolbar/cloud_volume_snapshot_center.rb
+#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshots_center.rb
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb
 #: ../app/helpers/application_helper/toolbar/condition_center.rb
 #: ../app/helpers/application_helper/toolbar/conditions_center.rb
@@ -15119,6 +15207,14 @@ msgid "ConfigurationProfile|Total configured systems"
 msgstr "配置的系统总数"
 
 #: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Context"
+msgstr "ConfigurationScriptBase | 上下文"
+
+#: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Credentials"
+msgstr "ConfigurationScriptBase | 凭证"
+
+#: ../config/model_attributes.rb
 msgid "ConfigurationScriptBase|Description"
 msgstr "描述"
 
@@ -15135,12 +15231,32 @@ msgid "ConfigurationScriptBase|Name"
 msgstr "名称"
 
 #: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Output"
+msgstr "ConfigurationScriptBase | 输出"
+
+#: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Payload"
+msgstr "ConfigurationScriptBase | 有效内容"
+
+#: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Payload type"
+msgstr "ConfigurationScriptBase | 有效内容类型"
+
+#: ../config/model_attributes.rb
 msgid "ConfigurationScriptBase|Region description"
 msgstr "区域说明"
 
 #: ../config/model_attributes.rb
 msgid "ConfigurationScriptBase|Region number"
 msgstr "区域编号"
+
+#: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Run by userid"
+msgstr "ConfigurationScriptBase | 按用户标识运行"
+
+#: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Status"
+msgstr "ConfigurationScriptBase | 状态"
 
 #: ../config/model_attributes.rb
 msgid "ConfigurationScriptBase|Survey spec"
@@ -19595,6 +19711,7 @@ msgstr "已创建"
 #: ../app/helpers/firmware_binary_helper/textual_summary.rb
 #: ../app/helpers/firmware_registry_helper/textual_summary.rb
 #: ../app/helpers/firmware_target_helper/textual_summary.rb
+#: ../app/helpers/request_details_helper.rb
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/views/catalog/_ot_tree_show.html.haml
 #: ../app/views/miq_ae_class/_method_form.html.haml
@@ -19859,7 +19976,6 @@ msgstr "凭证类型"
 msgid "Credential validation was not successful: %{details}"
 msgstr "凭证验证未成功：%{details}"
 
-#: ../app/controllers/host_controller.rb
 #: ../app/controllers/mixins/manager_controller_mixin.rb
 msgid "Credential validation was successful"
 msgstr "凭证验证成功"
@@ -19965,10 +20081,6 @@ msgstr "凭证必须有效才可以刷新供应商"
 msgid "Credentials/Settings"
 msgstr "凭证/设置"
 
-#: ../app/controllers/host_controller.rb
-msgid "Credentials/Settings saved successfully"
-msgstr "成功地保存了凭证/设置"
-
 #: src/topology/topologyCanvas.jsx
 msgid "Critical"
 msgstr "关键"
@@ -20041,8 +20153,8 @@ msgid "Current Flavor"
 msgstr "当前风格"
 
 #. TRANSLATORS: file: product/views/User.yaml
-#: ../app/views/ops/_rbac_user_details.html.haml
-#: ../config/yaml_strings.rb
+#: ../app/helpers/settings_users_helper.rb
+#: ../app/helpers/settings_users_helper.rb:38 ../config/yaml_strings.rb
 msgid "Current Group"
 msgstr "当前组"
 
@@ -20086,6 +20198,7 @@ msgid "Currently Used Space"
 msgstr "当前使用的空间"
 
 #: ../app/helpers/catalog_helper.rb:110 ../app/helpers/report_helper.rb
+#: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
 msgid "Custom"
 msgstr "定制"
 
@@ -20230,9 +20343,12 @@ msgstr "定制的网站图标"
 #: ../app/helpers/host_helper/textual_summary.rb
 #: ../app/helpers/textual_mixins/vm_common.rb
 #: ../app/javascript/components/vm-edit-form/vm-edit-form.schema.js
-#: ../app/views/host/_form.html.haml
 msgid "Custom Identifier"
 msgstr "定制标识符"
+
+#: ../app/javascript/components/host-edit-form/host-edit-form.schema.js
+msgid "Custom Identifier:"
+msgstr "定制标识："
 
 #: ../app/helpers/catalog_helper.rb
 #: ../app/views/catalog/_sandt_tree_custom_image_form.html.haml
@@ -20905,7 +21021,7 @@ msgstr "数据已成功验证"
 msgid "Data:"
 msgstr "数据："
 
-#: ../app/helpers/ops_helper.rb:106 ../app/views/ops/_all_tabs.html.haml
+#: ../app/helpers/ops_helper.rb:115 ../app/views/ops/_all_tabs.html.haml
 #: ../app/views/ops/_settings_authentication_tab.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 msgid "Database"
@@ -21099,10 +21215,6 @@ msgstr "数据存储其他虚拟机文件"
 #: ../config/dictionary_strings.rb:2348 ../config/yaml_strings.rb
 msgid "Datastore Path"
 msgstr "数据存储路径"
-
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
-msgid "Datastore Selection"
-msgstr "数据存储选择"
 
 #. TRANSLATORS: file: product/reports/150_Configuration Management - Storage/020_Summary for VMs.yaml
 #: ../config/yaml_strings.rb
@@ -21333,11 +21445,6 @@ msgstr "日期/时间值不能为空"
 msgid "Datepicker"
 msgstr "日期选择器"
 
-#:
-#: ../app/javascript/components/timeline-options/timeline-options-simple.schema.js
-msgid "Dates Range"
-msgstr "日期范围"
-
 #: ../app/helpers/report_helper/timer.rb
 #: ../app/javascript/components/schedule-form/helper.js
 #: ../app/javascript/oldjs/miq_formatters.js
@@ -21453,6 +21560,7 @@ msgstr "专用或共享"
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
 #: ../app/helpers/settings_tags_tabs_helper.rb
 #: ../app/helpers/textual_summary_helper.rb
+#: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
 #: ../app/views/layouts/_container_auth.html.haml
 #: ../app/views/layouts/_edit_form_buttons.html.haml
 #: ../app/views/layouts/_x_edit_buttons.html.haml
@@ -21692,15 +21800,18 @@ msgstr "延迟（分钟）停止"
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+#: ../app/helpers/ops_helper/settings_tab_helper.rb
 #: ../app/helpers/settings_tags_tabs_helper.rb
 #: ../app/javascript/components/remove-generic-item-modal.jsx
+#: ../app/javascript/components/settings-company-tags/helper.js
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 #: ../app/views/chargeback_rate/_cb_rate_edit_table.html.haml
 #: ../app/views/chargeback_rate/_tier_row.haml
 #: ../app/views/ops/_ap_form_file.html.haml
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 #: ../app/views/ops/_ap_form_registry.html.haml
 #: ../app/views/ops/_classification_entry.html.haml
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 #: ../app/views/vm_common/_reconfigure.html.haml
 msgid "Delete"
@@ -21857,10 +21968,6 @@ msgstr "删除云租户"
 #: ../app/helpers/application_helper/toolbar/cloud_tenants_center.rb
 msgid "Delete Cloud Tenants"
 msgstr "删除云租户"
-
-#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshot_center.rb
-msgid "Delete Cloud Volume Snapshot"
-msgstr "删除卷快照"
 
 #: ../app/helpers/application_helper/toolbar/conditions_center.rb
 msgid "Delete Conditions"
@@ -22151,6 +22258,11 @@ msgstr "删除窗口小部件"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Delete a Workflow"
+msgstr "删除工作流程"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Delete a Zone"
 msgstr "删除区域"
 
@@ -22389,10 +22501,20 @@ msgstr "删除旧于所选任务的任务"
 msgid "Delete the %{model} filter named %{filter}?"
 msgstr "是否删除名为 %{filter} 的 %{model} 过滤器？"
 
+#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshot_center.rb
+#: ../app/helpers/application_helper/toolbar/cloud_volume_snapshots_center.rb
+msgid "Delete the Cloud Volume Snapshot"
+msgstr "删除云卷快照"
+
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
 msgid "Delete the Host Initiator"
 msgstr "删除主机启动程序"
+
+#: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
+#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
+msgid "Delete the Host Initiator Group"
+msgstr "删除主机发起方组"
 
 #: ../app/helpers/application_helper/toolbar/physical_storage_center.rb
 #: ../app/helpers/application_helper/toolbar/physical_storages_center.rb
@@ -22562,9 +22684,17 @@ msgstr "删除此区"
 msgid "Delete this category"
 msgstr "删除此类别"
 
+#: ../app/javascript/components/settings-company-tags/helper.js
+msgid "Delete this entry"
+msgstr "删除此条目"
+
 #: ../app/helpers/application_helper/toolbar/tenant_center.rb
 msgid "Delete this item"
 msgstr "删除此项"
+
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+msgid "Delete this mapping"
+msgstr "删除此映射"
 
 #: ../app/helpers/application_helper/toolbar/volume_mapping_center.rb
 msgid "Delete volume mapping"
@@ -22665,6 +22795,7 @@ msgid ""
 "Deleting all Tasks older than %{date} from the %{product} Database initiated"
 msgstr "已启动从 %{product} 数据库删除超过 %{date} 的所有任务"
 
+#: ../app/helpers/ops_helper/settings_tab_helper.rb
 #: ../app/views/ops/_classification_entry.html.haml
 msgid ""
 "Deleting the '%{entry_name}' entry will also unassign it from all items, are "
@@ -22907,8 +23038,9 @@ msgstr "目标 Ems 集群 Uid"
 msgid "Destination Groups"
 msgstr "目标组"
 
-#: ../app/views/static/evacuate-form.html.haml
-#: ../app/views/vm_common/_live_migrate.html.haml
+#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
+#. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
+#: ../config/yaml_strings.rb
 msgid "Destination Host"
 msgstr "目的地主机"
 
@@ -23064,6 +23196,7 @@ msgstr "详细 - 虚拟机可以迁移"
 msgid "Detailed - VMs migration ready - no CD/DVD/Floppy connected"
 msgstr "详细 - 虚拟机可以迁移 - 未连接 CD/DVD/软盘"
 
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 #: ../app/views/ops/_rbac_group_details.html.haml
 msgid "Detailed Description"
 msgstr "详细描述"
@@ -23071,6 +23204,7 @@ msgstr "详细描述"
 #: ../app/helpers/catalog_helper.rb:176 ../app/helpers/catalog_helper.rb
 #: ../app/helpers/cloud_volume_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
+#: ../app/helpers/utilization_helper.rb
 #: ../app/javascript/components/visual-settings-form/visual-settings-form.schema.js
 #: ../app/views/generic_mailer/policy_action_email.html.haml
 #: ../app/views/generic_mailer/policy_action_email.text.haml
@@ -23078,7 +23212,6 @@ msgstr "详细描述"
 #: ../app/views/ops/_all_tabs.html.haml
 #: ../app/views/orchestration_stack/_stack_orchestration_template.html.haml
 #: ../app/views/service/_svcs_show.html.haml
-#: ../app/views/utilization/_utilization_tabs.html.haml
 msgid "Details"
 msgstr "详情"
 
@@ -24326,7 +24459,8 @@ msgstr "磁盘内核延迟 - 平均值 (ms)"
 msgid "Disk Latency - Avg (ms)"
 msgstr "磁盘延迟 - 平均值 (ms)"
 
-#: ../app/views/vm_common/_live_migrate.html.haml
+#:
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 msgid "Disk Over Commit"
 msgstr "提交的磁盘"
 
@@ -25802,6 +25936,46 @@ msgstr "显示虚拟机偏移"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Display a list of Credentials"
+msgstr "显示凭证列表"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display a list of Repositories"
+msgstr "显示存储库列表"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display a list of Workflow Instances"
+msgstr "显示工作流程实例列表"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display a list of Workflows"
+msgstr "显示工作流程列表"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display an Individual Credential"
+msgstr "显示单个凭证"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display an Individual Repository"
+msgstr "显示单个存储库"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display an Individual Workflow"
+msgstr "显示单个工作流程"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Display an Individual Workflow Instance"
+msgstr "显示单个工作流程实例"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Display any dashboards"
 msgstr "显示任意仪表板"
 
@@ -26838,6 +27012,10 @@ msgstr "编辑主机聚集"
 msgid "Edit Host Aggregate \"%{name}\""
 msgstr "编辑主机聚集“%{name}”"
 
+#: ../app/controllers/host_initiator_group_controller.rb
+msgid "Edit Host Initiator group \"%{name}\""
+msgstr "编辑主机发起方组“%{name}”"
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Edit Host Tags"
@@ -27137,6 +27315,10 @@ msgstr "编辑服务“%{name}”"
 #: ../config/yaml_strings.rb
 msgid "Edit Services"
 msgstr "编辑服务"
+
+#: ../app/controllers/storage_service_controller.rb
+msgid "Edit Storage Service \"%{name}\""
+msgstr "编辑存储服务“%{name}”"
 
 #: ../app/controllers/cloud_subnet_controller.rb
 msgid "Edit Subnet \"%{name}\""
@@ -28117,6 +28299,11 @@ msgstr "编辑主机聚集"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Edit a Host Initiator Group"
+msgstr "编辑主机发起方组"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Edit a Image"
 msgstr "编辑镜像"
 
@@ -28256,6 +28443,11 @@ msgstr "编辑存储管理者"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Edit a Storage Service"
+msgstr "编辑存储服务"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Edit a Subnet"
 msgstr "编辑子网"
 
@@ -28293,6 +28485,11 @@ msgstr "编辑卷"
 #: ../config/yaml_strings.rb
 msgid "Edit a Widget"
 msgstr "编辑窗口小部件"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Edit a Workflow"
+msgstr "编辑工作流程"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -28520,13 +28717,21 @@ msgstr "用户已取消编辑域“%s”的操作。"
 msgid "Edit of Generic Object Definition \"%s\" was cancelled by the user."
 msgstr "用户已取消编辑通用对象定义 \"%s\" 的操作。"
 
-#: ../app/controllers/host_controller.rb
-msgid "Edit of Host \"%{name}\" was cancelled by the user"
-msgstr "用户已取消针对主机“%{name}”的编辑"
+#: ../app/javascript/components/host-edit-form/host-edit-form.jsx
+msgid "Edit of Host \"%s\" was cancelled."
+msgstr "已取消对主机“%s”的编辑。"
 
 #: ../app/javascript/components/host-aggregate-form/index.jsx
 msgid "Edit of Host Aggregate \"%s\" was canceled by the user."
 msgstr "用户已取消编辑主机聚集 \"%s\"。"
+
+#: ../app/javascript/components/host-initiator-group-form/index.jsx
+msgid "Edit of Host Initiator Group \"%s\" was canceled by the user."
+msgstr "用户已取消对主机发起方组“%s”的编辑。"
+
+#: ../app/javascript/components/host-edit-form/host-edit-form.jsx
+msgid "Edit of Hosts was cancelled."
+msgstr "已取消对主机的编辑。"
 
 #: ../app/javascript/components/pxe-iso-image-form/index.jsx
 msgid "Edit of ISO Image \"%s\" was cancelled by the user"
@@ -28643,10 +28848,6 @@ msgstr "用户已取消针对 Windows 镜像“%{name}”的编辑"
 msgid "Edit of Zone \"%s\" was canceled by the user."
 msgstr "用户已取消编辑区域 \"%s\"。"
 
-#: ../app/controllers/host_controller.rb
-msgid "Edit of credentials for selected Hosts was cancelled by the user"
-msgstr "用户已取消编辑所选主机的凭证的操作"
-
 #: ../app/javascript/components/network-floatingIPs-form/index.jsx
 msgid "Edit of floating IPs \"%s\" was canceled by the user."
 msgstr "用户已取消编辑浮动 IP \"%s\"。"
@@ -28672,6 +28873,10 @@ msgstr "编辑所选云卷"
 msgid "Edit selected Generic Object Definition"
 msgstr "编辑所选通用对象定义"
 
+#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
+msgid "Edit selected Host Initiator Group"
+msgstr "编辑所选主机发起方组"
+
 #:
 #: ../app/helpers/application_helper/toolbar/orchestration_templates_center.rb
 msgid "Edit selected Orchestration Template"
@@ -28684,6 +28889,10 @@ msgstr "编辑所选物理存储器"
 #: ../app/helpers/application_helper/toolbar/miq_ae_fields_center.rb
 msgid "Edit selected Schema"
 msgstr "编辑所选模式"
+
+#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
+msgid "Edit selected Storage Service"
+msgstr "编辑所选存储服务"
 
 #: ../app/helpers/application_helper/toolbar/time_profiles_center.rb
 msgid "Edit selected Time Profile"
@@ -28943,6 +29152,10 @@ msgstr "编辑此对话框"
 msgid "Edit this Domain"
 msgstr "编辑此域"
 
+#: ../app/javascript/components/settings-company-tags-entry-form/schema.js
+msgid "Edit this Entry"
+msgstr "编辑此条目"
+
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_center.rb
 msgid "Edit this Generic Object Definition"
@@ -28951,6 +29164,10 @@ msgstr "编辑此通用对象定义"
 #: ../app/helpers/application_helper/toolbar/miq_group_center.rb
 msgid "Edit this Group"
 msgstr "编辑此组"
+
+#: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
+msgid "Edit this Host Initiator Group"
+msgstr "编辑此主机发起方组"
 
 #: ../app/helpers/application_helper/toolbar/iso_image_center.rb
 msgid "Edit this ISO Image"
@@ -29072,6 +29289,10 @@ msgstr "编辑此服务"
 #: ../app/helpers/application_helper/toolbar/ems_storage_center.rb
 msgid "Edit this Storage Manager"
 msgstr "编辑此存储管理器"
+
+#: ../app/helpers/application_helper/toolbar/storage_service_center.rb
+msgid "Edit this Storage Service"
+msgstr "编辑此存储服务"
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_type_center.rb
 msgid "Edit this System Image Type"
@@ -29350,6 +29571,10 @@ msgstr "嵌入式自动化管理器"
 #: ../app/views/miq_ae_class/_embedded_methods.html.haml
 msgid "Embedded Methods"
 msgstr "嵌入式方法"
+
+#: ../lib/manageiq/providers/workflows/engine.rb
+msgid "Embedded Workflows Provider"
+msgstr "嵌入式工作流程提供程序"
 
 #. TRANSLATORS: en.yml key: dictionary.column.empty_dir_medium_type
 #: ../config/dictionary_strings.rb
@@ -29993,6 +30218,11 @@ msgstr "已启用 Udp 入站端口"
 msgid "Enabled Udp Outbound Ports"
 msgstr "已启用 Udp 出站端口"
 
+#:
+#: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
+msgid "Enabled capability values:"
+msgstr "已启用的功能值："
+
 #. TRANSLATORS: file: product/views/SystemService.yaml
 #: ../config/yaml_strings.rb
 msgid "Enabled run levels"
@@ -30073,14 +30303,6 @@ msgstr "字节序"
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/network_manager/cloud_subnet.rb
 msgid "Ending IP Address"
 msgstr "结束 IP 地址"
-
-#: ../app/models/host.rb
-msgid "Ending address is malformed"
-msgstr "结束地址格式不正确"
-
-#: ../app/models/host.rb
-msgid "Ending address must be greater than starting address"
-msgstr "结束地址必须大于开始地址"
 
 #: ../app/models/manageiq/providers/ibm_terraform/provider.rb
 msgid "Endpoint"
@@ -30730,7 +30952,7 @@ msgstr "管理引擎里的错误可能由下列原因导致："
 msgid "Escalate Privilege"
 msgstr "升级特权"
 
-#: ../app/views/static/evacuate-form.html.haml
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
 msgid "Evacuate Host"
 msgstr "撤除主机"
 
@@ -30761,6 +30983,7 @@ msgid "Evacuating Instance %{instance_name} failed: %{error_message}"
 msgstr "撤除实例 %{instance_name} 失败：%{error_message}"
 
 #: ../app/controllers/mixins/actions/vm_actions/evacuate.rb
+#: ../app/javascript/components/evacuate-form/index.jsx
 msgid "Evacuation of Instances was cancelled by the user"
 msgstr "用户已取消撤除实例的操作"
 
@@ -31056,6 +31279,10 @@ msgid "EventStream|Event type"
 msgstr "事件类型"
 
 #: ../config/model_attributes.rb
+msgid "EventStream|Ext management system name"
+msgstr "EventStream | Ext 管理系统名称"
+
+#: ../config/model_attributes.rb
 msgid "EventStream|Full data"
 msgstr "完整数据"
 
@@ -31126,6 +31353,10 @@ msgstr "虚拟机位置"
 #: ../config/model_attributes.rb
 msgid "EventStream|Vm name"
 msgstr "虚拟机名称"
+
+#: ../config/model_attributes.rb
+msgid "EventStream|Vm or template name"
+msgstr "EventStream | 虚拟机或模板名称"
 
 #. TRANSLATORS: file: product/views/MiqEventDefinition.yaml
 #: ../app/controllers/miq_event_definition_controller.rb
@@ -31765,6 +31996,21 @@ msgstr "“时间线”下的任何内容"
 msgid "Everything under Volume Mapping"
 msgstr "“卷映射”下的任何内容"
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Everything under Workflow Instances"
+msgstr "工作流程实例下的所有内容"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Everything under Workflows"
+msgstr "工作流程下的所有内容"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Everything under Workflows Automation Manager"
+msgstr "工作流程自动化管理器下的所有内容"
+
 #. TRANSLATORS: en.yml key: dictionary.column.evm_owner_email
 #: ../config/dictionary_strings.rb
 msgid "Evm Owner Email"
@@ -32293,6 +32539,10 @@ msgid "ExtManagementSystem|Supports cloud volume create"
 msgstr "支持云卷创建"
 
 #: ../config/model_attributes.rb
+msgid "ExtManagementSystem|Supports cloud volume snapshots"
+msgstr "ExtManagementSystem | 支持云卷快照"
+
+#: ../config/model_attributes.rb
 msgid "ExtManagementSystem|Supports create flavor"
 msgstr "支持创建风格"
 
@@ -32629,7 +32879,7 @@ msgstr "未能删除 %s %s。"
 msgid "Failover"
 msgstr "故障转移"
 
-#: ../app/javascript/components/timeline-options/timeline-options.jsx
+#: ../app/models/miq_policy.rb
 msgid "Failure"
 msgstr "失败"
 
@@ -32970,9 +33220,9 @@ msgstr "更新时间"
 
 #: ../app/controllers/report_controller/reports/editor.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/ops/_schedule_form_filter.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/report/_schedule_form_filter.html.haml
 #: ../app/views/report/_widget_form_chart.html.haml
 #: ../app/views/report/_widget_form_report.html.haml
@@ -34488,6 +34738,11 @@ msgstr "URL"
 msgid "GitRepository|Verify ssl"
 msgstr "验证 SSL"
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Given a set of capabilities, check which attached resources will comply"
+msgstr "给定一组功能，检查哪些连接的资源符合要求"
+
 #:
 #: ../app/javascript/components/visual-settings-form/visual-settings-form.schema.js
 msgid "Global Default"
@@ -34619,6 +34874,7 @@ msgstr "组已过期"
 msgid "Group Home Directory"
 msgstr "组的主目录"
 
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 #: ../app/views/ops/_rbac_group_details.html.haml
 msgid "Group Information"
 msgstr "组信息"
@@ -34678,7 +34934,7 @@ msgstr "组 (%{groups_count})"
 msgid "Groups Count"
 msgstr "组计数"
 
-#: ../app/views/ops/_rbac_role_details.html.haml
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
 msgid "Groups Using this Role"
 msgstr "使用此角色的组"
 
@@ -35568,10 +35824,6 @@ msgstr "主机“%{hostname}”已添加到主机聚集“%{name}”"
 msgid "Host \"%{hostname}\" removed from Host Aggregate \"%{name}\""
 msgstr "已从主机聚集“%{name}”中移除主机“%{hostname}”"
 
-#: ../app/controllers/host_controller.rb
-msgid "Host \"%{name}\" was saved"
-msgstr "已保存主机“%{name}”"
-
 #: ../app/controllers/mixins/actions/host_actions/misc.rb
 msgid "Host \"%{name}\": Error during '%{task}': %{message}"
 msgstr "主机“%{name}”：“%{task}”期间出错：%{message}"
@@ -35902,14 +36154,6 @@ msgstr "主机名"
 msgid "Host Network Information"
 msgstr "主机网络信息"
 
-#: ../app/models/host.rb
-msgid "Host Not Resettable - No IPMI Address"
-msgstr "主机不可重设 - 没有 IPMI 地址"
-
-#: ../app/models/host.rb
-msgid "Host Not Resettable - No IPMI Credentials"
-msgstr "主机不可重设 - 没有 IPMI 凭证"
-
 #. TRANSLATORS: file: product/reports/190_Configuration Management - Physical Servers/030_Server Availability.yaml
 #: ../config/yaml_strings.rb
 msgid "Host OS"
@@ -35982,10 +36226,6 @@ msgstr "主机重置请求"
 #: ../app/models/manageiq/providers/openstack/network_manager/cloud_subnet.rb
 msgid "Host Routes"
 msgstr "主机路由"
-
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
-msgid "Host Selection"
-msgstr "主机选择"
 
 #: ../config/model_display_names.rb
 msgid "Host Service Group"
@@ -36112,10 +36352,6 @@ msgstr "主机必须连接到 EMS 才能刷新数据存储文件"
 #: ../app/models/manageiq/providers/vmware/infra_manager/vm_or_template_shared/operations/relocation.rb
 msgid "Host not specified, unable to migrate VM"
 msgstr "没有指定主机, 无法迁移虚拟机"
-
-#: ../app/views/host/_form.html.haml
-msgid "Host platform"
-msgstr "主机平台"
 
 #: ../config/model_attributes.rb
 msgid "Host service group"
@@ -36454,18 +36690,21 @@ msgstr "托管的数据库"
 #: ../app/helpers/configured_system_helper/textual_summary.rb
 #: ../app/helpers/host_helper.rb
 #: ../app/helpers/host_helper/textual_summary.rb
-#: ../app/helpers/ops_helper.rb:24 ../app/helpers/ops_helper.rb
-#: ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb:33 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../app/views/ops/_settings_server_tab.html.haml
 #: ../config/yaml_strings.rb
 msgid "Hostname"
 msgid_plural "Hostnames"
 msgstr[0] "主机名"
 
-#: ../app/views/host/_form.html.haml
 #: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
 msgid "Hostname (or IPv4 or IPv6 address)"
 msgstr "主机名（或 IPv4/IPv6 地址）"
+
+#: ../app/javascript/components/host-edit-form/host-edit-form.schema.js
+msgid "Hostname (or IPv4 or IPv6 address:"
+msgstr "主机名（或 IPv4 或 IPv6 地址）："
 
 #: ../app/views/ems_container/_form_fields.html.haml
 #: ../app/views/ems_infra/_form_fields.html.haml
@@ -36507,6 +36746,8 @@ msgstr "主机名或 IPv4/IPv6 地址"
 #: ../app/helpers/infra_networking_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/helpers/storage_helper/textual_summary.rb
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 #: ../app/javascript/components/provider-dashboard-charts/charts_config.js
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/services/ems_infra_dashboard_service.rb
@@ -37205,6 +37446,10 @@ msgstr "IBM Cloud 提供程序"
 msgid "IBM Power HMC Provider"
 msgstr "IBM Power HMC 提供者"
 
+#: ../app/models/manageiq/providers/ibm_power_vc/cloud_manager.rb
+msgid "IBM PowerVC"
+msgstr "IBM PowerVC"
+
 #: ../lib/manageiq/providers/ibm_power_vc/engine.rb
 msgid "IBM PowerVC Provider"
 msgstr "IBM PowerVC 提供者"
@@ -37236,11 +37481,11 @@ msgstr "ICMP"
 #. TRANSLATORS: file: product/views/MiqReportResult.yaml
 #. TRANSLATORS: file: product/views/MiqWidget.yaml
 #. TRANSLATORS: file: product/views/PlacementGroup.yaml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
+#: ../app/helpers/settings_users_helper.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
-#: ../app/views/ops/_rbac_group_details.html.haml
-#: ../app/views/ops/_rbac_role_details.html.haml
-#: ../app/views/ops/_rbac_user_details.html.haml
 #: ../config/yaml_strings.rb
 msgid "ID"
 msgstr "标识"
@@ -37276,9 +37521,9 @@ msgstr "IP"
 #: ../app/helpers/ems_automation_helper.rb:18 ../app/helpers/host_helper.rb
 #: ../app/helpers/host_helper/textual_summary.rb
 #: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
 #: ../app/javascript/components/subnet-form/subnet-form.schema.js
-#: ../app/views/ops/_server_desc.html.haml
 #: ../app/views/ops/_settings_server_tab.html.haml
 #: ../app/views/vm_common/_config.html.haml:101 ../config/yaml_strings.rb
 msgid "IP Address"
@@ -37313,10 +37558,6 @@ msgstr "IP 范围"
 msgid "IP Version"
 msgstr "IP 版本"
 
-#: ../app/models/host.rb
-msgid "IP address octets must be 0 to 255"
-msgstr "IP 地址八位位组必须是 0 到 255"
-
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
 msgid "IP protocol"
 msgstr "IP 协议"
@@ -37327,7 +37568,6 @@ msgid "IP-address field has to be either blank or a valid IPv4 address"
 msgstr "“IP 地址”字段必须为空白或有效的 IPv4 地址"
 
 #: ../app/helpers/textual_summary_helper.rb
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 msgid "IPMI"
 msgstr "IPMI"
 
@@ -37338,15 +37578,8 @@ msgid "IPMI Enabled"
 msgstr "IPMI 已启用"
 
 #: ../app/helpers/host_helper/textual_summary.rb
-#: ../app/views/host/_form.html.haml
 msgid "IPMI IP Address"
 msgstr "IPMI IP 地址"
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid ""
-"IPMI IP Address, Username and matching password fields are needed to perform "
-"verification of credentials"
-msgstr "执行凭证验证需要“IPMI IP 地址”、“用户名”和“匹配的密码”字段。"
 
 #: ../app/helpers/automation_manager_configured_system_helper.rb
 #: ../app/helpers/configuration_script_helper.rb
@@ -37881,6 +38114,10 @@ msgstr "已从 git 导入"
 #: ../config/dictionary_strings.rb
 msgid "In My LDAP Group?"
 msgstr "在我的 LDAP 组吗?"
+
+#: ../app/javascript/components/async-action-button.jsx
+msgid "In Progress"
+msgstr "进行中"
 
 #: ../app/helpers/ops_helper/textual_summary.rb
 msgid "In Use"
@@ -39343,7 +39580,7 @@ msgstr "最后已知数据存储路径"
 msgid "Last Known Size"
 msgstr "最后已知大小"
 
-#: ../app/helpers/ops_helper.rb:42 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:51 ../app/helpers/ops_helper.rb
 msgid "Last Log Collection"
 msgstr "最近的日志采集"
 
@@ -39361,7 +39598,7 @@ msgstr "最后登录"
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqProvision.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
-#: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:57 ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
 #: ../config/yaml_strings.rb
@@ -39504,6 +39741,7 @@ msgstr "最近的转换时间"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
 #: ../config/yaml_strings.rb
@@ -39771,6 +40009,7 @@ msgid "Live migrating Instance %{instance_name} failed: %{error_message}"
 msgstr "实时迁移实例 %{instance_name} 失败：%{error_message}"
 
 #: ../app/controllers/mixins/actions/vm_actions/live_migrate.rb
+#: ../app/javascript/components/live-migrate-form/index.jsx
 msgid "Live migration of Instances was cancelled by the user"
 msgstr "用户已取消实时迁移实例的操作"
 
@@ -40294,7 +40533,7 @@ msgstr "日志库设置已保存"
 msgid "Log Depot Settings were validated"
 msgstr "日志库设置已验证"
 
-#: ../app/helpers/ops_helper.rb:41 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:50 ../app/helpers/ops_helper.rb
 msgid "Log Depot URI"
 msgstr "日志库 URI"
 
@@ -40513,7 +40752,7 @@ msgstr "徽标文件大小"
 msgid "Logo Updated At"
 msgstr "徽标更新时间"
 
-#: ../app/models/host.rb:651 ../app/models/host.rb
+#: ../app/models/host.rb:654 ../app/models/host.rb
 msgid "Logon to platform [%{os_name}] not supported"
 msgstr "不支持登录到平台 [%{os_name}]"
 
@@ -40529,9 +40768,9 @@ msgstr "无法查看此 %{product} 服务器的日志"
 
 #: ../app/helpers/catalog_helper.rb:47 ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/settings-category-form/schema.js
+#: ../app/javascript/components/settings-company-tags/helper.js
 #: ../app/views/catalog/_form_details_info.html.haml
 #: ../app/views/catalog/_st_angular_form.html.haml
-#: ../app/views/ops/_settings_co_tags_tab.html.haml
 msgid "Long Description"
 msgstr "长描述"
 
@@ -40568,7 +40807,6 @@ msgstr "最低的机架名"
 #: ../app/helpers/textual_mixins/vm_common.rb
 #: ../app/helpers/guest_device_helper/textual_summary.rb
 #: ../app/helpers/physical_server_helper/textual_summary.rb
-#: ../app/views/host/_form.html.haml
 #: ../app/views/vm_common/_reconfigure.html.haml
 msgid "MAC Address"
 msgid_plural "MAC Addresses"
@@ -41196,6 +41434,7 @@ msgstr "生产商"
 msgid "Manufacturer / Model"
 msgstr "生产商 / 型号"
 
+#: ../app/javascript/components/settings-label-tag-mapping/index.jsx
 #: ../app/views/ops/_all_tabs.html.haml
 msgid "Map Tags"
 msgstr "映射标签"
@@ -41267,7 +41506,7 @@ msgstr "最大的活动虚拟机扫描次数"
 msgid "Max Available"
 msgstr "最大可用"
 
-#: ../app/helpers/ops_helper.rb:171 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:180 ../app/helpers/ops_helper.rb
 msgid "Max Concurrent"
 msgstr "最大的并行数量"
 
@@ -41411,7 +41650,7 @@ msgstr "最大已用"
 msgid "Max Used Value"
 msgstr "最大已用值"
 
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 msgid "Max active VM Scans"
 msgstr "最大的活动虚拟机扫描次数"
 
@@ -42092,8 +42331,9 @@ msgstr "内存共享级别"
 
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
 #: ../app/helpers/miq_action_helper.rb:55 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
-#: ../app/views/ops/_server_desc.html.haml:27 ../config/yaml_strings.rb
+#: ../config/yaml_strings.rb
 msgid "Memory Size"
 msgstr "内存大小"
 
@@ -42111,8 +42351,8 @@ msgstr "内存总成本"
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
 #. TRANSLATORS: file: product/views/OsProcess-processes.yaml
 #: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
-#: ../app/views/ops/_server_desc.html.haml
 #: ../app/views/vm_common/_right_size.html.haml
 #: ../config/yaml_strings.rb
 msgid "Memory Usage"
@@ -42206,6 +42446,7 @@ msgstr "菜单"
 #: ../app/helpers/container_build_helper/textual_summary.rb
 #: ../app/helpers/container_helper/textual_summary.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/data-tables/datastore/helper.js
 #: ../app/javascript/components/data-tables/requests-table/index.jsx
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
@@ -42215,7 +42456,6 @@ msgstr "菜单"
 #: ../app/views/miq_ae_class/_class_fields.html.haml
 #: ../app/views/miq_policy_export/import.html.haml
 #: ../app/views/miq_request/_ae_prov_show.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 #: ../app/views/static/edit_alert_dialog.html.haml
@@ -43638,7 +43878,7 @@ msgid "Migrate %{vm_or_template}"
 msgstr "迁移 %{vm_or_template}"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb
-#: ../app/views/vm_common/_live_migrate.html.haml
+#: ../app/javascript/components/live-migrate-form/live-migrate-form.schema.js
 msgid "Migrate Instance"
 msgstr "迁移实例"
 
@@ -47071,6 +47311,12 @@ msgstr "模态"
 msgid "Mode"
 msgstr "模式"
 
+#: ../app/models/manageiq/providers/autosde/storage_manager/cloud_volume.rb
+msgid ""
+"Mode: Create volume(s) using an existing storage service or create a new "
+"service as well"
+msgstr "方式：使用现有存储服务创建卷或同时创建新服务"
+
 #. TRANSLATORS: file: product/views/FirmwareTarget.yaml
 #: ../app/helpers/firmware_binary_helper/textual_summary.rb
 #: ../app/helpers/physical_server_helper/textual_summary.rb
@@ -47099,9 +47345,18 @@ msgstr "修改云卷\"%s\"的操作已成功排队。"
 msgid "Modification of Credential \"%s\" has been successfully queued."
 msgstr "修改凭证\"%s\"的操作已成功排队。"
 
+#: ../app/javascript/components/host-edit-form/host-edit-form.jsx
+msgid "Modification of Host %s has been successfully queued."
+msgstr "“修改主机 %s”已成功排队。"
+
 #: ../app/javascript/components/host-aggregate-form/index.jsx
 msgid "Modification of Host Aggregate %s has been successfully queued"
 msgstr "修改主机聚集 %s 的操作已成功排队"
+
+#: ../app/javascript/components/host-initiator-group-form/index.jsx
+msgid ""
+"Modification of Host Initiator Group \"%s\" has been successfully queued."
+msgstr "“修改主机发起方组‘%s’”已成功排队。"
 
 #: ../app/javascript/components/physical-storage-form/index.jsx
 msgid "Modification of Physical Storage \"%s\" has been successfully queued."
@@ -47114,6 +47369,10 @@ msgstr "修改存储服务“%s”已成功排队。"
 #: ../app/javascript/components/pxe-image-type-form/index.jsx
 msgid "Modification of System Image Type \"%s\" has been successfully queued."
 msgstr "修改系统映像类型 \"%s\" 的操作已成功排队。"
+
+#: ../app/javascript/components/host-edit-form/host-edit-form.jsx
+msgid "Modification of multiple Hosts has been successfully queued."
+msgstr "“修改多个主机”已成功排队。"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -47597,6 +47856,11 @@ msgstr "修改卷映射"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Modify Volume Snapshots"
+msgstr "修改卷快照"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Modify Volumes"
 msgstr "修改卷"
 
@@ -47604,6 +47868,11 @@ msgstr "修改卷"
 #: ../config/yaml_strings.rb
 msgid "Modify Widgets"
 msgstr "修改窗口小部件"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Modify Workflows"
+msgstr "修改工作流程"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -48181,7 +48450,7 @@ msgstr "安全策略规则的名称"
 msgid "Name*"
 msgstr "名称*"
 
-#:
+#: ../app/javascript/components/host-edit-form/host-edit-form.schema.js
 #: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js
 #: ../app/javascript/components/host-initiator-group-form/host-initiator-group-form.schema.js
 #: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
@@ -49278,6 +49547,10 @@ msgstr[0] "新的设置将影响虚拟机"
 msgid "New tab"
 msgstr "新选项卡"
 
+#: ../app/models/manageiq/providers/autosde/storage_manager/cloud_volume.rb
+msgid "New volume name"
+msgstr "新的卷名称"
+
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/vpc/cloud_manager/provision_workflow/volumes.rb
 msgid "New volumes has the following problems: %{error}"
@@ -49404,7 +49677,7 @@ msgstr "在 %{time}，没有任何正在运行的 %{tag} %{model}"
 msgid "No %{tag} %{model} were running %{time}"
 msgstr "在 %{time}，没有任何正在运行的 %{tag} %{model}"
 
-#: ../app/views/ops/_rbac_tag_box.html.haml
+#: ../app/helpers/settings_rbac_tag_helper.rb
 msgid "No %{tenant_name} Tags have been assigned"
 msgstr "没有分配 %{tenant_name} 标签"
 
@@ -49478,7 +49751,7 @@ msgstr "没有采集该主机的容量和使用率数据"
 msgid "No Capacity & Utilization data has been collected for this Template"
 msgstr "没有为该模板采集容量和利用率数据"
 
-#: ../app/controllers/mixins/chargeback_preview.rb
+#: ../app/controllers/mixins/chargeback_preview_mixin.rb
 #: ../app/helpers/application_helper/button/vm_perf.rb
 msgid "No Capacity & Utilization data has been collected for this VM"
 msgstr "没有为该虚拟机采集容量和利用率数据"
@@ -49747,7 +50020,7 @@ msgstr "没有选择要删除的安全组。"
 msgid "No Servers Assigned to Roles found."
 msgstr "找不到分配给角色的服务器。"
 
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 msgid "No Servers Found."
 msgstr "没有找到服务器。"
 
@@ -49850,10 +50123,6 @@ msgstr "没有要导入的窗口小部件"
 #: ../app/javascript/components/dashboard_toolbar.jsx
 msgid "No Widgets available to add"
 msgstr "没有要添加的可用窗口小部件"
-
-#: ../app/views/ops/_diagnostics_zones_tab.html.haml
-msgid "No Zones found."
-msgstr "没有找到区。"
 
 #: ../app/views/miq_alert/_alert_builtin_exp.html.haml
 msgid "No alarms found for the selected Provider"
@@ -50001,10 +50270,6 @@ msgstr "此 %{model} 没有可用的事件"
 #: ../app/controllers/application_controller/performance.rb
 msgid "No events available for this Cluster"
 msgstr "此集群没有可用的事件"
-
-#: ../app/controllers/application_controller/timelines.rb
-msgid "No events available for this timeline"
-msgstr "此时间线没有可用的事件"
 
 #: ../app/controllers/report_controller/reports/editor.rb
 msgid "No fields were moved up"
@@ -50237,6 +50502,11 @@ msgstr "没有存储器提供者支持创建存储服务。"
 msgid "No storage providers support creating volume mapping."
 msgstr "没有存储器提供程序支持创建卷映射。"
 
+#:
+#: ../app/javascript/helpers/storage_manager/filter-resources-by-capabilities.js
+msgid "No storage resource with selected capabilities."
+msgstr "没有具有所选功能的存储资源。"
+
 #: ../app/controllers/network_router_controller.rb
 msgid "No subnets available to add interfaces to Router \"%{name}\""
 msgstr "没有可用于向路由器“%{name}”添加接口的子网"
@@ -50454,6 +50724,11 @@ msgstr "不能从部署移除所有主机。"
 #: ../app/helpers/host_helper/textual_summary.rb
 msgid "Not available. Did you assigned Cloud Provider and run SSA?"
 msgstr "不可用。 是否分配云供应商且运行 SSA?"
+
+#:
+#: ../app/javascript/helpers/storage_manager/filter-service-by-capabilities.js
+msgid "Not found"
+msgstr "找不到"
 
 #: ../app/views/shared/views/_alerts_list.html.haml
 #: ../app/views/static/edit_alert_dialog.html.haml
@@ -50947,8 +51222,8 @@ msgstr "OVF 模板"
 msgid "Object"
 msgstr "对象"
 
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "Object Attribute"
@@ -50969,9 +51244,9 @@ msgid "Object Count"
 msgstr "对象计数"
 
 #: ../app/helpers/miq_action_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "Object Details"
@@ -51006,7 +51281,7 @@ msgstr "对象标签"
 msgid "Object Name"
 msgstr "对象名称"
 
-#: ../app/views/ops/_schedule_show.html.haml
+#: ../app/helpers/settings_schedule_helper.rb
 msgid "Object Selection"
 msgstr "对象选择"
 
@@ -51033,8 +51308,8 @@ msgstr "对象存储容器"
 msgid "Object Store Objects"
 msgstr "对象存储对象"
 
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/oldjs/controllers/alerts/alerts_overview_controller.js
-#: ../app/views/ops/_schedule_show.html.haml
 msgid "Object Type"
 msgstr "对象类型"
 
@@ -51127,7 +51402,7 @@ msgstr "发生错误时"
 msgid "On Exit"
 msgstr "退出时"
 
-#: ../app/views/static/evacuate-form.html.haml
+#: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
 msgid "On Shared Storage"
 msgstr "在共享存储上"
 
@@ -52767,6 +53042,7 @@ msgstr "父主机平台"
 msgid "Parent Name"
 msgstr "父名称"
 
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 msgid "Parent Request"
 msgstr "父请求"
@@ -53200,6 +53476,10 @@ msgstr "百分比，2 位小数 (99.00%)"
 #: ../config/yaml_strings.rb
 msgid "Percentage (99%)"
 msgstr "百分比 (99%)"
+
+#: ../app/javascript/components/async-action-button.jsx
+msgid "Perform Action"
+msgstr "执行操作"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -54325,7 +54605,7 @@ msgid_plural "Physical Switches (Lenovo)"
 msgstr[0] "物理交换机 (Lenovo)"
 
 #:
-#: ../app/models/manageiq/providers/cisco_intersight/physical_infra_manager/physical_switch_network_ports.rb
+#: ../app/models/manageiq/providers/cisco_intersight/physical_infra_manager/physical_switch_network_port.rb
 msgid "Physical Switch Network Port (CiscoIntersight)"
 msgid_plural "Physical Switches Network Ports (CiscoIntersight)"
 msgstr[0] "物理交换机网络端口 (CiscoIntersight)"
@@ -56064,7 +56344,7 @@ msgstr "以 PDF 格式打印或导出"
 msgid "Print the full report (all rows) or export it as a PDF file"
 msgstr "打印完整的报告（所有行），或以 PDF 文件格式导出"
 
-#: ../app/helpers/ops_helper.rb:168 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:177 ../app/helpers/ops_helper.rb
 msgid "Priority"
 msgstr "优先级"
 
@@ -56270,7 +56550,7 @@ msgstr[0] "产品功能部件"
 msgid "Product Features (Editing)"
 msgstr "产品功能（正在编辑）"
 
-#: ../app/views/ops/_rbac_role_details.html.haml
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
 msgid "Product Features (Read Only)"
 msgstr "产品功能（只读）"
 
@@ -56371,6 +56651,7 @@ msgstr "项目名称"
 msgid "Project Uid"
 msgstr "项目 Uid"
 
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 #: ../app/views/ops/_rbac_group_details.html.haml
 msgid "Project/Tenant"
 msgstr "项目/租户"
@@ -56822,13 +57103,13 @@ msgstr "区域编号"
 #: ../app/controllers/ems_network_controller.rb
 #: ../app/controllers/ems_physical_infra_controller.rb
 #: ../app/controllers/ops_controller.rb
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/helpers/ops_helper/textual_summary.rb
 #: ../app/helpers/pxe_helper/textual_summary.rb
 #: ../app/javascript/oldjs/controllers/container_dashboard/util/dashboard-utils-factory.js
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/presenters/tree_builder_utilization.rb
 #: ../app/services/ems_physical_infra_dashboard_service.rb
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 #: ../config/yaml_strings.rb
 msgid "Providers"
 msgstr "供应商"
@@ -57046,7 +57327,7 @@ msgstr "供应的大小"
 msgid "Provisioned Space Percent of Total"
 msgstr "供应空间占总空间的百分比"
 
-#: ../app/views/miq_request/_request.html.haml
+#: ../app/helpers/request_details_helper.rb
 msgid "Provisioned VMs"
 msgstr "供应虚拟机"
 
@@ -57889,6 +58170,7 @@ msgstr "领域"
 #: ../app/helpers/container_build_helper/textual_summary.rb
 #: ../app/helpers/container_helper/textual_summary.rb
 #: ../app/helpers/container_node_helper/textual_summary.rb
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
 #: ../config/yaml_strings.rb
@@ -58237,6 +58519,11 @@ msgstr "刷新块存储管理器"
 #: ../config/yaml_strings.rb
 msgid "Refresh Cloud Providers"
 msgstr "刷新云供应商"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Refresh Cloud Volumes"
+msgstr "刷新云卷"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -58678,6 +58965,12 @@ msgstr "是否刷新与所选项相关的所有项的关系和电源状态?"
 #: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
 msgid ""
 "Refresh relationships and power states for all items related to these Host "
+"Initiator Clusters?"
+msgstr "是否刷新与这些主机发起方集群相关的所有项的关系和电源状态？"
+
+#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
+msgid ""
+"Refresh relationships and power states for all items related to these Host "
 "Initiator Groups"
 msgstr "刷新与这些主机发起者组相关的所有项的关系和电源状态"
 
@@ -58686,12 +58979,6 @@ msgid ""
 "Refresh relationships and power states for all items related to these Host "
 "Initiators"
 msgstr "刷新与这些主机发起者相关的所有项的关系和电源状态"
-
-#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to these Host "
-"Initiators Cluster?"
-msgstr "是否刷新与这些主机发起者集群相关的所有项的关系和电源状态？"
 
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
 msgid ""
@@ -59356,6 +59643,7 @@ msgstr[0] "关系"
 #: ../app/helpers/network_port_helper/textual_summary.rb
 #: ../app/helpers/network_router_helper/textual_summary.rb
 #: ../app/helpers/network_service_helper/textual_summary.rb
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/helpers/ops_helper/textual_summary.rb
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb
 #: ../app/helpers/persistent_volume_helper/textual_summary.rb
@@ -59376,7 +59664,6 @@ msgstr[0] "关系"
 #: ../app/helpers/vm_helper/textual_summary.rb
 #: ../app/views/configuration_profile/show.html.haml
 #: ../app/views/ems_configuration/show.html.haml
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 msgid "Relationships"
 msgstr "关系"
 
@@ -59464,6 +59751,10 @@ msgstr "重新加载当前的显示"
 msgid "Relocate not supported because VM is not active"
 msgstr "不支持重定位，因为虚拟机不活动"
 
+#: ../app/models/manageiq/providers/vmware/infra_manager/host.rb
+msgid "Remote"
+msgstr "远程"
+
 #: ../app/helpers/application_helper/toolbar/ems_cloud_center.rb
 #: ../app/helpers/application_helper/toolbar/ems_infra_center.rb
 #: ../app/helpers/application_helper/toolbar/ems_physical_infra_center.rb
@@ -59475,7 +59766,6 @@ msgid "Remote Console Workers"
 msgstr "远程控制台工作程序"
 
 #: ../app/helpers/textual_summary_helper.rb
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 msgid "Remote Login"
 msgstr "远程登录"
 
@@ -59994,11 +60284,6 @@ msgstr "移除服务"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
-msgid "Remove Snapshot"
-msgstr "移除快照"
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
 msgid "Remove Storage Manager"
 msgstr "移除存储管理者"
 
@@ -60075,6 +60360,11 @@ msgstr "移除主机启动程序"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Remove a Host Initiator Group"
+msgstr "移除主机发起方组"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Remove a Network Service"
 msgstr "移除网络服务"
 
@@ -60096,6 +60386,11 @@ msgstr "从该实例移除安全组"
 #: ../config/yaml_strings.rb
 msgid "Remove a Storage Service"
 msgstr "移除存储服务"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Remove a Volume Snapshot"
+msgstr "移除卷快照"
 
 #: ../app/javascript/components/button-group/group-form.schema.js
 msgid "Remove all"
@@ -60660,7 +60955,7 @@ msgid "Replicators Count"
 msgstr "复制器计数"
 
 #: ../app/controllers/optimization_controller.rb
-#: ../app/views/utilization/_utilization_tabs.html.haml
+#: ../app/helpers/utilization_helper.rb
 msgid "Report"
 msgstr "报告"
 
@@ -60798,7 +61093,7 @@ msgstr "报告名称"
 msgid "Report no longer exists"
 msgstr "报告不再存在"
 
-#: ../app/controllers/mixins/chargeback_preview.rb
+#: ../app/controllers/mixins/chargeback_preview_mixin.rb
 #: ../app/controllers/report_controller/reports.rb
 msgid ""
 "Report preview generation returned: Status [%{status}] Message [%{message}]"
@@ -60875,10 +61170,10 @@ msgid "Repository Options"
 msgstr "存储库选项"
 
 #: ../app/helpers/miq_action_helper.rb
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "Request"
@@ -60936,6 +61231,7 @@ msgstr "请求日期："
 msgid "Request Denial"
 msgstr "请求拒绝"
 
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
 msgid "Request Details"
@@ -60948,6 +61244,7 @@ msgstr[0] "请求事件"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml:10 ../config/yaml_strings.rb
 msgid "Request ID"
 msgstr "请求 ID"
@@ -60984,6 +61281,7 @@ msgid "Request Memory bytes"
 msgstr "请求内存字节"
 
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml
 #: ../config/yaml_strings.rb
 msgid "Request State"
@@ -60996,6 +61294,7 @@ msgstr[0] "请求任务"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml:31 ../config/yaml_strings.rb
 msgid "Request Type"
 msgstr "请求类型"
@@ -61125,6 +61424,7 @@ msgstr "请求的 pod"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
+#: ../app/helpers/request_details_helper.rb
 #: ../app/views/miq_request/_request.html.haml:26 ../config/yaml_strings.rb
 msgid "Requester"
 msgstr "请求者"
@@ -61158,17 +61458,12 @@ msgstr "请求"
 msgid "Required"
 msgstr "必填"
 
-#:
-#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
+#: ../app/models/manageiq/providers/autosde/storage_manager/cloud_volume.rb
+#: ../app/models/manageiq/providers/autosde/storage_manager/storage_service.rb
 msgid "Required Capabilities"
 msgstr "必需功能"
 
-#: ../app/models/manageiq/providers/autosde/storage_manager/cloud_volume.rb
-#: ../app/models/manageiq/providers/autosde/storage_manager/storage_service.rb
-msgid "Required Capabilities (filters by exact match)"
-msgstr "必需功能（按完全匹配进行过滤）"
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
+#: ../app/models/manageiq/providers/ovirt/infra_manager/host.rb
 msgid "Required if SSH login is disabled for the Default account."
 msgstr "如果缺省帐户禁用 SSH 登录，则为必填项。"
 
@@ -61383,7 +61678,8 @@ msgstr[0] "资源操作"
 msgid "Resource Category"
 msgstr "资源类别"
 
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 msgid "Resource Entity"
 msgstr "资源实体"
 
@@ -61401,8 +61697,9 @@ msgstr "资源组"
 msgid "Resource Instance Id"
 msgstr "资源实例标识"
 
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 #: ../app/views/ops/_label_tag_mapping_form.html.haml
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
 msgid "Resource Label"
 msgstr "资源标签"
 
@@ -62356,6 +62653,7 @@ msgstr "角色“%{name}”"
 msgid "Role Access"
 msgstr "角色访问"
 
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
 #: ../app/views/ops/_rbac_role_details.html.haml
 msgid "Role Information"
 msgstr "角色信息"
@@ -62686,6 +62984,10 @@ msgstr "SPID"
 
 #: ../app/helpers/textual_summary_helper.rb
 msgid "SSH Key Pair"
+msgstr "SSH 密钥对"
+
+#: ../app/models/manageiq/providers/openstack/infra_manager/host.rb
+msgid "SSH Keypair"
 msgstr "SSH 密钥对"
 
 #: ../app/helpers/host_helper/textual_summary.rb
@@ -63233,10 +63535,10 @@ msgstr "调度：[%{id}] [%{name}]，无法使用 %{path} 利用过去的 start_
 
 #. TRANSLATORS: file: product/views/MiqSchedule.yaml
 #: ../app/controllers/report_controller.rb
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
 #: ../app/presenters/tree_builder_ops_settings.rb
 #: ../app/views/ops/_settings_details_tab.html.haml
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 #: ../config/yaml_strings.rb
 msgid "Schedules"
 msgstr "时间表"
@@ -63856,11 +64158,6 @@ msgstr "如果 AMQP 上所有内容没有启动选择 Ceilometer 。"
 msgid "Select Classes to copy"
 msgstr "选择要复制的类"
 
-#: ../app/views/static/evacuate-form.html.haml
-#: ../app/views/vm_common/_live_migrate.html.haml
-msgid "Select Destination Host"
-msgstr "选择目的地主机"
-
 #: ../app/controllers/miq_ae_customization_controller.rb
 msgid "Select Dialogs to import"
 msgstr "选择要导入的对话框"
@@ -63920,6 +64217,10 @@ msgstr "选择固件二进制文件"
 #: ../app/javascript/components/set-ownership-form/ownership-form.schema.js
 msgid "Select a Group:"
 msgstr "选择组："
+
+#: ../app/javascript/components/host-edit-form/host-edit-form.schema.js
+msgid "Select a Host to validate against"
+msgstr "选择要验证的主机"
 
 #: ../app/javascript/components/server-provision.schema.js
 msgid "Select a PXE Image"
@@ -64212,6 +64513,20 @@ msgstr "仅选择要移至顶部的一个字段或多个连续字段"
 #: ../app/controllers/report_controller/menus.rb
 msgid "Select only one or consecutive fields to move up"
 msgstr "仅选择要上移的一个字段或多个连续字段"
+
+#:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+msgid ""
+"Select storage resources to attach to the service. The new Volume(s) will be "
+"created on these resources."
+msgstr "选择要连接到服务的存储资源。 将在这些资源上创建新卷。"
+
+#:
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
+msgid ""
+"Select storage resources to attach to the service. Volumes for this service "
+"will be created on these resources."
+msgstr "选择要连接到服务的存储资源。 将在这些资源上创建此服务的卷。"
 
 #: src/tagging/components/InnerComponents/TagSelector.js
 msgid "Select tag category"
@@ -64640,11 +64955,11 @@ msgstr "更新时间"
 
 #: ../app/controllers/physical_server_controller.rb
 #: ../app/helpers/application_helper/title.rb
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/javascript/components/provider-dashboard-charts/charts_config.js
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/services/ems_physical_infra_dashboard_service.rb
 #: ../app/views/ops/_all_tabs.html.haml
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 #: ../app/views/vm_common/_evm_relationship.html.haml
 msgid "Servers"
 msgstr "服务器"
@@ -64830,6 +65145,7 @@ msgstr[0] "服务链接工作流程"
 
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 msgid "Service Name"
 msgstr "服务名称"
 
@@ -66951,7 +67267,7 @@ msgid "Show hourly data from"
 msgstr "显示每小时数据："
 
 #: ../app/helpers/settings_tags_tabs_helper.rb
-#: ../app/views/ops/_settings_co_tags_tab.html.haml
+#: ../app/javascript/components/settings-company-tags/helper.js
 msgid "Show in Console"
 msgstr "在控制台中显示"
 
@@ -67595,8 +67911,8 @@ msgstr "SmartProxy 关联性"
 msgid "SmartProxy Builds"
 msgstr "SmartProxy 构建"
 
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/javascript/components/zone-form/zone-form.schema.js
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 msgid "SmartProxy Server IP"
 msgstr "SmartProxy 服务器 IP"
 
@@ -68175,6 +68491,10 @@ msgstr "开始连接？"
 msgid "Start Date"
 msgstr "开始日期"
 
+#: ../app/javascript/forms/mappers/validatorMapper.jsx
+msgid "Start Date must come before End Date"
+msgstr "开始日期必须早于结束日期"
+
 #: ../app/models/miq_template/operations.rb
 msgid "Start Operation is not available for Images and VM Templates."
 msgstr "启动操作不可用于映像和虚拟机模板。"
@@ -68277,7 +68597,8 @@ msgstr "已启动"
 msgid "Started At"
 msgstr "启动于"
 
-#: ../app/helpers/ops_helper.rb:209 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 msgid "Started On"
 msgstr "开始日期"
 
@@ -68310,10 +68631,6 @@ msgstr "启动进程为必填项"
 #: ../app/views/report/_schedule_form_timer.html.haml
 msgid "Starting Time"
 msgstr "开始时间"
-
-#: ../app/models/host.rb
-msgid "Starting address is malformed"
-msgstr "开始地址的格式不正确"
 
 #: ../app/views/miq_ae_tools/_resolve_form_buttons.html.haml
 msgid "Starting process must be specified"
@@ -68476,11 +68793,13 @@ msgstr "Root 编排堆栈的状态"
 #: ../app/helpers/ems_network_helper/textual_summary.rb
 #: ../app/helpers/ems_physical_infra_helper/textual_summary.rb
 #: ../app/helpers/ems_storage_helper/textual_summary.rb
-#: ../app/helpers/ops_helper.rb:166 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:175 ../app/helpers/ops_helper.rb
 #: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb
 #: ../app/helpers/physical_server_helper/textual_summary.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
+#: ../app/helpers/request_details_helper.rb
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/javascript/components/container-projects/helper.jsx
@@ -68490,7 +68809,6 @@ msgstr "Root 编排堆栈的状态"
 #: ../app/views/miq_request/_ae_prov_show.html.haml
 #: ../app/views/miq_request/_request.html.haml
 #: ../app/views/miq_request/_request_details.html.haml
-#: ../app/views/ops/_server_desc.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 #: ../app/views/report/_export_widgets.html.haml
 #: ../config/yaml_strings.rb
@@ -68820,13 +69138,18 @@ msgid "Storage Providers"
 msgstr "存储供应商"
 
 #: ../app/helpers/storage_service_helper/textual_summary.rb
-#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
 msgid "Storage Resource"
+msgstr "存储资源"
+
+#:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+msgid "Storage Resource(s)"
 msgstr "存储资源"
 
 #. TRANSLATORS: file: product/views/StorageResource.yaml
 #: ../app/controllers/storage_resource_controller.rb
 #: ../app/helpers/storage_service_helper/textual_summary.rb
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 #: ../app/presenters/menu/default_menu.rb:164 ../config/yaml_strings.rb
 msgid "Storage Resources"
 msgstr "存储资源"
@@ -68916,6 +69239,11 @@ msgstr "存储资源"
 #: ../config/model_attributes.rb
 msgid "Storage service"
 msgstr "存储服务"
+
+#:
+#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+msgid "Storage service \"%s\" has no attached storage resources"
+msgstr "存储服务“%s”没有连接的存储资源"
 
 #: ../config/model_attributes.rb
 msgid "Storage service resource attachment"
@@ -69608,7 +69936,6 @@ msgid "Subtype is required."
 msgstr "子类型为必填项。"
 
 #: ../app/helpers/textual_mixins/textual_metrics_status.rb
-#: ../app/javascript/components/timeline-options/timeline-options.jsx
 msgid "Success"
 msgstr "成功"
 
@@ -70115,10 +70442,10 @@ msgstr "不支持系统域导入。"
 msgid "System service"
 msgstr "系统服务"
 
-#:
+#: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
+#: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/ops/_schedule_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "System/Process"
 msgstr "系统/进程"
@@ -70338,9 +70665,10 @@ msgstr "标签分配"
 msgid "Tag Assignment (Tags common to all selected items)"
 msgstr "标签分配（所有所选项的公用标签）"
 
+#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
+#: ../app/javascript/spec/settings-label-tag-mapping/data.js
 #: ../app/views/chargeback_assignment/_form.html.haml
 #: ../app/views/miq_alert_set/_alert_profile_assign.html.haml
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
 #: ../app/views/ops/label_tag_mapping/_tag_category.html.haml
 #: ../app/views/report/_form_filter_chargeback.html.haml
 msgid "Tag Category"
@@ -70456,11 +70784,13 @@ msgstr "区域编号"
 msgid "Tagging|Taggable type"
 msgstr "可标记类型"
 
+#: ../app/helpers/ops_helper/settings_tab_helper.rb
+#: ../app/helpers/settings_rbac_tag_helper.rb
 #: ../app/presenters/tree_builder_alert_profile_obj.rb
 #: ../app/views/miq_ae_class/_git_domain_refresh.html.haml
 #: ../app/views/miq_ae_tools/_import_export.html.haml
 #: ../app/views/ops/_all_tabs.html.haml
-#: ../app/views/ops/_rbac_tag_box.html.haml
+#: ../app/views/ops/_settings_co_tags_tab.html.haml
 msgid "Tags"
 msgstr "标签"
 
@@ -70615,10 +70945,6 @@ msgstr "模板分析"
 #: ../config/yaml_strings.rb
 msgid "Template Name"
 msgstr "模板名称"
-
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
-msgid "Template Selection"
-msgstr "模板选择"
 
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Amazon_CloudManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AzureStack_CloudManager_OrchestrationTemplate.yaml
@@ -71020,10 +71346,6 @@ msgid ""
 "three digit number, such as: squeamish-ossifrage-123"
 msgstr "GCE 分配标识。由两个词后接三位数字组成，例如：squeamish-ossifrage-123"
 
-#: ../app/controllers/host_controller.rb
-msgid "The Host SSH key has changed, do you want to accept the new key?"
-msgstr "主机 SSH 密钥已更改，要接受新密钥吗？"
-
 #: ../app/models/host.rb
 msgid "The Host has invalid IPMI credentials"
 msgstr "该主机有无效的 IPMI 凭证"
@@ -71350,9 +71672,16 @@ msgstr "逻辑分区参考码"
 msgid "The login group cannot be deleted"
 msgstr "无法删除登录组"
 
-#: ../app/javascript/helpers/validate-names.js
+#: ../app/javascript/helpers/storage_manager/validate-names.js
 msgid "The name \"%s\" already exists in \"%s\""
 msgstr "名称“%s”已存在于“%s”中"
+
+#:
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
+msgid ""
+"The name can contain letters, numbers, spaces, periods, colons, dashes and "
+"underscores"
+msgstr "名称可以包含字母、数字、空格、句点、冒号、短划线和下划线"
 
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
@@ -71362,13 +71691,20 @@ msgstr "该名称可以包含字母、数字、空格、句点、短划线和下
 
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 msgid "The name must begin with a letter or an underscore"
 msgstr "该名称必须以字母或下划线开头"
 
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
+#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 msgid "The name must not begin or end with a space"
 msgstr "该名称不得以空格开头或结尾"
+
+#:
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js
+msgid "The name should have up to 15 characters."
+msgstr "该名称最多应包含 15 个字符。"
 
 #:
 #: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb
@@ -71575,6 +71911,10 @@ msgid ""
 "The test email is being delivered, check \"%{email}\" to verify it was "
 "successful"
 msgstr "正在递送测试电子邮件，请检查“%{email}”来验证是否成功。"
+
+#: ../app/controllers/application_controller.rb
+msgid "The user is not authorized for this task or item"
+msgstr "用户无权执行此任务或项"
 
 #: ../app/controllers/application_controller.rb
 #: ../app/controllers/dashboard_controller.rb
@@ -71868,6 +72208,10 @@ msgstr "供应商的 api 版本不支持此功能"
 #: ./dist/js/ui-components.js
 msgid "This field is required"
 msgstr "此字段为必填"
+
+#: ../app/javascript/components/timeline-options/timeline-table.jsx
+msgid "This is a group of events that happened on %s."
+msgstr "这是在 %s 上发生的一组事件。"
 
 #:
 #: ../app/models/manageiq/providers/awx/automation_manager/openstack_credential.rb
@@ -73738,9 +74082,9 @@ msgstr "未知的目标 API 集：%{service_type}'"
 msgid "Unknown task, %{task}"
 msgstr "未知任务 %{task}"
 
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 #: ../app/helpers/resource_pool_helper/textual_summary.rb
 #: ../app/javascript/components/zone-form/zone-form.schema.js
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
 msgid "Unlimited"
 msgstr "无限制"
 
@@ -73811,6 +74155,10 @@ msgstr "不受支持的 API 版本：%{api_version}"
 #: ../app/models/vim_performance_analysis.rb
 msgid "Unsupported Mode (%{mode}) for %{class} %{type} options"
 msgstr "%{class} %{type} 选项不支持的模式 (%{mode})"
+
+#: ../app/models/manageiq/providers/openshift/container_manager.rb
+msgid "Unsupported OpenShift version"
+msgstr "不受支持的 OpenShift 版本"
 
 #: ../app/models/manageiq/providers/vmware/container_manager.rb
 msgid "Unsupported endpoint"
@@ -74700,17 +75048,17 @@ msgid ""
 "on AWS."
 msgstr "用于在 AWS 上执行 SmartState 分析所需的 Docker 注册表凭证。"
 
+#: ../app/models/manageiq/providers/vmware/infra_manager/host.rb
+msgid "Used for SSH login."
+msgstr "用于 SSH 登录。"
+
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 msgid ""
 "Used for VMRC connections to all VMs on this provider. If not set, the VMRC "
 "console access will be disabled for this provider."
 msgstr "用于此供应商中的所有虚拟机的 VMRC 连接。如果没有设置，则会禁止此供应商访问 VMRC 控制台。"
 
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "Used for access to IPMI."
-msgstr "用于访问 IPMI。"
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
+#: ../app/models/manageiq/providers/vmware/infra_manager/host.rb
 msgid "Used for access to Web Services."
 msgstr "用于访问 Web 服务。"
 
@@ -74831,6 +75179,7 @@ msgstr "用于 LDAP 查找的用户组序列："
 msgid "User ID"
 msgstr "用户标识"
 
+#: ../app/helpers/settings_users_helper.rb
 #: ../app/views/ops/_rbac_user_details.html.haml
 msgid "User Information"
 msgstr "用户信息"
@@ -74969,7 +75318,7 @@ msgstr "用户 (%{users_count})"
 msgid "Users are only allowed to delete their own requests"
 msgstr "用户只被允许删除自己的请求"
 
-#: ../app/views/ops/_rbac_group_details.html.haml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 msgid "Users in this Group"
 msgstr "此组里的用户"
 
@@ -75734,7 +76083,6 @@ msgstr "虚拟机停用日期"
 msgid "VM Right-sizing"
 msgstr "虚拟机适当大小"
 
-#: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js
 #: ../app/views/miq_policy_rsop/_rsop_form.html.haml
 msgid "VM Selection"
 msgstr "虚拟机选择"
@@ -76652,13 +77000,13 @@ msgstr "因为缺失区域，验证失败"
 msgid "Validation failed with error: '%{error_message}"
 msgstr "验证失败，发生错误：%{error_message}"
 
-#:
+#: ../app/javascript/components/host-edit-form/validate-host-credentials.jsx
 #: ../app/javascript/components/physical-storage-form/validate-storage-credentials.jsx
 #: ../app/javascript/components/provider-form/validate-provider-credentials.jsx
 msgid "Validation failed:"
 msgstr "验证失败："
 
-#:
+#: ../app/javascript/components/host-edit-form/validate-host-credentials.jsx
 #: ../app/javascript/components/physical-storage-form/validate-storage-credentials.jsx
 #: ../app/javascript/components/provider-form/validate-provider-credentials.jsx
 msgid "Validation failed: unknown error"
@@ -76875,7 +77223,8 @@ msgstr "验证 TLS 证书"
 msgid "Version"
 msgstr "版本"
 
-#: ../app/helpers/ops_helper.rb:215 ../app/views/ops/_server_desc.html.haml
+#: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 msgid "Version / Build"
 msgstr "版本 / 构建"
 
@@ -77677,6 +78026,16 @@ msgstr "查看卷类型"
 msgid "View Volumes"
 msgstr "查看卷"
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "View Workflow Instances"
+msgstr "查看工作流程实例"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "View Workflows"
+msgstr "查看工作流程"
+
 #: ../app/views/ops/_settings_details_tab.html.haml
 msgid "View Zones"
 msgstr "查看区"
@@ -77741,12 +78100,12 @@ msgstr "查看此警报概要文件"
 msgid "View this Event"
 msgstr "查看此事件"
 
-#: ../app/views/ops/_rbac_role_details.html.haml
-#: ../app/views/ops/_rbac_user_details.html.haml
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
+#: ../app/helpers/settings_users_helper.rb
 msgid "View this Group"
 msgstr "查看此组"
 
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml
+#: ../app/helpers/ops_helper/settings_zone_helper.rb
 msgid "View this MiqServer"
 msgstr "查看此 MiqServer"
 
@@ -77763,7 +78122,7 @@ msgstr "查看此 PXE 镜像"
 msgid "View this Policy Profile"
 msgstr "查看此策略概要文件"
 
-#: ../app/views/ops/_rbac_group_details.html.haml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 msgid "View this Project"
 msgstr "查看此项目"
 
@@ -77771,8 +78130,8 @@ msgstr "查看此项目"
 msgid "View this Report"
 msgstr "查看此报告"
 
-#: ../app/views/ops/_rbac_group_details.html.haml
-#: ../app/views/ops/_rbac_user_details.html.haml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
+#: ../app/helpers/settings_users_helper.rb
 msgid "View this Role"
 msgstr "查看此角色"
 
@@ -77784,11 +78143,11 @@ msgstr "查看此时间线"
 msgid "View this Service"
 msgstr "查看此服务"
 
-#: ../app/views/ops/_rbac_group_details.html.haml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 msgid "View this Tenant"
 msgstr "查看此租户"
 
-#: ../app/views/ops/_rbac_group_details.html.haml
+#: ../app/helpers/ops_helper/group_rbac_details_helper.rb
 msgid "View this User"
 msgstr "查看此用户"
 
@@ -77799,10 +78158,6 @@ msgstr "查看此窗口小部件"
 #: ../app/views/pxe/_pxe_server_details.html.haml
 msgid "View this Windows Image"
 msgstr "查看此 Windows 镜像"
-
-#: ../app/views/ops/_diagnostics_zones_tab.html.haml
-msgid "View this Zone"
-msgstr "查看此区"
 
 #: ../lib/gtl_formatter.rb
 msgid "View this item"
@@ -79420,6 +79775,7 @@ msgstr "卷快照模板 (Openstack)"
 #: ../app/controllers/cloud_volume_snapshot_controller.rb
 #: ../app/helpers/cloud_tenant_helper/textual_summary.rb
 #: ../app/presenters/menu/default_menu.rb
+#: ../app/services/ems_storage_dashboard_service.rb
 msgid "Volume Snapshots"
 msgstr "卷快照"
 
@@ -80106,12 +80462,15 @@ msgid ""
 "with this action"
 msgstr "警告：如果继续此操作，您将丢失目前所有停用选项"
 
+#: ../app/models/manageiq/providers/vmware/infra_manager/host.rb
+msgid "Web Service"
+msgstr "Web Service"
+
 #: ../app/javascript/components/workers-form/workers.schema.js
 msgid "Web Service Workers"
 msgstr "Web 服务工作程序"
 
 #: ../app/helpers/textual_summary_helper.rb
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 #: ../app/views/ops/_settings_server_tab.html.haml
 msgid "Web Services"
 msgstr "Web 服务"
@@ -80388,10 +80747,25 @@ msgstr "工作程序已停止"
 msgid "Workers"
 msgstr "工作程序"
 
+#: ../config/model_display_names.rb:258 ../config/model_attributes.rb
+msgid "Workflow"
+msgid_plural "Workflows"
+msgstr[0] "工作流程"
+
 #. TRANSLATORS: en.yml key: dictionary.column.v_workflow_class
 #: ../config/dictionary_strings.rb
 msgid "Workflow Class"
 msgstr "工作流程类"
+
+#: ../config/model_display_names.rb
+msgid "Workflow Instance"
+msgid_plural "Workflow Instances"
+msgstr[0] "工作流程实例"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Workflow Instances"
+msgstr "工作流程实例"
 
 #: ../app/helpers/miq_ae_class_helper.rb
 msgid "Workflow Template"
@@ -80414,10 +80788,84 @@ msgstr[0] "工作流模板 (Ansible Tower)"
 msgid "Workflow Templates (Ansible Tower)"
 msgstr "工作流模板 (Ansible Tower)"
 
+#: ../config/model_attributes.rb
+msgid "Workflow instance"
+msgstr "工作流程实例"
+
 #:
 #: ../app/javascript/components/pvc-import-image-form/pvc-import-image-form.schema.js
 msgid "Workflow max. timeout"
 msgstr "工作流程最大值超时"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Context"
+msgstr "WorkflowInstance | 上下文"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Credentials"
+msgstr "WorkflowInstance | 凭证"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Href slug"
+msgstr "WorkflowInstance | Href slug"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Output"
+msgstr "WorkflowInstance | 输出"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Region description"
+msgstr "WorkflowInstance | 区域描述"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Region number"
+msgstr "WorkflowInstance | 区域号"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Status"
+msgstr "WorkflowInstance | 状态"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Userid"
+msgstr "WorkflowInstance | 用户标识"
+
+#: ../config/model_attributes.rb
+msgid "WorkflowInstance|Workflow content"
+msgstr "WorkflowInstance | 工作流程内容"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Workflows"
+msgstr "工作流程"
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Workflows Automation Manager"
+msgstr "工作流程自动化管理器"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Credentials"
+msgstr "工作流程 | 凭证"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Href slug"
+msgstr "工作流程 | Href slug"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Name"
+msgstr "工作流程 | 名称"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Region description"
+msgstr "工作流程 | 区域描述"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Region number"
+msgstr "工作流程 | 区域号"
+
+#: ../config/model_attributes.rb
+msgid "Workflow|Workflow content"
+msgstr "工作流程 | 工作流程内容"
 
 #: ../app/views/shared/views/_prov_dialog.html.haml
 msgid "Workgroup Information"
@@ -80605,7 +81053,7 @@ msgstr "区*"
 msgid "Zone:"
 msgstr "区："
 
-#: ../app/helpers/zones_helper.rb
+#: ../app/helpers/settings_zone_list_helper.rb
 #: ../app/presenters/tree_builder_ops_settings.rb
 #: ../app/views/ops/_all_tabs.html.haml
 #: ../app/views/ops/_settings_details_tab.html.haml
@@ -80931,6 +81379,13 @@ msgstr "无法删除维护区"
 msgid "cannot delete volume that is in use."
 msgstr "无法删除正在使用的卷。"
 
+#: ../app/models/resource_action.rb
+msgid ""
+"cannot have configuration_script_id and ae_namespace, ae_class, and "
+"ae_instance present"
+msgstr ""
+"不能具有 configuration_script_id 以及 ae_namespace、ae_class 和 ae_instance present"
+
 #: ../app/models/service_generic.rb
 msgid "check_completed must be implemented in a subclass"
 msgstr "必须在子类中实现 check_completed"
@@ -80961,6 +81416,11 @@ msgstr "cloud_volume 不能为空"
 #: ../config/yaml_strings.rb
 msgid "compliance"
 msgstr "合规"
+
+#:
+#: ../app/javascript/components/storage-service-form/get-compliant-resources.jsx
+msgid "compliance check failed:"
+msgstr "合规性检查失败："
 
 #: ../app/models/condition.rb
 msgid ""
@@ -81205,7 +81665,8 @@ msgstr "cpu_total_cores"
 msgid "create_aggregate must be implemented in a subclass"
 msgstr "必须在子类中实现 create_aggregate"
 
-#: ../app/helpers/zones_helper.rb:18 ../app/presenters/tree_node/zone.rb
+#: ../app/helpers/settings_zone_list_helper.rb
+#: ../app/presenters/tree_node/zone.rb
 msgid "current"
 msgstr "当前"
 
@@ -81325,7 +81786,7 @@ msgstr "ems_configuration"
 #: ../app/models/host_initiator_group.rb
 #: ../app/models/physical_storage.rb:78 ../app/models/physical_storage.rb
 #: ../app/models/placement_group.rb:48 ../app/models/storage_service.rb
-#: ../app/models/volume_mapping.rb
+#: ../app/models/storage_service.rb:113 ../app/models/volume_mapping.rb
 msgid "ems_id cannot be nil"
 msgstr "ems_id 不可为空"
 
@@ -81483,12 +81944,16 @@ msgstr "evm_worker_stop"
 msgid "evm_worker_uptime_exceeded"
 msgstr "evm_worker_uptime_exceeded"
 
+#: ../app/models/manageiq/providers/workflows/automation_manager/workflow.rb
+msgid "execute is not enabled"
+msgstr "未启用执行"
+
 #:
 #: ../lib/miq_automation_engine/engine/miq_ae_engine/miq_ae_ansible_method_base.rb
 msgid "execute must be implemented in a subclass"
 msgstr "必须在子类中实现执行"
 
-#: ../lib/miq_expression.rb:129 ../lib/miq_expression.rb
+#: ../lib/miq_expression.rb:135 ../lib/miq_expression.rb
 msgid ""
 "expression malformed,  must contain one of 'checkall', 'checkany', 'checkcount"
 "'"
@@ -81499,7 +81964,7 @@ msgstr "表达式不正确，必须包括 'checkall'、'checkany'、'checkcount'
 #: ../app/models/host_initiator_group.rb
 #: ../app/models/physical_storage.rb:81 ../app/models/physical_storage.rb
 #: ../app/models/placement_group.rb:51 ../app/models/storage_service.rb
-#: ../app/models/volume_mapping.rb
+#: ../app/models/storage_service.rb:116 ../app/models/volume_mapping.rb
 msgid "ext_management_system cannot be found"
 msgstr "未找到 ext_management_system"
 
@@ -81777,10 +82242,6 @@ msgstr "login_failed"
 msgid "m"
 msgstr "m"
 
-#: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml
-msgid "map a new label to tag"
-msgstr "将新标签与标记对应"
-
 #: ../app/models/miq_ae_namespace.rb
 msgid "may contain only alphanumeric and _ . - $ characters"
 msgstr "只可以包含字母数字以及 _ . - $ 字符"
@@ -81878,7 +82339,7 @@ msgid "new element"
 msgstr "新元素"
 
 #: ../app/models/ext_management_system.rb
-#: ../app/models/ext_management_system.rb:656 ../app/models/provider.rb
+#: ../app/models/ext_management_system.rb:627 ../app/models/provider.rb
 msgid "no Provider credentials defined"
 msgstr "没有定义供应商凭证"
 
@@ -81970,7 +82431,7 @@ msgstr "于 %{date} %{time}"
 msgid "open and close options"
 msgstr "打开和关闭选项"
 
-#: ../lib/miq_expression.rb:294 ../lib/miq_expression.rb
+#: ../lib/miq_expression.rb:315 ../lib/miq_expression.rb
 msgid "operator '%{operator_name}' is not supported"
 msgstr "操作符“%{operator_name}”不受支持"
 
@@ -82144,6 +82605,10 @@ msgstr "必须在子类中实现 raw_add_security_group"
 msgid "raw_associate_floating_ip must be implemented in a subclass"
 msgstr "必须在子类中使用 raw_associate_floating_ip"
 
+#: ../app/models/storage_service.rb
+msgid "raw_check_compliant_resources must be implemented in a subclass"
+msgstr "必须在子类中实现 raw_check_compliant_resources"
+
 #: ../app/models/cloud_database.rb
 msgid "raw_create_cloud_database must be implemented in a subclass"
 msgstr "必须在子类中实现 raw_create_cloud_database"
@@ -82215,6 +82680,10 @@ msgstr "必须在子类中实现 raw_delete_flavor"
 #: ../app/models/host_initiator.rb
 msgid "raw_delete_host_initiator must be implemented in a subclass"
 msgstr "必须在子类中实现 raw_delete_host_initiator"
+
+#: ../app/models/host_initiator_group.rb
+msgid "raw_delete_host_initiator_group must be implemented in a subclass"
+msgstr "必须在子类中实现 raw_delete_host_initiator_group"
 
 #: ../app/models/manageiq/providers/cloud_manager/template.rb
 msgid "raw_delete_image must be implemented in a subclass"
@@ -82311,6 +82780,10 @@ msgstr "必须在子类中实现 raw_update_cloud_network"
 #: ../app/models/cloud_tenant.rb
 msgid "raw_update_cloud_tenant must be implemented in a subclass"
 msgstr "必须在子类中使用 raw_update_cloud_tenant"
+
+#: ../app/models/host_initiator_group.rb
+msgid "raw_update_host_initiator_group must be implemented in a subclass"
+msgstr "必须在子类中实现 raw_update_host_initiator_group"
 
 #: ../app/models/manageiq/providers/cloud_manager/template.rb
 msgid "raw_update_image must be implemented in a subclass"
@@ -82542,6 +83015,20 @@ msgstr "request_vm_unregister"
 msgid "resize value options cannot be nil"
 msgstr "调整大小值选项不能为 nil"
 
+#:
+#: ../app/models/manageiq/providers/workflows/automation_manager/workflow_instance.rb
+msgid "run is not enabled"
+msgstr "未启用运行"
+
+#: ../app/models/configuration_script_payload.rb
+msgid "run must be implemented in a subclass"
+msgstr "必须在子类中实现运行"
+
+#:
+#: ../app/models/manageiq/providers/workflows/automation_manager/workflow_instance.rb
+msgid "run_queue is not enabled"
+msgstr "未启用 run_queue"
+
 #: ../app/controllers/application_controller/performance.rb
 msgid "running"
 msgstr "正在运行"
@@ -82632,6 +83119,11 @@ msgstr "storage_scan_complete"
 msgid "success"
 msgstr "成功"
 
+#:
+#: ../app/models/manageiq/providers/embedded_automation_manager/configuration_script_source.rb
+msgid "sync must be implemented in a subclass"
+msgstr "必须在子类中实现同步"
+
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_sets.yml
 #: ../config/yaml_strings.rb
@@ -82641,6 +83133,11 @@ msgstr "tags"
 #: ../app/models/manageiq/providers/kubernetes/container_manager.rb
 msgid "target_class must be a class not an instance"
 msgstr "target_class 必须为类，而不是实例"
+
+#:
+#: ../app/models/manageiq/providers/autosde/storage_manager/host_initiator_group.rb
+msgid "the host initiator group is not connected to an active provider"
+msgstr "主机发起方组未连接到活动提供程序"
 
 #:
 #: ../app/models/manageiq/providers/openstack/storage_manager/cinder_manager/cloud_volume.rb
@@ -82776,7 +83273,7 @@ msgstr "未知的对象类型：%{class}"
 msgid "unknown zone %{zone_name}"
 msgstr "未知区域 %{zone_name}"
 
-#: ../app/helpers/ops_helper.rb:171 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:180 ../app/helpers/ops_helper.rb
 msgid "unlimited"
 msgstr "无限制"
 

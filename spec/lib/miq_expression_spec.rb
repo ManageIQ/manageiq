@@ -241,39 +241,99 @@ RSpec.describe MiqExpression do
     end
   end
 
-  describe "#preprocess_for_sql" do
+  describe "#reduce_exp" do
     let(:sql_field)  { {"=" => {"field" => "Vm-name", "value" => "foo"}.freeze}.freeze }
     let(:ruby_field) { {"=" => {"field" => "Vm-platform", "value" => "bar"}.freeze}.freeze }
 
     context "mode: :sql" do
       it "(sql AND ruby) => (sql)" do
-        expect(sql_reduced_exp("AND" => [sql_field, ruby_field.clone])).to eq("AND" => [sql_field])
+        expect(sql_pruned_exp("AND" => [sql_field, ruby_field.clone])).to eq(sql_field)
       end
 
       it "(ruby AND ruby) => ()" do
-        expect(sql_reduced_exp("AND" => [ruby_field.clone, ruby_field.clone])).to be_nil
+        expect(sql_pruned_exp("AND" => [ruby_field.clone, ruby_field.clone])).to be_nil
       end
 
       it "(sql OR sql) => (sql OR sql)" do
-        expect(sql_reduced_exp("OR" => [sql_field, sql_field])).to eq("OR" => [sql_field, sql_field])
+        expect(sql_pruned_exp("OR" => [sql_field, sql_field])).to eq("OR" => [sql_field, sql_field])
       end
 
       it "(sql OR ruby) => ()" do
-        expect(sql_reduced_exp("OR" => [sql_field, ruby_field])).to be_nil
+        expect(sql_pruned_exp("OR" => [sql_field, ruby_field])).to be_nil
       end
 
       it "(ruby OR ruby) => ()" do
-        expect(sql_reduced_exp("OR" => [ruby_field.clone, ruby_field.clone].deep_clone)).to be_nil
+        expect(sql_pruned_exp("OR" => [ruby_field.clone, ruby_field.clone].deep_clone)).to be_nil
       end
 
       it "!(sql OR ruby) => (!(sql) AND !(ruby)) => !(sql)" do
-        expect(sql_reduced_exp("NOT" => {"OR" => [sql_field, ruby_field.clone]})).to be_nil
-        # TODO: eq("NOT" => sql_field)
+        expect(sql_pruned_exp("NOT" => {"OR" => [sql_field, ruby_field.clone]})).to eq("NOT" => sql_field)
       end
 
       it "!(sql AND ruby) => (!(sql) OR !(ruby)) => nil" do
-        expect(sql_reduced_exp("NOT" => {"AND" => [sql_field, ruby_field.clone]})).to eq("NOT" => {"AND" => [sql_field]})
-        # TODO:  be_nil
+        expect(sql_pruned_exp("NOT" => {"AND" => [sql_field, ruby_field.clone]})).to be_nil
+      end
+    end
+
+    context "mode: ruby" do
+      it "(sql) => ()" do
+        expect(ruby_pruned_exp(sql_field.clone)).to be_nil
+      end
+
+      it "(ruby) => (ruby)" do
+        expect(ruby_pruned_exp(ruby_field.clone)).to eq(ruby_field)
+      end
+
+      it "(sql and sql) => ()" do
+        expect(ruby_pruned_exp("AND" => [sql_field.clone, sql_field.clone])).to be_nil
+      end
+
+      it "(sql and ruby) => (ruby)" do
+        expect(ruby_pruned_exp("AND" => [sql_field.clone, ruby_field.clone])).to eq(ruby_field)
+      end
+
+      it "(ruby or ruby) => (ruby or ruby)" do
+        expect(ruby_pruned_exp("OR" => [ruby_field.clone, ruby_field.clone])).to eq("OR" => [ruby_field, ruby_field])
+      end
+
+      it "(sql or sql) => ()" do
+        expect(ruby_pruned_exp("OR" => [sql_field.clone, sql_field.clone])).to be_nil
+      end
+
+      it "(sql or ruby) => (sql or ruby)" do
+        expect(ruby_pruned_exp("OR" => [ruby_field.clone, sql_field.clone])).to eq("OR" => [ruby_field, sql_field])
+      end
+
+      it "(ruby or ruby) => (ruby or ruby)" do
+        expect(ruby_pruned_exp("OR" => [ruby_field.clone, ruby_field.clone])).to eq("OR" => [ruby_field, ruby_field])
+      end
+
+      it "(sql AND sql) or ruby => keep all expressions" do
+        expect(ruby_pruned_exp("OR" => [{"AND" => [sql_field.clone, sql_field.clone]}, ruby_field.clone])).to eq("OR" => [{"AND" => [sql_field, sql_field]}, ruby_field])
+      end
+
+      # ensuring that the OR/AND is treating each sub expression independently
+      # it was getting this wrong
+      it "(sql or sql) and ruby => ruby" do
+        expect(ruby_pruned_exp("AND" => [{"OR" => [sql_field.clone, sql_field.clone]}, ruby_field.clone])).to eq(ruby_field)
+      end
+
+      it "ruby and (sql or sql) => ruby" do
+        expect(ruby_pruned_exp("AND" => [ruby_field.clone, {"OR" => [sql_field.clone, sql_field.clone]}])).to eq(ruby_field)
+      end
+
+      it "!(ruby) => keep all expressions" do
+        exp1 = {"=" => {"field" => "Vm-platform", "value" => "foo"}}
+        ruby = MiqExpression.new("NOT" => exp1).to_ruby(:prune_sql => true)
+        expect(ruby).to eq("!(<value ref=vm, type=string>/virtual/platform</value> == \"foo\")")
+      end
+
+      it "!(sql OR ruby) => (!(sql) AND !(ruby)) => !(ruby)" do
+        expect(ruby_pruned_exp("NOT" => {"OR" => [sql_field, ruby_field.clone]})).to eq("NOT" => ruby_field)
+      end
+
+      it "!(sql AND ruby) => (!(sql) OR !(ruby)) => !(sql AND ruby)" do
+        expect(ruby_pruned_exp("NOT" => {"AND" => [sql_field, ruby_field.clone]})).to eq("NOT" => {"AND" => [sql_field, ruby_field]})
       end
     end
   end
@@ -291,7 +351,7 @@ RSpec.describe MiqExpression do
 
     it "does not raise error for SQL generation if expression has a count in it" do
       sql, _ = MiqExpression.new("AND" => [{"=" => {"field" => "Vm-name", "value" => "foo"}}, {"=" => {"count" => "Vm.snapshots", "value" => "1"}}]).to_sql
-      expect(sql).to eq("(\"vms\".\"name\" = 'foo')")
+      expect(sql).to eq("\"vms\".\"name\" = 'foo'")
     end
 
     it "generates the SQL for an = expression if SQL generation for expression supported and 'token' key present in expression's Hash" do
@@ -444,7 +504,7 @@ RSpec.describe MiqExpression do
       exp1 = {"STARTS WITH" => {"field" => "Vm-name", "value" => "foo"}}
       exp2 = {"ENDS WITH" => {"field" => "Vm-platform", "value" => "bar"}}
       sql, * = MiqExpression.new("AND" => [exp1, exp2]).to_sql
-      expect(sql).to eq("(\"vms\".\"name\" LIKE 'foo%')")
+      expect(sql).to eq("\"vms\".\"name\" LIKE 'foo%'")
     end
 
     it "returns nil for an AND expression where none is supported by SQL" do
@@ -1034,6 +1094,13 @@ RSpec.describe MiqExpression do
           result = Vm.where(filter.to_sql(timezone).first)
           expect(result).to contain_exactly(vm2, vm3)
         end
+      end
+    end
+
+    context "caching" do
+      it "clears caching if prune_sql value changes" do
+        exp = MiqExpression.new({"=" => {"field" => "Vm-name", "value" => "foo"}})
+        expect(exp.to_ruby(:prune_sql => true)).not_to eq(exp.to_ruby(:prune_sql => false))
       end
     end
   end
@@ -3472,9 +3539,15 @@ RSpec.describe MiqExpression do
 
   private
 
-  def sql_reduced_exp(input)
+  def sql_pruned_exp(input)
     mexp = MiqExpression.new(input)
     pexp = mexp.preprocess_exp!(mexp.exp.deep_clone)
-    mexp.preprocess_for_sql(pexp).first
+    mexp.prune_exp(pexp, MiqExpression::MODE_SQL).first
+  end
+
+  def ruby_pruned_exp(input)
+    mexp = MiqExpression.new(input)
+    pexp = mexp.preprocess_exp!(mexp.exp.deep_clone)
+    mexp.prune_exp(pexp, MiqExpression::MODE_RUBY).first
   end
 end

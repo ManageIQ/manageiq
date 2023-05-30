@@ -302,6 +302,7 @@ class ExtManagementSystem < ApplicationRecord
   supports_attribute :feature => :cloud_subnet_create
   supports_attribute :feature => :cloud_volume
   supports_attribute :feature => :cloud_volume_create
+  supports_attribute :feature => :cloud_volume_snapshots
   supports_attribute :supports_cloud_database_create, :child_model => "CloudDatabase"
   supports_attribute :supports_create_flavor, :child_model => "Flavor"
   supports_attribute :supports_create_floating_ip, :child_model => "FloatingIp"
@@ -400,36 +401,6 @@ class ExtManagementSystem < ApplicationRecord
 
   def self.with_port(port)
     joins(:endpoints).where(:endpoints => {:port => port})
-  end
-
-  def self.create_discovered_ems(ost)
-    ip = ost.ipaddr
-    unless with_ipaddress(ip).exists?
-      hostname = Socket.getaddrinfo(ip, nil)[0][2]
-
-      ems_klass, ems_name = if ost.hypervisor.include?(:rhevm)
-                              [ManageIQ::Providers::Ovirt::InfraManager, 'RHEV-M']
-                            elsif ost.hypervisor.include?(:openstack_infra)
-                              [ManageIQ::Providers::Openstack::InfraManager, 'OpenStack Director']
-                            else
-                              [ManageIQ::Providers::Vmware::InfraManager, 'Virtual Center']
-                            end
-
-      ems = ems_klass.create(
-        :ipaddress => ip,
-        :name      => "#{ems_name} (#{ip})",
-        :hostname  => hostname,
-        :zone_id   => MiqServer.my_server.zone.id
-      )
-
-      _log.info("Provider #{ems.name} created")
-      AuditEvent.success(
-        :event        => "ems_created",
-        :target_id    => ems.id,
-        :target_class => "ExtManagementSystem",
-        :message      => "Provider %{provider_name} created" % {:provider_name => ems.name}
-      )
-    end
   end
 
   def self.raw_connect?(*params)
@@ -660,7 +631,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def self.ems_infra_discovery_types
-    @ems_infra_discovery_types ||= %w(virtualcenter scvmm rhevm openstack_infra)
+    @ems_infra_discovery_types ||= %w(virtualcenter rhevm openstack_infra)
   end
 
   def self.ems_physical_infra_discovery_types

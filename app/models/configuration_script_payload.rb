@@ -6,4 +6,8 @@ class ConfigurationScriptPayload < ConfigurationScriptBase
   def self.base_model
     ConfigurationScriptPayload
   end
+
+  def run(*)
+    raise NotImplementedError, _("run must be implemented in a subclass")
+  end
 end

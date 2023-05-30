@@ -273,9 +273,6 @@ module ManageIQ::Providers
           add_dependency_attributes(:vms =>persister.collections.values_at(:vms, :miq_templates, :vms_and_templates).compact)
         end
 
-
-
-
         def iso_images
           add_properties(
             :parent_inventory_collections => %i[storages],

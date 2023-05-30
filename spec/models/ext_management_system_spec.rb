@@ -45,16 +45,6 @@ RSpec.describe ExtManagementSystem do
     expect(described_class.model_name_from_emstype('foo')).to be_nil
   end
 
-  it ".create_discovered_ems" do
-    ost = OpenStruct.new(:ipaddr => "0.0.0.0", :hypervisor => [:virtualcenter])
-
-    allow(MiqServer).to receive(:my_server).and_return(
-      double("MiqServer", :zone => double("Zone", :name => "foo", :id => 1)))
-    expect(AuditEvent).to receive(:success)
-
-    described_class.create_discovered_ems(ost)
-  end
-
   describe ".types" do
     context "on the base ExtManagementSystem class" do
       it "returns both cloud and infra types" do
@@ -137,7 +127,7 @@ RSpec.describe ExtManagementSystem do
   end
 
   it ".ems_infra_discovery_types" do
-    expected_types = %w(scvmm rhevm virtualcenter openstack_infra)
+    expected_types = %w(rhevm virtualcenter openstack_infra)
 
     expect(described_class.ems_infra_discovery_types).to match_array(expected_types)
   end

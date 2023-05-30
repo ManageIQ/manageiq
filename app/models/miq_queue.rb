@@ -677,7 +677,7 @@ class MiqQueue < ApplicationRecord
   private_class_method def self.messaging_options_from_env
     return unless ENV["MESSAGING_HOSTNAME"] && ENV["MESSAGING_PORT"] && ENV["MESSAGING_USERNAME"] && ENV["MESSAGING_PASSWORD"]
 
-    {
+    options = {
       :host     => ENV["MESSAGING_HOSTNAME"],
       :port     => ENV["MESSAGING_PORT"].to_i,
       :username => ENV["MESSAGING_USERNAME"],
@@ -685,6 +685,15 @@ class MiqQueue < ApplicationRecord
       :protocol => ENV.fetch("MESSAGING_PROTOCOL", "Kafka"),
       :encoding => ENV.fetch("MESSAGING_ENCODING", "json")
     }
+
+    if ENV["MESSAGING_KEYSTORE_PASSWORD"].present?
+      options[:ssl] = true
+      options[:ca_file] = ENV.fetch("MESSAGING_SSL_CA", nil)
+      options[:keystore_location] = ENV.fetch("MESSAGING_KEYSTORE", nil)
+      options[:keystore_password] = ENV["MESSAGING_KEYSTORE_PASSWORD"]
+    end
+
+    options
   end
 
   MESSAGING_CONFIG_FILE = Rails.root.join("config", "messaging.yml")

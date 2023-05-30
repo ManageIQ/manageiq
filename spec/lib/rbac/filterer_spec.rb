@@ -2502,7 +2502,7 @@ RSpec.describe Rbac::Filterer do
     it "supports limits in ruby with limits on scopes" do
       filter = MiqExpression.new("=" => {"field" => "Vm-location", "value" => "b"})
       # force this filter to be evaluated in ruby
-      expect(filter).to receive(:sql_supports_atom?).and_return(false)
+      expect(filter).to receive(:sql_supports_atom?).at_least(:once).and_return(false)
 
       FactoryBot.create_list(:vm_vmware, 3, :location => "a")
       FactoryBot.create_list(:vm_vmware, 3, :location => "b")

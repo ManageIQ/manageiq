@@ -3,6 +3,8 @@ class CloudVolumeSnapshot < ApplicationRecord
   include ProviderObjectMixin
   include SupportsFeatureMixin
   include CloudTenancyMixin
+  include CustomActionsMixin
+  include EmsRefreshMixin
 
   acts_as_miq_taggable
 
@@ -10,6 +12,10 @@ class CloudVolumeSnapshot < ApplicationRecord
   belongs_to :cloud_tenant
   belongs_to :cloud_volume
   has_many   :based_volumes, :class_name => 'CloudVolume'
+
+  supports_not :create
+  supports_not :delete
+  supports_not :update
 
   virtual_total :total_based_volumes, :based_volumes
 

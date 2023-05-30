@@ -1,7 +1,7 @@
 module ManageIQ
   module Reporting
     module Formatter
-      class HTML < Ruport::Formatter
+      class Html < Ruport::Formatter
         renders :html, :for => ManageIQ::Reporting::Formatter::ReportRenderer
 
         def build_html_title

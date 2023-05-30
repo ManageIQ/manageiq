@@ -1,4 +1,6 @@
 RSpec.describe Metric::CiMixin::Rollup do
+  include Spec::Support::MetricHelper
+
   before do
     @zone = miq_server.zone
   end
@@ -27,7 +29,7 @@ RSpec.describe Metric::CiMixin::Rollup do
       before do
         stub_settings_merge(
           :performance => {:history => {:initial_capture_days => 7}},
-          :ems         => {:ems_vmware => {:capture_batch_size => 0}}
+          :ems         => ems_concurrent_requests("vmware")
         )
         vm
         vm2
@@ -124,7 +126,7 @@ RSpec.describe Metric::CiMixin::Rollup do
       before do
         stub_settings_merge(
           :performance => {:history => {:initial_capture_days => 7}},
-          :ems         => {:ems_vmware => {:capture_batch_size => 3}}
+          :ems         => ems_concurrent_requests("vmware", 3)
         )
       end
 

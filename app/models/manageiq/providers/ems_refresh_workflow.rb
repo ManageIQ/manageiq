@@ -32,9 +32,7 @@ class ManageIQ::Providers::EmsRefreshWorkflow < Job
   end
 
   def refresh
-    target = target_entity
-
-    task_ids = EmsRefresh.queue_refresh_task(target)
+    task_ids = EmsRefresh.queue_refresh_task(refresh_target)
     if task_ids.blank?
       process_error("Failed to queue refresh", "error")
       queue_signal(:error)
@@ -99,5 +97,9 @@ class ManageIQ::Providers::EmsRefreshWorkflow < Job
     end
 
     true
+  end
+
+  def refresh_target
+    target_entity
   end
 end

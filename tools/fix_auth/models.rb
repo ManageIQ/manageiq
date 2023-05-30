@@ -81,11 +81,17 @@ module FixAuth
     serialize :value
 
     def self.contenders
-      query = Vmdb::SettingsWalker::PASSWORD_FIELDS.collect do |field|
+      query = password_fields.collect do |field|
         "(key LIKE '%/#{field}')"
       end.join(" OR ")
 
       super.where(query)
+    end
+
+    # keys that contain protected fields in the settings
+    def self.password_fields
+      Vmdb::SettingsWalker::PASSWORD_FIELDS +
+        %w(openssl_verify_mode)
     end
   end
 

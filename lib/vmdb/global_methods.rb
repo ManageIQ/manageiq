@@ -27,10 +27,6 @@ module Vmdb
       arrayin.deep_clone
     end
 
-    def column_type(model, column)
-      MiqExpression.create_field(model, [], column).column_type
-    end
-
     # Had to add timezone methods here, they are being called from models
     # returns formatted time in specified timezone and format
     def format_timezone(time, timezone = Time.zone.name, ftype = "view")

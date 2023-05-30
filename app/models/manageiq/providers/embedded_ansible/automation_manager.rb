@@ -18,6 +18,8 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager < ManageIQ::Provid
   require_nested :Job
   require_nested :Playbook
 
+  supports_not :refresh_ems
+
   def self.ems_type
     @ems_type ||= "embedded_ansible_automation".freeze
   end

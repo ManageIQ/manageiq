@@ -149,8 +149,8 @@ module ManageIQ
       @yarn_version ||= Dir.glob(template_yarn_releases_path.join("yarn-*.cjs")).first.match(/yarn-(.+).cjs/).captures.first
     end
 
-    def package_managaer
-      @package_managaer ||= "yarn@#{yarn_version}"
+    def package_manager
+      @package_manager ||= "yarn@#{yarn_version}"
     end
 
     def package_json

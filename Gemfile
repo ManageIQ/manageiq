@@ -48,7 +48,7 @@ gem "linux_admin",                      "~>2.0", ">=2.0.1",  :require => false
 gem "listen",                           "~>3.2",             :require => false
 gem "manageiq-api-client",              "~>0.3.6",           :require => false
 gem "manageiq-loggers",                 "~>1.0",             :require => false
-gem "manageiq-messaging",               "~>1.0", ">=1.2.0",  :require => false
+gem "manageiq-messaging",               "~>1.0", ">=1.3.0",  :require => false
 gem "manageiq-password",                "~>1.0",             :require => false
 gem "manageiq-postgres_ha_admin",       "~>3.2",             :require => false
 gem "manageiq-ssh-util",                "~>0.1.1",           :require => false
@@ -212,6 +212,10 @@ group :vmware, :manageiq_default do
   manageiq_plugin "manageiq-providers-vmware"
 end
 
+group :workflows, :manageiq_default do
+  manageiq_plugin "manageiq-providers-workflows"
+end
+
 ### shared dependencies
 group :google, :openshift, :manageiq_default do
   gem "sshkey",                         "~>1.8.0",           :require => false
@@ -258,7 +262,6 @@ end
 
 group :web_server, :manageiq_default do
   gem "puma",                           "~>4.2"
-  gem "responders",                     "~>3.0"
   gem "ruby-dbus" # For external auth
   gem "secure_headers",                 "~>3.9"
 end
