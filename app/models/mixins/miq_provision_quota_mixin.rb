@@ -365,7 +365,9 @@ module MiqProvisionQuotaMixin
   end
 
   def number_of_cpus(prov, cloud, flavor_obj)
-    return flavor_obj.try(:cpus) if cloud
+    num_cpus = flavor_obj.try(:cpus) if cloud
+    return num_cpus if num_cpus.present?
+
     request = prov.kind_of?(MiqRequest) ? prov : prov.miq_request
     num_cpus = request.get_option(:number_of_sockets).to_i * request.get_option(:cores_per_socket).to_i
     num_cpus.zero? ? request.get_option(:number_of_cpus).to_i : num_cpus
@@ -384,7 +386,9 @@ module MiqProvisionQuotaMixin
   end
 
   def memory(prov, cloud, vendor, flavor_obj = nil)
-    return flavor_obj.try(:memory) if cloud
+    memory = flavor_obj.try(:memory) if cloud
+    return memory if memory.present?
+
     request = prov.kind_of?(MiqRequest) ? prov : prov.miq_request
     memory = request.get_option(:vm_memory).to_i
     %w(amazon openstack google).include?(vendor) ? memory : memory.megabytes
