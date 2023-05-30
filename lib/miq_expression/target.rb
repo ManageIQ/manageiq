@@ -1,8 +1,11 @@
 class MiqExpression::Target
-  ParseError = Class.new(StandardError)
-
-  def self.parse!(field)
-    parse(field) || raise(ParseError, field)
+  # TODO: fix to run against a single regular expression
+  # supports strange syntax like: managed.location, Model.x.y.managed-location
+  def self.parse(str)
+    MiqExpression::Field.parse(str) ||
+      MiqExpression::CountField.parse(str) ||
+      MiqExpression::Tag.parse(str) ||
+      MiqExpression::InvalidTarget.new
   end
 
   # example .parse('Host.vms-host_name')
@@ -36,6 +39,10 @@ class MiqExpression::Target
     @column = column
   end
 
+  def column_type
+    nil
+  end
+
   def sub_type
     column_type
   end
@@ -56,6 +63,10 @@ class MiqExpression::Target
     column_type == :decimal
   end
 
+  def tag?
+    false
+  end
+
   def numeric?
     %i(fixnum integer decimal float).include?(column_type)
   end
@@ -65,19 +76,25 @@ class MiqExpression::Target
     [:has_many, :has_and_belongs_to_many].include?(reflections.last.macro)
   end
 
+  def attribute_supported_by_sql?
+    reflection_supported_by_sql?
+  end
+
   def reflection_supported_by_sql?
     model&.follow_associations(associations).present?
   rescue ArgumentError
     false
   end
 
-  # AR or virtual reflections
+  # @returns AR or virtual reflections
+  # @raises ArgumentError
   def reflections
     model.collect_reflections_with_virtual(associations) ||
       raise(ArgumentError, "One or more associations are invalid: #{associations.join(", ")}")
   end
 
-  # only AR reflections
+  # @returns only AR reflections
+  # @raises ArgumentError
   def collect_reflections
     model.collect_reflections(associations) ||
       raise(ArgumentError, "One or more associations are invalid: #{associations.join(", ")}")
@@ -87,8 +104,12 @@ class MiqExpression::Target
     ret = {}
     model && collect_reflections.map(&:name).inject(ret) { |a, p| a[p] ||= {} }
     ret
+  rescue ArgumentError
+    # since the reflections are not valid, we don't have any includes
+    {}
   end
 
+  # @raises ArgumentError
   def target
     if associations.none?
       model
@@ -110,6 +131,8 @@ class MiqExpression::Target
     else
       false
     end
+  rescue ArgumentError # reflections are not valid when looking up target
+    false
   end
 
   # this should only be accessed in MiqExpression
