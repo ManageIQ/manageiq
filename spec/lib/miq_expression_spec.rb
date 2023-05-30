@@ -3466,6 +3466,32 @@ RSpec.describe MiqExpression do
     end
   end
 
+  describe ".quote" do
+    [
+      ["abc", :string, "\"abc\""],
+#       ["abc", nil, "\"abc\""],
+      ["123", :integer, 123],
+      ["1.minute", :integer, 60],
+    ].each do |src, type, target|
+      it "escapes #{src} as a #{type || "nil"}" do
+        expect(described_class.quote(src, type)).to eq(target)
+      end
+    end
+  end
+
+  describe ".quote_human" do
+    [
+      ["abc", :string, "\"abc\""],
+#       ["abc", nil, "\"abc\""],
+      ["123", :integer, 123],
+      ["1.minute", :integer, "1 Minute"],
+    ].each do |src, type, target|
+      it "escapes #{src} as a #{type || "nil"}" do
+        expect(described_class.quote_human(src, type)).to eq(target)
+      end
+    end
+  end
+
   private
 
   def sql_pruned_exp(input)
