@@ -66,10 +66,22 @@ RSpec.describe MiqReport, "::Formatting" do
   end
 
   describe "#format_relative_date" do
-    it "returns the time in words for a specific date" do
-      val = Time.utc(2019, 2, 18, 12, 3, 22) # 2019-02-18 12:03:22 UTC
-      expect(subject.format_relative_date(val, {}))
-        .to eq("about 4 years ago")
+    it "returns the time in words for a Time object" do
+      val = 1.year.ago.utc
+      expect(val.class).to eq(Time)
+      expect(subject.format_relative_date(val, {})).to eq("about 1 year ago")
+    end
+
+    it "returns the time in words for a Date object" do
+      val = 1.year.ago.to_date
+      expect(val.class).to eq(Date)
+      expect(subject.format_relative_date(val, {})).to eq("about 1 year ago")
+    end
+
+    it "returns the time in words for a DateTime object" do
+      val = 1.year.ago.to_datetime
+      expect(val.class).to eq(DateTime)
+      expect(subject.format_relative_date(val, {})).to eq("about 1 year ago")
     end
 
     it 'returns the original value if not a Time, Date, or DateTime object' do
