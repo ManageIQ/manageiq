@@ -64,4 +64,17 @@ RSpec.describe MiqReport, "::Formatting" do
       expect(container_report.format(memory_col, 7822)).to eq('7.6 GB')
     end
   end
+
+  describe "#format_relative_date" do
+    it "returns the time in words for a specific date" do
+      val = Time.utc(2019, 2, 18, 12, 3, 22) # 2019-02-18 12:03:22 UTC
+      expect(subject.format_relative_date(val, {}))
+        .to eq("about 4 years ago")
+    end
+
+    it 'returns the original value if not a Time, Date, or DateTime object' do
+      val = 'not a date object'
+      expect(subject.format_relative_date(val, {})).to eq(val)
+    end
+  end
 end

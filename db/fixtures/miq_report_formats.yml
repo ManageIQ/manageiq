@@ -649,6 +649,14 @@
       :name: datetime
       :format: "%m/%d"
 
+  :relative_date:
+    :description: Relative Date
+    :data_types:
+    - :datetime
+    - :timestamp
+    :function:
+      :name: relative_date
+
   :time:
     :description: Time (H:M:S Z)
     :data_types:
