@@ -134,10 +134,10 @@ class ServiceTemplateProvisionTask < MiqRequestTask
     ra = resource_action
 
     unless ra.nil?
-      args[:namespace]        = ra.ae_namespace unless ra.ae_namespace.blank?
-      args[:class_name]       = ra.ae_class     unless ra.ae_class.blank?
-      args[:instance_name]    = ra.ae_instance  unless ra.ae_instance.blank?
-      args[:automate_message] = ra.ae_message   unless ra.ae_message.blank?
+      args[:namespace]        = ra.ae_namespace if ra.ae_namespace.present?
+      args[:class_name]       = ra.ae_class     if ra.ae_class.present?
+      args[:instance_name]    = ra.ae_instance  if ra.ae_instance.present?
+      args[:automate_message] = ra.ae_message   if ra.ae_message.present?
       args[:attrs].merge!(ra.ae_attributes)
     end
 
@@ -154,7 +154,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
       :zone           => options.fetch(:miq_zone, my_zone),
       :tracking_label => tracking_label_id
     )
-    update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
+    update_and_notify_parent(:state => "pending", :status => "Ok", :message => "Automation Starting")
   end
 
   def resource_action
