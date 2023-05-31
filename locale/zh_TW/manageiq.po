@@ -21391,7 +21391,6 @@ msgid "Date Range (M/D/Y - M/D/Y)"
 msgstr "日期範圍 (M/D/Y - M/D/Y)"
 
 #. TRANSLATORS: file: product/views/EventLog-event_logs.yaml
-#: ../app/javascript/components/timeline-options/timeline-table.jsx
 #: ../config/yaml_strings.rb
 msgid "Date Time"
 msgstr "日期時間"
@@ -48462,7 +48461,6 @@ msgstr "名稱*"
 #: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js
 #: ../app/javascript/components/host-initiator-group-form/host-initiator-group-form.schema.js
 #: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
-#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 msgid "Name:"
 msgstr "名稱："
 
@@ -49605,11 +49603,6 @@ msgstr "否"
 #: src/rbac-forms/rbacUserTagsList.jsx
 msgid "No %s Tags have been assigned"
 msgstr "未指派任何 %s 標籤"
-
-#:
-#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
-msgid "No %s with selected capabilities."
-msgstr "沒有 %s 具有選取的功能。"
 
 #: ../app/models/miq_report/generator.rb
 msgid "No %{class_name} object provided"
@@ -70459,10 +70452,6 @@ msgstr "系統/處理程序"
 #: ../app/views/shared/buttons/_ab_show.html.haml
 msgid "System/Process/"
 msgstr "系統/處理程序"
-
-#: ../app/javascript/components/schedule-form/schedule-form-fields.js
-msgid "System/Proess"
-msgstr "系統/程序"
 
 #: ../config/model_attributes.rb
 msgid "SystemConsole|Host name"

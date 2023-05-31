@@ -22307,7 +22307,6 @@ msgid "Date Range (M/D/Y - M/D/Y)"
 msgstr "Intervallo Date (M/G/A - M/G/A)"
 
 #. TRANSLATORS: file: product/views/EventLog-event_logs.yaml
-#: ../app/javascript/components/timeline-options/timeline-table.jsx
 #: ../config/yaml_strings.rb
 msgid "Date Time"
 msgstr "Data/Ora"
@@ -49992,7 +49991,6 @@ msgstr "Nome*"
 #: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js
 #: ../app/javascript/components/host-initiator-group-form/host-initiator-group-form.schema.js
 #: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
-#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 msgid "Name:"
 msgstr "Nome:"
 
@@ -51164,11 +51162,6 @@ msgstr "No"
 #: src/rbac-forms/rbacUserTagsList.jsx
 msgid "No %s Tags have been assigned"
 msgstr "Nessun Tag %s è stato assegnato"
-
-#:
-#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
-msgid "No %s with selected capabilities."
-msgstr "Non sono presenti %s con le funzionalità selezionate."
 
 #: ../app/models/miq_report/generator.rb
 msgid "No %{class_name} object provided"
@@ -72711,10 +72704,6 @@ msgstr "Sistema/Processo"
 #: ../app/views/shared/buttons/_ab_show.html.haml
 msgid "System/Process/"
 msgstr "Sistema/Processo/"
-
-#: ../app/javascript/components/schedule-form/schedule-form-fields.js
-msgid "System/Proess"
-msgstr "Sistema/Proess"
 
 #: ../config/model_attributes.rb
 msgid "SystemConsole|Host name"

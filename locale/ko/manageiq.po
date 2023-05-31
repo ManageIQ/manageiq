@@ -21417,7 +21417,6 @@ msgid "Date Range (M/D/Y - M/D/Y)"
 msgstr "날짜 범위(M/D/Y - M/D/Y)"
 
 #. TRANSLATORS: file: product/views/EventLog-event_logs.yaml
-#: ../app/javascript/components/timeline-options/timeline-table.jsx
 #: ../config/yaml_strings.rb
 msgid "Date Time"
 msgstr "날짜 시간"
@@ -48503,7 +48502,6 @@ msgstr "이름*"
 #: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js
 #: ../app/javascript/components/host-initiator-group-form/host-initiator-group-form.schema.js
 #: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
-#: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 msgid "Name:"
 msgstr "이름:"
 
@@ -49646,11 +49644,6 @@ msgstr "아니오"
 #: src/rbac-forms/rbacUserTagsList.jsx
 msgid "No %s Tags have been assigned"
 msgstr "%s 태그가 지정되지 않았습니다."
-
-#:
-#: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
-msgid "No %s with selected capabilities."
-msgstr "선택한 기능이 포함된 %s이(가) 없습니다."
 
 #: ../app/models/miq_report/generator.rb
 msgid "No %{class_name} object provided"
@@ -70509,10 +70502,6 @@ msgstr "시스템/프로세스"
 #: ../app/views/shared/buttons/_ab_show.html.haml
 msgid "System/Process/"
 msgstr "시스템/프로세스/"
-
-#: ../app/javascript/components/schedule-form/schedule-form-fields.js
-msgid "System/Proess"
-msgstr "시스템/프로세스"
 
 #: ../config/model_attributes.rb
 msgid "SystemConsole|Host name"
