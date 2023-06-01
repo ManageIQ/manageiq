@@ -164,9 +164,9 @@ class MiqRequestTask < ApplicationRecord
       :args           => [args],
       :role           => 'automate',
       :zone           => options.fetch(:miq_zone, zone),
-      :tracking_label => tracking_label_id,
+      :tracking_label => tracking_label_id
     )
-    update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
+    update_and_notify_parent(:state => "pending", :status => "Ok", :message => "Automation Starting")
   end
 
   def execute_queue(queue_options = {})

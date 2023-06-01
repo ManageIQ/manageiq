@@ -25,7 +25,7 @@ class MiqRetireTask < MiqRequestTask
       :tenant_id     => miq_request.requester.current_group.tenant_id,
     }
 
-    MiqAeEngine::set_automation_attributes_from_objects(source, args[:attrs])
+    MiqAeEngine.set_automation_attributes_from_objects(source, args[:attrs])
 
     zone ||= source.respond_to?(:my_zone) ? source.my_zone : MiqServer.my_zone
     MiqQueue.put(
@@ -34,7 +34,7 @@ class MiqRetireTask < MiqRequestTask
       :args           => [args],
       :role           => 'automate',
       :zone           => options.fetch(:miq_zone, zone),
-      :tracking_label => tracking_label_id,
+      :tracking_label => tracking_label_id
     )
     update_and_notify_parent(:state => "pending", :status => "Ok", :message => "Automation Starting")
   end
