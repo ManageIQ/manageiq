@@ -117,48 +117,44 @@ class ServiceTemplateProvisionTask < MiqRequestTask
   end
 
   def deliver_to_automate(req_type = request_type, _zone = nil)
-    if self.class::AUTOMATE_DRIVES
-      dialog_values = options[:dialog] || {}
-      dialog_values["request"] = req_type
+    dialog_values = options[:dialog] || {}
+    dialog_values["request"] = req_type
 
-      args = {
-        :object_type      => self.class.name,
-        :object_id        => id,
-        :namespace        => "Service/Provisioning/StateMachines",
-        :class_name       => "ServiceProvision_Template",
-        :instance_name    => req_type,
-        :automate_message => "create",
-        :attrs            => dialog_values
-      }
+    args = {
+      :object_type      => self.class.name,
+      :object_id        => id,
+      :namespace        => "Service/Provisioning/StateMachines",
+      :class_name       => "ServiceProvision_Template",
+      :instance_name    => req_type,
+      :automate_message => "create",
+      :attrs            => dialog_values
+    }
 
-      # Automate entry point overrides from the resource_action
-      ra = resource_action
+    # Automate entry point overrides from the resource_action
+    ra = resource_action
 
-      unless ra.nil?
-        args[:namespace]        = ra.ae_namespace unless ra.ae_namespace.blank?
-        args[:class_name]       = ra.ae_class     unless ra.ae_class.blank?
-        args[:instance_name]    = ra.ae_instance  unless ra.ae_instance.blank?
-        args[:automate_message] = ra.ae_message   unless ra.ae_message.blank?
-        args[:attrs].merge!(ra.ae_attributes)
-      end
-
-      args[:attrs].merge!(MiqAeEngine.create_automation_attributes(destination.class.base_model.name => destination)) if destination.present?
-      args[:user_id]      = get_user.id
-      args[:miq_group_id] = get_user.current_group.id
-      args[:tenant_id]    = get_user.current_tenant.id
-
-      MiqQueue.put(
-        :class_name     => 'MiqAeEngine',
-        :method_name    => 'deliver',
-        :args           => [args],
-        :role           => 'automate',
-        :zone           => options.fetch(:miq_zone, my_zone),
-        :tracking_label => tracking_label_id
-      )
-      update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
-    else
-      execute_queue
+    unless ra.nil?
+      args[:namespace]        = ra.ae_namespace if ra.ae_namespace.present?
+      args[:class_name]       = ra.ae_class     if ra.ae_class.present?
+      args[:instance_name]    = ra.ae_instance  if ra.ae_instance.present?
+      args[:automate_message] = ra.ae_message   if ra.ae_message.present?
+      args[:attrs].merge!(ra.ae_attributes)
     end
+
+    args[:attrs].merge!(MiqAeEngine.create_automation_attributes(destination.class.base_model.name => destination)) if destination.present?
+    args[:user_id]      = get_user.id
+    args[:miq_group_id] = get_user.current_group.id
+    args[:tenant_id]    = get_user.current_tenant.id
+
+    MiqQueue.put(
+      :class_name     => 'MiqAeEngine',
+      :method_name    => 'deliver',
+      :args           => [args],
+      :role           => 'automate',
+      :zone           => options.fetch(:miq_zone, my_zone),
+      :tracking_label => tracking_label_id
+    )
+    update_and_notify_parent(:state => "pending", :status => "Ok", :message => "Automation Starting")
   end
 
   def resource_action
