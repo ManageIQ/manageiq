@@ -41,6 +41,9 @@ gem "fast_gettext",                     "~>2.0.1"
 gem "gettext_i18n_rails",               "~>1.10.1"
 gem "gettext_i18n_rails_js",            "~>1.3.0"
 gem "hamlit",                           "~>2.11.0"
+# rails-i18n typically takes care of this dependency
+# hardcoding to avoid 1.14 issue. remove once 1.15 comes out
+gem "i18n",                             "~>1.13.0"
 gem "inifile",                          "~>3.0",             :require => false
 gem "inventory_refresh",                "~>2.0",             :require => false
 gem "kubeclient",                       "~>4.0",             :require => false # For scaling pods at runtime
