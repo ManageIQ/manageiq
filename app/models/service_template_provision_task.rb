@@ -88,7 +88,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
       _log.info(message)
       update_and_notify_parent(:state => 'provisioned', :message => message)
     else
-      miq_request_tasks.each(&:deliver_to_automate)
+      miq_request_tasks.each(&:deliver_queue)
       message = "Service Provision started"
       _log.info(message)
       update_and_notify_parent(:message => message)
@@ -117,10 +117,6 @@ class ServiceTemplateProvisionTask < MiqRequestTask
   end
 
   def deliver_to_automate(req_type = request_type, _zone = nil)
-    task_check_on_delivery
-
-    _log.info("Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
-
     if self.class::AUTOMATE_DRIVES
       dialog_values = options[:dialog] || {}
       dialog_values["request"] = req_type

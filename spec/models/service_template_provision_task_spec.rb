@@ -75,7 +75,7 @@ RSpec.describe ServiceTemplateProvisionTask do
       end
     end
 
-    describe "#deliver_to_automate" do
+    describe "#deliver_queue" do
       context "when the state is not active" do
         before do
           @st_zone            = FactoryBot.create(:zone, :name => "service_template_zone")
@@ -111,31 +111,31 @@ RSpec.describe ServiceTemplateProvisionTask do
             :zone           => 'special',
             :tracking_label => tracking_label
           )
-          @task_0.deliver_to_automate
+          @task_0.deliver_queue
         end
 
         it "sets queue item to zone specified in dialog" do
           zone = FactoryBot.create(:zone, :name => 'dialog_zone')
           @task_0.update(:options => {:dialog => {"dialog_zone" => zone.name}})
           expect(MiqQueue).to receive(:put).with(hash_including(:zone => zone.name))
-          @task_0.deliver_to_automate
+          @task_0.deliver_queue
         end
 
         it "sets queue item to zone specified in service template without dialog" do
           expect(MiqQueue).to receive(:put).with(hash_including(:zone => @st_zone.name))
-          @task_0.deliver_to_automate
+          @task_0.deliver_queue
         end
 
         it "sets queue item to server's zone if not specified in dialog and service template" do
           @task_0.source.update(:zone => nil)
           expect(MiqQueue).to receive(:put).with(hash_including(:zone => 'a_server_zone'))
-          @task_0.deliver_to_automate
+          @task_0.deliver_queue
         end
       end
 
       it "raises an error when the state is already active" do
         @task_0.state = 'active'
-        expect { @task_0.deliver_to_automate }.to raise_error('Service_Template_Provisioning request is already being processed')
+        expect { @task_0.deliver_queue }.to raise_error('Service_Template_Provisioning request is already being processed')
       end
     end
 
