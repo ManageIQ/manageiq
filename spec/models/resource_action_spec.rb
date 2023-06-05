@@ -81,7 +81,7 @@ RSpec.describe ResourceAction do
       end
 
       it 'calls execute on the configuration_script_payload' do
-        expect(configuration_script_payload).to receive(:run).with({}, user.userid)
+        expect(configuration_script_payload).to receive(:run).with(:inputs => {}, :userid => user.userid, :zone => nil)
         ra.deliver_queue({}, nil, user)
       end
     end
@@ -107,7 +107,7 @@ RSpec.describe ResourceAction do
       let(:task) { FactoryBot.create(:miq_task, :state => MiqTask::STATE_FINISHED, :context_data => {:workflow_instance_id => configuration_script.id}) }
 
       it "calls deliver_queue" do
-        expect(configuration_script_payload).to receive(:run).with({}, user.userid).and_return(task.id)
+        expect(configuration_script_payload).to receive(:run).with(:inputs => {}, :userid => user.userid, :zone => nil).and_return(task.id)
         expect(ra.deliver({}, nil, user)).to eq(output)
       end
     end
