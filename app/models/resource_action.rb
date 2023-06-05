@@ -85,7 +85,7 @@ class ResourceAction < ApplicationRecord
     _log.info("Queuing <#{self.class.name}:#{id}> for <#{resource_type}:#{resource_id}>")
 
     if configuration_script_payload
-      configuration_script_payload.run(dialog_hash_values, user.userid)
+      configuration_script_payload.run(:inputs => dialog_hash_values, :userid => user.userid, :zone => target.try(:my_zone))
     else
       MiqAeEngine.deliver_queue(automate_queue_hash(target, dialog_hash_values[:dialog], user, task_id),
                                 :zone     => target.try(:my_zone),
