@@ -101,6 +101,8 @@ class Chargeback < ActsAsArModel
       [{:key => "#{tenant ? tenant.id : 'none'}_#{ts_key}"}]
     elsif @options.group_by_date_only?
       [{:key => ts_key.to_s}]
+    elsif @options.group_by_date_first?
+      [{:key => "#{ts_key}_#{consumption.resource_id}"}]
     else
       [{:key => default_key(consumption, ts_key)}]
     end
@@ -247,8 +249,13 @@ class Chargeback < ActsAsArModel
                   else                  report_static_cols
                   end
     rpt.cols      = %w(start_date display_range) + static_cols
-    rpt.col_order = static_cols + ["display_range"]
-    rpt.sortby    = static_cols + ["start_date"]
+    if group_by == "date-first"
+      rpt.col_order = ["display_range"] + static_cols
+      rpt.sortby    = (["start_date"] + static_cols)
+    else
+      rpt.col_order = static_cols + ["display_range"]
+      rpt.sortby    = (static_cols + ["start_date"])
+    end
 
     rpt.col_order.each do |c|
       header_column = if (c == report_tag_field && header_for_tag)
