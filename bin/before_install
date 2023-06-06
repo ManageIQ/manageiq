@@ -19,6 +19,7 @@ if [ -n "$CI" ]; then
   echo "== Setup git config =="
   git config --global user.name "ManageIQ"
   git config --global user.email "contact@manageiq.org"
+  git config --global init.defaultBranch "master"
   echo
 
   # Gemfile.lock.release only applies to non-master branches and PRs to non-master branches
