@@ -1,46 +1,47 @@
 module Spec
   module Support
     module MetricHelper
-      # given (enabled) capture_targets, compare with suggested queue entries
-      def metric_targets(expected_targets)
-        expected_targets.flat_map do |t|
-          # Storage is hourly only
-          # Non-storage historical is expecting 7 days back, plus partial day = 8
-          t.kind_of?(Storage) ? [[t, "hourly"]] : [[t, "realtime"]] + [[t, "historical"]] * 8
-        end
-      end
-
-      # @return [Array<Array<Object, String>>] List of object and interval names in miq queue
-      def queue_intervals(items = MiqQueue.where(:method_name => %w[perf_capture_hourly perf_capture_realtime perf_capture_historical]))
-        items.map do |q|
-          interval_name = q.method_name.sub("perf_capture_", "")
-          [Object.const_get(q.class_name).find(q.instance_id), interval_name]
-        end
-      end
-
       # method_name => {target => [timing1, timing2] }
       # for each capture type, what objects are submitted and what are their time frames
+      #
+      # The objects can be added as a batch or invididually. Additionally dates can be
+      # split up into multiple date ranges.
+      # This method undoes the batching and splitting to make testing more consistent
+      #
       # @return [Hash{String => Hash{Object => Array<Array>}} ]
+      #         {"Vm:1" => [[start_time1, finish_time1], [start_time2, finish_time2]]}
       def queue_timings(items = MiqQueue.where(:method_name => %w[perf_capture_hourly perf_capture_realtime perf_capture_historical]))
         messages = {}
         items.each do |q|
-          obj = q.instance_id ? Object.const_get(q.class_name).find(q.instance_id) : q.class_name.constantize
+          klass = q.class_name.constantize.base_class.name
+          # If the third argument contains a list of object ids
+          # we denormalize to one message per object_id
+          date_first, date_end, ids, *_ = q.args
+          ids = [q.instance_id] if ids.blank?
+          objs = ids.sort.map { |id| "#{klass}:#{id}" }
 
-          interval_name = q.method_name.sub("perf_capture_", "")
+          objs.each do |obj|
+            interval_name = q.method_name.sub("perf_capture_", "")
 
-          messages[interval_name] ||= {}
-          (messages[interval_name][obj] ||= []) << q.args
+            # historical captures have a date range, while realtime captures do not.
+            messages[interval_name] ||= {}
+            (messages[interval_name][obj] ||= []) << (date_first ? [date_first, date_end] : [])
+          end
         end
-        messages["historical"]&.transform_values!(&:sort!)
+        # there can be multiple messages for a large date range
+        # this will combine multiple consecutive date ranges into larger ones
+        messages["historical"]&.transform_values! { |v| combine_consecutive(v) }
 
         messages
       end
 
-      # sorry, stole from the code - not really testing
+      # to make test failures easier to read, use parent_class:id
+      def queue_object(object)
+        "#{object.class.base_class.name}:#{object.id}"
+      end
+
       def arg_day_range(start_time, end_time)
-        (start_time.utc..end_time.utc).step_value(1.day).each_cons(2).collect do |s_time, e_time|
-          [s_time, e_time, nil, false]
-        end
+        [[start_time, end_time]]
       end
 
       def stub_performance_settings(hash)
@@ -58,6 +59,23 @@ module Spec
             }
           }
         }
+      end
+
+      private
+
+      def combine_consecutive(array)
+        prev_first, prev_end = array.sort!.shift
+        array.each_with_object([]) do |(cur_first, cur_end), ac|
+          # It can overlap or abut, we want to join both of those
+          #   prev=1-1-2000T0..23:59, cur=1-2-2000T0..23:59
+          #   prev=1-1-2000T0..24:00, cur=1-2-2000T0..24:00
+          if cur_first <= (prev_end + 1.second)
+            prev_end = cur_end
+          else
+            ac << [prev_first, prev_end]
+            prev_first, prev_end = cur_first, cur_end
+          end
+        end << [prev_first, prev_end]
       end
     end
   end
