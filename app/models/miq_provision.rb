@@ -45,7 +45,7 @@ class MiqProvision < MiqProvisionTask
     set_dns_domain
   end
 
-  def deliver_to_automate
+  def deliver_to_automate(*)
     super("vm_provision", my_zone)
   end
 
