@@ -23,8 +23,6 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
   end
 
   describe ".perf_capture_gap" do
-    before { stub_settings_merge(:ems => ems_concurrent_requests("vmware")) }
-
     let(:host) { FactoryBot.create(:host_vmware, :ext_management_system => ems, :perf_capture_enabled => true) }
     let!(:vm)   { FactoryBot.create(:vm_vmware, :ext_management_system => ems, :host => host) }
     let(:host2) do
@@ -41,8 +39,28 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
     let(:storage) { FactoryBot.create(:storage_vmware, :perf_capture_enabled => true) }
 
     it "should queue up targets for historical" do
+      stub_settings_merge(:ems => ems_concurrent_requests("vmware"))
       Timecop.freeze do
         Metric::Capture.perf_capture_gap(7.days.ago.utc, 5.days.ago.utc, nil, ems.id)
+        expect(queue_timings).to eq(
+          "historical" => {
+            vm    => arg_day_range(7.days.ago.utc, 5.days.ago.utc),
+            vm2   => arg_day_range(7.days.ago.utc, 5.days.ago.utc),
+            host  => arg_day_range(7.days.ago.utc, 5.days.ago.utc),
+            host2 => arg_day_range(7.days.ago.utc, 5.days.ago.utc),
+            host3 => arg_day_range(7.days.ago.utc, 5.days.ago.utc),
+          }
+        )
+      end
+    end
+
+    it "should queue up targets for historical" do
+      stub_settings_merge(:ems => ems_concurrent_requests("vmware", 3))
+      Timecop.freeze do
+        Metric::Capture.perf_capture_gap(7.days.ago.utc, 5.days.ago.utc, nil, ems.id)
+        # 2 per day
+        expect(MiqQueue.where("class_name like '%Host'").count).to eq(2)
+        expect(MiqQueue.where("class_name like '%Vm'").count).to eq(2)
         expect(queue_timings).to eq(
           "historical" => {
             vm    => arg_day_range(7.days.ago.utc, 5.days.ago.utc),
