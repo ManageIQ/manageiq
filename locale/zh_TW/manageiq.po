@@ -71676,7 +71676,7 @@ msgstr "名稱 \"%s\" 已存在於 \"%s\" 中"
 msgid ""
 "The name can contain letters, numbers, spaces, periods, colons, dashes and "
 "underscores"
-msgstr "名稱可以包含字母、數字、空格、句點、冒號、橫線及底線"
+msgstr "該名稱可以包含字母、數字、空格、句點、冒號、橫線及底線"
 
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
