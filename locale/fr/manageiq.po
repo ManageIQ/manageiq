@@ -6959,7 +6959,7 @@ msgstr "Voulez-vous vraiment supprimer cette zone ?"
 #: ../app/helpers/application_helper/toolbar/cloud_volume_snapshot_center.rb
 #: ../app/helpers/application_helper/toolbar/cloud_volume_snapshots_center.rb
 msgid "Are you sure you want to delete this cloud volume snapshot?"
-msgstr "Voulez-vous vraiment supprimer cet instantané de volume cloud ?"
+msgstr "Voulez-vous vraiment supprimer cet instantané de volume de cloud ?"
 
 #: ../app/javascript/components/settings-company-tags/index.jsx
 msgid "Are you sure you want to delete this entry?"
@@ -23545,7 +23545,7 @@ msgstr "Supprimer le filtre %{model} nommé %{filter} ?"
 #: ../app/helpers/application_helper/toolbar/cloud_volume_snapshot_center.rb
 #: ../app/helpers/application_helper/toolbar/cloud_volume_snapshots_center.rb
 msgid "Delete the Cloud Volume Snapshot"
-msgstr "Supprimer l'instantané du volume cloud"
+msgstr "Supprimer l'instantané de volume de cloud"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
@@ -29894,7 +29894,7 @@ msgstr ""
 
 #: ../app/javascript/components/host-edit-form/host-edit-form.jsx
 msgid "Edit of Host \"%s\" was cancelled."
-msgstr "L'édition de l'Hôte \"%s\" a été annulée."
+msgstr "L'édition de l'hôte \"%s\" a été annulée."
 
 #: ../app/javascript/components/host-aggregate-form/index.jsx
 msgid "Edit of Host Aggregate \"%s\" was canceled by the user."
@@ -74321,7 +74321,7 @@ msgid ""
 "underscores"
 msgstr ""
 "Le nom peut contenir des lettres, des chiffres, des espaces, des points, des "
-"signes deux-points, des tirets et des traits de soulignement"
+"deux-points, des tirets et des traits de soulignement"
 
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js

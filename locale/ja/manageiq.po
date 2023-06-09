@@ -6608,7 +6608,7 @@ msgstr "このゾーンを削除しますか?"
 #: ../app/helpers/application_helper/toolbar/cloud_volume_snapshot_center.rb
 #: ../app/helpers/application_helper/toolbar/cloud_volume_snapshots_center.rb
 msgid "Are you sure you want to delete this cloud volume snapshot?"
-msgstr "このクラウド・ボリューム・スナップショットを削除してもよろしいですか?"
+msgstr "このクラウド・ボリューム・スナップショットを削除しますか?"
 
 #: ../app/javascript/components/settings-company-tags/index.jsx
 msgid "Are you sure you want to delete this entry?"
