@@ -1,6 +1,12 @@
 module Ansible
   class Runner
     class << self
+      def available?
+        return @available if defined?(@available)
+
+        @available = system("which ansible-runner >/dev/null 2>&1")
+      end
+
       # Runs a playbook via ansible-runner, see: https://ansible-runner.readthedocs.io/en/latest/standalone.html#running-playbooks
       #
       # @param env_vars [Hash] Hash with key/value pairs that will be passed as environment variables to the

@@ -13,6 +13,21 @@ if [ -n "$CI" ]; then
   # Install gettext for I18n msgfmt specs
   sudo apt-get install -y gettext
   echo
+
+  if [ -n "$ACT" ]; then
+    # Install cmake so we can build rugged gem
+    sudo apt-get install -y cmake
+    echo
+  fi
+
+  # Install ansible-runner for ansible-runner execution specs
+  if [ -n "$ACT" ]; then
+    sudo apt-get install -y python3-pip ansible
+  fi
+  pip3 install ansible-runner 'setuptools>=62.4.0'
+  ansible --version
+  ansible-runner --version
+  echo
 fi
 
 if [ -n "$CI" ]; then
