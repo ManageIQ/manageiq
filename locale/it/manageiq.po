@@ -6918,7 +6918,7 @@ msgstr "Si è sicuri di voler eliminare questa Zona?"
 #: ../app/helpers/application_helper/toolbar/cloud_volume_snapshot_center.rb
 #: ../app/helpers/application_helper/toolbar/cloud_volume_snapshots_center.rb
 msgid "Are you sure you want to delete this cloud volume snapshot?"
-msgstr "Eliminare questa istantanea del volume cloud?"
+msgstr "Si è sicuri di voler eliminare questa istantanea del volume cloud?"
 
 #: ../app/javascript/components/settings-company-tags/index.jsx
 msgid "Are you sure you want to delete this entry?"
