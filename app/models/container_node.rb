@@ -17,6 +17,7 @@ class ContainerNode < ApplicationRecord
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   has_many   :container_groups, -> { active }
   has_many   :container_conditions, :class_name => "ContainerCondition", :as => :container_entity, :dependent => :destroy
+  has_one    :ready_condition, -> { where(:name => "Ready") }, :class_name => "ContainerCondition", :as => :container_entity, :inverse_of => :container_entity # rubocop:disable Rails/HasManyOrHasOneDependent
   has_many   :containers, :through => :container_groups
   has_many   :container_images, -> { distinct }, :through => :container_groups
   has_many   :container_services, -> { distinct }, :through => :container_groups
@@ -26,7 +27,8 @@ class ContainerNode < ApplicationRecord
   has_many   :additional_attributes, -> { where(:section => "additional_attributes") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
   has_one    :computer_system, :as => :managed_entity, :dependent => :destroy
   belongs_to :lives_on, :polymorphic => true
-  has_one   :hardware, :through => :computer_system
+  has_one    :hardware, :through => :computer_system
+  has_one    :operating_system, :through => :computer_system
 
   # Metrics destroy is handled by purger
   has_many :metrics, :as => :resource
@@ -39,10 +41,6 @@ class ContainerNode < ApplicationRecord
   virtual_column :ready_condition_status, :type => :string, :uses => :container_conditions
   virtual_column :system_distribution, :type => :string
   virtual_column :kernel_version, :type => :string
-
-  def ready_condition
-    container_conditions.find_by(:name => "Ready")
-  end
 
   def ready_condition_status
     ready_condition.try(:status) || 'None'
