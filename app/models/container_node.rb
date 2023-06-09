@@ -39,19 +39,11 @@ class ContainerNode < ApplicationRecord
 
 
   virtual_column :ready_condition_status, :type => :string, :uses => :container_conditions
-  virtual_column :system_distribution, :type => :string
-  virtual_column :kernel_version, :type => :string
+  virtual_delegate :system_distribution, :to => "operating_system.distribution", :allow_nil => true, :type => :string
+  virtual_delegate :kernel_version, :to => :operating_system, :allow_nil => true, :type => :string
 
   def ready_condition_status
     ready_condition.try(:status) || 'None'
-  end
-
-  def system_distribution
-    computer_system.try(:operating_system).try(:distribution)
-  end
-
-  def kernel_version
-    computer_system.try(:operating_system).try(:kernel_version)
   end
 
   include EventMixin
