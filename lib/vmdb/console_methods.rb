@@ -47,7 +47,7 @@ module Vmdb
           MiqQueue.where.not(:state => MiqQueue::STATE_DEQUEUE)
                   .where(deliver_on.eq(nil).or(deliver_on.lteq(Time.now.utc)))
                   .where.not(:queue_name => "miq_server")
-                  .order(:id)
+                  .order(:priority, :id)
                   .first
         end
         if q
