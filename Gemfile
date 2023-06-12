@@ -281,7 +281,7 @@ end
 ### Development and test gems are excluded from appliance and container builds to reduce size and license issues
 group :development do
   gem "foreman"
-  gem "manageiq-style",                 "~>1.2.0",           :require => false
+  gem "manageiq-style",                                      :require => false
   gem "PoParser"
   # ruby_parser is required for i18n string extraction
   gem "ruby_parser",                                         :require => false
