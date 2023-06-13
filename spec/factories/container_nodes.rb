@@ -1,7 +1,13 @@
 FactoryBot.define do
   factory :container_node do
-    after(:create) do |x|
-      x.computer_system = FactoryBot.create(:computer_system)
+    transient do
+      hardware { nil }
+    end
+
+    after(:create) do |cn, evaluator|
+      unless evaluator.computer_system
+        cn.computer_system = FactoryBot.create(:computer_system, :hardware => evaluator.hardware)
+      end
     end
   end
 
