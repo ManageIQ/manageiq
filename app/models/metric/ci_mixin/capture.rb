@@ -29,9 +29,16 @@ module Metric::CiMixin::Capture
     raise ArgumentError, _("end_time cannot be specified if start_time is nil") if start_time.nil? && !end_time.nil?
 
     # if target (== self) is archived, skip it
-    if respond_to?(:ems_id) && ems_id.nil?
-      _log.warn("C&U collection's target is archived (no EMS associated), skipping. Target: #{log_target}")
-      return
+    if respond_to?(:ext_management_system)
+      if ext_management_system.nil?
+        _log.warn("C&U collection's target is archived (no EMS associated), skipping. Target: #{log_target}")
+        return
+      end
+
+      if !ext_management_system.enabled?
+        _log.warn("C&U collection's target's EMS is paused, skipping. Target: #{log_target}")
+        return
+      end
     end
 
     metrics_capture = perf_capture_object(target_ids ? self.class.where(:id => target_ids).to_a : self)
