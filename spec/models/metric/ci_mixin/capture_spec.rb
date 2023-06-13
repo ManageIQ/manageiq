@@ -12,6 +12,7 @@ RSpec.describe Metric::CiMixin::Capture do
   let(:vm) { FactoryBot.create(:vm_perf_openstack, :ext_management_system => ems_openstack) }
 
   before do
+    Zone.seed
     allow(ems_openstack).to receive(:connect).with(:service => "Metering").and_return(metering)
   end
 
@@ -184,6 +185,15 @@ RSpec.describe Metric::CiMixin::Capture do
             expected_timestamps.each do |timestamp|
               expect(@metrics_by_ts[timestamp.iso8601].try(:cpu_usage_rate_average)).not_to eq nil
             end
+          end
+        end
+
+        context "with a paused EMS" do
+          let(:ems_openstack) { FactoryBot.create(:ems_openstack, :zone => Zone.maintenance_zone, :enabled => false) }
+
+          it "doesn't run just_perf_capture" do
+            expect(vm).not_to receive(:just_perf_capture)
+            vm.perf_capture_realtime
           end
         end
       end

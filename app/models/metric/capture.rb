@@ -42,6 +42,11 @@ module Metric::Capture
     _log.info("Queueing performance capture...")
 
     ems = ExtManagementSystem.find(ems_id)
+    if !ems.enabled?
+      _log.info("Queueing performance capture...Skipping because name: [#{ems.name}] id: [#{ems.id}] is paused")
+      return
+    end
+
     ems.perf_capture_object.perf_capture_all_queue
 
     _log.info("Queueing performance capture...Complete")
