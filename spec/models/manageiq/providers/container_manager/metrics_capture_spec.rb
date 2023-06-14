@@ -28,6 +28,7 @@ RSpec.describe ManageIQ::Providers::ContainerManager::MetricsCapture do
       end
 
       context "with inventory" do
+        let(:ems)              { FactoryBot.create(:ems_container, :with_metrics_endpoint, :zone => miq_server.zone) }
         let(:deleted_on)       { nil }
         let!(:container_node)  { FactoryBot.create(:container_node, :ext_management_system => ems, :deleted_on => deleted_on) }
         let!(:container_group) { FactoryBot.create(:container_group, :ext_management_system => ems, :deleted_on => deleted_on) }
