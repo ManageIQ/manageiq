@@ -289,9 +289,9 @@ class MiqServer < ApplicationRecord
 
   def shutdown
     _log.info("initiated for #{format_full_log_msg}")
-    MiqEvent.raise_evm_event(self, "evm_server_stop")
-
     quiesce
+
+    MiqEvent.raise_evm_event(self, "evm_server_stop") rescue nil
   end
 
   def shutdown_and_exit(exit_status = 0)
