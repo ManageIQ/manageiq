@@ -18,19 +18,17 @@ require 'digest'
 #     get: Defaults to "generic" but is typically overridden by the caller (a worker)
 #
 class MiqQueue < ApplicationRecord
+  require_nested :Priority
+  MAX_PRIORITY    = Priority.new(Priority::MAX)
+  HIGH_PRIORITY   = Priority.new(Priority::HIGH)
+  NORMAL_PRIORITY = Priority.new(Priority::NORMAL)
+  LOW_PRIORITY    = Priority.new(Priority::LOW)
+  MIN_PRIORITY    = Priority.new(Priority::MIN)
+
   belongs_to :handler, :polymorphic => true
   belongs_to :miq_task
 
   attr_accessor :last_exception
-
-  MAX_PRIORITY    = 0
-  HIGH_PRIORITY   = 20
-  NORMAL_PRIORITY = 100
-  LOW_PRIORITY    = 150
-  MIN_PRIORITY    = 200
-
-  PRIORITY_WHICH  = [:max, :high, :normal, :low, :min]
-  PRIORITY_DIR    = [:higher, :lower]
 
   def self.messaging_type
     ENV.fetch("MESSAGING_TYPE", nil) || Settings.messaging.type
@@ -66,38 +64,6 @@ class MiqQueue < ApplicationRecord
 
   def self.columns_for_requeue
     @requeue_columns ||= MiqQueue.column_names.map(&:to_sym) - [:id]
-  end
-
-  def self.priority(which, dir = nil, by = 0)
-    unless which.kind_of?(Integer) || PRIORITY_WHICH.include?(which)
-      raise ArgumentError,
-            _("which must be an Integer or one of %{priority}") % {:priority => PRIORITY_WHICH.join(", ")}
-    end
-    unless dir.nil? || PRIORITY_DIR.include?(dir)
-      raise ArgumentError, _("dir must be one of %{directory}") % {:directory => PRIORITY_DIR.join(", ")}
-    end
-
-    which = const_get("#{which.to_s.upcase}_PRIORITY") unless which.kind_of?(Integer)
-    priority = which.send(dir == :higher ? "-" : "+", by)
-    priority = MIN_PRIORITY if priority > MIN_PRIORITY
-    priority = MAX_PRIORITY if priority < MAX_PRIORITY
-    priority
-  end
-
-  def self.higher_priority(*priorities)
-    priorities.min
-  end
-
-  def self.lower_priority(*priorities)
-    priorities.max
-  end
-
-  def self.higher_priority?(p1, p2)
-    p1 < p2
-  end
-
-  def self.lower_priority?(p1, p2)
-    p1 > p2
   end
 
   TIMEOUT = 10.minutes
@@ -636,6 +602,14 @@ class MiqQueue < ApplicationRecord
 
   def self.display_name(number = 1)
     n_('Queue', 'Queues', number)
+  end
+
+  def priority
+    Priority.new(super)
+  end
+
+  def priority=(value)
+    super(value.to_i)
   end
 
   private

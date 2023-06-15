@@ -295,36 +295,36 @@ RSpec.describe MiqQueue do
 
   context "executing priority" do
     it "should return adjusted value" do
-      expect(MiqQueue.priority(:max)).to eq(MiqQueue::MAX_PRIORITY)
-      expect(MiqQueue.priority(:high)).to eq(MiqQueue::HIGH_PRIORITY)
-      expect(MiqQueue.priority(:normal)).to eq(MiqQueue::NORMAL_PRIORITY)
-      expect(MiqQueue.priority(:low)).to eq(MiqQueue::LOW_PRIORITY)
-      expect(MiqQueue.priority(:min)).to eq(MiqQueue::MIN_PRIORITY)
+      # expect(MiqQueue.priority(:max)).to eq(MiqQueue::MAX_PRIORITY)
+      # expect(MiqQueue.priority(:high)).to eq(MiqQueue::HIGH_PRIORITY)
+      # expect(MiqQueue.priority(:normal)).to eq(MiqQueue::NORMAL_PRIORITY)
+      # expect(MiqQueue.priority(:low)).to eq(MiqQueue::LOW_PRIORITY)
+      # expect(MiqQueue.priority(:min)).to eq(MiqQueue::MIN_PRIORITY)
 
-      expect(MiqQueue.priority(5000)).to eq(MiqQueue::MIN_PRIORITY)
-      expect(MiqQueue.priority(-5000)).to eq(MiqQueue::MAX_PRIORITY)
-      expect(MiqQueue.priority(100)).to eq(100)
+      expect(MiqQueue::Priority.new(5000)).to  eq(MiqQueue::MIN_PRIORITY)
+      expect(MiqQueue::Priority.new(-5000)).to eq(MiqQueue::MAX_PRIORITY)
+      expect(MiqQueue::Priority.new(100)).to   eq(100)
 
-      expect { MiqQueue.priority(:other)        }.to raise_error(ArgumentError)
-      expect { MiqQueue.priority(:high, :other) }.to raise_error(ArgumentError)
+      expect(MiqQueue::NORMAL_PRIORITY.raise_priority(by: 10)).to eq(MiqQueue::NORMAL_PRIORITY.to_i - 10)
+      expect(MiqQueue::NORMAL_PRIORITY.lower_priority(by: 10)).to eq(MiqQueue::NORMAL_PRIORITY.to_i + 10)
 
-      expect(MiqQueue.priority(:normal, :higher, 10)).to eq(MiqQueue::NORMAL_PRIORITY - 10)
-      expect(MiqQueue.priority(:normal, :lower,  10)).to eq(MiqQueue::NORMAL_PRIORITY + 10)
 
-      expect(MiqQueue.priority(:min, :lower,  1)).to eq(MiqQueue::MIN_PRIORITY)
-      expect(MiqQueue.priority(:max, :higher, 1)).to eq(MiqQueue::MAX_PRIORITY)
+      expect(MiqQueue::MIN_PRIORITY.lower_priority(by: 1)).to eq(MiqQueue::MIN_PRIORITY)
+      expect(MiqQueue::MAX_PRIORITY.raise_priority(by: 1)).to eq(MiqQueue::MAX_PRIORITY)
     end
 
     it "should validate comparisons" do
-      expect(MiqQueue.higher_priority(MiqQueue::MIN_PRIORITY, MiqQueue::MAX_PRIORITY)).to eq(MiqQueue::MAX_PRIORITY)
-      expect(MiqQueue.higher_priority(MiqQueue::MAX_PRIORITY, MiqQueue::MIN_PRIORITY)).to eq(MiqQueue::MAX_PRIORITY)
-      expect(MiqQueue.higher_priority?(MiqQueue::MIN_PRIORITY, MiqQueue::MAX_PRIORITY)).to be_falsey
-      expect(MiqQueue.higher_priority?(MiqQueue::MAX_PRIORITY, MiqQueue::MIN_PRIORITY)).to be_truthy
+      expect([MiqQueue::MIN_PRIORITY, MiqQueue::MAX_PRIORITY].max).to eq(MiqQueue::MAX_PRIORITY)
+      expect([MiqQueue::MAX_PRIORITY, MiqQueue::MIN_PRIORITY].max).to eq(MiqQueue::MAX_PRIORITY)
 
-      expect(MiqQueue.lower_priority(MiqQueue::MIN_PRIORITY,  MiqQueue::MAX_PRIORITY)).to eq(MiqQueue::MIN_PRIORITY)
-      expect(MiqQueue.lower_priority(MiqQueue::MAX_PRIORITY,  MiqQueue::MIN_PRIORITY)).to eq(MiqQueue::MIN_PRIORITY)
-      expect(MiqQueue.lower_priority?(MiqQueue::MIN_PRIORITY,  MiqQueue::MAX_PRIORITY)).to be_truthy
-      expect(MiqQueue.lower_priority?(MiqQueue::MAX_PRIORITY,  MiqQueue::MIN_PRIORITY)).to be_falsey
+      expect(MiqQueue::MIN_PRIORITY.higher_than?(MiqQueue::MAX_PRIORITY)).to be(false)
+      expect(MiqQueue::MAX_PRIORITY.higher_than?(MiqQueue::MIN_PRIORITY)).to be(true)
+
+      expect([MiqQueue::MIN_PRIORITY, MiqQueue::MAX_PRIORITY].min).to eq(MiqQueue::MIN_PRIORITY)
+      expect([MiqQueue::MAX_PRIORITY, MiqQueue::MIN_PRIORITY].min).to eq(MiqQueue::MIN_PRIORITY)
+
+      expect(MiqQueue::MIN_PRIORITY.lower_than?(MiqQueue::MAX_PRIORITY)).to be(true)
+      expect(MiqQueue::MAX_PRIORITY.lower_than?(MiqQueue::MIN_PRIORITY)).to be(false)
     end
   end
 
