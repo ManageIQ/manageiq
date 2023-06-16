@@ -65,7 +65,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::OpenstackCredenti
   end
 
   def self.params_to_attributes(params)
-    attrs = params.dup
+    attrs = super
 
     if %i[host domain project].any? {|opt| attrs.has_key? opt }
       attrs[:options]         ||= {}

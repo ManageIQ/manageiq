@@ -20,8 +20,12 @@ class ManageIQ::Providers::EmbeddedAutomationManager::Authentication < ManageIQ:
 
   include ManageIQ::Providers::EmbeddedAutomationManager::CrudCommon
 
-  def self.params_to_attributes(_params)
-    raise NotImplementedError, "must be implemented in a subclass"
+  def self.params_to_attributes(params)
+    allowed_params     = API_ATTRIBUTES.pluck(:id)
+    unpermitted_params = params.keys - allowed_params
+    raise ArgumentError, _("Invalid parameters: %{params}" % {:params => unpermitted_params.join(", ")}) if unpermitted_params.any?
+
+    params
   end
 
   def self.raw_create_in_provider(manager, params)
