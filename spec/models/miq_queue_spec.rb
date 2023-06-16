@@ -997,6 +997,32 @@ RSpec.describe MiqQueue do
     end
   end
 
+  context ".queue_name_for_priority_service" do
+    it "returns generic queue for high priority work" do
+      expect(described_class.queue_name_for_priority_service('service', described_class::HIGH_PRIORITY)).to eq('generic')
+    end
+
+    it "returns generic queue for max priority work" do
+      expect(described_class.queue_name_for_priority_service('service', described_class::MAX_PRIORITY)).to eq('generic')
+    end
+
+    it "returns service queue for normal priority work" do
+      expect(described_class.queue_name_for_priority_service('service', described_class::NORMAL_PRIORITY)).to eq('service')
+    end
+
+    it "returns service queue for slightly higher than normal priority work" do
+      expect(described_class.queue_name_for_priority_service('service', described_class::NORMAL_PRIORITY - 10)).to eq('service')
+    end
+
+    it "returns service queue for slightly lower than high priority work" do
+      expect(described_class.queue_name_for_priority_service('service', described_class::HIGH_PRIORITY + 10)).to eq('service')
+    end
+
+    it "returns service queue for work with no priority specified" do
+      expect(described_class.queue_name_for_priority_service('service', nil)).to eq('service')
+    end
+  end
+
   describe ".messaging_client_options" do
     context "with ENV" do
       let(:env_vars) { ENV.to_h.merge("MESSAGING_HOSTNAME" => "server.example.com", "MESSAGING_PORT" => "9092", "MESSAGING_USERNAME" => "admin") }
