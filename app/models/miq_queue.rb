@@ -231,7 +231,7 @@ class MiqQueue < ApplicationRecord
     when "notifier"
       options[:role] = service
     when "reporting"
-      options[:queue_name] = "generic"
+      options[:queue_name] = queue_name_for_priority_service(service, options[:priority])
       options[:role] = service
     when "smartproxy"
       options[:queue_name] = "smartproxy"
@@ -244,6 +244,23 @@ class MiqQueue < ApplicationRecord
     # Note, options[:zone] is set in 'put' via 'determine_queue_zone' and handles setting
     # a nil (any) zone for regional roles.  Therefore, regional roles don't need to set zone here.
     put(options)
+  end
+
+  # For services with a dedicated queue_name and worker, such as reporting, high priority work is
+  # run in the 'generic' queue with HIGH_PRIORITY so priority workers or even generic workers can
+  # pick it up immediately. Anything but high priority work or higher is run in the service's
+  # queue, such as 'reporting', and the dedicated worker will process this message following
+  # priority processing.
+  #
+  # Why? For example, with 'reporting', reports are often started by a user who is actively waiting
+  # for the result so we need a way to expedite their request in workers who deal with high
+  # priority work.  At the same time, if a user isn't actively waiting for a report, it should be
+  # handled by reporting workers and not sit behind other items in the generic queue as it's far
+  # easier to scale these workers up and down as needed.
+  #
+  # TODO: Review if other services in submit_job, such as event/smart proxy should follow this pattern.
+  def self.queue_name_for_priority_service(service, priority)
+    (priority.nil? || MiqQueue.lower_priority?(priority, HIGH_PRIORITY)) ? service.to_s : "generic"
   end
 
   def self.where_queue_name(is_array)
