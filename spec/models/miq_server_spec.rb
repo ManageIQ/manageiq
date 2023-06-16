@@ -86,10 +86,18 @@ RSpec.describe MiqServer do
       expect(@miq_server.errors.messages[:zone]).to be_present
     end
 
-    it "shutdown will raise an event and quiesce" do
-      expect(MiqEvent).to receive(:raise_evm_event)
-      expect(@miq_server).to receive(:quiesce)
-      @miq_server.shutdown
+    context "#shutdown" do
+      it "will quiesce and raise an event" do
+        expect(MiqEvent).to receive(:raise_evm_event)
+        expect(@miq_server).to receive(:quiesce)
+        @miq_server.shutdown
+      end
+
+      it "exceptions during raise event will not prevent quiesce and will be ignored" do
+        allow(MiqEvent).to receive(:raise_evm_event).and_raise(StandardError)
+        expect(@miq_server).to receive(:quiesce)
+        @miq_server.shutdown
+      end
     end
 
     it "sync stop will do nothing if stopped" do
