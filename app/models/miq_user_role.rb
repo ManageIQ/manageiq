@@ -101,12 +101,12 @@ class MiqUserRole < ApplicationRecord
   virtual_total :group_count, :miq_groups
 
   def vm_restriction
-    vmr = settings && settings.fetch_path(:restrictions, :vms)
+    vmr = settings&.dig(:restrictions, :vms)
     vmr ? RESTRICTIONS[vmr] : "None"
   end
 
   def service_template_restriction
-    str = settings && settings.fetch_path(:restrictions, :service_templates)
+    str = settings&.dig(:restrictions, :service_templates)
     str ? RESTRICTIONS[str] : "None"
   end
 
