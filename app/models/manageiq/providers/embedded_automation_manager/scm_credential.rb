@@ -56,7 +56,7 @@ class ManageIQ::Providers::EmbeddedAutomationManager::ScmCredential < ManageIQ::
   end
 
   def self.params_to_attributes(params)
-    attrs = params.dup
+    attrs = super.dup
 
     attrs[:auth_key]          = attrs.delete(:ssh_key_data)    if attrs.key?(:ssh_key_data)
     attrs[:auth_key_password] = attrs.delete(:ssh_key_unlock)  if attrs.key?(:ssh_key_unlock)
