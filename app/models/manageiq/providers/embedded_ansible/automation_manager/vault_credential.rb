@@ -28,7 +28,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VaultCredential <
   alias vault_password password
 
   def self.params_to_attributes(params)
-    attrs = super
+    attrs = super.dup
     attrs[:password] = attrs.delete(:vault_password) if attrs.key?(:vault_password)
     attrs
   end

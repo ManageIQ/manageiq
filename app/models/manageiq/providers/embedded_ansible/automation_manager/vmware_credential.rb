@@ -47,7 +47,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VmwareCredential 
   end
 
   def self.params_to_attributes(params)
-    attrs = super
+    attrs = super.dup
     attrs[:options] = { :host => attrs.delete(:host) } if attrs[:host]
     attrs
   end
