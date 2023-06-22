@@ -21,7 +21,7 @@ class ManageIQ::Providers::EmbeddedAutomationManager::Authentication < ManageIQ:
   include ManageIQ::Providers::EmbeddedAutomationManager::CrudCommon
 
   def self.params_to_attributes(params)
-    allowed_params     = API_ATTRIBUTES.pluck(:id)
+    allowed_params     = self::API_ATTRIBUTES.pluck(:id) + %w[name type options]
     unpermitted_params = params.keys.map(&:to_s) - allowed_params
     raise ArgumentError, _("Invalid parameters: %{params}" % {:params => unpermitted_params.join(", ")}) if unpermitted_params.any?
 
