@@ -66,6 +66,10 @@ RSpec.describe SupportsFeatureMixin do
       expect(test_class.supports?(:dynamic_feature)).to be_truthy
     end
 
+    it "handles unknown supports" do
+      expect(test_class.supports?(:denial_unknown_feature)).to be_falsey
+    end
+
     context "with child class" do
       it "overrides to deny" do
         child_class = define_model(nil, test_class, :std_accept => false, :module_accept => false, :dynamic_feature => false)
@@ -97,6 +101,10 @@ RSpec.describe SupportsFeatureMixin do
     it "denies with no reason given" do
       test_class.supports_not :denial_no_reason
       expect(test_inst.supports?(:denial_no_reason)).to be_falsey
+    end
+
+    it "handles unknown supports" do
+      expect(test_inst.supports?(:denial_unknown_feature)).to be_falsey
     end
 
     it "denies dynamic attrs" do
@@ -183,6 +191,10 @@ RSpec.describe SupportsFeatureMixin do
       test_class.supports_not :denial_no_reason
       expect(test_class.unsupported_reason(:denial_no_reason)).to eq("Feature not available/supported")
     end
+
+    it "defaults denial reason for unknown feature" do
+      expect(test_class.unsupported_reason(:denial_unknown_feature)).to eq("Feature not available/supported")
+    end
   end
 
   describe '#unsupported_reason' do
@@ -195,6 +207,10 @@ RSpec.describe SupportsFeatureMixin do
     it "gives defaults denial reason" do
       test_class.supports_not :denial_no_reason
       expect(test_inst.unsupported_reason(:denial_no_reason)).to eq("Feature not available/supported")
+    end
+
+    it "defaults denial reason for unknown feature" do
+      expect(test_inst.unsupported_reason(:denial_unknown_feature)).to eq("Feature not available/supported")
     end
 
     it "gives reason when dynamic feature" do
