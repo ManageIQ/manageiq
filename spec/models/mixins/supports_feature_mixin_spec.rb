@@ -43,9 +43,9 @@ RSpec.describe SupportsFeatureMixin do
 
   describe ".supports_feature?" do
     it "defines supports on the class" do
-      expect(test_class.supports?(:std_accept)).to be_truthy
-      expect(test_class.supports?(:module_accept)).to be_truthy
-      expect(test_class.supports?(:std_denial)).to be_falsey
+      expect(test_class.supports_std_accept?).to be_truthy
+      expect(test_class.supports_module_accept?).to be_truthy
+      expect(test_class.supports_std_denial?).to be_falsey
     end
   end
 
