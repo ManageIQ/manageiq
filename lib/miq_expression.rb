@@ -1536,7 +1536,7 @@ class MiqExpression
 
     conn = main_model.connection
     sql  = conn.unprepared_statement { conn.to_sql(relation_query.arel) }
-    Arel::Nodes::In.new(primary_attribute, Arel::Nodes::SqlLiteral.new(sql))
+    Arel::Nodes::In.new(primary_attribute, Arel.sql(sql))
   end
 
   def self.determine_relat_path(ref)

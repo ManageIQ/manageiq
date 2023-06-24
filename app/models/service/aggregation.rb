@@ -229,15 +229,15 @@ module Service::Aggregation
     end
 
     def zero
-      @zero ||= Arel::Nodes::SqlLiteral.new("0")
+      @zero ||= Arel.sql("0")
     end
 
     def vm_or_template_type
-      @vm_or_template_type ||= Arel::Nodes::SqlLiteral.new("'VmOrTemplate'")
+      @vm_or_template_type ||= Arel.sql("'VmOrTemplate'")
     end
 
     def ancestry_match
-      @ancestry_match ||= Arel::Nodes::SqlLiteral.new("'/%'")
+      @ancestry_match ||= Arel.sql("'/%'")
     end
 
     def ancestry_ilike
