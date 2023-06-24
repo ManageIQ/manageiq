@@ -66,8 +66,7 @@ module Service::Aggregation
     def aggregate_all_vms_disk_space_allocated_arel
       column_name     = "aggregate_all_vm_disk_space_allocated"
       coalesce_values = [disks_tbl[:size], zero]
-      aggregation_sql = Arel::Nodes::NamedFunction.new('SUM',
-                                                       [Arel::Nodes::NamedFunction.new('COALESCE', coalesce_values)])
+      aggregation_sql = Arel::Nodes::NamedFunction.new('SUM', [disks_tbl.coalesce(coalesce_values)])
       aggregate_hardware_arel(column_name, aggregation_sql, :include_disks => true)
     end
 
@@ -79,8 +78,7 @@ module Service::Aggregation
     def aggregate_all_vms_disk_space_used_arel
       column_name     = "aggregate_all_vm_disk_space_used"
       coalesce_values = [disks_tbl[:size_on_disk], disks_tbl[:size], zero]
-      aggregation_sql = Arel::Nodes::NamedFunction.new('SUM',
-                                                       [Arel::Nodes::NamedFunction.new('COALESCE', coalesce_values)])
+      aggregation_sql = Arel::Nodes::NamedFunction.new('SUM', [disks_tbl.coalesce(coalesce_values)])
       aggregate_hardware_arel(column_name, aggregation_sql, :include_disks => true)
     end
 
