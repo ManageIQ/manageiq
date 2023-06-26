@@ -16,4 +16,10 @@ FactoryBot.define do
           :class  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource" do
     scm_url { "https://example.com/foo.git" }
   end
+
+  factory :embedded_workflow_configuration_script_source,
+          :parent => :configuration_script_source,
+          :class  => "ManageIQ::Providers::Workflows::AutomationManager::ConfigurationScriptSource" do
+    scm_url { "https://example.com/foo.git" }
+  end
 end
