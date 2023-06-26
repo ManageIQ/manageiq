@@ -268,7 +268,7 @@ module Metric::Rollup
 
   def self.rollup_child_metrics(obj, timestamp, interval_name, assoc)
     ts = timestamp.kind_of?(Time) ? timestamp.utc.iso8601 : timestamp
-    recs = obj.send("#{assoc}_from_vim_performance_state_for_ts", timestamp)
+    recs = obj.vim_performance_state_association(timestamp, assoc)
 
     result = {}
     counts = {}
