@@ -17,7 +17,9 @@ FactoryBot.define do
   factory :embedded_playbook,
           :class  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook",
           :parent => :configuration_script_payload
-
+  factory :embedded_workflow,
+          :class  => "ManageIQ::Providers::Workflows::AutomationManager::Workflow",
+          :parent => :configuration_script_payload
   factory :configuration_workflow,
           :class  => "ManageIQ::Providers::Awx::AutomationManager::ConfigurationWorkflow",
           :parent => :configuration_script
