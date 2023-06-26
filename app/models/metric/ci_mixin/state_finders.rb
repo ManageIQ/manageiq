@@ -32,43 +32,11 @@ module Metric::CiMixin::StateFinders
     @states_by_ts = vim_performance_states.where(conditions).index_by { |x| x.timestamp.utc.iso8601 }
   end
 
-  def hosts_from_vim_performance_state_for_ts(ts)
-    vim_performance_state_for_ts(ts).hosts
-  end
+  def vim_performance_state_association(ts, assoc)
+    if assoc.to_s == "miq_regions"
+      return respond_to?(:miq_regions) ? miq_regions : []
+    end
 
-  def container_nodes_from_vim_performance_state_for_ts(ts)
-    vim_performance_state_for_ts(ts).container_nodes
-  end
-
-  def vms_from_vim_performance_state_for_ts(ts)
-    vim_performance_state_for_ts(ts).vms
-  end
-
-  def container_groups_from_vim_performance_state_for_ts(ts)
-    vim_performance_state_for_ts(ts).container_groups
-  end
-
-  def all_container_groups_from_vim_performance_state_for_ts(ts)
-    vim_performance_state_for_ts(ts).all_container_groups
-  end
-
-  def ext_management_systems_from_vim_performance_state_for_ts(ts)
-    vim_performance_state_for_ts(ts).ext_management_systems
-  end
-
-  def ems_clusters_from_vim_performance_state_for_ts(ts)
-    vim_performance_state_for_ts(ts).ems_clusters
-  end
-
-  def storages_from_vim_performance_state_for_ts(ts)
-    vim_performance_state_for_ts(ts).storages
-  end
-
-  def miq_regions_from_vim_performance_state_for_ts(_ts)
-    self.respond_to?(:miq_regions) ? miq_regions : []
-  end
-
-  def containers_from_vim_performance_state_for_ts(timestamp)
-    vim_performance_state_for_ts(timestamp).containers
+    vim_performance_state_for_ts(ts).public_send(assoc)
   end
 end
