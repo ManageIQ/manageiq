@@ -1477,6 +1477,10 @@ en:
       ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VmwareCredential:          Credential (VMware)
       ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook:                  Playbook (Embedded Ansible)
       ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource: Repository (Embedded Ansible)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential:                Credential (Embedded Ansible)
+      ManageIQ::Providers::Workflows::AutomationManager::Workflow:                        Workflow
+      ManageIQ::Providers::Workflows::AutomationManager::ConfigurationScriptSource:       Repository (Embedded Workflows)
+      ManageIQ::Providers::Workflows::AutomationManager::Credential:                      Credential (Embedded Workflows)
       ManageIQ::Providers::ExternalAutomationManager:                                     Automation Manager
       ManageIQ::Providers::AutomationManager::Authentication:                             Credential
       ManageIQ::Providers::AnsibleTower::AutomationManager::AmazonCredential:             Credential (Amazon)
