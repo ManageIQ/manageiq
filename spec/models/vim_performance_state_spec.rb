@@ -9,6 +9,28 @@ RSpec.describe VimPerformanceState do
     end
   end
 
+  describe "#containers" do
+    let(:capture_time) { 5.hours.ago.utc.beginning_of_hour }
+
+    it "doesn't return records that are archived before the timestamp" do
+      container_image = FactoryBot.create(:container_image)
+      containers, other_containers = create_past_present_future_both(:containers, {:container_image => container_image})
+
+      state_data = {:assoc_ids => {:containers => {:on => (containers + other_containers).map(&:id)}}}
+      actual = described_class.new(:timestamp => capture_time, :state_data => state_data)
+      expect(actual.containers).to match_array(containers)
+    end
+
+    it "handles pruned ids" do
+      container_image = FactoryBot.create(:container_image)
+      containers = FactoryBot.create_list(:container, 1, :container_image => container_image)
+
+      state_data = {:assoc_ids => {:containers => {:on => (containers.map(&:id) + deleted_record_ids(containers))}}}
+      actual = described_class.new(:timestamp => capture_time, :state_data => state_data)
+      expect(actual.containers).to match_array(containers)
+    end
+  end
+
   describe "#vm_count_total" do
     it "will return the total vms regardless of mode" do
       state_data = {:assoc_ids => {:vms => {:on => [1], :off => [2]}}}
@@ -75,5 +97,28 @@ RSpec.describe VimPerformanceState do
         it { is_expected.to be_empty }
       end
     end
+  end
+
+  private
+
+  def create_past_present_future(factory, params)
+    create_past_present_future_both(factory, params).first
+  end
+
+  def create_past_present_future_both(factory, params)
+    # not deleted is captured
+    ret = FactoryBot.create_list(factory, 1, params)
+    # deleted before is not captured
+    old = FactoryBot.create_list(factory, 1, params.merge(:deleted_on => (capture_time - 2.hours)))
+    # deleted later is captured
+    ret << FactoryBot.create(factory, params.merge(:deleted_on => (capture_time + 2.hours)))
+
+    [ret, old]
+  end
+
+  # these represent records that have been pruned from the database
+  # so a find(id) will not be found
+  def deleted_record_ids(objs)
+    [objs.last.id + 1]
   end
 end
