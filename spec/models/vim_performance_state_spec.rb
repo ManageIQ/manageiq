@@ -31,6 +31,29 @@ RSpec.describe VimPerformanceState do
     end
   end
 
+  describe "#container_groups" do
+    # picking a date in the past to make sure active scope doesn't mess things up
+    let(:capture_time) { 5.hours.ago.utc.beginning_of_hour }
+
+    it "doesn't return records that are archived before the timestamp" do
+      container_project = FactoryBot.create(:container_project)
+      container_groups, other_container_groups = create_past_present_future_both(:container_group, :container_project => container_project)
+
+      state_data = {:assoc_ids => {:container_groups => {:on => (container_groups + other_container_groups).map(&:id)}}}
+      actual = described_class.new(:timestamp => capture_time, :state_data => state_data)
+      expect(actual.container_groups).to match_array(container_groups)
+    end
+
+    it "handles pruned ids" do
+      container_project = FactoryBot.create(:container_project)
+      container_groups = FactoryBot.create_list(:container_group, 1, :container_project => container_project)
+
+      state_data = {:assoc_ids => {:container_groups => {:on => (container_groups.map(&:id) + deleted_record_ids(container_groups))}}}
+      actual = described_class.new(:timestamp => capture_time, :state_data => state_data)
+      expect(actual.container_groups).to match_array(container_groups)
+    end
+  end
+
   describe "#vm_count_total" do
     it "will return the total vms regardless of mode" do
       state_data = {:assoc_ids => {:vms => {:on => [1], :off => [2]}}}
