@@ -1,4 +1,14 @@
 RSpec.describe VimPerformanceState do
+  describe ".capture" do
+    it "uses now" do
+      host = FactoryBot.create(:host)
+      state = VimPerformanceState.capture(host)
+
+      expect(state.timestamp).to be_within(1.minute).of(Time.now.utc.beginning_of_hour)
+      expect(state.capture_interval).to eq(3600) # 1.hour
+    end
+  end
+
   describe "#vm_count_total" do
     it "will return the total vms regardless of mode" do
       state_data = {:assoc_ids => {:vms => {:on => [1], :off => [2]}}}
