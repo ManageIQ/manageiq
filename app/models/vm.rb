@@ -166,4 +166,8 @@ class Vm < VmOrTemplate
       :message => unsupported_reason(:launch_native_console)
     }
   end
+
+  private_class_method def self.refresh_association
+    :vms
+  end
 end
