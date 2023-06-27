@@ -89,6 +89,10 @@ module Metric::CiMixin::Capture
     end
   end
 
+  # @param interval_name   ["realtime", "hourly", "historical"]
+  # @param start_time      [String|nil] start time for historical capture (nil for all other captures)
+  # @param end_time        [String|nil]   end time for historical capture (nil for all other captures)
+  # @param metrics_capture [MetricCapture]
   def just_perf_capture(interval_name, start_time, end_time, metrics_capture)
     log_header = "[#{interval_name}]"
     log_time = ''
