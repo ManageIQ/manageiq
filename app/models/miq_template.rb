@@ -94,4 +94,8 @@ class MiqTemplate < VmOrTemplate
       _("N/A")
     end
   end
+
+  private_class_method def self.refresh_association
+    :miq_templates
+  end
 end
