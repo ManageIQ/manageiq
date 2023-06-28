@@ -8,6 +8,6 @@ RSpec.describe ContainerService do
     subject { service.tap { service.container_groups << group } }
 
     # NOTE: virtual_total does not currently work with habtm
-    it_behaves_like "ruby only virtual_attribute", :container_groups_count, 1
+    it_behaves_like "sql friendly virtual_attribute", :container_groups_count, 1
   end
 end
