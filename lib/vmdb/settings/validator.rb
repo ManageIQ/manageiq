@@ -2,8 +2,12 @@ module Vmdb
   class Settings
     class Validator
       include Vmdb::Logging
+      include NotificationMixin
 
+      attr_reader :send_notifications, :resource
       def initialize(config)
+        @send_notifications = false
+        @resource = nil
         @config = config.to_hash
       end
 
@@ -19,6 +23,7 @@ module Vmdb
 
           _log.debug("Validating #{k}")
           ost = OpenStruct.new(@config[k].stringify_keys)
+          @roles = @config.fetch_path(:server, :role) || ""
           section_valid, errors = send(k.to_s, ost)
           next if section_valid
 
@@ -27,6 +32,12 @@ module Vmdb
           valid = false
         end
         return valid, @errors
+      end
+
+      def validate_and_notify_for_resource(resource)
+        @send_notifications = true
+        @resource = resource
+        validate
       end
 
       private
@@ -182,6 +193,16 @@ module Vmdb
         if keys.include?(:from) && data.from !~ /^\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z$/i
           valid = false
           errors << [:from, "\"#{data.from}\", invalid. Should be a valid email address"]
+        end
+
+        if send_notifications && @roles.split(",").include?("notifier") && data.domain == "mydomain.com"
+          message = "SMTP domain is invalid. Notifier role is enabled but smtp domain has not be changed from the defaults.  Disable 'notifier' server role if email notification is not needed."
+          notify_superadmin(message, nil, resource)
+        end
+
+        if send_notifications && !@roles.split(",").include?("notifier") && data.domain != "mydomain.com"
+          message = "smtp domain is configured but 'notifier' role is not enabled!  Enable 'notifier' role if email notification is desired."
+          notify_superadmin(message, nil, resource)
         end
 
         return valid, errors
