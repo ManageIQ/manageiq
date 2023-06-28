@@ -187,6 +187,32 @@ RSpec.describe User do
       expect(user).to receive(:unlock_queue)
       user.fail_login!
     end
+
+    it 'locks when reaching a number of failed logins' do
+      stub_settings_merge(:authentication => {:max_failed_login_attempts => 2})
+      expect(user).to receive(:unlock_queue).once
+
+      expect(user.locked?).to be_falsey
+      user.fail_login!
+      expect(user.locked?).to be_falsey
+      # this will lock it
+      user.fail_login!
+      expect(user.locked?).to be_truthy
+    end
+
+    it 'lock generates a single message on the queue (dedups)' do
+      stub_settings_merge(:authentication => {:max_failed_login_attempts => 1, :locked_account_timeout => 1.week})
+      EvmSpecHelper.local_miq_server
+
+      expect(MiqQueue.count).to eq(0)
+      user.fail_login!
+      user.fail_login!
+      expect(MiqQueue.count).to eq(1)
+      user.fail_login!
+      expect(MiqQueue.count).to eq(1)
+      msg = MiqQueue.first
+      expect(msg.deliver_on).to be_within(1.minute).of(1.week.from_now)
+    end
   end
 
   context "#authorize_ldap" do
