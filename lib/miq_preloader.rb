@@ -1,4 +1,26 @@
 module MiqPreloader
+  # If you want to preload an association on multiple records
+  # or want to only load a subset of an association
+  #
+  # @example Preloading vms on a set of emses
+  #   vms_scope = Vm.where(:ems_id => emses.id)
+  #   preload(emses, :vms, vms_scope)
+  #   emses.map { |ems| ems.vms } # cached - no queries
+  #   vms_scope.first.ems # cached - the reversed association is cached
+  #
+  #  @example Programmatically determine the reverse association name
+  #    Going from Ems#association(:vms) and going to Vm#association(:ems)
+  #
+  #   reverse_association_name = record.class.reflect_on_association(association).inverse_of.name
+  #   reverse_association = result.association(reverse_association_name)
+  #
+  # @param record [relation|ActiveRecord::Base|Array[ActiveRecord::Base]]
+  # @param association [Symbol|Hash|Array] name of the association(s)
+  # @param preload_scope [Nil|relation] Relation of the records to be use for preloading
+  #        For all but one case, default behavior is to use the association
+  #        Alternatively a scope can be used.
+  #        Currently an array does not work
+  # @return [Array<ActiveRecord::Base>] records
   def self.preload(records, associations, preload_scope = nil)
     preloader = ActiveRecord::Associations::Preloader.new
     preloader.preload(records, associations, preload_scope)
@@ -10,12 +32,15 @@ module MiqPreloader
   #   orchestration_stack.subtree.flat_map(&:direct_vms)
   # use instead:
   #   preload_and_map(orchestration_stack.subtree, :direct_vms)
+  #
+  # @param records [ActiveRecord::Base, Array<ActiveRecord::Base>, Object, Array<Object>]
+  # @param association [Symbol] name of the association
   def self.preload_and_map(records, association)
     Array.wrap(records).tap { |recs| MiqPreloader.preload(recs, association) }.flat_map(&association)
   end
 
   # @param records [ActiveRecord::Base, Array<ActiveRecord::Base>, Object, Array<Object>]
-  # @param association [String] an association on records
+  # @param association_name [Symbol] Name of the association
   def self.preload_and_scope(records, association_name)
     records = Array.wrap(records) unless records.kind_of?(Enumerable)
     active_record_klass = records.respond_to?(:klass) ? records.klass : records.first.class
