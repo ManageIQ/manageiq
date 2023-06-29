@@ -235,7 +235,9 @@ class VimPerformanceState < ApplicationRecord
              end
     return false unless resource.respond_to?(method)
 
-    resource.send(method)
+    records = resource.send(method)
+    records = records.not_archived_before(timestamp) if records.try(:klass).respond_to?(:not_archived_before)
+    records
   end
 
   def capture_parent_cluster

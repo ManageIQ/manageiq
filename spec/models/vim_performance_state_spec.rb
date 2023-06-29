@@ -11,6 +11,17 @@ RSpec.describe VimPerformanceState do
     end
   end
 
+  describe "#capture_assoc_ids" do
+    it "captures running containers" do
+      container_image = FactoryBot.create(:container_image)
+      containers = create_past_present_future(:container, {:container_image => container_image})
+
+      state = VimPerformanceState.capture(container_image)
+      expect(state.get_assoc(:containers).map(&:to_i)).to match_array(containers.map(&:id))
+      expect(state.containers.map(&:id)).to match_array(containers.map(&:id))
+    end
+  end
+
   describe "#containers" do
     let(:capture_time) { 5.hours.ago.utc.beginning_of_hour }
 
@@ -135,10 +146,13 @@ RSpec.describe VimPerformanceState do
 
     it "fetches active container objects" do
       container_image = FactoryBot.create(:container_image, :created_on => 6.hours.ago)
-      containers = FactoryBot.create_list(:container, 1, :container_image => container_image)
+      containers = create_past_present_future(:container, {:container_image => container_image})
 
       results = fetch_records(container_image, :containers, capture_time)
       expect(results).to eq(containers)
+
+      state = VimPerformanceState.capture(container_image)
+      expect(state.get_assoc(:containers).map(&:to_i)).to match_array(containers.map(&:id))
     end
   end
 
