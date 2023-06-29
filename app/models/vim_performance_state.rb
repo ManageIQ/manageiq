@@ -197,19 +197,9 @@ class VimPerformanceState < ApplicationRecord
   def capture_assoc_ids
     result = {}
     ASSOCIATIONS.each do |assoc|
-      method = if assoc == :vms
-                 if resource.kind_of?(EmsCluster)
-                   :all_vms_and_templates
-                 elsif resource.kind_of?(Service)
-                   :vms
-                 else
-                   :vms_and_templates
-                 end
-               else
-                 assoc
-               end
-      next unless resource.respond_to?(method)
-      assoc_recs = resource.send(method)
+      assoc_recs = fetch_assoc_records(resource, assoc)
+      next if assoc_recs == false
+
       has_state = assoc_recs[0] && assoc_recs[0].respond_to?(:state)
 
       r = result[assoc] = {:on => [], :off => []}
@@ -229,6 +219,23 @@ class VimPerformanceState < ApplicationRecord
       r_off.sort!
     end
     self.assoc_ids = result.presence
+  end
+
+  def fetch_assoc_records(resource, assoc)
+    method = if assoc == :vms
+               if resource.kind_of?(EmsCluster)
+                 :all_vms_and_templates
+               elsif resource.kind_of?(Service)
+                 :vms
+               else
+                 :vms_and_templates
+               end
+             else
+               assoc
+             end
+    return false unless resource.respond_to?(method)
+
+    resource.send(method)
   end
 
   def capture_parent_cluster

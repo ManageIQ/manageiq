@@ -1,4 +1,6 @@
 RSpec.describe VimPerformanceState do
+  let(:capture_time) { Time.now.utc.beginning_of_hour }
+
   describe ".capture" do
     it "uses now" do
       host = FactoryBot.create(:host)
@@ -122,6 +124,24 @@ RSpec.describe VimPerformanceState do
     end
   end
 
+  describe "#fetch_assoc_records (private)" do
+    it "fetches infra record" do
+      host = FactoryBot.create(:host)
+      vms = FactoryBot.create_list(:vm, 1, :host => host)
+
+      results = fetch_records(host, :vms)
+      expect(results).to eq(vms)
+    end
+
+    it "fetches active container objects" do
+      container_image = FactoryBot.create(:container_image, :created_on => 6.hours.ago)
+      containers = FactoryBot.create_list(:container, 1, :container_image => container_image)
+
+      results = fetch_records(container_image, :containers, capture_time)
+      expect(results).to eq(containers)
+    end
+  end
+
   private
 
   def create_past_present_future(factory, params)
@@ -143,5 +163,10 @@ RSpec.describe VimPerformanceState do
   # so a find(id) will not be found
   def deleted_record_ids(objs)
     [objs.last.id + 1]
+  end
+
+  def fetch_records(rec, association, timestamp = Time.now.utc)
+    vps = VimPerformanceState.new(:timestamp => timestamp)
+    vps.send(:fetch_assoc_records, rec, association)
   end
 end
