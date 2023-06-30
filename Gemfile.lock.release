@@ -862,7 +862,7 @@ GEM
       json (~> 2.3)
       more_core_extensions
       query_relation
-    manageiq-appliance_console (7.2.1)
+    manageiq-appliance_console (7.2.2)
       activerecord (~> 6.1.6, >= 6.1.6.1)
       activesupport (~> 6.1.6, >= 6.1.6.1)
       awesome_spawn (~> 1.4)
@@ -1343,7 +1343,7 @@ DEPENDENCIES
   listen (~> 3.2)
   manageiq-api!
   manageiq-api-client (~> 0.3.6)
-  manageiq-appliance_console (~> 7.2, >= 7.2.1)
+  manageiq-appliance_console (~> 7.2, >= 7.2.2)
   manageiq-automation_engine!
   manageiq-consumption!
   manageiq-content!
