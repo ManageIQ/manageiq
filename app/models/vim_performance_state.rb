@@ -111,42 +111,42 @@ class VimPerformanceState < ApplicationRecord
 
   def storages
     ids = get_assoc(:storages, :on)
-    ids.empty? ? [] : Storage.where(:id => ids).order(:id).to_a
+    ids.empty? ? Storage.none : Storage.where(:id => ids).order(:id)
   end
 
   def ext_management_systems
     ids = get_assoc(:ext_management_systems, :on)
-    ids.empty? ? [] : ExtManagementSystem.where(:id => ids).order(:id).to_a
+    ids.empty? ? ExtManagementSystem.none : ExtManagementSystem.where(:id => ids).order(:id)
   end
 
   def ems_clusters
     ids = get_assoc(:ems_clusters, :on)
-    ids.empty? ? [] : EmsCluster.where(:id => ids).order(:id).to_a
+    ids.empty? ? EmsCluster.none : EmsCluster.where(:id => ids).order(:id)
   end
 
   def hosts
     ids = get_assoc(:hosts)
-    ids.empty? ? [] : Host.where(:id => ids).order(:id).to_a
+    ids.empty? ? Host.none : Host.where(:id => ids).order(:id)
   end
 
   def vms
     ids = get_assoc(:vms)
-    ids.empty? ? [] : VmOrTemplate.where(:id => ids).order(:id).to_a
+    ids.empty? ? VmOrTemplate.none : VmOrTemplate.where(:id => ids).order(:id)
   end
 
   def container_nodes
     ids = get_assoc(:container_nodes)
-    ids.empty? ? [] : ContainerNode.where(:id => ids).order(:id).to_a
+    ids.empty? ? ContainerNode.none : ContainerNode.where(:id => ids).order(:id)
   end
 
   def container_groups
     ids = get_assoc(:container_groups)
-    ids.empty? ? [] : ContainerGroup.where(:id => ids).order(:id).to_a
+    ids.empty? ? ContainerGroup.none : ContainerGroup.where(:id => ids).order(:id)
   end
 
   def containers
     ids = get_assoc(:containers)
-    ids.empty? ? [] : Container.where(:id => ids).order(:id).to_a
+    ids.empty? ? Container.none : Container.where(:id => ids).order(:id)
   end
 
   def all_container_groups
