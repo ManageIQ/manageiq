@@ -56,7 +56,7 @@ class VimPerformanceTagValue
     return [] if eligible_cats.empty?
 
     ts = parent_perf.timestamp
-    children = parent_perf.resource.vim_performance_state_association(ts, assoc)
+    children = parent_perf.resource.vim_performance_state_association(ts, assoc).to_a
     return [] if children.empty?
     vim_performance_daily = parent_perf.kind_of?(VimPerformanceDaily)
     recs = get_metrics(children, ts, parent_perf.capture_interval_name, vim_performance_daily, options[:category])
