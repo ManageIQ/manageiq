@@ -4,22 +4,75 @@ RSpec.describe MiqPreloader do
       ems = FactoryBot.create(:ems_infra)
       expect(ems.vms).not_to be_loaded
       expect { preload(ems, :vms) }.to make_database_queries(:count => 1)
+
       expect(ems.vms).to be_loaded
-      expect { preload(ems, :vms) }.to_not make_database_queries
+      expect { preload(ems, :vms) }.not_to make_database_queries
+      expect { ems.vms.size }.not_to make_database_queries
     end
 
-    it "preloads from an array" do
+    it "preloads an array" do
       emses = FactoryBot.create_list(:ems_infra, 2)
       expect { preload(emses, :vms) }.to make_database_queries(:count => 1)
-      expect(emses[0].vms).to be_loaded
+
+      expect(emses.first.vms).to be_loaded
+      expect { emses.first.vms.size }.not_to make_database_queries
     end
 
-    it "preloads from an association" do
+    it "preloads a relation (record is a relation)" do
+      FactoryBot.create_list(:vm, 2, :ext_management_system => FactoryBot.create(:ems_infra))
+      emses = ExtManagementSystem.all
+      expect { preload(emses, :vms) }.to make_database_queries(:count => 2)
+
+      expect { expect(emses.first.vms.size).to eq(2) }.not_to make_database_queries
+    end
+
+    it "preloads with a relation (records is a relation)" do
       ems = FactoryBot.create(:ems_infra)
       FactoryBot.create_list(:vm, 2, :ext_management_system => ems)
 
-      emses = ExtManagementSystem.all
-      expect { preload(emses, :vms) }.to make_database_queries(:count => 2)
+      emses = ExtManagementSystem.all.load
+      vms   = Vm.where(:ems_id => emses.select(:id))
+
+      expect { preload(emses, :vms, vms) }.to make_database_queries(:count => 1)
+    end
+
+    it "preloads with a loaded relation (records is a relation)" do
+      ems = FactoryBot.create(:ems_infra)
+      FactoryBot.create_list(:vm, 2, :ext_management_system => ems)
+
+      emses = ExtManagementSystem.all.load
+      vms   = Vm.where(:ems_id => emses.select(:id)).load
+
+      expect { preload(emses, :vms, vms) }.not_to make_database_queries
+      expect { preload(emses, :vms, vms) }.not_to make_database_queries
+      expect { expect(emses.first.vms.size).to eq(2) }.not_to make_database_queries
+      expect { expect(vms.first.ext_management_system).to eq(ems) }.not_to make_database_queries
+    end
+
+    it "preloads with an array (records is a relation)" do
+      ems = FactoryBot.create(:ems_infra)
+      FactoryBot.create_list(:vm, 2, :ext_management_system => ems)
+
+      emses = ExtManagementSystem.all.load
+      vms = Vm.where(:ems_id => emses.select(:id)).to_a
+
+      expect { preload(emses, :vms, vms) }.not_to make_database_queries
+      expect { preload(emses, :vms, vms) }.not_to make_database_queries
+      expect { expect(emses.first.vms.size).to eq(2) }.not_to make_database_queries
+      expect { expect(vms.first.ext_management_system).to eq(ems) }.not_to make_database_queries
+    end
+
+    it "preloads with an array (records is an array)" do
+      ems = FactoryBot.create(:ems_infra)
+      FactoryBot.create_list(:vm, 2, :ext_management_system => ems)
+
+      emses = ExtManagementSystem.all.load.to_a
+      vms   = Vm.where(:ems_id => emses.map(&:id)).to_a
+
+      expect { preload(emses, :vms, vms) }.not_to make_database_queries
+      expect { preload(emses, :vms, vms) }.not_to make_database_queries
+      expect { expect(emses.first.vms.size).to eq(2) }.not_to make_database_queries
+      expect { expect(vms.first.ext_management_system).to eq(ems) }.not_to make_database_queries
     end
 
     def preload(*args)
@@ -34,7 +87,7 @@ RSpec.describe MiqPreloader do
 
       vms = nil
       expect { vms = preload_and_map(ems, :vms) }.to make_database_queries(:count => 1)
-      expect { expect(vms.size).to eq(2) }.to_not make_database_queries
+      expect { expect(vms.size).to eq(2) }.not_to make_database_queries
     end
 
     it "preloads from an association" do
@@ -56,7 +109,7 @@ RSpec.describe MiqPreloader do
       FactoryBot.create_list(:vm, 2, :ext_management_system => ems)
 
       vms = nil
-      expect { vms = preload_and_scope(ems, :vms) }.to_not make_database_queries
+      expect { vms = preload_and_scope(ems, :vms) }.not_to make_database_queries
       expect { expect(vms.count).to eq(2) }.to make_database_queries(:count => 1)
     end
 
@@ -65,7 +118,7 @@ RSpec.describe MiqPreloader do
       FactoryBot.create(:template, :ext_management_system => FactoryBot.create(:ems_infra))
 
       vms = nil
-      expect { vms = preload_and_scope(ExtManagementSystem.all, :vms_and_templates) }.to_not make_database_queries
+      expect { vms = preload_and_scope(ExtManagementSystem.all, :vms_and_templates) }.not_to make_database_queries
       expect { expect(vms.count).to eq(3) }.to make_database_queries(:count => 1)
     end
 
@@ -86,8 +139,8 @@ RSpec.describe MiqPreloader do
 
       hosts = nil
       vms = nil
-      expect { vms = preload_and_scope(ExtManagementSystem.all, :vms_and_templates) }.to_not make_database_queries
-      expect { hosts = preload_and_scope(vms, :host) }.to_not make_database_queries
+      expect { vms = preload_and_scope(ExtManagementSystem.all, :vms_and_templates) }.not_to make_database_queries
+      expect { hosts = preload_and_scope(vms, :host) }.not_to make_database_queries
       expect { expect(hosts.count).to eq(2) }.to make_database_queries(:count => 1)
     end
 
@@ -103,8 +156,8 @@ RSpec.describe MiqPreloader do
 
       emses = nil
       vms = nil
-      expect { emses = preload_and_scope(Host.all, :ext_management_system) }.to_not make_database_queries
-      expect { vms = preload_and_scope(emses, :vms) }.to_not make_database_queries
+      expect { emses = preload_and_scope(Host.all, :ext_management_system) }.not_to make_database_queries
+      expect { vms = preload_and_scope(emses, :vms) }.not_to make_database_queries
       expect { expect(vms.count).to eq(3) }.to make_database_queries(:count => 1)
     end
 
