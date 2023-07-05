@@ -83,7 +83,8 @@ class Authentication < ApplicationRecord
 
   CREDENTIAL_TYPES = {
     :external_credential_types         => 'ManageIQ::Providers::ExternalAutomationManager::Authentication',
-    :embedded_ansible_credential_types => 'ManageIQ::Providers::EmbeddedAutomationManager::Authentication'
+    :embedded_ansible_credential_types => 'ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential',
+    :workflows_credential_types        => 'ManageIQ::Providers::Workflows::AutomationManager::Credential'
   }.freeze
 
   # FIXME: To address problem with url resolution when displayed as a quadicon,
