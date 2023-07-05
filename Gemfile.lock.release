@@ -204,7 +204,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubernetes
-  revision: 6c0b75f3e2033e3918dd1b6d57ad9f854c7b858c
+  revision: 51d050413e54f22e4f9f292659b0b7ade211885a
   branch: petrosian
   specs:
     manageiq-providers-kubernetes (0.1.0)
