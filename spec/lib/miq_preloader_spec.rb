@@ -36,6 +36,45 @@ RSpec.describe MiqPreloader do
       expect { preload(emses, :vms, vms) }.to make_database_queries(:count => 1)
     end
 
+    it "preloads with a loaded relation (records is a relation)" do
+      ems = FactoryBot.create(:ems_infra)
+      FactoryBot.create_list(:vm, 2, :ext_management_system => ems)
+
+      emses = ExtManagementSystem.all.load
+      vms   = Vm.where(:ems_id => emses.select(:id)).load
+
+      expect { preload(emses, :vms, vms) }.not_to make_database_queries
+      expect { preload(emses, :vms, vms) }.not_to make_database_queries
+      expect { expect(emses.first.vms.size).to eq(2) }.not_to make_database_queries
+      expect { expect(vms.first.ext_management_system).to eq(ems) }.not_to make_database_queries
+    end
+
+    it "preloads with an array (records is a relation)" do
+      ems = FactoryBot.create(:ems_infra)
+      FactoryBot.create_list(:vm, 2, :ext_management_system => ems)
+
+      emses = ExtManagementSystem.all.load
+      vms = Vm.where(:ems_id => emses.select(:id)).to_a
+
+      expect { preload(emses, :vms, vms) }.not_to make_database_queries
+      expect { preload(emses, :vms, vms) }.not_to make_database_queries
+      expect { expect(emses.first.vms.size).to eq(2) }.not_to make_database_queries
+      expect { expect(vms.first.ext_management_system).to eq(ems) }.not_to make_database_queries
+    end
+
+    it "preloads with an array (records is an array)" do
+      ems = FactoryBot.create(:ems_infra)
+      FactoryBot.create_list(:vm, 2, :ext_management_system => ems)
+
+      emses = ExtManagementSystem.all.load.to_a
+      vms   = Vm.where(:ems_id => emses.map(&:id)).to_a
+
+      expect { preload(emses, :vms, vms) }.not_to make_database_queries
+      expect { preload(emses, :vms, vms) }.not_to make_database_queries
+      expect { expect(emses.first.vms.size).to eq(2) }.not_to make_database_queries
+      expect { expect(vms.first.ext_management_system).to eq(ems) }.not_to make_database_queries
+    end
+
     def preload(*args)
       MiqPreloader.preload(*args)
     end
