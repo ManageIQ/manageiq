@@ -2,6 +2,33 @@ RSpec.describe ResourceAction do
   let(:user) { FactoryBot.create(:user_with_group) }
   let(:ra)   { FactoryBot.create(:resource_action) }
 
+  describe "#fqname=" do
+    context "with an automate fully-qualified name" do
+      it "sets the ae_* attributes" do
+        ra.fqname = "/NAMESPACE/CLASS/INSTANCE"
+        expect(ra).to have_attributes(
+          :ae_namespace => "NAMESPACE",
+          :ae_class     => "CLASS",
+          :ae_instance  => "INSTANCE"
+        )
+      end
+    end
+
+    context "with a nil" do
+      context "with existing ae_attributes" do
+        let(:ra) { FactoryBot.create(:resource_action, :ae_namespace => "NAMESPACE", :ae_class => "CLASS", :ae_instance => "INSTANCE") }
+        it "clears the ae_* attributes" do
+          ra.fqname = nil
+          expect(ra).to have_attributes(
+            :ae_namespace => nil,
+            :ae_class     => nil,
+            :ae_instance  => nil
+          )
+        end
+      end
+    end
+  end
+
   context "#deliver_queue" do
     let(:zone_name) { "default" }
     let(:miq_server) { FactoryBot.create(:miq_server) }
