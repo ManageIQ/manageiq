@@ -10,7 +10,7 @@ module Metric::CiMixin::StateFinders
   #       contains a subset, typically top of the hour and the timestamp of interest
   #       the cache is indexed by a String in iso8601 form
   #       used by: CiMixin::Processing#perf_process
-  # @param ts [Time|String] prefer Time
+  # @param ts [Time|String] beginning of hour timestamp (prefer Time)
   def vim_performance_state_for_ts(ts)
     ts = Time.parse(ts).utc if ts.kind_of?(String)
     ts_iso = ts.utc.iso8601
@@ -25,9 +25,12 @@ module Metric::CiMixin::StateFinders
         state = vim_performance_states.detect { |s| s.timestamp == ts }
         if state.nil?
           # Look for state for current hour in cache
-          t = Metric::Helper.nearest_hourly_timestamp(Time.now.utc).to_time(:utc)
+          ts_iso_now = Metric::Helper.nearest_hourly_timestamp(Time.now.utc)
+          t = ts_iso_now.to_time(:utc)
           state = vim_performance_states.detect { |s| s.timestamp == t }
         end
+        # look for state from previous perf_capture_state call
+        state ||= @states_by_ts[ts_iso_now]
       else
         state = @states_by_ts[Metric::Helper.nearest_hourly_timestamp(Time.now.utc)]
         state ||= vim_performance_states.find_by(:timestamp => ts)

@@ -10,8 +10,8 @@ RSpec.describe Metric::CiMixin::StateFinders do
   let(:storage1) { FactoryBot.create(:storage) }
   let(:storage2) { FactoryBot.create(:storage) }
 
-  let(:ts_now) { Time.now.utc.beginning_of_hour.to_s }
-  let(:timestamp) { 2.hours.ago.utc.beginning_of_hour.to_s }
+  let(:ts_now) { Time.now.utc.beginning_of_hour }
+  let(:timestamp) { 2.hours.ago.utc.beginning_of_hour }
 
   describe "#vim_performance_state_association" do
     let(:c_vps_now) { create_vps(image, ts_now, :containers => [container1, container2]) }
@@ -159,7 +159,7 @@ RSpec.describe Metric::CiMixin::StateFinders do
       it "creates (and caches) a value when now isn't cached" do
         rec_states = VimPerformanceState.where(:timestamp => [ts_now, timestamp])
         MiqPreloader.preload(image, :vim_performance_states, rec_states)
-        expect(image).to receive(:perf_capture_state).twice.and_return(vps_now) # fix
+        expect(image).to receive(:perf_capture_state).once.and_return(vps_now)
 
         expect do
           expect(image.vim_performance_state_for_ts(timestamp)).to eq(vps_now)
