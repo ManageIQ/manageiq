@@ -93,6 +93,15 @@ RSpec.describe Metric::CiMixin::StateFinders do
           expect(image.vim_performance_state_for_ts(timestamp)).to eq(vps_now)
         end.not_to make_database_queries
       end
+
+      it "doesn't search db for now since perf_capture_state will do that" do
+        expect(image).to receive(:perf_capture_state).once.and_return(vps_now)
+
+        expect do
+          expect(image.vim_performance_state_for_ts(ts_now)).to eq(vps_now)
+        end.to make_database_queries(:count => 0)
+        expect { image.vim_performance_state_for_ts(ts_now) }.not_to make_database_queries
+      end
     end
 
     # ci_mixin/processing.rb uses this

@@ -32,8 +32,11 @@ module Metric::CiMixin::StateFinders
         # look for state from previous perf_capture_state call
         state ||= @states_by_ts[ts_iso_now]
       else
-        state = @states_by_ts[Metric::Helper.nearest_hourly_timestamp(Time.now.utc)]
-        state ||= vim_performance_states.find_by(:timestamp => ts)
+        ts_iso_now = Metric::Helper.nearest_hourly_timestamp(Time.now.utc)
+        state = @states_by_ts[ts_iso_now]
+        unless ts_iso_now == ts_iso
+          state ||= vim_performance_states.find_by(:timestamp => ts)
+        end
       end
       state ||= perf_capture_state
       @states_by_ts[state.timestamp.utc.iso8601] = state
