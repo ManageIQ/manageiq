@@ -7,7 +7,8 @@ class MiqUserRole < ApplicationRecord
   has_many                :miq_groups, :through => :entitlements
   has_and_belongs_to_many :miq_product_features, :join_table => :miq_roles_features
 
-  virtual_column :vm_restriction,                   :type => :string
+  virtual_column :vm_restriction,               :type => :string
+  virtual_column :service_template_restriction, :type => :string
 
   validates :name, :presence => true, :uniqueness_when_changed => {:case_sensitive => false}
 
@@ -56,12 +57,12 @@ class MiqUserRole < ApplicationRecord
     end
   end
 
-  def self_service?
-    [:user_or_group, :user].include?((settings || {}).fetch_path(:restrictions, :vms))
+  def self_service?(klass = nil)
+    [:user_or_group, :user].include?((settings || {}).fetch_path(:restrictions, restriction_type(klass)))
   end
 
-  def limited_self_service?
-    (settings || {}).fetch_path(:restrictions, :vms) == :user
+  def limited_self_service?(klass = nil)
+    (settings || {}).fetch_path(:restrictions, restriction_type(klass)) == :user
   end
 
   def self.with_roles_excluding(identifier)
@@ -100,8 +101,13 @@ class MiqUserRole < ApplicationRecord
   virtual_total :group_count, :miq_groups
 
   def vm_restriction
-    vmr = settings && settings.fetch_path(:restrictions, :vms)
+    vmr = settings&.dig(:restrictions, :vms)
     vmr ? RESTRICTIONS[vmr] : "None"
+  end
+
+  def service_template_restriction
+    str = settings&.dig(:restrictions, :service_templates)
+    str ? RESTRICTIONS[str] : "None"
   end
 
   def super_admin_user?
@@ -130,5 +136,16 @@ class MiqUserRole < ApplicationRecord
 
   def self.display_name(number = 1)
     n_('Role', 'Roles', number)
+  end
+
+  private
+
+  def restriction_type(klass)
+    case klass.to_s
+    when "ServiceTemplate"
+      :service_templates
+    else
+      :vms
+    end
   end
 end

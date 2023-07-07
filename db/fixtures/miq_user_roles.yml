@@ -948,6 +948,7 @@
   :settings:
     :restrictions:
       :vms: :user
+      :service_templates: :user
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
@@ -1134,6 +1135,7 @@
   :settings:
     :restrictions:
       :vms: :user_or_group
+      :service_templates: :user_or_group
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
