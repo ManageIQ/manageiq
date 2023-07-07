@@ -5908,6 +5908,10 @@
         :description: Rename VM
         :feature_type: admin
         :identifier: vm_rename
+      - :name: Reload
+        :description: Reload the current display
+        :feature_type: admin
+        :identifier: vms_reload
       - :name: Transform
         :description: Transform VM
         :feature_type: admin
