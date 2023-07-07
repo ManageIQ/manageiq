@@ -114,6 +114,62 @@ RSpec.describe MiqPreloader do
     end
   end
 
+  describe ".preload_from_array" do
+    it "preloads a loaded simple relation" do
+      vms = Vm.where(:ems_id => ems.id).load
+
+      expect { preload_from_array(ems, :vms, vms) }.not_to make_database_queries
+      expect { preload_from_array(ems, :vms, vms) }.not_to make_database_queries
+      expect { expect(ems.vms.size).to eq(2) }.not_to make_database_queries
+      expect { expect(vms.first.ext_management_system).to eq(ems) }.not_to make_database_queries
+    end
+
+    it "preloads an unloaded simple relation" do
+      vms = Vm.where(:ems_id => ems.id)
+      vms2 = vms.order(:id).to_a # preloaded vms to be used in tests
+
+      expect { preload_from_array(ems, :vms, vms) }.to make_database_queries(:count => 1)
+      expect { preload_from_array(ems, :vms, vms) }.not_to make_database_queries
+      expect { expect(ems.vms).to match_array(vms2) }.not_to make_database_queries
+      expect { expect(vms.first.ext_management_system).to eq(ems) }.not_to make_database_queries
+    end
+
+    it "preloads an array of a simple relation" do
+      vms = Vm.where(:ems_id => ems.id).to_a
+
+      expect { preload_from_array(ems, :vms, vms) }.not_to make_database_queries
+      expect { preload_from_array(ems, :vms, vms) }.not_to make_database_queries
+      expect { expect(ems.vms.size).to eq(2) }.not_to make_database_queries
+      expect { expect(vms.first.ext_management_system).to eq(ems) }.not_to make_database_queries
+    end
+
+    it "preloads a loaded through relation" do
+      image
+      nodes = ContainerNode.all.load
+
+      expect { preload_from_array(image, :container_nodes, nodes) }.not_to make_database_queries
+      expect { preload_from_array(image, :container_nodes, nodes) }.not_to make_database_queries
+      expect { expect(image.container_nodes).to eq(nodes) }.not_to make_database_queries
+      # TODO: can we get this to 0 queries?
+      expect { expect(nodes.first.container_images).to eq([image]) }.to make_database_queries(:count => 1)
+    end
+
+    it "preloads an array of a through relation" do
+      image
+      nodes = ContainerNode.all.to_a
+
+      expect { preload_from_array(image, :container_nodes, nodes) }.not_to make_database_queries
+      expect { preload_from_array(image, :container_nodes, nodes) }.not_to make_database_queries
+      expect { expect(image.container_nodes).to eq(nodes) }.not_to make_database_queries
+      # TODO: can we get this to 0 queries?
+      expect { expect(nodes.first.container_images).to eq([image]) }.to make_database_queries(:count => 1)
+    end
+
+    def preload_from_array(record, relation, values)
+      MiqPreloader.preload_from_array(record, relation, values)
+    end
+  end
+
   describe ".preload_and_map" do
     it "preloads from an object" do
       ems = FactoryBot.create(:ems_infra)
