@@ -28,9 +28,14 @@ RSpec.describe VimPerformanceState do
     describe ".purge_timer" do
       it "queues the correct purge method" do
         EvmSpecHelper.local_miq_server
+        stub_settings_merge(:vim_performance_states => {:history => {:keep_states => "6.months"}})
         described_class.purge_timer
-        q = MiqQueue.first
-        expect(q).to have_attributes(:class_name => described_class.name, :method_name => "purge_by_orphaned", :args => ["resource"])
+
+        expect(MiqQueue.count).to eq(2)
+        q1, q2 = MiqQueue.order(:id).to_a
+        expect(q1).to have_attributes(:class_name => described_class.name, :method_name => "purge_by_orphaned", :args => ["resource"])
+        expect(q2).to have_attributes(:class_name => described_class.name, :method_name => "purge_by_date")
+        expect(q2.args.first).to be_within(2.days).of 6.months.ago.utc
       end
     end
   end
