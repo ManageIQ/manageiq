@@ -39,6 +39,18 @@
 #     :miq_report_id
 #   end
 #
+#   example purge_mode_and_value
+#   @return [Array<2>] the mode (i.e.: :remaining) and the number of records to keep
+#   def purge_mode_and_value
+#     [:remaining, ::Settings.drift_states.history.keep_drift_states]
+#   end
+#
+# For purge_by_orphan, the mixee must provide the following methods:
+#
+#   @return [Array<2>] the mode (i.e.: :orphan) and the column_name to check for orphans
+#   def purge_mode_and_value
+#     %w[orphan resource]
+#   end
 module PurgingMixin
   extend ActiveSupport::Concern
 
