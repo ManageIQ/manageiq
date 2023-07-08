@@ -162,6 +162,20 @@ class VimPerformanceState < ApplicationRecord
     ids.nil? ? [] : ids.uniq.sort
   end
 
+  # @param obj object holding vps records
+  # @param timestamp [Time|String] hourly timestamp, prefer Time
+  # @returns [Range] time range
+  def self.get_time_interval(obj, timestamp)
+    timestamp = Time.parse(timestamp).utc if timestamp.kind_of?(String)
+
+    state = obj.vim_performance_state_for_ts(timestamp)
+    # NOTE: this is using timestamp passed in and not timestamp on the object (which could be now)
+    # NOTE: capture_interval is always 3600
+    start_time = timestamp - state[:capture_interval]
+
+    start_time..timestamp
+  end
+
   private
 
   def capture_disk_types

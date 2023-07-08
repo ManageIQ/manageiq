@@ -177,15 +177,6 @@ module Metric::Helper
     start_time..end_time
   end
 
-  def self.get_time_interval(obj, timestamp)
-    timestamp = Time.parse(timestamp).utc if timestamp.kind_of?(String)
-
-    state = obj.vim_performance_state_for_ts(timestamp)
-    start_time = timestamp - state[:capture_interval]
-
-    start_time..timestamp
-  end
-
   def self.latest_metrics(resource_type, since_timestamp, resource_ids = nil)
     metrics = Metric.where(:resource_type => resource_type)
     metrics = metrics.where(:resource_id => resource_ids) if resource_ids

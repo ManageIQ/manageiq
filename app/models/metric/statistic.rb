@@ -1,6 +1,7 @@
 module Metric::Statistic
+  # @param timestamp [String|Time] hourly timestamp used for hourly_rollups (prefer Time)
   def self.calculate_stat_columns(obj, timestamp)
-    capture_interval = Metric::Helper.get_time_interval(obj, timestamp)
+    capture_interval = VimPerformanceState.get_time_interval(obj, timestamp)
     stats = {}
 
     if obj.respond_to?(:all_container_groups)
