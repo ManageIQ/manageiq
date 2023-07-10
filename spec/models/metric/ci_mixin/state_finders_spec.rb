@@ -114,11 +114,11 @@ RSpec.describe Metric::CiMixin::StateFinders do
 
   private
 
-  def create_vps(image, ts, containers = [], nodes = [])
+  def create_vps(image, timestamp, containers = [], nodes = [])
     FactoryBot.create(
       :vim_performance_state,
-      :resource => image,
-      :timestamp => ts,
+      :resource   => image,
+      :timestamp  => timestamp,
       :state_data => {
         :assoc_ids => {
           :containers      => {:on => containers.map(&:id), :off => []},

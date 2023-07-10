@@ -6,7 +6,7 @@ RSpec.describe MiqPreloader do
   let(:image) do
     FactoryBot.create(:container_image).tap do |image|
       FactoryBot.create(
-        :container, 
+        :container,
         :container_image => image,
         :container_group => FactoryBot.create(:container_group, :container_node => FactoryBot.create(:container_node))
       )
@@ -222,10 +222,10 @@ RSpec.describe MiqPreloader do
     it "preloads (object.all).has_many.belongs_to" do
       ems = FactoryBot.create(:ems_infra)
       FactoryBot.create_list(:vm, 2,
-                              :ext_management_system => ems,
-                              :host                  => FactoryBot.create(:host, :ext_management_system => ems))
+                             :ext_management_system => ems,
+                             :host                  => FactoryBot.create(:host, :ext_management_system => ems))
       FactoryBot.create(:vm, :ext_management_system => ems,
-                              :host                  => FactoryBot.create(:host, :ext_management_system => ems))
+                             :host                  => FactoryBot.create(:host, :ext_management_system => ems))
 
       hosts = nil
       vms = nil
