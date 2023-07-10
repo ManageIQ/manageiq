@@ -162,6 +162,10 @@ module Metric::Rollup
   DERIVED_COLS_EXCLUDED_CLASSES = ['MiqRegion', 'MiqEnterprise']
   TAG_SEP = "|"
 
+  def self.aggregate_columns(klass, assoc, interval_name)
+    interval_name == "realtime" ? const_get("#{klass.base_class.name.underscore.upcase}_REALTIME_COLS") : AGGREGATE_COLS["#{klass.base_class}_#{assoc}".to_sym]
+  end
+
   def self.rollup_realtime(obj, rt_ts, _interval_name, _time_profile, new_perf, orig_perf)
     # Roll up realtime metrics from child objects
     children = obj.class::PERF_ROLLUP_CHILDREN
@@ -250,7 +254,7 @@ module Metric::Rollup
     result = {}
     counts = {}
 
-    agg_cols = interval_name == "realtime" ? const_get("#{obj.class.base_class.name.underscore.upcase}_REALTIME_COLS") : AGGREGATE_COLS["#{obj.class.base_class}_#{assoc}".to_sym]
+    agg_cols = aggregate_columns(obj.class, assoc, interval_name)
     agg_cols.each do |c|
       # Initialize aggregation col values and counts to zero before starting
       counts[c] = 0
