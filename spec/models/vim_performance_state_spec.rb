@@ -1,22 +1,11 @@
 RSpec.describe VimPerformanceState do
-  describe ".capture_host_sockets" do
-    it "returns the host sockets when given a host" do
-      hardware = FactoryBot.build(:hardware, :cpu_sockets => 2)
-      host = FactoryBot.create(:host, :hardware => hardware)
+  describe ".capture" do
+    it "uses now" do
+      host = FactoryBot.create(:host)
       state = VimPerformanceState.capture(host)
 
-      expect(state.host_sockets).to eq(2)
-    end
-
-    it "rolls up the total sockets when given something that has hosts" do
-      hardware_1 = FactoryBot.build(:hardware, :cpu_sockets => 2)
-      hardware_2 = FactoryBot.build(:hardware, :cpu_sockets => 4)
-      host_1 = FactoryBot.build(:host, :hardware => hardware_1)
-      host_2 = FactoryBot.build(:host, :hardware => hardware_2)
-      cluster = FactoryBot.create(:ems_cluster, :hosts => [host_1, host_2])
-      state = VimPerformanceState.capture(cluster)
-
-      expect(state.host_sockets).to eq(6)
+      expect(state.timestamp).to be_within(1.minute).of(Time.now.utc.beginning_of_hour)
+      expect(state.capture_interval).to eq(3600) # 1.hour
     end
   end
 
@@ -37,10 +26,24 @@ RSpec.describe VimPerformanceState do
   end
 
   describe "#host_sockets" do
-    it "returns the host sockets" do
-      state_data = {:host_sockets => 2}
-      actual = described_class.new(:state_data => state_data)
-      expect(actual.host_sockets).to eq(2)
+    it "captures the host sockets when given a host" do
+      hardware = FactoryBot.create(:hardware, :cpu_sockets => 2)
+      host = FactoryBot.create(:host, :hardware => hardware)
+      state = VimPerformanceState.capture(host)
+
+      expect(state.state_data).to include(:host_sockets => 2)
+      expect(state.host_sockets).to eq(2)
+    end
+
+    it "captures the rolled up sockets when given a cluster" do
+      hardware_1 = FactoryBot.build(:hardware, :cpu_sockets => 2)
+      hardware_2 = FactoryBot.build(:hardware, :cpu_sockets => 4)
+      host_1 = FactoryBot.build(:host, :hardware => hardware_1)
+      host_2 = FactoryBot.build(:host, :hardware => hardware_2)
+      cluster = FactoryBot.create(:ems_cluster, :hosts => [host_1, host_2])
+      state = VimPerformanceState.capture(cluster)
+
+      expect(state.host_sockets).to eq(6)
     end
   end
 
