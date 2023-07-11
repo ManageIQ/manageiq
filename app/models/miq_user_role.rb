@@ -141,8 +141,7 @@ class MiqUserRole < ApplicationRecord
   private
 
   def restriction_type(klass)
-    case klass.to_s
-    when "ServiceTemplate"
+    if klass <= ServiceTemplate
       :service_templates
     else
       :vms
