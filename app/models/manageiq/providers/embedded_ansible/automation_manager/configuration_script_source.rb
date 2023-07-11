@@ -9,6 +9,10 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
     true
   end
 
+  private_class_method def self.queue_role
+    "embedded_ansible"
+  end
+
   def sync
     update!(:status => "running")
     transaction do
