@@ -36,16 +36,26 @@ module Metric::CiMixin::StateFinders
   # using @last_vps_ts to ensure we don't load at one time and then use at another
   def vim_performance_state_association(ts, assoc)
     if assoc.to_s == "miq_regions"
-      return respond_to?(:miq_regions) ? miq_regions : []
+      return respond_to?(:miq_regions) ? miq_regions : MiqRegion.none
+    end
+
+    # this is a virtual reflection, just return the value
+    if !self.class.reflect_on_association(assoc)
+      return vim_performance_state_for_ts(ts).public_send(assoc)
     end
 
     if !defined?(@last_vps_ts) || @last_vps_ts != ts
       @last_vps_ts = ts
-      public_send(assoc).reset
-
-      MiqPreloader.preload(self, assoc, vim_performance_state_for_ts(ts).public_send(assoc).load)
+      # we are using a different timestamp
+      # clear out relevant associations
+      (VimPerformanceState::ASSOCIATIONS & self.class.reflections.keys.map(&:to_sym)).each do |vps_assoc|
+        association(vps_assoc).reset
+      end
     end
 
+    if !association(assoc.to_sym).loaded?
+      MiqPreloader.preload_from_array(self, assoc, vim_performance_state_for_ts(ts).public_send(assoc))
+    end
     public_send(assoc)
   end
 end

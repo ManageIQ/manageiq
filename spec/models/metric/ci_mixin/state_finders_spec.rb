@@ -2,11 +2,68 @@ RSpec.describe Metric::CiMixin::StateFinders do
   let(:image) { FactoryBot.create(:container_image) }
   let(:container1) { FactoryBot.create(:container, :container_image => image) }
   let(:container2) { FactoryBot.create(:container, :container_image => image) }
-  let(:node1) { FactoryBot.create(:container_node) }
-  let(:node2) { FactoryBot.create(:container_node) }
+
+  # region is currently the only class that has multiple rollups
+  let(:region) { MiqRegion.my_region || MiqRegion.seed }
+  let(:ems1) { FactoryBot.create(:ext_management_system) } # implied :region => region
+  let(:ems2) { FactoryBot.create(:ext_management_system) }
+  let(:storage1) { FactoryBot.create(:storage) }
+  let(:storage2) { FactoryBot.create(:storage) }
 
   let(:ts_now) { Time.now.utc.beginning_of_hour.to_s }
   let(:timestamp) { 2.hours.ago.utc.beginning_of_hour.to_s }
+
+  describe "#vim_performance_state_association" do
+    let(:c_vps_now) { create_vps(image, ts_now, :containers => [container1, container2]) }
+    let(:c_vps) { create_vps(image, timestamp, :containers => [container1]) }
+
+    let(:r_vps_now) { create_vps(region, ts_now, :ext_management_systems => [ems1, ems2], :storages => [storage1, storage2]) }
+    let(:r_vps) { create_vps(region, timestamp, :ext_management_systems => [ems1], :storages => [storage1]) }
+
+    it "performs a single query when looking up an association multiple times" do
+      c_vps
+
+      expect do
+        expect(image.vim_performance_state_association(timestamp, :containers)).to eq([container1])
+      end.to make_database_queries(:count => 2)
+
+      expect do
+        expect(image.vim_performance_state_association(timestamp, :containers)).to eq([container1])
+      end.to make_database_queries(:count => 0)
+    end
+
+    it "supports virtual associations" do
+      r_vps
+
+      expect do
+        expect(region.vim_performance_state_association(timestamp, :ext_management_systems)).to eq([ems1])
+      end.to make_database_queries(:count => 2)
+
+      expect do
+        expect(region.vim_performance_state_association(timestamp, :ext_management_systems)).to eq([ems1])
+      end.to make_database_queries(:count => 2) # TODO: vps caching (another PR) will change to 1
+    end
+
+    it "fetches a second timestamp" do
+      c_vps
+      c_vps_now
+      expect(image.vim_performance_state_association(timestamp, :containers)).to match_array([container1])
+
+      expect do
+        expect(image.vim_performance_state_association(ts_now, :containers)).to match_array([container1, container2])
+      end.to make_database_queries(:count => 2)
+    end
+
+    it "assigns reverse association" do
+      c_vps
+      expect(image.vim_performance_state_association(timestamp, :containers)).to match_array([container1])
+
+      expect do
+        c = image.vim_performance_state_association(timestamp, :containers).first
+        expect(c.container_image).to eq(image)
+      end.to make_database_queries(:count => 0)
+    end
+  end
 
   # NOTE: in these specs, we could let perf_capture_state be called
   # but using this reduces the queries
@@ -114,16 +171,15 @@ RSpec.describe Metric::CiMixin::StateFinders do
 
   private
 
-  def create_vps(image, timestamp, containers = [], nodes = [])
+  def create_vps(parent, timestamp, association = {})
     FactoryBot.create(
       :vim_performance_state,
-      :resource   => image,
+      :resource   => parent,
       :timestamp  => timestamp,
       :state_data => {
-        :assoc_ids => {
-          :containers      => {:on => containers.map(&:id), :off => []},
-          :container_nodes => {:on => nodes.map(&:id), :off => []},
-        }
+        :assoc_ids => association.transform_values do |values|
+          {:on => values.map(&:id), :off => []}
+        end
       }
     )
   end
