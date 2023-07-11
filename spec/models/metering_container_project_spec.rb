@@ -19,8 +19,9 @@ RSpec.describe MeteringContainerProject do
   let(:month_beginning) { ts.beginning_of_month.utc }
   let(:month_end) { ts.end_of_month.utc }
   let(:count_of_metric_rollup) { MetricRollup.where(:timestamp => month_beginning...month_end).count }
+  let(:ems_container) { FactoryBot.create(:ems_container) }
   let(:ems) { FactoryBot.create(:ems_vmware) }
-  let(:project) { FactoryBot.create(:container_project, :name => "my project", :ext_management_system => ems, :created_on => month_beginning) }
+  let(:project) { FactoryBot.create(:container_project, :ext_management_system => ems_container, :created_on => month_beginning) }
   let(:hardware) { FactoryBot.create(:hardware, :memory_mb => 8124, :cpu_total_cores => 1, :cpu_speed => 9576) }
   let(:host) { FactoryBot.create(:host, :storages => [storage], :hardware => hardware, :vms => [vm]) }
   let(:storage) { FactoryBot.create(:storage_vmware) }
