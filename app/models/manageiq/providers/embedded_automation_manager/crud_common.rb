@@ -13,7 +13,7 @@ module ManageIQ::Providers::EmbeddedAutomationManager::CrudCommon
         :priority    => MiqQueue::HIGH_PRIORITY,
         :class_name  => name,
         :method_name => method_name,
-        :role        => "embedded_ansible",
+        :role        => queue_role,
         :zone        => nil
       }
       queue_opts[:instance_id] = instance_id if instance_id
@@ -57,6 +57,10 @@ module ManageIQ::Providers::EmbeddedAutomationManager::CrudCommon
     end
 
     private
+
+    def queue_role
+      nil
+    end
 
     def send_notification(op_type, manager_id, params, success)
       op_arg = params.except(*notification_excludes).collect { |k, v| "#{k}=#{v}" }.join(', ')
