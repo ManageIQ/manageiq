@@ -47,7 +47,7 @@ class ContainerProject < ApplicationRecord
   include EventMixin
   include Metric::CiMixin
 
-  PERF_ROLLUP_CHILDREN = [:all_container_groups]
+  PERF_ROLLUP_CHILDREN = [:all_container_groups].freeze
 
   delegate :my_zone, :to => :ext_management_system, :allow_nil => true
 
@@ -95,6 +95,7 @@ class ContainerProject < ApplicationRecord
 
   def disconnect_inv
     return if archived?
+
     _log.info("Disconnecting Container Project [#{name}] id [#{id}] from EMS [#{ext_management_system.name}] id [#{ext_management_system.id}]")
     self.deleted_on = Time.now.utc
     save
