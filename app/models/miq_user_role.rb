@@ -141,6 +141,7 @@ class MiqUserRole < ApplicationRecord
   private
 
   def restriction_type(klass)
+    klass ||= Class
     if klass <= ServiceTemplate
       :service_templates
     else
