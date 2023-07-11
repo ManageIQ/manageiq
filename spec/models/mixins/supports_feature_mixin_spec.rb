@@ -43,9 +43,9 @@ RSpec.describe SupportsFeatureMixin do
 
   describe ".supports_feature?" do
     it "defines supports on the class" do
-      expect(test_class.supports?(:std_accept)).to be_truthy
-      expect(test_class.supports?(:module_accept)).to be_truthy
-      expect(test_class.supports?(:std_denial)).to be_falsey
+      expect(test_class.supports_std_accept?).to be_truthy
+      expect(test_class.supports_module_accept?).to be_truthy
+      expect(test_class.supports_std_denial?).to be_falsey
     end
   end
 
@@ -64,6 +64,10 @@ RSpec.describe SupportsFeatureMixin do
 
     it "supports dynamic features for classes (note: logic is not called)" do
       expect(test_class.supports?(:dynamic_feature)).to be_truthy
+    end
+
+    it "handles unknown supports" do
+      expect(test_class.supports?(:denial_unknown_feature)).to be_falsey
     end
 
     context "with child class" do
@@ -97,6 +101,10 @@ RSpec.describe SupportsFeatureMixin do
     it "denies with no reason given" do
       test_class.supports_not :denial_no_reason
       expect(test_inst.supports?(:denial_no_reason)).to be_falsey
+    end
+
+    it "handles unknown supports" do
+      expect(test_inst.supports?(:denial_unknown_feature)).to be_falsey
     end
 
     it "denies dynamic attrs" do
@@ -183,6 +191,10 @@ RSpec.describe SupportsFeatureMixin do
       test_class.supports_not :denial_no_reason
       expect(test_class.unsupported_reason(:denial_no_reason)).to eq("Feature not available/supported")
     end
+
+    it "defaults denial reason for unknown feature" do
+      expect(test_class.unsupported_reason(:denial_unknown_feature)).to eq("Feature not available/supported")
+    end
   end
 
   describe '#unsupported_reason' do
@@ -195,6 +207,10 @@ RSpec.describe SupportsFeatureMixin do
     it "gives defaults denial reason" do
       test_class.supports_not :denial_no_reason
       expect(test_inst.unsupported_reason(:denial_no_reason)).to eq("Feature not available/supported")
+    end
+
+    it "defaults denial reason for unknown feature" do
+      expect(test_inst.unsupported_reason(:denial_unknown_feature)).to eq("Feature not available/supported")
     end
 
     it "gives reason when dynamic feature" do

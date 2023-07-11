@@ -78,7 +78,13 @@ module SupportsFeatureMixin
 
   # query the instance if the feature is supported or not
   def supports?(feature)
-    public_send("supports_#{feature}?")
+    method_name = "supports_#{feature}?"
+    if respond_to?(method_name)
+      public_send(method_name)
+    else
+      unsupported_reason_add(feature)
+      false
+    end
   end
 
   private
@@ -108,7 +114,13 @@ module SupportsFeatureMixin
 
     # query the class if the feature is supported or not
     def supports?(feature)
-      public_send("supports_#{feature}?")
+      method_name = "supports_#{feature}?"
+      if respond_to?(method_name)
+        public_send(method_name)
+      else
+        unsupported_reason_add(feature)
+        false
+      end
     end
 
     # all subclasses that are considered for supporting features
@@ -147,7 +159,7 @@ module SupportsFeatureMixin
     # query the class for the reason why something is unsupported
     def unsupported_reason(feature)
       feature = feature.to_sym
-      public_send("supports_#{feature}?") unless unsupported.key?(feature)
+      supports?(feature) unless unsupported.key?(feature)
       unsupported[feature]
     end
 
