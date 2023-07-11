@@ -23,7 +23,8 @@ class ContainerProject < ApplicationRecord
   has_many :container_limit_items, :through => :container_limits
   has_many :container_builds
   has_many :container_templates
-  has_many :archived_container_groups, :foreign_key => "old_container_project_id", :class_name => "ContainerGroup"
+  has_many :all_container_groups, :class_name => "ContainerGroup", :inverse_of => :container_project
+  has_many :archived_container_groups, -> { archived }, :class_name => "ContainerGroup"
   has_many :persistent_volume_claims
   has_many :miq_alert_statuses, :as => :resource, :dependent => :destroy
   has_many :computer_systems, :through => :container_nodes
@@ -50,10 +51,6 @@ class ContainerProject < ApplicationRecord
   PERF_ROLLUP_CHILDREN = [:all_container_groups].freeze
 
   delegate :my_zone, :to => :ext_management_system, :allow_nil => true
-
-  def all_container_groups
-    ContainerGroup.where(:container_project_id => id).or(ContainerGroup.where(:old_container_project_id => id))
-  end
 
   def event_where_clause(assoc = :ems_events)
     case assoc.to_sym

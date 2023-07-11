@@ -24,7 +24,6 @@ class ContainerGroup < ApplicationRecord
   has_and_belongs_to_many :container_services, :join_table => :container_groups_container_services
   belongs_to :container_replicator
   belongs_to :container_project
-  belongs_to :old_container_project, :foreign_key => "old_container_project_id", :class_name => 'ContainerProject'
   belongs_to :container_build_pod
   has_many :container_volumes, :as => :parent, :dependent => :destroy
   has_many :persistent_volume_claim, :through => :container_volumes
@@ -105,9 +104,6 @@ class ContainerGroup < ApplicationRecord
     self.container_services = []
     self.container_replicator_id = nil
     self.container_build_pod_id = nil
-    # Keeping old_container_project_id for backwards compatibility, we will need a migration that is putting it back to
-    # container_project_id
-    self.old_container_project_id = self.container_project_id
     self.deleted_on = Time.now.utc
     save
   end
