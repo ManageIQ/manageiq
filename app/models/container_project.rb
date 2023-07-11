@@ -8,15 +8,15 @@ class ContainerProject < ApplicationRecord
   include TenantIdentityMixin
   include CustomActionsMixin
   include_concern 'Purging'
-  belongs_to :ext_management_system, :foreign_key => "ems_id"
-  has_many :container_groups, -> { active }
+  belongs_to :ext_management_system, :class_name => "ManageIQ::Providers::ContainerManager", :foreign_key => "ems_id", :inverse_of => :container_projects
+  has_many :container_groups, -> { active }, :inverse_of => :container_project
   has_many :container_routes
   has_many :container_replicators
   has_many :container_services
   has_many :containers, :through => :container_groups
   has_many :container_images, -> { distinct }, :through => :container_groups
   has_many :container_nodes, -> { distinct }, :through => :container_groups
-  has_many :container_quotas, -> { active }
+  has_many :container_quotas, -> { active }, :inverse_of => :container_project
   has_many :container_quota_scopes, :through => :container_quotas
   has_many :container_quota_items, :through => :container_quotas
   has_many :container_limits

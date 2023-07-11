@@ -31,6 +31,9 @@ RSpec.describe ContainerProject do
 
       groups = project.container_groups.to_a
       expect(groups).to match_array([group_active])
+      expect do
+        expect(groups.first.container_project).to eq(project)
+      end.not_to make_database_queries
     end
   end
 end
