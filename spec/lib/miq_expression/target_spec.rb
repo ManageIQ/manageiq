@@ -71,4 +71,32 @@ describe MiqExpression::Target do
       expect(subject).to be_nil
     end
   end
+
+  describe "#==" do
+    it "equals" do
+      expect(described_class.parse("Vm-name")).to eq(MiqExpression::Field.new(Vm, [], "name"))
+      expect(described_class.parse("Vm-name")).to eq(MiqExpression::Tag.new(Vm, [], "name"))
+      expect(described_class.parse("Vm.host-name")).to eq(MiqExpression::Field.new(Vm, ["host"], "name"))
+    end
+
+    it "doesn't equal" do
+      expect(described_class.parse("Vm.host-name")).not_to eq(MiqExpression::Field.new(Vm, [], "name"))
+      expect(described_class.parse("Vm.host-name")).not_to eq("Vm-host-name")
+      expect(described_class.parse("Vm-name")).not_to eql(["name", [], Vm])
+    end
+  end
+
+  describe "#eql?" do
+    it "equals" do
+      expect(described_class.parse("Vm-name")).to eq(MiqExpression::Field.new(Vm, [], "name"))
+      expect(described_class.parse("Vm.host-name")).to eq(MiqExpression::Field.new(Vm, ["host"], "name"))
+    end
+
+    it "doesn't equal" do
+      expect(described_class.parse("Vm-name")).to eq(MiqExpression::Tag.new(Vm, [], "name"))
+      expect(described_class.parse("Vm.host-name")).not_to eql(described_class.parse("Vm-name"))
+      expect(described_class.parse("Vm.host-name")).not_to eql("Vm.host-name")
+      expect(described_class.parse("Vm-name")).not_to eql(["name", [], Vm])
+    end
+  end
 end

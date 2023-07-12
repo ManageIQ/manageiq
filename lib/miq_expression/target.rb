@@ -163,6 +163,21 @@ class MiqExpression::Target
     false
   end
 
+  def hash
+    [column, associations, model].hash
+  end
+
+  def ==(other)
+    other.kind_of?(MiqExpression::Target) &&
+      column == other.column &&
+      model == other.model &&
+      associations == other.associations
+  end
+
+  def eql?(other)
+    other.class == self.class && self == other
+  end
+
   private
 
   def tag_path
