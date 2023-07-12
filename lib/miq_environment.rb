@@ -39,7 +39,7 @@ module MiqEnvironment
   end
 
   class Command
-    EVM_KNOWN_COMMANDS = %w[apachectl nohup service systemctl].freeze
+    EVM_KNOWN_COMMANDS = %w[apachectl docker nohup podman service systemctl].freeze
 
     def self.supports_systemd?
       return @supports_systemd unless @supports_systemd.nil?
