@@ -17,6 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: ../app/javascript/components/action-form/action-form.schema.js
+#: ../app/javascript/components/reconfigure-vm-form/helpers/network.js
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/javascript/components/storage-service-form/get-compliant-resources.jsx
 msgid " "
@@ -159,10 +160,6 @@ msgid ""
 "er."
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
-msgid " Add "
-msgstr ""
-
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
 #: ../config/yaml_strings.rb
 msgid " CPU - Peak Usage Rate Avg for Collected Intervals (%) (Max)"
@@ -221,10 +218,6 @@ msgstr ""
 msgid " Memory - Usage (%)"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
-msgid " Memory value not in range or not a multiple of 4"
-msgstr ""
-
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/190_VM Resource Utilization.yaml
 #: ../config/yaml_strings.rb
 msgid " Network I/O - Avg (KBps)"
@@ -232,10 +225,6 @@ msgstr ""
 
 #: ../app/models/miq_alert.rb
 msgid " Nothing"
-msgstr ""
-
-#: ../app/views/vm_common/_reconfigure.html.haml
-msgid " Processor Options"
 msgstr ""
 
 #: ../app/controllers/ems_infra_controller.rb
@@ -251,16 +240,8 @@ msgstr ""
 msgid " Total Used Disk Space"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
-msgid " Total processors value larger than the maximum allowed"
-msgstr ""
-
 #: ../app/models/miq_provision_virt_workflow.rb
 msgid " Use the snapshot that is active at time of provisioning"
-msgstr ""
-
-#: ../app/views/vm_common/_reconfigure.html.haml
-msgid " Valid memory value required"
 msgstr ""
 
 #: ../app/helpers/miq_policy_helper.rb
@@ -447,14 +428,6 @@ msgid "%d New"
 msgid_plural "%d New"
 msgstr[0] ""
 msgstr[1] ""
-
-#: ../app/javascript/oldjs/services/alerts_center_service.js
-msgid "%d Note"
-msgstr ""
-
-#: ../app/javascript/oldjs/services/alerts_center_service.js
-msgid "%d Notes"
-msgstr ""
 
 #: ../app/views/report/_form_filter_chargeback.html.haml
 msgid "%d Weeks Ago"
@@ -2457,10 +2430,14 @@ msgstr ""
 #: ../app/javascript/components/pxe-image-type-form/pxe-image-type-form.schema.js
 #: ../app/javascript/components/pxe-iso-datastore-form/pxe-iso-datastore-form.schema.js
 #: ../app/javascript/components/pxe-iso-image-form/pxe-iso-image-form.schema.js
+#: ../app/javascript/components/reconfigure-vm-form/disk-form-fields.js
+#: ../app/javascript/components/reconfigure-vm-form/drive-form-fields.js
+#: ../app/javascript/components/reconfigure-vm-form/network-form-fields.js
 #: ../app/javascript/components/routers-form/RoutersForm.schema.js
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/javascript/components/vm-cloud-add-remove-security-group-form/vm-cloud-add-security-form.schema.js
 #: ../app/javascript/components/volume-mapping-form/volume-mapping-form.schema.js
+#: ../app/javascript/components/workflow-credentials-form/workflow-credentials-form.schema.js
 #: ../app/views/catalog/_form_basic_info.html.haml
 #: ../app/views/condition/_form.html.haml
 #: ../app/views/layouts/_adv_search_body.html.haml
@@ -3165,28 +3142,19 @@ msgstr ""
 msgid "Account|Region number"
 msgstr ""
 
-#: ../app/javascript/oldjs/services/alerts_center_service.js
 #: ../app/views/static/edit_alert_dialog.html.haml
 msgid "Acknowledge"
-msgstr ""
-
-#: ../app/javascript/oldjs/services/alerts_center_service.js
-msgid "Acknowledge Alert"
-msgstr ""
-
-#: ../app/javascript/oldjs/controllers/alerts/alerts_list_controller.js
-#: ../app/javascript/oldjs/services/alerts_center_service.js
-msgid "Acknowledged"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/MiqAction.yaml
 #: ../app/controllers/optimization_controller.rb
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
 #: ../app/helpers/settings_schedule_helper.rb
+#: ../app/javascript/components/reconfigure-vm-form/helpers/disk.js
+#: ../app/javascript/components/reconfigure-vm-form/helpers/network.js
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/presenters/tree_builder_policy_simulation_results.rb
 #: ../app/views/catalog/_form_resources_info.html.haml
-#: ../app/views/shared/views/_alerts_list.html.haml
 #: ../config/yaml_strings.rb
 #, fuzzy
 msgid "Action"
@@ -3262,7 +3230,9 @@ msgstr ""
 #: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
 #: ../app/helpers/ops_helper/settings_tab_helper.rb
 #: ../app/helpers/settings_tags_tabs_helper.rb
+#: ../app/javascript/components/reconfigure-vm-form/helpers/drive.js
 #: ../app/javascript/components/settings-company-tags/helper.js
+#: ../app/javascript/spec/reconfigure-vm-form/datatable-data.js
 #: ../app/javascript/spec/settings-label-tag-mapping/data.js
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/views/chargeback_rate/_cb_rate_edit_table.html.haml
@@ -3274,7 +3244,6 @@ msgstr ""
 #: ../app/views/ops/_ap_form_registry.html.haml
 #: ../app/views/ops/_classification_entries.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
-#: ../app/views/vm_common/_reconfigure.html.haml
 #: ../config/yaml_strings.rb
 msgid "Actions"
 msgstr ""
@@ -3475,7 +3444,8 @@ msgstr ""
 msgid "Add Dialog in the Dialog Editor"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
+#: ../app/javascript/components/reconfigure-vm-form/helpers/general.js
+#: ../app/javascript/components/reconfigure-vm-form/reconfigure-form-fields.js
 msgid "Add Disk"
 msgstr ""
 
@@ -3565,6 +3535,11 @@ msgstr ""
 msgid "Add Interface to this Router"
 msgstr ""
 
+#:
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/helper.js
+msgid "Add Key-Value Pair"
+msgstr ""
+
 #: ../app/javascript/components/settings-label-tag-mapping/index.jsx
 msgid "Add Mapping Rule"
 msgstr ""
@@ -3573,10 +3548,12 @@ msgstr ""
 msgid "Add Method"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
+#:
+#: ../app/javascript/components/reconfigure-vm-form/reconfigure-form-fields.js
 msgid "Add Network"
 msgstr ""
 
+#: ../app/javascript/components/reconfigure-vm-form/helpers/general.js
 #: ../app/views/miq_request/_reconfigure_show.html.haml
 msgid "Add Network Adapters"
 msgstr ""
@@ -3611,6 +3588,7 @@ msgid "Add New Cloud Volume"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/ansible_credentials_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_credentials_center.rb
 msgid "Add New Credential"
 msgstr ""
 
@@ -3631,6 +3609,7 @@ msgid "Add New Network Router"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/ansible_repositories_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_repositories_center.rb
 msgid "Add New Repository"
 msgstr ""
 
@@ -3644,10 +3623,6 @@ msgstr ""
 
 #: ../app/controllers/cloud_subnet_controller.rb
 msgid "Add New Subnet"
-msgstr ""
-
-#: ../app/javascript/oldjs/services/alerts_center_service.js
-msgid "Add Note"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -4119,11 +4094,6 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
-msgid "Add a Workflow"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
 msgid "Add a Zone"
 msgstr ""
 
@@ -4202,6 +4172,7 @@ msgid "Add a new Containers Provider"
 msgstr ""
 
 #: ../app/controllers/ansible_credential_controller.rb
+#: ../app/controllers/workflow_credential_controller.rb
 msgid "Add a new Credential"
 msgstr ""
 
@@ -4276,6 +4247,7 @@ msgid "Add a new Report"
 msgstr ""
 
 #: ../app/controllers/ansible_repository_controller.rb
+#: ../app/controllers/workflow_repository_controller.rb
 msgid "Add a new Repository"
 msgstr ""
 
@@ -4396,6 +4368,7 @@ msgid "Add new Firmware Registry"
 msgstr ""
 
 #: ../app/controllers/ansible_repository_controller.rb
+#: ../app/controllers/workflow_repository_controller.rb
 msgid "Add new Repository"
 msgstr ""
 
@@ -4449,6 +4422,7 @@ msgid "Add of Cloud Volume \"%s\" has been successfully queued."
 msgstr ""
 
 #: ../app/javascript/components/ansible-credentials-form/index.jsx
+#: ../app/javascript/components/workflow-credentials-form/index.jsx
 msgid "Add of Credential \"%s\" has been successfully queued."
 msgstr ""
 
@@ -4491,10 +4465,12 @@ msgid "Add of Provider was cancelled by the user"
 msgstr ""
 
 #: ../app/javascript/components/ansible-repository-form/index.jsx
+#: ../app/javascript/components/workflow-repository-form/index.jsx
 msgid "Add of Repository \"%s\" was successfully initiated."
 msgstr ""
 
 #: ../app/javascript/components/ansible-repository-form/index.jsx
+#: ../app/javascript/components/workflow-repository-form/index.jsx
 msgid "Add of Repository cancelled by user."
 msgstr ""
 
@@ -4890,6 +4866,7 @@ msgid "Addition of security group was canceled by the user."
 msgstr ""
 
 #: ../app/helpers/catalog_helper.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/catalog/_tenants_tree_show.html.haml
 msgid "Additional Tenants"
 msgstr ""
@@ -5082,10 +5059,6 @@ msgstr ""
 msgid "After Playbook runs"
 msgstr ""
 
-#: ../app/views/shared/views/_alerts_list.html.haml
-msgid "Age"
-msgstr ""
-
 #: ../app/helpers/textual_mixins/vm_common.rb
 msgid "Agent Address"
 msgstr ""
@@ -5253,7 +5226,7 @@ msgstr ""
 
 #. TRANSLATORS: file: product/views/MiqAlertSet.yaml
 #: ../app/controllers/miq_alert_set_controller.rb
-#: ../app/presenters/menu/default_menu.rb:178 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:175 ../config/yaml_strings.rb
 msgid "Alert Profiles"
 msgstr ""
 
@@ -5275,8 +5248,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. TRANSLATORS: file: product/views/MiqAlert.yaml
-#: ../app/controllers/alerts_list_controller.rb
-#: ../app/controllers/alerts_overview_controller.rb
 #: ../app/controllers/miq_alert_controller.rb
 #: ../app/helpers/ems_container_helper/textual_summary.rb
 #: ../app/helpers/miq_alert_set_helper.rb
@@ -5371,8 +5342,8 @@ msgstr ""
 msgid "All Actions"
 msgstr ""
 
-#: ../app/controllers/alerts_list_controller.rb
-#: ../app/presenters/menu/default_menu.rb
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "All Alerts"
 msgstr ""
 
@@ -5741,7 +5712,6 @@ msgstr ""
 #: ../app/javascript/oldjs/components/miq_ae_class/namespace-form.js
 #: ../app/javascript/oldjs/controllers/catalog/catalog_item_form_controller.js
 #: ../app/javascript/oldjs/controllers/ops/pglogical_replication_form_controller.js
-#: ../app/javascript/oldjs/controllers/reconfigure/reconfigure_form_controller.js
 msgid "All changes have been reset"
 msgstr ""
 
@@ -5912,6 +5882,7 @@ msgid "Already has an ISO datastore"
 msgstr ""
 
 #: ../app/helpers/view_helper.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/helper.js
 #: ../app/javascript/oldjs/controllers/playbook-reusable-code-mixin.js
 msgid "Always"
 msgstr ""
@@ -6566,24 +6537,50 @@ msgid "Are you sure you want to delete the following Service?"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/ansible_credential_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_credential_center.rb
 msgid "Are you sure you want to delete the following credential?"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/ansible_credentials_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_credentials_center.rb
 msgid "Are you sure you want to delete the following credentials?"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/ansible_repositories_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_repositories_center.rb
 msgid "Are you sure you want to delete the following repositories?"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/ansible_repository_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_repository_center.rb
 msgid "Are you sure you want to delete the following repository?"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
+msgid "Are you sure you want to delete the selected Host Initiator Groups?"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
+msgid "Are you sure you want to delete the selected Host Initiators?"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/physical_storages_center.rb
+msgid ""
+"Are you sure you want to delete the selected Physical Storages?\n"
+"Note that all of the attached services (e.g. volumes) will be unmapped."
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/diagnostics_region_center.rb
 #: ../app/helpers/application_helper/toolbar/diagnostics_zone_center.rb
 msgid "Are you sure you want to delete the selected Servers?"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
+msgid "Are you sure you want to delete the selected Storage Services?"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/volume_mappings_center.rb
+msgid "Are you sure you want to delete the selected Volume Mappings?"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb
@@ -6619,8 +6616,17 @@ msgid "Are you sure you want to delete this Group?"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
-#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
 msgid "Are you sure you want to delete this Host Initiator Group?"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/host_initiator_center.rb
+msgid "Are you sure you want to delete this Host Initiator?"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/physical_storage_center.rb
+msgid ""
+"Are you sure you want to delete this Physical Storage?\n"
+"Note that all of the attached services (e.g. volumes) will be unmapped."
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/miq_alerts_center.rb
@@ -6644,12 +6650,15 @@ msgid "Are you sure you want to delete this Role?"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/storage_service_center.rb
-#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
 msgid "Are you sure you want to delete this Storage Service?"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/user_center.rb
 msgid "Are you sure you want to delete this User?"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/volume_mapping_center.rb
+msgid "Are you sure you want to delete this Volume Mapping?"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/zone_center.rb
@@ -6661,27 +6670,14 @@ msgstr ""
 msgid "Are you sure you want to delete this cloud volume snapshot?"
 msgstr ""
 
+#: ../app/javascript/components/reconfigure-vm-form/helpers/disk.js
+#: ../app/javascript/components/reconfigure-vm-form/helpers/network.js
 #: ../app/javascript/components/settings-company-tags/index.jsx
 msgid "Are you sure you want to delete this entry?"
 msgstr ""
 
-#: ../app/helpers/application_helper/toolbar/host_initiator_center.rb
-msgid "Are you sure you want to delete this host initiator?"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
-msgid "Are you sure you want to delete this host initiators?"
-msgstr ""
-
 #: ../app/helpers/application_helper/toolbar/tenant_center.rb
 msgid "Are you sure you want to delete this item and all of it's children?"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/physical_storage_center.rb
-#: ../app/helpers/application_helper/toolbar/physical_storages_center.rb
-msgid ""
-"Are you sure you want to delete this physical storage?\n"
-"Note that all of the attached services (e.g. volumes) will be unmapped."
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb
@@ -6895,12 +6891,8 @@ msgstr ""
 msgid "AssetDetail|Serial number"
 msgstr ""
 
-#: ../app/javascript/oldjs/services/alerts_center_service.js
+#: ../app/javascript/components/server-profile-form.js
 msgid "Assign"
-msgstr ""
-
-#: ../app/javascript/oldjs/services/alerts_center_service.js
-msgid "Assign Alert"
 msgstr ""
 
 #: ../app/javascript/components/catalog-form/catalog-form.schema.js
@@ -7471,6 +7463,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ../app/helpers/ansible_credential_helper/textual_summary.rb
+#: ../app/helpers/workflow_credential_helper/textual_summary.rb
 msgid "Authentication Type"
 msgstr ""
 
@@ -7672,6 +7665,7 @@ msgstr ""
 msgid "Author"
 msgstr ""
 
+#: ../app/controllers/dashboard_controller.rb
 #: ../app/views/dashboard/auth_error.html.haml
 msgid "Authorization Error"
 msgstr ""
@@ -7875,6 +7869,9 @@ msgstr ""
 #: ../app/controllers/miq_ae_customization_controller.rb
 #: ../app/controllers/miq_ae_tools_controller.rb
 #: ../app/controllers/miq_request_controller.rb
+#: ../app/controllers/workflow_controller.rb
+#: ../app/controllers/workflow_credential_controller.rb
+#: ../app/controllers/workflow_repository_controller.rb
 #: ../app/helpers/application_helper/title.rb
 #: ../app/presenters/menu/default_menu.rb
 msgid "Automation"
@@ -8649,6 +8646,7 @@ msgstr ""
 #: ../app/helpers/settings_analysis_profile_helper.rb
 #: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/javascript/components/cloud-volume-actions-form/create-backup.schema.js
 #: ../app/javascript/components/cloud-volume-actions-form/create-snapshot.schema.js
 #: ../app/javascript/components/cloud-volume-actions-form/restore-from-backup.schema.js
@@ -8662,7 +8660,6 @@ msgstr ""
 #: ../app/javascript/components/schedule-form/schedule-form.schema.js
 #: ../app/javascript/components/vm-edit-form/vm-edit-form.schema.js
 #: ../app/views/catalog/_form_basic_info.html.haml
-#: ../app/views/catalog/_st_angular_form.html.haml
 #: ../app/views/condition/_form.html.haml
 #: ../app/views/miq_ae_customization/_dialog_info.html.haml
 #: ../app/views/miq_ae_customization/_old_dialogs_details.html.haml
@@ -8717,6 +8714,11 @@ msgstr ""
 
 #: ../app/helpers/miq_policy_helper.rb
 msgid "Belongs to Profiles"
+msgstr ""
+
+#:
+#: ../app/javascript/components/reconfigure-vm-form/reconfigure-form-fields.js
+msgid "Between ${memory.min}MB and ${memory.max / 1024}GB"
 msgstr ""
 
 #: ../app/controllers/mixins/actions/vm_actions/reconfigure.rb
@@ -8899,7 +8901,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.ems_block_storage (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.ems_block_storages
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:3990 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:4034 ../config/dictionary_strings.rb
 #: ../config/yaml_strings.rb
 msgid "Block Storage Managers"
 msgstr ""
@@ -8960,7 +8962,8 @@ msgid "Boot Time"
 msgstr ""
 
 #: ../app/helpers/cloud_volume_helper/textual_summary.rb
-#: ../app/views/vm_common/_reconfigure.html.haml
+#: ../app/javascript/components/reconfigure-vm-form/disk-form-fields.js
+#: ../app/javascript/components/reconfigure-vm-form/helpers/disk.js
 msgid "Bootable"
 msgstr ""
 
@@ -9288,7 +9291,8 @@ msgstr ""
 msgid "CD-ROM (%{name} %{location}), %{connection}"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
+#:
+#: ../app/javascript/components/reconfigure-vm-form/reconfigure-form-fields.js
 msgid "CD/DVD Drives"
 msgstr ""
 
@@ -10133,10 +10137,6 @@ msgstr ""
 msgid "Cancel (Esc)"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
-msgid "Cancel Add"
-msgstr ""
-
 #: ../app/helpers/application_helper/toolbar/x_edit_view.rb
 #: ../app/views/layouts/_edit_form_buttons.html.haml
 #: ../app/views/layouts/_policy_sim.html.haml
@@ -10147,7 +10147,7 @@ msgstr ""
 msgid "Cancel Changes"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
+#: ../app/javascript/components/reconfigure-vm-form/helpers/drive.js
 msgid "Cancel Connect"
 msgstr ""
 
@@ -10155,16 +10155,17 @@ msgstr ""
 msgid "Cancel Copy from provisioning"
 msgstr ""
 
+#: ../app/javascript/components/reconfigure-vm-form/helpers/disk.js
+#: ../app/javascript/components/reconfigure-vm-form/helpers/network.js
 #: ../app/views/ops/_settings_replication_tab.html.haml
-#: ../app/views/vm_common/_reconfigure.html.haml
 msgid "Cancel Delete"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
+#: ../app/javascript/components/reconfigure-vm-form/helpers/drive.js
 msgid "Cancel Disconnect"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
+#: ../app/javascript/components/reconfigure-vm-form/helpers/network.js
 msgid "Cancel Edit"
 msgstr ""
 
@@ -10173,7 +10174,7 @@ msgstr ""
 msgid "Cancel Import"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
+#: ../app/javascript/components/reconfigure-vm-form/helpers/disk.js
 msgid "Cancel Resize"
 msgstr ""
 
@@ -10452,6 +10453,7 @@ msgid ""
 "ate signed by the root Openshift Cert.error message: %{err}"
 msgstr ""
 
+#: ../app/helpers/physical_storage_helper/textual_summary.rb
 #: ../app/helpers/storage_resource_helper/textual_summary.rb
 #: ../app/helpers/storage_service_helper/textual_summary.rb
 #: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
@@ -10763,8 +10765,8 @@ msgstr ""
 
 #. TRANSLATORS: file: product/views/ServiceTemplate.yaml
 #: ../app/helpers/catalog_helper.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/catalog/_form_basic_info.html.haml
-#: ../app/views/catalog/_st_angular_form.html.haml
 #: ../config/yaml_strings.rb
 #, fuzzy
 msgid "Catalog"
@@ -10788,11 +10790,13 @@ msgid "Catalog Item"
 msgstr ""
 
 #:
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/index.jsx
 #: ../app/javascript/oldjs/controllers/catalog/catalog_item_form_controller.js
 msgid "Catalog Item %s was added"
 msgstr ""
 
 #:
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/index.jsx
 #: ../app/javascript/oldjs/controllers/catalog/catalog_item_form_controller.js
 msgid "Catalog Item %s was saved"
 msgstr ""
@@ -10824,7 +10828,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ServiceTemplateCatalog.yaml
 #: ../app/controllers/catalog_controller.rb
 #: ../app/helpers/application_helper/title.rb
-#: ../app/presenters/menu/default_menu.rb:65 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:62 ../config/yaml_strings.rb
 msgid "Catalogs"
 msgstr ""
 
@@ -10963,16 +10967,6 @@ msgstr ""
 msgid "Change"
 msgstr ""
 
-#:
-#: ../app/javascript/oldjs/controllers/reconfigure/reconfigure_form_controller.js
-msgid "Change Memory and Processor value to submit reconfigure request"
-msgstr ""
-
-#:
-#: ../app/javascript/oldjs/controllers/reconfigure/reconfigure_form_controller.js
-msgid "Change Memory value to submit reconfigure request"
-msgstr ""
-
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Change Password"
@@ -10985,13 +10979,6 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Change Password of Infrastructure Providers"
-msgstr ""
-
-#:
-#: ../app/javascript/oldjs/controllers/reconfigure/reconfigure_form_controller.js
-msgid ""
-"Change Processor Sockets or Cores Per Socket value to submit reconfigure reque"
-"st"
 msgstr ""
 
 #: ../app/javascript/menu/group-switcher.jsx
@@ -11746,6 +11733,7 @@ msgstr ""
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
 #: ../app/javascript/components/diagnostics-collect-log-form/schema.js
 #: ../app/javascript/components/host-edit-form/host-edit-form.schema.js
+#: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js
 #: ../app/javascript/components/network-floatingIPs-form/network-floatingIPs-form.schema.js
 #: ../app/javascript/components/network-security-groups-form/network-security-groups-form.schema.js
 #: ../app/javascript/components/provider-form/index.jsx
@@ -11753,6 +11741,7 @@ msgstr ""
 #: ../app/javascript/components/select/index.jsx
 #: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
 #: ../app/javascript/components/subnet-form/subnet-form.schema.js
+#: ../app/javascript/components/volume-mapping-form/volume-mapping-form.schema.js
 #: ../app/javascript/helpers/storage_manager/filter-service-by-capabilities.js
 #: ../app/views/catalog/_form_basic_info.html.haml
 #: ../app/views/catalog/_form_ovf_template_options.html.haml
@@ -11785,7 +11774,6 @@ msgstr ""
 #: ../app/views/report/_widget_form_report.html.haml
 #: ../app/views/shared/_playbook_options.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
-#: ../app/views/vm_common/_reconfigure.html.haml
 msgid "Choose"
 msgstr ""
 
@@ -12422,6 +12410,7 @@ msgid "Cloud"
 msgstr ""
 
 #: ../app/helpers/catalog_helper.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 #: ../app/views/miq_ae_class/_method_inputs.html.haml
 msgid "Cloud Credential"
@@ -12480,7 +12469,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_cloud_manager
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_network_manager
 #: ../app/models/manageiq/providers/cloud_manager.rb
-#: ../config/dictionary_strings.rb:4180 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:4224 ../config/dictionary_strings.rb
 msgid "Cloud Manager"
 msgid_plural "Cloud Managers"
 msgstr[0] ""
@@ -12488,7 +12477,7 @@ msgstr[1] ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_cloud_manager (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_network_manager (plural form)
-#: ../config/dictionary_strings.rb:4182 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:4226 ../config/dictionary_strings.rb
 msgid "Cloud Managers"
 msgstr ""
 
@@ -12618,7 +12607,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_openstack_infra_manager_cloud_networks
-#: ../config/dictionary_strings.rb:3260 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3276 ../config/dictionary_strings.rb
 #: ../config/dictionary_strings.rb
 msgid "Cloud Networks (OpenStack)"
 msgstr ""
@@ -12689,6 +12678,36 @@ msgid_plural "Cloud Providers (Amazon)"
 msgstr[0] ""
 msgstr[1] ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Google::CloudManager
+#: ../config/dictionary_strings.rb
+msgid "Cloud Provider (Google)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::IbmCic::CloudManager
+#: ../config/dictionary_strings.rb
+msgid "Cloud Provider (IBM CIC)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::IbmCloud::PowerVirtualServers::CloudManager
+#: ../config/dictionary_strings.rb
+msgid "Cloud Provider (IBM Cloud Power Systems Virtual Servers)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::IbmCloud::VPC::CloudManager
+#: ../config/dictionary_strings.rb
+msgid "Cloud Provider (IBM Cloud VPC)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::IbmPowerVc::CloudManager
+#: ../config/dictionary_strings.rb
+msgid "Cloud Provider (IBM PowerVC)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AzureStack::CloudManager
+#: ../config/dictionary_strings.rb
+msgid "Cloud Provider (Microsoft Azure Stack)"
+msgstr ""
+
 #: ../app/models/manageiq/providers/azure/cloud_manager.rb
 #, fuzzy
 msgid "Cloud Provider (Microsoft Azure)"
@@ -12702,6 +12721,11 @@ msgid "Cloud Provider (OpenStack)"
 msgid_plural "Cloud Providers (OpenStack)"
 msgstr[0] ""
 msgstr[1] ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::OracleCloud::CloudManager
+#: ../config/dictionary_strings.rb
+msgid "Cloud Provider (Oracle Cloud)"
+msgstr ""
 
 #: ../app/models/manageiq/providers/vmware/cloud_manager.rb
 #, fuzzy
@@ -12720,6 +12744,36 @@ msgstr ""
 msgid "Cloud Providers (Amazon)"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Google::CloudManager (plural form)
+#: ../config/dictionary_strings.rb
+msgid "Cloud Providers (Google)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::IbmCic::CloudManager (plural form)
+#: ../config/dictionary_strings.rb
+msgid "Cloud Providers (IBM CIC)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::IbmCloud::PowerVirtualServers::CloudManager (plural form)
+#: ../config/dictionary_strings.rb
+msgid "Cloud Providers (IBM Cloud Power Systems Virtual Servers)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::IbmCloud::VPC::CloudManager (plural form)
+#: ../config/dictionary_strings.rb
+msgid "Cloud Providers (IBM Cloud VPC)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::IbmPowerVc::CloudManager (plural form)
+#: ../config/dictionary_strings.rb
+msgid "Cloud Providers (IBM PowerVC)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AzureStack::CloudManager (plural form)
+#: ../config/dictionary_strings.rb
+msgid "Cloud Providers (Microsoft Azure Stack)"
+msgstr ""
+
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::CloudManager (plural form)
 #: ../config/dictionary_strings.rb
 msgid "Cloud Providers (Microsoft Azure)"
@@ -12728,6 +12782,11 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager (plural form)
 #: ../config/dictionary_strings.rb
 msgid "Cloud Providers (OpenStack)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::OracleCloud::CloudManager (plural form)
+#: ../config/dictionary_strings.rb
+msgid "Cloud Providers (Oracle Cloud)"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::CloudManager (plural form)
@@ -12929,7 +12988,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager::CloudTenant (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_openstack_cloud_manager_cloud_tenant
-#: ../config/dictionary_strings.rb:3404 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3448 ../config/dictionary_strings.rb
 msgid "Cloud Tenants (OpenStack)"
 msgstr ""
 
@@ -12938,6 +12997,8 @@ msgstr ""
 msgid "Cloud Topology"
 msgstr ""
 
+#:
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 msgid "Cloud Type"
 msgstr ""
@@ -14748,7 +14809,7 @@ msgstr ""
 #: ../app/helpers/container_group_helper/textual_summary.rb
 #: ../app/helpers/container_node_helper/textual_summary.rb
 #: ../app/helpers/miq_policy_helper.rb
-#: ../app/presenters/menu/default_menu.rb:176 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:173 ../config/yaml_strings.rb
 msgid "Conditions"
 msgstr ""
 
@@ -15008,6 +15069,10 @@ msgstr ""
 #: ../app/helpers/application_helper/toolbar/volume_mapping_center.rb
 #: ../app/helpers/application_helper/toolbar/volume_mappings_center.rb
 #: ../app/helpers/application_helper/toolbar/windows_image_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_credential_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_credentials_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_repositories_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_repository_center.rb
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb
@@ -15090,7 +15155,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::ConfigurationManager
 #. TRANSLATORS: en.yml key: dictionary.table.ems_configuration
 #: ../app/models/manageiq/providers/configuration_manager.rb
-#: ../config/dictionary_strings.rb:3098 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3114 ../config/dictionary_strings.rb
 msgid "Configuration Manager"
 msgid_plural "Configuration Managers"
 msgstr[0] ""
@@ -15113,8 +15178,8 @@ msgstr[1] ""
 #. TRANSLATORS: en.yml key: dictionary.table.ems_configuration (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.ems_configurations
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:3100 ../config/dictionary_strings.rb
-#: ../config/dictionary_strings.rb:4010 ../config/yaml_strings.rb
+#: ../config/dictionary_strings.rb:3116 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:4054 ../config/yaml_strings.rb
 msgid "Configuration Managers"
 msgstr ""
 
@@ -15770,37 +15835,17 @@ msgstr ""
 msgid "ConfiguredSystem|Virtual instance ref"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
-msgid "Confirm"
-msgstr ""
-
 #: ../app/views/layouts/_auth_credentials.html.haml
 msgid "Confirm %{password}"
-msgstr ""
-
-#: ../app/views/vm_common/_reconfigure.html.haml
-msgid "Confirm Add"
 msgstr ""
 
 #: ../app/views/ems_infra/_form.html.haml
 msgid "Confirm Client Key"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
-msgid "Confirm Connect"
-msgstr ""
-
-#: ../app/views/vm_common/_reconfigure.html.haml
-msgid "Confirm Edit"
-msgstr ""
-
 #: ../app/views/ems_cloud/sync_users.html.haml
 #: ../app/views/ops/_rbac_user_details.html.haml
 msgid "Confirm Password"
-msgstr ""
-
-#: ../app/views/vm_common/_reconfigure.html.haml
-msgid "Confirm Resize"
 msgstr ""
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
@@ -15819,8 +15864,12 @@ msgstr ""
 msgid "Confirm password"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
+#: ../app/javascript/components/reconfigure-vm-form/helpers/drive.js
 msgid "Connect"
+msgstr ""
+
+#: ../app/javascript/components/reconfigure-vm-form/helpers/general.js
+msgid "Connect CD/DVD Drives"
 msgstr ""
 
 #: ../app/helpers/textual_mixins/textual_region.rb
@@ -15952,7 +16001,7 @@ msgstr ""
 
 #. TRANSLATORS: file: product/views/ContainerBuild.yaml
 #: ../app/controllers/container_build_controller.rb
-#: ../app/presenters/menu/default_menu.rb:132 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:129 ../config/yaml_strings.rb
 msgid "Container Builds"
 msgstr ""
 
@@ -16054,7 +16103,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. TRANSLATORS: file: product/views/ContainerImage.yaml
-#: ../app/presenters/menu/default_menu.rb:134 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:131 ../config/yaml_strings.rb
 msgid "Container Images"
 msgstr ""
 
@@ -16154,7 +16203,7 @@ msgid "Container Node Schedulable"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/ContainerNode.yaml
-#: ../app/presenters/menu/default_menu.rb:130 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:127 ../config/yaml_strings.rb
 msgid "Container Nodes"
 msgstr ""
 
@@ -16368,7 +16417,7 @@ msgstr[1] ""
 
 #. TRANSLATORS: file: product/views/ContainerProject.yaml
 #. TRANSLATORS: file: product/views/ContainerService.yaml
-#: ../app/presenters/menu/default_menu.rb:126 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:123 ../config/yaml_strings.rb
 msgid "Container Services"
 msgstr ""
 
@@ -16397,7 +16446,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. TRANSLATORS: file: product/views/ContainerTemplate.yaml
-#: ../app/presenters/menu/default_menu.rb:135 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:132 ../config/yaml_strings.rb
 msgid "Container Templates"
 msgstr ""
 
@@ -18837,7 +18886,7 @@ msgstr[1] ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::ContainerManager
 #. TRANSLATORS: en.yml key: dictionary.table.ems_container
-#: ../config/dictionary_strings.rb:3198 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3214 ../config/dictionary_strings.rb
 msgid "Containers Provider"
 msgstr ""
 
@@ -19265,7 +19314,11 @@ msgstr ""
 msgid "Control Policies"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
+#: ../app/javascript/components/reconfigure-vm-form/disk-form-fields.js
+msgid "Controller"
+msgstr ""
+
+#: ../app/javascript/components/reconfigure-vm-form/helpers/disk.js
 msgid "Controller Type"
 msgstr ""
 
@@ -19430,6 +19483,8 @@ msgstr ""
 msgid "Copy does not apply to selected Automate Namespace"
 msgstr ""
 
+#:
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/catalog/_confirmation_modal.html.haml
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 msgid "Copy from Provisioning"
@@ -19654,7 +19709,8 @@ msgstr ""
 msgid "Cores"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
+#:
+#: ../app/javascript/components/reconfigure-vm-form/reconfigure-form-fields.js
 msgid "Cores Per Socket"
 msgstr ""
 
@@ -19759,6 +19815,8 @@ msgstr ""
 msgid "Create L3 Cloud Subnet"
 msgstr ""
 
+#:
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 msgid "Create New"
 msgstr ""
@@ -19918,14 +19976,17 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_AutomationManager_Job.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AzureStack_CloudManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Azure_CloudManager_OrchestrationTemplate.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAnsible_AutomationManager_ConfigurationScriptSource.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAnsible_AutomationManager_Credential.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAnsible_AutomationManager_Playbook.yaml
-#. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAutomationManager_Authentication.yaml
-#. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAutomationManager_ConfigurationScriptSource.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ExternalAutomationManager_ConfigurationScript.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Openstack_CloudManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Openstack_CloudManager_VnfdTemplate.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_InfraManager_OrchestrationTemplate.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Workflows_AutomationManager_ConfigurationScriptSource.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Workflows_AutomationManager_Credential.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Workflows_AutomationManager_Workflow.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/ResourcePool.yaml
@@ -19939,6 +20000,9 @@ msgstr ""
 #: ../app/helpers/firmware_target_helper/textual_summary.rb
 #: ../app/helpers/request_details_helper.rb
 #: ../app/helpers/service_helper/textual_summary.rb
+#: ../app/helpers/workflow_credential_helper/textual_summary.rb
+#: ../app/helpers/workflow_helper/textual_summary.rb
+#: ../app/helpers/workflow_repository_helper/textual_summary.rb
 #: ../app/views/catalog/_ot_tree_show.html.haml
 #: ../app/views/miq_ae_class/_method_form.html.haml
 #: ../app/views/miq_ae_class/_method_inputs.html.haml
@@ -20065,6 +20129,7 @@ msgid "Creation of new Cloud Tenant was canceled by the user."
 msgstr ""
 
 #: ../app/javascript/components/ansible-credentials-form/index.jsx
+#: ../app/javascript/components/workflow-credentials-form/index.jsx
 msgid "Creation of new Credential was canceled by the user."
 msgstr ""
 
@@ -20119,6 +20184,16 @@ msgid "Credential (Amazon)"
 msgid_plural "Credentials (Amazon)"
 msgstr[0] ""
 msgstr[1] ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential
+#: ../config/dictionary_strings.rb
+msgid "Credential (Embedded Ansible)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Workflows::AutomationManager::Credential
+#: ../config/dictionary_strings.rb
+msgid "Credential (Embedded Workflows)"
+msgstr ""
 
 #:
 #: ../app/models/manageiq/providers/awx/automation_manager/google_credential.rb
@@ -20201,11 +20276,13 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ../app/helpers/ansible_credential_helper/textual_summary.rb
+#: ../app/helpers/workflow_credential_helper/textual_summary.rb
 msgid "Credential Options"
 msgstr ""
 
 #:
 #: ../app/javascript/components/ansible-credentials-form/ansible-credentials-form.schema.js
+#: ../app/javascript/components/workflow-credentials-form/workflow-credentials-form.schema.js
 msgid "Credential type"
 msgstr ""
 
@@ -20217,8 +20294,10 @@ msgstr ""
 msgid "Credential validation was successful"
 msgstr ""
 
-#. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAutomationManager_Authentication.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAnsible_AutomationManager_Credential.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Workflows_AutomationManager_Credential.yaml
 #: ../app/controllers/ansible_credential_controller.rb
+#: ../app/controllers/workflow_credential_controller.rb
 #: ../app/helpers/application_helper/title.rb
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/presenters/menu/default_menu.rb
@@ -20235,6 +20314,16 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::AmazonCredential (plural form)
 #: ../config/dictionary_strings.rb:2976 ../config/dictionary_strings.rb
 msgid "Credentials (Amazon)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential (plural form)
+#: ../config/dictionary_strings.rb
+msgid "Credentials (Embedded Ansible)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Workflows::AutomationManager::Credential (plural form)
+#: ../config/dictionary_strings.rb
+msgid "Credentials (Embedded Workflows)"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::GoogleCredential (plural form)
@@ -22012,7 +22101,7 @@ msgid "Define Scope"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
-msgid "Define a new host initiator"
+msgid "Define a new Host Initiator"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/volume_mappings_center.rb
@@ -22055,6 +22144,8 @@ msgstr ""
 #: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
 #: ../app/helpers/ops_helper/settings_tab_helper.rb
 #: ../app/helpers/settings_tags_tabs_helper.rb
+#: ../app/javascript/components/reconfigure-vm-form/helpers/disk.js
+#: ../app/javascript/components/reconfigure-vm-form/helpers/network.js
 #: ../app/javascript/components/remove-generic-item-modal.jsx
 #: ../app/javascript/components/settings-company-tags/helper.js
 #: ../app/javascript/spec/settings-label-tag-mapping/data.js
@@ -22065,7 +22156,6 @@ msgstr ""
 #: ../app/views/ops/_ap_form_registry.html.haml
 #: ../app/views/ops/_classification_entry.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
-#: ../app/views/vm_common/_reconfigure.html.haml
 msgid "Delete"
 msgstr ""
 
@@ -22163,7 +22253,7 @@ msgstr ""
 msgid "Delete Automate Namespace"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
+#: ../app/javascript/components/reconfigure-vm-form/helpers/disk.js
 msgid "Delete Backing"
 msgstr ""
 
@@ -22234,10 +22324,12 @@ msgid "Delete Configuration Management Providers"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/ansible_credential_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_credential_center.rb
 msgid "Delete Credential"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/ansible_credentials_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_credentials_center.rb
 msgid "Delete Credentials"
 msgstr ""
 
@@ -22328,10 +22420,12 @@ msgid "Delete Provisioning Dialog"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/ansible_repositories_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_repositories_center.rb
 msgid "Delete Repositories"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/ansible_repository_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_repository_center.rb
 msgid "Delete Repository"
 msgstr ""
 
@@ -22506,11 +22600,6 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Delete a Widget"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Delete a Workflow"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -22700,6 +22789,18 @@ msgstr ""
 msgid "Delete selected Host Aggregates"
 msgstr ""
 
+#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
+msgid "Delete selected Host Initiator Groups"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
+msgid "Delete selected Host Initiators"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/physical_storages_center.rb
+msgid "Delete selected Physical Storage"
+msgstr ""
+
 #: ../app/helpers/application_helper/toolbar/miq_alerts_center.rb
 msgid "Delete selected Policy Alerts"
 msgstr ""
@@ -22733,6 +22834,10 @@ msgstr ""
 msgid "Delete selected Users"
 msgstr ""
 
+#: ../app/helpers/application_helper/toolbar/volume_mappings_center.rb
+msgid "Delete selected Volume Mappings"
+msgstr ""
+
 #: ../app/controllers/report_controller.rb
 #: ../app/views/report/_menu_form1.html.haml
 msgid "Delete selected folder and its contents"
@@ -22744,10 +22849,6 @@ msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/tasks_center.rb
 msgid "Delete selected tasks"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/volume_mappings_center.rb
-msgid "Delete selected volume mappings"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -22768,22 +22869,6 @@ msgstr ""
 msgid "Delete the Cloud Volume Snapshot"
 msgstr ""
 
-#: ../app/helpers/application_helper/toolbar/host_initiator_center.rb
-#: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
-msgid "Delete the Host Initiator"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
-#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
-msgid "Delete the Host Initiator Group"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/physical_storage_center.rb
-#: ../app/helpers/application_helper/toolbar/physical_storages_center.rb
-msgid "Delete the Physical Storage"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/storage_service_center.rb
 #: ../app/helpers/application_helper/toolbar/storage_services_center.rb
 msgid "Delete the Storage Service"
 msgstr ""
@@ -22871,6 +22956,14 @@ msgstr ""
 msgid "Delete this Group"
 msgstr ""
 
+#: ../app/helpers/application_helper/toolbar/host_initiator_center.rb
+msgid "Delete this Host Initiator"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
+msgid "Delete this Host Initiator Group"
+msgstr ""
+
 #:
 #: ../app/helpers/application_helper/toolbar/cloud/instance_operations_button_group_mixin.rb
 msgid "Delete this Instance"
@@ -22879,6 +22972,10 @@ msgstr ""
 #:
 #: ../app/helpers/application_helper/toolbar/cloud/instance_operations_button_group_mixin.rb
 msgid "Delete this Instance?"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/physical_storage_center.rb
+msgid "Delete this Physical Storage"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/miq_report_center.rb
@@ -22922,6 +23019,10 @@ msgstr ""
 msgid "Delete this Security Policy Rule"
 msgstr ""
 
+#: ../app/helpers/application_helper/toolbar/storage_service_center.rb
+msgid "Delete this Storage Service"
+msgstr ""
+
 #: ../app/helpers/application_helper/toolbar/user_center.rb
 msgid "Delete this User"
 msgstr ""
@@ -22959,7 +23060,7 @@ msgid "Delete this mapping"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/volume_mapping_center.rb
-msgid "Delete volume mapping"
+msgid "Delete this volume mapping"
 msgstr ""
 
 #: ../app/javascript/components/provider-dashboard-charts/charts_config.js
@@ -23111,7 +23212,8 @@ msgstr ""
 msgid "Depend on Service"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
+#: ../app/javascript/components/reconfigure-vm-form/disk-form-fields.js
+#: ../app/javascript/components/reconfigure-vm-form/helpers/disk.js
 msgid "Dependent"
 msgstr ""
 
@@ -23558,6 +23660,7 @@ msgstr ""
 
 #: ../app/helpers/catalog_helper.rb:48 ../app/helpers/catalog_helper.rb
 #: ../app/helpers/catalog_helper.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
 #: ../app/views/catalog/_form_basic_info.html.haml
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
@@ -24147,7 +24250,8 @@ msgstr ""
 msgid "Discard report management changes"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
+#: ../app/javascript/components/reconfigure-vm-form/helpers/drive.js
+#: ../app/javascript/spec/reconfigure-vm-form/datatable-data.js
 msgid "Disconnect"
 msgstr ""
 
@@ -24797,12 +24901,8 @@ msgstr ""
 msgid "Disk Start Connected"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
-msgid "Disk size has to be greater than 1 MB"
-msgstr ""
-
-#: ../app/views/vm_common/_reconfigure.html.haml
-msgid "Disk size has to be greater than {{1*disk.orgHdSize+1}} {{disk.orgHdUnit}}"
+#: ../app/javascript/components/reconfigure-vm-form/index.jsx
+msgid "Disk size has to be greater than ${size}${unit}"
 msgstr ""
 
 #: ../app/javascript/components/flavor-form/flavor-form.schema.js
@@ -24810,7 +24910,7 @@ msgid "Disk size in GB"
 msgstr ""
 
 #: ../app/helpers/vm_helper/textual_summary.rb
-#: ../app/views/vm_common/_reconfigure.html.haml
+#: ../app/javascript/components/reconfigure-vm-form/reconfigure-form-fields.js
 msgid "Disks"
 msgstr ""
 
@@ -24944,7 +25044,8 @@ msgstr ""
 msgid "Disk|Used percent of provisioned"
 msgstr ""
 
-#: ../app/views/shared/views/_show_alerts_overview.html.haml
+#. TRANSLATORS: en.yml key: dictionary.column.display
+#: ../config/dictionary_strings.rb
 msgid "Display"
 msgstr ""
 
@@ -26205,46 +26306,6 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
-msgid "Display a list of Credentials"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Display a list of Repositories"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Display a list of Workflow Instances"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Display a list of Workflows"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Display an Individual Credential"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Display an Individual Repository"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Display an Individual Workflow"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Display an Individual Workflow Instance"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
 msgid "Display any dashboards"
 msgstr ""
 
@@ -26258,8 +26319,8 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ServiceTemplate.yaml
 #: ../app/helpers/catalog_helper.rb
 #: ../app/helpers/generic_object_definition_helper.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/catalog/_form_basic_info.html.haml
-#: ../app/views/catalog/_st_angular_form.html.haml
 #: ../config/yaml_strings.rb
 msgid "Display in Catalog"
 msgstr ""
@@ -26871,7 +26932,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.miq_custom_attribute (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.miq_custom_attributes
-#: ../config/dictionary_strings.rb:4160 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:4204 ../config/dictionary_strings.rb
 msgid "EVM Custom Attributes"
 msgstr ""
 
@@ -26993,7 +27054,7 @@ msgstr ""
 #: ../app/controllers/configuration_controller.rb
 #: ../app/helpers/application_helper/toolbar/diagnostics_server_center.rb
 #: ../app/helpers/application_helper/toolbar/diagnostics_zone_center.rb
-#: ../app/views/vm_common/_reconfigure.html.haml
+#: ../app/javascript/components/reconfigure-vm-form/helpers/network.js
 msgid "Edit"
 msgstr ""
 
@@ -27344,6 +27405,7 @@ msgstr ""
 msgid "Edit Network"
 msgstr ""
 
+#: ../app/javascript/components/reconfigure-vm-form/helpers/general.js
 #: ../app/views/miq_request/_reconfigure_show.html.haml
 msgid "Edit Network Adapters"
 msgstr ""
@@ -27420,6 +27482,7 @@ msgid "Edit Repository"
 msgstr ""
 
 #: ../app/controllers/ansible_repository_controller.rb
+#: ../app/controllers/workflow_repository_controller.rb
 msgid "Edit Repository \"%{name}\""
 msgstr ""
 
@@ -27739,6 +27802,12 @@ msgstr ""
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb
 #: ../app/helpers/application_helper/toolbar/vms_center.rb
 #: ../app/helpers/application_helper/toolbar/windows_image_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_credential_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_credentials_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_repositories_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_repository_center.rb
+#: ../app/helpers/application_helper/toolbar/workflows_center.rb
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb
@@ -27890,6 +27959,18 @@ msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/configuration_scripts_center.rb
 msgid "Edit Tags for the selected Templates"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/workflow_credentials_center.rb
+msgid "Edit Tags for the selected Workflow Credentials"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/workflow_repositories_center.rb
+msgid "Edit Tags for the selected Workflow Repositories"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/workflows_center.rb
+msgid "Edit Tags for the selected Workflows"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/container_images_center.rb
@@ -28150,6 +28231,18 @@ msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/windows_image_center.rb
 msgid "Edit Tags for this Windows Image"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/workflow_center.rb
+msgid "Edit Tags for this Workflow"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/workflow_credential_center.rb
+msgid "Edit Tags for this Workflow Credential"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/workflow_repository_center.rb
+msgid "Edit Tags for this Workflow Repository"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/ems_cluster_center.rb
@@ -28526,6 +28619,7 @@ msgid "Edit a Credential"
 msgstr ""
 
 #: ../app/controllers/ansible_credential_controller.rb
+#: ../app/controllers/workflow_credential_controller.rb
 msgid "Edit a Credential \"%{name}\""
 msgstr ""
 
@@ -28669,6 +28763,7 @@ msgid "Edit a Repository"
 msgstr ""
 
 #: ../app/controllers/ansible_repository_controller.rb
+#: ../app/controllers/workflow_repository_controller.rb
 msgid "Edit a Repository \"%{name}\""
 msgstr ""
 
@@ -28755,11 +28850,6 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Edit a Widget"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Edit a Workflow"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -28902,6 +28992,7 @@ msgid "Edit of Catalog Bundle \"%{name}\" was cancelled by the user"
 msgstr ""
 
 #:
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/index.jsx
 #: ../app/javascript/oldjs/controllers/catalog/catalog_item_form_controller.js
 msgid "Edit of Catalog Item %s was cancelled by the user"
 msgstr ""
@@ -28947,6 +29038,7 @@ msgid "Edit of Cloud Volume \"%{name}\" was cancelled by the user"
 msgstr ""
 
 #: ../app/javascript/components/ansible-credentials-form/index.jsx
+#: ../app/javascript/components/workflow-credentials-form/index.jsx
 msgid "Edit of Credential \"%s\" was canceled by the user."
 msgstr ""
 
@@ -29071,10 +29163,12 @@ msgid "Edit of Report Menu for role \"%{role}\" was cancelled by the user"
 msgstr ""
 
 #: ../app/javascript/components/ansible-repository-form/index.jsx
+#: ../app/javascript/components/workflow-repository-form/index.jsx
 msgid "Edit of Repository \"%s\" cancelled by user."
 msgstr ""
 
 #: ../app/javascript/components/ansible-repository-form/index.jsx
+#: ../app/javascript/components/workflow-repository-form/index.jsx
 msgid "Edit of Repository \"%s\" was successfully initiated."
 msgstr ""
 
@@ -29402,6 +29496,8 @@ msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/ansible_credential_center.rb
 #: ../app/helpers/application_helper/toolbar/ansible_credentials_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_credential_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_credentials_center.rb
 msgid "Edit this Credential"
 msgstr ""
 
@@ -29520,6 +29616,8 @@ msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/ansible_repositories_center.rb
 #: ../app/helpers/application_helper/toolbar/ansible_repository_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_repositories_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_repository_center.rb
 msgid "Edit this Repository"
 msgstr ""
 
@@ -29845,8 +29943,28 @@ msgstr ""
 msgid "Embedded Methods"
 msgstr ""
 
+#: ../app/javascript/components/workflow-repository-form/index.jsx
+msgid "Embedded Workflow Provider not found."
+msgstr ""
+
+#: ../app/javascript/components/workflow-credentials-form/index.jsx
+msgid "Embedded Workflow service is not available."
+msgstr ""
+
+#: ../app/controllers/workflow_controller.rb
+#: ../app/controllers/workflow_credential_controller.rb
+#: ../app/controllers/workflow_repository_controller.rb
+#: ../app/presenters/menu/default_menu.rb
+msgid "Embedded Workflows"
+msgstr ""
+
 #: ../lib/manageiq/providers/workflows/engine.rb
 msgid "Embedded Workflows Provider"
+msgstr ""
+
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Workflows_AutomationManager_Workflow.yaml
+#: ../config/yaml_strings.rb
+msgid "Embededded Workflows"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.column.empty_dir_medium_type
@@ -30673,16 +30791,8 @@ msgstr ""
 msgid "Enter Maintenance Mode"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
-msgid "Enter New Size"
-msgstr ""
-
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js
 msgid "Enter Retirement Date as"
-msgstr ""
-
-#: ../app/views/vm_common/_reconfigure.html.haml
-msgid "Enter Size"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb
@@ -30695,9 +30805,15 @@ msgid "Enter Support Case:"
 msgstr ""
 
 #:
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
 #: ../app/views/shared/_playbook_options.html.haml
 msgid "Enter a comma separated list of IP or DNS names"
+msgstr ""
+
+#:
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
+msgid "Enter a new Dialog"
 msgstr ""
 
 #: ../app/views/ops/label_tag_mapping/_tag_category.html.haml
@@ -30838,16 +30954,11 @@ msgstr ""
 
 #: ../app/controllers/miq_alert_controller.rb
 #: ../app/javascript/components/settings-tasks-form/settings-tasks-form.schema.js
-#: ../app/javascript/oldjs/services/alerts_center_service.js
 msgid "Error"
 msgstr ""
 
 #: ../app/models/file_depot_ftp.rb
 msgid "Error '%{message}', writing to FTP: [%{uri}], Username: [%{id}]"
-msgstr ""
-
-#: ../app/javascript/oldjs/controllers/alerts/alerts_overview_controller.js
-msgid "Error Count"
 msgstr ""
 
 #: ../app/presenters/tree_node/miq_report_result.rb
@@ -31219,6 +31330,7 @@ msgid "Errors in Management Engine can be caused by:"
 msgstr ""
 
 #: ../app/helpers/catalog_helper.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 #: ../app/views/miq_ae_class/_method_inputs.html.haml
 msgid "Escalate Privilege"
@@ -32273,21 +32385,6 @@ msgstr ""
 msgid "Everything under Volume Mapping"
 msgstr ""
 
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Everything under Workflow Instances"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Everything under Workflows"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Everything under Workflows Automation Manager"
-msgstr ""
-
 #. TRANSLATORS: en.yml key: dictionary.column.evm_owner_email
 #: ../config/dictionary_strings.rb
 msgid "Evm Owner Email"
@@ -32320,6 +32417,11 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.column.existence_hours_metric
 #: ../config/dictionary_strings.rb
 msgid "Existence Hours Metric"
+msgstr ""
+
+#:
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
+msgid "Existing Dialog"
 msgstr ""
 
 #:
@@ -33531,43 +33633,6 @@ msgstr ""
 msgid "Filter by %s"
 msgstr ""
 
-#: ../app/javascript/oldjs/services/alerts_center_service.js
-msgid "Filter by Acknowledged"
-msgstr ""
-
-#: ../app/javascript/oldjs/services/alerts_center_service.js
-msgid "Filter by Host Name"
-msgstr ""
-
-#: ../app/javascript/oldjs/services/alerts_center_service.js
-msgid "Filter by Message Text"
-msgstr ""
-
-#: ../app/javascript/oldjs/controllers/alerts/alerts_overview_controller.js
-msgid "Filter by Name"
-msgstr ""
-
-#: ../app/javascript/oldjs/services/alerts_center_service.js
-msgid "Filter by Owner"
-msgstr ""
-
-#: ../app/javascript/oldjs/services/alerts_center_service.js
-msgid "Filter by Provider Name"
-msgstr ""
-
-#: ../app/javascript/oldjs/services/alerts_center_service.js
-msgid "Filter by Provider Type"
-msgstr ""
-
-#: ../app/javascript/oldjs/controllers/alerts/alerts_overview_controller.js
-#: ../app/javascript/oldjs/services/alerts_center_service.js
-msgid "Filter by Severity"
-msgstr ""
-
-#: ../app/javascript/oldjs/controllers/alerts/alerts_overview_controller.js
-msgid "Filter by Type"
-msgstr ""
-
 #: ../app/controllers/ops_controller/settings/schedules.rb
 msgid "Filter must be selected"
 msgstr ""
@@ -34684,6 +34749,9 @@ msgstr ""
 
 #: ../app/javascript/components/container-projects/helper.jsx
 #: ../app/javascript/components/provider-dashboard-charts/charts_config.js
+#: ../app/javascript/components/reconfigure-vm-form/disk-form-fields.js
+#: ../app/javascript/components/reconfigure-vm-form/helpers/general.js
+#: ../app/javascript/components/reconfigure-vm-form/reconfigure-form-fields.js
 #: ../app/services/container_dashboard_service.rb
 msgid "GB"
 msgstr ""
@@ -34840,7 +34908,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/GenericObject.yaml
 #: ../app/controllers/generic_object_definition_controller.rb
 #: ../app/helpers/service_helper/textual_summary.rb
-#: ../app/presenters/menu/default_menu.rb:216 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:224 ../config/yaml_strings.rb
 msgid "Generic Objects"
 msgstr ""
 
@@ -35107,6 +35175,10 @@ msgstr ""
 msgid "Google Provider"
 msgstr ""
 
+#: ../app/javascript/components/workflows/workflow_payload.jsx
+msgid "Graph"
+msgstr ""
+
 #: ../app/helpers/application_helper/toolbar/report_view.rb
 msgid "Graph View"
 msgstr ""
@@ -35153,10 +35225,6 @@ msgstr ""
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/053_Account Groups Linux.yaml
 #: ../config/yaml_strings.rb
 msgid "Group Account Type"
-msgstr ""
-
-#: ../app/views/shared/views/_show_alerts_overview.html.haml
-msgid "Group By"
 msgstr ""
 
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
@@ -36087,7 +36155,6 @@ msgid "High Oper Range"
 msgstr ""
 
 #: ../app/helpers/compliance_summary_helper.rb
-#: ../app/views/shared/views/_alerts_list.html.haml
 msgid "History"
 msgstr ""
 
@@ -36362,7 +36429,9 @@ msgstr ""
 msgid "Host Failure"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
+#: ../app/javascript/components/reconfigure-vm-form/drive-form-fields.js
+#: ../app/javascript/components/reconfigure-vm-form/helpers/drive.js
+#: ../app/javascript/spec/reconfigure-vm-form/datatable-data.js
 msgid "Host File"
 msgstr ""
 
@@ -36476,7 +36545,40 @@ msgid_plural "Host Metrics"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../app/javascript/oldjs/services/alerts_center_service.js
+#. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/020_Vendor and Type.yaml
+#. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/025_Location and Size.yaml
+#. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/027_VMs_ with no UUID.yaml
+#. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/030_by MAC Address.yaml
+#. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/010_Summary.yaml
+#. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/011_Host Summary with VM info.yaml
+#. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/012_Virtual Infrastructure Platforms.yaml
+#. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/020_Date Brought under Management.yaml
+#. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
+#. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
+#. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
+#. TRANSLATORS: file: product/reports/120_Configuration Management - Providers/020_Host Relationships.yaml
+#. TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/030_VM Affinity with Power State.yaml
+#. TRANSLATORS: file: product/reports/150_Configuration Management - Storage/030_Summary for Hosts.yaml
+#. TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/010_Summary - VMs migration ready.yaml
+#. TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/011_Summary - VMs NOT migration ready.yaml
+#. TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/020_Detailed - VMs migration ready.yaml
+#. TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
+#. TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/010_Registered VMs by Free Space.yaml
+#. TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/015_Registered Free Space _35%.yaml
+#. TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/016_Unregistered Free Space _35%.yaml
+#. TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/050_VMs without VMware tools.yaml
+#. TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/055_VMs with old VMware tools.yaml
+#. TRANSLATORS: file: product/reports/410_Operations - EVM/025_EVM Snapshots.yaml
+#. TRANSLATORS: file: product/reports/410_Operations - EVM/026_Consolidate Helper Snapshots.yaml
+#. TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/030_Clusters Relationships.yaml
+#. TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
+#. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/050_Host CPU Usage per VM.yaml
+#. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/065_VM Performance - daily over last week.yaml
+#. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
+#. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/160_Top CPU Consumers weekly.yaml
+#. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/170_Top Memory Consumers weekly.yaml
+#. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/180_Top Storage Consumers.yaml
+#: ../config/yaml_strings.rb
 msgid "Host Name"
 msgstr ""
 
@@ -37112,7 +37214,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::InfraManager::Host (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::InfraManager::HostEsx (plural form)
-#: ../config/dictionary_strings.rb:3468 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3512 ../config/dictionary_strings.rb
 msgid "Hosts (Vmware)"
 msgstr ""
 
@@ -37777,6 +37879,10 @@ msgstr ""
 msgid "IBM Cloud Provider"
 msgstr ""
 
+#: ../app/models/manageiq/providers/ibm_power_hmc/infra_manager.rb
+msgid "IBM Power HMC"
+msgstr ""
+
 #: ../lib/manageiq/providers/ibm_power_hmc/engine.rb
 msgid "IBM Power HMC Provider"
 msgstr ""
@@ -38109,7 +38215,7 @@ msgstr ""
 #: ../app/helpers/generic_object_definition_helper.rb
 #: ../app/views/shared/buttons/_ab_list.html.haml
 #: ../app/views/shared/buttons/_ab_show.html.haml
-#: ../config/yaml_strings.rb:708 ../lib/gtl_formatter.rb
+#: ../config/yaml_strings.rb:720 ../lib/gtl_formatter.rb
 #, fuzzy
 msgid "Image"
 msgstr ""
@@ -38548,14 +38654,6 @@ msgstr ""
 msgid "Info"
 msgstr ""
 
-#: ../app/javascript/oldjs/services/alerts_center_service.js
-msgid "Information"
-msgstr ""
-
-#: ../app/javascript/oldjs/controllers/alerts/alerts_overview_controller.js
-msgid "Information Count"
-msgstr ""
-
 #: ../app/helpers/storage_helper/textual_summary.rb
 msgid "Information for Registered VMs"
 msgstr ""
@@ -38601,7 +38699,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::InfraManager
 #. TRANSLATORS: en.yml key: dictionary.table.ems_infra
-#: ../config/dictionary_strings.rb:3202 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3218 ../config/dictionary_strings.rb
 msgid "Infrastructure Provider"
 msgstr ""
 
@@ -39201,6 +39299,11 @@ msgid "Invalid or unsupported file depot type."
 msgstr ""
 
 #:
+#: ../app/models/manageiq/providers/embedded_automation_manager/authentication.rb
+msgid "Invalid parameters: %{params}"
+msgstr ""
+
+#:
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/provision_workflow.rb
 msgid "Invalid placement group - incompatible colocation policy"
 msgstr ""
@@ -39232,6 +39335,7 @@ msgstr ""
 
 #: ../app/helpers/miq_action_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
 #: ../app/views/shared/_playbook_options.html.haml
 msgid "Inventory"
@@ -39507,7 +39611,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager::AuthKeyPair
 #. TRANSLATORS: en.yml key: dictionary.table.auth_key_pair_cloud
 #: ../app/models/manageiq/providers/cloud_manager/auth_key_pair.rb
-#: ../config/dictionary_strings.rb:3118 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3134 ../config/dictionary_strings.rb
 msgid "Key Pair"
 msgid_plural "Key Pairs"
 msgstr[0] ""
@@ -40157,7 +40261,8 @@ msgstr ""
 msgid "Last Year"
 msgstr ""
 
-#. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAutomationManager_ConfigurationScriptSource.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAnsible_AutomationManager_ConfigurationScriptSource.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Workflows_AutomationManager_ConfigurationScriptSource.yaml
 #: ../config/yaml_strings.rb
 msgid "Last refresh on"
 msgstr ""
@@ -40847,6 +40952,7 @@ msgid "Locale"
 msgstr ""
 
 #: ../app/helpers/miq_action_helper.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 #: ../app/views/shared/_playbook_options.html.haml
@@ -41062,6 +41168,7 @@ msgid "Logging"
 msgstr ""
 
 #: ../app/helpers/catalog_helper.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 #: ../app/views/miq_ae_class/_method_inputs.html.haml
 msgid "Logging Output"
@@ -41161,10 +41268,10 @@ msgid "Logs for this %{product} Server are not available for viewing"
 msgstr ""
 
 #: ../app/helpers/catalog_helper.rb:47 ../app/helpers/catalog_helper.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/javascript/components/settings-category-form/schema.js
 #: ../app/javascript/components/settings-company-tags/helper.js
 #: ../app/views/catalog/_form_details_info.html.haml
-#: ../app/views/catalog/_st_angular_form.html.haml
 msgid "Long Description"
 msgstr ""
 
@@ -41201,7 +41308,7 @@ msgstr ""
 #: ../app/helpers/textual_mixins/vm_common.rb
 #: ../app/helpers/guest_device_helper/textual_summary.rb
 #: ../app/helpers/physical_server_helper/textual_summary.rb
-#: ../app/views/vm_common/_reconfigure.html.haml
+#: ../app/javascript/components/reconfigure-vm-form/network-form-fields.js
 #, fuzzy
 msgid "MAC Address"
 msgid_plural "MAC Addresses"
@@ -41222,6 +41329,10 @@ msgstr ""
 msgid "MAC Changes"
 msgstr ""
 
+#: ../app/javascript/components/reconfigure-vm-form/helpers/network.js
+msgid "MAC address"
+msgstr ""
+
 #. TRANSLATORS: en.yml key: dictionary.column.macaddress
 #: ../config/dictionary_strings.rb
 msgid "MACaddress"
@@ -41233,6 +41344,8 @@ msgid "MACaddresses"
 msgstr ""
 
 #: ../app/helpers/textual_mixins/textual_devices.rb
+#: ../app/javascript/components/reconfigure-vm-form/disk-form-fields.js
+#: ../app/javascript/components/reconfigure-vm-form/reconfigure-form-fields.js
 msgid "MB"
 msgstr ""
 
@@ -41268,6 +41381,7 @@ msgid "Machine"
 msgstr ""
 
 #: ../app/helpers/catalog_helper.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 #: ../app/views/miq_ae_class/_method_inputs.html.haml
 msgid "Machine Credential"
@@ -42016,6 +42130,7 @@ msgid "Max TTL"
 msgstr ""
 
 #: ../app/helpers/catalog_helper.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 msgid "Max TTL (mins)"
 msgstr ""
@@ -42141,11 +42256,11 @@ msgstr ""
 #: ../app/helpers/vm_helper/textual_summary.rb
 #: ../app/javascript/components/provider-dashboard-charts/charts_config.js
 #: ../app/javascript/components/provider-dashboard-charts/heat-map-chart/HeatMapChartGraph.js
+#: ../app/javascript/components/reconfigure-vm-form/reconfigure-form-fields.js
 #: ../app/javascript/spec/prov-grid/prov-vm-grid-data.js
 #: ../app/views/miq_request/_reconfigure_show.html.haml
 #: ../app/views/utilization/_utilization_report.html.haml
 #: ../app/views/utilization/_utilization_summary.html.haml
-#: ../app/views/vm_common/_reconfigure.html.haml
 #: ../app/views/vm_common/_right_size.html.haml
 #: ../config/yaml_strings.rb
 msgid "Memory"
@@ -42728,6 +42843,7 @@ msgstr ""
 #: ../app/helpers/miq_action_helper.rb:55 ../app/helpers/ops_helper.rb
 #: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
+#: ../app/javascript/components/reconfigure-vm-form/reconfigure-form-fields.js
 #: ../config/yaml_strings.rb
 msgid "Memory Size"
 msgstr ""
@@ -42741,6 +42857,11 @@ msgstr ""
 #. TRANSLATORS: file: product/charts/miq_reports/vm_chargeback.yaml
 #: ../config/dictionary_strings.rb:2560 ../config/yaml_strings.rb
 msgid "Memory Total Cost"
+msgstr ""
+
+#:
+#: ../app/javascript/components/reconfigure-vm-form/reconfigure-form-fields.js
+msgid "Memory Type"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
@@ -42797,6 +42918,10 @@ msgstr ""
 #:
 #: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb
 msgid "Memory type"
+msgstr ""
+
+#: ../app/javascript/components/reconfigure-vm-form/index.jsx
+msgid "Memory value not in range or not a multiple of 4"
 msgstr ""
 
 #. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/AvailabilityZone.yaml
@@ -42873,10 +42998,6 @@ msgstr ""
 
 #: ../app/models/miq_alert.rb
 msgid "Message Source"
-msgstr ""
-
-#: ../app/javascript/oldjs/services/alerts_center_service.js
-msgid "Message Text"
 msgstr ""
 
 #: ../app/javascript/components/action-form/action-form.schema.js
@@ -47378,6 +47499,10 @@ msgid "MiqUserRole|Region number"
 msgstr ""
 
 #: ../config/model_attributes.rb
+msgid "MiqUserRole|Service template restriction"
+msgstr ""
+
+#: ../config/model_attributes.rb
 msgid "MiqUserRole|Settings"
 msgstr ""
 
@@ -47697,13 +47822,13 @@ msgstr ""
 #. TRANSLATORS: file: product/views/MiqPolicy.yaml
 #: ../app/helpers/miq_alert_set_helper.rb
 #: ../app/javascript/components/miq-alert-set-form/miq-alert-set-form.schema.js
+#: ../app/javascript/components/reconfigure-vm-form/disk-form-fields.js
+#: ../app/javascript/components/reconfigure-vm-form/helpers/disk.js
 #: ../app/views/miq_policy/_form.html.haml
 #: ../app/views/ops/_ldap_forest_entries.html.haml
 #: ../app/views/ops/_settings_authentication_tab.html.haml
 #: ../app/views/ops/_settings_server_tab.html.haml
-#: ../app/views/vm_common/_disks.html.haml
-#: ../app/views/vm_common/_reconfigure.html.haml
-#: ../config/yaml_strings.rb
+#: ../app/views/vm_common/_disks.html.haml:6 ../config/yaml_strings.rb
 msgid "Mode"
 msgstr ""
 
@@ -47738,6 +47863,7 @@ msgid "Modification of Cloud Volume \"%s\" has been successfully queued."
 msgstr ""
 
 #: ../app/javascript/components/ansible-credentials-form/index.jsx
+#: ../app/javascript/components/workflow-credentials-form/index.jsx
 msgid "Modification of Credential \"%s\" has been successfully queued."
 msgstr ""
 
@@ -48266,11 +48392,6 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
-msgid "Modify Workflows"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
 msgid "Modify Zone"
 msgstr ""
 
@@ -48291,20 +48412,6 @@ msgstr ""
 
 #: ../app/javascript/components/settings-time-profile-form/helper.js
 msgid "Monday"
-msgstr ""
-
-#: ../app/controllers/alerts_list_controller.rb
-#: ../app/controllers/alerts_overview_controller.rb
-#: ../app/presenters/menu/default_menu.rb
-msgid "Monitor"
-msgstr ""
-
-#: ../app/helpers/application_helper/title.rb
-msgid "Monitor Alerts"
-msgstr ""
-
-#: ../app/helpers/application_helper/title.rb
-msgid "Monitor Alerts Overview"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/availability_zone_center.rb
@@ -48590,10 +48697,6 @@ msgstr ""
 msgid "Must be a number (greater than 0)"
 msgstr ""
 
-#: ../app/views/catalog/_st_angular_form.html.haml
-msgid "Must be a numeric value"
-msgstr ""
-
 #: ../app/javascript/components/create-nuage-cloud-subnet-form.schema.js
 msgid "Must be a valid IPv4 address"
 msgstr ""
@@ -48842,6 +48945,11 @@ msgstr ""
 msgid "Name of the Security Policy Rule"
 msgstr ""
 
+#:
+#: ../app/javascript/components/workflow-credentials-form/workflow-credentials-form.schema.js
+msgid "Name of this credential"
+msgstr ""
+
 #: ../app/helpers/container_template_helper/textual_summary.rb
 msgid "Name*"
 msgstr ""
@@ -48921,8 +49029,9 @@ msgstr ""
 #: ../app/helpers/host_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/javascript/components/provider-dashboard-charts/charts_config.js
+#: ../app/javascript/components/reconfigure-vm-form/helpers/network.js
+#: ../app/javascript/components/reconfigure-vm-form/network-form-fields.js
 #: ../app/presenters/menu/default_menu.rb
-#: ../app/views/vm_common/_reconfigure.html.haml
 #, fuzzy
 msgid "Network"
 msgstr ""
@@ -48935,7 +49044,8 @@ msgstr ""
 msgid "Network Adapter Information"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
+#:
+#: ../app/javascript/components/reconfigure-vm-form/reconfigure-form-fields.js
 msgid "Network Adapters"
 msgstr ""
 
@@ -49873,6 +49983,7 @@ msgstr ""
 #: ../app/helpers/textual_mixins/textual_refresh_status.rb
 #: ../app/helpers/view_helper.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/helper.js
 #: ../app/javascript/oldjs/controllers/playbook-reusable-code-mixin.js
 #: ../lib/gtl_formatter.rb
 msgid "Never"
@@ -50290,6 +50401,16 @@ msgstr ""
 
 #: ../app/controllers/host_aggregate_controller.rb
 msgid "No Host Aggregates were selected for deletion."
+msgstr ""
+
+#:
+#: ../app/javascript/components/volume-mapping-form/volume-mapping-form.schema.js
+msgid "No Host Initiator Group found"
+msgstr ""
+
+#:
+#: ../app/javascript/components/volume-mapping-form/volume-mapping-form.schema.js
+msgid "No Host Initiator found"
 msgstr ""
 
 #: ../app/controllers/application_controller/performance.rb
@@ -50819,6 +50940,7 @@ msgid "No output available"
 msgstr ""
 
 #: ../app/views/ansible_repository/_output.html.haml
+#: ../app/views/workflow_repository/_output.html.haml
 msgid "No output for the last refresh."
 msgstr ""
 
@@ -51152,16 +51274,8 @@ msgstr ""
 msgid "Not found"
 msgstr ""
 
-#: ../app/views/shared/views/_alerts_list.html.haml
 #: ../app/views/static/edit_alert_dialog.html.haml
 msgid "Note"
-msgstr ""
-
-#:
-#: ../app/javascript/components/volume-mapping-form/volume-mapping-form.schema.js
-msgid ""
-"Note! Volume can't be mapped to an empty host-initiator-group (host-cluster). "
-"Empty host-initiator-groups are not listed."
 msgstr ""
 
 #: src/report-editor/consolidation.jsx
@@ -51211,12 +51325,6 @@ msgstr ""
 #: ../app/views/layouts/angular-bootstrap/_auth_credentials_angular_bootstrap.html.haml
 #: ../app/views/static/auth-credentials.html.haml
 msgid "Note: Username must be in the format: name@realm"
-msgstr ""
-
-#: ../app/views/vm_common/_reconfigure.html.haml
-msgid ""
-"Note: a restart of the virtual machine might be required for the changes to ap"
-"ply."
 msgstr ""
 
 #: ../app/helpers/condition_helper.rb
@@ -51700,7 +51808,6 @@ msgstr ""
 #. TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
 #. TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
 #. TRANSLATORS: file: product/views/SystemService-win32_services.yaml
-#: ../app/javascript/oldjs/controllers/alerts/alerts_overview_controller.js
 #: ../config/yaml_strings.rb
 msgid "Object Name"
 msgstr ""
@@ -51717,7 +51824,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.ems_object_storage (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.ems_object_storages
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:4048 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:4092 ../config/dictionary_strings.rb
 #: ../config/yaml_strings.rb
 msgid "Object Storage Managers"
 msgstr ""
@@ -51733,7 +51840,6 @@ msgid "Object Store Objects"
 msgstr ""
 
 #: ../app/helpers/settings_schedule_helper.rb
-#: ../app/javascript/oldjs/controllers/alerts/alerts_overview_controller.js
 msgid "Object Type"
 msgstr ""
 
@@ -51774,10 +51880,6 @@ msgstr ""
 msgid "Off"
 msgstr ""
 
-#: ../app/views/shared/views/_alerts_list.html.haml
-msgid "Offending %{type}"
-msgstr ""
-
 #. TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/040_VMs_ Offline VMs not yet Scanned.yaml
 #: ../config/yaml_strings.rb
 msgid "Offline VMs Never Scanned"
@@ -51812,6 +51914,7 @@ msgid "On Entry"
 msgstr ""
 
 #: ../app/helpers/view_helper.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/helper.js
 #: ../app/javascript/components/data-tables/datastore/helper.js
 #: ../app/javascript/oldjs/controllers/playbook-reusable-code-mixin.js
 #: ../app/views/miq_ae_class/_class_fields.html.haml
@@ -52589,7 +52692,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack (plural form)
-#: ../config/dictionary_strings.rb:3400 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3444 ../config/dictionary_strings.rb
 msgid "Orchestration Stacks (OpenStack)"
 msgstr ""
 
@@ -53164,7 +53267,6 @@ msgstr ""
 msgid "Overridable Options"
 msgstr ""
 
-#: ../app/controllers/alerts_overview_controller.rb
 #: ../app/controllers/chargeback_assignment_controller.rb
 #: ../app/controllers/chargeback_rate_controller.rb
 #: ../app/controllers/chargeback_report_controller.rb
@@ -53189,7 +53291,6 @@ msgstr ""
 #. TRANSLATORS: file: product/views/Vm__restricted.yaml
 #: ../app/helpers/catalog_helper.rb
 #: ../app/helpers/service_helper/textual_summary.rb
-#: ../app/javascript/oldjs/services/alerts_center_service.js
 #: ../app/views/report/_form_filter_chargeback.html.haml
 #: ../app/views/static/edit_alert_dialog.html.haml
 #: ../config/yaml_strings.rb
@@ -53622,9 +53723,7 @@ msgid "Passed"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/machine_credential.rb
-#: ../app/models/manageiq/providers/awx/automation_manager/network_credential.rb
-#: ../app/models/manageiq/providers/awx/automation_manager/scm_credential.rb
+#: ../app/models/manageiq/providers/workflows/automation_manager/workflow_credential.rb
 msgid "Passphrase to unlock SSH private key if encrypted"
 msgstr ""
 
@@ -53660,11 +53759,7 @@ msgid "Password for privilege escalation method"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/machine_credential.rb
-#: ../app/models/manageiq/providers/awx/automation_manager/network_credential.rb
-#: ../app/models/manageiq/providers/awx/automation_manager/rhv_credential.rb
-#: ../app/models/manageiq/providers/awx/automation_manager/scm_credential.rb
-#: ../app/models/manageiq/providers/awx/automation_manager/vmware_credential.rb
+#: ../app/models/manageiq/providers/workflows/automation_manager/workflow_credential.rb
 msgid "Password for this credential"
 msgstr ""
 
@@ -54786,7 +54881,7 @@ msgstr[1] ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::PhysicalInfraManager
 #. TRANSLATORS: en.yml key: dictionary.table.ems_physical_infra
-#: ../config/dictionary_strings.rb:3218 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3234 ../config/dictionary_strings.rb
 msgid "Physical Infrastructure Provider"
 msgstr ""
 
@@ -55691,6 +55786,7 @@ msgstr ""
 #: ../app/helpers/catalog_helper.rb
 #: ../app/helpers/miq_ae_class_helper.rb
 #: ../app/helpers/service_helper/textual_summary.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 #: ../app/views/miq_ae_class/_method_inputs.html.haml
 msgid "Playbook"
@@ -55734,12 +55830,12 @@ msgstr[1] ""
 msgid "Playbook Catalog Item"
 msgstr ""
 
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAnsible_AutomationManager_ConfigurationScriptSource.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAnsible_AutomationManager_Playbook.yaml
-#. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAutomationManager_ConfigurationScriptSource.yaml
 #: ../app/controllers/ansible_repository_controller.rb
 #: ../app/helpers/ansible_repository_helper/textual_summary.rb
 #: ../app/helpers/application_helper/title.rb
-#: ../app/presenters/menu/default_menu.rb:206 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:204 ../config/yaml_strings.rb
 msgid "Playbooks"
 msgstr ""
 
@@ -55970,7 +56066,7 @@ msgstr ""
 #: ../app/javascript/components/container-projects/helper.jsx
 #: ../app/javascript/components/ems_container_dashboard/helper.js
 #: ../app/javascript/oldjs/controllers/container_dashboard/util/dashboard-utils-factory.js
-#: ../app/presenters/menu/default_menu.rb:128 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:125 ../config/yaml_strings.rb
 msgid "Pods"
 msgstr ""
 
@@ -56133,6 +56229,12 @@ msgstr ""
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb
 #: ../app/helpers/application_helper/toolbar/vms_center.rb
 #: ../app/helpers/application_helper/toolbar/windows_image_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_credential_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_credentials_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_repositories_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_repository_center.rb
+#: ../app/helpers/application_helper/toolbar/workflows_center.rb
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb
@@ -56431,7 +56533,7 @@ msgstr ""
 #: ../app/controllers/vm_common.rb
 #: ../app/helpers/guest_device_helper/textual_summary.rb
 #: ../app/helpers/physical_switch_helper/textual_summary.rb
-#: ../app/presenters/menu/default_menu.rb:149 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:146 ../config/yaml_strings.rb
 msgid "Ports"
 msgstr ""
 
@@ -56769,16 +56871,13 @@ msgid "Price"
 msgstr ""
 
 #: ../app/controllers/catalog_controller.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 msgid "Price / Month"
 msgstr ""
 
 #: ../app/controllers/catalog_controller.rb
 #: ../app/helpers/catalog_helper.rb:51 ../app/helpers/catalog_helper.rb
 msgid "Price / Month (in %{currency})"
-msgstr ""
-
-#: ../app/views/catalog/_st_angular_form.html.haml
-msgid "Price / Month (in {{vm.catalogItemModel.currency_name}})"
 msgstr ""
 
 #: ../app/controllers/catalog_controller.rb
@@ -56873,8 +56972,7 @@ msgid "Private SSH Key"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/machine_credential.rb
-#: ../app/models/manageiq/providers/awx/automation_manager/scm_credential.rb
+#: ../app/models/manageiq/providers/workflows/automation_manager/workflow_credential.rb
 msgid "Private key"
 msgstr ""
 
@@ -56883,9 +56981,7 @@ msgid "Private key download is unavailable for this keypair."
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/machine_credential.rb
-#: ../app/models/manageiq/providers/awx/automation_manager/network_credential.rb
-#: ../app/models/manageiq/providers/awx/automation_manager/scm_credential.rb
+#: ../app/models/manageiq/providers/workflows/automation_manager/workflow_credential.rb
 msgid "Private key passphrase"
 msgstr ""
 
@@ -57001,6 +57097,11 @@ msgstr ""
 msgid "Processing units"
 msgstr ""
 
+#:
+#: ../app/javascript/components/reconfigure-vm-form/reconfigure-form-fields.js
+msgid "Processor"
+msgstr ""
+
 #. TRANSLATORS: file: product/views/Vm-VmReconfigureRequest.yaml
 #: ../config/yaml_strings.rb
 msgid "Processor Cores Per Socket"
@@ -57033,7 +57134,6 @@ msgstr ""
 
 #. TRANSLATORS: file: product/views/Vm__restricted.yaml
 #: ../app/helpers/textual_mixins/textual_devices.rb
-#: ../app/views/vm_common/_reconfigure.html.haml
 #: ../app/views/vm_common/_right_size.html.haml
 #: ../config/yaml_strings.rb
 msgid "Processors"
@@ -57096,7 +57196,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ProductUpdate (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:3704 ../config/yaml_strings.rb
+#: ../config/dictionary_strings.rb:3748 ../config/yaml_strings.rb
 msgid "Product Updates"
 msgstr ""
 
@@ -57281,6 +57381,9 @@ msgstr ""
 #: ../app/helpers/vm_cloud_helper/textual_summary.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb
+#: ../app/helpers/workflow_credential_helper/textual_summary.rb
+#: ../app/helpers/workflow_helper/textual_summary.rb
+#: ../app/helpers/workflow_repository_helper/textual_summary.rb
 #: ../app/views/configuration_profile/show.html.haml
 #: ../app/views/configuration_script/show.html.haml
 #: ../app/views/ems_configuration/show.html.haml
@@ -57392,6 +57495,8 @@ msgstr ""
 #: ../app/helpers/configuration_job_helper/textual_summary.rb
 #: ../app/helpers/configuration_script_helper.rb
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb
+#: ../app/helpers/workflow_helper/textual_summary.rb
+#: ../app/helpers/workflow_repository_helper/textual_summary.rb
 #: ../app/javascript/components/auth-key-pair-cloud/auth-key-pair-cloud-form.schema.js
 #: ../app/javascript/components/flavor-form/flavor-form.schema.js
 #: ../app/javascript/components/host-aggregate-form/host-aggregate-form.schema.js
@@ -57474,7 +57579,6 @@ msgstr ""
 #. TRANSLATORS: file: product/views/EmsAutomation.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ExternalAutomationManager.yaml
-#: ../app/javascript/oldjs/services/alerts_center_service.js
 #: ../config/yaml_strings.rb
 msgid "Provider Name"
 msgstr ""
@@ -57521,7 +57625,9 @@ msgstr ""
 msgid "Provider Tag Mapping \"%{name}\": Delete successful"
 msgstr ""
 
-#: ../app/javascript/oldjs/services/alerts_center_service.js
+#. TRANSLATORS: file: product/reports/120_Configuration Management - Providers/040_Monthly Host Count per Provider.yaml
+#. TRANSLATORS: file: product/reports/120_Configuration Management - Providers/050_Monthly Vm Count per Provider.yaml
+#: ../config/yaml_strings.rb
 msgid "Provider Type"
 msgstr ""
 
@@ -57844,6 +57950,7 @@ msgid "Provisioned VMs [%{description}]"
 msgstr ""
 
 #: ../app/helpers/catalog_helper.rb:123 ../app/helpers/catalog_helper.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_multi_tab_ansible_form_options.html.haml
 #: ../app/views/service/_svcs_show.html.haml
 msgid "Provisioning"
@@ -58329,9 +58436,7 @@ msgid "RSA key pair"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/machine_credential.rb
-#: ../app/models/manageiq/providers/awx/automation_manager/network_credential.rb
-#: ../app/models/manageiq/providers/awx/automation_manager/scm_credential.rb
+#: ../app/models/manageiq/providers/workflows/automation_manager/workflow_credential.rb
 msgid "RSA or DSA private key to be used instead of password"
 msgstr ""
 
@@ -58989,6 +59094,11 @@ msgid "Redfish Provider"
 msgstr ""
 
 #:
+#: ../app/models/manageiq/providers/workflows/automation_manager/workflow_credential.rb
+msgid "Reference"
+msgstr ""
+
+#:
 #: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb
 msgid "Reference Code"
 msgstr ""
@@ -59129,29 +59239,19 @@ msgstr ""
 #: ../app/helpers/application_helper/toolbar/ems_storage_center.rb
 #: ../app/helpers/application_helper/toolbar/ems_storages_center.rb
 #: ../app/helpers/application_helper/toolbar/host_center.rb
-#: ../app/helpers/application_helper/toolbar/host_initiator_center.rb
-#: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
-#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
-#: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
 #: ../app/helpers/application_helper/toolbar/hosts_center.rb
 #: ../app/helpers/application_helper/toolbar/miq_templates_center.rb
 #: ../app/helpers/application_helper/toolbar/physical_rack_center.rb
 #: ../app/helpers/application_helper/toolbar/physical_racks_center.rb
 #: ../app/helpers/application_helper/toolbar/physical_server_center.rb
 #: ../app/helpers/application_helper/toolbar/physical_servers_center.rb
-#: ../app/helpers/application_helper/toolbar/physical_storage_center.rb
-#: ../app/helpers/application_helper/toolbar/physical_storages_center.rb
 #: ../app/helpers/application_helper/toolbar/physical_switch_center.rb
 #: ../app/helpers/application_helper/toolbar/physical_switches_center.rb
-#: ../app/helpers/application_helper/toolbar/storage_service_center.rb
-#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
 #: ../app/helpers/application_helper/toolbar/template_clouds_center.rb
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb
 #: ../app/helpers/application_helper/toolbar/vms_center.rb
-#: ../app/helpers/application_helper/toolbar/volume_mapping_center.rb
-#: ../app/helpers/application_helper/toolbar/volume_mappings_center.rb
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb
@@ -59208,6 +59308,10 @@ msgstr ""
 msgid "Refresh Selected Ansible Repositories"
 msgstr ""
 
+#: ../app/helpers/application_helper/toolbar/workflow_repositories_center.rb
+msgid "Refresh Selected Workflow Repositories"
+msgstr ""
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Refresh Storage Managers"
@@ -59238,6 +59342,7 @@ msgid "Refresh items and relationships related to this Containers Provider?"
 msgstr ""
 
 #: ../app/controllers/ansible_repository_controller.rb
+#: ../app/controllers/workflow_repository_controller.rb
 msgid "Refresh of Repository \"%{name}\" was successfully initiated."
 msgstr ""
 
@@ -59246,6 +59351,7 @@ msgid "Refresh of recent C&U data has been initiated"
 msgstr ""
 
 #: ../app/controllers/ansible_repository_controller.rb
+#: ../app/controllers/workflow_repository_controller.rb
 msgid "Refresh output"
 msgstr ""
 
@@ -59462,42 +59568,6 @@ msgid ""
 "tems?"
 msgstr ""
 
-#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to these Host Ini"
-"tiator Clusters?"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to these Host Ini"
-"tiator Groups"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to these Host Ini"
-"tiators"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to these Host Ini"
-"tiators?"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/physical_storages_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to these Physical"
-" Storages"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/physical_storages_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to these Physical"
-" Storages?"
-msgstr ""
-
 #: ../app/helpers/application_helper/toolbar/physical_switches_center.rb
 msgid ""
 "Refresh relationships and power states for all items related to these Physical"
@@ -59510,30 +59580,6 @@ msgid ""
 " Switches?"
 msgstr ""
 
-#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to these Storage "
-"Services"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to these Storage "
-"Services?"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/volume_mappings_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to these Volume M"
-"appings"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/volume_mappings_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to these Volume M"
-"appings?"
-msgstr ""
-
 #: ../app/helpers/application_helper/toolbar/ems_cloud_center.rb
 msgid ""
 "Refresh relationships and power states for all items related to this Cloud Pro"
@@ -59544,30 +59590,6 @@ msgstr ""
 msgid ""
 "Refresh relationships and power states for all items related to this Cloud Pro"
 "vider?"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/host_initiator_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to this Host Init"
-"iator"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to this Host Init"
-"iator Cluster?"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to this Host Init"
-"iator Group"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/host_initiator_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to this Host Init"
-"iator?"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb
@@ -59620,18 +59642,6 @@ msgid ""
 "Rack?"
 msgstr ""
 
-#: ../app/helpers/application_helper/toolbar/physical_storage_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to this Physical "
-"Storage"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/physical_storage_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to this Physical "
-"Storage?"
-msgstr ""
-
 #: ../app/helpers/application_helper/toolbar/physical_switch_center.rb
 msgid ""
 "Refresh relationships and power states for all items related to this Physical "
@@ -59656,18 +59666,6 @@ msgid ""
 "anager?"
 msgstr ""
 
-#: ../app/helpers/application_helper/toolbar/storage_service_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to this Storage S"
-"ervice"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/storage_service_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to this Storage S"
-"ervice?"
-msgstr ""
-
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb
 msgid "Refresh relationships and power states for all items related to this Template"
 msgstr ""
@@ -59682,18 +59680,6 @@ msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb
 msgid "Refresh relationships and power states for all items related to this VM?"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/volume_mapping_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to this Volume Ma"
-"pping"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/volume_mapping_center.rb
-msgid ""
-"Refresh relationships and power states for all items related to this Volume Ma"
-"pping?"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb
@@ -59740,20 +59726,126 @@ msgstr ""
 msgid "Refresh selected Ansible Repositories?"
 msgstr ""
 
+#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
+msgid "Refresh selected Host Initiator Groups"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
+msgid "Refresh selected Host Initiators"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/physical_storages_center.rb
+msgid "Refresh selected Physical Storages"
+msgstr ""
+
 #: ../app/helpers/application_helper/toolbar/saved_reports_center.rb
 msgid "Refresh selected Reports"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
+msgid "Refresh selected Storage Services"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/workflow_repositories_center.rb
+msgid "Refresh selected Workflow Repositories?"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb
+msgid "Refresh selected cloud Volumes"
+msgstr ""
+
+#: ../app/controllers/mixins/ems_common/refresh.rb
+msgid "Refresh successfully initiated for the selected records"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/optimizations_center.rb
 msgid "Refresh the list"
 msgstr ""
 
+#: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb
+msgid "Refresh the selected Host Initiator Groups?"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/host_initiators_center.rb
+msgid "Refresh the selected Host Initiators?"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/physical_storages_center.rb
+msgid "Refresh the selected Physical Storages?"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/storage_services_center.rb
+msgid "Refresh the selected Storage Services?"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/volume_mappings_center.rb
+msgid "Refresh the selected Volume Mappings"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/volume_mappings_center.rb
+msgid "Refresh the selected Volume Mappings?"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb
+msgid "Refresh the selected cloud Volumes?"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb
+msgid "Refresh this Cloud Volume"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb
+msgid "Refresh this Cloud Volume?"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/host_initiator_center.rb
+msgid "Refresh this Host Initiator"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
+msgid "Refresh this Host Initiator Group"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb
+msgid "Refresh this Host Initiator Group?"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/host_initiator_center.rb
+msgid "Refresh this Host Initiator?"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/physical_storage_center.rb
+msgid "Refresh this Physical Storage"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/physical_storage_center.rb
+msgid "Refresh this Physical Storage?"
+msgstr ""
+
 #: ../app/helpers/application_helper/toolbar/ansible_repository_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_repository_center.rb
 msgid "Refresh this Repository"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/ansible_repository_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_repository_center.rb
 msgid "Refresh this Repository?"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/storage_service_center.rb
+msgid "Refresh this Storage Service"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/storage_service_center.rb
+msgid "Refresh this Storage Service?"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/volume_mapping_center.rb
+msgid "Refresh this Volume Mapping"
+msgstr ""
+
+#: ../app/helpers/application_helper/toolbar/volume_mapping_center.rb
+msgid "Refresh this Volume Mapping?"
 msgstr ""
 
 #: ../app/javascript/components/dashboard-widgets/widget-wrapper/helper.jsx
@@ -59779,7 +59871,11 @@ msgstr ""
 #: ../app/helpers/application_helper/toolbar/miq_request_center.rb
 #: ../app/helpers/application_helper/toolbar/miq_requests_center.rb
 #: ../app/helpers/application_helper/toolbar/tasks_center.rb
+#: ../app/helpers/application_helper/toolbar/vm_infras_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_repositories_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_repository_center.rb
 #: ../app/helpers/application_helper/toolbar/x_history.rb
+#: ../app/helpers/application_helper/toolbar/x_vm_center.rb
 msgid "Refresh this page"
 msgstr ""
 
@@ -59880,8 +59976,8 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.miq_region (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.miq_regions
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:3586 ../config/dictionary_strings.rb
-#: ../config/dictionary_strings.rb:4216 ../config/yaml_strings.rb
+#: ../config/dictionary_strings.rb:3630 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:4260 ../config/yaml_strings.rb
 msgid "Regions"
 msgstr ""
 
@@ -60157,6 +60253,9 @@ msgstr[1] ""
 #: ../app/helpers/storage_resource_helper/textual_summary.rb
 #: ../app/helpers/storage_service_helper/textual_summary.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
+#: ../app/helpers/workflow_credential_helper/textual_summary.rb
+#: ../app/helpers/workflow_helper/textual_summary.rb
+#: ../app/helpers/workflow_repository_helper/textual_summary.rb
 #: ../app/views/configuration_profile/show.html.haml
 #: ../app/views/ems_configuration/show.html.haml
 msgid "Relationships"
@@ -60184,6 +60283,11 @@ msgstr ""
 
 #: ../config/model_attributes.rb
 msgid "Relationship|Resource type"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_report_formats.yml
+#: ../config/yaml_strings.rb
+msgid "Relative Date"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/GuestApplication.yaml
@@ -60925,6 +61029,8 @@ msgstr ""
 msgid "Remove items from Inventory"
 msgstr ""
 
+#:
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 msgid "Remove resources?"
 msgstr ""
@@ -60956,6 +61062,7 @@ msgid "Remove selected Containers Providers from Inventory"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/ansible_credentials_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_credentials_center.rb
 msgid "Remove selected Credentials from Inventory"
 msgstr ""
 
@@ -61063,6 +61170,7 @@ msgid "Remove selected Physical Infrastructure Providers from Inventory"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/ansible_repositories_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_repositories_center.rb
 msgid "Remove selected Repositories from Inventory"
 msgstr ""
 
@@ -61159,6 +61267,7 @@ msgid "Remove this Containers Provider from Inventory"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/ansible_credential_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_credential_center.rb
 msgid "Remove this Credential from Inventory"
 msgstr ""
 
@@ -61272,6 +61381,7 @@ msgid "Remove this Reconfigure Entry Point"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/ansible_repository_center.rb
+#: ../app/helpers/application_helper/toolbar/workflow_repository_center.rb
 msgid "Remove this Repository from Inventory"
 msgstr ""
 
@@ -61438,7 +61548,7 @@ msgstr ""
 
 #. TRANSLATORS: file: product/views/ContainerReplicator.yaml
 #: ../app/controllers/container_replicator_controller.rb
-#: ../app/presenters/menu/default_menu.rb:127 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:124 ../config/yaml_strings.rb
 msgid "Replicators"
 msgstr ""
 
@@ -61620,8 +61730,10 @@ msgid "Reports Currently Using This Time Profile"
 msgstr ""
 
 #: ../app/controllers/ansible_repository_controller.rb
+#: ../app/controllers/workflow_repository_controller.rb
 #: ../app/helpers/ansible_credential_helper/textual_summary.rb
 #: ../app/helpers/application_helper/title.rb
+#: ../app/helpers/workflow_credential_helper/textual_summary.rb
 #: ../app/presenters/menu/default_menu.rb
 msgid "Repositories"
 msgstr ""
@@ -61631,12 +61743,22 @@ msgstr ""
 msgid "Repositories (Embedded Ansible)"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Workflows::AutomationManager::ConfigurationScriptSource (plural form)
+#: ../config/dictionary_strings.rb
+msgid "Repositories (Embedded Workflows)"
+msgstr ""
+
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAnsible_AutomationManager_ConfigurationScriptSource.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAnsible_AutomationManager_Playbook.yaml
-#. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAutomationManager_ConfigurationScriptSource.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Workflows_AutomationManager_ConfigurationScriptSource.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Workflows_AutomationManager_Workflow.yaml
 #: ../app/controllers/ansible_repository_controller.rb
+#: ../app/controllers/workflow_repository_controller.rb
 #: ../app/helpers/ansible_playbook_helper/textual_summary.rb
 #: ../app/helpers/catalog_helper.rb
 #: ../app/helpers/service_helper/textual_summary.rb
+#: ../app/helpers/workflow_helper/textual_summary.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 #: ../app/views/miq_ae_class/_method_inputs.html.haml
 #: ../config/yaml_strings.rb
@@ -61660,7 +61782,16 @@ msgid_plural "Repositories (Embedded Ansible)"
 msgstr[0] ""
 msgstr[1] ""
 
+#:
+#: ../app/models/manageiq/providers/workflows/automation_manager/configuration_script_source.rb
+#, fuzzy
+msgid "Repository (Embedded Workflows)"
+msgid_plural "Repositories (Embedded Workflows)"
+msgstr[0] ""
+msgstr[1] ""
+
 #: ../app/helpers/ansible_repository_helper/textual_summary.rb
+#: ../app/helpers/workflow_repository_helper/textual_summary.rb
 msgid "Repository Options"
 msgstr ""
 
@@ -61947,7 +62078,7 @@ msgstr ""
 #: ../app/controllers/miq_request_controller.rb
 #: ../app/helpers/application_helper/title.rb
 #: ../app/presenters/menu/default_menu.rb
-#: ../app/presenters/menu/default_menu.rb:220 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:228 ../config/yaml_strings.rb
 msgid "Requests"
 msgstr ""
 
@@ -62113,13 +62244,17 @@ msgstr ""
 msgid "Resides on VM"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
+#: ../app/javascript/components/reconfigure-vm-form/helpers/disk.js
 msgid "Resize"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Resize Cloud VM"
+msgstr ""
+
+#: ../app/javascript/components/reconfigure-vm-form/helpers/general.js
+msgid "Resize Disk"
 msgstr ""
 
 #: ../app/views/miq_request/_reconfigure_show.html.haml
@@ -62231,7 +62366,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ResourcePool.yaml
 #: ../app/controllers/resource_pool_controller.rb
 #: ../app/helpers/resource_pool_helper/textual_summary.rb
-#: ../app/presenters/menu/default_menu.rb:100 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:97 ../config/yaml_strings.rb
 msgid "Resource Pools"
 msgstr ""
 
@@ -62990,6 +63125,7 @@ msgstr ""
 #: ../app/controllers/application_controller/ci_processing.rb
 #: ../app/helpers/application_helper/tasks.rb
 #: ../app/helpers/catalog_helper.rb:125 ../app/helpers/catalog_helper.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_multi_tab_ansible_form_options.html.haml
 #: ../app/views/service/_svcs_show.html.haml
 msgid "Retirement"
@@ -63252,6 +63388,10 @@ msgstr ""
 msgid "Row Count"
 msgstr ""
 
+#: ../app/javascript/spec/textual_summary/data/table_list_view.js
+msgid "Rows"
+msgstr ""
+
 #. TRANSLATORS: en.yml key: dictionary.column.rsc_type
 #: ../config/dictionary_strings.rb
 msgid "Rsc Type"
@@ -63410,16 +63550,20 @@ msgid "SAP VM resize not supported"
 msgstr ""
 
 #: ../app/helpers/ansible_repository_helper/textual_summary.rb
+#: ../app/helpers/workflow_repository_helper/textual_summary.rb
 #: ../app/javascript/components/ansible-repository-form/ansible-repository-form.schema.js
+#: ../app/javascript/components/workflow-repository-form/workflow-repository-form.schema.js
 msgid "SCM Branch"
 msgstr ""
 
 #:
 #: ../app/javascript/components/ansible-repository-form/ansible-repository-form.schema.js
+#: ../app/javascript/components/workflow-repository-form/workflow-repository-form.schema.js
 msgid "SCM Credentials"
 msgstr ""
 
 #: ../app/helpers/ansible_repository_helper/textual_summary.rb
+#: ../app/helpers/workflow_repository_helper/textual_summary.rb
 msgid "SCM URL"
 msgstr ""
 
@@ -64963,11 +65107,12 @@ msgstr ""
 
 #:
 #: ../app/javascript/components/ansible-repository-form/ansible-repository-form.schema.js
+#: ../app/javascript/components/workflow-repository-form/workflow-repository-form.schema.js
 msgid "Select credentials"
 msgstr ""
 
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/catalog/_form_basic_info.html.haml
-#: ../app/views/catalog/_st_angular_form.html.haml
 msgid "Select currency"
 msgstr ""
 
@@ -66253,7 +66398,7 @@ msgstr ""
 #: ../app/javascript/components/ems_container_dashboard/helper.js
 #: ../app/javascript/oldjs/controllers/container_dashboard/util/dashboard-utils-factory.js
 #: ../app/presenters/menu/default_menu.rb
-#: ../app/presenters/menu/default_menu.rb:145 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:142 ../config/yaml_strings.rb
 msgid "Services"
 msgstr ""
 
@@ -66946,8 +67091,6 @@ msgstr ""
 #. TRANSLATORS: file: product/views/OpenscapRuleResult.yaml
 #: ../app/helpers/miq_alert_helper.rb
 #: ../app/javascript/components/data-tables/requests-table/index.jsx
-#: ../app/javascript/oldjs/controllers/alerts/alerts_overview_controller.js
-#: ../app/javascript/oldjs/services/alerts_center_service.js
 #: ../app/views/miq_alert/_form.html.haml:26 ../config/yaml_strings.rb
 msgid "Severity"
 msgstr ""
@@ -67351,10 +67494,12 @@ msgid "Show Credential"
 msgstr ""
 
 #: ../app/helpers/ansible_repository_helper/textual_summary.rb
+#: ../app/helpers/workflow_repository_helper/textual_summary.rb
 msgid "Show Credential's SCM URL"
 msgstr ""
 
 #: ../app/helpers/ansible_repository_helper/textual_summary.rb
+#: ../app/helpers/workflow_repository_helper/textual_summary.rb
 msgid "Show Credential's SCM branch"
 msgstr ""
 
@@ -67475,6 +67620,7 @@ msgid "Show Report Tabular"
 msgstr ""
 
 #: ../app/helpers/ansible_playbook_helper/textual_summary.rb
+#: ../app/helpers/workflow_helper/textual_summary.rb
 msgid "Show Repository"
 msgstr ""
 
@@ -67733,6 +67879,7 @@ msgid "Show all Playbooks"
 msgstr ""
 
 #: ../app/helpers/ansible_credential_helper/textual_summary.rb
+#: ../app/helpers/workflow_credential_helper/textual_summary.rb
 msgid "Show all Repositories"
 msgstr ""
 
@@ -67767,6 +67914,10 @@ msgstr ""
 
 #: ../app/helpers/ems_container_helper/textual_summary.rb
 msgid "Show all Volumes"
+msgstr ""
+
+#: ../app/helpers/workflow_repository_helper/textual_summary.rb
+msgid "Show all Workflows"
 msgstr ""
 
 #: ../app/helpers/cloud_volume_helper/textual_summary.rb
@@ -67877,6 +68028,7 @@ msgid "Show policies:"
 msgstr ""
 
 #: ../app/helpers/ansible_repository_helper/textual_summary.rb
+#: ../app/helpers/workflow_repository_helper/textual_summary.rb
 msgid "Show refresh output"
 msgstr ""
 
@@ -68352,7 +68504,8 @@ msgstr ""
 #: ../app/helpers/cloud_volume_snapshot_helper/textual_summary.rb
 #: ../app/helpers/storage_resource_helper/textual_summary.rb
 #: ../app/helpers/storage_service_helper/textual_summary.rb
-#: ../app/views/vm_common/_reconfigure.html.haml
+#: ../app/javascript/components/reconfigure-vm-form/disk-form-fields.js
+#: ../app/javascript/components/reconfigure-vm-form/helpers/disk.js
 #: ../app/views/vm_common/_snapshots_desc.html.haml
 #: ../config/yaml_strings.rb
 msgid "Size"
@@ -68748,7 +68901,8 @@ msgstr ""
 msgid "Snapshot|Updated on"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
+#:
+#: ../app/javascript/components/reconfigure-vm-form/reconfigure-form-fields.js
 msgid "Sockets"
 msgstr ""
 
@@ -68986,6 +69140,8 @@ msgstr ""
 msgid "Specify Column Styles"
 msgstr ""
 
+#:
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 msgid "Specify host values"
 msgstr ""
@@ -69331,8 +69487,9 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_CloudDatabase.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
-#. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAutomationManager_ConfigurationScriptSource.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAnsible_AutomationManager_ConfigurationScriptSource.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ExternalAutomationManager.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Workflows_AutomationManager_ConfigurationScriptSource.yaml
 #. TRANSLATORS: file: product/views/MiqProvision.yaml
 #. TRANSLATORS: file: product/views/MiqReportResult-all.yaml
 #. TRANSLATORS: file: product/views/MiqReportResult.yaml
@@ -69369,6 +69526,7 @@ msgstr ""
 #: ../app/helpers/request_details_helper.rb
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
+#: ../app/helpers/workflow_repository_helper/textual_summary.rb
 #: ../app/javascript/components/container-projects/helper.jsx
 #: ../app/javascript/spec/chart-card/chart-card.spec.js
 #: ../app/views/ems_configuration/show.html.haml
@@ -69723,7 +69881,7 @@ msgstr ""
 #: ../app/controllers/storage_resource_controller.rb
 #: ../app/helpers/storage_service_helper/textual_summary.rb
 #: ../app/javascript/components/storage-service-form/storage-service-form.schema.js
-#: ../app/presenters/menu/default_menu.rb:164 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:161 ../config/yaml_strings.rb
 msgid "Storage Resources"
 msgstr ""
 
@@ -70443,7 +70601,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/NetworkPort.yaml
 #: ../app/controllers/cloud_subnet_controller.rb
 #: ../app/controllers/vm_common.rb
-#: ../app/presenters/menu/default_menu.rb:143 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:140 ../config/yaml_strings.rb
 msgid "Subnets"
 msgstr ""
 
@@ -71486,7 +71644,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.template_infra
 #: ../app/models/manageiq/providers/infra_manager/template.rb
 #: ../config/dictionary_strings.rb:1924 ../config/dictionary_strings.rb
-#: ../config/dictionary_strings.rb:3968 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:4012 ../config/dictionary_strings.rb
 msgid "Template"
 msgid_plural "Templates"
 msgstr[0] ""
@@ -71846,6 +72004,7 @@ msgstr ""
 msgid "Test E-mail Address"
 msgstr ""
 
+#: ../app/javascript/components/workflows/workflow_payload.jsx
 #: ../app/javascript/oldjs/miq_application.js
 #: ../app/views/report/_schedule_email_options.html.haml
 msgid "Text"
@@ -72488,6 +72647,7 @@ msgstr ""
 #: ../app/controllers/application_controller.rb
 #: ../app/controllers/dashboard_controller.rb
 #: ../app/controllers/mixins/actions/vm_actions/resize.rb
+#: ../app/controllers/mixins/workflow_check_prototype_mixin.rb
 msgid "The user is not authorized for this task or item."
 msgstr ""
 
@@ -72878,8 +73038,6 @@ msgid "Tier"
 msgstr ""
 
 #: ../app/javascript/components/data-tables/requests-table/index.jsx
-#: ../app/javascript/oldjs/services/alerts_center_service.js
-#: ../app/views/shared/views/_alerts_list.html.haml
 msgid "Time"
 msgstr ""
 
@@ -73471,8 +73629,9 @@ msgstr ""
 msgid "Total Number of Physical CPUs"
 msgstr ""
 
+#:
+#: ../app/javascript/components/reconfigure-vm-form/reconfigure-form-fields.js
 #: ../app/views/miq_request/_reconfigure_show.html.haml
-#: ../app/views/vm_common/_reconfigure.html.haml
 msgid "Total Processors"
 msgstr ""
 
@@ -73657,6 +73816,10 @@ msgstr ""
 
 #: ../app/helpers/physical_server_helper/textual_summary.rb
 msgid "Total memory (mb)"
+msgstr ""
+
+#: ../app/javascript/components/reconfigure-vm-form/index.jsx
+msgid "Total processors value larger than the maximum allowed value"
 msgstr ""
 
 #: ../app/models/miq_report.rb
@@ -73939,13 +74102,14 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
-#. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAutomationManager_Authentication.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAnsible_AutomationManager_Credential.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ExternalAutomationManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ExternalAutomationManager_ConfigurationScript.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_NetworkManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_PhysicalInfraManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Workflows_AutomationManager_Credential.yaml
 #. TRANSLATORS: file: product/views/MiqAction.yaml
 #. TRANSLATORS: file: product/views/MiqEvent-actions.yaml
 #. TRANSLATORS: file: product/views/MiqEventDefinition.yaml
@@ -74001,8 +74165,9 @@ msgstr ""
 #: ../app/javascript/components/pxe-customization-template-form/pxe-customization-template-form.schema.js
 #: ../app/javascript/components/pxe-image-type-form/pxe-image-type-form.schema.js
 #: ../app/javascript/components/pxe-iso-image-form/pxe-iso-image-form.schema.js
+#: ../app/javascript/components/reconfigure-vm-form/disk-form-fields.js
+#: ../app/javascript/components/reconfigure-vm-form/helpers/disk.js
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
-#: ../app/javascript/oldjs/controllers/alerts/alerts_overview_controller.js
 #: ../app/views/chargeback_rate/_cb_rate_show.html.haml
 #: ../app/views/chargeback_rate/_form.html.haml
 #: ../app/views/ems_container/_form.html.haml
@@ -74024,9 +74189,7 @@ msgstr ""
 #: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 #: ../app/views/static/ops/log_collection/log_collection.html.haml
-#: ../app/views/vm_common/_disks.html.haml
-#: ../app/views/vm_common/_reconfigure.html.haml
-#: ../config/yaml_strings.rb
+#: ../app/views/vm_common/_disks.html.haml:5 ../config/yaml_strings.rb
 msgid "Type"
 msgstr ""
 
@@ -74110,6 +74273,7 @@ msgstr ""
 #: ../app/helpers/ems_automation_helper.rb
 #: ../app/javascript/components/ansible-repository-form/ansible-repository-form.schema.js
 #: ../app/javascript/components/firmware-registry/firmware-registry-form.schema.js
+#: ../app/javascript/components/workflow-repository-form/workflow-repository-form.schema.js
 #: ../app/views/ops/_settings_help_menu_tab.html.haml
 #: ../config/yaml_strings.rb
 msgid "URL"
@@ -74209,6 +74373,7 @@ msgid "Unable to %{action} %{resource}: %{details}"
 msgstr ""
 
 #: ../app/javascript/components/ansible-repository-form/index.jsx
+#: ../app/javascript/components/workflow-repository-form/index.jsx
 msgid "Unable to add Repository \"%s\": %s"
 msgstr ""
 
@@ -74301,6 +74466,7 @@ msgid "Unable to disassociate Floating IP from Instance \"%{name}\": %{details}"
 msgstr ""
 
 #: ../app/javascript/components/ansible-repository-form/index.jsx
+#: ../app/javascript/components/workflow-repository-form/index.jsx
 msgid "Unable to edit Repository \"%s\": %s"
 msgstr ""
 
@@ -74407,6 +74573,7 @@ msgid "Unable to reconfigure Instance \"%{name}\": %{details}"
 msgstr ""
 
 #: ../app/controllers/ansible_repository_controller.rb
+#: ../app/controllers/workflow_repository_controller.rb
 msgid "Unable to refresh Repository \"%{name}\": %{details}"
 msgstr ""
 
@@ -74458,14 +74625,6 @@ msgstr ""
 msgid "Unable to update Host Aggregate \"%{name}\": %{details}"
 msgstr ""
 
-#: ../app/javascript/oldjs/services/alerts_center_service.js
-msgid "Unacknowledge"
-msgstr ""
-
-#: ../app/javascript/oldjs/services/alerts_center_service.js
-msgid "Unacknowledged"
-msgstr ""
-
 #. TRANSLATORS: file: product/compare/vms.yaml
 #: ../config/yaml_strings.rb
 msgid "Unallocated Space"
@@ -74476,12 +74635,8 @@ msgstr ""
 msgid "Unarchive Services"
 msgstr ""
 
-#: ../app/javascript/oldjs/services/alerts_center_service.js
+#: ../app/javascript/components/server-profile-form.js
 msgid "Unassign"
-msgstr ""
-
-#: ../app/javascript/oldjs/services/alerts_center_service.js
-msgid "Unassign Alert"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -74496,7 +74651,6 @@ msgid "Unassign Server Profile"
 msgstr ""
 
 #: ../app/helpers/catalog_helper.rb
-#: ../app/javascript/oldjs/services/alerts_center_service.js
 #: ../app/views/catalog/_form_basic_info.html.haml
 #: ../app/views/static/edit_alert_dialog.html.haml
 msgid "Unassigned"
@@ -74514,10 +74668,6 @@ msgstr ""
 
 #: ../app/controllers/application_controller.rb
 msgid "Unauthorized object or action"
-msgstr ""
-
-#: ../app/javascript/oldjs/services/alerts_center_service.js
-msgid "Uncknowledge Alert"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.column.uncommitted
@@ -74554,10 +74704,6 @@ msgstr ""
 msgid "Unexpected type: <self.required_roles.class.name>"
 msgstr ""
 
-#: ../app/javascript/oldjs/controllers/alerts/alerts_overview_controller.js
-msgid "Ungrouped"
-msgstr ""
-
 #. TRANSLATORS: en.yml key: dictionary.column.v_unique_name
 #. TRANSLATORS: file: product/compare/hosts.yaml
 #: ../config/dictionary_strings.rb:2070 ../config/yaml_strings.rb
@@ -74569,7 +74715,13 @@ msgstr ""
 msgid "Unique Set Size"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
+#:
+#: ../app/models/manageiq/providers/workflows/automation_manager/workflow_credential.rb
+msgid "Unique reference for this credential"
+msgstr ""
+
+#: ../app/javascript/components/reconfigure-vm-form/disk-form-fields.js
+#: ../app/javascript/components/reconfigure-vm-form/helpers/disk.js
 msgid "Unit"
 msgstr ""
 
@@ -74823,7 +74975,6 @@ msgstr ""
 #. TRANSLATORS: file: product/views/MiqTask.yaml
 #: ../app/helpers/generic_object_definition_helper/textual_summary.rb
 #: ../app/helpers/generic_object_helper/textual_summary.rb
-#: ../app/views/shared/views/_alerts_list.html.haml
 #: ../config/yaml_strings.rb
 msgid "Updated"
 msgstr ""
@@ -74842,13 +74993,15 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_AutomationManager_Job.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AzureStack_CloudManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Azure_CloudManager_OrchestrationTemplate.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAnsible_AutomationManager_Credential.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAnsible_AutomationManager_Playbook.yaml
-#. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAutomationManager_Authentication.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ExternalAutomationManager_ConfigurationScript.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Openstack_CloudManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Openstack_CloudManager_VnfdTemplate.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_InfraManager_OrchestrationTemplate.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Workflows_AutomationManager_Credential.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Workflows_AutomationManager_Workflow.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/ResourcePool.yaml
 #: ../app/helpers/ansible_credential_helper/textual_summary.rb
@@ -74859,6 +75012,9 @@ msgstr ""
 #: ../app/helpers/firmware_target_helper/textual_summary.rb
 #: ../app/helpers/pxe_helper/textual_summary.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
+#: ../app/helpers/workflow_credential_helper/textual_summary.rb
+#: ../app/helpers/workflow_helper/textual_summary.rb
+#: ../app/helpers/workflow_repository_helper/textual_summary.rb
 #: ../app/views/catalog/_ot_tree_show.html.haml
 #: ../app/views/miq_ae_customization/_dialog_info.html.haml
 #: ../app/views/orchestration_stack/_stack_orchestration_template.html.haml
@@ -75489,6 +75645,8 @@ msgstr ""
 msgid "Use Custom Logo Image"
 msgstr ""
 
+#:
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 msgid "Use Existing"
 msgstr ""
@@ -75643,7 +75801,8 @@ msgstr ""
 msgid "Used to gather Capacity & Utilization metrics."
 msgstr ""
 
-#. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAutomationManager_Authentication.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAnsible_AutomationManager_Credential.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Workflows_AutomationManager_Credential.yaml
 #. TRANSLATORS: file: product/views/MiqTask.yaml
 #: ../app/controllers/vm_common.rb
 #: ../app/helpers/custom_button_helper.rb
@@ -75651,7 +75810,6 @@ msgstr ""
 #: ../app/javascript/components/data-tables/report-list/helper.js
 #: ../app/javascript/components/data-tables/reports/helper.js
 #: ../app/javascript/components/settings-tasks-form/settings-tasks-form.schema.js
-#: ../app/views/shared/views/_alerts_list.html.haml
 #: ../config/yaml_strings.rb
 #, fuzzy
 msgid "User"
@@ -75798,6 +75956,10 @@ msgstr ""
 msgid "User isn't allowed to use the Embedded Ansible provider."
 msgstr ""
 
+#: ../app/helpers/application_helper/button/embedded_workflow.rb
+msgid "User isn't allowed to use the Embedded Workflows provider."
+msgstr ""
+
 #: ../lib/api/utils.rb
 msgid "User must be defined"
 msgstr ""
@@ -75847,11 +76009,7 @@ msgid "Username (optional):"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/machine_credential.rb
-#: ../app/models/manageiq/providers/awx/automation_manager/network_credential.rb
-#: ../app/models/manageiq/providers/awx/automation_manager/rhv_credential.rb
-#: ../app/models/manageiq/providers/awx/automation_manager/scm_credential.rb
-#: ../app/models/manageiq/providers/awx/automation_manager/vmware_credential.rb
+#: ../app/models/manageiq/providers/workflows/automation_manager/workflow_credential.rb
 msgid "Username for this credential"
 msgstr ""
 
@@ -76546,6 +76704,7 @@ msgid "VM Reconfigure"
 msgstr ""
 
 #: ../app/controllers/mixins/actions/vm_actions/reconfigure.rb
+#: ../app/javascript/components/reconfigure-vm-form/index.jsx
 msgid "VM Reconfigure Request was cancelled by the user"
 msgstr ""
 
@@ -77133,7 +77292,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.Vm (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.vm (plural form)
-#: ../config/dictionary_strings.rb:3800 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3844 ../config/dictionary_strings.rb
 msgid "VMs and Instances"
 msgstr ""
 
@@ -77664,6 +77823,7 @@ msgstr ""
 
 #: ../app/helpers/catalog_helper.rb
 #: ../app/helpers/configuration_script_helper.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/chargeback_rate/_cb_rate_edit_table.html.haml
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 msgid "Variable"
@@ -77687,6 +77847,7 @@ msgid "Variables"
 msgstr ""
 
 #: ../app/helpers/catalog_helper.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 msgid "Variables & Default Values"
 msgstr ""
@@ -77696,6 +77857,7 @@ msgid "Vault"
 msgstr ""
 
 #: ../app/helpers/catalog_helper.rb:195 ../app/helpers/catalog_helper.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 #: ../app/views/miq_ae_class/_method_inputs.html.haml
 msgid "Vault Credential"
@@ -77738,6 +77900,7 @@ msgstr ""
 
 #: ../app/helpers/catalog_helper.rb
 #: ../app/helpers/service_helper/textual_summary.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 #: ../app/views/miq_ae_class/_method_inputs.html.haml
 msgid "Verbosity"
@@ -77760,6 +77923,7 @@ msgstr ""
 
 #:
 #: ../app/javascript/components/ansible-repository-form/ansible-repository-form.schema.js
+#: ../app/javascript/components/workflow-repository-form/workflow-repository-form.schema.js
 msgid "Verify SSL"
 msgstr ""
 
@@ -78442,10 +78606,6 @@ msgstr ""
 msgid "View Roles"
 msgstr ""
 
-#: ../app/views/shared/views/_alerts_list.html.haml
-msgid "View SOP"
-msgstr ""
-
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "View Saved Reports"
@@ -78589,16 +78749,6 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "View Volumes"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "View Workflow Instances"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "View Workflows"
 msgstr ""
 
 #: ../app/views/ops/_settings_details_tab.html.haml
@@ -78952,7 +79102,7 @@ msgstr ""
 #: ../app/helpers/ems_infra_helper/textual_summary.rb
 #: ../app/helpers/ems_physical_infra_helper/textual_summary.rb
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
-#: ../app/presenters/menu/default_menu.rb:99 ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:96 ../config/yaml_strings.rb
 msgid "Virtual Machines"
 msgstr ""
 
@@ -80564,10 +80714,6 @@ msgstr ""
 msgid "Warning"
 msgstr ""
 
-#: ../app/javascript/oldjs/controllers/alerts/alerts_overview_controller.js
-msgid "Warning Count"
-msgstr ""
-
 #:
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_container_center.rb
 msgid ""
@@ -80817,11 +80963,6 @@ msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/tasks_center.rb
 msgid "Warning: The selected tasks will be permanently removed from the database!"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/volume_mapping_center.rb
-#: ../app/helpers/application_helper/toolbar/volume_mappings_center.rb
-msgid "Warning: The selected volume mappings will be permanently deleted!"
 msgstr ""
 
 #: ../app/controllers/ops_controller/settings/schedules.rb
@@ -81319,26 +81460,15 @@ msgstr ""
 msgid "Workers"
 msgstr ""
 
-#: ../config/model_display_names.rb:258 ../config/model_attributes.rb
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Workflows::AutomationManager::Workflow
+#: ../config/dictionary_strings.rb
+#, fuzzy
 msgid "Workflow"
-msgid_plural "Workflows"
-msgstr[0] ""
-msgstr[1] ""
+msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.column.v_workflow_class
 #: ../config/dictionary_strings.rb
 msgid "Workflow Class"
-msgstr ""
-
-#: ../config/model_display_names.rb
-msgid "Workflow Instance"
-msgid_plural "Workflow Instances"
-msgstr[0] ""
-msgstr[1] ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Workflow Instances"
 msgstr ""
 
 #: ../app/helpers/miq_ae_class_helper.rb
@@ -81365,83 +81495,19 @@ msgstr[1] ""
 msgid "Workflow Templates (Ansible Tower)"
 msgstr ""
 
-#: ../config/model_attributes.rb
-msgid "Workflow instance"
-msgstr ""
-
 #:
 #: ../app/javascript/components/pvc-import-image-form/pvc-import-image-form.schema.js
 msgid "Workflow max. timeout"
 msgstr ""
 
-#: ../config/model_attributes.rb
-msgid "WorkflowInstance|Context"
-msgstr ""
-
-#: ../config/model_attributes.rb
-msgid "WorkflowInstance|Credentials"
-msgstr ""
-
-#: ../config/model_attributes.rb
-msgid "WorkflowInstance|Href slug"
-msgstr ""
-
-#: ../config/model_attributes.rb
-msgid "WorkflowInstance|Output"
-msgstr ""
-
-#: ../config/model_attributes.rb
-msgid "WorkflowInstance|Region description"
-msgstr ""
-
-#: ../config/model_attributes.rb
-msgid "WorkflowInstance|Region number"
-msgstr ""
-
-#: ../config/model_attributes.rb
-msgid "WorkflowInstance|Status"
-msgstr ""
-
-#: ../config/model_attributes.rb
-msgid "WorkflowInstance|Userid"
-msgstr ""
-
-#: ../config/model_attributes.rb
-msgid "WorkflowInstance|Workflow content"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Workflows_AutomationManager_ConfigurationScriptSource.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Workflows_AutomationManager_Workflow.yaml
+#: ../app/controllers/workflow_controller.rb
+#: ../app/controllers/workflow_repository_controller.rb
+#: ../app/helpers/application_helper/title.rb
+#: ../app/helpers/workflow_repository_helper/textual_summary.rb
+#: ../app/presenters/menu/default_menu.rb:213 ../config/yaml_strings.rb
 msgid "Workflows"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Workflows Automation Manager"
-msgstr ""
-
-#: ../config/model_attributes.rb
-msgid "Workflow|Credentials"
-msgstr ""
-
-#: ../config/model_attributes.rb
-msgid "Workflow|Href slug"
-msgstr ""
-
-#: ../config/model_attributes.rb
-msgid "Workflow|Name"
-msgstr ""
-
-#: ../config/model_attributes.rb
-msgid "Workflow|Region description"
-msgstr ""
-
-#: ../config/model_attributes.rb
-msgid "Workflow|Region number"
-msgstr ""
-
-#: ../config/model_attributes.rb
-msgid "Workflow|Workflow content"
 msgstr ""
 
 #: ../app/views/shared/views/_prov_dialog.html.haml
@@ -81591,12 +81657,12 @@ msgstr ""
 #: ../app/helpers/ems_automation_helper.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
 #: ../app/helpers/report_helper/report_schedule_helper.rb
+#: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/javascript/components/miq-about-modal/miq-about-modal.jsx
 #: ../app/javascript/components/provider-form/index.jsx
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/javascript/components/settings-tasks-form/settings-tasks-form.schema.js
 #: ../app/views/catalog/_form_basic_info.html.haml
-#: ../app/views/catalog/_st_angular_form.html.haml
 #: ../app/views/ems_container/_form.html.haml
 #: ../app/views/ems_infra/_form.html.haml
 #: ../app/views/ems_physical_infra/_form.html.haml
@@ -82818,6 +82884,11 @@ msgstr ""
 msgid "m"
 msgstr ""
 
+#:
+#: ../app/models/manageiq/providers/workflows/automation_manager/workflow_credential.rb
+msgid "may contain only alphanumeric and _ - characters"
+msgstr ""
+
 #: ../app/models/miq_ae_namespace.rb
 msgid "may contain only alphanumeric and _ . - $ characters"
 msgstr ""
@@ -82960,8 +83031,7 @@ msgstr ""
 msgid "none"
 msgstr ""
 
-#:
-#: ../app/javascript/oldjs/controllers/reconfigure/reconfigure_form_controller.js
+#: ../app/javascript/components/reconfigure-vm-form/helpers/network.js
 msgid "not available yet"
 msgstr ""
 
@@ -83750,8 +83820,7 @@ msgstr ""
 msgid "time_profile must be passed if interval name is 'daily'"
 msgstr ""
 
-#:
-#: ../app/javascript/oldjs/controllers/reconfigure/reconfigure_form_controller.js
+#: ../app/javascript/components/reconfigure-vm-form/helpers/network.js
 msgid "to be determined"
 msgstr ""
 
@@ -83962,7 +84031,8 @@ msgstr ""
 msgid "vLANs"
 msgstr ""
 
-#: ../app/views/vm_common/_reconfigure.html.haml
+#: ../app/javascript/components/reconfigure-vm-form/helpers/network.js
+#: ../app/javascript/components/reconfigure-vm-form/network-form-fields.js
 msgid "vLan"
 msgstr ""
 
