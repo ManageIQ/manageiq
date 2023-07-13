@@ -26,6 +26,15 @@ module MiqPreloader
     preloader.preload(records, associations, preload_scope)
   end
 
+  # for a record, cache results. Also cache the children's links back
+  # currently preload works for simple associations, but this is needed for reverse associations
+  def self.preload_from_array(record, association_name, values)
+    association = record.association(association_name.to_sym)
+    values = Array.wrap(values)
+    association.target = association.reflection.collection? ? values : values.first
+    values.each { |value| association.set_inverse_instance(value) }
+  end
+
   # it will load records and their associations, and return the children
   #
   # instead of N+1:
