@@ -111,7 +111,7 @@ RSpec.describe EventMixin do
       end
 
       it "ContainerNode uses container_node_name and ems_id in ems events" do
-        ems   = FactoryBot.create(:ext_management_system)
+        ems   = FactoryBot.create(:ems_container)
         obj   = FactoryBot.create(:container_node, :name => "test", :ext_management_system => ems)
         event = FactoryBot.create(:event_stream, :container_node_name => obj.name, :ems_id => ems.id)
         FactoryBot.create(:event_stream, :ems_id => ems.id)
@@ -122,7 +122,7 @@ RSpec.describe EventMixin do
       end
 
       it "ContainerProject uses container_namespace(name) and ems_id in ems events" do
-        ems   = FactoryBot.create(:ext_management_system)
+        ems   = FactoryBot.create(:ems_container)
         obj   = FactoryBot.create(:container_project, :ext_management_system => ems)
         event = FactoryBot.create(:event_stream, :container_namespace => obj.name, :ems_id => ems.id)
         FactoryBot.create(:event_stream, :ems_id => ems.id)
@@ -133,7 +133,7 @@ RSpec.describe EventMixin do
       end
 
       it "ContainerReplicator uses container_namespace, container_replicator_name, and ems_id in ems events" do
-        ems      = FactoryBot.create(:ext_management_system)
+        ems      = FactoryBot.create(:ems_container)
         project  = FactoryBot.create(:container_project)
         obj      = FactoryBot.create(:container_replicator, :name => "test", :ext_management_system => ems, :container_project => project)
         event    = FactoryBot.create(:event_stream, :container_namespace => project.name, :ems_id => ems.id, :container_replicator_name => obj.name)

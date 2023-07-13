@@ -8,22 +8,23 @@ class ContainerProject < ApplicationRecord
   include TenantIdentityMixin
   include CustomActionsMixin
   include_concern 'Purging'
-  belongs_to :ext_management_system, :foreign_key => "ems_id"
-  has_many :container_groups, -> { active }
+  belongs_to :ext_management_system, :class_name => "ManageIQ::Providers::ContainerManager", :foreign_key => "ems_id", :inverse_of => :container_projects
+  has_many :container_groups, -> { active }, :inverse_of => :container_project
   has_many :container_routes
   has_many :container_replicators
   has_many :container_services
   has_many :containers, :through => :container_groups
   has_many :container_images, -> { distinct }, :through => :container_groups
   has_many :container_nodes, -> { distinct }, :through => :container_groups
-  has_many :container_quotas, -> { active }
+  has_many :container_quotas, -> { active }, :inverse_of => :container_project
   has_many :container_quota_scopes, :through => :container_quotas
   has_many :container_quota_items, :through => :container_quotas
   has_many :container_limits
   has_many :container_limit_items, :through => :container_limits
   has_many :container_builds
   has_many :container_templates
-  has_many :archived_container_groups, :foreign_key => "old_container_project_id", :class_name => "ContainerGroup"
+  has_many :all_container_groups, :class_name => "ContainerGroup", :inverse_of => :container_project
+  has_many :archived_container_groups, -> { archived }, :class_name => "ContainerGroup"
   has_many :persistent_volume_claims
   has_many :miq_alert_statuses, :as => :resource, :dependent => :destroy
   has_many :computer_systems, :through => :container_nodes
@@ -47,13 +48,9 @@ class ContainerProject < ApplicationRecord
   include EventMixin
   include Metric::CiMixin
 
-  PERF_ROLLUP_CHILDREN = [:all_container_groups]
+  PERF_ROLLUP_CHILDREN = [:all_container_groups].freeze
 
   delegate :my_zone, :to => :ext_management_system, :allow_nil => true
-
-  def all_container_groups
-    ContainerGroup.where(:container_project_id => id).or(ContainerGroup.where(:old_container_project_id => id))
-  end
 
   def event_where_clause(assoc = :ems_events)
     case assoc.to_sym
@@ -95,6 +92,7 @@ class ContainerProject < ApplicationRecord
 
   def disconnect_inv
     return if archived?
+
     _log.info("Disconnecting Container Project [#{name}] id [#{id}] from EMS [#{ext_management_system.name}] id [#{ext_management_system.id}]")
     self.deleted_on = Time.now.utc
     save
