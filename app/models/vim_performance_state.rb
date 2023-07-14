@@ -162,10 +162,9 @@ class VimPerformanceState < ApplicationRecord
     ids.nil? ? [] : ids.uniq.sort
   end
 
-  # @param obj object holding vps records
   # @param timestamp [Time|String] hourly timestamp, prefer Time
   # @returns [Range] time range
-  def self.get_time_interval(obj, timestamp)
+  def self.get_time_interval(timestamp)
     timestamp = Time.parse(timestamp).utc if timestamp.kind_of?(String)
     (timestamp - 1.hour)..timestamp
   end
