@@ -41,7 +41,7 @@ RSpec.describe Metric::CiMixin::StateFinders do
 
       expect do
         expect(region.vim_performance_state_association(timestamp, :ext_management_systems)).to eq([ems1])
-      end.to make_database_queries(:count => 2) # TODO: vps caching (another PR) will change to 1
+      end.to make_database_queries(:count => 1)
     end
 
     it "fetches a second timestamp" do
@@ -104,8 +104,8 @@ RSpec.describe Metric::CiMixin::StateFinders do
         expect(image).to receive(:perf_capture_state).never
 
         expect do
-          expect(image.vim_performance_state_for_ts(timestamp)).to eq(vps_now) # TODO: should be vps
-        end.to make_database_queries(:count => 0)
+          expect(image.vim_performance_state_for_ts(timestamp)).to eq(vps)
+        end.not_to make_database_queries
       end
 
       it "falls back to cached now" do

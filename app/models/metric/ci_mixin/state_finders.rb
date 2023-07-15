@@ -1,19 +1,30 @@
 module Metric::CiMixin::StateFinders
+  # load from cache or create a VimPerformanceState for a given timestamp
+  #
+  # for a cache:
+  #   use preload to populate vim_performance_states associations
+  #     this loads all records
+  #     the cache is indexed by a Time object
+  #     used by Metric.rollup / rollup_hourly
+  #   preload_vim_performance_state_for_ts_iso8601 to populate @states_by_ts
+  #       contains a subset, typically top of the hour and the timestamp of interest
+  #       the cache is indexed by a String in iso8601 form
+  #       used by: CiMixin::Processing#perf_process
+  # @param ts [Time|String] prefer Time
   def vim_performance_state_for_ts(ts)
+    ts = Time.parse(ts).utc if ts.kind_of?(String)
+    ts_iso = ts.utc.iso8601
     return nil unless self.respond_to?(:vim_performance_states)
 
     @states_by_ts ||= {}
-    state = @states_by_ts[ts]
+    state = @states_by_ts[ts_iso]
     if state.nil?
-      # TODO: vim_performance_states.loaded? works only when doing resource.vim_performance_states.all, not when loading
-      # a subset based on available timestamps
+      # using preloaded vim_performance_states association
       if vim_performance_states.loaded?
         # Look for requested time in cache
-        t = ts.to_time(:utc)
-        state = vim_performance_states.detect { |s| s.timestamp == t }
+        state = vim_performance_states.detect { |s| s.timestamp == ts }
         if state.nil?
-          # Look for state for current hour in cache if still nil because the
-          #   capture will return a state for the current hour only.
+          # Look for state for current hour in cache
           t = Metric::Helper.nearest_hourly_timestamp(Time.now.utc).to_time(:utc)
           state = vim_performance_states.detect { |s| s.timestamp == t }
         end
