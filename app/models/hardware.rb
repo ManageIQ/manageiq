@@ -148,7 +148,7 @@ class Hardware < ApplicationRecord
   virtual_attribute :provisioned_storage, :integer, :arel => (lambda do |t|
     t.grouping(
       t.grouping(t.coalesce([t[:allocated_disk_storage], 0])) +
-      t.grouping(t.coalesce([t[:memory_mb], 0])) * 1.megabyte
+      (t.grouping(t.coalesce([t[:memory_mb], 0])) * 1.megabyte)
     )
   end)
 
