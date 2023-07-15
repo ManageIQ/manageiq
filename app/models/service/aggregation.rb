@@ -65,7 +65,7 @@ module Service::Aggregation
     # @return (see #aggregate_hardware_arel)
     def aggregate_all_vms_disk_space_allocated_arel
       column_name     = "aggregate_all_vm_disk_space_allocated"
-      coalesce_values = [disks_tbl[:size], zero]
+      coalesce_values = [disks_tbl[:size], Arel.sql("0")]
       aggregation_sql = Arel::Nodes::NamedFunction.new('SUM', [disks_tbl.coalesce(coalesce_values)])
       aggregate_hardware_arel(column_name, aggregation_sql, :include_disks => true)
     end
@@ -77,7 +77,7 @@ module Service::Aggregation
     # @return (see #aggregate_hardware_arel)
     def aggregate_all_vms_disk_space_used_arel
       column_name     = "aggregate_all_vm_disk_space_used"
-      coalesce_values = [disks_tbl[:size_on_disk], disks_tbl[:size], zero]
+      coalesce_values = [disks_tbl[:size_on_disk], disks_tbl[:size], Arel.sql("0")]
       aggregation_sql = Arel::Nodes::NamedFunction.new('SUM', [disks_tbl.coalesce(coalesce_values)])
       aggregate_hardware_arel(column_name, aggregation_sql, :include_disks => true)
     end
@@ -165,7 +165,7 @@ module Service::Aggregation
     #   service_resources, vms, and hardwares
     def base_service_aggregation_join(arel, services_tbl, options = {})
       arel.join(service_resources_tbl).on(service_resources_tbl[:service_id].eq(services_tbl[:id])
-                                  .and(service_resources_tbl[:resource_type].eq(vm_or_template_type)))
+                                  .and(service_resources_tbl[:resource_type].eq(Arel.sql("'VmOrTemplate'"))))
           .join(vms_tbl).on(vm_join_clause(options)).tap do |arel_query|
             unless options[:skip_hardware]
               arel_query.join(hardwares_tbl).on(hardwares_tbl[:vm_or_template_id].eq(vms_tbl[:id]))
@@ -228,20 +228,8 @@ module Service::Aggregation
       @partitions_tbl ||= Partition.arel_table
     end
 
-    def zero
-      @zero ||= Arel.sql("0")
-    end
-
-    def vm_or_template_type
-      @vm_or_template_type ||= Arel.sql("'VmOrTemplate'")
-    end
-
-    def ancestry_match
-      @ancestry_match ||= Arel.sql("'/%'")
-    end
-
     def ancestry_ilike
-      @ancestry_ilike ||= Arel::Nodes::NamedFunction.new("CONCAT", [Service.arel_table[:id], ancestry_match])
+      @ancestry_ilike ||= Arel::Nodes::NamedFunction.new("CONCAT", [Service.arel_table[:id], Arel.sql("'/%'")])
     end
 
     def service_id_cast
