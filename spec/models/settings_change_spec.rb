@@ -1,4 +1,13 @@
 RSpec.describe SettingsChange do
+  describe "#key" do
+    it "validates with a good key" do
+      expect(described_class.new(:key => "/api/token")).to be_valid
+    end
+
+    it "doesn't validate with a bad key" do
+      expect(described_class.new(:key => "api/token")).not_to be_valid
+    end
+  end
   describe "#key_path" do
     it "with multiple parts in the key" do
       change = described_class.new(:key => "/api/token_ttl")
