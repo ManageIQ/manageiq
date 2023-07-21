@@ -18,24 +18,22 @@ module ManageIQ
       # determine plugin root dir. Assume we are called from a 'bin/' script in the plugin root
       plugin_root ||= Pathname.new(caller_locations.last.absolute_path).dirname.parent
 
-      ENV["SKIP_DATABASE_RESET"] ||= ENV["CI"] ? "true" : "false"
-
       ensure_config_files
 
       puts "== Installing dependencies =="
-      setup_gemfile_lock if ENV["CI"]
+      setup_gemfile_lock if ci?
       install_bundler(plugin_root)
       bundle_config(plugin_root)
       bundle_update(plugin_root, force: force_bundle_update)
 
-      if ENV.fetch("SKIP_DATABASE_RESET") == "false"
+      unless skip_database_reset?
         # Update the local development database
         create_database(plugin_root)
         migrate_database(plugin_root)
         seed_database(plugin_root)
       end
 
-      setup_test_environment(:task_prefix => 'app:', :root => plugin_root) unless ENV["SKIP_TEST_RESET"]
+      setup_test_environment(:task_prefix => 'app:', :root => plugin_root) unless skip_test_reset?
     end
 
     def self.ensure_config_files
@@ -97,7 +95,7 @@ module ManageIQ
       else
         system!("bundle update --jobs=3", :chdir => root)
       end
-      return unless ENV["CI"]
+      return unless ci?
 
       lockfile_contents = File.read(root.join("Gemfile.lock"))
       puts "===== Begin Gemfile.lock =====\n\n#{lockfile_contents}\n\n===== End Gemfile.lock ====="
@@ -161,6 +159,18 @@ module ManageIQ
       options = args.last.kind_of?(Hash) ? args.pop : {}
       options[:chdir] ||= APP_ROOT
       system(*args, options) || abort("\n== Command #{args} failed in #{options[:chdir]} ==")
+    end
+
+    def self.ci?
+      ENV.fetch("CI", nil) == "true"
+    end
+
+    def self.skip_database_reset?
+      ENV.key?("SKIP_DATABASE_RESET") ? ENV.fetch("SKIP_DATABASE_RESET") == "true" : ci?
+    end
+
+    def self.skip_test_reset?
+      ENV.fetch("SKIP_TEST_RESET", nil) == "true"
     end
   end
 end
