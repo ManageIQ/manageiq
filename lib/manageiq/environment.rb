@@ -1,3 +1,5 @@
+# rubocop:disable Rails/Output
+
 require 'fileutils'
 require 'pathname'
 
@@ -16,14 +18,17 @@ module ManageIQ
       # determine plugin root dir. Assume we are called from a 'bin/' script in the plugin root
       plugin_root ||= Pathname.new(caller_locations.last.absolute_path).dirname.parent
 
+      ENV["SKIP_DATABASE_RESET"] ||= ENV["CI"] ? "true" : "false"
+
+      ensure_config_files
+
+      puts "== Installing dependencies =="
       setup_gemfile_lock if ENV["CI"]
       install_bundler(plugin_root)
       bundle_config(plugin_root)
       bundle_update(plugin_root, force: force_bundle_update)
 
-      ensure_config_files
-
-      unless ENV["CI"]
+      if ENV.fetch("SKIP_DATABASE_RESET") == "false"
         # Update the local development database
         create_database(plugin_root)
         migrate_database(plugin_root)
@@ -159,3 +164,5 @@ module ManageIQ
     end
   end
 end
+
+# rubocop:enable Rails/Output
