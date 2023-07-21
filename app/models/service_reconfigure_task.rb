@@ -16,9 +16,7 @@ class ServiceReconfigureTask < MiqRequestTask
   end
 
   def deliver_to_automate(req_type = request_type, zone = nil)
-    dialog_values = options[:dialog] || {}
-
-    ra = source.service_template.resource_actions.find_by(:action => 'Reconfigure')
+    ra = resource_action
     if ra
       dialog_values["request"] = req_type
       args = {
@@ -48,6 +46,10 @@ class ServiceReconfigureTask < MiqRequestTask
                                :status  => "Ok",
                                :message => "#{request_class::TASK_DESCRIPTION} completed")
     end
+  end
+
+  def resource_action
+    @resource_action ||= source.service_template.resource_actions.find_by(:action => 'Reconfigure')
   end
 
   def after_ae_delivery(ae_result)
