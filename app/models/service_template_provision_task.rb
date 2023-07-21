@@ -117,9 +117,6 @@ class ServiceTemplateProvisionTask < MiqRequestTask
   end
 
   def deliver_to_automate(req_type = request_type, _zone = nil)
-    dialog_values = options[:dialog] || {}
-    dialog_values["request"] = req_type
-
     args = {
       :object_type      => self.class.name,
       :object_id        => id,
@@ -127,7 +124,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
       :class_name       => "ServiceProvision_Template",
       :instance_name    => req_type,
       :automate_message => "create",
-      :attrs            => dialog_values
+      :attrs            => dialog_values.merge("request" => req_type)
     }
 
     # Automate entry point overrides from the resource_action
@@ -158,7 +155,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
   end
 
   def resource_action
-    source.resource_actions.detect { |ra| ra.action == 'Provision' } if source.respond_to?(:resource_actions)
+    @resource_action ||= source.resource_actions.find_by(:action => 'Provision') if source.respond_to?(:resource_actions)
   end
 
   def service_resource
