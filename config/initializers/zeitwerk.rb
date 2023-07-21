@@ -1,4 +1,9 @@
 if Rails.application.config.autoloader == :zeitwerk && Rails.autoloaders.main
+  if ENV['DEBUG_MANAGEIQ_ZEITWERK'].present?
+    Zeitwerk::Loader.default_logger = method(:puts)
+    Rails.autoloaders.main.logger = Logger.new($stdout)
+  end
+
   # These specific directories are for code organization, not namespacing:
   # TODO: these should be either renamed with good names, the intermediate directory removed
   # and/or both.
