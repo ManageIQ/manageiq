@@ -24,8 +24,10 @@ module ManageIQ
       ensure_config_files
 
       unless ENV["CI"]
-        migrate_database
-        seed_database
+        # Update the local development database
+        create_database(plugin_root)
+        migrate_database(plugin_root)
+        seed_database(plugin_root)
       end
 
       setup_test_environment(:task_prefix => 'app:', :root => plugin_root) unless ENV["SKIP_TEST_RESET"]
@@ -96,19 +98,19 @@ module ManageIQ
       puts "===== Begin Gemfile.lock =====\n\n#{lockfile_contents}\n\n===== End Gemfile.lock ====="
     end
 
-    def self.create_database
-      puts "\n== Updating database =="
-      run_rake_task("db:create")
+    def self.create_database(root = APP_ROOT)
+      puts "\n== Creating database =="
+      run_rake_task("db:create", :root => root)
     end
 
-    def self.migrate_database
+    def self.migrate_database(root = APP_ROOT)
       puts "\n== Migrating database =="
-      run_rake_task("db:migrate")
+      run_rake_task("db:migrate", :root => root)
     end
 
-    def self.seed_database
+    def self.seed_database(root = APP_ROOT)
       puts "\n== Seeding database =="
-      run_rake_task("db:seed")
+      run_rake_task("db:seed", :root => root)
     end
 
     def self.setup_test_environment(task_prefix: '', root: APP_ROOT)
