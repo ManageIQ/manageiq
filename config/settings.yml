@@ -918,6 +918,7 @@
   :cpu_minimum: 1
   :mem_minimum: 32.megabytes
 :reporting:
+  :chart_top_values: 10
   :history:
     :keep_reports: 6.months
     :purge_window_size: 100
