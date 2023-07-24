@@ -52,7 +52,7 @@ class Dictionary
 
   def self.i18n_lookup(type, text)
     result = I18n.t("dictionary.#{type}.#{text}", :locale => "en")
-    result.start_with?("translation missing:") ? nil : result
+    result if result && !result.match?(/Translation missing:/i)
   end
   private_class_method :i18n_lookup
 end
