@@ -1076,11 +1076,9 @@ class MiqRequestWorkflow
     rails_logger('allowed_storages', 0)
     st = Time.now
 
-    storages = Storage.where(:id => HostStorage.writable_accessible.where(:host => hosts).select(:storage_id))
     selected_storage_profile_id = get_value(@values[:placement_storage_profile])
-    if selected_storage_profile_id
-      storages.reject! { |s| !s.storage_profiles.pluck(:id).include?(selected_storage_profile_id) }
-    end
+    storages = selected_storage_profile_id ? StorageProfile.find(selected_storage_profile_id).storages : Storage.all
+    storages = storages.where(:id => HostStorage.writable_accessible.where(:host => hosts).select(:storage_id))
     allowed_storages_cache = process_filter(:ds_filter, Storage, storages).collect do |s|
       ci_to_hash_struct(s)
     end
