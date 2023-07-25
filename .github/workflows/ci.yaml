@@ -55,4 +55,4 @@ jobs:
     - name: Report code coverage
       if: ${{ github.ref == 'refs/heads/master' && matrix.ruby-version == '2.7' && matrix.test-suite == 'vmdb' }}
       continue-on-error: true
-      uses: paambaati/codeclimate-action@v3.0.0
+      uses: paambaati/codeclimate-action@v5
