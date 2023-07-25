@@ -253,6 +253,7 @@ RSpec.describe MiqRequestWorkflow do
     let(:ems)           { FactoryBot.create(:ext_management_system) }
     let(:resource_pool) { FactoryBot.create(:resource_pool, :ems_id => ems.id) }
     let(:host)          { FactoryBot.create(:host, :ems_id => ems.id) }
+    let(:storage)       { FactoryBot.create(:storage, :ems_id => ems.id) }
 
     before { allow_any_instance_of(User).to receive(:get_timezone).and_return("UTC") }
 
@@ -311,6 +312,64 @@ RSpec.describe MiqRequestWorkflow do
         allow(workflow).to receive(:get_source_and_targets).and_return(:ems => nil)
         expect(workflow).to receive(:allowed_ci).with(:cluster, [:respool, :host, :folder], [])
         workflow.allowed_clusters
+      end
+    end
+
+    context "#allowed_storages" do
+      it "filters out storages not mounted to allowed hosts" do
+        allow(workflow).to receive(:get_source_and_targets).and_return(:ems => workflow.ci_to_hash_struct(ems))
+        allow(workflow).to receive(:allowed_hosts_obj).and_return([host])
+
+        expect(workflow.allowed_storages).to be_empty
+      end
+
+      context "with writable accessible storages" do
+        before { FactoryBot.create(:host_storage, :host => host, :storage => storage) }
+
+        it "returns all storages" do
+          allow(workflow).to receive(:get_source_and_targets).and_return(:ems => workflow.ci_to_hash_struct(ems))
+          allow(workflow).to receive(:allowed_hosts_obj).and_return([host])
+
+          expect(workflow.allowed_storages.map(&:id)).to eq([storage.id])
+        end
+
+        context "with a selected storage profile" do
+          let!(:storage_profile) { FactoryBot.create(:storage_profile, :ems_id => ems.id) }
+          let!(:storage_2)       { FactoryBot.create(:storage, :ems_id => ems.id, :hosts => [host], :storage_profiles => [storage_profile]) }
+
+          before do
+            workflow.values[:placement_storage_profile] = [storage_profile.id, storage_profile.name]
+          end
+
+          it "filters out storages not in the storage profile" do
+            allow(workflow).to receive(:get_source_and_targets).and_return(:ems => workflow.ci_to_hash_struct(ems))
+            allow(workflow).to receive(:allowed_hosts_obj).and_return([host])
+
+            expect(workflow.allowed_storages.map(&:id)).to eq([storage_2.id])
+          end
+        end
+      end
+
+      context "with read-only storages" do
+        before { FactoryBot.create(:host_storage, :host => host, :storage => storage, :read_only => true) }
+
+        it "filters out read-only storages" do
+          allow(workflow).to receive(:get_source_and_targets).and_return(:ems => workflow.ci_to_hash_struct(ems))
+          allow(workflow).to receive(:allowed_hosts_obj).and_return([host])
+
+          expect(workflow.allowed_storages).to be_empty
+        end
+      end
+
+      context "with inaccessible storages" do
+        before { FactoryBot.create(:host_storage, :host => host, :storage => storage, :read_only => false, :accessible => false) }
+
+        it "filters out read-only storages" do
+          allow(workflow).to receive(:get_source_and_targets).and_return(:ems => workflow.ci_to_hash_struct(ems))
+          allow(workflow).to receive(:allowed_hosts_obj).and_return([host])
+
+          expect(workflow.allowed_storages).to be_empty
+        end
       end
     end
   end
