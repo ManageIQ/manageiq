@@ -45,15 +45,15 @@ RSpec.describe YamlImportExportMixin do
     subject { MiqReport }
 
     it "valid YAML file" do
-      @fd = StringIO.new("---\n- MiqReport:\n")
+      fd = StringIO.new("---\n- MiqReport:\n")
       # if it gets to import_from_array, then it did not choke on yml
       expect(subject).to receive(:import_from_array)
-      subject.import(@fd)
+      subject.import(fd)
     end
 
     it "invalid YAML file" do
-      @fd = StringIO.new("---\na:\nb")
-      expect { subject.import(@fd) }.to raise_error("Invalid YAML file")
+      fd = StringIO.new("---\na:\nb")
+      expect { subject.import(fd) }.to raise_error("Invalid YAML file")
     end
   end
 
