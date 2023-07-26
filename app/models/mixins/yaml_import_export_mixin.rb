@@ -31,12 +31,24 @@ module YAMLImportExportMixin
     def import(fd, options = {})
       fd.rewind   # ensure to be at the beginning as the file is read multiple times
       begin
-        reps = YAML.load(fd.read)
-        validate_import_data_class(reps)
-      rescue Psych::SyntaxError => err
+        reps = YAML.safe_load(fd.read,
+          :aliases           => true,
+          :permitted_classes => [
+            ActiveSupport::TimeWithZone,
+            ActiveSupport::TimeZone,
+            Date,
+            DateTime,
+            MiqExpression,
+            Symbol,
+            Time,
+          ]
+        )
+      rescue => err
         _log.error("Failed to load from #{fd}: #{err}")
         raise "Invalid YAML file"
       end
+
+      validate_import_data_class(reps)
 
       return reps, import_from_array(reps, options)
     end
