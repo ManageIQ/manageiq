@@ -14,6 +14,152 @@ RSpec.describe MiqReport::ImportExport do
                                     :miq_group_id => @some_group.id)
   end
 
+  describe ".import" do
+    it "imports" do
+      fd = StringIO.new(<<~YAML)
+        ---
+        - MiqReport:
+            title: VMs with Volume Free Space > 50% by Department
+            rpt_group: Configuration Management - Virtual Machines
+            rpt_type: Custom
+            priority: 5
+            db: Vm
+            cols:
+            - name
+            - v_owning_cluster
+            include:
+              hardware:
+                include:
+                  volumes:
+                    columns:
+                    - name
+                    - free_space_percent
+                    - free_space
+                    - size
+                    - used_space_percent
+                    - used_space
+                    - filesystem
+              managed:
+                columns:
+                - department
+              storage:
+                columns:
+                - name
+            col_order:
+            - managed.department
+            - name
+            - v_owning_cluster
+            - storage.name
+            - hardware.volumes.name
+            - hardware.volumes.free_space_percent
+            - hardware.volumes.free_space
+            - hardware.volumes.size
+            - hardware.volumes.used_space_percent
+            - hardware.volumes.used_space
+            - hardware.volumes.filesystem
+            headers:
+            - Department Classification
+            - Name
+            - Parent Cluster
+            - Storage Name
+            - Volume Name
+            - Volume Free Space Percent
+            - Volume Free Space
+            - Volume Size
+            - Volume Used Space Percent
+            - Volume Used Space
+            - Volume Filesystem
+            conditions: !ruby/object:MiqExpression
+              exp:
+                FIND:
+                  search:
+                    IS NOT EMPTY:
+                      field: Vm.hardware.volumes-name
+                  checkany:
+                    ">":
+                      field: Vm.hardware.volumes-free_space_percent
+                      value: 50
+            order: Descending
+            sortby:
+            - managed.department
+            - hardware.volumes.free_space_percent
+            group: c
+            graph:
+              :type: Pie
+              :count: '8'
+              :other: false
+            dims: 1
+            filename: 100_Configuration Management - Virtual Machines/005_VMs with Free Space
+              _ 50% by Department.yaml
+            file_mtime: !ruby/object:ActiveSupport::TimeWithZone
+              utc: 2023-06-06 20:07:17.000000000 Z
+              zone: !ruby/object:ActiveSupport::TimeZone
+                name: Etc/UTC
+              time: 2023-06-06 20:07:17.000000000 Z
+            categories:
+            timeline:
+            template_type: report
+            where_clause:
+            db_options: {}
+            generate_cols:
+            generate_rows:
+            col_formats:
+            tz:
+            time_profile_id:
+            display_filter:
+            col_options:
+            rpt_options:
+            miq_group_id:
+            user_id:
+            menu_name: VMs with Free Space > 50% by Department
+            userid: ''
+            group_description: ''
+      YAML
+
+      MiqReport.import(fd, :save => true, :user => @some_user)
+
+      expect(MiqReport.count).to eq(2)
+
+      report = MiqReport.find_by(:title => "VMs with Volume Free Space > 50% by Department")
+      expect(report).to have_attributes(
+        :title           => "VMs with Volume Free Space > 50% by Department",
+        :rpt_group       => "Configuration Management - Virtual Machines",
+        :rpt_type        => "Custom",
+        :priority        => 5,
+        :db              => "Vm",
+        :cols            => %w[name v_owning_cluster],
+        :order           => "Descending",
+        :sortby          => %w[managed.department hardware.volumes.free_space_percent],
+        :group           => "c",
+        :dims            => 1,
+        :categories      => nil,
+        :timeline        => nil,
+        :template_type   => "report",
+        :where_clause    => nil,
+        :db_options      => {},
+        :generate_cols   => nil,
+        :generate_rows   => nil,
+        :col_formats     => nil,
+        :tz              => nil,
+        :time_profile_id => nil,
+        :display_filter  => nil,
+        :col_options     => nil,
+        :rpt_options     => nil,
+        :miq_group_id    => nil,
+        :user_id         => @some_user.id,
+        :menu_name       => "VMs with Free Space > 50% by Department"
+      )
+
+      conditions = report.conditions
+      expect(conditions).to be_a(MiqExpression)
+      expect(conditions.exp).to eq({"FIND" => {"checkany" => {">" => {"field" => "Vm.hardware.volumes-free_space_percent", "value" => 50}}, "search" => {"IS NOT EMPTY" => {"field" => "Vm.hardware.volumes-name"}}}})
+
+      file_mtime = report.file_mtime
+      expect(file_mtime).to be_a(ActiveSupport::TimeWithZone)
+      expect(file_mtime).to eq(Time.zone.parse('2023-06-06 20:07:17.000000000 Z'))
+    end
+  end
+
   context ".import_from_hash" do
     before do
       @user_admin = FactoryBot.create(:user_admin)
