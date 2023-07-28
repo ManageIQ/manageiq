@@ -1,6 +1,7 @@
 class SettingsChange < ApplicationRecord
   serialize :value
 
+  validates :key, :format => %r{\A/[^/]+(/[^/]+)*\z}
   belongs_to :resource, :polymorphic => true
 
   def key_path
