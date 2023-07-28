@@ -140,7 +140,7 @@ class MiqRequestTask < ApplicationRecord
     _log.info("Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
 
     if resource_action&.configuration_script_payload
-      resource_action.configuration_script_payload.run(:inputs => dialog_values, :userid => get_user.userid, :zone => zone)
+      resource_action.configuration_script_payload.run(:inputs => dialog_values, :userid => get_user.userid, :zone => zone, :object => self)
     elsif self.class::AUTOMATE_DRIVES
       deliver_to_automate(req_type, zone)
     else
