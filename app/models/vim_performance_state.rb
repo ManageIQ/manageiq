@@ -141,17 +141,17 @@ class VimPerformanceState < ApplicationRecord
 
   def container_groups
     ids = get_assoc(:container_groups)
-    ids.empty? ? ContainerGroup.none : ContainerGroup.where(:id => ids).order(:id)
+    ids.empty? ? ContainerGroup.none : ContainerGroup.where(:id => ids).order(:id).not_archived_before(timestamp)
   end
 
   def containers
     ids = get_assoc(:containers)
-    ids.empty? ? Container.none : Container.where(:id => ids).order(:id)
+    ids.empty? ? Container.none : Container.where(:id => ids).order(:id).not_archived_before(timestamp)
   end
 
   def all_container_groups
     ids = get_assoc(:all_container_groups)
-    ids.empty? ? [] : ContainerGroup.where(:id => ids).order(:id).to_a
+    ids.empty? ? ContainerGroup.none : ContainerGroup.where(:id => ids).order(:id)
   end
 
   def get_assoc(relat, mode = nil)
