@@ -266,8 +266,13 @@ module Metric::Rollup
     new_perf
   end
 
+  # @param obj parent object
+  # @param timestamp [Time] for hourly, time is at the beginning of the hour
+  # @param interval_name  ["realtime", "hourly", "historical"]
+  # @param assoc [Symbol] name of the association to rollup
   def self.rollup_child_metrics(obj, timestamp, interval_name, assoc)
-    ts = timestamp.kind_of?(Time) ? timestamp.utc.iso8601 : timestamp
+    timestamp = Time.parse(timestamp).utc if timestamp.kind_of?(String)
+    ts = timestamp.utc.iso8601
     recs = obj.vim_performance_state_association(timestamp, assoc).to_a
 
     result = {}

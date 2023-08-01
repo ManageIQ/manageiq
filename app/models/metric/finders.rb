@@ -1,9 +1,11 @@
 module Metric::Finders
+  # @param hour [String]
   def self.find_all_by_hour(resource, hour, interval_name)
     start_time, end_time = hour_to_range(hour)
     find_all_by_range(resource, start_time, end_time, interval_name)
   end
 
+  # @param day [String|Time] prefer Time
   def self.find_all_by_day(resource, day, interval_name, time_profile)
     start_time, end_time = day_to_range(day, time_profile)
     find_all_by_range(resource, start_time, end_time, interval_name)
@@ -37,12 +39,14 @@ module Metric::Finders
   # Helper methods
   #
 
+  # @param hour [String]
   def self.hour_to_range(hour)
     start_time = hour
     end_time = "#{hour[0..13]}59:59Z"
     return start_time, end_time
   end
 
+  # @param [String|Time] day prefer Time
   def self.day_to_range(day, time_profile)
     day = Time.parse(day) if day.kind_of?(String)
     day = day.in_time_zone(time_profile.tz_or_default)

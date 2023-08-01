@@ -54,7 +54,7 @@ class Chargeback
 
     def container_tag_list_with_prefix
       if resource.kind_of?(ContainerImage)
-        state = resource.vim_performance_state_for_ts(timestamp.to_s)
+        state = resource.vim_performance_state_for_ts(timestamp)
         image_tag_name = "#{state.image_tag_names}|" if state
 
         image_tag_name.split("|")

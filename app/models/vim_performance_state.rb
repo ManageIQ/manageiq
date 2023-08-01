@@ -46,6 +46,8 @@ class VimPerformanceState < ApplicationRecord
   # => host_sockets     (derive from assoc_ids)
 
   # TODO: do a single query for the finds
+  # @param objs [Array[Object]|Object] MetricsCapture#target - all should be the same object class
+  # @returns [Array[VimPerformanceState]|VimPerformanceState] return an array if an array was passed in
   # NOTE: a few calls (with a single object) do use the return and expect a single result
   def self.capture(objs)
     ts = Time.now.utc
