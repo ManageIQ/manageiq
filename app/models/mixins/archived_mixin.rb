@@ -4,6 +4,9 @@ module ArchivedMixin
   included do
     scope :archived, -> { where.not(:deleted_on => nil) }
     scope :active, -> { where(:deleted_on => nil) }
+    scope :not_archived_before, ->(timestamp) {
+      unscope(:where => :deleted_on).where(arel_table[:deleted_on].eq(nil).or(arel_table[:deleted_on].gteq(timestamp)))
+    }
   end
 
   def archived?
