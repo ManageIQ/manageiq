@@ -61,7 +61,7 @@ class VimPerformanceState < ApplicationRecord
 
   def capture
     self.state_data ||= {}
-    self.capture_interval = 3600
+    self.capture_interval = 1.hour.to_i
     capture_assoc_ids
     capture_parent_host
     capture_parent_storage
@@ -160,6 +160,13 @@ class VimPerformanceState < ApplicationRecord
 
     ids = mode.nil? ? (assoc[:on] || []) + (assoc[:off] || []) : assoc[mode.to_sym]
     ids.nil? ? [] : ids.uniq.sort
+  end
+
+  # @param timestamp [Time|String] hourly timestamp, prefer Time
+  # @returns [Range] time range
+  def self.get_time_interval(timestamp)
+    timestamp = Time.parse(timestamp).utc if timestamp.kind_of?(String)
+    (timestamp - 1.hour)..timestamp
   end
 
   private
