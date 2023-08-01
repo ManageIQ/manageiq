@@ -2976,9 +2976,14 @@ msgstr ""
 
 #: ../app/helpers/ops_helper/role_rbac_details_helper.rb
 #: ../app/views/ops/_rbac_role_details.html.haml
+msgid "Access Restriction for Catalog Items"
+msgstr ""
+
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
+#: ../app/views/ops/_rbac_role_details.html.haml
 msgid ""
-"Access Restriction for Catalog Items, Orchestration Stacks, Key Pairs, Service"
-"s, VMs, and Templates"
+"Access Restriction for Orchestration Stacks, Key Pairs, Services, VMs, and Tem"
+"plates"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -6749,15 +6754,15 @@ msgstr ""
 msgid "Are you sure you want to remove this Namespace?"
 msgstr ""
 
-#: ../app/views/catalog/_form_basic_info.html.haml
+#: ../app/views/catalog/_provision_entry_point.html.haml
 msgid "Are you sure you want to remove this Provisioning Entry Point?"
 msgstr ""
 
-#: ../app/views/catalog/_form_basic_info.html.haml
+#: ../app/views/catalog/_reconfigure_entry_point.html.haml
 msgid "Are you sure you want to remove this Reconfigure Entry Point?"
 msgstr ""
 
-#: ../app/views/catalog/_form_basic_info.html.haml
+#: ../app/views/catalog/_retire_entry_point.html.haml
 msgid "Are you sure you want to remove this Retirement Entry Point?"
 msgstr ""
 
@@ -8631,7 +8636,7 @@ msgstr ""
 msgid "Basic Info"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb:101 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:102 ../app/helpers/catalog_helper.rb
 #: ../app/helpers/condition_helper.rb
 #: ../app/helpers/generic_object_definition_helper.rb
 #: ../app/helpers/miq_action_helper.rb
@@ -12234,16 +12239,16 @@ msgstr ""
 msgid "Click to remove this policy"
 msgstr ""
 
-#: ../app/views/catalog/_form_basic_info.html.haml
+#: ../app/views/catalog/_provision_entry_point.html.haml
 #: ../app/views/miq_ae_class/_copy_objects_form.html.haml
 msgid "Click to select Provisioning Entry Point"
 msgstr ""
 
-#: ../app/views/catalog/_form_basic_info.html.haml
+#: ../app/views/catalog/_reconfigure_entry_point.html.haml
 msgid "Click to select Reconfigure Entry Point"
 msgstr ""
 
-#: ../app/views/catalog/_form_basic_info.html.haml
+#: ../app/views/catalog/_retire_entry_point.html.haml
 msgid "Click to select Retirement Entry Point"
 msgstr ""
 
@@ -15776,15 +15781,15 @@ msgid "ConfiguredSystem|Href slug"
 msgstr ""
 
 #: ../config/model_attributes.rb
+msgid "ConfiguredSystem|IPMI present"
+msgstr ""
+
+#: ../config/model_attributes.rb
 msgid "ConfiguredSystem|Inventory root group name"
 msgstr ""
 
 #: ../config/model_attributes.rb
 msgid "ConfiguredSystem|Ipaddress"
-msgstr ""
-
-#: ../config/model_attributes.rb
-msgid "ConfiguredSystem|Ipmi present"
 msgstr ""
 
 #: ../config/model_attributes.rb
@@ -20525,7 +20530,7 @@ msgstr ""
 msgid "Currently Used Space"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb:110 ../app/helpers/report_helper.rb
+#: ../app/helpers/catalog_helper.rb:111 ../app/helpers/report_helper.rb
 #: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
 msgid "Custom"
 msgstr ""
@@ -21410,7 +21415,7 @@ msgid "Databases"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/EmsCluster.yaml
-#: ../app/controllers/vm_common.rb:840 ../app/helpers/catalog_helper.rb
+#: ../app/controllers/vm_common.rb:841 ../app/helpers/catalog_helper.rb
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb
 #: ../app/views/catalog/_form_ovf_template_options.html.haml
 #: ../app/views/miq_request/_prov_vm_migrate_dialog.html.haml
@@ -23559,7 +23564,7 @@ msgstr ""
 msgid "Detailed Description"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb:176 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:177 ../app/helpers/catalog_helper.rb
 #: ../app/helpers/cloud_volume_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/helpers/utilization_helper.rb
@@ -23658,7 +23663,7 @@ msgstr ""
 msgid "Diagnostics Zone Settings"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb:48 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:49 ../app/helpers/catalog_helper.rb
 #: ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
@@ -29924,6 +29929,7 @@ msgstr ""
 msgid "Embedded Ansible service is not available."
 msgstr ""
 
+#: ../app/controllers/mixins/automation_mixin.rb
 #: ../app/presenters/menu/default_menu.rb
 msgid "Embedded Automate"
 msgstr ""
@@ -29941,6 +29947,10 @@ msgstr ""
 
 #: ../app/views/miq_ae_class/_embedded_methods.html.haml
 msgid "Embedded Methods"
+msgstr ""
+
+#: ../app/controllers/mixins/automation_mixin.rb
+msgid "Embedded Workflow"
 msgstr ""
 
 #: ../app/javascript/components/workflow-repository-form/index.jsx
@@ -30763,7 +30773,7 @@ msgid "Endpoint|Url"
 msgstr ""
 
 #: ../config/model_attributes.rb
-msgid "Endpoint|Verify ssl"
+msgid "Endpoint|Verify SSL"
 msgstr ""
 
 #:
@@ -31429,7 +31439,7 @@ msgstr ""
 msgid "Event Level"
 msgstr ""
 
-#: ../app/controllers/vm_common.rb:1112 ../app/views/ops/_ap_form.html.haml
+#: ../app/controllers/vm_common.rb:1113 ../app/views/ops/_ap_form.html.haml
 #: ../app/views/ops/_ap_form.html.haml
 msgid "Event Log"
 msgid_plural "Event Logs"
@@ -35118,7 +35128,7 @@ msgid "GitRepository|Url"
 msgstr ""
 
 #: ../config/model_attributes.rb
-msgid "GitRepository|Verify ssl"
+msgid "GitRepository|Verify SSL"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -36186,7 +36196,7 @@ msgstr ""
 #: ../app/controllers/host_controller.rb
 #: ../app/controllers/miq_action_controller.rb
 #: ../app/controllers/mixins/actions/host_actions/misc.rb
-#: ../app/helpers/catalog_helper.rb:145 ../app/helpers/miq_action_helper.rb
+#: ../app/helpers/catalog_helper.rb:146 ../app/helpers/miq_action_helper.rb
 #: ../app/helpers/miq_alert_helper.rb
 #: ../app/helpers/physical_server_helper/textual_summary.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
@@ -37496,15 +37506,15 @@ msgid "Host|Hypervisor hostname"
 msgstr ""
 
 #: ../config/model_attributes.rb
+msgid "Host|IPMI address"
+msgstr ""
+
+#: ../config/model_attributes.rb
+msgid "Host|IPMI enabled"
+msgstr ""
+
+#: ../config/model_attributes.rb
 msgid "Host|Ipaddress"
-msgstr ""
-
-#: ../config/model_attributes.rb
-msgid "Host|Ipmi address"
-msgstr ""
-
-#: ../config/model_attributes.rb
-msgid "Host|Ipmi enabled"
 msgstr ""
 
 #: ../config/model_attributes.rb
@@ -38646,7 +38656,7 @@ msgid "Infinity"
 msgstr ""
 
 #: ../app/controllers/miq_alert_controller.rb
-#: ../app/helpers/catalog_helper.rb:190 ../app/helpers/miq_alert_helper.rb
+#: ../app/helpers/catalog_helper.rb:191 ../app/helpers/miq_alert_helper.rb
 #: ../app/javascript/components/data-store-form/data-store-form.schema.js
 #: ../app/views/miq_alert/_form.html.haml
 #: ../app/views/resource_pool/_config.html.haml
@@ -39436,7 +39446,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. TRANSLATORS: file: product/views/ServiceTemplate.yaml
-#: ../app/helpers/catalog_helper.rb:109 ../config/yaml_strings.rb
+#: ../app/helpers/catalog_helper.rb:110 ../config/yaml_strings.rb
 msgid "Item Type"
 msgstr ""
 
@@ -41267,7 +41277,7 @@ msgstr ""
 msgid "Logs for this %{product} Server are not available for viewing"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb:47 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:48 ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/javascript/components/settings-category-form/schema.js
 #: ../app/javascript/components/settings-company-tags/helper.js
@@ -51301,6 +51311,12 @@ msgstr ""
 msgid "Note: Gap Collection is only available for VMware vSphere Infrastructures"
 msgstr ""
 
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb
+msgid ""
+"Note: If enabled, the Default, Metrics, and Alert Endpoints must be revalidate"
+"d when adding or changing the token"
+msgstr ""
+
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml
 msgid "Note: No Clusters available."
 msgstr ""
@@ -52728,7 +52744,7 @@ msgid "Orchestration Template is required, please select one from the list"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
-#: ../app/controllers/catalog_controller.rb:924 ../config/yaml_strings.rb
+#: ../app/controllers/catalog_controller.rb:961 ../config/yaml_strings.rb
 msgid "Orchestration Templates"
 msgstr ""
 
@@ -56876,7 +56892,7 @@ msgid "Price / Month"
 msgstr ""
 
 #: ../app/controllers/catalog_controller.rb
-#: ../app/helpers/catalog_helper.rb:51 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:52 ../app/helpers/catalog_helper.rb
 msgid "Price / Month (in %{currency})"
 msgstr ""
 
@@ -57491,7 +57507,7 @@ msgstr ""
 #: ../app/helpers/ansible_repository_helper/textual_summary.rb
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb
 #: ../app/helpers/automation_manager_configured_system_helper.rb
-#: ../app/helpers/catalog_helper.rb:114 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:115 ../app/helpers/catalog_helper.rb
 #: ../app/helpers/configuration_job_helper/textual_summary.rb
 #: ../app/helpers/configuration_script_helper.rb
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb
@@ -57780,7 +57796,7 @@ msgid "Provider|Url"
 msgstr ""
 
 #: ../config/model_attributes.rb
-msgid "Provider|Verify ssl"
+msgid "Provider|Verify SSL"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -57789,6 +57805,7 @@ msgid "Provides the native webconsole of the Cloud Provider"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/vms_center.rb
+#: ../app/javascript/components/workflows/workflow-entry-points.jsx
 #, fuzzy
 msgid "Provision"
 msgstr ""
@@ -57797,7 +57814,7 @@ msgstr ""
 msgid "Provision %{type} Request was cancelled by the user"
 msgstr ""
 
-#: ../app/controllers/vm_common.rb:1247 ../app/controllers/vm_common.rb
+#: ../app/controllers/vm_common.rb:1248 ../app/controllers/vm_common.rb
 msgid "Provision %{vms_or_templates}"
 msgstr ""
 
@@ -57949,7 +57966,7 @@ msgstr ""
 msgid "Provisioned VMs [%{description}]"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb:123 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:124 ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_multi_tab_ansible_form_options.html.haml
 #: ../app/views/service/_svcs_show.html.haml
@@ -58907,6 +58924,7 @@ msgstr ""
 
 #: ../app/controllers/mixins/actions/vm_actions/reconfigure.rb
 #: ../app/helpers/catalog_helper.rb
+#: ../app/javascript/components/workflows/workflow-entry-points.jsx
 msgid "Reconfigure"
 msgstr ""
 
@@ -61372,11 +61390,12 @@ msgstr ""
 msgid "Remove this Provider from Inventory"
 msgstr ""
 
-#: ../app/views/catalog/_form_basic_info.html.haml
+#: ../app/views/catalog/_provision_entry_point.html.haml
 msgid "Remove this Provisioning Entry Point"
 msgstr ""
 
-#: ../app/views/catalog/_form_basic_info.html.haml
+#: ../app/views/catalog/_reconfigure_entry_point.html.haml
+#: ../app/views/catalog/_retire_entry_point.html.haml
 msgid "Remove this Reconfigure Entry Point"
 msgstr ""
 
@@ -61387,10 +61406,6 @@ msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/resource_pool_center.rb
 msgid "Remove this Resource Pool from Inventory"
-msgstr ""
-
-#: ../app/views/catalog/_form_basic_info.html.haml
-msgid "Remove this Retirement Entry Point"
 msgstr ""
 
 #:
@@ -63124,8 +63139,9 @@ msgstr ""
 
 #: ../app/controllers/application_controller/ci_processing.rb
 #: ../app/helpers/application_helper/tasks.rb
-#: ../app/helpers/catalog_helper.rb:125 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:126 ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
+#: ../app/javascript/components/workflows/workflow-entry-points.jsx
 #: ../app/views/layouts/angular/_multi_tab_ansible_form_options.html.haml
 #: ../app/views/service/_svcs_show.html.haml
 msgid "Retirement"
@@ -64838,6 +64854,10 @@ msgstr ""
 msgid "Select Dialogs to import"
 msgstr ""
 
+#: ../app/javascript/components/workflows/workflow-entry-points.jsx
+msgid "Select Embedded Workflow - %s Entry Point"
+msgstr ""
+
 #: ../app/views/layouts/_ae_tree_select.html.haml
 msgid "Select Entry Point %{entry_point}"
 msgstr ""
@@ -65191,6 +65211,18 @@ msgstr ""
 msgid "Select only one or consecutive fields to move up"
 msgstr ""
 
+#: ../app/views/chargeback_assignment/_form.html.haml
+msgid "Select options for image labels"
+msgstr ""
+
+#: ../app/views/chargeback_assignment/_form.html.haml
+msgid "Select rate"
+msgstr ""
+
+#: ../app/views/chargeback_assignment/_form.html.haml
+msgid "Select rate for selections"
+msgstr ""
+
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
 msgid ""
@@ -65211,6 +65243,10 @@ msgstr ""
 
 #: src/tagging/components/InnerComponents/ValueSelector.js
 msgid "Select tag value"
+msgstr ""
+
+#: ../app/views/chargeback_assignment/_form.html.haml
+msgid "Select term of service type"
 msgstr ""
 
 #:
@@ -68666,7 +68702,7 @@ msgstr ""
 
 #. TRANSLATORS: file: product/views/ProvisionCloudTemplates.yaml
 #. TRANSLATORS: file: product/views/ProvisionInfraTemplates.yaml
-#: ../app/controllers/vm_common.rb:1142 ../config/yaml_strings.rb
+#: ../app/controllers/vm_common.rb:1143 ../config/yaml_strings.rb
 #: ../lib/gtl_formatter.rb
 #, fuzzy
 msgid "Snapshot"
@@ -71223,11 +71259,11 @@ msgid "SystemConsole|Region number"
 msgstr ""
 
 #: ../config/model_attributes.rb
-msgid "SystemConsole|Secret"
+msgid "SystemConsole|SSL"
 msgstr ""
 
 #: ../config/model_attributes.rb
-msgid "SystemConsole|Ssl"
+msgid "SystemConsole|Secret"
 msgstr ""
 
 #: ../config/model_attributes.rb
@@ -77856,7 +77892,7 @@ msgstr ""
 msgid "Vault"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb:195 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:196 ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 #: ../app/views/miq_ae_class/_method_inputs.html.haml
@@ -83684,6 +83720,18 @@ msgstr ""
 
 #: ../app/presenters/tree_node/assigned_server_role.rb
 msgid "secondary, "
+msgstr ""
+
+#: ../app/views/chargeback_assignment/_form.html.haml
+msgid "select Rate1"
+msgstr ""
+
+#: ../app/views/chargeback_assignment/_form.html.haml
+msgid "select Rate2"
+msgstr ""
+
+#: ../app/views/chargeback_assignment/_form.html.haml
+msgid "select rate for saved items"
 msgstr ""
 
 #: ../app/views/miq_ae_class/_copy_objects_form.html.haml
