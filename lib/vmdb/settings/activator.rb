@@ -30,6 +30,10 @@ module Vmdb
         EventStream.clear_event_groups_cache
       end
 
+      def prototype(_data)
+        Menu::Manager.reload if defined?(Menu::Manager) # NOTE: Can be removed after Settings.prototype.ems_workflows is removed
+      end
+
       def session(data)
         Session.timeout(data.timeout)
         Session.interval(data.interval)
