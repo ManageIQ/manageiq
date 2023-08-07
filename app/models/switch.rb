@@ -3,6 +3,7 @@ class Switch < ApplicationRecord
   include CustomActionsMixin
 
   belongs_to :host, :inverse_of => :host_virtual_switches
+  has_one :ext_management_system, :through => :host
 
   has_many :host_switches, :dependent => :destroy
   has_many :hosts, :through => :host_switches
