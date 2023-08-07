@@ -7,8 +7,10 @@ class MiqUserRole < ApplicationRecord
   has_many                :miq_groups, :through => :entitlements
   has_and_belongs_to_many :miq_product_features, :join_table => :miq_roles_features
 
-  virtual_column :vm_restriction,               :type => :string
-  virtual_column :service_template_restriction, :type => :string
+  virtual_column :auth_key_pair_restriction,        :type => :string
+  virtual_column :orchestration_stacks_restriction, :type => :string
+  virtual_column :service_template_restriction,     :type => :string
+  virtual_column :vm_restriction,                   :type => :string
 
   validates :name, :presence => true, :uniqueness_when_changed => {:case_sensitive => false}
 
@@ -100,14 +102,24 @@ class MiqUserRole < ApplicationRecord
 
   virtual_total :group_count, :miq_groups
 
-  def vm_restriction
-    vmr = settings&.dig(:restrictions, :vms)
-    vmr ? RESTRICTIONS[vmr] : "None"
+  def auth_key_pair_restriction
+    restrictions(:auth_key_pairs)
+  end
+
+  def orchestration_stack_restriction
+    restrictions(:orchestration_stacks)
   end
 
   def service_template_restriction
-    str = settings&.dig(:restrictions, :service_templates)
-    str ? RESTRICTIONS[str] : "None"
+    restrictions(:service_templates)
+  end
+
+  def service_restriction
+    restrictions(:services)
+  end
+
+  def vm_restriction
+    restrictions(:vms)
   end
 
   def super_admin_user?
@@ -140,10 +152,21 @@ class MiqUserRole < ApplicationRecord
 
   private
 
+  def restrictions(restriction_type)
+    restrictions = settings&.dig(:restrictions, restriction_type)
+    restrictions ? RESTRICTIONS[vmr] : "None"
+  end
+
   def restriction_type(klass)
     klass ||= Class
-    if klass <= ServiceTemplate
+    if klass <= ManageIQ::Providers::CloudManager::AuthKeyPair
+      :auth_key_pairs
+    elsif klass <= OrchestrationStack
+      :orchestration_stacks
+    elsif klass <= ServiceTemplate
       :service_templates
+    elsif klass <= Services
+      :services
     else
       :vms
     end
