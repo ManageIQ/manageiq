@@ -337,7 +337,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-ui-classic
-  revision: c2f371efa8cb720359250c1f2809a7bb75bf00ef
+  revision: 35586cd384a42119b8ba017650cd2335695f67a0
   branch: petrosian
   specs:
     manageiq-ui-classic (0.1.0)
