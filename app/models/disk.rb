@@ -11,7 +11,7 @@ class Disk < ApplicationRecord
   virtual_column :used_percent_of_provisioned, :type => :float
   virtual_column :partitions_aligned,          :type => :string,  :uses => {:partitions => :aligned}
   virtual_column :used_disk_storage, :type => :integer, :arel => (lambda do |t|
-    t.grouping(Arel::Nodes::NamedFunction.new('COALESCE', [t[:size_on_disk], t[:size], 0]))
+    t.grouping(t.coalesce([t[:size_on_disk], t[:size], 0]))
   end)
 
   # A performance improvement was introduced in Rails 6:

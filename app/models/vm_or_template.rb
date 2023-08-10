@@ -1232,13 +1232,13 @@ class VmOrTemplate < ApplicationRecord
   virtual_attribute :normalized_state, :string, :arel => (lambda do |t|
     t.grouping(
       Arel::Nodes::Case.new
-      .when(arel_table[:archived]).then(Arel::Nodes::SqlLiteral.new("\'archived\'"))
-      .when(arel_table[:orphaned]).then(Arel::Nodes::SqlLiteral.new("\'orphaned\'"))
-      .when(t[:template].eq(t.create_true)).then(Arel::Nodes::SqlLiteral.new("\'template\'"))
-      .when(t[:retired].eq(t.create_true)).then(Arel::Nodes::SqlLiteral.new("\'retired\'"))
-      .when(arel_table[:disconnected]).then(Arel::Nodes::SqlLiteral.new("\'disconnected\'"))
+      .when(arel_table[:archived]).then(Arel.sql("\'archived\'"))
+      .when(arel_table[:orphaned]).then(Arel.sql("\'orphaned\'"))
+      .when(t[:template].eq(t.create_true)).then(Arel.sql("\'template\'"))
+      .when(t[:retired].eq(t.create_true)).then(Arel.sql("\'retired\'"))
+      .when(arel_table[:disconnected]).then(Arel.sql("\'disconnected\'"))
       .else(t.lower(
-              Arel::Nodes::NamedFunction.new('COALESCE', [t[:power_state], Arel::Nodes::SqlLiteral.new("\'unknown\'")])
+              t.coalesce([t[:power_state], Arel.sql("\'unknown\'")])
       ))
     )
   end)
@@ -1336,7 +1336,7 @@ class VmOrTemplate < ApplicationRecord
   # technically it is capitalized, but for sorting, not a concern
   # but we do need nil to become false
   virtual_attribute :v_is_a_template, :string, :arel => (lambda do |t|
-    t.grouping(arel_coalesce([t[:template], t.create_false]))
+    t.grouping(t.coalesce([t[:template], t.create_false]))
   end)
 
   def v_datastore_path
@@ -1550,7 +1550,7 @@ class VmOrTemplate < ApplicationRecord
                      .join(networks).on(networks[:hardware_id].eq(hardwares[:id]))
                      .where(hardwares[:vm_or_template_id].eq(vms[:id]).and(match_grouping))
                      .take(1)
-    Arel::Nodes::SqlLiteral.new("1").eq(query)
+    Arel.sql("1").eq(query)
   end
 
   def self.scan_by_property(property, value, _options = {})
@@ -1720,11 +1720,4 @@ class VmOrTemplate < ApplicationRecord
       :zone        => my_zone,
     }.merge(queue_options)
   end
-
-  # this is verbose, helper for generating arel
-  def self.arel_coalesce(values)
-    Arel::Nodes::NamedFunction.new('COALESCE', values)
-  end
-
-  private_class_method :arel_coalesce
 end
