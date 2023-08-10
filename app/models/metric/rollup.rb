@@ -287,20 +287,11 @@ module Metric::Rollup
 
     perf_recs = Metric::Finders.hash_by_capture_interval_name_and_timestamp(recs, ts, ts, interval_name)
 
-    # Preload states for perf timestamp and the current hour.
-    #   in a single query bring back all relevant performance states
-    #   preload puts the states into rec's association where vim_performance_state_for_ts can find it
-    #
-    #   We are only concerned with the timestamp of interest.
-    #   For infra, if that record is not found, use the current performance_state (can't capture in the past)
-    if recs.present?
-      rec_states = VimPerformanceState.where(
-        :timestamp     => [ts, Metric::Helper.nearest_hourly_timestamp(Time.now.utc)],
-        :resource_type => recs.first.class.base_class.name,
-        :resource_id   => recs.map(&:id)
-      )
-      MiqPreloader.preload(recs, :vim_performance_states, rec_states)
-    end
+    # Preload states for perf timestamp and the current hour. We need to cache
+    #   the current hour too because the capture in vim_performance_state_for_ts,
+    #   if not found for the perf timestamp, will return a state for the current
+    #   hour only.
+    MiqPreloader.preload(recs, :vim_performance_states, VimPerformanceState.where(:timestamp => [ts, Metric::Helper.nearest_hourly_timestamp(Time.now.utc)])) unless recs.empty?
 
     recs.each do |rec|
       perf = perf_recs.fetch_path(rec.class.base_class.name, rec.id, interval_name, ts)
