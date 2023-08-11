@@ -16,7 +16,8 @@ RSpec.describe MiqScheduleWorker::Jobs do
         :class_name  => "ManageIQ::Providers::Vmware::InfraManager",
         :instance_id => nil,
         :method_name => "refresh_all_ems_timer",
-        :zone        => zone.name
+        :zone        => zone.name,
+        :priority    => MiqQueue::MEDIUM_PRIORITY
       )
     end
   end
@@ -45,7 +46,8 @@ RSpec.describe MiqScheduleWorker::Jobs do
       expect(MiqQueue.first).to have_attributes(
         :class_name  => "Service",
         :method_name => "queue_chargeback_reports",
-        :args        => [{:report_source => "Rspec - Chargeback reports queue"}]
+        :args        => [{:report_source => "Rspec - Chargeback reports queue"}],
+        :priority    => MiqQueue::MEDIUM_PRIORITY
       )
     end
   end
@@ -56,7 +58,8 @@ RSpec.describe MiqScheduleWorker::Jobs do
       described_class.new.check_for_timed_out_active_tasks
       expect(MiqQueue.first).to have_attributes(
         :class_name  => "MiqTask",
-        :method_name => "update_status_for_timed_out_active_tasks"
+        :method_name => "update_status_for_timed_out_active_tasks",
+        :priority    => MiqQueue::MEDIUM_PRIORITY
       )
     end
   end
@@ -69,28 +72,28 @@ RSpec.describe MiqScheduleWorker::Jobs do
     context "queues for miq_server process" do
       it "#vmdb_database_connection_log_statistics" do
         described_class.new.vmdb_database_connection_log_statistics
-        expect(MiqQueue.where(:method_name => "log_statistics").first).to have_attributes(:queue_name => "miq_server", :server_guid => guid, :zone => zone.name)
+        expect(MiqQueue.where(:method_name => "log_statistics").first).to have_attributes(:queue_name => "miq_server", :server_guid => guid, :zone => zone.name, :priority => MiqQueue::MEDIUM_PRIORITY)
       end
 
       it "#miq_server_audit_managed_resources" do
         described_class.new.miq_server_audit_managed_resources
-        expect(MiqQueue.where(:method_name => "audit_managed_resources").first).to have_attributes(:queue_name => "miq_server", :server_guid => guid, :zone => zone.name)
+        expect(MiqQueue.where(:method_name => "audit_managed_resources").first).to have_attributes(:queue_name => "miq_server", :server_guid => guid, :zone => zone.name, :priority => MiqQueue::MEDIUM_PRIORITY)
       end
 
       it "#miq_server_status_update" do
         described_class.new.miq_server_status_update
-        expect(MiqQueue.where(:method_name => "status_update").first).to have_attributes(:queue_name => "miq_server", :server_guid => guid, :zone => zone.name)
+        expect(MiqQueue.where(:method_name => "status_update").first).to have_attributes(:queue_name => "miq_server", :server_guid => guid, :zone => zone.name, :priority => MiqQueue::HIGH_PRIORITY)
       end
 
       it "#miq_server_worker_log_status" do
         described_class.new.miq_server_worker_log_status
-        expect(MiqQueue.where(:method_name => "log_status").first).to have_attributes(:queue_name => "miq_server", :server_guid => guid, :zone => zone.name)
-        expect(MiqQueue.where(:method_name => "log_status_all").first).to have_attributes(:queue_name => "miq_server", :server_guid => guid, :zone => zone.name)
+        expect(MiqQueue.where(:method_name => "log_status").first).to have_attributes(:queue_name => "miq_server", :server_guid => guid, :zone => zone.name, :priority => MiqQueue::HIGH_PRIORITY)
+        expect(MiqQueue.where(:method_name => "log_status_all").first).to have_attributes(:queue_name => "miq_server", :server_guid => guid, :zone => zone.name, :priority => MiqQueue::HIGH_PRIORITY)
       end
 
       it "#vmdb_appliance_log_config" do
         described_class.new.vmdb_appliance_log_config
-        expect(MiqQueue.where(:method_name => "log_config").first).to have_attributes(:queue_name => "miq_server", :server_guid => guid, :zone => zone.name)
+        expect(MiqQueue.where(:method_name => "log_config").first).to have_attributes(:queue_name => "miq_server", :server_guid => guid, :zone => zone.name, :priority => MiqQueue::MEDIUM_PRIORITY)
       end
     end
   end
