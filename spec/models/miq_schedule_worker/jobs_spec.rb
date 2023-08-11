@@ -64,6 +64,18 @@ RSpec.describe MiqScheduleWorker::Jobs do
     end
   end
 
+  it "#metric_capture_perf_capture_timer" do
+    zone = EvmSpecHelper.local_miq_server.zone
+    ems = FactoryBot.create(:ems_vmware, :zone => zone)
+    described_class.new.metric_capture_perf_capture_timer
+    expect(MiqQueue.first).to have_attributes(
+      :class_name  => "Metric::Capture",
+      :method_name => "perf_capture_timer",
+      :args        => [ems.id],
+      :priority    => MiqQueue::MEDIUM_PRIORITY
+    )
+  end
+
   context "with guid, server, zone" do
     let!(:server) { EvmSpecHelper.local_miq_server }
     let(:guid) { server.guid }

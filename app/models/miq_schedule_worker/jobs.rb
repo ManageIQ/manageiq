@@ -83,7 +83,6 @@ class MiqScheduleWorker::Jobs
         :method_name => "perf_capture_timer",
         :args        => [ems.id],
         :role        => "ems_metrics_coordinator",
-        :priority    => MiqQueue::HIGH_PRIORITY,
         :state       => ["ready", "dequeue"]
       )
     end
