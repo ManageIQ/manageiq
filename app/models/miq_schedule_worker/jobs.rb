@@ -83,7 +83,6 @@ class MiqScheduleWorker::Jobs
         :method_name => "perf_capture_timer",
         :args        => [ems.id],
         :role        => "ems_metrics_coordinator",
-        :priority    => MiqQueue::HIGH_PRIORITY,
         :state       => ["ready", "dequeue"]
       )
     end
@@ -200,7 +199,7 @@ class MiqScheduleWorker::Jobs
 
   def queue_work(options)
     return if options.nil?
-    options = {:zone => MiqServer.my_zone, :priority => MiqScheduleWorker::Runner::SCHEDULE_MEDIUM_PRIORITY}.merge(options)
+    options = {:zone => MiqServer.my_zone, :priority => MiqQueue::MEDIUM_PRIORITY}.merge(options)
     # always has class_name, method_name, zone, priority [often has role]
     MiqQueue.put_unless_exists(options)
   end

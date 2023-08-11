@@ -297,6 +297,7 @@ RSpec.describe MiqQueue do
     it "should return adjusted value" do
       expect(MiqQueue.priority(:max)).to eq(MiqQueue::MAX_PRIORITY)
       expect(MiqQueue.priority(:high)).to eq(MiqQueue::HIGH_PRIORITY)
+      expect(MiqQueue.priority(:medium)).to eq(MiqQueue::MEDIUM_PRIORITY)
       expect(MiqQueue.priority(:normal)).to eq(MiqQueue::NORMAL_PRIORITY)
       expect(MiqQueue.priority(:low)).to eq(MiqQueue::LOW_PRIORITY)
       expect(MiqQueue.priority(:min)).to eq(MiqQueue::MIN_PRIORITY)
