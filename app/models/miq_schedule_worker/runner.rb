@@ -4,7 +4,6 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
   set_callback(:dst_change, :after, :load_user_schedules)
 
   ROLES_NEEDING_RESTART = ["scheduler", "ems_metrics_coordinator", "event"]
-  SCHEDULE_MEDIUM_PRIORITY = MiqQueue.priority(:normal, :higher, 10)
   CLASS_TAG = "MiqSchedule"
 
   def after_initialize

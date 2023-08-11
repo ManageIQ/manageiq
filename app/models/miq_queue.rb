@@ -25,11 +25,12 @@ class MiqQueue < ApplicationRecord
 
   MAX_PRIORITY    = 0
   HIGH_PRIORITY   = 20
+  MEDIUM_PRIORITY = 50
   NORMAL_PRIORITY = 100
   LOW_PRIORITY    = 150
   MIN_PRIORITY    = 200
 
-  PRIORITY_WHICH  = [:max, :high, :normal, :low, :min]
+  PRIORITY_WHICH  = [:max, :high, :medium, :normal, :low, :min]
   PRIORITY_DIR    = [:higher, :lower]
 
   def self.messaging_type
