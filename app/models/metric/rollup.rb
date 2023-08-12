@@ -3,9 +3,11 @@ module Metric::Rollup
                  [:stat_container_group_create_rate,
                   :stat_container_group_delete_rate,
                   :stat_container_image_registration_rate]
-  STORAGE_COLS = Metric.columns_hash.collect { |c, _h| c.to_sym if c.starts_with?("derived_storage_") }.compact
+  STORAGE_COLS = Metric.columns_hash.collect { |c, _h| c.to_sym if c.starts_with?("derived_storage_") }.compact.freeze
 
-  NON_STORAGE_ROLLUP_COLS = (ROLLUP_COLS - STORAGE_COLS)
+  NON_STORAGE_ROLLUP_COLS = (ROLLUP_COLS - STORAGE_COLS).freeze
+  CONTAINER_ROLLUP_COLS   = [:cpu_usage_rate_average, :derived_vm_numvcpus, :derived_memory_used, :net_usage_rate_average].freeze
+  VM_ROLLUP_COLS          = [:cpu_usage_rate_average, :derived_memory_used, :disk_usage_rate_average, :net_usage_rate_average].freeze
 
   AGGREGATE_COLS = {
     :MiqEnterprise_miq_regions            => ROLLUP_COLS,
@@ -39,42 +41,12 @@ module Metric::Rollup
       :derived_vm_numvcpus,
       :derived_vm_used_disk_storage,
     ],
-    :ContainerImage_containers => [
-      :cpu_usage_rate_average,
-      :derived_vm_numvcpus,
-      :derived_memory_used,
-      :net_usage_rate_average
-    ],
-    :ContainerProject_all_container_groups => [
-      :cpu_usage_rate_average,
-      :derived_vm_numvcpus,
-      :derived_memory_used,
-      :net_usage_rate_average
-    ],
-    :ContainerService_container_groups    => [
-      :cpu_usage_rate_average,
-      :derived_vm_numvcpus,
-      :derived_memory_used,
-      :net_usage_rate_average
-    ],
-    :ContainerReplicator_container_groups => [
-      :cpu_usage_rate_average,
-      :derived_vm_numvcpus,
-      :derived_memory_used,
-      :net_usage_rate_average
-    ],
-    :AvailabilityZone_vms                 => [
-      :cpu_usage_rate_average,
-      :derived_memory_used,
-      :net_usage_rate_average,
-      :disk_usage_rate_average
-    ],
-    :HostAggregate_vms                    => [
-      :cpu_usage_rate_average,
-      :derived_memory_used,
-      :net_usage_rate_average,
-      :disk_usage_rate_average
-    ],
+    :ContainerImage_containers             => CONTAINER_ROLLUP_COLS,
+    :ContainerProject_all_container_groups => CONTAINER_ROLLUP_COLS,
+    :ContainerService_container_groups     => CONTAINER_ROLLUP_COLS,
+    :ContainerReplicator_container_groups  => CONTAINER_ROLLUP_COLS,
+    :AvailabilityZone_vms                  => VM_ROLLUP_COLS,
+    :HostAggregate_vms                     => VM_ROLLUP_COLS,
     :Service_vms                           => [
       :cpu_ready_delta_summation,
       :cpu_system_delta_summation,
@@ -190,6 +162,10 @@ module Metric::Rollup
   DERIVED_COLS_EXCLUDED_CLASSES = ['MiqRegion', 'MiqEnterprise']
   TAG_SEP = "|"
 
+  def self.aggregate_columns(klass, assoc, interval_name)
+    interval_name == "realtime" ? const_get("#{klass.base_class.name.underscore.upcase}_REALTIME_COLS") : AGGREGATE_COLS["#{klass.base_class}_#{assoc}".to_sym]
+  end
+
   def self.rollup_realtime(obj, rt_ts, _interval_name, _time_profile, new_perf, orig_perf)
     # Roll up realtime metrics from child objects
     children = obj.class::PERF_ROLLUP_CHILDREN
@@ -278,7 +254,7 @@ module Metric::Rollup
     result = {}
     counts = {}
 
-    agg_cols = interval_name == "realtime" ? const_get("#{obj.class.base_class.name.underscore.upcase}_REALTIME_COLS") : AGGREGATE_COLS["#{obj.class.base_class}_#{assoc}".to_sym]
+    agg_cols = aggregate_columns(obj.class, assoc, interval_name)
     agg_cols.each do |c|
       # Initialize aggregation col values and counts to zero before starting
       counts[c] = 0
