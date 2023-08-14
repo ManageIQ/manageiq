@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/ManageIQ/amazon_ssa_support.git
-  revision: a966bd122b67eb48d7597cfb3d8248c0d97082f5
-  branch: petrosian
+  revision: 83d721e9d13c4d53ea4edbc6d7245f046370382c
+  tag: petrosian-1
   specs:
     amazon_ssa_support (0.1.0)
       aws-sdk-ec2 (~> 1.0)
@@ -12,8 +12,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-api
-  revision: af94c5abd99f0ae2d29de67682e9b92840c477fb
-  branch: petrosian
+  revision: 2b47e0b02b8a2612dd306c2eee7b478d82ab25f8
+  tag: petrosian-1
   specs:
     manageiq-api (4.4.0.pre.pre)
       config
@@ -22,7 +22,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-automation_engine
   revision: 1dde828c6511289ffb252232d832e1d8c3f33436
-  branch: petrosian
+  tag: petrosian-1
   specs:
     manageiq-automation_engine (0.1.0)
       rubyzip (~> 2.0.0)
@@ -30,7 +30,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-consumption
   revision: 52ac73eb96ea1dc0c6f2f49ea88f659e54ab4773
-  branch: petrosian
+  tag: petrosian-1
   specs:
     manageiq-consumption (0.0.1)
       hashdiff (~> 1.0)
@@ -39,7 +39,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-content
   revision: c22bfa652df58b7c1da7c59ff0a5b73cad1c7262
-  branch: petrosian
+  tag: petrosian-1
   specs:
     manageiq-content (0.1.0)
       savon (~> 2.11.1)
@@ -47,14 +47,14 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-decorators
   revision: a9d8dd0ff5bd0251fa231874cf5a00e5f9cd5b47
-  branch: petrosian
+  tag: petrosian-1
   specs:
     manageiq-decorators (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-gems-pending.git
   revision: 15643955b25574da4e5244462cb198db97ced8bf
-  branch: petrosian
+  tag: petrosian-1
   specs:
     manageiq-gems-pending (0.1.0)
       activesupport (~> 6.0)
@@ -70,8 +70,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-amazon
-  revision: 649e66fb618e18e80f2199c9fbfcfd3138529fa7
-  branch: petrosian
+  revision: f2d94b561511070a15edf9016918fbf4da8dde48
+  tag: petrosian-1
   specs:
     manageiq-providers-amazon (0.1.0)
       aws-sdk-cloudformation (~> 1.0)
@@ -90,15 +90,15 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ansible_tower
   revision: 5e5fb1b6fbe514b8b0c6254a34d2d39c51089ba4
-  branch: petrosian
+  tag: petrosian-1
   specs:
     manageiq-providers-ansible_tower (0.1.0)
       ansible_tower_client (~> 0.20, >= 0.21.2)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-autosde
-  revision: a2a9c1edd1ad337f4ca3821151b85621679626e7
-  branch: petrosian
+  revision: be82c576b9ce4f16e2b0ddd6a761d0e95159ba1e
+  tag: petrosian-1
   specs:
     manageiq-providers-autosde (0.1.0)
       autosde_openapi_client (~> 3.2.0)
@@ -107,15 +107,15 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-awx
   revision: a869211c53a905beb113aa4229beff3c45bc700f
-  branch: petrosian
+  tag: petrosian-1
   specs:
     manageiq-providers-awx (0.1.0)
       ansible_tower_client (~> 0.20, >= 0.21.2)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure
-  revision: 30875bb78ec6bad104d3316b89dd5d23dfc4982a
-  branch: petrosian
+  revision: 92bc59b9323051c1cfd5d7d91558201f518c667b
+  tag: petrosian-1
   specs:
     manageiq-providers-azure (0.1.0)
       azure-armrest (~> 0.14)
@@ -123,7 +123,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure_stack
   revision: c65494712e35943ec3892f214cb05a2b19bc663e
-  branch: petrosian
+  tag: petrosian-1
   specs:
     manageiq-providers-azure_stack (0.1.0)
       azure_mgmt_compute (~> 0.20)
@@ -134,15 +134,15 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-cisco_intersight
   revision: 9a957334affd8201a8e0679d8775c74f2d569f35
-  branch: petrosian
+  tag: petrosian-1
   specs:
     manageiq-providers-cisco_intersight (0.1.0)
       intersight_client (~> 0.1, >= 0.1.5)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-foreman
-  revision: bbd0d9406172da5e1f634f096926f3b7204fd137
-  branch: petrosian
+  revision: 1b577b249c1e5c2237ad58b64d5b28ae5495fdf4
+  tag: petrosian-1
   specs:
     manageiq-providers-foreman (0.1.0)
       foreman_api_client (~> 1.0.2)
@@ -150,22 +150,22 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-google
   revision: 5553caf39735f160a8815b642c496b3a729bf092
-  branch: petrosian
+  tag: petrosian-1
   specs:
     manageiq-providers-google (0.1.0)
       fog-google (~> 1.18)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_cic
-  revision: c0cf6c86e764e2aeb776fc0d7a47d4cd0a71f2c6
-  branch: petrosian
+  revision: 0e3a5df23e9a0f0a67ef9e7f7179224d5a67baf0
+  tag: petrosian-1
   specs:
     manageiq-providers-ibm_cic (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_cloud
-  revision: f789fd1a23a989f1f0ba7875c888ecd32d94a934
-  branch: petrosian
+  revision: 8cae6d337fcf9de55c922fbf4e2298dacf8b2ef6
+  tag: petrosian-1
   specs:
     manageiq-providers-ibm_cloud (0.1.0)
       ibm-cloud-sdk (~> 0.1)
@@ -183,29 +183,29 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_power_hmc
   revision: 9e87b2e2c70093acc516f481a3678d67189d47e5
-  branch: petrosian
+  tag: petrosian-1
   specs:
     manageiq-providers-ibm_power_hmc (0.1.0)
       ibm_power_hmc (~> 0.25.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_power_vc
-  revision: d98c8b7e96a010f37b0984ae60479b7948be864c
-  branch: petrosian
+  revision: 006cb28dbcc2afdb001c89963fb2c8f0d097c47c
+  tag: petrosian-1
   specs:
     manageiq-providers-ibm_power_vc (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_terraform
   revision: 1765c34bd1fae82a96329f37d68b37b1b3d14634
-  branch: petrosian
+  tag: petrosian-1
   specs:
     manageiq-providers-ibm_terraform (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubernetes
-  revision: 51d050413e54f22e4f9f292659b0b7ade211885a
-  branch: petrosian
+  revision: 272dade1b16cfb20c7c72bc5a7cfb43678fd5c6a
+  tag: petrosian-1
   specs:
     manageiq-providers-kubernetes (0.1.0)
       image-inspector-client (~> 2.0)
@@ -217,7 +217,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubevirt
   revision: 13616e8859365565f03897e94165c9d392d559c6
-  branch: petrosian
+  tag: petrosian-1
   specs:
     manageiq-providers-kubevirt (0.1.0)
       fog-kubevirt (~> 1.0, >= 1.3.5)
@@ -225,23 +225,23 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-lenovo
-  revision: 1f9d8e8c916444d153c32f6fbe71b610b858b668
-  branch: petrosian
+  revision: 93ffabc5acb48c0565b3b5713c072bc5e23f589a
+  tag: petrosian-1
   specs:
     manageiq-providers-lenovo (0.2.0)
       xclarity_client (~> 0.6.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nsxt
-  revision: 0eafca6aa76f65853e3a403ad1a8857fbb26d0ba
-  branch: petrosian
+  revision: 2285d96fd21e2b61fd8d980ed48cd5bee72d6c54
+  tag: petrosian-1
   specs:
     manageiq-providers-nsxt (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nuage
-  revision: 2fe16954d532272114bf1a2cb02766b5edc44420
-  branch: petrosian
+  revision: 37fc86031a262eaa83abbdfc942216f8f3c7ab28
+  tag: petrosian-1
   specs:
     manageiq-providers-nuage (0.1.0)
       excon (~> 0.71)
@@ -249,15 +249,15 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openshift
   revision: bcd72da3d117562ef57908c54ab7d6982bdc267a
-  branch: petrosian
+  tag: petrosian-1
   specs:
     manageiq-providers-openshift (0.1.0)
       manageiq-providers-kubernetes (~> 0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openstack
-  revision: 155311b7fbb72d32c52f1d8e9476c9f8f5963e95
-  branch: petrosian
+  revision: c18e073b65521eb37b3bcdd47c0b381061241880
+  tag: petrosian-1
   specs:
     manageiq-providers-openstack (0.1.0)
       activesupport (~> 6.0)
@@ -270,15 +270,15 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-oracle_cloud
   revision: 2036978e352a6a5161a46753cbca3f20771d81a2
-  branch: petrosian
+  tag: petrosian-1
   specs:
     manageiq-providers-oracle_cloud (0.1.0)
       oci (~> 2.18)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ovirt
-  revision: df8adb9c6dba7359e21797912666d20b5f1bb594
-  branch: petrosian
+  revision: bce8319ba1e39d337124bed5526bc545dc48a56a
+  tag: petrosian-1
   specs:
     manageiq-providers-ovirt (0.1.0)
       ovirt-engine-sdk (~> 4.4.0)
@@ -286,8 +286,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-red_hat_virtualization
-  revision: 2c8d525edf592648eeb489c46b7f92c14b24823a
-  branch: petrosian
+  revision: 1c77bfd1795b53c116e84f6e2bfbc636808d56cc
+  tag: petrosian-1
   specs:
     manageiq-providers-red_hat_virtualization (0.1.0)
       ovirt-engine-sdk (~> 4.4.0)
@@ -296,7 +296,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-redfish
   revision: 52d22ab896c71330659c964f3d0eeabbcc021a15
-  branch: petrosian
+  tag: petrosian-1
   specs:
     manageiq-providers-redfish (0.1.0)
       redfish_client (~> 0.5.1)
@@ -304,7 +304,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-vmware
   revision: 9230773df579607de13fa506321e9602bcaf8b5c
-  branch: petrosian
+  tag: petrosian-1
   specs:
     manageiq-providers-vmware (0.1.0)
       ffi-vix_disk_lib (~> 1.1)
@@ -315,16 +315,16 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-workflows
-  revision: a4e80ba89684b2fe283cb653849dfd55e513e48a
-  branch: petrosian
+  revision: 4a4d5787a74eb0c867c01e2eef99b5e4e0e7e4a4
+  tag: petrosian-1
   specs:
     manageiq-providers-workflows (0.1.0)
-      floe
+      floe (~> 0.2.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-schema
-  revision: d426718b978b61c792bd053f2cdfa236b821fdda
-  branch: petrosian
+  revision: 891a6e0cbd3ed5f22060f3df7d2ce4b2ac7e18b1
+  tag: petrosian-1
   specs:
     manageiq-schema (0.1.0)
       activerecord-id_regions (~> 0.3.2)
@@ -337,8 +337,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-ui-classic
-  revision: 35586cd384a42119b8ba017650cd2335695f67a0
-  branch: petrosian
+  revision: 5e063889dad745d108f8f95955b990fda47f9fa9
+  tag: petrosian-1
   specs:
     manageiq-ui-classic (0.1.0)
       execjs (= 2.8.1)
@@ -522,7 +522,7 @@ GEM
       ms_rest_azure (~> 0.12.0)
     azure_mgmt_resources (0.18.2)
       ms_rest_azure (~> 0.12.0)
-    bcrypt (3.1.18)
+    bcrypt (3.1.19)
     bcrypt_pbkdf (1.1.0)
     binary_struct (2.1.0)
     bootsnap (1.16.0)
@@ -550,7 +550,7 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    dalli (3.2.4)
+    dalli (3.2.5)
     date (3.3.3)
     db-query-matchers (0.10.0)
       activesupport (>= 4.0, < 7)
@@ -646,9 +646,10 @@ GEM
       rake
     ffi-vix_disk_lib (1.3.0)
       ffi
-    floe (0.1.0)
+    floe (0.2.3)
       awesome_spawn (~> 1.0)
       jsonpath (~> 1.1)
+      kubeclient (~> 4.7)
       more_core_extensions
       optimist (~> 3.0)
     fog-core (2.2.4)
@@ -1024,7 +1025,7 @@ GEM
       more_core_extensions
     raabro (1.4.0)
     racc (1.6.2)
-    rack (2.2.7)
+    rack (2.2.8)
     rack-attack (6.5.0)
       rack (>= 1.0, < 3)
     rack-test (2.1.0)
@@ -1134,7 +1135,7 @@ GEM
       rexml
     ruby-progressbar (1.7.5)
     ruby2_keywords (0.0.5)
-    ruby_parser (3.20.1)
+    ruby_parser (3.20.3)
       sexp_processor (~> 4.16)
     rubyzip (2.0.0)
     rufus-lru (1.0.7)
@@ -1212,7 +1213,7 @@ GEM
     text (1.3.1)
     thor (1.2.2)
     tilt (2.1.0)
-    timecop (0.9.6)
+    timecop (0.9.8)
     timeliness (0.3.10)
     timeout (0.3.2)
     trailblazer-option (0.1.2)
