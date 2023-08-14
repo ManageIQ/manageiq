@@ -91,7 +91,7 @@ RSpec.describe MiqWidget do
         schedule.reload
 
         expect(MiqSchedule.count).to eq(2)
-        expect(schedule.name.end_with?(time_now.to_s)).to be_truthy
+        expect(schedule.name).to match(/#{time_now.to_s}$/)
       end
     end
 
