@@ -3,6 +3,7 @@ automate,Automation Engine,0,false,region
 database_operations,Database Operations,0,false,region
 database_owner,Database Owner,1,false,database
 embedded_ansible,Embedded Ansible,0,false,region
+embedded_workflows,Embedded Workflows,0,false,region
 ems_inventory,Provider Inventory,1,false,zone
 ems_metrics_collector,Capacity & Utilization Data Collector,0,false,zone
 ems_metrics_coordinator,Capacity & Utilization Coordinator,1,false,zone
