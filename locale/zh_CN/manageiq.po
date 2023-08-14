@@ -9,8 +9,8 @@ msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-12 15:57+0000\n"
-"PO-Revision-Date: 2023-07-12 15:57+0000\n"
+"POT-Creation-Date: 2023-08-01 00:46+0000\n"
+"PO-Revision-Date: 2023-08-01 00:46+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh\n"
@@ -2913,10 +2913,15 @@ msgstr "访问物理服务器远程控制台"
 
 #: ../app/helpers/ops_helper/role_rbac_details_helper.rb
 #: ../app/views/ops/_rbac_role_details.html.haml
+msgid "Access Restriction for Catalog Items"
+msgstr "目录项的访问限制"
+
+#: ../app/helpers/ops_helper/role_rbac_details_helper.rb
+#: ../app/views/ops/_rbac_role_details.html.haml
 msgid ""
-"Access Restriction for Catalog Items, Orchestration Stacks, Key Pairs, "
-"Services, VMs, and Templates"
-msgstr "目录项、编排堆栈、密钥对、服务、VM 和模板的访问限制"
+"Access Restriction for Orchestration Stacks, Key Pairs, Services, VMs, and "
+"Templates"
+msgstr "编排堆栈、密钥对、服务、VM 和模板的访问限制"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -6677,15 +6682,15 @@ msgstr "您确定你要移除此方法吗？"
 msgid "Are you sure you want to remove this Namespace?"
 msgstr "您确定要移除此名称空间吗？"
 
-#: ../app/views/catalog/_form_basic_info.html.haml
+#: ../app/views/catalog/_provision_entry_point.html.haml
 msgid "Are you sure you want to remove this Provisioning Entry Point?"
 msgstr "您确定要移除此供应入口点吗？"
 
-#: ../app/views/catalog/_form_basic_info.html.haml
+#: ../app/views/catalog/_reconfigure_entry_point.html.haml
 msgid "Are you sure you want to remove this Reconfigure Entry Point?"
 msgstr "您确定要移除此重新配置入口点吗？"
 
-#: ../app/views/catalog/_form_basic_info.html.haml
+#: ../app/views/catalog/_retire_entry_point.html.haml
 msgid "Are you sure you want to remove this Retirement Entry Point?"
 msgstr "您确定要移除此停用入口点吗？"
 
@@ -8538,7 +8543,7 @@ msgstr "基于卷"
 msgid "Basic Info"
 msgstr "基本信息"
 
-#: ../app/helpers/catalog_helper.rb:101 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:102 ../app/helpers/catalog_helper.rb
 #: ../app/helpers/condition_helper.rb
 #: ../app/helpers/generic_object_definition_helper.rb
 #: ../app/helpers/miq_action_helper.rb
@@ -12126,16 +12131,16 @@ msgstr "点击以从目录条目移除此资源"
 msgid "Click to remove this policy"
 msgstr "点击以移除此策略"
 
-#: ../app/views/catalog/_form_basic_info.html.haml
+#: ../app/views/catalog/_provision_entry_point.html.haml
 #: ../app/views/miq_ae_class/_copy_objects_form.html.haml
 msgid "Click to select Provisioning Entry Point"
 msgstr "点击选择供应入口点"
 
-#: ../app/views/catalog/_form_basic_info.html.haml
+#: ../app/views/catalog/_reconfigure_entry_point.html.haml
 msgid "Click to select Reconfigure Entry Point"
 msgstr "点击选择重新配置入口点"
 
-#: ../app/views/catalog/_form_basic_info.html.haml
+#: ../app/views/catalog/_retire_entry_point.html.haml
 msgid "Click to select Retirement Entry Point"
 msgstr "点击选择停用入口点"
 
@@ -15585,16 +15590,16 @@ msgid "ConfiguredSystem|Href slug"
 msgstr "Href slug"
 
 #: ../config/model_attributes.rb
+msgid "ConfiguredSystem|IPMI present"
+msgstr "ConfiguredSystem|IPMI 存在"
+
+#: ../config/model_attributes.rb
 msgid "ConfiguredSystem|Inventory root group name"
 msgstr "ConfiguredSystem|库存根组的名称"
 
 #: ../config/model_attributes.rb
 msgid "ConfiguredSystem|Ipaddress"
 msgstr "IP 地址"
-
-#: ../config/model_attributes.rb
-msgid "ConfiguredSystem|Ipmi present"
-msgstr "IPMI 存在"
 
 #: ../config/model_attributes.rb
 msgid "ConfiguredSystem|Last checkin"
@@ -20286,7 +20291,7 @@ msgstr "当前用户缺少为此虚拟机创建新快照的权限"
 msgid "Currently Used Space"
 msgstr "当前使用的空间"
 
-#: ../app/helpers/catalog_helper.rb:110 ../app/helpers/report_helper.rb
+#: ../app/helpers/catalog_helper.rb:111 ../app/helpers/report_helper.rb
 #: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
 msgid "Custom"
 msgstr "定制"
@@ -21158,7 +21163,7 @@ msgid "Databases"
 msgstr "数据库"
 
 #. TRANSLATORS: file: product/views/EmsCluster.yaml
-#: ../app/controllers/vm_common.rb:840 ../app/helpers/catalog_helper.rb
+#: ../app/controllers/vm_common.rb:841 ../app/helpers/catalog_helper.rb
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb
 #: ../app/views/catalog/_form_ovf_template_options.html.haml
 #: ../app/views/miq_request/_prov_vm_migrate_dialog.html.haml
@@ -23302,7 +23307,7 @@ msgstr "详细 - 虚拟机可以迁移 - 未连接 CD/DVD/软盘"
 msgid "Detailed Description"
 msgstr "详细描述"
 
-#: ../app/helpers/catalog_helper.rb:176 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:177 ../app/helpers/catalog_helper.rb
 #: ../app/helpers/cloud_volume_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/helpers/utilization_helper.rb
@@ -23401,7 +23406,7 @@ msgstr "诊断服务器设置"
 msgid "Diagnostics Zone Settings"
 msgstr "诊断区域设置"
 
-#: ../app/helpers/catalog_helper.rb:48 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:49 ../app/helpers/catalog_helper.rb
 #: ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
@@ -29649,6 +29654,7 @@ msgstr "未启用嵌入式 Ansible 角色。"
 msgid "Embedded Ansible service is not available."
 msgstr "嵌入式 Ansible 服务不可用。"
 
+#: ../app/controllers/mixins/automation_mixin.rb
 #: ../app/presenters/menu/default_menu.rb
 msgid "Embedded Automate"
 msgstr "嵌入式自动化"
@@ -29667,6 +29673,10 @@ msgstr "嵌入式自动化管理器"
 #: ../app/views/miq_ae_class/_embedded_methods.html.haml
 msgid "Embedded Methods"
 msgstr "嵌入式方法"
+
+#: ../app/controllers/mixins/automation_mixin.rb
+msgid "Embedded Workflow"
+msgstr "嵌入式工作流程"
 
 #: ../app/javascript/components/workflow-repository-form/index.jsx
 msgid "Embedded Workflow Provider not found."
@@ -30490,8 +30500,8 @@ msgid "Endpoint|Url"
 msgstr "URL"
 
 #: ../config/model_attributes.rb
-msgid "Endpoint|Verify ssl"
-msgstr "验证 SSL"
+msgid "Endpoint|Verify SSL"
+msgstr "端点|验证 SSL"
 
 #:
 #: ../app/models/manageiq/providers/ibm_power_vc/inventory/parser/cloud_manager.rb
@@ -31152,7 +31162,7 @@ msgstr "事件 ID"
 msgid "Event Level"
 msgstr "事件级别"
 
-#: ../app/controllers/vm_common.rb:1112 ../app/views/ops/_ap_form.html.haml
+#: ../app/controllers/vm_common.rb:1113 ../app/views/ops/_ap_form.html.haml
 #: ../app/views/ops/_ap_form.html.haml
 msgid "Event Log"
 msgid_plural "Event Logs"
@@ -34801,8 +34811,8 @@ msgid "GitRepository|Url"
 msgstr "URL"
 
 #: ../config/model_attributes.rb
-msgid "GitRepository|Verify ssl"
-msgstr "验证 SSL"
+msgid "GitRepository|Verify SSL"
+msgstr "GitRepository|验证 SSL"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -35862,7 +35872,7 @@ msgstr "主目录"
 #: ../app/controllers/host_controller.rb
 #: ../app/controllers/miq_action_controller.rb
 #: ../app/controllers/mixins/actions/host_actions/misc.rb
-#: ../app/helpers/catalog_helper.rb:145 ../app/helpers/miq_action_helper.rb
+#: ../app/helpers/catalog_helper.rb:146 ../app/helpers/miq_action_helper.rb
 #: ../app/helpers/miq_alert_helper.rb
 #: ../app/helpers/physical_server_helper/textual_summary.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
@@ -37156,16 +37166,16 @@ msgid "Host|Hypervisor hostname"
 msgstr "管理程序主机名"
 
 #: ../config/model_attributes.rb
+msgid "Host|IPMI address"
+msgstr "主机|IPMI 地址"
+
+#: ../config/model_attributes.rb
+msgid "Host|IPMI enabled"
+msgstr "主机|IPMI 已启用"
+
+#: ../config/model_attributes.rb
 msgid "Host|Ipaddress"
 msgstr "IP 地址"
-
-#: ../config/model_attributes.rb
-msgid "Host|Ipmi address"
-msgstr "IPMI 地址"
-
-#: ../config/model_attributes.rb
-msgid "Host|Ipmi enabled"
-msgstr "已启用 IPMI"
 
 #: ../config/model_attributes.rb
 msgid "Host|Last compliance status"
@@ -38293,7 +38303,7 @@ msgid "Infinity"
 msgstr "无限"
 
 #: ../app/controllers/miq_alert_controller.rb
-#: ../app/helpers/catalog_helper.rb:190 ../app/helpers/miq_alert_helper.rb
+#: ../app/helpers/catalog_helper.rb:191 ../app/helpers/miq_alert_helper.rb
 #: ../app/javascript/components/data-store-form/data-store-form.schema.js
 #: ../app/views/miq_alert/_form.html.haml
 #: ../app/views/resource_pool/_config.html.haml
@@ -39062,7 +39072,7 @@ msgid_plural "Items"
 msgstr[0] "项目"
 
 #. TRANSLATORS: file: product/views/ServiceTemplate.yaml
-#: ../app/helpers/catalog_helper.rb:109 ../config/yaml_strings.rb
+#: ../app/helpers/catalog_helper.rb:110 ../config/yaml_strings.rb
 msgid "Item Type"
 msgstr "项目类型"
 
@@ -40871,7 +40881,7 @@ msgstr "注销"
 msgid "Logs for this %{product} Server are not available for viewing"
 msgstr "无法查看此 %{product} 服务器的日志"
 
-#: ../app/helpers/catalog_helper.rb:47 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:48 ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/javascript/components/settings-category-form/schema.js
 #: ../app/javascript/components/settings-company-tags/helper.js
@@ -50873,6 +50883,12 @@ msgid ""
 "Note: Gap Collection is only available for VMware vSphere Infrastructures"
 msgstr "注意：差距收集只适用于 VMware vSphere 基础架构"
 
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb
+msgid ""
+"Note: If enabled, the Default, Metrics, and Alert Endpoints must be "
+"revalidated when adding or changing the token"
+msgstr "注：如果启用此选项，那么在添加或更改令牌时必须重新验证“缺省”、“指标”和“警报端点”"
+
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml
 msgid "Note: No Clusters available."
 msgstr "注意：没有可用的集群。"
@@ -52280,7 +52296,7 @@ msgid "Orchestration Template is required, please select one from the list"
 msgstr "需要编排模板，请从列表中选择一个"
 
 #. TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
-#: ../app/controllers/catalog_controller.rb:924 ../config/yaml_strings.rb
+#: ../app/controllers/catalog_controller.rb:961 ../config/yaml_strings.rb
 msgid "Orchestration Templates"
 msgstr "编排模板"
 
@@ -56366,7 +56382,7 @@ msgid "Price / Month"
 msgstr "价格/月"
 
 #: ../app/controllers/catalog_controller.rb
-#: ../app/helpers/catalog_helper.rb:51 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:52 ../app/helpers/catalog_helper.rb
 msgid "Price / Month (in %{currency})"
 msgstr "价格 / 月 (%{currency})"
 
@@ -56979,7 +56995,7 @@ msgstr "是否提供此项目？"
 #: ../app/helpers/ansible_repository_helper/textual_summary.rb
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb
 #: ../app/helpers/automation_manager_configured_system_helper.rb
-#: ../app/helpers/catalog_helper.rb:114 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:115 ../app/helpers/catalog_helper.rb
 #: ../app/helpers/configuration_job_helper/textual_summary.rb
 #: ../app/helpers/configuration_script_helper.rb
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb
@@ -57267,8 +57283,8 @@ msgid "Provider|Url"
 msgstr "Url"
 
 #: ../config/model_attributes.rb
-msgid "Provider|Verify ssl"
-msgstr "验证 ssl"
+msgid "Provider|Verify SSL"
+msgstr "提供程序|验证 SSL"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
@@ -57276,6 +57292,7 @@ msgid "Provides the native webconsole of the Cloud Provider"
 msgstr "提供云提供程序的本机 Web 控制台"
 
 #: ../app/helpers/application_helper/toolbar/vms_center.rb
+#: ../app/javascript/components/workflows/workflow-entry-points.jsx
 msgid "Provision"
 msgstr "供应"
 
@@ -57283,7 +57300,7 @@ msgstr "供应"
 msgid "Provision %{type} Request was cancelled by the user"
 msgstr "用户已取消供应 %{type} 请求的操作"
 
-#: ../app/controllers/vm_common.rb:1247 ../app/controllers/vm_common.rb
+#: ../app/controllers/vm_common.rb:1248 ../app/controllers/vm_common.rb
 msgid "Provision %{vms_or_templates}"
 msgstr "供应 %{vms_or_templates}"
 
@@ -57432,7 +57449,7 @@ msgstr "供应虚拟机"
 msgid "Provisioned VMs [%{description}]"
 msgstr "已供应 VM [%{description}]"
 
-#: ../app/helpers/catalog_helper.rb:123 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:124 ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_multi_tab_ansible_form_options.html.haml
 #: ../app/views/service/_svcs_show.html.haml
@@ -58391,6 +58408,7 @@ msgstr "可重新配置"
 
 #: ../app/controllers/mixins/actions/vm_actions/reconfigure.rb
 #: ../app/helpers/catalog_helper.rb
+#: ../app/javascript/components/workflows/workflow-entry-points.jsx
 msgid "Reconfigure"
 msgstr "重新配置"
 
@@ -60870,11 +60888,12 @@ msgstr "移除此策略概要文件"
 msgid "Remove this Provider from Inventory"
 msgstr "从库存移除此供应商"
 
-#: ../app/views/catalog/_form_basic_info.html.haml
+#: ../app/views/catalog/_provision_entry_point.html.haml
 msgid "Remove this Provisioning Entry Point"
 msgstr "移除此供应入口点"
 
-#: ../app/views/catalog/_form_basic_info.html.haml
+#: ../app/views/catalog/_reconfigure_entry_point.html.haml
+#: ../app/views/catalog/_retire_entry_point.html.haml
 msgid "Remove this Reconfigure Entry Point"
 msgstr "移除此重新配置入口点"
 
@@ -60886,10 +60905,6 @@ msgstr "从库存中移除此存储库"
 #: ../app/helpers/application_helper/toolbar/resource_pool_center.rb
 msgid "Remove this Resource Pool from Inventory"
 msgstr "从库存移除此资源池"
-
-#: ../app/views/catalog/_form_basic_info.html.haml
-msgid "Remove this Retirement Entry Point"
-msgstr "移除此停用入口点"
 
 #:
 #: ../app/helpers/helper/manageiq/providers/nsxt/toolbar_overrides/security_group_center.rb
@@ -62610,8 +62625,9 @@ msgstr "已停用？"
 
 #: ../app/controllers/application_controller/ci_processing.rb
 #: ../app/helpers/application_helper/tasks.rb
-#: ../app/helpers/catalog_helper.rb:125 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:126 ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
+#: ../app/javascript/components/workflows/workflow-entry-points.jsx
 #: ../app/views/layouts/angular/_multi_tab_ansible_form_options.html.haml
 #: ../app/views/service/_svcs_show.html.haml
 msgid "Retirement"
@@ -64295,6 +64311,10 @@ msgstr "选择要复制的类"
 msgid "Select Dialogs to import"
 msgstr "选择要导入的对话框"
 
+#: ../app/javascript/components/workflows/workflow-entry-points.jsx
+msgid "Select Embedded Workflow - %s Entry Point"
+msgstr "选择嵌入式工作流程 - %s 入口点"
+
 #: ../app/views/layouts/_ae_tree_select.html.haml
 msgid "Select Entry Point %{entry_point}"
 msgstr "选择入口点 %{entry_point}"
@@ -64648,6 +64668,18 @@ msgstr "仅选择要移至顶部的一个字段或多个连续字段"
 msgid "Select only one or consecutive fields to move up"
 msgstr "仅选择要上移的一个字段或多个连续字段"
 
+#: ../app/views/chargeback_assignment/_form.html.haml
+msgid "Select options for image labels"
+msgstr "选择图像标签的选项"
+
+#: ../app/views/chargeback_assignment/_form.html.haml
+msgid "Select rate"
+msgstr "选择费率"
+
+#: ../app/views/chargeback_assignment/_form.html.haml
+msgid "Select rate for selections"
+msgstr "为选项选择费率"
+
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js
 msgid ""
@@ -64669,6 +64701,10 @@ msgstr "选择标签类别"
 #: src/tagging/components/InnerComponents/ValueSelector.js
 msgid "Select tag value"
 msgstr "选择标签值"
+
+#: ../app/views/chargeback_assignment/_form.html.haml
+msgid "Select term of service type"
+msgstr "选择服务类型的条款"
 
 #:
 #: ../app/javascript/components/orchestration-template/orchestration-template-form.schema.js
@@ -68089,7 +68125,7 @@ msgstr "存储类型 %{store_type} 不支持智能状态分析"
 
 #. TRANSLATORS: file: product/views/ProvisionCloudTemplates.yaml
 #. TRANSLATORS: file: product/views/ProvisionInfraTemplates.yaml
-#: ../app/controllers/vm_common.rb:1142 ../config/yaml_strings.rb
+#: ../app/controllers/vm_common.rb:1143 ../config/yaml_strings.rb
 #: ../lib/gtl_formatter.rb
 msgid "Snapshot"
 msgid_plural "Snapshots"
@@ -70638,12 +70674,12 @@ msgid "SystemConsole|Region number"
 msgstr "区域编号"
 
 #: ../config/model_attributes.rb
-msgid "SystemConsole|Secret"
-msgstr "密钥"
+msgid "SystemConsole|SSL"
+msgstr "SystemConsole|SSL"
 
 #: ../config/model_attributes.rb
-msgid "SystemConsole|Ssl"
-msgstr "SSL"
+msgid "SystemConsole|Secret"
+msgstr "密钥"
 
 #: ../config/model_attributes.rb
 msgid "SystemConsole|Url"
@@ -77276,7 +77312,7 @@ msgstr "变量和缺省值"
 msgid "Vault"
 msgstr "保险库文件"
 
-#: ../app/helpers/catalog_helper.rb:195 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:196 ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 #: ../app/views/miq_ae_class/_method_inputs.html.haml
@@ -83096,6 +83132,18 @@ msgstr "样本"
 #: ../app/presenters/tree_node/assigned_server_role.rb
 msgid "secondary, "
 msgstr "次要的，"
+
+#: ../app/views/chargeback_assignment/_form.html.haml
+msgid "select Rate1"
+msgstr "选择 Rate1"
+
+#: ../app/views/chargeback_assignment/_form.html.haml
+msgid "select Rate2"
+msgstr "选择 Rate2"
+
+#: ../app/views/chargeback_assignment/_form.html.haml
+msgid "select rate for saved items"
+msgstr "选择已保存项的费率"
 
 #: ../app/views/miq_ae_class/_copy_objects_form.html.haml
 msgid "selected to copy"
