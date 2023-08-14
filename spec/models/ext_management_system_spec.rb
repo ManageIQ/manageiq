@@ -753,7 +753,10 @@ RSpec.describe ExtManagementSystem do
     it "destroys the ems when no active worker exists" do
       ems.destroy_queue
 
-      expect(MiqQueue.count).to eq(2)
+      # test pauses at high priority
+      # test destroy has extended timeout
+      expect(MiqQueue.where(:method_name => "pause!", :priority => MiqQueue::HIGH_PRIORITY).count).to eq(1)
+      expect(MiqQueue.where(:method_name => "orchestrate_destroy", :msg_timeout => 3_600).count).to eq(1)
 
       deliver_queue_message # Deliver the `#pause!` queue item
       deliver_queue_message # Deliver the `#orchestrate_destroy` queue item
@@ -785,7 +788,8 @@ RSpec.describe ExtManagementSystem do
       deliver_queue_message(MiqQueue.find_by(:method_name => "orchestrate_destroy"))
       deliver_queue_message
 
-      expect(MiqQueue.count).to eq(1)
+      # test non-nil deliver on and extended timeout
+      expect(MiqQueue.where(:msg_timeout => 3_600).where.not(:deliver_on => nil).count).to eq(1)
       expect(ExtManagementSystem.count).to eq(1)
 
       deliver_queue_message
