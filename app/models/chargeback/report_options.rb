@@ -18,8 +18,6 @@ class Chargeback
     :ext_options,
     :include_metrics,      # enable charging allocated resources with C & U
     :method_for_allocated_metrics,
-    :group_by_tenant?,
-    :group_by_date_only?,
     :cumulative_rate_calculation,
   ) do
     def self.new_from_h(hash)
@@ -146,6 +144,10 @@ class Chargeback
 
     def group_by_tenant?
       self[:groupby] == 'tenant'
+    end
+
+    def group_by_date_first?
+      self[:groupby] == 'date-first'
     end
 
     def group_by_date_only?
