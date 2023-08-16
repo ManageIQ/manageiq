@@ -235,8 +235,11 @@ class MiqRegion < ApplicationRecord
   end
 
   def api_system_auth_token(userid)
+    miq_server = remote_ws_miq_server
+    return if miq_server.nil?
+
     token_hash = {
-      :server_guid   => remote_ws_miq_server.guid,
+      :server_guid   => miq_server.guid,
       :userid        => userid,
       :timestamp     => Time.now.utc,
       :user_metadata => User.metadata_for_system_token(userid)
