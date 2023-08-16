@@ -25,25 +25,40 @@ class VmdbDatabaseConnection < ApplicationRecord
   virtual_column :blocked_by, :type => :integer
 
   def self.log_statistics(output = $log)
+    log_activity(output)
+    log_table_size(output)
+    log_table_statistics(output)
+  end
+
+  def self.log_csv(keys, stats, label, output)
     require 'csv'
-
-    begin
-      stats = all.map(&:to_csv_hash)
-
-      keys = stats.first.keys
-
-      csv = CSV.generate do |rows|
-        rows << keys
-        stats.each do |s|
-          vals = s.values_at(*keys)
-          rows << vals
-        end
-      end
-
-      output.info("MIQ(#{name}.#{__method__}) <<-ACTIVITY_STATS_CSV\n#{csv}ACTIVITY_STATS_CSV")
-    rescue => err
-      output.warn("MIQ(#{name}.#{__method__}) Unable to log stats, '#{err.message}'")
+    csv = CSV.generate do |rows|
+      rows << keys
+      stats.each { |s| rows << s.values_at(*keys) }
     end
+
+    output.info("MIQ(#{name}.#{__method__}) <<-#{label}\n#{csv}#{label}")
+  end
+
+  def self.log_activity(output = $log)
+    stats = all.map(&:to_csv_hash)
+    log_csv(stats.first.keys, stats, "ACTIVITY_STATS_CSV", output)
+  rescue => err
+    output.warn("MIQ(#{name}.#{__method__}) Unable to log activity, '#{err.message}'")
+  end
+
+  def self.log_table_size(output = $log)
+    stats = ApplicationRecord.connection.table_size
+    log_csv(stats.first.keys, stats, "TABLE_SIZE_CSV", output)
+  rescue => err
+    output.warn("MIQ(#{name}.#{__method__}) Unable to log activity, '#{err.message}'")
+  end
+
+  def self.log_table_statistics(output = $log)
+    stats = ApplicationRecord.connection.table_statistics.sort_by { |h| h['rows_live'] }.reverse!
+    log_csv(stats.first.keys, stats, "TABLE_STATS_CSV", output)
+  rescue => err
+    output.warn("MIQ(#{name}.#{__method__}) Unable to log activity, '#{err.message}'")
   end
 
   def address
