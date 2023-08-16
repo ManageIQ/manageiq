@@ -197,6 +197,12 @@ module Vmdb
             valid = false
             errors += new_errors
           end
+
+          result, new_errors = validate_worker_count(worker_class, data)
+          if result == false
+            valid = false
+            errors += new_errors
+          end
         end
 
         return valid, errors
@@ -235,6 +241,22 @@ module Vmdb
         if memory_request > memory_limit
           valid = false
           errors << [:memory_request, "#{worker_class.settings_name}: memory_request: #{memory_request} cannot exceed memory_threshold: #{memory_limit}"]
+        end
+        return valid, errors
+      end
+
+      def validate_worker_count(worker_class, data)
+        valid  = true
+        errors = []
+
+        worker_settings = worker_class.fetch_worker_settings_from_options_hash(data[:config])
+
+        count                 = worker_settings[:count]
+        maximum_workers_count = worker_class.maximum_workers_count
+
+        if maximum_workers_count.kind_of?(Integer) && count > maximum_workers_count
+          valid = false
+          errors << [:count, "#{worker_class.settings_name}: count: #{count} exceeds maximum worker count: #{maximum_workers_count}"]
         end
         return valid, errors
       end
