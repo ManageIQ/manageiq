@@ -660,7 +660,7 @@ class ExtManagementSystem < ApplicationRecord
       :message => msg
     )
 
-    orchestrate_destroy_queue(task.id, queue_options.reverse_merge(:msg_timeout => 3_600))
+    orchestrate_destroy_queue(task.id, queue_options)
 
     task.id
   end
@@ -686,7 +686,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def orchestrate_destroy_queue(task_id, queue_options = {})
-    self.class._queue_task('orchestrate_destroy', [id], task_id, queue_options)
+    self.class._queue_task('orchestrate_destroy', [id], task_id, queue_options.reverse_merge(:msg_timeout => 3_600))
   end
 
   def orchestrate_destroy(task_id = nil)
