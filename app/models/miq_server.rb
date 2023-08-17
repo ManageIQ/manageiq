@@ -404,27 +404,12 @@ class MiqServer < ApplicationRecord
     result.merge(:message => message)
   end
 
-  def ui_hostname
-    if MiqEnvironment::Command.is_podified?
-      ENV.fetch("APPLICATION_DOMAIN")
-    else
-      hostname || ipaddress
-    end
-  end
-
-  def ui_ipaddress
-    if MiqEnvironment::Command.is_podified?
-      nil
-    else
-      ipaddress
-    end
-  end
-
   def ui_address(contact_with = :hostname)
     if MiqEnvironment::Command.is_podified?
       ENV.fetch("APPLICATION_DOMAIN")
     else
-      contact_with == :hostname ? ui_hostname : ui_ipaddress
+      address = hostname if contact_with == :hostname
+      address || ipaddress
     end
   end
 
@@ -438,27 +423,12 @@ class MiqServer < ApplicationRecord
     URI::HTTPS.build(:host => host).to_s
   end
 
-  def ws_hostname
-    if MiqEnvironment::Command.is_podified?
-      ENV.fetch("APPLICATION_DOMAIN")
-    else
-      hostname || ipaddress
-    end
-  end
-
-  def ws_ipaddress
-    if MiqEnvironment::Command.is_podified?
-      nil
-    else
-      ipaddress
-    end
-  end
-
   def ws_address
     if MiqEnvironment::Command.is_podified?
       ENV.fetch("APPLICATION_DOMAIN")
     else
-      ::Settings.webservices.contactwith == 'hostname' ? ws_hostname : ws_ipaddress
+      address = hostname if ::Settings.webservices.contactwith == 'hostname'
+      address || ipaddress
     end
   end
 
