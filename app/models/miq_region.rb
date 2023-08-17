@@ -189,22 +189,15 @@ class MiqRegion < ApplicationRecord
   end
 
   def remote_ui_ipaddress
-    server = remote_ui_miq_server
-    server.try(:ipaddress)
+    remote_ui_miq_server&.ui_ipaddress
   end
 
   def remote_ui_hostname
-    server = remote_ui_miq_server
-    server && (server.hostname || server.ipaddress)
+    remote_ui_miq_server&.ui_hostname
   end
 
   def remote_ui_url(contact_with = :hostname)
-    svr = remote_ui_miq_server
-    remote_ui_url_override = svr.settings_for_resource.ui.url if svr
-    return remote_ui_url_override if remote_ui_url_override
-
-    hostname = send("remote_ui_#{contact_with}")
-    hostname && "https://#{hostname}"
+    remote_ui_miq_server&.ui_url(contact_with)
   end
 
   def remote_ws_miq_server
@@ -212,26 +205,19 @@ class MiqRegion < ApplicationRecord
   end
 
   def remote_ws_address
-    ::Settings.webservices.contactwith == 'hostname' ? remote_ws_hostname : remote_ws_ipaddress
+    remote_ws_miq_server&.ws_address
   end
 
   def remote_ws_ipaddress
-    miq_server = remote_ws_miq_server
-    miq_server.try(:ipaddress)
+    remote_ws_miq_server&.ws_ipaddress
   end
 
   def remote_ws_hostname
-    miq_server = remote_ws_miq_server
-    miq_server && (miq_server.hostname || miq_server.ipaddress)
+    remote_ws_miq_server&.ws_hostname
   end
 
   def remote_ws_url
-    svr = remote_ws_miq_server
-    remote_url_override = svr.settings_for_resource.webservices.url if svr
-    return remote_url_override if remote_url_override
-
-    hostname = remote_ws_address
-    hostname && URI::HTTPS.build(:host => hostname).to_s
+    remote_ws_miq_server&.ws_url
   end
 
   def api_system_auth_token(userid)

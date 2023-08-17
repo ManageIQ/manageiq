@@ -404,6 +404,50 @@ class MiqServer < ApplicationRecord
     result.merge(:message => message)
   end
 
+  def ui_hostname
+    hostname || ipaddress
+  end
+
+  def ui_ipaddress
+    ipaddress
+  end
+
+  def ui_address(contact_with = :hostname)
+    contact_with == :hostname ? ui_hostname : ui_ipaddress
+  end
+
+  def ui_url(contact_with = :hostname)
+    url_override = settings_for_resource.ui.url
+    return url_override if url_override
+
+    host = ui_address(contact_with)
+    return if host.nil?
+
+    URI::HTTPS.build(:host => host).to_s
+  end
+
+  def ws_hostname
+    hostname
+  end
+
+  def ws_ipaddress
+    ipaddress
+  end
+
+  def ws_address
+    ::Settings.webservices.contactwith == 'hostname' ? ws_hostname : ws_ipaddress
+  end
+
+  def ws_url
+    url_override = settings_for_resource.webservices.url
+    return url_override if url_override
+
+    host = ws_address
+    return if host.nil?
+
+    URI::HTTPS.build(:host => host).to_s
+  end
+
   #
   # Zone and Role methods
   #
