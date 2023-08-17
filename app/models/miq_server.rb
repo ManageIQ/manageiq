@@ -340,6 +340,20 @@ class MiqServer < ApplicationRecord
     ArApplicationName.name = database_application_name
   end
 
+  def self.podified?
+    return @podified unless @podified.nil?
+
+    @podified = MiqEnvironment::Command.is_podified?
+  end
+  delegate :podified?, :to => :class
+
+  def self.systemd?
+    return @systemd unless @systemd.nil?
+
+    @systemd = MiqEnvironment::Command.supports_systemd?
+  end
+  delegate :systemd?, :to => :class
+
   def is_local?
     guid == MiqServer.my_guid
   end
@@ -353,7 +367,7 @@ class MiqServer < ApplicationRecord
   end
 
   def is_deleteable?
-    return true if MiqEnvironment::Command.is_podified?
+    return true if podified?
 
     if self.is_local?
       message = N_("Cannot delete currently used %{log_message}") % {:log_message => format_short_log_msg}
@@ -405,7 +419,7 @@ class MiqServer < ApplicationRecord
   end
 
   def ui_address(contact_with = :hostname)
-    if MiqEnvironment::Command.is_podified?
+    if podified?
       ENV.fetch("APPLICATION_DOMAIN")
     else
       address = hostname if contact_with == :hostname
@@ -424,7 +438,7 @@ class MiqServer < ApplicationRecord
   end
 
   def ws_address
-    if MiqEnvironment::Command.is_podified?
+    if podified?
       ENV.fetch("APPLICATION_DOMAIN")
     else
       address = hostname if ::Settings.webservices.contactwith == 'hostname'
@@ -555,7 +569,7 @@ class MiqServer < ApplicationRecord
   end
 
   def self.zone_is_modifiable?
-    return false if MiqEnvironment::Command.is_podified?
+    return false if podified?
 
     Zone.visible.in_my_region.count > 1
   end
@@ -584,7 +598,7 @@ class MiqServer < ApplicationRecord
   private
 
   def zone_unchanged_in_pods
-    return unless MiqEnvironment::Command.is_podified?
+    return unless podified?
 
     errors.add(:zone, N_('cannot be changed when running in containers')) if zone_id_changed?
   end
