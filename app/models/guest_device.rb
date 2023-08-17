@@ -14,7 +14,7 @@ class GuestDevice < ApplicationRecord
   has_many :miq_scsi_targets, :dependent => :destroy
 
   has_many :firmwares, :dependent => :destroy
-  has_many :child_devices, -> { where(:parent_device_id => ids) }, :foreign_key => "parent_device_id", :class_name => "GuestDevice", :dependent => :destroy
+  has_many :child_devices, :foreign_key => "parent_device_id", :class_name => "GuestDevice", :dependent => :destroy
 
   has_many :physical_network_ports, :dependent => :destroy
   has_many :connected_physical_switches, :through => :physical_network_ports
