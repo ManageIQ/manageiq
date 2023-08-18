@@ -10,8 +10,14 @@ class ContainerReplicator < ApplicationRecord
   belongs_to  :ext_management_system, :foreign_key => "ems_id"
   has_many :container_groups
   belongs_to :container_project
-  has_many :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
-  has_many :selector_parts, -> { where(:section => "selectors") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
+  has_many :labels, -> { where(:section => "labels") }, # rubocop:disable Rails/HasManyOrHasOneDependent
+           :class_name => "CustomAttribute",
+           :as         => :resource,
+           :inverse_of => :resource
+  has_many :selector_parts, -> { where(:section => "selectors") }, # rubocop:disable Rails/HasManyOrHasOneDependent
+           :class_name => "CustomAttribute",
+           :as         => :resource,
+           :inverse_of => :resource
   has_many :container_nodes, -> { distinct }, :through => :container_groups
 
   # Needed for metrics

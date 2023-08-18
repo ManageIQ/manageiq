@@ -9,8 +9,14 @@ class ContainerService < ApplicationRecord
   has_many :container_routes
   has_many :container_service_port_configs, :dependent => :destroy
   belongs_to :container_project
-  has_many :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
-  has_many :selector_parts, -> { where(:section => "selectors") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
+  has_many :labels, -> { where(:section => "labels") }, # rubocop:disable Rails/HasManyOrHasOneDependent
+           :class_name => "CustomAttribute",
+           :as         => :resource,
+           :inverse_of => :resource
+  has_many :selector_parts, -> { where(:section => "selectors") }, # rubocop:disable Rails/HasManyOrHasOneDependent
+           :class_name => "CustomAttribute",
+           :as         => :resource,
+           :inverse_of => :resource
   has_many :container_nodes, -> { distinct }, :through => :container_groups
   belongs_to :container_image_registry
 
