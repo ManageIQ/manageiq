@@ -9,12 +9,13 @@ class GuestDevice < ApplicationRecord
 
   belongs_to :switch    # pNICs link to one switch
   belongs_to :lan       # vNICs link to one lan
+  belongs_to :parent_device, :class_name => "GuestDevice"
 
   has_one :network, :foreign_key => "device_id", :dependent => :destroy, :inverse_of => :guest_device
   has_many :miq_scsi_targets, :dependent => :destroy
 
   has_many :firmwares, :dependent => :destroy
-  has_many :child_devices, :foreign_key => "parent_device_id", :class_name => "GuestDevice", :dependent => :destroy
+  has_many :child_devices, :foreign_key => "parent_device_id", :class_name => "GuestDevice", :dependent => :destroy, :inverse_of => :parent_device
 
   has_many :physical_network_ports, :dependent => :destroy
   has_many :connected_physical_switches, :through => :physical_network_ports

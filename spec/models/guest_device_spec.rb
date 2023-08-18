@@ -35,8 +35,8 @@ RSpec.describe GuestDevice do
   describe "#child_device" do
     it "brings back children" do
       parent = FactoryBot.create(:guest_device)
-      child1 = FactoryBot.create(:guest_device, :parent_device_id => parent.id)
-      child2 = FactoryBot.create(:guest_device, :parent_device_id => parent.id)
+      child1 = FactoryBot.create(:guest_device, :parent_device => parent)
+      child2 = FactoryBot.create(:guest_device, :parent_device => parent)
       FactoryBot.create(:guest_device) # sad path (though the let! probably created lots of those)
 
       expect(parent.reload.child_devices).to match_array([child1, child2])
