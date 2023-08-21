@@ -261,7 +261,7 @@ group :ui_dependencies do # Added to Bundler.require in config/application.rb
 end
 
 group :web_server, :manageiq_default do
-  gem "puma",                           "~>4.2"
+  gem "puma",                           "~>6.3"
   gem "ruby-dbus" # For external auth
   gem "secure_headers",                 "~>3.9"
 end
