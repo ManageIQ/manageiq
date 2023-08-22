@@ -122,8 +122,8 @@ RSpec.describe MiqRegion do
       let(:url) { "https://www.manageiq.org" }
       let!(:web_server) do
         FactoryBot.create(:miq_server, :has_active_webservices => true,
-                                        :hostname               => hostname,
-                                        :ipaddress              => ip)
+                                       :hostname               => hostname,
+                                       :ipaddress              => ip)
       end
 
       it "fetches the url from server" do
@@ -133,6 +133,17 @@ RSpec.describe MiqRegion do
       it "fetches the url from the setting" do
         Vmdb::Settings.save!(web_server, :webservices => {:url => url})
         expect(region.remote_ws_url).to eq(url)
+      end
+
+      context "podified" do
+        before do
+          expect(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
+          expect(ENV).to receive(:fetch).with("APPLICATION_DOMAIN").and_return("manageiq.apps.mycluster.com")
+        end
+
+        it "returns the applicationDomain from the CR" do
+          expect(region.remote_ws_url).to eq("https://manageiq.apps.mycluster.com")
+        end
       end
     end
 
@@ -151,8 +162,8 @@ RSpec.describe MiqRegion do
       let(:url) { "http://localhost:3000" }
       let!(:ui_server) do
         FactoryBot.create(:miq_server, :has_active_userinterface => true,
-                                        :hostname                 => hostname,
-                                        :ipaddress                => ip)
+                                       :hostname                 => hostname,
+                                       :ipaddress                => ip)
       end
 
       it "fetches the url from server" do
@@ -162,6 +173,17 @@ RSpec.describe MiqRegion do
       it "fetches the url from the setting" do
         Vmdb::Settings.save!(ui_server, :ui => {:url => url})
         expect(region.remote_ui_url).to eq(url)
+      end
+
+      context "podified" do
+        before do
+          expect(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
+          expect(ENV).to receive(:fetch).with("APPLICATION_DOMAIN").and_return("manageiq.apps.mycluster.com")
+        end
+
+        it "returns the applicationDomain from the CR" do
+          expect(region.remote_ui_url).to eq("https://manageiq.apps.mycluster.com")
+        end
       end
     end
 
