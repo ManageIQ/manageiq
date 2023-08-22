@@ -31,4 +31,15 @@ RSpec.describe GuestDevice do
     expect(template_gd.host).to be_nil
     expect(host_gd.host).to eq(host)
   end
+
+  describe "#child_device" do
+    it "brings back children" do
+      parent = FactoryBot.create(:guest_device)
+      child1 = FactoryBot.create(:guest_device, :parent_device => parent)
+      child2 = FactoryBot.create(:guest_device, :parent_device => parent)
+      FactoryBot.create(:guest_device) # sad path (though the let! probably created lots of those)
+
+      expect(parent.reload.child_devices).to match_array([child1, child2])
+    end
+  end
 end
