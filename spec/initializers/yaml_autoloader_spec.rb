@@ -6,6 +6,7 @@ describe Psych::Visitors::ToRuby do
   let(:missing_model)   { model_directory.join("zzz_model.rb") }
 
   before do
+    skip "This is currently not testable with zeitwerk!" if Rails.application.config.autoloader == :zeitwerk
     File.write(missing_model, "class ZzzModel\nend\n")
     ActiveSupport::Dependencies.autoload_paths << model_directory
   end
