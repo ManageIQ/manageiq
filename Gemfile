@@ -9,7 +9,7 @@ require File.join(Bundler::Plugin.index.load_paths("bundler-inject")[0], "bundle
 #
 # VMDB specific gems
 #
-gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :branch => "master"
+gem "manageiq-gems-pending", ">0", :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :branch => "master"
 
 # when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
 def manageiq_plugin(plugin_name)
