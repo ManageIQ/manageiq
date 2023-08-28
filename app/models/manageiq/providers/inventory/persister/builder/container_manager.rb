@@ -88,8 +88,6 @@ module ManageIQ::Providers
           add_properties(
             # TODO: (bpaskinc) old save matches on [:image_ref, :container_image_registry_id]
             # TODO: (bpaskinc) should match on digest when available
-            # TODO: (mslemr) provider-specific class exists (openshift), but specs fail with them (?)
-            :model_class            => ::ContainerImage,
             :manager_ref            => %i[image_ref],
             :delete_method          => :disconnect_inv,
             :custom_reconnect_block => custom_reconnect_block
