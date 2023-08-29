@@ -1481,6 +1481,8 @@ en:
       ManageIQ::Providers::Workflows::AutomationManager::Workflow:                        Workflow
       ManageIQ::Providers::Workflows::AutomationManager::ConfigurationScriptSource:       Repository (Embedded Workflows)
       ManageIQ::Providers::Workflows::AutomationManager::Credential:                      Credential (Embedded Workflows)
+      ManageIQ::Providers::Workflows::AutomationManager::ScmCredential:                   Credential (SCM)
+      ManageIQ::Providers::Workflows::AutomationManager::WorkflowCredential:              Credential (Workflow)
       ManageIQ::Providers::ExternalAutomationManager:                                     Automation Manager
       ManageIQ::Providers::AutomationManager::Authentication:                             Credential
       ManageIQ::Providers::AnsibleTower::AutomationManager::AmazonCredential:             Credential (Amazon)
