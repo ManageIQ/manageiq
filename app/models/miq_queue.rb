@@ -696,12 +696,13 @@ class MiqQueue < ApplicationRecord
     return unless ENV["MESSAGING_HOSTNAME"] && ENV["MESSAGING_PORT"] && ENV["MESSAGING_USERNAME"] && ENV["MESSAGING_PASSWORD"]
 
     options = {
-      :host     => ENV["MESSAGING_HOSTNAME"],
-      :port     => ENV["MESSAGING_PORT"].to_i,
-      :username => ENV["MESSAGING_USERNAME"],
-      :password => ENV["MESSAGING_PASSWORD"],
-      :protocol => ENV.fetch("MESSAGING_PROTOCOL", "Kafka"),
-      :encoding => ENV.fetch("MESSAGING_ENCODING", "json")
+      :host           => ENV["MESSAGING_HOSTNAME"],
+      :port           => ENV["MESSAGING_PORT"].to_i,
+      :username       => ENV["MESSAGING_USERNAME"],
+      :password       => ENV["MESSAGING_PASSWORD"],
+      :protocol       => ENV.fetch("MESSAGING_PROTOCOL", "Kafka"),
+      :encoding       => ENV.fetch("MESSAGING_ENCODING", "json"),
+      :sasl_mechanism => ENV.fetch("MESSAGING_SASL_MECHANISM", "PLAIN")
     }
 
     if ENV["MESSAGING_SSL_CA"].present?

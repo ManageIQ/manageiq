@@ -169,6 +169,7 @@ class ContainerOrchestrator
         {:name => "MESSAGING_PORT", :value => ENV["MESSAGING_PORT"]},
         {:name => "MESSAGING_TYPE", :value => ENV["MESSAGING_TYPE"]},
         {:name => "MESSAGING_SSL_CA", :value => ENV["MESSAGING_SSL_CA"]},
+        {:name => "MESSAGING_SASL_MECHANISM", :value => ENV["MESSAGING_SASL_MECHANISM"]},
         {:name      => "MESSAGING_HOSTNAME",
          :valueFrom => {:secretKeyRef=>{:name => "kafka-secrets", :key => "hostname"}}},
         {:name      => "MESSAGING_PASSWORD",
