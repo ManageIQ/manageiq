@@ -138,6 +138,8 @@ class EmsEvent < EventStream
 
     # Write the event
     new_event = create_event(event_hash)
+    return if new_event.nil? # If the event is a duplicate skip further processing
+
     # Create a 'completed task' event if this is the last in a series of events
     create_completed_event(event_hash) if task_final_events.key?(event_type.to_sym)
 

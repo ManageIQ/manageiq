@@ -226,6 +226,19 @@ RSpec.describe EmsEvent do
           expect(ems_event).to be_nil
         end
 
+        context "with event syndication" do
+          before do
+            stub_settings_merge(:event_streams => {:syndicate_events => true})
+          end
+
+          it "doesn't syndicate duplicate events" do
+            expect(EmsEvent).not_to receive(:syndicate_event)
+
+            ems_event = EmsEvent.add(@ems.id, @event_hash)
+            expect(ems_event).to be_nil
+          end
+        end
+
         it "should add a new event if it has a different ems_ref" do
           ems_event = EmsEvent.add(
             @ems.id,
