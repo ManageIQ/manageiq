@@ -105,7 +105,7 @@ module Metric::CiMixin::Rollup
         Benchmark.realtime_block(:process_operating_ranges) { generate_vim_performance_operating_range(time_profile) }
       end
 
-      perf_rollup_to_parents(interval_name, time)
+      Benchmark.realtime_block(:rollup_to_parents) { perf_rollup_to_parents(interval_name, time) }
     end
 
     _log.info("#{log_header}...Complete - Timings: #{t.inspect}")
