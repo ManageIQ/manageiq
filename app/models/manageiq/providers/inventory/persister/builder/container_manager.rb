@@ -89,10 +89,9 @@ module ManageIQ::Providers
             # TODO: (bpaskinc) old save matches on [:image_ref, :container_image_registry_id]
             # TODO: (bpaskinc) should match on digest when available
             # TODO: (mslemr) provider-specific class exists (openshift), but specs fail with them (?)
-            :model_class            => ::ContainerImage,
-            :manager_ref            => %i[image_ref],
-            :delete_method          => :disconnect_inv,
-            :custom_reconnect_block => custom_reconnect_block
+            :model_class   => ::ContainerImage,
+            :manager_ref   => %i[image_ref],
+            :delete_method => :disconnect_inv
           )
           add_common_default_values
         end
@@ -104,10 +103,9 @@ module ManageIQ::Providers
 
         def container_groups
           add_properties(
-            :secondary_refs         => {:by_container_project_and_name => %i[container_project name]},
-            :attributes_blacklist   => %i[namespace],
-            :delete_method          => :disconnect_inv,
-            :custom_reconnect_block => custom_reconnect_block
+            :secondary_refs       => {:by_container_project_and_name => %i[container_project name]},
+            :attributes_blacklist => %i[namespace],
+            :delete_method        => :disconnect_inv
           )
           add_common_default_values
         end
@@ -123,8 +121,7 @@ module ManageIQ::Providers
         def containers
           add_properties(
             # parser sets :ems_ref => "#{pod_id}_#{container.name}_#{container.image}"
-            :delete_method          => :disconnect_inv,
-            :custom_reconnect_block => custom_reconnect_block
+            :delete_method => :disconnect_inv
           )
           add_common_default_values
         end
@@ -254,44 +251,6 @@ module ManageIQ::Providers
                   :args        => [collection_ids],
                   :priority    => MiqQueue::HIGH_PRIORITY
                 )
-              end
-            end
-          end
-        end
-
-        protected
-
-        def custom_reconnect_block
-          # TODO(lsmola) once we have DB unique indexes, we can stop using manual reconnect, since it adds processing time
-          lambda do |inventory_collection, inventory_objects_index, attributes_index|
-            relation = inventory_collection.model_class.where(:ems_id => inventory_collection.parent.id).archived
-
-            # Skip reconnect if there are no archived entities
-            return if relation.archived.count <= 0
-            raise "Allowed only manager_ref size of 1, got #{inventory_collection.manager_ref}" if inventory_collection.manager_ref.count > 1
-
-            inventory_objects_index.each_slice(1000) do |batch|
-              relation.where(inventory_collection.manager_ref.first => batch.map(&:first)).each do |record|
-                index = inventory_collection.object_index_with_keys(inventory_collection.manager_ref_to_cols, record)
-
-                # We need to delete the record from the inventory_objects_index and attributes_index, otherwise it
-                # would be sent for create.
-                inventory_object = inventory_objects_index.delete(index)
-                hash             = attributes_index.delete(index)
-
-                # Skip if hash is blank, which can happen when having several archived entities with the same ref
-                next unless hash
-
-                # Make the entity active again, otherwise we would be duplicating nested entities
-                hash[:deleted_on] = nil
-
-                record.assign_attributes(hash.except(:id, :type))
-                if !inventory_collection.check_changed? || record.changed?
-                  record.save!
-                  inventory_collection.store_updated_records(record)
-                end
-
-                inventory_object.id = record.id
               end
             end
           end
