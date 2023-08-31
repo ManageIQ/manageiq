@@ -704,11 +704,9 @@ class MiqQueue < ApplicationRecord
       :encoding => ENV.fetch("MESSAGING_ENCODING", "json")
     }
 
-    if ENV["MESSAGING_KEYSTORE_PASSWORD"].present?
+    if ENV["MESSAGING_SSL_CA"].present?
       options[:ssl] = true
-      options[:ca_file] = ENV.fetch("MESSAGING_SSL_CA", nil)
-      options[:keystore_location] = ENV.fetch("MESSAGING_KEYSTORE", nil)
-      options[:keystore_password] = ENV["MESSAGING_KEYSTORE_PASSWORD"]
+      options[:ca_file] = ENV["MESSAGING_SSL_CA"]
     end
 
     options
