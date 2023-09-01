@@ -6,10 +6,10 @@ class ContainerTemplate < ApplicationRecord
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   belongs_to :container_project
   has_many :container_template_parameters, :dependent => :destroy
-  has_many :labels, -> { where(:section => "labels") },
+  has_many :labels, -> { where(:section => "labels") }, # rubocop:disable Rails/HasManyOrHasOneDependent
            :class_name => "CustomAttribute",
            :as         => :resource,
-           :dependent  => :destroy
+           :inverse_of => :resource
 
   serialize :objects, Array
   serialize :object_labels, Hash

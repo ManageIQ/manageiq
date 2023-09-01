@@ -4,10 +4,10 @@ class ContainerBuildPod < ApplicationRecord
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   belongs_to :container_build
 
-  has_many :labels, -> { where(:section => "labels") },
+  has_many :labels, -> { where(:section => "labels") }, # rubocop:disable Rails/HasManyOrHasOneDependent
            :class_name => "CustomAttribute",
            :as         => :resource,
-           :dependent  => :destroy
+           :inverse_of => :resource
 
   has_one :container_group
 end
