@@ -100,11 +100,6 @@ class ContainerOrchestrator
             ],
           }
         }
-
-        if ENV["MESSAGING_KEYSTORE_PASSWORD"].present?
-          volume = deployment[:spec][:template][:spec][:volumes].find { |vol| vol[:name] == "internal-root-certificate" }
-          volume[:secret][:items].append({:key => "kafka_keystore", :path => "kafka.keystore.jks"})
-        end
       end
 
       deployment
@@ -174,14 +169,10 @@ class ContainerOrchestrator
         {:name => "MESSAGING_PORT", :value => ENV["MESSAGING_PORT"]},
         {:name => "MESSAGING_TYPE", :value => ENV["MESSAGING_TYPE"]},
         {:name => "MESSAGING_SSL_CA", :value => ENV["MESSAGING_SSL_CA"]},
-        {:name => "MESSAGING_KEYSTORE", :value => ENV["MESSAGING_KEYSTORE"]},
-        {:name => "MESSAGING_KEYSTORE_PASSWORD", :value => ENV["MESSAGING_KEYSTORE_PASSWORD"]},
-        {:name      => "MESSAGING_HOSTNAME",
-         :valueFrom => {:secretKeyRef=>{:name => "kafka-secrets", :key => "hostname"}}},
-        {:name      => "MESSAGING_PASSWORD",
-         :valueFrom => {:secretKeyRef=>{:name => "kafka-secrets", :key => "password"}}},
-        {:name      => "MESSAGING_USERNAME",
-         :valueFrom => {:secretKeyRef=>{:name => "kafka-secrets", :key => "username"}}}
+        {:name => "MESSAGING_SASL_MECHANISM", :value => ENV["MESSAGING_SASL_MECHANISM"]},
+        {:name => "MESSAGING_HOSTNAME", :value => ENV["MESSAGING_HOSTNAME"]},
+        {:name => "MESSAGING_PASSWORD", :value => ENV["MESSAGING_PASSWORD"]},
+        {:name => "MESSAGING_USERNAME", :value => ENV["MESSAGING_USERNAME"]}
       ]
     end
 
