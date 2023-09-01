@@ -3,20 +3,18 @@ require File.expand_path('../config/environment', __dir__)
 require 'optimist'
 
 ARGV.shift if ARGV[0] == '--' # if invoked with rails runner
+batch_message = "For each relationship, the number of rows to be removed in a batch. A lower number may decrease memory usage but also take longer."
 opts = Optimist.options do
-  banner "Purge managements system records in the background via the queue.\n\nUsage: ruby #{$0} [options]\n\nOptions:\n\t"
-  opt :id,      "Mangement System id",                                         :short => :i, :type => :integer,                    :required => true
-  opt :follow,  "Follow the progress or exit after creating messages",         :short => :f, :type => :string,  :default => "true"
-  opt :batch,   "How many rows in each relationship to be deleted in a batch", :short => :b, :type => :integer, :default => 1_000
-  opt :timeout, "How many minutes should each message be allowed to run",      :short => :t, :type => :integer, :default => 30
+  banner "Purge management system records in the background via the queue.\n\nUsage: ruby #{$PROGRAM_NAME} [options]\n\nOptions:\n\t"
+  opt :id,      "Management System id",                                         :type => :integer, :required => true
+  opt :follow,  "Follow the progress or exit after creating work items.",       :type => :boolean, :default => true
+  opt :batch,   batch_message,                                                  :type => :integer, :default => 1_000
+  opt :timeout, "The number of minutes each work item will be allowed to run.", :type => :integer, :default => 30
 end
 
 Optimist.die :id,      "must be a positive number"                             if opts[:id] < 1
 Optimist.die :batch,   "must be a positive number"                             if opts[:batch] < 1
 Optimist.die :timeout, "must be a positive number greater than or equal to 10" if opts[:timeout] < 10
-
-opts[:follow] = opts[:follow].to_s.downcase
-Optimist.die :follow, "must be true or false" unless %w[true false].include?(opts[:follow])
 
 RELATIONSHIP_DESTROY_METHOD = "destroy".freeze
 EMS_DESTROY_METHOD          = "destroy_queue".freeze
@@ -87,7 +85,7 @@ if create_messages
   )
 end
 
-if opts[:follow] == "true"
+if opts[:follow]
   start_backlog = current_backlog
   log("Destruction in progress...#{start_backlog} initial items")
   require 'ruby-progressbar'
