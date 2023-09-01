@@ -96,14 +96,11 @@ if opts[:follow]
   # Example format output:
   # Progress: 5/10 |=====     |
   pbar = ProgressBar.create(:title => "Progress", :total => start_backlog, :autofinish => false, :format => "%t: %c/%C |%B|")
-  done = 0
   loop do
     remaining = current_backlog
-    newly_finished = start_backlog - remaining - done
-    done += newly_finished
-    pbar.progress += newly_finished
-
     break if remaining == 0
+
+    pbar.progress = start_backlog - remaining
     sleep 10
   end
   pbar.finish
