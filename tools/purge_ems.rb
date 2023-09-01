@@ -16,10 +16,9 @@ Optimist.die :id,      "must be a positive number"                             i
 Optimist.die :batch,   "must be a positive number"                             if opts[:batch] < 1
 Optimist.die :timeout, "must be a positive number greater than or equal to 10" if opts[:timeout] < 10
 
-RELATIONSHIP_DESTROY_METHOD = "destroy".freeze
-EMS_DESTROY_METHOD          = "destroy_queue".freeze
-ZONE                        = nil                    # Will queue for any zone
-PRIORITY                    = MiqQueue::LOW_PRIORITY # Don't block other work
+DESTROY_METHOD = "destroy".freeze
+ZONE           = nil                    # Will queue for any zone
+PRIORITY       = MiqQueue::LOW_PRIORITY # Don't block other work
 
 def log(msg)
   $log.info("MIQ(#{__FILE__}) #{msg}")
@@ -27,7 +26,7 @@ def log(msg)
 end
 
 def current_backlog
-  MiqQueue.where(:method_name => [EMS_DESTROY_METHOD, RELATIONSHIP_DESTROY_METHOD], :zone => ZONE).count
+  MiqQueue.where(:method_name => DESTROY_METHOD, :zone => ZONE, :priority => PRIORITY).count
 end
 
 id = opts[:id]
@@ -37,6 +36,15 @@ if ems.enabled?
   ems.pause!
   log("Pausing management system with id: #{ems.id} #{ems.name}...Complete")
 end
+
+log("Removing any workers for management system with id: #{id} #{ems.name}...")
+ems.ems_workers.each(&:kill_async)
+ems.wait_for_ems_workers_removal
+log("Removing any workers for management system with id: #{ems.id} #{ems.name}...Complete")
+
+log("Removing any child managers for management system with id: #{id} #{ems.name}...")
+ems.child_managers.each(&:orchestrate_destroy)
+log("Removing any child managers for management system with id: #{ems.id} #{ems.name}...Complete")
 
 # Watching the destroy queue messages be processed can take a long time so terminal disconnects
 # are likely.  Therefore, if running it again, detect when it's in progress, skip queueing more
@@ -59,7 +67,7 @@ if create_messages
     rel.order(:id).pluck(:id).each_slice(batch) do |x|
       MiqQueue.put(
         :class_name  => rel.klass.to_s,
-        :method_name => RELATIONSHIP_DESTROY_METHOD,
+        :method_name => DESTROY_METHOD,
         :args        => [x],
         :msg_timeout => timeout,
         :priority    => PRIORITY,
@@ -73,7 +81,7 @@ if create_messages
   MiqQueue.put(
     :class_name  => ems.class,
     :instance_id => ems.id,
-    :method_name => EMS_DESTROY_METHOD,
+    :method_name => DESTROY_METHOD,
     :msg_timeout => timeout,
     :priority    => PRIORITY,
     :zone        => ZONE
