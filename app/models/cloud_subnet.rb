@@ -15,7 +15,7 @@ class CloudSubnet < ApplicationRecord
   belongs_to :parent_cloud_subnet, :class_name => "::CloudSubnet"
 
   has_many :cloud_subnet_network_ports, :dependent => :destroy
-  has_many :network_ports, :through => :cloud_subnet_network_ports, :dependent => :destroy
+  has_many :network_ports, :through => :cloud_subnet_network_ports
   has_many :vms, -> { distinct }, :through => :network_ports, :source => :device, :source_type => 'VmOrTemplate'
   has_many :cloud_subnets, :foreign_key => :parent_cloud_subnet_id
   has_many :security_groups, :dependent => :nullify
