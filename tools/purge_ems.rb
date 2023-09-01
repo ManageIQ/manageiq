@@ -38,11 +38,6 @@ if ems.enabled?
   log("Pausing management system with id: #{ems.id} #{ems.name}...Complete")
 end
 
-if ems.reload.enabled?
-  log("Management system with id: #{ems.id} #{ems.name} is still enabled!")
-  exit 1
-end
-
 # Watching the destroy queue messages be processed can take a long time so terminal disconnects
 # are likely.  Therefore, if running it again, detect when it's in progress, skip queueing more
 # and skip right to watching the updated progress if desired.
