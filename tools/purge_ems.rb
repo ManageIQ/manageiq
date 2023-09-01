@@ -29,36 +29,36 @@ def current_backlog
   MiqQueue.where(:method_name => DESTROY_METHOD, :zone => ZONE, :priority => PRIORITY).count
 end
 
-id = opts[:id]
-ems = ExtManagementSystem.find(id)
-if ems.enabled?
-  log("Pausing management system with id: #{id} #{ems.name}...")
-  ems.pause!
-  log("Pausing management system with id: #{ems.id} #{ems.name}...Complete")
+def before_destroy_ems(ems_id)
+  ems = ExtManagementSystem.find(ems_id)
+  if ems.enabled?
+    log("Pausing management system with id: #{ems.id} #{ems.name}...")
+    ems.pause!
+    log("Pausing management system with id: #{ems.id} #{ems.name}...Complete")
+  end
+
+  log("Removing any workers for management system with id: #{ems.id} #{ems.name}...")
+  ems.ems_workers.each(&:kill_async)
+  ems.wait_for_ems_workers_removal
+  log("Removing any workers for management system with id: #{ems.id} #{ems.name}...Complete")
 end
 
-log("Removing any workers for management system with id: #{id} #{ems.name}...")
-ems.ems_workers.each(&:kill_async)
-ems.wait_for_ems_workers_removal
-log("Removing any workers for management system with id: #{ems.id} #{ems.name}...Complete")
-
-log("Removing any child managers for management system with id: #{id} #{ems.name}...")
-ems.child_managers.each(&:orchestrate_destroy)
-log("Removing any child managers for management system with id: #{ems.id} #{ems.name}...Complete")
-
-# Watching the destroy queue messages be processed can take a long time so terminal disconnects
-# are likely.  Therefore, if running it again, detect when it's in progress, skip queueing more
-# and skip right to watching the updated progress if desired.
-create_messages = true
-backlog = current_backlog
-if backlog > 0
-  log("A backlog of #{backlog} work items is already in progress, skipping creating more.")
-  create_messages = false
+def existing_backlog?
+  # Watching the destroy queue messages be processed can take a long time so terminal disconnects
+  # are likely.  Therefore, if running it again, detect when it's in progress, skip queueing more
+  # and skip right to watching the updated progress if desired.
+  current_backlog > 0
 end
 
-if create_messages
-  batch = opts[:batch]
-  timeout = opts[:timeout].to_i.minutes
+def destroy_ems_in_batches(ems_id, batch, timeout, priority)
+  before_destroy_ems(ems_id)
+
+  if existing_backlog?
+    log("A backlog of work items is already in progress, skipping creating more.")
+    return
+  end
+
+  ems = ExtManagementSystem.find(ems_id)
   log("Adding work items with batches of #{batch}...")
   ems.class.reflections.select { |_, v| v.options[:dependent] }.map { |n, _v| ems.send(n) }.each do |rel|
     next unless rel
@@ -70,7 +70,7 @@ if create_messages
         :method_name => DESTROY_METHOD,
         :args        => [x],
         :msg_timeout => timeout,
-        :priority    => PRIORITY,
+        :priority    => priority,
         :zone        => ZONE
       )
     end
@@ -83,10 +83,25 @@ if create_messages
     :instance_id => ems.id,
     :method_name => DESTROY_METHOD,
     :msg_timeout => timeout,
-    :priority    => PRIORITY,
+    :priority    => priority,
     :zone        => ZONE
   )
 end
+
+def destroy_parent_ems_in_batches(ems_id, batch, timeout)
+  ems     = ExtManagementSystem.find(ems_id)
+  timeout = timeout.to_i.minutes
+
+  log("Adding work items to remove child managers first...")
+  ems.child_manager_ids.each { |i| destroy_ems_in_batches(i, batch, timeout, PRIORITY - 10) }
+  log("Adding work items to remove child managers first...Complete")
+
+  log("Adding work items to remove targeted management system...")
+  destroy_ems_in_batches(ems.id, batch, timeout, PRIORITY)
+  log("Adding work items to remove targeted management system...Complete")
+end
+
+destroy_parent_ems_in_batches(*opts.values_at(:id, :batch, :timeout))
 
 if opts[:follow]
   start_backlog = current_backlog
