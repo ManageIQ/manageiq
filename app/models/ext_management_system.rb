@@ -233,8 +233,6 @@ class ExtManagementSystem < ApplicationRecord
   include ComplianceMixin
   include CustomAttributeMixin
 
-  after_destroy { |record| $log.info("MIQ(ExtManagementSystem.after_destroy) Removed EMS [#{record.name}] id [#{record.id}]") }
-
   acts_as_miq_taggable
 
   include FilterableMixin
