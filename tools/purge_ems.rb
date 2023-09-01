@@ -37,7 +37,7 @@ ems = ExtManagementSystem.find(id)
 if ems.enabled?
   log("Pausing management system with id: #{id} #{ems.name}...")
   ems.pause!
-  log("Pausing ems with id: #{ems.id} #{ems.name}...done")
+  log("Pausing management system with id: #{ems.id} #{ems.name}...Complete")
 end
 
 if ems.reload.enabled?
@@ -51,14 +51,14 @@ end
 create_messages = true
 backlog = current_backlog
 if backlog > 0
-  log("There is already a backlog of #{backlog} destroy messages, skipping creating more.")
+  log("A backlog of #{backlog} work items is already in progress, skipping creating more.")
   create_messages = false
 end
 
 if create_messages
   batch = opts[:batch]
   timeout = opts[:timeout].to_i.minutes
-  log("Adding destroy messages in batches of #{batch}...")
+  log("Adding work items with batches of #{batch}...")
   ems.class.reflections.select { |_, v| v.options[:dependent] }.map { |n, _v| ems.send(n) }.each do |rel|
     next unless rel
 
@@ -75,7 +75,7 @@ if create_messages
     end
   end
 
-  log("Adding destroy messages in batches of #{batch}...done")
+  log("Adding work items with batches of #{batch}...Complete")
 
   MiqQueue.put(
     :class_name  => ems.class,
@@ -89,7 +89,7 @@ end
 
 if opts[:follow] == "true"
   start_backlog = current_backlog
-  log("Following #{start_backlog} destroy messages...")
+  log("Destruction in progress...#{start_backlog} initial items")
   require 'ruby-progressbar'
 
   # Example format output:
@@ -106,5 +106,5 @@ if opts[:follow] == "true"
     sleep 10
   end
   pbar.finish
-  log("Following #{start_backlog} destroy messages...Complete")
+  log("Destruction in progress...Complete")
 end
