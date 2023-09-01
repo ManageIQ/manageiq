@@ -67,18 +67,27 @@ RSpec.describe ContainerOrchestrator do
     end
 
     context "when MESSAGING_TYPE is set" do
-      before { stub_const("ENV", ENV.to_h.merge("MESSAGING_TYPE" => "kafka", "MESSAGING_PORT" => "9092")) }
+      before do
+        stub_const("ENV", ENV.to_h.merge(
+                            "MESSAGING_TYPE"           => "kafka",
+                            "MESSAGING_PORT"           => "9092",
+                            "MESSAGING_SSL_CA"         => "/etc/pki/ca-trust/source/anchors/root.crt",
+                            "MESSAGING_SASL_MECHANISM" => "PLAIN",
+                            "MESSAGING_HOSTNAME"       => "hostname",
+                            "MESSAGING_PASSWORD"       => "password",
+                            "MESSAGING_USERNAME"       => "username"
+                          ))
+      end
 
       it "sets the messaging env vars" do
         expect(subject.send(:default_environment)).to include(
           {:name => "MESSAGING_PORT", :value => "9092"},
           {:name => "MESSAGING_TYPE", :value => "kafka"},
-          {:name      => "MESSAGING_HOSTNAME",
-           :valueFrom => {:secretKeyRef=>{:name => "kafka-secrets", :key => "hostname"}}},
-          {:name      => "MESSAGING_PASSWORD",
-           :valueFrom => {:secretKeyRef=>{:name => "kafka-secrets", :key => "password"}}},
-          {:name      => "MESSAGING_USERNAME",
-           :valueFrom => {:secretKeyRef=>{:name => "kafka-secrets", :key => "username"}}}
+          {:name => "MESSAGING_SSL_CA", :value => "/etc/pki/ca-trust/source/anchors/root.crt"},
+          {:name => "MESSAGING_SASL_MECHANISM", :value => "PLAIN"},
+          {:name => "MESSAGING_HOSTNAME", :value => "hostname"},
+          {:name => "MESSAGING_PASSWORD", :value => "password"},
+          {:name => "MESSAGING_USERNAME", :value => "username"}
         )
       end
     end
