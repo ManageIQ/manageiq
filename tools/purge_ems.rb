@@ -20,7 +20,8 @@ Optimist.die :follow, "must be true or false" unless %w[true false].include?(opt
 
 RELATIONSHIP_DESTROY_METHOD = "destroy".freeze
 EMS_DESTROY_METHOD          = "destroy_queue".freeze
-ZONE                        = "default".freeze
+ZONE                        = nil                    # Will queue for any zone
+PRIORITY                    = MiqQueue::LOW_PRIORITY # Don't block other work
 
 def log(msg)
   $log.info("MIQ(#{__FILE__}) #{msg}")
@@ -62,7 +63,16 @@ if create_messages
     next unless rel
 
     log("  Adding #{rel.klass}")
-    rel.order(:id).pluck(:id).each_slice(batch) { |x| MiqQueue.put(:class_name => rel.klass.to_s, :method_name => RELATIONSHIP_DESTROY_METHOD, :args => [x], :zone => ZONE, :msg_timeout => timeout ) }
+    rel.order(:id).pluck(:id).each_slice(batch) do |x|
+      MiqQueue.put(
+        :class_name  => rel.klass.to_s,
+        :method_name => RELATIONSHIP_DESTROY_METHOD,
+        :args        => [x],
+        :msg_timeout => timeout,
+        :priority    => PRIORITY,
+        :zone        => ZONE
+      )
+    end
   end
 
   log("Adding destroy messages in batches of #{batch}...done")
@@ -71,6 +81,8 @@ if create_messages
     :class_name  => ems.class,
     :instance_id => ems.id,
     :method_name => EMS_DESTROY_METHOD,
+    :msg_timeout => timeout,
+    :priority    => PRIORITY,
     :zone        => ZONE
   )
 end
