@@ -34,7 +34,10 @@ class ContainerProject < ApplicationRecord
   has_many :metric_rollups,         :as => :resource
   has_many :vim_performance_states, :as => :resource
 
-  has_many :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
+  has_many :labels, -> { where(:section => "labels") }, # rubocop:disable Rails/HasManyOrHasOneDependent
+           :class_name => "CustomAttribute",
+           :as         => :resource,
+           :inverse_of => :resource
 
   virtual_total :groups_count,      :container_groups
   virtual_total :services_count,    :container_services

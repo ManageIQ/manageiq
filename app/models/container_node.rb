@@ -23,8 +23,14 @@ class ContainerNode < ApplicationRecord
   has_many   :container_services, -> { distinct }, :through => :container_groups
   has_many   :container_routes, -> { distinct }, :through => :container_services
   has_many   :container_replicators, -> { distinct }, :through => :container_groups
-  has_many   :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
-  has_many   :additional_attributes, -> { where(:section => "additional_attributes") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
+  has_many   :labels, -> { where(:section => "labels") }, # rubocop:disable Rails/HasManyOrHasOneDependent
+             :class_name => "CustomAttribute",
+             :as         => :resource,
+             :inverse_of => :resource
+  has_many   :additional_attributes, -> { where(:section => "additional_attributes") }, # rubocop:disable Rails/HasManyOrHasOneDependent
+             :class_name => "CustomAttribute",
+             :as         => :resource,
+             :inverse_of => :resource
   has_one    :computer_system, :as => :managed_entity, :dependent => :destroy
   belongs_to :lives_on, :polymorphic => true
   has_one    :hardware, :through => :computer_system
