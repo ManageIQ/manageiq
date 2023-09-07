@@ -55,7 +55,7 @@ class VmdbDatabaseConnection < ApplicationRecord
   end
 
   def self.log_table_statistics(output = $log)
-    stats = ApplicationRecord.connection.table_statistics.sort_by { |h| h['rows_live'] }.reverse!
+    stats = ApplicationRecord.connection.table_statistics
     log_csv(stats.first.keys, stats, "TABLE_STATS_CSV", output)
   rescue => err
     output.warn("MIQ(#{name}.#{__method__}) Unable to log activity, '#{err.message}'")

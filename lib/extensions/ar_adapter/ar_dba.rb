@@ -401,7 +401,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                      , last_autovacuum    AS last_autovacuum_date
                      , last_analyze       AS last_analyze_date
                      , last_autoanalyze   AS last_autoanalyze_date
-                  FROM pg_stat_all_tables
+                  FROM pg_stat_user_tables
                  WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
                  ORDER BY relname ASC ;
                  SQL
@@ -462,6 +462,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                   FROM pg_class
                  WHERE reltuples > 1
                    AND relname NOT LIKE 'pg_%'
+                   AND relkind = 'r'
               ORDER BY reltuples DESC
                      , relpages  DESC ;
                  SQL
