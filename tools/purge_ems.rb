@@ -29,8 +29,7 @@ def current_backlog
   MiqQueue.where(:method_name => DESTROY_METHOD, :zone => ZONE, :priority => PRIORITY).count
 end
 
-def before_destroy_ems(ems_id)
-  ems = ExtManagementSystem.find(ems_id)
+def before_destroy_ems(ems)
   if ems.enabled?
     log("Pausing management system with id: #{ems.id} #{ems.name}...")
     ems.pause!
@@ -50,15 +49,14 @@ def existing_backlog?
   current_backlog > 0
 end
 
-def destroy_ems_in_batches(ems_id, batch, timeout, priority)
-  before_destroy_ems(ems_id)
+def destroy_ems_in_batches(ems, batch, timeout, priority)
+  before_destroy_ems(ems)
 
   if existing_backlog?
     log("A backlog of work items is already in progress, skipping creating more.")
     return
   end
 
-  ems = ExtManagementSystem.find(ems_id)
   log("Adding work items with batches of #{batch}...")
   ems.class.reflections.select { |_, v| v.options[:dependent] }.map { |n, _v| ems.send(n) }.each do |rel|
     next unless rel
@@ -93,12 +91,15 @@ def destroy_parent_ems_in_batches(ems_id, batch, timeout)
   timeout = timeout.to_i.minutes
 
   log("Adding work items to remove child managers first...")
-  ems.child_manager_ids.each { |i| destroy_ems_in_batches(i, batch, timeout, PRIORITY - 10) }
+  ems.child_managers.each { |e| destroy_ems_in_batches(e, batch, timeout, PRIORITY - 10) }
   log("Adding work items to remove child managers first...Complete")
 
   log("Adding work items to remove targeted management system...")
-  destroy_ems_in_batches(ems.id, batch, timeout, PRIORITY)
+  destroy_ems_in_batches(ems, batch, timeout, PRIORITY)
   log("Adding work items to remove targeted management system...Complete")
+rescue ActiveRecord::RecordNotFound
+  log("Management System with id: #{ems_id} not found!")
+  exit 1
 end
 
 destroy_parent_ems_in_batches(*opts.values_at(:id, :batch, :timeout))
