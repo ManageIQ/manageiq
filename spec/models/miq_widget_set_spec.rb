@@ -202,7 +202,7 @@ RSpec.describe MiqWidgetSet do
       let(:dashboard_name) { "Dashboard for Group" }
       before do
         @yml_file = Tempfile.new('default_dashboard_for_group.yaml')
-        yml_data = YAML.safe_load(<<~DOC, [Symbol])
+        yml_data = YAML.safe_load(<<~DOC, :permitted_classes => [Symbol])
           ---
           name: #{dashboard_name}
           read_only: t

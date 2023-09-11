@@ -11,7 +11,7 @@ class DialogImportValidator
   end
 
   def determine_validity(import_file_upload)
-    potential_dialogs = YAML.safe_load(import_file_upload.uploaded_content, [Symbol])
+    potential_dialogs = YAML.safe_load(import_file_upload.uploaded_content, :permitted_classes => [Symbol])
     raise BlankFileError unless potential_dialogs
 
     check_dialogs_for_validity(potential_dialogs)
