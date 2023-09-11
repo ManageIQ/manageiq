@@ -138,7 +138,7 @@ RSpec.describe MiqRegion do
       context "podified" do
         before do
           expect(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
-          expect(ENV).to receive(:fetch).with("APPLICATION_DOMAIN").and_return("manageiq.apps.mycluster.com")
+          expect(ENV).to receive(:fetch).with("APPLICATION_DOMAIN", nil).and_return("manageiq.apps.mycluster.com")
         end
 
         it "returns the applicationDomain from the CR" do
@@ -178,7 +178,7 @@ RSpec.describe MiqRegion do
       context "podified" do
         before do
           expect(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
-          expect(ENV).to receive(:fetch).with("APPLICATION_DOMAIN").and_return("manageiq.apps.mycluster.com")
+          expect(ENV).to receive(:fetch).with("APPLICATION_DOMAIN", nil).and_return("manageiq.apps.mycluster.com")
         end
 
         it "returns the applicationDomain from the CR" do
