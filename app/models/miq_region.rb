@@ -188,12 +188,8 @@ class MiqRegion < ApplicationRecord
     MiqServer.in_region(region).recently_active.find_by(:has_active_userinterface => true)
   end
 
-  def remote_ui_ipaddress
-    remote_ui_miq_server&.ui_ipaddress
-  end
-
-  def remote_ui_hostname
-    remote_ui_miq_server&.ui_hostname
+  def remote_ui_address
+    remote_ui_miq_server&.ui_address
   end
 
   def remote_ui_url(contact_with = :hostname)
@@ -206,14 +202,6 @@ class MiqRegion < ApplicationRecord
 
   def remote_ws_address
     remote_ws_miq_server&.ws_address
-  end
-
-  def remote_ws_ipaddress
-    remote_ws_miq_server&.ws_ipaddress
-  end
-
-  def remote_ws_hostname
-    remote_ws_miq_server&.ws_hostname
   end
 
   def remote_ws_url

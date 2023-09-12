@@ -12,23 +12,15 @@ class MiqServer::WorkerManagement
   attr_reader :my_server
 
   def self.build(my_server)
-    klass = if podified?
+    klass = if my_server.podified?
               Kubernetes
-            elsif systemd?
+            elsif my_server.systemd?
               Systemd
             else
               Process
             end
 
     klass.new(my_server)
-  end
-
-  def self.podified?
-    MiqEnvironment::Command.is_podified?
-  end
-
-  def self.systemd?
-    MiqEnvironment::Command.supports_systemd?
   end
 
   def initialize(my_server)
