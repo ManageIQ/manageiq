@@ -102,6 +102,11 @@ RSpec.describe ContainerOrchestrator do
       expect(subject.send(:default_environment)).not_to include({:name => "DATABASE_NAME", :valueFrom => {:secretKeyRef => {:key => "dbname", :name => "postgresql-secrets"}}})
     end
 
+    it "sets APPLICATION_DOMAIN" do
+      stub_const("ENV", ENV.to_h.merge("APPLICATION_DOMAIN" => "manageiq"))
+      expect(subject.send(:default_environment)).to include({:name => "APPLICATION_DOMAIN", :value => "manageiq"})
+    end
+
     it "doesn't include memcached env vars by default" do
       env = subject.send(:default_environment)
 
