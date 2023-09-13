@@ -1,4 +1,3 @@
-require 'net/ftp'
 require 'uri'
 require 'mount/miq_generic_mount_session'
 
