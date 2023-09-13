@@ -39,7 +39,7 @@ class ServiceTemplate < ApplicationRecord
   has_many   :services
 
   has_many :service_template_tenants, :dependent => :destroy
-  has_many :additional_tenants, :through => :service_template_tenants, :source => :tenant, :dependent => :destroy
+  has_many :additional_tenants, :through => :service_template_tenants, :source => :tenant
 
   has_one :picture, :dependent => :destroy, :as => :resource, :autosave => true
 
