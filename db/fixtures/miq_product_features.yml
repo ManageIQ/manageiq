@@ -5197,6 +5197,10 @@
         :description: Edit a Playbook
         :feature_type: admin
         :identifier: embedded_configuration_script_payload_edit
+      - :name: Map Credentials
+        :description: Map Credentials to Workflow
+        :feature_type: admin
+        :identifier: embedded_configuration_script_payload_map_credentials
       - :name: Refresh Playbooks
         :description: Ansible Playbooks Refresh
         :feature_type: control
