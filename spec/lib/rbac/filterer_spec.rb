@@ -832,7 +832,7 @@ RSpec.describe Rbac::Filterer do
         end
       end
 
-      context "with accessible_tenant_ids filtering (strategy = :parent_ids)" do
+      context "with accessible_tenant_ids filtering (strategy = :ancestor_ids)" do
         it "can see parent tenant's EMS" do
           ems = FactoryBot.create(:ems_vmware, :tenant => owner_tenant)
           results = described_class.search(:class => "ExtManagementSystem", :miq_group => child_group).first
@@ -1015,9 +1015,10 @@ RSpec.describe Rbac::Filterer do
 
           context "when tenant is not mapped to cloud tenant" do
             it 'returns all cloud templates when user is admin' do
-              User.current_user = admin_user
-              results = described_class.filtered(TemplateCloud, :user => admin_user)
-              expect(results).to match_array(TemplateCloud.all)
+              User.with_user(admin_user) do
+                results = described_class.filtered(TemplateCloud)
+                expect(results).to match_array(TemplateCloud.all)
+              end
             end
 
             context "when user is restricted user" do
@@ -1026,22 +1027,23 @@ RSpec.describe Rbac::Filterer do
               let!(:volume_template_openstack_1) { FactoryBot.create(:template_openstack, :tenant => tenant_3, :publicly_available => true) }
 
               it "returns all public cloud templates and its descendants" do
-                User.current_user = user_2
+                User.with_user(user_2) do
+                  results = described_class.filtered(VmOrTemplate)
+                  expect(results).to match_array([cloud_template, cloud_template_root, volume_template_openstack_1])
 
-                results = described_class.filtered(VmOrTemplate, :user => user_2)
-                expect(results).to match_array([cloud_template, cloud_template_root, volume_template_openstack_1])
-
-                results = described_class.filtered(TemplateCloud, :user => user_2)
-                expect(results).to match_array([cloud_template, cloud_template_root, volume_template_openstack_1])
+                  results = described_class.filtered(TemplateCloud)
+                  expect(results).to match_array([cloud_template, cloud_template_root, volume_template_openstack_1])
+                end
               end
 
               context "should ignore other tenant's private cloud templates" do
                 let!(:cloud_template) { FactoryBot.create(:template_openstack, :tenant => tenant_3, :publicly_available => false) }
                 let!(:volume_template_openstack_2) { FactoryBot.create(:template_openstack, :tenant => tenant_3, :publicly_available => false) }
                 it "returns public templates" do
-                  User.current_user = user_2
-                  results = described_class.filtered(TemplateCloud, :user => user_2)
-                  expect(results).to match_array([cloud_template_root, volume_template_openstack_1])
+                  User.with_user(user_2) do
+                    results = described_class.filtered(TemplateCloud)
+                    expect(results).to match_array([cloud_template_root, volume_template_openstack_1])
+                  end
                 end
               end
             end
@@ -1052,26 +1054,29 @@ RSpec.describe Rbac::Filterer do
 
             it "finds tenant's private cloud templates" do
               cloud_template2 = FactoryBot.create(:template_openstack, :tenant => tenant_2, :publicly_available => false)
-              User.current_user = user_2
-              results = described_class.filtered(TemplateCloud, :user => user_2)
-              expect(results).to match_array([cloud_template2])
+              User.with_user(user_2) do
+                results = described_class.filtered(TemplateCloud)
+                expect(results).to match_array([cloud_template2])
+              end
             end
 
             it "finds tenant's private and public cloud templates" do
               cloud_template2 = FactoryBot.create(:template_openstack, :tenant => tenant_2, :publicly_available => false)
               cloud_template3 = FactoryBot.create(:template_openstack, :tenant => tenant_2, :publicly_available => true)
-              User.current_user = user_2
-              results = described_class.filtered(TemplateCloud, :user => user_2)
-              expect(results).to match_array([cloud_template2, cloud_template3])
+              User.with_user(user_2) do
+                results = described_class.filtered(TemplateCloud)
+                expect(results).to match_array([cloud_template2, cloud_template3])
+              end
             end
 
             it "ignores other tenant's private templates" do
               cloud_template2 = FactoryBot.create(:template_openstack, :tenant => tenant_2, :publicly_available => false)
               cloud_template3 = FactoryBot.create(:template_openstack, :tenant => tenant_2, :publicly_available => true)
               FactoryBot.create(:template_openstack, :tenant => default_tenant, :publicly_available => false)
-              User.current_user = user_2
-              results = described_class.filtered(TemplateCloud, :user => user_2)
-              expect(results).to match_array([cloud_template2, cloud_template3])
+              User.with_user(user_2) do
+                results = described_class.filtered(TemplateCloud)
+                expect(results).to match_array([cloud_template2, cloud_template3])
+              end
             end
 
             it "finds other tenant's public templates" do
@@ -1079,9 +1084,10 @@ RSpec.describe Rbac::Filterer do
               cloud_template3 = FactoryBot.create(:template_openstack, :tenant => tenant_2, :publicly_available => true)
               cloud_template4 = FactoryBot.create(:template_openstack, :tenant => default_tenant, :publicly_available => true)
               FactoryBot.create(:template_openstack, :tenant => default_tenant, :publicly_available => false)
-              User.current_user = user_2
-              results = described_class.filtered(TemplateCloud, :user => user_2)
-              expect(results).to match_array([cloud_template2, cloud_template3, cloud_template4])
+              User.with_user(user_2) do
+                results = described_class.filtered(TemplateCloud)
+                expect(results).to match_array([cloud_template2, cloud_template3, cloud_template4])
+              end
             end
           end
         end
@@ -1212,10 +1218,10 @@ RSpec.describe Rbac::Filterer do
     end
 
     def get_rbac_results_for_and_expect_objects(klass, expected_objects)
-      User.current_user = user
-
-      results = described_class.search(:targets => klass).first
-      expect(results).to match_array(expected_objects)
+      User.with_user(user) do
+        results = described_class.search(:targets => klass).first
+        expect(results).to match_array(expected_objects)
+      end
     end
 
     describe "#rbac_filtered_objects" do
