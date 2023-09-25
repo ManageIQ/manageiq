@@ -7,7 +7,7 @@ module MiqConfigSssdLdap
     end
 
     def allowed_uids
-      "apache, root"
+      "apache, root, manageiq"
     end
 
     def user_attributes

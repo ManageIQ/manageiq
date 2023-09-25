@@ -99,7 +99,7 @@ RSpec.describe MiqConfigSssdLdap::SssdConf do
         pam_initgroups_scheme = always
 
         [ifp]
-        allowed_uids = apache, root
+        allowed_uids = apache, root, manageiq
         user_attributes = +mail, +givenname, +sn, +displayname, +domainname
       SSSD_CONF_UPDATED
     end
