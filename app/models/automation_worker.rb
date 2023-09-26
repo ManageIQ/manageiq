@@ -10,4 +10,10 @@ class AutomationWorker < MiqQueueWorkerBase
   def self.kill_priority
     MiqWorkerType::KILL_PRIORITY_GENERIC_WORKERS
   end
+
+  def configure_worker_deployment(definition, replicas = 0)
+    super
+
+    definition[:spec][:template][:spec][:serviceAccountName] = "manageiq-automation"
+  end
 end
