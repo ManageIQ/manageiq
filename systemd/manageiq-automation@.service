@@ -1,0 +1,13 @@
+[Unit]
+PartOf=manageiq-automation.target
+[Install]
+WantedBy=manageiq-automation.target
+[Service]
+WorkingDirectory=/var/www/miq/vmdb
+Environment=BUNDLER_GROUPS=manageiq_default,ui_dependencies
+EnvironmentFile=/etc/default/manageiq*.properties
+ExecStart=/usr/bin/ruby lib/workers/bin/run_single_worker.rb AutomationWorker --heartbeat --guid=%i
+User=manageiq
+Restart=no
+Type=notify
+Slice=manageiq-automation.slice
