@@ -256,14 +256,14 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openstack
-  revision: 90a76fffd586917e4fc2567e29940388f42053e3
+  revision: a4963f2a98104f85c6e7f46fc012968b45ef2114
   branch: quinteros
   specs:
     manageiq-providers-openstack (0.1.0)
       activesupport (~> 6.0)
       bunny (~> 2.1.0)
       excon (~> 0.71)
-      fog-openstack (~> 1.0)
+      fog-openstack (~> 1.1)
       more_core_extensions (>= 3.2, < 5)
       parallel (~> 1.12)
 
@@ -303,23 +303,23 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-vmware
-  revision: b7a13f7657b74581df92d88cb18f7237687d8b37
+  revision: 8fb08b2250cb7ab033c8627d7b94ecc39958e42f
   branch: quinteros
   specs:
     manageiq-providers-vmware (0.1.0)
-      ffi-vix_disk_lib (~> 1.1)
+      ffi-vix_disk_lib (~> 1.3, >= 1.3.1)
       fog-vcloud-director (~> 0.3.0)
-      rbvmomi2 (~> 3.5)
+      rbvmomi2 (~> 3.7)
       vmware_web_service (~> 3.2)
       vsphere-automation-sdk (~> 0.4.7)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-workflows
-  revision: d7837cbd812b0f495250a4e3e36d09051cacd12b
+  revision: 0d1e031d66c96dcd4e55dac39782d73bbd989926
   branch: quinteros
   specs:
     manageiq-providers-workflows (0.1.0)
-      floe (~> 0.3.0)
+      floe (~> 0.4.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-schema
@@ -645,9 +645,9 @@ GEM
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
-    ffi-vix_disk_lib (1.3.0)
+    ffi-vix_disk_lib (1.3.1)
       ffi
-    floe (0.3.0)
+    floe (0.4.0)
       awesome_spawn (~> 1.0)
       jsonpath (~> 1.1)
       kubeclient (~> 4.7)
@@ -1072,7 +1072,7 @@ GEM
       ffi (~> 1.0)
     rbnacl (4.0.2)
       ffi
-    rbvmomi2 (3.6.1)
+    rbvmomi2 (3.7.0)
       builder (~> 3.2)
       json (~> 2.3)
       nokogiri (~> 1.12, >= 1.12.5)
