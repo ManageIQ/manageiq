@@ -140,9 +140,12 @@ class MiqRequestTask < ApplicationRecord
     _log.info("Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
 
     if resource_action&.configuration_script_payload
-      configuration_script = resource_action.configuration_script_payload.run(:inputs => dialog_values, :userid => get_user.userid, :zone => zone, :object => self)
+      miq_task_id = resource_action.configuration_script_payload.run(:inputs => dialog_values, :userid => get_user.userid, :zone => zone, :object => self)
+
+      options[:miq_task_id]                     = miq_task_id
       options[:configuration_script_payload_id] = resource_action.configuration_script_payload.id
-      options[:configuration_script_id]         = configuration_script.id
+      options[:configuration_script_id]         = MiqTask.find(miq_task_id).context_data[:workflow_instance_id]
+      save!
     elsif self.class::AUTOMATE_DRIVES
       deliver_to_automate(req_type, zone)
     else
