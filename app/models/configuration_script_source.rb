@@ -9,6 +9,8 @@ class ConfigurationScriptSource < ApplicationRecord
 
   virtual_total :total_payloads, :configuration_script_payloads
 
+  validates :scm_url, :uniqueness => {:scope => [:type, :scm_branch]}
+
   def self.display_name(number = 1)
     n_('Repository', 'Repositories', number)
   end
