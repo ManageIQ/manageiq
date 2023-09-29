@@ -315,7 +315,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-workflows
-  revision: 0d1e031d66c96dcd4e55dac39782d73bbd989926
+  revision: 4b3dfe7acd6188303db0d5692ed822fb5e60c149
   branch: quinteros
   specs:
     manageiq-providers-workflows (0.1.0)
