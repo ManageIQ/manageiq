@@ -35,7 +35,7 @@ module Vmdb
           :name    => engine.name,
           :version => version(engine),
           :path    => engine.root.to_s,
-          :repo    => engine.root.to_s.match(%r{/gems/(.+)-\h+$}).captures.first
+          :repo    => engine.root.to_s.match(%r{/gems/(.+)-\h+$})&.captures&.first || File.dirname(engine.root.to_s)
         }
       end
     end
