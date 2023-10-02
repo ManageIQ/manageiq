@@ -47,7 +47,7 @@ module ManageIQ
       empty_directory_with_keep_file "bundler.d"
       template "config/secrets.defaults.yml"
       template "config/settings.yml"
-      template "lib/%plugin_name%.rb"
+      template "lib/%plugin_path%.rb"
       template "lib/%plugin_path%/engine.rb"
       template "lib/%plugin_path%/version.rb"
       template "lib/tasks/README.md"
