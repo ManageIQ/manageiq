@@ -120,8 +120,13 @@ RSpec.describe EmsEvent do
         }
       end
 
-      context "messaging_type: artemis" do
-        before { stub_settings_merge(:messaging => {:type => 'artemis'}) }
+      context "messaging_type: artemis, dequeue_method: miq_messaging" do
+        before do
+          stub_settings_merge(
+            :messaging => {:type => 'artemis'},
+            :workers   => {:worker_base => {:queue_worker_base => {:defaults => {:dequeue_method => "miq_messaging"}}}}
+          )
+        end
 
         it "Adds event to Artemis queue" do
           messaging_client = double("ManageIQ::Messaging")
@@ -140,8 +145,36 @@ RSpec.describe EmsEvent do
         end
       end
 
-      context "messaging_type: kafka" do
-        before { stub_settings_merge(:messaging => {:type => 'kafka'}) }
+      context "messaging_type: artemis, dequeue_method: drb" do
+        before do
+          stub_settings_merge(
+            :messaging => {:type => 'artemis'},
+            :workers   => {:worker_base => {:queue_worker_base => {:defaults => {:dequeue_method => "drb"}}}}
+          )
+        end
+
+        it "Adds event to Kafka topic" do
+          expected_queue_payload = {
+            :service     => "event",
+            :target_id   => ems.id,
+            :class_name  => described_class.name,
+            :method_name => 'add',
+            :args        => [event_hash],
+          }
+
+          expect(MiqQueue).to receive(:submit_job).with(expected_queue_payload)
+
+          described_class.add_queue('add', ems.id, event_hash)
+        end
+      end
+
+      context "messaging_type: kafka, dequeue_method: miq_messaging" do
+        before do
+          stub_settings_merge(
+            :messaging => {:type => 'kafka'},
+            :workers   => {:worker_base => {:queue_worker_base => {:defaults => {:dequeue_method => "miq_messaging"}}}}
+          )
+        end
 
         it "Adds event to Kafka topic" do
           messaging_client = double("ManageIQ::Messaging")
@@ -155,6 +188,29 @@ RSpec.describe EmsEvent do
 
           expect(messaging_client).to receive(:publish_topic).with(expected_queue_payload)
           expect(MiqQueue).to receive(:messaging_client).with('event_handler').and_return(messaging_client).twice
+
+          described_class.add_queue('add', ems.id, event_hash)
+        end
+      end
+
+      context "messaging_type: kafka, dequeue_method: drb" do
+        before do
+          stub_settings_merge(
+            :messaging => {:type => 'kafka'},
+            :workers   => {:worker_base => {:queue_worker_base => {:defaults => {:dequeue_method => "drb"}}}}
+          )
+        end
+
+        it "Adds event to Kafka topic" do
+          expected_queue_payload = {
+            :service     => "event",
+            :target_id   => ems.id,
+            :class_name  => described_class.name,
+            :method_name => 'add',
+            :args        => [event_hash],
+          }
+
+          expect(MiqQueue).to receive(:submit_job).with(expected_queue_payload)
 
           described_class.add_queue('add', ems.id, event_hash)
         end

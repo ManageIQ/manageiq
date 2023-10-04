@@ -104,7 +104,7 @@ class EmsEvent < EventStream
   end
 
   def self.add_queue(meth, ems_id, event)
-    if MiqQueue.messaging_client('event_handler').present?
+    if MiqEventHandler.worker_settings[:dequeue_method] != "drb" && MiqQueue.messaging_client('event_handler').present?
       MiqQueue.messaging_client('event_handler').publish_topic(
         :service => "manageiq.#{MiqEventHandler.default_queue_name}",
         :sender  => ems_id,
