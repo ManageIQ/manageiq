@@ -60,6 +60,7 @@ gem "net-ldap",                         "~>0.16.1",          :require => false
 gem "net-ping",                         "~>1.7.4",           :require => false
 gem "openscap",                         "~>0.4.8",           :require => false
 gem "optimist",                         "~>3.0",             :require => false
+gem "psych",                            "<4",                :require => false
 gem "pg",                               ">=1.3", "!= 1.4.0", :require => false # 1.4.0 caused https://github.com/ged/ruby-pg/issues/466
 gem "pg-dsn_parser",                    "~>0.1.0",           :require => false
 gem "query_relation",                   "~>0.1.0",           :require => false
