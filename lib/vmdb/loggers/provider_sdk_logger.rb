@@ -17,6 +17,7 @@ module Vmdb::Loggers
     class Formatter < ManageIQ::Loggers::Base::Formatter
       def call(severity, datetime, progname, msg)
         msg = msg.sub(/Bearer(.*?)\"/, 'Bearer [FILTERED] "')
+        msg = msg.sub(/Basic(.*?)\"/, 'Basic [FILTERED] "')
         msg = msg.sub(/SharedKey(.*?)\"/, 'SharedKey [FILTERED] "')
         msg = msg.sub(/client_secret=(.*?)&/, "client_secret=[FILTERED]&")
         msg = msg.sub(/apikey=(.*?)\"/, 'apikey=[FILTERED]"')
