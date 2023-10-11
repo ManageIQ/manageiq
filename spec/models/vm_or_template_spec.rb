@@ -663,7 +663,9 @@ RSpec.describe VmOrTemplate do
 
   context "#supports?(:smartstate_analysis)" do
     it "returns true for VMware VM" do
-      vm =  FactoryBot.create(:vm_vmware)
+      vm = FactoryBot.create(:vm_vmware,
+                             :storage => storage)
+
       allow(vm).to receive_messages(:archived? => false)
       allow(vm).to receive_messages(:orphaned? => false)
       expect(vm.supports?(:smartstate_analysis)).to eq(true)
