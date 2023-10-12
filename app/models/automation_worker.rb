@@ -15,5 +15,6 @@ class AutomationWorker < MiqQueueWorkerBase
     super
 
     definition[:spec][:template][:spec][:serviceAccountName] = "manageiq-automation"
+    definition[:spec][:template][:spec][:containers][0][:env] << {:name => "AUTOMATION_JOB_SERVICE_ACCOUNT", :value => ENV.fetch("WORKER_SERVICE_ACCOUNT")}
   end
 end
