@@ -315,11 +315,11 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-workflows
-  revision: 85154b698a6b705b97fcae1e114fa29dd667c185
+  revision: 81d76fda2a9b91e2f2f4fa9557c2fdae3962b5b3
   branch: quinteros
   specs:
     manageiq-providers-workflows (0.1.0)
-      floe (~> 0.4.1)
+      floe (~> 0.5.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-schema
@@ -647,7 +647,7 @@ GEM
       rake
     ffi-vix_disk_lib (1.3.1)
       ffi
-    floe (0.4.1)
+    floe (0.5.0)
       awesome_spawn (~> 1.0)
       jsonpath (~> 1.1)
       kubeclient (~> 4.7)
