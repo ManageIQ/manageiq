@@ -43,7 +43,12 @@ class MiqScheduleWorker::Jobs
   end
 
   def job_check_for_evm_snapshots(job_not_found_delay)
-    queue_work_on_each_zone(:class_name  => "Job", :method_name => "check_for_evm_snapshots", :args => [job_not_found_delay])
+    queue_work_on_each_zone_with_active_role(
+      "smartstate",
+      :class_name  => "Job",
+      :method_name => "check_for_evm_snapshots",
+      :args        => [job_not_found_delay]
+    )
   end
 
   def vm_scan_dispatcher_dispatch
@@ -206,5 +211,11 @@ class MiqScheduleWorker::Jobs
 
   def queue_work_on_each_zone(options)
     Zone.in_my_region.each { |z| queue_work(options.merge(:zone => z.name)) }
+  end
+
+  def queue_work_on_each_zone_with_active_role(role_name, options)
+    Zone.in_my_region
+        .with_active_role(role_name)
+        .each { |z| queue_work(options.merge(:zone => z.name)) }
   end
 end
