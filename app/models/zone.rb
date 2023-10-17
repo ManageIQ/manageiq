@@ -115,6 +115,10 @@ class Zone < ApplicationRecord
     in_my_region.find_by(:name => "default")
   end
 
+  def self.with_active_role(role_name)
+    select { |z| z.role_active?(role_name) }
+  end
+
   # Zone for paused providers (no servers in it), not visible by default
   def self.maintenance_zone
     MiqRegion.my_region&.maintenance_zone

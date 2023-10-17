@@ -215,7 +215,7 @@ class MiqScheduleWorker::Jobs
 
   def queue_work_on_each_zone_with_active_role(role_name, options)
     Zone.in_my_region
-        .select { |z| z.role_active?(role_name) }
+        .with_active_role(role_name)
         .each { |z| queue_work(options.merge(:zone => z.name)) }
   end
 end
