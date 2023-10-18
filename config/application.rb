@@ -177,6 +177,8 @@ module Vmdb
       Vmdb::Initializer.init
       ActiveRecord::Base.connection_pool.release_connection
       puts "** #{Vmdb::Appliance.BANNER}" unless Rails.env.production?
+
+      YamlPermittedClasses.initialize_app_yaml_permitted_classes
     end
 
     console do
