@@ -123,6 +123,7 @@ module Authenticator
       return user_attrs[:username] if user_attrs[:domain].nil?
 
       user_name = user_attrs[:username].split("@").first
+      user_name = user_name.split("\\").last if user_name.include?("\\")
       "#{user_name}@#{user_attrs[:domain]}".downcase
     end
 
