@@ -15,10 +15,10 @@ source /etc/default/evm
 
 tarball="log/evm_current_$(uname -n)_$(date +%Y%m%d_%H%M%S).tar.xz"
 
-if [[ -n "$APPLIANCE_PG_DATA" && -d "$APPLIANCE_PG_DATA/pg_log" ]]; then
+if [[ -n "$APPLIANCE_PG_DATA" && -d "$APPLIANCE_PG_DATA/log" ]]; then
     echo "This ManageIQ appliance has a Database server and is running version: $(psql --version)"
     echo " Log collection starting:"
-    XZ_OPT=-9 tar -cJvf ${tarball} --sparse --warning=no-file-changed -X $collect_logs_directory/exclude_files --exclude="/var/log/messages-*" --exclude="/var/log/journal/*/system@*.journal" BUILD GUID VERSION log/*.log log/*.txt config/* /var/log/* log/apache/*.log $APPLIANCE_PG_DATA/pg_log/* $APPLIANCE_PG_DATA/postgresql.conf
+    XZ_OPT=-9 tar -cJvf ${tarball} --sparse --warning=no-file-changed -X $collect_logs_directory/exclude_files --exclude="/var/log/messages-*" --exclude="/var/log/journal/*/system@*.journal" BUILD GUID VERSION log/*.log log/*.txt config/* /var/log/* log/apache/*.log $APPLIANCE_PG_DATA/log/* $APPLIANCE_PG_DATA/postgresql.conf
 else
     echo "This ManageIQ appliance is not a Database server"
     echo " Log collection starting:"
