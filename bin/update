@@ -13,8 +13,34 @@ if ARGV.any?
         SKIP_AUTOMATE_RESET  Skip the reset of the automate domain.
         SKIP_TEST_RESET      Skip the creation of the test enviroment.  Defaults to
                              true in production mode since the tasks do not exist.
+
+    Or choose individual options:
   BANNER
   exit 1
+  require 'optparse'
+
+  op = OptionParser.new do |opts|
+    opts.program_name = File.basename($PROGRAM_NAME)
+    opts.banner = banner
+    opts.on("-h", "--help", "This Message") do
+      puts opts
+      exit 1
+    end
+    opts.on("--config", "Ensure config files")         { options[:config] = true }
+    opts.on("--bundler", "Bundle dependencies")        { options[:bundler] = true }
+    opts.on("--test", "Setup test Environment")        { options[:test] = true }
+    opts.on("--ui", "Update UI")                       { options[:ui] = true }
+    opts.on("--database", "Migrate and Seed database") { options[:database] = true }
+    opts.on("--automate", "Reset automate domain")     { options[:automate] = true }
+    opts.on("--assets", "Compile assets")              { options[:assets] = true }
+    opts.on("--logs", "Clear logs and temp")           { options[:logs] = true }
+  end
+  begin
+    op.parse!(ARGV)
+  rescue OptionParser::InvalidOption
+    puts op
+    exit 1
+  end
 else
   options = {
     :config   => true,
