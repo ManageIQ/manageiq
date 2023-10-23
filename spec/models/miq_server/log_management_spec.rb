@@ -96,7 +96,7 @@ RSpec.describe MiqServer do
 
       it "pg_data_dir set" do
         allow(@miq_server).to receive_messages(:pg_data_dir => '/var/lib/pgsql/data')
-        expected = %w(/var/lib/pgsql/data/*.conf /var/lib/pgsql/data/pg_log/* /etc/manageiq/postgresql.conf.d/*)
+        expected = %w(/var/lib/pgsql/data/*.conf /var/lib/pgsql/data/log/* /etc/manageiq/postgresql.conf.d/*)
         expect(@miq_server.pg_log_patterns.collect(&:to_s)).to match_array expected
       end
     end

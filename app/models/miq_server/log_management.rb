@@ -78,7 +78,7 @@ module MiqServer::LogManagement
     return [] unless pg_data
 
     pg_data = Pathname.new(pg_data)
-    [pg_data.join("*.conf"), pg_data.join("pg_log/*"), Pathname.new("/etc/manageiq/postgresql.conf.d/*")]
+    [pg_data.join("*.conf"), pg_data.join("log/*"), Pathname.new("/etc/manageiq/postgresql.conf.d/*")]
   end
 
   def log_start_and_end_for_pattern(pattern)
