@@ -1,44 +1,63 @@
 #!/usr/bin/env ruby
 require_relative '../lib/manageiq/environment'
 
-if ARGV.any?
-  puts <<-EOS
-Usage: bin/update
+options = {}
 
-Environment Variable Options:
-    SKIP_DATABASE_SETUP  Skip the migration and seeding of the database.
-    SKIP_UI_UPDATE       Skip the update of UI assets.
-    SKIP_AUTOMATE_RESET  Skip the reset of the automate domain.
-    SKIP_TEST_RESET      Skip the creation of the test enviroment.  Defaults to
-                         true in production mode since the tasks do not exist.
-EOS
+if ARGV.any?
+  puts <<-BANNER
+    Usage: bin/#{File.basename($PROGRAM_NAME)}
+
+    Environment Variable Options:
+        SKIP_DATABASE_SETUP  Skip the migration and seeding of the database.
+        SKIP_UI_UPDATE       Skip the update of UI assets.
+        SKIP_AUTOMATE_RESET  Skip the reset of the automate domain.
+        SKIP_TEST_RESET      Skip the creation of the test enviroment.  Defaults to
+                             true in production mode since the tasks do not exist.
+  BANNER
   exit 1
+else
+  options = {
+    :config   => true,
+    :bundler  => true,
+    :test     => true,
+    :ui       => true,
+    :database => true,
+    :automate => true,
+    :assets   => false,
+    :logs     => true
+  }
+
+  options[:ui]       = false if ENV["SKIP_UI_UPDATE"] || ENV["CI"]
+  options[:database] = false if ENV["SKIP_DATABASE_SETUP"] || ENV["CI"]
+  options[:test]     = false if ENV["SKIP_TEST_RESET"] || ENV["RAILS_ENV"] == "production"
+  options[:automate] = false if ENV["SKIP_AUTOMATE_RESET"]
+  options[:assets]   = true  if ENV['RAILS_ENV'] == 'production'
 end
 
-ENV["SKIP_TEST_RESET"] = "true" if ENV["RAILS_ENV"] == "production"
-
 Dir.chdir(ManageIQ::Environment::APP_ROOT) do
-  ManageIQ::Environment.ensure_config_files
+  ManageIQ::Environment.ensure_config_files if options[:config]
 
-  puts '== Installing dependencies =='
-  ManageIQ::Environment.install_bundler
-  ManageIQ::Environment.bundle_config
-  ManageIQ::Environment.bundle_update(force: true)
+  if options[:bundler]
+    puts '== Installing dependencies =='
+    ManageIQ::Environment.install_bundler
+    ManageIQ::Environment.bundle_config
+    ManageIQ::Environment.bundle_update(:force => true)
+  end
 
-  ui_thread = ManageIQ::Environment.update_ui_thread unless ENV["SKIP_UI_UPDATE"]
+  ui_thread = ManageIQ::Environment.update_ui_thread if options[:ui]
 
-  unless ENV["SKIP_DATABASE_SETUP"]
+  if options[:database]
     ManageIQ::Environment.migrate_database
     ManageIQ::Environment.seed_database
   end
 
-  ManageIQ::Environment.setup_test_environment unless ENV["SKIP_TEST_RESET"]
-  ManageIQ::Environment.reset_automate_domain  unless ENV["SKIP_AUTOMATE_RESET"]
+  ManageIQ::Environment.setup_test_environment if options[:test]
+  ManageIQ::Environment.reset_automate_domain  if options[:automate]
 
   ui_thread&.join
 
   # Make sure update_ui is done before compiling assets
-  ManageIQ::Environment.compile_assets if ENV['RAILS_ENV'] == 'production'
+  ManageIQ::Environment.compile_assets if options[:assets]
 
-  ManageIQ::Environment.clear_logs_and_temp
+  ManageIQ::Environment.clear_logs_and_temp if options[:logs]
 end
