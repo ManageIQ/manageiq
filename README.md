@@ -10,7 +10,7 @@
 [![Translate](https://img.shields.io/badge/translate-transifex-blue.svg)](https://www.transifex.com/manageiq/manageiq/dashboard/)
 [![Open Source Helpers](https://www.codetriage.com/manageiq/manageiq/badges/users.svg)](https://www.codetriage.com/manageiq/manageiq)
 
-[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/4282/badge)](https://bestpractices.coreinfrastructure.org/projects/4282)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/4282/badge)](https://www.bestpractices.dev/projects/4282)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/ManageIQ/manageiq/badge)](https://api.securityscorecards.dev/projects/github.com/ManageIQ/manageiq)
 
 [![Build history for master branch](https://buildstats.info/github/chart/ManageIQ/manageiq?branch=master&buildCount=50&includeBuildsFromPullRequest=false&showstats=false)](https://github.com/ManageIQ/manageiq/actions?query=branch%3Amaster)
