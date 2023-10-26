@@ -55,6 +55,7 @@ gem "manageiq-ssh-util",                "~>0.1.1",           :require => false
 gem "memoist",                          "~>0.16.0",          :require => false
 gem "money",                            "~>6.13.5",          :require => false
 gem "more_core_extensions"                                                     # min version should be set in manageiq-gems-pending, not here
+gem "net-ftp",                          "~>0.1.2",           :require => false
 gem "net-ldap",                         "~>0.16.1",          :require => false
 gem "net-ping",                         "~>1.7.4",           :require => false
 gem "openscap",                         "~>0.4.8",           :require => false
@@ -87,6 +88,7 @@ gem "mime-types",                       "~>3.0",             :require => false, 
 
 # Modified gems (forked on Github)
 gem "handsoap",                         "=0.2.5.5",          :require => false, :source => "https://rubygems.manageiq.org" # for manageiq-gems-pending only
+gem "fog-google",                       "=1.22.0.1",         :require => false, :source => "https://rubygems.manageiq.org" # for manageiq-providers-google
 
 # In 1.9.3: Time.parse uses british version dd/mm/yyyy instead of american version mm/dd/yyyy
 # american_date fixes this to be compatible with 1.8.7 until all callers can be converted to the 1.9.3 format prior to parsing.

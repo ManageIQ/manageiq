@@ -7,6 +7,9 @@
 #
 # Note, this is used to autoload constants serialized as yaml from one process and loaded in another such as through
 # args in the MiqQueue. An alternative would be to eager load all of our autoload_paths in all processes.
+#
+# This is still needed in some areas for zeitwerk, such as YAML files for tests in the manageiq-providers-vmware
+# that reference a constant: RbVmomi::VIM::TaskEvent
 Psych::Visitors::ToRuby.prepend Module.new {
   def resolve_class(klass_name)
     (class_loader.class != Psych::ClassLoader::Restricted && klass_name && klass_name.safe_constantize) || super

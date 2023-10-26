@@ -96,6 +96,11 @@ module Vmdb
 
     config.autoload_paths += config.eager_load_paths
 
+    config.autoloader = :zeitwerk
+
+    # config.load_defaults 6.1
+    # Disable defaults as ActiveRecord::Base.belongs_to_required_by_default = true causes MiqRegion.seed to fail validation on belongs_to maintenance zone
+
     # NOTE:  If you are going to make changes to autoload_paths, please make
     # sure they are all strings.  Rails will push these paths into the
     # $LOAD_PATH.
@@ -157,6 +162,15 @@ module Vmdb
     initializer :load_vmdb_settings, :before => :load_config_initializers do
       Vmdb::Settings.init
       Vmdb::Loggers.apply_config(::Settings.log)
+    end
+
+    initializer :eager_load_all_the_things, :after => :load_config_initializers do
+      if ENV['DEBUG_MANAGEIQ_ZEITWERK'].present?
+        config.eager_load_paths += config.autoload_paths
+        Vmdb::Plugins.each do |plugin|
+          plugin.config.eager_load_paths += plugin.config.autoload_paths
+        end
+      end
     end
 
     config.after_initialize do

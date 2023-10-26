@@ -105,7 +105,7 @@ class Service < ApplicationRecord
 
   alias parent_service parent
   alias_attribute :service, :parent
-  deprecate_attribute :display, :visible
+  deprecate_attribute :display, :visible, :type => :boolean
   virtual_belongs_to :service
 
   def power_states

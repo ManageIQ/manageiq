@@ -108,5 +108,27 @@ RSpec.describe MiqScheduleWorker::Jobs do
         expect(MiqQueue.where(:method_name => "log_config").first).to have_attributes(:queue_name => "miq_server", :server_guid => guid, :zone => zone.name, :priority => MiqQueue::MEDIUM_PRIORITY)
       end
     end
+
+    describe "#job_check_for_evm_snapshots" do
+      context "with no zones having an active smartstate role" do
+        it "doesn't queue any work" do
+          described_class.new.job_check_for_evm_snapshots(1.hour)
+          expect(MiqQueue.count).to be_zero
+        end
+      end
+
+      context "with a zone having an active smartstate role" do
+        let(:role) { ServerRole.find_by(:name => "smartstate") || FactoryBot.create(:server_role, :name => 'smartstate', :max_concurrent => 0) }
+        before do
+          server.assign_role(role).update(:active => true)
+        end
+
+        it "queues the Job.check_for_evm_snapshots" do
+          described_class.new.job_check_for_evm_snapshots(1.hour)
+          expect(MiqQueue.count).to eq(1)
+          expect(MiqQueue.where(:class_name => "Job", :method_name => "check_for_evm_snapshots").first).to have_attributes(:queue_name => "generic", :zone => zone.name, :priority => MiqQueue::MEDIUM_PRIORITY)
+        end
+      end
+    end
   end
 end

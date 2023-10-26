@@ -1834,6 +1834,8 @@ en:
       operating_system:            OS
       physical_server:             Physical Server
       physical_servers:            Physical Servers
+      physical_storage:            Physical Storage
+      physical_storages:           Physical Storages
       registry_items:              Registry
       repository:                  Repository
       resource_pool:               Resource Pool

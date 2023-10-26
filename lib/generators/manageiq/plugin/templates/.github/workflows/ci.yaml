@@ -5,6 +5,7 @@ on:
   pull_request:
   schedule:
   - cron: '0 0 * * *'
+  workflow_dispatch:
 
 jobs:
   ci:
@@ -28,7 +29,7 @@ jobs:
       PGPASSWORD: smartvm
       CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up system
       run: bin/before_install
     - name: Set up Ruby

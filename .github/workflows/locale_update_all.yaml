@@ -27,7 +27,7 @@ jobs:
       SKIP_TEST_RESET: true
       SKIP_DATABASE_SETUP: true
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up system
       run: bin/before_install
     - name: Set up Ruby

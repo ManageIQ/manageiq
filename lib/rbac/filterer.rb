@@ -127,7 +127,7 @@ module Rbac
     # | * | :descendant_ids    | all parents can see these resources |
     # |   | :parent_ids        | only direct children can see these resources |
     # |   | :sibling_ids       | all tenants of the same level can see these |
-    # | * | nil                | only the same tenant can see the resources |
+    # | * | nil                | only the same tenant can see the resources (default)|
     #
     # Star * highlights most relevant methods
     TENANT_ACCESS_STRATEGY = {
