@@ -15,6 +15,17 @@ class ContainerOrchestrator
           :template => {
             :metadata => {:name => name, :labels => common_labels.merge(:name => name)},
             :spec     => {
+              :affinity => {
+                :nodeAffinity => {
+                  :requiredDuringSchedulingIgnoredDuringExecution => {
+                    :nodeSelectorTerms => [{
+                      :matchExpressions => [
+                        {:key => "kubernetes.io/arch", :operator => "In", :values => ContainerOrchestrator.new.my_node_affinity_arch_values}
+                      ]}
+                    ]
+                  }
+                }
+              },
               :serviceAccountName => ENV["WORKER_SERVICE_ACCOUNT"],
               :containers         => [{
                 :name            => name,

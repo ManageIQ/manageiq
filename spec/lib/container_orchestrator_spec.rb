@@ -127,6 +127,12 @@ RSpec.describe ContainerOrchestrator do
   end
 
   context "#deployment_definition (private)" do
+    let(:container_orchestrator) { ContainerOrchestrator.new }
+    before do
+      allow(ContainerOrchestrator).to receive(:new).and_return(container_orchestrator)
+      expect(container_orchestrator).to receive(:my_node_affinity_arch_values).and_return(["amd64", "arm64"])
+    end
+
     it "skips the database root certificate if the orchestrator doesn't have it" do
       expect(File).to receive(:file?).with("/.postgresql/root.crt").and_return(false)
       allow(File).to receive(:file?).and_call_original # allow other calls to .file? to still work
@@ -181,6 +187,16 @@ RSpec.describe ContainerOrchestrator do
         }
       })
     end
+
+    it "includes node affinities" do
+      deployment_definition = subject.send(:deployment_definition, "test")
+
+      expect(deployment_definition.fetch_path(:spec, :template, :spec, :affinity, :nodeAffinity, :requiredDuringSchedulingIgnoredDuringExecution, :nodeSelectorTerms, 0, :matchExpressions, 0)).to include({
+        :key => "kubernetes.io/arch",
+        :operator => "In",
+        :values => ["amd64", "arm64"],
+      })
+    end
   end
 
   context "with stub connections" do
@@ -202,6 +218,12 @@ RSpec.describe ContainerOrchestrator do
     end
 
     describe "#create_deployment" do
+      let(:container_orchestrator) { ContainerOrchestrator.new }
+      before do
+        allow(ContainerOrchestrator).to receive(:new).and_return(container_orchestrator)
+        expect(container_orchestrator).to receive(:my_node_affinity_arch_values).and_return(["amd64", "arm64"])
+      end
+
       it "creates a deployment with the given name and edits" do
         expect(apps_connection_stub).to receive(:create_deployment) do |definition|
           expect(definition[:metadata][:name]).to eq("test")
