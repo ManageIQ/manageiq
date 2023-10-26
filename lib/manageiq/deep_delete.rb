@@ -100,7 +100,7 @@ module ManageIQ
               recursive_delete(rscope, :name => rname)
             end
           when :delete_all
-            run(rname, "delete") { rscope.delete_all }
+            run(rname, "delete") { batch(rscope) { |subset| subset.delete_all } }
           when :nullify
             run(rname, "null") { rscope.update_all(relation.foreign_key => nil) } # rubocop:disable Rails/SkipsModelValidations
           else
@@ -114,9 +114,9 @@ module ManageIQ
       elsif callbacks
         # issue - this works for after destroy, but may have problems with a before destroy hook
         #   they can reference children
-        run(name, "destroy") { scope.destroy_all.count }
+        run(name, "destroy") { batch(scope) { |subset| subset.destroy_all.count } }
       else
-        run(name, "delete") { scope.delete_all }
+        run(name, "delete") { batch(scope) { |subset| subset.delete_all } }
       end
       _log.debug { "/> deep_delete #{name}" }
     end
@@ -155,6 +155,24 @@ module ManageIQ
       ruby_callbacks_we_can_ignore = IGNORE_CALLBACKS[klass.name]&.to_i || IGNORE_CALLBACKS[klass.base_class.name].to_i
       need_to_call_ruby_callbacks = ruby_callback_count > ruby_callbacks_we_can_ignore
       [dependent_refs, need_to_call_ruby_callbacks]
+    end
+
+    # in_batches for delete or destroy (not nullify)
+    # similar to:
+    #   scope.in_batches(of: batch_size, :load => true).destroy_all.count
+    # 
+    # @block takes a subscope and returns a count
+    def batch(scope, batch_size: 1000, &block)
+      pk = scope.primary_key  
+      total = 0
+
+      loop do
+        if (id = scope.order(pk).limit(1).offset(batch_size).pluck(pk).first)
+          total += block.call(scope.where("#{pk} < ?", id))
+        else
+          return total += block.call(scope)
+        end
+      end
     end
 
     def run(name, action, &block)
