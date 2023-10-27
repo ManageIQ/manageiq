@@ -95,8 +95,11 @@ class MiqTemplate < VmOrTemplate
     end
   end
 
-  def memory_for_request(prov, cloud, vendor, flavor_obj = nil)
-    memory = flavor_obj.try(:memory) if cloud
+  def memory_for_request(request, flavor_id = nil)
+    flavor_id ||= request.get_option(:instance_type)
+    flavor_obj = Flavor.find(flavor_id)
+
+    memory = flavor_obj.try(:memory) if request.source.try(:cloud)
     return memory if memory.present?
 
     request = prov.kind_of?(MiqRequest) ? prov : prov.miq_request
@@ -104,8 +107,11 @@ class MiqTemplate < VmOrTemplate
     %w(amazon openstack google).include?(vendor) ? memory : memory.megabytes
   end
 
-  def number_of_cpus_for_request(prov, cloud, flavor_obj)
-    num_cpus = flavor_obj.try(:cpus) if cloud
+  def number_of_cpus_for_request(request, flavor_id = nil)
+    flavor_id ||= request.get_option(:instance_type)
+    flavor_obj = Flavor.find(flavor_id)
+
+    num_cpus = flavor_obj.try(:cpus) if request.source.try(:cloud)
     return num_cpus if num_cpus.present?
 
     request = prov.kind_of?(MiqRequest) ? prov : prov.miq_request

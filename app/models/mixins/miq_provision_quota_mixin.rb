@@ -293,8 +293,8 @@ module MiqProvisionQuotaMixin
     return if num_vms_for_request.zero?
     flavor_obj = flavor(pr)
     result[:count] += num_vms_for_request
-    result[:memory] += pr.vm_template.memory_for_request(pr, cloud?(pr), vendor(pr), flavor_obj) * num_vms_for_request
-    result[:cpu] += pr.vm_template.number_of_cpus_for_request(pr, cloud?(pr), flavor_obj) * num_vms_for_request
+    result[:memory] += pr.vm_template.memory_for_request(pr) * num_vms_for_request
+    result[:cpu] += pr.vm_template.number_of_cpus_for_request(pr) * num_vms_for_request
     result[:storage] += storage(pr, cloud?(pr), vendor(pr), flavor_obj) * num_vms_for_request
     result[:ids] << pr.id
 
@@ -302,8 +302,8 @@ module MiqProvisionQuotaMixin
       next unless p.state == 'Active'
       host_id, storage_id = p.get_option(:dest_host).to_i, p.get_option(:dest_storage).to_i
       active = result[:active]
-      active[:memory_by_host_id][host_id] += p.vm_template.memory_for_request(p, cloud?(pr), vendor(pr), flavor_obj)
-      active[:cpu_by_host_id][host_id] += p.vm_template.number_of_cpus_for_request(p, cloud?(pr), flavor_obj)
+      active[:memory_by_host_id][host_id] += p.vm_template.memory_for_request(p)
+      active[:cpu_by_host_id][host_id] += p.vm_template.number_of_cpus_for_request(p)
       active[:storage_by_id][storage_id] += storage(p, cloud?(pr), vendor(pr), flavor_obj)
       active[:vms_by_storage_id][storage_id] << p.id
       active[:ids] << p.id
