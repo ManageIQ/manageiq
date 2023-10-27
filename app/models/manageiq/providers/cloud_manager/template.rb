@@ -155,6 +155,18 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
     n_('Image', 'Images', number)
   end
 
+  def memory_for_request(request, flavor_id = nil)
+    flavor_id ||= request.get_option(:instance_type)
+    flavor_obj = Flavor.find(flavor_id)
+    flavor_obj.try(:memory)
+  end
+
+  def number_of_cpus_for_request(request, flavor_id = nil)
+    flavor_id ||= request.get_option(:instance_type)
+    flavor_obj = Flavor.find(flavor_id)
+    flavor_obj.try(:cpus)
+  end
+
   private
 
   def raise_created_event

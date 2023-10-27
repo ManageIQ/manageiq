@@ -96,27 +96,11 @@ class MiqTemplate < VmOrTemplate
   end
 
   def memory_for_request(request, flavor_id = nil)
-    flavor_id ||= request.get_option(:instance_type)
-    flavor_obj = Flavor.find(flavor_id)
-
-    memory = flavor_obj.try(:memory) if request.source.try(:cloud)
-    return memory if memory.present?
-
-    request = prov.kind_of?(MiqRequest) ? prov : prov.miq_request
-    memory = request.get_option(:vm_memory).to_i
-    %w(amazon openstack google).include?(vendor) ? memory : memory.megabytes
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   def number_of_cpus_for_request(request, flavor_id = nil)
-    flavor_id ||= request.get_option(:instance_type)
-    flavor_obj = Flavor.find(flavor_id)
-
-    num_cpus = flavor_obj.try(:cpus) if request.source.try(:cloud)
-    return num_cpus if num_cpus.present?
-
-    request = prov.kind_of?(MiqRequest) ? prov : prov.miq_request
-    num_cpus = request.get_option(:number_of_sockets).to_i * request.get_option(:cores_per_socket).to_i
-    num_cpus.zero? ? request.get_option(:number_of_cpus).to_i : num_cpus
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   private_class_method def self.refresh_association
