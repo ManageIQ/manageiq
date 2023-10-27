@@ -95,6 +95,24 @@ class MiqTemplate < VmOrTemplate
     end
   end
 
+  def memory_for_request(prov, cloud, vendor, flavor_obj = nil)
+    memory = flavor_obj.try(:memory) if cloud
+    return memory if memory.present?
+
+    request = prov.kind_of?(MiqRequest) ? prov : prov.miq_request
+    memory = request.get_option(:vm_memory).to_i
+    %w(amazon openstack google).include?(vendor) ? memory : memory.megabytes
+  end
+
+  def number_of_cpus_for_request(prov, cloud, flavor_obj)
+    num_cpus = flavor_obj.try(:cpus) if cloud
+    return num_cpus if num_cpus.present?
+
+    request = prov.kind_of?(MiqRequest) ? prov : prov.miq_request
+    num_cpus = request.get_option(:number_of_sockets).to_i * request.get_option(:cores_per_socket).to_i
+    num_cpus.zero? ? request.get_option(:number_of_cpus).to_i : num_cpus
+  end
+
   private_class_method def self.refresh_association
     :miq_templates
   end

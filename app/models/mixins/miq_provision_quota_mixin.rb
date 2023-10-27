@@ -293,8 +293,8 @@ module MiqProvisionQuotaMixin
     return if num_vms_for_request.zero?
     flavor_obj = flavor(pr)
     result[:count] += num_vms_for_request
-    result[:memory] += memory(pr, cloud?(pr), vendor(pr), flavor_obj) * num_vms_for_request
-    result[:cpu] += number_of_cpus(pr, cloud?(pr), flavor_obj) * num_vms_for_request
+    result[:memory] += pr.vm_template.memory_for_request(pr, cloud?(pr), vendor(pr), flavor_obj) * num_vms_for_request
+    result[:cpu] += pr.vm_template.number_of_cpus_for_request(pr, cloud?(pr), flavor_obj) * num_vms_for_request
     result[:storage] += storage(pr, cloud?(pr), vendor(pr), flavor_obj) * num_vms_for_request
     result[:ids] << pr.id
 
@@ -302,8 +302,8 @@ module MiqProvisionQuotaMixin
       next unless p.state == 'Active'
       host_id, storage_id = p.get_option(:dest_host).to_i, p.get_option(:dest_storage).to_i
       active = result[:active]
-      active[:memory_by_host_id][host_id] += memory(p, cloud?(pr), vendor(pr), flavor_obj)
-      active[:cpu_by_host_id][host_id] += number_of_cpus(p, cloud?(pr), flavor_obj)
+      active[:memory_by_host_id][host_id] += p.vm_template.memory_for_request(p, cloud?(pr), vendor(pr), flavor_obj)
+      active[:cpu_by_host_id][host_id] += p.vm_template.number_of_cpus_for_request(p, cloud?(pr), flavor_obj)
       active[:storage_by_id][storage_id] += storage(p, cloud?(pr), vendor(pr), flavor_obj)
       active[:vms_by_storage_id][storage_id] << p.id
       active[:ids] << p.id
@@ -364,15 +364,6 @@ module MiqProvisionQuotaMixin
     Flavor.find(request.get_option(:instance_type)) if cloud?(request)
   end
 
-  def number_of_cpus(prov, cloud, flavor_obj)
-    num_cpus = flavor_obj.try(:cpus) if cloud
-    return num_cpus if num_cpus.present?
-
-    request = prov.kind_of?(MiqRequest) ? prov : prov.miq_request
-    num_cpus = request.get_option(:number_of_sockets).to_i * request.get_option(:cores_per_socket).to_i
-    num_cpus.zero? ? request.get_option(:number_of_cpus).to_i : num_cpus
-  end
-
   def storage(prov, cloud, vendor, flavor_obj = nil)
     if cloud
       if vendor == 'google'
@@ -383,14 +374,5 @@ module MiqProvisionQuotaMixin
     else
       prov.kind_of?(MiqRequest) ? prov.vm_template.provisioned_storage : prov.miq_request.vm_template.provisioned_storage
     end
-  end
-
-  def memory(prov, cloud, vendor, flavor_obj = nil)
-    memory = flavor_obj.try(:memory) if cloud
-    return memory if memory.present?
-
-    request = prov.kind_of?(MiqRequest) ? prov : prov.miq_request
-    memory = request.get_option(:vm_memory).to_i
-    %w(amazon openstack google).include?(vendor) ? memory : memory.megabytes
   end
 end
