@@ -133,7 +133,7 @@ namespace :locale do
   end
 
   desc "Extract model attribute names and virtual column names"
-  task "store_model_attributes" do
+  task "store_model_attributes" => :environment do
     require 'gettext_i18n_rails/model_attributes_finder'
     require_relative 'model_attribute_override.rb'
 
