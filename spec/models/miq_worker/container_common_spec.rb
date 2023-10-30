@@ -46,9 +46,10 @@ RSpec.describe MiqWorker::ContainerCommon do
 
     it "MiqUiWorker adds the ui_httpd_configs volume mount" do
       container_orchestrator = ContainerOrchestrator.new
+      expect(container_orchestrator).to receive(:my_node_affinity_arch_values).and_return(["amd64", "arm64"])
       kubeclient = double("Kubeclient::Client")
 
-      expect(ContainerOrchestrator).to receive(:new).and_return(container_orchestrator)
+      allow(ContainerOrchestrator).to receive(:new).and_return(container_orchestrator)
       expect(container_orchestrator).to receive(:my_namespace).and_return("my-namespace")
       expect(container_orchestrator).to receive(:raw_connect).and_return(kubeclient)
 
@@ -64,9 +65,10 @@ RSpec.describe MiqWorker::ContainerCommon do
 
     it "Service workers use httpGet liveness and readiness probes" do
       container_orchestrator = ContainerOrchestrator.new
+      expect(container_orchestrator).to receive(:my_node_affinity_arch_values).and_return(["amd64", "arm64"])
       kubeclient = double("Kubeclient::Client")
 
-      expect(ContainerOrchestrator).to receive(:new).and_return(container_orchestrator)
+      allow(ContainerOrchestrator).to receive(:new).and_return(container_orchestrator)
       expect(container_orchestrator).to receive(:my_namespace).and_return("my-namespace")
       expect(container_orchestrator).to receive(:raw_connect).and_return(kubeclient)
 
