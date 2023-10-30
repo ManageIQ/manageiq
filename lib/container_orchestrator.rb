@@ -95,6 +95,14 @@ class ContainerOrchestrator
     get_pod_by_namespace_and_hostname(my_namespace, ENV["HOSTNAME"])
   end
 
+  def my_node_affinity_arch_values
+    ContainerOrchestrator.new.my_pod.spec.affinity&.nodeAffinity&.requiredDuringSchedulingIgnoredDuringExecution&.nodeSelectorTerms&.each do |i|
+      i.matchExpressions&.each { |a| return(a.values) if a.key == "kubernetes.io/arch" }
+    end
+
+    return ["amd64"]
+  end
+
   private
 
   def default_get_options
