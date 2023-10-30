@@ -82,6 +82,14 @@ gem "sys-filesystem",                   "~>1.4.3"
 gem "terminal",                                              :require => false
 gem "wim_parser",                       "~>1.0",             :require => false
 
+# gems to resolve security issues
+# CVE-2021-33621 fixed: ruby 3.0.6 - https://github.com/advisories/GHSA-vc47-6rqg-c7f5
+gem "cgi",  "~> 0.2.2"
+# CVE-2023-28756 fixed: ruby 3.0.6 - https://github.com/advisories/GHSA-fg7x-g82r-94qc
+gem "time", "~> 0.1.1"
+# CVE-2023-36617 https://github.com/advisories/GHSA-hww2-5g85-429m
+gem "uri",  "~> 0.10.3"
+
 # Custom gem that replaces mime-types in order to redirect mime-types calls to mini_mime
 #   Source is located at https://github.com/ManageIQ/mime-types-redirector
 gem "mime-types",                       "~>3.0",             :require => false, :source => "https://rubygems.manageiq.org"
