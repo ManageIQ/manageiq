@@ -83,7 +83,7 @@ module Vmdb
     def embedded_workflows_content
       @embedded_workflows_content ||= begin
         flat_map do |engine|
-          Dir.glob(engine.root.join("content", "workflows", "**", "*.asl"))
+          engine.root.join("content", "workflows").glob("**/*.asl")
         end
       end
     end
