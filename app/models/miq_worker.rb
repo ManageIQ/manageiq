@@ -582,6 +582,15 @@ class MiqWorker < ApplicationRecord
     self.class.minimal_class_name
   end
 
+  def self.ultra_minimal_class_name
+    minimal_class_name
+        .gsub("Manager", "")
+  end
+
+  def ultra_minimal_class_name
+    self.class.ultra_minimal_class_name
+  end
+
   def database_application_name
     zone = MiqServer.my_server.zone
     "MIQ|#{Process.pid}|#{miq_server.compressed_id}|#{compressed_id}|#{zone.compressed_id}|#{minimal_class_name}|#{zone.name}".truncate(64)
