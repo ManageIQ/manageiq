@@ -585,6 +585,14 @@ class MiqWorker < ApplicationRecord
   def self.ultra_minimal_class_name
     minimal_class_name
         .gsub("Manager", "")
+        .gsub("Worker", "")
+        .gsub("Storage", "")
+        .sub("Ems", "")
+        .sub("EventCatcher", "Events")
+        .sub("PhysicalInfra", "Physical")
+        .sub("MetricsCollector", "Metrics")
+        .sub("PowerVirtualServers", "PowerVS")
+        .sub("::::", "::")
   end
 
   def ultra_minimal_class_name
