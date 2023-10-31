@@ -1251,6 +1251,7 @@ GEM
       unf_ext
     unf_ext (0.0.8.2)
     unicode-display_width (2.5.0)
+    uri (0.10.3)
     useragent (0.16.10)
     uuid (2.3.9)
       macaddr (~> 1.0)
@@ -1340,6 +1341,7 @@ DEPENDENCIES
   bundler-audit
   byebug
   capybara (~> 2.5.0)
+  cgi (~> 0.3.5)
   color (~> 1.8)
   config (~> 2.2, >= 2.2.3)
   connection_pool
@@ -1451,7 +1453,9 @@ DEPENDENCIES
   sys-filesystem (~> 1.4.3)
   systemd-journal (~> 1.4.2)
   terminal
+  time (~> 0.2.2)
   timecop (~> 0.9, != 0.9.7)
+  uri (~> 0.10.3)
   vcr (~> 5.0)
   webmock (~> 3.7)
   websocket-driver (~> 0.6.3)
