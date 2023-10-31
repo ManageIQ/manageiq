@@ -26,7 +26,7 @@ RSpec.describe TaskHelpers::Exports::Widgets do
     resource_type: MiqReport
     enabled: true
     read_only: false
-    ", [Symbol], %i(col_order row_count roles)))
+    ", :permitted_classes => [Symbol]))
     MiqWidget.sync_from_hash(YAML.safe_load("
     description: Test Widget 2
     title: Test Widget 2
@@ -43,7 +43,7 @@ RSpec.describe TaskHelpers::Exports::Widgets do
     resource_type: MiqReport
     enabled: true
     read_only: false
-    ", [Symbol], %i(col_order row_count roles)))
+    ", :permitted_classes => [Symbol]))
   end
 
   after do
