@@ -43,7 +43,7 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: "${{ matrix.ruby-version }}"
-        ruby-gems: "${{ matrix.ruby-version == '2.7' && 'latest' || default' }}"
+        rubygems: "${{ matrix.ruby-version == '2.7' && 'latest' || 'default' }}"
         bundler-cache: true
       timeout-minutes: 30
     - name: Prepare tests
