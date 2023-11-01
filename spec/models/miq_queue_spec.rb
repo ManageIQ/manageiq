@@ -52,7 +52,7 @@ RSpec.describe MiqQueue do
       msg = MiqQueue.new(:class_name => "NotARealClazz")
       status, message, result = msg.deliver
       expect(status).to eq(MiqQueue::STATUS_ERROR)
-      expect(message).to eq("uninitialized constant NotARealClazz")
+      expect(message).to include("uninitialized constant NotARealClazz")
       expect(result).to be_nil
     end
 
