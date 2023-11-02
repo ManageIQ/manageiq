@@ -10,8 +10,6 @@ module Vm::Operations::Lifecycle
       end
     end
 
-    supports_not :publish
-
     api_relay_method :retire do |options|
       options
     end

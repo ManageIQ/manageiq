@@ -12,10 +12,6 @@ class CloudDatabase < ApplicationRecord
 
   serialize :extra_attributes
 
-  supports_not :create
-  supports_not :delete
-  supports_not :update
-
   def self.create_cloud_database_queue(userid, ext_management_system, options = {})
     task_opts = {
       :action => "creating Cloud Database for user #{userid}",

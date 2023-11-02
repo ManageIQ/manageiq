@@ -16,9 +16,6 @@ class CloudObjectStoreContainer < ApplicationRecord
 
   alias_attribute :name, :key
 
-  supports_not :delete
-  supports_not :cloud_object_store_container_clear
-
   # Create a cloud object store container as a queued task and return the task
   # id. The queue name and the queue zone are derived from the provided EMS
   # instance. The EMS instance and a userid are mandatory. Any +options+ are

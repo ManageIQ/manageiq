@@ -29,10 +29,6 @@ module Vm::Operations::Power
         _('The VM is not powered on')
       end
     end
-
-    supports_not :pause
-    supports_not :shelve
-    supports_not :shelve_offload
   end
 
   def vm_powered_on?

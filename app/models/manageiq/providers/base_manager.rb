@@ -33,8 +33,6 @@ module ManageIQ::Providers
       self.class.http_proxy
     end
 
-    supports_not :native_console
-
     def console_url
       raise NotImplementedError, _("console_url must be implemented in a subclass")
     end

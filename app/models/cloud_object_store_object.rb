@@ -15,8 +15,6 @@ class CloudObjectStoreObject < ApplicationRecord
 
   alias_attribute :name, :key
 
-  supports_not :delete
-
   def disconnect_inv
     # This is for bypassing a weird Rails behaviour. If we do a ems.cloud_object_store_objects.delete(objects) and a
     # relation in the ems is missing a :dependent => :destroy on :cloud_object_store_objects relation, it does not

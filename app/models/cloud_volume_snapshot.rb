@@ -13,10 +13,6 @@ class CloudVolumeSnapshot < ApplicationRecord
   belongs_to :cloud_volume
   has_many   :based_volumes, :class_name => 'CloudVolume'
 
-  supports_not :create
-  supports_not :delete
-  supports_not :update
-
   virtual_total :total_based_volumes, :based_volumes
 
   def self.class_by_ems(ext_management_system)

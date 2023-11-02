@@ -140,10 +140,7 @@ module VmOrTemplate::Operations
         _("The VM is not connected to an active Provider")
       end
     end
-    supports_not :clone
-    supports_not :quick_stats
-    supports_not :rename
-    supports_not :terminate
+
     supports :vm_control_powered_on do
       if !supports?(:control)
         unsupported_reason_add(:vm_control_powered_on, unsupported_reason(:control))
