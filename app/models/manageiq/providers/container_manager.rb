@@ -69,7 +69,6 @@ module ManageIQ::Providers
     virtual_column :port_show, :type => :string
 
     supports     :authentication_status
-    supports_not :external_logging
     supports     :metrics
     supports     :performance
 

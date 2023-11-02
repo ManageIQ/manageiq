@@ -1,10 +1,6 @@
 module VmOrTemplate::Scanning
   extend ActiveSupport::Concern
 
-  included do
-    supports_not :smartstate_analysis
-  end
-
   # Call the VmScan Job and raise a "request" event
   def scan(userid = "system", options = {})
     # Check if there are any current scan jobs already waiting to run
