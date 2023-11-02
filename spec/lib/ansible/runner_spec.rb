@@ -3,7 +3,7 @@ RSpec.describe Ansible::Runner do
   let(:env_vars)   { {"ENV1" => "VAL1", "ENV2" => "VAL2"} }
   let(:extra_vars) { {"id" => uuid} }
   let(:tags)       { "tag" }
-  let(:result)     { AwesomeSpawn::CommandResult.new("ansible-runner", "output", "", "0") }
+  let(:result)     { AwesomeSpawn::CommandResult.new("ansible-runner", "output", "", 100, "0") }
 
   let(:manageiq_venv_path)  { "/var/lib/manageiq/venv/python3.8/site-packages" }
   let(:ansible_python_path) { "/usr/local/lib64/python3.8/site-packages:/usr/local/lib/python3.8/site-packages:/usr/lib64/python3.8/site-packages:/usr/lib/python3.8/site-packages" }
