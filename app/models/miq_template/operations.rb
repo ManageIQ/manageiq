@@ -3,16 +3,16 @@ module MiqTemplate::Operations
 
   included do
     supports     :clone
-    supports_not :collect_running_processes, :reason => N_("Process Collection is not available for Images and VM Templates.")
-    supports_not :pause,                     :reason => N_("Pause Operation is not available for Images and VM Templates.")
-    supports_not :provisioning,              :reason => N_("Provisioning Operation is not available for Images and VM Templates.")
-    supports_not :reboot_guest,              :reason => N_("Reboot Guest Operation is not available for Images and VM Templates.")
-    supports_not :reset,                     :reason => N_("Reset Operation is not available for Images and VM Templates.")
-    supports_not :retire,                    :reason => N_("Retire Operation is not available for Images and VM Templates.")
-    supports_not :shutdown_guest,            :reason => N_("Shutdown Guest Operation is not available for Images and VM Templates.")
-    supports_not :standby_guest,             :reason => N_("Standby Guest Operation is not available for Images and VM Templates.")
-    supports_not :start,                     :reason => N_("Start Operation is not available for Images and VM Templates.")
-    supports_not :stop,                      :reason => N_("Stop Operation is not available for Images and VM Templates.")
-    supports_not :suspend,                   :reason => N_("Suspend Operation is not available for Images and VM Templates.")
+    supports_not :collect_running_processes
+    supports_not :pause
+    supports_not :provisioning
+    supports_not :reboot_guest
+    supports_not :reset
+    supports_not :retire
+    supports_not :shutdown_guest
+    supports_not :standby_guest
+    supports_not :start
+    supports_not :stop
+    supports_not :suspend
   end
 end
