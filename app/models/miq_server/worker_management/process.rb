@@ -1,7 +1,7 @@
 class MiqServer::WorkerManagement::Process < MiqServer::WorkerManagement
   def sync_from_system
     require "sys/proctable"
-    self.miq_processes = Sys::ProcTable.ps.select { |proc| proc.ppid == my_server.pid }
+    @miq_processes_by_pid = Sys::ProcTable.ps.select { |proc| proc.ppid == my_server.pid }.index_by(&:pid)
   end
 
   def sync_starting_workers
@@ -10,6 +10,22 @@ class MiqServer::WorkerManagement::Process < MiqServer::WorkerManagement
 
   def sync_stopping_workers
     MiqWorker.find_all_stopping.to_a
+  end
+
+  def cleanup_orphaned_worker_rows
+    orphaned_rows = miq_workers.where.not(:pid => miq_pids)
+    return if orphaned_rows.empty?
+
+    _log.warn("Removing orphaned worker rows without corresponding processes: #{orphaned_rows.collect(&:pid).inspect}")
+    orphaned_rows.destroy_all
+  end
+
+  def cleanup_orphaned_workers
+    orphaned_workers = miq_pids - miq_workers.pluck(:pid)
+    return if orphaned_workers.empty?
+
+    _log.warn("Removing orphaned processes without corresponding worker rows: #{orphaned_workers.inspect}")
+    orphaned_workers.each { |pid| ::Process.kill(9, pid) }
   end
 
   def monitor_workers
@@ -74,5 +90,13 @@ class MiqServer::WorkerManagement::Process < MiqServer::WorkerManagement
 
   private
 
-  attr_accessor :miq_processes
+  attr_reader :miq_processes_by_pid
+
+  def miq_processes
+    miq_processes_by_pid.values
+  end
+
+  def miq_pids
+    miq_processes_by_pid.keys
+  end
 end
