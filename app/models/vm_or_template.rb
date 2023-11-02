@@ -215,6 +215,8 @@ class VmOrTemplate < ApplicationRecord
   scope :from_cloud_managers, -> { where(:ext_management_system => ManageIQ::Providers::CloudManager.all) }
   scope :from_infra_managers, -> { where(:ext_management_system => ManageIQ::Providers::InfraManager.all) }
 
+  supports_not :management_console
+
   def from_cloud_manager?
     ext_management_system&.kind_of?(ManageIQ::Providers::CloudManager)
   end
