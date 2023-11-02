@@ -185,6 +185,10 @@ namespace :release do
     end
 
     update_gems = ENV["UPDATE_GEMS"].to_s.split(" ")
+    if ENV["UPDATE_PLUGINS"]
+      require "vmdb/plugins"
+      update_gems += Vmdb::Plugins.repos.values
+    end
 
     root = Pathname.new(__dir__).join("../..")
 

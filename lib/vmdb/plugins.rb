@@ -34,7 +34,8 @@ module Vmdb
         hash[engine] = {
           :name    => engine.name,
           :version => version(engine),
-          :path    => engine.root.to_s
+          :path    => engine.root.to_s,
+          :repo    => engine.root.to_s.match(%r{/gems/(.+)-\h+$})&.captures&.first || File.dirname(engine.root.to_s)
         }
       end
     end
@@ -45,6 +46,10 @@ module Vmdb
 
     def versions
       details.transform_values { |v| v[:version] }
+    end
+
+    def repos
+      details.transform_values { |v| v[:repo] }
     end
 
     # Ansible content (roles) that come out-of-the-box, for use by both Automate
