@@ -11,6 +11,49 @@ RSpec.describe Vmdb::Plugins do
     )
   end
 
+  describe ".plugin_for_class" do
+    context "with a class in core" do
+      it "returns nil" do
+        expect(described_class.plugin_for_class(::MiqGenericWorker)).to be_nil
+      end
+    end
+
+    context "with a class in a plugin" do
+      it "returns the plugin" do
+        expect(described_class.plugin_for_class(::ApplicationController)).to eq(ManageIQ::UI::Classic::Engine)
+        expect(described_class.plugin_for_class(::Api::BaseController)).to eq(ManageIQ::Api::Engine)
+      end
+    end
+
+    context "with a nonexistent class" do
+      it "returns nil" do
+        expect(described_class.plugin_for_class("ThisClassDoesntExist")).to be_nil
+      end
+    end
+
+    context "with a string argument" do
+      it "returns the plugin" do
+        # Ensure the classes are referenced otherwise this test can fail
+        # sporadically
+        _ = ApplicationController
+        _ = Api::BaseController
+        expect(described_class.plugin_for_class("::ApplicationController")).to be(ManageIQ::UI::Classic::Engine)
+        expect(described_class.plugin_for_class("::Api::BaseController")).to eq(ManageIQ::Api::Engine)
+      end
+    end
+
+    context "with a symbol argument" do
+      it "returns the plugin" do
+        # Ensure the classes are referenced otherwise this test can fail
+        # sporadically
+        _ = ApplicationController
+        _ = Api::BaseController
+        expect(described_class.plugin_for_class(:ApplicationController)).to be(ManageIQ::UI::Classic::Engine)
+        expect(described_class.plugin_for_class(:'Api::BaseController')).to eq(ManageIQ::Api::Engine)
+      end
+    end
+  end
+
   it ".ansible_content" do
     ansible_content = described_class.ansible_content
 
