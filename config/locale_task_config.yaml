@@ -45,3 +45,8 @@ yaml_strings_to_extract:
   - name
   - headers
   - generate_rows
+  product/dashboard/widgets/*.yaml:
+  - title
+  product/dashboard/dashboards/*.yaml:
+  - name
+  - description
