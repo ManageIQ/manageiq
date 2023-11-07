@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-01 00:23+0000\n"
-"PO-Revision-Date: 2023-11-01 00:23+0000\n"
+"POT-Creation-Date: 2023-11-06 16:32-0500\n"
+"PO-Revision-Date: 2023-11-06 16:32-0500\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -9946,6 +9946,7 @@ msgstr ""
 msgid "CPU Reserve Expand"
 msgstr ""
 
+#. TRANSLATORS: file: product/dashboard/widgets/cpu_right_sizing_recommendations.yaml
 #. TRANSLATORS: file: product/reports/200_Optimization - Virtual Machines/001_CPU Right Sizing Recommendations.yaml
 #: ../config/yaml_strings.rb
 msgid "CPU Right Sizing Recommendations"
@@ -21943,8 +21944,18 @@ msgstr ""
 msgid "Default Container Image Rate"
 msgstr ""
 
+#. TRANSLATORS: file: product/dashboard/dashboards/default.yaml
+#: ../config/yaml_strings.rb
+msgid "Default Dashboard"
+msgstr ""
+
 #: ../app/helpers/application_helper/button/dashboard_delete.rb
 msgid "Default Dashboard cannot be deleted"
+msgstr ""
+
+#. TRANSLATORS: file: product/dashboard/dashboards/physical_infrastructure_default.yaml
+#: ../config/yaml_strings.rb
+msgid "Default Dashboard for Physical Infrastructure Group"
 msgstr ""
 
 #: ../app/controllers/miq_ae_customization_controller/old_dialogs.rb
@@ -22057,6 +22068,11 @@ msgstr ""
 #:
 #: ../app/models/manageiq/providers/vmware/infra_manager/inventory/parser.rb
 msgid "Default for %{parent_type} %{parent_name}"
+msgstr ""
+
+#. TRANSLATORS: file: product/dashboard/dashboards/physical_infrastructure_default.yaml
+#: ../config/yaml_strings.rb
+msgid "Default for Physical Infrastructure"
 msgstr ""
 
 #: ../app/controllers/report_controller/reports/editor.rb
@@ -22732,11 +22748,6 @@ msgstr ""
 
 #: ../app/controllers/application_controller/ci_processing.rb
 msgid "Delete of Flavor \"%{name}\" was successfully initiated."
-msgstr ""
-
-#: ../app/models/cloud_object_store_container.rb
-#: ../app/models/cloud_object_store_object.rb
-msgid "Delete operation is not supported."
 msgstr ""
 
 #: ../app/controllers/report_controller.rb
@@ -27043,6 +27054,16 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ems_storage.yaml
 #: ../config/yaml_strings.rb
 msgid "EVM Zone"
+msgstr ""
+
+#. TRANSLATORS: file: product/dashboard/widgets/rss_newest_hosts.yaml
+#: ../config/yaml_strings.rb
+msgid "EVM: Recently Discovered Hosts"
+msgstr ""
+
+#. TRANSLATORS: file: product/dashboard/widgets/rss_newest_vms.yaml
+#: ../config/yaml_strings.rb
+msgid "EVM: Recently Discovered VMs"
 msgstr ""
 
 #: ../app/controllers/configuration_controller.rb
@@ -35384,6 +35405,11 @@ msgstr ""
 msgid "Guest OS Id"
 msgstr ""
 
+#. TRANSLATORS: file: product/dashboard/widgets/chart_guest_os_information_any_os.yaml
+#: ../config/yaml_strings.rb
+msgid "Guest OS Information"
+msgstr ""
+
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/062_Guest OS Information - Linux.yaml
 #: ../config/yaml_strings.rb
 msgid "Guest OS Information - Linux"
@@ -37209,6 +37235,7 @@ msgstr ""
 msgid "Hosts - Storage Adapters Information"
 msgstr ""
 
+#. TRANSLATORS: file: product/dashboard/widgets/chart_hosts_summary_by_version.yaml
 #. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/010_Summary.yaml
 #: ../config/yaml_strings.rb
 msgid "Hosts - Summary by Version"
@@ -41214,7 +41241,7 @@ msgstr ""
 msgid "Logo Updated At"
 msgstr ""
 
-#: ../app/models/host.rb:657 ../app/models/host.rb
+#: ../app/models/host.rb:641 ../app/models/host.rb
 msgid "Logon to platform [%{os_name}] not supported"
 msgstr ""
 
@@ -51395,6 +51422,7 @@ msgstr ""
 msgid "Nodes"
 msgstr ""
 
+#. TRANSLATORS: file: product/dashboard/widgets/nodes_by_cpu_usage.yaml
 #. TRANSLATORS: file: product/reports/170_Configuration Management - Containers/020_Nodes by CPU Usage.yaml
 #: ../config/yaml_strings.rb
 msgid "Nodes By CPU Usage"
@@ -51405,9 +51433,15 @@ msgstr ""
 msgid "Nodes By Capacity"
 msgstr ""
 
+#. TRANSLATORS: file: product/dashboard/widgets/nodes_by_memory_usage.yaml
 #. TRANSLATORS: file: product/reports/170_Configuration Management - Containers/030_Nodes by Memory Usage.yaml
 #: ../config/yaml_strings.rb
 msgid "Nodes By Memory Usage"
+msgstr ""
+
+#. TRANSLATORS: file: product/dashboard/widgets/nodes_by_cpu_capacity.yaml
+#: ../config/yaml_strings.rb
+msgid "Nodes by Capacity"
 msgstr ""
 
 #. TRANSLATORS: file: product/reports/170_Configuration Management - Containers/050_Number of Nodes per CPU Cores.yaml
@@ -51888,6 +51922,11 @@ msgstr ""
 
 #: ../app/views/shared/views/_prov_dialog.html.haml
 msgid "Number of Instances"
+msgstr ""
+
+#. TRANSLATORS: file: product/dashboard/widgets/chart_number_of_nodes_per_cpu_cores.yaml
+#: ../config/yaml_strings.rb
+msgid "Number of Nodes per CPU Cores Chart"
 msgstr ""
 
 #: ../app/helpers/ems_infra_helper.rb
@@ -52823,6 +52862,11 @@ msgstr ""
 #: ../app/controllers/optimization_controller.rb
 #: ../app/presenters/menu/default_menu.rb
 msgid "Optimization"
+msgstr ""
+
+#. TRANSLATORS: file: product/dashboard/dashboards/optimization_savings.yaml
+#: ../config/yaml_strings.rb
+msgid "Optimization & Savings"
 msgstr ""
 
 #: ../app/models/chargeback/report_options.rb
@@ -54164,10 +54208,6 @@ msgstr ""
 msgid "Pause Instance"
 msgstr ""
 
-#: ../app/models/miq_template/operations.rb
-msgid "Pause Operation is not available for Images and VM Templates."
-msgstr ""
-
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Pause Physical Infrastructure Providers"
@@ -55251,6 +55291,7 @@ msgid_plural "Physical Servers (Redfish)"
 msgstr[0] ""
 msgstr[1] ""
 
+#. TRANSLATORS: file: product/dashboard/widgets/chart_server_availability.yaml
 #. TRANSLATORS: file: product/reports/190_Configuration Management - Physical Servers/030_Server Availability.yaml
 #: ../config/yaml_strings.rb
 msgid "Physical Server Availability"
@@ -55279,6 +55320,7 @@ msgstr ""
 msgid "Physical Server Firmware Update"
 msgstr ""
 
+#. TRANSLATORS: file: product/dashboard/widgets/chart_server_health.yaml
 #. TRANSLATORS: file: product/reports/190_Configuration Management - Physical Servers/020_Server Health.yaml
 #: ../config/yaml_strings.rb
 msgid "Physical Server Health"
@@ -56320,9 +56362,15 @@ msgstr ""
 msgid "Pods (Kubernetes)"
 msgstr ""
 
+#. TRANSLATORS: file: product/dashboard/widgets/pods_per_ready.yaml
 #. TRANSLATORS: file: product/reports/170_Configuration Management - Containers/060_Pods per Ready Status.yaml
 #: ../config/yaml_strings.rb
 msgid "Pods per Ready Status"
+msgstr ""
+
+#. TRANSLATORS: file: product/dashboard/widgets/chart_pods_per_ready.yaml
+#: ../config/yaml_strings.rb
+msgid "Pods per Ready Status Chart"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/MiqPolicy.yaml
@@ -57260,10 +57308,6 @@ msgstr ""
 msgid "Process"
 msgstr ""
 
-#: ../app/models/miq_template/operations.rb
-msgid "Process Collection is not available for Images and VM Templates."
-msgstr ""
-
 #. TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
 #: ../config/yaml_strings.rb
 msgid "Process Cpu Time"
@@ -57509,21 +57553,25 @@ msgstr ""
 msgid "Projects"
 msgstr ""
 
+#. TRANSLATORS: file: product/dashboard/widgets/projects_by_cpu_usage.yaml
 #. TRANSLATORS: file: product/reports/170_Configuration Management - Containers/080_Projects by CPU Usage.yaml
 #: ../config/yaml_strings.rb
 msgid "Projects By CPU Usage"
 msgstr ""
 
+#. TRANSLATORS: file: product/dashboard/widgets/projects_by_memory_usage.yaml
 #. TRANSLATORS: file: product/reports/170_Configuration Management - Containers/090_Projects by Memory Usage.yaml
 #: ../config/yaml_strings.rb
 msgid "Projects By Memory Usage"
 msgstr ""
 
+#. TRANSLATORS: file: product/dashboard/widgets/projects_by_number_of_containers.yaml
 #. TRANSLATORS: file: product/reports/170_Configuration Management - Containers/120_Projects by Number of Containers.yaml
 #: ../config/yaml_strings.rb
 msgid "Projects by Number of Containers"
 msgstr ""
 
+#. TRANSLATORS: file: product/dashboard/widgets/projects_by_number_of_pods.yaml
 #. TRANSLATORS: file: product/reports/170_Configuration Management - Containers/070_Projects by Pod Number.yaml
 #: ../config/yaml_strings.rb
 msgid "Projects by Number of Pods"
@@ -58240,10 +58288,6 @@ msgstr ""
 
 #: ../app/controllers/catalog_controller.rb
 msgid "Provisioning Entry Point is required"
-msgstr ""
-
-#: ../app/models/miq_template/operations.rb
-msgid "Provisioning Operation is not available for Images and VM Templates."
 msgstr ""
 
 #: ../app/helpers/host_helper/textual_summary.rb
@@ -59034,10 +59078,6 @@ msgstr ""
 msgid "Reason:"
 msgstr ""
 
-#: ../app/models/miq_template/operations.rb
-msgid "Reboot Guest Operation is not available for Images and VM Templates."
-msgstr ""
-
 #: ../app/services/ems_infra_dashboard_service.rb
 msgid "Recent Hosts"
 msgstr ""
@@ -59076,11 +59116,13 @@ msgstr ""
 msgid "Recently Added Hosts"
 msgstr ""
 
+#. TRANSLATORS: file: product/dashboard/widgets/rss_newest_servers.yaml
 #. TRANSLATORS: file: product/reports/190_Configuration Management - Physical Servers/010_Newest Servers.yaml
 #: ../config/yaml_strings.rb
 msgid "Recently Discovered Physical Servers"
 msgstr ""
 
+#. TRANSLATORS: file: product/dashboard/widgets/recently_discovered_pods.yaml
 #. TRANSLATORS: file: product/reports/170_Configuration Management - Containers/040_Recently Discovered Container Groups.yaml
 #: ../config/yaml_strings.rb
 msgid "Recently Discovered Pods"
@@ -62407,10 +62449,6 @@ msgstr ""
 msgid "Reset Lockout Counter"
 msgstr ""
 
-#: ../app/models/miq_template/operations.rb
-msgid "Reset Operation is not available for Images and VM Templates."
-msgstr ""
-
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Reset VM"
@@ -63248,10 +63286,6 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Retire Instances"
-msgstr ""
-
-#: ../app/models/miq_template/operations.rb
-msgid "Retire Operation is not available for Images and VM Templates."
 msgstr ""
 
 #: ../app/controllers/mixins/actions/vm_actions/retire.rb
@@ -68583,10 +68617,6 @@ msgstr ""
 msgid "Shutdown Guest"
 msgstr ""
 
-#: ../app/models/miq_template/operations.rb
-msgid "Shutdown Guest Operation is not available for Images and VM Templates."
-msgstr ""
-
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Shutdown Host"
@@ -69430,10 +69460,6 @@ msgstr ""
 msgid "Standby Guest"
 msgstr ""
 
-#: ../app/models/miq_template/operations.rb
-msgid "Standby Guest Operation is not available for Images and VM Templates."
-msgstr ""
-
 #. TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
 #. TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
 #. TRANSLATORS: file: product/views/SystemService-win32_services.yaml
@@ -69464,10 +69490,6 @@ msgstr ""
 
 #: ../app/javascript/forms/mappers/validatorMapper.jsx
 msgid "Start Date must come before End Date"
-msgstr ""
-
-#: ../app/models/miq_template/operations.rb
-msgid "Start Operation is not available for Images and VM Templates."
 msgstr ""
 
 #:
@@ -69827,10 +69849,6 @@ msgstr ""
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb
 #: ../app/views/catalog/_form_resources_info.html.haml
 msgid "Stop"
-msgstr ""
-
-#: ../app/models/miq_template/operations.rb
-msgid "Stop Operation is not available for Images and VM Templates."
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -71097,10 +71115,6 @@ msgstr ""
 msgid "Suspend Instance"
 msgstr ""
 
-#: ../app/models/miq_template/operations.rb
-msgid "Suspend Operation is not available for Images and VM Templates."
-msgstr ""
-
 #: ../app/helpers/application_helper/toolbar/diagnostics_region_center.rb
 #: ../app/helpers/application_helper/toolbar/diagnostics_zone_center.rb
 msgid "Suspend Role"
@@ -72046,6 +72060,7 @@ msgstr ""
 msgid "Tenant Quota"
 msgstr ""
 
+#. TRANSLATORS: file: product/dashboard/widgets/tenant_quotas.yaml
 #. TRANSLATORS: file: product/reports/780_Tenants - Tenant Quotas/001_Tenant Quotas.yaml
 #: ../config/yaml_strings.rb
 msgid "Tenant Quotas"
@@ -73635,6 +73650,7 @@ msgstr ""
 msgid "Tools Status"
 msgstr ""
 
+#. TRANSLATORS: file: product/dashboard/widgets/report_top_cpu_consumers_weekly.yaml
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/160_Top CPU Consumers weekly.yaml
 #: ../config/yaml_strings.rb
 msgid "Top CPU Consumers (weekly)"
@@ -73644,11 +73660,13 @@ msgstr ""
 msgid "Top Level"
 msgstr ""
 
+#. TRANSLATORS: file: product/dashboard/widgets/report_top_memory_consumers_weekly.yaml
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/170_Top Memory Consumers weekly.yaml
 #: ../config/yaml_strings.rb
 msgid "Top Memory Consumers (weekly)"
 msgstr ""
 
+#. TRANSLATORS: file: product/dashboard/widgets/report_top_storage_consumers.yaml
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/180_Top Storage Consumers.yaml
 #: ../config/yaml_strings.rb
 msgid "Top Storage Consumers"
@@ -77363,7 +77381,7 @@ msgid "VM operations"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.VmOrTemplate
-#: ../app/models/vm_or_template.rb:1690 ../config/dictionary_strings.rb
+#: ../app/models/vm_or_template.rb:1689 ../config/dictionary_strings.rb
 msgid "VM or Template"
 msgid_plural "VMs or Templates"
 msgstr[0] ""
@@ -78131,6 +78149,11 @@ msgstr ""
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/022_Vendor and Guest OS.yaml
 #: ../config/yaml_strings.rb
 msgid "Vendor and Guest OS"
+msgstr ""
+
+#. TRANSLATORS: file: product/dashboard/widgets/chart_vendor_and_guest_os.yaml
+#: ../config/yaml_strings.rb
+msgid "Vendor and Guest OS Chart"
 msgstr ""
 
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/020_Vendor and Type.yaml
@@ -78996,7 +79019,7 @@ msgid "View Zones"
 msgstr ""
 
 #: ../app/javascript/components/notification-drawer/notification-drawer.jsx
-#: ../app/javascript/components/toast-list/toast-list.jsx
+#: ../app/javascript/components/toast-list/toast-item.jsx
 msgid "View details"
 msgstr ""
 
@@ -79237,6 +79260,7 @@ msgstr ""
 msgid "Virtual Infrastructure Platform"
 msgstr ""
 
+#. TRANSLATORS: file: product/dashboard/widgets/chart_virtual_infrastructure_platforms.yaml
 #. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/012_Virtual Infrastructure Platforms.yaml
 #: ../config/yaml_strings.rb
 msgid "Virtual Infrastructure Platforms"
@@ -82664,11 +82688,11 @@ msgstr ""
 
 #: ../app/models/cloud_database.rb
 #: ../app/models/cloud_object_store_container.rb
-#: ../app/models/cloud_volume.rb:92 ../app/models/host_initiator.rb
+#: ../app/models/cloud_volume.rb:81 ../app/models/host_initiator.rb
 #: ../app/models/host_initiator_group.rb
-#: ../app/models/physical_storage.rb:78 ../app/models/physical_storage.rb
+#: ../app/models/physical_storage.rb:74 ../app/models/physical_storage.rb
 #: ../app/models/placement_group.rb:48 ../app/models/storage_service.rb
-#: ../app/models/storage_service.rb:113 ../app/models/volume_mapping.rb
+#: ../app/models/storage_service.rb:109 ../app/models/volume_mapping.rb
 msgid "ems_id cannot be nil"
 msgstr ""
 
@@ -82842,11 +82866,11 @@ msgid ""
 msgstr ""
 
 #: ../app/models/cloud_object_store_container.rb
-#: ../app/models/cloud_volume.rb:94 ../app/models/host_initiator.rb
+#: ../app/models/cloud_volume.rb:83 ../app/models/host_initiator.rb
 #: ../app/models/host_initiator_group.rb
-#: ../app/models/physical_storage.rb:81 ../app/models/physical_storage.rb
+#: ../app/models/physical_storage.rb:77 ../app/models/physical_storage.rb
 #: ../app/models/placement_group.rb:51 ../app/models/storage_service.rb
-#: ../app/models/storage_service.rb:116 ../app/models/volume_mapping.rb
+#: ../app/models/storage_service.rb:112 ../app/models/volume_mapping.rb
 msgid "ext_management_system cannot be found"
 msgstr ""
 
@@ -83226,7 +83250,7 @@ msgid "new element"
 msgstr ""
 
 #: ../app/models/ext_management_system.rb
-#: ../app/models/ext_management_system.rb:625 ../app/models/provider.rb
+#: ../app/models/ext_management_system.rb:595 ../app/models/provider.rb
 msgid "no Provider credentials defined"
 msgstr ""
 
@@ -84521,10 +84545,6 @@ msgstr ""
 
 #: ../app/models/miq_queue.rb
 msgid "which must be an Integer or one of %{priority}"
-msgstr ""
-
-#: ../app/models/miq_worker/runner.rb
-msgid "worker_cmdline must be implemented in a subclass"
 msgstr ""
 
 #: ../app/views/ops/_settings_server_tab.html.haml
