@@ -127,6 +127,7 @@ RSpec.describe Rbac::Filterer do
   let(:default_tenant)     { Tenant.seed }
 
   let(:admin_user)         { FactoryBot.create(:user, :role => "super_administrator") }
+  let(:admin_group)        { admin_user.miq_groups.find_by(:description => "EvmGroup-super_administrator") }
 
   let(:owner_tenant)       { FactoryBot.create(:tenant) }
   let(:owner_group)        { FactoryBot.create(:miq_group, :tenant => owner_tenant) }
@@ -1286,19 +1287,93 @@ RSpec.describe Rbac::Filterer do
         end
       end
 
-      it "returns users from current user's groups" do
-        other_user.miq_groups << group
-        get_rbac_results_for_and_expect_objects(User, [user, other_user])
-      end
-
-      it "returns user's groups" do
-        _expected_groups = [group, other_group] # this will create more groups than 2
-        get_rbac_results_for_and_expect_objects(MiqGroup, user.miq_groups)
-      end
-
-      context "with self-service user" do
+      context "with other users in the group" do
         before do
-          allow_any_instance_of(MiqGroup).to receive_messages(:self_service? => true)
+          other_user.miq_groups << group
+        end
+
+        it "returns users from current user's groups" do
+          get_rbac_results_for_and_expect_objects(User, [user, other_user])
+        end
+
+        it "returns user's groups" do
+          get_rbac_results_for_and_expect_objects(MiqGroup, [group])
+        end
+      end
+
+      context "with a user in a shared group" do
+        let(:shared_group) { FactoryBot.create(:miq_group, :tenant => default_tenant) }
+
+        before do
+          other_user.miq_groups << shared_group
+          user.miq_groups << shared_group
+        end
+
+        context "and the current_group is the shared group" do
+          before { user.current_group = shared_group }
+
+          it "returns users from all of the current user's groups" do
+            get_rbac_results_for_and_expect_objects(User, [user, other_user])
+          end
+
+          it "returns user's groups" do
+            get_rbac_results_for_and_expect_objects(MiqGroup, [group, shared_group])
+          end
+        end
+
+        context "and the user's current_group is not the shared group" do
+          before { user.current_group = group }
+
+          it "returns users from all of the current user's groups" do
+            get_rbac_results_for_and_expect_objects(User, [user, other_user])
+          end
+
+          it "returns user's groups" do
+            get_rbac_results_for_and_expect_objects(MiqGroup, [group, shared_group])
+          end
+        end
+      end
+
+      context "with a user in a super_administrator group" do
+        before do
+          admin_user # ensure we create another user as an admin user
+          other_user # ensure we create another user in another regular group
+
+          user.miq_groups << admin_group
+          user.miq_groups << other_group
+        end
+
+        context "and the current_group is the super_administrator group" do
+          before { user.current_group = admin_group }
+
+          it "returns all users" do
+            get_rbac_results_for_and_expect_objects(User, User.all.to_a)
+          end
+
+          it "returns user's groups" do
+            get_rbac_results_for_and_expect_objects(MiqGroup, MiqGroup.all.to_a)
+          end
+        end
+
+        context "and the current_group is not the super_administrator group" do
+          before { user.current_group = group }
+
+          it "returns users from all of the current user's groups except admins" do
+            get_rbac_results_for_and_expect_objects(User, [user, other_user])
+          end
+
+          it "returns user's groups except admins" do
+            get_rbac_results_for_and_expect_objects(MiqGroup, [group, other_group])
+          end
+        end
+      end
+
+      context "with a self_service user" do
+        let(:user)  { FactoryBot.create(:user, :role => "user_self_service") }
+        let(:group) { user.miq_groups.detect { |g| g.description == "EvmGroup-user_self_service" } }
+
+        before do
+          other_user # ensure we create another user in another group
         end
 
         it "returns only the current user" do
@@ -1306,36 +1381,48 @@ RSpec.describe Rbac::Filterer do
         end
 
         it "returns only the current group" do
-          get_rbac_results_for_and_expect_objects(MiqGroup, [user.current_group])
+          get_rbac_results_for_and_expect_objects(MiqGroup, [group])
+        end
+
+        context "that is in multiple groups" do
+          before { user.miq_groups << other_group }
+
+          context "and the current_group is the self_service group" do
+            before { user.current_group = group }
+
+            it "returns only the current user" do
+              get_rbac_results_for_and_expect_objects(User, [user])
+            end
+
+            it "returns only the current group" do
+              get_rbac_results_for_and_expect_objects(MiqGroup, [group])
+            end
+          end
+
+          context "and the current_group is not the self_service group" do
+            before { user.current_group = other_group }
+
+            it "returns users from all of the current user's groups" do
+              get_rbac_results_for_and_expect_objects(User, [user, other_user])
+            end
+
+            it "returns user's groups" do
+              get_rbac_results_for_and_expect_objects(MiqGroup, [other_group])
+            end
+          end
         end
       end
 
       context 'with EvmRole-tenant_administrator' do
-        let(:rbac_tenant) do
-          FactoryBot.create(:miq_product_feature, :identifier => MiqProductFeature::TENANT_ADMIN_FEATURE)
-        end
-
-        let(:tenant_administrator_user_role) do
-          FactoryBot.create(:miq_user_role, :name => MiqUserRole::DEFAULT_TENANT_ROLE_NAME, :miq_product_features => [rbac_tenant])
-        end
-
-        let!(:super_administrator_user_role) do
-          FactoryBot.create(:miq_user_role, :role => "super_administrator")
-        end
-
-        let(:group) do
-          FactoryBot.create(:miq_group, :tenant => default_tenant, :miq_user_role => tenant_administrator_user_role)
-        end
-
-        let!(:user_role) do
-          FactoryBot.create(:miq_user_role, :role => "user")
-        end
-
-        let!(:other_group) do
-          FactoryBot.create(:miq_group, :tenant => default_tenant, :miq_user_role => user_role)
-        end
-
+        let(:rbac_tenant) { FactoryBot.create(:miq_product_feature, :identifier => MiqProductFeature::TENANT_ADMIN_FEATURE) }
+        let(:tenant_administrator_user_role) { FactoryBot.create(:miq_user_role, :name => MiqUserRole::DEFAULT_TENANT_ROLE_NAME, :miq_product_features => [rbac_tenant]) }
+        let!(:super_administrator_user_role) { FactoryBot.create(:miq_user_role, :role => "super_administrator") }
+        let(:group) { FactoryBot.create(:miq_group, :tenant => default_tenant, :miq_user_role => tenant_administrator_user_role) }
+        let!(:user_role) { FactoryBot.create(:miq_user_role, :role => "user") }
+        let!(:other_group) { FactoryBot.create(:miq_group, :tenant => default_tenant, :miq_user_role => user_role) }
         let!(:user) { FactoryBot.create(:user, :miq_groups => [group]) }
+        let(:super_admin_group) { FactoryBot.create(:miq_group, :tenant => default_tenant, :miq_user_role => super_administrator_user_role) }
+        let!(:super_admin_user) { FactoryBot.create(:user, :miq_groups => [super_admin_group]) }
 
         it 'can see all roles except for EvmRole-super_administrator' do
           expect(MiqUserRole.count).to eq(3)
@@ -1357,12 +1444,6 @@ RSpec.describe Rbac::Filterer do
           default_group_for_tenant = user.current_tenant.miq_groups.where(:group_type => "tenant").first
           get_rbac_results_for_and_expect_objects(MiqGroup, [another_tenant_group, default_group_for_tenant])
         end
-
-        let(:super_admin_group) do
-          FactoryBot.create(:miq_group, :tenant => default_tenant, :miq_user_role => super_administrator_user_role)
-        end
-
-        let!(:super_admin_user) { FactoryBot.create(:user, :miq_groups => [super_admin_group]) }
 
         it 'can see all users except for user with group with role EvmRole-super_administrator' do
           expect(User.count).to eq(2)

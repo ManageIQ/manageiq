@@ -628,17 +628,35 @@ module Rbac
     def scope_for_user_role_group(klass, scope, miq_group, user, managed_filters)
       user_or_group = miq_group || user
 
-      if user_or_group.try!(:self_service?) && MiqUserRole != klass
+      if user_or_group.try!(:self_service?) && klass != MiqUserRole
         scope.where(:id => klass == User ? user.id : miq_group.id)
       else
         role = user_or_group.miq_user_role
-        # hide creating admin group / roles from non-super administrators
+
+        # Exclude users/groups/roles tied to the super admin user if the current user isn't also
+        # a super admin user. This prevents a tenant admin from creating a super admin and then
+        # escalating privileges.
         unless role&.super_admin_user?
-          scope = scope.with_roles_excluding(MiqProductFeature::SUPER_ADMIN_FEATURE)
+          # In the case that the user is not currently in a super admin group, but can _become_
+          #   a super admin by virtue of being in multiple groups, then they will be filtered by
+          #   with_roles_excluding. The allowed_ids option ensures the user can still see themselves.
+          #
+          # TODO: Determine if this same logic should apply to MiqUserRole as well
+          with_roles_excluding_options =
+            if klass == User
+              {:allowed_ids => user.id}
+            elsif klass == MiqGroup
+              {:allowed_ids => miq_group.id}
+            else
+              {}
+            end
+
+          scope = scope.with_roles_excluding(MiqProductFeature::SUPER_ADMIN_FEATURE, **with_roles_excluding_options)
         end
 
-        if MiqUserRole != klass
+        if klass != MiqUserRole
           filtered_ids = pluck_ids(get_managed_filter_object_ids(scope, managed_filters))
+
           # Non tenant admins can only see their own groups. Note - a super admin is also a tenant admin
           scope = scope.with_groups(user.miq_group_ids) unless role&.tenant_admin_user?
         end
