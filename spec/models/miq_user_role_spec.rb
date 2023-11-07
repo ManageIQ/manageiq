@@ -42,7 +42,7 @@ RSpec.describe MiqUserRole do
       expect(consumption_role).not_to be_nil
       features = consumption_role.miq_product_features.collect(&:identifier)
 
-      expect(features).to match_array(%w(dashboard miq_report chargeback))
+      expect(features).to match_array(%w[dashboard miq_report chargeback my_settings_view])
     end
   end
 
