@@ -1,5 +1,5 @@
 class VmMigrateRequest < MiqRequest
-  TASK_DESCRIPTION  = 'VM Migrate'
+  TASK_DESCRIPTION  = N_('VM Migrate')
   SOURCE_CLASS_NAME = 'Vm'
   ACTIVE_STATES     = %w( migrated ) + base_class::ACTIVE_STATES
 

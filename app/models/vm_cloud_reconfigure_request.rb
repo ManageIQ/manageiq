@@ -1,5 +1,5 @@
 class VmCloudReconfigureRequest < MiqRequest
-  TASK_DESCRIPTION  = 'VM Cloud Reconfigure'.freeze
+  TASK_DESCRIPTION  = N_('VM Cloud Reconfigure').freeze
   SOURCE_CLASS_NAME = 'Vm'.freeze
   ACTIVE_STATES     = %w(reconfigured) + base_class::ACTIVE_STATES
 

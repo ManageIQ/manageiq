@@ -1,7 +1,7 @@
 class AutomationRequest < MiqRequest
   alias_attribute :automation_tasks, :miq_request_tasks
 
-  TASK_DESCRIPTION  = 'Automation Request'
+  TASK_DESCRIPTION  = N_('Automation Request')
   DEFAULT_NAMESPACE = "SYSTEM"
   DEFAULT_CLASS     = "PROCESS"
   DEFAULT_INSTANCE  = "AUTOMATION_REQUEST"
