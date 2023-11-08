@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-06 16:32-0500\n"
-"PO-Revision-Date: 2023-11-06 16:32-0500\n"
+"POT-Creation-Date: 2023-11-08 22:17+0000\n"
+"PO-Revision-Date: 2023-11-08 22:17+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -1543,6 +1543,14 @@ msgstr ""
 #: ../app/controllers/mixins/ems_common/metrics.rb
 #: ../app/controllers/mixins/ems_common/pause_resume.rb
 msgid "%{record} no longer exists"
+msgstr ""
+
+#: ../app/models/miq_retire_task.rb
+msgid "%{request_description} for: %{request_source}"
+msgstr ""
+
+#: ../app/models/vm_reconfigure_task.rb
+msgid "%{request_description} for: %{resource_name} - %{message}"
 msgstr ""
 
 #: ../app/models/mixins/custom_attribute_mixin.rb
@@ -3566,6 +3574,10 @@ msgstr ""
 #: ../app/javascript/components/reconfigure-vm-form/helpers/general.js
 #: ../app/views/miq_request/_reconfigure_show.html.haml
 msgid "Add Network Adapters"
+msgstr ""
+
+#: ../app/models/vm_reconfigure_task.rb
+msgid "Add Network Adapters: %{value}"
 msgstr ""
 
 #: ../app/controllers/host_initiator_group_controller.rb
@@ -7234,6 +7246,10 @@ msgstr ""
 msgid "Attach"
 msgstr ""
 
+#: ../app/models/vm_reconfigure_task.rb
+msgid "Attach CD/DVDs: %{value}"
+msgstr ""
+
 #: ../app/controllers/cloud_volume_controller.rb
 msgid "Attach Cloud Volume \"%{name}\""
 msgstr ""
@@ -7927,6 +7943,10 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager (plural form)
 #: ../config/dictionary_strings.rb
 msgid "Automation Managers (Ansible Tower)"
+msgstr ""
+
+#: ../app/models/automation_request.rb
+msgid "Automation Request"
 msgstr ""
 
 #: ../app/controllers/application_controller/automate.rb
@@ -15613,6 +15633,10 @@ msgstr[1] ""
 
 #: ../app/models/miq_dialog.rb
 msgid "Configured System Provision"
+msgstr ""
+
+#: ../app/models/miq_provision_configured_system_request.rb
+msgid "Configured System Provisioning"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/configured_system_center.rb
@@ -23478,6 +23502,10 @@ msgstr ""
 msgid "Detach"
 msgstr ""
 
+#: ../app/models/vm_reconfigure_task.rb
+msgid "Detach CD/DVDs: %{value}"
+msgstr ""
+
 #: ../app/controllers/cloud_volume_controller.rb
 msgid "Detach Cloud Volume \"%{name}\""
 msgstr ""
@@ -27423,6 +27451,10 @@ msgstr ""
 #: ../app/javascript/components/reconfigure-vm-form/helpers/general.js
 #: ../app/views/miq_request/_reconfigure_show.html.haml
 msgid "Edit Network Adapters"
+msgstr ""
+
+#: ../app/models/vm_reconfigure_task.rb
+msgid "Edit Network Adapters: %{value}"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -43237,6 +43269,10 @@ msgstr ""
 msgid "Memory(MB)"
 msgstr ""
 
+#: ../app/models/vm_reconfigure_task.rb
+msgid "Memory: %{value} MB"
+msgstr ""
+
 #: src/report-editor/basic-info.jsx
 msgid "Menu Name"
 msgstr ""
@@ -53099,6 +53135,10 @@ msgstr ""
 msgid "OrchestrationStack"
 msgstr ""
 
+#: ../app/models/orchestration_stack_retire_request.rb
+msgid "OrchestrationStack Retire"
+msgstr ""
+
 #: ../config/model_attributes.rb
 msgid "OrchestrationStackOutput|Description"
 msgstr ""
@@ -55317,6 +55357,7 @@ msgid "Physical Server Console"
 msgstr ""
 
 #: ../app/models/miq_request.rb
+#: ../app/models/physical_server_firmware_update_request.rb
 msgid "Physical Server Firmware Update"
 msgstr ""
 
@@ -55364,6 +55405,10 @@ msgstr ""
 
 #: ../app/models/miq_dialog.rb:13 ../app/models/miq_request.rb
 msgid "Physical Server Provision"
+msgstr ""
+
+#: ../app/models/physical_server_provision_request.rb
+msgid "Physical Server Provisioning"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/physical_server_center.rb
@@ -57392,6 +57437,10 @@ msgstr ""
 msgid "Processor Cores Per Socket"
 msgstr ""
 
+#: ../app/models/vm_reconfigure_task.rb
+msgid "Processor Cores Per Socket: %{value}"
+msgstr ""
+
 #: ../app/views/miq_request/_reconfigure_show.html.haml
 msgid "Processor Cores_Per_Socket"
 msgstr ""
@@ -57400,6 +57449,10 @@ msgstr ""
 #: ../app/views/miq_request/_reconfigure_show.html.haml
 #: ../config/yaml_strings.rb
 msgid "Processor Sockets"
+msgstr ""
+
+#: ../app/models/vm_reconfigure_task.rb
+msgid "Processor Sockets: %{value}"
 msgstr ""
 
 #:
@@ -58290,8 +58343,24 @@ msgstr ""
 msgid "Provisioning Entry Point is required"
 msgstr ""
 
+#: ../app/models/service_template_provision_task.rb
+msgid "Provisioning Service [%{rsc_name}] for Service [%{svc_target_name}]"
+msgstr ""
+
+#: ../app/models/service_template_provision_task.rb
+msgid "Provisioning Service [%{svc_target_name}] from [%{prov_source_name}]"
+msgstr ""
+
 #: ../app/helpers/host_helper/textual_summary.rb
 msgid "Provisioning State"
+msgstr ""
+
+#: ../app/models/service_template_provision_task.rb
+msgid "Provisioning VM [%{rsc_name}] for Service [%{svc_target_name}]"
+msgstr ""
+
+#: ../app/models/service_template_provision_task.rb
+msgid "Provisioning [%{rsc_name}] for Service [%{svc_target_name}]"
 msgstr ""
 
 #: ../app/controllers/mixins/manager_controller_mixin.rb
@@ -60805,6 +60874,10 @@ msgstr ""
 msgid "Remove Disks"
 msgstr ""
 
+#: ../app/models/vm_reconfigure_task.rb
+msgid "Remove Disks: %{value}"
+msgstr ""
+
 #: ../app/helpers/application_helper/toolbar/miq_ae_domains_center.rb
 msgid "Remove Domains"
 msgstr ""
@@ -60968,6 +61041,10 @@ msgstr ""
 
 #: ../app/views/miq_request/_reconfigure_show.html.haml
 msgid "Remove Network Adapters"
+msgstr ""
+
+#: ../app/models/vm_reconfigure_task.rb
+msgid "Remove Network Adapters: %{value}"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -62529,6 +62606,10 @@ msgstr ""
 
 #: ../app/views/miq_request/_reconfigure_show.html.haml
 msgid "Resize Disks"
+msgstr ""
+
+#: ../app/models/vm_reconfigure_task.rb
+msgid "Resize Disks: %{value}"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -66189,6 +66270,7 @@ msgid "Service Provision Complete"
 msgstr ""
 
 #: ../app/models/miq_request.rb
+#: ../app/models/service_reconfigure_request.rb
 msgid "Service Reconfigure"
 msgstr ""
 
@@ -66198,7 +66280,7 @@ msgid_plural "Service Resources"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../app/models/miq_request.rb
+#: ../app/models/miq_request.rb:100 ../app/models/service_retire_request.rb
 msgid "Service Retire"
 msgstr ""
 
@@ -66663,6 +66745,10 @@ msgstr ""
 
 #: ../config/model_attributes.rb
 msgid "ServiceTemplate|Type display"
+msgstr ""
+
+#: ../app/models/service_template_provision_request.rb
+msgid "Service_Template_Provisioning"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/CloudService.yaml
@@ -73894,6 +73980,10 @@ msgstr ""
 msgid "Total Processors"
 msgstr ""
 
+#: ../app/models/vm_reconfigure_task.rb
+msgid "Total Processors: %{value}"
+msgstr ""
+
 #. TRANSLATORS: file: product/views/Storage.yaml
 #. TRANSLATORS: file: product/views/StorageCluster.yaml
 #: ../config/yaml_strings.rb
@@ -76670,6 +76760,7 @@ msgid "VM Clone Start"
 msgstr ""
 
 #: ../app/models/miq_request.rb
+#: ../app/models/vm_cloud_reconfigure_request.rb
 msgid "VM Cloud Reconfigure"
 msgstr ""
 
@@ -76812,6 +76903,7 @@ msgid "VM Memory Files Percent of Used"
 msgstr ""
 
 #: ../app/models/miq_dialog.rb:12 ../app/models/miq_request.rb
+#: ../app/models/vm_migrate_request.rb
 msgid "VM Migrate"
 msgstr ""
 
@@ -76954,11 +77046,15 @@ msgstr ""
 msgid "VM Provisioned Disk Files"
 msgstr ""
 
+#: ../app/models/miq_provision_request.rb
+msgid "VM Provisioning"
+msgstr ""
+
 #: ../app/models/miq_request.rb
 msgid "VM Publish"
 msgstr ""
 
-#: ../app/models/miq_request.rb
+#: ../app/models/miq_request.rb:115 ../app/models/vm_reconfigure_request.rb
 msgid "VM Reconfigure"
 msgstr ""
 
@@ -77036,7 +77132,7 @@ msgstr ""
 msgid "VM Resume"
 msgstr ""
 
-#: ../app/models/miq_request.rb
+#: ../app/models/miq_request.rb:118 ../app/models/vm_retire_request.rb
 msgid "VM Retire"
 msgstr ""
 
