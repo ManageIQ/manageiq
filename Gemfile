@@ -25,6 +25,7 @@ gem "activerecord-session_store",       "~>2.0"
 gem "activerecord-virtual_attributes",  "~>6.1.2"
 gem "acts_as_tree",                     "~>2.7" # acts_as_tree needs to be required so that it loads before ancestry
 gem "ancestry",                         "~>4.1.0",           :require => false
+gem "awesome_spawn",                    "~>1.6",             :require => false
 gem "aws-sdk-s3",                       "~>1.0",             :require => false # For FileDepotS3
 gem "bcrypt",                           "~> 3.1.10",         :require => false
 gem "bootsnap",                         ">= 1.8.1",          :require => false # for psych 3.3.2+ / 4 unsafe_load
