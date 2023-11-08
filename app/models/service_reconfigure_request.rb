@@ -1,5 +1,5 @@
 class ServiceReconfigureRequest < MiqRequest
-  TASK_DESCRIPTION  = 'Service Reconfigure'
+  TASK_DESCRIPTION  = N_('Service Reconfigure')
   SOURCE_CLASS_NAME = 'Service'
 
   validates_inclusion_of :request_state, :in      => %w(pending finished) + ACTIVE_STATES,

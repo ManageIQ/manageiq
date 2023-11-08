@@ -1,5 +1,5 @@
 class ServiceTemplateProvisionRequest < MiqRequest
-  TASK_DESCRIPTION  = 'Service_Template_Provisioning'
+  TASK_DESCRIPTION  = N_('Service_Template_Provisioning')
   SOURCE_CLASS_NAME = 'ServiceTemplate'
   ACTIVE_STATES     = %w( migrated ) + base_class::ACTIVE_STATES
   SERVICE_ORDER_CLASS = '::ServiceOrderCart'.freeze

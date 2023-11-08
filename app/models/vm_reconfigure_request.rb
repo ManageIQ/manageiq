@@ -1,5 +1,5 @@
 class VmReconfigureRequest < MiqRequest
-  TASK_DESCRIPTION  = 'VM Reconfigure'
+  TASK_DESCRIPTION  = N_('VM Reconfigure')
   SOURCE_CLASS_NAME = 'Vm'
   ACTIVE_STATES     = %w( reconfigured ) + base_class::ACTIVE_STATES
 

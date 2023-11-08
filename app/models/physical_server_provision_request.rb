@@ -1,5 +1,5 @@
 class PhysicalServerProvisionRequest < MiqRequest
-  TASK_DESCRIPTION  = 'Physical Server Provisioning'.freeze
+  TASK_DESCRIPTION  = N_('Physical Server Provisioning').freeze
   SOURCE_CLASS_NAME = 'PhysicalServer'.freeze
 
   def description
