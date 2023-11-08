@@ -8,15 +8,14 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-01 00:46+0000\n"
-"PO-Revision-Date: 2023-08-01 00:46+0000\n"
+"POT-Creation-Date: 2023-11-01 00:23+0000\n"
+"PO-Revision-Date: 2023-11-01 00:23+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid " "
@@ -620,6 +619,9 @@ msgstr "%{button_name} 단추가 아직 구현되지 않음"
 
 msgid "%{chargeback_interval} Ending with"
 msgstr "%{chargeback_interval} 다음으로 종료"
+
+msgid "%{chargeback_model} and Date"
+msgstr "%{chargeback_model} 및 날짜"
 
 msgid ""
 "%{class_name} [%{name}] is attached to <%{ems_class_name}: %{ems_name}> that "
@@ -2461,8 +2463,8 @@ msgstr "맵핑 규칙 추가"
 msgid "Add Method"
 msgstr "메소드 추가"
 
-msgid "Add Network"
-msgstr "네트워크 추가"
+msgid "Add Network Adapter"
+msgstr "네트워크 어댑터 추가"
 
 msgid "Add Network Adapters"
 msgstr "네트워크 어댑터 추가"
@@ -3985,6 +3987,9 @@ msgstr "관리자 역할을 선택해야 합니다."
 
 msgid "An alert must contain a valid expression."
 msgstr "경보는 올바른 표현식을 포함해야 합니다."
+
+msgid "An error has occurred with this workflow"
+msgstr "이 워크플로우에서 오류가 발생했습니다."
 
 msgid ""
 "An error occured when changing orchestration template \"%{name}\" to orderable"
@@ -12630,6 +12635,9 @@ msgstr "서비스 계정 이메일과 연관된 PEM 파일의 컨텐츠"
 msgid "Context Data"
 msgstr "컨텍스트 데이터"
 
+msgid "Context is not available for \"%s\""
+msgstr "\"%s\"에 대한 컨텍스트를 사용할 수 없음"
+
 msgid "Continue"
 msgstr "계속"
 
@@ -12917,6 +12925,9 @@ msgstr "인증 상태를 판별할 수 없습니다."
 
 msgid "Could not fetch the data"
 msgstr "데이터를 페치할 수 없습니다."
+
+msgid "Could not find credentials %{missing_credential_refs}"
+msgstr "%{missing_credential_refs} 신임 정보를 찾을 수 없음"
 
 msgid "Could not find the given \"%{model}\" record."
 msgstr "지정된 \"%{model}\" 레코드를 찾을 수 없습니다."
@@ -13242,8 +13253,26 @@ msgid "Credential (Vault)"
 msgid_plural "Credentials (Vault)"
 msgstr[0] "인증 정보(저장소)"
 
+msgid "Credential (Workflow)"
+msgstr "신임 정보 (워크플로우)"
+
+msgid "Credential Field"
+msgstr "신임 정보 필드"
+
+msgid "Credential Mapping for \"%s\" was canceled by the user."
+msgstr "사용자가 \"%s\"에 대한 신임 맵핑을 취소했습니다."
+
+msgid "Credential Mapping for \"%s\" was saved."
+msgstr "\"%s\"에 대한 신임 맵핑이 저장되었습니다."
+
 msgid "Credential Options"
 msgstr "인증 정보 옵션"
+
+msgid "Credential Record"
+msgstr "신임 정보 레코드"
+
+msgid "Credential Reference"
+msgstr "신임 정보 참조"
 
 msgid "Credential type"
 msgstr "인증 정보 유형"
@@ -13261,7 +13290,7 @@ msgid "Credentials (Amazon)"
 msgstr "인증 정보(Amazon)"
 
 msgid "Credentials (Embedded Ansible)"
-msgstr "신임 정보(임베디드 Ansible)"
+msgstr "신임 정보(임베디드된 Ansible)"
 
 msgid "Credentials (Embedded Workflows)"
 msgstr "신임 정보(임베디드 워크플로우)"
@@ -13299,8 +13328,14 @@ msgstr "인증 정보(VMware)"
 msgid "Credentials (Vault)"
 msgstr "인증 정보(저장소(Vault))"
 
+msgid "Credentials (Workflow)"
+msgstr "신임 정보(워크플로우)"
+
 msgid "Credentials Changed On"
 msgstr "인증 정보 변경 날짜"
+
+msgid "Credentials Identifier"
+msgstr "신임 정보 ID"
 
 msgid "Credentials must be valid to capture metrics"
 msgstr "메트릭을 캡처하려면 인증 정보가 유효해야 합니다."
@@ -19918,6 +19953,9 @@ msgstr "새 대화 상자 입력"
 msgid "Enter tag category to map to"
 msgstr "맵핑할 태그 카테고리 입력"
 
+msgid "Entered Time"
+msgstr "입력된 시간"
+
 msgid "Entered text should match the format:"
 msgstr "입력한 텍스트의 형식이 일치해야 함:"
 
@@ -21861,6 +21899,9 @@ msgstr "완료 시간"
 msgid "Finished Task cannot be cancelled"
 msgstr "완료한 태스크는 취소할 수 없습니다."
 
+msgid "Finished Time"
+msgstr "완료 시간"
+
 msgid "Finished with Warnings"
 msgstr "경고와 함께 완료됨"
 
@@ -22520,6 +22561,9 @@ msgstr "GENEVE"
 
 msgid "GRE"
 msgstr "GRE"
+
+msgid "Gap Collection is only available for VMware vSphere Infrastructures"
+msgstr "갭 콜렉션은 VMware vSphere 인프라에만 사용 가능합니다."
 
 msgid "Gateway"
 msgstr "게이트웨이"
@@ -24527,6 +24571,9 @@ msgstr "IBM Cloud Activity Tracker 인스턴스 서비스 키"
 msgid "IBM Cloud Block-Storage Volume"
 msgstr "IBM Cloud Block-Storage 볼륨"
 
+msgid "IBM Cloud Infrastructure Center"
+msgstr "IBM Cloud Infrastructure Center"
+
 msgid "IBM Cloud Monitoring Instance GUID"
 msgstr "IBM Cloud Monitoring 인스턴스 GUID"
 
@@ -25352,6 +25399,9 @@ msgstr "차트 정의가 올바르지 않습니다."
 msgid "Invalid configuration parameters."
 msgstr "구성 매개변수가 올바르지 않습니다."
 
+msgid "Invalid credential_field %{field}, allowed values are %{allowed_fields}"
+msgstr "올바르지 않은 credential_field%{field}입니다. 허용되는 값은%{allowed_fields}입니다."
+
 msgid "Invalid database type"
 msgstr "올바르지 않은 데이터베이스 유형"
 
@@ -25378,6 +25428,9 @@ msgstr "올바르지 않거나 지원되지 않는 파일 저장소(depot) 유�
 
 msgid "Invalid parameters: %{params}"
 msgstr "올바르지 않은 매개변수: %{params}"
+
+msgid "Invalid payload: %{error}"
+msgstr "올바르지 않은 페이로드: %{error}"
 
 msgid "Invalid placement group - incompatible colocation policy"
 msgstr "올바르지 않은 배치 그룹 - 호환되지 않는 공존 정책"
@@ -26944,6 +26997,237 @@ msgstr "ManageIQ"
 msgid "ManageIQ Tag Department"
 msgstr "ManageIQ 태그 부서"
 
+msgid "ManageIQ/showback/data rollup"
+msgstr "ManageIQ/showback/data 롤업"
+
+msgid "ManageIQ/showback/data view"
+msgstr "ManageIQ/showback/data 보기"
+
+msgid "ManageIQ/showback/envelope"
+msgstr "ManageIQ/showback/envelope"
+
+msgid "ManageIQ/showback/input measure"
+msgstr "ManageIQ/showback/input 측정"
+
+msgid "ManageIQ/showback/price plan"
+msgstr "ManageIQ/showback/price 플랜"
+
+msgid "ManageIQ/showback/rate"
+msgstr "ManageIQ/showback/rate"
+
+msgid "ManageIQ/showback/tier"
+msgstr "ManageIQ/showback/tier"
+
+msgid "ManageIQ::Showback::DataRollup|Context"
+msgstr "ManageIQ::Showback::DataRollup|컨텍스트"
+
+msgid "ManageIQ::Showback::DataRollup|Data"
+msgstr "ManageIQ::Showback::DataRollup|데이터"
+
+msgid "ManageIQ::Showback::DataRollup|End time"
+msgstr "ManageIQ::Showback::DataRollup|종료 시간"
+
+msgid "ManageIQ::Showback::DataRollup|Href slug"
+msgstr "ManageIQ::Showback::DataRollup|Href 슬러그"
+
+msgid "ManageIQ::Showback::DataRollup|Region description"
+msgstr "ManageIQ::Showback::DataRollup|영역 설명"
+
+msgid "ManageIQ::Showback::DataRollup|Region number"
+msgstr "ManageIQ::Showback::DataRollup|영역 번호"
+
+msgid "ManageIQ::Showback::DataRollup|Resource type"
+msgstr "ManageIQ::Showback::DataRollup|자원 유형"
+
+msgid "ManageIQ::Showback::DataRollup|Start time"
+msgstr "ManageIQ::Showback::DataRollup|시작 시간"
+
+msgid "ManageIQ::Showback::DataView|Context snapshot"
+msgstr "ManageIQ::Showback::DataView|컨텍스트 스냅샷"
+
+msgid "ManageIQ::Showback::DataView|Cost currency"
+msgstr "ManageIQ::Showback::DataView|비용 통화"
+
+msgid "ManageIQ::Showback::DataView|Cost subunits"
+msgstr "ManageIQ::Showback::DataView|비용 하위 단위"
+
+msgid "ManageIQ::Showback::DataView|Data snapshot"
+msgstr "ManageIQ::Showback::DataView|데이터 스냅샷"
+
+msgid "ManageIQ::Showback::DataView|End time"
+msgstr "ManageIQ::Showback::DataView|종료 시간"
+
+msgid "ManageIQ::Showback::DataView|Href slug"
+msgstr "ManageIQ::Showback::DataView|Href 슬러그"
+
+msgid "ManageIQ::Showback::DataView|Region description"
+msgstr "ManageIQ::Showback::DataView|영역 설명"
+
+msgid "ManageIQ::Showback::DataView|Region number"
+msgstr "ManageIQ::Showback::DataView|영역 번호"
+
+msgid "ManageIQ::Showback::DataView|Start time"
+msgstr "ManageIQ::Showback::DataView|시작 시간"
+
+msgid "ManageIQ::Showback::Envelope|Accumulated cost currency"
+msgstr "ManageIQ::Showback::Envelope|누적 비용 통화"
+
+msgid "ManageIQ::Showback::Envelope|Accumulated cost subunits"
+msgstr "ManageIQ::Showback::Envelope|누적 비용 하위 단위"
+
+msgid "ManageIQ::Showback::Envelope|Description"
+msgstr "ManageIQ::Showback::Envelope|설명"
+
+msgid "ManageIQ::Showback::Envelope|End time"
+msgstr "ManageIQ::Showback::Envelope|종료 시간"
+
+msgid "ManageIQ::Showback::Envelope|Href slug"
+msgstr "ManageIQ::Showback::Envelope|Href 슬러그"
+
+msgid "ManageIQ::Showback::Envelope|Name"
+msgstr "ManageIQ::Showback::Envelope|이름"
+
+msgid "ManageIQ::Showback::Envelope|Region description"
+msgstr "ManageIQ::Showback::Envelope|영역 설명"
+
+msgid "ManageIQ::Showback::Envelope|Region number"
+msgstr "ManageIQ::Showback::Envelope|영역 번호"
+
+msgid "ManageIQ::Showback::Envelope|Resource type"
+msgstr "ManageIQ::Showback::Envelope|자원 유형"
+
+msgid "ManageIQ::Showback::Envelope|Start time"
+msgstr "ManageIQ::Showback::Envelope|시작 시간"
+
+msgid "ManageIQ::Showback::Envelope|State"
+msgstr "ManageIQ::Showback::Envelope|상태"
+
+msgid "ManageIQ::Showback::InputMeasure|Description"
+msgstr "ManageIQ::Showback::InputMeasure|설명"
+
+msgid "ManageIQ::Showback::InputMeasure|Entity"
+msgstr "ManageIQ::Showback::InputMeasure|엔티티"
+
+msgid "ManageIQ::Showback::InputMeasure|Fields"
+msgstr "ManageIQ::Showback::InputMeasure|필드"
+
+msgid "ManageIQ::Showback::InputMeasure|Group"
+msgstr "ManageIQ::Showback::InputMeasure|그룹"
+
+msgid "ManageIQ::Showback::InputMeasure|Href slug"
+msgstr "ManageIQ::Showback::InputMeasure|Href 슬러그"
+
+msgid "ManageIQ::Showback::InputMeasure|Region description"
+msgstr "ManageIQ::Showback::InputMeasure|영역 설명"
+
+msgid "ManageIQ::Showback::InputMeasure|Region number"
+msgstr "ManageIQ::Showback::InputMeasure|영역 번호"
+
+msgid "ManageIQ::Showback::PricePlan|Description"
+msgstr "ManageIQ::Showback::PricePlan|설명"
+
+msgid "ManageIQ::Showback::PricePlan|Href slug"
+msgstr "ManageIQ::Showback::PricePlan|Href 슬러그"
+
+msgid "ManageIQ::Showback::PricePlan|Name"
+msgstr "ManageIQ::Showback::PricePlan|이름"
+
+msgid "ManageIQ::Showback::PricePlan|Region description"
+msgstr "ManageIQ::Showback::PricePlan|영역 설명"
+
+msgid "ManageIQ::Showback::PricePlan|Region number"
+msgstr "ManageIQ::Showback::PricePlan|영역 번호"
+
+msgid "ManageIQ::Showback::PricePlan|Resource type"
+msgstr "ManageIQ::Showback::PricePlan|자원 유형"
+
+msgid "ManageIQ::Showback::Rate|Calculation"
+msgstr "ManageIQ::Showback::Rate|계산"
+
+msgid "ManageIQ::Showback::Rate|Concept"
+msgstr "ManageIQ::Showback::Rate|개념"
+
+msgid "ManageIQ::Showback::Rate|Entity"
+msgstr "ManageIQ::Showback::Rate|엔티티"
+
+msgid "ManageIQ::Showback::Rate|Field"
+msgstr "ManageIQ::Showback::Rate|필드"
+
+msgid "ManageIQ::Showback::Rate|Group"
+msgstr "ManageIQ::Showback::Rate|그룹"
+
+msgid "ManageIQ::Showback::Rate|Href slug"
+msgstr "ManageIQ::Showback::Rate|Href 슬러그"
+
+msgid "ManageIQ::Showback::Rate|Region description"
+msgstr "ManageIQ::Showback::Rate|영역 설명"
+
+msgid "ManageIQ::Showback::Rate|Region number"
+msgstr "ManageIQ::Showback::Rate|영역 번호"
+
+msgid "ManageIQ::Showback::Rate|Screener"
+msgstr "ManageIQ::Showback::Rate|스크리너"
+
+msgid "ManageIQ::Showback::Rate|Start date"
+msgstr "ManageIQ::Showback::Rate|시작 날짜"
+
+msgid "ManageIQ::Showback::Rate|Tier input variable"
+msgstr "ManageIQ::Showback::Rate|티어 입력 변수"
+
+msgid "ManageIQ::Showback::Rate|Tiers use full value"
+msgstr "ManageIQ::Showback::Rate|티어가 전체 값을 사용함"
+
+msgid "ManageIQ::Showback::Rate|Uses single tier"
+msgstr "ManageIQ::Showback::Rate|단일 티어 사용"
+
+msgid "ManageIQ::Showback::Tier|Fixed rate currency"
+msgstr "ManageIQ::Showback::Tier|고정 환율 통화"
+
+msgid "ManageIQ::Showback::Tier|Fixed rate per time"
+msgstr "ManageIQ::Showback::Tier|횟수당 고정 비율"
+
+msgid "ManageIQ::Showback::Tier|Fixed rate subunits"
+msgstr "ManageIQ::Showback::Tier|고정 비율 하위 단위"
+
+msgid "ManageIQ::Showback::Tier|Href slug"
+msgstr "ManageIQ::Showback::Tier|Href 슬러그"
+
+msgid "ManageIQ::Showback::Tier|Region description"
+msgstr "ManageIQ::Showback::Tier|영역 설명"
+
+msgid "ManageIQ::Showback::Tier|Region number"
+msgstr "ManageIQ::Showback::Tier|영역 번호"
+
+msgid "ManageIQ::Showback::Tier|Step time unit"
+msgstr "ManageIQ::Showback::Tier|단계 시간 단위"
+
+msgid "ManageIQ::Showback::Tier|Step time value"
+msgstr "ManageIQ::Showback::Tier|단계 시간 값"
+
+msgid "ManageIQ::Showback::Tier|Step unit"
+msgstr "ManageIQ::Showback::Tier|단계 단위"
+
+msgid "ManageIQ::Showback::Tier|Step value"
+msgstr "ManageIQ::Showback::Tier|단계 값"
+
+msgid "ManageIQ::Showback::Tier|Tier end value"
+msgstr "ManageIQ::Showback::Tier|티어 및 값"
+
+msgid "ManageIQ::Showback::Tier|Tier start value"
+msgstr "ManageIQ::Showback::Tier|티어 시작 값"
+
+msgid "ManageIQ::Showback::Tier|Variable rate currency"
+msgstr "ManageIQ::Showback::Tier|가변 비율 통화"
+
+msgid "ManageIQ::Showback::Tier|Variable rate per time"
+msgstr "ManageIQ::Showback::Tier|횟수당 가변 비율"
+
+msgid "ManageIQ::Showback::Tier|Variable rate per unit"
+msgstr "ManageIQ::Showback::Tier|단위당 가변 비율"
+
+msgid "ManageIQ::Showback::Tier|Variable rate subunits"
+msgstr "ManageIQ::Showback::Tier|가변 비율 하위 단위"
+
 msgid "Manageable"
 msgstr "관리 가능"
 
@@ -27031,6 +27315,18 @@ msgstr "제조업체"
 
 msgid "Manufacturer / Model"
 msgstr "제조업체/모델"
+
+msgid "Map Credentials"
+msgstr "신임 정보 맵핑"
+
+msgid "Map Credentials to \"%{name}\""
+msgstr "신임 정보를 \"%{name}\"에 맵핑"
+
+msgid "Map Credentials to Workflow"
+msgstr "신임 정보를 워크플로우에 맵핑"
+
+msgid "Map Credentials to this Workflow"
+msgstr "신임 정보를 이 워크플로우에 맵핑"
 
 msgid "Map Tags"
 msgstr "태그 맵핑"
@@ -27564,9 +27860,6 @@ msgstr "메모리 총계"
 
 msgid "Memory Total Cost"
 msgstr "메모리 총 비용"
-
-msgid "Memory Type"
-msgstr "메모리 유형"
 
 msgid "Memory Usage"
 msgstr "메모리 사용량"
@@ -33667,9 +33960,6 @@ msgstr "유형별 VM 수"
 msgid "Number, 2 Decimals (1,234.00)"
 msgstr "숫자, 2개 10진수(1,234.00)"
 
-msgid "Numeric-only passwords are not accepted"
-msgstr "숫자로만 구성된 비밀번호는 허용되지 않음"
-
 msgid "OK"
 msgstr "확인"
 
@@ -33844,6 +34134,9 @@ msgstr "개별적으로"
 
 msgid "One of e-mail addresses 'To' is not valid"
 msgstr "이메일 주소 '수신인' 중 하나가 올바르지 않습니다."
+
+msgid "One of the Hosts does not support editing"
+msgstr "호스트 중 하나가 편집을 지원하지 않습니다."
 
 msgid "One or more %{model} must be selected to Reconfigure"
 msgstr "재구성하려면 하나 이상의 %{model}을(를) 선택해야 합니다."
@@ -35165,6 +35458,9 @@ msgstr "이 인스턴스 일시정지?"
 
 msgid "Paused"
 msgstr "일시정지됨"
+
+msgid "Payload is not available."
+msgstr "페이로드를 사용할 수 없습니다."
 
 msgid "Pct Free Disk"
 msgstr "여유 디스크 백분율"
@@ -40379,6 +40675,15 @@ msgstr "ResourcePool|vm cpu 집계"
 
 msgid "ResourcePool|Aggregate vm memory"
 msgstr "ResourcePool|vm 메모리 집계"
+
+msgid "ResourcePool|Cpu cores available"
+msgstr "ResourcePool|사용 가능한 CPU 코어"
+
+msgid "ResourcePool|Cpu cores limit"
+msgstr "ResourcePool|CPU 코어 한계"
+
+msgid "ResourcePool|Cpu cores reserve"
+msgstr "ResourcePool| CPU 코어 예비량"
 
 msgid "ResourcePool|Cpu limit"
 msgstr "ResourcePool|Cpu 한계"
@@ -47186,6 +47491,9 @@ msgstr "이 그룹은 읽기 전용이어서 삭제할 수 없습니다."
 msgid "This Group is Read Only and can not be edited"
 msgstr "이 그룹은 읽기 전용이어서 편집할 수 없습니다."
 
+msgid "This Host does not support editing"
+msgstr "이 호스트는 편집을 지원하지 않습니다."
+
 msgid "This Hour"
 msgstr "이번 시간"
 
@@ -52697,6 +53005,12 @@ msgstr "워크플로우"
 msgid "Workflow Class"
 msgstr "워크플로우 클래스"
 
+msgid "Workflow Credential"
+msgstr "워크플로우 신임 정보"
+
+msgid "Workflow States"
+msgstr "워크플로우 상태"
+
 msgid "Workflow Template"
 msgstr "워크플로 템플리트"
 
@@ -52710,6 +53024,9 @@ msgstr[0] "워크플로우 템플리트(Ansible Tower)"
 
 msgid "Workflow Templates (Ansible Tower)"
 msgstr "워크플로우 템플리트(Ansible Tower)"
+
+msgid "Workflow does not have any credentials to map."
+msgstr "워크플로우에 맵핑할 신임 정보가 없습니다."
 
 msgid "Workflow max. timeout"
 msgstr "워크플로우 최대 제한시간"

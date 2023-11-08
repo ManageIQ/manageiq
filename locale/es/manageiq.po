@@ -8,15 +8,14 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-01 00:46+0000\n"
-"PO-Revision-Date: 2023-08-01 00:46+0000\n"
+"POT-Creation-Date: 2023-11-01 00:23+0000\n"
+"PO-Revision-Date: 2023-11-01 00:23+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 msgid " "
@@ -715,6 +714,9 @@ msgstr "Botón %{button_name} no implementado aún"
 
 msgid "%{chargeback_interval} Ending with"
 msgstr "%{chargeback_interval} termina por"
+
+msgid "%{chargeback_model} and Date"
+msgstr "%{chargeback_model} y fecha"
 
 msgid ""
 "%{class_name} [%{name}] is attached to <%{ems_class_name}: %{ems_name}> that "
@@ -2713,8 +2715,8 @@ msgstr "Añadir regla de correlación"
 msgid "Add Method"
 msgstr "Añadir Método"
 
-msgid "Add Network"
-msgstr "Agregar red"
+msgid "Add Network Adapter"
+msgstr "Añadir adaptador de red"
 
 msgid "Add Network Adapters"
 msgstr "Agregar adaptadores de red"
@@ -4308,6 +4310,9 @@ msgstr "Se debe seleccionar un rol de administrador."
 
 msgid "An alert must contain a valid expression."
 msgstr "La alerta debe contener una expresión válida"
+
+msgid "An error has occurred with this workflow"
+msgstr "Se ha producido un error con este flujo de trabajo"
 
 msgid ""
 "An error occured when changing orchestration template \"%{name}\" to orderable"
@@ -13607,6 +13612,9 @@ msgstr ""
 msgid "Context Data"
 msgstr "Datos de contexto"
 
+msgid "Context is not available for \"%s\""
+msgstr "El contexto no está disponible para \"%s\""
+
 msgid "Continue"
 msgstr "Continuar"
 
@@ -13902,6 +13910,9 @@ msgstr "No se pudo determinar el estado de autenticación"
 
 msgid "Could not fetch the data"
 msgstr "No se han podido recuperar los datos"
+
+msgid "Could not find credentials %{missing_credential_refs}"
+msgstr "No se han podido encontrar las credenciales %{missing_credential_refs}"
 
 msgid "Could not find the given \"%{model}\" record."
 msgstr "No se ha encontrado el registro \"%{model}\" especificado."
@@ -14262,8 +14273,26 @@ msgid_plural "Credentials (Vault)"
 msgstr[0] "Credencial (Vault)"
 msgstr[1] "Credenciales (Vault)"
 
+msgid "Credential (Workflow)"
+msgstr "Credencial (flujo de trabajo)"
+
+msgid "Credential Field"
+msgstr "Campo de credencial"
+
+msgid "Credential Mapping for \"%s\" was canceled by the user."
+msgstr "El usuario ha cancelado la correlación de credenciales para \"%s\"."
+
+msgid "Credential Mapping for \"%s\" was saved."
+msgstr "Se ha guardado la correlación de credenciales para \"%s\"."
+
 msgid "Credential Options"
 msgstr "Opciones de credencial"
+
+msgid "Credential Record"
+msgstr "Registro de credenciales"
+
+msgid "Credential Reference"
+msgstr "Referencia de credencial"
 
 msgid "Credential type"
 msgstr "Tipo de credencial"
@@ -14320,8 +14349,14 @@ msgstr "Credenciales (VMware)"
 msgid "Credentials (Vault)"
 msgstr "Credenciales (Vault)"
 
+msgid "Credentials (Workflow)"
+msgstr "Credenciales (flujo de trabajo)"
+
 msgid "Credentials Changed On"
 msgstr "Las credenciales cambiaron el"
+
+msgid "Credentials Identifier"
+msgstr "Identificador de credenciales"
 
 msgid "Credentials must be valid to capture metrics"
 msgstr "Las credenciales deben ser válidas para capturar métricas"
@@ -21155,6 +21190,9 @@ msgstr "Especificar un nuevo diálogo"
 msgid "Enter tag category to map to"
 msgstr "Ingresar categoría de etiqueta para asignar a"
 
+msgid "Entered Time"
+msgstr "Hora especificada"
+
 msgid "Entered text should match the format:"
 msgstr "El texto especificado debe coincidir con el formato:"
 
@@ -23209,6 +23247,9 @@ msgstr "Hora de finalización"
 msgid "Finished Task cannot be cancelled"
 msgstr "La tarea finalizada no puede ser cancelada"
 
+msgid "Finished Time"
+msgstr "Hora de finalización"
+
 msgid "Finished with Warnings"
 msgstr "Finalizado con avisos"
 
@@ -23887,6 +23928,10 @@ msgstr "GENEVE"
 
 msgid "GRE"
 msgstr "GRE"
+
+msgid "Gap Collection is only available for VMware vSphere Infrastructures"
+msgstr ""
+"Gap Collection solo está disponible para infraestructuras de VMware vSphere"
 
 msgid "Gateway"
 msgstr "Puerta de enlace"
@@ -25971,6 +26016,9 @@ msgstr "Clave de servicio de instancia de IBM Cloud Activity Tracker"
 msgid "IBM Cloud Block-Storage Volume"
 msgstr "Volumen de almacenamiento de bloques de IBM Cloud"
 
+msgid "IBM Cloud Infrastructure Center"
+msgstr "IBM Cloud Infrastructure Center"
+
 msgid "IBM Cloud Monitoring Instance GUID"
 msgstr "GUID de instancia de IBM Cloud Monitoring"
 
@@ -26848,6 +26896,11 @@ msgstr "Definición de diagrama no válido"
 msgid "Invalid configuration parameters."
 msgstr "Parámetros de configuración inválidos."
 
+msgid "Invalid credential_field %{field}, allowed values are %{allowed_fields}"
+msgstr ""
+"Credential_field%{field} no válido, los valores permitidos son %{"
+"allowed_fields}"
+
 msgid "Invalid database type"
 msgstr "Tipo de base de datos no válido"
 
@@ -26874,6 +26927,9 @@ msgstr "Tipo de almacén de archivo no válido o no soportado."
 
 msgid "Invalid parameters: %{params}"
 msgstr "Parámetros no válidos: %{params}"
+
+msgid "Invalid payload: %{error}"
+msgstr "Carga útil no válida: %{error}"
 
 msgid "Invalid placement group - incompatible colocation policy"
 msgstr "Grupo de colocación no válido - política de coubicación incompatible"
@@ -28496,6 +28552,237 @@ msgstr "ManageIQ"
 msgid "ManageIQ Tag Department"
 msgstr "Departamento de etiquetas de ManageIQ"
 
+msgid "ManageIQ/showback/data rollup"
+msgstr "ManageIQ/showback/data rollup"
+
+msgid "ManageIQ/showback/data view"
+msgstr "ManageIQ/showback/data view"
+
+msgid "ManageIQ/showback/envelope"
+msgstr "ManageIQ/showback/envelope"
+
+msgid "ManageIQ/showback/input measure"
+msgstr "ManageIQ/showback/input measure"
+
+msgid "ManageIQ/showback/price plan"
+msgstr "ManageIQ/showback/price plan"
+
+msgid "ManageIQ/showback/rate"
+msgstr "ManageIQ/showback/rate"
+
+msgid "ManageIQ/showback/tier"
+msgstr "ManageIQ/showback/tier"
+
+msgid "ManageIQ::Showback::DataRollup|Context"
+msgstr "ManageIQ::Showback::DataRollup|Contexto"
+
+msgid "ManageIQ::Showback::DataRollup|Data"
+msgstr "ManageIQ::Showback::DataRollup|Datos"
+
+msgid "ManageIQ::Showback::DataRollup|End time"
+msgstr "ManageIQ::Showback::DataRollup|Hora de finalización"
+
+msgid "ManageIQ::Showback::DataRollup|Href slug"
+msgstr "ManageIQ::Showback::DataRollup|Href slug"
+
+msgid "ManageIQ::Showback::DataRollup|Region description"
+msgstr "ManageIQ::Showback::DataRollup|Descripción de región"
+
+msgid "ManageIQ::Showback::DataRollup|Region number"
+msgstr "ManageIQ::Showback::DataRollup|Número de región"
+
+msgid "ManageIQ::Showback::DataRollup|Resource type"
+msgstr "ManageIQ::Showback::DataRollup|Tipo de recurso"
+
+msgid "ManageIQ::Showback::DataRollup|Start time"
+msgstr "ManageIQ::Showback::DataRollup|Hora de inicio"
+
+msgid "ManageIQ::Showback::DataView|Context snapshot"
+msgstr "ManageIQ::Showback::DataView|Instantánea de contexto"
+
+msgid "ManageIQ::Showback::DataView|Cost currency"
+msgstr "ManageIQ::Showback::DataView|Moneda de coste"
+
+msgid "ManageIQ::Showback::DataView|Cost subunits"
+msgstr "ManageIQ::Showback::DataView|Subunidades de coste"
+
+msgid "ManageIQ::Showback::DataView|Data snapshot"
+msgstr "ManageIQ::Showback::DataView|Instantánea de datos"
+
+msgid "ManageIQ::Showback::DataView|End time"
+msgstr "ManageIQ::Showback::DataView|Hora de finalización"
+
+msgid "ManageIQ::Showback::DataView|Href slug"
+msgstr "ManageIQ::Showback::DataView|Href slug"
+
+msgid "ManageIQ::Showback::DataView|Region description"
+msgstr "ManageIQ::Showback::DataView|Descripción de región"
+
+msgid "ManageIQ::Showback::DataView|Region number"
+msgstr "ManageIQ::Showback::DataView|Número de región"
+
+msgid "ManageIQ::Showback::DataView|Start time"
+msgstr "ManageIQ::Showback::DataView|Hora de inicio"
+
+msgid "ManageIQ::Showback::Envelope|Accumulated cost currency"
+msgstr "ManageIQ::Showback::Envelope|Moneda de coste acumulado"
+
+msgid "ManageIQ::Showback::Envelope|Accumulated cost subunits"
+msgstr "ManageIQ::Showback::Envelope|Subunidades de coste acumulado"
+
+msgid "ManageIQ::Showback::Envelope|Description"
+msgstr "ManageIQ::Showback::Envelope|Descripción"
+
+msgid "ManageIQ::Showback::Envelope|End time"
+msgstr "ManageIQ::Showback::Envelope|Hora de finalización"
+
+msgid "ManageIQ::Showback::Envelope|Href slug"
+msgstr "ManageIQ::Showback::Envelope|Href slug"
+
+msgid "ManageIQ::Showback::Envelope|Name"
+msgstr "ManageIQ::Showback::Envelope|Nombre"
+
+msgid "ManageIQ::Showback::Envelope|Region description"
+msgstr "ManageIQ::Showback::Envelope|Descripción de región"
+
+msgid "ManageIQ::Showback::Envelope|Region number"
+msgstr "ManageIQ::Showback::Envelope|Número de región"
+
+msgid "ManageIQ::Showback::Envelope|Resource type"
+msgstr "ManageIQ::Showback::Envelope|Tipo de recurso"
+
+msgid "ManageIQ::Showback::Envelope|Start time"
+msgstr "ManageIQ::Showback::Envelope|Hora de inicio"
+
+msgid "ManageIQ::Showback::Envelope|State"
+msgstr "ManageIQ::Showback::Envelope|Estado"
+
+msgid "ManageIQ::Showback::InputMeasure|Description"
+msgstr "ManageIQ::Showback::InputMeasure|Descripción"
+
+msgid "ManageIQ::Showback::InputMeasure|Entity"
+msgstr "ManageIQ::Showback::InputMeasure|Entidad"
+
+msgid "ManageIQ::Showback::InputMeasure|Fields"
+msgstr "ManageIQ::Showback::InputMeasure|Campos"
+
+msgid "ManageIQ::Showback::InputMeasure|Group"
+msgstr "ManageIQ::Showback::InputMeasure|Grupo"
+
+msgid "ManageIQ::Showback::InputMeasure|Href slug"
+msgstr "ManageIQ::Showback::InputMeasure|Href slug"
+
+msgid "ManageIQ::Showback::InputMeasure|Region description"
+msgstr "ManageIQ::Showback::InputMeasure|Descripción de región"
+
+msgid "ManageIQ::Showback::InputMeasure|Region number"
+msgstr "ManageIQ::Showback::InputMeasure|Número de región"
+
+msgid "ManageIQ::Showback::PricePlan|Description"
+msgstr "ManageIQ::Showback::PricePlan|Descripción"
+
+msgid "ManageIQ::Showback::PricePlan|Href slug"
+msgstr "ManageIQ::Showback::PricePlan|Href slug"
+
+msgid "ManageIQ::Showback::PricePlan|Name"
+msgstr "ManageIQ::Showback::PricePlan|Nombre"
+
+msgid "ManageIQ::Showback::PricePlan|Region description"
+msgstr "ManageIQ::Showback::PricePlan|Descripción de región"
+
+msgid "ManageIQ::Showback::PricePlan|Region number"
+msgstr "ManageIQ::Showback::PricePlan|Número de región"
+
+msgid "ManageIQ::Showback::PricePlan|Resource type"
+msgstr "ManageIQ::Showback::PricePlan|Tipo de recurso"
+
+msgid "ManageIQ::Showback::Rate|Calculation"
+msgstr "ManageIQ::Showback::Rate|Cálculo"
+
+msgid "ManageIQ::Showback::Rate|Concept"
+msgstr "ManageIQ::Showback::Rate|Concepto"
+
+msgid "ManageIQ::Showback::Rate|Entity"
+msgstr "ManageIQ::Showback::Rate|Entidad"
+
+msgid "ManageIQ::Showback::Rate|Field"
+msgstr "ManageIQ::Showback::Rate|Campo"
+
+msgid "ManageIQ::Showback::Rate|Group"
+msgstr "ManageIQ::Showback::Rate|Grupo"
+
+msgid "ManageIQ::Showback::Rate|Href slug"
+msgstr "ManageIQ::Showback::Rate|Href slug"
+
+msgid "ManageIQ::Showback::Rate|Region description"
+msgstr "ManageIQ::Showback::Rate|Descripción de región"
+
+msgid "ManageIQ::Showback::Rate|Region number"
+msgstr "ManageIQ::Showback::Rate|Número de región"
+
+msgid "ManageIQ::Showback::Rate|Screener"
+msgstr "ManageIQ::Showback::Rate|Screener"
+
+msgid "ManageIQ::Showback::Rate|Start date"
+msgstr "ManageIQ::Showback::Rate|Fecha de inicio"
+
+msgid "ManageIQ::Showback::Rate|Tier input variable"
+msgstr "ManageIQ::Showback::Rate|Variable de entrada de nivel"
+
+msgid "ManageIQ::Showback::Rate|Tiers use full value"
+msgstr "ManageIQ::Showback::Rate|Los niveles utilizan el valor completo"
+
+msgid "ManageIQ::Showback::Rate|Uses single tier"
+msgstr "ManageIQ::Showback::Rate|Utiliza un solo nivel"
+
+msgid "ManageIQ::Showback::Tier|Fixed rate currency"
+msgstr "ManageIQ::Showback::Tier|Divisa a tipo fijo"
+
+msgid "ManageIQ::Showback::Tier|Fixed rate per time"
+msgstr "ManageIQ::Showback::Tier|Tipo fijo por tiempo"
+
+msgid "ManageIQ::Showback::Tier|Fixed rate subunits"
+msgstr "ManageIQ::Showback::Tier|Subunidades a tipo fijo"
+
+msgid "ManageIQ::Showback::Tier|Href slug"
+msgstr "ManageIQ::Showback::Tier|Href slug"
+
+msgid "ManageIQ::Showback::Tier|Region description"
+msgstr "ManageIQ::Showback::Tier|Descripción de región"
+
+msgid "ManageIQ::Showback::Tier|Region number"
+msgstr "ManageIQ::Showback::Tier|Número de región"
+
+msgid "ManageIQ::Showback::Tier|Step time unit"
+msgstr "ManageIQ::Showback::Tier|Unidad de tiempo de paso"
+
+msgid "ManageIQ::Showback::Tier|Step time value"
+msgstr "ManageIQ::Showback::Tier|Valor de tiempo de paso"
+
+msgid "ManageIQ::Showback::Tier|Step unit"
+msgstr "ManageIQ::Showback::Tier|Unidad de paso"
+
+msgid "ManageIQ::Showback::Tier|Step value"
+msgstr "ManageIQ::Showback::Tier|Valor de paso"
+
+msgid "ManageIQ::Showback::Tier|Tier end value"
+msgstr "ManageIQ::Showback::Tier|Valor de fin de nivel"
+
+msgid "ManageIQ::Showback::Tier|Tier start value"
+msgstr "ManageIQ::Showback::Tier|Valor de inicio de nivel"
+
+msgid "ManageIQ::Showback::Tier|Variable rate currency"
+msgstr "ManageIQ::Showback::Tier|Divisa a tipo variable"
+
+msgid "ManageIQ::Showback::Tier|Variable rate per time"
+msgstr "ManageIQ::Showback::Tier|Tipo variable por tiempo"
+
+msgid "ManageIQ::Showback::Tier|Variable rate per unit"
+msgstr "ManageIQ::Showback::Tier|Tipo variable por unidad"
+
+msgid "ManageIQ::Showback::Tier|Variable rate subunits"
+msgstr "ManageIQ::Showback::Tier|Subunidades de tipo variable"
+
 msgid "Manageable"
 msgstr "Administrable"
 
@@ -28585,6 +28872,18 @@ msgstr "Fabricante"
 
 msgid "Manufacturer / Model"
 msgstr "Fabricante/Modelo"
+
+msgid "Map Credentials"
+msgstr "Correlacionar credenciales"
+
+msgid "Map Credentials to \"%{name}\""
+msgstr "Correlacionar credenciales con \"%{name}\""
+
+msgid "Map Credentials to Workflow"
+msgstr "Correlacionar credenciales con flujo de trabajo"
+
+msgid "Map Credentials to this Workflow"
+msgstr "Correlacionar credenciales con este flujo de trabajo"
 
 msgid "Map Tags"
 msgstr "Asignar etiquetas"
@@ -29176,9 +29475,6 @@ msgstr "Memoria total"
 
 msgid "Memory Total Cost"
 msgstr "Costo total de memoria"
-
-msgid "Memory Type"
-msgstr "Tipo de memoria"
 
 msgid "Memory Usage"
 msgstr "Uso de la memoria"
@@ -35526,9 +35822,6 @@ msgstr "Número de máquinas virtuales por tipo"
 msgid "Number, 2 Decimals (1,234.00)"
 msgstr "Número, 2 decimales (1,234.00)"
 
-msgid "Numeric-only passwords are not accepted"
-msgstr "No se aceptan contraseñas solo numéricas"
-
 msgid "OK"
 msgstr "Aceptar"
 
@@ -35709,6 +36002,9 @@ msgstr "Uno por uno"
 
 msgid "One of e-mail addresses 'To' is not valid"
 msgstr "Una de las direcciones de correo electrónico 'Para' no es válida"
+
+msgid "One of the Hosts does not support editing"
+msgstr "Uno de los hosts no admite la edición"
 
 msgid "One or more %{model} must be selected to Reconfigure"
 msgstr "Se debe seleccionar uno o varios %{model} para reconfigurar"
@@ -37083,6 +37379,9 @@ msgstr "¿Desea pausar esta instancia?"
 
 msgid "Paused"
 msgstr "Pausado"
+
+msgid "Payload is not available."
+msgstr "La carga útil no está disponible."
 
 msgid "Pct Free Disk"
 msgstr "Porcentaje de disco libre"
@@ -42634,6 +42933,15 @@ msgstr "Total CPU de máquina virtual"
 
 msgid "ResourcePool|Aggregate vm memory"
 msgstr "Total de memoria de máquina virtual"
+
+msgid "ResourcePool|Cpu cores available"
+msgstr "ResourcePool| Núcleos de Cpu disponibles"
+
+msgid "ResourcePool|Cpu cores limit"
+msgstr "ResourcePool| Límite de núcleos de Cpu"
+
+msgid "ResourcePool|Cpu cores reserve"
+msgstr "ResourcePool|Reserva de núcleos de Cpu"
 
 msgid "ResourcePool|Cpu limit"
 msgstr "Límite de CPU"
@@ -49788,6 +50096,9 @@ msgstr "Este grupo es de solo lectura y no se puede eliminar"
 msgid "This Group is Read Only and can not be edited"
 msgstr "Este grupo es de solo lectura y no se puede modificar"
 
+msgid "This Host does not support editing"
+msgstr "Este host no admite la edición"
+
 msgid "This Hour"
 msgstr "Esta hora"
 
@@ -55673,6 +55984,12 @@ msgstr "Flujo de trabajo"
 msgid "Workflow Class"
 msgstr "Clase de flujo de trabajo"
 
+msgid "Workflow Credential"
+msgstr "Credencial de flujo de trabajo"
+
+msgid "Workflow States"
+msgstr "Estados de flujo de trabajo"
+
 msgid "Workflow Template"
 msgstr "Plantilla de flujo de trabajo"
 
@@ -55688,6 +56005,9 @@ msgstr[1] "Plantillas de flujo de trabajo (Ansible Tower)"
 
 msgid "Workflow Templates (Ansible Tower)"
 msgstr "Plantillas de flujo de trabajo (Ansible Tower)"
+
+msgid "Workflow does not have any credentials to map."
+msgstr "El flujo de trabajo no tiene ninguna credencial que correlacionar."
 
 msgid "Workflow max. timeout"
 msgstr "Tiempo de espera máximo del flujo de trabajo"

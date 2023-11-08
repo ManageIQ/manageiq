@@ -8,15 +8,14 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-01 00:46+0000\n"
-"PO-Revision-Date: 2023-08-01 00:46+0000\n"
+"POT-Creation-Date: 2023-11-01 00:23+0000\n"
+"PO-Revision-Date: 2023-11-01 00:23+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid " "
@@ -618,6 +617,9 @@ msgstr "尚未實作 %{button_name} 按鈕"
 
 msgid "%{chargeback_interval} Ending with"
 msgstr "%{chargeback_interval} 結尾為"
+
+msgid "%{chargeback_model} and Date"
+msgstr "%{chargeback_model} 和日期"
 
 msgid ""
 "%{class_name} [%{name}] is attached to <%{ems_class_name}: %{ems_name}> that "
@@ -2449,8 +2451,8 @@ msgstr "新增對映規則"
 msgid "Add Method"
 msgstr "新增方法"
 
-msgid "Add Network"
-msgstr "新增網路"
+msgid "Add Network Adapter"
+msgstr "新增網路配接卡"
 
 msgid "Add Network Adapters"
 msgstr "新增網路配接卡"
@@ -3973,6 +3975,9 @@ msgstr "必須選取管理者角色。"
 
 msgid "An alert must contain a valid expression."
 msgstr "警示必須包含有效的表示式。"
+
+msgid "An error has occurred with this workflow"
+msgstr "此工作流程發生錯誤"
 
 msgid ""
 "An error occured when changing orchestration template \"%{name}\" to orderable"
@@ -12607,6 +12612,9 @@ msgstr "與服務帳戶電子郵件相關聯的 PEM 檔案內容"
 msgid "Context Data"
 msgstr "環境定義資料"
 
+msgid "Context is not available for \"%s\""
+msgstr "環境定義無法用於 \"%s\""
+
 msgid "Continue"
 msgstr "繼續"
 
@@ -12893,6 +12901,9 @@ msgstr "無法判斷鑑別狀態"
 
 msgid "Could not fetch the data"
 msgstr "無法提取資料"
+
+msgid "Could not find credentials %{missing_credential_refs}"
+msgstr "找不到認證 %{missing_credential_refs}"
 
 msgid "Could not find the given \"%{model}\" record."
 msgstr "找不到給定的 \"%{model}\" 記錄。"
@@ -13217,8 +13228,26 @@ msgid "Credential (Vault)"
 msgid_plural "Credentials (Vault)"
 msgstr[0] "認證 (Vault)"
 
+msgid "Credential (Workflow)"
+msgstr "認證（工作流程）"
+
+msgid "Credential Field"
+msgstr "認證欄位"
+
+msgid "Credential Mapping for \"%s\" was canceled by the user."
+msgstr "使用者已取消 \"%s\" 的認證對映。"
+
+msgid "Credential Mapping for \"%s\" was saved."
+msgstr "已儲存 \"%s\" 的認證對映。"
+
 msgid "Credential Options"
 msgstr "認證選項"
+
+msgid "Credential Record"
+msgstr "認證記錄"
+
+msgid "Credential Reference"
+msgstr "認證參照"
 
 msgid "Credential type"
 msgstr "認證類型"
@@ -13236,7 +13265,7 @@ msgid "Credentials (Amazon)"
 msgstr "認證 (Amazon)"
 
 msgid "Credentials (Embedded Ansible)"
-msgstr "認證（內嵌 Ansible）"
+msgstr "認證（內嵌的 Ansible）"
 
 msgid "Credentials (Embedded Workflows)"
 msgstr "認證（內嵌工作流程）"
@@ -13274,8 +13303,14 @@ msgstr "認證 (VMware)"
 msgid "Credentials (Vault)"
 msgstr "認證（儲存庫）"
 
+msgid "Credentials (Workflow)"
+msgstr "認證（工作流程）"
+
 msgid "Credentials Changed On"
 msgstr "認證變更日期"
+
+msgid "Credentials Identifier"
+msgstr "認證 ID"
 
 msgid "Credentials must be valid to capture metrics"
 msgstr "認證必須有效，才能擷取度量"
@@ -19886,6 +19921,9 @@ msgstr "輸入新的對話框"
 msgid "Enter tag category to map to"
 msgstr "輸入要對映至的標籤種類"
 
+msgid "Entered Time"
+msgstr "輸入時間"
+
 msgid "Entered text should match the format:"
 msgstr "輸入的文字應符合格式："
 
@@ -21828,6 +21866,9 @@ msgstr "完成於"
 msgid "Finished Task cannot be cancelled"
 msgstr "無法取消已完成的作業"
 
+msgid "Finished Time"
+msgstr "完成時間"
+
 msgid "Finished with Warnings"
 msgstr "完成，但產生警告"
 
@@ -22487,6 +22528,9 @@ msgstr "GENEVE"
 
 msgid "GRE"
 msgstr "GRE"
+
+msgid "Gap Collection is only available for VMware vSphere Infrastructures"
+msgstr "「間隙收集」僅適用於 VMware vSphere 基礎架構"
 
 msgid "Gateway"
 msgstr "閘道"
@@ -24492,6 +24536,9 @@ msgstr "IBM Cloud Activity Tracker 實例服務金鑰"
 msgid "IBM Cloud Block-Storage Volume"
 msgstr "IBM Cloud 區塊儲存體磁區"
 
+msgid "IBM Cloud Infrastructure Center"
+msgstr "IBM Cloud Infrastructure Center"
+
 msgid "IBM Cloud Monitoring Instance GUID"
 msgstr "IBM Cloud Monitoring 實例 GUID"
 
@@ -25317,6 +25364,9 @@ msgstr "圖表定義無效"
 msgid "Invalid configuration parameters."
 msgstr "配置參數無效。"
 
+msgid "Invalid credential_field %{field}, allowed values are %{allowed_fields}"
+msgstr "credential_field %{field} 無效，容許值為 %{allowed_fields}"
+
 msgid "Invalid database type"
 msgstr "資料庫類型無效"
 
@@ -25343,6 +25393,9 @@ msgstr "無效或不受支援的檔案保存庫類型。"
 
 msgid "Invalid parameters: %{params}"
 msgstr "無效參數：%{params}"
+
+msgid "Invalid payload: %{error}"
+msgstr "有效負載無效：%{error}"
 
 msgid "Invalid placement group - incompatible colocation policy"
 msgstr "放置群組無效 - 不相容的並存原則"
@@ -26908,6 +26961,237 @@ msgstr "ManageIQ"
 msgid "ManageIQ Tag Department"
 msgstr "ManageIQ 標籤部門"
 
+msgid "ManageIQ/showback/data rollup"
+msgstr "ManageIQ/showback/data rollup"
+
+msgid "ManageIQ/showback/data view"
+msgstr "ManageIQ/showback/data view"
+
+msgid "ManageIQ/showback/envelope"
+msgstr "ManageIQ/showback/envelope"
+
+msgid "ManageIQ/showback/input measure"
+msgstr "ManageIQ/showback/input measure"
+
+msgid "ManageIQ/showback/price plan"
+msgstr "ManageIQ/showback/price plan"
+
+msgid "ManageIQ/showback/rate"
+msgstr "ManageIQ/showback/rate"
+
+msgid "ManageIQ/showback/tier"
+msgstr "ManageIQ/showback/tier"
+
+msgid "ManageIQ::Showback::DataRollup|Context"
+msgstr "ManageIQ::Showback::DataRollup|環境定義"
+
+msgid "ManageIQ::Showback::DataRollup|Data"
+msgstr "ManageIQ::Showback::DataRollup|資料"
+
+msgid "ManageIQ::Showback::DataRollup|End time"
+msgstr "ManageIQ::Showback::DataRollup|結束時間"
+
+msgid "ManageIQ::Showback::DataRollup|Href slug"
+msgstr "ManageIQ::Showback::DataRollup|Href slug"
+
+msgid "ManageIQ::Showback::DataRollup|Region description"
+msgstr "ManageIQ::Showback::DataRollup|區域說明"
+
+msgid "ManageIQ::Showback::DataRollup|Region number"
+msgstr "ManageIQ: Showback:DataRollup|區域號碼"
+
+msgid "ManageIQ::Showback::DataRollup|Resource type"
+msgstr "ManageIQ: Showback ::DataRollup|資源類型"
+
+msgid "ManageIQ::Showback::DataRollup|Start time"
+msgstr "ManageIQ:: 顯示 ::DataRollup|開始時間"
+
+msgid "ManageIQ::Showback::DataView|Context snapshot"
+msgstr "ManageIQ:: Showback ::DataView|環境定義 Snapshot"
+
+msgid "ManageIQ::Showback::DataView|Cost currency"
+msgstr "ManageIQ:: Showback ::DataView|成本貨幣"
+
+msgid "ManageIQ::Showback::DataView|Cost subunits"
+msgstr "ManageIQ:: Showback ::DataView|成本子單位"
+
+msgid "ManageIQ::Showback::DataView|Data snapshot"
+msgstr "ManageIQ:: Showback ::DataView|資料 Snapshot"
+
+msgid "ManageIQ::Showback::DataView|End time"
+msgstr "ManageIQ:: Showback ::DataView|結束時間"
+
+msgid "ManageIQ::Showback::DataView|Href slug"
+msgstr "ManageIQ: Showback ::DataView|Href slug"
+
+msgid "ManageIQ::Showback::DataView|Region description"
+msgstr "ManageIQ:: Showback ::DataView|區域說明"
+
+msgid "ManageIQ::Showback::DataView|Region number"
+msgstr "ManageIQ:: Showback ::DataView|區域號碼"
+
+msgid "ManageIQ::Showback::DataView|Start time"
+msgstr "ManageIQ:: Showback ::DataView|開始時間"
+
+msgid "ManageIQ::Showback::Envelope|Accumulated cost currency"
+msgstr "ManageIQ::Showback::Envelope|累計成本貨幣"
+
+msgid "ManageIQ::Showback::Envelope|Accumulated cost subunits"
+msgstr "ManageIQ::Showback::Envelope|累計成本子單位"
+
+msgid "ManageIQ::Showback::Envelope|Description"
+msgstr "ManageIQ::Showback::Envelope|說明"
+
+msgid "ManageIQ::Showback::Envelope|End time"
+msgstr "ManageIQ::Showback::Envelope|結束時間"
+
+msgid "ManageIQ::Showback::Envelope|Href slug"
+msgstr "ManageIQ::Showback::Envelope|Href slug"
+
+msgid "ManageIQ::Showback::Envelope|Name"
+msgstr "ManageIQ::Showback::Envelope|名稱"
+
+msgid "ManageIQ::Showback::Envelope|Region description"
+msgstr "ManageIQ::Showback::Envelope|區域說明"
+
+msgid "ManageIQ::Showback::Envelope|Region number"
+msgstr "ManageIQ::Showback::Envelope|區域號碼"
+
+msgid "ManageIQ::Showback::Envelope|Resource type"
+msgstr "ManageIQ::Showback::Envelope|資源類型"
+
+msgid "ManageIQ::Showback::Envelope|Start time"
+msgstr "ManageIQ::Showback::Envelope|開始時間"
+
+msgid "ManageIQ::Showback::Envelope|State"
+msgstr "ManageIQ::Showback::Envelope|狀態"
+
+msgid "ManageIQ::Showback::InputMeasure|Description"
+msgstr "ManageIQ::Showback::InputMeasure|說明"
+
+msgid "ManageIQ::Showback::InputMeasure|Entity"
+msgstr "ManageIQ::Showback::InputMeasure|實體"
+
+msgid "ManageIQ::Showback::InputMeasure|Fields"
+msgstr "ManageIQ::Showback::InputMeasure|欄位"
+
+msgid "ManageIQ::Showback::InputMeasure|Group"
+msgstr "ManageIQ::Showback::InputMeasure|群組"
+
+msgid "ManageIQ::Showback::InputMeasure|Href slug"
+msgstr "ManageIQ::Showback::InputMeasure|Href slug"
+
+msgid "ManageIQ::Showback::InputMeasure|Region description"
+msgstr "ManageIQ::Showback::InputMeasure|區域說明"
+
+msgid "ManageIQ::Showback::InputMeasure|Region number"
+msgstr "ManageIQ::Showback::InputMeasure|區域號碼"
+
+msgid "ManageIQ::Showback::PricePlan|Description"
+msgstr "ManageIQ::Showback::PricePlan|說明"
+
+msgid "ManageIQ::Showback::PricePlan|Href slug"
+msgstr "ManageIQ::Showback::PricePlan|Href slug"
+
+msgid "ManageIQ::Showback::PricePlan|Name"
+msgstr "ManageIQ::Showback::PricePlan|名稱"
+
+msgid "ManageIQ::Showback::PricePlan|Region description"
+msgstr "ManageIQ::Showback::PricePlan|區域說明"
+
+msgid "ManageIQ::Showback::PricePlan|Region number"
+msgstr "ManageIQ::Showback::PricePlan|區域號碼"
+
+msgid "ManageIQ::Showback::PricePlan|Resource type"
+msgstr "ManageIQ::Showback::PricePlan|資源類型"
+
+msgid "ManageIQ::Showback::Rate|Calculation"
+msgstr "ManageIQ::Showback::Rate|計算"
+
+msgid "ManageIQ::Showback::Rate|Concept"
+msgstr "ManageIQ::Showback::Rate|概念"
+
+msgid "ManageIQ::Showback::Rate|Entity"
+msgstr "ManageIQ::Showback::Rate|實體"
+
+msgid "ManageIQ::Showback::Rate|Field"
+msgstr "ManageIQ::Showback::Rate|欄位"
+
+msgid "ManageIQ::Showback::Rate|Group"
+msgstr "ManageIQ::Showback::Rate|群組"
+
+msgid "ManageIQ::Showback::Rate|Href slug"
+msgstr "ManageIQ::Showback::Rate|Href slug"
+
+msgid "ManageIQ::Showback::Rate|Region description"
+msgstr "ManageIQ::Showback::Rate|區域說明"
+
+msgid "ManageIQ::Showback::Rate|Region number"
+msgstr "ManageIQ::Showback::Rate|區域號碼"
+
+msgid "ManageIQ::Showback::Rate|Screener"
+msgstr "ManageIQ::Showback::Rate|Screener"
+
+msgid "ManageIQ::Showback::Rate|Start date"
+msgstr "ManageIQ::Showback::Rate|開始日期"
+
+msgid "ManageIQ::Showback::Rate|Tier input variable"
+msgstr "ManageIQ::Showback::Rate|層級輸入變數"
+
+msgid "ManageIQ::Showback::Rate|Tiers use full value"
+msgstr "ManageIQ::Showback::Rate|層級使用完整值"
+
+msgid "ManageIQ::Showback::Rate|Uses single tier"
+msgstr "ManageIQ::Showback::Rate|使用單一層級"
+
+msgid "ManageIQ::Showback::Tier|Fixed rate currency"
+msgstr "ManageIQ::Showback::Tier|固定費率貨幣"
+
+msgid "ManageIQ::Showback::Tier|Fixed rate per time"
+msgstr "ManageIQ::Showback::Tier|每次固定費率"
+
+msgid "ManageIQ::Showback::Tier|Fixed rate subunits"
+msgstr "ManageIQ::Showback::Tier|固定費率子單位"
+
+msgid "ManageIQ::Showback::Tier|Href slug"
+msgstr "ManageIQ::Showback::Tier|Href slug"
+
+msgid "ManageIQ::Showback::Tier|Region description"
+msgstr "ManageIQ::Showback::Tier|區域說明"
+
+msgid "ManageIQ::Showback::Tier|Region number"
+msgstr "ManageIQ::Showback::Tier|區域號碼"
+
+msgid "ManageIQ::Showback::Tier|Step time unit"
+msgstr "ManageIQ::Showback::Tier|步驟時間單位"
+
+msgid "ManageIQ::Showback::Tier|Step time value"
+msgstr "ManageIQ::Showback::Tier|步驟時間值"
+
+msgid "ManageIQ::Showback::Tier|Step unit"
+msgstr "ManageIQ::Showback::Tier|步驟單位"
+
+msgid "ManageIQ::Showback::Tier|Step value"
+msgstr "ManageIQ::Showback::Tier|步驟值"
+
+msgid "ManageIQ::Showback::Tier|Tier end value"
+msgstr "ManageIQ::Showback::Tier|層級終止值"
+
+msgid "ManageIQ::Showback::Tier|Tier start value"
+msgstr "ManageIQ::Showback::Tier|層級起始值"
+
+msgid "ManageIQ::Showback::Tier|Variable rate currency"
+msgstr "ManageIQ::Showback::Tier|可變費率貨幣"
+
+msgid "ManageIQ::Showback::Tier|Variable rate per time"
+msgstr "ManageIQ::Showback::Tier|每次可變費率"
+
+msgid "ManageIQ::Showback::Tier|Variable rate per unit"
+msgstr "ManageIQ::Showback::Tier|每單位可變費率"
+
+msgid "ManageIQ::Showback::Tier|Variable rate subunits"
+msgstr "ManageIQ::Showback::Tier|可變費率子單位"
+
 msgid "Manageable"
 msgstr "可管理"
 
@@ -26995,6 +27279,18 @@ msgstr "製造商"
 
 msgid "Manufacturer / Model"
 msgstr "製造商 / 機型"
+
+msgid "Map Credentials"
+msgstr "對映認證"
+
+msgid "Map Credentials to \"%{name}\""
+msgstr "將認證對映至 \"%{name}\""
+
+msgid "Map Credentials to Workflow"
+msgstr "將認證對映至工作流程"
+
+msgid "Map Credentials to this Workflow"
+msgstr "將認證對映至此工作流程"
 
 msgid "Map Tags"
 msgstr "對映標籤"
@@ -27524,9 +27820,6 @@ msgstr "記憶體總計"
 
 msgid "Memory Total Cost"
 msgstr "記憶體總計成本"
-
-msgid "Memory Type"
-msgstr "記憶體類型"
 
 msgid "Memory Usage"
 msgstr "記憶體用量"
@@ -33625,9 +33918,6 @@ msgstr "虛擬機器數（依類型）"
 msgid "Number, 2 Decimals (1,234.00)"
 msgstr "數字，2 個小數點 (1,234.00)"
 
-msgid "Numeric-only passwords are not accepted"
-msgstr "不接受純數值密碼"
-
 msgid "OK"
 msgstr "確定"
 
@@ -33802,6 +34092,9 @@ msgstr "逐一"
 
 msgid "One of e-mail addresses 'To' is not valid"
 msgstr "其中一個電子郵件位址「收件者」無效"
+
+msgid "One of the Hosts does not support editing"
+msgstr "其中一個主機不支援編輯"
 
 msgid "One or more %{model} must be selected to Reconfigure"
 msgstr "必須選取一或多個 %{model} 才能重新配置"
@@ -35120,6 +35413,9 @@ msgstr "暫停此實例？"
 
 msgid "Paused"
 msgstr "已暫停"
+
+msgid "Payload is not available."
+msgstr "有效負載無法使用。"
 
 msgid "Pct Free Disk"
 msgstr "可用磁碟百分比"
@@ -40333,6 +40629,15 @@ msgstr "聚集虛擬機器 CPU"
 
 msgid "ResourcePool|Aggregate vm memory"
 msgstr "聚集虛擬機器記憶體"
+
+msgid "ResourcePool|Cpu cores available"
+msgstr "ResourcePool|CPU 核心可用"
+
+msgid "ResourcePool|Cpu cores limit"
+msgstr "ResourcePool|Cpu 核心限制"
+
+msgid "ResourcePool|Cpu cores reserve"
+msgstr "ResourcePool|Cpu 核心保留"
 
 msgid "ResourcePool|Cpu limit"
 msgstr "CPU 限制"
@@ -47135,6 +47440,9 @@ msgstr "此群組為「唯讀」，無法刪除"
 msgid "This Group is Read Only and can not be edited"
 msgstr "此群組為「唯讀」，無法編輯"
 
+msgid "This Host does not support editing"
+msgstr "此主機不支援編輯"
+
 msgid "This Hour"
 msgstr "這個小時"
 
@@ -52636,6 +52944,12 @@ msgstr "工作流程"
 msgid "Workflow Class"
 msgstr "工作流程類別"
 
+msgid "Workflow Credential"
+msgstr "工作流程認證"
+
+msgid "Workflow States"
+msgstr "工作流程狀態"
+
 msgid "Workflow Template"
 msgstr "工作流程範本"
 
@@ -52649,6 +52963,9 @@ msgstr[0] "工作流程範本 (Ansible Tower)"
 
 msgid "Workflow Templates (Ansible Tower)"
 msgstr "工作流程範本 (Ansible Tower)"
+
+msgid "Workflow does not have any credentials to map."
+msgstr "工作流程沒有任何要對映的認證。"
 
 msgid "Workflow max. timeout"
 msgstr "工作流程上限。逾時"
