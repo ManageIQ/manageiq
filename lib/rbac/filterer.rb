@@ -256,6 +256,7 @@ module Rbac
         scope = apply_scope(klass, scope)
         scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
       elsif targets.kind_of?(Array)
+        # TODO: get away from passing in a klass and a list of target ids
         if targets.first.kind_of?(Numeric)
           target_ids = targets
           # assume klass is passed in
@@ -273,6 +274,8 @@ module Rbac
         targets = to_class(targets).all
         scope = apply_scope(targets, scope)
 
+        # 100% of tests do not pass klass AND targets - so here, 100% of tests klass == nil
+        # Think that klass != nil is not a valid use case here
         unless klass.respond_to?(:find)
           klass = targets
           klass = klass.klass if klass.respond_to?(:klass)
