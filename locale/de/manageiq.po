@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2023-11-01 00:23+0000\n"
-"PO-Revision-Date: 2023-11-01 00:23+0000\n"
+"POT-Creation-Date: 2023-11-08 22:17+0000\n"
+"PO-Revision-Date: 2023-11-08 22:17+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1223,6 +1223,12 @@ msgstr "%{record} - \"%{button_text}\""
 
 msgid "%{record} no longer exists"
 msgstr "%{record} ist nicht mehr vorhanden"
+
+msgid "%{request_description} for: %{request_source}"
+msgstr "%{request_description} für: %{request_source}"
+
+msgid "%{request_description} for: %{resource_name} - %{message}"
+msgstr "%{request_description} für: %{resource_name} - %{message}"
 
 msgid "%{section}: %{custom_key}"
 msgstr "%{section}: %{custom_key}"
@@ -2726,6 +2732,9 @@ msgstr "Netzadapter hinzufügen"
 
 msgid "Add Network Adapters"
 msgstr "Netzadapter hinzufügen"
+
+msgid "Add Network Adapters: %{value}"
+msgstr "Netzadapter hinzufügen: %{value}"
 
 msgid "Add New %{table}"
 msgstr "Neue %{table} hinzufügen"
@@ -5254,6 +5263,9 @@ msgstr "Mindestens ein Taskstatus ist erforderlich"
 msgid "Attach"
 msgstr "Anhängen"
 
+msgid "Attach CD/DVDs: %{value}"
+msgstr "CD/DVDs anhängen: %{value}"
+
 msgid "Attach Cloud Volume \"%{name}\""
 msgstr "Anhängen von Clouddatenträger \"%{name}\""
 
@@ -5731,6 +5743,9 @@ msgstr "Automatisierungsmanager"
 
 msgid "Automation Managers (Ansible Tower)"
 msgstr "Automatisierungsmanager (Ansible Tower)"
+
+msgid "Automation Request"
+msgstr "Automatisierungsanforderung"
 
 msgid "Automation Simulation has been run"
 msgstr "Automatisierungssimulation wurde ausgeführt"
@@ -10701,6 +10716,9 @@ msgstr[1] "Konfigurierte Systeme (IBM Terraform)"
 msgid "Configured System Provision"
 msgstr "Bereitstellung von konfiguriertem System"
 
+msgid "Configured System Provisioning"
+msgstr "Bereitstellung konfigurierter Systeme"
+
 msgid "Configured System console"
 msgstr "Konsole für konfiguriertes System"
 
@@ -15294,8 +15312,14 @@ msgstr "Standardrückerstattungsraten können nicht entfernt werden."
 msgid "Default Container Image Rate"
 msgstr "Standardrate des Containerimages"
 
+msgid "Default Dashboard"
+msgstr "Standarddashboard"
+
 msgid "Default Dashboard cannot be deleted"
 msgstr "Standarddashboard kann nicht löscht werden"
+
+msgid "Default Dashboard for Physical Infrastructure Group"
+msgstr "Standarddashboard für physische Infrastrukturgruppe"
 
 msgid "Default Dialog \"%{name}\" can not be edited"
 msgstr "Standarddialog \"%{name}\" kann nicht bearbeitet werden"
@@ -15377,6 +15401,9 @@ msgstr "Standarddialoge können nicht aus der VMDB entfernt werden"
 
 msgid "Default for %{parent_type} %{parent_name}"
 msgstr "Standardwert für %{parent_type} %{parent_name}"
+
+msgid "Default for Physical Infrastructure"
+msgstr "Standard für physische Infrastruktur"
 
 msgid "Default reports can not be edited"
 msgstr "Standardberichte können nicht bearbeitet werden"
@@ -15822,9 +15849,6 @@ msgstr "Löschen von Sicherung \"%{name}\" wurde erfolgreich eingeleitet."
 
 msgid "Delete of Flavor \"%{name}\" was successfully initiated."
 msgstr "Löschen von Variante \"%{name}\" wurde erfolgreich eingeleitet."
-
-msgid "Delete operation is not supported."
-msgstr "Löschoperation wird nicht unterstützt."
 
 msgid "Delete selected Accordion and its contents"
 msgstr "Ausgewähltes Akkordeon und Inhalt löschen"
@@ -16342,6 +16366,9 @@ msgstr ""
 
 msgid "Detach"
 msgstr "Abhängen"
+
+msgid "Detach CD/DVDs: %{value}"
+msgstr "CD/DVDs abhängen: %{value}"
 
 msgid "Detach Cloud Volume \"%{name}\""
 msgstr "Abhängen von Clouddatenträger \"%{name}\""
@@ -18560,6 +18587,12 @@ msgstr "EVM-Worker"
 msgid "EVM Zone"
 msgstr "EVM-Zone"
 
+msgid "EVM: Recently Discovered Hosts"
+msgstr "EVM: Kürzlich erkannte Hosts"
+
+msgid "EVM: Recently Discovered VMs"
+msgstr "EVM: Kürzlich erkannte VMs"
+
 msgid "Edit"
 msgstr "Bearbeiten"
 
@@ -18795,6 +18828,9 @@ msgstr "Netz bearbeiten"
 
 msgid "Edit Network Adapters"
 msgstr "Netzadapter bearbeiten"
+
+msgid "Edit Network Adapters: %{value}"
+msgstr "Netzadapter bearbeiten: %{value}"
 
 msgid "Edit Orchestration Stack"
 msgstr "Orchestrierungsstack bearbeiten"
@@ -24258,6 +24294,9 @@ msgstr "Gastbetriebssystem - HKLM-Registry-Informationen"
 msgid "Guest OS Id"
 msgstr "ID des Gastbetriebssystems"
 
+msgid "Guest OS Information"
+msgstr "Gastbetriebssysteminformationen"
+
 msgid "Guest OS Information - Linux"
 msgstr "Gastbetriebssysteminformationen - Linux"
 
@@ -29412,6 +29451,9 @@ msgstr ""
 
 msgid "Memory(MB)"
 msgstr "Hauptspeicher (MB)"
+
+msgid "Memory: %{value} MB"
+msgstr "Hauptspeicher: %{value} MB"
 
 msgid "Menu Name"
 msgstr "Menüname"
@@ -35341,6 +35383,9 @@ msgstr "Knoten nach Kapazität"
 msgid "Nodes By Memory Usage"
 msgstr "Knoten nach Speicherbelegung"
 
+msgid "Nodes by Capacity"
+msgstr "Knoten nach Kapazität"
+
 msgid "Nodes by Number of CPU Cores"
 msgstr "Knoten nach Anzahl der CPU-Kerne"
 
@@ -35683,6 +35728,9 @@ msgstr "Anzahl der Images pro Knoten"
 
 msgid "Number of Instances"
 msgstr "Anzahl der Instanzen"
+
+msgid "Number of Nodes per CPU Cores Chart"
+msgstr "Diagramm „Anzahl der Knoten pro CPU-Kerne“"
 
 msgid "Number of Object Storage Hosts"
 msgstr "Anzahl Objektspeicherhosts"
@@ -36321,6 +36369,9 @@ msgstr "Operator"
 msgid "Optimization"
 msgstr "Optimierung"
 
+msgid "Optimization & Savings"
+msgstr "Optimierung & Einsparungen"
+
 msgid "Option 'interval_size' is required"
 msgstr "Option 'interval_size' ist erforderlich"
 
@@ -36485,6 +36536,9 @@ msgstr ""
 
 msgid "OrchestrationStack"
 msgstr "Orchestrierungsstack"
+
+msgid "OrchestrationStack Retire"
+msgstr "OrchestrationStack außer Kraft setzen"
 
 msgid "OrchestrationStackOutput|Description"
 msgstr "Beschreibung"
@@ -37233,10 +37287,6 @@ msgstr "Anhalten"
 msgid "Pause Instance"
 msgstr "Instanz anhalten"
 
-msgid "Pause Operation is not available for Images and VM Templates."
-msgstr ""
-"Die Operation zum Anhalten ist für Images und VM-Vorlagen nicht verfügbar."
-
 msgid "Pause Physical Infrastructure Providers"
 msgstr "Provider für physische Infrastruktur anhalten"
 
@@ -37958,6 +38008,9 @@ msgstr "Physische Serverprofile"
 msgid "Physical Server Provision"
 msgstr "Bereitstellung von physischem Server"
 
+msgid "Physical Server Provisioning"
+msgstr "Bereitstellung physischer Server"
+
 msgid "Physical Server Remote Access"
 msgstr "Fernzugriff auf physischen Server"
 
@@ -38648,6 +38701,9 @@ msgstr "Pods (Kubernetes)"
 msgid "Pods per Ready Status"
 msgstr "Pods pro Bereitstatus"
 
+msgid "Pods per Ready Status Chart"
+msgstr "Diagramm für Pods pro Bereitstatus"
+
 msgid "Policies"
 msgstr "Richtlinien"
 
@@ -39150,9 +39206,6 @@ msgstr "Privilegiert"
 msgid "Process"
 msgstr "Prozess"
 
-msgid "Process Collection is not available for Images and VM Templates."
-msgstr "Die Prozesserfassung ist für Images und VM-Vorlagen nicht verfügbar."
-
 msgid "Process Cpu Time"
 msgstr "Prozess - CPU-Zeit"
 
@@ -39204,11 +39257,17 @@ msgstr "Prozessor"
 msgid "Processor Cores Per Socket"
 msgstr "Prozessorkerne pro Socket"
 
+msgid "Processor Cores Per Socket: %{value}"
+msgstr "Prozessorkerne pro Socket: %{value}"
+
 msgid "Processor Cores_Per_Socket"
 msgstr "Prozessorkerne pro Sockel"
 
 msgid "Processor Sockets"
 msgstr "Prozessorsockel"
+
+msgid "Processor Sockets: %{value}"
+msgstr "Prozessorsockets: %{value}"
 
 msgid "Processor compatibility mode"
 msgstr "Kompatibilitätsmodus des Prozessors"
@@ -39686,12 +39745,20 @@ msgstr "Bereitstellungseinstiegspunkt (Namensbereich/Klasse/Instanz)"
 msgid "Provisioning Entry Point is required"
 msgstr "Bereitstellungseinstiegspunkt ist erforderlich"
 
-msgid "Provisioning Operation is not available for Images and VM Templates."
-msgstr ""
-"Bereitstellungsoperation ist für Images und VM-Vorlagen nicht verfügbar."
+msgid "Provisioning Service [%{rsc_name}] for Service [%{svc_target_name}]"
+msgstr "Bereitstellungsservice [%{rsc_name}] für Service [%{svc_target_name}]"
+
+msgid "Provisioning Service [%{svc_target_name}] from [%{prov_source_name}]"
+msgstr "Bereitstellungsservice [%{svc_target_name}] aus [%{prov_source_name}]"
 
 msgid "Provisioning State"
 msgstr "Bereitstellungsstatus"
+
+msgid "Provisioning VM [%{rsc_name}] for Service [%{svc_target_name}]"
+msgstr "Bereitstellung von VM [%{rsc_name}] für Service [%{svc_target_name}]"
+
+msgid "Provisioning [%{rsc_name}] for Service [%{svc_target_name}]"
+msgstr "Bereitstellung von [%{rsc_name}] für Service [%{svc_target_name}]"
 
 msgid "Provisioning is not supported for at least one of the selected systems"
 msgstr ""
@@ -40231,11 +40298,6 @@ msgstr "Ursache"
 
 msgid "Reason:"
 msgstr "Ursache:"
-
-msgid "Reboot Guest Operation is not available for Images and VM Templates."
-msgstr ""
-"Die Operation für den Warmstart des Gastsystems ist für Images und VM-Vorlagen"
-" nicht verfügbar."
 
 msgid "Recent Hosts"
 msgstr "Letzte Hosts"
@@ -41432,6 +41494,9 @@ msgstr "Dialog entfernen"
 msgid "Remove Disks"
 msgstr "Platten entfernen"
 
+msgid "Remove Disks: %{value}"
+msgstr "Platten entfernen: %{value}"
+
 msgid "Remove Domains"
 msgstr "Domänen entfernen"
 
@@ -41556,6 +41621,9 @@ msgstr "Namensbereiche entfernen"
 
 msgid "Remove Network Adapters"
 msgstr "Netzadapter entfernen"
+
+msgid "Remove Network Adapters: %{value}"
+msgstr "Netzadapter entfernen: %{value}"
 
 msgid "Remove Network Provider"
 msgstr "Netzbetreiber entfernen"
@@ -42529,10 +42597,6 @@ msgstr "Instanz zurücksetzen"
 msgid "Reset Lockout Counter"
 msgstr "Sperrzähler zurücksetzen"
 
-msgid "Reset Operation is not available for Images and VM Templates."
-msgstr ""
-"Die Zurücksetzungsoperation ist für Images und VM-Vorlagen nicht verfügbar."
-
 msgid "Reset VM"
 msgstr "VM zurücksetzen"
 
@@ -42589,6 +42653,9 @@ msgstr "Plattengröße ändern"
 
 msgid "Resize Disks"
 msgstr "Größe von Platten ändern"
+
+msgid "Resize Disks: %{value}"
+msgstr "Plattengröße ändern: %{value}"
 
 msgid "Resize VM"
 msgstr "Größe der VM ändern"
@@ -43111,10 +43178,6 @@ msgstr "Stilllegen von %{name}"
 
 msgid "Retire Instances"
 msgstr "Instanzen stilllegen"
-
-msgid "Retire Operation is not available for Images and VM Templates."
-msgstr ""
-"Die Operation zum Zurückziehen ist für Images und VM-Vorlagen nicht verfügbar."
 
 msgid "Retire Orchestration Stack"
 msgstr "Orchestrierungsstack stilllegen"
@@ -45486,6 +45549,9 @@ msgstr "Vorlage gültig - Fehlernachricht"
 msgid "ServiceTemplate|Type display"
 msgstr "Typanzeige"
 
+msgid "Service_Template_Provisioning"
+msgstr "Bereitstellung_der_Servicevorlage"
+
 msgid "Services"
 msgstr "Services"
 
@@ -46864,11 +46930,6 @@ msgstr "Herunterfahren"
 msgid "Shutdown Guest"
 msgstr "Gastmaschine herunterfahren"
 
-msgid "Shutdown Guest Operation is not available for Images and VM Templates."
-msgstr ""
-"Die Operation zum Herunterfahren des Gastsystems ist für Images und "
-"VM-Vorlagen nicht verfügbar."
-
 msgid "Shutdown Host"
 msgstr "Host herunterfahren"
 
@@ -47399,11 +47460,6 @@ msgstr "Bereitschaftsaktion"
 msgid "Standby Guest"
 msgstr "Gastmaschine in Standby versetzen"
 
-msgid "Standby Guest Operation is not available for Images and VM Templates."
-msgstr ""
-"Die Operation für den Standby-Modus für das Gastsystem ist für Images und "
-"VM-Vorlagen nicht verfügbar."
-
 msgid "Start"
 msgstr "Starten"
 
@@ -47418,9 +47474,6 @@ msgstr "Startdatum"
 
 msgid "Start Date must come before End Date"
 msgstr "Das Startdatum muss vor dem Enddatum liegen"
-
-msgid "Start Operation is not available for Images and VM Templates."
-msgstr "Die Startoperation ist für Images und VM-Vorlagen nicht verfügbar."
 
 msgid "Start Page"
 msgstr "Startseite"
@@ -47630,9 +47683,6 @@ msgstr "Standardausgabe"
 
 msgid "Stop"
 msgstr "Stoppen"
-
-msgid "Stop Operation is not available for Images and VM Templates."
-msgstr "Die Stoppoperation ist für Images und VM-Vorlagen nicht verfügbar"
 
 msgid "Stop VM"
 msgstr "VM stoppen"
@@ -48487,9 +48537,6 @@ msgstr "Aussetzen"
 
 msgid "Suspend Instance"
 msgstr "Instanz aussetzen"
-
-msgid "Suspend Operation is not available for Images and VM Templates."
-msgstr "Die Aussetzoperation ist für Images und VM-Vorlagen nicht verfügbar."
 
 msgid "Suspend Role"
 msgstr "Rolle aussetzen"
@@ -50466,6 +50513,9 @@ msgstr "Gesamtzahl der physischen CPUs"
 msgid "Total Processors"
 msgstr "Prozessoren insgesamt"
 
+msgid "Total Processors: %{value}"
+msgstr "Gesamtzahl Prozessoren: %{value}"
+
 msgid "Total Provisioned Space"
 msgstr "Bereitgestellter Speicherplatz insgesamt"
 
@@ -52414,6 +52464,9 @@ msgstr "Bereitstellung der VM abgeschlossen"
 msgid "VM Provisioned Disk Files"
 msgstr "Bereitgestellte VM-Plattendateien"
 
+msgid "VM Provisioning"
+msgstr "VM-Bereitstellung"
+
 msgid "VM Publish"
 msgstr "VM-Publikation"
 
@@ -53191,6 +53244,9 @@ msgstr "Anbieteranzeige"
 
 msgid "Vendor and Guest OS"
 msgstr "Anbieter und Gastbetriebssystem"
+
+msgid "Vendor and Guest OS Chart"
+msgstr "Diagramm für Anbieter- und Gastbetriebssystem"
 
 msgid "Vendor and Type"
 msgstr "Anbieter und Typ"
@@ -57734,9 +57790,6 @@ msgid "which must be an Integer or one of %{priority}"
 msgstr ""
 "wobei es sich um eine Ganzzahl oder einen der folgenden Werte handeln muss: %{"
 "priority}"
-
-msgid "worker_cmdline must be implemented in a subclass"
-msgstr "worker_cmdline muss in einer Unterklasse implementiert werden"
 
 msgid "ws-security"
 msgstr "ws-security"
