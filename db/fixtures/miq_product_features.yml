@@ -2815,6 +2815,10 @@
   :feature_type: node
   :identifier: my_settings
   :children:
+  - :name: View
+    :description: View My Settings
+    :feature_type: view
+    :identifier: my_settings_view
   - :name: Modify
     :description: Modify My Settings
     :feature_type: admin
