@@ -65,10 +65,16 @@ class MiqUserRole < ApplicationRecord
     (settings || {}).fetch_path(:restrictions, restriction_type(klass)) == :user
   end
 
-  def self.with_roles_excluding(identifier)
-    where.not(:id => MiqUserRole.unscope(:select).joins(:miq_product_features)
-                                .where(:miq_product_features => {:identifier => identifier})
-                                .select(:id))
+  def self.with_roles_excluding(identifier, allowed_ids: nil)
+    scope = where.not(
+      :id => MiqUserRole
+        .unscope(:select)
+        .joins(:miq_product_features)
+        .where(:miq_product_features => {:identifier => identifier})
+        .select(:id)
+    )
+    scope = scope.or(where(:id => allowed_ids)) if allowed_ids.present?
+    scope
   end
 
   def self.seed
