@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2023-11-01 00:23+0000\n"
-"PO-Revision-Date: 2023-11-01 00:23+0000\n"
+"POT-Creation-Date: 2023-11-08 22:17+0000\n"
+"PO-Revision-Date: 2023-11-08 22:17+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1091,6 +1091,12 @@ msgstr "%{record} - \"%{button_text}\""
 
 msgid "%{record} no longer exists"
 msgstr "%{record}이(가) 더 이상 존재하지 않습니다."
+
+msgid "%{request_description} for: %{request_source}"
+msgstr "다음에 대한 %{request_description}: %{request_source}"
+
+msgid "%{request_description} for: %{resource_name} - %{message}"
+msgstr "다음에 대한 %{request_description}: %{resource_name} - %{message}"
 
 msgid "%{section}: %{custom_key}"
 msgstr "%{section}: %{custom_key}"
@@ -2468,6 +2474,9 @@ msgstr "네트워크 어댑터 추가"
 
 msgid "Add Network Adapters"
 msgstr "네트워크 어댑터 추가"
+
+msgid "Add Network Adapters: %{value}"
+msgstr "네트워크 어댑터 추가: %{value}"
 
 msgid "Add New %{table}"
 msgstr "새 %{table} 추가"
@@ -4853,6 +4862,9 @@ msgstr "하나 이상의 태스크 상태가 필요함"
 msgid "Attach"
 msgstr "첨부"
 
+msgid "Attach CD/DVDs: %{value}"
+msgstr "CD/DVD 첨부: %{value}"
+
 msgid "Attach Cloud Volume \"%{name}\""
 msgstr "클라우드 볼륨 \"%{name}\" 접속"
 
@@ -5310,6 +5322,9 @@ msgstr "자동화 관리자"
 
 msgid "Automation Managers (Ansible Tower)"
 msgstr "자동화 관리자(Ansible Tower)"
+
+msgid "Automation Request"
+msgstr "자동화 요청"
 
 msgid "Automation Simulation has been run"
 msgstr "자동화 시뮬레이션이 실행됨"
@@ -10029,6 +10044,9 @@ msgstr[0] "구성된 시스템(IBM Terraform)"
 msgid "Configured System Provision"
 msgstr "구성된 시스템 프로비저닝"
 
+msgid "Configured System Provisioning"
+msgstr "구성된 시스템 프로비저닝"
+
 msgid "Configured System console"
 msgstr "구성된 시스템 콘솔"
 
@@ -14322,8 +14340,14 @@ msgstr "기본 비용 상환율을 제거할 수 없습니다."
 msgid "Default Container Image Rate"
 msgstr "기본 컨테이너 이미지 비율"
 
+msgid "Default Dashboard"
+msgstr "기본 대시보드"
+
 msgid "Default Dashboard cannot be deleted"
 msgstr "기본 대시보드를 삭제할 수 없습니다."
+
+msgid "Default Dashboard for Physical Infrastructure Group"
+msgstr "물리적 인프라 그룹의 기본 대시보드"
 
 msgid "Default Dialog \"%{name}\" can not be edited"
 msgstr "기본 대화 상자 \"%{name}\"을(를) 편집할 수 없습니다."
@@ -14403,6 +14427,9 @@ msgstr "기본 대화 상자를 VMDB에서 제거할 수 없습니다."
 
 msgid "Default for %{parent_type} %{parent_name}"
 msgstr "%{parent_type} %{parent_name}의 기본값"
+
+msgid "Default for Physical Infrastructure"
+msgstr "물리적 인프라의 기본값"
 
 msgid "Default reports can not be edited"
 msgstr "기본 보고서를 편집할 수 없습니다."
@@ -14826,9 +14853,6 @@ msgstr "백업 \"%{name}\"의 삭제가 정상적으로 시작되었습니다."
 
 msgid "Delete of Flavor \"%{name}\" was successfully initiated."
 msgstr "플레이버 \"%{name}\"의 삭제가 정상적으로 시작되었습니다."
-
-msgid "Delete operation is not supported."
-msgstr "삭제 오퍼레이션이 지원되지 않습니다."
 
 msgid "Delete selected Accordion and its contents"
 msgstr "선택한 아코디언과 컨텐츠 삭제"
@@ -15315,6 +15339,9 @@ msgstr "가상 머신 %{subject} 영구 삭제 실패: %{error_message}"
 
 msgid "Detach"
 msgstr "분리"
+
+msgid "Detach CD/DVDs: %{value}"
+msgstr "CD/DVD 분리: %{value}"
 
 msgid "Detach Cloud Volume \"%{name}\""
 msgstr "클라우드 볼륨 \"%{name}\" 분리"
@@ -17490,6 +17517,12 @@ msgstr "EVM 작업자"
 msgid "EVM Zone"
 msgstr "EVM 구역"
 
+msgid "EVM: Recently Discovered Hosts"
+msgstr "EVM: 최근에 감지된 호스트"
+
+msgid "EVM: Recently Discovered VMs"
+msgstr "EVM: 최근에 감지된 VM"
+
 msgid "Edit"
 msgstr "편집"
 
@@ -17720,6 +17753,9 @@ msgstr "네트워크 편집"
 
 msgid "Edit Network Adapters"
 msgstr "네트워크 어댑터 편집"
+
+msgid "Edit Network Adapters: %{value}"
+msgstr "네트워크 어댑터 편집: %{value}"
 
 msgid "Edit Orchestration Stack"
 msgstr "오케스트레이션 스택 편집"
@@ -22965,6 +23001,9 @@ msgstr "게스트 OS HKLM 레지스트리 정보"
 msgid "Guest OS Id"
 msgstr "게스트 OS ID"
 
+msgid "Guest OS Information"
+msgstr "게스트 OS 정보"
+
 msgid "Guest OS Information - Linux"
 msgstr "게스트 OS 정보 - Linux"
 
@@ -27896,6 +27935,9 @@ msgstr "메모리 값이 범위에 없거나 4의 배수가 아님"
 
 msgid "Memory(MB)"
 msgstr "메모리(MB)"
+
+msgid "Memory: %{value} MB"
+msgstr "메모리: %{value}MB"
 
 msgid "Menu Name"
 msgstr "메뉴 이름"
@@ -33617,6 +33659,9 @@ msgstr "용량별 노드"
 msgid "Nodes By Memory Usage"
 msgstr "메모리 사용별 노드"
 
+msgid "Nodes by Capacity"
+msgstr "용량별 노드"
+
 msgid "Nodes by Number of CPU Cores"
 msgstr "CPU 코어 수별 노드"
 
@@ -33938,6 +33983,9 @@ msgstr "노드별 이미지 수"
 
 msgid "Number of Instances"
 msgstr "인스턴스 수"
+
+msgid "Number of Nodes per CPU Cores Chart"
+msgstr "CPU 코어당 노드 수 차트"
 
 msgid "Number of Object Storage Hosts"
 msgstr "Object Storage 호스트의 수"
@@ -34549,6 +34597,9 @@ msgstr "운영자"
 msgid "Optimization"
 msgstr "최적화"
 
+msgid "Optimization & Savings"
+msgstr "최적화 및 절약"
+
 msgid "Option 'interval_size' is required"
 msgstr "'interval_size' 옵션은 필수입니다."
 
@@ -34697,6 +34748,9 @@ msgstr "오케스트레이션 템플리트 실행기가 오류와 함께 완료�
 
 msgid "OrchestrationStack"
 msgstr "OrchestrationStack"
+
+msgid "OrchestrationStack Retire"
+msgstr "OrchestrationStack 폐기"
 
 msgid "OrchestrationStackOutput|Description"
 msgstr "OrchestrationStackOutput|설명"
@@ -35432,9 +35486,6 @@ msgstr "일시정지"
 msgid "Pause Instance"
 msgstr "인스턴스 일시정지"
 
-msgid "Pause Operation is not available for Images and VM Templates."
-msgstr "이미지 및 VM 템플리트에 대해 일시정지 조작을 사용할 수 없습니다."
-
 msgid "Pause Physical Infrastructure Providers"
 msgstr "물리적 인프라 제공자 일시정지"
 
@@ -36131,6 +36182,9 @@ msgstr "물리적 서버 프로파일"
 msgid "Physical Server Provision"
 msgstr "물리적 서버 프로비저닝"
 
+msgid "Physical Server Provisioning"
+msgstr "물리적 서버 프로비저닝"
+
 msgid "Physical Server Remote Access"
 msgstr "물리적 서버 원격 액세스"
 
@@ -36800,6 +36854,9 @@ msgstr "팟(Pods)(Kubernetes)"
 msgid "Pods per Ready Status"
 msgstr "준비 상태별 팟(Pod)"
 
+msgid "Pods per Ready Status Chart"
+msgstr "준비 상태당 팟(Pod) 차트"
+
 msgid "Policies"
 msgstr "정책"
 
@@ -37282,9 +37339,6 @@ msgstr "권한이 있는"
 msgid "Process"
 msgstr "프로세스"
 
-msgid "Process Collection is not available for Images and VM Templates."
-msgstr "이미지 및 VM 템플리트에 대해 프로세스 콜렉션을 사용할 수 없습니다."
-
 msgid "Process Cpu Time"
 msgstr "프로세스 CPU 시간"
 
@@ -37336,11 +37390,17 @@ msgstr "프로세서"
 msgid "Processor Cores Per Socket"
 msgstr "프로세서 소켓당 코어"
 
+msgid "Processor Cores Per Socket: %{value}"
+msgstr "소켓당 프로세서 코어: %{value}"
+
 msgid "Processor Cores_Per_Socket"
 msgstr "프로세서 Cores_Per_Socket"
 
 msgid "Processor Sockets"
 msgstr "프로세서 소켓"
+
+msgid "Processor Sockets: %{value}"
+msgstr "프로세서 소켓: %{value}"
 
 msgid "Processor compatibility mode"
 msgstr "프로세서 호환 모드"
@@ -37806,11 +37866,20 @@ msgstr "프로비저닝 시작점(NameSpace/클래스/인스턴스)"
 msgid "Provisioning Entry Point is required"
 msgstr "프로비저닝 시작점은 필수입니다."
 
-msgid "Provisioning Operation is not available for Images and VM Templates."
-msgstr "이미지 및 VM 템플리트에 대해 프로비저닝 조작을 사용할 수 없습니다."
+msgid "Provisioning Service [%{rsc_name}] for Service [%{svc_target_name}]"
+msgstr "[%{svc_target_name}] 서비스에 대한 프로비저닝 서비스 [%{rsc_name}]"
+
+msgid "Provisioning Service [%{svc_target_name}] from [%{prov_source_name}]"
+msgstr "[%{prov_source_name}]에서 프로비저닝 서비스 [%{svc_target_name}]"
 
 msgid "Provisioning State"
 msgstr "프로비저닝 상태"
+
+msgid "Provisioning VM [%{rsc_name}] for Service [%{svc_target_name}]"
+msgstr "서비스 [%{svc_target_name}]에 대한 프로비저닝 VM [%{rsc_name}]"
+
+msgid "Provisioning [%{rsc_name}] for Service [%{svc_target_name}]"
+msgstr "[%{svc_target_name}] 서비스에 대한 [%{rsc_name}] 프로비저닝"
 
 msgid "Provisioning is not supported for at least one of the selected systems"
 msgstr "선택한 시스템 중 적어도 하나에 대해 프로비저닝이 지원되지 않습니다."
@@ -38323,9 +38392,6 @@ msgstr "이유"
 
 msgid "Reason:"
 msgstr "이유:"
-
-msgid "Reboot Guest Operation is not available for Images and VM Templates."
-msgstr "이미지 및 VM 템플리트에 대해 게스트 재부팅 조작을 사용할 수 없습니다."
 
 msgid "Recent Hosts"
 msgstr "최신 호스트"
@@ -39382,6 +39448,9 @@ msgstr "대화 상자 제거"
 msgid "Remove Disks"
 msgstr "디스크 제거"
 
+msgid "Remove Disks: %{value}"
+msgstr "디스크 제거: %{value}"
+
 msgid "Remove Domains"
 msgstr "도메인 제거"
 
@@ -39497,6 +39566,9 @@ msgstr "네임스페이스 제거"
 
 msgid "Remove Network Adapters"
 msgstr "네트워크 어댑터 제거"
+
+msgid "Remove Network Adapters: %{value}"
+msgstr "네트워크 어댑터 제거: %{value}"
 
 msgid "Remove Network Provider"
 msgstr "네트워크 제공자 제거"
@@ -40447,9 +40519,6 @@ msgstr "인스턴스 재설정"
 msgid "Reset Lockout Counter"
 msgstr "잠금 카운터 재설정"
 
-msgid "Reset Operation is not available for Images and VM Templates."
-msgstr "이미지 및 VM 템플리트에 대해 재설정 조작을 사용할 수 없습니다."
-
 msgid "Reset VM"
 msgstr "VM 재설정"
 
@@ -40506,6 +40575,9 @@ msgstr "디스크 크기 조정"
 
 msgid "Resize Disks"
 msgstr "디스크 크기 조정"
+
+msgid "Resize Disks: %{value}"
+msgstr "디스크 크기 조정: %{value}"
 
 msgid "Resize VM"
 msgstr "VM 크기 조정"
@@ -41010,9 +41082,6 @@ msgstr "%{name} 폐기"
 
 msgid "Retire Instances"
 msgstr "인스턴스 폐기"
-
-msgid "Retire Operation is not available for Images and VM Templates."
-msgstr "이미지 및 VM 템플리트에 대해 폐기 조작을 사용할 수 없습니다."
 
 msgid "Retire Orchestration Stack"
 msgstr "오케스트레이션 스택 폐기"
@@ -43284,6 +43353,9 @@ msgstr "ServiceTemplate|템플리트 유효 오류 메시지"
 msgid "ServiceTemplate|Type display"
 msgstr "ServiceTemplate|유형 표시"
 
+msgid "Service_Template_Provisioning"
+msgstr "Service_Template_Provisioning"
+
 msgid "Services"
 msgstr "서비스"
 
@@ -44611,9 +44683,6 @@ msgstr "시스템 종료"
 msgid "Shutdown Guest"
 msgstr "게스트 종료"
 
-msgid "Shutdown Guest Operation is not available for Images and VM Templates."
-msgstr "이미지 및 VM 템플리트에 대해 게스트 종료 조작을 사용할 수 없습니다."
-
 msgid "Shutdown Host"
 msgstr "호스트 시스템 종료"
 
@@ -45134,9 +45203,6 @@ msgstr "대기 조치"
 msgid "Standby Guest"
 msgstr "게스트 대기"
 
-msgid "Standby Guest Operation is not available for Images and VM Templates."
-msgstr "이미지 및 VM 템플리트에 대해 대기 게스트 조작을 사용할 수 없습니다."
-
 msgid "Start"
 msgstr "시작"
 
@@ -45151,9 +45217,6 @@ msgstr "시작 날짜"
 
 msgid "Start Date must come before End Date"
 msgstr "시작 날짜는 종료 날짜보다 이전이어야 합니다."
-
-msgid "Start Operation is not available for Images and VM Templates."
-msgstr "이미지 및 VM 템플리트에 대해 시작 조작을 사용할 수 없습니다."
 
 msgid "Start Page"
 msgstr "시작 페이지"
@@ -45335,9 +45398,6 @@ msgstr "표준 출력"
 
 msgid "Stop"
 msgstr "중지"
-
-msgid "Stop Operation is not available for Images and VM Templates."
-msgstr "이미지 및 VM 템플리트에 대해 중지 조작을 사용할 수 없습니다."
 
 msgid "Stop VM"
 msgstr "VM 중지"
@@ -46162,9 +46222,6 @@ msgstr "일시중단"
 
 msgid "Suspend Instance"
 msgstr "인스턴스 일시중단"
-
-msgid "Suspend Operation is not available for Images and VM Templates."
-msgstr "이미지 및 VM 템플리트에 대해 일시중단 조작을 사용할 수 없습니다."
 
 msgid "Suspend Role"
 msgstr "역할 일시중단"
@@ -48011,6 +48068,9 @@ msgstr "물리적 CPU 수 총계"
 msgid "Total Processors"
 msgstr "프로세서 총계"
 
+msgid "Total Processors: %{value}"
+msgstr "총 프로세서 수: %{value}"
+
 msgid "Total Provisioned Space"
 msgstr "프로비저닝된 공간 총계"
 
@@ -49841,6 +49901,9 @@ msgstr "VM 프로비저닝 완료"
 msgid "VM Provisioned Disk Files"
 msgstr "VM 프로비저닝 디스크 파일"
 
+msgid "VM Provisioning"
+msgstr "VM 프로비저닝"
+
 msgid "VM Publish"
 msgstr "VM 공개"
 
@@ -50585,6 +50648,9 @@ msgstr "벤더 표시"
 
 msgid "Vendor and Guest OS"
 msgstr "벤더 및 게스트 OS"
+
+msgid "Vendor and Guest OS Chart"
+msgstr "공급업체 및 게스트 OS 차트"
 
 msgid "Vendor and Type"
 msgstr "벤더 및 유형"
@@ -54860,9 +54926,6 @@ msgstr "주"
 
 msgid "which must be an Integer or one of %{priority}"
 msgstr "정수 또는 %{priority} 중 하나여야 함"
-
-msgid "worker_cmdline must be implemented in a subclass"
-msgstr "worker_cmdline은 서브클래스에서 구현되어야 함"
 
 msgid "ws-security"
 msgstr "ws-security"

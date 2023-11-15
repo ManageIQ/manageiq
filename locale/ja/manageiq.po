@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2023-11-01 00:23+0000\n"
-"PO-Revision-Date: 2023-11-01 00:23+0000\n"
+"POT-Creation-Date: 2023-11-08 22:17+0000\n"
+"PO-Revision-Date: 2023-11-08 22:17+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1091,6 +1091,12 @@ msgstr "%{record} - \"%{button_text}\""
 
 msgid "%{record} no longer exists"
 msgstr "%{record}は存在しません"
+
+msgid "%{request_description} for: %{request_source}"
+msgstr "%{request_source} の %{request_description}"
+
+msgid "%{request_description} for: %{resource_name} - %{message}"
+msgstr "%{resource_name} の %{request_description} - %{message}"
 
 msgid "%{section}: %{custom_key}"
 msgstr "%{section}: %{custom_key}"
@@ -2471,6 +2477,9 @@ msgstr "ネットワーク・アダプターの追加"
 
 msgid "Add Network Adapters"
 msgstr "ネットワーク・アダプターの追加"
+
+msgid "Add Network Adapters: %{value}"
+msgstr "ネットワーク・アダプターの追加: %{value}"
 
 msgid "Add New %{table}"
 msgstr "新規 %{table}の追加"
@@ -4857,6 +4866,9 @@ msgstr "少なくとも 1 つのタスク状況が必要です"
 msgid "Attach"
 msgstr "割り当て"
 
+msgid "Attach CD/DVDs: %{value}"
+msgstr "CD/DVDの接続: %{value}"
+
 msgid "Attach Cloud Volume \"%{name}\""
 msgstr "クラウド・ボリューム \"%{name}\" の割り当て"
 
@@ -5315,6 +5327,9 @@ msgstr "自動化マネージャー"
 
 msgid "Automation Managers (Ansible Tower)"
 msgstr "自動化マネージャー (Ansible Tower)"
+
+msgid "Automation Request"
+msgstr "自動化要求"
 
 msgid "Automation Simulation has been run"
 msgstr "自動化シミュレーションが実行されました"
@@ -10036,6 +10051,9 @@ msgstr[0] "構成済みシステム (IBM Terraform)"
 msgid "Configured System Provision"
 msgstr "構成済みシステムのプロビジョニング"
 
+msgid "Configured System Provisioning"
+msgstr "構成済みシステム・プロビジョニング"
+
 msgid "Configured System console"
 msgstr "構成済みシステム・コンソール"
 
@@ -14330,8 +14348,14 @@ msgstr "デフォルトのチャージバック・レートを削除できませ
 msgid "Default Container Image Rate"
 msgstr "デフォルト・コンテナー・イメージ・レート"
 
+msgid "Default Dashboard"
+msgstr "デフォルト・ダッシュボード"
+
 msgid "Default Dashboard cannot be deleted"
 msgstr "デフォルトのダッシュボードを削除できません"
+
+msgid "Default Dashboard for Physical Infrastructure Group"
+msgstr "物理インフラストラクチャー・グループのデフォルト・ダッシュボード"
 
 msgid "Default Dialog \"%{name}\" can not be edited"
 msgstr "デフォルトのダイアログ \"%{name}\" を編集できません"
@@ -14411,6 +14435,9 @@ msgstr "デフォルト・ダイアログを VMDB から削除することはで
 
 msgid "Default for %{parent_type} %{parent_name}"
 msgstr "%{parent_type} %{parent_name} のデフォルト"
+
+msgid "Default for Physical Infrastructure"
+msgstr "物理インフラストラクチャーのデフォルト"
 
 msgid "Default reports can not be edited"
 msgstr "デフォルトのレポートは編集できません。"
@@ -14834,9 +14861,6 @@ msgstr "バックアップ\"%{name}\"の削除が正常に開始されました�
 
 msgid "Delete of Flavor \"%{name}\" was successfully initiated."
 msgstr "フレーバー\"%{name}\"の削除が正常に開始されました。"
-
-msgid "Delete operation is not supported."
-msgstr "削除操作はサポートされていません。"
 
 msgid "Delete selected Accordion and its contents"
 msgstr "選択したアコーディオンおよびそのコンテンツの削除"
@@ -15324,6 +15348,9 @@ msgstr "仮想マシン %{subject} の破棄に失敗しました: %{error_messa
 
 msgid "Detach"
 msgstr "割り当て解除"
+
+msgid "Detach CD/DVDs: %{value}"
+msgstr "CD/DVDの切り離し: %{value}"
 
 msgid "Detach Cloud Volume \"%{name}\""
 msgstr "クラウド・ボリューム \"%{name}\" の割り当て解除"
@@ -17500,6 +17527,12 @@ msgstr "EVM ワーカー"
 msgid "EVM Zone"
 msgstr "EVM ゾーン"
 
+msgid "EVM: Recently Discovered Hosts"
+msgstr "EVM: 最近ディスカバーされたホスト"
+
+msgid "EVM: Recently Discovered VMs"
+msgstr "EVM: 最近ディスカバーされたVM"
+
 msgid "Edit"
 msgstr "編集"
 
@@ -17730,6 +17763,9 @@ msgstr "ネットワークの編集"
 
 msgid "Edit Network Adapters"
 msgstr "ネットワーク・アダプターの編集"
+
+msgid "Edit Network Adapters: %{value}"
+msgstr "ネットワーク・アダプターの編集: %{value}"
 
 msgid "Edit Orchestration Stack"
 msgstr "オーケストレーション・スタックの編集"
@@ -22974,6 +23010,9 @@ msgstr "ゲスト OS HKLM レジストリー情報"
 msgid "Guest OS Id"
 msgstr "ゲスト OS ID"
 
+msgid "Guest OS Information"
+msgstr "ゲストOS情報"
+
 msgid "Guest OS Information - Linux"
 msgstr "ゲスト OS 情報 - Linux"
 
@@ -27910,6 +27949,9 @@ msgstr "メモリー値が範囲内ではないか、または 4 の倍数では
 
 msgid "Memory(MB)"
 msgstr "メモリー (MB)"
+
+msgid "Memory: %{value} MB"
+msgstr "メモリー: %{value} MB"
 
 msgid "Menu Name"
 msgstr "メニュー名"
@@ -33631,6 +33673,9 @@ msgstr "ノード (容量別)"
 msgid "Nodes By Memory Usage"
 msgstr "ノード (メモリー使用状況別)"
 
+msgid "Nodes by Capacity"
+msgstr "ノード (容量別)"
+
 msgid "Nodes by Number of CPU Cores"
 msgstr "ノード (CPU コア数別)"
 
@@ -33954,6 +33999,9 @@ msgstr "ノードあたりのイメージ数"
 
 msgid "Number of Instances"
 msgstr "インスタンスの数"
+
+msgid "Number of Nodes per CPU Cores Chart"
+msgstr "CPUコアごとのノード数のグラフ"
 
 msgid "Number of Object Storage Hosts"
 msgstr "オブジェクト・ストレージ・ホストの数"
@@ -34566,6 +34614,9 @@ msgstr "演算子"
 msgid "Optimization"
 msgstr "最適化"
 
+msgid "Optimization & Savings"
+msgstr "最適化および節約"
+
 msgid "Option 'interval_size' is required"
 msgstr "オプション 'interval_size' が必要です"
 
@@ -34714,6 +34765,9 @@ msgstr "オーケストレーション・テンプレート・ランナーがエ
 
 msgid "OrchestrationStack"
 msgstr "OrchestrationStack"
+
+msgid "OrchestrationStack Retire"
+msgstr "OrchestrationStack廃止"
 
 msgid "OrchestrationStackOutput|Description"
 msgstr "説明"
@@ -35449,9 +35503,6 @@ msgstr "一時停止"
 msgid "Pause Instance"
 msgstr "インスタンスの一時停止"
 
-msgid "Pause Operation is not available for Images and VM Templates."
-msgstr "一時停止操作は、イメージおよび VM テンプレートには使用できません。"
-
 msgid "Pause Physical Infrastructure Providers"
 msgstr "物理インフラストラクチャー・プロバイダーの一時停止"
 
@@ -36148,6 +36199,9 @@ msgstr "物理サーバー・プロファイル"
 msgid "Physical Server Provision"
 msgstr "物理サーバーのプロビジョニング"
 
+msgid "Physical Server Provisioning"
+msgstr "物理サーバー・プロビジョニング"
+
 msgid "Physical Server Remote Access"
 msgstr "物理サーバーのリモート・アクセス"
 
@@ -36818,6 +36872,9 @@ msgstr "ポッド (Kubernetes)"
 msgid "Pods per Ready Status"
 msgstr "ポッド (作動可能ステータス別)"
 
+msgid "Pods per Ready Status Chart"
+msgstr "作動可能状況ごとのポッドのグラフ"
+
 msgid "Policies"
 msgstr "ポリシー"
 
@@ -37300,9 +37357,6 @@ msgstr "特権"
 msgid "Process"
 msgstr "プロセス"
 
-msgid "Process Collection is not available for Images and VM Templates."
-msgstr "プロセス・コレクションは、イメージおよび VM テンプレートには使用できません。"
-
 msgid "Process Cpu Time"
 msgstr "プロセス CPU  時間"
 
@@ -37354,11 +37408,17 @@ msgstr "プロセッサー"
 msgid "Processor Cores Per Socket"
 msgstr "1 ソケットあたりのプロセッサー・コア数"
 
+msgid "Processor Cores Per Socket: %{value}"
+msgstr "ソケット当たりのプロセッサー・コア数: %{value}"
+
 msgid "Processor Cores_Per_Socket"
 msgstr "プロセッサー Cores_Per_Socket"
 
 msgid "Processor Sockets"
 msgstr "プロセッサー・ソケット"
+
+msgid "Processor Sockets: %{value}"
+msgstr "プロセッサー・ソケット: %{value}"
 
 msgid "Processor compatibility mode"
 msgstr "プロセッサー互換モード"
@@ -37825,11 +37885,20 @@ msgstr "プロビジョニングのエントリー・ポイント (名前空間/
 msgid "Provisioning Entry Point is required"
 msgstr "プロビジョニングのエントリー・ポイントが必要です"
 
-msgid "Provisioning Operation is not available for Images and VM Templates."
-msgstr "プロビジョニング操作は、イメージおよび VM テンプレートには使用できません。"
+msgid "Provisioning Service [%{rsc_name}] for Service [%{svc_target_name}]"
+msgstr "サービス [%{svc_target_name}] のプロビジョニング・サービス [%{rsc_name}]"
+
+msgid "Provisioning Service [%{svc_target_name}] from [%{prov_source_name}]"
+msgstr "[%{prov_source_name}] からのプロビジョニング・サービス [%{svc_target_name}]"
 
 msgid "Provisioning State"
 msgstr "プロビジョニング状態"
+
+msgid "Provisioning VM [%{rsc_name}] for Service [%{svc_target_name}]"
+msgstr "サービス [%{svc_target_name}] のVM [%{rsc_name}] のプロビジョニング"
+
+msgid "Provisioning [%{rsc_name}] for Service [%{svc_target_name}]"
+msgstr "サービス [%{svc_target_name}] の [%{rsc_name}] のプロビジョニング"
 
 msgid "Provisioning is not supported for at least one of the selected systems"
 msgstr "選択した 1 つ以上のシステムでプロビジョニングがサポートされていません"
@@ -38342,9 +38411,6 @@ msgstr "理由"
 
 msgid "Reason:"
 msgstr "理由:"
-
-msgid "Reboot Guest Operation is not available for Images and VM Templates."
-msgstr "リブート・ゲスト操作は、イメージおよび VM テンプレートには使用できません。"
 
 msgid "Recent Hosts"
 msgstr "最近のホスト"
@@ -39401,6 +39467,9 @@ msgstr "ダイアログの削除"
 msgid "Remove Disks"
 msgstr "ディスクの削除"
 
+msgid "Remove Disks: %{value}"
+msgstr "ディスクの削除: %{value}"
+
 msgid "Remove Domains"
 msgstr "ドメインの削除"
 
@@ -39516,6 +39585,9 @@ msgstr "名前空間の削除"
 
 msgid "Remove Network Adapters"
 msgstr "ネットワーク・アダプターを削除"
+
+msgid "Remove Network Adapters: %{value}"
+msgstr "ネットワーク・アダプターの削除: %{value}"
 
 msgid "Remove Network Provider"
 msgstr "ネットワーク・プロバイダーの削除"
@@ -40466,9 +40538,6 @@ msgstr "インスタンスのリセット"
 msgid "Reset Lockout Counter"
 msgstr "ロックアウト・カウンターのリセット"
 
-msgid "Reset Operation is not available for Images and VM Templates."
-msgstr "リセット操作は、イメージおよび VM テンプレートには使用できません。"
-
 msgid "Reset VM"
 msgstr "VM のリセット"
 
@@ -40525,6 +40594,9 @@ msgstr "ディスクのサイズ変更"
 
 msgid "Resize Disks"
 msgstr "ディスクのサイズ変更"
+
+msgid "Resize Disks: %{value}"
+msgstr "ディスクのサイズ変更: %{value}"
 
 msgid "Resize VM"
 msgstr "VMのサイズ変更"
@@ -41029,9 +41101,6 @@ msgstr "%{name} のリタイヤ"
 
 msgid "Retire Instances"
 msgstr "インスタンスのリタイヤ"
-
-msgid "Retire Operation is not available for Images and VM Templates."
-msgstr "廃止操作は、イメージおよび VM テンプレートでは使用できません。"
 
 msgid "Retire Orchestration Stack"
 msgstr "オーケストレーション・スタックのリタイヤ"
@@ -43305,6 +43374,9 @@ msgstr "テンプレートの有効性に関するエラー・メッセージ"
 msgid "ServiceTemplate|Type display"
 msgstr "タイプ表示"
 
+msgid "Service_Template_Provisioning"
+msgstr "Service_Template_Provisioning"
+
 msgid "Services"
 msgstr "サービス"
 
@@ -44632,9 +44704,6 @@ msgstr "シャットダウン"
 msgid "Shutdown Guest"
 msgstr "ゲストのシャットダウン"
 
-msgid "Shutdown Guest Operation is not available for Images and VM Templates."
-msgstr "ゲストのシャットダウン操作は、イメージおよび VM テンプレートでは使用できません。"
-
 msgid "Shutdown Host"
 msgstr "ホストのシャットダウン"
 
@@ -45154,9 +45223,6 @@ msgstr "スタンバイ・アクション"
 msgid "Standby Guest"
 msgstr "スタンバイ・ゲスト"
 
-msgid "Standby Guest Operation is not available for Images and VM Templates."
-msgstr "スタンバイ・ゲスト操作は、イメージおよび VM テンプレートには使用できません。"
-
 msgid "Start"
 msgstr "開始"
 
@@ -45171,9 +45237,6 @@ msgstr "開始日"
 
 msgid "Start Date must come before End Date"
 msgstr "開始日は終了日より前にする必要があります"
-
-msgid "Start Operation is not available for Images and VM Templates."
-msgstr "開始操作は、イメージおよび VM テンプレートには使用できません。"
 
 msgid "Start Page"
 msgstr "スタート・ページ"
@@ -45356,9 +45419,6 @@ msgstr "標準出力"
 
 msgid "Stop"
 msgstr "停止"
-
-msgid "Stop Operation is not available for Images and VM Templates."
-msgstr "停止操作は、イメージおよび VM テンプレートには使用できません。"
 
 msgid "Stop VM"
 msgstr "VM の停止"
@@ -46183,9 +46243,6 @@ msgstr "中断"
 
 msgid "Suspend Instance"
 msgstr "インスタンスの中断"
-
-msgid "Suspend Operation is not available for Images and VM Templates."
-msgstr "中断操作は、イメージおよび VM テンプレートには使用できません。"
 
 msgid "Suspend Role"
 msgstr "ロールの一時停止"
@@ -48035,6 +48092,9 @@ msgstr "物理 CPU の合計数"
 msgid "Total Processors"
 msgstr "合計プロセッサー"
 
+msgid "Total Processors: %{value}"
+msgstr "合計プロセッサー数: %{value}"
+
 msgid "Total Provisioned Space"
 msgstr "プロビジョニング・スペースの合計"
 
@@ -49865,6 +49925,9 @@ msgstr "VM のプロビジョンが完了"
 msgid "VM Provisioned Disk Files"
 msgstr "VM のプロビジョニングされたディスク・ファイル"
 
+msgid "VM Provisioning"
+msgstr "VMプロビジョニング"
+
 msgid "VM Publish"
 msgstr "VM の公開"
 
@@ -50608,6 +50671,9 @@ msgstr "ベンダーの表示"
 
 msgid "Vendor and Guest OS"
 msgstr "ベンダーおよびゲスト OS"
+
+msgid "Vendor and Guest OS Chart"
+msgstr "ベンダーとゲストOSのグラフ"
 
 msgid "Vendor and Type"
 msgstr "ベンダーおよびタイプ"
@@ -54883,9 +54949,6 @@ msgstr "週間"
 
 msgid "which must be an Integer or one of %{priority}"
 msgstr "整数または %{priority}のいずれかでなければなりません"
-
-msgid "worker_cmdline must be implemented in a subclass"
-msgstr "worker_cmdline をサブクラスに実装する必要があります"
 
 msgid "ws-security"
 msgstr "WS-セキュリティー"
