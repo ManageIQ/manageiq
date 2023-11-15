@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2023-11-01 00:23+0000\n"
-"PO-Revision-Date: 2023-11-01 00:23+0000\n"
+"POT-Creation-Date: 2023-11-08 22:17+0000\n"
+"PO-Revision-Date: 2023-11-08 22:17+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1084,6 +1084,12 @@ msgstr "%{record} - \"%{button_text}\""
 
 msgid "%{record} no longer exists"
 msgstr "%{record} 不再存在"
+
+msgid "%{request_description} for: %{request_source}"
+msgstr "%{request_description}，针对：%{request_source}"
+
+msgid "%{request_description} for: %{resource_name} - %{message}"
+msgstr "%{request_description}，针对：%{resource_name} -%{message}"
 
 msgid "%{section}: %{custom_key}"
 msgstr "%{section}: %{custom_key}"
@@ -2453,6 +2459,9 @@ msgstr "添加网络适配器"
 
 msgid "Add Network Adapters"
 msgstr "添加网络适配器"
+
+msgid "Add Network Adapters: %{value}"
+msgstr "添加网络适配器：%{value}"
 
 msgid "Add New %{table}"
 msgstr "添加新的%{table}"
@@ -4834,6 +4843,9 @@ msgstr "至少需要一个任务状态"
 msgid "Attach"
 msgstr "附加"
 
+msgid "Attach CD/DVDs: %{value}"
+msgstr "连接 CD/DVD：%{value}"
+
 msgid "Attach Cloud Volume \"%{name}\""
 msgstr "附加云卷“%{name}”"
 
@@ -5290,6 +5302,9 @@ msgstr "自动化管理者"
 
 msgid "Automation Managers (Ansible Tower)"
 msgstr "自动化管理器 (Ansible Tower)"
+
+msgid "Automation Request"
+msgstr "自动化请求"
 
 msgid "Automation Simulation has been run"
 msgstr "自动化模拟已经运行"
@@ -10002,6 +10017,9 @@ msgstr[0] "已配置的系统 (IBM Terraform)"
 msgid "Configured System Provision"
 msgstr "已配置的系统供应"
 
+msgid "Configured System Provisioning"
+msgstr "已配置系统供应"
+
 msgid "Configured System console"
 msgstr "已配置的系统控制台"
 
@@ -14292,8 +14310,14 @@ msgstr "无法移除缺省计费费率。"
 msgid "Default Container Image Rate"
 msgstr "缺省容器映像费率"
 
+msgid "Default Dashboard"
+msgstr "缺省仪表板"
+
 msgid "Default Dashboard cannot be deleted"
 msgstr "不能删除缺省仪表板"
+
+msgid "Default Dashboard for Physical Infrastructure Group"
+msgstr "物理基础结构组的缺省仪表板"
 
 msgid "Default Dialog \"%{name}\" can not be edited"
 msgstr "无法编辑缺省对话框“%{name}”"
@@ -14373,6 +14397,9 @@ msgstr "不能从 VMDB 移除缺省对话框"
 
 msgid "Default for %{parent_type} %{parent_name}"
 msgstr "%{parent_type} %{parent_name} 的缺省值"
+
+msgid "Default for Physical Infrastructure"
+msgstr "物理基础结构的缺省值"
 
 msgid "Default reports can not be edited"
 msgstr "无法编辑缺省报告"
@@ -14796,9 +14823,6 @@ msgstr "启动删除备份“%{name}”的操作成功。"
 
 msgid "Delete of Flavor \"%{name}\" was successfully initiated."
 msgstr "启动删除风格“%{name}”的操作成功。"
-
-msgid "Delete operation is not supported."
-msgstr "不支持删除操作。"
 
 msgid "Delete selected Accordion and its contents"
 msgstr "删除选中的折叠菜单和其内容"
@@ -15285,6 +15309,9 @@ msgstr "销毁虚拟机 %{subject} 失败：%{error_message}"
 
 msgid "Detach"
 msgstr "拆离"
+
+msgid "Detach CD/DVDs: %{value}"
+msgstr "拆离 CD/DVD：%{value}"
 
 msgid "Detach Cloud Volume \"%{name}\""
 msgstr "拆离云卷“%{name}”"
@@ -17460,6 +17487,12 @@ msgstr "EVM 工作程序"
 msgid "EVM Zone"
 msgstr "EVM 区域"
 
+msgid "EVM: Recently Discovered Hosts"
+msgstr "EVM：最近发现的主机"
+
+msgid "EVM: Recently Discovered VMs"
+msgstr "EVM：最近发现的 VM"
+
 msgid "Edit"
 msgstr "编辑"
 
@@ -17690,6 +17723,9 @@ msgstr "编辑网络"
 
 msgid "Edit Network Adapters"
 msgstr "编辑网络适配器"
+
+msgid "Edit Network Adapters: %{value}"
+msgstr "编辑网络适配器：%{value}"
 
 msgid "Edit Orchestration Stack"
 msgstr "编辑编排堆栈"
@@ -22925,6 +22961,9 @@ msgstr "访客操作系统 HKLM 注册表信息"
 msgid "Guest OS Id"
 msgstr "访客操作系统标识"
 
+msgid "Guest OS Information"
+msgstr "访客操作系统信息"
+
 msgid "Guest OS Information - Linux"
 msgstr "访客操作系统信息 - Linux"
 
@@ -27848,6 +27887,9 @@ msgstr "内存值不在范围内或不是 4 的倍数"
 
 msgid "Memory(MB)"
 msgstr "内存 (MB)"
+
+msgid "Memory: %{value} MB"
+msgstr "内存：%{value} MB"
 
 msgid "Menu Name"
 msgstr "菜单名称"
@@ -33568,6 +33610,9 @@ msgstr "按容量排列的节点"
 msgid "Nodes By Memory Usage"
 msgstr "按内存使用率排列的节点"
 
+msgid "Nodes by Capacity"
+msgstr "按容量排列的节点"
+
 msgid "Nodes by Number of CPU Cores"
 msgstr "按 CPU 核心数量显示的节点"
 
@@ -33887,6 +33932,9 @@ msgstr "每个节点的镜像数"
 
 msgid "Number of Instances"
 msgstr "实例的数量"
+
+msgid "Number of Nodes per CPU Cores Chart"
+msgstr "每个 CPU 核心的节点数图表"
 
 msgid "Number of Object Storage Hosts"
 msgstr "对象存储主机的数量"
@@ -34495,6 +34543,9 @@ msgstr "操作者"
 msgid "Optimization"
 msgstr "优化"
 
+msgid "Optimization & Savings"
+msgstr "优化和节省"
+
 msgid "Option 'interval_size' is required"
 msgstr "需要选项 'interval_size'"
 
@@ -34643,6 +34694,9 @@ msgstr "编排模板运行器已完成，但出现错误。请检查 evm.log 以
 
 msgid "OrchestrationStack"
 msgstr "OrchestrationStack"
+
+msgid "OrchestrationStack Retire"
+msgstr "OrchestrationStack 退市"
 
 msgid "OrchestrationStackOutput|Description"
 msgstr "描述"
@@ -35378,9 +35432,6 @@ msgstr "暂停"
 msgid "Pause Instance"
 msgstr "暂停实例"
 
-msgid "Pause Operation is not available for Images and VM Templates."
-msgstr "暂停操作不可用于映像和虚拟机模板。"
-
 msgid "Pause Physical Infrastructure Providers"
 msgstr "暂停物理基础架构供应商"
 
@@ -36077,6 +36128,9 @@ msgstr "物理服务器概要文件"
 msgid "Physical Server Provision"
 msgstr "物理服务器供应"
 
+msgid "Physical Server Provisioning"
+msgstr "物理服务器供应"
+
 msgid "Physical Server Remote Access"
 msgstr "物理服务器远程访问"
 
@@ -36746,6 +36800,9 @@ msgstr "Pod (Kubernetes)"
 msgid "Pods per Ready Status"
 msgstr "每个就绪状态的 Pod 数"
 
+msgid "Pods per Ready Status Chart"
+msgstr "“每个就绪状态的 pod 数”图表"
+
 msgid "Policies"
 msgstr "策略"
 
@@ -37228,9 +37285,6 @@ msgstr "有特权的"
 msgid "Process"
 msgstr "处理"
 
-msgid "Process Collection is not available for Images and VM Templates."
-msgstr "进程集合不可用于映像和虚拟机模板。"
-
 msgid "Process Cpu Time"
 msgstr "进程 CPU 时间"
 
@@ -37282,11 +37336,17 @@ msgstr "处理器"
 msgid "Processor Cores Per Socket"
 msgstr "每个插槽的处理器核心数"
 
+msgid "Processor Cores Per Socket: %{value}"
+msgstr "每个插座的处理器核心数：%{value}"
+
 msgid "Processor Cores_Per_Socket"
 msgstr "处理器的 Cores_Per_Socket"
 
 msgid "Processor Sockets"
 msgstr "处理器插槽"
+
+msgid "Processor Sockets: %{value}"
+msgstr "处理器插座数：%{value}"
 
 msgid "Processor compatibility mode"
 msgstr "处理器兼容性方式"
@@ -37752,11 +37812,20 @@ msgstr "供应入口点（名称空间/类/实例）"
 msgid "Provisioning Entry Point is required"
 msgstr "需要供应入口点"
 
-msgid "Provisioning Operation is not available for Images and VM Templates."
-msgstr "配置操作不可用于映像和虚拟机模板。"
+msgid "Provisioning Service [%{rsc_name}] for Service [%{svc_target_name}]"
+msgstr "正在为服务 [%{svc_target_name}] 供应服务 [%{rsc_name}]"
+
+msgid "Provisioning Service [%{svc_target_name}] from [%{prov_source_name}]"
+msgstr "正在从 [%{prov_source_name}] 供应服务 [%{svc_target_name}]"
 
 msgid "Provisioning State"
 msgstr "正在供应状态"
+
+msgid "Provisioning VM [%{rsc_name}] for Service [%{svc_target_name}]"
+msgstr "正在为服务 [%{svc_target_name}] 供应 VM [%{rsc_name}]"
+
+msgid "Provisioning [%{rsc_name}] for Service [%{svc_target_name}]"
+msgstr "正在为服务 [%{svc_target_name}] 供应 [%{rsc_name}]"
 
 msgid "Provisioning is not supported for at least one of the selected systems"
 msgstr "最少有一个所选的系统不支持供应"
@@ -38269,9 +38338,6 @@ msgstr "原因"
 
 msgid "Reason:"
 msgstr "原因："
-
-msgid "Reboot Guest Operation is not available for Images and VM Templates."
-msgstr "重新引导访客操作不可用于映像和虚拟机模板。"
 
 msgid "Recent Hosts"
 msgstr "最新主机"
@@ -39328,6 +39394,9 @@ msgstr "移除对话框"
 msgid "Remove Disks"
 msgstr "移除磁盘"
 
+msgid "Remove Disks: %{value}"
+msgstr "除去磁盘：%{value}"
+
 msgid "Remove Domains"
 msgstr "移除域"
 
@@ -39443,6 +39512,9 @@ msgstr "移除名称空间"
 
 msgid "Remove Network Adapters"
 msgstr "移除网络适配器"
+
+msgid "Remove Network Adapters: %{value}"
+msgstr "除去网络适配器：%{value}"
 
 msgid "Remove Network Provider"
 msgstr "移除网络供应商"
@@ -40392,9 +40464,6 @@ msgstr "重置实例"
 msgid "Reset Lockout Counter"
 msgstr "重置锁定计数器"
 
-msgid "Reset Operation is not available for Images and VM Templates."
-msgstr "重置操作不可用于映像和虚拟机模板。"
-
 msgid "Reset VM"
 msgstr "重置虚拟机"
 
@@ -40451,6 +40520,9 @@ msgstr "调整磁盘大小"
 
 msgid "Resize Disks"
 msgstr "调整磁盘大小"
+
+msgid "Resize Disks: %{value}"
+msgstr "调整磁盘大小：%{value}"
 
 msgid "Resize VM"
 msgstr "调整虚拟机的大小"
@@ -40955,9 +41027,6 @@ msgstr "停用 %{name}"
 
 msgid "Retire Instances"
 msgstr "停用实例"
-
-msgid "Retire Operation is not available for Images and VM Templates."
-msgstr "停用操作不可用于映像和虚拟机模板。"
 
 msgid "Retire Orchestration Stack"
 msgstr "停用编排堆栈"
@@ -43227,6 +43296,9 @@ msgstr "模板有效错误消息"
 msgid "ServiceTemplate|Type display"
 msgstr "类型显示"
 
+msgid "Service_Template_Provisioning"
+msgstr "Service_Template_Provisioning"
+
 msgid "Services"
 msgstr "服务"
 
@@ -44554,9 +44626,6 @@ msgstr "关闭"
 msgid "Shutdown Guest"
 msgstr "关闭访客操作系统"
 
-msgid "Shutdown Guest Operation is not available for Images and VM Templates."
-msgstr "关闭访客操作不可用于映像和虚拟机模板。"
-
 msgid "Shutdown Host"
 msgstr "关闭主机"
 
@@ -45076,9 +45145,6 @@ msgstr "待机操作"
 msgid "Standby Guest"
 msgstr "使访客操作系统待机"
 
-msgid "Standby Guest Operation is not available for Images and VM Templates."
-msgstr "备用访客操作不可用于映像和虚拟机模板。"
-
 msgid "Start"
 msgstr "启动"
 
@@ -45093,9 +45159,6 @@ msgstr "开始日期"
 
 msgid "Start Date must come before End Date"
 msgstr "开始日期必须早于结束日期"
-
-msgid "Start Operation is not available for Images and VM Templates."
-msgstr "启动操作不可用于映像和虚拟机模板。"
 
 msgid "Start Page"
 msgstr "启动页面"
@@ -45278,9 +45341,6 @@ msgstr "标准输出"
 
 msgid "Stop"
 msgstr "停止"
-
-msgid "Stop Operation is not available for Images and VM Templates."
-msgstr "停止操作不可用于映像和虚拟机模板。"
 
 msgid "Stop VM"
 msgstr "停止虚拟机"
@@ -46105,9 +46165,6 @@ msgstr "暂挂"
 
 msgid "Suspend Instance"
 msgstr "暂挂实例"
-
-msgid "Suspend Operation is not available for Images and VM Templates."
-msgstr "暂挂操作不可用于映像和虚拟机模板。"
 
 msgid "Suspend Role"
 msgstr "暂挂角色"
@@ -47953,6 +48010,9 @@ msgstr "物理 CPU 的总数"
 msgid "Total Processors"
 msgstr "处理器总数"
 
+msgid "Total Processors: %{value}"
+msgstr "处理器总数：%{value}"
+
 msgid "Total Provisioned Space"
 msgstr "总供应空间"
 
@@ -49779,6 +49839,9 @@ msgstr "虚拟机配置完成"
 msgid "VM Provisioned Disk Files"
 msgstr "虚拟机供应的磁盘文件"
 
+msgid "VM Provisioning"
+msgstr "VM 供应"
+
 msgid "VM Publish"
 msgstr "虚拟机发布"
 
@@ -50518,6 +50581,9 @@ msgstr "厂商显示"
 
 msgid "Vendor and Guest OS"
 msgstr "供应商和访客操作系统"
+
+msgid "Vendor and Guest OS Chart"
+msgstr "供应商和访客操作系统图表"
 
 msgid "Vendor and Type"
 msgstr "供应商和类型"
@@ -54787,9 +54853,6 @@ msgstr "周"
 
 msgid "which must be an Integer or one of %{priority}"
 msgstr "必须是一个整数或者 %{priority} 之一"
-
-msgid "worker_cmdline must be implemented in a subclass"
-msgstr "worker_cmdline 必须在子类中实现"
 
 msgid "ws-security"
 msgstr "Web 服务安全"
