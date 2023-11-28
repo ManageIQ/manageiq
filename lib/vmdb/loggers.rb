@@ -49,8 +49,7 @@ module Vmdb
     end
 
     private_class_method def self.create_file_logger(log_file, logger_class)
-      log_file = Pathname.new(log_file) if log_file.kind_of?(String)
-      log_file = ManageIQ.root.join("log", log_file) if log_file.try(:dirname).to_s == "."
+      log_file = log_path_from_file(log_file)
       progname = log_file.try(:basename, ".*").to_s
 
       logger_class.new(log_file, :progname => progname)
@@ -80,13 +79,18 @@ module Vmdb
       nil
     end
 
+    private_class_method def self.log_path_from_file(log_file)
+      log_file = Pathname.new(log_file) if log_file.kind_of?(String)
+      log_file = ManageIQ.root.join("log", log_file) if log_file.try(:dirname).to_s == "."
+      log_file
+    end
+
     private_class_method def self.progname_from_file(log_file_name)
       File.basename(log_file_name, ".*")
     end
 
     private_class_method def self.create_wrapper_logger(log_file, logger_class, wrapped_logger)
-      log_file = Pathname.new(log_file) if log_file.kind_of?(String)
-      log_file = ManageIQ.root.join("log", log_file) if log_file.try(:dirname).to_s == "."
+      log_file = log_path_from_file(log_file)
       progname = log_file.try(:basename, ".*").to_s
 
       logger_class.new(nil, :progname => progname).tap do |logger|
