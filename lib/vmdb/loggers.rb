@@ -56,33 +56,23 @@ module Vmdb
     end
 
     private_class_method def self.create_container_logger(log_file_name, logger_class)
-      return nil unless (logger = create_raw_container_logger)
+      require "manageiq/loggers/container"
+      logger = ManageIQ::Loggers::Container.new
 
       progname = progname_from_file(log_file_name)
       logger.progname = progname
 
       create_wrapper_logger(progname, logger_class, logger)
-    end
-
-    private_class_method def self.create_raw_container_logger
-      require "manageiq/loggers/container"
-      ManageIQ::Loggers::Container.new
     end
 
     private_class_method def self.create_journald_logger(log_file_name, logger_class)
-      return nil unless (logger = create_raw_journald_logger)
+      require "manageiq/loggers/journald"
+      logger = ManageIQ::Loggers::Journald.new
 
       progname = progname_from_file(log_file_name)
       logger.progname = progname
 
       create_wrapper_logger(progname, logger_class, logger)
-    end
-
-    private_class_method def self.create_raw_journald_logger
-      require "manageiq/loggers/journald"
-      ManageIQ::Loggers::Journald.new
-    rescue LoadError
-      nil
     end
 
     private_class_method def self.log_path_from_file(log_file)
