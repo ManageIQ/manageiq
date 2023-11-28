@@ -50,7 +50,7 @@ module Vmdb
 
     private_class_method def self.create_file_logger(log_file, logger_class)
       log_file = log_path_from_file(log_file)
-      progname = log_file.try(:basename, ".*").to_s
+      progname = progname_from_file(log_file)
 
       logger_class.new(log_file, :progname => progname)
     end
@@ -58,7 +58,8 @@ module Vmdb
     private_class_method def self.create_container_logger(log_file_name, logger_class)
       return nil unless (logger = create_raw_container_logger)
 
-      create_wrapper_logger(log_file_name, logger_class, logger)
+      progname = progname_from_file(log_file_name)
+      create_wrapper_logger(progname, logger_class, logger)
     end
 
     private_class_method def self.create_raw_container_logger
@@ -69,7 +70,8 @@ module Vmdb
     private_class_method def self.create_journald_logger(log_file_name, logger_class)
       return nil unless (logger = create_raw_journald_logger)
 
-      create_wrapper_logger(log_file_name, logger_class, logger)
+      progname = progname_from_file(log_file_name)
+      create_wrapper_logger(progname, logger_class, logger)
     end
 
     private_class_method def self.create_raw_journald_logger
@@ -86,13 +88,11 @@ module Vmdb
     end
 
     private_class_method def self.progname_from_file(log_file_name)
-      File.basename(log_file_name, ".*")
+      log_file = Pathname.new(log_file) if log_file.kind_of?(String)
+      log_file.try(:basename, ".*").to_s
     end
 
-    private_class_method def self.create_wrapper_logger(log_file, logger_class, wrapped_logger)
-      log_file = log_path_from_file(log_file)
-      progname = log_file.try(:basename, ".*").to_s
-
+    private_class_method def self.create_wrapper_logger(progname, logger_class, wrapped_logger)
       logger_class.new(nil, :progname => progname).tap do |logger|
         # HACK: In order to access the wrapped logger in test, we inject it as an instance var.
         if Rails.env.test?
