@@ -93,15 +93,6 @@ module Vmdb
 
     private_class_method def self.create_wrapper_logger(progname, logger_class, wrapped_logger)
       logger_class.new(nil, :progname => progname).tap do |logger|
-        # HACK: In order to access the wrapped logger in test, we inject it as an instance var.
-        if Rails.env.test?
-          logger.instance_variable_set(:@wrapped_logger, wrapped_logger)
-
-          def logger.wrapped_logger
-            @wrapped_logger
-          end
-        end
-
         logger.extend(ActiveSupport::Logger.broadcast(wrapped_logger))
       end
     end
