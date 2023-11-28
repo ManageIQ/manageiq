@@ -28,7 +28,7 @@ module Vmdb
       Vmdb::Plugins.each { |p| p.try(:apply_logger_config, config) }
     end
 
-    def self.create_logger(log_file_name, logger_class = ManageIQ::Loggers::Base)
+    def self.create_logger(log_file_name, logger_class = nil)
       if MiqEnvironment::Command.is_container?
         create_container_logger(log_file_name, logger_class)
       elsif MiqEnvironment::Command.supports_systemd?
@@ -52,6 +52,7 @@ module Vmdb
       log_file = log_path_from_file(log_file)
       progname = progname_from_file(log_file)
 
+      logger_class ||= ManageIQ::Loggers::Base
       logger_class.new(log_file, :progname => progname)
     end
 
@@ -62,6 +63,8 @@ module Vmdb
       progname = progname_from_file(log_file_name)
       logger.progname = progname
 
+      return logger if logger_class.nil?
+
       create_wrapper_logger(progname, logger_class, logger)
     end
 
@@ -71,6 +74,8 @@ module Vmdb
 
       progname = progname_from_file(log_file_name)
       logger.progname = progname
+
+      return logger if logger_class.nil?
 
       create_wrapper_logger(progname, logger_class, logger)
     end
