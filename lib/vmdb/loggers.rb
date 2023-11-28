@@ -59,6 +59,8 @@ module Vmdb
       return nil unless (logger = create_raw_container_logger)
 
       progname = progname_from_file(log_file_name)
+      logger.progname = progname
+
       create_wrapper_logger(progname, logger_class, logger)
     end
 
@@ -71,6 +73,8 @@ module Vmdb
       return nil unless (logger = create_raw_journald_logger)
 
       progname = progname_from_file(log_file_name)
+      logger.progname = progname
+
       create_wrapper_logger(progname, logger_class, logger)
     end
 
@@ -104,8 +108,6 @@ module Vmdb
         end
 
         logger.extend(ActiveSupport::Logger.broadcast(wrapped_logger))
-
-        wrapped_logger.progname = progname
       end
     end
 
