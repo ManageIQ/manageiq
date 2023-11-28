@@ -29,9 +29,13 @@ module Vmdb
     end
 
     def self.create_logger(log_file_name, logger_class = ManageIQ::Loggers::Base)
-      create_container_logger(log_file_name, logger_class) ||
-        create_journald_logger(log_file_name, logger_class) ||
+      if MiqEnvironment::Command.is_container?
+        create_container_logger(log_file_name, logger_class)
+      elsif MiqEnvironment::Command.supports_systemd?
+        create_journald_logger(log_file_name, logger_class)
+      else
         create_file_logger(log_file_name, logger_class)
+      end
     end
 
     private_class_method def self.create_loggers
@@ -59,8 +63,6 @@ module Vmdb
     end
 
     private_class_method def self.create_raw_container_logger
-      return unless ENV["CONTAINER"]
-
       require "manageiq/loggers/container"
       ManageIQ::Loggers::Container.new
     end
@@ -72,8 +74,6 @@ module Vmdb
     end
 
     private_class_method def self.create_raw_journald_logger
-      return unless MiqEnvironment::Command.supports_systemd?
-
       require "manageiq/loggers/journald"
       ManageIQ::Loggers::Journald.new
     rescue LoadError
