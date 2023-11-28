@@ -100,6 +100,7 @@
   :network_provider: https://manageiq.org/docs/reference/latest/managing_providers/#network-managers
   :physical_infra_provider: https://www.manageiq.org/docs/reference/latest/managing_providers/#physical-infrastucture-providers
   :storage_manager: https://www.manageiq.org/docs/reference/latest/managing_providers/#storage-managers
+  :automation_manager: https://www.manageiq.org/docs/reference/latest/managing_providers/#automation-management-providers
 
 :drift_states:
   :history:
