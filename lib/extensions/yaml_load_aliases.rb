@@ -9,6 +9,8 @@ module YamlLoadAliases
     # Temporary hack to fallback to psych 3 behavior to go back to unsafe load if it's a disallowed class.
     # See: https://stackoverflow.com/questions/71191685/visit-psych-nodes-alias-unknown-alias-default-psychbadalias/71192990#71192990
     # The alternative is to enumerate all the classes we will allow to be loaded from YAML, such as many of the various models.
+    raise unless Rails.env.production?
+
     warn "WARNING: Using fallback to unsafe_load due to DisallowedClass: #{err}"
     unsafe_load(yaml, **kwargs.except(:aliases, :permitted_classes, :permitted_symbols))
   end
