@@ -256,13 +256,14 @@ module Rbac
         scope = apply_scope(klass, scope)
         scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
       elsif targets.kind_of?(Array)
+        # TODO: get away from passing in a klass and a list of target ids
         if targets.first.kind_of?(Numeric)
           target_ids = targets
           # assume klass is passed in
         else
           target_ids  = targets.collect(&:id)
           klass       = targets.first.class
-          klass       = base_class if !klass.respond_to?(:find) && (base_class = rbac_base_class(klass))
+          klass       = rbac_base_class(klass) if !klass.respond_to?(:find)
           klass       = safe_base_class(klass) if is_sti?(klass) # always scope to base class if model is STI
         end
         scope = apply_scope(klass, scope)
@@ -273,11 +274,12 @@ module Rbac
         targets = to_class(targets).all
         scope = apply_scope(targets, scope)
 
+        # 100% of tests do not pass klass AND targets - so here, 100% of tests klass == nil
+        # Think that klass != nil is not a valid use case here
         unless klass.respond_to?(:find)
           klass = targets
           klass = klass.klass if klass.respond_to?(:klass)
-          # working around MiqAeDomain not being in rbac_class
-          klass = base_class if (base_class = rbac_base_class(klass))
+          klass = rbac_base_class(klass)
         end
         scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
       end
@@ -465,8 +467,16 @@ module Rbac
       klass != VimPerformanceDaily && klass != VimPerformanceTag && (klass < MetricRollup || klass < Metric)
     end
 
+    # get the base class for a class
+    #
+    # rbac_class().nil? checks are there to avoid promoting to a base class when the child class is supported by base class is not
+    # Read: child: MiqAeDomain (supported) to base: MiqAeNamespace (not supported)
     def rbac_base_class(klass)
-      klass.base_class if klass.respond_to?(:base_class) && rbac_class(klass).nil? && rbac_class(klass.base_class)
+      if klass.respond_to?(:base_class) && rbac_class(klass).nil? && rbac_class(klass.base_class)
+        klass.base_class
+      else
+        klass
+      end
     end
 
     def safe_base_class(klass)

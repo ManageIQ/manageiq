@@ -32,10 +32,6 @@ class PhysicalStorage < ApplicationRecord
 
   supports :timeline
 
-  supports_not :create
-  supports_not :delete
-  supports_not :update_physical_storage
-  supports_not :validate
   acts_as_miq_taggable
 
   def my_zone

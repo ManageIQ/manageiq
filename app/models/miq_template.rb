@@ -3,8 +3,6 @@ class MiqTemplate < VmOrTemplate
 
   default_scope { where(:template => true) }
 
-  supports_not :kickstart_provisioning
-
   virtual_column :display_type,                         :type => :string
   virtual_column :display_operating_system,             :type => :string
   virtual_column :display_platform,                     :type => :string

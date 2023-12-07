@@ -21,8 +21,6 @@ class PhysicalServer < ApplicationRecord
     nil       => "Unknown",
   }.freeze
 
-  supports_not :console
-
   validates :vendor, :inclusion =>{:in => VENDOR_TYPES}
   belongs_to :ext_management_system, :foreign_key => :ems_id, :inverse_of => :physical_servers,
     :class_name => "ManageIQ::Providers::PhysicalInfraManager"

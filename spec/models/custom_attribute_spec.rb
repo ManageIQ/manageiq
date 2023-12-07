@@ -12,9 +12,6 @@ RSpec.describe CustomAttribute do
   end
 
   it "returns the value type of Integer custom attributes" do
-    # TODO: Ruby 2.4 unifies fixnum and bignum into integer, we shouldn't be
-    # returnings ruby types like this.
-    expected = RUBY_VERSION >= "2.4.0" ? :integer : :fixnum
-    expect(int_custom_attribute.value_type).to eq(expected)
+    expect(int_custom_attribute.value_type).to eq(:integer)
   end
 end

@@ -133,7 +133,6 @@
   - host_initiator_group
   - miq_task_my_ui
   - my_settings_view
-  - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
   - miq_report_run
@@ -234,7 +233,6 @@
   - host_tag
   - host_timeline
   - my_settings_view
-  - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
   - miq_report_run
@@ -337,7 +335,6 @@
   - host_tag
   - miq_task_my_ui
   - my_settings_view
-  - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
   - miq_report_run
@@ -423,7 +420,6 @@
   - miq_template_show_list
   - miq_template_timeline
   - my_settings_view
-  - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
   - physical_rack
@@ -531,7 +527,6 @@
   - host_tag
   - host_timeline
   - my_settings_view
-  - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
   - miq_report_run
@@ -627,7 +622,6 @@
   - host_tag
   - host_timeline
   - my_settings_view
-  - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
   - miq_report_run
@@ -714,7 +708,6 @@
   - host_timeline
   - miq_task_my_ui
   - my_settings_view
-  - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
   - miq_report_run
@@ -803,7 +796,6 @@
   - host_timeline
   - miq_task_my_ui
   - my_settings_view
-  - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
   - miq_report_run
@@ -909,7 +901,6 @@
   - miq_request_view
   - miq_task_my_ui
   - my_settings_view
-  - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
   - physical_chassis_view
@@ -966,7 +957,6 @@
   - miq_request_view
   - miq_task_my_ui
   - my_settings_view
-  - my_settings_default_views
   - my_settings_visuals
   - service_edit
   - service_delete
@@ -1064,7 +1054,6 @@
   - host_initiator_group_edit
   - miq_task_my_ui
   - my_settings_view
-  - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
   - miq_report_run
@@ -1171,7 +1160,6 @@
   - miq_template_tag
   - miq_template_timeline
   - my_settings_view
-  - my_settings_default_views
   - my_settings_visuals
   - miq_request_admin
   - miq_request_view
@@ -1235,7 +1223,6 @@
   - miq_template_tag
   - miq_template_timeline
   - my_settings_view
-  - my_settings_default_views
   - my_settings_visuals
   - vm_check_compliance
   - vm_clone

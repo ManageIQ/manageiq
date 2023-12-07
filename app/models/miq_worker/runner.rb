@@ -510,7 +510,12 @@ class MiqWorker::Runner
   end
 
   def worker_cmdline
-    raise NotImplementedError, _("worker_cmdline must be implemented in a subclass")
+    # Attempt to find the plugin where the class lives then default to
+    # the application root
+    engine = Vmdb::Plugins.plugin_for_class(self.class) || Rails
+
+    worker_type = self.class.module_parent.name.split("::").last.underscore
+    engine.root.join("workers/#{worker_type}/worker").to_s
   end
 
   def skip_heartbeat?

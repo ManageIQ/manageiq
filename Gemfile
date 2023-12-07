@@ -1,4 +1,4 @@
-raise "Ruby versions < 2.7.0 are unsupported!" if RUBY_VERSION < "2.7.0"
+raise "Ruby versions < 3.0.0 are unsupported!" if RUBY_VERSION < "3.0.0"
 raise "Ruby versions >= 3.1.0 are unsupported!" if RUBY_VERSION >= "3.1.0"
 
 source 'https://rubygems.org'
@@ -97,7 +97,6 @@ gem "mime-types",                       "~>3.0",             :require => false, 
 
 # Modified gems (forked on Github)
 gem "handsoap",                         "=0.2.5.5",          :require => false, :source => "https://rubygems.manageiq.org" # for manageiq-gems-pending only
-gem "fog-google",                       "=1.22.0.1",         :require => false, :source => "https://rubygems.manageiq.org" # for manageiq-providers-google
 
 # In 1.9.3: Time.parse uses british version dd/mm/yyyy instead of american version mm/dd/yyyy
 # american_date fixes this to be compatible with 1.8.7 until all callers can be converted to the 1.9.3 format prior to parsing.
