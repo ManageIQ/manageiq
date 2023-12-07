@@ -19,8 +19,6 @@ module Metric::CiMixin
     Metric::LongTermAverages::AVG_METHODS_WITHOUT_OVERHEAD.each do |vcol|
       virtual_column vcol, :type => :float, :uses => :vim_performance_operating_ranges
     end
-
-    supports_not :capture
   end
 
   def has_perf_data?

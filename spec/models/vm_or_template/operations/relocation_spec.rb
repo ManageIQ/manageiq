@@ -24,4 +24,10 @@ RSpec.describe VmOrTemplate::Operations::Relocation do
       )
     end
   end
+
+  context "supports" do
+    it "does not support migrate by default" do
+      expect(FactoryBot.build(:vm).supports?(:migrate)).to be false
+    end
+  end
 end

@@ -82,9 +82,6 @@ class Storage < ApplicationRecord
 
   supports(:delete) { _("Only storage without VMs and Hosts can be removed") if vms_and_templates.any? || hosts.any? }
 
-  supports_not :evacuate
-  supports_not :iso_datastore
-
   def to_s
     name
   end

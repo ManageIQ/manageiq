@@ -68,7 +68,7 @@ class ExtManagementSystem < ApplicationRecord
     end
   end
 
-  belongs_to :provider
+  belongs_to :provider, :autosave => true
   has_many :child_managers, :class_name => 'ExtManagementSystem', :foreign_key => 'parent_ems_id'
 
   belongs_to :tenant
@@ -142,37 +142,7 @@ class ExtManagementSystem < ApplicationRecord
 
   serialize :options
 
-  supports_not :add_host_initiator
-  supports_not :add_storage
-  supports_not :add_volume_mapping
-  supports_not :admin_ui
-  supports_not :assume_role
-  supports_not :block_storage
-  supports_not :catalog
-  supports_not :change_password
-  supports_not :cloud_object_store_container_create
-  supports_not :cloud_subnet_create
-  supports_not :cloud_tenant_mapping
-  supports_not :cloud_volume_create
-  supports_not :storage_service_create
-  supports_not :console
-  supports_not :create_iso_datastore
-  supports_not :discovery
-  supports_not :events
-  supports_not :label_mapping
-  supports_not :metrics
-  supports_not :object_storage
-  supports_not :provisioning
-  supports_not :publish
-  supports_not :reconfigure_disks
   supports     :refresh_ems
-  supports_not :regions
-  supports_not :smartstate_analysis
-  supports_not :storage_manager
-  supports_not :streaming_refresh
-  supports_not :swift_service
-  supports_not :vm_import
-  supports_not :volume_availability_zones
 
   def edit_with_params(params, endpoints, authentications)
     tap do |ems|

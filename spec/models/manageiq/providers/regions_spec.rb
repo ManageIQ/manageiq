@@ -1,6 +1,6 @@
 RSpec.describe ManageIQ::Providers::Regions, :providers_common => true do
   describe ".regions" do
-    ExtManagementSystem.supported_types_for_create.select(&:supports_regions?).each do |klass|
+    ExtManagementSystem.supported_types_for_create.select { |klass| klass.supports?(:regions) }.each do |klass|
       context klass.description do
         it "returns regions" do
           expect(klass.module_parent::Regions.regions.count).not_to be_zero
@@ -23,7 +23,7 @@ RSpec.describe ManageIQ::Providers::Regions, :providers_common => true do
   end
 
   describe ".all" do
-    ExtManagementSystem.supported_types_for_create.select(&:supports_regions?).each do |klass|
+    ExtManagementSystem.supported_types_for_create.select { |klass| klass.supports?(:regions) }.each do |klass|
       context klass.description do
         it "returns regions" do
           expect(klass.module_parent::Regions.all.count).not_to be_zero
@@ -46,7 +46,7 @@ RSpec.describe ManageIQ::Providers::Regions, :providers_common => true do
   end
 
   describe ".names" do
-    ExtManagementSystem.supported_types_for_create.select(&:supports_regions?).each do |klass|
+    ExtManagementSystem.supported_types_for_create.select { |klass| klass.supports?(:regions) }.each do |klass|
       context klass.description do
         it "returns regions" do
           expect(klass.module_parent::Regions.all.count).not_to be_zero

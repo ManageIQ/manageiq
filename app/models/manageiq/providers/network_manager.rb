@@ -9,10 +9,6 @@ module ManageIQ::Providers
       define_method(:singular_route_key) { "ems_network" }
     end
 
-    supports_not :cloud_tenant_mapping
-    supports_not :create_floating_ip
-    supports_not :create_network_router
-
     # cloud_subnets are defined on base class, because of virtual_total performance
     has_many :floating_ips,                       :foreign_key => :ems_id, :dependent => :destroy
     has_many :security_groups,                    :foreign_key => :ems_id, :dependent => :destroy

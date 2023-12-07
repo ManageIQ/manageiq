@@ -2828,10 +2828,6 @@
       :description: Edit Visuals
       :feature_type: admin
       :identifier: my_settings_visuals
-    - :name: Default Views
-      :description: Edit Default Views
-      :feature_type: admin
-      :identifier: my_settings_default_views
     - :name: Default Filters
       :description: Edit Default Filters
       :feature_type: admin

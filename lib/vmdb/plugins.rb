@@ -47,6 +47,15 @@ module Vmdb
       details.transform_values { |v| v[:version] }
     end
 
+    def plugin_for_class(klass)
+      klass = klass.to_s unless klass.kind_of?(String)
+
+      klass_path, _klass_line = Object.const_source_location(klass)
+      return unless klass_path
+
+      paths.detect { |_engine, path| klass_path.start_with?(path) }&.first
+    end
+
     # Ansible content (roles) that come out-of-the-box, for use by both Automate
     #   and ansible-runner
     def ansible_content

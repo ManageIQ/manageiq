@@ -95,8 +95,6 @@ class ContainerNode < ApplicationRecord
     true
   end
 
-  supports_not :external_logging
-
   def external_logging_query
     nil # {}.to_query # TODO
   end

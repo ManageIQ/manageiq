@@ -29,8 +29,6 @@ class SecurityGroup < ApplicationRecord
   virtual_total :total_security_policy_rules_as_source, :security_policy_rules_as_source, :uses => :security_policy_rules_as_source
   virtual_total :total_security_policy_rules_as_destination, :security_policy_rules_as_destination, :uses => :security_policy_rules_as_destination
 
-  supports_not :delete_security_group
-
   def self.non_cloud_network
     where(:cloud_network_id => nil)
   end

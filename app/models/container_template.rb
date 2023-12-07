@@ -14,8 +14,6 @@ class ContainerTemplate < ApplicationRecord
   serialize :objects, Array
   serialize :object_labels, Hash
 
-  supports_not :instantiate
-
   acts_as_miq_taggable
 
   def instantiate(_params, _project_name)

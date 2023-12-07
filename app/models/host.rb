@@ -184,23 +184,7 @@ class Host < ApplicationRecord
 
   supports     :check_compliance_queue
   supports     :destroy
-  supports_not :quick_stats
-  supports_not :refresh_advanced_settings
-  supports_not :refresh_firewall_rules
-  supports_not :refresh_logs
-  supports_not :refresh_network_interfaces
   supports     :scan_and_check_compliance_queue
-  supports_not :set_node_maintenance
-  supports_not :smartstate_analysis
-  supports_not :unset_node_maintenance
-  supports_not :reboot
-  supports_not :shutdown
-  supports_not :standby
-  supports_not :enter_maint_mode
-  supports_not :exit_maint_mode
-  supports_not :enable_vmotion
-  supports_not :disable_vmotion
-  supports_not :vmotion_enabled
   supports     :ipmi do
     if ipmi_address.blank?
       _("The Host is not configured for IPMI")

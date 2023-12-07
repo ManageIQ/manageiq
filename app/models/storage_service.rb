@@ -12,10 +12,6 @@ class StorageService < ApplicationRecord
   has_many :cloud_volumes
 
   acts_as_miq_taggable
-  supports_not :create
-  supports_not :delete
-  supports_not :update
-  supports_not :check_compliant_resources
 
   def self.class_by_ems(ext_management_system)
     ext_management_system&.class_by_ems(:StorageService)

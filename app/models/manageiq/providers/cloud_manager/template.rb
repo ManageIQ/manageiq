@@ -1,9 +1,4 @@
 class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
-  supports_not :create_image
-  supports_not :delete_image
-  supports_not :import_image
-  supports_not :update_image
-
   default_value_for :cloud, true
 
   virtual_column :image?, :type => :boolean

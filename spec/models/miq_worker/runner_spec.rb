@@ -152,5 +152,11 @@ RSpec.describe MiqWorker::Runner do
         )
       end
     end
+
+    describe ".worker_cmdline (private)" do
+      it "returns a path to the worker binary" do
+        expect(runner.send(:worker_cmdline)).to eq(Rails.root.join("workers/miq_generic_worker/worker").to_s)
+      end
+    end
   end
 end
