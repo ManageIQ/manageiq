@@ -1,7 +1,7 @@
 class YamlPermittedClasses
   DEFAULT_PERMITTED_CLASSES = [Object, Range, Regexp, Symbol, Date, Time, DateTime, ActiveSupport::Duration, ActiveSupport::HashWithIndifferentAccess, ActiveSupport::TimeWithZone, ActiveSupport::TimeZone]
   def self.app_yaml_permitted_classes
-    @app_yaml_permitted_classes ||= DEFAULT_PERMITTED_CLASSES + [MiqExpression, MiqReport, Ruport::Data::Table, Ruport::Data::Record, User, ConfigurationScript, ContainerImage, ContainerTemplate, OpenStruct, OrchestrationTemplate, ManageIQ::Providers::Vmware::InfraManager, ManageIQ::Providers::InfraManager::Vm, VimHash, VimString, VimArray, ActiveModel::Type::String, ActiveModel::Attribute.const_get(:FromDatabase), ActiveModel::Attribute.const_get(:FromUser)]
+    @app_yaml_permitted_classes ||= DEFAULT_PERMITTED_CLASSES + [MiqExpression]
   end
 
   def self.default_permitted_classes
