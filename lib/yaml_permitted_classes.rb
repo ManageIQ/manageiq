@@ -4,6 +4,10 @@ class YamlPermittedClasses
     @app_yaml_permitted_classes ||= DEFAULT_PERMITTED_CLASSES + [MiqExpression]
   end
 
+  def self.app_yaml_permitted_classes=(classes)
+    @app_yaml_permitted_classes = Array(classes)
+  end
+
   def self.default_permitted_classes
     @default_permitted_classes ||= DEFAULT_PERMITTED_CLASSES
   end
