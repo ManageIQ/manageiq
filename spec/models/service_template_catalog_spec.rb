@@ -3,6 +3,26 @@ RSpec.describe ServiceTemplateCatalog do
     Tenant.seed
   end
 
+  describe ".seed" do
+    it "seeds when the table is empty" do
+      expect(described_class.count).to eq(0)
+
+      described_class.seed
+
+      expect(described_class.count).to eq(1)
+      expect(described_class.first.name).to eq("My Catalog")
+    end
+
+    it "does not seed when the table is not empty" do
+      described_class.create!(:name => "Custom Catalog", :tenant => root_tenant)
+
+      described_class.seed
+
+      expect(described_class.count).to eq(1)
+      expect(described_class.first.name).to eq("Custom Catalog")
+    end
+  end
+
   it "doesn’t access database when unchanged model is saved" do
     f1 = described_class.create!(:name => 'f1')
     expect { f1.valid? }.to make_database_queries(:count => 2)
