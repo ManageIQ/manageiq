@@ -111,6 +111,25 @@ class ContainerOrchestrator
             ],
           }
         }
+      else
+        deployment[:spec][:template][:spec][:containers][0][:volumeMounts] ||= []
+        deployment[:spec][:template][:spec][:containers][0][:volumeMounts] << {
+          :mountPath => "/etc/pki/ca-trust/source/anchors",
+          :name      => "messaging-certificate",
+          :readOnly  => true,
+        }
+
+        deployment[:spec][:template][:spec][:volumes] ||= []
+        deployment[:spec][:template][:spec][:volumes] << {
+          :name   => "messaging-certificate",
+          :secret => {
+            :secretName => "manageiq-cluster-ca-cert",
+            :items      => [
+              :key  => "ca.crt",
+              :path => "ca.crt",
+            ],
+          }
+        }
       end
 
       deployment
