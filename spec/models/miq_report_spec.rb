@@ -332,7 +332,7 @@ RSpec.describe MiqReport do
     fake_ruport_data_table = {:data => result, :column_names => column_names}
     before = MiqReport.new
     before.table = fake_ruport_data_table
-    after = YAML.load(YAML.dump(before))
+    after = YAML.safe_load(YAML.dump(before), :permitted_classes => [MiqReport, ActiveModel::Attribute.const_get(:FromDatabase)])
     expect(after.table).to eq(fake_ruport_data_table)
   end
 
