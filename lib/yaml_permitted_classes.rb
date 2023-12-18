@@ -1,5 +1,17 @@
 class YamlPermittedClasses
-  DEFAULT_PERMITTED_CLASSES = [Object, Range, Regexp, Symbol, Date, Time, DateTime, ActiveSupport::Duration, ActiveSupport::HashWithIndifferentAccess, ActiveSupport::TimeWithZone, ActiveSupport::TimeZone]
+  DEFAULT_PERMITTED_CLASSES = [
+    ActiveSupport::Duration,
+    ActiveSupport::HashWithIndifferentAccess,
+    ActiveSupport::TimeWithZone,
+    ActiveSupport::TimeZone,
+    Date,
+    DateTime,
+    Object,
+    Range,
+    Regexp,
+    Symbol,
+    Time
+  ].freeze
   def self.app_yaml_permitted_classes
     @app_yaml_permitted_classes ||= DEFAULT_PERMITTED_CLASSES + [MiqExpression]
   end
