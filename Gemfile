@@ -11,10 +11,14 @@ require File.join(Bundler::Plugin.index.load_paths("bundler-inject")[0], "bundle
 #
 gem "manageiq-gems-pending", ">0", :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :branch => "master"
 
+PLUGIN_META={:branch => "master", :git => "https://github.com/ManageIQ/"}.freeze
+
 # when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
 def manageiq_plugin(plugin_name)
-  unless dependencies.detect { |d| d.name == plugin_name }
-    gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :branch => "master"
+  if dependencies.detect { |d| d.name == plugin_name }
+    puts "skipping plugin #{plugin_name}"
+  else
+    gem plugin_name, PLUGIN_META.merge(:git => "#{PLUGIN_META[:git]}#{plugin_name}")
   end
 end
 
