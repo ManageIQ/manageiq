@@ -232,10 +232,10 @@ RSpec.describe Host do
 
       it "passes the new credentials" do
         @host.update_authentication(old_creds)
-        @host.verify_credentials_task(FactoryBot.create(:user).userid, :default, :credentials => default_creds)
+        @host.verify_credentials_task(FactoryBot.create(:user).userid, :default, "authentications" => default_creds.deep_stringify_keys)
 
         expect(MiqQueue.last).to have_attributes(
-          :args        => [:default, {:credentials => default_creds}],
+          :args        => [:default, {"authentications" => default_creds.deep_stringify_keys}],
           :method_name => "verify_credentials?",
           :instance_id => @host.id,
           :class_name  => @host.class.name,
@@ -277,7 +277,7 @@ RSpec.describe Host do
 
       it "updates credentials via validate_credential options" do
         @host.update_authentication(old_creds)
-        assert_default_credentials_validated(:credentials => default_creds)
+        assert_default_credentials_validated("authentications" => default_creds)
       end
     end
 
