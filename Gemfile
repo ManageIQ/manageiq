@@ -27,7 +27,7 @@ gem "acts_as_tree",                     "~>2.7" # acts_as_tree needs to be requi
 gem "ancestry",                         "~>3.0.7",           :require => false
 gem "aws-sdk-s3",                       "~>1.0",             :require => false # For FileDepotS3
 gem "bcrypt",                           "~> 3.1.10",         :require => false
-gem "bundler",                          "~> 2.1", ">= 2.1.4", "!= 2.2.10", :require => false
+gem "bundler",                          "~> 2.1", ">= 2.1.4", "!= 2.2.10", "< 2.5", :require => false # bundler 2.5 dropped support for Ruby 2.x
 gem "byebug",                                                :require => false
 gem "color",                            "~>1.8"
 gem "config",                           "~>2.2", ">=2.2.3",  :require => false
