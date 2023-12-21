@@ -1168,7 +1168,7 @@ DEPENDENCIES
   ancestry (~> 3.0.7)
   aws-sdk-s3 (~> 1.0)
   bcrypt (~> 3.1.10)
-  bundler (~> 2.1, >= 2.1.4, != 2.2.10)
+  bundler (~> 2.1, >= 2.1.4, < 2.5, != 2.2.10)
   byebug
   color (~> 1.8)
   config (~> 2.2, >= 2.2.3)
