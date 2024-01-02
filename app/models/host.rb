@@ -629,8 +629,8 @@ class Host < ApplicationRecord
   def verify_credentials?(auth_type = nil, options = {})
     # Prevent the connection details, including the password, from being leaked into the logs
     # and MiqQueue by only returning true/false
-    auth = options.delete(:credentials)
-    update_authentication(auth, :save => false) if auth.present?
+    auth = options.delete("authentications")
+    update_authentication(auth.deep_symbolize_keys, :save => false) if auth.present?
 
     !!verify_credentials(auth_type, options)
   end
