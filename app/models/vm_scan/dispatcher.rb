@@ -246,18 +246,10 @@ class VmScan
         return []
       end
 
-      if @vm.requires_storage_for_scan?
-        if @vm.storage.nil?
-          msg = "Vm [#{@vm.path}] is not located on a storage, aborting job [#{job.guid}]."
-          queue_signal(job, {:args => [:abort, msg, "error"]})
-          return []
-        else
-          unless @vm.storage.supports?(:smartstate_analysis)
-            msg = @vm.storage.unsupported_reason(:smartstate_analysis)
-            queue_signal(job, {:args => [:abort, msg, "error"]})
-            return []
-          end
-        end
+      unless @vm.supports?(:smartstate_analysis)
+        msg = @vm.unsupported_reason(:smartstate_analysis)
+        queue_signal(job, {:args => [:abort, msg, "error"]})
+        return []
       end
 
       vm_proxies, = Benchmark.realtime_block(:get_eligible_proxies_for_job__proxies4job) { @vm.proxies4job(job) }
