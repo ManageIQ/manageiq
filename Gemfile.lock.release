@@ -883,8 +883,8 @@ GEM
       pg
       pg-logical_replication
       rbnacl (>= 3.2, < 5.0)
-    manageiq-loggers (1.1.0)
-      activesupport (>= 5.0)
+    manageiq-loggers (1.1.1)
+      activesupport (>= 5.0, < 7.1)
       manageiq-password (< 2)
     manageiq-messaging (1.4.1)
       activesupport (>= 5.2.4.3, < 7.0)
@@ -1371,7 +1371,7 @@ DEPENDENCIES
   manageiq-content!
   manageiq-decorators!
   manageiq-gems-pending (> 0)!
-  manageiq-loggers (~> 1.0)
+  manageiq-loggers (~> 1.0, >= 1.1.1)
   manageiq-messaging (~> 1.0, >= 1.4.0)
   manageiq-password (~> 1.0)
   manageiq-postgres_ha_admin (~> 3.2)
