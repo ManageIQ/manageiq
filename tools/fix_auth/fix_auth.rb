@@ -34,8 +34,8 @@ module FixAuth
     end
 
     def models
-      [FixAuthentication, FixMiqDatabase, FixMiqAeValue, FixMiqAeField,
-       FixSettingsChange, FixMiqRequest, FixMiqRequestTask]
+      [FixAuthentication, FixConfigurationScript, FixMiqDatabase, FixMiqAeValue,
+       FixMiqAeField, FixSettingsChange, FixMiqRequest, FixMiqRequestTask]
     end
 
     def generate_password
