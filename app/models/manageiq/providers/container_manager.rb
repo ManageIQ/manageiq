@@ -86,11 +86,13 @@ module ManageIQ::Providers
       port.to_s
     end
 
+    # this creates managers associated with this endpoint
     def endpoint_created(role)
       monitoring_endpoint_created(role) if respond_to?(:monitoring_endpoint_created)
       virtualization_endpoint_created(role) if respond_to?(:virtualization_endpoint_created)
     end
 
+    # this destroys managers associated with this endpoint (via destroy_queue)
     def endpoint_destroyed(role)
       monitoring_endpoint_destroyed(role) if respond_to?(:monitoring_endpoint_destroyed)
       virtualization_endpoint_destroyed(role) if respond_to?(:virtualization_endpoint_destroyed)
