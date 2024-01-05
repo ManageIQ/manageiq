@@ -2124,7 +2124,7 @@ msgstr ""
 msgid "2 Days"
 msgstr ""
 
-#: ../app/helpers/miq_task_helper.rb:5 ../app/helpers/view_helper.rb
+#: ../app/helpers/miq_task_helper.rb:18 ../app/helpers/view_helper.rb
 msgid "2 Days Ago"
 msgstr ""
 
@@ -2198,7 +2198,7 @@ msgstr ""
 msgid "3 Days"
 msgstr ""
 
-#: ../app/helpers/miq_task_helper.rb:6 ../app/helpers/view_helper.rb
+#: ../app/helpers/miq_task_helper.rb:19 ../app/helpers/view_helper.rb
 msgid "3 Days Ago"
 msgstr ""
 
@@ -2262,7 +2262,7 @@ msgstr ""
 msgid "4 Days"
 msgstr ""
 
-#: ../app/helpers/miq_task_helper.rb:7 ../app/helpers/view_helper.rb
+#: ../app/helpers/miq_task_helper.rb:20 ../app/helpers/view_helper.rb
 msgid "4 Days Ago"
 msgstr ""
 
@@ -2315,7 +2315,7 @@ msgstr ""
 msgid "5 Days"
 msgstr ""
 
-#: ../app/helpers/miq_task_helper.rb:8 ../app/helpers/view_helper.rb
+#: ../app/helpers/miq_task_helper.rb:21 ../app/helpers/view_helper.rb
 msgid "5 Days Ago"
 msgstr ""
 
@@ -2335,7 +2335,7 @@ msgstr ""
 msgid "6 Days"
 msgstr ""
 
-#: ../app/helpers/miq_task_helper.rb:9 ../app/helpers/view_helper.rb
+#: ../app/helpers/miq_task_helper.rb:22 ../app/helpers/view_helper.rb
 msgid "6 Days Ago"
 msgstr ""
 
@@ -2840,7 +2840,7 @@ msgid_plural "AWX Workflow Jobs"
 msgstr[0] ""
 msgstr[1] ""
 
-#:
+#: ../app/javascript/components/custom-url-tabs/index.jsx
 #: ../app/javascript/oldjs/controllers/dialog_editor/dialog_editor_controller.js
 #: ../app/javascript/oldjs/miq_application.js
 msgid "Abandon changes?"
@@ -7950,6 +7950,10 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager (plural form)
 #: ../config/dictionary_strings.rb
 msgid "Automation Managers (Ansible Tower)"
+msgstr ""
+
+#: ../app/javascript/spec/textual_summary/data/code_mirror_data.js
+msgid "Automation Method Data"
 msgstr ""
 
 #: ../app/models/automation_request.rb
@@ -14656,7 +14660,6 @@ msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/compare_view.rb
 #: ../app/helpers/application_helper/toolbar/drift_view.rb
-#: ../app/helpers/configuration_helper/configuration_view_helper.rb
 msgid "Compressed View"
 msgstr ""
 
@@ -15527,7 +15530,15 @@ msgid "ConfigurationScriptBase|Payload"
 msgstr ""
 
 #: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Payload error"
+msgstr ""
+
+#: ../config/model_attributes.rb
 msgid "ConfigurationScriptBase|Payload type"
+msgstr ""
+
+#: ../config/model_attributes.rb
+msgid "ConfigurationScriptBase|Payload valid"
 msgstr ""
 
 #: ../config/model_attributes.rb
@@ -20615,7 +20626,7 @@ msgstr ""
 msgid "Currently Used Space"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb:111 ../app/helpers/report_helper.rb
+#: ../app/helpers/catalog_helper.rb:112 ../app/helpers/report_helper.rb
 #: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
 msgid "Custom"
 msgstr ""
@@ -21368,7 +21379,6 @@ msgstr ""
 #: ../app/helpers/application_helper/toolbar/dashboard_summary_toggle_view.rb
 #: ../app/helpers/application_helper/toolbar/ems_cloud_center.rb
 #: ../app/helpers/application_helper/toolbar/ems_storage_center.rb
-#: ../app/helpers/configuration_helper/configuration_view_helper.rb
 msgid "Dashboard View"
 msgstr ""
 
@@ -21399,6 +21409,7 @@ msgid "Dashboards:"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/RegistryItem.yaml
+#: ../app/helpers/miq_ae_class_helper.rb
 #: ../app/views/miq_ae_class/_method_form.html.haml
 #: ../app/views/miq_ae_class/_method_inputs.html.haml
 #: ../config/yaml_strings.rb
@@ -22133,11 +22144,6 @@ msgstr ""
 #: ../app/views/miq_ae_class/_inputs.html.haml
 #: ../app/views/miq_ae_class/_method_inputs.html.haml
 msgid "Default Value"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Default Views"
 msgstr ""
 
 #: ../app/helpers/application_helper/button/miq_action_edit.rb
@@ -23665,7 +23671,7 @@ msgstr ""
 msgid "Detailed Description"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb:177 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb
 #: ../app/helpers/cloud_volume_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/helpers/utilization_helper.rb
@@ -23681,7 +23687,6 @@ msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/compare_center.rb
 #: ../app/helpers/application_helper/toolbar/drift_center.rb
-#: ../app/helpers/configuration_helper/configuration_view_helper.rb
 msgid "Details Mode"
 msgstr ""
 
@@ -27406,11 +27411,6 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
-msgid "Edit Default Views"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
 msgid "Edit Dialog in the Dialog Editor"
 msgstr ""
 
@@ -27756,13 +27756,13 @@ msgstr ""
 msgid "Edit Sequence of User Groups was cancelled by the user"
 msgstr ""
 
+#: ../app/controllers/service_controller.rb
+msgid "Edit Service \"%{name}\""
+msgstr ""
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Edit Service tags"
-msgstr ""
-
-#: ../app/controllers/service_controller.rb
-msgid "Edit Service\"%{name}\""
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -29987,6 +29987,10 @@ msgstr ""
 
 #: ../app/controllers/ops_controller.rb
 msgid "Editing tag mapping from label \"%{name}\""
+msgstr ""
+
+#: ../app/javascript/components/MarkdownPreview/index.jsx
+msgid "Editor"
 msgstr ""
 
 #:
@@ -32561,7 +32565,6 @@ msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/compare_center.rb
 #: ../app/helpers/application_helper/toolbar/drift_center.rb
-#: ../app/helpers/configuration_helper/configuration_view_helper.rb
 msgid "Exists Mode"
 msgstr ""
 
@@ -32591,7 +32594,6 @@ msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/compare_view.rb
 #: ../app/helpers/application_helper/toolbar/drift_view.rb
-#: ../app/helpers/configuration_helper/configuration_view_helper.rb
 msgid "Expanded View"
 msgstr ""
 
@@ -36328,7 +36330,7 @@ msgstr ""
 #: ../app/controllers/host_controller.rb
 #: ../app/controllers/miq_action_controller.rb
 #: ../app/controllers/mixins/actions/host_actions/misc.rb
-#: ../app/helpers/catalog_helper.rb:146 ../app/helpers/miq_action_helper.rb
+#: ../app/helpers/catalog_helper.rb:147 ../app/helpers/miq_action_helper.rb
 #: ../app/helpers/miq_alert_helper.rb
 #: ../app/helpers/physical_server_helper/textual_summary.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
@@ -38793,7 +38795,7 @@ msgid "Infinity"
 msgstr ""
 
 #: ../app/controllers/miq_alert_controller.rb
-#: ../app/helpers/catalog_helper.rb:191 ../app/helpers/miq_alert_helper.rb
+#: ../app/helpers/catalog_helper.rb:192 ../app/helpers/miq_alert_helper.rb
 #: ../app/javascript/components/data-store-form/data-store-form.schema.js
 #: ../app/views/miq_alert/_form.html.haml
 #: ../app/views/resource_pool/_config.html.haml
@@ -39402,6 +39404,10 @@ msgstr ""
 msgid "Invalid button action"
 msgstr ""
 
+#: ../app/controllers/service_controller.rb
+msgid "Invalid button action!"
+msgstr ""
+
 #: ../lib/manageiq/reporting/formatter/chart_common.rb
 msgid "Invalid chart definition"
 msgstr ""
@@ -39590,7 +39596,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. TRANSLATORS: file: product/views/ServiceTemplate.yaml
-#: ../app/helpers/catalog_helper.rb:110 ../config/yaml_strings.rb
+#: ../app/helpers/catalog_helper.rb:111 ../config/yaml_strings.rb
 msgid "Item Type"
 msgstr ""
 
@@ -41422,10 +41428,10 @@ msgid "Logs for this %{product} Server are not available for viewing"
 msgstr ""
 
 #: ../app/helpers/catalog_helper.rb:48 ../app/helpers/catalog_helper.rb
+#: ../app/javascript/components/MarkdownPreview/helper.js
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/javascript/components/settings-category-form/schema.js
 #: ../app/javascript/components/settings-company-tags/helper.js
-#: ../app/views/catalog/_form_details_info.html.haml
 msgid "Long Description"
 msgstr ""
 
@@ -43447,6 +43453,7 @@ msgstr ""
 #: ../app/helpers/container_helper/textual_summary.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
 #: ../app/helpers/settings_schedule_helper.rb
+#: ../app/helpers/task_details_helper.rb
 #: ../app/javascript/components/data-tables/datastore/helper.js
 #: ../app/javascript/components/data-tables/requests-table/index.jsx
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
@@ -49362,11 +49369,6 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb
-#: ../app/views/catalog/_form_basic_info.html.haml
-msgid "Name / Description"
-msgstr ""
-
 #: ../app/javascript/forms/mappers/validatorMapper.jsx
 msgid "Name can only contain lowercase letters, numbers, or underscores"
 msgstr ""
@@ -52154,6 +52156,7 @@ msgstr ""
 msgid "Number, 2 Decimals (1,234.00)"
 msgstr ""
 
+#: ../app/javascript/components/custom-url-tabs/index.jsx
 #: ../app/views/static/edit_alert_dialog.html.haml
 msgid "OK"
 msgstr ""
@@ -57355,6 +57358,7 @@ msgid "Pressing the back button during a session."
 msgstr ""
 
 #: ../app/controllers/report_controller/reports/editor.rb
+#: ../app/javascript/components/MarkdownPreview/index.jsx
 msgid "Preview"
 msgstr ""
 
@@ -58021,7 +58025,7 @@ msgstr ""
 #: ../app/helpers/ansible_repository_helper/textual_summary.rb
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb
 #: ../app/helpers/automation_manager_configured_system_helper.rb
-#: ../app/helpers/catalog_helper.rb:115 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:116 ../app/helpers/catalog_helper.rb
 #: ../app/helpers/configuration_job_helper/textual_summary.rb
 #: ../app/helpers/configuration_script_helper.rb
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb
@@ -58480,7 +58484,7 @@ msgstr ""
 msgid "Provisioned VMs [%{description}]"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb:124 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:125 ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_multi_tab_ansible_form_options.html.haml
 #: ../app/views/service/_svcs_show.html.haml
@@ -58904,6 +58908,7 @@ msgstr ""
 
 #. TRANSLATORS: file: product/views/MiqTask.yaml
 #: ../app/controllers/miq_task_controller.rb
+#: ../app/helpers/task_details_helper.rb
 #: ../app/javascript/components/settings-tasks-form/settings-tasks-form.schema.js
 #: ../config/yaml_strings.rb
 msgid "Queued"
@@ -63680,7 +63685,7 @@ msgstr ""
 
 #: ../app/controllers/application_controller/ci_processing.rb
 #: ../app/helpers/application_helper/tasks.rb
-#: ../app/helpers/catalog_helper.rb:126 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:127 ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/javascript/components/workflows/workflow-entry-points.jsx
 #: ../app/views/layouts/angular/_multi_tab_ansible_form_options.html.haml
@@ -66002,7 +66007,8 @@ msgid "Serial Number"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/MiqTask.yaml
-#: ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:208 ../app/helpers/task_details_helper.rb
+#: ../app/helpers/task_details_helper.rb
 #: ../app/javascript/components/provider-dashboard-charts/charts_config.js
 #: ../app/presenters/tree_node/assigned_server_role.rb
 #: ../app/views/ops/_all_tabs.html.haml:26 ../config/yaml_strings.rb
@@ -69957,6 +69963,7 @@ msgstr ""
 #: ../app/controllers/application_controller/miq_request_methods.rb
 #: ../app/helpers/network_router_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
+#: ../app/helpers/task_details_helper.rb
 #: ../app/javascript/spec/prov-grid/prov-vm-grid-data.js
 #: ../app/views/miq_request/_ae_prov_show.html.haml
 #: ../config/yaml_strings.rb
@@ -70096,6 +70103,7 @@ msgstr ""
 #: ../app/helpers/request_details_helper.rb
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
+#: ../app/helpers/task_details_helper.rb
 #: ../app/helpers/workflow_repository_helper/textual_summary.rb
 #: ../app/javascript/components/container-projects/helper.jsx
 #: ../app/javascript/spec/chart-card/chart-card.spec.js
@@ -72171,8 +72179,16 @@ msgstr[1] ""
 msgid "Task %{id} not found"
 msgstr ""
 
+#: ../app/helpers/task_details_helper.rb
+msgid "Task Details"
+msgstr ""
+
+#: ../app/helpers/task_details_helper.rb
+msgid "Task ID"
+msgstr ""
+
 #. TRANSLATORS: file: product/views/MiqTask.yaml
-#: ../config/yaml_strings.rb
+#: ../app/helpers/task_details_helper.rb:11 ../config/yaml_strings.rb
 msgid "Task Name"
 msgstr ""
 
@@ -72593,10 +72609,6 @@ msgstr ""
 #:
 #: ../app/javascript/components/visual-settings-form/visual-settings-form.schema.js
 msgid "Textual"
-msgstr ""
-
-#: ../app/helpers/configuration_helper/configuration_view_helper.rb
-msgid "Textual View"
 msgstr ""
 
 #: ../app/services/user_validation_service.rb
@@ -73892,7 +73904,7 @@ msgid ""
 "to <<reset>>."
 msgstr ""
 
-#: ../app/helpers/miq_task_helper.rb:3 ../app/helpers/view_helper.rb
+#: ../app/helpers/miq_task_helper.rb:16 ../app/helpers/view_helper.rb
 msgid "Today"
 msgstr ""
 
@@ -75552,7 +75564,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/MiqTask.yaml
 #: ../app/helpers/generic_object_definition_helper/textual_summary.rb
 #: ../app/helpers/generic_object_helper/textual_summary.rb
-#: ../config/yaml_strings.rb
+#: ../app/helpers/task_details_helper.rb:17 ../config/yaml_strings.rb
 msgid "Updated"
 msgstr ""
 
@@ -76384,6 +76396,7 @@ msgstr ""
 #: ../app/controllers/vm_common.rb
 #: ../app/helpers/custom_button_helper.rb
 #: ../app/helpers/report_helper/report_information_helper.rb
+#: ../app/helpers/task_details_helper.rb
 #: ../app/javascript/components/data-tables/report-list/helper.js
 #: ../app/javascript/components/data-tables/reports/helper.js
 #: ../app/javascript/components/settings-tasks-form/settings-tasks-form.schema.js
@@ -78439,7 +78452,7 @@ msgstr ""
 msgid "Vault"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb:196 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:197 ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 #: ../app/views/miq_ae_class/_method_inputs.html.haml
@@ -78961,6 +78974,11 @@ msgstr ""
 
 #: ../app/javascript/oldjs/miq_flash.js
 msgid "View More"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "View My Settings"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -82066,6 +82084,7 @@ msgid "Workflow Credential"
 msgstr ""
 
 #: ../app/views/miq_request/_st_prov_show.html.haml
+#: ../app/views/miq_task/show.html.haml
 msgid "Workflow States"
 msgstr ""
 
