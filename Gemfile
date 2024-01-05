@@ -49,7 +49,7 @@ gem "linux_admin",                      "~>2.0", ">=2.0.1",  :require => false
 gem "listen",                           "~>3.2",             :require => false
 gem "manageiq-api-client",              "~>0.3.6",           :require => false
 gem "manageiq-loggers",                 "~>1.0", ">=1.1.1",  :require => false
-gem "manageiq-messaging",               "~>1.0", ">=1.4.0",  :require => false
+gem "manageiq-messaging",               "~>1.0", ">=1.4.1",  :require => false
 gem "manageiq-password",                "~>1.0",             :require => false
 gem "manageiq-postgres_ha_admin",       "~>3.2",             :require => false
 gem "manageiq-ssh-util",                "~>0.1.1",           :require => false
@@ -283,7 +283,7 @@ group :web_socket, :manageiq_default do
 end
 
 group :appliance, :optional => true do
-  gem "manageiq-appliance_console",     "~>7.2", ">=7.2.2",   :require => false
+  gem "manageiq-appliance_console",     "~>8.0",             :require => false
 end
 
 ### Development and test gems are excluded from appliance and container builds to reduce size and license issues
