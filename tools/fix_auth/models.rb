@@ -10,6 +10,17 @@ module FixAuth
     self.inheritance_column = :_type_disabled
   end
 
+  class FixConfigurationScript < ActiveRecord::Base
+    include FixAuth::AuthConfigModel
+    self.table_name = "configuration_scripts"
+    self.password_columns = %w[credentials]
+
+    # no particular fields for passwords, instead encrypt everything
+    self.password_fields = []
+    # blank prefix matches all fields
+    self.password_prefix = ""
+  end
+
   class FixMiqDatabase < ActiveRecord::Base
     include FixAuth::AuthModel
     self.table_name = "miq_databases"

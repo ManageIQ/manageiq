@@ -22,7 +22,7 @@ module FixAuth
       # bring back anything with a password column that has a non blank v1 or v2 password in it
       def selection_criteria
         available_columns.collect do |column|
-          "(#{column} like '%v2:{%')"
+          "(#{column}::text like '%v2:{%')"
         end.join(" OR ")
       end
 
