@@ -1,7 +1,7 @@
 [Unit]
 Description=EVM server daemon
-After=memcached.service manageiq-db-ready.service
-Wants=memcached.service manageiq-db-ready.service
+After=memcached.service manageiq-db-ready.service manageiq-messaging-ready.service
+Wants=memcached.service manageiq-db-ready.service manageiq-messaging-ready.service
 
 [Service]
 WorkingDirectory=/var/www/miq/vmdb
