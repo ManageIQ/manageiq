@@ -15,7 +15,9 @@ module FixAuth
 
       def display_column(r, column, options)
         puts "    #{column}:"
-        traverse_column([], YAML.load(r.send(column)), options)
+
+        hash = r.send(column).kind_of?(Hash) ? r.send(column) : YAML.load(r.send(column))
+        traverse_column([], hash, options)
       end
 
       def password_field?(key)
@@ -33,14 +35,14 @@ module FixAuth
       end
 
       def recrypt(old_value, options = {})
-        hash = YAML.load(old_value)
+        hash = old_value.kind_of?(Hash) ? old_value : YAML.load(old_value)
 
         Vmdb::SettingsWalker.walk(hash) do |key, value, _path, owning|
           owning[key] = super(value, options) if password_field?(key) && value.present?
         end
 
         symbol_keys ? hash.deep_symbolize_keys! : hash.deep_stringify_keys!
-        hash.to_yaml
+        old_value.kind_of?(Hash) ? hash : hash.to_yaml
       rescue ArgumentError # undefined class/module
         unless options[:allow_failures]
           STDERR.puts "potentially bad yaml:"
