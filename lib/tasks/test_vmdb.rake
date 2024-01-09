@@ -1,4 +1,5 @@
 require_relative "./evm_test_helper"
+require 'parallel_tests/tasks'
 
 if defined?(RSpec) && defined?(RSpec::Core::RakeTask)
 namespace :test do
