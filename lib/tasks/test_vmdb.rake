@@ -1,7 +1,9 @@
 require_relative "./evm_test_helper"
-require 'parallel_tests/tasks'
 
 if defined?(RSpec) && defined?(RSpec::Core::RakeTask)
+
+require 'parallel_tests/tasks'
+
 namespace :test do
   namespace :vmdb do
     desc "Setup environment for vmdb specs"
