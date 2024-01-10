@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2023-11-08 22:17+0000\n"
-"PO-Revision-Date: 2023-11-08 22:17+0000\n"
+"POT-Creation-Date: 2024-01-01 00:17+0000\n"
+"PO-Revision-Date: 2024-01-01 00:17+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -5323,6 +5323,9 @@ msgstr "자동화 관리자"
 msgid "Automation Managers (Ansible Tower)"
 msgstr "자동화 관리자(Ansible Tower)"
 
+msgid "Automation Method Data"
+msgstr "자동화 메소드 데이터"
+
 msgid "Automation Request"
 msgstr "자동화 요청"
 
@@ -9934,8 +9937,14 @@ msgstr "ConfigurationScriptBase|출력"
 msgid "ConfigurationScriptBase|Payload"
 msgstr "ConfigurationScriptBase|페이로드"
 
+msgid "ConfigurationScriptBase|Payload error"
+msgstr "ConfigurationScriptBase | 페이로드 오류"
+
 msgid "ConfigurationScriptBase|Payload type"
 msgstr "ConfigurationScriptBase|페이로드 유형"
+
+msgid "ConfigurationScriptBase|Payload valid"
+msgstr "ConfigurationScriptBase | 페이로드 유효"
 
 msgid "ConfigurationScriptBase|Region description"
 msgstr "ConfigurationScriptBase|지역 설명"
@@ -14407,9 +14416,6 @@ msgstr "기본 시간 프로파일 \"%{name}\"을(를) 삭제할 수 없습니�
 msgid "Default Value"
 msgstr "기본값"
 
-msgid "Default Views"
-msgstr "기본 보기"
-
 msgid "Default actions can not be changed."
 msgstr "기본 조치를 변경할 수 없습니다."
 
@@ -17676,9 +17682,6 @@ msgstr "데이터 저장소 태그 편집"
 msgid "Edit Default Filters"
 msgstr "기본 필터 편집"
 
-msgid "Edit Default Views"
-msgstr "기본 보기 편집"
-
 msgid "Edit Dialog in the Dialog Editor"
 msgstr "대화 상자 편집기의 대화 상자 편집"
 
@@ -17907,11 +17910,11 @@ msgstr "LDAP 검색의 사용자 그룹 순서 편집"
 msgid "Edit Sequence of User Groups was cancelled by the user"
 msgstr "사용자가 사용자 그룹의 순서 편집을 취소했습니다."
 
+msgid "Edit Service \"%{name}\""
+msgstr "서비스 \"%{name}\" 편집"
+
 msgid "Edit Service tags"
 msgstr "서비스 태그 편집"
-
-msgid "Edit Service\"%{name}\""
-msgstr "서비스 \"%{name}\" 편집"
 
 msgid "Edit Services"
 msgstr "서비스 편집"
@@ -19315,6 +19318,9 @@ msgstr "사용자가 %s 시간 프로파일 편집을 취소했습니다."
 
 msgid "Editing tag mapping from label \"%{name}\""
 msgstr "레이블 \"%{name}\"에서 태그 맵핑 편집"
+
+msgid "Editor"
+msgstr "편집자"
 
 msgid "Either Host Name or Cluster Name is required"
 msgstr "호스트 이름 또는 클러스터 이름은 필수입니다."
@@ -25431,6 +25437,9 @@ msgstr "올바르지 않은 인증 정보"
 
 msgid "Invalid button action"
 msgstr "올바르지 않은 단추 조치"
+
+msgid "Invalid button action!"
+msgstr "올바르지 않은 단추 조치입니다!"
 
 msgid "Invalid chart definition"
 msgstr "차트 정의가 올바르지 않습니다."
@@ -32183,9 +32192,6 @@ msgstr "NVMe"
 
 msgid "Name"
 msgstr "이름"
-
-msgid "Name / Description"
-msgstr "이름/설명"
 
 msgid "Name can only contain lowercase letters, numbers, or underscores"
 msgstr "이름에는 소문자, 숫자 또는 밑줄만 포함될 수 있음"
@@ -46726,6 +46732,12 @@ msgstr[0] "태스크"
 msgid "Task %{id} not found"
 msgstr "%{id} 태스크를 찾을 수 없음"
 
+msgid "Task Details"
+msgstr "태스크 세부사항"
+
+msgid "Task ID"
+msgstr "태스크 ID"
+
 msgid "Task Name"
 msgstr "태스크 이름"
 
@@ -46983,9 +46995,6 @@ msgstr "텍스트 상자"
 
 msgid "Textual"
 msgstr "텍스트"
-
-msgid "Textual View"
-msgstr "텍스트 형식 보기"
 
 msgid ""
 "The %{product} Server is still starting, you have been redirected to the "
@@ -50936,6 +50945,9 @@ msgstr "메트릭 보기"
 
 msgid "View More"
 msgstr "자세히 보기"
+
+msgid "View My Settings"
+msgstr "내 설정 보기"
 
 msgid "View Network Ports"
 msgstr "네트워크 포트 보기"

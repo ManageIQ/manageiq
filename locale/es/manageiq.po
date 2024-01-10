@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2023-11-08 22:17+0000\n"
-"PO-Revision-Date: 2023-11-08 22:17+0000\n"
+"POT-Creation-Date: 2024-01-01 00:17+0000\n"
+"PO-Revision-Date: 2024-01-01 00:17+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -5738,6 +5738,9 @@ msgstr "Administradores de automatización"
 msgid "Automation Managers (Ansible Tower)"
 msgstr "Administradores de automatización (Ansible Tower)"
 
+msgid "Automation Method Data"
+msgstr "Datos de método de automatización"
+
 msgid "Automation Request"
 msgstr "Solicitud de automatización"
 
@@ -10606,8 +10609,14 @@ msgstr "ConfigurationScriptBase|Salida"
 msgid "ConfigurationScriptBase|Payload"
 msgstr "ConfigurationScriptBase|Carga útil"
 
+msgid "ConfigurationScriptBase|Payload error"
+msgstr "ConfigurationScriptBase | Error de carga útil"
+
 msgid "ConfigurationScriptBase|Payload type"
 msgstr "ConfigurationScriptBase|Tipo de carga útil"
+
+msgid "ConfigurationScriptBase|Payload valid"
+msgstr "ConfigurationScriptBase | Carga útil válida"
 
 msgid "ConfigurationScriptBase|Region description"
 msgstr "ConfigurationScriptBase|Descripción de la región"
@@ -15465,9 +15474,6 @@ msgstr "No se puede suprimir el perfil de tiempo predeterminado \"%{name}\""
 msgid "Default Value"
 msgstr "Valor predeterminado"
 
-msgid "Default Views"
-msgstr "Vistas predeterminadas"
-
 msgid "Default actions can not be changed."
 msgstr "No se pueden modificar las acciones predeterminadas."
 
@@ -18847,9 +18853,6 @@ msgstr "Modificar etiquetas del almacén de datos"
 msgid "Edit Default Filters"
 msgstr "Modificar filtros predeterminados"
 
-msgid "Edit Default Views"
-msgstr "Modificar vistas predeterminadas"
-
 msgid "Edit Dialog in the Dialog Editor"
 msgstr "Editar diálogo en el editor de diálogo"
 
@@ -19080,11 +19083,11 @@ msgid "Edit Sequence of User Groups was cancelled by the user"
 msgstr ""
 "La edición de secuencia para el grupo de usuarios fue eliminada por el usuario"
 
+msgid "Edit Service \"%{name}\""
+msgstr "Editar servicio \"%{name}\""
+
 msgid "Edit Service tags"
 msgstr "Editar etiquetas de servicio"
-
-msgid "Edit Service\"%{name}\""
-msgstr "Editar servicio \"%{name}\""
 
 msgid "Edit Services"
 msgstr "Modificar servicios"
@@ -20528,6 +20531,9 @@ msgstr "El usuario ha cancelado la edición del perfil de tiempo %s."
 
 msgid "Editing tag mapping from label \"%{name}\""
 msgstr "Edición de asignación de etiquetas desde etiqueta \"%{name}\""
+
+msgid "Editor"
+msgstr "Editor"
 
 msgid "Either Host Name or Cluster Name is required"
 msgstr "Se requiere el nombre del host o el nombre del clúster"
@@ -26928,6 +26934,9 @@ msgstr "Credenciales de autenticación no válidas"
 
 msgid "Invalid button action"
 msgstr "Acción de botón no válida"
+
+msgid "Invalid button action!"
+msgstr "Acción de botón no válida."
 
 msgid "Invalid chart definition"
 msgstr "Definición de diagrama no válido"
@@ -33917,9 +33926,6 @@ msgstr "NVMe"
 
 msgid "Name"
 msgstr "Nombre"
-
-msgid "Name / Description"
-msgstr "Nombre / Descripción"
 
 msgid "Name can only contain lowercase letters, numbers, or underscores"
 msgstr ""
@@ -49231,6 +49237,12 @@ msgstr[1] "Tareas"
 msgid "Task %{id} not found"
 msgstr "No se ha encontrado la tarea %{id}"
 
+msgid "Task Details"
+msgstr "Detalles de tarea"
+
+msgid "Task ID"
+msgstr "ID de tarea"
+
 msgid "Task Name"
 msgstr "Nombre de la tarea"
 
@@ -49497,9 +49509,6 @@ msgstr "Cuadro de texto"
 
 msgid "Textual"
 msgstr "Textual"
-
-msgid "Textual View"
-msgstr "Vista de texto"
 
 msgid ""
 "The %{product} Server is still starting, you have been redirected to the "
@@ -53697,6 +53706,9 @@ msgstr "Ver las Métricas"
 
 msgid "View More"
 msgstr "Ver más"
+
+msgid "View My Settings"
+msgstr "Ver mis valores"
 
 msgid "View Network Ports"
 msgstr "Ver puertos de red"
