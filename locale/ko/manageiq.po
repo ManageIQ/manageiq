@@ -9938,13 +9938,13 @@ msgid "ConfigurationScriptBase|Payload"
 msgstr "ConfigurationScriptBase|페이로드"
 
 msgid "ConfigurationScriptBase|Payload error"
-msgstr "ConfigurationScriptBase | 페이로드 오류"
+msgstr "ConfigurationScriptBase|페이로드 오류"
 
 msgid "ConfigurationScriptBase|Payload type"
 msgstr "ConfigurationScriptBase|페이로드 유형"
 
 msgid "ConfigurationScriptBase|Payload valid"
-msgstr "ConfigurationScriptBase | 페이로드 유효"
+msgstr "ConfigurationScriptBase|페이로드 유효"
 
 msgid "ConfigurationScriptBase|Region description"
 msgstr "ConfigurationScriptBase|지역 설명"

@@ -10586,10 +10586,10 @@ msgid "ConfigurationProfile|Total configured systems"
 msgstr "Nombre total de systèmes configurés"
 
 msgid "ConfigurationScriptBase|Context"
-msgstr "ConfigurationScriptBase | Contexte"
+msgstr "ConfigurationScriptBase|Contexte"
 
 msgid "ConfigurationScriptBase|Credentials"
-msgstr "ConfigurationScriptBase | Données d'identification"
+msgstr "ConfigurationScriptBase|Données d'identification"
 
 msgid "ConfigurationScriptBase|Description"
 msgstr "Description"
@@ -10604,16 +10604,16 @@ msgid "ConfigurationScriptBase|Name"
 msgstr "Nom"
 
 msgid "ConfigurationScriptBase|Output"
-msgstr "ConfigurationScriptBase | Sortie"
+msgstr "ConfigurationScriptBase|Sortie"
 
 msgid "ConfigurationScriptBase|Payload"
-msgstr "ConfigurationScriptBase | Contenu"
+msgstr "ConfigurationScriptBase|Contenu"
 
 msgid "ConfigurationScriptBase|Payload error"
 msgstr "ConfigurationScriptBase|Erreur de contenu"
 
 msgid "ConfigurationScriptBase|Payload type"
-msgstr "ConfigurationScriptBase | Type de contenu"
+msgstr "ConfigurationScriptBase|Type de contenu"
 
 msgid "ConfigurationScriptBase|Payload valid"
 msgstr "ConfigurationScriptBase|Contenu valide"
@@ -10625,10 +10625,10 @@ msgid "ConfigurationScriptBase|Region number"
 msgstr "Numéro de la région"
 
 msgid "ConfigurationScriptBase|Run by userid"
-msgstr "ConfigurationScriptBase | Exécution par ID utilisateur"
+msgstr "ConfigurationScriptBase|Exécution par ID utilisateur"
 
 msgid "ConfigurationScriptBase|Status"
-msgstr "ConfigurationScriptBase | Statut"
+msgstr "ConfigurationScriptBase|Statut"
 
 msgid "ConfigurationScriptBase|Survey spec"
 msgstr "Spécifications d'enquête"
@@ -26902,7 +26902,7 @@ msgid "Invalid button action"
 msgstr "Action de bouton non valide"
 
 msgid "Invalid button action!"
-msgstr "Action de bouton non valide !"
+msgstr "Action de bouton non valide!"
 
 msgid "Invalid chart definition"
 msgstr "Définition de graphique non valide"

@@ -9915,13 +9915,13 @@ msgid "ConfigurationScriptBase|Payload"
 msgstr "ConfigurationScriptBase|有效負載"
 
 msgid "ConfigurationScriptBase|Payload error"
-msgstr "ConfigurationScriptBase | 有效負載錯誤"
+msgstr "ConfigurationScriptBase|有效負載錯誤"
 
 msgid "ConfigurationScriptBase|Payload type"
 msgstr "ConfigurationScriptBase|有效負載類型"
 
 msgid "ConfigurationScriptBase|Payload valid"
-msgstr "ConfigurationScriptBase | 有效負載"
+msgstr "ConfigurationScriptBase|有效負載"
 
 msgid "ConfigurationScriptBase|Region description"
 msgstr "地區說明"

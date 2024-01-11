@@ -10610,13 +10610,13 @@ msgid "ConfigurationScriptBase|Payload"
 msgstr "ConfigurationScriptBase|Carga útil"
 
 msgid "ConfigurationScriptBase|Payload error"
-msgstr "ConfigurationScriptBase | Error de carga útil"
+msgstr "ConfigurationScriptBase|Error de carga útil"
 
 msgid "ConfigurationScriptBase|Payload type"
 msgstr "ConfigurationScriptBase|Tipo de carga útil"
 
 msgid "ConfigurationScriptBase|Payload valid"
-msgstr "ConfigurationScriptBase | Carga útil válida"
+msgstr "ConfigurationScriptBase|Carga útil válida"
 
 msgid "ConfigurationScriptBase|Region description"
 msgstr "ConfigurationScriptBase|Descripción de la región"

@@ -9887,10 +9887,10 @@ msgid "ConfigurationProfile|Total configured systems"
 msgstr "配置的系统总数"
 
 msgid "ConfigurationScriptBase|Context"
-msgstr "ConfigurationScriptBase | 上下文"
+msgstr "ConfigurationScriptBase|上下文"
 
 msgid "ConfigurationScriptBase|Credentials"
-msgstr "ConfigurationScriptBase | 凭证"
+msgstr "ConfigurationScriptBase|凭证"
 
 msgid "ConfigurationScriptBase|Description"
 msgstr "描述"
@@ -9905,19 +9905,19 @@ msgid "ConfigurationScriptBase|Name"
 msgstr "名称"
 
 msgid "ConfigurationScriptBase|Output"
-msgstr "ConfigurationScriptBase | 输出"
+msgstr "ConfigurationScriptBase|输出"
 
 msgid "ConfigurationScriptBase|Payload"
-msgstr "ConfigurationScriptBase | 有效内容"
+msgstr "ConfigurationScriptBase|有效内容"
 
 msgid "ConfigurationScriptBase|Payload error"
-msgstr "ConfigurationScriptBase | 有效内容错误"
+msgstr "ConfigurationScriptBase|有效内容错误"
 
 msgid "ConfigurationScriptBase|Payload type"
-msgstr "ConfigurationScriptBase | 有效内容类型"
+msgstr "ConfigurationScriptBase|有效内容类型"
 
 msgid "ConfigurationScriptBase|Payload valid"
-msgstr "ConfigurationScriptBase | 有效内容"
+msgstr "ConfigurationScriptBase|有效内容"
 
 msgid "ConfigurationScriptBase|Region description"
 msgstr "区域说明"
@@ -9926,10 +9926,10 @@ msgid "ConfigurationScriptBase|Region number"
 msgstr "区域编号"
 
 msgid "ConfigurationScriptBase|Run by userid"
-msgstr "ConfigurationScriptBase | 按用户标识运行"
+msgstr "ConfigurationScriptBase|按用户标识运行"
 
 msgid "ConfigurationScriptBase|Status"
-msgstr "ConfigurationScriptBase | 状态"
+msgstr "ConfigurationScriptBase|状态"
 
 msgid "ConfigurationScriptBase|Survey spec"
 msgstr "调查规范"

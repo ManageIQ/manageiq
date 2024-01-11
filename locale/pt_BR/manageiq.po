@@ -10494,10 +10494,10 @@ msgid "ConfigurationProfile|Total configured systems"
 msgstr "ConfigurationProfile|Total de sistemas configurados"
 
 msgid "ConfigurationScriptBase|Context"
-msgstr "ConfigurationScriptBase | Contexto"
+msgstr "ConfigurationScriptBase|Contexto"
 
 msgid "ConfigurationScriptBase|Credentials"
-msgstr "ConfigurationScriptBase | Credenciais"
+msgstr "ConfigurationScriptBase|Credenciais"
 
 msgid "ConfigurationScriptBase|Description"
 msgstr "ConfigurationScriptBase|Descrição"
@@ -10512,19 +10512,19 @@ msgid "ConfigurationScriptBase|Name"
 msgstr "ConfigurationScriptBase|Nome"
 
 msgid "ConfigurationScriptBase|Output"
-msgstr "ConfigurationScriptBase | Saída"
+msgstr "ConfigurationScriptBase|Saída"
 
 msgid "ConfigurationScriptBase|Payload"
-msgstr "ConfigurationScriptBase | Carga útil"
+msgstr "ConfigurationScriptBase|Carga útil"
 
 msgid "ConfigurationScriptBase|Payload error"
-msgstr "ConfigurationScriptBase | Erro de carga útil"
+msgstr "ConfigurationScriptBase|Erro de carga útil"
 
 msgid "ConfigurationScriptBase|Payload type"
-msgstr "ConfigurationScriptBase | Tipo de carga útil"
+msgstr "ConfigurationScriptBase|Tipo de carga útil"
 
 msgid "ConfigurationScriptBase|Payload valid"
-msgstr "ConfigurationScriptBase | Carga útil válida"
+msgstr "ConfigurationScriptBase|Carga útil válida"
 
 msgid "ConfigurationScriptBase|Region description"
 msgstr "ConfigurationScriptBase|Descrição da região"
@@ -10533,10 +10533,10 @@ msgid "ConfigurationScriptBase|Region number"
 msgstr "ConfigurationScriptBase|Número da região"
 
 msgid "ConfigurationScriptBase|Run by userid"
-msgstr "ConfigurationScriptBase | Executar por ID do usuário"
+msgstr "ConfigurationScriptBase|Executar por ID do usuário"
 
 msgid "ConfigurationScriptBase|Status"
-msgstr "ConfigurationScriptBase | Status"
+msgstr "ConfigurationScriptBase|Status"
 
 msgid "ConfigurationScriptBase|Survey spec"
 msgstr "ConfigurationScriptBase|Especificação da pesquisa de opinião"
