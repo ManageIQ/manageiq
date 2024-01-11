@@ -10581,10 +10581,10 @@ msgid "ConfigurationProfile|Total configured systems"
 msgstr "Konfigurierte Systeme insgesamt"
 
 msgid "ConfigurationScriptBase|Context"
-msgstr "ConfigurationScript-Basis|Kontext"
+msgstr "ConfigurationScriptBase|Kontext"
 
 msgid "ConfigurationScriptBase|Credentials"
-msgstr "ConfigurationScript-Basis|Berechtigungsnachweise"
+msgstr "ConfigurationScriptBase|Berechtigungsnachweise"
 
 msgid "ConfigurationScriptBase|Description"
 msgstr "Beschreibung"
@@ -10599,19 +10599,19 @@ msgid "ConfigurationScriptBase|Name"
 msgstr "Name"
 
 msgid "ConfigurationScriptBase|Output"
-msgstr "ConfigurationScript-Basis|Ausgabe"
+msgstr "ConfigurationScriptBase|Ausgabe"
 
 msgid "ConfigurationScriptBase|Payload"
-msgstr "ConfigurationScript-Basis|Nutzdaten"
+msgstr "ConfigurationScriptBase|Nutzdaten"
 
 msgid "ConfigurationScriptBase|Payload error"
-msgstr "ConfigurationScript-Basis | Fehler bei Nutzdaten"
+msgstr "ConfigurationScriptBase|Fehler bei Nutzdaten"
 
 msgid "ConfigurationScriptBase|Payload type"
-msgstr "ConfigurationScript-Basis|Nutzdatentyp"
+msgstr "ConfigurationScriptBase|Nutzdatentyp"
 
 msgid "ConfigurationScriptBase|Payload valid"
-msgstr "ConfigurationScript-Basis | Nutzdaten gültig"
+msgstr "ConfigurationScriptBase|Nutzdaten gültig"
 
 msgid "ConfigurationScriptBase|Region description"
 msgstr "Regionsbeschreibung"
@@ -10620,10 +10620,10 @@ msgid "ConfigurationScriptBase|Region number"
 msgstr "Regionsnummer"
 
 msgid "ConfigurationScriptBase|Run by userid"
-msgstr "ConfigurationScript-Basis|Ausführung nach Benutzer-ID"
+msgstr "ConfigurationScriptBase|Ausführung nach Benutzer-ID"
 
 msgid "ConfigurationScriptBase|Status"
-msgstr "ConfigurationScript-Basis|Status"
+msgstr "ConfigurationScriptBase|Status"
 
 msgid "ConfigurationScriptBase|Survey spec"
 msgstr "Umfragespezifikation"

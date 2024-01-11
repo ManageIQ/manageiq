@@ -9921,10 +9921,10 @@ msgid "ConfigurationProfile|Total configured systems"
 msgstr "構成済みシステムの合計"
 
 msgid "ConfigurationScriptBase|Context"
-msgstr "ConfigurationScript ベース | コンテキスト"
+msgstr "ConfigurationScriptBase|コンテキスト"
 
 msgid "ConfigurationScriptBase|Credentials"
-msgstr "ConfigurationScript ベース | 資格情報"
+msgstr "ConfigurationScriptBase|資格情報"
 
 msgid "ConfigurationScriptBase|Description"
 msgstr "説明"
@@ -9939,19 +9939,19 @@ msgid "ConfigurationScriptBase|Name"
 msgstr "名前"
 
 msgid "ConfigurationScriptBase|Output"
-msgstr "ConfigurationScript ベース | 出力"
+msgstr "ConfigurationScriptBase|出力"
 
 msgid "ConfigurationScriptBase|Payload"
-msgstr "ConfigurationScript ベース | ペイロード"
+msgstr "ConfigurationScriptBase|ペイロード"
 
 msgid "ConfigurationScriptBase|Payload error"
-msgstr "ConfigurationScriptベース | ペイロード・エラー"
+msgstr "ConfigurationScriptBase|ペイロード・エラー"
 
 msgid "ConfigurationScriptBase|Payload type"
-msgstr "ConfigurationScript ベース | ペイロード・タイプ"
+msgstr "ConfigurationScriptBase|ペイロード・タイプ"
 
 msgid "ConfigurationScriptBase|Payload valid"
-msgstr "ConfigurationScriptベース | ペイロード有効"
+msgstr "ConfigurationScriptBase|ペイロード有効"
 
 msgid "ConfigurationScriptBase|Region description"
 msgstr "リージョンの説明"
@@ -9960,10 +9960,10 @@ msgid "ConfigurationScriptBase|Region number"
 msgstr "リージョン番号"
 
 msgid "ConfigurationScriptBase|Run by userid"
-msgstr "ConfigurationScript ベース | ユーザー ID による実行"
+msgstr "ConfigurationScriptBase|ユーザー ID による実行"
 
 msgid "ConfigurationScriptBase|Status"
-msgstr "ConfigurationScript ベース | 状況"
+msgstr "ConfigurationScriptBase|状況"
 
 msgid "ConfigurationScriptBase|Survey spec"
 msgstr "調査仕様"
