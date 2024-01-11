@@ -154,6 +154,10 @@
       :feature_type: view
       :hidden: true
       :identifier: miq_request_reload
+    - :name: Logs
+      :description: Display Request Logs
+      :feature_type: view
+      :identifier: miq_request_show_logs
   - :name: Operate
     :description: Perform Operations on Requests
     :feature_type: control
