@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2023-11-08 22:17+0000\n"
-"PO-Revision-Date: 2023-11-08 22:17+0000\n"
+"POT-Creation-Date: 2024-01-01 00:17+0000\n"
+"PO-Revision-Date: 2024-01-01 00:17+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -5328,6 +5328,9 @@ msgstr "自動化マネージャー"
 msgid "Automation Managers (Ansible Tower)"
 msgstr "自動化マネージャー (Ansible Tower)"
 
+msgid "Automation Method Data"
+msgstr "自動化メソッド・データ"
+
 msgid "Automation Request"
 msgstr "自動化要求"
 
@@ -9918,10 +9921,10 @@ msgid "ConfigurationProfile|Total configured systems"
 msgstr "構成済みシステムの合計"
 
 msgid "ConfigurationScriptBase|Context"
-msgstr "ConfigurationScript ベース | コンテキスト"
+msgstr "ConfigurationScriptBase|コンテキスト"
 
 msgid "ConfigurationScriptBase|Credentials"
-msgstr "ConfigurationScript ベース | 資格情報"
+msgstr "ConfigurationScriptBase|資格情報"
 
 msgid "ConfigurationScriptBase|Description"
 msgstr "説明"
@@ -9936,13 +9939,19 @@ msgid "ConfigurationScriptBase|Name"
 msgstr "名前"
 
 msgid "ConfigurationScriptBase|Output"
-msgstr "ConfigurationScript ベース | 出力"
+msgstr "ConfigurationScriptBase|出力"
 
 msgid "ConfigurationScriptBase|Payload"
-msgstr "ConfigurationScript ベース | ペイロード"
+msgstr "ConfigurationScriptBase|ペイロード"
+
+msgid "ConfigurationScriptBase|Payload error"
+msgstr "ConfigurationScriptBase|ペイロード・エラー"
 
 msgid "ConfigurationScriptBase|Payload type"
-msgstr "ConfigurationScript ベース | ペイロード・タイプ"
+msgstr "ConfigurationScriptBase|ペイロード・タイプ"
+
+msgid "ConfigurationScriptBase|Payload valid"
+msgstr "ConfigurationScriptBase|ペイロード有効"
 
 msgid "ConfigurationScriptBase|Region description"
 msgstr "リージョンの説明"
@@ -9951,10 +9960,10 @@ msgid "ConfigurationScriptBase|Region number"
 msgstr "リージョン番号"
 
 msgid "ConfigurationScriptBase|Run by userid"
-msgstr "ConfigurationScript ベース | ユーザー ID による実行"
+msgstr "ConfigurationScriptBase|ユーザー ID による実行"
 
 msgid "ConfigurationScriptBase|Status"
-msgstr "ConfigurationScript ベース | 状況"
+msgstr "ConfigurationScriptBase|状況"
 
 msgid "ConfigurationScriptBase|Survey spec"
 msgstr "調査仕様"
@@ -14415,9 +14424,6 @@ msgstr "デフォルト・タイム・プロファイル \"%{name}\" は削除�
 msgid "Default Value"
 msgstr "デフォルト値"
 
-msgid "Default Views"
-msgstr "デフォルト・ビュー"
-
 msgid "Default actions can not be changed."
 msgstr "デフォルトのアクションは変更できません。"
 
@@ -17686,9 +17692,6 @@ msgstr "データ・ストア・タグの編集"
 msgid "Edit Default Filters"
 msgstr "デフォルト・フィルターの編集"
 
-msgid "Edit Default Views"
-msgstr "デフォルト・ビューの編集"
-
 msgid "Edit Dialog in the Dialog Editor"
 msgstr "ダイアログ・エディターでのダイアログの編集"
 
@@ -17917,11 +17920,11 @@ msgstr "LDAP 検索でのユーザー・グループの順序の編集"
 msgid "Edit Sequence of User Groups was cancelled by the user"
 msgstr "ユーザー・グループの順序の編集はユーザーにより取り消されました"
 
+msgid "Edit Service \"%{name}\""
+msgstr "サービス \"%{name}\" の編集"
+
 msgid "Edit Service tags"
 msgstr "サービス・タグの編集"
-
-msgid "Edit Service\"%{name}\""
-msgstr "サービス \"%{name}\" の編集"
 
 msgid "Edit Services"
 msgstr "サービスの編集"
@@ -19325,6 +19328,9 @@ msgstr "時間プロファイル %s の編集はユーザーにより取り消�
 
 msgid "Editing tag mapping from label \"%{name}\""
 msgstr "ラベル \"%{name}\" のタグ・マッピングの編集"
+
+msgid "Editor"
+msgstr "エディター"
 
 msgid "Either Host Name or Cluster Name is required"
 msgstr "ホスト名またはクラスター名が必要です"
@@ -25445,6 +25451,9 @@ msgstr "無効な資格情報"
 
 msgid "Invalid button action"
 msgstr "無効なボタン・アクション"
+
+msgid "Invalid button action!"
+msgstr "無効なボタン・アクションです。"
 
 msgid "Invalid chart definition"
 msgstr "無効なチャート定義"
@@ -32197,9 +32206,6 @@ msgstr "NVMe"
 
 msgid "Name"
 msgstr "名前"
-
-msgid "Name / Description"
-msgstr "名前 / 説明"
 
 msgid "Name can only contain lowercase letters, numbers, or underscores"
 msgstr "名前には小文字、数字、または下線のみを含みます"
@@ -46749,6 +46755,12 @@ msgstr[0] "タスク"
 msgid "Task %{id} not found"
 msgstr "タスク %{id} が見つかりません"
 
+msgid "Task Details"
+msgstr "タスクの詳細"
+
+msgid "Task ID"
+msgstr "タスク ID"
+
 msgid "Task Name"
 msgstr "タスク名"
 
@@ -47006,9 +47018,6 @@ msgstr "テキスト・ボックス"
 
 msgid "Textual"
 msgstr "テキスト"
-
-msgid "Textual View"
-msgstr "テキスト・ビュー"
 
 msgid ""
 "The %{product} Server is still starting, you have been redirected to the "
@@ -50959,6 +50968,9 @@ msgstr "メトリックの表示"
 
 msgid "View More"
 msgstr "詳細表示"
+
+msgid "View My Settings"
+msgstr "マイ設定の表示"
 
 msgid "View Network Ports"
 msgstr "ネットワーク・ポートの表示"
