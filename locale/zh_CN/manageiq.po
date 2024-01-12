@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2023-11-08 22:17+0000\n"
-"PO-Revision-Date: 2023-11-08 22:17+0000\n"
+"POT-Creation-Date: 2024-01-01 00:17+0000\n"
+"PO-Revision-Date: 2024-01-01 00:17+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -5303,6 +5303,9 @@ msgstr "自动化管理者"
 msgid "Automation Managers (Ansible Tower)"
 msgstr "自动化管理器 (Ansible Tower)"
 
+msgid "Automation Method Data"
+msgstr "自动化方法数据"
+
 msgid "Automation Request"
 msgstr "自动化请求"
 
@@ -9884,10 +9887,10 @@ msgid "ConfigurationProfile|Total configured systems"
 msgstr "配置的系统总数"
 
 msgid "ConfigurationScriptBase|Context"
-msgstr "ConfigurationScriptBase | 上下文"
+msgstr "ConfigurationScriptBase|上下文"
 
 msgid "ConfigurationScriptBase|Credentials"
-msgstr "ConfigurationScriptBase | 凭证"
+msgstr "ConfigurationScriptBase|凭证"
 
 msgid "ConfigurationScriptBase|Description"
 msgstr "描述"
@@ -9902,13 +9905,19 @@ msgid "ConfigurationScriptBase|Name"
 msgstr "名称"
 
 msgid "ConfigurationScriptBase|Output"
-msgstr "ConfigurationScriptBase | 输出"
+msgstr "ConfigurationScriptBase|输出"
 
 msgid "ConfigurationScriptBase|Payload"
-msgstr "ConfigurationScriptBase | 有效内容"
+msgstr "ConfigurationScriptBase|有效内容"
+
+msgid "ConfigurationScriptBase|Payload error"
+msgstr "ConfigurationScriptBase|有效内容错误"
 
 msgid "ConfigurationScriptBase|Payload type"
-msgstr "ConfigurationScriptBase | 有效内容类型"
+msgstr "ConfigurationScriptBase|有效内容类型"
+
+msgid "ConfigurationScriptBase|Payload valid"
+msgstr "ConfigurationScriptBase|有效内容"
 
 msgid "ConfigurationScriptBase|Region description"
 msgstr "区域说明"
@@ -9917,10 +9926,10 @@ msgid "ConfigurationScriptBase|Region number"
 msgstr "区域编号"
 
 msgid "ConfigurationScriptBase|Run by userid"
-msgstr "ConfigurationScriptBase | 按用户标识运行"
+msgstr "ConfigurationScriptBase|按用户标识运行"
 
 msgid "ConfigurationScriptBase|Status"
-msgstr "ConfigurationScriptBase | 状态"
+msgstr "ConfigurationScriptBase|状态"
 
 msgid "ConfigurationScriptBase|Survey spec"
 msgstr "调查规范"
@@ -14377,9 +14386,6 @@ msgstr "无法删除缺省时间概要文件“%{name}”"
 msgid "Default Value"
 msgstr "缺省值"
 
-msgid "Default Views"
-msgstr "缺省视图"
-
 msgid "Default actions can not be changed."
 msgstr "不能更改缺省操作"
 
@@ -17646,9 +17652,6 @@ msgstr "编辑数据存储标签"
 msgid "Edit Default Filters"
 msgstr "编辑缺省过滤器"
 
-msgid "Edit Default Views"
-msgstr "编辑缺省视图"
-
 msgid "Edit Dialog in the Dialog Editor"
 msgstr "在对话框编辑器中编辑对话框"
 
@@ -17877,11 +17880,11 @@ msgstr "编辑 LDAP 查找的用户组序列"
 msgid "Edit Sequence of User Groups was cancelled by the user"
 msgstr "用户已取消编辑用户组序列的操作"
 
+msgid "Edit Service \"%{name}\""
+msgstr "编辑服务“%{name}”"
+
 msgid "Edit Service tags"
 msgstr "编辑服务标签"
-
-msgid "Edit Service\"%{name}\""
-msgstr "编辑服务“%{name}”"
 
 msgid "Edit Services"
 msgstr "编辑服务"
@@ -19283,6 +19286,9 @@ msgstr "用户已取消对时间概要文件 %s 的编辑。"
 
 msgid "Editing tag mapping from label \"%{name}\""
 msgstr "编辑标签“%{name}”中的标记映射"
+
+msgid "Editor"
+msgstr "编辑者"
 
 msgid "Either Host Name or Cluster Name is required"
 msgstr "主机名称或集群名称为必填项"
@@ -25388,6 +25394,9 @@ msgstr "无效验证证书"
 
 msgid "Invalid button action"
 msgstr "无效的按钮操作"
+
+msgid "Invalid button action!"
+msgstr "按钮操作无效！"
 
 msgid "Invalid chart definition"
 msgstr "无效的图表定义"
@@ -32134,9 +32143,6 @@ msgstr "NVMe"
 
 msgid "Name"
 msgstr "名称"
-
-msgid "Name / Description"
-msgstr "名称 / 描述"
 
 msgid "Name can only contain lowercase letters, numbers, or underscores"
 msgstr "名称只能包含小写字母、数字或下划线。"
@@ -46670,6 +46676,12 @@ msgstr[0] "任务"
 msgid "Task %{id} not found"
 msgstr "未找到任务 %{id}"
 
+msgid "Task Details"
+msgstr "任务详细信息"
+
+msgid "Task ID"
+msgstr "任务标识"
+
 msgid "Task Name"
 msgstr "任务名称"
 
@@ -46927,9 +46939,6 @@ msgstr "文本框"
 
 msgid "Textual"
 msgstr "文本"
-
-msgid "Textual View"
-msgstr "文本视图"
 
 msgid ""
 "The %{product} Server is still starting, you have been redirected to the "
@@ -50869,6 +50878,9 @@ msgstr "查看度量"
 
 msgid "View More"
 msgstr "查看更多"
+
+msgid "View My Settings"
+msgstr "查看我的设置"
 
 msgid "View Network Ports"
 msgstr "查看网络端口"
