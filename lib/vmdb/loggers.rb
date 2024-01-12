@@ -97,6 +97,9 @@ module Vmdb
         end
 
         logger.extend(ActiveSupport::Logger.broadcast(wrapped_logger))
+        if logger.class.const_defined?(:FormatterMixin)
+          wrapped_logger.formatter.extend(logger.class.const_get(:FormatterMixin))
+        end
 
         wrapped_logger.progname = progname
       end
