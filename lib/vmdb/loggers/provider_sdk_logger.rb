@@ -14,7 +14,7 @@ module Vmdb::Loggers
       msg.size
     end
 
-    class Formatter < ManageIQ::Loggers::Base::Formatter
+    module FormatterMixin
       def call(severity, datetime, progname, msg)
         msg = msg.sub(/Bearer(.*?)\"/, 'Bearer [FILTERED] "')
         msg = msg.sub(/Basic(.*?)\"/, 'Basic [FILTERED] "')
@@ -23,6 +23,10 @@ module Vmdb::Loggers
         msg = msg.sub(/apikey=(.*?)\"/, 'apikey=[FILTERED]"')
         super(severity, datetime, progname, msg)
       end
+    end
+
+    class Formatter < ManageIQ::Loggers::Base::Formatter
+      include FormatterMixin
     end
   end
 end
