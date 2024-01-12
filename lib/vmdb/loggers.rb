@@ -37,6 +37,10 @@ module Vmdb
         broadcast_logger = create_broadcast_logger
         if broadcast_logger
           logger.extend(ActiveSupport::Logger.broadcast(broadcast_logger))
+          if logger.class.const_defined?(:FormatterMixin)
+            broadcast_logger.formatter.extend(logger.class.const_get(:FormatterMixin))
+          end
+
           broadcast_logger.progname = progname
 
           # HACK: In order to access the broadcast logger in test, we inject it
