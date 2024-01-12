@@ -613,6 +613,8 @@ class Host < ApplicationRecord
       :userid => userid
     }
 
+    encrypt_verify_credential_params!(options)
+
     queue_opts = {
       :args        => [auth_type, options],
       :class_name  => self.class.name,
@@ -1424,6 +1426,36 @@ class Host < ApplicationRecord
       unless value
         description ||= feature.to_s.humanize(:capitalize => false)
         _log.warn("Cannot #{description} because <#{unsupported_reason(feature)}>")
+      end
+    end
+  end
+
+  private
+
+  # Ensure that any passwords are encrypted before putting them onto the queue for any
+  # DDF fields which are a password type
+  def encrypt_verify_credential_params!(options)
+    # NOTE the API always symbolizes the username/password keys so it is safe
+    # to assume the keys will be symbols until we move to passing the DDF payload in
+    encrypted_columns = Authentication.encrypted_columns.map(&:to_sym)
+
+    traverse_hash(options) do |value, key_path|
+      value.slice(*encrypted_columns).each do |key, val|
+        options.store_path(key_path + [key], ManageIQ::Password.try_encrypt(val))
+      end
+    end
+  end
+
+  def traverse_hash(hash, path = [], &block)
+    hash.each do |key, val|
+      key_path = path << key
+
+      if val.kind_of?(Array)
+        val.each { |v| traverse_hash(v, key_path, &block)}
+      elsif val.kind_of?(Hash)
+        yield val, key_path
+
+        traverse_hash(val, key_path, &block)
       end
     end
   end

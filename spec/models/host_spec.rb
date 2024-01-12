@@ -244,6 +244,35 @@ RSpec.describe Host do
           :queue_name  => @ems.queue_name_for_ems_operations
         )
       end
+
+      it "encryptes the password before putting it on the queue" do
+        credentials = {
+          "default" => {
+            :userid   => "root",
+            :auth_key => "SECRET"
+          },
+          "ws"      => {
+            :userid   => "root",
+            :password => "ALSO_SECRET"
+          }
+        }
+
+        expected_credentials = credentials.dup
+        expected_credentials["default"][:auth_key] = ManageIQ::Password.encrypt(credentials.dig("default", :auth_key))
+        expected_credentials["ws"][:password]      = ManageIQ::Password.encrypt(credentials.dig("ws", :password))
+
+        @host.verify_credentials_task(FactoryBot.create(:user).userid, :default, :credentials => credentials)
+
+        expect(MiqQueue.last).to have_attributes(
+          :args        => [:default, {:credentials => expected_credentials}],
+          :method_name => "verify_credentials?",
+          :instance_id => @host.id,
+          :class_name  => @host.class.name,
+          :role        => "ems_operations",
+          :zone        => @ems.zone.name,
+          :queue_name  => @ems.queue_name_for_ems_operations
+        )
+      end
     end
 
     context "default credentials" do
