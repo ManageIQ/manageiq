@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2023-11-08 22:17+0000\n"
-"PO-Revision-Date: 2023-11-08 22:17+0000\n"
+"POT-Creation-Date: 2024-01-01 00:17+0000\n"
+"PO-Revision-Date: 2024-01-01 00:17+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -5306,6 +5306,9 @@ msgstr "自動化管理程式"
 msgid "Automation Managers (Ansible Tower)"
 msgstr "自動化管理程式 (Ansible Tower)"
 
+msgid "Automation Method Data"
+msgstr "自動化方法資料"
+
 msgid "Automation Request"
 msgstr "自動化要求"
 
@@ -9911,8 +9914,14 @@ msgstr "ConfigurationScriptBase|輸出"
 msgid "ConfigurationScriptBase|Payload"
 msgstr "ConfigurationScriptBase|有效負載"
 
+msgid "ConfigurationScriptBase|Payload error"
+msgstr "ConfigurationScriptBase|有效負載錯誤"
+
 msgid "ConfigurationScriptBase|Payload type"
 msgstr "ConfigurationScriptBase|有效負載類型"
+
+msgid "ConfigurationScriptBase|Payload valid"
+msgstr "ConfigurationScriptBase|有效負載"
 
 msgid "ConfigurationScriptBase|Region description"
 msgstr "地區說明"
@@ -14381,9 +14390,6 @@ msgstr "無法刪除預設時間設定檔 \"%{name}\""
 msgid "Default Value"
 msgstr "預設值"
 
-msgid "Default Views"
-msgstr "預設視圖"
-
 msgid "Default actions can not be changed."
 msgstr "無法變更預設動作。"
 
@@ -17650,9 +17656,6 @@ msgstr "編輯資料儲存庫標籤"
 msgid "Edit Default Filters"
 msgstr "編輯預設過濾器"
 
-msgid "Edit Default Views"
-msgstr "編輯預設視圖"
-
 msgid "Edit Dialog in the Dialog Editor"
 msgstr "編輯對話框編輯器中的對話框"
 
@@ -17881,11 +17884,11 @@ msgstr "編輯 LDAP 查閱使用者群組的順序"
 msgid "Edit Sequence of User Groups was cancelled by the user"
 msgstr "使用者群組已取消編輯「使用者群組順序」"
 
+msgid "Edit Service \"%{name}\""
+msgstr "編輯服務 \"%{name}\""
+
 msgid "Edit Service tags"
 msgstr "編輯服務標籤"
-
-msgid "Edit Service\"%{name}\""
-msgstr "編輯服務 \"%{name}\""
 
 msgid "Edit Services"
 msgstr "編輯服務"
@@ -19288,6 +19291,9 @@ msgstr "使用者已取消編輯時間設定檔 %s。"
 
 msgid "Editing tag mapping from label \"%{name}\""
 msgstr "從標籤 \"%{name}\" 編輯標籤對映"
+
+msgid "Editor"
+msgstr "編輯者"
 
 msgid "Either Host Name or Cluster Name is required"
 msgstr "「主機名稱」或「叢集名稱」是必要的"
@@ -25396,6 +25402,9 @@ msgstr "鑑別認證無效"
 
 msgid "Invalid button action"
 msgstr "按鈕動作無效"
+
+msgid "Invalid button action!"
+msgstr "按鈕動作無效！"
 
 msgid "Invalid chart definition"
 msgstr "圖表定義無效"
@@ -32142,9 +32151,6 @@ msgstr "NVMe"
 
 msgid "Name"
 msgstr "名稱"
-
-msgid "Name / Description"
-msgstr "名稱/說明"
 
 msgid "Name can only contain lowercase letters, numbers, or underscores"
 msgstr "名稱只能包含小寫字母、數字或底線"
@@ -46677,6 +46683,12 @@ msgstr[0] "作業"
 msgid "Task %{id} not found"
 msgstr "找不到作業 %{id}"
 
+msgid "Task Details"
+msgstr "作業詳細資料"
+
+msgid "Task ID"
+msgstr "作業 ID"
+
 msgid "Task Name"
 msgstr "作業名稱"
 
@@ -46934,9 +46946,6 @@ msgstr "文字框"
 
 msgid "Textual"
 msgstr "文字"
-
-msgid "Textual View"
-msgstr "文字視圖"
 
 msgid ""
 "The %{product} Server is still starting, you have been redirected to the "
@@ -50878,6 +50887,9 @@ msgstr "檢視測量值"
 
 msgid "View More"
 msgstr "檢視更多"
+
+msgid "View My Settings"
+msgstr "檢視我的設定"
 
 msgid "View Network Ports"
 msgstr "檢視網路埠"

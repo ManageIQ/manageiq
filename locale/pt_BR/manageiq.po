@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2023-11-08 22:17+0000\n"
-"PO-Revision-Date: 2023-11-08 22:17+0000\n"
+"POT-Creation-Date: 2024-01-01 00:17+0000\n"
+"PO-Revision-Date: 2024-01-01 00:17+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -5664,6 +5664,9 @@ msgstr "Gerenciadores de automação"
 msgid "Automation Managers (Ansible Tower)"
 msgstr "Gerenciadores de automação (Ansible Tower)"
 
+msgid "Automation Method Data"
+msgstr "Dados do método de automação"
+
 msgid "Automation Request"
 msgstr "Solicitação de automação"
 
@@ -10491,10 +10494,10 @@ msgid "ConfigurationProfile|Total configured systems"
 msgstr "ConfigurationProfile|Total de sistemas configurados"
 
 msgid "ConfigurationScriptBase|Context"
-msgstr "ConfigurationScriptBase | Contexto"
+msgstr "ConfigurationScriptBase|Contexto"
 
 msgid "ConfigurationScriptBase|Credentials"
-msgstr "ConfigurationScriptBase | Credenciais"
+msgstr "ConfigurationScriptBase|Credenciais"
 
 msgid "ConfigurationScriptBase|Description"
 msgstr "ConfigurationScriptBase|Descrição"
@@ -10509,13 +10512,19 @@ msgid "ConfigurationScriptBase|Name"
 msgstr "ConfigurationScriptBase|Nome"
 
 msgid "ConfigurationScriptBase|Output"
-msgstr "ConfigurationScriptBase | Saída"
+msgstr "ConfigurationScriptBase|Saída"
 
 msgid "ConfigurationScriptBase|Payload"
-msgstr "ConfigurationScriptBase | Carga útil"
+msgstr "ConfigurationScriptBase|Carga útil"
+
+msgid "ConfigurationScriptBase|Payload error"
+msgstr "ConfigurationScriptBase|Erro de carga útil"
 
 msgid "ConfigurationScriptBase|Payload type"
-msgstr "ConfigurationScriptBase | Tipo de carga útil"
+msgstr "ConfigurationScriptBase|Tipo de carga útil"
+
+msgid "ConfigurationScriptBase|Payload valid"
+msgstr "ConfigurationScriptBase|Carga útil válida"
 
 msgid "ConfigurationScriptBase|Region description"
 msgstr "ConfigurationScriptBase|Descrição da região"
@@ -10524,10 +10533,10 @@ msgid "ConfigurationScriptBase|Region number"
 msgstr "ConfigurationScriptBase|Número da região"
 
 msgid "ConfigurationScriptBase|Run by userid"
-msgstr "ConfigurationScriptBase | Executar por ID do usuário"
+msgstr "ConfigurationScriptBase|Executar por ID do usuário"
 
 msgid "ConfigurationScriptBase|Status"
-msgstr "ConfigurationScriptBase | Status"
+msgstr "ConfigurationScriptBase|Status"
 
 msgid "ConfigurationScriptBase|Survey spec"
 msgstr "ConfigurationScriptBase|Especificação da pesquisa de opinião"
@@ -15342,9 +15351,6 @@ msgstr "O perfil de tempo padrão \"%{name}\" não pode ser excluído"
 msgid "Default Value"
 msgstr "Valor padrão"
 
-msgid "Default Views"
-msgstr "Visualizações padrão"
-
 msgid "Default actions can not be changed."
 msgstr "As ações padrão não podem ser mudadas."
 
@@ -18702,9 +18708,6 @@ msgstr "Editar tags do armazenamento de dados"
 msgid "Edit Default Filters"
 msgstr "Editar filtros padrão"
 
-msgid "Edit Default Views"
-msgstr "Editar exibições padrão"
-
 msgid "Edit Dialog in the Dialog Editor"
 msgstr "Editar caixa de diálogo no editor do diálogo"
 
@@ -18936,11 +18939,11 @@ msgstr "Editar sequência de grupos de usuários para procura LDAP"
 msgid "Edit Sequence of User Groups was cancelled by the user"
 msgstr "A edição da sequência de grupos de usuários foi cancelada pelo usuário"
 
+msgid "Edit Service \"%{name}\""
+msgstr "Editar Serviço \"%{name}\""
+
 msgid "Edit Service tags"
 msgstr "Editar tags de serviço"
-
-msgid "Edit Service\"%{name}\""
-msgstr "Editar serviço\"%{name}\""
 
 msgid "Edit Services"
 msgstr "Editar serviços"
@@ -20367,6 +20370,9 @@ msgstr "A edição do perfil de tempo %s foi cancelada pelo usuário."
 
 msgid "Editing tag mapping from label \"%{name}\""
 msgstr "Editando o mapeamento de tag a partir do rótulo \"%{name}\""
+
+msgid "Editor"
+msgstr "Editor"
 
 msgid "Either Host Name or Cluster Name is required"
 msgstr "É obrigatório informar o nome do host ou o nome do cluster"
@@ -26736,6 +26742,9 @@ msgstr "Credenciais de autenticação inválidas"
 
 msgid "Invalid button action"
 msgstr "Ação inválida do botão"
+
+msgid "Invalid button action!"
+msgstr "Ação do botão inválida!"
 
 msgid "Invalid chart definition"
 msgstr "Definição de gráfico inválida"
@@ -33724,9 +33733,6 @@ msgstr "NVMe"
 
 msgid "Name"
 msgstr "Nome"
-
-msgid "Name / Description"
-msgstr "Nome/descrição"
 
 msgid "Name can only contain lowercase letters, numbers, or underscores"
 msgstr "O nome pode conter apenas letras minúsculas, números ou sublinhados"
@@ -48968,6 +48974,12 @@ msgstr[1] "Tarefas"
 msgid "Task %{id} not found"
 msgstr "A tarefa %{id} não foi localizada"
 
+msgid "Task Details"
+msgstr "Detalhes da tarefas"
+
+msgid "Task ID"
+msgstr "ID da tarefa"
+
 msgid "Task Name"
 msgstr "Nome da tarefa"
 
@@ -49233,9 +49245,6 @@ msgstr "Caixa de texto"
 
 msgid "Textual"
 msgstr "Textual"
-
-msgid "Textual View"
-msgstr "Exibição textual"
 
 msgid ""
 "The %{product} Server is still starting, you have been redirected to the "
@@ -53381,6 +53390,9 @@ msgstr "Visualizar métricas"
 
 msgid "View More"
 msgstr "Visualizar mais"
+
+msgid "View My Settings"
+msgstr "Visualizar minhas configurações"
 
 msgid "View Network Ports"
 msgstr "Visualizar portas da rede"
