@@ -41,6 +41,7 @@ class ContainerOrchestrator
                 },
                 :volumeMounts    => [
                   {:name => "database-secret", :readOnly => true, :mountPath => "/run/secrets/postgresql"},
+                  {:name => "messaging-env-secret", :readOnly => true, :mountPath => "/run/secrets/messaging"},
                   {:name => "encryption-key", :readOnly => true, :mountPath => "/run/secrets/manageiq/application"},
                 ]
               }],
@@ -56,6 +57,32 @@ class ContainerOrchestrator
                       {:key => "port",     :path => "POSTGRESQL_PORT"},
                       {:key => "username", :path => "POSTGRESQL_USER"},
                     ],
+                  }
+                },
+                {
+                  :name   => "messaging-env-secret",
+                  :projected => {
+                    :sources => [
+                      {
+                        :secret => {
+                          :name => "messaging-env-secret",
+                          :items      => [
+                            {:key => "hostname",   :path => "MESSAGING_HOSTNAME"},
+                            {:key => "username", :path => "MESSAGING_USERNAME"},
+                            {:key => "port",     :path => "MESSAGING_PORT"},
+                            {:key => "sasl_mechanism", :path => "MESSAGING_SASL_MECHANISM"},
+                          ],
+                        }
+                      },
+                      {
+                        :secret => {
+                          :name => "#{ENV["APP_NAME"]}-kafka-admin",
+                          :items      => [
+                            {:key => "password", :path => "MESSAGING_PASSWORD"},
+                          ],
+                        }
+                      },
+                    ]
                   }
                 },
                 {
