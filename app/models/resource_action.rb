@@ -60,11 +60,7 @@ class ResourceAction < ApplicationRecord
   end
 
   def fqname
-    MiqAeEngine::MiqAePath.new(
-      :ae_namespace => ae_namespace,
-      :ae_class     => ae_class,
-      :ae_instance  => ae_instance
-    ).to_s
+    MiqAeEngine::MiqAePath.join(ae_namespace, ae_class, ae_instance)
   end
   alias_method :ae_path, :fqname
 
