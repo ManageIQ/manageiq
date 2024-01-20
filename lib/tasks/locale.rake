@@ -171,20 +171,6 @@ namespace :locale do
 
   desc "Update all ManageIQ gettext catalogs and merge them into one"
   task "update_all" do
-    def remove_line_numbers(path)
-      puts "Removing line numbers from #{path}"
-
-      # Remove line numbers from source references
-      path.write(
-        path.readlines.map { |l| l.gsub(/^(#.+):[0-9]+\n$/, "\\1\n") }.join
-      )
-
-      # Fix consecutive duplicate comment lines where there were multiple source references to the same file
-      path.write(
-        (path.readlines << nil).each_cons(2).map { |l1, l2| l1.start_with?("#") && l1 == l2 ? nil : l1 }.compact.join
-      )
-    end
-
     Rake::Task['locale:update'].invoke
 
     pot_files = []
@@ -209,21 +195,24 @@ namespace :locale do
     ]
 
     tmp_dir = Rails.root.join('locale', 'tmp').to_s
-    Dir.mkdir(tmp_dir, 0o700)
+    FileUtils.rm_rf(tmp_dir)
+    FileUtils.mkdir(tmp_dir)
     extra_pots.each do |url|
       pot_file = "#{tmp_dir}/#{url.split('/')[-1]}"
       ManageIQ::Environment.system!('curl', '-f', '-o', pot_file, url)
       pot_files << pot_file
     end
 
-    system('rmsgcat', '--sort-by-msgid', '-o', Rails.root.join('locale', 'manageiq-all.pot').to_s, Rails.root.join('locale', 'manageiq.pot').to_s, *pot_files)
-    system('mv', '-v', Rails.root.join('locale', 'manageiq-all.pot').to_s, Rails.root.join('locale', 'manageiq.pot').to_s)
-    system('rmsgmerge', '--sort-by-msgid', '--no-fuzzy-matching', '-o', Rails.root.join('locale', 'en', 'manageiq-all.po').to_s, Rails.root.join('locale', 'en', 'manageiq.po').to_s, Rails.root.join('locale', 'manageiq.pot').to_s)
-    system('mv', '-v', Rails.root.join('locale', 'en', 'manageiq-all.po').to_s, Rails.root.join('locale', 'en', 'manageiq.po').to_s)
-    system('rm', '-rf', tmp_dir)
+    # Generate the file locations for reference.
+    # msgcat will concatenate and retain all file location information, whereas rmsgcat will only retain file locations from the last file ARG
+    system('msgcat', '--sort-output', '-o', Rails.root.join('locale', 'manageiq-with-file-locations.pot').to_s, Rails.root.join('locale', 'manageiq.pot').to_s, *pot_files)
 
-    remove_line_numbers(Rails.root.join('locale/manageiq.pot'))
-    remove_line_numbers(Rails.root.join('locale/en/manageiq.po'))
+    system('rmsgcat', '--sort-by-msgid', '--no-location', '-o', Rails.root.join('locale', 'tmp', 'manageiq-all.pot').to_s, Rails.root.join('locale', 'manageiq.pot').to_s, *pot_files)
+    system('mv', '-v', Rails.root.join('locale', 'tmp', 'manageiq-all.pot').to_s, Rails.root.join('locale', 'manageiq.pot').to_s)
+    system('rmsgmerge', '--sort-by-msgid', '--no-location', '--no-fuzzy-matching', '-o', Rails.root.join('locale', 'tmp', 'manageiq-all.po').to_s, Rails.root.join('locale', 'en', 'manageiq.po').to_s, Rails.root.join('locale', 'manageiq.pot').to_s)
+    system('mv', '-v', Rails.root.join('locale', 'tmp', 'manageiq-all.po').to_s, Rails.root.join('locale', 'en', 'manageiq.po').to_s)
+
+    FileUtils.rm_rf(tmp_dir)
   end
 
   desc "Show changes in gettext strings since last catalog update"
