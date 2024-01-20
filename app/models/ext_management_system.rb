@@ -146,18 +146,41 @@ class ExtManagementSystem < ApplicationRecord
 
   def edit_with_params(params, endpoints, authentications)
     tap do |ems|
+      endpoints_changed       = false
+      authentications_changed = false
+
+      endpoint_changes       = {}
+      authentication_changes = {}
+
       transaction do
         # Remove endpoints/attributes that are not arriving in the arguments above
-        ems.endpoints.where.not(:role => nil).where.not(:role => endpoints.map { |ep| ep['role'] }).delete_all
-        ems.authentications.where.not(:authtype => nil).where.not(:authtype => authentications.map { |au| au['authtype'] }).delete_all
+        endpoints_to_delete       = ems.endpoints.where.not(:role => nil).where.not(:role => endpoints.map { |ep| ep['role'] })
+        authentications_to_delete = ems.authentications.where.not(:authtype => nil).where.not(:authtype => authentications.map { |au| au['authtype'] })
+
+        endpoints_changed       ||= endpoints_to_delete.delete_all > 0
+        authentications_changed ||= authentications_to_delete.delete_all > 0
 
         ems.assign_attributes(params)
-        ems.endpoints = endpoints.map(&method(:assign_nested_endpoint))
-        ems.authentications = authentications.map(&method(:assign_nested_authentication))
+        ems.endpoints       = endpoints.map       { |ep| assign_nested_endpoint(ep) }
+        ems.authentications = authentications.map { |auth| assign_nested_authentication(auth) }
+
+        endpoint_changes = ems.endpoints.select(&:changed?).to_h do |ep|
+          [ep.role.to_sym, ep.changes]
+        end
+
+        authentication_changes = ems.authentications.select(&:changed?).to_h do |auth|
+          [auth.authtype.to_sym, auth.changes]
+        end
+
+        endpoints_changed       ||= endpoint_changes.present?
+        authentications_changed ||= authentication_changes.present?
 
         ems.provider.save! if ems.provider.present? && ems.provider.changed?
         ems.save!
       end
+
+      after_update_endpoints(endpoint_changes)            if endpoints_changed
+      after_update_authentication(authentication_changes) if authentications_changed
     end
   end
 
@@ -802,8 +825,12 @@ class ExtManagementSystem < ApplicationRecord
   # Some workers hold open a connection to the provider and thus do not
   # automatically pick up authentication changes.  These workers have to be
   # restarted manually for the new credentials to be used.
-  def after_update_authentication
-    stop_event_monitor_queue_on_credential_change
+  def after_update_authentication(changes)
+    stop_event_monitor_queue_on_credential_change(changes)
+  end
+
+  def after_update_endpoints(changes)
+    stop_event_monitor_queue_on_change(changes)
   end
 
   ###################################
@@ -814,6 +841,14 @@ class ExtManagementSystem < ApplicationRecord
     nil
   end
   delegate :event_monitor_class, :to => :class
+
+  def endpoint_role_for_events
+    :default
+  end
+
+  def authtype_for_events
+    default_authentication_type
+  end
 
   def event_monitor
     return if event_monitor_class.nil?
@@ -842,15 +877,15 @@ class ExtManagementSystem < ApplicationRecord
     )
   end
 
-  def stop_event_monitor_queue_on_change
-    if event_monitor_class && !self.new_record? && default_endpoint.changed.include_any?("hostname", "ipaddress")
+  def stop_event_monitor_queue_on_change(changes)
+    if event_monitor_class && !new_record? && changes[endpoint_role_for_events]&.keys&.include_any?("hostname", "ipaddress")
       _log.info("EMS: [#{name}], Hostname or IP address has changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
       stop_event_monitor_queue
     end
   end
 
-  def stop_event_monitor_queue_on_credential_change
-    if event_monitor_class && !self.new_record? && self.credentials_changed?
+  def stop_event_monitor_queue_on_credential_change(changes)
+    if event_monitor_class && !new_record? && changes[authtype_for_events].present?
       _log.info("EMS: [#{name}], Credentials have changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
       stop_event_monitor_queue
     end
@@ -875,6 +910,14 @@ class ExtManagementSystem < ApplicationRecord
     nil
   end
   delegate :refresh_worker_class, :to => :class
+
+  def endpoint_role_for_refresh
+    :default
+  end
+
+  def authtype_for_refresh
+    default_authentication_type
+  end
 
   def refresh_worker
     return if refresh_worker_class.nil?
@@ -906,15 +949,15 @@ class ExtManagementSystem < ApplicationRecord
     )
   end
 
-  def stop_refresh_worker_queue_on_change
-    if refresh_worker_class && !self.new_record? && default_endpoint.changed.include_any?("hostname", "ipaddress")
+  def stop_refresh_worker_queue_on_change(changes)
+    if refresh_worker_class && !new_record? && changes["default"]&.keys&.include_any?("hostname", "ipaddress")
       _log.info("EMS: [#{name}], Hostname or IP address has changed, stopping Refresh Worker.  It will be restarted by the WorkerMonitor.")
       stop_refresh_worker_queue
     end
   end
 
-  def stop_refresh_worker_queue_on_credential_change
-    if refresh_worker_class && !self.new_record? && self.credentials_changed?
+  def stop_refresh_worker_queue_on_credential_change(changes)
+    if refresh_worker_class && !new_record? && changes[authtype_for_refresh].present?
       _log.info("EMS: [#{name}], Credentials have changed, stopping Refresh Worker.  It will be restarted by the WorkerMonitor.")
       stop_refresh_worker_queue
     end

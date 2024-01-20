@@ -70,8 +70,8 @@ module ManageIQ::Providers
       MiqSystem.open_browser(browser_url)
     end
 
-    def stop_event_monitor_queue_on_credential_change
-      if event_monitor_class && !self.new_record? && self.credentials_changed?
+    def stop_event_monitor_queue_on_credential_change(changes)
+      if event_monitor_class && !new_record? && changes["default"]&.keys&.include_any?("hostname", "ipaddress")
         _log.info("EMS: [#{name}], Credentials have changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
         stop_event_monitor_queue
         network_manager.stop_event_monitor_queue if respond_to?(:network_manager) && network_manager

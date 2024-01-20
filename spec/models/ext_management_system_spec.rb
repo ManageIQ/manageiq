@@ -698,6 +698,163 @@ RSpec.describe ExtManagementSystem do
     end
   end
 
+  describe "#edit_with_params" do
+    let(:zone) { EvmSpecHelper.local_miq_server.zone }
+    let(:ems)  do
+      FactoryBot.create(:ext_management_system, :with_authentication, :zone => zone).tap do |ems|
+        # assign_nested_authentication automatically sets the name to "#{self.class.name} #{name}"
+        # set it here to prevent spurious authentication record changes
+        ems.default_authentication.update!(:name => "#{ems.class.name} #{ems.name}")
+      end
+    end
+
+    let(:params)          { {"name" => ems.name, "zone" => ems.zone} }
+    let(:endpoints)       { [default_endpoint] }
+    let(:authentications) { [default_authentication] }
+
+    let(:default_endpoint)       { {"role" => "default", "hostname" => ems.default_endpoint.hostname, "ipaddress" => ems.default_endpoint.ipaddress} }
+    let(:default_authentication) { {"authtype" => "default", "userid" => ems.default_authentication.userid, "password" => ems.default_authentication.password} }
+
+    context "with no changes" do
+      it "doesn't call endpoints or authentications changed callbacks" do
+        expect(ems).not_to receive(:after_update_endpoints)
+        expect(ems).not_to receive(:after_update_authentication)
+
+        ems.edit_with_params(params, endpoints, authentications)
+      end
+    end
+
+    context "changing an ext_management_system record attribute" do
+      let(:params) { {:name => "new-name", :zone => ems.zone} }
+
+      it "changes the name" do
+        ems.edit_with_params(params, endpoints, authentications)
+        expect(ems.reload.name).to eq("new-name")
+      end
+    end
+
+    context "adding an endpoint" do
+      let(:endpoints) { [default_endpoint, {"role" => "metrics", "hostname" => "metrics"}] }
+
+      it "creates the new endpoint" do
+        ems.edit_with_params(params, endpoints, authentications)
+
+        ems.reload
+
+        expect(ems.endpoints.pluck(:role)).to match_array(["default", "metrics"])
+      end
+
+      it "calls after_update_endpoints" do
+        expect(ems).to receive(:after_update_endpoints)
+        expect(ems).not_to receive(:after_update_authentication)
+
+        ems.edit_with_params(params, endpoints, authentications)
+      end
+    end
+
+    context "deleting an endpoint" do
+      before { ems.endpoints.create!(:role => "metrics", :hostname => "metrics") }
+
+      it "deletes the unused endpoint" do
+        ems.edit_with_params(params, endpoints, authentications)
+
+        ems.reload
+        expect(ems.endpoints.pluck(:role)).to match_array(["default"])
+      end
+
+      it "calls after_update_endpoints" do
+        expect(ems).to receive(:after_update_endpoints)
+        expect(ems).not_to receive(:after_update_authentication)
+
+        ems.edit_with_params(params, endpoints, authentications)
+      end
+    end
+
+    context "updating an endpoint" do
+      let(:default_endpoint) { {"role" => "default", "hostname" => "new-hostname", "ipaddress" => ems.default_endpoint.ipaddress} }
+
+      it "updates the default hostname" do
+        ems.edit_with_params(params, endpoints, authentications)
+
+        ems.reload
+        expect(ems.default_endpoint.hostname).to eq("new-hostname")
+      end
+
+      it "calls after_update_endpoints" do
+        expect(ems).to receive(:after_update_endpoints)
+        expect(ems).not_to receive(:after_update_authentication)
+
+        ems.edit_with_params(params, endpoints, authentications)
+      end
+
+      it "stops the event monitor" do
+        expect(ems).to receive(:stop_event_monitor_queue)
+
+        ems.edit_with_params(params, endpoints, authentications)
+      end
+    end
+
+    context "adding an authentication" do
+      let(:authentications) { [default_authentication, {:authtype => "metrics", :auth_key => "secret"}] }
+
+      it "creates the authentication" do
+        ems.edit_with_params(params, endpoints, authentications)
+
+        ems.reload
+        expect(ems.authentications.pluck(:authtype)).to match_array(["default", "metrics"])
+      end
+
+      it "calls after_update_authentication" do
+        expect(ems).to receive(:after_update_authentication)
+        expect(ems).not_to receive(:after_update_endpoints)
+
+        ems.edit_with_params(params, endpoints, authentications)
+      end
+    end
+
+    context "deleting an authentication" do
+      before { ems.authentications.create!(:authtype => "metrics", :auth_key => "secret") }
+
+      it "deletes the authentication" do
+        ems.edit_with_params(params, endpoints, authentications)
+
+        ems.reload
+        expect(ems.authentications.pluck(:authtype)).to match_array(["default"])
+      end
+
+      it "calls after_update_authentication" do
+        expect(ems).to receive(:after_update_authentication)
+        expect(ems).not_to receive(:after_update_endpoints)
+
+        ems.edit_with_params(params, endpoints, authentications)
+      end
+    end
+
+    context "updating an authentication" do
+      let(:default_authentication) { {"authtype" => "default", "userid" => ems.default_authentication.userid, "password" => "more-secret"} }
+
+      it "updates the password" do
+        ems.edit_with_params(params, endpoints, authentications)
+
+        ems.reload
+        expect(ems.default_authentication.password).to eq("more-secret")
+      end
+
+      it "calls after_update_authentication" do
+        expect(ems).to receive(:after_update_authentication)
+        expect(ems).not_to receive(:after_update_endpoints)
+
+        ems.edit_with_params(params, endpoints, authentications)
+      end
+
+      it "stops the event monitor" do
+        expect(ems).to receive(:stop_event_monitor_queue)
+
+        ems.edit_with_params(params, endpoints, authentications)
+      end
+    end
+  end
+
   context "virtual column :supports_block_storage (direct supports)" do
     it "returns false if block storage is not supported" do
       ems = FactoryBot.create(:ext_management_system)
