@@ -6,4 +6,5 @@ session_store ||= case Settings.server.session_store
                   when "cache"  then :mem_cache_store
                   end
 
+require 'manageiq/session'
 ManageIQ::Session.store = session_store
