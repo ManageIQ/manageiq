@@ -34,7 +34,7 @@ class <%= class_name %>::<%= manager_type %> < ManageIQ::Providers::<%= manager_
               :component              => 'validate-provider-credentials',
               :name                   => 'authentications.default.valid',
               :skipSubmit             => true,
-              :validationDependencies => %w[type provider_region],
+              :validationDependencies => %w[type zone_id provider_region],
               :fields                 => [
                 {
                   :component  => "select-field",
