@@ -96,3 +96,5 @@ module ManageIQ
     private_class_method :fetch_store_from_rails
   end
 end
+
+Dir.glob(File.join(__dir__, "session/*")).sort.each {|f| require f}

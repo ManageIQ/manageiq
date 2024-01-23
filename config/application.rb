@@ -158,6 +158,7 @@ module Vmdb
     # on the top to bottom order of initializer calls in the file.
     # Because this is easy to mess up, keep your initializers in order.
     initializer :load_inflections, :before => :init_vmdb_plugins do
+      require 'vmdb/inflections'
       Vmdb::Inflections.load_inflections
     end
 
