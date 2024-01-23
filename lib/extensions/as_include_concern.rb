@@ -56,6 +56,7 @@ module ActiveSupport
         end
         include to_include.constantize
       end
+      require 'vmdb/deprecation'
       Vmdb::Deprecation.deprecate_methods(self, :include_concern)
     end
   end
