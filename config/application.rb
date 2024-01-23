@@ -104,8 +104,6 @@ module Vmdb
 
     config.autoload_paths += config.eager_load_paths
 
-    config.autoloader = :zeitwerk
-
     # config.load_defaults 6.1
     # Disable defaults as ActiveRecord::Base.belongs_to_required_by_default = true causes MiqRegion.seed to fail validation on belongs_to maintenance zone
 
