@@ -132,16 +132,19 @@ RSpec.describe Rbac::Filterer do
   let(:owner_tenant)       { FactoryBot.create(:tenant) }
   let(:owner_group)        { FactoryBot.create(:miq_group, :tenant => owner_tenant) }
   let(:owner_user)         { FactoryBot.create(:user, :miq_groups => [owner_group]) }
-  let(:owned_vm)           { FactoryBot.create(:vm_vmware, :tenant => owner_tenant) }
+  let(:owned_ems)          { FactoryBot.create(:ems_vmware, :tenant => owner_tenant) }
+  let(:owned_vm)           { FactoryBot.create(:vm_vmware, :ext_management_system => owned_ems, :tenant => owner_tenant) }
 
   let(:other_tenant)       { FactoryBot.create(:tenant) }
   let(:other_group)        { FactoryBot.create(:miq_group, :tenant => other_tenant) }
   let(:other_user)         { FactoryBot.create(:user, :miq_groups => [other_group]) }
-  let(:other_vm)           { FactoryBot.create(:vm_vmware, :tenant => other_tenant) }
+  let(:other_ems)          { FactoryBot.create(:ems_vmware, :tenant => other_tenant) }
+  let(:other_vm)           { FactoryBot.create(:vm_vmware, :ext_management_system => other_ems, :tenant => other_tenant) }
 
   let(:child_tenant)       { FactoryBot.create(:tenant, :divisible => false, :parent => owner_tenant) }
   let(:child_group)        { FactoryBot.create(:miq_group, :tenant => child_tenant) }
   let(:child_user)         { FactoryBot.create(:user, :miq_groups => [child_group]) }
+  let(:child_ems)          { FactoryBot.create(:ems_vmware, :tenant => child_tenant) }
   let(:child_openstack_vm) { FactoryBot.create(:vm_openstack, :tenant => child_tenant, :miq_group => child_group) }
 
   describe ".search" do
@@ -834,16 +837,18 @@ RSpec.describe Rbac::Filterer do
       end
 
       context "with accessible_tenant_ids filtering (strategy = :ancestor_ids)" do
-        it "can see parent tenant's EMS" do
-          ems = FactoryBot.create(:ems_vmware, :tenant => owner_tenant)
+        it "can see parent and own tenant's EMS" do
+          owned_ems
+          child_ems
           results = described_class.search(:class => "ExtManagementSystem", :miq_group => child_group).first
-          expect(results).to match_array [ems]
+          expect(results).to match_array [owned_ems, child_ems]
         end
 
         it "can't see descendant tenant's EMS" do
-          _ems = FactoryBot.create(:ems_vmware, :tenant => child_tenant)
+          owned_ems
+          child_ems
           results = described_class.search(:class => "ExtManagementSystem", :miq_group => owner_group).first
-          expect(results).to match_array []
+          expect(results).to match_array [owned_ems]
         end
       end
 
@@ -1201,6 +1206,34 @@ RSpec.describe Rbac::Filterer do
                                  :include_for_find => @include,
                                  :references       => nil
         end.not_to raise_error
+      end
+    end
+
+    context "for Switches" do
+      let(:owned_host) { FactoryBot.create(:host, :ext_management_system => owned_ems) }
+      let(:other_host) { FactoryBot.create(:host, :ext_management_system => other_ems) }
+      let(:child_host) { FactoryBot.create(:host, :ext_management_system => child_ems) }
+
+      let(:owned_switch) { FactoryBot.create(:switch, :host => owned_host) }
+      let(:other_switch) { FactoryBot.create(:switch, :host => other_host) }
+      let(:child_switch) { FactoryBot.create(:switch, :host => child_host) }
+
+      it "finds own switches and child switches" do
+        owned_switch
+        other_switch
+        child_switch
+
+        results = described_class.filtered(Switch, :user => owner_user)
+        expect(results).to match_array([owned_switch, child_switch])
+      end
+
+      it "doesn't finds parent switches" do
+        owned_switch
+        other_switch
+        child_switch
+
+        results = described_class.filtered(Switch, :user => child_user)
+        expect(results).to match_array([child_switch])
       end
     end
   end
