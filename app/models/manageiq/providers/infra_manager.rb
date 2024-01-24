@@ -1,17 +1,5 @@
 module ManageIQ::Providers
   class InfraManager < BaseManager
-    require_nested :Cluster
-    require_nested :Datacenter
-    require_nested :Folder
-    require_nested :MetricsCapture
-    require_nested :ProvisionWorkflow
-    require_nested :ResourcePool
-    require_nested :Storage
-    require_nested :StorageCluster
-    require_nested :Template
-    require_nested :Vm
-    require_nested :VmOrTemplate
-
     include SupportsFeatureMixin
 
     has_many :distributed_virtual_switches, :dependent => :destroy, :foreign_key => :ems_id, :inverse_of => :ext_management_system

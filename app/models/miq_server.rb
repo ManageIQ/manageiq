@@ -9,10 +9,6 @@ class MiqServer < ApplicationRecord
   include QueueManagement
   include RoleManagement
   include StatusManagement
-
-  require_nested :ServerMonitor
-  require_nested :WorkerManagement
-
   include UuidMixin
   acts_as_miq_taggable
   include MiqPolicyMixin

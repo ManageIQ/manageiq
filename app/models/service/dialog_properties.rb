@@ -1,7 +1,5 @@
 class Service
   class DialogProperties
-    require_nested :Retirement
-
     def initialize(options, user)
       @options = options || {}
       @user = user

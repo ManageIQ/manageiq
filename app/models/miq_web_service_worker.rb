@@ -1,6 +1,4 @@
 class MiqWebServiceWorker < MiqWorker
-  require_nested :Runner
-
   self.required_roles = ['web_services']
 
   STARTING_PORT = 4000

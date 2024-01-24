@@ -1,10 +1,4 @@
 class <%= class_name %>::<%= manager_type %> < ManageIQ::Providers::<%= manager_type %>
-  require_nested :MetricsCapture
-  require_nested :MetricsCollectorWorker
-  require_nested :Refresher
-  require_nested :RefreshWorker
-  require_nested :Vm
-
   # Form schema for creating/editing a provider, it should follow the DDF specification
   # For more information check the DDF documentation at: https://data-driven-forms.org
   #

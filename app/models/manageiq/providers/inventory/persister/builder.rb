@@ -6,14 +6,6 @@ module ManageIQ::Providers
 
       class NotSubclassedError < StandardError; end
 
-      require_nested :AutomationManager
-      require_nested :CloudManager
-      require_nested :InfraManager
-      require_nested :NetworkManager
-      require_nested :PhysicalInfraManager
-      require_nested :StorageManager
-      require_nested :PersisterHelper
-
       include ::ManageIQ::Providers::Inventory::Persister::Builder::Shared
 
       # Default options for builder
