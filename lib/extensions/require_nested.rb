@@ -37,6 +37,7 @@ module RequireNested
       Object.require_nested name
     end
   end
+  Vmdb::Deprecation.deprecate_methods(self, :require_nested)
 end
 
 Module.include RequireNested
