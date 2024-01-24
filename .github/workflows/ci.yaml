@@ -15,6 +15,7 @@ jobs:
       matrix:
         ruby-version:
         - '3.0'
+        - '3.1'
         test-suite:
         - vmdb
         - security
