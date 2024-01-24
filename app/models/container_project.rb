@@ -7,7 +7,7 @@ class ContainerProject < ApplicationRecord
   include MiqPolicyMixin
   include TenantIdentityMixin
   include CustomActionsMixin
-  include_concern 'Purging'
+  include Purging
   belongs_to :ext_management_system, :class_name => "ManageIQ::Providers::ContainerManager", :foreign_key => "ems_id", :inverse_of => :container_projects
   has_many :container_groups, -> { active }, :inverse_of => :container_project
   has_many :container_routes

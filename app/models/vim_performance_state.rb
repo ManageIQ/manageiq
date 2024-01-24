@@ -1,5 +1,5 @@
 class VimPerformanceState < ApplicationRecord
-  include_concern 'Purging'
+  include Purging
 
   serialize :state_data
 

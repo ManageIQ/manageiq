@@ -3,7 +3,7 @@ class ExtManagementSystem < ApplicationRecord
   include SupportsFeatureMixin
   include ExternalUrlMixin
   include VerifyCredentialsMixin
-  include_concern "SupportsAttribute"
+  include SupportsAttribute
 
   hide_attribute "aggregate_memory" # better to use total_memory (coin toss - they're similar)
 

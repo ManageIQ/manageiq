@@ -6,7 +6,7 @@ class MiqProductFeature < ApplicationRecord
   ALL_TASKS_FEATURE     = "miq_task_all_ui".freeze
   TENANT_ADMIN_FEATURE  = "rbac_tenant".freeze
 
-  include_concern "Seeding"
+  include Seeding
 
   acts_as_tree
 

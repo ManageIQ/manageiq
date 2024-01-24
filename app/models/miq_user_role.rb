@@ -1,5 +1,5 @@
 class MiqUserRole < ApplicationRecord
-  include_concern "ReadOnlyMixin"
+  include ReadOnlyMixin
 
   DEFAULT_TENANT_ROLE_NAME = "EvmRole-tenant_administrator"
 

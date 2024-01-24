@@ -1,14 +1,14 @@
 require 'resolv'
 
 class MiqServer < ApplicationRecord
-  include_concern 'AtStartup'
-  include_concern 'ServerSmartProxy'
-  include_concern 'ConfigurationManagement'
-  include_concern 'EnvironmentManagement'
-  include_concern 'LogManagement'
-  include_concern 'QueueManagement'
-  include_concern 'RoleManagement'
-  include_concern 'StatusManagement'
+  include AtStartup
+  include ServerSmartProxy
+  include ConfigurationManagement
+  include EnvironmentManagement
+  include LogManagement
+  include QueueManagement
+  include RoleManagement
+  include StatusManagement
 
   require_nested :ServerMonitor
   require_nested :WorkerManagement

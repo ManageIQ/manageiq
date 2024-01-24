@@ -11,8 +11,7 @@ class ContainerImage < ApplicationRecord
   include NewWithTypeStiMixin
   include CustomActionsMixin
   include Metric::CiMixin
-
-  include_concern 'Purging'
+  include Purging
 
   DOCKER_IMAGE_PREFIX = "docker://"
   DOCKER_PULLABLE_PREFIX = "docker-pullable://".freeze

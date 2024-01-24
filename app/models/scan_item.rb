@@ -1,5 +1,5 @@
 class ScanItem < ApplicationRecord
-  include_concern "Seeding"
+  include Seeding
 
   serialize :definition
   acts_as_miq_set_member

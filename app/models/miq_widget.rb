@@ -2,7 +2,7 @@
 #
 
 class MiqWidget < ApplicationRecord
-  include_concern "ReadOnlyMixin"
+  include ReadOnlyMixin
 
   default_value_for :enabled, true
   default_value_for :read_only, false
@@ -29,7 +29,7 @@ class MiqWidget < ApplicationRecord
 
   scope :with_content_type, ->(type) { where(:content_type => type) }
 
-  include_concern 'ImportExport'
+  include ImportExport
   include UuidMixin
   include YamlImportExportMixin
   acts_as_miq_set_member

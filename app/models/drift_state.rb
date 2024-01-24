@@ -1,5 +1,5 @@
 class DriftState < ApplicationRecord
-  include_concern 'Purging'
+  include Purging
 
   belongs_to :resource, :polymorphic => true
 

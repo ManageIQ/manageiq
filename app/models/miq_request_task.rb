@@ -1,7 +1,7 @@
 class MiqRequestTask < ApplicationRecord
-  include_concern 'Dumping'
-  include_concern 'PostInstallCallback'
-  include_concern 'StateMachine'
+  include Dumping
+  include PostInstallCallback
+  include StateMachine
 
   belongs_to :miq_request
   belongs_to :source,            :polymorphic => true

@@ -1,5 +1,5 @@
 class PhysicalServerProvisionTask < MiqProvisionTask
-  include_concern 'StateMachine'
+  include StateMachine
 
   def description
     'Provision Physical Server'

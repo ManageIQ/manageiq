@@ -11,7 +11,7 @@ class CloudObjectStoreObject < ApplicationRecord
   include ProcessTasksMixin
   include SupportsFeatureMixin
 
-  include_concern 'Operations'
+  include Operations
 
   alias_attribute :name, :key
 

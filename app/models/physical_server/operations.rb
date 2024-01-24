@@ -1,10 +1,10 @@
 module PhysicalServer::Operations
   extend ActiveSupport::Concern
 
-  include_concern 'Power'
-  include_concern 'Led'
-  include_concern 'ConfigPattern'
-  include_concern 'Lifecycle'
+  include Power
+  include Led
+  include ConfigPattern
+  include Lifecycle
 
   def remote_console_acquire_resource_queue(userid)
     task_opts = {

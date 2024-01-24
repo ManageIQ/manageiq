@@ -1,8 +1,8 @@
 require 'io/wait'
 
 class MiqWorker < ApplicationRecord
-  include_concern 'ContainerCommon'
-  include_concern 'SystemdCommon'
+  include ContainerCommon
+  include SystemdCommon
   include UuidMixin
 
   before_destroy :error_out_tasks_with_active_queue_message, :log_destroy_of_worker_messages

@@ -1,5 +1,5 @@
 class PhysicalServerFirmwareUpdateTask < MiqRequestTask
-  include_concern 'StateMachine'
+  include StateMachine
 
   validates :state, :inclusion => {
     :in      => %w[pending queued active firmware_updated finished],

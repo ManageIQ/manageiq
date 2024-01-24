@@ -1,5 +1,5 @@
 class AdvancedSetting < ApplicationRecord
-  include_concern "ReadOnlyMixin"
+  include ReadOnlyMixin
 
   belongs_to :resource, :polymorphic => true
 

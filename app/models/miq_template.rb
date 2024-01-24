@@ -10,7 +10,7 @@ class MiqTemplate < VmOrTemplate
   virtual_column :display_deprecated,                   :type => :string
   virtual_column :display_memory,                       :type => :integer
 
-  include_concern 'Operations'
+  include Operations
 
   def self.base_model
     MiqTemplate

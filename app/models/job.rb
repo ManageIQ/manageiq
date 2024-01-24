@@ -1,7 +1,7 @@
 class Job < ApplicationRecord
   require_nested :Dispatcher
 
-  include_concern 'StateMachine'
+  include StateMachine
   include UuidMixin
   include FilterableMixin
 

@@ -3,7 +3,7 @@ class AuditEvent < ApplicationRecord
   validates :status, :inclusion => { :in => %w(success failure) }
   validates :severity, :inclusion => { :in => %w(fatal error warn info debug) }
 
-  include_concern 'Purging'
+  include Purging
 
   def self.generate(attrs)
     attrs = {

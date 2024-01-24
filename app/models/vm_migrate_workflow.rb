@@ -1,5 +1,5 @@
 class VmMigrateWorkflow < MiqRequestWorkflow
-  include_concern "DialogFieldValidation"
+  include DialogFieldValidation
 
   def self.base_model
     VmMigrateWorkflow

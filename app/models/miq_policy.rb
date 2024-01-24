@@ -1,7 +1,7 @@
 # TODO: Import/Export support
 
 class MiqPolicy < ApplicationRecord
-  include_concern "ReadOnlyMixin"
+  include ReadOnlyMixin
 
   TOWHAT_APPLIES_TO_CLASSES = %w(ContainerGroup
                                  ContainerImage
@@ -29,7 +29,7 @@ class MiqPolicy < ApplicationRecord
 
   acts_as_miq_taggable
   acts_as_miq_set_member
-  include_concern 'ImportExport'
+  include ImportExport
 
   include UuidMixin
   include YamlImportExportMixin

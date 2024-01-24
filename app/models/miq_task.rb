@@ -1,5 +1,5 @@
 class MiqTask < ApplicationRecord
-  include_concern 'Purging'
+  include Purging
 
   serialize :context_data
   STATE_INITIALIZED = N_('Initialized').freeze

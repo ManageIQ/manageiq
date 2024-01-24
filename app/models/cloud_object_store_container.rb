@@ -12,7 +12,7 @@ class CloudObjectStoreContainer < ApplicationRecord
   include SupportsFeatureMixin
   include CustomActionsMixin
 
-  include_concern 'Operations'
+  include Operations
 
   alias_attribute :name, :key
 

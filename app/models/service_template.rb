@@ -29,8 +29,8 @@ class ServiceTemplate < ApplicationRecord
   include TenancyMixin
   include ArchivedMixin
   include CiFeatureMixin
-  include_concern 'Filter'
-  include_concern 'Copy'
+  include Filter
+  include Copy
 
   validates :name, :presence => true
   belongs_to :tenant

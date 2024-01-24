@@ -1,20 +1,20 @@
 class MiqProvision < MiqProvisionTask
   include MiqProvisionMixin
-  include_concern 'Automate'
-  include_concern 'CustomAttributes'
-  include_concern 'Description'
-  include_concern 'Genealogy'
-  include_concern 'PostInstallCallback'
-  include_concern 'Helper'
-  include_concern 'Iso'
-  include_concern 'Naming'
-  include_concern 'OptionsHelper'
-  include_concern 'Ownership'
-  include_concern 'Pxe'
-  include_concern 'Retirement'
-  include_concern 'Service'
-  include_concern 'StateMachine'
-  include_concern 'Tagging'
+  include Automate
+  include CustomAttributes
+  include Description
+  include Genealogy
+  include PostInstallCallback
+  include Helper
+  include Iso
+  include Naming
+  include OptionsHelper
+  include Ownership
+  include Pxe
+  include Retirement
+  include Service
+  include StateMachine
+  include Tagging
 
   alias_attribute :miq_provision_request, :miq_request   # Legacy provisioning support
   alias_attribute :provision_type,        :request_type  # Legacy provisioning support

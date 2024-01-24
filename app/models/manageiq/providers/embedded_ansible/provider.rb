@@ -1,5 +1,5 @@
 class ManageIQ::Providers::EmbeddedAnsible::Provider < ::Provider
-  include_concern 'DefaultAnsibleObjects'
+  include DefaultAnsibleObjects
 
   has_one :automation_manager,
           :foreign_key => "provider_id",

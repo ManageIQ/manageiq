@@ -1,9 +1,9 @@
 module Vm::Operations
   extend ActiveSupport::Concern
 
-  include_concern 'Guest'
-  include_concern 'Power'
-  include_concern 'Lifecycle'
+  include Guest
+  include Power
+  include Lifecycle
 
   included do
     supports :html5_console do

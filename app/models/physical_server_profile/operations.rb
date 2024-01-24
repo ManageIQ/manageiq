@@ -1,5 +1,5 @@
 module PhysicalServerProfile::Operations
   extend ActiveSupport::Concern
 
-  include_concern 'Assignment'
+  include Assignment
 end
