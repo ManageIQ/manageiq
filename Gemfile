@@ -197,7 +197,7 @@ group :red_hat_virtualization, :manageiq_default do
 end
 
 group :qpid_proton, :optional => true do
-  gem "qpid_proton",                    "~>0.30.0",          :require => false
+  gem "qpid_proton",                    "~>0.37.0",          :require => false
 end
 
 group :systemd, :optional => true do
