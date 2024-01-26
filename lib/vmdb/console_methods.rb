@@ -79,5 +79,31 @@ module Vmdb
       ws.ae_user = (user || User.find_by(:userid => 'admin'))
       $evm = MiqAeMethodService::MiqAeService.new(ws)
     end
+
+    # Helper method to enable one or more roles from the Rails console in development mode
+    #
+    # Role assignment is done in the UI however activation is handled by the orchestrator.
+    # In development mode, the orchestrator is typically not running. This method handles
+    # both the assignment and activation of a role all at once.
+    #
+    # @param role_names [Array<String>] The role names to enable, defaults to all currently
+    #   assigned roles. If "*" is passed, all possible roles will be enabled.
+    def enable_roles(*role_names)
+      raise NotImplementedError, "not implemented in #{Rails.env} mode" unless Rails.env.development?
+
+      role_names.flatten!
+
+      if role_names.blank?
+        role_names = MiqServer.my_server.server_role_names
+      elsif role_names.include?("*")
+        MiqServer.my_server.server_role_names = "*"
+        role_names = MiqServer.my_server.server_role_names
+      else
+        MiqServer.my_server.server_role_names += role_names
+      end
+
+      MiqServer.my_server.activate_roles(*role_names)
+      MiqServer.my_server.active_role_names
+    end
   end
 end
