@@ -257,9 +257,8 @@ class MiqTask < ApplicationRecord
     return miq_report_result.report_results unless miq_report_result.nil?
     unless binary_blob.nil?
       serializer_name = binary_blob.data_type
-      serializer_name = "Marshal" unless serializer_name == "YAML" # YAML or Marshal, for now
       serializer = serializer_name.constantize
-      result = serializer.load(binary_blob.binary)
+      result = serializer.respond_to?(:unsafe_load) ? serializer.unsafe_load(binary_blob.binary) : serializer.load(binary_blob.binary)
       return result.kind_of?(String) ? result.force_encoding("UTF-8") : result
     end
     nil

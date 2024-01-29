@@ -134,6 +134,13 @@ RSpec.describe MiqTask do
       expect(miq_task.task_results).to eq(results)
     end
 
+    it "should get/set task_results with not normally permitted classes properly" do
+      results = {:a => 1, :b => User}
+      miq_task.task_results = results
+      miq_task.save
+      expect(miq_task.task_results).to eq(results)
+    end
+
     it "should queue callback properly" do
       state   = MiqTask::STATE_QUEUED
       message = 'Message for testing: queue_callback'
