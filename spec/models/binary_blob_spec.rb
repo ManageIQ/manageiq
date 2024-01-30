@@ -85,6 +85,15 @@ RSpec.describe BinaryBlob do
       expect(bb.data).to eq(data)
     end
 
+    it "can store and load data as YAML with unpermitted classes" do
+      bb = FactoryBot.build(:binary_blob)
+      data = {:a => User}
+
+      bb.store_data("YAML", data)
+
+      expect(bb.data).to eq(data)
+    end
+
     it "can store and load Marshaled data" do
       bb = FactoryBot.build(:binary_blob)
       data = "foo"
