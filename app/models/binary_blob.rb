@@ -108,7 +108,7 @@ class BinaryBlob < ApplicationRecord
   end
 
   def data
-    serializer.load(binary)
+    serializer.respond_to?(:unsafe_load) ? serializer.unsafe_load(binary) : serializer.load(binary)
   end
 
   def store_data(data_type, the_data)
