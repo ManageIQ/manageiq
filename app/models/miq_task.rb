@@ -255,10 +255,8 @@ class MiqTask < ApplicationRecord
     # support legacy task that saved results in the results column
     return Marshal.load(Base64.decode64(results.split("\n").join)) unless results.nil?
     return miq_report_result.report_results unless miq_report_result.nil?
-    unless binary_blob.nil?
-      serializer_name = binary_blob.data_type
-      serializer = serializer_name.constantize
-      result = serializer.respond_to?(:unsafe_load) ? serializer.unsafe_load(binary_blob.binary) : serializer.load(binary_blob.binary)
+    if binary_blob
+      result = binary_blob.data
       return result.kind_of?(String) ? result.force_encoding("UTF-8") : result
     end
     nil
