@@ -149,7 +149,7 @@ RSpec.describe EmsEvent do
         before do
           stub_settings_merge(
             :messaging => {:type => 'artemis'},
-            :workers   => {:worker_base => {:queue_worker_base => {:defaults => {:dequeue_method => "drb"}}}}
+            :workers   => {:worker_base => {:queue_worker_base => {:event_handler => {:dequeue_method => "drb"}}}}
           )
         end
 
@@ -197,7 +197,7 @@ RSpec.describe EmsEvent do
         before do
           stub_settings_merge(
             :messaging => {:type => 'kafka'},
-            :workers   => {:worker_base => {:queue_worker_base => {:defaults => {:dequeue_method => "drb"}}}}
+            :workers   => {:worker_base => {:queue_worker_base => {:event_handler => {:dequeue_method => "drb"}}}}
           )
         end
 
