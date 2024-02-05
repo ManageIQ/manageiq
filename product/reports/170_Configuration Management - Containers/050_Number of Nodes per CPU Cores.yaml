@@ -27,7 +27,7 @@ graph:
   :type: Column
   :count: 10
   :other: true
-dims: 1
+dims: 2
 filename:
 file_mtime:
 categories: []
