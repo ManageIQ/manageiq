@@ -121,6 +121,14 @@ class ResourcePool < ApplicationRecord
     parent(:of_type => 'ResourcePool')
   end
 
+  def parent_resource_pool_cloud
+    parent(:of_type => 'ManageIQ::Providers::CloudManager::ResourcePool')
+  end
+
+  def parent_resource_pool_infra
+    parent(:of_type => 'ManageIQ::Providers::InfraManager::ResourcePool')
+  end
+
   def parent_cluster_or_host
     Relationship.resource(ancestor_rels(:of_type => ["EmsCluster", "Host"]).last)
   end

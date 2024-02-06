@@ -789,6 +789,19 @@ class VmOrTemplate < ApplicationRecord
       parent(:of_type => "ResourcePool")
     end
   end
+
+  def parent_resource_pool_cloud
+    with_relationship_type('ems_metadata') do
+      parent(:of_type => "ManageIQ::Providers::CloudManager::ResourcePool")
+    end
+  end
+
+  def parent_resource_pool_infra
+    with_relationship_type('ems_metadata') do
+      parent(:of_type => "ManageIQ::Providers::InfraManager::ResourcePool")
+    end
+  end
+
   alias_method :owning_resource_pool, :parent_resource_pool
 
   def parent_blue_folder
