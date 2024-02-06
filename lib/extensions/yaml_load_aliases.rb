@@ -16,7 +16,5 @@ module YamlLoadAliases
   end
 end
 
-if Psych::VERSION >= "3.1"
-  require 'yaml'
-  YAML.singleton_class.prepend(YamlLoadAliases)
-end
+require 'yaml'
+YAML.singleton_class.prepend(YamlLoadAliases)
