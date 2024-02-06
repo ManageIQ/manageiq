@@ -295,7 +295,7 @@
             false: 0
             true: 1
           :description: Preemptible
-          :help: "A <a target=\"_blank\" href=\"https://cloud.google.com/compute/docs/instances/preemptible\">preemptible VM</a> will run for at most 24 hours and may be prematurely-terminated."
+          :help: "A <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://cloud.google.com/compute/docs/instances/preemptible\">preemptible VM</a> will run for at most 24 hours and may be prematurely-terminated."
           :required: false
           :display: :edit
           :default: false
