@@ -51,8 +51,6 @@
 module SupportsFeatureMixin
   extend ActiveSupport::Concern
 
-  COMMON_FEATURES = %i[create delete destroy refresh_ems update].freeze
-
   # Whenever this mixin is included we define all features as unsupported by default.
   # This way we can query for every feature
   included do
