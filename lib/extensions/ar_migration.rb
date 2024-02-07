@@ -31,10 +31,15 @@ module ArPglogicalMigrationHelper
       end
 
       to_add.each do |v|
-        ActiveRecord::Base.connection.exec_insert("INSERT INTO schema_migrations_ran (version, created_at) VALUES ($1, $2)", "SQL", [[nil, v], [nil, Time.now.utc.iso8601(6)]])
+        binds = [
+          ActiveRecord::Relation::QueryAttribute.new("version", v, ActiveModel::Type::String.new),
+          ActiveRecord::Relation::QueryAttribute.new("created_at", Time.now.utc.iso8601(6), ActiveModel::Type::Value.new)
+        ]
+        ActiveRecord::Base.connection.exec_insert("INSERT INTO schema_migrations_ran (version, created_at) VALUES ($1, $2)", "SQL", binds, nil, nil)
       end
     else
-      ActiveRecord::Base.connection.exec_delete("DELETE FROM schema_migrations_ran WHERE version = $1", "SQL", [[nil, version]])
+      binds = [ActiveRecord::Relation::QueryAttribute.new("version", version, ActiveModel::Type::String.new)]
+      ActiveRecord::Base.connection.exec_delete("DELETE FROM schema_migrations_ran WHERE version = $1", "SQL", binds)
     end
   end
 
