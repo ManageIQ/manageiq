@@ -2,6 +2,10 @@ require 'sys-uname'
 require 'socket'
 
 module MiqEnvironment
+  def self.arch
+    Sys::Platform::ARCH
+  end
+
   # Return the fully qualified hostname for the local host.
   #
   def self.fully_qualified_domain_name

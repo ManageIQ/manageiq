@@ -137,6 +137,14 @@ class Service < ApplicationRecord
     options[:power_status]
   end
 
+  def self.active
+    where(:lifecycle_state => ["provisioning", "provisioned"], :retired => false)
+  end
+
+  def self.inactive
+    where(:lifecycle_state => ["unprovisioned", "error_in_provisioning"], :retired => false).or(retired)
+  end
+
   def service_id
     parent_id
   end

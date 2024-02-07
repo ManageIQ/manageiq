@@ -57,7 +57,7 @@ module MiqServer::AtStartup
     private
 
     def log_under_management(prefix)
-      total_vms, total_hosts, total_sockets = managed_resources.values_at(:vms, :hosts, :aggregate_physical_cpus)
+      total_vms, total_hosts, total_sockets = audit_details.values_at(:vms, :hosts, :aggregate_physical_cpus)
       $log.info("#{prefix}, Under Management: VMs: [#{total_vms}], Hosts: [#{total_hosts}], Sockets: [#{total_sockets}]")
     end
 

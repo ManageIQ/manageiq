@@ -586,11 +586,16 @@ class MiqServer < ApplicationRecord
     Zone.visible.in_my_region.count > 1
   end
 
-  def self.managed_resources
+  def self.audit_details
     {
       :vms                     => Vm.active.count,
       :hosts                   => Host.active.count,
       :aggregate_physical_cpus => Host.active.in_my_region.sum(:aggregate_physical_cpus),
+      :providers               => ExtManagementSystem.group(:type).count,
+      :deployment              => MiqEnvironment::Command.is_appliance? ? "appliance" : "containers",
+      :arch                    => MiqEnvironment.arch.to_s,
+      :services                => {:active => Service.active.count, :inactive => Service.inactive.count},
+      :service_catalog_items   => {:active => ServiceTemplate.active.count, :archived => ServiceTemplate.archived.count},
     }
   end
 
@@ -602,8 +607,8 @@ class MiqServer < ApplicationRecord
     }
   end
 
-  def self.audit_managed_resources
-    totals = managed_resources.slice(:vms, :hosts)
+  def self.report_audit_details
+    totals = audit_details.slice(:vms, :hosts)
     $audit_log.info("Under Management: #{totals.to_json}")
   end
 
