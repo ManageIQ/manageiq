@@ -20,8 +20,6 @@
 class ProviderTagMapping < ApplicationRecord
   belongs_to :tag
 
-  require_nested :Mapper
-
   TAG_PREFIXES = ExtManagementSystem.label_mapping_prefixes.map { |name| "/managed/#{name}:" }.freeze
   validate :validate_tag_prefix
 

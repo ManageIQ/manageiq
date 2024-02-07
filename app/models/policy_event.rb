@@ -1,5 +1,5 @@
 class PolicyEvent < ApplicationRecord
-  include_concern 'Purging'
+  include Purging
 
   belongs_to  :miq_event_definition
   belongs_to  :miq_policy

@@ -6,8 +6,7 @@ class CloudVolume < ApplicationRecord
   include CloudTenancyMixin
   include CustomActionsMixin
   include EmsRefreshMixin
-
-  include_concern 'Operations'
+  include Operations
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ExtManagementSystem"
   belongs_to :availability_zone

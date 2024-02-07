@@ -9,7 +9,7 @@ class ContainerNode < ApplicationRecord
   include SupportsFeatureMixin
   include ArchivedMixin
   include CustomActionsMixin
-  include_concern 'Purging'
+  include Purging
 
   EXTERNAL_LOGGING_PATH = "/#/discover?_g=()&_a=(columns:!(hostname,level,kubernetes.pod_name,message),filters:!((meta:(disabled:!f,index:'%{index}',key:hostname,negate:!f),%{query})),index:'%{index}',interval:auto,query:(query_string:(analyze_wildcard:!t,query:'*')),sort:!(time,desc))".freeze
 

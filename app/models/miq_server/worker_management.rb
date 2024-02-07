@@ -1,13 +1,9 @@
 class MiqServer::WorkerManagement
   include Vmdb::Logging
 
-  require_nested :Kubernetes
-  require_nested :Process
-  require_nested :Systemd
-
-  include_concern 'Dequeue'
-  include_concern 'Heartbeat'
-  include_concern 'Monitor'
+  include Dequeue
+  include Heartbeat
+  include Monitor
 
   attr_reader :my_server
 

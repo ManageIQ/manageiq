@@ -1,6 +1,4 @@
 class MiqRemoteConsoleWorker < MiqWorker
-  require_nested :Runner
-
   self.required_roles = ['remote_console']
 
   RACK_APPLICATION = RemoteConsole::RackServer

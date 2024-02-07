@@ -1,5 +1,5 @@
 class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
-  include_concern "DialogFieldValidation"
+  include DialogFieldValidation
 
   def auto_placement_enabled?
     get_value(@values[:placement_auto])

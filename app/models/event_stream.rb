@@ -1,5 +1,5 @@
 class EventStream < ApplicationRecord
-  include_concern 'Purging'
+  include Purging
   serialize :full_data
 
   belongs_to :target, :polymorphic => true

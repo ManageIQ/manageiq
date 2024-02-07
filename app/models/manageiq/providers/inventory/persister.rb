@@ -1,7 +1,6 @@
 class ManageIQ::Providers::Inventory::Persister
   require 'json'
   require 'yaml'
-  require_nested :Builder
 
   attr_reader :manager, :target, :collections, :tag_mapper
 

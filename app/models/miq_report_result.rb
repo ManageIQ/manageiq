@@ -1,6 +1,6 @@
 class MiqReportResult < ApplicationRecord
-  include_concern 'Purging'
-  include_concern 'ResultSetOperations'
+  include Purging
+  include ResultSetOperations
 
   belongs_to :miq_report
   belongs_to :miq_group

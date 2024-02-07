@@ -1,15 +1,5 @@
 module ManageIQ::Providers
   class CloudManager < BaseManager
-    require_nested :AuthKeyPair
-    require_nested :Template
-    require_nested :MetricsCapture
-    require_nested :Provision
-    require_nested :ProvisionWorkflow
-    require_nested :ResourcePool
-    require_nested :Vm
-    require_nested :OrchestrationStack
-    require_nested :VmOrTemplate
-
     class << model_name
       define_method(:route_key) { "ems_clouds" }
       define_method(:singular_route_key) { "ems_cloud" }

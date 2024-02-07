@@ -4,7 +4,7 @@ class MetricRollup < ApplicationRecord
   self.primary_key = "id"
 
   include Metric::Common
-  include_concern 'Metric::ChargebackHelper'
+  include Metric::ChargebackHelper
 
   CHARGEBACK_METRIC_FIELDS = %w(derived_vm_numvcpus cpu_usagemhz_rate_average
                                 cpu_usage_rate_average disk_usage_rate_average

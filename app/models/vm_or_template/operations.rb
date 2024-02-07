@@ -1,10 +1,10 @@
 module VmOrTemplate::Operations
   extend ActiveSupport::Concern
 
-  include_concern 'Configuration'
-  include_concern 'Power'
-  include_concern 'Relocation'
-  include_concern 'Snapshot'
+  include Configuration
+  include Power
+  include Relocation
+  include Snapshot
 
   alias_method :ruby_clone, :clone
 

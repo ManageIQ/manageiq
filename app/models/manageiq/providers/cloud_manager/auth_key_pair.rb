@@ -3,7 +3,7 @@ class ManageIQ::Providers::CloudManager::AuthKeyPair < ::Authentication
   has_and_belongs_to_many :vms, :join_table => :key_pairs_vms, :foreign_key => :authentication_id
   virtual_belongs_to :ext_management_system, :uses => :resource
 
-  include_concern 'Operations'
+  include Operations
 
   def self.class_by_ems(ext_management_system)
     ext_management_system&.class_by_ems(:AuthKeyPair)

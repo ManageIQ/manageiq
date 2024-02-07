@@ -13,11 +13,11 @@ class VmOrTemplate < ApplicationRecord
   self.table_name = 'vms'
   has_ancestry
 
-  include_concern 'Operations'
-  include_concern 'RetirementManagement'
-  include_concern 'RightSizing'
-  include_concern 'Scanning'
-  include_concern 'Snapshotting'
+  include Operations
+  include RetirementManagement
+  include RightSizing
+  include Scanning
+  include Snapshotting
 
   attr_accessor :surrogate_host
   @surrogate_host = nil

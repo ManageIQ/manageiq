@@ -1,5 +1,5 @@
 class Notification < ApplicationRecord
-  include_concern 'Purging'
+  include Purging
 
   belongs_to :notification_type
   belongs_to :initiator, :class_name => "User", :foreign_key => 'user_id'

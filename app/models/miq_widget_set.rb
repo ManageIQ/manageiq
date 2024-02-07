@@ -1,5 +1,5 @@
 class MiqWidgetSet < ApplicationRecord
-  include_concern 'SetData'
+  include SetData
 
   acts_as_miq_set
 

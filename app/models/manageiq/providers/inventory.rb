@@ -1,9 +1,5 @@
 module ManageIQ::Providers
   class Inventory
-    require_nested :Collector
-    require_nested :Parser
-    require_nested :Persister
-
     attr_accessor :collector, :parsers, :persister
 
     # Entry point for building inventory

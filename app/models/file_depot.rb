@@ -1,7 +1,7 @@
 class FileDepot < ApplicationRecord
   include NewWithTypeStiMixin
   include AuthenticationMixin
-  include_concern 'ImportExport'
+  include ImportExport
   include YamlImportExportMixin
 
   has_many              :miq_schedules, :dependent => :nullify

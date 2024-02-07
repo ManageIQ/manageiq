@@ -1,6 +1,4 @@
 class MiqUiWorker < MiqWorker
-  require_nested :Runner
-
   self.required_roles = ['user_interface']
 
   STARTING_PORT = 3000

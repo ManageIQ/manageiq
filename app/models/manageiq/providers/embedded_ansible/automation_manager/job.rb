@@ -1,8 +1,5 @@
 class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::Providers::EmbeddedAutomationManager::OrchestrationStack
   include CiFeatureMixin
-
-  require_nested :Status
-
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::AutomationManager", :inverse_of => false
   belongs_to :playbook, :foreign_key => :configuration_script_base_id, :inverse_of => false
 

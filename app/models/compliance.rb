@@ -1,5 +1,5 @@
 class Compliance < ApplicationRecord
-  include_concern 'Purging'
+  include Purging
   belongs_to  :resource,  :polymorphic => true
   has_many    :compliance_details, :dependent => :destroy
 

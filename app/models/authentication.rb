@@ -1,6 +1,6 @@
 class Authentication < ApplicationRecord
   acts_as_miq_taggable
-  include_concern 'ImportExport'
+  include ImportExport
   include YamlImportExportMixin
   include SupportsFeatureMixin
   include NewWithTypeStiMixin

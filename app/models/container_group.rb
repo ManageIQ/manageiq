@@ -9,7 +9,7 @@ class ContainerGroup < ApplicationRecord
   include TenantIdentityMixin
   include ArchivedMixin
   include CustomActionsMixin
-  include_concern 'Purging'
+  include Purging
 
   # :name, :uid, :creation_timestamp, :resource_version, :namespace
   # :labels, :restart_policy, :dns_policy

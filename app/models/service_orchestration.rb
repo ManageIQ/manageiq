@@ -1,7 +1,7 @@
 class ServiceOrchestration < Service
   include ServiceOrchestrationMixin
   include ServiceOrchestrationOptionsMixin
-  include_concern 'ProvisionTagging'
+  include ProvisionTagging
 
   # read from DB or parse from dialog
   def stack_name

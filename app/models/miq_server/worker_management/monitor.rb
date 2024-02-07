@@ -1,15 +1,15 @@
 module MiqServer::WorkerManagement::Monitor
   extend ActiveSupport::Concern
 
-  include_concern 'Kill'
-  include_concern 'Quiesce'
-  include_concern 'Reason'
-  include_concern 'Settings'
-  include_concern 'Start'
-  include_concern 'Status'
-  include_concern 'Stop'
-  include_concern 'SystemLimits'
-  include_concern 'Validation'
+  include Kill
+  include Quiesce
+  include Reason
+  include Settings
+  include Start
+  include Status
+  include Stop
+  include SystemLimits
+  include Validation
 
   def monitor_workers
     # Reload my_server so we can detect role and possibly other changes faster

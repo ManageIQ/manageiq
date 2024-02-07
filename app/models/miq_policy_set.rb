@@ -1,6 +1,6 @@
 class MiqPolicySet < ApplicationRecord
   acts_as_miq_set
-  include_concern "ReadOnlyMixin"
+  include ReadOnlyMixin
 
   before_validation :default_name_to_description, :on => :create
   before_destroy    :destroy_policy_tags

@@ -1,6 +1,6 @@
 class Classification < ApplicationRecord
   acts_as_tree
-  include_concern "ReadOnlyMixin"
+  include ReadOnlyMixin
 
   belongs_to :tag
 

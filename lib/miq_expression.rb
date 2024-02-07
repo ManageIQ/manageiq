@@ -5,7 +5,6 @@ class MiqExpression
   MODE_SQL  = 2
   MODE_BOTH = MODE_RUBY | MODE_SQL
 
-  require_nested :Tag
   include Vmdb::Logging
   attr_accessor :exp, :context_type, :preprocess_options
 

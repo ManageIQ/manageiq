@@ -2,7 +2,7 @@ require 'ostruct'
 
 class MiqRequestWorkflow
   include Vmdb::Logging
-  include_concern "DialogFieldValidation"
+  include DialogFieldValidation
 
   # We rely on MiqRequestWorkflow's descendants to be comprehensive
   singleton_class.send(:prepend, DescendantLoader::ArDescendantsWithLoader)

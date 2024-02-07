@@ -1,5 +1,5 @@
 class EmsEvent < EventStream
-  include_concern 'Automate'
+  include Automate
 
   CLONE_TASK_COMPLETE = "CloneVM_Task_Complete"
   SOURCE_DEST_TASKS = [

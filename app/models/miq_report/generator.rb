@@ -1,12 +1,12 @@
 module MiqReport::Generator
   extend ActiveSupport::Concern
 
-  include_concern 'Aggregation'
-  include_concern 'Async'
-  include_concern 'Html'
-  include_concern 'Sorting'
-  include_concern 'Trend'
-  include_concern 'Utilization'
+  include Aggregation
+  include Async
+  include Html
+  include Sorting
+  include Trend
+  include Utilization
 
   DATE_TIME_BREAK_SUFFIXES = [
     [N_("Hour"),              "hour"],

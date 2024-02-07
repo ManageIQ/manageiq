@@ -11,8 +11,7 @@ class PhysicalServer < ApplicationRecord
   include EmsRefreshMixin
   include CustomActionsMixin
 
-
-  include_concern 'Operations'
+  include Operations
 
   VENDOR_TYPES = {
     # DB        Displayed

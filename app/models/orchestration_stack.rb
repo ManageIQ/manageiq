@@ -1,8 +1,6 @@
 require 'ancestry'
 
 class OrchestrationStack < ApplicationRecord
-  require_nested :Status
-
   include NewWithTypeStiMixin
   include AsyncDeleteMixin
   include ProcessTasksMixin

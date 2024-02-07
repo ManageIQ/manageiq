@@ -1,12 +1,12 @@
 module Metric::CiMixin
   extend ActiveSupport::Concern
 
-  include_concern 'Capture'
-  include_concern 'Processing'
-  include_concern 'Rollup'
-  include_concern 'Targets'
-  include_concern 'StateFinders'
-  include_concern 'LongTermAverages'
+  include Capture
+  include Processing
+  include Rollup
+  include Targets
+  include StateFinders
+  include LongTermAverages
 
   included do
     # TODO: Move in creation of has_many relations here from various classes?

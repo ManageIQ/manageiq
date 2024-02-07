@@ -74,10 +74,10 @@ class Service < ApplicationRecord
 
   extend InterRegionApiMethodRelay
 
-  include_concern 'Aggregation'
-  include_concern 'Operations'
-  include_concern 'ResourceLinking'
-  include_concern 'RetirementManagement'
+  include Aggregation
+  include Operations
+  include ResourceLinking
+  include RetirementManagement
 
   hide_attribute "display"
 

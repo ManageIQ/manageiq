@@ -1,14 +1,14 @@
 class MiqReport < ApplicationRecord
   include ActiveRecord::AttributeAccessorThatYamls
 
-  include_concern 'Formatting'
-  include_concern 'Formatters'
-  include_concern 'Seeding'
-  include_concern 'ImportExport'
-  include_concern 'Generator'
-  include_concern 'Notification'
-  include_concern 'Schedule'
-  include_concern 'Search'
+  include Formatting
+  include Formatters
+  include Seeding
+  include ImportExport
+  include Generator
+  include Notification
+  include Schedule
+  include Search
   include YamlImportExportMixin
 
   serialize :cols

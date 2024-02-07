@@ -1,6 +1,4 @@
 class ManageIQ::Providers::BaseManager::RefreshWorker < MiqQueueWorkerBase
-  require_nested :Runner
-
   include ProviderWorkerMixin
   include PerEmsWorkerMixin
 

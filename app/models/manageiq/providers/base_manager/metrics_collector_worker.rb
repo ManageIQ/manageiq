@@ -1,8 +1,5 @@
 class ManageIQ::Providers::BaseManager::MetricsCollectorWorker < MiqQueueWorkerBase
   include MiqWorker::ReplicaPerWorker
-
-  require_nested :Runner
-
   include ProviderWorkerMixin
   include PerEmsTypeWorkerMixin
 

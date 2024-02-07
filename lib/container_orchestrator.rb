@@ -3,7 +3,7 @@ autoload(:KubeException, 'kubeclient')
 
 class ContainerOrchestrator
   include Vmdb::Logging
-  include_concern 'ObjectDefinition'
+  include ObjectDefinition
 
   TOKEN_FILE   = "/run/secrets/kubernetes.io/serviceaccount/token".freeze
   CA_CERT_FILE = "/run/secrets/kubernetes.io/serviceaccount/ca.crt".freeze
