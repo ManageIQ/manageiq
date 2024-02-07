@@ -104,8 +104,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::Refresher do
       it "doesn't publish anything" do
         expect(messaging_client).not_to receive(:publish_topic)
 
-        refresher = described_class.new([ems])
-        refresher.publish_inventory(ems, ems, persister)
+        persister.publish_inventory(ems, ems)
       end
     end
 
@@ -129,8 +128,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::Refresher do
           )
         )
 
-        refresher = described_class.new([ems])
-        refresher.publish_inventory(ems, ems, persister)
+        persister.publish_inventory(ems, ems)
       end
     end
 
@@ -177,8 +175,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::Refresher do
           )
         )
 
-        refresher = described_class.new([ems])
-        refresher.publish_inventory(ems, ems, persister)
+        persister.publish_inventory(ems, ems)
       end
     end
   end
