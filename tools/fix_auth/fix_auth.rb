@@ -61,7 +61,7 @@ module FixAuth
 
       begin
         # in specs, this is already setup
-        ActiveRecord::Base.connection_config
+        ActiveRecord::Base.connection_db_config
       rescue ActiveRecord::ConnectionNotEstablished
         # From the command line, we want to connect to a database
         ActiveRecord::Base.logger = Logger.new("#{options[:root]}/log/fix_auth.log")

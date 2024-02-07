@@ -76,7 +76,7 @@ module Vmdb
       fh.info("---")
 
       fh.info("DATABASE settings:")
-      fh.log_hashes(ActiveRecord::Base.connection_config)
+      fh.log_hashes(ActiveRecord::Base.connection_db_config.configuration_hash)
       fh.info("DATABASE settings END")
       fh.info("---")
     end
