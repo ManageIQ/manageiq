@@ -12,21 +12,17 @@
 #
 # To make a feature conditionally supported, pass a block to the +supports+ method.
 # The block is evaluated in the context of the instance.
-# If you call the private method +unsupported_reason_add+ with the feature
-# and a reason, then the feature will be unsupported and the reason will be
+# If a feature is not supported, return a string for the reason. A nil means it is supported
+# Alternatively, calling the private method +unsupported_reason_add+ with the feature
+# and a reason, marks the feature as unsupported, and the reason will be
 # accessible through
 #
 #   instance.unsupported_reason(:feature)
 #
-# The above allows you to call +supports_feature?+ or +supports?(feature) :methods
-# on the Class and Instance
-#
-#   Post.supports_publish?                       # => true
 #   Post.supports?(:publish)                     # => true
-#   Post.new.supports_publish?                   # => true
-#   Post.supports_fake?                          # => false
-#   Post.supports_archive?                       # => true
-#   Post.new(featured: true).supports_archive?   # => false
+#   Post.new.supports?(:publish)                 # => true
+#   Post.supports?(:archive)                     # => true
+#   Post.new(featured: true).supports?(:archive) # => false
 #
 # To get a reason why a feature is unsupported use the +unsupported_reason+ method
 #
@@ -56,7 +52,7 @@ module SupportsFeatureMixin
   included do
     private_class_method :unsupported
     private_class_method :unsupported_reason_add
-    private_class_method :define_supports_feature_methods
+    class_attribute :supports_features, :instance_writer => false, :default => {}
   end
 
   def self.default_supports_reason
@@ -72,9 +68,8 @@ module SupportsFeatureMixin
 
   # query the instance if the feature is supported or not
   def supports?(feature)
-    method_name = "supports_#{feature}?"
-    if respond_to?(method_name)
-      public_send(method_name)
+    if self.class.supports_features.key?(feature.to_sym)
+      self.class.check_supports(feature.to_sym, supports_features[feature.to_sym], instance: self)
     else
       unsupported_reason_add(feature, SupportsFeatureMixin.default_supports_reason)
       false
@@ -97,20 +92,19 @@ module SupportsFeatureMixin
   class_methods do
     # This is the DSL used a class level to define what is supported
     def supports(feature, &block)
-      define_supports_feature_methods(feature, block || true)
+      self.supports_features = supports_features.merge(feature.to_sym => block || true)
     end
 
     # supports_not does not take a block, because its never supported
     # and not conditionally supported
     def supports_not(feature, reason: nil)
-      define_supports_feature_methods(feature, reason || false)
+      self.supports_features = supports_features.merge(feature.to_sym => reason.presence || false)
     end
 
     # query the class if the feature is supported or not
     def supports?(feature)
-      method_name = "supports_#{feature}?"
-      if respond_to?(method_name)
-        public_send(method_name)
+      if supports_features.key?(feature.to_sym)
+        check_supports(feature.to_sym, supports_features[feature.to_sym], instance: self)
       else
         unsupported_reason_add(feature, SupportsFeatureMixin.default_supports_reason)
         false
@@ -187,24 +181,6 @@ module SupportsFeatureMixin
     # use this for making a class not support a feature
     def unsupported_reason_add(feature, reason)
       unsupported[feature.to_sym] = reason
-    end
-
-    def define_supports_feature_methods(feature, value)
-      method_name = "supports_#{feature}?"
-      feature = feature.to_sym
-
-      # silence potential redefinition warnings
-      silence_warnings do
-        # defines the method on the instance
-        define_method(method_name) do
-          self.class.check_supports(feature, value, instance: self)
-        end
-
-        # defines the method on the class
-        define_singleton_method(method_name) do
-          check_supports(feature, value, instance: self)          
-        end
-      end
     end
   end
 end

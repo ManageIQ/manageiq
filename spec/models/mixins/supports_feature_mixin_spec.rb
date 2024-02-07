@@ -33,22 +33,6 @@ RSpec.describe SupportsFeatureMixin do
 
   let(:test_inst) { test_class.new }
 
-  describe "#supports_feature?" do
-    it "defines supports on the instance" do
-      expect(test_inst.supports_std_accept?).to be_truthy
-      expect(test_inst.supports_module_accept?).to be_truthy
-      expect(test_inst.supports_std_denial?).to be_falsey
-    end
-  end
-
-  describe ".supports_feature?" do
-    it "defines supports on the class" do
-      expect(test_class.supports_std_accept?).to be_truthy
-      expect(test_class.supports_module_accept?).to be_truthy
-      expect(test_class.supports_std_denial?).to be_falsey
-    end
-  end
-
   describe ".supports?" do
     it "handles base supports" do
       expect(test_class.supports?(:std_accept)).to be_truthy
