@@ -436,7 +436,7 @@ class MiqWorker::Runner
     ObjectSpace.each_object(Object) do |obj|
       next unless defined?(obj.class)
 
-      types[obj.class.name] += 1
+      types[obj.class.to_s] += 1
     end
     types
   end
