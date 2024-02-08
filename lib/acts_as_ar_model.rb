@@ -233,7 +233,7 @@ class ActsAsArModel
     if value.kind_of?(String) && value.length > 50
       "#{value[0..50]}...".inspect
     elsif value.kind_of?(Date) || value.kind_of?(Time)
-      %("#{value.to_s(:db)}")
+      %("#{value.to_fs(:db)}")
     else
       value.inspect
     end
