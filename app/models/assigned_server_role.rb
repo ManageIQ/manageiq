@@ -59,9 +59,9 @@ class AssignedServerRole < ApplicationRecord
       MiqRegion.my_region.lock do
         if server_role.master_supported?
           servers = MiqRegion.my_region.active_miq_servers
-          self.class.where(:server_role_id => server_role.id).each do |asr|
-            asr.deactivate if servers.include?(asr.miq_server)
-          end
+          self.class.where(:server_role => server_role,
+                           :miq_server  => servers,
+                           :active      => true).each(&:deactivate)
         end
 
         activate(override)
@@ -86,9 +86,9 @@ class AssignedServerRole < ApplicationRecord
       miq_server.zone.lock do |_zone|
         if server_role.master_supported?
           servers = miq_server.zone.active_miq_servers
-          self.class.where(:server_role_id => server_role.id).each do |asr|
-            asr.deactivate if servers.include?(asr.miq_server)
-          end
+          self.class.where(:server_role => server_role,
+                           :miq_server  => servers,
+                           :active      => true).each(&:deactivate)
         end
 
         activate(override)
