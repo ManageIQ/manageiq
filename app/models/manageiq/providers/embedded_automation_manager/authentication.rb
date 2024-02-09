@@ -9,6 +9,8 @@ class ManageIQ::Providers::EmbeddedAutomationManager::Authentication < ManageIQ:
   after_create :set_manager_ref
 
   supports :create
+  supports :update
+  supports :delete
 
   COMMON_ATTRIBUTES = {}.freeze
   EXTRA_ATTRIBUTES = {}.freeze

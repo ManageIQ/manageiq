@@ -2,6 +2,8 @@ class ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource 
   include ManageIQ::Providers::EmbeddedAutomationManager::CrudCommon
 
   supports :create
+  supports :update
+  supports :delete
 
   virtual_attribute :verify_ssl, :integer
 
