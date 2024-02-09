@@ -231,10 +231,36 @@ RSpec.describe SupportsFeatureMixin do
     end
 
     it "gives reason when implicit dynamic attrs" do
-      test_class.supports(:implicit_feature) {  "dynamically unsupported" unless attr1 }
+      test_class.supports(:implicit_feature) { "dynamically unsupported" unless attr1 }
       test_inst = test_class.new(:attr1 => false)
 
       expect(test_inst.unsupported_reason(:implicit_feature)).to eq("dynamically unsupported")
+    end
+
+    it "gives reason when chained to a denail with a default reason" do
+      test_class.supports_not :denial_no_reason
+      test_class.supports(:denial_chained) { unsupported_reason(:denial_no_reason) }
+
+      expect(test_inst.unsupported_reason(:denial_chained)).to eq("Feature not available/supported")
+    end
+
+    it "gives reason when chained to a denail with a default reason (checking supported)" do
+      test_class.supports_not :denial_no_reason
+      test_class.supports(:denial_chained) { unsupported_reason(:denial_no_reason) unless supports?(:denial_no_reason) }
+
+      expect(test_inst.unsupported_reason(:denial_chained)).to eq("Feature not available/supported")
+    end
+
+    it "gives no reason when chained to an attribute with success" do
+      test_class.supports(:std_chained) { unsupported_reason(:std_accept) }
+
+      expect(test_inst.unsupported_reason(:std_chained)).to eq(nil)
+    end
+
+    it "gives no reason when chained to an attribute with success (checking supported)" do
+      test_class.supports(:std_chained) { unsupported_reason(:std_accept) unless supports?(:std_accept) }
+
+      expect(test_inst.unsupported_reason(:std_chained)).to eq(nil)
     end
   end
 
