@@ -295,4 +295,29 @@ RSpec.describe Vm do
       expect(vm.supported_consoles.keys).to match_array([:html5, :vmrc, :native])
     end
   end
+
+  context "#supports?(:vm_control_powered_on)" do
+    it "returns true for powered on vms with control" do
+      # need a vendor to properly specify the running state
+      vm = FactoryBot.create(:vm_vmware,
+                             :host                  => FactoryBot.create(:host),
+                             :ext_management_system => FactoryBot.create(:ext_management_system))
+      expect(vm.unsupported_reason(:control)).to eq(nil)
+      expect(vm.unsupported_reason(:vm_control_powered_on)).to eq(nil)
+    end
+
+    it "returns the control reason if vm is not properly controlled" do
+      vm = FactoryBot.create(:vm_vmware)
+      expect(vm.unsupported_reason(:control)).to match(/not connected to a Host/i)
+      expect(vm.unsupported_reason(:vm_control_powered_on)).to match(/not connected to a Host/i)
+    end
+
+    it "returns false for powered off vms with control" do
+      vm = FactoryBot.create(:vm_vmware,
+                             :raw_power_state       => "unknown",
+                             :host                  => FactoryBot.create(:host),
+                             :ext_management_system => FactoryBot.create(:ext_management_system))
+      expect(vm.unsupported_reason(:vm_control_powered_on)).to match(/not powered on/i)
+    end
+  end
 end
