@@ -11,7 +11,7 @@ module Vmdb
     end
 
     def self.CODENAME
-      "Radjabov".freeze
+      "Quinteros".freeze
     end
 
     def self.RELEASE
