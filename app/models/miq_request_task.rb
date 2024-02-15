@@ -13,8 +13,6 @@ class MiqRequestTask < ApplicationRecord
   serialize   :phase_context, Hash
   serialize   :options,       Hash
 
-  default_value_for :phase_context, {}
-  default_value_for :options,       {}
   attribute :state, :default => 'pending'
   attribute :status, :default => 'Ok'
 
