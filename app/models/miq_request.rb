@@ -25,8 +25,8 @@ class MiqRequest < ApplicationRecord
   serialize   :options, Hash
 
   default_value_for(:message)       { |r| "#{r.class::TASK_DESCRIPTION} - Request Created" }
-  default_value_for :options,       {}
   default_value_for :request_state, 'pending'
+
   default_value_for(:request_type)  { |r| r.request_types.first }
   default_value_for :status,        'Ok'
   default_value_for :process,       true

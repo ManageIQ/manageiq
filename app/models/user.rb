@@ -55,7 +55,6 @@ class User < ApplicationRecord
   alias_method :authenticate_bcrypt, :authenticate
 
   serialize     :settings, Hash   # Implement settings column as a hash
-  default_value_for(:settings) { Hash.new }
 
   default_value_for :failed_login_attempts, 0
 
