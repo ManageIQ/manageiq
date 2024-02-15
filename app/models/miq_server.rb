@@ -25,7 +25,7 @@ class MiqServer < ApplicationRecord
   before_destroy          :validate_is_deleteable
   after_destroy           :destroy_linked_events_queue
 
-  default_value_for(:name, "EVM")
+  attribute :name, :default => "EVM"
   default_value_for(:zone) { Zone.default_zone }
 
   scope :active_miq_servers, -> { where(:status => STATUSES_ACTIVE) }

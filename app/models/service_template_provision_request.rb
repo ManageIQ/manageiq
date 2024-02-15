@@ -17,8 +17,8 @@ class ServiceTemplateProvisionRequest < MiqRequest
   virtual_has_one :user
 
   default_value_for(:source_id)    { |r| r.get_option(:src_id) }
-  default_value_for :source_type,  SOURCE_CLASS_NAME
-  default_value_for :process,      false
+  attribute :source_type, :default => SOURCE_CLASS_NAME
+  attribute :process, :default => false
 
   delegate :picture, :to => :service_template, :allow_nil => true
 

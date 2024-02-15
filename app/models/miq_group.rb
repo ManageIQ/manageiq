@@ -32,9 +32,8 @@ class MiqGroup < ApplicationRecord
 
   serialize :settings
 
-  default_value_for :group_type, USER_GROUP
-  default_value_for(:sequence) { next_sequence }
-
+  attribute :group_type, :default => USER_GROUP
+  attribute :sequence, :default => -> { next_sequence }
   acts_as_miq_taggable
   include CustomAttributeMixin
   include ActiveVmAggregationMixin
@@ -81,7 +80,7 @@ class MiqGroup < ApplicationRecord
     #   https://github.com/rails/rails/pull/35280
     #
     # This was an attempt to fix "leaking scopes", however, in our case, we use
-    # this method both for our +default_value_for(:sequence)+, and it will get
+    # this method both for our default value of :sequence, and it will get
     # used as part of +.create_tenant_group+.
     #
     # As such, we need both +.current_scope+ for when we want to scope down the

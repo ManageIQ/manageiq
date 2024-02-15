@@ -1,7 +1,7 @@
 class BlacklistedEvent < ApplicationRecord
   belongs_to        :ext_management_system, :foreign_key => "ems_id"
 
-  default_value_for :enabled, true
+  attribute :enabled, :default => true
   after_save        :reload_all_server_settings
   after_destroy     :reload_all_server_settings, :audit_deletion
   after_create      :audit_creation

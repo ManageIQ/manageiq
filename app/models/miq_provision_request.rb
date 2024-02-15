@@ -18,7 +18,7 @@ class MiqProvisionRequest < MiqRequest
 
   default_value_for :options,      :number_of_vms => 1
   default_value_for(:source_id)    { |r| r.get_option(:src_vm_id) || r.get_option(:source_id) }
-  default_value_for :source_type,  "VmOrTemplate"
+  attribute :source_type, :default => "VmOrTemplate"
 
   virtual_column :provision_type, :type => :string
 

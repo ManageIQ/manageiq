@@ -11,7 +11,7 @@ class GitRepository < ApplicationRecord
 
   validates :url, :format => Regexp.union(URI.regexp(%w[http https file ssh]), /\A[-\w:.]+@.*:/), :allow_nil => false
 
-  default_value_for :verify_ssl, OpenSSL::SSL::VERIFY_PEER
+  attribute :verify_ssl, :default => OpenSSL::SSL::VERIFY_PEER
   validates :verify_ssl, :inclusion => {:in => [OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER]}
 
   has_many :git_branches, :dependent => :destroy

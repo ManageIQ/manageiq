@@ -1,5 +1,5 @@
 class ManageIQ::Providers::InfraManager::Template < MiqTemplate
-  default_value_for :cloud, false
+  attribute :cloud, :default => false
 
   def self.display_name(number = 1)
     n_('Template', 'Templates', number)

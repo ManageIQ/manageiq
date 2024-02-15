@@ -2,7 +2,7 @@ class SystemConsole < ApplicationRecord
   belongs_to :vm
   belongs_to :user
 
-  default_value_for :opened, false
+  attribute :opened, :default => false
 
   validates :url_secret, :uniqueness_when_changed => true
 

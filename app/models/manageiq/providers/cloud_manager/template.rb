@@ -1,5 +1,5 @@
 class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
-  default_value_for :cloud, true
+  attribute :cloud, :default => true
 
   virtual_column :image?, :type => :boolean
 

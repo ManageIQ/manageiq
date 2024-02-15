@@ -12,7 +12,7 @@ class Flavor < ApplicationRecord
 
   virtual_total :total_vms, :vms
 
-  default_value_for :enabled, true
+  attribute :enabled, :default => true
 
   alias_attribute :cpus, :cpu_total_cores
   alias_attribute :cpu_cores, :cpu_cores_per_socket

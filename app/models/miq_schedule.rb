@@ -44,8 +44,8 @@ class MiqSchedule < ApplicationRecord
   ALLOWED_CLASS_METHOD_ACTIONS = %w[automation_request].freeze
   IMPORT_CLASS_NAMES = %w[MiqSchedule].freeze
 
-  default_value_for :userid,  "system"
-  default_value_for :enabled, true
+  attribute :userid, :default => "system"
+  attribute :enabled, :default => true
   default_value_for(:zone_id) { MiqServer.my_server.zone_id }
 
   def set_start_time_and_prod_default

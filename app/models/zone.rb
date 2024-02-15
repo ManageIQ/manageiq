@@ -43,7 +43,7 @@ class Zone < ApplicationRecord
   include ConfigurationManagementMixin
 
   scope :visible, -> { where(:visible => true) }
-  default_value_for :visible, true
+  attribute :visible, :default => true
 
   def active_miq_servers
     MiqServer.active_miq_servers.where(:zone_id => id)

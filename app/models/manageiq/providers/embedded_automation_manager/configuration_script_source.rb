@@ -11,8 +11,8 @@ class ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource 
   validates :scm_type,   :presence => true, :inclusion => {:in => %w[git]}
   validates :scm_branch, :presence => true
 
-  default_value_for :scm_type,   "git"
-  default_value_for :scm_branch, "master"
+  attribute :scm_type, :default => "git"
+  attribute :scm_branch, :default => "master"
 
   belongs_to :git_repository, :autosave => true, :dependent => :destroy
   before_validation :sync_git_repository

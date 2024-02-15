@@ -2,7 +2,7 @@ class AssignedServerRole < ApplicationRecord
   belongs_to :miq_server
   belongs_to :server_role
 
-  default_value_for :active, false
+  attribute :active, :default => false
 
   delegate :master_supported?, :name, :to => :server_role
 

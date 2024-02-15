@@ -30,12 +30,21 @@ RSpec.describe BlacklistedEvent do
     end
   end
 
-  it '#enabled=' do
-    User.current_user = FactoryBot.create(:user)
-    f = FactoryBot.create(:blacklisted_event, :event_name => 'event_1')
-    expect(f.enabled).to be_truthy
+  context "#enabled=" do
+    it 'new record' do
+      f = FactoryBot.create(:blacklisted_event, :event_name => 'event_1')
+      expect(f.enabled).to be_truthy
 
-    f.enabled = false
-    expect(f.enabled).to be_falsey
+      f.enabled = false
+      expect(f.enabled).to be_falsey
+    end
+
+    it 'persisted' do
+      f = FactoryBot.build(:blacklisted_event, :event_name => 'event_1')
+      expect(f.enabled).to be_truthy
+
+      f.enabled = false
+      expect(f.enabled).to be_falsey
+    end
   end
 end

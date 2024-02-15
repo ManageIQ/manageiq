@@ -26,7 +26,7 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
 
   has_many   :host_aggregates,        :through => :host
 
-  default_value_for :cloud, true
+  attribute :cloud, :default => true
 
   virtual_column :ipaddresses, :type => :string_set, :uses => {:network_ports => :ipaddresses}
   virtual_column :floating_ip_addresses, :type => :string_set, :uses => {:network_ports => :floating_ip_addresses}

@@ -57,7 +57,7 @@ class User < ApplicationRecord
   serialize     :settings, Hash   # Implement settings column as a hash
   default_value_for(:settings) { Hash.new }
 
-  default_value_for :failed_login_attempts, 0
+  attribute :failed_login_attempts, :default => 0
 
   scope :in_all_regions, ->(id) { where(:userid => User.default_scoped.where(:id => id).select(:userid)) }
 
