@@ -46,5 +46,20 @@ RSpec.describe BlacklistedEvent do
       f.enabled = false
       expect(f.enabled).to be_falsey
     end
+
+    it 'logs a message when changed' do
+      f = FactoryBot.create(:blacklisted_event, :event_name => 'event_1')
+
+      expect($audit_log).to receive(:info)
+      f.update(:enabled => false)
+    end
+
+    it 'does not log a message when unchanged' do
+      f = FactoryBot.create(:blacklisted_event, :event_name => 'event_1')
+
+      expect($audit_log).to_not receive(:info)
+      f.update(:enabled => f.enabled)
+    end
+
   end
 end
