@@ -16,7 +16,6 @@ class MiqProvisionRequest < MiqRequest
   validates :source, :presence => true
   validate               :must_have_user
 
-  default_value_for :options,      :number_of_vms => 1
   default_value_for(:source_id)    { |r| r.get_option(:src_vm_id) || r.get_option(:source_id) }
   attribute :source_type, :default => "VmOrTemplate"
 
@@ -24,6 +23,11 @@ class MiqProvisionRequest < MiqRequest
 
   include MiqProvisionMixin
   include MiqProvisionQuotaMixin
+
+  # Setup default coming back from the default serialized Hash
+  def options
+    super.tap { |s| s[:number_of_vms] = 1 unless s.key?(:number_of_vms) }
+  end
 
   def self.request_task_class_from(attribs)
     source_id = MiqRequestMixin.get_option(:src_vm_id, nil, attribs['options'])
