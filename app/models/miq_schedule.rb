@@ -46,7 +46,7 @@ class MiqSchedule < ApplicationRecord
 
   attribute :userid, :default => "system"
   attribute :enabled, :default => true
-  default_value_for(:zone_id) { MiqServer.my_server.zone_id }
+  attribute :zone_id, :default => -> { MiqServer.my_server.zone_id }
 
   def set_start_time_and_prod_default
     run_at # Internally this will correct :start_time to UTC
