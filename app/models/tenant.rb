@@ -12,10 +12,10 @@ class Tenant < ApplicationRecord
 
   acts_as_miq_taggable
 
-  default_value_for :name,        "My Company"
-  default_value_for :description, "Tenant for My Company"
-  default_value_for :divisible,   true
-  default_value_for :use_config_for_attributes, false
+  attribute :name,        :default => "My Company"
+  attribute :description, :default => "Tenant for My Company"
+  attribute :divisible,   :default => true
+  attribute :use_config_for_attributes, :default => false
 
   before_destroy :ensure_can_be_destroyed
 

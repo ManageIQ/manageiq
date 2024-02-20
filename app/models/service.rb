@@ -89,10 +89,10 @@ class Service < ApplicationRecord
 
   validates :name, :presence => true
 
-  default_value_for :visible, false
-  default_value_for :initiator, 'user'
-  default_value_for :lifecycle_state, 'unprovisioned'
-  default_value_for :retired, false
+  attribute :visible, :default => false
+  attribute :initiator, :default => 'user'
+  attribute :lifecycle_state, :default => 'unprovisioned'
+  attribute :retired, :default => false
 
   validates :visible, :inclusion => { :in => [true, false] }
   validates :retired, :inclusion => { :in => [true, false] }

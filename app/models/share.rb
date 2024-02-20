@@ -11,7 +11,7 @@ class Share < ApplicationRecord
   validates :tenant,               :presence => true
   validates :user,                 :presence => true
 
-  default_value_for :allow_tenant_inheritance, false
+  attribute :allow_tenant_inheritance, :default => false
 
   scope :by_tenant_inheritance, ->(tenant) do
     where(:tenant => tenant.accessible_tenant_ids(:ancestor_ids),
