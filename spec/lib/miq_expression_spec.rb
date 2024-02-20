@@ -222,21 +222,21 @@ RSpec.describe MiqExpression do
     end
   end
 
-  describe "#preprocess_exp!" do
+  describe "#preprocess_exp" do
     it "convert size value in units to integer for comparasing operators on integer field" do
       expession_hash = {"=" => {"field" => "Vm-allocated_disk_storage", "value" => "5.megabytes"}}
       expession = MiqExpression.new(expession_hash)
-      exp, _ = expession.preprocess_exp!(expession_hash)
+      exp, _ = expession.preprocess_exp(expession_hash)
       expect(exp.values.first["value"]).to eq("5.megabyte".to_i_with_method)
 
       expession_hash = {">" => {"field" => "Vm-allocated_disk_storage", "value" => "5.kilobytes"}}
       expession = MiqExpression.new(expession_hash)
-      exp, _ = expession.preprocess_exp!(expession_hash)
+      exp, _ = expession.preprocess_exp(expession_hash)
       expect(exp.values.first["value"]).to eq("5.kilobytes".to_i_with_method)
 
       expession_hash = {"<" => {"field" => "Vm-allocated_disk_storage", "value" => "2.terabytes"}}
       expession = MiqExpression.new(expession_hash)
-      exp, _ = expession.preprocess_exp!(expession_hash)
+      exp, _ = expession.preprocess_exp(expession_hash)
       expect(exp.values.first["value"]).to eq(2.terabytes.to_i_with_method)
     end
   end
@@ -3494,13 +3494,13 @@ RSpec.describe MiqExpression do
 
   def sql_pruned_exp(input)
     mexp = MiqExpression.new(input)
-    pexp = mexp.preprocess_exp!(mexp.exp.deep_clone)
+    pexp = mexp.preprocess_exp(mexp.exp)
     mexp.prune_exp(pexp, MiqExpression::MODE_SQL).first
   end
 
   def ruby_pruned_exp(input)
     mexp = MiqExpression.new(input)
-    pexp = mexp.preprocess_exp!(mexp.exp.deep_clone)
+    pexp = mexp.preprocess_exp(mexp.exp)
     mexp.prune_exp(pexp, MiqExpression::MODE_RUBY).first
   end
 end
