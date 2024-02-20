@@ -181,7 +181,7 @@ class MiqExpression
     elsif @ruby
       @ruby.dup
     elsif valid?
-      pexp = preprocess_exp!(exp.deep_clone)
+      pexp = preprocess_exp(exp)
       pexp, _ = prune_exp(pexp, MODE_RUBY) if prune_sql
       @ruby = self.class._to_ruby(pexp, context_type, timezone) || true
       @ruby == true ? nil : @ruby.dup
@@ -325,7 +325,7 @@ class MiqExpression
 
   def to_sql(tz = nil)
     tz ||= "UTC"
-    pexp = preprocess_exp!(exp.deep_clone)
+    pexp = preprocess_exp(exp)
     pexp, seen = prune_exp(pexp, MODE_SQL)
     attrs = {:supported_by_sql => (seen == MODE_SQL)}
     sql = to_arel(pexp, tz).to_sql if pexp.present?
@@ -333,22 +333,21 @@ class MiqExpression
     [sql, incl, attrs]
   end
 
-  def preprocess_exp!(exp)
-    exp.delete(:token)
+  def preprocess_exp(exp)
     operator = exp.keys.first
     operator_values = exp[operator]
     case operator.downcase
     when "and", "or"
-      operator_values.each { |atom| preprocess_exp!(atom) }
+      operator_values = operator_values.map { |atom| preprocess_exp(atom) }
     when "not", "!"
-      preprocess_exp!(operator_values)
-      exp
+      operator_values = preprocess_exp(operator_values)
     else # field
       # op => {"regkey"=>"foo", "regval"=>"bar", "value"=>"baz"}
       # op => {"field" => "foo", "value" => "baz"}
       # op => {"field" => "<count>, "value" => "0"}
       # op => {"count" => "Vm.snapshots", "value"=>"1"}
       # op => {"tag"=>"Host.managed-environment", "value"=>"prod"}
+      operator_values = operator_values.dup
       field = operator_values["field"]
       column_details = col_details[field] if field
       value = operator_values["value"]
@@ -358,7 +357,7 @@ class MiqExpression
         operator_values["value"] = convert_size_in_units_to_integer(field, column_details, value)
       end
     end
-    exp
+    {operator => operator_values}
   end
 
   # @param operator [String]      operator (i.e.: AND, OR, NOT)
