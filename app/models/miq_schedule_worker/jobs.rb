@@ -14,7 +14,7 @@ class MiqScheduleWorker::Jobs
   end
 
   def miq_server_audit_managed_resources
-    queue_work(:class_name  => "MiqServer", :method_name => "audit_managed_resources", :queue_name => 'miq_server', :task_id => "audit_managed_resources", :server_guid => MiqServer.my_guid)
+    queue_work(:class_name  => "MiqServer", :method_name => "report_audit_details", :queue_name => 'miq_server', :task_id => "report_audit_details", :server_guid => MiqServer.my_guid)
   end
 
   def vmdb_database_connection_log_statistics
