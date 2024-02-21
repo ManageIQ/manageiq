@@ -1010,10 +1010,5 @@ class ExtManagementSystem < ApplicationRecord
     update_authentication(creds, options)
   end
 
-  def clear_association_cache
-    @storages = nil
-    super
-  end
-
   define_method(:allow_duplicate_endpoint_url?) { false }
 end

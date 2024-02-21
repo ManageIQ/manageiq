@@ -34,7 +34,6 @@ class PxeServer < ApplicationRecord
 
   def default_pxe_image_for_windows=(image)
     image.update(:default_for_windows => true)
-    clear_association_cache
   end
 
   def default_pxe_image_for_windows
@@ -44,7 +43,13 @@ class PxeServer < ApplicationRecord
   def synchronize_advertised_images
     pxe_menus.each(&:synchronize)
     sync_windows_images
-    clear_association_cache
+
+    advertised_pxe_images.reload
+    discovered_pxe_images.reload
+    pxe_images.reload
+    pxe_menus.reload
+    windows_images.reload
+
     update_attribute(:last_refresh_on, Time.now.utc)
   end
 
@@ -59,7 +64,8 @@ class PxeServer < ApplicationRecord
   def sync_images
     sync_pxe_images
     sync_windows_images
-    clear_association_cache
+    pxe_images.reload
+    windows_images.reload
     update_attribute(:last_refresh_on, Time.now.utc)
   end
 

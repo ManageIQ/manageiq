@@ -165,6 +165,30 @@ PXE
         end
       end
     end
+
+    context "#default_pxe_image_for_windows / #default_pxe_image_for_windows=" do
+      before { @pxe_server.sync_images }
+
+      it "when there is no default" do
+        expect(@pxe_server.default_pxe_image_for_windows).to be_nil
+      end
+
+      it "when setting the default" do
+        i = @pxe_server.pxe_images.detect { |pxe_image| pxe_image.name == "ubuntu-10.10-desktop-amd64" }
+        @pxe_server.default_pxe_image_for_windows = i
+
+        expect(@pxe_server.default_pxe_image_for_windows).to eq(i)
+      end
+
+      it "when setting the default with an image not from the collection directly" do
+        i = PxeImage.find_by(:name => "ubuntu-10.10-desktop-amd64")
+
+        @pxe_server.pxe_images.to_a # Preload the collection to ensure it's a different in-memory instance
+        @pxe_server.default_pxe_image_for_windows = i
+
+        expect(@pxe_server.default_pxe_image_for_windows).to eq(i)
+      end
+    end
   end
 
   context "ipxe depot" do

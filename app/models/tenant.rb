@@ -154,8 +154,8 @@ class Tenant < ApplicationRecord
       end
       # Delete any quotas that were not passed in
       tenant_quotas.destroy_missing(updated_keys)
-      # unfortunatly, an extra scope is created in destroy_missing, so we need to reload the records
-      clear_association_cache
+      # unfortunately, an extra scope is created in destroy_missing, so we need to reload the records
+      tenant_quotas.reload
     end
 
     get_quotas
