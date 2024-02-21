@@ -263,7 +263,7 @@ class DescendantLoader
 
   module ArDescendantsWithLoader
     def descendants
-      unless defined? @loaded_descendants
+      if Vmdb::Application.instance.initialized? && !defined? @loaded_descendants
         @loaded_descendants = true
         DescendantLoader.instance.load_subclasses(self)
       end
@@ -275,7 +275,7 @@ class DescendantLoader
     # https://github.com/rails/rails/commit/8f8aa857e084b76b1120edaa9bb9ce03ba1e6a19
     # We need to get in front of it, like we do for descendants.
     def subclasses
-      unless defined? @loaded_descendants
+      if Vmdb::Application.instance.initialized? && !defined? @loaded_descendants
         @loaded_descendants = true
         DescendantLoader.instance.load_subclasses(self)
       end
