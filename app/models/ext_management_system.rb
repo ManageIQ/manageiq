@@ -225,6 +225,8 @@ class ExtManagementSystem < ApplicationRecord
            :hostname=,
            :port,
            :port=,
+           :url,
+           :url=,
            :security_protocol,
            :security_protocol=,
            :verify_ssl,
