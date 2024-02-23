@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/ManageIQ/amazon_ssa_support.git
   revision: 63a11da6c7d0ee24b0ee468f917917b6cf73f106
-  branch: quinteros
+  tag: quinteros-1
   specs:
     amazon_ssa_support (0.1.0)
       aws-sdk-ec2 (~> 1.0)
@@ -12,8 +12,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-api
-  revision: f3ab4b3c2ed9f7359cd74ea706c690fa6e71d4df
-  branch: quinteros
+  revision: 4684141df0b41c0b095dbd1d9e2ebc8e7a85b651
+  tag: quinteros-1
   specs:
     manageiq-api (4.4.0.pre.pre)
       config
@@ -22,7 +22,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-automation_engine
   revision: 344e02aa10fb242c36236ead687f2694ce18cb16
-  branch: quinteros
+  tag: quinteros-1
   specs:
     manageiq-automation_engine (0.1.0)
       rubyzip (~> 2.0.0)
@@ -30,7 +30,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-consumption
   revision: 7360a0fa21e6cd9cd8b2ba3b21c8d9e1e571d662
-  branch: quinteros
+  tag: quinteros-1
   specs:
     manageiq-consumption (0.0.1)
       hashdiff (~> 1.0)
@@ -39,7 +39,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-content
   revision: d67b2e855036eee44c768c7eb865bad6fb24825a
-  branch: quinteros
+  tag: quinteros-1
   specs:
     manageiq-content (0.1.0)
       savon (~> 2.11.1)
@@ -47,14 +47,14 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-decorators
   revision: 98a2f556480f85fd34683cb5627c6484c0062f85
-  branch: quinteros
+  tag: quinteros-1
   specs:
     manageiq-decorators (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-gems-pending.git
   revision: d965f712d720fb2d4079671ba002872218ee4005
-  branch: quinteros
+  tag: quinteros-1
   specs:
     manageiq-gems-pending (0.1.0)
       activesupport (~> 6.0)
@@ -72,8 +72,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-amazon
-  revision: 862e466ad1dc6766e4f3fb9462d48c7318267607
-  branch: quinteros
+  revision: bde7912f870c25d36f4c7bdf13817cbdcf43d7f7
+  tag: quinteros-1
   specs:
     manageiq-providers-amazon (0.1.0)
       aws-sdk-cloudformation (~> 1.0)
@@ -91,16 +91,16 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ansible_tower
-  revision: 4eccca50f4b8a3ad3ebc8bc1ff5b5b369aab7a0d
-  branch: quinteros
+  revision: 484ab2e6fabb87df7d6aa4c4c1b5e47453628fbb
+  tag: quinteros-1
   specs:
     manageiq-providers-ansible_tower (0.1.0)
       ansible_tower_client (~> 0.20, >= 0.21.2)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-autosde
-  revision: 2503914820519d93b43600f2bc9afabc4361d979
-  branch: quinteros
+  revision: 40de8450f09b98471ad37433b3005a8771e3e890
+  tag: quinteros-1
   specs:
     manageiq-providers-autosde (0.1.0)
       autosde_openapi_client (~> 3.2.0)
@@ -108,16 +108,16 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-awx
-  revision: f19af328075f5eebbbeacdb10b3387b42d91d39c
-  branch: quinteros
+  revision: 22bcfe1d327921e9fff2d897c8e8bc7caffd1d17
+  tag: quinteros-1
   specs:
     manageiq-providers-awx (0.1.0)
       ansible_tower_client (~> 0.20, >= 0.21.2)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure
-  revision: dd735db7c985c97bd3c53567db277579b77dc103
-  branch: quinteros
+  revision: ddd7493117fab5f7410c23e6cc5d61a7a4dcf3a5
+  tag: quinteros-1
   specs:
     manageiq-providers-azure (0.1.0)
       azure-armrest (~> 0.14)
@@ -125,7 +125,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure_stack
   revision: 84e78ccabf1410ae93b7725325aa5274f72f21b1
-  branch: quinteros
+  tag: quinteros-1
   specs:
     manageiq-providers-azure_stack (0.1.0)
       azure_mgmt_compute (~> 0.20)
@@ -135,8 +135,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-cisco_intersight
-  revision: 4528c8452f3ba0f27f6e89b8eb98c6c1ff2dd0a7
-  branch: quinteros
+  revision: 39d5a73496a01d5cc298c25f0e4aafdceaf91758
+  tag: quinteros-1
   specs:
     manageiq-providers-cisco_intersight (0.1.0)
       intersight_client (~> 0.1, >= 0.1.5)
@@ -144,7 +144,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-foreman
   revision: 3ca1fd2a540a4e53b2a6d515fc73a43c601e90f9
-  branch: quinteros
+  tag: quinteros-1
   specs:
     manageiq-providers-foreman (0.1.0)
       foreman_api_client (~> 1.0.2)
@@ -152,7 +152,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-google
   revision: 20f0dae921f66f582de5b72e95c6557e7e9ebd89
-  branch: quinteros
+  tag: quinteros-1
   specs:
     manageiq-providers-google (0.1.0)
       fog-google (~> 1.23)
@@ -160,14 +160,14 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_cic
   revision: 19a6366a760a744257bcb21b43cbd5f2e39fe15b
-  branch: quinteros
+  tag: quinteros-1
   specs:
     manageiq-providers-ibm_cic (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_cloud
-  revision: 9cabeca80a1913b01c610ac077ed0e8bc6212c3b
-  branch: quinteros
+  revision: 1ac163e7e67f4857bbf6c9d3f48ea63f1e5cf7fd
+  tag: quinteros-1
   specs:
     manageiq-providers-ibm_cloud (0.1.0)
       ibm-cloud-sdk (~> 0.1)
@@ -185,29 +185,29 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_power_hmc
   revision: 64af0c7b06405db89e31f9054f87e97d3764b95b
-  branch: quinteros
+  tag: quinteros-1
   specs:
     manageiq-providers-ibm_power_hmc (0.1.0)
       ibm_power_hmc (~> 0.25.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_power_vc
-  revision: ca0b74fb1e4d1118ee4f30efbf5f93d7a4ef2aaf
-  branch: quinteros
+  revision: c79641e35e6f9aecc95f963d8f00dbc5c3bdc90d
+  tag: quinteros-1
   specs:
     manageiq-providers-ibm_power_vc (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_terraform
   revision: 23fa9208fbc68d9d2a18646810bc2e223e94413d
-  branch: quinteros
+  tag: quinteros-1
   specs:
     manageiq-providers-ibm_terraform (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubernetes
-  revision: fcff0d351bebe5e77c4e10e4ca81f3954368b497
-  branch: quinteros
+  revision: a8437b47276844075a54d3f3a493d7896a66dde8
+  tag: quinteros-1
   specs:
     manageiq-providers-kubernetes (0.1.0)
       image-inspector-client (~> 2.0)
@@ -219,7 +219,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubevirt
   revision: 1bc2e9c5a60038f02ffc0d7afad0574567d7ae32
-  branch: quinteros
+  tag: quinteros-1
   specs:
     manageiq-providers-kubevirt (0.1.0)
       fog-kubevirt (~> 1.0, >= 1.3.5)
@@ -227,8 +227,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-lenovo
-  revision: 94bc645f203668da53a32cd15ce21489080b147a
-  branch: quinteros
+  revision: 9187e66e20caa9027fe6f4a5c8c168f775bf88d9
+  tag: quinteros-1
   specs:
     manageiq-providers-lenovo (0.2.0)
       xclarity_client (~> 0.6.0)
@@ -236,14 +236,14 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nsxt
   revision: 4ff0aeb675d90d2ce7ed76185e80ec651b28267a
-  branch: quinteros
+  tag: quinteros-1
   specs:
     manageiq-providers-nsxt (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nuage
-  revision: c59c2299ce49d0ee56bacd88f2233de782caa32f
-  branch: quinteros
+  revision: 5cb49bc212ed8dde66d27e47169ab91e231201ff
+  tag: quinteros-1
   specs:
     manageiq-providers-nuage (0.1.0)
       excon (~> 0.71)
@@ -251,15 +251,15 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openshift
   revision: a1f21f93ddac456aaf7db8e8fa2e08ea03fcec68
-  branch: quinteros
+  tag: quinteros-1
   specs:
     manageiq-providers-openshift (0.1.0)
       manageiq-providers-kubernetes (~> 0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openstack
-  revision: 7b26641178c9469c02b7d547f8f78be76e1fbfb2
-  branch: quinteros
+  revision: ddb44061800b824218e76d3dee43c7b0ce1e7ac3
+  tag: quinteros-1
   specs:
     manageiq-providers-openstack (0.1.0)
       activesupport (~> 6.0)
@@ -272,7 +272,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-oracle_cloud
   revision: 5c29839fe31731a499fc92bd718624a20877bcce
-  branch: quinteros
+  tag: quinteros-1
   specs:
     manageiq-providers-oracle_cloud (0.1.0)
       oci (~> 2.19.0)
@@ -280,7 +280,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ovirt
   revision: 8612e7f0e7c909fa713b7ff2715b8f56dab2be50
-  branch: quinteros
+  tag: quinteros-1
   specs:
     manageiq-providers-ovirt (0.1.0)
       ovirt-engine-sdk (~> 4.4.0)
@@ -289,7 +289,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-red_hat_virtualization
   revision: 27d1f1a07abbb94555b9e889bce3fcc688b27014
-  branch: quinteros
+  tag: quinteros-1
   specs:
     manageiq-providers-red_hat_virtualization (0.1.0)
       ovirt-engine-sdk (~> 4.4.0)
@@ -297,16 +297,16 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-redfish
-  revision: 79c86edcc68a3ca25b39c342f89b7304e2fd935c
-  branch: quinteros
+  revision: 5b723b459bc197f5477cab77337b704fdbb072f7
+  tag: quinteros-1
   specs:
     manageiq-providers-redfish (0.1.0)
       redfish_client (~> 0.5.1)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-vmware
-  revision: 624712bb3ee83faaba4ef0d23cc0d10aa2fe8320
-  branch: quinteros
+  revision: 7d1f834b214278433a6d16dd129eb6a23d8863c9
+  tag: quinteros-1
   specs:
     manageiq-providers-vmware (0.1.0)
       ffi-vix_disk_lib (~> 1.3, >= 1.3.1)
@@ -318,15 +318,15 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-workflows
   revision: d6153dd0928b3c74f43794b3a1343b970d188cbc
-  branch: quinteros
+  tag: quinteros-1
   specs:
     manageiq-providers-workflows (0.1.0)
       floe (~> 0.7.1)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-schema
-  revision: 036a6f4ab31a3667157b3332f66d5ac42561817c
-  branch: quinteros
+  revision: f5adf88df27144a90391fb34d3652d5553a370bc
+  tag: quinteros-1
   specs:
     manageiq-schema (0.1.0)
       activerecord-id_regions (~> 0.3.2)
@@ -339,8 +339,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-ui-classic
-  revision: 27b9aa49abdc0b0e9f112c5be4cefbf0aa313450
-  branch: quinteros
+  revision: f5f9f6988bd5d35fcbc48f5487f905a6e21ecd5c
+  tag: quinteros-1
   specs:
     manageiq-ui-classic (0.1.0)
       execjs (= 2.8.1)
@@ -529,7 +529,7 @@ GEM
     bcrypt_pbkdf (1.1.0)
     bigdecimal (3.1.5)
     binary_struct (2.1.0)
-    bootsnap (1.17.0)
+    bootsnap (1.17.1)
       msgpack (~> 1.2)
     brakeman (5.4.1)
     builder (3.2.4)
@@ -555,7 +555,7 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    dalli (3.2.6)
+    dalli (3.2.8)
     date (3.3.4)
     db-query-matchers (0.10.0)
       activesupport (>= 4.0, < 7)
@@ -1009,7 +1009,7 @@ GEM
       ast (~> 2.4.1)
       racc
     pdf-core (0.9.0)
-    pg (1.5.4)
+    pg (1.5.5)
     pg-dsn_parser (0.1.1)
     pg-logical_replication (1.2.0)
       pg
@@ -1037,7 +1037,7 @@ GEM
       more_core_extensions
     raabro (1.4.0)
     racc (1.7.3)
-    rack (2.2.8)
+    rack (2.2.8.1)
     rack-attack (6.5.0)
       rack (>= 1.0, < 3)
     rack-test (2.1.0)
@@ -1107,7 +1107,7 @@ GEM
     rexml (3.2.6)
     ripper_ruby_parser (1.5.1)
       sexp_processor (~> 4.10)
-    routes_lazy_routes (0.4.2)
+    routes_lazy_routes (0.4.3)
       actionpack
       railties
     rspec (3.12.0)
@@ -1461,4 +1461,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.4.17
+   2.5.6
