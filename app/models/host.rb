@@ -1432,11 +1432,10 @@ class Host < ApplicationRecord
   end
 
   def verbose_supports?(feature, description = nil)
-    supports?(feature).tap do |value|
-      unless value
-        description ||= feature.to_s.humanize(:capitalize => false)
-        _log.warn("Cannot #{description} because <#{unsupported_reason(feature)}>")
-      end
+    if (reason = unsupported_reason(feature))
+      description ||= feature.to_s.humanize(:capitalize => false)
+      _log.warn("Cannot #{description} because <#{reason}>")
     end
+    !reason
   end
 end
