@@ -458,6 +458,10 @@ class ExtManagementSystem < ApplicationRecord
     emstype.downcase
   end
 
+  def default_authentication
+    authentication_type(default_authentication_type) || authentications.build(:authtype => default_authentication_type)
+  end
+
   def default_endpoint
     default = endpoints.detect { |e| e.role == "default" }
     default || endpoints.build(:role => "default")
