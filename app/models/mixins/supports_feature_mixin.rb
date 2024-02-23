@@ -59,8 +59,8 @@ module SupportsFeatureMixin
     private_class_method :define_supports_feature_methods
   end
 
-  def self.reason_or_default(reason)
-    (reason.presence || _("Feature not available/supported"))
+  def self.default_supports_reason
+    _("Feature not available/supported")
   end
 
   # query instance for the reason why the feature is unsupported
@@ -76,7 +76,7 @@ module SupportsFeatureMixin
     if respond_to?(method_name)
       public_send(method_name)
     else
-      unsupported_reason_add(feature)
+      unsupported_reason_add(feature, SupportsFeatureMixin.default_supports_reason)
       false
     end
   end
@@ -85,9 +85,9 @@ module SupportsFeatureMixin
 
   # used inside a +supports+ block to add a reason why the feature is not supported
   # just adding a reason will make the feature unsupported
-  def unsupported_reason_add(feature, reason = nil)
+  def unsupported_reason_add(feature, reason)
     feature = feature.to_sym
-    unsupported[feature] = SupportsFeatureMixin.reason_or_default(reason)
+    unsupported[feature] = reason
   end
 
   def unsupported
@@ -112,7 +112,7 @@ module SupportsFeatureMixin
       if respond_to?(method_name)
         public_send(method_name)
       else
-        unsupported_reason_add(feature)
+        unsupported_reason_add(feature, SupportsFeatureMixin.default_supports_reason)
         false
       end
     end
@@ -164,9 +164,8 @@ module SupportsFeatureMixin
     end
 
     # use this for making a class not support a feature
-    def unsupported_reason_add(feature, reason = nil)
-      feature = feature.to_sym
-      unsupported[feature] = SupportsFeatureMixin.reason_or_default(reason)
+    def unsupported_reason_add(feature, reason)
+      unsupported[feature.to_sym] = reason
     end
 
     def define_supports_feature_methods(feature, is_supported: true, reason: nil, &block)
@@ -191,7 +190,7 @@ module SupportsFeatureMixin
               unsupported_reason_add(feature, "Internal Error: #{e.message}")
             end
           else
-            unsupported_reason_add(feature, reason) unless is_supported
+            unsupported_reason_add(feature, reason || SupportsFeatureMixin.default_supports_reason) unless is_supported
           end
           !unsupported.key?(feature)
         end
@@ -200,7 +199,7 @@ module SupportsFeatureMixin
         define_singleton_method(method_name) do
           unsupported.delete(feature)
           # TODO: durandom - make reason evaluate in class context, to e.g. include the name of a subclass (.to_proc?)
-          unsupported_reason_add(feature, reason) unless is_supported
+          unsupported_reason_add(feature, reason || SupportsFeatureMixin.default_supports_reason) unless is_supported
           !unsupported.key?(feature)
         end
       end
