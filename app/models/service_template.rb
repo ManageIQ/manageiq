@@ -78,9 +78,13 @@ class ServiceTemplate < ApplicationRecord
       'Service template is not configured to be displayed'
     end
   end
-  alias orderable?     supports_order?
-  alias validate_order supports_order?
 
+  # ui-classic calls "validate_#{action}"
+  def validate_order
+    supports?(:order)
+  end
+
+  alias orderable? validate_order
 
   def self.with_tenant(tenant_id)
     tenant = Tenant.find(tenant_id)

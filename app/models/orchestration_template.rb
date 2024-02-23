@@ -1,5 +1,6 @@
 require 'digest/md5'
 class OrchestrationTemplate < ApplicationRecord
+  include SupportsFeatureMixin
   include NewWithTypeStiMixin
 
   acts_as_miq_taggable
@@ -18,6 +19,8 @@ class OrchestrationTemplate < ApplicationRecord
   scope :orderable, -> { where(:orderable => true) }
 
   before_destroy :check_not_in_use
+
+  supports(:order) { _("Template not orderable") unless orderable? }
 
   attr_accessor :remote_proxy
   alias remote_proxy? remote_proxy
