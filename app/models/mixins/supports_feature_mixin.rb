@@ -68,12 +68,7 @@ module SupportsFeatureMixin
 
   # query the instance if the feature is supported or not
   def supports?(feature)
-    if self.class.supports_features.key?(feature.to_sym)
-      self.class.check_supports(feature.to_sym, supports_features[feature.to_sym], instance: self)
-    else
-      unsupported_reason_add(feature, SupportsFeatureMixin.default_supports_reason)
-      false
-    end
+    self.class.check_supports(feature.to_sym, :instance => self)
   end
 
   private
@@ -103,16 +98,15 @@ module SupportsFeatureMixin
 
     # query the class if the feature is supported or not
     def supports?(feature)
-      if supports_features.key?(feature.to_sym)
-        check_supports(feature.to_sym, supports_features[feature.to_sym], instance: self)
-      else
-        unsupported_reason_add(feature, SupportsFeatureMixin.default_supports_reason)
-        false
-      end
+      check_supports(feature.to_sym, :instance => self)
     end
 
-    def check_supports(feature, value, instance:)
+    def check_supports(feature, instance:)
       instance.send(:unsupported).delete(feature)
+
+      # undeclared features are not supported
+      value = supports_features[feature.to_sym]
+
       if value.respond_to?(:call)
         begin
           # for class level supports, blocks are not evaluated and assumed to be true
