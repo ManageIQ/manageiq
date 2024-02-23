@@ -1,4 +1,4 @@
-ARG IMAGE_REF=latest
+ARG IMAGE_REF=latest-radjabov
 FROM docker.io/manageiq/manageiq-ui-worker:${IMAGE_REF}
 MAINTAINER ManageIQ https://github.com/ManageIQ/manageiq
 
