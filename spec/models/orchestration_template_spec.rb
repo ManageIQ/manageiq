@@ -1,4 +1,12 @@
 RSpec.describe OrchestrationTemplate do
+  let(:content) { "content of the test template" }
+  let(:existing_orderable_template) do
+    FactoryBot.create(:orchestration_template, :content => content, :orderable => true)
+  end
+  let(:existing_discovered_template) do
+    FactoryBot.create(:orchestration_template, :content => content, :orderable => false)
+  end
+
   it "doesn't access database when unchanged model is saved" do
     m = described_class.create
     expect { m.valid? }.not_to make_database_queries
@@ -212,15 +220,17 @@ RSpec.describe OrchestrationTemplate do
     end
   end
 
-  describe ".save_as_orderable!" do
-    let(:content) { "content of the test template" }
-    let(:existing_orderable_template) do
-      FactoryBot.create(:orchestration_template, :content => content, :orderable => true)
-    end
-    let(:existing_discovered_template) do
-      FactoryBot.create(:orchestration_template, :content => content, :orderable => false)
+  describe "supports(:order)" do
+    it "with orderable supports orders" do
+      expect(existing_orderable_template.supports?(:order)).to be_truthy
     end
 
+    it "without orderable doesn't supports orders" do
+      expect(existing_discovered_template.supports?(:order)).to be_falsey
+    end
+  end
+
+  describe ".save_as_orderable!" do
     context "save new template" do
       let(:template) { FactoryBot.build(:orchestration_template, :content => content) }
 
