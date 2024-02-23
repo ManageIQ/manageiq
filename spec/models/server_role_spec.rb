@@ -55,7 +55,7 @@ RSpec.describe ServerRole do
         web_services,Web Services,0,false,region
       CSV
 
-      allow(File).to receive(:open).and_return(StringIO.new(@csv))
+      allow(File).to receive(:open).with(ServerRole.fixture_path, "r", any_args).and_return(StringIO.new(@csv))
       ServerRole.seed
     end
 
