@@ -237,6 +237,16 @@ class ExtManagementSystem < ApplicationRecord
            :allow_nil => true
   delegate :path, :path=, :to => :default_endpoint, :prefix => "endpoint", :allow_nil => true
 
+  delegate :userid,
+           :userid=,
+           :password,
+           :password=,
+           :auth_key,
+           :auth_key=,
+           :to        => :default_authentication,
+           :allow_nil => true,
+           :prefix    => :default
+
   alias_method :address, :hostname # TODO: Remove all callers of address
 
   virtual_column :ipaddress,               :type => :string,  :uses => :endpoints
@@ -448,6 +458,10 @@ class ExtManagementSystem < ApplicationRecord
   # UI method for determining which icon to show for a particular EMS
   def image_name
     emstype.downcase
+  end
+
+  def default_authentication
+    authentication_type(default_authentication_type) || authentications.build(:authtype => default_authentication_type)
   end
 
   def default_endpoint
