@@ -5,7 +5,6 @@ MAINTAINER ManageIQ https://github.com/ManageIQ/manageiq
 ENV DATABASE_URL=postgresql://root@localhost/vmdb_production?encoding=utf8&pool=5&wait_timeout=5
 
 RUN echo "# This file intentionally left blank. ManageIQ maintains its own SSL configuration" > /etc/httpd/conf.d/ssl.conf && \
-    dnf -y module enable mod_auth_openidc && \
     dnf -y --setopt=tsflags=nodocs install \
       manageiq-appliance      \
       memcached               \
