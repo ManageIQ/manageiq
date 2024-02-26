@@ -1453,7 +1453,7 @@ DEPENDENCIES
   query_relation (~> 0.1.0)
   rack (>= 2.2.6.4)
   rack-attack (~> 6.5.0)
-  rails (~> 6.1.7, >= 6.1.7.6)
+  rails (~> 6.1.7, >= 6.1.7.7)
   rails-i18n (~> 6.x)
   rake (>= 12.3.3)
   rdoc
