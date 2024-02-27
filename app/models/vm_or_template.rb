@@ -1699,13 +1699,10 @@ class VmOrTemplate < ApplicationRecord
     self.class.calculate_power_state(raw_power_state)
   end
 
+  # deprecated, use unsupported_reason(:action) instead
   def check_feature_support(message_prefix)
-    if archived?
-      return [false, nil]
-    elsif orphaned?
-      return [false, _("%{action} cannot be performed on orphaned VM.") % {:action => message_prefix}]
-    end
-    [true, nil]
+    reason = unsupported_reason(:action)
+    [!reason, reason]
   end
 
   def create_notification(type, options)

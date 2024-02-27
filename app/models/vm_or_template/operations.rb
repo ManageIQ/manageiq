@@ -125,6 +125,14 @@ module VmOrTemplate::Operations
   #
 
   included do
+    supports :action do
+      if orphaned?
+        _("The VM is orphaned")
+      elsif archived?
+        _("The VM is archived")
+      end
+    end
+
     supports :control do
       if retired?
         _('The VM is retired')
