@@ -10,7 +10,7 @@ RSpec.describe "Server Environment Management" do
       require "uuidtools"
       allow(UUIDTools::UUID).to receive(:mac_address).and_return(mac_address)
       allow(Socket).to receive(:gethostname).and_return("localhost")
-      allow(Addrinfo).to receive(:getaddrinfo).with("localhost", nil).and_return([Addrinfo.tcp("localhost", nil), Addrinfo.udp("localhost", nil)])
+      allow(Addrinfo).to receive(:getaddrinfo).with("localhost", nil, nil, :STREAM).and_return([Addrinfo.tcp("localhost", nil)])
       allow(Socket).to receive(:ip_address_list).and_return([Addrinfo.ip(ip_address)])
     end
 

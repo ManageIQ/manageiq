@@ -10,7 +10,7 @@ module MiqEnvironment
   #
   def self.fully_qualified_domain_name
     hostname    = Socket.gethostname
-    addrinfo    = Addrinfo.getaddrinfo(hostname, nil).first
+    addrinfo    = Addrinfo.getaddrinfo(hostname, nil, nil, :STREAM).first
     fqdn, _port = addrinfo.getnameinfo
     fqdn
   end
