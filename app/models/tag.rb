@@ -160,7 +160,7 @@ class Tag < ApplicationRecord
   private
 
   def remove_from_managed_filters
-    Entitlement.remove_tag_from_all_managed_filters(name)
+    Entitlement.with_region(self.class.id_to_region(id)) { Entitlement.remove_tag_from_all_managed_filters(name) }
   end
 
   def name_path
