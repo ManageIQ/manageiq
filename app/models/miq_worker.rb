@@ -5,7 +5,8 @@ class MiqWorker < ApplicationRecord
   include SystemdCommon
   include UuidMixin
 
-  before_destroy :error_out_tasks_with_active_queue_message, :log_destroy_of_worker_messages
+  after_initialize :set_system_uid
+  before_destroy   :error_out_tasks_with_active_queue_message, :log_destroy_of_worker_messages
 
   belongs_to :miq_server
   has_many   :messages,           :as => :handler, :class_name => 'MiqQueue'
@@ -481,6 +482,10 @@ class MiqWorker < ApplicationRecord
       _log.warn("Message id: [#{m.id}] Setting state to 'error'")
       m.delivered_in_error('Clean Active Messages')
     end
+  end
+
+  private def set_system_uid
+    self.system_uid = unit_name if systemd_worker?
   end
 
   private def error_out_tasks_with_active_queue_message
