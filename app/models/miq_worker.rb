@@ -288,8 +288,9 @@ class MiqWorker < ApplicationRecord
     params[:queue_name]     = default_queue_name unless params.key?(:queue_name) || default_queue_name.nil?
     params[:status]         = STATUS_CREATING
     params[:last_heartbeat] = Time.now.utc
-
-    server_scope.new(params)
+    server_scope.new(params).tap do |w|
+      w.system_uid = w.unit_name if systemd_worker?
+    end
   end
 
   def self.create_worker_record(*params)

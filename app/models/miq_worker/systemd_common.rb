@@ -12,6 +12,10 @@ class MiqWorker
       end
     end
 
+    def unit_name
+      "#{service_base_name}#{unit_instance}.service"
+    end
+
     def start_systemd_worker
       enable_systemd_unit
       write_unit_settings_file
@@ -75,10 +79,6 @@ class MiqWorker
 
     def service_base_name
       self.class.service_base_name
-    end
-
-    def unit_name
-      "#{service_base_name}#{unit_instance}.service"
     end
 
     def unit_instance
