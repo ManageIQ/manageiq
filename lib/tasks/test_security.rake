@@ -55,9 +55,6 @@ namespace :test do
         }
       end
 
-      # See discussion in https://github.com/rails/rails/issues/51190
-      options << {:ignore => %w[CVE-2024-26143]}
-
       require "awesome_spawn"
       cmd = AwesomeSpawn.build_command_line("bundle-audit check", options)
       puts "** with command line: #{cmd}"
