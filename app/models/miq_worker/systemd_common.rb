@@ -7,9 +7,21 @@ class MiqWorker
         "manageiq-#{minimal_class_name.underscore.tr("/", "_")}"
       end
 
+      def service_file
+        "#{service_base_name}@.service"
+      end
+
+      def target_file
+        "#{service_base_name}.target"
+      end
+
       def systemd_unit_dir
         Pathname.new("/lib/systemd/system")
       end
+    end
+
+    def unit_name
+      "#{service_base_name}#{unit_instance}.service"
     end
 
     def start_systemd_worker
@@ -75,10 +87,6 @@ class MiqWorker
 
     def service_base_name
       self.class.service_base_name
-    end
-
-    def unit_name
-      "#{service_base_name}#{unit_instance}.service"
     end
 
     def unit_instance
