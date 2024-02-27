@@ -168,5 +168,24 @@ RSpec.describe Tag do
       MiqGroup.all.each { |group| expect(group.get_managed_filters).to match_array(expected_filters) }
       expect(Tag.all).to be_empty
     end
+
+    it "removing a tag will only remove it from entitlement filters in the tag's region" do
+      tag
+      other_region           = ApplicationRecord.my_region_number + 1
+      other_region_tag       = FactoryBot.create(:tag, :name => "/managed/my_name/test", :id => ApplicationRecord.id_in_region(1, other_region))
+      other_region_miq_group = FactoryBot.create(:miq_group, :entitlement => Entitlement.create!, :id => ApplicationRecord.id_in_region(1, other_region))
+      other_region_miq_group.entitlement.set_managed_filters(filters)
+      other_region_miq_group.save
+
+      other_region_tag.destroy
+
+      # tag and filters from other region are deleted and updated
+      Tag.in_region(other_region) { expect(Tag.all).to be_empty }
+      MiqGroup.in_region(other_region) { MiqGroup.all.each { |group| expect(group.get_managed_filters).to be_empty } }
+
+      # current region tag/filters are not changed
+      expect(Tag.pluck(:id)).to eq([tag.id])
+      MiqGroup.all.each { |group| expect(group.get_managed_filters).to match_array(filters) }
+    end
   end
 end
