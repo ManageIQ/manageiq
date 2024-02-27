@@ -9,7 +9,10 @@ module MiqEnvironment
   # Return the fully qualified hostname for the local host.
   #
   def self.fully_qualified_domain_name
-    Socket.gethostbyname(Socket.gethostname).first
+    hostname    = Socket.gethostname
+    addrinfo    = Addrinfo.getaddrinfo(hostname, nil).first
+    fqdn, _port = addrinfo.getnameinfo
+    fqdn
   end
 
   # Return the local IP v4 address of the local host
