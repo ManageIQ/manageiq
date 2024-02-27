@@ -40,6 +40,10 @@ class MiqWorker < ApplicationRecord
 
   PROCESS_TITLE_PREFIX = "MIQ:".freeze
 
+  after_initialize do |worker|
+    worker.system_uid = worker.unit_name if worker.systemd_worker?
+  end
+
   def self.atShutdown
     stop_workers
   end
@@ -288,9 +292,8 @@ class MiqWorker < ApplicationRecord
     params[:queue_name]     = default_queue_name unless params.key?(:queue_name) || default_queue_name.nil?
     params[:status]         = STATUS_CREATING
     params[:last_heartbeat] = Time.now.utc
-    server_scope.new(params).tap do |w|
-      w.system_uid = w.unit_name if systemd_worker?
-    end
+
+    server_scope.new(params)
   end
 
   def self.create_worker_record(*params)
