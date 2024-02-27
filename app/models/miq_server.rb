@@ -592,7 +592,7 @@ class MiqServer < ApplicationRecord
       :hosts                   => Host.active.count,
       :aggregate_physical_cpus => Host.active.in_my_region.sum(:aggregate_physical_cpus),
       :providers               => ExtManagementSystem.group(:type).count,
-      :deployment              => MiqEnvironment::Command.is_appliance? ? "appliance" : "containers",
+      :deployment              => MiqEnvironment::Command.is_podified? ? "containers" : "appliance",
       :arch                    => MiqEnvironment.arch.to_s,
       :services                => {:active => Service.active.count, :inactive => Service.inactive.count},
       :service_catalog_items   => {:active => ServiceTemplate.active.count, :archived => ServiceTemplate.archived.count},
