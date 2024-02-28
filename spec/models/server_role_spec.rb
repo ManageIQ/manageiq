@@ -32,6 +32,8 @@ RSpec.describe ServerRole do
   end
 
   context "With Seeding" do
+    let(:plugin_server_role_paths) { [] }
+
     before do
       @csv = <<-CSV.gsub(/^\s+/, "")
         name,description,max_concurrent,external_failover,role_scope
@@ -55,19 +57,21 @@ RSpec.describe ServerRole do
         web_services,Web Services,0,false,region
       CSV
 
-      allow(File).to receive(:exist?).and_call_original
-      allow(File).to receive(:exist?).with(a_string_matching(/content\/server_roles.csv/)).and_return(false)
-
       allow(File).to receive(:open).and_call_original
       allow(File).to receive(:open).with(ServerRole.fixture_path, "r", any_args).and_return(StringIO.new(@csv))
-      ServerRole.seed
+
+      expect(Vmdb::Plugins).to receive(:server_role_paths).and_return(plugin_server_role_paths)
     end
 
     it "should create proper number of rows" do
+      ServerRole.seed
+
       expect(@csv.split("\n").length - 1).to eq(ServerRole.count)
     end
 
     it "should import rows properly" do
+      ServerRole.seed
+
       roles = @csv.split("\n")
       roles.shift
       roles.each do |role|
@@ -88,6 +92,27 @@ RSpec.describe ServerRole do
         when 1
           expect(sr.master_supported?).to be_truthy
         end
+      end
+    end
+
+    context "with a plugin" do
+      let(:plugin_server_role_path)  { ManageIQ::Api::Engine.root.join("content/server_roles.csv") }
+      let(:plugin_server_role_paths) { [plugin_server_role_path] }
+
+      before do
+        @plugin_csv = <<-CSV.gsub(/^\s+/, "")
+          name,description,max_concurrent,external_failover,role_scope
+          special_api_role,Special API Role,0,false,region
+        CSV
+
+        allow(File).to receive(:open).with(plugin_server_role_path, "r", any_args).and_return(StringIO.new(@plugin_csv))
+      end
+
+      it "should create proper number of rows" do
+        ServerRole.seed
+
+        expected_role_count = @csv.split("\n").length + @plugin_csv.split("\n").length - 2
+        expect(expected_role_count).to eq(ServerRole.count)
       end
     end
   end
