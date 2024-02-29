@@ -9,7 +9,7 @@ class GitRepository < ApplicationRecord
 
   attr_reader :git_lock
 
-  validates :url, :format => Regexp.union(URI.regexp(%w[http https file ssh]), /\A[-\w:.]+@.*:/), :allow_nil => false
+  validates :url, :format => Regexp.union(URI::DEFAULT_PARSER.make_regexp(%w[http https file ssh]), /\A[-\w:.]+@.*:/), :allow_nil => false
 
   attribute :verify_ssl, :default => OpenSSL::SSL::VERIFY_PEER
   validates :verify_ssl, :inclusion => {:in => [OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER]}
