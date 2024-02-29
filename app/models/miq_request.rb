@@ -351,7 +351,7 @@ class MiqRequest < ApplicationRecord
                             else
                               name.underscore.gsub(/_request$/, "_task").camelize.constantize
                             end
-    
+
   end
 
   def requested_task_idx

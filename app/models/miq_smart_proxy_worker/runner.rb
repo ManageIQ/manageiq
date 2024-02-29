@@ -25,7 +25,7 @@ class MiqSmartProxyWorker::Runner < MiqQueueWorkerBase::Runner
     _log.info("#{log_prefix} Starting Heartbeat Thread")
 
     tid = Thread.new do
-      
+
       heartbeat_thread
     rescue => err
       _log.error("#{log_prefix} Heartbeat Thread aborted because [#{err.message}]")
@@ -33,7 +33,7 @@ class MiqSmartProxyWorker::Runner < MiqQueueWorkerBase::Runner
       Thread.exit
     ensure
       @heartbeat_started.set
-      
+
     end
 
     @heartbeat_started.wait

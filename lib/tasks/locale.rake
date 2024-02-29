@@ -291,7 +291,7 @@ namespace :locale do
 
   desc "Convert PO files from all plugins to JS files"
   task "po_to_json" => :environment do
-    
+
     require_relative 'gettext_task_override'
     require_relative 'po_to_json_override'
     require Rails.root.join('lib/manageiq/environment')
@@ -340,7 +340,7 @@ namespace :locale do
     Rake::Task['gettext:po_to_json'].invoke
   ensure
     system "rm -rf #{combined_dir}"
-    
+
   end
 
   desc "Create display names for models"

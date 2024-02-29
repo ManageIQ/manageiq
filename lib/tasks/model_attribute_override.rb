@@ -10,7 +10,7 @@ module GettextI18nRails
       elsif !ignored?(model.table_name, ignored_tables) && @existing_tables.include?(model.table_name)
         model.virtual_attribute_names +
           model.columns.reject { |c| ignored?(c.name, ignored_cols) }.collect { |c| c.name }
-        
+
       else
         []
       end

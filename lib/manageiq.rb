@@ -10,7 +10,7 @@ module ManageIQ
               else
                 ActiveSupport::StringInquirer.new(ENV["RAILS_ENV"].presence || ENV["RACK_ENV"].presence || "development")
               end
-    
+
   end
 
   def self.root
@@ -19,6 +19,6 @@ module ManageIQ
                else
                  Pathname.new(File.expand_path('..', __dir__))
                end
-    
+
   end
 end

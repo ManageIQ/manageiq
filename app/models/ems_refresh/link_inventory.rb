@@ -32,12 +32,12 @@ module EmsRefresh::LinkInventory
 
     unless prev_ids.nil? || disconnect_proc.nil?
       prev_ids.each do |p|
-        
+
         disconnect_proc.call(p)
       rescue => err
         _log.error("An error occurred while disconnecting id [#{p}]: #{err}")
         _log.log_backtrace(err)
-        
+
       end
     end
 
@@ -51,12 +51,12 @@ module EmsRefresh::LinkInventory
         end
       elsif connect_proc
         new_ids.each do |n|
-          
+
           connect_proc.call(n)
         rescue => err
           _log.error("EMS: [#{@ems.name}], id: [#{@ems.id}] An error occurred while connecting id [#{n}]: #{err}")
           _log.log_backtrace(err)
-          
+
         end
       end
     end

@@ -171,7 +171,7 @@ class Chargeback
     def values(metric, sub_metric = nil)
       @values ||= {}
       @values["#{metric}#{sub_metric}"] ||= sub_metric ? sub_metric_rollups(sub_metric) : rollup_records.collect { |x| rollup_field(x, metric) }.compact
-      
+
     end
 
     def rollup_field(rollup, metric)
@@ -229,7 +229,7 @@ class Chargeback
       @tag_filtered_for_rollup_records[tag_name_filter] ||= @rollup_records.select do |rollup|
         (resource_tag_names(rollup) & [tag_name_filter]).present?
       end
-      
+
     end
   end
 end

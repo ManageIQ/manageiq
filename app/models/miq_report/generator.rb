@@ -74,7 +74,7 @@ module MiqReport::Generator
                               ref = db_class.reflection_with_virtual(table.to_sym)
         ref ? ref.class_name : table.singularize.camelize
                             end
-    
+
 
     @table2class[table]
   end
@@ -595,7 +595,7 @@ module MiqReport::Generator
       arr << rec
       last_rec = rec
     end
-    
+
   end
 
   def build_apply_time_profile(results)

@@ -37,7 +37,7 @@ class Chargeback < ActsAsArModel
 
           result["#{chargeable_field.rate_name}_rate"] = :string
       end
-      
+
   end
 
   def self.refresh_dynamic_metric_columns

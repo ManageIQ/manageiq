@@ -7,7 +7,7 @@ module MiqReport::ImportExport
         path = engine.root.join('product/views')
           path if path.directory?
       end.compact
-      
+
     end
 
     def resolve_view_path(file_name, file_name_no_suffix = nil)

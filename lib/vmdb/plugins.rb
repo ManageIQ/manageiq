@@ -76,7 +76,7 @@ module Vmdb
 
           [engine, content_dir]
       end.compact
-      
+
     end
 
     def automate_domains
@@ -105,7 +105,7 @@ module Vmdb
 
     def systemd_units
       @systemd_units ||= flat_map { |engine| engine.root.join("systemd").glob("*.*") }
-      
+
     end
 
     def load_inflections

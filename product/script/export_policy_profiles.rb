@@ -13,7 +13,7 @@ ext = "yaml"
 dir = Dir.pwd
 
 MiqPolicySet.all.each do |ps|
-  
+
   contents = ps.export_to_yaml if ext == "yaml"
   contents = ps.export_to_xml  if ext == "xml"
 
@@ -24,5 +24,5 @@ MiqPolicySet.all.each do |ps|
   f.close
 rescue ActiveRecord::RecordNotFound
   next
-  
+
 end

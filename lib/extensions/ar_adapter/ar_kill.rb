@@ -25,7 +25,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                             FROM   pg_stat_activity
                             WHERE  datname = #{quote(current_database)}
       SQL
-      
+
     end
   end
 end

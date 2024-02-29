@@ -15,20 +15,20 @@ namespace :evm do
 
     # Start the EVM Database silently - not to be a visible rake task
     task :silent_start do
-      
+
       LinuxAdmin::Service.new(ENV.fetch("APPLIANCE_PG_SERVICE")).start
     rescue AwesomeSpawn::CommandResultError
       # ignore issues (ala silent)
-      
+
     end
 
     # Stop the EVM Database silently - not to be a visible rake task
     task :silent_stop do
-      
+
       LinuxAdmin::Service.new(ENV.fetch("APPLIANCE_PG_SERVICE")).stop
     rescue AwesomeSpawn::CommandResultError
       # ignore issues (ala silent)
-      
+
     end
 
     desc "Seed the ManageIQ EVM Database (VMDB) with defaults"

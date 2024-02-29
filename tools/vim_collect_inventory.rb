@@ -47,18 +47,18 @@ begin
   process(:storageDevice, dir) do
     data = {}
     vim.hostSystemsByMor.keys.each do |host_mor|
-      
+
       vim_host = vim.getVimHostByMor(host_mor)
       data[host_mor] = vim_host.storageDevice
     ensure
       vim_host.release if vim_host rescue nil
-      
+
     end
     data
   end
 
   process(:getAllCustomizationSpecs, dir) do
-    
+
     vim_csm = vim.getVimCustomizationSpecManager
     vim_csm.getAllCustomizationSpecs
   rescue RuntimeError => err
@@ -67,7 +67,7 @@ begin
     []
   ensure
     vim_csm.release if vim_csm rescue nil
-    
+
   end
 ensure
   vim.release unless vim.nil? rescue nil

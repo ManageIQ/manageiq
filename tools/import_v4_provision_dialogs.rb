@@ -4,7 +4,7 @@ require File.expand_path('../config/environment', __dir__)
 # Convert v4-style provisioning dialogs from Ruby files into YAML format
 # and store in the miq_dialogs table.
 Dir.glob(Rails.root.join("db/fixtures/*.rb")) do |dialog_file|
-  
+
   dialog_text = File.read(dialog_file)
   next unless dialog_text.include?('module MiqProvisionDialogs') && dialog_text.include?('def self.dialogs')
 
@@ -20,5 +20,5 @@ Dir.glob(Rails.root.join("db/fixtures/*.rb")) do |dialog_file|
   end
 rescue ScriptError, StandardError => err
   puts "Failed to import dialog from file <#{dialog_file}>.  Error: <#{err}>"
-  
+
 end

@@ -75,7 +75,7 @@ class ChargebackConfiguredSystem < Chargeback
       else
         raise _('Unable to find strategy for Configured Systems selection')
       end
-      
+
   end
 
   def self.display_name(number = 1)

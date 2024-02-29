@@ -149,13 +149,13 @@ class ProviderTagMapping
       entry = category.find_entry_by_name(tag_hash[:entry_name])
       unless entry
         category.lock(:exclusive) do
-          
+
           entry = category.add_entry(:name        => tag_hash[:entry_name],
                                      :description => tag_hash[:entry_description])
           entry.save!
         rescue ActiveRecord::RecordInvalid
           entry = category.find_entry_by_name(tag_hash[:entry_name])
-          
+
         end
       end
       entry.tag_id

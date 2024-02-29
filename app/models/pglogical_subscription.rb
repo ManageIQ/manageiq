@@ -50,11 +50,11 @@ class PglogicalSubscription < ActsAsArModel
   def self.save_all!(subscription_list)
     errors = []
     subscription_list.each do |s|
-      
+
       s.save!(false)
     rescue => e
       errors << "Failed to save subscription to #{s.host}: #{e.message}"
-      
+
     end
 
     EvmDatabase.restart_failover_monitor_service_queue

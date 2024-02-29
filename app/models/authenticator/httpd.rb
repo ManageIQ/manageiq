@@ -116,7 +116,7 @@ module Authenticator
     def find_userid_as_distinguished_name(user_attrs)
       dn_domain = user_attrs[:domain].downcase.split(".").map { |s| "dc=#{s}" }.join(",")
       User.in_my_region.where("userid LIKE ?", "%=#{user_attrs[:username]},%,#{dn_domain}").last
-      
+
     end
 
     def username_to_upn_name(user_attrs)

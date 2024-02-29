@@ -129,7 +129,7 @@ class VimPerformanceTrend < ActsAsArModel
       arr.push(new(row))
     end
 
-    
+
   end
 
   def self.calc_value_at_target(limit, trend_data)

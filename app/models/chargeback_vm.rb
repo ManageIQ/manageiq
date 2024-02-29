@@ -160,7 +160,7 @@ class ChargebackVm < Chargeback
 
   def self.vms(region)
     @vms ||= {}
-    
+
         # Find Vms by user or by tag
     @vms[region] ||=
       if @options[:entity_id]
@@ -207,7 +207,7 @@ class ChargebackVm < Chargeback
       else
         raise _('Unable to find strategy for VM selection')
       end
-      
+
   end
 
   def self.display_name(number = 1)

@@ -979,10 +979,10 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def storage2proxies
-    
+
       # Support vixDisk scanning of VMware VMs from the vmdb server
     @storage_proxies ||= miq_server_proxies
-    
+
   end
 
   def storage2active_proxies(all_proxy_list = nil)
@@ -1538,11 +1538,11 @@ class VmOrTemplate < ApplicationRecord
   def self.vms_by_ipaddress(ipaddress)
     ipaddresses = ipaddress.split(',')
     Network.where("ipaddress in (?)", ipaddresses).each do |network|
-      
+
       vm = network.hardware.vm
       yield(vm)
     rescue
-      
+
     end
   end
 

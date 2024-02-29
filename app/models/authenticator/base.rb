@@ -125,7 +125,7 @@ module Authenticator
       decrypt_ldap_password(config) if MiqLdap.using_ldap?
 
       run_task(taskid, "Authorizing") do |task|
-        
+
         identity = find_external_identity(username, args[0], args[1])
 
         unless identity
@@ -176,7 +176,7 @@ module Authenticator
       rescue Exception => err
         audit_failure(audit.merge(:message => err.message))
         raise
-        
+
       end
     end
 

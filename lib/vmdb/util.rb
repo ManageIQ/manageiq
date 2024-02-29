@@ -119,11 +119,11 @@ module VMDB
         dirs.each do |dir|
           dir = Rails.root.join(dir) unless Pathname.new(dir).absolute?
           Dir.glob(dir).each do |file|
-            
+
             entry, _mtime = add_zip_entry(zip, file, zfile)
           rescue => e
             _log.error("Failed to add file: [#{entry}]. Error information: #{e.message}")
-            
+
           end
         end
         zip.close
@@ -156,7 +156,7 @@ module VMDB
       rails_root_directories = Rails.root.to_s.split("/")
       within_rails_root = path.split("/")[0, rails_root_directories.length] == rails_root_directories
       within_rails_root ? Pathname.new(path).relative_path_from(Rails.root).to_s : "ROOT#{path}"
-      
+
     end
     private_class_method :zip_entry_from_path
 

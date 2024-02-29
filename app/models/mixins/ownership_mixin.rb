@@ -58,7 +58,7 @@ module OwnershipMixin
       errors.add(:missing_ids, "Unable to find #{name.pluralize} with the following ids #{missing.inspect}") unless missing.empty?
 
       objects.each do |obj|
-        
+
         options.each_key do |k|
           col = case k
                 when :owner then :evm_owner
@@ -71,7 +71,7 @@ module OwnershipMixin
         obj.save
       rescue => err
         errors.add(:error_updating, "Error, '#{err.message}, updating #{name}: Name: [#{obj.name}], Id: [#{obj.id}]")
-        
+
       end
 
       errors.empty? ? true : errors

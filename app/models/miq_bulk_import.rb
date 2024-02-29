@@ -101,6 +101,6 @@ module MiqBulkImport
       c.send(attr)
     end.compact
 
-    
+
   end
 end

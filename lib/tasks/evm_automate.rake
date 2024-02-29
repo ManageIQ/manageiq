@@ -100,7 +100,7 @@ namespace :evm do
 
     desc 'Export automate model information to a folder or zip file. ENV options DOMAIN,NAMESPACE,CLASS,EXPORT_DIR|ZIP_FILE|YAML_FILE'
     task :export => :environment do
-      
+
       domain = ENV.fetch('DOMAIN', nil)
       raise "Must specify domain for export:" if domain.nil?
 
@@ -123,12 +123,12 @@ namespace :evm do
       warn err.backtrace
       warn err.message
       exit(1)
-      
+
     end
 
     desc 'Import automate model information from an export folder or zip file. '
     task :import => :environment do
-      
+
       raise "Must specify domain for import:" if ENV['DOMAIN'].blank? && ENV['GIT_URL'].blank?
       if ENV['YAML_FILE'].blank? && ENV['IMPORT_DIR'].blank? && ENV['ZIP_FILE'].blank? && ENV['GIT_URL'].blank?
         raise 'Must specify either a directory with exported automate model or a zip file or a http based git url'
@@ -177,7 +177,7 @@ namespace :evm do
       warn err.backtrace
       warn err.message
       exit(1)
-      
+
     end
 
     desc 'Extract automate methods'
@@ -190,7 +190,7 @@ namespace :evm do
 
     desc 'Method simulation'
     task :simulate => :environment do
-      
+
       puts "Automate simulation starting"
       domain         = ENV.fetch("DOMAIN", nil)
       namespace      = ENV.fetch("NAMESPACE", nil)
@@ -210,12 +210,12 @@ namespace :evm do
     rescue => err
       warn err.message
       exit(1)
-      
+
     end
 
     desc 'Restore automate domains from a backup zip file or folder.'
     task :restore => :environment do
-      
+
       raise 'Must specify a backup zip file' if ENV['BACKUP_ZIP_FILE'].blank?
 
       puts "Importing automate domains from file #{ENV.fetch('BACKUP_ZIP_FILE', nil)}"
@@ -223,7 +223,7 @@ namespace :evm do
     rescue => err
       warn err.message
       exit(1)
-      
+
     end
 
     desc 'Convert the legacy automation model to new format  ENV options FILE,DOMAIN,EXPORT_DIR|ZIP_FILE|YAML_FILE'

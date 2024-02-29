@@ -14,7 +14,7 @@ class FileDepotFtp < FileDepot
   def upload_file(file)
     super
     with_connection do
-      
+
       return if file_exists?(destination_file)
 
       upload(file.local_file, destination_file)
@@ -30,7 +30,7 @@ class FileDepotFtp < FileDepot
       :log_uri => destination_file
     )
       file.post_upload_tasks
-      
+
     end
   end
 

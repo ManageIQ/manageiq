@@ -154,7 +154,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < MiqWorker::Runner
     _log.info("#{log_prefix} Starting Event Monitor Thread")
 
     tid = Thread.new do
-      
+
       monitor_events
     rescue EventCatcherHandledException
       Thread.exit
@@ -166,7 +166,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < MiqWorker::Runner
       Thread.exit
     ensure
       @monitor_started.set
-      
+
     end
 
     @monitor_started.wait

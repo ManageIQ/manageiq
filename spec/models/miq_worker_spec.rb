@@ -452,7 +452,7 @@ RSpec.describe MiqWorker do
       end
 
       it "with ENV['APPLIANCE']" do
-        
+
         allow(MiqWorker).to receive(:nice_increment).and_return("10")
         allow(@worker).to receive(:worker_options).and_return(:ems_id => 1234, :guid => @worker.guid)
         old_env = ENV.delete('APPLIANCE')
@@ -466,7 +466,7 @@ RSpec.describe MiqWorker do
       ensure
         # ENV['x'] = nil deletes the key because ENV accepts only string values
         ENV['APPLIANCE'] = old_env
-        
+
       end
     end
 

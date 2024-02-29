@@ -142,7 +142,7 @@ class MiqSnmp
     else                                     oid
     end
 
-    
+
   end
   private_class_method :subst_oid
 

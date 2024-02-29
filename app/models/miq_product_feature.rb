@@ -302,7 +302,7 @@ class MiqProductFeature < ApplicationRecord
     @details ||= attributes.symbolize_keys.slice(*DETAIL_ATTRS).merge(
       :children => children.where(:hidden => [false, nil])
       )
-    
+
   end
 
   def self.display_name(number = 1)

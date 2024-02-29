@@ -165,7 +165,7 @@ class ChargebackRateDetail < ApplicationRecord
     else raise "rate time unit of '#{per_time}' not supported"
     end
 
-    
+
   end
 
   def rate_adjustment

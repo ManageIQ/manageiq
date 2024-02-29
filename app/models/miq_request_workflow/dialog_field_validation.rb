@@ -8,11 +8,11 @@ module MiqRequestWorkflow::DialogFieldValidation
     required_tags = Array.wrap(fld[:required_tags].presence).collect(&:to_sym)
     missing_tags = required_tags - selected_tags_categories
     missing_categories_names = missing_tags.collect do |category|
-      
+
       Classification.lookup_by_name(category.to_s).description
     rescue
       nil
-      
+
     end.compact
 
     return nil if missing_categories_names.blank?

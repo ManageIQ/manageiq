@@ -40,7 +40,7 @@ class ChargebackRate < ApplicationRecord
     @relevant ||= chargeback_rate_details.select do |r|
       r.affects_report_fields(report_cols) && allowed_cols.include?(r.metric_column_key)
     end
-    
+
   end
 
   def self.validate_rate_type(type)

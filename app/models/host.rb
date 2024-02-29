@@ -596,7 +596,7 @@ class Host < ApplicationRecord
     return true if host_ids.blank?
 
     host_ids.each do |id|
-      
+
       host = Host.find(id)
       host.update_authentication(creds)
     rescue ActiveRecord::RecordNotFound => err
@@ -606,7 +606,7 @@ class Host < ApplicationRecord
       errors << err.to_s
       _log.error("#{err.class.name}-#{err}")
       next
-      
+
     end
     errors.empty? ? true : errors
   end
