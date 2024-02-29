@@ -3,8 +3,8 @@ require 'awesome_spawn'
 class MiqAction < ApplicationRecord
   include UuidMixin
   before_validation :default_name_to_guid, :on => :create
-  before_destroy    :check_policy_contents_empty_on_destroy
   before_save       :round_if_memory_reconfigured
+  before_destroy    :check_policy_contents_empty_on_destroy
 
   silence_warnings do
     const_set(:TYPES,

@@ -5,6 +5,8 @@ class ServiceOrder < ApplicationRecord
   REQUEST_ATTRIBUTES = %w(id name approval_state request_state message
                           created_on fulfilled_on updated_on placed_on).freeze
 
+  before_create :assign_user
+  after_create  :create_order_name
   before_destroy :destroy_unprocessed_requests
   belongs_to :tenant
   belongs_to :user
@@ -14,8 +16,6 @@ class ServiceOrder < ApplicationRecord
   validates :state, :uniqueness_when_changed => {:scope => [:user_id, :tenant_id]}, :if => :cart?
   validates :name, :presence => true, :on => :update
 
-  before_create :assign_user
-  after_create  :create_order_name
 
   def initialize(*args)
     raise NotImplementedError, _("must be implemented in a subclass") if self.class == ServiceOrder

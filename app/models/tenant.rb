@@ -17,6 +17,8 @@ class Tenant < ApplicationRecord
   attribute :divisible,   :default => true
   attribute :use_config_for_attributes, :default => false
 
+  before_save :nil_blanks
+  after_create :create_tenant_group, :create_miq_product_features_for_tenant_nodes, :update_miq_product_features_for_tenant_nodes
   before_destroy :ensure_can_be_destroyed
 
   has_ancestry(:orphan_strategy => :restrict)
@@ -61,9 +63,7 @@ class Tenant < ApplicationRecord
   virtual_column :parent_name,  :type => :string
   virtual_column :display_type, :type => :string
 
-  before_save :nil_blanks
   after_save -> { MiqProductFeature.invalidate_caches }
-  after_create :create_tenant_group, :create_miq_product_features_for_tenant_nodes, :update_miq_product_features_for_tenant_nodes
 
   def self.scope_by_tenant?
     true

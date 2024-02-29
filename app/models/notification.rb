@@ -9,11 +9,11 @@ class Notification < ApplicationRecord
   has_many :recipients, :class_name => "User", :through => :notification_recipients, :source => :user
 
   accepts_nested_attributes_for :notification_recipients
+  before_save :backup_subject_name
   before_create :set_notification_recipients
   # Do not emit notifications if they are not enabled for the server
   after_commit :emit_message, :on => :create
 
-  before_save :backup_subject_name
 
   serialize :options, Hash
 

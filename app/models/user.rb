@@ -8,6 +8,8 @@ class User < ApplicationRecord
   include CustomActionsMixin
   include ExternalUrlMixin
 
+  before_validation :nil_email_field_if_blank
+  before_validation :dummy_password_for_external_auth
   before_destroy :check_reference, :prepend => true
 
   has_many   :miq_approvals, :as => :approver
@@ -146,8 +148,6 @@ class User < ApplicationRecord
     errors.add(:userid, "'system' is reserved for EVM internal operations") unless (userid =~ /^system$/i).nil?
   end
 
-  before_validation :nil_email_field_if_blank
-  before_validation :dummy_password_for_external_auth
   before_destroy :destroy_subscribed_widget_sets
 
   def check_reference

@@ -3,11 +3,11 @@ class MiqWidgetSet < ApplicationRecord
 
   acts_as_miq_set
 
+  before_validation :keep_group_when_saving
   before_destroy :ensure_can_be_destroyed
   before_destroy :destroy_user_versions
   before_destroy :delete_from_dashboard_order
 
-  before_validation :keep_group_when_saving
   after_save        :add_to_dashboard_order
   after_save        :update_members
 

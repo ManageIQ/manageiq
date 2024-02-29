@@ -31,9 +31,9 @@ class Zone < ApplicationRecord
   has_many :vm_hardwares, :class_name => 'Hardware', :through => :vms_and_templates, :source => :hardware
   virtual_has_many :active_miq_servers, :class_name => "MiqServer"
 
+  after_create :create_server_if_podified
   before_destroy :remove_servers_if_podified
   before_destroy :check_zone_in_use_on_destroy
-  after_create :create_server_if_podified
 
   include AuthenticationMixin
 

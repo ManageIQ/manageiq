@@ -40,8 +40,8 @@ class MiqTask < ApplicationRecord
 
   before_validation :initialize_attributes, :on => :create
 
-  before_destroy :check_active, :check_associations
   before_save :ensure_started
+  before_destroy :check_active, :check_associations
 
   virtual_has_one :task_results
   virtual_attribute :state_or_status, :string, :arel => (lambda do |t|

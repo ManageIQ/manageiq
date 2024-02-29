@@ -2,8 +2,8 @@ class FirmwareTarget < ApplicationRecord
   has_many :firmware_binary_firmware_targets, :dependent => :destroy
   has_many :firmware_binaries, :through => :firmware_binary_firmware_targets
 
-  before_create :normalize
   before_save   :normalize
+  before_create :normalize
 
   # Attributes that need to match for target physical server to be assumed compatible.
   MATCH_ATTRIBUTES = %i[manufacturer model].freeze
