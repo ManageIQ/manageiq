@@ -24,7 +24,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
 
   def self.raw_create_stack(playbook, options = {})
     playbook.run(options)
-  rescue StandardError => e
+  rescue => e
     _log.error("Failed to create job from playbook(#{playbook.name}), error: #{e}")
     raise MiqException::MiqOrchestrationProvisionError, e.to_s, e.backtrace
   end

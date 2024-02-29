@@ -9,7 +9,7 @@ module TaskHelpers
           begin
             alertsets = YAML.load_file(filename)
             import_alert_sets(alertsets)
-          rescue StandardError => err
+          rescue => err
             $log.error("Error importing #{filename} : #{err.message}")
             warn("Error importing #{filename} : #{err.message}")
           end

@@ -100,7 +100,7 @@ module MiqReport::Generator::Trend
       @trend_data[c][:slope], @trend_data[c][:yint], @trend_data[c][:corr] =
         begin
           Math.linear_regression(*coordinates)
-        rescue StandardError => err
+        rescue => err
           _log.warn("#{err.message}, calculating slope") unless err.kind_of?(ZeroDivisionError)
           nil
         end

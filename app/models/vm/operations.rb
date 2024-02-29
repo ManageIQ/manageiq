@@ -33,7 +33,7 @@ module Vm::Operations
 
     supports :launch_native_console do
       validate_native_console_support
-    rescue StandardError => err
+    rescue => err
       _('VM NATIVE Console error: %{error}') % {:error => err}
     end
 

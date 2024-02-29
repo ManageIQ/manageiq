@@ -163,7 +163,7 @@ class Classification < ApplicationRecord
 
         begin
           d.remove_entry_from(t)
-        rescue StandardError => err
+        rescue => err
           _log.error("Error occurred while removing entry name: [#{d.name}] from #{options[:model]} name: #{t.name}")
           _log.error("#{err.class} - #{err}")
           failed_deletes[t] << d
@@ -175,7 +175,7 @@ class Classification < ApplicationRecord
 
         begin
           a.assign_entry_to(t)
-        rescue StandardError => err
+        rescue => err
           _log.error("Error occurred while adding entry name: [#{a.name}] to #{options[:model]} name: #{t.name}")
           _log.error("#{err.class} - #{err}")
           failed_adds[t] << a

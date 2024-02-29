@@ -10,7 +10,7 @@ module TaskHelpers
 
           begin
             import_custom_buttons(filename, options[:connect_dialog_by_name])
-          rescue StandardError
+          rescue
             raise StandardError, "Error importing #{filename} at #{$@}"
           end
         end

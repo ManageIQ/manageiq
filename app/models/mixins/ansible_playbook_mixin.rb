@@ -37,7 +37,7 @@ module AnsiblePlaybookMixin
     return if log_option == 'on_error' && job.raw_status.succeeded?
 
     $log.info("Stdout from ansible job #{job.name}: #{job.raw_stdout('txt_download')}")
-  rescue StandardError => err
+  rescue => err
     if job.nil?
       $log.error("Job was nil, must pass a valid job")
     else

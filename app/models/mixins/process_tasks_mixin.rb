@@ -140,7 +140,7 @@ module ProcessTasksMixin
         _log.info("Invoking task #{action} on #{msg_desination}")
         destination.send(action, post_args)
         task_audit_event(:success, remote_options, :message => "'#{action}' successfully initiated on #{msg_desination}")
-      rescue StandardError => err
+      rescue => err
         task_audit_event(:failure, remote_options, :message => "'#{action}' failed to be initiated on #{msg_desination}")
         _log.error(err.message)
         raise err unless err.kind_of?(NoMethodError) || err.kind_of?(ManageIQ::API::Client::ResourceNotFound)

@@ -4,7 +4,7 @@ class ReportStructure
     destination_group = find_group(destination_group_name)
     destination_group.update!(:settings => find_group(source_group_name).settings) unless dry_run
     puts "Reports structure was successfully copied from '#{source_group_name}' to '#{destination_group_name}'"
-  rescue StandardError => e
+  rescue => e
     $stderr.puts "Copying failed: #{e.message}"
   end
 
@@ -15,7 +15,7 @@ class ReportStructure
       
         destination_group.update!(:settings => source_group.settings) unless dry_run
         puts "  Reports structure was successfully copied from '#{source_group_name}' to '#{destination_group.description}'"
-      rescue StandardError => e
+      rescue => e
         $stderr.puts "Copying failed: #{e.message}"
       
     end
@@ -27,7 +27,7 @@ class ReportStructure
     begin
       group.update!(:settings => nil) unless dry_run
       puts "Successfully removed custom report structure for group '#{group_name}'"
-    rescue StandardError => e
+    rescue => e
       $stderr.puts "Removing failed: #{e.message}"
     end
   end
@@ -38,7 +38,7 @@ class ReportStructure
       
         group.update!(:settings => nil) unless dry_run
         puts "Successfully removed custom report structure for group '#{group.description}'"
-      rescue StandardError => e
+      rescue => e
         $stderr.puts "Removing failed: #{e.message}"
       
     end

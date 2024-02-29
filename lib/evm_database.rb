@@ -143,7 +143,7 @@ class EvmDatabase
   rescue Timeout::Error
     _log.error("Seeding... Timed out after #{lock_timeout} seconds")
     raise
-  rescue StandardError => err
+  rescue => err
     _log.log_backtrace(err)
     raise
   end

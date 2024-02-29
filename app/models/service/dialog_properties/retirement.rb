@@ -27,7 +27,7 @@ class Service
           field_name = 'dialog_service_retires_in_days'
           retires_in_duration(@options[field_name], :days)
         end
-      rescue StandardError
+      rescue
         $log.error("Error parsing dialog retirement property [#{field_name}] with value [#{@options[field_name].inspect}]. Error: #{$!}")
       end
 

@@ -23,7 +23,7 @@ module ManageIQ::Providers::EmbeddedAutomationManager::CrudCommon
     def notify(op_type, manager_id, params)
       error = nil
       yield
-    rescue StandardError => error
+    rescue => error
       _log.debug(error.result.error) if error.kind_of?(AwesomeSpawn::CommandResultError)
       raise
     ensure

@@ -35,7 +35,7 @@ class ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner < Job
     miq_task.update(:name => name)
     save!
     my_signal(false, :poll_stack_status, 10)
-  rescue StandardError => err
+  rescue => err
     _log.error("Error deploying orchestration stack : #{err.class} - #{err.message}")
     my_signal(minimize_indirect, :abort_job, err.message, 'error')
   end
@@ -48,7 +48,7 @@ class ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner < Job
     miq_task.update(:name => name)
     save!
     my_signal(false, :poll_stack_status, 10)
-  rescue StandardError => err
+  rescue => err
     _log.error("Error updating orchestration stack : #{err.class} - #{err.message}")
     my_signal(minimize_indirect, :abort_job, err.message, 'error')
   end

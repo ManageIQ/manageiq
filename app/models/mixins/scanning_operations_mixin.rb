@@ -17,7 +17,7 @@ module ScanningOperationsMixin
     )
     _log.info("target [#{guid}] data put on queue, job [#{jobid}]")
     true
-  rescue StandardError => err
+  rescue => err
     _log.log_backtrace(err)
     false
   end
