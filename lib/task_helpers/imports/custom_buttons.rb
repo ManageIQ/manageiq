@@ -60,8 +60,8 @@ module TaskHelpers
             # may contain dialog_label,delete it, then find and connect dialog (optionally)
             dialog_label = assoc.last.first['attributes'].delete('dialog_label')
             resource_action = create_object(*assoc).first
-            if @connect_dialog
-              resource_action.dialog = Dialog.in_region(MiqRegion.my_region_number).find_by(:label => dialog_label) if dialog_label
+            if @connect_dialog && dialog_label
+              resource_action.dialog = Dialog.in_region(MiqRegion.my_region_number).find_by(:label => dialog_label)
             end
             new_obj.send(:"#{assoc.first}=", resource_action)
           end

@@ -254,12 +254,10 @@ class MiqAction < ApplicationRecord
             what   = what.strip.downcase   unless what.nil?
             method = method.strip.downcase unless method.nil?
             # ${Cause.Description}
-            if what == "cause"
-              if method == "description"
+            if what == "cause" && (method == "description")
                 subst = "Policy: #{inputs[:policy].description}" if inputs[:policy].kind_of?(MiqPolicy)
                 subst = "Alert: #{inputs[:policy].description}"  if inputs[:policy].kind_of?(MiqAlert)
               end
-            end
 
             # ${Object.method}
             if what == "object"

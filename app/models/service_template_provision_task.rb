@@ -169,8 +169,8 @@ class ServiceTemplateProvisionTask < MiqRequestTask
 
   def mark_pending_items_as_finished
     miq_request.miq_request_tasks.each do |s|
-      if s.state == 'pending'
-        s.update_and_notify_parent(:state => "finished", :status => "Warn", :message => "Error in Request: #{miq_request.id}. Setting pending Task: #{id} to finished.") unless id == s.id
+      if s.state == 'pending' && !(id == s.id)
+        s.update_and_notify_parent(:state => "finished", :status => "Warn", :message => "Error in Request: #{miq_request.id}. Setting pending Task: #{id} to finished.")
       end
     end
   end

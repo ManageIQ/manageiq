@@ -225,8 +225,8 @@ end
         attr, val = o.split("=")
         ohash[attr.strip.downcase.to_sym] = val.strip.downcase
       end
-      if ohash[:ref] != rec.class.to_s.downcase && !exclude_from_object_ref_substitution(ohash[:ref], rec)
-        ref = rec.send(val) if val && rec.respond_to?(val)
+      if ohash[:ref] != rec.class.to_s.downcase && !exclude_from_object_ref_substitution(ohash[:ref], rec) && (val && rec.respond_to?(val))
+        ref = rec.send(val)
       end
     end
     return ohash, ref

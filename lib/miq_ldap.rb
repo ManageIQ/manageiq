@@ -162,8 +162,8 @@ class MiqLdap
   def _search(opts, seen = nil, &_blk)
     raw_opts = opts.dup
     opts[:scope] = scope(opts[:scope]) if opts[:scope]
-    if opts[:filter]
-      opts[:filter] = filter_construct(opts[:filter]) unless opts[:filter].kind_of?(Net::LDAP::Filter)
+    if opts[:filter] && !opts[:filter].kind_of?(Net::LDAP::Filter)
+      opts[:filter] = filter_construct(opts[:filter])
     end
     opts[:return_referrals] = @follow_referrals
     seen ||= {:objects => [], :referrals => {}}

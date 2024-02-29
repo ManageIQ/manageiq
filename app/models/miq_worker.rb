@@ -82,8 +82,8 @@ class MiqWorker < ApplicationRecord
 
   def self.workers_configured_count
     count = worker_settings[:count]
-    if maximum_workers_count.kind_of?(Integer)
-      count = maximum_workers_count if maximum_workers_count < count
+    if maximum_workers_count.kind_of?(Integer) && (maximum_workers_count < count)
+      count = maximum_workers_count
     end
     count
   end

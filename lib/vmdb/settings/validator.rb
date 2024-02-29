@@ -118,24 +118,20 @@ module Vmdb
 
         keys = data.each_pair.to_a.transpose.first.to_set
 
-        if keys.include?(:listening_port)
-          unless is_numeric?(data.listening_port) || data.listening_port.blank?
+        if keys.include?(:listening_port) && !(is_numeric?(data.listening_port) || data.listening_port.blank?)
             valid = false
             errors << [:listening_port, "listening_port, \"#{data.listening_port}\", invalid. Should be numeric"]
           end
-        end
 
         if keys.include?(:session_store) && !%w[sql memory cache].include?(data.session_store)
           valid = false
           errors << [:session_store, "session_store, \"#{data.session_store}\", invalid. Should be one of \"sql\", \"memory\", \"cache\""]
         end
 
-        if keys.include?(:zone)
-          unless Zone.in_my_region.find_by(:name => data.zone)
+        if keys.include?(:zone) && !Zone.in_my_region.find_by(:name => data.zone)
             valid = false
             errors << [:zone, "zone, \"#{data.zone}\", invalid. Should be a valid Zone"]
           end
-        end
 
         if keys.include?(:rate_limiting)
           %i[api_login request ui_login].each do |limiting_section|

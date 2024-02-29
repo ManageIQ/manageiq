@@ -270,10 +270,10 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def create_tasks_for_service(service_task, parent_svc)
-    unless parent_svc
-      return [] unless self.class.include_service_template?(service_task,
+    if !parent_svc && !self.class.include_service_template?(service_task,
                                                             service_task.source_id,
                                                             parent_svc)
+      return []
     end
     svc = create_service(service_task, parent_svc)
 

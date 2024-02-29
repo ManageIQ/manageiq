@@ -12,8 +12,8 @@ class LifecycleEvent < ApplicationRecord
     event.save!
 
     # create the event and link it to a Vm if a vm was found
-    if vm.present?
-      vm.lifecycle_events << event unless vm.lifecycle_events.include?(event)
+    if vm.present? && !vm.lifecycle_events.include?(event)
+      vm.lifecycle_events << event
     end
   end
 end

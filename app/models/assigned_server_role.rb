@@ -37,8 +37,7 @@ class AssignedServerRole < ApplicationRecord
 
   def set_priority(val)
     # Only allow 1 Primary in the RoleScope
-    if val == HIGH_PRIORITY && server_role.master_supported?
-      if ['zone', 'region'].include?(server_role.role_scope)
+    if val == HIGH_PRIORITY && server_role.master_supported? && ['zone', 'region'].include?(server_role.role_scope)
         method = "find_other_servers_in_#{server_role.role_scope}"
         other_servers = miq_server.send(method)
         other_servers.each do |server|
@@ -48,7 +47,6 @@ class AssignedServerRole < ApplicationRecord
           assigned.update_attribute(:priority, DEFAULT_PRIORITY) if assigned.priority == HIGH_PRIORITY
         end
       end
-    end
 
     update_attribute(:priority, val)
   end

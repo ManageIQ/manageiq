@@ -28,11 +28,9 @@ module MiqReport::Formatting
   def formatter_by(column)
     formatter = nil
     if Chargeback.db_is_chargeback?(db)
-      if db.to_s == "ChargebackContainerProject" # override format: default is mhz but cores needed for containers
-        if %w[cpu_used_metric cpu_metric].include?(column)
+      if db.to_s == "ChargebackContainerProject" && %w[cpu_used_metric cpu_metric].include?(column)
           formatter = :cores
         end
-      end
 
       formatter = :_none_ if Chargeback.rate_column?(column.to_s)
     end

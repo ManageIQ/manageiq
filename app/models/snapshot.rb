@@ -117,8 +117,8 @@ class Snapshot < ApplicationRecord
           nh[:disks] << e1.attributes.to_h
 
           # If we do not get a snapshot create time in the header use the file create time
-          if e.attributes['create_time'].blank? && nh[:create_time].blank?
-            nh[:create_time] = e1.attributes['cdate_on_disk'] if e1.attributes['cdate_on_disk'].present?
+          if e.attributes['create_time'].blank? && nh[:create_time].blank? && e1.attributes['cdate_on_disk'].present?
+            nh[:create_time] = e1.attributes['cdate_on_disk']
           end
         end
 

@@ -136,11 +136,9 @@ class Storage < ApplicationRecord
     end
 
     miq_task.lock(:exclusive) do |locked_miq_task|
-      if locked_miq_task.context_data[:targets].length == 1
-        unless MiqTask.status_ok?(status)
-          self.task_results = result unless result.nil?
+      if locked_miq_task.context_data[:targets].length == 1 && !MiqTask.status_ok?(status) && !result.nil?
+          self.task_results = result
         end
-      end
 
       if MiqTask.status_error?(status)
         locked_miq_task.context_data[:error] ||= []
@@ -518,8 +516,8 @@ class Storage < ApplicationRecord
     end
 
     ems = ext_management_system
-    unless smartstate_analysis_count_for_ems_id(ems.id) < ::Settings.storage.max_parallel_scans_per_ems
-      raise MiqException::MiqQueueRetryLater.new(:deliver_on => Time.now.utc + 1.minute) if qmessage?(method_name)
+    if !(smartstate_analysis_count_for_ems_id(ems.id) < ::Settings.storage.max_parallel_scans_per_ems) && qmessage?(method_name)
+      raise MiqException::MiqQueueRetryLater.new(:deliver_on => Time.now.utc + 1.minute)
     end
 
     $_miq_worker_current_msg.update!(:target_id => ems.id) if qmessage?(method_name)

@@ -156,13 +156,11 @@ module ManageIQ
           end
 
           # see if a final group line needs to be written
-          if ["y", "c"].include?(mri.group) && !mri.sortby.nil?
-            if mri.group == "c"
+          if ["y", "c"].include?(mri.group) && !mri.sortby.nil? && (mri.group == "c")
               s += @hr
               t = " Total for #{save_val}: #{counter} ".center(@line_len - 2)
               s += fit_to_width("|#{t}|" + CRLF)
             end
-          end
 
           s += @hr
           output << fit_to_width(s)

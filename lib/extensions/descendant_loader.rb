@@ -200,8 +200,8 @@ class DescendantLoader
     def classes_in(filename)
       t = File.mtime(filename)
 
-      if (entry = cache[filename])
-        return entry[:parsed] if entry[:mtime] == t
+      if (entry = cache[filename]) && (entry[:mtime] == t)
+        return entry[:parsed]
       end
 
       super.tap do |data|
