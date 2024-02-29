@@ -1099,11 +1099,11 @@ RSpec.describe ServiceTemplate do
       FactoryBot.create(:orchestration_template)
       expect(ServiceTemplate.catalog_item_types).to match(
         hash_including('amazon'                => {:description => 'Amazon',
-                                                    :display     => false},
+                                                   :display     => false},
                        'generic'               => {:description => 'Generic',
-                                                    :display     => true},
+                                                   :display     => true},
                        'generic_orchestration' => {:description => 'Orchestration',
-                                                    :display     => true})
+                                                   :display     => true})
       )
     end
   end

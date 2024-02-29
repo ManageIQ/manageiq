@@ -124,22 +124,22 @@ RSpec.describe Authenticator::Httpd do
   describe '#find_or_initialize_user' do
     let(:user_attrs_simple) do
       {:username  => "sal",
-        :fullname  => "Test User Sal",
-        :firstname => "Salvadore",
-        :lastname  => "Bigs",
-        :email     => "sal_email@example.com",
-        :domain    => "example.com"}
+       :fullname  => "Test User Sal",
+       :firstname => "Salvadore",
+       :lastname  => "Bigs",
+       :email     => "sal_email@example.com",
+       :domain    => "example.com"}
     end
 
     let(:identity_simple) { [user_attrs_simple, %w[mumble bumble bee]] }
 
     let(:user_attrs_upn) do
       {:username  => "sal@example.com",
-        :fullname  => "Test User Sal",
-        :firstname => "Salvadore",
-        :lastname  => "Bigs",
-        :email     => "sal_email@example.com",
-        :domain    => "example.com"}
+       :fullname  => "Test User Sal",
+       :firstname => "Salvadore",
+       :lastname  => "Bigs",
+       :email     => "sal_email@example.com",
+       :domain    => "example.com"}
     end
 
     let(:identity_upn) { [user_attrs_upn, %w[mumble bumble bee]] }
@@ -709,11 +709,11 @@ RSpec.describe Authenticator::Httpd do
         end
         let(:user_attrs) do
           {:username  => "testuser",
-            :fullname  => "Test User",
-            :firstname => "Alice",
-            :lastname  => "Aardvark",
-            :email     => "testuser@example.com",
-            :domain    => "example.com"}
+           :fullname  => "Test User",
+           :firstname => "Alice",
+           :lastname  => "Aardvark",
+           :email     => "testuser@example.com",
+           :domain    => "example.com"}
         end
 
         it "handles a comma separated grouplist" do
@@ -729,11 +729,11 @@ RSpec.describe Authenticator::Httpd do
         end
         let(:user_attrs) do
           {:username  => "testuser",
-            :fullname  => "Test User",
-            :firstname => "Alice",
-            :lastname  => "Aardvark",
-            :email     => "testuser@example.com",
-            :domain    => "example.com"}
+           :fullname  => "Test User",
+           :firstname => "Alice",
+           :lastname  => "Aardvark",
+           :email     => "testuser@example.com",
+           :domain    => "example.com"}
         end
 
         it "handles group names with escaped special characters" do
@@ -757,11 +757,11 @@ RSpec.describe Authenticator::Httpd do
         end
         let(:user_attrs) do
           {:username  => "testuser",
-            :fullname  => "Test User",
-            :firstname => "Alice",
-            :lastname  => "Aardvark",
-            :email     => "testuser@example.com",
-            :domain    => "example.com"}
+           :fullname  => "Test User",
+           :firstname => "Alice",
+           :lastname  => "Aardvark",
+           :email     => "testuser@example.com",
+           :domain    => "example.com"}
         end
 
         it "handles nil group names" do

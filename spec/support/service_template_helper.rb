@@ -52,8 +52,8 @@ module Spec
         end
 
         model['top'] = {:type          => 'composite',
-                         :children      => children,
-                         :child_options => child_options}
+                        :children      => children,
+                        :child_options => child_options}
 
         build_service_template_tree(model)
       end

@@ -189,7 +189,7 @@ class MiqSchedule < ApplicationRecord
       _("Run %{interval} on %{start_time}") % {:interval => interval, :start_time => start_time}
     elsif run_at[:interval][:value].to_i == 1
       _("Run %{interval} starting on %{start_time}") % {:interval   => interval,
-                                                          :start_time => start_time}
+                                                        :start_time => start_time}
     else
         _("Run %{interval} every %{value} %{unit} starting on %{start_time}") %
                {:interval   => interval,

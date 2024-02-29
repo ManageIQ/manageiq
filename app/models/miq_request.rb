@@ -35,8 +35,8 @@ class MiqRequest < ApplicationRecord
 
   validates :initiated_by, :inclusion => {:in => %w[user system]}, :allow_blank => true
   validates :cancelation_status, :inclusion => {:in        => CANCEL_STATUS,
-                                                 :allow_nil => true,
-                                                 :message   => "should be one of #{CANCEL_STATUS.join(", ")}"}
+                                                :allow_nil => true,
+                                                :message   => "should be one of #{CANCEL_STATUS.join(", ")}"}
 
   validate :validate_class, :validate_request_type
 

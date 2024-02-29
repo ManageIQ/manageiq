@@ -38,16 +38,16 @@ RSpec.describe MiqConfigSssdLdap::AuthEstablish do
         expect(AwesomeSpawn).to receive(:run)
           .with("authconfig",
                 :params => {:ldapserver=        => "bob://hostname:22",
-                             :ldapbasedn=        => nil,
-                             :enablesssd         => nil,
-                             :enablesssdauth     => nil,
-                             :enablelocauthorize => nil,
-                             :enableldap         => nil,
-                             :enableldapauth     => nil,
-                             :disableldaptls     => nil,
-                             :enablerfc2307bis   => nil,
-                             :enablecachecreds   => nil,
-                             :update             => nil})
+                            :ldapbasedn=        => nil,
+                            :enablesssd         => nil,
+                            :enablesssdauth     => nil,
+                            :enablelocauthorize => nil,
+                            :enableldap         => nil,
+                            :enableldapauth     => nil,
+                            :disableldaptls     => nil,
+                            :enablerfc2307bis   => nil,
+                            :enablecachecreds   => nil,
+                            :update             => nil})
           .and_return(double(:command_line => "authconfig", :failure? => false))
         @auth_establish.run_auth_establish
       end

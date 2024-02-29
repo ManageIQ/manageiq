@@ -9,20 +9,20 @@ RSpec.describe TaskHelpers::Exports::CustomizationTemplates do
 
   let(:content1) do
     {:name           => template_name,
-      :description    => template_desc,
-      :script         => template_script,
-      :type           => template_type,
-      :pxe_image_type => {
+     :description    => template_desc,
+     :script         => template_script,
+     :type           => template_type,
+     :pxe_image_type => {
         :name => image_type_name1
       }}
   end
 
   let(:content2) do
     {:name           => template_name,
-      :description    => template_desc,
-      :script         => template_script,
-      :type           => template_type,
-      :pxe_image_type => {
+     :description    => template_desc,
+     :script         => template_script,
+     :type           => template_type,
+     :pxe_image_type => {
         :name           => image_type_name2,
         :provision_type => provision_type2
       }}
@@ -30,11 +30,11 @@ RSpec.describe TaskHelpers::Exports::CustomizationTemplates do
 
   let(:content3) do
     {:name           => template_name,
-      :description    => template_desc,
-      :script         => template_script,
-      :type           => template_type,
-      :system         => true,
-      :pxe_image_type => {}}
+     :description    => template_desc,
+     :script         => template_script,
+     :type           => template_type,
+     :system         => true,
+     :pxe_image_type => {}}
   end
 
   let(:export_dir) do

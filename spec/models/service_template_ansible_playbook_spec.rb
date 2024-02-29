@@ -62,8 +62,8 @@ RSpec.describe ServiceTemplateAnsiblePlaybook do
 
   let(:catalog_item_options_three) do
     changed_items = {:name        => 'test_update_ansible_item',
-                      :description => 'test updated ansible item',
-                      :config_info => {
+                     :description => 'test updated ansible item',
+                     :config_info => {
                         :provision => {
                           :new_dialog_name => 'test_dialog_updated',
                           :become_enabled  => false,

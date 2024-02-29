@@ -21,7 +21,7 @@ RSpec.describe Ansible::Content do
       expected_params = [
         "install",
         {:roles_path= => roles_dir,
-        :role_file=  => roles_requirements}
+         :role_file=  => roles_requirements}
       ]
       expect(AwesomeSpawn).to receive(:run!).with("ansible-galaxy", :params => expected_params)
 
@@ -35,7 +35,7 @@ RSpec.describe Ansible::Content do
       expected_params = [
         "install",
         {:roles_path= => roles_dir,
-        :role_file=  => roles_requirements}
+         :role_file=  => roles_requirements}
       ]
       expect(AwesomeSpawn).to receive(:run!).with("ansible-galaxy", :params => expected_params)
 

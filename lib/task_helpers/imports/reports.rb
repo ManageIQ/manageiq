@@ -9,8 +9,8 @@ module TaskHelpers
           $log.info("Importing Reports from: #{filename}")
 
           report_options = {:userid    => 'admin',
-                             :overwrite => options[:overwrite],
-                             :save      => true}
+                            :overwrite => options[:overwrite],
+                            :save      => true}
 
           begin
             report_fd = File.open(filename, 'r')

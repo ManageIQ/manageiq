@@ -4,7 +4,7 @@ class VmCloudReconfigureRequest < MiqRequest
   ACTIVE_STATES     = %w[reconfigured] + base_class::ACTIVE_STATES
 
   validates :request_state, :inclusion => {:in      => %w[pending finished] + ACTIVE_STATES,
-                                            :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"}
+                                           :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"}
   validate  :must_have_user
   include MiqProvisionQuotaMixin
 

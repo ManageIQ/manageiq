@@ -86,7 +86,7 @@ class Host < ApplicationRecord
 
   has_many                  :cloud_services, :dependent => :nullify
   has_many                  :host_cloud_services, :class_name => "CloudService",
-                            :inverse_of => :host
+                                                  :inverse_of => :host
   has_many                  :host_aggregate_hosts, :dependent => :destroy
   has_many                  :host_aggregates, :through => :host_aggregate_hosts
   has_many :host_hardwares, :class_name => 'Hardware', :dependent => :nullify

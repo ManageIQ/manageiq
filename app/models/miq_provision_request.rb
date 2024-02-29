@@ -12,7 +12,7 @@ class MiqProvisionRequest < MiqRequest
 
   validates :request_state,
             :inclusion => { :in      => %w[pending provisioned finished] + ACTIVE_STATES,
-            :message => "should be pending, #{ACTIVE_STATES.join(", ")}, provisioned, or finished" }
+                            :message => "should be pending, #{ACTIVE_STATES.join(", ")}, provisioned, or finished" }
   validates :source, :presence => true
   validate :must_have_user
 

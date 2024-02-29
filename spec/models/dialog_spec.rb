@@ -316,9 +316,9 @@ RSpec.describe Dialog do
           'label'         => 'updated_label',
           'dialog_groups' => [
             {'id'            => dialog_group.first.id,
-              'dialog_tab_id' => dialog_tab.first.id,
-              'dialog_fields' =>
-                                 [{
+             'dialog_tab_id' => dialog_tab.first.id,
+             'dialog_fields' =>
+                                [{
                                    'id'                      => dialog_field.first.id,
                                    'name'                    => dialog_field.first.name,
                                    'dialog_group_id'         => dialog_group.first.id,

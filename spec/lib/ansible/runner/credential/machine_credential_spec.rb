@@ -86,8 +86,8 @@ RSpec.describe Ansible::Runner::MachineCredential do
         cred.write_config_files
 
         expect(password_hash).to eq(
-          "^SSH [pP]assword"                                      => "secret",
-          "^BECOME [pP]assword"                                   => "othersecret",
+          "^SSH [pP]assword"                                   => "secret",
+          "^BECOME [pP]assword"                                => "othersecret",
           "^Enter passphrase for [a-zA-Z0-9-/]+/ssh_key_data:" => "keypass"
         )
 

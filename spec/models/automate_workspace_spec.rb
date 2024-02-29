@@ -11,7 +11,7 @@ RSpec.describe AutomateWorkspace do
            "var3" => "password::v2:{c8qTeiuz6JgbBOiDqp3eiQ==}"
          }
        },
-        "method_parameters" => {"arg1" => "password::#{encrypted}"}}
+       "method_parameters" => {"arg1" => "password::#{encrypted}"}}
     end
 
     it "raises error on invalid hash" do

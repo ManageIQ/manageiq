@@ -158,7 +158,7 @@ RSpec.describe ContainerOrchestrator do
                                                                                                :name   => "pg-root-certificate",
                                                                                                :secret => {
                                                                                                  :secretName => "postgresql-secrets",
-          :items      => [
+                                                                                                 :items      => [
             :key  => "rootcertificate",
             :path => "root.crt",
           ],
@@ -180,7 +180,7 @@ RSpec.describe ContainerOrchestrator do
                                                                                                :name   => "internal-root-certificate",
                                                                                                :secret => {
                                                                                                  :secretName => "some-secret-name",
-          :items      => [
+                                                                                                 :items      => [
             :key  => "root_crt",
             :path => "root.crt",
           ],

@@ -551,7 +551,7 @@ RSpec.describe MiqAction do
 
     let(:request_options) do
       {:manageiq_extra_vars => {"event_target" => vm.href_slug, "event_name" => event_name},
-        :initiator           => 'control'}
+       :initiator           => 'control'}
     end
 
     shared_examples_for "#workflow check" do
@@ -568,7 +568,7 @@ RSpec.describe MiqAction do
     context "use event target" do
       let(:action_options) do
         {:service_template_id => stap.id,
-          :use_event_target    => true}
+         :use_event_target    => true}
       end
       let(:dialog_options) { {:hosts => ip1} }
 
@@ -578,7 +578,7 @@ RSpec.describe MiqAction do
     context "use localhost" do
       let(:action_options) do
         {:service_template_id => stap.id,
-          :use_localhost       => true}
+         :use_localhost       => true}
       end
       let(:dialog_options) { {:hosts => 'localhost'} }
 
@@ -588,7 +588,7 @@ RSpec.describe MiqAction do
     context "use hosts" do
       let(:action_options) do
         {:service_template_id => stap.id,
-          :hosts               => "ip1, ip2"}
+         :hosts               => "ip1, ip2"}
       end
       let(:dialog_options) { {:hosts => 'ip1, ip2'} }
 
