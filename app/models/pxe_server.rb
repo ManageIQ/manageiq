@@ -85,40 +85,40 @@ class PxeServer < ApplicationRecord
 
     with_depot do
       
-        file_glob("#{pxe_directory}/*").each do |f|
-          next unless file_file?(f)
+      file_glob("#{pxe_directory}/*").each do |f|
+        next unless file_file?(f)
 
-          relative_path = Pathname.new(f).relative_path_from(Pathname.new(pxe_directory)).to_s
+        relative_path = Pathname.new(f).relative_path_from(Pathname.new(pxe_directory)).to_s
 
-          contents    = file_read(f)
-          menu_class  = PxeMenu.class_from_contents(contents)
-          image_class = menu_class.corresponding_image
-          image_list  = image_class.parse_contents(contents, File.basename(f))
+        contents    = file_read(f)
+        menu_class  = PxeMenu.class_from_contents(contents)
+        image_class = menu_class.corresponding_image
+        image_list  = image_class.parse_contents(contents, File.basename(f))
 
-          # Deal with multiple images with the same label in a file
-          incoming = image_list.group_by { |h| h[:label] }
-          incoming.each_key do |name|
-            array = incoming[name]
-            _log.warn("duplicate name <#{name}> in file <#{relative_path}> on PXE Server <#{self.name}>") if array.length > 1
-            incoming[name] = array.first
-          end
-
-          incoming.each do |_name, ihash|
-            image = current.delete([relative_path, ihash[:label]])
-            if image.nil?
-              image = image_class.new
-              pxe_images << image
-            end
-            stats[image.new_record? ? :adds : :updates] += 1
-
-            image.path = relative_path
-            image.parsed_contents = ihash
-            image.save!
-          end
+        # Deal with multiple images with the same label in a file
+        incoming = image_list.group_by { |h| h[:label] }
+        incoming.each_key do |name|
+          array = incoming[name]
+          _log.warn("duplicate name <#{name}> in file <#{relative_path}> on PXE Server <#{self.name}>") if array.length > 1
+          incoming[name] = array.first
         end
-      rescue => err
-        _log.error("Synchronizing PXE images on PXE Server [#{self.name}]: #{err.class.name}: #{err}")
-        _log.log_backtrace(err)
+
+        incoming.each do |_name, ihash|
+          image = current.delete([relative_path, ihash[:label]])
+          if image.nil?
+            image = image_class.new
+            pxe_images << image
+          end
+          stats[image.new_record? ? :adds : :updates] += 1
+
+          image.path = relative_path
+          image.parsed_contents = ihash
+          image.save!
+        end
+      end
+    rescue => err
+      _log.error("Synchronizing PXE images on PXE Server [#{self.name}]: #{err.class.name}: #{err}")
+      _log.log_backtrace(err)
       
     end
 
@@ -138,29 +138,29 @@ class PxeServer < ApplicationRecord
 
     with_depot do
       
-        file_glob("#{windows_images_directory}/*.wim").each do |f|
-          next unless file_file?(f)
+      file_glob("#{windows_images_directory}/*.wim").each do |f|
+        next unless file_file?(f)
 
-          path = Pathname.new(f).relative_path_from(Pathname.new(windows_images_directory)).to_s
+        path = Pathname.new(f).relative_path_from(Pathname.new(windows_images_directory)).to_s
 
-          wim_parser = WimParser.new(File.join(depot_root, f))
-          wim_parser.xml_data["images"].each do |image_hash|
-            index   = image_hash["index"]
+        wim_parser = WimParser.new(File.join(depot_root, f))
+        wim_parser.xml_data["images"].each do |image_hash|
+          index   = image_hash["index"]
 
-            image = current.delete([path, index]) || windows_images.build
-            stats[image.new_record? ? :adds : :updates] += 1
+          image = current.delete([path, index]) || windows_images.build
+          stats[image.new_record? ? :adds : :updates] += 1
 
-            image.update(
-              :name        => image_hash["name"],
-              :description => image_hash["description"].presence,
-              :path        => path,
-              :index       => index
-            )
-          end
+          image.update(
+            :name        => image_hash["name"],
+            :description => image_hash["description"].presence,
+            :path        => path,
+            :index       => index
+          )
         end
-      rescue => err
-        _log.error("Synchronizing Windows images on PXE Server [#{name}]: #{err.class.name}: #{err}")
-        _log.log_backtrace(err)
+      end
+    rescue => err
+      _log.error("Synchronizing Windows images on PXE Server [#{name}]: #{err.class.name}: #{err}")
+      _log.log_backtrace(err)
       
     end
 

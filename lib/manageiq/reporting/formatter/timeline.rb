@@ -30,9 +30,9 @@ module ManageIQ
           @events_data = []
           tlfield = mri.timeline[:field].split("-") # Split the table and field
           col = if tlfield.first.include?(".") # If table has a period (from a sub table)
-            tlfield.first.split(".").last + "." + tlfield.last # use subtable.field
+                  tlfield.first.split(".").last + "." + tlfield.last # use subtable.field
                 else
-            tlfield.last # Not a subtable, just grab the field name
+                  tlfield.last # Not a subtable, just grab the field name
                 end
 
           # some of the OOTB reports have db as EventStream or PolicyEvent,

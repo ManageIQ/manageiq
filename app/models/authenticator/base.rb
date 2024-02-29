@@ -126,56 +126,56 @@ module Authenticator
 
       run_task(taskid, "Authorizing") do |task|
         
-          identity = find_external_identity(username, args[0], args[1])
+        identity = find_external_identity(username, args[0], args[1])
 
-          unless identity
-            msg = "Authentication failed for userid #{username}, unable to find user object in #{self.class.proper_name}"
-            _log.warn(msg)
-            audit_failure(audit.merge(:message => msg))
-            task.error(msg)
-            task.state_finished
-            return nil
-          end
+        unless identity
+          msg = "Authentication failed for userid #{username}, unable to find user object in #{self.class.proper_name}"
+          _log.warn(msg)
+          audit_failure(audit.merge(:message => msg))
+          task.error(msg)
+          task.state_finished
+          return nil
+        end
 
-          incoming_groups = groups_for(identity)
-          matching_groups = match_groups(incoming_groups)
-          userid, user = find_or_initialize_user(identity, username)
-          update_user_attributes(user, userid, identity)
-          audit_new_user(audit, user) if user.new_record?
-          user.miq_groups = matching_groups
+        incoming_groups = groups_for(identity)
+        matching_groups = match_groups(incoming_groups)
+        userid, user = find_or_initialize_user(identity, username)
+        update_user_attributes(user, userid, identity)
+        audit_new_user(audit, user) if user.new_record?
+        user.miq_groups = matching_groups
 
-          if matching_groups.empty?
-            msg = "Authentication failed for userid #{user.userid}, unable to match user's group membership to an EVM role. The incoming groups are: #{incoming_groups.join(", ")}"
-            _log.warn(msg)
-            audit_failure(audit.merge(:message => msg))
-            task.error(msg)
-            task.state_finished
-            user.save! unless user.new_record?
-            return nil
-          end
+        if matching_groups.empty?
+          msg = "Authentication failed for userid #{user.userid}, unable to match user's group membership to an EVM role. The incoming groups are: #{incoming_groups.join(", ")}"
+          _log.warn(msg)
+          audit_failure(audit.merge(:message => msg))
+          task.error(msg)
+          task.state_finished
+          user.save! unless user.new_record?
+          return nil
+        end
 
-          user.lastlogon = Time.now.utc
-          if user.new_record?
-            User.with_lock do
-              user.save!
-            rescue ActiveRecord::RecordInvalid # Try update when catching create race condition.
-              userid, user = find_or_initialize_user(identity, username)
-              update_user_attributes(user, userid, identity)
-              user.miq_groups = matching_groups
-              user.save!
-            end
-          else
+        user.lastlogon = Time.now.utc
+        if user.new_record?
+          User.with_lock do
+            user.save!
+          rescue ActiveRecord::RecordInvalid # Try update when catching create race condition.
+            userid, user = find_or_initialize_user(identity, username)
+            update_user_attributes(user, userid, identity)
+            user.miq_groups = matching_groups
             user.save!
           end
+        else
+          user.save!
+        end
 
-          _log.info("Authorized User: [#{user.userid}]")
-          task.userid = user.userid
-          task.update_status("Finished", "Ok", "User authorized successfully")
+        _log.info("Authorized User: [#{user.userid}]")
+        task.userid = user.userid
+        task.update_status("Finished", "Ok", "User authorized successfully")
 
-          user
-        rescue Exception => err
-          audit_failure(audit.merge(:message => err.message))
-          raise
+        user
+      rescue Exception => err
+        audit_failure(audit.merge(:message => err.message))
+        raise
         
       end
     end

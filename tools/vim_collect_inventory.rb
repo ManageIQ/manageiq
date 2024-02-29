@@ -48,10 +48,10 @@ begin
     data = {}
     vim.hostSystemsByMor.keys.each do |host_mor|
       
-        vim_host = vim.getVimHostByMor(host_mor)
-        data[host_mor] = vim_host.storageDevice
-      ensure
-        vim_host.release if vim_host rescue nil
+      vim_host = vim.getVimHostByMor(host_mor)
+      data[host_mor] = vim_host.storageDevice
+    ensure
+      vim_host.release if vim_host rescue nil
       
     end
     data
@@ -59,14 +59,14 @@ begin
 
   process(:getAllCustomizationSpecs, dir) do
     
-      vim_csm = vim.getVimCustomizationSpecManager
-      vim_csm.getAllCustomizationSpecs
-    rescue RuntimeError => err
-      raise unless err.message.include?("not supported on this system")
+    vim_csm = vim.getVimCustomizationSpecManager
+    vim_csm.getAllCustomizationSpecs
+  rescue RuntimeError => err
+    raise unless err.message.include?("not supported on this system")
 
-      []
-    ensure
-      vim_csm.release if vim_csm rescue nil
+    []
+  ensure
+    vim_csm.release if vim_csm rescue nil
     
   end
 ensure

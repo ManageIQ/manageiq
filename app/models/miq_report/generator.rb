@@ -67,11 +67,11 @@ module MiqReport::Generator
 
     @table2class[table] ||= case table.to_sym
                             when :ports, :nics, :storage_adapters
-        "GuestDevice"
+                              "GuestDevice"
                             when :"<compare>"
-        self.class.name
+                              self.class.name
                             else
-        ref = db_class.reflection_with_virtual(table.to_sym)
+                              ref = db_class.reflection_with_virtual(table.to_sym)
         ref ? ref.class_name : table.singularize.camelize
                             end
     
@@ -763,10 +763,10 @@ module MiqReport::Generator
       data_records = []
       full_path = get_full_path(parent_association, association)
       assoc_options = if include_has_options
-        includes[association].merge(:qualify_attribute_names => full_path,
-                                    :only                    => includes[association]["columns"])
+                        includes[association].merge(:qualify_attribute_names => full_path,
+                                                    :only                    => includes[association]["columns"])
                       else
-        {:qualify_attribute_names => full_path, :only => includes[association]["columns"]}
+                        {:qualify_attribute_names => full_path, :only => includes[association]["columns"]}
                       end
 
       if ["categories", "managed"].include?(association)
@@ -806,9 +806,9 @@ module MiqReport::Generator
         else
           association_objects.each do |obj|
             association_records = if ["categories", "managed"].include?(association)
-              [obj]
+                                    [obj]
                                   else
-              build_reportable_data(obj, assoc_options, full_path)
+                                    build_reportable_data(obj, assoc_options, full_path)
                                   end
             association_records.each do |assoc_record|
               data_records << existing_record.merge(assoc_record)

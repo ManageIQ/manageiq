@@ -28,9 +28,9 @@ module Metric::Finders
     klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
 
     scope = if !resource.kind_of?(Array) && !resource.kind_of?(ActiveRecord::Relation)
-      resource.send(meth)
+              resource.send(meth)
             else
-      klass.where(:resource => resource)
+              klass.where(:resource => resource)
             end
     scope = scope.where(:capture_interval_name => interval_name) if interval_name != "realtime"
     scope.for_time_range(start_time, end_time)

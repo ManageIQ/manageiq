@@ -597,15 +597,15 @@ class Host < ApplicationRecord
 
     host_ids.each do |id|
       
-        host = Host.find(id)
-        host.update_authentication(creds)
-      rescue ActiveRecord::RecordNotFound => err
-        _log.warn("#{err.class.name}-#{err}")
-        next
-      rescue => err
-        errors << err.to_s
-        _log.error("#{err.class.name}-#{err}")
-        next
+      host = Host.find(id)
+      host.update_authentication(creds)
+    rescue ActiveRecord::RecordNotFound => err
+      _log.warn("#{err.class.name}-#{err}")
+      next
+    rescue => err
+      errors << err.to_s
+      _log.error("#{err.class.name}-#{err}")
+      next
       
     end
     errors.empty? ? true : errors

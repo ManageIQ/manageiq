@@ -189,9 +189,9 @@ module ManageIQ
             targets_by_ems_id[t.manager_id] << t
           else
             ems = if t.respond_to?(:ext_management_system)
- t.ext_management_system
+                    t.ext_management_system
                   elsif t.respond_to?(:manager)
- t.manager
+                    t.manager
                   else t
                   end
             if ems.nil?

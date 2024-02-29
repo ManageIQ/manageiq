@@ -608,9 +608,9 @@ class VmOrTemplate < ApplicationRecord
     order(options[:orderby]).limit(options[:limit_to_count]).each_with_object([]) do |vm, result|
       rec = OpenStruct.new(vm.attributes)
       rec.host_name = if vm.host.nil?
-        "unknown"
+                        "unknown"
                       else
-        vm.host.name
+                        vm.host.name
                       end
       rec.vm_id = vm.id
       rec.reason = []
@@ -981,7 +981,7 @@ class VmOrTemplate < ApplicationRecord
   def storage2proxies
     
       # Support vixDisk scanning of VMware VMs from the vmdb server
-      @storage_proxies ||= miq_server_proxies
+    @storage_proxies ||= miq_server_proxies
     
   end
 
@@ -1069,9 +1069,9 @@ class VmOrTemplate < ApplicationRecord
 
     self.type = corresponding_model.name if (template? && kind_of?(Vm)) || (!template? && kind_of?(MiqTemplate))
     d = if template?
-[/\.vmx$/, ".vmtx", 'never']
+          [/\.vmx$/, ".vmtx", 'never']
         else
-[/\.vmtx$/, ".vmx", state == 'never' ? 'unknown' : raw_power_state]
+          [/\.vmtx$/, ".vmx", state == 'never' ? 'unknown' : raw_power_state]
         end
     self.location = location.sub(d[0], d[1]) unless location.nil?
     self.raw_power_state = d[2]
@@ -1380,9 +1380,9 @@ class VmOrTemplate < ApplicationRecord
 
     operator = options[:operator] || ">"
     operator = if operator.downcase == "increased"
-">"
+                 ">"
                else
-operator.downcase == "decreased" ? "<" : operator
+                 operator.downcase == "decreased" ? "<" : operator
                end
 
     current_state, prev_state = drift_states.order("timestamp DESC").limit(2)
@@ -1539,9 +1539,9 @@ operator.downcase == "decreased" ? "<" : operator
     ipaddresses = ipaddress.split(',')
     Network.where("ipaddress in (?)", ipaddresses).each do |network|
       
-        vm = network.hardware.vm
-        yield(vm)
-      rescue
+      vm = network.hardware.vm
+      yield(vm)
+    rescue
       
     end
   end

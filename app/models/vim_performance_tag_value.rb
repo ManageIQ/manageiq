@@ -81,9 +81,9 @@ class VimPerformanceTagValue
 
       cats_to_process.each do |category|
         tag_names = if !perf.tag_names.nil? && perf.tag_names.include?(category)
-          perf.tag_names.split(TAG_SEP).select { |t| t.starts_with?(category) }
+                      perf.tag_names.split(TAG_SEP).select { |t| t.starts_with?(category) }
                     else
-          ["#{category}/_none_"]
+                      ["#{category}/_none_"]
                     end
         tag_names.each do |tag|
           next if tag.starts_with?("power_state")

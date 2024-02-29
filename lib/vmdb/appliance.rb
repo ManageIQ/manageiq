@@ -133,9 +133,9 @@ module Vmdb
       @diags.each do |diag|
         begin
           res = if diag[:cmd].kind_of?(Proc)
-            diag[:cmd].call
+                  diag[:cmd].call
                 else
-            AwesomeSpawn.run(diag[:cmd], :params => diag[:params]).output
+                  AwesomeSpawn.run(diag[:cmd], :params => diag[:params]).output
                 end
         rescue => e
           $log.warn("Diagnostics: [#{diag[:msg]}] command [#{diag[:cmd]}] failed with error [#{e}]")

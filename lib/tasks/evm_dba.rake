@@ -16,8 +16,8 @@ namespace :evm do
     # Start the EVM Database silently - not to be a visible rake task
     task :silent_start do
       
-        LinuxAdmin::Service.new(ENV.fetch("APPLIANCE_PG_SERVICE")).start
-      rescue AwesomeSpawn::CommandResultError
+      LinuxAdmin::Service.new(ENV.fetch("APPLIANCE_PG_SERVICE")).start
+    rescue AwesomeSpawn::CommandResultError
       # ignore issues (ala silent)
       
     end
@@ -25,8 +25,8 @@ namespace :evm do
     # Stop the EVM Database silently - not to be a visible rake task
     task :silent_stop do
       
-        LinuxAdmin::Service.new(ENV.fetch("APPLIANCE_PG_SERVICE")).stop
-      rescue AwesomeSpawn::CommandResultError
+      LinuxAdmin::Service.new(ENV.fetch("APPLIANCE_PG_SERVICE")).stop
+    rescue AwesomeSpawn::CommandResultError
       # ignore issues (ala silent)
       
     end

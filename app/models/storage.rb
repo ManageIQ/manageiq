@@ -137,7 +137,7 @@ class Storage < ApplicationRecord
 
     miq_task.lock(:exclusive) do |locked_miq_task|
       if locked_miq_task.context_data[:targets].length == 1 && !MiqTask.status_ok?(status) && !result.nil?
-          self.task_results = result
+        self.task_results = result
       end
 
       if MiqTask.status_error?(status)

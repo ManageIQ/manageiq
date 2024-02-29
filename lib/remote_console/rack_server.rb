@@ -43,11 +43,11 @@ module RemoteConsole
 
           @proxy.each_ready do |left, right|
             
-              @adapters[left].fetch(64.kilobytes) { |data| @adapters[right].issue(data) } # left -> right
-            rescue IOError, IO::WaitReadable, IO::WaitWritable
-              cleanup(:info, "Closing RemoteConsole proxy for VM %{vm_id}", left, right)
-            rescue => ex
-              cleanup(:error, "RemoteConsole proxy for VM %{vm_id} errored with #{ex} #{ex.backtrace.join("\n")}", left, right)
+            @adapters[left].fetch(64.kilobytes) { |data| @adapters[right].issue(data) } # left -> right
+          rescue IOError, IO::WaitReadable, IO::WaitWritable
+            cleanup(:info, "Closing RemoteConsole proxy for VM %{vm_id}", left, right)
+          rescue => ex
+            cleanup(:error, "RemoteConsole proxy for VM %{vm_id} errored with #{ex} #{ex.backtrace.join("\n")}", left, right)
             
           end
         end

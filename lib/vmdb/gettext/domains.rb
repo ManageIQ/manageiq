@@ -26,7 +26,7 @@ module Vmdb
         when :po
           po_paths << path
         else
-             mo_paths << path
+          mo_paths << path
         end
       end
 

@@ -91,9 +91,9 @@ class DescendantLoader
         # scope. We're just not sure how that scope plays out relative
         # to its parents.
         define_combos = if (container_name = scope_names.pop)
-          scoped_name(container_name, name_combinations(scope_names))
+                          scoped_name(container_name, name_combinations(scope_names))
                         else
-          search_combos.dup
+                          search_combos.dup
                         end
 
         [search_combos, define_combos, flatten_name(name), flatten_name(sklass)]

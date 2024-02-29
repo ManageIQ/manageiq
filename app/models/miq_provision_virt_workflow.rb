@@ -542,7 +542,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       entry[:path] = ou[0]
       entry[:ou] = ou
     else
-        create_ou_tree(ou, h[pathname] ||= {}, path)
+      create_ou_tree(ou, h[pathname] ||= {}, path)
     end
   end
 

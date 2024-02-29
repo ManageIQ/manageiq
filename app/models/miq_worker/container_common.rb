@@ -13,9 +13,9 @@ class MiqWorker
       container = definition[:spec][:template][:spec][:containers].first
 
       container[:imagePullPolicy] = if container_image_tag.include?("latest")
-        "Always"
+                                      "Always"
                                     else
-        "IfNotPresent"
+                                      "IfNotPresent"
                                     end
 
       container[:image] = container_image

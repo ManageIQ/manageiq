@@ -20,11 +20,11 @@ if defined?(RSpec)
 
       EvmRakeHelper.with_dummy_database_url_configuration do
         
-          puts "** Confirming rails environment does not connect to the database"
-          Rake::Task['environment'].invoke
-        rescue ActiveRecord::NoDatabaseError
-          STDERR.write "Detected Rails environment trying to connect to the database!  Check the backtrace for an initializer trying to access the database.\n\n"
-          raise
+        puts "** Confirming rails environment does not connect to the database"
+        Rake::Task['environment'].invoke
+      rescue ActiveRecord::NoDatabaseError
+        STDERR.write "Detected Rails environment trying to connect to the database!  Check the backtrace for an initializer trying to access the database.\n\n"
+        raise
         
       end
     end

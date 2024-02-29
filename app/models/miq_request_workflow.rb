@@ -181,7 +181,7 @@ class MiqRequestWorkflow
         end
 
         if fld[:validation_method] && respond_to?(fld[:validation_method]) && (fld[:error] = send(fld[:validation_method], f, values, dlg, fld, value))
-            valid = false
+          valid = false
             next
         end
 

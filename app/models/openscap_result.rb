@@ -76,13 +76,13 @@ class OpenscapResult < ApplicationRecord
 
     with_openscap_arf(raw) do |arf|
       
-        test_results = arf.test_result
-        source_datastream = arf.report_request
-        bench_source = source_datastream.select_checklist!
-        benchmark = OpenSCAP::Xccdf::Benchmark.new(bench_source)
-        yield(test_results.rr, benchmark.items)
-      ensure
-        [benchmark, source_datastream, test_results].each { |obj| obj.try(:destroy) }
+      test_results = arf.test_result
+      source_datastream = arf.report_request
+      bench_source = source_datastream.select_checklist!
+      benchmark = OpenSCAP::Xccdf::Benchmark.new(bench_source)
+      yield(test_results.rr, benchmark.items)
+    ensure
+      [benchmark, source_datastream, test_results].each { |obj| obj.try(:destroy) }
       
     end
   end

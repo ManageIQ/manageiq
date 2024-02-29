@@ -10,13 +10,13 @@ rels_to_delete = []
 
 Vm.includes(:all_relationships).each do |v|
   
-    v.parent_resource_pool
-  rescue ActiveRecord::RecordNotFound => err
-    puts "FIXING - #{v.name} - #{err}"
-    rels_to_delete += v.all_relationships.to_a.select { |r| r.relationship == "ems_metadata" }
-    fixed_vms << v.reload
+  v.parent_resource_pool
+rescue ActiveRecord::RecordNotFound => err
+  puts "FIXING - #{v.name} - #{err}"
+  rels_to_delete += v.all_relationships.to_a.select { |r| r.relationship == "ems_metadata" }
+  fixed_vms << v.reload
 else
-    puts "OK     - #{v.name}"
+  puts "OK     - #{v.name}"
   
 end
 Relationship.delete(rels_to_delete)

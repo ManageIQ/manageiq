@@ -107,9 +107,9 @@ module MiqReport::Search
                                     end
 
     targets = if options[:parent]
-      get_parent_targets(options[:parent], options[:association] || options[:parent_method])
+                get_parent_targets(options[:parent], options[:association] || options[:parent_method])
               else
-      db_class
+                db_class
               end
 
     if selected_ids.present?

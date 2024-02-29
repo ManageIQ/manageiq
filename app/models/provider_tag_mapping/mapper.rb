@@ -122,13 +122,13 @@ class ProviderTagMapping
       else
           # NOTE: if the way we compute `entry_name` changes,
           # consider what will happen to previously created tags.
-          any_value.map do |tag_id|
-            emit_tag_reference(
-              :category_tag_id   => tag_id,
-              :entry_name        => Classification.sanitize_name(value),
-              :entry_description => value
-            )
-          end
+        any_value.map do |tag_id|
+          emit_tag_reference(
+            :category_tag_id   => tag_id,
+            :entry_name        => Classification.sanitize_name(value),
+            :entry_description => value
+          )
+        end
       end
     end
 
@@ -150,11 +150,11 @@ class ProviderTagMapping
       unless entry
         category.lock(:exclusive) do
           
-            entry = category.add_entry(:name        => tag_hash[:entry_name],
-                                       :description => tag_hash[:entry_description])
-            entry.save!
-          rescue ActiveRecord::RecordInvalid
-            entry = category.find_entry_by_name(tag_hash[:entry_name])
+          entry = category.add_entry(:name        => tag_hash[:entry_name],
+                                     :description => tag_hash[:entry_description])
+          entry.save!
+        rescue ActiveRecord::RecordInvalid
+          entry = category.find_entry_by_name(tag_hash[:entry_name])
           
         end
       end

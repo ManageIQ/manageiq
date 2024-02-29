@@ -4,7 +4,7 @@ module MiqReport::ImportExport
   module ClassMethods
     def view_paths
       @view_paths ||= Vmdb::Plugins.map do |engine|
-          path = engine.root.join('product/views')
+        path = engine.root.join('product/views')
           path if path.directory?
       end.compact
       
@@ -129,7 +129,7 @@ module MiqReport::ImportExport
       # Special code to build the view file name for users of VM restricted roles
       if %w[ManageIQ::Providers::CloudManager::Template ManageIQ::Providers::InfraManager::Template
             ManageIQ::Providers::CloudManager::Vm ManageIQ::Providers::InfraManager::Vm VmOrTemplate].include?(db) && (role && role.settings && role.settings.fetch_path(:restrictions, :vms))
-          viewfilerestricted = resolve_view_path('Vm__restricted.yaml')
+        viewfilerestricted = resolve_view_path('Vm__restricted.yaml')
       end
 
       db = db.gsub("::", '_')

@@ -303,15 +303,15 @@ class MiqQueue < ApplicationRecord
     result = nil
     msgs.each do |msg|
       
-        _log.info("#{MiqQueue.format_short_log_msg(msg)} previously timed out, retrying...") if msg.state == STATE_TIMEOUT
-        handler = MiqWorker.my_worker || MiqServer.my_server
-        msg.update!(:state => STATE_DEQUEUE, :handler => handler)
-        _log.info("#{MiqQueue.format_full_log_msg(msg)}, Dequeued in: [#{Time.now.utc - msg.created_on}] seconds")
-        return msg
-      rescue ActiveRecord::StaleObjectError
-        result = :stale
-      rescue => err
-        raise _("%{log_message} \"%{error}\" attempting to get next message") % {:log_message => _log.prefix, :error => err}
+      _log.info("#{MiqQueue.format_short_log_msg(msg)} previously timed out, retrying...") if msg.state == STATE_TIMEOUT
+      handler = MiqWorker.my_worker || MiqServer.my_server
+      msg.update!(:state => STATE_DEQUEUE, :handler => handler)
+      _log.info("#{MiqQueue.format_full_log_msg(msg)}, Dequeued in: [#{Time.now.utc - msg.created_on}] seconds")
+      return msg
+    rescue ActiveRecord::StaleObjectError
+      result = :stale
+    rescue => err
+      raise _("%{log_message} \"%{error}\" attempting to get next message") % {:log_message => _log.prefix, :error => err}
       
     end
     _log.debug("All #{prefetch_max_per_worker} messages stale, returning...") if result == :stale
@@ -461,9 +461,9 @@ class MiqQueue < ApplicationRecord
       if instance_id
         begin
           obj = if (class_name == requester.class.name) && requester.respond_to?(:id) && (instance_id == requester.id)
-            requester
+                  requester
                 else
-            obj.find(instance_id)
+                  obj.find(instance_id)
                 end
         rescue ActiveRecord::RecordNotFound => err
           _log.warn("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}")

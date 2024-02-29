@@ -453,19 +453,19 @@ RSpec.describe MiqWorker do
 
       it "with ENV['APPLIANCE']" do
         
-          allow(MiqWorker).to receive(:nice_increment).and_return("10")
-          allow(@worker).to receive(:worker_options).and_return(:ems_id => 1234, :guid => @worker.guid)
-          old_env = ENV.delete('APPLIANCE')
-          ENV['APPLIANCE'] = 'true'
-          cmd = @worker.command_line
-          expect(cmd).to start_with("nice -n 10")
-          expect(cmd).to include("--ems-id 1234")
-          expect(cmd).to include("--guid #{@worker.guid}")
-          expect(cmd).to include("--heartbeat")
-          expect(cmd).to end_with("MiqWorker")
-        ensure
-          # ENV['x'] = nil deletes the key because ENV accepts only string values
-          ENV['APPLIANCE'] = old_env
+        allow(MiqWorker).to receive(:nice_increment).and_return("10")
+        allow(@worker).to receive(:worker_options).and_return(:ems_id => 1234, :guid => @worker.guid)
+        old_env = ENV.delete('APPLIANCE')
+        ENV['APPLIANCE'] = 'true'
+        cmd = @worker.command_line
+        expect(cmd).to start_with("nice -n 10")
+        expect(cmd).to include("--ems-id 1234")
+        expect(cmd).to include("--guid #{@worker.guid}")
+        expect(cmd).to include("--heartbeat")
+        expect(cmd).to end_with("MiqWorker")
+      ensure
+        # ENV['x'] = nil deletes the key because ENV accepts only string values
+        ENV['APPLIANCE'] = old_env
         
       end
     end

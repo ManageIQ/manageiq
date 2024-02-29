@@ -6,18 +6,18 @@ module ManageIQ
   # Defined in the same fashion as Rails.env
   def self.env
     @_env ||= if defined?(Rails)
-        Rails.env
+                Rails.env
               else
-        ActiveSupport::StringInquirer.new(ENV["RAILS_ENV"].presence || ENV["RACK_ENV"].presence || "development")
+                ActiveSupport::StringInquirer.new(ENV["RAILS_ENV"].presence || ENV["RACK_ENV"].presence || "development")
               end
     
   end
 
   def self.root
     @_root ||= if defined?(Rails)
-        Rails.root
+                 Rails.root
                else
-        Pathname.new(File.expand_path('..', __dir__))
+                 Pathname.new(File.expand_path('..', __dir__))
                end
     
   end

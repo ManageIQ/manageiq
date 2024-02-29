@@ -21,9 +21,9 @@ class VimPerformanceTag < MetricRollup
     results = recs.each_with_object(:res => [], :tags => [], :tcols => []) do |rec, h|
       tvrecs = build_tag_value_recs(rec, options)
       rec.inside_time_profile = if rec.instance_of?(::VimPerformanceTag)
-        tp ? tp.ts_in_profile?(rec.timestamp) : true
+                                  tp ? tp.ts_in_profile?(rec.timestamp) : true
                                 else
-        tp ? tp.ts_day_in_profile?(rec.timestamp) : true
+                                  tp ? tp.ts_day_in_profile?(rec.timestamp) : true
                                 end
 
       tvrecs.each do |tv|

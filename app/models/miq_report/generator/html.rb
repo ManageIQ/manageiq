@@ -27,7 +27,7 @@ module MiqReport::Generator::Html
         output = ""
         if ["y", "c"].include?(group) && !sortby.nil? && save_val != d.data[sortby[0]].to_s
           if !(d_idx == 0) && !(group_limit && group_counter >= group_limit) # If not past the limit
-              html_rows += build_group_html_rows(save_val, col_order.length, break_label, group_text)
+            html_rows += build_group_html_rows(save_val, col_order.length, break_label, group_text)
               group_counter += 1
           end
           save_val = d.data[sortby[0]].to_s
@@ -37,9 +37,9 @@ module MiqReport::Generator::Html
 
         # Build click thru if string can be created
         output << if clickable_rows && onclick = build_row_onclick(d.data)
-          "<tr class='row#{row}' #{onclick}>"
+                    "<tr class='row#{row}' #{onclick}>"
                   else
-          "<tr class='row#{row}-nocursor'>"
+                    "<tr class='row#{row}-nocursor'>"
                   end
         row = 1 - row
 
@@ -55,7 +55,7 @@ module MiqReport::Generator::Html
       end
 
       if ["y", "c"].include?(group) && !sortby.nil? && !(group_limit && group_counter >= group_limit)
-          html_rows += build_group_html_rows(save_val, col_order.length, break_label, group_text)
+        html_rows += build_group_html_rows(save_val, col_order.length, break_label, group_text)
           html_rows += build_group_html_rows(:_total_, col_order.length)
       end
     end
@@ -111,16 +111,16 @@ module MiqReport::Generator::Html
       controller = db == "ExtManagementSystem" ? "management_system" : db.underscore
       donav = "DoNav('/#{controller}/show/#{data_row['id']}');"
       title = if data_row['name']
-  "View #{ui_lookup(:model => db)} \"#{data_row['name']}\""
+                "View #{ui_lookup(:model => db)} \"#{data_row['name']}\""
               else
-  "View this #{ui_lookup(:model => db)}"
+                "View this #{ui_lookup(:model => db)}"
               end
       onclick = "onclick=\"#{donav}\" onKeyPress=\"#{donav}\" tabindex='0' style='cursor:hand' title='#{title}'"
     end
 
     # Handle CI performance report rows
     if db.ends_with?("Performance") && (data_row['resource_id'] && data_row['resource_type']) # Base click thru on the related resource
-        donav = "DoNav('/#{data_row['resource_type'].underscore}/show/#{data_row['resource_id']}');"
+      donav = "DoNav('/#{data_row['resource_type'].underscore}/show/#{data_row['resource_id']}');"
         onclick = "onclick=\"#{donav}\" onKeyPress=\"#{donav}\" tabindex='0' style='cursor:hand' title='View #{ui_lookup(:model => data_row['resource_type'])} \"#{data_row['resource_name']}\"'"
     end
 

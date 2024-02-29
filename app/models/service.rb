@@ -303,19 +303,19 @@ class Service < ApplicationRecord
   def process_group_action(action, group_idx, direction)
     each_group_resource(group_idx) do |svc_rsc|
       
-        rsc = svc_rsc.resource
-        rsc_action = service_action(action, svc_rsc)
-        rsc_name = "#{rsc.class.name}:#{rsc.id}" + (rsc.respond_to?(:name) ? ":#{rsc.name}" : "")
-        if rsc_action.nil?
-          _log.info("Not Processing action for Service:<#{name}:#{id}>, RSC:<#{rsc_name}}> in Group Idx:<#{group_idx}>")
-        elsif rsc.respond_to?(rsc_action)
-          _log.info("Processing action <#{rsc_action}> for Service:<#{name}:#{id}>, RSC:<#{rsc_name}}> in Group Idx:<#{group_idx}>")
-          rsc.send(rsc_action)
-        else
-          _log.info("Skipping action <#{rsc_action}> for Service:<#{name}:#{id}>, RSC:<#{rsc.class.name}:#{rsc.id}> in Group Idx:<#{group_idx}>")
-        end
-      rescue => err
-        _log.error("Error while processing Service:<#{name}> Group Idx:<#{group_idx}>  Resource<#{rsc_name}>.  Message:<#{err}>")
+      rsc = svc_rsc.resource
+      rsc_action = service_action(action, svc_rsc)
+      rsc_name = "#{rsc.class.name}:#{rsc.id}" + (rsc.respond_to?(:name) ? ":#{rsc.name}" : "")
+      if rsc_action.nil?
+        _log.info("Not Processing action for Service:<#{name}:#{id}>, RSC:<#{rsc_name}}> in Group Idx:<#{group_idx}>")
+      elsif rsc.respond_to?(rsc_action)
+        _log.info("Processing action <#{rsc_action}> for Service:<#{name}:#{id}>, RSC:<#{rsc_name}}> in Group Idx:<#{group_idx}>")
+        rsc.send(rsc_action)
+      else
+        _log.info("Skipping action <#{rsc_action}> for Service:<#{name}:#{id}>, RSC:<#{rsc.class.name}:#{rsc.id}> in Group Idx:<#{group_idx}>")
+      end
+    rescue => err
+      _log.error("Error while processing Service:<#{name}> Group Idx:<#{group_idx}>  Resource<#{rsc_name}>.  Message:<#{err}>")
       
     end
 

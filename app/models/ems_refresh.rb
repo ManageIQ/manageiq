@@ -61,11 +61,11 @@ module EmsRefresh
     # Split the targets into refresher groups
     groups = targets.group_by do |t|
       ems = if t.respond_to?(:ext_management_system)
- t.ext_management_system
+              t.ext_management_system
             elsif t.respond_to?(:manager_id)
- manager_by_manager_id[t.manager_id] ||= t.manager
+              manager_by_manager_id[t.manager_id] ||= t.manager
             elsif t.respond_to?(:manager)
- t.manager
+              t.manager
             else t
             end
       ems.refresher if ems.respond_to?(:refresher)

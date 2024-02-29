@@ -69,11 +69,11 @@ class ChargebackConfiguredSystem < Chargeback
     @configured_systems ||= {}
     @configured_systems[region] ||=
       if @options[:entity_id]
-          ConfiguredSystem.where(:id => @options[:entity_id])
+        ConfiguredSystem.where(:id => @options[:entity_id])
       elsif @options[:tag]
-          ConfiguredSystem.find_tagged_with(:all => @options[:tag], :ns => '*')
+        ConfiguredSystem.find_tagged_with(:all => @options[:tag], :ns => '*')
       else
-          raise _('Unable to find strategy for Configured Systems selection')
+        raise _('Unable to find strategy for Configured Systems selection')
       end
       
   end

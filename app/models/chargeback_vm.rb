@@ -164,20 +164,20 @@ class ChargebackVm < Chargeback
         # Find Vms by user or by tag
     @vms[region] ||=
       if @options[:entity_id]
-          Vm.where(:id => @options[:entity_id])
+        Vm.where(:id => @options[:entity_id])
       elsif @options[:owner]
-          user = User.lookup_by_userid(@options[:owner])
+        user = User.lookup_by_userid(@options[:owner])
           if user.nil?
             _log.error("Unable to find user '#{@options[:owner]}'. Calculating chargeback costs aborted.")
             raise MiqException::Error, _("Unable to find user '%{name}'") % {:name => @options[:owner]}
           end
           user.vms
       elsif @options[:tag]
-          vms = Vm.find_tagged_with(:all => @options[:tag], :ns => '*')
+        vms = Vm.find_tagged_with(:all => @options[:tag], :ns => '*')
           vms &= @report_user.accessible_vms if @report_user && @report_user.self_service?
           vms
       elsif @options[:tenant_id]
-          tenant = Tenant.find_by(:id => @options[:tenant_id])
+        tenant = Tenant.find_by(:id => @options[:tenant_id])
           if tenant.nil?
             error_message = "Unable to find tenant '#{@options[:tenant_id]}'"
             _log.info("#{error_message}. Calculating chargeback costs skipped for #{@options[:tenant_id]} in region #{region}.")
@@ -198,14 +198,14 @@ class ChargebackVm < Chargeback
             Vm.where(:tenant_id => tenant.subtree.select(:id))
           end
       elsif @options[:service_id]
-          service = Service.find(@options[:service_id])
+        service = Service.find(@options[:service_id])
           if service.nil?
             _log.error("Unable to find service '#{@options[:service_id]}'. Calculating chargeback costs aborted.")
             raise MiqException::Error, "Unable to find service '#{@options[:service_id]}'"
           end
           service.vms
       else
-          raise _('Unable to find strategy for VM selection')
+        raise _('Unable to find strategy for VM selection')
       end
       
   end

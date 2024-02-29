@@ -155,17 +155,17 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < MiqWorker::Runner
 
     tid = Thread.new do
       
-        monitor_events
-      rescue EventCatcherHandledException
-        Thread.exit
-      rescue TemporaryFailure
-        raise
-      rescue => err
-        _log.error("#{log_prefix} Event Monitor Thread aborted because [#{err.message}]")
-        _log.log_backtrace(err) unless err.kind_of?(Errno::ECONNREFUSED)
-        Thread.exit
-      ensure
-        @monitor_started.set
+      monitor_events
+    rescue EventCatcherHandledException
+      Thread.exit
+    rescue TemporaryFailure
+      raise
+    rescue => err
+      _log.error("#{log_prefix} Event Monitor Thread aborted because [#{err.message}]")
+      _log.log_backtrace(err) unless err.kind_of?(Errno::ECONNREFUSED)
+      Thread.exit
+    ensure
+      @monitor_started.set
       
     end
 

@@ -19,12 +19,12 @@ module ManageIQ
             mri.col_formats ||= [] # Backward compat - create empty array for formats
             mri.col_order.each_with_index do |f, i|
               data = if ["<compare>", "<drift>"].include?(mri.db)
-                r[f].to_s
+                       r[f].to_s
                      else
-                mri.format(f,
-                           r[f],
-                           :format => mri.col_formats[i] || :_default_,
-                           :tz     => tz)
+                       mri.format(f,
+                                  r[f],
+                                  :format => mri.col_formats[i] || :_default_,
+                                  :tz     => tz)
                      end
               if !@max_col_width[i] || data.length > @max_col_width[i]
                 @max_col_width[i] = data.length
@@ -119,12 +119,12 @@ module ManageIQ
               next if mri.column_is_hidden?(f)
 
               data = if ["<compare>", "<drift>"].include?(mri.db)
-                r[f].to_s
+                       r[f].to_s
                      else
-                mri.format(f,
-                           r[f],
-                           :format => mri.col_formats[i] || :_default_,
-                           :tz     => tz)
+                       mri.format(f,
+                                  r[f],
+                                  :format => mri.col_formats[i] || :_default_,
+                                  :tz     => tz)
                      end
               if options.alignment.eql?(:center)
                 line << data.center(@max_col_width[i])
@@ -157,7 +157,7 @@ module ManageIQ
 
           # see if a final group line needs to be written
           if ["y", "c"].include?(mri.group) && !mri.sortby.nil? && (mri.group == "c")
-              s += @hr
+            s += @hr
               t = " Total for #{save_val}: #{counter} ".center(@line_len - 2)
               s += fit_to_width("|#{t}|" + CRLF)
           end
@@ -255,9 +255,9 @@ module ManageIQ
         def hr
           columns = options.mri.table.column_names
           @line_len = if columns.include?("id") # Use 1 less column if "id" is present
-            @max_col_width.inject((columns.length - 1) * 3) { |s, e| s + e } + 1
+                        @max_col_width.inject((columns.length - 1) * 3) { |s, e| s + e } + 1
                       else
-            @max_col_width.inject(columns.length * 3) { |s, e| s + e }
+                        @max_col_width.inject(columns.length * 3) { |s, e| s + e }
                       end
           "+" + ("-" * (@line_len - 2)) + "+" + CRLF
         end

@@ -15,21 +15,21 @@ class FileDepotFtp < FileDepot
     super
     with_connection do
       
-        return if file_exists?(destination_file)
+      return if file_exists?(destination_file)
 
-        upload(file.local_file, destination_file)
-      rescue => err
-        msg = "Error '#{err.message.chomp}', writing to FTP: [#{uri}], Username: [#{authentication_userid}]"
-        _log.error(msg)
-        raise _("Error '%{message}', writing to FTP: [%{uri}], Username: [%{id}]") % {:message => err.message.chomp,
-                                                                                      :uri     => uri,
-                                                                                      :id      => authentication_userid}
-    else
-        file.update(
-          :state   => "available",
-          :log_uri => destination_file
-        )
-        file.post_upload_tasks
+      upload(file.local_file, destination_file)
+    rescue => err
+      msg = "Error '#{err.message.chomp}', writing to FTP: [#{uri}], Username: [#{authentication_userid}]"
+      _log.error(msg)
+      raise _("Error '%{message}', writing to FTP: [%{uri}], Username: [%{id}]") % {:message => err.message.chomp,
+                                                                                    :uri     => uri,
+                                                                                    :id      => authentication_userid}
+  else
+    file.update(
+      :state   => "available",
+      :log_uri => destination_file
+    )
+      file.post_upload_tasks
       
     end
   end

@@ -10,10 +10,10 @@ module ProviderObjectMixin
 
     connection_source(options).with_provider_connection(options) do |connection|
       
-        handle = provider_object(connection)
-        yield handle
-      ensure
-        provider_object_release(handle) if handle && respond_to?(:provider_object_release)
+      handle = provider_object(connection)
+      yield handle
+    ensure
+      provider_object_release(handle) if handle && respond_to?(:provider_object_release)
       
     end
   end

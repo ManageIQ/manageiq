@@ -33,7 +33,7 @@ class Chargeback < ActsAsArModel
     @chargeable_fields = {}
     @chargeable_fields[self.class] ||=
       ChargeableField.all.each_with_object({}) do |chargeable_field, result|
-          next unless report_col_options.keys.include?("#{chargeable_field.rate_name}_cost")
+        next unless report_col_options.keys.include?("#{chargeable_field.rate_name}_cost")
 
           result["#{chargeable_field.rate_name}_rate"] = :string
       end

@@ -71,7 +71,7 @@ module Vmdb
     #   not exposed to Automate, and to be run by ansible_runner
     def ansible_runner_content
       @ansible_runner_content ||= map do |engine|
-          content_dir = engine.root.join("content", "ansible_runner")
+        content_dir = engine.root.join("content", "ansible_runner")
           next unless File.exist?(content_dir.join("roles/requirements.yml"))
 
           [engine, content_dir]

@@ -116,9 +116,9 @@ class Condition < ApplicationRecord
       value = ref.nil? ? false : ref.is_tagged_with?(tag, :ns => "*")
     when "value"
       value = if ref.kind_of?(Hash)
-        ref.fetch(tag, "")
+                ref.fetch(tag, "")
               else
-        ref.nil? ? "" : Tag.list(ref, :ns => tag)
+                ref.nil? ? "" : Tag.list(ref, :ns => tag)
               end
       value = MiqExpression.quote(value, ohash[:type]&.to_sym)
     when "count"

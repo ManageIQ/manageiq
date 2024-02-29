@@ -9,9 +9,9 @@ module MiqRequestWorkflow::DialogFieldValidation
     missing_tags = required_tags - selected_tags_categories
     missing_categories_names = missing_tags.collect do |category|
       
-        Classification.lookup_by_name(category.to_s).description
-      rescue
-        nil
+      Classification.lookup_by_name(category.to_s).description
+    rescue
+      nil
       
     end.compact
 

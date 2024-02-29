@@ -23,7 +23,7 @@ FactoryBot.define do
         end
 # admins now using a feature instead of a roll
         if e_features.blank? && (evaluator.role == "super_administrator")
-                    e_features = MiqProductFeature::SUPER_ADMIN_FEATURE
+          e_features = MiqProductFeature::SUPER_ADMIN_FEATURE
         end
       end
 

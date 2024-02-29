@@ -25,9 +25,9 @@ module Vm::Operations
 
     supports :launch_vmrc_console do
       
-        validate_remote_console_vmrc_support
-      rescue => err
-        _('VM VMRC Console error: %{error}') % {:error => err}
+      validate_remote_console_vmrc_support
+    rescue => err
+      _('VM VMRC Console error: %{error}') % {:error => err}
       
     end
 

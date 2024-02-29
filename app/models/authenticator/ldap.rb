@@ -104,9 +104,9 @@ module Authenticator
         if (sid = MiqLdap.get_attr(obj, :objectsid))
           authentication[:user_proxies].each do |auth|
             
-              groups += user_proxy_membership(auth, MiqLdap.sid_to_s(sid))
-            rescue Exception => err
-              _log.warn("#{err.message} (from Authenticator#user_proxy_membership)")
+            groups += user_proxy_membership(auth, MiqLdap.sid_to_s(sid))
+          rescue Exception => err
+            _log.warn("#{err.message} (from Authenticator#user_proxy_membership)")
             
           end
         else
