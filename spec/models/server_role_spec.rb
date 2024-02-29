@@ -96,7 +96,7 @@ RSpec.describe ServerRole do
     end
 
     context "with a plugin" do
-      let(:plugin_server_role_path)  { ManageIQ::Api::Engine.root.join("content/server_roles.csv") }
+      let(:plugin_server_role_path)  { ManageIQ::Api::Engine.root.join("config/server_roles.csv") }
       let(:plugin_server_role_paths) { [plugin_server_role_path] }
 
       before do
