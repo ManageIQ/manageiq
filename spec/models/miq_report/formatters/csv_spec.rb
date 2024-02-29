@@ -61,8 +61,8 @@ RSpec.describe MiqReport::Formatters::Csv do
         end
 
         context "first column starts with '#{prefix}' with '(' present" do
-          let(:name_1)     { %Q{#{prefix}HYPERLINK("example.com/vm/B1","Link to B1")} }
-          let(:csv_name_1) { %Q{"'#{prefix}HYPERLINK(""example.com/vm/B1"",""Link to B1"")"} }
+          let(:name_1)     { %{#{prefix}HYPERLINK("example.com/vm/B1","Link to B1")} }
+          let(:csv_name_1) { %{"'#{prefix}HYPERLINK(""example.com/vm/B1"",""Link to B1"")"} }
 
           it "escapes the column data" do
             expect(miq_report_filesystem.to_csv).to eq(csv_output)
