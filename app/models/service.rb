@@ -302,7 +302,7 @@ class Service < ApplicationRecord
 
   def process_group_action(action, group_idx, direction)
     each_group_resource(group_idx) do |svc_rsc|
-      begin
+      
         rsc = svc_rsc.resource
         rsc_action = service_action(action, svc_rsc)
         rsc_name = "#{rsc.class.name}:#{rsc.id}" + (rsc.respond_to?(:name) ? ":#{rsc.name}" : "")
@@ -316,7 +316,7 @@ class Service < ApplicationRecord
         end
       rescue => err
         _log.error("Error while processing Service:<#{name}> Group Idx:<#{group_idx}>  Resource<#{rsc_name}>.  Message:<#{err}>")
-      end
+      
     end
 
     # Setup processing for the next group

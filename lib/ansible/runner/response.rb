@@ -75,12 +75,12 @@ module Ansible
           # TODO(lsmola) we can remove exception handling when this is fixed
           # https://github.com/ansible/ansible-runner/issues/89#issuecomment-404236832 , so it fails early if there is
           # a non json line
-          begin
+          
             data = JSON.parse(line)
             parsed_stdout << data if data.kind_of?(Hash)
           rescue => e
             _log.warn("Couldn't parse JSON from: #{e}")
-          end
+          
         end
 
         parsed_stdout

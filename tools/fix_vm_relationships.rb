@@ -9,7 +9,7 @@ fixed_vms = []
 rels_to_delete = []
 
 Vm.includes(:all_relationships).each do |v|
-  begin
+  
     v.parent_resource_pool
   rescue ActiveRecord::RecordNotFound => err
     puts "FIXING - #{v.name} - #{err}"
@@ -17,7 +17,7 @@ Vm.includes(:all_relationships).each do |v|
     fixed_vms << v.reload
   else
     puts "OK     - #{v.name}"
-  end
+  
 end
 Relationship.delete(rels_to_delete)
 

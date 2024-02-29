@@ -302,7 +302,7 @@ class MiqQueue < ApplicationRecord
 
     result = nil
     msgs.each do |msg|
-      begin
+      
         _log.info("#{MiqQueue.format_short_log_msg(msg)} previously timed out, retrying...") if msg.state == STATE_TIMEOUT
         handler = MiqWorker.my_worker || MiqServer.my_server
         msg.update!(:state => STATE_DEQUEUE, :handler => handler)
@@ -312,7 +312,7 @@ class MiqQueue < ApplicationRecord
         result = :stale
       rescue => err
         raise _("%{log_message} \"%{error}\" attempting to get next message") % {:log_message => _log.prefix, :error => err}
-      end
+      
     end
     _log.debug("All #{prefetch_max_per_worker} messages stale, returning...") if result == :stale
     result

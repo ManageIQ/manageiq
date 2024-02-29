@@ -65,8 +65,7 @@ module MiqReport::Generator
   def table2class(table)
     @table2class ||= {}
 
-    @table2class[table] ||= begin
-      case table.to_sym
+    @table2class[table] ||= case table.to_sym
       when :ports, :nics, :storage_adapters
         "GuestDevice"
       when :"<compare>"
@@ -75,7 +74,7 @@ module MiqReport::Generator
         ref = db_class.reflection_with_virtual(table.to_sym)
         ref ? ref.class_name : table.singularize.camelize
       end
-    end
+    
 
     @table2class[table]
   end

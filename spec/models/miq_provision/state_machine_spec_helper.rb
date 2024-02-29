@@ -63,9 +63,8 @@ module MiqProvision::StateMachineSpecHelper
   end
 
   def test_poll_destination_powered_off_in_provider_no_callback
-    @test_poll_destination_powered_off_in_provider_no_callback_setup ||= begin
-      expect(task).to(receive(:requeue_phase).twice { requeue_phase(__method__) })
-    end
+    @test_poll_destination_powered_off_in_provider_no_callback_setup ||= expect(task).to(receive(:requeue_phase).twice { requeue_phase(__method__) })
+    
 
     skip_post_install_check { call_method }
   end

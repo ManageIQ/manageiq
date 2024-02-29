@@ -82,14 +82,14 @@ class MiqLdap
       end
 
       addresses.each do |address|
-        begin
+        
           $log.info("MiqLdap.connection: Connecting to IP Address [#{address}]") if $log
           @conn = TCPSocket.new(address, port)
           valid_address = true
           break
         rescue => err
           $log.debug("Warning: '#{err.message}', connecting to IP Address [#{address}]")
-        end
+        
       end
 
       return selected_host if valid_address

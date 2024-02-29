@@ -339,10 +339,10 @@ class VmScan < Job
   private
 
   def log_user_event(user_event)
-    begin
+    
       vm.log_user_event(user_event)
     rescue => err
       _log.warn("Failed to log user event with EMS.  Error: [#{err.class.name}]: #{err} Event message [#{user_event}]")
-    end
+    
   end
 end

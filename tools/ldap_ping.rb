@@ -36,7 +36,7 @@ Array.wrap(ldap_hosts).each do |host|
 end
 
 ldap_addresses.each do |address|
-  begin
+  
     $log.info("----------------------------------")
     $log.info("Binding to LDAP: Host: <#{address}>, User: <#{username}>...")
     ldap     = MiqLdap.new(:host => address)
@@ -51,7 +51,7 @@ ldap_addresses.each do |address|
     end
   rescue Exception => err
     $log.warn("Binding to LDAP: Host: <#{address}>, User: <#{username}>... failed because <#{err.message}>")
-  end
+  
 end
 
 $log.info("Done")

@@ -160,10 +160,10 @@ class ChargebackVm < Chargeback
 
   def self.vms(region)
     @vms ||= {}
-    @vms[region] ||=
-      begin
+    
         # Find Vms by user or by tag
-        if @options[:entity_id]
+        @vms[region] ||=
+      if @options[:entity_id]
           Vm.where(:id => @options[:entity_id])
         elsif @options[:owner]
           user = User.lookup_by_userid(@options[:owner])
@@ -207,7 +207,7 @@ class ChargebackVm < Chargeback
         else
           raise _('Unable to find strategy for VM selection')
         end
-      end
+      
   end
 
   def self.display_name(number = 1)

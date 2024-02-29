@@ -84,7 +84,7 @@ class PxeServer < ApplicationRecord
     current = pxe_images.where(:pxe_menu_id => nil).index_by { |i| [i.path, i.name] }
 
     with_depot do
-      begin
+      
         file_glob("#{pxe_directory}/*").each do |f|
           next unless self.file_file?(f)
 
@@ -119,7 +119,7 @@ class PxeServer < ApplicationRecord
       rescue => err
         _log.error("Synchronizing PXE images on PXE Server [#{self.name}]: #{err.class.name}: #{err}")
         _log.log_backtrace(err)
-      end
+      
     end
 
     stats[:deletes] = current.length
@@ -137,7 +137,7 @@ class PxeServer < ApplicationRecord
     current = windows_images.index_by { |i| [i.path, i.index] }
 
     with_depot do
-      begin
+      
         file_glob("#{windows_images_directory}/*.wim").each do |f|
           next unless self.file_file?(f)
 
@@ -161,7 +161,7 @@ class PxeServer < ApplicationRecord
       rescue => err
         _log.error("Synchronizing Windows images on PXE Server [#{name}]: #{err.class.name}: #{err}")
         _log.log_backtrace(err)
-      end
+      
     end
 
     stats[:deletes] = current.length

@@ -24,11 +24,11 @@ module Vm::Operations
     end
 
     supports :launch_vmrc_console do
-      begin
+      
         validate_remote_console_vmrc_support
       rescue => err
         _('VM VMRC Console error: %{error}') % {:error => err}
-      end
+      
     end
 
     supports :launch_native_console do

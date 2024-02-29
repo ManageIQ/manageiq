@@ -345,14 +345,13 @@ class MiqRequest < ApplicationRecord
   end
 
   def self.request_task_class
-    @request_task_class ||= begin
-      case name
+    @request_task_class ||= case name
       when 'MiqProvisionRequest'
         name.underscore.chomp('_request').camelize.constantize
       else
         name.underscore.gsub(/_request$/, "_task").camelize.constantize
       end
-    end
+    
   end
 
   def requested_task_idx

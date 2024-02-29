@@ -424,7 +424,7 @@ RSpec.describe MiqQueue do
     end
 
     it "should accept non-Array args (for now)" do
-      begin
+      
         class MiqQueueSpecNonArrayArgs
           def self.some_method(single_arg)
             single_arg
@@ -444,7 +444,7 @@ RSpec.describe MiqQueue do
         expect(result).to eq "not_an_array"
       ensure
         Object.send(:remove_const, :MiqQueueSpecNonArrayArgs)
-      end
+      
     end
 
     it "defaults :args" do

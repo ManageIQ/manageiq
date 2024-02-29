@@ -119,11 +119,11 @@ module VMDB
         dirs.each do |dir|
           dir = Rails.root.join(dir) unless Pathname.new(dir).absolute?
           Dir.glob(dir).each do |file|
-            begin
+            
               entry, _mtime = add_zip_entry(zip, file, zfile)
             rescue => e
               _log.error("Failed to add file: [#{entry}]. Error information: #{e.message}")
-            end
+            
           end
         end
         zip.close

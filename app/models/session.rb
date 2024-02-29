@@ -40,11 +40,11 @@ class Session < ApplicationRecord
   def self.log_off_user_sessions(sessions)
     # Log off the users associated with the sessions that are eligible for deletion
     userids = sessions.each_with_object([]) do |s, a|
-      begin
+      
         a << s.raw_data[:userid]
       rescue => err
         _log.warn("Error '#{err.message}', attempting to load session with id [#{s.id}]")
-      end
+      
     end
 
     User.where(:userid => userids).each do |user|

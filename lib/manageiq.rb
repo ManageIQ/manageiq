@@ -5,22 +5,20 @@ require 'active_support/string_inquirer'
 module ManageIQ
   # Defined in the same fashion as Rails.env
   def self.env
-    @_env ||= begin
-      if defined?(Rails)
+    @_env ||= if defined?(Rails)
         Rails.env
       else
         ActiveSupport::StringInquirer.new(ENV["RAILS_ENV"].presence || ENV["RACK_ENV"].presence || "development")
       end
-    end
+    
   end
 
   def self.root
-    @_root ||= begin
-      if defined?(Rails)
+    @_root ||= if defined?(Rails)
         Rails.root
       else
         Pathname.new(File.expand_path('..', __dir__))
       end
-    end
+    
   end
 end

@@ -125,12 +125,12 @@ module MiqConfigSssdLdap
     def ldaphost_and_ldapport_valid?
       begin
         Timeout.timeout(1) do
-          begin
+          
             TCPSocket.new(opts[:ldaphost], opts[:ldapport]).close
             return true
           rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
             return false
-          end
+          
         end
       rescue Timeout::Error
         return false

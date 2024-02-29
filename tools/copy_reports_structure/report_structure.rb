@@ -12,12 +12,12 @@ class ReportStructure
     puts "Copying report structure from group '#{source_group_name}' to role ' #{destination_role_name}' ..."
     source_group = find_group(source_group_name)
     find_role(destination_role_name).miq_groups.each do |destination_group|
-      begin
+      
         destination_group.update!(:settings => source_group.settings) unless dry_run
         puts "  Reports structure was successfully copied from '#{source_group_name}' to '#{destination_group.description}'"
       rescue StandardError => e
         $stderr.puts "Copying failed: #{e.message}"
-      end
+      
     end
   end
 
@@ -35,12 +35,12 @@ class ReportStructure
   def self.reset_for_role(role_name, dry_run = false)
     puts "Removing custom report structure for role '#{role_name}'..."
     find_role(role_name).miq_groups.each do |group|
-      begin
+      
         group.update!(:settings => nil) unless dry_run
         puts "Successfully removed custom report structure for group '#{group.description}'"
       rescue StandardError => e
         $stderr.puts "Removing failed: #{e.message}"
-      end
+      
     end
   end
 
