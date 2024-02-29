@@ -118,11 +118,11 @@ class ChargebackRate < ApplicationRecord
           rec.chargeback_rate_details.create(rates)
         elsif fix_mtime > rec.created_on
           _log.info("Updating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
-            rec.update(cbr)
-            rec.chargeback_rate_details.clear
-            rec.chargeback_rate_details.create(rates)
-            rec.created_on = fix_mtime
-            rec.save!
+          rec.update(cbr)
+          rec.chargeback_rate_details.clear
+          rec.chargeback_rate_details.create(rates)
+          rec.created_on = fix_mtime
+          rec.save!
         end
       end
     end

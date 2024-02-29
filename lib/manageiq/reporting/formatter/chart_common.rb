@@ -197,9 +197,9 @@ module ManageIQ
               counter = 0
             elsif save2 != r[sort2].to_s
               counts[save1_nonblank][save2_nonblank] = counter
-                save2 = r[sort2].to_s
-                save2_nonblank = nonblank_or_default(save2)
-                counter = 0 # only the second sort field changed, save the count
+              save2 = r[sort2].to_s
+              save2_nonblank = nonblank_or_default(save2)
+              counter = 0 # only the second sort field changed, save the count
             end
             counter += 1
           end

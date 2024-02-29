@@ -163,8 +163,8 @@ class MiqRequestWorkflow
               end
             elsif value.blank?
               fld[:error] = "#{required_description(dlg, fld)} is required"
-                valid = false
-                next
+              valid = false
+              next
             end
           else
             Array.wrap(fld[:required_method]).each do |method|
@@ -423,7 +423,7 @@ class MiqRequestWorkflow
             selected_key = f[:default]
           elsif f[:values].present?
             sorted_values = f[:values].sort
-              selected_key = sorted_values.first.first
+            selected_key = sorted_values.first.first
           end
           @values[fn] = [selected_key, f[:values][selected_key]] unless selected_key.nil?
         else

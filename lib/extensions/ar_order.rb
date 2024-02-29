@@ -23,12 +23,12 @@ module ActiveRecord
                             end
               # If we haven't already removed the order clause,
               # Remove any ASC/DESC modifiers
-              if keep_order
-                s
-              else
-                s.gsub(/\s+(?:ASC|DESC)\b/i, "")
-                 .gsub(/\s+NULLS\s+(?:FIRST|LAST)\b/i, "")
-              end
+                            if keep_order
+                              s
+                            else
+                              s.gsub(/\s+(?:ASC|DESC)\b/i, "")
+                               .gsub(/\s+NULLS\s+(?:FIRST|LAST)\b/i, "")
+                            end
                           end.reject(&:blank?).map.with_index { |column, i| "#{column} AS alias_#{i}" }
 
           (order_columns << super).join(", ")

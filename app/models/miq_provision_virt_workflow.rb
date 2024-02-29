@@ -539,8 +539,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       create_ou_tree(ou, h, path)
     elsif path.blank?
       entry = (h[pathname] ||= {})
-        entry[:path] = ou[0]
-        entry[:ou] = ou
+      entry[:path] = ou[0]
+      entry[:ou] = ou
     else
         create_ou_tree(ou, h[pathname] ||= {}, path)
     end
