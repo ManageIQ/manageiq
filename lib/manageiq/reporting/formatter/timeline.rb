@@ -126,7 +126,7 @@ end
                           end
               end
             else
-              e_title = rec[:name] ? rec[:name] : row[mri.col_order.first].to_s
+              e_title = rec[:name] || row[mri.col_order.first].to_s
             end
           end
           e_title ||= ems ? ems.name : "No VM, Host, or MS"

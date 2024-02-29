@@ -56,7 +56,7 @@ module TaskHelpers
       end
 
       def import_classification(tag_category)
-        ns = tag_category["ns"] ? tag_category["ns"] : "/managed"
+        ns = tag_category["ns"] || "/managed"
         tag_category["name"] = tag_category["name"].to_s
         tag_category.delete("parent_id")
 

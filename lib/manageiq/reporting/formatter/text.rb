@@ -21,7 +21,7 @@ module ManageIQ
               data = unless ["<compare>", "<drift>"].include?(mri.db)
                 mri.format(f,
                                   r[f],
-                                  :format => mri.col_formats[i] ? mri.col_formats[i] : :_default_,
+                                  :format => mri.col_formats[i] || :_default_,
                                   :tz     => tz)
               else
                 r[f].to_s
@@ -103,7 +103,7 @@ module ManageIQ
           counter = 0
 
           row_limit = mri.rpt_options && mri.rpt_options[:row_limit] ? mri.rpt_options[:row_limit] : 0
-          use_table = mri.sub_table ? mri.sub_table : mri.table
+          use_table = mri.sub_table || mri.table
           use_table.data.each_with_index do |r, d_idx|
             break if row_limit != 0 && d_idx > row_limit - 1
 
@@ -121,7 +121,7 @@ module ManageIQ
               data = unless ["<compare>", "<drift>"].include?(mri.db)
                 mri.format(f,
                                   r[f],
-                                  :format => mri.col_formats[i] ? mri.col_formats[i] : :_default_,
+                                  :format => mri.col_formats[i] || :_default_,
                                   :tz     => tz)
               else
                 r[f].to_s

@@ -20,7 +20,7 @@ module MiqReport::Generator::Html
       save_val = :_undefined_                                 # Hang on to the current group value
       break_label = col_options.fetch_path(sortby[0], :break_label) unless sortby.nil? || col_options.nil? || in_a_widget
       group_text = nil                                        # Optionally override what gets displayed for the group (i.e. Chargeback)
-      use_table = sub_table ? sub_table : table
+      use_table = sub_table || table
       use_table.data.each_with_index do |d, d_idx|
         break if row_limit != 0 && d_idx > row_limit - 1
 
@@ -166,7 +166,7 @@ end
           grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>"
           if extras[:grouping][group].key?(calc.first)
             grp_output << CGI.escapeHTML(
-              c.split("__").first % [extras[:grouping][group][calc.first][c], {:format => self.col_formats[c_idx] ? self.col_formats[c_idx] : :_default_}]
+              c.split("__").first % [extras[:grouping][group][calc.first][c], {:format => self.col_formats[c_idx] || :_default_}]
             )
           end
           grp_output << "</td>"

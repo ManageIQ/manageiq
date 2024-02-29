@@ -38,7 +38,7 @@ class VimPerformanceTrend < ActsAsArModel
     #   :target_pcts    => [70, 80, 90, 100],
     # }
 
-    options[:limit_col] ? options[:limit_col] : "limit"
+    options[:limit_col] || "limit"
 
     # group data by resource name
     grouped_objs = perfs.each_with_object({}) do |o, h|

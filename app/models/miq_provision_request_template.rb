@@ -76,7 +76,7 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
   def get_root_svc(parent_svc)
     return nil unless parent_svc
 
-    parent_svc.parent ? parent_svc.parent : parent_svc
+    parent_svc.parent || parent_svc
   end
 
   def get_parent_task(service_task)
