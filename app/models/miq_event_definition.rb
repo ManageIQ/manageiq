@@ -101,7 +101,7 @@ class MiqEventDefinition < ApplicationRecord
         eventData.delete("id")
 
         # Remove elements that do not belong in the event table
-        %w( src_vm_guid dest_vm_guid vm_guid ).each do |field|
+        %w(src_vm_guid dest_vm_guid vm_guid).each do |field|
           eventData.delete(field)
         end
 

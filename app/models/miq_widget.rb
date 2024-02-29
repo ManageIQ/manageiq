@@ -21,7 +21,7 @@ class MiqWidget < ApplicationRecord
 
   validates_presence_of   :title, :description
   validates :description, :uniqueness_when_changed => true
-  VALID_CONTENT_TYPES = %w( report chart rss menu )
+  VALID_CONTENT_TYPES = %w(report chart rss menu)
   validates_inclusion_of :content_type, :in => VALID_CONTENT_TYPES, :message => "should be one of #{VALID_CONTENT_TYPES.join(", ")}"
 
   serialize :visibility
