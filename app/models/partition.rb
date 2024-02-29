@@ -6,8 +6,8 @@ class Partition < ApplicationRecord
              p = Partition.quoted_table_name
              v = Volume.quoted_table_name
              Volume.select("DISTINCT #{v}.*")
-               .joins("JOIN #{p} ON #{v}.hardware_id = #{p}.hardware_id AND #{v}.volume_group = #{p}.volume_group")
-               .where("#{p}.id" => id)
+                   .joins("JOIN #{p} ON #{v}.hardware_id = #{p}.hardware_id AND #{v}.volume_group = #{p}.volume_group")
+                   .where("#{p}.id" => id)
            }, :foreign_key => :volume_group
 
   virtual_column :aligned, :type => :boolean

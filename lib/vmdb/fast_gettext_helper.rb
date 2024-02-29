@@ -35,8 +35,8 @@ module Vmdb
 
     private_class_method def self.supported_locales_files
       Vmdb::Plugins.to_a.unshift(Rails)
-        .map { |source| source.root.join("config", "supported_locales.yml") }
-        .select(&:exist?)
+                   .map { |source| source.root.join("config", "supported_locales.yml") }
+                   .select(&:exist?)
     end
 
     def self.find_available_locales

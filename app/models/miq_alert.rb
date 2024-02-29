@@ -227,7 +227,7 @@ class MiqAlert < ApplicationRecord
     delay_next_evaluation = (options || {}).fetch_path(:notifications, :delay_next_evaluation)
     start_skipping_at = Time.now.utc - (delay_next_evaluation || 10.minutes).to_i
     statuses_not_expired = miq_alert_statuses.where(:resource => target, :result => true)
-                           .where(miq_alert_statuses.arel_table[:evaluated_on].gt(start_skipping_at))
+                                             .where(miq_alert_statuses.arel_table[:evaluated_on].gt(start_skipping_at))
 
     if statuses_not_expired.count > 0
       _log.info("Skipping re-evaluation of Alert [#{description}] for target: [#{target.name}] with delay_next_evaluation [#{delay_next_evaluation}]")

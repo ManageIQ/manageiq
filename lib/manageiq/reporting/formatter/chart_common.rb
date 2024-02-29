@@ -290,7 +290,7 @@ module ManageIQ
           sorted_data = mri.table.data.sort_by { |row| row[data_column_name] || 0 }
 
           series = sorted_data.reverse.take(keep)
-                   .each_with_object(series_class.new(pie_type? ? :pie : :flat)) do |row, a|
+                              .each_with_object(series_class.new(pie_type? ? :pie : :flat)) do |row, a|
             tooltip = row[sort1]
             tooltip = _('no value') if tooltip.blank?
             a.push(:value   => row[data_column_name],
@@ -320,7 +320,7 @@ module ManageIQ
 
           categories = []
           series = sorted_data.reverse.take(keep)
-                   .each_with_object(series_class.new(pie_type? ? :pie : :flat)) do |(key, data), a|
+                              .each_with_object(series_class.new(pie_type? ? :pie : :flat)) do |(key, data), a|
             tooltip = key
             tooltip = _('no value') if key.blank?
             a.push(:value   => data[aggreg][raw_column_name],

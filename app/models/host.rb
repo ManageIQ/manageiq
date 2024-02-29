@@ -1176,8 +1176,8 @@ class Host < ApplicationRecord
     conditions[:host_protocol] = host_protocol if host_protocol
 
     operating_system.firewall_rules.where(conditions)
-      .flat_map { |rule| rule.port_range.to_a }
-      .uniq.sort
+                    .flat_map { |rule| rule.port_range.to_a }
+                    .uniq.sort
   end
 
   def service_names

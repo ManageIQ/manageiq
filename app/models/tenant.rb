@@ -279,7 +279,7 @@ class Tenant < ApplicationRecord
     tenants_by_id = all_tenants_and_projects.index_by(&:id)
 
     tenants_and_projects = Rbac.filtered(Tenant.in_my_region.select(:id, :ancestry, :divisible, :use_config_for_attributes, :name))
-                           .to_a.sort_by { |t| [t.ancestry || "", t.name] }
+                               .to_a.sort_by { |t| [t.ancestry || "", t.name] }
 
     tenants_and_projects.partition(&:divisible?).map do |tenants|
       tenants.map do |t|

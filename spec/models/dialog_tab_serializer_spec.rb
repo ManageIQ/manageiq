@@ -30,7 +30,7 @@ RSpec.describe DialogTabSerializer do
 
     before do
       allow(dialog_group_serializer).to receive(:serialize).with(dialog_group, boolean)
-        .and_return("serialized dialog group")
+                                                           .and_return("serialized dialog group")
     end
 
     context 'when wanting the excluded set of attributes' do

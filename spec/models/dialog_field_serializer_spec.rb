@@ -61,7 +61,7 @@ RSpec.describe DialogFieldSerializer do
 
           it 'serializes the dialog_field with the correct attributes' do
             expect(dialog_field_serializer.serialize(dialog_field, all_attributes))
-            .to eq(expected_serialized_values.merge(
+              .to eq(expected_serialized_values.merge(
                      "resource_action"         => "serialized resource action",
                      "values"                  => "dynamic values",
                      "dialog_field_responders" => dialog_field_responders
@@ -74,7 +74,7 @@ RSpec.describe DialogFieldSerializer do
 
           it 'serializes the dialog_field with all attributes' do
             expect(dialog_field_serializer.serialize(dialog_field, all_attributes))
-            .to include(expected_serialized_values.merge(
+              .to include(expected_serialized_values.merge(
                           'id'                      => dialog_field.id,
                           'resource_action'         => 'serialized resource action',
                           'dialog_field_responders' => [],

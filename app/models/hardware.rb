@@ -72,16 +72,16 @@ class Hardware < ApplicationRecord
 
     # Excluding ethernet devices from deletes because the refresh is the master of the data and it will handle the deletes.
     deletes[:gd] = parent.hardware.guest_devices
-                   .where.not(:device_type => "ethernet")
-                   .select(:id, :device_type, :location, :address)
-                   .collect { |rec| [rec.id, [rec.device_type, rec.location, rec.address]] }
+                         .where.not(:device_type => "ethernet")
+                         .select(:id, :device_type, :location, :address)
+                         .collect { |rec| [rec.id, [rec.device_type, rec.location, rec.address]] }
 
     if parent.vendor == "redhat"
       deletes[:disk] = parent.hardware.disks.select(:id, :device_type, :location)
-                     .collect { |rec| [rec.id, [rec.device_type, "0:#{rec.location}"]] }
+                             .collect { |rec| [rec.id, [rec.device_type, "0:#{rec.location}"]] }
     else
       deletes[:disk] = parent.hardware.disks.select(:id, :device_type, :location)
-                     .collect { |rec| [rec.id, [rec.device_type, rec.location]] }
+                             .collect { |rec| [rec.id, [rec.device_type, rec.location]] }
     end
 
     xmlNode.root.each_recursive do |e|

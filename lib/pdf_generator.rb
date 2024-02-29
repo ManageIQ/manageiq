@@ -38,7 +38,7 @@ class PdfGenerator
     # strip out bad attachment_fu URLs
     # and remove asset ids on images
     html_string.gsub('.com:/', '.com/')
-      .gsub(/src=["'](\S+)\?\d*["']/i, 'src="\1"')
+               .gsub(/src=["'](\S+)\?\d*["']/i, 'src="\1"')
   end
   private_class_method :sanitize_html
 

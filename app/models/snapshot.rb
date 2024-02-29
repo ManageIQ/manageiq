@@ -83,7 +83,7 @@ class Snapshot < ApplicationRecord
 
   def recently_created?
     create_time >= ::Settings.ems_refresh.raise_vm_snapshot_complete_if_created_within.to_i_with_method
-                   .seconds.ago.utc
+                             .seconds.ago.utc
   end
 
   def not_recently_created?

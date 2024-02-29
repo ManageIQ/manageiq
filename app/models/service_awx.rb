@@ -75,7 +75,7 @@ class ServiceAwx < Service
     {
       'service' => href_slug
     }.merge(manageiq_env(evm_owner, miq_group, miq_request_task))
-     .merge(request_options_extra_vars)
+      .merge(request_options_extra_vars)
   end
 
   def request_options_extra_vars

@@ -52,10 +52,10 @@ module VmOrTemplate::RightSizing
 
         where_clause =
           metric_rollup_table[:time_profile_id].in(tp_ids)
-            .and(metric_rollup_table[:capture_interval_name].eq("daily"))
-            .and(metric_rollup_table[:timestamp].between(timestamp))
-            .and(metric_rollup_table[:resource_type].eq("VmOrTemplate"))
-            .and(metric_rollup_table[:resource_id].eq(t[:id]))
+                                               .and(metric_rollup_table[:capture_interval_name].eq("daily"))
+                                               .and(metric_rollup_table[:timestamp].between(timestamp))
+                                               .and(metric_rollup_table[:resource_type].eq("VmOrTemplate"))
+                                               .and(metric_rollup_table[:resource_id].eq(t[:id]))
 
         t.grouping(
           metric_rollup_table.project(select_clause)

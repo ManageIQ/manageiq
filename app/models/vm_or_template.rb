@@ -1563,7 +1563,7 @@ class VmOrTemplate < ApplicationRecord
     hardwares = Hardware.arel_table
 
     match_grouping = networks[:ipaddress].matches("%#{ipaddress}%")
-                       .or(networks[:ipv6address].matches("%#{ipaddress}%"))
+                                         .or(networks[:ipv6address].matches("%#{ipaddress}%"))
 
     query = hardwares.project(1)
                      .join(networks).on(networks[:hardware_id].eq(hardwares[:id]))

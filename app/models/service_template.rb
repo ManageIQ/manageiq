@@ -103,8 +103,8 @@ class ServiceTemplate < ApplicationRecord
       }
 
       ExtManagementSystem.subclasses_supporting(:catalog)
-        .flat_map(&:catalog_types)
-        .reduce(builtin_catalog_item_types, :merge)
+                         .flat_map(&:catalog_types)
+                         .reduce(builtin_catalog_item_types, :merge)
     end
   end
 

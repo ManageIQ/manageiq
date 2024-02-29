@@ -23,8 +23,8 @@ time_cond = {:timestamp => (start_ts.to_time.utc.beginning_of_day..end_ts.to_tim
 puts "Processing VM IDs: #{vm_ids.sort.inspect} for time range: #{time_cond.inspect}"
 
 vm_perf_recs = MetricRollup.where(time_cond).where(:capture_interval_name => 'hourly', :resource_id => vm_ids)
-               .includes(:vm => {:taggings => :tag})
-               .select(:id, :resource_type, :resource_id, :resource_name, :parent_host_id)
+                           .includes(:vm => {:taggings => :tag})
+                           .select(:id, :resource_type, :resource_id, :resource_name, :parent_host_id)
 
 vm_perf_recs.group_by(&:resource_id).sort.each do |resource_id, perfs|
   puts "Updating tags in performance data for VM: ID: #{resource_id} => #{perfs.first.resource_name}"

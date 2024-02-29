@@ -217,9 +217,9 @@ class Classification < ApplicationRecord
 
   def self.category_names_for_perf_by_tag(region_id = my_region_number, ns = DEFAULT_NAMESPACE)
     in_region(region_id).is_category.where(:perf_by_tag => true)
-      .includes(:tag)
-      .collect { |c| c.name if c.tag2ns(c.tag.name) == ns }
-      .compact
+                        .includes(:tag)
+                        .collect { |c| c.name if c.tag2ns(c.tag.name) == ns }
+                        .compact
   end
 
   def self.find_assigned_entries(obj, ns = DEFAULT_NAMESPACE)

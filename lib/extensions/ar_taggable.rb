@@ -121,11 +121,11 @@ module ActsAsTaggable
       tag = Tag.arel_table
       tagging = Tagging.arel_table
       Tagging.joins(:tag)
-        .where(:taggable_id    => id)
-        .where(:taggable_type  => self.class.base_class.name)
-        .where(tagging[:tag_id].eq(tag[:id]))
-        .where(tag[:name].matches("#{ns}/%"))
-        .destroy_all
+             .where(:taggable_id    => id)
+             .where(:taggable_type  => self.class.base_class.name)
+             .where(tagging[:tag_id].eq(tag[:id]))
+             .where(tag[:name].matches("#{ns}/%"))
+             .destroy_all
 
       # Apply new tags
       Tag.parse(list).each do |name|
