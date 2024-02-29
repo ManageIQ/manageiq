@@ -49,11 +49,11 @@ module Vmdb
 
   module ClassLogging
     def instance_logger
-      @instance_logger ||= LogProxy.new(name, '#', Hash.new)
+      @instance_logger ||= LogProxy.new(name, '#', {})
     end
 
     def _log
-      @_log ||= LogProxy.new(name, '.', Hash.new)
+      @_log ||= LogProxy.new(name, '.', {})
     end
   end
 

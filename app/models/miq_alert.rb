@@ -40,7 +40,7 @@ class MiqAlert < ApplicationRecord
 
   HOURLY_TIMER_EVENT = "_hourly_timer_"
 
-  cache_with_timeout(:alert_assignments) { Hash.new }
+  cache_with_timeout(:alert_assignments) { {} }
 
   virtual_column :based_on,               :type => :string
   virtual_column :evaluation_description, :type => :string
