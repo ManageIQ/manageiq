@@ -231,7 +231,7 @@ RSpec.describe SupportsFeatureMixin do
     end
 
     it "gives reason when implicit dynamic attrs" do
-      test_class.supports(:implicit_feature) {  "dynamically unsupported" unless attr1 }
+      test_class.supports(:implicit_feature) { "dynamically unsupported" unless attr1 }
       test_inst = test_class.new(:attr1 => false)
 
       expect(test_inst.unsupported_reason(:implicit_feature)).to eq("dynamically unsupported")

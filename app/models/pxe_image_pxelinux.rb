@@ -12,7 +12,7 @@ label #{name}
     PXE
 
     pxe << "   kernel #{kernel}\n" unless kernel.nil?
-    pxe << "   append #{options}\n"     unless options.blank?
+    pxe << "   append #{options}\n" unless options.blank?
     pxe << "\n"
   end
 

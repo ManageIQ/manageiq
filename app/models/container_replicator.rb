@@ -7,7 +7,7 @@ class ContainerReplicator < ApplicationRecord
   include MiqPolicyMixin
   include TenantIdentityMixin
 
-  belongs_to  :ext_management_system, :foreign_key => "ems_id"
+  belongs_to :ext_management_system, :foreign_key => "ems_id"
   has_many :container_groups
   belongs_to :container_project
   has_many :labels, -> { where(:section => "labels") }, # rubocop:disable Rails/HasManyOrHasOneDependent

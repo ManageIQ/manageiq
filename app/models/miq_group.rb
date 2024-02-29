@@ -7,7 +7,7 @@ class MiqGroup < ApplicationRecord
   has_one    :entitlement, :dependent => :destroy, :autosave => true
   has_one    :miq_user_role, :through => :entitlement
   has_and_belongs_to_many :users
-  has_many   :vms,         :dependent => :nullify
+  has_many   :vms, :dependent => :nullify
   has_many   :miq_templates, :dependent => :nullify
   has_many   :miq_reports, :dependent => :nullify
   has_many   :miq_report_results, :dependent => :nullify
@@ -17,7 +17,7 @@ class MiqGroup < ApplicationRecord
   has_many   :authentications, :dependent => :nullify
 
   virtual_delegate :miq_user_role_name, :to => :entitlement, :allow_nil => true, :type => :string
-  virtual_column :read_only,          :type => :boolean
+  virtual_column :read_only, :type => :boolean
   virtual_has_one :sui_product_features, :class_name => "Array"
 
   delegate :self_service?, :limited_self_service?, :to => :miq_user_role, :allow_nil => true

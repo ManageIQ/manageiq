@@ -514,7 +514,7 @@ RSpec.describe MiqWidget do
       expect(task.pct_complete).to eq(100)
 
       @widget.visibility[:roles] = "_ALL_"
-      new_user  = FactoryBot.create(:user, :userid => "test task", :role => "random")
+      new_user = FactoryBot.create(:user, :userid => "test task", :role => "random")
 
       @widget.create_initial_content_for_user(new_user)
       q = MiqQueue.first
@@ -537,7 +537,7 @@ RSpec.describe MiqWidget do
     end
 
     it "with multiple timezones in one group" do
-      user_est =  FactoryBot.create(:user, :userid => 'user_est', :miq_groups => [@group2], :settings => {:display => {:timezone => "Eastern Time (US & Canada)"}})
+      user_est = FactoryBot.create(:user, :userid => 'user_est', :miq_groups => [@group2], :settings => {:display => {:timezone => "Eastern Time (US & Canada)"}})
       expect(user_est.get_timezone).to eq("Eastern Time (US & Canada)")
 
       ws = FactoryBot.create(:miq_widget_set, :name => "default", :userid => "user_est", :owner => @group2, :widget_id => @widget.id)
@@ -551,7 +551,7 @@ RSpec.describe MiqWidget do
     end
 
     it "with report_sync" do
-      user_est =  FactoryBot.create(:user, :userid => 'user_est', :miq_groups => [@group2], :settings => {:display => {:timezone => "Eastern Time (US & Canada)"}})
+      user_est = FactoryBot.create(:user, :userid => 'user_est', :miq_groups => [@group2], :settings => {:display => {:timezone => "Eastern Time (US & Canada)"}})
       expect(user_est.get_timezone).to eq("Eastern Time (US & Canada)")
 
       ws = FactoryBot.create(:miq_widget_set, :name => "default", :userid => "user_est", :owner => @group2, :widget_id => @widget.id)

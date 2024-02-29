@@ -26,7 +26,7 @@ RSpec.describe MiqRequest do
   end
 
   context "A new request" do
-    let(:event_name)   { "hello" }
+    let(:event_name) { "hello" }
     let(:miq_request) { FactoryBot.build(:automation_request, :options => {:src_ids => [1]}) }
     let(:request)      { FactoryBot.create(:vm_migrate_request, :requester => fred) }
     let(:ems)          { FactoryBot.create(:ems_vmware) }
@@ -160,12 +160,12 @@ RSpec.describe MiqRequest do
           end
 
           it "approval_state denied" do
-            provision_request.approval_state  = 'denied'
+            provision_request.approval_state = 'denied'
             expect(provision_request.request_status).to eq('Error')
           end
 
           it "approval_state pending_approval" do
-            provision_request.approval_state  = 'pending_approval'
+            provision_request.approval_state = 'pending_approval'
             expect(provision_request.request_status).to eq('Unknown')
           end
         end

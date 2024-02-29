@@ -91,7 +91,7 @@ RSpec.describe MiqAction do
 
   context "#raise_automation_event" do
     before do
-      @vm   = FactoryBot.create(:vm_infra)
+      @vm = FactoryBot.create(:vm_infra)
       allow(@vm).to receive(:my_zone).and_return("vm_zone")
       FactoryBot.create(:miq_event_definition, :name => "raise_automation_event")
       FactoryBot.create(:miq_event_definition, :name => "vm_start")
@@ -191,17 +191,17 @@ RSpec.describe MiqAction do
 
   context "#action_vm_retire" do
     before do
-      @vm     = FactoryBot.create(:vm_infra)
+      @vm = FactoryBot.create(:vm_infra)
       allow(@vm).to receive(:my_zone).and_return("vm_zone")
       @event  = FactoryBot.create(:miq_event_definition, :name => "assigned_company_tag")
       @action = FactoryBot.create(:miq_action, :name => "vm_retire")
     end
 
     it "synchronous" do
-      input  = {:synchronous => true}
+      input = {:synchronous => true}
 
       Timecop.freeze do
-        date   = Time.now.utc - 1.day
+        date = Time.now.utc - 1.day
 
         expect(VmOrTemplate).to receive(:retire) do |vms, options|
           expect(vms).to eq([@vm])
@@ -217,7 +217,7 @@ RSpec.describe MiqAction do
       allow(@vm).to receive_messages(:my_zone => zone.name)
 
       Timecop.freeze do
-        date   = Time.now.utc - 1.day
+        date = Time.now.utc - 1.day
 
         @action.action_vm_retire(@action, @vm, input)
         expect(MiqQueue.count).to eq(1)

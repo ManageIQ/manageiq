@@ -48,10 +48,10 @@ module EmsRefresh::SaveInventoryInfra
           found = ems.hosts.build(h)
         else
           _log.info("#{log_header} Updating Host [#{found.name}] id: [#{found.id}] hostname: [#{found.hostname}] IP: [#{found.ipaddress}] ems_ref: [#{h[:ems_ref]}]")
-          h[:ems_id] = ems.id  # Steal this host from the previous EMS
+          h[:ems_id] = ems.id # Steal this host from the previous EMS
 
           # Adjust the names so they do not keep changing in the event of DNS problems
-          ip_part  =  /[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/
+          ip_part  = /[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/
           ip_whole = /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/
 
           # Keep the previous ip address if we don't have a new one or the new one is not an ip address

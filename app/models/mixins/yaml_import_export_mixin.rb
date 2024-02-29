@@ -29,7 +29,7 @@ module YamlImportExportMixin
     # @return [Array<Hash>, Array<String>] The array of objects to be imported,
     #   and the array of importing status.
     def import(fd, options = {})
-      fd.rewind   # ensure to be at the beginning as the file is read multiple times
+      fd.rewind # ensure to be at the beginning as the file is read multiple times
       begin
         reps = YAML.load(fd.read)
         validate_import_data_class(reps)

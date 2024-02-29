@@ -51,23 +51,23 @@ FactoryBot.define do
   end
 
   factory :chargeback_rate_detail_cpu_used, :parent => :chargeback_rate_detail do
-    per_unit    { "megahertz" }
+    per_unit { "megahertz" }
     chargeable_field { FactoryBot.build(:chargeable_field_cpu_used) }
   end
 
   factory :chargeback_rate_detail_cpu_cores_used, :parent => :chargeback_rate_detail do
-    per_unit    { "cores" }
+    per_unit { "cores" }
     chargeable_field { FactoryBot.build(:chargeable_field_cpu_cores_used) }
   end
 
   factory :chargeback_rate_detail_cpu_cores_allocated, :parent => :chargeback_rate_detail do
-    per_unit    { "cores" }
+    per_unit { "cores" }
     chargeable_field { FactoryBot.build(:chargeable_field_cpu_cores_allocated) }
   end
 
   factory :chargeback_rate_detail_cpu_allocated, :traits => [:daily],
                                                  :parent => :chargeback_rate_detail do
-    per_unit    { "cpu" }
+    per_unit { "cpu" }
     chargeable_field { FactoryBot.build(:chargeable_field_cpu_allocated) }
   end
 

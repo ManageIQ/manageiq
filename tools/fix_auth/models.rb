@@ -37,7 +37,7 @@ module FixAuth
     self.table_name = "miq_ae_values"
     self.password_columns = %w(value)
 
-    belongs_to :field,    :class_name => "FixMiqAeField",    :foreign_key => :field_id
+    belongs_to :field,    :class_name => "FixMiqAeField", :foreign_key => :field_id
 
     # add foreign keys so includes will work
     def self.select_columns

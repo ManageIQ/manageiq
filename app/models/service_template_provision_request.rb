@@ -4,7 +4,7 @@ class ServiceTemplateProvisionRequest < MiqRequest
   ACTIVE_STATES     = %w( migrated ) + base_class::ACTIVE_STATES
   SERVICE_ORDER_CLASS = '::ServiceOrderCart'.freeze
 
-  validates_inclusion_of :request_state,  :in => %w( pending finished ) + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"
+  validates_inclusion_of :request_state, :in => %w( pending finished ) + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"
   validate               :must_have_user
 
   after_create :process_service_order

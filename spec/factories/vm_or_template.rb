@@ -19,7 +19,7 @@ FactoryBot.define do
   end
 
   factory(:vm,             :class => "Vm",            :parent => :vm_or_template)
-  factory(:vm_cloud,       :class => "VmCloud",       :parent => :vm)       { cloud { true } }
+  factory(:vm_cloud,       :class => "VmCloud",       :parent => :vm) { cloud { true } }
   factory(:vm_infra,       :class => "VmInfra",       :parent => :vm)
   factory(:vm_server,      :class => "VmServer",      :parent => :vm)
   factory(:template_cloud, :class => "TemplateCloud", :parent => :template) { cloud { true } }

@@ -103,10 +103,10 @@ RSpec.describe EmsEventHelper do
       @policy_set = FactoryBot.create(:miq_policy_set)
       @policy     = FactoryBot.create(:miq_policy, :towhat => 'Vm', :active => true, :mode => 'control')
       automate_options = {:ae_message => 'create', :ae_hash => {"kevin" => "1", "q" => "1"}}
-      @action     = FactoryBot.create(:miq_action, :description => 'create_incident', :action_type => 'custom_automation', :options => automate_options)
+      @action = FactoryBot.create(:miq_action, :description => 'create_incident', :action_type => 'custom_automation', :options => automate_options)
       @policy_set.add_member(@policy)
 
-      @policy_content  = FactoryBot.create(:miq_policy_content,
+      @policy_content = FactoryBot.create(:miq_policy_content,
                                            :miq_policy           => @policy,
                                            :miq_action           => @action,
                                            :miq_event_definition => @miq_event_vm_start,

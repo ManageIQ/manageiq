@@ -14,7 +14,7 @@ RSpec.describe "Widget Chart Content" do
 
     5.times do |i|
       vm = FactoryBot.build(:vm_vmware)
-      vm.evm_owner_id = @user.id           if i > 2
+      vm.evm_owner_id = @user.id if i > 2
       vm.miq_group_id = @user.current_group.id if vm.evm_owner_id || (i > 1)
       vm.save
     end

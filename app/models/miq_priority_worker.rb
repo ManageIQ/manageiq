@@ -1,7 +1,7 @@
 class MiqPriorityWorker < MiqQueueWorkerBase
   include MiqWorker::ReplicaPerWorker
 
-  self.default_queue_name   = "generic"
+  self.default_queue_name = "generic"
 
   def self.queue_priority
     MiqQueue::HIGH_PRIORITY

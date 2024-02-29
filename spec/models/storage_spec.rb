@@ -39,25 +39,25 @@ RSpec.describe Storage do
 
   it "#scan_complete?" do
     miq_task = FactoryBot.create(:miq_task)
-    miq_task.context_data = {:targets => [], :complete => [], :pending  => {}}
+    miq_task.context_data = {:targets => [], :complete => [], :pending => {}}
     miq_task.context_data[:targets]  = [123, 456, 789]
     miq_task.context_data[:complete] = []
     expect(Storage.scan_complete?(miq_task)).to be_falsey
 
-    miq_task.context_data[:complete]  = [123, 456, 789]
+    miq_task.context_data[:complete] = [123, 456, 789]
     expect(Storage.scan_complete?(miq_task)).to be_truthy
   end
 
   it "#scan_complete_message" do
     miq_task = FactoryBot.create(:miq_task)
-    miq_task.context_data = {:targets => [], :complete => [], :pending  => {}}
-    miq_task.context_data[:targets]  = [123, 456, 789]
+    miq_task.context_data = {:targets => [], :complete => [], :pending => {}}
+    miq_task.context_data[:targets] = [123, 456, 789]
     expect(Storage.scan_complete_message(miq_task)).to eq("SmartState Analysis for 3 storages complete")
   end
 
   it "#scan_update_message" do
     miq_task = FactoryBot.create(:miq_task)
-    miq_task.context_data = {:targets => [], :complete => [], :pending  => {}}
+    miq_task.context_data = {:targets => [], :complete => [], :pending => {}}
     miq_task.context_data[:targets]  = [123, 456, 789]
     miq_task.context_data[:complete] = [123]
     miq_task.context_data[:pending][789] = 98765
@@ -119,7 +119,7 @@ RSpec.describe Storage do
 
     it "#scan_storages_unprocessed" do
       miq_task = FactoryBot.create(:miq_task)
-      miq_task.context_data = {:targets => [], :complete => [], :pending  => {}}
+      miq_task.context_data = {:targets => [], :complete => [], :pending => {}}
       miq_task.context_data[:targets]  = [@storage1.id, @storage2.id, @storage3.id]
       miq_task.context_data[:complete] = []
       miq_task.context_data[:pending]  = {}
@@ -134,7 +134,7 @@ RSpec.describe Storage do
       miq_task.context_data[:pending].delete(@storage2.id)
       expect(Storage.scan_storages_unprocessed(miq_task)).to match_array [@storage1.id, @storage2.id]
 
-      miq_task.context_data[:complete]  = [@storage1.id, @storage2.id, @storage3.id]
+      miq_task.context_data[:complete] = [@storage1.id, @storage2.id, @storage3.id]
       expect(Storage.scan_storages_unprocessed(miq_task)).to eq([])
     end
 
@@ -216,7 +216,7 @@ RSpec.describe Storage do
 
         it "#scan_timer" do
           expect(Storage).to receive(:scan_queue_watchdog).never
-          miq_task  = Storage.scan_timer(nil)
+          miq_task = Storage.scan_timer(nil)
           expect(miq_task).to be_nil
           expect(MiqTask.count).to eq(0)
           expect(MiqQueue.count).to eq(0)
@@ -239,13 +239,13 @@ RSpec.describe Storage do
         it "#scan_queue" do
           bogus_id = @storage1.id - 1
           miq_task = FactoryBot.create(:miq_task)
-          miq_task.context_data = {:targets => [], :complete => [], :pending  => {}}
+          miq_task.context_data = {:targets => [], :complete => [], :pending => {}}
           miq_task.context_data[:targets]  = [bogus_id, @storage1.id, @storage2.id, @storage3.id]
           miq_task.context_data[:complete] = []
           miq_task.context_data[:pending]  = {}
           miq_task.save!
 
-          qitem1  = FactoryBot.create(:miq_queue)
+          qitem1 = FactoryBot.create(:miq_queue)
           allow_any_instance_of(Storage).to receive_messages(:scan_queue_item => qitem1)
           Storage.scan_queue(miq_task)
           miq_task.reload
@@ -257,7 +257,7 @@ RSpec.describe Storage do
           miq_task.context_data[:complete] << @storage1.id
           miq_task.context_data[:pending].delete(@storage1.id)
           miq_task.save!
-          qitem2  = FactoryBot.create(:miq_queue)
+          qitem2 = FactoryBot.create(:miq_queue)
           allow_any_instance_of(Storage).to receive_messages(:scan_queue_item => qitem2)
           Storage.scan_queue(miq_task)
           miq_task.reload
@@ -281,7 +281,7 @@ RSpec.describe Storage do
           max_qitems_per_scan_request = 1
           allow(Storage).to receive_messages(:max_qitems_per_scan_request => max_qitems_per_scan_request)
           miq_task = FactoryBot.create(:miq_task)
-          miq_task.context_data = {:targets => [], :complete => [], :pending  => {}}
+          miq_task.context_data = {:targets => [], :complete => [], :pending => {}}
           miq_task.context_data[:targets]  = [@storage1.id, @storage2.id, @storage3.id]
           miq_task.context_data[:complete] = []
           miq_task.context_data[:pending]  = {}
@@ -294,7 +294,7 @@ RSpec.describe Storage do
           expect(miq_task.context_data[:complete]).to eq([])
           expect(miq_task.context_data[:pending].length).to eq(0)
 
-          qitem1  = FactoryBot.create(:miq_queue)
+          qitem1 = FactoryBot.create(:miq_queue)
           miq_task.context_data[:pending][@storage1.id] = qitem1.id
           miq_task.save!
           expect(Storage).to receive(:scan_queue_watchdog).with(miq_task.id).once
@@ -327,7 +327,7 @@ RSpec.describe Storage do
 
         it "#scan_complete_callback" do
           miq_task = FactoryBot.create(:miq_task)
-          miq_task.context_data = {:targets => [], :complete => [], :pending  => {}}
+          miq_task.context_data = {:targets => [], :complete => [], :pending => {}}
           miq_task.context_data[:targets]  = [@storage1.id, @storage2.id, @storage3.id]
           miq_task.context_data[:complete] = []
           miq_task.context_data[:pending][@storage1.id] = 123

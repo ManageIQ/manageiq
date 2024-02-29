@@ -212,7 +212,7 @@ class MiqReportResult < ApplicationRecord
       :run_date  => format_timezone(last_run_on, user_timezone, "gtl")
     )
 
-    html_string << report_build_html_table(report_results, html_rows.join)  # Build the html report table using all html rows
+    html_string << report_build_html_table(report_results, html_rows.join) # Build the html report table using all html rows
 
     PdfGenerator.pdf_from_string(html_string, "pdf_report.css")
   end

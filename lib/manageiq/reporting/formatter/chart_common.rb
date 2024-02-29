@@ -53,7 +53,7 @@ module ManageIQ
 
             allnil = true
             tip = graph_options[:trendtip] if col.starts_with?("trend") && graph_options[:trendtip]
-            categories = []                      # Store categories and series counts in an array of arrays
+            categories = [] # Store categories and series counts in an array of arrays
             series = series_class.new
             mri.table.data.each_with_index do |r, d_idx|
               rec_time = r["timestamp"].in_time_zone(tz)
@@ -236,7 +236,7 @@ module ManageIQ
 
           if other.present? && show_other # Sum up the other sort2 counts by sort1 value
             series = series_class.new
-            counts.each do |key1, hash1|   # Go thru each sort1 key and hash count
+            counts.each do |key1, hash1| # Go thru each sort1 key and hash count
               # Add in all of the remaining sort2 key counts
               ocount = other.reduce(0) { |a, e| a + hash1[e[0]] }
               series.push(:value   => ocount,
@@ -409,7 +409,7 @@ module ManageIQ
         def build_reporting_chart_other
           save_key   = nil
           counter    = 0
-          categories = []                      # Store categories and series counts in an array of arrays
+          categories = [] # Store categories and series counts in an array of arrays
           mri.table.data.each_with_index do |r, d_idx|
             category_changed = save_key != r[mri.sortby[0]]
             not_first_iteration = d_idx > 0

@@ -16,7 +16,7 @@ module ManageIQ
             end
           end
           mri.table.data.each do |r|
-            mri.col_formats ||= []                 # Backward compat - create empty array for formats
+            mri.col_formats ||= [] # Backward compat - create empty array for formats
             mri.col_order.each_with_index do |f, i|
               unless ["<compare>", "<drift>"].include?(mri.db)
                 data = mri.format(f,
@@ -114,7 +114,7 @@ module ManageIQ
             elsif ["<drift>"].include?(mri.db) && r[0] == "Changed:"
               line_wrapper = true       # Wrap drift changed lines with header rows
             end
-            mri.col_formats ||= []                 # Backward compat - create empty array for formats
+            mri.col_formats ||= [] # Backward compat - create empty array for formats
             mri.col_order.each_with_index do |f, i|
               next if mri.column_is_hidden?(f)
 
@@ -210,7 +210,7 @@ module ManageIQ
                 output << fit_to_width("|#{t}|" + CRLF)
 
                 # Clean up the conditions for display
-                tables = mri.conditions[:field].split("-")[0].split(".")  # Get the model and tables
+                tables = mri.conditions[:field].split("-")[0].split(".") # Get the model and tables
                 field = Dictionary.gettext(tables[0], :type => :model, :notfound => :titleize) # Start with the model
                 tables[1..-1].each do |t| # Add on any tables
                   field += "." + Dictionary.gettext(t, :type => :table, :notfound => :titleize)

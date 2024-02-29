@@ -1,7 +1,7 @@
 class MiqEnterprise < ApplicationRecord
   has_many :metrics,        :as => :resource  # Destroy will be handled by purger
   has_many :metric_rollups, :as => :resource  # Destroy will be handled by purger
-  has_many :vim_performance_states, :as => :resource  # Destroy will be handled by purger
+  has_many :vim_performance_states, :as => :resource # Destroy will be handled by purger
 
   virtual_has_many :miq_regions,             :class_name => "MiqRegion"
   virtual_has_many :ext_management_systems,  :class_name => "ExtManagementSystem"
@@ -64,7 +64,7 @@ class MiqEnterprise < ApplicationRecord
     PolicyEvent.all
   end
 
-  alias_method :all_storages,           :storages
+  alias_method :all_storages, :storages
 
   def get_reserve(field)
     ext_management_systems.inject(0) { |v, obj| v + (obj.send(field) || 0) }

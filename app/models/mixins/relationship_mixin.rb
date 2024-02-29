@@ -382,7 +382,7 @@ module RelationshipMixin
   def descendant_rels_arranged(*args)
     options = args.extract_options!
     rel = relationship(:raise_on_multiple => true)
-    return {} if rel.nil?  # TODO: Should this return nil or init_relationship or Relationship.new in a Hash?
+    return {} if rel.nil? # TODO: Should this return nil or init_relationship or Relationship.new in a Hash?
 
     Relationship.filter_by_resource_type(rel.descendants, options).arrange
   end

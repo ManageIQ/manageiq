@@ -29,7 +29,7 @@ class User < ApplicationRecord
   has_many   :sessions, :dependent => :destroy
   belongs_to :current_group, :class_name => "MiqGroup"
   has_and_belongs_to_many :miq_groups
-  scope      :superadmins, lambda {
+  scope :superadmins, lambda {
     joins(:miq_groups => {:miq_user_role => :miq_product_features})
       .where(:miq_product_features => {:identifier => MiqProductFeature::SUPER_ADMIN_FEATURE })
   }
@@ -54,7 +54,7 @@ class User < ApplicationRecord
   # with the class method of the same name (User.authenticate)
   alias_method :authenticate_bcrypt, :authenticate
 
-  serialize     :settings, Hash   # Implement settings column as a hash
+  serialize :settings, Hash # Implement settings column as a hash
 
   attribute :failed_login_attempts, :default => 0
 

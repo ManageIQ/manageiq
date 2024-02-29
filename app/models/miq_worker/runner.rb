@@ -200,7 +200,7 @@ class MiqWorker::Runner
     meth = (exit_code == 0) ? :info : :error
 
     prefix = "#{log_prefix} "      rescue ""
-    pid    = "PID [#{Process.pid}] "    rescue ""
+    pid    = "PID [#{Process.pid}] " rescue ""
     guid   = worker.nil? ? '' : "GUID [#{worker.guid}] "  rescue ""
     id     = worker.nil? ? '' : "ID [#{worker.id}] "      rescue ""
     logmsg = "#{prefix}#{id}#{pid}#{guid}#{message}"

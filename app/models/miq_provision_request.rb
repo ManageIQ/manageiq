@@ -14,7 +14,7 @@ class MiqProvisionRequest < MiqRequest
                          :in      => %w(pending provisioned finished) + ACTIVE_STATES,
                          :message => "should be pending, #{ACTIVE_STATES.join(", ")}, provisioned, or finished"
   validates :source, :presence => true
-  validate               :must_have_user
+  validate :must_have_user
 
   default_value_for(:source_id)    { |r| r.get_option(:src_vm_id) || r.get_option(:source_id) }
   attribute :source_type, :default => "VmOrTemplate"
@@ -104,7 +104,7 @@ class MiqProvisionRequest < MiqRequest
     return false if dept.empty? || env.empty?
 
     prov.options[:environment] = "prod" # Set env to prod to get service levels
-    svc  = prov.allowed(:service_level) # Get service levels
+    svc = prov.allowed(:service_level) # Get service levels
     return false if env.include?("prod") && svc.empty?  # Make sure we have at least one
 
     true

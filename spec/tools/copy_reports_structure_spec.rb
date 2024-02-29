@@ -5,8 +5,8 @@ require 'copy_reports_structure/report_structure'
 RSpec.describe ReportStructure do
   let(:group_name) { "SourceGroup" }
   let(:settings) { {"reports_menus" => [["Configuration Management", ["Virtual Machines", ["Vendor and Type"]]]]} }
-  let(:role)  { FactoryBot.create(:miq_user_role) }
-  let(:source_group) {  FactoryBot.create(:miq_group, :settings => settings) }
+  let(:role) { FactoryBot.create(:miq_user_role) }
+  let(:source_group) { FactoryBot.create(:miq_group, :settings => settings) }
   let(:destination_group) { FactoryBot.create(:miq_group, :miq_user_role => role) }
 
   before do

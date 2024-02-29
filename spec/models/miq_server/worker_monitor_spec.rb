@@ -86,7 +86,7 @@ RSpec.describe "MiqWorker Monitor" do
           @messages = []
           @actives  = []
 
-          m = FactoryBot.create(:miq_queue, :state => 'ready',   :handler => @worker, :msg_timeout => 4.minutes)
+          m = FactoryBot.create(:miq_queue, :state => 'ready', :handler => @worker, :msg_timeout => 4.minutes)
           @messages << m
           @actives << m if m.state == 'dequeue'
 

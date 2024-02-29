@@ -10,7 +10,7 @@ module Vmdb
           when "excon.request" then  [:debug, message_for_excon_request(params)]
           when "excon.response" then [:debug, message_for_excon_response(params)]
           when "excon.error" then    [:debug, message_for_excon_error(params)]
-          else                   [:debug, message_for_other(params)]
+          else [:debug, message_for_other(params)]
           end
 
         send(method, "#{name.ljust(14)}  #{message}")

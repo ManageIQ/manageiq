@@ -8,7 +8,7 @@ if ARGV.length != 1
   exit 1
 end
 
-ems_name  = ARGV[0]
+ems_name = ARGV[0]
 # server    = ARGV[0]
 # username  = ARGV[1]
 # password  = ARGV[2]

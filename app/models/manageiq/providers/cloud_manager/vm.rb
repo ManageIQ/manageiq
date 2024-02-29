@@ -24,7 +24,7 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
                                       :association_foreign_key => :authentication_id,
                                       :class_name              => "ManageIQ::Providers::CloudManager::AuthKeyPair"
 
-  has_many   :host_aggregates,        :through => :host
+  has_many :host_aggregates, :through => :host
 
   attribute :cloud, :default => true
 

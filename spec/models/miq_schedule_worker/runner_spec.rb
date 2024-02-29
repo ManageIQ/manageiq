@@ -356,7 +356,7 @@ RSpec.describe MiqScheduleWorker::Runner do
             @schedule_worker.instance_variable_set(:@active_roles, [])
           end
 
-          context "#schedules_for_all_roles"  do
+          context "#schedules_for_all_roles" do
             before do
               @schedule_worker.instance_variable_set(:@active_roles, [])
               @start_time = Time.utc(2011, 1, 31, 8, 30, 0)

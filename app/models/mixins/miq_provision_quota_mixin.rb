@@ -124,7 +124,7 @@ module MiqProvisionQuotaMixin
     vms = []
     prov_owner = get_owner
     unless prov_owner.nil?
-      cond_str, cond_args  = "evm_owner_id = ? AND template = ? AND host_id is not NULL", [prov_owner.id, false]
+      cond_str, cond_args = "evm_owner_id = ? AND template = ? AND host_id is not NULL", [prov_owner.id, false]
 
       # Default return includes retired VMs that are still on a host
       if options[:retired_vms_only] == true
@@ -340,7 +340,7 @@ module MiqProvisionQuotaMixin
     result = {:count => 0, :memory => 0, :cpu => 0, :storage => 0, :ids => [], :class_name => "MiqProvisionRequest",
               :active => {
                 :class_name => "MiqProvision", :ids => [], :storage_by_id => Hash.new { |k, v| k[v] = 0 },
-                :memory_by_host_id => Hash.new { |k, v| k[v] = 0 },  :cpu_by_host_id => Hash.new { |k, v| k[v] = 0 },
+                :memory_by_host_id => Hash.new { |k, v| k[v] = 0 }, :cpu_by_host_id => Hash.new { |k, v| k[v] = 0 },
                 :vms_by_storage_id => Hash.new { |k, v| k[v] = [] }
               }
              }

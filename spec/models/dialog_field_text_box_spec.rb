@@ -108,7 +108,7 @@ RSpec.describe DialogFieldTextBox do
   end
 
   context "dialog field text box with protected field" do
-    let(:df) { FactoryBot.build(:dialog_field_text_box, :label   => 'test field', :name    => 'test field', :options => {:protected => true}) }
+    let(:df) { FactoryBot.build(:dialog_field_text_box, :label => 'test field', :name => 'test field', :options => {:protected => true}) }
 
     it "#protected?" do
       expect(df).to be_protected

@@ -354,7 +354,7 @@ RSpec.describe MiqReport do
       host = FactoryBot.create(:host)
       vm1  = FactoryBot.create(:vm_vmware, :host => host)
       allow(vm1).to receive(:archived?).and_return(false)
-      vm2  = FactoryBot.create(:vm_vmware, :host => host)
+      vm2 = FactoryBot.create(:vm_vmware, :host => host)
       allow(vm2).to receive(:archived?).and_return(false)
       allow(Vm).to receive(:find_by).and_return(vm1)
 

@@ -12,7 +12,7 @@ RSpec.describe NewWithTypeStiMixin do
       expect(Host.new(:type => "ManageIQ::Providers::Redhat::InfraManager::Host").class).to eq(ManageIQ::Providers::Redhat::InfraManager::Host)
       expect(Host.new(:type => "ManageIQ::Providers::Vmware::InfraManager::Host").class).to eq(ManageIQ::Providers::Vmware::InfraManager::Host)
       expect(Host.new(:type => "ManageIQ::Providers::Vmware::InfraManager::HostEsx").class).to eq(ManageIQ::Providers::Vmware::InfraManager::HostEsx)
-      expect(ManageIQ::Providers::Vmware::InfraManager::Host.new(:type  => "ManageIQ::Providers::Vmware::InfraManager::HostEsx").class).to eq(ManageIQ::Providers::Vmware::InfraManager::HostEsx)
+      expect(ManageIQ::Providers::Vmware::InfraManager::Host.new(:type => "ManageIQ::Providers::Vmware::InfraManager::HostEsx").class).to eq(ManageIQ::Providers::Vmware::InfraManager::HostEsx)
 
       expect(Host.new("type" => "Host").class).to eq(Host)
       expect(Host.new("type" => "ManageIQ::Providers::Redhat::InfraManager::Host").class).to eq(ManageIQ::Providers::Redhat::InfraManager::Host)

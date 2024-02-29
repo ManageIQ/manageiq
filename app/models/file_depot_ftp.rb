@@ -70,7 +70,7 @@ class FileDepotFtp < FileDepot
     begin
       _log.info("Connecting to #{self.class.name}: #{name} host: #{host}...")
       @ftp         = Net::FTP.new(host)
-      @ftp.passive = true  # Use passive mode to avoid firewall issues see http://slacksite.com/other/ftp.html#passive
+      @ftp.passive = true # Use passive mode to avoid firewall issues see http://slacksite.com/other/ftp.html#passive
       # @ftp.debug_mode = true if settings[:debug]  # TODO: add debug option
       creds = cred_hash ? [cred_hash[:username], cred_hash[:password]] : login_credentials
       @ftp.login(*creds)

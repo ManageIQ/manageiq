@@ -29,10 +29,10 @@ module ManageIQ
           @events = []
           @events_data = []
           tlfield = mri.timeline[:field].split("-") # Split the table and field
-          if tlfield.first.include?(".")                    # If table has a period (from a sub table)
-            col = tlfield.first.split(".").last + "." + tlfield.last  # use subtable.field
+          if tlfield.first.include?(".") # If table has a period (from a sub table)
+            col = tlfield.first.split(".").last + "." + tlfield.last # use subtable.field
           else
-            col = tlfield.last                             # Not a subtable, just grab the field name
+            col = tlfield.last # Not a subtable, just grab the field name
           end
 
           # some of the OOTB reports have db as EventStream or PolicyEvent,
@@ -58,7 +58,7 @@ module ManageIQ
             end
           else
             mri.table.data.each_with_index do |row, _d_idx|
-              tl_event(row, col)   # Add this row to the tl event xml
+              tl_event(row, col) # Add this row to the tl event xml
             end
             @events.push(:data => [@events_data])
           end
@@ -72,7 +72,7 @@ module ManageIQ
           mri = options.mri
           tz = mri.get_time_zone(Time.zone.name)
           etime = row[col]
-          return if etime.nil?                              # Skip nil dates - Sprint 41
+          return if etime.nil? # Skip nil dates - Sprint 41
           return if !@start_time.nil? && etime < @start_time # Skip if before start time limit
 
           #     START of TIMELINE TIMEZONE Code
@@ -90,7 +90,7 @@ module ManageIQ
             mri.extras[:tl_position] = format_timezone(etime.to_time, tz, 'raw') if format_timezone(etime.to_time, tz, 'raw') > format_timezone(mri.extras[:tl_position], tz, 'raw')
           end
           #     END of TIMELINE TIMEZONE Code
-          if row["id"]  # Make sure id column is present
+          if row["id"] # Make sure id column is present
             rec = mri.db.constantize.find_by_id(row['id'])
           end
           unless rec.nil?
@@ -104,7 +104,7 @@ module ManageIQ
               ems_storage = false
               if rec[:ems_id] && ExtManagementSystem.exists?(rec[:ems_id])
                 ems = ExtManagementSystem.find(rec[:ems_id])
-                ems_cloud =  true if ems.kind_of?(EmsCloud)
+                ems_cloud = true if ems.kind_of?(EmsCloud)
                 ems_container = true if ems.kind_of?(::ManageIQ::Providers::ContainerManager)
                 ems_storage = true if ems.kind_of?(::ManageIQ::Providers::StorageManager)
               end

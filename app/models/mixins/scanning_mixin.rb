@@ -35,7 +35,7 @@ module ScanningMixin
       taskid = doc.root.attributes["taskid"]
       _log.info("TaskId = [#{taskid}]")
       unless taskid.blank?
-        name =  begin
+        name = begin
                   File.basename(doc.root.elements[1].elements[1].attributes["original_filename"], ".*")
                 rescue
                   "vmscan"
@@ -312,7 +312,7 @@ module ScanningMixin
 
       categories = ost.category.split(",")
       ost.scanTime = Time.now.utc
-      ost.compress = true       # Request that data returned from the blackbox is compressed
+      ost.compress = true # Request that data returned from the blackbox is compressed
       ost.xml_class = REXML::Document
       # TODO: if from_time is not a string (see sync_metadata() above), loadXmlData fails.
       # Just clear it for now, until we figure out the right thing to do.

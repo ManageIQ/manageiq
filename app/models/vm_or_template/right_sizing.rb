@@ -116,7 +116,7 @@ module VmOrTemplate::RightSizing
 
   RIGHT_SIZING_MODES.each do |mode, meth|
     define_method("#{mode}_recommended_vcpus") do
-      base_recommended(send(meth[:cpu]), cpu_total_cores, self.class.cpu_recommendation_minimum)  unless cpu_total_cores.nil?
+      base_recommended(send(meth[:cpu]), cpu_total_cores, self.class.cpu_recommendation_minimum) unless cpu_total_cores.nil?
     end
 
     define_method("#{mode}_recommended_mem") do

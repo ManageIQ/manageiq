@@ -1,6 +1,6 @@
 class Compliance < ApplicationRecord
   include Purging
-  belongs_to  :resource,  :polymorphic => true
+  belongs_to  :resource, :polymorphic => true
   has_many    :compliance_details, :dependent => :destroy
 
   def self.check_compliance_queue(targets, inputs = {})
@@ -96,7 +96,7 @@ class Compliance < ApplicationRecord
     name = target.respond_to?(:name) ? target.name : "NA"
     _log.info("Marking as #{compliant ? "" : "Non-"}Compliant Object with Class: [#{target.class}], Id: [#{target.id}], Name: [#{name}]")
 
-    comp  = create(:resource => target, :compliant => compliant, :event_type => event, :timestamp => Time.now.utc)
+    comp = create(:resource => target, :compliant => compliant, :event_type => event, :timestamp => Time.now.utc)
 
     details.each do |p|
       dhash = {

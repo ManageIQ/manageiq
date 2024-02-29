@@ -91,7 +91,7 @@ RSpec.describe Tenant do
 
     it "detects Tenant" do
       expect(tenant.display_type).to eql  'Tenant'
-      expect(project.display_type).not_to eql  'Tenant'
+      expect(project.display_type).not_to eql 'Tenant'
     end
 
     it "detects Project" do
@@ -418,7 +418,7 @@ RSpec.describe Tenant do
       # This spec is here to confirm that we don't mutate the memoized
       # ancestor_ids value when calling `Tenant#visible_domains`.
       it "does not affect the memoized ancestor_ids variable" do
-        expected_ancestor_ids = t1_1.ancestor_ids.dup  # dup required, don't remove
+        expected_ancestor_ids = t1_1.ancestor_ids.dup # dup required, don't remove
         t1_1.visible_domains
         expect(t1_1.ancestor_ids).to eq(expected_ancestor_ids)
       end
@@ -482,7 +482,7 @@ RSpec.describe Tenant do
   end
 
   describe ".set_quotas" do
-    let(:tenant)  { FactoryBot.build(:tenant, :parent => default_tenant) }
+    let(:tenant) { FactoryBot.build(:tenant, :parent => default_tenant) }
 
     it "can set quotas" do
       tenant.set_quotas(:vms_allocated => {:value => 20})
@@ -554,7 +554,7 @@ RSpec.describe Tenant do
   end
 
   describe ".get_quotas" do
-    let(:tenant)  { FactoryBot.build(:tenant, :parent => default_tenant) }
+    let(:tenant) { FactoryBot.build(:tenant, :parent => default_tenant) }
 
     it "can get quotas" do
       expect(tenant.get_quotas).not_to be_empty

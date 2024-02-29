@@ -29,7 +29,7 @@ class MiqRegion < ApplicationRecord
   include SupportsFeatureMixin
   include Metric::CiMixin
 
-  alias_method :all_storages,           :storages
+  alias_method :all_storages, :storages
 
   PERF_ROLLUP_CHILDREN = [:ext_management_systems, :storages]
 

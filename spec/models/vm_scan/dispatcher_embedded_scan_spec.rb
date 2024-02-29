@@ -65,7 +65,7 @@ RSpec.describe "VmScanDispatcherEmbeddedScanSpec" do
 
         context "and embedded scans on ems" do
           context "and scans against ems limited to 2 and up to 10 scans per miqserver" do
-            it "should dispatch only 2 scan jobs per ems"  do
+            it "should dispatch only 2 scan jobs per ems" do
               allow(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:scan_via_ems?).and_return(true)
               VmScan::Dispatcher.dispatch
               assert_at_most_x_scan_jobs_per_y_resource(2, :ems)
@@ -81,14 +81,14 @@ RSpec.describe "VmScanDispatcherEmbeddedScanSpec" do
           end
 
           context "and scans against ems limited to 4 and up to 10 scans per miqserver" do
-            it "should dispatch only 4 scan jobs per ems"  do
+            it "should dispatch only 4 scan jobs per ems" do
               VmScan::Dispatcher.dispatch
               assert_at_most_x_scan_jobs_per_y_resource(4, :ems)
             end
           end
 
           context "and scans against ems limited to 4 and up to 2 scans per miqserver" do
-            it "should dispatch up to 4 per ems and 2 per miqserver"  do
+            it "should dispatch up to 4 per ems and 2 per miqserver" do
               VmScan::Dispatcher.dispatch
               assert_at_most_x_scan_jobs_per_y_resource(4, :ems)
               assert_at_most_x_scan_jobs_per_y_resource(2, :miq_server)
@@ -102,21 +102,21 @@ RSpec.describe "VmScanDispatcherEmbeddedScanSpec" do
           end
 
           context "and scans against host limited to 2 and up to 10 scans per miqserver" do
-            it "should dispatch only 2 scan jobs per host"  do
+            it "should dispatch only 2 scan jobs per host" do
               VmScan::Dispatcher.dispatch
               assert_at_most_x_scan_jobs_per_y_resource(2, :host)
             end
           end
 
           context "and scans against host limited to 4 and up to 10 scans per miqserver" do
-            it "should dispatch only 4 scan jobs per host"  do
+            it "should dispatch only 4 scan jobs per host" do
               VmScan::Dispatcher.dispatch
               assert_at_most_x_scan_jobs_per_y_resource(4, :host)
             end
           end
 
           context "and scans against host limited to 4 and up to 2 scans per miqserver" do
-            it "should dispatch up to 4 per host and 2 per miqserver"  do
+            it "should dispatch up to 4 per host and 2 per miqserver" do
               VmScan::Dispatcher.dispatch
               assert_at_most_x_scan_jobs_per_y_resource(4, :host)
               assert_at_most_x_scan_jobs_per_y_resource(2, :miq_server)

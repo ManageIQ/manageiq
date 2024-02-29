@@ -161,9 +161,9 @@ class MiqLdap
 
   def _search(opts, seen = nil, &_blk)
     raw_opts = opts.dup
-    opts[:scope]            = scope(opts[:scope]) if opts[:scope]
+    opts[:scope] = scope(opts[:scope]) if opts[:scope]
     if opts[:filter]
-      opts[:filter]         = filter_construct(opts[:filter]) unless opts[:filter].kind_of?(Net::LDAP::Filter)
+      opts[:filter] = filter_construct(opts[:filter]) unless opts[:filter].kind_of?(Net::LDAP::Filter)
     end
     opts[:return_referrals] = @follow_referrals
     seen ||= {:objects => [], :referrals => {}}
@@ -391,7 +391,7 @@ class MiqLdap
 
     assistants           = []
     delegates            = user[:publicdelegates]
-    delegates.each { |d|  assistants << get(d) } unless delegates.nil?
+    delegates.each { |d| assistants << get(d) } unless delegates.nil?
     udata[:assistant]       = assistants.empty? ? nil : MiqLdap.get_attr(assistants.first, :displayname)
     udata[:assistant_phone] = assistants.empty? ? nil : MiqLdap.get_attr(assistants.first, :telephonenumber)
     udata[:assistant_mail]  = assistants.empty? ? nil : MiqLdap.get_attr(assistants.first, :mail)

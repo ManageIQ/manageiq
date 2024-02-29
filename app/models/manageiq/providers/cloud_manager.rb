@@ -33,7 +33,7 @@ module ManageIQ::Providers
 
     virtual_has_many :volume_availability_zones, :class_name => "AvailabilityZone", :uses => :availability_zones
 
-    supports     :authentication_status
+    supports :authentication_status
 
     validates_presence_of :zone
 

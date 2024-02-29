@@ -3,7 +3,7 @@ class VmReconfigureRequest < MiqRequest
   SOURCE_CLASS_NAME = 'Vm'
   ACTIVE_STATES     = %w( reconfigured ) + base_class::ACTIVE_STATES
 
-  validates_inclusion_of :request_state,  :in => %w( pending finished ) + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"
+  validates_inclusion_of :request_state, :in => %w( pending finished ) + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"
   validate               :must_have_user
   include MiqProvisionQuotaMixin
 
@@ -31,7 +31,7 @@ class VmReconfigureRequest < MiqRequest
     end
 
     result[:max__number_of_sockets] = all_vcpus.min
-    result[:max__vm_memory]      = all_memory.min
+    result[:max__vm_memory] = all_memory.min
     result[:max__cores_per_socket] = all_cores_per_socket.min
     result[:max__total_vcpus] = all_total_vcpus.min
 
@@ -73,7 +73,7 @@ class VmReconfigureRequest < MiqRequest
     # Check if the total number of cpu value is within the allowed limits
     unless cpus.blank? || cores.blank?
       total_vcpus = (cores * cpus)
-      errors << "The total number of cpus must be less than #{limits[:max__total_vcpus]}.  Current value: #{total_vcpus}"    if total_vcpus > limits[:max__total_vcpus]
+      errors << "The total number of cpus must be less than #{limits[:max__total_vcpus]}.  Current value: #{total_vcpus}" if total_vcpus > limits[:max__total_vcpus]
     end
 
     return false if errors.blank?

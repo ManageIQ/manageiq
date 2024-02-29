@@ -383,7 +383,7 @@ class GitWorktree
 
   def create_repo
     @repo = @bare ? Rugged::Repository.init_at(@path, :bare) : Rugged::Repository.init_at(@path)
-    @repo.config['user.name']  = @username  if @username
+    @repo.config['user.name']  = @username if @username
     @repo.config['user.email'] = @email if @email
     @repo.config['merge.ff']   = 'only' if @fast_forward_merge
   end

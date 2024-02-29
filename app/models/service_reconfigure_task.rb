@@ -40,7 +40,7 @@ class ServiceReconfigureTask < MiqRequestTask
         :zone           => zone,
         :tracking_label => tracking_label_id
       )
-      update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
+      update_and_notify_parent(:state => "pending", :status => "Ok", :message => "Automation Starting")
     else
       update_and_notify_parent(:state   => "finished",
                                :status  => "Ok",

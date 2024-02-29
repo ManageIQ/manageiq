@@ -622,7 +622,7 @@ RSpec.describe EmsEvent do
   end
 
   context 'Physical Storage Events' do
-    let(:ems)   { FactoryBot.create(:ems_storage) }
+    let(:ems) { FactoryBot.create(:ems_storage) }
     let(:physical_storage) { FactoryBot.create(:physical_storage, :name => "my-storage", :ems_ref => "ems1", :ext_management_system => ems) }
     let(:event_hash) {
       {

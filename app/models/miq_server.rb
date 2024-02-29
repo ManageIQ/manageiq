@@ -18,7 +18,7 @@ class MiqServer < ApplicationRecord
 
   belongs_to              :vm, :inverse_of => :miq_server
   belongs_to              :zone
-  has_many                :messages,  :as => :handler, :class_name => 'MiqQueue'
+  has_many                :messages, :as => :handler, :class_name => 'MiqQueue'
   has_many                :miq_events, :as => :target
   has_many                :miq_workers, :dependent => :destroy
 

@@ -145,7 +145,7 @@ RSpec.describe CustomButton do
 
     expect(described_class.buttons_for(Host)).to eq([])
     expect(described_class.buttons_for(Vm)).to eq([button1all])
-    expect(described_class.buttons_for(vm)).to  match_array([button1vm, button2vm])
+    expect(described_class.buttons_for(vm)).to match_array([button1vm, button2vm])
     expect(described_class.buttons_for(vm_other)).to eq([])
   end
 

@@ -94,7 +94,7 @@ RSpec.describe ProcessTasksMixin do
     end
 
     context "when the server has an ip address" do
-      let(:api_connection)    { double("ManageIQ::API::Client connection") }
+      let(:api_connection) { double("ManageIQ::API::Client connection") }
 
       before do
         server.ipaddress = "192.0.2.1"

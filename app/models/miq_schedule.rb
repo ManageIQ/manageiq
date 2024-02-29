@@ -299,7 +299,7 @@ class MiqSchedule < ApplicationRecord
     end
   end
 
-  def verify_file_depot(params)  # TODO: This logic belongs in the UI, not sure where
+  def verify_file_depot(params) # TODO: This logic belongs in the UI, not sure where
     depot_class                = FileDepot.supported_protocols[params[:uri_prefix]]
     depot                      = file_depot.class.name == depot_class ? file_depot : build_file_depot(:type => depot_class)
     depot.name                 = params[:name]

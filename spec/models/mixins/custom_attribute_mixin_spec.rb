@@ -74,7 +74,7 @@ RSpec.describe CustomAttributeMixin do
 
       expect(object.miq_custom_keys).to eq([])
 
-      key  = "foo"
+      key = "foo"
       FactoryBot.create(:miq_custom_attribute,
                         :resource_type => object.class.base_class.name,
                         :resource_id   => object.id,

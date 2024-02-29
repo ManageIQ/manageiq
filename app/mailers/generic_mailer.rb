@@ -20,7 +20,7 @@ class GenericMailer < ActionMailer::Base
       rcpts.each do |rcpt|
         rcpt.split(',').each do |to|
           options[:to] = to
-          individual =  send(method, options)
+          individual = send(method, options)
           begin
             individual.deliver_now
           rescue Net::SMTPError
@@ -173,7 +173,7 @@ class GenericMailer < ActionMailer::Base
   OPTIONAL_SMTP_KEYS = [:enable_starttls_auto, :openssl_verify_mode]
   def set_mailer_smtp(evm_settings = nil)
     evm_settings ||= ::Settings.smtp
-    am_settings =  {}
+    am_settings = {}
 
     DESTINATION_SMTP_KEYS.each { |key| am_settings[key] = evm_settings[key] }
     am_settings[:address] ||= evm_settings[:host] # vmdb.yml has key :host, ActionMailer expects :address
@@ -182,7 +182,7 @@ class GenericMailer < ActionMailer::Base
     case evm_settings[:authentication].to_s.to_sym
     when :none then           AUTHENTICATION_SMTP_KEYS.each { |key| am_settings[key] = nil }
     when :plain, :login then  AUTHENTICATION_SMTP_KEYS.each { |key| am_settings[key] = evm_settings[key] }
-    else                  raise ArgumentError, "authentication value #{evm_settings[:authentication].inspect} must be one of: 'none', 'plain', 'login'"
+    else raise ArgumentError, "authentication value #{evm_settings[:authentication].inspect} must be one of: 'none', 'plain', 'login'"
     end
 
     OPTIONAL_SMTP_KEYS.each { |key| am_settings[key] = evm_settings[key] if evm_settings.key?(key) }

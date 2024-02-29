@@ -152,7 +152,7 @@ RSpec.describe Rbac::Filterer do
       # MiqRequest for owner group
       let!(:miq_request_user_owner) { FactoryBot.create(:miq_provision_request, :tenant => owner_tenant, :requester => owner_user) }
       # User for owner group
-      let(:user_a)                        { FactoryBot.create(:user, :miq_groups => [owner_group]) }
+      let(:user_a) { FactoryBot.create(:user, :miq_groups => [owner_group]) }
 
       # MiqRequests for other group
       let!(:miq_request_user_a)     { FactoryBot.create(:miq_provision_request, :tenant => owner_tenant, :requester => other_user) }

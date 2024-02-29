@@ -38,7 +38,7 @@ class MiqAlert < ApplicationRecord
 
   ASSIGNMENT_PARENT_ASSOCIATIONS = %i(host ems_cluster ext_management_system my_enterprise physical_server).freeze
 
-  HOURLY_TIMER_EVENT   = "_hourly_timer_"
+  HOURLY_TIMER_EVENT = "_hourly_timer_"
 
   cache_with_timeout(:alert_assignments) { Hash.new }
 
@@ -123,7 +123,7 @@ class MiqAlert < ApplicationRecord
     log_target = "Target: #{target.class.name} Name: [#{target.name}], Id: [#{target.id}]"
 
     # event can be nil, so the compact removes event if it is nil
-    key  = [target.class.base_model.name, target.id, event].compact.join("_")
+    key = [target.class.base_model.name, target.id, event].compact.join("_")
 
     alert_assignments[key] ||= begin
       profiles  = MiqAlertSet.assigned_to_target(target)
@@ -299,7 +299,7 @@ class MiqAlert < ApplicationRecord
   end
 
   def invoke_automate(target, inputs)
-    event  = options.fetch_path(:notifications, :automate, :event_name)
+    event = options.fetch_path(:notifications, :automate, :event_name)
     event_obj = CustomEvent.create(
       :event_type => event,
       :target     => target,
@@ -506,7 +506,7 @@ class MiqAlert < ApplicationRecord
   # TODO: vmware specific
   def self.ems_alarms(db, ems = nil)
     ems = ExtManagementSystem.extract_objects(ems)
-    raise "Unable to find Management System with id: [#{id}]"  if ems.nil?
+    raise "Unable to find Management System with id: [#{id}]" if ems.nil?
 
     to     = 30
     alarms = []

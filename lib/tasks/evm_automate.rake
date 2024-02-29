@@ -49,7 +49,7 @@ namespace :evm do
       raise 'Must specify a backup zip file' if ENV['BACKUP_ZIP_FILE'].blank?
 
       puts "Datastore backup starting"
-      zip_file       = ENV['BACKUP_ZIP_FILE']
+      zip_file = ENV['BACKUP_ZIP_FILE']
       begin
         MiqAeDatastore.backup('zip_file'  => zip_file,
                               'overwrite' => (ENV['OVERWRITE'].to_s.downcase == 'true'))
@@ -101,7 +101,7 @@ namespace :evm do
     desc 'Export automate model information to a folder or zip file. ENV options DOMAIN,NAMESPACE,CLASS,EXPORT_DIR|ZIP_FILE|YAML_FILE'
     task :export => :environment do
       begin
-        domain         = ENV['DOMAIN']
+        domain = ENV['DOMAIN']
         raise "Must specify domain for export:" if domain.nil?
 
         zip_file       = ENV['ZIP_FILE']
@@ -148,13 +148,13 @@ namespace :evm do
                           'import_as' => import_as}
         if ENV['ZIP_FILE'].present?
           puts "Importing automate domain: #{ENV['DOMAIN']} from file #{ENV['ZIP_FILE']}"
-          import_options['zip_file']   = ENV['ZIP_FILE']
+          import_options['zip_file'] = ENV['ZIP_FILE']
         elsif ENV['IMPORT_DIR'].present?
           puts "Importing automate domain: #{ENV['DOMAIN']} from directory #{ENV['IMPORT_DIR']}"
           import_options['import_dir'] = ENV['IMPORT_DIR']
         elsif ENV['YAML_FILE'].present?
           puts "Importing automate domain: #{ENV['DOMAIN']} from file #{ENV['YAML_FILE']}"
-          import_options['yaml_file']   = ENV['YAML_FILE']
+          import_options['yaml_file'] = ENV['YAML_FILE']
         elsif ENV['GIT_URL'].present?
           puts "Importing automate domain from url #{ENV['GIT_URL']}"
           ENV['DOMAIN'] = nil
@@ -183,7 +183,7 @@ namespace :evm do
 
     desc 'Extract automate methods'
     task :extract_methods => :environment do
-      method_folder  = ENV["FOLDER"] ||= './automate_methods'
+      method_folder = ENV["FOLDER"] ||= './automate_methods'
       puts "Extracting automate methods from database to folder: #{method_folder} ..."
       EvmAutomate.extract_methods(method_folder)
       puts "The automate methods have been extracted."
@@ -230,14 +230,14 @@ namespace :evm do
     desc 'Convert the legacy automation model to new format  ENV options FILE,DOMAIN,EXPORT_DIR|ZIP_FILE|YAML_FILE'
     task :convert => :environment do
       puts "Convert automation model from the legacy xml file"
-      domain_name    = ENV["DOMAIN"]
+      domain_name = ENV["DOMAIN"]
       raise "Must specify the DOMAIN name to convert as" if domain_name.nil?
 
       export_options = {}
       zip_file    = ENV['ZIP_FILE']
       export_dir  = ENV['EXPORT_DIR']
       yaml_file   = ENV['YAML_FILE']
-      overwrite   =  (ENV['OVERWRITE'] ||= 'false').downcase.==('true')
+      overwrite   = (ENV['OVERWRITE'] ||= 'false').downcase.==('true')
 
       export_options['zip_file'] = zip_file if zip_file
       export_options['export_dir'] = export_dir if export_dir

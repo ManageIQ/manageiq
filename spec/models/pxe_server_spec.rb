@@ -330,7 +330,7 @@ boot
     end
 
     it "#pxe_images" do
-      expect(@pxe_server.pxe_images).to  match_array([@advertised_image, @discovered_image])
+      expect(@pxe_server.pxe_images).to match_array([@advertised_image, @discovered_image])
     end
 
     it "#advertised_pxe_images" do

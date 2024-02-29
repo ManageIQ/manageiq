@@ -103,7 +103,7 @@ class VmOrTemplate < ApplicationRecord
 
   has_many                  :filesystems, :as => :resource, :dependent => :destroy
   has_many                  :directories, -> { where("rsc_type = 'dir'") }, :as => :resource, :class_name => "Filesystem"
-  has_many                  :files, -> { where("rsc_type = 'file'") },       :as => :resource, :class_name => "Filesystem"
+  has_many                  :files, -> { where("rsc_type = 'file'") }, :as => :resource, :class_name => "Filesystem"
 
   has_many                  :scan_histories,    :dependent => :destroy
   has_many                  :lifecycle_events,  :class_name => "LifecycleEvent"
@@ -114,7 +114,7 @@ class VmOrTemplate < ApplicationRecord
 
   has_many                  :metrics,        :as => :resource  # Destroy will be handled by purger
   has_many                  :metric_rollups, :as => :resource  # Destroy will be handled by purger
-  has_many                  :vim_performance_states, :as => :resource  # Destroy will be handled by purger
+  has_many                  :vim_performance_states, :as => :resource # Destroy will be handled by purger
 
   has_many                  :storage_files, :dependent => :destroy
   has_many                  :storage_files_files, -> { where("rsc_type = 'file'") }, :class_name => "StorageFile"
@@ -174,7 +174,7 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :has_rdm_disk,                         :type => :boolean,    :uses => {:hardware => :disks}
   virtual_column :disks_aligned,                        :type => :string,     :uses => {:hardware => {:hard_disks => :partitions_aligned}}
 
-  virtual_has_many   :processes,              :class_name => "OsProcess",    :uses => {:operating_system => :processes}
+  virtual_has_many   :processes, :class_name => "OsProcess", :uses => {:operating_system => :processes}
   virtual_has_many   :event_logs,                                            :uses => {:operating_system => :event_logs}
   virtual_has_many   :lans,                                                  :uses => {:hardware => {:nics => :lan}}
   virtual_has_many   :child_resources,        :class_name => "VmOrTemplate"
@@ -232,7 +232,7 @@ class VmOrTemplate < ApplicationRecord
     where(arel_table[:template].eq(true).and(arel_table[:ems_id].eq(nil)).or(arel_table[:host_id].eq(nil)))
   end)
 
-  alias_method :datastores, :storages    # Used by web-services to return datastores as the property name
+  alias_method :datastores, :storages # Used by web-services to return datastores as the property name
 
   alias_method :parent_cluster, :ems_cluster
   alias_method :owning_cluster, :ems_cluster
@@ -279,7 +279,7 @@ class VmOrTemplate < ApplicationRecord
     ]
 
     disk_methods.each do |k, t|
-      m  = "disk_#{i}_#{k}".to_sym
+      m = "disk_#{i}_#{k}".to_sym
 
       define_method(m) do
         return nil if hardware.nil?
@@ -336,7 +336,7 @@ class VmOrTemplate < ApplicationRecord
   def is_evm_appliance?
     !!miq_server
   end
-  alias_method :is_evm_appliance,  :is_evm_appliance?
+  alias_method :is_evm_appliance, :is_evm_appliance?
 
   # Determines if the VM is on an EMS or Host
   def registered?
@@ -443,14 +443,14 @@ class VmOrTemplate < ApplicationRecord
       return false
     end
     spid = ::Settings.repository_scanning.defaultsmartproxy
-    if spid.nil?                          # No repo scanning SmartProxy configured
+    if spid.nil? # No repo scanning SmartProxy configured
       task.error("#{vm.name}: No Default Repository SmartProxy is configured, contact your EVM administrator")
       return false
     elsif MiqProxy.exists?(spid) == false
       task.error("#{vm.name}: The Default Repository SmartProxy no longer exists, contact your EVM Administrator")
       return false
     end
-    if MiqProxy.find(spid).state != "on"                     # Repo scanning host iagent s not running
+    if MiqProxy.find(spid).state != "on" # Repo scanning host iagent s not running
       task.error("#{vm.name}: The Default Repository SmartProxy, '#{sp.name}', is not running. "\
                  "'#{options[:task]}' not attempted")
       return false
@@ -1188,7 +1188,7 @@ class VmOrTemplate < ApplicationRecord
       self.previous_state   = raw_power_state
       self.state_changed_on = Time.now.utc
       super
-      self.power_state      = calculate_power_state
+      self.power_state = calculate_power_state
     end
     new_state
   end

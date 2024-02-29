@@ -30,13 +30,13 @@ RSpec.describe AuditEvent do
     bad = ["bad", "worse"]
 
     ok.each do |sev|
-      event = AuditEvent.new(:event => "test_valid_severity", :message => "test_valid_severity - message",   :status => "success")
+      event = AuditEvent.new(:event => "test_valid_severity", :message => "test_valid_severity - message", :status => "success")
       event.severity = sev
       expect(event).to be_valid
     end
 
     bad.each do |sev|
-      event = AuditEvent.new(:event => "test_invalid_severity", :message => "test_invalid_severity - message",   :status => "success")
+      event = AuditEvent.new(:event => "test_invalid_severity", :message => "test_invalid_severity - message", :status => "success")
       event.severity = sev
       expect(event).not_to be_valid
     end

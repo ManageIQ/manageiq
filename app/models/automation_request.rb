@@ -23,7 +23,7 @@ class AutomationRequest < MiqRequest
     uri_options = MiqRequestWorkflow.parse_ws_string(uri_parts)
     [:namespace, :class, :instance, :message].each { |key| options[key] = uri_options.delete(key) if uri_options.key?(key) }
     uri_options.keys.each { |key| _log.warn("invalid keyword <#{key}> specified in uri_parts") }
-    options[:namespace]     = (options.delete(:namespace) || DEFAULT_NAMESPACE).strip.gsub(/(^\/|\/$)/, "")  # Strip blanks and slashes from beginning and end of string
+    options[:namespace]     = (options.delete(:namespace) || DEFAULT_NAMESPACE).strip.gsub(/(^\/|\/$)/, "") # Strip blanks and slashes from beginning and end of string
     options[:class_name]    = (options.delete(:class) || DEFAULT_CLASS).strip.gsub(/(^\/|\/$)/, "")
     options[:instance_name] = (options.delete(:instance) || DEFAULT_INSTANCE).strip
     options.merge!(parse_schedule_options(parameters.select { |key, _v| key.to_s.include?('schedule') }))

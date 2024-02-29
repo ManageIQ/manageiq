@@ -27,7 +27,7 @@ class VimPerformanceTag < MetricRollup
       end
 
       tvrecs.each do |tv|
-        if  rec.inside_time_profile == false
+        if rec.inside_time_profile == false
           tv.value = tv.assoc_ids = nil
           _log.debug("Timestamp: [#{rec.timestamp}] is outside of time profile")
         else

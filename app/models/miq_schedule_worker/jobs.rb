@@ -22,7 +22,7 @@ class MiqScheduleWorker::Jobs
   end
 
   def job_check_jobs_for_timeout
-    queue_work_on_each_zone(:class_name  => "Job", :method_name => "check_jobs_for_timeout")
+    queue_work_on_each_zone(:class_name => "Job", :method_name => "check_jobs_for_timeout")
   end
 
   def retirement_check
@@ -39,7 +39,7 @@ class MiqScheduleWorker::Jobs
   end
 
   def session_check_session_timeout
-    queue_work(:class_name  => "Session", :method_name => "check_session_timeout", :server_guid => MiqServer.my_guid)
+    queue_work(:class_name => "Session", :method_name => "check_session_timeout", :server_guid => MiqServer.my_guid)
   end
 
   def job_check_for_evm_snapshots(job_not_found_delay)
@@ -78,7 +78,7 @@ class MiqScheduleWorker::Jobs
   end
 
   def storage_scan_timer
-    queue_work(:class_name  => "Storage", :method_name => "scan_timer")
+    queue_work(:class_name => "Storage", :method_name => "scan_timer")
   end
 
   def metric_capture_perf_capture_timer

@@ -78,7 +78,7 @@ module MiqExpression::SubstMixin
 
   # Find an expression atom based on the token
   def exp_find_by_token(exp, token, parent_is_not = false)
-    if exp.kind_of?(Array)                             # Is this and AND or OR
+    if exp.kind_of?(Array) # Is this and AND or OR
       result = nil
       exp.find do |e|
         result = exp_find_by_token(e, token) # Look for token

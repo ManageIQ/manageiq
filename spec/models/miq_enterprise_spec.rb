@@ -33,7 +33,7 @@ RSpec.describe MiqEnterprise do
 
   context "with some existing records" do
     before do
-      @ems  = FactoryBot.create(:ems_vmware)
+      @ems = FactoryBot.create(:ems_vmware)
     end
 
     it "#vms_and_templates" do
@@ -47,7 +47,7 @@ RSpec.describe MiqEnterprise do
     end
 
     it "#vms" do
-      vm   = [FactoryBot.create(:vm_vmware, :ext_management_system => @ems),
+      vm = [FactoryBot.create(:vm_vmware, :ext_management_system => @ems),
               FactoryBot.create(:vm_vmware, :ext_management_system => @ems)]
 
       FactoryBot.create(:vm_vmware)

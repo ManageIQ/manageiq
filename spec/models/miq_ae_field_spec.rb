@@ -141,7 +141,7 @@ RSpec.describe MiqAeField do
     end
 
     it "should set the updated_by field on save" do
-      f1 =  @c1.ae_fields.create(:name => "field")
+      f1 = @c1.ae_fields.create(:name => "field")
       expect(f1.updated_by).to eq('system')
     end
 

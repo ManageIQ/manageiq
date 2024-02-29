@@ -7,9 +7,9 @@ class MiqAeClass < ApplicationRecord
   belongs_to :domain, :class_name => "MiqAeDomain", :inverse_of => false
   has_many   :ae_fields,    -> { order(:priority) }, :class_name => "MiqAeField",     :foreign_key => :class_id,
                             :dependent => :destroy, :autosave => true, :inverse_of => :ae_class
-  has_many   :ae_instances, -> { preload(:ae_values) }, :class_name => "MiqAeInstance",  :foreign_key => :class_id,
+  has_many   :ae_instances, -> { preload(:ae_values) }, :class_name => "MiqAeInstance", :foreign_key => :class_id,
                             :dependent => :destroy, :inverse_of => :ae_class
-  has_many   :ae_methods,   :class_name => "MiqAeMethod",    :foreign_key => :class_id,
+  has_many   :ae_methods,   :class_name => "MiqAeMethod", :foreign_key => :class_id,
                             :dependent => :destroy, :inverse_of => :ae_class
 
   validates :namespace_id, :domain_id, :presence => true
@@ -81,7 +81,7 @@ class MiqAeClass < ApplicationRecord
       next if %w(name namespace).include?(cname)
 
       # Process the column
-      xml_attrs[cname.to_sym]  = send(cname)   unless send(cname).blank?
+      xml_attrs[cname.to_sym] = send(cname) unless send(cname).blank?
     end
 
     xml.MiqAeClass(xml_attrs) do

@@ -19,7 +19,7 @@ class ConfiguredSystem < ApplicationRecord
   has_and_belongs_to_many :configuration_tags
 
   alias ext_management_system manager
-  alias_attribute :name,    :hostname
+  alias_attribute :name, :hostname
   alias_method    :configuration_manager, :manager
 
   delegate :name, :to => :configuration_profile,         :prefix => true, :allow_nil => true
@@ -57,7 +57,7 @@ class ConfiguredSystem < ApplicationRecord
   scope :with_inventory_root_group,     ->(group_id)   { where(:inventory_root_group_id => group_id) }
   scope :with_manager,                  ->(manager_id) { where(:manager_id => manager_id) }
   scope :with_configuration_profile_id, ->(profile_id) { where(:configuration_profile_id => profile_id) }
-  scope :without_configuration_profile_id,          -> { where(:configuration_profile_id => nil) }
+  scope :without_configuration_profile_id, -> { where(:configuration_profile_id => nil) }
   scope :under_configuration_managers, -> { where(:manager => ManageIQ::Providers::ConfigurationManager.all) }
 
   def configuration_architecture

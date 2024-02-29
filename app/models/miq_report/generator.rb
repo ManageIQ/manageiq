@@ -662,7 +662,7 @@ module MiqReport::Generator
       h
     end
 
-    group_key =  rpt_options[:pivot][:group_cols]
+    group_key = rpt_options[:pivot][:group_cols]
     data = generate_subtotals(data, group_key, options)
     data.inject([]) do |a, (k, v)|
       next(a) if k == :_total_
@@ -859,7 +859,7 @@ module MiqReport::Generator
       end
     end
 
-    res_last_run_on  = Time.now.utc
+    res_last_run_on = Time.now.utc
 
     # If a scheduler :at time was provided, convert that to a Time object, otherwise use the current time
     if res_opts[:at]

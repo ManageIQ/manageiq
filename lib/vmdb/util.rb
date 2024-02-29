@@ -48,7 +48,7 @@ module VMDB
     def self.log_timestamp(str)
       return nil unless str
 
-      t  = Time.parse(str)
+      t = Time.parse(str)
       Time.utc(t.year, t.month, t.day, t.hour, t.min, t.sec, 0)
     end
 

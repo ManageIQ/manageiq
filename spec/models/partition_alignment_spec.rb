@@ -4,7 +4,7 @@ RSpec.describe "PartitionAlignment" do
       aligned = 64.kilobytes
       not_aligned = 1
 
-      @vm1 = FactoryBot.create(:vm_vmware, :name => "VM 1 Aligned",     :hardware => FactoryBot.create(:hardware))
+      @vm1 = FactoryBot.create(:vm_vmware, :name => "VM 1 Aligned", :hardware => FactoryBot.create(:hardware))
       FactoryBot.create(:disk,
                         :device_type => "floppy",
                         :hardware_id => @vm1.hardware.id,

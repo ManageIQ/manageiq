@@ -180,7 +180,7 @@ class Hardware < ApplicationRecord
 
       da = {"device_type" => xmlNode.attributes["type"].to_s.downcase, "controller_type" => xmlNode.attributes["type"]}
       # Loop over the device mapping table and add attributes
-      @@dh.each_pair { |k, v|  da.merge!(v => e.attributes[k]) if e.attributes[k] }
+      @@dh.each_pair { |k, v| da.merge!(v => e.attributes[k]) if e.attributes[k] }
 
       if da["device_name"] == 'disk'
         target = disks

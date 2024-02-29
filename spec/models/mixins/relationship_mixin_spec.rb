@@ -1076,17 +1076,17 @@ RSpec.describe RelationshipMixin do
     parent.with_relationship_type(rel_type) do
       expect(parent.relationships.length).to eq(p_rels_count)
       expect(parent.parents.length).to eq(p_parents.length)
-      expect(parent.parents).to              match_array(p_parents)
+      expect(parent.parents).to match_array(p_parents)
       expect(parent.children.length).to eq(p_children.length)
-      expect(parent.children).to             match_array(p_children)
+      expect(parent.children).to match_array(p_children)
     end
 
     child.with_relationship_type(rel_type) do
       expect(child.relationships.length).to eq(c_rels_count)
       expect(child.parents.length).to eq(c_parents.length)
-      expect(child.parents).to              match_array(c_parents)
+      expect(child.parents).to match_array(c_parents)
       expect(child.children.length).to eq(c_children.length)
-      expect(child.children).to             match_array(c_children)
+      expect(child.children).to match_array(c_children)
     end
   end
 end

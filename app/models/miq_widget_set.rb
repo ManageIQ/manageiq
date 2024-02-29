@@ -29,7 +29,7 @@ class MiqWidgetSet < ApplicationRecord
     order(Arel.sql(order))
   }
 
-  WIDGET_DIR =  File.expand_path(File.join(Rails.root, "product/dashboard/dashboards"))
+  WIDGET_DIR = File.expand_path(File.join(Rails.root, "product/dashboard/dashboards"))
 
   def self.default_dashboard
     find_by(:name => 'default', :read_only => true)

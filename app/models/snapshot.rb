@@ -7,7 +7,7 @@ class Snapshot < ApplicationRecord
 
   serialize :disks, Array
 
-  after_create  :after_create_callback
+  after_create :after_create_callback
 
   EVM_SNAPSHOT_NAME = "EvmSnapshot".freeze
 

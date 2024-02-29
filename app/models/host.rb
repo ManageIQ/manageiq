@@ -56,7 +56,7 @@ class Host < ApplicationRecord
 
   has_many                  :metrics,        :as => :resource  # Destroy will be handled by purger
   has_many                  :metric_rollups, :as => :resource  # Destroy will be handled by purger
-  has_many                  :vim_performance_states, :as => :resource  # Destroy will be handled by purger
+  has_many                  :vim_performance_states, :as => :resource # Destroy will be handled by purger
 
   has_many                  :ems_events,
                             ->(host) { where("host_id = ? OR dest_host_id = ?", host.id, host.id).order(:timestamp) },
@@ -145,7 +145,7 @@ class Host < ApplicationRecord
 
   virtual_has_many   :resource_pools,                               :uses => :all_relationships
   virtual_has_many   :miq_scsi_luns,                                :uses => {:hardware => {:storage_adapters => {:miq_scsi_targets => :miq_scsi_luns}}}
-  virtual_has_many   :processes,       :class_name => "OsProcess",  :uses => {:operating_system => :processes}
+  virtual_has_many   :processes, :class_name => "OsProcess", :uses => {:operating_system => :processes}
   virtual_has_many   :event_logs,                                   :uses => {:operating_system => :event_logs}
   virtual_has_many   :firewall_rules,                               :uses => {:operating_system => :firewall_rules}
 
@@ -156,7 +156,7 @@ class Host < ApplicationRecord
   scope :active,   -> { where.not(:ems_id => nil) }
   scope :archived, -> { where(:ems_id => nil) }
 
-  alias_method :datastores, :storages    # Used by web-services to return datastores as the property name
+  alias_method :datastores, :storages # Used by web-services to return datastores as the property name
 
   alias_method :parent_cluster, :ems_cluster
   alias_method :owning_cluster, :ems_cluster
@@ -1011,7 +1011,7 @@ class Host < ApplicationRecord
       unless is_vmware_esxi?
         if hostname.blank?
           _log.warn("No hostname defined for #{log_target}")
-          task.update_status("Finished", "Warn", "Scanning incomplete due to missing hostname")  if task
+          task.update_status("Finished", "Warn", "Scanning incomplete due to missing hostname") if task
           return
         end
 
@@ -1019,7 +1019,7 @@ class Host < ApplicationRecord
 
         if missing_credentials?
           _log.warn("No credentials defined for #{log_target}")
-          task.update_status("Finished", "Warn", "Scanning incomplete due to Credential Issue")  if task
+          task.update_status("Finished", "Warn", "Scanning incomplete due to Credential Issue") if task
           return
         end
 

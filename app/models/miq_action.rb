@@ -27,7 +27,7 @@ class MiqAction < ApplicationRecord
 
   validates :action_type,        :presence => true
   validates :name, :description, :presence => true, :uniqueness_when_changed => true
-  validates_format_of       :name, :with => /\A[a-z0-9_\-]+\z/i,
+  validates_format_of :name, :with => /\A[a-z0-9_\-]+\z/i,
     :allow_nil => true, :message => "must only contain alpha-numeric, underscore and hyphen chatacters without spaces"
 
   acts_as_miq_taggable
@@ -110,7 +110,7 @@ class MiqAction < ApplicationRecord
       succeeded.each do |p|
         actions = case p
                   when MiqPolicy then p.actions_for_event(inputs[:event], :success).uniq
-                  else            p.actions_for_event
+                  else p.actions_for_event
                   end
 
         actions.each do |a|
@@ -239,7 +239,7 @@ class MiqAction < ApplicationRecord
     snmp_inputs = {}
     snmp_inputs[:host] = action.options[:host]
     trap_id_key = (snmp_version == 1) ? :specific_trap : :trap_oid
-    snmp_inputs[trap_id_key]  = action.options[:trap_id]
+    snmp_inputs[trap_id_key] = action.options[:trap_id]
 
     vars = []
     action.options[:variables].each do |h|
@@ -648,7 +648,7 @@ class MiqAction < ApplicationRecord
     end
     log_prefix += " VM: [#{rec.name}] Id: [#{rec.id}]"
 
-    snap   = nil
+    snap = nil
     rec.snapshots.order("create_time DESC").each do |s|
       next if s.is_a_type?(:evm_snapshot)
 
@@ -872,7 +872,7 @@ class MiqAction < ApplicationRecord
   end
 
   def action_assign_scan_profile(action, _rec, _inputs)
-    ScanItem  # Cause the ScanItemSet class to load, if not already loaded
+    ScanItem # Cause the ScanItemSet class to load, if not already loaded
     profile = ScanItemSet.find_by(:name => action.options[:scan_item_set_name])
     if profile
       MiqPolicy.logger.info("MIQ(action_assign_scan_profile): Action [#{action.description}], using analysis profile: [#{profile.description}]")

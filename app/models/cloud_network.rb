@@ -24,7 +24,7 @@ class CloudNetwork < ApplicationRecord
 
   # TODO(lsmola) figure out what this means, like security groups used by VMs in the network? It's not being
   # refreshed, so we can probably delete this association
-  has_many   :security_groups
+  has_many :security_groups
   has_many :firewall_rules, :as => :resource, :dependent => :destroy
 
   # Use for virtual columns, mainly for modeling array and hash types, we get from the API

@@ -40,7 +40,7 @@ FactoryBot.define do
   end
 
   # Type specific subclasses
-  factory(:host_vmware,     :parent => :host,        :class => "ManageIQ::Providers::Vmware::InfraManager::Host") do
+  factory(:host_vmware, :parent => :host, :class => "ManageIQ::Providers::Vmware::InfraManager::Host") do
     ems_ref_type { "HostSystem" }
   end
   factory(:host_vmware_esx, :parent => :host_vmware, :class => "ManageIQ::Providers::Vmware::InfraManager::HostEsx") do

@@ -51,10 +51,10 @@ class MiqWidget < ApplicationRecord
     end
   end
 
-  virtual_column :status,         :type => :string,    :uses => :miq_task
+  virtual_column :status, :type => :string, :uses => :miq_task
   virtual_delegate :status_message, :to => "miq_task.message", :allow_nil => true, :default => "Unknown", :type => :string
   virtual_delegate :queued_at, :to => "miq_task.created_on", :allow_nil => true, :type => :datetime
-  virtual_column :last_run_on,    :type => :datetime,  :uses => :miq_schedule
+  virtual_column :last_run_on,    :type => :datetime, :uses => :miq_schedule
 
   def row_count(row_count_param = nil)
     row_count_param.try(:to_i) || options.try(:[], :row_count) || DEFAULT_ROW_COUNT
@@ -79,7 +79,7 @@ class MiqWidget < ApplicationRecord
 
   def create_task(num_targets, userid = User.current_userid)
     userid ||= "system"
-    context_data = {:targets  => num_targets, :complete => 0}
+    context_data = {:targets => num_targets, :complete => 0}
     miq_task     = MiqTask.create(
       :name         => "Generate Widget: '#{title}'",
       :state        => MiqTask::STATE_QUEUED,
@@ -201,7 +201,7 @@ class MiqWidget < ApplicationRecord
 
     MiqPreloader.preload(group_hash_visibility_agnostic.keys, [:miq_user_role])
 
-    group_hash = group_hash_visibility_agnostic.select { |k, _v| available_for_group?(k) }      # Process users grouped by LDAP group membership of whether they have RBAC
+    group_hash = group_hash_visibility_agnostic.select { |k, _v| available_for_group?(k) } # Process users grouped by LDAP group membership of whether they have RBAC
 
     if group_hash.length == 0
       _log.info("#{log_prefix} is not subscribed, content will NOT be generated")
@@ -347,7 +347,7 @@ class MiqWidget < ApplicationRecord
 
   # TODO: group/user support
   def create_initial_content_for_user(user, group = nil)
-    return unless contents_for_user(user).blank? && content_type != "menu"  # Menu widgets have no content
+    return unless contents_for_user(user).blank? && content_type != "menu" # Menu widgets have no content
 
     user    = self.class.get_user(user)
     group   = self.class.get_group(group)
@@ -540,7 +540,7 @@ class MiqWidget < ApplicationRecord
       :filter        => MiqExpression.new(filter_for_schedule),
       :resource_type => self.class.name,
       :run_at        => {
-        :interval   => {:value => value, :unit  => unit},
+        :interval   => {:value => value, :unit => unit},
         :tz         => server_tz,
         :start_time => sched_time
       },
@@ -571,14 +571,14 @@ class MiqWidget < ApplicationRecord
     sync_from_dir
   end
 
-  def save_with_shortcuts(shortcuts)  # [[<shortcut.id>, <widget_shortcut.description>], ...]
+  def save_with_shortcuts(shortcuts) # [[<shortcut.id>, <widget_shortcut.description>], ...]
     transaction do
-      ws = []  # Create an array of widget shortcuts
+      ws = [] # Create an array of widget shortcuts
       shortcuts.each_with_index do |s, s_idx|
         ws.push(MiqWidgetShortcut.new(:sequence => s_idx, :description => s.last, :miq_shortcut_id => s.first))
       end
       self.miq_widget_shortcuts = ws
-      save       # .save! raises exception if validate_uniqueness fails
+      save # .save! raises exception if validate_uniqueness fails
     end
     errors.empty? # True if no errors
   end

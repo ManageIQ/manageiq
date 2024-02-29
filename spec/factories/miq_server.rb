@@ -9,7 +9,7 @@ FactoryBot.define do
     version         { '9.9.9.9' }
 
     factory :miq_server_in_default_zone do
-      zone          { FactoryBot.build(:zone, :name => "default") }
+      zone { FactoryBot.build(:zone, :name => "default") }
     end
   end
 end

@@ -26,8 +26,8 @@ module MiqReport::Generator::Html
 
         output = ""
         if ["y", "c"].include?(group) && !sortby.nil? && save_val != d.data[sortby[0]].to_s
-          unless d_idx == 0                       # If not the first row, we are at a group break
-            unless group_limit && group_counter >= group_limit  # If not past the limit
+          unless d_idx == 0 # If not the first row, we are at a group break
+            unless group_limit && group_counter >= group_limit # If not past the limit
               html_rows += build_group_html_rows(save_val, col_order.length, break_label, group_text)
               group_counter += 1
             end
@@ -153,13 +153,13 @@ module MiqReport::Generator::Html
     html_rows << "<tr><td class='group' colspan='#{col_count}'>#{CGI.escapeHTML(content)}</td></tr>"
 
     if extras && extras[:grouping] && extras[:grouping][group] # See if group key exists
-      MiqReport::GROUPINGS.each do |calc|                     # Add an output row for each group calculation
+      MiqReport::GROUPINGS.each do |calc| # Add an output row for each group calculation
         if extras[:grouping][group].key?(calc.first) # Only add a row if there are calcs of this type for this group value
           grp_output = ""
           grp_output << "<tr>"
           grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>#{_(calc.last)}:</td>"
-          col_order.each_with_index do |c, c_idx|        # Go through the columns
-            next if c_idx == 0                                # Skip first column
+          col_order.each_with_index do |c, c_idx| # Go through the columns
+            next if c_idx == 0 # Skip first column
 
             grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>"
             grp_output << CGI.escapeHTML(

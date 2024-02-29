@@ -508,7 +508,7 @@ class MiqPolicy < ApplicationRecord
     opt_hash.delete(:synchronous)
 
     pevent = miq_policy_contents.build(opt_hash)
-    pevent.miq_event_definition  = event
+    pevent.miq_event_definition = event
     pevent.miq_action = action
     pevent.save
 

@@ -6,7 +6,7 @@ class MiqEventDefinition < ApplicationRecord
                    :allow_nil               => true,
                    :format                  => {:with    => /\A[a-z0-9_\-]+\z/i,
                                                 :message => "must only contain alpha-numeric, underscore and hyphen characters without spaces"}
-  validates_presence_of     :description
+  validates_presence_of :description
 
   acts_as_miq_set_member
   acts_as_miq_taggable

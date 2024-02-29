@@ -18,7 +18,7 @@ class Tag < ApplicationRecord
   def self.list(object, options = {})
     ns = get_namespace(options)
     if ns[0..7] == "/virtual"
-      ns.gsub!('/virtual/','')  # throw away /virtual
+      ns.gsub!('/virtual/','') # throw away /virtual
       ns, virtual_custom_attribute = MiqExpression.escape_virtual_custom_attribute(ns)
       predicate = ns.split("/")
 

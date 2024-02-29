@@ -355,7 +355,7 @@ RSpec.describe User do
       group = FactoryBot.create(:miq_group)
       @user = FactoryBot.create(:user, :miq_groups => [group])
       @ems = FactoryBot.create(:ems_vmware, :name => "test_vcenter")
-      @storage  = FactoryBot.create(:storage, :name => "test_storage_nfs", :store_type => "NFS")
+      @storage = FactoryBot.create(:storage, :name => "test_storage_nfs", :store_type => "NFS")
 
       @hw1 = FactoryBot.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
       @hw2 = FactoryBot.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)

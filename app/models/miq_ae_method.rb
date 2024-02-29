@@ -23,12 +23,12 @@ class MiqAeMethod < ApplicationRecord
                     :format                  => {:with    => /\A[\w]+\z/i,
                                                  :message => N_("may contain only alphanumeric and _ characters")}
 
-  AVAILABLE_LANGUAGES  = ["ruby", "perl"]  # someday, add sh, perl, python, tcl and any other scripting language
-  validates_inclusion_of  :language,  :in => AVAILABLE_LANGUAGES
+  AVAILABLE_LANGUAGES = ["ruby", "perl"] # someday, add sh, perl, python, tcl and any other scripting language
+  validates_inclusion_of :language, :in => AVAILABLE_LANGUAGES
   AVAILABLE_LOCATIONS = %w(builtin inline expression playbook ansible_job_template ansible_workflow_template).freeze
-  validates_inclusion_of  :location,  :in => AVAILABLE_LOCATIONS
-  AVAILABLE_SCOPES     = ["class", "instance"]
-  validates_inclusion_of  :scope,     :in => AVAILABLE_SCOPES
+  validates_inclusion_of :location, :in => AVAILABLE_LOCATIONS
+  AVAILABLE_SCOPES = ["class", "instance"]
+  validates_inclusion_of :scope, :in => AVAILABLE_SCOPES
 
   def self.available_languages
     AVAILABLE_LANGUAGES
@@ -97,7 +97,7 @@ class MiqAeMethod < ApplicationRecord
       next if %w(name language scope location data).include?(cname)
 
       # Process the column
-      xml_attrs[cname.to_sym]  = send(cname)   unless send(cname).blank?
+      xml_attrs[cname.to_sym]  = send(cname) unless send(cname).blank?
     end
 
     xml.MiqAeMethod(xml_attrs) do

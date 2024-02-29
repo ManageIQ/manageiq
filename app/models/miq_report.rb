@@ -30,7 +30,7 @@ class MiqReport < ApplicationRecord
   serialize :rpt_options
   serialize :display_filter
 
-  validates_presence_of     :name, :title, :db, :rpt_group
+  validates_presence_of :name, :title, :db, :rpt_group
   validates :name, :uniqueness_when_changed => true
   validates_inclusion_of    :rpt_type, :in => %w( Default Custom )
 

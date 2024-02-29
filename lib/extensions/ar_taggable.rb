@@ -177,7 +177,7 @@ module ActsAsTaggable
 
   def is_tagged_with?(tag, options = {})
     ns = Tag.get_namespace(options)
-    return is_vtagged_with?(tag, options) if  ns[0..7] == "/virtual" || tag[0..7] == "/virtual"
+    return is_vtagged_with?(tag, options) if ns[0..7] == "/virtual" || tag[0..7] == "/virtual"
 
     # self.tagged_with(options).include?(File.join(ns ,tag))
     Array(tags).include?(File.join(ns, tag))
@@ -189,7 +189,7 @@ module ActsAsTaggable
     subject = self
     parts = File.join(ns, tag.split("/")).split("/")[2..-1] # throw away /virtual
     object = parts.pop
-    object = object.gsub(/%2f/, "/")  unless object.nil? # decode embedded slashes
+    object = object.gsub(/%2f/, "/") unless object.nil? # decode embedded slashes
     attr = parts.pop
     begin
       # resolve any intermediate relationships, throw an error if any of them return multiple results

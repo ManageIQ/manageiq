@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :scan_item
 
   factory :scan_item_category_default, :parent => :scan_item do
-    attributes  do
+    attributes do
       {
         "item_type"  => "category",
         "definition" => {
@@ -13,7 +13,7 @@ FactoryBot.define do
   end
 
   factory :scan_item_category_test, :parent => :scan_item do
-    attributes  do
+    attributes do
       {
         "item_type"  => "category",
         "definition" => {
@@ -24,6 +24,6 @@ FactoryBot.define do
   end
 
   factory :scan_item_file, :parent => :scan_item do
-    attributes  { {"item_type" => "file", "definition" => {}} }
+    attributes { {"item_type" => "file", "definition" => {}} }
   end
 end

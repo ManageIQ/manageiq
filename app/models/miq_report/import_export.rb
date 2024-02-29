@@ -117,7 +117,7 @@ module MiqReport::ImportExport
     def load_from_filename(filename, cache)
       yaml = cache[filename] ||= YAML.load_file(filename)
       view = MiqReport.new(yaml)
-      view.extras ||= {}                        # Always add in the extras hash
+      view.extras ||= {} # Always add in the extras hash
       view.extras[:filename] = File.basename(filename, '.yaml')
       view
     end

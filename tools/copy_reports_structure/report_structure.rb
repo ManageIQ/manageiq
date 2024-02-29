@@ -38,7 +38,7 @@ class ReportStructure
       begin
         group.update!(:settings => nil) unless dry_run
         puts "Successfully removed custom report structure for group '#{group.description}'"
-      rescue  StandardError => e
+      rescue StandardError => e
         $stderr.puts "Removing failed: #{e.message}"
       end
     end

@@ -15,7 +15,7 @@ class Dialog < ApplicationRecord
   before_destroy :reject_if_has_resource_actions
   validates      :name, :unique_within_region => true
 
-  alias_attribute  :name, :label
+  alias_attribute :name, :label
 
   attr_accessor :target_resource
 

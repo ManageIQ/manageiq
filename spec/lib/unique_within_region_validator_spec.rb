@@ -22,7 +22,7 @@ RSpec.describe UniqueWithinRegionValidator do
         end
       end
 
-      let(:test_name)  { "thename" }
+      let(:test_name) { "thename" }
 
       let(:in_first_region_id) do
         case_sensitive_class.create!(

@@ -17,7 +17,7 @@ class MiqAeValue < ApplicationRecord
       next if %w(name value).include?(cname)
 
       # Process the column
-      xml_attrs[cname.to_sym]  = send(cname)   unless send(cname).blank?
+      xml_attrs[cname.to_sym] = send(cname) unless send(cname).blank?
     end
 
     xml.MiqAeField(xml_attrs) do

@@ -422,8 +422,8 @@ class MiqCompare
 
     # Determine the base and result records
     base_id = case @mode
-              when :compare then @ids[0]                                         # For compare, we are comparing to the first record
-              when :drift then   @ids.each_cons(2) { |x, y| break(x) if y == id }  # For drift, we are comparing to the previous timestamp
+              when :compare then @ids[0] # For compare, we are comparing to the first record
+              when :drift then   @ids.each_cons(2) { |x, y| break(x) if y == id } # For drift, we are comparing to the previous timestamp
               end
     base = @results[base_id]
     result = @results[id]

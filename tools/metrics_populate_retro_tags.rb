@@ -30,6 +30,6 @@ vm_perf_recs.group_by(&:resource_id).sort.each do |resource_id, perfs|
   puts "Updating tags in performance data for VM: ID: #{resource_id} => #{perfs.first.resource_name}"
   MetricRollup.update_all(
     {:tag_names => perfs.first.vm.perf_tags},
-    :id        => perfs.collect(&:id)
+    :id => perfs.collect(&:id)
   )
 end

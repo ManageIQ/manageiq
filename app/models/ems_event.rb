@@ -212,7 +212,7 @@ class EmsEvent < EventStream
       if vm.respond_to?(:availability_zone)
         availability_zone = vm.availability_zone
         unless availability_zone.nil?
-          event[:availability_zone_id]     = availability_zone.id
+          event[:availability_zone_id] = availability_zone.id
         end
       end
     end

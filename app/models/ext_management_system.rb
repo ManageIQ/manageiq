@@ -88,7 +88,7 @@ class ExtManagementSystem < ApplicationRecord
   has_many :physical_servers,         :foreign_key => :ems_id, :inverse_of => :ext_management_system, :dependent => :destroy
   has_many :physical_server_profiles, :foreign_key => :ems_id, :inverse_of => :ext_management_system, :dependent => :destroy
   has_many :physical_server_profile_templates, :foreign_key => :ems_id, :inverse_of => :ext_management_system, :dependent => :destroy
-  has_many :placement_groups,         :foreign_key => :ems_id, :inverse_of => :ext_management_system, :dependent => :destroy
+  has_many :placement_groups, :foreign_key => :ems_id, :inverse_of => :ext_management_system, :dependent => :destroy
 
   has_many :vm_and_template_labels, :through => :vms_and_templates, :source => :labels
   # Only taggings mapped from labels, excluding user-assigned tags.
@@ -142,7 +142,7 @@ class ExtManagementSystem < ApplicationRecord
 
   serialize :options
 
-  supports     :refresh_ems
+  supports :refresh_ems
 
   def edit_with_params(params, endpoints, authentications)
     tap do |ems|

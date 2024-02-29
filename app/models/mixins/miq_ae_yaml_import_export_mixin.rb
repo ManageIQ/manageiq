@@ -55,7 +55,7 @@ module MiqAeYamlImportExportMixin
   def add_method(class_obj, method_yaml)
     method_attributes = method_yaml.fetch_path('object', 'attributes')
     _log.info("Importing method:    <#{method_attributes['name']}>")
-    fields  = method_yaml.fetch_path('object', 'inputs')
+    fields = method_yaml.fetch_path('object', 'inputs')
     method_attributes['class_id'] = class_obj.id
     MiqAeMethod.new(method_attributes).tap do |method_obj|
       method_obj.inputs = process_fields(fields) unless fields.nil?

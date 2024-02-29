@@ -111,7 +111,7 @@ RSpec.describe Zone do
   end
 
   context ".determine_queue_zone" do
-    subject           { described_class }
+    subject { described_class }
 
     before do
       allow(ServerRole).to receive_messages(:region_scoped_roles => [ServerRole.new(:name => "inregion")])

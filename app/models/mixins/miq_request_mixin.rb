@@ -44,7 +44,7 @@ module MiqRequestMixin
   def tags
     Array.wrap(tag_ids).each do |tag_id|
       tag = Classification.find(tag_id)
-      yield(tag.name, tag.parent.name)  unless tag.nil?    # yield the tag's name and category
+      yield(tag.name, tag.parent.name) unless tag.nil?    # yield the tag's name and category
     end
   end
 
@@ -57,7 +57,7 @@ module MiqRequestMixin
     tags do |tag, cat|
       cat = cat.to_sym
       if vm_tags.key?(cat)
-        vm_tags[cat] = [vm_tags[cat]]   unless vm_tags[cat].kind_of?(Array)
+        vm_tags[cat] = [vm_tags[cat]] unless vm_tags[cat].kind_of?(Array)
         vm_tags[cat] << tag
       else
         vm_tags[cat] = tag
@@ -102,7 +102,7 @@ module MiqRequestMixin
   def classifications
     Array.wrap(self.tag_ids).each do |tag_id|
       classification = Classification.find(tag_id)
-      yield(classification)  unless classification.nil?    # yield the whole classification
+      yield(classification) unless classification.nil?    # yield the whole classification
     end
   end
 
@@ -116,7 +116,7 @@ module MiqRequestMixin
       cat   = classification.parent.name.to_sym
       tuple = {:name => classification.name, :description => classification.description}
       if vm_classifications.key?(cat)
-        vm_classifications[cat] = [vm_classifications[cat]]   unless vm_classifications[cat].kind_of?(Array)
+        vm_classifications[cat] = [vm_classifications[cat]] unless vm_classifications[cat].kind_of?(Array)
         vm_classifications[cat] << tuple
       else
         vm_classifications[cat] = tuple

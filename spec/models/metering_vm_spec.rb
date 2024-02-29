@@ -14,7 +14,7 @@ RSpec.describe MeteringVm do
   let(:derived_memory_available)  { 1000.0 }
   let(:cpu_usagemhz_rate_average) { 50.0 }
   let(:disk_usage_rate_average)   { 100.0 }
-  let(:derived_memory_used)   { 100.0 }
+  let(:derived_memory_used) { 100.0 }
   let(:net_usage_rate_average) { 25.0 }
   let(:derived_vm_used_disk_storage) { 1.0.gigabytes }
   let(:derived_vm_allocated_disk_storage) { 4.0.gigabytes }

@@ -25,7 +25,7 @@ module CustomAttributeMixin
       define_method(getter) do
         miq_custom_get(custom_str)
       end
-      virtual_column getter, :type => :string  # uses not set since miq_custom_get re-queries
+      virtual_column getter, :type => :string # uses not set since miq_custom_get re-queries
 
       define_method(setter) do |value|
         miq_custom_set(custom_str, value)

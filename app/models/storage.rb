@@ -17,7 +17,7 @@ class Storage < ApplicationRecord
 
   has_many :metrics,        :as => :resource  # Destroy will be handled by purger
   has_many :metric_rollups, :as => :resource  # Destroy will be handled by purger
-  has_many :vim_performance_states, :as => :resource  # Destroy will be handled by purger
+  has_many :vim_performance_states, :as => :resource # Destroy will be handled by purger
 
   has_many :storage_files,       :dependent => :destroy
   has_many :storage_files_files, -> { where("rsc_type = 'file'") }, :class_name => "StorageFile", :foreign_key => "storage_id"
@@ -30,7 +30,7 @@ class Storage < ApplicationRecord
 
   scope :available, -> { where(:maintenance => [nil, false]) }
 
-  validates_presence_of     :name
+  validates_presence_of :name
 
   include RelationshipMixin
   self.default_relationship_type = "ems_metadata"
@@ -63,7 +63,7 @@ class Storage < ApplicationRecord
   virtual_column :v_provisioned_percent_of_total, :type => :float
   virtual_column :total_managed_unregistered_vms, :type => :integer
   virtual_column :total_managed_registered_vms,   :type => :integer
-  virtual_column :total_unmanaged_vms,            :type => :integer  # uses is handled via class method that aggregates
+  virtual_column :total_unmanaged_vms,            :type => :integer # uses is handled via class method that aggregates
   virtual_column :count_of_vmdk_disk_files,       :type => :integer
 
   delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
@@ -311,7 +311,7 @@ class Storage < ApplicationRecord
   end
 
   def self.create_scan_task(task_name, userid, storages)
-    context_data = {:targets  => storages.collect(&:id).sort, :complete => [], :pending  => {}}
+    context_data = {:targets => storages.collect(&:id).sort, :complete => [], :pending => {}}
     miq_task     = MiqTask.create(
       :name         => task_name,
       :state        => MiqTask::STATE_QUEUED,

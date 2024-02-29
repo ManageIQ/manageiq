@@ -11,13 +11,13 @@ class MiqAeField < ApplicationRecord
                    :presence                => true,
                    :format                  => {:with => /\A[\w]+\z/i, :message => N_("may contain only alphanumeric and _ characters")}
 
-  validates_inclusion_of  :substitute, :in => [true, false]
+  validates_inclusion_of :substitute, :in => [true, false]
 
   NULL_COALESCING_DATATYPE = "null coalescing".freeze
-  AVAILABLE_SCOPES    = ["class", "instance", "local"]
-  validates_inclusion_of  :scope,      :in => AVAILABLE_SCOPES,    :allow_nil => true  # nil => instance
-  AVAILABLE_AETYPES   = ["assertion", "attribute", "method", "relationship", "state"]
-  validates_inclusion_of  :aetype,     :in => AVAILABLE_AETYPES,   :allow_nil => true  # nil => attribute
+  AVAILABLE_SCOPES = ["class", "instance", "local"]
+  validates_inclusion_of :scope, :in => AVAILABLE_SCOPES, :allow_nil => true  # nil => instance
+  AVAILABLE_AETYPES = ["assertion", "attribute", "method", "relationship", "state"]
+  validates_inclusion_of :aetype, :in => AVAILABLE_AETYPES, :allow_nil => true # nil => attribute
   AVAILABLE_DATATYPES_FOR_UI = ["string", "symbol", "integer", "float", "boolean", "time",
                                 "array", "password", NULL_COALESCING_DATATYPE].freeze
   AVAILABLE_DATATYPES        = AVAILABLE_DATATYPES_FOR_UI +
@@ -30,9 +30,9 @@ class MiqAeField < ApplicationRecord
                                   request
                                   provision
                                   user)
-  validates_inclusion_of  :datatype,   :in => AVAILABLE_DATATYPES, :allow_nil => true  # nil => string
+  validates_inclusion_of :datatype, :in => AVAILABLE_DATATYPES, :allow_nil => true # nil => string
 
-  before_save        :set_message_and_default_value
+  before_save :set_message_and_default_value
 
   DEFAULTS = {:substitute => true, :datatype => "string", :aetype => "attribute", :scope => "instance", :message => "create"}
 
@@ -85,11 +85,11 @@ class MiqAeField < ApplicationRecord
       next if %w(name default_value substitute).include?(cname)
 
       # Process the column
-      xml_attrs[cname.to_sym]  = send(cname)   unless send(cname).blank?
+      xml_attrs[cname.to_sym] = send(cname) unless send(cname).blank?
     end
 
     xml.MiqAeField(xml_attrs) do
-      xml.text!(default_value)   unless default_value.blank?
+      xml.text!(default_value) unless default_value.blank?
     end
   end
 

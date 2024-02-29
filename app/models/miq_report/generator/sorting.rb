@@ -9,7 +9,7 @@ module MiqReport::Generator::Sorting
   end
 
   def build_sort_table
-    return if sortby.nil?                                                # Are there any sort fields
+    return if sortby.nil? # Are there any sort fields
 
     new_sortby = build_sort_suffix_data
     sb_nil_sub = []
@@ -17,7 +17,7 @@ module MiqReport::Generator::Sorting
       base_col_name = sb.split(SORT_COL_SUFFIX).first
       ctype = MiqExpression::Target.parse(col_to_expression_col(base_col_name)).column_type
       sb_nil_sub[idx] = case ctype
-                        when :string, :text, :boolean, nil        then "00ff".hex.chr   # "\xFF"
+                        when :string, :text, :boolean, nil        then "00ff".hex.chr # "\xFF"
                         when :integer, :fixnum, :decimal, :float  then @table.data.collect { |d| d.data[sb] }.compact.max.to_i + 1
                         when :datetime                            then Time.at(@table.data.collect { |d| d.data[sb] }.compact.max.to_i + 1).utc
                         when :date                                then @table.data.collect { |d| d.data[sb] }.compact.max.try(:+, 1)
@@ -69,7 +69,7 @@ module MiqReport::Generator::Sorting
 
   def build_value_for_sort_suffix(value, suffix)
     value = value.in_time_zone(get_time_zone("UTC")) if value && value.kind_of?(Time)
-    value = value.to_time.utc.beginning_of_day            if value && value.kind_of?(Date)
+    value = value.to_time.utc.beginning_of_day if value && value.kind_of?(Date)
     suffix = suffix.to_sym if suffix
 
     case suffix

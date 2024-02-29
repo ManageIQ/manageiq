@@ -47,7 +47,7 @@ class ChargebackRateDetail < ApplicationRecord
   def populate_showback_rate(plan, rate_detail, entity)
     group = rate_detail.chargeable_field.showback_measure
     field, _, calculation = rate_detail.chargeable_field.showback_dimension
-    unit  = rate_detail.showback_unit
+    unit = rate_detail.showback_unit
 
     showback_rate = ManageIQ::Showback::Rate.find_or_create_by(:entity      => entity,
                                                                :group       => group,

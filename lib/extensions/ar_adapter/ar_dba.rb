@@ -780,7 +780,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
     )
 
     data.each do |datum|
-      integer_columns.each   { |c| datum[c] = datum[c].to_i }
+      integer_columns.each { |c| datum[c] = datum[c].to_i }
     end
 
     data.to_a

@@ -2,7 +2,7 @@ require 'uri'
 require 'mount/miq_generic_mount_session'
 
 class LogFile < ApplicationRecord
-  belongs_to :resource,    :polymorphic => true
+  belongs_to :resource, :polymorphic => true
   belongs_to :file_depot
   belongs_to :miq_task
 
@@ -19,7 +19,7 @@ class LogFile < ApplicationRecord
     date_string = "#{format_log_time(logging_started_on)}_#{format_log_time(logging_ended_on)}"
     fname       = "#{File.basename(loc_file, ".*").capitalize}_"
     fname += "region_#{MiqRegion.my_region.region rescue "unknown"}_#{zone.name}_#{zone.id}_#{server.name}_#{server.id}_#{date_string}#{File.extname(loc_file)}"
-    dest        = File.join("/", path, fname)
+    dest = File.join("/", path, fname)
     _log.info("Built relative path: [#{dest}] from source: [#{loc_file}]")
     dest
   end

@@ -17,7 +17,7 @@ opts = Optimist.options(ARGV) do
          "Example (Duplicate for Role): bundle exec ruby #{__FILE__} --source-group=EvmGroup  --target-role=SomeRole\n" \
          "Example (Reset to Default for Group): bundle exec ruby #{__FILE__} --reset-group=SomeGroup\n" \
          "Example (Reset to Default for Role):  bundle exec ruby #{__FILE__} --reset-role=SomeRole\n"
-  opt :dry_run,  "Dry Run", :short => "d"
+  opt :dry_run, "Dry Run", :short => "d"
   opt :source_group, "Source group to take report structure from", :short => :none, :type => :string
   opt :target_group, "Target group to get report menue from source group", :short => :none, :type => :string
   opt :target_role, "Target role to get report menue from source group", :short => :none, :type => :string

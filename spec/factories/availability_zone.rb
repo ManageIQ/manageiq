@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :availability_zone do
-    sequence(:name)     { |n| "availability_zone_#{seq_padded_for_sorting(n)}" }
+    sequence(:name) { |n| "availability_zone_#{seq_padded_for_sorting(n)}" }
   end
 
   factory :availability_zone_amazon, :parent => :availability_zone, :class => "ManageIQ::Providers::Amazon::CloudManager::AvailabilityZone"

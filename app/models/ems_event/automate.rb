@@ -90,7 +90,7 @@ class EmsEvent
     private
 
     def parse_policy_parameters(target_str, policy_event, param)
-      target         = get_target(target_str)     unless target_str.blank?
+      target         = get_target(target_str) unless target_str.blank?
       policy_event ||= event_type
       policy_src     = parse_policy_source(target, param) if target
 

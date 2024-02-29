@@ -22,11 +22,11 @@ class MiqRequest < ApplicationRecord
 
   alias_attribute :state, :request_state
 
-  serialize   :options, Hash
+  serialize :options, Hash
 
-  default_value_for(:message)       { |r| "#{r.class::TASK_DESCRIPTION} - Request Created" }
+  default_value_for(:message) { |r| "#{r.class::TASK_DESCRIPTION} - Request Created" }
   attribute :request_state, :default => 'pending'
-  default_value_for(:request_type)  { |r| r.request_types.first }
+  default_value_for(:request_type) { |r| r.request_types.first }
   attribute :status,  :default => 'Ok'
   attribute :process, :default => true
 
@@ -52,7 +52,7 @@ class MiqRequest < ApplicationRecord
   virtual_column  :resource_type,        :type => :string
   virtual_column  :state,                :type => :string
 
-  delegate :allowed_tags,                :to => :workflow,   :prefix => :v,  :allow_nil => true
+  delegate :allowed_tags,                :to => :workflow,   :prefix => :v, :allow_nil => true
   delegate :class,                       :to => :workflow,   :prefix => :v_workflow
   delegate :deny, :reason, :stamped_on,  :to => :first_approval
   delegate :userid,                      :to => :requester, :prefix => true
@@ -120,7 +120,7 @@ class MiqRequest < ApplicationRecord
   }.freeze
 
   REQUEST_TYPES_BACKEND_ONLY = {
-    :MiqProvisionRequestTemplate              => {:template            => "VM Provision Template"},
+    :MiqProvisionRequestTemplate              => {:template => "VM Provision Template"},
   }
 
   REQUEST_TYPES = MODEL_REQUEST_TYPES.values.each_with_object(REQUEST_TYPES_BACKEND_ONLY) { |i, h| i.each { |k, v| h[k] = v } }
@@ -333,7 +333,7 @@ class MiqRequest < ApplicationRecord
   def approver
     first_approval.approver.try(:name)
   end
-  alias_method :approver_role, :approver  # TODO: Is this needed anymore?
+  alias_method :approver_role, :approver # TODO: Is this needed anymore?
 
   def workflow_class
     klass = self.class.workflow_class

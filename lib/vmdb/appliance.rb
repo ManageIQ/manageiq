@@ -139,7 +139,7 @@ module Vmdb
           end
         rescue => e
           $log.warn("Diagnostics: [#{diag[:msg]}] command [#{diag[:cmd]}] failed with error [#{e}]")
-          next  # go to next diagnostic command if this one blew up
+          next # go to next diagnostic command if this one blew up
         end
         $log.info("Diagnostics: [#{diag[:msg]}]\n#{res}") unless res.blank?
       end
@@ -200,7 +200,7 @@ module Vmdb
       @diags ||= [
         {:cmd => "top",      :params => [:b, {:n => 1}],                              :msg => "Uptime, top processes, and memory usage"}, # batch mode - 1 iteration
         {:cmd => "pstree",   :params => [:a, :p],                                     :msg => "Process tree"},
-        {:cmd => "df",       :params => [:all, :local, :human_readable, :print_type], :msg => "File system disk usage"},   # All including dummy fs, local, human readable, file system type
+        {:cmd => "df",       :params => [:all, :local, :human_readable, :print_type], :msg => "File system disk usage"}, # All including dummy fs, local, human readable, file system type
         {:cmd => "mount",                                                             :msg => "Mounted file systems"},
         {:cmd => "ifconfig", :params => [:a],                                         :msg => "Currently active interfaces"},  # -a display all interfaces which are currently available, even if down
         {:cmd => "route",                                                             :msg => "IP Routing table"},

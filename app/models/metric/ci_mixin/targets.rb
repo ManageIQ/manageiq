@@ -9,8 +9,8 @@ module Metric::CiMixin::Targets
     when Service then true
     # going to treat an availability_zone like a host wrt perf_capture settings
     when Host, EmsCluster, AvailabilityZone, HostAggregate then Metric::Targets.perf_capture_always[:host_and_cluster]
-    when Storage then                            Metric::Targets.perf_capture_always[:storage]
-    else;                                    false
+    when Storage then Metric::Targets.perf_capture_always[:storage]
+    else; false
     end
   end
   alias_method :perf_capture_always, :perf_capture_always?

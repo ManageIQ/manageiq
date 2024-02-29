@@ -172,7 +172,7 @@ RSpec.describe GenericObject do
   end
 
   describe 'property methods' do
-    let(:ws)   { double("MiqAeWorkspaceRuntime", :root => {"method_result" => "some_return_value"}) }
+    let(:ws) { double("MiqAeWorkspaceRuntime", :root => {"method_result" => "some_return_value"}) }
 
     before { go.ae_user_identity(user) }
 

@@ -106,7 +106,7 @@ RSpec.describe ChargebackRateDetail do
   let(:consumption) { instance_double('Consumption', :hours_in_month => (30.days / 1.hour)) }
 
   it '#hourly_cost' do
-    cvalue   = 42.0
+    cvalue = 42.0
     fixed_rate = 5.0
     variable_rate = 8.26
     tier_start = 0
