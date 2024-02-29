@@ -6,7 +6,7 @@ class PxeImagePxelinux < PxeImage
     pxe = <<~PXE
       timeout 0
       default #{name}
-      
+
       label #{name}
          menu label #{description}
     PXE

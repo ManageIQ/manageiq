@@ -26,15 +26,15 @@ module PgInspector
       Optimist.options(args) do
         banner <<~BANNER
           pg_inspector is a tool to inspect ManageIQ process caused deadlock in PostgreSQL.
-          
+
             Usage:
               #{$PROGRAM_NAME} operation options_for_operation
               #{$PROGRAM_NAME} options
-          
+
             Operations:
           #{op_help}
             Use `pg_inspector.rb operation -h' to see help for each operation
-          
+
             Options:
         BANNER
         stop_on(SUB_COMMANDS.keys.map(&:to_s))

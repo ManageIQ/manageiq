@@ -19,44 +19,44 @@ RSpec.describe PxeMenuIpxe do
       item reboot    Reboot the Machine
       item ipxedemo  iPXE Demo
       choose os && goto ${os}
-      
+
       ########## MIQ Live Images ##########
       :ud1204
       kernel http://192.168.252.60/boot/ubuntu-12.04-desktop/casper/vmlinuz vga=normal boot=casper netboot=nfs nfsroot=192.168.252.60:/srv/boot/ubuntu-12.04-desktop ro root=/dev/nfs -- quiet
       initrd http://192.168.252.60/boot/ubuntu-12.04-desktop/casper/initrd.lz
       boot
-      
+
       :ud1204_not_in_menu
       kernel http://192.168.252.60/boot/ubuntu-12.04-desktop/casper/vmlinuz vga=normal boot=casper netboot=nfs nfsroot=192.168.252.60:/srv/boot/ubuntu-12.04-desktop ro root=/dev/nfs -- quiet
       initrd http://192.168.252.60/boot/ubuntu-12.04-desktop/casper/initrd.lz
       boot
-      
+
       :ud1204_commented_in_menu
       kernel http://192.168.252.60/boot/ubuntu-12.04-desktop/casper/vmlinuz vga=normal boot=casper netboot=nfs nfsroot=192.168.252.60:/srv/boot/ubuntu-12.04-desktop ro root=/dev/nfs -- quiet
       initrd http://192.168.252.60/boot/ubuntu-12.04-desktop/casper/initrd.lz
       boot
-      
+
       :ud1204_commented_in_image
       #kernel http://192.168.252.60/boot/ubuntu-12.04-desktop/casper/vmlinuz vga=normal boot=casper netboot=nfs nfsroot=192.168.252.60:/srv/boot/ubuntu-12.04-desktop ro root=/dev/nfs -- quiet
       #initrd http://192.168.252.60/boot/ubuntu-12.04-desktop/casper/initrd.lz
       #boot
-      
+
       ########## MIQ Desktop Images ##########
       :rhel62dsk
       kernel http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz ramdisk_size=10000 ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-desktop.ks.cfg ksdevice=00:50:56:91:79:d5
       initrd http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img
       boot
-      
+
       ########## MIQ Server Images ##########
       :rhel62host
       kernel http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz ramdisk_size=10000 ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-host.ks.cfg
       initrd http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img
       boot
-      
+
       ########## Other Stuff ##########
       :reboot
       reboot
-      
+
       :ipxedemo
       chain http://boot.ipxe.org/demo/boot.php
     PXEMENU
@@ -67,7 +67,7 @@ RSpec.describe PxeMenuIpxe do
       item --gap -- -----Live Images:
       item rhel62host   RHEL6.2 Host
       choose os && goto ${os}
-      
+
       ########## MIQ Server Images ##########
       :rhel62host
       kernel http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz ramdisk_size=10000 ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-host.ks.cfg

@@ -6,15 +6,15 @@ RSpec.describe Filesystem do
       ## It has not been audited to ensure that everything present is either Heat controlled or a mandatory as-is setting.
       ## Please submit patches for any setting that should be deleted or Heat-configurable. '"-"'
       ##  https://git.openstack.org/cgit/openstack/tripleo-image-elements
-      
-      
+
+
       [DEFAULT]
-      
-      
+
+
       s3_host=192.0.2.10
       ec2_dmz_host=192.0.2.10
       ec2_url=http://192.0.2.10:8773/services/Cloud
-      
+
       my_ip=192.0.2.13
     EOT
   end

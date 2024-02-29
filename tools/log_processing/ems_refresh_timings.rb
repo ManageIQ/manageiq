@@ -15,10 +15,10 @@ def parse_args(argv)
     banner <<~EOS
       Parse EMS Refreshes from a set of evm.log files and filter on a set of
       provided conditions.
-      
+
       Usage:
         ruby ems_refresh_timings.rb [OPTION]... <FILE>...
-      
+
       Options:
     EOS
     opt :sort_by, 'Column to sort by, options are start_time, end_time, ' \

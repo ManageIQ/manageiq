@@ -10,11 +10,11 @@ module PgInspector
     def parse_options(args)
       self.options = Optimist.options(args) do
         banner <<~BANNER
-          
+
           #{HELP_MSG_SHORT}
-          
+
           Use password in PGPASSWORD environment variable if no password file given.
-          
+
           Options:
         BANNER
         opt(:pg_host, "PostgreSQL host name or address",

@@ -12,13 +12,13 @@ module PgInspector
     def parse_options(args)
       self.options = Optimist.options(args) do
         banner <<~BANNER
-          
+
           #{HELP_MSG_SHORT}
-          
+
           Use password in PGPASSWORD environment if no password file given.
           The output file will overwrite the previous one with same name after
           successfully dumped.
-          
+
           Options:
         BANNER
         opt(:pg_host, "PostgreSQL host name or address",

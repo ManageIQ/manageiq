@@ -71,27 +71,27 @@ RSpec.describe MiqConfigSssdLdap::SssdConf do
         ldap_tls_cacertdir = /etc/openldap/cacerts/
         entry_cache_timeout = 600
         ldap_auth_disable_tls_never_use_in_production = true
-        ldap_default_bind_dn = 
-        ldap_default_authtok = 
+        ldap_default_bind_dn =#{' '}
+        ldap_default_authtok =#{' '}
         ldap_group_member = member
         ldap_group_name = cn
         ldap_group_object_class = groupOfNames
         ldap_group_search_base = my_basedn
         ldap_network_timeout = 3
         ldap_pwd_policy = none
-        ldap_tls_cacert = 
+        ldap_tls_cacert =#{' '}
         ldap_user_extra_attrs = mail, givenname, sn, displayname, domainname
         ldap_user_gid_number = gidNumber
         ldap_user_name = cn
         ldap_user_object_class = person
-        ldap_user_search_base = 
+        ldap_user_search_base =#{' '}
         ldap_user_uid_number = uidNumber
 
         [sssd]
         services = nss, pam, ifp
-        domains = 
+        domains =#{' '}
         config_file_version = 2
-        default_domain_suffix = 
+        default_domain_suffix =#{' '}
         sbus_timeout = 30
 
         [pam]

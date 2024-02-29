@@ -4,7 +4,7 @@ require_relative '../lib/manageiq/environment'
 if ARGV.any?
   puts <<~EOS
     Usage: bin/setup
-    
+
     Environment Variable Options:
         SKIP_DATABASE_SETUP  Skip the creation, migration, and seeding of the database.
         SKIP_UI_UPDATE       Skip the update of UI assets.

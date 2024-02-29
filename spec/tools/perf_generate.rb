@@ -51,13 +51,13 @@ puts <<~EOL
     Clusters:       #{NUM_CLUSTERS}
     Hosts:          #{NUM_HOSTS}
     VMs:            #{NUM_VMS}
-  
+
     Realtime from:  #{REALTIME_START.iso8601}
     Hourly from:    #{HOURLY_START.iso8601}
-  
+
     Number of realtime rows: #{Class.new.extend(ActionView::Helpers::NumberHelper).number_with_delimiter(realtime_count)}
     Number of hourly rows:   #{Class.new.extend(ActionView::Helpers::NumberHelper).number_with_delimiter(hourly_count)}
-  
+
 EOL
 
 unless opts[:no_generate]

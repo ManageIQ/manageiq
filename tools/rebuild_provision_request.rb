@@ -22,30 +22,30 @@ ARGV.shift if ARGV[0] == '--'
 
 opts = Optimist.options do
   banner <<~EOS
-    
+
     Reconstruct provision request parameters based on an existing request
-    
+
     Common Examples\n\t
     Output the hash parameters of a request
-    
+
       #{PROGRAM_STRING} --request-id=3
-    
+
     Show the hash parameters and the console command needed to rerun a request
-    
+
       #{PROGRAM_STRING} --request-id=3  --console
-    
+
     Show the hash parameters and rerun the request
-    
+
       #{PROGRAM_STRING} --request-id=3  --run-it
-    
+
     Show a list of 5 recent requests
-    
+
       #{PROGRAM_STRING} --last-requests
-    
+
     Help! #{PROGRAM_STRING} --help
-    
+
     Usage: #{PROGRAM_STRING} [--options]\n\nOptions:\n\t
-    
+
   EOS
   opt :api_host, "The hostname to run the api call against", :default => 'localhost', :type => :string
   opt :console,  "Show the output needed to run the POST in a Rails console", :default => false, :type => :bool
