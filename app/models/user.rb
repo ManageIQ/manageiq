@@ -300,8 +300,7 @@ class User < ApplicationRecord
 
   def get_expressions(db = nil)
     sql = ["((search_type=? and search_key is null) or (search_type=? and search_key is null) or (search_type=? and search_key=?))",
-           'default', 'global', 'user', userid
-          ]
+           'default', 'global', 'user', userid]
     unless db.nil?
       sql[0] += "and db=?"
       sql << db.to_s

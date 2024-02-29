@@ -287,8 +287,7 @@ RSpec.describe Authenticator::Ldap do
               ["user_created",
                {
                  :event_details => "User creation successful for User: Bob Builderson with ID: bob"
-               }
-              ]
+               }]
             )
           end
         end

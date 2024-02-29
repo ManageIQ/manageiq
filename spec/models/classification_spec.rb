@@ -234,8 +234,7 @@ RSpec.describe Classification do
       ['<My_Name>',
        'My Name',
        'My_Name_is...',
-       '123456789_123456789_123456789_123456789_123456789_1'
-      ].each do |name|
+       '123456789_123456789_123456789_123456789_123456789_1'].each do |name|
         cat = Classification.is_category.new(:name => name)
 
         expect(cat).to_not be_valid
@@ -247,8 +246,7 @@ RSpec.describe Classification do
       ['<My_Name>',
        'My Name',
        'My_Name_is...',
-       '123456789_123456789_123456789_123456789_123456789_1'
-      ].each do |name|
+       '123456789_123456789_123456789_123456789_123456789_1'].each do |name|
         good_name = Classification.sanitize_name(name)
         cat = Classification.is_category.new(:name => good_name, :description => name)
         expect(cat).to be_valid
@@ -456,7 +454,8 @@ RSpec.describe Classification do
                                                        :single_value => "1",
                                                        :entries      => [{:description => "Cost Center 001", :name => "001"},
                                                                          {:description => "Cost Center 002", :name => "002"}]
-                                                      }]
+                                                      }
+]
                                                    )
     end
 
