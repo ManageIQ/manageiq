@@ -18,14 +18,14 @@ module ManageIQ
           mri.table.data.each do |r|
             mri.col_formats ||= [] # Backward compat - create empty array for formats
             mri.col_order.each_with_index do |f, i|
-              data = unless ["<compare>", "<drift>"].include?(mri.db)
+              data = if ["<compare>", "<drift>"].include?(mri.db)
+                r[f].to_s
+                     else
                 mri.format(f,
                                   r[f],
                                   :format => mri.col_formats[i] || :_default_,
                                   :tz     => tz)
-              else
-                r[f].to_s
-                     end
+              end
               if !@max_col_width[i] || data.length > @max_col_width[i]
                 @max_col_width[i] = data.length
               end
@@ -118,14 +118,14 @@ module ManageIQ
             mri.col_order.each_with_index do |f, i|
               next if mri.column_is_hidden?(f)
 
-              data = unless ["<compare>", "<drift>"].include?(mri.db)
+              data = if ["<compare>", "<drift>"].include?(mri.db)
+                r[f].to_s
+                     else
                 mri.format(f,
                                   r[f],
                                   :format => mri.col_formats[i] || :_default_,
                                   :tz     => tz)
-              else
-                r[f].to_s
-                     end
+              end
               if options.alignment.eql?(:center)
                 line << data.center(@max_col_width[i])
               else
