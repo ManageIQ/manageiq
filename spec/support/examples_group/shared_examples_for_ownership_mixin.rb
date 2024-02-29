@@ -105,9 +105,9 @@ shared_examples_for "OwnershipMixin" do
       it "usable as arel" do
         group_name = user.current_group.description.downcase
         sql        = <<~SQL.split("\n").join(' ')
-                       LOWER(((SELECT "miq_groups"."description"
-                       FROM "miq_groups"
-                       WHERE "miq_groups"."id" = "#{described_class.table_name}"."miq_group_id"))) = '#{group_name}'
+          LOWER(((SELECT "miq_groups"."description"
+          FROM "miq_groups"
+          WHERE "miq_groups"."id" = "#{described_class.table_name}"."miq_group_id"))) = '#{group_name}'
         SQL
         attribute = described_class.arel_table[:owned_by_current_ldap_group]
         expect(stringify_arel(attribute)).to eq ["(#{sql})"]
@@ -210,9 +210,9 @@ shared_examples_for "OwnershipMixin" do
       it "usable as arel" do
         userid = user.userid.downcase
         sql = <<~SQL.split("\n").join(' ')
-                       LOWER(((SELECT "users"."userid"
-                       FROM "users"
-                       WHERE "users"."id" = "#{described_class.table_name}"."evm_owner_id"))) = '#{userid}'
+          LOWER(((SELECT "users"."userid"
+          FROM "users"
+          WHERE "users"."id" = "#{described_class.table_name}"."evm_owner_id"))) = '#{userid}'
         SQL
         attribute = described_class.arel_table[:owned_by_current_user]
         expect(stringify_arel(attribute)).to eq ["(#{sql})"]
