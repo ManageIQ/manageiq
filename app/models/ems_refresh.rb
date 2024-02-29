@@ -66,7 +66,7 @@ module EmsRefresh
  manager_by_manager_id[t.manager_id] ||= t.manager
             elsif t.respond_to?(:manager)
  t.manager
-            else                                            t
+            else t
             end
       ems.refresher if ems.respond_to?(:refresher)
     end

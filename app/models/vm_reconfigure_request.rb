@@ -4,7 +4,7 @@ class VmReconfigureRequest < MiqRequest
   ACTIVE_STATES     = %w[reconfigured] + base_class::ACTIVE_STATES
 
   validates :request_state, :inclusion => { :in => %w[pending finished] + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished" }
-  validate               :must_have_user
+  validate :must_have_user
   include MiqProvisionQuotaMixin
 
   def self.request_limits(options)

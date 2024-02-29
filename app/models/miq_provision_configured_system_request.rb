@@ -3,7 +3,7 @@ class MiqProvisionConfiguredSystemRequest < MiqRequest
   SOURCE_CLASS_NAME = 'ConfiguredSystem'
 
   validates :request_state, :inclusion => { :in => %w[pending finished] + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished" }
-  validate               :must_have_user
+  validate :must_have_user
 
   def host_name
     options[:src_configured_system_ids].length == 1 ? src_configured_systems.pluck(:hostname).first : "Multiple Hosts"

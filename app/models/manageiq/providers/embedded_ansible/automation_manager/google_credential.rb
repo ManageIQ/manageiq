@@ -51,7 +51,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::GoogleCredential 
   def self.params_to_attributes(params)
     attrs = super.dup
 
-    attrs[:auth_key] = attrs.delete(:ssh_key_data)            if attrs.key?(:ssh_key_data)
+    attrs[:auth_key] = attrs.delete(:ssh_key_data) if attrs.key?(:ssh_key_data)
     attrs[:options]  = {:project => attrs.delete(:project)} if attrs[:project]
 
     attrs

@@ -59,7 +59,7 @@ class VmOrTemplate < ApplicationRecord
   POWER_OPS = %w[start stop suspend reset shutdown_guest standby_guest reboot_guest]
   REMOTE_REGION_TASKS = POWER_OPS + %w[retire_now]
 
-  validates     :name, :location, :presence => true
+  validates :name, :location, :presence => true
   validates                 :vendor, :inclusion => {:in => VENDOR_TYPES.keys}
 
   has_one                   :operating_system, :dependent => :destroy

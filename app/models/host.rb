@@ -26,7 +26,7 @@ class Host < ApplicationRecord
     nil               => "Unknown",
   }.freeze
 
-  validates     :name, :presence => true
+  validates :name, :presence => true
   validates    :user_assigned_os, :inclusion => { :in => ["linux_generic", "windows_generic", nil] }
   validates    :vmm_vendor, :inclusion => { :in => VENDOR_TYPES.keys }
 

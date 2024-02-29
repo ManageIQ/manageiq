@@ -27,7 +27,7 @@ class VimPerformanceState < ApplicationRecord
     :allocated_disk_types,
     :vm_used_disk_storage
   ].each do |m|
-    define_method(m)       { state_data[m] }
+    define_method(m) { state_data[m] }
     define_method(:"#{m}=") { |value| state_data[m] = value }
   end
 

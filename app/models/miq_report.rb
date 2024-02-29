@@ -32,7 +32,7 @@ class MiqReport < ApplicationRecord
 
   validates :name, :title, :db, :rpt_group, :presence => true
   validates :name, :uniqueness_when_changed => true
-  validates    :rpt_type, :inclusion => { :in => %w[Default Custom] }
+  validates :rpt_type, :inclusion => { :in => %w[Default Custom] }
 
   has_many                  :miq_report_results, :dependent => :destroy
   belongs_to                :time_profile

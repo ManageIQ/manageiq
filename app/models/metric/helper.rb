@@ -23,7 +23,7 @@ module Metric::Helper
  ts[17, 2] = '20'
     elsif sec < 40
  ts[17, 2] = '40'
-    else               ts = (Time.parse(ts) + (60 - sec)).iso8601
+    else ts = (Time.parse(ts) + (60 - sec)).iso8601
     end
     ts
   end

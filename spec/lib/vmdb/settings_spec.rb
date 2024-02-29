@@ -133,7 +133,7 @@ RSpec.describe Vmdb::Settings do
                             },
                             :drift_states => {
                               :history => {
-                                :keep_drift_states => "1.hour"   # Added
+                                :keep_drift_states => "1.hour" # Added
                               }
                             })
 

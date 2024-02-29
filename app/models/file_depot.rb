@@ -9,7 +9,7 @@ class FileDepot < ApplicationRecord
   has_many              :log_files
   validates :uri, :presence => true
 
-  attr_accessor         :file
+  attr_accessor :file
 
   def self.supported_depots
     descendants.each_with_object({}) { |klass, hash| hash[klass.name] = klass.display_name }
