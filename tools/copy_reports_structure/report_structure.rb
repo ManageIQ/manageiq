@@ -5,7 +5,7 @@ class ReportStructure
     destination_group.update!(:settings => find_group(source_group_name).settings) unless dry_run
     puts "Reports structure was successfully copied from '#{source_group_name}' to '#{destination_group_name}'"
   rescue => e
-    $stderr.puts "Copying failed: #{e.message}"
+    warn "Copying failed: #{e.message}"
   end
 
   def self.duplicate_for_role(source_group_name, destination_role_name, dry_run = false)
@@ -16,7 +16,7 @@ class ReportStructure
         destination_group.update!(:settings => source_group.settings) unless dry_run
         puts "  Reports structure was successfully copied from '#{source_group_name}' to '#{destination_group.description}'"
       rescue => e
-        $stderr.puts "Copying failed: #{e.message}"
+        warn "Copying failed: #{e.message}"
       
     end
   end
@@ -28,7 +28,7 @@ class ReportStructure
       group.update!(:settings => nil) unless dry_run
       puts "Successfully removed custom report structure for group '#{group_name}'"
     rescue => e
-      $stderr.puts "Removing failed: #{e.message}"
+      warn "Removing failed: #{e.message}"
     end
   end
 
@@ -39,7 +39,7 @@ class ReportStructure
         group.update!(:settings => nil) unless dry_run
         puts "Successfully removed custom report structure for group '#{group.description}'"
       rescue => e
-        $stderr.puts "Removing failed: #{e.message}"
+        warn "Removing failed: #{e.message}"
       
     end
   end

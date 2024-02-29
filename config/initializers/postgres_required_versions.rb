@@ -12,7 +12,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.prepend(Module.new do
     end
 
     if postgresql_version >= 14_00_00
-      $stderr.puts msg
+      warn msg
     end
   end
 end)

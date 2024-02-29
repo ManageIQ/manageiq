@@ -4,7 +4,7 @@ require 'rubygems'
 require 'VMwareWebService/MiqVim'
 
 if ARGV.length != 1
-  $stderr.puts "Usage: #{$0} ems_name"
+  warn "Usage: #{$0} ems_name"
   exit 1
 end
 

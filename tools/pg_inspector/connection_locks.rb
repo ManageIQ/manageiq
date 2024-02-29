@@ -101,7 +101,7 @@ module PgInspector
       when "tuple"
         select_lock(lock, "database", "relation", "page", "tuple")
       else
-        $stderr.puts("Warning: unexpected lock type #{lock["locktype"]} encountered.")
+        warn("Warning: unexpected lock type #{lock["locktype"]} encountered.")
       end
     end
 

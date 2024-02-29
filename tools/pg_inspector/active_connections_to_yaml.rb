@@ -110,7 +110,7 @@ module PgInspector
 
         error_msg = "The application name for MIQ server/worker: #{row["application_name"]} is truncated"
         if options[:ignore_error]
-          $stderr.puts error_msg
+          warn error_msg
         else
           raise error_msg
         end

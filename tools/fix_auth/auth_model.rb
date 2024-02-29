@@ -119,7 +119,7 @@ module FixAuth
           rescue ArgumentError # undefined class/module
             errors += 1
             unless options[:allow_failures]
-              STDERR.puts "unable to fix #{r.class.table_name}:#{r.id}" unless options[:silent]
+              warn "unable to fix #{r.class.table_name}:#{r.id}" unless options[:silent]
               raise
             end
           end

@@ -205,7 +205,7 @@ module PgInspector
       # MIQ|<pid>|<server_id>|<worker_id>|<zone_id>|<class_name>|<zone_name>
       # Both previous and current is truncated up to 64 characters
       if activity["application_name"].end_with?("...")
-        $stderr.puts("Warning: the application_name #{activity["application_name"]} is incomplete.")
+        warn("Warning: the application_name #{activity["application_name"]} is incomplete.")
       end
       if new_application_name?(activity)
         _, pid, server_id, worker_id, zone_id, class_name, zone_name = activity["application_name"].split("|")

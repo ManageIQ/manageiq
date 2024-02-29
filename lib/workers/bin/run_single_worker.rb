@@ -74,7 +74,7 @@ end
 opt_parser.abort(opt_parser.help) unless worker_class
 
 unless MiqWorkerType.find_by(:worker_type => worker_class)
-  STDERR.puts "ERR:  `#{worker_class}` WORKER CLASS NOT FOUND!  Please run with `-l` to see possible worker class names."
+  warn "ERR:  `#{worker_class}` WORKER CLASS NOT FOUND!  Please run with `-l` to see possible worker class names."
   exit 1
 end
 
@@ -90,7 +90,7 @@ end
 
 worker_class = worker_class.constantize
 unless worker_class.has_required_role?
-  STDERR.puts "ERR:  Server roles are not sufficient for `#{worker_class}` worker."
+  warn "ERR:  Server roles are not sufficient for `#{worker_class}` worker."
   exit 1
 end
 
@@ -130,7 +130,7 @@ unless options[:dry_run]
     raise
   rescue Exception => err
     MiqWorker::Runner.safe_log(worker, "An unhandled error has occurred: #{err}\n#{err.backtrace.join("\n")}", :error)
-    STDERR.puts("ERROR: An unhandled error has occurred: #{err}. See log for details.") rescue nil
+    warn("ERROR: An unhandled error has occurred: #{err}. See log for details.") rescue nil
     exit 1
   ensure
     FileUtils.rm_f(worker.heartbeat_file)

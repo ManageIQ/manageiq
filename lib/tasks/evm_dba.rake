@@ -60,7 +60,7 @@ namespace :evm do
       AwesomeSpawn.run!("bin/rails runner", :params => ["MiqDatabase.seed; MiqRegion.seed"])
     rescue => err
       message = err.kind_of?(AwesomeSpawn::CommandResultError) ? err.result.error : err.message
-      STDERR.puts "Encountered issue setting up Database using region #{region}: #{message}\n"
+      warn "Encountered issue setting up Database using region #{region}: #{message}\n"
       raise
     end
   end

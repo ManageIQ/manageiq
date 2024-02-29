@@ -3,12 +3,12 @@ require File.expand_path('../config/environment', __dir__)
 
 ManageIQ::Providers::Vmware::Host.all.each do |host|
   if host.ipaddress.blank?
-    STDERR.puts "Host ID=#{host.id.inspect}, Name=#{host.name.inspect} has no IP Address"
+    warn "Host ID=#{host.id.inspect}, Name=#{host.name.inspect} has no IP Address"
     next
   end
 
   if host.guid.blank?
-    STDERR.puts "Host ID=#{host.id.inspect}, Name=#{host.name.inspect} has no GUID"
+    warn "Host ID=#{host.id.inspect}, Name=#{host.name.inspect} has no GUID"
     next
   end
 
@@ -19,7 +19,7 @@ ManageIQ::Providers::Vmware::Host.all.each do |host|
     begin
       ipaddress = TCPSocket.gethostbyname(host.ipaddress.split(',').first).last
     rescue SocketError => err
-      STDERR.puts "Cannot resolve hostname(#{host.ipaddress}) for Host ID=#{host.id.inspect}, Name=#{host.name.inspect} because #{err.message}"
+      warn "Cannot resolve hostname(#{host.ipaddress}) for Host ID=#{host.id.inspect}, Name=#{host.name.inspect} because #{err.message}"
       next
     end
   end

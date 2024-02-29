@@ -54,7 +54,7 @@ namespace :evm do
         MiqAeDatastore.backup('zip_file'  => zip_file,
                               'overwrite' => (ENV['OVERWRITE'].to_s.downcase == 'true'))
       rescue => err
-        STDERR.puts err.message
+        warn err.message
         exit(1)
       end
     end
@@ -120,8 +120,8 @@ namespace :evm do
         export_options['export_as'] = ENV['EXPORT_AS'] if ENV['EXPORT_AS'].present?
         MiqAeExport.new(domain, export_options).export
       rescue => err
-        STDERR.puts err.backtrace
-        STDERR.puts err.message
+        warn err.backtrace
+        warn err.message
         exit(1)
       
     end
@@ -174,8 +174,8 @@ namespace :evm do
         end
         MiqAeImport.new(ENV.fetch('DOMAIN', nil), import_options).import
       rescue => err
-        STDERR.puts err.backtrace
-        STDERR.puts err.message
+        warn err.backtrace
+        warn err.message
         exit(1)
       
     end
@@ -208,7 +208,7 @@ namespace :evm do
         EvmAutomate.simulate(domain, namespace, class_name, instance_name)
         puts "Automate simulation ending"
       rescue => err
-        STDERR.puts err.message
+        warn err.message
         exit(1)
       
     end
@@ -221,7 +221,7 @@ namespace :evm do
         puts "Importing automate domains from file #{ENV.fetch('BACKUP_ZIP_FILE', nil)}"
         MiqAeDatastore.restore(ENV.fetch('BACKUP_ZIP_FILE', nil))
       rescue => err
-        STDERR.puts err.message
+        warn err.message
         exit(1)
       
     end

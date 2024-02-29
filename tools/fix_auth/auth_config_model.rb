@@ -44,8 +44,8 @@ module FixAuth
         old_value.kind_of?(Hash) ? hash : hash.to_yaml
       rescue ArgumentError # undefined class/module
         unless options[:allow_failures]
-          STDERR.puts "potentially bad yaml:"
-          STDERR.puts old_value
+          warn "potentially bad yaml:"
+          warn old_value
         end
         raise
       end
