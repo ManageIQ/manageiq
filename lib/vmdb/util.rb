@@ -30,7 +30,7 @@ module VMDB
       log_dir = File.join(Rails.root, "log")
       gz_pattern = File.join(log_dir, "*[0-9][0-9].gz")
       Dir.glob(gz_pattern).inject([]) do |arr, f|
-        f.match(/.+-(\d+\.gz)/)
+        f =~ /.+-(\d+\.gz)/
         name = File.join(log_dir, "*#{$1}")
         arr << name unless $1.nil? || arr.include?(name)
         arr
