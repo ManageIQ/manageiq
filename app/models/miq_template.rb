@@ -37,7 +37,7 @@ class MiqTemplate < VmOrTemplate
                         "ManageIQ::Providers::Openstack::CloudManager::VolumeSnapshotTemplate"])
   end
 
-  def active?() = false
+  def active? = false
 
   def self.display_name(number = 1)
     n_('Template and Image', 'Templates and Images', number)

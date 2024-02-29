@@ -1,5 +1,5 @@
 class VimPerformanceDaily < MetricRollup
-  def self.instances_are_derived?() = true
+  def self.instances_are_derived? = true
 
   INFO_COLS = [:resource_type, :resource_id, :resource_name]
   PARENT_COLS = [:parent_host_id, :parent_ems_cluster_id, :parent_storage_id, :parent_ems_id].freeze

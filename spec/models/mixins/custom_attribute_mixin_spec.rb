@@ -2,7 +2,7 @@ RSpec.describe CustomAttributeMixin do
   let(:supported_factories) { [:vm_redhat, :host] }
   let(:test_class) do
     Class.new(ActiveRecord::Base) do
-      def self.name() = "TestClass"
+      def self.name = "TestClass"
       self.table_name = "vms"
       include CustomAttributeMixin
     end

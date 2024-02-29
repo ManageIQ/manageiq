@@ -781,15 +781,15 @@ class ExtManagementSystem < ApplicationRecord
     vms.inject(0) { |t, vm| vm.power_state == state ? t + 1 : t }
   end
 
-  def total_vms_on() = vm_count_by_state("on")
+  def total_vms_on = vm_count_by_state("on")
 
-  def total_vms_off() = vm_count_by_state("off")
+  def total_vms_off = vm_count_by_state("off")
 
-  def total_vms_unknown() = vm_count_by_state("unknown")
+  def total_vms_unknown = vm_count_by_state("unknown")
 
-  def total_vms_never() = vm_count_by_state("never")
+  def total_vms_never = vm_count_by_state("never")
 
-  def total_vms_suspended() = vm_count_by_state("suspended")
+  def total_vms_suspended = vm_count_by_state("suspended")
 
   def get_reserve(field)
     (hosts + ems_clusters).inject(0) { |v, obj| v + (obj.send(field) || 0) }

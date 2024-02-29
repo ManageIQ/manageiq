@@ -97,7 +97,7 @@ module ActsAsMiqSet
     #       this class save the *_type column with the full sub-class's name as opposed to the
     #       base model class. This is needed so that tagging works properly. Once tagging is reworked
     #       to handle the base model class name this can be removed and real STI can be used.
-    def descends_from_active_record?() = false
+    def descends_from_active_record? = false
 
     def model_class
       @model_class ||= name[0..-4].constantize
