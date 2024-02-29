@@ -93,7 +93,7 @@ class Account < ApplicationRecord
     if accttype == valid_account_type
       yield
     else
-      raise _("Cannot call method '%{caller}' on an Account of type '%{type}'") % {:caller => caller[0][/`.*'/][1..-2],
+      raise _("Cannot call method '%{caller}' on an Account of type '%{type}'") % {:caller => caller(1..1).first[/`.*'/][1..-2],
                                                                                    :type   => accttype}
     end
   end
