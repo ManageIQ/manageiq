@@ -2,6 +2,7 @@ require_relative 'git_worktree_exception'
 
 class GitWorktree
   attr_accessor :name, :email, :base_name
+
   ENTRY_KEYS = [:path, :dev, :ino, :mode, :gid, :uid, :ctime, :mtime]
   DEFAULT_FILE_MODE = 0100644
   LOCK_REFERENCE = 'refs/locks'

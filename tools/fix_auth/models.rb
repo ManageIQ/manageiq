@@ -109,6 +109,7 @@ module FixAuth
   class FixDatabaseYml
     attr_accessor :id
     attr_accessor :yml
+
     include FixAuth::AuthConfigModel
 
     class << self

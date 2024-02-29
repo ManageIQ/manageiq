@@ -8,6 +8,7 @@ require 'pg_inspector/connection_locks'
 module PgInspector
   class Cli
     attr_accessor :cmd
+
     SUB_COMMANDS = {
       :connections => ActiveConnectionsYAML,
       :servers     => ServersYAML,

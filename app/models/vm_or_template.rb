@@ -20,6 +20,7 @@ class VmOrTemplate < ApplicationRecord
   include Snapshotting
 
   attr_accessor :surrogate_host
+
   @surrogate_host = nil
 
   include ProviderObjectMixin

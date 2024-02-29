@@ -2,6 +2,7 @@ module EmsRefresh::SaveInventoryHelper
   class TypedIndex
     attr_accessor :record_index, :key_attribute_types
     attr_accessor :find_key
+
     def initialize(records, find_key)
       # Save the columns associated with the find keys, so we can coerce the hash values during fetch
       if records.first
