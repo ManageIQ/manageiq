@@ -392,7 +392,6 @@ class MiqPolicy < ApplicationRecord
         MiqExpression.new(filter_hash)
   end
 
-
   def self.logger
     $policy_log
   end

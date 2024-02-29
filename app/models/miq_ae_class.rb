@@ -93,7 +93,6 @@ class MiqAeClass < ApplicationRecord
     end
   end
 
-
   # my class's fqname is /domain/namespace1/namespace2/class
   def namespace
     return nil if ae_namespace.nil?

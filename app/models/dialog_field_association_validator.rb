@@ -1,5 +1,6 @@
 class DialogFieldAssociationValidator
   class DialogFieldAssociationCircularReferenceError < RuntimeError; end
+
   def check_for_circular_references(hash, k, collection = [])
     raise DialogFieldAssociationCircularReferenceError, "#{k} already exists in #{collection}" if collection.include?(k)
 

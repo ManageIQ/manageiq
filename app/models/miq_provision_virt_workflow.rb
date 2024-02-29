@@ -423,7 +423,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     result
   end
 
-
   def resources_for_ui
     auto_placement_enabled? ? {} : super
   end
