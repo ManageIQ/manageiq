@@ -33,7 +33,7 @@ module MiqServer::WorkerManagement::Monitor::Quiesce
       my_server.reload # Reload from SQL this MiqServer AND its miq_workers association
       my_server.heartbeat
 
-      break if self.workers_quiesced?
+      break if workers_quiesced?
 
       sleep worker_monitor_poll
     end

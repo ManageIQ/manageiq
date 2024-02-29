@@ -73,7 +73,7 @@ module FileDepotMixin
 
   def validate_depot_credentials
     # This only checks that credentials are present
-    errors.add(:file_depot, "is missing credentials") if self.requires_credentials? && self.missing_credentials?
+    errors.add(:file_depot, "is missing credentials") if requires_credentials? && missing_credentials?
   end
 
   def verify_depot_credentials(_auth_type = nil)

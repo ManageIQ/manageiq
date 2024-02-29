@@ -469,7 +469,7 @@ class MiqWorker::Runner
 
   def process_message(message, *args)
     meth = "message_#{message}"
-    if self.respond_to?(meth)
+    if respond_to?(meth)
       send(meth, *args)
     else
       _log.warn("#{log_prefix} Message [#{message}] is not recognized, ignoring")

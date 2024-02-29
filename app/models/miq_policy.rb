@@ -514,7 +514,7 @@ class MiqPolicy < ApplicationRecord
     pevent.miq_action = action
     pevent.save
 
-    self.save!
+    save!
   end
   private :add_action_for_event
 end

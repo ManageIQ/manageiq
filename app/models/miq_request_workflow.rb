@@ -155,7 +155,7 @@ end
           # If :required_method is defined let it determine if the field is value
           if fld[:required_method].nil?
             default_require_method = "default_require_#{f}".to_sym
-            if self.respond_to?(default_require_method)
+            if respond_to?(default_require_method)
               fld[:error] = send(default_require_method, f, values, dlg, fld, value)
               unless fld[:error].nil?
                 valid = false

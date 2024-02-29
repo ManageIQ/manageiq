@@ -186,7 +186,7 @@ module MiqProvisionQuotaMixin
     )
 
     # Make sure we skip the current MiqProvisionRequest in the calculation.
-    skip_id = self.instance_of?(::MiqProvisionRequest) ? id : miq_provision_request.id
+    skip_id = instance_of?(::MiqProvisionRequest) ? id : miq_provision_request.id
     load_ids = queued_requests.pluck(:instance_id)
     load_ids.delete(skip_id)
     provisions = MiqProvisionRequest.where(:id => load_ids).to_a
@@ -231,7 +231,7 @@ module MiqProvisionQuotaMixin
     requests = MiqRequest.where("type = ? and approval_state != ? and (created_on >= ? and created_on < ?)",
                                 MiqProvisionRequest.name, 'denied', *today_time_range)
     # Make sure we skip the current MiqProvisionRequest in the calculation.
-    skip_id = self.instance_of?(::MiqProvisionRequest) ? id : miq_provision_request.id
+    skip_id = instance_of?(::MiqProvisionRequest) ? id : miq_provision_request.id
     requests.collect { |request| request unless request.id == skip_id }.compact
   end
 

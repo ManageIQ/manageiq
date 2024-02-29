@@ -145,7 +145,7 @@ class ChargebackRateDetail < ApplicationRecord
   }
 
   def hourly_cost(value, consumption)
-    return 0.0 unless self.enabled?
+    return 0.0 unless enabled?
 
     (fixed_rate, variable_rate) = find_rate(value)
 
@@ -211,7 +211,7 @@ class ChargebackRateDetail < ApplicationRecord
   def save_tiers(tiers)
     temp = self.class.new(:chargeback_tiers => tiers)
     if temp.contiguous_tiers?
-      self.chargeback_tiers.replace(tiers)
+      chargeback_tiers.replace(tiers)
     else
       temp.errors.each { |error| errors.add(error.attribute, error.message) }
     end

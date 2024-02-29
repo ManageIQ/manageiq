@@ -61,7 +61,7 @@ class ChargebackContainerImage < Chargeback
   end
 
   def self.load_custom_attribute_groupby(groupby_label)
-    report_cb_model(self.name).safe_constantize.add_custom_attribute(groupby_label_method(groupby_label))
+    report_cb_model(name).safe_constantize.add_custom_attribute(groupby_label_method(groupby_label))
   end
 
   def self.groupby_label_method(groupby_label)

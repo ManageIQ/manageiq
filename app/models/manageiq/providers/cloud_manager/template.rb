@@ -27,7 +27,7 @@ class ManageIQ::Providers::CloudManager::Template < MiqTemplate
     }
 
     queue_opts = {
-      :class_name  => self.name,
+      :class_name  => name,
       :method_name => 'create_image',
       :role        => 'ems_operations',
       :zone        => ext_management_system.my_zone,

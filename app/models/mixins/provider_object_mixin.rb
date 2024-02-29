@@ -13,7 +13,7 @@ module ProviderObjectMixin
         handle = provider_object(connection)
         yield handle
       ensure
-        provider_object_release(handle) if handle && self.respond_to?(:provider_object_release)
+        provider_object_release(handle) if handle && respond_to?(:provider_object_release)
       
     end
   end

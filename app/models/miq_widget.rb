@@ -93,7 +93,7 @@ class MiqWidget < ApplicationRecord
     _log.info("Created MiqTask ID: [#{miq_task.id}], Name: [#{miq_task.name}] for: [#{num_targets}] groups")
 
     self.miq_task_id = miq_task.id
-    self.save!
+    save!
 
     miq_task
   end
@@ -163,7 +163,7 @@ class MiqWidget < ApplicationRecord
   end
 
   def generate_content_complete!
-    self.update!(:last_generated_content_on => Time.now.utc)
+    update!(:last_generated_content_on => Time.now.utc)
   end
 
   def generate_content_complete_message
@@ -188,7 +188,7 @@ class MiqWidget < ApplicationRecord
     return if content_type == "menu"
 
     # Called from schedule
-    unless self.enabled?
+    unless enabled?
       _log.info("#{log_prefix} is disabled, content will NOT be generated")
       return
     end
@@ -502,7 +502,7 @@ class MiqWidget < ApplicationRecord
       end
     else
       $log.info("Widget: [#{attrs["description"]}] file has been added to disk, adding to model")
-      widget = self.create!(attrs)
+      widget = create!(attrs)
     end
 
     widget.sync_schedule(schedule_info)
@@ -546,7 +546,7 @@ class MiqWidget < ApplicationRecord
       },
     )
     self.miq_schedule = sched
-    self.save!
+    save!
 
     _log.info("Created schedule for Widget: [#{title}]")
     _log.debug("Widget: [#{title}] created schedule: [#{sched.inspect}]")

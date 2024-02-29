@@ -12,7 +12,7 @@ class Snapshot < ApplicationRecord
   EVM_SNAPSHOT_NAME = "EvmSnapshot".freeze
 
   def after_create_callback
-    MiqEvent.raise_evm_event_queue(vm_or_template, "vm_snapshot_complete", attributes) unless self.is_a_type?(:system_snapshot) || self.not_recently_created?
+    MiqEvent.raise_evm_event_queue(vm_or_template, "vm_snapshot_complete", attributes) unless is_a_type?(:system_snapshot) || not_recently_created?
   end
 
   def self.add_elements(parentObj, xmlNode)
@@ -54,7 +54,7 @@ class Snapshot < ApplicationRecord
             end
 
     if value == :system_snapshot
-      self.is_a_type?(:evm_snapshot)
+      is_a_type?(:evm_snapshot)
     elsif value.kind_of?(Regexp)
       !!(value =~ name)
     else
@@ -87,7 +87,7 @@ class Snapshot < ApplicationRecord
   end
 
   def not_recently_created?
-    !self.recently_created?
+    !recently_created?
   end
 
   def self.xml_to_hashes(xmlNode, vm_or_template_id)

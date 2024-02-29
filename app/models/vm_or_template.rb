@@ -991,7 +991,7 @@ class VmOrTemplate < ApplicationRecord
 
     # MiqServer coresident proxy needs to contact the host and provide credentials.
     # Remove any MiqServer instances if we do not have credentials
-    rsc = self.scan_via_ems? ? ext_management_system : host
+    rsc = scan_via_ems? ? ext_management_system : host
     proxies.delete_if { |p| p.kind_of?(MiqServer) } if rsc && !rsc.authentication_status_ok?
     _log.debug("proxies2.length = #{proxies.length}")
 
@@ -1015,7 +1015,7 @@ class VmOrTemplate < ApplicationRecord
     case vendor
     when 'vmware'
       # VM cannot be scanned by server if they are on a repository
-      return [] if storage_id.blank? || self.repository_vm?
+      return [] if storage_id.blank? || repository_vm?
     when 'microsoft'
       return [] if storage_id.blank?
     else
@@ -1065,8 +1065,8 @@ class VmOrTemplate < ApplicationRecord
 
     write_attribute(:template, val)
 
-    self.type = corresponding_model.name if (self.template? && self.kind_of?(Vm)) || (!self.template? && self.kind_of?(MiqTemplate))
-    d = if self.template?
+    self.type = corresponding_model.name if (template? && kind_of?(Vm)) || (!template? && kind_of?(MiqTemplate))
+    d = if template?
 [/\.vmx$/, ".vmtx", 'never']
 else
 [/\.vmtx$/, ".vmx", state == 'never' ? 'unknown' : raw_power_state]
@@ -1347,7 +1347,7 @@ end
   end
 
   def v_is_a_template
-    self.template?.to_s.capitalize
+    template?.to_s.capitalize
   end
   # technically it is capitalized, but for sorting, not a concern
   # but we do need nil to become false

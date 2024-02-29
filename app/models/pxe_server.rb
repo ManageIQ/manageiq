@@ -86,7 +86,7 @@ class PxeServer < ApplicationRecord
     with_depot do
       
         file_glob("#{pxe_directory}/*").each do |f|
-          next unless self.file_file?(f)
+          next unless file_file?(f)
 
           relative_path = Pathname.new(f).relative_path_from(Pathname.new(pxe_directory)).to_s
 
@@ -139,7 +139,7 @@ class PxeServer < ApplicationRecord
     with_depot do
       
         file_glob("#{windows_images_directory}/*.wim").each do |f|
-          next unless self.file_file?(f)
+          next unless file_file?(f)
 
           path = Pathname.new(f).relative_path_from(Pathname.new(windows_images_directory)).to_s
 

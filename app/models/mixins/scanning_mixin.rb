@@ -105,7 +105,7 @@ module ScanningMixin
     # Update the last sync time if we did something
     self.last_sync_on = Time.at(xml_node.root.attributes["created_on"].to_i).utc if updated == true && xml_node.root.attributes["created_on"]
     save
-    hardware.save if self.respond_to?(:hardware) && !hardware.nil?
+    hardware.save if respond_to?(:hardware) && !hardware.nil?
   end
 
   def scan_queue(userid = "system", options = {})
@@ -163,8 +163,8 @@ module ScanningMixin
   end
 
   def path_arg
-    return path if self.respond_to?(:path)
-    return name if self.respond_to?(:name)
+    return path if respond_to?(:path)
+    return name if respond_to?(:name)
 
     nil
   end

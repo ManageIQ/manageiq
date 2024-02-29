@@ -906,7 +906,7 @@ end
   def append_user_filters_to_title(user)
     return unless user && user.has_filters?
 
-    self.append_to_title!(" (filtered for #{user.name})")
+    append_to_title!(" (filtered for #{user.name})")
   end
 
   def get_time_zone(default_tz = nil)

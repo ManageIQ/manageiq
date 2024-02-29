@@ -246,7 +246,7 @@ class MiqRegion < ApplicationRecord
 
   def perf_capture_always
     @perf_capture_always ||= VALID_CAPTURE_ALWAYS_TYPES.index_with do |type|
-      self.is_tagged_with?("capture_enabled", :ns => "/performance/#{type}")
+      is_tagged_with?("capture_enabled", :ns => "/performance/#{type}")
     end.freeze
   end
 
@@ -270,7 +270,7 @@ class MiqRegion < ApplicationRecord
     # Set @perf_capture_always since we already know all the answers
     options = options.dup
     (VALID_CAPTURE_ALWAYS_TYPES - options.keys).each do |type|
-      options[type] = self.is_tagged_with?("capture_enabled", :ns => "/performance/#{type}")
+      options[type] = is_tagged_with?("capture_enabled", :ns => "/performance/#{type}")
     end
     @perf_capture_always = options.freeze
   end

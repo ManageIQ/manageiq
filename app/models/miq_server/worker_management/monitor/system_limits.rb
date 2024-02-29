@@ -116,7 +116,7 @@ module MiqServer::WorkerManagement::Monitor::SystemLimits
 
   def build_algorithm_name(name, type)
     real_algorithm_name = "#{type}_algorithm_#{name}" if name && type
-    unless real_algorithm_name && self.respond_to?(real_algorithm_name)
+    unless real_algorithm_name && respond_to?(real_algorithm_name)
       default = TYPE_TO_DEFAULT_ALGORITHM[type]
       _log.warn("Using default algorithm: [#{default}] since [#{name}] is not a valid algorithm")
       real_algorithm_name = "#{type}_algorithm_#{default}"

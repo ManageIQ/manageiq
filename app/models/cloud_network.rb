@@ -109,10 +109,10 @@ class CloudNetwork < ApplicationRecord
 
   def extra_attributes_save(key, value)
     self.extra_attributes = {} if extra_attributes.blank?
-    self.extra_attributes[key] = value
+    extra_attributes[key] = value
   end
 
   def extra_attributes_load(key)
-    self.extra_attributes[key] if extra_attributes.present?
+    extra_attributes[key] if extra_attributes.present?
   end
 end

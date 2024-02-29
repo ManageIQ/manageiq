@@ -83,7 +83,7 @@ class Disk < ApplicationRecord
   end
 
   def partitions_aligned
-    return "Not Applicable" if self.rdm_disk?
+    return "Not Applicable" if rdm_disk?
 
     plist = partitions
     return "Unknown" if plist.empty?

@@ -24,7 +24,7 @@ class PxeMenu < ApplicationRecord
 
     klass = self.class.class_from_contents(contents)
     if klass != self.class
-      self.save!
+      save!
 
       # If sublass changes type to a different subclass
       pxe_images.destroy_all if self.class != PxeMenu

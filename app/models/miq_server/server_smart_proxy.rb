@@ -6,15 +6,15 @@ module MiqServer::ServerSmartProxy
   SMART_ROLES = %w[smartproxy smartstate].freeze
 
   def is_a_proxy?
-    self.has_role?(:SmartProxy)
+    has_role?(:SmartProxy)
   end
 
   def is_proxy_active?
-    self.started? && self.has_active_role?(:SmartProxy)
+    started? && has_active_role?(:SmartProxy)
   end
 
   def is_vix_disk?
-    has_vix_disk_lib? && self.has_active_role?(:SmartProxy)
+    has_vix_disk_lib? && has_active_role?(:SmartProxy)
   end
 
   def vm_scan_host_affinity?
@@ -132,7 +132,7 @@ module MiqServer::ServerSmartProxy
   end
 
   def concurrent_job_max
-    return 0 unless self.is_a_proxy?
+    return 0 unless is_a_proxy?
 
     MiqSmartProxyWorker.fetch_worker_settings_from_server(self)[:count].to_i
   end

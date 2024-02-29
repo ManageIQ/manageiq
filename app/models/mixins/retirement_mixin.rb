@@ -32,9 +32,9 @@ module RetirementMixin
       existing_objects = where(:id => obj_ids)
       updated_count = existing_objects.update_all(:retirement_requester => requester.userid)
       if updated_count != obj_ids.count
-        _log.info("Retirement requester for #{self.name} #{obj_ids - existing_objects.pluck(:id)} not set because objects not found")
+        _log.info("Retirement requester for #{name} #{obj_ids - existing_objects.pluck(:id)} not set because objects not found")
       else
-        _log.info("Retirement requester for #{self.name} #{obj_ids} being set to #{requester.userid}")
+        _log.info("Retirement requester for #{name} #{obj_ids} being set to #{requester.userid}")
       end
     end
   end

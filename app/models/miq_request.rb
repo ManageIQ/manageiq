@@ -250,7 +250,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def approval_approved
-    unless self.approved?
+    unless approved?
       _log.info("Request: [#{description}] has outstanding approvals")
       return false
     end
@@ -320,7 +320,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def approve(userid, reason)
-    first_approval.approve(userid, reason) unless self.approved?
+    first_approval.approve(userid, reason) unless approved?
   end
   api_relay_method(:approve) { |_userid, reason| {:reason => reason} }
   api_relay_method(:deny)    { |_userid, reason| {:reason => reason} }

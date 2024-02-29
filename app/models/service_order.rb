@@ -18,7 +18,7 @@ class ServiceOrder < ApplicationRecord
 
 
   def initialize(*args)
-    raise NotImplementedError, _("must be implemented in a subclass") if self.instance_of?(ServiceOrder)
+    raise NotImplementedError, _("must be implemented in a subclass") if instance_of?(ServiceOrder)
 
     super
   end

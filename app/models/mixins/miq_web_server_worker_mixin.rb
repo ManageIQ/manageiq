@@ -154,7 +154,7 @@ module MiqWebServerWorkerMixin
   end
 
   def release_db_connection
-    self.update_spid!(nil)
+    update_spid!(nil)
     self.class.release_db_connection
   end
 end

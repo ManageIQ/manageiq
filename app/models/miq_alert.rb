@@ -240,7 +240,7 @@ class MiqAlert < ApplicationRecord
   def evaluate(target, inputs = {})
     target = self.class.normalize_target(target)
 
-    return if self.postpone_evaluation?(target)
+    return if postpone_evaluation?(target)
 
     _log.info("Evaluating Alert [#{description}] for target: [#{target.name}]...")
     result = eval_expression(target, inputs)
@@ -280,7 +280,7 @@ class MiqAlert < ApplicationRecord
         next if a == :delay_next_evaluation
 
         method = "invoke_#{a}"
-        unless self.respond_to?(method)
+        unless respond_to?(method)
           _log.warn("Unknown notification type: [#{a}], skipping invocation")
           next
         end
@@ -594,7 +594,7 @@ class MiqAlert < ApplicationRecord
     method = "evaluate_method_#{hash_expression[:eval_method]}"
     options = hash_expression[:options] || {}
 
-    raise "Evaluation method '#{hash_expression[:eval_method]}' does not exist" unless self.respond_to?(method)
+    raise "Evaluation method '#{hash_expression[:eval_method]}' does not exist" unless respond_to?(method)
 
     send(method, target, options)
   end

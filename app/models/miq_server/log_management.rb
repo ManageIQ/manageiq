@@ -123,14 +123,14 @@ module MiqServer::LogManagement
 
     begin
       local_file = VMDB::Util.zip_logs(log_type.to_s.downcase.concat(".zip"), log_patterns(log_type, pattern), "system")
-      self.log_files << logfile
+      log_files << logfile
 
       logfile.update(
         :local_file         => local_file,
         :logging_started_on => log_start,
         :logging_ended_on   => log_end,
         :name               => LogFile.logfile_name(self, log_type, date_string),
-        :description        => "Logs for Zone #{zone.name rescue nil} Server #{self.name} #{date_string}",
+        :description        => "Logs for Zone #{zone.name rescue nil} Server #{name} #{date_string}",
       )
 
       logfile.upload

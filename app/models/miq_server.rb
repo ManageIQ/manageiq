@@ -112,7 +112,7 @@ class MiqServer < ApplicationRecord
   end
 
   def validate_is_deleteable
-    unless self.is_deleteable?
+    unless is_deleteable?
       _log.error(@errors.full_messages)
       throw :abort
     end
@@ -202,7 +202,7 @@ class MiqServer < ApplicationRecord
     if threshold_exceeded?(:server_monitor_frequency, now)
       Benchmark.realtime_block(:server_monitor) do
         server_monitor.monitor_servers
-        monitor_server_roles if self.is_master?
+        monitor_server_roles if is_master?
         messaging_health_check
       end
     end
@@ -249,7 +249,7 @@ class MiqServer < ApplicationRecord
   end
 
   def stop(sync = false)
-    return if self.stopped?
+    return if stopped?
 
     shutdown_and_exit_queue
     wait_for_stopped if sync
@@ -258,7 +258,7 @@ class MiqServer < ApplicationRecord
   def wait_for_stopped
     loop do
       reload
-      break if self.stopped?
+      break if stopped?
 
       sleep stop_poll
     end
@@ -354,13 +354,13 @@ class MiqServer < ApplicationRecord
   def is_deleteable?
     return true if MiqEnvironment::Command.is_podified?
 
-    if self.is_local?
+    if is_local?
       message = N_("Cannot delete currently used %{log_message}") % {:log_message => format_short_log_msg}
       @errors ||= ActiveModel::Errors.new(self)
       @errors.add(:base, message)
       return false
     end
-    return true if self.stopped?
+    return true if stopped?
 
     if is_recently_active?
       message = N_("Cannot delete recently active %{log_message}") % {:log_message => format_short_log_msg}
@@ -389,7 +389,7 @@ class MiqServer < ApplicationRecord
   end
 
   def logon_status
-    return :ready if self.started?
+    return :ready if started?
 
     started_on < (Time.now.utc - ::Settings.server.startup_timeout) ? :timed_out_starting : status.to_sym
   end

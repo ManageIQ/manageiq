@@ -189,7 +189,7 @@ class User < ApplicationRecord
     end
     if auth.authenticate(userid, oldpwd)
       self.password = newpwd
-      self.save!
+      save!
     end
   end
 

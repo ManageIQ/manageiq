@@ -12,6 +12,6 @@ module UuidMixin
   private
 
   def default_name_to_guid
-    self.name ||= self.guid if self.respond_to?(:guid) && self.respond_to?(:name) && self.respond_to?(:name=)
+    self.name ||= guid if respond_to?(:guid) && respond_to?(:name) && respond_to?(:name=)
   end
 end

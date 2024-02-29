@@ -92,7 +92,7 @@ class Notification < ApplicationRecord
 
     # Note, options are read in text_bindings_dynamic and used in text_bindings
     # if the subject is no longer there such as when a vm is deleted.
-    self.options[:subject] = backup_name if backup_name
+    options[:subject] = backup_name if backup_name
   end
 
   def text_bindings

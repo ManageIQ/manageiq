@@ -54,7 +54,7 @@ module MiqReport::Generator::Async
     task = MiqTask.create(:name => _("Generate Report: '%{name}'") % {:name => name})
     unless sync # Only queued if sync reporting disabled (default)
       cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
-      if self.new_record?
+      if new_record?
         MiqQueue.submit_job(
           :service      => "reporting",
           :class_name   => self.class.to_s,

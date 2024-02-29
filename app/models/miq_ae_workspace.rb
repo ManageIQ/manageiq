@@ -19,7 +19,7 @@ class MiqAeWorkspace < ApplicationRecord
     if workspace.varset(uri, value)
       self.setters ||= []
       self.setters << [uri, value]
-      self.save!
+      save!
     end
   end
 

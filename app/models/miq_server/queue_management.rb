@@ -60,7 +60,7 @@ module MiqServer::QueueManagement
   # Tell the remote or local server to restart
   def restart_queue
     log_message  = "Server restart requested"
-    log_message += ", remote server: [#{name}], GUID: [#{guid}], initiated from: [#{MiqServer.my_server.name}], GUID: [#{MiqServer.my_server.guid}]" if self.is_remote?
+    log_message += ", remote server: [#{name}], GUID: [#{guid}], initiated from: [#{MiqServer.my_server.name}], GUID: [#{MiqServer.my_server.guid}]" if is_remote?
     _log.info(log_message)
     enqueue_for_server('restart')
   end

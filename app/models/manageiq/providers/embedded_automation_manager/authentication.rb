@@ -67,7 +67,7 @@ class ManageIQ::Providers::EmbeddedAutomationManager::Authentication < ManageIQ:
   end
 
   def set_manager_ref
-    self.manager_ref = self.id
+    self.manager_ref = id
     save!
   end
 

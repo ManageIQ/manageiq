@@ -18,7 +18,7 @@ module MiqReport::Notification
 
     send_if_empty = options.fetch_path(:email, :send_if_empty)
     send_if_empty = true if send_if_empty.nil?
-    if !self.table_has_records? && !send_if_empty
+    if !table_has_records? && !send_if_empty
       _log.info("No records found for scheduled report and :send_if_empty option is false, no Email will be sent. ")
       return
     end
@@ -31,7 +31,7 @@ module MiqReport::Notification
     curr_tz = Time.zone # Save current time zone setting
     Time.zone = user ? user.get_timezone : MiqServer.my_server.server_timezone
 
-    if self.table_has_records?
+    if table_has_records?
       attach_types = options.fetch_path(:email, :attach) || [:pdf] # support legacy schedules
       attachments = attach_types.collect do |atype|
         target = atype == :pdf ? result : self
@@ -60,7 +60,7 @@ module MiqReport::Notification
   end
 
   def notify_email_body(_url, _result, recipients)
-    if self.table_has_records?
+    if table_has_records?
       _("Please find attached scheduled report \"%{name}\". This report was sent to: %{recipients}.") %
         {:name => name, :recipients => recipients.join(", ")}
     else

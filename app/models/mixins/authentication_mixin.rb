@@ -189,7 +189,7 @@ module AuthenticationMixin
     @orig_credentials ||= auth_user_pwd || "none"
 
     # Invoke before callback
-    before_update_authentication if self.respond_to?(:before_update_authentication) && options[:save]
+    before_update_authentication if respond_to?(:before_update_authentication) && options[:save]
 
     data.each_pair do |type, value|
       cred = authentication_type(type)
@@ -230,7 +230,7 @@ module AuthenticationMixin
       # Update or create
       if cred.nil?
         # FIXME: after we completely move to DDF and revise the REST API for providers, this will probably be something to delete
-        if self.kind_of?(ManageIQ::Providers::Openstack::InfraManager) && value[:auth_key]
+        if kind_of?(ManageIQ::Providers::Openstack::InfraManager) && value[:auth_key]
           # TODO(lsmola) investigate why build throws an exception, that it needs to be subclass of AuthUseridPassword
           cred = ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair.new(:name => "#{self.class.name} #{name}", :authtype => type.to_s,
                                                                                :resource_id => id, :resource_type => "ExtManagementSystem")
@@ -253,7 +253,7 @@ module AuthenticationMixin
     end
 
     # Invoke callback
-    after_update_authentication if self.respond_to?(:after_update_authentication) && options[:save]
+    after_update_authentication if respond_to?(:after_update_authentication) && options[:save]
     @orig_credentials = nil if options[:save]
   end
 
@@ -303,8 +303,8 @@ module AuthenticationMixin
   end
 
   def authentication_check_attributes(types, method_options)
-    role = authentication_check_role if self.respond_to?(:authentication_check_role)
-    zone = my_zone if self.respond_to?(:my_zone)
+    role = authentication_check_role if respond_to?(:authentication_check_role)
+    zone = my_zone if respond_to?(:my_zone)
 
     # FIXME: Via schedule, a message is created with args = [], so all authentications will be checked,
     # while an authentication change will create a message with args [:default] or whatever
@@ -468,7 +468,7 @@ module AuthenticationMixin
   def authentication_check_no_validation(type, options)
     header = "type: [#{type.inspect}] for [#{id}] [#{name}]"
     status, details =
-      if self.missing_credentials?(type)
+      if missing_credentials?(type)
         [:incomplete, "Missing credentials"]
       else
         begin

@@ -169,7 +169,7 @@ class MiqAction < ApplicationRecord
     atype = action_type
     atype = name if atype.nil? || atype == "default"
     method = "action_" + atype
-    unless self.respond_to?(method)
+    unless respond_to?(method)
       MiqPolicy.logger.info("MIQ(action-invoke) '#{name}', not supported")
       return
     end
@@ -187,7 +187,7 @@ class MiqAction < ApplicationRecord
     atype = action_type
     atype ||= name
     method = "action_" + atype
-    unless self.respond_to?(method)
+    unless respond_to?(method)
       MiqPolicy.logger.info("MIQ(action-invoke) '#{name}', not supported")
       return
     end

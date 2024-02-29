@@ -7,7 +7,7 @@ class BinaryBlob < ApplicationRecord
   def delete_binary
     self.md5 = self.size = self.part_size = nil
     binary_blob_parts.delete_all
-    self.save!
+    save!
   end
 
   # Get binary file from database into a raw String
@@ -37,7 +37,7 @@ class BinaryBlob < ApplicationRecord
       buf = data.slice!(0..self.part_size)
       binary_blob_parts << BinaryBlobPart.new(:data => buf)
     end
-    self.save!
+    save!
   end
 
   # Write binary file from the database into a file
@@ -89,7 +89,7 @@ class BinaryBlob < ApplicationRecord
     end
 
     self.md5 = hasher.hexdigest
-    self.save!
+    save!
 
     self
   end

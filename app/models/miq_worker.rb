@@ -265,7 +265,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.start_workers
-    return unless self.has_required_role?
+    return unless has_required_role?
 
     workers.times { start_worker }
   end

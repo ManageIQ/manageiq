@@ -278,7 +278,7 @@ class EmsCluster < ApplicationRecord
 
   def get_perf_collection_object_list
     hosts = hosts_enabled_for_perf_capture
-    self.perf_capture_enabled? ? [self] + hosts : hosts
+    perf_capture_enabled? ? [self] + hosts : hosts
   end
 
   def perf_capture_enabled_host_ids=(ids)

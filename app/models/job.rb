@@ -48,7 +48,7 @@ class Job < ApplicationRecord
   end
 
   def check_active_on_destroy
-    if self.is_active?
+    if is_active?
       _log.warn("Job is active, delete not allowed - #{attributes_log}")
       throw :abort
     end
@@ -71,7 +71,7 @@ class Job < ApplicationRecord
     self.message = message
     save
 
-    return unless self.is_active?
+    return unless is_active?
 
     # Update worker heartbeat
     MiqQueue.get_worker(guid).try(:update_heartbeat)

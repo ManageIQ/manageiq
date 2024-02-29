@@ -141,7 +141,7 @@ module ActsAsTaggable
     # Apply new tags
     Tag.transaction do
       Tag.parse(list).each do |name|
-        next if self.is_tagged_with?(name, options)
+        next if is_tagged_with?(name, options)
 
         name = File.join(ns, name)
         tag = Tag.where(:name => name).first_or_create
@@ -221,7 +221,7 @@ module ActsAsTaggable
     list.each do |inner_list|
       inner_result = false
       inner_list.each do |tag|
-        if self.is_tagged_with?(tag, options)
+        if is_tagged_with?(tag, options)
           inner_result = true
           break
         end

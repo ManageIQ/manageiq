@@ -60,7 +60,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
   def scheduler_for(role)
     @schedules[role] ||= []
-    ::MiqScheduleWorker::Scheduler.new(self._log, @schedules[role], @system_scheduler)
+    ::MiqScheduleWorker::Scheduler.new(_log, @schedules[role], @system_scheduler)
   end
 
   def schedules_for_all_roles
@@ -554,7 +554,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       begin
         added.each do |r|
           m = "schedules_for_#{r}_role"
-          next unless self.respond_to?(m)
+          next unless respond_to?(m)
 
           _log.info("Adding Schedules for Role=[#{r}]")
           send(m)

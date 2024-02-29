@@ -282,7 +282,7 @@ class Chargeback < ActsAsArModel
   end
 
   def self.load_custom_attributes_for(cols)
-    chargeback_klass = report_cb_model(self.to_s).safe_constantize
+    chargeback_klass = report_cb_model(to_s).safe_constantize
     chargeback_klass.load_custom_attributes_for(cols)
     cols.each do |x|
       next unless x.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)

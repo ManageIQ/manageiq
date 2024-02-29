@@ -700,7 +700,7 @@ end
     data_type   = field_hash[:data_type]
     cust_method = "custom_#{dlg_field}"
 
-    if self.respond_to?(cust_method)
+    if respond_to?(cust_method)
       send(cust_method, field_hash, data_value)
     else
       value = case data_type

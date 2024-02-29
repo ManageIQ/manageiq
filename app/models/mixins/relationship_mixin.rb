@@ -722,7 +722,7 @@ module RelationshipMixin
     of_type = Array.wrap(options[:of_type])
     all_children_removed = of_type.empty? || (child_types - of_type).empty?
 
-    if self.is_root? && all_children_removed
+    if is_root? && all_children_removed
       remove_all_relationships
     else
       remove_all_relationships(child_rels(*args))

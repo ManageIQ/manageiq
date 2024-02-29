@@ -16,7 +16,7 @@ module Metric::CiMixin::Targets
   alias perf_capture_always perf_capture_always?
 
   def perf_capture_enabled?
-    @perf_capture_enabled ||= (perf_capture_always? || self.is_tagged_with?("capture_enabled", :ns => "/performance"))
+    @perf_capture_enabled ||= (perf_capture_always? || is_tagged_with?("capture_enabled", :ns => "/performance"))
   end
   alias perf_capture_enabled perf_capture_enabled?
   Vmdb::Deprecation.deprecate_methods(self, :perf_capture_enabled => :perf_capture_enabled?)
