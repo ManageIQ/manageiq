@@ -554,9 +554,8 @@ class Storage < ApplicationRecord
     host_ids = hosts.collect(&:id)
     return {} if host_ids.empty?
 
-    Vm.where(:host_id => host_ids).includes(:storage).inject({}) do |h, v|
+    Vm.where(:host_id => host_ids).includes(:storage).each_with_object({}) do |v, h|
       h[File.dirname(v.path)] = v.id
-      h
     end
   end
 

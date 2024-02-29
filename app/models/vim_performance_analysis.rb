@@ -363,7 +363,7 @@ module VimPerformanceAnalysis
   def self.child_tags_over_time_period(obj, interval_name, options = {})
     classifications = Classification.hash_all_by_type_and_name
 
-    find_child_perf_for_time_period(obj, interval_name, options.merge(:conditions => "resource_type != 'VmOrTemplate' AND tag_names IS NOT NULL", :select => "resource_type, tag_names")).inject({}) do |h, p|
+    find_child_perf_for_time_period(obj, interval_name, options.merge(:conditions => "resource_type != 'VmOrTemplate' AND tag_names IS NOT NULL", :select => "resource_type, tag_names")).each_with_object({}) do |p, h|
       p.tag_names.split("|").each do |t|
         next if t.starts_with?("power_state")
 
@@ -377,7 +377,6 @@ module VimPerformanceAnalysis
         ent_desc = ent.nil? ? e.titleize : ent.description
         h[tag] = "#{ui_lookup(:model => p.resource_type)}: #{cat_desc}: #{ent_desc}"
       end
-      h
     end
   end
 
@@ -412,15 +411,14 @@ module VimPerformanceAnalysis
     end
 
     result.each do |_k, h|
-      h[:min_max] = h.keys.find_all { |k| k.to_s.starts_with?("min", "max") }.inject({}) do |mm, k|
+      h[:min_max] = h.keys.find_all { |k| k.to_s.starts_with?("min", "max") }.each_with_object({}) do |k, mm|
         val = h.delete(k)
         mm[k] = val unless val.nil?
-        mm
       end
       h.reject! { |k, _v| perf_klass.virtual_attribute?(k) }
     end
 
-    result.inject([]) do |recs, k|
+    result.each_with_object([]) do |k, recs|
       _ts, v = k
       cols.each do |c|
         next unless v[c].kind_of?(Float)
@@ -429,7 +427,6 @@ module VimPerformanceAnalysis
       end
 
       recs.push(perf_klass.new(v))
-      recs
     end
   end
 

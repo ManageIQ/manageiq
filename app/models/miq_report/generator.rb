@@ -494,7 +494,7 @@ module MiqReport::Generator
   end
 
   def generate_rows_from_data(data)
-    data.inject([]) do |arr, d|
+    data.each_with_object([]) do |d, arr|
       generate_rows.each do |gen_row|
         row = {}
         gen_row.each_with_index do |col_def, col_idx|
@@ -503,7 +503,6 @@ module MiqReport::Generator
         end
         arr << row
       end
-      arr
     end
   end
 
@@ -539,7 +538,7 @@ module MiqReport::Generator
 
   def build_correlate_tag_cols
     tags2desc = {}
-    arr = self.cols.inject([]) do |a, c|
+    arr = self.cols.each_with_object([]) do |c, a|
       self.extras[:group_by_tag_cols].each do |tc|
         tag = tc[(c.length + 1)..-1]
         if tc.starts_with?(c)
@@ -554,7 +553,6 @@ module MiqReport::Generator
           a << [tc, tags2desc[tag]]
         end
       end
-      a
     end
     arr.sort_by! { |a| a[1] }
     while arr.first[1] == "[None]"
@@ -583,7 +581,7 @@ module MiqReport::Generator
     klass = recs.first.class
     last_rec = nil
 
-    results = recs.sort_by { |r| [r.resource_type, r.resource_id.to_s, r.timestamp.iso8601] }.inject([]) do |arr, rec|
+    results = recs.sort_by { |r| [r.resource_type, r.resource_id.to_s, r.timestamp.iso8601] }.each_with_object([]) do |rec, arr|
       last_rec ||= rec
       while (rec.timestamp - last_rec.timestamp) > int
         base_attrs = last_rec.attributes.reject { |k, _v| !base_cols.include?(k) }
@@ -593,7 +591,6 @@ module MiqReport::Generator
       end
       arr << rec
       last_rec = rec
-      arr
     end
     results
   end
@@ -652,14 +649,13 @@ module MiqReport::Generator
     data = sort_table(data, rpt_options[:pivot][:group_cols].collect(&:to_s), :order => :ascending)
 
     # build grouping options for subtotal
-    options = col_order.inject({}) do |h, col|
+    options = col_order.each_with_object({}) do |col, h|
       next(h) unless col.include?("__")
 
       c, g = col.split("__")
       h[c] ||= {}
       h[c][:grouping] ||= []
       h[c][:grouping] << g.to_sym
-      h
     end
 
     group_key = rpt_options[:pivot][:group_cols]
@@ -667,14 +663,13 @@ module MiqReport::Generator
     data.inject([]) do |a, (k, v)|
       next(a) if k == :_total_
 
-      row = col_order.inject({}) do |h, col|
+      row = col_order.each_with_object({}) do |col, h|
         if col.include?("__")
           c, g = col.split("__")
           h[col] = v[g.to_sym][c]
         else
           h[col] = v[:row][col]
         end
-        h
       end
       a << row
     end
@@ -748,9 +743,8 @@ module MiqReport::Generator
         attrs[a] = rec.send(a) if rec.respond_to?(a)
       end
     end
-    attrs = attrs.inject({}) do |h, (k, v)|
+    attrs = attrs.each_with_object({}) do |(k, v), h|
       h["#{options[:qualify_attribute_names]}.#{k}"] = v
-      h
     end if options[:qualify_attribute_names]
     attrs
   end

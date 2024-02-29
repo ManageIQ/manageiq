@@ -29,11 +29,10 @@ module VMDB
       # From a log file create an array of strings containing the date patterns
       log_dir = Rails.root.join("log").to_s
       gz_pattern = File.join(log_dir, "*[0-9][0-9].gz")
-      Dir.glob(gz_pattern).inject([]) do |arr, f|
+      Dir.glob(gz_pattern).each_with_object([]) do |f, arr|
         f =~ /.+-(\d+\.gz)/
         name = File.join(log_dir, "*#{$1}")
         arr << name unless $1.nil? || arr.include?(name)
-        arr
       end
     end
 

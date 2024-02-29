@@ -382,31 +382,27 @@ class MiqAlert < ApplicationRecord
   end
 
   def self.rt_perf_model_details(dbs)
-    dbs.inject({}) do |h, db|
-      h[db] = Metric::Rollup.const_get("#{db.underscore.upcase}_REALTIME_COLS").inject({}) do |hh, c|
+    dbs.each_with_object({}) do |db, h|
+      h[db] = Metric::Rollup.const_get("#{db.underscore.upcase}_REALTIME_COLS").each_with_object({}) do |c, hh|
         db_column = "#{db}Performance.#{c}" # this is to prevent the string from being collected during string extraction
         hh[c.to_s] = Dictionary.gettext(db_column)
-        hh
       end
-      h
     end
   end
 
   def self.operating_range_perf_model_details(dbs)
-    dbs.inject({}) do |h, db|
-      h[db] = Metric::LongTermAverages::AVG_COLS.inject({}) do |hh, c|
+    dbs.each_with_object({}) do |db, h|
+      h[db] = Metric::LongTermAverages::AVG_COLS.each_with_object({}) do |c, hh|
         db_column = "#{db}Performance.#{c}" # this is to prevent the string from being collected during string extraction
         hh[c.to_s] = Dictionary.gettext(db_column)
-        hh
       end
-      h
     end
   end
 
   def self.hourly_perf_model_details(dbs)
-    dbs.inject({}) do |h, db|
+    dbs.each_with_object({}) do |db, h|
       perf_model = "#{db}Performance"
-      h[db] = MiqExpression.model_details(perf_model, :include_model => false, :interval => "hourly").inject({}) do |hh, a|
+      h[db] = MiqExpression.model_details(perf_model, :include_model => false, :interval => "hourly").each_with_object({}) do |a, hh|
         d, c = a
         model, col = c.split("-")
         next(hh) unless model == perf_model
@@ -414,9 +410,7 @@ class MiqAlert < ApplicationRecord
         next(hh) if col.starts_with?("abs_") && col.ends_with?("_timestamp")
 
         hh[col] = d
-        hh
       end
-      h
     end
   end
 
@@ -521,22 +515,20 @@ class MiqAlert < ApplicationRecord
       raise
     end
 
-    alarms.inject({}) do |h, a|
+    alarms.each_with_object({}) do |a, h|
       exp = a.fetch_path("info", "expression", "expression")
       next(h) unless exp
       next(h) unless exp.detect { |e| e["type"] == EVM_TYPE_TO_VIM_TYPE[db] || e["objectType"] == EVM_TYPE_TO_VIM_TYPE[db] }
 
       h[a["MOR"]] = a["info"]["name"]
-      h
     end
   end
 
   def self.expression_types(db = nil)
-    automate_expressions.inject({}) do |h, e|
+    automate_expressions.each_with_object({}) do |e, h|
       next(h) unless db.nil? || e[:db].nil? || e[:db].include?(db)
 
       h[e[:name]] = e[:description]
-      h
     end
   end
 

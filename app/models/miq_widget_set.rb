@@ -118,14 +118,13 @@ class MiqWidgetSet < ApplicationRecord
     if ws.nil? || ws.updated_on.utc < File.mtime(filename).utc
       # Convert widget descriptions to ids in set_data
       members = []
-      attrs["set_data"] = attrs.delete("set_data_by_description").inject({}) do |h, k|
+      attrs["set_data"] = attrs.delete("set_data_by_description").each_with_object({}) do |k, h|
         col, arr = k
         h[col] = arr.collect do |d|
           w = MiqWidget.find_by(:description => d)
           members << w if w
           w.try(:id)
         end.compact
-        h
       end
 
       owner_description = attrs.delete("owner_description")

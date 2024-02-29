@@ -41,18 +41,16 @@ class VimPerformanceTrend < ActsAsArModel
     options[:limit_col] ? options[:limit_col] : "limit"
 
     # group data by resource name
-    grouped_objs = perfs.inject({}) do |h, o|
+    grouped_objs = perfs.each_with_object({}) do |o, h|
       name = o.resource.name if o.resource
       h[name] ||= []
       h[name].push(o)
-      h
     end
 
     # calculate trend data for each group
-    trend_data = grouped_objs.inject({}) do |h, group|
+    trend_data = grouped_objs.each_with_object({}) do |group, h|
       name, olist = group
       h[name] = build_trend_data(options[:trend_col], olist)
-      h
     end
 
     # build table data
@@ -224,10 +222,9 @@ class VimPerformanceTrend < ActsAsArModel
     return [] unless TREND_COLS[db.to_sym][col.to_sym]
     return [] unless TREND_COLS[db.to_sym][col.to_sym][:limit_cols]
 
-    TREND_COLS[db.to_sym][col.to_sym][:limit_cols].inject([]) do |arr, col|
+    TREND_COLS[db.to_sym][col.to_sym][:limit_cols].each_with_object([]) do |col, arr|
       cols = interval == "daily" ? ["max_#{col}"] : [col] # add in max if daily
       cols.each { |c| arr.push([Dictionary.gettext([db, c.to_s].join("."), :type => "column"), c]) }
-      arr
     end
   end
 
