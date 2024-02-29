@@ -67,7 +67,7 @@ class Account < ApplicationRecord
       nh[:acctid] = nh.delete("#{typeName}id".to_sym)
       nh[:acctid] = nil unless nh[:acctid].respond_to?(:to_int) || nh[:acctid].to_s =~ /^-?[0-9]+$/
       # Convert to signed integer values for acctid
-      nh[:acctid] = [nh[:acctid].to_i].pack("I").unpack("i")[0] unless nh[:acctid].nil?
+      nh[:acctid] = [nh[:acctid].to_i].pack("I").unpack1("i") unless nh[:acctid].nil?
 
       # Find the users for this group / groups for this user
       nh[:members] = []
