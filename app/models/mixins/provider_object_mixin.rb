@@ -1,10 +1,8 @@
 module ProviderObjectMixin
-  def with_provider_connection(options = {})
+  def with_provider_connection(options = {}, &block)
     raise _("no block given") unless block_given?
 
-    connection_source(options).with_provider_connection(options) do |connection|
-      yield connection
-    end
+    connection_source(options).with_provider_connection(options, &block)
   end
 
   def with_provider_object(options = {})

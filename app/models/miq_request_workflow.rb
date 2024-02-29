@@ -310,8 +310,8 @@ class MiqRequestWorkflow
   end
 
   # TODO: Return list in defined ordered
-  def dialogs
-    @dialogs[:dialogs].each_pair { |n, d| yield(n, d) }
+  def dialogs(&block)
+    @dialogs[:dialogs].each_pair(&block)
   end
 
   def fields(dialog = nil)

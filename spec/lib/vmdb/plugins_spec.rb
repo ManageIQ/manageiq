@@ -135,12 +135,12 @@ RSpec.describe Vmdb::Plugins do
     before { clear_versions_caches }
     after  { clear_versions_caches }
 
-    def with_temp_dir(options)
+    def with_temp_dir(options, &block)
       Dir.mktmpdir("plugins_spec") do |dir|
         allow(engine).to receive(:root).and_return(Pathname.new(dir))
 
         if options[:symlinked]
-          with_temp_symlink(dir) { |ln| yield ln }
+          with_temp_symlink(dir, &block)
         else
           yield dir
         end

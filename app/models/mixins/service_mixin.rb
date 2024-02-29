@@ -56,17 +56,15 @@ module ServiceMixin
     return :stop_delay if action == :stop
   end
 
-  def each_group_resource(grp_idx = nil)
+  def each_group_resource(grp_idx = nil, &block)
     return enum_for(:each_group_resource) unless block_given?
 
     if children.present? && service_resources.empty?
       children.each do |child|
-        child.service_resources.each { |sr| yield(sr) }
+        child.service_resources.each(&block)
       end
     elsif grp_idx.nil?
-      service_resources.each do |sr|
-        yield(sr)
-      end
+      service_resources.each(&block)
     else
       service_resources.each do |sr|
         yield(sr) if sr.group_idx == grp_idx

@@ -87,10 +87,10 @@ class Service
         with_user_timezone { Time.zone.now.utc }
       end
 
-      def with_user_timezone
+      def with_user_timezone(&block)
         user = @user || User.current_user
 
-        user ? user.with_my_timezone { yield } : yield
+        user ? user.with_my_timezone(&block) : yield
       end
     end
   end
