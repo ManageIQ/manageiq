@@ -94,8 +94,8 @@ RSpec.describe ContainerOrchestrator do
 
     it "sets database environment variables" do
       stub_const("ENV", ENV.to_h.merge(
-        "DATABASE_NAME"     => "vmdb_production",
-        "DATABASE_SSL_MODE" => "verify-full",
+                          "DATABASE_NAME"     => "vmdb_production",
+                          "DATABASE_SSL_MODE" => "verify-full",
       ))
 
       expect(subject.send(:default_environment)).to include({:name => "DATABASE_SSL_MODE", :value => "verify-full"})

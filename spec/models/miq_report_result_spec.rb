@@ -9,16 +9,16 @@ RSpec.describe MiqReportResult do
     task = FactoryBot.create(:miq_task)
     EvmSpecHelper.local_miq_server
     report = MiqReport.create(
-        :name          => "VMs based on Disk Type",
-        :title         => "VMs using thin provisioned disks",
-        :rpt_group     => "Custom",
-        :rpt_type      => "Custom",
-        :db            => "VmInfra",
-        :cols          => ["name"],
-        :col_order     => ["name"],
-        :headers       => ["Name"],
-        :order         => "Ascending",
-        :template_type => "report"
+      :name          => "VMs based on Disk Type",
+      :title         => "VMs using thin provisioned disks",
+      :rpt_group     => "Custom",
+      :rpt_type      => "Custom",
+      :db            => "VmInfra",
+      :cols          => ["name"],
+      :col_order     => ["name"],
+      :headers       => ["Name"],
+      :order         => "Ascending",
+      :template_type => "report"
       )
     report.generate_table(:userid => "admin")
     task.miq_report_result = report.build_create_results({:userid => "admin"}, task.id)

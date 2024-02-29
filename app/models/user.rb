@@ -477,10 +477,10 @@ class User < ApplicationRecord
   def unlock_queue
     MiqQueue.create_with(:deliver_on => Time.now.utc + ::Settings.authentication.locked_account_timeout.to_i)
             .put_unless_exists(
-      :class_name  => self.class.name,
-      :instance_id => id,
-      :method_name => 'unlock!',
-      :priority    => MiqQueue::MAX_PRIORITY
+              :class_name  => self.class.name,
+              :instance_id => id,
+              :method_name => 'unlock!',
+              :priority    => MiqQueue::MAX_PRIORITY
     )
   end
 end

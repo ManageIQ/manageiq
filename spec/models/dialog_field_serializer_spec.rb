@@ -213,8 +213,8 @@ RSpec.describe DialogFieldSerializer do
     context "when the dialog_field is a tag control type" do
       let(:dialog_field) do
         DialogFieldTagControl.new(expected_serialized_values.merge(
-          :resource_action         => resource_action,
-          :dialog_field_responders => dialog_field_responders
+                                    :resource_action         => resource_action,
+                                    :dialog_field_responders => dialog_field_responders
         ))
       end
 
