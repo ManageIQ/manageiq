@@ -116,7 +116,7 @@ class GenericObject < ApplicationRecord
     attributes_as_string += ["associations: #{generic_object_definition.property_associations.keys}"]
     attributes_as_string += ["methods: #{property_methods}"]
 
-    prefix = Kernel.instance_method(:inspect).bind(self).call.split(' ', 2).first
+    prefix = Kernel.instance_method(:inspect).bind_call(self).split(' ', 2).first
     "#{prefix} #{attributes_as_string.join(", ")}>"
   end
 
