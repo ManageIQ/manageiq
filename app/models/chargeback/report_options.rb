@@ -37,7 +37,7 @@ class Chargeback
       !!self[:cumulative_rate_calculation]
     end
 
-    ALLOCATED_METHODS_WHITELIST = %i(max avg current_value).freeze
+    ALLOCATED_METHODS_WHITELIST = %i[max avg current_value].freeze
 
     def method_for_allocated_metrics
       method = (self[:method_for_allocated_metrics] || :max).to_sym

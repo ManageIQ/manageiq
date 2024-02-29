@@ -1,7 +1,7 @@
 module TaskHelpers
   class Exports
     class Roles
-      EXCLUDE_ATTRS = %w(created_at updated_at id).freeze
+      EXCLUDE_ATTRS = %w[created_at updated_at id].freeze
       def export(options = {})
         export_dir = options[:directory]
 

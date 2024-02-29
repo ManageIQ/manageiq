@@ -179,7 +179,7 @@ RSpec.describe Dialog::OrchestrationTemplateServiceDialog do
   describe "creation of dropdown parameter fields" do
     context "when allowed values are given" do
       let(:param_options) do
-        constraint = OrchestrationTemplate::OrchestrationParameterAllowed.new(:allowed_values => %w(val1 val2), :allow_multiple => true)
+        constraint = OrchestrationTemplate::OrchestrationParameterAllowed.new(:allowed_values => %w[val1 val2], :allow_multiple => true)
         {:default_value => '["val1"]', :constraints => [constraint]}
       end
 
@@ -188,7 +188,7 @@ RSpec.describe Dialog::OrchestrationTemplateServiceDialog do
                      DialogFieldDropDownList,
                      :name              => "param_user",
                      :default_value     => "[\"val1\"]",
-                     :values            => [%w(val1 val1), %w(val2 val2)],
+                     :values            => [%w[val1 val1], %w[val2 val2]],
                      :reconfigurable    => true,
                      :force_multi_value => true)
       end
@@ -205,7 +205,7 @@ RSpec.describe Dialog::OrchestrationTemplateServiceDialog do
                      DialogFieldDropDownList,
                      :name          => "param_user",
                      :default_value => "val1",
-                     :values        => [[nil, "<Choose>"], %w(key1 val1), %w(key2 val2)])
+                     :values        => [[nil, "<Choose>"], %w[key1 val1], %w[key2 val2]])
       end
     end
 

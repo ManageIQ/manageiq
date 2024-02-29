@@ -371,10 +371,10 @@ RSpec.describe Rbac::Filterer do
         end
       end
 
-      %w(
+      %w[
         automation_manager_authentication ManageIQ::Providers::AutomationManager::Authentication
         embedded_automation_manager_authentication ManageIQ::Providers::EmbeddedAutomationManager::Authentication
-      ).slice(2) do |factory, klass|
+      ].slice(2) do |factory, klass|
         context "searching for instances of #{klass}" do
           let!(:automation_manager_authentication) { FactoryBot.create(factory) }
           automation_manager_authentication.tag_with('/managed/environment/prod', :ns => '*')
@@ -2158,7 +2158,7 @@ RSpec.describe Rbac::Filterer do
     end
 
     context 'with network models' do
-      NETWORK_MODELS = %w(
+      NETWORK_MODELS = %w[
         CloudNetwork
         CloudSubnet
         FloatingIp
@@ -2166,7 +2166,7 @@ RSpec.describe Rbac::Filterer do
         NetworkPort
         NetworkRouter
         SecurityGroup
-      ).freeze
+      ].freeze
 
       NETWORK_MODELS.each do |network_model|
         describe ".search" do
@@ -2214,7 +2214,7 @@ RSpec.describe Rbac::Filterer do
           FactoryBot.create(:host, :name => "Host4", :hostname => "host4.local")
         ].each_with_index do |host, i|
           grp = i + 1
-          guest_os = %w(_none_ windows ubuntu windows ubuntu)[grp]
+          guest_os = %w[_none_ windows ubuntu windows ubuntu][grp]
           vm = FactoryBot.build(:vm_vmware, :name => "Test Group #{grp} VM #{i}")
           vm.hardware = FactoryBot.build(:hardware, :cpu_sockets => (grp * 2), :memory_mb => (grp * 1.megabytes), :guest_os => guest_os)
           vm.host = host
@@ -2637,7 +2637,7 @@ RSpec.describe Rbac::Filterer do
       FactoryBot.create(:vm_vmware, :location => "a")
       FactoryBot.create(:vm_vmware, :location => "b")
       FactoryBot.create(:vm_vmware, :location => "a")
-      expect(described_class.filtered(Vm.all.order(:location)).map(&:location)).to eq(%w(a a b))
+      expect(described_class.filtered(Vm.all.order(:location)).map(&:location)).to eq(%w[a a b])
     end
 
     it "returns empty array for out-of-bounds condition when limits cannot be applied in SQL" do

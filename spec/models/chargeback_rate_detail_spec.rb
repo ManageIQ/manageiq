@@ -19,7 +19,7 @@ RSpec.describe ChargebackRateDetail do
 
     it 'loads chargeback rates from yml for Compute metrics' do
       rates = ChargebackRateDetail.default_rate_details_for('Compute')
-      expected_metrics = %w(
+      expected_metrics = %w[
         derived_vm_numvcpus
         derived_vm_numvcpu_cores
         cpu_usagemhz_rate_average
@@ -30,19 +30,19 @@ RSpec.describe ChargebackRateDetail do
         derived_memory_available
         derived_memory_used
         net_usage_rate_average
-      )
+      ]
 
       expect(rates.map { |x| x.chargeable_field.metric }).to match_array(expected_metrics)
     end
 
     it 'loads chargeback rates from yml for Storage metrics' do
       rates = ChargebackRateDetail.default_rate_details_for('Storage')
-      expected_metrics = %w(
+      expected_metrics = %w[
         fixed_storage_1
         fixed_storage_2
         derived_vm_allocated_disk_storage
         derived_vm_used_disk_storage
-      )
+      ]
 
       expect(rates.map { |x| x.chargeable_field.metric }).to match_array(expected_metrics)
     end
@@ -82,8 +82,8 @@ RSpec.describe ChargebackRateDetail do
     context 'with rate adjustment' do
       let(:measure) do
         FactoryBot.build(:chargeback_rate_detail_measure,
-                          :units_display => %w(B KB MB GB TB),
-                          :units         => %w(bytes kilobytes megabytes gigabytes terabytes))
+                          :units_display => %w[B KB MB GB TB],
+                          :units         => %w[bytes kilobytes megabytes gigabytes terabytes])
       end
       let(:field) { FactoryBot.create(:chargeable_field_storage_allocated, :detail_measure => measure) }
       let(:cbd) do
@@ -228,8 +228,8 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
 
   it "#per_unit_display_with_measurements" do
     cbdm = FactoryBot.create(:chargeback_rate_detail_measure,
-                              :units_display => %w(B KB MB GB TB),
-                              :units         => %w(bytes kilobytes megabytes gigabytes terabytes))
+                              :units_display => %w[B KB MB GB TB],
+                              :units         => %w[bytes kilobytes megabytes gigabytes terabytes])
     field = FactoryBot.create(:chargeable_field, :detail_measure => cbdm)
     cbd = FactoryBot.build(:chargeback_rate_detail, :per_unit => 'megabytes', :chargeable_field => field)
     expect(cbd.per_unit_display).to eq('MB')

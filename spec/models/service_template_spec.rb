@@ -989,7 +989,7 @@ RSpec.describe ServiceTemplate do
         end
 
         it "provisions a service template with errors" do
-          expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w(Error1 Error2))
+          expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w[Error1 Error2])
           expect(resource_action_workflow).to receive(:request_options=).with({
                                                                                 :init_defaults => true, :provision_workflow => true
                                                                               })
@@ -1012,7 +1012,7 @@ RSpec.describe ServiceTemplate do
         end
 
         it "provisions a service template with errors" do
-          expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w(Error1 Error2))
+          expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w[Error1 Error2])
           expect(resource_action_workflow).to receive(:request_options=).with({
                                                                                 :initiator => 'control', :submit_workflow => true
                                                                               })
@@ -1059,7 +1059,7 @@ RSpec.describe ServiceTemplate do
         end
 
         it "provisions a service template with errors" do
-          expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w(Error1 Error2))
+          expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w[Error1 Error2])
           expect(resource_action_workflow).to receive(:request_options=).with({
                                                                                 :initiator => 'control', :provision_workflow => true
                                                                               })
@@ -1078,7 +1078,7 @@ RSpec.describe ServiceTemplate do
         end
 
         it "provisions a service template with errors" do
-          expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w(Error1 Error2))
+          expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w[Error1 Error2])
           expect(resource_action_workflow).to receive(:request_options=).with({:provision_workflow => true})
 
           expect { service_template.provision_request(user, arg1) }.to raise_error(RuntimeError)

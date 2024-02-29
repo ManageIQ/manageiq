@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-RAILS_ROOT = File.expand_path(File.join(__dir__, %w(.. ..)))
+RAILS_ROOT = File.expand_path(File.join(__dir__, %w[.. ..]))
 
 require 'manageiq/gems/pending'
 require 'miq_logger_processor'

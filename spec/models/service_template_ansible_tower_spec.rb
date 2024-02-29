@@ -32,7 +32,7 @@ RSpec.describe ServiceTemplateAnsibleTower do
       expect(service_template.name).to eq('Ansible Tower')
       expect(service_template.service_resources.count).to eq(1)
       expect(service_template.dialogs.first).to eq(service_dialog)
-      expect(service_template.resource_actions.pluck(:action)).to match_array(%w(Provision Retirement))
+      expect(service_template.resource_actions.pluck(:action)).to match_array(%w[Provision Retirement])
       expect(service_template.job_template).to eq(configuration_script)
       expect(service_template.config_info).to eq(catalog_item_options[:config_info])
     end
@@ -84,7 +84,7 @@ RSpec.describe ServiceTemplateAnsibleTower do
       expect(updated.name).to eq('Updated Ansible Tower')
       expect(updated.config_info).to eq(updated_catalog_item_options[:config_info])
       expect(updated.job_template).to eq(new_configuration_script)
-      expect(updated.resource_actions.pluck(:action)).to match_array(%w(Provision Reconfigure))
+      expect(updated.resource_actions.pluck(:action)).to match_array(%w[Provision Reconfigure])
     end
 
     it 'requires a configuration or configuration_script_id' do

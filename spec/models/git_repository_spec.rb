@@ -37,8 +37,8 @@ RSpec.describe GitRepository do
   context "repo" do
     let(:gwt) { instance_double('GitWorktree') }
     let(:verify_ssl) { OpenSSL::SSL::VERIFY_PEER }
-    let(:branch_list) { %w(b1 b2) }
-    let(:tag_list) { %w(t1 t2) }
+    let(:branch_list) { %w[b1 b2] }
+    let(:tag_list) { %w[t1 t2] }
     let(:info) { {:time => Time.now.utc, :message => "R2D2", :commit_sha => "abcdef"} }
     let(:branch_info_hash) do
       {'b1' => {:time => Time.now.utc, :message => "B1", :commit_sha => "abcdef"},

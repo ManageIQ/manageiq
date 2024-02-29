@@ -367,11 +367,11 @@ RSpec.describe MiqAction do
       before do
         @script_dir = Dir.mktmpdir
         stub_const('::MiqAction::SCRIPT_DIR', Pathname(@script_dir))
-        FileUtils.touch %W(
+        FileUtils.touch %W[
           #{@script_dir}/script2.rb
           #{@script_dir}/script.1.sh
           #{@script_dir}/script3
-        )
+        ]
       end
 
       after do

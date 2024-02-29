@@ -342,7 +342,7 @@ module VimPerformanceAnalysis
     when Storage then
       rel = rel.where(:parent_storage_id => obj.id)
     when ExtManagementSystem then
-      rel = rel.where(:parent_ems_id => obj.id).where(:resource_type => %w(Host EmsCluster))
+      rel = rel.where(:parent_ems_id => obj.id).where(:resource_type => %w[Host EmsCluster])
     else
       raise _("unknown object type: %{class}") % {:class => obj.class}
     end

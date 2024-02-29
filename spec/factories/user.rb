@@ -24,14 +24,14 @@ FactoryBot.define do
     end
 
     trait :with_miq_edit_features do
-      features { %w(
+      features { %w[
         miq_ae_class_edit
         miq_ae_domain_edit
         miq_ae_class_copy
         miq_ae_instance_copy
         miq_ae_method_copy
         miq_ae_namespace_edit
-      ) }
+      ] }
     end
   end
 

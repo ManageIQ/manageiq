@@ -20,7 +20,7 @@ RSpec.describe GenericObject do
           :s_time     => "datetime"
         },
         :associations => {"vms" => "Vm", "hosts" => "Host"},
-        :methods      => %w(my_host  some_method)
+        :methods      => %w[my_host  some_method]
       }
     )
   end
@@ -213,9 +213,9 @@ RSpec.describe GenericObject do
       end
 
       it 'one array parameter' do
-        options = {:attrs => attrs.merge(:param_1 => %w(p1 p2), :param_1_type=>"Array")}
+        options = {:attrs => attrs.merge(:param_1 => %w[p1 p2], :param_1_type=>"Array")}
         expect(MiqAeEngine).to receive(:deliver).with(hash_including(options)).and_return(ws)
-        go.my_host(%w(p1 p2))
+        go.my_host(%w[p1 p2])
       end
 
       it 'one hash parameter' do

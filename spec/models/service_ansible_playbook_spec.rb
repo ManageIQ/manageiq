@@ -207,8 +207,8 @@ RSpec.describe(ServiceAnsiblePlaybook) do
     it 'creates an Ansible Runner job' do
       expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job).to receive(:create_job) do |jobtemp, opts|
         expect(jobtemp).to eq(playbook)
-        exposed_miq = %w(api_url api_token service user group X_MIQ_Group request_task request) + control_extras.keys
-        exposed_connection = %w(url token X_MIQ_Group)
+        exposed_miq = %w[api_url api_token service user group X_MIQ_Group request_task request] + control_extras.keys
+        exposed_connection = %w[url token X_MIQ_Group]
         expect(opts[:extra_vars].delete('manageiq').keys).to include(*exposed_miq)
         expect(opts[:extra_vars].delete('manageiq_connection').keys).to include(*exposed_connection)
 

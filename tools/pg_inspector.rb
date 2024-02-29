@@ -5,7 +5,7 @@
 
 if __FILE__ == $PROGRAM_NAME
   $LOAD_PATH.push(File.expand_path(__dir__))
-  $LOAD_PATH.push(File.expand_path(File.join(__dir__, %w(.. lib))))
+  $LOAD_PATH.push(File.expand_path(File.join(__dir__, %w[.. lib])))
 end
 
 require 'pg_inspector/util'

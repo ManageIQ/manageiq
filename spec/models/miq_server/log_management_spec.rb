@@ -96,22 +96,22 @@ RSpec.describe MiqServer do
 
       it "pg_data_dir set" do
         allow(@miq_server).to receive_messages(:pg_data_dir => '/var/lib/pgsql/data')
-        expected = %w(/var/lib/pgsql/data/*.conf /var/lib/pgsql/data/log/* /etc/manageiq/postgresql.conf.d/*)
+        expected = %w[/var/lib/pgsql/data/*.conf /var/lib/pgsql/data/log/* /etc/manageiq/postgresql.conf.d/*]
         expect(@miq_server.pg_log_patterns.collect(&:to_s)).to match_array expected
       end
     end
 
     it "#current_log_patterns" do
-      stub_settings(:log => {:collection => {:current => {:pattern => %w(/var/log/syslog*)}}})
-      allow(@miq_server).to receive_messages(:pg_log_patterns => %w(/var/lib/pgsql/data/*.conf))
-      expect(@miq_server.current_log_patterns).to match_array %w(/var/log/syslog* /var/lib/pgsql/data/*.conf)
+      stub_settings(:log => {:collection => {:current => {:pattern => %w[/var/log/syslog*]}}})
+      allow(@miq_server).to receive_messages(:pg_log_patterns => %w[/var/lib/pgsql/data/*.conf])
+      expect(@miq_server.current_log_patterns).to match_array %w[/var/log/syslog* /var/lib/pgsql/data/*.conf]
     end
 
     it "#current_log_patterns with pg_logs duplicated in current_log_pattern_configuration" do
       stub_settings(
-        :log => {:collection => {:current => {:pattern => %w(/var/log/syslog* /var/lib/pgsql/data/*.conf)}}})
-      allow(@miq_server).to receive_messages(:pg_log_patterns => %w(/var/lib/pgsql/data/*.conf))
-      expect(@miq_server.current_log_patterns).to match_array %w(/var/log/syslog* /var/lib/pgsql/data/*.conf)
+        :log => {:collection => {:current => {:pattern => %w[/var/log/syslog* /var/lib/pgsql/data/*.conf]}}})
+      allow(@miq_server).to receive_messages(:pg_log_patterns => %w[/var/lib/pgsql/data/*.conf])
+      expect(@miq_server.current_log_patterns).to match_array %w[/var/log/syslog* /var/lib/pgsql/data/*.conf]
     end
 
     context "post current/historical/models/dialogs" do
@@ -134,19 +134,19 @@ RSpec.describe MiqServer do
         allow(@miq_server).to receive(:current_log_patterns).and_return(current_log_patterns)
         allow(@miq_server).to receive(:backup_automate_dialogs)
         allow(@miq_server).to receive(:backup_automate_models)
-        %w(historical_logfile current_logfile).each do |kind|
+        %w[historical_logfile current_logfile].each do |kind|
           logfile = FactoryBot.create(:log_file, :historical => kind == "historical_logfile")
           allow(logfile).to receive(:upload)
           allow(LogFile).to receive(kind).and_return(logfile)
         end
       end
 
-      %w(
+      %w[
         Archive post_historical_logs
         Current post_current_logs
         Models post_automate_models
         Dialogs post_automate_dialogs
-      ).each_slice(2) do |name, method|
+      ].each_slice(2) do |name, method|
         it "##{method}" do
           logfile = nil
 

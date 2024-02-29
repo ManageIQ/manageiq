@@ -6,7 +6,7 @@ class EvmApplication
   def self.start
     puts "Running EVM in background..."
 
-    command_line = "#{Gem.ruby} #{Rails.root.join(*%w(lib workers bin evm_server.rb)).expand_path}"
+    command_line = "#{Gem.ruby} #{Rails.root.join(*%w[lib workers bin evm_server.rb]).expand_path}"
 
     env_options = {}
     env_options["EVMSERVER"] = "true" if MiqEnvironment::Command.is_appliance?

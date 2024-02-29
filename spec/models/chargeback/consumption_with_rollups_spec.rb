@@ -57,7 +57,7 @@ RSpec.describe Chargeback::ConsumptionWithRollups do
         let(:consumption) { described_class.new(pluck_rollup([metric_rollup]), starting_date, starting_date + 1.day) }
 
         it 'returns array of tags' do
-          expect(consumption.tag_list_with_prefix).to match_array(%w(vm/tag/managed/operations/analysis_failed vm/tag/managed/environment/prod vm/tag/managed/environment/dev))
+          expect(consumption.tag_list_with_prefix).to match_array(%w[vm/tag/managed/operations/analysis_failed vm/tag/managed/environment/prod vm/tag/managed/environment/dev])
         end
       end
     end
@@ -76,7 +76,7 @@ RSpec.describe Chargeback::ConsumptionWithRollups do
         let(:consumption) { described_class.new(pluck_rollup([metric_rollup_container]), starting_date, starting_date + 1.day) }
 
         it 'returns array of tags' do
-          expect(consumption.tag_list_with_prefix).to match_array(%w(container_image/tag/managed/environment/cont container_image/tag/managed/environment/cust container_image/tag/managed/environment/stage container_image/label/managed/version/1.2/_label-1/test/1.0.0\ \ rc_2 container_image/label/managed/escaped:{version%2F1%2E2%2F%5Flabel%2D1}/escaped:{test%2F1%2E0%2E0%20%20rc%5F2}))
+          expect(consumption.tag_list_with_prefix).to match_array(%w[container_image/tag/managed/environment/cont container_image/tag/managed/environment/cust container_image/tag/managed/environment/stage container_image/label/managed/version/1.2/_label-1/test/1.0.0\ \ rc_2 container_image/label/managed/escaped:{version%2F1%2E2%2F%5Flabel%2D1}/escaped:{test%2F1%2E0%2E0%20%20rc%5F2}])
         end
       end
     end

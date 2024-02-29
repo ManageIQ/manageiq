@@ -196,7 +196,7 @@ RSpec.describe MiqRequestWorkflow do
         before do
           dialogs[:dialogs].keys.each do |dialog_name|
             workflow.get_all_fields(dialog_name).each_pair do |_, field_values|
-              field_values[:values] = [%w(test 100), %w(test2 0)]
+              field_values[:values] = [%w[test 100], %w[test2 0]]
             end
           end
         end
@@ -584,7 +584,7 @@ RSpec.describe MiqRequestWorkflow do
   end
 
   describe '#validate_data_types?' do
-    %w(array_integer integer float array).each do |name|
+    %w[array_integer integer float array].each do |name|
       let("fld_#{name}".to_sym) { {:error => nil, :data_type => name.to_sym} }
     end
 

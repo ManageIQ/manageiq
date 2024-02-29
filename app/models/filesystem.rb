@@ -86,7 +86,7 @@ class Filesystem < ApplicationRecord
     unless ext.nil?
       ext.sub!(".", "")
       ext.downcase!
-      return ext if %w(dll exe log txt xml ini doc pdf zip).include?(ext)
+      return ext if %w[dll exe log txt xml ini doc pdf zip].include?(ext)
     end
     "unknown"
   end

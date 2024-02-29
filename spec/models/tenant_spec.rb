@@ -365,10 +365,10 @@ RSpec.describe Tenant do
         dom3 = FactoryBot.create(:miq_ae_domain, :name => 'A', :tenant_id => root_tenant.id)
         dom4 = FactoryBot.create(:miq_ae_domain, :name => 'B', :tenant_id => root_tenant.id)
 
-        expect(root_tenant.visible_domains.collect(&:name)).to eq(%w(B A Redhat ManageIQ))
+        expect(root_tenant.visible_domains.collect(&:name)).to eq(%w[B A Redhat ManageIQ])
         ids = [dom4.id, dom3.id]
         root_tenant.reset_domain_priority_by_ordered_ids(ids)
-        expect(root_tenant.visible_domains.collect(&:name)).to eq(%w(A B Redhat ManageIQ))
+        expect(root_tenant.visible_domains.collect(&:name)).to eq(%w[A B Redhat ManageIQ])
         dom4.reload
         expect(dom4.priority).to eq(2)
       end
@@ -382,10 +382,10 @@ RSpec.describe Tenant do
         FactoryBot.create(:miq_ae_domain, :name => 'T1_B', :tenant_id => t1.id)
         dom5 = FactoryBot.create(:miq_ae_domain, :name => 'T1_1_A', :tenant_id => t1_1.id)
         dom6 = FactoryBot.create(:miq_ae_domain, :name => 'T1_1_B', :tenant_id => t1_1.id)
-        expect(t1_1.visible_domains.collect(&:name)).to eq(%w(T1_1_B T1_1_A T1_B T1_A Redhat ManageIQ))
+        expect(t1_1.visible_domains.collect(&:name)).to eq(%w[T1_1_B T1_1_A T1_B T1_A Redhat ManageIQ])
         ids = [dom6.id, dom5.id]
         t1_1.reset_domain_priority_by_ordered_ids(ids)
-        expect(t1_1.visible_domains.collect(&:name)).to eq(%w(T1_1_A T1_1_B T1_B T1_A Redhat ManageIQ))
+        expect(t1_1.visible_domains.collect(&:name)).to eq(%w[T1_1_A T1_1_B T1_B T1_A Redhat ManageIQ])
       end
     end
 
@@ -396,7 +396,7 @@ RSpec.describe Tenant do
       FactoryBot.create(:miq_ae_system_domain, :name => 'DOM10', :priority => 10,
                          :tenant_id => root_tenant.id, :enabled => false)
 
-      expect(t1_1.sequenceable_domains.collect(&:name)).to eq(%w(DOM15))
+      expect(t1_1.sequenceable_domains.collect(&:name)).to eq(%w[DOM15])
     end
 
     context "visibility" do
@@ -425,22 +425,22 @@ RSpec.describe Tenant do
 
       it "#visibile_domains sub_tenant" do
         t1_1
-        expect(t1_1.visible_domains.collect(&:name)).to eq(%w(DOM5 DOM3 DOM1 DOM15 DOM10))
+        expect(t1_1.visible_domains.collect(&:name)).to eq(%w[DOM5 DOM3 DOM1 DOM15 DOM10])
       end
 
       it "#enabled_domains sub_tenant" do
         t1_1
-        expect(t1_1.enabled_domains.collect(&:name)).to eq(%w(DOM5 DOM3 DOM1 DOM15))
+        expect(t1_1.enabled_domains.collect(&:name)).to eq(%w[DOM5 DOM3 DOM1 DOM15])
       end
 
       it "#editable domains sub_tenant" do
         t1_1
-        expect(t1_1.editable_domains.collect(&:name)).to eq(%w(DOM5 DOM3))
+        expect(t1_1.editable_domains.collect(&:name)).to eq(%w[DOM5 DOM3])
       end
 
       it "#visible_domains tenant" do
         t2
-        expect(t2.visible_domains.collect(&:name)).to eq(%w(DOM2 DOM15 DOM10))
+        expect(t2.visible_domains.collect(&:name)).to eq(%w[DOM2 DOM15 DOM10])
       end
     end
 
@@ -537,7 +537,7 @@ RSpec.describe Tenant do
 
       tq = default_tenant.tenant_quotas
       expect(tq.length).to eql 2
-      expect(tq.map(&:name).sort).to eql %w(mem_allocated vms_allocated)
+      expect(tq.map(&:name).sort).to eql %w[mem_allocated vms_allocated]
     end
 
     it "deletes existing quotas when nil value is passed" do
@@ -841,10 +841,10 @@ RSpec.describe Tenant do
 
       User.with_user(user_admin) do
         tenants, projects = Tenant.tenant_and_project_names
-        expect(tenants.map(&:first)).to eq(%w(root root/ten1 root/ten2 root/ten3))
+        expect(tenants.map(&:first)).to eq(%w[root root/ten1 root/ten2 root/ten3])
         expect(tenants.first.last).to eq(root_tenant.id)
 
-        expect(projects.map(&:first)).to eq(%w(root/proj3 root/ten1/proj1 root/ten2/proj2))
+        expect(projects.map(&:first)).to eq(%w[root/proj3 root/ten1/proj1 root/ten2/proj2])
       end
     end
   end

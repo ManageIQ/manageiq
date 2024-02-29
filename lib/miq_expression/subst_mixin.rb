@@ -28,9 +28,9 @@ module MiqExpression::SubstMixin
       @exp_token += 1
       exp[:token] = @exp_token
       exp_table.push(quick_search ? "NOT" : ["NOT", @exp_token])             # No token if building quick search exp
-      exp_table.push("(") unless %w(and or).include?(exp["not"].keys.first)  # No parens if and/or under me
+      exp_table.push("(") unless %w[and or].include?(exp["not"].keys.first)  # No parens if and/or under me
       exp_table += exp_build_table(exp["not"], quick_search)
-      exp_table.push(")") unless %w(and or).include?(exp["not"].keys.first)  # No parens if and/or under me
+      exp_table.push(")") unless %w[and or].include?(exp["not"].keys.first)  # No parens if and/or under me
     else
       @exp_token ||= 0
       @exp_token += 1
@@ -58,7 +58,7 @@ module MiqExpression::SubstMixin
   # Go thru an expression and replace the quick search tokens
   def exp_replace_qs_tokens(exp, tokens)
     key = exp.keys.first
-    if %w(and or).include?(key)
+    if %w[and or].include?(key)
       exp[key].each { |e| exp_replace_qs_tokens(e, tokens) }
     elsif key == "not"
       exp_replace_qs_tokens(exp[key], tokens)

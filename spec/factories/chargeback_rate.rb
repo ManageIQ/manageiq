@@ -31,7 +31,7 @@ FactoryBot.define do
 
     trait :with_compute_details do
       after(:create) do |chargeback_rate, evaluator|
-        %i(
+        %i[
           chargeback_rate_detail_cpu_used
           chargeback_rate_detail_cpu_allocated
           chargeback_rate_detail_cpu_cores_used
@@ -41,7 +41,7 @@ FactoryBot.define do
           chargeback_rate_detail_memory_allocated
           chargeback_rate_detail_memory_used
           chargeback_rate_detail_net_io_used
-        ).each do |factory_name|
+        ].each do |factory_name|
           chargeback_rate.chargeback_rate_details << FactoryBot.create(factory_name,
                                                                         :tiers_with_three_intervals,
                                                                         :per_time => evaluator.per_time)
@@ -53,12 +53,12 @@ FactoryBot.define do
       rate_type { 'Storage' }
 
       after(:create) do |chargeback_rate, evaluator|
-        %i(
+        %i[
           chargeback_rate_detail_storage_used
           chargeback_rate_detail_storage_allocated
           chargeback_rate_detail_fixed_storage_cost
           chargeback_rate_detail_fixed_storage_cost
-        ).each do |factory_name|
+        ].each do |factory_name|
           chargeback_rate.chargeback_rate_details << FactoryBot.create(factory_name,
                                                                         :tiers_with_three_intervals,
                                                                         :per_time => evaluator.per_time)

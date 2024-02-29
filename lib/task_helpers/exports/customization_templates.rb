@@ -1,7 +1,7 @@
 module TaskHelpers
   class Exports
     class CustomizationTemplates
-      EXCLUDE_ATTRS = %i(created_at updated_at id pxe_image_type_id class).freeze
+      EXCLUDE_ATTRS = %i[created_at updated_at id pxe_image_type_id class].freeze
       def export(options = {})
         export_dir = options[:directory]
 

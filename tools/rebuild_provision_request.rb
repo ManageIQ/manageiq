@@ -67,7 +67,7 @@ elsif opts[:last_requests_given] && opts[:count]
   Optimist.die :count, "must be greater than 0" if opts[:count] <= 0
 else
   Optimist.die :request_id, "must be a number greater than 0" if opts[:request_id] <= 0
-  Optimist.die :output, "must be either hash or json" unless %w(hash json).include?(opts[:output])
+  Optimist.die :output, "must be either hash or json" unless %w[hash json].include?(opts[:output])
 end
 
 class Tab

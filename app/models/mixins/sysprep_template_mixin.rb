@@ -9,7 +9,7 @@ module SysprepTemplateMixin
 
     result = CustomizationTemplateSysprep.in_region(source.region_number).all.collect do |c|
       @values[:customization_template_script] = c.script if c.id == customization_template_id
-      build_ci_hash_struct(c, %i(name description updated_at))
+      build_ci_hash_struct(c, %i[name description updated_at])
     end
 
     result.compact!

@@ -1,8 +1,8 @@
 class ResourceSharer
-  WHITELISTED_RESOURCE_TYPES = %w(
+  WHITELISTED_RESOURCE_TYPES = %w[
     VmOrTemplate
     ServiceTemplate
-  ).freeze
+  ].freeze
 
   include ActiveModel::Model
 

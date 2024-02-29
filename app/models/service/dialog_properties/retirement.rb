@@ -1,7 +1,7 @@
 class Service
   class DialogProperties
     class Retirement
-      RETIREMENT_WARN_FIELD_NAMES = %w(warn_on warn_in_days warn_in_hours warn_offset_days warn_offset_hours).freeze
+      RETIREMENT_WARN_FIELD_NAMES = %w[warn_on warn_in_days warn_in_hours warn_offset_days warn_offset_hours].freeze
 
       def initialize(options, user)
         @attributes = {}

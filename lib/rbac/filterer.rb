@@ -6,7 +6,7 @@ module Rbac
     # Classes should be added to this list ONLY after:
     # 1. Tagging has been enabled in the UI
     # 2. Class contains acts_as_miq_taggable
-    CLASSES_THAT_PARTICIPATE_IN_RBAC = %w(
+    CLASSES_THAT_PARTICIPATE_IN_RBAC = %w[
       Authentication
       AvailabilityZone
       CloudNetwork
@@ -67,11 +67,11 @@ module Rbac
       Switch
       VmOrTemplate
       WindowsImage
-    )
+    ]
 
-    TAGGABLE_FILTER_CLASSES = CLASSES_THAT_PARTICIPATE_IN_RBAC - %w(EmsFolder MiqRequest) + %w(MiqGroup User Tenant)
+    TAGGABLE_FILTER_CLASSES = CLASSES_THAT_PARTICIPATE_IN_RBAC - %w[EmsFolder MiqRequest] + %w[MiqGroup User Tenant]
 
-    NETWORK_MODELS_FOR_BELONGSTO_FILTER = %w(
+    NETWORK_MODELS_FOR_BELONGSTO_FILTER = %w[
       CloudNetwork
       CloudSubnet
       FloatingIp
@@ -79,9 +79,9 @@ module Rbac
       NetworkPort
       NetworkRouter
       SecurityGroup
-    ).freeze
+    ].freeze
 
-    BELONGSTO_FILTER_CLASSES = %w(
+    BELONGSTO_FILTER_CLASSES = %w[
       Container
       ContainerBuild
       ContainerGroup
@@ -101,7 +101,7 @@ module Rbac
       ResourcePool
       Storage
       VmOrTemplate
-    ) + NETWORK_MODELS_FOR_BELONGSTO_FILTER
+    ] + NETWORK_MODELS_FOR_BELONGSTO_FILTER
 
     # key: descendant::klass
     # value:
@@ -163,10 +163,10 @@ module Rbac
 
     # Classes inherited from these classes or mixins are allowing ownership feature on the target model,
     # scope user_or_group_owned is required on target model
-    OWNERSHIP_CLASSES = %w(
+    OWNERSHIP_CLASSES = %w[
       OwnershipMixin
       MiqRequest
-    ).freeze
+    ].freeze
 
     ADDITIONAL_TENANT_CLASSES = %w[ServiceTemplate].freeze
     PRODUCT_FEATURE_CLASSES = %w[MiqShortcut].freeze

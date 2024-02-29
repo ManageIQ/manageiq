@@ -3,7 +3,7 @@ RSpec.describe MiqExpression do
     let(:vm) { FactoryBot.create(:vm) }
     let!(:custom_attribute) { FactoryBot.create(:custom_attribute, :name => 'my_attribute_1', :resource => vm) }
     let(:extra_fields) do
-      %w(start_date
+      %w[start_date
          end_date
          interval_name
          display_range
@@ -12,7 +12,7 @@ RSpec.describe MiqExpression do
          label_name
          id
          vm_id
-         vm_name)
+         vm_name]
     end
 
     it 'lists custom attributes in ChargebackVm' do
@@ -790,7 +790,7 @@ RSpec.describe MiqExpression do
         end
 
         it "generates the SQL for a FROM expression with a value of 'Yesterday'/'Today' for a date field" do
-          exp = described_class.new("FROM" => {"field" => "Vm-retires_on", "value" => %w(Yesterday Today)})
+          exp = described_class.new("FROM" => {"field" => "Vm-retires_on", "value" => %w[Yesterday Today]})
           sql, * = exp.to_sql("Asia/Jakarta")
           expect(sql).to eq(%q("vms"."retires_on" BETWEEN '2011-01-10 17:00:00' AND '2011-01-12 16:59:59.999999'))
         end
@@ -2101,7 +2101,7 @@ RSpec.describe MiqExpression do
         end
 
         it "generates the RUBY for a FROM expression with a value of 'Yesterday'/'Today' for a date field" do
-          exp = described_class.new("FROM" => {"field" => "Vm-retires_on", "value" => %w(Yesterday Today)})
+          exp = described_class.new("FROM" => {"field" => "Vm-retires_on", "value" => %w[Yesterday Today]})
           ruby, * = exp.to_ruby("Asia/Jakarta")
           expect(ruby).to eq("!(val=<value ref=vm, type=datetime>/virtual/retires_on</value>&.to_time).nil? and val >= Time.utc(2011,1,10,17,0,0) and val <= Time.utc(2011,1,12,16,59,59)")
         end

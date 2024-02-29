@@ -20,7 +20,7 @@ class MiqRequestTask < ApplicationRecord
 
   delegate :request_class, :task_description, :to => :class
 
-  validates_inclusion_of :status, :in => %w( Ok Warn Error Timeout )
+  validates_inclusion_of :status, :in => %w[ Ok Warn Error Timeout ]
 
   include MiqRequestMixin
   include TenancyMixin
@@ -261,7 +261,7 @@ class MiqRequestTask < ApplicationRecord
   end
 
   def valid_states
-    %w(pending finished) + request_class::ACTIVE_STATES
+    %w[pending finished] + request_class::ACTIVE_STATES
   end
 
   def dialog_values

@@ -36,12 +36,12 @@ module Vmdb
 
         keys = data.each_pair.to_a.transpose.first.to_set
 
-        if keys.include?(:mode) && !%w(invoke disable).include?(data.mode)
+        if keys.include?(:mode) && !%w[invoke disable].include?(data.mode)
           valid = false
           errors << [:mode, "webservices mode, \"#{data.mode}\", invalid. Should be one of: invoke or disable"]
         end
 
-        if keys.include?(:contactwith) && !%w(ipaddress hostname).include?(data.contactwith)
+        if keys.include?(:contactwith) && !%w[ipaddress hostname].include?(data.contactwith)
           valid = false
           errors << [:contactwith, "webservices contactwith, \"#{data.contactwith}\", invalid. Should be one of: ipaddress or hostname"]
         end
@@ -125,7 +125,7 @@ module Vmdb
           end
         end
 
-        if keys.include?(:session_store) && !%w(sql memory cache).include?(data.session_store)
+        if keys.include?(:session_store) && !%w[sql memory cache].include?(data.session_store)
           valid = false
           errors << [:session_store, "session_store, \"#{data.session_store}\", invalid. Should be one of \"sql\", \"memory\", \"cache\""]
         end
@@ -164,7 +164,7 @@ module Vmdb
 
         keys = data.each_pair.to_a.transpose.first.to_set
 
-        if keys.include?(:authentication) && !%w(login plain none).include?(data.authentication)
+        if keys.include?(:authentication) && !%w[login plain none].include?(data.authentication)
           valid = false
           errors << [:mode, "authentication, \"#{data.mode}\", invalid. Should be one of: login, plain, or none"]
         end

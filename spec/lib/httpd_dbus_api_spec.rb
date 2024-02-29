@@ -14,7 +14,7 @@ RSpec.describe HttpdDBusApi do
     }
   end
 
-  let(:jdoe_user_groups) { %w(evmgroup-super_administrator evmgroup-user) }
+  let(:jdoe_user_groups) { %w[evmgroup-super_administrator evmgroup-user] }
 
   let(:jim_userid)       { "jim" }
   let(:jim_attrs_error)  { "Unable to get attributes for user #{jim_userid} - No such user" }
@@ -46,7 +46,7 @@ RSpec.describe HttpdDBusApi do
     end
 
     it "converts attribute list to comma separated attributes parameter" do
-      expect(described_class.new.user_attrs(jdoe_userid, %w(givenname sn)))
+      expect(described_class.new.user_attrs(jdoe_userid, %w[givenname sn]))
         .to match(jdoe_user_attrs.slice("givenname", "sn"))
     end
 

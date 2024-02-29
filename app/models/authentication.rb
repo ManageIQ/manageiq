@@ -79,7 +79,7 @@ class Authentication < ApplicationRecord
     end
   end.else(-1)
 
-  RETRYABLE_STATUS = %w(error unreachable).freeze
+  RETRYABLE_STATUS = %w[error unreachable].freeze
 
   CREDENTIAL_TYPES = {
     :external_credential_types         => 'ManageIQ::Providers::ExternalAutomationManager::Authentication',

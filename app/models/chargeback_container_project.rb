@@ -51,7 +51,7 @@ class ChargebackContainerProject < Chargeback
   end
 
   def self.report_static_cols
-    %w(project_name)
+    %w[project_name]
   end
 
   def self.report_col_options

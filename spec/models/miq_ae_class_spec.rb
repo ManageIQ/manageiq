@@ -103,7 +103,7 @@ RSpec.describe MiqAeClass do
       set_priority('domain1', 10)
       set_priority('domain2', 20)
       set_priority('domain3', 50)
-      @inst4_list =  %w(/DOMAIN3/SYSTEM/PROCESS/inst4  /DOMAIN1/SYSTEM/PROCESS/inst4)
+      @inst4_list =  %w[/DOMAIN3/SYSTEM/PROCESS/inst4  /DOMAIN1/SYSTEM/PROCESS/inst4]
       @sorted_inst_list =  ['/DOMAIN3/SYSTEM/PROCESS/inst1', '/DOMAIN3/SYSTEM/PROCESS/inst2',
                             '/DOMAIN3/SYSTEM/PROCESS/inst32', '/DOMAIN3/SYSTEM/PROCESS/inst4',
                             '/DOMAIN2/SYSTEM/PROCESS/inst31', '/DOMAIN2/SYSTEM/PROCESS/inst41',
@@ -348,7 +348,7 @@ RSpec.describe MiqAeClass do
       create_ae_model(:name => 'MARIO', :ae_class => 'CLASS3', :ae_namespace  => 'C/D/E')
       domain_fqnames = %w[FRED FREDDY]
       ns_fqnames = %w[FRED/A FRED/A/B FRED/A/B/C FREDDY/C FREDDY/C/D FREDDY/C/D/E]
-      class_fqnames = %w(/FRED/A/B/C/CLASS1 /FREDDY/C/D/E/CLASS2)
+      class_fqnames = %w[/FRED/A/B/C/CLASS1 /FREDDY/C/D/E/CLASS2]
       ids = domain_fqnames.collect { |ns| "MiqAeDomain::#{MiqAeNamespace.lookup_by_fqname(ns, false).id}" }
       ids += ns_fqnames.collect { |ns| "MiqAeNamespace::#{MiqAeNamespace.lookup_by_fqname(ns, false).id}" }
       ids += class_fqnames.collect { |cls| "MiqAeClass::#{MiqAeClass.lookup_by_fqname(cls).id}" }

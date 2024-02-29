@@ -78,7 +78,7 @@ RSpec.describe Authenticator::Ldap do
       :givenname         => 'Alice',
       :sn                => 'Aardvark',
       :mail              => ['alice@example.com', 'a.aardvark@example.com'],
-      :groups            => %w(wibble bubble),
+      :groups            => %w[wibble bubble],
     }
   end
   let(:bob_data) do
@@ -89,7 +89,7 @@ RSpec.describe Authenticator::Ldap do
       :givenname         => 'Bob',
       :sn                => 'Builderson',
       :mail              => 'bob@example.com',
-      :groups            => %w(wibble bubble),
+      :groups            => %w[wibble bubble],
     }
   end
   let(:betty_data) do
@@ -100,7 +100,7 @@ RSpec.describe Authenticator::Ldap do
       :givenname         => 'Betty',
       :sn                => 'Builderson',
       :mail              => 'betty@example.com',
-      :groups            => %w(wibble bubble),
+      :groups            => %w[wibble bubble],
     }
   end
   let(:sam_data) do
@@ -111,7 +111,7 @@ RSpec.describe Authenticator::Ldap do
       :givenname         => nil,
       :sn                => nil,
       :mail              => 'sam@example.com',
-      :groups            => %w(wibble bubble),
+      :groups            => %w[wibble bubble],
     }
   end
 
@@ -456,7 +456,7 @@ RSpec.describe Authenticator::Ldap do
         end
 
         context "with no matching groups" do
-          let(:bob_data) { super().merge(:groups => %w(bubble trouble)) }
+          let(:bob_data) { super().merge(:groups => %w[bubble trouble]) }
 
           it "enqueues an authorize task" do
             expect(subject).to receive(:authorize_queue).and_return(123)

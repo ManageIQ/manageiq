@@ -19,7 +19,7 @@ RSpec.describe "AR Nested Count By extension" do
     end
 
     it "should count by state, zone and role" do
-      expect(MiqQueue.nested_count_by(%w(state zone role))).to eq(
+      expect(MiqQueue.nested_count_by(%w[state zone role])).to eq(
         MiqQueue::STATE_READY   => {
           zone1.name => {"role1" => 3},
           zone3.name => {"role3" => 1},
@@ -46,7 +46,7 @@ RSpec.describe "AR Nested Count By extension" do
     end
 
     it "should count by role and state" do
-      expect(MiqQueue.nested_count_by(%w(role state))).to eq(
+      expect(MiqQueue.nested_count_by(%w[role state])).to eq(
         "role1" => {"dequeue" => 4, "ready" => 3, "error" => 1},
         "role2" => {"dequeue" => 1, "error" => 1},
         "role3" => {"ready"   => 1, "warn"  => 1},

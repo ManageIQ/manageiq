@@ -1,5 +1,5 @@
 module EvmAutomate
-  $:.push File.expand_path(File.join(Rails.root, %w{.. lib util xml}))
+  $:.push File.expand_path(File.join(Rails.root, %w[.. lib util xml]))
 
   def self.log(level, msg)
     $log.send(level, msg)
@@ -131,7 +131,7 @@ namespace :evm do
           raise 'Must specify either a directory with exported automate model or a zip file or a http based git url'
         end
         preview        = ENV['PREVIEW'] ||= 'true'
-        raise 'Preview must be true or false' unless %w{true false}.include?(preview)
+        raise 'Preview must be true or false' unless %w[true false].include?(preview)
         mode           = ENV['MODE'] ||= 'add'
         import_as      = ENV['IMPORT_AS']
         overwrite      = (ENV['OVERWRITE'] ||= 'false').casecmp('true').zero?
@@ -161,9 +161,9 @@ namespace :evm do
           import_options['ref_type'] = ENV['REF_TYPE'] || MiqAeGitImport::BRANCH
           import_options['verify_ssl'] = ENV['VERIFY_SSL'] || OpenSSL::SSL::VERIFY_PEER
         end
-        %w(SYSTEM ENABLED).each do |name|
+        %w[SYSTEM ENABLED].each do |name|
           if ENV[name].present?
-            raise "#{name} must be true or false" unless %w(true false).include?(ENV[name])
+            raise "#{name} must be true or false" unless %w[true false].include?(ENV[name])
             import_options[name.downcase] = ENV[name]
           end
         end

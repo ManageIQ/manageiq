@@ -116,7 +116,7 @@ module ManageIQ
         end
 
         def chart_is_stacked?
-          %w(StackedBar StackedColumn StackedArea).include?(mri.graph[:type])
+          %w[StackedBar StackedColumn StackedArea].include?(mri.graph[:type])
         end
 
         # change structure of chart JSON to performance chart with timeseries data

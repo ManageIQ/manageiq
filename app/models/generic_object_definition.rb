@@ -20,10 +20,10 @@ class GenericObjectDefinition < ApplicationRecord
     :time     => N_('Time')
   }.freeze
 
-  FEATURES = %w(attribute association method).freeze
+  FEATURES = %w[attribute association method].freeze
   REG_ATTRIBUTE_NAME = /\A[a-z][a-zA-Z_0-9]*\z/
   REG_METHOD_NAME    = /\A[a-z][a-zA-Z_0-9]*[!?]?\z/
-  ALLOWED_ASSOCIATION_TYPES = (MiqReport.reportable_models + %w(GenericObject)).freeze
+  ALLOWED_ASSOCIATION_TYPES = (MiqReport.reportable_models + %w[GenericObject]).freeze
 
   serialize :properties, Hash
 

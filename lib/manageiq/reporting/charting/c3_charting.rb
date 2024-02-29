@@ -69,7 +69,7 @@ module ManageIQ
 
       # list of themes - in options_for_select format
       def chart_themes_for_select
-        [%w(Default default)]
+        [%w[Default default]]
       end
 
       def serialized(data)

@@ -183,7 +183,7 @@ RSpec.describe Vmdb::Plugins do
     end
 
     def with_spec(type, options = {})
-      raise "Unexpected type '#{type}'" unless %i(git path_with_git path).include?(type)
+      raise "Unexpected type '#{type}'" unless %i[git path_with_git path].include?(type)
 
       source =
         if type == :git

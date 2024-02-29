@@ -450,7 +450,7 @@ module ManageIQ
 
         # Utilization timestamp charts
         def build_util_ts_chart(_maxcols)
-          build_util_ts_chart_column if %w(Column ColumnThreed).index(mri.graph[:type])
+          build_util_ts_chart_column if %w[Column ColumnThreed].index(mri.graph[:type])
         end
 
         def build_reporting_chart_numeric(_maxcols)

@@ -17,8 +17,8 @@ RSpec.describe DialogFieldAssociationValidator do
 
     context "when there are circular references" do
       let(:trivial_associations) { {"a" => ["b"], "b" => ["a"]} }
-      let(:associations) { {"a" => %w(b d), "b" => ["c"], "c" => %w(e d), "e" => ["b"]} }
-      let(:associations1) { {"a" => %w(b d), "b" => ["c"], "d" => ["a"]} }
+      let(:associations) { {"a" => %w[b d], "b" => ["c"], "c" => %w[e d], "e" => ["b"]} }
+      let(:associations1) { {"a" => %w[b d], "b" => ["c"], "d" => ["a"]} }
 
       it "raises circular reference error and returns problematic fields" do
         expect { dialog_field_association_validator.check_for_circular_references(trivial_associations, "a") }.to raise_error(DialogFieldAssociationValidator::DialogFieldAssociationCircularReferenceError, 'a already exists in ["a", "b"]')

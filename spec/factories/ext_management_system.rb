@@ -241,7 +241,7 @@ FactoryBot.define do
 
   factory :ems_openstack_infra_with_authentication,
           :parent => :ems_openstack_infra do
-    authtype { %w(default amqp) }
+    authtype { %w[default amqp] }
   end
 
   factory :ems_vmware_cloud,
@@ -305,7 +305,7 @@ FactoryBot.define do
 
   factory :ems_openstack_with_authentication,
           :parent => :ems_openstack do
-    authtype { %w(default amqp) }
+    authtype { %w[default amqp] }
   end
 
   factory :ems_openstack_network,
@@ -382,7 +382,7 @@ FactoryBot.define do
 
   trait(:configuration_workflow) do
     after(:create) do |x|
-      type = (x.type.split("::")[0..2] + %w(AutomationManager ConfigurationWorkflow)).join("::")
+      type = (x.type.split("::")[0..2] + %w[AutomationManager ConfigurationWorkflow]).join("::")
       x.configuration_scripts << FactoryBot.create(:configuration_workflow, :type => type)
     end
   end

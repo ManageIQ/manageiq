@@ -424,7 +424,7 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
         )
       end
 
-      expect(persister.vms.index_proxy.send(:data_indexes).keys).to match_array(%i(manager_ref by_availability_zone_and_name))
+      expect(persister.vms.index_proxy.send(:data_indexes).keys).to match_array(%i[manager_ref by_availability_zone_and_name])
     end
 
     it "checks relation is on model class" do
@@ -439,7 +439,7 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
       persister.add_collection(persister.send(:cloud), :vms, {}, {:without_sti => true}) do |builder|
         builder.add_properties(
           :custom_save_block => ->(ems, _ic) { ems },
-          :manager_ref       => %i(a b c)
+          :manager_ref       => %i[a b c]
         )
       end
 

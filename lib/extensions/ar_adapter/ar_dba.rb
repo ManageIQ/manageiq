@@ -108,7 +108,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                 ORDER BY  1
             SQL
 
-    integer_columns = %w(
+    integer_columns = %w[
       otta
       pages
       pagesize
@@ -116,11 +116,11 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
       wasted_bytes
       wasted_pages
       wasted_size
-    )
+    ]
 
-    float_columns = %w(
+    float_columns = %w[
       percent_bloat
-    )
+    ]
 
     data.each do |datum|
       integer_columns.each   { |c| datum[c] = datum[c].to_i }
@@ -203,7 +203,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                 ORDER BY  1, 2
            SQL
 
-    integer_columns = %w(
+    integer_columns = %w[
       otta
       pages
       pagesize
@@ -211,11 +211,11 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
       wasted_bytes
       wasted_pages
       wasted_size
-    )
+    ]
 
-    float_columns = %w(
+    float_columns = %w[
       percent_bloat
-    )
+    ]
 
     data.each do |datum|
       integer_columns.each   { |c| datum[c] = datum[c].to_i }
@@ -362,7 +362,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
               ORDER BY  1, 2
            SQL
 
-    integer_columns = %w(
+    integer_columns = %w[
       otta
       pages
       pagesize
@@ -370,11 +370,11 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
       wasted_bytes
       wasted_pages
       wasted_size
-    )
+    ]
 
-    float_columns = %w(
+    float_columns = %w[
       percent_bloat
-    )
+    ]
 
     data.each do |datum|
       integer_columns.each   { |c| datum[c] = datum[c].to_i }
@@ -406,7 +406,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                  ORDER BY relname ASC ;
                  SQL
 
-    integer_columns = %w(
+    integer_columns = %w[
       table_scans
       sequential_rows_read
       index_scans
@@ -417,14 +417,14 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
       rows_hot_updated
       rows_live
       rows_dead
-    )
+    ]
 
-    timestamp_columns = %w(
+    timestamp_columns = %w[
       last_vacuum_date
       last_autovacuum_date
       last_analyze_date
       last_autoanalyze_date
-    )
+    ]
 
     data.each do |datum|
       integer_columns.each   { |c| datum[c] = datum[c].to_i }
@@ -584,18 +584,18 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
             ORDER BY  1
         SQL
 
-    integer_columns = %w(
+    integer_columns = %w[
       otta
       pages
       rows
       wasted_bytes
       wasted_pages
       wasted_size
-    )
+    ]
 
-    float_columns = %w(
+    float_columns = %w[
       percent_bloat
-    )
+    ]
 
     data.each do |datum|
       integer_columns.each   { |c| datum[c] = datum[c].to_i }
@@ -627,7 +627,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                ORDER BY relname ASC ;
             SQL
 
-    integer_columns = %w(
+    integer_columns = %w[
       table_scans
       sequential_rows_read
       index_scans
@@ -638,14 +638,14 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
       rows_hot_updated
       rows_live
       rows_dead
-    )
+    ]
 
-    timestamp_columns = %w(
+    timestamp_columns = %w[
       last_vacuum_date
       last_autovacuum_date
       last_analyze_date
       last_autoanalyze_date
-    )
+    ]
 
     data.each do |datum|
       integer_columns.each   { |c| datum[c] = datum[c].to_i }
@@ -734,7 +734,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                 ORDER BY  1, 2
            SQL
 
-    integer_columns = %w(
+    integer_columns = %w[
       otta
       pages
       pagesize
@@ -742,11 +742,11 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
       wasted_bytes
       wasted_pages
       wasted_size
-    )
+    ]
 
-    float_columns = %w(
+    float_columns = %w[
       percent_bloat
-    )
+    ]
 
     data.each do |datum|
       integer_columns.each   { |c| datum[c] = datum[c].to_i }
@@ -771,13 +771,13 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                  AND indexrelname = '#{index_name}' ;
             SQL
 
-    integer_columns = %w(
+    integer_columns = %w[
       table_id
       index_id
       index_scans
       index_rows_read
       index_rows_fetched
-    )
+    ]
 
     data.each do |datum|
       integer_columns.each   { |c| datum[c] = datum[c].to_i }

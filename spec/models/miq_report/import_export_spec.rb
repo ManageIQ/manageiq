@@ -6,10 +6,10 @@ RSpec.describe MiqReport::ImportExport do
                                     :name         => "Test Report",
                                     :rpt_type     => "Custom",
                                     :tz           => "Eastern Time (US & Canada)",
-                                    :col_order    => %w(name boot_time disks_aligned),
-                                    :cols         => %w(name boot_time disks_aligned),
+                                    :col_order    => %w[name boot_time disks_aligned],
+                                    :cols         => %w[name boot_time disks_aligned],
                                     :db_options   => {:rpt_type => "ChargebackContainerProject"},
-                                    "include"     => {"columns" => %w(col1 col2)},
+                                    "include"     => {"columns" => %w[col1 col2]},
                                     :user_id      => @some_user.id,
                                     :miq_group_id => @some_group.id)
   end

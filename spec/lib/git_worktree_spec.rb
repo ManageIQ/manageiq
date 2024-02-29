@@ -4,10 +4,10 @@ RSpec.describe GitWorktree do
       @git_db = "TestGit.git"
       @ae_db_dir = Dir.mktmpdir
       @default_hash = {:a => "one", :b => "two", :c => "three"}
-      @dirnames = %w(A B c)
+      @dirnames = %w[A B c]
       @repo_path = File.join(@ae_db_dir, @git_db)
-      @filenames = %w(A/File1.YamL B/File2.YamL c/File3.YAML)
-      @deleted_names = %w(A A/File1.YamL)
+      @filenames = %w[A/File1.YamL B/File2.YamL c/File3.YAML]
+      @deleted_names = %w[A A/File1.YamL]
       @conflict_file = 'A/File1.YamL'
       @master_url = "file://#{@repo_path}"
       @repo_options = {:path     => @repo_path,
@@ -91,7 +91,7 @@ RSpec.describe GitWorktree do
     end
 
     it "#entries in A" do
-      expect(@ae_db.entries("A")).to match_array(%w(File1.YamL))
+      expect(@ae_db.entries("A")).to match_array(%w[File1.YamL])
     end
 
     it "get list of files" do
@@ -109,8 +109,8 @@ RSpec.describe GitWorktree do
     end
 
     it "rename directory" do
-      filenames = %w(AAA/File1.YamL B/File2.YamL c/File3.YAML)
-      dirnames  = %w(AAA B c)
+      filenames = %w[AAA/File1.YamL B/File2.YamL c/File3.YAML]
+      dirnames  = %w[AAA B c]
       @ae_db.mv_dir('A', "AAA")
       @ae_db.save_changes("directories moved")
       expect(@ae_db.file_list).to match_array(filenames + dirnames)
@@ -121,24 +121,24 @@ RSpec.describe GitWorktree do
     end
 
     it "move directories with similar names" do
-      filenames = %w(A/A/A/File1.YamL A/A/Aile2.YamL)
+      filenames = %w[A/A/A/File1.YamL A/A/Aile2.YamL]
       filenames.each { |f| @ae_db.add(f, YAML.dump(@default_hash.merge(:fname => f))) }
       @ae_db.send(:commit, "extra files_added").tap { |cid| @ae_db.send(:merge, cid) }
       @ae_db.mv_dir('A', "AAA")
       @ae_db.save_changes("directories moved")
-      filenames = %w(AAA/File1.YamL B/File2.YamL c/File3.YAML AAA/A/A/File1.YamL AAA/A/Aile2.YamL)
-      dirnames  = %w(AAA B c AAA/A AAA/A/A)
+      filenames = %w[AAA/File1.YamL B/File2.YamL c/File3.YAML AAA/A/A/File1.YamL AAA/A/Aile2.YamL]
+      dirnames  = %w[AAA B c AAA/A AAA/A/A]
       expect(@ae_db.file_list).to match_array(filenames + dirnames)
     end
 
     it "move intermediate directories with similar names" do
-      filenames = %w(A/A/A/File1.YamL A/A/Aile2.YamL)
+      filenames = %w[A/A/A/File1.YamL A/A/Aile2.YamL]
       filenames.each { |f| @ae_db.add(f, YAML.dump(@default_hash.merge(:fname => f))) }
       @ae_db.send(:commit, "extra files_added").tap { |cid| @ae_db.send(:merge, cid) }
       @ae_db.mv_dir('A/A', "AAA")
       @ae_db.save_changes("directories moved")
-      filenames = %w(A/File1.YamL B/File2.YamL c/File3.YAML AAA/A/File1.YamL AAA/Aile2.YamL)
-      dirnames  = %w(AAA B c AAA/A A)
+      filenames = %w[A/File1.YamL B/File2.YamL c/File3.YAML AAA/A/File1.YamL AAA/Aile2.YamL]
+      dirnames  = %w[AAA B c AAA/A A]
       expect(@ae_db.file_list).to match_array(filenames + dirnames)
     end
 
@@ -159,14 +159,14 @@ RSpec.describe GitWorktree do
     end
 
     it "rename file with new contents" do
-      filenames = %w(A/File11.YamL B/File2.YamL c/File3.YAML)
+      filenames = %w[A/File11.YamL B/File2.YamL c/File3.YAML]
       @ae_db.mv_file_with_new_contents('A/File1.YamL', 'A/File11.YamL', "Hello")
       @ae_db.save_changes("file renamed")
       expect(@ae_db.file_list).to match_array(filenames + @dirnames)
     end
 
     it "rename file" do
-      filenames = %w(A/File11.YamL B/File2.YamL c/File3.YAML)
+      filenames = %w[A/File11.YamL B/File2.YamL c/File3.YAML]
       @ae_db.mv_file('A/File1.YamL', 'A/File11.YamL')
       @ae_db.save_changes("file renamed")
       expect(@ae_db.file_list).to match_array(filenames + @dirnames)
@@ -266,11 +266,11 @@ RSpec.describe GitWorktree do
 
     describe "#branches" do
       it "all branches" do
-        expect(test_repo.branches).to match_array(%w(master branch1 branch2 symbolic))
+        expect(test_repo.branches).to match_array(%w[master branch1 branch2 symbolic])
       end
 
       it "local branches only" do
-        expect(test_repo.branches(:local)).to match_array(%w(master branch1 branch2 symbolic))
+        expect(test_repo.branches(:local)).to match_array(%w[master branch1 branch2 symbolic])
       end
 
       it "remote branches only" do
@@ -282,7 +282,7 @@ RSpec.describe GitWorktree do
       it "get list of files in a branch" do
         test_repo.branch = 'branch2'
 
-        expect(test_repo.file_list).to match_array(%w(file1 file2 file3 file4))
+        expect(test_repo.file_list).to match_array(%w[file1 file2 file3 file4])
       end
     end
 
@@ -308,7 +308,7 @@ RSpec.describe GitWorktree do
 
     describe "#branches" do
       it "all branches" do
-        expect(test_repo.branches).to match_array(%w(branch1 branch2))
+        expect(test_repo.branches).to match_array(%w[branch1 branch2])
       end
     end
 
@@ -316,7 +316,7 @@ RSpec.describe GitWorktree do
       it "get list of files in a branch" do
         test_repo.branch = 'branch2'
 
-        expect(test_repo.file_list).to match_array(%w(file1 file2 file3 file4))
+        expect(test_repo.file_list).to match_array(%w[file1 file2 file3 file4])
       end
     end
   end
@@ -327,14 +327,14 @@ RSpec.describe GitWorktree do
 
     describe "#tags" do
       it "get list of tags" do
-        expect(test_repo.tags).to match_array(%w(tag1 tag2))
+        expect(test_repo.tags).to match_array(%w[tag1 tag2])
       end
     end
 
     describe "#file_list" do
       it "get list of files in a tag" do
         test_repo.tag = 'tag2'
-        expect(test_repo.file_list).to match_array(%w(file1 file2 file3 file4))
+        expect(test_repo.file_list).to match_array(%w[file1 file2 file3 file4])
       end
     end
 

@@ -18,7 +18,7 @@ class GitRepository < ApplicationRecord
   has_many :git_tags, :dependent => :destroy
   after_destroy :broadcast_repo_dir_delete
 
-  INFO_KEYS = %w(commit_sha commit_message commit_time name).freeze
+  INFO_KEYS = %w[commit_sha commit_message commit_time name].freeze
 
   def self.delete_repo_dir(id, directory_name)
     _log.info("Deleting GitRepository[#{id}] in #{directory_name} for MiqServer[#{MiqServer.my_server.id}]...")

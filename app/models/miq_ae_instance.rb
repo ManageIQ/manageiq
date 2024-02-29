@@ -93,10 +93,10 @@ class MiqAeInstance < ApplicationRecord
 
     self.class.column_names.each do |cname|
       # Remove any columns that we do not want to export
-      next if %w(id created_on updated_on updated_by).include?(cname) || cname.ends_with?("_id")
+      next if %w[id created_on updated_on updated_by].include?(cname) || cname.ends_with?("_id")
 
       # Skip any columns that we process explicitly
-      next if %w(name).include?(cname)
+      next if %w[name].include?(cname)
 
       # Process the column
       xml_attrs[cname.to_sym]  = send(cname)   unless send(cname).blank?

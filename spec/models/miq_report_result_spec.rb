@@ -220,7 +220,7 @@ RSpec.describe MiqReportResult do
     end
 
     it "can serialize and deserialize a CSV" do
-      csv = CSV.generate { |c| c << %w(foo bar) << %w(baz qux) }
+      csv = CSV.generate { |c| c << %w[foo bar] << %w[baz qux] }
       report_result = described_class.new
 
       report_result.report_results = csv

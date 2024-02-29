@@ -33,7 +33,7 @@ class NetworkRouter < ApplicationRecord
   virtual_column :high_availability    , :type => :boolean
 
   # Define all getters and setters for extra_attributes related virtual columns
-  %i(external_gateway_info distributed routes propagating_vgws main_route_table high_availability).each do |action|
+  %i[external_gateway_info distributed routes propagating_vgws main_route_table high_availability].each do |action|
     define_method("#{action}=") do |value|
       extra_attributes_save(action, value)
     end
