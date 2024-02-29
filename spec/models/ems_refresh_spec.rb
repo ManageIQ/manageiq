@@ -216,7 +216,7 @@ RSpec.describe EmsRefresh do
 
       EmsRefresh.refresh([
                            [vm1.class, vm1.id],
-        [vm2.class, vm2.id],
+                           [vm2.class, vm2.id],
                          ])
     end
 
@@ -227,7 +227,7 @@ RSpec.describe EmsRefresh do
       expect(ManageIQ::Providers::Vmware::InfraManager::Refresher).to receive(:refresh).with([vm1])
       EmsRefresh.refresh([
                            [vm1.class, vm1.id],
-        [vm2.class, vm2.id],
+                           [vm2.class, vm2.id],
                          ])
     end
   end

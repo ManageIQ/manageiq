@@ -29,7 +29,7 @@ module Ruport
   #
   class Formatter::SafeCSV < Formatter::CSV
     renders :csv, :for => [Controller::Row,   Controller::Table,
-                            Controller::Group, Controller::Grouping]
+                           Controller::Group, Controller::Grouping]
 
     def build_table_body
       data.each do |row|

@@ -50,15 +50,15 @@ RSpec.describe MiqUserRole do
     before do
       EvmSpecHelper.seed_specific_product_features(%w[
                                                      dashboard_add
-        dashboard_view
-        host_compare
-        host_edit
-        host_scan
-        host_show_list
-        miq_policy
-        vm
-        dialog_edit_editor
-        rbac_tenant_manage_quotas
+                                                     dashboard_view
+                                                     host_compare
+                                                     host_edit
+                                                     host_scan
+                                                     host_show_list
+                                                     miq_policy
+                                                     vm
+                                                     dialog_edit_editor
+                                                     rbac_tenant_manage_quotas
                                                    ])
 
       feature1 = MiqProductFeature.find_all_by_identifier("dashboard_admin")

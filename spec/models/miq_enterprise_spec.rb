@@ -48,7 +48,7 @@ RSpec.describe MiqEnterprise do
 
     it "#vms" do
       vm = [FactoryBot.create(:vm_vmware, :ext_management_system => @ems),
-              FactoryBot.create(:vm_vmware, :ext_management_system => @ems)]
+            FactoryBot.create(:vm_vmware, :ext_management_system => @ems)]
 
       FactoryBot.create(:vm_vmware)
 

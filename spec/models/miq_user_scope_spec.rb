@@ -17,11 +17,11 @@ RSpec.describe MiqUserScope do
       @scope1 = MiqUserScope.new(
         :view => {:belongsto =>
                                 {:_all_ => ["/belongsto/ExtManagementSystem|VC1/EmsFolder|Datacenters/EmsFolder|DataCenter1/EmsFolder|host/EmsCluster|Cluster1",
-                                                                    "/belongsto/ExtManagementSystem|VC1/EmsFolder|Datacenters/EmsFolder|DataCenter2/EmsFolder|host/EmsCluster|Cluster3"]},
+                                            "/belongsto/ExtManagementSystem|VC1/EmsFolder|Datacenters/EmsFolder|DataCenter2/EmsFolder|host/EmsCluster|Cluster3"]},
                   :managed   =>
                                 {:_all_ => [["/managed/department/accounting", "/managed/department/automotive"],
-                                                                    ["/managed/location/london", "/managed/location/ny"],
-                                                                    ["/managed/service_level/gold", "/managed/service_level/platinum"]]}}
+                                            ["/managed/location/london", "/managed/location/ny"],
+                                            ["/managed/service_level/gold", "/managed/service_level/platinum"]]}}
       )
 
       @scope2_exp = MiqExpression.new("=" => {})
@@ -61,8 +61,8 @@ RSpec.describe MiqUserScope do
                                                                                                 "/belongsto/ExtManagementSystem|VC1/EmsFolder|Datacenters/EmsFolder|DataCenter2/EmsFolder|host/EmsCluster|Cluster3"],
                                                                                 :managed    =>
                                                                                                [["/managed/department/accounting", "/managed/department/automotive"],
-                        ["/managed/location/london", "/managed/location/ny"],
-                        ["/managed/service_level/gold", "/managed/service_level/platinum"]],
+                                                                                                ["/managed/location/london", "/managed/location/ny"],
+                                                                                                ["/managed/service_level/gold", "/managed/service_level/platinum"]],
                                                                                 :expression => nil
                                                                               })
       expect(@scope1.get_filters(:class => Vm, :feature_type => :admin)).to eq({:expression => nil, :belongsto => nil, :managed => nil})

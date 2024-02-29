@@ -257,7 +257,7 @@ RSpec.describe MiqReportResult do
 
       expect(MiqReportResult.counts_by_userid).to match_array([
                                                                 {:userid => u1.userid, :count => 2},
-        {:userid => u2.userid, :count => 1}
+                                                                {:userid => u2.userid, :count => 1}
                                                               ])
     end
   end

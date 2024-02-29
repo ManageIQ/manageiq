@@ -89,7 +89,7 @@ RSpec.describe VmReconfigureTask do
     let(:request_options) do
       {:network_adapter_add    => [
          {:cloud_network => 'vApp Network Name', :name => 'VM Name#NIC#2'}.with_indifferent_access,
-        {:cloud_network => nil, :name => 'VM Name#NIC#3'}.with_indifferent_access
+         {:cloud_network => nil, :name => 'VM Name#NIC#3'}.with_indifferent_access
        ],
        :network_adapter_remove => [{:network => {:name => 'VM Name#NIC#0'}.with_indifferent_access}],
        :network_adapter_edit   => [{:network => "NFS Network", :name => "Network adapter 1"}.with_indifferent_access]}

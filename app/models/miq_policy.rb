@@ -384,7 +384,7 @@ class MiqPolicy < ApplicationRecord
     filter_hash = {
       "AND" => [
         {"="  => {"field" => "MiqEventDefinition-event_type",       "value" => "Default"}},
-          {"!=" => {"field" => "MiqEventDefinition-event_group_name", "value" => ""}}
+        {"!=" => {"field" => "MiqEventDefinition-event_group_name", "value" => ""}}
       ]
     }
     EVENT_GROUPS_EXCLUDED.each do |e|
