@@ -56,4 +56,3 @@ class ReportStructure
     role
   end
 end
-
