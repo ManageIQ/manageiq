@@ -133,7 +133,7 @@ module EmsRefresh
 
     # Items will be naturally serialized since there is a dedicated worker.
     MiqQueue.put_or_update(queue_options) do |msg, item|
-      targets = msg.nil? ? targets : msg.data.concat(targets)
+      targets = msg.data.concat(targets) unless msg.nil?
       targets = uniq_targets(targets)
       obj = targets.select { |t| t.kind_of?(ApplicationRecord) }
       if obj.present?

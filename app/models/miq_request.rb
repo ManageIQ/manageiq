@@ -549,7 +549,7 @@ class MiqRequest < ApplicationRecord
 
   # Helper method when not using workflow
   def self.update_request(request, values, requester)
-    request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
+    request = MiqRequest.find(request) unless request.kind_of?(MiqRequest)
     request.update_request(values, requester)
   end
 

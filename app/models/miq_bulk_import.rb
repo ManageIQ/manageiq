@@ -93,7 +93,7 @@ module MiqBulkImport
 
       current = current.send(p)
     end
-    current = current.kind_of?(ActiveRecord::Base) ? [current] : current
+    current = [current] if current.kind_of?(ActiveRecord::Base)
 
     current.collect do |c|
       return [] unless c.respond_to?(attr)

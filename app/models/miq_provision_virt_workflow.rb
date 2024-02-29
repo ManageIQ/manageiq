@@ -57,7 +57,7 @@ end
     end
 
     if request
-      request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
+      request = MiqRequest.find(request) unless request.kind_of?(MiqRequest)
       request.src_vm_id = get_value(values[:src_vm_id])
     end
 

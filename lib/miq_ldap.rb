@@ -140,7 +140,7 @@ class MiqLdap
     return nil unless obj.attribute_names.include?(attr)
 
     val = obj.send(attr)
-    val = val.length == 1 ? val.first : val
+    val = val.first if val.length == 1
 
     # The BERParser#read_ber adds the method "ber_identifier" to strings and arrays (line 122 in ber.rb) via instance_eval
     # This singleton method causes TypeError: singleton can't be dumped during Marshal.dump

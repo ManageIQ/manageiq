@@ -586,7 +586,7 @@ class MiqExpression
   end
 
   def self.evaluate_atoms(exp, obj)
-    exp = exp.kind_of?(self) ? copy_hash(exp.exp) : exp
+    exp = copy_hash(exp.exp) if exp.kind_of?(self)
     exp["result"] = new(exp).evaluate(obj)
 
     operators = exp.keys

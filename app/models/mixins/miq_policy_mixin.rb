@@ -150,7 +150,7 @@ module MiqPolicyMixin
       eventobj = event.kind_of?(String) ? MiqEventDefinition.find_by(:name => event) : MiqEventDefinition.extract_objects(event)
       raise _("No event found for [%{event}]") % {:event => event} if eventobj.nil?
 
-      targets = targets.first.kind_of?(self) ? targets.collect(&:id) : targets
+      targets = targets.collect(&:id) if targets.first.kind_of?(self)
 
       opts = {
         :action => "#{name} - Resultant Set of Policy, Event: [#{eventobj.description}]",
