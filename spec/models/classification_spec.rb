@@ -453,7 +453,7 @@ RSpec.describe Classification do
                                                        :single_value => "1",
                                                        :entries      => [{:description => "Cost Center 001", :name => "001"},
                                                                          {:description => "Cost Center 002", :name => "002"}]}
-])
+                                                    ])
     end
 
     context "after seeding" do
