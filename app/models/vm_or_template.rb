@@ -661,7 +661,7 @@ class VmOrTemplate < ApplicationRecord
     path.gsub!(/\\/, "/")
     #it's empty string for local type
     storage_name = ""
-                    # NAS
+    # NAS
     relative_path = if path.starts_with?("//")
                       raise _("path, '%{path}', is malformed") % {:path => path} unless path =~ %r{^//[^/].*/.+$}
                       # path is a UNC
