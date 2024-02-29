@@ -30,6 +30,22 @@ class MiqAeMethod < ApplicationRecord
   AVAILABLE_SCOPES     = ["class", "instance"]
   validates_inclusion_of  :scope,     :in => AVAILABLE_SCOPES
 
+  scope :name_path_search, lambda { |search|
+    where('name ILIKE ? or relative_path ILIKE ?', "%#{search}%", "%#{search}%") if search.present?
+  }
+
+  scope :domain_search, lambda { |domain_id|
+    where(:domain_id => domain_id) if domain_id.present?
+  }
+
+  scope :selected_methods, lambda { |method_ids|
+    if method_ids.present?
+      where(:id => method_ids.split(',').map(&:to_i))
+    else
+      where(nil)
+    end
+  }
+
   def self.available_languages
     AVAILABLE_LANGUAGES
   end
