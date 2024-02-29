@@ -763,7 +763,7 @@ end
       full_path = get_full_path(parent_association, association)
       assoc_options = if include_has_options
         includes[association].merge(:qualify_attribute_names => full_path,
-                                                    :only                    => includes[association]["columns"])
+                                    :only                    => includes[association]["columns"])
       else
         {:qualify_attribute_names => full_path, :only => includes[association]["columns"]}
                       end

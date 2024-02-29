@@ -122,10 +122,10 @@ RSpec.describe Metric::Processing do
       let(:vm) do
         FactoryBot.create(:vm_vmware, :hardware =>
                                                    FactoryBot.create(:hardware,
-                            :cpu_total_cores      => 8,
-                            :cpu_sockets          => 4,
-                            :cpu_cores_per_socket => 2,
-                            :cpu_speed            => 3_000))
+                                                                     :cpu_total_cores      => 8,
+                                                                     :cpu_sockets          => 4,
+                                                                     :cpu_cores_per_socket => 2,
+                                                                     :cpu_speed            => 3_000))
       end
 
       it "with all usage values" do
@@ -184,7 +184,7 @@ RSpec.describe Metric::Processing do
       let(:vm) do
         FactoryBot.create(:vm_vmware, :hardware =>
                                                    FactoryBot.create(:hardware,
-                            :memory_mb => 4_096))
+                                                                     :memory_mb => 4_096))
       end
 
       it "with usage values" do

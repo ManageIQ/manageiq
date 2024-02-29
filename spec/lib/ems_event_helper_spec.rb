@@ -99,12 +99,12 @@ RSpec.describe EmsEventHelper do
       @policy_set.add_member(@policy)
 
       @policy_content = FactoryBot.create(:miq_policy_content,
-                                           :miq_policy           => @policy,
-                                           :miq_action           => @action,
-                                           :miq_event_definition => @miq_event_vm_start,
-                                           :qualifier            => 'success',
-                                           :success_sequence     => 1,
-                                           :success_synchronous  => true)
+                                          :miq_policy           => @policy,
+                                          :miq_action           => @action,
+                                          :miq_event_definition => @miq_event_vm_start,
+                                          :qualifier            => 'success',
+                                          :success_sequence     => 1,
+                                          :success_synchronous  => true)
 
       @vm.add_policy(@policy)
     end

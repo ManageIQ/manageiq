@@ -22,9 +22,9 @@ module ManageIQ
                 r[f].to_s
                      else
                 mri.format(f,
-                                  r[f],
-                                  :format => mri.col_formats[i] || :_default_,
-                                  :tz     => tz)
+                           r[f],
+                           :format => mri.col_formats[i] || :_default_,
+                           :tz     => tz)
               end
               if !@max_col_width[i] || data.length > @max_col_width[i]
                 @max_col_width[i] = data.length
@@ -122,9 +122,9 @@ module ManageIQ
                 r[f].to_s
                      else
                 mri.format(f,
-                                  r[f],
-                                  :format => mri.col_formats[i] || :_default_,
-                                  :tz     => tz)
+                           r[f],
+                           :format => mri.col_formats[i] || :_default_,
+                           :tz     => tz)
               end
               if options.alignment.eql?(:center)
                 line << data.center(@max_col_width[i])
