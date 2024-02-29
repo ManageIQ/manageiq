@@ -1,7 +1,7 @@
 class NotificationRecipient < ApplicationRecord
   belongs_to :notification
   belongs_to :user
-  attribute :seen, :default => false
+  default_value_for :seen, false
   virtual_column :details, :type => :string
 
   scope :unseen, -> { where(:seen => false) }

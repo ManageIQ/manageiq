@@ -25,8 +25,8 @@ class MiqServer < ApplicationRecord
   before_destroy          :validate_is_deleteable
   after_destroy           :destroy_linked_events_queue
 
-  attribute :name, :default => "EVM"
-  attribute :zone, :default => -> { Zone.default_zone }
+  default_value_for(:name, "EVM")
+  default_value_for(:zone) { Zone.default_zone }
 
   scope :active_miq_servers, -> { where(:status => STATUSES_ACTIVE) }
   scope :recently_active,    -> { where(:last_heartbeat => 10.minutes.ago.utc...Time.now.utc) }

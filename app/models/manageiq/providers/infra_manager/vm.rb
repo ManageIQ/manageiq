@@ -1,5 +1,5 @@
 class ManageIQ::Providers::InfraManager::Vm < ::Vm
-  attribute :cloud, :default => false
+  default_value_for :cloud, false
 
   # Show certain non-generic charts
   def cpu_mhz_available?

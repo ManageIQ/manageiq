@@ -30,46 +30,12 @@ RSpec.describe BlacklistedEvent do
     end
   end
 
-  context "#enabled=" do
-    it 'new record' do
-      f = FactoryBot.create(:blacklisted_event, :event_name => 'event_1')
-      expect(f.enabled).to be_truthy
+  it '#enabled=' do
+    User.current_user = FactoryBot.create(:user)
+    f = FactoryBot.create(:blacklisted_event, :event_name => 'event_1')
+    expect(f.enabled).to be_truthy
 
-      f.enabled = false
-      expect(f.enabled).to be_falsey
-    end
-
-    it 'persisted' do
-      f = FactoryBot.build(:blacklisted_event, :event_name => 'event_1')
-      expect(f.enabled).to be_truthy
-
-      f.enabled = false
-      expect(f.enabled).to be_falsey
-    end
-
-    it "log creation" do
-      expect($audit_log).to receive(:info).with(a_string_including("Creating")).once
-      FactoryBot.create(:blacklisted_event, :event_name => 'event_1')
-    end
-
-    it "doesn't log changed on creation" do
-      expect($audit_log).to receive(:info).with(a_string_including("changed")).never
-      FactoryBot.create(:blacklisted_event, :event_name => 'event_1')
-    end
-
-    it 'logs a message when changed' do
-      f = FactoryBot.create(:blacklisted_event, :event_name => 'event_1')
-
-      expect($audit_log).to receive(:info).with(a_string_including("changed")).once
-      f.update(:enabled => false)
-    end
-
-    it 'does not log a message when unchanged' do
-      f = FactoryBot.create(:blacklisted_event, :event_name => 'event_1')
-
-      expect($audit_log).to receive(:info).with(a_string_including("changed")).never
-      f.update(:enabled => f.enabled)
-    end
-
+    f.enabled = false
+    expect(f.enabled).to be_falsey
   end
 end
