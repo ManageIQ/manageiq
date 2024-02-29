@@ -135,7 +135,7 @@ namespace :locale do
   desc "Extract model attribute names and virtual column names"
   task "store_model_attributes" => :environment do
     require 'gettext_i18n_rails/model_attributes_finder'
-    require_relative 'model_attribute_override.rb'
+    require_relative 'model_attribute_override'
 
     attributes_file = 'locale/model_attributes.rb'
     File.unlink(attributes_file) if File.exist?(attributes_file)
@@ -292,8 +292,8 @@ namespace :locale do
   desc "Convert PO files from all plugins to JS files"
   task "po_to_json" => :environment do
     
-      require_relative 'gettext_task_override.rb'
-      require_relative 'po_to_json_override.rb'
+      require_relative 'gettext_task_override'
+      require_relative 'po_to_json_override'
       require Rails.root.join('lib/manageiq/environment')
       require Rails.root.join("lib/vmdb/gettext/domains")
 
