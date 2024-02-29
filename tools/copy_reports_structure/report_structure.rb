@@ -1,5 +1,4 @@
 class ReportStructure
-
   def self.duplicate_for_group(source_group_name, destination_group_name, dry_run = false)
     puts "Copying report structure from group '#{source_group_name}' to group ' #{destination_group_name}' ..."
     destination_group = find_group(destination_group_name)

@@ -295,5 +295,4 @@ class Condition < ApplicationRecord
 
     return c, status
   end
-
 end # class Condition

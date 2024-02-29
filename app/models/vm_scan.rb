@@ -346,5 +346,4 @@ class VmScan < Job
       _log.warn("Failed to log user event with EMS.  Error: [#{err.class.name}]: #{err} Event message [#{user_event}]")
     end
   end
-
 end
