@@ -9,7 +9,7 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     @ems = ems
   end
 
-  delegate :zone, to: :ems
+  delegate :zone, :to => :ems
 
   def my_zone
     ems.zone.name

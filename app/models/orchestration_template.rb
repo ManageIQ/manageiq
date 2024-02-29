@@ -14,7 +14,7 @@ class OrchestrationTemplate < ApplicationRecord
   validates :md5,
             :uniqueness_when_changed => {:scope => :draft, :message => "of content already exists (content must be unique)"},
             :if                      => :unique_md5?
-  validates :name, presence: true
+  validates :name, :presence => true
 
   scope :orderable, -> { where(:orderable => true) }
 

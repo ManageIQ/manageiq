@@ -56,9 +56,9 @@ class MiqWorker
       sd_notify.ready
     end
 
-    delegate :stopping, to: :sd_notify, prefix: true
+    delegate :stopping, :to => :sd_notify, :prefix => true
 
-    delegate :watchdog, to: :sd_notify, prefix: true
+    delegate :watchdog, :to => :sd_notify, :prefix => true
 
     def sd_notify_watchdog_usec(timeout_in_seconds)
       usec = timeout_in_seconds * 1_000_000

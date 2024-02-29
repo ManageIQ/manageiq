@@ -12,7 +12,7 @@ RSpec.describe MiqDialog do
 
       before do
         FileUtils.mkdir_p(dialog_dir)
-        FileUtils.cp_r(Rails.root.join("product/dialogs/miq_dialogs/miq_provision_dialogs.yaml"), dialog_dir, preserve: true)
+        FileUtils.cp_r(Rails.root.join("product/dialogs/miq_dialogs/miq_provision_dialogs.yaml"), dialog_dir, :preserve => true)
 
         stub_const("MiqDialog::Seeding::DIALOG_DIR", dialog_dir)
         expect(Vmdb::Plugins).to receive(:flat_map).at_least(:once) { [] }
@@ -31,7 +31,7 @@ RSpec.describe MiqDialog do
         expect(MiqDialog.where(:name => "testing_dialog")).to_not exist
 
         # Add new records
-        FileUtils.cp_r(data_dir, tmpdir, preserve: true)
+        FileUtils.cp_r(data_dir, tmpdir, :preserve => true)
 
         described_class.seed
 
@@ -52,7 +52,7 @@ RSpec.describe MiqDialog do
 
         # The mtime rounding is granular to the second, so need to be higher
         # than that for test purposes
-        FileUtils.touch(dialog_yml, mtime: 1.second.from_now.to_time)
+        FileUtils.touch(dialog_yml, :mtime => 1.second.from_now.to_time)
 
         described_class.seed
 

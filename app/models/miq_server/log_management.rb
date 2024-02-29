@@ -250,7 +250,7 @@ module MiqServer::LogManagement
     end
 
     # Since a task is created before a logfile, there's a chance we have a task without a logfile
-    MiqTask.where(:miq_server_id => id).where("name like ?", "Zipped log retrieval for %").where.not(state: "Finished").each do |task|
+    MiqTask.where(:miq_server_id => id).where("name like ?", "Zipped log retrieval for %").where.not(:state => "Finished").each do |task|
       task.update(:state => 'Finished', :status => 'Error', :message => 'Log Collection Incomplete during Server Startup')
     end
   end

@@ -247,7 +247,7 @@ RSpec.describe PglogicalSubscription do
         :user     => "root",
         :password => "1234"
       }
-      expect(pglogical).to receive(:create_subscription).with("region_2_subscription", dsn, ['miq'], create_slot: false).and_return(double(:check => nil))
+      expect(pglogical).to receive(:create_subscription).with("region_2_subscription", dsn, ['miq'], :create_slot => false).and_return(double(:check => nil))
 
       sub = described_class.new(:host => "test-2.example.com", :user => "root", :password => "1234")
 
@@ -318,14 +318,14 @@ RSpec.describe PglogicalSubscription do
         :user     => "root",
         :password => "1234"
       }
-      expect(pglogical).to receive(:create_subscription).with("region_2_subscription", dsn2, ['miq'], create_slot: false).and_return(double(:check => nil))
+      expect(pglogical).to receive(:create_subscription).with("region_2_subscription", dsn2, ['miq'], :create_slot => false).and_return(double(:check => nil))
 
       dsn3 = {
         :host     => "test-3.example.com",
         :user     => "miq",
         :password => "1234"
       }
-      expect(pglogical).to receive(:create_subscription).with("region_3_subscription", dsn3, ['miq'], create_slot: false).and_return(double(:check => nil))
+      expect(pglogical).to receive(:create_subscription).with("region_3_subscription", dsn3, ['miq'], :create_slot => false).and_return(double(:check => nil))
 
       to_save = []
       to_save << described_class.new(dsn2)
@@ -350,7 +350,7 @@ RSpec.describe PglogicalSubscription do
         :user     => "miq",
         :password => "1234"
       }
-      expect(pglogical).to receive(:create_subscription).ordered.with("region_3_subscription", dsn3, ['miq'], create_slot: false).and_return(double(:check => nil))
+      expect(pglogical).to receive(:create_subscription).ordered.with("region_3_subscription", dsn3, ['miq'], :create_slot => false).and_return(double(:check => nil))
       expect(pglogical).to receive(:create_subscription).ordered.and_raise("Error two")
 
       to_save = []

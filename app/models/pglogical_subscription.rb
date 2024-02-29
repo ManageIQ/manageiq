@@ -263,7 +263,7 @@ class PglogicalSubscription < ActsAsArModel
     end
 
     self.class.with_connection_error_handling do
-      pglogical.create_subscription(subscription, conn_info_hash, [MiqPglogical::PUBLICATION_NAME], create_slot: false).check
+      pglogical.create_subscription(subscription, conn_info_hash, [MiqPglogical::PUBLICATION_NAME], :create_slot => false).check
     end
     self
   end

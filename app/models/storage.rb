@@ -30,7 +30,7 @@ class Storage < ApplicationRecord
 
   scope :available, -> { where(:maintenance => [nil, false]) }
 
-  validates :name, presence: true
+  validates :name, :presence => true
 
   include RelationshipMixin
   self.default_relationship_type = "ems_metadata"

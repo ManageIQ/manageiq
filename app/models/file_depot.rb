@@ -7,7 +7,7 @@ class FileDepot < ApplicationRecord
   has_many              :miq_schedules, :dependent => :nullify
   has_many              :miq_servers,   :dependent => :nullify, :foreign_key => :log_file_depot_id
   has_many              :log_files
-  validates :uri, presence: true
+  validates :uri, :presence => true
 
   attr_accessor         :file
 

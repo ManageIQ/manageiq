@@ -42,7 +42,7 @@ module MiqConfigSssdLdap
       LOGGER.debug("Invoked #{self.class}\##{__method__}")
 
       begin
-        File.write(dest_path, ERB.new(File.read(src_path), trim_mode: '-').result(binding))
+        File.write(dest_path, ERB.new(File.read(src_path), :trim_mode => '-').result(binding))
         FileUtils.chmod(0o600, dest_path)
       rescue Errno::ENOENT, IndexError => e
         LOGGER.fatal(e.message)

@@ -11,7 +11,7 @@ module ManageIQ
       # determine plugin root dir. Assume we are called from a 'bin/' script in the plugin root
       plugin_root ||= Pathname.new(caller_locations.last.absolute_path).dirname.parent
 
-      manageiq_plugin_update(plugin_root, force_bundle_update: false)
+      manageiq_plugin_update(plugin_root, :force_bundle_update => false)
     end
 
     def self.manageiq_plugin_update(plugin_root = nil, force_bundle_update: true)
@@ -24,7 +24,7 @@ module ManageIQ
       setup_gemfile_lock if ci?
       install_bundler(plugin_root)
       bundle_config(plugin_root)
-      bundle_update(plugin_root, force: force_bundle_update)
+      bundle_update(plugin_root, :force => force_bundle_update)
 
       unless skip_database_reset?
         # Update the local development database

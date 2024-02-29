@@ -24,13 +24,13 @@ class DialogField < ApplicationRecord
 
   alias_attribute :order, :position
 
-  validates   :name, presence: true
+  validates   :name, :presence => true
   validates :name, :exclusion => {:in      => %w(action controller),
                                   :message => "Field Name %{value} is reserved."}
 
   attribute :required, :default => false
   attribute :visible,  :default => true
-  validates :visible, inclusion: {in: [true, false]}
+  validates :visible, :inclusion => {:in => [true, false]}
   attribute :load_values_on_init, :default => true
 
   serialize :values

@@ -105,7 +105,7 @@ RSpec.describe "MiqWorker Monitor" do
 
         it "on worker destroy, will destroy its processed messages" do
           @worker.destroy
-          expect(@worker.messages.where.not(state: "ready").count).to eq(0)
+          expect(@worker.messages.where.not(:state => "ready").count).to eq(0)
           expect(@worker.active_messages.size).to eq(0)
         end
 

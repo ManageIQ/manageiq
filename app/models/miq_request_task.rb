@@ -18,7 +18,7 @@ class MiqRequestTask < ApplicationRecord
 
   delegate :request_class, :task_description, :to => :class
 
-  validates :status, inclusion: { :in => %w(Ok Warn Error Timeout) }
+  validates :status, :inclusion => { :in => %w(Ok Warn Error Timeout) }
 
   include MiqRequestMixin
   include TenancyMixin

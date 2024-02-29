@@ -60,7 +60,7 @@ FactoryBot.define do
     vmm_vendor   { "unknown" }
     ems_ref      { "openstack-perf-host" }
     uid_ems      { "openstack-perf-host-nova-instance" }
-    association :ems_cluster, factory: :ems_cluster_openstack
+    association :ems_cluster, :factory => :ems_cluster_openstack
   end
 
   factory :host_openstack_infra_compute, :parent => :host_openstack_infra,

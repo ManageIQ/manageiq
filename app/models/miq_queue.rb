@@ -114,7 +114,7 @@ class MiqQueue < ApplicationRecord
   STATE_ERROR   = 'error'.freeze
   STATE_TIMEOUT = 'timeout'.freeze
   STATE_EXPIRED = "expired".freeze
-  validates :state, inclusion: { :in => [STATE_READY, STATE_DEQUEUE, STATE_WARN, STATE_ERROR, STATE_TIMEOUT, STATE_EXPIRED] }
+  validates :state, :inclusion => { :in => [STATE_READY, STATE_DEQUEUE, STATE_WARN, STATE_ERROR, STATE_TIMEOUT, STATE_EXPIRED] }
   FINISHED_STATES = [STATE_WARN, STATE_ERROR, STATE_TIMEOUT, STATE_EXPIRED].freeze
 
   STATUS_OK      = 'ok'.freeze

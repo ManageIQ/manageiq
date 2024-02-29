@@ -2,7 +2,7 @@ module DialogMixin
   extend ActiveSupport::Concern
 
   included do
-    validates :label, presence: true
+    validates :label, :presence => true
   end
 
   def remove_all_resources

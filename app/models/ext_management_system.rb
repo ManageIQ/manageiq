@@ -769,7 +769,7 @@ class ExtManagementSystem < ApplicationRecord
     if @association_cache.include?(:resource_pools)
       resource_pools.select { |r| !r.is_default }
     else
-      resource_pools.where.not(is_default: true).to_a
+      resource_pools.where.not(:is_default => true).to_a
     end
   end
 

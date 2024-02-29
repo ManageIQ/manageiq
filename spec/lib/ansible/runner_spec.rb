@@ -120,7 +120,7 @@ RSpec.describe Ansible::Runner do
         expect(described_class).to receive(:python_path).and_call_original
 
         expect(described_class).to receive(:manageiq_venv_path).and_return(manageiq_venv_path)
-        stub_ansible_raw(ansible_exists: true)
+        stub_ansible_raw(:ansible_exists => true)
 
         expect(AwesomeSpawn).to receive(:run) do |command, options|
           expect(command).to eq("ansible-runner")
@@ -327,28 +327,28 @@ RSpec.describe Ansible::Runner do
 
     it "with manageiq_venv_path valid and ansible_python_version valid" do
       expect(described_class).to receive(:manageiq_venv_path).and_return(manageiq_venv_path)
-      stub_ansible_raw(ansible_exists: true)
+      stub_ansible_raw(:ansible_exists => true)
 
       expect(described_class.send(:python_path)).to eq([manageiq_venv_path, ansible_python_path].join(File::PATH_SEPARATOR))
     end
 
     it "with manageiq_venv_path valid and ansible_python_version nil" do
       expect(described_class).to receive(:manageiq_venv_path).and_return(manageiq_venv_path)
-      stub_ansible_raw(ansible_exists: false)
+      stub_ansible_raw(:ansible_exists => false)
 
       expect(described_class.send(:python_path)).to eq(manageiq_venv_path)
     end
 
     it "with manageiq_venv_path nil and ansible_python_version valid" do
       expect(described_class).to receive(:manageiq_venv_path).and_return(nil)
-      stub_ansible_raw(ansible_exists: true)
+      stub_ansible_raw(:ansible_exists => true)
 
       expect(described_class.send(:python_path)).to eq(ansible_python_path)
     end
 
     it "with manageiq_venv_path nil and ansible_python_version nil" do
       expect(described_class).to receive(:manageiq_venv_path).and_return(nil)
-      stub_ansible_raw(ansible_exists: false)
+      stub_ansible_raw(:ansible_exists => false)
 
       expect(described_class.send(:python_path)).to eq("")
     end

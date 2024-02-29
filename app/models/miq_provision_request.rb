@@ -11,7 +11,7 @@ class MiqProvisionRequest < MiqRequest
   ACTIVE_STATES     = %w(migrated) + base_class::ACTIVE_STATES
 
   validates :request_state,
-                         inclusion: { :in      => %w(pending provisioned finished) + ACTIVE_STATES,
+                         :inclusion => { :in      => %w(pending provisioned finished) + ACTIVE_STATES,
                          :message => "should be pending, #{ACTIVE_STATES.join(", ")}, provisioned, or finished" }
   validates :source, :presence => true
   validate :must_have_user

@@ -34,7 +34,7 @@ module MiqServer::StatusManagement
     # 2. Delegate and/or deprecate these class methods
     # 3. Change callers (app/models/miq_schedule_worker/jobs.rb) to use an instance.
     # 4. Cleanup any existing queue messages.
-    delegate :status_update, to: :my_server
+    delegate :status_update, :to => :my_server
 
     def log_status
       log_system_status

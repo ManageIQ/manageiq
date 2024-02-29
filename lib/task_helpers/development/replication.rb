@@ -47,7 +47,7 @@ module TaskHelpers
 
           regions = REMOTES + [GLOBAL]
           regions.each do |r|
-            run_command("dropdb -U '#{PG_USER}' -h #{PG_HOST} #{database(r)}", env: {"PGPASSWORD" => PG_PASS}, raise_on_error: false)
+            run_command("dropdb -U '#{PG_USER}' -h #{PG_HOST} #{database(r)}", :env => {"PGPASSWORD" => PG_PASS}, :raise_on_error => false)
           end
         end
 
@@ -92,18 +92,18 @@ module TaskHelpers
         end
 
         def configure_global_region(region)
-          run_command("bin/rails r 'TaskHelpers::Development::Replication.configure_global_region_script'", env: command_environment(region))
-          run_command("psql #{database_url(region)} -c 'SELECT * FROM pg_subscription;'", raise_on_error: false)
+          run_command("bin/rails r 'TaskHelpers::Development::Replication.configure_global_region_script'", :env => command_environment(region))
+          run_command("psql #{database_url(region)} -c 'SELECT * FROM pg_subscription;'", :raise_on_error => false)
         end
 
         def configure_remote_region(region)
-          run_command("bin/rails r 'MiqRegion.replication_type = :remote'", env: command_environment(region))
+          run_command("bin/rails r 'MiqRegion.replication_type = :remote'", :env => command_environment(region))
           run_command("psql #{database_url(region)} -c 'SELECT * FROM pg_publication;'")
         end
 
         def create_region(region)
-          run_command("bin/rake evm:db:region", env: command_environment(region).merge("DISABLE_DATABASE_ENVIRONMENT_CHECK" => "true"))
-          run_command("bin/rails r 'EvmDatabase.seed_primordial'", env: command_environment(region))
+          run_command("bin/rake evm:db:region", :env => command_environment(region).merge("DISABLE_DATABASE_ENVIRONMENT_CHECK" => "true"))
+          run_command("bin/rails r 'EvmDatabase.seed_primordial'", :env => command_environment(region))
         ensure
           FileUtils.rm_f(guid_file)
         end
@@ -124,11 +124,11 @@ module TaskHelpers
         end
 
         def teardown_global_subscription_for_region(region)
-          run_command("psql #{database_url(GLOBAL)} -c 'DROP SUBSCRIPTION region_#{region}_subscription;'", raise_on_error: false)
+          run_command("psql #{database_url(GLOBAL)} -c 'DROP SUBSCRIPTION region_#{region}_subscription;'", :raise_on_error => false)
         end
 
         def teardown_remote_publication(region)
-          run_command("psql #{database_url(region)} -c 'DROP PUBLICATION miq;'", raise_on_error: false)
+          run_command("psql #{database_url(region)} -c 'DROP PUBLICATION miq;'", :raise_on_error => false)
         end
       end
     end
