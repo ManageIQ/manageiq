@@ -93,6 +93,14 @@ class MiqTemplate < VmOrTemplate
     end
   end
 
+  def memory_for_request(request, flavor_id = nil)
+    raise NotImplementedError, _("must be implemented in a subclass")
+  end
+
+  def number_of_cpus_for_request(request, flavor_id = nil)
+    raise NotImplementedError, _("must be implemented in a subclass")
+  end
+
   private_class_method def self.refresh_association
     :miq_templates
   end
