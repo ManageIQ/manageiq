@@ -150,12 +150,12 @@ RSpec.describe ContainerOrchestrator do
       deployment_definition = subject.send(:deployment_definition, "test")
 
       expect(deployment_definition.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts)).to include({
-        :mountPath => "/.postgresql",
+                                                                                                                    :mountPath => "/.postgresql",
         :name      => "pg-root-certificate",
         :readOnly  => true
-      })
+                                                                                                                  })
       expect(deployment_definition.fetch_path(:spec, :template, :spec, :volumes)).to include({
-        :name   => "pg-root-certificate",
+                                                                                               :name   => "pg-root-certificate",
         :secret => {
           :secretName => "postgresql-secrets",
           :items      => [
@@ -163,7 +163,7 @@ RSpec.describe ContainerOrchestrator do
             :path => "root.crt",
           ],
         }
-      })
+                                                                                             })
     end
 
     it "mounts the root CA certificate" do
@@ -172,12 +172,12 @@ RSpec.describe ContainerOrchestrator do
       deployment_definition = subject.send(:deployment_definition, "test")
 
       expect(deployment_definition.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts)).to include({
-        :mountPath => "/etc/pki/ca-trust/source/anchors",
+                                                                                                                    :mountPath => "/etc/pki/ca-trust/source/anchors",
         :name      => "internal-root-certificate",
         :readOnly  => true
-      })
+                                                                                                                  })
       expect(deployment_definition.fetch_path(:spec, :template, :spec, :volumes)).to include({
-        :name   => "internal-root-certificate",
+                                                                                               :name   => "internal-root-certificate",
         :secret => {
           :secretName => "some-secret-name",
           :items      => [
@@ -185,17 +185,17 @@ RSpec.describe ContainerOrchestrator do
             :path => "root.crt",
           ],
         }
-      })
+                                                                                             })
     end
 
     it "includes node affinities" do
       deployment_definition = subject.send(:deployment_definition, "test")
 
       expect(deployment_definition.fetch_path(:spec, :template, :spec, :affinity, :nodeAffinity, :requiredDuringSchedulingIgnoredDuringExecution, :nodeSelectorTerms, 0, :matchExpressions, 0)).to include({
-        :key => "kubernetes.io/arch",
+                                                                                                                                                                                                             :key => "kubernetes.io/arch",
         :operator => "In",
         :values => ["amd64", "arm64"],
-      })
+                                                                                                                                                                                                           })
     end
   end
 

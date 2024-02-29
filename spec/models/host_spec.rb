@@ -48,7 +48,7 @@ RSpec.describe Host do
     expect(DriftState.count).to eq(1)
 
     expect(host.drift_states.first.data).to eq({
-      :class                         => "ManageIQ::Providers::Vmware::InfraManager::Host",
+                                                 :class                         => "ManageIQ::Providers::Vmware::InfraManager::Host",
       :id                            => host.id,
       :name                          => host.name,
       :vmm_vendor_display            => "VMware",
@@ -66,7 +66,7 @@ RSpec.describe Host do
       :tags                          => [],
       :users                         => [],
       :vms                           => [],
-    })
+                                               })
   end
 
   it "emits cluster policy event when the cluster changes" do

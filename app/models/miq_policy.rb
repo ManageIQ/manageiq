@@ -380,11 +380,11 @@ class MiqPolicy < ApplicationRecord
   def self.all_policy_events_filter
     # Todo Convert to SQL if possible
     filter_hash = {
-       "AND" => [
-         {"="  => {"field" => "MiqEventDefinition-event_type",       "value" => "Default"}},
-           {"!=" => {"field" => "MiqEventDefinition-event_group_name", "value" => ""}}
-       ]
-        }
+      "AND" => [
+        {"="  => {"field" => "MiqEventDefinition-event_type",       "value" => "Default"}},
+          {"!=" => {"field" => "MiqEventDefinition-event_group_name", "value" => ""}}
+      ]
+    }
         EVENT_GROUPS_EXCLUDED.each do |e|
           filter_hash["AND"] << {"!=" => {"field" => "MiqEventDefinition-event_group_name", "value" => e}}
         end

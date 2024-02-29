@@ -243,7 +243,7 @@ RSpec.describe Vm do
     expect(DriftState.count).to eq(1)
 
     expect(vm.drift_states.first.data).to eq({
-      :class               => "ManageIQ::Providers::Vmware::InfraManager::Vm",
+                                               :class               => "ManageIQ::Providers::Vmware::InfraManager::Vm",
       :id                  => vm.id,
       :location            => vm.location,
       :name                => vm.name,
@@ -260,7 +260,7 @@ RSpec.describe Vm do
       :tags                => [],
       :users               => [],
       :win32_services      => [],
-    })
+                                             })
   end
 
   it '#set_remote_console_url' do
