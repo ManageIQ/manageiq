@@ -64,7 +64,7 @@ RSpec.describe FixAuth::AuthConfigModel do
       subject.fix_passwords(request, options)
       expect(request).to be_changed
       new_options = YAML.load(request.options)
-      expect(new_options[:dialog]['password::special'.to_sym]).to be_encrypted(pass)
+      expect(new_options[:dialog][:"password::special"]).to be_encrypted(pass)
 
       expect(new_options[:root_password]).to be_encrypted(pass)
       expect(new_options[:sysprep_password]).to be_encrypted(pass)
@@ -92,7 +92,7 @@ RSpec.describe FixAuth::AuthConfigModel do
       subject.fix_passwords(request, options)
       expect(request).to be_changed
       new_options = YAML.load(request.options)
-      expect(new_options[:dialog]['password::special'.to_sym]).to be_encrypted(pass)
+      expect(new_options[:dialog][:"password::special"]).to be_encrypted(pass)
 
       expect(new_options[:root_password]).to be_encrypted(pass)
       expect(new_options[:sysprep_password]).to be_encrypted(pass)
