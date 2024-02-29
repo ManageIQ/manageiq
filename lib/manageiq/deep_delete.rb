@@ -162,7 +162,7 @@ module ManageIQ
     #   scope.in_batches(of: batch_size, :load => true).destroy_all.count
     #
     # @block takes a subscope and returns a count
-    def batch(scope, batch_size: 1000, &block)
+    def batch(scope, batch_size: 1000)
       pk = scope.primary_key
       total = 0
 
