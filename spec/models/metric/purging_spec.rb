@@ -40,13 +40,13 @@ RSpec.describe Metric::Purging do
 
       before do
         @metrics1 = [
-          FactoryBot.create(:metric_rollup_vm_hr, :resource_id => vm1.id, :timestamp => (6.months + 1.days).ago.utc),
-          FactoryBot.create(:metric_rollup_vm_hr, :resource_id => vm1.id, :timestamp => (6.months - 1.days).ago.utc)
+          FactoryBot.create(:metric_rollup_vm_hr, :resource_id => vm1.id, :timestamp => (6.months + 1.day).ago.utc),
+          FactoryBot.create(:metric_rollup_vm_hr, :resource_id => vm1.id, :timestamp => (6.months - 1.day).ago.utc)
         ]
         @metrics2 = [
           FactoryBot.create(:metric_rollup_vm_hr, :resource_id => vm2.id, :timestamp => (6.months + 2.days).ago.utc),
-          FactoryBot.create(:metric_rollup_vm_hr, :resource_id => vm2.id, :timestamp => (6.months + 1.days).ago.utc),
-          FactoryBot.create(:metric_rollup_vm_hr, :resource_id => vm2.id, :timestamp => (6.months - 1.days).ago.utc)
+          FactoryBot.create(:metric_rollup_vm_hr, :resource_id => vm2.id, :timestamp => (6.months + 1.day).ago.utc),
+          FactoryBot.create(:metric_rollup_vm_hr, :resource_id => vm2.id, :timestamp => (6.months - 1.day).ago.utc)
         ]
       end
 

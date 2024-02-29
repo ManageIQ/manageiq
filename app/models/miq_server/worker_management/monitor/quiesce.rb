@@ -19,7 +19,7 @@ module MiqServer::WorkerManagement::Monitor::Quiesce
     @quiesce_started_on = Time.now.utc
     @worker_monitor_settings ||= {}
     @quiesce_loop_timeout = @worker_monitor_settings[:quiesce_loop_timeout] || 5.minutes
-    worker_monitor_poll = (@worker_monitor_settings[:poll] || 1.seconds).to_i_with_method
+    worker_monitor_poll = (@worker_monitor_settings[:poll] || 1.second).to_i_with_method
 
     miq_workers.each do |w|
       if w.containerized_worker?

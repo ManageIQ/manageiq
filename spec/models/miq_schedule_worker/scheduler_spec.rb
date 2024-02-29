@@ -23,7 +23,7 @@ RSpec.describe MiqScheduleWorker::Scheduler do
         work = lambda {}
         scheduler.schedule_every(schedule_name, 3.hours, :first_in => 1.hour, :tags => [:first, :tag], &work)
         job = rufus_scheduler.jobs.first
-        expect(job.next_time).to eq(1.hours.from_now)
+        expect(job.next_time).to eq(1.hour.from_now)
         expect(job.tags).to match_array(%w(first tag))
         expect(job.callable).to eq(work)
       end
@@ -33,7 +33,7 @@ RSpec.describe MiqScheduleWorker::Scheduler do
       Timecop.freeze do
         scheduler.schedule_every(schedule_name, "3h", :first_in => "1h") {}
         job = rufus_scheduler.jobs.first
-        expect(job.next_time).to eq(1.hours.from_now)
+        expect(job.next_time).to eq(1.hour.from_now)
       end
     end
 

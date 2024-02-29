@@ -108,7 +108,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
       :instance_id    => id,
       :method_name    => "do_post_provision",
       :zone           => my_zone,
-      :deliver_on     => 1.minutes.from_now.utc,
+      :deliver_on     => 1.minute.from_now.utc,
       :tracking_label => tracking_label_id,
       :miq_callback   => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
     )
