@@ -58,7 +58,7 @@ module ServiceMixin
   end
 
   def each_group_resource(grp_idx = nil, &block)
-    return enum_for(:each_group_resource) unless block_given?
+    return enum_for(:each_group_resource) unless block
 
     if children.present? && service_resources.empty?
       children.each do |child|
