@@ -10,7 +10,7 @@ RSpec.describe MiqProvision::PostInstallCallback do
         @phase       = phase.to_s
       end
 
-      def for_destination;
+      def for_destination
       end
 
       def _log
