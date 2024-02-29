@@ -52,7 +52,7 @@ class MiqAction < ApplicationRecord
   }
 
   SH_PREAMBLE = begin
-    preamble = "\#!/bin/sh\n"
+    preamble = "#!/bin/sh\n"
     RC_HASH.each { |k, v| preamble += "#{v}=#{k}\n" }
     preamble
   end

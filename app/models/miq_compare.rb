@@ -344,7 +344,7 @@ end
 
         sub_rec.each do |r|
           if key_name.blank?
-            key = "\##{key_counter}"
+            key = "##{key_counter}"
             key_counter += 1
           else
             key = r.send(key_name)

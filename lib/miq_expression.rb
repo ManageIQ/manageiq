@@ -840,7 +840,7 @@ class MiqExpression
 
   # Escape any unescaped forward slashes and/or interpolation
   def self.sanitize_regular_expression(string)
-    string.gsub(%r{\\*/}, "\\/").gsub(/\\*#/, "\\\#")
+    string.gsub(%r{\\*/}, "\\/").gsub(/\\*#/, "\\#")
   end
 
   def self.escape_virtual_custom_attribute(attribute)

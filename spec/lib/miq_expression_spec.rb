@@ -468,7 +468,7 @@ RSpec.describe MiqExpression do
         FROM "hardwares"
         INNER JOIN "networks" ON "networks"."hardware_id" = "hardwares"."id"
         WHERE "hardwares"."vm_or_template_id" = "vms"."id"
-        AND (\"networks\".\"ipaddress\" ILIKE '%foo%' OR \"networks\".\"ipv6address\" ILIKE '%foo%')
+        AND ("networks"."ipaddress" ILIKE '%foo%' OR "networks"."ipv6address" ILIKE '%foo%')
         LIMIT 1)
       EXPECTED
       expect(sql).to eq(expected_sql)
@@ -1538,7 +1538,7 @@ RSpec.describe MiqExpression do
     end
 
     it "does not escape escaped forward slashes for values in REGULAR EXPRESSION MATCHES expressions" do
-      value = "\/foo\/bar"
+      value = "/foo/bar"
       actual = described_class.new("REGULAR EXPRESSION MATCHES" => {"field" => "Vm-name", "value" => value}).to_ruby
       expected = "<value ref=vm, type=string>/virtual/name</value> =~ /\\/foo\\/bar/"
       expect(actual).to eq(expected)
@@ -1594,7 +1594,7 @@ RSpec.describe MiqExpression do
     end
 
     it "does not escape escaped forward slashes for values in REGULAR EXPRESSION DOES NOT MATCH expressions" do
-      value = "\/foo\/bar"
+      value = "/foo/bar"
       actual = described_class.new("REGULAR EXPRESSION DOES NOT MATCH" => {"field" => "Vm-name", "value" => value}).to_ruby
       expected = "<value ref=vm, type=string>/virtual/name</value> !~ /\\/foo\\/bar/"
       expect(actual).to eq(expected)

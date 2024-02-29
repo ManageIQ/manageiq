@@ -1248,13 +1248,13 @@ end
   virtual_attribute :normalized_state, :string, :arel => (lambda do |t|
     t.grouping(
       Arel::Nodes::Case.new
-      .when(arel_table[:archived]).then(Arel.sql("\'archived\'"))
-      .when(arel_table[:orphaned]).then(Arel.sql("\'orphaned\'"))
-      .when(t[:template].eq(t.create_true)).then(Arel.sql("\'template\'"))
-      .when(t[:retired].eq(t.create_true)).then(Arel.sql("\'retired\'"))
-      .when(arel_table[:disconnected]).then(Arel.sql("\'disconnected\'"))
+      .when(arel_table[:archived]).then(Arel.sql("'archived'"))
+      .when(arel_table[:orphaned]).then(Arel.sql("'orphaned'"))
+      .when(t[:template].eq(t.create_true)).then(Arel.sql("'template'"))
+      .when(t[:retired].eq(t.create_true)).then(Arel.sql("'retired'"))
+      .when(arel_table[:disconnected]).then(Arel.sql("'disconnected'"))
       .else(t.lower(
-              t.coalesce([t[:power_state], Arel.sql("\'unknown\'")])
+              t.coalesce([t[:power_state], Arel.sql("'unknown'")])
             ))
     )
   end)

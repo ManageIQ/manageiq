@@ -28,7 +28,7 @@ module Ansible
 
       private
 
-      SSH_UNLOCK_KEY = "^Enter passphrase for [a-zA-Z0-9\-\/]+\/ssh_key_data:".freeze
+      SSH_UNLOCK_KEY = "^Enter passphrase for [a-zA-Z0-9-/]+/ssh_key_data:".freeze
       def write_password_file
         password_data = initialize_password_data
         password_data[SSH_UNLOCK_KEY] ||= auth.ssh_key_unlock || ""

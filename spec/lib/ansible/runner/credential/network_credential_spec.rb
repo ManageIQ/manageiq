@@ -127,7 +127,7 @@ RSpec.describe Ansible::Runner::NetworkCredential do
       end
 
       context "with authorize set" do
-        let(:ssh_unlock_key) { "^Enter passphrase for [a-zA-Z0-9\-\/]+\/ssh_key_data:" }
+        let(:ssh_unlock_key) { "^Enter passphrase for [a-zA-Z0-9-/]+/ssh_key_data:" }
         let(:auth_attributes) do
           {
             :userid            => "user",

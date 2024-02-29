@@ -978,7 +978,7 @@ RSpec.describe ChargebackVm do
           ChargebackRate.set_assignments(:storage, [rate_assignment_options])
         end
 
-        it "chooses rate according to cloud_volume\'s tag" do
+        it "chooses rate according to cloud_volume's tag" do
           cloud_volume_sdd.tag_with([classification.tag.name], :ns => '*')
 
           expect(subject).to eq(storage_chargeback_rate)
