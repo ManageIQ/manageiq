@@ -94,7 +94,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   end
 
   def init_field_hash
-    @dialog.dialog_fields.each_with_object({}) { |df, result| result[df.name] = df }
+    @dialog.dialog_fields.index_by { |df| df.name }
   end
 
   def set_value(name, value)

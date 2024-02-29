@@ -171,7 +171,7 @@ module AssignmentMixin
     def assignments
       # Get all assigned, enabled instances for type klass
       records = kind_of?(Class) ? all : self
-      assignment_map = records.each_with_object({}) { |a, h| h[a.id] = a }
+      assignment_map = records.index_by { |a| a.id }
       Tag
         .includes(:taggings).references(:taggings)
         .where("taggings.taggable_type = ? and tags.name like ?", name, "#{namespace}/%")

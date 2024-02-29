@@ -189,7 +189,7 @@ class Dialog < ApplicationRecord
   private
 
   def dialog_field_hash
-    @dialog_field_hash ||= dialog_fields.each_with_object({}) { |df, hash| hash[df.name] = df }
+    @dialog_field_hash ||= dialog_fields.index_by { |df| df.name }
   end
 
   def reject_if_has_resource_actions
