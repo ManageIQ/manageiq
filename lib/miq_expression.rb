@@ -1013,7 +1013,7 @@ class MiqExpression
     options = {:include_model => true}.merge(extra_options)
 
     case what.to_sym
-    when :exp_available_fields then
+    when :exp_available_fields
       @miq_adv_search_lists[model.to_s][:exp_available_fields] ||= MiqExpression.model_details(model, options.merge(:typ => "field", :disallow_loading_virtual_custom_attributes => false))
     when :exp_available_counts then @miq_adv_search_lists[model.to_s][:exp_available_counts] ||= MiqExpression.model_details(model, options.merge(:typ => "count"))
     when :exp_available_finds  then @miq_adv_search_lists[model.to_s][:exp_available_finds]  ||= MiqExpression.model_details(model, options.merge(:typ => "find"))

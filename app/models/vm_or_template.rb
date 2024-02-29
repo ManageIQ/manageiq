@@ -468,11 +468,11 @@ class VmOrTemplate < ApplicationRecord
   # override
   def self.task_arguments(options)
     case options[:task]
-    when "scan", "sync" then
+    when "scan", "sync"
       [options[:userid]]
-    when "remove_snapshot", "revert_to_snapshot" then
+    when "remove_snapshot", "revert_to_snapshot"
       [options[:snap_selected]]
-    when "create_snapshot" then
+    when "create_snapshot"
       [options[:name], options[:description], options[:memory]]
     else
       super

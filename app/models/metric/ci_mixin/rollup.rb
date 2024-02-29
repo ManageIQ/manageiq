@@ -15,14 +15,14 @@ module Metric::CiMixin::Rollup
       next if parent.nil?
 
       case new_interval
-      when 'hourly', 'historical' then
+      when 'hourly', 'historical'
         times = Metric::Helper.hours_from_range(start_time, end_time)
 
         log_header = "Queueing [#{new_interval}] rollup to #{parent.class.name} id: [#{parent.id}] for times: #{times.inspect}"
         _log.info("#{log_header}...")
         times.each { |t| parent.perf_rollup_queue(t, new_interval) }
         _log.info("#{log_header}...Complete")
-      when 'daily' then
+      when 'daily'
         times_by_tp = Metric::Helper.days_from_range_by_time_profile(start_time, end_time)
         times_by_tp.each do |tp, times|
           log_header = "Queueing [#{new_interval}] rollup to #{parent.class.name} id: [#{parent.id}] in time profile: [#{tp.description}] for times: #{times.inspect}"

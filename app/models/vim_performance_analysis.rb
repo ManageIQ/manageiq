@@ -334,15 +334,15 @@ module VimPerformanceAnalysis
     rel = Metric::Helper.find_for_interval_name(interval_name, ext_options[:time_profile] || ext_options[:tz],
                                                 ext_options[:class])
     case obj
-    when MiqEnterprise, MiqRegion then
+    when MiqEnterprise, MiqRegion
       rel = rel.where(:resource => obj.storages).or(rel.where(:resource => obj.ext_management_systems))
-    when Host then
+    when Host
       rel = rel.where(:parent_host_id => obj.id)
     when EmsCluster
       rel = rel.where(:parent_ems_cluster_id => obj.id)
-    when Storage then
+    when Storage
       rel = rel.where(:parent_storage_id => obj.id)
-    when ExtManagementSystem then
+    when ExtManagementSystem
       rel = rel.where(:parent_ems_id => obj.id).where(:resource_type => %w(Host EmsCluster))
     else
       raise _("unknown object type: %{class}") % {:class => obj.class}
