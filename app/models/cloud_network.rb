@@ -37,7 +37,7 @@ class CloudNetwork < ApplicationRecord
   # Define all getters and setters for extra_attributes related virtual columns
   %i(maximum_transmission_unit port_security_enabled qos_policy_id).each do |action|
     define_method("#{action}=") do |value|
-      extra_attributes_save(action, value)
+     extra_attributes_save(action, value)
    end
 
    define_method(action) do

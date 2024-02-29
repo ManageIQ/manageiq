@@ -1244,9 +1244,9 @@ class MiqExpression
         return _("Date/Time value must not be blank") if value.blank?
 
         v_cvt = begin
-                  RelativeDatetime.normalize(v, "UTC")
-                rescue
-                  nil
+          RelativeDatetime.normalize(v, "UTC")
+        rescue
+          nil
         end
         return _("Value '%{value}' is not valid") % {:value => v} if v_cvt.nil?
 

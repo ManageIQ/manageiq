@@ -265,10 +265,10 @@ class GitRepository < ApplicationRecord
     return false unless %w[http https].include?(Settings.git_repository_proxy.scheme)
 
     repo_url_scheme = begin
-                        URI.parse(url).scheme
-                      rescue URI::InvalidURIError
-                        # url is not a parsable URI, such as git@github.com:ManageIQ/manageiq.git
-                        nil
+      URI.parse(url).scheme
+    rescue URI::InvalidURIError
+      # url is not a parsable URI, such as git@github.com:ManageIQ/manageiq.git
+      nil
     end
     %w[http https].include?(repo_url_scheme)
   end

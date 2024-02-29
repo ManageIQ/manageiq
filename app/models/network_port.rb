@@ -54,7 +54,7 @@ class NetworkPort < ApplicationRecord
   %i(binding_virtual_interface_details binding_virtual_nic_type binding_profile extra_dhcp_opts
      allowed_address_pairs fixed_ips).each do |action|
     define_method("#{action}=") do |value|
-      extra_attributes_save(action, value)
+     extra_attributes_save(action, value)
    end
 
    define_method(action) do

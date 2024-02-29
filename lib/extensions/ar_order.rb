@@ -7,20 +7,20 @@ module ActiveRecord
         def columns_for_distinct(columns, orders) #:nodoc:
           order_columns = orders.reject(&:blank?).map { |s|
               # Convert Arel node to string
-              unless s.is_a?(String)
-                if s.kind_of?(Arel::Nodes::Ordering)
-                  s = s.expr
-                  keep_order = true
-                end
-                if s.respond_to?(:to_sql)
-                  s = s.to_sql
-                else # for Arel::Nodes::Attribute
-                  engine = Arel::Table.engine
-                  collector = Arel::Collectors::SQLString.new
-                  collector = engine.connection.visitor.accept s, collector
-                  s = collector.value
-                end
-              end
+                            unless s.is_a?(String)
+                              if s.kind_of?(Arel::Nodes::Ordering)
+                                s = s.expr
+                                keep_order = true
+                              end
+                              if s.respond_to?(:to_sql)
+                                s = s.to_sql
+                              else # for Arel::Nodes::Attribute
+                                engine = Arel::Table.engine
+                                collector = Arel::Collectors::SQLString.new
+                                collector = engine.connection.visitor.accept s, collector
+                                s = collector.value
+                              end
+                            end
               # If we haven't already removed the order clause,
               # Remove any ASC/DESC modifiers
               if keep_order
