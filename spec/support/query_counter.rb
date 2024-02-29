@@ -14,7 +14,7 @@ module Spec
       end
 
       def callback_proc
-        lambda(&method(:callback))
+        method(:callback)
       end
 
       def count(&block)
