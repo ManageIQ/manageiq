@@ -24,11 +24,11 @@ class MiqAeMethod < ApplicationRecord
                                                  :message => N_("may contain only alphanumeric and _ characters")}
 
   AVAILABLE_LANGUAGES = ["ruby", "perl"] # someday, add sh, perl, python, tcl and any other scripting language
-  validates :language, :inclusion => { :in => AVAILABLE_LANGUAGES }
+  validates :language, :inclusion => {:in => AVAILABLE_LANGUAGES}
   AVAILABLE_LOCATIONS = %w[builtin inline expression playbook ansible_job_template ansible_workflow_template].freeze
-  validates :location, :inclusion => { :in => AVAILABLE_LOCATIONS }
+  validates :location, :inclusion => {:in => AVAILABLE_LOCATIONS}
   AVAILABLE_SCOPES = ["class", "instance"]
-  validates :scope, :inclusion => { :in => AVAILABLE_SCOPES }
+  validates :scope, :inclusion => {:in => AVAILABLE_SCOPES}
 
   def self.available_languages
     AVAILABLE_LANGUAGES
