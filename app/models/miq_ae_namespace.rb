@@ -73,8 +73,8 @@ class MiqAeNamespace < ApplicationRecord
   # TODO: broken since 2017
   def self.find_tree(find_options = {})
     namespaces = where(find_options)
-    ns_lookup = namespaces.each_with_object({}) do |ns, h|
-      h[ns.id] = ns
+    ns_lookup = namespaces.index_by do |ns|
+      ns.id
     end
 
     roots = []

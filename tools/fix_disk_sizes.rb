@@ -21,8 +21,8 @@ end
 log_header = "MIQ(#{__FILE__})"
 $log.info("#{log_header} Correcting Disk Sizes...")
 
-disks_by_filename = Disk.all.each_with_object({}) do |d, h|
-  h[d.filename] = d
+disks_by_filename = Disk.all.index_by do |d|
+  d.filename
 end
 
 changed_disks = {}
