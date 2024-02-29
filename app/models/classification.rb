@@ -35,10 +35,10 @@ class Classification < ApplicationRecord
 
   DEFAULT_NAMESPACE = "/managed".freeze
 
-  attribute :read_only,    :default => false
-  attribute :syntax,       :default => "string"
-  attribute :single_value, :default => false
-  attribute :show,         :default => true
+  default_value_for :read_only,    false
+  default_value_for :syntax,       "string"
+  default_value_for :single_value, false
+  default_value_for :show,         true
 
   FIXTURE_FILE = FIXTURE_DIR.join("classifications.yml")
 

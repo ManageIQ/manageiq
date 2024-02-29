@@ -3,7 +3,7 @@ RSpec.describe UniquenessWhenChangedValidator do
   describe "#uniqueness_when_changed" do
     it "queries for a new record" do
       alert = FactoryBot.build(:miq_alert)
-      expect { alert.valid? }.to make_database_queries(:count => 2)
+      expect { alert.valid? }.to make_database_queries(:count => 1)
     end
 
     it "queries for a changed record" do

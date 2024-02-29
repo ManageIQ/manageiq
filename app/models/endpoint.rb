@@ -3,7 +3,7 @@ require 'openssl'
 class Endpoint < ApplicationRecord
   belongs_to :resource, :polymorphic => true
 
-  attribute :verify_ssl, :default => OpenSSL::SSL::VERIFY_PEER
+  default_value_for :verify_ssl, OpenSSL::SSL::VERIFY_PEER
   validates :verify_ssl, :inclusion => {:in => [OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER]}
   validates :port, :numericality => {:only_integer => true, :allow_nil => true, :greater_than => 0}
   validates :url, :uniqueness_when_changed => true, :allow_blank => true, :unless => :allow_duplicate_url?

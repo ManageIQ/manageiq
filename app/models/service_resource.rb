@@ -10,10 +10,10 @@ class ServiceResource < ApplicationRecord
   belongs_to :resource, :polymorphic => true
   belongs_to :source,   :polymorphic => true
 
-  attribute :group_idx,       :default => 0
-  attribute :scaling_min,     :default => 1
-  attribute :scaling_max,     :default => -1
-  attribute :provision_index, :default => 0
+  default_value_for :group_idx, 0
+  default_value_for :scaling_min, 1
+  default_value_for :scaling_max, -1
+  default_value_for :provision_index, 0
 
   virtual_column :resource_name,        :type => :string
   virtual_column :resource_description, :type => :string
