@@ -57,5 +57,5 @@ module Vmdb
     end
   end
 
-  ::Module.send(:include, ClassLogging)
+  ::Module.include ClassLogging
 end
