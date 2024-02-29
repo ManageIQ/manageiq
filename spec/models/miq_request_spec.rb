@@ -421,9 +421,9 @@ RSpec.describe MiqRequest do
   context '#workflow' do
     let(:provision_request) do
       FactoryBot.create(:miq_provision_request,
-                         :requester => fred,
-                         :src_vm_id => template.id,
-                         :options => {:src_vm_id => template.id})
+                        :requester => fred,
+                        :src_vm_id => template.id,
+                        :options => {:src_vm_id => template.id})
     end
     let(:ems)          { FactoryBot.create(:ems_vmware) }
     let(:template)     { FactoryBot.create(:template_vmware, :ext_management_system => ems) }
@@ -436,8 +436,8 @@ RSpec.describe MiqRequest do
 
     it "returns the allowed tags" do
       FactoryBot.create(:miq_dialog,
-                         :name        => "miq_provision_dialogs",
-                         :dialog_type => MiqProvisionWorkflow)
+                        :name        => "miq_provision_dialogs",
+                        :dialog_type => MiqProvisionWorkflow)
 
       FactoryBot.create(:classification_department_with_tags)
 
@@ -538,8 +538,8 @@ RSpec.describe MiqRequest do
 
     let(:request) do
       FactoryBot.create(:miq_provision_request,
-                         :requester => fred,
-                         :options   => {:a => "1"})
+                        :requester => fred,
+                        :options   => {:a => "1"})
     end
 
     it "user_message" do

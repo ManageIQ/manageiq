@@ -325,14 +325,14 @@ RSpec.describe Tenant do
     let(:tenant1) { FactoryBot.create(:tenant) }
     let(:tenant1_admins) do
       FactoryBot.create(:miq_group,
-                         :miq_user_role => admin_with_brand,
-                         :tenant        => tenant1
+                        :miq_user_role => admin_with_brand,
+                        :tenant        => tenant1
                         )
     end
     let(:tenant1_users) do
       FactoryBot.create(:miq_group,
-                         :tenant        => tenant1,
-                         :miq_user_role => self_service_role)
+                        :tenant        => tenant1,
+                        :miq_user_role => self_service_role)
     end
     let(:admin) { FactoryBot.create(:user, :miq_groups => [tenant1_users, tenant1_admins]) }
     let(:user1) { FactoryBot.create(:user, :miq_groups => [tenant1_users]) }
@@ -465,18 +465,18 @@ RSpec.describe Tenant do
     it "no editable domains available for current tenant" do
       t1_1
       FactoryBot.create(:miq_ae_system_domain,
-                         :name      => 'non_editable',
-                         :priority  => 3,
-                         :tenant_id => t1_1.id)
+                        :name      => 'non_editable',
+                        :priority  => 3,
+                        :tenant_id => t1_1.id)
       expect(t1_1.any_editable_domains?).to eq(false)
     end
 
     it "editable domains available for current_tenant" do
       t1_1
       FactoryBot.create(:miq_ae_domain,
-                         :name      => 'editable',
-                         :priority  => 3,
-                         :tenant_id => t1_1.id)
+                        :name      => 'editable',
+                        :priority  => 3,
+                        :tenant_id => t1_1.id)
       expect(t1_1.any_editable_domains?).to eq(true)
     end
   end

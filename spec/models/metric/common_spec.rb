@@ -2,8 +2,8 @@ RSpec.describe Metric::Common do
   let(:host) { FactoryBot.create(:host) }
   let(:metric) do
     FactoryBot.create(:metric_rollup_host_hr,
-                       :resource  => host,
-                       :timestamp => Time.now.next_week(:sunday).utc
+                      :resource  => host,
+                      :timestamp => Time.now.next_week(:sunday).utc
                       )
   end
 
@@ -17,10 +17,10 @@ RSpec.describe Metric::Common do
   context "#apply_time_profile" do
     it "with all days and hours selected it should return true" do
       profile = FactoryBot.create(:time_profile,
-                                   :description => "foo",
-                                   :profile     => {:tz    => "New Delhi",
-                                                    :days  => TimeProfile::ALL_DAYS,
-                                                    :hours => TimeProfile::ALL_HOURS}
+                                  :description => "foo",
+                                  :profile     => {:tz    => "New Delhi",
+                                                   :days  => TimeProfile::ALL_DAYS,
+                                                   :hours => TimeProfile::ALL_HOURS}
                                   )
       res = metric.apply_time_profile(profile)
       expect(res).to be_truthy
@@ -28,10 +28,10 @@ RSpec.describe Metric::Common do
 
     it "with specific days and hours selected it should return false" do
       profile = FactoryBot.create(:time_profile,
-                                   :description => "foo",
-                                   :profile     => {:tz    => "New Delhi",
-                                                    :days  => [1],
-                                                    :hours => [1]}
+                                  :description => "foo",
+                                  :profile     => {:tz    => "New Delhi",
+                                                   :days  => [1],
+                                                   :hours => [1]}
                                   )
       res = metric.apply_time_profile(profile)
       expect(res).to be_falsey
@@ -39,15 +39,15 @@ RSpec.describe Metric::Common do
 
     it "returns true if time profile were used for aggregation (and rollup record refer to it)" do
       profile = FactoryBot.create(:time_profile,
-                                   :description => "foo",
-                                   :profile     => {:tz    => "New Delhi",
-                                                    :days  => [1],
-                                                    :hours => [1]})
+                                  :description => "foo",
+                                  :profile     => {:tz    => "New Delhi",
+                                                   :days  => [1],
+                                                   :hours => [1]})
       profile_aggr = FactoryBot.create(:time_profile,
-                                        :description => "used_for_daily_aggregation",
-                                        :profile     => {:tz    => "UTC",
-                                                         :days  => (2..4),
-                                                         :hours => TimeProfile::ALL_HOURS})
+                                       :description => "used_for_daily_aggregation",
+                                       :profile     => {:tz    => "UTC",
+                                                        :days  => (2..4),
+                                                        :hours => TimeProfile::ALL_HOURS})
 
       metric.time_profile_id = profile_aggr.id
       res = metric.apply_time_profile(profile)

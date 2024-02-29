@@ -60,16 +60,16 @@ RSpec.describe Metric do
           ]
           cases.each_slice(2) do |t, v|
             @vm1.metric_rollups << FactoryBot.create(:metric_rollup_vm_hr,
-                                                      :timestamp                  => t,
-                                                      :cpu_usage_rate_average     => v,
-                                                      :cpu_ready_delta_summation  => v * 10000,
-                                                      :sys_uptime_absolute_latest => v,
-                                                      :min_max                    => {
-                                                        :abs_max_cpu_usage_rate_average_value     => v,
-                                                        :abs_max_cpu_usage_rate_average_timestamp => Time.parse(t) + 20.seconds,
-                                                        :abs_min_cpu_usage_rate_average_value     => v,
-                                                        :abs_min_cpu_usage_rate_average_timestamp => Time.parse(t) + 40.seconds,
-                                                      }
+                                                     :timestamp                  => t,
+                                                     :cpu_usage_rate_average     => v,
+                                                     :cpu_ready_delta_summation  => v * 10000,
+                                                     :sys_uptime_absolute_latest => v,
+                                                     :min_max                    => {
+                                                       :abs_max_cpu_usage_rate_average_value     => v,
+                                                       :abs_max_cpu_usage_rate_average_timestamp => Time.parse(t) + 20.seconds,
+                                                       :abs_min_cpu_usage_rate_average_value     => v,
+                                                       :abs_min_cpu_usage_rate_average_timestamp => Time.parse(t) + 40.seconds,
+                                                     }
                                                      )
           end
         end
@@ -87,10 +87,10 @@ RSpec.describe Metric do
             ]
             cases.each_slice(2) do |t, v|
               @host1.metrics << FactoryBot.create(:metric_host_rt,
-                                                   :timestamp                  => t,
-                                                   :cpu_usage_rate_average     => v,
-                                                   :cpu_usagemhz_rate_average  => v,
-                                                   :sys_uptime_absolute_latest => v
+                                                  :timestamp                  => t,
+                                                  :cpu_usage_rate_average     => v,
+                                                  :cpu_usagemhz_rate_average  => v,
+                                                  :sys_uptime_absolute_latest => v
                                                   )
             end
 
@@ -105,10 +105,10 @@ RSpec.describe Metric do
             ]
             cases.each_slice(2) do |t, v|
               @host2.metrics << FactoryBot.create(:metric_host_rt,
-                                                   :timestamp                  => t,
-                                                   :cpu_usage_rate_average     => v,
-                                                   :cpu_usagemhz_rate_average  => v,
-                                                   :sys_uptime_absolute_latest => v
+                                                  :timestamp                  => t,
+                                                  :cpu_usage_rate_average     => v,
+                                                  :cpu_usagemhz_rate_average  => v,
+                                                  :sys_uptime_absolute_latest => v
                                                   )
             end
           end
@@ -145,14 +145,14 @@ RSpec.describe Metric do
           cases.each_slice(3) do |t, cpu, mem|
             [@vm1, @vm2].each do |vm|
               vm.metric_rollups << FactoryBot.create(:metric_rollup_vm_daily,
-                                                      :timestamp                  => t,
-                                                      :cpu_usage_rate_average     => cpu,
-                                                      :mem_usage_absolute_average => mem,
-                                                      :min_max                    => {
-                                                        :max_cpu_usage_rate_average     => cpu,
-                                                        :max_mem_usage_absolute_average => mem,
-                                                      },
-                                                      :time_profile               => @time_profile
+                                                     :timestamp                  => t,
+                                                     :cpu_usage_rate_average     => cpu,
+                                                     :mem_usage_absolute_average => mem,
+                                                     :min_max                    => {
+                                                       :max_cpu_usage_rate_average     => cpu,
+                                                       :max_mem_usage_absolute_average => mem,
+                                                     },
+                                                     :time_profile               => @time_profile
                                                      )
             end
           end
@@ -217,7 +217,7 @@ RSpec.describe Metric do
         it "should handle the only event right before the starting on time (FB15770)" do
           @ems_cluster = FactoryBot.create(:ems_cluster, :ext_management_system => @ems_vmware)
           @ems_cluster.metric_rollups << FactoryBot.create(:metric_rollup_vm_hr,
-                                                            :timestamp => Time.parse("2011-08-12T20:33:12Z")
+                                                           :timestamp => Time.parse("2011-08-12T20:33:12Z")
                                                            )
 
           options = {:debug_trace     => "false",

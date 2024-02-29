@@ -40,9 +40,9 @@ module Spec
           images_count.times do |idx|
             container_image_classes.each do |cic|
               FactoryBot.create(:container_image,
-                                 :name   => "test_container_images_#{idx}",
-                                 :ext_management_system => ems_openshift,
-                                 :type   => cic.name)
+                                :name   => "test_container_images_#{idx}",
+                                :ext_management_system => ems_openshift,
+                                :type   => cic.name)
             end
           end
         end

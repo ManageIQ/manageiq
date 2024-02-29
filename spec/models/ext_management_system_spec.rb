@@ -241,9 +241,9 @@ RSpec.describe ExtManagementSystem do
   context "with multiple endpoints using connection_configurations" do
     let(:ems) do
       FactoryBot.build(:ems_openstack,
-                        :hostname                  => "example.org",
-                        :connection_configurations => [{:endpoint => {:role     => "amqp",
-                                                                      :hostname => "amqp.example.org"}}])
+                       :hostname                  => "example.org",
+                       :connection_configurations => [{:endpoint => {:role     => "amqp",
+                                                                     :hostname => "amqp.example.org"}}])
     end
 
     it "will contain seperate ampq endpoint" do
@@ -260,9 +260,9 @@ RSpec.describe ExtManagementSystem do
   context "with multiple endpoints using connection_configurations (string keys)" do
     let(:ems) do
       FactoryBot.build(:ems_openstack,
-                        "hostname"                  => "example.org",
-                        "connection_configurations" => [{"endpoint" => {"role"     => "amqp",
-                                                                        "hostname" => "amqp.example.org"}}])
+                       "hostname"                  => "example.org",
+                       "connection_configurations" => [{"endpoint" => {"role"     => "amqp",
+                                                                       "hostname" => "amqp.example.org"}}])
     end
 
     it "will contain seperate ampq endpoint" do
@@ -279,14 +279,14 @@ RSpec.describe ExtManagementSystem do
   context "with multiple endpoints using explicit authtype" do
     let(:ems) do
       FactoryBot.build(:ems_openshift,
-                        :connection_configurations => [{:endpoint       => {:role     => "default",
-                                                                            :hostname => "openshift.example.org"},
-                                                        :authentication => {:role     => "bearer",
-                                                                            :auth_key => "SomeSecret"}},
-                                                       {:endpoint       => {:role     => "hawkular",
-                                                                            :hostname => "openshift.example.org"},
-                                                        :authentication => {:role     => "hawkular",
-                                                                            :auth_key => "SomeSecret"}}])
+                       :connection_configurations => [{:endpoint       => {:role     => "default",
+                                                                           :hostname => "openshift.example.org"},
+                                                       :authentication => {:role     => "bearer",
+                                                                           :auth_key => "SomeSecret"}},
+                                                      {:endpoint       => {:role     => "hawkular",
+                                                                           :hostname => "openshift.example.org"},
+                                                       :authentication => {:role     => "hawkular",
+                                                                           :auth_key => "SomeSecret"}}])
     end
 
     it "will contain the bearer authentication as default" do
@@ -300,12 +300,12 @@ RSpec.describe ExtManagementSystem do
   context "with multiple endpoints using implicit default authtype" do
     let(:ems) do
       FactoryBot.build(:ems_openshift,
-                        :connection_configurations => [{:endpoint       => {:role     => "default",
-                                                                            :hostname => "openshift.example.org"},
-                                                        :authentication => {:auth_key => "SomeSecret"}},
-                                                       {:endpoint       => {:role     => "hawkular",
-                                                                            :hostname => "openshift.example.org"},
-                                                        :authentication => {:auth_key => "SomeSecret"}}])
+                       :connection_configurations => [{:endpoint       => {:role     => "default",
+                                                                           :hostname => "openshift.example.org"},
+                                                       :authentication => {:auth_key => "SomeSecret"}},
+                                                      {:endpoint       => {:role     => "hawkular",
+                                                                           :hostname => "openshift.example.org"},
+                                                       :authentication => {:auth_key => "SomeSecret"}}])
     end
 
     it "will contain the default authentication (bearer) for default endpoint" do
@@ -370,17 +370,17 @@ RSpec.describe ExtManagementSystem do
       @ems = FactoryBot.create(:ems_vmware)
       2.times do
         FactoryBot.create(:vm_vmware,
-                           :ext_management_system => @ems,
-                           :hardware              => FactoryBot.create(:hardware,
-                                                                        :cpu1x2,
-                                                                        :ram1GB))
+                          :ext_management_system => @ems,
+                          :hardware              => FactoryBot.create(:hardware,
+                                                                      :cpu1x2,
+                                                                      :ram1GB))
       end
       2.times do
         FactoryBot.create(:host,
-                           :ext_management_system => @ems,
-                           :hardware              => FactoryBot.create(:hardware,
-                                                                        :cpu2x2,
-                                                                        :ram1GB))
+                          :ext_management_system => @ems,
+                          :hardware              => FactoryBot.create(:hardware,
+                                                                      :cpu2x2,
+                                                                      :ram1GB))
       end
     end
 

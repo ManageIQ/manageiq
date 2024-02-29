@@ -200,8 +200,8 @@ RSpec.describe(ServiceAnsiblePlaybook) do
       miq_request_task = FactoryBot.create(:miq_request_task, :miq_request => FactoryBot.create(:service_template_provision_request))
       miq_request_task.update(:options => {:request_options => {:manageiq_extra_vars => control_extras}})
       loaded_service.update(:evm_owner        => FactoryBot.create(:user_with_group),
-                                       :miq_group        => FactoryBot.create(:miq_group),
-                                       :miq_request_task => miq_request_task)
+                            :miq_group        => FactoryBot.create(:miq_group),
+                            :miq_request_task => miq_request_task)
     end
 
     it 'creates an Ansible Runner job' do

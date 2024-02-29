@@ -134,8 +134,8 @@ RSpec.describe User do
   describe "role methods" do
     let(:user) do
       FactoryBot.create(:user,
-                         :settings => {"Setting1" => 1, "Setting2" => 2, "Setting3" => 3},
-                         :role     => role_name)
+                        :settings => {"Setting1" => 1, "Setting2" => 2, "Setting3" => 3},
+                        :role     => role_name)
     end
 
     describe "#self_service?" do
@@ -367,25 +367,25 @@ RSpec.describe User do
       @disk4 = FactoryBot.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw4.id)
 
       @active_vm = FactoryBot.create(:vm_vmware,
-                                      :name         => "Active VM",
-                                      :evm_owner_id => @user.id,
-                                      :ems_id       => @ems.id,
-                                      :storage_id   => @storage.id,
-                                      :hardware     => @hw1)
+                                     :name         => "Active VM",
+                                     :evm_owner_id => @user.id,
+                                     :ems_id       => @ems.id,
+                                     :storage_id   => @storage.id,
+                                     :hardware     => @hw1)
       @archived_vm = FactoryBot.create(:vm_vmware,
-                                        :name         => "Archived VM",
-                                        :evm_owner_id => @user.id,
-                                        :hardware     => @hw2)
-      @orphaned_vm = FactoryBot.create(:vm_vmware,
-                                        :name         => "Orphaned VM",
-                                        :evm_owner_id => @user.id,
-                                        :storage_id   => @storage.id,
-                                        :hardware     => @hw3)
-      @retired_vm = FactoryBot.create(:vm_vmware,
-                                       :name         => "Retired VM",
+                                       :name         => "Archived VM",
                                        :evm_owner_id => @user.id,
-                                       :retired      => true,
-                                       :hardware     => @hw4)
+                                       :hardware     => @hw2)
+      @orphaned_vm = FactoryBot.create(:vm_vmware,
+                                       :name         => "Orphaned VM",
+                                       :evm_owner_id => @user.id,
+                                       :storage_id   => @storage.id,
+                                       :hardware     => @hw3)
+      @retired_vm = FactoryBot.create(:vm_vmware,
+                                      :name         => "Retired VM",
+                                      :evm_owner_id => @user.id,
+                                      :retired      => true,
+                                      :hardware     => @hw4)
     end
 
     it "#active_vms" do

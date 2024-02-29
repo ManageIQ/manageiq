@@ -43,8 +43,8 @@ RSpec.describe ServiceTemplateProvisionRequest do
           @vmware_user1 = FactoryBot.create(:user_with_email, :miq_groups => [group])
           @vmware_user2 = FactoryBot.create(:user_with_email, :miq_groups => [group])
           @vmware_template = FactoryBot.create(:template_vmware,
-                                                :ext_management_system => ems,
-                                                :hardware              => FactoryBot.create(:hardware, :cpu1x2, :memory_mb => 512))
+                                               :ext_management_system => ems,
+                                               :hardware              => FactoryBot.create(:hardware, :cpu1x2, :memory_mb => 512))
           @vmware_prov_options = {:number_of_vms => [2, '2'], :vm_memory => [1024, '1024'], :number_of_cpus => [2, '2']}
           requests = []
 
@@ -113,7 +113,7 @@ RSpec.describe ServiceTemplateProvisionRequest do
 
         let(:google_requests) do
           ems = FactoryBot.create(:ems_google_with_authentication,
-                                   :availability_zones => [FactoryBot.create(:availability_zone_google)])
+                                  :availability_zones => [FactoryBot.create(:availability_zone_google)])
           group = FactoryBot.create(:miq_group, :tenant => FactoryBot.create(:tenant))
           @google_user1 = FactoryBot.create(:user_with_email, :miq_groups => [group])
           @google_user2 = FactoryBot.create(:user_with_email, :miq_groups => [group])

@@ -76,19 +76,19 @@ RSpec.describe CustomAttributeMixin do
 
       key  = "foo"
       FactoryBot.create(:miq_custom_attribute,
-                         :resource_type => object.class.base_class.name,
-                         :resource_id   => object.id,
-                         :name          => key,
-                         :value         => "bar")
+                        :resource_type => object.class.base_class.name,
+                        :resource_id   => object.id,
+                        :name          => key,
+                        :value         => "bar")
 
       expect(object.reload.miq_custom_keys).to eq([key])
 
       key2 = "foobar"
       FactoryBot.create(:miq_custom_attribute,
-                         :resource_type => object.class.base_class.name,
-                         :resource_id   => object.id,
-                         :name          => key2,
-                         :value         => "bar")
+                        :resource_type => object.class.base_class.name,
+                        :resource_id   => object.id,
+                        :name          => key2,
+                        :value         => "bar")
       expect(object.reload.miq_custom_keys).to match_array([key, key2])
     end
   end
@@ -175,10 +175,10 @@ RSpec.describe CustomAttributeMixin do
       expect(object.miq_custom_get(key)).to be_nil
 
       FactoryBot.create(:miq_custom_attribute,
-                         :resource_type => object.class.base_class.name,
-                         :resource_id   => object.id,
-                         :name          => key,
-                         :value         => value)
+                        :resource_type => object.class.base_class.name,
+                        :resource_id   => object.id,
+                        :name          => key,
+                        :value         => value)
 
       expect(object.reload.miq_custom_get(key)).to eq(value)
     end

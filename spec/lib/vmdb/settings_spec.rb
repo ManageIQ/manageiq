@@ -127,15 +127,15 @@ RSpec.describe Vmdb::Settings do
       _delete = miq_server.settings_changes.create!(:key => "/api/authentication_timeout", :value => "1.hour")
 
       described_class.save!(miq_server,
-        :api => {
-          :token_ttl              => "2.hours", # Updated
-          :authentication_timeout => default,   # Deleted (back to default)
-        },
-        :drift_states => {
-          :history => {
-            :keep_drift_states    => "1.hour"   # Added
-          }
-        }
+                            :api => {
+                              :token_ttl              => "2.hours", # Updated
+                              :authentication_timeout => default,   # Deleted (back to default)
+                            },
+                            :drift_states => {
+                              :history => {
+                                :keep_drift_states    => "1.hour"   # Added
+                              }
+                            }
       )
 
       miq_server.reload
@@ -207,12 +207,12 @@ RSpec.describe Vmdb::Settings do
       encrypted = ManageIQ::Password.encrypt(password)
 
       described_class.save!(miq_server,
-        :authentication => {
-          :mode         => "ldap",
-          :ldaphost     => "localhost",
-          :bind_pwd     => password,
-          :user_proxies => [{:bind_pwd => password}]
-        }
+                            :authentication => {
+                              :mode         => "ldap",
+                              :ldaphost     => "localhost",
+                              :bind_pwd     => password,
+                              :user_proxies => [{:bind_pwd => password}]
+                            }
       )
 
       miq_server.reload

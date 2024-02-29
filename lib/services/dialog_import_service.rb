@@ -116,7 +116,7 @@ class DialogImportService
         value.each do |responder|
           next if fields.select { |field| field.name == responder }.empty?
           DialogFieldAssociation.create!(:trigger_id => fields.find { |field| field.name.include?(association.keys.first) }.id,
-                                        :respond_id => fields.find { |field| field.name == responder }.id)
+                                         :respond_id => fields.find { |field| field.name == responder }.id)
         end
       end
     end

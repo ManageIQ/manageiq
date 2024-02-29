@@ -499,10 +499,10 @@ RSpec.describe Classification do
 
     it "does not re-seed existing categories" do
       category = FactoryBot.create(:classification_cost_center,
-                                    :description  => "user defined",
-                                    :example_text => "user defined",
-                                    :show         => false,
-                                    :single_value => "0")
+                                   :description  => "user defined",
+                                   :example_text => "user defined",
+                                   :show         => false,
+                                   :single_value => "0")
 
       category_attrs = category.attributes
       Classification.seed

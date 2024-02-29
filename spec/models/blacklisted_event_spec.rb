@@ -20,8 +20,8 @@ RSpec.describe BlacklistedEvent do
     it 'does not re-seed existing event filters' do
       User.current_user = FactoryBot.create(:user)
       filter = FactoryBot.create(:blacklisted_event,
-                                  :event_name     => 'AlarmActionTriggeredEvent',
-                                  :provider_model => 'ManageIQ::Providers::Vmware::InfraManager'
+                                 :event_name     => 'AlarmActionTriggeredEvent',
+                                 :provider_model => 'ManageIQ::Providers::Vmware::InfraManager'
                                  )
       filter_attrs = filter.attributes
 

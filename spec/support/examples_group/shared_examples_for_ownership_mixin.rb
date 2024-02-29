@@ -4,8 +4,8 @@ shared_examples_for "OwnershipMixin" do
 
     let(:user) do
       FactoryBot.create(:user,
-                         :userid     => "ownership_user",
-                         :miq_groups => FactoryBot.create_list(:miq_group, 1))
+                        :userid     => "ownership_user",
+                        :miq_groups => FactoryBot.create_list(:miq_group, 1))
     end
 
     let(:user2)  { FactoryBot.create(:user) }

@@ -20,10 +20,10 @@ FactoryBot.define do
 
     tag do
       category = FactoryBot.create(:classification,
-                                    :name         => category_name,
-                                    :description  => category_description,
-                                    :single_value => true,
-                                    :read_only    => true)
+                                   :name         => category_name,
+                                   :description  => category_description,
+                                   :single_value => true,
+                                   :read_only    => true)
       category.tag
     end
   end

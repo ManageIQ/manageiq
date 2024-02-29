@@ -229,15 +229,15 @@ module AuthenticationMixin
         if self.kind_of?(ManageIQ::Providers::Openstack::InfraManager) && value[:auth_key]
           # TODO(lsmola) investigate why build throws an exception, that it needs to be subclass of AuthUseridPassword
           cred = ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair.new(:name => "#{self.class.name} #{name}", :authtype => type.to_s,
-                                               :resource_id => id, :resource_type => "ExtManagementSystem")
+                                                                               :resource_id => id, :resource_type => "ExtManagementSystem")
           authentications << cred
         elsif value[:auth_key]
           cred = AuthToken.new(:name => "#{self.class.name} #{name}", :authtype => type.to_s,
-                                               :resource_id => id, :resource_type => "ExtManagementSystem")
+                               :resource_id => id, :resource_type => "ExtManagementSystem")
           authentications << cred
         else
           cred = authentications.build(:name => "#{self.class.name} #{name}", :authtype => type.to_s,
-                                            :type => "AuthUseridPassword")
+                                       :type => "AuthUseridPassword")
         end
       end
       cred.userid          = value[:userid]

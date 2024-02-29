@@ -171,25 +171,25 @@ RSpec.describe MiqGroup do
       @disk3 = FactoryBot.create(:disk, :device_type => "disk", :size => disk_size, :hardware_id => @hw4.id)
 
       @active_vm = FactoryBot.create(:vm_vmware,
-                                      :name         => "Active VM",
-                                      :miq_group_id => miq_group.id,
-                                      :ems_id       => ems.id,
-                                      :storage_id   => storage.id,
-                                      :hardware     => @hw1)
+                                     :name         => "Active VM",
+                                     :miq_group_id => miq_group.id,
+                                     :ems_id       => ems.id,
+                                     :storage_id   => storage.id,
+                                     :hardware     => @hw1)
       @archived_vm = FactoryBot.create(:vm_vmware,
-                                        :name         => "Archived VM",
-                                        :miq_group_id => miq_group.id,
-                                        :hardware     => @hw2)
-      @orphaned_vm = FactoryBot.create(:vm_vmware,
-                                        :name         => "Orphaned VM",
-                                        :miq_group_id => miq_group.id,
-                                        :storage_id   => storage.id,
-                                        :hardware     => @hw3)
-      @retired_vm = FactoryBot.create(:vm_vmware,
-                                       :name         => "Retired VM",
+                                       :name         => "Archived VM",
                                        :miq_group_id => miq_group.id,
-                                       :retired      => true,
-                                       :hardware     => @hw4)
+                                       :hardware     => @hw2)
+      @orphaned_vm = FactoryBot.create(:vm_vmware,
+                                       :name         => "Orphaned VM",
+                                       :miq_group_id => miq_group.id,
+                                       :storage_id   => storage.id,
+                                       :hardware     => @hw3)
+      @retired_vm = FactoryBot.create(:vm_vmware,
+                                      :name         => "Retired VM",
+                                      :miq_group_id => miq_group.id,
+                                      :retired      => true,
+                                      :hardware     => @hw4)
     end
 
     it "#active_vms" do
@@ -221,11 +221,11 @@ RSpec.describe MiqGroup do
     it "when the virtual column is nil" do
       hw = FactoryBot.create(:hardware, :cpu_sockets => num_cpu, :memory_mb => ram_size)
       FactoryBot.create(:vm_vmware,
-                         :name         => "VM with no disk",
-                         :miq_group_id => miq_group.id,
-                         :ems_id       => ems.id,
-                         :storage_id   => storage.id,
-                         :hardware     => hw)
+                        :name         => "VM with no disk",
+                        :miq_group_id => miq_group.id,
+                        :ems_id       => ems.id,
+                        :storage_id   => storage.id,
+                        :hardware     => hw)
       expect(miq_group.allocated_storage).to eq(disk_size)
     end
   end
@@ -297,8 +297,8 @@ RSpec.describe MiqGroup do
       let!(:group_with_no_entitlement) { tenant.default_miq_group }
       let!(:group_with_existing_entitlement) do
         FactoryBot.create(:miq_group,
-                           :tenant_type,
-                           :entitlement => FactoryBot.create(:entitlement, :miq_user_role => nil))
+                          :tenant_type,
+                          :entitlement => FactoryBot.create(:entitlement, :miq_user_role => nil))
       end
       let(:default_tenant_role) { MiqUserRole.default_tenant_role }
 
@@ -391,8 +391,8 @@ RSpec.describe MiqGroup do
         :settings => {:restrictions => {:vms => :user_or_group}}
       )
       group = FactoryBot.create(:miq_group,
-                                 :description   => "MiqGroup-self_service",
-                                 :miq_user_role => role
+                                :description   => "MiqGroup-self_service",
+                                :miq_user_role => role
                                 )
       expect(group).to be_self_service
     end

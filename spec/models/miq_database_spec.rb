@@ -25,8 +25,8 @@ RSpec.describe MiqDatabase do
       context "existing record" do
         it "will seed nil values" do
           FactoryBot.build(:miq_database,
-                            :csrf_secret_token    => nil,
-                            :session_secret_token => nil
+                           :csrf_secret_token    => nil,
+                           :session_secret_token => nil
                            ).save(:validate => false)
 
           db = MiqDatabase.seed
@@ -36,8 +36,8 @@ RSpec.describe MiqDatabase do
 
         it "will not change existing values" do
           FactoryBot.create(:miq_database,
-                             :csrf_secret_token    => "abc",
-                             :session_secret_token => "def"
+                            :csrf_secret_token    => "abc",
+                            :session_secret_token => "def"
                             )
           csrf, session, update_repo = MiqDatabase.all.collect { |db| [db.csrf_secret_token, db.session_secret_token] }.first
 

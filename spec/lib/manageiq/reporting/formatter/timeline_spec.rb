@@ -4,12 +4,12 @@ describe ManageIQ::Reporting::Formatter::TimelineMessage do
     let(:ems) { FactoryBot.create(:ems_redhat, :id => 42) }
     let(:event) do
       FactoryBot.create(:ems_event,
-                         :event_type            => 'CONTAINER_CREATED',
-                         :ems_id                => 6,
-                         :container_group_name  => 'hawkular-cassandra-1-wb1z6',
-                         :container_namespace   => 'openshift-infra',
-                         :container_name        => 'hawkular-cassandra-1',
-                         :ext_management_system => ems)
+                        :event_type            => 'CONTAINER_CREATED',
+                        :ems_id                => 6,
+                        :container_group_name  => 'hawkular-cassandra-1-wb1z6',
+                        :container_namespace   => 'openshift-infra',
+                        :container_name        => 'hawkular-cassandra-1',
+                        :ext_management_system => ems)
     end
 
     flags = {:ems_cloud     => false,
@@ -33,8 +33,8 @@ describe ManageIQ::Reporting::Formatter::TimelineMessage do
     let(:vm) { FactoryBot.create(:vm_redhat, :id => 42) }
     let(:event) do
       FactoryBot.create(:ems_event,
-                         :event_type     => 'VM_CREATED',
-                         :vm_or_template => vm)
+                        :event_type     => 'VM_CREATED',
+                        :vm_or_template => vm)
     end
 
     flags = {:ems_cloud     => false,
@@ -58,10 +58,10 @@ describe ManageIQ::Reporting::Formatter::TimelineMessage do
     let(:vm) { FactoryBot.create(:vm_redhat, :id => 42, :name => 'Test VM') }
     let(:event) do
       FactoryBot.create(:policy_event,
-                         :event_type   => 'vm_poweroff',
-                         :target_id    => 42,
-                         :target_name  => vm.name,
-                         :target_class => 'VmOrTemplate')
+                        :event_type   => 'vm_poweroff',
+                        :target_id    => 42,
+                        :target_name  => vm.name,
+                        :target_class => 'VmOrTemplate')
     end
 
     tests = {'event_type'  => 'vm_poweroff',
@@ -98,10 +98,10 @@ describe ManageIQ::Reporting::Formatter::TimelineMessage do
 
     before do
       @report = FactoryBot.create(:miq_report,
-                                   :db        => "EventStream",
-                                   :col_order => %w(id name event_type timestamp),
-                                   :headers   => %w(id name event_type timestamp),
-                                   :timeline  => {:field => "EmsEvent-timestamp", :position => "Last"})
+                                  :db        => "EventStream",
+                                  :col_order => %w(id name event_type timestamp),
+                                  :headers   => %w(id name event_type timestamp),
+                                  :timeline  => {:field => "EmsEvent-timestamp", :position => "Last"})
       @report.rpt_options = {:categories => {:power    => {:display_name => "Power Activity",
                                                            :include_set  => %w(VmPoweredOffEvent VmPoweredOnEvent),
                                                            :regexes      => []},
@@ -250,10 +250,10 @@ describe '#set data for headers that exist in col headers' do
 
   before do
     @report = FactoryBot.create(:miq_report,
-                                 :db        => "EventStream",
-                                 :col_order => %w(id name event_type timestamp vm_location),
-                                 :headers   => %w(id name event_type timestamp vm_location),
-                                 :timeline  => {:field => "EmsEvent-timestamp", :position => "Last"})
+                                :db        => "EventStream",
+                                :col_order => %w(id name event_type timestamp vm_location),
+                                :headers   => %w(id name event_type timestamp vm_location),
+                                :timeline  => {:field => "EmsEvent-timestamp", :position => "Last"})
     @report.rpt_options = {:categories => {:power    => {:display_name => "Power Activity",
                                                          :include_set  => %w(VmPoweredOffEvent VmPoweredOnEvent),
                                                          :regexes      => []},

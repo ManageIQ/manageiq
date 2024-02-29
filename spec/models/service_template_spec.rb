@@ -152,22 +152,22 @@ RSpec.describe ServiceTemplate do
       true_expression = MiqExpression.new("=" => {"field" => "Service-name", "value" => "bar"})
       false_expression = MiqExpression.new("=" => {"field" => "Service-name", "value" => "foo"})
       FactoryBot.create(:custom_button,
-                         :name                  => "enabled button",
-                         :applies_to_class      => "Service",
-                         :enablement_expression => true_expression)
+                        :name                  => "enabled button",
+                        :applies_to_class      => "Service",
+                        :enablement_expression => true_expression)
       FactoryBot.create(:custom_button,
-                         :name                  => "disabled button",
-                         :applies_to_class      => "Service",
-                         :enablement_expression => false_expression)
+                        :name                  => "disabled button",
+                        :applies_to_class      => "Service",
+                        :enablement_expression => false_expression)
       FactoryBot.create(:custom_button_set).tap do |group|
         group.add_member(FactoryBot.create(:custom_button,
-                                            :name                  => "enabled button in group",
-                                            :applies_to_class      => "Service",
-                                            :enablement_expression => true_expression))
+                                           :name                  => "enabled button in group",
+                                           :applies_to_class      => "Service",
+                                           :enablement_expression => true_expression))
         group.add_member(FactoryBot.create(:custom_button,
-                                            :name                  => "disabled button in group",
-                                            :applies_to_class      => "Service",
-                                            :enablement_expression => false_expression))
+                                           :name                  => "disabled button in group",
+                                           :applies_to_class      => "Service",
+                                           :enablement_expression => false_expression))
       end
 
       expected = {
@@ -195,21 +195,21 @@ RSpec.describe ServiceTemplate do
       true_expression = MiqExpression.new("=" => {"field" => "ServiceTemplate-name", "value" => service_template.name})
       false_expression = MiqExpression.new("=" => {"field" => "ServiceTemplate-name", "value" => "bar"})
       visible_button = FactoryBot.create(:custom_button,
-                                          :applies_to_class      => "ServiceTemplate",
-                                          :applies_to_id         => service_template.id,
-                                          :visibility_expression => true_expression)
+                                         :applies_to_class      => "ServiceTemplate",
+                                         :applies_to_id         => service_template.id,
+                                         :visibility_expression => true_expression)
       _hidden_button = FactoryBot.create(:custom_button,
-                                          :applies_to_class      => "ServiceTemplate",
-                                          :applies_to_id         => service_template.id,
-                                          :visibility_expression => false_expression)
+                                         :applies_to_class      => "ServiceTemplate",
+                                         :applies_to_id         => service_template.id,
+                                         :visibility_expression => false_expression)
       visible_button_in_group = FactoryBot.create(:custom_button,
-                                                   :applies_to_class      => "ServiceTemplate",
-                                                   :applies_to_id         => service_template.id,
-                                                   :visibility_expression => true_expression)
-      hidden_button_in_group = FactoryBot.create(:custom_button,
                                                   :applies_to_class      => "ServiceTemplate",
                                                   :applies_to_id         => service_template.id,
-                                                  :visibility_expression => false_expression)
+                                                  :visibility_expression => true_expression)
+      hidden_button_in_group = FactoryBot.create(:custom_button,
+                                                 :applies_to_class      => "ServiceTemplate",
+                                                 :applies_to_id         => service_template.id,
+                                                 :visibility_expression => false_expression)
       service_template.custom_button_sets << FactoryBot.create(:custom_button_set).tap do |group|
         group.add_member(visible_button_in_group)
         group.add_member(hidden_button_in_group)
@@ -361,14 +361,14 @@ RSpec.describe ServiceTemplate do
     describe "#create_service" do
       let(:service_task) do
         FactoryBot.create(:service_template_provision_task,
-                           :miq_request => service_template_request,
-                           :options     => {:service_resource_id => service_resource.id})
+                          :miq_request => service_template_request,
+                          :options     => {:service_resource_id => service_resource.id})
       end
       let(:service_template_request) { FactoryBot.create(:service_template_provision_request, :requester => user) }
       let(:service_resource) do
         FactoryBot.create(:service_resource,
-                           :resource_type => 'MiqRequest',
-                           :resource_id   => service_template_request.id)
+                          :resource_type => 'MiqRequest',
+                          :resource_id   => service_template_request.id)
       end
       let(:user) { FactoryBot.create(:user) }
       let(:parent_service) { FactoryBot.create(:service) }
@@ -688,8 +688,8 @@ RSpec.describe ServiceTemplate do
       dialog = FactoryBot.create(:dialog)
       template = FactoryBot.create(:service_template)
       request = FactoryBot.create(:service_template_provision_request,
-                                   :requester => @user,
-                                   :options   => {:foo => 'bar', :baz => nil })
+                                  :requester => @user,
+                                  :options   => {:foo => 'bar', :baz => nil })
       template.create_resource_actions(:provision => { :fqname => @ra.fqname, :dialog_id => dialog.id })
       add_and_save_service(template, request)
       template.reload

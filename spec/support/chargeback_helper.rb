@@ -55,10 +55,10 @@ module Spec
         range.step_value(step).each do |time|
           Array(resources).each do |resource|
             FactoryBot.create(:vim_performance_state,
-                               :timestamp        => time,
-                               :resource         => resource,
-                               :state_data       => state_data,
-                               :capture_interval => 1.hour)
+                              :timestamp        => time,
+                              :resource         => resource,
+                              :state_data       => state_data,
+                              :capture_interval => 1.hour)
           end
         end
       end

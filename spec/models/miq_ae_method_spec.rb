@@ -4,11 +4,11 @@ RSpec.describe MiqAeMethod do
     n1 = FactoryBot.create(:miq_ae_system_domain, :tenant => user.current_tenant)
     c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     f1 = FactoryBot.create(:miq_ae_method,
-                            :class_id => c1.id,
-                            :name     => "foo_method",
-                            :scope    => "instance",
-                            :language => "ruby",
-                            :location => "inline")
+                           :class_id => c1.id,
+                           :name     => "foo_method",
+                           :scope    => "instance",
+                           :language => "ruby",
+                           :location => "inline")
     expect(f1.editable?(user)).to be_falsey
   end
 
@@ -16,11 +16,11 @@ RSpec.describe MiqAeMethod do
     n1 = FactoryBot.create(:miq_ae_domain, :tenant => user.current_tenant)
     c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     f1 = FactoryBot.create(:miq_ae_method,
-                            :class_id => c1.id,
-                            :name     => "foo_method",
-                            :scope    => "instance",
-                            :language => "ruby",
-                            :location => "inline")
+                           :class_id => c1.id,
+                           :name     => "foo_method",
+                           :scope    => "instance",
+                           :language => "ruby",
+                           :location => "inline")
     expect(f1.editable?(user)).to be_truthy
   end
 
@@ -166,11 +166,11 @@ RSpec.describe MiqAeMethod do
     n1 = FactoryBot.create(:miq_ae_namespace, :name => 'ns1', :parent => d1)
     c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     m1 = FactoryBot.create(:miq_ae_method,
-                            :class_id => c1.id,
-                            :name     => "foo_method",
-                            :scope    => "instance",
-                            :language => "ruby",
-                            :location => "inline")
+                           :class_id => c1.id,
+                           :name     => "foo_method",
+                           :scope    => "instance",
+                           :language => "ruby",
+                           :location => "inline")
     expect(m1.domain.name).to eql('dom1')
   end
 
@@ -179,11 +179,11 @@ RSpec.describe MiqAeMethod do
     n1 = FactoryBot.create(:miq_ae_namespace, :name => 'ns1', :parent => d1)
     c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     m1 = FactoryBot.create(:miq_ae_method,
-                            :class_id => c1.id,
-                            :name     => "foo_method",
-                            :scope    => "instance",
-                            :language => "ruby",
-                            :location => "inline")
+                           :class_id => c1.id,
+                           :name     => "foo_method",
+                           :scope    => "instance",
+                           :language => "ruby",
+                           :location => "inline")
     result = m1.to_export_yaml
 
     expect(result['name']).to eql('foo_method')

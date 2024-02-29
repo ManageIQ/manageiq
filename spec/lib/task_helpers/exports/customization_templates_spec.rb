@@ -43,25 +43,25 @@ RSpec.describe TaskHelpers::Exports::CustomizationTemplates do
 
   before do
     pit1 = FactoryBot.create(:pxe_image_type,
-                              :name => image_type_name1)
+                             :name => image_type_name1)
 
     pit2 = FactoryBot.create(:pxe_image_type,
-                              :name           => image_type_name2,
-                              :provision_type => provision_type2)
+                             :name           => image_type_name2,
+                             :provision_type => provision_type2)
 
     FactoryBot.create(:customization_template,
-                       :name           => template_name,
-                       :type           => template_type,
-                       :description    => template_desc,
-                       :script         => template_script,
-                       :pxe_image_type => pit1)
+                      :name           => template_name,
+                      :type           => template_type,
+                      :description    => template_desc,
+                      :script         => template_script,
+                      :pxe_image_type => pit1)
 
     FactoryBot.create(:customization_template,
-                       :name           => template_name,
-                       :type           => template_type,
-                       :description    => template_desc,
-                       :script         => template_script,
-                       :pxe_image_type => pit2)
+                      :name           => template_name,
+                      :type           => template_type,
+                      :description    => template_desc,
+                      :script         => template_script,
+                      :pxe_image_type => pit2)
 
     CustomizationTemplate.create!(:name        => template_name,
                                   :type        => template_type,

@@ -2604,10 +2604,10 @@ RSpec.describe MiqExpression do
       Tenant.seed
 
       cat = FactoryBot.create(:classification,
-                               :description  => "Auto Approve - Max CPU",
-                               :name         => "prov_max_cpu",
-                               :single_value => true,
-                               :show         => true,
+                              :description  => "Auto Approve - Max CPU",
+                              :name         => "prov_max_cpu",
+                              :single_value => true,
+                              :show         => true,
                               )
       cat.add_entry(:description  => "1",
                     :read_only    => "0",
@@ -3431,16 +3431,16 @@ RSpec.describe MiqExpression do
     it "returns the added classification when no_cache option is used" do
       Tenant.seed
       FactoryBot.create(:classification,
-                         :name        => "first_classification",
-                         :description => "First Classification",
-                         :children    => [FactoryBot.create(:classification)])
+                        :name        => "first_classification",
+                        :description => "First Classification",
+                        :children    => [FactoryBot.create(:classification)])
       actual = described_class.tag_details(nil, {})
       expect(actual).to eq([["My Company Tags : First Classification", "managed-first_classification"]])
 
       FactoryBot.create(:classification,
-                         :name        => "second_classification",
-                         :description => "Second Classification",
-                         :children    => [FactoryBot.create(:classification)])
+                        :name        => "second_classification",
+                        :description => "Second Classification",
+                        :children    => [FactoryBot.create(:classification)])
       actual = described_class.tag_details(nil, :no_cache => true)
       expect(actual).to eq([["My Company Tags : First Classification", "managed-first_classification"], ["My Company Tags : Second Classification", "managed-second_classification"]])
     end

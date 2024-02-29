@@ -20,12 +20,12 @@ RSpec.describe VimPerformanceAnalysis do
   let(:storage) { FactoryBot.create(:storage_vmware) }
   let(:host1) do
     FactoryBot.create(:host,
-                       :hardware => FactoryBot.create(:hardware,
-                                                       :memory_mb       => 8124,
-                                                       :cpu_total_cores => 1,
-                                                       :cpu_speed       => 9576),
-                       :vms      => [vm1],
-                       :storages => [storage])
+                      :hardware => FactoryBot.create(:hardware,
+                                                     :memory_mb       => 8124,
+                                                     :cpu_total_cores => 1,
+                                                     :cpu_speed       => 9576),
+                      :vms      => [vm1],
+                      :storages => [storage])
   end
 
   let(:ems_cluster) do
@@ -56,8 +56,8 @@ RSpec.describe VimPerformanceAnalysis do
   describe '.group_perf_by_timestamp' do
     let(:storage_metric) do
       FactoryBot.create(:metric_rollup,
-                         :derived_storage_total => '42',
-                         :derived_storage_free  => '13')
+                        :derived_storage_total => '42',
+                        :derived_storage_free  => '13')
     end
     let(:cols) { [:derived_storage_total, :derived_storage_free, :v_derived_storage_used] }
 
@@ -85,14 +85,14 @@ RSpec.describe VimPerformanceAnalysis do
 
   def add_rollup(vm, timestamp, tag = tag_text)
     vm.metric_rollups << FactoryBot.create(:metric_rollup_vm_daily, :with_data,
-                                            :timestamp          => timestamp,
-                                            :tag_names          => tag,
-                                            :parent_host        => vm.host,
-                                            :parent_ems_cluster => vm.ems_cluster,
-                                            :parent_ems         => vm.ext_management_system,
-                                            :parent_storage     => vm.storage,
-                                            :resource_name      => vm.name,
-                                            :time_profile       => time_profile,
+                                           :timestamp          => timestamp,
+                                           :tag_names          => tag,
+                                           :parent_host        => vm.host,
+                                           :parent_ems_cluster => vm.ems_cluster,
+                                           :parent_ems         => vm.ext_management_system,
+                                           :parent_storage     => vm.storage,
+                                           :resource_name      => vm.name,
+                                           :time_profile       => time_profile,
                                            )
   end
 end

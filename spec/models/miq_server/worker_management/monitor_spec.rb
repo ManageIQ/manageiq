@@ -3,10 +3,10 @@ RSpec.describe MiqServer::WorkerManagement::Monitor do
     let(:server) { EvmSpecHelper.local_miq_server }
     let(:worker) do
       FactoryBot.create(:miq_worker,
-                         :type           => "MiqGenericWorker",
-                         :miq_server     => server,
-                         :pid            => 12345,
-                         :last_heartbeat => 5.minutes.ago)
+                        :type           => "MiqGenericWorker",
+                        :miq_server     => server,
+                        :pid            => 12345,
+                        :last_heartbeat => 5.minutes.ago)
     end
 
     before do

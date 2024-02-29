@@ -166,15 +166,15 @@ RSpec.describe MiqProvisionRequest do
             @vmware_user2 = FactoryBot.create(:user_with_email, :miq_groups => [group])
             hardware = FactoryBot.create(:hardware, :cpu1x2, :memory_mb => 512)
             @vmware_template = FactoryBot.create(:template_vmware,
-                                                  :ext_management_system => ems,
-                                                  :hardware              => hardware)
+                                                 :ext_management_system => ems,
+                                                 :hardware              => hardware)
             prov_options = {:number_of_vms => [2, '2'], :vm_memory => [1024, '1024'], :number_of_cpus => [2, '2']}
             2.times { create_request(@vmware_user1, @vmware_template, prov_options) }
 
             2.times { create_request(@vmware_user2, @vmware_template, prov_options) }
 
             ems = FactoryBot.create(:ems_google_with_authentication,
-                                     :availability_zones => [FactoryBot.create(:availability_zone_google)])
+                                    :availability_zones => [FactoryBot.create(:availability_zone_google)])
             google_tenant = FactoryBot.create(:tenant)
             group = FactoryBot.create(:miq_group, :tenant => google_tenant)
             @google_user1 = FactoryBot.create(:user_with_email, :miq_groups => [group])

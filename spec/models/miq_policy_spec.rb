@@ -289,8 +289,8 @@ RSpec.describe MiqPolicy do
       FactoryBot.create(:miq_action, :name => "vm_suspend", :action_type => 'default')
       MiqPolicy.class_variable_set(:@@built_in_policies, nil)
       @vm = FactoryBot.create(:vm_openstack,
-                               :ext_management_system => FactoryBot.create(:ems_openstack,
-                                                                            :zone => FactoryBot.create(:zone)))
+                              :ext_management_system => FactoryBot.create(:ems_openstack,
+                                                                          :zone => FactoryBot.create(:zone)))
     end
     subject { MiqPolicy.enforce_policy(@vm, "vm_resume", {}) }
 

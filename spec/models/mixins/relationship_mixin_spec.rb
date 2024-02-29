@@ -1052,8 +1052,8 @@ RSpec.describe RelationshipMixin do
     # can map to the resource to return all the resources created
     rels = Hash.new do |hash, key|
       hash[key] = FactoryBot.create(:relationship,
-                                     :resource     => FactoryBot.create(base_factory),
-                                     :relationship => rel_type)
+                                    :resource     => FactoryBot.create(base_factory),
+                                    :relationship => rel_type)
     end
 
     recurse_relationship_tree(tree) do |parent, child|

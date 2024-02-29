@@ -233,8 +233,8 @@ RSpec.describe ServiceTemplateOrchestration do
       template = FactoryBot.create(:orchestration_template)
       manager = FactoryBot.create(:ext_management_system)
       service_template = FactoryBot.create(:service_template_orchestration,
-                                            :orchestration_template => template,
-                                            :orchestration_manager  => manager)
+                                           :orchestration_template => template,
+                                           :orchestration_manager  => manager)
       ra = FactoryBot.create(:resource_action, :action => 'Provision', :fqname => '/a/b/c')
       service_template.create_resource_actions(:provision => { :fqname => ra.fqname })
 

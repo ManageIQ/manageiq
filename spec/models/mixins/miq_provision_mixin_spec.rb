@@ -51,7 +51,7 @@ RSpec.describe MiqProvisionMixin do
     describe ".current_group" do
       before do
         owner.update(:current_group => my_group,
-                                :miq_groups    => [my_group, my_alt_group])
+                     :miq_groups    => [my_group, my_alt_group])
       end
       let(:my_group) { FactoryBot.create(:miq_group) }
       let(:my_alt_group) { FactoryBot.create(:miq_group, :description => 'yay') }

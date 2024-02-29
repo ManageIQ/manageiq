@@ -4,8 +4,8 @@ RSpec.describe ServiceTemplateProvisionTask do
       @admin = FactoryBot.create(:user_with_group)
 
       @request = FactoryBot.create(:service_template_provision_request,
-                                    :description => 'Service Request',
-                                    :requester   => @admin)
+                                   :description => 'Service Request',
+                                   :requester   => @admin)
       @task_0 = create_stp('Task 0 (Top)')
       @task_1 = create_stp('Task 1', 'pending', 7, 1)
       @task_1_1 = create_stp('Task 1 - 1', 'pending', 1, 3)
@@ -34,19 +34,19 @@ RSpec.describe ServiceTemplateProvisionTask do
         options = {}
       end
       FactoryBot.create(:service_template_provision_task,
-                         :description    => description,
-                         :userid         => @admin.userid,
-                         :state          => state,
-                         :miq_request_id => @request.id,
-                         :options        => options)
+                        :description    => description,
+                        :userid         => @admin.userid,
+                        :state          => state,
+                        :miq_request_id => @request.id,
+                        :options        => options)
     end
 
     def service_resource_id(index, scaling_max)
       FactoryBot.create(:service_resource,
-                         :provision_index => index,
-                         :scaling_min     => 1,
-                         :scaling_max     => scaling_max,
-                         :resource_type   => 'ServiceTemplate').id
+                        :provision_index => index,
+                        :scaling_min     => 1,
+                        :scaling_max     => scaling_max,
+                        :resource_type   => 'ServiceTemplate').id
     end
 
     describe "#before_ae_starts" do

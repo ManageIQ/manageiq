@@ -42,12 +42,12 @@ RSpec.describe "MiqWorker Monitor" do
       describe "#do_system_limit_exceeded" do
         before do
           @worker_to_keep = FactoryBot.create(:miq_ems_metrics_processor_worker,
-            :miq_server   => @miq_server,
-            :memory_usage => 1.gigabytes
+                                              :miq_server   => @miq_server,
+                                              :memory_usage => 1.gigabytes
           )
           @worker_to_kill = FactoryBot.create(:miq_ems_metrics_processor_worker,
-            :miq_server   => @miq_server,
-            :memory_usage => 2.gigabytes
+                                              :miq_server   => @miq_server,
+                                              :memory_usage => 2.gigabytes
           )
         end
 

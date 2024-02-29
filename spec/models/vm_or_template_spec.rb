@@ -444,11 +444,11 @@ RSpec.describe VmOrTemplate do
         @host2 = FactoryBot.create(:host, :name => 'host2', :storages => [@storage2])
         @host3 = FactoryBot.create(:host, :name => 'host3', :storages => [@storage1, @storage2])
         @vm = FactoryBot.create(:vm_vmware,
-                                 :host     => @host1,
-                                 :name     => 'vm',
-                                 :vendor   => 'vmware',
-                                 :storage  => @storage1,
-                                 :storages => [@storage1, @storage2])
+                                :host     => @host1,
+                                :name     => 'vm',
+                                :vendor   => 'vmware',
+                                :storage  => @storage1,
+                                :storages => [@storage1, @storage2])
         @zone = FactoryBot.create(:zone, :name => 'zone')
 
         allow_any_instance_of(MiqServer).to receive_messages(:is_vix_disk? => true)
@@ -508,11 +508,11 @@ RSpec.describe VmOrTemplate do
         @host2 = FactoryBot.create(:host, :name => 'host2', :storages => [@storage2])
 
         @vm = FactoryBot.create(:vm_redhat,
-                                 :host     => @host1,
-                                 :name     => 'vm',
-                                 :vendor   => 'redhat',
-                                 :storage  => @storage1,
-                                 :storages => [@storage1])
+                                :host     => @host1,
+                                :name     => 'vm',
+                                :vendor   => 'redhat',
+                                :storage  => @storage1,
+                                :storages => [@storage1])
 
         @svr1 = EvmSpecHelper.local_miq_server(:name => 'svr1')
         @svr2 = FactoryBot.create(:miq_server, :name => 'svr2', :zone => @svr1.zone)
@@ -1009,32 +1009,32 @@ RSpec.describe VmOrTemplate do
       EvmSpecHelper.local_miq_server
       tp_id = TimeProfile.seed.id
       FactoryBot.create :metric_rollup_vm_daily,
-                         :with_data,
-                         :timestamp       => 1.day.ago,
-                         :time_profile_id => tp_id,
-                         :resource_id     => vm.id,
-                         :min_max         => {
-                           :abs_max_cpu_usagemhz_rate_average_value => 100.00
-                         }
+                        :with_data,
+                        :timestamp       => 1.day.ago,
+                        :time_profile_id => tp_id,
+                        :resource_id     => vm.id,
+                        :min_max         => {
+                          :abs_max_cpu_usagemhz_rate_average_value => 100.00
+                        }
 
       FactoryBot.create :metric_rollup_vm_daily,
-                         :with_data,
-                         :cpu_usagemhz_rate_average => 10.0,
-                         :timestamp                 => 1.day.ago,
-                         :time_profile_id           => tp_id,
-                         :resource_id               => vm.id,
-                         :min_max                   => {
-                           :abs_max_cpu_usagemhz_rate_average_value => 900.00
-                         }
+                        :with_data,
+                        :cpu_usagemhz_rate_average => 10.0,
+                        :timestamp                 => 1.day.ago,
+                        :time_profile_id           => tp_id,
+                        :resource_id               => vm.id,
+                        :min_max                   => {
+                          :abs_max_cpu_usagemhz_rate_average_value => 900.00
+                        }
       FactoryBot.create :metric_rollup_vm_daily,
-                         :with_data,
-                         :cpu_usagemhz_rate_average => 100.0,
-                         :timestamp                 => 1.day.ago,
-                         :time_profile_id           => tp_id,
-                         :resource_id               => vm.id,
-                         :min_max                   => {
-                           :abs_max_cpu_usagemhz_rate_average_value => 500.00
-                         }
+                        :with_data,
+                        :cpu_usagemhz_rate_average => 100.0,
+                        :timestamp                 => 1.day.ago,
+                        :time_profile_id           => tp_id,
+                        :resource_id               => vm.id,
+                        :min_max                   => {
+                          :abs_max_cpu_usagemhz_rate_average_value => 500.00
+                        }
     end
 
     it "calculates in ruby" do
@@ -1058,31 +1058,31 @@ RSpec.describe VmOrTemplate do
       EvmSpecHelper.local_miq_server
       tp_id = TimeProfile.seed.id
       FactoryBot.create :metric_rollup_vm_daily,
-                         :with_data,
-                         :time_profile_id => tp_id,
-                         :timestamp       => 1.day.ago,
-                         :resource_id     => vm.id,
-                         :min_max         => {
-                           :abs_max_derived_memory_used_value => 100.00
-                         }
+                        :with_data,
+                        :time_profile_id => tp_id,
+                        :timestamp       => 1.day.ago,
+                        :resource_id     => vm.id,
+                        :min_max         => {
+                          :abs_max_derived_memory_used_value => 100.00
+                        }
       FactoryBot.create :metric_rollup_vm_daily,
-                         :with_data,
-                         :derived_memory_used => 10.0,
-                         :timestamp           => 1.day.ago,
-                         :time_profile_id     => tp_id,
-                         :resource_id         => vm.id,
-                         :min_max             => {
-                           :abs_max_derived_memory_used_value => 500.00
-                         }
+                        :with_data,
+                        :derived_memory_used => 10.0,
+                        :timestamp           => 1.day.ago,
+                        :time_profile_id     => tp_id,
+                        :resource_id         => vm.id,
+                        :min_max             => {
+                          :abs_max_derived_memory_used_value => 500.00
+                        }
       FactoryBot.create :metric_rollup_vm_daily,
-                         :with_data,
-                         :derived_memory_used => 1000.0,
-                         :timestamp           => 1.day.ago,
-                         :time_profile_id     => tp_id,
-                         :resource_id         => vm.id,
-                         :min_max             => {
-                           :abs_max_derived_memory_used_value => 200.00
-                         }
+                        :with_data,
+                        :derived_memory_used => 1000.0,
+                        :timestamp           => 1.day.ago,
+                        :time_profile_id     => tp_id,
+                        :resource_id         => vm.id,
+                        :min_max             => {
+                          :abs_max_derived_memory_used_value => 200.00
+                        }
     end
 
     it "calculates in ruby" do
@@ -1298,8 +1298,8 @@ RSpec.describe VmOrTemplate do
     let(:ems) { FactoryBot.build(:ext_management_system) }
     let(:vm) do
       FactoryBot.build(:vm_or_template,
-                        :ext_management_system => ems,
-                        :ems_cluster           => FactoryBot.build(:ems_cluster))
+                       :ext_management_system => ems,
+                       :ems_cluster           => FactoryBot.build(:ems_cluster))
     end
 
     it "clears ems and cluster" do

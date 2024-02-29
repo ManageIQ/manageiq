@@ -107,12 +107,12 @@ RSpec.describe MiqReport do
 
     let(:report) do
       MiqReport.new(:name => "Custom VM report", :title => "Custom VM report", :rpt_group => "Custom",
-        :rpt_type => "Custom", :db => "Vm", :cols => %w(name),
-        :conditions => MiqExpression.new("=" => {"regkey" => "HKLM\\SOFTWARE\\WindowsFirewall",
-                                                 "regval" => "EnableFirewall", "value" => "0"}),
-        :col_order => %w(name registry_items.data registry_items.name registry_items.value_name),
-        :headers   => ["Name", "Registry Data", "Registry Name", "Registry Value Name"],
-        :order     => "Ascending")
+                    :rpt_type => "Custom", :db => "Vm", :cols => %w(name),
+                    :conditions => MiqExpression.new("=" => {"regkey" => "HKLM\\SOFTWARE\\WindowsFirewall",
+                                                             "regval" => "EnableFirewall", "value" => "0"}),
+                    :col_order => %w(name registry_items.data registry_items.name registry_items.value_name),
+                    :headers   => ["Name", "Registry Data", "Registry Name", "Registry Value Name"],
+                    :order     => "Ascending")
     end
 
     it "can generate a report filtered by registry items" do
@@ -205,14 +205,14 @@ RSpec.describe MiqReport do
       let(:report) do
         MiqReport.new(
           :name => "Custom VM report", :title => "Custom VM report", :rpt_group => "Custom", :rpt_type => "Custom",
-            :db        => "ContainerImage",
-            :cols      => ['name',
-                           "virtual_custom_attribute_CATTR#{CustomAttributeMixin::SECTION_SEPARATOR}docker_labels",
-                           "virtual_custom_attribute_CATTR#{CustomAttributeMixin::SECTION_SEPARATOR}labels"],
-            :include   => {:custom_attributes => {}},
-            :col_order => %w(name CATTR),
-            :headers   => ["Name", custom_column_key_1, custom_column_key_1],
-            :order     => "Ascending"
+          :db        => "ContainerImage",
+          :cols      => ['name',
+                         "virtual_custom_attribute_CATTR#{CustomAttributeMixin::SECTION_SEPARATOR}docker_labels",
+                         "virtual_custom_attribute_CATTR#{CustomAttributeMixin::SECTION_SEPARATOR}labels"],
+          :include   => {:custom_attributes => {}},
+          :col_order => %w(name CATTR),
+          :headers   => ["Name", custom_column_key_1, custom_column_key_1],
+          :order     => "Ascending"
         )
       end
 
@@ -1162,12 +1162,12 @@ RSpec.describe MiqReport do
         project = FactoryBot.create(:container_project, :name => project_name, :ext_management_system => ems, :created_on => 2.days.ago)
         project.labels << label
         project.metric_rollups << FactoryBot.create(:metric_rollup_vm_hr,
-                                                     :with_data,
-                                                     :timestamp     => 1.day.ago,
-                                                     :resource_id   => project.id,
-                                                     :resource_name => project.name,
-                                                     :parent_ems_id => ems.id,
-                                                     :tag_names     => "")
+                                                    :with_data,
+                                                    :timestamp     => 1.day.ago,
+                                                    :resource_id   => project.id,
+                                                    :resource_name => project.name,
+                                                    :parent_ems_id => ems.id,
+                                                    :tag_names     => "")
         ChargebackRate.set_assignments(:compute, [{ :cb_rate => chargeback_rate, :object => ems }])
         rpt = report.generate_table(:userid => "admin")
         row = rpt[project_name][:row]
@@ -1225,15 +1225,15 @@ RSpec.describe MiqReport do
         ems_cluster = FactoryBot.create(:ems_cluster, :ext_management_system => ems)
         ems_cluster.hosts << host1
         vm1.metric_rollups << FactoryBot.create(:metric_rollup_vm_hr,
-                                                 :with_data,
-                                                 :timestamp             => 1.day.ago,
-                                                 :resource_id           => vm1.id,
-                                                 :resource_name         => vm1.name,
-                                                 :tag_names             => "environment/prod",
-                                                 :parent_host_id        => host1.id,
-                                                 :parent_ems_cluster_id => ems_cluster.id,
-                                                 :parent_ems_id         => ems.id,
-                                                 :parent_storage_id     => storage.id)
+                                                :with_data,
+                                                :timestamp             => 1.day.ago,
+                                                :resource_id           => vm1.id,
+                                                :resource_name         => vm1.name,
+                                                :tag_names             => "environment/prod",
+                                                :parent_host_id        => host1.id,
+                                                :parent_ems_cluster_id => ems_cluster.id,
+                                                :parent_ems_id         => ems.id,
+                                                :parent_storage_id     => storage.id)
         rpt = report.generate_table(:userid => "admin")
         row = rpt[vm_name][:row]
         expect(row[label_report_column]).to eq(label_value)

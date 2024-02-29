@@ -217,16 +217,16 @@ RSpec.describe TimeProfile do
       tp.profile_type = "global"
       tp.save
       FactoryBot.create(:time_profile,
-                         :description          => "test1",
-                         :profile_type         => "user",
-                         :profile_key          => "some_user",
-                         :rollup_daily_metrics => true)
+                        :description          => "test1",
+                        :profile_type         => "user",
+                        :profile_key          => "some_user",
+                        :rollup_daily_metrics => true)
 
       FactoryBot.create(:time_profile,
-                         :description          => "test2",
-                         :profile_type         => "user",
-                         :profile_key          => "foo",
-                         :rollup_daily_metrics => true)
+                        :description          => "test2",
+                        :profile_type         => "user",
+                        :profile_key          => "foo",
+                        :rollup_daily_metrics => true)
       tp = TimeProfile.profiles_for_user("foo", MiqRegion.my_region_number)
       expect(tp.count).to eq(2)
     end
@@ -239,18 +239,18 @@ RSpec.describe TimeProfile do
 
     it "gets time profiles that matches user's tz and marked for daily Rollup" do
       FactoryBot.create(:time_profile,
-                         :description          => "test1",
-                         :profile_type         => "user",
-                         :profile_key          => "some_user",
-                         :tz                   => "other_tz",
-                         :rollup_daily_metrics => true)
+                        :description          => "test1",
+                        :profile_type         => "user",
+                        :profile_key          => "some_user",
+                        :tz                   => "other_tz",
+                        :rollup_daily_metrics => true)
 
       FactoryBot.create(:time_profile,
-                         :description          => "test2",
-                         :profile_type         => "user",
-                         :profile_key          => "foo",
-                         :tz                   => "foo_tz",
-                         :rollup_daily_metrics => true)
+                        :description          => "test2",
+                        :profile_type         => "user",
+                        :profile_key          => "foo",
+                        :tz                   => "foo_tz",
+                        :rollup_daily_metrics => true)
       tp = TimeProfile.profile_for_user_tz("foo", "foo_tz")
       expect(tp.description).to eq("test2")
     end

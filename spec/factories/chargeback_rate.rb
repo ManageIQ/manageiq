@@ -43,8 +43,8 @@ FactoryBot.define do
           chargeback_rate_detail_net_io_used
         ).each do |factory_name|
           chargeback_rate.chargeback_rate_details << FactoryBot.create(factory_name,
-                                                                        :tiers_with_three_intervals,
-                                                                        :per_time => evaluator.per_time)
+                                                                       :tiers_with_three_intervals,
+                                                                       :per_time => evaluator.per_time)
         end
       end
     end
@@ -60,8 +60,8 @@ FactoryBot.define do
           chargeback_rate_detail_fixed_storage_cost
         ).each do |factory_name|
           chargeback_rate.chargeback_rate_details << FactoryBot.create(factory_name,
-                                                                        :tiers_with_three_intervals,
-                                                                        :per_time => evaluator.per_time)
+                                                                       :tiers_with_three_intervals,
+                                                                       :per_time => evaluator.per_time)
         end
       end
     end

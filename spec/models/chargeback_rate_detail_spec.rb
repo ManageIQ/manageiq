@@ -4,8 +4,8 @@ RSpec.describe ChargebackRateDetail do
     it "is invalid without a valid chargeback_rate" do
       invalid_chargeback_rate_id = (ChargebackRate.maximum(:id) || -1) + 1
       chargeback_rate_detail = FactoryBot.build(:chargeback_rate_detail,
-                                                 :chargeable_field   => field,
-                                                 :chargeback_rate_id => invalid_chargeback_rate_id)
+                                                :chargeable_field   => field,
+                                                :chargeback_rate_id => invalid_chargeback_rate_id)
       expect(chargeback_rate_detail).to be_invalid
       expect(chargeback_rate_detail.errors[:chargeback_rate]).to include(/can't be blank/)
     end
@@ -82,16 +82,16 @@ RSpec.describe ChargebackRateDetail do
     context 'with rate adjustment' do
       let(:measure) do
         FactoryBot.build(:chargeback_rate_detail_measure,
-                          :units_display => %w(B KB MB GB TB),
-                          :units         => %w(bytes kilobytes megabytes gigabytes terabytes))
+                         :units_display => %w(B KB MB GB TB),
+                         :units         => %w(bytes kilobytes megabytes gigabytes terabytes))
       end
       let(:field) { FactoryBot.create(:chargeable_field_storage_allocated, :detail_measure => measure) }
       let(:cbd) do
         # This charges per gigabyte, tiers are per gigabytes
         FactoryBot.build(:chargeback_rate_detail,
-                          :chargeback_tiers => [cbt1, cbt2, cbt3],
-                          :chargeable_field => field,
-                          :per_unit         => 'gigabytes')
+                         :chargeback_tiers => [cbt1, cbt2, cbt3],
+                         :chargeable_field => field,
+                         :per_unit         => 'gigabytes')
       end
       it 'finds proper tier for the value' do
         expect(cbd.find_rate(0.0)).to                   eq([cbt1.fixed_rate, cbt1.variable_rate])
@@ -114,16 +114,16 @@ RSpec.describe ChargebackRateDetail do
     per_time = 'monthly'
     per_unit = 'megabytes'
     cbd = FactoryBot.build(:chargeback_rate_detail,
-                            :chargeable_field => field,
-                            :per_time => per_time,
-                            :per_unit => per_unit,
-                            :enabled  => true)
+                           :chargeable_field => field,
+                           :per_time => per_time,
+                           :per_unit => per_unit,
+                           :enabled  => true)
     cbt = FactoryBot.create(:chargeback_tier,
-                             :chargeback_rate_detail_id => cbd.id,
-                             :start                     => tier_start,
-                             :finish                    => tier_finish,
-                             :fixed_rate                => fixed_rate,
-                             :variable_rate             => variable_rate)
+                            :chargeback_rate_detail_id => cbd.id,
+                            :start                     => tier_start,
+                            :finish                    => tier_finish,
+                            :fixed_rate                => fixed_rate,
+                            :variable_rate             => variable_rate)
     cbd.update(:chargeback_tiers => [cbt])
     expect(cbd.hourly_cost(cvalue, consumption)).to eq(cvalue * cbd.hourly(variable_rate, consumption) + cbd.hourly(fixed_rate, consumption))
 
@@ -191,8 +191,8 @@ RSpec.describe ChargebackRateDetail do
     expect(cbd.friendly_rate).to eq(friendly_rate)
 
     cbd = FactoryBot.build(:chargeback_rate_detail,
-                            :per_time         => 'monthly',
-                            :chargeable_field => FactoryBot.build(:chargeable_field_fixed_compute_1))
+                           :per_time         => 'monthly',
+                           :chargeable_field => FactoryBot.build(:chargeable_field_fixed_compute_1))
     cbt = FactoryBot.create(:chargeback_tier, :start => 0, :chargeback_rate_detail_id => cbd.id,
                        :finish => Float::INFINITY, :fixed_rate => 1.0, :variable_rate => 2.0)
     cbd.update(:chargeback_tiers => [cbt])
@@ -228,8 +228,8 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
 
   it "#per_unit_display_with_measurements" do
     cbdm = FactoryBot.create(:chargeback_rate_detail_measure,
-                              :units_display => %w(B KB MB GB TB),
-                              :units         => %w(bytes kilobytes megabytes gigabytes terabytes))
+                             :units_display => %w(B KB MB GB TB),
+                             :units         => %w(bytes kilobytes megabytes gigabytes terabytes))
     field = FactoryBot.create(:chargeable_field, :detail_measure => cbdm)
     cbd = FactoryBot.build(:chargeback_rate_detail, :per_unit => 'megabytes', :chargeable_field => field)
     expect(cbd.per_unit_display).to eq('MB')
@@ -245,14 +245,14 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
   it 'is valid without per_unit' do
     ['cpu', nil].each do |per_unit|
       cbd = FactoryBot.build(:chargeback_rate_detail,
-                              :chargeable_field => field,
-                              :per_unit         => per_unit)
+                             :chargeable_field => field,
+                             :per_unit         => per_unit)
       cbt = FactoryBot.create(:chargeback_tier,
-                               :chargeback_rate_detail_id => cbd.id,
-                               :start                     => 0,
-                               :finish                    => Float::INFINITY,
-                               :fixed_rate                => 0.0,
-                               :variable_rate             => 0.0)
+                              :chargeback_rate_detail_id => cbd.id,
+                              :start                     => 0,
+                              :finish                    => Float::INFINITY,
+                              :fixed_rate                => 0.0,
+                              :variable_rate             => 0.0)
       cbd.update(:chargeback_tiers => [cbt])
       expect(cbd).to be_valid
     end
@@ -261,13 +261,13 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
   it "diferents_per_units_rates_should_have_the_same_cost" do
     # should be the same cost. bytes to megabytes and gigabytes to megabytes
     cbd_bytes = FactoryBot.build(:chargeback_rate_detail,
-                                  :chargeable_field => field,
-                                  :per_unit         => 'bytes',
-                                  :per_time         => 'monthly')
+                                 :chargeable_field => field,
+                                 :per_unit         => 'bytes',
+                                 :per_time         => 'monthly')
     cbd_gigabytes = FactoryBot.build(:chargeback_rate_detail,
-                                      :chargeable_field => field,
-                                      :per_unit         => 'gigabytes',
-                                      :per_time         => 'monthly')
+                                     :chargeable_field => field,
+                                     :per_unit         => 'gigabytes',
+                                     :per_time         => 'monthly')
     expect(cbd_bytes.hourly_cost(100, consumption)).to eq(cbd_gigabytes.hourly_cost(100, consumption))
   end
 

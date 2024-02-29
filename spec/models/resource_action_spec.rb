@@ -143,9 +143,9 @@ RSpec.describe ResourceAction do
   context "uri validation" do
     let(:ra) do
       FactoryBot.build(:resource_action,
-                        :ae_namespace => "NAMESPACE",
-                        :ae_class     => "CLASS",
-                        :ae_instance  => "INSTANCE")
+                       :ae_namespace => "NAMESPACE",
+                       :ae_class     => "CLASS",
+                       :ae_instance  => "INSTANCE")
     end
 
     it "#ae_path" do

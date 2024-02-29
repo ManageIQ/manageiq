@@ -70,15 +70,15 @@ RSpec.describe CustomButton do
         @userid        = "guest"
         uri_path, uri_attributes, uri_message = CustomButton.parse_uri(@ae_uri)
         @button = FactoryBot.create(:custom_button,
-          :name             => @button_name,
-          :description      => @button_text,
-          :applies_to_class => @button_class,
-          :applies_to_id    => @target_id,
-          :uri              => @ae_uri,
-          :uri_path         => uri_path,
-          :uri_attributes   => uri_attributes,
-          :uri_message      => uri_message,
-          :userid           => @userid
+                                    :name             => @button_name,
+                                    :description      => @button_text,
+                                    :applies_to_class => @button_class,
+                                    :applies_to_id    => @target_id,
+                                    :uri              => @ae_uri,
+                                    :uri_path         => uri_path,
+                                    :uri_attributes   => uri_attributes,
+                                    :uri_message      => uri_message,
+                                    :userid           => @userid
         )
       end
 
@@ -129,19 +129,19 @@ RSpec.describe CustomButton do
     vm         = FactoryBot.create(:vm_vmware)
     vm_other   = FactoryBot.create(:vm_vmware)
     button1all = FactoryBot.create(:custom_button,
-                                    :applies_to  => vm.class,
-                                    :name        => "foo",
-                                    :description => "foo foo")
+                                   :applies_to  => vm.class,
+                                   :name        => "foo",
+                                   :description => "foo foo")
 
     button1vm  = FactoryBot.create(:custom_button,
-                                    :applies_to  => vm,
-                                    :name        => "bar",
-                                    :description => "bar bar")
+                                   :applies_to  => vm,
+                                   :name        => "bar",
+                                   :description => "bar bar")
 
     button2vm  = FactoryBot.create(:custom_button,
-                                    :applies_to  => vm,
-                                    :name        => "foo",
-                                    :description => "foo foo")
+                                   :applies_to  => vm,
+                                   :name        => "foo",
+                                   :description => "foo foo")
 
     expect(described_class.buttons_for(Host)).to eq([])
     expect(described_class.buttons_for(Vm)).to eq([button1all])
@@ -168,9 +168,9 @@ RSpec.describe CustomButton do
 
     it "applies_to_class" do
       button_for_all_vms = FactoryBot.create(:custom_button,
-                                              :applies_to_class => 'Vm',
-                                              :name             => @default_name,
-                                              :description      => @default_description)
+                                             :applies_to_class => 'Vm',
+                                             :name             => @default_name,
+                                             :description      => @default_description)
       expect(button_for_all_vms).to be_valid
 
       new_host_button = described_class.new(
@@ -208,9 +208,9 @@ RSpec.describe CustomButton do
       vm_other = FactoryBot.create(:vm_vmware)
 
       button_for_single_vm = FactoryBot.create(:custom_button,
-                                                :applies_to  => @vm,
-                                                :name        => @default_name,
-                                                :description => @default_description)
+                                               :applies_to  => @vm,
+                                               :name        => @default_name,
+                                               :description => @default_description)
       expect(button_for_single_vm).to be_valid
 
       # For same VM

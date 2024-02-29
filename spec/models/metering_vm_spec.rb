@@ -63,9 +63,9 @@ RSpec.describe MeteringVm do
 
     let(:hardware) do
       FactoryBot.create(:hardware,
-                         :cpu_total_cores => cores,
-                         :memory_mb       => mem_mb,
-                         :disks           => [FactoryBot.create(:disk, :size => disk_b)])
+                        :cpu_total_cores => cores,
+                        :memory_mb       => mem_mb,
+                        :disks           => [FactoryBot.create(:disk, :size => disk_b)])
     end
 
     context 'for any virtual machine' do

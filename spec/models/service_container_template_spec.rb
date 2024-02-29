@@ -29,8 +29,8 @@ RSpec.describe(ServiceContainerTemplate) do
     end
 
     FactoryBot.create(:service_container_template,
-                       :options          => provision_options.merge(config_info_options),
-                       :service_template => service_template).tap do |svc|
+                      :options          => provision_options.merge(config_info_options),
+                      :service_template => service_template).tap do |svc|
       allow(svc).to receive(:container_template).and_return(container_template)
       allow(svc).to receive(:stack).and_return(stack)
     end

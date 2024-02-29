@@ -57,54 +57,54 @@ module Spec
 
       def create_vmware_vms
         @active_vm = FactoryBot.create(:vm_vmware,
-                                        :miq_group_id => @miq_group.id,
-                                        :evm_owner_id => @user.id,
-                                        :ems_id       => @ems.id,
-                                        :storage_id   => @storage.id,
-                                        :hardware     => @hw1,
-                                        :tenant       => @tenant)
+                                       :miq_group_id => @miq_group.id,
+                                       :evm_owner_id => @user.id,
+                                       :ems_id       => @ems.id,
+                                       :storage_id   => @storage.id,
+                                       :hardware     => @hw1,
+                                       :tenant       => @tenant)
         @archived_vm = FactoryBot.create(:vm_vmware,
-                                          :miq_group_id => @miq_group.id,
-                                          :evm_owner_id => @user.id,
-                                          :hardware     => @hw2)
-        @orphaned_vm = FactoryBot.create(:vm_vmware,
-                                          :miq_group_id => @miq_group.id,
-                                          :evm_owner_id => @user.id,
-                                          :storage_id   => @storage.id,
-                                          :hardware     => @hw3)
-        @retired_vm = FactoryBot.create(:vm_vmware,
                                          :miq_group_id => @miq_group.id,
                                          :evm_owner_id => @user.id,
-                                         :retired      => true,
-                                         :hardware     => @hw4)
+                                         :hardware     => @hw2)
+        @orphaned_vm = FactoryBot.create(:vm_vmware,
+                                         :miq_group_id => @miq_group.id,
+                                         :evm_owner_id => @user.id,
+                                         :storage_id   => @storage.id,
+                                         :hardware     => @hw3)
+        @retired_vm = FactoryBot.create(:vm_vmware,
+                                        :miq_group_id => @miq_group.id,
+                                        :evm_owner_id => @user.id,
+                                        :retired      => true,
+                                        :hardware     => @hw4)
       end
 
       def create_google_vms
         @active_vm = FactoryBot.create(:vm_google,
-                                        :miq_group_id          => @miq_group.id,
-                                        :evm_owner_id          => @user.id,
-                                        :ext_management_system => @ems,
-                                        :tenant                => @tenant)
+                                       :miq_group_id          => @miq_group.id,
+                                       :evm_owner_id          => @user.id,
+                                       :ext_management_system => @ems,
+                                       :tenant                => @tenant)
         @archived_vm = FactoryBot.create(:vm_google,
-                                          :miq_group_id => @miq_group.id,
-                                          :evm_owner_id => @user.id,
-                                          :tenant       => @tenant)
-        @orphaned_vm = FactoryBot.create(:vm_google,
-                                          :miq_group_id => @miq_group.id,
-                                          :evm_owner_id => @user.id,
-                                          :tenant       => @tenant)
-        @retired_vm = FactoryBot.create(:vm_google,
                                          :miq_group_id => @miq_group.id,
                                          :evm_owner_id => @user.id,
-                                         :retired      => true,
                                          :tenant       => @tenant)
+        @orphaned_vm = FactoryBot.create(:vm_google,
+                                         :miq_group_id => @miq_group.id,
+                                         :evm_owner_id => @user.id,
+                                         :tenant       => @tenant)
+        @retired_vm = FactoryBot.create(:vm_google,
+                                        :miq_group_id => @miq_group.id,
+                                        :evm_owner_id => @user.id,
+                                        :retired      => true,
+                                        :tenant       => @tenant)
       end
 
       def create_request(prov_options)
         @miq_provision_request = FactoryBot.create(:miq_provision_request,
-                                                    :requester => @user,
-                                                    :source    => @vm_template,
-                                                    :options   => prov_options)
+                                                   :requester => @user,
+                                                   :source    => @vm_template,
+                                                   :options   => prov_options)
         @miq_request = @miq_provision_request
       end
 
@@ -119,7 +119,7 @@ module Spec
       def vmware_template
         @ems = FactoryBot.create(:ems_vmware)
         FactoryBot.create(:template_vmware,
-                           :hardware => FactoryBot.create(:hardware, :cpu1x2, :memory_mb => 512))
+                          :hardware => FactoryBot.create(:hardware, :cpu1x2, :memory_mb => 512))
       end
 
       def vmware_model
@@ -156,7 +156,7 @@ module Spec
 
       def google_template
         @ems = FactoryBot.create(:ems_google_with_authentication,
-                                  :availability_zones => [FactoryBot.create(:availability_zone_google)])
+                                 :availability_zones => [FactoryBot.create(:availability_zone_google)])
         FactoryBot.create(:template_google, :ext_management_system => @ems)
       end
 
@@ -165,18 +165,18 @@ module Spec
         m2_small_flavor = FactoryBot.create(:flavor_google, :ems_id => @ems.id, :cloud_subnet_required => false,
                                              :cpus => 4, :cpu_cores => 1, :memory => 1024)
         create_request(:number_of_vms => 1, :owner_email    => 'user@example.com',
-                                            :src_vm_id      => @vm_template.id,
-                                            :boot_disk_size => ["10.GB", "10 GB"],
-                                            :placement_auto => [true, 1],
-                                            :instance_type  => [m2_small_flavor.id, m2_small_flavor.name])
+                       :src_vm_id      => @vm_template.id,
+                       :boot_disk_size => ["10.GB", "10 GB"],
+                       :placement_auto => [true, 1],
+                       :instance_type  => [m2_small_flavor.id, m2_small_flavor.name])
         create_google_vms
       end
 
       def generic_template
         FactoryBot.create(:service_template,
-                           :name         => 'generic',
-                           :service_type => 'atomic',
-                           :prov_type    => 'generic')
+                          :name         => 'generic',
+                          :service_type => 'atomic',
+                          :prov_type    => 'generic')
       end
 
       def build_generic_service_item
@@ -186,9 +186,9 @@ module Spec
 
       def build_generic_ansible_tower_service_item
         @service_template = FactoryBot.create(:service_template,
-                                               :name         => 'generic_ansible_tower',
-                                               :service_type => 'atomic',
-                                               :prov_type    => 'generic_ansible_tower')
+                                              :name         => 'generic_ansible_tower',
+                                              :service_type => 'atomic',
+                                              :prov_type    => 'generic_ansible_tower')
         @service_request = build_service_template_request("generic_ansible_tower", @user,
                                                           :dialog => {"test" => "dialog"})
       end

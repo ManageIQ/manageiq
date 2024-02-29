@@ -1506,10 +1506,10 @@ RSpec.describe Rbac::Filterer do
           @timestamps.each do |t, v|
             [@host1, @host2].each do |h|
               h.metric_rollups << FactoryBot.create(:metric_rollup_host_hr,
-                                                     :timestamp                  => t,
-                                                     :cpu_usage_rate_average     => v,
-                                                     :cpu_ready_delta_summation  => v * 1000, # Multiply by a factor of 1000 to make it more realistic and enable testing virtual col v_pct_cpu_ready_delta_summation
-                                                     :sys_uptime_absolute_latest => v
+                                                    :timestamp                  => t,
+                                                    :cpu_usage_rate_average     => v,
+                                                    :cpu_ready_delta_summation  => v * 1000, # Multiply by a factor of 1000 to make it more realistic and enable testing virtual col v_pct_cpu_ready_delta_summation
+                                                    :sys_uptime_absolute_latest => v
                                                     )
             end
           end
@@ -2410,9 +2410,9 @@ RSpec.describe Rbac::Filterer do
       before do
         4.times do |i|
           FactoryBot.create(:vm_vmware,
-                             :name             => "Test VM #{i}",
-                             :connection_state => i < 2 ? 'connected' : 'disconnected',
-                             :miq_group        => i.even? ? group : group2)
+                            :name             => "Test VM #{i}",
+                            :connection_state => i < 2 ? 'connected' : 'disconnected',
+                            :miq_group        => i.even? ? group : group2)
         end
       end
 

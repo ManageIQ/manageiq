@@ -5,97 +5,97 @@ RSpec.describe EmsEventHelper do
 
       @zone      = FactoryBot.create(:zone)
       @ems       = FactoryBot.create(:ems_vmware,
-                                      :zone      => @zone,
-                                      :name      => 'vc7',
-                                      :hostname  => 'vc7.manageiq.com',
-                                      :ipaddress => '10.10.10.2'
+                                     :zone      => @zone,
+                                     :name      => 'vc7',
+                                     :hostname  => 'vc7.manageiq.com',
+                                     :ipaddress => '10.10.10.2'
                                      )
       @storage   = FactoryBot.create(:storage,
-                                      :name       => 'StarM1-Demo5',
-                                      :store_type => 'VMFS'
+                                     :name       => 'StarM1-Demo5',
+                                     :store_type => 'VMFS'
                                      )
       @host      = FactoryBot.create(:host,
-                                      :name                  => 'host7',
-                                      :ext_management_system => @ems,
-                                      :vmm_vendor            => 'vmware',
-                                      :vmm_version           => '4.0.0',
-                                      :vmm_product           => 'ESX',
-                                      :vmm_buildnumber       => 261974,
-                                      :ipaddress             => '192.168.252.28',
-                                      :hostname              => 'host7.manageiq.com'
+                                     :name                  => 'host7',
+                                     :ext_management_system => @ems,
+                                     :vmm_vendor            => 'vmware',
+                                     :vmm_version           => '4.0.0',
+                                     :vmm_product           => 'ESX',
+                                     :vmm_buildnumber       => 261974,
+                                     :ipaddress             => '192.168.252.28',
+                                     :hostname              => 'host7.manageiq.com'
                                      )
       @vm        = FactoryBot.create(:vm_vmware,
-                                      :ext_management_system => @ems,
-                                      :name                  => 'vm42',
-                                      :location              => 'vm42/vm42.vmx',
-                                      :storage               => @storage
+                                     :ext_management_system => @ems,
+                                     :name                  => 'vm42',
+                                     :location              => 'vm42/vm42.vmx',
+                                     :storage               => @storage
                                      )
 
       @username = 'fred'
       @chain_id = 12345
       @ems_events = []
       @ems_events << FactoryBot.create(:ems_event,
-                                        :event_type            => 'PowerOnVM_Task',
-                                        :message               => 'Task: Power On virtual machine',
-                                        :host_name             => @host.ipaddress,
-                                        :timestamp             => Time.now,
-                                        :ext_management_system => @ems,
-                                        :host                  => @host,
-                                        :vm                    => @vm,
-                                        :vm_name               => @vm.name,
-                                        :vm_location           => @vm.path,
-                                        :source                => 'VC',
-                                        :chain_id              => @chain_id,
-                                        :is_task               => false,
-                                        :username              => @username
+                                       :event_type            => 'PowerOnVM_Task',
+                                       :message               => 'Task: Power On virtual machine',
+                                       :host_name             => @host.ipaddress,
+                                       :timestamp             => Time.now,
+                                       :ext_management_system => @ems,
+                                       :host                  => @host,
+                                       :vm                    => @vm,
+                                       :vm_name               => @vm.name,
+                                       :vm_location           => @vm.path,
+                                       :source                => 'VC',
+                                       :chain_id              => @chain_id,
+                                       :is_task               => false,
+                                       :username              => @username
                                        )
 
       @ems_events << FactoryBot.create(:ems_event,
-                                        :event_type            => 'VmStartingEvent',
-                                        :message               => "#{@vm.name} on host #{@host.ipaddress} in DC1 is starting",
-                                        :host_name             => @host.ipaddress,
-                                        :timestamp             => Time.now,
-                                        :ext_management_system => @ems,
-                                        :host                  => @host,
-                                        :vm                    => @vm,
-                                        :vm_name               => @vm.name,
-                                        :vm_location           => @vm.path,
-                                        :source                => 'VC',
-                                        :chain_id              => @chain_id,
-                                        :is_task               => false,
-                                        :username              => @username
+                                       :event_type            => 'VmStartingEvent',
+                                       :message               => "#{@vm.name} on host #{@host.ipaddress} in DC1 is starting",
+                                       :host_name             => @host.ipaddress,
+                                       :timestamp             => Time.now,
+                                       :ext_management_system => @ems,
+                                       :host                  => @host,
+                                       :vm                    => @vm,
+                                       :vm_name               => @vm.name,
+                                       :vm_location           => @vm.path,
+                                       :source                => 'VC',
+                                       :chain_id              => @chain_id,
+                                       :is_task               => false,
+                                       :username              => @username
                                        )
 
       @ems_events << FactoryBot.create(:ems_event,
-                                        :event_type            => 'VmPoweredOnEvent',
-                                        :message               => "#{@vm.name} on  #{@host.ipaddress} in DC1 is powered on",
-                                        :host_name             => @host.ipaddress,
-                                        :timestamp             => Time.now,
-                                        :ext_management_system => @ems,
-                                        :host                  => @host,
-                                        :vm                    => @vm,
-                                        :vm_name               => @vm.name,
-                                        :vm_location           => @vm.path,
-                                        :source                => 'VC',
-                                        :chain_id              => @chain_id,
-                                        :is_task               => false,
-                                        :username              => @username
+                                       :event_type            => 'VmPoweredOnEvent',
+                                       :message               => "#{@vm.name} on  #{@host.ipaddress} in DC1 is powered on",
+                                       :host_name             => @host.ipaddress,
+                                       :timestamp             => Time.now,
+                                       :ext_management_system => @ems,
+                                       :host                  => @host,
+                                       :vm                    => @vm,
+                                       :vm_name               => @vm.name,
+                                       :vm_location           => @vm.path,
+                                       :source                => 'VC',
+                                       :chain_id              => @chain_id,
+                                       :is_task               => false,
+                                       :username              => @username
                                        )
 
       @ems_events << FactoryBot.create(:ems_event,
-                                        :event_type            => 'PowerOnVM_Task_Complete',
-                                        :message               => 'PowerOnVM_Task Completed',
-                                        :host_name             => @host.ipaddress,
-                                        :timestamp             => Time.now,
-                                        :ext_management_system => @ems,
-                                        :host                  => @host,
-                                        :vm                    => @vm,
-                                        :vm_name               => @vm.name,
-                                        :vm_location           => @vm.path,
-                                        :source                => 'EVM',
-                                        :chain_id              => 12345,
-                                        :is_task               => false,
-                                        :username              => @username
+                                       :event_type            => 'PowerOnVM_Task_Complete',
+                                       :message               => 'PowerOnVM_Task Completed',
+                                       :host_name             => @host.ipaddress,
+                                       :timestamp             => Time.now,
+                                       :ext_management_system => @ems,
+                                       :host                  => @host,
+                                       :vm                    => @vm,
+                                       :vm_name               => @vm.name,
+                                       :vm_location           => @vm.path,
+                                       :source                => 'EVM',
+                                       :chain_id              => 12345,
+                                       :is_task               => false,
+                                       :username              => @username
                                        )
 
       @miq_event_vm_start = FactoryBot.create(:miq_event_definition, :name => 'vm_start', :description => 'VM Power On')
@@ -107,12 +107,12 @@ RSpec.describe EmsEventHelper do
       @policy_set.add_member(@policy)
 
       @policy_content  = FactoryBot.create(:miq_policy_content,
-                                            :miq_policy           => @policy,
-                                            :miq_action           => @action,
-                                            :miq_event_definition => @miq_event_vm_start,
-                                            :qualifier            => 'success',
-                                            :success_sequence     => 1,
-                                            :success_synchronous  => true)
+                                           :miq_policy           => @policy,
+                                           :miq_action           => @action,
+                                           :miq_event_definition => @miq_event_vm_start,
+                                           :qualifier            => 'success',
+                                           :success_sequence     => 1,
+                                           :success_synchronous  => true)
 
       @vm.add_policy(@policy)
     end

@@ -385,8 +385,8 @@ RSpec.describe Host do
     let(:ems) { FactoryBot.build(:ext_management_system) }
     let(:host) do
       FactoryBot.build(:host,
-                        :ext_management_system => ems,
-                        :ems_cluster           => FactoryBot.build(:ems_cluster))
+                       :ext_management_system => ems,
+                       :ems_cluster           => FactoryBot.build(:ems_cluster))
     end
     it "clears ems and cluster" do
       host.disconnect_ems(ems)

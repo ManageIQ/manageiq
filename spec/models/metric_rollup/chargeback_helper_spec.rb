@@ -22,11 +22,11 @@ RSpec.describe MetricRollup do
       context 'metric_rollup record with parents not nil' do
         let(:metric_rollup) do
           FactoryBot.build(:metric_rollup_vm_hr,
-                            :resource           => vm,
-                            :parent_host        => host,
-                            :parent_ems_cluster => ems_cluster,
-                            :parent_ems         => ems,
-                            :parent_storage     => storage,
+                           :resource           => vm,
+                           :parent_host        => host,
+                           :parent_ems_cluster => ems_cluster,
+                           :parent_ems         => ems,
+                           :parent_storage     => storage,
                            )
         end
 

@@ -3,15 +3,15 @@ describe MiqExpression::Target do
     subject { described_class.parse(@field)&.column_type }
     let(:string_custom_attribute) do
       FactoryBot.create(:custom_attribute,
-                         :name          => "foo",
-                         :value         => "string",
-                         :resource_type => 'ExtManagementSystem')
+                        :name          => "foo",
+                        :value         => "string",
+                        :resource_type => 'ExtManagementSystem')
     end
     let(:date_custom_attribute) do
       FactoryBot.create(:custom_attribute,
-                         :name          => "foo",
-                         :value         => DateTime.current,
-                         :resource_type => 'ExtManagementSystem')
+                        :name          => "foo",
+                        :value         => DateTime.current,
+                        :resource_type => 'ExtManagementSystem')
     end
 
     it "with model-field__with_pivot_table_suffix" do

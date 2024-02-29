@@ -11,8 +11,8 @@ RSpec.describe ResourceSharer do
 
     let(:user) do
       FactoryBot.create(:user,
-                         :role     => "user",
-                         :features => user_allowed_feature)
+                        :role     => "user",
+                        :features => user_allowed_feature)
     end
     let(:user_allowed_feature) { "service" }
     let(:resource_to_be_shared) { FactoryBot.create(:miq_template) }
@@ -88,14 +88,14 @@ RSpec.describe ResourceSharer do
     context "attempting to share a resource the user doesn't have access to via RBAC" do
       let(:user) do
         FactoryBot.create(:user,
-                           :role     => "user",
-                           :features => user_allowed_feature,
-                           :tenant   => FactoryBot.create(:tenant, :name => "Tenant under root"))
+                          :role     => "user",
+                          :features => user_allowed_feature,
+                          :tenant   => FactoryBot.create(:tenant, :name => "Tenant under root"))
       end
       let(:resource_to_be_shared) do
         FactoryBot.create(:miq_template,
-                           :tenant => FactoryBot.create(:tenant,
-                                                         :name => "Sibling tenant"))
+                          :tenant => FactoryBot.create(:tenant,
+                                                       :name => "Sibling tenant"))
       end
       let(:tenants) { [user.current_tenant] } # Attempt to share a resource in Sibling tenant to one's own tenant
 

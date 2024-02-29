@@ -18,7 +18,7 @@ module Spec
         ae_instances ||= {instance_name => {'field1' => {:value => 'hello world'}}}
 
         FactoryBot.create(:miq_ae_domain, :with_small_model, :with_instances,
-                           attrs.merge('ae_fields' => ae_fields, 'ae_instances' => ae_instances))
+                          attrs.merge('ae_fields' => ae_fields, 'ae_instances' => ae_instances))
       end
 
       def create_state_ae_model(attrs = {})
@@ -28,7 +28,7 @@ module Spec
         ae_instances = {instance_name => {'field1' => {:value => 'phases of matter'}}}
 
         FactoryBot.create(:miq_ae_domain, :with_small_model, :with_instances,
-                           attrs.merge('ae_fields' => ae_fields, 'ae_instances' => ae_instances))
+                          attrs.merge('ae_fields' => ae_fields, 'ae_instances' => ae_instances))
       end
 
       def create_ae_model_with_method(attrs = {})
@@ -45,9 +45,9 @@ module Spec
                                       :language => 'ruby', 'params' => method_params}}
 
         FactoryBot.create(:miq_ae_domain, :with_small_model, :with_instances, :with_methods,
-                           attrs.merge('ae_fields'    => ae_fields,
-                                       'ae_instances' => ae_instances,
-                                       'ae_methods'   => ae_methods))
+                          attrs.merge('ae_fields'    => ae_fields,
+                                      'ae_instances' => ae_instances,
+                                      'ae_methods'   => ae_methods))
       end
 
       def default_ae_model_attributes(attrs = {})

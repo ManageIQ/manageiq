@@ -23,9 +23,9 @@ module Spec
           options ||= {}
           options[:dialog] = {}
           mprt = FactoryBot.create(:miq_provision_request_template,
-                                    :requester => get_user(options),
-                                    :src_vm_id => options[:src_vm_id],
-                                    :options   => options)
+                                   :requester => get_user(options),
+                                   :src_vm_id => options[:src_vm_id],
+                                   :options   => options)
           add_st_resource(item, mprt)
         end
       end
@@ -95,17 +95,17 @@ module Spec
         return nil unless root
         options = {:src_id => root.id, :target_name => "barney"}.merge(dialog_options)
         FactoryBot.create(:service_template_provision_request,
-                           :description    => 'Service Request',
-                           :source_type    => 'ServiceTemplate',
-                           :type           => 'ServiceTemplateProvisionRequest',
-                           :request_type   => 'clone_to_service',
-                           :approval_state => 'approved',
-                           :status         => 'Ok',
-                           :process        => true,
-                           :request_state  => 'active',
-                           :source_id      => root.id,
-                           :requester      => user,
-                           :options        => options)
+                          :description    => 'Service Request',
+                          :source_type    => 'ServiceTemplate',
+                          :type           => 'ServiceTemplateProvisionRequest',
+                          :request_type   => 'clone_to_service',
+                          :approval_state => 'approved',
+                          :status         => 'Ok',
+                          :process        => true,
+                          :request_state  => 'active',
+                          :source_id      => root.id,
+                          :requester      => user,
+                          :options        => options)
       end
 
       def request_stubs

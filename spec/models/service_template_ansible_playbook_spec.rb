@@ -12,14 +12,14 @@ RSpec.describe ServiceTemplateAnsiblePlaybook do
 
   let(:playbook) do
     FactoryBot.create(:embedded_playbook,
-                       :configuration_script_source => script_source,
-                       :manager                     => ems)
+                      :configuration_script_source => script_source,
+                      :manager                     => ems)
   end
 
   let(:job_template) do
     FactoryBot.create(:embedded_ansible_configuration_script,
-                       :variables => catalog_item_options.fetch_path(:config_info, :provision, :extra_vars),
-                       :manager   => ems)
+                      :variables => catalog_item_options.fetch_path(:config_info, :provision, :extra_vars),
+                      :manager   => ems)
   end
 
   let(:catalog_item_options) do

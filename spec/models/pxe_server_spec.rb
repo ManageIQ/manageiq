@@ -262,10 +262,10 @@ PXE
     context "#create_provisioning_files" do
       it "without kickstart" do
         image = FactoryBot.create(:pxe_image_ipxe,
-                                   :pxe_server     => @pxe_server,
-                                   :kernel         => "http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz",
-                                   :kernel_options => "ramdisk_size=10000 ksdevice=00:50:56:91:79:d5",
-                                   :initrd         => "http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img"
+                                  :pxe_server     => @pxe_server,
+                                  :kernel         => "http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz",
+                                  :kernel_options => "ramdisk_size=10000 ksdevice=00:50:56:91:79:d5",
+                                  :initrd         => "http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img"
                                   )
         expected_name = @pxe_server.test_full_path_to("#{@pxe_server.pxe_directory}/00-19-e3-d7-5b-0e")
         expected_contents = <<-PXE
@@ -292,10 +292,10 @@ PXE
         expected_ks_name = "#{expected_name}.ks.cfg"
 
         image = FactoryBot.create(:pxe_image_ipxe,
-                                   :pxe_server     => @pxe_server,
-                                   :kernel         => "http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz",
-                                   :kernel_options => "ramdisk_size=10000 ksdevice=00:50:56:91:79:d5",
-                                   :initrd         => "http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img"
+                                  :pxe_server     => @pxe_server,
+                                  :kernel         => "http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz",
+                                  :kernel_options => "ramdisk_size=10000 ksdevice=00:50:56:91:79:d5",
+                                  :initrd         => "http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img"
                                   )
 
         ks_contents = "FOO"

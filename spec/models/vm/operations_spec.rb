@@ -23,10 +23,10 @@ RSpec.describe 'VM::Operations' do
         ems = FactoryBot.create(:ems_google, :project => 'manageiq-dev')
         az  = FactoryBot.create(:availability_zone_google)
         vm = FactoryBot.create(:vm_google,
-                                :ext_management_system => ems,
-                                :ems_ref               => 123,
-                                :availability_zone     => az,
-                                :hardware              => @hardware)
+                               :ext_management_system => ems,
+                               :ems_ref               => 123,
+                               :availability_zone     => az,
+                               :hardware              => @hardware)
         allow(vm).to receive(:ipaddresses).and_return(@ipaddresses)
         url = vm.send(:ipv4_address)
         expect(url).to eq('35.190.140.48')
