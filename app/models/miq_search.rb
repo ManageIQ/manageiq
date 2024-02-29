@@ -79,7 +79,7 @@ class MiqSearch < ApplicationRecord
     Hash[*all.select(:id, :description).flat_map { |x| [x.id.to_s, x.description] }]
   end
 
-  FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
+  FIXTURE_DIR = Rails.root.join("db/fixtures").to_s
   def self.seed
     searches = where("name like 'default%'").index_by { |ms| "#{ms.name}-#{ms.db}" }
     fixture_file = File.join(FIXTURE_DIR, "miq_searches.yml")

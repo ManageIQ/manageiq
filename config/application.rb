@@ -117,12 +117,12 @@ module Vmdb
     #
     #   https://bugs.ruby-lang.org/issues/14372
     #
-    config.autoload_paths << Rails.root.join("app", "models", "aliases").to_s
-    config.autoload_paths << Rails.root.join("app", "models", "mixins").to_s
+    config.autoload_paths << Rails.root.join("app/models/aliases").to_s
+    config.autoload_paths << Rails.root.join("app/models/mixins").to_s
     config.autoload_paths << Rails.root.join("lib").to_s
-    config.autoload_paths << Rails.root.join("lib", "services").to_s
+    config.autoload_paths << Rails.root.join("lib/services").to_s
 
-    config.autoload_once_paths << Rails.root.join("lib", "vmdb", "console_methods.rb").to_s
+    config.autoload_once_paths << Rails.root.join("lib/vmdb/console_methods.rb").to_s
 
     require_relative '../lib/request_started_on_middleware'
     config.middleware.use RequestStartedOnMiddleware

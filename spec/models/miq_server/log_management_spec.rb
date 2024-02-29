@@ -117,12 +117,12 @@ RSpec.describe MiqServer do
 
     context "post current/historical/models/dialogs" do
       let(:task)                      { FactoryBot.create(:miq_task) }
-      let(:compressed_log_patterns)   { [Rails.root.join("log", "evm*.log.gz").to_s] }
-      let(:current_log_patterns)      { [Rails.root.join("log", "evm.log").to_s] }
+      let(:compressed_log_patterns)   { [Rails.root.join("log/evm*.log.gz").to_s] }
+      let(:current_log_patterns)      { [Rails.root.join("log/evm.log").to_s] }
       let(:compressed_evm_log)        { Rails.root.join("evm.log-20180319.gz").to_s }
       let(:log_start)                 { Time.zone.parse("2018-05-11 11:33:12 UTC") }
       let(:log_end)                   { Time.zone.parse("2018-05-11 15:34:16 UTC") }
-      let(:daily_log)                 { Rails.root.join("data", "user", "system", "evm_server_daily.zip").to_s }
+      let(:daily_log)                 { Rails.root.join("data/user/system/evm_server_daily.zip").to_s }
       let(:log_depot)                 { FactoryBot.create(:file_depot) }
       let(:region)                    { MiqRegion.my_region }
       let(:zone)                      { @miq_server.zone }

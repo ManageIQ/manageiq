@@ -148,7 +148,7 @@ module MiqServer::LogManagement
   end
 
   def post_automate_models(taskid, log_depot)
-    domain_zip = Rails.root.join("log", "domain.zip")
+    domain_zip = Rails.root.join("log/domain.zip")
     backup_automate_models(domain_zip)
     now = Time.zone.now
 
@@ -169,7 +169,7 @@ module MiqServer::LogManagement
   end
 
   def post_automate_dialogs(taskid, log_depot)
-    dialog_directory = Rails.root.join("log", "service_dialogs")
+    dialog_directory = Rails.root.join("log/service_dialogs")
     FileUtils.mkdir_p(dialog_directory)
     backup_automate_dialogs(dialog_directory)
     now = Time.zone.now

@@ -713,7 +713,7 @@ class MiqQueue < ApplicationRecord
     options
   end
 
-  MESSAGING_CONFIG_FILE = Rails.root.join("config", "messaging.yml")
+  MESSAGING_CONFIG_FILE = Rails.root.join("config/messaging.yml")
   private_class_method def self.messaging_options_from_file
     return unless MESSAGING_CONFIG_FILE.file?
 

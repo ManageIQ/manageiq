@@ -1,5 +1,5 @@
 module EvmAutomate
-  $:.push File.expand_path(File.join(Rails.root, %w{.. lib util xml}))
+  $:.push File.expand_path(Rails.root.join(%w{.. lib util xml}).to_s)
 
   def self.log(level, msg)
     $log.send(level, msg)

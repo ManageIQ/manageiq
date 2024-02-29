@@ -1,6 +1,6 @@
 module Ansible
   class Content
-    PLUGIN_CONTENT_DIR = Rails.root.join("content", "ansible_consolidated").to_s.freeze
+    PLUGIN_CONTENT_DIR = Rails.root.join("content/ansible_consolidated").to_s.freeze
 
     attr_accessor :path
 

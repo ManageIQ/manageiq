@@ -92,7 +92,7 @@ class MiqServer < ApplicationRecord
   end
 
   def self.pidfile
-    @pidfile ||= "#{Rails.root}/tmp/pids/evm.pid"
+    @pidfile ||= "#{Rails.root.join("tmp/pids/evm.pid")}"
   end
 
   def self.running?

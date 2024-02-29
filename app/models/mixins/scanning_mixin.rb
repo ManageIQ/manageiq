@@ -218,7 +218,7 @@ module ScanningMixin
     xml_node_scan.add_attributes("start_time" => ost.scanTime.iso8601)
     xml_summary.root.add_attributes("taskid" => ost.taskid)
 
-    data_dir = File.join(File.expand_path(Rails.root), "data/metadata")
+    data_dir = Rails.root.join("data/metadata").to_s
     _log.debug("creating #{data_dir}")
     begin
       Dir.mkdir(data_dir)
@@ -324,7 +324,7 @@ module ScanningMixin
       xml_node = xml_summary.root.add_element("syncmetadata")
       xml_summary.root.add_attributes("scan_time" => ost.scanTime, "taskid" => ost.taskid)
       ost.skipConfig = true
-      data_dir = File.join(File.expand_path(Rails.root), "data/metadata")
+      data_dir = Rails.root.join("data/metadata").to_s
       ost.config = OpenStruct.new(
         :dataDir            => data_dir,
         :forceFleeceDefault => false

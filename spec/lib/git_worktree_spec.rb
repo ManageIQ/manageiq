@@ -352,7 +352,7 @@ RSpec.describe GitWorktree do
   end
 
   describe "#new" do
-    let(:git_repo_path) { Rails.root.join("spec", "fixtures", "git_repos", "branch_and_tag.git") }
+    let(:git_repo_path) { Rails.root.join("spec/fixtures/git_repos/branch_and_tag.git") }
 
     it "raises an exception if SSH requested, but rugged is not compiled with SSH support" do
       require "rugged"
@@ -365,7 +365,7 @@ RSpec.describe GitWorktree do
   end
 
   describe "#with_remote_options" do
-    let(:git_repo_path) { Rails.root.join("spec", "fixtures", "git_repos", "branch_and_tag.git") }
+    let(:git_repo_path) { Rails.root.join("spec/fixtures/git_repos/branch_and_tag.git") }
 
     subject do
       repo.with_remote_options do |cred_options|

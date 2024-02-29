@@ -3,7 +3,7 @@ require 'linux_admin'
 module Vmdb
   module Appliance
     def self.VERSION
-      @EVM_VERSION ||= File.read(File.join(File.expand_path(Rails.root), "VERSION")).strip
+      @EVM_VERSION ||= File.read(Rails.root.join("VERSION").to_s).strip
     end
 
     def self.BUILD
@@ -15,7 +15,7 @@ module Vmdb
     end
 
     def self.RELEASE
-      release_file = File.join(File.expand_path(Rails.root), "RELEASE")
+      release_file = Rails.root.join("RELEASE").to_s
       File.exist?(release_file) ? File.read(release_file).strip : self.CODENAME
     end
 
@@ -88,7 +88,7 @@ module Vmdb
       # the file must not be named ".log" or it will be removed by logrotate, and it must contain the Server GUID (by which the appliance is known in the vmdb,
       # the build identifier of the appliance as it is being started,  the appliance hostname and the name of the appliance as configured from our configuration screen.
 
-      last_startup_file = Rails.root.join("log", "last_startup.txt")
+      last_startup_file = Rails.root.join("log/last_startup.txt")
       last_startup_file.delete if last_startup_file.exist?
 
       begin
@@ -146,7 +146,7 @@ module Vmdb
     end
 
     def self.get_build
-      build_file = File.join(File.expand_path(Rails.root), "BUILD")
+      build_file = Rails.root.join("BUILD").to_s
 
       if File.exist?(build_file)
         build = File.read(build_file).strip.split("-").last

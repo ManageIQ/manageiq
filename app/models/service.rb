@@ -437,7 +437,7 @@ class Service < ApplicationRecord
   end
 
   def chargeback_yaml
-    yaml = YAML.load_file(Rails.root.join('product', 'chargeback', 'chargeback_vm_monthly.yaml'))
+    yaml = YAML.load_file(Rails.root.join("product/chargeback/chargeback_vm_monthly.yaml"))
     yaml["db_options"][:options][:service_id] = id
     yaml["title"] = chargeback_report_name
     yaml

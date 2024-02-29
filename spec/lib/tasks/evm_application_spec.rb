@@ -1,6 +1,6 @@
 require "tempfile"
 require "fileutils"
-require Rails.root.join("lib", "tasks", "evm_application")
+require Rails.root.join("lib/tasks/evm_application")
 
 RSpec.describe EvmApplication do
   context ".server_state" do

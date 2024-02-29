@@ -97,7 +97,7 @@ class MiqPglogical
   end
 
   def self.excludes
-    YAML.load_file(Rails.root.join("config", "replication_exclude_tables.yml"))[:exclude_tables] | ALWAYS_EXCLUDED_TABLES
+    YAML.load_file(Rails.root.join("config/replication_exclude_tables.yml"))[:exclude_tables] | ALWAYS_EXCLUDED_TABLES
   end
 
   def self.save_global_region(subscriptions_to_save, subscriptions_to_remove)

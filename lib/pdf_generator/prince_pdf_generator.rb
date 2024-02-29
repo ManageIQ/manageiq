@@ -19,7 +19,7 @@ class PrincePdfGenerator < PdfGenerator
       :params  => {
         :input  => "html",
         :style  => stylesheet,
-        :log    => Rails.root.join("log", "prince.log"),
+        :log    => Rails.root.join("log/prince.log"),
         :output => "-", # Write to stdout
         "-"     => nil  # Read from stdin
       },

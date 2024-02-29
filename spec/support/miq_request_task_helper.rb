@@ -41,4 +41,4 @@ module Spec
   end
 end
 
-Dir.glob(Rails.root.join("spec", "models", "**", "state_machine_spec_helper.rb")).each { |file| require file }
+Dir.glob(Rails.root.join("spec/models/**/state_machine_spec_helper.rb")).each { |file| require file }

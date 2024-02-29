@@ -27,7 +27,7 @@ module VMDB
 
     def self.compressed_log_patterns
       # From a log file create an array of strings containing the date patterns
-      log_dir = File.join(Rails.root, "log")
+      log_dir = Rails.root.join("log").to_s
       gz_pattern = File.join(log_dir, "*[0-9][0-9].gz")
       Dir.glob(gz_pattern).inject([]) do |arr, f|
         f =~ /.+-(\d+\.gz)/

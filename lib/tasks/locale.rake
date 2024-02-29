@@ -208,7 +208,7 @@ namespace :locale do
       "https://raw.githubusercontent.com/ManageIQ/react-ui-components/#{checkout_branch}/locale/react-ui-components.pot"
     ]
 
-    tmp_dir = Rails.root.join('locale', 'tmp').to_s
+    tmp_dir = Rails.root.join("locale/tmp").to_s
     Dir.mkdir(tmp_dir, 0o700)
     extra_pots.each do |url|
       pot_file = "#{tmp_dir}/#{url.split('/')[-1]}"
@@ -216,10 +216,10 @@ namespace :locale do
       pot_files << pot_file
     end
 
-    system('rmsgcat', '--sort-by-msgid', '-o', Rails.root.join('locale', 'manageiq-all.pot').to_s, Rails.root.join('locale', 'manageiq.pot').to_s, *pot_files)
-    system('mv', '-v', Rails.root.join('locale', 'manageiq-all.pot').to_s, Rails.root.join('locale', 'manageiq.pot').to_s)
-    system('rmsgmerge', '--sort-by-msgid', '--no-fuzzy-matching', '-o', Rails.root.join('locale', 'en', 'manageiq-all.po').to_s, Rails.root.join('locale', 'en', 'manageiq.po').to_s, Rails.root.join('locale', 'manageiq.pot').to_s)
-    system('mv', '-v', Rails.root.join('locale', 'en', 'manageiq-all.po').to_s, Rails.root.join('locale', 'en', 'manageiq.po').to_s)
+    system('rmsgcat', '--sort-by-msgid', '-o', Rails.root.join("locale/manageiq-all.pot").to_s, Rails.root.join("locale/manageiq.pot").to_s, *pot_files)
+    system('mv', '-v', Rails.root.join("locale/manageiq-all.pot").to_s, Rails.root.join("locale/manageiq.pot").to_s)
+    system('rmsgmerge', '--sort-by-msgid', '--no-fuzzy-matching', '-o', Rails.root.join("locale/en/manageiq-all.po").to_s, Rails.root.join("locale/en/manageiq.po").to_s, Rails.root.join("locale/manageiq.pot").to_s)
+    system('mv', '-v', Rails.root.join("locale/en/manageiq-all.po").to_s, Rails.root.join("locale/en/manageiq.po").to_s)
     system('rm', '-rf', tmp_dir)
 
     remove_line_numbers(Rails.root.join('locale/manageiq.pot'))
@@ -230,9 +230,9 @@ namespace :locale do
   task "report_changes", [:verbose] do |_t, args|
     require 'poparser'
 
-    old_pot = PoParser.parse(File.read(Rails.root.join('locale', 'manageiq.pot'))).to_h.collect { |item| item[:msgid] }.sort
+    old_pot = PoParser.parse(File.read(Rails.root.join("locale/manageiq.pot"))).to_h.collect { |item| item[:msgid] }.sort
     Rake::Task['locale:update_all'].invoke
-    new_pot = PoParser.parse(File.read(Rails.root.join('locale', 'manageiq.pot'))).to_h.collect { |item| item[:msgid] }.sort
+    new_pot = PoParser.parse(File.read(Rails.root.join("locale/manageiq.pot"))).to_h.collect { |item| item[:msgid] }.sort
     diff = new_pot - old_pot
     puts "--------------------------------------------------"
     puts "Current string / word count: %{str} / %{word}" % {:str => old_pot.length, :word => old_pot.join(' ').split.size}
@@ -308,7 +308,7 @@ namespace :locale do
         end
       end
 
-      combined_dir = File.join(Rails.root, "locale/combined")
+      combined_dir = Rails.root.join("locale/combined").to_s
       Dir.mkdir(combined_dir, 0o700)
       po_files.each do |locale, files|
         files.each do |file|
