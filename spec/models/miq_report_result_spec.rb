@@ -19,7 +19,7 @@ RSpec.describe MiqReportResult do
       :headers       => ["Name"],
       :order         => "Ascending",
       :template_type => "report"
-      )
+    )
     report.generate_table(:userid => "admin")
     task.miq_report_result = report.build_create_results({:userid => "admin"}, task.id)
     task.miq_report_result._async_generate_result(task.id, :txt, :user => @user1)

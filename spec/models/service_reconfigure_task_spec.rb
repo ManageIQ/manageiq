@@ -34,7 +34,7 @@ RSpec.describe ServiceReconfigureTask do
         :state   => 'finished',
         :status  => 'Ok',
         :message => 'Service Reconfigure completed'
-)
+      )
       task.after_ae_delivery('ok')
     end
 
@@ -43,7 +43,7 @@ RSpec.describe ServiceReconfigureTask do
         :state   => 'finished',
         :status  => 'Error',
         :message => 'Service Reconfigure failed'
-)
+      )
       task.after_ae_delivery('error')
     end
 
@@ -115,7 +115,7 @@ RSpec.describe ServiceReconfigureTask do
           :state   => 'pending',
           :status  => 'Ok',
           :message => 'Automation Starting'
-)
+        )
         task.deliver_to_automate
       end
     end
@@ -126,7 +126,7 @@ RSpec.describe ServiceReconfigureTask do
           :state   => 'finished',
           :status  => 'Ok',
           :message => 'Service Reconfigure completed'
-)
+        )
         task.deliver_to_automate
       end
     end

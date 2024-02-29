@@ -215,7 +215,7 @@ RSpec.describe DialogFieldSerializer do
         DialogFieldTagControl.new(expected_serialized_values.merge(
                                     :resource_action         => resource_action,
                                     :dialog_field_responders => dialog_field_responders
-        ))
+                                  ))
       end
 
       let(:type) { "DialogFieldTagControl" }

@@ -29,7 +29,7 @@ RSpec.describe MiqReport::Generator do
                                :trend_db     => "HostPerformance",
                                :interval     => "daily",
                                :target_pcts  => [70, 80, 90]}
-)
+        )
       end
 
       it "returns one row for each host" do

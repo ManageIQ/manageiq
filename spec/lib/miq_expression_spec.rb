@@ -1123,7 +1123,7 @@ RSpec.describe MiqExpression do
                                       "value" => ["2011-01-08 17:00", "2011-01-09 23:30:59"]}},
             "search"   => {"IS NOT NULL" => {"field" => "Host.vms-description"}}
 }
-)
+        )
         result = Host.all.to_a.select { |rec| filter.lenient_evaluate(rec) }
         expect(result).to contain_exactly(host3, host5)
       end
@@ -3256,7 +3256,7 @@ RSpec.describe MiqExpression do
         ">="     => {"field" => "Vm-num_cpu",
                      "value" => "2"},
         "result" => false
-)
+      )
     end
   end
 

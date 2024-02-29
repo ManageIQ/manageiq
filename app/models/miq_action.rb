@@ -285,7 +285,7 @@ class MiqAction < ApplicationRecord
     invoke_or_queue(
       inputs[:synchronous], __method__, "notifier", nil, MiqSnmp, method_name, [snmp_inputs],
       "SNMP Trap [#{rec[:name]}]"
-)
+    )
   end
 
   def action_email(action, rec, inputs)
@@ -534,7 +534,7 @@ class MiqAction < ApplicationRecord
       invoke_or_queue(
         inputs[:synchronous], action_method, vm_method == "scan" ? "smartstate" : "ems_operations", rec.my_zone,
         rec, vm_method, [], "[#{action.description}] of VM [#{rec.name}]"
-)
+      )
     end
   end
 
@@ -583,7 +583,7 @@ class MiqAction < ApplicationRecord
         action.options[:config], action.options[:customization], action.options[:disk]
       ],
       "[#{action.description}] of VM [#{rec.name}]"
-)
+    )
   end
 
   # Legacy: Replaces by action_vm_analyze
@@ -602,7 +602,7 @@ class MiqAction < ApplicationRecord
       inputs[:synchronous], __method__, "ems_operations", rec.my_zone, target, 'retire',
       [[rec], {:date => 1.day.ago}],
       "VM Retire for VM [#{rec.name}]"
-)
+    )
   end
 
   def action_create_snapshot(action, rec, inputs)

@@ -24,7 +24,7 @@ module Spec
             'platform'                  => platform
           ),
           anything
-).and_return(dialog_name)
+        ).and_return(dialog_name)
       end
 
       def assert_automate_vm_name_lookup(user, vm_name = 'vm_name')
@@ -38,7 +38,7 @@ module Spec
             'User::user' => user.id
           ),
           anything
-).and_return("get_vmname_url")
+        ).and_return("get_vmname_url")
       end
 
       def stub_automate_workspace(url, user, *result)

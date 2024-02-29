@@ -133,6 +133,6 @@ module MiqProvision::Automate
   def automate_attributes(message, objects = [get_user])
     MiqAeEngine.set_automation_attributes_from_objects(
       objects, 'request' => 'UI_PROVISION_INFO', 'message' => message
-)
+    )
   end
 end

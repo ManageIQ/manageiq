@@ -175,14 +175,14 @@ RSpec.describe MiqEvent do
           :ems_event,
           :event_type => "CloneVM_Task",
           :full_data  => {"info" => {"task" => "task-5324"}}
-)
+        )
         FactoryBot.create(:miq_event_definition, :name => event)
         FactoryBot.create(
           :miq_event,
           :event_type => event,
           :target     => vm,
           :full_data  => {:source_event_id => ems_event.id}
-)
+        )
         inputs = {
           :type            => vm.class.name,
           :source_event    => ems_event,

@@ -15,7 +15,7 @@ RSpec.describe MiqProvisionWorkflow do
           expect do
             ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
               "1.0", admin, "template", "target", false, "cc|001|environment|test", ""
-)
+            )
           end.to raise_error(RuntimeError)
         end
       end
@@ -43,7 +43,7 @@ RSpec.describe MiqProvisionWorkflow do
           FactoryBot.create(:classification_cost_center_with_tags)
           request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
             "1.0", admin, "template", "target", false, "cc|001|environment|test", ""
-)
+          )
           expect(request).to be_a_kind_of(MiqRequest)
 
           expect(request.options[:vm_tags]).to eq([Classification.lookup_by_name("cc/001").id])
@@ -54,7 +54,7 @@ RSpec.describe MiqProvisionWorkflow do
           request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
             "1.1", admin, {'name' => 'template'}, {'vm_name' => 'spec_test'}, nil,
             {'cc' => '001', 'environment' => 'test'}, nil, nil, nil
-)
+          )
           expect(request).to be_a_kind_of(MiqRequest)
 
           expect(request.options[:vm_tags]).to eq([Classification.lookup_by_name("cc/001").id])
@@ -66,7 +66,7 @@ RSpec.describe MiqProvisionWorkflow do
             "1.1", admin, {'name' => 'template'}, {'vm_name' => 'spec_test', 'root_password' => password_input.dup}, # dup because it's mutated
             {'owner_email' => 'admin'}, {'owner_first_name' => 'test'},
             {'owner_last_name' => 'test'}, nil, nil, nil, nil
-)
+          )
 
           expect(ManageIQ::Password.encrypted?(request.options[:root_password])).to be_truthy
           expect(ManageIQ::Password.decrypt(request.options[:root_password])).to eq(password_input)
@@ -76,7 +76,7 @@ RSpec.describe MiqProvisionWorkflow do
           request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
             "1.1", admin, {'name' => 'template'}, {'vm_name' => 'spec_test'},
             nil, nil, {'abc' => 'tr|ue', 'blah' => 'na|h'}, nil, nil
-)
+          )
 
           expect(request.options[:ws_values]).to include(:blah => "na|h")
         end
@@ -86,7 +86,7 @@ RSpec.describe MiqProvisionWorkflow do
             request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
               "1.1", admin, {'name' => 'template'}, {'vm_name' => 'spec_test'},
               nil, nil, "abc=true", nil, nil
-)
+            )
 
             expect(request.options[:ws_values]).to include(:abc => "true")
           end
@@ -97,7 +97,7 @@ RSpec.describe MiqProvisionWorkflow do
             request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
               "1.1", admin, "name=template", "vm_name=spec_test",
               nil, nil, "abc=true", nil, nil
-)
+            )
 
             expect(request.options[:ws_values]).to include(:abc => "true")
           end

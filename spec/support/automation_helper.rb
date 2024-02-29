@@ -56,7 +56,7 @@ module Spec
           :ae_namespace  => 'A/B/C',
           :enabled       => true,
           :instance_name => 'instance1'
-)
+        )
       end
 
       def send_ae_request_via_queue(args, timeout = nil)

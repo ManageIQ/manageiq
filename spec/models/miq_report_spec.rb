@@ -744,7 +744,7 @@ RSpec.describe MiqReport do
                             derived_memory_used_high_over_time_period
                             derived_memory_used_low_over_time_period]
 }}
-)
+        )
         report.generate_table(:userid => "admin")
       end
 

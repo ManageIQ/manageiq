@@ -13,7 +13,7 @@ RSpec.describe DialogGroupSerializer do
         :display_method_options => "display method options",
         :label                  => "label",
         :position               => 1
-)
+      )
     end
 
     let(:expected_serialized_values) do

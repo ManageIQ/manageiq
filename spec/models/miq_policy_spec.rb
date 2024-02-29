@@ -325,7 +325,7 @@ RSpec.describe MiqPolicy do
     it 'allows override of defaults' do
       expect(described_class.create!(
                :towhat => "Host", :mode => "compliance", :active => false, :description => 'x'
-      )).to have_attributes(
+             )).to have_attributes(
         :towhat => "Host",
         :active => false,
         :mode   => "compliance"

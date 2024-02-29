@@ -480,6 +480,6 @@ class User < ApplicationRecord
               :instance_id => id,
               :method_name => 'unlock!',
               :priority    => MiqQueue::MAX_PRIORITY
-    )
+            )
   end
 end

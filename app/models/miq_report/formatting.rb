@@ -20,7 +20,7 @@ module MiqReport::Formatting
 
     options = format.merge(format[:function]).slice(
       *%i[delimiter separator precision length tz column format prefix suffix description unit]
-)
+    )
 
     [function_name, options]
   end

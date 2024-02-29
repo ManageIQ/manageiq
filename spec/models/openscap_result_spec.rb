@@ -31,14 +31,14 @@ RSpec.describe OpenscapResult do
         :result             => "result_1",
         :title              => "Bad",
         :severity           => "Bad"
-)
+      )
       expect(openscap_result.openscap_rule_results[1]).to have_attributes(
         :openscap_result_id => 17,
         :name               => '2',
         :result             => "result_2",
         :title              => "Not That Bad",
         :severity           => "Not That Bad"
-)
+      )
     end
   end
 end

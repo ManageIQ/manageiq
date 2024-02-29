@@ -41,7 +41,7 @@ RSpec.describe MiqSearch do
         srchs[0].id.to_s => srchs[0].description,
         srchs[1].id.to_s => srchs[1].description,
         srchs[2].id.to_s => srchs[2].description
-)
+      )
     end
 
     it "supports scopes" do
@@ -54,7 +54,7 @@ RSpec.describe MiqSearch do
       expect(MiqSearch.where(:db => 'Vm').descriptions).to eq(
         srchs[0].id.to_s => srchs[0].description,
         srchs[1].id.to_s => srchs[1].description
-)
+      )
     end
   end
 

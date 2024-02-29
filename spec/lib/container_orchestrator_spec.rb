@@ -96,7 +96,7 @@ RSpec.describe ContainerOrchestrator do
       stub_const("ENV", ENV.to_h.merge(
                           "DATABASE_NAME"     => "vmdb_production",
                           "DATABASE_SSL_MODE" => "verify-full"
-      ))
+                        ))
 
       expect(subject.send(:default_environment)).to include({:name => "DATABASE_SSL_MODE", :value => "verify-full"})
       expect(subject.send(:default_environment)).not_to include({:name => "DATABASE_NAME", :valueFrom => {:secretKeyRef => {:key => "dbname", :name => "postgresql-secrets"}}})

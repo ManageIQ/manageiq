@@ -79,7 +79,7 @@ describe CustomizeFieldsVisibilityService do
                      customize_fields_list
                    )).to eq(
                      :hide => [:potato], :edit => [:linux_domain_name]
-            )
+                   )
           end
         end
 
@@ -93,7 +93,7 @@ describe CustomizeFieldsVisibilityService do
                      customize_fields_list
                    )).to eq(
                      :hide => [], :edit => []
-            )
+                   )
           end
         end
       end

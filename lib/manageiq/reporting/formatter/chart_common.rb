@@ -433,7 +433,7 @@ module ManageIQ
 
           series = kept_categories.each_with_object(
             series_class.new(pie_type? ? :pie : :flat)
-) do |cat, a|
+          ) do |cat, a|
             a.push(:value => cat.last, :tooltip => cat.first)
           end
 
