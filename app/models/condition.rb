@@ -165,7 +165,7 @@ end
 
     list = l.collect do |obj|
       value = MiqExpression.quote(obj.send(attr), opts[:type]&.to_sym)
-      value = value.gsub(/\\/, '\&\&') if value.kind_of?(String)
+      value = value.gsub("\\", '\&\&') if value.kind_of?(String)
       e = search.gsub(/<value[^>]*>.+<\/value>/im, value.to_s)
       obj if do_eval(e)
     end.compact
@@ -203,7 +203,7 @@ end
     list.each do |obj|
       opts, _ref = options2hash(raw_opts, obj)
       value = MiqExpression.quote(obj.send(checkattr), opts[:type]&.to_sym)
-      value = value.gsub(/\\/, '\&\&') if value.kind_of?(String)
+      value = value.gsub("\\", '\&\&') if value.kind_of?(String)
       e = check.gsub(/<value[^>]*>.+<\/value>/im, value.to_s)
       MiqPolicy.logger.debug("MIQ(condition-_subst_find): Check Expression after substitution: [#{e}]")
 

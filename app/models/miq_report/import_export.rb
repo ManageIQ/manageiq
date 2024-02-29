@@ -134,7 +134,7 @@ module MiqReport::ImportExport
         end
       end
 
-      db = db.gsub(/::/, '_')
+      db = db.gsub("::", '_')
 
       role = role.name.split("-").last if role.try(:read_only?)
 

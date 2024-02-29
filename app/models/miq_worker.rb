@@ -560,8 +560,8 @@ class MiqWorker < ApplicationRecord
 
   def self.minimal_class_name
     abbreviated_class_name
-      .sub(/Miq/, "")
-      .sub(/Worker/, "")
+      .sub("Miq", "")
+      .sub("Worker", "")
   end
 
   def minimal_class_name

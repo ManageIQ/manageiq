@@ -229,7 +229,7 @@ module ManageIQ
               a.push(:value   => hash1[val2[0]],
                      :tooltip => "#{key1} / #{val2[0]}")
             end
-            val2[0] = val2[0].to_s.gsub(/\\/, ' \ ')
+            val2[0] = val2[0].to_s.gsub("\\", ' \ ')
             add_series(val2[0].to_s, series)
           end
 
@@ -396,7 +396,7 @@ module ManageIQ
                           :tooltip => "Other / #{val2}")
             end
             label = val2 if val2.kind_of?(String)
-            label = label.to_s.gsub(/\\/, ' \ ')
+            label = label.to_s.gsub("\\", ' \ ')
             label = _('no value') if label.blank?
             add_series(label, series)
           end

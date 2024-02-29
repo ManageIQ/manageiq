@@ -184,7 +184,7 @@ end
     return if atoms.nil?
 
     nh = {}
-    row.each { |k, v| nh[col_to_expression_col(k).sub(/-/, ".")] = v } # Convert keys to match expression fields
+    row.each { |k, v| nh[col_to_expression_col(k).sub("-", ".")] = v } # Convert keys to match expression fields
     field = col_to_expression_col(col)
 
     atoms.each do |atom|

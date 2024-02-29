@@ -87,7 +87,7 @@ class ServiceContainerTemplate < ServiceGeneric
   def parameters_from_dialog
     params =
       options[:dialog].each_with_object({}) do |(attr, val), obj|
-        var_key = attr.sub(/dialog_param_/, '')
+        var_key = attr.sub("dialog_param_", '')
         obj[var_key] = val unless var_key == attr
       end
 

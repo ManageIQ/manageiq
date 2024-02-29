@@ -835,7 +835,7 @@ class MiqExpression
   # eval("/" + regexp_string + "/")
   # ```
   def self.re_escape(s)
-    Regexp.escape(s).gsub(/\//, '\/')
+    Regexp.escape(s).gsub("/", '\/')
   end
 
   # Escape any unescaped forward slashes and/or interpolation

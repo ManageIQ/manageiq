@@ -121,7 +121,7 @@ class MiqExpression::Target
 
   def tag_path_with(value = nil)
     # encode embedded / characters in values since / is used as a tag seperator
-    "#{tag_path}#{value.nil? ? '' : '/' + value.to_s.gsub(/\//, "%2f")}"
+    "#{tag_path}#{value.nil? ? '' : '/' + value.to_s.gsub("/", "%2f")}"
   end
 
   def exclude_col_by_preprocess_options?(options)

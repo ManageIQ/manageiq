@@ -54,7 +54,7 @@ class DialogFieldTagControl < DialogFieldSortedItem
 
   def value_from_dialog_fields(dialog_values)
     value = dialog_values[automate_key_name]
-    value.gsub(/Classification::/, '') if value
+    value.gsub("Classification::", '') if value
   end
 
   def values

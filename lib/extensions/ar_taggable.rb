@@ -189,7 +189,7 @@ module ActsAsTaggable
     subject = self
     parts = File.join(ns, tag.split("/")).split("/")[2..-1] # throw away /virtual
     object = parts.pop
-    object = object.gsub(/%2f/, "/") unless object.nil? # decode embedded slashes
+    object = object.gsub("%2f", "/") unless object.nil? # decode embedded slashes
     attr = parts.pop
     begin
       # resolve any intermediate relationships, throw an error if any of them return multiple results
