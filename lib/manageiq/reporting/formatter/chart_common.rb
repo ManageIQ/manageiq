@@ -49,7 +49,6 @@ module ManageIQ
           tz = mri.get_time_zone(Time.zone.name)
 
           mri.graph[:columns].each_with_index do |col, col_idx|
-
             next if col_idx >= maxcols
 
             allnil = true

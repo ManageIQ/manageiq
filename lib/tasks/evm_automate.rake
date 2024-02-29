@@ -44,7 +44,6 @@ end
 
 namespace :evm do
   namespace :automate do
-
     desc 'Backup all automate domains to a zip file or backup folder.'
     task :backup => :environment do
       raise 'Must specify a backup zip file' if ENV['BACKUP_ZIP_FILE'].blank?

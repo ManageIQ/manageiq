@@ -1351,7 +1351,6 @@ RSpec.describe ChargebackVm do
       end
 
       context "Group by single tag category" do
-
         let(:options) { base_options.merge(:interval => 'monthly', :groupby_tag => 'environment') }
         before do
           add_metric_rollups_for(@vm1, month_beginning...month_end, 12.hours, metric_rollup_params)

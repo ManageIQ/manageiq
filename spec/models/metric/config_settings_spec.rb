@@ -8,7 +8,6 @@ RSpec.describe Metric::ConfigSettings do
       stub_settings(:performance => {:host_overhead => {:cpu => 1.23}})
       expect(described_class.host_overhead_cpu).to eq(1.23)
     end
-
   end
 
   describe ".host_overhead_memory" do
@@ -16,6 +15,5 @@ RSpec.describe Metric::ConfigSettings do
       stub_settings(:performance => {:host_overhead => {:memory => 1.23}})
       expect(described_class.host_overhead_memory).to eq(1.23)
     end
-
   end
 end

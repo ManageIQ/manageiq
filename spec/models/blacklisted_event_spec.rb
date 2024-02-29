@@ -70,6 +70,5 @@ RSpec.describe BlacklistedEvent do
       expect($audit_log).to receive(:info).with(a_string_including("changed")).never
       f.update(:enabled => f.enabled)
     end
-
   end
 end

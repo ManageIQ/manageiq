@@ -1,6 +1,5 @@
 RSpec.describe DialogField do
   context "legacy tests" do
-
     let(:df) { FactoryBot.create(:dialog_field) }
     it "sets default value for required attribute" do
       expect(df.required).to eq(false)

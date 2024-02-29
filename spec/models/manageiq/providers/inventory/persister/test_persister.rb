@@ -4,7 +4,6 @@ class TestPersister < ManageIQ::Providers::Inventory::Persister
     # Top level models with direct references for Cloud
     %i(vms
        miq_templates).each do |name|
-
       add_collection(cloud, name, {}, {:without_sti => true}) do |builder|
         builder.add_properties(
           :secondary_refs => {:by_name => [:name], :by_uid_ems_and_name => %i(uid_ems name)}
@@ -24,7 +23,6 @@ class TestPersister < ManageIQ::Providers::Inventory::Persister
        orchestration_templates
        orchestration_stacks_outputs
        orchestration_stacks_parameters).each do |name|
-
       add_collection(cloud, name, {}, {:without_sti => true})
     end
 
@@ -36,7 +34,6 @@ class TestPersister < ManageIQ::Providers::Inventory::Persister
        cloud_subnets
        security_groups
        load_balancers).each do |name|
-
       add_collection(network, name, {}, {:without_sti => true}) do |builder|
         builder.add_properties(:parent => manager.network_manager)
       end
@@ -56,7 +53,6 @@ class TestPersister < ManageIQ::Providers::Inventory::Persister
        load_balancer_listener_pools
        load_balancer_health_checks
        load_balancer_health_check_members).each do |name|
-
       add_collection(network, name, {}, {:without_sti => true}) do |builder|
         builder.add_properties(:parent => manager.network_manager)
       end
@@ -68,7 +64,6 @@ class TestPersister < ManageIQ::Providers::Inventory::Persister
     ######## Custom processing of Ancestry ##########
     %i(vm_and_miq_template_ancestry
        orchestration_stack_ancestry).each do |name|
-
       add_collection(cloud, name, {}, {:without_model_class => true})
     end
   end

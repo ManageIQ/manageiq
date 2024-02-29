@@ -152,7 +152,6 @@ RSpec.describe EvmApplication do
 
     context "for just the local server" do
       it "displays server status for the local server and its workers" do
-
         expected_output = <<~SERVER_INFO
           Checking EVM status...
            #{header(:Region)  } | #{header(:Zone, :ljust)} | Server                   | Status  | PID | SPID | Workers | Version | #{header(:Started, :ljust)  } | #{header(:Heartbeat, :ljust)  } | MB Usage | Roles
