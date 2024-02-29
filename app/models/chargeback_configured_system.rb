@@ -74,7 +74,7 @@ class ChargebackConfiguredSystem < Chargeback
           ConfiguredSystem.find_tagged_with(:all => @options[:tag], :ns => '*')
       else
           raise _('Unable to find strategy for Configured Systems selection')
-        end
+      end
       
   end
 

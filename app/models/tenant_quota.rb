@@ -195,6 +195,6 @@ class TenantQuota < ApplicationRecord
     parent_quota = tenant.parent.tenant_quotas.send(name).take
     if !parent_quota.nil? && (parent_quota.available < diff)
         errors.add(name, "quota is over allocated, parent tenant does not have enough quota")
-      end
+    end
   end
 end

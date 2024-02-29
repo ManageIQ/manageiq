@@ -21,7 +21,7 @@ class MiqProvisionOrchWorkflow < MiqProvisionVirtWorkflow
         @dialogs = get_dialogs
       elsif options[:use_pre_dialog] != false
         @running_pre_dialog = true
-end
+      end
       normalize_numeric_fields unless @dialogs.nil?
     end
 

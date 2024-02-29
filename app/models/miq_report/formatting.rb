@@ -30,7 +30,7 @@ module MiqReport::Formatting
     if Chargeback.db_is_chargeback?(db)
       if db.to_s == "ChargebackContainerProject" && %w[cpu_used_metric cpu_metric].include?(column)
           formatter = :cores
-        end
+      end
 
       formatter = :_none_ if Chargeback.rate_column?(column.to_s)
     end

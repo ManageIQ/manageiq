@@ -73,7 +73,7 @@ module MiqReport::Generator
                             else
         ref = db_class.reflection_with_virtual(table.to_sym)
         ref ? ref.class_name : table.singularize.camelize
-      end
+                            end
     
 
     @table2class[table]
@@ -744,7 +744,7 @@ module MiqReport::Generator
         attrs[a] = build_calculate_trend_point(rec, a)
       elsif rec.respond_to?(a)
         attrs[a] = rec.send(a)
-end
+      end
     end
     if options[:qualify_attribute_names]
       attrs = attrs.each_with_object({}) do |(k, v), h|

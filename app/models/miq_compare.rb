@@ -198,7 +198,7 @@ class MiqCompare
         section, column = :_model_, c.to_sym
       elsif c =~ /(.+)\.([^.]+)$/
         section, column = $1.to_sym, $2.to_sym
-end
+      end
       # Determine the section and column based on the last '.'
 
       # See if this section has a key

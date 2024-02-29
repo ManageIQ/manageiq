@@ -261,7 +261,7 @@ class VmOrTemplate < ApplicationRecord
       when :integer then as.value.to_i
       when :float then as.value.to_f
       else as.value.to_s
-             end
+      end
     end
 
     virtual_column m, :type => t, :uses => :advanced_settings
@@ -1072,7 +1072,7 @@ class VmOrTemplate < ApplicationRecord
 [/\.vmx$/, ".vmtx", 'never']
         else
 [/\.vmtx$/, ".vmx", state == 'never' ? 'unknown' : raw_power_state]
-end
+        end
     self.location = location.sub(d[0], d[1]) unless location.nil?
     self.raw_power_state = d[2]
   end
@@ -1383,7 +1383,7 @@ end
 ">"
                else
 operator.downcase == "decreased" ? "<" : operator
-end
+               end
 
     current_state, prev_state = drift_states.order("timestamp DESC").limit(2)
     if current_state.nil? || prev_state.nil?

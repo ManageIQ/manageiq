@@ -121,7 +121,7 @@ module Vmdb
         if keys.include?(:listening_port) && !(is_numeric?(data.listening_port) || data.listening_port.blank?)
             valid = false
             errors << [:listening_port, "listening_port, \"#{data.listening_port}\", invalid. Should be numeric"]
-          end
+        end
 
         if keys.include?(:session_store) && !%w[sql memory cache].include?(data.session_store)
           valid = false
@@ -131,7 +131,7 @@ module Vmdb
         if keys.include?(:zone) && !Zone.in_my_region.find_by(:name => data.zone)
             valid = false
             errors << [:zone, "zone, \"#{data.zone}\", invalid. Should be a valid Zone"]
-          end
+        end
 
         if keys.include?(:rate_limiting)
           %i[api_login request ui_login].each do |limiting_section|

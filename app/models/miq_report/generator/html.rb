@@ -29,7 +29,7 @@ module MiqReport::Generator::Html
           if !(d_idx == 0) && !(group_limit && group_counter >= group_limit) # If not past the limit
               html_rows += build_group_html_rows(save_val, col_order.length, break_label, group_text)
               group_counter += 1
-            end
+          end
           save_val = d.data[sortby[0]].to_s
           # Chargeback, sort by date, but show range
           group_text = d.data["display_range"] if Chargeback.db_is_chargeback?(db) && sortby[0] == "start_date"
@@ -57,7 +57,7 @@ module MiqReport::Generator::Html
       if ["y", "c"].include?(group) && !sortby.nil? && !(group_limit && group_counter >= group_limit)
           html_rows += build_group_html_rows(save_val, col_order.length, break_label, group_text)
           html_rows += build_group_html_rows(:_total_, col_order.length)
-        end
+      end
     end
 
     html_rows
@@ -114,7 +114,7 @@ module MiqReport::Generator::Html
   "View #{ui_lookup(:model => db)} \"#{data_row['name']}\""
               else
   "View this #{ui_lookup(:model => db)}"
-end
+              end
       onclick = "onclick=\"#{donav}\" onKeyPress=\"#{donav}\" tabindex='0' style='cursor:hand' title='#{title}'"
     end
 
@@ -122,7 +122,7 @@ end
     if db.ends_with?("Performance") && (data_row['resource_id'] && data_row['resource_type']) # Base click thru on the related resource
         donav = "DoNav('/#{data_row['resource_type'].underscore}/show/#{data_row['resource_id']}');"
         onclick = "onclick=\"#{donav}\" onKeyPress=\"#{donav}\" tabindex='0' style='cursor:hand' title='View #{ui_lookup(:model => data_row['resource_type'])} \"#{data_row['resource_name']}\"'"
-      end
+    end
 
     onclick
   end

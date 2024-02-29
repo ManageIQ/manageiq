@@ -237,7 +237,7 @@ class MiqTask < ApplicationRecord
       message = MESSAGE_TASK_COMPLETED_SUCCESSFULLY
     elsif message.blank?
       message = MESSAGE_TASK_COMPLETED_UNSUCCESSFULLY
-end
+    end
 
     self.task_results = result unless result.nil?
     update_status(state, status.titleize, message)

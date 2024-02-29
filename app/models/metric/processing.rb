@@ -66,7 +66,7 @@ module Metric::Processing
           result[col] = total_cpu if have_cpu_metrics && total_cpu > 0
         elsif have_mem_metrics && total_mem > 0
           result[col] = total_mem
-end
+        end
       when "allocated"
         method = col.to_s.split("_")[1..-1].join("_")
         result[col] = state.send(method) if state.respond_to?(method)

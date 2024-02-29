@@ -577,7 +577,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
             elsif j.respond_to?(:tags)
               if j.tags.any? { |t| t.to_s.starts_with?("miq_schedules_") }
                   _log.info("Removing user schedule with Tags: #{j.tags.inspect}")
-                end
+              end
                 j.unschedule
             end
           end

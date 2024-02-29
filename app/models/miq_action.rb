@@ -257,7 +257,7 @@ class MiqAction < ApplicationRecord
             if what == "cause" && (method == "description")
                 subst = "Policy: #{inputs[:policy].description}" if inputs[:policy].kind_of?(MiqPolicy)
                 subst = "Alert: #{inputs[:policy].description}"  if inputs[:policy].kind_of?(MiqAlert)
-              end
+            end
 
             # ${Object.method}
             if what == "object"

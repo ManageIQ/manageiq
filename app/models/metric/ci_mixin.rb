@@ -53,7 +53,7 @@ module Metric::CiMixin
       perf.first_ts.kind_of?(String) ? Time.parse("#{perf.first_ts} UTC") : perf.first_ts,
       perf.last_ts.kind_of?(String) ? Time.parse("#{perf.last_ts} UTC") : perf.last_ts
     ]
-end
+    end
   end
 
   #
@@ -210,7 +210,7 @@ end
         return true if matches_in_window >= recs_to_match
       elsif debug_trace
         _log.info("Matched?: false, Index: #{i}, Window start index: #{i - recs_in_window}, matches_in_window: #{matches_in_window}, ts: #{rec.timestamp}, #{column}: #{rec.send(column)}")
-end
+      end
     end
     false
   end

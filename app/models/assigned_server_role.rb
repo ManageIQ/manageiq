@@ -46,7 +46,7 @@ class AssignedServerRole < ApplicationRecord
 
           assigned.update_attribute(:priority, DEFAULT_PRIORITY) if assigned.priority == HIGH_PRIORITY
         end
-      end
+    end
 
     update_attribute(:priority, val)
   end

@@ -25,7 +25,7 @@ module ManageIQ
                            r[f],
                            :format => mri.col_formats[i] || :_default_,
                            :tz     => tz)
-              end
+                     end
               if !@max_col_width[i] || data.length > @max_col_width[i]
                 @max_col_width[i] = data.length
               end
@@ -125,7 +125,7 @@ module ManageIQ
                            r[f],
                            :format => mri.col_formats[i] || :_default_,
                            :tz     => tz)
-              end
+                     end
               if options.alignment.eql?(:center)
                 line << data.center(@max_col_width[i])
               else
@@ -160,7 +160,7 @@ module ManageIQ
               s += @hr
               t = " Total for #{save_val}: #{counter} ".center(@line_len - 2)
               s += fit_to_width("|#{t}|" + CRLF)
-            end
+          end
 
           s += @hr
           output << fit_to_width(s)

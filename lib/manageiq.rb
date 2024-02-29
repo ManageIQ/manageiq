@@ -9,7 +9,7 @@ module ManageIQ
         Rails.env
               else
         ActiveSupport::StringInquirer.new(ENV["RAILS_ENV"].presence || ENV["RACK_ENV"].presence || "development")
-      end
+              end
     
   end
 
@@ -18,7 +18,7 @@ module ManageIQ
         Rails.root
                else
         Pathname.new(File.expand_path('..', __dir__))
-      end
+               end
     
   end
 end

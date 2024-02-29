@@ -85,10 +85,10 @@ module ManageIQ
               mri.extras[:tl_position] = format_timezone(etime.to_time, tz, 'raw')
             elsif format_timezone(etime.to_time, tz, 'raw') > format_timezone(mri.extras[:tl_position], tz, 'raw')
               mri.extras[:tl_position] = format_timezone(etime.to_time, tz, 'raw')
-end
+            end
           elsif format_timezone(etime.to_time, tz, 'raw') > format_timezone(mri.extras[:tl_position], tz, 'raw')
             mri.extras[:tl_position] = format_timezone(etime.to_time, tz, 'raw')
-end
+          end
           #     END of TIMELINE TIMEZONE Code
           if row["id"] # Make sure id column is present
             rec = mri.db.constantize.find_by_id(row['id'])

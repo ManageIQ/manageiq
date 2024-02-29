@@ -206,7 +206,7 @@ class ChargebackVm < Chargeback
               service.vms
           else
               raise _('Unable to find strategy for VM selection')
-            end
+          end
       
   end
 

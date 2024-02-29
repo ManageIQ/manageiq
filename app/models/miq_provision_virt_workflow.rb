@@ -27,7 +27,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
         @dialogs = get_dialogs
       elsif options[:use_pre_dialog] != false
         @running_pre_dialog = true
-end
+      end
       normalize_numeric_fields unless @dialogs.nil?
     end
 
@@ -621,7 +621,7 @@ end
       end
     elsif @customize_option == 'file'
       @values[:sysprep_upload_text] = nil
-end
+    end
 
     @current_spec = selected_spec
     @custom_spec_override = current_spec_override

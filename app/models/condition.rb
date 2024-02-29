@@ -63,7 +63,7 @@ class Condition < ApplicationRecord
           result = false if expression["include"] == "none"
         elsif expression["include"] == "all"
           result = false
-end
+        end
       end
     when "tag_expr", "tag_expr_v2", "object"
       expr = case mode

@@ -140,7 +140,7 @@ class MiqSnmp
     when "custom1"                      then "#{base}.9"
     when "custom2"                      then "#{base}.10"
     else                                     oid
-          end
+    end
 
     
   end

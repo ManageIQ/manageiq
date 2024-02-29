@@ -350,7 +350,7 @@ class MiqRequest < ApplicationRecord
         name.underscore.chomp('_request').camelize.constantize
                             else
         name.underscore.gsub(/_request$/, "_task").camelize.constantize
-      end
+                            end
     
   end
 

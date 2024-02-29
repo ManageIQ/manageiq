@@ -59,7 +59,7 @@ class MiqRequestWorkflow
         normalize_numeric_fields
       elsif options[:use_pre_dialog] != false
         @running_pre_dialog = true
-end
+      end
     end
 
     unless options[:skip_dialog_load] == true
@@ -183,7 +183,7 @@ end
         if fld[:validation_method] && respond_to?(fld[:validation_method]) && (fld[:error] = send(fld[:validation_method], f, values, dlg, fld, value))
             valid = false
             next
-          end
+        end
 
         next if value.blank?
 
@@ -458,7 +458,7 @@ end
         @values[fn] = [nil, nil]
       elsif partial_key
         _log.info("set_value_from_list matched item value:[#{value}] to item:[#{@values[fn][0]}]")
-end
+      end
     end
   end
 
@@ -1284,7 +1284,7 @@ end
                    field_values.keys & set_value
                  elsif field_values.key?(set_value)
                    [set_value, field_values[set_value]]
-end
+                 end
 
         set_value = apply_result(result, data_type)
       end
