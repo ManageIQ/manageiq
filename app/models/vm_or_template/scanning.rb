@@ -33,8 +33,8 @@ module VmOrTemplate::Scanning
 
     self.last_scan_attempt_on = Time.now.utc
     save
-    job = scan_job_class.create_job(options)
-    job
+    scan_job_class.create_job(options)
+    
   rescue => err
     _log.log_backtrace(err)
     raise
