@@ -3,12 +3,12 @@ module MiqReport::ImportExport
 
   module ClassMethods
     def view_paths
-      @view_paths ||= (
+      @view_paths ||= begin
         Vmdb::Plugins.map do |engine|
           path = engine.root.join('product/views')
           path if path.directory?
         end.compact
-      )
+      end
     end
 
     def resolve_view_path(file_name, file_name_no_suffix = nil)
