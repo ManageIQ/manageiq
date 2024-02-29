@@ -30,8 +30,8 @@ class MiqRequest < ApplicationRecord
   attribute :status,  :default => 'Ok'
   attribute :process, :default => true
 
-  validates_inclusion_of :approval_state, :in => %w(pending_approval approved denied), :message => "should be 'pending_approval', 'approved' or 'denied'"
-  validates_inclusion_of :status,         :in => %w(Ok Warn Error Timeout Denied)
+  validates :approval_state, inclusion: { :in => %w(pending_approval approved denied), :message => "should be 'pending_approval', 'approved' or 'denied'" }
+  validates :status,         inclusion: { :in => %w(Ok Warn Error Timeout Denied) }
 
   validates :initiated_by, :inclusion => {:in => %w[user system]}, :allow_blank => true
   validates :cancelation_status, :inclusion => {:in        => CANCEL_STATUS,

@@ -25,7 +25,7 @@ class DialogField < ApplicationRecord
 
   alias_attribute :order, :position
 
-  validates_presence_of   :name
+  validates   :name, presence: true
   validates :name, :exclusion => {:in      => %w(action controller),
                                   :message => "Field Name %{value} is reserved."}
 

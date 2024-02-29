@@ -35,7 +35,7 @@ module ManageIQ::Providers
 
     supports :authentication_status
 
-    validates_presence_of :zone
+    validates :zone, presence: true
 
     # TODO: remove and have each manager include this
     include HasNetworkManagerMixin

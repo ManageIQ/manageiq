@@ -3,7 +3,7 @@ class MiqDatabase < ApplicationRecord
   encrypt_column  :csrf_secret_token
   encrypt_column  :session_secret_token
 
-  validates_presence_of :session_secret_token, :csrf_secret_token
+  validates :session_secret_token, :csrf_secret_token, presence: true
 
   def self.seed
     db = first || new

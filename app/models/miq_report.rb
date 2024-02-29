@@ -30,9 +30,9 @@ class MiqReport < ApplicationRecord
   serialize :rpt_options
   serialize :display_filter
 
-  validates_presence_of :name, :title, :db, :rpt_group
+  validates :name, :title, :db, :rpt_group, presence: true
   validates :name, :uniqueness_when_changed => true
-  validates_inclusion_of    :rpt_type, :in => %w(Default Custom)
+  validates    :rpt_type, inclusion: { :in => %w(Default Custom) }
 
   has_many                  :miq_report_results, :dependent => :destroy
   belongs_to                :time_profile
