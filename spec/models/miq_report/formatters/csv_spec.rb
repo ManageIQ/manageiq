@@ -14,7 +14,6 @@ RSpec.describe MiqReport::Formatters::Csv do
       FactoryBot.create(:miq_report_filesystem).tap do |report|
         report.table = Ruport::Data::Table.new(:data => table_data, :column_names => report.cols)
         report.col_options = col_options
-        report
       end
     end
 

@@ -69,7 +69,6 @@ module RelationshipMixin
       relationship_types.push(rel)
       clear_relationships_cache(:except => :relationships_of)
     end
-    rel
   end
 
   def with_relationship_type(rel)

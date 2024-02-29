@@ -156,8 +156,6 @@ module MiqServer::RoleManagement
         end
       end
     end
-
-    roles
   end
 
   def role

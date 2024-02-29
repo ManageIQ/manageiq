@@ -1240,7 +1240,6 @@ class Host < ApplicationRecord
       remove_all_parents
       list.each { |parent| set_parent(parent) }
     end
-    true
   end
   alias_method :set_vm_scan_affinity, :vm_scan_affinity=
 

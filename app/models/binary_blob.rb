@@ -38,8 +38,6 @@ class BinaryBlob < ApplicationRecord
       binary_blob_parts << BinaryBlobPart.new(:data => buf)
     end
     self.save!
-
-    self
   end
 
   # Write binary file from the database into a file

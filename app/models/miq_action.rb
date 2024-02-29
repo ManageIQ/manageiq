@@ -874,8 +874,7 @@ class MiqAction < ApplicationRecord
     end
   end
 
-  def action_assign_scan_profile(action, _rec, _inputs)
-    ScanItem # Cause the ScanItemSet class to load, if not already loaded
+  def action_assign_scan_profile(action, _rec, _inputs) # Cause the ScanItemSet class to load, if not already loaded
     profile = ScanItemSet.find_by(:name => action.options[:scan_item_set_name])
     if profile
       MiqPolicy.logger.info("MIQ(action_assign_scan_profile): Action [#{action.description}], using analysis profile: [#{profile.description}]")

@@ -23,8 +23,6 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
       repo = Spec::Support::FakeAnsibleRepo.new(local_repo, repo_dir_structure)
       repo.generate
       repo.git_branch_create("other_branch")
-
-      GitRepository
       stub_const("GitRepository::GIT_REPO_DIRECTORY", repo_dir)
 
       EvmSpecHelper.assign_embedded_ansible_role

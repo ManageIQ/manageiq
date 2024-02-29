@@ -1190,7 +1190,6 @@ class VmOrTemplate < ApplicationRecord
       super
       self.power_state = calculate_power_state
     end
-    new_state
   end
 
   def self.calculate_power_state(raw_power_state)
