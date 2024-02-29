@@ -18,7 +18,7 @@ namespace :evm do
       
         LinuxAdmin::Service.new(ENV.fetch("APPLIANCE_PG_SERVICE")).start
       rescue AwesomeSpawn::CommandResultError
-        # ignore issues (ala silent)
+      # ignore issues (ala silent)
       
     end
 
@@ -27,7 +27,7 @@ namespace :evm do
       
         LinuxAdmin::Service.new(ENV.fetch("APPLIANCE_PG_SERVICE")).stop
       rescue AwesomeSpawn::CommandResultError
-        # ignore issues (ala silent)
+      # ignore issues (ala silent)
       
     end
 

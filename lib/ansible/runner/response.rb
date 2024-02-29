@@ -72,9 +72,9 @@ module Ansible
 
         # output is JSON per new line
         stdout.each_line do |line|
-          # TODO(lsmola) we can remove exception handling when this is fixed
-          # https://github.com/ansible/ansible-runner/issues/89#issuecomment-404236832 , so it fails early if there is
-          # a non json line
+            # TODO(lsmola) we can remove exception handling when this is fixed
+            # https://github.com/ansible/ansible-runner/issues/89#issuecomment-404236832 , so it fails early if there is
+            # a non json line
           
             data = JSON.parse(line)
             parsed_stdout << data if data.kind_of?(Hash)

@@ -6,7 +6,7 @@ module ActiveRecord
       module SchemaStatements
         def columns_for_distinct(columns, orders) # :nodoc:
           order_columns = orders.reject(&:blank?).map do |s|
-              # Convert Arel node to string
+                            # Convert Arel node to string
                             unless s.kind_of?(String)
                               if s.kind_of?(Arel::Nodes::Ordering)
                                 s = s.expr

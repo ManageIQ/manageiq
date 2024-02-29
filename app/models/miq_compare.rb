@@ -199,7 +199,7 @@ class MiqCompare
       elsif c =~ /(.+)\.([^.]+)$/
         section, column = $1.to_sym, $2.to_sym
 end
-        # Determine the section and column based on the last '.'
+      # Determine the section and column based on the last '.'
 
       # See if this section has a key
       if section == :_model_
