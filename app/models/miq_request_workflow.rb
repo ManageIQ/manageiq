@@ -149,7 +149,7 @@ class MiqRequestWorkflow
         # Check the disabled flag here so we reset the "error" value on each field
         next if dialog_disabled || fld[:display] == :hide
 
-        value = fld[:data_type] =~ /array_/ ? values[f] : get_value(values[f])
+        value = /array_/.match?(fld[:data_type]) ? values[f] : get_value(values[f])
 
         if fld[:required] == true
           # If :required_method is defined let it determine if the field is value
@@ -620,7 +620,7 @@ class MiqRequestWorkflow
     @tags = tag_results.compact + tags_to_sort
 
     @tags.each do |tag|
-      tag[:children] = if tag[:children].first.last[:name] =~ /^\d/
+      tag[:children] = if /^\d/.match?(tag[:children].first.last[:name])
                          tag[:children].sort_by { |_k, v| v[:name].to_i }
                        else
                          tag[:children].sort_by { |_k, v| v[:description] }

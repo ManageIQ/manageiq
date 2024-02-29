@@ -165,12 +165,12 @@ class EvmServer
 
     ipaddr, hostname, mac_address = MiqServer.get_network_information
 
-    if ipaddr =~ Regexp.union(Resolv::IPv4::Regex, Resolv::IPv6::Regex).freeze
+    if ipaddr&.match?(Regexp.union(Resolv::IPv4::Regex, Resolv::IPv6::Regex).freeze)
       server_hash[:ipaddress] = config_hash[:host] = ipaddr
     end
 
     if hostname.present? && hostname.hostname?
-      hostname = nil if hostname =~ /.*localhost.*/
+      hostname = nil if /.*localhost.*/.match?(hostname)
       server_hash[:hostname] = config_hash[:hostname] = hostname
     end
 

@@ -638,7 +638,7 @@ class VmOrTemplate < ApplicationRecord
   # TODO: Vmware specific URI methods?  Next 3 methods
   def self.location2uri(location, scheme = "file")
     pat = %r{^(file|http|miq)://([^/]*)/(.+)$}
-    unless pat =~ location
+    unless pat&.match?(location)
       # location = scheme<<"://"<<self.myhost.ipaddress<<":1139/"<<location
       location = scheme << ":///" << location
     end
@@ -665,14 +665,14 @@ class VmOrTemplate < ApplicationRecord
     storage_name = ""
     # NAS
     relative_path = if path.starts_with?("//")
-                      raise _("path, '%{path}', is malformed") % {:path => path} unless path =~ %r{^//[^/].*/.+$}
+                      raise _("path, '%{path}', is malformed") % {:path => path} unless %r{^//[^/].*/.+$}.match?(path)
 
                       # path is a UNC
                       storage_name = path.split("/")[0..3].join("/")
                       path.split("/")[4..path.length].join("/") if path.length > 4
                     # VMFS
                     elsif path.starts_with?("[")
-                      raise _("path, '%{path}', is malformed") % {:path => path} unless path =~ /^\[[^\]].+\].*$/
+                      raise _("path, '%{path}', is malformed") % {:path => path} unless /^\[[^\]].+\].*$/.match?(path)
 
                       # path is a VMWare storage name
                       /^\[(.*)\](.*)$/ =~ path

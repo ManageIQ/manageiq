@@ -195,7 +195,7 @@ class MiqEvent < EventStream
     )
 
     target_model = target.class.base_model.name.downcase
-    target_model = "vm" if target_model.match("template")
+    target_model = "vm" if target_model.match?("template")
 
     base_event = [target_model, options[:type]].join("_")
     evm_event  = [options[:prefix], base_event, options[:suffix]].compact.join("_")

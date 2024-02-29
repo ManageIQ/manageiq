@@ -30,7 +30,7 @@ class EvmApplication
   def self.server_state
     MiqServer.my_server.status
   rescue => error
-    :no_db if error.message =~ /Connection refused/i
+    :no_db if /Connection refused/i.match?(error.message)
   end
 
   def self.status(include_remotes = false)

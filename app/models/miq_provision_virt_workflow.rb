@@ -268,7 +268,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
         else
           f.each do |fd|
             selected_tag.each do |st|
-              filters << fd if fd[:tag] =~ st
+              filters << fd if fd[:tag]&.match?(st)
             end
           end
         end

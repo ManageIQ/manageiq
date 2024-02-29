@@ -54,7 +54,7 @@ class DialogFieldTextBox < DialogField
 
     return unless rule
 
-    "#{dialog_tab.label}/#{dialog_group.label}/#{label} is invalid" unless @value.to_s =~ /#{rule}/
+    "#{dialog_tab.label}/#{dialog_group.label}/#{label} is invalid" unless /#{rule}/.match?(@value.to_s)
   end
 
   def script_error_values

@@ -667,7 +667,7 @@ class Host < ApplicationRecord
 
   def verify_credentials_with_ssh(auth_type = nil, options = {})
     raise MiqException::MiqHostError, _("No credentials defined") if missing_credentials?(auth_type)
-    unless os_image_name =~ /linux_*/
+    unless /linux_*/.match?(os_image_name)
       raise MiqException::MiqHostError, _("Logon to platform [%{os_name}] not supported") % {:os_name => os_image_name}
     end
 
@@ -763,7 +763,7 @@ class Host < ApplicationRecord
       sb = ssu.shell_exec("esxupdate query")
       t = Time.now
       sb.each_line do |line|
-        next if line =~ /-{5,}/ # skip any header/footer rows
+        next if /-{5,}/.match?(line) # skip any header/footer rows
 
         data = line.split(" ")
         # Find the lines we should skip

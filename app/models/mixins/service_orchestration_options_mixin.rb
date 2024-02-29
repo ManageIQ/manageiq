@@ -32,7 +32,7 @@ module ServiceOrchestrationOptionsMixin
     opts_dump.each do |_opt_name, opt_val|
       next unless opt_val.kind_of?(Hash)
 
-      opt_val.each { |param_key, param_val| opt_val[param_key] = proc.call(param_val) if param_key =~ /password/i }
+      opt_val.each { |param_key, param_val| opt_val[param_key] = proc.call(param_val) if /password/i.match?(param_key) }
     end
 
     opts_dump

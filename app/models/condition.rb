@@ -32,7 +32,7 @@ class Condition < ApplicationRecord
 
   def applies_to?(rec, inputs = {})
     rec_model = rec.class.base_model.name
-    rec_model = "Vm" if rec_model.downcase.match("template")
+    rec_model = "Vm" if rec_model.downcase.match?("template")
 
     return false if towhat && rec_model != towhat
     return true  if applies_to_exp.nil?

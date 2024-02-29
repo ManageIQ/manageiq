@@ -11,7 +11,7 @@ opts = Optimist.options do
   opt :bypass, "Bypass broker usage", :type => :boolean
   opt :dir,    "Output directory",    :default => "."
 end
-Optimist.die :ip, "is an invalid format" unless opts[:ip] =~ /^\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}$/
+Optimist.die :ip, "is an invalid format" unless /^\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}$/.match?(opts[:ip])
 
 def process(accessor, dir)
   puts "Reading #{accessor}..."

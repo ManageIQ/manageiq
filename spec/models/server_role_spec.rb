@@ -67,7 +67,7 @@ RSpec.describe ServerRole do
       roles = @csv.split("\n")
       roles.shift
       roles.each do |role|
-        next if role =~ /^#.*$/ # skip commented lines
+        next if /^#.*$/.match?(role) # skip commented lines
 
         name, description, max_concurrent, external_failover, role_scope = role.split(',')
         max_concurrent = max_concurrent.to_i
