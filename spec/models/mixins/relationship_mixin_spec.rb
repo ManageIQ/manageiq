@@ -67,7 +67,7 @@ RSpec.describe RelationshipMixin do
         assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
                                       child,   1, [@parent], []
-                                     )
+        )
       end
 
       it "with a root object will link a new tree node for the parent to the existing tree node for the child" do
@@ -77,7 +77,7 @@ RSpec.describe RelationshipMixin do
         assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
                                       child,   1, [@parent], [vms[1], vms[2]]
-                                     )
+        )
       end
 
       it "with an inner object will link a new tree node for the parent to a second new tree node for the child" do
@@ -87,7 +87,7 @@ RSpec.describe RelationshipMixin do
         assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
                                       child,   2, [vms[0], @parent], [vms[3], vms[4]]
-                                     )
+        )
       end
 
       it "with a leaf object will link a new tree node for the parent to a second new tree node for the child" do
@@ -97,7 +97,7 @@ RSpec.describe RelationshipMixin do
         assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
                                       child,   2, [vms[1], @parent], []
-                                     )
+        )
       end
     end
 
@@ -111,7 +111,7 @@ RSpec.describe RelationshipMixin do
         assert_parent_child_structure(test_rel_type,
                                       parent, 1, [], [@child],
                                       @child, 1, [parent], []
-                                     )
+        )
       end
 
       it "with a root object will link the existing tree node for the parent to a new tree node for the child" do
@@ -121,7 +121,7 @@ RSpec.describe RelationshipMixin do
         assert_parent_child_structure(test_rel_type,
                                       parent, 1, [], [vms[1], vms[2], @child],
                                       @child, 1, [parent], []
-                                     )
+        )
       end
 
       it "with an inner object will link the existing tree node for the parent to a new tree node for the child" do
@@ -131,7 +131,7 @@ RSpec.describe RelationshipMixin do
         assert_parent_child_structure(test_rel_type,
                                       parent, 1, [vms[0]], [vms[3], vms[4], @child],
                                       @child, 1, [parent], []
-                                     )
+        )
       end
 
       it "with a leaf object will link the existing tree node for the parent to a new tree node for the child" do
@@ -141,7 +141,7 @@ RSpec.describe RelationshipMixin do
         assert_parent_child_structure(test_rel_type,
                                       parent, 1, [vms[1]], [@child],
                                       @child, 1, [parent], []
-                                     )
+        )
       end
     end
 
@@ -155,7 +155,7 @@ RSpec.describe RelationshipMixin do
         assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
                                       child,   1, [@parent], []
-                                     )
+        )
       end
 
       it "on a root object will link a new tree node for the parent to the existing tree node for the child and be the only parent for the child" do
@@ -165,7 +165,7 @@ RSpec.describe RelationshipMixin do
         assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
                                       child,   1, [@parent], [vms[1], vms[2]]
-                                     )
+        )
       end
 
       it "on an inner object will link a new tree node for the parent to the existing tree node for the child and be the only parent for the child" do
@@ -175,7 +175,7 @@ RSpec.describe RelationshipMixin do
         assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
                                       child,   1, [@parent], [vms[3], vms[4]]
-                                     )
+        )
       end
 
       it "on a leaf object will link a new tree node for the parent to the existing tree node for the child and be the only parent for the child" do
@@ -185,7 +185,7 @@ RSpec.describe RelationshipMixin do
         assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
                                       child,   1, [@parent], []
-                                     )
+        )
       end
     end
 
@@ -198,7 +198,7 @@ RSpec.describe RelationshipMixin do
         assert_parent_child_structure(test_rel_type,
                                       parent, 1, [vms[0]], [child, vms[3], vms[4]],
                                       child,  1, [parent], [vms[5], vms[6], vms[7]]
-                                     )
+        )
       end
     end
 

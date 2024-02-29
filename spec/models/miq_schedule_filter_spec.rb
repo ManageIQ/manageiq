@@ -13,24 +13,24 @@ RSpec.describe "MiqSchedule Filter" do
                                               :resource_type => "Vm",
                                               :sched_action  => {:method => "vm_scan"},
                                               :filter        => MiqExpression.new("=" => {"field" => "Vm-name", "value" => "Special Test VM"})
-                                              )
+                                             )
 
       @vm_all_schedule = FactoryBot.create(:miq_schedule,
                                            :resource_type => "Vm",
                                            :sched_action  => {:method => "vm_scan"},
                                            :filter        => MiqExpression.new("IS NOT NULL" => {"field" => "Vm-name"})
-                                           )
+                                          )
 
       # Schedule froma saved search
       @search = FactoryBot.create(:miq_search,
                                   :db     => "Vm",
                                   :filter => MiqExpression.new("=" => {"field" => "Vm-name", "value" => "Test VM 2"})
-                                  )
+                                 )
       @vm_search_schedule = FactoryBot.create(:miq_schedule,
                                               :resource_type => "Vm",
                                               :sched_action  => {:method => "vm_scan"},
                                               :miq_search_id => @search.id
-                                              )
+                                             )
     end
 
     context "for a scheduled report" do
@@ -41,7 +41,7 @@ RSpec.describe "MiqSchedule Filter" do
                                              :resource_type => "MiqReport",
                                              :sched_action  => {:method => "run_report"},
                                              :filter        => MiqExpression.new("=" => {"field" => "MiqReport-id", "value" => @report.id})
-                                             )
+                                            )
       end
 
       it "should get the correct report" do

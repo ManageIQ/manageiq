@@ -79,7 +79,7 @@ RSpec.describe CustomButton do
                                     :uri_attributes   => uri_attributes,
                                     :uri_message      => uri_message,
                                     :userid           => @userid
-        )
+                                   )
       end
 
       it "creates the proper button" do

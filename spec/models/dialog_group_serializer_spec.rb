@@ -50,7 +50,7 @@ RSpec.describe DialogGroupSerializer do
                    'dialog_tab_id' => nil,
                    'id'            => nil,
                    'updated_at'    => nil
-          ))
+                 ))
       end
     end
   end

@@ -27,7 +27,7 @@ RSpec.describe MiqDatabase do
           FactoryBot.build(:miq_database,
                            :csrf_secret_token    => nil,
                            :session_secret_token => nil
-                           ).save(:validate => false)
+                          ).save(:validate => false)
 
           db = MiqDatabase.seed
           expect(db.csrf_secret_token_encrypted).to be_encrypted
@@ -38,7 +38,7 @@ RSpec.describe MiqDatabase do
           FactoryBot.create(:miq_database,
                             :csrf_secret_token    => "abc",
                             :session_secret_token => "def"
-                            )
+                           )
           csrf, session, update_repo = MiqDatabase.all.collect { |db| [db.csrf_secret_token, db.session_secret_token] }.first
 
           db = MiqDatabase.seed

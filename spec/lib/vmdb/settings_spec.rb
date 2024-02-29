@@ -136,7 +136,7 @@ RSpec.describe Vmdb::Settings do
                                 :keep_drift_states    => "1.hour"   # Added
                               }
                             }
-      )
+                           )
 
       miq_server.reload
       expect(miq_server.settings_changes.count).to eq 2
@@ -213,7 +213,7 @@ RSpec.describe Vmdb::Settings do
                               :bind_pwd     => password,
                               :user_proxies => [{:bind_pwd => password}]
                             }
-      )
+                           )
 
       miq_server.reload
 

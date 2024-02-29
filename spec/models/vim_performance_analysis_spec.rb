@@ -93,6 +93,6 @@ RSpec.describe VimPerformanceAnalysis do
                                            :parent_storage     => vm.storage,
                                            :resource_name      => vm.name,
                                            :time_profile       => time_profile,
-                                           )
+    )
   end
 end

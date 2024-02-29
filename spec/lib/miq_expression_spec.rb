@@ -2608,7 +2608,7 @@ RSpec.describe MiqExpression do
                               :name         => "prov_max_cpu",
                               :single_value => true,
                               :show         => true,
-                              )
+                             )
       cat.add_entry(:description  => "1",
                     :read_only    => "0",
                     :syntax       => "string",

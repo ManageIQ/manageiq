@@ -70,7 +70,7 @@ RSpec.describe Metric do
                                                        :abs_min_cpu_usage_rate_average_value     => v,
                                                        :abs_min_cpu_usage_rate_average_timestamp => Time.parse(t) + 40.seconds,
                                                      }
-                                                     )
+                                                    )
           end
         end
 
@@ -91,7 +91,7 @@ RSpec.describe Metric do
                                                   :cpu_usage_rate_average     => v,
                                                   :cpu_usagemhz_rate_average  => v,
                                                   :sys_uptime_absolute_latest => v
-                                                  )
+                                                 )
             end
 
             cases = [
@@ -109,7 +109,7 @@ RSpec.describe Metric do
                                                   :cpu_usage_rate_average     => v,
                                                   :cpu_usagemhz_rate_average  => v,
                                                   :sys_uptime_absolute_latest => v
-                                                  )
+                                                 )
             end
           end
 
@@ -153,7 +153,7 @@ RSpec.describe Metric do
                                                        :max_mem_usage_absolute_average => mem,
                                                      },
                                                      :time_profile               => @time_profile
-                                                     )
+                                                    )
             end
           end
         end
@@ -218,7 +218,7 @@ RSpec.describe Metric do
           @ems_cluster = FactoryBot.create(:ems_cluster, :ext_management_system => @ems_vmware)
           @ems_cluster.metric_rollups << FactoryBot.create(:metric_rollup_vm_hr,
                                                            :timestamp => Time.parse("2011-08-12T20:33:12Z")
-                                                           )
+                                                          )
 
           options = {:debug_trace     => "false",
                      :value           => "50",

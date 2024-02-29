@@ -60,7 +60,7 @@ RSpec.describe MiqSearch do
     FactoryBot.create(:miq_search,
                       :db     => "Vm",
                       :filter => MiqExpression.new("=" => {"field" => "Vm-location", "value" => "good"})
-                      )
+                     )
   end
 
   let(:matched_vms) { FactoryBot.create_list(:vm_vmware, 2, :location => "good") }

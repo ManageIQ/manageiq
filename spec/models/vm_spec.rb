@@ -174,7 +174,7 @@ RSpec.describe Vm do
       @vm = FactoryBot.create(:vm_vmware,
                               :host      => @host,
                               :miq_group => FactoryBot.create(:miq_group)
-                              )
+                             )
       FactoryBot.create(:miq_event_definition, :name => :request_vm_start)
       # admin user is needed to process Events
       User.super_admin || FactoryBot.create(:user_with_group, :userid => "admin")

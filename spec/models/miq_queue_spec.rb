@@ -1065,7 +1065,7 @@ RSpec.describe MiqQueue do
         it "with SSL enabled" do
           stub_const("ENV", env_vars.to_h.merge("MESSAGING_PASSWORD" => "password",
                                                 "MESSAGING_SSL_CA"   => "/path/root.crt"
-                                                ))
+                                               ))
 
           expect(YAML).not_to receive(:load_file).with(MiqQueue::MESSAGING_CONFIG_FILE)
 

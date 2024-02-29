@@ -4,7 +4,7 @@ RSpec.describe Metric::Common do
     FactoryBot.create(:metric_rollup_host_hr,
                       :resource  => host,
                       :timestamp => Time.now.next_week(:sunday).utc
-                      )
+                     )
   end
 
   describe "#v_month" do
@@ -21,7 +21,7 @@ RSpec.describe Metric::Common do
                                   :profile     => {:tz    => "New Delhi",
                                                    :days  => TimeProfile::ALL_DAYS,
                                                    :hours => TimeProfile::ALL_HOURS}
-                                  )
+                                 )
       res = metric.apply_time_profile(profile)
       expect(res).to be_truthy
     end
@@ -32,7 +32,7 @@ RSpec.describe Metric::Common do
                                   :profile     => {:tz    => "New Delhi",
                                                    :days  => [1],
                                                    :hours => [1]}
-                                  )
+                                 )
       res = metric.apply_time_profile(profile)
       expect(res).to be_falsey
     end

@@ -1245,7 +1245,7 @@ class VmOrTemplate < ApplicationRecord
       .when(arel_table[:disconnected]).then(Arel.sql("\'disconnected\'"))
       .else(t.lower(
               t.coalesce([t[:power_state], Arel.sql("\'unknown\'")])
-      ))
+            ))
     )
   end)
 

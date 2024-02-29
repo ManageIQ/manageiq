@@ -327,7 +327,7 @@ RSpec.describe Tenant do
       FactoryBot.create(:miq_group,
                         :miq_user_role => admin_with_brand,
                         :tenant        => tenant1
-                        )
+                       )
     end
     let(:tenant1_users) do
       FactoryBot.create(:miq_group,

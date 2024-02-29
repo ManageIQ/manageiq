@@ -51,7 +51,7 @@ RSpec.describe DialogTabSerializer do
                    'dialog_id'  => nil,
                    'id'         => nil,
                    'updated_at' => nil
-          ))
+                 ))
       end
     end
   end
