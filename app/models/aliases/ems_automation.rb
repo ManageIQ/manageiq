@@ -1,1 +1,1 @@
-::EmsAutomation = ::ManageIQ::Providers::ExternalAutomationManager
+EmsAutomation = ManageIQ::Providers::ExternalAutomationManager

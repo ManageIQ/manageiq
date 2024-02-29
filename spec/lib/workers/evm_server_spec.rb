@@ -183,7 +183,7 @@ describe EvmServer do
         end
 
         received_ids = []
-        subject.send(:as_each_server) { received_ids << ::Settings.special.settings[:id] }
+        subject.send(:as_each_server) { received_ids << Settings.special.settings[:id] }
         expect(received_ids).to match_array(MiqServer.pluck(:id))
       end
     end

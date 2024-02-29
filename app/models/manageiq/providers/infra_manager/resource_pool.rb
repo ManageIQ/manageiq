@@ -1,2 +1,2 @@
-class ManageIQ::Providers::InfraManager::ResourcePool < ::ResourcePool
+class ManageIQ::Providers::InfraManager::ResourcePool < ResourcePool
 end

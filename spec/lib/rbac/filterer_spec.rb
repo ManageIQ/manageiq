@@ -656,7 +656,7 @@ RSpec.describe Rbac::Filterer do
         end
 
         it "includes references" do
-          expect(subject).to receive(:include_references).with(anything, ::Vm, nil, {:host => {}})
+          expect(subject).to receive(:include_references).with(anything, Vm, nil, {:host => {}})
                                                          .and_call_original
           expect(subject).to receive(:warn).never
           results

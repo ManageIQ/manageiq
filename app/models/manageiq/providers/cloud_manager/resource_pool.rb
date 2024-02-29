@@ -1,2 +1,2 @@
-class ManageIQ::Providers::CloudManager::ResourcePool < ::ResourcePool
+class ManageIQ::Providers::CloudManager::ResourcePool < ResourcePool
 end

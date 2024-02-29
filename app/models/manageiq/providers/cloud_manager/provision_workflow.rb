@@ -1,4 +1,4 @@
-class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtWorkflow
+class ManageIQ::Providers::CloudManager::ProvisionWorkflow < MiqProvisionVirtWorkflow
   include DialogFieldValidation
   include CloudInitTemplateMixin
   include SysprepTemplateMixin

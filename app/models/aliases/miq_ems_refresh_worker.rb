@@ -1,1 +1,1 @@
-::MiqEmsRefreshWorker = ManageIQ::Providers::BaseManager::RefreshWorker
+MiqEmsRefreshWorker = ManageIQ::Providers::BaseManager::RefreshWorker

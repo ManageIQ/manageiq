@@ -1,2 +1,2 @@
-class ManageIQ::Providers::AutomationManager::ConfiguredSystem < ::ConfiguredSystem
+class ManageIQ::Providers::AutomationManager::ConfiguredSystem < ConfiguredSystem
 end

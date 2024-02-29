@@ -102,11 +102,11 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
 
           expect(Notification).to receive(:create!).with(notify_creation_args)
           expect(Notification).to receive(:create!).with(sync_notification_args)
-          allow_any_instance_of(GitRepository).to receive(:with_worktree).and_raise(::Rugged::NetworkError)
+          allow_any_instance_of(GitRepository).to receive(:with_worktree).and_raise(Rugged::NetworkError)
 
           expect do
             described_class.create_in_provider(manager.id, params)
-          end.to raise_error(::Rugged::NetworkError)
+          end.to raise_error(Rugged::NetworkError)
         end
 
         it "sets the status to 'error' if syncing has a network error" do
@@ -373,12 +373,12 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
 
           expect(Notification).to receive(:create!).with(notify_update_args)
           expect(Notification).to receive(:create!).with(sync_notification_args)
-          expect(record.git_repository).to receive(:update_repo).and_raise(::Rugged::NetworkError)
+          expect(record.git_repository).to receive(:update_repo).and_raise(Rugged::NetworkError)
 
           expect do
             # described_class.last.update_in_provider update_params
             record.update_in_provider update_params
-          end.to raise_error(::Rugged::NetworkError)
+          end.to raise_error(Rugged::NetworkError)
         end
 
         it "sets the status to 'error' if syncing has a network error" do

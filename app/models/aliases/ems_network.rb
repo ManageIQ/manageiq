@@ -1,1 +1,1 @@
-::EmsNetwork = ::ManageIQ::Providers::NetworkManager
+EmsNetwork = ManageIQ::Providers::NetworkManager

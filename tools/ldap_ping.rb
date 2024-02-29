@@ -19,10 +19,10 @@ class MiqLdap
   end
 end
 
-ldap_hosts   = ::Settings.authentication.ldaphost
-username     = ::Settings.authentication.bind_dn
-password     = ::Settings.authentication.bind_pwd
-bind_timeout = ::Settings.authentication.bind_timeout.to_i_with_method
+ldap_hosts   = Settings.authentication.ldaphost
+username     = Settings.authentication.bind_dn
+password     = Settings.authentication.bind_pwd
+bind_timeout = Settings.authentication.bind_timeout.to_i_with_method
 if ldap_hosts.to_s.strip.empty?
   $log.info("LDAP Host cannot be blank")
   exit

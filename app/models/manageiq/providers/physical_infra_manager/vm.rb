@@ -1,4 +1,4 @@
-class ManageIQ::Providers::PhysicalInfraManager::Vm < ::Vm
+class ManageIQ::Providers::PhysicalInfraManager::Vm < Vm
   attribute :cloud, :default => false
 
   def self.display_name(number = 1)

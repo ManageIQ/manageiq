@@ -1,4 +1,4 @@
-class ManageIQ::Providers::EmbeddedAnsible::Provider < ::Provider
+class ManageIQ::Providers::EmbeddedAnsible::Provider < Provider
   include DefaultAnsibleObjects
 
   has_one :automation_manager,

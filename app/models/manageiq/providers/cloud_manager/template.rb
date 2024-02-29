@@ -1,4 +1,4 @@
-class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
+class ManageIQ::Providers::CloudManager::Template < MiqTemplate
   attribute :cloud, :default => true
 
   virtual_column :image?, :type => :boolean

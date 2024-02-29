@@ -26,7 +26,7 @@ RSpec.describe Vmdb::Appliance do
 
       before do
         stub_settings(fake_settings)
-        allow(::Settings).to receive(:to_hash).and_return(fake_settings)
+        allow(Settings).to receive(:to_hash).and_return(fake_settings)
         described_class.log_config(:logger => ManageIQ::Loggers::Base.new(logger_io))
       end
 

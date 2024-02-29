@@ -1,4 +1,4 @@
-class ManageIQ::Providers::InfraManager::ProvisionWorkflow < ::MiqProvisionVirtWorkflow
+class ManageIQ::Providers::InfraManager::ProvisionWorkflow < MiqProvisionVirtWorkflow
   def set_or_default_hardware_field_values(vm)
     update_values = {
       :vm_memory      => vm.hardware.memory_mb.to_s,

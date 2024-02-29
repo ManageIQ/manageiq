@@ -6,8 +6,8 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister::Builder do
   let(:ems) { FactoryBot.create(:ems_cloud) }
   let(:adv_settings) { {:strategy => :local_db_find_missing_references, :saver_strategy => :concurrent_safe_batch} }
 
-  let(:cloud) { ::ManageIQ::Providers::Inventory::Persister::Builder::CloudManager }
-  let(:network) { ::ManageIQ::Providers::Inventory::Persister::Builder::NetworkManager }
+  let(:cloud) { ManageIQ::Providers::Inventory::Persister::Builder::CloudManager }
+  let(:network) { ManageIQ::Providers::Inventory::Persister::Builder::NetworkManager }
 
   # --- association ---
 
@@ -26,15 +26,15 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister::Builder do
   it "derives existing model_class without persister's class" do
     data = cloud.prepare_data(:vms, persister, :without_sti => true).to_hash
 
-    expect(data[:model_class]).to eq ::Vm
+    expect(data[:model_class]).to eq Vm
   end
 
   it "replaces derived model_class if model_class defined manually" do
     data = cloud.prepare_data(:vms, persister, :without_sti => true) do |builder|
-      builder.add_properties(:model_class => ::MiqTemplate)
+      builder.add_properties(:model_class => MiqTemplate)
     end.to_hash
 
-    expect(data[:model_class]).to eq ::MiqTemplate
+    expect(data[:model_class]).to eq MiqTemplate
   end
 
   it "doesn't try to derive model_class when disabled" do
@@ -45,14 +45,14 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister::Builder do
 
   it "throws exception if model_class should be namespaced but isn't" do
     expect { cloud.prepare_data(:vms, persister) }.to raise_error(
-      ::ManageIQ::Providers::Inventory::Persister::Builder::NotSubclassedError
+      ManageIQ::Providers::Inventory::Persister::Builder::NotSubclassedError
     )
   end
 
   it 'throws exception if model_class not specified' do
     builder = cloud.prepare_data(:non_existing_ic, persister)
 
-    expect { builder.to_inventory_collection }.to raise_error(::ManageIQ::Providers::Inventory::Persister::Builder::MissingModelClassError, /NonExistingIc/)
+    expect { builder.to_inventory_collection }.to raise_error(ManageIQ::Providers::Inventory::Persister::Builder::MissingModelClassError, /NonExistingIc/)
   end
 
   # --- adv. settings (TODO: link to gui)---

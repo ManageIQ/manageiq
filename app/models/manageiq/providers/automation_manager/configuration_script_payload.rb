@@ -1,2 +1,2 @@
-class ManageIQ::Providers::AutomationManager::ConfigurationScriptPayload < ::ConfigurationScriptPayload
+class ManageIQ::Providers::AutomationManager::ConfigurationScriptPayload < ConfigurationScriptPayload
 end

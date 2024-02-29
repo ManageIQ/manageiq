@@ -693,7 +693,7 @@ RSpec.describe Vmdb::Settings do
       {"api" => {"token_ttl" => "2.minutes"}}.to_yaml
     )
 
-    expect(::Settings.api.token_ttl).to eq("2.minutes")
+    expect(Settings.api.token_ttl).to eq("2.minutes")
   end
 
   it ".validate", :providers_common => true do

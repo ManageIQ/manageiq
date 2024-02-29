@@ -1,4 +1,4 @@
-class ManageIQ::Providers::InfraManager::Vm < ::Vm
+class ManageIQ::Providers::InfraManager::Vm < Vm
   attribute :cloud, :default => false
 
   # Show certain non-generic charts

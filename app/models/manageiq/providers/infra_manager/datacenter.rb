@@ -1,2 +1,2 @@
-class ManageIQ::Providers::InfraManager::Datacenter < ::Datacenter
+class ManageIQ::Providers::InfraManager::Datacenter < Datacenter
 end
