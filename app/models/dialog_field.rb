@@ -31,7 +31,7 @@ class DialogField < ApplicationRecord
 
   attribute :required, :default => false
   attribute :visible,  :default => true
-  validates :visible, inclusion: { in: [ true, false ] }
+  validates :visible, inclusion: { in: [true, false] }
   attribute :load_values_on_init, :default => true
 
   serialize :values

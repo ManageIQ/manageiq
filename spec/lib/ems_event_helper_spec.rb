@@ -110,7 +110,7 @@ RSpec.describe EmsEventHelper do
     end
 
     it "should handle event properly" do
-      routine = [ { "policy" => ["src_vm", "vm_start"] } ]
+      routine = [{ "policy" => ["src_vm", "vm_start"] }]
       policy  = routine.first["policy"]
       event   = @ems_events.last
 
