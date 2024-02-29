@@ -39,7 +39,7 @@ module ScanningMixin
                   File.basename(doc.root.elements[1].elements[1].attributes["original_filename"], ".*")
                 rescue
                   "vmscan"
-                end
+        end
         job = Job.find_by(:guid => taskid)
         raise _("Unable to process data for job with id <%{number}>. Job not found.") % {:number => taskid} if job.nil?
         begin

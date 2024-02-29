@@ -1232,7 +1232,7 @@ class MiqExpression
                   RelativeDatetime.normalize(v, "UTC")
                 rescue
                   nil
-                end
+        end
         return _("Value '%{value}' is not valid") % {:value => v} if v_cvt.nil?
         v_cvt
       end

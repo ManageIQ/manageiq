@@ -267,7 +267,7 @@ class GitRepository < ApplicationRecord
                       rescue URI::InvalidURIError
                         # url is not a parsable URI, such as git@github.com:ManageIQ/manageiq.git
                         nil
-                      end
+    end
     %w[http https].include?(repo_url_scheme)
   end
 

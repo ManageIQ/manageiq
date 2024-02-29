@@ -12,7 +12,7 @@ class Chargeback
       @consumed_hours_in_interval ||= begin
                                         consumed = (consumption_end - consumption_start).round / 1.hour
                                         consumed > 0 ? consumed : 0
-                                      end
+      end
     end
 
     def hours_in_month
