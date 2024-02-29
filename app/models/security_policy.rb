@@ -10,7 +10,7 @@ class SecurityPolicy < ApplicationRecord
   belongs_to :cloud_tenant
   belongs_to :orchestration_stack
 
-  has_many :security_policy_rules, :foreign_key => :security_policy_id, :dependent => :destroy
+  has_many :security_policy_rules, :dependent => :destroy
   alias rules security_policy_rules
 
   virtual_total :rules_count, :security_policy_rules

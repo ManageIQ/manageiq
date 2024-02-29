@@ -9,7 +9,7 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   has_many :network_routers, -> { distinct }, :through => :cloud_subnets
   # Keeping floating_ip for backwards compatibility. Keeping association through vm_id foreign key, because of Amazon
   # ec2, it allows to associate floating ips without network ports
-  has_one  :floating_ip, :foreign_key => :vm_id
+  has_one  :floating_ip
   has_many :floating_ips
   has_many :security_groups, -> { distinct }, :through => :network_ports
   has_many :cloud_volumes, :through => :disks, :source => :backing, :source_type => "CloudVolume"
@@ -20,7 +20,6 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   has_many :load_balancer_health_checks, -> { distinct }, :through => :load_balancer_pool_members
 
   has_and_belongs_to_many :key_pairs, :join_table              => :key_pairs_vms,
-                                      :foreign_key             => :vm_id,
                                       :association_foreign_key => :authentication_id,
                                       :class_name              => "ManageIQ::Providers::CloudManager::AuthKeyPair"
 

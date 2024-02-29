@@ -7,7 +7,7 @@ class ChargebackRateDetailCurrency < ApplicationRecord
   validates :full_name,   :presence => true, :length => {:maximum => 100}
   validates :symbol,      :presence => true, :length => {:maximum => 100}
 
-  has_many :chargeback_rate_detail, :foreign_key => "chargeback_rate_detail_currency_id"
+  has_many :chargeback_rate_detail
 
   self.table_name = 'currencies'
 

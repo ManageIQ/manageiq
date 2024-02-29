@@ -10,7 +10,7 @@ class NetworkService < ApplicationRecord
   belongs_to :cloud_tenant
   belongs_to :orchestration_stack
 
-  has_many :network_service_entries, :foreign_key => :network_service_id, :dependent => :destroy
+  has_many :network_service_entries, :dependent => :destroy
   alias entries network_service_entries
 
   has_many :security_policy_rule_network_services, :dependent => :destroy

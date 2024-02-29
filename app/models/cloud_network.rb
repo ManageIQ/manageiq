@@ -18,7 +18,7 @@ class CloudNetwork < ApplicationRecord
   has_many :floating_ips,  :dependent => :destroy
   has_many :vms, -> { distinct }, :through => :network_ports, :source => :device, :source_type => 'VmOrTemplate'
 
-  has_many :public_network_routers, :foreign_key => :cloud_network_id, :class_name => "NetworkRouter"
+  has_many :public_network_routers, :class_name => "NetworkRouter"
   has_many :public_network_vms, -> { distinct }, :through => :public_network_routers, :source => :vms
   has_many :private_networks, -> { distinct }, :through => :public_network_routers, :source => :cloud_networks
 

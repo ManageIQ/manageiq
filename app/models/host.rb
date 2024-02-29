@@ -52,7 +52,7 @@ class Host < ApplicationRecord
   has_many                  :networks, :through => :hardware
   has_many                  :patches, :dependent => :destroy
   has_many                  :system_services, :dependent => :destroy
-  has_many                  :host_services, :class_name => "SystemService", :foreign_key => "host_id", :inverse_of => :host
+  has_many                  :host_services, :class_name => "SystemService", :inverse_of => :host
 
   has_many                  :metrics,        :as => :resource  # Destroy will be handled by purger
   has_many                  :metric_rollups, :as => :resource  # Destroy will be handled by purger
@@ -85,7 +85,7 @@ class Host < ApplicationRecord
   has_many                  :host_service_groups, :dependent => :destroy
 
   has_many                  :cloud_services, :dependent => :nullify
-  has_many                  :host_cloud_services, :class_name => "CloudService", :foreign_key => "host_id",
+  has_many                  :host_cloud_services, :class_name => "CloudService",
                             :inverse_of => :host
   has_many                  :host_aggregate_hosts, :dependent => :destroy
   has_many                  :host_aggregates, :through => :host_aggregate_hosts
