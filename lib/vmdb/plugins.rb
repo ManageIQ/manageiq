@@ -80,6 +80,12 @@ module Vmdb
       end
     end
 
+    def embedded_workflows_content
+      @embedded_workflows_content ||= flat_map do |engine|
+        engine.root.join("content", "workflows").glob("**/*.asl")
+      end
+    end
+
     def automate_domains
       @automate_domains ||= begin
         require_relative 'plugins/automate_domain'

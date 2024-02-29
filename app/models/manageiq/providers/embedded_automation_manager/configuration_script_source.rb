@@ -51,7 +51,7 @@ class ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource 
   end
 
   def git_repository
-    (super || (ensure_git_repository && super)).tap { |r| sync_git_repository(r) }
+    (super || (ensure_git_repository && super))&.tap { |r| sync_git_repository(r) }
   end
 
   def verify_ssl=(val)
@@ -86,6 +86,8 @@ class ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource 
   end
 
   def checkout_git_repository(target_directory)
+    return if git_repository.nil?
+
     git_repository.update_repo
     git_repository.checkout(scm_branch, target_directory)
   end
@@ -93,6 +95,8 @@ class ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource 
   private
 
   def ensure_git_repository
+    return if scm_url.blank?
+
     transaction do
       repo = GitRepository.create!(attrs_for_sync_git_repository)
       if new_record?
@@ -108,6 +112,8 @@ class ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource 
     return unless name_changed? || scm_url_changed? || authentication_id_changed? || @verify_ssl_changed
 
     git_repository ||= self.git_repository
+    return if git_repository.nil?
+
     git_repository.attributes = attrs_for_sync_git_repository
   end
 
