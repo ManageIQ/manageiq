@@ -2797,13 +2797,11 @@ RSpec.describe MiqExpression do
       expect(subject).to contain_exactly("=", "!=", "<", "<=", ">=", ">")
     end
 
-=begin
-    # there is no example of fields with fixnum datatype available for expression builder
-    it "returns list of available operations for field type 'fixnum'" do
-      @field = ?
-      expect(subject).to eq(["=", "!=", "<", "<=", ">=", ">", "RUBY"])
-    end
-=end
+#     # there is no example of fields with fixnum datatype available for expression builder
+#     it "returns list of available operations for field type 'fixnum'" do
+#       @field = ?
+#       expect(subject).to eq(["=", "!=", "<", "<=", ">=", ">", "RUBY"])
+#     end
 
     it "returns list of available operations for field type 'string_set'" do
       @field = "ManageIQ::Providers::InfraManager::Vm-hostnames"
