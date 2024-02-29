@@ -14,7 +14,6 @@ module Ruport::Data
 end
 
 module Ruport
-
   # Handles preventing CSV injection attacks by adding an apostrophe to all
   # fields that could potentially be a formula that executes a function.
   #
