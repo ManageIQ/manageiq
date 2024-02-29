@@ -130,8 +130,8 @@ class Tag < ApplicationRecord
   singleton_class.send(:alias_method, :find_by_classification_name, :lookup_by_classification_name)
   Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_classification_name => :lookup_by_classification_name)
 
-  def ==(comparison_object)
-    super || name.downcase == comparison_object.to_s.downcase
+  def ==(other)
+    super || name.downcase == other.to_s.downcase
   end
 
   def show
