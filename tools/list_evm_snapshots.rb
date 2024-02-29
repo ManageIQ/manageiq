@@ -33,7 +33,7 @@ begin
     end
   end
 rescue => err
-  puts err.to_s
+  puts err
   puts err.backtrace.join("\n")
 ensure
   vim.disconnect
