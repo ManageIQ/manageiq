@@ -292,7 +292,7 @@ RSpec.describe MiqAction do
   context '.create_default_actions' do
     context 'seeding default actions from a file with 3 csv rows and some comments' do
       before do
-        stub_csv <<-CSV.strip_heredoc
+        stub_csv <<~CSV
           name,description
           audit,Generate Audit Event
           log,Generate log message
@@ -314,7 +314,7 @@ RSpec.describe MiqAction do
 
       context 'when csv was changed and imported again' do
         before do
-          stub_csv <<-CSV.strip_heredoc
+          stub_csv <<~CSV
             name,description
             audit,UPD: Audit Event
             # log,Generate log message

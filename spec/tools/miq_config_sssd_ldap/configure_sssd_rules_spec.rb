@@ -12,7 +12,7 @@ RSpec.describe MiqConfigSssdLdap::ConfigureSssdRules do
 
   describe '#disable_tls' do
     let(:disable_tls_conf) do
-      <<-CFG_RULES_CONF.strip_heredoc
+      <<~CFG_RULES_CONF
         option = ldap_auth_disable_tls_never_use_in_production
       CFG_RULES_CONF
     end

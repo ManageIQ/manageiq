@@ -104,7 +104,7 @@ shared_examples_for "OwnershipMixin" do
 
       it "usable as arel" do
         group_name = user.current_group.description.downcase
-        sql        = <<-SQL.strip_heredoc.split("\n").join(' ')
+        sql        = <<~SQL.split("\n").join(' ')
                        LOWER(((SELECT "miq_groups"."description"
                        FROM "miq_groups"
                        WHERE "miq_groups"."id" = "#{described_class.table_name}"."miq_group_id"))) = '#{group_name}'
@@ -209,7 +209,7 @@ shared_examples_for "OwnershipMixin" do
 
       it "usable as arel" do
         userid = user.userid.downcase
-        sql = <<-SQL.strip_heredoc.split("\n").join(' ')
+        sql = <<~SQL.split("\n").join(' ')
                        LOWER(((SELECT "users"."userid"
                        FROM "users"
                        WHERE "users"."id" = "#{described_class.table_name}"."evm_owner_id"))) = '#{userid}'

@@ -463,7 +463,7 @@ RSpec.describe MiqExpression do
 
     it "generates the SQL for an INCLUDES ANY with expression method" do
       sql, * = MiqExpression.new("INCLUDES ANY" => {"field" => "Vm-ipaddresses", "value" => "foo"}).to_sql
-      expected_sql = <<-EXPECTED.strip_heredoc.split("\n").join(" ")
+      expected_sql = <<~EXPECTED.split("\n").join(" ")
         1 = (SELECT 1
         FROM "hardwares"
         INNER JOIN "networks" ON "networks"."hardware_id" = "hardwares"."id"

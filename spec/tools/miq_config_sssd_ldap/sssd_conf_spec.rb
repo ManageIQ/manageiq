@@ -12,7 +12,7 @@ RSpec.describe MiqConfigSssdLdap::SssdConf do
 
   describe '#configure' do
     let(:sssd_conf_erb) do
-      <<-SSSD_CONF_ERB.strip_heredoc
+      <<~SSSD_CONF_ERB
         [domain/default]
         autofs_provider = ldap
         ldap_schema = rfc2307bis
@@ -33,7 +33,7 @@ RSpec.describe MiqConfigSssdLdap::SssdConf do
     end
 
     let(:sssd_conf_shell) do
-      <<-SSSD_CONF_INITIAL.strip_heredoc
+      <<~SSSD_CONF_INITIAL
         [domain/default]
         autofs_provider = ldap
         ldap_schema = rfc2307bis
@@ -54,7 +54,7 @@ RSpec.describe MiqConfigSssdLdap::SssdConf do
     end
 
     let(:sssd_conf_updated) do
-      <<-SSSD_CONF_UPDATED.strip_heredoc
+      <<~SSSD_CONF_UPDATED
 
         [domain/]
 
