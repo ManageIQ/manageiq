@@ -56,7 +56,6 @@ module EventMixin
     filter
   end
 
-  private
 
   def find_one_event(assoc, order)
     ewc = event_where_clause(assoc)
