@@ -19,7 +19,7 @@ class ChargebackRateDetailMeasure < ApplicationRecord
   end
 
   private def units_same_length
-    unless (units.count == units_display.count)
+    unless units.count == units_display.count
       errors.add("Units Problem", "Units_display length diferent that the units length")
     end
   end

@@ -195,7 +195,7 @@ namespace :locale do
       # TODO: Rake tasks such as delete_pot_file, plugin:find, and report_changes take arguments and conflict with
       # the assumption that rake makes:  already invoked tasks should not be invoked again as the result should be the same.
       # We should make these methods with arguments and not use rake tasks in this way.
-      Rake.application.tasks.each { |t| t.reenable if (t.already_invoked && !t.kind_of?(Rake::FileTask)) }
+      Rake.application.tasks.each { |t| t.reenable if t.already_invoked && !t.kind_of?(Rake::FileTask) }
       Rake::Task['locale:delete_pot_file'].invoke(plugin.root) # Delete plugin's pot file if it exists to avoid weird file timestamp issues
       Rake::Task['locale:plugin:find'].invoke(plugin.to_s.sub('::Engine', '')) # will warn and exit 1 if any engine fails
       pot_file = Dir.glob("#{plugin.root.join('locale')}/*.pot")[0]

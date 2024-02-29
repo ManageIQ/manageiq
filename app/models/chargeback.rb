@@ -260,9 +260,9 @@ class Chargeback < ActsAsArModel
     end
 
     rpt.col_order.each do |c|
-      header_column = if (c == report_tag_field && header_for_tag)
+      header_column = if c == report_tag_field && header_for_tag
                         header_for_tag
-                      elsif (c == report_label_field && groupby_label)
+                      elsif c == report_label_field && groupby_label
                         groupby_label
                       else
                         c

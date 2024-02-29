@@ -19,7 +19,7 @@ module EmsRefresh::SaveInventoryInfra
     target = ems if target.nil?
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
-    disconnects = if (target == ems)
+    disconnects = if target == ems
                     target.hosts.reload.to_a
                   elsif target.kind_of?(Host)
                     [target.clone]

@@ -725,7 +725,7 @@ class MiqAlert < ApplicationRecord
     status = target.miq_alert_statuses.first
     if status
       since_last_eval = (Time.now.utc - status.evaluated_on)
-      eval_options[:starting_on] = if (since_last_eval >= eval_options[:duration])
+      eval_options[:starting_on] = if since_last_eval >= eval_options[:duration]
                                      (status.evaluated_on + 1)
                                    else
                                      (Time.now.utc - status.evaluated_on).seconds.ago.utc
