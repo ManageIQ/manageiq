@@ -126,19 +126,19 @@ class MiqSnmp
 
     # Need to move these to ManageIQ MIB
     case oid.downcase
-          when "info"                         then "#{enterprise_oid_string}.1"
-          when "warn", "warning"              then "#{enterprise_oid_string}.2"
-          when "crit", "critical", "error"    then "#{enterprise_oid_string}.3"
-          when "description"                  then "#{base}.1"
-          when "category"                     then "#{base}.2"
-          when "message"                      then "#{base}.3"
-          when "object"                       then "#{base}.4"
-          when "location"                     then "#{base}.5"
-          when "platform"                     then "#{base}.6"
-          when "url"                          then "#{base}.7"
-          when "source"                       then "#{base}.8"
-          when "custom1"                      then "#{base}.9"
-          when "custom2"                      then "#{base}.10"
+    when "info"                         then "#{enterprise_oid_string}.1"
+    when "warn", "warning"              then "#{enterprise_oid_string}.2"
+    when "crit", "critical", "error"    then "#{enterprise_oid_string}.3"
+    when "description"                  then "#{base}.1"
+    when "category"                     then "#{base}.2"
+    when "message"                      then "#{base}.3"
+    when "object"                       then "#{base}.4"
+    when "location"                     then "#{base}.5"
+    when "platform"                     then "#{base}.6"
+    when "url"                          then "#{base}.7"
+    when "source"                       then "#{base}.8"
+    when "custom1"                      then "#{base}.9"
+    when "custom2"                      then "#{base}.10"
           else                                     oid
           end
 

@@ -66,9 +66,9 @@ module MiqReport::Generator
     @table2class ||= {}
 
     @table2class[table] ||= case table.to_sym
-      when :ports, :nics, :storage_adapters
+                            when :ports, :nics, :storage_adapters
         "GuestDevice"
-      when :"<compare>"
+                            when :"<compare>"
         self.class.name
       else
         ref = db_class.reflection_with_virtual(table.to_sym)

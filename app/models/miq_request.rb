@@ -346,7 +346,7 @@ class MiqRequest < ApplicationRecord
 
   def self.request_task_class
     @request_task_class ||= case name
-      when 'MiqProvisionRequest'
+                            when 'MiqProvisionRequest'
         name.underscore.chomp('_request').camelize.constantize
       else
         name.underscore.gsub(/_request$/, "_task").camelize.constantize
