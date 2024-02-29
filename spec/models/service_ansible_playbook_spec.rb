@@ -21,7 +21,7 @@ RSpec.describe(ServiceAnsiblePlaybook) do
 
   let(:executed_service) do
     FactoryBot.create(:service_ansible_playbook, :options => provision_options).tap do |service|
-      regex = /(#{ResourceAction::PROVISION})|(#{ResourceAction::RETIREMENT})/
+      regex = /(#{ResourceAction::PROVISION})|(#{ResourceAction::RETIREMENT})/o
       allow(service).to receive(:job).with(regex).and_return(runner_job)
     end
   end
