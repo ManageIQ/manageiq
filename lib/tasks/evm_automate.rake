@@ -170,7 +170,7 @@ namespace :evm do
         next unless ENV[name].present?
         raise "#{name} must be true or false" unless %w[true false].include?(ENV[name])
 
-        import_options[name.downcase] = ENV[name]
+        import_options[name.downcase] = ENV.fetch(name, nil)
       end
       MiqAeImport.new(ENV.fetch('DOMAIN', nil), import_options).import
     rescue => err
