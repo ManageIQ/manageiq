@@ -94,15 +94,13 @@ RSpec.describe VimPerformanceTag do
             if vm.name == "none"
               perf = FactoryBot.create(:metric_rollup_vm_hr,
                                        :timestamp                 => timestamp,
-                                       :cpu_usagemhz_rate_average => value
-                                      )
+                                       :cpu_usagemhz_rate_average => value)
             else
               tag = "environment/#{vm.name}"
               perf = FactoryBot.create(:metric_rollup_vm_hr,
                                        :timestamp                 => timestamp,
                                        :cpu_usagemhz_rate_average => value,
-                                       :tag_names                 => tag
-                                      )
+                                       :tag_names                 => tag)
             end
             vm.metric_rollups << perf
           end
@@ -112,8 +110,7 @@ RSpec.describe VimPerformanceTag do
         case_sets[:host].each do |timestamp, value|
           perf = FactoryBot.create(:metric_rollup_host_hr,
                                    :timestamp                 => timestamp,
-                                   :cpu_usagemhz_rate_average => value
-                                  )
+                                   :cpu_usagemhz_rate_average => value)
           @host.metric_rollups << perf
         end
         @host.save!

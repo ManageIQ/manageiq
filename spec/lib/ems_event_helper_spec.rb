@@ -8,12 +8,10 @@ RSpec.describe EmsEventHelper do
                                      :zone      => @zone,
                                      :name      => 'vc7',
                                      :hostname  => 'vc7.manageiq.com',
-                                     :ipaddress => '10.10.10.2'
-                                    )
+                                     :ipaddress => '10.10.10.2')
       @storage   = FactoryBot.create(:storage,
                                      :name       => 'StarM1-Demo5',
-                                     :store_type => 'VMFS'
-                                    )
+                                     :store_type => 'VMFS')
       @host      = FactoryBot.create(:host,
                                      :name                  => 'host7',
                                      :ext_management_system => @ems,
@@ -22,14 +20,12 @@ RSpec.describe EmsEventHelper do
                                      :vmm_product           => 'ESX',
                                      :vmm_buildnumber       => 261974,
                                      :ipaddress             => '192.168.252.28',
-                                     :hostname              => 'host7.manageiq.com'
-                                    )
+                                     :hostname              => 'host7.manageiq.com')
       @vm        = FactoryBot.create(:vm_vmware,
                                      :ext_management_system => @ems,
                                      :name                  => 'vm42',
                                      :location              => 'vm42/vm42.vmx',
-                                     :storage               => @storage
-                                    )
+                                     :storage               => @storage)
 
       @username = 'fred'
       @chain_id = 12345
@@ -47,8 +43,7 @@ RSpec.describe EmsEventHelper do
                                        :source                => 'VC',
                                        :chain_id              => @chain_id,
                                        :is_task               => false,
-                                       :username              => @username
-                                      )
+                                       :username              => @username)
 
       @ems_events << FactoryBot.create(:ems_event,
                                        :event_type            => 'VmStartingEvent',
@@ -63,8 +58,7 @@ RSpec.describe EmsEventHelper do
                                        :source                => 'VC',
                                        :chain_id              => @chain_id,
                                        :is_task               => false,
-                                       :username              => @username
-                                      )
+                                       :username              => @username)
 
       @ems_events << FactoryBot.create(:ems_event,
                                        :event_type            => 'VmPoweredOnEvent',
@@ -79,8 +73,7 @@ RSpec.describe EmsEventHelper do
                                        :source                => 'VC',
                                        :chain_id              => @chain_id,
                                        :is_task               => false,
-                                       :username              => @username
-                                      )
+                                       :username              => @username)
 
       @ems_events << FactoryBot.create(:ems_event,
                                        :event_type            => 'PowerOnVM_Task_Complete',
@@ -95,8 +88,7 @@ RSpec.describe EmsEventHelper do
                                        :source                => 'EVM',
                                        :chain_id              => 12345,
                                        :is_task               => false,
-                                       :username              => @username
-                                      )
+                                       :username              => @username)
 
       @miq_event_vm_start = FactoryBot.create(:miq_event_definition, :name => 'vm_start', :description => 'VM Power On')
 

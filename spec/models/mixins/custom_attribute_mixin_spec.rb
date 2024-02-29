@@ -139,14 +139,16 @@ RSpec.describe CustomAttributeMixin do
         :resource_type => object.class.base_class.name,
         :resource_id   => object.id,
         :source        => source,
-        :name          => key).first).to be_nil
+        :name          => key
+).first).to be_nil
 
       object.miq_custom_set(key, "")
       expect(CustomAttribute.where(
         :resource_type => object.class.base_class.name,
         :resource_id   => object.id,
         :source        => source,
-        :name          => key).first).to be_nil
+        :name          => key
+).first).to be_nil
 
       object.miq_custom_set(key, value)
       expect(CustomAttribute.where(
@@ -154,14 +156,16 @@ RSpec.describe CustomAttributeMixin do
         :resource_id   => object.id,
         :source        => source,
         :name          => key,
-        :value         => value).first).not_to be_nil
+        :value         => value
+).first).not_to be_nil
 
       object.miq_custom_set(key, "")
       expect(CustomAttribute.where(
         :resource_type => object.class.base_class.name,
         :resource_id   => object.id,
         :source        => source,
-        :name          => key).first).to be_nil
+        :name          => key
+).first).to be_nil
     end
   end
 

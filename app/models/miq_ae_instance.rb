@@ -134,14 +134,12 @@ class MiqAeInstance < ApplicationRecord
     if options[:new_name]
       MiqAeInstanceCopy.new(options[:fqname]).as(options[:new_name],
                                                  options[:namespace],
-                                                 options[:overwrite_location]
-                                                )
+                                                 options[:overwrite_location])
     else
       MiqAeInstanceCopy.copy_multiple(options[:ids],
                                       options[:domain],
                                       options[:namespace],
-                                      options[:overwrite_location]
-                                     )
+                                      options[:overwrite_location])
     end
   end
 

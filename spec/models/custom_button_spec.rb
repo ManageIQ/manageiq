@@ -78,8 +78,7 @@ RSpec.describe CustomButton do
                                     :uri_path         => uri_path,
                                     :uri_attributes   => uri_attributes,
                                     :uri_message      => uri_message,
-                                    :userid           => @userid
-                                   )
+                                    :userid           => @userid)
       end
 
       it "creates the proper button" do
@@ -176,31 +175,36 @@ RSpec.describe CustomButton do
       new_host_button = described_class.new(
         :applies_to_class => 'Host',
         :name             => @default_name,
-        :description      => @default_description)
+        :description      => @default_description
+)
       expect(new_host_button).to be_valid
 
       dup_vm_button = described_class.new(
         :applies_to_class => 'Vm',
         :name             => @default_name,
-        :description      => @default_description)
+        :description      => @default_description
+)
       expect(dup_vm_button).not_to be_valid
 
       dup_vm_name_button = described_class.new(
         :applies_to_class => 'Vm',
         :name             => @default_name,
-        :description      => "hello world")
+        :description      => "hello world"
+)
       expect(dup_vm_name_button).not_to be_valid
 
       dup_vm_desc_button = described_class.new(
         :applies_to_class => 'Vm',
         :name             => "hello",
-        :description      => @default_description)
+        :description      => @default_description
+)
       expect(dup_vm_desc_button).not_to be_valid
 
       new_vm_button = described_class.new(
         :applies_to_class => 'Vm',
         :name             => "hello",
-        :description      => "hello world")
+        :description      => "hello world"
+)
       expect(new_vm_button).to be_valid
     end
 
@@ -217,50 +221,58 @@ RSpec.describe CustomButton do
       dup_vm_button = described_class.new(
         :applies_to  => @vm,
         :name        => @default_name,
-        :description => @default_description)
+        :description => @default_description
+)
       expect(dup_vm_button).not_to be_valid
 
       dup_vm_name_button = described_class.new(
         :applies_to  => @vm,
         :name        => @default_name,
-        :description => "hello world")
+        :description => "hello world"
+)
       expect(dup_vm_name_button).not_to be_valid
 
       dup_vm_desc_button = described_class.new(
         :applies_to  => @vm,
         :name        => "hello",
-        :description => @default_description)
+        :description => @default_description
+)
       expect(dup_vm_desc_button).not_to be_valid
 
       new_vm_button = described_class.new(
         :applies_to  => @vm,
         :name        => "hello",
-        :description => "hello world")
+        :description => "hello world"
+)
       expect(new_vm_button).to be_valid
 
       # For other VM
       dup_vm_button = described_class.new(
         :applies_to  => vm_other,
         :name        => @default_name,
-        :description => @default_description)
+        :description => @default_description
+)
       expect(dup_vm_button).to be_valid
 
       dup_vm_name_button = described_class.new(
         :applies_to  => vm_other,
         :name        => @default_name,
-        :description => "hello world")
+        :description => "hello world"
+)
       expect(dup_vm_name_button).to be_valid
 
       dup_vm_desc_button = described_class.new(
         :applies_to  => vm_other,
         :name        => "hello",
-        :description => @default_description)
+        :description => @default_description
+)
       expect(dup_vm_desc_button).to be_valid
 
       new_vm_button = described_class.new(
         :applies_to  => vm_other,
         :name        => "hello",
-        :description => "hello world")
+        :description => "hello world"
+)
       expect(new_vm_button).to be_valid
     end
   end

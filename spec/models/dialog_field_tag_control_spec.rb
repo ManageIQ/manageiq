@@ -65,8 +65,7 @@ RSpec.describe DialogFieldTagControl do
   context "dialog field tag control with with options hash and category" do
     before do
       @df = FactoryBot.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category',
-            :options => {:force_single_value => true, :category_id => 1, :category_name => 'category', :category_description => 'description'}
-      )
+            :options => {:force_single_value => true, :category_id => 1, :category_name => 'category', :category_description => 'description'})
     end
 
     it "#category" do
@@ -90,8 +89,7 @@ RSpec.describe DialogFieldTagControl do
     before do
       @cat = FactoryBot.create(:classification, :description => "Auto Approve - Max CPU", :name => "prov_max_cpu", :single_value => 1)
       @df  = FactoryBot.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category',
-            :options => {:category_id => @cat.id, :category_name => 'category', :category_description => 'description'}
-      )
+            :options => {:category_id => @cat.id, :category_name => 'category', :category_description => 'description'})
     end
 
     it "#single_value?" do
@@ -99,8 +97,7 @@ RSpec.describe DialogFieldTagControl do
 
       cat = FactoryBot.create(:classification, :description => "Auto Approve - Max Memory", :name => "prov_max_memory", :single_value => 0)
       df  = FactoryBot.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category',
-            :options => {:category_id => cat.id, :category_name => 'category', :category_description => 'description'}
-      )
+            :options => {:category_id => cat.id, :category_name => 'category', :category_description => 'description'})
 
       expect(df.single_value?).to be_falsey
     end

@@ -1509,8 +1509,7 @@ RSpec.describe Rbac::Filterer do
                                                     :timestamp                  => t,
                                                     :cpu_usage_rate_average     => v,
                                                     :cpu_ready_delta_summation  => v * 1000, # Multiply by a factor of 1000 to make it more realistic and enable testing virtual col v_pct_cpu_ready_delta_summation
-                                                    :sys_uptime_absolute_latest => v
-                                                   )
+                                                    :sys_uptime_absolute_latest => v)
             end
           end
         end

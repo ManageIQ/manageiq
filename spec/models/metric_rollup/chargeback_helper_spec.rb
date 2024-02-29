@@ -13,8 +13,7 @@ RSpec.describe MetricRollup do
       let(:vm) do
         FactoryBot.create(:vm_vmware, :name => 'test_vm', :ems_ref => 'ems_ref',
                            :ems_cluster => ems_cluster, :storage => storage, :host => host,
-                           :ext_management_system => ems
-        )
+                           :ext_management_system => ems)
       end
 
       subject { metric_rollup.parents_determining_rate }
@@ -26,8 +25,7 @@ RSpec.describe MetricRollup do
                            :parent_host        => host,
                            :parent_ems_cluster => ems_cluster,
                            :parent_ems         => ems,
-                           :parent_storage     => storage,
-                          )
+                           :parent_storage     => storage,)
         end
 
         let(:parents_from_rollup) do

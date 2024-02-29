@@ -35,8 +35,7 @@ RSpec.describe ChargebackVm do
                                              :parent_ems_cluster_id     => ems_cluster.id,
                                              :parent_ems_id             => ems.id,
                                              :parent_storage_id         => storage.id,
-                                             :resource_name             => vm.name,
-                                            )
+                                             :resource_name             => vm.name,)
     end
     vm
   end

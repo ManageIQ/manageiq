@@ -10,8 +10,7 @@ RSpec.describe "LogCollection" do
       @miq_server.log_files << @log_file
       @task = FactoryBot.create(:miq_task,
                                 :miq_server_id => @miq_server.id,
-                                :name          => "Zipped log retrieval for #{@miq_server.name}"
-                               )
+                                :name          => "Zipped log retrieval for #{@miq_server.name}")
     end
 
     it { expect(@miq_server).to be_log_collection_active }

@@ -23,7 +23,8 @@ module Spec
             'platform_category'         => category,
             'platform'                  => platform,
           ),
-          anything).and_return(dialog_name)
+          anything
+).and_return(dialog_name)
       end
 
       def assert_automate_vm_name_lookup(user, vm_name = 'vm_name')
@@ -36,7 +37,8 @@ module Spec
             'message'    => 'get_vmname',
             'User::user' => user.id
           ),
-          anything).and_return("get_vmname_url")
+          anything
+).and_return("get_vmname_url")
       end
 
       def stub_automate_workspace(url, user, *result)

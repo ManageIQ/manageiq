@@ -69,8 +69,7 @@ module MiqServer::StatusManagement
                         "iUsed",
                         "iFree",
                         "%iUsed",
-                        "Mounted on"
-                       )
+                        "Mounted on")
         _log.info("[#{svr_name}] #{header}")
 
         disks.each do |disk|
@@ -85,8 +84,7 @@ module MiqServer::StatusManagement
                              disk[:used_inodes],
                              disk[:available_inodes],
                              "#{disk[:used_inodes_percent]}%",
-                             disk[:mount_point]
-                            )
+                             disk[:mount_point])
           _log.info("[#{svr_name}] #{formatted}")
         end
 

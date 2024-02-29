@@ -206,8 +206,7 @@ RSpec.describe MiqWidget do
                                     :miq_widget   => @widget_report_vendor_and_guest_os,
                                     :user_id      => @user1.id,
                                     :miq_group_id => @user1.current_group_id,
-                                    :timezone     => "UTC",
-                                   )
+                                    :timezone     => "UTC",)
         expect(@widget_report_vendor_and_guest_os.contents_for_user(@user1)).to eq(content)
       end
 
@@ -237,14 +236,12 @@ RSpec.describe MiqWidget do
         FactoryBot.create(:miq_widget_content,
                           :miq_widget   => @widget_report_vendor_and_guest_os,
                           :miq_group_id => @group1.id,
-                          :timezone     => "Eastern Time (US & Canada)"
-                         )
+                          :timezone     => "Eastern Time (US & Canada)")
         content2 = FactoryBot.create(:miq_widget_content,
                                      :miq_widget   => @widget_report_vendor_and_guest_os,
                                      :miq_group_id => @group1.id,
                                      :user_id      => @user1.id,
-                                     :timezone     => "UTC"
-                                    )
+                                     :timezone     => "UTC")
         expect(@widget_report_vendor_and_guest_os.contents_for_user(@user1)).to eq(content2)
       end
     end
@@ -829,8 +826,7 @@ RSpec.describe MiqWidget do
                                 :vendor           => "vmware",
                                 :operating_system => FactoryBot.create(:operating_system,
                                                                        :product_name => @winos_pruduct_name,
-                                                                       :name         => 'my_pc'),
-                               )
+                                                                       :name         => 'my_pc'),)
           vm.miq_group_id = @group2.id
           vm.save
         end
@@ -842,8 +838,7 @@ RSpec.describe MiqWidget do
                                 :vendor           => "redhat",
                                 :operating_system => FactoryBot.create(:operating_system,
                                                                        :product_name => @rhos_product_name,
-                                                                       :name         => 'my_linux'),
-                               )
+                                                                       :name         => 'my_linux'),)
           vm.miq_group_id = @group.id
           vm.save
         end

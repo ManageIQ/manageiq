@@ -1122,7 +1122,8 @@ RSpec.describe MiqExpression do
             "checkany" => {"FROM" => {"field" => "Host.vms-last_scan_on",
                                       "value" => ["2011-01-08 17:00", "2011-01-09 23:30:59"]}},
             "search"   => {"IS NOT NULL" => {"field" => "Host.vms-description"}}
-})
+}
+)
         result = Host.all.to_a.select { |rec| filter.lenient_evaluate(rec) }
         expect(result).to contain_exactly(host3, host5)
       end
@@ -2609,16 +2610,14 @@ RSpec.describe MiqExpression do
                               :description  => "Auto Approve - Max CPU",
                               :name         => "prov_max_cpu",
                               :single_value => true,
-                              :show         => true,
-                             )
+                              :show         => true,)
       cat.add_entry(:description  => "1",
                     :read_only    => "0",
                     :syntax       => "string",
                     :name         => "1",
                     :example_text => nil,
                     :default      => true,
-                    :single_value => "1"
-                   )
+                    :single_value => "1")
     end
 
     context "with :typ=>tag" do
@@ -2638,8 +2637,7 @@ RSpec.describe MiqExpression do
                                                :typ             => "tag",
                                                :include_model   => true,
                                                :include_my_tags => true,
-                                               :userid          => "admin"
-                                              )
+                                               :userid          => "admin")
         expect(result.map(&:first)).to include("VM or Template.My Company Tags : Auto Approve - Max CPU")
       end
 
@@ -3259,7 +3257,8 @@ RSpec.describe MiqExpression do
       expect(result).to include(
         ">="     => {"field" => "Vm-num_cpu",
                      "value" => "2"},
-        "result" => false)
+        "result" => false
+)
     end
   end
 

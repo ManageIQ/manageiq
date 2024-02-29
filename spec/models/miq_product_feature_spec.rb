@@ -318,14 +318,16 @@ RSpec.describe MiqProductFeature do
       hierarchical_features
       expect(MiqProductFeature).not_to receive(:sort_children)
       expect(MiqProductFeature.feature_all_children("miq_report_widget_editor", false)).to match_array(
-        %w(widget_copy widget_edit miq_report_widget_admin))
+        %w(widget_copy widget_edit miq_report_widget_admin)
+)
     end
 
     it "returns all visible children sorted" do
       hierarchical_features
       expect(MiqProductFeature).to receive(:sort_children).and_call_original
       expect(MiqProductFeature.feature_all_children("miq_report_widget_editor")).to eq(
-        %w(widget_copy widget_edit miq_report_widget_admin))
+        %w(widget_copy widget_edit miq_report_widget_admin)
+)
     end
   end
 

@@ -122,7 +122,8 @@ class Hardware < ApplicationRecord
   virtual_attribute :v_pct_free_disk_space, :float, :arel => (lambda do |t|
     t.grouping(Arel::Nodes::Division.new(
       Arel::Nodes::NamedFunction.new("CAST", [t[:disk_free_space].as("float")]),
-      t[:disk_capacity]) * 100)
+      t[:disk_capacity]
+) * 100)
   end)
 
   def v_pct_used_disk_space
@@ -134,7 +135,8 @@ class Hardware < ApplicationRecord
   virtual_attribute :v_pct_used_disk_space, :float, :arel => (lambda do |t|
     t.grouping(Arel::Nodes::Division.new(
       Arel::Nodes::NamedFunction.new("CAST", [t[:disk_free_space].as("float")]),
-      t[:disk_capacity]) * -100 + 100)
+      t[:disk_capacity]
+) * -100 + 100)
   end)
 
   def provisioned_storage

@@ -305,8 +305,7 @@ RSpec.describe Classification do
       expect(all_tagged_with(Host, [[full_tag_name(ent11)], [full_tag_name(ent11)]])).to eq([host2])
 
       # failure
-      expect(all_tagged_with(Host, [[full_tag_name(ent12), full_tag_name(ent11)], [full_tag_name(ent21)]])
-            ).not_to eq([host2])
+      expect(all_tagged_with(Host, [[full_tag_name(ent12), full_tag_name(ent11)], [full_tag_name(ent21)]])).not_to eq([host2])
       expect(all_tagged_with(Host, [[full_tag_name(ent11)], [full_tag_name(ent22)]])).not_to eq([host2])
       expect(all_tagged_with(Host, [[full_tag_name(ent12)], [full_tag_name(ent21)]])).not_to eq([host2])
     end
@@ -454,8 +453,7 @@ RSpec.describe Classification do
                                                        :single_value => "1",
                                                        :entries      => [{:description => "Cost Center 001", :name => "001"},
                                                                          {:description => "Cost Center 002", :name => "002"}]}
-]
-                                                   )
+])
     end
 
     context "after seeding" do

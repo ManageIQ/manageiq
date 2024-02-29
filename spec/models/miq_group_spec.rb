@@ -391,8 +391,7 @@ RSpec.describe MiqGroup do
       )
       group = FactoryBot.create(:miq_group,
                                 :description   => "MiqGroup-self_service",
-                                :miq_user_role => role
-                               )
+                                :miq_user_role => role)
       expect(group).to be_self_service
     end
 

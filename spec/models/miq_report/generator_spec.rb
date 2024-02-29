@@ -28,7 +28,8 @@ RSpec.describe MiqReport::Generator do
                                :end_offset   => 0,
                                :trend_db     => "HostPerformance",
                                :interval     => "daily",
-                               :target_pcts  => [70, 80, 90]})
+                               :target_pcts  => [70, 80, 90]}
+)
       end
 
       it "returns one row for each host" do
@@ -169,8 +170,7 @@ RSpec.describe MiqReport::Generator do
       rpt = MiqReport.new(:db        => "VmOrTemplate",
                           :cols      => %w(vendor),
                           :col_order => %w(host.name host.hostname vendor),
-                          :include   => {"host" => { "columns" => %w(name hostname)}}
-                         )
+                          :include   => {"host" => { "columns" => %w(name hostname)}})
       expect(rpt.cols_for_report).to match_array(%w(vendor host.name host.hostname))
     end
   end

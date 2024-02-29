@@ -111,8 +111,7 @@ RSpec.describe Notification, :type => :model do
         :created_at => notification.created_at,
         :text       => notification.notification_type.message,
         :bindings   => a_hash_including(:initiator => a_hash_including(:text => user.name),
-                                        :extra     => a_hash_including(:text => 'information')
-                                       )
+                                        :extra     => a_hash_including(:text => 'information'))
       )
     end
 

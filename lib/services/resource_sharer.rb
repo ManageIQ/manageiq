@@ -24,8 +24,7 @@ class ResourceSharer
     new(:user     => share.user,
         :resource => share.resource,
         :tenants  => [share.tenant],
-        :features => share.miq_product_features
-       ).valid?
+        :features => share.miq_product_features).valid?
   end
 
   ##

@@ -40,7 +40,8 @@ RSpec.describe MiqSearch do
       expect(MiqSearch.descriptions).to eq(
         srchs[0].id.to_s => srchs[0].description,
         srchs[1].id.to_s => srchs[1].description,
-        srchs[2].id.to_s => srchs[2].description)
+        srchs[2].id.to_s => srchs[2].description
+)
     end
 
     it "supports scopes" do
@@ -52,15 +53,15 @@ RSpec.describe MiqSearch do
 
       expect(MiqSearch.where(:db => 'Vm').descriptions).to eq(
         srchs[0].id.to_s => srchs[0].description,
-        srchs[1].id.to_s => srchs[1].description)
+        srchs[1].id.to_s => srchs[1].description
+)
     end
   end
 
   let(:vm_location_search) do
     FactoryBot.create(:miq_search,
                       :db     => "Vm",
-                      :filter => MiqExpression.new("=" => {"field" => "Vm-location", "value" => "good"})
-                     )
+                      :filter => MiqExpression.new("=" => {"field" => "Vm-location", "value" => "good"}))
   end
 
   let(:matched_vms) { FactoryBot.create_list(:vm_vmware, 2, :location => "good") }

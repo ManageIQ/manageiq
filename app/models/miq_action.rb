@@ -21,8 +21,7 @@ class MiqAction < ApplicationRecord
               "inherit_parent_tags"     => N_("Inherit Parent Tags"),
               "remove_tags"             => N_("Remove Tags"),
               "delete_snapshots_by_age" => N_("Delete Snapshots by Age"),
-              "run_ansible_playbook"    => N_("Run Ansible Playbook")
-             )
+              "run_ansible_playbook"    => N_("Run Ansible Playbook"))
   end
 
   validates :action_type,        :presence => true
@@ -284,7 +283,8 @@ class MiqAction < ApplicationRecord
 
     invoke_or_queue(
       inputs[:synchronous], __method__, "notifier", nil, MiqSnmp, method_name, [snmp_inputs],
-      "SNMP Trap [#{rec[:name]}]")
+      "SNMP Trap [#{rec[:name]}]"
+)
   end
 
   def action_email(action, rec, inputs)
@@ -532,7 +532,8 @@ class MiqAction < ApplicationRecord
 
       invoke_or_queue(
         inputs[:synchronous], action_method, vm_method == "scan" ? "smartstate" : "ems_operations", rec.my_zone,
-        rec, vm_method, [], "[#{action.description}] of VM [#{rec.name}]")
+        rec, vm_method, [], "[#{action.description}] of VM [#{rec.name}]"
+)
     end
   end
 
@@ -580,7 +581,8 @@ class MiqAction < ApplicationRecord
         action.options[:datastore], action.options[:powerOn], action.options[:template], action.options[:transform],
         action.options[:config], action.options[:customization], action.options[:disk]
       ],
-      "[#{action.description}] of VM [#{rec.name}]")
+      "[#{action.description}] of VM [#{rec.name}]"
+)
   end
 
   # Legacy: Replaces by action_vm_analyze
@@ -598,7 +600,8 @@ class MiqAction < ApplicationRecord
     invoke_or_queue(
       inputs[:synchronous], __method__, "ems_operations", rec.my_zone, target, 'retire',
       [[rec], :date => Time.zone.now - 1.day],
-      "VM Retire for VM [#{rec.name}]")
+      "VM Retire for VM [#{rec.name}]"
+)
   end
 
   def action_create_snapshot(action, rec, inputs)

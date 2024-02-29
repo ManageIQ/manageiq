@@ -10,7 +10,8 @@ RSpec.describe FixAuth::Cli do
       expect(opts).to eq(
         :username => "root",
         :database => "vmdb_production",
-        :port     => 5432)
+        :port     => 5432
+)
     end
 
     it "should pickup env variables" do
@@ -20,7 +21,8 @@ RSpec.describe FixAuth::Cli do
         :username => "envuser",
         :database => "vmdb_production",
         :password => "envpass",
-        :hostname => "envhost")
+        :hostname => "envhost"
+)
     end
 
     it "should parse database names" do
@@ -28,7 +30,8 @@ RSpec.describe FixAuth::Cli do
              .options.slice(:hostname, :username, :password, :hardcode, :database)
       expect(opts).to eq(
         :username => "root",
-        :database => "DB1")
+        :database => "DB1"
+)
     end
 
     it "should parse hardcoded password" do
@@ -37,7 +40,8 @@ RSpec.describe FixAuth::Cli do
       expect(opts).to eq(
         :username => "root",
         :database => "vmdb_production",
-        :hardcode => "hardcoded")
+        :hardcode => "hardcoded"
+)
     end
 
     it "defaults to updating the database" do

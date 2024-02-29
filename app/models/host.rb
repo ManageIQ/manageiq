@@ -1371,7 +1371,8 @@ class Host < ApplicationRecord
       id,
       capture_interval.to_s,
       time_range[0],
-      time_range[1])
+      time_range[1]
+)
 
     perf_hash = {}
     vm_perfs.each do |p|

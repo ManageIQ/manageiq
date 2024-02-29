@@ -432,7 +432,8 @@ module ManageIQ
           kept_categories.map { |cat| [nonblank_or_default(cat.first), cat.last] }
 
           series = kept_categories.each_with_object(
-            series_class.new(pie_type? ? :pie : :flat)) do |cat, a|
+            series_class.new(pie_type? ? :pie : :flat)
+) do |cat, a|
             a.push(:value => cat.last, :tooltip => cat.first)
           end
 

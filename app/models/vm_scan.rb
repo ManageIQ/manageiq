@@ -149,8 +149,7 @@ class VmScan < Job
       options[:categories] = vm.scan_profile_categories(scan_args["vmScanProfiles"])
       vm.sync_metadata(options[:categories],
                        "taskid" => jobid,
-                       "host"   => host
-                      )
+                       "host"   => host)
     rescue Timeout::Error
       message = "timed out attempting to synchronize, aborting"
       _log.error(message)

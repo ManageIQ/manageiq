@@ -97,8 +97,7 @@ module MiqReport::Search
     search_options = options.merge(:class            => db,
                                    :conditions       => conditions,
                                    :include_for_find => includes,
-                                   :references       => get_include
-                                  )
+                                   :references       => get_include)
     search_options.merge!(:limit => limit, :offset => offset, :order => order) if order
     search_options[:extra_cols] = va_sql_cols if va_sql_cols.present?
     search_options[:use_sql_view] = if db_options.nil? || db_options[:use_sql_view].nil?
