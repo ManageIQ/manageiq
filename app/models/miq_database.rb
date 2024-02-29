@@ -3,7 +3,7 @@ class MiqDatabase < ApplicationRecord
   encrypt_column  :csrf_secret_token
   encrypt_column  :session_secret_token
 
-  validates_presence_of :session_secret_token, :csrf_secret_token
+  validates :session_secret_token, :csrf_secret_token, :presence => true
 
   def self.seed
     db = first || new
@@ -25,7 +25,7 @@ class MiqDatabase < ApplicationRecord
   end
 
   def self.adapter
-    @adapter ||= ActiveRecord::Base.connection.instance_variable_get("@config")[:adapter]
+    @adapter ||= ActiveRecord::Base.connection.instance_variable_get(:@config)[:adapter]
   end
 
   def self.display_name(number = 1)

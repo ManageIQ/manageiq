@@ -118,7 +118,7 @@ class EmsCluster < ApplicationRecord
     Relationship.resources(direct_vm_rels).sort_by { |v| v.name.downcase }
   end
 
-  alias_method :direct_miq_templates, :miq_templates
+  alias direct_miq_templates miq_templates
 
   def direct_vms_and_templates
     (direct_vms + direct_miq_templates).sort_by { |v| v.name.downcase }
@@ -128,7 +128,7 @@ class EmsCluster < ApplicationRecord
     Relationship.resource_ids(direct_vm_rels)
   end
 
-  alias_method :direct_miq_template_ids, :miq_template_ids
+  alias direct_miq_template_ids miq_template_ids
 
   def direct_vm_or_template_ids
     direct_vm_ids + direct_miq_template_ids
@@ -154,8 +154,8 @@ class EmsCluster < ApplicationRecord
     Relationship.resources(child_and_grandchild_rels(:of_type => 'ResourcePool'))
   end
 
-  alias_method :add_resource_pool, :set_child
-  alias_method :remove_resource_pool, :remove_child
+  alias add_resource_pool set_child
+  alias remove_resource_pool remove_child
 
   def remove_all_resource_pools
     remove_all_children(:of_type => 'ResourcePool')
@@ -175,7 +175,7 @@ class EmsCluster < ApplicationRecord
 
   # Parent relationship methods
   def parent_folder
-    detect_ancestor(:of_type => "EmsFolder") { |a| !a.kind_of?(Datacenter) && !%w(host vm).include?(a.name) } # TODO: Fix this to use EmsFolder#hidden?
+    detect_ancestor(:of_type => "EmsFolder") { |a| !a.kind_of?(Datacenter) && !%w[host vm].include?(a.name) } # TODO: Fix this to use EmsFolder#hidden?
   end
 
   def parent_datacenter
@@ -207,6 +207,7 @@ class EmsCluster < ApplicationRecord
   def ems_events
     ewc = event_where_clause
     return [] if ewc.blank?
+
     EmsEvent.where(ewc).order("timestamp").to_a
   end
 
@@ -218,7 +219,7 @@ class EmsCluster < ApplicationRecord
       :affinity    => ext_management_system,
       :class_name  => self.class.to_s,
       :method_name => "save_drift_state",
-      :instance_id => id,
+      :instance_id => id
     )
   end
 
@@ -237,11 +238,12 @@ class EmsCluster < ApplicationRecord
 
   def effective_resource(resource)
     resource = resource.to_s
-    unless %w(cpu vcpu memory).include?(resource)
+    unless %w[cpu vcpu memory].include?(resource)
       raise ArgumentError, _("Unknown resource %{name}") % {:name => resource.inspect}
     end
+
     resource = "cpu" if resource == "vcpu"
-    send("effective_#{resource}")
+    send(:"effective_#{resource}")
   end
 
   #
@@ -276,7 +278,7 @@ class EmsCluster < ApplicationRecord
 
   def get_perf_collection_object_list
     hosts = hosts_enabled_for_perf_capture
-    self.perf_capture_enabled? ? [self] + hosts : hosts
+    perf_capture_enabled? ? [self] + hosts : hosts
   end
 
   def perf_capture_enabled_host_ids=(ids)

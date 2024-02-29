@@ -2,7 +2,7 @@ RSpec.describe MiqProvisionRequestTemplate do
   let(:user)             { FactoryBot.create(:user) }
   let(:template)         do
     FactoryBot.create(:template_vmware,
-                       :ext_management_system => FactoryBot.create(:ems_vmware_with_authentication))
+                      :ext_management_system => FactoryBot.create(:ems_vmware_with_authentication))
   end
   let(:parent_svc) { FactoryBot.create(:service, :guid => SecureRandom.uuid, :options => {:dialog => {}}) }
   let(:bundle_parent_svc) do
@@ -10,8 +10,8 @@ RSpec.describe MiqProvisionRequestTemplate do
   end
   let(:service_resource) do
     FactoryBot.create(:service_resource,
-                       :resource_type => 'MiqRequest',
-                       :resource_id   => service_template_request.id)
+                      :resource_type => 'MiqRequest',
+                      :resource_id   => service_template_request.id)
   end
   let(:service_template) do
     FactoryBot.create(:service_template)
@@ -21,44 +21,44 @@ RSpec.describe MiqProvisionRequestTemplate do
   end
   let(:service_template_resource) do
     FactoryBot.create(:service_resource,
-                       :resource_type => 'ServiceTemplate',
-                       :resource_id   => service_template.id)
+                      :resource_type => 'ServiceTemplate',
+                      :resource_id   => service_template.id)
   end
   let(:bundle_service_template_resource) do
     FactoryBot.create(:service_resource,
-                       :resource_type => 'ServiceTemplate',
-                       :resource_id   => bundle_service_template.id)
+                      :resource_type => 'ServiceTemplate',
+                      :resource_id   => bundle_service_template.id)
   end
   let(:service_template_request) { FactoryBot.create(:service_template_provision_request, :requester => user) }
   let(:service_task) do
     FactoryBot.create(:service_template_provision_task,
-                       :miq_request  => service_template_request,
-                       :options      => {:service_resource_id => service_resource.id})
+                      :miq_request => service_template_request,
+                      :options     => {:service_resource_id => service_resource.id})
   end
   let(:parent_service_task) do
     FactoryBot.create(:service_template_provision_task,
-                       :status       => 'Ok',
-                       :state        => 'pending',
-                       :request_type => 'clone_to_service',
-                       :miq_request  => service_template_request,
-                       :options      => {:service_resource_id => service_template_resource.id})
+                      :status       => 'Ok',
+                      :state        => 'pending',
+                      :request_type => 'clone_to_service',
+                      :miq_request  => service_template_request,
+                      :options      => {:service_resource_id => service_template_resource.id})
   end
   let(:bundle_service_task) do
     FactoryBot.create(:service_template_provision_task,
-                       :status       => 'Ok',
-                       :state        => 'pending',
-                       :request_type => 'clone_to_service',
-                       :miq_request  => service_template_request,
-                       :options      => {:service_resource_id => bundle_service_template_resource.id})
+                      :status       => 'Ok',
+                      :state        => 'pending',
+                      :request_type => 'clone_to_service',
+                      :miq_request  => service_template_request,
+                      :options      => {:service_resource_id => bundle_service_template_resource.id})
   end
   let(:provision_request_template) do
     FactoryBot.create(:miq_provision_request_template,
-                       :requester    => user,
-                       :src_vm_id    => template.id,
-                       :options      => {
-                         :src_vm_id           => template.id,
-                         :service_resource_id => service_resource.id
-                       })
+                      :requester => user,
+                      :src_vm_id => template.id,
+                      :options   => {
+                        :src_vm_id           => template.id,
+                        :service_resource_id => service_resource.id
+                      })
   end
 
   describe '#create_tasks_for_service' do

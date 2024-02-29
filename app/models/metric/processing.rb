@@ -57,14 +57,15 @@ module Metric::Processing
     DERIVED_COLS.each do |col|
       _dummy, group, typ, mode = col.to_s.split("_")
       next if group == "vm" && obj.kind_of?(Service) && typ != "count"
+
       case typ
       when "available"
         # Do not derive "available" values if there haven't been any usage
         # values collected
         if group == "cpu"
           result[col] = total_cpu if have_cpu_metrics && total_cpu > 0
-        else
-          result[col] = total_mem if have_mem_metrics && total_mem > 0
+        elsif have_mem_metrics && total_mem > 0
+          result[col] = total_mem
         end
       when "allocated"
         method = col.to_s.split("_")[1..-1].join("_")
@@ -91,11 +92,11 @@ module Metric::Processing
           result[col] = state.send(method) if state.respond_to?(method)
         end
       when "rate"
-        if col.to_s == "cpu_usagemhz_rate_average" && attrs[:cpu_usagemhz_rate_average].blank?
+        if col.to_s == "cpu_usagemhz_rate_average" && attrs[:cpu_usagemhz_rate_average].blank? && !(total_cpu == 0 || attrs[:cpu_usage_rate_average].nil?)
           # TODO(lsmola) for some reason, this column is used in chart, although from processing code above, it should
           # be named derived_cpu_used. Investigate what is the right solution and make it right. For now lets fill
           # the column shown in charts.
-          result[col] = (attrs[:cpu_usage_rate_average] / 100 * total_cpu) unless total_cpu == 0 || attrs[:cpu_usage_rate_average].nil?
+          result[col] = (attrs[:cpu_usage_rate_average] / 100 * total_cpu)
         end
       when "reserved"
         method = group == "cpu" ? :reserve_cpu : :reserve_mem
@@ -155,12 +156,14 @@ module Metric::Processing
     new_perf = klass.new(attrs)
     Metric::Rollup::ROLLUP_COLS.each do |c|
       next if new_perf.send(c).nil? || perf.send(c).nil?
+
       new_perf.send(c.to_s + "=", (new_perf.send(c) + perf.send(c)) / 2)
     end
 
     unless perf.assoc_ids.nil?
       Metric::Rollup::ASSOC_KEYS.each do |assoc|
         next if new_perf.assoc_ids.nil? || new_perf.assoc_ids[assoc].blank? || perf.assoc_ids[assoc].blank?
+
         new_perf.assoc_ids[assoc][:on] ||= []
         new_perf.assoc_ids[assoc][:off] ||= []
         new_perf.assoc_ids[assoc][:on]  = (new_perf.assoc_ids[assoc][:on] + perf.assoc_ids[assoc][:on]).uniq!

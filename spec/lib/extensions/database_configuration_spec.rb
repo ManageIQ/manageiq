@@ -25,14 +25,14 @@ RSpec.describe "DatabaseConfiguration patch" do
 
   context "when DATABASE_URL is set" do
     around(:each) do |example|
-      begin
-        old_env = ENV.delete('DATABASE_URL')
-        ENV['DATABASE_URL'] = 'postgres://'
-        example.run
-      ensure
-        # ENV['x'] = nil deletes the key because ENV accepts only string values
-        ENV['DATABASE_URL'] = old_env
-      end
+
+      old_env = ENV.delete('DATABASE_URL')
+      ENV['DATABASE_URL'] = 'postgres://'
+      example.run
+    ensure
+      # ENV['x'] = nil deletes the key because ENV accepts only string values
+      ENV['DATABASE_URL'] = old_env
+
     end
 
     it "ignores a missing file" do

@@ -26,9 +26,9 @@ class Host < ApplicationRecord
     nil               => "Unknown",
   }.freeze
 
-  validates_presence_of     :name
-  validates_inclusion_of    :user_assigned_os, :in => ["linux_generic", "windows_generic", nil]
-  validates_inclusion_of    :vmm_vendor, :in => VENDOR_TYPES.keys
+  validates :name, :presence => true
+  validates    :user_assigned_os, :inclusion => {:in => ["linux_generic", "windows_generic", nil]}
+  validates    :vmm_vendor, :inclusion => {:in => VENDOR_TYPES.keys}
 
   belongs_to                :ext_management_system, :foreign_key => "ems_id"
   belongs_to                :ems_cluster
@@ -52,11 +52,11 @@ class Host < ApplicationRecord
   has_many                  :networks, :through => :hardware
   has_many                  :patches, :dependent => :destroy
   has_many                  :system_services, :dependent => :destroy
-  has_many                  :host_services, :class_name => "SystemService", :foreign_key => "host_id", :inverse_of => :host
+  has_many                  :host_services, :class_name => "SystemService", :inverse_of => :host
 
   has_many                  :metrics,        :as => :resource  # Destroy will be handled by purger
   has_many                  :metric_rollups, :as => :resource  # Destroy will be handled by purger
-  has_many                  :vim_performance_states, :as => :resource  # Destroy will be handled by purger
+  has_many                  :vim_performance_states, :as => :resource # Destroy will be handled by purger
 
   has_many                  :ems_events,
                             ->(host) { where("host_id = ? OR dest_host_id = ?", host.id, host.id).order(:timestamp) },
@@ -85,8 +85,8 @@ class Host < ApplicationRecord
   has_many                  :host_service_groups, :dependent => :destroy
 
   has_many                  :cloud_services, :dependent => :nullify
-  has_many                  :host_cloud_services, :class_name => "CloudService", :foreign_key => "host_id",
-                            :inverse_of => :host
+  has_many                  :host_cloud_services, :class_name => "CloudService",
+                                                  :inverse_of => :host
   has_many                  :host_aggregate_hosts, :dependent => :destroy
   has_many                  :host_aggregates, :through => :host_aggregate_hosts
   has_many :host_hardwares, :class_name => 'Hardware', :dependent => :nullify
@@ -145,7 +145,7 @@ class Host < ApplicationRecord
 
   virtual_has_many   :resource_pools,                               :uses => :all_relationships
   virtual_has_many   :miq_scsi_luns,                                :uses => {:hardware => {:storage_adapters => {:miq_scsi_targets => :miq_scsi_luns}}}
-  virtual_has_many   :processes,       :class_name => "OsProcess",  :uses => {:operating_system => :processes}
+  virtual_has_many   :processes, :class_name => "OsProcess", :uses => {:operating_system => :processes}
   virtual_has_many   :event_logs,                                   :uses => {:operating_system => :event_logs}
   virtual_has_many   :firewall_rules,                               :uses => {:operating_system => :firewall_rules}
 
@@ -156,10 +156,10 @@ class Host < ApplicationRecord
   scope :active,   -> { where.not(:ems_id => nil) }
   scope :archived, -> { where(:ems_id => nil) }
 
-  alias_method :datastores, :storages    # Used by web-services to return datastores as the property name
+  alias datastores storages # Used by web-services to return datastores as the property name
 
-  alias_method :parent_cluster, :ems_cluster
-  alias_method :owning_cluster, :ems_cluster
+  alias parent_cluster ems_cluster
+  alias owning_cluster ems_cluster
 
   include RelationshipMixin
   self.default_relationship_type = "ems_metadata"
@@ -405,13 +405,16 @@ class Host < ApplicationRecord
   def arch
     if vmm_product.to_s.include?('ESX')
       return 'x86_64' if vmm_version.to_i >= 4
+
       return 'x86'
     end
 
     return "unknown" unless hardware && !hardware.cpu_type.nil?
+
     cpu = hardware.cpu_type.to_s.downcase
     return cpu if cpu.include?('x86')
     return "x86" if cpu.starts_with?("intel")
+
     "unknown"
   end
 
@@ -566,13 +569,13 @@ class Host < ApplicationRecord
   end
 
   def owning_folder
-    detect_ancestor(:of_type => "EmsFolder") { |a| !a.kind_of?(Datacenter) && !%w(host vm).include?(a.name) }
+    detect_ancestor(:of_type => "EmsFolder") { |a| !a.kind_of?(Datacenter) && !%w[host vm].include?(a.name) }
   end
 
   def parent_datacenter
     detect_ancestor(:of_type => "EmsFolder") { |a| a.kind_of?(Datacenter) }
   end
-  alias_method :owning_datacenter, :parent_datacenter
+  alias owning_datacenter parent_datacenter
 
   def self.save_metadata(id, dataArray)
     _log.info("for host [#{id}]")
@@ -585,24 +588,25 @@ class Host < ApplicationRecord
     _log.info("for host [#{id}] host saved")
   rescue => err
     _log.log_backtrace(err)
-    return false
+    false
   end
 
   def self.batch_update_authentication(host_ids, creds = {})
     errors = []
     return true if host_ids.blank?
+
     host_ids.each do |id|
-      begin
-        host = Host.find(id)
-        host.update_authentication(creds)
-      rescue ActiveRecord::RecordNotFound => err
-        _log.warn("#{err.class.name}-#{err}")
-        next
-      rescue => err
-        errors << err.to_s
-        _log.error("#{err.class.name}-#{err}")
-        next
-      end
+
+      host = Host.find(id)
+      host.update_authentication(creds)
+    rescue ActiveRecord::RecordNotFound => err
+      _log.warn("#{err.class.name}-#{err}")
+      next
+    rescue => err
+      errors << err.to_s
+      _log.error("#{err.class.name}-#{err}")
+      next
+
     end
     errors.empty? ? true : errors
   end
@@ -663,7 +667,7 @@ class Host < ApplicationRecord
 
   def verify_credentials_with_ssh(auth_type = nil, options = {})
     raise MiqException::MiqHostError, _("No credentials defined") if missing_credentials?(auth_type)
-    unless os_image_name =~ /linux_*/
+    unless /linux_*/.match?(os_image_name)
       raise MiqException::MiqHostError, _("Logon to platform [%{os_name}] not supported") % {:os_name => os_image_name}
     end
 
@@ -759,13 +763,16 @@ class Host < ApplicationRecord
       sb = ssu.shell_exec("esxupdate query")
       t = Time.now
       sb.each_line do |line|
-        next if line =~ /-{5,}/ # skip any header/footer rows
+        next if /-{5,}/.match?(line) # skip any header/footer rows
+
         data = line.split(" ")
         # Find the lines we should skip
         begin
           next if data[1, 2].nil?
+
           dhash = {:name => data[0], :vendor => "VMware", :installed_on => Time.parse(data[1, 2].join(" ")).utc}
           next if dhash[:installed_on] - t >= 0
+
           dhash[:description] = data[3..-1].join(" ") unless data[3..-1].nil?
           patches << dhash
         rescue ArgumentError => err
@@ -840,11 +847,11 @@ class Host < ApplicationRecord
     self.ssh_permit_root_login = 'yes' if permit_list
     permit_list.each_line do |line|
       la = line.split(' ')
-      if la.length == 2
-        next if la.first[0, 1] == '#'
-        self.ssh_permit_root_login = la.last.to_s.downcase
-        break
-      end
+      next unless la.length == 2
+      next if la.first[0, 1] == '#'
+
+      self.ssh_permit_root_login = la.last.to_s.downcase
+      break
     end
   rescue
     # _log.log_backtrace($!)
@@ -868,7 +875,7 @@ class Host < ApplicationRecord
         if ipmi.connected?
           self.power_state = ipmi.power_state
           mac = ipmi.mac_address
-          self.mac_address = mac unless mac.blank?
+          self.mac_address = mac if mac.present?
 
           hw_info = {:manufacturer => ipmi.manufacturer, :model => ipmi.model}
           if hardware.nil?
@@ -886,10 +893,11 @@ class Host < ApplicationRecord
   end
 
   def ipmi_config_valid?(include_mac_addr = false)
-    return false unless (ipmi_address.present? && has_credentials?(:ipmi))
+    return false unless ipmi_address.present? && has_credentials?(:ipmi)
+
     include_mac_addr == true ? mac_address.present? : true
   end
-  alias_method :ipmi_enabled, :ipmi_config_valid?
+  alias ipmi_enabled ipmi_config_valid?
 
   def set_custom_field(attribute, value)
     return unless is_vmware?
@@ -927,6 +935,7 @@ class Host < ApplicationRecord
 
   def firewall_rules
     return [] if operating_system.nil?
+
     operating_system.firewall_rules
   end
 
@@ -1001,7 +1010,7 @@ class Host < ApplicationRecord
       unless is_vmware_esxi?
         if hostname.blank?
           _log.warn("No hostname defined for #{log_target}")
-          task.update_status("Finished", "Warn", "Scanning incomplete due to missing hostname")  if task
+          task.update_status("Finished", "Warn", "Scanning incomplete due to missing hostname") if task
           return
         end
 
@@ -1009,7 +1018,7 @@ class Host < ApplicationRecord
 
         if missing_credentials?
           _log.warn("No credentials defined for #{log_target}")
-          task.update_status("Finished", "Warn", "Scanning incomplete due to Credential Issue")  if task
+          task.update_status("Finished", "Warn", "Scanning incomplete due to Credential Issue") if task
           return
         end
 
@@ -1166,8 +1175,8 @@ class Host < ApplicationRecord
     conditions[:host_protocol] = host_protocol if host_protocol
 
     operating_system.firewall_rules.where(conditions)
-      .flat_map { |rule| rule.port_range.to_a }
-      .uniq.sort
+                    .flat_map { |rule| rule.port_range.to_a }
+                    .uniq.sort
   end
 
   def service_names
@@ -1230,14 +1239,13 @@ class Host < ApplicationRecord
       remove_all_parents
       list.each { |parent| set_parent(parent) }
     end
-    true
   end
-  alias_method :set_vm_scan_affinity, :vm_scan_affinity=
+  alias set_vm_scan_affinity vm_scan_affinity=
 
   def vm_scan_affinity
     with_relationship_type("vm_scan_affinity") { parents }
   end
-  alias_method :get_vm_scan_affinity, :vm_scan_affinity
+  alias get_vm_scan_affinity vm_scan_affinity
 
   def processes
     operating_system.try(:processes) || []
@@ -1277,7 +1285,8 @@ class Host < ApplicationRecord
 
   def domain
     names = hostname.to_s.split(',').first.to_s.split('.')
-    return names[1..-1].join('.') unless names.blank?
+    return names[1..-1].join('.') if names.present?
+
     nil
   end
 
@@ -1339,10 +1348,11 @@ class Host < ApplicationRecord
     return values if function.nil?
 
     case function.to_sym
-    when :min, :max then return values.send(function)
+    when :min, :max then values.send(function)
     when :avg
       return 0 if values.length == 0
-      return (values.compact.sum / values.length)
+
+      (values.compact.sum / values.length)
     else
       raise _("Function %{function} is invalid, should be one of :min, :max, :avg or nil") % {:function => function}
     end
@@ -1359,7 +1369,8 @@ class Host < ApplicationRecord
       id,
       capture_interval.to_s,
       time_range[0],
-      time_range[1])
+      time_range[1]
+    )
 
     perf_hash = {}
     vm_perfs.each do |p|

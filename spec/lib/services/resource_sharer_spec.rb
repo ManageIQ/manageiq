@@ -11,8 +11,8 @@ RSpec.describe ResourceSharer do
 
     let(:user) do
       FactoryBot.create(:user,
-                         :role     => "user",
-                         :features => user_allowed_feature)
+                        :role     => "user",
+                        :features => user_allowed_feature)
     end
     let(:user_allowed_feature) { "service" }
     let(:resource_to_be_shared) { FactoryBot.create(:miq_template) }
@@ -42,7 +42,7 @@ RSpec.describe ResourceSharer do
         let(:features) { MiqProductFeature.find_by(:identifier => "host") }
         let(:user_allowed_feature) { "service" }
 
-        before { EvmSpecHelper.seed_specific_product_features(%w(host service)) }
+        before { EvmSpecHelper.seed_specific_product_features(%w[host service]) }
 
         it "is invalid" do
           expect(subject).not_to be_valid
@@ -54,7 +54,7 @@ RSpec.describe ResourceSharer do
         let(:features) { MiqProductFeature.find_by(:identifier => "host") }
         let(:user_allowed_feature) { "host_edit" }
 
-        before { EvmSpecHelper.seed_specific_product_features(%w(host)) }
+        before { EvmSpecHelper.seed_specific_product_features(%w[host]) }
 
         it "is invalid" do
           expect(subject).not_to be_valid
@@ -66,7 +66,7 @@ RSpec.describe ResourceSharer do
         let(:features) { MiqProductFeature.find_by(:identifier => "host_edit") }
         let(:user_allowed_feature) { "everything" }
 
-        before { EvmSpecHelper.seed_specific_product_features(%w(host_edit everything)) }
+        before { EvmSpecHelper.seed_specific_product_features(%w[host_edit everything]) }
 
         it "is valid" do
           expect(subject).to be_valid
@@ -88,14 +88,14 @@ RSpec.describe ResourceSharer do
     context "attempting to share a resource the user doesn't have access to via RBAC" do
       let(:user) do
         FactoryBot.create(:user,
-                           :role     => "user",
-                           :features => user_allowed_feature,
-                           :tenant   => FactoryBot.create(:tenant, :name => "Tenant under root"))
+                          :role     => "user",
+                          :features => user_allowed_feature,
+                          :tenant   => FactoryBot.create(:tenant, :name => "Tenant under root"))
       end
       let(:resource_to_be_shared) do
         FactoryBot.create(:miq_template,
-                           :tenant => FactoryBot.create(:tenant,
-                                                         :name => "Sibling tenant"))
+                          :tenant => FactoryBot.create(:tenant,
+                                                       :name => "Sibling tenant"))
       end
       let(:tenants) { [user.current_tenant] } # Attempt to share a resource in Sibling tenant to one's own tenant
 

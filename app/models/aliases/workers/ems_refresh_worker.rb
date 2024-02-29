@@ -1,1 +1,1 @@
-::EmsRefreshWorker = ManageIQ::Providers::BaseManager::RefreshWorker::Runner
+EmsRefreshWorker = ManageIQ::Providers::BaseManager::RefreshWorker::Runner

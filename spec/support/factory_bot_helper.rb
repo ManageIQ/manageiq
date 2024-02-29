@@ -4,7 +4,7 @@ end
 
 def ip_from_seq(seq)
   ip = 0xFFFFFFFF - seq
-  "#{ip >> 24}.#{ip >> 16 & 0xFF}.#{ip >> 8 & 0xFF}.#{ip & 0xFF}"
+  "#{ip >> 24}.#{(ip >> 16) & 0xFF}.#{(ip >> 8) & 0xFF}.#{ip & 0xFF}"
 end
 
 def mac_from_seq(seq)
@@ -41,7 +41,7 @@ FactoryBot.define do
       end
 
       unless evaluator.other_region
-        raise "You need to pass specific region  with :other_region: \n"\
+        raise "You need to pass specific region  with :other_region: \n" \
               "FactoryBot.create(:#{instance.class.to_s.tableize.singularize.to_sym}, :in_other_region, :other_region => <region>) "
       end
 
@@ -52,4 +52,3 @@ FactoryBot.define do
     end
   end
 end
-

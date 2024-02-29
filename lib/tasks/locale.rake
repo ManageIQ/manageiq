@@ -135,7 +135,7 @@ namespace :locale do
   desc "Extract model attribute names and virtual column names"
   task "store_model_attributes" => :environment do
     require 'gettext_i18n_rails/model_attributes_finder'
-    require_relative 'model_attribute_override.rb'
+    require_relative 'model_attribute_override'
 
     attributes_file = 'locale/model_attributes.rb'
     File.unlink(attributes_file) if File.exist?(attributes_file)
@@ -195,7 +195,7 @@ namespace :locale do
       # TODO: Rake tasks such as delete_pot_file, plugin:find, and report_changes take arguments and conflict with
       # the assumption that rake makes:  already invoked tasks should not be invoked again as the result should be the same.
       # We should make these methods with arguments and not use rake tasks in this way.
-      Rake.application.tasks.each { |t| t.reenable if (t.already_invoked && !t.kind_of?(Rake::FileTask)) }
+      Rake.application.tasks.each { |t| t.reenable if t.already_invoked && !t.kind_of?(Rake::FileTask) }
       Rake::Task['locale:delete_pot_file'].invoke(plugin.root) # Delete plugin's pot file if it exists to avoid weird file timestamp issues
       Rake::Task['locale:plugin:find'].invoke(plugin.to_s.sub('::Engine', '')) # will warn and exit 1 if any engine fails
       pot_file = Dir.glob("#{plugin.root.join('locale')}/*.pot")[0]
@@ -208,7 +208,7 @@ namespace :locale do
       "https://raw.githubusercontent.com/ManageIQ/react-ui-components/#{checkout_branch}/locale/react-ui-components.pot"
     ]
 
-    tmp_dir = Rails.root.join('locale', 'tmp').to_s
+    tmp_dir = Rails.root.join("locale/tmp").to_s
     Dir.mkdir(tmp_dir, 0o700)
     extra_pots.each do |url|
       pot_file = "#{tmp_dir}/#{url.split('/')[-1]}"
@@ -216,10 +216,10 @@ namespace :locale do
       pot_files << pot_file
     end
 
-    system('rmsgcat', '--sort-by-msgid', '-o', Rails.root.join('locale', 'manageiq-all.pot').to_s, Rails.root.join('locale', 'manageiq.pot').to_s, *pot_files)
-    system('mv', '-v', Rails.root.join('locale', 'manageiq-all.pot').to_s, Rails.root.join('locale', 'manageiq.pot').to_s)
-    system('rmsgmerge', '--sort-by-msgid', '--no-fuzzy-matching', '-o', Rails.root.join('locale', 'en', 'manageiq-all.po').to_s, Rails.root.join('locale', 'en', 'manageiq.po').to_s, Rails.root.join('locale', 'manageiq.pot').to_s)
-    system('mv', '-v', Rails.root.join('locale', 'en', 'manageiq-all.po').to_s, Rails.root.join('locale', 'en', 'manageiq.po').to_s)
+    system('rmsgcat', '--sort-by-msgid', '-o', Rails.root.join("locale/manageiq-all.pot").to_s, Rails.root.join("locale/manageiq.pot").to_s, *pot_files)
+    system('mv', '-v', Rails.root.join("locale/manageiq-all.pot").to_s, Rails.root.join("locale/manageiq.pot").to_s)
+    system('rmsgmerge', '--sort-by-msgid', '--no-fuzzy-matching', '-o', Rails.root.join("locale/en/manageiq-all.po").to_s, Rails.root.join("locale/en/manageiq.po").to_s, Rails.root.join("locale/manageiq.pot").to_s)
+    system('mv', '-v', Rails.root.join("locale/en/manageiq-all.po").to_s, Rails.root.join("locale/en/manageiq.po").to_s)
     system('rm', '-rf', tmp_dir)
 
     remove_line_numbers(Rails.root.join('locale/manageiq.pot'))
@@ -230,9 +230,9 @@ namespace :locale do
   task "report_changes", [:verbose] do |_t, args|
     require 'poparser'
 
-    old_pot = PoParser.parse(File.read(Rails.root.join('locale', 'manageiq.pot'))).to_h.collect { |item| item[:msgid] }.sort
+    old_pot = PoParser.parse(File.read(Rails.root.join("locale/manageiq.pot"))).to_h.collect { |item| item[:msgid] }.sort
     Rake::Task['locale:update_all'].invoke
-    new_pot = PoParser.parse(File.read(Rails.root.join('locale', 'manageiq.pot'))).to_h.collect { |item| item[:msgid] }.sort
+    new_pot = PoParser.parse(File.read(Rails.root.join("locale/manageiq.pot"))).to_h.collect { |item| item[:msgid] }.sort
     diff = new_pot - old_pot
     puts "--------------------------------------------------"
     puts "Current string / word count: %{str} / %{word}" % {:str => old_pot.length, :word => old_pot.join(' ').split.size}
@@ -291,56 +291,56 @@ namespace :locale do
 
   desc "Convert PO files from all plugins to JS files"
   task "po_to_json" => :environment do
-    begin
-      require_relative 'gettext_task_override.rb'
-      require_relative 'po_to_json_override.rb'
-      require Rails.root.join('lib/manageiq/environment')
-      require Rails.root.join("lib/vmdb/gettext/domains")
 
-      po_files = {}
+    require_relative 'gettext_task_override'
+    require_relative 'po_to_json_override'
+    require Rails.root.join('lib/manageiq/environment')
+    require Rails.root.join("lib/vmdb/gettext/domains")
 
-      Vmdb::Gettext::Domains.po_paths.each do |path|
-        files = ::Pathname.glob(::File.join(path, "**", "*.po")).sort
-        files.each do |file|
-          locale = file.dirname.basename.to_s
-          po_files[locale] ||= []
-          po_files[locale].push(file)
-        end
+    po_files = {}
+
+    Vmdb::Gettext::Domains.po_paths.each do |path|
+      files = Pathname.glob(File.join(path, "**", "*.po")).sort
+      files.each do |file|
+        locale = file.dirname.basename.to_s
+        po_files[locale] ||= []
+        po_files[locale].push(file)
       end
-
-      combined_dir = File.join(Rails.root, "locale/combined")
-      Dir.mkdir(combined_dir, 0o700)
-      po_files.each do |locale, files|
-        files.each do |file|
-          unless system "msgfmt --check #{file}"
-            puts "Fatal error running 'msgfmt --check' on file: #{file}.  Review the output above."
-            exit 1
-          end
-        end
-
-        dir = File.join(combined_dir, locale)
-        po = File.join(dir, 'manageiq.po')
-        Dir.mkdir(dir, 0o700)
-        puts "Generating po from\n#{files.sort.map { |f| "- #{f}" }.join("\n")}"
-        system "rmsgcat --sort-by-msgid -o #{po} #{files.join(' ')}"
-        puts
-      end
-
-      # create webpack file for including bootstrap-datepicker language packs
-      File.open(::ManageIQ::UI::Classic::Engine.root.join('app/javascript/packs/bootstrap-datepicker-languages.js'), "w+") do |f|
-        f.puts("// This file is automatically generated by rake task 'locale:po_to_json'")
-        po_files.keys.sort.each do |lang|
-          next if lang == 'en'
-
-          f.puts("require('bootstrap-datepicker/dist/locales/bootstrap-datepicker." + lang.sub('_', '-') + ".min.js');")
-        end
-      end
-
-      # This depends on PoToJson overrides as defined in lib/tasks/po_to_json_override.rb
-      Rake::Task['gettext:po_to_json'].invoke
-    ensure
-      system "rm -rf #{combined_dir}"
     end
+
+    combined_dir = Rails.root.join("locale/combined").to_s
+    Dir.mkdir(combined_dir, 0o700)
+    po_files.each do |locale, files|
+      files.each do |file|
+        unless system "msgfmt --check #{file}"
+          puts "Fatal error running 'msgfmt --check' on file: #{file}.  Review the output above."
+          exit 1
+        end
+      end
+
+      dir = File.join(combined_dir, locale)
+      po = File.join(dir, 'manageiq.po')
+      Dir.mkdir(dir, 0o700)
+      puts "Generating po from\n#{files.sort.map { |f| "- #{f}" }.join("\n")}"
+      system "rmsgcat --sort-by-msgid -o #{po} #{files.join(' ')}"
+      puts
+    end
+
+    # create webpack file for including bootstrap-datepicker language packs
+    File.open(ManageIQ::UI::Classic::Engine.root.join('app/javascript/packs/bootstrap-datepicker-languages.js'), "w+") do |f|
+      f.puts("// This file is automatically generated by rake task 'locale:po_to_json'")
+      po_files.keys.sort.each do |lang|
+        next if lang == 'en'
+
+        f.puts("require('bootstrap-datepicker/dist/locales/bootstrap-datepicker." + lang.sub('_', '-') + ".min.js');")
+      end
+    end
+
+    # This depends on PoToJson overrides as defined in lib/tasks/po_to_json_override.rb
+    Rake::Task['gettext:po_to_json'].invoke
+  ensure
+    system "rm -rf #{combined_dir}"
+
   end
 
   desc "Create display names for models"

@@ -14,7 +14,7 @@ RSpec.describe "Widget Chart Content" do
 
     5.times do |i|
       vm = FactoryBot.build(:vm_vmware)
-      vm.evm_owner_id = @user.id           if i > 2
+      vm.evm_owner_id = @user.id if i > 2
       vm.miq_group_id = @user.current_group.id if vm.evm_owner_id || (i > 1)
       vm.save
     end
@@ -62,6 +62,6 @@ RSpec.describe "Widget Chart Content" do
 
   it '#generate returns valid data' do
     content = widget.generate_one_content_for_user(@group, @user)
-    expect(ManageIQ::Reporting::Charting.data_ok? content.contents).to eq(true)
+    expect(ManageIQ::Reporting::Charting.data_ok?(content.contents)).to eq(true)
   end
 end

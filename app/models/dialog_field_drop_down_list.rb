@@ -9,9 +9,9 @@ class DialogFieldDropDownList < DialogFieldSortedItem
   end
 
   def force_multi_value
-    return true if options[:force_multi_value].present? &&
-                   options[:force_multi_value] != "null" &&
-                   options[:force_multi_value]
+    true if options[:force_multi_value].present? &&
+            options[:force_multi_value] != "null" &&
+            options[:force_multi_value]
   end
 
   def force_multi_value=(setting)
@@ -49,6 +49,7 @@ class DialogFieldDropDownList < DialogFieldSortedItem
 
   def automate_output_value
     return super unless force_multi_value
+
     a = if @value.kind_of?(Integer)
           [@value]
         elsif @value.kind_of?(Array)
@@ -62,6 +63,7 @@ class DialogFieldDropDownList < DialogFieldSortedItem
 
   def automate_key_name
     return super unless force_multi_value
+
     MiqAeEngine.create_automation_attribute_array_key(super)
   end
 
@@ -84,6 +86,7 @@ class DialogFieldDropDownList < DialogFieldSortedItem
   def default_value_included?(values_list)
     if force_multi_value
       return false if default_value.blank?
+
       converted_values_list = values_list.collect { |value_pair| value_pair[0].send(value_modifier) }
       converted_default_values = JSON.parse(default_value).collect { |value| value.send(value_modifier) }
       overlap = converted_values_list & converted_default_values
@@ -95,6 +98,7 @@ class DialogFieldDropDownList < DialogFieldSortedItem
 
   def coerce_default_value_into_proper_format
     return unless default_value
+
     unless JSON.parse(default_value).kind_of?(Array)
       self.default_value = Array.wrap(default_value).to_json
     end

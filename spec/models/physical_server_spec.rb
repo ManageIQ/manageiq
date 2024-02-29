@@ -1,5 +1,5 @@
 RSpec.describe PhysicalServer do
-  let(:attrs)    { { :manufacturer => 'manu', :model => 'model' } }
+  let(:attrs)    { {:manufacturer => 'manu', :model => 'model'} }
   let!(:binary1) { FactoryBot.create(:firmware_binary) }
   let!(:binary2) { FactoryBot.create(:firmware_binary) }
   let!(:target)  { FactoryBot.create(:firmware_target, **attrs, :firmware_binaries => [binary1]) }

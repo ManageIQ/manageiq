@@ -150,7 +150,7 @@ RSpec.describe ServiceTemplateOrchestration do
     end
 
     it 'requires both a template and a manager' do
-      catalog_item_options[:config_info] = { :manager => manager }
+      catalog_item_options[:config_info] = {:manager => manager}
 
       expect do
         ServiceTemplateOrchestration.create_catalog_item(catalog_item_options)
@@ -158,7 +158,7 @@ RSpec.describe ServiceTemplateOrchestration do
     end
 
     it 'accepts a manager and a template' do
-      catalog_item_options[:config_info] = { :manager => manager, :template => template }
+      catalog_item_options[:config_info] = {:manager => manager, :template => template}
 
       service_template = ServiceTemplateOrchestration.create_catalog_item(catalog_item_options)
       expect(service_template.orchestration_template).to eq(template)
@@ -200,7 +200,7 @@ RSpec.describe ServiceTemplateOrchestration do
       expect(updated.config_info).to eq(updated_catalog_item_options[:config_info])
       expect(updated.orchestration_template).to eq(new_template)
       expect(updated.orchestration_manager).to eq(new_manager)
-      expect(updated.resource_actions.pluck(:action)).to match_array(%w(Provision Reconfigure))
+      expect(updated.resource_actions.pluck(:action)).to match_array(%w[Provision Reconfigure])
     end
 
     it 'requires both template and manager id' do
@@ -233,10 +233,10 @@ RSpec.describe ServiceTemplateOrchestration do
       template = FactoryBot.create(:orchestration_template)
       manager = FactoryBot.create(:ext_management_system)
       service_template = FactoryBot.create(:service_template_orchestration,
-                                            :orchestration_template => template,
-                                            :orchestration_manager  => manager)
+                                           :orchestration_template => template,
+                                           :orchestration_manager  => manager)
       ra = FactoryBot.create(:resource_action, :action => 'Provision', :fqname => '/a/b/c')
-      service_template.create_resource_actions(:provision => { :fqname => ra.fqname })
+      service_template.create_resource_actions(:provision => {:fqname => ra.fqname})
 
       expected_config_info = {
         :template_id => template.id,

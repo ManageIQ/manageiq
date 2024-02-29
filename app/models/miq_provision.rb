@@ -23,7 +23,7 @@ class MiqProvision < MiqProvisionTask
 
   before_create :set_template_and_networking
 
-  virtual_belongs_to :miq_provision_request  # Legacy provisioning support
+  virtual_belongs_to :miq_provision_request # Legacy provisioning support
   virtual_belongs_to :vm
   virtual_belongs_to :vm_template
   virtual_column     :placement_auto, :type => :boolean

@@ -27,18 +27,16 @@ class Flavor < ApplicationRecord
                 else
                   _("%{name} (%{num_cpus} CPU, %{memory_gigabytes} GB RAM, %{root_disk_gigabytes} GB Root Disk)")
                 end
+              elsif root_disk_size.nil?
+                _("%{name} (%{num_cpus} CPUs, %{memory_gigabytes} GB RAM, Unknown Size Root Disk)")
               else
-                if root_disk_size.nil?
-                  _("%{name} (%{num_cpus} CPUs, %{memory_gigabytes} GB RAM, Unknown Size Root Disk)")
-                else
-                  _("%{name} (%{num_cpus} CPUs, %{memory_gigabytes} GB RAM, %{root_disk_gigabytes} GB Root Disk)")
-                end
+                _("%{name} (%{num_cpus} CPUs, %{memory_gigabytes} GB RAM, %{root_disk_gigabytes} GB Root Disk)")
               end
     details % {
       :name                => name,
       :num_cpus            => cpus,
       :memory_gigabytes    => memory.bytes / 1.0.gigabytes,
-      :root_disk_gigabytes => root_disk_size && root_disk_size.bytes / 1.0.gigabytes
+      :root_disk_gigabytes => root_disk_size && (root_disk_size.bytes / 1.0.gigabytes)
     }
   end
 
@@ -79,8 +77,10 @@ class Flavor < ApplicationRecord
 
   def self.create_flavor(ems_id, options)
     raise ArgumentError, _("ems cannot be nil") if ems_id.nil?
+
     ext_management_system = ExtManagementSystem.find(ems_id)
     raise ArgumentError, _("ems cannot be found") if ext_management_system.nil?
+
     klass = ext_management_system.class_by_ems(:Flavor)
     klass.raw_create_flavor(ext_management_system, options)
   end

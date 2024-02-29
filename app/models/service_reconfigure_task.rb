@@ -25,7 +25,7 @@ class ServiceReconfigureTask < MiqRequestTask
         :namespace        => ra.ae_namespace,
         :class_name       => ra.ae_class,
         :instance_name    => ra.ae_instance,
-        :automate_message => ra.ae_message.blank? ? 'create' : ra.ae_message,
+        :automate_message => (ra.ae_message.presence || 'create'),
         :attrs            => dialog_values,
         :user_id          => get_user.id,
         :miq_group_id     => get_user.current_group_id,
@@ -40,7 +40,7 @@ class ServiceReconfigureTask < MiqRequestTask
         :zone           => zone,
         :tracking_label => tracking_label_id
       )
-      update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
+      update_and_notify_parent(:state => "pending", :status => "Ok", :message => "Automation Starting")
     else
       update_and_notify_parent(:state   => "finished",
                                :status  => "Ok",

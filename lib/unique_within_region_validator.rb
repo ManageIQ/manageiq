@@ -13,7 +13,7 @@
 #
 class UniqueWithinRegionValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    return if value.nil? || !record.send("#{attribute}_changed?")
+    return if value.nil? || !record.send(:"#{attribute}_changed?")
 
     match_case = options.key?(:match_case) ? options[:match_case] : true
     record_base_class = record.class.base_class.default_scoped

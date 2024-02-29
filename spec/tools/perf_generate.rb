@@ -44,19 +44,19 @@ IMPORT_REALTIME_FNAME = File.expand_path(File.join(File.dirname(__FILE__), "impo
 IMPORT_HOURLY_FNAME = File.expand_path(File.join(File.dirname(__FILE__), "import_hourly.csv"))
 METRICS_COLS = [:capture_interval_name, :resource_type, :resource_id, :timestamp]
 
-puts <<-EOL
-Importing metrics for:
-  EMS:            #{NUM_EMS}
-  Storages:       #{NUM_STORAGES}
-  Clusters:       #{NUM_CLUSTERS}
-  Hosts:          #{NUM_HOSTS}
-  VMs:            #{NUM_VMS}
+puts <<~EOL
+  Importing metrics for:
+    EMS:            #{NUM_EMS}
+    Storages:       #{NUM_STORAGES}
+    Clusters:       #{NUM_CLUSTERS}
+    Hosts:          #{NUM_HOSTS}
+    VMs:            #{NUM_VMS}
 
-  Realtime from:  #{REALTIME_START.iso8601}
-  Hourly from:    #{HOURLY_START.iso8601}
+    Realtime from:  #{REALTIME_START.iso8601}
+    Hourly from:    #{HOURLY_START.iso8601}
 
-  Number of realtime rows: #{Class.new.extend(ActionView::Helpers::NumberHelper).number_with_delimiter(realtime_count)}
-  Number of hourly rows:   #{Class.new.extend(ActionView::Helpers::NumberHelper).number_with_delimiter(hourly_count)}
+    Number of realtime rows: #{Class.new.extend(ActionView::Helpers::NumberHelper).number_with_delimiter(realtime_count)}
+    Number of hourly rows:   #{Class.new.extend(ActionView::Helpers::NumberHelper).number_with_delimiter(hourly_count)}
 
 EOL
 
@@ -69,7 +69,7 @@ unless opts[:no_generate]
 
   def insert_realtime(klass, id, timestamp)
     180.times do |rt_count|
-      $out_csv_realtime << ["realtime", klass, id, (timestamp + 20 * rt_count).iso8601]
+      $out_csv_realtime << ["realtime", klass, id, (timestamp + (20 * rt_count)).iso8601]
       $pbar.increment
     end
   end
@@ -84,7 +84,7 @@ unless opts[:no_generate]
   def with_vms_and_hosts
     NUM_HOSTS.times do |h_id|
       VMS_PER_HOST.times do |v_count|
-        v_id = h_id * VMS_PER_HOST + v_count
+        v_id = (h_id * VMS_PER_HOST) + v_count
         yield "Vm", v_id + 1
       end
       yield "Host", h_id + 1

@@ -25,7 +25,7 @@ module Vmdb
         case type.to_sym
         when :po
           po_paths << path
-        else :mo
+        else
           mo_paths << path
         end
       end

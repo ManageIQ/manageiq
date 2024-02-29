@@ -41,7 +41,7 @@ module Vmdb
 
       def server(data)
         MiqServer.my_server&.config_activated(data)
-      rescue StandardError
+      rescue
         nil
       end
     end

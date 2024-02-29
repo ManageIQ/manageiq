@@ -15,15 +15,14 @@ RSpec.describe MiqExpression::SubstMixin do
       exp =
         {
           "and" =>
-            [
-              {"=" => {"field" => "ManageIQ::Providers::InfraManager::Vm-active", "value" => "true"}, :token => 1},
+                   [
+                     {"=" => {"field" => "ManageIQ::Providers::InfraManager::Vm-active", "value" => "true"}, :token => 1},
               {"or" =>
-                [
-                  {"=" => {"count" => "ManageIQ::Providers::InfraManager::Vm.advanced_settings", "value" => "1"}, :token => 2},
+                       [
+                         {"=" => {"count" => "ManageIQ::Providers::InfraManager::Vm.advanced_settings", "value" => "1"}, :token => 2},
                   {"=" => {"count" => "ManageIQ::Providers::InfraManager::Vm.storages", "value" => "1"}, :token => 3}
-                ]
-              }
-            ]
+                       ]}
+                   ]
         }
       result = test_obj.exp_find_by_token(exp, 2)
       expect(result).to eq("=" => {"count" => "ManageIQ::Providers::InfraManager::Vm.advanced_settings", "value" => "1"}, :token => 2)
@@ -33,11 +32,11 @@ RSpec.describe MiqExpression::SubstMixin do
       exp =
         {
           "and" =>
-            [
-              {"=" => {"field" => "ManageIQ::Providers::InfraManager::Vm-active", "value" => "true"}, :token => 1},
+                   [
+                     {"=" => {"field" => "ManageIQ::Providers::InfraManager::Vm-active", "value" => "true"}, :token => 1},
               {"CONTAINS" => {"tag" => "ManageIQ::Providers::InfraManager::Vm.managed-prov_max_cpu", "value" => "2"}, :token => 2},
               {"CONTAINS" => {"tag" => "ManageIQ::Providers::InfraManager::Vm.managed-prov_max_retirement_days", "value" => "60"}, :token => 3}
-            ]
+                   ]
         }
       result = test_obj.exp_find_by_token(exp, 3)
       expect(result).to eq("CONTAINS" => {"tag" => "ManageIQ::Providers::InfraManager::Vm.managed-prov_max_retirement_days", "value" => "60"}, :token => 3)

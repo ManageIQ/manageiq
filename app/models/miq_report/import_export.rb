@@ -3,12 +3,11 @@ module MiqReport::ImportExport
 
   module ClassMethods
     def view_paths
-      @view_paths ||= (
-        Vmdb::Plugins.map do |engine|
-          path = engine.root.join('product/views')
+      @view_paths ||= Vmdb::Plugins.map do |engine|
+        path = engine.root.join('product/views')
           path if path.directory?
-        end.compact
-      )
+      end.compact
+
     end
 
     def resolve_view_path(file_name, file_name_no_suffix = nil)
@@ -117,7 +116,7 @@ module MiqReport::ImportExport
     def load_from_filename(filename, cache)
       yaml = cache[filename] ||= YAML.load_file(filename)
       view = MiqReport.new(yaml)
-      view.extras ||= {}                        # Always add in the extras hash
+      view.extras ||= {} # Always add in the extras hash
       view.extras[:filename] = File.basename(filename, '.yaml')
       view
     end
@@ -128,14 +127,12 @@ module MiqReport::ImportExport
 
       role = current_user.try(:miq_user_role)
       # Special code to build the view file name for users of VM restricted roles
-      if %w(ManageIQ::Providers::CloudManager::Template ManageIQ::Providers::InfraManager::Template
-            ManageIQ::Providers::CloudManager::Vm ManageIQ::Providers::InfraManager::Vm VmOrTemplate).include?(db)
-        if role && role.settings && role.settings.fetch_path(:restrictions, :vms)
-          viewfilerestricted = resolve_view_path('Vm__restricted.yaml')
-        end
+      if %w[ManageIQ::Providers::CloudManager::Template ManageIQ::Providers::InfraManager::Template
+            ManageIQ::Providers::CloudManager::Vm ManageIQ::Providers::InfraManager::Vm VmOrTemplate].include?(db) && (role && role.settings && role.settings.fetch_path(:restrictions, :vms))
+        viewfilerestricted = resolve_view_path('Vm__restricted.yaml')
       end
 
-      db = db.gsub(/::/, '_')
+      db = db.gsub("::", '_')
 
       role = role.name.split("-").last if role.try(:read_only?)
 

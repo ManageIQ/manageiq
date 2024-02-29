@@ -5,7 +5,7 @@ module Metric::CiMixin::Rollup
                                            when 'hourly', 'historical' then [perf_rollup_parents('hourly'), 'daily']
                                            when 'daily'                then [nil, nil]
                                            else raise ArgumentError, _("invalid interval name %{name}") %
-                                                                       {:name => interval_name}
+                                                                     {:name => interval_name}
                                            end
 
     parents = parent_rollups.to_a.compact.flat_map { |p| [p, interval_name] }
@@ -15,14 +15,14 @@ module Metric::CiMixin::Rollup
       next if parent.nil?
 
       case new_interval
-      when 'hourly', 'historical' then
+      when 'hourly', 'historical'
         times = Metric::Helper.hours_from_range(start_time, end_time)
 
         log_header = "Queueing [#{new_interval}] rollup to #{parent.class.name} id: [#{parent.id}] for times: #{times.inspect}"
         _log.info("#{log_header}...")
         times.each { |t| parent.perf_rollup_queue(t, new_interval) }
         _log.info("#{log_header}...Complete")
-      when 'daily' then
+      when 'daily'
         times_by_tp = Metric::Helper.days_from_range_by_time_profile(start_time, end_time)
         times_by_tp.each do |tp, times|
           log_header = "Queueing [#{new_interval}] rollup to #{parent.class.name} id: [#{parent.id}] in time profile: [#{tp.description}] for times: #{times.inspect}"
@@ -42,6 +42,7 @@ module Metric::CiMixin::Rollup
     if interval_name == 'daily' && time_profile.nil?
       raise ArgumentError, _("time_profile must be passed if interval name is 'daily'")
     end
+
     time_profile = TimeProfile.extract_objects(time_profile)
 
     deliver_on = case interval_name
@@ -73,6 +74,7 @@ module Metric::CiMixin::Rollup
     if interval_name == 'daily' && time_profile.nil?
       raise ArgumentError, _("time_profile must be passed if interval name is 'daily'")
     end
+
     time_profile = TimeProfile.extract_objects(time_profile)
     _klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
 
@@ -93,7 +95,7 @@ module Metric::CiMixin::Rollup
       end
 
       Benchmark.realtime_block(:rollup_perfs) do
-        new_perf = Metric::Rollup.send("rollup_#{interval_name}", self, time, interval_name, time_profile, new_perf, perf.attributes.symbolize_keys)
+        new_perf = Metric::Rollup.send(:"rollup_#{interval_name}", self, time, interval_name, time_profile, new_perf, perf.attributes.symbolize_keys)
       end
 
       Benchmark.realtime_block(:db_update_perf) { perf.update(new_perf) }
@@ -119,8 +121,10 @@ module Metric::CiMixin::Rollup
               Metric::Helper.hours_from_range(start_time, end_time)
             when 'daily'
               raise ArgumentError, _("time_profile must be passed if interval name is 'daily'") if time_profile.nil?
+
               time_profile = TimeProfile.extract_objects(time_profile)
               return if time_profile.nil? || !time_profile.rollup_daily_metrics
+
               Metric::Helper.days_from_range(start_time, end_time, time_profile.tz_or_default)
             end
 

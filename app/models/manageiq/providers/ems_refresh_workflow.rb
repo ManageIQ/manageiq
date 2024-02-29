@@ -59,12 +59,12 @@ class ManageIQ::Providers::EmsRefreshWorkflow < Job
     super(*args, :role => role, :priority => priority, :deliver_on => deliver_on)
   end
 
-  alias_method :initializing, :dispatch_start
-  alias_method :start,        :run_native_op
-  alias_method :finish,       :process_finished
-  alias_method :abort_job,    :process_abort
-  alias_method :cancel,       :process_cancel
-  alias_method :error,        :process_error
+  alias initializing dispatch_start
+  alias start run_native_op
+  alias finish process_finished
+  alias abort_job process_abort
+  alias cancel process_cancel
+  alias error process_error
 
   protected
 

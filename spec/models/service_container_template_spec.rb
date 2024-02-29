@@ -29,8 +29,8 @@ RSpec.describe(ServiceContainerTemplate) do
     end
 
     FactoryBot.create(:service_container_template,
-                       :options          => provision_options.merge(config_info_options),
-                       :service_template => service_template).tap do |svc|
+                      :options          => provision_options.merge(config_info_options),
+                      :service_template => service_template).tap do |svc|
       allow(svc).to receive(:container_template).and_return(container_template)
       allow(svc).to receive(:stack).and_return(stack)
     end
@@ -136,7 +136,7 @@ RSpec.describe(ServiceContainerTemplate) do
 
   describe '#check_completed' do
     it 'created container object ends in VMDB' do
-      allow(stack_status).to receive(:normalized_status).and_return(%w(create_complete completed))
+      allow(stack_status).to receive(:normalized_status).and_return(%w[create_complete completed])
       expect(loaded_service.check_completed(action)).to eq([true, nil])
     end
 

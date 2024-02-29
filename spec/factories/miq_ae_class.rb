@@ -16,15 +16,15 @@ FactoryBot.define do
 
         evaluator.ae_instances.each do |name, values|
           FactoryBot.create(:miq_ae_instance,
-                             :class_id => aeclass.id,
-                             :name     => name,
-                             'values'  => values)
+                            :class_id => aeclass.id,
+                            :name     => name,
+                            'values'  => values)
         end
 
         evaluator.ae_methods.each do |name, aemethod|
           FactoryBot.create(:miq_ae_method,
-                             {:class_id => aeclass.id,
-                              :name     => name}.merge(aemethod))
+                            {:class_id => aeclass.id,
+                             :name     => name}.merge(aemethod))
         end
       end
     end

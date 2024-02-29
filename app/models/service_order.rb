@@ -2,9 +2,11 @@ class ServiceOrder < ApplicationRecord
   STATE_CART    = 'cart'.freeze
   STATE_WISH    = 'wish'.freeze
   STATE_ORDERED = 'ordered'.freeze
-  REQUEST_ATTRIBUTES = %w(id name approval_state request_state message
-                          created_on fulfilled_on updated_on placed_on).freeze
+  REQUEST_ATTRIBUTES = %w[id name approval_state request_state message
+                          created_on fulfilled_on updated_on placed_on].freeze
 
+  before_create :assign_user
+  after_create  :create_order_name
   before_destroy :destroy_unprocessed_requests
   belongs_to :tenant
   belongs_to :user
@@ -14,11 +16,8 @@ class ServiceOrder < ApplicationRecord
   validates :state, :uniqueness_when_changed => {:scope => [:user_id, :tenant_id]}, :if => :cart?
   validates :name, :presence => true, :on => :update
 
-  before_create :assign_user
-  after_create  :create_order_name
-
   def initialize(*args)
-    raise NotImplementedError, _("must be implemented in a subclass") if self.class == ServiceOrder
+    raise NotImplementedError, _("must be implemented in a subclass") if instance_of?(ServiceOrder)
 
     super
   end
@@ -51,17 +50,18 @@ class ServiceOrder < ApplicationRecord
 
   def checkout
     raise "Invalid operation [checkout] for Service Order in state [#{state}]" if ordered?
+
     _log.info("Service Order checkout for service: #{name}")
     process_checkout(miq_requests)
     update(:state     => STATE_ORDERED,
-                      :placed_at => Time.zone.now)
+           :placed_at => Time.zone.now)
   end
 
   def checkout_immediately
     _log.info("Service Order checkout immediately for service: #{name}")
     process_checkout(miq_requests)
     update(:state     => STATE_ORDERED,
-                      :placed_at => Time.zone.now)
+           :placed_at => Time.zone.now)
   end
 
   def process_checkout(miq_requests)
@@ -73,6 +73,7 @@ class ServiceOrder < ApplicationRecord
 
   def clear
     raise "Invalid operation [clear] for Service Order in state [#{state}]" if ordered?
+
     _log.info("Service Order clear for service: #{name}")
     destroy_unprocessed_requests
   end
@@ -108,6 +109,7 @@ class ServiceOrder < ApplicationRecord
 
   def deep_copy(new_attributes = {})
     raise _("Cannot copy a service order in the %{state} state") % {:state => STATE_CART} if state == STATE_CART
+
     dup.tap do |new_service_order|
       # Set it to nil - the after_create hook will give it the correct name
       new_service_order.name = nil
@@ -117,7 +119,7 @@ class ServiceOrder < ApplicationRecord
         request.class.send(:create, request.attributes.except(*REQUEST_ATTRIBUTES))
       end
       new_attributes.each do |attr, value|
-        new_service_order.send("#{attr}=", value) if self.class.attribute_names.include?(attr.to_s)
+        new_service_order.send(:"#{attr}=", value) if self.class.attribute_names.include?(attr.to_s)
       end
       new_service_order.save!
     end
@@ -127,6 +129,7 @@ class ServiceOrder < ApplicationRecord
 
   def destroy_unprocessed_requests
     return if ordered?
+
     miq_requests.destroy_all
   end
 end

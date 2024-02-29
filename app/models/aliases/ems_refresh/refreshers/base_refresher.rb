@@ -1,1 +1,1 @@
-::EmsRefresh::Refreshers::BaseRefresher = ManageIQ::Providers::BaseManager::Refresher
+EmsRefresh::Refreshers::BaseRefresher = ManageIQ::Providers::BaseManager::Refresher

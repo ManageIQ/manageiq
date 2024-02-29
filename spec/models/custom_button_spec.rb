@@ -7,13 +7,13 @@ RSpec.describe CustomButton do
 
       context 'by bigint column' do
         it 'orders by memory_shares column' do
-          expect(CustomButton.with_array_order(%w(300 100 200), :applies_to_id).ids).to eq([custom_button_3.id, custom_button_1.id, custom_button_2.id])
+          expect(CustomButton.with_array_order(%w[300 100 200], :applies_to_id).ids).to eq([custom_button_3.id, custom_button_1.id, custom_button_2.id])
         end
       end
 
       context 'by string column' do
         it 'orders by name column' do
-          expect(CustomButton.with_array_order(%w(BBB AAA CCC), :name, :text).ids).to eq([custom_button_2.id, custom_button_1.id, custom_button_3.id])
+          expect(CustomButton.with_array_order(%w[BBB AAA CCC], :name, :text).ids).to eq([custom_button_2.id, custom_button_1.id, custom_button_3.id])
         end
       end
     end
@@ -70,16 +70,15 @@ RSpec.describe CustomButton do
         @userid        = "guest"
         uri_path, uri_attributes, uri_message = CustomButton.parse_uri(@ae_uri)
         @button = FactoryBot.create(:custom_button,
-          :name             => @button_name,
-          :description      => @button_text,
-          :applies_to_class => @button_class,
-          :applies_to_id    => @target_id,
-          :uri              => @ae_uri,
-          :uri_path         => uri_path,
-          :uri_attributes   => uri_attributes,
-          :uri_message      => uri_message,
-          :userid           => @userid
-        )
+                                    :name             => @button_name,
+                                    :description      => @button_text,
+                                    :applies_to_class => @button_class,
+                                    :applies_to_id    => @target_id,
+                                    :uri              => @ae_uri,
+                                    :uri_path         => uri_path,
+                                    :uri_attributes   => uri_attributes,
+                                    :uri_message      => uri_message,
+                                    :userid           => @userid)
       end
 
       it "creates the proper button" do
@@ -129,23 +128,23 @@ RSpec.describe CustomButton do
     vm         = FactoryBot.create(:vm_vmware)
     vm_other   = FactoryBot.create(:vm_vmware)
     button1all = FactoryBot.create(:custom_button,
-                                    :applies_to  => vm.class,
-                                    :name        => "foo",
-                                    :description => "foo foo")
+                                   :applies_to  => vm.class,
+                                   :name        => "foo",
+                                   :description => "foo foo")
 
     button1vm  = FactoryBot.create(:custom_button,
-                                    :applies_to  => vm,
-                                    :name        => "bar",
-                                    :description => "bar bar")
+                                   :applies_to  => vm,
+                                   :name        => "bar",
+                                   :description => "bar bar")
 
     button2vm  = FactoryBot.create(:custom_button,
-                                    :applies_to  => vm,
-                                    :name        => "foo",
-                                    :description => "foo foo")
+                                   :applies_to  => vm,
+                                   :name        => "foo",
+                                   :description => "foo foo")
 
     expect(described_class.buttons_for(Host)).to eq([])
     expect(described_class.buttons_for(Vm)).to eq([button1all])
-    expect(described_class.buttons_for(vm)).to  match_array([button1vm, button2vm])
+    expect(described_class.buttons_for(vm)).to match_array([button1vm, button2vm])
     expect(described_class.buttons_for(vm_other)).to eq([])
   end
 
@@ -168,39 +167,44 @@ RSpec.describe CustomButton do
 
     it "applies_to_class" do
       button_for_all_vms = FactoryBot.create(:custom_button,
-                                              :applies_to_class => 'Vm',
-                                              :name             => @default_name,
-                                              :description      => @default_description)
+                                             :applies_to_class => 'Vm',
+                                             :name             => @default_name,
+                                             :description      => @default_description)
       expect(button_for_all_vms).to be_valid
 
       new_host_button = described_class.new(
         :applies_to_class => 'Host',
         :name             => @default_name,
-        :description      => @default_description)
+        :description      => @default_description
+      )
       expect(new_host_button).to be_valid
 
       dup_vm_button = described_class.new(
         :applies_to_class => 'Vm',
         :name             => @default_name,
-        :description      => @default_description)
+        :description      => @default_description
+      )
       expect(dup_vm_button).not_to be_valid
 
       dup_vm_name_button = described_class.new(
         :applies_to_class => 'Vm',
         :name             => @default_name,
-        :description      => "hello world")
+        :description      => "hello world"
+      )
       expect(dup_vm_name_button).not_to be_valid
 
       dup_vm_desc_button = described_class.new(
         :applies_to_class => 'Vm',
         :name             => "hello",
-        :description      => @default_description)
+        :description      => @default_description
+      )
       expect(dup_vm_desc_button).not_to be_valid
 
       new_vm_button = described_class.new(
         :applies_to_class => 'Vm',
         :name             => "hello",
-        :description      => "hello world")
+        :description      => "hello world"
+      )
       expect(new_vm_button).to be_valid
     end
 
@@ -208,59 +212,67 @@ RSpec.describe CustomButton do
       vm_other = FactoryBot.create(:vm_vmware)
 
       button_for_single_vm = FactoryBot.create(:custom_button,
-                                                :applies_to  => @vm,
-                                                :name        => @default_name,
-                                                :description => @default_description)
+                                               :applies_to  => @vm,
+                                               :name        => @default_name,
+                                               :description => @default_description)
       expect(button_for_single_vm).to be_valid
 
       # For same VM
       dup_vm_button = described_class.new(
         :applies_to  => @vm,
         :name        => @default_name,
-        :description => @default_description)
+        :description => @default_description
+      )
       expect(dup_vm_button).not_to be_valid
 
       dup_vm_name_button = described_class.new(
         :applies_to  => @vm,
         :name        => @default_name,
-        :description => "hello world")
+        :description => "hello world"
+      )
       expect(dup_vm_name_button).not_to be_valid
 
       dup_vm_desc_button = described_class.new(
         :applies_to  => @vm,
         :name        => "hello",
-        :description => @default_description)
+        :description => @default_description
+      )
       expect(dup_vm_desc_button).not_to be_valid
 
       new_vm_button = described_class.new(
         :applies_to  => @vm,
         :name        => "hello",
-        :description => "hello world")
+        :description => "hello world"
+      )
       expect(new_vm_button).to be_valid
 
       # For other VM
       dup_vm_button = described_class.new(
         :applies_to  => vm_other,
         :name        => @default_name,
-        :description => @default_description)
+        :description => @default_description
+      )
       expect(dup_vm_button).to be_valid
 
       dup_vm_name_button = described_class.new(
         :applies_to  => vm_other,
         :name        => @default_name,
-        :description => "hello world")
+        :description => "hello world"
+      )
       expect(dup_vm_name_button).to be_valid
 
       dup_vm_desc_button = described_class.new(
         :applies_to  => vm_other,
         :name        => "hello",
-        :description => @default_description)
+        :description => @default_description
+      )
       expect(dup_vm_desc_button).to be_valid
 
       new_vm_button = described_class.new(
         :applies_to  => vm_other,
         :name        => "hello",
-        :description => "hello world")
+        :description => "hello world"
+      )
       expect(new_vm_button).to be_valid
     end
   end
@@ -329,7 +341,7 @@ RSpec.describe CustomButton do
       EvmSpecHelper.local_miq_server(:is_master => true, :zone => Zone.seed)
     end
 
-    %i(invoke invoke_async).each do |method|
+    %i[invoke invoke_async].each do |method|
       describe "##{method}", "publishes CustomButtonEvent(s)" do
         it "with a single VM" do
           Timecop.freeze(Time.now.utc) do
@@ -358,10 +370,10 @@ RSpec.describe CustomButton do
 
             expect(CustomButtonEvent.count).to eq(3)
             expect(CustomButtonEvent.find_by(:target_id => vm.id, :target_type => "VmOrTemplate", :source => 'UI')).to have_attributes(
-              :type        => 'CustomButtonEvent',
-              :event_type  => 'button.trigger.start',
-              :user_id     => user.id,
-              :full_data   => a_hash_including(:automate_entry_point => "/SYSTEM/PROCESS/Request")
+              :type       => 'CustomButtonEvent',
+              :event_type => 'button.trigger.start',
+              :user_id    => user.id,
+              :full_data  => a_hash_including(:automate_entry_point => "/SYSTEM/PROCESS/Request")
             )
           end
 
@@ -374,10 +386,10 @@ RSpec.describe CustomButton do
 
             expect(CustomButtonEvent.count).to eq(3)
             expect(CustomButtonEvent.find_by(:target_id => vm.id, :target_type => "VmOrTemplate", :source => 'UI')).to have_attributes(
-              :type        => 'CustomButtonEvent',
-              :event_type  => 'button.trigger.start',
-              :user_id     => user.id,
-              :full_data   => a_hash_including(:automate_entry_point => "/SYSTEM/PROCESS/Request")
+              :type       => 'CustomButtonEvent',
+              :event_type => 'button.trigger.start',
+              :user_id    => user.id,
+              :full_data  => a_hash_including(:automate_entry_point => "/SYSTEM/PROCESS/Request")
             )
           end
         end

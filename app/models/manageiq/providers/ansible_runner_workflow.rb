@@ -130,6 +130,7 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
 
     if monitor.running?
       return handle_runner_timeout(monitor) if job_timeout_exceeded?
+
       queue_signal(:poll_runner, :deliver_on => deliver_on)
     else
       process_runner_result(monitor.response)

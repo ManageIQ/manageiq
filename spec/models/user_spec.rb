@@ -134,8 +134,8 @@ RSpec.describe User do
   describe "role methods" do
     let(:user) do
       FactoryBot.create(:user,
-                         :settings => {"Setting1" => 1, "Setting2" => 2, "Setting3" => 3},
-                         :role     => role_name)
+                        :settings => {"Setting1" => 1, "Setting2" => 2, "Setting3" => 3},
+                        :role     => role_name)
     end
 
     describe "#self_service?" do
@@ -231,8 +231,7 @@ RSpec.describe User do
                              :ldap_role => true,
                              :user_suffix => "manageiq.com",
                              :group_memberships_max_depth => 2,
-                             :ldaphost => ["192.168.254.15"]}
-        }
+                             :ldaphost => ["192.168.254.15"]}}
       stub_settings(@auth_config)
       @miq_ldap = double('miq_ldap')
       allow(@miq_ldap).to receive_messages(:bind => false)
@@ -355,7 +354,7 @@ RSpec.describe User do
       group = FactoryBot.create(:miq_group)
       @user = FactoryBot.create(:user, :miq_groups => [group])
       @ems = FactoryBot.create(:ems_vmware, :name => "test_vcenter")
-      @storage  = FactoryBot.create(:storage, :name => "test_storage_nfs", :store_type => "NFS")
+      @storage = FactoryBot.create(:storage, :name => "test_storage_nfs", :store_type => "NFS")
 
       @hw1 = FactoryBot.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
       @hw2 = FactoryBot.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
@@ -367,25 +366,25 @@ RSpec.describe User do
       @disk4 = FactoryBot.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw4.id)
 
       @active_vm = FactoryBot.create(:vm_vmware,
-                                      :name         => "Active VM",
-                                      :evm_owner_id => @user.id,
-                                      :ems_id       => @ems.id,
-                                      :storage_id   => @storage.id,
-                                      :hardware     => @hw1)
+                                     :name         => "Active VM",
+                                     :evm_owner_id => @user.id,
+                                     :ems_id       => @ems.id,
+                                     :storage_id   => @storage.id,
+                                     :hardware     => @hw1)
       @archived_vm = FactoryBot.create(:vm_vmware,
-                                        :name         => "Archived VM",
-                                        :evm_owner_id => @user.id,
-                                        :hardware     => @hw2)
-      @orphaned_vm = FactoryBot.create(:vm_vmware,
-                                        :name         => "Orphaned VM",
-                                        :evm_owner_id => @user.id,
-                                        :storage_id   => @storage.id,
-                                        :hardware     => @hw3)
-      @retired_vm = FactoryBot.create(:vm_vmware,
-                                       :name         => "Retired VM",
+                                       :name         => "Archived VM",
                                        :evm_owner_id => @user.id,
-                                       :retired      => true,
-                                       :hardware     => @hw4)
+                                       :hardware     => @hw2)
+      @orphaned_vm = FactoryBot.create(:vm_vmware,
+                                       :name         => "Orphaned VM",
+                                       :evm_owner_id => @user.id,
+                                       :storage_id   => @storage.id,
+                                       :hardware     => @hw3)
+      @retired_vm = FactoryBot.create(:vm_vmware,
+                                      :name         => "Retired VM",
+                                      :evm_owner_id => @user.id,
+                                      :retired      => true,
+                                      :hardware     => @hw4)
     end
 
     it "#active_vms" do
@@ -408,7 +407,7 @@ RSpec.describe User do
       expect(@user.provisioned_storage).to eq(@ram_size.megabyte + @disk_size)
     end
 
-    %w(allocated_memory allocated_vcpu allocated_storage provisioned_storage).each do |vcol|
+    %w[allocated_memory allocated_vcpu allocated_storage provisioned_storage].each do |vcol|
       it "should have virtual column #{vcol} " do
         expect(described_class).to have_virtual_column vcol.to_s, :integer
       end
@@ -787,7 +786,7 @@ RSpec.describe User do
     it "handles multiple columns" do
       a1 = FactoryBot.create(:miq_group, :features => "good")
       a2 = FactoryBot.create(:miq_group, :features => "something")
-      b = FactoryBot.create(:miq_group, :features => %w(good everything))
+      b = FactoryBot.create(:miq_group, :features => %w[good everything])
       c = FactoryBot.create(:miq_group, :features => "everything")
 
       u1 = FactoryBot.create(:user, :miq_groups => [a1])

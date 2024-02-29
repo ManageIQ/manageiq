@@ -93,16 +93,14 @@ RSpec.describe VimPerformanceTag do
           case_sets[vm.name.to_sym].each do |timestamp, value|
             if vm.name == "none"
               perf = FactoryBot.create(:metric_rollup_vm_hr,
-                                        :timestamp                 => timestamp,
-                                        :cpu_usagemhz_rate_average => value
-                                       )
+                                       :timestamp                 => timestamp,
+                                       :cpu_usagemhz_rate_average => value)
             else
               tag = "environment/#{vm.name}"
               perf = FactoryBot.create(:metric_rollup_vm_hr,
-                                        :timestamp                 => timestamp,
-                                        :cpu_usagemhz_rate_average => value,
-                                        :tag_names                 => tag
-                                       )
+                                       :timestamp                 => timestamp,
+                                       :cpu_usagemhz_rate_average => value,
+                                       :tag_names                 => tag)
             end
             vm.metric_rollups << perf
           end
@@ -111,9 +109,8 @@ RSpec.describe VimPerformanceTag do
 
         case_sets[:host].each do |timestamp, value|
           perf = FactoryBot.create(:metric_rollup_host_hr,
-                                    :timestamp                 => timestamp,
-                                    :cpu_usagemhz_rate_average => value
-                                   )
+                                   :timestamp                 => timestamp,
+                                   :cpu_usagemhz_rate_average => value)
           @host.metric_rollups << perf
         end
         @host.save!
@@ -140,9 +137,9 @@ RSpec.describe VimPerformanceTag do
         results.each do |t|
           ts = t.timestamp.iso8601.to_s
           @classification_entries.each do |entry|
-            expect(@precomputed[ts][entry.to_sym]).to eq(t.send("cpu_usagemhz_rate_average_#{entry}"))
+            expect(@precomputed[ts][entry.to_sym]).to eq(t.send(:"cpu_usagemhz_rate_average_#{entry}"))
           end
-          expect(@precomputed[ts][:none]).to eq(t.send("cpu_usagemhz_rate_average__none_"))
+          expect(@precomputed[ts][:none]).to eq(t.send(:cpu_usagemhz_rate_average__none_))
         end
       end
     end

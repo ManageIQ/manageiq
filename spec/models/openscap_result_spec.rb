@@ -18,7 +18,8 @@ RSpec.describe OpenscapResult do
     it "parses results" do
       rule_results = [
         [1, double(:result => 'result_1')],
-        [2, double(:result => 'result_2')]]
+        [2, double(:result => 'result_2')]
+      ]
 
       benchmark_items = {1 => double(:severity => 'Bad', :idents => [], :title => "Bad"),
                          2 => double(:severity => 'Not That Bad', :idents => [], :title => "Not That Bad")}
@@ -29,13 +30,15 @@ RSpec.describe OpenscapResult do
         :name               => '1',
         :result             => "result_1",
         :title              => "Bad",
-        :severity           => "Bad")
+        :severity           => "Bad"
+      )
       expect(openscap_result.openscap_rule_results[1]).to have_attributes(
         :openscap_result_id => 17,
         :name               => '2',
         :result             => "result_2",
         :title              => "Not That Bad",
-        :severity           => "Not That Bad")
+        :severity           => "Not That Bad"
+      )
     end
   end
 end

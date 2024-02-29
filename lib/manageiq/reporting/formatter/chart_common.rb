@@ -7,7 +7,7 @@ module ManageIQ
           when Date, Time, DateTime, ActiveSupport::TimeWithZone
             string.iso8601(3)
           else
-            string.to_s.gsub(/\n/, ' ').truncate(limit)
+            string.to_s.tr("\n", ' ').truncate(limit)
           end
         end
 
@@ -28,6 +28,7 @@ module ManageIQ
 
         def build_document_body
           return no_records_found_chart if mri.table.nil? || mri.table.data.blank?
+
           maxcols = 8
           fun = case graph_options[:chart_type]
                 when :performance then :build_performance_chart # performance chart (time based)
@@ -48,11 +49,11 @@ module ManageIQ
           tz = mri.get_time_zone(Time.zone.name)
 
           mri.graph[:columns].each_with_index do |col, col_idx|
-
             next if col_idx >= maxcols
+
             allnil = true
             tip = graph_options[:trendtip] if col.starts_with?("trend") && graph_options[:trendtip]
-            categories = []                      # Store categories and series counts in an array of arrays
+            categories = [] # Store categories and series counts in an array of arrays
             series = series_class.new
             mri.table.data.each_with_index do |r, d_idx|
               rec_time = r["timestamp"].in_time_zone(tz)
@@ -77,6 +78,7 @@ module ManageIQ
 
         def rounded_value(value)
           return 0 if value.blank?
+
           value.round(graph_options[:decimals] || 0)
         end
 
@@ -90,6 +92,7 @@ module ManageIQ
             cat = cat_cnt > 6 ? 'Others' : r["resource_name"]
             val = rounded_value(r[col])
             next if val == 0
+
             if cat.starts_with?("Others") && categories[-1].starts_with?("Others") # Are we past the top 10?
               categories[-1] = "Others"
               series.add_to_value(-1, val) # Accumulate the series value
@@ -135,7 +138,8 @@ module ManageIQ
                                      :function => {
                                        :name      => "mhz_to_human_size",
                                        :precision => "1"
-                                     }})
+                                     }
+                                   })
                       when "Memory"
                         mri.format(tip_key, r[tip_key].to_f * 1024 * 1024, :format => format_bytes_human_size_1)
                       when "Disk"
@@ -191,13 +195,11 @@ module ManageIQ
               save2_nonblank = nonblank_or_default(save2)
               counts[save1_nonblank] = Hash.new(0)
               counter = 0
-            else
-              if save2 != r[sort2].to_s # only the second sort field changed, save the count
-                counts[save1_nonblank][save2_nonblank] = counter
-                save2 = r[sort2].to_s
-                save2_nonblank = nonblank_or_default(save2)
-                counter = 0
-              end
+            elsif save2 != r[sort2].to_s
+              counts[save1_nonblank][save2_nonblank] = counter
+              save2 = r[sort2].to_s
+              save2_nonblank = nonblank_or_default(save2)
+              counter = 0 # only the second sort field changed, save the count
             end
             counter += 1
           end
@@ -227,13 +229,13 @@ module ManageIQ
               a.push(:value   => hash1[val2[0]],
                      :tooltip => "#{key1} / #{val2[0]}")
             end
-            val2[0] = val2[0].to_s.gsub(/\\/, ' \ ')
+            val2[0] = val2[0].to_s.gsub("\\", ' \ ')
             add_series(val2[0].to_s, series)
           end
 
           if other.present? && show_other # Sum up the other sort2 counts by sort1 value
             series = series_class.new
-            counts.each do |key1, hash1|   # Go thru each sort1 key and hash count
+            counts.each do |key1, hash1| # Go thru each sort1 key and hash count
               # Add in all of the remaining sort2 key counts
               ocount = other.reduce(0) { |a, e| a + hash1[e[0]] }
               series.push(:value   => ocount,
@@ -286,7 +288,7 @@ module ManageIQ
           sorted_data = mri.table.data.sort_by { |row| row[data_column_name] || 0 }
 
           series = sorted_data.reverse.take(keep)
-                   .each_with_object(series_class.new(pie_type? ? :pie : :flat)) do |row, a|
+                              .each_with_object(series_class.new(pie_type? ? :pie : :flat)) do |row, a|
             tooltip = row[sort1]
             tooltip = _('no value') if tooltip.blank?
             a.push(:value   => row[data_column_name],
@@ -316,7 +318,7 @@ module ManageIQ
 
           categories = []
           series = sorted_data.reverse.take(keep)
-                   .each_with_object(series_class.new(pie_type? ? :pie : :flat)) do |(key, data), a|
+                              .each_with_object(series_class.new(pie_type? ? :pie : :flat)) do |(key, data), a|
             tooltip = key
             tooltip = _('no value') if key.blank?
             a.push(:value   => data[aggreg][raw_column_name],
@@ -351,8 +353,8 @@ module ManageIQ
 
           def_range_key2 = subtotals.keys.map { |key| key.split('__')[1] || '' }.sort.uniq
 
-          group_sums = groups.keys.each_with_object({}) do |key1, h|
-            h[key1] = def_range_key2.inject(0) do |sum, key2|
+          group_sums = groups.keys.index_with do |key1|
+            def_range_key2.inject(0) do |sum, key2|
               sub_key = "#{key1}__#{key2}"
               subtotals.key?(sub_key) ? sum + subtotals[sub_key][aggreg][raw_column_name] : sum
             end
@@ -389,14 +391,16 @@ module ManageIQ
                      :tooltip => "#{key1} / #{val2}")
             end
 
-            series.push(:value   => other[val2],
-                        :tooltip => "Other / #{val2}") if show_other
+            if show_other
+              series.push(:value   => other[val2],
+                          :tooltip => "Other / #{val2}")
+            end
             label = val2 if val2.kind_of?(String)
-            label = label.to_s.gsub(/\\/, ' \ ')
+            label = label.to_s.gsub("\\", ' \ ')
             label = _('no value') if label.blank?
             add_series(label, series)
           end
-          groups.keys.collect { |k| k.blank? ? _('no value') : k }
+          groups.keys.collect { |k| (k.presence || _('no value')) }
         end
 
         def pie_type?
@@ -406,7 +410,7 @@ module ManageIQ
         def build_reporting_chart_other
           save_key   = nil
           counter    = 0
-          categories = []                      # Store categories and series counts in an array of arrays
+          categories = [] # Store categories and series counts in an array of arrays
           mri.table.data.each_with_index do |r, d_idx|
             category_changed = save_key != r[mri.sortby[0]]
             not_first_iteration = d_idx > 0
@@ -428,7 +432,8 @@ module ManageIQ
           kept_categories.map { |cat| [nonblank_or_default(cat.first), cat.last] }
 
           series = kept_categories.each_with_object(
-            series_class.new(pie_type? ? :pie : :flat)) do |cat, a|
+            series_class.new(pie_type? ? :pie : :flat)
+          ) do |cat, a|
             a.push(:value => cat.last, :tooltip => cat.first)
           end
 
@@ -450,11 +455,12 @@ module ManageIQ
 
         # Utilization timestamp charts
         def build_util_ts_chart(_maxcols)
-          build_util_ts_chart_column if %w(Column ColumnThreed).index(mri.graph[:type])
+          build_util_ts_chart_column if %w[Column ColumnThreed].index(mri.graph[:type])
         end
 
         def build_reporting_chart_numeric(_maxcols)
           return no_records_found_chart(_('Invalid chart definition')) unless mri.graph[:column].present?
+
           if mri.group.nil?
             build_numeric_chart_simple
           else

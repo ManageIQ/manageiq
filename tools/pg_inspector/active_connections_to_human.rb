@@ -77,11 +77,11 @@ module PgInspector
 
     def filter_activity_for_server(activity)
       activity.select do |k, _v|
-        %w(server_id
+        %w[server_id
            name
            pid
            zone_id
-           zone_name)
+           zone_name]
           .include?(k)
       end
     end
@@ -98,10 +98,10 @@ module PgInspector
 
     def filter_activity_for_worker(activity)
       activity.select do |k, _v|
-        %w(worker_id
+        %w[worker_id
            server_id
            class_name
-           pid)
+           pid]
           .include?(k)
       end
     end
@@ -113,7 +113,7 @@ module PgInspector
 
     def filter_activity_for_connection(activity)
       activity.select do |k, _v|
-        %w(worker_id
+        %w[worker_id
            server_id
            datid
            datname
@@ -129,7 +129,7 @@ module PgInspector
            state
            backend_xid
            backend_xmin
-           query)
+           query]
           .include?(k)
       end
     end
@@ -157,6 +157,7 @@ module PgInspector
       elsif old_application_name?(activity) && activity["application_name"].include?(" Server")
         return true
       end
+
       false
     end
 
@@ -166,6 +167,7 @@ module PgInspector
       elsif old_application_name?(activity) && !activity["application_name"].include?(" Server")
         return true
       end
+
       false
     end
 
@@ -190,7 +192,7 @@ module PgInspector
     end
 
     def to_utc(time_str)
-      return Time.parse(time_str).utc.to_s if time_str
+      Time.parse(time_str).utc.to_s if time_str
     end
 
     def process_miq_activity_application_name(activity)
@@ -203,7 +205,7 @@ module PgInspector
       # MIQ|<pid>|<server_id>|<worker_id>|<zone_id>|<class_name>|<zone_name>
       # Both previous and current is truncated up to 64 characters
       if activity["application_name"].end_with?("...")
-        $stderr.puts("Warning: the application_name #{activity["application_name"]} is incomplete.")
+        warn("Warning: the application_name #{activity["application_name"]} is incomplete.")
       end
       if new_application_name?(activity)
         _, pid, server_id, worker_id, zone_id, class_name, zone_name = activity["application_name"].split("|")
@@ -236,9 +238,9 @@ module PgInspector
     def process_miq_server(server)
       server["server_id"] = server["id"].to_i
       server.select do |k, _v|
-        %w(server_id
+        %w[server_id
            hostname
-           ipaddress)
+           ipaddress]
           .include?(k)
       end
     end
@@ -263,6 +265,7 @@ module PgInspector
     def compress_id(id)
       if $old_version
         return nil if id.nil?
+
         region_number, short_id = split_id(id)
         region_number.zero? ? short_id.to_s : "#{region_number}#{COMPRESSED_ID_SEPARATOR}#{short_id}"
       else
@@ -273,7 +276,8 @@ module PgInspector
     def uncompress_id(id)
       if $old_version
         return nil if id.nil?
-        id.to_s =~ RE_COMPRESSED_ID ? ($1.to_i * rails_sequence_factor + $2.to_i) : id.to_i
+
+        id.to_s =~ RE_COMPRESSED_ID ? (($1.to_i * rails_sequence_factor) + $2.to_i) : id.to_i
       else
         Class.new.include(ActiveRecord::IdRegions).uncompress_id(id)
       end

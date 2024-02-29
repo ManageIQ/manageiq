@@ -54,7 +54,7 @@ class DialogFieldTagControl < DialogFieldSortedItem
 
   def value_from_dialog_fields(dialog_values)
     value = dialog_values[automate_key_name]
-    value.gsub(/Classification::/, '') if value
+    value.gsub("Classification::", '') if value
   end
 
   def values
@@ -80,8 +80,8 @@ class DialogFieldTagControl < DialogFieldSortedItem
 
     available_tags.reverse! if sort_order == :descending
 
-    available_tags = blank_value + available_tags
-    available_tags
+    blank_value + available_tags
+
   end
 
   def automate_output_value

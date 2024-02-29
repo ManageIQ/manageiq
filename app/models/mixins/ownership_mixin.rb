@@ -58,20 +58,20 @@ module OwnershipMixin
       errors.add(:missing_ids, "Unable to find #{name.pluralize} with the following ids #{missing.inspect}") unless missing.empty?
 
       objects.each do |obj|
-        begin
-          options.each_key do |k|
-            col = case k
-                  when :owner then :evm_owner
-                  when :group then :miq_group
-                  else
-                    raise _("Unknown option, '%{name}'") % {:name => k}
-                  end
-            obj.send("#{col}=", options[k])
-          end
-          obj.save
-        rescue => err
-          errors.add(:error_updating, "Error, '#{err.message}, updating #{name}: Name: [#{obj.name}], Id: [#{obj.id}]")
+
+        options.each_key do |k|
+          col = case k
+                when :owner then :evm_owner
+                when :group then :miq_group
+                else
+                  raise _("Unknown option, '%{name}'") % {:name => k}
+                end
+          obj.send(:"#{col}=", options[k])
         end
+        obj.save
+      rescue => err
+        errors.add(:error_updating, "Error, '#{err.message}, updating #{name}: Name: [#{obj.name}], Id: [#{obj.id}]")
+
       end
 
       errors.empty? ? true : errors

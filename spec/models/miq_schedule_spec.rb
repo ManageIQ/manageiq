@@ -19,7 +19,7 @@ RSpec.describe MiqSchedule do
       }
     end
 
-    let(:sched_action) { { :method => "run_report", :options => options } }
+    let(:sched_action) { {:method => "run_report", :options => options} }
     let(:miq_report) { FactoryBot.create(:miq_report) }
     let(:miq_expression) { MiqExpression.new("=" => {"field" => "MiqReport-id", "value" => miq_report.id}) }
 
@@ -71,7 +71,7 @@ RSpec.describe MiqSchedule do
     end
 
     context "SmartState" do
-      let(:sched_action) { { :method => "vm_scan", :options => options } }
+      let(:sched_action) { {:method => "vm_scan", :options => options} }
 
       it "exports to array" do
         miq_schedule_array = MiqSchedule.export_to_array([miq_schedule.id], MiqSchedule).first["MiqSchedule"]
@@ -144,7 +144,7 @@ RSpec.describe MiqSchedule do
     end
 
     context "with resource (ServiceTemplate)" do
-      let(:sched_action) { { :method => "vm_scan", :options => options } }
+      let(:sched_action) { {:method => "vm_scan", :options => options} }
       let(:template) { FactoryBot.create(:service_template) }
       let(:schedule_with_template) do
         FactoryBot.create(:miq_schedule,

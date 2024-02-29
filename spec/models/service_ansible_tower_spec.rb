@@ -21,8 +21,8 @@ RSpec.describe ServiceAnsibleTower do
 
   let(:service) do
     FactoryBot.create(:service_ansible_tower,
-                       :evm_owner => FactoryBot.create(:user),
-                       :miq_group => FactoryBot.create(:miq_group))
+                      :evm_owner => FactoryBot.create(:user),
+                      :miq_group => FactoryBot.create(:miq_group))
   end
 
   let(:service_with_dialog_options) do
@@ -67,8 +67,8 @@ RSpec.describe ServiceAnsibleTower do
       miq_request_task = FactoryBot.create(:miq_request_task, :miq_request => FactoryBot.create(:service_template_provision_request))
       miq_request_task.update(:options => {:request_options => {:manageiq_extra_vars => control_extras}})
       service.update(:evm_owner        => FactoryBot.create(:user_with_group),
-                                :miq_group        => FactoryBot.create(:miq_group),
-                                :miq_request_task => miq_request_task)
+                     :miq_group        => FactoryBot.create(:miq_group),
+                     :miq_request_task => miq_request_task)
     end
 
     it 'launches a job through ansible tower provider' do
@@ -77,8 +77,8 @@ RSpec.describe ServiceAnsibleTower do
         expect(opts).to have_key(:limit)
         expect(opts).to have_key(:extra_vars)
 
-        exposed_miq = %w(api_url api_token service user group X_MIQ_Group request_task request) + control_extras.keys
-        exposed_connection = %w(url token X_MIQ_Group)
+        exposed_miq = %w[api_url api_token service user group X_MIQ_Group request_task request] + control_extras.keys
+        exposed_connection = %w[url token X_MIQ_Group]
         expect(opts[:extra_vars].delete('manageiq').keys).to include(*exposed_miq)
         expect(opts[:extra_vars].delete('manageiq_connection').keys).to include(*exposed_connection)
       end.and_return(double(:raw_job,

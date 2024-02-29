@@ -11,7 +11,7 @@ module TaskHelpers
           begin
             policies = YAML.load_file(filename)
             import_policies(policies)
-          rescue StandardError => err
+          rescue => err
             warn("Error importing #{filename} : #{err.message}")
           end
         end

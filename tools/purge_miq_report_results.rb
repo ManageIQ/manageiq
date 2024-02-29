@@ -2,7 +2,7 @@
 require File.expand_path('../config/environment', __dir__)
 require 'optimist'
 
-MODES = %w(count purge)
+MODES = %w[count purge]
 
 ARGV.shift if ARGV[0] == '--' # if invoked with rails runner
 opts = Optimist.options do

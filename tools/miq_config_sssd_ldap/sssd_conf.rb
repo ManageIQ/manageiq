@@ -14,7 +14,7 @@ module MiqConfigSssdLdap
     attr_reader :src_path, :dest_path, :ldap_uri, :ldap_search_base, :initial_settings, :sssd_conf_contents
 
     def initialize(initial_settings)
-      LOGGER.debug("Invoked #{self.class}\##{__method__}")
+      LOGGER.debug("Invoked #{self.class}##{__method__}")
 
       super
 
@@ -26,7 +26,7 @@ module MiqConfigSssdLdap
     end
 
     def update
-      LOGGER.debug("Invoked #{self.class}\##{__method__}")
+      LOGGER.debug("Invoked #{self.class}##{__method__}")
 
       [Domain, Sssd, Pam, Ifp].each do |section_class|
         section = section_class.new(initial_settings)
@@ -39,10 +39,10 @@ module MiqConfigSssdLdap
     private
 
     def create
-      LOGGER.debug("Invoked #{self.class}\##{__method__}")
+      LOGGER.debug("Invoked #{self.class}##{__method__}")
 
       begin
-        File.write(dest_path, ERB.new(File.read(src_path), nil, '-').result(binding))
+        File.write(dest_path, ERB.new(File.read(src_path), :trim_mode => '-').result(binding))
         FileUtils.chmod(0o600, dest_path)
       rescue Errno::ENOENT, IndexError => e
         LOGGER.fatal(e.message)

@@ -2,7 +2,7 @@ RSpec.describe ManageIQ::Providers::CloudManager::MetricsCapture do
   include Spec::Support::MetricHelper
 
   let(:miq_server) { EvmSpecHelper.local_miq_server }
-  let(:ems)  { FactoryBot.create(:ems_openstack, :zone => miq_server.zone) }
+  let(:ems) { FactoryBot.create(:ems_openstack, :zone => miq_server.zone) }
 
   describe ".capture_ems_targets" do
     before do

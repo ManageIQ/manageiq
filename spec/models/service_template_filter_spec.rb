@@ -16,21 +16,19 @@ RSpec.describe "Service Filter" do
              "middle"     => {:type    => 'composite', :children => ['vm_service']},
              "vm_service" => {:type    => 'atomic',
                               :request => {:target_name => "fred", :src_vm_id => @src_vm.id,
-                                           :number_of_vms => 1, :requester => @user}
-                             }
-            }
+                                           :number_of_vms => 1, :requester => @user}}}
     build_service_template_tree(model)
   end
 
   context "#include_service" do
     it "all service templates" do
-      @allowed_service_templates = %w(top middle vm_service)
+      @allowed_service_templates = %w[top middle vm_service]
       @request.create_request_tasks
       expect(@request.miq_request_tasks.count).to eql(5)
     end
 
     it "filter out the atomic service" do
-      @allowed_service_templates = %w(top middle)
+      @allowed_service_templates = %w[top middle]
       @request.create_request_tasks
       expect(@request.miq_request_tasks.count).to eql(2)
     end
@@ -42,7 +40,7 @@ RSpec.describe "Service Filter" do
     end
 
     it "filter out middle service" do
-      @allowed_service_templates = %w(top)
+      @allowed_service_templates = %w[top]
       @request.create_request_tasks
       expect(@request.miq_request_tasks.count).to eql(1)
     end

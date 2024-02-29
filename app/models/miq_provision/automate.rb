@@ -65,7 +65,7 @@ module MiqProvision::Automate
 
   def get_network_details
     related_vm             = vm || source
-    related_vm_description = (related_vm == vm) ? "VM" : "Template"
+    related_vm_description = related_vm == vm ? "VM" : "Template"
 
     if related_vm.nil?
       _log.error("No VM or Template Found for Provision Object")
@@ -101,19 +101,23 @@ module MiqProvision::Automate
 
     networks = ws.root("networks")
 
-    networks.each do |network|
-      next unless network.kind_of?(Hash)
-      next unless network[:vc_id] == vc_id
-      next unless vlan_name.casecmp(network[:vlan]) == 0
+    if networks.kind_of?(Array)
+      networks.each do |network|
+        next unless network.kind_of?(Hash)
+        next unless network[:vc_id] == vc_id
+        next unless vlan_name.casecmp(network[:vlan]) == 0
 
-      # Remove passwords
-      network[:dhcp_servers].each do |dhcp|
-        domain = dhcp[:domain]
-        domain.delete(:bind_password) if domain.kind_of?(Hash)
-      end if network[:dhcp_servers].kind_of?(Array)
+        # Remove passwords
+        if network[:dhcp_servers].kind_of?(Array)
+          network[:dhcp_servers].each do |dhcp|
+            domain = dhcp[:domain]
+            domain.delete(:bind_password) if domain.kind_of?(Hash)
+          end
+        end
 
-      return network
-    end if networks.kind_of?(Array)
+        return network
+      end
+    end
 
     _log.warn("- No Network matched in Automate Results: #{ws.to_expanded_xml}")
     nil
@@ -122,11 +126,13 @@ module MiqProvision::Automate
   def get_domain
     return options[:linux_domain_name]         unless options[:linux_domain_name].nil?
     return options[:sysprep_domain_name].first if     options[:sysprep_domain_name].kind_of?(Array)
+
     nil
   end
 
   def automate_attributes(message, objects = [get_user])
     MiqAeEngine.set_automation_attributes_from_objects(
-      objects, 'request' => 'UI_PROVISION_INFO', 'message' => message)
+      objects, 'request' => 'UI_PROVISION_INFO', 'message' => message
+    )
   end
 end

@@ -40,7 +40,7 @@ FactoryBot.define do
   end
 
   # Type specific subclasses
-  factory(:host_vmware,     :parent => :host,        :class => "ManageIQ::Providers::Vmware::InfraManager::Host") do
+  factory(:host_vmware, :parent => :host, :class => "ManageIQ::Providers::Vmware::InfraManager::Host") do
     ems_ref_type { "HostSystem" }
   end
   factory(:host_vmware_esx, :parent => :host_vmware, :class => "ManageIQ::Providers::Vmware::InfraManager::HostEsx") do
@@ -60,7 +60,7 @@ FactoryBot.define do
     vmm_vendor   { "unknown" }
     ems_ref      { "openstack-perf-host" }
     uid_ems      { "openstack-perf-host-nova-instance" }
-    association :ems_cluster, factory: :ems_cluster_openstack
+    association :ems_cluster, :factory => :ems_cluster_openstack
   end
 
   factory :host_openstack_infra_compute, :parent => :host_openstack_infra,

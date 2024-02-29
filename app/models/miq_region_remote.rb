@@ -12,6 +12,7 @@ class MiqRegionRemote < ApplicationRecord
     log_details = "Host: [#{host}]}, Database: [#{database}], Adapter: [#{adapter}], User: [#{username}]"
 
     return [_("Validation failed due to missing port")] if port.blank?
+
     begin
       with_remote_connection(host, port, username, password, database, adapter) do |c|
         _log.info("Attempting to connection to: #{log_details}...")
@@ -26,7 +27,7 @@ class MiqRegionRemote < ApplicationRecord
             return nil
           else
             return [_("Validation failed because region %{region_name} has already been used") %
-                      {:region_name => region.region}]
+                    {:region_name => region.region}]
           end
         else
           _log.info("Attempting to connection to: #{log_details}...Failed")
@@ -35,7 +36,7 @@ class MiqRegionRemote < ApplicationRecord
       end
     rescue => err
       _log.warn("Attempting to connection to: #{log_details}...Failed with error: '#{err.message}")
-      return [_("Validation failed with error: '%{error_message}") % {:error_message => err.message}]
+      [_("Validation failed with error: '%{error_message}") % {:error_message => err.message}]
     end
   end
 
@@ -83,6 +84,7 @@ class MiqRegionRemote < ApplicationRecord
     # connect to localhost, so don't allow that at all.
     host = host.to_s.strip
     raise ArgumentError, _("host cannot be blank") if host.blank?
+
     if [nil, "", "localhost", "localhost.localdomain", "127.0.0.1", "0.0.0.0"].include?(host)
       cfg = ActiveRecord::Base.configurations.configs_for(:env_name => Rails.env)&.first
       local_database = cfg && cfg.database.to_s.strip

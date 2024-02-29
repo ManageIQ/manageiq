@@ -11,7 +11,7 @@ module ManageIQ
       # determine plugin root dir. Assume we are called from a 'bin/' script in the plugin root
       plugin_root ||= Pathname.new(caller_locations.last.absolute_path).dirname.parent
 
-      manageiq_plugin_update(plugin_root, force_bundle_update: false)
+      manageiq_plugin_update(plugin_root, :force_bundle_update => false)
     end
 
     def self.manageiq_plugin_update(plugin_root = nil, force_bundle_update: true)
@@ -24,7 +24,7 @@ module ManageIQ
       setup_gemfile_lock if ci?
       install_bundler(plugin_root)
       bundle_config(plugin_root)
-      bundle_update(plugin_root, force: force_bundle_update)
+      bundle_update(plugin_root, :force => force_bundle_update)
 
       unless skip_database_reset?
         # Update the local development database
@@ -46,6 +46,7 @@ module ManageIQ
       config_files.each do |source, dest|
         file = APP_ROOT.join(dest)
         next if file.exist?
+
         puts "Copying #{file} from template..."
         FileUtils.cp(APP_ROOT.join(source), file)
       end
@@ -82,6 +83,7 @@ module ManageIQ
                     !ENV["GITHUB_REF_NAME"].to_s.start_with?("dependabot/") # Dependabot makes branches in the core repo
 
       raise "Missing Gemfile.lock.release" unless APP_ROOT.join("Gemfile.lock.release").file?
+
       FileUtils.cp(APP_ROOT.join("Gemfile.lock.release"), APP_ROOT.join("Gemfile.lock"))
     end
 

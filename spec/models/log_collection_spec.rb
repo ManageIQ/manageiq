@@ -9,9 +9,8 @@ RSpec.describe "LogCollection" do
       @log_file = FactoryBot.create(:log_file, :state => "collecting")
       @miq_server.log_files << @log_file
       @task = FactoryBot.create(:miq_task,
-                                 :miq_server_id => @miq_server.id,
-                                 :name          => "Zipped log retrieval for #{@miq_server.name}"
-                                )
+                                :miq_server_id => @miq_server.id,
+                                :name          => "Zipped log retrieval for #{@miq_server.name}")
     end
 
     it { expect(@miq_server).to be_log_collection_active }
@@ -71,7 +70,7 @@ RSpec.describe "LogCollection" do
       end
     end
 
-    %w(models dialogs current archive).each do |log_type|
+    %w[models dialogs current archive].each do |log_type|
       context "using a #{log_type} log file" do
         before do
           @fname = "#{log_type}.zip"

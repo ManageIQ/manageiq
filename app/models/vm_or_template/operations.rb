@@ -6,7 +6,7 @@ module VmOrTemplate::Operations
   include Relocation
   include Snapshot
 
-  alias_method :ruby_clone, :clone
+  alias ruby_clone clone
 
   def raw_clone(_name, _folder, _pool = nil, _host = nil, _datastore = nil, _powerOn = false, _template_flag = false, _transform = nil, _config = nil, _customization = nil, _disk = nil)
     raise NotImplementedError, _("must be implemented in a subclass")
@@ -117,8 +117,6 @@ module VmOrTemplate::Operations
   def log_user_event(user_event)
     $log.info(user_event)
   end
-
-  private
 
   #
   # UI button validation methods

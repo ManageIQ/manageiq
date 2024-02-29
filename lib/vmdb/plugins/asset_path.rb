@@ -4,10 +4,7 @@ Vmdb::Inflections.load_inflections
 module Vmdb
   class Plugins
     class AssetPath
-      attr_reader :name
-      attr_reader :path
-      attr_reader :namespace
-      attr_reader :node_modules
+      attr_reader :name, :path, :namespace, :node_modules
 
       def self.asset_path(engine)
         engine.root.join('app', 'javascript')
@@ -39,7 +36,7 @@ module Vmdb
 
       # also used in update:ui task to determine where to copy config files
       def self.node_root
-        Rails.root.join('vendor', 'node_root')
+        Rails.root.join("vendor/node_root")
       end
     end
   end

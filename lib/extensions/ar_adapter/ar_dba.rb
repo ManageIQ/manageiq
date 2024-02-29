@@ -29,7 +29,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                        , query
                     FROM pg_stat_activity
                    ORDER BY 1, 2
-                  SQL
+    SQL
   end
 
   # Taken from: https://github.com/bucardo/check_postgres/blob/2.19.0/check_postgres.pl#L3492
@@ -106,9 +106,9 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                 ) AS sml
                 WHERE schemaname = 'public'
                 ORDER BY  1
-            SQL
+    SQL
 
-    integer_columns = %w(
+    integer_columns = %w[
       otta
       pages
       pagesize
@@ -116,11 +116,11 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
       wasted_bytes
       wasted_pages
       wasted_size
-    )
+    ]
 
-    float_columns = %w(
+    float_columns = %w[
       percent_bloat
-    )
+    ]
 
     data.each do |datum|
       integer_columns.each   { |c| datum[c] = datum[c].to_i }
@@ -201,9 +201,9 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                         ) AS sml
                 WHERE schemaname = 'public'
                 ORDER BY  1, 2
-           SQL
+    SQL
 
-    integer_columns = %w(
+    integer_columns = %w[
       otta
       pages
       pagesize
@@ -211,11 +211,11 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
       wasted_bytes
       wasted_pages
       wasted_size
-    )
+    ]
 
-    float_columns = %w(
+    float_columns = %w[
       percent_bloat
-    )
+    ]
 
     data.each do |datum|
       integer_columns.each   { |c| datum[c] = datum[c].to_i }
@@ -360,9 +360,9 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                       ) AS sml
               WHERE schemaname = 'public'
               ORDER BY  1, 2
-           SQL
+    SQL
 
-    integer_columns = %w(
+    integer_columns = %w[
       otta
       pages
       pagesize
@@ -370,11 +370,11 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
       wasted_bytes
       wasted_pages
       wasted_size
-    )
+    ]
 
-    float_columns = %w(
+    float_columns = %w[
       percent_bloat
-    )
+    ]
 
     data.each do |datum|
       integer_columns.each   { |c| datum[c] = datum[c].to_i }
@@ -404,9 +404,9 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                   FROM pg_stat_all_tables
                  WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
                  ORDER BY relname ASC ;
-                 SQL
+    SQL
 
-    integer_columns = %w(
+    integer_columns = %w[
       table_scans
       sequential_rows_read
       index_scans
@@ -417,14 +417,14 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
       rows_hot_updated
       rows_live
       rows_dead
-    )
+    ]
 
-    timestamp_columns = %w(
+    timestamp_columns = %w[
       last_vacuum_date
       last_autovacuum_date
       last_analyze_date
       last_autoanalyze_date
-    )
+    ]
 
     data.each do |datum|
       integer_columns.each   { |c| datum[c] = datum[c].to_i }
@@ -464,7 +464,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                    AND relname NOT LIKE 'pg_%'
               ORDER BY reltuples DESC
                      , relpages  DESC ;
-                 SQL
+    SQL
 
     stats.each do |s|
       s["rows"]  = s["rows"].to_f.to_i
@@ -582,20 +582,20 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
             WHERE schemaname = 'public'
               AND tablename  = '#{table_name}'
             ORDER BY  1
-        SQL
+    SQL
 
-    integer_columns = %w(
+    integer_columns = %w[
       otta
       pages
       rows
       wasted_bytes
       wasted_pages
       wasted_size
-    )
+    ]
 
-    float_columns = %w(
+    float_columns = %w[
       percent_bloat
-    )
+    ]
 
     data.each do |datum|
       integer_columns.each   { |c| datum[c] = datum[c].to_i }
@@ -625,9 +625,9 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
                  AND relname = '#{table_name}'
                ORDER BY relname ASC ;
-            SQL
+    SQL
 
-    integer_columns = %w(
+    integer_columns = %w[
       table_scans
       sequential_rows_read
       index_scans
@@ -638,14 +638,14 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
       rows_hot_updated
       rows_live
       rows_dead
-    )
+    ]
 
-    timestamp_columns = %w(
+    timestamp_columns = %w[
       last_vacuum_date
       last_autovacuum_date
       last_analyze_date
       last_autoanalyze_date
-    )
+    ]
 
     data.each do |datum|
       integer_columns.each   { |c| datum[c] = datum[c].to_i }
@@ -658,14 +658,14 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
   def table_metrics_total_size(table_name)
     select_value(<<-SQL, "Table Metrics Total Size").to_i
             SELECT pg_total_relation_size('#{table_name}'::regclass) AS total_table_size;
-           SQL
+    SQL
   end
 
   def number_of_db_connections
     select_value(<<-SQL, "DB Client Connections").to_i
             SELECT count(*) as active_connections
               FROM pg_stat_activity
-           SQL
+    SQL
   end
 
   def index_metrics_bloat(index_name)
@@ -732,9 +732,9 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                         ) AS sml
                 WHERE iname  = '#{index_name}'
                 ORDER BY  1, 2
-           SQL
+    SQL
 
-    integer_columns = %w(
+    integer_columns = %w[
       otta
       pages
       pagesize
@@ -742,11 +742,11 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
       wasted_bytes
       wasted_pages
       wasted_size
-    )
+    ]
 
-    float_columns = %w(
+    float_columns = %w[
       percent_bloat
-    )
+    ]
 
     data.each do |datum|
       integer_columns.each   { |c| datum[c] = datum[c].to_i }
@@ -769,18 +769,18 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                 FROM pg_stat_user_indexes
                WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
                  AND indexrelname = '#{index_name}' ;
-            SQL
+    SQL
 
-    integer_columns = %w(
+    integer_columns = %w[
       table_id
       index_id
       index_scans
       index_rows_read
       index_rows_fetched
-    )
+    ]
 
     data.each do |datum|
-      integer_columns.each   { |c| datum[c] = datum[c].to_i }
+      integer_columns.each { |c| datum[c] = datum[c].to_i }
     end
 
     data.to_a
@@ -789,9 +789,8 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
   def index_metrics_total_size(_index_name)
     select_value(<<-SQL, "Index Metrics -  Size").to_i
             SELECT pg_total_relation_size('#{table_name}'::regclass) - pg_relation_size('#{table_name}') AS index_size;
-           SQL
+    SQL
   end
-  #
 
   # DBA operations
   #
@@ -802,14 +801,14 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                     SELECT setting AS path
                       FROM pg_settings
                      WHERE name = 'data_directory'
-                 SQL
+    SQL
   end
 
   # Fetch PostgreSQL last start date/time
   def last_start_time
     start_time = select_value(<<-SQL, "Select last start date/time")
                                  SELECT pg_postmaster_start_time()
-                              SQL
+    SQL
     ActiveRecord::Type::DateTime.new.deserialize(start_time)
   end
 

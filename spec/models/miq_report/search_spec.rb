@@ -41,7 +41,7 @@ RSpec.describe MiqReport do
       end
 
       it "detects a sortable virtual column in a list" do
-        @miq_report.sortby = %w(name archived id)
+        @miq_report.sortby = %w[name archived id]
         order = @miq_report.get_order_info
         expect(order).to be_truthy
         expect(stringify_arel(order).join(",")).to match(/name.*ems_id.*null.*id/i)
@@ -54,7 +54,7 @@ RSpec.describe MiqReport do
       end
 
       it "detects an unsortable virtual column in a list" do
-        @miq_report.sortby = %w(name is_evm_appliance id)
+        @miq_report.sortby = %w[name is_evm_appliance id]
         order = @miq_report.get_order_info
         expect(order).to be_falsy
       end
@@ -64,14 +64,14 @@ RSpec.describe MiqReport do
           @miq_report.sortby = ["name", "operating_system.product_name"]
           order = @miq_report.get_order_info
           expect(order).to be_truthy
-          expect(stringify_arel(order)).to eq(%w{LOWER("vms"."name") LOWER("operating_systems"."product_name")})
+          expect(stringify_arel(order)).to eq(%w[LOWER("vms"."name") LOWER("operating_systems"."product_name")])
         end
 
         it "works with association where table_name can not be guessed" do
           @miq_report.sortby = ["name", "linux_initprocesses.name", "evm_owner.name"]
           order = @miq_report.get_order_info
           expect(order).to be_truthy
-          expect(stringify_arel(order)).to eq(%w{LOWER("vms"."name") LOWER("system_services"."name") LOWER("users"."name")})
+          expect(stringify_arel(order)).to eq(%w[LOWER("vms"."name") LOWER("system_services"."name") LOWER("users"."name")])
         end
       end
 

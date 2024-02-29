@@ -13,7 +13,7 @@ class ActsAsArScope < ActsAsArModel
   end
 
   def self.all(*args)
-    if args.empty? || args.size == 1 && args.first.respond_to?(:empty?) && args.first.empty?
+    if args.empty? || (args.size == 1 && args.first.respond_to?(:empty?) && args.first.empty?)
       # avoid warnings
       aar_scope
     else

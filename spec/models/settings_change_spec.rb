@@ -11,12 +11,12 @@ RSpec.describe SettingsChange do
   describe "#key_path" do
     it "with multiple parts in the key" do
       change = described_class.new(:key => "/api/token_ttl")
-      expect(change.key_path).to eq %i(api token_ttl)
+      expect(change.key_path).to eq %i[api token_ttl]
     end
 
     it "with one part in the key" do
       change = described_class.new(:key => "/api")
-      expect(change.key_path).to eq %i(api)
+      expect(change.key_path).to eq %i[api]
     end
 
     it "with key of /" do

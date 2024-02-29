@@ -1,4 +1,4 @@
-require_relative './evm_test_helper'
+require_relative 'evm_test_helper'
 
 if defined?(RSpec)
   namespace :test do
@@ -19,13 +19,13 @@ if defined?(RSpec)
       end
 
       EvmRakeHelper.with_dummy_database_url_configuration do
-        begin
-          puts "** Confirming rails environment does not connect to the database"
-          Rake::Task['environment'].invoke
-        rescue ActiveRecord::NoDatabaseError
-          STDERR.write "Detected Rails environment trying to connect to the database!  Check the backtrace for an initializer trying to access the database.\n\n"
-          raise
-        end
+
+        puts "** Confirming rails environment does not connect to the database"
+        Rake::Task['environment'].invoke
+      rescue ActiveRecord::NoDatabaseError
+        STDERR.write "Detected Rails environment trying to connect to the database!  Check the backtrace for an initializer trying to access the database.\n\n"
+        raise
+
       end
     end
 
@@ -35,8 +35,8 @@ if defined?(RSpec)
     end
 
     task :setup_region do
-      ENV["REGION"] ||= (rand(99) + 1).to_s # Ensure we have a random, non-0, region
-      puts "** Preparing database with REGION #{ENV["REGION"]}"
+      ENV["REGION"] ||= rand(1..99).to_s # Ensure we have a random, non-0, region
+      puts "** Preparing database with REGION #{ENV.fetch("REGION", nil)}"
     end
 
     task :spec_deps => [:initialize, 'evm:compile_sti_loader']

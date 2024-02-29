@@ -43,7 +43,7 @@ module ManageIQ
       template "bin/setup"
       template "bin/update"
       template "bin/before_install"
-      chmod "bin", 0755 & ~File.umask, :verbose => false
+      chmod "bin", 0o755 & ~File.umask, :verbose => false
       empty_directory_with_keep_file "bundler.d"
       template "config/secrets.defaults.yml"
       template "config/settings.yml"
@@ -232,7 +232,7 @@ module ManageIQ
       with_output_buffer { value = yield(*args) }.presence || value
     end
 
-    def with_output_buffer(buf = nil) #:nodoc:
+    def with_output_buffer(buf = nil) # :nodoc:
       unless buf
         buf = ""
         if output_buffer && output_buffer.respond_to?(:encoding)

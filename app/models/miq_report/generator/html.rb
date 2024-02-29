@@ -20,16 +20,15 @@ module MiqReport::Generator::Html
       save_val = :_undefined_                                 # Hang on to the current group value
       break_label = col_options.fetch_path(sortby[0], :break_label) unless sortby.nil? || col_options.nil? || in_a_widget
       group_text = nil                                        # Optionally override what gets displayed for the group (i.e. Chargeback)
-      use_table = sub_table ? sub_table : table
+      use_table = sub_table || table
       use_table.data.each_with_index do |d, d_idx|
         break if row_limit != 0 && d_idx > row_limit - 1
+
         output = ""
         if ["y", "c"].include?(group) && !sortby.nil? && save_val != d.data[sortby[0]].to_s
-          unless d_idx == 0                       # If not the first row, we are at a group break
-            unless group_limit && group_counter >= group_limit  # If not past the limit
-              html_rows += build_group_html_rows(save_val, col_order.length, break_label, group_text)
+          if !(d_idx == 0) && !(group_limit && group_counter >= group_limit) # If not past the limit
+            html_rows += build_group_html_rows(save_val, col_order.length, break_label, group_text)
               group_counter += 1
-            end
           end
           save_val = d.data[sortby[0]].to_s
           # Chargeback, sort by date, but show range
@@ -37,11 +36,11 @@ module MiqReport::Generator::Html
         end
 
         # Build click thru if string can be created
-        if clickable_rows && onclick = build_row_onclick(d.data)
-          output << "<tr class='row#{row}' #{onclick}>"
-        else
-          output << "<tr class='row#{row}-nocursor'>"
-        end
+        output << if clickable_rows && onclick = build_row_onclick(d.data)
+                    "<tr class='row#{row}' #{onclick}>"
+                  else
+                    "<tr class='row#{row}-nocursor'>"
+                  end
         row = 1 - row
 
         col_order.each_with_index do |c, c_idx|
@@ -55,11 +54,9 @@ module MiqReport::Generator::Html
         html_rows << output unless hide_detail_rows
       end
 
-      if ["y", "c"].include?(group) && !sortby.nil?
-        unless group_limit && group_counter >= group_limit
-          html_rows += build_group_html_rows(save_val, col_order.length, break_label, group_text)
+      if ["y", "c"].include?(group) && !sortby.nil? && !(group_limit && group_counter >= group_limit)
+        html_rows += build_group_html_rows(save_val, col_order.length, break_label, group_text)
           html_rows += build_group_html_rows(:_total_, col_order.length)
-        end
       end
     end
 
@@ -94,7 +91,7 @@ module MiqReport::Generator::Html
   def build_html_col(output, col_name, col_format, row_data, time_zone)
     style = get_style_class(col_name, row_data, time_zone)
     style_class = style.present? ? " class='#{style}'" : nil
-    alignment_style = if db == 'Tenant' && TenantQuota.can_format_field?(col_name, row_data['tenant_quotas.name']) || row_data[col_name].kind_of?(Integer) || row_data[col_name].kind_of?(Float)
+    alignment_style = if (db == 'Tenant' && TenantQuota.can_format_field?(col_name, row_data['tenant_quotas.name'])) || row_data[col_name].kind_of?(Integer) || row_data[col_name].kind_of?(Float)
                         :right
                       elsif row_data[col_name].kind_of?(Time)
                         :center
@@ -113,18 +110,18 @@ module MiqReport::Generator::Html
     if ['EmsCluster', 'ExtManagementSystem', 'Host', 'Storage', 'Vm', 'Service'].include?(db) && data_row['id']
       controller = db == "ExtManagementSystem" ? "management_system" : db.underscore
       donav = "DoNav('/#{controller}/show/#{data_row['id']}');"
-      title = data_row['name'] ?
-        "View #{ui_lookup(:model => db)} \"#{data_row['name']}\"" :
-        "View this #{ui_lookup(:model => db)}"
+      title = if data_row['name']
+                "View #{ui_lookup(:model => db)} \"#{data_row['name']}\""
+              else
+                "View this #{ui_lookup(:model => db)}"
+              end
       onclick = "onclick=\"#{donav}\" onKeyPress=\"#{donav}\" tabindex='0' style='cursor:hand' title='#{title}'"
     end
 
     # Handle CI performance report rows
-    if db.ends_with?("Performance")
-      if data_row['resource_id'] && data_row['resource_type'] # Base click thru on the related resource
-        donav = "DoNav('/#{data_row['resource_type'].underscore}/show/#{data_row['resource_id']}');"
+    if db.ends_with?("Performance") && (data_row['resource_id'] && data_row['resource_type']) # Base click thru on the related resource
+      donav = "DoNav('/#{data_row['resource_type'].underscore}/show/#{data_row['resource_id']}');"
         onclick = "onclick=\"#{donav}\" onKeyPress=\"#{donav}\" tabindex='0' style='cursor:hand' title='View #{ui_lookup(:model => data_row['resource_type'])} \"#{data_row['resource_name']}\"'"
-      end
     end
 
     onclick
@@ -148,29 +145,29 @@ module MiqReport::Generator::Html
     if (self.group == 'c') && extras && extras[:grouping] && extras[:grouping][group]
       display_count = _("Count: %{number}") % {:number => extras[:grouping][group][:count]}
     end
-    content << " | #{display_count}" unless display_count.blank?
+    content << " | #{display_count}" if display_count.present?
     html_rows << "<tr><td class='group' colspan='#{col_count}'>#{CGI.escapeHTML(content)}</td></tr>"
 
     if extras && extras[:grouping] && extras[:grouping][group] # See if group key exists
-      MiqReport::GROUPINGS.each do |calc|                     # Add an output row for each group calculation
-        if extras[:grouping][group].key?(calc.first) # Only add a row if there are calcs of this type for this group value
-          grp_output = ""
-          grp_output << "<tr>"
-          grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>#{_(calc.last)}:</td>"
-          col_order.each_with_index do |c, c_idx|        # Go through the columns
-            next if c_idx == 0                                # Skip first column
-            grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>"
+      MiqReport::GROUPINGS.each do |calc| # Add an output row for each group calculation
+        next unless extras[:grouping][group].key?(calc.first) # Only add a row if there are calcs of this type for this group value
+
+        grp_output = ""
+        grp_output << "<tr>"
+        grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>#{_(calc.last)}:</td>"
+        col_order.each_with_index do |c, c_idx| # Go through the columns
+          next if c_idx == 0 # Skip first column
+
+          grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>"
+          if extras[:grouping][group].key?(calc.first)
             grp_output << CGI.escapeHTML(
-              format(
-                c.split("__").first, extras[:grouping][group][calc.first][c],
-                :format => self.col_formats[c_idx] ? self.col_formats[c_idx] : :_default_
-              )
-            ) if extras[:grouping][group].key?(calc.first)
-            grp_output << "</td>"
+              c.split("__").first % [extras[:grouping][group][calc.first][c], {:format => self.col_formats[c_idx] || :_default_}]
+            )
           end
-          grp_output << "</tr>"
-          html_rows << grp_output
+          grp_output << "</td>"
         end
+        grp_output << "</tr>"
+        html_rows << grp_output
       end
     end
     html_rows << "<tr><td class='group_spacer' colspan='#{col_count}'>&nbsp;</td></tr>" unless group == :_total_
@@ -182,7 +179,7 @@ module MiqReport::Generator::Html
     return if atoms.nil?
 
     nh = {}
-    row.each { |k, v| nh[col_to_expression_col(k).sub(/-/, ".")] = v } # Convert keys to match expression fields
+    row.each { |k, v| nh[col_to_expression_col(k).sub("-", ".")] = v } # Convert keys to match expression fields
     field = col_to_expression_col(col)
 
     atoms.each do |atom|

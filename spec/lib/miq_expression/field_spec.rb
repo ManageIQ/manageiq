@@ -69,7 +69,7 @@ RSpec.describe MiqExpression::Field do
 
     it "can parse the associations when there are many present" do
       field = "Vm.host.hardware-id"
-      expect(described_class.parse(field).associations).to eq(%w(host hardware))
+      expect(described_class.parse(field).associations).to eq(%w[host hardware])
     end
 
     it "will return nil when given a field with unsupported syntax" do
@@ -94,7 +94,7 @@ RSpec.describe MiqExpression::Field do
     it 'parses field with numbers in association' do
       field = 'Vm.win32_services-dependencies'
       expect(described_class.parse(field)).to have_attributes(:model        => Vm,
-                                                              :associations => %w(win32_services),
+                                                              :associations => %w[win32_services],
                                                               :column       => 'dependencies')
     end
 
@@ -163,7 +163,7 @@ RSpec.describe MiqExpression::Field do
     end
 
     it "returns the reflections of fields with multiple associations" do
-      field = described_class.new(Vm, %w(host hardware), "guest_os")
+      field = described_class.new(Vm, %w[host hardware], "guest_os")
       expect(field.reflections).to match([an_object_having_attributes(:klass => Host),
                                           an_object_having_attributes(:klass => Hardware)])
     end
@@ -179,7 +179,7 @@ RSpec.describe MiqExpression::Field do
     end
 
     it "raises an error if the field has invalid associations" do
-      field = described_class.new(Vm, %w(foo bar), "name")
+      field = described_class.new(Vm, %w[foo bar], "name")
       expect { field.reflections }.to raise_error(/One or more associations are invalid: foo, bar/)
     end
   end

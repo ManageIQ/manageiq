@@ -29,7 +29,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook < Manage
   def build_extra_vars(external = {})
     (external || {}).each_with_object({}) do |(k, v), hash|
       match_data = v.kind_of?(String) && /password::/.match(v)
-      hash[k] = match_data ? ManageIQ::Password.decrypt(v.gsub(/password::/, '')) : v
+      hash[k] = match_data ? ManageIQ::Password.decrypt(v.gsub("password::", '')) : v
     end
   end
 

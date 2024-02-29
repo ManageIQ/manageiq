@@ -19,7 +19,7 @@ FactoryBot.define do
   end
 
   factory(:vm,             :class => "Vm",            :parent => :vm_or_template)
-  factory(:vm_cloud,       :class => "VmCloud",       :parent => :vm)       { cloud { true } }
+  factory(:vm_cloud,       :class => "VmCloud",       :parent => :vm) { cloud { true } }
   factory(:vm_infra,       :class => "VmInfra",       :parent => :vm)
   factory(:vm_server,      :class => "VmServer",      :parent => :vm)
   factory(:template_cloud, :class => "TemplateCloud", :parent => :template) { cloud { true } }
@@ -52,7 +52,6 @@ FactoryBot.define do
   factory(:template_google, :class => "ManageIQ::Providers::Google::CloudManager::Template", :parent => :template_cloud) { vendor { "google" } }
   factory(:template_redhat, :class => "ManageIQ::Providers::Redhat::InfraManager::Template", :parent => :template_infra) { vendor { "redhat" } }
   factory(:template_ovirt, :class => "ManageIQ::Providers::Ovirt::InfraManager::Template", :parent => :template_infra) { vendor { "ovirt" } }
-
 
   factory :template_vmware, :class => "ManageIQ::Providers::Vmware::InfraManager::Template", :parent => "template_infra" do
     location { |x| "[storage] #{x.name}/#{x.name}.vmtx" }

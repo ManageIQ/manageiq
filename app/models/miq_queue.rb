@@ -114,7 +114,7 @@ class MiqQueue < ApplicationRecord
   STATE_ERROR   = 'error'.freeze
   STATE_TIMEOUT = 'timeout'.freeze
   STATE_EXPIRED = "expired".freeze
-  validates_inclusion_of :state,  :in => [STATE_READY, STATE_DEQUEUE, STATE_WARN, STATE_ERROR, STATE_TIMEOUT, STATE_EXPIRED]
+  validates :state, :inclusion => {:in => [STATE_READY, STATE_DEQUEUE, STATE_WARN, STATE_ERROR, STATE_TIMEOUT, STATE_EXPIRED]}
   FINISHED_STATES = [STATE_WARN, STATE_ERROR, STATE_TIMEOUT, STATE_EXPIRED].freeze
 
   STATUS_OK      = 'ok'.freeze
@@ -137,7 +137,7 @@ class MiqQueue < ApplicationRecord
       :zone         => Zone.determine_queue_zone(options),
       :state        => STATE_READY,
       :handler_type => nil,
-      :handler_id   => nil,
+      :handler_id   => nil
     )
 
     if Zone.maintenance?(options[:zone])
@@ -261,7 +261,7 @@ class MiqQueue < ApplicationRecord
   #
   # TODO: Review if other services in submit_job, such as event/smart proxy should follow this pattern.
   def self.queue_name_for_priority_service(service, priority)
-    (priority.nil? || MiqQueue.lower_priority?(priority, HIGH_PRIORITY)) ? service.to_s : "generic"
+    priority.nil? || MiqQueue.lower_priority?(priority, HIGH_PRIORITY) ? service.to_s : "generic"
   end
 
   def self.where_queue_name(is_array)
@@ -302,17 +302,17 @@ class MiqQueue < ApplicationRecord
 
     result = nil
     msgs.each do |msg|
-      begin
-        _log.info("#{MiqQueue.format_short_log_msg(msg)} previously timed out, retrying...") if msg.state == STATE_TIMEOUT
-        handler = MiqWorker.my_worker || MiqServer.my_server
-        msg.update!(:state => STATE_DEQUEUE, :handler => handler)
-        _log.info("#{MiqQueue.format_full_log_msg(msg)}, Dequeued in: [#{Time.now.utc - msg.created_on}] seconds")
-        return msg
-      rescue ActiveRecord::StaleObjectError
-        result = :stale
-      rescue => err
-        raise _("%{log_message} \"%{error}\" attempting to get next message") % {:log_message => _log.prefix, :error => err}
-      end
+
+      _log.info("#{MiqQueue.format_short_log_msg(msg)} previously timed out, retrying...") if msg.state == STATE_TIMEOUT
+      handler = MiqWorker.my_worker || MiqServer.my_server
+      msg.update!(:state => STATE_DEQUEUE, :handler => handler)
+      _log.info("#{MiqQueue.format_full_log_msg(msg)}, Dequeued in: [#{Time.now.utc - msg.created_on}] seconds")
+      return msg
+    rescue ActiveRecord::StaleObjectError
+      result = :stale
+    rescue => err
+      raise _("%{log_message} \"%{error}\" attempting to get next message") % {:log_message => _log.prefix, :error => err}
+
     end
     _log.debug("All #{prefetch_max_per_worker} messages stale, returning...") if result == :stale
     result
@@ -330,7 +330,7 @@ class MiqQueue < ApplicationRecord
     _log.info("#{MiqQueue.format_full_log_msg(self)}, Requeued")
   end
 
-  # TODO (juliancheal) This is a hack. Brakeman was giving us an SQL injection
+  # TODO: (juliancheal) This is a hack. Brakeman was giving us an SQL injection
   # warning when we concatonated the queue_name string onto the query.
   # Creating two seperate queries like this, resolves the Brakeman issue, but
   # isn't ideal. This will need to be rewritten using Arel queries at some point.
@@ -460,11 +460,11 @@ class MiqQueue < ApplicationRecord
 
       if instance_id
         begin
-          if (class_name == requester.class.name) && requester.respond_to?(:id) && (instance_id == requester.id)
-            obj = requester
-          else
-            obj = obj.find(instance_id)
-          end
+          obj = if (class_name == requester.class.name) && requester.respond_to?(:id) && (instance_id == requester.id)
+                  requester
+                else
+                  obj.find(instance_id)
+                end
         rescue ActiveRecord::RecordNotFound => err
           _log.warn("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}")
           return STATUS_WARN, nil, nil
@@ -526,7 +526,7 @@ class MiqQueue < ApplicationRecord
   def delivered(state, msg, result)
     self.state = state
     _log.info("#{MiqQueue.format_short_log_msg(self)}, State: [#{state}], Delivered in [#{Time.now - delivered_on}] seconds")
-    m_callback(msg, result) unless miq_callback.blank?
+    m_callback(msg, result) if miq_callback.present?
   rescue => err
     _log.error("#{MiqQueue.format_short_log_msg(self)}, #{err.message}")
   ensure
@@ -551,7 +551,7 @@ class MiqQueue < ApplicationRecord
           miq_callback[:args] ||= []
 
           log_args = result.inspect
-          log_args = "#{log_args[0, 500]}..." if log_args.length > 500  # Trim long results
+          log_args = "#{log_args[0, 500]}..." if log_args.length > 500 # Trim long results
           log_args = miq_callback[:args] + [state, msg, log_args]
           _log.info("#{MiqQueue.format_short_log_msg(self)}, Invoking Callback with args: #{log_args.inspect}") unless obj.nil?
 
@@ -604,23 +604,23 @@ class MiqQueue < ApplicationRecord
     data = msg.data.nil? ? "" : "#{msg.data.length} bytes"
     args = ManageIQ::Password.sanitize_string(msg.args.inspect)
 
-    "Message id: [#{msg.id}], "                         \
-    "Zone: [#{msg.zone}], "                             \
-    "Role: [#{msg.role}], "                             \
-    "Server: [#{msg.server_guid}], "                    \
-    "MiqTask id: [#{msg.miq_task_id}], "                \
-    "Handler id: [#{handler}], "                        \
-    "Ident: [#{msg.queue_name}], "                      \
-    "Target id: [#{msg.target_id}], "                   \
-    "Instance id: [#{msg.instance_id}], "               \
-    "Task id: [#{msg.task_id}], "                       \
-    "Command: [#{msg.class_name}.#{msg.method_name}], " \
-    "Timeout: [#{msg.msg_timeout}], "                   \
-    "Priority: [#{msg.priority}], "                     \
-    "State: [#{msg.state}], "                           \
-    "Deliver On: [#{msg.deliver_on}], "                 \
-    "Data: [#{data}], "                                 \
-    "Args: #{args}"
+    "Message id: [#{msg.id}], " \
+      "Zone: [#{msg.zone}], " \
+      "Role: [#{msg.role}], " \
+      "Server: [#{msg.server_guid}], " \
+      "MiqTask id: [#{msg.miq_task_id}], " \
+      "Handler id: [#{handler}], " \
+      "Ident: [#{msg.queue_name}], " \
+      "Target id: [#{msg.target_id}], " \
+      "Instance id: [#{msg.instance_id}], " \
+      "Task id: [#{msg.task_id}], " \
+      "Command: [#{msg.class_name}.#{msg.method_name}], " \
+      "Timeout: [#{msg.msg_timeout}], " \
+      "Priority: [#{msg.priority}], " \
+      "State: [#{msg.state}], " \
+      "Deliver On: [#{msg.deliver_on}], " \
+      "Data: [#{data}], " \
+      "Args: #{args}"
   end
 
   def self.format_short_log_msg(msg)
@@ -649,7 +649,7 @@ class MiqQueue < ApplicationRecord
     end
   end
 
-  cache_with_timeout(:valid_zone_names, 1.minute) { Hash.new }
+  cache_with_timeout(:valid_zone_names, 1.minute) { {} }
 
   def activate_miq_task(args)
     MiqTask.update_status(miq_task_id, MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, "Task starting") if miq_task_id
@@ -693,13 +693,13 @@ class MiqQueue < ApplicationRecord
   private_class_method :optional_values
 
   private_class_method def self.messaging_options_from_env
-    return unless ENV["MESSAGING_HOSTNAME"] && ENV["MESSAGING_PORT"] && ENV["MESSAGING_USERNAME"] && ENV["MESSAGING_PASSWORD"]
+    return unless ENV.fetch("MESSAGING_HOSTNAME", nil) && ENV.fetch("MESSAGING_PORT", nil) && ENV.fetch("MESSAGING_USERNAME", nil) && ENV["MESSAGING_PASSWORD"]
 
     options = {
-      :host           => ENV["MESSAGING_HOSTNAME"],
+      :host           => ENV.fetch("MESSAGING_HOSTNAME", nil),
       :port           => ENV["MESSAGING_PORT"].to_i,
-      :username       => ENV["MESSAGING_USERNAME"],
-      :password       => ENV["MESSAGING_PASSWORD"],
+      :username       => ENV.fetch("MESSAGING_USERNAME", nil),
+      :password       => ENV.fetch("MESSAGING_PASSWORD", nil),
       :protocol       => ENV.fetch("MESSAGING_PROTOCOL", "Kafka"),
       :encoding       => ENV.fetch("MESSAGING_ENCODING", "json"),
       :sasl_mechanism => ENV.fetch("MESSAGING_SASL_MECHANISM", "PLAIN")
@@ -713,7 +713,7 @@ class MiqQueue < ApplicationRecord
     options
   end
 
-  MESSAGING_CONFIG_FILE = Rails.root.join("config", "messaging.yml")
+  MESSAGING_CONFIG_FILE = Rails.root.join("config/messaging.yml")
   private_class_method def self.messaging_options_from_file
     return unless MESSAGING_CONFIG_FILE.file?
 

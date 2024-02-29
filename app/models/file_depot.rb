@@ -7,9 +7,9 @@ class FileDepot < ApplicationRecord
   has_many              :miq_schedules, :dependent => :nullify
   has_many              :miq_servers,   :dependent => :nullify, :foreign_key => :log_file_depot_id
   has_many              :log_files
-  validates_presence_of :uri
+  validates :uri, :presence => true
 
-  attr_accessor         :file
+  attr_accessor :file
 
   def self.supported_depots
     descendants.each_with_object({}) { |klass, hash| hash[klass.name] = klass.display_name }

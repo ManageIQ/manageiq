@@ -12,11 +12,11 @@ class MiqWorker
 
       container = definition[:spec][:template][:spec][:containers].first
 
-      if container_image_tag.include?("latest")
-        container[:imagePullPolicy] = "Always"
-      else
-        container[:imagePullPolicy] = "IfNotPresent"
-      end
+      container[:imagePullPolicy] = if container_image_tag.include?("latest")
+                                      "Always"
+                                    else
+                                      "IfNotPresent"
+                                    end
 
       container[:image] = container_image
       container[:env] << {:name => "WORKER_CLASS_NAME", :value => self.class.name}
@@ -53,8 +53,8 @@ class MiqWorker
     end
 
     def zone_selector
-      product = Vmdb::Appliance.PRODUCT_NAME.downcase.gsub(/[^-a-z0-9\.]/, "-")
-      zone    = MiqServer.my_zone.chomp.strip.gsub(/[^-A-Za-z0-9_\.\/]/, "-")
+      product = Vmdb::Appliance.PRODUCT_NAME.downcase.gsub(/[^-a-z0-9.]/, "-")
+      zone    = MiqServer.my_zone.chomp.strip.gsub(/[^-A-Za-z0-9_.\/]/, "-")
       {"#{product}/zone-#{zone}" => "true"}
     end
 
@@ -90,7 +90,7 @@ class MiqWorker
     end
 
     def container_image_namespace
-      ENV["CONTAINER_IMAGE_NAMESPACE"]
+      ENV.fetch("CONTAINER_IMAGE_NAMESPACE", nil)
     end
 
     def container_image_name

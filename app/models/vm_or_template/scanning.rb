@@ -5,9 +5,9 @@ module VmOrTemplate::Scanning
   def scan(userid = "system", options = {})
     # Check if there are any current scan jobs already waiting to run
     j = VmScan.where(:state => 'waiting_to_start')
-        .where(:sync_key => guid)
-        .pluck(:id)
-    unless j.blank?
+              .where(:sync_key => guid)
+              .pluck(:id)
+    if j.present?
       _log.info("VM scan job will not be added due to existing scan job waiting to be processed.  VM ID:[#{id}] Name:[#{name}] Guid:[#{guid}]  Existing Job IDs [#{j.join(", ")}]")
       return nil
     end
@@ -33,8 +33,8 @@ module VmOrTemplate::Scanning
 
     self.last_scan_attempt_on = Time.now.utc
     save
-    job = scan_job_class.create_job(options)
-    return job
+    scan_job_class.create_job(options)
+    
   rescue => err
     _log.log_backtrace(err)
     raise

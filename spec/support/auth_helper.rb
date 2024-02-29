@@ -7,7 +7,7 @@ module Spec
 
       def login_as(user, stub_controller: false)
         User.current_user = user
-        STDERR.puts "WARNING: double stubbing user - only use login_as or stub_user once" if user != User.current_user
+        warn "WARNING: double stubbing user - only use login_as or stub_user once" if user != User.current_user
         session[:userid]  = user.userid
         session[:group]   = user.current_group_id
         allow(controller).to receive(:current_user).and_return(user) if stub_controller

@@ -1,6 +1,6 @@
 class CloudTenant < ApplicationRecord
   include CloudTenancyMixin
-  TENANT_MAPPING_ASSOCIATIONS = %i(vms_and_templates).freeze
+  TENANT_MAPPING_ASSOCIATIONS = %i[vms_and_templates].freeze
 
   include NewWithTypeStiMixin
   include CustomActionsMixin
@@ -30,7 +30,7 @@ class CloudTenant < ApplicationRecord
   has_many   :flavors, :through => :cloud_tenant_flavors
   has_many   :cloud_volume_types, :through => :ext_management_system
 
-  alias_method :direct_cloud_networks, :cloud_networks
+  alias direct_cloud_networks cloud_networks
 
   acts_as_miq_taggable
 
@@ -178,12 +178,14 @@ class CloudTenant < ApplicationRecord
   def self.post_refresh_ems(ems_id, _)
     ems = ExtManagementSystem.find(ems_id)
 
-    MiqQueue.put_unless_exists(
-      :class_name  => ems.class.name,
-      :instance_id => ems_id,
-      :method_name => 'sync_cloud_tenants_with_tenants',
-      :zone        => ems.my_zone
-    ) if ems.supports?(:cloud_tenant_mapping)
+    if ems.supports?(:cloud_tenant_mapping)
+      MiqQueue.put_unless_exists(
+        :class_name  => ems.class.name,
+        :instance_id => ems_id,
+        :method_name => 'sync_cloud_tenants_with_tenants',
+        :zone        => ems.my_zone
+      )
+    end
   end
 
   def self.tenant_joins_clause(scope)

@@ -20,6 +20,7 @@ class ResourceAction < ApplicationRecord
 
   def readonly?
     return true if super
+
     resource.readonly? if resource.kind_of?(ServiceTemplate)
   end
 
@@ -66,15 +67,15 @@ class ResourceAction < ApplicationRecord
       :ae_instance  => ae_instance
     ).to_s
   end
-  alias_method :ae_path, :fqname
+  alias ae_path fqname
 
   def ae_uri
     uri = ae_path
-    unless ae_attributes.blank?
+    if ae_attributes.present?
       uri << "?"
       uri << MiqAeEngine::MiqAeUri.hash2query(ae_attributes)
     end
-    unless ae_message.blank?
+    if ae_message.present?
       uri << "#"
       uri << ae_message
     end

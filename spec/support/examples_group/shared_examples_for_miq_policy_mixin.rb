@@ -1,4 +1,4 @@
-# Note:  This example group uses the `subject` defined by the calling spec
+# NOTE: This example group uses the `subject` defined by the calling spec
 shared_examples_for "MiqPolicyMixin" do
   context "MiqPolicyMixin methods" do
     let(:policy) { FactoryBot.create(:miq_policy) }

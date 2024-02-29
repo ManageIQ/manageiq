@@ -49,7 +49,7 @@ module EvmSettings
 
   def self.log(level, msg)
     $log.send(level, "EVM:Settings Task: #{msg}")
-    STDERR.puts "#{level}: #{msg}" if level != INFO
+    warn "#{level}: #{msg}" if level != INFO
   end
   private_class_method :log
 

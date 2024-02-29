@@ -1,4 +1,4 @@
-ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.prepend Module.new {
+ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.prepend(Module.new do
   def initialize(*args)
     super
     check_version if respond_to?(:check_version)
@@ -12,7 +12,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.prepend Module.new {
     end
 
     if postgresql_version >= 14_00_00
-      $stderr.puts msg
+      warn msg
     end
   end
-}
+end)

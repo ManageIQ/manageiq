@@ -82,20 +82,20 @@ class MiqLdap
       end
 
       addresses.each do |address|
-        begin
-          $log.info("MiqLdap.connection: Connecting to IP Address [#{address}]") if $log
-          @conn = TCPSocket.new(address, port)
-          valid_address = true
-          break
-        rescue => err
-          $log.debug("Warning: '#{err.message}', connecting to IP Address [#{address}]")
-        end
+
+        $log.info("MiqLdap.connection: Connecting to IP Address [#{address}]") if $log
+        @conn = TCPSocket.new(address, port)
+        valid_address = true
+        break
+      rescue => err
+        $log.debug("Warning: '#{err.message}', connecting to IP Address [#{address}]")
+
       end
 
       return selected_host if valid_address
     end
 
-    raise Net::LDAP::Error.new("unable to establish a connection to server")
+    raise Net::LDAP::Error, "unable to establish a connection to server"
   end
 
   def bind(username, password)
@@ -113,7 +113,7 @@ class MiqLdap
       end
     rescue Exception => err
       _log.error("Binding to LDAP: Host: [#{@ldap.host}], User: [#{username}], '#{err.message}'")
-      return false
+      false
     end
   end
 
@@ -131,14 +131,16 @@ class MiqLdap
       _log.error("'#{err.message}'")
     end
     return nil unless result
+
     # puts "result: #{result.inspect}"
     result.first
   end
 
   def self.get_attr(obj, attr)
     return nil unless obj.attribute_names.include?(attr)
+
     val = obj.send(attr)
-    val = val.length == 1 ? val.first : val
+    val = val.first if val.length == 1
 
     # The BERParser#read_ber adds the method "ber_identifier" to strings and arrays (line 122 in ber.rb) via instance_eval
     # This singleton method causes TypeError: singleton can't be dumped during Marshal.dump
@@ -159,30 +161,31 @@ class MiqLdap
 
   def _search(opts, seen = nil, &_blk)
     raw_opts = opts.dup
-    opts[:scope]            = scope(opts[:scope]) if opts[:scope]
-    if opts[:filter]
-      opts[:filter]         = filter_construct(opts[:filter]) unless opts[:filter].kind_of?(Net::LDAP::Filter)
+    opts[:scope] = scope(opts[:scope]) if opts[:scope]
+    if opts[:filter] && !opts[:filter].kind_of?(Net::LDAP::Filter)
+      opts[:filter] = filter_construct(opts[:filter])
     end
     opts[:return_referrals] = @follow_referrals
     seen ||= {:objects => [], :referrals => {}}
     _log.debug("opts: #{opts.inspect}")
 
-    if block_given?
+    if _blk
       opts[:return_result] = false
-      return @ldap.search(opts) { |entry| yield entry if block_given? }
+      @ldap.search(opts) { |entry| yield entry if _blk }
     else
       result = @ldap.search(opts)
       unless ldap_result_ok?
         _log.warn("LDAP Search unsuccessful, '#{@ldap.get_operation_result.message}', Code: [#{@ldap.get_operation_result.code}], Host: [#{@ldap.host}]")
         return []
       end
-      return @follow_referrals ? chase_referrals(result, raw_opts, seen) : result
+      @follow_referrals ? chase_referrals(result, raw_opts, seen) : result
     end
   end
 
   def ldap_result_ok?(follow_referrals = @follow_referrals)
     return true if @ldap.get_operation_result.code == 0
     return true if @ldap.get_operation_result.code == 10 && follow_referrals
+
     false
   end
 
@@ -264,6 +267,7 @@ class MiqLdap
 
   def normalize(dn)
     return if dn.nil?
+
     dn.split(",").collect { |i| i.downcase.strip }.join(",")
   end
 
@@ -303,21 +307,22 @@ class MiqLdap
     user_prefix = "cn" if user_prefix == "dn"
     case user_type
     when "samaccountname"
-      return "#{@domain_prefix}\\#{username}" unless @domain_prefix.blank?
-      return username
+      return "#{@domain_prefix}\\#{username}" if @domain_prefix.present?
+
+      username
     when "upn", "userprincipalname"
       return username if @user_suffix.blank?
 
-      return "#{username}@#{@user_suffix}"
+      "#{username}@#{@user_suffix}"
     when "mail"
       username = "#{username}@#{@user_suffix}" unless @user_suffix.blank? || upn?(username)
       dbuser = User.lookup_by_email(username.downcase)
       dbuser ||= User.lookup_by_userid(username.downcase)
       return dbuser.userid if dbuser && dbuser.userid
 
-      return username
+      username
     when "dn"
-      return "#{user_prefix}=#{username},#{@user_suffix}"
+      "#{user_prefix}=#{username},#{@user_suffix}"
     end
   end
 
@@ -379,14 +384,14 @@ class MiqLdap
     udata[:sid]          = MiqLdap.get_sid(user)
 
     managers = []
-    user[:manager].each { |m| managers << get(m) } unless user[:manager].blank?
+    user[:manager].each { |m| managers << get(m) } if user[:manager].present?
     udata[:manager]       = managers.empty? ? nil : MiqLdap.get_attr(managers.first, :displayname)
     udata[:manager_phone] = managers.empty? ? nil : MiqLdap.get_attr(managers.first, :telephonenumber)
     udata[:manager_mail]  = managers.empty? ? nil : MiqLdap.get_attr(managers.first, :mail)
 
     assistants           = []
     delegates            = user[:publicdelegates]
-    delegates.each { |d|  assistants << get(d) } unless delegates.nil?
+    delegates.each { |d| assistants << get(d) } unless delegates.nil?
     udata[:assistant]       = assistants.empty? ? nil : MiqLdap.get_attr(assistants.first, :displayname)
     udata[:assistant_phone] = assistants.empty? ? nil : MiqLdap.get_attr(assistants.first, :telephonenumber)
     udata[:assistant_mail]  = assistants.empty? ? nil : MiqLdap.get_attr(assistants.first, :mail)
@@ -441,6 +446,7 @@ class MiqLdap
     filter ||= "(ObjectCategory=organizationalUnit)"
     result = search(:base => basedn, :scope => :sub, :filter => filter)
     return nil unless result
+
     result.collect { |o| [get_attr(o, :dn), get_attr(o, :name)] }
   end
 
@@ -472,7 +478,7 @@ class MiqLdap
     sid << data.ord.to_s
 
     rid = ""
-    (6).downto(1) do |i|
+    6.downto(1) do |i|
       rid += byte2hex(data[i, 1].ord)
     end
     sid << rid.to_i.to_s

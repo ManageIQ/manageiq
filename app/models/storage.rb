@@ -3,9 +3,9 @@ class Storage < ApplicationRecord
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :inverse_of => :storages
 
-  has_many :vms_and_templates, :foreign_key => :storage_id, :dependent => :nullify, :class_name => "VmOrTemplate"
-  has_many :miq_templates,     :foreign_key => :storage_id
-  has_many :vms,               :foreign_key => :storage_id
+  has_many :vms_and_templates, :dependent => :nullify, :class_name => "VmOrTemplate"
+  has_many :miq_templates
+  has_many :vms
   has_many :host_storages,     :dependent => :destroy
   has_many :hosts,             :through => :host_storages
   has_many :storage_profile_storages,   :dependent  => :destroy
@@ -17,7 +17,7 @@ class Storage < ApplicationRecord
 
   has_many :metrics,        :as => :resource  # Destroy will be handled by purger
   has_many :metric_rollups, :as => :resource  # Destroy will be handled by purger
-  has_many :vim_performance_states, :as => :resource  # Destroy will be handled by purger
+  has_many :vim_performance_states, :as => :resource # Destroy will be handled by purger
 
   has_many :storage_files,       :dependent => :destroy
   has_many :storage_files_files, -> { where("rsc_type = 'file'") }, :class_name => "StorageFile", :foreign_key => "storage_id"
@@ -30,7 +30,7 @@ class Storage < ApplicationRecord
 
   scope :available, -> { where(:maintenance => [nil, false]) }
 
-  validates_presence_of     :name
+  validates :name, :presence => true
 
   include RelationshipMixin
   self.default_relationship_type = "ems_metadata"
@@ -63,7 +63,7 @@ class Storage < ApplicationRecord
   virtual_column :v_provisioned_percent_of_total, :type => :float
   virtual_column :total_managed_unregistered_vms, :type => :integer
   virtual_column :total_managed_registered_vms,   :type => :integer
-  virtual_column :total_unmanaged_vms,            :type => :integer  # uses is handled via class method that aggregates
+  virtual_column :total_unmanaged_vms,            :type => :integer # uses is handled via class method that aggregates
   virtual_column :count_of_vmdk_disk_files,       :type => :integer
 
   delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
@@ -136,10 +136,8 @@ class Storage < ApplicationRecord
     end
 
     miq_task.lock(:exclusive) do |locked_miq_task|
-      if locked_miq_task.context_data[:targets].length == 1
-        unless MiqTask.status_ok?(status)
-          self.task_results = result unless result.nil?
-        end
+      if locked_miq_task.context_data[:targets].length == 1 && !MiqTask.status_ok?(status) && !result.nil?
+        self.task_results = result
       end
 
       if MiqTask.status_error?(status)
@@ -181,7 +179,7 @@ class Storage < ApplicationRecord
       :method_name  => 'smartstate_analysis',
       :args         => [miq_task_id],
       :msg_timeout  => self.class.scan_collection_timeout,
-      :miq_callback => cb,
+      :miq_callback => cb
     )
   end
 
@@ -269,12 +267,12 @@ class Storage < ApplicationRecord
     miq_task.lock(:exclusive) do |locked_miq_task|
       locked_miq_task.context_data[:pending].each do |storage_id, qitem_id|
         qitem = MiqQueue.find_by(:id => qitem_id)
-        if qitem.nil?
-          _log.warn("Pending Scan for Storage ID: [#{storage_id}] is missing MiqQueue ID: [#{qitem_id}] - will requeue")
-          locked_miq_task.context_data[:pending].delete(storage_id)
-          locked_miq_task.save!
-          scan_queue(locked_miq_task)
-        end
+        next unless qitem.nil?
+
+        _log.warn("Pending Scan for Storage ID: [#{storage_id}] is missing MiqQueue ID: [#{qitem_id}] - will requeue")
+        locked_miq_task.context_data[:pending].delete(storage_id)
+        locked_miq_task.save!
+        scan_queue(locked_miq_task)
       end
     end
     scan_queue_watchdog(miq_task.id)
@@ -311,7 +309,7 @@ class Storage < ApplicationRecord
   end
 
   def self.create_scan_task(task_name, userid, storages)
-    context_data = {:targets  => storages.collect(&:id).sort, :complete => [], :pending  => {}}
+    context_data = {:targets => storages.collect(&:id).sort, :complete => [], :pending => {}}
     miq_task     = MiqTask.create(
       :name         => task_name,
       :state        => MiqTask::STATE_QUEUED,
@@ -483,6 +481,7 @@ class Storage < ApplicationRecord
 
   def qmessage?(method_name)
     return false if $_miq_worker_current_msg.nil?
+
     ($_miq_worker_current_msg.class_name == self.class.name) && ($_miq_worker_current_msg.instance_id = id) && ($_miq_worker_current_msg.method_name == method_name)
   end
 
@@ -514,12 +513,12 @@ class Storage < ApplicationRecord
       _log.warn(message)
       raise MiqException::MiqUnreachableStorage,
             _("There are no EMSs with valid credentials connected to Storage: [%{name}] in Zone: [%{zone}].") %
-              {:name => name, :zone => MiqServer.my_zone}
+            {:name => name, :zone => MiqServer.my_zone}
     end
 
     ems = ext_management_system
-    unless smartstate_analysis_count_for_ems_id(ems.id) < ::Settings.storage.max_parallel_scans_per_ems
-      raise MiqException::MiqQueueRetryLater.new(:deliver_on => Time.now.utc + 1.minute) if qmessage?(method_name)
+    if !(smartstate_analysis_count_for_ems_id(ems.id) < ::Settings.storage.max_parallel_scans_per_ems) && qmessage?(method_name)
+      raise MiqException::MiqQueueRetryLater.new(:deliver_on => Time.now.utc + 1.minute)
     end
 
     $_miq_worker_current_msg.update!(:target_id => ems.id) if qmessage?(method_name)
@@ -553,9 +552,8 @@ class Storage < ApplicationRecord
     host_ids = hosts.collect(&:id)
     return {} if host_ids.empty?
 
-    Vm.where(:host_id => host_ids).includes(:storage).inject({}) do |h, v|
+    Vm.where(:host_id => host_ids).includes(:storage).each_with_object({}) do |v, h|
       h[File.dirname(v.path)] = v.id
-      h
     end
   end
 
@@ -563,6 +561,7 @@ class Storage < ApplicationRecord
   def self.get_common_refresh_targets(storages)
     storages = Array.wrap(storages)
     return [] if storages.empty?
+
     storages = find(storages) unless storages[0].kind_of?(Storage)
 
     objs = storages.collect do |s|
@@ -577,17 +576,17 @@ class Storage < ApplicationRecord
   def used_space
     total_space.to_i.zero? ? 0 : total_space.to_i - free_space.to_i
   end
-  alias_method :v_used_space, :used_space
+  alias v_used_space used_space
 
   def used_space_percent_of_total
     total_space.to_i.zero? ? 0.0 : (used_space.to_f / total_space * 1000.0).round / 10.0
   end
-  alias_method :v_used_space_percent_of_total, :used_space_percent_of_total
+  alias v_used_space_percent_of_total used_space_percent_of_total
 
   def free_space_percent_of_total
     total_space.to_i.zero? ? 0.0 : (free_space.to_f / total_space * 1000.0).round / 10.0
   end
-  alias_method :v_free_space_percent_of_total, :free_space_percent_of_total
+  alias v_free_space_percent_of_total free_space_percent_of_total
 
   def v_total_hosts
     if @association_cache.include?(:hosts)
@@ -610,11 +609,11 @@ class Storage < ApplicationRecord
     end
   end
 
-  alias_method :v_total_debris_size,   :debris_size
-  alias_method :v_total_snapshot_size, :snapshot_size
-  alias_method :v_total_memory_size,   :vm_ram_size
-  alias_method :v_total_vm_misc_size,  :vm_misc_size
-  alias_method :v_total_disk_size,     :disk_size
+  alias v_total_debris_size debris_size
+  alias v_total_snapshot_size snapshot_size
+  alias v_total_memory_size vm_ram_size
+  alias v_total_vm_misc_size vm_misc_size
+  alias v_total_disk_size disk_size
 
   def v_debris_percent_of_used
     used_space.to_i.zero? ? 0.0 : (debris_size.to_f / used_space * 1000.0).round / 10.0
@@ -737,7 +736,7 @@ class Storage < ApplicationRecord
         ['registered', 'unregistered'].each do |mode|
           attrs["derived_storage_used_#{mode}".to_sym] ||= 0
 
-          send("#{mode}_vms").each do |vm|
+          send(:"#{mode}_vms").each do |vm|
             vm_attrs = {:capture_interval => interval, :resource_name => vm.name}
             vm_attrs[:derived_storage_vm_count_managed] = 1
             vm_attrs["derived_storage_vm_count_#{mode}".to_sym] = 1
@@ -766,13 +765,13 @@ class Storage < ApplicationRecord
               attrs[col] ||= 0
               vm_attrs[col] ||= 0
 
-              unless val.nil?
-                attrs[col] += val
-                attrs["derived_storage_used_#{mode}".to_sym] += val
-                attrs[:derived_storage_used_managed] += val
-                vm_attrs[col] += val
-                vm_attrs[:derived_storage_used_managed] += val
-              end
+              next if val.nil?
+
+              attrs[col] += val
+              attrs["derived_storage_used_#{mode}".to_sym] += val
+              attrs[:derived_storage_used_managed] += val
+              vm_attrs[col] += val
+              vm_attrs[:derived_storage_used_managed] += val
             end
 
             vm_perf   = obj_perfs.fetch_path(vm.class.name, vm.id, interval_name, hour)

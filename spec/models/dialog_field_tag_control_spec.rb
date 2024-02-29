@@ -1,6 +1,7 @@
 RSpec.describe DialogFieldTagControl do
   def add_entry(cat, options)
     raise "entries can only be added to classifications" unless cat.category?
+
     # Inherit from parent classification
     options.merge!(:read_only => cat.read_only, :syntax => cat.syntax, :single_value => cat.single_value, :ns => cat.ns)
     options.merge!(:parent_id => cat.id) # Ugly way to set up a child
@@ -64,8 +65,7 @@ RSpec.describe DialogFieldTagControl do
   context "dialog field tag control with with options hash and category" do
     before do
       @df = FactoryBot.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category',
-            :options => {:force_single_value => true, :category_id => 1, :category_name => 'category', :category_description => 'description'}
-                              )
+            :options => {:force_single_value => true, :category_id => 1, :category_name => 'category', :category_description => 'description'})
     end
 
     it "#category" do
@@ -89,8 +89,7 @@ RSpec.describe DialogFieldTagControl do
     before do
       @cat = FactoryBot.create(:classification, :description => "Auto Approve - Max CPU", :name => "prov_max_cpu", :single_value => 1)
       @df  = FactoryBot.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category',
-            :options => {:category_id => @cat.id, :category_name => 'category', :category_description => 'description'}
-                               )
+            :options => {:category_id => @cat.id, :category_name => 'category', :category_description => 'description'})
     end
 
     it "#single_value?" do
@@ -98,8 +97,7 @@ RSpec.describe DialogFieldTagControl do
 
       cat = FactoryBot.create(:classification, :description => "Auto Approve - Max Memory", :name => "prov_max_memory", :single_value => 0)
       df  = FactoryBot.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category',
-            :options => {:category_id => cat.id, :category_name => 'category', :category_description => 'description'}
-                              )
+            :options => {:category_id => cat.id, :category_name => 'category', :category_description => 'description'})
 
       expect(df.single_value?).to be_falsey
     end
@@ -144,7 +142,7 @@ RSpec.describe DialogFieldTagControl do
       it "automate_output_value with multiple values" do
         tags = [Classification.first, Classification.last]
         @df.value = tags.collect(&:id).join(",")
-        expect(@df.automate_output_value.split("\x1F")).to match_array tags.collect { |tag| "#{tag.class.name}::#{tag.id}" }
+        expect(@df.automate_output_value.split("\x1F")).to match_array(tags.collect { |tag| "#{tag.class.name}::#{tag.id}" })
       end
     end
   end
@@ -203,10 +201,10 @@ RSpec.describe DialogFieldTagControl do
 
             it "sorts reverse by name converting to integer and adds a blank value to the front" do
               expect(dialog_field.values).to eq([
-                {:id => nil, :name => "<None>", :description => "<None>"},
-                {:id => 321, :name => "2dog", :description => "Dog"},
-                {:id => 312, :name => "1cat", :description => "Cat"}
-              ])
+                                                  {:id => nil, :name => "<None>", :description => "<None>"},
+                                                  {:id => 321, :name => "2dog", :description => "Dog"},
+                                                  {:id => 312, :name => "1cat", :description => "Cat"}
+                                                ])
             end
           end
 
@@ -217,10 +215,10 @@ RSpec.describe DialogFieldTagControl do
 
             it "sorts by name converting to integer and adds a blank value to the front" do
               expect(dialog_field.values).to eq([
-                {:id => nil, :name => "<None>", :description => "<None>"},
-                {:id => 312, :name => "1cat", :description => "Cat"},
-                {:id => 321, :name => "2dog", :description => "Dog"}
-              ])
+                                                  {:id => nil, :name => "<None>", :description => "<None>"},
+                                                  {:id => 312, :name => "1cat", :description => "Cat"},
+                                                  {:id => 321, :name => "2dog", :description => "Dog"}
+                                                ])
             end
           end
         end
@@ -233,10 +231,10 @@ RSpec.describe DialogFieldTagControl do
 
             it "sorts reverse by name and adds a blank value to the front" do
               expect(dialog_field.values).to eq([
-                {:id => nil, :name => "<None>", :description => "<None>"},
-                {:id => 321, :name => "dog", :description => "Dog"},
-                {:id => 312, :name => "cat", :description => "Cat"}
-              ])
+                                                  {:id => nil, :name => "<None>", :description => "<None>"},
+                                                  {:id => 321, :name => "dog", :description => "Dog"},
+                                                  {:id => 312, :name => "cat", :description => "Cat"}
+                                                ])
             end
           end
 
@@ -247,10 +245,10 @@ RSpec.describe DialogFieldTagControl do
 
             it "sorts by name and adds a blank value to the front" do
               expect(dialog_field.values).to eq([
-                {:id => nil, :name => "<None>", :description => "<None>"},
-                {:id => 312, :name => "cat", :description => "Cat"},
-                {:id => 321, :name => "dog", :description => "Dog"}
-              ])
+                                                  {:id => nil, :name => "<None>", :description => "<None>"},
+                                                  {:id => 312, :name => "cat", :description => "Cat"},
+                                                  {:id => 321, :name => "dog", :description => "Dog"}
+                                                ])
             end
           end
         end
@@ -261,10 +259,10 @@ RSpec.describe DialogFieldTagControl do
 
         it "returns the available tags in whatever order they came in as with a blank value first" do
           expect(dialog_field.values).to eq([
-            {:id => nil, :name => "<None>", :description => "<None>"},
-            {:id => 321, :name => "dog", :description => "Dog"},
-            {:id => 312, :name => "cat", :description => "Cat"},
-          ])
+                                              {:id => nil, :name => "<None>", :description => "<None>"},
+                                              {:id => 321, :name => "dog", :description => "Dog"},
+                                              {:id => 312, :name => "cat", :description => "Cat"},
+                                            ])
         end
       end
     end

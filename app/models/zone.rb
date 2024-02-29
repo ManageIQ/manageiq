@@ -1,5 +1,5 @@
 class Zone < ApplicationRecord
-  validates_presence_of   :name, :description
+  validates :name, :description, :presence => true
   validates :name, :unique_within_region => true
 
   serialize :settings, Hash
@@ -31,9 +31,9 @@ class Zone < ApplicationRecord
   has_many :vm_hardwares, :class_name => 'Hardware', :through => :vms_and_templates, :source => :hardware
   virtual_has_many :active_miq_servers, :class_name => "MiqServer"
 
+  after_create :create_server_if_podified
   before_destroy :remove_servers_if_podified
   before_destroy :check_zone_in_use_on_destroy
-  after_create :create_server_if_podified
 
   include AuthenticationMixin
 
@@ -70,6 +70,7 @@ class Zone < ApplicationRecord
       MiqRegion.my_region.update(:maintenance_zone => zone)
     rescue ActiveRecord::RecordInvalid
       raise if zone.errors[:name].blank?
+
       retry
     end
     _log.info("Creating maintenance zone...")
@@ -243,6 +244,7 @@ class Zone < ApplicationRecord
     return _("cannot delete default zone") if name == "default"
     return _("cannot delete maintenance zone") if maintenance?
     return _("zone name '%{name}' is used by a server") % {:name => name} if !MiqEnvironment::Command.is_podified? && miq_servers.present?
+
     _("zone name '%{name}' is used by a provider") % {:name => name} if ext_management_systems.present?
   end
 

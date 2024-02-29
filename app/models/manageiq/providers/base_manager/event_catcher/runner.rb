@@ -1,7 +1,7 @@
 require 'concurrent/atomic/event'
 require 'util/duplicate_blocker'
 
-class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runner
+class ManageIQ::Providers::BaseManager::EventCatcher::Runner < MiqWorker::Runner
   class EventCatcherHandledException < StandardError
   end
 
@@ -94,6 +94,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
   # Called when there is any change in BlacklistedEvent
   def sync_blacklisted_events
     return unless @ems
+
     filters = @ems.blacklisted_event_names
 
     if @filtered_events.nil? || @filtered_events != filters
@@ -153,19 +154,19 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
     _log.info("#{log_prefix} Starting Event Monitor Thread")
 
     tid = Thread.new do
-      begin
-        monitor_events
-      rescue EventCatcherHandledException
-        Thread.exit
-      rescue TemporaryFailure
-        raise
-      rescue => err
-        _log.error("#{log_prefix} Event Monitor Thread aborted because [#{err.message}]")
-        _log.log_backtrace(err) unless err.kind_of?(Errno::ECONNREFUSED)
-        Thread.exit
-      ensure
-        @monitor_started.set
-      end
+
+      monitor_events
+    rescue EventCatcherHandledException
+      Thread.exit
+    rescue TemporaryFailure
+      raise
+    rescue => err
+      _log.error("#{log_prefix} Event Monitor Thread aborted because [#{err.message}]")
+      _log.log_backtrace(err) unless err.kind_of?(Errno::ECONNREFUSED)
+      Thread.exit
+    ensure
+      @monitor_started.set
+
     end
 
     @monitor_started.wait

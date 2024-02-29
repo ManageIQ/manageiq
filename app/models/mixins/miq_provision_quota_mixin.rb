@@ -9,6 +9,7 @@ module MiqProvisionQuotaMixin
     unless respond_to?(quota_method)
       raise _("check_quota called with an invalid provisioning quota method <%{type}>") % {:type => quota_type}
     end
+
     send(quota_method, options)
   end
 
@@ -123,7 +124,7 @@ module MiqProvisionQuotaMixin
     vms = []
     prov_owner = get_owner
     unless prov_owner.nil?
-      cond_str, cond_args  = "evm_owner_id = ? AND template = ? AND host_id is not NULL", [prov_owner.id, false]
+      cond_str, cond_args = "evm_owner_id = ? AND template = ? AND host_id is not NULL", [prov_owner.id, false]
 
       # Default return includes retired VMs that are still on a host
       if options[:retired_vms_only] == true
@@ -181,11 +182,11 @@ module MiqProvisionQuotaMixin
       :class_name  => 'MiqProvisionRequest',
       :method_name => 'create_request_tasks',
       :state       => 'ready',
-      :deliver_on  => scheduled_range,
+      :deliver_on  => scheduled_range
     )
 
     # Make sure we skip the current MiqProvisionRequest in the calculation.
-    skip_id = self.class.name == "MiqProvisionRequest" ? id : miq_provision_request.id
+    skip_id = instance_of?(::MiqProvisionRequest) ? id : miq_provision_request.id
     load_ids = queued_requests.pluck(:instance_id)
     load_ids.delete(skip_id)
     provisions = MiqProvisionRequest.where(:id => load_ids).to_a
@@ -195,6 +196,7 @@ module MiqProvisionQuotaMixin
       today_range = (scheduled_range.first..scheduled_range.last)
       MiqProvisionRequest.where.not(:request_state => 'pending').where(:updated_on => today_range).each do |prov_req|
         next if prov_req.id == skip_id
+
         provisions << prov_req if today_range.include?(prov_req.options[:delivered_on])
       end
     end
@@ -229,7 +231,7 @@ module MiqProvisionQuotaMixin
     requests = MiqRequest.where("type = ? and approval_state != ? and (created_on >= ? and created_on < ?)",
                                 MiqProvisionRequest.name, 'denied', *today_time_range)
     # Make sure we skip the current MiqProvisionRequest in the calculation.
-    skip_id = self.class.name == "MiqProvisionRequest" ? id : miq_provision_request.id
+    skip_id = instance_of?(::MiqProvisionRequest) ? id : miq_provision_request.id
     requests.collect { |request| request unless request.id == skip_id }.compact
   end
 
@@ -277,8 +279,8 @@ module MiqProvisionQuotaMixin
   def quota_find_active_prov_request(_options)
     MiqRequest.where(
       :approval_state => 'approved',
-      :type           => %w(MiqProvisionRequest ServiceTemplateProvisionRequest),
-      :request_state  => %w(active queued pending),
+      :type           => %w[MiqProvisionRequest ServiceTemplateProvisionRequest],
+      :request_state  => %w[active queued pending],
       :status         => 'Ok',
       :process        => true
     ).where.not(:id => id)
@@ -291,6 +293,7 @@ module MiqProvisionQuotaMixin
   def vm_quota_values(pr, result)
     num_vms_for_request = number_of_vms(pr)
     return if num_vms_for_request.zero?
+
     flavor_obj = flavor(pr)
     result[:count] += num_vms_for_request
     result[:memory] += memory(pr, cloud?(pr), vendor(pr), flavor_obj) * num_vms_for_request
@@ -300,6 +303,7 @@ module MiqProvisionQuotaMixin
 
     pr.miq_request_tasks.each do |p|
       next unless p.state == 'Active'
+
       host_id, storage_id = p.get_option(:dest_host).to_i, p.get_option(:dest_storage).to_i
       active = result[:active]
       active[:memory_by_host_id][host_id] += memory(p, cloud?(pr), vendor(pr), flavor_obj)
@@ -312,11 +316,13 @@ module MiqProvisionQuotaMixin
 
   def service_quota_values(request, result)
     return unless request.service_template
+
     request.service_template.service_resources.each do |sr|
       if request.service_template.service_type == ServiceTemplate::SERVICE_TYPE_COMPOSITE
         bundle_quota_values(sr, result)
       else
         next if request.service_template.prov_type.starts_with?("generic")
+
         vm_quota_values(sr.resource, result)
       end
     end
@@ -324,6 +330,7 @@ module MiqProvisionQuotaMixin
 
   def bundle_quota_values(service_resource, result)
     return if service_resource.resource.prov_type.starts_with?('generic')
+
     service_resource.resource.service_resources.each do |sr|
       vm_quota_values(sr.resource, result)
     end
@@ -333,10 +340,9 @@ module MiqProvisionQuotaMixin
     result = {:count => 0, :memory => 0, :cpu => 0, :storage => 0, :ids => [], :class_name => "MiqProvisionRequest",
               :active => {
                 :class_name => "MiqProvision", :ids => [], :storage_by_id => Hash.new { |k, v| k[v] = 0 },
-                :memory_by_host_id => Hash.new { |k, v| k[v] = 0 },  :cpu_by_host_id => Hash.new { |k, v| k[v] = 0 },
+                :memory_by_host_id => Hash.new { |k, v| k[v] = 0 }, :cpu_by_host_id => Hash.new { |k, v| k[v] = 0 },
                 :vms_by_storage_id => Hash.new { |k, v| k[v] = [] }
-              }
-             }
+              }}
 
     send(prov_method, options).each do |pr|
       service_request?(pr) ? service_quota_values(pr, result) : vm_quota_values(pr, result)
@@ -379,6 +385,7 @@ module MiqProvisionQuotaMixin
         return prov.get_option(:boot_disk_size).to_i.gigabytes
       end
       return nil unless flavor_obj
+
       flavor_obj.root_disk_size.to_i + flavor_obj.ephemeral_disk_size.to_i + flavor_obj.swap_disk_size.to_i
     else
       prov.kind_of?(MiqRequest) ? prov.vm_template.provisioned_storage : prov.miq_request.vm_template.provisioned_storage
@@ -391,6 +398,6 @@ module MiqProvisionQuotaMixin
 
     request = prov.kind_of?(MiqRequest) ? prov : prov.miq_request
     memory = request.get_option(:vm_memory).to_i
-    %w(amazon openstack google).include?(vendor) ? memory : memory.megabytes
+    %w[amazon openstack google].include?(vendor) ? memory : memory.megabytes
   end
 end

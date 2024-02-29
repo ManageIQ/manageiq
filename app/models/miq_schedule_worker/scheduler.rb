@@ -17,13 +17,13 @@ class MiqScheduleWorker
       log_schedule(name, opts.merge(:duration => duration))
 
       if duration.blank?
-        logger.warn("Duration is empty, scheduling ignored. Called from: #{caller[1]}.")
+        logger.warn("Duration is empty, scheduling ignored. Called from: #{caller(2..2).first}.")
         return
       end
 
       role_schedule << rufus_scheduler.schedule_every(duration, nil, opts, &block)
     rescue ArgumentError => err
-      logger.error("#{err.class} for schedule_every with [#{duration}, #{opts.inspect}].  Called from: #{caller[1]}.")
+      logger.error("#{err.class} for schedule_every with [#{duration}, #{opts.inspect}].  Called from: #{caller(2..2).first}.")
     end
 
     def schedule_cron(name, cronline, opts = {}, &block)

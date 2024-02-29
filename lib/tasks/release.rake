@@ -2,15 +2,15 @@ desc "Release a new project version"
 task :release do
   require 'pathname'
 
-  version = ENV["RELEASE_VERSION"]
+  version = ENV.fetch("RELEASE_VERSION", nil)
   if version.nil? || version.empty?
-    STDERR.puts "ERROR: You must set the env var RELEASE_VERSION to the proper value."
+    warn "ERROR: You must set the env var RELEASE_VERSION to the proper value."
     exit 1
   end
 
   branch = `git rev-parse --abbrev-ref HEAD`.chomp
   if branch == "master"
-    STDERR.puts "ERROR: You cannot cut a release from the master branch."
+    warn "ERROR: You cannot cut a release from the master branch."
     exit 1
   end
 
@@ -72,21 +72,21 @@ namespace :release do
   task :new_branch do
     require 'pathname'
 
-    branch = ENV["RELEASE_BRANCH"]
+    branch = ENV.fetch("RELEASE_BRANCH", nil)
     if branch.nil? || branch.empty?
-      STDERR.puts "ERROR: You must set the env var RELEASE_BRANCH to the proper value."
+      warn "ERROR: You must set the env var RELEASE_BRANCH to the proper value."
       exit 1
     end
 
-    next_branch = ENV["RELEASE_BRANCH_NEXT"]
+    next_branch = ENV.fetch("RELEASE_BRANCH_NEXT", nil)
     if next_branch.nil? || next_branch.empty?
-      STDERR.puts "ERROR: You must set the env var RELEASE_BRANCH_NEXT to the proper value."
+      warn "ERROR: You must set the env var RELEASE_BRANCH_NEXT to the proper value."
       exit 1
     end
 
     current_branch = `git rev-parse --abbrev-ref HEAD`.chomp
     if current_branch == "master"
-      STDERR.puts "ERROR: You cannot do new branch tasks from the master branch."
+      warn "ERROR: You cannot do new branch tasks from the master branch."
       exit 1
     end
 
@@ -133,21 +133,21 @@ namespace :release do
   task :new_branch_master do
     require 'pathname'
 
-    branch = ENV["RELEASE_BRANCH"]
+    branch = ENV.fetch("RELEASE_BRANCH", nil)
     if branch.nil? || branch.empty?
-      STDERR.puts "ERROR: You must set the env var RELEASE_BRANCH to the proper value."
+      warn "ERROR: You must set the env var RELEASE_BRANCH to the proper value."
       exit 1
     end
 
-    next_branch = ENV["RELEASE_BRANCH_NEXT"]
+    next_branch = ENV.fetch("RELEASE_BRANCH_NEXT", nil)
     if next_branch.nil? || next_branch.empty?
-      STDERR.puts "ERROR: You must set the env var RELEASE_BRANCH_NEXT to the proper value."
+      warn "ERROR: You must set the env var RELEASE_BRANCH_NEXT to the proper value."
       exit 1
     end
 
     current_branch = `git rev-parse --abbrev-ref HEAD`.chomp
     if current_branch != "master"
-      STDERR.puts "ERROR: You cannot do master branch tasks from a non-master branch (#{current_branch})."
+      warn "ERROR: You cannot do master branch tasks from a non-master branch (#{current_branch})."
       exit 1
     end
 
@@ -178,9 +178,9 @@ namespace :release do
 
   desc "Generate the Gemfile.lock.release file"
   task :generate_lockfile do
-    branch = ENV["RELEASE_BRANCH"]
+    branch = ENV.fetch("RELEASE_BRANCH", nil)
     if branch.nil? || branch.empty?
-      STDERR.puts "ERROR: You must set the env var RELEASE_BRANCH to the proper value."
+      warn "ERROR: You must set the env var RELEASE_BRANCH to the proper value."
       exit 1
     end
 
@@ -193,7 +193,7 @@ namespace :release do
     global_bundler_d = Pathname.new(Dir.home).join(".bundler.d")
     if (local_bundler_d.exist? && local_bundler_d.glob("*.rb").any?) ||
        (global_bundler_d.exist? && global_bundler_d.glob("*.rb").any?)
-      STDERR.puts "ERROR: You cannot run generate_lockfile with bundler-inject files present."
+      warn "ERROR: You cannot run generate_lockfile with bundler-inject files present."
       exit 1
     end
 

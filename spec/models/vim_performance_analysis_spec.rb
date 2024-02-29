@@ -5,7 +5,7 @@ RSpec.describe VimPerformanceAnalysis do
   let(:time_profile) { FactoryBot.create(:time_profile_with_rollup, :profile => {:tz => "UTC"}) }
   let(:ems) { FactoryBot.create(:ems_vmware) }
 
-  let(:good_day) { DateTime.current - 2.day }
+  let(:good_day) { DateTime.current - 2.days }
   let(:bad_day)  { DateTime.current - 4.months }
   let(:vm1) do
     FactoryBot.create(:vm_vmware, :name => "test_vm", :tags => [tag_good], :ext_management_system => ems).tap do |vm|
@@ -20,12 +20,12 @@ RSpec.describe VimPerformanceAnalysis do
   let(:storage) { FactoryBot.create(:storage_vmware) }
   let(:host1) do
     FactoryBot.create(:host,
-                       :hardware => FactoryBot.create(:hardware,
-                                                       :memory_mb       => 8124,
-                                                       :cpu_total_cores => 1,
-                                                       :cpu_speed       => 9576),
-                       :vms      => [vm1],
-                       :storages => [storage])
+                      :hardware => FactoryBot.create(:hardware,
+                                                     :memory_mb       => 8124,
+                                                     :cpu_total_cores => 1,
+                                                     :cpu_speed       => 9576),
+                      :vms      => [vm1],
+                      :storages => [storage])
   end
 
   let(:ems_cluster) do
@@ -41,7 +41,7 @@ RSpec.describe VimPerformanceAnalysis do
       ems_cluster
       expect(MetricRollup.count).to be > 0
 
-      cols = %i(id name project provider_id)
+      cols = %i[id name project provider_id]
       # :conditions => ["resource_type = ? and tag_names like ?", tag_klass, "%#{cat}/#{tag}%"]
       options = {:end_date => DateTime.current, :days => 30, :ext_options => {:time_profile => time_profile}}
 
@@ -56,8 +56,8 @@ RSpec.describe VimPerformanceAnalysis do
   describe '.group_perf_by_timestamp' do
     let(:storage_metric) do
       FactoryBot.create(:metric_rollup,
-                         :derived_storage_total => '42',
-                         :derived_storage_free  => '13')
+                        :derived_storage_total => '42',
+                        :derived_storage_free  => '13')
     end
     let(:cols) { [:derived_storage_total, :derived_storage_free, :v_derived_storage_used] }
 
@@ -85,14 +85,13 @@ RSpec.describe VimPerformanceAnalysis do
 
   def add_rollup(vm, timestamp, tag = tag_text)
     vm.metric_rollups << FactoryBot.create(:metric_rollup_vm_daily, :with_data,
-                                            :timestamp          => timestamp,
-                                            :tag_names          => tag,
-                                            :parent_host        => vm.host,
-                                            :parent_ems_cluster => vm.ems_cluster,
-                                            :parent_ems         => vm.ext_management_system,
-                                            :parent_storage     => vm.storage,
-                                            :resource_name      => vm.name,
-                                            :time_profile       => time_profile,
-                                           )
+                                           :timestamp          => timestamp,
+                                           :tag_names          => tag,
+                                           :parent_host        => vm.host,
+                                           :parent_ems_cluster => vm.ems_cluster,
+                                           :parent_ems         => vm.ext_management_system,
+                                           :parent_storage     => vm.storage,
+                                           :resource_name      => vm.name,
+                                           :time_profile       => time_profile)
   end
 end

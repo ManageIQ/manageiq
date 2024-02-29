@@ -32,7 +32,7 @@ class Condition < ApplicationRecord
 
   def applies_to?(rec, inputs = {})
     rec_model = rec.class.base_model.name
-    rec_model = "Vm" if rec_model.downcase.match("template")
+    rec_model = "Vm" if rec_model.downcase.match?("template")
 
     return false if towhat && rec_model != towhat
     return true  if applies_to_exp.nil?
@@ -51,9 +51,9 @@ class Condition < ApplicationRecord
 
     case mode
     when "tag"
-      unless %w(any all none).include?(expression["include"])
+      unless %w[any all none].include?(expression["include"])
         raise _("condition '%{name}', include value \"%{value}\", is invalid. Should be one of \"any, all or none\"") %
-                {:name => name, :value => expression["include"]}
+              {:name => name, :value => expression["include"]}
       end
 
       result = expression["include"] != "any"
@@ -61,8 +61,8 @@ class Condition < ApplicationRecord
         if rec.is_tagged_with?(tag, :ns => expression["ns"])
           result = true if expression["include"] == "any"
           result = false if expression["include"] == "none"
-        else
-          result = false if expression["include"] == "all"
+        elsif expression["include"] == "all"
+          result = false
         end
       end
     when "tag_expr", "tag_expr_v2", "object"
@@ -113,18 +113,18 @@ class Condition < ApplicationRecord
 
     case mode.downcase
     when "exist"
-      ref.nil? ? value = false : value = ref.is_tagged_with?(tag, :ns => "*")
+      value = ref.nil? ? false : ref.is_tagged_with?(tag, :ns => "*")
     when "value"
-      if ref.kind_of?(Hash)
-        value = ref.fetch(tag, "")
-      else
-        value = ref.nil? ? "" : Tag.list(ref, :ns => tag)
-      end
+      value = if ref.kind_of?(Hash)
+                ref.fetch(tag, "")
+              else
+                ref.nil? ? "" : Tag.list(ref, :ns => tag)
+              end
       value = MiqExpression.quote(value, ohash[:type]&.to_sym)
     when "count"
-      ref.nil? ? value = 0 : value = ref.tag_list(:ns => tag).length
+      value = ref.nil? ? 0 : ref.tag_list(:ns => tag).length
     when "registry"
-      ref.nil? ? value = "" : value = registry_data(ref, tag, ohash)
+      value = ref.nil? ? "" : registry_data(ref, tag, ohash)
       value = MiqExpression.quote(value, ohash[:type]&.to_sym)
     end
     value
@@ -165,7 +165,7 @@ class Condition < ApplicationRecord
 
     list = l.collect do |obj|
       value = MiqExpression.quote(obj.send(attr), opts[:type]&.to_sym)
-      value = value.gsub(/\\/, '\&\&') if value.kind_of?(String)
+      value = value.gsub("\\", '\&\&') if value.kind_of?(String)
       e = search.gsub(/<value[^>]*>.+<\/value>/im, value.to_s)
       obj if do_eval(e)
     end.compact
@@ -184,7 +184,7 @@ class Condition < ApplicationRecord
     if checkmode == "count"
       e = check.gsub(/<count>/i, list.length.to_s)
       left, operator, right = e.split
-      raise _("Illegal operator, '%{operator}'") % {:operator => operator} unless %w(== != < > <= >=).include?(operator)
+      raise _("Illegal operator, '%{operator}'") % {:operator => operator} unless %w[== != < > <= >=].include?(operator)
 
       MiqPolicy.logger.debug("MIQ(condition-_subst_find): Check Expression after substitution: [#{e}]")
       result = !!left.to_f.send(operator, right.to_f)
@@ -203,7 +203,7 @@ class Condition < ApplicationRecord
     list.each do |obj|
       opts, _ref = options2hash(raw_opts, obj)
       value = MiqExpression.quote(obj.send(checkattr), opts[:type]&.to_sym)
-      value = value.gsub(/\\/, '\&\&') if value.kind_of?(String)
+      value = value.gsub("\\", '\&\&') if value.kind_of?(String)
       e = check.gsub(/<value[^>]*>.+<\/value>/im, value.to_s)
       MiqPolicy.logger.debug("MIQ(condition-_subst_find): Check Expression after substitution: [#{e}]")
 
@@ -219,14 +219,14 @@ class Condition < ApplicationRecord
   def self.options2hash(opts, rec)
     ref = rec
     ohash = {}
-    unless opts.blank?
+    if opts.present?
       val = nil
       opts.split(",").each do |o|
         attr, val = o.split("=")
         ohash[attr.strip.downcase.to_sym] = val.strip.downcase
       end
-      if ohash[:ref] != rec.class.to_s.downcase && !exclude_from_object_ref_substitution(ohash[:ref], rec)
-        ref = rec.send(val) if val && rec.respond_to?(val)
+      if ohash[:ref] != rec.class.to_s.downcase && !exclude_from_object_ref_substitution(ohash[:ref], rec) && (val && rec.respond_to?(val))
+        ref = rec.send(val)
       end
     end
     return ohash, ref
@@ -242,7 +242,7 @@ class Condition < ApplicationRecord
   def self.registry_data(ref, name, ohash)
     # <registry>HKLM\Software\Microsoft\Windows\CurrentVersion\explorer\Shell Folders\Common AppData</registry> == 'C:\Documents and Settings\All Users\Application Data'
     # <registry>HKLM\Software\Microsoft\Windows\CurrentVersion\explorer\Shell Folders : Common AppData</registry> == 'C:\Documents and Settings\All Users\Application Data'
-    return nil unless ref.respond_to?("registry_items")
+    return nil unless ref.respond_to?(:registry_items)
 
     registry_items = ref.registry_items
     if ohash[:key_exists]
@@ -295,5 +295,4 @@ class Condition < ApplicationRecord
 
     return c, status
   end
-
 end # class Condition

@@ -26,7 +26,7 @@ class ContainerOrchestrator
     yield(definition) if block_given?
     kube_apps_connection.create_deployment(definition)
   rescue KubeException => e
-    raise unless e.message =~ /already exists/
+    raise unless /already exists/.match?(e.message)
   end
 
   def create_service(name, selector, port)
@@ -34,7 +34,7 @@ class ContainerOrchestrator
     yield(definition) if block_given?
     kube_connection.create_service(definition)
   rescue KubeException => e
-    raise unless e.message =~ /already exists/
+    raise unless /already exists/.match?(e.message)
   end
 
   def create_secret(name, data)
@@ -42,7 +42,7 @@ class ContainerOrchestrator
     yield(definition) if block_given?
     kube_connection.create_secret(definition)
   rescue KubeException => e
-    raise unless e.message =~ /already exists/
+    raise unless /already exists/.match?(e.message)
   end
 
   def delete_deployment(name)
@@ -50,19 +50,19 @@ class ContainerOrchestrator
     scale(name, 0)
     kube_apps_connection.delete_deployment(name, my_namespace)
   rescue KubeException => e
-    raise unless e.message =~ /not found/
+    raise unless /not found/.match?(e.message)
   end
 
   def delete_service(name)
     kube_connection.delete_service(name, my_namespace)
   rescue KubeException => e
-    raise unless e.message =~ /not found/
+    raise unless /not found/.match?(e.message)
   end
 
   def delete_secret(name)
     kube_connection.delete_secret(name, my_namespace)
   rescue KubeException => e
-    raise unless e.message =~ /not found/
+    raise unless /not found/.match?(e.message)
   end
 
   def get_deployments
@@ -92,7 +92,7 @@ class ContainerOrchestrator
   #       container orchestrator process itself, as it uses environment info
   #       that only the running orchestrator pod will have.
   def my_pod
-    get_pod_by_namespace_and_hostname(my_namespace, ENV["HOSTNAME"])
+    get_pod_by_namespace_and_hostname(my_namespace, ENV.fetch("HOSTNAME", nil))
   end
 
   def my_node_affinity_arch_values
@@ -100,7 +100,7 @@ class ContainerOrchestrator
       i.matchExpressions&.each { |a| return(a.values) if a.key == "kubernetes.io/arch" }
     end
 
-    return ["amd64"]
+    ["amd64"]
   end
 
   private
@@ -125,15 +125,15 @@ class ContainerOrchestrator
 
     Kubeclient::Client.new(
       uri,
-      :auth_options => { :bearer_token_file => TOKEN_FILE },
+      :auth_options => {:bearer_token_file => TOKEN_FILE},
       :ssl_options  => ssl_options
     )
   end
 
   def manager_uri(path)
     URI::HTTPS.build(
-      :host => ENV["KUBERNETES_SERVICE_HOST"],
-      :port => ENV["KUBERNETES_SERVICE_PORT"],
+      :host => ENV.fetch("KUBERNETES_SERVICE_HOST", nil),
+      :port => ENV.fetch("KUBERNETES_SERVICE_PORT", nil),
       :path => path
     )
   end

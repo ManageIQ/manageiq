@@ -11,12 +11,12 @@ module PgInspector
     end
 
     def self.error_exit(e, exit_code = 1)
-      $stderr.puts e.message
+      warn e.message
       exit(exit_code)
     end
 
     def self.error_msg_exit(e_msg, exit_code = 1)
-      $stderr.puts e_msg
+      warn e_msg
       exit(exit_code)
     end
   end

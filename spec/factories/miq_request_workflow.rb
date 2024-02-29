@@ -20,8 +20,8 @@ FactoryBot.define do
   factory :miq_provision_virt_workflow, :class => "MiqProvisionVirtWorkflow", :parent => :miq_provision_workflow
 
   factory :miq_provision_virt_workflow_vmware,
-    :class  => "ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow",
-    :parent => :miq_provision_virt_workflow
+          :class  => "ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow",
+          :parent => :miq_provision_virt_workflow
 
   factory :miq_provision_orch_workflow, :class => "MiqProvisionOrchWorkflow", :parent => :miq_provision_virt_workflow
 end

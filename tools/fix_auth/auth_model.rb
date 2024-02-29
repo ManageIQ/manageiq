@@ -62,7 +62,7 @@ module FixAuth
         available_columns.each do |column|
           if (old_value = obj.send(column)).present?
             new_value = recrypt(old_value, options)
-            obj.send("#{column}=", new_value) if new_value != old_value
+            obj.send(:"#{column}=", new_value) if new_value != old_value
           end
         end
         obj
@@ -70,6 +70,7 @@ module FixAuth
 
       def highlight_password(value, options)
         return if value.blank?
+
         if options[:hardcode] && (value == ManageIQ::Password.encrypt(options[:hardcode]))
           "#{value} HARDCODED"
         elsif options[:invalid] && (value == ManageIQ::Password.encrypt(options[:invalid]))
@@ -89,8 +90,8 @@ module FixAuth
 
       def display_column(r, column, options)
         v = r.send(column)
-        if r.send("#{column}_changed?")
-          puts "    #{column}: #{r.send("#{column}_was").inspect} => #{highlight_password(v, options)}"
+        if r.send(:"#{column}_changed?")
+          puts "    #{column}: #{r.send(:"#{column}_was").inspect} => #{highlight_password(v, options)}"
         elsif r.send(column).present?
           puts "    #{column}: #{v.inspect} (not changed)"
         end
@@ -98,6 +99,7 @@ module FixAuth
 
       def run(options = {})
         return if available_columns.empty?
+
         puts "fixing #{table_name}.#{available_columns.join(", ")}" unless options[:silent]
         processed = 0
         errors = 0
@@ -117,7 +119,7 @@ module FixAuth
           rescue ArgumentError # undefined class/module
             errors += 1
             unless options[:allow_failures]
-              STDERR.puts "unable to fix #{r.class.table_name}:#{r.id}" unless options[:silent]
+              warn "unable to fix #{r.class.table_name}:#{r.id}" unless options[:silent]
               raise
             end
           end

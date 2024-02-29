@@ -1,3 +1,3 @@
-class ManageIQ::Providers::BaseManager::MetricsCollectorWorker::Runner < ::MiqQueueWorkerBase::Runner
+class ManageIQ::Providers::BaseManager::MetricsCollectorWorker::Runner < MiqQueueWorkerBase::Runner
   include ProviderWorkerRunnerMixin
 end

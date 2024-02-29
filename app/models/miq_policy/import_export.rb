@@ -1,11 +1,12 @@
 module MiqPolicy::ImportExport
   extend ActiveSupport::Concern
 
-  IMPORT_CLASS_NAMES = %w(MiqPolicy MiqPolicySet MiqAlert).freeze
+  IMPORT_CLASS_NAMES = %w[MiqPolicy MiqPolicySet MiqAlert].freeze
 
   module ClassMethods
     def import_from_hash(policy, options = {})
       raise _("No Policy to Import") if policy.nil?
+
       pe = policy.delete("MiqPolicyContent") { |_k| raise "No contents for Policy == #{policy.inspect}" }
       pc = policy.delete("Condition") || []
 
@@ -31,7 +32,7 @@ module MiqPolicy::ImportExport
 
         event = e["MiqEventDefinition"] || e["MiqEvent"]
         ekey = event["name"]
-        eventsHash[ekey] = MiqEventDefinition.import_from_hash(event,  options) unless eventsHash.key?(ekey)
+        eventsHash[ekey] = MiqEventDefinition.import_from_hash(event, options) unless eventsHash.key?(ekey)
 
         e2a[ekey] = [] unless e2a.key?(ekey)
         e2a[ekey].push([akey, opts])
@@ -43,11 +44,11 @@ module MiqPolicy::ImportExport
         event_status[:children] ||= []
         e2a[ekey].each do |arr|
           akey, opts = arr
-          unless akey.nil?
-            action, s = actionsHash[akey]
-            actions.push([action, opts])
-            event_status[:children].push(s)
-          end
+          next if akey.nil?
+
+          action, s = actionsHash[akey]
+          actions.push([action, opts])
+          event_status[:children].push(s)
         end
 
         events.push([event, actions])
@@ -62,7 +63,7 @@ module MiqPolicy::ImportExport
         conditions.push(condition)
       end
 
-      policy["towhat"] ||= "Vm"      # Default "towhat" value to "Vm" to support older export decks that don't have a value set.
+      policy["towhat"] ||= "Vm" # Default "towhat" value to "Vm" to support older export decks that don't have a value set.
       # Default "active" value to true to support older export decks that don't have a value set.
       policy["active"] = true if policy["active"].nil?
       policy["mode"] ||= "control" # Default "mode" value to true to support older export decks that don't have a value set.

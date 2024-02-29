@@ -20,7 +20,7 @@ class GenericMailer < ActionMailer::Base
       rcpts.each do |rcpt|
         rcpt.split(',').each do |to|
           options[:to] = to
-          individual =  send(method, options)
+          individual = send(method, options)
           begin
             individual.deliver_now
           rescue Net::SMTPError
@@ -41,7 +41,6 @@ class GenericMailer < ActionMailer::Base
       rescue => e
         _log.error("method: #{method} options: #{options} delivery-error #{e}")
       end
-
     end
 
     msg
@@ -49,13 +48,14 @@ class GenericMailer < ActionMailer::Base
 
   def self.deliver_queue(method, options = {})
     return unless MiqRegion.my_region.role_assigned?('notifier')
+
     _log.info("starting: method: #{method} args: #{options} ")
     options[:attachment] &&= attachment_to_blob(options[:attachment])
     MiqQueue.submit_job(
       :service     => "notifier",
       :class_name  => name,
       :method_name => 'deliver',
-      :args        => [method, options],
+      :args        => [method, options]
     )
   end
 
@@ -95,12 +95,14 @@ class GenericMailer < ActionMailer::Base
     when String   # Actual Body
       blob_to_attachment(:attachment => attachment)
     when Hash
-      attachment[:body] ||= begin
-        blob = BinaryBlob.find(attachment.delete(:attachment_id))
-        body = blob.binary unless blob.nil?
-        blob.destroy unless blob.nil?
-        body
-      end if attachment[:attachment_id].kind_of?(Numeric)
+      if attachment[:attachment_id].kind_of?(Numeric)
+        attachment[:body] ||= begin
+          blob = BinaryBlob.find(attachment.delete(:attachment_id))
+          body = blob.binary unless blob.nil?
+          blob.destroy unless blob.nil?
+          body
+        end
+      end
       attachment[:filename] ||= "evm_attachment"
       attachment
     else
@@ -162,6 +164,7 @@ class GenericMailer < ActionMailer::Base
     options[:attachment].each do |a|
       name = a[:filename]
       next if name.nil?
+
       attachments[name] = {:mime_type => a[:content_type], :content => a[:body]}
     end
     mail(:subject => options[:subject], :to => options[:to], :from => options[:from], :cc => options[:cc], :bcc => options[:bcc], :date => options[:sent_on])
@@ -172,7 +175,7 @@ class GenericMailer < ActionMailer::Base
   OPTIONAL_SMTP_KEYS = [:enable_starttls_auto, :openssl_verify_mode]
   def set_mailer_smtp(evm_settings = nil)
     evm_settings ||= ::Settings.smtp
-    am_settings =  {}
+    am_settings = {}
 
     DESTINATION_SMTP_KEYS.each { |key| am_settings[key] = evm_settings[key] }
     am_settings[:address] ||= evm_settings[:host] # vmdb.yml has key :host, ActionMailer expects :address
@@ -181,7 +184,7 @@ class GenericMailer < ActionMailer::Base
     case evm_settings[:authentication].to_s.to_sym
     when :none then           AUTHENTICATION_SMTP_KEYS.each { |key| am_settings[key] = nil }
     when :plain, :login then  AUTHENTICATION_SMTP_KEYS.each { |key| am_settings[key] = evm_settings[key] }
-    else                  raise ArgumentError, "authentication value #{evm_settings[:authentication].inspect} must be one of: 'none', 'plain', 'login'"
+    else raise ArgumentError, "authentication value #{evm_settings[:authentication].inspect} must be one of: 'none', 'plain', 'login'"
     end
 
     OPTIONAL_SMTP_KEYS.each { |key| am_settings[key] = evm_settings[key] if evm_settings.key?(key) }

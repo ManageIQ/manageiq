@@ -39,25 +39,25 @@ module MiqProvision::OptionsHelper
     unless ems.supports?(:provisioning)
       raise MiqException::MiqProvisionError,
             _("%{class_name} [%{name}] is attached to <%{ems_class_name}: %{ems_name}> that does not support Provisioning") %
-              {:class_name     => source.class.name,
-               :name           => source.name,
-               :ems_class_name => ems.class.name,
-               :ems_name       => ems.name}
+            {:class_name     => source.class.name,
+             :name           => source.name,
+             :ems_class_name => ems.class.name,
+             :ems_name       => ems.name}
     end
     if ems.missing_credentials?
       raise MiqException::MiqProvisionError,
             _("%{class_name} [%{name}] is attached to <%{ems_class_name}: %{ems_name}> with missing credentials") %
-              {:class_name     => source.class.name,
-               :name           => source.name,
-               :ems_class_name => ems.class.name,
-               :ems_name       => ems.name}
+            {:class_name     => source.class.name,
+             :name           => source.name,
+             :ems_class_name => ems.class.name,
+             :ems_name       => ems.name}
     end
     source
   end
 
   def get_hostname(dest_vm_name)
-    name_key = (source.platform == 'windows') ? :sysprep_computer_name : :linux_host_name
-    computer_name = (get_option(:number_of_vms) > 1) ? nil : get_option(name_key).to_s.strip
+    name_key = source.platform == 'windows' ? :sysprep_computer_name : :linux_host_name
+    computer_name = get_option(:number_of_vms) > 1 ? nil : get_option(name_key).to_s.strip
     computer_name = dest_vm_name if computer_name.blank?
     hostname_cleanup(computer_name)
   end
@@ -66,8 +66,10 @@ module MiqProvision::OptionsHelper
     pass ||= get_option(:pass).to_i
     pass -= 1
     return if pass <= 0
+
     ip_address = get_option(:ip_addr)
     return unless ip_address.to_s.ipv4?
+
     ip_seg = ip_address.split('.')
     ip_seg[-1] = ip_seg[-1].to_i + pass
     options[:ip_addr] = ip_seg.join('.')

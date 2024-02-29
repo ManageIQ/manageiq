@@ -3,17 +3,15 @@ RSpec.describe MiqWidget do
     before do
       @user       = FactoryBot.create(:user_admin)
       @old_report = FactoryBot.create(:miq_report,
-                                       :name      => "Test Report",
-                                       :rpt_type  => "Custom",
-                                       :tz        => "Eastern Time (US & Canada)",
-                                       :col_order => ["name", "boot_time", "disks_aligned"],
-                                       :cols      => ["name", "boot_time", "disks_aligned"]
-                                      )
+                                      :name      => "Test Report",
+                                      :rpt_type  => "Custom",
+                                      :tz        => "Eastern Time (US & Canada)",
+                                      :col_order => ["name", "boot_time", "disks_aligned"],
+                                      :cols      => ["name", "boot_time", "disks_aligned"])
       @old_widget = FactoryBot.create(:miq_widget,
-                                       :title      => "Test Widget",
-                                       :visibility => {:roles => ["_ALL_"]},
-                                       :resource   => @old_report
-                                      )
+                                      :title      => "Test Widget",
+                                      :visibility => {:roles => ["_ALL_"]},
+                                      :resource   => @old_report)
 
       widget_string = MiqWidget.export_to_yaml([@old_widget.id], MiqWidget)
       @new_widget = YAML.load(widget_string).first["MiqWidget"]

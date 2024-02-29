@@ -103,11 +103,11 @@ RSpec.describe MiqAeClass do
       set_priority('domain1', 10)
       set_priority('domain2', 20)
       set_priority('domain3', 50)
-      @inst4_list =  %w(/DOMAIN3/SYSTEM/PROCESS/inst4  /DOMAIN1/SYSTEM/PROCESS/inst4)
-      @sorted_inst_list =  ['/DOMAIN3/SYSTEM/PROCESS/inst1', '/DOMAIN3/SYSTEM/PROCESS/inst2',
-                            '/DOMAIN3/SYSTEM/PROCESS/inst32', '/DOMAIN3/SYSTEM/PROCESS/inst4',
-                            '/DOMAIN2/SYSTEM/PROCESS/inst31', '/DOMAIN2/SYSTEM/PROCESS/inst41',
-                            '/DOMAIN1/SYSTEM/PROCESS/inst3']
+      @inst4_list = %w[/DOMAIN3/SYSTEM/PROCESS/inst4 /DOMAIN1/SYSTEM/PROCESS/inst4]
+      @sorted_inst_list = ['/DOMAIN3/SYSTEM/PROCESS/inst1', '/DOMAIN3/SYSTEM/PROCESS/inst2',
+                           '/DOMAIN3/SYSTEM/PROCESS/inst32', '/DOMAIN3/SYSTEM/PROCESS/inst4',
+                           '/DOMAIN2/SYSTEM/PROCESS/inst31', '/DOMAIN2/SYSTEM/PROCESS/inst41',
+                           '/DOMAIN1/SYSTEM/PROCESS/inst3']
     end
 
     it 'invalid path should return an empty array' do
@@ -194,7 +194,7 @@ RSpec.describe MiqAeClass do
       @cls1 = FactoryBot.create(:miq_ae_class, :name => "cls1", :namespace_id => @ns1.id)
       @cls2 = FactoryBot.create(:miq_ae_class, :name => "cls2", :namespace_id => @ns1.id)
 
-      @d2 = FactoryBot.create(:miq_ae_domain, :name => "domain2", :priority  => 2)
+      @d2 = FactoryBot.create(:miq_ae_domain, :name => "domain2", :priority => 2)
       @ns2 = FactoryBot.create(:miq_ae_namespace, :name => "ns2", :parent => @d2)
     end
 
@@ -277,8 +277,8 @@ RSpec.describe MiqAeClass do
       end
 
       it "produces the expected xml" do
-        expected_xml = <<-XML
-<MiqAeClass name="" namespace=""><ae_method2/><ae_method1/><MiqAeSchema><ae_field2/><ae_field1/></MiqAeSchema><ae_instance2/><ae_instance1/></MiqAeClass>
+        expected_xml = <<~XML
+          <MiqAeClass name="" namespace=""><ae_method2/><ae_method1/><MiqAeSchema><ae_field2/><ae_field1/></MiqAeSchema><ae_instance2/><ae_instance1/></MiqAeClass>
         XML
 
         expect(miq_ae_class.to_export_xml).to eq(expected_xml.chomp)
@@ -289,8 +289,8 @@ RSpec.describe MiqAeClass do
       let(:ae_fields) { [] }
 
       it "produces the expected xml" do
-        expected_xml = <<-XML
-<MiqAeClass name="" namespace=""><ae_method2/><ae_method1/><ae_instance2/><ae_instance1/></MiqAeClass>
+        expected_xml = <<~XML
+          <MiqAeClass name="" namespace=""><ae_method2/><ae_method1/><ae_instance2/><ae_instance1/></MiqAeClass>
         XML
 
         expect(miq_ae_class.to_export_xml).to eq(expected_xml.chomp)
@@ -343,12 +343,12 @@ RSpec.describe MiqAeClass do
 
   context "waypoint_ids_for_state_machine" do
     it "check ids" do
-      create_state_ae_model(:name => 'FRED', :ae_class => 'CLASS1', :ae_namespace  => 'A/B/C')
-      create_state_ae_model(:name => 'FREDDY', :ae_class => 'CLASS2', :ae_namespace  => 'C/D/E')
-      create_ae_model(:name => 'MARIO', :ae_class => 'CLASS3', :ae_namespace  => 'C/D/E')
+      create_state_ae_model(:name => 'FRED', :ae_class => 'CLASS1', :ae_namespace => 'A/B/C')
+      create_state_ae_model(:name => 'FREDDY', :ae_class => 'CLASS2', :ae_namespace => 'C/D/E')
+      create_ae_model(:name => 'MARIO', :ae_class => 'CLASS3', :ae_namespace => 'C/D/E')
       domain_fqnames = %w[FRED FREDDY]
       ns_fqnames = %w[FRED/A FRED/A/B FRED/A/B/C FREDDY/C FREDDY/C/D FREDDY/C/D/E]
-      class_fqnames = %w(/FRED/A/B/C/CLASS1 /FREDDY/C/D/E/CLASS2)
+      class_fqnames = %w[/FRED/A/B/C/CLASS1 /FREDDY/C/D/E/CLASS2]
       ids = domain_fqnames.collect { |ns| "MiqAeDomain::#{MiqAeNamespace.lookup_by_fqname(ns, false).id}" }
       ids += ns_fqnames.collect { |ns| "MiqAeNamespace::#{MiqAeNamespace.lookup_by_fqname(ns, false).id}" }
       ids += class_fqnames.collect { |cls| "MiqAeClass::#{MiqAeClass.lookup_by_fqname(cls).id}" }
@@ -356,7 +356,7 @@ RSpec.describe MiqAeClass do
     end
 
     it "no state machine classes" do
-      create_ae_model(:name => 'MARIO', :ae_class => 'CLASS3', :ae_namespace  => 'C/D/E')
+      create_ae_model(:name => 'MARIO', :ae_class => 'CLASS3', :ae_namespace => 'C/D/E')
       expect(MiqAeClass.waypoint_ids_for_state_machines).to be_empty
     end
   end

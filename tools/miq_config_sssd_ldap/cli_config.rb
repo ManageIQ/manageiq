@@ -8,7 +8,7 @@ module MiqConfigSssdLdap
     def parse(args)
       args.shift if args.first == "--" # Handle when called through script/runner
 
-      LOGGER.debug("Invoked #{self.class}\##{__method__}")
+      LOGGER.debug("Invoked #{self.class}##{__method__}")
 
       self.opts = Optimist.options(args) do
         banner "Usage: ruby #{$PROGRAM_NAME} [opts]\n"
@@ -125,12 +125,12 @@ module MiqConfigSssdLdap
     def ldaphost_and_ldapport_valid?
       begin
         Timeout.timeout(1) do
-          begin
-            TCPSocket.new(opts[:ldaphost], opts[:ldapport]).close
-            return true
-          rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
-            return false
-          end
+
+          TCPSocket.new(opts[:ldaphost], opts[:ldapport]).close
+          return true
+        rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
+          return false
+
         end
       rescue Timeout::Error
         return false
@@ -140,9 +140,10 @@ module MiqConfigSssdLdap
     end
 
     def bind_dn_and_bind_pwd_valid?
-      if opts[:mode] == "ldap" || opts[:ldap_role] == true
-        return false if opts[:bind_dn].nil? || opts[:bind_pwd].nil?
+      if (opts[:mode] == "ldap" || opts[:ldap_role] == true) && (opts[:bind_dn].nil? || opts[:bind_pwd].nil?)
+        return false
       end
+
       true
     end
 

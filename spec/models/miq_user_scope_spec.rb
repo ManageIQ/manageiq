@@ -15,13 +15,13 @@ RSpec.describe MiqUserScope do
   context "testing get_filters method" do
     before do
       @scope1 = MiqUserScope.new(
-        :view =>           {:belongsto =>
-                                          {:_all_ =>               ["/belongsto/ExtManagementSystem|VC1/EmsFolder|Datacenters/EmsFolder|DataCenter1/EmsFolder|host/EmsCluster|Cluster1",
-                                                                    "/belongsto/ExtManagementSystem|VC1/EmsFolder|Datacenters/EmsFolder|DataCenter2/EmsFolder|host/EmsCluster|Cluster3"]},
-                            :managed   =>
-                                          {:_all_ =>               [["/managed/department/accounting", "/managed/department/automotive"],
-                                                                    ["/managed/location/london", "/managed/location/ny"],
-                                                                    ["/managed/service_level/gold", "/managed/service_level/platinum"]]}}
+        :view => {:belongsto =>
+                                {:_all_ => ["/belongsto/ExtManagementSystem|VC1/EmsFolder|Datacenters/EmsFolder|DataCenter1/EmsFolder|host/EmsCluster|Cluster1",
+                                            "/belongsto/ExtManagementSystem|VC1/EmsFolder|Datacenters/EmsFolder|DataCenter2/EmsFolder|host/EmsCluster|Cluster3"]},
+                  :managed   =>
+                                {:_all_ => [["/managed/department/accounting", "/managed/department/automotive"],
+                                            ["/managed/location/london", "/managed/location/ny"],
+                                            ["/managed/service_level/gold", "/managed/service_level/platinum"]]}}
       )
 
       @scope2_exp = MiqExpression.new("=" => {})
@@ -56,25 +56,25 @@ RSpec.describe MiqUserScope do
 
     it "should return the correct filters for search" do
       expect(@scope1.get_filters(:class => Vm, :feature_type => :view)).to eq({
-        :belongsto  =>
-                       ["/belongsto/ExtManagementSystem|VC1/EmsFolder|Datacenters/EmsFolder|DataCenter1/EmsFolder|host/EmsCluster|Cluster1",
-                        "/belongsto/ExtManagementSystem|VC1/EmsFolder|Datacenters/EmsFolder|DataCenter2/EmsFolder|host/EmsCluster|Cluster3"],
-        :managed    =>
-                       [["/managed/department/accounting", "/managed/department/automotive"],
-                        ["/managed/location/london", "/managed/location/ny"],
-                        ["/managed/service_level/gold", "/managed/service_level/platinum"]],
-        :expression => nil
-      })
+                                                                                :belongsto  =>
+                                                                                               ["/belongsto/ExtManagementSystem|VC1/EmsFolder|Datacenters/EmsFolder|DataCenter1/EmsFolder|host/EmsCluster|Cluster1",
+                                                                                                "/belongsto/ExtManagementSystem|VC1/EmsFolder|Datacenters/EmsFolder|DataCenter2/EmsFolder|host/EmsCluster|Cluster3"],
+                                                                                :managed    =>
+                                                                                               [["/managed/department/accounting", "/managed/department/automotive"],
+                                                                                                ["/managed/location/london", "/managed/location/ny"],
+                                                                                                ["/managed/service_level/gold", "/managed/service_level/platinum"]],
+                                                                                :expression => nil
+                                                                              })
       expect(@scope1.get_filters(:class => Vm, :feature_type => :admin)).to eq({:expression => nil, :belongsto => nil, :managed => nil})
       expect(@scope1.get_filters(:class => Vm, :feature_type => :control)).to eq({:expression => nil, :belongsto => nil, :managed => nil})
 
       expect(@scope2.get_filters(:class => Vm, :feature_type => :view)).to eq({
-        :belongsto  =>
-                       ["/belongsto/ExtManagementSystem|VC4 IP 14/EmsFolder|Datacenters/EmsFolder|Prod/EmsFolder|vm/EmsFolder|Discovered virtual machine"],
-        :managed    =>
-                       [["/managed/location/chicago", "/managed/location/ny"], ["/managed/environment/dev"]],
-        :expression => nil
-      })
+                                                                                :belongsto  =>
+                                                                                               ["/belongsto/ExtManagementSystem|VC4 IP 14/EmsFolder|Datacenters/EmsFolder|Prod/EmsFolder|vm/EmsFolder|Discovered virtual machine"],
+                                                                                :managed    =>
+                                                                                               [["/managed/location/chicago", "/managed/location/ny"], ["/managed/environment/dev"]],
+                                                                                :expression => nil
+                                                                              })
 
       filters = @scope2.get_filters(:class => Storage, :feature_type => :view)
       expect(filters[:belongsto]).to be_nil

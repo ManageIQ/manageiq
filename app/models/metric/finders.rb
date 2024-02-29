@@ -24,13 +24,14 @@ module Metric::Finders
 
   def self.find_all_by_range(resource, start_time, end_time, interval_name)
     return [] if resource.blank?
+
     klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
 
-    if !resource.kind_of?(Array) && !resource.kind_of?(ActiveRecord::Relation)
-      scope = resource.send(meth)
-    else
-      scope = klass.where(:resource => resource)
-    end
+    scope = if !resource.kind_of?(Array) && !resource.kind_of?(ActiveRecord::Relation)
+              resource.send(meth)
+            else
+              klass.where(:resource => resource)
+            end
     scope = scope.where(:capture_interval_name => interval_name) if interval_name != "realtime"
     scope.for_time_range(start_time, end_time)
   end

@@ -166,7 +166,7 @@ RSpec.describe MiqServer::WorkerManagement::Kubernetes do
         :metadata => {
           :name => pod_name
         },
-        :spec => {
+        :spec     => {
           :replicas => 2,
           :template => {
             :spec => {
@@ -174,7 +174,7 @@ RSpec.describe MiqServer::WorkerManagement::Kubernetes do
             }
           }
         },
-        :status => {
+        :status   => {
           :readyReplicas => 2
         }
       )

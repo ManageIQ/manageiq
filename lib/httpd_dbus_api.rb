@@ -21,8 +21,8 @@ class HttpdDBusApi
   private
 
   def dbus_api(request_url)
-    host = ENV["HTTPD_DBUS_API_SERVICE_HOST"]
-    port = ENV["HTTPD_DBUS_API_SERVICE_PORT"]
+    host = ENV.fetch("HTTPD_DBUS_API_SERVICE_HOST", nil)
+    port = ENV.fetch("HTTPD_DBUS_API_SERVICE_PORT", nil)
     conn = Faraday.new(:url => "http://#{host}:#{port}") do |faraday|
       faraday.options[:open_timeout] = @options[:open_timeout] || 5  # Net::HTTP open_timeout
       faraday.options[:timeout]      = @options[:timeout]      || 30 # Net::HTTP read_timeout
@@ -44,6 +44,7 @@ class HttpdDBusApi
     end
 
     raise(body["error"]) if response.status >= 400
+
     body["result"]
   end
 end

@@ -8,6 +8,8 @@ class User < ApplicationRecord
   include CustomActionsMixin
   include ExternalUrlMixin
 
+  before_validation :nil_email_field_if_blank
+  before_validation :dummy_password_for_external_auth
   before_destroy :check_reference, :prepend => true
 
   has_many   :miq_approvals, :as => :approver
@@ -29,9 +31,9 @@ class User < ApplicationRecord
   has_many   :sessions, :dependent => :destroy
   belongs_to :current_group, :class_name => "MiqGroup"
   has_and_belongs_to_many :miq_groups
-  scope      :superadmins, lambda {
+  scope :superadmins, lambda {
     joins(:miq_groups => {:miq_user_role => :miq_product_features})
-      .where(:miq_product_features => {:identifier => MiqProductFeature::SUPER_ADMIN_FEATURE })
+      .where(:miq_product_features => {:identifier => MiqProductFeature::SUPER_ADMIN_FEATURE})
   }
 
   virtual_has_many :active_vms, :class_name => "VmOrTemplate"
@@ -52,9 +54,9 @@ class User < ApplicationRecord
 
   # use authenticate_bcrypt rather than .authenticate to avoid confusion
   # with the class method of the same name (User.authenticate)
-  alias_method :authenticate_bcrypt, :authenticate
+  alias authenticate_bcrypt authenticate
 
-  serialize     :settings, Hash   # Implement settings column as a hash
+  serialize :settings, Hash # Implement settings column as a hash
 
   attribute :failed_login_attempts, :default => 0
 
@@ -146,8 +148,6 @@ class User < ApplicationRecord
     errors.add(:userid, "'system' is reserved for EVM internal operations") unless (userid =~ /^system$/i).nil?
   end
 
-  before_validation :nil_email_field_if_blank
-  before_validation :dummy_password_for_external_auth
   before_destroy :destroy_subscribed_widget_sets
 
   def check_reference
@@ -189,7 +189,7 @@ class User < ApplicationRecord
     end
     if auth.authenticate(userid, oldpwd)
       self.password = newpwd
-      self.save!
+      save!
     end
   end
 
@@ -210,7 +210,7 @@ class User < ApplicationRecord
   def ldap_group
     current_group.try(:description)
   end
-  alias_method :miq_group_description, :ldap_group
+  alias miq_group_description ldap_group
 
   def role_allows?(**options)
     Rbac.role_allows?(:user => self, **options)
@@ -282,6 +282,7 @@ class User < ApplicationRecord
 
   def self.authorize_user(userid)
     return if userid.blank? || admin?(userid)
+
     authenticator(userid).authorize_user(userid)
   end
 
@@ -299,8 +300,7 @@ class User < ApplicationRecord
 
   def get_expressions(db = nil)
     sql = ["((search_type=? and search_key is null) or (search_type=? and search_key is null) or (search_type=? and search_key=?))",
-           'default', 'global', 'user', userid
-          ]
+           'default', 'global', 'user', userid]
     unless db.nil?
       sql[0] += "and db=?"
       sql << db.to_s
@@ -325,6 +325,7 @@ class User < ApplicationRecord
     user_groups = miq_group_ids
     user_groups.delete(current_group_id)
     raise _("The user's current group cannot be changed because the user does not belong to any other group") if user_groups.empty?
+
     self.current_group = MiqGroup.find_by(:id => user_groups.first)
     save!
   end
@@ -385,6 +386,7 @@ class User < ApplicationRecord
 
   def self.with_user_group(user, group, &block)
     return yield if user.nil?
+
     user = User.find(user) unless user.kind_of?(User)
     if group && group.kind_of?(MiqGroup)
       user.current_group = group
@@ -444,6 +446,7 @@ class User < ApplicationRecord
     seed_data.each do |user_attributes|
       user_id = user_attributes[:userid]
       next if in_my_region.find_by_userid(user_id)
+
       log_attrs = user_attributes.slice(:name, :userid, :group)
       _log.info("Creating user with parameters #{log_attrs.inspect}")
 
@@ -473,10 +476,10 @@ class User < ApplicationRecord
   def unlock_queue
     MiqQueue.create_with(:deliver_on => Time.now.utc + ::Settings.authentication.locked_account_timeout.to_i)
             .put_unless_exists(
-      :class_name  => self.class.name,
-      :instance_id => id,
-      :method_name => 'unlock!',
-      :priority    => MiqQueue::MAX_PRIORITY
-    )
+              :class_name  => self.class.name,
+              :instance_id => id,
+              :method_name => 'unlock!',
+              :priority    => MiqQueue::MAX_PRIORITY
+            )
   end
 end

@@ -1,7 +1,7 @@
 class MiqEnterprise < ApplicationRecord
   has_many :metrics,        :as => :resource  # Destroy will be handled by purger
   has_many :metric_rollups, :as => :resource  # Destroy will be handled by purger
-  has_many :vim_performance_states, :as => :resource  # Destroy will be handled by purger
+  has_many :vim_performance_states, :as => :resource # Destroy will be handled by purger
 
   virtual_has_many :miq_regions,             :class_name => "MiqRegion"
   virtual_has_many :ext_management_systems,  :class_name => "ExtManagementSystem"
@@ -64,7 +64,7 @@ class MiqEnterprise < ApplicationRecord
     PolicyEvent.all
   end
 
-  alias_method :all_storages,           :storages
+  alias all_storages storages
 
   def get_reserve(field)
     ext_management_systems.inject(0) { |v, obj| v + (obj.send(field) || 0) }
@@ -91,7 +91,7 @@ class MiqEnterprise < ApplicationRecord
   def perf_capture_enabled?
     @perf_capture_enabled ||= ext_management_systems.any?(&:perf_capture_enabled?)
   end
-  alias_method :perf_capture_enabled, :perf_capture_enabled?
+  alias perf_capture_enabled perf_capture_enabled?
   Vmdb::Deprecation.deprecate_methods(self, :perf_capture_enabled => :perf_capture_enabled?)
 
   def self.display_name(number = 1)

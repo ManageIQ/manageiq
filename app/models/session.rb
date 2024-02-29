@@ -27,6 +27,7 @@ class Session < ApplicationRecord
   def self.purge_one_batch(ttl, batch_size)
     sessions = where("updated_at <= ?", ttl.seconds.ago.utc).limit(batch_size)
     return 0 if sessions.size.zero?
+
     sessions = sessions.reject do |s|
       expires_on = s.raw_data[:expires_on] rescue nil
       expires_on && expires_on >= Time.zone.now
@@ -39,11 +40,11 @@ class Session < ApplicationRecord
   def self.log_off_user_sessions(sessions)
     # Log off the users associated with the sessions that are eligible for deletion
     userids = sessions.each_with_object([]) do |s, a|
-      begin
-        a << s.raw_data[:userid]
-      rescue => err
-        _log.warn("Error '#{err.message}', attempting to load session with id [#{s.id}]")
-      end
+
+      a << s.raw_data[:userid]
+    rescue => err
+      _log.warn("Error '#{err.message}', attempting to load session with id [#{s.id}]")
+
     end
 
     User.where(:userid => userids).each do |user|

@@ -9,7 +9,7 @@ class Disk < ApplicationRecord
   virtual_column :unallocated_space,           :type => :integer, :uses => :allocated_space
   virtual_column :unallocated_space_percent,   :type => :float,   :uses => :unallocated_space
   virtual_column :used_percent_of_provisioned, :type => :float
-  virtual_column :partitions_aligned,          :type => :string,  :uses => {:partitions => :aligned}
+  virtual_column :partitions_aligned,          :type => :string, :uses => {:partitions => :aligned}
   virtual_column :used_disk_storage, :type => :integer, :arel => (lambda do |t|
     t.grouping(t.coalesce([t[:size_on_disk], t[:size], 0]))
   end)
@@ -48,21 +48,25 @@ class Disk < ApplicationRecord
 
   def allocated_space
     return nil if size.nil?
+
     partitions.inject(0) { |t, p| t + p.size }
   end
 
   def allocated_space_percent
     return nil if size.nil? || size == 0
+
     Float(allocated_space) / size * 100
   end
 
   def unallocated_space
     return nil if size.nil?
+
     size - allocated_space
   end
 
   def unallocated_space_percent
     return nil if size.nil? || size == 0
+
     Float(unallocated_space) / size * 100
   end
 
@@ -79,11 +83,13 @@ class Disk < ApplicationRecord
   end
 
   def partitions_aligned
-    return "Not Applicable" if self.rdm_disk?
+    return "Not Applicable" if rdm_disk?
+
     plist = partitions
     return "Unknown" if plist.empty?
     return "True"    if plist.all?(&:aligned?)
     return "False"   if plist.any? { |p| p.aligned? == false }
+
     "Unknown"
   end
 

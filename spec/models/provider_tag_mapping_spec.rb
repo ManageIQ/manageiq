@@ -113,7 +113,7 @@ RSpec.describe ProviderTagMapping do
       expect(tags).to be_empty
       expect(tags2).to contain_exactly(tag2)
 
-      # Note: this test doesn't cover creation of the category, eg. you can't have
+      # NOTE: this test doesn't cover creation of the category, eg. you can't have
       # /managed/kubernetes:name vs /managed/kubernetes:naME.
     end
 
@@ -129,8 +129,8 @@ RSpec.describe ProviderTagMapping do
 
     it "handles values that differ only past 50th character" do
       tags = map_to_tags(new_mapper, 'ContainerNode', 'name' => 'x' * 50)
-      tags2 = map_to_tags(new_mapper, 'ContainerNode', 'name' => 'x' * 50 + 'y')
-      tags3 = map_to_tags(new_mapper, 'ContainerNode', 'name' => 'x' * 50 + 'z')
+      tags2 = map_to_tags(new_mapper, 'ContainerNode', 'name' => ('x' * 50) + 'y')
+      tags3 = map_to_tags(new_mapper, 'ContainerNode', 'name' => ('x' * 50) + 'z')
       # TODO: They get mapped to the same tag, is this desired?
       # TODO: What do we want the description to be?
       expect(tags2).to eq(tags)

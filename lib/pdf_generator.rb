@@ -4,7 +4,7 @@ class PdfGenerator
   end
 
   def self.instance
-    @instance ||= self.new
+    @instance ||= new
   end
 
   def self.pdf_from_string(html_string, stylesheet)
@@ -30,7 +30,7 @@ class PdfGenerator
   end
 
   def self.detect_available_generator
-    self.subclasses.detect(&:available?) || NullPdfGenerator
+    subclasses.detect(&:available?) || NullPdfGenerator
   end
   private_class_method :detect_available_generator
 
@@ -38,7 +38,7 @@ class PdfGenerator
     # strip out bad attachment_fu URLs
     # and remove asset ids on images
     html_string.gsub('.com:/', '.com/')
-      .gsub(/src=["'](\S+)\?\d*["']/i, 'src="\1"')
+               .gsub(/src=["'](\S+)\?\d*["']/i, 'src="\1"')
   end
   private_class_method :sanitize_html
 

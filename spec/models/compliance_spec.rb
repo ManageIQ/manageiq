@@ -141,10 +141,10 @@ RSpec.describe Compliance do
       context "no condition" do
         let(:policy) do
           FactoryBot.create(:miq_policy,
-                             :mode       => 'compliance',
-                             :towhat     => 'Vm',
-                             :expression => MiqExpression.new("=" => {"field" => "Vm-retired", "value" => "true"}),
-                             :active     => true)
+                            :mode       => 'compliance',
+                            :towhat     => 'Vm',
+                            :expression => MiqExpression.new("=" => {"field" => "Vm-retired", "value" => "true"}),
+                            :active     => true)
         end
         let(:policy_set) { FactoryBot.create(:miq_policy_set) }
         let(:event_definition) { MiqEventDefinition.find_by(:name => "vm_compliance_check") }

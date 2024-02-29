@@ -9,8 +9,8 @@ FactoryBot.define do
 
     after(:build) do |provider|
       provider.authentications << FactoryBot.build(:authentication,
-                                                    :userid   => "admin",
-                                                    :password => "smartvm")
+                                                   :userid   => "admin",
+                                                   :password => "smartvm")
     end
   end
 

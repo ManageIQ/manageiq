@@ -34,29 +34,30 @@ total = 0
 fixed = 0
 
 MiqReportResult.find_each(:batch_size => opts[:batch_size]).with_index do |rr, i|
-  begin
-    break if opts[:count].positive? && i == opts[:count]
-    total += 1
 
-    next if rr.report.nil? || rr.report.extras.nil?
+  break if opts[:count].positive? && i == opts[:count]
 
-    if rr.report.extras.key?(:grouping)
-      rr.report.extras.except!(:grouping)
-      rr.save!
-      if rr.reload.report.extras.key?(:grouping)
-        puts "MiqReportResult: #{rr.id} could NOT be fixed"
-      else
-        puts "MiqReportResult: #{rr.id} fixed"
-        fixed += 1
-      end
+  total += 1
+
+  next if rr.report.nil? || rr.report.extras.nil?
+
+  if rr.report.extras.key?(:grouping)
+    rr.report.extras.except!(:grouping)
+    rr.save!
+    if rr.reload.report.extras.key?(:grouping)
+      puts "MiqReportResult: #{rr.id} could NOT be fixed"
     else
-      puts "MiqReportResult: #{rr.id} doesn't need fixing"
+      puts "MiqReportResult: #{rr.id} fixed"
+      fixed += 1
     end
-  rescue => err
-    puts "\nWarning: Rolling back all changes since an error occurred on MiqReportResult with id: #{rr.try(:id)}: #{err.message}"
-    ActiveRecord::Base.connection.rollback_transaction unless opts[:dry_run]
-    exit 1
+  else
+    puts "MiqReportResult: #{rr.id} doesn't need fixing"
   end
+rescue => err
+  puts "\nWarning: Rolling back all changes since an error occurred on MiqReportResult with id: #{rr.try(:id)}: #{err.message}"
+  ActiveRecord::Base.connection.rollback_transaction unless opts[:dry_run]
+  exit 1
+
 end
 
 ActiveRecord::Base.connection.commit_transaction unless opts[:dry_run]

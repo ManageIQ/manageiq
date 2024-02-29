@@ -18,7 +18,7 @@ module Spec
         ae_instances ||= {instance_name => {'field1' => {:value => 'hello world'}}}
 
         FactoryBot.create(:miq_ae_domain, :with_small_model, :with_instances,
-                           attrs.merge('ae_fields' => ae_fields, 'ae_instances' => ae_instances))
+                          attrs.merge('ae_fields' => ae_fields, 'ae_instances' => ae_instances))
       end
 
       def create_state_ae_model(attrs = {})
@@ -28,7 +28,7 @@ module Spec
         ae_instances = {instance_name => {'field1' => {:value => 'phases of matter'}}}
 
         FactoryBot.create(:miq_ae_domain, :with_small_model, :with_instances,
-                           attrs.merge('ae_fields' => ae_fields, 'ae_instances' => ae_instances))
+                          attrs.merge('ae_fields' => ae_fields, 'ae_instances' => ae_instances))
       end
 
       def create_ae_model_with_method(attrs = {})
@@ -45,9 +45,9 @@ module Spec
                                       :language => 'ruby', 'params' => method_params}}
 
         FactoryBot.create(:miq_ae_domain, :with_small_model, :with_instances, :with_methods,
-                           attrs.merge('ae_fields'    => ae_fields,
-                                       'ae_instances' => ae_instances,
-                                       'ae_methods'   => ae_methods))
+                          attrs.merge('ae_fields'    => ae_fields,
+                                      'ae_instances' => ae_instances,
+                                      'ae_methods'   => ae_methods))
       end
 
       def default_ae_model_attributes(attrs = {})
@@ -55,7 +55,8 @@ module Spec
           :ae_class      => 'CLASS1',
           :ae_namespace  => 'A/B/C',
           :enabled       => true,
-          :instance_name => 'instance1')
+          :instance_name => 'instance1'
+        )
       end
 
       def send_ae_request_via_queue(args, timeout = nil)
@@ -70,6 +71,7 @@ module Spec
       def deliver_ae_request_from_queue
         q = MiqQueue.all.detect { |item| item.state == 'ready' && item.class_name == "MiqAeEngine" }
         return nil unless q
+
         q.state = 'dequeue'
         q.save
         q.deliver
@@ -79,9 +81,10 @@ module Spec
         aec = MiqAeClass.lookup_by_fqname('/ManageIQ/System/Request')
         aei = aec.ae_instances.detect { |ins| ins.name == 'Call_Method' } if aec
         return if aei
+
         aef = aec.ae_fields.detect { |fld| fld.name == 'meth1' }
         aei = MiqAeInstance.new('name' => 'Call_Method')
-        aev = MiqAeValue.new(:ae_field => aef, :value =>  "${/#namespace}/${/#class}.${/#method}")
+        aev = MiqAeValue.new(:ae_field => aef, :value => "${/#namespace}/${/#class}.${/#method}")
         aei.ae_values << aev
         aec.ae_instances << aei
         aec.save

@@ -19,24 +19,23 @@ RSpec.describe ChargebackVm do
                             :created_on => start_of_all_intervals)
     vm.tag_with(tag.name, :ns => '*')
     host = FactoryBot.create(:host, :hardware => FactoryBot.create(:hardware,
-                                                                     :memory_mb => 8124, :cpu_total_cores => 1,
-                                                                     :cpu_speed => 9576), :vms => [vm])
+                                                                   :memory_mb => 8124, :cpu_total_cores => 1,
+                                                                   :cpu_speed => 9576), :vms => [vm])
     ems_cluster = FactoryBot.create(:ems_cluster, :ext_management_system => ems)
     ems_cluster.hosts << host
     storage = FactoryBot.create(:storage_vmware)
 
     Range.new(start_of_all_intervals, midle_of_the_first_day, true).step_value(1.hour).each do |time|
       vm.metric_rollups << FactoryBot.create(:metric_rollup_vm_hr,
-                                              :derived_vm_numvcpus       => number_of_cpus,
-                                              :cpu_usagemhz_rate_average => cpu_usagemhz,
-                                              :timestamp                 => time,
-                                              :tag_names                 => 'environment/prod',
-                                              :parent_host_id            => host.id,
-                                              :parent_ems_cluster_id     => ems_cluster.id,
-                                              :parent_ems_id             => ems.id,
-                                              :parent_storage_id         => storage.id,
-                                              :resource_name             => vm.name,
-                                             )
+                                             :derived_vm_numvcpus       => number_of_cpus,
+                                             :cpu_usagemhz_rate_average => cpu_usagemhz,
+                                             :timestamp                 => time,
+                                             :tag_names                 => 'environment/prod',
+                                             :parent_host_id            => host.id,
+                                             :parent_ems_cluster_id     => ems_cluster.id,
+                                             :parent_ems_id             => ems.id,
+                                             :parent_storage_id         => storage.id,
+                                             :resource_name             => vm.name)
     end
     vm
   end
@@ -56,7 +55,7 @@ RSpec.describe ChargebackVm do
                              :single_value => true, :show => true)
     c = FactoryBot.create(:classification, :name => 'prod', :description => 'Production', :parent_id => cat.id)
     chargeback_rate = FactoryBot.create(:chargeback_rate, :detail_params => detail_params)
-    temp = { :cb_rate => chargeback_rate, :tag => [c, 'vm'] }
+    temp = {:cb_rate => chargeback_rate, :tag => [c, 'vm']}
     ChargebackRate.set_assignments(:compute, [temp])
   end
 

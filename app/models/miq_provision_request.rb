@@ -8,13 +8,13 @@ class MiqProvisionRequest < MiqRequest
 
   TASK_DESCRIPTION  = N_('VM Provisioning')
   SOURCE_CLASS_NAME = 'Vm'
-  ACTIVE_STATES     = %w(migrated) + base_class::ACTIVE_STATES
+  ACTIVE_STATES     = %w[migrated] + base_class::ACTIVE_STATES
 
-  validates_inclusion_of :request_state,
-                         :in      => %w(pending provisioned finished) + ACTIVE_STATES,
-                         :message => "should be pending, #{ACTIVE_STATES.join(", ")}, provisioned, or finished"
+  validates :request_state,
+            :inclusion => {:in      => %w[pending provisioned finished] + ACTIVE_STATES,
+                            :message => "should be pending, #{ACTIVE_STATES.join(", ")}, provisioned, or finished"}
   validates :source, :presence => true
-  validate               :must_have_user
+  validate :must_have_user
 
   default_value_for(:source_id)    { |r| r.get_option(:src_vm_id) || r.get_option(:source_id) }
   attribute :source_type, :default => "VmOrTemplate"
@@ -46,6 +46,7 @@ class MiqProvisionRequest < MiqRequest
     if vm_or_template.ext_management_system.nil?
       raise MiqException::MiqProvisionError, "Source Template/Vm with id [#{source_id}] has no EMS, unable to provision"
     end
+
     vm_or_template
   end
 
@@ -71,6 +72,7 @@ class MiqProvisionRequest < MiqRequest
 
   def update_description_from_tasks
     return unless requested_task_idx.length == 1
+
     update(:description => miq_request_tasks.reload.first.description)
   end
 
@@ -102,7 +104,7 @@ class MiqProvisionRequest < MiqRequest
     return false if dept.empty? || env.empty?
 
     prov.options[:environment] = "prod" # Set env to prod to get service levels
-    svc  = prov.allowed(:service_level) # Get service levels
+    svc = prov.allowed(:service_level) # Get service levels
     return false if env.include?("prod") && svc.empty?  # Make sure we have at least one
 
     true
@@ -134,17 +136,20 @@ class MiqProvisionRequest < MiqRequest
   end
 
   def validate_template
-    return {:valid   => false,
-            :message => "Unable to find VM with Id [#{source_id}]"
-    } if source.nil?
+    if source.nil?
+      return {:valid   => false,
+              :message => "Unable to find VM with Id [#{source_id}]"}
+    end
 
-    return {:valid   => false,
-            :message => "VM/Template <#{source.name}> with Id <#{source.id}> is archived and cannot be used with provisioning."
-    } if source.archived?
+    if source.archived?
+      return {:valid   => false,
+              :message => "VM/Template <#{source.name}> with Id <#{source.id}> is archived and cannot be used with provisioning."}
+    end
 
-    return {:valid   => false,
-            :message => "VM/Template <#{source.name}> with Id <#{source.id}> is orphaned and cannot be used with provisioning."
-    } if source.orphaned?
+    if source.orphaned?
+      return {:valid   => false,
+              :message => "VM/Template <#{source.name}> with Id <#{source.id}> is orphaned and cannot be used with provisioning."}
+    end
 
     {:valid => true, :message => nil}
   end

@@ -36,7 +36,7 @@ RSpec.describe EmsFolder do
     before do
       @root = FactoryBot.create(:ems_folder, :name => "root")
 
-      @dc   = FactoryBot.create(:datacenter, :name => "dc")
+      @dc = FactoryBot.create(:datacenter, :name => "dc")
       @dc.parent = @root
 
       @vm = FactoryBot.create(:ems_folder, :name => "vm", :hidden => true)

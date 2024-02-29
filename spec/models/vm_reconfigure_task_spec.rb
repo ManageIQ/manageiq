@@ -42,8 +42,8 @@ RSpec.describe VmReconfigureTask do
   context "Single Disk add " do
     let(:request_options) { {:disk_add => [{"disk_size_in_mb" => "33", "persistent" => "true", "type" => "thin"}.with_indifferent_access]} }
     let(:description_partial) do
-      "Add Disks: 1 : #{request.options[:disk_add][0]["disk_size_in_mb"].to_i.megabytes.to_s(:human_size)}, Type: "\
-    "#{request.options[:disk_add][0]["type"]} "
+      "Add Disks: 1 : #{request.options[:disk_add][0]["disk_size_in_mb"].to_i.megabytes.to_s(:human_size)}, Type: " \
+        "#{request.options[:disk_add][0]["type"]} "
     end
 
     it_behaves_like ".get_description"
@@ -55,9 +55,9 @@ RSpec.describe VmReconfigureTask do
                      {"disk_size_in_mb" => "44", "persistent" => "true", "type" => "thick"}.with_indifferent_access]}
     end
     let(:description_partial) do
-      "Add Disks: 2 : #{request.options[:disk_add][0]["disk_size_in_mb"].to_i.megabytes.to_s(:human_size)}, Type: "\
-      "#{request.options[:disk_add][0]["type"]}, #{request.options[:disk_add][1]["disk_size_in_mb"].to_i.megabytes.to_s(:human_size)}, Type: "\
-      "#{request.options[:disk_add][1]["type"]} "
+      "Add Disks: 2 : #{request.options[:disk_add][0]["disk_size_in_mb"].to_i.megabytes.to_s(:human_size)}, Type: " \
+        "#{request.options[:disk_add][0]["type"]}, #{request.options[:disk_add][1]["disk_size_in_mb"].to_i.megabytes.to_s(:human_size)}, Type: " \
+        "#{request.options[:disk_add][1]["type"]} "
     end
 
     it_behaves_like ".get_description"
@@ -88,9 +88,9 @@ RSpec.describe VmReconfigureTask do
   context "Network" do
     let(:request_options) do
       {:network_adapter_add    => [
-        {:cloud_network => 'vApp Network Name', :name => 'VM Name#NIC#2'}.with_indifferent_access,
-        {:cloud_network => nil, :name => 'VM Name#NIC#3'}.with_indifferent_access
-      ],
+         {:cloud_network => 'vApp Network Name', :name => 'VM Name#NIC#2'}.with_indifferent_access,
+         {:cloud_network => nil, :name => 'VM Name#NIC#3'}.with_indifferent_access
+       ],
        :network_adapter_remove => [{:network => {:name => 'VM Name#NIC#0'}.with_indifferent_access}],
        :network_adapter_edit   => [{:network => "NFS Network", :name => "Network adapter 1"}.with_indifferent_access]}
     end
@@ -102,10 +102,10 @@ RSpec.describe VmReconfigureTask do
   context "CDROM" do
     let(:request_options) do
       {:cdrom_connect    => [
-        {:device_name => "CD/DVD drive 1",
-         :filename    => "[NFS Share] ISO/centos.iso",
-         :storage_id  => 1234}.with_indifferent_access
-      ],
+         {:device_name => "CD/DVD drive 1",
+          :filename    => "[NFS Share] ISO/centos.iso",
+          :storage_id  => 1234}.with_indifferent_access
+       ],
        :cdrom_disconnect => [{:device_name => "CD/DVD drive 2"}.with_indifferent_access]}
     end
     let(:description_partial) { "Attach CD/DVDs: 1, Detach CD/DVDs: 1" }

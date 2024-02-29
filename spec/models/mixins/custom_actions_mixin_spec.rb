@@ -1,7 +1,7 @@
 RSpec.describe CustomActionsMixin do
   let(:test_class) do
     Class.new(ActiveRecord::Base) do
-      def self.name; "TestClass"; end
+      def self.name = "TestClass"
       self.table_name = "vms"
       include CustomActionsMixin
     end

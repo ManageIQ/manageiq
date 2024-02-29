@@ -7,10 +7,10 @@ RSpec.describe Vmdb::Settings do
       described_class.walk do |key, value, path, owning|
         expect(owning).to be_kind_of(Config::Options)
 
-        if %i(a d e).include?(key)
+        if %i[a d e].include?(key)
           expect(value).to be_kind_of(Config::Options)
           value = value.to_hash
-        elsif %i(i).include?(key)
+        elsif %i[i].include?(key)
           expect(value).to be_kind_of(Array)
           value.each { |v| expect(v).to be_kind_of(Config::Options) }
           value = value.collect(&:to_hash)
@@ -20,7 +20,7 @@ RSpec.describe Vmdb::Settings do
       end
 
       expect(walked).to eq [
-        #key value                       path
+        # key value                       path
         [:a, {:b => 'c'},                [:a]],
         [:b, 'c',                        [:a, :b]],
         [:d, {:e => {:f => 'g'}},        [:d]],
@@ -38,7 +38,7 @@ RSpec.describe Vmdb::Settings do
         :hash:
         - &1
           A: *1
-        CONFIG
+      CONFIG
 
       expect { described_class.walk(y) { |_k, _v, _p, _o| } }.not_to raise_error
     end
@@ -127,16 +127,15 @@ RSpec.describe Vmdb::Settings do
       _delete = miq_server.settings_changes.create!(:key => "/api/authentication_timeout", :value => "1.hour")
 
       described_class.save!(miq_server,
-        :api => {
-          :token_ttl              => "2.hours", # Updated
-          :authentication_timeout => default,   # Deleted (back to default)
-        },
-        :drift_states => {
-          :history => {
-            :keep_drift_states    => "1.hour"   # Added
-          }
-        }
-      )
+                            :api          => {
+                              :token_ttl              => "2.hours", # Updated
+                              :authentication_timeout => default,   # Deleted (back to default)
+                            },
+                            :drift_states => {
+                              :history => {
+                                :keep_drift_states => "1.hour" # Added
+                              }
+                            })
 
       miq_server.reload
       expect(miq_server.settings_changes.count).to eq 2
@@ -207,13 +206,12 @@ RSpec.describe Vmdb::Settings do
       encrypted = ManageIQ::Password.encrypt(password)
 
       described_class.save!(miq_server,
-        :authentication => {
-          :mode         => "ldap",
-          :ldaphost     => "localhost",
-          :bind_pwd     => password,
-          :user_proxies => [{:bind_pwd => password}]
-        }
-      )
+                            :authentication => {
+                              :mode         => "ldap",
+                              :ldaphost     => "localhost",
+                              :bind_pwd     => password,
+                              :user_proxies => [{:bind_pwd => password}]
+                            })
 
       miq_server.reload
 
@@ -695,7 +693,7 @@ RSpec.describe Vmdb::Settings do
       {"api" => {"token_ttl" => "2.minutes"}}.to_yaml
     )
 
-    expect(::Settings.api.token_ttl).to eq("2.minutes")
+    expect(Settings.api.token_ttl).to eq("2.minutes")
   end
 
   it ".validate", :providers_common => true do

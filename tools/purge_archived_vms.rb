@@ -22,15 +22,15 @@ end
 
 query.archived.find_in_batches do |vms|
   vms.each do |vm|
-    begin
-      archived += 1
-      unless REPORT_ONLY
-        $log.info("Deleting archived VM '#{vm.name}' (id #{vm.id})")
-        vm.destroy
-      end
-    rescue => err
-      $log.log_backtrace(err)
+
+    archived += 1
+    unless REPORT_ONLY
+      $log.info("Deleting archived VM '#{vm.name}' (id #{vm.id})")
+      vm.destroy
     end
+  rescue => err
+    $log.log_backtrace(err)
+
   end
 end
 

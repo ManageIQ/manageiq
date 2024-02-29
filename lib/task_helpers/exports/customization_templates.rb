@@ -1,7 +1,7 @@
 module TaskHelpers
   class Exports
     class CustomizationTemplates
-      EXCLUDE_ATTRS = %i(created_at updated_at id pxe_image_type_id class).freeze
+      EXCLUDE_ATTRS = %i[created_at updated_at id pxe_image_type_id class].freeze
       def export(options = {})
         export_dir = options[:directory]
 
@@ -23,9 +23,9 @@ module TaskHelpers
 
       def pxe_image_type_hash(pxe_image_type)
         if pxe_image_type
-          { :pxe_image_type => pxe_image_type.to_model_hash.reject { |key| EXCLUDE_ATTRS.include?(key) } }
+          {:pxe_image_type => pxe_image_type.to_model_hash.reject { |key| EXCLUDE_ATTRS.include?(key) }}
         else
-          { :pxe_image_type => {} }
+          {:pxe_image_type => {}}
         end
       end
     end

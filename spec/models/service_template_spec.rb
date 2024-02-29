@@ -152,22 +152,22 @@ RSpec.describe ServiceTemplate do
       true_expression = MiqExpression.new("=" => {"field" => "Service-name", "value" => "bar"})
       false_expression = MiqExpression.new("=" => {"field" => "Service-name", "value" => "foo"})
       FactoryBot.create(:custom_button,
-                         :name                  => "enabled button",
-                         :applies_to_class      => "Service",
-                         :enablement_expression => true_expression)
+                        :name                  => "enabled button",
+                        :applies_to_class      => "Service",
+                        :enablement_expression => true_expression)
       FactoryBot.create(:custom_button,
-                         :name                  => "disabled button",
-                         :applies_to_class      => "Service",
-                         :enablement_expression => false_expression)
+                        :name                  => "disabled button",
+                        :applies_to_class      => "Service",
+                        :enablement_expression => false_expression)
       FactoryBot.create(:custom_button_set).tap do |group|
         group.add_member(FactoryBot.create(:custom_button,
-                                            :name                  => "enabled button in group",
-                                            :applies_to_class      => "Service",
-                                            :enablement_expression => true_expression))
+                                           :name                  => "enabled button in group",
+                                           :applies_to_class      => "Service",
+                                           :enablement_expression => true_expression))
         group.add_member(FactoryBot.create(:custom_button,
-                                            :name                  => "disabled button in group",
-                                            :applies_to_class      => "Service",
-                                            :enablement_expression => false_expression))
+                                           :name                  => "disabled button in group",
+                                           :applies_to_class      => "Service",
+                                           :enablement_expression => false_expression))
       end
 
       expected = {
@@ -195,21 +195,21 @@ RSpec.describe ServiceTemplate do
       true_expression = MiqExpression.new("=" => {"field" => "ServiceTemplate-name", "value" => service_template.name})
       false_expression = MiqExpression.new("=" => {"field" => "ServiceTemplate-name", "value" => "bar"})
       visible_button = FactoryBot.create(:custom_button,
-                                          :applies_to_class      => "ServiceTemplate",
-                                          :applies_to_id         => service_template.id,
-                                          :visibility_expression => true_expression)
+                                         :applies_to_class      => "ServiceTemplate",
+                                         :applies_to_id         => service_template.id,
+                                         :visibility_expression => true_expression)
       _hidden_button = FactoryBot.create(:custom_button,
-                                          :applies_to_class      => "ServiceTemplate",
-                                          :applies_to_id         => service_template.id,
-                                          :visibility_expression => false_expression)
+                                         :applies_to_class      => "ServiceTemplate",
+                                         :applies_to_id         => service_template.id,
+                                         :visibility_expression => false_expression)
       visible_button_in_group = FactoryBot.create(:custom_button,
-                                                   :applies_to_class      => "ServiceTemplate",
-                                                   :applies_to_id         => service_template.id,
-                                                   :visibility_expression => true_expression)
-      hidden_button_in_group = FactoryBot.create(:custom_button,
                                                   :applies_to_class      => "ServiceTemplate",
                                                   :applies_to_id         => service_template.id,
-                                                  :visibility_expression => false_expression)
+                                                  :visibility_expression => true_expression)
+      hidden_button_in_group = FactoryBot.create(:custom_button,
+                                                 :applies_to_class      => "ServiceTemplate",
+                                                 :applies_to_id         => service_template.id,
+                                                 :visibility_expression => false_expression)
       service_template.custom_button_sets << FactoryBot.create(:custom_button_set).tap do |group|
         group.add_member(visible_button_in_group)
         group.add_member(hidden_button_in_group)
@@ -361,14 +361,14 @@ RSpec.describe ServiceTemplate do
     describe "#create_service" do
       let(:service_task) do
         FactoryBot.create(:service_template_provision_task,
-                           :miq_request => service_template_request,
-                           :options     => {:service_resource_id => service_resource.id})
+                          :miq_request => service_template_request,
+                          :options     => {:service_resource_id => service_resource.id})
       end
       let(:service_template_request) { FactoryBot.create(:service_template_provision_request, :requester => user) }
       let(:service_resource) do
         FactoryBot.create(:service_resource,
-                           :resource_type => 'MiqRequest',
-                           :resource_id   => service_template_request.id)
+                          :resource_type => 'MiqRequest',
+                          :resource_id   => service_template_request.id)
       end
       let(:user) { FactoryBot.create(:user) }
       let(:parent_service) { FactoryBot.create(:service) }
@@ -688,9 +688,9 @@ RSpec.describe ServiceTemplate do
       dialog = FactoryBot.create(:dialog)
       template = FactoryBot.create(:service_template)
       request = FactoryBot.create(:service_template_provision_request,
-                                   :requester => @user,
-                                   :options   => {:foo => 'bar', :baz => nil })
-      template.create_resource_actions(:provision => { :fqname => @ra.fqname, :dialog_id => dialog.id })
+                                  :requester => @user,
+                                  :options   => {:foo => 'bar', :baz => nil})
+      template.create_resource_actions(:provision => {:fqname => @ra.fqname, :dialog_id => dialog.id})
       add_and_save_service(template, request)
       template.reload
 
@@ -724,17 +724,17 @@ RSpec.describe ServiceTemplate do
   let(:ra2) { FactoryBot.create(:resource_action, :action => 'Retirement') }
   let(:ems) { FactoryBot.create(:ems_amazon) }
   let(:content) do
-    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGP"\
-      "C/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3Cc"\
-      "ulE8AAAACXBIWXMAAAsTAAALEwEAmpwYAAABWWlUWHRYTUw6Y29tLmFkb2Jl"\
-      "LnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIg"\
-      "eDp4bXB0az0iWE1QIENvcmUgNS40LjAiPgogICA8cmRmOlJERiB4bWxuczpy"\
-      "ZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1u"\
-      "cyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAg"\
-      "ICAgICAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYv"\
-      "MS4wLyI+CiAgICAgICAgIDx0aWZmOk9yaWVudGF0aW9uPjE8L3RpZmY6T3Jp"\
-      "ZW50YXRpb24+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpS"\
-      "REY+CjwveDp4bXBtZXRhPgpMwidZAAAADUlEQVQIHWNgYGCwBQAAQgA+3N0+"\
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGP" \
+      "C/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3Cc" \
+      "ulE8AAAACXBIWXMAAAsTAAALEwEAmpwYAAABWWlUWHRYTUw6Y29tLmFkb2Jl" \
+      "LnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIg" \
+      "eDp4bXB0az0iWE1QIENvcmUgNS40LjAiPgogICA8cmRmOlJERiB4bWxuczpy" \
+      "ZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1u" \
+      "cyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAg" \
+      "ICAgICAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYv" \
+      "MS4wLyI+CiAgICAgICAgIDx0aWZmOk9yaWVudGF0aW9uPjE8L3RpZmY6T3Jp" \
+      "ZW50YXRpb24+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpS" \
+      "REY+CjwveDp4bXBtZXRhPgpMwidZAAAADUlEQVQIHWNgYGCwBQAAQgA+3N0+" \
       "xQAAAABJRU5ErkJggg=="
   end
   let(:vm) { FactoryBot.create(:vm_amazon, :ext_management_system => ems) }
@@ -747,7 +747,7 @@ RSpec.describe ServiceTemplate do
       :service_type => 'atomic',
       :prov_type    => 'amazon',
       :display      => 'false',
-      :picture      => { :content => content, :extension => 'jpg' },
+      :picture      => {:content => content, :extension => 'jpg'},
       :description  => 'a description',
       :config_info  => {
         :miq_request_dialog_name => request_dialog.name,
@@ -790,10 +790,10 @@ RSpec.describe ServiceTemplate do
       let(:picture) { Picture.create(catalog_item_options.delete(:picture)) }
 
       it "creates the picture without error" do
-        expect {
+        expect do
           service_template = ServiceTemplate.create_catalog_item(catalog_item_options, user)
           service_template.picture = picture
-        }.not_to raise_error
+        end.not_to raise_error
       end
 
       it "has the picture assigned properly" do
@@ -815,7 +815,7 @@ RSpec.describe ServiceTemplate do
       {
         :name        => 'Updated Template Name',
         :display     => 'false',
-        :picture     => { :content => new_picture_content, :extension => 'jpg' },
+        :picture     => {:content => new_picture_content, :extension => 'jpg'},
         :description => 'a description',
         :config_info => {
           :miq_request_dialog_name => request_dialog.name,
@@ -958,7 +958,7 @@ RSpec.describe ServiceTemplate do
         :args        => [user.id, {}, {}],
         :class_name  => "ServiceTemplate",
         :instance_id => service_template.id,
-        :method_name => "order",
+        :method_name => "order"
       )
     end
 
@@ -967,7 +967,7 @@ RSpec.describe ServiceTemplate do
       expect(resource_action_workflow).to receive(:validate_dialog).twice.and_return([])
 
       service_template.order(user, {}, {}, Time.zone.now.utc.to_s)
-      service_template.order(user, {}, {}, (Time.zone.now + 1.hour).utc.to_s)
+      service_template.order(user, {}, {}, 1.hour.from_now.utc.to_s)
 
       expect(service_template.miq_schedules.length).to eq(2)
     end
@@ -989,7 +989,7 @@ RSpec.describe ServiceTemplate do
         end
 
         it "provisions a service template with errors" do
-          expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w(Error1 Error2))
+          expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w[Error1 Error2])
           expect(resource_action_workflow).to receive(:request_options=).with({
                                                                                 :init_defaults => true, :provision_workflow => true
                                                                               })
@@ -1012,7 +1012,7 @@ RSpec.describe ServiceTemplate do
         end
 
         it "provisions a service template with errors" do
-          expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w(Error1 Error2))
+          expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w[Error1 Error2])
           expect(resource_action_workflow).to receive(:request_options=).with({
                                                                                 :initiator => 'control', :submit_workflow => true
                                                                               })
@@ -1059,7 +1059,7 @@ RSpec.describe ServiceTemplate do
         end
 
         it "provisions a service template with errors" do
-          expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w(Error1 Error2))
+          expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w[Error1 Error2])
           expect(resource_action_workflow).to receive(:request_options=).with({
                                                                                 :initiator => 'control', :provision_workflow => true
                                                                               })
@@ -1078,7 +1078,7 @@ RSpec.describe ServiceTemplate do
         end
 
         it "provisions a service template with errors" do
-          expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w(Error1 Error2))
+          expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w[Error1 Error2])
           expect(resource_action_workflow).to receive(:request_options=).with({:provision_workflow => true})
 
           expect { service_template.provision_request(user, arg1) }.to raise_error(RuntimeError)
@@ -1091,19 +1091,19 @@ RSpec.describe ServiceTemplate do
     it "only returns generic with no providers" do
       expect(ServiceTemplate.catalog_item_types).to match(
         hash_including('amazon'  => {:description => 'Amazon',  :display => false},
-                       'generic' => {:description => 'Generic', :display => true })
+                       'generic' => {:description => 'Generic', :display => true})
       )
     end
 
     it "returns orchestration template and generic" do
       FactoryBot.create(:orchestration_template)
       expect(ServiceTemplate.catalog_item_types).to match(
-        hash_including('amazon'                => { :description => 'Amazon',
-                                                    :display     => false },
-                       'generic'               => { :description => 'Generic',
-                                                    :display     => true },
-                       'generic_orchestration' => { :description => 'Orchestration',
-                                                    :display     => true})
+        hash_including('amazon'                => {:description => 'Amazon',
+                                                   :display     => false},
+                       'generic'               => {:description => 'Generic',
+                                                   :display     => true},
+                       'generic_orchestration' => {:description => 'Orchestration',
+                                                   :display     => true})
       )
     end
   end
@@ -1169,6 +1169,7 @@ end
 
 def print_svc(svc, indent = "")
   return if indent.length > 10
+
   svc.service_resources.each do |s|
     puts indent + s.resource.name
     print_svc(s.resource, indent + "  ")

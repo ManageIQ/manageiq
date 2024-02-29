@@ -3,7 +3,7 @@ class PolicyEvent < ApplicationRecord
 
   belongs_to  :miq_event_definition
   belongs_to  :miq_policy
-  has_many    :contents,        :class_name => "PolicyEventContent", :dependent => :destroy
+  has_many    :contents, :class_name => "PolicyEventContent", :dependent => :destroy
 
   virtual_has_many :miq_actions,     :uses => {:contents => :resource}
   virtual_has_many :miq_policy_sets, :uses => {:contents => :resource}
@@ -25,7 +25,7 @@ class PolicyEvent < ApplicationRecord
         :target_class                     => target.class.base_class.name,
         :target_name                      => target.name,
         :chain_id                         => chain_id
-      # TODO: username,
+        # TODO: username,
       )
 
       pe.host_id = target.try(:host)&.id

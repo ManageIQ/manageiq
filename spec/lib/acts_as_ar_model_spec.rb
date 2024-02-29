@@ -1,14 +1,14 @@
 RSpec.describe ActsAsArModel do
   # id is a default column included regardless if it's in the set_columns_hash
-  let(:col_names_strs) { %w(str id int flt dt) }
+  let(:col_names_strs) { %w[str id int flt dt] }
 
   let(:base_class) do
     Class.new(ActsAsArModel) do
       set_columns_hash(
-        :str              => :string,
-        :int              => :integer,
-        :flt              => :float,
-        :dt               => :datetime,
+        :str => :string,
+        :int => :integer,
+        :flt => :float,
+        :dt  => :datetime
       )
     end
   end

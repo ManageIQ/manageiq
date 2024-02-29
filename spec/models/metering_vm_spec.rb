@@ -14,7 +14,7 @@ RSpec.describe MeteringVm do
   let(:derived_memory_available)  { 1000.0 }
   let(:cpu_usagemhz_rate_average) { 50.0 }
   let(:disk_usage_rate_average)   { 100.0 }
-  let(:derived_memory_used)   { 100.0 }
+  let(:derived_memory_used) { 100.0 }
   let(:net_usage_rate_average) { 25.0 }
   let(:derived_vm_used_disk_storage) { 1.0.gigabytes }
   let(:derived_vm_allocated_disk_storage) { 4.0.gigabytes }
@@ -58,14 +58,14 @@ RSpec.describe MeteringVm do
     let(:cores)               { 7 }
     let(:mem_mb)              { 1777 }
     let(:disk_gb)             { 7 }
-    let(:disk_b)              { disk_gb * 1024**3 }
+    let(:disk_b)              { disk_gb * (1024**3) }
     let(:metering_used_hours) { 24 }
 
     let(:hardware) do
       FactoryBot.create(:hardware,
-                         :cpu_total_cores => cores,
-                         :memory_mb       => mem_mb,
-                         :disks           => [FactoryBot.create(:disk, :size => disk_b)])
+                        :cpu_total_cores => cores,
+                        :memory_mb       => mem_mb,
+                        :disks           => [FactoryBot.create(:disk, :size => disk_b)])
     end
 
     context 'for any virtual machine' do
@@ -161,7 +161,7 @@ RSpec.describe MeteringVm do
         expect(subject.beginning_of_resource_existence_in_report_interval).to eq(beginning_of_resource_existence)
         expect(subject.end_of_resource_existence_in_report_interval.to_s).to eq(vm.updated_on.to_s)
         expect(subject.end_of_resource_existence_in_report_interval.to_s).to eq("2012-09-25 19:00:00 UTC")
-        expect(subject.existence_hours_metric).to eq(19 * 24 + 19) # from 2012-09-06 00:00:00 UTC to 2012-09-25 19:00:00 UTC
+        expect(subject.existence_hours_metric).to eq((19 * 24) + 19) # from 2012-09-06 00:00:00 UTC to 2012-09-25 19:00:00 UTC
       end
     end
 

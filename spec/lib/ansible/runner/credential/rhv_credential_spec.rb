@@ -19,7 +19,7 @@ RSpec.describe Ansible::Runner::RhvCredential do
       {
         :userid   => "manageiq-rhv",
         :password => "rhv_password",
-        :options  => { :host => "rhv_host" }
+        :options  => {:host => "rhv_host"}
       }
     end
 

@@ -60,6 +60,7 @@ class ContainerImage < ApplicationRecord
 
   def full_name
     return docker_id if image_ref && image_ref.start_with?(DOCKER_PULLABLE_PREFIX)
+
     result = ""
     result << "#{container_image_registry.full_name}/" unless container_image_registry.nil?
     result << name
@@ -81,7 +82,7 @@ class ContainerImage < ApplicationRecord
   end
 
   # The guid is required by the smart analysis infrastructure
-  alias_method :guid, :docker_id
+  alias guid docker_id
 
   def display_registry
     container_image_registry.present? ? container_image_registry.full_name : _("Unknown image source")
@@ -115,6 +116,7 @@ class ContainerImage < ApplicationRecord
 
   def disconnect_inv
     return if archived?
+
     _log.info("Disconnecting Image [#{name}] id [#{id}] from EMS [#{ext_management_system.name}] id [#{ext_management_system.id}]")
     self.container_image_registry = nil
     self.deleted_on = Time.now.utc
@@ -122,7 +124,7 @@ class ContainerImage < ApplicationRecord
   end
 
   def self.disconnect_inv(ids)
-    _log.info "Disconnecting Images [#{ids}]"
+    _log.info("Disconnecting Images [#{ids}]")
     where(:id => ids).update_all(:container_image_registry_id => nil, :deleted_on => Time.now.utc)
   end
 
@@ -134,5 +136,5 @@ class ContainerImage < ApplicationRecord
     containers.map(&:limit_memory_bytes).compact.sum
   end
 
-  alias_method :perform_metadata_sync, :sync_stashed_metadata
+  alias perform_metadata_sync sync_stashed_metadata
 end

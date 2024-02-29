@@ -100,7 +100,7 @@ describe ManageIQ::Reporting::Formatter::C3 do
   context '#C&U charts without grouping' do
     let(:report) { cu_chart_without_grouping }
     before do
-      render_report(report, &proc { |e| e.options.graph_options = { :chart_type => :performance } })
+      render_report(report, &proc { |e| e.options.graph_options = {:chart_type => :performance} })
     end
 
     it "has right data" do
@@ -127,7 +127,7 @@ describe ManageIQ::Reporting::Formatter::C3 do
   context '#C&U charts with grouping' do
     let(:report) { cu_chart_with_grouping }
     before do
-      render_report(report, &proc { |e| e.options.graph_options = { :chart_type => :performance } })
+      render_report(report, &proc { |e| e.options.graph_options = {:chart_type => :performance} })
     end
 
     it "has right data" do
@@ -154,7 +154,7 @@ describe ManageIQ::Reporting::Formatter::C3 do
   context '#C&U charts with no data' do
     let(:report) { cu_chart_with_grouping }
     before do
-      render_report(report, &proc { |e| e.options.graph_options = { :chart_type => :performance } })
+      render_report(report, &proc { |e| e.options.graph_options = {:chart_type => :performance} })
     end
 
     it "has right empty data description" do

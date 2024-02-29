@@ -16,16 +16,16 @@ module ManageIQ
             end
           end
           mri.table.data.each do |r|
-            mri.col_formats ||= []                 # Backward compat - create empty array for formats
+            mri.col_formats ||= [] # Backward compat - create empty array for formats
             mri.col_order.each_with_index do |f, i|
-              unless ["<compare>", "<drift>"].include?(mri.db)
-                data = mri.format(f,
+              data = if ["<compare>", "<drift>"].include?(mri.db)
+                       r[f].to_s
+                     else
+                       mri.format(f,
                                   r[f],
-                                  :format => mri.col_formats[i] ? mri.col_formats[i] : :_default_,
+                                  :format => mri.col_formats[i] || :_default_,
                                   :tz     => tz)
-              else
-                data = r[f].to_s
-              end
+                     end
               if !@max_col_width[i] || data.length > @max_col_width[i]
                 @max_col_width[i] = data.length
               end
@@ -56,6 +56,7 @@ module ManageIQ
         def build_document_header
           mri = options.mri
           raise "No settings configured for Table" if mri.table.nil?
+
           calculate_max_col_widths
           @hr = hr
 
@@ -74,6 +75,7 @@ module ManageIQ
           end
 
           return if mri.headers.empty?
+
           c = mri.headers.dup
           # Remove headers of hidden columns
           mri.col_order.each_with_index do |f, i|
@@ -101,9 +103,10 @@ module ManageIQ
           counter = 0
 
           row_limit = mri.rpt_options && mri.rpt_options[:row_limit] ? mri.rpt_options[:row_limit] : 0
-          use_table = mri.sub_table ? mri.sub_table : mri.table
+          use_table = mri.sub_table || mri.table
           use_table.data.each_with_index do |r, d_idx|
             break if row_limit != 0 && d_idx > row_limit - 1
+
             line = []
             line_wrapper = false        # Clear line wrapper flag
             if ["<compare>"].include?(mri.db) && r[0] == "% Match:"
@@ -111,19 +114,19 @@ module ManageIQ
             elsif ["<drift>"].include?(mri.db) && r[0] == "Changed:"
               line_wrapper = true       # Wrap drift changed lines with header rows
             end
-            mri.col_formats ||= []                 # Backward compat - create empty array for formats
+            mri.col_formats ||= [] # Backward compat - create empty array for formats
             mri.col_order.each_with_index do |f, i|
               next if mri.column_is_hidden?(f)
 
-              unless ["<compare>", "<drift>"].include?(mri.db)
-                data = mri.format(f,
+              data = if ["<compare>", "<drift>"].include?(mri.db)
+                       r[f].to_s
+                     else
+                       mri.format(f,
                                   r[f],
-                                  :format => mri.col_formats[i] ? mri.col_formats[i] : :_default_,
+                                  :format => mri.col_formats[i] || :_default_,
                                   :tz     => tz)
-              else
-                data = r[f].to_s
-              end
-              if options.alignment.eql? :center
+                     end
+              if options.alignment.eql?(:center)
                 line << data.center(@max_col_width[i])
               else
                 align = data.kind_of?(Numeric) ? :rjust : :ljust
@@ -153,12 +156,10 @@ module ManageIQ
           end
 
           # see if a final group line needs to be written
-          if ["y", "c"].include?(mri.group) && !mri.sortby.nil?
-            if mri.group == "c"
-              s += @hr
+          if ["y", "c"].include?(mri.group) && !mri.sortby.nil? && (mri.group == "c")
+            s += @hr
               t = " Total for #{save_val}: #{counter} ".center(@line_len - 2)
               s += fit_to_width("|#{t}|" + CRLF)
-            end
           end
 
           s += @hr
@@ -168,33 +169,33 @@ module ManageIQ
         def build_document_footer
           mri = options.mri
           tz = mri.get_time_zone(Time.zone.name)
-          if !mri.user_categories.blank? || !mri.categories.blank? || !mri.conditions.nil? || !mri.display_filter.nil?
+          if mri.user_categories.present? || mri.categories.present? || !mri.conditions.nil? || !mri.display_filter.nil?
             output << fit_to_width(@hr)
-            unless mri.user_categories.blank?
+            if mri.user_categories.present?
               user_filters = mri.user_categories.flatten
-              unless user_filters.blank?
+              if user_filters.present?
                 customer_name = Tenant.root_tenant.name
                 user_filter = "User assigned " + customer_name + " Tag filters:"
                 t = user_filter.ljust(@line_len - 2)
                 output << fit_to_width("|#{t}|" + CRLF)
                 user_filters.each do |filters|
                   tag_val = "  " + calculate_filter_names(filters)
-                  tag_val1 = tag_val + " " * (@line_len - tag_val.length - 2)
+                  tag_val1 = tag_val + (" " * (@line_len - tag_val.length - 2))
                   output << fit_to_width("|#{tag_val1}|" + CRLF)
                 end
               end
             end
 
-            unless mri.categories.blank?
+            if mri.categories.present?
               categories = mri.categories.flatten
-              unless categories.blank?
+              if categories.present?
                 customer_name = Tenant.root_tenant.name
                 customer_name_title = "Report based " + customer_name + " Tag filters:"
-                t = customer_name_title + " " * (@line_len - customer_name_title.length - 2)
+                t = customer_name_title + (" " * (@line_len - customer_name_title.length - 2))
                 output << fit_to_width("|#{t}|" + CRLF)
                 categories.each do |filters|
                   tag_val = "  " + calculate_filter_names(filters)
-                  tag_val1 = tag_val + " " * (@line_len - tag_val.length - 2)
+                  tag_val1 = tag_val + (" " * (@line_len - tag_val.length - 2))
                   output << fit_to_width("|#{tag_val1}|" + CRLF)
                 end
               end
@@ -207,7 +208,7 @@ module ManageIQ
                 output << fit_to_width("|#{t}|" + CRLF)
 
                 # Clean up the conditions for display
-                tables = mri.conditions[:field].split("-")[0].split(".")  # Get the model and tables
+                tables = mri.conditions[:field].split("-")[0].split(".") # Get the model and tables
                 field = Dictionary.gettext(tables[0], :type => :model, :notfound => :titleize) # Start with the model
                 tables[1..-1].each do |t| # Add on any tables
                   field += "." + Dictionary.gettext(t, :type => :table, :notfound => :titleize)
@@ -216,7 +217,7 @@ module ManageIQ
                 field += " : " + Dictionary.gettext(mri.conditions[:field].split("-")[1], :type => :column, :notfound => :titleize)
 
                 filter_val = "  " + field + " " + mri.conditions[:operator] + " " + mri.conditions[:string].to_s
-                t = filter_val + " " * (@line_len - filter_val.length - 2)
+                t = filter_val + (" " * (@line_len - filter_val.length - 2))
                 output << fit_to_width("|#{t}|" + CRLF)
               else
                 filter_fields = "Report based filter fields:"
@@ -233,14 +234,14 @@ module ManageIQ
               t = filter_fields.ljust(@line_len - 2)
               output << fit_to_width("|#{t}|" + CRLF)
               filter_val = mri.display_filter.to_human
-              t = filter_val + " " * (@line_len - filter_val.length - 2)
+              t = filter_val + (" " * (@line_len - filter_val.length - 2))
               output << fit_to_width("|#{t}|" + CRLF)
             end
           end
 
           output << fit_to_width(@hr)
           # Label footer with last run on time of selected report or current time for other downloads
-          last_run_on = mri.rpt_options && mri.rpt_options[:last_run_on] || Time.zone.now
+          last_run_on = (mri.rpt_options && mri.rpt_options[:last_run_on]) || Time.zone.now
           cr = format_timezone(last_run_on, tz).to_s
           f = cr.center(@line_len - 2)
           output << fit_to_width("|#{f}|" + CRLF)
@@ -253,12 +254,12 @@ module ManageIQ
         #   "+------------------+"
         def hr
           columns = options.mri.table.column_names
-          if columns.include?("id") # Use 1 less column if "id" is present
-            @line_len = @max_col_width.inject((columns.length - 1) * 3) { |s, e| s + e } + 1
-          else
-            @line_len = @max_col_width.inject(columns.length * 3) { |s, e| s + e }
-          end
-          "+" + "-" * (@line_len - 2) + "+" + CRLF
+          @line_len = if columns.include?("id") # Use 1 less column if "id" is present
+                        @max_col_width.inject((columns.length - 1) * 3) { |s, e| s + e } + 1
+                      else
+                        @max_col_width.inject(columns.length * 3) { |s, e| s + e }
+                      end
+          "+" + ("-" * (@line_len - 2)) + "+" + CRLF
         end
       end
     end

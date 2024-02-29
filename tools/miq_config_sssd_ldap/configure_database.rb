@@ -10,13 +10,13 @@ module MiqConfigSssdLdap
     attr_reader :sssd_domain
 
     def initialize
-      LOGGER.debug("Invoked #{self.class}\##{__method__}")
+      LOGGER.debug("Invoked #{self.class}##{__method__}")
       @sssd_domain = domain_from_sssd
       LOGGER.debug("#{__method__} sssd_domain #{sssd_domain}")
     end
 
     def change_userids_to_upn
-      LOGGER.debug("Invoked #{self.class}\##{__method__}")
+      LOGGER.debug("Invoked #{self.class}##{__method__}")
       LOGGER.debug("Normalizing userids to User Principal Name (UPN)")
 
       return unless CHANGE_MODES.include?(Settings.authentication.to_hash[:mode])
@@ -47,7 +47,7 @@ module MiqConfigSssdLdap
     end
 
     def save_new_or_delete_duplicate_userid(user)
-      LOGGER.debug("Invoked #{self.class}\##{__method__} userid #{user.userid}")
+      LOGGER.debug("Invoked #{self.class}##{__method__} userid #{user.userid}")
       check_duplicate_u = find_user(user.userid)
       if check_duplicate_u.nil? || check_duplicate_u.id == user.id
         LOGGER.debug("Saving userid #{user.userid}")

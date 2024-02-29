@@ -90,11 +90,11 @@ class DescendantLoader
         # will definitely be defined inside the innermost containining
         # scope. We're just not sure how that scope plays out relative
         # to its parents.
-        if (container_name = scope_names.pop)
-          define_combos = scoped_name(container_name, name_combinations(scope_names))
-        else
-          define_combos = search_combos.dup
-        end
+        define_combos = if (container_name = scope_names.pop)
+                          scoped_name(container_name, name_combinations(scope_names))
+                        else
+                          search_combos.dup
+                        end
 
         [search_combos, define_combos, flatten_name(name), flatten_name(sklass)]
       end.compact
@@ -200,8 +200,8 @@ class DescendantLoader
     def classes_in(filename)
       t = File.mtime(filename)
 
-      if (entry = cache[filename])
-        return entry[:parsed] if entry[:mtime] == t
+      if (entry = cache[filename]) && (entry[:mtime] == t)
+        return entry[:parsed]
       end
 
       super.tap do |data|
@@ -219,7 +219,7 @@ class DescendantLoader
     def class_inheritance_relationships
       @class_inheritance_relationships ||= begin
         children = Hash.new { |h, k| h[k] = [] }
-        Dir.glob(descendants_paths.map{|path| Pathname.new(path).join('**/*.rb')}) do |file|
+        Dir.glob(descendants_paths.map { |path| Pathname.new(path).join('**/*.rb') }) do |file|
           classes_in(file).each do |search_scopes, define_scopes, name, sklass|
             possible_names = scoped_name(name, define_scopes)
             possible_superklasses = scoped_name(sklass, search_scopes)

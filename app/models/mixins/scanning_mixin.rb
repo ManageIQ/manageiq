@@ -15,7 +15,7 @@ module ScanningMixin
     end
 
     def default_scan_categories
-      %w(vmconfig accounts software services system profiles)
+      %w[vmconfig accounts software services system profiles]
     end
 
     # Stash metadata before sync.
@@ -34,14 +34,15 @@ module ScanningMixin
 
       taskid = doc.root.attributes["taskid"]
       _log.info("TaskId = [#{taskid}]")
-      unless taskid.blank?
-        name =  begin
-                  File.basename(doc.root.elements[1].elements[1].attributes["original_filename"], ".*")
-                rescue
-                  "vmscan"
-                end
+      if taskid.present?
+        name = begin
+          File.basename(doc.root.elements[1].elements[1].attributes["original_filename"], ".*")
+        rescue
+          "vmscan"
+        end
         job = Job.find_by(:guid => taskid)
         raise _("Unable to process data for job with id <%{number}>. Job not found.") % {:number => taskid} if job.nil?
+
         begin
           job.signal(:data, xml_file)
         rescue => err
@@ -76,6 +77,7 @@ module ScanningMixin
   # Process XML documents from VM scans
   def add_elements(xml_node)
     return if xml_node.nil?
+
     _log.info("Adding XML elements for [#{id}] from [#{xml_node.root.name}]")
     updated = false
 
@@ -103,7 +105,7 @@ module ScanningMixin
     # Update the last sync time if we did something
     self.last_sync_on = Time.at(xml_node.root.attributes["created_on"].to_i).utc if updated == true && xml_node.root.attributes["created_on"]
     save
-    hardware.save if self.respond_to?(:hardware) && !hardware.nil?
+    hardware.save if respond_to?(:hardware) && !hardware.nil?
   end
 
   def scan_queue(userid = "system", options = {})
@@ -161,8 +163,9 @@ module ScanningMixin
   end
 
   def path_arg
-    return path if self.respond_to?(:path)
-    return name if self.respond_to?(:name)
+    return path if respond_to?(:path)
+    return name if respond_to?(:name)
+
     nil
   end
   private :path_arg
@@ -215,13 +218,15 @@ module ScanningMixin
     xml_node_scan.add_attributes("start_time" => ost.scanTime.iso8601)
     xml_summary.root.add_attributes("taskid" => ost.taskid)
 
-    data_dir = File.join(File.expand_path(Rails.root), "data/metadata")
+    data_dir = Rails.root.join("data/metadata").to_s
     _log.debug("creating #{data_dir}")
-    begin
-      Dir.mkdir(data_dir)
-    rescue Errno::EEXIST
-      # Ignore if the directory was created by another thread.
-    end unless File.exist?(data_dir)
+    unless File.exist?(data_dir)
+      begin
+        Dir.mkdir(data_dir)
+      rescue Errno::EEXIST
+        # Ignore if the directory was created by another thread.
+      end
+    end
     ost.skipConfig = true
     ost.config = OpenStruct.new(
       :dataDir            => data_dir,
@@ -306,9 +311,10 @@ module ScanningMixin
     xml_summary = nil
     begin
       raise _("No synchronize category specified") if ost.category.nil?
+
       categories = ost.category.split(",")
       ost.scanTime = Time.now.utc
-      ost.compress = true       # Request that data returned from the blackbox is compressed
+      ost.compress = true # Request that data returned from the blackbox is compressed
       ost.xml_class = REXML::Document
       # TODO: if from_time is not a string (see sync_metadata() above), loadXmlData fails.
       # Just clear it for now, until we figure out the right thing to do.
@@ -320,7 +326,7 @@ module ScanningMixin
       xml_node = xml_summary.root.add_element("syncmetadata")
       xml_summary.root.add_attributes("scan_time" => ost.scanTime, "taskid" => ost.taskid)
       ost.skipConfig = true
-      data_dir = File.join(File.expand_path(Rails.root), "data/metadata")
+      data_dir = Rails.root.join("data/metadata").to_s
       ost.config = OpenStruct.new(
         :dataDir            => data_dir,
         :forceFleeceDefault => false
@@ -346,13 +352,11 @@ module ScanningMixin
           _log.info("Starting:  Sending target data for [#{c}] to server.  Size:[#{data.length}]  TaskId:[#{ost.taskid}]  target:[#{name}]")
           save_metadata_op(data, "b64,zlib,xml", ost.taskid)
           _log.info("Completed: Sending target data for [#{c}] to server.  Size:[#{data.length}]  TaskId:[#{ost.taskid}]  target:[#{name}]")
-        else
+        elsif items_total.zero?
           # Do not send empty XMLs.  Warn if there is not data at all, or just not items selected.
-          if items_total.zero?
-            _log.warn("Synchronize: No data found for [#{c}].  Items:Total[#{items_total}] Selected[#{items_selected}]  TaskId:[#{ost.taskid}]  VM:[#{name}]")
-          else
-            _log.warn("Synchronize: No data selected for [#{c}].  Items:Total[#{items_total}] Selected[#{items_selected}]  TaskId:[#{ost.taskid}]  VM:[#{name}]")
-          end
+          _log.warn("Synchronize: No data found for [#{c}].  Items:Total[#{items_total}] Selected[#{items_selected}]  TaskId:[#{ost.taskid}]  VM:[#{name}]")
+        else
+          _log.warn("Synchronize: No data selected for [#{c}].  Items:Total[#{items_total}] Selected[#{items_selected}]  TaskId:[#{ost.taskid}]  VM:[#{name}]")
         end
       end
     rescue => syncErr
@@ -384,7 +388,7 @@ module ScanningMixin
         :class_name  => "Job",
         :method_name => "update_message",
         :args        => [ost.taskid, message],
-        :task_id     => "job_message_#{Time.now.to_i}",
+        :task_id     => "job_message_#{Time.now.to_i}"
       )
     end
   end

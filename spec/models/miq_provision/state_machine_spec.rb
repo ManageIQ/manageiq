@@ -9,12 +9,12 @@ RSpec.describe MiqProvision do
 
     let(:task) do
       FactoryBot.create(:miq_provision_openstack,
-                         :source      => template,
-                         :destination => vm,
-                         :state       => 'pending',
-                         :status      => 'Ok',
-                         :userid      => req_user.userid,
-                         :options     => options)
+                        :source      => template,
+                        :destination => vm,
+                        :state       => 'pending',
+                        :status      => 'Ok',
+                        :userid      => req_user.userid,
+                        :options     => options)
     end
 
     context "#prepare_provision" do
@@ -33,7 +33,7 @@ RSpec.describe MiqProvision do
           :flavor_ref      => flavor.ems_ref,
           :image_ref       => template.ems_ref,
           :name            => options[:vm_target_name],
-          :security_groups => [],
+          :security_groups => []
         )
       end
 

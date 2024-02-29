@@ -34,9 +34,7 @@ module MiqServer::StatusManagement
     # 2. Delegate and/or deprecate these class methods
     # 3. Change callers (app/models/miq_schedule_worker/jobs.rb) to use an instance.
     # 4. Cleanup any existing queue messages.
-    def status_update
-      my_server.status_update
-    end
+    delegate :status_update, :to => :my_server
 
     def log_status
       log_system_status
@@ -58,35 +56,11 @@ module MiqServer::StatusManagement
       unless disks.empty?
         _log.info("[#{svr_name}] Disk Usage:")
         format_string = "%-12s %6s %12s %12s %12s %12s %12s %12s %12s %12s %12s"
-        header = format(format_string,
-                        "Filesystem",
-                        "Type",
-                        "Total",
-                        "Used",
-                        "Available",
-                        "%Used",
-                        "iTotal",
-                        "iUsed",
-                        "iFree",
-                        "%iUsed",
-                        "Mounted on"
-                       )
+        header = format_string % ["Filesystem", "Type", "Total", "Used", "Available", "%Used", "iTotal", "iUsed", "iFree", "%iUsed", "Mounted on"]
         _log.info("[#{svr_name}] #{header}")
 
         disks.each do |disk|
-          formatted = format(format_string,
-                             disk[:filesystem],
-                             disk[:type],
-                             ActiveSupport::NumberHelper.number_to_human_size(disk[:total_bytes]),
-                             ActiveSupport::NumberHelper.number_to_human_size(disk[:used_bytes]),
-                             ActiveSupport::NumberHelper.number_to_human_size(disk[:available_bytes]),
-                             "#{disk[:used_bytes_percent]}%",
-                             disk[:total_inodes],
-                             disk[:used_inodes],
-                             disk[:available_inodes],
-                             "#{disk[:used_inodes_percent]}%",
-                             disk[:mount_point]
-                            )
+          formatted = format_string % [disk[:filesystem], disk[:type], ActiveSupport::NumberHelper.number_to_human_size(disk[:total_bytes]), ActiveSupport::NumberHelper.number_to_human_size(disk[:used_bytes]), ActiveSupport::NumberHelper.number_to_human_size(disk[:available_bytes]), "#{disk[:used_bytes_percent]}%", disk[:total_inodes], disk[:used_inodes], disk[:available_inodes], "#{disk[:used_inodes_percent]}%", disk[:mount_point]]
           _log.info("[#{svr_name}] #{formatted}")
         end
 
@@ -94,11 +68,11 @@ module MiqServer::StatusManagement
         svr.check_disk_usage(disks)
       end
 
-      queue_count = MiqQueue.nested_count_by(%w(state zone role))
+      queue_count = MiqQueue.nested_count_by(%w[state zone role])
       states = queue_count.keys.sort_by(&:to_s)
       states.each { |state| _log.info("[#{svr_name}] MiqQueue count for state=[#{state.inspect}] by zone and role: #{queue_count[state].inspect}") }
 
-      job_count = Job.nested_count_by(%w(state zone type))
+      job_count = Job.nested_count_by(%w[state zone type])
       states = job_count.keys.sort_by(&:to_s)
       states.each { |state| _log.info("[#{svr_name}] Job count for state=[#{state.inspect}] by zone and process_type: #{job_count[state].inspect}") }
     end

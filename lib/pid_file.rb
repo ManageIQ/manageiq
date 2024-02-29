@@ -15,8 +15,10 @@ class PidFile
 
   def pid
     return nil unless File.file?(@fname)
+
     data = File.read(@fname).strip
     return nil if data.empty? || !/\d+/.match(data)
+
     data.to_i
   end
 
@@ -26,15 +28,17 @@ class PidFile
 
   def create(remove_on_exit = true)
     FileUtils.mkdir_p(File.dirname(@fname))
-    File.open(@fname, "w") { |f| f.write(Process.pid) }
+    File.write(@fname, Process.pid)
     at_exit { PidFile.remove(@fname) } if remove_on_exit
   end
 
   def running?(regexp = nil)
     pid = self.pid
     return false if pid.nil?
+
     command_line = MiqProcess.command_line(pid)
     return false if command_line.blank?
+
     unless regexp.nil?
       regexp = Regexp.new(regexp) if regexp.kind_of?(String)
       return false if regexp.match(command_line).nil?

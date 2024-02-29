@@ -65,7 +65,7 @@ module MiqPolicyMixin
   end
 
   def passes_policy?(list = nil)
-    list.nil? ? plist = policies : plist = resolve_policies(list)
+    plist = list.nil? ? policies : resolve_policies(list)
     result = true
     plist.each do |policy|
       result = false if policy["result"] == "deny"
@@ -129,11 +129,13 @@ module MiqPolicyMixin
       targets.each do |t|
         profiles = (t.get_policies + MiqPolicy.associations_to_get_policies.collect do |assoc|
           next unless t.respond_to?(assoc)
+
           t.send(assoc).get_policies unless t.send(assoc).nil?
         end).compact.flatten.uniq
         presults = t.resolve_profiles(profiles.collect(&:id), eventobj)
         target_result = presults.inject("allow") do |s, r|
           break "deny" if r["result"] == "deny"
+
           s
         end
 
@@ -148,7 +150,7 @@ module MiqPolicyMixin
       eventobj = event.kind_of?(String) ? MiqEventDefinition.find_by(:name => event) : MiqEventDefinition.extract_objects(event)
       raise _("No event found for [%{event}]") % {:event => event} if eventobj.nil?
 
-      targets =  targets.first.kind_of?(self) ? targets.collect(&:id) : targets
+      targets = targets.collect(&:id) if targets.first.kind_of?(self)
 
       opts = {
         :action => "#{name} - Resultant Set of Policy, Event: [#{eventobj.description}]",

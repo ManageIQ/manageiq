@@ -9,15 +9,15 @@ require 'optimist'
 require 'copy_reports_structure/report_structure'
 
 opts = Optimist.options(ARGV) do
-  banner "Utility to: \n" \
-         "  - make report structure configured for a group available to another group\n" \
-         "  - make report structure configured for a group available to role\n" \
-         "  - reset report access to default for group or role\n" \
+  banner "Utility to: \n  " \
+         "- make report structure configured for a group available to another group\n  " \
+         "- make report structure configured for a group available to role\n  " \
+         "- reset report access to default for group or role\n" \
          "Example (Duplicate for Group): bundle exec ruby #{__FILE__} --source-group=EvmGroup --target-group=SomeGroup\n" \
          "Example (Duplicate for Role): bundle exec ruby #{__FILE__} --source-group=EvmGroup  --target-role=SomeRole\n" \
          "Example (Reset to Default for Group): bundle exec ruby #{__FILE__} --reset-group=SomeGroup\n" \
          "Example (Reset to Default for Role):  bundle exec ruby #{__FILE__} --reset-role=SomeRole\n"
-  opt :dry_run,  "Dry Run", :short => "d"
+  opt :dry_run, "Dry Run", :short => "d"
   opt :source_group, "Source group to take report structure from", :short => :none, :type => :string
   opt :target_group, "Target group to get report menue from source group", :short => :none, :type => :string
   opt :target_role, "Target role to get report menue from source group", :short => :none, :type => :string

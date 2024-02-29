@@ -2,7 +2,7 @@ require 'active_support/core_ext/string/conversions'
 require 'active_support/deprecation'
 
 class String
-  alias_method :old_to_time, :to_time
+  alias old_to_time to_time
 
   OBJ = Object.new
 

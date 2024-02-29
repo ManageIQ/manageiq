@@ -29,7 +29,7 @@ class DialogFieldSerializer < Serializer
         dialog_field.options[:force_single_value] = dialog_field.options[:force_single_value] || category.single_value
       end
     end
-    json_options = dialog_field.dynamic? ? {:methods => [:type], :except => [:values]} : {:methods => %i(type values)}
+    json_options = dialog_field.dynamic? ? {:methods => [:type], :except => [:values]} : {:methods => %i[type values]}
     included_attributes(dialog_field.as_json(json_options), all_attributes).merge(extra_attributes)
   end
 end

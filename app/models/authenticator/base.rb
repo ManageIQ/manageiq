@@ -19,6 +19,7 @@ module Authenticator
     end
 
     attr_reader :config
+
     def initialize(config)
       @config = config
     end
@@ -41,6 +42,7 @@ module Authenticator
 
     def authorize_user(userid)
       return unless user_authorizable_without_authentication?
+
       authenticate(userid, "", {}, {:require_user => true, :authorize_only => true})
     end
 
@@ -89,11 +91,10 @@ module Authenticator
           audit_success(audit.merge(:message => "Authentication successful for user #{username}"))
         else
           reason = failure_reason(username, request)
-          reason = ": #{reason}" unless reason.blank?
+          reason = ": #{reason}" if reason.present?
           audit_failure(audit.merge(:message => "Authentication failed for userid #{username}#{reason}"))
           raise MiqException::MiqEVMLoginError, fail_message
         end
-
       rescue MiqException::MiqEVMLoginError => err
         _log.warn(err.message)
         raise
@@ -107,6 +108,7 @@ module Authenticator
         if task.nil? || MiqTask.status_error?(task.status) || MiqTask.status_timeout?(task.status)
           raise MiqException::MiqEVMLoginError, fail_message
         end
+
         user_or_taskid = case_insensitive_find_by_userid(task.userid)
       end
 
@@ -123,58 +125,58 @@ module Authenticator
       decrypt_ldap_password(config) if MiqLdap.using_ldap?
 
       run_task(taskid, "Authorizing") do |task|
-        begin
-          identity = find_external_identity(username, args[0], args[1])
 
-          unless identity
-            msg = "Authentication failed for userid #{username}, unable to find user object in #{self.class.proper_name}"
-            _log.warn(msg)
-            audit_failure(audit.merge(:message => msg))
-            task.error(msg)
-            task.state_finished
-            return nil
-          end
+        identity = find_external_identity(username, args[0], args[1])
 
-          incoming_groups = groups_for(identity)
-          matching_groups = match_groups(incoming_groups)
-          userid, user = find_or_initialize_user(identity, username)
-          update_user_attributes(user, userid, identity)
-          audit_new_user(audit, user) if user.new_record?
-          user.miq_groups = matching_groups
+        unless identity
+          msg = "Authentication failed for userid #{username}, unable to find user object in #{self.class.proper_name}"
+          _log.warn(msg)
+          audit_failure(audit.merge(:message => msg))
+          task.error(msg)
+          task.state_finished
+          return nil
+        end
 
-          if matching_groups.empty?
-            msg = "Authentication failed for userid #{user.userid}, unable to match user's group membership to an EVM role. The incoming groups are: #{incoming_groups.join(", ")}"
-            _log.warn(msg)
-            audit_failure(audit.merge(:message => msg))
-            task.error(msg)
-            task.state_finished
-            user.save! unless user.new_record?
-            return nil
-          end
+        incoming_groups = groups_for(identity)
+        matching_groups = match_groups(incoming_groups)
+        userid, user = find_or_initialize_user(identity, username)
+        update_user_attributes(user, userid, identity)
+        audit_new_user(audit, user) if user.new_record?
+        user.miq_groups = matching_groups
 
-          user.lastlogon = Time.now.utc
-          if user.new_record?
-            User.with_lock do
-              user.save!
-            rescue ActiveRecord::RecordInvalid # Try update when catching create race condition.
-              userid, user = find_or_initialize_user(identity, username)
-              update_user_attributes(user, userid, identity)
-              user.miq_groups = matching_groups
-              user.save!
-            end
-          else
+        if matching_groups.empty?
+          msg = "Authentication failed for userid #{user.userid}, unable to match user's group membership to an EVM role. The incoming groups are: #{incoming_groups.join(", ")}"
+          _log.warn(msg)
+          audit_failure(audit.merge(:message => msg))
+          task.error(msg)
+          task.state_finished
+          user.save! unless user.new_record?
+          return nil
+        end
+
+        user.lastlogon = Time.now.utc
+        if user.new_record?
+          User.with_lock do
+            user.save!
+          rescue ActiveRecord::RecordInvalid # Try update when catching create race condition.
+            userid, user = find_or_initialize_user(identity, username)
+            update_user_attributes(user, userid, identity)
+            user.miq_groups = matching_groups
             user.save!
           end
-
-          _log.info("Authorized User: [#{user.userid}]")
-          task.userid = user.userid
-          task.update_status("Finished", "Ok", "User authorized successfully")
-
-          user
-        rescue Exception => err
-          audit_failure(audit.merge(:message => err.message))
-          raise
+        else
+          user.save!
         end
+
+        _log.info("Authorized User: [#{user.userid}]")
+        task.userid = user.userid
+        task.update_status("Finished", "Ok", "User authorized successfully")
+
+        user
+      rescue Exception => err
+        audit_failure(audit.merge(:message => err.message))
+        raise
+
       end
     end
 
@@ -279,7 +281,7 @@ module Authenticator
             :instance_id => task.id,
             :method_name => :queue_callback_on_exceptions,
             :args        => ['Finished']
-          },
+          }
         )
       else
         authorize(task.id, username, *args)

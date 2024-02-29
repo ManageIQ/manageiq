@@ -8,26 +8,26 @@ RSpec.describe TaskHelpers::Exports::Reports do
                       :name       => "Test Report",
                       :rpt_type   => "Custom",
                       :tz         => "Eastern Time (US & Canada)",
-                      :col_order  => %w(name boot_time disks_aligned),
-                      :cols       => %w(name boot_time disks_aligned),
-                      :db_options => { :rpt_type => "ChargebackContainerProject" },
-                      "include"   => { "columns" => %w(col1 col2) })
+                      :col_order  => %w[name boot_time disks_aligned],
+                      :cols       => %w[name boot_time disks_aligned],
+                      :db_options => {:rpt_type => "ChargebackContainerProject"},
+                      "include"   => {"columns" => %w[col1 col2]})
     FactoryBot.create(:miq_report,
                       :name       => "Test Report 2",
                       :rpt_type   => "Custom",
                       :tz         => "Eastern Time (US & Canada)",
-                      :col_order  => %w(name boot_time disks_aligned),
-                      :cols       => %w(name boot_time disks_aligned),
-                      :db_options => { :rpt_type => "ChargebackContainerProject" },
-                      "include"   => { "columns" => %w(col1 col2) })
+                      :col_order  => %w[name boot_time disks_aligned],
+                      :cols       => %w[name boot_time disks_aligned],
+                      :db_options => {:rpt_type => "ChargebackContainerProject"},
+                      "include"   => {"columns" => %w[col1 col2]})
     FactoryBot.create(:miq_report,
                       :name       => "Default Test Report",
                       :rpt_type   => "Default",
                       :tz         => "Eastern Time (US & Canada)",
-                      :col_order  => %w(name boot_time disks_aligned),
-                      :cols       => %w(name boot_time disks_aligned),
-                      :db_options => { :rpt_type => "ChargebackContainerProject" },
-                      "include"   => { "columns" => %w(col1 col2) })
+                      :col_order  => %w[name boot_time disks_aligned],
+                      :cols       => %w[name boot_time disks_aligned],
+                      :db_options => {:rpt_type => "ChargebackContainerProject"},
+                      "include"   => {"columns" => %w[col1 col2]})
   end
 
   after do

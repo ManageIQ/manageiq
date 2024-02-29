@@ -23,7 +23,7 @@ module ToModelHash
 
       cols  = (options["cols"] || options["columns"] || [])
       cols += (options["key"] || []).compact
-      ret[:columns] = cols.uniq.sort.collect(&:to_sym) unless cols.blank?
+      ret[:columns] = cols.uniq.sort.collect(&:to_sym) if cols.present?
 
       includes = options["include"]
       if includes
@@ -34,7 +34,7 @@ module ToModelHash
 
         ret[:include] = includes.each_with_object({}) do |(k, v), h|
           sub_options = to_model_hash_options_fixup(v)
-          h[k.to_sym] = sub_options.blank? ? nil : sub_options
+          h[k.to_sym] = sub_options.presence
         end
       end
 
@@ -59,7 +59,8 @@ module ToModelHash
     columns << :id
 
     columns.each_with_object({:class => self.class.name}) do |c, h|
-      next unless self.respond_to?(c)
+      next unless respond_to?(c)
+
       value = send(c)
       h[c.to_sym] = value unless value.nil?
     end
@@ -72,7 +73,7 @@ module ToModelHash
 
     case spec
     when Symbol, String
-      if self.respond_to?(spec)
+      if respond_to?(spec)
         recs = send(spec)
         if recs.kind_of?(ActiveRecord::Base) || (recs.kind_of?(Array) && recs.first.kind_of?(ActiveRecord::Base))
           single_rec = !recs.kind_of?(Array)
@@ -85,7 +86,8 @@ module ToModelHash
       spec.each { |s| to_model_hash_recursive(s, result) }
     when Hash
       spec.each do |k, v|
-        next unless self.respond_to?(k)
+        next unless respond_to?(k)
+
         if k == :tags
           recs = tags.collect { |t| Classification.tag_to_model_hash(t) }
         else

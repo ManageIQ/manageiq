@@ -42,13 +42,13 @@ module RemoteConsole
           @proxy.select(1000)
 
           @proxy.each_ready do |left, right|
-            begin
-              @adapters[left].fetch(64.kilobytes) { |data| @adapters[right].issue(data) } # left -> right
-            rescue IOError, IO::WaitReadable, IO::WaitWritable
-              cleanup(:info, "Closing RemoteConsole proxy for VM %{vm_id}", left, right)
-            rescue StandardError => ex
-              cleanup(:error, "RemoteConsole proxy for VM %{vm_id} errored with #{ex} #{ex.backtrace.join("\n")}", left, right)
-            end
+
+            @adapters[left].fetch(64.kilobytes) { |data| @adapters[right].issue(data) } # left -> right
+          rescue IOError, IO::WaitReadable, IO::WaitWritable
+            cleanup(:info, "Closing RemoteConsole proxy for VM %{vm_id}", left, right)
+          rescue => ex
+            cleanup(:error, "RemoteConsole proxy for VM %{vm_id} errored with #{ex} #{ex.backtrace.join("\n")}", left, right)
+
           end
         end
       end
@@ -72,7 +72,7 @@ module RemoteConsole
 
     # Determine if the transmitter thread is alive or crashed
     def healthy?
-      %w(run sleep).include?(@transmitter.status)
+      %w[run sleep].include?(@transmitter.status)
     end
 
     private
@@ -93,7 +93,7 @@ module RemoteConsole
         @adapters[ws_sock] = ServerAdapter.new(record, env, ws_sock)
 
         @proxy.push(ws_sock, console_sock)
-      rescue StandardError => ex
+      rescue => ex
         cleanup(:error, "RemoteConsole proxy for VM %{vm_id} errored with #{ex} #{ex.backtrace.join("\n")}", console_sock, ws_sock, record)
         RACK_404
       else

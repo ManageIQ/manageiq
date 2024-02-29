@@ -7,7 +7,7 @@ module MiqConfigSssdLdap
     CFG_RULES_FILE = "/usr/share/sssd/cfg_rules.ini".freeze
 
     def self.disable_tls
-      LOGGER.debug("Invoked #{self.class}\##{__method__}")
+      LOGGER.debug("Invoked #{self.class}##{__method__}")
 
       message = "Converting from unsecured LDAP authentication to SSSD. This is dangerous. Passwords are not encrypted"
       puts(message)

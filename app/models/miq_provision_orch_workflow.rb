@@ -7,9 +7,9 @@ class MiqProvisionOrchWorkflow < MiqProvisionVirtWorkflow
     # Check if the caller passed the source VM as part of the initial call
     if initial_pass == true
       src_obj_id = get_value(@values[:src_vm_id])
-      unless src_obj_id.blank?
+      if src_obj_id.present?
         src_obj = OrchestrationTemplate.find_by(:id => src_obj_id)
-        @values[:src_vm_id] = [src_obj.id, src_obj.name] unless src_obj.blank?
+        @values[:src_vm_id] = [src_obj.id, src_obj.name] if src_obj.present?
       end
     end
 
@@ -19,8 +19,8 @@ class MiqProvisionOrchWorkflow < MiqProvisionVirtWorkflow
       @dialogs = get_pre_dialogs if initial_pass && options[:use_pre_dialog] != false
       if @dialogs.nil?
         @dialogs = get_dialogs
-      else
-        @running_pre_dialog = true if options[:use_pre_dialog] != false
+      elsif options[:use_pre_dialog] != false
+        @running_pre_dialog = true
       end
       normalize_numeric_fields unless @dialogs.nil?
     end
@@ -75,6 +75,7 @@ class MiqProvisionOrchWorkflow < MiqProvisionVirtWorkflow
   def allowed_ci(ci, relats, filtered_ids = nil)
     return {} if get_value(@values[:placement_auto]) == true
     return {} if (sources = resources_for_ui).blank?
+
     get_ems_metadata_tree(sources)
     super(ci, relats, sources, filtered_ids)
   end

@@ -7,7 +7,7 @@ RSpec.describe "User Password" do
 
       @old = 'smartvm'
       @admin = FactoryBot.create(:user, :userid          => 'admin',
-                                         :password_digest => BCrypt::Password.create(@old))
+                                        :password_digest => BCrypt::Password.create(@old))
     end
 
     it "should have set password" do

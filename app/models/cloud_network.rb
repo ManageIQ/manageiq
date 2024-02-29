@@ -18,13 +18,13 @@ class CloudNetwork < ApplicationRecord
   has_many :floating_ips,  :dependent => :destroy
   has_many :vms, -> { distinct }, :through => :network_ports, :source => :device, :source_type => 'VmOrTemplate'
 
-  has_many :public_network_routers, :foreign_key => :cloud_network_id, :class_name => "NetworkRouter"
+  has_many :public_network_routers, :class_name => "NetworkRouter"
   has_many :public_network_vms, -> { distinct }, :through => :public_network_routers, :source => :vms
   has_many :private_networks, -> { distinct }, :through => :public_network_routers, :source => :cloud_networks
 
   # TODO(lsmola) figure out what this means, like security groups used by VMs in the network? It's not being
   # refreshed, so we can probably delete this association
-  has_many   :security_groups
+  has_many :security_groups
   has_many :firewall_rules, :as => :resource, :dependent => :destroy
 
   # Use for virtual columns, mainly for modeling array and hash types, we get from the API
@@ -35,8 +35,8 @@ class CloudNetwork < ApplicationRecord
   virtual_column :qos_policy_id,             :type => :string
 
   # Define all getters and setters for extra_attributes related virtual columns
-  %i(maximum_transmission_unit port_security_enabled qos_policy_id).each do |action|
-	  define_method("#{action}=") do |value|
+  %i[maximum_transmission_unit port_security_enabled qos_policy_id].each do |action|
+    define_method(:"#{action}=") do |value|
       extra_attributes_save(action, value)
     end
 
@@ -109,10 +109,10 @@ class CloudNetwork < ApplicationRecord
 
   def extra_attributes_save(key, value)
     self.extra_attributes = {} if extra_attributes.blank?
-    self.extra_attributes[key] = value
+    extra_attributes[key] = value
   end
 
   def extra_attributes_load(key)
-    self.extra_attributes[key] unless extra_attributes.blank?
+    extra_attributes[key] if extra_attributes.present?
   end
 end

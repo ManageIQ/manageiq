@@ -34,6 +34,7 @@ module MiqServer::EnvironmentManagement
 
     disks.each do |disk|
       next unless disk[:used_bytes_percent].to_i > threshold
+
       disk_usage_event = case disk[:mount_point].chomp
                          when '/'                     then 'evm_server_system_disk_high_usage'
                          when '/boot'                 then 'evm_server_boot_disk_high_usage'
@@ -48,6 +49,7 @@ module MiqServer::EnvironmentManagement
                          end
 
       next unless disk_usage_event
+
       msg = "Filesystem: #{disk[:filesystem]} (#{disk[:type]}) on #{disk[:mount_point]} is #{disk[:used_bytes_percent]}% full with #{ActiveSupport::NumberHelper.number_to_human_size(disk[:available_bytes])} free."
       MiqEvent.raise_evm_event_queue(self, disk_usage_event, :event_details => msg)
     end

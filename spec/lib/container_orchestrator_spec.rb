@@ -94,9 +94,9 @@ RSpec.describe ContainerOrchestrator do
 
     it "sets database environment variables" do
       stub_const("ENV", ENV.to_h.merge(
-        "DATABASE_NAME"     => "vmdb_production",
-        "DATABASE_SSL_MODE" => "verify-full",
-      ))
+                          "DATABASE_NAME"     => "vmdb_production",
+                          "DATABASE_SSL_MODE" => "verify-full"
+                        ))
 
       expect(subject.send(:default_environment)).to include({:name => "DATABASE_SSL_MODE", :value => "verify-full"})
       expect(subject.send(:default_environment)).not_to include({:name => "DATABASE_NAME", :valueFrom => {:secretKeyRef => {:key => "dbname", :name => "postgresql-secrets"}}})
@@ -120,7 +120,7 @@ RSpec.describe ContainerOrchestrator do
       it "sets the messaging env vars" do
         expect(subject.send(:default_environment)).to include(
           {:name => "MEMCACHED_ENABLE_SSL", :value => "true"},
-          {:name => "MEMCACHED_SSL_CA",     :value => "/etc/pki/ca-trust/source/anchors/root.crt"},
+          {:name => "MEMCACHED_SSL_CA",     :value => "/etc/pki/ca-trust/source/anchors/root.crt"}
         )
       end
     end
@@ -150,20 +150,20 @@ RSpec.describe ContainerOrchestrator do
       deployment_definition = subject.send(:deployment_definition, "test")
 
       expect(deployment_definition.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts)).to include({
-        :mountPath => "/.postgresql",
-        :name      => "pg-root-certificate",
-        :readOnly  => true
-      })
+                                                                                                                    :mountPath => "/.postgresql",
+                                                                                                                    :name      => "pg-root-certificate",
+                                                                                                                    :readOnly  => true
+                                                                                                                  })
       expect(deployment_definition.fetch_path(:spec, :template, :spec, :volumes)).to include({
-        :name   => "pg-root-certificate",
-        :secret => {
-          :secretName => "postgresql-secrets",
-          :items      => [
+                                                                                               :name   => "pg-root-certificate",
+                                                                                               :secret => {
+                                                                                                 :secretName => "postgresql-secrets",
+                                                                                                 :items      => [
             :key  => "rootcertificate",
             :path => "root.crt",
           ],
-        }
-      })
+                                                                                               }
+                                                                                             })
     end
 
     it "mounts the root CA certificate" do
@@ -172,30 +172,30 @@ RSpec.describe ContainerOrchestrator do
       deployment_definition = subject.send(:deployment_definition, "test")
 
       expect(deployment_definition.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts)).to include({
-        :mountPath => "/etc/pki/ca-trust/source/anchors",
-        :name      => "internal-root-certificate",
-        :readOnly  => true
-      })
+                                                                                                                    :mountPath => "/etc/pki/ca-trust/source/anchors",
+                                                                                                                    :name      => "internal-root-certificate",
+                                                                                                                    :readOnly  => true
+                                                                                                                  })
       expect(deployment_definition.fetch_path(:spec, :template, :spec, :volumes)).to include({
-        :name   => "internal-root-certificate",
-        :secret => {
-          :secretName => "some-secret-name",
-          :items      => [
+                                                                                               :name   => "internal-root-certificate",
+                                                                                               :secret => {
+                                                                                                 :secretName => "some-secret-name",
+                                                                                                 :items      => [
             :key  => "root_crt",
             :path => "root.crt",
           ],
-        }
-      })
+                                                                                               }
+                                                                                             })
     end
 
     it "includes node affinities" do
       deployment_definition = subject.send(:deployment_definition, "test")
 
       expect(deployment_definition.fetch_path(:spec, :template, :spec, :affinity, :nodeAffinity, :requiredDuringSchedulingIgnoredDuringExecution, :nodeSelectorTerms, 0, :matchExpressions, 0)).to include({
-        :key => "kubernetes.io/arch",
-        :operator => "In",
-        :values => ["amd64", "arm64"],
-      })
+                                                                                                                                                                                                             :key      => "kubernetes.io/arch",
+                                                                                                                                                                                                             :operator => "In",
+                                                                                                                                                                                                             :values   => ["amd64", "arm64"],
+                                                                                                                                                                                                           })
     end
   end
 

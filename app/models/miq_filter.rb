@@ -42,6 +42,7 @@ module MiqFilter
   def self.belongsto2object_list(tag)
     # /belongsto/ExtManagementSystem|<name>/EmsCluster|<name>/EmsFolder|<name>
     raise _("invalid tag: %{tag}") % {:tag => tag} unless tag.starts_with?("/belongsto/ExtManagementSystem")
+
     parts = tag.split("/")[2..-1]
     depth = parts.size - 1 # ancestry uses 0 based depth
 
@@ -61,8 +62,8 @@ module MiqFilter
     # Get the leaf node object for this EMS
     leaf_class, leaf_name = parts.last.split("|", 2)
     leaves = leaf_class.constantize
-      .includes(:all_relationships)
-      .where(:name => leaf_name, :ems_id => ems.id)
+                       .includes(:all_relationships)
+                       .where(:name => leaf_name, :ems_id => ems.id)
 
     # If multiple leaves come back, filter by depth, and then find which one has
     #   the valid path. It's possible multiple leaves could be at the same depth.

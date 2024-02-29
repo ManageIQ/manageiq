@@ -105,8 +105,8 @@ RSpec.describe MiqEventDefinition do
     before do
       com_set = MiqEventDefinitionSet.create(:name => "compliance", :description => "Compliance Events")
       FactoryBot.create(:miq_event_definition,
-                         :name       => "host_compliance_check",
-                         :event_type => "Default").tap { |e| com_set.add_member(e) }
+                        :name       => "host_compliance_check",
+                        :event_type => "Default").tap { |e| com_set.add_member(e) }
     end
 
     it 'has all default control policy events with set type' do

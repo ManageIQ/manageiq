@@ -24,11 +24,11 @@ module ArPglogicalMigrationHelper
     return unless schema_migrations_ran_exists?
 
     if direction == :up
-      if version == SCHEMA_MIGRATIONS_RAN_MIGRATION
-        to_add = ActiveRecord::SchemaMigration.normalized_versions << version
-      else
-        to_add = [version]
-      end
+      to_add = if version == SCHEMA_MIGRATIONS_RAN_MIGRATION
+                 ActiveRecord::SchemaMigration.normalized_versions << version
+               else
+                 [version]
+               end
 
       to_add.each do |v|
         binds = [
@@ -77,6 +77,7 @@ module ArPglogicalMigrationHelper
 
     def wait_for_migration?
       return false unless schema_migrations_ran_class
+
       # We need to unscope here since in_region doesn't override the default scope of in_my_region
       # see https://github.com/ManageIQ/activerecord-id_regions/issues/11
       !schema_migrations_ran_class.unscoped.in_region(region_number).where(:version => version).exists?

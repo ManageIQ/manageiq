@@ -1,8 +1,7 @@
 class AssetTagImport
   include Vmdb::Logging
 
-  attr_accessor :errors
-  attr_accessor :stats
+  attr_accessor :errors, :stats
 
   # The required fields list is not limited anymore, so pass nil.
   REQUIRED_COLS = {VmOrTemplate => nil, Host => nil}
@@ -24,6 +23,7 @@ class AssetTagImport
     klass = Object.const_get(klass.to_s)
     raise _("%{name} not supported for upload!") % {:name => klass} unless REQUIRED_COLS.key?(klass)
     raise _("%{name} not supported for upload!") % {:name => klass} unless MATCH_KEYS.key?(klass)
+
     data, keys, tags = MiqBulkImport.upload(fd, REQUIRED_COLS[klass], MATCH_KEYS[klass].dup)
 
     import = new(:data => data, :keys => keys, :tags => tags, :klass => klass)
@@ -69,13 +69,13 @@ class AssetTagImport
     end
 
     @verified_data.each do |id, data|
-      if data.length > 1
-        obj = @klass.find_by(:id => id)
-        while data.length > 1
-          data.shift
-          _log.warn("#{@klass.name} #{obj.name}, Multiple lines for the same object, the last line is applied")
-          @errors.add(:singlevaluedassettag, "#{@klass.name}: #{obj.name}, Multiple lines for the same object, the last line is applied")
-        end
+      next unless data.length > 1
+
+      obj = @klass.find_by(:id => id)
+      while data.length > 1
+        data.shift
+        _log.warn("#{@klass.name} #{obj.name}, Multiple lines for the same object, the last line is applied")
+        @errors.add(:singlevaluedassettag, "#{@klass.name}: #{obj.name}, Multiple lines for the same object, the last line is applied")
       end
     end
 
@@ -87,31 +87,29 @@ class AssetTagImport
   def apply
     @verified_data.each do |id, data|
       obj = @klass.find_by(:id => id)
-      if obj
-        attrs = obj.miq_custom_attributes
-        new_attrs = []
-        data[0].each do |key, value|
-          # Add custom attribute here.
-          attr = attrs.detect { |ca| ca.name == key }
-          if attr.nil?
-            if value.blank?
-              _log.info("#{@klass.name}: #{obj.name}, Skipping tag <#{key}> due to blank value")
-            else
-              _log.info("#{@klass.name}: #{obj.name}, Adding tag <#{key}>, value <#{value}>")
-              new_attrs << {:name => key, :value => value, :source => 'EVM'}
-            end
+      next unless obj
+
+      attrs = obj.miq_custom_attributes
+      new_attrs = []
+      data[0].each do |key, value|
+        # Add custom attribute here.
+        attr = attrs.detect { |ca| ca.name == key }
+        if attr.nil?
+          if value.blank?
+            _log.info("#{@klass.name}: #{obj.name}, Skipping tag <#{key}> due to blank value")
           else
-            if value.blank?
-              _log.info("#{@klass.name}: #{obj.name}, Deleting tag <#{key}> due to blank value")
-              attr.delete
-            else
-              _log.info("#{@klass.name}: #{obj.name}, Updating tag <#{key}>, value <#{value}>")
-              attr.update_attribute(:value, value)
-            end
+            _log.info("#{@klass.name}: #{obj.name}, Adding tag <#{key}>, value <#{value}>")
+            new_attrs << {:name => key, :value => value, :source => 'EVM'}
           end
+        elsif value.blank?
+          _log.info("#{@klass.name}: #{obj.name}, Deleting tag <#{key}> due to blank value")
+          attr.delete
+        else
+          _log.info("#{@klass.name}: #{obj.name}, Updating tag <#{key}>, value <#{value}>")
+            attr.update_attribute(:value, value)
         end
-        obj.custom_attributes.create(new_attrs)
       end
+      obj.custom_attributes.create(new_attrs)
     end
   end
 

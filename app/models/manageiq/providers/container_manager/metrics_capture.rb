@@ -2,7 +2,7 @@ class ManageIQ::Providers::ContainerManager::MetricsCapture < ManageIQ::Provider
   def capture_ems_targets(_options = {})
     return [] unless ems.supports?(:metrics)
 
-    MiqPreloader.preload([ems], :container_images => :tags, :container_nodes => :tags, :container_groups => [:tags, :containers => :tags])
+    MiqPreloader.preload([ems], :container_images => :tags, :container_nodes => :tags, :container_groups => [:tags, {:containers => :tags}])
 
     with_archived(ems.all_container_nodes).supporting(:capture) +
       with_archived(ems.all_container_groups).supporting(:capture) +

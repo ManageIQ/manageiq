@@ -1,6 +1,6 @@
 class Compliance < ApplicationRecord
   include Purging
-  belongs_to  :resource,  :polymorphic => true
+  belongs_to  :resource, :polymorphic => true
   has_many    :compliance_details, :dependent => :destroy
 
   def self.check_compliance_queue(targets, inputs = {})
@@ -15,17 +15,17 @@ class Compliance < ApplicationRecord
 
   def self.scan_and_check_compliance_queue(targets, inputs = {})
     Array.wrap(targets).each do |target|
-      if target.kind_of?(Host)
-        # Queue this with the vc-refresher taskid, so that any concurrent ems_refreshes don't clash with this one.
-        MiqQueue.put(
-          :class_name  => name,
-          :method_name => 'scan_and_check_compliance',
-          :args        => [[target.class.name, target.id], inputs],
-          :task_id     => 'vc-refresher',
-          :role        => "ems_inventory",
-          :zone        => target.ext_management_system.try(:my_zone)
-        )
-      end
+      next unless target.kind_of?(Host)
+
+      # Queue this with the vc-refresher taskid, so that any concurrent ems_refreshes don't clash with this one.
+      MiqQueue.put(
+        :class_name  => name,
+        :method_name => 'scan_and_check_compliance',
+        :args        => [[target.class.name, target.id], inputs],
+        :task_id     => 'vc-refresher',
+        :role        => "ems_inventory",
+        :zone        => target.ext_management_system.try(:my_zone)
+      )
     end
   end
 
@@ -67,11 +67,12 @@ class Compliance < ApplicationRecord
       end
     end
     target_class = target.class.base_model.name.downcase
-    target_class = "vm" if target_class.match("template")
+    target_class = "vm" if target_class.match?("template")
 
     unless target.respond_to?(:compliances)
       raise _("Compliance check not supported for %{class_name} objects") % {:class_name => target.class.name}
     end
+
     check_event = "#{target_class}_compliance_check"
     _log.info("Checking compliance...")
     results = MiqPolicy.enforce_policy(target, check_event)
@@ -88,7 +89,6 @@ class Compliance < ApplicationRecord
     event = results[:result] ? "#{target_class}_compliance_passed" : "#{target_class}_compliance_failed"
     _log.info("Raising EVM Event: #{event}")
     MiqEvent.raise_evm_event_queue(target, event)
-    #
     results[:result]
   end
 
@@ -96,7 +96,7 @@ class Compliance < ApplicationRecord
     name = target.respond_to?(:name) ? target.name : "NA"
     _log.info("Marking as #{compliant ? "" : "Non-"}Compliant Object with Class: [#{target.class}], Id: [#{target.id}], Name: [#{name}]")
 
-    comp  = create(:resource => target, :compliant => compliant, :event_type => event, :timestamp => Time.now.utc)
+    comp = create(:resource => target, :compliant => compliant, :event_type => event, :timestamp => Time.now.utc)
 
     details.each do |p|
       dhash = {

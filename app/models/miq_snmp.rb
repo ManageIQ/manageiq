@@ -72,6 +72,7 @@ class MiqSnmp
     # trap_oid: An ObjectId or String with the OID identifier for this trap.
     trap_oid = inputs[:trap_oid] || inputs['trap_oid']
     raise MiqException::Error, _("MiqSnmp.trap_v2: Ensure that a trap object id is provided") if trap_oid.nil?
+
     trap_oid = subst_oid(trap_oid)
 
     # A list of additional varbinds to send with the trap.
@@ -107,7 +108,7 @@ class MiqSnmp
       value    = tuple[:value]
       type     = tuple[:type] || tuple[:var_type]
       snmpType = AVAILABLE_TYPES_HASH[type]
-      snmpVal  = (snmpType == SNMP::Null) ? SNMP::Null.new : snmpType.new(value)
+      snmpVal  = snmpType == SNMP::Null ? SNMP::Null.new : snmpType.new(value)
       vars << SNMP::VarBind.new(oid, snmpVal)
     end
     vars
@@ -124,24 +125,24 @@ class MiqSnmp
     return "#{base}#{oid}" if oid[0, 1] == "."
 
     # Need to move these to ManageIQ MIB
-    oid = case oid.downcase
-          when "info"                         then "#{enterprise_oid_string}.1"
-          when "warn", "warning"              then "#{enterprise_oid_string}.2"
-          when "crit", "critical", "error"    then "#{enterprise_oid_string}.3"
-          when "description"                  then "#{base}.1"
-          when "category"                     then "#{base}.2"
-          when "message"                      then "#{base}.3"
-          when "object"                       then "#{base}.4"
-          when "location"                     then "#{base}.5"
-          when "platform"                     then "#{base}.6"
-          when "url"                          then "#{base}.7"
-          when "source"                       then "#{base}.8"
-          when "custom1"                      then "#{base}.9"
-          when "custom2"                      then "#{base}.10"
-          else                                     oid
-          end
+    case oid.downcase
+    when "info"                         then "#{enterprise_oid_string}.1"
+    when "warn", "warning"              then "#{enterprise_oid_string}.2"
+    when "crit", "critical", "error"    then "#{enterprise_oid_string}.3"
+    when "description"                  then "#{base}.1"
+    when "category"                     then "#{base}.2"
+    when "message"                      then "#{base}.3"
+    when "object"                       then "#{base}.4"
+    when "location"                     then "#{base}.5"
+    when "platform"                     then "#{base}.6"
+    when "url"                          then "#{base}.7"
+    when "source"                       then "#{base}.8"
+    when "custom1"                      then "#{base}.9"
+    when "custom2"                      then "#{base}.10"
+    else                                     oid
+    end
 
-    oid
+
   end
   private_class_method :subst_oid
 

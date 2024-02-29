@@ -6,7 +6,7 @@ class EvmApplication
   def self.start
     puts "Running EVM in background..."
 
-    command_line = "#{Gem.ruby} #{Rails.root.join(*%w(lib workers bin evm_server.rb)).expand_path}"
+    command_line = "#{Gem.ruby} #{Rails.root.join(*%w[lib workers bin evm_server.rb]).expand_path}"
 
     env_options = {}
     env_options["EVMSERVER"] = "true" if MiqEnvironment::Command.is_appliance?
@@ -30,7 +30,7 @@ class EvmApplication
   def self.server_state
     MiqServer.my_server.status
   rescue => error
-    :no_db if error.message =~ /Connection refused/i
+    :no_db if /Connection refused/i.match?(error.message)
   end
 
   def self.status(include_remotes = false)
@@ -55,6 +55,7 @@ class EvmApplication
 
   def self.output_status(data, footnote = nil)
     return if data.blank?
+
     duplicate_columns = redundant_columns(data)
     duplicate_columns.delete("Status") # always show status
     puts data.tableize(:columns => (data.first.keys - duplicate_columns.keys))
@@ -71,6 +72,7 @@ class EvmApplication
 
   def self.redundant_columns(data, column_names = nil, dups = {})
     return dups if data.size <= 1
+
     column_names ||= data.first.keys
     column_names.each do |col_header|
       values = data.collect { |row| row[col_header] }.uniq
@@ -82,6 +84,7 @@ class EvmApplication
 
   def self.compact_date(date)
     return "" unless date
+
     date < 1.day.ago ? date.strftime("%Y-%m-%d") : date.strftime("%H:%M:%S%Z")
   end
   private_class_method :compact_date
@@ -104,7 +107,7 @@ class EvmApplication
   def self.servers_status(servers)
     data = servers.collect do |s|
       {
-        "Region"       => s.region_number,
+        "Region"    => s.region_number,
         "Zone"      => s.zone.name,
         "Server"    => (s.name || "UNKNOWN") + (s.is_master ? "*" : ""),
         "Status"    => s.status,
@@ -128,18 +131,18 @@ class EvmApplication
         mb_threshold = w.worker_settings[:memory_threshold]
         simple_type = w.type&.gsub(/(ManageIQ::Providers::|Manager|Worker|Miq)/, '')
         {
-          "Region"       => s.region_number,
-          "Zone"      => s.zone.name,
-          "Type"      => simple_type,
-          "Status"    => w.status.sub("stopping", "stop pending"),
-          "PID"       => w.pid,
-          "SPID"      => w.sql_spid,
-          "Server"    => s.name,
-          "Queue"     => compact_queue_uri(w.queue_name, w.uri),
-          "Started"   => compact_date(w.started_on),
-          "Heartbeat" => compact_date(w.last_heartbeat),
+          "Region"     => s.region_number,
+          "Zone"       => s.zone.name,
+          "Type"       => simple_type,
+          "Status"     => w.status.sub("stopping", "stop pending"),
+          "PID"        => w.pid,
+          "SPID"       => w.sql_spid,
+          "Server"     => s.name,
+          "Queue"      => compact_queue_uri(w.queue_name, w.uri),
+          "Started"    => compact_date(w.started_on),
+          "Heartbeat"  => compact_date(w.last_heartbeat),
           "System UID" => w.system_uid,
-          "MB Usage"  => mb_usage ? "#{mb_usage / 1.megabyte}/#{mb_threshold / 1.megabyte}" : ""
+          "MB Usage"   => mb_usage ? "#{mb_usage / 1.megabyte}/#{mb_threshold / 1.megabyte}" : ""
         }
       end
     end
@@ -178,6 +181,7 @@ class EvmApplication
     return "new_deployment" if context.current_version.zero? || MiqServer.none?
     return "new_replica"    if MiqServer.my_server.nil?
     return "upgrade"        if context.needs_migration?
+
     "redeployment"
   rescue PG::ConnectionBad, ActiveRecord::NoDatabaseError => err
     raise unless err.message.match?(/database "[^"]+" does not exist/)

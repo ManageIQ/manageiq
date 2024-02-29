@@ -4,8 +4,8 @@ context "save_tags_inventory" do
   # @return [Tag] a tag in a category linked to a mapping.
   def mapped_tag(category_name, tag_name)
     mapping = FactoryBot.create(:tag_mapping_with_category,
-                                 :category_name        => category_name,
-                                 :category_description => category_name)
+                                :category_name        => category_name,
+                                :category_description => category_name)
     category = mapping.tag.classification
     entry = category.add_entry(:name => tag_name, :description => tag_name)
     entry.tag

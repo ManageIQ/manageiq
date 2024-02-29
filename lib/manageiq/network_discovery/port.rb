@@ -23,7 +23,7 @@ module ManageIQ
         rescue Timeout::Error => err
           $log&.debug("Port scan timeout: ip = #{ost.ipaddr}, port = #{port}, #{err}")
           false
-        rescue StandardError => err
+        rescue => err
           $log&.debug("Port scan error: ip = #{ost.ipaddr}, port = #{port}, #{err}")
           false
         end

@@ -19,10 +19,12 @@ module Metric::Helper
     return ts if ['00', '20', '40'].include?(sec)
 
     sec = sec.to_i
-    case
-    when sec < 20 then ts[17, 2] = '20'
-    when sec < 40 then ts[17, 2] = '40'
-    else               ts = (Time.parse(ts) + (60 - sec)).iso8601
+    if sec < 20
+      ts[17, 2] = '20'
+    elsif sec < 40
+      ts[17, 2] = '40'
+    else
+      ts = (Time.parse(ts) + (60 - sec)).iso8601
     end
     ts
   end
@@ -90,6 +92,7 @@ module Metric::Helper
   # @return Range<DateTime,DateTime>
   def self.time_range_from_hash(range)
     return range unless range.kind_of?(Hash)
+
     end_time = (range[:end_date] || Time.now.utc).utc
     days = range[:days] || 20
     start_time = (range[:start_date] || (end_time - days.days)).utc
@@ -151,6 +154,7 @@ module Metric::Helper
   def self.get_time_zone(options = nil)
     return TimeProfile::DEFAULT_TZ if options.nil?
     return options[:time_profile].tz if options[:time_profile] && options[:time_profile].tz
+
     options[:tz] || TimeProfile::DEFAULT_TZ
   end
 

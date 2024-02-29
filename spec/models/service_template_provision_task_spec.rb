@@ -4,8 +4,8 @@ RSpec.describe ServiceTemplateProvisionTask do
       @admin = FactoryBot.create(:user_with_group)
 
       @request = FactoryBot.create(:service_template_provision_request,
-                                    :description => 'Service Request',
-                                    :requester   => @admin)
+                                   :description => 'Service Request',
+                                   :requester   => @admin)
       @task_0 = create_stp('Task 0 (Top)')
       @task_1 = create_stp('Task 1', 'pending', 7, 1)
       @task_1_1 = create_stp('Task 1 - 1', 'pending', 1, 3)
@@ -16,37 +16,37 @@ RSpec.describe ServiceTemplateProvisionTask do
 
       @request.miq_request_tasks = [@task_0, @task_1, @task_1_1, @task_1_2, @task_2, @task_2_1, @task_3]
       @task_0.miq_request_tasks  = [@task_1, @task_2, @task_3]
-      @task_1.miq_request_task   =  @task_0
+      @task_1.miq_request_task   = @task_0
       @task_1.miq_request_tasks  = [@task_1_1, @task_1_2]
       @task_1_1.miq_request_task =  @task_1
       @task_1_2.miq_request_task =  @task_1
       @task_2.miq_request_task   =  @task_0
       @task_2.miq_request_tasks  = [@task_2_1]
-      @task_3.miq_request_task   =  @task_0
+      @task_3.miq_request_task   = @task_0
     end
 
     let(:tracking_label) { "r#{@request.id}_service_template_provision_task_#{@task_0.id}" }
 
     def create_stp(description, state = 'pending', prov_index = nil, scaling_max = nil)
-      if prov_index && scaling_max
-        options = {:service_resource_id => service_resource_id(prov_index, scaling_max)}
-      else
-        options = {}
-      end
+      options = if prov_index && scaling_max
+                  {:service_resource_id => service_resource_id(prov_index, scaling_max)}
+                else
+                  {}
+                end
       FactoryBot.create(:service_template_provision_task,
-                         :description    => description,
-                         :userid         => @admin.userid,
-                         :state          => state,
-                         :miq_request_id => @request.id,
-                         :options        => options)
+                        :description    => description,
+                        :userid         => @admin.userid,
+                        :state          => state,
+                        :miq_request_id => @request.id,
+                        :options        => options)
     end
 
     def service_resource_id(index, scaling_max)
       FactoryBot.create(:service_resource,
-                         :provision_index => index,
-                         :scaling_min     => 1,
-                         :scaling_max     => scaling_max,
-                         :resource_type   => 'ServiceTemplate').id
+                        :provision_index => index,
+                        :scaling_min     => 1,
+                        :scaling_max     => scaling_max,
+                        :resource_type   => 'ServiceTemplate').id
     end
 
     describe "#before_ae_starts" do

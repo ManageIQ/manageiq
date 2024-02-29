@@ -4,11 +4,11 @@ require 'rubygems'
 require 'VMwareWebService/MiqVim'
 
 if ARGV.length != 1
-  $stderr.puts "Usage: #{$0} ems_name"
+  warn "Usage: #{$0} ems_name"
   exit 1
 end
 
-ems_name  = ARGV[0]
+ems_name = ARGV[0]
 # server    = ARGV[0]
 # username  = ARGV[1]
 # password  = ARGV[2]
@@ -21,7 +21,7 @@ begin
   puts "Done."
 
   puts "vim.class: #{vim.class}"
-  puts "#{vim.server} is #{(vim.isVirtualCenter? ? 'VC' : 'ESX')}"
+  puts "#{vim.server} is #{vim.isVirtualCenter? ? 'VC' : 'ESX'}"
   puts "API version: #{vim.apiVersion}"
   puts
 
@@ -33,7 +33,7 @@ begin
     end
   end
 rescue => err
-  puts err.to_s
+  puts err
   puts err.backtrace.join("\n")
 ensure
   vim.disconnect

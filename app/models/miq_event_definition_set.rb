@@ -8,7 +8,6 @@ class MiqEventDefinitionSet < ApplicationRecord
   def self.seed
     existing = all.group_by(&:name)
     set_definitions_from_path(fixture_path).each do |set|
-
       rec = existing[set['name']].try(:first)
       if rec.nil?
         _log.info("Creating [#{set['name']}]")
@@ -31,5 +30,5 @@ class MiqEventDefinitionSet < ApplicationRecord
     n_('Event Definition Set', 'Event Definition Sets', number)
   end
 
-  alias_method :events, :miq_event_definitions
+  alias events miq_event_definitions
 end

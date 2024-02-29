@@ -8,8 +8,8 @@ RSpec.describe PostponedTranslation do
       expect(pt.translate).to eq("Test foo5")
 
       pt = PostponedTranslation.new("Test %{bar}") do
-             {:bar => "foo"}
-           end
+        {:bar => "foo"}
+      end
       expect(pt.translate).to eq("Test foo")
     end
   end

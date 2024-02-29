@@ -15,20 +15,20 @@ namespace :evm do
 
     # Start the EVM Database silently - not to be a visible rake task
     task :silent_start do
-      begin
-        LinuxAdmin::Service.new(ENV.fetch("APPLIANCE_PG_SERVICE")).start
-      rescue AwesomeSpawn::CommandResultError
-        # ignore issues (ala silent)
-      end
+
+      LinuxAdmin::Service.new(ENV.fetch("APPLIANCE_PG_SERVICE")).start
+    rescue AwesomeSpawn::CommandResultError
+      # ignore issues (ala silent)
+
     end
 
     # Stop the EVM Database silently - not to be a visible rake task
     task :silent_stop do
-      begin
-        LinuxAdmin::Service.new(ENV.fetch("APPLIANCE_PG_SERVICE")).stop
-      rescue AwesomeSpawn::CommandResultError
-        # ignore issues (ala silent)
-      end
+
+      LinuxAdmin::Service.new(ENV.fetch("APPLIANCE_PG_SERVICE")).stop
+    rescue AwesomeSpawn::CommandResultError
+      # ignore issues (ala silent)
+
     end
 
     desc "Seed the ManageIQ EVM Database (VMDB) with defaults"
@@ -54,13 +54,13 @@ namespace :evm do
 
     desc 'Set the region of the current ManageIQ EVM Database (VMDB)'
     task :region => "evm:db:reset" do
-      region = ENV["REGION"]
+      region = ENV.fetch("REGION", nil)
 
       puts "Initializing region and database..."
       AwesomeSpawn.run!("bin/rails runner", :params => ["MiqDatabase.seed; MiqRegion.seed"])
     rescue => err
       message = err.kind_of?(AwesomeSpawn::CommandResultError) ? err.result.error : err.message
-      STDERR.puts "Encountered issue setting up Database using region #{region}: #{message}\n"
+      warn "Encountered issue setting up Database using region #{region}: #{message}\n"
       raise
     end
   end

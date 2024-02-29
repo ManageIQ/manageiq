@@ -62,7 +62,7 @@ RSpec.describe EmsRefresh do
 
     let(:targets) do
       targets = []
-      (0..996).each do |i|
+      997.times do |i|
         targets << InventoryRefresh::Target.load(
           :manager_id  => @ems.id,
           :association => :vms,
@@ -215,9 +215,9 @@ RSpec.describe EmsRefresh do
       end
 
       EmsRefresh.refresh([
-        [vm1.class, vm1.id],
-        [vm2.class, vm2.id],
-      ])
+                           [vm1.class, vm1.id],
+                           [vm2.class, vm2.id],
+                         ])
     end
 
     it "ignores an EMS-less (archived) VM" do
@@ -226,9 +226,9 @@ RSpec.describe EmsRefresh do
       vm2 = FactoryBot.create(:vm_vmware, :name => "vm_vmware2", :ext_management_system => nil)
       expect(ManageIQ::Providers::Vmware::InfraManager::Refresher).to receive(:refresh).with([vm1])
       EmsRefresh.refresh([
-        [vm1.class, vm1.id],
-        [vm2.class, vm2.id],
-      ])
+                           [vm1.class, vm1.id],
+                           [vm2.class, vm2.id],
+                         ])
     end
   end
 

@@ -6,12 +6,13 @@ module ProcessTasksMixin
     # Processes tasks received from the UI and queues them
     def process_tasks(options)
       raise _("No ids given to process_tasks") if options[:ids].blank?
+
       if options[:task] == 'retire_now'
         options[:ids].each do |id|
           $log.info("Creating retire request for id [#{id}] with user [#{User.current_user.userid}]")
           name.constantize.make_retire_request(id, User.current_user)
         end
-      elsif options[:task] == "refresh_ems" && respond_to?("refresh_ems")
+      elsif options[:task] == "refresh_ems" && respond_to?(:refresh_ems)
         refresh_ems(options[:ids])
         msg = "'#{options[:task]}' initiated for #{options[:ids].length} #{ui_lookup(:table => base_class.name).pluralize}"
         task_audit_event(:success, options, :message => msg)
@@ -77,7 +78,7 @@ module ProcessTasksMixin
           next
         rescue => err
           # Handle specific error case, until we can figure out how it occurs
-          if err.class == ArgumentError && err.message == "cannot interpret as DNS name: nil"
+          if err.instance_of?(ArgumentError) && err.message == "cannot interpret as DNS name: nil"
             $log.error("An error occurred while invoking remote tasks...")
             $log.log_backtrace(err)
             next
@@ -139,7 +140,7 @@ module ProcessTasksMixin
         _log.info("Invoking task #{action} on #{msg_desination}")
         destination.send(action, post_args)
         task_audit_event(:success, remote_options, :message => "'#{action}' successfully initiated on #{msg_desination}")
-      rescue StandardError => err
+      rescue => err
         task_audit_event(:failure, remote_options, :message => "'#{action}' failed to be initiated on #{msg_desination}")
         _log.error(err.message)
         raise err unless err.kind_of?(NoMethodError) || err.kind_of?(ManageIQ::API::Client::ResourceNotFound)
@@ -161,12 +162,14 @@ module ProcessTasksMixin
 
     # default implementation, can be overridden
     def invoke_task_local(task, instance, options, args)
-      cb = {
-        :class_name  => task.class.to_s,
-        :instance_id => task.id,
-        :method_name => :queue_callback,
-        :args        => ["Finished"]
-      } if task
+      if task
+        cb = {
+          :class_name  => task.class.to_s,
+          :instance_id => task.id,
+          :method_name => :queue_callback,
+          :args        => ["Finished"]
+        }
+      end
 
       q_hash = {
         :class_name   => name,
@@ -208,6 +211,7 @@ module ProcessTasksMixin
       end
 
       return true unless options[:task] == "retire_now" && instance.retired?
+
       task.error("#{instance.name} is already retired")
       false
     end

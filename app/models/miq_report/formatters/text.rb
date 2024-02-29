@@ -5,5 +5,5 @@ module MiqReport::Formatters::Text
       e.options.ignore_table_width = true
     end
   end
-  alias_method :to_txt, :to_text
+  alias to_txt to_text
 end

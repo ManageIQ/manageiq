@@ -31,15 +31,15 @@ class ChargebackVm < Chargeback
     :storage_used_cost        => :float,
     :storage_used_metric      => :float,
     :storage_cost             => :float,
-    :total_cost               => :float,
+    :total_cost               => :float
   )
 
-  DEFAULT_STORAGE_METRICS = %w(
+  DEFAULT_STORAGE_METRICS = %w[
     storage_allocated_unclassified_metric
     storage_allocated_unclassified_cost
     storage_allocated_metric
     storage_allocated_cost
-  ).freeze
+  ].freeze
 
   cache_with_timeout(:current_volume_types) do
     volume_types = CloudVolume.volume_types
@@ -64,7 +64,7 @@ class ChargebackVm < Chargeback
   # }
   def self.dynamic_columns_for(column_type)
     current_volume_types.each_with_object({}) do |volume_type, result|
-      %i(metric cost rate).collect do |type|
+      %i[metric cost rate].collect do |type|
         result["storage_allocated_#{volume_type || 'unclassified'}_#{type}"] = column_type
       end
     end
@@ -115,7 +115,7 @@ class ChargebackVm < Chargeback
   end
 
   def self.report_static_cols
-    %w(vm_name)
+    %w[vm_name]
   end
 
   def self.sub_metric_columns
@@ -160,24 +160,24 @@ class ChargebackVm < Chargeback
 
   def self.vms(region)
     @vms ||= {}
-    @vms[region] ||=
-      begin
+
         # Find Vms by user or by tag
-        if @options[:entity_id]
-          Vm.where(:id => @options[:entity_id])
-        elsif @options[:owner]
-          user = User.lookup_by_userid(@options[:owner])
+    @vms[region] ||=
+      if @options[:entity_id]
+        Vm.where(:id => @options[:entity_id])
+      elsif @options[:owner]
+        user = User.lookup_by_userid(@options[:owner])
           if user.nil?
             _log.error("Unable to find user '#{@options[:owner]}'. Calculating chargeback costs aborted.")
             raise MiqException::Error, _("Unable to find user '%{name}'") % {:name => @options[:owner]}
           end
           user.vms
-        elsif @options[:tag]
-          vms = Vm.find_tagged_with(:all => @options[:tag], :ns => '*')
+      elsif @options[:tag]
+        vms = Vm.find_tagged_with(:all => @options[:tag], :ns => '*')
           vms &= @report_user.accessible_vms if @report_user && @report_user.self_service?
           vms
-        elsif @options[:tenant_id]
-          tenant = Tenant.find_by(:id => @options[:tenant_id])
+      elsif @options[:tenant_id]
+        tenant = Tenant.find_by(:id => @options[:tenant_id])
           if tenant.nil?
             error_message = "Unable to find tenant '#{@options[:tenant_id]}'"
             _log.info("#{error_message}. Calculating chargeback costs skipped for #{@options[:tenant_id]} in region #{region}.")
@@ -197,17 +197,17 @@ class ChargebackVm < Chargeback
           else
             Vm.where(:tenant_id => tenant.subtree.select(:id))
           end
-        elsif @options[:service_id]
-          service = Service.find(@options[:service_id])
+      elsif @options[:service_id]
+        service = Service.find(@options[:service_id])
           if service.nil?
             _log.error("Unable to find service '#{@options[:service_id]}'. Calculating chargeback costs aborted.")
             raise MiqException::Error, "Unable to find service '#{@options[:service_id]}'"
           end
           service.vms
-        else
-          raise _('Unable to find strategy for VM selection')
-        end
+      else
+        raise _('Unable to find strategy for VM selection')
       end
+
   end
 
   def self.display_name(number = 1)

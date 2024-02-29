@@ -52,7 +52,7 @@ module MiqServer::RoleManagement
   end
 
   def ensure_default_roles
-    MiqServer.my_server.add_settings_for_resource(:server => {:role => ENV["MIQ_SERVER_DEFAULT_ROLES"]}) if role.blank? && ENV["MIQ_SERVER_DEFAULT_ROLES"].present?
+    MiqServer.my_server.add_settings_for_resource(:server => {:role => ENV.fetch("MIQ_SERVER_DEFAULT_ROLES", nil)}) if role.blank? && ENV["MIQ_SERVER_DEFAULT_ROLES"].present?
     sync_assigned_roles
   end
 
@@ -123,8 +123,8 @@ module MiqServer::RoleManagement
   def server_role_names
     server_roles.pluck(:name).sort
   end
-  alias_method :my_roles, :server_role_names
-  alias_method :assigned_role_names, :server_role_names
+  alias my_roles server_role_names
+  alias assigned_role_names server_role_names
 
   def server_role_names=(roles)
     zone.lock do
@@ -156,15 +156,13 @@ module MiqServer::RoleManagement
         end
       end
     end
-
-    roles
   end
 
   def role
     server_role_names.join(',')
   end
-  alias_method :my_role, :role
-  alias_method :assigned_role, :role
+  alias my_role role
+  alias assigned_role role
 
   def role=(val)
     self.server_role_names = val == "*" ? val : val.split(",")
@@ -208,7 +206,7 @@ module MiqServer::RoleManagement
   def has_assigned_role?(role)
     assigned_role_names.include?(role.to_s.strip.downcase)
   end
-  alias_method :has_role?, :has_assigned_role?
+  alias has_role? has_assigned_role?
 
   def has_active_role?(role)
     active_role_names.include?(role.to_s.strip.downcase)
@@ -259,13 +257,13 @@ module MiqServer::RoleManagement
         end
 
         active.each do |s, p|
-          if (inactive.length > 0) && (p > inactive.first.last)
-            s2, p2 = inactive.shift
-            _log.info("Migrating Role <#{role_name}> Active on Server <#{s.name}> with Priority <#{p}> to Server <#{s2.name}> with Priority <#{p2}>")
-            s.deactivate_roles(role_name)
-            s2.activate_roles(role_name)
-            active << [s2, p2]
-          end
+          next unless (inactive.length > 0) && (p > inactive.first.last)
+
+          s2, p2 = inactive.shift
+          _log.info("Migrating Role <#{role_name}> Active on Server <#{s.name}> with Priority <#{p}> to Server <#{s2.name}> with Priority <#{p2}>")
+          s.deactivate_roles(role_name)
+          s2.activate_roles(role_name)
+          active << [s2, p2]
         end
 
       end

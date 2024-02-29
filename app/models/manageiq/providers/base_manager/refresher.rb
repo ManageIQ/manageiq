@@ -17,6 +17,7 @@ module ManageIQ
 
       def options
         return @options if defined?(@options)
+
         @options = Settings.ems_refresh
       end
 
@@ -99,7 +100,7 @@ module ManageIQ
 
           Benchmark.realtime_block(:save_inventory) { save_inventory(ems, target, parsed) }
 
-          _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]...Complete"
+          _log.info("#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]...Complete")
         end
       end
 
@@ -157,6 +158,7 @@ module ManageIQ
         # Do any post-operations for this EMS
         post_process_refresh_classes.each do |klass|
           next unless klass.respond_to?(:post_refresh_ems)
+
           _log.info("#{log_ems_target} Performing post-refresh operations for #{klass} instances...")
           klass.post_refresh_ems(ems.id, ems_refresh_start_time)
           _log.info("#{log_ems_target} Performing post-refresh operations for #{klass} instances...Complete")
@@ -186,10 +188,12 @@ module ManageIQ
             ems_by_ems_id[t.manager_id] ||= t.manager
             targets_by_ems_id[t.manager_id] << t
           else
-            ems = case
-                  when t.respond_to?(:ext_management_system) then t.ext_management_system
-                  when t.respond_to?(:manager)               then t.manager
-                  else                                            t
+            ems = if t.respond_to?(:ext_management_system)
+                    t.ext_management_system
+                  elsif t.respond_to?(:manager)
+                    t.manager
+                  else
+                    t
                   end
             if ems.nil?
               _log.warn("Unable to perform refresh for #{t.class} [#{t.name}] id [#{t.id}], since it is not on an EMS.")

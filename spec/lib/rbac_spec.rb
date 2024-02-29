@@ -4,9 +4,9 @@ RSpec.describe Rbac do
   describe ".resources_shared_with" do
     let(:user) do
       FactoryBot.create(:user,
-                         :role     => "user",
-                         :tenant   => FactoryBot.create(:tenant, :name => "Tenant under root"),
-                         :features => user_allowed_feature)
+                        :role     => "user",
+                        :tenant   => FactoryBot.create(:tenant, :name => "Tenant under root"),
+                        :features => user_allowed_feature)
     end
     let(:user_allowed_feature) { "service" }
     let(:resource_to_be_shared) { FactoryBot.create(:vm_vmware, :tenant => user.current_tenant) }
@@ -20,8 +20,8 @@ RSpec.describe Rbac do
     end
     let(:sharee) do
       FactoryBot.create(:user,
-                         :miq_groups => [FactoryBot.create(:miq_group,
-                                                            :tenant => FactoryBot.create(:tenant, :name => "Sibling tenant"))])
+                        :miq_groups => [FactoryBot.create(:miq_group,
+                                                          :tenant => FactoryBot.create(:tenant, :name => "Sibling tenant"))])
     end
 
     before { Tenant.seed }
@@ -43,14 +43,14 @@ RSpec.describe Rbac do
       let(:siblings_child) { FactoryBot.create(:tenant, :parent => sibling_tenant, :name => "Sibling's child tenant") }
       let(:sharee) do
         FactoryBot.create(:user,
-                           :miq_groups => [FactoryBot.create(:miq_group,
-                                                              :tenant => siblings_child)])
+                          :miq_groups => [FactoryBot.create(:miq_group,
+                                                            :tenant => siblings_child)])
       end
       let!(:share) do
-        ResourceSharer.new(:user     => user,
-                           :resource => resource_to_be_shared,
-                           :tenants  => tenants,
-                           :features => features,
+        ResourceSharer.new(:user                     => user,
+                           :resource                 => resource_to_be_shared,
+                           :tenants                  => tenants,
+                           :features                 => features,
                            :allow_tenant_inheritance => allow_tenant_inheritance)
       end
       let(:tenants) { [sibling_tenant] }

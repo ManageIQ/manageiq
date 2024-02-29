@@ -5,7 +5,7 @@ module ActiveMetrics
     class MiqPostgresAdapter < AbstractAdapter
       include Vmdb::Logging
 
-      # TODO Use the actual configuration from the initializer or whatever
+      # TODO: Use the actual configuration from the initializer or whatever
       def self.create_connection(_config)
         ActiveRecord::Base.connection
       end
@@ -29,7 +29,7 @@ module ActiveMetrics
           :saver_strategy => :batch,
           :arel           => samples_arel,
           :complete       => false,
-          :model_class    => klass,
+          :model_class    => klass
         )
 
         log_header = "[#{interval_name}]"

@@ -44,9 +44,9 @@ RSpec.describe EmsCluster do
 
     it('#total_vms_and_templates') { expect(@cluster.total_vms_and_templates).to eq(4) }
 
-    it('#total_vms')  { expect(@cluster.total_vms).to eq(2) }
+    it('#total_vms') { expect(@cluster.total_vms).to eq(2) }
 
-    it('#total_miq_templates')  { expect(@cluster.total_miq_templates).to eq(2) }
+    it('#total_miq_templates') { expect(@cluster.total_miq_templates).to eq(2) }
 
     it('ResourcePool#v_direct_vms') { expect(@rp1.v_direct_vms).to eq(1) }
     it('ResourcePool#v_total_vms')  { expect(@rp1.v_total_vms).to eq(2) }
@@ -98,7 +98,7 @@ RSpec.describe EmsCluster do
 
     it('#total_vms_and_templates') { expect(@cluster.total_vms_and_templates).to eq(4) }
 
-    it('#total_vms')  { expect(@cluster.total_vms).to eq(2) }
+    it('#total_vms') { expect(@cluster.total_vms).to eq(2) }
 
     it('#total_miq_templates')  { expect(@cluster.total_miq_templates).to eq(2) }
     it('#hosts')                { expect(@cluster.hosts).to match_array [@host1, @host2] }
@@ -221,8 +221,8 @@ RSpec.describe EmsCluster do
   describe "#event_where_clause" do
     let(:cluster) { FactoryBot.create(:ems_cluster) }
     # just doing one to avoid db random ordering
-    let(:vms) { FactoryBot.create_list(:vm, 1, :ems_cluster => cluster)}
-    let(:hosts) { FactoryBot.create_list(:host, 1, :ems_cluster => cluster)}
+    let(:vms) { FactoryBot.create_list(:vm, 1, :ems_cluster => cluster) }
+    let(:hosts) { FactoryBot.create_list(:host, 1, :ems_cluster => cluster) }
     it "handles empty cluster" do
       expect(cluster.event_where_clause).to eq(["ems_cluster_id = ?", cluster.id])
     end

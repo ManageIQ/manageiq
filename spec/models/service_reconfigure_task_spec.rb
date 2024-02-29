@@ -33,7 +33,8 @@ RSpec.describe ServiceReconfigureTask do
       expect(task).to receive(:update_and_notify_parent).with(
         :state   => 'finished',
         :status  => 'Ok',
-        :message => 'Service Reconfigure completed')
+        :message => 'Service Reconfigure completed'
+      )
       task.after_ae_delivery('ok')
     end
 
@@ -41,7 +42,8 @@ RSpec.describe ServiceReconfigureTask do
       expect(task).to receive(:update_and_notify_parent).with(
         :state   => 'finished',
         :status  => 'Error',
-        :message => 'Service Reconfigure failed')
+        :message => 'Service Reconfigure failed'
+      )
       task.after_ae_delivery('error')
     end
 
@@ -75,10 +77,10 @@ RSpec.describe ServiceReconfigureTask do
     context "automation entry point available" do
       before do
         FactoryBot.create(:resource_action, :action       => 'Reconfigure',
-                                             :resource     => template,
-                                             :ae_namespace => 'namespace',
-                                             :ae_class     => 'class',
-                                             :ae_instance  => 'instance')
+                                            :resource     => template,
+                                            :ae_namespace => 'namespace',
+                                            :ae_class     => 'class',
+                                            :ae_instance  => 'instance')
       end
 
       it "queues the reconfigure automate entry point" do
@@ -112,7 +114,8 @@ RSpec.describe ServiceReconfigureTask do
         expect(task).to receive(:update_and_notify_parent).with(
           :state   => 'pending',
           :status  => 'Ok',
-          :message => 'Automation Starting')
+          :message => 'Automation Starting'
+        )
         task.deliver_to_automate
       end
     end
@@ -122,7 +125,8 @@ RSpec.describe ServiceReconfigureTask do
         expect(task).to receive(:update_and_notify_parent).with(
           :state   => 'finished',
           :status  => 'Ok',
-          :message => 'Service Reconfigure completed')
+          :message => 'Service Reconfigure completed'
+        )
         task.deliver_to_automate
       end
     end

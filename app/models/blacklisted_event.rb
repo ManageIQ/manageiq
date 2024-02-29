@@ -1,5 +1,5 @@
 class BlacklistedEvent < ApplicationRecord
-  belongs_to        :ext_management_system, :foreign_key => "ems_id"
+  belongs_to :ext_management_system, :foreign_key => "ems_id"
 
   attribute :enabled, :default => true
   after_validation  :log_enabling, :if => :enabled_changed?, :unless => :new_record?

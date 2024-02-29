@@ -278,8 +278,8 @@ RSpec.describe DialogFieldImporter do
     context "#visible?" do
       let(:dialog_field) do
         {
-          "type"    => "DialogFieldTextBox",
-          "name"    => "Something else"
+          "type" => "DialogFieldTextBox",
+          "name" => "Something else"
         }
       end
 

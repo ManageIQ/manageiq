@@ -1,1 +1,1 @@
-::MiqProvisionCloud = ::ManageIQ::Providers::CloudManager::Provision
+MiqProvisionCloud = ManageIQ::Providers::CloudManager::Provision

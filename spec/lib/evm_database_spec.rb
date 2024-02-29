@@ -136,7 +136,7 @@ RSpec.describe EvmDatabase do
       EvmSpecHelper.local_miq_server
       described_class.raise_server_event("db_failover_executed")
       record = MiqQueue.last
-      expect(record.class_name). to eq "MiqEvent"
+      expect(record.class_name).to eq "MiqEvent"
       expect(record.method_name).to eq "raise_evm_event"
       expect(record.args[1]).to eq "db_failover_executed"
     end
@@ -213,8 +213,8 @@ RSpec.describe EvmDatabase do
       expect(handlers.count).to eq(3)
       handlers.select! { |h| h.kind_of?(ManageIQ::PostgresHaAdmin::LogicalReplicationConfigHandler) }
       expect(handlers.count).to eq(2)
-      expect(%w(sub_id_1 sub_id_2)).to include(handlers.first.subscription)
-      expect(%w(sub_id_1 sub_id_2)).to include(handlers.last.subscription)
+      expect(%w[sub_id_1 sub_id_2]).to include(handlers.first.subscription)
+      expect(%w[sub_id_1 sub_id_2]).to include(handlers.last.subscription)
       expect(handlers.first.subscription).not_to eq(handlers.last.subscription)
     end
   end

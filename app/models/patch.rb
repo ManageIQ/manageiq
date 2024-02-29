@@ -18,7 +18,7 @@ class Patch < ApplicationRecord
   end
 
   def self.process_array(parent, hashes)
-    EmsRefresh.save_patches_inventory(parent, hashes) unless hashes.blank?
+    EmsRefresh.save_patches_inventory(parent, hashes) if hashes.present?
   end
 
   def self.highest_patch_level

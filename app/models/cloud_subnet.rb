@@ -33,8 +33,8 @@ class CloudSubnet < ApplicationRecord
   virtual_column :network_type,     :type => :string
 
   # Define all getters and setters for extra_attributes related virtual columns
-  %i(allocation_pools host_routes ip_version subnetpool_id network_type).each do |action|
-    define_method("#{action}=") do |value|
+  %i[allocation_pools host_routes ip_version subnetpool_id network_type].each do |action|
+    define_method(:"#{action}=") do |value|
       extra_attributes_save(action, value)
     end
 
@@ -84,10 +84,10 @@ class CloudSubnet < ApplicationRecord
 
   def extra_attributes_save(key, value)
     self.extra_attributes = {} if extra_attributes.blank?
-    self.extra_attributes[key] = value
+    extra_attributes[key] = value
   end
 
   def extra_attributes_load(key)
-    self.extra_attributes[key] unless extra_attributes.blank?
+    extra_attributes[key] if extra_attributes.present?
   end
 end

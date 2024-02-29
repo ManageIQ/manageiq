@@ -121,6 +121,7 @@ module EmsRefresh::SaveInventoryCloud
   def link_volumes_to_base_snapshots(hashes)
     base_snapshot_to_volume = hashes.each_with_object({}) do |h, bsh|
       next unless (base_snapshot = h[:base_snapshot])
+
       (bsh[base_snapshot[:id]] ||= []) << h[:id]
     end
 

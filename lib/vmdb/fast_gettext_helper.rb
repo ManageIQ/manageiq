@@ -10,7 +10,7 @@ module Vmdb
       FastGettext.available_locales.each do |locale|
         FastGettext.human_available_locales << [human_locale_names[locale] || "locale_name", locale]
       end
-      FastGettext.human_available_locales.sort! { |a, b| a[0] <=> b[0] }
+      FastGettext.human_available_locales.sort_by! { |a| a[0] }
     end
 
     def self.fix_i18n_available_locales
@@ -35,8 +35,8 @@ module Vmdb
 
     private_class_method def self.supported_locales_files
       Vmdb::Plugins.to_a.unshift(Rails)
-        .map { |source| source.root.join("config", "supported_locales.yml") }
-        .select(&:exist?)
+                   .map { |source| source.root.join("config", "supported_locales.yml") }
+                   .select(&:exist?)
     end
 
     def self.find_available_locales

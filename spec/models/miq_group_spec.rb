@@ -69,7 +69,6 @@ RSpec.describe MiqGroup do
       end
     end
 
-
     it "should set group type to 'system' " do
       expect(subject.group_type).to eq("system")
     end
@@ -101,7 +100,7 @@ RSpec.describe MiqGroup do
     end
 
     it "should return groups by user name with external authentication" do
-      memberships = [%w(foo bar)]
+      memberships = [%w[foo bar]]
 
       allow(@ifp_interface).to receive(:GetUserGroups).with('user').and_return(memberships)
 
@@ -109,8 +108,8 @@ RSpec.describe MiqGroup do
     end
 
     it "should remove FQDN from the groups by user name with external authentication" do
-      ifp_memberships = [%w(foo@fqdn bar@fqdn)]
-      memberships = [%w(foo bar)]
+      ifp_memberships = [%w[foo@fqdn bar@fqdn]]
+      memberships = [%w[foo bar]]
 
       allow(@ifp_interface).to receive(:GetUserGroups).with('user').and_return(ifp_memberships)
 
@@ -127,12 +126,12 @@ RSpec.describe MiqGroup do
                         :normalize       => 'fred flintstone',
                         :bind            => true,
                         :get_user_object => 'user object',
-                        :get_memberships => %w(foo bar))
+                        :get_memberships => %w[foo bar])
       allow(MiqLdap).to receive(:new).and_return(miq_ldap)
     end
 
     it "should return LDAP groups by user name" do
-      expect(MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password')).to eq(%w(foo bar))
+      expect(MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password')).to eq(%w[foo bar])
     end
 
     it "should issue an error message when user name could not be bound to LDAP" do
@@ -171,25 +170,25 @@ RSpec.describe MiqGroup do
       @disk3 = FactoryBot.create(:disk, :device_type => "disk", :size => disk_size, :hardware_id => @hw4.id)
 
       @active_vm = FactoryBot.create(:vm_vmware,
-                                      :name         => "Active VM",
-                                      :miq_group_id => miq_group.id,
-                                      :ems_id       => ems.id,
-                                      :storage_id   => storage.id,
-                                      :hardware     => @hw1)
+                                     :name         => "Active VM",
+                                     :miq_group_id => miq_group.id,
+                                     :ems_id       => ems.id,
+                                     :storage_id   => storage.id,
+                                     :hardware     => @hw1)
       @archived_vm = FactoryBot.create(:vm_vmware,
-                                        :name         => "Archived VM",
-                                        :miq_group_id => miq_group.id,
-                                        :hardware     => @hw2)
-      @orphaned_vm = FactoryBot.create(:vm_vmware,
-                                        :name         => "Orphaned VM",
-                                        :miq_group_id => miq_group.id,
-                                        :storage_id   => storage.id,
-                                        :hardware     => @hw3)
-      @retired_vm = FactoryBot.create(:vm_vmware,
-                                       :name         => "Retired VM",
+                                       :name         => "Archived VM",
                                        :miq_group_id => miq_group.id,
-                                       :retired      => true,
-                                       :hardware     => @hw4)
+                                       :hardware     => @hw2)
+      @orphaned_vm = FactoryBot.create(:vm_vmware,
+                                       :name         => "Orphaned VM",
+                                       :miq_group_id => miq_group.id,
+                                       :storage_id   => storage.id,
+                                       :hardware     => @hw3)
+      @retired_vm = FactoryBot.create(:vm_vmware,
+                                      :name         => "Retired VM",
+                                      :miq_group_id => miq_group.id,
+                                      :retired      => true,
+                                      :hardware     => @hw4)
     end
 
     it "#active_vms" do
@@ -212,7 +211,7 @@ RSpec.describe MiqGroup do
       expect(miq_group.provisioned_storage).to eq(ram_size.megabyte + disk_size)
     end
 
-    %w(allocated_memory allocated_vcpu allocated_storage provisioned_storage).each do |vcol|
+    %w[allocated_memory allocated_vcpu allocated_storage provisioned_storage].each do |vcol|
       it "should have virtual column #{vcol} " do
         expect(described_class).to have_virtual_column vcol.to_s, :integer
       end
@@ -221,11 +220,11 @@ RSpec.describe MiqGroup do
     it "when the virtual column is nil" do
       hw = FactoryBot.create(:hardware, :cpu_sockets => num_cpu, :memory_mb => ram_size)
       FactoryBot.create(:vm_vmware,
-                         :name         => "VM with no disk",
-                         :miq_group_id => miq_group.id,
-                         :ems_id       => ems.id,
-                         :storage_id   => storage.id,
-                         :hardware     => hw)
+                        :name         => "VM with no disk",
+                        :miq_group_id => miq_group.id,
+                        :ems_id       => ems.id,
+                        :storage_id   => storage.id,
+                        :hardware     => hw)
       expect(miq_group.allocated_storage).to eq(disk_size)
     end
   end
@@ -285,9 +284,9 @@ RSpec.describe MiqGroup do
       allow(YAML).to receive(:load_file).with(role_map_path).and_return(role_map)
       allow(YAML).to receive(:load_file).with(filter_map_path).and_call_original
 
-      expect {
+      expect do
         MiqGroup.seed
-      }.to(change { MiqGroup.count })
+      end.to(change { MiqGroup.count })
       expect(MiqGroup.last.name).to eql('EvmRole-test_role')
       expect(MiqGroup.last.sequence).to eql(1)
     end
@@ -297,8 +296,8 @@ RSpec.describe MiqGroup do
       let!(:group_with_no_entitlement) { tenant.default_miq_group }
       let!(:group_with_existing_entitlement) do
         FactoryBot.create(:miq_group,
-                           :tenant_type,
-                           :entitlement => FactoryBot.create(:entitlement, :miq_user_role => nil))
+                          :tenant_type,
+                          :entitlement => FactoryBot.create(:entitlement, :miq_user_role => nil))
       end
       let(:default_tenant_role) { MiqUserRole.default_tenant_role }
 
@@ -391,9 +390,8 @@ RSpec.describe MiqGroup do
         :settings => {:restrictions => {:vms => :user_or_group}}
       )
       group = FactoryBot.create(:miq_group,
-                                 :description   => "MiqGroup-self_service",
-                                 :miq_user_role => role
-                                )
+                                :description   => "MiqGroup-self_service",
+                                :miq_user_role => role)
       expect(group).to be_self_service
     end
 
@@ -587,13 +585,13 @@ RSpec.describe MiqGroup do
     end
 
     it "Returns the expected sui roles" do
-      allow(MiqProductFeature).to receive(:feature_all_children).with('sui').and_return(%w(sui_role_a sui_role_b sui_role_c))
-      %w(sui sui_role_a sui_role_c).each do |ident|
+      allow(MiqProductFeature).to receive(:feature_all_children).with('sui').and_return(%w[sui_role_a sui_role_b sui_role_c])
+      %w[sui sui_role_a sui_role_c].each do |ident|
         allow(role).to receive(:allows?).with(:identifier => ident).and_return(true)
       end
       allow(role).to receive(:allows?).with(:identifier => 'sui_role_b').and_return(false)
 
-      expect(subject.sui_product_features).to eq(%w(sui_role_a sui_role_c))
+      expect(subject.sui_product_features).to eq(%w[sui_role_a sui_role_c])
     end
   end
 
@@ -626,7 +624,7 @@ RSpec.describe MiqGroup do
   describe ".with_roles_excluding" do
     it "handles multiple columns" do
       a = FactoryBot.create(:miq_group, :features => "good")
-      FactoryBot.create(:miq_group, :features => %w(good everything))
+      FactoryBot.create(:miq_group, :features => %w[good everything])
       FactoryBot.create(:miq_group, :features => "everything")
 
       expect(MiqGroup.select(:id, :description).with_roles_excluding("everything")).to match_array([a])

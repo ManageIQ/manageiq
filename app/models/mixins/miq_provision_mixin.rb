@@ -55,6 +55,7 @@ module MiqProvisionMixin
     @owner ||= begin
       email = get_option(:owner_email).try(:downcase)
       return if email.blank?
+
       User.lookup_by_lower_email(email, get_user).tap do |owner|
         owner.current_group_by_description = get_option(:owner_group) if owner
       end
@@ -163,8 +164,10 @@ module MiqProvisionMixin
   def get_source_vm
     vm_id = get_option(:src_vm_id)
     raise _("Source VM not provided") if vm_id.nil?
+
     svm = VmOrTemplate.find_by(:id => vm_id)
     raise _("Unable to find VM with Id: [%{vm_id}]") % {:vm_id => vm_id} if svm.nil?
+
     svm
   end
 
@@ -190,7 +193,7 @@ module MiqProvisionMixin
       custom_spec_name = custom_spec_name.name unless custom_spec_name.kind_of?(String)
       options = self.options.dup
       workflow do |prov_wf|
-        options[:sysprep_enabled] = %w(fields Specification)
+        options[:sysprep_enabled] = %w[fields Specification]
         prov_wf.init_from_dialog(options)
         prov_wf.get_all_dialogs
         prov_wf.allowed_customization_specs
@@ -229,6 +232,7 @@ module MiqProvisionMixin
 
   def target_type
     return 'template' if provision_type == 'clone_to_template'
+
     'vm'
   end
 
@@ -279,6 +283,7 @@ module MiqProvisionMixin
   def format_web_service_property(key, value)
     return nil if value.kind_of?(Hash)
     return nil if value.blank?
+
     value = value.iso8601 if value.kind_of?(Time)
     {:key => key.to_s, :value => value.to_s}
   end
@@ -294,7 +299,8 @@ module MiqProvisionMixin
   end
 
   def resource_display_name(rsc)
-    return rsc.name    if rsc.respond_to?(:name)
+    return rsc.name if rsc.respond_to?(:name)
+
     ''
   end
 
@@ -330,6 +336,7 @@ module MiqProvisionMixin
     if rsc.kind_of?(MiqAeMethodService::MiqAeServiceManageIQ_Providers_CloudManager_AuthKeyPair)
       return 'ManageIQ::Providers::CloudManager::AuthKeyPair'
     end
+
     $1 if rsc.class.base_class.name =~ /::MiqAeService(.*)/
   end
 end

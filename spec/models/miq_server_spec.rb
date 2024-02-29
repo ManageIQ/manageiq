@@ -247,9 +247,9 @@ RSpec.describe MiqServer do
       before do
         @server_roles = []
         [
-          ['event',                  1],
+          ['event', 1],
           ['ems_metrics_coordinator', 1],
-          ['ems_operations',         0]
+          ['ems_operations', 0]
         ].each { |r, max| @server_roles << FactoryBot.create(:server_role, :name => r, :max_concurrent => max) }
 
         @miq_server.role = @server_roles.collect(&:name).join(',')

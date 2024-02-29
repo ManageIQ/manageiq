@@ -46,7 +46,7 @@ module EmsRefresh
       queue_merge(ts, ems, opts[:create_task])
     end
 
-    return task_ids if opts[:create_task]
+    task_ids if opts[:create_task]
   end
 
   def self.refresh(target, id = nil)
@@ -60,11 +60,14 @@ module EmsRefresh
 
     # Split the targets into refresher groups
     groups = targets.group_by do |t|
-      ems = case
-            when t.respond_to?(:ext_management_system) then t.ext_management_system
-            when t.respond_to?(:manager_id)            then manager_by_manager_id[t.manager_id] ||= t.manager
-            when t.respond_to?(:manager)               then t.manager
-            else                                            t
+      ems = if t.respond_to?(:ext_management_system)
+              t.ext_management_system
+            elsif t.respond_to?(:manager_id)
+              manager_by_manager_id[t.manager_id] ||= t.manager
+            elsif t.respond_to?(:manager)
+              t.manager
+            else
+              t
             end
       ems.refresher if ems.respond_to?(:refresher)
     end
@@ -131,7 +134,7 @@ module EmsRefresh
 
     # Items will be naturally serialized since there is a dedicated worker.
     MiqQueue.put_or_update(queue_options) do |msg, item|
-      targets = msg.nil? ? targets : msg.data.concat(targets)
+      targets = msg.data.concat(targets) unless msg.nil?
       targets = uniq_targets(targets)
       obj = targets.select { |t| t.kind_of?(ApplicationRecord) }
       if obj.present?
@@ -167,7 +170,7 @@ module EmsRefresh
     task_id
   end
 
-  def self.create_refresh_task(ems, targets)
+  def self.create_refresh_task(ems, _targets)
     task_options = {
       :action => "EmsRefresh(#{ems.name}) Refreshing relationships and power states",
       :userid => "system"
@@ -220,8 +223,10 @@ module EmsRefresh
 
       [:name, :product_name, :device_name].each do |k|
         next unless d.respond_to?(k)
+
         v = d.send(k)
         next if v.nil?
+
         s << " #{k}: [#{v}]"
         break
       end

@@ -3,7 +3,7 @@ RSpec.describe 'VM::Operations' do
     @miq_server = EvmSpecHelper.local_miq_server
     @ems        = FactoryBot.create(:ems_vmware, :zone => @miq_server.zone)
     @vm         = FactoryBot.create(:vm_vmware, :ems_id => @ems.id)
-    ipaddresses = %w(fe80::21a:4aff:fe22:dde5 127.0.0.1)
+    ipaddresses = %w[fe80::21a:4aff:fe22:dde5 127.0.0.1]
     allow(@vm).to receive(:ipaddresses).and_return(ipaddresses)
 
     @hardware = FactoryBot.create(:hardware)
@@ -18,15 +18,15 @@ RSpec.describe 'VM::Operations' do
     end
 
     context 'cloud providers' do
-      before { @ipaddresses = %w(10.10.1.121 35.190.140.48) }
+      before { @ipaddresses = %w[10.10.1.121 35.190.140.48] }
       it 'returns the public ipv4 address for AWS' do
         ems = FactoryBot.create(:ems_google, :project => 'manageiq-dev')
         az  = FactoryBot.create(:availability_zone_google)
         vm = FactoryBot.create(:vm_google,
-                                :ext_management_system => ems,
-                                :ems_ref               => 123,
-                                :availability_zone     => az,
-                                :hardware              => @hardware)
+                               :ext_management_system => ems,
+                               :ems_ref               => 123,
+                               :availability_zone     => az,
+                               :hardware              => @hardware)
         allow(vm).to receive(:ipaddresses).and_return(@ipaddresses)
         url = vm.send(:ipv4_address)
         expect(url).to eq('35.190.140.48')
@@ -44,7 +44,7 @@ RSpec.describe 'VM::Operations' do
 
   context '#public_address' do
     it 'returns a public ipv4 address' do
-      ipaddresses = %w(10.10.1.121 35.190.140.48)
+      ipaddresses = %w[10.10.1.121 35.190.140.48]
       ems = FactoryBot.create(:ems_amazon)
       vm = FactoryBot.create(:vm_amazon, :ext_management_system => ems, :hardware => @hardware)
       allow(vm).to receive(:ipaddresses).and_return(ipaddresses)

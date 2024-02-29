@@ -20,7 +20,7 @@ class RequestLogSessionMiddleware
     env["HTTP_COOKIE"].split(/\s*;\s*/).map do |keyval|
       keyval.split('=')
     end.to_h
-  rescue StandardError
+  rescue
     {}
   end
 end

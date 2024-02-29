@@ -29,7 +29,7 @@ module ManageIQ
       # called from each ApplicationController instance
       def load_helpers(klass)
         klass.instance_eval do
-          helper ManageIQ::Reporting::Formatter::C3Helper
+          helper(ManageIQ::Reporting::Formatter::C3Helper)
         end
       end
 
@@ -42,7 +42,7 @@ module ManageIQ
 
       def sample_chart(options, _report_theme)
         sample = {
-          :data => {
+          :data     => {
             :axis    => {},
             :tooltip => {},
             :columns => [
@@ -52,7 +52,7 @@ module ManageIQ
             ],
           },
           :miqChart => options[:graph_type],
-          :miq      => { :zoomed => false }
+          :miq      => {:zoomed => false}
         }
         sample[:data][:groups] = [['data1', 'data2', 'data3']] if options[:graph_type].include?('Stacked')
         sample
@@ -69,7 +69,7 @@ module ManageIQ
 
       # list of themes - in options_for_select format
       def chart_themes_for_select
-        [%w(Default default)]
+        [%w[Default default]]
       end
 
       def serialized(data)

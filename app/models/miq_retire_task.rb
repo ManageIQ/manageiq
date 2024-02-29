@@ -60,7 +60,7 @@ class MiqRetireTask < MiqRequestTask
 
   def before_ae_starts(_options)
     reload
-    if state.to_s.downcase.in?(%w(pending queued))
+    if state.to_s.downcase.in?(%w[pending queued])
       _log.info("Executing #{request_class::TASK_DESCRIPTION} request: [#{description}]")
       update_and_notify_parent(:state => "active", :status => "Ok", :message => "In Process")
     end
@@ -68,8 +68,8 @@ class MiqRetireTask < MiqRequestTask
 
   def mark_pending_items_as_finished
     miq_request.miq_request_tasks.each do |s|
-      if s.state == 'pending'
-        s.update_and_notify_parent(:state => "finished", :status => "Warn", :message => "Error in Request: #{miq_request.id}. Setting pending Task: #{id} to finished.") unless id == s.id
+      if s.state == 'pending' && !(id == s.id)
+        s.update_and_notify_parent(:state => "finished", :status => "Warn", :message => "Error in Request: #{miq_request.id}. Setting pending Task: #{id} to finished.")
       end
     end
   end

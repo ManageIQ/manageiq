@@ -18,7 +18,7 @@ class Tag < ApplicationRecord
   def self.list(object, options = {})
     ns = get_namespace(options)
     if ns[0..7] == "/virtual"
-      ns.gsub!('/virtual/','')  # throw away /virtual
+      ns.gsub!('/virtual/', '') # throw away /virtual
       ns, virtual_custom_attribute = MiqExpression.escape_virtual_custom_attribute(ns)
       predicate = ns.split("/")
 
@@ -61,7 +61,7 @@ class Tag < ApplicationRecord
   def self.parse(list)
     if list.kind_of?(Array)
       tag_names = list.collect { |tag| tag.try(:to_s) }
-      return tag_names.compact
+      tag_names.compact
     else
       tag_names = []
 
@@ -69,7 +69,7 @@ class Tag < ApplicationRecord
       list = list.dup
 
       # first, pull out the quoted tags
-      list.gsub!(/\"(.*?)\"\s*/) do
+      list.gsub!(/"(.*?)"\s*/) do
         tag_names << $1
         ""
       end
@@ -86,7 +86,7 @@ class Tag < ApplicationRecord
       # delete any blank tag names
       tag_names = tag_names.delete_if(&:empty?)
 
-      return tag_names.uniq
+      tag_names.uniq
     end
   end
 
@@ -110,8 +110,9 @@ class Tag < ApplicationRecord
     list = []
     tags.collect do |tag|
       next unless tag.name =~ %r{^#{ns}/(.*)$}i
+
       name = $1.include?(" ") ? "'#{$1}'" : $1
-      list.push(name) unless name.blank?
+      list.push(name) if name.present?
     end
     list
   end
@@ -129,8 +130,8 @@ class Tag < ApplicationRecord
   singleton_class.send(:alias_method, :find_by_classification_name, :lookup_by_classification_name)
   Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_classification_name => :lookup_by_classification_name)
 
-  def ==(comparison_object)
-    super || name.downcase == comparison_object.to_s.downcase
+  def ==(other)
+    super || name.downcase == other.to_s.downcase
   end
 
   def show

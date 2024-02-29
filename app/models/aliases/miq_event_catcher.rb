@@ -1,1 +1,1 @@
-::MiqEventCatcher = ManageIQ::Providers::BaseManager::EventCatcher
+MiqEventCatcher = ManageIQ::Providers::BaseManager::EventCatcher

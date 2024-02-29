@@ -17,14 +17,14 @@ module Metric::LongTermAverages
       :column => col,
       :type   => type
     }
-    unless AVG_COLS_TO_OVERHEAD_TYPE[col].nil?
-      AVG_METHODS_WITHOUT_OVERHEAD_INFO[:"#{meth}_without_overhead"] = {
-        :column        => col,
-        :type          => type,
-        :base_meth     => meth,
-        :overhead_type => AVG_COLS_TO_OVERHEAD_TYPE[col]
-      }
-    end
+    next if AVG_COLS_TO_OVERHEAD_TYPE[col].nil?
+
+    AVG_METHODS_WITHOUT_OVERHEAD_INFO[:"#{meth}_without_overhead"] = {
+      :column        => col,
+      :type          => type,
+      :base_meth     => meth,
+      :overhead_type => AVG_COLS_TO_OVERHEAD_TYPE[col]
+    }
   end
 
   AVG_METHODS = AVG_METHODS_INFO.keys
@@ -54,7 +54,7 @@ module Metric::LongTermAverages
         results[:avg][c] ||= 0
         counts[c] ||= 0
 
-        val =  p.send(c) || 0
+        val = p.send(c) || 0
         vals[c] << val
         val *= 1.0 unless val.nil?
         Metric::Aggregation::Aggregate.average(c, self, results[:avg], counts, val)

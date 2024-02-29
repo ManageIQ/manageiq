@@ -30,7 +30,7 @@ RSpec.describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
     end
 
     it "should retrieve cloud-init templates when cloning" do
-      options = {'key' => 'value' }
+      options = {'key' => 'value'}
 
       result = workflow.allowed_customization_templates(options)
       customization_template = workflow.instance_variable_get(:@values)[:customization_template_script]
@@ -38,13 +38,13 @@ RSpec.describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
 
       expect(customization_template).to eq cloud_init_template.script
       expect(template_hash).to be_a(Hash)
-      %i(id name description).each do |attr|
+      %i[id name description].each do |attr|
         expect(template_hash[attr]).to eq cloud_init_template.send(attr)
       end
     end
 
     it "should retrieve sysprep templates when cloning" do
-      options = {'key' => 'value' }
+      options = {'key' => 'value'}
       allow(sysprep_workflow).to receive(:supports_sysprep?).and_return(true)
       allow(sysprep_workflow).to receive(:load_ar_obj).and_return(template)
       allow(template).to receive(:platform).and_return('windows')
@@ -55,7 +55,7 @@ RSpec.describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
 
       expect(customization_template).to eq sysprep_template.script
       expect(template_hash).to be_a(Hash)
-      %i(id name description).each do |attr|
+      %i[id name description].each do |attr|
         expect(template_hash[attr]).to eq sysprep_template.send(attr)
       end
     end
@@ -109,7 +109,7 @@ RSpec.describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
     context "floating_ips" do
       it "#get_targets_for_source" do
         fip1 = FactoryBot.create(:floating_ip, :cloud_network_only    => true,
-                                                :ext_management_system => ems.network_manager)
+                                               :ext_management_system => ems.network_manager)
         filtered = workflow.send(:get_targets_for_source, ems, :cloud_filter, FloatingIp,
                                  'floating_ips.available')
         expect(filtered.size).to eq(1)
@@ -171,15 +171,15 @@ RSpec.describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
       @cn1 = FactoryBot.create(:cloud_network, :ext_management_system => ems.network_manager, :cidr => "10.0.0./8")
 
       @cs1 = FactoryBot.create(:cloud_subnet, :cloud_network         => @cn1,
-                                               :availability_zone     => @az1,
-                                               :ext_management_system => ems.network_manager)
+                                              :availability_zone     => @az1,
+                                              :ext_management_system => ems.network_manager)
       @cs2 = FactoryBot.create(:cloud_subnet, :cloud_network         => @cn1,
-                                               :availability_zone     => @az2,
-                                               :ext_management_system => ems.network_manager)
+                                              :availability_zone     => @az2,
+                                              :ext_management_system => ems.network_manager)
       @ip1 = FactoryBot.create(:floating_ip, :cloud_network_only    => true,
-                                              :ext_management_system => ems.network_manager)
+                                             :ext_management_system => ems.network_manager)
       @ip2 = FactoryBot.create(:floating_ip, :cloud_network_only    => false,
-                                              :ext_management_system => ems.network_manager)
+                                             :ext_management_system => ems.network_manager)
     end
 
     context "#allowed_cloud_networks" do

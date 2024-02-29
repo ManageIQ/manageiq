@@ -6,7 +6,7 @@ module Rbac
     # Classes should be added to this list ONLY after:
     # 1. Tagging has been enabled in the UI
     # 2. Class contains acts_as_miq_taggable
-    CLASSES_THAT_PARTICIPATE_IN_RBAC = %w(
+    CLASSES_THAT_PARTICIPATE_IN_RBAC = %w[
       Authentication
       AvailabilityZone
       CloudNetwork
@@ -67,11 +67,11 @@ module Rbac
       Switch
       VmOrTemplate
       WindowsImage
-    )
+    ]
 
-    TAGGABLE_FILTER_CLASSES = CLASSES_THAT_PARTICIPATE_IN_RBAC - %w(EmsFolder MiqRequest) + %w(MiqGroup User Tenant)
+    TAGGABLE_FILTER_CLASSES = CLASSES_THAT_PARTICIPATE_IN_RBAC - %w[EmsFolder MiqRequest] + %w[MiqGroup User Tenant]
 
-    NETWORK_MODELS_FOR_BELONGSTO_FILTER = %w(
+    NETWORK_MODELS_FOR_BELONGSTO_FILTER = %w[
       CloudNetwork
       CloudSubnet
       FloatingIp
@@ -79,9 +79,9 @@ module Rbac
       NetworkPort
       NetworkRouter
       SecurityGroup
-    ).freeze
+    ].freeze
 
-    BELONGSTO_FILTER_CLASSES = %w(
+    BELONGSTO_FILTER_CLASSES = %w[
       Container
       ContainerBuild
       ContainerGroup
@@ -101,7 +101,7 @@ module Rbac
       ResourcePool
       Storage
       VmOrTemplate
-    ) + NETWORK_MODELS_FOR_BELONGSTO_FILTER
+    ] + NETWORK_MODELS_FOR_BELONGSTO_FILTER
 
     # key: descendant::klass
     # value:
@@ -163,10 +163,10 @@ module Rbac
 
     # Classes inherited from these classes or mixins are allowing ownership feature on the target model,
     # scope user_or_group_owned is required on target model
-    OWNERSHIP_CLASSES = %w(
+    OWNERSHIP_CLASSES = %w[
       OwnershipMixin
       MiqRequest
-    ).freeze
+    ].freeze
 
     ADDITIONAL_TENANT_CLASSES = %w[ServiceTemplate].freeze
     PRODUCT_FEATURE_CLASSES = %w[MiqShortcut].freeze
@@ -227,6 +227,7 @@ module Rbac
       if options.key?(:targets) && options[:targets].kind_of?(Array) && options[:targets].empty?
         return [], {:auth_count => 0}
       end
+
       targets           = options[:targets]
       scope             = options[:named_scope]
 
@@ -430,6 +431,7 @@ module Rbac
     # @param includes [Array, Hash]
     def add_joins(klass, scope, includes)
       return scope unless includes
+
       includes = Array(includes) unless includes.kind_of?(Enumerable)
       includes.each do |association, value|
         reflection = klass.reflect_on_association(association)
@@ -495,6 +497,7 @@ module Rbac
         #      VmPerformance   => VmOrTemplate
         return klass.name[0..-12].constantize.base_class
       end
+
       nil
     end
 
@@ -587,6 +590,7 @@ module Rbac
 
     def get_belongsto_filter_object_ids(klass, filter)
       return nil if !BELONGSTO_FILTER_CLASSES.include?(safe_base_class(klass).name) || filter.blank?
+
       get_belongsto_matches(filter, rbac_class(klass)).collect(&:id)
     end
 
@@ -594,6 +598,7 @@ module Rbac
       klass = scope.respond_to?(:klass) ? scope.klass : scope
       return nil if !TAGGABLE_FILTER_CLASSES.include?(safe_base_class(klass).name) || filter.blank?
       return scope.where(filter.to_sql.first) if filter.kind_of?(MiqExpression)
+
       scope.find_tags_by_grouping(filter, :ns => '*').reorder(nil)
     end
 
@@ -641,7 +646,7 @@ module Rbac
     def scope_for_user_role_group(klass, scope, miq_group, user, managed_filters)
       user_or_group = miq_group || user
 
-      if user_or_group.try!(:self_service?) && klass != MiqUserRole
+      if user_or_group&.self_service? && klass != MiqUserRole
         scope.where(:id => klass == User ? user.id : miq_group.id)
       else
         role = user_or_group.miq_user_role
@@ -748,7 +753,7 @@ module Rbac
 
     def lookup_user_group(user, userid, miq_group, miq_group_id)
       user ||= (userid && User.lookup_by_userid(userid)) || User.current_user
-      miq_group_id ||= miq_group.try!(:id)
+      miq_group_id ||= miq_group&.id
       return [user, user.current_group] if user && user.current_group_id.to_s == miq_group_id.to_s
 
       group = if user
@@ -768,7 +773,7 @@ module Rbac
     # for reports, user is currently nil, so use the group filter
     # the user.get_filters delegates to user.current_group anyway
     def lookup_user_filters(miq_group)
-      filters = miq_group.try!(:get_filters).try!(:dup) || {}
+      filters = miq_group&.get_filters&.dup || {}
       filters["managed"] ||= []
       filters["belongsto"] ||= []
       filters
@@ -839,11 +844,13 @@ module Rbac
     def get_belongsto_matches(blist, klass)
       return get_belongsto_matches_for_host(blist) if klass <= Host
       return get_belongsto_matches_for_storage(blist) if klass == Storage
+
       association_name = klass.base_model.to_s.tableize
 
       blist.flat_map do |bfilter|
         vcmeta_list = MiqFilter.belongsto2object_list(bfilter)
         next [] if vcmeta_list.empty?
+
         # typically, this is the only one we want:
         vcmeta = vcmeta_list.last
 
@@ -856,13 +863,13 @@ module Rbac
     end
 
     def belongsto_association_filtered?(vcmeta, klass)
-      if [ExtManagementSystem, Host].any? { |x| vcmeta.kind_of?(x) }
+      if [ExtManagementSystem, Host].any? { |x| vcmeta.kind_of?(x) } && associated_belongsto_models.any? do |associated|
+           klass <= associated && vcmeta.respond_to?(associated.base_model.to_s.tableize)
+         end
         # Eject early if klass(requested for RBAC check) is allowed to be filtered by
         # belongsto filtering generally and whether relation (based on the klass) exists on object
         # from belongsto filter at all.
-        return true if associated_belongsto_models.any? do |associated|
-          klass <= associated && vcmeta.respond_to?(associated.base_model.to_s.tableize)
-        end
+        return true
       end
 
       if vcmeta.kind_of?(ManageIQ::Providers::NetworkManager)
@@ -897,7 +904,7 @@ module Rbac
         vcmeta = MiqFilter.belongsto2object(bfilter)
         next unless vcmeta
 
-        subtree  = vcmeta.subtree
+        subtree = vcmeta.subtree
         clusters += subtree.grep(EmsCluster)
         hosts    += subtree.grep(Host)
       end

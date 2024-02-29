@@ -82,6 +82,7 @@ class Chargeback
 
     def sum_of_maxes_from_grouped_values(metric, sub_metric = nil)
       return max(metric, sub_metric) if sub_metric
+
       @grouped_values ||= {}
       grouped_rollups = rollup_records.group_by { |x| x[ChargeableField.col_index(:resource_id)] }
 
@@ -169,9 +170,8 @@ class Chargeback
 
     def values(metric, sub_metric = nil)
       @values ||= {}
-      @values["#{metric}#{sub_metric}"] ||= begin
-        sub_metric ? sub_metric_rollups(sub_metric) : rollup_records.collect { |x| rollup_field(x, metric) }.compact
-      end
+      @values["#{metric}#{sub_metric}"] ||= sub_metric ? sub_metric_rollups(sub_metric) : rollup_records.collect { |x| rollup_field(x, metric) }.compact
+
     end
 
     def rollup_field(rollup, metric)
@@ -226,11 +226,10 @@ class Chargeback
       return @rollup_records unless tag_name_filter
 
       @tag_filtered_for_rollup_records ||= {}
-      @tag_filtered_for_rollup_records[tag_name_filter] ||= begin
-        @rollup_records.select do |rollup|
-          (resource_tag_names(rollup) & [tag_name_filter]).present?
-        end
+      @tag_filtered_for_rollup_records[tag_name_filter] ||= @rollup_records.select do |rollup|
+        (resource_tag_names(rollup) & [tag_name_filter]).present?
       end
+
     end
   end
 end

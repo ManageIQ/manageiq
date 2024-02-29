@@ -42,13 +42,11 @@ RSpec.describe "MiqWorker Monitor" do
       describe "#do_system_limit_exceeded" do
         before do
           @worker_to_keep = FactoryBot.create(:miq_ems_metrics_processor_worker,
-            :miq_server   => @miq_server,
-            :memory_usage => 1.gigabytes
-          )
+                                              :miq_server   => @miq_server,
+                                              :memory_usage => 1.gigabytes)
           @worker_to_kill = FactoryBot.create(:miq_ems_metrics_processor_worker,
-            :miq_server   => @miq_server,
-            :memory_usage => 2.gigabytes
-          )
+                                              :miq_server   => @miq_server,
+                                              :memory_usage => 2.gigabytes)
         end
 
         it "will kill the worker with the highest memory" do
@@ -86,7 +84,7 @@ RSpec.describe "MiqWorker Monitor" do
           @messages = []
           @actives  = []
 
-          m = FactoryBot.create(:miq_queue, :state => 'ready',   :handler => @worker, :msg_timeout => 4.minutes)
+          m = FactoryBot.create(:miq_queue, :state => 'ready', :handler => @worker, :msg_timeout => 4.minutes)
           @messages << m
           @actives << m if m.state == 'dequeue'
 
@@ -107,7 +105,7 @@ RSpec.describe "MiqWorker Monitor" do
 
         it "on worker destroy, will destroy its processed messages" do
           @worker.destroy
-          expect(@worker.messages.where("state != ?", "ready").count).to eq(0)
+          expect(@worker.messages.where.not(:state => "ready").count).to eq(0)
           expect(@worker.active_messages.size).to eq(0)
         end
 

@@ -41,7 +41,7 @@ RSpec.describe TaskHelpers::Exports::ProvisionDialogs do
   let(:content2) do
     {
       :dialogs => {
-        :buttons => %i(submit cancel)
+        :buttons => %i[submit cancel]
       }
     }
   end
@@ -52,18 +52,18 @@ RSpec.describe TaskHelpers::Exports::ProvisionDialogs do
 
   before do
     FactoryBot.create(:miq_dialog,
-                       :dialog_type => dialog_type1,
-                       :name        => dialog_name1,
-                       :description => dialog_desc1,
-                       :content     => content,
-                       :default     => true)
+                      :dialog_type => dialog_type1,
+                      :name        => dialog_name1,
+                      :description => dialog_desc1,
+                      :content     => content,
+                      :default     => true)
 
     FactoryBot.create(:miq_dialog,
-                       :dialog_type => dialog_type2,
-                       :name        => dialog_name2,
-                       :description => dialog_desc2,
-                       :content     => content,
-                       :default     => false)
+                      :dialog_type => dialog_type2,
+                      :name        => dialog_name2,
+                      :description => dialog_desc2,
+                      :content     => content,
+                      :default     => false)
   end
 
   after do
@@ -105,11 +105,11 @@ RSpec.describe TaskHelpers::Exports::ProvisionDialogs do
 
     before do
       FactoryBot.create(:miq_dialog,
-                         :dialog_type => dialog_type3,
-                         :name        => dialog_name2,
-                         :description => dialog_desc2,
-                         :content     => content2,
-                         :default     => false)
+                        :dialog_type => dialog_type3,
+                        :name        => dialog_name2,
+                        :description => dialog_desc2,
+                        :content     => content2,
+                        :default     => false)
     end
 
     it 'exports the dialogs to different files' do

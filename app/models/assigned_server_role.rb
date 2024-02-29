@@ -22,7 +22,7 @@ class AssignedServerRole < ApplicationRecord
   end
 
   def inactive?
-    !self.active?
+    !active?
   end
 
   def set_master
@@ -37,16 +37,15 @@ class AssignedServerRole < ApplicationRecord
 
   def set_priority(val)
     # Only allow 1 Primary in the RoleScope
-    if val == HIGH_PRIORITY && server_role.master_supported?
-      if ['zone', 'region'].include?(server_role.role_scope)
-        method = "find_other_servers_in_#{server_role.role_scope}"
+    if val == HIGH_PRIORITY && server_role.master_supported? && ['zone', 'region'].include?(server_role.role_scope)
+      method = "find_other_servers_in_#{server_role.role_scope}"
         other_servers = miq_server.send(method)
         other_servers.each do |server|
           assigned = server.assigned_server_roles.find_by(:server_role_id => server_role_id)
           next if assigned.nil?
-          assigned.update_attribute(:priority, DEFAULT_PRIORITY)  if assigned.priority == HIGH_PRIORITY
+
+          assigned.update_attribute(:priority, DEFAULT_PRIORITY) if assigned.priority == HIGH_PRIORITY
         end
-      end
     end
 
     update_attribute(:priority, val)
@@ -55,7 +54,7 @@ class AssignedServerRole < ApplicationRecord
   def activate_in_region(override = false)
     return unless server_role.role_scope == 'region'
 
-    if override || self.inactive?
+    if override || inactive?
       MiqRegion.my_region.lock do
         if server_role.master_supported?
           servers = MiqRegion.my_region.active_miq_servers
@@ -72,7 +71,7 @@ class AssignedServerRole < ApplicationRecord
   def deactivate_in_region(override = false)
     return unless server_role.role_scope == 'region'
 
-    if override || self.active?
+    if override || active?
       MiqRegion.my_region.lock do
         deactivate(override)
       end
@@ -82,7 +81,7 @@ class AssignedServerRole < ApplicationRecord
   def activate_in_zone(override = false)
     return unless server_role.role_scope == 'zone'
 
-    if override || self.inactive?
+    if override || inactive?
       miq_server.zone.lock do |_zone|
         if server_role.master_supported?
           servers = miq_server.zone.active_miq_servers
@@ -99,7 +98,7 @@ class AssignedServerRole < ApplicationRecord
   def deactivate_in_zone(override = false)
     return unless server_role.role_scope == 'zone'
 
-    if override || self.active?
+    if override || active?
       miq_server.zone.lock do |_zone|
         deactivate(override)
       end
@@ -121,14 +120,14 @@ class AssignedServerRole < ApplicationRecord
   end
 
   def activate(override = false)
-    if override || self.inactive?
+    if override || inactive?
       _log.info("Activating Role <#{server_role.name}> on Server <#{miq_server.name}>")
       update(:active => true)
     end
   end
 
   def deactivate(override = false)
-    if override || self.active?
+    if override || active?
       _log.info("Deactivating Role <#{server_role.name}> on Server <#{miq_server.name}>")
       update(:active => false)
     end

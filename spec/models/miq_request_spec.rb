@@ -5,20 +5,20 @@ RSpec.describe MiqRequest do
   context "CONSTANTS" do
     it "REQUEST_TYPES" do
       expected_request_types = {
-        :MiqProvisionRequest                      => {:template                        => "VM Provision", :clone_to_vm => "VM Clone", :clone_to_template => "VM Publish"},
-        :MiqProvisionRequestTemplate              => {:template                        => "VM Provision Template"},
-        :MiqProvisionConfiguredSystemRequest      => {:provision_via_foreman           => "#{ui_lookup(:ui_title => 'foreman')} Provision"},
-        :VmReconfigureRequest                     => {:vm_reconfigure                  => "VM Reconfigure"},
-        :VmCloudReconfigureRequest                => {:vm_cloud_reconfigure            => "VM Cloud Reconfigure"},
-        :VmMigrateRequest                         => {:vm_migrate                      => "VM Migrate"},
-        :VmRetireRequest                          => {:vm_retire                       => "VM Retire"},
-        :ServiceRetireRequest                     => {:service_retire                  => "Service Retire"},
-        :OrchestrationStackRetireRequest          => {:orchestration_stack_retire      => "Orchestration Stack Retire"},
-        :AutomationRequest                        => {:automation                      => "Automation"},
-        :ServiceTemplateProvisionRequest          => {:clone_to_service                => "Service Provision"},
-        :ServiceReconfigureRequest                => {:service_reconfigure             => "Service Reconfigure"},
-        :PhysicalServerProvisionRequest           => {:provision_physical_server       => "Physical Server Provision"},
-        :PhysicalServerFirmwareUpdateRequest      => {:physical_server_firmware_update => "Physical Server Firmware Update"},
+        :MiqProvisionRequest                 => {:template                        => "VM Provision", :clone_to_vm => "VM Clone", :clone_to_template => "VM Publish"},
+        :MiqProvisionRequestTemplate         => {:template                        => "VM Provision Template"},
+        :MiqProvisionConfiguredSystemRequest => {:provision_via_foreman           => "#{ui_lookup(:ui_title => 'foreman')} Provision"},
+        :VmReconfigureRequest                => {:vm_reconfigure                  => "VM Reconfigure"},
+        :VmCloudReconfigureRequest           => {:vm_cloud_reconfigure            => "VM Cloud Reconfigure"},
+        :VmMigrateRequest                    => {:vm_migrate                      => "VM Migrate"},
+        :VmRetireRequest                     => {:vm_retire                       => "VM Retire"},
+        :ServiceRetireRequest                => {:service_retire                  => "Service Retire"},
+        :OrchestrationStackRetireRequest     => {:orchestration_stack_retire      => "Orchestration Stack Retire"},
+        :AutomationRequest                   => {:automation                      => "Automation"},
+        :ServiceTemplateProvisionRequest     => {:clone_to_service                => "Service Provision"},
+        :ServiceReconfigureRequest           => {:service_reconfigure             => "Service Reconfigure"},
+        :PhysicalServerProvisionRequest      => {:provision_physical_server       => "Physical Server Provision"},
+        :PhysicalServerFirmwareUpdateRequest => {:physical_server_firmware_update => "Physical Server Firmware Update"},
       }
 
       expect(described_class::REQUEST_TYPES).to eq(expected_request_types)
@@ -26,7 +26,7 @@ RSpec.describe MiqRequest do
   end
 
   context "A new request" do
-    let(:event_name)   { "hello" }
+    let(:event_name) { "hello" }
     let(:miq_request) { FactoryBot.build(:automation_request, :options => {:src_ids => [1]}) }
     let(:request)      { FactoryBot.create(:vm_migrate_request, :requester => fred) }
     let(:ems)          { FactoryBot.create(:ems_vmware) }
@@ -160,12 +160,12 @@ RSpec.describe MiqRequest do
           end
 
           it "approval_state denied" do
-            provision_request.approval_state  = 'denied'
+            provision_request.approval_state = 'denied'
             expect(provision_request.request_status).to eq('Error')
           end
 
           it "approval_state pending_approval" do
-            provision_request.approval_state  = 'pending_approval'
+            provision_request.approval_state = 'pending_approval'
             expect(provision_request.request_status).to eq('Unknown')
           end
         end
@@ -263,7 +263,7 @@ RSpec.describe MiqRequest do
         end
 
         describe ".with_reason_like" do
-          let(:reason) { %w(abcd abcde cde) }
+          let(:reason) { %w[abcd abcde cde] }
           subject { described_class.with_reason_like(pattern).count }
 
           before { request.miq_approvals = approvals }
@@ -421,9 +421,9 @@ RSpec.describe MiqRequest do
   context '#workflow' do
     let(:provision_request) do
       FactoryBot.create(:miq_provision_request,
-                         :requester => fred,
-                         :src_vm_id => template.id,
-                         :options => {:src_vm_id => template.id})
+                        :requester => fred,
+                        :src_vm_id => template.id,
+                        :options   => {:src_vm_id => template.id})
     end
     let(:ems)          { FactoryBot.create(:ems_vmware) }
     let(:template)     { FactoryBot.create(:template_vmware, :ext_management_system => ems) }
@@ -436,8 +436,8 @@ RSpec.describe MiqRequest do
 
     it "returns the allowed tags" do
       FactoryBot.create(:miq_dialog,
-                         :name        => "miq_provision_dialogs",
-                         :dialog_type => MiqProvisionWorkflow)
+                        :name        => "miq_provision_dialogs",
+                        :dialog_type => MiqProvisionWorkflow)
 
       FactoryBot.create(:classification_department_with_tags)
 
@@ -538,8 +538,8 @@ RSpec.describe MiqRequest do
 
     let(:request) do
       FactoryBot.create(:miq_provision_request,
-                         :requester => fred,
-                         :options   => {:a => "1"})
+                        :requester => fred,
+                        :options   => {:a => "1"})
     end
 
     it "user_message" do

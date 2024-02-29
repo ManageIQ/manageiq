@@ -84,7 +84,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::NetworkCredential
     attrs[:become_password]   = attrs.delete(:authorize_password) if attrs.key?(:authorize_password)
 
     if attrs[:authorize]
-      attrs[:options] = { :authorize => attrs.delete(:authorize) }
+      attrs[:options] = {:authorize => attrs.delete(:authorize)}
     end
 
     attrs

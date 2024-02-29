@@ -133,6 +133,7 @@ module Metric::Purging
             query.pluck(:id)
           end
           break if batch_ids.empty?
+
           current_window = batch_ids.size
         else
           batch_ids = query
@@ -143,6 +144,7 @@ module Metric::Purging
           scope.unscoped.where(:id => batch_ids).delete_all
         end
         break if count == 0
+
         total += count
 
         yield(count, total) if block_given?

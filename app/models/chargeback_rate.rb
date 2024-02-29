@@ -37,11 +37,10 @@ class ChargebackRate < ApplicationRecord
 
   def rate_details_relevant_to(report_cols, allowed_cols)
     # we can memoize, as we get the same report_cols through the life of the object
-    @relevant ||= begin
-      chargeback_rate_details.select do |r|
-        r.affects_report_fields(report_cols) && allowed_cols.include?(r.metric_column_key)
-      end
+    @relevant ||= chargeback_rate_details.select do |r|
+      r.affects_report_fields(report_cols) && allowed_cols.include?(r.metric_column_key)
     end
+
   end
 
   def self.validate_rate_type(type)
@@ -117,15 +116,13 @@ class ChargebackRate < ApplicationRecord
           _log.info("Creating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
           rec = create(cbr)
           rec.chargeback_rate_details.create(rates)
-        else
-          if fix_mtime > rec.created_on
-            _log.info("Updating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
-            rec.update(cbr)
-            rec.chargeback_rate_details.clear
-            rec.chargeback_rate_details.create(rates)
-            rec.created_on = fix_mtime
-            rec.save!
-          end
+        elsif fix_mtime > rec.created_on
+          _log.info("Updating [#{cbr[:description]}] with guid=[#{cbr[:guid]}]")
+          rec.update(cbr)
+          rec.chargeback_rate_details.clear
+          rec.chargeback_rate_details.create(rates)
+          rec.created_on = fix_mtime
+          rec.save!
         end
       end
     end

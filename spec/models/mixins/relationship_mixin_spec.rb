@@ -51,7 +51,7 @@ RSpec.describe RelationshipMixin do
       end
     end
 
-    # NOTE for understanding the next 4 contexts:
+    # NOTE: for understanding the next 4 contexts:
     # Objects (VMs, Hosts, etc) have associated tree nodes entries in the
     # relationships table which are linked.  If an object must reside in
     # multiple parts of the tree via having multiple parents, it will need more
@@ -66,8 +66,7 @@ RSpec.describe RelationshipMixin do
 
         assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
-                                      child,   1, [@parent], []
-                                     )
+                                      child,   1, [@parent], [])
       end
 
       it "with a root object will link a new tree node for the parent to the existing tree node for the child" do
@@ -76,8 +75,7 @@ RSpec.describe RelationshipMixin do
 
         assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
-                                      child,   1, [@parent], [vms[1], vms[2]]
-                                     )
+                                      child,   1, [@parent], [vms[1], vms[2]])
       end
 
       it "with an inner object will link a new tree node for the parent to a second new tree node for the child" do
@@ -86,8 +84,7 @@ RSpec.describe RelationshipMixin do
 
         assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
-                                      child,   2, [vms[0], @parent], [vms[3], vms[4]]
-                                     )
+                                      child,   2, [vms[0], @parent], [vms[3], vms[4]])
       end
 
       it "with a leaf object will link a new tree node for the parent to a second new tree node for the child" do
@@ -96,8 +93,7 @@ RSpec.describe RelationshipMixin do
 
         assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
-                                      child,   2, [vms[1], @parent], []
-                                     )
+                                      child,   2, [vms[1], @parent], [])
       end
     end
 
@@ -110,8 +106,7 @@ RSpec.describe RelationshipMixin do
 
         assert_parent_child_structure(test_rel_type,
                                       parent, 1, [], [@child],
-                                      @child, 1, [parent], []
-                                     )
+                                      @child, 1, [parent], [])
       end
 
       it "with a root object will link the existing tree node for the parent to a new tree node for the child" do
@@ -120,8 +115,7 @@ RSpec.describe RelationshipMixin do
 
         assert_parent_child_structure(test_rel_type,
                                       parent, 1, [], [vms[1], vms[2], @child],
-                                      @child, 1, [parent], []
-                                     )
+                                      @child, 1, [parent], [])
       end
 
       it "with an inner object will link the existing tree node for the parent to a new tree node for the child" do
@@ -130,8 +124,7 @@ RSpec.describe RelationshipMixin do
 
         assert_parent_child_structure(test_rel_type,
                                       parent, 1, [vms[0]], [vms[3], vms[4], @child],
-                                      @child, 1, [parent], []
-                                     )
+                                      @child, 1, [parent], [])
       end
 
       it "with a leaf object will link the existing tree node for the parent to a new tree node for the child" do
@@ -140,8 +133,7 @@ RSpec.describe RelationshipMixin do
 
         assert_parent_child_structure(test_rel_type,
                                       parent, 1, [vms[1]], [@child],
-                                      @child, 1, [parent], []
-                                     )
+                                      @child, 1, [parent], [])
       end
     end
 
@@ -154,8 +146,7 @@ RSpec.describe RelationshipMixin do
 
         assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
-                                      child,   1, [@parent], []
-                                     )
+                                      child,   1, [@parent], [])
       end
 
       it "on a root object will link a new tree node for the parent to the existing tree node for the child and be the only parent for the child" do
@@ -164,8 +155,7 @@ RSpec.describe RelationshipMixin do
 
         assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
-                                      child,   1, [@parent], [vms[1], vms[2]]
-                                     )
+                                      child,   1, [@parent], [vms[1], vms[2]])
       end
 
       it "on an inner object will link a new tree node for the parent to the existing tree node for the child and be the only parent for the child" do
@@ -174,8 +164,7 @@ RSpec.describe RelationshipMixin do
 
         assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
-                                      child,   1, [@parent], [vms[3], vms[4]]
-                                     )
+                                      child,   1, [@parent], [vms[3], vms[4]])
       end
 
       it "on a leaf object will link a new tree node for the parent to the existing tree node for the child and be the only parent for the child" do
@@ -184,8 +173,7 @@ RSpec.describe RelationshipMixin do
 
         assert_parent_child_structure(test_rel_type,
                                       @parent, 1, [], [child],
-                                      child,   1, [@parent], []
-                                     )
+                                      child,   1, [@parent], [])
       end
     end
 
@@ -197,8 +185,7 @@ RSpec.describe RelationshipMixin do
 
         assert_parent_child_structure(test_rel_type,
                                       parent, 1, [vms[0]], [child, vms[3], vms[4]],
-                                      child,  1, [parent], [vms[5], vms[6], vms[7]]
-                                     )
+                                      child,  1, [parent], [vms[5], vms[6], vms[7]])
       end
     end
 
@@ -363,7 +350,7 @@ RSpec.describe RelationshipMixin do
       it "#parent=" do
         service6 = ancestry_class.create
         service6.update(:parent => service1)
-        expect(service2.with_relationship_type("custom") { service2.parent=(service6) }).to eq(service6)
+        expect(service2.with_relationship_type("custom") { service2.parent = (service6) }).to eq(service6)
         service2.save!
         expect(service6.with_relationship_type("custom") { service6.child_ids }).to eq([service2.id])
       end
@@ -1052,8 +1039,8 @@ RSpec.describe RelationshipMixin do
     # can map to the resource to return all the resources created
     rels = Hash.new do |hash, key|
       hash[key] = FactoryBot.create(:relationship,
-                                     :resource     => FactoryBot.create(base_factory),
-                                     :relationship => rel_type)
+                                    :resource     => FactoryBot.create(base_factory),
+                                    :relationship => rel_type)
     end
 
     recurse_relationship_tree(tree) do |parent, child|
@@ -1076,17 +1063,17 @@ RSpec.describe RelationshipMixin do
     parent.with_relationship_type(rel_type) do
       expect(parent.relationships.length).to eq(p_rels_count)
       expect(parent.parents.length).to eq(p_parents.length)
-      expect(parent.parents).to              match_array(p_parents)
+      expect(parent.parents).to match_array(p_parents)
       expect(parent.children.length).to eq(p_children.length)
-      expect(parent.children).to             match_array(p_children)
+      expect(parent.children).to match_array(p_children)
     end
 
     child.with_relationship_type(rel_type) do
       expect(child.relationships.length).to eq(c_rels_count)
       expect(child.parents.length).to eq(c_parents.length)
-      expect(child.parents).to              match_array(c_parents)
+      expect(child.parents).to match_array(c_parents)
       expect(child.children.length).to eq(c_children.length)
-      expect(child.children).to             match_array(c_children)
+      expect(child.children).to match_array(c_children)
     end
   end
 end

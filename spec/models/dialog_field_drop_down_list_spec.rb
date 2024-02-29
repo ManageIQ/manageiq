@@ -29,7 +29,7 @@ RSpec.describe DialogFieldDropDownList do
 
     describe "sorting #values" do
       before do
-        df.values = [%w(2 Y), %w(1 Z), %w(3 X)]
+        df.values = [%w[2 Y], %w[1 Z], %w[3 X]]
       end
 
       context "when the data type is a string" do
@@ -38,7 +38,7 @@ RSpec.describe DialogFieldDropDownList do
         context "when sorting by description" do
           context "when sorting ascending" do
             it "returns the sorted values with a nil option prepended" do
-              expect(df.values).to eq([[nil, "<None>"], %w(3 X), %w(2 Y), %w(1 Z)])
+              expect(df.values).to eq([[nil, "<None>"], %w[3 X], %w[2 Y], %w[1 Z]])
             end
           end
 
@@ -46,7 +46,7 @@ RSpec.describe DialogFieldDropDownList do
             let(:sort_order) { :descending }
 
             it "returns the sorted values with a nil option prepended" do
-              expect(df.values).to eq([[nil, "<None>"], %w(1 Z), %w(2 Y), %w(3 X)])
+              expect(df.values).to eq([[nil, "<None>"], %w[1 Z], %w[2 Y], %w[3 X]])
             end
           end
         end
@@ -56,7 +56,7 @@ RSpec.describe DialogFieldDropDownList do
 
           context "when sorting ascending" do
             it "returns the sorted values with a nil option prepended" do
-              expect(df.values).to eq([[nil, "<None>"], %w(1 Z), %w(2 Y), %w(3 X)])
+              expect(df.values).to eq([[nil, "<None>"], %w[1 Z], %w[2 Y], %w[3 X]])
             end
           end
 
@@ -64,7 +64,7 @@ RSpec.describe DialogFieldDropDownList do
             let(:sort_order) { :descending }
 
             it "returns the sorted values with a nil option prepended" do
-              expect(df.values).to eq([[nil, "<None>"], %w(3 X), %w(2 Y), %w(1 Z)])
+              expect(df.values).to eq([[nil, "<None>"], %w[3 X], %w[2 Y], %w[1 Z]])
             end
           end
         end
@@ -74,7 +74,7 @@ RSpec.describe DialogFieldDropDownList do
 
           context "when sorting ascending" do
             it "returns the unsorted values with a nil option prepended" do
-              expect(df.values).to eq([[nil, "<None>"], %w(2 Y), %w(1 Z), %w(3 X)])
+              expect(df.values).to eq([[nil, "<None>"], %w[2 Y], %w[1 Z], %w[3 X]])
             end
           end
 
@@ -82,7 +82,7 @@ RSpec.describe DialogFieldDropDownList do
             let(:sort_order) { :descending }
 
             it "returns the unsorted values with a nil option prepended" do
-              expect(df.values).to eq([[nil, "<None>"], %w(2 Y), %w(1 Z), %w(3 X)])
+              expect(df.values).to eq([[nil, "<None>"], %w[2 Y], %w[1 Z], %w[3 X]])
             end
           end
         end
@@ -96,7 +96,7 @@ RSpec.describe DialogFieldDropDownList do
 
           context "when sorting ascending" do
             it "returns the sorted values with a nil option prepended" do
-              expect(df.values).to eq([[nil, "<None>"], %w(1 Z), %w(2 Y), %w(3 X)])
+              expect(df.values).to eq([[nil, "<None>"], %w[1 Z], %w[2 Y], %w[3 X]])
             end
           end
 
@@ -104,7 +104,7 @@ RSpec.describe DialogFieldDropDownList do
             let(:sort_order) { :descending }
 
             it "returns the sorted values with a nil option prepended" do
-              expect(df.values).to eq([[nil, "<None>"], %w(3 X), %w(2 Y), %w(1 Z)])
+              expect(df.values).to eq([[nil, "<None>"], %w[3 X], %w[2 Y], %w[1 Z]])
             end
           end
         end
@@ -114,7 +114,7 @@ RSpec.describe DialogFieldDropDownList do
 
           context "when sorting ascending" do
             it "returns the unsorted values with a nil option prepended" do
-              expect(df.values).to eq([[nil, "<None>"], %w(2 Y), %w(1 Z), %w(3 X)])
+              expect(df.values).to eq([[nil, "<None>"], %w[2 Y], %w[1 Z], %w[3 X]])
             end
           end
 
@@ -122,7 +122,7 @@ RSpec.describe DialogFieldDropDownList do
             let(:sort_order) { :descending }
 
             it "returns the unsorted values with a nil option prepended" do
-              expect(df.values).to eq([[nil, "<None>"], %w(2 Y), %w(1 Z), %w(3 X)])
+              expect(df.values).to eq([[nil, "<None>"], %w[2 Y], %w[1 Z], %w[3 X]])
             end
           end
         end
@@ -139,7 +139,7 @@ RSpec.describe DialogFieldDropDownList do
       let(:dialog_field) do
         described_class.new(:default_value => default_value, :options => {:force_multi_value => true}, :dynamic => true)
       end
-      let(:values) { [%w(test test), %w(test2 test2)] }
+      let(:values) { [%w[test test], %w[test2 test2]] }
       let(:default_value) { "test2" }
 
       before do
@@ -254,28 +254,28 @@ RSpec.describe DialogFieldDropDownList do
 
       context "when the raw values are already set" do
         before do
-          dialog_field.instance_variable_set(:@raw_values, %w(potato potato))
+          dialog_field.instance_variable_set(:@raw_values, %w[potato potato])
         end
 
         it "returns the raw values" do
-          expect(dialog_field.values).to eq(%w(potato potato))
+          expect(dialog_field.values).to eq(%w[potato potato])
         end
       end
 
       context "when the raw values are not already set" do
         context "when the values returned are strings" do
           before do
-            allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return(%w(automate values))
+            allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return(%w[automate values])
           end
 
           it "returns the values from automate" do
-            expect(dialog_field.values).to eq(%w(automate values))
+            expect(dialog_field.values).to eq(%w[automate values])
           end
 
           context "when the values returned contain a nil" do
             before do
               allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return(
-                [[nil, "Choose something!"], %w(1 one), %w(2 two), %w(abc def)]
+                [[nil, "Choose something!"], %w[1 one], %w[2 two], %w[abc def]]
               )
             end
 
@@ -330,7 +330,7 @@ RSpec.describe DialogFieldDropDownList do
             end
 
             it "returns the values from automate" do
-              expect(dialog_field.values).to eq([[nil, "Choose something!"], %w(1 one), %w(2 two), %w(abc def)])
+              expect(dialog_field.values).to eq([[nil, "Choose something!"], %w[1 one], %w[2 two], %w[abc def]])
             end
           end
         end
@@ -377,7 +377,7 @@ RSpec.describe DialogFieldDropDownList do
 
       context "when the raw values are already set" do
         before do
-          dialog_field.instance_variable_set(:@raw_values, [%w(potato potato)])
+          dialog_field.instance_variable_set(:@raw_values, [%w[potato potato]])
         end
 
         context 'and this is a multiselect' do
@@ -445,7 +445,7 @@ RSpec.describe DialogFieldDropDownList do
 
       context "when the raw values are not already set" do
         before do
-          dialog_field.values = [%w(original values)]
+          dialog_field.values = [%w[original values]]
         end
 
         context 'and this is a multiselect' do
@@ -479,23 +479,23 @@ RSpec.describe DialogFieldDropDownList do
 
       before do
         allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return(
-          %w(automate values)
+          %w[automate values]
         )
       end
 
       context "when the raw values are already set" do
         before do
-          dialog_field.instance_variable_set(:@raw_values, %w(potato potato))
+          dialog_field.instance_variable_set(:@raw_values, %w[potato potato])
         end
 
         it "updates with the values from automate" do
-          expect(dialog_field.trigger_automate_value_updates).to eq(%w(automate values))
+          expect(dialog_field.trigger_automate_value_updates).to eq(%w[automate values])
         end
       end
 
       context "when the raw values are not already set" do
         it "returns the values from automate" do
-          expect(dialog_field.trigger_automate_value_updates).to eq(%w(automate values))
+          expect(dialog_field.trigger_automate_value_updates).to eq(%w[automate values])
         end
       end
     end
@@ -505,22 +505,22 @@ RSpec.describe DialogFieldDropDownList do
 
       context "when the raw values are already set" do
         before do
-          dialog_field.instance_variable_set(:@raw_values, %w(potato potato))
-          dialog_field.values = [%w(original values)]
+          dialog_field.instance_variable_set(:@raw_values, %w[potato potato])
+          dialog_field.values = [%w[original values]]
         end
 
         it "returns the raw values" do
-          expect(dialog_field.trigger_automate_value_updates).to eq([[nil, "<None>"], %w(original values)])
+          expect(dialog_field.trigger_automate_value_updates).to eq([[nil, "<None>"], %w[original values]])
         end
       end
 
       context "when the raw values are not already set" do
         before do
-          dialog_field.values = [%w(original values)]
+          dialog_field.values = [%w[original values]]
         end
 
         it "returns the values" do
-          expect(dialog_field.trigger_automate_value_updates).to eq([[nil, "<None>"], %w(original values)])
+          expect(dialog_field.trigger_automate_value_updates).to eq([[nil, "<None>"], %w[original values]])
         end
 
         it "sets up the default value" do

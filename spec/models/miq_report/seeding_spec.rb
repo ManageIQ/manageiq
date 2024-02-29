@@ -14,8 +14,8 @@ RSpec.describe MiqReport do
 
       before do
         FileUtils.mkdir_p(reports_dir)
-        FileUtils.cp_r(Rails.root.join("product/reports/520_Events - Policy"), reports_dir, preserve: true)
-        FileUtils.cp_r(Rails.root.join("product/compare"), tmpdir.join("product"), preserve: true)
+        FileUtils.cp_r(Rails.root.join("product/reports/520_Events - Policy"), reports_dir, :preserve => true)
+        FileUtils.cp_r(Rails.root.join("product/compare"), tmpdir.join("product"), :preserve => true)
 
         stub_const("MiqReport::Seeding::REPORT_DIR", reports_dir)
         stub_const("MiqReport::Seeding::COMPARE_DIR", compare_dir)
@@ -38,7 +38,7 @@ RSpec.describe MiqReport do
         expect(MiqReport.where(:name => "Testing Compare Name")).to_not exist
 
         # Add new records
-        FileUtils.cp_r(data_dir, tmpdir, preserve: true)
+        FileUtils.cp_r(data_dir, tmpdir, :preserve => true)
 
         described_class.seed
 
@@ -56,7 +56,7 @@ RSpec.describe MiqReport do
           :file_mtime    => File.mtime(report_yml).utc.round,
           :db            => "Vm",
           :cols          => ["vendor_display", "name"],
-          :include       => {"operating_system" => {"columns" => ["product_name", "name"]}},
+          :include       => {"operating_system" => {"columns" => ["product_name", "name"]}}
         )
 
         expect(compare).to have_attributes(
@@ -78,8 +78,8 @@ RSpec.describe MiqReport do
 
         # The mtime rounding is granular to the second, so need to be higher
         # than that for test purposes
-        FileUtils.touch(report_yml,  mtime: 1.second.from_now.to_time)
-        FileUtils.touch(compare_yml, mtime: 1.second.from_now.to_time)
+        FileUtils.touch(report_yml,  :mtime => 1.second.from_now.to_time)
+        FileUtils.touch(compare_yml, :mtime => 1.second.from_now.to_time)
 
         described_class.seed
 

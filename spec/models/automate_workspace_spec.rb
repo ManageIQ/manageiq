@@ -4,14 +4,14 @@ RSpec.describe AutomateWorkspace do
     let(:password) { "ca$hc0w" }
     let(:encrypted) { ManageIQ::Password.encrypt(password) }
     let(:input) do
-      { "objects"           => {
-        "root" => {
-          "var1" => "1",
-          "var2" => "password::#{encrypted}",
-          "var3" => "password::v2:{c8qTeiuz6JgbBOiDqp3eiQ==}"
-        }
-      },
-        "method_parameters" => {"arg1" => "password::#{encrypted}"} }
+      {"objects"           => {
+         "root" => {
+           "var1" => "1",
+           "var2" => "password::#{encrypted}",
+           "var3" => "password::v2:{c8qTeiuz6JgbBOiDqp3eiQ==}"
+         }
+       },
+       "method_parameters" => {"arg1" => "password::#{encrypted}"}}
     end
 
     it "raises error on invalid hash" do
@@ -20,7 +20,7 @@ RSpec.describe AutomateWorkspace do
 
     it "properly merges the hash with the new output" do
       hash = {'objects' => {'root' => {'a' => 1}}, 'state_vars' => {'b' => 2}}
-      partial_hash = {'objects' => {'root' => {'c' => 1}}, 'state_vars' => {} }
+      partial_hash = {'objects' => {'root' => {'c' => 1}}, 'state_vars' => {}}
       merged_hash = {'objects' => {'root' => {'a' => 1, 'c' => 1}}, 'state_vars' => {'b' => 2}}
 
       aw.merge_output!(hash)

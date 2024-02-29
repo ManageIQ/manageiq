@@ -203,11 +203,10 @@ RSpec.describe MiqWidget do
     context "#contents_for_user" do
       it "returns user owned widget contents in UTC timezone if user's timezone not specified" do
         content = FactoryBot.create(:miq_widget_content,
-                                     :miq_widget   => @widget_report_vendor_and_guest_os,
-                                     :user_id      => @user1.id,
-                                     :miq_group_id => @user1.current_group_id,
-                                     :timezone     => "UTC",
-                                    )
+                                    :miq_widget   => @widget_report_vendor_and_guest_os,
+                                    :user_id      => @user1.id,
+                                    :miq_group_id => @user1.current_group_id,
+                                    :timezone     => "UTC")
         expect(@widget_report_vendor_and_guest_os.contents_for_user(@user1)).to eq(content)
       end
 
@@ -235,16 +234,14 @@ RSpec.describe MiqWidget do
 
       it "both user and miq_group owned" do
         FactoryBot.create(:miq_widget_content,
-                                      :miq_widget   => @widget_report_vendor_and_guest_os,
-                                      :miq_group_id => @group1.id,
-                                      :timezone     => "Eastern Time (US & Canada)"
-                                     )
+                          :miq_widget   => @widget_report_vendor_and_guest_os,
+                          :miq_group_id => @group1.id,
+                          :timezone     => "Eastern Time (US & Canada)")
         content2 = FactoryBot.create(:miq_widget_content,
-                                      :miq_widget   => @widget_report_vendor_and_guest_os,
-                                      :miq_group_id => @group1.id,
-                                      :user_id      => @user1.id,
-                                      :timezone     => "UTC"
-                                     )
+                                     :miq_widget   => @widget_report_vendor_and_guest_os,
+                                     :miq_group_id => @group1.id,
+                                     :user_id      => @user1.id,
+                                     :timezone     => "UTC")
         expect(@widget_report_vendor_and_guest_os.contents_for_user(@user1)).to eq(content2)
       end
     end
@@ -344,8 +341,7 @@ RSpec.describe MiqWidget do
                     :zone        => nil,
                     :class_name  => @widget.class.name,
                     :instance_id => @widget.id,
-                    :msg_timeout => 3600
-      }
+                    :msg_timeout => 3600}
     end
 
     it "skips task creation and records warn message if MiqTask for generating widget content exists and not finished" do
@@ -514,7 +510,7 @@ RSpec.describe MiqWidget do
       expect(task.pct_complete).to eq(100)
 
       @widget.visibility[:roles] = "_ALL_"
-      new_user  = FactoryBot.create(:user, :userid => "test task", :role => "random")
+      new_user = FactoryBot.create(:user, :userid => "test task", :role => "random")
 
       @widget.create_initial_content_for_user(new_user)
       q = MiqQueue.first
@@ -537,7 +533,7 @@ RSpec.describe MiqWidget do
     end
 
     it "with multiple timezones in one group" do
-      user_est =  FactoryBot.create(:user, :userid => 'user_est', :miq_groups => [@group2], :settings => {:display => {:timezone => "Eastern Time (US & Canada)"}})
+      user_est = FactoryBot.create(:user, :userid => 'user_est', :miq_groups => [@group2], :settings => {:display => {:timezone => "Eastern Time (US & Canada)"}})
       expect(user_est.get_timezone).to eq("Eastern Time (US & Canada)")
 
       ws = FactoryBot.create(:miq_widget_set, :name => "default", :userid => "user_est", :owner => @group2, :widget_id => @widget.id)
@@ -551,7 +547,7 @@ RSpec.describe MiqWidget do
     end
 
     it "with report_sync" do
-      user_est =  FactoryBot.create(:user, :userid => 'user_est', :miq_groups => [@group2], :settings => {:display => {:timezone => "Eastern Time (US & Canada)"}})
+      user_est = FactoryBot.create(:user, :userid => 'user_est', :miq_groups => [@group2], :settings => {:display => {:timezone => "Eastern Time (US & Canada)"}})
       expect(user_est.get_timezone).to eq("Eastern Time (US & Canada)")
 
       ws = FactoryBot.create(:miq_widget_set, :name => "default", :userid => "user_est", :owner => @group2, :widget_id => @widget.id)
@@ -721,11 +717,11 @@ RSpec.describe MiqWidget do
       @role   = FactoryBot.create(:miq_user_role)
       @group  = FactoryBot.create(:miq_group, :miq_user_role => @role)
       @user1  = FactoryBot.create(:user,
-                                   :settings   => {:display => {:timezone => "Eastern Time (US & Canada)"}},
-                                   :miq_groups => [@group])
+                                  :settings   => {:display => {:timezone => "Eastern Time (US & Canada)"}},
+                                  :miq_groups => [@group])
       @user2  = FactoryBot.create(:user,
-                                   :settings   => {:display => {:timezone => "Pacific Time (US & Canada)"}},
-                                   :miq_groups => [@group])
+                                  :settings   => {:display => {:timezone => "Pacific Time (US & Canada)"}},
+                                  :miq_groups => [@group])
 
       @ws1 = FactoryBot.create(:miq_widget_set, :name   => "HOME",
                                                 :userid => @user1.userid,
@@ -758,7 +754,7 @@ RSpec.describe MiqWidget do
       end
 
       it "contents created for one timezone per group with timezone_matters = false" do
-        widget.options = {:timezone_matters => false }
+        widget.options = {:timezone_matters => false}
         widget.queue_generate_content
         MiqQueue.first.deliver
         expect(MiqWidgetContent.count).to eq(1)
@@ -826,12 +822,11 @@ RSpec.describe MiqWidget do
         @winos_pruduct_name = 'Windows 7 Enterprise'
         7.times do |i|
           vm = FactoryBot.build(:vm_vmware,
-                                 :name             => "vm_win_#{i}",
-                                 :vendor           => "vmware",
-                                 :operating_system => FactoryBot.create(:operating_system,
-                                                                         :product_name => @winos_pruduct_name,
-                                                                         :name         => 'my_pc'),
-                                )
+                                :name             => "vm_win_#{i}",
+                                :vendor           => "vmware",
+                                :operating_system => FactoryBot.create(:operating_system,
+                                                                       :product_name => @winos_pruduct_name,
+                                                                       :name         => 'my_pc'))
           vm.miq_group_id = @group2.id
           vm.save
         end
@@ -839,12 +834,11 @@ RSpec.describe MiqWidget do
         @rhos_product_name = 'Red Hat Enterprise Linux 6 (64-bit)'
         3.times do |i|
           vm = FactoryBot.build(:vm_redhat,
-                                 :name             => "vm_rh_#{i}",
-                                 :vendor           => "redhat",
-                                 :operating_system => FactoryBot.create(:operating_system,
-                                                                         :product_name => @rhos_product_name,
-                                                                         :name         => 'my_linux'),
-                                )
+                                :name             => "vm_rh_#{i}",
+                                :vendor           => "redhat",
+                                :operating_system => FactoryBot.create(:operating_system,
+                                                                       :product_name => @rhos_product_name,
+                                                                       :name         => 'my_linux'))
           vm.miq_group_id = @group.id
           vm.save
         end

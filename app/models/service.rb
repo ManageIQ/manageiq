@@ -94,8 +94,8 @@ class Service < ApplicationRecord
   attribute :lifecycle_state, :default => 'unprovisioned'
   attribute :retired, :default => false
 
-  validates :visible, :inclusion => { :in => [true, false] }
-  validates :retired, :inclusion => { :in => [true, false] }
+  validates :visible, :inclusion => {:in => [true, false]}
+  validates :retired, :inclusion => {:in => [true, false]}
 
   scope :displayed, ->              { where(:visible => true) }
   scope :retired,   ->(bool = true) { where(:retired => bool) }
@@ -113,7 +113,7 @@ class Service < ApplicationRecord
   end
 
   # renaming method from custom_actions_mixin
-  alias_method :custom_service_actions, :custom_actions
+  alias custom_service_actions custom_actions
   def custom_actions
     service_template ? service_template.custom_actions(self) : custom_service_actions(self)
   end
@@ -129,6 +129,7 @@ class Service < ApplicationRecord
       'off' if power_states_match?(:stop)
     else
       return 'on' if power_states_match?(:start)
+
       'off' if power_states_match?(:stop)
     end
   end
@@ -290,6 +291,7 @@ class Service < ApplicationRecord
   def update_power_status(action)
     expected_status = "#{action}_complete"
     return true if options[:power_status] == expected_status
+
     options[:power_status] = expected_status
     update(:options => options)
   end
@@ -300,21 +302,21 @@ class Service < ApplicationRecord
 
   def process_group_action(action, group_idx, direction)
     each_group_resource(group_idx) do |svc_rsc|
-      begin
-        rsc = svc_rsc.resource
-        rsc_action = service_action(action, svc_rsc)
-        rsc_name = "#{rsc.class.name}:#{rsc.id}" + (rsc.respond_to?(:name) ? ":#{rsc.name}" : "")
-        if rsc_action.nil?
-          _log.info("Not Processing action for Service:<#{name}:#{id}>, RSC:<#{rsc_name}}> in Group Idx:<#{group_idx}>")
-        elsif rsc.respond_to?(rsc_action)
-          _log.info("Processing action <#{rsc_action}> for Service:<#{name}:#{id}>, RSC:<#{rsc_name}}> in Group Idx:<#{group_idx}>")
-          rsc.send(rsc_action)
-        else
-          _log.info("Skipping action <#{rsc_action}> for Service:<#{name}:#{id}>, RSC:<#{rsc.class.name}:#{rsc.id}> in Group Idx:<#{group_idx}>")
-        end
-      rescue => err
-        _log.error("Error while processing Service:<#{name}> Group Idx:<#{group_idx}>  Resource<#{rsc_name}>.  Message:<#{err}>")
+
+      rsc = svc_rsc.resource
+      rsc_action = service_action(action, svc_rsc)
+      rsc_name = "#{rsc.class.name}:#{rsc.id}" + (rsc.respond_to?(:name) ? ":#{rsc.name}" : "")
+      if rsc_action.nil?
+        _log.info("Not Processing action for Service:<#{name}:#{id}>, RSC:<#{rsc_name}}> in Group Idx:<#{group_idx}>")
+      elsif rsc.respond_to?(rsc_action)
+        _log.info("Processing action <#{rsc_action}> for Service:<#{name}:#{id}>, RSC:<#{rsc_name}}> in Group Idx:<#{group_idx}>")
+        rsc.send(rsc_action)
+      else
+        _log.info("Skipping action <#{rsc_action}> for Service:<#{name}:#{id}>, RSC:<#{rsc.class.name}:#{rsc.id}> in Group Idx:<#{group_idx}>")
       end
+    rescue => err
+      _log.error("Error while processing Service:<#{name}> Group Idx:<#{group_idx}>  Resource<#{rsc_name}>.  Message:<#{err}>")
+
     end
 
     # Setup processing for the next group
@@ -362,12 +364,13 @@ class Service < ApplicationRecord
 
   def reconfigure_dialog
     return nil unless supports?(:reconfigure)
+
     resource_action = reconfigure_resource_action
     options = {:target => self, :reconfigure => true}
 
     workflow = ResourceActionWorkflow.new(self.options[:dialog], User.current_user, resource_action, options)
 
-    DialogSerializer.new.serialize(Array[workflow.dialog], true)
+    DialogSerializer.new.serialize([workflow.dialog], true)
   end
 
   def raise_final_process_event(action)
@@ -434,7 +437,7 @@ class Service < ApplicationRecord
   end
 
   def chargeback_yaml
-    yaml = YAML.load_file(Rails.root.join('product', 'chargeback', 'chargeback_vm_monthly.yaml'))
+    yaml = YAML.load_file(Rails.root.join("product/chargeback/chargeback_vm_monthly.yaml"))
     yaml["db_options"][:options][:service_id] = id
     yaml["title"] = chargeback_report_name
     yaml
@@ -457,14 +460,14 @@ class Service < ApplicationRecord
     }
 
     MiqQueue.submit_job(
-      :service     => "reporting",
-      :class_name  => self.class.name,
-      :instance_id => id,
-      :task_id     => task.id,
+      :service      => "reporting",
+      :class_name   => self.class.name,
+      :instance_id  => id,
+      :task_id      => task.id,
       :miq_task_id  => task.id,
       :miq_callback => cb,
-      :method_name => "generate_chargeback_report",
-      :args        => options
+      :method_name  => "generate_chargeback_report",
+      :args         => options
     )
     _log.info("Added to queue: #{msg}")
     task

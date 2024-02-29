@@ -9,7 +9,7 @@ RSpec.describe AuthenticationMixin do
 
   let(:test_class_instance) do
     Class.new(ActiveRecord::Base) do
-      def self.name; "TestClass"; end
+      def self.name = "TestClass"
       self.table_name = "vms"
       include AuthenticationMixin
     end.new
@@ -427,7 +427,7 @@ RSpec.describe AuthenticationMixin do
       end
 
       it "Host#authentication_check_types_queue with [:ssh, :default], :remember_host => true is passed down to verify_credentials" do
-        types   = %i(ssh default)
+        types   = %i[ssh default]
         options = {:remember_host => true}
         @host.authentication_check_types_queue(types, options)
         conditions = {:class_name => @host.class.base_class.name, :instance_id => @host.id, :method_name => 'authentication_check_types', :role => @host.authentication_check_role}

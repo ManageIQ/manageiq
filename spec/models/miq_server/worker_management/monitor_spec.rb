@@ -3,10 +3,10 @@ RSpec.describe MiqServer::WorkerManagement::Monitor do
     let(:server) { EvmSpecHelper.local_miq_server }
     let(:worker) do
       FactoryBot.create(:miq_worker,
-                         :type           => "MiqGenericWorker",
-                         :miq_server     => server,
-                         :pid            => 12345,
-                         :last_heartbeat => 5.minutes.ago)
+                        :type           => "MiqGenericWorker",
+                        :miq_server     => server,
+                        :pid            => 12345,
+                        :last_heartbeat => 5.minutes.ago)
     end
 
     before do
@@ -37,7 +37,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor do
       let(:server) { EvmSpecHelper.local_miq_server }
 
       it "rescues exceptions and moves on" do
-        allow(MiqWorkerType).to receive(:worker_class_names).and_return(%w(MiqGenericWorker MiqPriorityWorker))
+        allow(MiqWorkerType).to receive(:worker_class_names).and_return(%w[MiqGenericWorker MiqPriorityWorker])
         allow(MiqGenericWorker).to receive(:sync_workers).and_raise
         expect(MiqPriorityWorker).to receive(:sync_workers).and_return(:adds => [123])
         expect(server.worker_manager.sync_workers).to eq("MiqPriorityWorker"=>{:adds=>[123]})

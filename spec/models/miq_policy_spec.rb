@@ -274,7 +274,7 @@ RSpec.describe MiqPolicy do
   describe ".built_in_policies" do
     it 'creates built in policies' do
       policy = described_class.built_in_policies[0]
-      %w(name description towhat active mode conditions).each do |m|
+      %w[name description towhat active mode conditions].each do |m|
         expect(policy.send(m)).not_to be_nil
       end
       expect(policy.events).not_to                      be_empty
@@ -289,8 +289,8 @@ RSpec.describe MiqPolicy do
       FactoryBot.create(:miq_action, :name => "vm_suspend", :action_type => 'default')
       MiqPolicy.class_variable_set(:@@built_in_policies, nil)
       @vm = FactoryBot.create(:vm_openstack,
-                               :ext_management_system => FactoryBot.create(:ems_openstack,
-                                                                            :zone => FactoryBot.create(:zone)))
+                              :ext_management_system => FactoryBot.create(:ems_openstack,
+                                                                          :zone => FactoryBot.create(:zone)))
     end
     subject { MiqPolicy.enforce_policy(@vm, "vm_resume", {}) }
 
@@ -318,17 +318,17 @@ RSpec.describe MiqPolicy do
       expect(described_class.create!(:description => 'x')).to have_attributes(
         :towhat => "Vm",
         :active => true,
-        :mode   => "control",
+        :mode   => "control"
       )
     end
 
     it 'allows override of defaults' do
       expect(described_class.create!(
-        :towhat => "Host", :mode => "compliance", :active => false, :description => 'x',
-      )).to have_attributes(
-        :towhat => "Host",
-        :active => false,
-        :mode   => "compliance",
+               :towhat => "Host", :mode => "compliance", :active => false, :description => 'x'
+             )).to have_attributes(
+               :towhat => "Host",
+               :active => false,
+               :mode   => "compliance"
       )
     end
   end
@@ -340,8 +340,8 @@ RSpec.describe MiqPolicy do
 
     it 'reports invalid towhat' do
       policy = FactoryBot.build(:miq_policy, :towhat => "BobsYourUncle")
-      towhat_error = "should be one of ContainerGroup, ContainerImage, "\
-                     "ContainerNode, ContainerProject, ContainerReplicator, "\
+      towhat_error = "should be one of ContainerGroup, ContainerImage, " \
+                     "ContainerNode, ContainerProject, ContainerReplicator, " \
                      "ExtManagementSystem, Host, PhysicalServer, Vm"
 
       expect(policy).not_to be_valid

@@ -172,9 +172,8 @@ RSpec.describe Vm do
       EvmSpecHelper.local_miq_server
       @host = FactoryBot.create(:host_vmware)
       @vm = FactoryBot.create(:vm_vmware,
-                               :host      => @host,
-                               :miq_group => FactoryBot.create(:miq_group)
-                              )
+                              :host      => @host,
+                              :miq_group => FactoryBot.create(:miq_group))
       FactoryBot.create(:miq_event_definition, :name => :request_vm_start)
       # admin user is needed to process Events
       User.super_admin || FactoryBot.create(:user_with_group, :userid => "admin")
@@ -243,24 +242,24 @@ RSpec.describe Vm do
     expect(DriftState.count).to eq(1)
 
     expect(vm.drift_states.first.data).to eq({
-      :class               => "ManageIQ::Providers::Vmware::InfraManager::Vm",
-      :id                  => vm.id,
-      :location            => vm.location,
-      :name                => vm.name,
-      :vendor              => "vmware",
+                                               :class               => "ManageIQ::Providers::Vmware::InfraManager::Vm",
+                                               :id                  => vm.id,
+                                               :location            => vm.location,
+                                               :name                => vm.name,
+                                               :vendor              => "vmware",
 
-      :files               => [],
-      :filesystem_drivers  => [],
-      :groups              => [],
-      :guest_applications  => [],
-      :kernel_drivers      => [],
-      :linux_initprocesses => [],
-      :patches             => [],
-      :registry_items      => [],
-      :tags                => [],
-      :users               => [],
-      :win32_services      => [],
-    })
+                                               :files               => [],
+                                               :filesystem_drivers  => [],
+                                               :groups              => [],
+                                               :guest_applications  => [],
+                                               :kernel_drivers      => [],
+                                               :linux_initprocesses => [],
+                                               :patches             => [],
+                                               :registry_items      => [],
+                                               :tags                => [],
+                                               :users               => [],
+                                               :win32_services      => [],
+                                             })
   end
 
   it '#set_remote_console_url' do

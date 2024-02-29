@@ -14,23 +14,23 @@ class FileDepotFtp < FileDepot
   def upload_file(file)
     super
     with_connection do
-      begin
-        return if file_exists?(destination_file)
 
-        upload(file.local_file, destination_file)
-      rescue => err
-        msg = "Error '#{err.message.chomp}', writing to FTP: [#{uri}], Username: [#{authentication_userid}]"
-        _log.error(msg)
-        raise _("Error '%{message}', writing to FTP: [%{uri}], Username: [%{id}]") % {:message => err.message.chomp,
-                                                                                      :uri     => uri,
-                                                                                      :id      => authentication_userid}
-      else
-        file.update(
-          :state   => "available",
-          :log_uri => destination_file
-        )
-        file.post_upload_tasks
-      end
+      return if file_exists?(destination_file)
+
+      upload(file.local_file, destination_file)
+    rescue => err
+      msg = "Error '#{err.message.chomp}', writing to FTP: [#{uri}], Username: [#{authentication_userid}]"
+      _log.error(msg)
+      raise _("Error '%{message}', writing to FTP: [%{uri}], Username: [%{id}]") % {:message => err.message.chomp,
+                                                                                    :uri     => uri,
+                                                                                    :id      => authentication_userid}
+  else
+    file.update(
+      :state   => "available",
+      :log_uri => destination_file
+    )
+      file.post_upload_tasks
+
     end
   end
 
@@ -46,11 +46,13 @@ class FileDepotFtp < FileDepot
   def verify_credentials(_auth_type = nil, cred_hash = nil)
     res = with_connection(cred_hash, &:last_response)
     raise _("Depot Settings validation failed") unless res
+
     res
   end
 
   def with_connection(cred_hash = nil)
     raise _("no block given") unless block_given?
+
     _log.info("Connecting through #{self.class.name}: [#{name}]")
     begin
       connection = connect(cred_hash)
@@ -68,7 +70,7 @@ class FileDepotFtp < FileDepot
     begin
       _log.info("Connecting to #{self.class.name}: #{name} host: #{host}...")
       @ftp         = Net::FTP.new(host)
-      @ftp.passive = true  # Use passive mode to avoid firewall issues see http://slacksite.com/other/ftp.html#passive
+      @ftp.passive = true # Use passive mode to avoid firewall issues see http://slacksite.com/other/ftp.html#passive
       # @ftp.debug_mode = true if settings[:debug]  # TODO: add debug option
       creds = cred_hash ? [cred_hash[:username], cred_hash[:password]] : login_credentials
       @ftp.login(*creds)

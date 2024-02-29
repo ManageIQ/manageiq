@@ -4,6 +4,4 @@ recs = recs.collect do |r|
   attrs[:system] = true
   attrs
 end
-File.open(CustomizationTemplate.seed_file_name, "w") do |f|
-  f.write(recs.to_yaml)
-end
+File.write(CustomizationTemplate.seed_file_name, recs.to_yaml)

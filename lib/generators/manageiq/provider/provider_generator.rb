@@ -26,7 +26,7 @@ module ManageIQ
                  :desc => "Generate default class scaffolding (Default: --scaffolding)"
 
     class_option :manager_type, :type => :string,
-                 :desc => "What type of manager to create, required if building scaffolding (Options: #{manager_types.keys.join(", ")})"
+                                :desc => "What type of manager to create, required if building scaffolding (Options: #{manager_types.keys.join(", ")})"
 
     def create_provider_files
       empty_directory "spec/models/#{plugin_path}"

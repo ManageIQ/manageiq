@@ -147,7 +147,7 @@ RSpec.describe EmsRefresh::SaveInventory do
 
     context "with disconnected non-dup in the database" do
       before do
-        @uid  = SecureRandom.uuid
+        @uid = SecureRandom.uuid
         @vm1 = FactoryBot.create(:vm_with_ref, :ext_management_system => nil, :uid_ems => @uid)
         @vm2 = FactoryBot.build(:vm_with_ref, :ext_management_system => @ems, :uid_ems => @uid)
       end
@@ -172,7 +172,7 @@ RSpec.describe EmsRefresh::SaveInventory do
 
         @ems_ref1 = @vm1.ems_ref
         @ems_ref2 = @vm2.ems_ref
-        @vm1.ems_ref = @vm2.ems_ref     = nil
+        @vm1.ems_ref = @vm2.ems_ref = nil
         @vm1.save
         @vm2.save
       end
@@ -229,7 +229,7 @@ RSpec.describe EmsRefresh::SaveInventory do
 
     def raw_data_process(*args)
       args.collect do |v|
-        RAW_DATA_ATTRS.each_with_object({}) { |s, h| h[s] = v.send(s) }
+        RAW_DATA_ATTRS.index_with { |s| v.send(s) }
       end
     end
 

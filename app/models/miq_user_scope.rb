@@ -1,13 +1,12 @@
 class MiqUserScope
   FEATURE_TYPES = [:view, :control, :admin]
-  attr_accessor *FEATURE_TYPES
-  attr_accessor :scope
+  attr_accessor(*FEATURE_TYPES, :scope)
 
   FILTER_TYPES = [:managed, :belongsto, :expression]
 
   def initialize(scope)
     @scope = scope
-    FEATURE_TYPES.each { |f| instance_variable_set("@#{f}", scope[f]) }
+    FEATURE_TYPES.each { |f| instance_variable_set(:"@#{f}", scope[f]) }
   end
 
   def get_filters(options = {})
@@ -36,9 +35,9 @@ class MiqUserScope
 
     all       = filter[:_all_]
     for_class = filter[klass.to_s.downcase.to_sym]
-    result    = send("merge_#{filter_type}", all, for_class)
+    result    = send(:"merge_#{filter_type}", all, for_class)
 
-    result.blank? ? nil : result
+    result.presence
   end
 
   def merge_managed(*args)
@@ -68,8 +67,8 @@ class MiqUserScope
     return if managed.blank? && belongs.blank?
 
     newh = {:view => {}}
-    newh[:view][:managed]   = {:_all_ => managed} unless managed.blank?
-    newh[:view][:belongsto] = {:_all_ => belongs} unless belongs.blank?
+    newh[:view][:managed]   = {:_all_ => managed} if managed.present?
+    newh[:view][:belongsto] = {:_all_ => belongs} if belongs.present?
 
     new(newh)
   end

@@ -39,6 +39,7 @@ class ServiceRetireTask < MiqRetireTask
     parent_service.service_resources.collect do |svc_rsc|
       next if svc_rsc.resource.respond_to?(:retired?) && svc_rsc.resource.retired?
       next unless svc_rsc.resource.try(:retireable?)
+
       # TODO: the next line deals with the filtering for provisioning
       # (https://github.com/ManageIQ/manageiq/blob/3921e87915b5a69937b9d4a70bb24ab71b97c165/app/models/service_template/filter.rb#L5)
       # which should be extended to retirement as part of later work
@@ -61,7 +62,7 @@ class ServiceRetireTask < MiqRetireTask
         :src_ids             => [svc_rsc.resource.id],
         :service_resource_id => svc_rsc.id,
         :parent_service_id   => parent_service.id,
-        :parent_task_id      => parent_task.id,
+        :parent_task_id      => parent_task.id
       )
       task.request_type = task_type.name.underscore[0..-6]
       task.source = svc_rsc.resource

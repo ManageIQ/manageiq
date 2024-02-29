@@ -80,7 +80,7 @@ describe EvmServer do
         expect(subject.servers_to_monitor.map(&:id)).not_to include(server.id)
       end
 
-      # Note: this is a very important spec
+      # NOTE: this is a very important spec
       # A lot of the data about the current server is stored as instance variables
       # so losing the particular instance we're using to do worker management would
       # be a big problem
@@ -183,7 +183,7 @@ describe EvmServer do
         end
 
         received_ids = []
-        subject.send(:as_each_server) { received_ids << ::Settings.special.settings[:id] }
+        subject.send(:as_each_server) { received_ids << Settings.special.settings[:id] }
         expect(received_ids).to match_array(MiqServer.pluck(:id))
       end
     end

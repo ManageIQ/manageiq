@@ -18,7 +18,7 @@ class EmsEvent
       targets = targets.flatten
       return if targets.blank?
 
-      refresh_targets = targets.collect { |t| get_target("#{t}_refresh_target") unless t.blank? }.compact.uniq
+      refresh_targets = targets.collect { |t| get_target("#{t}_refresh_target") if t.present? }.compact.uniq
       return if refresh_targets.empty?
 
       EmsRefresh.queue_refresh(refresh_targets, nil, :create_task => sync)
@@ -32,8 +32,8 @@ class EmsEvent
       return if target.nil? || policy_event.nil? || policy_src.nil?
 
       inputs = {
-        policy_src.class.table_name.to_sym            => policy_src,
-        :ems_event                                    => self
+        policy_src.class.table_name.to_sym => policy_src,
+        :ems_event                         => self
       }
       begin
         MiqEvent.raise_evm_event(target, policy_event, inputs)
@@ -90,7 +90,7 @@ class EmsEvent
     private
 
     def parse_policy_parameters(target_str, policy_event, param)
-      target         = get_target(target_str)     unless target_str.blank?
+      target         = get_target(target_str) if target_str.present?
       policy_event ||= event_type
       policy_src     = parse_policy_source(target, param) if target
 

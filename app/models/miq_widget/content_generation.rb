@@ -4,10 +4,8 @@ class MiqWidget::ContentGeneration
 
     options.each do |k, v|
       class_eval { attr_accessor k.to_sym }
-      instance_variable_set("@#{k}", v)
+      instance_variable_set(:"@#{k}", v)
     end
-
-    self
   end
 
   def self.based_on_miq_report?

@@ -1,21 +1,20 @@
 module ProviderObjectMixin
-  def with_provider_connection(options = {})
-    raise _("no block given") unless block_given?
+  def with_provider_connection(options = {}, &block)
+    raise _("no block given") unless block
 
-    connection_source(options).with_provider_connection(options) do |connection|
-      yield connection
-    end
+    connection_source(options).with_provider_connection(options, &block)
   end
 
   def with_provider_object(options = {})
     raise _("no block given") unless block_given?
+
     connection_source(options).with_provider_connection(options) do |connection|
-      begin
-        handle = provider_object(connection)
-        yield handle
-      ensure
-        provider_object_release(handle) if handle && self.respond_to?(:provider_object_release)
-      end
+
+      handle = provider_object(connection)
+      yield handle
+    ensure
+      provider_object_release(handle) if handle && respond_to?(:provider_object_release)
+
     end
   end
 
@@ -28,6 +27,7 @@ module ProviderObjectMixin
   def connection_source(options = {})
     source = options[:connection_source] || connection_manager
     raise _("no connection source available") if source.nil?
+
     source
   end
 

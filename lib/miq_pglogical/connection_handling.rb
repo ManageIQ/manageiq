@@ -41,7 +41,7 @@ class MiqPglogical
         retry
       end
 
-      def pglogical(refresh = false)
+      def pglogical(_refresh = false)
         # TODO: Review if the reasons behind the previous caching / refreshing
         # of the PG::LogicalReplication::Client
         #

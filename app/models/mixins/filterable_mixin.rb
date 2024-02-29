@@ -13,8 +13,8 @@ module FilterableMixin
       return false if recs.nil?
     end
 
-    if db.respond_to?(:apply_belongsto_filters)
-      result = false unless MiqFilter.apply_belongsto_filters([self], bfilters) == [self]
+    if db.respond_to?(:apply_belongsto_filters) && !(MiqFilter.apply_belongsto_filters([self], bfilters) == [self])
+      result = false
     end
 
     result

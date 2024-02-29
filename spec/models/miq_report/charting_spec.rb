@@ -7,14 +7,14 @@ RSpec.describe MiqReport do
 
     5.times do |i|
       vm = FactoryBot.build(:vm_vmware)
-      vm.evm_owner_id = @user.id           if i > 2
+      vm.evm_owner_id = @user.id if i > 2
       vm.miq_group_id = @user.current_group.id if vm.evm_owner_id || (i > 1)
       vm.save
     end
 
     @report_theme = 'miq'
     @show_title   = true
-    @options = MiqReport.graph_options({ :title => "CPU (Mhz)", :type => "Line", :columns => ["col"] })
+    @options = MiqReport.graph_options({:title => "CPU (Mhz)", :type => "Line", :columns => ["col"]})
 
     allow(ManageIQ::Reporting::Charting).to receive(:backend).and_return(:c3)
     allow(ManageIQ::Reporting::Charting).to receive(:format).and_return(:c3)
@@ -22,8 +22,8 @@ RSpec.describe MiqReport do
 
   context 'graph_options' do
     it 'returns a hash with options' do
-      expect(MiqReport.graph_options({ :title => "CPU (Mhz)", :type => "Line", :columns => ["col"] })).to include(
-        :type => "Line",
+      expect(MiqReport.graph_options({:title => "CPU (Mhz)", :type => "Line", :columns => ["col"]})).to include(
+        :type  => "Line",
         :title => "CPU (Mhz)"
       )
     end

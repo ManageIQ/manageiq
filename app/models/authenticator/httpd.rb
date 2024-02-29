@@ -65,7 +65,7 @@ module Authenticator
       user.userid     = username
       user.first_name = user_attrs[:firstname]
       user.last_name  = user_attrs[:lastname]
-      user.email      = user_attrs[:email] unless user_attrs[:email].blank?
+      user.email      = user_attrs[:email] if user_attrs[:email].present?
       user.name       = user_attrs[:fullname]
       user.name       = "#{user.first_name} #{user.last_name}" if user.name.blank?
       user.name       = user.userid if user.name.blank?
@@ -115,8 +115,8 @@ module Authenticator
 
     def find_userid_as_distinguished_name(user_attrs)
       dn_domain = user_attrs[:domain].downcase.split(".").map { |s| "dc=#{s}" }.join(",")
-      user = User.in_my_region.where("userid LIKE ?", "%=#{user_attrs[:username]},%,#{dn_domain}").last
-      user
+      User.in_my_region.where("userid LIKE ?", "%=#{user_attrs[:username]},%,#{dn_domain}").last
+
     end
 
     def username_to_upn_name(user_attrs)
@@ -167,8 +167,8 @@ module Authenticator
         X-REMOTE-USER-EMAIL
         X-REMOTE-USER-DOMAIN
         X-REMOTE-USER-GROUPS
-      ].each_with_object({}) do |k, h|
-        h[k] = request.headers[k]&.force_encoding("UTF-8")
+      ].index_with do |k|
+        request.headers[k]&.force_encoding("UTF-8")
       end.delete_nils
     end
 
@@ -192,10 +192,11 @@ module Authenticator
       end
     end
 
-    ATTRS_NEEDED = %w(mail givenname sn displayname domainname).freeze
+    ATTRS_NEEDED = %w[mail givenname sn displayname domainname].freeze
 
     def user_attrs_from_external_directory_via_dbus(username)
       return unless username
+
       require "dbus"
 
       sysbus = DBus.system_bus
@@ -210,7 +211,7 @@ module Authenticator
               {:user_name => username, :error => err}
       end
 
-      ATTRS_NEEDED.each_with_object({}) { |attr, hash| hash[attr] = Array(user_attrs[attr]).first }
+      ATTRS_NEEDED.index_with { |attr| Array(user_attrs[attr]).first }
     end
 
     def user_attrs_from_external_directory_via_dbus_api_service(username)

@@ -224,7 +224,7 @@ RSpec.describe ChargebackVm do
           let(:parent_classification) { FactoryBot.create(:classification) }
           let(:classification)        { FactoryBot.create(:classification, :parent_id => parent_classification.id) }
 
-          let(:rate_assignment_options) { {:cb_rate => storage_chargeback_rate, :object => MiqEnterprise.first } }
+          let(:rate_assignment_options) { {:cb_rate => storage_chargeback_rate, :object => MiqEnterprise.first} }
           let(:options) { base_options.merge(:interval => 'daily', :tag => nil, :entity_id => resource.id, :include_metrics => false) }
 
           before do
@@ -914,7 +914,7 @@ RSpec.describe ChargebackVm do
 
       context "by owner" do
         let(:user) { FactoryBot.create(:user, :name => 'Test VM Owner', :userid => 'test_user') }
-        let(:options) { {:interval_size => 4, :owner => user.userid, :ext_options => {:tz => 'Eastern Time (US & Canada)'} } }
+        let(:options) { {:interval_size => 4, :owner => user.userid, :ext_options => {:tz => 'Eastern Time (US & Canada)'}} }
         before do
           @vm1.update_attribute(:evm_owner, user)
         end
@@ -978,7 +978,7 @@ RSpec.describe ChargebackVm do
           ChargebackRate.set_assignments(:storage, [rate_assignment_options])
         end
 
-        it "chooses rate according to cloud_volume\'s tag" do
+        it "chooses rate according to cloud_volume's tag" do
           cloud_volume_sdd.tag_with([classification.tag.name], :ns => '*')
 
           expect(subject).to eq(storage_chargeback_rate)
@@ -1102,7 +1102,7 @@ RSpec.describe ChargebackVm do
 
       before do
         # fix fixed computes cost tier - we are not using variable part
-        detail_params[:chargeback_rate_detail_fixed_compute_cost][:tiers] = [{:fixed_rate => count_hourly_rate.to_s }]
+        detail_params[:chargeback_rate_detail_fixed_compute_cost][:tiers] = [{:fixed_rate => count_hourly_rate.to_s}]
 
         vm.tag_with([classification_1_1.tag.name, classification_2_1.tag.name], :ns => '*')
 
@@ -1199,7 +1199,7 @@ RSpec.describe ChargebackVm do
           expect(subject.memory_allocated_metric).to eq(memory_available)
 
           memory_cost_rate1 = memory_available * hourly_rate * hours_in_month
-          memory_cost_rate2 = fixed_rate * hours_in_month + memory_available * hourly_rate_2 * hours_in_month
+          memory_cost_rate2 = (fixed_rate * hours_in_month) + (memory_available * hourly_rate_2 * hours_in_month)
 
           expect(subject.memory_allocated_cost).to eq(memory_cost_rate1 + memory_cost_rate2)
 
@@ -1207,7 +1207,7 @@ RSpec.describe ChargebackVm do
           expect(subject.memory_used_metric).to eq(used_metric)
 
           memory_cost_rate1 = used_metric * hourly_rate * hours_in_month
-          memory_cost_rate2 = fixed_rate * hours_in_month + used_metric * hourly_rate_2 * hours_in_month
+          memory_cost_rate2 = (fixed_rate * hours_in_month) + (used_metric * hourly_rate_2 * hours_in_month)
 
           expect(subject.memory_used_cost).to eq(memory_cost_rate1 + memory_cost_rate2)
           expect(subject.memory_cost).to eq(subject.memory_allocated_cost + subject.memory_used_cost)
@@ -1351,7 +1351,6 @@ RSpec.describe ChargebackVm do
       end
 
       context "Group by single tag category" do
-
         let(:options) { base_options.merge(:interval => 'monthly', :groupby_tag => 'environment') }
         before do
           add_metric_rollups_for(@vm1, month_beginning...month_end, 12.hours, metric_rollup_params)
@@ -1515,7 +1514,7 @@ RSpec.describe ChargebackVm do
     let(:cores)               { 7 }
     let(:mem_mb)              { 1777 }
     let(:disk_gb)             { 7 }
-    let(:disk_b)              { disk_gb * 1024**3 }
+    let(:disk_b)              { disk_gb * (1024**3) }
 
     let(:hardware) do
       FactoryBot.create(:hardware,

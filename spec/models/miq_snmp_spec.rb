@@ -17,7 +17,7 @@ RSpec.describe MiqSnmp do
       MiqSnmp.trap_v1(:host          => ["localhost"],
                       :sysuptime     => 1,
                       :specific_trap => "56",
-                      :object_list   => [{:oid=>"1.2.3", :var_type=>"Integer", :value=>"1"}])
+                      :object_list   => [{:oid => "1.2.3", :var_type => "Integer", :value => "1"}])
     end
   end
 end

@@ -10,7 +10,7 @@ module TaskHelpers
 
           begin
             import_scan_profile(filename)
-          rescue StandardError => err
+          rescue => err
             $log.error("Error importing #{filename} : #{err.message}")
             warn("Error importing #{filename} : #{err.message}")
           end
@@ -37,6 +37,7 @@ module TaskHelpers
 
         items.each do |item|
           next if item['filename']
+
           if item['guid'].nil?
             item['guid'] = SecureRandom.uuid
           end

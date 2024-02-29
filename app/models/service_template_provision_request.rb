@@ -1,11 +1,11 @@
 class ServiceTemplateProvisionRequest < MiqRequest
   TASK_DESCRIPTION  = N_('Service_Template_Provisioning')
   SOURCE_CLASS_NAME = 'ServiceTemplate'
-  ACTIVE_STATES     = %w( migrated ) + base_class::ACTIVE_STATES
+  ACTIVE_STATES     = %w[migrated] + base_class::ACTIVE_STATES
   SERVICE_ORDER_CLASS = '::ServiceOrderCart'.freeze
 
-  validates_inclusion_of :request_state,  :in => %w( pending finished ) + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"
-  validate               :must_have_user
+  validates :request_state, :inclusion => {:in => %w[pending finished] + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"}
+  validate :must_have_user
 
   after_create :process_service_order
 
@@ -22,7 +22,7 @@ class ServiceTemplateProvisionRequest < MiqRequest
 
   delegate :picture, :to => :service_template, :allow_nil => true
 
-  alias_method :user, :get_user
+  alias user get_user
   include MiqProvisionQuotaMixin
 
   def process_service_order

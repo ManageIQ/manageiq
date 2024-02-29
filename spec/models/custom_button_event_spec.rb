@@ -3,11 +3,11 @@ RSpec.describe CustomButtonEvent do
   let(:ae_entry_point) { "/SYSTEM/PROCESS/Request" }
   let(:cb_event) do
     FactoryBot.create(:custom_button_event,
-                       :full_data => {
-                         :automate_entry_point => ae_entry_point,
-                         :button_id            => custom_button.id,
-                         :button_name          => custom_button.name
-                       })
+                      :full_data => {
+                        :automate_entry_point => ae_entry_point,
+                        :button_id            => custom_button.id,
+                        :button_name          => custom_button.name
+                      })
   end
 
   context '#automate_entry_point' do

@@ -9,16 +9,16 @@ RSpec.describe MiqReportResult do
     task = FactoryBot.create(:miq_task)
     EvmSpecHelper.local_miq_server
     report = MiqReport.create(
-        :name          => "VMs based on Disk Type",
-        :title         => "VMs using thin provisioned disks",
-        :rpt_group     => "Custom",
-        :rpt_type      => "Custom",
-        :db            => "VmInfra",
-        :cols          => ["name"],
-        :col_order     => ["name"],
-        :headers       => ["Name"],
-        :order         => "Ascending",
-        :template_type => "report"
+      :name          => "VMs based on Disk Type",
+      :title         => "VMs using thin provisioned disks",
+      :rpt_group     => "Custom",
+      :rpt_type      => "Custom",
+      :db            => "VmInfra",
+      :cols          => ["name"],
+      :col_order     => ["name"],
+      :headers       => ["Name"],
+      :order         => "Ascending",
+      :template_type => "report"
     )
     report.generate_table(:userid => "admin")
     task.miq_report_result = report.build_create_results({:userid => "admin"}, task.id)
@@ -103,7 +103,7 @@ RSpec.describe MiqReportResult do
 
       @report_theme = 'miq'
       @show_title   = true
-      @options = MiqReport.graph_options({ :title => "CPU (Mhz)", :type => "Line", :columns => ["col"] })
+      @options = MiqReport.graph_options({:title => "CPU (Mhz)", :type => "Line", :columns => ["col"]})
 
       allow(ManageIQ::Reporting::Charting).to receive(:detect_available_plugin).and_return(ManageIQ::Reporting::C3Charting)
     end
@@ -131,7 +131,7 @@ RSpec.describe MiqReportResult do
       report_result = rpt.build_create_results(:userid => "test")
 
       report_result.report
-      report_result.report.extras[:grouping] = { "extra data" => "not saved" }
+      report_result.report.extras[:grouping] = {"extra data" => "not saved"}
       report_result.save
 
       result_reload = MiqReportResult.last
@@ -220,7 +220,7 @@ RSpec.describe MiqReportResult do
     end
 
     it "can serialize and deserialize a CSV" do
-      csv = CSV.generate { |c| c << %w(foo bar) << %w(baz qux) }
+      csv = CSV.generate { |c| c << %w[foo bar] << %w[baz qux] }
       report_result = described_class.new
 
       report_result.report_results = csv
@@ -229,16 +229,16 @@ RSpec.describe MiqReportResult do
     end
 
     it "can serialize and deserialize a plain text report" do
-      txt = <<EOF
-+--------------+
-|  Foo Report  |
-+--------------+
-| Foo  | Bar   |
-+--------------+
-| baz  | qux   |
-| quux | corge |
-+--------------+
-EOF
+      txt = <<~EOF
+        +--------------+
+        |  Foo Report  |
+        +--------------+
+        | Foo  | Bar   |
+        +--------------+
+        | baz  | qux   |
+        | quux | corge |
+        +--------------+
+      EOF
       report_result = described_class.new
 
       report_result.report_results = txt
@@ -256,9 +256,9 @@ EOF
       FactoryBot.create(:miq_report_result, :userid => u2.userid)
 
       expect(MiqReportResult.counts_by_userid).to match_array([
-        {:userid => u1.userid, :count => 2},
-        {:userid => u2.userid, :count => 1}
-      ])
+                                                                {:userid => u1.userid, :count => 2},
+                                                                {:userid => u2.userid, :count => 1}
+                                                              ])
     end
   end
 end

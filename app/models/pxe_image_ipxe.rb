@@ -7,7 +7,7 @@ class PxeImageIpxe < PxeImage
   end
 
   def self.pxe_server_filename(mac_address)
-    mac_address.gsub(/:/, "-").downcase.strip
+    mac_address.tr(':', "-").downcase.strip
   end
 
   def self.parse_contents(contents, label)

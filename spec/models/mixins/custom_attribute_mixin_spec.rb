@@ -2,7 +2,7 @@ RSpec.describe CustomAttributeMixin do
   let(:supported_factories) { [:vm_redhat, :host] }
   let(:test_class) do
     Class.new(ActiveRecord::Base) do
-      def self.name; "TestClass"; end
+      def self.name = "TestClass"
       self.table_name = "vms"
       include CustomAttributeMixin
     end
@@ -74,21 +74,21 @@ RSpec.describe CustomAttributeMixin do
 
       expect(object.miq_custom_keys).to eq([])
 
-      key  = "foo"
+      key = "foo"
       FactoryBot.create(:miq_custom_attribute,
-                         :resource_type => object.class.base_class.name,
-                         :resource_id   => object.id,
-                         :name          => key,
-                         :value         => "bar")
+                        :resource_type => object.class.base_class.name,
+                        :resource_id   => object.id,
+                        :name          => key,
+                        :value         => "bar")
 
       expect(object.reload.miq_custom_keys).to eq([key])
 
       key2 = "foobar"
       FactoryBot.create(:miq_custom_attribute,
-                         :resource_type => object.class.base_class.name,
-                         :resource_id   => object.id,
-                         :name          => key2,
-                         :value         => "bar")
+                        :resource_type => object.class.base_class.name,
+                        :resource_id   => object.id,
+                        :name          => key2,
+                        :value         => "bar")
       expect(object.reload.miq_custom_keys).to match_array([key, key2])
     end
   end
@@ -102,7 +102,7 @@ RSpec.describe CustomAttributeMixin do
 
     it "key with a letter followed by a number" do
       test_class.add_custom_attribute("fun4all")
-      expect(test_class.new).to respond_to(:"fun4all")
+      expect(test_class.new).to respond_to(:fun4all)
       expect(test_class.new).to respond_to(:"fun4all=")
     end
 
@@ -139,14 +139,16 @@ RSpec.describe CustomAttributeMixin do
         :resource_type => object.class.base_class.name,
         :resource_id   => object.id,
         :source        => source,
-        :name          => key).first).to be_nil
+        :name          => key
+      ).first).to be_nil
 
       object.miq_custom_set(key, "")
       expect(CustomAttribute.where(
         :resource_type => object.class.base_class.name,
         :resource_id   => object.id,
         :source        => source,
-        :name          => key).first).to be_nil
+        :name          => key
+      ).first).to be_nil
 
       object.miq_custom_set(key, value)
       expect(CustomAttribute.where(
@@ -154,14 +156,16 @@ RSpec.describe CustomAttributeMixin do
         :resource_id   => object.id,
         :source        => source,
         :name          => key,
-        :value         => value).first).not_to be_nil
+        :value         => value
+      ).first).not_to be_nil
 
       object.miq_custom_set(key, "")
       expect(CustomAttribute.where(
         :resource_type => object.class.base_class.name,
         :resource_id   => object.id,
         :source        => source,
-        :name          => key).first).to be_nil
+        :name          => key
+      ).first).to be_nil
     end
   end
 
@@ -175,10 +179,10 @@ RSpec.describe CustomAttributeMixin do
       expect(object.miq_custom_get(key)).to be_nil
 
       FactoryBot.create(:miq_custom_attribute,
-                         :resource_type => object.class.base_class.name,
-                         :resource_id   => object.id,
-                         :name          => key,
-                         :value         => value)
+                        :resource_type => object.class.base_class.name,
+                        :resource_id   => object.id,
+                        :name          => key,
+                        :value         => value)
 
       expect(object.reload.miq_custom_get(key)).to eq(value)
     end

@@ -7,7 +7,7 @@ class MiqGroup < ApplicationRecord
   has_one    :entitlement, :dependent => :destroy, :autosave => true
   has_one    :miq_user_role, :through => :entitlement
   has_and_belongs_to_many :users
-  has_many   :vms,         :dependent => :nullify
+  has_many   :vms, :dependent => :nullify
   has_many   :miq_templates, :dependent => :nullify
   has_many   :miq_reports, :dependent => :nullify
   has_many   :miq_report_results, :dependent => :nullify
@@ -17,12 +17,12 @@ class MiqGroup < ApplicationRecord
   has_many   :authentications, :dependent => :nullify
 
   virtual_delegate :miq_user_role_name, :to => :entitlement, :allow_nil => true, :type => :string
-  virtual_column :read_only,          :type => :boolean
+  virtual_column :read_only, :type => :boolean
   virtual_has_one :sui_product_features, :class_name => "Array"
 
   delegate :self_service?, :limited_self_service?, :to => :miq_user_role, :allow_nil => true
 
-  validates :description, :presence => true, :unique_within_region => { :match_case => false }
+  validates :description, :presence => true, :unique_within_region => {:match_case => false}
   validate :validate_default_tenant, :on => :update, :if => :tenant_id_changed?
   before_destroy :ensure_can_be_destroyed
   after_destroy :reset_current_group_for_users
@@ -42,7 +42,7 @@ class MiqGroup < ApplicationRecord
   include CustomActionsMixin
   include ExternalUrlMixin
 
-  alias_method :current_tenant, :tenant
+  alias current_tenant tenant
 
   def name
     description
@@ -112,7 +112,7 @@ class MiqGroup < ApplicationRecord
     root_tenant = Tenant.root_tenant
 
     groups = where(:group_type => SYSTEM_GROUP, :tenant_id => Tenant.root_tenant)
-               .includes(:entitlement).index_by(&:description)
+             .includes(:entitlement).index_by(&:description)
     roles  = MiqUserRole.where("name like 'EvmRole-%'").index_by(&:name)
 
     role_map.each_with_index do |(group_name, role_name), index|
@@ -121,7 +121,7 @@ class MiqGroup < ApplicationRecord
       if user_role.nil?
         raise StandardError,
               _("Unable to find user_role 'EvmRole-%{role_name}' for group '%{group_name}'") %
-                {:role_name => role_name, :group_name => group_name}
+              {:role_name => role_name, :group_name => group_name}
       end
       group.miq_user_role       = user_role if group.entitlement.try(:miq_user_role_id) != user_role.id
       group.sequence            = index + 1
@@ -129,11 +129,11 @@ class MiqGroup < ApplicationRecord
       group.group_type          = SYSTEM_GROUP
       group.tenant              = root_tenant
 
-      if group.changed?
-        mode = group.new_record? ? "Created" : "Updated"
-        group.save!
-        _log.info("#{mode} Group: #{group.description} with Role: #{user_role.name}")
-      end
+      next unless group.changed?
+
+      mode = group.new_record? ? "Created" : "Updated"
+      group.save!
+      _log.info("#{mode} Group: #{group.description} with Role: #{user_role.name}")
     end
 
     # find any default tenant groups that do not have a role
@@ -162,6 +162,7 @@ class MiqGroup < ApplicationRecord
     unless ldap.bind(ldap.fqusername(bind_dn), bind_pwd)
       raise _("Bind failed for user %{user_name}") % {:user_name => bind_dn}
     end
+
     user_obj = ldap.get_user_object(ldap.normalize(ldap.fqusername(username)))
     raise _("Unable to find user %{user_name} in directory") % {:user_name => username} if user_obj.nil?
 
@@ -239,7 +240,7 @@ class MiqGroup < ApplicationRecord
   def read_only
     system_group? || tenant_group?
   end
-  alias_method :read_only?, :read_only
+  alias read_only? read_only
 
   virtual_total :user_count, :users
 
@@ -270,7 +271,7 @@ class MiqGroup < ApplicationRecord
       :description => "Tenant #{tenant_full_name} access"
     ).find_or_create_by!(
       :group_type => TENANT_GROUP,
-      :tenant_id  => tenant.id,
+      :tenant_id  => tenant.id
     )
   end
 
@@ -298,11 +299,13 @@ class MiqGroup < ApplicationRecord
   def single_group_users?
     group_user_ids = user_ids
     return false if group_user_ids.empty?
+
     users.includes(:miq_groups).where(:id => group_user_ids).where.not(:miq_groups => {:id => id}).count != group_user_ids.size
   end
 
   def sui_product_features
     return [] unless miq_user_role.allows?(:identifier => 'sui')
+
     MiqProductFeature.feature_all_children('sui').each_with_object([]) do |sui_feature, sui_features|
       sui_features << sui_feature if miq_user_role.allows?(:identifier => sui_feature)
     end

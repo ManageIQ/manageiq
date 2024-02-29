@@ -17,6 +17,7 @@ module MiqReport::Search
     klass = db_class.follow_associations_with_virtual(parts)
     # Column is valid if it is accessible via virtual relations or directly.
     raise _("Invalid reflection <%{item}> on model <%{name}>") % {:item => assoc, :name => db_class} if klass.nil?
+
     # only return attribute if it is accessible directly (not through virtual columns)
     [klass.arel_table[col.to_sym], klass.type_for_attribute(col).type] if db_class.follow_associations(parts)
   end
@@ -43,10 +44,12 @@ module MiqReport::Search
   # @return [Array<Arel::Nodes>] for sorting in sql
   def get_order_info
     return [] if sortby.nil? # apply limits (note: without order it is non-deterministic)
+
     # Convert sort cols from sub-tables from the form of assoc_name.column to arel
     Array.wrap(sortby).collect do |c|
       sql_col, sql_type = association_column(c)
       return nil if sql_col.nil?
+
       sql_col = Arel::Nodes::NamedFunction.new('LOWER', [sql_col]) if [:string, :text].include?(sql_type)
       if order.nil?
         sql_col
@@ -94,8 +97,7 @@ module MiqReport::Search
     search_options = options.merge(:class            => db,
                                    :conditions       => conditions,
                                    :include_for_find => includes,
-                                   :references       => get_include
-                                  )
+                                   :references       => get_include)
     search_options.merge!(:limit => limit, :offset => offset, :order => order) if order
     search_options[:extra_cols] = va_sql_cols if va_sql_cols.present?
     search_options[:use_sql_view] = if db_options.nil? || db_options[:use_sql_view].nil?
@@ -104,11 +106,11 @@ module MiqReport::Search
                                       db_options[:use_sql_view]
                                     end
 
-    if options[:parent]
-      targets = get_parent_targets(options[:parent], options[:association] || options[:parent_method])
-    else
-      targets = db_class
-    end
+    targets = if options[:parent]
+                get_parent_targets(options[:parent], options[:association] || options[:parent_method])
+              else
+                db_class
+              end
 
     if selected_ids.present?
       targets = targets.first.kind_of?(Integer) ? targets & selected_ids : targets.where(:id => selected_ids)
@@ -143,6 +145,7 @@ module MiqReport::Search
 
   def filter_results(results, supported_features_filter)
     return results if supported_features_filter.nil?
+
     results.select { |result| result.send(supported_features_filter) }
   end
 end

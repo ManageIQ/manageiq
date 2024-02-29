@@ -4,8 +4,8 @@ class Volume < ApplicationRecord
     p = Partition.quoted_table_name
     v = Volume.quoted_table_name
     Partition.select("DISTINCT #{p}.*")
-      .joins("JOIN #{v} ON #{v}.hardware_id = #{p}.hardware_id AND #{v}.volume_group = #{p}.volume_group")
-      .where("#{v}.id" => id).to_sql
+             .joins("JOIN #{v} ON #{v}.hardware_id = #{p}.hardware_id AND #{v}.volume_group = #{p}.volume_group")
+             .where("#{v}.id" => id).to_sql
   }, :foreign_key => :volume_group
 
   virtual_column :free_space_percent, :type => :float
@@ -17,16 +17,19 @@ class Volume < ApplicationRecord
     # Override volume_group getter to prevent the special physical linkage from coming through
     vg = read_attribute(:volume_group)
     return nil if vg.respond_to?(:starts_with?) && vg.starts_with?(PHYSICAL_VOLUME_GROUP)
+
     vg
   end
 
   def free_space_percent
     return nil if size.nil? || size == 0 || free_space.nil?
+
     Float(free_space) / size * 100
   end
 
   def used_space_percent
     return nil if size.nil? || size == 0 || used_space.nil?
+
     Float(used_space) / size * 100
   end
 
@@ -68,25 +71,25 @@ class Volume < ApplicationRecord
       end
 
       nhv = nh[:volume]
-      unless nhv.nil?
-        name = nhv[:name]
-        found = parent.hardware.volumes.where(:name => name).order(:id)
+      next if nhv.nil?
 
-        # Handle duplicate volume names (Generally only in the case of Windows with blank volume names)
-        if found.length > 1
-          dup_volumes[name] = found.collect(&:id) if dup_volumes[name].nil?
-          found_id = dup_volumes[name].shift
-          found = found.detect { |f| f.id == found_id }
-        else
-          found = found[0]
-        end
-        found.nil? ? new_volumes << nhv : found.update(nhv)
+      name = nhv[:name]
+      found = parent.hardware.volumes.where(:name => name).order(:id)
 
-        deletes[:volumes].each_with_index do |ele, i|
-          if ele[1] == name
-            deletes[:volumes].delete_at(i)
-            break
-          end
+      # Handle duplicate volume names (Generally only in the case of Windows with blank volume names)
+      if found.length > 1
+        dup_volumes[name] = found.collect(&:id) if dup_volumes[name].nil?
+        found_id = dup_volumes[name].shift
+        found = found.detect { |f| f.id == found_id }
+      else
+        found = found[0]
+      end
+      found.nil? ? new_volumes << nhv : found.update(nhv)
+
+      deletes[:volumes].each_with_index do |ele, i|
+        if ele[1] == name
+          deletes[:volumes].delete_at(i)
+          break
         end
       end
     end
@@ -156,6 +159,7 @@ class Volume < ApplicationRecord
 
   def self.find_disk_by_controller(parent, controller)
     return parent.hardware.disks.find_by(:controller_type => $1, :location => $2) if controller =~ /^([^0-9]+)([0-9]:[0-9]):[0-9]$/
+
     nil
   end
 end

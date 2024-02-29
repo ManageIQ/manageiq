@@ -212,7 +212,7 @@ class EmsEvent < EventStream
       if vm.respond_to?(:availability_zone)
         availability_zone = vm.availability_zone
         unless availability_zone.nil?
-          event[:availability_zone_id]     = availability_zone.id
+          event[:availability_zone_id] = availability_zone.id
         end
       end
     end
@@ -228,6 +228,7 @@ class EmsEvent < EventStream
 
   def self.first_chained_event(ems_id, chain_id)
     return nil if chain_id.nil?
+
     EmsEvent.where(:ems_id => ems_id, :chain_id => chain_id).order(:id).first
   end
 
@@ -281,7 +282,7 @@ class EmsEvent < EventStream
   private
 
   def self.event_allowed_ems_ref_keys
-    %w(vm_ems_ref dest_vm_ems_ref)
+    %w[vm_ems_ref dest_vm_ems_ref]
   end
   private_class_method :event_allowed_ems_ref_keys
 
@@ -289,11 +290,11 @@ class EmsEvent < EventStream
     event.delete_if { |k,| k.to_s.ends_with?("_ems_ref") && !event_allowed_ems_ref_keys.include?(k.to_s) }
 
     new_event = EmsEvent.create(event) unless EmsEvent.exists?(
-      :event_type  => event[:event_type],
-      :timestamp   => event[:timestamp],
-      :chain_id    => event[:chain_id],
-      :ems_id      => event[:ems_id],
-      :ems_ref     => event[:ems_ref],
+      :event_type => event[:event_type],
+      :timestamp  => event[:timestamp],
+      :chain_id   => event[:chain_id],
+      :ems_id     => event[:ems_id],
+      :ems_ref    => event[:ems_ref]
     )
     new_event.handle_event if new_event
     new_event
@@ -338,7 +339,7 @@ class EmsEvent < EventStream
         :vm_ems_ref        => source_event.vm_ems_ref,
         :vm_or_template_id => source_event.vm_or_template_id
       }
-      new_event[:username] = event.username unless event.username.blank?
+      new_event[:username] = event.username if event.username.present?
 
       # Fill in the dest information if we have it
       unless dest_event.nil?
@@ -348,10 +349,10 @@ class EmsEvent < EventStream
         new_event.merge!(
           :dest_host_name         => dest_event.host_name,
           :dest_host_id           => dest_event.host_id,
-          :dest_vm_name           => dest_event.send("#{dest_key}vm_name"),
-          :dest_vm_location       => dest_event.send("#{dest_key}vm_location"),
-          :dest_vm_ems_ref        => dest_event.send("#{dest_key}vm_ems_ref"),
-          :dest_vm_or_template_id => dest_event.send("#{dest_key}vm_or_template_id")
+          :dest_vm_name           => dest_event.send(:"#{dest_key}vm_name"),
+          :dest_vm_location       => dest_event.send(:"#{dest_key}vm_location"),
+          :dest_vm_ems_ref        => dest_event.send(:"#{dest_key}vm_ems_ref"),
+          :dest_vm_or_template_id => dest_event.send(:"#{dest_key}vm_or_template_id")
         )
       end
 
@@ -390,7 +391,7 @@ class EmsEvent < EventStream
   def vm_refresh_target
     (vm_or_template && vm_or_template.ext_management_system ? vm_or_template : host_refresh_target)
   end
-  alias_method :src_vm_refresh_target, :vm_refresh_target
+  alias src_vm_refresh_target vm_refresh_target
 
   def src_vm_or_dest_host_refresh_target
     vm_or_template ? vm_refresh_target : dest_host_refresh_target
@@ -399,7 +400,7 @@ class EmsEvent < EventStream
   def host_refresh_target
     (host && host.ext_management_system ? host : ems_refresh_target)
   end
-  alias_method :src_host_refresh_target, :host_refresh_target
+  alias src_host_refresh_target host_refresh_target
 
   def dest_vm_refresh_target
     (dest_vm_or_template && dest_vm_or_template.ext_management_system ? dest_vm_or_template : dest_host_refresh_target)
@@ -412,7 +413,7 @@ class EmsEvent < EventStream
   def ems_cluster_refresh_target
     ext_management_system
   end
-  alias_method :src_ems_cluster_refresh_target, :ems_cluster_refresh_target
+  alias src_ems_cluster_refresh_target ems_cluster_refresh_target
 
   def ems_refresh_target
     ext_management_system

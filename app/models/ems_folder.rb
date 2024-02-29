@@ -33,8 +33,8 @@ class EmsFolder < ApplicationRecord
     children(:of_type => 'EmsFolder')
   end
 
-  alias_method :add_folder, :set_child
-  alias_method :remove_folder, :remove_child
+  alias add_folder set_child
+  alias remove_folder remove_child
 
   def remove_all_folders
     remove_all_children(:of_type => 'EmsFolder')
@@ -53,8 +53,8 @@ class EmsFolder < ApplicationRecord
     children(:of_type => 'EmsCluster')
   end
 
-  alias_method :add_cluster, :set_child
-  alias_method :remove_cluster, :remove_child
+  alias add_cluster set_child
+  alias remove_cluster remove_child
 
   def remove_all_clusters
     remove_all_children(:of_type => 'EmsCluster')
@@ -66,8 +66,8 @@ class EmsFolder < ApplicationRecord
     children(:of_type => 'Host')
   end
 
-  alias_method :add_host, :set_child
-  alias_method :remove_host, :remove_child
+  alias add_host set_child
+  alias remove_host remove_child
 
   def remove_all_hosts
     remove_all_children(:of_type => 'Host')
@@ -87,8 +87,8 @@ class EmsFolder < ApplicationRecord
     vms_and_templates.select { |v| v.kind_of?(Vm) }
   end
 
-  alias_method :add_vm, :set_child
-  alias_method :remove_vm, :remove_child
+  alias add_vm set_child
+  alias remove_vm remove_child
 
   def remove_all_vms
     remove_all_children(:of_type => 'Vm')

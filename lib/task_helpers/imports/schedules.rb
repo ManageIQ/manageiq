@@ -10,7 +10,7 @@ module TaskHelpers
 
           begin
             MiqSchedule.import(File.open(filename, 'r'))
-          rescue StandardError => err
+          rescue => err
             warn("Error importing #{filename} : #{err.message}")
           end
         end

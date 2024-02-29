@@ -18,22 +18,25 @@ module Metric::Aggregation
   class Aggregate < Common
     def self.summation(col, _obj, result, counts, value)
       return if value.nil?
+
       result[col] += value
       counts[col] += 1
     end
 
     class << self
-      alias_method :derived_vm_numvcpus, :summation
-      alias_method :average, :summation
+      alias derived_vm_numvcpus summation
+      alias average summation
     end
 
     def self.latest(col, _obj, result, _counts, value)
       return if value.nil?
+
       result[col] = value
     end
 
     def self.cpu_usage_rate_average(col, state, result, counts, value)
       return if value.nil?
+
       if state.try(:total_cpu).to_i > 0
         pct = value / 100
         total = state.total_cpu
@@ -49,6 +52,7 @@ module Metric::Aggregation
 
     def self.mem_usage_absolute_average(col, state, result, counts, value)
       return if value.nil?
+
       if state && state.total_mem
         pct = value / 100
         total = state.total_mem
@@ -63,6 +67,7 @@ module Metric::Aggregation
   class Process < Common
     def self.average(col, _dummy, result, counts, aggregate_only = false)
       return if aggregate_only || result[col].nil?
+
       result[col] = result[col] / counts[col] unless counts[col] == 0
     end
 
@@ -71,11 +76,12 @@ module Metric::Aggregation
     end
 
     class << self
-      alias_method :latest, :summation
+      alias latest summation
     end
 
     def self.cpu_usage_rate_average(col, state, result, counts, aggregate_only = false)
       return if result[col].nil?
+
       if state.try(:total_cpu).to_i > 0
         total = state.total_cpu
         result[col] = result[col] / total * 100 unless total == 0
@@ -86,6 +92,7 @@ module Metric::Aggregation
 
     def self.mem_usage_absolute_average(col, state, result, counts, aggregate_only = false)
       return if result[col].nil?
+
       if state && state.total_mem
         total = state.total_mem
         result[col] = result[col] / total * 100 unless total == 0

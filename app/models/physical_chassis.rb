@@ -8,7 +8,7 @@ class PhysicalChassis < ApplicationRecord
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :inverse_of => :physical_chassis,
     :class_name => "ManageIQ::Providers::PhysicalInfraManager"
-  belongs_to :physical_rack, :foreign_key => :physical_rack_id, :inverse_of => :physical_chassis
+  belongs_to :physical_rack, :inverse_of => :physical_chassis
   belongs_to :parent_physical_chassis,
              :class_name => "PhysicalChassis",
              :inverse_of => :child_physical_chassis

@@ -12,8 +12,8 @@ module Vmdb
 
     private_class_method def self.permission_files
       Vmdb::Plugins.to_a.unshift(Rails)
-        .map { |source| source.root.join("config", "permissions.yml") }
-        .select(&:exist?)
+                   .map { |source| source.root.join("config", "permissions.yml") }
+                   .select(&:exist?)
     end
 
     attr_reader :unsupported

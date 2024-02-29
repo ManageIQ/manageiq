@@ -20,7 +20,7 @@ RSpec.describe GenericObject do
           :s_time     => "datetime"
         },
         :associations => {"vms" => "Vm", "hosts" => "Host"},
-        :methods      => %w(my_host  some_method)
+        :methods      => %w[my_host some_method]
       }
     )
   end
@@ -89,12 +89,12 @@ RSpec.describe GenericObject do
         }
         go.save!
 
-        expect(go.property_attributes['s_time']).to be_within(0.001).of (s_time - 2.days)
+        expect(go.property_attributes['s_time']).to be_within(0.001).of(s_time - 2.days)
         expect(go.property_attributes).to include(
           "flag"       => false,
           "data_read"  => data_read + 100.50,
           "max_number" => max_number + 100,
-          "server"     => "#{server_name}_2",
+          "server"     => "#{server_name}_2"
         )
       end
 
@@ -172,7 +172,7 @@ RSpec.describe GenericObject do
   end
 
   describe 'property methods' do
-    let(:ws)   { double("MiqAeWorkspaceRuntime", :root => {"method_result" => "some_return_value"}) }
+    let(:ws) { double("MiqAeWorkspaceRuntime", :root => {"method_result" => "some_return_value"}) }
 
     before { go.ae_user_identity(user) }
 
@@ -213,13 +213,13 @@ RSpec.describe GenericObject do
       end
 
       it 'one array parameter' do
-        options = {:attrs => attrs.merge(:param_1 => %w(p1 p2), :param_1_type=>"Array")}
+        options = {:attrs => attrs.merge(:param_1 => %w[p1 p2], :param_1_type => "Array")}
         expect(MiqAeEngine).to receive(:deliver).with(hash_including(options)).and_return(ws)
-        go.my_host(%w(p1 p2))
+        go.my_host(%w[p1 p2])
       end
 
       it 'one hash parameter' do
-        options = {:attrs => attrs.merge(:param_1 => {:p1 => 1, :p2 => 2}, :param_1_type=>"Hash")}
+        options = {:attrs => attrs.merge(:param_1 => {:p1 => 1, :p2 => 2}, :param_1_type => "Hash")}
         expect(MiqAeEngine).to receive(:deliver).with(hash_including(options)).and_return(ws)
         go.my_host(:p1 => 1, :p2 => 2)
       end

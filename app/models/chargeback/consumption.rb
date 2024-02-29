@@ -10,9 +10,9 @@ class Chargeback
       #   2) We cannot charge for future hours (i.e. weekly report on Monday, should charge just monday)
       #   3) We cannot charge for hours after the resource has been retired.
       @consumed_hours_in_interval ||= begin
-                                        consumed = (consumption_end - consumption_start).round / 1.hour
-                                        consumed > 0 ? consumed : 0
-                                      end
+        consumed = (consumption_end - consumption_start).round / 1.hour
+        consumed > 0 ? consumed : 0
+      end
     end
 
     def hours_in_month
@@ -60,7 +60,7 @@ class Chargeback
 
     def monthly?
       # A heuristic. Is the interval lenght about 30 days?
-      (hours_in_interval * 1.hour - 30.days).abs < 3.days
+      ((hours_in_interval * 1.hour) - 30.days).abs < 3.days
     end
 
     def born_at

@@ -1,4 +1,5 @@
 # coding: utf-8
+
 class ProviderTagMapping
   # Performs most of the work of ProviderTagMapping - holds current mappings,
   # computes applicable tags, and creates/finds Tag records - except actually [un]assigning.
@@ -26,7 +27,7 @@ class ProviderTagMapping
         :model_class       => Tag,
         # more than needed to identify, doesn't matter much as we use custom save
         :manager_ref       => [:category_tag_id, :entry_name, :entry_description],
-        #:arel            => Tag.all,
+        # :arel            => Tag.all,
         :custom_save_block => lambda do |_ems, inv_collection|
           # TODO: O(N) queries, optimize.
           inv_collection.each do |inv_object|
@@ -38,7 +39,7 @@ class ProviderTagMapping
       @specific_tags_collection = ::InventoryRefresh::InventoryCollection.new(
         :name        => :mapped_specific_tags,
         :model_class => Tag,
-        :manager_ref => [:id],
+        :manager_ref => [:id]
       )
     end
 
@@ -116,19 +117,17 @@ class ProviderTagMapping
       any_value      = @mappings[[name, type, nil]]   || []
       if !specific_value.empty?
         specific_value.map { |tag_id| emit_specific_reference(tag_id) }
+      elsif value.empty?
+        []
       else
-        if value.empty?
-          [] # Don't map empty value to any tag.
-        else
-          # Note: if the way we compute `entry_name` changes,
+          # NOTE: if the way we compute `entry_name` changes,
           # consider what will happen to previously created tags.
-          any_value.map do |tag_id|
-            emit_tag_reference(
-              :category_tag_id   => tag_id,
-              :entry_name        => Classification.sanitize_name(value),
-              :entry_description => value,
-            )
-          end
+        any_value.map do |tag_id|
+          emit_tag_reference(
+            :category_tag_id   => tag_id,
+            :entry_name        => Classification.sanitize_name(value),
+            :entry_description => value
+          )
         end
       end
     end
@@ -150,13 +149,13 @@ class ProviderTagMapping
       entry = category.find_entry_by_name(tag_hash[:entry_name])
       unless entry
         category.lock(:exclusive) do
-          begin
-            entry = category.add_entry(:name        => tag_hash[:entry_name],
-                                       :description => tag_hash[:entry_description])
-            entry.save!
-          rescue ActiveRecord::RecordInvalid
-            entry = category.find_entry_by_name(tag_hash[:entry_name])
-          end
+
+          entry = category.add_entry(:name        => tag_hash[:entry_name],
+                                     :description => tag_hash[:entry_description])
+          entry.save!
+        rescue ActiveRecord::RecordInvalid
+          entry = category.find_entry_by_name(tag_hash[:entry_name])
+
         end
       end
       entry.tag_id

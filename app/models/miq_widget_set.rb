@@ -3,11 +3,11 @@ class MiqWidgetSet < ApplicationRecord
 
   acts_as_miq_set
 
+  before_validation :keep_group_when_saving
   before_destroy :ensure_can_be_destroyed
   before_destroy :destroy_user_versions
   before_destroy :delete_from_dashboard_order
 
-  before_validation :keep_group_when_saving
   after_save        :add_to_dashboard_order
   after_save        :update_members
 
@@ -29,7 +29,7 @@ class MiqWidgetSet < ApplicationRecord
     order(Arel.sql(order))
   }
 
-  WIDGET_DIR =  File.expand_path(File.join(Rails.root, "product/dashboard/dashboards"))
+  WIDGET_DIR = File.expand_path(Rails.root.join("product/dashboard/dashboards").to_s)
 
   def self.default_dashboard
     find_by(:name => 'default', :read_only => true)
@@ -118,14 +118,13 @@ class MiqWidgetSet < ApplicationRecord
     if ws.nil? || ws.updated_on.utc < File.mtime(filename).utc
       # Convert widget descriptions to ids in set_data
       members = []
-      attrs["set_data"] = attrs.delete("set_data_by_description").inject({}) do |h, k|
+      attrs["set_data"] = attrs.delete("set_data_by_description").each_with_object({}) do |k, h|
         col, arr = k
         h[col] = arr.collect do |d|
           w = MiqWidget.find_by(:description => d)
           members << w if w
           w.try(:id)
         end.compact
-        h
       end
 
       owner_description = attrs.delete("owner_description")

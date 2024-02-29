@@ -28,14 +28,14 @@ class MiqProductFeature < ApplicationRecord
     :tenant_id
   ]
 
-  FEATURE_TYPE_ORDER = %w(view control admin node).freeze
+  FEATURE_TYPE_ORDER = %w[view control admin node].freeze
   validates :feature_type, :inclusion => FEATURE_TYPE_ORDER
 
   REQUIRED_ATTRIBUTES = [:feature_type, :identifier].freeze
-  OPTIONAL_ATTRIBUTES = %i(name description children hidden protected).freeze
+  OPTIONAL_ATTRIBUTES = %i[name description children hidden protected].freeze
   ALLOWED_ATTRIBUTES = (REQUIRED_ATTRIBUTES + OPTIONAL_ATTRIBUTES).freeze
-  MY_TENANT_FEATURE_ROOT_IDENTIFIERS = %w(rbac_tenant_manage_quotas).freeze
-  TENANT_FEATURE_ROOT_IDENTIFIERS = (%w(dialog_new_editor dialog_edit_editor dialog_copy_editor dialog_delete) + MY_TENANT_FEATURE_ROOT_IDENTIFIERS).freeze
+  MY_TENANT_FEATURE_ROOT_IDENTIFIERS = %w[rbac_tenant_manage_quotas].freeze
+  TENANT_FEATURE_ROOT_IDENTIFIERS = (%w[dialog_new_editor dialog_edit_editor dialog_copy_editor dialog_delete] + MY_TENANT_FEATURE_ROOT_IDENTIFIERS).freeze
 
   def name
     value = self[:name]
@@ -85,7 +85,8 @@ class MiqProductFeature < ApplicationRecord
   def self.feature_all_children(identifier, sort = true)
     children = feature_children(identifier, false)
     return [] if children.empty?
-    result   = children + children.flat_map { |c| feature_all_children(c, false) }
+
+    result = children + children.flat_map { |c| feature_all_children(c, false) }
     sort ? sort_children(result) : result
   end
 
@@ -129,7 +130,7 @@ class MiqProductFeature < ApplicationRecord
                                          .includes(:tenant)
                                          .each_with_object({}) do |f, h|
         parent_ident = f.parent_identifier
-        details      = DETAIL_ATTRS.each_with_object({}) { |a, dh| dh[a] = f.send(a) }
+        details      = DETAIL_ATTRS.index_with { |a| f.send(a) }
         h[f.identifier] = {:parent => parent_ident, :children => [], :details => details}
       end
       # populate the children based upon parent identifier
@@ -298,11 +299,10 @@ class MiqProductFeature < ApplicationRecord
   end
 
   def details
-    @details ||= begin
-      attributes.symbolize_keys.slice(*DETAIL_ATTRS).merge(
-        :children => children.where(:hidden => [false, nil])
+    @details ||= attributes.symbolize_keys.slice(*DETAIL_ATTRS).merge(
+      :children => children.where(:hidden => [false, nil])
       )
-    end
+
   end
 
   def self.display_name(number = 1)

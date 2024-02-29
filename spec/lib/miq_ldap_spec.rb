@@ -42,7 +42,7 @@ RSpec.describe MiqLdap do
     end
   end
 
-  let(:users) { %w(rock@mycompany.com smith@mycompany.com will@mycompany.com john@mycompany.com) }
+  let(:users) { %w[rock@mycompany.com smith@mycompany.com will@mycompany.com john@mycompany.com] }
 
   it "gets user information" do
     if @userid
@@ -52,6 +52,7 @@ RSpec.describe MiqLdap do
       users.sort.each do |u|
         udata = ldap.get_user_info(u)
         next if udata.nil?
+
         # puts "\nUser Data for #{udata[:display_name]}:"
         udata.sort_by { |k, _v| k.to_s }.each { |k, v| puts "\t#{k}: #{v}" }
 

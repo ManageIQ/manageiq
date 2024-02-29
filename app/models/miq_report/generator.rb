@@ -65,17 +65,16 @@ module MiqReport::Generator
   def table2class(table)
     @table2class ||= {}
 
-    @table2class[table] ||= begin
-      case table.to_sym
-      when :ports, :nics, :storage_adapters
-        "GuestDevice"
-      when :"<compare>"
-        self.class.name
-      else
-        ref = db_class.reflection_with_virtual(table.to_sym)
+    @table2class[table] ||= case table.to_sym
+                            when :ports, :nics, :storage_adapters
+                              "GuestDevice"
+                            when :"<compare>"
+                              self.class.name
+                            else
+                              ref = db_class.reflection_with_virtual(table.to_sym)
         ref ? ref.class_name : table.singularize.camelize
-      end
-    end
+                            end
+
 
     @table2class[table]
   end
@@ -119,8 +118,10 @@ module MiqReport::Generator
   # will go away when we drop build_reportable_data
   def invent_report_includes
     return {} unless col_order
+
     col_order.each_with_object({}) do |col, ret|
       next unless col.include?(".")
+
       *rels, column = col.split(".")
       if col !~ /managed\./ && col !~ /virtual_custom/
         (rels.inject(ret) { |h, rel| h[rel] ||= {} }["columns"] ||= []) << column
@@ -213,6 +214,7 @@ module MiqReport::Generator
 
   def _generate_table(options = {})
     return build_table_from_report(options) if db == self.class.name # Build table based on data from passed in report object
+
     _generate_table_prep
 
     results = if custom_results_method
@@ -261,7 +263,7 @@ module MiqReport::Generator
       results, extras[:group_by_tag_cols], extras[:group_by_tags] = db_class.group_by_tags(
         db_class.find_entries(ext_options).where(where_clause).where(options[:where_clause]),
         :category  => performance[:group_by_category],
-        :cat_model => options[:cat_model],
+        :cat_model => options[:cat_model]
       )
       build_correlate_tag_cols
     end
@@ -342,7 +344,7 @@ module MiqReport::Generator
     )
 
     ## add in virtual attributes that can be calculated from sql
-    rbac_opts[:extra_cols] = va_sql_cols unless va_sql_cols.blank?
+    rbac_opts[:extra_cols] = va_sql_cols if va_sql_cols.present?
     rbac_opts[:use_sql_view] = if db_options.nil? || db_options[:use_sql_view].nil?
                                  MiqReport.default_use_sql_view
                                else
@@ -491,7 +493,7 @@ module MiqReport::Generator
   end
 
   def generate_rows_from_data(data)
-    data.inject([]) do |arr, d|
+    data.each_with_object([]) do |d, arr|
       generate_rows.each do |gen_row|
         row = {}
         gen_row.each_with_index do |col_def, col_idx|
@@ -500,7 +502,6 @@ module MiqReport::Generator
         end
         arr << row
       end
-      arr
     end
   end
 
@@ -509,9 +510,10 @@ module MiqReport::Generator
       unless data.key?(col_def[:col_name])
         raise _("Column '%{name} does not exist in data") % {:name => col_def[:col_name]}
       end
-      return col_def.key?(:function) ? apply_col_function(col_def, data) : data[col_def[:col_name]]
+
+      col_def.key?(:function) ? apply_col_function(col_def, data) : data[col_def[:col_name]]
     else
-      return col_def
+      col_def
     end
   end
 
@@ -524,9 +526,10 @@ module MiqReport::Generator
       unless data.key?(col_def[:pct_col_name])
         raise _("Column '%{name} does not exist in data") % {:name => gen_row[:pct_col_name]}
       end
+
       col_val = data[col_def[:col_name]] || 0
       pct_val = data[col_def[:pct_col_name]] || 0
-      return pct_val == 0 ? 0 : (col_val / pct_val * 100.0)
+      pct_val == 0 ? 0 : (col_val / pct_val * 100.0)
     else
       raise _("Column function '%{name}' not supported") % {:name => col_def[:function]}
     end
@@ -534,27 +537,28 @@ module MiqReport::Generator
 
   def build_correlate_tag_cols
     tags2desc = {}
-    arr = self.cols.inject([]) do |a, c|
+    arr = self.cols.each_with_object([]) do |c, a|
       self.extras[:group_by_tag_cols].each do |tc|
         tag = tc[(c.length + 1)..-1]
-        if tc.starts_with?(c)
-          unless tags2desc.key?(tag)
-            if tag == "_none_"
-              tags2desc[tag] = "[None]"
-            else
-              entry = Classification.lookup_by_name([performance[:group_by_category], tag].join("/"))
-              tags2desc[tag] = entry.nil? ? tag.titleize : entry.description
-            end
+        next unless tc.starts_with?(c)
+
+        unless tags2desc.key?(tag)
+          if tag == "_none_"
+            tags2desc[tag] = "[None]"
+          else
+            entry = Classification.lookup_by_name([performance[:group_by_category], tag].join("/"))
+            tags2desc[tag] = entry.nil? ? tag.titleize : entry.description
           end
-          a << [tc, tags2desc[tag]]
         end
+        a << [tc, tags2desc[tag]]
       end
-      a
     end
-    arr.sort! { |a, b| a[1] <=> b[1] }
-    while arr.first[1] == "[None]"
-      arr.push(arr.shift)
-    end unless arr.blank? || (arr.first[1] == "[None]" && arr.last[1] == "[None]")
+    arr.sort_by! { |a| a[1] }
+    unless arr.blank? || (arr.first[1] == "[None]" && arr.last[1] == "[None]")
+      while arr.first[1] == "[None]"
+        arr.push(arr.shift)
+      end
+    end
     arr.each do |c, h|
       self.cols.push(c)
       col_order.push(c)
@@ -562,9 +566,11 @@ module MiqReport::Generator
     end
 
     tarr = Array(tags2desc).sort_by { |t| t[1] }
-    while tarr.first[1] == "[None]"
-      tarr.push(tarr.shift)
-    end unless tarr.blank? || (tarr.first[1] == "[None]" && tarr.last[1] == "[None]")
+    unless tarr.blank? || (tarr.first[1] == "[None]" && tarr.last[1] == "[None]")
+      while tarr.first[1] == "[None]"
+        tarr.push(tarr.shift)
+      end
+    end
     self.extras[:group_by_tags] = tarr.collect { |a| a[0] }
     self.extras[:group_by_tag_descriptions] = tarr.collect { |a| a[1] }
   end
@@ -578,7 +584,7 @@ module MiqReport::Generator
     klass = recs.first.class
     last_rec = nil
 
-    results = recs.sort_by { |r| [r.resource_type, r.resource_id.to_s, r.timestamp.iso8601] }.inject([]) do |arr, rec|
+    recs.sort_by { |r| [r.resource_type, r.resource_id.to_s, r.timestamp.iso8601] }.each_with_object([]) do |rec, arr|
       last_rec ||= rec
       while (rec.timestamp - last_rec.timestamp) > int
         base_attrs = last_rec.attributes.reject { |k, _v| !base_cols.include?(k) }
@@ -588,13 +594,13 @@ module MiqReport::Generator
       end
       arr << rec
       last_rec = rec
-      arr
     end
-    results
+
   end
 
   def build_apply_time_profile(results)
     return unless time_profile
+
     # Apply time profile if one was provided
     results.each { |rec| rec.apply_time_profile(time_profile) if rec.respond_to?(:apply_time_profile) }
   end
@@ -646,28 +652,27 @@ module MiqReport::Generator
     data = sort_table(data, rpt_options[:pivot][:group_cols].collect(&:to_s), :order => :ascending)
 
     # build grouping options for subtotal
-    options = col_order.inject({}) do |h, col|
+    options = col_order.each_with_object({}) do |col, h|
       next(h) unless col.include?("__")
 
       c, g = col.split("__")
       h[c] ||= {}
       h[c][:grouping] ||= []
       h[c][:grouping] << g.to_sym
-      h
     end
 
-    group_key =  rpt_options[:pivot][:group_cols]
+    group_key = rpt_options[:pivot][:group_cols]
     data = generate_subtotals(data, group_key, options)
     data.inject([]) do |a, (k, v)|
       next(a) if k == :_total_
-      row = col_order.inject({}) do |h, col|
+
+      row = col_order.each_with_object({}) do |col, h|
         if col.include?("__")
           c, g = col.split("__")
           h[col] = v[g.to_sym][c]
         else
           h[col] = v[:row][col]
         end
-        h
       end
       a << row
     end
@@ -682,6 +687,7 @@ module MiqReport::Generator
 
   def build_cols_from_include(hash, parent_association = nil)
     return [] if hash.blank?
+
     hash.inject([]) do |a, (k, v)|
       full_path = get_full_path(parent_association, k)
       v["columns"].each { |c| a << get_full_path(full_path, c) } if v.key?("columns")
@@ -731,18 +737,20 @@ module MiqReport::Generator
         {:only => options[:only], :except => options[:except]}
       end
     return {} unless only_or_except
+
     attrs = {}
     options[:only].each do |a|
       if self.class.is_trend_column?(a)
         attrs[a] = build_calculate_trend_point(rec, a)
-      else
-        attrs[a] = rec.send(a) if rec.respond_to?(a)
+      elsif rec.respond_to?(a)
+        attrs[a] = rec.send(a)
       end
     end
-    attrs = attrs.inject({}) do |h, (k, v)|
-      h["#{options[:qualify_attribute_names]}.#{k}"] = v
-      h
-    end if options[:qualify_attribute_names]
+    if options[:qualify_attribute_names]
+      attrs = attrs.each_with_object({}) do |(k, v), h|
+        h["#{options[:qualify_attribute_names]}.#{k}"] = v
+      end
+    end
     attrs
   end
 
@@ -754,14 +762,14 @@ module MiqReport::Generator
       existing_records = data_records.dup
       data_records = []
       full_path = get_full_path(parent_association, association)
-      if include_has_options
-        assoc_options = includes[association].merge(:qualify_attribute_names => full_path,
+      assoc_options = if include_has_options
+                        includes[association].merge(:qualify_attribute_names => full_path,
                                                     :only                    => includes[association]["columns"])
-      else
-        assoc_options = {:qualify_attribute_names => full_path, :only => includes[association]["columns"]}
-      end
+                      else
+                        {:qualify_attribute_names => full_path, :only => includes[association]["columns"]}
+                      end
 
-      if association == "categories" || association == "managed"
+      if ["categories", "managed"].include?(association)
         association_objects = []
         assochash = {}
         @descriptions_by_tag_id ||= Classification.is_entry.each_with_object({}) do |c, h|
@@ -773,6 +781,7 @@ module MiqReport::Generator
           entry[:obj].tags.each do |t|
             next unless t.name.starts_with?("/managed/#{c}/")
             next unless @descriptions_by_tag_id.key?(t.id)
+
             entarr << @descriptions_by_tag_id[t.id]
           end
           assochash[full_path + "." + c] = entarr unless entarr.empty?
@@ -796,11 +805,11 @@ module MiqReport::Generator
           data_records << existing_record
         else
           association_objects.each do |obj|
-            if association == "categories" || association == "managed"
-              association_records = [obj]
-            else
-              association_records = build_reportable_data(obj, assoc_options, full_path)
-            end
+            association_records = if ["categories", "managed"].include?(association)
+                                    [obj]
+                                  else
+                                    build_reportable_data(obj, assoc_options, full_path)
+                                  end
             association_records.each do |assoc_record|
               data_records << existing_record.merge(assoc_record)
             end
@@ -849,13 +858,14 @@ module MiqReport::Generator
       end
     end
 
-    res_last_run_on  = Time.now.utc
+    res_last_run_on = Time.now.utc
 
     # If a scheduler :at time was provided, convert that to a Time object, otherwise use the current time
     if res_opts[:at]
       unless res_opts[:at].kind_of?(Numeric)
         raise _("Expected scheduled time 'at' to be 'numeric', received '%{type}'") % {:type => res_opts[:at].class}
       end
+
       at = Time.at(res_opts[:at]).utc
     else
       at = res_last_run_on
@@ -896,7 +906,8 @@ module MiqReport::Generator
 
   def append_user_filters_to_title(user)
     return unless user && user.has_filters?
-    self.append_to_title!(" (filtered for #{user.name})")
+
+    append_to_title!(" (filtered for #{user.name})")
   end
 
   def get_time_zone(default_tz = nil)

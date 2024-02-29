@@ -19,7 +19,7 @@ module EmsRefresh::SaveInventoryInfra
     target = ems if target.nil?
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
-    disconnects = if (target == ems)
+    disconnects = if target == ems
                     target.hosts.reload.to_a
                   elsif target.kind_of?(Host)
                     [target.clone]
@@ -48,10 +48,10 @@ module EmsRefresh::SaveInventoryInfra
           found = ems.hosts.build(h)
         else
           _log.info("#{log_header} Updating Host [#{found.name}] id: [#{found.id}] hostname: [#{found.hostname}] IP: [#{found.ipaddress}] ems_ref: [#{h[:ems_ref]}]")
-          h[:ems_id] = ems.id  # Steal this host from the previous EMS
+          h[:ems_id] = ems.id # Steal this host from the previous EMS
 
           # Adjust the names so they do not keep changing in the event of DNS problems
-          ip_part  =  /[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/
+          ip_part  = /[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/
           ip_whole = /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/
 
           # Keep the previous ip address if we don't have a new one or the new one is not an ip address
@@ -60,7 +60,7 @@ module EmsRefresh::SaveInventoryInfra
           #   Keep the previous hostname unless it's nil or it's an ip address
           h[:hostname] = found.hostname unless found.hostname.nil? || (found.hostname =~ ip_whole)
 
-          if found.name =~ /#{h[:name]} - \d+$/
+          if /#{h[:name]} - \d+$/.match?(found.name)
             # Update the name to be found.name if it has the same ems_ref and the name
             # already has a '- int' suffix to work around duplicate hostnames
             h[:name] = found.name
@@ -95,6 +95,7 @@ module EmsRefresh::SaveInventoryInfra
           _log.warn("#{log_header} Processing Host: [#{name}] failed with error [#{err.class}: #{err}]. Skipping Host.")
         else
           raise if EmsRefresh.debug_failures
+
           _log.error("#{log_header} Processing Host: [#{name}] failed with error [#{err.class}: #{err}]. Skipping Host.")
           _log.log_backtrace(err)
         end
@@ -141,7 +142,7 @@ module EmsRefresh::SaveInventoryInfra
     save_inventory_multi(ems.ems_folders, hashes, deletes, [:uid_ems], nil, :ems_children)
     store_ids_for_new_records(ems.ems_folders, hashes, :uid_ems)
   end
-  alias_method :save_ems_folders_inventory, :save_folders_inventory
+  alias save_ems_folders_inventory save_folders_inventory
 
   def save_clusters_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
@@ -152,7 +153,7 @@ module EmsRefresh::SaveInventoryInfra
     save_inventory_multi(ems.ems_clusters, hashes, deletes, [:uid_ems], nil, :ems_children)
     store_ids_for_new_records(ems.ems_clusters, hashes, :uid_ems)
   end
-  alias_method :save_ems_clusters_inventory, :save_clusters_inventory
+  alias save_ems_clusters_inventory save_clusters_inventory
 
   def save_resource_pools_inventory(ems, hashes, target = nil)
     target = ems if target.nil?

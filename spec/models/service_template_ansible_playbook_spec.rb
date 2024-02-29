@@ -12,14 +12,14 @@ RSpec.describe ServiceTemplateAnsiblePlaybook do
 
   let(:playbook) do
     FactoryBot.create(:embedded_playbook,
-                       :configuration_script_source => script_source,
-                       :manager                     => ems)
+                      :configuration_script_source => script_source,
+                      :manager                     => ems)
   end
 
   let(:job_template) do
     FactoryBot.create(:embedded_ansible_configuration_script,
-                       :variables => catalog_item_options.fetch_path(:config_info, :provision, :extra_vars),
-                       :manager   => ems)
+                      :variables => catalog_item_options.fetch_path(:config_info, :provision, :extra_vars),
+                      :manager   => ems)
   end
 
   let(:catalog_item_options) do
@@ -61,9 +61,9 @@ RSpec.describe ServiceTemplateAnsiblePlaybook do
   end
 
   let(:catalog_item_options_three) do
-    changed_items = { :name        => 'test_update_ansible_item',
-                      :description => 'test updated ansible item',
-                      :config_info => {
+    changed_items = {:name        => 'test_update_ansible_item',
+                     :description => 'test updated ansible item',
+                     :config_info => {
                         :provision => {
                           :new_dialog_name => 'test_dialog_updated',
                           :become_enabled  => false,
@@ -126,7 +126,7 @@ RSpec.describe ServiceTemplateAnsiblePlaybook do
 
     context 'with remove_resources in retirement option' do
       it 'sets the corresponding entry point' do
-        %w(yes_without_playbook no_without_playbook no_with_playbook pre_with_playbook post_with_playbook).each do |opt|
+        %w[yes_without_playbook no_without_playbook no_with_playbook pre_with_playbook post_with_playbook].each do |opt|
           opts = described_class.send(:validate_config_info, :retirement => {:remove_resources => opt})
           expect(opts[:retirement][:fqname]).to eq(described_class.const_get(:RETIREMENT_ENTRY_POINTS)[opt])
         end

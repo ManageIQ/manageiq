@@ -5,6 +5,7 @@ module Vmdb
 
       def initialize(path)
         raise "#{path} does not exist" unless File.directory?(path)
+
         roles_path = Pathname.new(path)
         @path = roles_path.split.first
       end

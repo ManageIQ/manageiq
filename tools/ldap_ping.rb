@@ -19,10 +19,10 @@ class MiqLdap
   end
 end
 
-ldap_hosts   = ::Settings.authentication.ldaphost
-username     = ::Settings.authentication.bind_dn
-password     = ::Settings.authentication.bind_pwd
-bind_timeout = ::Settings.authentication.bind_timeout.to_i_with_method
+ldap_hosts   = Settings.authentication.ldaphost
+username     = Settings.authentication.bind_dn
+password     = Settings.authentication.bind_pwd
+bind_timeout = Settings.authentication.bind_timeout.to_i_with_method
 if ldap_hosts.to_s.strip.empty?
   $log.info("LDAP Host cannot be blank")
   exit
@@ -36,22 +36,22 @@ Array.wrap(ldap_hosts).each do |host|
 end
 
 ldap_addresses.each do |address|
-  begin
-    $log.info("----------------------------------")
-    $log.info("Binding to LDAP: Host: <#{address}>, User: <#{username}>...")
-    ldap     = MiqLdap.new(:host => address)
-    raw_ldap = ldap.ldap
-    raw_ldap.authenticate(username, password)
-    Timeout.timeout(bind_timeout) do
-      if raw_ldap.bind
-        $log.info("Binding to LDAP: Host: <#{address}>, User: <#{username}>... successful")
-      else
-        $log.warn("Binding to LDAP: Host: <#{address}>, User: <#{username}>... unsuccessful because <#{raw_ldap.get_operation_result.message}>")
-      end
+
+  $log.info("----------------------------------")
+  $log.info("Binding to LDAP: Host: <#{address}>, User: <#{username}>...")
+  ldap     = MiqLdap.new(:host => address)
+  raw_ldap = ldap.ldap
+  raw_ldap.authenticate(username, password)
+  Timeout.timeout(bind_timeout) do
+    if raw_ldap.bind
+      $log.info("Binding to LDAP: Host: <#{address}>, User: <#{username}>... successful")
+    else
+      $log.warn("Binding to LDAP: Host: <#{address}>, User: <#{username}>... unsuccessful because <#{raw_ldap.get_operation_result.message}>")
     end
-  rescue Exception => err
-    $log.warn("Binding to LDAP: Host: <#{address}>, User: <#{username}>... failed because <#{err.message}>")
   end
+rescue Exception => err
+  $log.warn("Binding to LDAP: Host: <#{address}>, User: <#{username}>... failed because <#{err.message}>")
+
 end
 
 $log.info("Done")

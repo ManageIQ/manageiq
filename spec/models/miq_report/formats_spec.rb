@@ -1,11 +1,11 @@
 RSpec.describe MiqReport::Formats do
   describe '.default_format_details_for' do
     let(:human_mb_details) do
-      { :description => 'Suffixed Megabytes (MB, GB)',
-        :columns     => nil,
-        :sub_types   => [:megabytes],
-        :function    => {:name => 'mbytes_to_human_size'},
-        :precision   => 1 }
+      {:description => 'Suffixed Megabytes (MB, GB)',
+       :columns     => nil,
+       :sub_types   => [:megabytes],
+       :function    => {:name => 'mbytes_to_human_size'},
+       :precision   => 1}
     end
 
     it 'returns human MB format details for memory_mb' do

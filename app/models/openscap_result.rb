@@ -59,6 +59,7 @@ class OpenscapResult < ApplicationRecord
 
   def with_openscap_arf(raw)
     return unless self.class.openscap_available?
+
     begin
       OpenSCAP.oscap_init
       # ARF - nist standardized 'Asset Reporting Format' Full representation if a scap scan result.
@@ -72,16 +73,17 @@ class OpenscapResult < ApplicationRecord
 
   def with_openscap_objects(raw)
     raise "no block given" unless block_given?
+
     with_openscap_arf(raw) do |arf|
-      begin
-        test_results = arf.test_result
-        source_datastream = arf.report_request
-        bench_source = source_datastream.select_checklist!
-        benchmark = OpenSCAP::Xccdf::Benchmark.new(bench_source)
-        yield(test_results.rr, benchmark.items)
-      ensure
-        [benchmark, source_datastream, test_results].each { |obj| obj.try(:destroy) }
-      end
+
+      test_results = arf.test_result
+      source_datastream = arf.report_request
+      bench_source = source_datastream.select_checklist!
+      benchmark = OpenSCAP::Xccdf::Benchmark.new(bench_source)
+      yield(test_results.rr, benchmark.items)
+    ensure
+      [benchmark, source_datastream, test_results].each { |obj| obj.try(:destroy) }
+
     end
   end
 end

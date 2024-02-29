@@ -26,11 +26,11 @@ class ConfigurationProfile < ApplicationRecord
 
   delegate :my_zone, :provider, :zone, :to => :manager
 
-  virtual_has_one :configuration_architecture,  :class_name => 'ConfigurationArchitecture', :uses => :configuration_tags
+  virtual_has_one :configuration_architecture, :class_name => 'ConfigurationArchitecture', :uses => :configuration_tags
   virtual_has_one :configuration_compute_profile, :class_name => 'ConfigurationProfile',    :uses => :configuration_tags
   virtual_has_one :configuration_domain,          :class_name => 'ConfigurationDomain',     :uses => :configuration_tags
-  virtual_has_one :configuration_environment,    :class_name => 'ConfigurationEnvironment', :uses => :configuration_tags
-  virtual_has_one :configuration_realm,           :class_name => 'ConfigurationRealm',      :uses => :configuration_tags
+  virtual_has_one :configuration_environment, :class_name => 'ConfigurationEnvironment', :uses => :configuration_tags
+  virtual_has_one :configuration_realm, :class_name => 'ConfigurationRealm', :uses => :configuration_tags
 
   virtual_column  :total_configured_systems,           :type => :integer
   virtual_column  :my_zone,                            :type => :string
@@ -69,7 +69,7 @@ class ConfigurationProfile < ApplicationRecord
     @tag_hash ||= configuration_tags.index_by(&:class)
   end
 
-  alias_method :configuration_manager, :manager
+  alias configuration_manager manager
 
   def total_configured_systems
     Rbac.filtered(configured_systems).count

@@ -12,13 +12,13 @@ RSpec.describe Vmdb::Appliance do
             :password => "passw0rd",
             :ldaphost => "my_ldap_host",
           },
-          :database => {
+          :database       => {
             :maintenance => {
               :reindex_schedule => "1 * * * *",
               :reindex_tables   => %w[Metric MiqQueue]
             }
           },
-          :log => {
+          :log            => {
             :secret_filter => secret_filter
           }
         }
@@ -26,7 +26,7 @@ RSpec.describe Vmdb::Appliance do
 
       before do
         stub_settings(fake_settings)
-        allow(::Settings).to receive(:to_hash).and_return(fake_settings)
+        allow(Settings).to receive(:to_hash).and_return(fake_settings)
         described_class.log_config(:logger => ManageIQ::Loggers::Base.new(logger_io))
       end
 

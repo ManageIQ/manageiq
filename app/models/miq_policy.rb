@@ -3,7 +3,7 @@
 class MiqPolicy < ApplicationRecord
   include ReadOnlyMixin
 
-  TOWHAT_APPLIES_TO_CLASSES = %w(ContainerGroup
+  TOWHAT_APPLIES_TO_CLASSES = %w[ContainerGroup
                                  ContainerImage
                                  ContainerNode
                                  ContainerProject
@@ -11,7 +11,7 @@ class MiqPolicy < ApplicationRecord
                                  ExtManagementSystem
                                  Host
                                  PhysicalServer
-                                 Vm).freeze
+                                 Vm].freeze
 
   CONDITION_SUCCESS = N_("Success")
   CONDITION_FAILURE = N_("Failure")
@@ -22,7 +22,7 @@ class MiqPolicy < ApplicationRecord
 
   def self.policy_modes
     {
-      "control" => _("Control"),
+      "control"    => _("Control"),
       "compliance" => _("Compliance")
     }
   end
@@ -54,9 +54,9 @@ class MiqPolicy < ApplicationRecord
 
   validates :description, :presence => true, :uniqueness_when_changed => true
   validates :name, :presence => true, :uniqueness_when_changed => true
-  validates :mode, :inclusion => { :in => %w(compliance control) }
-  validates :towhat, :inclusion => { :in      => TOWHAT_APPLIES_TO_CLASSES,
-                                     :message => "should be one of #{TOWHAT_APPLIES_TO_CLASSES.join(", ")}" }
+  validates :mode, :inclusion => {:in => %w[compliance control]}
+  validates :towhat, :inclusion => {:in      => TOWHAT_APPLIES_TO_CLASSES,
+                                    :message => "should be one of #{TOWHAT_APPLIES_TO_CLASSES.join(", ")}"}
 
   scope :with_mode,   ->(mode)   { where(:mode => mode) }
   scope :with_towhat, ->(towhat) { where(:towhat => towhat) }
@@ -74,7 +74,7 @@ class MiqPolicy < ApplicationRecord
   def self.built_in_policies
     return @@built_in_policies.dup unless @@built_in_policies.nil?
 
-    policy_hashes = YAML.load_file(Rails.root.join("product", "policy", "built_in_policies.yml"))
+    policy_hashes = YAML.load_file(Rails.root.join("product/policy/built_in_policies.yml"))
 
     @@built_in_policies = policy_hashes.collect do |p_hash|
       policy = OpenStruct.new(p_hash)
@@ -105,7 +105,7 @@ class MiqPolicy < ApplicationRecord
     @@built_in_policies.dup
   end
 
-  CLEAN_ATTRS = %w(id guid name created_on updated_on miq_policy_id description)
+  CLEAN_ATTRS = %w[id guid name created_on updated_on miq_policy_id description]
   def self.clean_attrs(attrs)
     CLEAN_ATTRS.each { |a| attrs.delete(a) }
     attrs
@@ -127,17 +127,18 @@ class MiqPolicy < ApplicationRecord
   def miq_event_definitions
     miq_policy_contents.collect(&:miq_event_definition).compact.uniq
   end
-  alias_method :events, :miq_event_definitions
+  alias events miq_event_definitions
 
   def miq_actions
     miq_policy_contents.collect(&:miq_action).compact.uniq
   end
-  alias_method :actions, :miq_actions
+  alias actions miq_actions
 
   def actions_for_event(event, on = :failure)
     order = on == :success ? "success_sequence" : "failure_sequence"
     miq_policy_contents.where(:miq_event_definition => event).order(order).collect do |pe|
       next unless pe.qualifier == on.to_s
+
       pe.get_action(on)
     end.compact
   end
@@ -166,7 +167,7 @@ class MiqPolicy < ApplicationRecord
     fail_seq = 0
     action_list.each do |action, opts|
       opts[:qualifier] ||= "failure"
-      opts[:sequence]  = opts[:qualifier].to_s == "success" ? succes_seq += 1 : fail_seq += 1
+      opts[:sequence] = opts[:qualifier].to_s == "success" ? succes_seq += 1 : fail_seq += 1
       add_action_for_event(event, action, opts)
     end
   end
@@ -285,6 +286,7 @@ class MiqPolicy < ApplicationRecord
     # ]
     policies.collect do |p|
       next unless p.kind_of?(self) # skip built-in policies
+
       {
         :miq_policy      => p,
         :result          => status.to_s,
@@ -307,10 +309,12 @@ class MiqPolicy < ApplicationRecord
         policy_hash['result'], policy_hash['conditions'] = resolve_policy_conditions(p, rec)
 
         action_on = policy_hash["result"] == "deny" ? :failure : :success
-        policy_hash["actions"] =
-          p.actions_for_event(event, action_on).uniq.collect do |a|
-            {"id" => a.id, "name" => a.name, "description" => a.description, "result" => policy_hash["result"]}
-          end unless event.nil?
+        unless event.nil?
+          policy_hash["actions"] =
+            p.actions_for_event(event, action_on).uniq.collect do |a|
+              {"id" => a.id, "name" => a.name, "description" => a.description, "result" => policy_hash["result"]}
+            end
+        end
       end
       p.attributes.merge(policy_hash)
     end.compact
@@ -321,7 +325,7 @@ class MiqPolicy < ApplicationRecord
     conditions =
       policy.conditions.collect do |c|
         rec_model = rec.class.base_model.name
-        rec_model = "Vm" if rec_model.downcase.match("template")
+        rec_model = "Vm" if rec_model.downcase.match?("template")
         next unless rec_model == c["towhat"]
 
         resolve_condition(c, rec).tap do |cond_hash|
@@ -355,7 +359,7 @@ class MiqPolicy < ApplicationRecord
 
   def applies_to?(rec, inputs = {})
     rec_model = rec.class.base_model.name
-    rec_model = "Vm" if rec_model.downcase.match("template")
+    rec_model = "Vm" if rec_model.downcase.match?("template")
 
     return false if towhat && rec_model != towhat
     return true  if expression.nil?
@@ -378,18 +382,17 @@ class MiqPolicy < ApplicationRecord
   def self.all_policy_events_filter
     # Todo Convert to SQL if possible
     filter_hash = {
-       "AND" => [
-           {"="  => {"field" => "MiqEventDefinition-event_type",       "value" => "Default"}},
-           {"!=" => {"field" => "MiqEventDefinition-event_group_name", "value" => ""}}
-          ]
-        }
-        EVENT_GROUPS_EXCLUDED.each do |e|
-          filter_hash["AND"] << {"!=" => {"field" => "MiqEventDefinition-event_group_name", "value" => e}}
-        end
+      "AND" => [
+        {"="  => {"field" => "MiqEventDefinition-event_type",       "value" => "Default"}},
+        {"!=" => {"field" => "MiqEventDefinition-event_group_name", "value" => ""}}
+      ]
+    }
+    EVENT_GROUPS_EXCLUDED.each do |e|
+      filter_hash["AND"] << {"!=" => {"field" => "MiqEventDefinition-event_group_name", "value" => e}}
+    end
 
-        MiqExpression.new(filter_hash)
+    MiqExpression.new(filter_hash)
   end
-
 
   def self.logger
     $policy_log
@@ -415,13 +418,13 @@ class MiqPolicy < ApplicationRecord
     plist = built_in_policies.concat(plist).uniq
 
     towhat = target.class.base_model.name
-    towhat = "Vm" if towhat.downcase.match("template")
+    towhat = "Vm" if towhat.downcase.match?("template")
     plist.keep_if do |p|
       p.mode == mode &&
-      p.towhat == towhat &&
-      policy_for_event?(p, event) &&
-      policy_active?(p) &&
-      policy_applicable?(p, target, inputs)
+        p.towhat == towhat &&
+        policy_for_event?(p, event) &&
+        policy_active?(p) &&
+        policy_applicable?(p, target, inputs)
     end
 
     [profiles, plist]
@@ -507,11 +510,11 @@ class MiqPolicy < ApplicationRecord
     opt_hash.delete(:synchronous)
 
     pevent = miq_policy_contents.build(opt_hash)
-    pevent.miq_event_definition  = event
+    pevent.miq_event_definition = event
     pevent.miq_action = action
     pevent.save
 
-    self.save!
+    save!
   end
   private :add_action_for_event
 end

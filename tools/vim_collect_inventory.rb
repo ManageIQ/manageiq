@@ -11,13 +11,13 @@ opts = Optimist.options do
   opt :bypass, "Bypass broker usage", :type => :boolean
   opt :dir,    "Output directory",    :default => "."
 end
-Optimist.die :ip, "is an invalid format" unless opts[:ip] =~ /^\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}$/
+Optimist.die :ip, "is an invalid format" unless /^\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}$/.match?(opts[:ip])
 
 def process(accessor, dir)
   puts "Reading #{accessor}..."
   data = yield
   puts "Writing #{accessor}..."
-  File.open(File.join(dir, "#{accessor}.yml"), "w") { |f| f.write(data.to_yaml(:SortKeys => true)) }
+  File.write(File.join(dir, "#{accessor}.yml"), data.to_yaml(:SortKeys => true))
   data
 end
 
@@ -40,35 +40,35 @@ begin
   require 'VMwareWebService/MiqVim'
 
   vim = MiqVim.new(:server => opts[:ip], :username => opts[:user], :password => opts[:pass])
-  VC_ACCESSORS.each do |accessor, type|
+  VC_ACCESSORS.each do |accessor, _type|
     process(accessor, dir) { vim.send(accessor) }
   end
 
   process(:storageDevice, dir) do
     data = {}
     vim.hostSystemsByMor.keys.each do |host_mor|
-      begin
-        vim_host = vim.getVimHostByMor(host_mor)
-        data[host_mor] = vim_host.storageDevice
-      ensure
-        vim_host.release if vim_host rescue nil
-      end
+
+      vim_host = vim.getVimHostByMor(host_mor)
+      data[host_mor] = vim_host.storageDevice
+    ensure
+      vim_host.release if vim_host rescue nil
+
     end
     data
   end
 
   process(:getAllCustomizationSpecs, dir) do
-    begin
-      vim_csm = vim.getVimCustomizationSpecManager
-      vim_csm.getAllCustomizationSpecs
-    rescue RuntimeError => err
-      raise unless err.message.include?("not supported on this system")
-      []
-    ensure
-      vim_csm.release if vim_csm rescue nil
-    end
-  end
 
+    vim_csm = vim.getVimCustomizationSpecManager
+    vim_csm.getAllCustomizationSpecs
+  rescue RuntimeError => err
+    raise unless err.message.include?("not supported on this system")
+
+    []
+  ensure
+    vim_csm.release if vim_csm rescue nil
+
+  end
 ensure
   vim.release unless vim.nil? rescue nil
 end

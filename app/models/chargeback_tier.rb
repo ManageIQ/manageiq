@@ -7,7 +7,7 @@ class ChargebackTier < ApplicationRecord
 
   default_scope { order(:start => :asc) }
 
-  FORM_ATTRIBUTES = %i(fixed_rate variable_rate start finish).freeze
+  FORM_ATTRIBUTES = %i[fixed_rate variable_rate start finish].freeze
 
   def self.to_float(s)
     if s.to_s.include?("Infinity")
@@ -18,7 +18,7 @@ class ChargebackTier < ApplicationRecord
   end
 
   def includes?(value)
-    starts_with_zero? && value.zero? || value > start && value.to_f <= finish
+    (starts_with_zero? && value.zero?) || (value > start && value.to_f <= finish)
   end
 
   def starts_with_zero?

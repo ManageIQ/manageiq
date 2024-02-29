@@ -20,6 +20,7 @@ class VmOrTemplate < ApplicationRecord
   include Snapshotting
 
   attr_accessor :surrogate_host
+
   @surrogate_host = nil
 
   include ProviderObjectMixin
@@ -55,10 +56,10 @@ class VmOrTemplate < ApplicationRecord
     "unknown"       => "Unknown"
   }
 
-  POWER_OPS = %w(start stop suspend reset shutdown_guest standby_guest reboot_guest)
-  REMOTE_REGION_TASKS = POWER_OPS + %w(retire_now)
+  POWER_OPS = %w[start stop suspend reset shutdown_guest standby_guest reboot_guest]
+  REMOTE_REGION_TASKS = POWER_OPS + %w[retire_now]
 
-  validates_presence_of     :name, :location
+  validates :name, :location, :presence => true
   validates                 :vendor, :inclusion => {:in => VENDOR_TYPES.keys}
 
   has_one                   :operating_system, :dependent => :destroy
@@ -102,7 +103,7 @@ class VmOrTemplate < ApplicationRecord
 
   has_many                  :filesystems, :as => :resource, :dependent => :destroy
   has_many                  :directories, -> { where("rsc_type = 'dir'") }, :as => :resource, :class_name => "Filesystem"
-  has_many                  :files, -> { where("rsc_type = 'file'") },       :as => :resource, :class_name => "Filesystem"
+  has_many                  :files, -> { where("rsc_type = 'file'") }, :as => :resource, :class_name => "Filesystem"
 
   has_many                  :scan_histories,    :dependent => :destroy
   has_many                  :lifecycle_events,  :class_name => "LifecycleEvent"
@@ -113,11 +114,10 @@ class VmOrTemplate < ApplicationRecord
 
   has_many                  :metrics,        :as => :resource  # Destroy will be handled by purger
   has_many                  :metric_rollups, :as => :resource  # Destroy will be handled by purger
-  has_many                  :vim_performance_states, :as => :resource  # Destroy will be handled by purger
+  has_many                  :vim_performance_states, :as => :resource # Destroy will be handled by purger
 
   has_many                  :storage_files, :dependent => :destroy
   has_many                  :storage_files_files, -> { where("rsc_type = 'file'") }, :class_name => "StorageFile"
-
 
   # EMS Events
   has_many                  :ems_events, ->(vmt) { unscope(:where => :vm_or_template_id).where(["vm_or_template_id = ? OR dest_vm_or_template_id = ?", vmt.id, vmt.id]).order(:timestamp) },
@@ -174,7 +174,7 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :has_rdm_disk,                         :type => :boolean,    :uses => {:hardware => :disks}
   virtual_column :disks_aligned,                        :type => :string,     :uses => {:hardware => {:hard_disks => :partitions_aligned}}
 
-  virtual_has_many   :processes,              :class_name => "OsProcess",    :uses => {:operating_system => :processes}
+  virtual_has_many   :processes, :class_name => "OsProcess", :uses => {:operating_system => :processes}
   virtual_has_many   :event_logs,                                            :uses => {:operating_system => :event_logs}
   virtual_has_many   :lans,                                                  :uses => {:hardware => {:nics => :lan}}
   virtual_has_many   :child_resources,        :class_name => "VmOrTemplate"
@@ -232,10 +232,10 @@ class VmOrTemplate < ApplicationRecord
     where(arel_table[:template].eq(true).and(arel_table[:ems_id].eq(nil)).or(arel_table[:host_id].eq(nil)))
   end)
 
-  alias_method :datastores, :storages    # Used by web-services to return datastores as the property name
+  alias datastores storages # Used by web-services to return datastores as the property name
 
-  alias_method :parent_cluster, :ems_cluster
-  alias_method :owning_cluster, :ems_cluster
+  alias parent_cluster ems_cluster
+  alias owning_cluster ems_cluster
 
   # Add virtual columns/methods for specific things derived from advanced_settings
   REQUIRED_ADVANCED_SETTINGS = {
@@ -256,12 +256,12 @@ class VmOrTemplate < ApplicationRecord
       as = advanced_settings.detect { |setting| setting.name == k }
       return nil if as.nil? || as.value.nil?
 
-      return case t
-             when :boolean then ActiveRecord::Type::Boolean.new.cast(as.value)
-             when :integer then as.value.to_i
-             when :float then as.value.to_f
-             else as.value.to_s
-             end
+      case t
+      when :boolean then ActiveRecord::Type::Boolean.new.cast(as.value)
+      when :integer then as.value.to_i
+      when :float then as.value.to_f
+      else as.value.to_s
+      end
     end
 
     virtual_column m, :type => t, :uses => :advanced_settings
@@ -279,11 +279,12 @@ class VmOrTemplate < ApplicationRecord
     ]
 
     disk_methods.each do |k, t|
-      m  = "disk_#{i}_#{k}".to_sym
+      m = "disk_#{i}_#{k}".to_sym
 
       define_method(m) do
         return nil if hardware.nil?
         return nil if hardware.hard_disks.length < i
+
         hardware.hard_disks[i - 1].send(k)
       end
 
@@ -335,12 +336,13 @@ class VmOrTemplate < ApplicationRecord
   def is_evm_appliance?
     !!miq_server
   end
-  alias_method :is_evm_appliance,  :is_evm_appliance?
+  alias is_evm_appliance is_evm_appliance?
 
   # Determines if the VM is on an EMS or Host
   def registered?
     # TODO: Vmware specific
     return false if template? && ems_id.nil?
+
     host_id.present?
   end
 
@@ -429,27 +431,27 @@ class VmOrTemplate < ApplicationRecord
 
     # VM has no host or storage affiliation
     if vm.storage.nil?
-      task.error("#{vm.name}: There is no owning Host or Datastore for this VM, "\
+      task.error("#{vm.name}: There is no owning Host or Datastore for this VM, " \
                  "'#{options[:task]}' is not allowed")
       return false
     end
 
     # VM belongs to a storage/repository location
     # TODO: The following never gets run since the invoke tasks invokes it as a job, and only tasks get to this point ?
-    unless %w(scan sync).include?(options[:task])
+    unless %w[scan sync].include?(options[:task])
       task.error("#{vm.name}: There is no owning Host for this VM, '#{options[:task]}' is not allowed")
       return false
     end
     spid = ::Settings.repository_scanning.defaultsmartproxy
-    if spid.nil?                          # No repo scanning SmartProxy configured
+    if spid.nil? # No repo scanning SmartProxy configured
       task.error("#{vm.name}: No Default Repository SmartProxy is configured, contact your EVM administrator")
       return false
     elsif MiqProxy.exists?(spid) == false
       task.error("#{vm.name}: The Default Repository SmartProxy no longer exists, contact your EVM Administrator")
       return false
     end
-    if MiqProxy.find(spid).state != "on"                     # Repo scanning host iagent s not running
-      task.error("#{vm.name}: The Default Repository SmartProxy, '#{sp.name}', is not running. "\
+    if MiqProxy.find(spid).state != "on" # Repo scanning host iagent s not running
+      task.error("#{vm.name}: The Default Repository SmartProxy, '#{sp.name}', is not running. " \
                  "'#{options[:task]}' not attempted")
       return false
     end
@@ -459,18 +461,18 @@ class VmOrTemplate < ApplicationRecord
 
   # override
   def self.task_invoked_by(options)
-    %w(scan sync).include?(options[:task]) ? :job : super
+    %w[scan sync].include?(options[:task]) ? :job : super
   end
   private_class_method :task_invoked_by
 
   # override
   def self.task_arguments(options)
     case options[:task]
-    when "scan", "sync" then
+    when "scan", "sync"
       [options[:userid]]
-    when "remove_snapshot", "revert_to_snapshot" then
+    when "remove_snapshot", "revert_to_snapshot"
       [options[:snap_selected]]
-    when "create_snapshot" then
+    when "create_snapshot"
       [options[:name], options[:description], options[:memory]]
     else
       super
@@ -605,22 +607,22 @@ class VmOrTemplate < ApplicationRecord
   def self.rss_fails_policy(_name, options)
     order(options[:orderby]).limit(options[:limit_to_count]).each_with_object([]) do |vm, result|
       rec = OpenStruct.new(vm.attributes)
-      if vm.host.nil?
-        rec.host_name = "unknown"
-      else
-        rec.host_name = vm.host.name
-      end
+      rec.host_name = if vm.host.nil?
+                        "unknown"
+                      else
+                        vm.host.name
+                      end
       rec.vm_id = vm.id
       rec.reason = []
       presult = vm.enforce_policy("rsop")
-      if presult[:result] == false
-        presult[:details].each do |p|
-          rec.reason.push(p["description"]) unless p["result"]
-        end
-        if rec.reason != []
-          rec.reason = rec.reason.join(", ")
-          result.push(rec)
-        end
+      next unless presult[:result] == false
+
+      presult[:details].each do |p|
+        rec.reason.push(p["description"]) unless p["result"]
+      end
+      if rec.reason != []
+        rec.reason = rec.reason.join(", ")
+        result.push(rec)
       end
     end
   end
@@ -636,7 +638,7 @@ class VmOrTemplate < ApplicationRecord
   # TODO: Vmware specific URI methods?  Next 3 methods
   def self.location2uri(location, scheme = "file")
     pat = %r{^(file|http|miq)://([^/]*)/(.+)$}
-    unless pat =~ location
+    unless pat&.match?(location)
       # location = scheme<<"://"<<self.myhost.ipaddress<<":1139/"<<location
       location = scheme << ":///" << location
     end
@@ -658,25 +660,27 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def self.repository_parse_path(path)
-    path.gsub!(/\\/, "/")
-    #it's empty string for local type
+    path.tr!('\\', "/")
+    # it's empty string for local type
     storage_name = ""
-                    # NAS
+    # NAS
     relative_path = if path.starts_with?("//")
-                      raise _("path, '%{path}', is malformed") % {:path => path} unless path =~ %r{^//[^/].*/.+$}
+                      raise _("path, '%{path}', is malformed") % {:path => path} unless %r{^//[^/].*/.+$}.match?(path)
+
                       # path is a UNC
                       storage_name = path.split("/")[0..3].join("/")
                       path.split("/")[4..path.length].join("/") if path.length > 4
-                    #VMFS
+                    # VMFS
                     elsif path.starts_with?("[")
-                      raise _("path, '%{path}', is malformed") % {:path => path} unless path =~ /^\[[^\]].+\].*$/
+                      raise _("path, '%{path}', is malformed") % {:path => path} unless /^\[[^\]].+\].*$/.match?(path)
+
                       # path is a VMWare storage name
                       /^\[(.*)\](.*)$/ =~ path
                       storage_name = $1
                       temp_path = $2.strip
                       # Some esx servers add a leading "/".
                       # This needs to be stripped off to allow matching on location
-                      temp_path.sub(/^\//,'')
+                      temp_path.sub(/^\//, '')
                     # local
                     else
                       raise _("path, '%{path}', is malformed") % {:path => path}
@@ -789,14 +793,14 @@ class VmOrTemplate < ApplicationRecord
       parent(:of_type => "ResourcePool")
     end
   end
-  alias_method :owning_resource_pool, :parent_resource_pool
+  alias owning_resource_pool parent_resource_pool
 
   def parent_blue_folder
     with_relationship_type('ems_metadata') do
       parent(:of_type => "EmsFolder")
     end
   end
-  alias_method :owning_blue_folder, :parent_blue_folder
+  alias owning_blue_folder parent_blue_folder
 
   def parent_blue_folders(*args)
     f = parent_blue_folder
@@ -805,6 +809,7 @@ class VmOrTemplate < ApplicationRecord
 
   def under_blue_folder?(folder)
     return false unless folder.kind_of?(EmsFolder)
+
     parent_blue_folders.any? { |f| f == folder }
   end
 
@@ -812,36 +817,36 @@ class VmOrTemplate < ApplicationRecord
     f = parent_blue_folder
     f.nil? ? "" : f.folder_path(*args)
   end
-  alias_method :owning_blue_folder_path, :parent_blue_folder_path
+  alias owning_blue_folder_path parent_blue_folder_path
 
   def parent_folder
     ems_cluster.try(:parent_folder)
   end
-  alias_method :owning_folder, :parent_folder
-  alias_method :parent_yellow_folder, :parent_folder
+  alias owning_folder parent_folder
+  alias parent_yellow_folder parent_folder
 
   def parent_folders(*args)
     f = parent_folder
     f.nil? ? [] : f.folder_path_objs(*args)
   end
-  alias_method :parent_yellow_folders, :parent_folders
+  alias parent_yellow_folders parent_folders
 
   def parent_folder_path(*args)
     f = parent_folder
     f.nil? ? "" : f.folder_path(*args)
   end
-  alias_method :owning_folder_path, :parent_folder_path
-  alias_method :parent_yellow_folder_path, :parent_folder_path
+  alias owning_folder_path parent_folder_path
+  alias parent_yellow_folder_path parent_folder_path
 
   def parent_datacenter
     ems_cluster.try(:parent_datacenter)
   end
-  alias_method :owning_datacenter, :parent_datacenter
+  alias owning_datacenter parent_datacenter
 
   def parent_blue_folder_display_path
     parent_blue_folder_path(:exclude_non_display_folders => true)
   end
-  alias_method :v_parent_blue_folder_display_path, :parent_blue_folder_display_path
+  alias v_parent_blue_folder_display_path parent_blue_folder_display_path
 
   def lans
     !hardware.nil? ? hardware.nics.collect(&:lan).compact : []
@@ -851,16 +856,16 @@ class VmOrTemplate < ApplicationRecord
   def ems_host_list
     params = {}
     [ext_management_system, "ems", host, "host"].each_slice(2) do |ems, type|
-      if ems
-        params[type] = {
-          :hostname   => ems.hostname,
-          :ipaddress  => ems.ipaddress,
-          :username   => ems.authentication_userid,
-          :password   => ems.authentication_password_encrypted,
-          :class_name => ems.class.name
-        }
-        params[type][:port] = ems.port if ems.respond_to?(:port) && !ems.port.blank?
-      end
+      next unless ems
+
+      params[type] = {
+        :hostname   => ems.hostname,
+        :ipaddress  => ems.ipaddress,
+        :username   => ems.authentication_userid,
+        :password   => ems.authentication_password_encrypted,
+        :class_name => ems.class.name
+      }
+      params[type][:port] = ems.port if ems.respond_to?(:port) && ems.port.present?
     end
     params
   end
@@ -969,14 +974,15 @@ class VmOrTemplate < ApplicationRecord
 
   def log_proxies_format_instance(object)
     return 'Nil' if object.nil?
+
     "#{object.class.name}:#{object.id}-#{object.name}:#{object.try(:state)}"
   end
 
   def storage2proxies
-    @storage_proxies ||= begin
+
       # Support vixDisk scanning of VMware VMs from the vmdb server
-      miq_server_proxies
-    end
+    @storage_proxies ||= miq_server_proxies
+
   end
 
   def storage2active_proxies(all_proxy_list = nil)
@@ -987,8 +993,8 @@ class VmOrTemplate < ApplicationRecord
 
     # MiqServer coresident proxy needs to contact the host and provide credentials.
     # Remove any MiqServer instances if we do not have credentials
-    rsc = self.scan_via_ems? ? ext_management_system : host
-    proxies.delete_if { |p| MiqServer === p } if rsc && !rsc.authentication_status_ok?
+    rsc = scan_via_ems? ? ext_management_system : host
+    proxies.delete_if { |p| p.kind_of?(MiqServer) } if rsc && !rsc.authentication_status_ok?
     _log.debug("proxies2.length = #{proxies.length}")
 
     proxies
@@ -1011,7 +1017,7 @@ class VmOrTemplate < ApplicationRecord
     case vendor
     when 'vmware'
       # VM cannot be scanned by server if they are on a repository
-      return [] if storage_id.blank? || self.repository_vm?
+      return [] if storage_id.blank? || repository_vm?
     when 'microsoft'
       return [] if storage_id.blank?
     else
@@ -1033,7 +1039,7 @@ class VmOrTemplate < ApplicationRecord
 
     miq_servers = srs.select do |svr|
       (svr.vm_scan_host_affinity? ? host_server_ids.detect { |id| id == svr.id } : host_server_ids.empty?) &&
-      (svr.vm_scan_storage_affinity? ? all_storage_server_ids.detect { |id| id == svr.id } : storage_server_ids.empty?)
+        (svr.vm_scan_storage_affinity? ? all_storage_server_ids.detect { |id| id == svr.id } : storage_server_ids.empty?)
     end
     _log.debug("miq_servers1.length = #{miq_servers.length}")
 
@@ -1058,10 +1064,15 @@ class VmOrTemplate < ApplicationRecord
   # TODO: Vmware specfic
   def template=(val)
     return val unless val ^ template # Only continue if toggling setting
+
     write_attribute(:template, val)
 
-    self.type = corresponding_model.name if (self.template? && self.kind_of?(Vm)) || (!self.template? && self.kind_of?(MiqTemplate))
-    d = self.template? ? [/\.vmx$/, ".vmtx", 'never'] : [/\.vmtx$/, ".vmx", state == 'never' ? 'unknown' : raw_power_state]
+    self.type = corresponding_model.name if (template? && kind_of?(Vm)) || (!template? && kind_of?(MiqTemplate))
+    d = if template?
+          [/\.vmx$/, ".vmtx", 'never']
+        else
+          [/\.vmtx$/, ".vmx", state == 'never' ? 'unknown' : raw_power_state]
+        end
     self.location = location.sub(d[0], d[1]) unless location.nil?
     self.raw_power_state = d[2]
   end
@@ -1163,13 +1174,14 @@ class VmOrTemplate < ApplicationRecord
     # /rhev/data-center/<datacenter_id>/mastersd/master/vms/<vm_guid>/<vm_guid>.ovf/
     datacenter = parent_datacenter
     return location if datacenter.blank?
+
     File.join('/rhev/data-center', datacenter.uid_ems, 'mastersd/master/vms', uid_ems, location)
   end
 
   def state
     (power_state || "unknown").downcase
   end
-  alias_method :current_state, :state
+  alias current_state state
 
   # Override raw_power_state= attribute setter in order to impose side effects
   # of setting previous_state and updating state_changed_on
@@ -1180,19 +1192,18 @@ class VmOrTemplate < ApplicationRecord
       self.previous_state   = raw_power_state
       self.state_changed_on = Time.now.utc
       super
-      self.power_state      = calculate_power_state
+      self.power_state = calculate_power_state
     end
-    new_state
   end
 
   def self.calculate_power_state(raw_power_state)
-    (raw_power_state == "never") ? "never" : "unknown"
+    raw_power_state == "never" ? "never" : "unknown"
   end
 
   def archived?
     ems_id.nil? && storage_id.nil?
   end
-  alias_method :archived, :archived?
+  alias archived archived?
   virtual_attribute :archived, :boolean, :arel => (lambda do |t|
     t.grouping(t[:ems_id].eq(nil).and(t[:storage_id].eq(nil)))
   end)
@@ -1200,7 +1211,7 @@ class VmOrTemplate < ApplicationRecord
   def orphaned?
     ems_id.nil? && !storage_id.nil?
   end
-  alias_method :orphaned, :orphaned?
+  alias orphaned orphaned?
   virtual_attribute :orphaned, :boolean, :arel => (lambda do |t|
     t.grouping(t[:ems_id].eq(nil).and(t[:storage_id].not_eq(nil)))
   end)
@@ -1208,7 +1219,7 @@ class VmOrTemplate < ApplicationRecord
   def active?
     !archived? && !orphaned? && !retired? && !template?
   end
-  alias_method :active, :active?
+  alias active active?
   # in sql nil != false ==> false
   virtual_attribute :active, :boolean, :arel => (lambda do |t|
     t.grouping(t[:ems_id].not_eq(nil)
@@ -1224,28 +1235,29 @@ class VmOrTemplate < ApplicationRecord
   virtual_attribute :disconnected, :boolean, :arel => (lambda do |t|
     t.grouping(t[:connection_state].not_eq(nil).and(t[:connection_state].not_eq("connected")))
   end)
-  alias_method :disconnected, :disconnected?
+  alias disconnected disconnected?
 
   def normalized_state
     return self["normalized_state"] if has_attribute?("normalized_state")
 
-    %w(archived orphaned template retired disconnected).each do |s|
-      return s if send("#{s}?")
+    %w[archived orphaned template retired disconnected].each do |s|
+      return s if send(:"#{s}?")
     end
     return power_state.downcase unless power_state.nil?
+
     "unknown"
   end
   virtual_attribute :normalized_state, :string, :arel => (lambda do |t|
     t.grouping(
       Arel::Nodes::Case.new
-      .when(arel_table[:archived]).then(Arel.sql("\'archived\'"))
-      .when(arel_table[:orphaned]).then(Arel.sql("\'orphaned\'"))
-      .when(t[:template].eq(t.create_true)).then(Arel.sql("\'template\'"))
-      .when(t[:retired].eq(t.create_true)).then(Arel.sql("\'retired\'"))
-      .when(arel_table[:disconnected]).then(Arel.sql("\'disconnected\'"))
+      .when(arel_table[:archived]).then(Arel.sql("'archived'"))
+      .when(arel_table[:orphaned]).then(Arel.sql("'orphaned'"))
+      .when(t[:template].eq(t.create_true)).then(Arel.sql("'template'"))
+      .when(t[:retired].eq(t.create_true)).then(Arel.sql("'retired'"))
+      .when(arel_table[:disconnected]).then(Arel.sql("'disconnected'"))
       .else(t.lower(
-              t.coalesce([t[:power_state], Arel.sql("\'unknown\'")])
-      ))
+              t.coalesce([t[:power_state], Arel.sql("'unknown'")])
+            ))
     )
   end)
 
@@ -1261,7 +1273,7 @@ class VmOrTemplate < ApplicationRecord
 
   def classify_with_parent_folder_path(add = true)
     [:blue, :yellow].each do |folder_type|
-      path = send("parent_#{folder_type}_folder_path")
+      path = send(:"parent_#{folder_type}_folder_path")
       next if path.blank?
 
       cat = self.class.folder_category(folder_type)
@@ -1300,9 +1312,9 @@ class VmOrTemplate < ApplicationRecord
   def event_where_clause(assoc = :ems_events)
     case assoc.to_sym
     when :ems_events, :event_streams
-      return ["vm_or_template_id = ? OR dest_vm_or_template_id = ? ", id, id]
+      ["vm_or_template_id = ? OR dest_vm_or_template_id = ? ", id, id]
     when :policy_events
-      return ["target_id = ? and target_class = ? ", id, self.class.base_class.name]
+      ["target_id = ? and target_class = ? ", id, self.class.base_class.name]
     end
   end
 
@@ -1322,14 +1334,14 @@ class VmOrTemplate < ApplicationRecord
     o ? o.name : ""
   end
 
-  alias_method :v_owning_folder_path, :owning_folder_path
+  alias v_owning_folder_path owning_folder_path
 
   def v_owning_blue_folder
     o = owning_blue_folder
     o ? o.name : ""
   end
 
-  alias_method :v_owning_blue_folder_path, :owning_blue_folder_path
+  alias v_owning_blue_folder_path owning_blue_folder_path
 
   def v_owning_datacenter
     o = owning_datacenter
@@ -1337,7 +1349,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def v_is_a_template
-    self.template?.to_s.capitalize
+    template?.to_s.capitalize
   end
   # technically it is capitalized, but for sorting, not a concern
   # but we do need nil to become false
@@ -1354,6 +1366,7 @@ class VmOrTemplate < ApplicationRecord
     raise _("option :event_types is required")    unless options[:event_types]
     raise _("option :time_threshold is required") unless options[:time_threshold]
     raise _("option :freq_threshold is required") unless options[:freq_threshold]
+
     EmsEvent
       .where(:event_type => options[:event_types])
       .where("vm_or_template_id = :id OR dest_vm_or_template_id = :id", :id => id)
@@ -1366,7 +1379,11 @@ class VmOrTemplate < ApplicationRecord
     raise _(":hdw_attr required") if attr.nil?
 
     operator = options[:operator] || ">"
-    operator = operator.downcase == "increased" ? ">" : operator.downcase == "decreased" ? "<" : operator
+    operator = if operator.downcase == "increased"
+                 ">"
+               else
+                 operator.downcase == "decreased" ? "<" : operator
+               end
 
     current_state, prev_state = drift_states.order("timestamp DESC").limit(2)
     if current_state.nil? || prev_state.nil?
@@ -1454,11 +1471,13 @@ class VmOrTemplate < ApplicationRecord
     return "Unknown" if dlist.empty?
     return "True"    if dlist.all? { |d| d.partitions_aligned == "True" }
     return "False"   if dlist.any? { |d| d.partitions_aligned == "False" }
+
     "Unknown"
   end
 
   def memory_exceeds_current_host_headroom
     return false if host.nil?
+
     (ram_size > host.current_memory_headroom)
   end
 
@@ -1501,6 +1520,7 @@ class VmOrTemplate < ApplicationRecord
 
   def has_active_ems?
     return true unless ext_management_system.nil?
+
     false
   end
 
@@ -1518,11 +1538,11 @@ class VmOrTemplate < ApplicationRecord
   def self.vms_by_ipaddress(ipaddress)
     ipaddresses = ipaddress.split(',')
     Network.where("ipaddress in (?)", ipaddresses).each do |network|
-      begin
-        vm = network.hardware.vm
-        yield(vm)
-      rescue
-      end
+
+      vm = network.hardware.vm
+      yield(vm)
+    rescue
+
     end
   end
 
@@ -1550,7 +1570,7 @@ class VmOrTemplate < ApplicationRecord
     hardwares = Hardware.arel_table
 
     match_grouping = networks[:ipaddress].matches("%#{ipaddress}%")
-                       .or(networks[:ipv6address].matches("%#{ipaddress}%"))
+                                         .or(networks[:ipv6address].matches("%#{ipaddress}%"))
 
     query = hardwares.project(1)
                      .join(networks).on(networks[:hardware_id].eq(hardwares[:id]))
@@ -1622,10 +1642,10 @@ class VmOrTemplate < ApplicationRecord
   def non_generic_charts_available?
     false
   end
-  alias_method :cpu_ready_available?,    :non_generic_charts_available?
-  alias_method :cpu_mhz_available?,      :non_generic_charts_available?
-  alias_method :cpu_percent_available?,  :non_generic_charts_available?
-  alias_method :memory_mb_available?,    :non_generic_charts_available?
+  alias cpu_ready_available? non_generic_charts_available?
+  alias cpu_mhz_available? non_generic_charts_available?
+  alias cpu_percent_available? non_generic_charts_available?
+  alias memory_mb_available? non_generic_charts_available?
 
   def self.includes_template?(ids)
     MiqTemplate.where(:id => ids).exists?
@@ -1641,10 +1661,11 @@ class VmOrTemplate < ApplicationRecord
   def self.reconfigurable?(ids)
     vms = VmOrTemplate.where(:id => ids)
     return false if vms.blank?
+
     vms.all?(&:reconfigurable?)
   end
 
-  PUBLIC_TEMPLATE_CLASSES = %w(ManageIQ::Providers::Openstack::CloudManager::Template).freeze
+  PUBLIC_TEMPLATE_CLASSES = %w[ManageIQ::Providers::Openstack::CloudManager::Template].freeze
 
   def self.tenant_id_clause(user_or_group)
     template_tenant_ids = MiqTemplate.accessible_tenant_ids(user_or_group, Rbac.accessible_tenant_ids_strategy(MiqTemplate))
@@ -1700,7 +1721,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   # deprecated, use unsupported_reason(:action) instead
-  def check_feature_support(message_prefix)
+  def check_feature_support(_message_prefix)
     reason = unsupported_reason(:action)
     [!reason, reason]
   end

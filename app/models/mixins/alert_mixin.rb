@@ -6,10 +6,10 @@ module AlertMixin
     raise _("option :message_filter_type is required") unless options[:message_filter_type]
     raise _("option :message_filter_value is required") unless options[:message_filter_value]
 
-    allowed_types = %w(STARTS\ WITH ENDS\ WITH INCLUDES REGULAR\ EXPRESSION)
+    allowed_types = %w[STARTS\ WITH ENDS\ WITH INCLUDES REGULAR\ EXPRESSION]
     unless allowed_types.include?(options[:message_filter_type])
       raise _("option :message_filter_type: %{options}, invalid, expected one of %{type}") %
-              {:options => options[:message_filter_type], :type => allowed_types}
+            {:options => options[:message_filter_type], :type => allowed_types}
     end
 
     options.reverse_merge!({:time_threshold => 10.days, :freq_threshold => 2})
@@ -45,13 +45,13 @@ module AlertMixin
     end
 
     [:source, :event_id, :level, :name].each do |col|
-      if options[col]
-        sel_conj = sel.empty? ? "" : ", "
-        sel << "#{sel_conj}#{col}"
-        conjunction = cond[0].empty? ? "" : " and "
-        cond[0] << "#{conjunction}#{col} = ?"
-        cond << options[col]
-      end
+      next unless options[col]
+
+      sel_conj = sel.empty? ? "" : ", "
+      sel << "#{sel_conj}#{col}"
+      conjunction = cond[0].empty? ? "" : " and "
+      cond[0] << "#{conjunction}#{col} = ?"
+      cond << options[col]
     end
     return cond, sel
   end

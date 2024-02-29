@@ -23,6 +23,7 @@ module Metric::CiMixin
 
   def has_perf_data?
     return @has_perf_data unless @has_perf_data.nil?
+
     @has_perf_data = associated_metrics('hourly').exists?
   end
 
@@ -45,10 +46,14 @@ module Metric::CiMixin
            .group(:resource_id)
            .limit(1).to_a
            .first
-    perf.nil? ? [] : [
-      perf.first_ts.kind_of?(String) ? Time.parse("#{perf.first_ts} UTC") : perf.first_ts,
-      perf.last_ts.kind_of?(String) ? Time.parse("#{perf.last_ts} UTC") : perf.last_ts
-    ]
+    if perf.nil?
+      []
+    else
+      [
+        perf.first_ts.kind_of?(String) ? Time.parse("#{perf.first_ts} UTC") : perf.first_ts,
+          perf.last_ts.kind_of?(String) ? Time.parse("#{perf.last_ts} UTC") : perf.last_ts
+      ]
+    end
   end
 
   #
@@ -58,6 +63,7 @@ module Metric::CiMixin
   def performances_maintains_value_for_duration?(options)
     _log.info("options: #{options.inspect}")
     raise _("Argument must be an options hash") unless options.kind_of?(Hash)
+
     column = options[:column]
     value = options[:value].to_f
     duration = options[:duration]
@@ -78,7 +84,7 @@ module Metric::CiMixin
     raise ":value required" if value.nil?
     raise ":duration required" if duration.nil?
     # TODO: Check for valid operators
-    unless percentage.nil? || percentage.kind_of?(Integer) && percentage >= 0 && percentage <= 100
+    unless percentage.nil? || (percentage.kind_of?(Integer) && percentage >= 0 && percentage <= 100)
       raise _(":percentage expected integer from 0-100, received: %{number}") % {:number => percentage}
     end
 
@@ -122,8 +128,8 @@ module Metric::CiMixin
     # Find the record at or near the starting_on timestamp to determine if we need to handle overlap
     rec_at_start_on = total_records.reverse.detect { |r| r.timestamp >= starting_on }
     return false if rec_at_start_on.nil?
+
     start_on_idx = total_records.index { |r| r.timestamp == rec_at_start_on.timestamp }
-    #
     colvalue = rec_at_start_on.send(column)
     if colvalue && colvalue.send(operator, value)
       # If there is a match at the start_on timestamp then we need to check the records going backwards to find the first one that doesnt match.
@@ -202,8 +208,8 @@ module Metric::CiMixin
         matches_in_window += match_history[i]
         _log.info("Matched?: true,  Index: #{i}, Window start index: #{i - recs_in_window}, matches_in_window: #{matches_in_window}, ts: #{rec.timestamp}, #{column}: #{rec.send(column)}") if debug_trace
         return true if matches_in_window >= recs_to_match
-      else
-        _log.info("Matched?: false, Index: #{i}, Window start index: #{i - recs_in_window}, matches_in_window: #{matches_in_window}, ts: #{rec.timestamp}, #{column}: #{rec.send(column)}") if debug_trace
+      elsif debug_trace
+        _log.info("Matched?: false, Index: #{i}, Window start index: #{i - recs_in_window}, matches_in_window: #{matches_in_window}, ts: #{rec.timestamp}, #{column}: #{rec.send(column)}")
       end
     end
     false
@@ -211,6 +217,7 @@ module Metric::CiMixin
 
   def get_daily_time_profile_in_my_region_from_tz(tz)
     return if tz.nil?
+
     TimeProfile.in_region(region_id).rollup_daily_metrics.find_all_with_entire_tz.detect { |p| p.tz_or_default == tz }
   end
 

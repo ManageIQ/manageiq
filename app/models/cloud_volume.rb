@@ -78,6 +78,7 @@ class CloudVolume < ApplicationRecord
 
   def self.create_volume(ems_id, options = {})
     raise ArgumentError, _("ems_id cannot be nil") if ems_id.nil?
+
     ext_management_system = ExtManagementSystem.find(ems_id)
     raise ArgumentError, _("ext_management_system cannot be found") if ext_management_system.nil?
 

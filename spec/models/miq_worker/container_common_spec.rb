@@ -19,7 +19,7 @@ RSpec.describe MiqWorker::ContainerCommon do
           :template => {
             :metadata => {:name => "test", :labels => {:name => "test", :app => "manageiq"}},
             :spec     => {
-              :containers         => [{
+              :containers => [{
                 :name => "test",
                 :env  => []
               }]
@@ -33,7 +33,7 @@ RSpec.describe MiqWorker::ContainerCommon do
       worker = FactoryBot.create(:miq_generic_worker)
       worker.configure_worker_deployment(test_deployment)
 
-      expect(test_deployment.dig(:spec, :template, :spec, :nodeSelector)).to eq("manageiq/zone-#{MiqServer.my_zone}".gsub(" ", "-") => "true")
+      expect(test_deployment.dig(:spec, :template, :spec, :nodeSelector)).to eq("manageiq/zone-#{MiqServer.my_zone}".tr(" ", "-") => "true")
     end
 
     it "doesn't add a node selector for the default zone" do
@@ -277,7 +277,7 @@ RSpec.describe MiqWorker::ContainerCommon do
           :requests => {
             :memory => "250Mi",
           },
-          :limits         => {
+          :limits   => {
             :memory => "600Mi",
           }
         }

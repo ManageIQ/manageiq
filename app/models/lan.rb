@@ -11,7 +11,7 @@ class Lan < ApplicationRecord
   belongs_to :parent, :class_name => "::Lan"
 
   # TODO: Should this go through switch and not guest devices?
-  has_many :hosts,             :through => :guest_devices
+  has_many :hosts, :through => :guest_devices
 
   acts_as_miq_taggable
 end

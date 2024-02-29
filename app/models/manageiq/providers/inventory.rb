@@ -44,9 +44,7 @@ module ManageIQ::Providers
     # Returns all InventoryCollections contained in persister
     #
     # @return [Array<InventoryRefresh::InventoryCollection>] List of InventoryCollections objects
-    def inventory_collections
-      parse.inventory_collections
-    end
+    delegate :inventory_collections, :to => :parse
 
     # Based on the given provider/manager class, this returns correct collector class
     #
@@ -83,7 +81,7 @@ module ManageIQ::Providers
     # @param type [String] 'Persister' | 'Collector' | 'Parser'
     # @param manager_name [String, nil] @see default_manager_name
     def self.class_for(ems, target, type, manager_name = nil)
-      ems_class = ems.class == Class ? ems : ems.class
+      ems_class = ems.instance_of?(Class) ? ems : ems.class
       provider_module = ManageIQ::Providers::Inflector.provider_module(ems_class)
 
       manager_name ||= parsed_manager_name(ems, target)
@@ -111,7 +109,7 @@ module ManageIQ::Providers
       when InventoryRefresh::TargetCollection
         'TargetCollection'
       else
-        klass = target.class == Class ? target : target.class
+        klass = target.instance_of?(Class) ? target : target.class
         suffix_arr = klass.name.split('::') - ManageIQ::Providers::Inflector.provider_module(klass).name.split("::")
         suffix_arr.join('::')
       end

@@ -48,25 +48,25 @@ RSpec.describe Host do
     expect(DriftState.count).to eq(1)
 
     expect(host.drift_states.first.data).to eq({
-      :class                         => "ManageIQ::Providers::Vmware::InfraManager::Host",
-      :id                            => host.id,
-      :name                          => host.name,
-      :vmm_vendor_display            => "VMware",
-      :v_total_vms                   => 0,
+                                                 :class                         => "ManageIQ::Providers::Vmware::InfraManager::Host",
+                                                 :id                            => host.id,
+                                                 :name                          => host.name,
+                                                 :vmm_vendor_display            => "VMware",
+                                                 :v_total_vms                   => 0,
 
-      :advanced_settings             => [],
-      :filesystems                   => [],
-      :filesystems_custom_attributes => [],
-      :groups                        => [],
-      :guest_applications            => [],
-      :lans                          => [],
-      :patches                       => [],
-      :switches                      => [],
-      :system_services               => [],
-      :tags                          => [],
-      :users                         => [],
-      :vms                           => [],
-    })
+                                                 :advanced_settings             => [],
+                                                 :filesystems                   => [],
+                                                 :filesystems_custom_attributes => [],
+                                                 :groups                        => [],
+                                                 :guest_applications            => [],
+                                                 :lans                          => [],
+                                                 :patches                       => [],
+                                                 :switches                      => [],
+                                                 :system_services               => [],
+                                                 :tags                          => [],
+                                                 :users                         => [],
+                                                 :vms                           => [],
+                                               })
   end
 
   it "emits cluster policy event when the cluster changes" do
@@ -226,7 +226,7 @@ RSpec.describe Host do
           :class_name  => @host.class.name,
           :role        => "ems_operations",
           :zone        => @ems.zone.name,
-          :queue_name  => @ems.queue_name_for_ems_operations,
+          :queue_name  => @ems.queue_name_for_ems_operations
         )
       end
 
@@ -315,8 +315,7 @@ RSpec.describe Host do
 
       it "validate remote, then validate default" do
         data = {:default => {:userid => "", :password => ""},
-                :remote  => {:userid => "root", :password => password},
-        }
+                :remote  => {:userid => "root", :password => password},}
         @host.update_authentication(data, :save => false)
         assert_remote_credentials_validated
 
@@ -385,8 +384,8 @@ RSpec.describe Host do
     let(:ems) { FactoryBot.build(:ext_management_system) }
     let(:host) do
       FactoryBot.build(:host,
-                        :ext_management_system => ems,
-                        :ems_cluster           => FactoryBot.build(:ems_cluster))
+                       :ext_management_system => ems,
+                       :ems_cluster           => FactoryBot.build(:ems_cluster))
     end
     it "clears ems and cluster" do
       host.disconnect_ems(ems)

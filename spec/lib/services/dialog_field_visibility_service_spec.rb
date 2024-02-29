@@ -171,8 +171,8 @@ describe DialogFieldVisibilityService do
         .to receive(:determine_visibility).with(
           platform, supports_customization_template, customize_fields_list
         ).and_return(
-          :hide => %i(customize_fields_hide number_hide), # Forces uniq
-          :edit => %i(customize_fields_edit number_edit retirement_hide) # Forces uniq and removal of intersection
+          :hide => %i[customize_fields_hide number_hide], # Forces uniq
+          :edit => %i[customize_fields_edit number_edit retirement_hide] # Forces uniq and removal of intersection
         )
 
       allow(sysprep_custom_spec_visibility_service)
@@ -200,7 +200,7 @@ describe DialogFieldVisibilityService do
 
     it "adds the values to the field names to hide, edit, and show without duplicates or intersections" do
       result = subject.determine_visibility(options)
-      expect(result[:hide]).to match_array(%i(
+      expect(result[:hide]).to match_array(%i[
                                              auto_hide
                                              customize_fields_hide
                                              linked_clone_hide
@@ -211,8 +211,8 @@ describe DialogFieldVisibilityService do
                                              service_template_request_hide
                                              sysprep_auto_logon_hide
                                              sysprep_custom_spec_hide
-                                           ))
-      expect(result[:edit]).to match_array(%i(
+                                           ])
+      expect(result[:edit]).to match_array(%i[
                                              auto_edit
                                              customize_fields_edit
                                              linked_clone_edit
@@ -223,7 +223,7 @@ describe DialogFieldVisibilityService do
                                              retirement_edit
                                              sysprep_auto_logon_edit
                                              sysprep_custom_spec_edit
-                                           ))
+                                           ])
       expect(result[:show]).to match_array([:linked_clone_show])
     end
   end

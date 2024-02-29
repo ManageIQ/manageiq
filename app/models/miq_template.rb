@@ -19,10 +19,10 @@ class MiqTemplate < VmOrTemplate
   def self.corresponding_model
     module_parent::Vm
   end
-  class << self; alias_method :corresponding_vm_model, :corresponding_model; end
+  class << self; alias corresponding_vm_model corresponding_model; end
 
   delegate :corresponding_model, :to => :class
-  alias_method :corresponding_vm_model, :corresponding_model
+  alias corresponding_vm_model corresponding_model
 
   def scan_via_ems?
     true
@@ -37,7 +37,7 @@ class MiqTemplate < VmOrTemplate
                         "ManageIQ::Providers::Openstack::CloudManager::VolumeSnapshotTemplate"])
   end
 
-  def active?; false; end
+  def active? = false
 
   def self.display_name(number = 1)
     n_('Template and Image', 'Templates and Images', number)

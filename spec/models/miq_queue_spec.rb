@@ -424,27 +424,27 @@ RSpec.describe MiqQueue do
     end
 
     it "should accept non-Array args (for now)" do
-      begin
-        class MiqQueueSpecNonArrayArgs
-          def self.some_method(single_arg)
-            single_arg
-          end
+
+      class MiqQueueSpecNonArrayArgs
+        def self.some_method(single_arg)
+          single_arg
         end
-
-        msg = MiqQueue.put(
-          :class_name  => "MiqQueueSpecNonArrayArgs",
-          :method_name => "some_method",
-          :args        => "not_an_array"
-        )
-
-        msg_from_db = MiqQueue.find(msg.id)
-        expect(msg_from_db.args).to eq(["not_an_array"])
-
-        _, _, result = msg_from_db.deliver
-        expect(result).to eq "not_an_array"
-      ensure
-        Object.send(:remove_const, :MiqQueueSpecNonArrayArgs)
       end
+
+      msg = MiqQueue.put(
+        :class_name  => "MiqQueueSpecNonArrayArgs",
+        :method_name => "some_method",
+        :args        => "not_an_array"
+      )
+
+      msg_from_db = MiqQueue.find(msg.id)
+      expect(msg_from_db.args).to eq(["not_an_array"])
+
+      _, _, result = msg_from_db.deliver
+      expect(result).to eq "not_an_array"
+    ensure
+      Object.send(:remove_const, :MiqQueueSpecNonArrayArgs)
+
     end
 
     it "defaults :args" do
@@ -1050,7 +1050,7 @@ RSpec.describe MiqQueue do
 
           expect(YAML).not_to receive(:load_file).with(MiqQueue::MESSAGING_CONFIG_FILE)
 
-          expect(ENV["MESSAGING_PASSWORD"]).to be_encrypted
+          expect(ENV.fetch("MESSAGING_PASSWORD", nil)).to be_encrypted
           expect(MiqQueue.send(:messaging_client_options)).to eq(
             :encoding       => "json",
             :host           => "server.example.com",
@@ -1064,8 +1064,7 @@ RSpec.describe MiqQueue do
 
         it "with SSL enabled" do
           stub_const("ENV", env_vars.to_h.merge("MESSAGING_PASSWORD" => "password",
-                                                "MESSAGING_SSL_CA"   => "/path/root.crt"
-                                                ))
+                                                "MESSAGING_SSL_CA"   => "/path/root.crt"))
 
           expect(YAML).not_to receive(:load_file).with(MiqQueue::MESSAGING_CONFIG_FILE)
 

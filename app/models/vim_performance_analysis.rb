@@ -105,7 +105,7 @@ module VimPerformanceAnalysis
       return target.storages if target.kind_of?(Host)
 
       if target.kind_of?(EmsCluster)
-        return target.hosts.collect(&:storages).flatten.compact
+        target.hosts.collect(&:storages).flatten.compact
       else
         raise _("unable to get storages for %{name}") % {:name => target.class}
       end
@@ -116,25 +116,25 @@ module VimPerformanceAnalysis
         :used      => {:metric => :max_cpu_usagemhz_rate_average, :mode => :perf_trend},
         :reserved  => {:metric => :cpu_reserve, :mode => :current},
         :allocated => nil,
-        :manual    => {:value =>  nil, :mode => :manual}
+        :manual    => {:value => nil, :mode => :manual}
       },
       :vcpus   => {
         :used      => {:metric => :num_cpu, :mode => :current},
         :reserved  => {:metric => :num_cpu, :mode => :current},
         :allocated => {:metric => :num_cpu, :mode => :current},
-        :manual    => {:value =>  nil, :mode => :manual}
+        :manual    => {:value => nil, :mode => :manual}
       },
       :memory  => {
         :used      => {:metric => :max_derived_memory_used, :mode => :perf_trend},
         :reserved  => {:metric => :memory_reserve, :mode => :current},
         :allocated => {:metric => :ram_size, :mode => :current},
-        :manual    => {:value =>  nil, :mode => :manual}
+        :manual    => {:value => nil, :mode => :manual}
       },
       :storage => {
         :used      => {:metric => :used_disk_storage, :mode => :current},
         :reserved  => {:metric => :provisioned_storage, :mode => :current},
         :allocated => {:metric => :allocated_disk_storage, :mode => :current},
-        :manual    => {:value =>  nil, :mode => :manual}
+        :manual    => {:value => nil, :mode => :manual}
       }
     }
     ##########################################################
@@ -157,9 +157,9 @@ module VimPerformanceAnalysis
       end
 
       vm_perf = VimPerformanceAnalysis.get_daily_perf(@vm, options[:range], options[:ext_options], perf_cols)
-      vm_ts = vm_perf.last.timestamp unless vm_perf.blank?
-      [:cpu, :vcpus, :memory, :storage].each_with_object({}) do |type, vm_needs|
-        vm_needs[type] = vm_consumes(vm_perf, vm_ts, options[:vm_options][type], type)
+      vm_ts = vm_perf.last.timestamp if vm_perf.present?
+      [:cpu, :vcpus, :memory, :storage].index_with do |type|
+        vm_consumes(vm_perf, vm_ts, options[:vm_options][type], type)
       end
     end
 
@@ -251,13 +251,14 @@ module VimPerformanceAnalysis
         avail   = measure_object(target, options[:mode], options[:limit_col], perf, ts, type) || 0
         avail   = (avail * (options[:limit_pct] / 100.0)) unless avail.nil? || options[:limit_pct].blank?
       end
-      usage = (usage > reserve) ? usage : reserve # Take the greater of usage or total reserve of child VMs
+      usage = reserve unless usage > reserve # Take the greater of usage or total reserve of child VMs
       [avail, usage]
     end
 
     def can_fit(avail, usage, need)
       return nil if avail.nil? || usage.nil? || need.nil?
       return 0   unless avail > usage && need > 0
+
       fits = (avail - usage) / need
       fits.truncate
     end
@@ -333,16 +334,16 @@ module VimPerformanceAnalysis
     rel = Metric::Helper.find_for_interval_name(interval_name, ext_options[:time_profile] || ext_options[:tz],
                                                 ext_options[:class])
     case obj
-    when MiqEnterprise, MiqRegion then
+    when MiqEnterprise, MiqRegion
       rel = rel.where(:resource => obj.storages).or(rel.where(:resource => obj.ext_management_systems))
-    when Host then
+    when Host
       rel = rel.where(:parent_host_id => obj.id)
     when EmsCluster
       rel = rel.where(:parent_ems_cluster_id => obj.id)
-    when Storage then
+    when Storage
       rel = rel.where(:parent_storage_id => obj.id)
-    when ExtManagementSystem then
-      rel = rel.where(:parent_ems_id => obj.id).where(:resource_type => %w(Host EmsCluster))
+    when ExtManagementSystem
+      rel = rel.where(:parent_ems_id => obj.id).where(:resource_type => %w[Host EmsCluster])
     else
       raise _("unknown object type: %{class}") % {:class => obj.class}
     end
@@ -362,9 +363,10 @@ module VimPerformanceAnalysis
   def self.child_tags_over_time_period(obj, interval_name, options = {})
     classifications = Classification.hash_all_by_type_and_name
 
-    find_child_perf_for_time_period(obj, interval_name, options.merge(:conditions => "resource_type != 'VmOrTemplate' AND tag_names IS NOT NULL", :select => "resource_type, tag_names")).inject({}) do |h, p|
+    find_child_perf_for_time_period(obj, interval_name, options.merge(:conditions => "resource_type != 'VmOrTemplate' AND tag_names IS NOT NULL", :select => "resource_type, tag_names")).each_with_object({}) do |p, h|
       p.tag_names.split("|").each do |t|
         next if t.starts_with?("power_state")
+
         tag = "#{p.resource_type}/#{t}"
         next if h.key?(tag)
 
@@ -375,7 +377,6 @@ module VimPerformanceAnalysis
         ent_desc = ent.nil? ? e.titleize : ent.description
         h[tag] = "#{ui_lookup(:model => p.resource_type)}: #{cat_desc}: #{ent_desc}"
       end
-      h
     end
   end
 
@@ -410,23 +411,22 @@ module VimPerformanceAnalysis
     end
 
     result.each do |_k, h|
-      h[:min_max] = h.keys.find_all { |k| k.to_s.starts_with?("min", "max") }.inject({}) do |mm, k|
+      h[:min_max] = h.keys.find_all { |k| k.to_s.starts_with?("min", "max") }.each_with_object({}) do |k, mm|
         val = h.delete(k)
         mm[k] = val unless val.nil?
-        mm
       end
       h.reject! { |k, _v| perf_klass.virtual_attribute?(k) }
     end
 
-    result.inject([]) do |recs, k|
+    result.each_with_object([]) do |k, recs|
       _ts, v = k
       cols.each do |c|
         next unless v[c].kind_of?(Float)
+
         Metric::Aggregation::Process.column(c, nil, v, counts[k], true, :average)
       end
 
       recs.push(perf_klass.new(v))
-      recs
     end
   end
 
@@ -435,6 +435,7 @@ module VimPerformanceAnalysis
 
     coordinates = recs.each_with_object([]) do |r, arr|
       next unless r.respond_to?(x_attr) && r.respond_to?(y_attr)
+
       if r.respond_to?(:inside_time_profile) && r.inside_time_profile == false
         _log.debug("Class: [#{r.class}], [#{r.resource_type} - #{r.resource_id}], Timestamp: [#{r.timestamp}] is outside of time profile")
         next
@@ -443,7 +444,7 @@ module VimPerformanceAnalysis
       # y = r.send(x_attr).to_i # Calculate normal way by using the integer value of the timestamp
       adj_x_attr = "time_profile_adjusted_#{x_attr}"
       if r.respond_to?(adj_x_attr)
-        r.send("#{adj_x_attr}=", (recs.first.send(x_attr).to_i + arr.length.days.to_i))
+        r.send(:"#{adj_x_attr}=", (recs.first.send(x_attr).to_i + arr.length.days.to_i))
         x = r.send(adj_x_attr).to_i # Calculate by using the number of days out from the first timestamp
       else
         x = r.send(x_attr).to_i
@@ -453,7 +454,7 @@ module VimPerformanceAnalysis
 
     begin
       Math.linear_regression(*coordinates)
-    rescue StandardError => err
+    rescue => err
       _log.warn("#{err.message}, calculating slope") unless err.kind_of?(ZeroDivisionError)
       nil
     end
@@ -464,7 +465,7 @@ module VimPerformanceAnalysis
 
     ext_options ||= {}
     Metric::Helper.find_for_interval_name("daily", ext_options[:time_profile] || ext_options[:tz], ext_options[:class])
-                  .order("timestamp") #.select(perf_cols) - Currently passing perf_cols to select is broken because it includes virtual cols. This is actively being worked on.
+                  .order("timestamp") # .select(perf_cols) - Currently passing perf_cols to select is broken because it includes virtual cols. This is actively being worked on.
                   .where(:resource => obj, :timestamp => Metric::Helper.time_range_from_hash(range))
   end
 
@@ -473,12 +474,12 @@ module VimPerformanceAnalysis
     return nil if slope.nil?
 
     begin
-      return Math.slope_y_intercept(timestamp.to_f, slope, yint)
+      Math.slope_y_intercept(timestamp.to_f, slope, yint)
     rescue RangeError
-      return nil
+      nil
     rescue => err
       _log.warn("#{err.message}, calculating trend value")
-      return nil
+      nil
     end
   end
 
@@ -487,12 +488,12 @@ module VimPerformanceAnalysis
     return nil if slope.nil?
 
     begin
-      return Time.at(Math.slope_x_intercept(value.to_f, slope, yint)).utc
+      Time.at(Math.slope_x_intercept(value.to_f, slope, yint)).utc
     rescue RangeError
-      return nil
+      nil
     rescue => err
       _log.warn("#{err.message}, calculating timestamp at trend value")
-      return nil
+      nil
     end
   end
 end # module VimPerformanceAnalysis

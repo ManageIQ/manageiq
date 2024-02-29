@@ -25,7 +25,7 @@ RSpec.describe ChargebackRateDetailMeasure do
 
   it "is invalid with a units_display lenght diferent that the units lenght" do
     expect(FactoryBot.build(:chargeback_rate_detail_measure,
-                      :units         => %w(Bs KBs GBs),
-                      :units_display => %w(kbps mbps))).not_to be_valid
+                            :units         => %w[Bs KBs GBs],
+                            :units_display => %w[kbps mbps])).not_to be_valid
   end
 end

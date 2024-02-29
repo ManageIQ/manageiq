@@ -3,7 +3,7 @@ class ServiceTemplateCatalog < ApplicationRecord
   validates :name, :presence => true, :uniqueness_when_changed => {:scope => :tenant_id}
 
   belongs_to :tenant
-  has_many  :service_templates, :dependent => :nullify
+  has_many :service_templates, :dependent => :nullify
 
   acts_as_miq_taggable
 

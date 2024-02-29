@@ -6,8 +6,8 @@ class Partition < ApplicationRecord
              p = Partition.quoted_table_name
              v = Volume.quoted_table_name
              Volume.select("DISTINCT #{v}.*")
-               .joins("JOIN #{p} ON #{v}.hardware_id = #{p}.hardware_id AND #{v}.volume_group = #{p}.volume_group")
-               .where("#{p}.id" => id)
+                   .joins("JOIN #{p} ON #{v}.hardware_id = #{p}.hardware_id AND #{v}.volume_group = #{p}.volume_group")
+                   .where("#{p}.id" => id)
            }, :foreign_key => :volume_group
 
   virtual_column :aligned, :type => :boolean
@@ -16,6 +16,7 @@ class Partition < ApplicationRecord
     # Override volume_group getter to prevent the special physical linkage from coming through
     vg = read_attribute(:volume_group)
     return nil if vg.respond_to?(:starts_with?) && vg.starts_with?(Volume::PHYSICAL_VOLUME_GROUP)
+
     vg
   end
 
@@ -123,6 +124,7 @@ class Partition < ApplicationRecord
 
   def self.partition_type_name(partition_type)
     return PARTITION_TYPE_NAMES[partition_type] if PARTITION_TYPE_NAMES.key?(partition_type)
+
     UNKNOWN_PARTITION_TYPE
   end
 
@@ -142,5 +144,5 @@ class Partition < ApplicationRecord
     # The alignment of hidden volumes affects the performance of the logical volumes that are based on them.
     start_address % alignment_boundary == 0
   end
-  alias_method :aligned, :aligned?
+  alias aligned aligned?
 end

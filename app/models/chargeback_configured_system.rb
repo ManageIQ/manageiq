@@ -68,15 +68,14 @@ class ChargebackConfiguredSystem < Chargeback
   def self.configured_systems(region)
     @configured_systems ||= {}
     @configured_systems[region] ||=
-      begin
-        if @options[:entity_id]
-          ConfiguredSystem.where(:id => @options[:entity_id])
-        elsif @options[:tag]
-          ConfiguredSystem.find_tagged_with(:all => @options[:tag], :ns => '*')
-        else
-          raise _('Unable to find strategy for Configured Systems selection')
-        end
+      if @options[:entity_id]
+        ConfiguredSystem.where(:id => @options[:entity_id])
+      elsif @options[:tag]
+        ConfiguredSystem.find_tagged_with(:all => @options[:tag], :ns => '*')
+      else
+        raise _('Unable to find strategy for Configured Systems selection')
       end
+
   end
 
   def self.display_name(number = 1)

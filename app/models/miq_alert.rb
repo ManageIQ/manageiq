@@ -11,14 +11,14 @@ class MiqAlert < ApplicationRecord
   validates :description, :presence => true, :uniqueness_when_changed => true, :length => {:maximum => 255}
   validate :validate_automate_expressions
   validate :validate_single_expression
-  validates :severity, :inclusion => { :in => SEVERITIES }
+  validates :severity, :inclusion => {:in => SEVERITIES}
 
   has_many :miq_alert_statuses, :dependent => :destroy
   before_save :set_responds_to_events
 
   attr_accessor :reserved
 
-  BASE_TABLES = %w(
+  BASE_TABLES = %w[
     Vm
     Host
     Storage
@@ -28,7 +28,7 @@ class MiqAlert < ApplicationRecord
     ContainerNode
     ContainerProject
     PhysicalServer
-  )
+  ]
 
   def self.base_tables
     BASE_TABLES
@@ -36,11 +36,11 @@ class MiqAlert < ApplicationRecord
 
   acts_as_miq_set_member
 
-  ASSIGNMENT_PARENT_ASSOCIATIONS = %i(host ems_cluster ext_management_system my_enterprise physical_server).freeze
+  ASSIGNMENT_PARENT_ASSOCIATIONS = %i[host ems_cluster ext_management_system my_enterprise physical_server].freeze
 
-  HOURLY_TIMER_EVENT   = "_hourly_timer_"
+  HOURLY_TIMER_EVENT = "_hourly_timer_"
 
-  cache_with_timeout(:alert_assignments) { Hash.new }
+  cache_with_timeout(:alert_assignments) { {} }
 
   virtual_column :based_on,               :type => :string
   virtual_column :evaluation_description, :type => :string
@@ -79,7 +79,7 @@ class MiqAlert < ApplicationRecord
 
   # Define methods for notify_* virtual columns
   [:automate, :email, :evm_event, :snmp].each do |n|
-    define_method("notify_#{n}") do
+    define_method(:"notify_#{n}") do
       (options || {}).has_key_path?(:notifications, n)
     end
   end
@@ -87,8 +87,8 @@ class MiqAlert < ApplicationRecord
   def miq_actions
     []
   end
-  alias_method :actions, :miq_actions
-  alias_method :owning_miq_actions, :miq_actions
+  alias actions miq_actions
+  alias owning_miq_actions miq_actions
 
   def set_responds_to_events
     events = responds_to_events_from_expression
@@ -123,7 +123,7 @@ class MiqAlert < ApplicationRecord
     log_target = "Target: #{target.class.name} Name: [#{target.name}], Id: [#{target.id}]"
 
     # event can be nil, so the compact removes event if it is nil
-    key  = [target.class.base_model.name, target.id, event].compact.join("_")
+    key = [target.class.base_model.name, target.id, event].compact.join("_")
 
     alert_assignments[key] ||= begin
       profiles  = MiqAlertSet.assigned_to_target(target)
@@ -170,6 +170,7 @@ class MiqAlert < ApplicationRecord
 
     enabled_assigned_alerts.each do |a|
       next if a.postpone_evaluation?(target)
+
       _log.info("#{log_header} #{log_target} Queuing evaluation of Alert: [#{a.description}]")
       a.evaluate_queue(target, inputs)
     end
@@ -195,7 +196,7 @@ class MiqAlert < ApplicationRecord
         # ems_clusters, storages, hosts, ext_management_systems, miq_servers, vms
         table_name = a.db.constantize.table_name
         targets += zone.public_send(table_name)
-        targets += Zone.public_send("#{table_name}_without_a_zone") if Zone.respond_to?("#{table_name}_without_a_zone")
+        targets += Zone.public_send(:"#{table_name}_without_a_zone") if Zone.respond_to?(:"#{table_name}_without_a_zone")
       end
     end
 
@@ -226,20 +227,20 @@ class MiqAlert < ApplicationRecord
     delay_next_evaluation = (options || {}).fetch_path(:notifications, :delay_next_evaluation)
     start_skipping_at = Time.now.utc - (delay_next_evaluation || 10.minutes).to_i
     statuses_not_expired = miq_alert_statuses.where(:resource => target, :result => true)
-                           .where(miq_alert_statuses.arel_table[:evaluated_on].gt(start_skipping_at))
+                                             .where(miq_alert_statuses.arel_table[:evaluated_on].gt(start_skipping_at))
 
     if statuses_not_expired.count > 0
       _log.info("Skipping re-evaluation of Alert [#{description}] for target: [#{target.name}] with delay_next_evaluation [#{delay_next_evaluation}]")
-      return true
+      true
     else
-      return false
+      false
     end
   end
 
   def evaluate(target, inputs = {})
     target = self.class.normalize_target(target)
 
-    return if self.postpone_evaluation?(target)
+    return if postpone_evaluation?(target)
 
     _log.info("Evaluating Alert [#{description}] for target: [#{target.name}]...")
     result = eval_expression(target, inputs)
@@ -258,12 +259,12 @@ class MiqAlert < ApplicationRecord
     status = miq_alert_statuses.find_or_initialize_by(:resource => target, :event_ems_ref => ems_ref)
     status.result = result
     status.ems_id = target.try(:ems_id)
-    status.ems_id ||= target.id if target.is_a?(ExtManagementSystem)
+    status.ems_id ||= target.id if target.kind_of?(ExtManagementSystem)
     status.description = status_description || description
     status.severity = severity
-    status.severity = event_severity unless event_severity.blank?
-    status.url = url unless url.blank?
-    status.event_ems_ref = ems_ref unless ems_ref.blank?
+    status.severity = event_severity if event_severity.present?
+    status.url = url if url.present?
+    status.event_ems_ref = ems_ref if ems_ref.present?
     status.resolved = resolved
     status.evaluated_on = Time.now.utc
     status.save!
@@ -277,8 +278,9 @@ class MiqAlert < ApplicationRecord
         a.invoke(target, inputs.merge(:result => true, :sequence => a.sequence, :synchronous => false))
       else
         next if a == :delay_next_evaluation
+
         method = "invoke_#{a}"
-        unless self.respond_to?(method)
+        unless respond_to?(method)
           _log.warn("Unknown notification type: [#{a}], skipping invocation")
           next
         end
@@ -287,7 +289,7 @@ class MiqAlert < ApplicationRecord
     end
   rescue MiqException::StopAction => err
     _log.error("Stopping action invocation [#{err.message}]")
-    return
+    nil
   rescue MiqException::UnknownActionRc => err
     _log.error("Aborting action invocation [#{err.message}]")
     raise
@@ -297,7 +299,7 @@ class MiqAlert < ApplicationRecord
   end
 
   def invoke_automate(target, inputs)
-    event  = options.fetch_path(:notifications, :automate, :event_name)
+    event = options.fetch_path(:notifications, :automate, :event_name)
     event_obj = CustomEvent.create(
       :event_type => event,
       :target     => target,
@@ -372,48 +374,43 @@ class MiqAlert < ApplicationRecord
     raise "unable to evaluate expression: [#{miq_expression.inspect}], unknown format" unless hash_expression
 
     case hash_expression[:mode]
-    when "internal" then return evaluate_internal(target, inputs)
-    when "automate" then return evaluate_in_automate(target, inputs)
-    when "script"   then return evaluate_script
+    when "internal" then evaluate_internal(target, inputs)
+    when "automate" then evaluate_in_automate(target, inputs)
+    when "script"   then evaluate_script
     else                 raise "unable to evaluate expression: [#{hash_expression.inspect}], unknown mode"
     end
   end
 
   def self.rt_perf_model_details(dbs)
-    dbs.inject({}) do |h, db|
-      h[db] = Metric::Rollup.const_get("#{db.underscore.upcase}_REALTIME_COLS").inject({}) do |hh, c|
+    dbs.index_with do |db|
+      Metric::Rollup.const_get("#{db.underscore.upcase}_REALTIME_COLS").each_with_object({}) do |c, hh|
         db_column = "#{db}Performance.#{c}" # this is to prevent the string from being collected during string extraction
         hh[c.to_s] = Dictionary.gettext(db_column)
-        hh
       end
-      h
     end
   end
 
   def self.operating_range_perf_model_details(dbs)
-    dbs.inject({}) do |h, db|
-      h[db] = Metric::LongTermAverages::AVG_COLS.inject({}) do |hh, c|
+    dbs.index_with do |db|
+      Metric::LongTermAverages::AVG_COLS.each_with_object({}) do |c, hh|
         db_column = "#{db}Performance.#{c}" # this is to prevent the string from being collected during string extraction
         hh[c.to_s] = Dictionary.gettext(db_column)
-        hh
       end
-      h
     end
   end
 
   def self.hourly_perf_model_details(dbs)
-    dbs.inject({}) do |h, db|
+    dbs.each_with_object({}) do |db, h|
       perf_model = "#{db}Performance"
-      h[db] = MiqExpression.model_details(perf_model, :include_model => false, :interval => "hourly").inject({}) do |hh, a|
+      h[db] = MiqExpression.model_details(perf_model, :include_model => false, :interval => "hourly").each_with_object({}) do |a, hh|
         d, c = a
         model, col = c.split("-")
         next(hh) unless model == perf_model
         next(hh) if ["timestamp", "v_date", "v_time", "resource_name"].include?(col)
         next(hh) if col.starts_with?("abs_") && col.ends_with?("_timestamp")
+
         hh[col] = d
-        hh
       end
-      h
     end
   end
 
@@ -431,7 +428,7 @@ class MiqAlert < ApplicationRecord
           {:name => :time_threshold, :description => N_("How Far Back to Check"), :required => true},
           {:name => :freq_threshold, :description => N_("Event Count Threshold"), :required => true, :numeric => true}
         ]},
-      {:name => "event_log_threshold", :description => N_("Event Log Threshold"), :db => ["Vm"], :responds_to_events  => "vm_scan_complete",
+      {:name => "event_log_threshold", :description => N_("Event Log Threshold"), :db => ["Vm"], :responds_to_events => "vm_scan_complete",
         :options => [
           {:name => :event_log_message_filter_type, :description => N_("Message Filter Type"), :values => ["STARTS WITH", "ENDS WITH", "INCLUDES", "REGULAR EXPRESSION"], :required => true},
           {:name => :event_log_message_filter_value, :description => N_("Message Filter"), :required => true},
@@ -503,7 +500,7 @@ class MiqAlert < ApplicationRecord
   # TODO: vmware specific
   def self.ems_alarms(db, ems = nil)
     ems = ExtManagementSystem.extract_objects(ems)
-    raise "Unable to find Management System with id: [#{id}]"  if ems.nil?
+    raise "Unable to find Management System with id: [#{id}]" if ems.nil?
 
     to     = 30
     alarms = []
@@ -518,26 +515,27 @@ class MiqAlert < ApplicationRecord
       raise
     end
 
-    alarms.inject({}) do |h, a|
+    alarms.each_with_object({}) do |a, h|
       exp = a.fetch_path("info", "expression", "expression")
       next(h) unless exp
       next(h) unless exp.detect { |e| e["type"] == EVM_TYPE_TO_VIM_TYPE[db] || e["objectType"] == EVM_TYPE_TO_VIM_TYPE[db] }
+
       h[a["MOR"]] = a["info"]["name"]
-      h
     end
   end
 
   def self.expression_types(db = nil)
-    automate_expressions.inject({}) do |h, e|
+    automate_expressions.each_with_object({}) do |e, h|
       next(h) unless db.nil? || e[:db].nil? || e[:db].include?(db)
+
       h[e[:name]] = e[:description]
-      h
     end
   end
 
   def self.expression_options(name)
     exp = expression_by_name(name)
     return nil unless exp
+
     exp[:options]
   end
 
@@ -547,7 +545,7 @@ class MiqAlert < ApplicationRecord
 
   def self.raw_events
     @raw_events ||= expression_by_name("event_threshold")[:options].find { |h| h[:name] == :event_types }[:values] +
-                    %w(datawarehouse_alert)
+                    %w[datawarehouse_alert]
   end
 
   def self.event_alertable?(event)
@@ -596,7 +594,7 @@ class MiqAlert < ApplicationRecord
     method = "evaluate_method_#{hash_expression[:eval_method]}"
     options = hash_expression[:options] || {}
 
-    raise "Evaluation method '#{hash_expression[:eval_method]}' does not exist" unless self.respond_to?(method)
+    raise "Evaluation method '#{hash_expression[:eval_method]}' does not exist" unless respond_to?(method)
 
     send(method, target, options)
   end
@@ -727,7 +725,7 @@ class MiqAlert < ApplicationRecord
     status = target.miq_alert_statuses.first
     if status
       since_last_eval = (Time.now.utc - status.evaluated_on)
-      eval_options[:starting_on] = if (since_last_eval >= eval_options[:duration])
+      eval_options[:starting_on] = if since_last_eval >= eval_options[:duration]
                                      (status.evaluated_on + 1)
                                    else
                                      (Time.now.utc - status.evaluated_on).seconds.ago.utc
@@ -769,6 +767,7 @@ class MiqAlert < ApplicationRecord
 
     exp_type.each do |fld|
       next if fld[:required] != true
+
       if hash_expression[:options][fld[:name]].blank?
         errors.add("field", "'#{fld[:description]}' is required")
         next
@@ -800,17 +799,17 @@ class MiqAlert < ApplicationRecord
       alist.each do |alert_hash|
         guid = alert_hash["guid"] || alert_hash[:guid]
         rec = find_by(:guid => guid)
-        if rec.nil?
-          alert_hash[:read_only] = true
-          alert = create(alert_hash)
-          _log.info("Added sample Alert: #{alert.description}")
-          if action
-            alert.options ||= {}
-            alert.options[:notifications] ||= {}
-            alert.options[:notifications][action.action_type.to_sym] = action.options
-            alert.save
-          end
-        end
+        next unless rec.nil?
+
+        alert_hash[:read_only] = true
+        alert = create(alert_hash)
+        _log.info("Added sample Alert: #{alert.description}")
+        next unless action
+
+        alert.options ||= {}
+        alert.options[:notifications] ||= {}
+        alert.options[:notifications][action.action_type.to_sym] = action.options
+        alert.save
       end
     end
   end

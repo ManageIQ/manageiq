@@ -2,16 +2,16 @@
 require_relative '../lib/manageiq/environment'
 
 if ARGV.any?
-  puts <<-EOS
-Usage: bin/update
+  puts <<~EOS
+    Usage: bin/update
 
-Environment Variable Options:
-    SKIP_DATABASE_SETUP  Skip the migration and seeding of the database.
-    SKIP_UI_UPDATE       Skip the update of UI assets.
-    SKIP_AUTOMATE_RESET  Skip the reset of the automate domain.
-    SKIP_TEST_RESET      Skip the creation of the test enviroment.  Defaults to
-                         true in production mode since the tasks do not exist.
-EOS
+    Environment Variable Options:
+        SKIP_DATABASE_SETUP  Skip the migration and seeding of the database.
+        SKIP_UI_UPDATE       Skip the update of UI assets.
+        SKIP_AUTOMATE_RESET  Skip the reset of the automate domain.
+        SKIP_TEST_RESET      Skip the creation of the test enviroment.  Defaults to
+                             true in production mode since the tasks do not exist.
+  EOS
   exit 1
 end
 
@@ -23,7 +23,7 @@ Dir.chdir(ManageIQ::Environment::APP_ROOT) do
   puts '== Installing dependencies =='
   ManageIQ::Environment.install_bundler
   ManageIQ::Environment.bundle_config
-  ManageIQ::Environment.bundle_update(force: true)
+  ManageIQ::Environment.bundle_update(:force => true)
 
   ui_thread = ManageIQ::Environment.update_ui_thread unless ENV["SKIP_UI_UPDATE"]
 

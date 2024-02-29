@@ -72,24 +72,24 @@ class Hardware < ApplicationRecord
 
     # Excluding ethernet devices from deletes because the refresh is the master of the data and it will handle the deletes.
     deletes[:gd] = parent.hardware.guest_devices
-                   .where.not(:device_type => "ethernet")
-                   .select(:id, :device_type, :location, :address)
-                   .collect { |rec| [rec.id, [rec.device_type, rec.location, rec.address]] }
+                         .where.not(:device_type => "ethernet")
+                         .select(:id, :device_type, :location, :address)
+                         .collect { |rec| [rec.id, [rec.device_type, rec.location, rec.address]] }
 
-    if parent.vendor == "redhat"
-      deletes[:disk] = parent.hardware.disks.select(:id, :device_type, :location)
-                     .collect { |rec| [rec.id, [rec.device_type, "0:#{rec.location}"]] }
-    else
-      deletes[:disk] = parent.hardware.disks.select(:id, :device_type, :location)
-                     .collect { |rec| [rec.id, [rec.device_type, rec.location]] }
-    end
+    deletes[:disk] = if parent.vendor == "redhat"
+                       parent.hardware.disks.select(:id, :device_type, :location)
+                             .collect { |rec| [rec.id, [rec.device_type, "0:#{rec.location}"]] }
+                     else
+                       parent.hardware.disks.select(:id, :device_type, :location)
+                             .collect { |rec| [rec.id, [rec.device_type, rec.location]] }
+                     end
 
     xmlNode.root.each_recursive do |e|
-      begin
-        parent.hardware.send("m_#{e.name}", parent, e, deletes) if parent.hardware.respond_to?("m_#{e.name}")
-      rescue => err
-        _log.warn(err.to_s)
-      end
+
+      parent.hardware.send(:"m_#{e.name}", parent, e, deletes) if parent.hardware.respond_to?(:"m_#{e.name}")
+    rescue => err
+      _log.warn(err.to_s)
+
     end
 
     GuestDevice.delete(deletes[:gd].transpose[0])
@@ -122,7 +122,8 @@ class Hardware < ApplicationRecord
   virtual_attribute :v_pct_free_disk_space, :float, :arel => (lambda do |t|
     t.grouping(Arel::Nodes::Division.new(
       Arel::Nodes::NamedFunction.new("CAST", [t[:disk_free_space].as("float")]),
-      t[:disk_capacity]) * 100)
+      t[:disk_capacity]
+    ) * 100)
   end)
 
   def v_pct_used_disk_space
@@ -132,9 +133,10 @@ class Hardware < ApplicationRecord
   # resulting sql: "(cast(disk_free_space as float) / (disk_capacity * -100) + 100)"
   # to work with arel better, put the 100 at the end
   virtual_attribute :v_pct_used_disk_space, :float, :arel => (lambda do |t|
-    t.grouping(Arel::Nodes::Division.new(
+    t.grouping((Arel::Nodes::Division.new(
       Arel::Nodes::NamedFunction.new("CAST", [t[:disk_free_space].as("float")]),
-      t[:disk_capacity]) * -100 + 100)
+      t[:disk_capacity]
+    ) * -100) + 100)
   end)
 
   def provisioned_storage
@@ -180,7 +182,7 @@ class Hardware < ApplicationRecord
 
       da = {"device_type" => xmlNode.attributes["type"].to_s.downcase, "controller_type" => xmlNode.attributes["type"]}
       # Loop over the device mapping table and add attributes
-      @@dh.each_pair { |k, v|  da.merge!(v => e.attributes[k]) if e.attributes[k] }
+      @@dh.each_pair { |k, v| da.merge!(v => e.attributes[k]) if e.attributes[k] }
 
       if da["device_name"] == 'disk'
         target = disks

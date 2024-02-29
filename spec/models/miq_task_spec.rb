@@ -54,14 +54,14 @@ RSpec.describe MiqTask do
     end
 
     it "should respond to warn instance method properly" do
-      message      = "There may be a fire on your floor"
+      message = "There may be a fire on your floor"
       miq_task.warn(message)
       expect(miq_task.message).to eq(message)
       expect(miq_task.status).to eq(MiqTask::STATUS_WARNING)
     end
 
     it "should respond to warn class method properly" do
-      message      = "There may be a fire on your floor (class)"
+      message = "There may be a fire on your floor (class)"
       MiqTask.warn(miq_task.id, message)
       miq_task.reload
       expect(miq_task.message).to eq(message)
@@ -69,14 +69,14 @@ RSpec.describe MiqTask do
     end
 
     it "should respond to error instance method properly" do
-      message      = "Red Alert"
+      message = "Red Alert"
       miq_task.error(message)
       expect(miq_task.message).to eq(message)
       expect(miq_task.status).to eq(MiqTask::STATUS_ERROR)
     end
 
     it "should respond to error class method properly" do
-      message      = "Red Alert (class)"
+      message = "Red Alert (class)"
       MiqTask.error(miq_task.id, message)
       miq_task.reload
       expect(miq_task.message).to eq(message)
@@ -151,14 +151,14 @@ RSpec.describe MiqTask do
       expect(miq_task.message).to eq(MiqTask::MESSAGE_TASK_COMPLETED_SUCCESSFULLY)
       expect(miq_task.task_results).to eq(result)
 
-      status  = MiqTask::STATUS_ERROR
+      status = MiqTask::STATUS_ERROR
       miq_task.queue_callback(state, status, "", result)
       expect(miq_task.state).to eq(state)
       expect(miq_task.status).to eq(status)
       expect(miq_task.message).to eq(MiqTask::MESSAGE_TASK_COMPLETED_UNSUCCESSFULLY)
       expect(miq_task.task_results).to eq(result)
 
-      result  = {:c => 1, :d => 2}
+      result = {:c => 1, :d => 2}
       miq_task.queue_callback(state, status, message, result)
       expect(miq_task.state).to eq(state)
       expect(miq_task.status).to eq(status)
@@ -461,7 +461,7 @@ RSpec.describe MiqTask do
       context "task is not active" do
         it "does not update status to 'Error' if task state is 'Finished'" do
           miq_task.update(:state      => MiqTask::STATE_FINISHED,
-                                     :updated_on => miq_task.updated_on - timeout.to_i_with_method)
+                          :updated_on => miq_task.updated_on - timeout.to_i_with_method)
           MiqTask.update_status_for_timed_out_active_tasks
           miq_task.reload
           expect(miq_task.status).not_to eq MiqTask::STATUS_ERROR
@@ -469,7 +469,7 @@ RSpec.describe MiqTask do
 
         it "does not update status to 'Error' if task state is 'Queued'" do
           miq_task.update(:state      => MiqTask::STATE_QUEUED,
-                                     :updated_on => miq_task.updated_on - timeout.to_i_with_method)
+                          :updated_on => miq_task.updated_on - timeout.to_i_with_method)
           MiqTask.update_status_for_timed_out_active_tasks
           miq_task.reload
           expect(miq_task.status).not_to eq MiqTask::STATUS_ERROR
@@ -485,7 +485,7 @@ RSpec.describe MiqTask do
 
       it "does not update status to 'Error'" do
         miq_task.update(:state      => MiqTask::STATE_ACTIVE,
-                                   :updated_on => miq_task.updated_on - timeout.to_i_with_method)
+                        :updated_on => miq_task.updated_on - timeout.to_i_with_method)
         MiqTask.update_status_for_timed_out_active_tasks
         miq_task.reload
         expect(miq_task.status).not_to eq MiqTask::STATUS_ERROR
@@ -540,8 +540,8 @@ RSpec.describe MiqTask do
   def create_test_task(name, status, updated)
     Timecop.travel(updated) do
       FactoryBot.create(:miq_task_plain).update(:state  => MiqTask::STATE_FINISHED,
-                                                            :status => status,
-                                                            :name   => name)
+                                                :status => status,
+                                                :name   => name)
     end
   end
 end

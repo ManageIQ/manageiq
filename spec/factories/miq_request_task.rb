@@ -44,10 +44,10 @@ FactoryBot.define do
   end
 
   # Retire Tasks
-  factory :service_retire_task,             :parent => :miq_retire_task, :class => "ServiceRetireTask" do
+  factory :service_retire_task, :parent => :miq_retire_task, :class => "ServiceRetireTask" do
     state        { 'pending' }
   end
-  factory :vm_retire_task,                  :parent => :miq_retire_task, :class => "VmRetireTask" do
+  factory :vm_retire_task, :parent => :miq_retire_task, :class => "VmRetireTask" do
     state        { 'pending' }
   end
   factory :orchestration_stack_retire_task, :parent => :miq_retire_task, :class => "OrchestrationStackRetireTask" do

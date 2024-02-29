@@ -3,13 +3,7 @@ class MiqCompare
   EMPTY = '(empty)'
   TAG_PREFIX = '_tag_'
 
-  attr_reader :report
-  attr_reader :mode
-  attr_reader :ids
-  attr_reader :records
-
-  attr_reader :master_list
-  attr_reader :results
+  attr_reader :report, :mode, :ids, :records, :master_list, :results
 
   attr_accessor :include
 
@@ -144,7 +138,7 @@ class MiqCompare
   # 'guest_devices' section below it, would create a 'hardware.guest_devices'
   # section in the resultant include.
   def self.build_sections(section, all_sections, full_name = '')
-    return unless section.key?('include') && !section['include'].blank?
+    return unless section.key?('include') && section['include'].present?
 
     section['include'].each do |name, data|
       group = data['group']
@@ -172,7 +166,7 @@ class MiqCompare
     name = name.to_sym
     all_sections[name] = {:fetch => false, :fetched => false, :checked => false}
     all_sections[name][:key] = key.empty? ? key : key.to_sym unless key.nil?
-    all_sections[name][:group] = group unless group.blank?
+    all_sections[name][:group] = group if group.present?
   end
 
   def section_header_text(model)
@@ -202,10 +196,10 @@ class MiqCompare
 
       if @report.cols.include?(c)
         section, column = :_model_, c.to_sym
-      else
-        # Determine the section and column based on the last '.'
-        section, column = $1.to_sym, $2.to_sym if c =~ /(.+)\.([^\.]+)$/
+      elsif c =~ /(.+)\.([^.]+)$/
+        section, column = $1.to_sym, $2.to_sym
       end
+      # Determine the section and column based on the last '.'
 
       # See if this section has a key
       if section == :_model_
@@ -215,7 +209,7 @@ class MiqCompare
         column = column.to_s
         section = "#{TAG_PREFIX}#{column}".to_sym
         c = Classification.lookup_by_name(column)
-        section_header = (c.nil? || c.description.blank?) ? column.titleize : c.description
+        section_header = c.nil? || c.description.blank? ? column.titleize : c.description
         column = nil # columns will be filled in dynamically when we fetch the section data
         key = nil
       else
@@ -350,7 +344,7 @@ class MiqCompare
 
         sub_rec.each do |r|
           if key_name.blank?
-            key = "\##{key_counter}"
+            key = "##{key_counter}"
             key_counter += 1
           else
             key = r.send(key_name)
@@ -422,8 +416,8 @@ class MiqCompare
 
     # Determine the base and result records
     base_id = case @mode
-              when :compare then @ids[0]                                         # For compare, we are comparing to the first record
-              when :drift then   @ids.each_cons(2) { |x, y| break(x) if y == id }  # For drift, we are comparing to the previous timestamp
+              when :compare then @ids[0] # For compare, we are comparing to the first record
+              when :drift then   @ids.each_cons(2) { |x, y| break(x) if y == id } # For drift, we are comparing to the previous timestamp
               end
     base = @results[base_id]
     result = @results[id]
@@ -520,12 +514,12 @@ class MiqCompare
 
   # Retrieve all records from the source for the set of ids (mode agnostic)
   def get_records
-    send("get_#{@mode}_records")
+    send(:"get_#{@mode}_records")
   end
 
   # Retrieve the record from the source (mode agnostic)
   def get_record(id)
-    send("get_#{@mode}_record", id)
+    send(:"get_#{@mode}_record", id)
   end
 
   # Find the record for the specified id
@@ -538,6 +532,7 @@ class MiqCompare
   # Retrieve all records from the source for the set of ids (compare mode)
   def get_compare_records
     return unless @mode == :compare
+
     recs = @model.where(:id => @ids)
     error_recs = []
 
@@ -549,12 +544,13 @@ class MiqCompare
       new_rec
     end
 
-    _log.error("No record was found for compare object #{@model}, ids: [#{error_recs.join(", ")}]") unless error_recs.blank?
+    _log.error("No record was found for compare object #{@model}, ids: [#{error_recs.join(", ")}]") if error_recs.present?
   end
 
   # Retrieve the record from the source (compare mode)
   def get_compare_record(id)
     return unless @mode == :compare
+
     new_rec = @model.find_by(:id => id)
     _log.error("No record was found for compare object #{@model}, id: [#{id}]") if new_rec.nil?
     new_rec
@@ -565,12 +561,14 @@ class MiqCompare
   # Retrieve all records from the source for the set of ids (drift mode)
   def get_drift_records
     return unless @mode == :drift
+
     @records = drift_model_record.drift_states.where(:timestamp => @ids).collect(&:data_obj)
   end
 
   # Retrieve the record from the source (drift mode)
   def get_drift_record(ts)
     return unless @mode == :drift
+
     new_rec = drift_model_record.drift_states.find_by(:timestamp => ts).data_obj
     _log.error("No data was found for drift object #{@model} [#{@model_record_id}] at [#{ts}]") if new_rec.nil?
     new_rec
@@ -578,6 +576,7 @@ class MiqCompare
 
   def drift_model_record
     return unless @mode == :drift
+
     @model_record ||= @model.find_by(:id => @model_record_id)
   end
 
@@ -591,7 +590,7 @@ class MiqCompare
 
   def marshal_dump
     ivs = instance_variables.reject { |iv| iv.in?(IVS_TO_REMOVE_ON_DUMP) }
-    ivs.each_with_object({}) { |iv, h| h[iv] = instance_variable_get(iv) }
+    ivs.index_with { |iv| instance_variable_get(iv) }
   end
 
   def marshal_load(data)

@@ -12,7 +12,8 @@ RSpec.describe DialogGroupSerializer do
         :display_method         => "display method",
         :display_method_options => "display method options",
         :label                  => "label",
-        :position               => 1)
+        :position               => 1
+      )
     end
 
     let(:expected_serialized_values) do
@@ -50,7 +51,7 @@ RSpec.describe DialogGroupSerializer do
                    'dialog_tab_id' => nil,
                    'id'            => nil,
                    'updated_at'    => nil
-          ))
+                 ))
       end
     end
   end

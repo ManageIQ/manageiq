@@ -157,6 +157,7 @@ class MiqEvent < EventStream
 
   def self.normalize_event(event)
     return event if MiqEventDefinition.find_by(:name => event)
+
     "unknown"
   end
 
@@ -178,11 +179,13 @@ class MiqEvent < EventStream
   end
 
   def self.raise_evm_alert_event_queue(target, raw_event, inputs = {})
-    MiqQueue.put_unless_exists(
-      :class_name  => "MiqAlert",
-      :method_name => 'evaluate_alerts',
-      :args        => [[target.class.name, target.id], raw_event, inputs]
-    ) if MiqAlert.alarm_has_alerts?(raw_event)
+    if MiqAlert.alarm_has_alerts?(raw_event)
+      MiqQueue.put_unless_exists(
+        :class_name  => "MiqAlert",
+        :method_name => 'evaluate_alerts',
+        :args        => [[target.class.name, target.id], raw_event, inputs]
+      )
+    end
   end
 
   def self.raise_evm_job_event(target, options = {}, inputs = {}, q_options = {})
@@ -194,7 +197,7 @@ class MiqEvent < EventStream
     )
 
     target_model = target.class.base_model.name.downcase
-    target_model = "vm" if target_model.match("template")
+    target_model = "vm" if target_model.match?("template")
 
     base_event = [target_model, options[:type]].join("_")
     evm_event  = [options[:prefix], base_event, options[:suffix]].compact.join("_")
@@ -208,6 +211,7 @@ class MiqEvent < EventStream
     child_event = "#{raw_event}_parent_#{target.class.base_model.name.underscore}"
     child_assocs.each do |assoc|
       next unless target.respond_to?(assoc)
+
       children = target.send(assoc)
       children.each do |child|
         _log.info("Raising Event [#{child_event}] for Child [(#{child.class}) #{child.name}] of Parent [(#{target.class}) #{target.name}]")

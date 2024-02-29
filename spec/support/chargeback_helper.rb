@@ -2,9 +2,9 @@ module Spec
   module Support
     module ChargebackHelper
       def set_tier_param_for(metric, param, value, num_of_tier = 0)
-        detail = chargeback_rate.chargeback_rate_details.joins(:chargeable_field).where(:chargeable_fields => { :metric => metric }).first
+        detail = chargeback_rate.chargeback_rate_details.joins(:chargeable_field).where(:chargeable_fields => {:metric => metric}).first
         tier = detail.chargeback_tiers[num_of_tier]
-        tier.send("#{param}=", value)
+        tier.send(:"#{param}=", value)
         tier.save
       end
 
@@ -55,10 +55,10 @@ module Spec
         range.step_value(step).each do |time|
           Array(resources).each do |resource|
             FactoryBot.create(:vim_performance_state,
-                               :timestamp        => time,
-                               :resource         => resource,
-                               :state_data       => state_data,
-                               :capture_interval => 1.hour)
+                              :timestamp        => time,
+                              :resource         => resource,
+                              :state_data       => state_data,
+                              :capture_interval => 1.hour)
           end
         end
       end

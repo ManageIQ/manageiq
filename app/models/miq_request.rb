@@ -1,8 +1,8 @@
 class MiqRequest < ApplicationRecord
   extend InterRegionApiMethodRelay
 
-  ACTIVE_STATES = %w(active queued)
-  REQUEST_UNIQUE_KEYS = %w(id state status created_on updated_on type).freeze
+  ACTIVE_STATES = %w[active queued]
+  REQUEST_UNIQUE_KEYS = %w[id state status created_on updated_on type].freeze
 
   CANCEL_STATUS_REQUESTED  = "cancel_requested".freeze
   CANCEL_STATUS_PROCESSING = "canceling".freeze
@@ -22,21 +22,21 @@ class MiqRequest < ApplicationRecord
 
   alias_attribute :state, :request_state
 
-  serialize   :options, Hash
+  serialize :options, Hash
 
-  default_value_for(:message)       { |r| "#{r.class::TASK_DESCRIPTION} - Request Created" }
+  default_value_for(:message) { |r| "#{r.class::TASK_DESCRIPTION} - Request Created" }
   attribute :request_state, :default => 'pending'
-  default_value_for(:request_type)  { |r| r.request_types.first }
+  default_value_for(:request_type) { |r| r.request_types.first }
   attribute :status,  :default => 'Ok'
   attribute :process, :default => true
 
-  validates_inclusion_of :approval_state, :in => %w(pending_approval approved denied), :message => "should be 'pending_approval', 'approved' or 'denied'"
-  validates_inclusion_of :status,         :in => %w(Ok Warn Error Timeout Denied)
+  validates :approval_state, :inclusion => {:in => %w[pending_approval approved denied], :message => "should be 'pending_approval', 'approved' or 'denied'"}
+  validates :status,         :inclusion => {:in => %w[Ok Warn Error Timeout Denied]}
 
-  validates :initiated_by, :inclusion => { :in => %w[user system] }, :allow_blank => true
-  validates :cancelation_status, :inclusion => { :in        => CANCEL_STATUS,
-                                                 :allow_nil => true,
-                                                 :message   => "should be one of #{CANCEL_STATUS.join(", ")}" }
+  validates :initiated_by, :inclusion => {:in => %w[user system]}, :allow_blank => true
+  validates :cancelation_status, :inclusion => {:in        => CANCEL_STATUS,
+                                                :allow_nil => true,
+                                                :message   => "should be one of #{CANCEL_STATUS.join(", ")}"}
 
   validate :validate_class, :validate_request_type
 
@@ -52,7 +52,7 @@ class MiqRequest < ApplicationRecord
   virtual_column  :resource_type,        :type => :string
   virtual_column  :state,                :type => :string
 
-  delegate :allowed_tags,                :to => :workflow,   :prefix => :v,  :allow_nil => true
+  delegate :allowed_tags,                :to => :workflow,   :prefix => :v, :allow_nil => true
   delegate :class,                       :to => :workflow,   :prefix => :v_workflow
   delegate :deny, :reason, :stamped_on,  :to => :first_approval
   delegate :userid,                      :to => :requester, :prefix => true
@@ -72,12 +72,12 @@ class MiqRequest < ApplicationRecord
   scope :with_requester,      ->(id)         { where(:requester_id => User.in_all_regions(id).select(:id)) }
 
   MODEL_REQUEST_TYPES = {
-    :Automate       => {
+    :Automate => {
       :AutomationRequest => {
         :automation => N_("Automation")
       }
     },
-    :Service        => {
+    :Service  => {
       :MiqProvisionConfiguredSystemRequest => {
         :provision_via_foreman => N_("%{config_mgr_type} Provision") % {:config_mgr_type => ui_lookup(:ui_title => 'foreman')}
       },
@@ -120,7 +120,7 @@ class MiqRequest < ApplicationRecord
   }.freeze
 
   REQUEST_TYPES_BACKEND_ONLY = {
-    :MiqProvisionRequestTemplate              => {:template            => "VM Provision Template"},
+    :MiqProvisionRequestTemplate => {:template => "VM Provision Template"},
   }
 
   REQUEST_TYPES = MODEL_REQUEST_TYPES.values.each_with_object(REQUEST_TYPES_BACKEND_ONLY) { |i, h| i.each { |k, v| h[k] = v } }
@@ -186,6 +186,7 @@ class MiqRequest < ApplicationRecord
     miq_approvals << build_default_approval if miq_approvals.empty?
 
     return unless requester
+
     self.requester_name ||= requester.name
     self.userid         ||= requester.userid
     self.tenant         ||= requester.current_tenant
@@ -214,8 +215,7 @@ class MiqRequest < ApplicationRecord
     )
 
     {'EventStream::event_stream' => event_obj.id,
-     :event_stream_id            => event_obj.id
-    }
+     :event_stream_id            => event_obj.id}
   end
 
   def call_automate_event(event_name, synchronous: false)
@@ -250,7 +250,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def approval_approved
-    unless self.approved?
+    unless approved?
       _log.info("Request: [#{description}] has outstanding approvals")
       return false
     end
@@ -301,6 +301,7 @@ class MiqRequest < ApplicationRecord
 
   def request_status
     return status if self.approval_state == 'approved' && !status.nil?
+
     case self.approval_state
     when 'pending_approval' then 'Unknown'
     when 'denied'           then 'Error'
@@ -319,7 +320,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def approve(userid, reason)
-    first_approval.approve(userid, reason) unless self.approved?
+    first_approval.approve(userid, reason) unless approved?
   end
   api_relay_method(:approve) { |_userid, reason| {:reason => reason} }
   api_relay_method(:deny)    { |_userid, reason| {:reason => reason} }
@@ -331,7 +332,7 @@ class MiqRequest < ApplicationRecord
   def approver
     first_approval.approver.try(:name)
   end
-  alias_method :approver_role, :approver  # TODO: Is this needed anymore?
+  alias approver_role approver # TODO: Is this needed anymore?
 
   def workflow_class
     klass = self.class.workflow_class
@@ -344,14 +345,13 @@ class MiqRequest < ApplicationRecord
   end
 
   def self.request_task_class
-    @request_task_class ||= begin
-      case name
-      when 'MiqProvisionRequest'
-        name.underscore.chomp('_request').camelize.constantize
-      else
-        name.underscore.gsub(/_request$/, "_task").camelize.constantize
-      end
-    end
+    @request_task_class ||= case name
+                            when 'MiqProvisionRequest'
+                              name.underscore.chomp('_request').camelize.constantize
+                            else
+                              name.underscore.gsub(/_request$/, "_task").camelize.constantize
+                            end
+
   end
 
   def requested_task_idx
@@ -381,14 +381,14 @@ class MiqRequest < ApplicationRecord
     end
     msg = states.sort.collect { |s| "#{s[0].capitalize} = #{s[1]}" }.join("; ")
 
-    req_state = (states.length == 1) ? states.keys.first : "active"
+    req_state = states.length == 1 ? states.keys.first : "active"
 
     # Determine status to report
     req_status = status.slice('Error', 'Timeout', 'Warn').keys.first || 'Ok'
 
     if req_state == "finished"
       update_attribute(:fulfilled_on, Time.now.utc)
-      msg = (req_status == 'Ok') ? "Request complete" : "Request completed with errors"
+      msg = req_status == 'Ok' ? "Request complete" : "Request completed with errors"
     end
 
     # If there is only 1 request_task, set the parent message the same
@@ -473,7 +473,7 @@ class MiqRequest < ApplicationRecord
       post_create_request_tasks
     rescue
       _log.log_backtrace($ERROR_INFO) # TODO: Add to Request Logs
-      request_state, status = request_task_created.zero? ? %w(finished Error) : %w(active Warn)
+      request_state, status = request_task_created.zero? ? %w[finished Error] : %w[active Warn]
       update(:request_state => request_state, :status => status, :message => "Error: #{$ERROR_INFO}")
     end
   end
@@ -549,7 +549,7 @@ class MiqRequest < ApplicationRecord
 
   # Helper method when not using workflow
   def self.update_request(request, values, requester)
-    request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
+    request = MiqRequest.find(request) unless request.kind_of?(MiqRequest)
     request.update_request(values, requester)
   end
 
@@ -575,7 +575,7 @@ class MiqRequest < ApplicationRecord
       :event        => event_name(mode),
       :target_class => self.class::SOURCE_CLASS_NAME,
       :userid       => requester_id,
-      :message      => event_message,
+      :message      => event_message
     )
   end
 
@@ -624,12 +624,13 @@ class MiqRequest < ApplicationRecord
   end
 
   # Helper method to log the request to both the request_logs table and $log
-  def self.request_log(severity, message = nil, resource_id: nil, &block)
+  def self.request_log(severity, message = nil, resource_id: nil)
     formatted_severity = severity.to_s.upcase
     level = Logger.const_get(formatted_severity)
 
     # Partially copied from Logger#add
     return true if level < $log.level
+
     message = yield if message.nil? && block_given?
 
     RequestLog.create(:message => message, :severity => formatted_severity, :resource_id => resource_id) if resource_id
@@ -637,7 +638,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def request_log(severity, message = nil, resource_id: nil, &block)
-    self.class.request_log(severity, message, resource_id: resource_id, &block)
+    self.class.request_log(severity, message, :resource_id => resource_id, &block)
   end
 
   private

@@ -15,18 +15,18 @@ class ContainerOrchestrator
           :template => {
             :metadata => {:name => name, :labels => common_labels.merge(:name => name)},
             :spec     => {
-              :affinity => {
+              :affinity           => {
                 :nodeAffinity => {
                   :requiredDuringSchedulingIgnoredDuringExecution => {
                     :nodeSelectorTerms => [{
                       :matchExpressions => [
                         {:key => "kubernetes.io/arch", :operator => "In", :values => ContainerOrchestrator.new.my_node_affinity_arch_values}
-                      ]}
-                    ]
+                      ]
+                    }]
                   }
                 }
               },
-              :serviceAccountName => ENV["WORKER_SERVICE_ACCOUNT"],
+              :serviceAccountName => ENV.fetch("WORKER_SERVICE_ACCOUNT", nil),
               :containers         => [{
                 :name            => name,
                 :env             => default_environment,
@@ -44,7 +44,7 @@ class ContainerOrchestrator
                   {:name => "encryption-key", :readOnly => true, :mountPath => "/run/secrets/manageiq/application"},
                 ]
               }],
-              :volumes => [
+              :volumes            => [
                 {
                   :name   => "database-secret",
                   :secret => {
@@ -170,17 +170,17 @@ class ContainerOrchestrator
       [
         {:name => "GUID",                    :value => MiqServer.my_guid},
         {:name => "HOME",                    :value => Rails.root.join("tmp").to_s},
-        {:name => "APPLICATION_DOMAIN",      :value => ENV["APPLICATION_DOMAIN"]},
-        {:name => "MEMCACHED_SERVER",        :value => ENV["MEMCACHED_SERVER"]},
-        {:name => "MEMCACHED_SERVICE_NAME",  :value => ENV["MEMCACHED_SERVICE_NAME"]},
-        {:name => "WORKER_HEARTBEAT_FILE",   :value => Rails.root.join("tmp", "worker.hb").to_s},
+        {:name => "APPLICATION_DOMAIN",      :value => ENV.fetch("APPLICATION_DOMAIN", nil)},
+        {:name => "MEMCACHED_SERVER",        :value => ENV.fetch("MEMCACHED_SERVER", nil)},
+        {:name => "MEMCACHED_SERVICE_NAME",  :value => ENV.fetch("MEMCACHED_SERVICE_NAME", nil)},
+        {:name => "WORKER_HEARTBEAT_FILE",   :value => Rails.root.join("tmp/worker.hb").to_s},
         {:name => "WORKER_HEARTBEAT_METHOD", :value => "file"},
       ] + database_environment + memcached_environment + messaging_environment
     end
 
     def database_environment
       [
-        {:name => "DATABASE_SSL_MODE", :value => ENV["DATABASE_SSL_MODE"]},
+        {:name => "DATABASE_SSL_MODE", :value => ENV.fetch("DATABASE_SSL_MODE", nil)},
       ]
     end
 
@@ -188,8 +188,8 @@ class ContainerOrchestrator
       return [] unless ENV["MEMCACHED_ENABLE_SSL"].present?
 
       [
-        {:name => "MEMCACHED_ENABLE_SSL", :value => ENV["MEMCACHED_ENABLE_SSL"]},
-        {:name => "MEMCACHED_SSL_CA",     :value => ENV["MEMCACHED_SSL_CA"]},
+        {:name => "MEMCACHED_ENABLE_SSL", :value => ENV.fetch("MEMCACHED_ENABLE_SSL", nil)},
+        {:name => "MEMCACHED_SSL_CA",     :value => ENV.fetch("MEMCACHED_SSL_CA", nil)},
       ]
     end
 
@@ -197,13 +197,13 @@ class ContainerOrchestrator
       return [] unless ENV["MESSAGING_TYPE"].present?
 
       [
-        {:name => "MESSAGING_PORT", :value => ENV["MESSAGING_PORT"]},
-        {:name => "MESSAGING_TYPE", :value => ENV["MESSAGING_TYPE"]},
-        {:name => "MESSAGING_SSL_CA", :value => ENV["MESSAGING_SSL_CA"]},
-        {:name => "MESSAGING_SASL_MECHANISM", :value => ENV["MESSAGING_SASL_MECHANISM"]},
-        {:name => "MESSAGING_HOSTNAME", :value => ENV["MESSAGING_HOSTNAME"]},
-        {:name => "MESSAGING_PASSWORD", :value => ENV["MESSAGING_PASSWORD"]},
-        {:name => "MESSAGING_USERNAME", :value => ENV["MESSAGING_USERNAME"]}
+        {:name => "MESSAGING_PORT", :value => ENV.fetch("MESSAGING_PORT", nil)},
+        {:name => "MESSAGING_TYPE", :value => ENV.fetch("MESSAGING_TYPE", nil)},
+        {:name => "MESSAGING_SSL_CA", :value => ENV.fetch("MESSAGING_SSL_CA", nil)},
+        {:name => "MESSAGING_SASL_MECHANISM", :value => ENV.fetch("MESSAGING_SASL_MECHANISM", nil)},
+        {:name => "MESSAGING_HOSTNAME", :value => ENV.fetch("MESSAGING_HOSTNAME", nil)},
+        {:name => "MESSAGING_PASSWORD", :value => ENV.fetch("MESSAGING_PASSWORD", nil)},
+        {:name => "MESSAGING_USERNAME", :value => ENV.fetch("MESSAGING_USERNAME", nil)}
       ]
     end
 
@@ -222,7 +222,7 @@ class ContainerOrchestrator
     end
 
     def app_name
-      ENV["APP_NAME"]
+      ENV.fetch("APP_NAME", nil)
     end
 
     def app_name_label
@@ -257,11 +257,11 @@ class ContainerOrchestrator
     end
 
     def pod_name
-      ENV['POD_NAME']
+      ENV.fetch('POD_NAME', nil)
     end
 
     def pod_uid
-      ENV["POD_UID"]
+      ENV.fetch("POD_UID", nil)
     end
   end
 end

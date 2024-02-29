@@ -15,7 +15,7 @@ end
 
 def yml_dump(yml_fname, items)
   File.delete(yml_fname) if File.exist?(yml_fname)
-  File.open(yml_fname, "w") { |fd| fd.write(YAML.dump(items)) }
+  File.write(yml_fname, YAML.dump(items))
 end
 
 ### Main

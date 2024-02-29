@@ -108,8 +108,8 @@ RSpec.describe GenericObjectDefinition do
   describe '#add_property_attribute' do
     let(:definition) do
       FactoryBot.create(:generic_object_definition,
-                         :name       => 'test',
-                         :properties => { :attributes => {:status => "string"}})
+                        :name       => 'test',
+                        :properties => {:attributes => {:status => "string"}})
     end
 
     it 'adds a new attribute' do
@@ -135,8 +135,8 @@ RSpec.describe GenericObjectDefinition do
   describe '#delete_property_attribute' do
     let(:definition) do
       FactoryBot.create(:generic_object_definition,
-                         :name       => 'test',
-                         :properties => { :attributes => {:status => "string"}})
+                        :name       => 'test',
+                        :properties => {:attributes => {:status => "string"}})
     end
 
     it 'does nothing for non-existing attribute' do
@@ -159,26 +159,26 @@ RSpec.describe GenericObjectDefinition do
   describe '#add_property_method' do
     let(:definition) do
       FactoryBot.create(:generic_object_definition,
-                         :name       => 'test',
-                         :properties => { :methods => %w(method1) })
+                        :name       => 'test',
+                        :properties => {:methods => %w[method1]})
     end
 
     it 'adds a new method' do
       definition.add_property_method("add_vms")
-      expect(definition.properties).to include(:methods => %w(method1 add_vms))
+      expect(definition.properties).to include(:methods => %w[method1 add_vms])
     end
 
     it 'does nothing for existing method' do
       expect { definition.add_property_method("method1") }.to make_database_queries(:count => 4..8)
-      expect(definition.properties).to include(:methods => %w(method1))
+      expect(definition.properties).to include(:methods => %w[method1])
     end
   end
 
   describe '#delete_property_method' do
     let(:definition) do
       FactoryBot.create(:generic_object_definition,
-                         :name       => 'test',
-                         :properties => { :methods => %w(method1) })
+                        :name       => 'test',
+                        :properties => {:methods => %w[method1]})
     end
 
     it 'deletes an existing method' do
@@ -188,15 +188,15 @@ RSpec.describe GenericObjectDefinition do
 
     it 'does nothing for non-existing method' do
       definition.delete_property_method(:method2)
-      expect(definition.properties).to include(:methods => %w(method1))
+      expect(definition.properties).to include(:methods => %w[method1])
     end
   end
 
   describe '#add_property_association' do
     let(:definition) do
       FactoryBot.create(:generic_object_definition,
-                         :name       => 'test',
-                         :properties => { :associations => { :vms => 'Vm' } })
+                        :name       => 'test',
+                        :properties => {:associations => {:vms => 'Vm'}})
     end
 
     it 'adds a new association' do
@@ -227,8 +227,8 @@ RSpec.describe GenericObjectDefinition do
   describe '#delete_property_association' do
     let(:definition) do
       FactoryBot.create(:generic_object_definition,
-                         :name       => 'test',
-                         :properties => {:associations => {:vms => 'Vm'}})
+                        :name       => 'test',
+                        :properties => {:associations => {:vms => 'Vm'}})
     end
 
     it 'deletes an existing association' do
@@ -261,7 +261,7 @@ RSpec.describe GenericObjectDefinition do
     subject { definition.find_objects(@options) }
 
     it 'finds multiple objects' do
-      @options = { :max_number => 10 }
+      @options = {:max_number => 10}
       expect(subject.size).to eq(2)
     end
 
@@ -354,23 +354,23 @@ RSpec.describe GenericObjectDefinition do
 
       before do
         FactoryBot.create(:custom_button,
-                           :name                  => "visible button on Generic Object",
-                           :applies_to_class      => "GenericObject",
-                           :visibility_expression => true_expression_on_generic)
+                          :name                  => "visible button on Generic Object",
+                          :applies_to_class      => "GenericObject",
+                          :visibility_expression => true_expression_on_generic)
         FactoryBot.create(:custom_button,
-                           :name                  => "hidden button on Generic Object",
-                           :applies_to_class      => "GenericObject",
-                           :visibility_expression => false_expression_on_generic)
+                          :name                  => "hidden button on Generic Object",
+                          :applies_to_class      => "GenericObject",
+                          :visibility_expression => false_expression_on_generic)
         FactoryBot.create(:custom_button,
-                           :name                  => "visible button on Generic Object Definition",
-                           :applies_to_class      => "GenericObjectDefinition",
-                           :applies_to_id         => definition.id,
-                           :visibility_expression => true_expression_on_definition)
+                          :name                  => "visible button on Generic Object Definition",
+                          :applies_to_class      => "GenericObjectDefinition",
+                          :applies_to_id         => definition.id,
+                          :visibility_expression => true_expression_on_definition)
         FactoryBot.create(:custom_button,
-                           :name                  => "hidden button on Generic Object Definition",
-                           :applies_to_class      => "GenericObjectDefinition",
-                           :applies_to_id         => definition.id,
-                           :visibility_expression => false_expression_on_definition)
+                          :name                  => "hidden button on Generic Object Definition",
+                          :applies_to_class      => "GenericObjectDefinition",
+                          :applies_to_id         => definition.id,
+                          :visibility_expression => false_expression_on_definition)
       end
 
       it "uses appropriate object: parameter, which is GenericObject or definition for expression evaluation" do

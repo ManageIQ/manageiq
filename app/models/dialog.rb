@@ -15,7 +15,7 @@ class Dialog < ApplicationRecord
   before_destroy :reject_if_has_resource_actions
   validates      :name, :unique_within_region => true
 
-  alias_attribute  :name, :label
+  alias_attribute :name, :label
 
   attr_accessor :target_resource
 
@@ -69,6 +69,7 @@ class Dialog < ApplicationRecord
 
     dialog_tabs.each do |dt|
       next if dt.valid?
+
       dt.errors.full_messages.each do |err_msg|
         errors.add(:base, _("Dialog %{dialog_label} / %{error_message}") %
                    {:dialog_label => label, :error_message => err_msg})
@@ -140,11 +141,11 @@ class Dialog < ApplicationRecord
   end
 
   def content(target = nil, resource_action = nil, all_attributes = false)
-    return DialogSerializer.new.serialize(Array[self], all_attributes) if target.nil? && resource_action.nil?
+    return DialogSerializer.new.serialize([self], all_attributes) if target.nil? && resource_action.nil?
 
     workflow = ResourceActionWorkflow.new({}, User.current_user, resource_action, :target => target)
 
-    DialogSerializer.new.serialize(Array[workflow.dialog], all_attributes)
+    DialogSerializer.new.serialize([workflow.dialog], all_attributes)
   end
 
   # Allows you to pass dialog tabs as a hash
@@ -180,7 +181,7 @@ class Dialog < ApplicationRecord
     new_dialog.dialog_tabs = dialog_tabs.collect(&:deep_copy)
 
     new_attributes.each do |attr, value|
-      new_dialog.send("#{attr}=", value)
+      new_dialog.send(:"#{attr}=", value)
     end
     new_dialog
   end
@@ -188,7 +189,7 @@ class Dialog < ApplicationRecord
   private
 
   def dialog_field_hash
-    @dialog_field_hash ||= dialog_fields.each_with_object({}) { |df, hash| hash[df.name] = df }
+    @dialog_field_hash ||= dialog_fields.index_by { |df| df.name }
   end
 
   def reject_if_has_resource_actions

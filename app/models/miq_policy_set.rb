@@ -13,6 +13,7 @@ class MiqPolicySet < ApplicationRecord
 
   def notes=(data)
     return if data.nil?
+
     self.set_data ||= {}
     self.set_data[:notes] = data[0..511]
   end
@@ -23,7 +24,7 @@ class MiqPolicySet < ApplicationRecord
 
   def destroy_policy_tags
     # handle policy assignment removal for deleted policy profile
-    Tag.find_by(:name => "/miq_policy/assignment/#{self.class.to_s.underscore}/#{id}").try!(:destroy)
+    Tag.find_by(:name => "/miq_policy/assignment/#{self.class.to_s.underscore}/#{id}")&.destroy
   end
 
   def add_policy(policy)

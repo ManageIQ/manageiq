@@ -81,13 +81,14 @@ module EvmSpecHelper
 
     # Marshal dump of Settings loses the config_sources, so we need to compare manually
     current != @settings_backup ||
-      current.instance_variable_get(:@config_sources) != @settings_backup.instance_variable_get(:@config_sources)
+    current.instance_variable_get(:@config_sources) != @settings_backup.instance_variable_get(:@config_sources)
   end
 
   def self.clear_instance_variables(instance)
     if instance.kind_of?(ActiveRecord::Base) || (instance.kind_of?(Class) && instance < ActiveRecord::Base)
       raise "instances variables should not be cleared from ActiveRecord objects"
     end
+
     # Don't clear the rspec-mocks instance variables
     ivars = instance.instance_variables - [:@mock_proxy, :@__recorder]
     ivars.each { |ivar| clear_instance_variable(instance, ivar) }
@@ -112,7 +113,7 @@ module EvmSpecHelper
   end
 
   class << self
-    alias_method :create_guid_miq_server_zone, :local_guid_miq_server_zone
+    alias create_guid_miq_server_zone local_guid_miq_server_zone
   end
 
   def self.remote_miq_server(attrs = {})

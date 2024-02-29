@@ -18,7 +18,7 @@ module MiqServer::LogManagement
       :instance_id => id,
       :method_name => "post_logs",
       :server_guid => guid,
-      :zone        => my_zone,
+      :zone        => my_zone
     ) do |msg|
       _log.info("Previous adhoc log collection is still running, skipping...Resource: [#{self.class.name}], id: [#{id}]") unless msg.nil?
       nil
@@ -37,11 +37,12 @@ module MiqServer::LogManagement
 
   def last_log_sync_message
     last_log = log_files.order(:updated_on => :desc).first
-    last_log.try(:miq_task).try!(:message)
+    last_log.try(:miq_task)&.message
   end
 
   def include_automate_models_and_dialogs?(value)
     return value unless value.nil?
+
     Settings.log.collection.include_automate_models_and_dialogs
   end
 
@@ -52,6 +53,7 @@ module MiqServer::LogManagement
 
     # the current queue item and task must be errored out on exceptions so re-raise any caught errors
     raise _("Log depot settings not configured") unless context_log_depot
+
     context_log_depot.update(:support_case => options[:support_case].presence)
 
     if include_automate_models_and_dialogs?(options[:include_automate_models_and_dialogs])
@@ -121,14 +123,14 @@ module MiqServer::LogManagement
 
     begin
       local_file = VMDB::Util.zip_logs(log_type.to_s.downcase.concat(".zip"), log_patterns(log_type, pattern), "system")
-      self.log_files << logfile
+      log_files << logfile
 
       logfile.update(
         :local_file         => local_file,
         :logging_started_on => log_start,
         :logging_ended_on   => log_end,
         :name               => LogFile.logfile_name(self, log_type, date_string),
-        :description        => "Logs for Zone #{zone.name rescue nil} Server #{self.name} #{date_string}",
+        :description        => "Logs for Zone #{zone.name rescue nil} Server #{name} #{date_string}"
       )
 
       logfile.upload
@@ -146,7 +148,7 @@ module MiqServer::LogManagement
   end
 
   def post_automate_models(taskid, log_depot)
-    domain_zip = Rails.root.join("log", "domain.zip")
+    domain_zip = Rails.root.join("log/domain.zip")
     backup_automate_models(domain_zip)
     now = Time.zone.now
 
@@ -167,7 +169,7 @@ module MiqServer::LogManagement
   end
 
   def post_automate_dialogs(taskid, log_depot)
-    dialog_directory = Rails.root.join("log", "service_dialogs")
+    dialog_directory = Rails.root.join("log/service_dialogs")
     FileUtils.mkdir_p(dialog_directory)
     backup_automate_dialogs(dialog_directory)
     now = Time.zone.now
@@ -240,15 +242,15 @@ module MiqServer::LogManagement
 
   def delete_active_log_collections
     log_files.each do |lf|
-      if lf.state == 'collecting'
-        _log.info("Deleting #{lf.description}")
-        lf.miq_task&.(:state => 'Finished', :status => 'Error', :message => 'Log Collection Incomplete during Server Startup')
-        lf.destroy
-      end
+      next unless lf.state == 'collecting'
+
+      _log.info("Deleting #{lf.description}")
+      lf.miq_task&.(:state => 'Finished', :status => 'Error', :message => 'Log Collection Incomplete during Server Startup')
+      lf.destroy
     end
 
     # Since a task is created before a logfile, there's a chance we have a task without a logfile
-    MiqTask.where(:miq_server_id => id).where("name like ?", "Zipped log retrieval for %").where("state != ?", "Finished").each do |task|
+    MiqTask.where(:miq_server_id => id).where("name like ?", "Zipped log retrieval for %").where.not(:state => "Finished").each do |task|
       task.update(:state => 'Finished', :status => 'Error', :message => 'Log Collection Incomplete during Server Startup')
     end
   end
@@ -256,11 +258,13 @@ module MiqServer::LogManagement
   def log_collection_active_recently?(since = nil)
     since ||= 15.minutes.ago.utc
     return true if log_files.exists?(["created_on > ? AND state = ?", since, "collecting"])
+
     MiqTask.exists?(["miq_server_id = ? and name like ? and state != ? and created_on > ?", id, "Zipped log retrieval for %", "Finished", since])
   end
 
   def log_collection_active?
     return true if log_files.exists?(:state => "collecting")
+
     MiqTask.exists?(["miq_server_id = ? and name like ? and state != ?", id, "Zipped log retrieval for %", "Finished"])
   end
 

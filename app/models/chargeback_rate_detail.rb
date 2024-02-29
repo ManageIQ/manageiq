@@ -14,7 +14,7 @@ class ChargebackRateDetail < ApplicationRecord
 
   delegate :metric_column_key, :metric_key, :cost_keys, :rate_key, :to => :chargeable_field
 
-  FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric chargeable_field_id sub_metric).freeze
+  FORM_ATTRIBUTES = %i[description per_time per_unit metric group source metric chargeable_field_id sub_metric].freeze
   PER_TIME_TYPES = {
     "hourly"  => N_("Hourly"),
     "daily"   => N_("Daily"),
@@ -27,6 +27,7 @@ class ChargebackRateDetail < ApplicationRecord
   #
   def showback_unit(p_per_unit = nil)
     return '' unless chargeable_field.detail_measure
+
     {'bytes'     => '',
      'kilobytes' => 'KiB',
      'megabytes' => 'MiB',
@@ -46,7 +47,7 @@ class ChargebackRateDetail < ApplicationRecord
   def populate_showback_rate(plan, rate_detail, entity)
     group = rate_detail.chargeable_field.showback_measure
     field, _, calculation = rate_detail.chargeable_field.showback_dimension
-    unit  = rate_detail.showback_unit
+    unit = rate_detail.showback_unit
 
     showback_rate = ManageIQ::Showback::Rate.find_or_create_by(:entity      => entity,
                                                                :group       => group,
@@ -144,27 +145,27 @@ class ChargebackRateDetail < ApplicationRecord
   }
 
   def hourly_cost(value, consumption)
-    return 0.0 unless self.enabled?
+    return 0.0 unless enabled?
 
     (fixed_rate, variable_rate) = find_rate(value)
 
     hourly_fixed_rate    = hourly(fixed_rate, consumption)
     hourly_variable_rate = hourly(variable_rate, consumption)
 
-    hourly_fixed_rate + rate_adjustment * value * hourly_variable_rate
+    hourly_fixed_rate + (rate_adjustment * value * hourly_variable_rate)
   end
 
   def hourly(rate, consumption)
-    hourly_rate = case per_time
-                  when "hourly"  then rate
-                  when "daily"   then rate / 24
-                  when "weekly"  then rate / 24 / 7
-                  when "monthly" then rate / consumption.hours_in_month
-                  when "yearly"  then rate / 24 / 365
-                  else raise "rate time unit of '#{per_time}' not supported"
-                  end
+    case per_time
+    when "hourly"  then rate
+    when "daily"   then rate / 24
+    when "weekly"  then rate / 24 / 7
+    when "monthly" then rate / consumption.hours_in_month
+    when "yearly"  then rate / 24 / 365
+    else raise "rate time unit of '#{per_time}' not supported"
+    end
 
-    hourly_rate
+
   end
 
   def rate_adjustment
@@ -187,7 +188,7 @@ class ChargebackRateDetail < ApplicationRecord
       s = ""
       chargeback_tiers.each do |tier|
         # Example: Daily @ .02 per MHz from 0.0 to Infinity
-        s += "#{per_time.to_s.capitalize} @ #{tier.fixed_rate} + "\
+        s += "#{per_time.to_s.capitalize} @ #{tier.fixed_rate} + " \
              "#{tier.variable_rate} per #{per_unit_display} from #{tier.start} to #{tier.finish}\n"
       end
       s.chomp
@@ -210,9 +211,9 @@ class ChargebackRateDetail < ApplicationRecord
   def save_tiers(tiers)
     temp = self.class.new(:chargeback_tiers => tiers)
     if temp.contiguous_tiers?
-      self.chargeback_tiers.replace(tiers)
+      chargeback_tiers.replace(tiers)
     else
-      temp.errors.each {|error| errors.add(error.attribute, error.message)}
+      temp.errors.each { |error| errors.add(error.attribute, error.message) }
     end
   end
 
@@ -225,13 +226,13 @@ class ChargebackRateDetail < ApplicationRecord
     tiers = chargeback_tiers
 
     tiers.each_with_index do |tier, index|
-      if single_tier?(tier,tiers)
+      if single_tier?(tier, tiers)
         error = true if !tier.starts_with_zero? || !tier.ends_with_infinity?
-      elsif first_tier?(tier,tiers)
+      elsif first_tier?(tier, tiers)
         error = true if !tier.starts_with_zero? || tier.ends_with_infinity?
-      elsif last_tier?(tier,tiers)
+      elsif last_tier?(tier, tiers)
         error = true if !consecutive_tiers?(tier, tiers[index - 1]) || !tier.ends_with_infinity?
-      elsif middle_tier?(tier,tiers)
+      elsif middle_tier?(tier, tiers)
         error = true if !consecutive_tiers?(tier, tiers[index - 1]) || tier.ends_with_infinity?
       end
 
@@ -259,19 +260,19 @@ class ChargebackRateDetail < ApplicationRecord
     [metric_value, cost]
   end
 
-  def first_tier?(tier,tiers)
+  def first_tier?(tier, tiers)
     tier == tiers.first
   end
 
-  def last_tier?(tier,tiers)
+  def last_tier?(tier, tiers)
     tier == tiers.last
   end
 
-  def single_tier?(tier,tiers)
+  def single_tier?(tier, tiers)
     first_tier?(tier, tiers) && last_tier?(tier, tiers)
   end
 
-  def middle_tier?(tier,tiers)
+  def middle_tier?(tier, tiers)
     !first_tier?(tier, tiers) && !last_tier?(tier, tiers)
   end
 
@@ -299,17 +300,17 @@ class ChargebackRateDetail < ApplicationRecord
 
         rate_details.push(detail_new)
 
-        if detail_new.chargeable_field.metric == 'derived_vm_allocated_disk_storage'
-          volume_types = CloudVolume.volume_types
-          volume_types.push('unclassified') if volume_types.present?
-          volume_types.each do |volume_type|
-            storage_detail_new = detail_new.dup
-            storage_detail_new.sub_metric = volume_type
-            detail[:tiers].sort_by { |tier| tier[:start] }.each do |tier|
-              storage_detail_new.chargeback_tiers << ChargebackTier.new(tier.slice(*ChargebackTier::FORM_ATTRIBUTES))
-            end
-            rate_details.push(storage_detail_new)
+        next unless detail_new.chargeable_field.metric == 'derived_vm_allocated_disk_storage'
+
+        volume_types = CloudVolume.volume_types
+        volume_types.push('unclassified') if volume_types.present?
+        volume_types.each do |volume_type|
+          storage_detail_new = detail_new.dup
+          storage_detail_new.sub_metric = volume_type
+          detail[:tiers].sort_by { |tier| tier[:start] }.each do |tier|
+            storage_detail_new.chargeback_tiers << ChargebackTier.new(tier.slice(*ChargebackTier::FORM_ATTRIBUTES))
           end
+          rate_details.push(storage_detail_new)
         end
       end
     end

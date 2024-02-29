@@ -30,8 +30,8 @@ module Vmdb
     # Had to add timezone methods here, they are being called from models
     # returns formatted time in specified timezone and format
     def format_timezone(time, timezone = Time.zone.name, ftype = "view")
-      timezone = timezone.name if timezone.kind_of?(ActiveSupport::TimeZone)   # If a Timezone object comes in, just get the name
-      if !time.blank?
+      timezone = timezone.name if timezone.kind_of?(ActiveSupport::TimeZone) # If a Timezone object comes in, just get the name
+      if time.present?
         new_time = time.in_time_zone(timezone)
         case ftype
         when "gtl"                                  # for gtl views
@@ -52,7 +52,7 @@ module Vmdb
         else                                        # for summary screens
           new_time = I18n.l(new_time)
         end
-      else    # if time is nil
+      else # if time is nil
         new_time = ""
       end
       new_time

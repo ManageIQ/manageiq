@@ -3,7 +3,7 @@ module ActiveRecordPreloadScopes
   def records_for(ids)
     # use our logic if passing in [ActiveRecord::Base] or passing in a loaded Relation/scope
     unless (preload_scope.kind_of?(Array) && preload_scope.first.kind_of?(ActiveRecord::Base)) ||
-            preload_scope.try(:loaded?)
+           preload_scope.try(:loaded?)
       return super
     end
 

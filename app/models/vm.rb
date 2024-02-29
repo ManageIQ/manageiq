@@ -21,10 +21,10 @@ class Vm < VmOrTemplate
       module_parent::Template
     end
   end
-  class << self; alias_method :corresponding_template_model, :corresponding_model; end
+  class << self; alias corresponding_template_model corresponding_model; end
 
   delegate :corresponding_model, :to => :class
-  alias_method :corresponding_template_model, :corresponding_model
+  alias corresponding_template_model corresponding_model
 
   def validate_remote_console_vmrc_support
     raise(MiqException::RemoteConsoleNotSupportedError,
@@ -87,7 +87,8 @@ class Vm < VmOrTemplate
       require 'win32/miq-wmi'
       cred = my_zone_obj.auth_user_pwd(:windows_domain)
       ipaddresses.each do |ipaddr|
-        break unless pl.blank?
+        break if pl.present?
+
         _log.info("Running processes for VM:[#{id}:#{name}]  IP:[#{ipaddr}] Logon:[#{cred[0]}]")
         begin
           wmi = WMIHelper.connectServer(ipaddr, *cred)
@@ -117,9 +118,9 @@ class Vm < VmOrTemplate
 
   def supported_consoles
     {
-      :html5   => html5_support,
-      :vmrc    => vmrc_support,
-      :native  => native_support
+      :html5  => html5_support,
+      :vmrc   => vmrc_support,
+      :native => native_support
     }
   end
 

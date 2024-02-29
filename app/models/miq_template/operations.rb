@@ -2,6 +2,6 @@ module MiqTemplate::Operations
   extend ActiveSupport::Concern
 
   included do
-    supports     :clone
+    supports :clone
   end
 end

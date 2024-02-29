@@ -10,12 +10,12 @@ module Metric::Rollup
   VM_ROLLUP_COLS          = [:cpu_usage_rate_average, :derived_memory_used, :disk_usage_rate_average, :net_usage_rate_average].freeze
 
   AGGREGATE_COLS = {
-    :MiqEnterprise_miq_regions            => ROLLUP_COLS,
-    :MiqRegion_ext_management_systems     => NON_STORAGE_ROLLUP_COLS,
-    :MiqRegion_storages                   => STORAGE_COLS,
-    :ExtManagementSystem_hosts            => NON_STORAGE_ROLLUP_COLS,
-    :ExtManagementSystem_container_nodes  => NON_STORAGE_ROLLUP_COLS,
-    :EmsCluster_hosts                     => [
+    :MiqEnterprise_miq_regions             => ROLLUP_COLS,
+    :MiqRegion_ext_management_systems      => NON_STORAGE_ROLLUP_COLS,
+    :MiqRegion_storages                    => STORAGE_COLS,
+    :ExtManagementSystem_hosts             => NON_STORAGE_ROLLUP_COLS,
+    :ExtManagementSystem_container_nodes   => NON_STORAGE_ROLLUP_COLS,
+    :EmsCluster_hosts                      => [
       :cpu_ready_delta_summation,
       :cpu_system_delta_summation,
       :cpu_usage_rate_average,
@@ -32,7 +32,7 @@ module Metric::Rollup
       :mem_usage_absolute_average,
       :net_usage_rate_average,
     ],
-    :Host_vms                             => [
+    :Host_vms                              => [
       :cpu_ready_delta_summation,
       :cpu_system_delta_summation,
       :cpu_used_delta_summation,
@@ -194,7 +194,7 @@ module Metric::Rollup
   end
 
   class << self
-    alias_method :rollup_historical, :rollup_hourly
+    alias rollup_historical rollup_hourly
   end
 
   def self.rollup_daily(obj, day, interval_name, time_profile, new_perf, orig_perf)
@@ -226,6 +226,7 @@ module Metric::Rollup
       end
 
       next unless obj.kind_of?(VmOrTemplate)
+
       new_perf[:min_max] ||= {}
       BURST_COLS.each do |col|
         value = rt.send(col)
@@ -276,6 +277,7 @@ module Metric::Rollup
     recs.each do |rec|
       perf = perf_recs.fetch_path(rec.class.base_class.name, rec.id, interval_name, ts)
       next unless perf
+
       state = rec.vim_performance_state_for_ts(timestamp)
       agg_cols.each do |c|
         result[c] ||= 0
@@ -329,13 +331,16 @@ module Metric::Rollup
 
   def self.rollup_assoc(c, result, value)
     return if value.nil?
+
     ASSOC_KEYS.each do |assoc|
       next if value[assoc].nil?
+
       result[c] ||= {}
       result[c][assoc] ||= {}
 
       [:on, :off].each do |mode|
         next if value[assoc][mode].nil?
+
         result[c][assoc][mode] ||= []
         result[c][assoc][mode].concat(value[assoc][mode]).uniq!
       end
@@ -344,6 +349,7 @@ module Metric::Rollup
 
   def self.rollup_tags(c, result, value)
     return if value.blank?
+
     result[c] ||= ""
     result[c] = result[c].split(TAG_SEP).concat(value.split(TAG_SEP)).uniq.join(TAG_SEP)
   end

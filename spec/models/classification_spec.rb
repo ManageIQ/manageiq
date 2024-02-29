@@ -234,8 +234,7 @@ RSpec.describe Classification do
       ['<My_Name>',
        'My Name',
        'My_Name_is...',
-       '123456789_123456789_123456789_123456789_123456789_1'
-      ].each do |name|
+       '123456789_123456789_123456789_123456789_123456789_1'].each do |name|
         cat = Classification.is_category.new(:name => name)
 
         expect(cat).to_not be_valid
@@ -247,8 +246,7 @@ RSpec.describe Classification do
       ['<My_Name>',
        'My Name',
        'My_Name_is...',
-       '123456789_123456789_123456789_123456789_123456789_1'
-      ].each do |name|
+       '123456789_123456789_123456789_123456789_123456789_1'].each do |name|
         good_name = Classification.sanitize_name(name)
         cat = Classification.is_category.new(:name => good_name, :description => name)
         expect(cat).to be_valid
@@ -307,8 +305,7 @@ RSpec.describe Classification do
       expect(all_tagged_with(Host, [[full_tag_name(ent11)], [full_tag_name(ent11)]])).to eq([host2])
 
       # failure
-      expect(all_tagged_with(Host, [[full_tag_name(ent12), full_tag_name(ent11)], [full_tag_name(ent21)]])
-            ).not_to eq([host2])
+      expect(all_tagged_with(Host, [[full_tag_name(ent12), full_tag_name(ent11)], [full_tag_name(ent21)]])).not_to eq([host2])
       expect(all_tagged_with(Host, [[full_tag_name(ent11)], [full_tag_name(ent22)]])).not_to eq([host2])
       expect(all_tagged_with(Host, [[full_tag_name(ent12)], [full_tag_name(ent21)]])).not_to eq([host2])
     end
@@ -446,18 +443,17 @@ RSpec.describe Classification do
   describe ".seed" do
     before do
       allow(YAML).to receive(:load_file).and_return([
-        {:name         => "cc",
-         :description  => "Cost Center",
-         :example_text => "Cost Center",
-         :read_only    => "0",
-         :syntax       => "string",
-         :show         => true,
-         :default      => true,
-         :single_value => "1",
-         :entries      => [{:description => "Cost Center 001", :name => "001"},
-                           {:description => "Cost Center 002", :name => "002"}]
-        }]
-                                      )
+                                                      {:name         => "cc",
+                                                       :description  => "Cost Center",
+                                                       :example_text => "Cost Center",
+                                                       :read_only    => "0",
+                                                       :syntax       => "string",
+                                                       :show         => true,
+                                                       :default      => true,
+                                                       :single_value => "1",
+                                                       :entries      => [{:description => "Cost Center 001", :name => "001"},
+                                                                         {:description => "Cost Center 002", :name => "002"}]}
+                                                    ])
     end
 
     context "after seeding" do
@@ -491,18 +487,18 @@ RSpec.describe Classification do
         cat = Classification.is_category.find_by!(:description => "Cost Center")
         allow(YAML).to receive(:load_file).and_call_original
         cat.update!(:name => "new_name")
-        expect {
+        expect do
           2.times.each { Classification.seed }
-        }.to_not raise_error
+        end.to_not raise_error
       end
     end
 
     it "does not re-seed existing categories" do
       category = FactoryBot.create(:classification_cost_center,
-                                    :description  => "user defined",
-                                    :example_text => "user defined",
-                                    :show         => false,
-                                    :single_value => "0")
+                                   :description  => "user defined",
+                                   :example_text => "user defined",
+                                   :show         => false,
+                                   :single_value => "0")
 
       category_attrs = category.attributes
       Classification.seed
@@ -515,7 +511,7 @@ RSpec.describe Classification do
   describe '.find_by_name' do
     let(:my_region_number) { Classification.my_region_number }
     let(:other_region) { Classification.my_region_number + 1 }
-    let(:other_region_id) { other_region * Classification.rails_sequence_factor + 1 }
+    let(:other_region_id) { (other_region * Classification.rails_sequence_factor) + 1 }
 
     before do
       @local = FactoryBot.create(:classification, :name => "test_category1")
@@ -558,7 +554,7 @@ RSpec.describe Classification do
   describe '.find_by_names' do
     let(:my_region_number) { Classification.my_region_number }
     let(:other_region) { Classification.my_region_number + 1 }
-    let(:other_region_id) { other_region * Classification.rails_sequence_factor + 1 }
+    let(:other_region_id) { (other_region * Classification.rails_sequence_factor) + 1 }
 
     before do
       @local = FactoryBot.create(:classification, :name => "test_category1")

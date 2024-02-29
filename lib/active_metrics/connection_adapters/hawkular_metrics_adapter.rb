@@ -12,7 +12,7 @@ module ActiveMetrics
         Hawkular::Metrics::Client.new(
           URI::HTTP.build(:host => hostname, :port => port).to_s,
           config.slice(:username, :password),
-          :tenant => db,
+          :tenant => db
         )
       end
 

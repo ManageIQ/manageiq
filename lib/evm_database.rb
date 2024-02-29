@@ -96,6 +96,7 @@ class EvmDatabase
 
   def self.seed_rest
     return if skip_seeding?
+
     seed(OTHER_SEEDABLE_CLASSES + seedable_plugin_classes)
   end
 
@@ -118,7 +119,7 @@ class EvmDatabase
   end
 
   def self.skip_seeding?
-    ENV['SKIP_SEEDING'] && seeded_primordially?
+    ENV.fetch('SKIP_SEEDING', nil) && seeded_primordially?
   end
   private_class_method :skip_seeding?
 
@@ -142,14 +143,14 @@ class EvmDatabase
   rescue Timeout::Error
     _log.error("Seeding... Timed out after #{lock_timeout} seconds")
     raise
-  rescue StandardError => err
+  rescue => err
     _log.log_backtrace(err)
     raise
   end
   private_class_method :seed_classes
 
   def self.host
-    (ActiveRecord::Base.configurations[ENV['RAILS_ENV']] || {})['host']
+    (ActiveRecord::Base.configurations[ENV.fetch('RAILS_ENV', nil)] || {})['host']
   end
 
   def self.local?
@@ -185,7 +186,7 @@ class EvmDatabase
     require 'manageiq-postgres_ha_admin'
     ManageIQ::PostgresHaAdmin.logger = Vmdb.logger
 
-    monitor ||= ManageIQ::PostgresHaAdmin::FailoverMonitor.new(Rails.root.join("config", "ha_admin.yml"))
+    monitor ||= ManageIQ::PostgresHaAdmin::FailoverMonitor.new(Rails.root.join("config/ha_admin.yml"))
 
     configure_rails_handler(monitor)
     configure_logical_replication_handlers(monitor)
@@ -195,11 +196,11 @@ class EvmDatabase
   end
 
   def self.configure_rails_handler(monitor)
-    file_path = Rails.root.join("config", "database.yml")
+    file_path = Rails.root.join("config/database.yml")
     rails_handler = ManageIQ::PostgresHaAdmin::RailsConfigHandler.new(:file_path => file_path, :environment => Rails.env)
     _log.info("Configuring database failover for #{file_path}'s #{Rails.env} environment")
 
-    rails_handler.after_failover do |new_conn_info|
+    rails_handler.after_failover do |_new_conn_info|
       # refresh the rails connection info after the config handler changed database.yml
       begin
         ActiveRecord::Base.remove_connection

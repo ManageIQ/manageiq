@@ -26,11 +26,11 @@ RSpec.describe Metric::Purging do
 
         q = MiqQueue.all.map { |item| item.attributes.slice("class_name", "method_name") }
         expect(q).to match_array([
-          {"class_name" => described_class.name, "method_name" => "purge_daily"},
-          {"class_name" => described_class.name, "method_name" => "purge_hourly"},
-          {"class_name" => described_class.name, "method_name" => "purge_realtime"},
-          {"class_name" => "MiqTask", "method_name"=>"destroy_older_by_condition"}
-        ])
+                                   {"class_name" => described_class.name, "method_name" => "purge_daily"},
+                                   {"class_name" => described_class.name, "method_name" => "purge_hourly"},
+                                   {"class_name" => described_class.name, "method_name" => "purge_realtime"},
+                                   {"class_name" => "MiqTask", "method_name" => "destroy_older_by_condition"}
+                                 ])
       end
     end
 
@@ -40,13 +40,13 @@ RSpec.describe Metric::Purging do
 
       before do
         @metrics1 = [
-          FactoryBot.create(:metric_rollup_vm_hr, :resource_id => vm1.id, :timestamp => (6.months + 1.days).ago.utc),
-          FactoryBot.create(:metric_rollup_vm_hr, :resource_id => vm1.id, :timestamp => (6.months - 1.days).ago.utc)
+          FactoryBot.create(:metric_rollup_vm_hr, :resource_id => vm1.id, :timestamp => (6.months + 1.day).ago.utc),
+          FactoryBot.create(:metric_rollup_vm_hr, :resource_id => vm1.id, :timestamp => (6.months - 1.day).ago.utc)
         ]
         @metrics2 = [
           FactoryBot.create(:metric_rollup_vm_hr, :resource_id => vm2.id, :timestamp => (6.months + 2.days).ago.utc),
-          FactoryBot.create(:metric_rollup_vm_hr, :resource_id => vm2.id, :timestamp => (6.months + 1.days).ago.utc),
-          FactoryBot.create(:metric_rollup_vm_hr, :resource_id => vm2.id, :timestamp => (6.months - 1.days).ago.utc)
+          FactoryBot.create(:metric_rollup_vm_hr, :resource_id => vm2.id, :timestamp => (6.months + 1.day).ago.utc),
+          FactoryBot.create(:metric_rollup_vm_hr, :resource_id => vm2.id, :timestamp => (6.months - 1.day).ago.utc)
         ]
       end
 
@@ -84,7 +84,7 @@ RSpec.describe Metric::Purging do
 
     it "deletes mid day" do
       Timecop.freeze('2018-02-01T09:12:00Z') do
-        (0..16).each do |hours|
+        17.times do |hours|
           FactoryBot.create(:metric_vm_rt, :resource_id => vm1.id, :timestamp => (hours.hours.ago + 1.minute))
         end
         expect(Metric.count).to eq(17)
@@ -98,7 +98,7 @@ RSpec.describe Metric::Purging do
 
     it "deletes just after midnight" do
       Timecop.freeze('2018-02-01T02:12:00Z') do
-        (0..16).each do |hours|
+        17.times do |hours|
           FactoryBot.create(:metric_vm_rt, :resource_id => vm1.id, :timestamp => (hours.hours.ago + 1.minute))
         end
         expect(Metric.count).to eq(17)
@@ -113,7 +113,7 @@ RSpec.describe Metric::Purging do
       EvmSpecHelper.local_miq_server
 
       Timecop.freeze('2018-01-01T02:12:00Z') do
-        (0..16).each do |hours|
+        17.times do |hours|
           FactoryBot.create(:metric_vm_rt, :resource_id => vm1.id, :timestamp => (hours.hours.ago + 1.minute))
         end
         expect(Metric.count).to eq(17)
@@ -128,7 +128,7 @@ RSpec.describe Metric::Purging do
       EvmSpecHelper.local_miq_server
       Timecop.freeze('2017-03-12T08:12:00Z') do # 2:00am+05 EST is time of change
         # this is overkill. since we prune every 21 minutes, there will only be ~1 table with data
-        (0..16).each do |hours|
+        17.times do |hours|
           FactoryBot.create(:metric_vm_rt, :resource_id => vm1.id, :timestamp => (hours.hours.ago + 1.minute))
         end
         expect(Metric.count).to eq(17)
@@ -143,7 +143,7 @@ RSpec.describe Metric::Purging do
       EvmSpecHelper.local_miq_server
       Timecop.freeze('2017-11-05T08:12:00Z') do # 2:00am+05 EST is time of change
         # this is overkill. since we prune every 21 minutes, there will only be ~1 table with data
-        (0..16).each do |hours|
+        17.times do |hours|
           FactoryBot.create(:metric_vm_rt, :resource_id => vm1.id, :timestamp => (hours.hours.ago + 1.minute))
         end
         expect(Metric.count).to eq(17)
@@ -169,7 +169,7 @@ RSpec.describe Metric::Purging do
 
       it "deletes just after midnight" do
         Timecop.freeze('2018-02-01T02:12:00Z') do
-          (0..23).each do |hours|
+          24.times do |hours|
             FactoryBot.create(:metric_vm_rt, :resource_id => vm1.id, :timestamp => (hours.hours.ago + 1.minute))
           end
           expect(Metric.count).to eq(24)
