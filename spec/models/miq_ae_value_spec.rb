@@ -17,8 +17,8 @@ RSpec.describe MiqAeValue do
     context "when the value is blank" do
       let(:value) { nil }
       let(:expected_xml) do
-        <<-XML
-<MiqAeField name="ae_field"><![CDATA[]]></MiqAeField>
+        <<~XML
+          <MiqAeField name="ae_field"><![CDATA[]]></MiqAeField>
         XML
       end
 
@@ -30,8 +30,8 @@ RSpec.describe MiqAeValue do
     context "when the value is not blank" do
       let(:value) { "value" }
       let(:expected_xml) do
-        <<-XML
-<MiqAeField name="ae_field">value</MiqAeField>
+        <<~XML
+          <MiqAeField name="ae_field">value</MiqAeField>
         XML
       end
 

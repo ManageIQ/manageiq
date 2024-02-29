@@ -3,12 +3,12 @@ class PxeImagePxelinux < PxeImage
     options = super
     options.insert(0, "initrd=#{initrd} ") unless initrd.blank?
 
-    pxe = <<-PXE
-timeout 0
-default #{name}
-
-label #{name}
-   menu label #{description}
+    pxe = <<~PXE
+      timeout 0
+      default #{name}
+      
+      label #{name}
+         menu label #{description}
     PXE
 
     pxe << "   kernel #{kernel}\n" unless kernel.nil?

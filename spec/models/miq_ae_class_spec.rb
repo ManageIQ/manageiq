@@ -277,8 +277,8 @@ RSpec.describe MiqAeClass do
       end
 
       it "produces the expected xml" do
-        expected_xml = <<-XML
-<MiqAeClass name="" namespace=""><ae_method2/><ae_method1/><MiqAeSchema><ae_field2/><ae_field1/></MiqAeSchema><ae_instance2/><ae_instance1/></MiqAeClass>
+        expected_xml = <<~XML
+          <MiqAeClass name="" namespace=""><ae_method2/><ae_method1/><MiqAeSchema><ae_field2/><ae_field1/></MiqAeSchema><ae_instance2/><ae_instance1/></MiqAeClass>
         XML
 
         expect(miq_ae_class.to_export_xml).to eq(expected_xml.chomp)
@@ -289,8 +289,8 @@ RSpec.describe MiqAeClass do
       let(:ae_fields) { [] }
 
       it "produces the expected xml" do
-        expected_xml = <<-XML
-<MiqAeClass name="" namespace=""><ae_method2/><ae_method1/><ae_instance2/><ae_instance1/></MiqAeClass>
+        expected_xml = <<~XML
+          <MiqAeClass name="" namespace=""><ae_method2/><ae_method1/><ae_instance2/><ae_instance1/></MiqAeClass>
         XML
 
         expect(miq_ae_class.to_export_xml).to eq(expected_xml.chomp)

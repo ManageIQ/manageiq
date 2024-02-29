@@ -66,10 +66,10 @@ class MiqAeMethod < ApplicationRecord
   end
 
   def self.default_method_text
-    <<-DEFAULT_METHOD_TEXT
-#
-# Description: <Method description here>
-#
+    <<~DEFAULT_METHOD_TEXT
+      #
+      # Description: <Method description here>
+      #
     DEFAULT_METHOD_TEXT
   end
 

@@ -229,16 +229,16 @@ RSpec.describe MiqReportResult do
     end
 
     it "can serialize and deserialize a plain text report" do
-      txt = <<EOF
-+--------------+
-|  Foo Report  |
-+--------------+
-| Foo  | Bar   |
-+--------------+
-| baz  | qux   |
-| quux | corge |
-+--------------+
-EOF
+      txt = <<~EOF
+        +--------------+
+        |  Foo Report  |
+        +--------------+
+        | Foo  | Bar   |
+        +--------------+
+        | baz  | qux   |
+        | quux | corge |
+        +--------------+
+      EOF
       report_result = described_class.new
 
       report_result.report_results = txt

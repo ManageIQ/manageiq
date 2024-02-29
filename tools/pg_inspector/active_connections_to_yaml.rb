@@ -9,13 +9,13 @@ module PgInspector
     HELP_MSG_SHORT = "Dump active connections to YAML file".freeze
     def parse_options(args)
       self.options = Optimist.options(args) do
-        banner <<-BANNER
-
-#{HELP_MSG_SHORT}
-
-Use password in PGPASSWORD environment variable if no password file given.
-
-Options:
+        banner <<~BANNER
+          
+          #{HELP_MSG_SHORT}
+          
+          Use password in PGPASSWORD environment variable if no password file given.
+          
+          Options:
         BANNER
         opt(:pg_host, "PostgreSQL host name or address",
             :type => :string, :short => "s", :default => "127.0.0.1")
@@ -84,10 +84,10 @@ Options:
     end
 
     def rows_in_table(conn, table_name, order_by = nil)
-      query = <<-SQL
-SELECT *
-FROM #{table_name}
-#{"ORDER BY #{order_by}" if order_by}
+      query = <<~SQL
+        SELECT *
+        FROM #{table_name}
+        #{"ORDER BY #{order_by}" if order_by}
       SQL
       conn.exec_params(query)
     rescue PG::Error => e

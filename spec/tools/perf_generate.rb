@@ -44,20 +44,20 @@ IMPORT_REALTIME_FNAME = File.expand_path(File.join(File.dirname(__FILE__), "impo
 IMPORT_HOURLY_FNAME = File.expand_path(File.join(File.dirname(__FILE__), "import_hourly.csv"))
 METRICS_COLS = [:capture_interval_name, :resource_type, :resource_id, :timestamp]
 
-puts <<-EOL
-Importing metrics for:
-  EMS:            #{NUM_EMS}
-  Storages:       #{NUM_STORAGES}
-  Clusters:       #{NUM_CLUSTERS}
-  Hosts:          #{NUM_HOSTS}
-  VMs:            #{NUM_VMS}
-
-  Realtime from:  #{REALTIME_START.iso8601}
-  Hourly from:    #{HOURLY_START.iso8601}
-
-  Number of realtime rows: #{Class.new.extend(ActionView::Helpers::NumberHelper).number_with_delimiter(realtime_count)}
-  Number of hourly rows:   #{Class.new.extend(ActionView::Helpers::NumberHelper).number_with_delimiter(hourly_count)}
-
+puts <<~EOL
+  Importing metrics for:
+    EMS:            #{NUM_EMS}
+    Storages:       #{NUM_STORAGES}
+    Clusters:       #{NUM_CLUSTERS}
+    Hosts:          #{NUM_HOSTS}
+    VMs:            #{NUM_VMS}
+  
+    Realtime from:  #{REALTIME_START.iso8601}
+    Hourly from:    #{HOURLY_START.iso8601}
+  
+    Number of realtime rows: #{Class.new.extend(ActionView::Helpers::NumberHelper).number_with_delimiter(realtime_count)}
+    Number of hourly rows:   #{Class.new.extend(ActionView::Helpers::NumberHelper).number_with_delimiter(hourly_count)}
+  
 EOL
 
 unless opts[:no_generate]

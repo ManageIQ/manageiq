@@ -12,14 +12,14 @@ def parse_args(argv)
   logfiles = []
 
   opts = Optimist.options do
-    banner <<-EOS
-Parse EMS Refreshes from a set of evm.log files and filter on a set of
-provided conditions.
-
-Usage:
-  ruby ems_refresh_timings.rb [OPTION]... <FILE>...
-
-Options:
+    banner <<~EOS
+      Parse EMS Refreshes from a set of evm.log files and filter on a set of
+      provided conditions.
+      
+      Usage:
+        ruby ems_refresh_timings.rb [OPTION]... <FILE>...
+      
+      Options:
     EOS
     opt :sort_by, 'Column to sort by, options are start_time, end_time, '\
                   'duration, ems, target_type, and target',

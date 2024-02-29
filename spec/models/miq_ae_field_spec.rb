@@ -15,8 +15,8 @@ RSpec.describe MiqAeField do
 
     context "when default_value is blank" do
       let(:expected_xml) do
-        <<-XML
-<MiqAeField name="" substitute="true" display_name="display_name"></MiqAeField>
+        <<~XML
+          <MiqAeField name="" substitute="true" display_name="display_name"></MiqAeField>
         XML
       end
 
@@ -28,8 +28,8 @@ RSpec.describe MiqAeField do
     context "when default_value is not blank" do
       let(:default_value) { "default_value" }
       let(:expected_xml) do
-        <<-XML
-<MiqAeField name="" substitute="true" display_name="display_name">default_value</MiqAeField>
+        <<~XML
+          <MiqAeField name="" substitute="true" display_name="display_name">default_value</MiqAeField>
         XML
       end
 
