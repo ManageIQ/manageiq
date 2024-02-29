@@ -1068,7 +1068,11 @@ class VmOrTemplate < ApplicationRecord
     write_attribute(:template, val)
 
     self.type = corresponding_model.name if (self.template? && self.kind_of?(Vm)) || (!self.template? && self.kind_of?(MiqTemplate))
-    d = self.template? ? [/\.vmx$/, ".vmtx", 'never'] : [/\.vmtx$/, ".vmx", state == 'never' ? 'unknown' : raw_power_state]
+    d = if self.template?
+[/\.vmx$/, ".vmtx", 'never']
+else
+[/\.vmtx$/, ".vmx", state == 'never' ? 'unknown' : raw_power_state]
+end
     self.location = location.sub(d[0], d[1]) unless location.nil?
     self.raw_power_state = d[2]
   end
@@ -1375,7 +1379,11 @@ class VmOrTemplate < ApplicationRecord
     raise _(":hdw_attr required") if attr.nil?
 
     operator = options[:operator] || ">"
-    operator = operator.downcase == "increased" ? ">" : operator.downcase == "decreased" ? "<" : operator
+    operator = if operator.downcase == "increased"
+">"
+else
+operator.downcase == "decreased" ? "<" : operator
+end
 
     current_state, prev_state = drift_states.order("timestamp DESC").limit(2)
     if current_state.nil? || prev_state.nil?
