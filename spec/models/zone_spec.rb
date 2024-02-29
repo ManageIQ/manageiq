@@ -67,7 +67,7 @@ RSpec.describe Zone do
   describe "#clustered_hosts" do
     let(:zone) { FactoryBot.create(:zone) }
     let(:ems) { FactoryBot.create(:ems_vmware, :zone => zone) }
-    let(:cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => ems)}
+    let(:cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => ems) }
     let(:host_with_cluster) { FactoryBot.create(:host, :ext_management_system => ems, :ems_cluster => cluster) }
     let(:host) { FactoryBot.create(:host, :ext_management_system => ems) }
 
@@ -82,7 +82,7 @@ RSpec.describe Zone do
   describe "#non_clustered_hosts" do
     let(:zone) { FactoryBot.create(:zone) }
     let(:ems) { FactoryBot.create(:ems_vmware, :zone => zone) }
-    let(:cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => ems)}
+    let(:cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => ems) }
     let(:host_with_cluster) { FactoryBot.create(:host, :ext_management_system => ems, :ems_cluster => cluster) }
     let(:host) { FactoryBot.create(:host, :ext_management_system => ems) }
 

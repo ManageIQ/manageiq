@@ -76,7 +76,7 @@ class MiqSearch < ApplicationRecord
   end
 
   def self.descriptions
-    Hash[*all.select(:id, :description).flat_map {|x| [x.id.to_s, x.description] }]
+    Hash[*all.select(:id, :description).flat_map { |x| [x.id.to_s, x.description] }]
   end
 
   FIXTURE_DIR = File.join(Rails.root, "db/fixtures")

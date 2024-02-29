@@ -64,7 +64,7 @@ class Notification < ApplicationRecord
     # 1. Deprecate now
     # 2. Fail validation going forward via errors.add(error_args)
     error_args = [:options, "text bindings for notification_type: '#{notification_type.name}' failed with error: '#{e.message}' with options: '#{options.inspect}' and message #{notification_type.message.inspect}. Next release will not allow a notification without complete bindings."]
-    ActiveSupport::Deprecation.warn(error_args.join(' '), caller_locations[1..-1].reject {|location| location.label.include?("emit_for_event") })
+    ActiveSupport::Deprecation.warn(error_args.join(' '), caller_locations[1..-1].reject { |location| location.label.include?("emit_for_event") })
   end
 
   def emit_message

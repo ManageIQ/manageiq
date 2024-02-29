@@ -213,7 +213,7 @@ class ChargebackRateDetail < ApplicationRecord
     if temp.contiguous_tiers?
       self.chargeback_tiers.replace(tiers)
     else
-      temp.errors.each {|error| errors.add(error.attribute, error.message)}
+      temp.errors.each { |error| errors.add(error.attribute, error.message) }
     end
   end
 
