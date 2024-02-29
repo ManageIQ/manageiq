@@ -205,7 +205,7 @@ module ActsAsTaggable
         relationship = "self"
         macro = :has_one
       end
-      if macro == :has_one || macro == :belongs_to
+      if [:has_one, :belongs_to].include?(macro)
         value = subject.public_send(relationship).public_send(attr)
         return object.downcase == value.to_s.downcase
       else

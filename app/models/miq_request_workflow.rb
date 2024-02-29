@@ -496,7 +496,7 @@ end
     enabled_field = "#{name}_enabled".to_sym
     # Check if the fields hash contains a <dialog_name>_enabled field
     enabled = get_value(values[enabled_field])
-    return false if enabled == false || enabled == "disabled"
+    return false if [false, "disabled"].include?(enabled)
 
     true
   end

@@ -1154,7 +1154,7 @@ class MiqExpression
 
   def self.get_col_operators(field)
     col_type =
-      if field == :count || field == :regkey
+      if [:count, :regkey].include?(field)
         field
       else
         Target.parse(field.to_s).column_type || :string
@@ -1189,7 +1189,7 @@ class MiqExpression
       cat = field.split("-").last
       catobj = Classification.lookup_by_name(cat)
       return catobj ? catobj.entries.collect { |e| [e.description, e.name] } : []
-    elsif ns == "user_tag" || ns == "user"
+    elsif ["user_tag", "user"].include?(ns)
       cat = field.split("-").last
       return ::Tag.where("name like ?", "/user/#{cat}%").select(:name).collect do |t|
         tag_name = t.name.split("/").last

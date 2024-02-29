@@ -770,7 +770,7 @@ end
         {:qualify_attribute_names => full_path, :only => includes[association]["columns"]}
                       end
 
-      if association == "categories" || association == "managed"
+      if ["categories", "managed"].include?(association)
         association_objects = []
         assochash = {}
         @descriptions_by_tag_id ||= Classification.is_entry.each_with_object({}) do |c, h|
@@ -806,7 +806,7 @@ end
           data_records << existing_record
         else
           association_objects.each do |obj|
-            association_records = if association == "categories" || association == "managed"
+            association_records = if ["categories", "managed"].include?(association)
               [obj]
             else
               build_reportable_data(obj, assoc_options, full_path)
