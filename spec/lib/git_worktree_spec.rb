@@ -179,9 +179,9 @@ RSpec.describe GitWorktree do
       new_db = open_existing_repo
       new_db.add(@conflict_file, YAML.dump(@default_hash.merge(:fname => "second_one")))
       new_db.save_changes("overlapping commit")
-      expect { @ae_db.send(:merge, commit) }.to(raise_error { |error|
+      expect { @ae_db.send(:merge, commit) }.to(raise_error do |error|
         expect(error).to be_a(GitWorktreeException::GitConflicts)
-      })
+      end)
     end
 
     it "clone repo" do
@@ -358,9 +358,9 @@ RSpec.describe GitWorktree do
       require "rugged"
       expect(Rugged).to receive(:features).and_return([:threads, :https])
 
-      expect {
+      expect do
         GitWorktree.new(:path => git_repo_path, :ssh_private_key => "fake key\nfile content")
-      }.to raise_error(GitWorktreeException::InvalidCredentialType)
+      end.to raise_error(GitWorktreeException::InvalidCredentialType)
     end
   end
 

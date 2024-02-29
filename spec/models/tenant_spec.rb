@@ -2,11 +2,11 @@ RSpec.describe Tenant do
   include_examples ".seed called multiple times", 1
 
   let(:tenant) { described_class.new(:domain => 'x.com', :parent => default_tenant) }
-  let(:user_admin) {
+  let(:user_admin) do
     user = FactoryBot.create(:user_admin)
     allow(user).to receive(:get_timezone).and_return("UTC")
     user
-  }
+  end
 
   let(:default_tenant) do
     root_tenant

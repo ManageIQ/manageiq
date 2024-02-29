@@ -5,7 +5,7 @@ module ActiveRecord
     module PostgreSQL
       module SchemaStatements
         def columns_for_distinct(columns, orders) # :nodoc:
-          order_columns = orders.reject(&:blank?).map { |s|
+          order_columns = orders.reject(&:blank?).map do |s|
               # Convert Arel node to string
                             unless s.is_a?(String)
                               if s.kind_of?(Arel::Nodes::Ordering)
@@ -29,7 +29,7 @@ module ActiveRecord
                 s.gsub(/\s+(?:ASC|DESC)\b/i, "")
                  .gsub(/\s+NULLS\s+(?:FIRST|LAST)\b/i, "")
               end
-                          }.reject(&:blank?).map.with_index { |column, i| "#{column} AS alias_#{i}" }
+                          end.reject(&:blank?).map.with_index { |column, i| "#{column} AS alias_#{i}" }
 
           (order_columns << super).join(", ")
         end

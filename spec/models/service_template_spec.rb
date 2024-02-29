@@ -790,10 +790,10 @@ RSpec.describe ServiceTemplate do
       let(:picture) { Picture.create(catalog_item_options.delete(:picture)) }
 
       it "creates the picture without error" do
-        expect {
+        expect do
           service_template = ServiceTemplate.create_catalog_item(catalog_item_options, user)
           service_template.picture = picture
-        }.not_to raise_error
+        end.not_to raise_error
       end
 
       it "has the picture assigned properly" do

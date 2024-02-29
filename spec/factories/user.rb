@@ -24,7 +24,7 @@ FactoryBot.define do
     end
 
     trait :with_miq_edit_features do
-      features {
+      features do
         %w(
         miq_ae_class_edit
         miq_ae_domain_edit
@@ -33,7 +33,7 @@ FactoryBot.define do
         miq_ae_method_copy
         miq_ae_namespace_edit
       )
-}
+end
     end
   end
 
