@@ -121,7 +121,7 @@ class ProviderTagMapping
         if value.empty?
           [] # Don't map empty value to any tag.
         else
-          # Note: if the way we compute `entry_name` changes,
+          # NOTE: if the way we compute `entry_name` changes,
           # consider what will happen to previously created tags.
           any_value.map do |tag_id|
             emit_tag_reference(

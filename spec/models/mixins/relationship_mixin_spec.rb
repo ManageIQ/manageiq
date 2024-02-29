@@ -51,7 +51,7 @@ RSpec.describe RelationshipMixin do
       end
     end
 
-    # NOTE for understanding the next 4 contexts:
+    # NOTE: for understanding the next 4 contexts:
     # Objects (VMs, Hosts, etc) have associated tree nodes entries in the
     # relationships table which are linked.  If an object must reside in
     # multiple parts of the tree via having multiple parents, it will need more

@@ -156,7 +156,7 @@ module Vmdb
       require 'vmdb_helper'
     end
 
-    # Note: If an initializer doesn't have an after, Rails will add one based
+    # NOTE: If an initializer doesn't have an after, Rails will add one based
     # on the top to bottom order of initializer calls in the file.
     # Because this is easy to mess up, keep your initializers in order.
     initializer :load_inflections, :before => :init_vmdb_plugins do

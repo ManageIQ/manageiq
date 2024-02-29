@@ -1600,7 +1600,7 @@ RSpec.describe MiqExpression do
       expect(actual).to eq(expected)
     end
 
-    # Note: To debug these tests, the following may be helpful:
+    # NOTE: To debug these tests, the following may be helpful:
     # puts "Expression Raw:      #{filter.exp.inspect}"
     # puts "Expression in Human: #{filter.to_human}"
     # puts "Expression in Ruby:  #{filter.to_ruby}"

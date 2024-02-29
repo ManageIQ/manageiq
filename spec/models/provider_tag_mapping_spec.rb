@@ -113,7 +113,7 @@ RSpec.describe ProviderTagMapping do
       expect(tags).to be_empty
       expect(tags2).to contain_exactly(tag2)
 
-      # Note: this test doesn't cover creation of the category, eg. you can't have
+      # NOTE: this test doesn't cover creation of the category, eg. you can't have
       # /managed/kubernetes:name vs /managed/kubernetes:naME.
     end
 

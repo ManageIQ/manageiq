@@ -29,7 +29,7 @@ RSpec.describe MiqAlertSet do
   end
 
   def without_file(fname)
-    # Note: can the file you are moving cause sporadic failures in other threads?
+    # NOTE: can the file you are moving cause sporadic failures in other threads?
     raise "no block given" unless block_given?
     raise "fname is blank" if fname.blank?
 

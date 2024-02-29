@@ -1,4 +1,4 @@
-# Note: when changing a formatter, please consider also changing the corresponding entry in miq_formatters.js
+# NOTE: when changing a formatter, please consider also changing the corresponding entry in miq_formatters.js
 
 module MiqReport::Formatting
   extend ActiveSupport::Concern

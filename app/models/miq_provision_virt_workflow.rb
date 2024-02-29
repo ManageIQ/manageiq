@@ -69,7 +69,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     new_src = get_value(values[:src_vm_id])
     vm_changed = @last_vm_id != new_src
 
-    # Note: This makes a copy of the values hash so we have a copy of the object to modify
+    # NOTE: This makes a copy of the values hash so we have a copy of the object to modify
     @values = values
 
     get_source_and_targets(true)
