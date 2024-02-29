@@ -251,7 +251,7 @@ module VimPerformanceAnalysis
         avail   = measure_object(target, options[:mode], options[:limit_col], perf, ts, type) || 0
         avail   = (avail * (options[:limit_pct] / 100.0)) unless avail.nil? || options[:limit_pct].blank?
       end
-      usage = reserve unless (usage > reserve) # Take the greater of usage or total reserve of child VMs
+      usage = reserve unless usage > reserve # Take the greater of usage or total reserve of child VMs
       [avail, usage]
     end
 
