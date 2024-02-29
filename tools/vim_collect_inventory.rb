@@ -40,7 +40,7 @@ begin
   require 'VMwareWebService/MiqVim'
 
   vim = MiqVim.new(:server => opts[:ip], :username => opts[:user], :password => opts[:pass])
-  VC_ACCESSORS.each do |accessor, type|
+  VC_ACCESSORS.each do |accessor, _type|
     process(accessor, dir) { vim.send(accessor) }
   end
 

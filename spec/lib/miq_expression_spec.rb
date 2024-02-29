@@ -3263,7 +3263,7 @@ RSpec.describe MiqExpression do
   end
 
   describe ".operands2rubyvalue" do
-    RSpec.shared_examples :coerces_value_to_integer do |value|
+    RSpec.shared_examples :coerces_value_to_integer do |_value|
       it 'coerces the value to an integer' do
         expect(subject.last).to eq(0)
       end
