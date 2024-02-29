@@ -226,13 +226,13 @@ class ChargebackRateDetail < ApplicationRecord
     tiers = chargeback_tiers
 
     tiers.each_with_index do |tier, index|
-      if single_tier?(tier,tiers)
+      if single_tier?(tier, tiers)
         error = true if !tier.starts_with_zero? || !tier.ends_with_infinity?
-      elsif first_tier?(tier,tiers)
+      elsif first_tier?(tier, tiers)
         error = true if !tier.starts_with_zero? || tier.ends_with_infinity?
-      elsif last_tier?(tier,tiers)
+      elsif last_tier?(tier, tiers)
         error = true if !consecutive_tiers?(tier, tiers[index - 1]) || !tier.ends_with_infinity?
-      elsif middle_tier?(tier,tiers)
+      elsif middle_tier?(tier, tiers)
         error = true if !consecutive_tiers?(tier, tiers[index - 1]) || tier.ends_with_infinity?
       end
 
@@ -260,19 +260,19 @@ class ChargebackRateDetail < ApplicationRecord
     [metric_value, cost]
   end
 
-  def first_tier?(tier,tiers)
+  def first_tier?(tier, tiers)
     tier == tiers.first
   end
 
-  def last_tier?(tier,tiers)
+  def last_tier?(tier, tiers)
     tier == tiers.last
   end
 
-  def single_tier?(tier,tiers)
+  def single_tier?(tier, tiers)
     first_tier?(tier, tiers) && last_tier?(tier, tiers)
   end
 
-  def middle_tier?(tier,tiers)
+  def middle_tier?(tier, tiers)
     !first_tier?(tier, tiers) && !last_tier?(tier, tiers)
   end
 

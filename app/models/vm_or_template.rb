@@ -680,7 +680,7 @@ class VmOrTemplate < ApplicationRecord
                       temp_path = $2.strip
                       # Some esx servers add a leading "/".
                       # This needs to be stripped off to allow matching on location
-                      temp_path.sub(/^\//,'')
+                      temp_path.sub(/^\//, '')
                     # local
                     else
                       raise _("path, '%{path}', is malformed") % {:path => path}
