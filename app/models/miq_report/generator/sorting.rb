@@ -53,7 +53,7 @@ module MiqReport::Generator::Sorting
         sort_col = "#{sb}#{SORT_COL_SUFFIX}"
 
         @table.add_column(sort_col) { |d| build_value_for_sort_suffix(d.data[col], sfx) }
-        @table.add_column(sb)       { |d| sb % [d.data[col], :format => col_options ? col_options.fetch_path(sb, :break_format) : nil] }
+        @table.add_column(sb)       { |d| sb % [d.data[col], {:format => col_options ? col_options.fetch_path(sb, :break_format) : nil}] }
 
         new_sortby << sort_col
 

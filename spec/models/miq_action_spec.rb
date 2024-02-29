@@ -224,7 +224,7 @@ RSpec.describe MiqAction do
         msg = MiqQueue.first
         expect(msg.class_name).to eq(@vm.class.name)
         expect(msg.method_name).to eq('retire')
-        expect(msg.args).to eq([[@vm], :date => date])
+        expect(msg.args).to eq([[@vm], {:date => date}])
         expect(msg.zone).to eq(zone.name)
       end
     end

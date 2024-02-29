@@ -345,7 +345,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       every,
       :first_at => time_at
     ) do
-      enqueue([:generate_chargeback_for_service, :report_source => "Daily scheduler"])
+      enqueue([:generate_chargeback_for_service, {:report_source => "Daily scheduler"}])
     end
   end
 
