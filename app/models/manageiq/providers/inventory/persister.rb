@@ -34,7 +34,7 @@ class ManageIQ::Providers::Inventory::Persister
 
   # Returns serialized Persisted object to JSON
   # @return [String] serialized Persisted object to JSON
-  def to_json
+  def to_json(*_args)
     JSON.dump(to_hash)
   end
 
