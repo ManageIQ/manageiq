@@ -4,7 +4,7 @@ end
 
 def ip_from_seq(seq)
   ip = 0xFFFFFFFF - seq
-  "#{ip >> 24}.#{ip >> 16 & 0xFF}.#{ip >> 8 & 0xFF}.#{ip & 0xFF}"
+  "#{ip >> 24}.#{(ip >> 16) & 0xFF}.#{(ip >> 8) & 0xFF}.#{ip & 0xFF}"
 end
 
 def mac_from_seq(seq)

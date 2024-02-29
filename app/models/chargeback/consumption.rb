@@ -60,7 +60,7 @@ class Chargeback
 
     def monthly?
       # A heuristic. Is the interval lenght about 30 days?
-      (hours_in_interval * 1.hour - 30.days).abs < 3.days
+      ((hours_in_interval * 1.hour) - 30.days).abs < 3.days
     end
 
     def born_at

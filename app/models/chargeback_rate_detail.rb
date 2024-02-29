@@ -152,7 +152,7 @@ class ChargebackRateDetail < ApplicationRecord
     hourly_fixed_rate    = hourly(fixed_rate, consumption)
     hourly_variable_rate = hourly(variable_rate, consumption)
 
-    hourly_fixed_rate + rate_adjustment * value * hourly_variable_rate
+    hourly_fixed_rate + (rate_adjustment * value * hourly_variable_rate)
   end
 
   def hourly(rate, consumption)

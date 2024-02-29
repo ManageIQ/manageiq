@@ -184,7 +184,7 @@ class DialogImportService
       field_position = f.position
       dialog_group_position = f.dialog_group.position
       dialog_tab_position = f.dialog_group.dialog_tab.position
-      index = field_position + dialog_group_position * 1000 + dialog_tab_position * 100_000
+      index = field_position + (dialog_group_position * 1000) + (dialog_tab_position * 100_000)
       {:name => f.name, :position => index}
     end
   end

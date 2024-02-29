@@ -125,7 +125,7 @@ RSpec.describe ChargebackRateDetail do
                             :fixed_rate                => fixed_rate,
                             :variable_rate             => variable_rate)
     cbd.update(:chargeback_tiers => [cbt])
-    expect(cbd.hourly_cost(cvalue, consumption)).to eq(cvalue * cbd.hourly(variable_rate, consumption) + cbd.hourly(fixed_rate, consumption))
+    expect(cbd.hourly_cost(cvalue, consumption)).to eq((cvalue * cbd.hourly(variable_rate, consumption)) + cbd.hourly(fixed_rate, consumption))
 
     cbd.chargeable_field = FactoryBot.build(:chargeable_field_fixed_compute_1)
     expect(cbd.hourly_cost(1, consumption)).to eq(cbd.hourly(variable_rate, consumption) + cbd.hourly(fixed_rate, consumption))

@@ -277,7 +277,7 @@ module PgInspector
       if $old_version
         return nil if id.nil?
 
-        id.to_s =~ RE_COMPRESSED_ID ? ($1.to_i * rails_sequence_factor + $2.to_i) : id.to_i
+        id.to_s =~ RE_COMPRESSED_ID ? (($1.to_i * rails_sequence_factor) + $2.to_i) : id.to_i
       else
         Class.new.include(ActiveRecord::IdRegions).uncompress_id(id)
       end

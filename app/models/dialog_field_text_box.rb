@@ -44,7 +44,7 @@ class DialogFieldTextBox < DialogField
   end
 
   def validate_field_data(dialog_tab, dialog_group)
-    return if !required? && @value.blank? || !visible
+    return if (!required? && @value.blank?) || !visible
 
     return "#{dialog_tab.label}/#{dialog_group.label}/#{label} is required" if required? && @value.blank?
     return "#{dialog_tab.label}/#{dialog_group.label}/#{label} must be an integer" if value_supposed_to_be_int?

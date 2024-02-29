@@ -182,7 +182,7 @@ module ManageIQ
                 output << fit_to_width("|#{t}|" + CRLF)
                 user_filters.each do |filters|
                   tag_val = "  " + calculate_filter_names(filters)
-                  tag_val1 = tag_val + " " * (@line_len - tag_val.length - 2)
+                  tag_val1 = tag_val + (" " * (@line_len - tag_val.length - 2))
                   output << fit_to_width("|#{tag_val1}|" + CRLF)
                 end
               end
@@ -193,11 +193,11 @@ module ManageIQ
               unless categories.blank?
                 customer_name = Tenant.root_tenant.name
                 customer_name_title = "Report based " + customer_name + " Tag filters:"
-                t = customer_name_title + " " * (@line_len - customer_name_title.length - 2)
+                t = customer_name_title + (" " * (@line_len - customer_name_title.length - 2))
                 output << fit_to_width("|#{t}|" + CRLF)
                 categories.each do |filters|
                   tag_val = "  " + calculate_filter_names(filters)
-                  tag_val1 = tag_val + " " * (@line_len - tag_val.length - 2)
+                  tag_val1 = tag_val + (" " * (@line_len - tag_val.length - 2))
                   output << fit_to_width("|#{tag_val1}|" + CRLF)
                 end
               end
@@ -219,7 +219,7 @@ module ManageIQ
                 field += " : " + Dictionary.gettext(mri.conditions[:field].split("-")[1], :type => :column, :notfound => :titleize)
 
                 filter_val = "  " + field + " " + mri.conditions[:operator] + " " + mri.conditions[:string].to_s
-                t = filter_val + " " * (@line_len - filter_val.length - 2)
+                t = filter_val + (" " * (@line_len - filter_val.length - 2))
                 output << fit_to_width("|#{t}|" + CRLF)
               else
                 filter_fields = "Report based filter fields:"
@@ -236,14 +236,14 @@ module ManageIQ
               t = filter_fields.ljust(@line_len - 2)
               output << fit_to_width("|#{t}|" + CRLF)
               filter_val = mri.display_filter.to_human
-              t = filter_val + " " * (@line_len - filter_val.length - 2)
+              t = filter_val + (" " * (@line_len - filter_val.length - 2))
               output << fit_to_width("|#{t}|" + CRLF)
             end
           end
 
           output << fit_to_width(@hr)
           # Label footer with last run on time of selected report or current time for other downloads
-          last_run_on = mri.rpt_options && mri.rpt_options[:last_run_on] || Time.zone.now
+          last_run_on = (mri.rpt_options && mri.rpt_options[:last_run_on]) || Time.zone.now
           cr = format_timezone(last_run_on, tz).to_s
           f = cr.center(@line_len - 2)
           output << fit_to_width("|#{f}|" + CRLF)
@@ -261,7 +261,7 @@ module ManageIQ
           else
             @line_len = @max_col_width.inject(columns.length * 3) { |s, e| s + e }
           end
-          "+" + "-" * (@line_len - 2) + "+" + CRLF
+          "+" + ("-" * (@line_len - 2)) + "+" + CRLF
         end
       end
     end

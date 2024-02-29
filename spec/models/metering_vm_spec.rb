@@ -58,7 +58,7 @@ RSpec.describe MeteringVm do
     let(:cores)               { 7 }
     let(:mem_mb)              { 1777 }
     let(:disk_gb)             { 7 }
-    let(:disk_b)              { disk_gb * 1024**3 }
+    let(:disk_b)              { disk_gb * (1024**3) }
     let(:metering_used_hours) { 24 }
 
     let(:hardware) do
@@ -161,7 +161,7 @@ RSpec.describe MeteringVm do
         expect(subject.beginning_of_resource_existence_in_report_interval).to eq(beginning_of_resource_existence)
         expect(subject.end_of_resource_existence_in_report_interval.to_s).to eq(vm.updated_on.to_s)
         expect(subject.end_of_resource_existence_in_report_interval.to_s).to eq("2012-09-25 19:00:00 UTC")
-        expect(subject.existence_hours_metric).to eq(19 * 24 + 19) # from 2012-09-06 00:00:00 UTC to 2012-09-25 19:00:00 UTC
+        expect(subject.existence_hours_metric).to eq((19 * 24) + 19) # from 2012-09-06 00:00:00 UTC to 2012-09-25 19:00:00 UTC
       end
     end
 

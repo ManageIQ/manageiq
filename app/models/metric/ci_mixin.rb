@@ -80,7 +80,7 @@ module Metric::CiMixin
     raise ":value required" if value.nil?
     raise ":duration required" if duration.nil?
     # TODO: Check for valid operators
-    unless percentage.nil? || percentage.kind_of?(Integer) && percentage >= 0 && percentage <= 100
+    unless percentage.nil? || (percentage.kind_of?(Integer) && percentage >= 0 && percentage <= 100)
       raise _(":percentage expected integer from 0-100, received: %{number}") % {:number => percentage}
     end
 

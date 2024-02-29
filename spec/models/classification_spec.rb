@@ -511,7 +511,7 @@ RSpec.describe Classification do
   describe '.find_by_name' do
     let(:my_region_number) { Classification.my_region_number }
     let(:other_region) { Classification.my_region_number + 1 }
-    let(:other_region_id) { other_region * Classification.rails_sequence_factor + 1 }
+    let(:other_region_id) { (other_region * Classification.rails_sequence_factor) + 1 }
 
     before do
       @local = FactoryBot.create(:classification, :name => "test_category1")
@@ -554,7 +554,7 @@ RSpec.describe Classification do
   describe '.find_by_names' do
     let(:my_region_number) { Classification.my_region_number }
     let(:other_region) { Classification.my_region_number + 1 }
-    let(:other_region_id) { other_region * Classification.rails_sequence_factor + 1 }
+    let(:other_region_id) { (other_region * Classification.rails_sequence_factor) + 1 }
 
     before do
       @local = FactoryBot.create(:classification, :name => "test_category1")

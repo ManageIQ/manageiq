@@ -69,7 +69,7 @@ unless opts[:no_generate]
 
   def insert_realtime(klass, id, timestamp)
     180.times do |rt_count|
-      $out_csv_realtime << ["realtime", klass, id, (timestamp + 20 * rt_count).iso8601]
+      $out_csv_realtime << ["realtime", klass, id, (timestamp + (20 * rt_count)).iso8601]
       $pbar.increment
     end
   end
@@ -84,7 +84,7 @@ unless opts[:no_generate]
   def with_vms_and_hosts
     NUM_HOSTS.times do |h_id|
       VMS_PER_HOST.times do |v_count|
-        v_id = h_id * VMS_PER_HOST + v_count
+        v_id = (h_id * VMS_PER_HOST) + v_count
         yield "Vm", v_id + 1
       end
       yield "Host", h_id + 1

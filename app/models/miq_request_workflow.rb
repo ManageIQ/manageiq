@@ -950,7 +950,7 @@ class MiqRequestWorkflow
     # Walk the xml document parents to find the requested class
     while node.kind_of?(XmlHash::Element)
       ci = node.attributes[:object]
-      if node.name == klass_name && (datacenter == false || datacenter == true && ci.datacenter?)
+      if node.name == klass_name && (datacenter == false || (datacenter == true && ci.datacenter?))
         result = ci
         break
       end

@@ -39,7 +39,7 @@ module MiqRequestWorkflow::DialogFieldValidation
 
     unless value.match(regex)
       error = _("%{name} must be correctly formatted") % {:name => required_description(dlg, fld)}
-      error << _(". %{details}") % {:details => fld[:required_regex_fail_details]} if fld[:required_regex_fail_details]
+      error << (_(". %{details}") % {:details => fld[:required_regex_fail_details]}) if fld[:required_regex_fail_details]
 
       error
     end

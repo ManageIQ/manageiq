@@ -1199,7 +1199,7 @@ RSpec.describe ChargebackVm do
           expect(subject.memory_allocated_metric).to eq(memory_available)
 
           memory_cost_rate1 = memory_available * hourly_rate * hours_in_month
-          memory_cost_rate2 = fixed_rate * hours_in_month + memory_available * hourly_rate_2 * hours_in_month
+          memory_cost_rate2 = (fixed_rate * hours_in_month) + (memory_available * hourly_rate_2 * hours_in_month)
 
           expect(subject.memory_allocated_cost).to eq(memory_cost_rate1 + memory_cost_rate2)
 
@@ -1207,7 +1207,7 @@ RSpec.describe ChargebackVm do
           expect(subject.memory_used_metric).to eq(used_metric)
 
           memory_cost_rate1 = used_metric * hourly_rate * hours_in_month
-          memory_cost_rate2 = fixed_rate * hours_in_month + used_metric * hourly_rate_2 * hours_in_month
+          memory_cost_rate2 = (fixed_rate * hours_in_month) + (used_metric * hourly_rate_2 * hours_in_month)
 
           expect(subject.memory_used_cost).to eq(memory_cost_rate1 + memory_cost_rate2)
           expect(subject.memory_cost).to eq(subject.memory_allocated_cost + subject.memory_used_cost)
@@ -1514,7 +1514,7 @@ RSpec.describe ChargebackVm do
     let(:cores)               { 7 }
     let(:mem_mb)              { 1777 }
     let(:disk_gb)             { 7 }
-    let(:disk_b)              { disk_gb * 1024**3 }
+    let(:disk_b)              { disk_gb * (1024**3) }
 
     let(:hardware) do
       FactoryBot.create(:hardware,

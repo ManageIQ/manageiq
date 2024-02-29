@@ -236,7 +236,7 @@ RSpec.describe TenantQuota do
       end
 
       it "displays available resources for 'Allocated Storage in GB' quota" do
-        expect(tenant_quota_storage.available).to eq(2.0 * 1.gigabytes - 1_000_000.0)
+        expect(tenant_quota_storage.available).to eq((2.0 * 1.gigabytes) - 1_000_000.0)
       end
 
       it "displays available resources for 'Allocated Number of Virtual Machines' quota" do
