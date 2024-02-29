@@ -12,6 +12,7 @@ t = Time.now
 puts "Processing file..."
 MiqLoggerProcessor.new(logfile).each do |line|
   next unless line =~ /MiqBrokerObjRegistry\.([^:]+): ([^ ]+) object_id: (\d+)/
+
   mode, type, object_id = $1, $2, $3
   counts[type][object_id] << mode
 end

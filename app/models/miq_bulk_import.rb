@@ -5,6 +5,7 @@ module MiqBulkImport
     _log.info("Uploading CSV file")
     data = fd.read
     raise _("File is empty") if data.empty?
+
     data.gsub!(/\r/, "\n")
     begin
       reader = CSV.parse(data)
@@ -39,9 +40,11 @@ module MiqBulkImport
     result = []
     reader.each do |row|
       next if row.first.nil?
+
       line = {}
       header.each_index do |i|
         next unless tags.include?(header[i])
+
         line[header[i]] = row[i].strip if row[i]
       end
       result.push(line)
@@ -75,6 +78,7 @@ module MiqBulkImport
   def self.get_sub_key_values(rec, sub_key)
     unless sub_key.include?(".")
       return [] unless rec.respond_to?(sub_key)
+
       return rec.send(sub_key).downcase
     end
 
@@ -93,6 +97,7 @@ module MiqBulkImport
 
     results = current.collect do |c|
       return [] unless c.respond_to?(attr)
+
       c.send(attr)
     end.compact
 

@@ -12,6 +12,7 @@ module EvmAutomate
   def self.simulate(domain, namespace, class_name, instance_name)
     user = User.super_admin
     raise "Need a admin user to run simulation" unless user
+
     MiqAeEngine.resolve_automation_object(instance_name,
                                           user,
                                           {},
@@ -35,6 +36,7 @@ module EvmAutomate
   def self.extract_methods(method_folder)
     MiqAeMethod.all.sort_by(&:fqname).each do |m|
       next unless m.location == 'inline'
+
       write_method_data(File.join(method_folder, m.ae_class.fqname), m['name'], m['data'])
     end
   end
@@ -46,6 +48,7 @@ namespace :evm do
     desc 'Backup all automate domains to a zip file or backup folder.'
     task :backup => :environment do
       raise 'Must specify a backup zip file' if ENV['BACKUP_ZIP_FILE'].blank?
+
       puts "Datastore backup starting"
       zip_file       = ENV['BACKUP_ZIP_FILE']
       begin
@@ -101,6 +104,7 @@ namespace :evm do
       begin
         domain         = ENV['DOMAIN']
         raise "Must specify domain for export:" if domain.nil?
+
         zip_file       = ENV['ZIP_FILE']
         export_dir     = ENV['EXPORT_DIR']
         yaml_file      = ENV['YAML_FILE']
@@ -130,8 +134,10 @@ namespace :evm do
         if ENV['YAML_FILE'].blank? && ENV['IMPORT_DIR'].blank? && ENV['ZIP_FILE'].blank? && ENV['GIT_URL'].blank?
           raise 'Must specify either a directory with exported automate model or a zip file or a http based git url'
         end
+
         preview        = ENV['PREVIEW'] ||= 'true'
         raise 'Preview must be true or false' unless %w{true false}.include?(preview)
+
         mode           = ENV['MODE'] ||= 'add'
         import_as      = ENV['IMPORT_AS']
         overwrite      = (ENV['OVERWRITE'] ||= 'false').casecmp('true').zero?
@@ -164,6 +170,7 @@ namespace :evm do
         %w(SYSTEM ENABLED).each do |name|
           if ENV[name].present?
             raise "#{name} must be true or false" unless %w(true false).include?(ENV[name])
+
             import_options[name.downcase] = ENV[name]
           end
         end
@@ -212,6 +219,7 @@ namespace :evm do
     task :restore => :environment do
       begin
         raise 'Must specify a backup zip file' if ENV['BACKUP_ZIP_FILE'].blank?
+
         puts "Importing automate domains from file #{ENV['BACKUP_ZIP_FILE']}"
         MiqAeDatastore.restore(ENV['BACKUP_ZIP_FILE'])
       rescue => err
@@ -225,6 +233,7 @@ namespace :evm do
       puts "Convert automation model from the legacy xml file"
       domain_name    = ENV["DOMAIN"]
       raise "Must specify the DOMAIN name to convert as" if domain_name.nil?
+
       export_options = {}
       zip_file    = ENV['ZIP_FILE']
       export_dir  = ENV['EXPORT_DIR']

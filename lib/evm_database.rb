@@ -96,6 +96,7 @@ class EvmDatabase
 
   def self.seed_rest
     return if skip_seeding?
+
     seed(OTHER_SEEDABLE_CLASSES + seedable_plugin_classes)
   end
 

@@ -75,6 +75,7 @@ class MiqProvisionOrchWorkflow < MiqProvisionVirtWorkflow
   def allowed_ci(ci, relats, filtered_ids = nil)
     return {} if get_value(@values[:placement_auto]) == true
     return {} if (sources = resources_for_ui).blank?
+
     get_ems_metadata_tree(sources)
     super(ci, relats, sources, filtered_ids)
   end

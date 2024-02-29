@@ -48,6 +48,7 @@ module TaskHelpers
         tag_categories.each do |tag_category|
           tag = tag_category["ns"] ? "#{tag_category["ns"]}/#{tag_category["name"]}" : "/managed/#{tag_category["name"]}"
           next if SPECIAL_TAGS.include?(tag)
+
           Classification.transaction do
             import_classification(tag_category)
           end
@@ -88,6 +89,7 @@ module TaskHelpers
           end
 
           next if tag_entry.valid?
+
           tag_entry.errors.full_messages.each do |message|
             errors << "Entry #{index}: #{message}"
           end

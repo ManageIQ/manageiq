@@ -77,6 +77,7 @@ class VmReconfigureRequest < MiqRequest
     end
 
     return false if errors.blank?
+
     errors
   end
 

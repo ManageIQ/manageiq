@@ -70,6 +70,7 @@ class RegistryItem < ApplicationRecord
 
   def image_name
     return "registry_string_items" if !format.blank? && format.include?("_SZ")
+
     "registry_binary_items"
   end
 end

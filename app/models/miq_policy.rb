@@ -138,6 +138,7 @@ class MiqPolicy < ApplicationRecord
     order = on == :success ? "success_sequence" : "failure_sequence"
     miq_policy_contents.where(:miq_event_definition => event).order(order).collect do |pe|
       next unless pe.qualifier == on.to_s
+
       pe.get_action(on)
     end.compact
   end
@@ -285,6 +286,7 @@ class MiqPolicy < ApplicationRecord
     # ]
     policies.collect do |p|
       next unless p.kind_of?(self) # skip built-in policies
+
       {
         :miq_policy      => p,
         :result          => status.to_s,

@@ -68,6 +68,7 @@ class CustomButton < ApplicationRecord
       applies_to_class = other
     else
       raise _("Instance has no id") if other.id.nil?
+
       applies_to_class = other.class.base_model.name
       applies_to_id    = other.id
     end
@@ -95,6 +96,7 @@ class CustomButton < ApplicationRecord
       self.applies_to_id    = nil
     else
       raise _("Instance has no id") if other.id.nil?
+
       self.applies_to_class = other.class.base_model.name
       self.applies_to_id    = other.id
     end
@@ -203,12 +205,14 @@ class CustomButton < ApplicationRecord
   def evaluate_enablement_expression_for(object)
     return true unless enablement_expression
     return false if enablement_expression && !object # list
+
     enablement_expression.lenient_evaluate(object)
   end
 
   def evaluate_visibility_expression_for(object)
     return true unless visibility_expression
     return false if visibility_expression && !object # object == nil, method is called for list of objects
+
     visibility_expression.lenient_evaluate(object)
   end
 
@@ -225,12 +229,14 @@ class CustomButton < ApplicationRecord
 
   def visible_for_current_user?
     return false unless visibility.key?(:roles)
+
     visibility[:roles].include?(User.current_user.miq_user_role_name) || visibility[:roles].include?("_ALL_")
   end
 
   def self.get_user(user)
     user = User.lookup_by_userid(user) if user.kind_of?(String)
     raise _("Unable to find user '%{user}'") % {:user => user} if user.nil?
+
     user
   end
 

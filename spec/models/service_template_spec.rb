@@ -1169,6 +1169,7 @@ end
 
 def print_svc(svc, indent = "")
   return if indent.length > 10
+
   svc.service_resources.each do |s|
     puts indent + s.resource.name
     print_svc(s.resource, indent + "  ")

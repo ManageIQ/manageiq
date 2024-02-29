@@ -63,6 +63,7 @@ begin
       vim_csm.getAllCustomizationSpecs
     rescue RuntimeError => err
       raise unless err.message.include?("not supported on this system")
+
       []
     ensure
       vim_csm.release if vim_csm rescue nil

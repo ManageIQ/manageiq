@@ -60,6 +60,7 @@ module ToModelHash
 
     columns.each_with_object({:class => self.class.name}) do |c, h|
       next unless self.respond_to?(c)
+
       value = send(c)
       h[c.to_sym] = value unless value.nil?
     end
@@ -86,6 +87,7 @@ module ToModelHash
     when Hash
       spec.each do |k, v|
         next unless self.respond_to?(k)
+
         if k == :tags
           recs = tags.collect { |t| Classification.tag_to_model_hash(t) }
         else

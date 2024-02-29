@@ -32,12 +32,14 @@ class ManageIQ::Providers::InfraManager::ProvisionWorkflow < ::MiqProvisionVirtW
   def allowed_ci(ci, relats, filtered_ids = nil)
     return {} if get_value(@values[:placement_auto]) == true
     return {} if (sources = resources_for_ui).blank?
+
     get_ems_metadata_tree(sources)
     super(ci, relats, sources, filtered_ids)
   end
 
   def get_source_and_targets(refresh = false)
     return @target_resource if @target_resource && refresh == false
+
     result = super
     return result if result.blank?
 

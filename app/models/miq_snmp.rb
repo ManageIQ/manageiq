@@ -72,6 +72,7 @@ class MiqSnmp
     # trap_oid: An ObjectId or String with the OID identifier for this trap.
     trap_oid = inputs[:trap_oid] || inputs['trap_oid']
     raise MiqException::Error, _("MiqSnmp.trap_v2: Ensure that a trap object id is provided") if trap_oid.nil?
+
     trap_oid = subst_oid(trap_oid)
 
     # A list of additional varbinds to send with the trap.

@@ -27,8 +27,10 @@ class Notification < ApplicationRecord
 
   def self.emit_for_event(event)
     return unless NotificationType.names.include?(event.event_type)
+
     type = NotificationType.find_by(:name => event.event_type)
     return unless type.enabled?
+
     Notification.create(:notification_type => type,
                         :options           => event.full_data,
                         :subject           => event.target)
@@ -49,6 +51,7 @@ class Notification < ApplicationRecord
 
   def self.notification_text(name, message_params)
     return unless message_params && NotificationType.names.include?(name)
+
     type = NotificationType.find_by(:name => name)
     type.message % message_params
   end
@@ -66,6 +69,7 @@ class Notification < ApplicationRecord
 
   def emit_message
     return unless ::Settings.server.asynchronous_notifications
+
     notification_recipients.pluck(:id, :user_id).each do |id, user|
       ActionCable.server.broadcast("notifications_#{user}", to_h.merge(:id => id.to_s))
     end
@@ -83,6 +87,7 @@ class Notification < ApplicationRecord
 
   def backup_subject_name
     return unless subject
+
     backup_name = (subject.try(:name) || subject.try(:description))
 
     # Note, options are read in text_bindings_dynamic and used in text_bindings

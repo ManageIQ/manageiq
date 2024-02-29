@@ -50,6 +50,7 @@ class MiqAeMethod < ApplicationRecord
   def self.validate_syntax(code_text)
     result = ManageIQ::AutomationEngine::SyntaxChecker.check(code_text)
     return nil if result.valid?
+
     [[result.error_line, result.error_text]] # Array of arrays for future multi-line support
   end
 
@@ -115,6 +116,7 @@ class MiqAeMethod < ApplicationRecord
   def field_value_hash(name)
     field = inputs.detect { |f| f.name.casecmp(name) == 0 }
     raise "Field #{name} not found in method #{self.name}" if field.nil?
+
     field.attributes
   end
 

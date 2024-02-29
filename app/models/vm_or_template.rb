@@ -284,6 +284,7 @@ class VmOrTemplate < ApplicationRecord
       define_method(m) do
         return nil if hardware.nil?
         return nil if hardware.hard_disks.length < i
+
         hardware.hard_disks[i - 1].send(k)
       end
 
@@ -341,6 +342,7 @@ class VmOrTemplate < ApplicationRecord
   def registered?
     # TODO: Vmware specific
     return false if template? && ems_id.nil?
+
     host_id.present?
   end
 
@@ -664,12 +666,14 @@ class VmOrTemplate < ApplicationRecord
     # NAS
     relative_path = if path.starts_with?("//")
                       raise _("path, '%{path}', is malformed") % {:path => path} unless path =~ %r{^//[^/].*/.+$}
+
                       # path is a UNC
                       storage_name = path.split("/")[0..3].join("/")
                       path.split("/")[4..path.length].join("/") if path.length > 4
                     #VMFS
                     elsif path.starts_with?("[")
                       raise _("path, '%{path}', is malformed") % {:path => path} unless path =~ /^\[[^\]].+\].*$/
+
                       # path is a VMWare storage name
                       /^\[(.*)\](.*)$/ =~ path
                       storage_name = $1
@@ -805,6 +809,7 @@ class VmOrTemplate < ApplicationRecord
 
   def under_blue_folder?(folder)
     return false unless folder.kind_of?(EmsFolder)
+
     parent_blue_folders.any? { |f| f == folder }
   end
 
@@ -969,6 +974,7 @@ class VmOrTemplate < ApplicationRecord
 
   def log_proxies_format_instance(object)
     return 'Nil' if object.nil?
+
     "#{object.class.name}:#{object.id}-#{object.name}:#{object.try(:state)}"
   end
 
@@ -1058,6 +1064,7 @@ class VmOrTemplate < ApplicationRecord
   # TODO: Vmware specfic
   def template=(val)
     return val unless val ^ template # Only continue if toggling setting
+
     write_attribute(:template, val)
 
     self.type = corresponding_model.name if (self.template? && self.kind_of?(Vm)) || (!self.template? && self.kind_of?(MiqTemplate))
@@ -1163,6 +1170,7 @@ class VmOrTemplate < ApplicationRecord
     # /rhev/data-center/<datacenter_id>/mastersd/master/vms/<vm_guid>/<vm_guid>.ovf/
     datacenter = parent_datacenter
     return location if datacenter.blank?
+
     File.join('/rhev/data-center', datacenter.uid_ems, 'mastersd/master/vms', uid_ems, location)
   end
 
@@ -1233,6 +1241,7 @@ class VmOrTemplate < ApplicationRecord
       return s if send("#{s}?")
     end
     return power_state.downcase unless power_state.nil?
+
     "unknown"
   end
   virtual_attribute :normalized_state, :string, :arel => (lambda do |t|
@@ -1354,6 +1363,7 @@ class VmOrTemplate < ApplicationRecord
     raise _("option :event_types is required")    unless options[:event_types]
     raise _("option :time_threshold is required") unless options[:time_threshold]
     raise _("option :freq_threshold is required") unless options[:freq_threshold]
+
     EmsEvent
       .where(:event_type => options[:event_types])
       .where("vm_or_template_id = :id OR dest_vm_or_template_id = :id", :id => id)
@@ -1454,11 +1464,13 @@ class VmOrTemplate < ApplicationRecord
     return "Unknown" if dlist.empty?
     return "True"    if dlist.all? { |d| d.partitions_aligned == "True" }
     return "False"   if dlist.any? { |d| d.partitions_aligned == "False" }
+
     "Unknown"
   end
 
   def memory_exceeds_current_host_headroom
     return false if host.nil?
+
     (ram_size > host.current_memory_headroom)
   end
 
@@ -1501,6 +1513,7 @@ class VmOrTemplate < ApplicationRecord
 
   def has_active_ems?
     return true unless ext_management_system.nil?
+
     false
   end
 
@@ -1641,6 +1654,7 @@ class VmOrTemplate < ApplicationRecord
   def self.reconfigurable?(ids)
     vms = VmOrTemplate.where(:id => ids)
     return false if vms.blank?
+
     vms.all?(&:reconfigurable?)
   end
 

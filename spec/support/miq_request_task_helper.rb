@@ -10,12 +10,14 @@ module Spec
 
       def check_post_install_callback
         return if @skip_post_install_check
+
         allow(task).to receive(:for_destination)
         task.post_install_callback
       end
 
       def dequeue_method
         return unless (method = @queue.shift)
+
         if method.to_s.start_with?("test_")
           send(method)
         else

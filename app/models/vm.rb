@@ -88,6 +88,7 @@ class Vm < VmOrTemplate
       cred = my_zone_obj.auth_user_pwd(:windows_domain)
       ipaddresses.each do |ipaddr|
         break unless pl.blank?
+
         _log.info("Running processes for VM:[#{id}:#{name}]  IP:[#{ipaddr}] Logon:[#{cred[0]}]")
         begin
           wmi = WMIHelper.connectServer(ipaddr, *cred)

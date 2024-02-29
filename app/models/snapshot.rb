@@ -165,6 +165,7 @@ class Snapshot < ApplicationRecord
   # we don't skip linking up data because of a format change.  (IE 2009-09-25T20:11:14.000000Z to 2009-09-25T20:11:14.299742Z)
   def self.normalize_ss_uid(uid)
     return uid[0, 20] if !uid.nil? && uid.length == 27 && uid[-1, 1] == 'Z'
+
     uid
   end
   private_class_method :normalize_ss_uid

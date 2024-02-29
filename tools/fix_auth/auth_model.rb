@@ -70,6 +70,7 @@ module FixAuth
 
       def highlight_password(value, options)
         return if value.blank?
+
         if options[:hardcode] && (value == ManageIQ::Password.encrypt(options[:hardcode]))
           "#{value} HARDCODED"
         elsif options[:invalid] && (value == ManageIQ::Password.encrypt(options[:invalid]))
@@ -98,6 +99,7 @@ module FixAuth
 
       def run(options = {})
         return if available_columns.empty?
+
         puts "fixing #{table_name}.#{available_columns.join(", ")}" unless options[:silent]
         processed = 0
         errors = 0

@@ -82,6 +82,7 @@ class MiqAction < ApplicationRecord
       [:from, :to].each do |k|
         if self.options && self.options[k]
           next if k == :from && self.options[k].blank? # allow blank from addres, we use the default.
+
           match = self.options[k] =~ /^\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z$/i
           errors.add(k, "must be a valid email address") unless match
         end
@@ -129,6 +130,7 @@ class MiqAction < ApplicationRecord
 
       failed.each do |p|
         next unless p.kind_of?(MiqPolicy) # built-in policies are OpenStructs whose actions will be invoked only on success
+
         actions = p.actions_for_event(inputs[:event], :failure).uniq
 
         actions.each do |a|
@@ -439,6 +441,7 @@ class MiqAction < ApplicationRecord
   def self.inheritable_cats
     Classification.in_my_region.categories.inject([]) do |arr, c|
       next(arr) if c.name.starts_with?("folder_path_") || c.entries.empty?
+
       arr << c
     end
   end

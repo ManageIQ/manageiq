@@ -54,6 +54,7 @@ class MiqExpression::RelativeDatetime
 
   def self.coerce(value, is_date)
     return value if is_date.nil?
+
     is_date ? value.to_date : value.utc
   end
 end

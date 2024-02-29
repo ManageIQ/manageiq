@@ -226,6 +226,7 @@ module Metric::Rollup
       end
 
       next unless obj.kind_of?(VmOrTemplate)
+
       new_perf[:min_max] ||= {}
       BURST_COLS.each do |col|
         value = rt.send(col)
@@ -276,6 +277,7 @@ module Metric::Rollup
     recs.each do |rec|
       perf = perf_recs.fetch_path(rec.class.base_class.name, rec.id, interval_name, ts)
       next unless perf
+
       state = rec.vim_performance_state_for_ts(timestamp)
       agg_cols.each do |c|
         result[c] ||= 0
@@ -329,13 +331,16 @@ module Metric::Rollup
 
   def self.rollup_assoc(c, result, value)
     return if value.nil?
+
     ASSOC_KEYS.each do |assoc|
       next if value[assoc].nil?
+
       result[c] ||= {}
       result[c][assoc] ||= {}
 
       [:on, :off].each do |mode|
         next if value[assoc][mode].nil?
+
         result[c][assoc][mode] ||= []
         result[c][assoc][mode].concat(value[assoc][mode]).uniq!
       end
@@ -344,6 +349,7 @@ module Metric::Rollup
 
   def self.rollup_tags(c, result, value)
     return if value.blank?
+
     result[c] ||= ""
     result[c] = result[c].split(TAG_SEP).concat(value.split(TAG_SEP)).uniq.join(TAG_SEP)
   end

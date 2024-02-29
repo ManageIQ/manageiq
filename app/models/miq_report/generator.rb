@@ -119,8 +119,10 @@ module MiqReport::Generator
   # will go away when we drop build_reportable_data
   def invent_report_includes
     return {} unless col_order
+
     col_order.each_with_object({}) do |col, ret|
       next unless col.include?(".")
+
       *rels, column = col.split(".")
       if col !~ /managed\./ && col !~ /virtual_custom/
         (rels.inject(ret) { |h, rel| h[rel] ||= {} }["columns"] ||= []) << column
@@ -213,6 +215,7 @@ module MiqReport::Generator
 
   def _generate_table(options = {})
     return build_table_from_report(options) if db == self.class.name # Build table based on data from passed in report object
+
     _generate_table_prep
 
     results = if custom_results_method
@@ -509,6 +512,7 @@ module MiqReport::Generator
       unless data.key?(col_def[:col_name])
         raise _("Column '%{name} does not exist in data") % {:name => col_def[:col_name]}
       end
+
       return col_def.key?(:function) ? apply_col_function(col_def, data) : data[col_def[:col_name]]
     else
       return col_def
@@ -524,6 +528,7 @@ module MiqReport::Generator
       unless data.key?(col_def[:pct_col_name])
         raise _("Column '%{name} does not exist in data") % {:name => gen_row[:pct_col_name]}
       end
+
       col_val = data[col_def[:col_name]] || 0
       pct_val = data[col_def[:pct_col_name]] || 0
       return pct_val == 0 ? 0 : (col_val / pct_val * 100.0)
@@ -595,6 +600,7 @@ module MiqReport::Generator
 
   def build_apply_time_profile(results)
     return unless time_profile
+
     # Apply time profile if one was provided
     results.each { |rec| rec.apply_time_profile(time_profile) if rec.respond_to?(:apply_time_profile) }
   end
@@ -660,6 +666,7 @@ module MiqReport::Generator
     data = generate_subtotals(data, group_key, options)
     data.inject([]) do |a, (k, v)|
       next(a) if k == :_total_
+
       row = col_order.inject({}) do |h, col|
         if col.include?("__")
           c, g = col.split("__")
@@ -682,6 +689,7 @@ module MiqReport::Generator
 
   def build_cols_from_include(hash, parent_association = nil)
     return [] if hash.blank?
+
     hash.inject([]) do |a, (k, v)|
       full_path = get_full_path(parent_association, k)
       v["columns"].each { |c| a << get_full_path(full_path, c) } if v.key?("columns")
@@ -731,6 +739,7 @@ module MiqReport::Generator
         {:only => options[:only], :except => options[:except]}
       end
     return {} unless only_or_except
+
     attrs = {}
     options[:only].each do |a|
       if self.class.is_trend_column?(a)
@@ -773,6 +782,7 @@ module MiqReport::Generator
           entry[:obj].tags.each do |t|
             next unless t.name.starts_with?("/managed/#{c}/")
             next unless @descriptions_by_tag_id.key?(t.id)
+
             entarr << @descriptions_by_tag_id[t.id]
           end
           assochash[full_path + "." + c] = entarr unless entarr.empty?
@@ -856,6 +866,7 @@ module MiqReport::Generator
       unless res_opts[:at].kind_of?(Numeric)
         raise _("Expected scheduled time 'at' to be 'numeric', received '%{type}'") % {:type => res_opts[:at].class}
       end
+
       at = Time.at(res_opts[:at]).utc
     else
       at = res_last_run_on
@@ -896,6 +907,7 @@ module MiqReport::Generator
 
   def append_user_filters_to_title(user)
     return unless user && user.has_filters?
+
     self.append_to_title!(" (filtered for #{user.name})")
   end
 

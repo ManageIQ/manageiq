@@ -131,6 +131,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       if vm.ext_management_system.nil?
         raise _("Source VM [%{name}] does not belong to a Provider") % {:name => vm.name}
       end
+
       set_or_default_hardware_field_values(vm)
 
       # Record the nic/lan setting on the template for validation checks at provision time.
@@ -183,6 +184,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     exclude_list = [:sysprep_spec_override, :sysprep_custom_spec, :sysprep_enabled, :sysprep_upload_file, :sysprep_upload_text]
     fields(:customize) { |fn, f, _dn, _d| f[:read_only] = read_only unless exclude_list.include?(fn) }
     return unless options[:read_only_fields]
+
     fields(:hardware) { |fn, f, _dn, _d| f[:read_only] = true if options[:read_only_fields].include?(fn) }
   end
 
@@ -379,6 +381,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   def allowed_snapshots(_options = {})
     result = {}
     return result if (vm = get_source_vm).blank?
+
     vm.snapshots.each { |ss| result[ss.id.to_s] = ss.current? ? "#{ss.name} (Active)" : ss.name }
     result["__CURRENT__"] = _(" Use the snapshot that is active at time of provisioning") unless result.blank?
     result
@@ -386,11 +389,13 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def allowed_tags(options = {})
     return {} if (source = load_ar_obj(get_source_vm)).blank?
+
     super(options.merge(:region_number => source.region_number))
   end
 
   def allowed_pxe_servers(_options = {})
     return {} if (source = load_ar_obj(get_source_vm)).blank?
+
     PxeServer.in_region(source.region_number).each_with_object({}) { |p, h| h[p.id] = p.name }
   end
 
@@ -471,6 +476,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def load_test_ous_data
     return @ldap_ous unless @ldap_ous.nil?
+
     ous = YAML.load_file("ous.yaml")
     @ldap_ous = {}
     ous.each { |ou| @ldap_ous[ou[0].dup] = ou[1].dup }
@@ -521,6 +527,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     paths.each do |path|
       parts = path.split('=')
       next if parts.first == 'DC'
+
       path_name = path_name.blank? ? parts.last : File.join(path_name, parts.last)
       ou[1].replace(path_name)
     end
@@ -552,6 +559,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
           # Filter by host platform or is proxy is active
           next unless options[:platform].nil? || options[:platform].include?(host.platform)
           next unless options[:active_proxy].nil? || host.is_proxy_active? == options[:active_proxy]
+
           domains[domain] = domain
         end
       else
@@ -564,6 +572,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   def update_custom_spec
     vm = get_source_vm
     return if vm.nil?
+
     if @customize_option.nil?
       @current_spec = get_value(@values[:sysprep_custom_spec])
       @customize_option = get_value(@values[:sysprep_enabled])
@@ -685,6 +694,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def collect_customization_spec_settings(spec, spec_hash, spec_path, fields)
     return unless (section = spec.fetch_path(spec_path))
+
     fields.each_slice(2) { |dlg_field, prop| spec_hash[dlg_field] = section[prop] }
   end
 
@@ -746,6 +756,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     src_name_down = src_name.downcase
     src = p.allowed_templates.detect { |v| v.name.downcase == src_name_down }
     raise _("Source template [%{name}] was not found") % {:name => src_name} if src.nil?
+
     p = class_for_source(src.id).new(values, user, :use_pre_dialog => false)
 
     # Populate required fields
@@ -798,11 +809,13 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       if srcs.length > 1
         raise _("Multiple source template were found from input data:<%{data}>") % {:data => data.inspect}
       end
+
       src = srcs.first
     end
     if src.nil?
       raise _("No source template was found from input data:<%{data}>") % {:data => data.inspect}
     end
+
     _log.info("VM Found: <#{src.name}> <#{src.guid}> <#{src.uid_ems}>  Datacenter:<#{src.datacenter_name}>")
     src
   end
@@ -864,6 +877,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     ws_hardware_disk_fields(values, data)
     ws_hardware_network_fields(values, data)
     return if (dlg_fields = get_ws_dialog_fields(dialog_name = :hardware)).nil?
+
     data.keys.each { |key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_fields.key?(key) }
   end
 
@@ -904,6 +918,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     data.keys.each do |k|
       key_name = k.to_s.split('.').first
       next unless key_name =~ regex_filter
+
       item_id = Regexp.last_match(1).to_i
       v = data.delete(k)
       _log.info("processing key <hardware:#{k}(#{v.class})> with value <#{v.inspect}>")
@@ -926,6 +941,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def ws_network_fields(values, _fields, data)
     return if (dlg_fields = get_ws_dialog_fields(dialog_name = :network)).nil?
+
     data.keys.each { |key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_fields.key?(key) }
   end
 
@@ -953,6 +969,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     p = new(values = {}, user, init_options)
     src = p.ws_template_fields(values, template_fields, options.values)
     raise _("Source template [%{name}] was not found") % {:name => src_name} if src.nil?
+
     # Allow new workflow class to determine dialog name instead of using the stored value from the first call.
     values.delete(:miq_request_dialog_name)
     values[:placement_auto] = [true, 1]
@@ -1113,6 +1130,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def selected_host(src)
     raise _("Unable to find Host with Id: [%{id}]") % {:id => src[:host_id]} if src[:host].nil?
+
     [load_ar_obj(src[:host])]
   end
 

@@ -19,6 +19,7 @@ class BinaryBlob < ApplicationRecord
     unless md5.nil? || md5 == Digest::MD5.hexdigest(data)
       raise _("md5 of %{name} id [%{number}] is incorrect") % {:name => self.class.name, :number => id}
     end
+
     data
   end
 
@@ -66,6 +67,7 @@ class BinaryBlob < ApplicationRecord
     unless md5.nil? || md5 == hasher.hexdigest
       raise _("md5 of %{name} id [%{number}] is incorrect") % {:name => self.class.name, :number => id}
     end
+
     true
   end
 

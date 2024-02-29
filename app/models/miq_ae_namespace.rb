@@ -59,6 +59,7 @@ class MiqAeNamespace < ApplicationRecord
 
       found = lookup_by_fqname(parts.join('/'), include_classes)
       break unless found.nil?
+
       new_parts.unshift(parts.pop)
     end
 
@@ -100,11 +101,13 @@ class MiqAeNamespace < ApplicationRecord
     raise ArgumentError, "User not provided to editable?" unless user
     return false if domain? && user.current_tenant.id != tenant_id
     return source == MiqAeDomain::USER_SOURCE if domain?
+
     ancestors.all? { |a| a.editable?(user) }
   end
 
   def ns_fqname
     return nil if fqname == domain_name
+
     fqname.sub(domain_name.to_s, '')
   end
 

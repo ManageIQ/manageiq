@@ -44,6 +44,7 @@ class AssignedServerRole < ApplicationRecord
         other_servers.each do |server|
           assigned = server.assigned_server_roles.find_by(:server_role_id => server_role_id)
           next if assigned.nil?
+
           assigned.update_attribute(:priority, DEFAULT_PRIORITY)  if assigned.priority == HIGH_PRIORITY
         end
       end

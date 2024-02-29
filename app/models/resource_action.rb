@@ -20,6 +20,7 @@ class ResourceAction < ApplicationRecord
 
   def readonly?
     return true if super
+
     resource.readonly? if resource.kind_of?(ServiceTemplate)
   end
 

@@ -8,6 +8,7 @@ class StorageFile < ApplicationRecord
 
   def self.is_snapshot_disk_file(file)
     return false unless file.ext_name == "vmdk"
+
     basename = File.basename(file.name, ".vmdk")
     i = basename.rindex('-')
     test_str = i.nil? ? basename : basename[i + 1..-1]
@@ -51,6 +52,7 @@ class StorageFile < ApplicationRecord
       path = f.is_directory? ? f.name : File.dirname(f.name)
       vm_id = vm_ids_by_path[path]
       next if vm_id.nil?
+
       if update
         f.update_attribute(:vm_or_template_id, vm_id)
       else

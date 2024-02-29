@@ -131,12 +131,14 @@ class MiqLdap
       _log.error("'#{err.message}'")
     end
     return nil unless result
+
     # puts "result: #{result.inspect}"
     result.first
   end
 
   def self.get_attr(obj, attr)
     return nil unless obj.attribute_names.include?(attr)
+
     val = obj.send(attr)
     val = val.length == 1 ? val.first : val
 
@@ -183,6 +185,7 @@ class MiqLdap
   def ldap_result_ok?(follow_referrals = @follow_referrals)
     return true if @ldap.get_operation_result.code == 0
     return true if @ldap.get_operation_result.code == 10 && follow_referrals
+
     false
   end
 
@@ -264,6 +267,7 @@ class MiqLdap
 
   def normalize(dn)
     return if dn.nil?
+
     dn.split(",").collect { |i| i.downcase.strip }.join(",")
   end
 
@@ -304,6 +308,7 @@ class MiqLdap
     case user_type
     when "samaccountname"
       return "#{@domain_prefix}\\#{username}" unless @domain_prefix.blank?
+
       return username
     when "upn", "userprincipalname"
       return username if @user_suffix.blank?
@@ -441,6 +446,7 @@ class MiqLdap
     filter ||= "(ObjectCategory=organizationalUnit)"
     result = search(:base => basedn, :scope => :sub, :filter => filter)
     return nil unless result
+
     result.collect { |o| [get_attr(o, :dn), get_attr(o, :name)] }
   end
 

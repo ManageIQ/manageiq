@@ -113,13 +113,16 @@ class Filesystem < ApplicationRecord
     return false if name.nil?
     # We will display max 20k characters in the UI textarea
     return false if size > 20_000
+
     mime_type = MIME::Types.of(name).first
     return has_contents? && contents.force_encoding("UTF-8").ascii_only? if mime_type.nil?
+
     !mime_type.binary?
   end
 
   def displayable_contents
     return nil unless has_contents?
+
     bom = contents.byteslice(0, 2).bytes
     if contents_displayable? && (bom == UTF_16BE_BOM || bom == UTF_16LE_BOM)
       contents.force_encoding('UTF-16').encode('UTF-8')

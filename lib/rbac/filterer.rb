@@ -227,6 +227,7 @@ module Rbac
       if options.key?(:targets) && options[:targets].kind_of?(Array) && options[:targets].empty?
         return [], {:auth_count => 0}
       end
+
       targets           = options[:targets]
       scope             = options[:named_scope]
 
@@ -430,6 +431,7 @@ module Rbac
     # @param includes [Array, Hash]
     def add_joins(klass, scope, includes)
       return scope unless includes
+
       includes = Array(includes) unless includes.kind_of?(Enumerable)
       includes.each do |association, value|
         reflection = klass.reflect_on_association(association)
@@ -495,6 +497,7 @@ module Rbac
         #      VmPerformance   => VmOrTemplate
         return klass.name[0..-12].constantize.base_class
       end
+
       nil
     end
 
@@ -587,6 +590,7 @@ module Rbac
 
     def get_belongsto_filter_object_ids(klass, filter)
       return nil if !BELONGSTO_FILTER_CLASSES.include?(safe_base_class(klass).name) || filter.blank?
+
       get_belongsto_matches(filter, rbac_class(klass)).collect(&:id)
     end
 
@@ -594,6 +598,7 @@ module Rbac
       klass = scope.respond_to?(:klass) ? scope.klass : scope
       return nil if !TAGGABLE_FILTER_CLASSES.include?(safe_base_class(klass).name) || filter.blank?
       return scope.where(filter.to_sql.first) if filter.kind_of?(MiqExpression)
+
       scope.find_tags_by_grouping(filter, :ns => '*').reorder(nil)
     end
 
@@ -839,11 +844,13 @@ module Rbac
     def get_belongsto_matches(blist, klass)
       return get_belongsto_matches_for_host(blist) if klass <= Host
       return get_belongsto_matches_for_storage(blist) if klass == Storage
+
       association_name = klass.base_model.to_s.tableize
 
       blist.flat_map do |bfilter|
         vcmeta_list = MiqFilter.belongsto2object_list(bfilter)
         next [] if vcmeta_list.empty?
+
         # typically, this is the only one we want:
         vcmeta = vcmeta_list.last
 

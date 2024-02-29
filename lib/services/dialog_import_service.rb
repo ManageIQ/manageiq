@@ -115,6 +115,7 @@ class DialogImportService
       association.each_value do |value|
         value.each do |responder|
           next if fields.select { |field| field.name == responder }.empty?
+
           DialogFieldAssociation.create!(:trigger_id => fields.find { |field| field.name.include?(association.keys.first) }.id,
                                          :respond_id => fields.find { |field| field.name == responder }.id)
         end
@@ -144,6 +145,7 @@ class DialogImportService
 
   def import_from_dialogs(dialogs)
     raise ParsedNonDialogYamlError if dialogs.empty?
+
     dialogs.each do |dialog|
       dialog.except!(:blueprint_id, 'blueprint_id') # blueprint_id might appear in some old dialogs, but no longer exists
       new_or_existing_dialog = Dialog.where(:label => dialog["label"]).first_or_create

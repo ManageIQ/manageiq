@@ -196,6 +196,7 @@ module Authenticator
 
     def user_attrs_from_external_directory_via_dbus(username)
       return unless username
+
       require "dbus"
 
       sysbus = DBus.system_bus

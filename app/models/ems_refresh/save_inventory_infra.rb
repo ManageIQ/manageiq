@@ -95,6 +95,7 @@ module EmsRefresh::SaveInventoryInfra
           _log.warn("#{log_header} Processing Host: [#{name}] failed with error [#{err.class}: #{err}]. Skipping Host.")
         else
           raise if EmsRefresh.debug_failures
+
           _log.error("#{log_header} Processing Host: [#{name}] failed with error [#{err.class}: #{err}]. Skipping Host.")
           _log.log_backtrace(err)
         end

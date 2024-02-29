@@ -51,12 +51,14 @@ class GenericObjectDefinition < ApplicationRecord
   FEATURES.each do |feature|
     define_method("property_#{feature}s") do
       return errors[:properties] if properties_changed? && !valid?
+
       properties["#{feature}s".to_sym]
     end
 
     define_method("property_#{feature}_defined?") do |attr|
       attr = attr.to_s
       return property_methods.include?(attr) if feature == 'method'
+
       send("property_#{feature}s").key?(attr)
     end
   end
@@ -221,6 +223,7 @@ class GenericObjectDefinition < ApplicationRecord
 
   def check_not_in_use
     return true if generic_objects.empty?
+
     errors.add(:base, "Cannot delete the definition while it is referenced by some generic objects")
     throw :abort
   end

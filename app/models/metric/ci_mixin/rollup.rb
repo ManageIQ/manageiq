@@ -42,6 +42,7 @@ module Metric::CiMixin::Rollup
     if interval_name == 'daily' && time_profile.nil?
       raise ArgumentError, _("time_profile must be passed if interval name is 'daily'")
     end
+
     time_profile = TimeProfile.extract_objects(time_profile)
 
     deliver_on = case interval_name
@@ -73,6 +74,7 @@ module Metric::CiMixin::Rollup
     if interval_name == 'daily' && time_profile.nil?
       raise ArgumentError, _("time_profile must be passed if interval name is 'daily'")
     end
+
     time_profile = TimeProfile.extract_objects(time_profile)
     _klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
 
@@ -119,8 +121,10 @@ module Metric::CiMixin::Rollup
               Metric::Helper.hours_from_range(start_time, end_time)
             when 'daily'
               raise ArgumentError, _("time_profile must be passed if interval name is 'daily'") if time_profile.nil?
+
               time_profile = TimeProfile.extract_objects(time_profile)
               return if time_profile.nil? || !time_profile.rollup_daily_metrics
+
               Metric::Helper.days_from_range(start_time, end_time, time_profile.tz_or_default)
             end
 

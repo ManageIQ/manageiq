@@ -13,6 +13,7 @@ class LocaleResolver
   def resolve
     return user_locale if set?(user_locale)
     return server_locale if set?(server_locale)
+
     headers["Accept-Language"]
   end
 

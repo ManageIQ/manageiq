@@ -20,12 +20,14 @@ class MiqWorker::Runner
 
   def poll_method
     return @poll_method unless @poll_method.nil?
+
     self.poll_method = worker_settings[:poll_method]&.to_sym
   end
 
   def poll_method=(val)
     val = "sleep_poll_#{val}"
     raise ArgumentError, _("poll method '%{value}' not defined") % {:value => val} unless respond_to?(val)
+
     @poll_method = val.to_sym
   end
 
@@ -76,6 +78,7 @@ class MiqWorker::Runner
   def worker_monitor_drb
     @worker_monitor_drb ||= begin
       raise _("%{log} No MiqServer found to establishing DRb Connection to") % {:log => log_prefix} if server.nil?
+
       drb_uri = server.reload.drb_uri
       if drb_uri.blank?
         raise _("%{log} Blank DRb_URI for MiqServer with ID=[%{number}], NAME=[%{name}], PID=[%{pid_number}], GUID=[%{guid_number}]") %
@@ -228,6 +231,7 @@ class MiqWorker::Runner
 
   def do_exit(message = nil, exit_code = 0)
     return if @exiting # Prevent running the do_exit logic more than one time
+
     @exiting = true
 
     begin

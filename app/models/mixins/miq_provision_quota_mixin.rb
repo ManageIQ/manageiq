@@ -9,6 +9,7 @@ module MiqProvisionQuotaMixin
     unless respond_to?(quota_method)
       raise _("check_quota called with an invalid provisioning quota method <%{type}>") % {:type => quota_type}
     end
+
     send(quota_method, options)
   end
 
@@ -195,6 +196,7 @@ module MiqProvisionQuotaMixin
       today_range = (scheduled_range.first..scheduled_range.last)
       MiqProvisionRequest.where.not(:request_state => 'pending').where(:updated_on => today_range).each do |prov_req|
         next if prov_req.id == skip_id
+
         provisions << prov_req if today_range.include?(prov_req.options[:delivered_on])
       end
     end
@@ -291,6 +293,7 @@ module MiqProvisionQuotaMixin
   def vm_quota_values(pr, result)
     num_vms_for_request = number_of_vms(pr)
     return if num_vms_for_request.zero?
+
     flavor_obj = flavor(pr)
     result[:count] += num_vms_for_request
     result[:memory] += memory(pr, cloud?(pr), vendor(pr), flavor_obj) * num_vms_for_request
@@ -300,6 +303,7 @@ module MiqProvisionQuotaMixin
 
     pr.miq_request_tasks.each do |p|
       next unless p.state == 'Active'
+
       host_id, storage_id = p.get_option(:dest_host).to_i, p.get_option(:dest_storage).to_i
       active = result[:active]
       active[:memory_by_host_id][host_id] += memory(p, cloud?(pr), vendor(pr), flavor_obj)
@@ -312,11 +316,13 @@ module MiqProvisionQuotaMixin
 
   def service_quota_values(request, result)
     return unless request.service_template
+
     request.service_template.service_resources.each do |sr|
       if request.service_template.service_type == ServiceTemplate::SERVICE_TYPE_COMPOSITE
         bundle_quota_values(sr, result)
       else
         next if request.service_template.prov_type.starts_with?("generic")
+
         vm_quota_values(sr.resource, result)
       end
     end
@@ -324,6 +330,7 @@ module MiqProvisionQuotaMixin
 
   def bundle_quota_values(service_resource, result)
     return if service_resource.resource.prov_type.starts_with?('generic')
+
     service_resource.resource.service_resources.each do |sr|
       vm_quota_values(sr.resource, result)
     end
@@ -379,6 +386,7 @@ module MiqProvisionQuotaMixin
         return prov.get_option(:boot_disk_size).to_i.gigabytes
       end
       return nil unless flavor_obj
+
       flavor_obj.root_disk_size.to_i + flavor_obj.ephemeral_disk_size.to_i + flavor_obj.swap_disk_size.to_i
     else
       prov.kind_of?(MiqRequest) ? prov.vm_template.provisioned_storage : prov.miq_request.vm_template.provisioned_storage

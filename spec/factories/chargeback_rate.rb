@@ -14,6 +14,7 @@ FactoryBot.define do
       evaluator.detail_params.each do |factory_name, chargeback_rate_params|
         next unless chargeback_rate_params
         next unless chargeback_rate_params[:tiers].kind_of?(Array)
+
         params_hash = { :tiers_params => chargeback_rate_params[:tiers], :per_time => evaluator.per_time }
         params_hash.merge!(chargeback_rate_params[:detail]) if chargeback_rate_params[:detail]
         params = [factory_name, :tiers, params_hash]

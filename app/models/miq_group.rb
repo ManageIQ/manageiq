@@ -162,6 +162,7 @@ class MiqGroup < ApplicationRecord
     unless ldap.bind(ldap.fqusername(bind_dn), bind_pwd)
       raise _("Bind failed for user %{user_name}") % {:user_name => bind_dn}
     end
+
     user_obj = ldap.get_user_object(ldap.normalize(ldap.fqusername(username)))
     raise _("Unable to find user %{user_name} in directory") % {:user_name => username} if user_obj.nil?
 
@@ -298,11 +299,13 @@ class MiqGroup < ApplicationRecord
   def single_group_users?
     group_user_ids = user_ids
     return false if group_user_ids.empty?
+
     users.includes(:miq_groups).where(:id => group_user_ids).where.not(:miq_groups => {:id => id}).count != group_user_ids.size
   end
 
   def sui_product_features
     return [] unless miq_user_role.allows?(:identifier => 'sui')
+
     MiqProductFeature.feature_all_children('sui').each_with_object([]) do |sui_feature, sui_features|
       sui_features << sui_feature if miq_user_role.allows?(:identifier => sui_feature)
     end

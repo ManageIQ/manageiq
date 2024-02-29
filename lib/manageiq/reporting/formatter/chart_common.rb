@@ -28,6 +28,7 @@ module ManageIQ
 
         def build_document_body
           return no_records_found_chart if mri.table.nil? || mri.table.data.blank?
+
           maxcols = 8
           fun = case graph_options[:chart_type]
                 when :performance then :build_performance_chart # performance chart (time based)
@@ -50,6 +51,7 @@ module ManageIQ
           mri.graph[:columns].each_with_index do |col, col_idx|
 
             next if col_idx >= maxcols
+
             allnil = true
             tip = graph_options[:trendtip] if col.starts_with?("trend") && graph_options[:trendtip]
             categories = []                      # Store categories and series counts in an array of arrays
@@ -77,6 +79,7 @@ module ManageIQ
 
         def rounded_value(value)
           return 0 if value.blank?
+
           value.round(graph_options[:decimals] || 0)
         end
 
@@ -90,6 +93,7 @@ module ManageIQ
             cat = cat_cnt > 6 ? 'Others' : r["resource_name"]
             val = rounded_value(r[col])
             next if val == 0
+
             if cat.starts_with?("Others") && categories[-1].starts_with?("Others") # Are we past the top 10?
               categories[-1] = "Others"
               series.add_to_value(-1, val) # Accumulate the series value
@@ -455,6 +459,7 @@ module ManageIQ
 
         def build_reporting_chart_numeric(_maxcols)
           return no_records_found_chart(_('Invalid chart definition')) unless mri.graph[:column].present?
+
           if mri.group.nil?
             build_numeric_chart_simple
           else

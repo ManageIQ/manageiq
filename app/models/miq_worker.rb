@@ -61,6 +61,7 @@ class MiqWorker < ApplicationRecord
     return 0 unless has_required_role?
     return @workers.call if @workers.kind_of?(Proc)
     return @workers unless @workers.nil?
+
     workers_configured_count
   end
 
@@ -98,6 +99,7 @@ class MiqWorker < ApplicationRecord
 
   def self.server_scope
     return current_scope if current_scope && current_scope.where_values_hash.include?('miq_server_id')
+
     where(:miq_server_id => MiqServer.my_server&.id)
   end
 
@@ -264,6 +266,7 @@ class MiqWorker < ApplicationRecord
 
   def self.start_workers
     return unless self.has_required_role?
+
     workers.times { start_worker }
   end
 
@@ -360,6 +363,7 @@ class MiqWorker < ApplicationRecord
   def self.runner_script
     script = ManageIQ.root.join("lib/workers/bin/run_single_worker.rb")
     raise "script not found: #{script}" unless File.exist?(script)
+
     script
   end
 
@@ -427,6 +431,7 @@ class MiqWorker < ApplicationRecord
         Process.kill(9, pid)
         loop do
           break unless is_alive?
+
           sleep(0.01)
         end
       rescue Errno::ESRCH

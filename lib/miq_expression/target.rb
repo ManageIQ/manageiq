@@ -73,6 +73,7 @@ class MiqExpression::Target
 
   def plural?
     return false if reflections.empty?
+
     [:has_many, :has_and_belongs_to_many].include?(reflections.last.macro)
   end
 

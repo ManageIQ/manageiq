@@ -3,6 +3,7 @@ class DialogFieldDateTimeControl < DialogFieldDateControl
 
   def automate_output_value
     return nil if @value.blank?
+
     with_current_user_timezone { Time.zone.parse(@value).utc.iso8601 }
   end
 

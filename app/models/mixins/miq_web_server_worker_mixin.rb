@@ -24,6 +24,7 @@ module MiqWebServerWorkerMixin
 
     def preload_for_worker_role
       raise "Expected database to be seeded via `rake db:seed`." unless EvmDatabase.seeded_primordially?
+
       configure_secret_token
     end
 
@@ -104,6 +105,7 @@ module MiqWebServerWorkerMixin
     def reserve_port(ports)
       free_ports = port_range.to_a - ports
       raise NoFreePortError if free_ports.empty?
+
       free_ports.first
     end
   end

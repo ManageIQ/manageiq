@@ -71,6 +71,7 @@ module MiqAeYamlImportExportMixin
     field.each do |fname, value|
       ae_field = instance_obj.ae_class.ae_fields.detect { |f| fname.casecmp(f.name) == 0 }
       raise MiqAeException::FieldNotFound, "Field [#{fname}] not found in MiqAeDatastore" if ae_field.nil?
+
       instance_obj.ae_values << MiqAeValue.new({'ae_field' => ae_field}.merge(value))
     end
   end

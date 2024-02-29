@@ -19,6 +19,7 @@ class DialogFieldCheckBox < DialogField
     end
 
     return initial_values if automate_hash["value"].blank?
+
     automate_hash["value"].to_s
   end
 

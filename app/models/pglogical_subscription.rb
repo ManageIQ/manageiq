@@ -62,6 +62,7 @@ class PglogicalSubscription < ActsAsArModel
     unless errors.empty?
       raise errors.join("\n")
     end
+
     subscription_list
   end
 
@@ -203,6 +204,7 @@ class PglogicalSubscription < ActsAsArModel
     self.class.with_connection_error_handling { pglogical.drop_subscription(id, true) }
   rescue PG::InternalError => e
     raise unless e.message =~ /could not connect to publisher/ || e.message =~ /replication slot .* does not exist/
+
     connection.transaction do
       disable
       self.class.with_connection_error_handling do
@@ -235,6 +237,7 @@ class PglogicalSubscription < ActsAsArModel
   # sets this instance's password field to the one in the subscription dsn in the database
   def find_password
     return password if password.present?
+
     s = subscription_attributes.symbolize_keys
     dsn_hash = PG::DSNParser.parse(s.delete(:subscription_dsn))
     self.password = dsn_hash[:password]

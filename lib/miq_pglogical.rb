@@ -33,11 +33,13 @@ class MiqPglogical
 
   def configure_provider
     return if provider?
+
     create_replication_set
   end
 
   def destroy_provider
     return unless provider?
+
     self.class.with_connection_error_handling { pglogical.drop_publication(PUBLICATION_NAME) }
   end
 

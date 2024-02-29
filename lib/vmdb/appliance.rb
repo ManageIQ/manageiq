@@ -83,6 +83,7 @@ module Vmdb
 
     def self.log_server_identity
       return unless MiqEnvironment::Command.is_appliance?
+
       # this is the request to overwrite a small file in the vmdb/log directory for each time the evm server is restarted.
       # the file must not be named ".log" or it will be removed by logrotate, and it must contain the Server GUID (by which the appliance is known in the vmdb,
       # the build identifier of the appliance as it is being started,  the appliance hostname and the name of the appliance as configured from our configuration screen.

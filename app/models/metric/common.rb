@@ -47,6 +47,7 @@ module Metric::Common
 
   def v_derived_storage_used
     return nil if derived_storage_total.nil? || derived_storage_free.nil?
+
     derived_storage_total - derived_storage_free
   end
 
@@ -91,6 +92,7 @@ module Metric::Common
     # We need to divide by the number of running VMs since the is an aggregation of the millisend values of all the child VMs
     unless resource_type == 'VmOrTemplate'
       return 0 if derived_vm_count_on.nil? || derived_vm_count_on == 0
+
       raw_val = (raw_val / derived_vm_count_on)
     end
 
@@ -119,16 +121,19 @@ module Metric::Common
 
   def v_derived_cpu_reserved_pct
     return nil if derived_cpu_reserved.nil? || derived_cpu_available.nil? || derived_cpu_available == 0
+
     (derived_cpu_reserved / derived_cpu_available * 100)
   end
 
   def v_derived_memory_reserved_pct
     return nil if derived_memory_reserved.nil? || derived_memory_available.nil? || derived_memory_available == 0
+
     (derived_memory_reserved / derived_memory_available * 100)
   end
 
   def v_derived_cpu_total_cores_used
     return nil if cpu_usage_rate_average.nil? || derived_vm_numvcpus.nil? || derived_vm_numvcpus == 0
+
     (cpu_usage_rate_average * derived_vm_numvcpus) / 100.0
   end
 

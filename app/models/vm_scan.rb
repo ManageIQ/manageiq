@@ -222,6 +222,7 @@ class VmScan < Job
 
             begin
               raise _("Unable to find Vm") if vm.nil?
+
               inputs = {:vm => vm, :host => vm.host}
               MiqEvent.raise_evm_job_event(vm, {:type => "scan", :suffix => "complete"}, inputs)
             rescue => err
@@ -283,6 +284,7 @@ class VmScan < Job
     if message.to_s.include?("Could not find VM: [") && options[:scan_count].to_i.zero?
       # We may need to skip calling the retry if this method is called twice.
       return if skip_retry == true
+
       options[:scan_count] = options[:scan_count].to_i + 1
       EmsRefresh.refresh(vm)
       vm.reload

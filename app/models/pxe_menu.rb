@@ -7,6 +7,7 @@ class PxeMenu < ApplicationRecord
   def self.class_from_contents(contents)
     line = contents.to_s.each_line { |l| break l }
     return PxeMenuIpxe if line =~ /^#!\s*ipxe\s*$/
+
     PxeMenuPxelinux
   end
 

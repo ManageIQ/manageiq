@@ -2,6 +2,7 @@ class PrincePdfGenerator < PdfGenerator
   include Vmdb::Logging
   def self.executable
     return @executable if defined?(@executable)
+
     @executable = `which prince 2> /dev/null`.chomp
   end
 

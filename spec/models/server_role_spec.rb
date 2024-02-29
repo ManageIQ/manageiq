@@ -68,6 +68,7 @@ RSpec.describe ServerRole do
       roles.shift
       roles.each do |role|
         next if role =~ /^#.*$/ # skip commented lines
+
         name, description, max_concurrent, external_failover, role_scope = role.split(',')
         max_concurrent = max_concurrent.to_i
         external_failover = true  if external_failover == 'true'

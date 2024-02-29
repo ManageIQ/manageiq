@@ -43,6 +43,7 @@ def filter(hash, opts = {})
   return false unless opts[:target_type].nil? || opts[:target_type].include?(hash[:target_type])
   return false unless opts[:target].nil? || opts[:target].include?(hash[:target])
   return false unless opts[:ems].nil? || opts[:ems].include?(hash[:ems])
+
   true
 end
 

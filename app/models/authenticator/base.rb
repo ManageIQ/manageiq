@@ -41,6 +41,7 @@ module Authenticator
 
     def authorize_user(userid)
       return unless user_authorizable_without_authentication?
+
       authenticate(userid, "", {}, {:require_user => true, :authorize_only => true})
     end
 
@@ -107,6 +108,7 @@ module Authenticator
         if task.nil? || MiqTask.status_error?(task.status) || MiqTask.status_timeout?(task.status)
           raise MiqException::MiqEVMLoginError, fail_message
         end
+
         user_or_taskid = case_insensitive_find_by_userid(task.userid)
       end
 

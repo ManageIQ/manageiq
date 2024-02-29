@@ -51,6 +51,7 @@ class ServiceOrder < ApplicationRecord
 
   def checkout
     raise "Invalid operation [checkout] for Service Order in state [#{state}]" if ordered?
+
     _log.info("Service Order checkout for service: #{name}")
     process_checkout(miq_requests)
     update(:state     => STATE_ORDERED,
@@ -73,6 +74,7 @@ class ServiceOrder < ApplicationRecord
 
   def clear
     raise "Invalid operation [clear] for Service Order in state [#{state}]" if ordered?
+
     _log.info("Service Order clear for service: #{name}")
     destroy_unprocessed_requests
   end
@@ -108,6 +110,7 @@ class ServiceOrder < ApplicationRecord
 
   def deep_copy(new_attributes = {})
     raise _("Cannot copy a service order in the %{state} state") % {:state => STATE_CART} if state == STATE_CART
+
     dup.tap do |new_service_order|
       # Set it to nil - the after_create hook will give it the correct name
       new_service_order.name = nil
@@ -127,6 +130,7 @@ class ServiceOrder < ApplicationRecord
 
   def destroy_unprocessed_requests
     return if ordered?
+
     miq_requests.destroy_all
   end
 end

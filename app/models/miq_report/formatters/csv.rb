@@ -1,6 +1,7 @@
 module MiqReport::Formatters::Csv
   def to_csv
     return if (@sub_table || @table).nil?
+
     csv_table = @sub_table ? @sub_table.dup : @table.dup  # Duplicate table/sub_table since we will be deleting the ID column
     csv_table.column_names.delete("id")
 

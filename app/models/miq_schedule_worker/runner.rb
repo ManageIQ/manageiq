@@ -24,6 +24,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
   def check_dst
     return if @dst == dst?
+
     run_callbacks(:dst_change) do
       reset_dst
     end
@@ -119,6 +120,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
   def schedules_for_scheduler_role
     # These schedules need to run only once in a region per interval, so let the single scheduler role handle them
     return unless schedule_enabled?(:scheduler)
+
     scheduler = scheduler_for(:scheduler)
 
     # Schedule - Check for timed out jobs
@@ -349,6 +351,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
   def schedules_for_database_operations_role
     return unless schedule_enabled?(:database_operations)
+
     scheduler = scheduler_for(:database_operations)
 
     # Schedule - Database reindexing
@@ -394,6 +397,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
   def schedules_for_ems_metrics_coordinator_role
     return unless schedule_enabled?("ems_metrics_coordinator")
+
     scheduler = scheduler_for(:ems_metrics_coordinator)
 
     # Schedule - Performance Collection
@@ -412,6 +416,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
   def schedules_for_event_role
     # These schedules need to run by the servers with the event role
     return unless schedule_enabled?(:event)
+
     scheduler = scheduler_for(:event)
 
     # Schedule - Purging of event streams
@@ -550,6 +555,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
         added.each do |r|
           m = "schedules_for_#{r}_role"
           next unless self.respond_to?(m)
+
           _log.info("Adding Schedules for Role=[#{r}]")
           send(m)
         end
@@ -559,6 +565,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
         removed.each do |r|
           rs = r.to_sym
           next unless @schedules.key?(rs)
+
           _log.info("Removing Schedules for Role=[#{r}]")
           @schedules[rs].each do |j|
             # In Rufus::Scheduler Version 1, schedule returns a JobID

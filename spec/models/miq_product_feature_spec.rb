@@ -33,6 +33,7 @@ RSpec.describe MiqProductFeature do
     expect(pf.keys - described_class::ALLOWED_ATTRIBUTES).to be_empty
     pf.each do |k, v|
       next if k == :hidden
+
       expect(v).not_to be_blank, "Identifier: '#{pf[:identifier]}'  Key: '#{k}' is blank"
     end
   end

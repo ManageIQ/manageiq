@@ -1,6 +1,7 @@
 RSpec.describe DialogFieldTagControl do
   def add_entry(cat, options)
     raise "entries can only be added to classifications" unless cat.category?
+
     # Inherit from parent classification
     options.merge!(:read_only => cat.read_only, :syntax => cat.syntax, :single_value => cat.single_value, :ns => cat.ns)
     options.merge!(:parent_id => cat.id) # Ugly way to set up a child

@@ -75,6 +75,7 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
 
   def get_root_svc(parent_svc)
     return nil unless parent_svc
+
     parent_svc.parent ? parent_svc.parent : parent_svc
   end
 
@@ -84,6 +85,7 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
 
   def number_of_vms_from_dialog(root_svc, parent_task)
     return nil unless root_svc.options[:dialog]
+
     value = root_svc.options[:dialog]["dialog_option_0_number_of_vms"]
     if parent_task.service_resource
       index = parent_task.service_resource.provision_index

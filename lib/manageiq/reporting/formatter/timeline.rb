@@ -74,6 +74,7 @@ module ManageIQ
           etime = row[col]
           return if etime.nil?                              # Skip nil dates - Sprint 41
           return if !@start_time.nil? && etime < @start_time # Skip if before start time limit
+
           #     START of TIMELINE TIMEZONE Code
           mri.extras[:tl_position] ||= format_timezone(etime.to_time, tz, 'raw')
           if mri.timeline[:position] && mri.timeline[:position] == "First"
@@ -173,6 +174,7 @@ module ManageIQ
           col_order.each_with_index do |co, co_idx|
             value = tl_message.message_html(co)
             next if value.to_s.empty? || co == "id"
+
             event_data[co] = {
               :value => value,
               :text  => headers[co_idx]

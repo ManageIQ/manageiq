@@ -107,6 +107,7 @@ FROM #{table_name}
 
       rows_array.each do |row|
         next unless row["application_name"].end_with?('..')
+
         error_msg = "The application name for MIQ server/worker: #{row["application_name"]} is truncated"
         if options[:ignore_error]
           $stderr.puts error_msg

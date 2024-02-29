@@ -228,6 +228,7 @@ class EmsEvent < EventStream
 
   def self.first_chained_event(ems_id, chain_id)
     return nil if chain_id.nil?
+
     EmsEvent.where(:ems_id => ems_id, :chain_id => chain_id).order(:id).first
   end
 

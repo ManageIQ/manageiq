@@ -186,6 +186,7 @@ class MiqRequest < ApplicationRecord
     miq_approvals << build_default_approval if miq_approvals.empty?
 
     return unless requester
+
     self.requester_name ||= requester.name
     self.userid         ||= requester.userid
     self.tenant         ||= requester.current_tenant
@@ -301,6 +302,7 @@ class MiqRequest < ApplicationRecord
 
   def request_status
     return status if self.approval_state == 'approved' && !status.nil?
+
     case self.approval_state
     when 'pending_approval' then 'Unknown'
     when 'denied'           then 'Error'
@@ -630,6 +632,7 @@ class MiqRequest < ApplicationRecord
 
     # Partially copied from Logger#add
     return true if level < $log.level
+
     message = yield if message.nil? && block_given?
 
     RequestLog.create(:message => message, :severity => formatted_severity, :resource_id => resource_id) if resource_id

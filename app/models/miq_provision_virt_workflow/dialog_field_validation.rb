@@ -27,12 +27,14 @@ module MiqProvisionVirtWorkflow::DialogFieldValidation
   def validate_pxe_image_id(_field, _values, dlg, fld, _value)
     return nil unless supports_pxe?
     return nil unless get_pxe_image.nil?
+
     _("%{description} is required") % {:description => required_description(dlg, fld)}
   end
 
   def validate_pxe_server_id(_field, _values, dlg, fld, _value)
     return nil unless supports_pxe?
     return nil unless get_pxe_server.nil?
+
     _("%{description} is required") % {:description => required_description(dlg, fld)}
   end
 
@@ -41,6 +43,7 @@ module MiqProvisionVirtWorkflow::DialogFieldValidation
     return nil unless value.blank?
     return nil if get_value(values[:placement_auto]) == true
     return nil unless get_value(values[field]).blank?
+
     _("%{description} is required") % {:description => required_description(dlg, fld)}
   end
 
@@ -48,6 +51,7 @@ module MiqProvisionVirtWorkflow::DialogFieldValidation
     return nil unless value.blank?
     return nil unless get_value(values[:sysprep_enabled]) == 'file'
     return nil unless get_value(values[field]).blank?
+
     _("%{description} is required") % {:description => required_description(dlg, fld)}
   end
 
@@ -55,6 +59,7 @@ module MiqProvisionVirtWorkflow::DialogFieldValidation
     return nil unless value.blank?
     return nil unless get_value(values[:sysprep_enabled]) == 'fields'
     return nil unless get_value(values[field]).blank?
+
     _("%{description} is required") % {:description => required_description(dlg, fld)}
   end
 end

@@ -88,6 +88,7 @@ module EvmSpecHelper
     if instance.kind_of?(ActiveRecord::Base) || (instance.kind_of?(Class) && instance < ActiveRecord::Base)
       raise "instances variables should not be cleared from ActiveRecord objects"
     end
+
     # Don't clear the rspec-mocks instance variables
     ivars = instance.instance_variables - [:@mock_proxy, :@__recorder]
     ivars.each { |ivar| clear_instance_variable(instance, ivar) }

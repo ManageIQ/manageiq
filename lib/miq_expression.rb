@@ -62,6 +62,7 @@ class MiqExpression
   def set_tagged_target(model, associations = [])
     each_atom(exp) do |atom|
       next unless atom.key?("tag")
+
       tag = Tag.parse(atom["tag"])
       tag.model = model
       tag.associations = associations
@@ -71,6 +72,7 @@ class MiqExpression
 
   def self.proto?
     return @proto if defined?(@proto)
+
     @proto = ::Settings.product.proto
   end
 
@@ -132,6 +134,7 @@ class MiqExpression
       check = "checkany" if exp[operator].include?("checkany")
       check = "checkcount" if exp[operator].include?("checkcount")
       raise _("expression malformed,  must contain one of 'checkall', 'checkany', 'checkcount'") unless check
+
       check =~ /^check(.*)$/
       mode = $1.upcase
       clause = "FIND" + " " + _to_human(exp[operator]["search"]) + " CHECK " + mode + " " + _to_human(exp[operator][check], :include_table => false).strip
@@ -269,6 +272,7 @@ class MiqExpression
                    # So we have to trick it by replacing the value with the description.
                    description = MiqExpression.get_entry_details(op_args["tag"]).inject("") do |s, t|
                      break(t.first) if t.last == op_args["value"]
+
                      s
                    end
                    val = op_args["tag"].split(".").last.split("-").join(".")
@@ -287,6 +291,7 @@ class MiqExpression
         op_args[check][op]["field"] = "<count>"
       end
       raise _("expression malformed,  must contain one of 'checkall', 'checkany', 'checkcount'") unless check
+
       check =~ /^check(.*)$/
       mode = $1.downcase
       clause = "<find><search>" + _to_ruby(op_args["search"], context_type, tz) + "</search>" \
@@ -520,6 +525,7 @@ class MiqExpression
 
   def attribute_supported_by_sql?(field)
     return false unless col_details[field]
+
     col_details[field][:sql_support]
   end
   # private attribute_supported_by_sql? -- tests only
@@ -664,6 +670,7 @@ class MiqExpression
         elsif first
           first = nil
           next unless options[:include_model] == true
+
           Dictionary.gettext(t, :type => :model, :notfound => :titleize)
         else
           Dictionary.gettext(t, :type => :table, :notfound => :titleize)
@@ -744,9 +751,11 @@ class MiqExpression
       val.to_s.inspect
     when :date
       return "nil" if val.blank? # treat nil value as empty string
+
       "Date.new(#{val.year},#{val.month},#{val.day})"
     when :datetime
       return "nil" if val.blank? # treat nil value as empty string
+
       val = val.utc
       "Time.utc(#{val.year},#{val.month},#{val.day},#{val.hour},#{val.min},#{val.sec})"
     when :integer, :decimal, :fixnum
@@ -796,6 +805,7 @@ class MiqExpression
     case typ&.to_sym
     when :integer, :decimal, :fixnum, :float
       return val.to_i unless val.to_s.number_with_method? || typ == :float
+
       if val =~ /^([0-9\.,]+)\.([a-z]+)$/
         val, sfx = $1, $2
         if sfx.ends_with?("bytes") && FORMAT_BYTE_SUFFIXES.key?(sfx.to_sym)
@@ -897,6 +907,7 @@ class MiqExpression
       result = []
       TAG_CLASSES.invert.each do |name, tc|
         next if tc.constantize.base_class == model.constantize.base_class
+
         path = [model, name].join(".")
         result.concat(tag_details(path, opts))
       end
@@ -1074,6 +1085,7 @@ class MiqExpression
               parent[:assoc_path].include?(assoc.to_s.singularize) ||
               parent[:direction] == :up ||
               parent[:multivalue]
+
       seen.push(seen_key)
       result[:reflections][assoc] = build_relats(assoc_class, new_parent, seen)
     end
@@ -1111,6 +1123,7 @@ class MiqExpression
       includes = ["^.*derived_storage.*$", "^timestamp$", "v_date", "v_time", "resource_name"]
       column_names = column_names.collect do |c|
         next(c) if includes.include?(c)
+
         c if includes.detect { |incl| c.match(incl) }
       end.compact
     when base_model.starts_with?("Container")
@@ -1132,6 +1145,7 @@ class MiqExpression
         end
       end
       next unless col
+
       field_class_path = "#{class_path}-#{col}"
       field_assoc_path = "#{assoc_path}-#{col}"
       [value2human(field_class_path, :include_model => include_model), field_assoc_path]
@@ -1228,12 +1242,14 @@ class MiqExpression
 
       values_converted = values.collect do |v|
         return _("Date/Time value must not be blank") if value.blank?
+
         v_cvt = begin
                   RelativeDatetime.normalize(v, "UTC")
                 rescue
                   nil
         end
         return _("Value '%{value}' is not valid") % {:value => v} if v_cvt.nil?
+
         v_cvt
       end
       if values_converted.length > 1 && values_converted[0] > values_converted[1]
@@ -1245,6 +1261,7 @@ class MiqExpression
       unless operator.downcase.include?("null") || %w(true false).include?(value)
         return _("Value must be true or false")
       end
+
       return false
     when :regexp
       begin
@@ -1291,6 +1308,7 @@ class MiqExpression
       return true
     rescue
       return false unless n.number_with_method?
+
       begin
         n2 = n.to_f_with_method
         return (n2.to_i == n2)
@@ -1308,6 +1326,7 @@ class MiqExpression
       return true
     rescue
       return false unless n.number_with_method?
+
       begin
         n.to_f_with_method
         return true
@@ -1320,6 +1339,7 @@ class MiqExpression
   # Is an MiqExpression or an expression hash a quick_search
   def self.quick_search?(exp)
     return exp.quick_search? if exp.kind_of?(self)
+
     _quick_search?(exp)
   end
 
@@ -1334,6 +1354,7 @@ class MiqExpression
       e.any? { |e_exp| _quick_search?(e_exp) }
     when Hash
       return true if e["value"] == :user_input
+
       e.values.any? { |e_exp| _quick_search?(e_exp) }
     else
       false
@@ -1464,16 +1485,20 @@ class MiqExpression
     when "and"
       operands = exp[operator].each_with_object([]) do |operand, result|
         next if operand.blank?
+
         arel = to_arel(operand, tz)
         next if arel.blank?
+
         result << arel
       end
       Arel::Nodes::Grouping.new(Arel::Nodes::And.new(operands))
     when "or"
       operands = exp[operator].each_with_object([]) do |operand, result|
         next if operand.blank?
+
         arel = to_arel(operand, tz)
         next if arel.blank?
+
         result << arel
       end
       first, *rest = operands

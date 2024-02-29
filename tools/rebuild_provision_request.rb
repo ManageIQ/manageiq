@@ -318,6 +318,7 @@ class AutomateHash
   def find_request_options
     @provision_options = MiqProvisionRequest.find_by(:id => @request_id)
     return no_provision_found if @provision_options.nil?
+
     @provision_options
   end
 

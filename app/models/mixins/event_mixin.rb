@@ -25,6 +25,7 @@ module EventMixin
     # It should be considered for removal.
     @has_events ||= {}
     return @has_events[assoc] if @has_events.key?(assoc)
+
     @has_events[assoc] = events_assoc_class(assoc).where(event_where_clause(assoc)).exists?
   end
 

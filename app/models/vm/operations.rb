@@ -50,6 +50,7 @@ module Vm::Operations
 
   def ipv4_address
     return public_address unless public_address.nil?
+
     ipaddresses.find { |ip| IPAddr.new(ip).ipv4? && !ip.starts_with?('192') }
   end
 

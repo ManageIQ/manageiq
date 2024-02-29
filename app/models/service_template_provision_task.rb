@@ -15,12 +15,14 @@ class ServiceTemplateProvisionTask < MiqRequestTask
 
   def provision_priority
     return 0 if service_resource.nil?
+
     service_resource.provision_index
   end
 
   def sibling_sequence_run_now?
     return true  if miq_request_task.nil? || miq_request_task.miq_request_tasks.count == 1
     return false if miq_request_task.miq_request_tasks.detect { |t| t.provision_priority < provision_priority && t.state != "finished" }
+
     true
   end
 
@@ -29,6 +31,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
     return true   if parent.nil?
     return false  unless parent.group_sequence_run_now?
     return false  unless sibling_sequence_run_now?
+
     true
   end
 
@@ -160,6 +163,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
 
   def service_resource
     return nil if options[:service_resource_id].blank?
+
     ServiceResource.find_by(:id => options[:service_resource_id])
   end
 

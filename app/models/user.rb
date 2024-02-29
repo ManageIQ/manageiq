@@ -282,6 +282,7 @@ class User < ApplicationRecord
 
   def self.authorize_user(userid)
     return if userid.blank? || admin?(userid)
+
     authenticator(userid).authorize_user(userid)
   end
 
@@ -325,6 +326,7 @@ class User < ApplicationRecord
     user_groups = miq_group_ids
     user_groups.delete(current_group_id)
     raise _("The user's current group cannot be changed because the user does not belong to any other group") if user_groups.empty?
+
     self.current_group = MiqGroup.find_by(:id => user_groups.first)
     save!
   end
@@ -385,6 +387,7 @@ class User < ApplicationRecord
 
   def self.with_user_group(user, group, &block)
     return yield if user.nil?
+
     user = User.find(user) unless user.kind_of?(User)
     if group && group.kind_of?(MiqGroup)
       user.current_group = group
@@ -444,6 +447,7 @@ class User < ApplicationRecord
     seed_data.each do |user_attributes|
       user_id = user_attributes[:userid]
       next if in_my_region.find_by_userid(user_id)
+
       log_attrs = user_attributes.slice(:name, :userid, :group)
       _log.info("Creating user with parameters #{log_attrs.inspect}")
 

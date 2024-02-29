@@ -47,6 +47,7 @@ module VMDB
 
     def self.log_timestamp(str)
       return nil unless str
+
       t  = Time.parse(str)
       Time.utc(t.year, t.month, t.day, t.hour, t.min, t.sec, 0)
     end
@@ -83,6 +84,7 @@ module VMDB
           gz.each_line do |line|
             line_count += 1
             next unless line =~ LOG_TIMESTAMP_REGEX
+
             start_time_str ||= $1
             end_time_str     = $1
           end

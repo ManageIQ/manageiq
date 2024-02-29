@@ -80,10 +80,12 @@ module MiqReport::Generator::Trend
 
     cols.each do |c|
       next unless self.class.is_trend_column?(c)
+
       @trend_data[c] = {}
 
       coordinates = recs.each_with_object([]) do |r, arr|
         next unless r.respond_to?(CHART_X_AXIS_COLUMN) && r.respond_to?(c[6..-1])
+
         if r.respond_to?(:inside_time_profile) && r.inside_time_profile == false
           _log.debug("Timestamp: [#{r.timestamp}] is outside of time profile: [#{time_profile.description}]")
           next
@@ -107,6 +109,7 @@ module MiqReport::Generator::Trend
 
   def build_trend_limits(recs)
     return if cols.nil? || @trend_data.blank?
+
     cols.each do |c|
       # XXX: TODO: Hardcoding column names for now until we have more time to extend the model and allow defining these in YAML
       case c.to_sym

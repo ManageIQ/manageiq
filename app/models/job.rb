@@ -93,6 +93,7 @@ class Job < ApplicationRecord
 
   def dispatch_finish
     return if @storage_dispatcher_process_finish_flag
+
     _log.info("Dispatch Status is 'finished'")
     self.dispatch_status = "finished"
     save
@@ -192,6 +193,7 @@ class Job < ApplicationRecord
       timestamp = timestamp.to_time rescue nil
     end
     return false if timestamp.nil?
+
     (timestamp >= job_not_found_delay.seconds.ago)
   end
 

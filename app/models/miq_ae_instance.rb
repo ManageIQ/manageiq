@@ -123,8 +123,10 @@ class MiqAeInstance < ApplicationRecord
   def field_value_hash(name)
     field = ae_class.ae_fields.detect { |f| f.name.casecmp(name) == 0 }
     raise "Field #{name} not found in class #{ae_class.fqname}" if field.nil?
+
     value = ae_values.detect { |v| v.field_id == field.id }
     raise "Field #{name} not found in instance #{self.name} in class #{ae_class.fqname}" if value.nil?
+
     value.attributes
   end
 

@@ -13,6 +13,7 @@ class MiqPolicySet < ApplicationRecord
 
   def notes=(data)
     return if data.nil?
+
     self.set_data ||= {}
     self.set_data[:notes] = data[0..511]
   end

@@ -66,8 +66,10 @@ module MiqProvision::OptionsHelper
     pass ||= get_option(:pass).to_i
     pass -= 1
     return if pass <= 0
+
     ip_address = get_option(:ip_addr)
     return unless ip_address.to_s.ipv4?
+
     ip_seg = ip_address.split('.')
     ip_seg[-1] = ip_seg[-1].to_i + pass
     options[:ip_addr] = ip_seg.join('.')

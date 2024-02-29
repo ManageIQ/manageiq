@@ -159,11 +159,13 @@ class Authentication < ApplicationRecord
 
   def set_credentials_changed_on
     return unless @auth_changed
+
     self.credentials_changed_on = Time.now.utc
   end
 
   def after_authentication_changed
     return unless @auth_changed
+
     _log.info("[#{resource_type}] [#{resource_id}], previously valid on: [#{last_valid_on}]")
 
     raise_event(:changed)

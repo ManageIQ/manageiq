@@ -129,6 +129,7 @@ class Service < ApplicationRecord
       'off' if power_states_match?(:stop)
     else
       return 'on' if power_states_match?(:start)
+
       'off' if power_states_match?(:stop)
     end
   end
@@ -290,6 +291,7 @@ class Service < ApplicationRecord
   def update_power_status(action)
     expected_status = "#{action}_complete"
     return true if options[:power_status] == expected_status
+
     options[:power_status] = expected_status
     update(:options => options)
   end
@@ -362,6 +364,7 @@ class Service < ApplicationRecord
 
   def reconfigure_dialog
     return nil unless supports?(:reconfigure)
+
     resource_action = reconfigure_resource_action
     options = {:target => self, :reconfigure => true}
 

@@ -50,6 +50,7 @@ module CustomAttributeMixin
 
     def self.add_custom_attribute(custom_attribute)
       return if respond_to?(custom_attribute)
+
       ActiveSupport::Deprecation.warn(invalid_custom_attribute_message(custom_attribute)) unless custom_attribute.to_s =~ CUSTOM_ATTRIBUTE_VALID_NAME_REGEXP
 
       ca_sym                 = custom_attribute.to_sym
@@ -95,6 +96,7 @@ module CustomAttributeMixin
 
   def self.column_name(custom_key)
     return if custom_key.nil?
+
     CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX + custom_key
   end
 
@@ -112,6 +114,7 @@ module CustomAttributeMixin
 
   def miq_custom_set(key, value)
     return miq_custom_delete(key) if value.blank?
+
     ActiveSupport::Deprecation.warn(self.class.invalid_custom_attribute_message(key)) unless key.to_s =~ self.class::CUSTOM_ATTRIBUTE_VALID_NAME_REGEXP
 
     record = miq_custom_attributes.find_by(:name => key.to_s)

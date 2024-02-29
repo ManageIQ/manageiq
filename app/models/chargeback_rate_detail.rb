@@ -27,6 +27,7 @@ class ChargebackRateDetail < ApplicationRecord
   #
   def showback_unit(p_per_unit = nil)
     return '' unless chargeable_field.detail_measure
+
     {'bytes'     => '',
      'kilobytes' => 'KiB',
      'megabytes' => 'MiB',

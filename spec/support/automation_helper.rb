@@ -70,6 +70,7 @@ module Spec
       def deliver_ae_request_from_queue
         q = MiqQueue.all.detect { |item| item.state == 'ready' && item.class_name == "MiqAeEngine" }
         return nil unless q
+
         q.state = 'dequeue'
         q.save
         q.deliver
@@ -79,6 +80,7 @@ module Spec
         aec = MiqAeClass.lookup_by_fqname('/ManageIQ/System/Request')
         aei = aec.ae_instances.detect { |ins| ins.name == 'Call_Method' } if aec
         return if aei
+
         aef = aec.ae_fields.detect { |fld| fld.name == 'meth1' }
         aei = MiqAeInstance.new('name' => 'Call_Method')
         aev = MiqAeValue.new(:ae_field => aef, :value =>  "${/#namespace}/${/#class}.${/#method}")

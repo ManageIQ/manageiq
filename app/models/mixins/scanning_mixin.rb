@@ -42,6 +42,7 @@ module ScanningMixin
         end
         job = Job.find_by(:guid => taskid)
         raise _("Unable to process data for job with id <%{number}>. Job not found.") % {:number => taskid} if job.nil?
+
         begin
           job.signal(:data, xml_file)
         rescue => err
@@ -76,6 +77,7 @@ module ScanningMixin
   # Process XML documents from VM scans
   def add_elements(xml_node)
     return if xml_node.nil?
+
     _log.info("Adding XML elements for [#{id}] from [#{xml_node.root.name}]")
     updated = false
 
@@ -163,6 +165,7 @@ module ScanningMixin
   def path_arg
     return path if self.respond_to?(:path)
     return name if self.respond_to?(:name)
+
     nil
   end
   private :path_arg
@@ -306,6 +309,7 @@ module ScanningMixin
     xml_summary = nil
     begin
       raise _("No synchronize category specified") if ost.category.nil?
+
       categories = ost.category.split(",")
       ost.scanTime = Time.now.utc
       ost.compress = true       # Request that data returned from the blackbox is compressed

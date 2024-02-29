@@ -154,6 +154,7 @@ module VmOrTemplate::RightSizing
     perfs.collect do |p|
       # Ignore any CPU bursts to 100% 15 minutes after VM booted
       next if (p.abs_max_cpu_usage_rate_average_value == 100.0) && boot_time && (p.abs_max_cpu_usage_rate_average_timestamp <= (boot_time + 15.minutes))
+
       p.abs_max_cpu_usage_rate_average_value
     end.compact.max
   end
@@ -191,6 +192,7 @@ module VmOrTemplate::RightSizing
 
   def base_change(recommended, actual)
     return if actual.nil? || recommended.nil?
+
     actual - recommended
   end
 

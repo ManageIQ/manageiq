@@ -163,18 +163,21 @@ module AuthenticationMixin
   def auth_user_pwd(type = nil)
     cred = authentication_best_fit(type)
     return nil if cred.nil? || cred.userid.blank?
+
     [cred.userid, cred.password]
   end
 
   def auth_user_token(type = nil)
     cred = authentication_best_fit(type)
     return nil if cred.nil? || cred.userid.blank?
+
     [cred.userid, cred.auth_key]
   end
 
   def auth_user_keypair(type = nil)
     cred = authentication_best_fit(type)
     return nil if cred.nil? || cred.userid.blank?
+
     [cred.userid, cred.auth_key]
   end
 
@@ -219,6 +222,7 @@ module AuthenticationMixin
       if value.key?(:userid) && value[:userid].blank?
         current[:new] = nil
         next if options[:save] == false
+
         authentication_delete(type)
         next
       end
@@ -261,6 +265,7 @@ module AuthenticationMixin
 
   def authentication_type(type)
     return nil if type.nil?
+
     available_authentications.detect do |a|
       a.authentication_type.to_s == type.to_s
     end
@@ -347,6 +352,7 @@ module AuthenticationMixin
 
   def retry_scheduled_authentication_check(auth_type, options)
     return unless options[:attempt]
+
     auth = authentication_best_fit(auth_type)
 
     if auth.try(:retryable_status?)
@@ -400,6 +406,7 @@ module AuthenticationMixin
     unless supports?(:change_password)
       raise MiqException::Error, _("Change Password is not supported for %{class_description} provider") % {:class_description => self.class.description}
     end
+
     if change_password_params_valid?(current_password, new_password)
       raw_change_password(current_password, new_password)
       update_authentication(auth_type => {:userid => authentication_userid, :password => new_password})

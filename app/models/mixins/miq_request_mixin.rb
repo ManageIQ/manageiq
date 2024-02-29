@@ -75,6 +75,7 @@ module MiqRequestMixin
         tag = Classification.find(tag_id)
         next if category.to_s.casecmp(tag.parent.name) != 0
         next if !tag_name.blank? && tag_name.to_s.casecmp(tag.name) != 0
+
         deletes << tag_id
       end
       unless deletes.blank?
@@ -87,8 +88,10 @@ module MiqRequestMixin
   def add_tag(category, tag_name)
     cat = Classification.lookup_by_name(category.to_s)
     return if cat.nil?
+
     tag = cat.children.detect { |t| t.name.casecmp(tag_name.to_s) == 0 }
     return if tag.nil?
+
     self.tag_ids ||= []
     unless self.tag_ids.include?(tag.id)
       self.tag_ids << tag.id
@@ -137,10 +140,12 @@ module MiqRequestMixin
     classifications do |c|
       tag_name = c.to_tag
       next unless tag_name.starts_with?(ns)
+
       tag_path = tag_name.split('/')[2..-1].join('/')
       parts = tag_path.split('/')
       cat = Classification.lookup_by_name(parts.first)
       next if cat.show? == false
+
       cat_descript = cat.description
       tag_descript = Classification.lookup_by_name(tag_path).description
       ws_tag_data << {:category => parts.first, :category_display_name => cat_descript,
@@ -167,6 +172,7 @@ module MiqRequestMixin
   def request_dialog(action_name)
     st = service_template
     return {} if st.blank?
+
     ra = st.resource_actions.find_by(:action => action_name)
     values = options[:dialog]
     dialog = ResourceActionWorkflow.new(values, get_user, ra, {}).dialog

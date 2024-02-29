@@ -72,6 +72,7 @@ class Compliance < ApplicationRecord
     unless target.respond_to?(:compliances)
       raise _("Compliance check not supported for %{class_name} objects") % {:class_name => target.class.name}
     end
+
     check_event = "#{target_class}_compliance_check"
     _log.info("Checking compliance...")
     results = MiqPolicy.enforce_policy(target, check_event)

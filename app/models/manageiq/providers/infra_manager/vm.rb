@@ -12,6 +12,7 @@ class ManageIQ::Providers::InfraManager::Vm < ::Vm
 
   def self.calculate_power_state(raw_power_state)
     return raw_power_state if raw_power_state == "wait_for_launch"
+
     super
   end
 

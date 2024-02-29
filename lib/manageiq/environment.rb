@@ -46,6 +46,7 @@ module ManageIQ
       config_files.each do |source, dest|
         file = APP_ROOT.join(dest)
         next if file.exist?
+
         puts "Copying #{file} from template..."
         FileUtils.cp(APP_ROOT.join(source), file)
       end
@@ -82,6 +83,7 @@ module ManageIQ
                     !ENV["GITHUB_REF_NAME"].to_s.start_with?("dependabot/") # Dependabot makes branches in the core repo
 
       raise "Missing Gemfile.lock.release" unless APP_ROOT.join("Gemfile.lock.release").file?
+
       FileUtils.cp(APP_ROOT.join("Gemfile.lock.release"), APP_ROOT.join("Gemfile.lock"))
     end
 

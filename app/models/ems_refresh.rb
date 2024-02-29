@@ -220,8 +220,10 @@ module EmsRefresh
 
       [:name, :product_name, :device_name].each do |k|
         next unless d.respond_to?(k)
+
         v = d.send(k)
         next if v.nil?
+
         s << " #{k}: [#{v}]"
         break
       end

@@ -13,6 +13,7 @@ class DialogFieldDateControl < DialogField
 
   def automate_output_value
     return nil if @value.blank?
+
     Date.parse(@value).iso8601
   end
 
@@ -27,6 +28,7 @@ class DialogFieldDateControl < DialogField
     end
 
     return default_time if automate_hash["value"].blank?
+
     begin
       return DateTime.parse(automate_hash["value"].to_s).iso8601
     rescue

@@ -258,6 +258,7 @@ module VimPerformanceAnalysis
     def can_fit(avail, usage, need)
       return nil if avail.nil? || usage.nil? || need.nil?
       return 0   unless avail > usage && need > 0
+
       fits = (avail - usage) / need
       fits.truncate
     end
@@ -365,6 +366,7 @@ module VimPerformanceAnalysis
     find_child_perf_for_time_period(obj, interval_name, options.merge(:conditions => "resource_type != 'VmOrTemplate' AND tag_names IS NOT NULL", :select => "resource_type, tag_names")).inject({}) do |h, p|
       p.tag_names.split("|").each do |t|
         next if t.starts_with?("power_state")
+
         tag = "#{p.resource_type}/#{t}"
         next if h.key?(tag)
 
@@ -422,6 +424,7 @@ module VimPerformanceAnalysis
       _ts, v = k
       cols.each do |c|
         next unless v[c].kind_of?(Float)
+
         Metric::Aggregation::Process.column(c, nil, v, counts[k], true, :average)
       end
 
@@ -435,6 +438,7 @@ module VimPerformanceAnalysis
 
     coordinates = recs.each_with_object([]) do |r, arr|
       next unless r.respond_to?(x_attr) && r.respond_to?(y_attr)
+
       if r.respond_to?(:inside_time_profile) && r.inside_time_profile == false
         _log.debug("Class: [#{r.class}], [#{r.resource_type} - #{r.resource_id}], Timestamp: [#{r.timestamp}] is outside of time profile")
         next

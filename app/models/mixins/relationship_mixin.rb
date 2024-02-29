@@ -151,6 +151,7 @@ module RelationshipMixin
   def parent_rel(*args)
     rels = parent_rels(*args).take(2)
     raise _("Multiple parents found.") if rels.length > 1
+
     rels.first
   end
 
@@ -160,6 +161,7 @@ module RelationshipMixin
 
     rels = parent_rels(*args).take(2)
     raise _("Multiple parents found.") if rels.length > 1
+
     rels.first.try(:resource)
   end
 
@@ -169,6 +171,7 @@ module RelationshipMixin
 
     rels = parent_ids(*args).take(2)
     raise _("Multiple parents found.") if rels.length > 1
+
     rels.first
   end
 
@@ -380,6 +383,7 @@ module RelationshipMixin
     options = args.extract_options!
     rel = relationship(:raise_on_multiple => true)
     return {} if rel.nil?  # TODO: Should this return nil or init_relationship or Relationship.new in a Hash?
+
     Relationship.filter_by_resource_type(rel.descendants, options).arrange
   end
 
@@ -427,6 +431,7 @@ module RelationshipMixin
     options = args.extract_options!
     rel = relationship(:raise_on_multiple => true)
     return {relationship_for_isolated_root => {}} if rel.nil?
+
     Relationship.filter_by_resource_type(rel.subtree, options).arrange
   end
 
@@ -479,6 +484,7 @@ module RelationshipMixin
     if options[:raise_on_multiple]
       rels = relationships.take(2)
       raise _("Multiple relationships found") if rels.length > 1
+
       rels.first
     else
       relationships.first
@@ -553,6 +559,7 @@ module RelationshipMixin
     options = args.extract_options!
     root_id = relationship.try(:root_id)
     return {relationship_for_isolated_root => {}} if root_id.nil?
+
     Relationship.filter_by_resource_type(Relationship.subtree_of(root_id), options).arrange
   end
 

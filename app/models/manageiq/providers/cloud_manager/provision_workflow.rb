@@ -23,6 +23,7 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
       targets = get_targets_for_source(cn, :cloud_filter, CloudNetwork, 'cloud_subnets')
       targets.each_with_object({}) do |cs, hash|
         next if !az_id.zero? && az_id != cs.availability_zone_id
+
         hash[cs.id] = "#{cs.name} (#{cs.cidr}) | #{cs.availability_zone.try(:name)}"
       end
     else
@@ -32,6 +33,7 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
 
   def allowed_cloud_networks(_options = {})
     return {} unless (src = provider_or_tenant_object)
+
     targets = get_targets_for_source(src, :cloud_filter, CloudNetwork, 'all_cloud_networks')
     allowed_ci(:cloud_network, [:availability_zone], targets.map(&:id))
   end
@@ -54,6 +56,7 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
 
   def allowed_floating_ip_addresses(_options = {})
     return {} unless (src_obj = provider_or_tenant_object)
+
     targets = get_targets_for_source(src_obj, :cloud_filter, FloatingIp, 'floating_ips.available')
     targets.each_with_object({}) do |ip, h|
       h[ip.id] = ip.address
@@ -101,6 +104,7 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
   # Optional starting set of results maybe passed in.
   def allowed_ci(ci, relats, filtered_ids = nil)
     return {} if (sources = resources_for_ui).blank?
+
     super(ci, relats, sources, filtered_ids)
   end
 
@@ -123,6 +127,7 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
 
   def get_source_and_targets(refresh = false)
     return @target_resource if @target_resource && refresh == false
+
     result = super
     return result if result.blank?
 
@@ -143,6 +148,7 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
     ems = src.try(:ext_management_system)
 
     return {} if ems.nil?
+
     process_filter(filter_name, klass, ems.deep_send(relats))
   end
 
@@ -154,6 +160,7 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
   def provider_or_tenant_object
     src = resources_for_ui
     return nil if src[:ems].nil?
+
     obj = src[:cloud_tenant] || src[:ems]
     load_ar_obj(obj)
   end

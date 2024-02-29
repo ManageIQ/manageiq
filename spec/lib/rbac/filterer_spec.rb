@@ -2065,11 +2065,13 @@ RSpec.describe Rbac::Filterer do
           describe ".search" do
             let!(:network_object) do
               return network_manager if network_model == ManageIQ::Providers::NetworkManager
+
               FactoryBot.create(network_model.underscore, :ext_management_system => network_manager)
             end
 
             let!(:network_object_with_different_network_manager) do
               return network_manager_1 if network_model == ManageIQ::Providers::NetworkManager
+
               FactoryBot.create(network_model.underscore,  :ext_management_system => network_manager_1)
             end
 

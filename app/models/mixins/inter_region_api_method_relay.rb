@@ -79,6 +79,7 @@ module InterRegionApiMethodRelay
     case result
     when ManageIQ::API::Client::ActionResult
       raise InterRegionApiMethodRelayError, result.message if result.failed?
+
       result.attributes
     when ManageIQ::API::Client::Resource
       instance_for_resource(result)
@@ -99,6 +100,7 @@ module InterRegionApiMethodRelay
     while wait < MAX_INSTANCE_WAIT
       instance = klass.find_by(:id => resource.id)
       return instance if instance
+
       sleep(wait)
       wait *= 2
     end

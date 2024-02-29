@@ -56,6 +56,7 @@ module ManageIQ::Providers
     # This method is NOT meant to be called from production code.
     def open_browser
       raise NotImplementedError unless Rails.env.development?
+
       require 'util/miq-system'
       MiqSystem.open_browser(browser_url)
     end
@@ -70,6 +71,7 @@ module ManageIQ::Providers
 
     def sync_cloud_tenants_with_tenants
       return unless supports?(:cloud_tenant_mapping)
+
       sync_root_tenant
       sync_tenants
       sync_deleted_cloud_tenants

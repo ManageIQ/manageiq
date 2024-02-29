@@ -143,6 +143,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
       heartbeat
       msg = get_message
       break if msg.nil?
+
       deliver_message(msg)
     end
   end

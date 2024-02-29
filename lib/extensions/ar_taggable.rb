@@ -43,6 +43,7 @@ module ActsAsTaggable
       tag_ids = Tag.for_names(tag_names, Tag.get_namespace(options)).pluck(:id)
       if options[:all]
         return none if tag_ids.length != tag_names.length
+
         with_all_tags(tag_ids)
       else
         with_any_tags(tag_ids)
@@ -141,6 +142,7 @@ module ActsAsTaggable
     Tag.transaction do
       Tag.parse(list).each do |name|
         next if self.is_tagged_with?(name, options)
+
         name = File.join(ns, name)
         tag = Tag.where(:name => name).first_or_create
         tag.taggings.create(:taggable => self)
@@ -157,6 +159,7 @@ module ActsAsTaggable
         name = File.join(ns, name)
         tag = Tag.find_by(:name => name)
         next if tag.nil?
+
         tag.taggings.where(:taggable => self).destroy_all
       end
     end
@@ -175,6 +178,7 @@ module ActsAsTaggable
   def is_tagged_with?(tag, options = {})
     ns = Tag.get_namespace(options)
     return is_vtagged_with?(tag, options) if  ns[0..7] == "/virtual" || tag[0..7] == "/virtual"
+
     # self.tagged_with(options).include?(File.join(ns ,tag))
     Array(tags).include?(File.join(ns, tag))
   end

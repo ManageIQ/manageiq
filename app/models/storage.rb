@@ -483,6 +483,7 @@ class Storage < ApplicationRecord
 
   def qmessage?(method_name)
     return false if $_miq_worker_current_msg.nil?
+
     ($_miq_worker_current_msg.class_name == self.class.name) && ($_miq_worker_current_msg.instance_id = id) && ($_miq_worker_current_msg.method_name == method_name)
   end
 
@@ -563,6 +564,7 @@ class Storage < ApplicationRecord
   def self.get_common_refresh_targets(storages)
     storages = Array.wrap(storages)
     return [] if storages.empty?
+
     storages = find(storages) unless storages[0].kind_of?(Storage)
 
     objs = storages.collect do |s|

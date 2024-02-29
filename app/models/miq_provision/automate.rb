@@ -122,6 +122,7 @@ module MiqProvision::Automate
   def get_domain
     return options[:linux_domain_name]         unless options[:linux_domain_name].nil?
     return options[:sysprep_domain_name].first if     options[:sysprep_domain_name].kind_of?(Array)
+
     nil
   end
 

@@ -59,6 +59,7 @@ module MiqReport::Generator::Aggregation
   def process_totals(group)
     group.each_key do |g|
       next if g == :count
+
       group[g].each_key do |c|
         case g
         when :total, :count, :min, :max

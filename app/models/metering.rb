@@ -39,6 +39,7 @@ module Metering
 
     relevant_fields.each do |field|
       next unless self.class.report_col_options.include?(field)
+
       group, source, * = field.split('_')
 
       if field == 'net_io_used_metric'
@@ -63,6 +64,7 @@ module Metering
 
       chargable_field = ChargeableField.find_by(:group => group, :source => source)
       next if METERING_ALLOCATED_FIELDS.include?(field) || field == "existence_hours_metric" || field == "fixed_compute_metric" || chargable_field&.metering?
+
       value = chargable_field.measure_metering(consumption, @options) if chargable_field
       self[field] = (value || 0)
     end

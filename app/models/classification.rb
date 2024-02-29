@@ -268,6 +268,7 @@ class Classification < ApplicationRecord
 
   def add_entry(options)
     raise _("entries can only be added to classifications") unless category?
+
     # Inherit from parent classification
     options.merge!(:read_only => read_only, :syntax => syntax, :single_value => single_value, :ns => ns)
     children.create!(options)
@@ -275,6 +276,7 @@ class Classification < ApplicationRecord
 
   def lookup_by_entry(type)
     raise _("method is only available for an entry") if category?
+
     klass = type.constantize
     unless klass.respond_to?("find_tagged_with")
       raise _("Class '%{type}' is not eligible for classification") % {:type => type}
@@ -467,6 +469,7 @@ class Classification < ApplicationRecord
 
       category = is_category.new(c.except(:entries))
       next unless category.valid? # HACK: Skip seeding if categories aren't valid/unique
+
       _log.info("Creating category #{c[:name]}")
       category.save!
       add_entries_from_hash(category, c[:entries])

@@ -155,6 +155,7 @@ class VimPerformanceTrend < ActsAsArModel
 
     coordinates = recs.collect do |r|
       next unless r.respond_to?(CHART_X_AXIS_COL) && r.respond_to?(col)
+
       [r.send(CHART_X_AXIS_COL).to_i, r.send(col).to_f]
     end.compact
 
@@ -222,6 +223,7 @@ class VimPerformanceTrend < ActsAsArModel
     return [] unless TREND_COLS[db.to_sym]
     return [] unless TREND_COLS[db.to_sym][col.to_sym]
     return [] unless TREND_COLS[db.to_sym][col.to_sym][:limit_cols]
+
     TREND_COLS[db.to_sym][col.to_sym][:limit_cols].inject([]) do |arr, col|
       cols = interval == "daily" ? ["max_#{col}"] : [col] # add in max if daily
       cols.each { |c| arr.push([Dictionary.gettext([db, c.to_s].join("."), :type => "column"), c]) }

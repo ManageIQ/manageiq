@@ -31,6 +31,7 @@ class FileDepotS3 < FileDepot
 
   def with_depot_connection(options = {})
     raise _("no block given") unless block_given?
+
     _log.info("Connecting through #{self.class.name}: [#{name}]")
     yield connect(options)
   end

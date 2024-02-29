@@ -257,6 +257,7 @@ class MiqServer < ApplicationRecord
     loop do
       reload
       break if self.stopped?
+
       sleep stop_poll
     end
   end
@@ -387,6 +388,7 @@ class MiqServer < ApplicationRecord
 
   def logon_status
     return :ready if self.started?
+
     started_on < (Time.now.utc - ::Settings.server.startup_timeout) ? :timed_out_starting : status.to_sym
   end
 

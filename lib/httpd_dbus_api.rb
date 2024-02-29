@@ -44,6 +44,7 @@ class HttpdDBusApi
     end
 
     raise(body["error"]) if response.status >= 400
+
     body["result"]
   end
 end

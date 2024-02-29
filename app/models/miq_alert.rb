@@ -170,6 +170,7 @@ class MiqAlert < ApplicationRecord
 
     enabled_assigned_alerts.each do |a|
       next if a.postpone_evaluation?(target)
+
       _log.info("#{log_header} #{log_target} Queuing evaluation of Alert: [#{a.description}]")
       a.evaluate_queue(target, inputs)
     end
@@ -277,6 +278,7 @@ class MiqAlert < ApplicationRecord
         a.invoke(target, inputs.merge(:result => true, :sequence => a.sequence, :synchronous => false))
       else
         next if a == :delay_next_evaluation
+
         method = "invoke_#{a}"
         unless self.respond_to?(method)
           _log.warn("Unknown notification type: [#{a}], skipping invocation")
@@ -410,6 +412,7 @@ class MiqAlert < ApplicationRecord
         next(hh) unless model == perf_model
         next(hh) if ["timestamp", "v_date", "v_time", "resource_name"].include?(col)
         next(hh) if col.starts_with?("abs_") && col.ends_with?("_timestamp")
+
         hh[col] = d
         hh
       end
@@ -522,6 +525,7 @@ class MiqAlert < ApplicationRecord
       exp = a.fetch_path("info", "expression", "expression")
       next(h) unless exp
       next(h) unless exp.detect { |e| e["type"] == EVM_TYPE_TO_VIM_TYPE[db] || e["objectType"] == EVM_TYPE_TO_VIM_TYPE[db] }
+
       h[a["MOR"]] = a["info"]["name"]
       h
     end
@@ -530,6 +534,7 @@ class MiqAlert < ApplicationRecord
   def self.expression_types(db = nil)
     automate_expressions.inject({}) do |h, e|
       next(h) unless db.nil? || e[:db].nil? || e[:db].include?(db)
+
       h[e[:name]] = e[:description]
       h
     end
@@ -538,6 +543,7 @@ class MiqAlert < ApplicationRecord
   def self.expression_options(name)
     exp = expression_by_name(name)
     return nil unless exp
+
     exp[:options]
   end
 
@@ -769,6 +775,7 @@ class MiqAlert < ApplicationRecord
 
     exp_type.each do |fld|
       next if fld[:required] != true
+
       if hash_expression[:options][fld[:name]].blank?
         errors.add("field", "'#{fld[:description]}' is required")
         next

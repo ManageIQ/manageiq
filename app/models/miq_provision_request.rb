@@ -46,6 +46,7 @@ class MiqProvisionRequest < MiqRequest
     if vm_or_template.ext_management_system.nil?
       raise MiqException::MiqProvisionError, "Source Template/Vm with id [#{source_id}] has no EMS, unable to provision"
     end
+
     vm_or_template
   end
 
@@ -71,6 +72,7 @@ class MiqProvisionRequest < MiqRequest
 
   def update_description_from_tasks
     return unless requested_task_idx.length == 1
+
     update(:description => miq_request_tasks.reload.first.description)
   end
 

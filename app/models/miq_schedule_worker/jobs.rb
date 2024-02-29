@@ -204,6 +204,7 @@ class MiqScheduleWorker::Jobs
 
   def queue_work(options)
     return if options.nil?
+
     options = {:zone => MiqServer.my_zone, :priority => MiqQueue::MEDIUM_PRIORITY}.merge(options)
     # always has class_name, method_name, zone, priority [often has role]
     MiqQueue.put_unless_exists(options)

@@ -40,6 +40,7 @@ class GenericObject < ApplicationRecord
 
   def property_attributes=(options)
     raise "generic_object_definition is nil" unless generic_object_definition
+
     options.keys.each do |k|
       unless property_attribute_defined?(k)
         raise ActiveModel::UnknownAttributeError.new(self, k)
@@ -154,6 +155,7 @@ class GenericObject < ApplicationRecord
 
   def respond_to_missing?(method_name, _include_private = false)
     return true if property_defined?(method_name.to_s.chomp('='))
+
     super
   end
 

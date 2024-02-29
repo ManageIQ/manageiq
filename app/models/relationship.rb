@@ -27,6 +27,7 @@ class Relationship < ApplicationRecord
     of_type = Array.wrap(options[:of_type])
     except_type = Array.wrap(options[:except_type])
     return relationships if of_type.empty? && except_type.empty?
+
     if relationships.kind_of?(Array) || relationships.try(:loaded?)
       relationships.reject { |r| r.filtered?(of_type, except_type) }
     else

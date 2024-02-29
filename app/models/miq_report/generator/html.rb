@@ -23,6 +23,7 @@ module MiqReport::Generator::Html
       use_table = sub_table ? sub_table : table
       use_table.data.each_with_index do |d, d_idx|
         break if row_limit != 0 && d_idx > row_limit - 1
+
         output = ""
         if ["y", "c"].include?(group) && !sortby.nil? && save_val != d.data[sortby[0]].to_s
           unless d_idx == 0                       # If not the first row, we are at a group break
@@ -159,6 +160,7 @@ module MiqReport::Generator::Html
           grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>#{_(calc.last)}:</td>"
           col_order.each_with_index do |c, c_idx|        # Go through the columns
             next if c_idx == 0                                # Skip first column
+
             grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>"
             grp_output << CGI.escapeHTML(
               format(

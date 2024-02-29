@@ -104,6 +104,7 @@ class ServiceContainerTemplate < ServiceGeneric
     project_name = new_project_name || existing_name
 
     raise _("A project is required for the container template provisioning") unless project_name
+
     project_name
   end
 

@@ -9,6 +9,7 @@ class DialogFieldTextBox < DialogField
 
   def value
     return nil if @value.nil?
+
     convert_value_to_type
   end
 
@@ -32,11 +33,13 @@ class DialogFieldTextBox < DialogField
   def automate_output_value
     return nil if @value.nil?
     return ManageIQ::Password.try_encrypt(@value) if self.protected?
+
     convert_value_to_type
   end
 
   def automate_key_name
     return "password::#{super}" if self.protected?
+
     super
   end
 
@@ -50,6 +53,7 @@ class DialogFieldTextBox < DialogField
     rule = validator_rule if validator_type == 'regex'
 
     return unless rule
+
     "#{dialog_tab.label}/#{dialog_group.label}/#{label} is invalid" unless @value.to_s =~ /#{rule}/
   end
 

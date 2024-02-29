@@ -69,6 +69,7 @@ class Dialog < ApplicationRecord
 
     dialog_tabs.each do |dt|
       next if dt.valid?
+
       dt.errors.full_messages.each do |err_msg|
         errors.add(:base, _("Dialog %{dialog_label} / %{error_message}") %
                    {:dialog_label => label, :error_message => err_msg})

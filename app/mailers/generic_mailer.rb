@@ -49,6 +49,7 @@ class GenericMailer < ActionMailer::Base
 
   def self.deliver_queue(method, options = {})
     return unless MiqRegion.my_region.role_assigned?('notifier')
+
     _log.info("starting: method: #{method} args: #{options} ")
     options[:attachment] &&= attachment_to_blob(options[:attachment])
     MiqQueue.submit_job(
@@ -162,6 +163,7 @@ class GenericMailer < ActionMailer::Base
     options[:attachment].each do |a|
       name = a[:filename]
       next if name.nil?
+
       attachments[name] = {:mime_type => a[:content_type], :content => a[:body]}
     end
     mail(:subject => options[:subject], :to => options[:to], :from => options[:from], :cc => options[:cc], :bcc => options[:bcc], :date => options[:sent_on])

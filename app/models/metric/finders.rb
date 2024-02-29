@@ -24,6 +24,7 @@ module Metric::Finders
 
   def self.find_all_by_range(resource, start_time, end_time, interval_name)
     return [] if resource.blank?
+
     klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
 
     if !resource.kind_of?(Array) && !resource.kind_of?(ActiveRecord::Relation)

@@ -192,6 +192,7 @@ class ServiceTemplate < ApplicationRecord
 
   def archive
     raise _("Cannot archive while in use") unless active_requests.empty?
+
     archive!
   end
 
@@ -297,6 +298,7 @@ class ServiceTemplate < ApplicationRecord
                 !self.class.include_service_template?(parent_service_task,
                                                       child_svc_rsc.resource.id,
                                                       parent_service)
+
         new_task = parent_service_task.class.new(nh)
         new_task.options.merge!(
           :src_id              => child_svc_rsc.resource.id,
@@ -321,6 +323,7 @@ class ServiceTemplate < ApplicationRecord
 
   def set_ownership(service, user)
     return if user.nil?
+
     service.evm_owner = user
     if user.current_group
       $log.info("Setting Service Owning User to Name=#{user.name}, ID=#{user.id}, Group to Name=#{user.current_group.name}, ID=#{user.current_group.id}")
@@ -399,6 +402,7 @@ class ServiceTemplate < ApplicationRecord
     resource_action_list.each do |action|
       ae_endpoint = ae_endpoints[action[:param_key]]
       next unless ae_endpoint
+
       build_resource_action(ae_endpoint, action)
     end
     save!
@@ -414,6 +418,7 @@ class ServiceTemplate < ApplicationRecord
     request_options[:parent_id] = options.delete('param_parent_request_id') unless options['param_parent_request_id'].nil?
     result = order(user, options, request_options)
     raise result[:errors].join(", ") if result[:errors].any?
+
     result[:request]
   end
 
@@ -517,6 +522,7 @@ class ServiceTemplate < ApplicationRecord
     if options[:prov_type] && options[:prov_type] != prov_type
       raise _('prov_type cannot be changed')
     end
+
     options[:config_info]
   end
 

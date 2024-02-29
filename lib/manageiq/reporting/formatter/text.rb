@@ -56,6 +56,7 @@ module ManageIQ
         def build_document_header
           mri = options.mri
           raise "No settings configured for Table" if mri.table.nil?
+
           calculate_max_col_widths
           @hr = hr
 
@@ -74,6 +75,7 @@ module ManageIQ
           end
 
           return if mri.headers.empty?
+
           c = mri.headers.dup
           # Remove headers of hidden columns
           mri.col_order.each_with_index do |f, i|
@@ -104,6 +106,7 @@ module ManageIQ
           use_table = mri.sub_table ? mri.sub_table : mri.table
           use_table.data.each_with_index do |r, d_idx|
             break if row_limit != 0 && d_idx > row_limit - 1
+
             line = []
             line_wrapper = false        # Clear line wrapper flag
             if ["<compare>"].include?(mri.db) && r[0] == "% Match:"

@@ -127,6 +127,7 @@ class MiqSchedule < ApplicationRecord
     # Let RBAC evaluate the filter's MiqExpression, and return the first value (the target ids)
     my_filter = get_filter
     return [] if my_filter.nil?
+
     Rbac.filtered(resource_type, :filter => my_filter).pluck(:id)
   end
 
@@ -421,6 +422,7 @@ class MiqSchedule < ApplicationRecord
 
   def v_zone_name
     return "" if zone.nil?
+
     zone.name
   end
 

@@ -75,6 +75,7 @@ module RetirementMixin
 
   def extend_retires_on(days, date = Time.zone.now)
     raise _("Invalid Date specified: %{date}") % {:date => date} unless date.kind_of?(ActiveSupport::TimeWithZone)
+
     _log.info("Extending Retirement Date on #{self.class.name} for id:<#{id}>, name:<#{name}> ")
     new_retires_date = date.in_time_zone + days.to_i.days
     _log.info("Original Date: #{date} Extend days: #{days} New Retirement Date: #{new_retires_date} for id:<#{id}>, name:<#{name}>")
@@ -123,6 +124,7 @@ module RetirementMixin
 
   def retirement_check
     return if retired? || retiring? || retirement_initialized?
+
     requester = system_context_requester
 
     if !retirement_warned? && retirement_warning_due?
@@ -151,6 +153,7 @@ module RetirementMixin
   def retire_now(requester = nil)
     if retired
       return if retired_validated?
+
       _log.info("#{retirement_object_title}: [id:<#{id}>, name:<#{name}>], Retires On: [#{retires_on.strftime("%x %R %Z")}], was previously retired, but currently #{retired_invalid_reason}")
     elsif retiring?
       _log.info("#{retirement_object_title}: [id:<#{id}>, name:<#{name}>] retirement in progress")
@@ -175,6 +178,7 @@ module RetirementMixin
 
   def finish_retirement
     raise _("%{name} already retired") % {:name => name} if retired?
+
     $log.info("Finishing Retirement for [#{name}]")
     requester = retirement_requester
     mark_retired
@@ -191,6 +195,7 @@ module RetirementMixin
 
   def start_retirement
     return if retired? || retiring?
+
     $log.info("Starting Retirement for [id:<#{id}>, name:<#{name}>]")
     update(:retirement_state => "retiring")
   end

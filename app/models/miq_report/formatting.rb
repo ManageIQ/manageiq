@@ -104,6 +104,7 @@ module MiqReport::Formatting
 
   def apply_format_precision(value, precision)
     return value if precision.nil? || !(value.kind_of?(Integer) || value.kind_of?(Float))
+
     Kernel.format("%.#{precision}f", value)
   end
 
@@ -188,6 +189,7 @@ module MiqReport::Formatting
 
     val = val.in_time_zone(options[:tz]) if val.kind_of?(Time) && options[:tz]
     return val if options[:format].nil?
+
     val.strftime(options[:format])
   end
 
@@ -221,6 +223,7 @@ module MiqReport::Formatting
 
   def format_set(val, options)
     return val unless val.kind_of?(Array)
+
     options[:delimiter] ||= ", "
     val.join(options[:delimiter])
   end
@@ -268,6 +271,7 @@ module MiqReport::Formatting
 
   def format_large_number_to_exponential_form(val, _options = {})
     return val if val.to_f < 1.0e+15
+
     val.to_f.to_s
   end
 

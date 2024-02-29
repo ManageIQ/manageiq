@@ -52,6 +52,7 @@ class Provider < ApplicationRecord
 
   def with_provider_connection(options = {})
     raise _("no block given") unless block_given?
+
     _log.info("Connecting through #{self.class.name}: [#{name}]")
     yield connect(options)
   end
@@ -68,6 +69,7 @@ class Provider < ApplicationRecord
     unless authentication_status_ok?
       raise _("Provider failed last authentication check")
     end
+
     managers.flat_map { |manager| EmsRefresh.queue_refresh(manager, nil, opts) }
   end
 

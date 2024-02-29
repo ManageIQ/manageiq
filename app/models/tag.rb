@@ -110,6 +110,7 @@ class Tag < ApplicationRecord
     list = []
     tags.collect do |tag|
       next unless tag.name =~ %r{^#{ns}/(.*)$}i
+
       name = $1.include?(" ") ? "'#{$1}'" : $1
       list.push(name) unless name.blank?
     end

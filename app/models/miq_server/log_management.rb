@@ -42,6 +42,7 @@ module MiqServer::LogManagement
 
   def include_automate_models_and_dialogs?(value)
     return value unless value.nil?
+
     Settings.log.collection.include_automate_models_and_dialogs
   end
 
@@ -52,6 +53,7 @@ module MiqServer::LogManagement
 
     # the current queue item and task must be errored out on exceptions so re-raise any caught errors
     raise _("Log depot settings not configured") unless context_log_depot
+
     context_log_depot.update(:support_case => options[:support_case].presence)
 
     if include_automate_models_and_dialogs?(options[:include_automate_models_and_dialogs])
@@ -256,11 +258,13 @@ module MiqServer::LogManagement
   def log_collection_active_recently?(since = nil)
     since ||= 15.minutes.ago.utc
     return true if log_files.exists?(["created_on > ? AND state = ?", since, "collecting"])
+
     MiqTask.exists?(["miq_server_id = ? and name like ? and state != ? and created_on > ?", id, "Zipped log retrieval for %", "Finished", since])
   end
 
   def log_collection_active?
     return true if log_files.exists?(:state => "collecting")
+
     MiqTask.exists?(["miq_server_id = ? and name like ? and state != ?", id, "Zipped log retrieval for %", "Finished"])
   end
 

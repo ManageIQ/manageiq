@@ -19,8 +19,10 @@ module Authenticator
     def autocreate_user(username)
       # when default group for ldap users is enabled, create the user
       return unless config[:default_group_for_users]
+
       default_group = MiqGroup.in_my_region.find_by(:description => config[:default_group_for_users])
       return unless default_group
+
       create_user_from_ldap(username) { [default_group] }
     end
 
@@ -148,9 +150,11 @@ module Authenticator
 
       _log.info("Bind DN: [#{auth[:bind_dn]}], Host: [#{auth[:ldaphost]}], Port: [#{auth[:ldapport]}], Mode: [#{auth[:mode]}]")
       raise "Cannot Bind" unless ldap_up.bind(auth[:bind_dn], auth[:bind_pwd]) # now bind with bind_dn so that we can do our searches.
+
       _log.info("User SID: [#{sid}], FSP DN: [#{fsp_dn}]")
       user_proxy_object = ldap_up.search(:base => fsp_dn, :scope => :base).first
       raise "Unable to find user proxy object in LDAP" if user_proxy_object.nil?
+
       _log.debug("UserProxy obj from LDAP: #{user_proxy_object.inspect}")
       ldap_up.get_memberships(user_proxy_object, auth[:group_memberships_max_depth])
     end

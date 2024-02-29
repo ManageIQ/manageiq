@@ -13,6 +13,7 @@ class ChargebackRateDetailMeasure < ApplicationRecord
 
   def adjust(from_unit, to_unit)
     return 1 if from_unit == to_unit
+
     jumps = units.index(to_unit) - units.index(from_unit)
     BigDecimal(step)**jumps
   end

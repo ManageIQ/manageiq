@@ -237,6 +237,7 @@ class LogFile < ApplicationRecord
     unless server.respond_to?(:started?)
       raise MiqException::Error, _("started? not implemented for %{server_name}") % {:server_name => server.class.name}
     end
+
     unless server.started?
       if server.respond_to?(:name)
         raise MiqException::Error,

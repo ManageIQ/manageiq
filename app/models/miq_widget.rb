@@ -107,6 +107,7 @@ class MiqWidget < ApplicationRecord
                   !MiqQueue.where(:method_name => "generate_content",
                                   :class_name  => self.class.name,
                                   :instance_id => id).any?(&:unfinished?)
+
     miq_task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_TIMEOUT, "Timed out stalled task.")
   end
 
@@ -185,6 +186,7 @@ class MiqWidget < ApplicationRecord
 
   def queue_generate_content
     return if content_type == "menu"
+
     # Called from schedule
     unless self.enabled?
       _log.info("#{log_prefix} is disabled, content will NOT be generated")
@@ -238,6 +240,7 @@ class MiqWidget < ApplicationRecord
 
   def generate_content(klass, group_description, userids, timezones = nil)
     return if content_type == "menu"
+
     miq_task.state_active if miq_task
     content_generator.generate(self, klass, group_description, userids, timezones)
   end
@@ -388,6 +391,7 @@ class MiqWidget < ApplicationRecord
   def last_run_on_for_user(user)
     contents = contents_for_user(user)
     return nil if contents.nil?
+
     contents.miq_report_result.nil? ? contents.updated_at : contents.miq_report_result.last_run_on
   end
 
@@ -410,6 +414,7 @@ class MiqWidget < ApplicationRecord
 
   def available_for_group?(group)
     return false unless group
+
     has_visibility?(:roles, group.miq_user_role_name) || has_visibility?(:groups, group.description)
   end
 
@@ -587,6 +592,7 @@ class MiqWidget < ApplicationRecord
   # TODO: detect date field in the report?
   def timezone_matters?
     return true unless options
+
     options.fetch(:timezone_matters, true)
   end
 

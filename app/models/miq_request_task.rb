@@ -122,6 +122,7 @@ class MiqRequestTask < ApplicationRecord
     if request_class::ACTIVE_STATES.include?(state)
       raise _("%{task} request is already being processed") % {:task => request_class::TASK_DESCRIPTION}
     end
+
     task_check_on_execute
   end
 

@@ -35,6 +35,7 @@ class Chargeback < ActsAsArModel
       begin
         ChargeableField.all.each_with_object({}) do |chargeable_field, result|
           next unless report_col_options.keys.include?("#{chargeable_field.rate_name}_cost")
+
           result["#{chargeable_field.rate_name}_rate"] = :string
         end
       end
@@ -215,6 +216,7 @@ class Chargeback < ActsAsArModel
         end
         r.charge(consumption, @options).each do |field, value|
           next if @options.skip_field_accumulation?(field, self[field])
+
           _log.debug("Calculation with field: #{field} and with value: #{value}")
           (self[field] = self[field].kind_of?(Numeric) ? (self[field] || 0) + value : value)
           _log.debug("Accumulated value: #{self[field]}")

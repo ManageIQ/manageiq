@@ -207,6 +207,7 @@ class EmsCluster < ApplicationRecord
   def ems_events
     ewc = event_where_clause
     return [] if ewc.blank?
+
     EmsEvent.where(ewc).order("timestamp").to_a
   end
 
@@ -240,6 +241,7 @@ class EmsCluster < ApplicationRecord
     unless %w(cpu vcpu memory).include?(resource)
       raise ArgumentError, _("Unknown resource %{name}") % {:name => resource.inspect}
     end
+
     resource = "cpu" if resource == "vcpu"
     send("effective_#{resource}")
   end

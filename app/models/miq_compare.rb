@@ -538,6 +538,7 @@ class MiqCompare
   # Retrieve all records from the source for the set of ids (compare mode)
   def get_compare_records
     return unless @mode == :compare
+
     recs = @model.where(:id => @ids)
     error_recs = []
 
@@ -555,6 +556,7 @@ class MiqCompare
   # Retrieve the record from the source (compare mode)
   def get_compare_record(id)
     return unless @mode == :compare
+
     new_rec = @model.find_by(:id => id)
     _log.error("No record was found for compare object #{@model}, id: [#{id}]") if new_rec.nil?
     new_rec
@@ -565,12 +567,14 @@ class MiqCompare
   # Retrieve all records from the source for the set of ids (drift mode)
   def get_drift_records
     return unless @mode == :drift
+
     @records = drift_model_record.drift_states.where(:timestamp => @ids).collect(&:data_obj)
   end
 
   # Retrieve the record from the source (drift mode)
   def get_drift_record(ts)
     return unless @mode == :drift
+
     new_rec = drift_model_record.drift_states.find_by(:timestamp => ts).data_obj
     _log.error("No data was found for drift object #{@model} [#{@model_record_id}] at [#{ts}]") if new_rec.nil?
     new_rec
@@ -578,6 +582,7 @@ class MiqCompare
 
   def drift_model_record
     return unless @mode == :drift
+
     @model_record ||= @model.find_by(:id => @model_record_id)
   end
 

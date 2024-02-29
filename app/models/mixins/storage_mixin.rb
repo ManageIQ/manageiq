@@ -17,6 +17,7 @@ module StorageMixin
 
   def storage_files_by_type
     return @storage_files_by_type unless @storage_files_by_type.nil?
+
     @storage_files_by_type = StorageFile.split_file_types(storage_files_files)
   end
 

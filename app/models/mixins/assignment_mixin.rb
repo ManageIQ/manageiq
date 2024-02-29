@@ -50,6 +50,7 @@ module AssignmentMixin
     Array.wrap(objects).each do |obj|
       tag = build_tag_tagging_path(obj, klass)
       next if tag.nil?
+
       tag_add(tag, :ns => namespace)
     end
     reload
@@ -59,6 +60,7 @@ module AssignmentMixin
     Array.wrap(objects).each do |obj|
       tag = build_tag_tagging_path(obj, klass)
       next if tag.nil?
+
       tag_remove(tag, :ns => namespace)
     end
     reload
@@ -249,6 +251,7 @@ module AssignmentMixin
       "#{obj.class.base_model.name.underscore}/id/#{obj.id}"
     else                                # obj is the id of an instance of <klass>
       raise _("Class must be specified when object is an integer") if klass.nil?
+
       "#{klass.underscore}/id/#{obj}"
     end
   end

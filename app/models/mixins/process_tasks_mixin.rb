@@ -6,6 +6,7 @@ module ProcessTasksMixin
     # Processes tasks received from the UI and queues them
     def process_tasks(options)
       raise _("No ids given to process_tasks") if options[:ids].blank?
+
       if options[:task] == 'retire_now'
         options[:ids].each do |id|
           $log.info("Creating retire request for id [#{id}] with user [#{User.current_user.userid}]")
@@ -208,6 +209,7 @@ module ProcessTasksMixin
       end
 
       return true unless options[:task] == "retire_now" && instance.retired?
+
       task.error("#{instance.name} is already retired")
       false
     end

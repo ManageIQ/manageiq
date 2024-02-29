@@ -28,6 +28,7 @@ module MiqServer::WorkerManagement::Monitor::SystemLimits
       sys = MiqSystem.memory
 
       return false if sys[:SwapTotal].nil? || sys[:SwapFree].nil? || sys[:MemFree].nil? || sys[:SwapTotal] == 0
+
       used = sys[:SwapTotal] - sys[:SwapFree] - sys[:MemFree]
       pct_used = used / sys[:SwapTotal].to_f * 100
     rescue => err
@@ -48,6 +49,7 @@ module MiqServer::WorkerManagement::Monitor::SystemLimits
       sys = MiqSystem.memory
 
       return true if sys[:SwapTotal].nil? || sys[:SwapFree].nil? || sys[:MemFree].nil? || sys[:SwapTotal] == 0
+
       used = sys[:SwapTotal] - sys[:SwapFree] - sys[:MemFree]
       pct_used = used / sys[:SwapTotal].to_f * 100
     rescue => err
