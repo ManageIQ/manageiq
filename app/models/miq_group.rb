@@ -32,7 +32,6 @@ class MiqGroup < ApplicationRecord
 
   serialize :settings
 
-  default_value_for :group_type, USER_GROUP
   default_value_for(:sequence) { next_sequence }
 
   acts_as_miq_taggable

@@ -5,8 +5,6 @@ class PxeServer < ApplicationRecord
 
   alias_attribute :description, :name
 
-  default_value_for :customization_directory, ""
-
   serialize :visibility
 
   acts_as_miq_taggable

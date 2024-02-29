@@ -25,11 +25,7 @@ class MiqRequest < ApplicationRecord
   serialize   :options, Hash
 
   default_value_for(:message)       { |r| "#{r.class::TASK_DESCRIPTION} - Request Created" }
-  default_value_for :request_state, 'pending'
-
   default_value_for(:request_type)  { |r| r.request_types.first }
-  default_value_for :status,        'Ok'
-  default_value_for :process,       true
 
   validates_inclusion_of :approval_state, :in => %w(pending_approval approved denied), :message => "should be 'pending_approval', 'approved' or 'denied'"
   validates_inclusion_of :status,         :in => %w(Ok Warn Error Timeout Denied)

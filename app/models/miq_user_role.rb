@@ -14,8 +14,6 @@ class MiqUserRole < ApplicationRecord
 
   serialize :settings
 
-  default_value_for :read_only, false
-
   FIXTURE_PATH = File.join(FIXTURE_DIR, table_name)
   FIXTURE_YAML = "#{FIXTURE_PATH}.yml"
 

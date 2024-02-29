@@ -4,9 +4,6 @@
 class MiqWidget < ApplicationRecord
   include ReadOnlyMixin
 
-  default_value_for :enabled, true
-  default_value_for :read_only, false
-
   DEFAULT_ROW_COUNT = 5
   IMPORT_CLASS_NAMES = %w(MiqWidget).freeze
 
