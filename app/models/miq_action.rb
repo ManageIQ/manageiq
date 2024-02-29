@@ -463,7 +463,7 @@ class MiqAction < ApplicationRecord
     Tempfile.open('miq_action', SCRIPT_DIR) do |fd|
       fd.puts ruby_file ? RB_PREAMBLE : SH_PREAMBLE
       fd.puts File.read(filename)
-      fd.chmod(0755)
+      fd.chmod(0o755)
 
       MiqPolicy.logger.info("MIQ(action_script): Executing: [#{filename}]")
 

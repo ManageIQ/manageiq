@@ -43,7 +43,7 @@ module ManageIQ
       template "bin/setup"
       template "bin/update"
       template "bin/before_install"
-      chmod "bin", 0755 & ~File.umask, :verbose => false
+      chmod "bin", 0o755 & ~File.umask, :verbose => false
       empty_directory_with_keep_file "bundler.d"
       template "config/secrets.defaults.yml"
       template "config/settings.yml"

@@ -4,7 +4,7 @@ class GitWorktree
   attr_accessor :name, :email, :base_name
 
   ENTRY_KEYS = [:path, :dev, :ino, :mode, :gid, :uid, :ctime, :mtime]
-  DEFAULT_FILE_MODE = 0100644
+  DEFAULT_FILE_MODE = 0o100644
   LOCK_REFERENCE = 'refs/locks'
 
   def self.checkout_at(url, directory, options = {})

@@ -132,18 +132,18 @@ class Filesystem < ApplicationRecord
   end
 
   [
-    [:suid_bit,    04000],
-    [:sgid_bit,    02000],
-    [:sticky_bit,  01000],
-    [:owner_read,  00400],
-    [:owner_write, 00200],
-    [:owner_exec,  00100],
-    [:group_read,  00040],
-    [:group_write, 00020],
-    [:group_exec,  00010],
-    [:other_read,  00004],
-    [:other_write, 00002],
-    [:other_exec,  00001],
+    [:suid_bit,    0o4000],
+    [:sgid_bit,    0o2000],
+    [:sticky_bit,  0o1000],
+    [:owner_read,  0o0400],
+    [:owner_write, 0o0200],
+    [:owner_exec,  0o0100],
+    [:group_read,  0o0040],
+    [:group_write, 0o0020],
+    [:group_exec,  0o0010],
+    [:other_read,  0o0004],
+    [:other_write, 0o0002],
+    [:other_exec,  0o0001],
   ].each do |m, o|
     define_method(:"permission_#{m}?") do
       return permissions && permissions.to_i(8) & o != 0
