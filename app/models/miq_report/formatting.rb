@@ -137,7 +137,7 @@ module MiqReport::Formatting
     helper_options = {}
     helper_options[:delimiter] = options[:delimiter] if options.key?(:delimiter)
     helper_options[:separator] = options[:separator] if options.key?(:separator)
-    helper_options[:unit] = options [:unit] if options.key?(:unit)
+    helper_options[:unit] = options[:unit] if options.key?(:unit)
     val = apply_format_precision(val, options[:precision])
     val = ApplicationController.helpers.number_to_currency(val, helper_options)
     apply_prefix_and_suffix(val, options)
