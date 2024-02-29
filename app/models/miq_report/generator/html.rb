@@ -114,9 +114,11 @@ module MiqReport::Generator::Html
     if ['EmsCluster', 'ExtManagementSystem', 'Host', 'Storage', 'Vm', 'Service'].include?(db) && data_row['id']
       controller = db == "ExtManagementSystem" ? "management_system" : db.underscore
       donav = "DoNav('/#{controller}/show/#{data_row['id']}');"
-      title = data_row['name'] ?
-        "View #{ui_lookup(:model => db)} \"#{data_row['name']}\"" :
-        "View this #{ui_lookup(:model => db)}"
+      title = if data_row['name']
+  "View #{ui_lookup(:model => db)} \"#{data_row['name']}\""
+else
+  "View this #{ui_lookup(:model => db)}"
+end
       onclick = "onclick=\"#{donav}\" onKeyPress=\"#{donav}\" tabindex='0' style='cursor:hand' title='#{title}'"
     end
 
