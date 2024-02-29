@@ -69,7 +69,7 @@ class MiqRequestTask < ApplicationRecord
     states["unknown"] = unknown_state unless unknown_state.zero?
     msg = states.sort.collect { |s| "#{s[0].capitalize} = #{s[1]}" }.join("; ")
 
-    req_state = (states.length == 1) ? states.keys.first : "active"
+    req_state = states.length == 1 ? states.keys.first : "active"
 
     # Determine status to report
     req_status = status.slice('Error', 'Timeout', 'Warn').keys.first || 'Ok'
@@ -80,7 +80,7 @@ class MiqRequestTask < ApplicationRecord
     end
 
     if req_state == "finished"
-      msg = (req_status == 'Ok') ? "Task complete" : "Task completed with errors"
+      msg = req_status == 'Ok' ? "Task complete" : "Task completed with errors"
     end
 
     # If there is only 1 request_task, set the parent message the same

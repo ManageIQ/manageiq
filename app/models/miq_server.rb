@@ -277,7 +277,7 @@ class MiqServer < ApplicationRecord
     # Then kill this server
     _log.info("initiated for #{format_full_log_msg}")
     update(:stopped_on => Time.now.utc, :status => "killed", :is_master => false)
-    (pid == Process.pid) ? shutdown_and_exit : Process.kill(9, pid)
+    pid == Process.pid ? shutdown_and_exit : Process.kill(9, pid)
   end
 
   def self.kill

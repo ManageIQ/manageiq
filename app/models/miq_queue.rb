@@ -261,7 +261,7 @@ class MiqQueue < ApplicationRecord
   #
   # TODO: Review if other services in submit_job, such as event/smart proxy should follow this pattern.
   def self.queue_name_for_priority_service(service, priority)
-    (priority.nil? || MiqQueue.lower_priority?(priority, HIGH_PRIORITY)) ? service.to_s : "generic"
+    priority.nil? || MiqQueue.lower_priority?(priority, HIGH_PRIORITY) ? service.to_s : "generic"
   end
 
   def self.where_queue_name(is_array)

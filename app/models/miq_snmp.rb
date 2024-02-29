@@ -108,7 +108,7 @@ class MiqSnmp
       value    = tuple[:value]
       type     = tuple[:type] || tuple[:var_type]
       snmpType = AVAILABLE_TYPES_HASH[type]
-      snmpVal  = (snmpType == SNMP::Null) ? SNMP::Null.new : snmpType.new(value)
+      snmpVal  = snmpType == SNMP::Null ? SNMP::Null.new : snmpType.new(value)
       vars << SNMP::VarBind.new(oid, snmpVal)
     end
     vars

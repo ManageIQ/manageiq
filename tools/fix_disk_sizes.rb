@@ -46,7 +46,7 @@ ExtManagementSystem.all.each do |e|
     next if d.nil?
 
     data = {
-      :new => {:size => di[:capacityInKB].kilobytes, :disk_type => (di[:thinProvisioned] == 'true') ? 'thin' : 'thick', :mode => di[:diskMode]},
+      :new => {:size => di[:capacityInKB].kilobytes, :disk_type => di[:thinProvisioned] == 'true' ? 'thin' : 'thick', :mode => di[:diskMode]},
       :old => {:size => d.size, :disk_type => d.disk_type, :mode => d.mode}
     }
     next unless data[:new] != data[:old]

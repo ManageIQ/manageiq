@@ -65,7 +65,7 @@ module MiqProvision::Automate
 
   def get_network_details
     related_vm             = vm || source
-    related_vm_description = (related_vm == vm) ? "VM" : "Template"
+    related_vm_description = related_vm == vm ? "VM" : "Template"
 
     if related_vm.nil?
       _log.error("No VM or Template Found for Provision Object")

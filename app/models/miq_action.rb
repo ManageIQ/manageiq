@@ -236,7 +236,7 @@ class MiqAction < ApplicationRecord
 
     snmp_inputs = {}
     snmp_inputs[:host] = action.options[:host]
-    trap_id_key = (snmp_version == 1) ? :specific_trap : :trap_oid
+    trap_id_key = snmp_version == 1 ? :specific_trap : :trap_oid
     snmp_inputs[trap_id_key] = action.options[:trap_id]
 
     vars = []

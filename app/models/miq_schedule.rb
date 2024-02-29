@@ -156,7 +156,7 @@ class MiqSchedule < ApplicationRecord
     time = if run_at[:interval][:unit].downcase != "once"
       next_interval_time
     else
-      (last_run_on && (last_run_on > run_at[:start_time])) ? nil : run_at[:start_time]
+      last_run_on && (last_run_on > run_at[:start_time]) ? nil : run_at[:start_time]
            end
     time.try(:utc)
   end

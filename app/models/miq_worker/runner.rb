@@ -197,7 +197,7 @@ class MiqWorker::Runner
   #
 
   def self.safe_log(worker, message = nil, exit_code = 0)
-    meth = (exit_code == 0) ? :info : :error
+    meth = exit_code == 0 ? :info : :error
 
     prefix = "#{log_prefix} "      rescue ""
     pid    = "PID [#{Process.pid}] " rescue ""

@@ -696,7 +696,7 @@ end
       if attrs.key?(key)
         _log.info("Skipping key=<#{key}> because already set to <#{attrs[key]}>")
       else
-        value = (k == :vm_tags) ? get_tags : get_value(@values[k]).to_s
+        value = k == :vm_tags ? get_tags : get_value(@values[k]).to_s
         _log.info("Setting attrs[#{key}]=<#{value}>")
         attrs[key] = value
       end

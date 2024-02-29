@@ -112,6 +112,6 @@ class MiqAeField < ApplicationRecord
   private
 
   def set_default_value(value)
-    write_attribute(:default_value, (datatype == "password") ? MiqAePassword.encrypt(value) : value)
+    write_attribute(:default_value, datatype == "password" ? MiqAePassword.encrypt(value) : value)
   end
 end

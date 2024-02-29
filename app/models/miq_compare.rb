@@ -209,7 +209,7 @@ end
         column = column.to_s
         section = "#{TAG_PREFIX}#{column}".to_sym
         c = Classification.lookup_by_name(column)
-        section_header = (c.nil? || c.description.blank?) ? column.titleize : c.description
+        section_header = c.nil? || c.description.blank? ? column.titleize : c.description
         column = nil # columns will be filled in dynamically when we fetch the section data
         key = nil
       else

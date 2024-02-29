@@ -56,8 +56,8 @@ module MiqProvision::OptionsHelper
   end
 
   def get_hostname(dest_vm_name)
-    name_key = (source.platform == 'windows') ? :sysprep_computer_name : :linux_host_name
-    computer_name = (get_option(:number_of_vms) > 1) ? nil : get_option(name_key).to_s.strip
+    name_key = source.platform == 'windows' ? :sysprep_computer_name : :linux_host_name
+    computer_name = get_option(:number_of_vms) > 1 ? nil : get_option(name_key).to_s.strip
     computer_name = dest_vm_name if computer_name.blank?
     hostname_cleanup(computer_name)
   end

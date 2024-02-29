@@ -1195,7 +1195,7 @@ end
   end
 
   def self.calculate_power_state(raw_power_state)
-    (raw_power_state == "never") ? "never" : "unknown"
+    raw_power_state == "never" ? "never" : "unknown"
   end
 
   def archived?

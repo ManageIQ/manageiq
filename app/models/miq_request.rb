@@ -381,14 +381,14 @@ class MiqRequest < ApplicationRecord
     end
     msg = states.sort.collect { |s| "#{s[0].capitalize} = #{s[1]}" }.join("; ")
 
-    req_state = (states.length == 1) ? states.keys.first : "active"
+    req_state = states.length == 1 ? states.keys.first : "active"
 
     # Determine status to report
     req_status = status.slice('Error', 'Timeout', 'Warn').keys.first || 'Ok'
 
     if req_state == "finished"
       update_attribute(:fulfilled_on, Time.now.utc)
-      msg = (req_status == 'Ok') ? "Request complete" : "Request completed with errors"
+      msg = req_status == 'Ok' ? "Request complete" : "Request completed with errors"
     end
 
     # If there is only 1 request_task, set the parent message the same
