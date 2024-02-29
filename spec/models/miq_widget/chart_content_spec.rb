@@ -62,6 +62,6 @@ RSpec.describe "Widget Chart Content" do
 
   it '#generate returns valid data' do
     content = widget.generate_one_content_for_user(@group, @user)
-    expect(ManageIQ::Reporting::Charting.data_ok? content.contents).to eq(true)
+    expect(ManageIQ::Reporting::Charting.data_ok?(content.contents)).to eq(true)
   end
 end
