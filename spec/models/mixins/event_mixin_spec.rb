@@ -47,16 +47,16 @@ RSpec.describe EventMixin do
     # 3) Host#event_where_clause does an OR: host_id OR dest_host_id... right now we only do host_id in ems_event_filter
     # 4) VmOrTemplate#event_where_clause does an OR: vm_or_template_id OR dest_vm_or_template_id, we only do vm_or_template_id in ems_event_filter
     %w[
-      AvailabilityZone    availability_zone_id
-      EmsCluster          ems_cluster_id
+      AvailabilityZone availability_zone_id
+      EmsCluster ems_cluster_id
       ExtManagementSystem ems_id
-      Host                host_id
-      PhysicalChassis     physical_chassis_id
-      PhysicalServer      physical_server_id
-      PhysicalStorage     physical_storage_id
-      PhysicalSwitch      physical_switch_id
-      VmOrTemplate        vm_or_template_id
-      Vm                  vm_or_template_id
+      Host host_id
+      PhysicalChassis physical_chassis_id
+      PhysicalServer physical_server_id
+      PhysicalStorage physical_storage_id
+      PhysicalSwitch physical_switch_id
+      VmOrTemplate vm_or_template_id
+      Vm vm_or_template_id
     ].each_slice(2) do |klass, column|
       it "#{klass} uses #{column} and target_id and target_type" do
         obj = FactoryBot.create(klass.tableize.singularize)

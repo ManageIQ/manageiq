@@ -20,7 +20,7 @@ RSpec.describe GenericObject do
           :s_time     => "datetime"
         },
         :associations => {"vms" => "Vm", "hosts" => "Host"},
-        :methods      => %w(my_host  some_method)
+        :methods      => %w(my_host some_method)
       }
     )
   end

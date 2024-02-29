@@ -103,7 +103,7 @@ RSpec.describe MiqAeClass do
       set_priority('domain1', 10)
       set_priority('domain2', 20)
       set_priority('domain3', 50)
-      @inst4_list = %w(/DOMAIN3/SYSTEM/PROCESS/inst4  /DOMAIN1/SYSTEM/PROCESS/inst4)
+      @inst4_list = %w(/DOMAIN3/SYSTEM/PROCESS/inst4 /DOMAIN1/SYSTEM/PROCESS/inst4)
       @sorted_inst_list = ['/DOMAIN3/SYSTEM/PROCESS/inst1', '/DOMAIN3/SYSTEM/PROCESS/inst2',
                             '/DOMAIN3/SYSTEM/PROCESS/inst32', '/DOMAIN3/SYSTEM/PROCESS/inst4',
                             '/DOMAIN2/SYSTEM/PROCESS/inst31', '/DOMAIN2/SYSTEM/PROCESS/inst41',
