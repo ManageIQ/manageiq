@@ -35,7 +35,7 @@ if defined?(RSpec)
     end
 
     task :setup_region do
-      ENV["REGION"] ||= (rand(99) + 1).to_s # Ensure we have a random, non-0, region
+      ENV["REGION"] ||= (rand(1..99)).to_s # Ensure we have a random, non-0, region
       puts "** Preparing database with REGION #{ENV.fetch("REGION", nil)}"
     end
 
