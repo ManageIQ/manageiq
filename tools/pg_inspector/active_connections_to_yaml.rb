@@ -16,7 +16,7 @@ module PgInspector
 Use password in PGPASSWORD environment variable if no password file given.
 
 Options:
-BANNER
+        BANNER
         opt(:pg_host, "PostgreSQL host name or address",
             :type => :string, :short => "s", :default => "127.0.0.1")
         opt(:port, "PostgreSQL server port",
@@ -88,7 +88,7 @@ BANNER
 SELECT *
 FROM #{table_name}
 #{"ORDER BY #{order_by}" if order_by}
-SQL
+      SQL
       conn.exec_params(query)
     rescue PG::Error => e
       Util.error_exit(e)

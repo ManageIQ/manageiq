@@ -35,7 +35,7 @@ pg_inspector is a tool to inspect ManageIQ process caused deadlock in PostgreSQL
   Use `pg_inspector.rb operation -h' to see help for each operation
 
   Options:
-BANNER
+        BANNER
         stop_on(SUB_COMMANDS.keys.map(&:to_s))
       end
       current_operation = args.shift

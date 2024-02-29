@@ -116,7 +116,7 @@ label Ubuntu-10.10-Desktop-i386-LIVE_BOOT
    kernel ubuntu-10.10-desktop-i386/vmlinuz
    append initrd=ubuntu-10.10-desktop-i386/initrd.lz vga=normal boot=casper netboot=nfs nfsroot=192.168.252.60:/srv/nfsboot/ubuntu-10.10-desktop-i386 -- quiet
 
-PXE
+        PXE
         image = @pxe_server.pxe_images.find_by(:name => "Ubuntu-10.10-Desktop-i386-LIVE_BOOT")
         begin
           @pxe_server.create_provisioning_files(image, "00:19:e3:d7:5b:0e")
@@ -150,7 +150,7 @@ label Ubuntu-10.10-Desktop-i386-LIVE_BOOT
    kernel ubuntu-10.10-desktop-i386/vmlinuz
    append initrd=ubuntu-10.10-desktop-i386/initrd.lz vga=normal boot=casper netboot=nfs nfsroot=192.168.252.60:/srv/nfsboot/ubuntu-10.10-desktop-i386 -- quiet ks=#{@pxe_server.access_url}/#{@pxe_server.customization_directory}/#{dashed_mac_address}.ks.cfg ksdevice=00:19:e3:d7:5b:0e
 
-PXE
+        PXE
 
         begin
           @pxe_server.create_provisioning_files(image, "00:19:e3:d7:5b:0e", nil, kickstart)
@@ -273,7 +273,7 @@ PXE
 kernel #{image.kernel} ramdisk_size=10000
 initrd #{image.initrd}
 boot
-PXE
+        PXE
         begin
           @pxe_server.create_provisioning_files(image, "00:19:e3:d7:5b:0e")
           expect(File.exist?(expected_name)).to be_truthy
@@ -306,7 +306,7 @@ PXE
 kernel #{image.kernel} ramdisk_size=10000 ksdevice=00:19:e3:d7:5b:0e ks=#{@pxe_server.access_url}/#{@pxe_server.customization_directory}/#{dashed_mac_address}.ks.cfg
 initrd #{image.initrd}
 boot
-PXE
+        PXE
         begin
           @pxe_server.create_provisioning_files(image, "00:19:e3:d7:5b:0e", nil, kickstart)
           expect(File.exist?(expected_name)).to be_truthy

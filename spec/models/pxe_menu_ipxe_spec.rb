@@ -59,7 +59,7 @@ reboot
 
 :ipxedemo
 chain http://boot.ipxe.org/demo/boot.php
-PXEMENU
+    PXEMENU
 
     @contents2 = <<-PXEMENU
 #!ipxe
@@ -73,7 +73,7 @@ choose os && goto ${os}
 kernel http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz ramdisk_size=10000 ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-host.ks.cfg
 initrd http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img
 boot
-PXEMENU
+    PXEMENU
   end
 
   it ".parse_contents" do

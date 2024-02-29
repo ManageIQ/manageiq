@@ -9,7 +9,7 @@ default #{name}
 
 label #{name}
    menu label #{description}
-PXE
+    PXE
 
     pxe << "   kernel #{kernel}\n" unless kernel.nil?
     pxe << "   append #{options}\n"     unless options.blank?

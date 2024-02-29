@@ -20,7 +20,7 @@ The output file will overwrite the previous one with same name after
 successfully dumped.
 
 Options:
-BANNER
+        BANNER
         opt(:pg_host, "PostgreSQL host name or address",
             :type => :string, :short => "s", :default => "127.0.0.1")
         opt(:port, "PostgreSQL server port",
@@ -70,7 +70,7 @@ BANNER
       query = <<-SQL
 SELECT *
 FROM #{table_name};
-SQL
+      SQL
       result = []
       res = conn.exec_params(query)
       res.each do |row|

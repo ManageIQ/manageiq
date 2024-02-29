@@ -9,7 +9,7 @@ format fs=ntfs label="Windows" quick
 assign letter=c
 active
 exit
-EOF
+  EOF
 
   IMAGE_BAT_FILENAME = "image.bat".freeze
   IMAGE_BAT_CONTENTS = <<-EOF
@@ -19,7 +19,7 @@ copy unattend.xml c:\\windows\\system32\\sysprep\\
 bcdboot c:\\windows /s c:
 s:\\<%= evm[:windows_images_directory] %>\\curl <%= evm[:post_install_callback_url] %>
 wpeutil shutdown
-EOF
+  EOF
 
   UNATTEND_FILENAME = "unattend.xml".freeze
 

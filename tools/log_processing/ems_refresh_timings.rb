@@ -20,7 +20,7 @@ Usage:
   ruby ems_refresh_timings.rb [OPTION]... <FILE>...
 
 Options:
-EOS
+    EOS
     opt :sort_by, 'Column to sort by, options are start_time, end_time, '\
                   'duration, ems, target_type, and target',
         :type => :string, :default => 'start_time'

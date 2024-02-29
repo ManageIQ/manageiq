@@ -60,7 +60,7 @@ label Local_drive
 
 prompt 0
 timeout 600
-PXEMENU
+    PXEMENU
 
     @contents_ipxe = <<-PXEMENU
 #!ipxe
@@ -121,7 +121,7 @@ reboot
 
 :ipxedemo
 chain http://boot.ipxe.org/demo/boot.php
-PXEMENU
+    PXEMENU
   end
 
   it ".class_from_contents" do

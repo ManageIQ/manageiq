@@ -108,7 +108,7 @@ shared_examples_for "OwnershipMixin" do
                        LOWER(((SELECT "miq_groups"."description"
                        FROM "miq_groups"
                        WHERE "miq_groups"."id" = "#{described_class.table_name}"."miq_group_id"))) = '#{group_name}'
-                     SQL
+        SQL
         attribute  = described_class.arel_table[:owned_by_current_ldap_group]
         expect(stringify_arel(attribute)).to eq ["(#{sql})"]
       end
@@ -213,7 +213,7 @@ shared_examples_for "OwnershipMixin" do
                        LOWER(((SELECT "users"."userid"
                        FROM "users"
                        WHERE "users"."id" = "#{described_class.table_name}"."evm_owner_id"))) = '#{userid}'
-                     SQL
+        SQL
         attribute  = described_class.arel_table[:owned_by_current_user]
         expect(stringify_arel(attribute)).to eq ["(#{sql})"]
       end

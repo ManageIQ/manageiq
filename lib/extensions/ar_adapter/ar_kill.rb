@@ -13,7 +13,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                         FROM pg_stat_activity
                        WHERE pid     = #{pid_numeric}
                          AND datname = #{quote(current_database)}
-                      SQL
+    SQL
 
     item = data.first
     if item.nil?
@@ -24,7 +24,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                             SELECT pg_cancel_backend(#{pid_numeric})
                             FROM   pg_stat_activity
                             WHERE  datname = #{quote(current_database)}
-                         SQL
+      SQL
       result
     end
   end

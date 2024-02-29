@@ -10,7 +10,7 @@ Environment Variable Options:
     SKIP_UI_UPDATE       Skip the update of UI assets.
     SKIP_TEST_RESET      Skip the creation of the test enviroment.  Defaults to
                          true in production mode since the tasks do not exist.
-EOS
+  EOS
   exit 1
 end
 

@@ -38,7 +38,7 @@ RSpec.describe Vmdb::Settings do
         :hash:
         - &1
           A: *1
-        CONFIG
+      CONFIG
 
       expect { described_class.walk(y) { |_k, _v, _p, _o| } }.not_to raise_error
     end

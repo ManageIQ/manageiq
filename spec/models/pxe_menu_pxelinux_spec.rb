@@ -60,7 +60,7 @@ label Local_drive
 
 prompt 0
 timeout 600
-PXEMENU
+    PXEMENU
 
     @contents2 = <<-PXEMENU
 default vesamenu.c32
@@ -73,7 +73,7 @@ label RHEL6
 
 prompt 0
 timeout 600
-PXEMENU
+    PXEMENU
   end
 
   it ".parse_contents" do
