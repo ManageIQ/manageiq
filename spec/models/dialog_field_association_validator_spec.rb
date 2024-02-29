@@ -7,7 +7,7 @@ RSpec.describe DialogFieldAssociationValidator do
       let(:trivial_associations) { {"a" => ["b"]} }
 
       it "doesn't blow up and returns nil" do
-        expect(dialog_field_association_validator.check_for_circular_references({"a" => []} , [])).to eq(nil)
+        expect(dialog_field_association_validator.check_for_circular_references({"a" => []}, [])).to eq(nil)
        expect(dialog_field_association_validator.check_for_circular_references(trivial_associations, "a")).to eq(nil)
        expect(dialog_field_association_validator.check_for_circular_references(associations, "e")).to eq(nil)
        expect(dialog_field_association_validator.check_for_circular_references(associations, "c")).to eq(nil)
