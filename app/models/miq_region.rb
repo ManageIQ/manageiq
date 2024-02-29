@@ -245,8 +245,8 @@ class MiqRegion < ApplicationRecord
   VALID_CAPTURE_ALWAYS_TYPES = [:storage, :host_and_cluster]
 
   def perf_capture_always
-    @perf_capture_always ||= VALID_CAPTURE_ALWAYS_TYPES.each_with_object({}) do |type, h|
-      h[type] = self.is_tagged_with?("capture_enabled", :ns => "/performance/#{type}")
+    @perf_capture_always ||= VALID_CAPTURE_ALWAYS_TYPES.index_with do |type|
+      self.is_tagged_with?("capture_enabled", :ns => "/performance/#{type}")
     end.freeze
   end
 

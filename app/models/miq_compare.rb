@@ -596,7 +596,7 @@ class MiqCompare
 
   def marshal_dump
     ivs = instance_variables.reject { |iv| iv.in?(IVS_TO_REMOVE_ON_DUMP) }
-    ivs.each_with_object({}) { |iv, h| h[iv] = instance_variable_get(iv) }
+    ivs.index_with { |iv| instance_variable_get(iv) }
   end
 
   def marshal_load(data)

@@ -88,8 +88,8 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credenti
       it "#update_in_provider to succeed" do
         expect(Notification).to receive(:create!).never
 
-        previous_params_to_attrs = params_to_attrs.each_with_object({}) do |key, attrs|
-          attrs[key] = ansible_cred.send(key)
+        previous_params_to_attrs = params_to_attrs.index_with do |key|
+          ansible_cred.send(key)
         end
 
         result = ansible_cred.update_in_provider update_params

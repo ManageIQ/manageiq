@@ -34,7 +34,7 @@ class VimPerformanceDaily < MetricRollup
       rid   = perf.resource_id
 
       key = [perf.capture_interval_name, rtype, rid]
-      result[key] ||= INFO_COLS.each_with_object({}) { |c, h| h[c] = perf.send(c) }
+      result[key] ||= INFO_COLS.index_with { |c| perf.send(c) }
       counts[key] ||= {}
 
       if tp && tp.ts_in_profile?(perf.timestamp) == false

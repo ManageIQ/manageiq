@@ -355,8 +355,8 @@ module ManageIQ
 
           def_range_key2 = subtotals.keys.map { |key| key.split('__')[1] || '' }.sort.uniq
 
-          group_sums = groups.keys.each_with_object({}) do |key1, h|
-            h[key1] = def_range_key2.inject(0) do |sum, key2|
+          group_sums = groups.keys.index_with do |key1|
+            def_range_key2.inject(0) do |sum, key2|
               sub_key = "#{key1}__#{key2}"
               subtotals.key?(sub_key) ? sum + subtotals[sub_key][aggreg][raw_column_name] : sum
             end

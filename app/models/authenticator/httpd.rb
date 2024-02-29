@@ -167,8 +167,8 @@ module Authenticator
         X-REMOTE-USER-EMAIL
         X-REMOTE-USER-DOMAIN
         X-REMOTE-USER-GROUPS
-      ].each_with_object({}) do |k, h|
-        h[k] = request.headers[k]&.force_encoding("UTF-8")
+      ].index_with do |k|
+        request.headers[k]&.force_encoding("UTF-8")
       end.delete_nils
     end
 
@@ -211,7 +211,7 @@ module Authenticator
               {:user_name => username, :error => err}
       end
 
-      ATTRS_NEEDED.each_with_object({}) { |attr, hash| hash[attr] = Array(user_attrs[attr]).first }
+      ATTRS_NEEDED.index_with { |attr| Array(user_attrs[attr]).first }
     end
 
     def user_attrs_from_external_directory_via_dbus_api_service(username)

@@ -27,8 +27,8 @@ def matrix_for(model)
   matrix.model = model
 
   if model.included_modules.include?(SupportsFeatureMixin)
-    matrix.features = SupportsFeatureMixin::QUERYABLE_FEATURES.keys.each_with_object({}) do |feature, features|
-      features[feature] = model.supports?(feature)
+    matrix.features = SupportsFeatureMixin::QUERYABLE_FEATURES.keys.index_with do |feature|
+      model.supports?(feature)
     end
   end
 

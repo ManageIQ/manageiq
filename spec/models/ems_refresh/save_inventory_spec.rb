@@ -229,7 +229,7 @@ RSpec.describe EmsRefresh::SaveInventory do
 
     def raw_data_process(*args)
       args.collect do |v|
-        RAW_DATA_ATTRS.each_with_object({}) { |s, h| h[s] = v.send(s) }
+        RAW_DATA_ATTRS.index_with { |s| v.send(s) }
       end
     end
 

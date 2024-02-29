@@ -130,7 +130,7 @@ class MiqProductFeature < ApplicationRecord
                                          .includes(:tenant)
                                          .each_with_object({}) do |f, h|
         parent_ident = f.parent_identifier
-        details      = DETAIL_ATTRS.each_with_object({}) { |a, dh| dh[a] = f.send(a) }
+        details      = DETAIL_ATTRS.index_with { |a| f.send(a) }
         h[f.identifier] = {:parent => parent_ident, :children => [], :details => details}
       end
       # populate the children based upon parent identifier

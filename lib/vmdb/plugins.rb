@@ -30,8 +30,8 @@ module Vmdb
     end
 
     def details
-      each_with_object({}) do |engine, hash|
-        hash[engine] = {
+      index_with do |engine|
+        {
           :name    => engine.name,
           :version => version(engine),
           :path    => engine.root.to_s
