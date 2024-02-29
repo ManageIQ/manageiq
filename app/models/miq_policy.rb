@@ -385,11 +385,11 @@ class MiqPolicy < ApplicationRecord
           {"!=" => {"field" => "MiqEventDefinition-event_group_name", "value" => ""}}
       ]
     }
-        EVENT_GROUPS_EXCLUDED.each do |e|
-          filter_hash["AND"] << {"!=" => {"field" => "MiqEventDefinition-event_group_name", "value" => e}}
-        end
+    EVENT_GROUPS_EXCLUDED.each do |e|
+      filter_hash["AND"] << {"!=" => {"field" => "MiqEventDefinition-event_group_name", "value" => e}}
+    end
 
-        MiqExpression.new(filter_hash)
+    MiqExpression.new(filter_hash)
   end
 
   def self.logger

@@ -57,9 +57,9 @@ class NetworkPort < ApplicationRecord
       extra_attributes_save(action, value)
    end
 
-    define_method(action) do
-      extra_attributes_load(action)
-    end
+   define_method(action) do
+     extra_attributes_load(action)
+   end
   end
 
   private

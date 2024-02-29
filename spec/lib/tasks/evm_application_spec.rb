@@ -165,7 +165,7 @@ RSpec.describe EvmApplication do
            #{pad(rgn, :Region)} | #{local.zone.name      } | Ui   | ready  | #{pad(ui.pid, :PID)    } |      | #{ local.name } |       |         |           |            |
         SERVER_INFO
 
-      expect { EvmApplication.status }.to output(expected_output).to_stdout
+        expect { EvmApplication.status }.to output(expected_output).to_stdout
       end
     end
 
