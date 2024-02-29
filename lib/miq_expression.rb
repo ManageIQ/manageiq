@@ -806,7 +806,7 @@ class MiqExpression
     when :integer, :decimal, :fixnum, :float
       return val.to_i unless val.to_s.number_with_method? || typ == :float
 
-      if val =~ /^([0-9\.,]+)\.([a-z]+)$/
+      if val =~ /^([0-9.,]+)\.([a-z]+)$/
         val, sfx = $1, $2
         if sfx.ends_with?("bytes") && FORMAT_BYTE_SUFFIXES.key?(sfx.to_sym)
           "#{val} #{FORMAT_BYTE_SUFFIXES[sfx.to_sym]}"

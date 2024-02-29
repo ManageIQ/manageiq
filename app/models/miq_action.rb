@@ -26,7 +26,7 @@ class MiqAction < ApplicationRecord
 
   validates :action_type,        :presence => true
   validates :name, :description, :presence => true, :uniqueness_when_changed => true
-  validates :name, :format => { :with => /\A[a-z0-9_\-]+\z/i,
+  validates :name, :format => { :with => /\A[a-z0-9_-]+\z/i,
     :allow_nil => true, :message => "must only contain alpha-numeric, underscore and hyphen chatacters without spaces" }
 
   acts_as_miq_taggable
@@ -82,7 +82,7 @@ class MiqAction < ApplicationRecord
         next unless self.options && self.options[k]
         next if k == :from && self.options[k].blank? # allow blank from addres, we use the default.
 
-        match = self.options[k] =~ /^\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z$/i
+        match = self.options[k] =~ /^\A([\w.\-+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z$/i
         errors.add(k, "must be a valid email address") unless match
       end
     when "tag"

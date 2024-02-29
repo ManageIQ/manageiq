@@ -4,7 +4,7 @@ class MiqEventDefinition < ApplicationRecord
   validates :name, :uniqueness_when_changed => true,
                    :presence                => true,
                    :allow_nil               => true,
-                   :format                  => {:with    => /\A[a-z0-9_\-]+\z/i,
+                   :format                  => {:with    => /\A[a-z0-9_-]+\z/i,
                                                 :message => "must only contain alpha-numeric, underscore and hyphen characters without spaces"}
   validates :description, :presence => true
 

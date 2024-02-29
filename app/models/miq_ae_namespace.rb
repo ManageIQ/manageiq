@@ -16,7 +16,7 @@ class MiqAeNamespace < ApplicationRecord
            :foreign_key => :namespace_id, :dependent => :destroy, :inverse_of => :ae_namespace
 
   validates :name,
-            :format                  => {:with => /\A[\w\.\-\$]+\z/i, :message => N_("may contain only alphanumeric and _ . - $ characters")},
+            :format                  => {:with => /\A[\w.\-$]+\z/i, :message => N_("may contain only alphanumeric and _ . - $ characters")},
             :presence                => true,
             :uniqueness_when_changed => {:scope => :ancestry, :case_sensitive => false}
 

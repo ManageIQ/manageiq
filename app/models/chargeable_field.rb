@@ -75,7 +75,7 @@ class ChargeableField < ApplicationRecord
   # fixed_compute_metric is used in report and calculations
   # TODO: remove and unify with metric_key
   def metric_column_key
-    fixed? ? metric_key.gsub(/\_1|\_2/, '') : metric_key
+    fixed? ? metric_key.gsub(/_1|_2/, '') : metric_key
   end
 
   def cost_keys(sub_metric = nil)

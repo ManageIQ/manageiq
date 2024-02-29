@@ -6,7 +6,7 @@ module CustomAttributeMixin
   DEFAULT_SECTION_NAME     = 'Custom Attribute'.freeze
 
   CUSTOM_ATTRIBUTE_INVALID_NAME_WARNING = "A custom attribute name must begin with a letter (a-z, but also letters with diacritical marks and non-Latin letters) or an underscore (_). Subsequent characters can be letters, underscores, digits (0-9), or dollar signs ($)".freeze
-  CUSTOM_ATTRIBUTE_VALID_NAME_REGEXP    = /\A[\p{Alpha}_][\p{Alpha}_\d\$]*\z/
+  CUSTOM_ATTRIBUTE_VALID_NAME_REGEXP    = /\A[\p{Alpha}_][\p{Alpha}_\d$]*\z/
 
   included do
     has_many   :custom_attributes,     :as => :resource, :dependent => :destroy

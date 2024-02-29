@@ -69,7 +69,7 @@ class Tag < ApplicationRecord
       list = list.dup
 
       # first, pull out the quoted tags
-      list.gsub!(/\"(.*?)\"\s*/) do
+      list.gsub!(/"(.*?)"\s*/) do
         tag_names << $1
         ""
       end
