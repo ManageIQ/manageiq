@@ -19,8 +19,8 @@ RSpec.describe "MiqAlert Evaluation Internal" do
             :event_types    => ["MigrateVM_Task_Complete"],
             :freq_threshold => 3,
             :time_threshold => 3.days
-}
-}
+          }
+        }
         @alert      = FactoryBot.create(:miq_alert_vm, :expression => expression)
         @alert_prof = FactoryBot.create(:miq_alert_set_vm)
         @alert_prof.add_member(@alert)
@@ -51,8 +51,8 @@ RSpec.describe "MiqAlert Evaluation Internal" do
             :rt_time_threshold => 60,
             :trend_direction   => 'none',
             :debug_trace       => 'false'
-}
-}
+          }
+        }
         @alert      = FactoryBot.create(:miq_alert_vm, :expression => expression)
         @alert_prof = FactoryBot.create(:miq_alert_set_vm)
         @alert_prof.add_member(@alert)
@@ -74,8 +74,8 @@ RSpec.describe "MiqAlert Evaluation Internal" do
           :options     => {
             :operator => "Changed",
             :hdw_attr => :cpu_affinity
-}
-}
+          }
+        }
         @alert      = FactoryBot.create(:miq_alert_vm, :expression => expression)
         @alert_prof = FactoryBot.create(:miq_alert_set_vm)
         @alert_prof.add_member(@alert)
@@ -97,8 +97,8 @@ RSpec.describe "MiqAlert Evaluation Internal" do
           :options     => {
             :operator => "Decreased",
             :hdw_attr => "memory_mb"
-}
-}
+          }
+        }
         @alert      = FactoryBot.create(:miq_alert_vm, :expression => expression)
         @alert_prof = FactoryBot.create(:miq_alert_set_vm)
         @alert_prof.add_member(@alert)
@@ -126,8 +126,8 @@ RSpec.describe "MiqAlert Evaluation Internal" do
             :event_log_event_id             => "12345",
             :time_threshold                 => 86400,
             :event_log_level                => "fatal"
-}
-}
+          }
+        }
         @alert      = FactoryBot.create(:miq_alert_vm, :expression => expression)
         @alert_prof = FactoryBot.create(:miq_alert_set_vm)
         @alert_prof.add_member(@alert)
@@ -150,7 +150,7 @@ RSpec.describe "MiqAlert Evaluation Internal" do
             :ems_alarm_name => "GT VM CPU Usage",
             :ems_alarm_mor  => "alarm-7"
           }
-}
+        }
         @alert      = FactoryBot.create(:miq_alert_vm, :expression => expression)
         @alert_prof = FactoryBot.create(:miq_alert_set_vm)
         @alert_prof.add_member(@alert)
@@ -182,8 +182,8 @@ RSpec.describe "MiqAlert Evaluation Internal" do
             :event_log_message_filter_value => "exceeds soft limit",
             :time_threshold                 => 86400,
             :event_log_level                => "warn"
-}
-}
+          }
+        }
         @alert = FactoryBot.create(:miq_alert_vm, :expression => expression)
         @alert_prof = FactoryBot.create(:miq_alert_set_host)
         @alert_prof.add_member(@alert)

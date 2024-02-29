@@ -139,7 +139,7 @@ module ManageIQ
                                        :name      => "mhz_to_human_size",
                                        :precision => "1"
                                      }
-})
+                                   })
                       when "Memory"
                         mri.format(tip_key, r[tip_key].to_f * 1024 * 1024, :format => format_bytes_human_size_1)
                       when "Disk"

@@ -5,12 +5,12 @@ RSpec.describe AutomateWorkspace do
     let(:encrypted) { ManageIQ::Password.encrypt(password) }
     let(:input) do
       {"objects"           => {
-          "root" => {
-            "var1" => "1",
-            "var2" => "password::#{encrypted}",
-            "var3" => "password::v2:{c8qTeiuz6JgbBOiDqp3eiQ==}"
-          }
-        },
+         "root" => {
+           "var1" => "1",
+           "var2" => "password::#{encrypted}",
+           "var3" => "password::v2:{c8qTeiuz6JgbBOiDqp3eiQ==}"
+         }
+       },
         "method_parameters" => {"arg1" => "password::#{encrypted}"}}
     end
 

@@ -157,12 +157,12 @@ RSpec.describe ContainerOrchestrator do
       expect(deployment_definition.fetch_path(:spec, :template, :spec, :volumes)).to include({
                                                                                                :name   => "pg-root-certificate",
                                                                                                :secret => {
-          :secretName => "postgresql-secrets",
+                                                                                                 :secretName => "postgresql-secrets",
           :items      => [
             :key  => "rootcertificate",
             :path => "root.crt",
           ],
-        }
+                                                                                               }
                                                                                              })
     end
 
@@ -179,12 +179,12 @@ RSpec.describe ContainerOrchestrator do
       expect(deployment_definition.fetch_path(:spec, :template, :spec, :volumes)).to include({
                                                                                                :name   => "internal-root-certificate",
                                                                                                :secret => {
-          :secretName => "some-secret-name",
+                                                                                                 :secretName => "some-secret-name",
           :items      => [
             :key  => "root_crt",
             :path => "root.crt",
           ],
-        }
+                                                                                               }
                                                                                              })
     end
 
