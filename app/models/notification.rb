@@ -14,7 +14,6 @@ class Notification < ApplicationRecord
   # Do not emit notifications if they are not enabled for the server
   after_commit :emit_message, :on => :create
 
-
   serialize :options, Hash
 
   validate :complete_bindings

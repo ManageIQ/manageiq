@@ -16,7 +16,6 @@ class ServiceOrder < ApplicationRecord
   validates :state, :uniqueness_when_changed => {:scope => [:user_id, :tenant_id]}, :if => :cart?
   validates :name, :presence => true, :on => :update
 
-
   def initialize(*args)
     raise NotImplementedError, _("must be implemented in a subclass") if instance_of?(ServiceOrder)
 
