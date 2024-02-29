@@ -56,33 +56,11 @@ module MiqServer::StatusManagement
       unless disks.empty?
         _log.info("[#{svr_name}] Disk Usage:")
         format_string = "%-12s %6s %12s %12s %12s %12s %12s %12s %12s %12s %12s"
-        header = format(format_string,
-                        "Filesystem",
-                        "Type",
-                        "Total",
-                        "Used",
-                        "Available",
-                        "%Used",
-                        "iTotal",
-                        "iUsed",
-                        "iFree",
-                        "%iUsed",
-                        "Mounted on")
+        header = format_string % ["Filesystem", "Type", "Total", "Used", "Available", "%Used", "iTotal", "iUsed", "iFree", "%iUsed", "Mounted on"]
         _log.info("[#{svr_name}] #{header}")
 
         disks.each do |disk|
-          formatted = format(format_string,
-                             disk[:filesystem],
-                             disk[:type],
-                             ActiveSupport::NumberHelper.number_to_human_size(disk[:total_bytes]),
-                             ActiveSupport::NumberHelper.number_to_human_size(disk[:used_bytes]),
-                             ActiveSupport::NumberHelper.number_to_human_size(disk[:available_bytes]),
-                             "#{disk[:used_bytes_percent]}%",
-                             disk[:total_inodes],
-                             disk[:used_inodes],
-                             disk[:available_inodes],
-                             "#{disk[:used_inodes_percent]}%",
-                             disk[:mount_point])
+          formatted = format_string % [disk[:filesystem], disk[:type], ActiveSupport::NumberHelper.number_to_human_size(disk[:total_bytes]), ActiveSupport::NumberHelper.number_to_human_size(disk[:used_bytes]), ActiveSupport::NumberHelper.number_to_human_size(disk[:available_bytes]), "#{disk[:used_bytes_percent]}%", disk[:total_inodes], disk[:used_inodes], disk[:available_inodes], "#{disk[:used_inodes_percent]}%", disk[:mount_point]]
           _log.info("[#{svr_name}] #{formatted}")
         end
 
