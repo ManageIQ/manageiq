@@ -90,7 +90,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credenti
 
         previous_params_to_attrs = params_to_attrs.each_with_object({}) do |key, attrs|
                                      attrs[key] = ansible_cred.send(key)
-                                   end
+        end
 
         result = ansible_cred.update_in_provider update_params
 

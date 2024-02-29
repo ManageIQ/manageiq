@@ -29,7 +29,7 @@ module ActiveRecord
                 s.gsub(/\s+(?:ASC|DESC)\b/i, "")
                  .gsub(/\s+NULLS\s+(?:FIRST|LAST)\b/i, "")
               end
-            }.reject(&:blank?).map.with_index { |column, i| "#{column} AS alias_#{i}" }
+                          }.reject(&:blank?).map.with_index { |column, i| "#{column} AS alias_#{i}" }
 
           (order_columns << super).join(", ")
         end

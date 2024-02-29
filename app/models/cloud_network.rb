@@ -38,7 +38,7 @@ class CloudNetwork < ApplicationRecord
   %i(maximum_transmission_unit port_security_enabled qos_policy_id).each do |action|
 	  define_method("#{action}=") do |value|
       extra_attributes_save(action, value)
-    end
+   end
 
     define_method(action) do
       extra_attributes_load(action)

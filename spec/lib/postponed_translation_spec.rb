@@ -9,7 +9,7 @@ RSpec.describe PostponedTranslation do
 
       pt = PostponedTranslation.new("Test %{bar}") do
              {:bar => "foo"}
-           end
+      end
       expect(pt.translate).to eq("Test foo")
     end
   end
