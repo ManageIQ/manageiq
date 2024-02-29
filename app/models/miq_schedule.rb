@@ -413,8 +413,6 @@ class MiqSchedule < ApplicationRecord
   def v_interval_unit
     if run_at[:interval] && run_at[:interval][:unit]
       run_at[:interval][:unit]
-    else
-      nil
     end
   end
 
