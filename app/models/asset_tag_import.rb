@@ -1,8 +1,7 @@
 class AssetTagImport
   include Vmdb::Logging
 
-  attr_accessor :errors
-  attr_accessor :stats
+  attr_accessor :errors, :stats
 
   # The required fields list is not limited anymore, so pass nil.
   REQUIRED_COLS = {VmOrTemplate => nil, Host => nil}

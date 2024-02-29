@@ -3,13 +3,7 @@ class MiqCompare
   EMPTY = '(empty)'
   TAG_PREFIX = '_tag_'
 
-  attr_reader :report
-  attr_reader :mode
-  attr_reader :ids
-  attr_reader :records
-
-  attr_reader :master_list
-  attr_reader :results
+  attr_reader :report, :mode, :ids, :records, :master_list, :results
 
   attr_accessor :include
 

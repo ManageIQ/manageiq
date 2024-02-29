@@ -1,15 +1,5 @@
 class DialogFieldVisibilityService
-  attr_accessor :auto_placement_visibility_service
-  attr_accessor :number_of_vms_visibility_service
-  attr_accessor :service_template_fields_visibility_service
-  attr_accessor :network_visibility_service
-  attr_accessor :sysprep_auto_logon_visibility_service
-  attr_accessor :retirement_visibility_service
-  attr_accessor :customize_fields_visibility_service
-  attr_accessor :sysprep_custom_spec_visibility_service
-  attr_accessor :request_type_visibility_service
-  attr_accessor :pxe_iso_visibility_service
-  attr_accessor :linked_clone_visibility_service
+  attr_accessor :auto_placement_visibility_service, :number_of_vms_visibility_service, :service_template_fields_visibility_service, :network_visibility_service, :sysprep_auto_logon_visibility_service, :retirement_visibility_service, :customize_fields_visibility_service, :sysprep_custom_spec_visibility_service, :request_type_visibility_service, :pxe_iso_visibility_service, :linked_clone_visibility_service
 
   def initialize(
     auto_placement_visibility_service = AutoPlacementVisibilityService.new,

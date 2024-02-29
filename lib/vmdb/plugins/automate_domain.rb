@@ -1,9 +1,7 @@
 module Vmdb
   class Plugins
     class AutomateDomain
-      attr_reader :datastores_path
-      attr_reader :name
-      attr_reader :path
+      attr_reader :datastores_path, :name, :path
 
       def initialize(path)
         raise "#{path} is not a directory" unless File.directory?(path)

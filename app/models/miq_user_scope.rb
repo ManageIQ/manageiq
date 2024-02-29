@@ -1,7 +1,6 @@
 class MiqUserScope
   FEATURE_TYPES = [:view, :control, :admin]
-  attr_accessor(*FEATURE_TYPES)
-  attr_accessor :scope
+  attr_accessor *FEATURE_TYPES, :scope
 
   FILTER_TYPES = [:managed, :belongsto, :expression]
 

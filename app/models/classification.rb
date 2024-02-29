@@ -73,7 +73,7 @@ class Classification < ApplicationRecord
     with_tag_name.where(tags_arel[:name].matches_regexp("/managed/[^\\/]+$"))
   end
 
-  attr_writer :ns
+  attr_writer :ns, :name
 
   def ns
     @ns ||= DEFAULT_NAMESPACE if new_record?
@@ -332,8 +332,6 @@ class Classification < ApplicationRecord
   def name
     @name ||= tag2name(tag_name || tag.name)
   end
-
-  attr_writer :name
 
   def self.lookup_category_by_description(description, region_id = my_region_number)
     is_category.in_region(region_id).find_by(:description => description)

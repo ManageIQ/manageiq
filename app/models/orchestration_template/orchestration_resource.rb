@@ -1,7 +1,6 @@
 class OrchestrationTemplate
   class OrchestrationResource
-    attr_accessor :name
-    attr_accessor :type
+    attr_accessor :name, :type
 
     def initialize(hash = {})
       hash.each { |key, value| public_send(:"#{key}=", value) }

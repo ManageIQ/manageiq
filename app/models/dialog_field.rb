@@ -1,8 +1,7 @@
 class DialogField < ApplicationRecord
   include NewWithTypeStiMixin
 
-  attr_accessor :value
-  attr_accessor :dialog
+  attr_accessor :value, :dialog
 
   belongs_to :dialog_group
   has_one :resource_action, :as => :resource, :dependent => :destroy

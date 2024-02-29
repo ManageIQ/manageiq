@@ -1,6 +1,5 @@
 class ResourceActionWorkflow < MiqRequestWorkflow
-  attr_accessor :dialog
-  attr_accessor :request_options
+  attr_accessor :dialog, :request_options
 
   attr_reader :target
 

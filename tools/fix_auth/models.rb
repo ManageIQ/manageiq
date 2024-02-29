@@ -107,14 +107,12 @@ module FixAuth
   end
 
   class FixDatabaseYml
-    attr_accessor :id
-    attr_accessor :yml
+    attr_accessor :id, :yml
 
     include FixAuth::AuthConfigModel
 
     class << self
-      attr_accessor :available_columns
-      attr_accessor :file_name
+      attr_accessor :available_columns, :file_name
 
       def table_name
         file_name.gsub(".yml", "")

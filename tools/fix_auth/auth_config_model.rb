@@ -4,8 +4,7 @@ module FixAuth
     include FixAuth::AuthModel
 
     module ClassMethods
-      attr_accessor :password_fields
-      attr_accessor :password_prefix
+      attr_accessor :password_fields, :password_prefix
       # true if we want to output the keys as symbols (default: false - output as string keys)
       attr_accessor :symbol_keys
 

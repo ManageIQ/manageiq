@@ -20,14 +20,7 @@ class OrchestrationTemplate
     #      comma_delimited_list
     #      boolean
 
-    attr_accessor :name
-    attr_accessor :label
-    attr_accessor :description
-    attr_accessor :data_type
-    attr_accessor :default_value
-    attr_accessor :hidden
-    attr_accessor :required
-    attr_accessor :reconfigurable
+    attr_accessor :name, :label, :description, :data_type, :default_value, :hidden, :required, :reconfigurable
     attr_writer   :constraints
 
     def initialize(hash = {})

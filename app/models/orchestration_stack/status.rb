@@ -1,7 +1,6 @@
 class OrchestrationStack
   class Status
-    attr_accessor :status
-    attr_accessor :reason
+    attr_accessor :status, :reason
 
     def initialize(status, reason)
       self.status = status
