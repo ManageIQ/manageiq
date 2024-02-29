@@ -44,9 +44,7 @@ module ManageIQ::Providers
     # Returns all InventoryCollections contained in persister
     #
     # @return [Array<InventoryRefresh::InventoryCollection>] List of InventoryCollections objects
-    def inventory_collections
-      parse.inventory_collections
-    end
+    delegate :inventory_collections, to: :parse
 
     # Based on the given provider/manager class, this returns correct collector class
     #

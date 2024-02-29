@@ -135,13 +135,9 @@ class GitWorktree
     current_index.add(entry)
   end
 
-  def remove(path)
-    current_index.remove(path)
-  end
+  delegate :remove, to: :current_index
 
-  def remove_dir(path)
-    current_index.remove_dir(path)
-  end
+  delegate :remove_dir, to: :current_index
 
   def file_exists?(path)
     !!find_entry(path)
