@@ -136,7 +136,7 @@ RSpec.describe EvmDatabase do
       EvmSpecHelper.local_miq_server
       described_class.raise_server_event("db_failover_executed")
       record = MiqQueue.last
-      expect(record.class_name). to eq "MiqEvent"
+      expect(record.class_name).to eq "MiqEvent"
       expect(record.method_name).to eq "raise_evm_event"
       expect(record.args[1]).to eq "db_failover_executed"
     end
