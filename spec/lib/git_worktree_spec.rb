@@ -179,9 +179,9 @@ RSpec.describe GitWorktree do
       new_db = open_existing_repo
       new_db.add(@conflict_file, YAML.dump(@default_hash.merge(:fname => "second_one")))
       new_db.save_changes("overlapping commit")
-      expect { @ae_db.send(:merge, commit) }.to raise_error { |error|
+      expect { @ae_db.send(:merge, commit) }.to(raise_error { |error|
         expect(error).to be_a(GitWorktreeException::GitConflicts)
-      }
+      })
     end
 
     it "clone repo" do

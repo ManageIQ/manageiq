@@ -167,7 +167,7 @@ RSpec.describe MiqScheduleWorker::Runner do
               @schedule_worker.rufus_add_normal_schedule(options)
 
               jobs = @schedule_worker.instance_variable_get(:@schedules)[:scheduler]
-              expect(jobs).to be_all { |job| job.kind_of?(Rufus::Scheduler::Job) }
+              expect(jobs).to(be_all { |job| job.kind_of?(Rufus::Scheduler::Job) })
             end
           end
         end
