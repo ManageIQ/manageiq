@@ -123,8 +123,8 @@ module MiqServer::RoleManagement
   def server_role_names
     server_roles.pluck(:name).sort
   end
-  alias_method :my_roles, :server_role_names
-  alias_method :assigned_role_names, :server_role_names
+  alias my_roles server_role_names
+  alias assigned_role_names server_role_names
 
   def server_role_names=(roles)
     zone.lock do
@@ -161,8 +161,8 @@ module MiqServer::RoleManagement
   def role
     server_role_names.join(',')
   end
-  alias_method :my_role, :role
-  alias_method :assigned_role, :role
+  alias my_role role
+  alias assigned_role role
 
   def role=(val)
     self.server_role_names = val == "*" ? val : val.split(",")
@@ -206,7 +206,7 @@ module MiqServer::RoleManagement
   def has_assigned_role?(role)
     assigned_role_names.include?(role.to_s.strip.downcase)
   end
-  alias_method :has_role?, :has_assigned_role?
+  alias has_role? has_assigned_role?
 
   def has_active_role?(role)
     active_role_names.include?(role.to_s.strip.downcase)

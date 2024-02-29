@@ -127,12 +127,12 @@ class MiqPolicy < ApplicationRecord
   def miq_event_definitions
     miq_policy_contents.collect(&:miq_event_definition).compact.uniq
   end
-  alias_method :events, :miq_event_definitions
+  alias events miq_event_definitions
 
   def miq_actions
     miq_policy_contents.collect(&:miq_action).compact.uniq
   end
-  alias_method :actions, :miq_actions
+  alias actions miq_actions
 
   def actions_for_event(event, on = :failure)
     order = on == :success ? "success_sequence" : "failure_sequence"

@@ -22,7 +22,7 @@ class ServiceTemplateProvisionRequest < MiqRequest
 
   delegate :picture, :to => :service_template, :allow_nil => true
 
-  alias_method :user, :get_user
+  alias user get_user
   include MiqProvisionQuotaMixin
 
   def process_service_order

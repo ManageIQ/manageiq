@@ -143,10 +143,10 @@ module VmOrTemplate::RightSizing
   #####################################################
   # BACKWARD COMPATIBILITY for REPORTS THAT USE THESE
   #####################################################
-  alias_method :recommended_vcpus,       :aggressive_recommended_vcpus
-  alias_method :recommended_mem,         :aggressive_recommended_mem
-  alias_method :overallocated_vcpus_pct, :aggressive_vcpus_recommended_change_pct
-  alias_method :overallocated_mem_pct,   :aggressive_mem_recommended_change_pct
+  alias recommended_vcpus aggressive_recommended_vcpus
+  alias recommended_mem aggressive_recommended_mem
+  alias overallocated_vcpus_pct aggressive_vcpus_recommended_change_pct
+  alias overallocated_mem_pct aggressive_mem_recommended_change_pct
 
   def max_cpu_usage_rate_average_max_over_time_period
     end_date = Time.now.utc.beginning_of_day - 1
@@ -158,14 +158,14 @@ module VmOrTemplate::RightSizing
       p.abs_max_cpu_usage_rate_average_value
     end.compact.max
   end
-  alias_method :cpu_usage_rate_average_max_over_time_period, :max_cpu_usage_rate_average_max_over_time_period
+  alias cpu_usage_rate_average_max_over_time_period max_cpu_usage_rate_average_max_over_time_period
 
   def max_mem_usage_absolute_average_max_over_time_period
     end_date = Time.now.utc.beginning_of_day - 1
     perfs = VimPerformanceAnalysis.find_perf_for_time_period(self, "daily", :end_date => end_date, :days => Metric::LongTermAverages::AVG_DAYS)
     perfs.collect(&:abs_max_mem_usage_absolute_average_value).compact.max
   end
-  alias_method :mem_usage_absolute_average_max_over_time_period, :max_mem_usage_absolute_average_max_over_time_period
+  alias mem_usage_absolute_average_max_over_time_period max_mem_usage_absolute_average_max_over_time_period
 
   def cpu_usagemhz_rate_average_max_over_time_period
     end_date = Time.now.utc.beginning_of_day - 1

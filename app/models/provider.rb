@@ -60,7 +60,7 @@ class Provider < ApplicationRecord
   def my_zone
     zone.try(:name).presence || MiqServer.my_zone
   end
-  alias_method :zone_name, :my_zone
+  alias zone_name my_zone
 
   def refresh_ems(opts = {})
     if missing_credentials?

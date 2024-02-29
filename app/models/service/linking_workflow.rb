@@ -46,7 +46,7 @@ class Service
         queue_signal(:refresh)
       end
     end
-    alias_method :start, :run_native_op
+    alias start run_native_op
 
     def post_refresh
       _log.info("Enter")

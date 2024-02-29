@@ -328,13 +328,13 @@ class VmScan < Job
   end
 
   # All other signals
-  alias_method :initializing,       :dispatch_start
-  alias_method :start,              :call_check_policy
-  alias_method :synchronize,        :call_synchronize
-  alias_method :abort_job,          :process_abort
-  alias_method :cancel,             :process_cancel
-  alias_method :finish,             :process_finished
-  alias_method :error,              :process_error
+  alias initializing dispatch_start
+  alias start call_check_policy
+  alias synchronize call_synchronize
+  alias abort_job process_abort
+  alias cancel process_cancel
+  alias finish process_finished
+  alias error process_error
 
   private
 

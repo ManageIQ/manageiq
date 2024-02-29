@@ -113,7 +113,7 @@ module EvmSpecHelper
   end
 
   class << self
-    alias_method :create_guid_miq_server_zone, :local_guid_miq_server_zone
+    alias create_guid_miq_server_zone local_guid_miq_server_zone
   end
 
   def self.remote_miq_server(attrs = {})

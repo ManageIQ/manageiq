@@ -248,7 +248,7 @@ class ExtManagementSystem < ApplicationRecord
            :allow_nil => true,
            :prefix    => :default
 
-  alias_method :address, :hostname # TODO: Remove all callers of address
+  alias address hostname # TODO: Remove all callers of address
 
   virtual_column :ipaddress,               :type => :string,  :uses => :endpoints
   virtual_column :hostname,                :type => :string,  :uses => :endpoints
@@ -304,7 +304,7 @@ class ExtManagementSystem < ApplicationRecord
   virtual_sum :total_cloud_vcpus,  :vms,   :cpu_total_cores
   virtual_sum :total_cloud_memory, :vms,   :ram_size
 
-  alias_method :clusters, :ems_clusters # Used by web-services to return clusters as the property name
+  alias clusters ems_clusters # Used by web-services to return clusters as the property name
   alias_attribute :to_s, :name
 
   attribute :enabled, :default => true
@@ -554,7 +554,7 @@ class ExtManagementSystem < ApplicationRecord
   def my_zone
     zone.try(:name).presence || MiqServer.my_zone
   end
-  alias_method :zone_name, :my_zone
+  alias zone_name my_zone
 
   def emstype_description
     self.class.description || emstype.titleize
@@ -730,8 +730,8 @@ class ExtManagementSystem < ApplicationRecord
     MiqEvent.raise_evm_event(target, event, inputs)
   end
 
-  alias_method :all_storages,           :storages
-  alias_method :datastores,             :storages # Used by web-services to return datastores as the property name
+  alias all_storages storages
+  alias datastores storages # Used by web-services to return datastores as the property name
 
   #
   # Relationship methods
@@ -746,8 +746,8 @@ class ExtManagementSystem < ApplicationRecord
     children(:of_type => 'EmsFolder').sort_by { |c| c.name.downcase }
   end
 
-  alias_method :add_folder,    :set_child
-  alias_method :remove_folder, :remove_child
+  alias add_folder set_child
+  alias remove_folder remove_child
 
   def remove_all_folders
     remove_all_children(:of_type => 'EmsFolder')
@@ -818,7 +818,7 @@ class ExtManagementSystem < ApplicationRecord
 
     @perf_capture_enabled = ems_clusters.any?(&:perf_capture_enabled?) || host.any?(&:perf_capture_enabled?)
   end
-  alias_method :perf_capture_enabled, :perf_capture_enabled?
+  alias perf_capture_enabled perf_capture_enabled?
   Vmdb::Deprecation.deprecate_methods(self, :perf_capture_enabled => :perf_capture_enabled?)
 
   # Some workers hold open a connection to the provider and thus do not

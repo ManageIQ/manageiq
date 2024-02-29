@@ -69,7 +69,7 @@ class ConfigurationProfile < ApplicationRecord
     @tag_hash ||= configuration_tags.index_by(&:class)
   end
 
-  alias_method :configuration_manager, :manager
+  alias configuration_manager manager
 
   def total_configured_systems
     Rbac.filtered(configured_systems).count

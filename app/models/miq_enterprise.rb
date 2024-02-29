@@ -64,7 +64,7 @@ class MiqEnterprise < ApplicationRecord
     PolicyEvent.all
   end
 
-  alias_method :all_storages, :storages
+  alias all_storages storages
 
   def get_reserve(field)
     ext_management_systems.inject(0) { |v, obj| v + (obj.send(field) || 0) }
@@ -91,7 +91,7 @@ class MiqEnterprise < ApplicationRecord
   def perf_capture_enabled?
     @perf_capture_enabled ||= ext_management_systems.any?(&:perf_capture_enabled?)
   end
-  alias_method :perf_capture_enabled, :perf_capture_enabled?
+  alias perf_capture_enabled perf_capture_enabled?
   Vmdb::Deprecation.deprecate_methods(self, :perf_capture_enabled => :perf_capture_enabled?)
 
   def self.display_name(number = 1)

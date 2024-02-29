@@ -30,5 +30,5 @@ class MiqEventDefinitionSet < ApplicationRecord
     n_('Event Definition Set', 'Event Definition Sets', number)
   end
 
-  alias_method :events, :miq_event_definitions
+  alias events miq_event_definitions
 end

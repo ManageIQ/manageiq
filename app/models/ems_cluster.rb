@@ -118,7 +118,7 @@ class EmsCluster < ApplicationRecord
     Relationship.resources(direct_vm_rels).sort_by { |v| v.name.downcase }
   end
 
-  alias_method :direct_miq_templates, :miq_templates
+  alias direct_miq_templates miq_templates
 
   def direct_vms_and_templates
     (direct_vms + direct_miq_templates).sort_by { |v| v.name.downcase }
@@ -128,7 +128,7 @@ class EmsCluster < ApplicationRecord
     Relationship.resource_ids(direct_vm_rels)
   end
 
-  alias_method :direct_miq_template_ids, :miq_template_ids
+  alias direct_miq_template_ids miq_template_ids
 
   def direct_vm_or_template_ids
     direct_vm_ids + direct_miq_template_ids
@@ -154,8 +154,8 @@ class EmsCluster < ApplicationRecord
     Relationship.resources(child_and_grandchild_rels(:of_type => 'ResourcePool'))
   end
 
-  alias_method :add_resource_pool, :set_child
-  alias_method :remove_resource_pool, :remove_child
+  alias add_resource_pool set_child
+  alias remove_resource_pool remove_child
 
   def remove_all_resource_pools
     remove_all_children(:of_type => 'ResourcePool')

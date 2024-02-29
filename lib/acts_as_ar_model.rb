@@ -26,7 +26,7 @@ class ActsAsArModel
     []
   end
 
-  class << self; alias_method :base_model, :base_class; end
+  class << self; alias base_model base_class; end
 
   #
   # Column methods
@@ -93,12 +93,12 @@ class ActsAsArModel
     def [](attr)
       @attributes[attr.to_s]
     end
-    alias_method :read_attribute, :[]
+    alias read_attribute []
 
     def []=(attr, value)
       @attributes[attr.to_s] = value
     end
-    alias_method :write_attribute, :[]=
+    alias write_attribute []=
   end
 
   def self.set_columns_hash(hash)

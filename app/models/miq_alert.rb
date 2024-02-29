@@ -87,8 +87,8 @@ class MiqAlert < ApplicationRecord
   def miq_actions
     []
   end
-  alias_method :actions, :miq_actions
-  alias_method :owning_miq_actions, :miq_actions
+  alias actions miq_actions
+  alias owning_miq_actions miq_actions
 
   def set_responds_to_events
     events = responds_to_events_from_expression

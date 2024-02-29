@@ -82,7 +82,7 @@ class ContainerImage < ApplicationRecord
   end
 
   # The guid is required by the smart analysis infrastructure
-  alias_method :guid, :docker_id
+  alias guid docker_id
 
   def display_registry
     container_image_registry.present? ? container_image_registry.full_name : _("Unknown image source")
@@ -136,5 +136,5 @@ class ContainerImage < ApplicationRecord
     containers.map(&:limit_memory_bytes).compact.sum
   end
 
-  alias_method :perform_metadata_sync, :sync_stashed_metadata
+  alias perform_metadata_sync sync_stashed_metadata
 end

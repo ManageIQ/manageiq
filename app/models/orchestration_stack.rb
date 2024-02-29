@@ -50,9 +50,9 @@ class OrchestrationStack < ApplicationRecord
 
   scope :without_type, ->(type) { where.not(:type => type) }
 
-  alias_method :orchestration_stack_parameters, :parameters
-  alias_method :orchestration_stack_outputs,    :outputs
-  alias_method :orchestration_stack_resources,  :resources
+  alias orchestration_stack_parameters parameters
+  alias orchestration_stack_outputs outputs
+  alias orchestration_stack_resources resources
 
   supports :retire
 

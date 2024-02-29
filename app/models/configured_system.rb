@@ -20,7 +20,7 @@ class ConfiguredSystem < ApplicationRecord
 
   alias ext_management_system manager
   alias_attribute :name, :hostname
-  alias_method    :configuration_manager, :manager
+  alias configuration_manager manager
 
   delegate :name, :to => :configuration_profile,         :prefix => true, :allow_nil => true
   delegate :name, :to => :configuration_architecture,    :prefix => true, :allow_nil => true

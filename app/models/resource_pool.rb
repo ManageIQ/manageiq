@@ -44,8 +44,8 @@ class ResourcePool < ApplicationRecord
     children(:of_type => 'ResourcePool')
   end
 
-  alias_method :add_resource_pool, :set_child
-  alias_method :remove_resource_pool, :remove_child
+  alias add_resource_pool set_child
+  alias remove_resource_pool remove_child
 
   def remove_all_resource_pools
     remove_all_children(:of_type => 'ResourcePool')
@@ -60,17 +60,17 @@ class ResourcePool < ApplicationRecord
   def vms_and_templates
     children(:of_type => 'VmOrTemplate')
   end
-  alias_method :direct_vms_and_templates, :vms_and_templates
+  alias direct_vms_and_templates vms_and_templates
 
   def miq_templates
     vms_and_templates.select { |v| v.kind_of?(MiqTemplate) }
   end
-  alias_method :direct_miq_templates, :miq_templates
+  alias direct_miq_templates miq_templates
 
   def vms
     vms_and_templates.select { |v| v.kind_of?(Vm) }
   end
-  alias_method :direct_vms, :vms
+  alias direct_vms vms
 
   def vm_and_template_ids
     Relationship.resource_pairs_to_ids(child_ids(:of_type => 'VmOrTemplate'))
@@ -79,12 +79,12 @@ class ResourcePool < ApplicationRecord
   def miq_template_ids
     miq_templates.collect(&:id)
   end
-  alias_method :direct_miq_template_ids, :miq_template_ids
+  alias direct_miq_template_ids miq_template_ids
 
   def vm_ids
     vms.collect(&:id)
   end
-  alias_method :direct_vm_ids, :vm_ids
+  alias direct_vm_ids vm_ids
 
   def total_direct_vms_and_templates
     child_count(:of_type => 'VmOrTemplate')
@@ -104,8 +104,8 @@ class ResourcePool < ApplicationRecord
     descendant_count(:of_type => 'VmOrTemplate')
   end
 
-  alias_method :add_vm, :set_child
-  alias_method :remove_vm, :remove_child
+  alias add_vm set_child
+  alias remove_vm remove_child
 
   def remove_all_vms
     remove_all_children(:of_type => 'Vm')
@@ -182,8 +182,8 @@ class ResourcePool < ApplicationRecord
     p ? p.name : ""
   end
 
-  alias_method :v_direct_vms,           :total_direct_vms
-  alias_method :v_direct_miq_templates, :total_direct_miq_templates
+  alias v_direct_vms total_direct_vms
+  alias v_direct_miq_templates total_direct_miq_templates
 
   alias total_vms v_total_vms
   alias total_miq_templates v_total_miq_templates

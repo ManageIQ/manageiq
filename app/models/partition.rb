@@ -144,5 +144,5 @@ class Partition < ApplicationRecord
     # The alignment of hidden volumes affects the performance of the logical volumes that are based on them.
     start_address % alignment_boundary == 0
   end
-  alias_method :aligned, :aligned?
+  alias aligned aligned?
 end

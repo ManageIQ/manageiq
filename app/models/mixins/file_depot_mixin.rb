@@ -116,7 +116,7 @@ module FileDepotMixin
     mnt.disconnect if @connected == 1
     @connected -= 1
   end
-  alias_method :close, :disconnect_depot # TODO: Do we still need this alias?  Since this is a mixin, close is a bad override.
+  alias close disconnect_depot # TODO: Do we still need this alias?  Since this is a mixin, close is a bad override.
 
   def with_depot
     connect_depot
@@ -166,7 +166,7 @@ module FileDepotMixin
       mnt.delete(file)
     end
   end
-  alias_method :directory_delete, :file_delete
+  alias directory_delete file_delete
 
   def file_open(*args, &block)
     with_depot do

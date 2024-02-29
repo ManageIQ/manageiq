@@ -332,7 +332,7 @@ class MiqRequest < ApplicationRecord
   def approver
     first_approval.approver.try(:name)
   end
-  alias_method :approver_role, :approver # TODO: Is this needed anymore?
+  alias approver_role approver # TODO: Is this needed anymore?
 
   def workflow_class
     klass = self.class.workflow_class

@@ -397,7 +397,7 @@ class MiqWorker < ApplicationRecord
   end
 
   # Let the worker monitor start a new worker
-  alias_method :restart, :stop
+  alias restart stop
 
   def kill
     kill_process

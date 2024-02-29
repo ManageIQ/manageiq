@@ -19,10 +19,10 @@ class MiqTemplate < VmOrTemplate
   def self.corresponding_model
     module_parent::Vm
   end
-  class << self; alias_method :corresponding_vm_model, :corresponding_model; end
+  class << self; alias corresponding_vm_model corresponding_model; end
 
   delegate :corresponding_model, :to => :class
-  alias_method :corresponding_vm_model, :corresponding_model
+  alias corresponding_vm_model corresponding_model
 
   def scan_via_ems?
     true

@@ -24,8 +24,8 @@ module Metric::Aggregation
     end
 
     class << self
-      alias_method :derived_vm_numvcpus, :summation
-      alias_method :average, :summation
+      alias derived_vm_numvcpus summation
+      alias average summation
     end
 
     def self.latest(col, _obj, result, _counts, value)
@@ -76,7 +76,7 @@ module Metric::Aggregation
     end
 
     class << self
-      alias_method :latest, :summation
+      alias latest summation
     end
 
     def self.cpu_usage_rate_average(col, state, result, counts, aggregate_only = false)

@@ -113,7 +113,7 @@ class Service < ApplicationRecord
   end
 
   # renaming method from custom_actions_mixin
-  alias_method :custom_service_actions, :custom_actions
+  alias custom_service_actions custom_actions
   def custom_actions
     service_template ? service_template.custom_actions(self) : custom_service_actions(self)
   end

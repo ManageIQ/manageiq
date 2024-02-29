@@ -156,10 +156,10 @@ class Host < ApplicationRecord
   scope :active,   -> { where.not(:ems_id => nil) }
   scope :archived, -> { where(:ems_id => nil) }
 
-  alias_method :datastores, :storages # Used by web-services to return datastores as the property name
+  alias datastores storages # Used by web-services to return datastores as the property name
 
-  alias_method :parent_cluster, :ems_cluster
-  alias_method :owning_cluster, :ems_cluster
+  alias parent_cluster ems_cluster
+  alias owning_cluster ems_cluster
 
   include RelationshipMixin
   self.default_relationship_type = "ems_metadata"
@@ -575,7 +575,7 @@ class Host < ApplicationRecord
   def parent_datacenter
     detect_ancestor(:of_type => "EmsFolder") { |a| a.kind_of?(Datacenter) }
   end
-  alias_method :owning_datacenter, :parent_datacenter
+  alias owning_datacenter parent_datacenter
 
   def self.save_metadata(id, dataArray)
     _log.info("for host [#{id}]")
@@ -898,7 +898,7 @@ class Host < ApplicationRecord
 
     include_mac_addr == true ? mac_address.present? : true
   end
-  alias_method :ipmi_enabled, :ipmi_config_valid?
+  alias ipmi_enabled ipmi_config_valid?
 
   def set_custom_field(attribute, value)
     return unless is_vmware?
@@ -1241,12 +1241,12 @@ class Host < ApplicationRecord
       list.each { |parent| set_parent(parent) }
     end
   end
-  alias_method :set_vm_scan_affinity, :vm_scan_affinity=
+  alias set_vm_scan_affinity vm_scan_affinity=
 
   def vm_scan_affinity
     with_relationship_type("vm_scan_affinity") { parents }
   end
-  alias_method :get_vm_scan_affinity, :vm_scan_affinity
+  alias get_vm_scan_affinity vm_scan_affinity
 
   def processes
     operating_system.try(:processes) || []

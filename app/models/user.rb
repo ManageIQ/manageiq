@@ -54,7 +54,7 @@ class User < ApplicationRecord
 
   # use authenticate_bcrypt rather than .authenticate to avoid confusion
   # with the class method of the same name (User.authenticate)
-  alias_method :authenticate_bcrypt, :authenticate
+  alias authenticate_bcrypt authenticate
 
   serialize :settings, Hash # Implement settings column as a hash
 
@@ -210,7 +210,7 @@ class User < ApplicationRecord
   def ldap_group
     current_group.try(:description)
   end
-  alias_method :miq_group_description, :ldap_group
+  alias miq_group_description ldap_group
 
   def role_allows?(**options)
     Rbac.role_allows?(:user => self, **options)

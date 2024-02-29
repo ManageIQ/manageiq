@@ -579,17 +579,17 @@ class Storage < ApplicationRecord
   def used_space
     total_space.to_i.zero? ? 0 : total_space.to_i - free_space.to_i
   end
-  alias_method :v_used_space, :used_space
+  alias v_used_space used_space
 
   def used_space_percent_of_total
     total_space.to_i.zero? ? 0.0 : (used_space.to_f / total_space * 1000.0).round / 10.0
   end
-  alias_method :v_used_space_percent_of_total, :used_space_percent_of_total
+  alias v_used_space_percent_of_total used_space_percent_of_total
 
   def free_space_percent_of_total
     total_space.to_i.zero? ? 0.0 : (free_space.to_f / total_space * 1000.0).round / 10.0
   end
-  alias_method :v_free_space_percent_of_total, :free_space_percent_of_total
+  alias v_free_space_percent_of_total free_space_percent_of_total
 
   def v_total_hosts
     if @association_cache.include?(:hosts)
@@ -612,11 +612,11 @@ class Storage < ApplicationRecord
     end
   end
 
-  alias_method :v_total_debris_size,   :debris_size
-  alias_method :v_total_snapshot_size, :snapshot_size
-  alias_method :v_total_memory_size,   :vm_ram_size
-  alias_method :v_total_vm_misc_size,  :vm_misc_size
-  alias_method :v_total_disk_size,     :disk_size
+  alias v_total_debris_size debris_size
+  alias v_total_snapshot_size snapshot_size
+  alias v_total_memory_size vm_ram_size
+  alias v_total_vm_misc_size vm_misc_size
+  alias v_total_disk_size disk_size
 
   def v_debris_percent_of_used
     used_space.to_i.zero? ? 0.0 : (debris_size.to_f / used_space * 1000.0).round / 10.0

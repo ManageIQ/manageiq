@@ -67,7 +67,7 @@ class ResourceAction < ApplicationRecord
       :ae_instance  => ae_instance
     ).to_s
   end
-  alias_method :ae_path, :fqname
+  alias ae_path fqname
 
   def ae_uri
     uri = ae_path

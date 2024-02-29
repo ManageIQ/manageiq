@@ -107,7 +107,7 @@ class Filesystem < ApplicationRecord
   def has_contents?
     !self.binary_blob.nil?
   end
-  alias_method :contents_available, :has_contents?
+  alias contents_available has_contents?
 
   def contents_displayable?
     return false if name.nil?

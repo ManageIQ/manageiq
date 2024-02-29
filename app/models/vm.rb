@@ -21,10 +21,10 @@ class Vm < VmOrTemplate
       module_parent::Template
     end
   end
-  class << self; alias_method :corresponding_template_model, :corresponding_model; end
+  class << self; alias corresponding_template_model corresponding_model; end
 
   delegate :corresponding_model, :to => :class
-  alias_method :corresponding_template_model, :corresponding_model
+  alias corresponding_template_model corresponding_model
 
   def validate_remote_console_vmrc_support
     raise(MiqException::RemoteConsoleNotSupportedError,

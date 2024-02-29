@@ -3,10 +3,10 @@ class ServiceAwx < Service
   include ServiceConfigurationMixin
   include ServiceOrchestrationOptionsMixin
 
-  alias_method :job_template, :configuration_script
-  alias_method :job_template=, :configuration_script=
-  alias_method :job_options, :stack_options
-  alias_method :job_options=, :stack_options=
+  alias job_template configuration_script
+  alias job_template= configuration_script=
+  alias job_options stack_options
+  alias job_options= stack_options=
 
   def launch_job
     job_class = "#{job_template.class.module_parent.name}::#{job_template.class.stack_type}".constantize

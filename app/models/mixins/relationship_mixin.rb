@@ -617,7 +617,7 @@ module RelationshipMixin
 
     child_objs
   end
-  alias_method :add_child, :add_children
+  alias add_child add_children
 
   def parent=(parent)
     if parent.nil?
@@ -641,14 +641,14 @@ module RelationshipMixin
 
     clear_relationships_cache
   end
-  alias_method :replace_parent, :parent=
+  alias replace_parent parent=
 
   #
   # Backward compatibility methods
   #
 
-  alias_method :set_parent, :parent=
-  alias_method :set_child,  :add_children
+  alias set_parent parent=
+  alias set_child add_children
 
   def replace_children(*child_objs)
     child_objs = child_objs.flatten
@@ -706,7 +706,7 @@ module RelationshipMixin
       remove_all_relationships(to_del)
     end
   end
-  alias_method :remove_child, :remove_children
+  alias remove_child remove_children
 
   def remove_all_parents(*args)
     return update!(:parent => nil) if use_ancestry?

@@ -39,7 +39,7 @@ module MiqRequestMixin
       @user = User.super_admin
     end
   end
-  alias_method :tenant_identity, :get_user
+  alias tenant_identity get_user
 
   def tags
     Array.wrap(tag_ids).each do |tag_id|

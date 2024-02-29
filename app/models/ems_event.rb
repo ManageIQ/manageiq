@@ -391,7 +391,7 @@ class EmsEvent < EventStream
   def vm_refresh_target
     (vm_or_template && vm_or_template.ext_management_system ? vm_or_template : host_refresh_target)
   end
-  alias_method :src_vm_refresh_target, :vm_refresh_target
+  alias src_vm_refresh_target vm_refresh_target
 
   def src_vm_or_dest_host_refresh_target
     vm_or_template ? vm_refresh_target : dest_host_refresh_target
@@ -400,7 +400,7 @@ class EmsEvent < EventStream
   def host_refresh_target
     (host && host.ext_management_system ? host : ems_refresh_target)
   end
-  alias_method :src_host_refresh_target, :host_refresh_target
+  alias src_host_refresh_target host_refresh_target
 
   def dest_vm_refresh_target
     (dest_vm_or_template && dest_vm_or_template.ext_management_system ? dest_vm_or_template : dest_host_refresh_target)
@@ -413,7 +413,7 @@ class EmsEvent < EventStream
   def ems_cluster_refresh_target
     ext_management_system
   end
-  alias_method :src_ems_cluster_refresh_target, :ems_cluster_refresh_target
+  alias src_ems_cluster_refresh_target ems_cluster_refresh_target
 
   def ems_refresh_target
     ext_management_system

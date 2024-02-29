@@ -42,7 +42,7 @@ class MiqGroup < ApplicationRecord
   include CustomActionsMixin
   include ExternalUrlMixin
 
-  alias_method :current_tenant, :tenant
+  alias current_tenant tenant
 
   def name
     description
@@ -240,7 +240,7 @@ class MiqGroup < ApplicationRecord
   def read_only
     system_group? || tenant_group?
   end
-  alias_method :read_only?, :read_only
+  alias read_only? read_only
 
   virtual_total :user_count, :users
 

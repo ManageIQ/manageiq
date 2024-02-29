@@ -194,7 +194,7 @@ module Metric::Rollup
   end
 
   class << self
-    alias_method :rollup_historical, :rollup_hourly
+    alias rollup_historical rollup_hourly
   end
 
   def self.rollup_daily(obj, day, interval_name, time_profile, new_perf, orig_perf)

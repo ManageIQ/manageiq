@@ -232,10 +232,10 @@ class VmOrTemplate < ApplicationRecord
     where(arel_table[:template].eq(true).and(arel_table[:ems_id].eq(nil)).or(arel_table[:host_id].eq(nil)))
   end)
 
-  alias_method :datastores, :storages # Used by web-services to return datastores as the property name
+  alias datastores storages # Used by web-services to return datastores as the property name
 
-  alias_method :parent_cluster, :ems_cluster
-  alias_method :owning_cluster, :ems_cluster
+  alias parent_cluster ems_cluster
+  alias owning_cluster ems_cluster
 
   # Add virtual columns/methods for specific things derived from advanced_settings
   REQUIRED_ADVANCED_SETTINGS = {
@@ -336,7 +336,7 @@ class VmOrTemplate < ApplicationRecord
   def is_evm_appliance?
     !!miq_server
   end
-  alias_method :is_evm_appliance, :is_evm_appliance?
+  alias is_evm_appliance is_evm_appliance?
 
   # Determines if the VM is on an EMS or Host
   def registered?
@@ -793,14 +793,14 @@ class VmOrTemplate < ApplicationRecord
       parent(:of_type => "ResourcePool")
     end
   end
-  alias_method :owning_resource_pool, :parent_resource_pool
+  alias owning_resource_pool parent_resource_pool
 
   def parent_blue_folder
     with_relationship_type('ems_metadata') do
       parent(:of_type => "EmsFolder")
     end
   end
-  alias_method :owning_blue_folder, :parent_blue_folder
+  alias owning_blue_folder parent_blue_folder
 
   def parent_blue_folders(*args)
     f = parent_blue_folder
@@ -817,36 +817,36 @@ class VmOrTemplate < ApplicationRecord
     f = parent_blue_folder
     f.nil? ? "" : f.folder_path(*args)
   end
-  alias_method :owning_blue_folder_path, :parent_blue_folder_path
+  alias owning_blue_folder_path parent_blue_folder_path
 
   def parent_folder
     ems_cluster.try(:parent_folder)
   end
-  alias_method :owning_folder, :parent_folder
-  alias_method :parent_yellow_folder, :parent_folder
+  alias owning_folder parent_folder
+  alias parent_yellow_folder parent_folder
 
   def parent_folders(*args)
     f = parent_folder
     f.nil? ? [] : f.folder_path_objs(*args)
   end
-  alias_method :parent_yellow_folders, :parent_folders
+  alias parent_yellow_folders parent_folders
 
   def parent_folder_path(*args)
     f = parent_folder
     f.nil? ? "" : f.folder_path(*args)
   end
-  alias_method :owning_folder_path, :parent_folder_path
-  alias_method :parent_yellow_folder_path, :parent_folder_path
+  alias owning_folder_path parent_folder_path
+  alias parent_yellow_folder_path parent_folder_path
 
   def parent_datacenter
     ems_cluster.try(:parent_datacenter)
   end
-  alias_method :owning_datacenter, :parent_datacenter
+  alias owning_datacenter parent_datacenter
 
   def parent_blue_folder_display_path
     parent_blue_folder_path(:exclude_non_display_folders => true)
   end
-  alias_method :v_parent_blue_folder_display_path, :parent_blue_folder_display_path
+  alias v_parent_blue_folder_display_path parent_blue_folder_display_path
 
   def lans
     !hardware.nil? ? hardware.nics.collect(&:lan).compact : []
@@ -1177,7 +1177,7 @@ class VmOrTemplate < ApplicationRecord
   def state
     (power_state || "unknown").downcase
   end
-  alias_method :current_state, :state
+  alias current_state state
 
   # Override raw_power_state= attribute setter in order to impose side effects
   # of setting previous_state and updating state_changed_on
@@ -1199,7 +1199,7 @@ class VmOrTemplate < ApplicationRecord
   def archived?
     ems_id.nil? && storage_id.nil?
   end
-  alias_method :archived, :archived?
+  alias archived archived?
   virtual_attribute :archived, :boolean, :arel => (lambda do |t|
     t.grouping(t[:ems_id].eq(nil).and(t[:storage_id].eq(nil)))
   end)
@@ -1207,7 +1207,7 @@ class VmOrTemplate < ApplicationRecord
   def orphaned?
     ems_id.nil? && !storage_id.nil?
   end
-  alias_method :orphaned, :orphaned?
+  alias orphaned orphaned?
   virtual_attribute :orphaned, :boolean, :arel => (lambda do |t|
     t.grouping(t[:ems_id].eq(nil).and(t[:storage_id].not_eq(nil)))
   end)
@@ -1215,7 +1215,7 @@ class VmOrTemplate < ApplicationRecord
   def active?
     !archived? && !orphaned? && !retired? && !template?
   end
-  alias_method :active, :active?
+  alias active active?
   # in sql nil != false ==> false
   virtual_attribute :active, :boolean, :arel => (lambda do |t|
     t.grouping(t[:ems_id].not_eq(nil)
@@ -1231,7 +1231,7 @@ class VmOrTemplate < ApplicationRecord
   virtual_attribute :disconnected, :boolean, :arel => (lambda do |t|
     t.grouping(t[:connection_state].not_eq(nil).and(t[:connection_state].not_eq("connected")))
   end)
-  alias_method :disconnected, :disconnected?
+  alias disconnected disconnected?
 
   def normalized_state
     return self["normalized_state"] if has_attribute?("normalized_state")
@@ -1330,14 +1330,14 @@ class VmOrTemplate < ApplicationRecord
     o ? o.name : ""
   end
 
-  alias_method :v_owning_folder_path, :owning_folder_path
+  alias v_owning_folder_path owning_folder_path
 
   def v_owning_blue_folder
     o = owning_blue_folder
     o ? o.name : ""
   end
 
-  alias_method :v_owning_blue_folder_path, :owning_blue_folder_path
+  alias v_owning_blue_folder_path owning_blue_folder_path
 
   def v_owning_datacenter
     o = owning_datacenter
@@ -1634,10 +1634,10 @@ class VmOrTemplate < ApplicationRecord
   def non_generic_charts_available?
     false
   end
-  alias_method :cpu_ready_available?,    :non_generic_charts_available?
-  alias_method :cpu_mhz_available?,      :non_generic_charts_available?
-  alias_method :cpu_percent_available?,  :non_generic_charts_available?
-  alias_method :memory_mb_available?,    :non_generic_charts_available?
+  alias cpu_ready_available? non_generic_charts_available?
+  alias cpu_mhz_available? non_generic_charts_available?
+  alias cpu_percent_available? non_generic_charts_available?
+  alias memory_mb_available? non_generic_charts_available?
 
   def self.includes_template?(ids)
     MiqTemplate.where(:id => ids).exists?
