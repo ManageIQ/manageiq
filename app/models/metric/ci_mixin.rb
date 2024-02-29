@@ -123,7 +123,6 @@ module Metric::CiMixin
     rec_at_start_on = total_records.reverse.detect { |r| r.timestamp >= starting_on }
     return false if rec_at_start_on.nil?
     start_on_idx = total_records.index { |r| r.timestamp == rec_at_start_on.timestamp }
-    #
     colvalue = rec_at_start_on.send(column)
     if colvalue && colvalue.send(operator, value)
       # If there is a match at the start_on timestamp then we need to check the records going backwards to find the first one that doesnt match.

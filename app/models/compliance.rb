@@ -88,7 +88,6 @@ class Compliance < ApplicationRecord
     event = results[:result] ? "#{target_class}_compliance_passed" : "#{target_class}_compliance_failed"
     _log.info("Raising EVM Event: #{event}")
     MiqEvent.raise_evm_event_queue(target, event)
-    #
     results[:result]
   end
 

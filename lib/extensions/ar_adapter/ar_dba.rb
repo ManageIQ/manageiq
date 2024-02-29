@@ -791,7 +791,6 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
             SELECT pg_total_relation_size('#{table_name}'::regclass) - pg_relation_size('#{table_name}') AS index_size;
     SQL
   end
-  #
 
   # DBA operations
   #
