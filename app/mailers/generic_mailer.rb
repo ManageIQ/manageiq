@@ -41,7 +41,6 @@ class GenericMailer < ActionMailer::Base
       rescue => e
         _log.error("method: #{method} options: #{options} delivery-error #{e}")
       end
-
     end
 
     msg
