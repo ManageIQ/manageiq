@@ -300,7 +300,7 @@ class MiqProductFeature < ApplicationRecord
 
   def details
     @details ||= attributes.symbolize_keys.slice(*DETAIL_ATTRS).merge(
-        :children => children.where(:hidden => [false, nil])
+      :children => children.where(:hidden => [false, nil])
       )
     
   end
