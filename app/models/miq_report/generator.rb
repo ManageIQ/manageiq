@@ -556,7 +556,7 @@ module MiqReport::Generator
       end
       a
     end
-    arr.sort! { |a, b| a[1] <=> b[1] }
+    arr.sort_by! { |a| a[1] }
     while arr.first[1] == "[None]"
       arr.push(arr.shift)
     end unless arr.blank? || (arr.first[1] == "[None]" && arr.last[1] == "[None]")

@@ -58,7 +58,7 @@ class VimPerformanceTrend < ActsAsArModel
     # build table data
     table_data = grouped_objs.inject([]) do |arr, group|
       name, olist = group
-      olist.sort! { |a, b| a.timestamp <=> b.timestamp }
+      olist.sort_by!(&:timestamp)
       limit   = olist.last.send(options[:limit_col]) if options[:limit_col]
       limit ||= options[:limit_val].to_f
 

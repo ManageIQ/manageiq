@@ -912,7 +912,7 @@ class MiqExpression
         result.concat(tag_details(path, opts))
       end
       @classifications = nil
-      return tags_for_model.concat(result.sort! { |a, b| a.to_s <=> b.to_s })
+      return tags_for_model.concat(result.sort_by!(&:to_s))
     end
 
     relats = get_relats(model)
@@ -922,7 +922,7 @@ class MiqExpression
       @column_cache ||= {}
       key = "#{model}_#{opts[:interval]}_#{opts[:include_model] || false}"
       @column_cache[key] = nil if model == "ChargebackVm"
-      @column_cache[key] ||= get_column_details(relats[:columns], model, model, opts).sort! { |a, b| a.to_s <=> b.to_s }
+      @column_cache[key] ||= get_column_details(relats[:columns], model, model, opts).sort_by!(&:to_s)
       result.concat(@column_cache[key])
 
       unless opts[:disallow_loading_virtual_custom_attributes]
@@ -998,7 +998,7 @@ class MiqExpression
       field = [prefix, opts[:userid]].join("_")
       result.push([value2human(field, opts), field])
     end
-    result.sort! { |a, b| a.to_s <=> b.to_s }
+    result.sort_by!(&:to_s)
   end
 
   def self.get_relats(model)
