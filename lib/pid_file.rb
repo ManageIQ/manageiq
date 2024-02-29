@@ -28,7 +28,7 @@ class PidFile
 
   def create(remove_on_exit = true)
     FileUtils.mkdir_p(File.dirname(@fname))
-    File.open(@fname, "w") { |f| f.write(Process.pid) }
+    File.write(@fname, Process.pid)
     at_exit { PidFile.remove(@fname) } if remove_on_exit
   end
 

@@ -60,7 +60,7 @@ def process(accessor, dir)
   puts "Reading #{accessor}..."
   data = yield
   puts "Writing #{accessor}..."
-  File.open(File.join(dir, "#{accessor}.yml"), "w") { |f| f.write(data.to_yaml(:SortKeys => true)) }
+  File.write(File.join(dir, "#{accessor}.yml"), data.to_yaml(:SortKeys => true))
   data
 end
 

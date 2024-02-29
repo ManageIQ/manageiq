@@ -65,11 +65,9 @@ RSpec.describe MiqConfigSssdLdap::ConfigureApache do
       @pam_template_dir = FileUtils.mkdir_p("#{@template_dir}/#{@pam_conf_dir}")[0]
       stub_const("MiqConfigSssdLdap::AuthTemplateFiles::PAM_CONF_DIR", @pam_conf_dir)
 
-      File.open("#{@pam_template_dir}/httpd-auth", "w") { |f| f.write(manageiq_pam_conf) }
-      File.open("#{@httpd_template_dir}/manageiq-remote-user.conf", "w") { |f| f.write(manageiq_remote_user_conf) }
-      File.open("#{@httpd_template_dir}/manageiq-external-auth.conf.erb", "w") do |f|
-        f.write(manageiq_external_auth_conf)
-      end
+      File.write("#{@pam_template_dir}/httpd-auth", manageiq_pam_conf)
+      File.write("#{@httpd_template_dir}/manageiq-remote-user.conf", manageiq_remote_user_conf)
+      File.write("#{@httpd_template_dir}/manageiq-external-auth.conf.erb", manageiq_external_auth_conf)
     end
 
     after do
@@ -84,9 +82,7 @@ RSpec.describe MiqConfigSssdLdap::ConfigureApache do
     end
 
     it 'silently ignores missing KrbAuthRealms when creating the gssapi httpd config file' do
-      File.open("#{@httpd_template_dir}/manageiq-external-auth.conf.erb", "w") do |f|
-        f.write(manageiq_external_auth_gssapi_conf)
-      end
+      File.write("#{@httpd_template_dir}/manageiq-external-auth.conf.erb", manageiq_external_auth_gssapi_conf)
 
       described_class.new(@initial_settings).configure
       expect(File.read("#{@httpd_conf_dir}/manageiq-external-auth.conf")).to eq(manageiq_external_auth_gssapi_conf)

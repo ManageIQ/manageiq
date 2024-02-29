@@ -124,7 +124,7 @@ RSpec.describe MiqConfigSssdLdap::SssdConf do
     end
 
     it 'will create the sssd config file if needed' do
-      File.open("#{@sssd_template_dir}/sssd.conf.erb", "w") { |f| f.write(sssd_conf_erb) }
+      File.write("#{@sssd_template_dir}/sssd.conf.erb", sssd_conf_erb)
 
       described_class.new(@initial_settings)
 
@@ -132,7 +132,7 @@ RSpec.describe MiqConfigSssdLdap::SssdConf do
     end
 
     it 'will populate the PAM section' do
-      File.open("#{@sssd_template_dir}/sssd.conf.erb", "w") { |f| f.write(sssd_conf_erb) }
+      File.write("#{@sssd_template_dir}/sssd.conf.erb", sssd_conf_erb)
 
       described_class.new(@initial_settings).update
 

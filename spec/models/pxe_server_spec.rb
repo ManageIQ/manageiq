@@ -68,7 +68,7 @@ RSpec.describe PxeServer do
         def file_write(file, contents)
           fname = test_full_path_to(file)
           FileUtils.mkdir_p(File.dirname(fname))
-          File.open(fname, "w") { |fd| fd.write(contents) }
+          File.write(fname, contents)
         end
       end
     end
@@ -230,7 +230,7 @@ RSpec.describe PxeServer do
         def file_write(file, contents)
           fname = test_full_path_to(file)
           FileUtils.mkdir_p(File.dirname(fname))
-          File.open(fname, "w") { |fd| fd.write(contents) }
+          File.write(fname, contents)
         end
       end
     end
