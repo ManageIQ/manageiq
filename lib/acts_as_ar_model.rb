@@ -82,7 +82,7 @@ class ActsAsArModel
 
     def attributes=(values)
       values.each do |attr, value|
-        send("#{attr}=", value)
+        send(:"#{attr}=", value)
       end
     end
 
@@ -111,7 +111,7 @@ class ActsAsArModel
         read_attribute(attribute)
       end
 
-      define_method("#{attribute}=") do |val|
+      define_method(:"#{attribute}=") do |val|
         write_attribute(attribute, val)
       end
     end

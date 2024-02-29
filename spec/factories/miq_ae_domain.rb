@@ -77,12 +77,12 @@ FactoryBot.define do
 
       after :create do |aedomain, evaluator|
         args = {}
-        args[:name] = evaluator.ae_class if evaluator.respond_to?('ae_class')
-        args[:namespace] = "#{aedomain.name}/#{evaluator.ae_namespace}" if evaluator.respond_to?('ae_namespace')
+        args[:name] = evaluator.ae_class if evaluator.respond_to?(:ae_class)
+        args[:namespace] = "#{aedomain.name}/#{evaluator.ae_namespace}" if evaluator.respond_to?(:ae_namespace)
         items = %w(ae_fields ae_instances ae_methods)
         items.each { |f| args[f] = evaluator.respond_to?(f) ? evaluator.send(f) : {} }
 
-        FactoryBot.create(:miq_ae_class, :with_instances_and_methods, args) if evaluator.respond_to?('ae_class')
+        FactoryBot.create(:miq_ae_class, :with_instances_and_methods, args) if evaluator.respond_to?(:ae_class)
       end
     end
   end

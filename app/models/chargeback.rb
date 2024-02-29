@@ -169,8 +169,8 @@ class Chargeback < ActsAsArModel
       duration = @options.interval == "monthly" ? 30.days : @options.duration_of_report_step
       results = plan.calculate_list_of_costs_input(resource_type:  showback_category,
                                                    data:           data,
-                                                   start_time:     consumption.instance_variable_get("@start_time"),
-                                                   end_time:       consumption.instance_variable_get("@end_time"),
+                                                   start_time:     consumption.instance_variable_get(:@start_time),
+                                                   end_time:       consumption.instance_variable_get(:@end_time),
                                                    cycle_duration: duration)
 
       results.each do |cost_value, sb_rate|

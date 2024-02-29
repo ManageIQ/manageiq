@@ -9,20 +9,20 @@ RSpec.describe VimPerformanceTagValue do
 
     it "handles 'realtime' interval" do
       interval = 'realtime'
-      metrics = VimPerformanceTagValue.send('get_metrics', resources, ts, interval, vim_performance_daily, category)
+      metrics = VimPerformanceTagValue.send(:get_metrics, resources, ts, interval, vim_performance_daily, category)
       expect(metrics).to be_empty
     end
 
     it "handles 'hourly' interval" do
       interval = 'hourly'
-      metrics = VimPerformanceTagValue.send('get_metrics', resources, ts, interval, vim_performance_daily, category)
+      metrics = VimPerformanceTagValue.send(:get_metrics, resources, ts, interval, vim_performance_daily, category)
       expect(metrics).to be_empty
     end
 
     it "handles VimPerformanceDaily type" do
       interval = nil
       vim_performance_daily = true
-      metrics = VimPerformanceTagValue.send('get_metrics', resources, ts, interval, vim_performance_daily, category)
+      metrics = VimPerformanceTagValue.send(:get_metrics, resources, ts, interval, vim_performance_daily, category)
       expect(metrics).to be_empty
     end
 
@@ -44,7 +44,7 @@ RSpec.describe VimPerformanceTagValue do
       it "finds metrics" do
         interval = nil
         vim_performance_daily = true
-        metrics = VimPerformanceTagValue.send('get_metrics', [development_vm], start_time, interval, vim_performance_daily, "environment")
+        metrics = VimPerformanceTagValue.send(:get_metrics, [development_vm], start_time, interval, vim_performance_daily, "environment")
         expect(metrics).not_to be_empty
       end
     end

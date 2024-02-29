@@ -223,7 +223,7 @@ class Classification < ApplicationRecord
   end
 
   def self.find_assigned_entries(obj, ns = DEFAULT_NAMESPACE)
-    unless obj.respond_to?("tag_with")
+    unless obj.respond_to?(:tag_with)
       raise _("Class '%{name}' is not eligible for classification") % {:name => obj.class}
     end
 
@@ -278,7 +278,7 @@ class Classification < ApplicationRecord
     raise _("method is only available for an entry") if category?
 
     klass = type.constantize
-    unless klass.respond_to?("find_tagged_with")
+    unless klass.respond_to?(:find_tagged_with)
       raise _("Class '%{type}' is not eligible for classification") % {:type => type}
     end
 
@@ -290,7 +290,7 @@ class Classification < ApplicationRecord
 
   def assign_entry_to(obj, is_request = true)
     raise _("method is only available for an entry") if category?
-    unless obj.respond_to?("tag_with")
+    unless obj.respond_to?(:tag_with)
       raise _("Class '%{name}' is not eligible for classification") % {:name => obj.class}
     end
 

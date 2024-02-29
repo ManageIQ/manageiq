@@ -588,7 +588,7 @@ RSpec.describe EmsEvent do
 
       before do
         allow(ems).to receive(:allow_targeted_refresh?).and_return(true)
-        allow(ems.class.const_get('EventTargetParser')).to receive(:new).and_return(target_parser)
+        allow(ems.class.const_get(:EventTargetParser)).to receive(:new).and_return(target_parser)
         expect(target_parser).to receive(:parse).and_return(targets)
       end
 

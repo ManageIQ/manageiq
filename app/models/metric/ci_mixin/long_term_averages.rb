@@ -6,7 +6,7 @@ module Metric::CiMixin::LongTermAverages
   Metric::LongTermAverages::AVG_METHODS_WITHOUT_OVERHEAD_INFO.each do |meth, info|
     define_method(meth) do
       base = send(info[:base_meth])
-      base.nil? || self.kind_of?(Vm) ? base : [base - Metric::ConfigSettings.send("host_overhead_#{info[:overhead_type]}"), 0.0].max
+      base.nil? || self.kind_of?(Vm) ? base : [base - Metric::ConfigSettings.send(:"host_overhead_#{info[:overhead_type]}"), 0.0].max
     end
   end
 

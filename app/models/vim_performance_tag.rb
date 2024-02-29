@@ -46,7 +46,7 @@ class VimPerformanceTag < MetricRollup
 
     results[:res].each do |rec|
       # Default nil values in tag cols to 0 for records with timestamp that falls inside the time profile
-      results[:tcols].each { |c| rec.send("#{c}=", 0) if rec.send(c).nil? } if rec.inside_time_profile == true
+      results[:tcols].each { |c| rec.send(:"#{c}=", 0) if rec.send(c).nil? } if rec.inside_time_profile == true
 
       # Fill in missing assos ids
       fill_assoc_ids(rec.timestamp, rec, cat_assoc, results[:tags])
@@ -76,7 +76,7 @@ class VimPerformanceTag < MetricRollup
     tags.each do |t|
       assoc_ids_meth = ["assoc_ids", t].join("_").to_s
       if result.send(assoc_ids_meth).nil?
-        result.send("#{assoc_ids_meth}=", assoc => {:on => []})
+        result.send(:"#{assoc_ids_meth}=", assoc => {:on => []})
       end
     end
   end

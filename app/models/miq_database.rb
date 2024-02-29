@@ -25,7 +25,7 @@ class MiqDatabase < ApplicationRecord
   end
 
   def self.adapter
-    @adapter ||= ActiveRecord::Base.connection.instance_variable_get("@config")[:adapter]
+    @adapter ||= ActiveRecord::Base.connection.instance_variable_get(:@config)[:adapter]
   end
 
   def self.display_name(number = 1)

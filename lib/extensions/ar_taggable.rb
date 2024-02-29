@@ -97,7 +97,7 @@ module ActsAsTaggable
         )
       end)
 
-      define_method("#{attribute_name}_tags") do
+      define_method(:"#{attribute_name}_tags") do
         Tag.filter_ns(tags, namespace)
       end
 
@@ -109,7 +109,7 @@ module ActsAsTaggable
         end
       end
 
-      alias_method "#{plural_attribute_name}?", plural_attribute_name
+      alias_method :"#{plural_attribute_name}?", plural_attribute_name
     end
   end # module SingletonMethods
 

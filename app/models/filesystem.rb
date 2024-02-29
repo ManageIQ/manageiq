@@ -145,7 +145,7 @@ class Filesystem < ApplicationRecord
     [:other_write, 00002],
     [:other_exec,  00001],
   ].each do |m, o|
-    define_method("permission_#{m}?") do
+    define_method(:"permission_#{m}?") do
       return permissions && permissions.to_i(8) & o != 0
     end
   end

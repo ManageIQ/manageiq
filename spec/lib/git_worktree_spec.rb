@@ -26,7 +26,7 @@ RSpec.describe GitWorktree do
     def add_files_to_bare_repo(flist)
       flist.each { |f| @ae_db.add(f, YAML.dump(@default_hash.merge(:fname => f))) }
       @ae_db.save_changes("files added")
-      @ae_db.instance_variable_get('@repo').head.target.oid
+      @ae_db.instance_variable_get(:@repo).head.target.oid
     end
 
     def clone(url, add_options = {})

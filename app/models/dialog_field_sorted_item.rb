@@ -57,7 +57,7 @@ class DialogFieldSortedItem < DialogField
 
   def normalize_automate_values(automate_hash)
     AUTOMATE_VALUE_FIELDS.each do |key|
-      send("#{key}=", automate_hash[key]) if automate_hash.key?(key)
+      send(:"#{key}=", automate_hash[key]) if automate_hash.key?(key)
     end
 
     result = automate_hash["values"].to_a

@@ -63,7 +63,7 @@ module TaskHelpers
             if @connect_dialog
               resource_action.dialog = Dialog.in_region(MiqRegion.my_region_number).find_by(:label => dialog_label) if dialog_label
             end
-            new_obj.send("#{assoc.first}=", resource_action)
+            new_obj.send(:"#{assoc.first}=", resource_action)
           end
         end
 

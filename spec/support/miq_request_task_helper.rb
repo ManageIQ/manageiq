@@ -22,7 +22,7 @@ module Spec
           send(method)
         else
           @current_state = method
-          send("test_#{@current_state}")
+          send(:"test_#{@current_state}")
         end
         true
       end

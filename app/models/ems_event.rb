@@ -349,10 +349,10 @@ class EmsEvent < EventStream
         new_event.merge!(
           :dest_host_name         => dest_event.host_name,
           :dest_host_id           => dest_event.host_id,
-          :dest_vm_name           => dest_event.send("#{dest_key}vm_name"),
-          :dest_vm_location       => dest_event.send("#{dest_key}vm_location"),
-          :dest_vm_ems_ref        => dest_event.send("#{dest_key}vm_ems_ref"),
-          :dest_vm_or_template_id => dest_event.send("#{dest_key}vm_or_template_id")
+          :dest_vm_name           => dest_event.send(:"#{dest_key}vm_name"),
+          :dest_vm_location       => dest_event.send(:"#{dest_key}vm_location"),
+          :dest_vm_ems_ref        => dest_event.send(:"#{dest_key}vm_ems_ref"),
+          :dest_vm_or_template_id => dest_event.send(:"#{dest_key}vm_or_template_id")
         )
       end
 

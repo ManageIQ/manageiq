@@ -243,7 +243,7 @@ class EmsCluster < ApplicationRecord
     end
 
     resource = "cpu" if resource == "vcpu"
-    send("effective_#{resource}")
+    send(:"effective_#{resource}")
   end
 
   #

@@ -122,15 +122,15 @@ RSpec.describe EvmApplication do
   describe ".status" do
     def header(col, adjust = :rjust)
       hdr = col == :WID ? "ID" : col.to_s # edge case
-      hdr.gsub("_", " ").send(adjust, send("#{col.downcase}_padding"))
+      hdr.gsub("_", " ").send(adjust, send(:"#{col.downcase}_padding"))
     end
 
     def line_for(col)
-      "-" * send("#{col.downcase}_padding")
+      "-" * send(:"#{col.downcase}_padding")
     end
 
     def pad(val, col, adjust = :rjust)
-      val.to_s.send(adjust, send("#{col.downcase}_padding"))
+      val.to_s.send(adjust, send(:"#{col.downcase}_padding"))
     end
 
     let(:local_zone) { FactoryBot.create(:zone, :name => 'A Zone') }

@@ -447,7 +447,7 @@ module VimPerformanceAnalysis
       # y = r.send(x_attr).to_i # Calculate normal way by using the integer value of the timestamp
       adj_x_attr = "time_profile_adjusted_#{x_attr}"
       if r.respond_to?(adj_x_attr)
-        r.send("#{adj_x_attr}=", (recs.first.send(x_attr).to_i + arr.length.days.to_i))
+        r.send(:"#{adj_x_attr}=", (recs.first.send(x_attr).to_i + arr.length.days.to_i))
         x = r.send(adj_x_attr).to_i # Calculate by using the number of days out from the first timestamp
       else
         x = r.send(x_attr).to_i

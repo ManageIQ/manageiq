@@ -12,7 +12,7 @@ module ProcessTasksMixin
           $log.info("Creating retire request for id [#{id}] with user [#{User.current_user.userid}]")
           name.constantize.make_retire_request(id, User.current_user)
         end
-      elsif options[:task] == "refresh_ems" && respond_to?("refresh_ems")
+      elsif options[:task] == "refresh_ems" && respond_to?(:refresh_ems)
         refresh_ems(options[:ids])
         msg = "'#{options[:task]}' initiated for #{options[:ids].length} #{ui_lookup(:table => base_class.name).pluralize}"
         task_audit_event(:success, options, :message => msg)

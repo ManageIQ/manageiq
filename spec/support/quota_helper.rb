@@ -230,7 +230,7 @@ module Spec
       def setup_model(vendor = "vmware")
         user_setup
         create_tenant_quota
-        send("#{vendor}_model") unless vendor == 'generic'
+        send(:"#{vendor}_model") unless vendor == 'generic'
       end
     end
   end

@@ -7,21 +7,21 @@ RSpec.describe Metric::Processing do
       it "fills all hourly intervals" do
         perf.save && last_perf.save
         expect(MetricRollup.count).to eq(2)
-        described_class.send("extrapolate", MetricRollup, MetricRollup.all)
+        described_class.send(:extrapolate, MetricRollup, MetricRollup.all)
         expect(MetricRollup.count).to eq(3)
       end
     end
 
     context "#create_new_metric" do
       it "creates a filling record without ID attribute" do
-        new_perf = described_class.send("create_new_metric", MetricRollup, last_perf, perf, 3600)
+        new_perf = described_class.send(:create_new_metric, MetricRollup, last_perf, perf, 3600)
         expect(new_perf.id).to be_nil
       end
 
       it "averages the 2 metric values" do
         last_perf.derived_vm_numvcpus = 1000
         perf.derived_vm_numvcpus      = 2000
-        new_perf = described_class.send("create_new_metric", MetricRollup, last_perf, perf, 3600)
+        new_perf = described_class.send(:create_new_metric, MetricRollup, last_perf, perf, 3600)
         expect(new_perf.derived_vm_numvcpus).to eq(1500)
       end
     end

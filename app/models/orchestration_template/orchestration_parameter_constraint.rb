@@ -3,7 +3,7 @@ class OrchestrationTemplate
     attr_accessor :description
 
     def initialize(hash = {})
-      hash.each { |key, value| public_send("#{key}=", value) }
+      hash.each { |key, value| public_send(:"#{key}=", value) }
     end
   end
 end

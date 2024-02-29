@@ -92,7 +92,7 @@ module MiqReport::Generator::Trend
         end
         y = r.send(c[6..-1]).to_f
         # y = r.send(CHART_X_AXIS_COLUMN).to_i # Calculate normal way by using the integer value of the timestamp
-        r.send("#{CHART_X_AXIS_COLUMN_ADJUSTED}=", (recs.first.send(CHART_X_AXIS_COLUMN).to_i + arr.length.days.to_i))
+        r.send(:"#{CHART_X_AXIS_COLUMN_ADJUSTED}=", (recs.first.send(CHART_X_AXIS_COLUMN).to_i + arr.length.days.to_i))
         x = r.send(CHART_X_AXIS_COLUMN_ADJUSTED).to_i # Calculate by using the number of days out from the first timestamp
         arr << [x, y]
       end

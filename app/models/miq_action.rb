@@ -7,7 +7,7 @@ class MiqAction < ApplicationRecord
   before_save       :round_if_memory_reconfigured
 
   silence_warnings do
-    const_set("TYPES",
+    const_set(:TYPES,
               "create_snapshot"         => N_("Create a Snapshot"),
               "email"                   => N_("Send an E-mail"),
               "snmp_trap"               => N_("Send an SNMP Trap"),

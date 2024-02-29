@@ -32,14 +32,14 @@ class MiqExpression::RelativeDatetime
 
       if interval == "quarters"
         ts = Time.now.in_time_zone(tz).beginning_of_quarter
-        coerce((ts - (value.to_i * 3.months)).send("#{mode}_of_quarter"), is_date)
+        coerce((ts - (value.to_i * 3.months)).send(:"#{mode}_of_quarter"), is_date)
       else
-        coerce(value.to_i.send(interval).ago.in_time_zone(tz).send("#{mode}_of_#{interval.singularize}"), is_date)
+        coerce(value.to_i.send(interval).ago.in_time_zone(tz).send(:"#{mode}_of_#{interval.singularize}"), is_date)
       end
     elsif rt == "today"
-      coerce(Time.now.in_time_zone(tz).send("#{mode}_of_day"), is_date)
+      coerce(Time.now.in_time_zone(tz).send(:"#{mode}_of_day"), is_date)
     elsif rt == "yesterday"
-      coerce(1.day.ago.in_time_zone(tz).send("#{mode}_of_day"), is_date)
+      coerce(1.day.ago.in_time_zone(tz).send(:"#{mode}_of_day"), is_date)
     elsif rt == "now"
       t = Time.now.in_time_zone(tz)
       coerce(mode == "beginning" ? t.beginning_of_hour : t.end_of_hour, is_date)
@@ -47,7 +47,7 @@ class MiqExpression::RelativeDatetime
       # Assume it's an absolute date or time
       value_is_date = !rel_time.include?(":")
       ts = Time.use_zone(tz) { Time.zone.parse(rel_time) }
-      ts = ts.send("#{mode}_of_day") if mode && value_is_date
+      ts = ts.send(:"#{mode}_of_day") if mode && value_is_date
       coerce(ts, is_date)
     end
   end

@@ -38,7 +38,7 @@ module MiqReport::Notification
         {
           :content_type => "application/#{atype}",
           :filename     => "#{title} #{run_on.utc.iso8601}.#{atype}",
-          :body         => target.send("to_#{atype}")
+          :body         => target.send(:"to_#{atype}")
         }
       end
     end

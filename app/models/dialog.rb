@@ -181,7 +181,7 @@ class Dialog < ApplicationRecord
     new_dialog.dialog_tabs = dialog_tabs.collect(&:deep_copy)
 
     new_attributes.each do |attr, value|
-      new_dialog.send("#{attr}=", value)
+      new_dialog.send(:"#{attr}=", value)
     end
     new_dialog
   end

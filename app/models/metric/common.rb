@@ -151,7 +151,7 @@ module Metric::Common
   end
 
   def nil_out_values_for_apply_time_profile
-    (Metric::Rollup::ROLLUP_COLS + ["assoc_ids", "min_max"]).each { |c| send("#{c}=", nil) }
+    (Metric::Rollup::ROLLUP_COLS + ["assoc_ids", "min_max"]).each { |c| send(:"#{c}=", nil) }
   end
 
   class_methods do

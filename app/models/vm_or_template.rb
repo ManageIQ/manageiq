@@ -1237,7 +1237,7 @@ class VmOrTemplate < ApplicationRecord
     return self["normalized_state"] if has_attribute?("normalized_state")
 
     %w(archived orphaned template retired disconnected).each do |s|
-      return s if send("#{s}?")
+      return s if send(:"#{s}?")
     end
     return power_state.downcase unless power_state.nil?
 
@@ -1269,7 +1269,7 @@ class VmOrTemplate < ApplicationRecord
 
   def classify_with_parent_folder_path(add = true)
     [:blue, :yellow].each do |folder_type|
-      path = send("parent_#{folder_type}_folder_path")
+      path = send(:"parent_#{folder_type}_folder_path")
       next if path.blank?
 
       cat = self.class.folder_category(folder_type)

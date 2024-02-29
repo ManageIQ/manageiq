@@ -79,7 +79,7 @@ class MiqAlert < ApplicationRecord
 
   # Define methods for notify_* virtual columns
   [:automate, :email, :evm_event, :snmp].each do |n|
-    define_method("notify_#{n}") do
+    define_method(:"notify_#{n}") do
       (options || {}).has_key_path?(:notifications, n)
     end
   end
@@ -196,7 +196,7 @@ class MiqAlert < ApplicationRecord
         # ems_clusters, storages, hosts, ext_management_systems, miq_servers, vms
         table_name = a.db.constantize.table_name
         targets += zone.public_send(table_name)
-        targets += Zone.public_send("#{table_name}_without_a_zone") if Zone.respond_to?("#{table_name}_without_a_zone")
+        targets += Zone.public_send(:"#{table_name}_without_a_zone") if Zone.respond_to?(:"#{table_name}_without_a_zone")
       end
     end
 

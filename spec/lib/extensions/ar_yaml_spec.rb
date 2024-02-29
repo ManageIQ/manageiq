@@ -17,7 +17,7 @@ RSpec.describe ActiveRecord::AttributeAccessorThatYamls do
 
   it "attr_reader_that_yamls" do
     inst = Vm.new
-    inst.instance_variable_set("@read1", 1)
+    inst.instance_variable_set(:@read1, 1)
     result = YAML.safe_load(YAML.dump(inst), :permitted_classes => [Vm, ActiveModel::Attribute.const_get(:FromDatabase), ActiveModel::Attribute::const_get(:FromUser), ActiveModel::Attribute::UserProvidedDefault, ActiveModel::Type::String])
     expect(result.read1).to eq(1)
   end
@@ -26,6 +26,6 @@ RSpec.describe ActiveRecord::AttributeAccessorThatYamls do
     inst = Vm.new
     inst.write1 = 1
     result = YAML.safe_load(YAML.dump(inst), :permitted_classes => [Vm, ActiveModel::Attribute.const_get(:FromDatabase), ActiveModel::Attribute::const_get(:FromUser), ActiveModel::Attribute::UserProvidedDefault, ActiveModel::Type::String])
-    expect(result.instance_variable_get("@write1")).to eq(1)
+    expect(result.instance_variable_get(:@write1)).to eq(1)
   end
 end

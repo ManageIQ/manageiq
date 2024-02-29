@@ -62,7 +62,7 @@ module FixAuth
         available_columns.each do |column|
           if (old_value = obj.send(column)).present?
             new_value = recrypt(old_value, options)
-            obj.send("#{column}=", new_value) if new_value != old_value
+            obj.send(:"#{column}=", new_value) if new_value != old_value
           end
         end
         obj
@@ -90,8 +90,8 @@ module FixAuth
 
       def display_column(r, column, options)
         v = r.send(column)
-        if r.send("#{column}_changed?")
-          puts "    #{column}: #{r.send("#{column}_was").inspect} => #{highlight_password(v, options)}"
+        if r.send(:"#{column}_changed?")
+          puts "    #{column}: #{r.send(:"#{column}_was").inspect} => #{highlight_password(v, options)}"
         elsif r.send(column).present?
           puts "    #{column}: #{v.inspect} (not changed)"
         end

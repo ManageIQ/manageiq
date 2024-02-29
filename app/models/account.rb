@@ -136,18 +136,18 @@ class Account < ApplicationRecord
   # FIXME: Why not use .pluralize?
   #
   def members
-    send("#{accttype_opposite}s")
+    send(:"#{accttype_opposite}s")
   end
 
   def add_member(member)
-    send("add_#{accttype_opposite}", member)
+    send(:"add_#{accttype_opposite}", member)
   end
 
   def remove_member(member)
-    send("remove_#{accttype_opposite}", member)
+    send(:"remove_#{accttype_opposite}", member)
   end
 
   def remove_all_members
-    send("remove_all_#{accttype_opposite}s")
+    send(:"remove_all_#{accttype_opposite}s")
   end
 end

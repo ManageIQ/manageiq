@@ -616,7 +616,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
         end
 
         # Call platform specific method
-        send("update_fields_from_spec_#{cs_data[:typ].downcase}", cs_data)
+        send(:"update_fields_from_spec_#{cs_data[:typ].downcase}", cs_data)
 
         # Call generic networking method
         update_fields_from_spec_networking(cs_data)

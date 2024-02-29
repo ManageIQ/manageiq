@@ -533,7 +533,7 @@ RSpec.describe MiqRequestWorkflow do
       attrs = ems_folder.attributes.merge(:object => workflow.ems_folder_to_hash_struct(ems_folder))
       xml_hash = XmlHash::Element.new('EmsFolder', attrs)
       hash = {ResourcePool => {resource_pool.id => xml_hash}}
-      workflow.instance_variable_set("@ems_xml_nodes", hash)
+      workflow.instance_variable_set(:@ems_xml_nodes, hash)
     end
 
     it "returns nil if :respool is nil" do
@@ -554,7 +554,7 @@ RSpec.describe MiqRequestWorkflow do
       attrs = resource_pool.attributes.merge(:object => resource_pool, :ems => ems)
       xml_hash = XmlHash::Element.new('ResourcePool', attrs)
       hash = {EmsFolder => {ems_folder.id => xml_hash}}
-      workflow.instance_variable_set("@ems_xml_nodes", hash)
+      workflow.instance_variable_set(:@ems_xml_nodes, hash)
     end
 
     it "returns nil if :folder is nil" do
@@ -574,7 +574,7 @@ RSpec.describe MiqRequestWorkflow do
       attrs = datacenter.attributes.merge(:object => workflow.ems_folder_to_hash_struct(datacenter), :ems => ems)
       xml_hash = XmlHash::Element.new('EmsFolder', attrs)
       hash = {EmsFolder => {datacenter.id => xml_hash}}
-      workflow.instance_variable_set("@ems_xml_nodes", hash)
+      workflow.instance_variable_set(:@ems_xml_nodes, hash)
     end
 
     it "returns a datacenter" do

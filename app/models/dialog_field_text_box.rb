@@ -67,7 +67,7 @@ class DialogFieldTextBox < DialogField
 
   def normalize_automate_values(automate_hash)
     self.class::AUTOMATE_VALUE_FIELDS.each do |key|
-      send("#{key}=", automate_hash[key]) if automate_hash.key?(key)
+      send(:"#{key}=", automate_hash[key]) if automate_hash.key?(key)
     end
 
     automate_hash["value"].to_s.presence || initial_values

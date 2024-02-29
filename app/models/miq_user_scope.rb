@@ -7,7 +7,7 @@ class MiqUserScope
 
   def initialize(scope)
     @scope = scope
-    FEATURE_TYPES.each { |f| instance_variable_set("@#{f}", scope[f]) }
+    FEATURE_TYPES.each { |f| instance_variable_set(:"@#{f}", scope[f]) }
   end
 
   def get_filters(options = {})
@@ -36,7 +36,7 @@ class MiqUserScope
 
     all       = filter[:_all_]
     for_class = filter[klass.to_s.downcase.to_sym]
-    result    = send("merge_#{filter_type}", all, for_class)
+    result    = send(:"merge_#{filter_type}", all, for_class)
 
     result.blank? ? nil : result
   end

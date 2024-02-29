@@ -86,7 +86,7 @@ class Hardware < ApplicationRecord
 
     xmlNode.root.each_recursive do |e|
       begin
-        parent.hardware.send("m_#{e.name}", parent, e, deletes) if parent.hardware.respond_to?("m_#{e.name}")
+        parent.hardware.send(:"m_#{e.name}", parent, e, deletes) if parent.hardware.respond_to?(:"m_#{e.name}")
       rescue => err
         _log.warn(err.to_s)
       end

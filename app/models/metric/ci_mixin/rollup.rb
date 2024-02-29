@@ -95,7 +95,7 @@ module Metric::CiMixin::Rollup
       end
 
       Benchmark.realtime_block(:rollup_perfs) do
-        new_perf = Metric::Rollup.send("rollup_#{interval_name}", self, time, interval_name, time_profile, new_perf, perf.attributes.symbolize_keys)
+        new_perf = Metric::Rollup.send(:"rollup_#{interval_name}", self, time, interval_name, time_profile, new_perf, perf.attributes.symbolize_keys)
       end
 
       Benchmark.realtime_block(:db_update_perf) { perf.update(new_perf) }

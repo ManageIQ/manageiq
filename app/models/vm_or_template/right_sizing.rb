@@ -115,28 +115,28 @@ module VmOrTemplate::RightSizing
   MEMORY_RECOMMENDATION_ROUND_TO_NEAREST = 4
 
   RIGHT_SIZING_MODES.each do |mode, meth|
-    define_method("#{mode}_recommended_vcpus") do
+    define_method(:"#{mode}_recommended_vcpus") do
       base_recommended(send(meth[:cpu]), cpu_total_cores, self.class.cpu_recommendation_minimum) unless cpu_total_cores.nil?
     end
 
-    define_method("#{mode}_recommended_mem") do
+    define_method(:"#{mode}_recommended_mem") do
       base_recommended(send(meth[:mem]), ram_size, self.class.mem_recommendation_minimum, MEMORY_RECOMMENDATION_ROUND_TO_NEAREST) unless ram_size.nil?
     end
 
-    define_method("#{mode}_vcpus_recommended_change_pct") do
-      base_change_percentage(send("#{mode}_recommended_vcpus"), cpu_total_cores) unless cpu_total_cores.nil?
+    define_method(:"#{mode}_vcpus_recommended_change_pct") do
+      base_change_percentage(send(:"#{mode}_recommended_vcpus"), cpu_total_cores) unless cpu_total_cores.nil?
     end
 
-    define_method("#{mode}_mem_recommended_change_pct") do
-      base_change_percentage(send("#{mode}_recommended_mem"), ram_size) unless ram_size.nil?
+    define_method(:"#{mode}_mem_recommended_change_pct") do
+      base_change_percentage(send(:"#{mode}_recommended_mem"), ram_size) unless ram_size.nil?
     end
 
-    define_method("#{mode}_vcpus_recommended_change") do
-      base_change(send("#{mode}_recommended_vcpus"), cpu_total_cores) unless cpu_total_cores.nil?
+    define_method(:"#{mode}_vcpus_recommended_change") do
+      base_change(send(:"#{mode}_recommended_vcpus"), cpu_total_cores) unless cpu_total_cores.nil?
     end
 
-    define_method("#{mode}_mem_recommended_change") do
-      base_change(send("#{mode}_recommended_mem"), ram_size) unless ram_size.nil?
+    define_method(:"#{mode}_mem_recommended_change") do
+      base_change(send(:"#{mode}_recommended_mem"), ram_size) unless ram_size.nil?
     end
   end
 

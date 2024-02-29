@@ -87,7 +87,7 @@ module EmsRefresh::SaveInventoryHelper
     if child
       update!(child, hash, [:type, *remove_keys])
     else
-      child = parent.send("create_#{type}!", hash.except(*remove_keys))
+      child = parent.send(:"create_#{type}!", hash.except(*remove_keys))
     end
     save_child_inventory(child, hash, child_keys)
   end
@@ -120,7 +120,7 @@ module EmsRefresh::SaveInventoryHelper
   end
 
   def save_child_inventory(obj, hashes, child_keys, *args)
-    child_keys.each { |k| send("save_#{k}_inventory", obj, hashes[k], *args) if hashes.key?(k) }
+    child_keys.each { |k| send(:"save_#{k}_inventory", obj, hashes[k], *args) if hashes.key?(k) }
   end
 
   def store_ids_for_new_records(records, hashes, keys)

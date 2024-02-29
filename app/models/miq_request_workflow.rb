@@ -658,7 +658,7 @@ class MiqRequestWorkflow
 
   def build_ci_hash_struct(ci, props)
     nh = OpenStruct.new(:id => ci.id, :evm_object_class => ci.class.base_class.name.to_sym)
-    props.each { |p| nh.send("#{p}=", ci.send(p)) }
+    props.each { |p| nh.send(:"#{p}=", ci.send(p)) }
     nh
   end
 
@@ -822,7 +822,7 @@ class MiqRequestWorkflow
     result = nil
     relats.each do |rsc_type|
       rails_logger("allowed_ci - #{rsc_type}_to_#{ci}", 0)
-      rc = send("#{rsc_type}_to_#{ci}", sources)
+      rc = send(:"#{rsc_type}_to_#{ci}", sources)
       rails_logger("allowed_ci - #{rsc_type}_to_#{ci}", 1)
       unless rc.nil?
         rc = rc.to_a
@@ -1034,7 +1034,7 @@ class MiqRequestWorkflow
 
   def ems_folder_to_hash_struct(ci)
     build_ci_hash_struct(ci, [:name, :type, :hidden]).tap do |nh|
-      nh.send("datacenter?=", ci.kind_of?(Datacenter))
+      nh.send(:"datacenter?=", ci.kind_of?(Datacenter))
     end
   end
 

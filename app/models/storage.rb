@@ -739,7 +739,7 @@ class Storage < ApplicationRecord
         ['registered', 'unregistered'].each do |mode|
           attrs["derived_storage_used_#{mode}".to_sym] ||= 0
 
-          send("#{mode}_vms").each do |vm|
+          send(:"#{mode}_vms").each do |vm|
             vm_attrs = {:capture_interval => interval, :resource_name => vm.name}
             vm_attrs[:derived_storage_vm_count_managed] = 1
             vm_attrs["derived_storage_vm_count_#{mode}".to_sym] = 1

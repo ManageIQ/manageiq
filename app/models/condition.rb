@@ -242,7 +242,7 @@ class Condition < ApplicationRecord
   def self.registry_data(ref, name, ohash)
     # <registry>HKLM\Software\Microsoft\Windows\CurrentVersion\explorer\Shell Folders\Common AppData</registry> == 'C:\Documents and Settings\All Users\Application Data'
     # <registry>HKLM\Software\Microsoft\Windows\CurrentVersion\explorer\Shell Folders : Common AppData</registry> == 'C:\Documents and Settings\All Users\Application Data'
-    return nil unless ref.respond_to?("registry_items")
+    return nil unless ref.respond_to?(:registry_items)
 
     registry_items = ref.registry_items
     if ohash[:key_exists]

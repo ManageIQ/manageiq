@@ -5,12 +5,12 @@ module ActiveRecord
 
     def encode_with(coder)
       super
-      Array(self.class.attrs_that_yaml).each { |attr| coder[attr.to_s] = instance_variable_get("@#{attr}") }
+      Array(self.class.attrs_that_yaml).each { |attr| coder[attr.to_s] = instance_variable_get(:"@#{attr}") }
     end
 
     def init_with(coder)
       super
-      Array(self.class.attrs_that_yaml).each { |attr| instance_variable_set("@#{attr}", coder[attr.to_s]) }
+      Array(self.class.attrs_that_yaml).each { |attr| instance_variable_set(:"@#{attr}", coder[attr.to_s]) }
       self
     end
 

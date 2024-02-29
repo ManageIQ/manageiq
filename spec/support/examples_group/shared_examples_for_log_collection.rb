@@ -1,5 +1,5 @@
 shared_examples_for "Log Collection #synchronize_logs" do |type|
-  let(:instance) { instance_variable_get("@#{type}") }
+  let(:instance) { instance_variable_get(:"@#{type}") }
 
   it "#{type.camelize} no args" do
     expect(LogFile).to receive(:logs_from_server).with(MiqServer.my_server, hash_excluding(:only_current))

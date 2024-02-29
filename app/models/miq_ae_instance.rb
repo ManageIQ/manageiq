@@ -39,7 +39,7 @@ class MiqAeInstance < ApplicationRecord
 
     val   = ae_values.detect { |v| v.field_id == field.id }
     val ||= ae_values.build(:field_id => field.id)
-    val.send("#{attribute}=", value)
+    val.send(:"#{attribute}=", value)
     val.save!
   end
 

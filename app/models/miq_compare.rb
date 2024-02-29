@@ -520,12 +520,12 @@ class MiqCompare
 
   # Retrieve all records from the source for the set of ids (mode agnostic)
   def get_records
-    send("get_#{@mode}_records")
+    send(:"get_#{@mode}_records")
   end
 
   # Retrieve the record from the source (mode agnostic)
   def get_record(id)
-    send("get_#{@mode}_record", id)
+    send(:"get_#{@mode}_record", id)
   end
 
   # Find the record for the specified id

@@ -50,13 +50,13 @@ class LogFile < ApplicationRecord
     raise _("Log Depot settings not configured") unless file_depot
 
     method = get_post_method(file_depot.uri)
-    send("upload_log_file_#{method}")
+    send(:"upload_log_file_#{method}")
   end
 
   def remove
     method = get_post_method(log_uri)
     return if method.nil?
-    return send("remove_log_file_#{method}") if respond_to?("remove_log_file_#{method}")
+    return send(:"remove_log_file_#{method}") if respond_to?(:"remove_log_file_#{method}")
 
     # At this point ftp should have returned
     klass = Object.const_get("Miq#{method.capitalize}Session")
@@ -70,7 +70,7 @@ class LogFile < ApplicationRecord
 
     method = get_post_method(log_uri)
     return true if method.nil?
-    return send("file_exists_#{method}?") if respond_to?("file_exists_#{method}?")
+    return send(:"file_exists_#{method}?") if respond_to?(:"file_exists_#{method}?")
 
     # At this point ftp should have returned
     klass = Object.const_get("Miq#{method.capitalize}Session")

@@ -42,7 +42,7 @@ class VimPerformanceTagValue
   }
 
   def initialize(options = {})
-    options.each { |k, v| public_send("#{k}=", v) }
+    options.each { |k, v| public_send(:"#{k}=", v) }
   end
 
   def self.build_from_performance_record(parent_perf, options = {})

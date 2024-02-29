@@ -47,7 +47,7 @@ class MetricRollup < ApplicationRecord
     # This should really be done by subclassing where each subclass can define reservations or
     # changing the reports to allow for optional reservations.
     if val.to_i == 0 && col.to_s =~ /(.+)_reserved$/
-      return send("#{$1}_available")
+      return send(:"#{$1}_available")
     else
       return val
     end

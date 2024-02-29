@@ -49,17 +49,17 @@ class GenericObjectDefinition < ApplicationRecord
   virtual_total :generic_objects_count, :generic_objects
 
   FEATURES.each do |feature|
-    define_method("property_#{feature}s") do
+    define_method(:"property_#{feature}s") do
       return errors[:properties] if properties_changed? && !valid?
 
       properties["#{feature}s".to_sym]
     end
 
-    define_method("property_#{feature}_defined?") do |attr|
+    define_method(:"property_#{feature}_defined?") do |attr|
       attr = attr.to_s
       return property_methods.include?(attr) if feature == 'method'
 
-      send("property_#{feature}s").key?(attr)
+      send(:"property_#{feature}s").key?(attr)
     end
   end
 
