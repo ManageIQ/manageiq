@@ -340,8 +340,8 @@ RSpec.describe MiqPolicy do
 
     it 'reports invalid towhat' do
       policy = FactoryBot.build(:miq_policy, :towhat => "BobsYourUncle")
-      towhat_error = "should be one of ContainerGroup, ContainerImage, "\
-                     "ContainerNode, ContainerProject, ContainerReplicator, "\
+      towhat_error = "should be one of ContainerGroup, ContainerImage, " \
+                     "ContainerNode, ContainerProject, ContainerReplicator, " \
                      "ExtManagementSystem, Host, PhysicalServer, Vm"
 
       expect(policy).not_to be_valid

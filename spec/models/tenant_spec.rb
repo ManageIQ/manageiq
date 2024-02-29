@@ -958,7 +958,7 @@ RSpec.describe Tenant do
       end
 
       it "raises error when region is not passed" do
-        exception_message = "You need to pass specific region  with :other_region: \n"\
+        exception_message = "You need to pass specific region  with :other_region: \n" \
                             "FactoryBot.create(:tenant, :in_other_region, :other_region => <region>) "
         expect { FactoryBot.create(:tenant, :in_other_region) }.to raise_error(exception_message)
       end

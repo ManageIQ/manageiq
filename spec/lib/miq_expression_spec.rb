@@ -593,7 +593,7 @@ RSpec.describe MiqExpression do
 
     it "generates the SQL for a CONTAINS expression with has_many field" do
       sql, * = MiqExpression.new("CONTAINS" => {"field" => "Vm.guest_applications-name", "value" => "foo"}).to_sql
-      expected = "\"vms\".\"id\" IN (SELECT \"vms\".\"id\" FROM \"vms\" INNER JOIN \"guest_applications\" ON "\
+      expected = "\"vms\".\"id\" IN (SELECT \"vms\".\"id\" FROM \"vms\" INNER JOIN \"guest_applications\" ON " \
                  "\"guest_applications\".\"vm_or_template_id\" = \"vms\".\"id\" WHERE \"guest_applications\".\"name\" = 'foo')"
       expect(sql).to eq(expected)
     end
@@ -2408,7 +2408,7 @@ RSpec.describe MiqExpression do
                                                                           "value" => "X"}},
                                          "checkall" => {"=" => {"field" => "Vm.advanced_settings-read_only",
                                                                 "value" => "true"}}})
-      expect(exp.to_human).to eq('FIND VM and Instance.Advanced Settings : '\
+      expect(exp.to_human).to eq('FIND VM and Instance.Advanced Settings : ' \
         'Name STARTS WITH "X" CHECK ALL Read Only = "true"')
     end
 

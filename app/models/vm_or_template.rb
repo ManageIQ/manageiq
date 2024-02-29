@@ -431,7 +431,7 @@ class VmOrTemplate < ApplicationRecord
 
     # VM has no host or storage affiliation
     if vm.storage.nil?
-      task.error("#{vm.name}: There is no owning Host or Datastore for this VM, "\
+      task.error("#{vm.name}: There is no owning Host or Datastore for this VM, " \
                  "'#{options[:task]}' is not allowed")
       return false
     end
@@ -451,7 +451,7 @@ class VmOrTemplate < ApplicationRecord
       return false
     end
     if MiqProxy.find(spid).state != "on" # Repo scanning host iagent s not running
-      task.error("#{vm.name}: The Default Repository SmartProxy, '#{sp.name}', is not running. "\
+      task.error("#{vm.name}: The Default Repository SmartProxy, '#{sp.name}', is not running. " \
                  "'#{options[:task]}' not attempted")
       return false
     end

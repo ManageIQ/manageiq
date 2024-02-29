@@ -21,7 +21,7 @@ def parse_args(argv)
       
       Options:
     EOS
-    opt :sort_by, 'Column to sort by, options are start_time, end_time, '\
+    opt :sort_by, 'Column to sort by, options are start_time, end_time, ' \
                   'duration, ems, target_type, and target',
         :type => :string, :default => 'start_time'
     opt :target, 'Filter by specific targets, comma separated', :type => :strings
