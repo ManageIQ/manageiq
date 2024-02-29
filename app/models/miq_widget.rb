@@ -543,7 +543,7 @@ class MiqWidget < ApplicationRecord
         :interval   => {:value => value, :unit => unit},
         :tz         => server_tz,
         :start_time => sched_time
-      },
+      }
     )
     self.miq_schedule = sched
     save!

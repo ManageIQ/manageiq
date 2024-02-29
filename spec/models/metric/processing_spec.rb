@@ -70,7 +70,7 @@ RSpec.describe Metric::Processing do
         m = FactoryBot.create(:metric_rollup_vm_hr,
                               :resource                  => vm,
                               :cpu_usage_rate_average    => 50.0,
-                              :cpu_usagemhz_rate_average => 1_500.0,)
+                              :cpu_usagemhz_rate_average => 1_500.0)
 
         derived_columns = described_class.process_derived_columns(vm, m.attributes.symbolize_keys)
 
@@ -80,7 +80,7 @@ RSpec.describe Metric::Processing do
       it "with only cpu_usage_rate_average usage value" do
         m = FactoryBot.create(:metric_rollup_vm_hr,
                               :resource               => vm,
-                              :cpu_usage_rate_average => 50.0,)
+                              :cpu_usage_rate_average => 50.0)
 
         derived_columns = described_class.process_derived_columns(vm, m.attributes.symbolize_keys)
 
@@ -90,7 +90,7 @@ RSpec.describe Metric::Processing do
       it "with only cpu_usagemhz_rate_average usage value" do
         m = FactoryBot.create(:metric_rollup_vm_hr,
                               :resource                  => vm,
-                              :cpu_usagemhz_rate_average => 1_500.0,)
+                              :cpu_usagemhz_rate_average => 1_500.0)
 
         derived_columns = described_class.process_derived_columns(vm, m.attributes.symbolize_keys)
 
@@ -125,14 +125,14 @@ RSpec.describe Metric::Processing do
                             :cpu_total_cores      => 8,
                             :cpu_sockets          => 4,
                             :cpu_cores_per_socket => 2,
-                            :cpu_speed            => 3_000,))
+                            :cpu_speed            => 3_000))
       end
 
       it "with all usage values" do
         m = FactoryBot.create(:metric_rollup_vm_hr,
                               :resource                  => vm,
                               :cpu_usage_rate_average    => 50.0,
-                              :cpu_usagemhz_rate_average => 1_500.0,)
+                              :cpu_usagemhz_rate_average => 1_500.0)
 
         derived_columns = described_class.process_derived_columns(vm, m.attributes.symbolize_keys)
 
@@ -142,7 +142,7 @@ RSpec.describe Metric::Processing do
       it "with only cpu_usage_rate_average usage value" do
         m = FactoryBot.create(:metric_rollup_vm_hr,
                               :resource               => vm,
-                              :cpu_usage_rate_average => 50.0,)
+                              :cpu_usage_rate_average => 50.0)
 
         derived_columns = described_class.process_derived_columns(vm, m.attributes.symbolize_keys)
 
@@ -152,7 +152,7 @@ RSpec.describe Metric::Processing do
       it "with only cpu_usagemhz_rate_average usage value" do
         m = FactoryBot.create(:metric_rollup_vm_hr,
                               :resource                  => vm,
-                              :cpu_usagemhz_rate_average => 1_500.0,)
+                              :cpu_usagemhz_rate_average => 1_500.0)
 
         derived_columns = described_class.process_derived_columns(vm, m.attributes.symbolize_keys)
 
@@ -190,7 +190,7 @@ RSpec.describe Metric::Processing do
       it "with usage values" do
         m = FactoryBot.create(:metric_rollup_vm_hr,
                               :resource                   => vm,
-                              :mem_usage_absolute_average => 50.0,)
+                              :mem_usage_absolute_average => 50.0)
 
         derived_columns = described_class.process_derived_columns(vm, m.attributes.symbolize_keys)
 
@@ -209,7 +209,7 @@ RSpec.describe Metric::Processing do
         vm = FactoryBot.create(:vm_vmware)
         m = FactoryBot.create(:metric_rollup_vm_hr,
                               :resource                   => vm,
-                              :mem_usage_absolute_average => 50.0,)
+                              :mem_usage_absolute_average => 50.0)
 
         derived_columns = described_class.process_derived_columns(vm, m.attributes.symbolize_keys)
 

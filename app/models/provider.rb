@@ -85,7 +85,7 @@ class Provider < ApplicationRecord
       :name    => msg,
       :state   => MiqTask::STATE_QUEUED,
       :status  => MiqTask::STATUS_OK,
-      :message => msg,
+      :message => msg
     )
     self.class._queue_task('destroy', [id], task.id)
     task.id

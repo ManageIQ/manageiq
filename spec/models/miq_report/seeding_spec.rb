@@ -56,7 +56,7 @@ RSpec.describe MiqReport do
           :file_mtime    => File.mtime(report_yml).utc.round,
           :db            => "Vm",
           :cols          => ["vendor_display", "name"],
-          :include       => {"operating_system" => {"columns" => ["product_name", "name"]}},
+          :include       => {"operating_system" => {"columns" => ["product_name", "name"]}}
         )
 
         expect(compare).to have_attributes(

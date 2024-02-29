@@ -366,7 +366,7 @@ class MiqReportResult < ApplicationRecord
       :class_name  => name,
       :method_name => "destroy_all",
       :priority    => MiqQueue::HIGH_PRIORITY,
-      :args        => [["userid IN (?)", userids]],
+      :args        => [["userid IN (?)", userids]]
     )
   end
 

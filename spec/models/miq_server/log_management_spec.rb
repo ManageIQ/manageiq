@@ -187,7 +187,7 @@ RSpec.describe MiqServer do
           expect(task.reload).to have_attributes(
             :message => "#{name} log files from #{@miq_server.name} #{@miq_server.zone.name} MiqServer #{@miq_server.id} are posted",
             :state   => "Active",
-            :status  => "Ok",
+            :status  => "Ok"
           )
         end
       end

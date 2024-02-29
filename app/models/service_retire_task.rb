@@ -62,7 +62,7 @@ class ServiceRetireTask < MiqRetireTask
         :src_ids             => [svc_rsc.resource.id],
         :service_resource_id => svc_rsc.id,
         :parent_service_id   => parent_service.id,
-        :parent_task_id      => parent_task.id,
+        :parent_task_id      => parent_task.id
       )
       task.request_type = task_type.name.underscore[0..-6]
       task.source = svc_rsc.resource

@@ -226,7 +226,7 @@ RSpec.describe Host do
           :class_name  => @host.class.name,
           :role        => "ems_operations",
           :zone        => @ems.zone.name,
-          :queue_name  => @ems.queue_name_for_ems_operations,
+          :queue_name  => @ems.queue_name_for_ems_operations
         )
       end
 

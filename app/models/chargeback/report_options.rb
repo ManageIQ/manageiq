@@ -18,7 +18,7 @@ class Chargeback
     :ext_options,
     :include_metrics,      # enable charging allocated resources with C & U
     :method_for_allocated_metrics,
-    :cumulative_rate_calculation,
+    :cumulative_rate_calculation
   ) do
     def self.new_from_h(hash)
       new(*hash.values_at(*members))

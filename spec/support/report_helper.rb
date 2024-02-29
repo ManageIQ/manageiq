@@ -26,7 +26,7 @@ module Spec
           :col_options => {"num_cpu" => {:grouping => %i[avg max min total]},
                            "name"    => {:break_label => "Cloud/Infrastructure Provider : Name: "}},
           :graph       => {:type => "Column", :mode => "values", :column => "Vm-num_cpu:total", :count => 2, :other => other},
-          :extras      => {},
+          :extras      => {}
         )
 
         report.table = Ruport::Data::Table.new(
@@ -40,7 +40,7 @@ module Spec
             ["gek", 2, system_name_3,          357],
             ["tik", 1, system_name_4 = 'blud', 358],
             ["tak", 1, system_name_4,          359],
-          ],
+          ]
         )
         report
       end
@@ -57,7 +57,7 @@ module Spec
           :graph       => {:type => "Bar", :mode => "values", :column => "Host-ram_size", :count => 10, :other => false},
           :dims        => 1,
           :col_options => {},
-          :extras      => {},
+          :extras      => {}
         )
 
         report.table = Ruport::Data::Table.new(
@@ -110,7 +110,7 @@ module Spec
           :graph       => {:type => "Bar", :mode => "values", :column => "Host-ram_size", :count => 10, :other => false},
           :dims        => 1,
           :col_options => {},
-          :extras      => {},
+          :extras      => {}
         )
 
         report.table = Ruport::Data::Table.new(
@@ -137,7 +137,7 @@ module Spec
           :dims        => 1,
           :col_options => {},
           :rpt_options => {},
-          :extras      => {},
+          :extras      => {}
         )
 
         report.table = Ruport::Data::Table.new(
@@ -145,7 +145,7 @@ module Spec
           :data         => [
             ["Чук", nil, 4,   6_144, 42],
             ["Гек", nil, nil, 1_024, 49],
-          ],
+          ]
         )
         report
       end
@@ -164,7 +164,7 @@ module Spec
           :rpt_options => {},
           :col_options => {},
           :graph       => {:type => "Bar", :mode => "values", :column => "Host-v_total_vms", :count => 4, :other => other},
-          :extras      => {},
+          :extras      => {}
         )
 
         report.table = Ruport::Data::Table.new(
@@ -176,7 +176,7 @@ module Spec
             ["foo", 2,                1355],
             ["foo", 1,                1356],
             ["foo", 0,                1357],
-          ],
+          ]
         )
         report
       end
@@ -195,7 +195,7 @@ module Spec
           :dims        => 2,
           :col_options => {"name" => {:break_label => "Cloud/Infrastructure Provider : Name: "}, "mem_cpu" => {:grouping => [:total]}},
           :rpt_options => {:summary => {:hide_detail_rows => false}},
-          :extras      => {},
+          :extras      => {}
         )
 
         report.table = Ruport::Data::Table.new(
@@ -209,7 +209,7 @@ module Spec
             ["windows",      1_024, "openstack",     71],
             ["linux_centos", 1_024, "ec2",           72],
             ["",             0,     "",              79],
-          ],
+          ]
         )
         report
       end

@@ -294,7 +294,7 @@ class EmsEvent < EventStream
       :timestamp  => event[:timestamp],
       :chain_id   => event[:chain_id],
       :ems_id     => event[:ems_id],
-      :ems_ref    => event[:ems_ref],
+      :ems_ref    => event[:ems_ref]
     )
     new_event.handle_event if new_event
     new_event

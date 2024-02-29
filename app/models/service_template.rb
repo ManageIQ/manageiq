@@ -306,7 +306,7 @@ class ServiceTemplate < ApplicationRecord
           :scaling_min         => scaling_min,
           :service_resource_id => child_svc_rsc.id,
           :parent_service_id   => parent_service.id,
-          :parent_task_id      => parent_service_task.id,
+          :parent_task_id      => parent_service_task.id
         )
         new_task.state  = 'pending'
         new_task.status = 'Ok'
@@ -435,7 +435,7 @@ class ServiceTemplate < ApplicationRecord
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "order",
-      :args        => [user_id, options, request_options],
+      :args        => [user_id, options, request_options]
     )
   end
 
@@ -459,7 +459,7 @@ class ServiceTemplate < ApplicationRecord
           :interval   => {:unit => "once"},
           :start_time => time,
           :tz         => "UTC",
-        },
+        }
       )
       {:schedule => schedule}
     else

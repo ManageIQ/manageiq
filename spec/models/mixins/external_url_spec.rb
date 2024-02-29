@@ -22,7 +22,7 @@ RSpec.describe ExternalUrlMixin do
         :resource_type => 'TestClass',
         :resource_id   => test_instance.id
       ).first.attributes).to include(
-        'url' => 'https://www.other.example.com',
+        'url' => 'https://www.other.example.com'
       )
     end
 
@@ -36,7 +36,7 @@ RSpec.describe ExternalUrlMixin do
         :resource_type => 'TestClass',
         :resource_id   => test_instance.id
       ).first.attributes).to include(
-        'url' => 'https://www.example.com',
+        'url' => 'https://www.example.com'
       )
     end
   end

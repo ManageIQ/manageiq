@@ -137,7 +137,7 @@ class MiqQueue < ApplicationRecord
       :zone         => Zone.determine_queue_zone(options),
       :state        => STATE_READY,
       :handler_type => nil,
-      :handler_id   => nil,
+      :handler_id   => nil
     )
 
     if Zone.maintenance?(options[:zone])

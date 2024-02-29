@@ -760,7 +760,7 @@ class MiqAction < ApplicationRecord
         :method_name => :annotate_scan_policy_results,
         :args        => [inputs[:policy].name, inputs[:result]],
         :instance_id => rec.id,
-        :priority    => MiqQueue::HIGH_PRIORITY,
+        :priority    => MiqQueue::HIGH_PRIORITY
       )
     end
   end
@@ -788,7 +788,7 @@ class MiqAction < ApplicationRecord
         :class_name  => "Host",
         :method_name => "scan_from_queue",
         :instance_id => rec.id,
-        :priority    => MiqQueue::HIGH_PRIORITY,
+        :priority    => MiqQueue::HIGH_PRIORITY
       )
     end
   end

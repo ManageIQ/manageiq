@@ -179,7 +179,7 @@ class Storage < ApplicationRecord
       :method_name  => 'smartstate_analysis',
       :args         => [miq_task_id],
       :msg_timeout  => self.class.scan_collection_timeout,
-      :miq_callback => cb,
+      :miq_callback => cb
     )
   end
 

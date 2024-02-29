@@ -39,7 +39,7 @@ class ProviderTagMapping
       @specific_tags_collection = ::InventoryRefresh::InventoryCollection.new(
         :name        => :mapped_specific_tags,
         :model_class => Tag,
-        :manager_ref => [:id],
+        :manager_ref => [:id]
       )
     end
 
@@ -126,7 +126,7 @@ class ProviderTagMapping
             emit_tag_reference(
               :category_tag_id   => tag_id,
               :entry_name        => Classification.sanitize_name(value),
-              :entry_description => value,
+              :entry_description => value
             )
           end
       end

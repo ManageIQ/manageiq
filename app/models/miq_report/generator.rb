@@ -263,7 +263,7 @@ module MiqReport::Generator
       results, extras[:group_by_tag_cols], extras[:group_by_tags] = db_class.group_by_tags(
         db_class.find_entries(ext_options).where(where_clause).where(options[:where_clause]),
         :category  => performance[:group_by_category],
-        :cat_model => options[:cat_model],
+        :cat_model => options[:cat_model]
       )
       build_correlate_tag_cols
     end

@@ -281,7 +281,7 @@ module Authenticator
             :instance_id => task.id,
             :method_name => :queue_callback_on_exceptions,
             :args        => ['Finished']
-          },
+          }
         )
       else
         authorize(task.id, username, *args)

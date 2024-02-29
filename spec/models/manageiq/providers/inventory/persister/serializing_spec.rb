@@ -99,7 +99,7 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
         {:hardware => lazy_find_hardware, :description => "public"},
         :key     => :hostname,
         :default => 'default_value_unknown'
-      ),
+      )
     )
 
     @hardware_data_1 = hardware_data(1).merge(
@@ -113,11 +113,11 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
     )
 
     @public_network_data_1 = public_network_data(1).merge(
-      :hardware => persister.hardwares.lazy_find(:vm_or_template => lazy_find_vm),
+      :hardware => persister.hardwares.lazy_find(:vm_or_template => lazy_find_vm)
     )
 
     @disk_data_1 = disk_data(1).merge(
-      :hardware => persister.hardwares.lazy_find(:vm_or_template => lazy_find_vm),
+      :hardware => persister.hardwares.lazy_find(:vm_or_template => lazy_find_vm)
     )
 
     persister.miq_templates.build(@image_data_1)

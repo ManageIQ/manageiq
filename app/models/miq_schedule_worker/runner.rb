@@ -358,7 +358,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     scheduler.schedule_cron(
       :database_maintenance_reindex_timer,
       ::Settings.database.maintenance.reindex_schedule,
-      :tags => %i[database_operations database_maintenance_reindex_schedule],
+      :tags => %i[database_operations database_maintenance_reindex_schedule]
     ) do
       enqueue(:database_maintenance_reindex_timer)
     end
@@ -367,7 +367,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     scheduler.schedule_cron(
       :database_maintenance_vacuum_timer,
       ::Settings.database.maintenance.vacuum_schedule,
-      :tags => %i[database_operations database_maintenance_vacuum_schedule],
+      :tags => %i[database_operations database_maintenance_vacuum_schedule]
     ) do
       enqueue(:database_maintenance_vacuum_timer)
     end

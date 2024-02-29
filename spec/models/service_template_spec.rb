@@ -958,7 +958,7 @@ RSpec.describe ServiceTemplate do
         :args        => [user.id, {}, {}],
         :class_name  => "ServiceTemplate",
         :instance_id => service_template.id,
-        :method_name => "order",
+        :method_name => "order"
       )
     end
 

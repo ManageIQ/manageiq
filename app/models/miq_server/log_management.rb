@@ -18,7 +18,7 @@ module MiqServer::LogManagement
       :instance_id => id,
       :method_name => "post_logs",
       :server_guid => guid,
-      :zone        => my_zone,
+      :zone        => my_zone
     ) do |msg|
       _log.info("Previous adhoc log collection is still running, skipping...Resource: [#{self.class.name}], id: [#{id}]") unless msg.nil?
       nil
@@ -130,7 +130,7 @@ module MiqServer::LogManagement
         :logging_started_on => log_start,
         :logging_ended_on   => log_end,
         :name               => LogFile.logfile_name(self, log_type, date_string),
-        :description        => "Logs for Zone #{zone.name rescue nil} Server #{name} #{date_string}",
+        :description        => "Logs for Zone #{zone.name rescue nil} Server #{name} #{date_string}"
       )
 
       logfile.upload

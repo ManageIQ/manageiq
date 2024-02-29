@@ -29,7 +29,7 @@ module ActiveMetrics
           :saver_strategy => :batch,
           :arel           => samples_arel,
           :complete       => false,
-          :model_class    => klass,
+          :model_class    => klass
         )
 
         log_header = "[#{interval_name}]"

@@ -270,7 +270,7 @@ class MiqGroup < ApplicationRecord
       :description => "Tenant #{tenant_full_name} access"
     ).find_or_create_by!(
       :group_type => TENANT_GROUP,
-      :tenant_id  => tenant.id,
+      :tenant_id  => tenant.id
     )
   end
 

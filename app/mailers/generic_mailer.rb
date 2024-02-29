@@ -55,7 +55,7 @@ class GenericMailer < ActionMailer::Base
       :service     => "notifier",
       :class_name  => name,
       :method_name => 'deliver',
-      :args        => [method, options],
+      :args        => [method, options]
     )
   end
 

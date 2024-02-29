@@ -8,7 +8,7 @@ RSpec.describe ActsAsArModel do
         :str => :string,
         :int => :integer,
         :flt => :float,
-        :dt  => :datetime,
+        :dt  => :datetime
       )
     end
   end

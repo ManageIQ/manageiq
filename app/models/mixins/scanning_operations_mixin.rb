@@ -13,7 +13,7 @@ module ScanningOperationsMixin
       :class_name  => self.class.base_class.name,
       :method_name => "save_metadata",
       :data        => Marshal.dump([xmlFile, type]),
-      :task_id     => jobid,
+      :task_id     => jobid
     )
     _log.info("target [#{guid}] data put on queue, job [#{jobid}]")
     true

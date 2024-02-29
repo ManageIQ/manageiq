@@ -11,7 +11,7 @@ RSpec.describe ContainerGroup do
 
     group = FactoryBot.create(
       :container_group,
-      :name => "group",
+      :name => "group"
     )
 
     ems = FactoryBot.create(

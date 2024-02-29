@@ -52,7 +52,7 @@ RSpec.describe "VmScanDispatcherEmbeddedScanSpec" do
           :storages => storage_count,
           :vms      => vm_count,
           :repo_vms => repo_vm_count,
-          :zone     => zone,
+          :zone     => zone
         )
       end
 

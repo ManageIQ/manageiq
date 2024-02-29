@@ -19,7 +19,7 @@ class ChargebackContainerImage < Chargeback
     :memory_allocated_metric    => :float,
     :net_io_used_cost           => :float,
     :net_io_used_metric         => :float,
-    :total_cost                 => :float,
+    :total_cost                 => :float
   )
 
   def self.build_results_for_report_ChargebackContainerImage(options)

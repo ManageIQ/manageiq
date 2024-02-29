@@ -219,7 +219,7 @@ class EmsCluster < ApplicationRecord
       :affinity    => ext_management_system,
       :class_name  => self.class.to_s,
       :method_name => "save_drift_state",
-      :instance_id => id,
+      :instance_id => id
     )
   end
 

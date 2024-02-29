@@ -575,7 +575,7 @@ class MiqRequest < ApplicationRecord
       :event        => event_name(mode),
       :target_class => self.class::SOURCE_CLASS_NAME,
       :userid       => requester_id,
-      :message      => event_message,
+      :message      => event_message
     )
   end
 

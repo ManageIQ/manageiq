@@ -95,7 +95,7 @@ RSpec.describe MiqReport::Generator do
         :title     => "Custom VM report",
         :rpt_group => "Custom",
         :rpt_type  => "Custom",
-        :db        => "ManageIQ::Providers::InfraManager::Vm",
+        :db        => "ManageIQ::Providers::InfraManager::Vm"
       )
     end
 

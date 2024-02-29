@@ -21,7 +21,7 @@ module Spec
             'dialog_input_request_type' => 'template',
             'dialog_input_target_type'  => 'vm',
             'platform_category'         => category,
-            'platform'                  => platform,
+            'platform'                  => platform
           ),
           anything
 ).and_return(dialog_name)

@@ -10,7 +10,7 @@ class Chargeback < ActsAsArModel
     :entity                 => :binary,
     :tag_name               => :string,
     :label_name             => :string,
-    :fixed_compute_metric   => :integer,
+    :fixed_compute_metric   => :integer
   )
 
   ALLOWED_FIELD_SUFFIXES = %w[

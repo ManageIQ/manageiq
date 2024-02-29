@@ -182,7 +182,7 @@ module MiqProvisionQuotaMixin
       :class_name  => 'MiqProvisionRequest',
       :method_name => 'create_request_tasks',
       :state       => 'ready',
-      :deliver_on  => scheduled_range,
+      :deliver_on  => scheduled_range
     )
 
     # Make sure we skip the current MiqProvisionRequest in the calculation.

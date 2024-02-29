@@ -347,7 +347,7 @@ end
     MiqQueue.submit_job(
       :class_name  => name,
       :method_name => "destroy_older_by_condition",
-      :args        => [ts, condition],
+      :args        => [ts, condition]
     )
   end
 
@@ -363,7 +363,7 @@ end
     MiqQueue.submit_job(
       :class_name  => name,
       :method_name => "destroy",
-      :args        => [ids],
+      :args        => [ids]
     )
   end
 

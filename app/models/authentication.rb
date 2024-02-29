@@ -60,7 +60,7 @@ class Authentication < ApplicationRecord
     "incomplete"  => 1,
     "error"       => 2,
     "unreachable" => 2,
-    "invalid"     => 3,
+    "invalid"     => 3
   ).freeze
 
   # Builds a case statement that case be used in a sql ORDER BY.

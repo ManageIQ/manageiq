@@ -833,7 +833,7 @@ end
     filter_id = get_value(@values[filter_prop]).to_i
     MiqSearch.filtered(filter_id, ci_klass, targets,
                        :user      => @requester,
-                       :miq_group => @requester.current_group,).tap { rails_logger("process_filter - [#{ci_klass}]", 1) }
+                       :miq_group => @requester.current_group).tap { rails_logger("process_filter - [#{ci_klass}]", 1) }
   end
 
   def find_all_ems_of_type(klass, src = nil)

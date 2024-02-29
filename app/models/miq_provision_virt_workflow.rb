@@ -739,7 +739,7 @@ end
     prov_options = OpenStruct.new(
       :values                => args[6],
       :ems_custom_attributes => args[7],
-      :miq_custom_attributes => args[8],
+      :miq_custom_attributes => args[8]
     )
     prov_args = args[0, 6]
     prov_args << prov_options

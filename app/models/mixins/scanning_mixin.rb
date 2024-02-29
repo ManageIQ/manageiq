@@ -388,7 +388,7 @@ module ScanningMixin
         :class_name  => "Job",
         :method_name => "update_message",
         :args        => [ost.taskid, message],
-        :task_id     => "job_message_#{Time.now.to_i}",
+        :task_id     => "job_message_#{Time.now.to_i}"
       )
     end
   end

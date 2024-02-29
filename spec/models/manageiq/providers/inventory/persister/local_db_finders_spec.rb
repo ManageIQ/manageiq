@@ -52,21 +52,21 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
         :flavor           => persister.flavors.lazy_find(:ems_ref => flavor_data(1)[:name]),
         :genealogy_parent => persister.miq_templates.lazy_find(:ems_ref => image_data(1)[:ems_ref]),
         :key_pairs        => [persister.auth_key_pairs.lazy_find(:name => key_pair_data(1)[:name])],
-        :location         => lazy_find_network1,
+        :location         => lazy_find_network1
       )
 
       @vm_data102 = vm_data(102).merge(
         :flavor           => persister.flavors.lazy_find(:ems_ref => flavor_data(1)[:name]),
         :genealogy_parent => persister.miq_templates.lazy_find(:ems_ref => image_data(1)[:ems_ref]),
         :key_pairs        => [persister.auth_key_pairs.lazy_find(:name => key_pair_data(1)[:name])],
-        :location         => lazy_find_network2,
+        :location         => lazy_find_network2
       )
 
       @vm_data160 = vm_data(160).merge(
         :flavor           => persister.flavors.lazy_find(:ems_ref => flavor_data(1)[:name]),
         :genealogy_parent => persister.miq_templates.lazy_find(:ems_ref => image_data(1)[:ems_ref]),
         :key_pairs        => [persister.auth_key_pairs.lazy_find(:name => key_pair_data(1)[:name])],
-        :location         => lazy_find_network60,
+        :location         => lazy_find_network60
       )
 
       persister.vms.build(@vm_data101)
@@ -180,7 +180,7 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
           :ems_ref => orchestration_stack_resource_data("1_12_1")[:ems_ref]
         },
         :ref => :by_stack_and_ems_ref,
-        :key => :stack,
+        :key => :stack
       )
 
       @network_port1 = network_port_data(1).merge(
@@ -310,7 +310,7 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
           :ems_ref => orchestration_stack_resource_data("1_12_1")[:ems_ref]
         },
         :ref => :by_stack_and_ems_ref,
-        :key => :stack,
+        :key => :stack
       ).load
 
       expect(persister.orchestration_stacks_resources.index_proxy.send(:local_db_indexes)[:by_stack_and_ems_ref].send(:index).keys).to(

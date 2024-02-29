@@ -213,7 +213,7 @@ class Job < ApplicationRecord
       :class_name  => name,
       :method_name => "destroy",
       :priority    => MiqQueue::HIGH_PRIORITY,
-      :args        => [ids],
+      :args        => [ids]
     )
   end
 

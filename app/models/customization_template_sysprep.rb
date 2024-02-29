@@ -38,7 +38,7 @@ class CustomizationTemplateSysprep < CustomizationTemplate
     image_bat_options = substitution_options.merge(
       :windows_images_directory => pxe_server.windows_images_directory.chomp("/").gsub("/", "\\\\"),
       :windows_image_path       => windows_image.path.chomp("/").gsub("/", "\\\\"),
-      :windows_image_index      => windows_image.index,
+      :windows_image_index      => windows_image.index
     )
     image_bat_contents = self.class.substitute_erb(IMAGE_BAT_CONTENTS, image_bat_options)
 

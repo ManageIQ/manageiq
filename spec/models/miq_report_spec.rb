@@ -442,7 +442,7 @@ RSpec.describe MiqReport do
       report = MiqReport.new(:db => "Vm")
       results, attrs = report.paged_view_search(
         :only   => ["name"],
-        :userid => user.userid,
+        :userid => user.userid
       )
       expect(results.length).to eq 1
       expect(results.data.collect(&:name)).to eq [vm1.name]
@@ -587,7 +587,7 @@ RSpec.describe MiqReport do
         :col_order => %w[name host.name host.vmm_product],
         :headers   => ["Name", "Host", "Host VMM Product"],
         :order     => "Ascending",
-        :sortby    => ["host_name"],
+        :sortby    => ["host_name"]
       )
 
       options = {
@@ -905,7 +905,7 @@ RSpec.describe MiqReport do
       report = MiqReport.new(
         :db        => "Host",
         :cols      => %w[name hostname smart],
-        :col_order => %w[name hostname smart],
+        :col_order => %w[name hostname smart]
       )
       expect(report.sort_col).to eq(0)
     end
@@ -928,7 +928,7 @@ RSpec.describe MiqReport do
 
     it "allows manipulation" do
       report = MiqReport.new(
-        :col_order => %w[miq_custom_attributes.name miq_custom_attributes.value name],
+        :col_order => %w[miq_custom_attributes.name miq_custom_attributes.value name]
       )
       report.cols << "name2"
       expect(report.cols).to eq(%w[name name2])

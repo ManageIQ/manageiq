@@ -94,7 +94,7 @@ RSpec.describe GenericObject do
           "flag"       => false,
           "data_read"  => data_read + 100.50,
           "max_number" => max_number + 100,
-          "server"     => "#{server_name}_2",
+          "server"     => "#{server_name}_2"
         )
       end
 

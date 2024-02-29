@@ -2610,7 +2610,7 @@ RSpec.describe MiqExpression do
                               :description  => "Auto Approve - Max CPU",
                               :name         => "prov_max_cpu",
                               :single_value => true,
-                              :show         => true,)
+                              :show         => true)
       cat.add_entry(:description  => "1",
                     :read_only    => "0",
                     :syntax       => "string",
@@ -2853,7 +2853,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => nil,
         :include                        => {},
         :tag                            => false,
-        :sql_support                    => false,
+        :sql_support                    => false
       )
     end
 
@@ -2866,7 +2866,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => :bytes,
         :include                        => {},
         :tag                            => false,
-        :sql_support                    => false,
+        :sql_support                    => false
       )
     end
 
@@ -2879,7 +2879,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => :boolean,
         :include                        => {},
         :tag                            => false,
-        :sql_support                    => true,
+        :sql_support                    => true
       )
     end
 
@@ -2892,7 +2892,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => nil,
         :include                        => {},
         :tag                            => false,
-        :sql_support                    => false,
+        :sql_support                    => false
       )
     end
 
@@ -2906,7 +2906,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => :string,
         :include                        => {},
         :tag                            => true,
-        :sql_support                    => false,
+        :sql_support                    => false
       )
     end
 
@@ -2919,7 +2919,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => :string,
         :include                        => {},
         :tag                            => true,
-        :sql_support                    => true,
+        :sql_support                    => true
       )
     end
 
@@ -2932,7 +2932,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => :string,
         :include                        => {:host => {}},
         :tag                            => true,
-        :sql_support                    => true,
+        :sql_support                    => true
       )
     end
 
@@ -2945,7 +2945,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => :integer,
         :include                        => {},
         :tag                            => false,
-        :sql_support                    => true,
+        :sql_support                    => true
       )
     end
 
@@ -2958,7 +2958,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => :string,
         :include                        => {:guest_applications => {}},
         :tag                            => false,
-        :sql_support                    => true,
+        :sql_support                    => true
       )
     end
 
@@ -2971,7 +2971,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => :bytes,
         :include                        => {},
         :tag                            => false,
-        :sql_support                    => false,
+        :sql_support                    => false
       )
     end
 
@@ -2984,7 +2984,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => nil,
         :include                        => {},
         :tag                            => false,
-        :sql_support                    => false,
+        :sql_support                    => false
       )
     end
 
@@ -2997,7 +2997,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => nil,
         :include                        => {},
         :tag                            => false,
-        :sql_support                    => false,
+        :sql_support                    => false
       )
     end
 
@@ -3010,7 +3010,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => :boolean,
         :include                        => {},
         :tag                            => false,
-        :sql_support                    => false,
+        :sql_support                    => false
       )
     end
   end

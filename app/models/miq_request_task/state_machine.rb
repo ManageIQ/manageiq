@@ -58,7 +58,7 @@ module MiqRequestTask::StateMachine
       :zone           => my_zone,
       :role           => my_role,
       :queue_name     => my_queue_name,
-      :tracking_label => tracking_label_id,
+      :tracking_label => tracking_label_id
     )
   end
 

@@ -92,6 +92,6 @@ RSpec.describe VimPerformanceAnalysis do
                                            :parent_ems         => vm.ext_management_system,
                                            :parent_storage     => vm.storage,
                                            :resource_name      => vm.name,
-                                           :time_profile       => time_profile,)
+                                           :time_profile       => time_profile)
   end
 end

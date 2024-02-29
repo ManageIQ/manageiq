@@ -70,7 +70,7 @@ RSpec.describe Provider do
         provider.destroy_queue
         expect(MiqQueue.find_by(:instance_id => provider.id)).to have_attributes(
           'method_name' => 'destroy',
-          'class_name'  => provider.class.name,
+          'class_name'  => provider.class.name
         )
       end
     end
@@ -82,7 +82,7 @@ RSpec.describe Provider do
         task = MiqTask.create(
           :name   => "Destroying #{self.class.name} with id: #{provider.id}",
           :state  => MiqTask::STATE_QUEUED,
-          :status => MiqTask::STATUS_OK,
+          :status => MiqTask::STATUS_OK
         )
         provider.destroy(task.id)
         task.reload
