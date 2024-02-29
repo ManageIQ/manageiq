@@ -660,7 +660,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def self.repository_parse_path(path)
-    path.gsub!(/\\/, "/")
+    path.tr!('\\', "/")
     # it's empty string for local type
     storage_name = ""
     # NAS

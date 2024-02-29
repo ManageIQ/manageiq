@@ -6,7 +6,7 @@ module MiqBulkImport
     data = fd.read
     raise _("File is empty") if data.empty?
 
-    data.gsub!(/\r/, "\n")
+    data.tr!("\r", "\n")
     begin
       reader = CSV.parse(data)
     rescue CSV::IllegalFormatError

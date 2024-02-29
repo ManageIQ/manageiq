@@ -17,7 +17,7 @@ class PxeImagePxelinux < PxeImage
   end
 
   def self.pxe_server_filename(mac_address)
-    "01-#{mac_address.gsub(/:/, "-").downcase.strip}"
+    "01-#{mac_address.tr(':', "-").downcase.strip}"
   end
 
   def self.parse_contents(contents, _label = nil)

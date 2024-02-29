@@ -7,7 +7,7 @@ module ManageIQ
           when Date, Time, DateTime, ActiveSupport::TimeWithZone
             string.iso8601(3)
           else
-            string.to_s.gsub(/\n/, ' ').truncate(limit)
+            string.to_s.tr("\n", ' ').truncate(limit)
           end
         end
 

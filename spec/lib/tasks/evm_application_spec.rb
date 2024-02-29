@@ -122,7 +122,7 @@ RSpec.describe EvmApplication do
   describe ".status" do
     def header(col, adjust = :rjust)
       hdr = col == :WID ? "ID" : col.to_s # edge case
-      hdr.gsub("_", " ").send(adjust, send(:"#{col.downcase}_padding"))
+      hdr.tr("_", " ").send(adjust, send(:"#{col.downcase}_padding"))
     end
 
     def line_for(col)
