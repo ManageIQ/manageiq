@@ -16,7 +16,7 @@ class PxeServer < ApplicationRecord
 
   has_many :pxe_menus,      :dependent => :destroy
   has_many :pxe_images,     :dependent => :destroy
-  has_many :advertised_pxe_images, -> { where("pxe_menu_id IS NOT NULL") }, :class_name => "PxeImage"
+  has_many :advertised_pxe_images, -> { where.not(pxe_menu_id: nil) }, :class_name => "PxeImage"
   has_many :discovered_pxe_images, -> { where(:pxe_menu_id => nil) }, :class_name => "PxeImage"
   has_many :windows_images, :dependent => :destroy
 
