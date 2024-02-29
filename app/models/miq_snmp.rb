@@ -125,7 +125,7 @@ class MiqSnmp
     return "#{base}#{oid}" if oid[0, 1] == "."
 
     # Need to move these to ManageIQ MIB
-    oid = case oid.downcase
+    case oid.downcase
           when "info"                         then "#{enterprise_oid_string}.1"
           when "warn", "warning"              then "#{enterprise_oid_string}.2"
           when "crit", "critical", "error"    then "#{enterprise_oid_string}.3"
@@ -142,7 +142,7 @@ class MiqSnmp
           else                                     oid
           end
 
-    oid
+    
   end
   private_class_method :subst_oid
 

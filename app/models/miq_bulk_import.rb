@@ -95,12 +95,12 @@ module MiqBulkImport
     end
     current = current.kind_of?(ActiveRecord::Base) ? [current] : current
 
-    results = current.collect do |c|
+    current.collect do |c|
       return [] unless c.respond_to?(attr)
 
       c.send(attr)
     end.compact
 
-    results
+    
   end
 end

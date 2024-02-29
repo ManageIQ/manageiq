@@ -80,8 +80,8 @@ class DialogFieldTagControl < DialogFieldSortedItem
 
     available_tags.reverse! if sort_order == :descending
 
-    available_tags = blank_value + available_tags
-    available_tags
+    blank_value + available_tags
+    
   end
 
   def automate_output_value

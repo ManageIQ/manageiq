@@ -54,7 +54,7 @@ class VimPerformanceTrend < ActsAsArModel
     end
 
     # build table data
-    table_data = grouped_objs.inject([]) do |arr, group|
+    grouped_objs.inject([]) do |arr, group|
       name, olist = group
       olist.sort_by!(&:timestamp)
       limit   = olist.last.send(options[:limit_col]) if options[:limit_col]
@@ -129,7 +129,7 @@ class VimPerformanceTrend < ActsAsArModel
       arr.push(new(row))
     end
 
-    table_data
+    
   end
 
   def self.calc_value_at_target(limit, trend_data)

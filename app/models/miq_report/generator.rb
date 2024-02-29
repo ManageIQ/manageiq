@@ -584,7 +584,7 @@ module MiqReport::Generator
     klass = recs.first.class
     last_rec = nil
 
-    results = recs.sort_by { |r| [r.resource_type, r.resource_id.to_s, r.timestamp.iso8601] }.each_with_object([]) do |rec, arr|
+    recs.sort_by { |r| [r.resource_type, r.resource_id.to_s, r.timestamp.iso8601] }.each_with_object([]) do |rec, arr|
       last_rec ||= rec
       while (rec.timestamp - last_rec.timestamp) > int
         base_attrs = last_rec.attributes.reject { |k, _v| !base_cols.include?(k) }
@@ -595,7 +595,7 @@ module MiqReport::Generator
       arr << rec
       last_rec = rec
     end
-    results
+    
   end
 
   def build_apply_time_profile(results)

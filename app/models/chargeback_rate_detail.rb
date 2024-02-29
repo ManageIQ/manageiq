@@ -156,7 +156,7 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   def hourly(rate, consumption)
-    hourly_rate = case per_time
+    case per_time
                   when "hourly"  then rate
                   when "daily"   then rate / 24
                   when "weekly"  then rate / 24 / 7
@@ -165,7 +165,7 @@ class ChargebackRateDetail < ApplicationRecord
                   else raise "rate time unit of '#{per_time}' not supported"
                   end
 
-    hourly_rate
+    
   end
 
   def rate_adjustment

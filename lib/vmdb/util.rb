@@ -155,8 +155,8 @@ module VMDB
     def self.zip_entry_from_path(path)
       rails_root_directories = Rails.root.to_s.split("/")
       within_rails_root = path.split("/")[0, rails_root_directories.length] == rails_root_directories
-      entry = within_rails_root ? Pathname.new(path).relative_path_from(Rails.root).to_s : "ROOT#{path}"
-      entry
+      within_rails_root ? Pathname.new(path).relative_path_from(Rails.root).to_s : "ROOT#{path}"
+      
     end
     private_class_method :zip_entry_from_path
 
