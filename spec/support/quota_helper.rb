@@ -138,7 +138,7 @@ module Spec
         create_hardware
         create_vmware_vms
         @reconfigure_request = FactoryBot.create(:vm_reconfigure_request, :requester => @user)
-        @vm_hardware = FactoryBot.build(:hardware, :virtual_hw_version => "07", :cpu_total_cores => 2, \
+        @vm_hardware = FactoryBot.build(:hardware, :virtual_hw_version => "07", :cpu_total_cores => 2, 
          :memory_mb => 4096, :cpu_sockets => 2, :cpu_cores_per_socket => 1)
         @vm_vmware = FactoryBot.create(:vm_vmware, :hardware => @vm_hardware)
         @vm_vmware.update(:ems_id => @ems.id)
