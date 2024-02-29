@@ -141,11 +141,11 @@ class Dialog < ApplicationRecord
   end
 
   def content(target = nil, resource_action = nil, all_attributes = false)
-    return DialogSerializer.new.serialize(Array[self], all_attributes) if target.nil? && resource_action.nil?
+    return DialogSerializer.new.serialize([self], all_attributes) if target.nil? && resource_action.nil?
 
     workflow = ResourceActionWorkflow.new({}, User.current_user, resource_action, :target => target)
 
-    DialogSerializer.new.serialize(Array[workflow.dialog], all_attributes)
+    DialogSerializer.new.serialize([workflow.dialog], all_attributes)
   end
 
   # Allows you to pass dialog tabs as a hash

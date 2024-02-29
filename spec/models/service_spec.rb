@@ -933,7 +933,7 @@ RSpec.describe Service do
     end
 
     it "serializes the dialog returned by the workflow with all attributes" do
-      expect(dialog_serializer).to receive(:serialize).with(Array["workflow_dialog"], true)
+      expect(dialog_serializer).to receive(:serialize).with(["workflow_dialog"], true)
       service.reconfigure_dialog
     end
 

@@ -370,7 +370,7 @@ class Service < ApplicationRecord
 
     workflow = ResourceActionWorkflow.new(self.options[:dialog], User.current_user, resource_action, options)
 
-    DialogSerializer.new.serialize(Array[workflow.dialog], true)
+    DialogSerializer.new.serialize([workflow.dialog], true)
   end
 
   def raise_final_process_event(action)

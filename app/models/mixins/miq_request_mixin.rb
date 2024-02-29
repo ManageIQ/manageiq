@@ -176,7 +176,7 @@ module MiqRequestMixin
     ra = st.resource_actions.find_by(:action => action_name)
     values = options[:dialog]
     dialog = ResourceActionWorkflow.new(values, get_user, ra, {}).dialog
-    DialogSerializer.new.serialize(Array[dialog]).first
+    DialogSerializer.new.serialize([dialog]).first
   end
 
   def dialog_zone
