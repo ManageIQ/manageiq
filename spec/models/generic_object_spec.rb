@@ -89,7 +89,7 @@ RSpec.describe GenericObject do
         }
         go.save!
 
-        expect(go.property_attributes['s_time']).to be_within(0.001).of (s_time - 2.days)
+        expect(go.property_attributes['s_time']).to be_within(0.001).of(s_time - 2.days)
         expect(go.property_attributes).to include(
           "flag"       => false,
           "data_read"  => data_read + 100.50,
