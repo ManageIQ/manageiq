@@ -172,21 +172,21 @@ class VimPerformanceTrend < ActsAsArModel
   end
 
   TREND_COLS = {
-    :VmPerformance         => {
+    :VmPerformance                  => {
       :cpu_usagemhz_rate_average => {},
       :cpu_usage_rate_average    => {},
       :disk_usage_rate_average   => {},
       :net_usage_rate_average    => {},
       :derived_memory_used       => {:limit_cols => ["derived_memory_available"]}
     },
-    :HostPerformance       => {
+    :HostPerformance                => {
       :cpu_usagemhz_rate_average => {:limit_cols => ["derived_cpu_available", "derived_cpu_reserved"]},
       :cpu_usage_rate_average    => {},
       :disk_usage_rate_average   => {},
       :net_usage_rate_average    => {},
       :derived_memory_used       => {:limit_cols => ["derived_memory_available", "derived_memory_reserved"]}
     },
-    :EmsClusterPerformance => {
+    :EmsClusterPerformance          => {
       :cpu_usagemhz_rate_average => {:limit_cols => ["derived_cpu_available", "derived_cpu_reserved"]},
       :cpu_usage_rate_average    => {},
       :disk_usage_rate_average   => {},
@@ -200,7 +200,7 @@ class VimPerformanceTrend < ActsAsArModel
       :net_usage_rate_average    => {},
       :derived_memory_used       => {:limit_cols => %w(derived_memory_available derived_memory_reserved)}
     },
-    :StoragePerformance    => {
+    :StoragePerformance             => {
       :derived_storage_free   => {:limit_cols => ["derived_storage_total"]},
       :v_derived_storage_used => {:limit_cols => ["derived_storage_total"]}
     }

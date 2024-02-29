@@ -15,8 +15,8 @@ module Spec
           next unless value[:type] == "atomic"
 
           item = FactoryBot.create(:service_template, :name         => name,
-                                                       :options      => {:dialog => {}},
-                                                       :service_type => 'atomic')
+                                                      :options      => {:dialog => {}},
+                                                      :service_type => 'atomic')
           item.update(:prov_type => value[:prov_type]) if value[:prov_type].present?
           next if value[:prov_type] && value[:prov_type].starts_with?("generic")
 
@@ -71,8 +71,8 @@ module Spec
 
       def build_a_composite(name, hash)
         item = FactoryBot.create(:service_template, :name         => name,
-                                                     :options      => {:dialog => {}},
-                                                     :service_type => 'composite')
+                                                    :options      => {:dialog => {}},
+                                                    :service_type => 'composite')
         properties = hash[name]
         link_all_children(item, properties, hash) unless properties[:children].empty?
         item
@@ -123,8 +123,8 @@ module Spec
         @ems = FactoryBot.create(:ems_vmware_with_authentication)
         @host1 =  FactoryBot.create(:host_vmware, :ems_id => @ems.id)
         @src_vm = FactoryBot.create(:vm_vmware, :host   => @host1,
-                                                 :ems_id => @ems.id,
-                                                 :name   => "barney")
+                                                :ems_id => @ems.id,
+                                                :name   => "barney")
       end
 
       def service_template_stubs

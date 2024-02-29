@@ -116,7 +116,7 @@ RSpec.describe OrchestrationTemplate do
 
     before do
       allow(OrchestrationTemplate).to receive_messages(:eligible_manager_types =>
-                                                         [ManageIQ::Providers::Amazon::CloudManager,
+                                                                                  [ManageIQ::Providers::Amazon::CloudManager,
                                                           ManageIQ::Providers::Openstack::CloudManager])
       @template = FactoryBot.create(:orchestration_template)
       @aws = FactoryBot.create(:ems_amazon, :tenant => other_tenant)

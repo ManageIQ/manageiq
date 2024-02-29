@@ -121,7 +121,7 @@ RSpec.describe Ansible::Runner::MachineCredential do
           expected_data = {
             "^SSH [pP]assword"    => "secret",
             "^BECOME [pP]assword" => "othersecret",
-            ssh_unlock_key         => "keypass"
+            ssh_unlock_key        => "keypass"
           }
           existing_env_password_file(existing_data)
           cred.write_config_files

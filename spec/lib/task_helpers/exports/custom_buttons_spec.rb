@@ -244,8 +244,8 @@ RSpec.describe TaskHelpers::Exports::CustomButtons do
             }],
           },
         }],
-        "custom_button" => [{
-          "attributes" => {
+        "custom_button"     => [{
+          "attributes"   => {
             "guid"                  => custom_button2.guid,
             "description"           => "Button Two",
             "applies_to_class"      => "Vm",

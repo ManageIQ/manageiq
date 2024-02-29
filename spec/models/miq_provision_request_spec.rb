@@ -147,15 +147,15 @@ RSpec.describe MiqProvisionRequest do
         context "for cloud and infra providers," do
           def create_request(user, vm_template, prov_options)
             FactoryBot.create(:miq_provision_request, :requester      => user,
-                                                       :description    => "request",
-                                                       :tenant         => user.current_tenant,
-                                                       :source         => vm_template,
-                                                       :status         => 'Ok',
-                                                       :process        => true,
-                                                       :request_state  => 'active',
-                                                       :approval_state => 'approved',
-                                                       :src_vm_id      => vm_template.id,
-                                                       :options        => prov_options.merge(:owner_email => user.email, :requester_group => user.miq_groups.first.description))
+                                                      :description    => "request",
+                                                      :tenant         => user.current_tenant,
+                                                      :source         => vm_template,
+                                                      :status         => 'Ok',
+                                                      :process        => true,
+                                                      :request_state  => 'active',
+                                                      :approval_state => 'approved',
+                                                      :src_vm_id      => vm_template.id,
+                                                      :options        => prov_options.merge(:owner_email => user.email, :requester_group => user.miq_groups.first.description))
           end
 
           let(:create_requests) do

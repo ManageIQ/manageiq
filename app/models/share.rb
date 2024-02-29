@@ -14,7 +14,7 @@ class Share < ApplicationRecord
   attribute :allow_tenant_inheritance, :default => false
 
   scope :by_tenant_inheritance, ->(tenant) do
-    where(:tenant => tenant.accessible_tenant_ids(:ancestor_ids),
+    where(:tenant                   => tenant.accessible_tenant_ids(:ancestor_ids),
           :allow_tenant_inheritance => true)
       .or(where(:tenant => tenant))
   end

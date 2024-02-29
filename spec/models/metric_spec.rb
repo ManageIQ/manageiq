@@ -247,20 +247,20 @@ RSpec.describe Metric do
 
       @node_a.metric_rollups << FactoryBot.create(
         :metric_rollup,
-        :timestamp                  => rollup_chain_timestamp,
-        :cpu_usage_rate_average     => 50.0,
-        :capture_interval_name      => 'hourly',
-        :derived_vm_numvcpus        => 2,
-        :parent_ems_id              => @ems_kubernetes.id
+        :timestamp              => rollup_chain_timestamp,
+        :cpu_usage_rate_average => 50.0,
+        :capture_interval_name  => 'hourly',
+        :derived_vm_numvcpus    => 2,
+        :parent_ems_id          => @ems_kubernetes.id
       )
 
       @node_b.metric_rollups << FactoryBot.create(
         :metric_rollup,
-        :timestamp                  => rollup_chain_timestamp,
-        :cpu_usage_rate_average     => 75.0,
-        :capture_interval_name      => 'hourly',
-        :derived_vm_numvcpus        => 8,
-        :parent_ems_id              => @ems_kubernetes.id
+        :timestamp              => rollup_chain_timestamp,
+        :cpu_usage_rate_average => 75.0,
+        :capture_interval_name  => 'hourly',
+        :derived_vm_numvcpus    => 8,
+        :parent_ems_id          => @ems_kubernetes.id
       )
     end
 

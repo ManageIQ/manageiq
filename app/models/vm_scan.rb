@@ -15,22 +15,22 @@ class VmScan < Job
   def load_transitions
     self.state ||= 'initialize'
     {
-      :initializing       => {'initialize'                => 'waiting_to_start'},
-      :start              => {'waiting_to_start'          => 'checking_policy'},
-      :before_scan        => {'checking_policy'           => 'before_scan'},
-      :start_scan         => {'before_scan'               => 'scanning'},
-      :after_scan         => {'scanning'                  => 'after_scan'},
-      :synchronize        => {'after_scan'                => 'synchronizing'},
-      :finish             => {'synchronizing'             => 'finished',
-                              'aborting'                  => 'finished'},
-      :data               => {'scanning'                  => 'scanning',
-                              'synchronizing'             => 'synchronizing',
-                              'finished'                  => 'finished'},
-      :scan_retry         => {'scanning'                  => 'scanning'},
-      :abort_retry        => {'scanning'                  => 'scanning'},
-      :abort_job          => {'*'                         => 'aborting'},
-      :cancel             => {'*'                         => 'canceling'},
-      :error              => {'*'                         => '*'},
+      :initializing => {'initialize'                => 'waiting_to_start'},
+      :start        => {'waiting_to_start'          => 'checking_policy'},
+      :before_scan  => {'checking_policy'           => 'before_scan'},
+      :start_scan   => {'before_scan'               => 'scanning'},
+      :after_scan   => {'scanning'                  => 'after_scan'},
+      :synchronize  => {'after_scan'                => 'synchronizing'},
+      :finish       => {'synchronizing' => 'finished',
+                        'aborting'      => 'finished'},
+      :data         => {'scanning'      => 'scanning',
+                        'synchronizing' => 'synchronizing',
+                        'finished'      => 'finished'},
+      :scan_retry   => {'scanning'                  => 'scanning'},
+      :abort_retry  => {'scanning'                  => 'scanning'},
+      :abort_job    => {'*'                         => 'aborting'},
+      :cancel       => {'*'                         => 'canceling'},
+      :error        => {'*'                         => '*'},
     }
   end
 

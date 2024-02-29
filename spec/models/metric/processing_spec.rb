@@ -125,7 +125,7 @@ RSpec.describe Metric::Processing do
     context "on :derived_cpu_available" do
       let(:vm) do
         FactoryBot.create(:vm_vmware, :hardware =>
-          FactoryBot.create(:hardware,
+                                                   FactoryBot.create(:hardware,
                             :cpu_total_cores      => 8,
                             :cpu_sockets          => 4,
                             :cpu_cores_per_socket => 2,
@@ -193,7 +193,7 @@ RSpec.describe Metric::Processing do
     context "on :derived_memory_available" do
       let(:vm) do
         FactoryBot.create(:vm_vmware, :hardware =>
-          FactoryBot.create(:hardware,
+                                                   FactoryBot.create(:hardware,
                             :memory_mb => 4_096
                            )
         )

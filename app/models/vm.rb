@@ -118,9 +118,9 @@ class Vm < VmOrTemplate
 
   def supported_consoles
     {
-      :html5   => html5_support,
-      :vmrc    => vmrc_support,
-      :native  => native_support
+      :html5  => html5_support,
+      :vmrc   => vmrc_support,
+      :native => native_support
     }
   end
 

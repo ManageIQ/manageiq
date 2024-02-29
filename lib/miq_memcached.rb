@@ -17,7 +17,7 @@ module MiqMemcached
       # Direct Dalli Clients won't use connection pool but will be threadsafe.
       # ActiveSupport::Cache::MemCacheStore and ManageIQ::Session::MemCacheStoreAdapter
       # use threadsafe but also accept connection pool options.
-      :threadsafe => true
+      :threadsafe          => true
     }
 
     if ENV["MEMCACHED_ENABLE_SSL"]

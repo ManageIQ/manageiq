@@ -10,12 +10,12 @@ module Metric::Rollup
   VM_ROLLUP_COLS          = [:cpu_usage_rate_average, :derived_memory_used, :disk_usage_rate_average, :net_usage_rate_average].freeze
 
   AGGREGATE_COLS = {
-    :MiqEnterprise_miq_regions            => ROLLUP_COLS,
-    :MiqRegion_ext_management_systems     => NON_STORAGE_ROLLUP_COLS,
-    :MiqRegion_storages                   => STORAGE_COLS,
-    :ExtManagementSystem_hosts            => NON_STORAGE_ROLLUP_COLS,
-    :ExtManagementSystem_container_nodes  => NON_STORAGE_ROLLUP_COLS,
-    :EmsCluster_hosts                     => [
+    :MiqEnterprise_miq_regions             => ROLLUP_COLS,
+    :MiqRegion_ext_management_systems      => NON_STORAGE_ROLLUP_COLS,
+    :MiqRegion_storages                    => STORAGE_COLS,
+    :ExtManagementSystem_hosts             => NON_STORAGE_ROLLUP_COLS,
+    :ExtManagementSystem_container_nodes   => NON_STORAGE_ROLLUP_COLS,
+    :EmsCluster_hosts                      => [
       :cpu_ready_delta_summation,
       :cpu_system_delta_summation,
       :cpu_usage_rate_average,
@@ -32,7 +32,7 @@ module Metric::Rollup
       :mem_usage_absolute_average,
       :net_usage_rate_average,
     ],
-    :Host_vms                             => [
+    :Host_vms                              => [
       :cpu_ready_delta_summation,
       :cpu_system_delta_summation,
       :cpu_used_delta_summation,

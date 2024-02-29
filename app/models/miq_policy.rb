@@ -22,7 +22,7 @@ class MiqPolicy < ApplicationRecord
 
   def self.policy_modes
     {
-      "control" => _("Control"),
+      "control"    => _("Control"),
       "compliance" => _("Compliance")
     }
   end

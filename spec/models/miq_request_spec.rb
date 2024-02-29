@@ -5,20 +5,20 @@ RSpec.describe MiqRequest do
   context "CONSTANTS" do
     it "REQUEST_TYPES" do
       expected_request_types = {
-        :MiqProvisionRequest                      => {:template                        => "VM Provision", :clone_to_vm => "VM Clone", :clone_to_template => "VM Publish"},
-        :MiqProvisionRequestTemplate              => {:template                        => "VM Provision Template"},
-        :MiqProvisionConfiguredSystemRequest      => {:provision_via_foreman           => "#{ui_lookup(:ui_title => 'foreman')} Provision"},
-        :VmReconfigureRequest                     => {:vm_reconfigure                  => "VM Reconfigure"},
-        :VmCloudReconfigureRequest                => {:vm_cloud_reconfigure            => "VM Cloud Reconfigure"},
-        :VmMigrateRequest                         => {:vm_migrate                      => "VM Migrate"},
-        :VmRetireRequest                          => {:vm_retire                       => "VM Retire"},
-        :ServiceRetireRequest                     => {:service_retire                  => "Service Retire"},
-        :OrchestrationStackRetireRequest          => {:orchestration_stack_retire      => "Orchestration Stack Retire"},
-        :AutomationRequest                        => {:automation                      => "Automation"},
-        :ServiceTemplateProvisionRequest          => {:clone_to_service                => "Service Provision"},
-        :ServiceReconfigureRequest                => {:service_reconfigure             => "Service Reconfigure"},
-        :PhysicalServerProvisionRequest           => {:provision_physical_server       => "Physical Server Provision"},
-        :PhysicalServerFirmwareUpdateRequest      => {:physical_server_firmware_update => "Physical Server Firmware Update"},
+        :MiqProvisionRequest                 => {:template                        => "VM Provision", :clone_to_vm => "VM Clone", :clone_to_template => "VM Publish"},
+        :MiqProvisionRequestTemplate         => {:template                        => "VM Provision Template"},
+        :MiqProvisionConfiguredSystemRequest => {:provision_via_foreman           => "#{ui_lookup(:ui_title => 'foreman')} Provision"},
+        :VmReconfigureRequest                => {:vm_reconfigure                  => "VM Reconfigure"},
+        :VmCloudReconfigureRequest           => {:vm_cloud_reconfigure            => "VM Cloud Reconfigure"},
+        :VmMigrateRequest                    => {:vm_migrate                      => "VM Migrate"},
+        :VmRetireRequest                     => {:vm_retire                       => "VM Retire"},
+        :ServiceRetireRequest                => {:service_retire                  => "Service Retire"},
+        :OrchestrationStackRetireRequest     => {:orchestration_stack_retire      => "Orchestration Stack Retire"},
+        :AutomationRequest                   => {:automation                      => "Automation"},
+        :ServiceTemplateProvisionRequest     => {:clone_to_service                => "Service Provision"},
+        :ServiceReconfigureRequest           => {:service_reconfigure             => "Service Reconfigure"},
+        :PhysicalServerProvisionRequest      => {:provision_physical_server       => "Physical Server Provision"},
+        :PhysicalServerFirmwareUpdateRequest => {:physical_server_firmware_update => "Physical Server Firmware Update"},
       }
 
       expect(described_class::REQUEST_TYPES).to eq(expected_request_types)
@@ -423,7 +423,7 @@ RSpec.describe MiqRequest do
       FactoryBot.create(:miq_provision_request,
                         :requester => fred,
                         :src_vm_id => template.id,
-                        :options => {:src_vm_id => template.id})
+                        :options   => {:src_vm_id => template.id})
     end
     let(:ems)          { FactoryBot.create(:ems_vmware) }
     let(:template)     { FactoryBot.create(:template_vmware, :ext_management_system => ems) }

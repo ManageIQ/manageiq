@@ -32,8 +32,8 @@ RSpec.describe MiqProvisionRequestTemplate do
   let(:service_template_request) { FactoryBot.create(:service_template_provision_request, :requester => user) }
   let(:service_task) do
     FactoryBot.create(:service_template_provision_task,
-                      :miq_request  => service_template_request,
-                      :options      => {:service_resource_id => service_resource.id})
+                      :miq_request => service_template_request,
+                      :options     => {:service_resource_id => service_resource.id})
   end
   let(:parent_service_task) do
     FactoryBot.create(:service_template_provision_task,
@@ -53,9 +53,9 @@ RSpec.describe MiqProvisionRequestTemplate do
   end
   let(:provision_request_template) do
     FactoryBot.create(:miq_provision_request_template,
-                      :requester    => user,
-                      :src_vm_id    => template.id,
-                      :options      => {
+                      :requester => user,
+                      :src_vm_id => template.id,
+                      :options   => {
                         :src_vm_id           => template.id,
                         :service_resource_id => service_resource.id
                       })

@@ -69,7 +69,7 @@ RSpec.describe ChargebackRateDetail do
     let(:cbt3) { FactoryBot.build(:chargeback_tier, :start => 50, :finish => Float::INFINITY, :fixed_rate => 1.0, :variable_rate => 0.1) }
     let(:cbd) do
       FactoryBot.build(:chargeback_rate_detail, :chargeback_tiers => [cbt3, cbt2, cbt1],
-                                                 :chargeable_field => field)
+                                                :chargeable_field => field)
     end
 
     it "finds proper rate according the value" do
@@ -115,9 +115,9 @@ RSpec.describe ChargebackRateDetail do
     per_unit = 'megabytes'
     cbd = FactoryBot.build(:chargeback_rate_detail,
                            :chargeable_field => field,
-                           :per_time => per_time,
-                           :per_unit => per_unit,
-                           :enabled  => true)
+                           :per_time         => per_time,
+                           :per_unit         => per_unit,
+                           :enabled          => true)
     cbt = FactoryBot.create(:chargeback_tier,
                             :chargeback_rate_detail_id => cbd.id,
                             :start                     => tier_start,

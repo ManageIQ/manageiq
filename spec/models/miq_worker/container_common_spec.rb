@@ -19,7 +19,7 @@ RSpec.describe MiqWorker::ContainerCommon do
           :template => {
             :metadata => {:name => "test", :labels => {:name => "test", :app => "manageiq"}},
             :spec     => {
-              :containers         => [{
+              :containers => [{
                 :name => "test",
                 :env  => []
               }]
@@ -277,7 +277,7 @@ RSpec.describe MiqWorker::ContainerCommon do
           :requests => {
             :memory => "250Mi",
           },
-          :limits         => {
+          :limits   => {
             :memory => "600Mi",
           }
         }

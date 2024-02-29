@@ -96,8 +96,8 @@ class SystemConsole < ApplicationRecord
 
     if ::Settings.server.console_proxy_disabled || SystemConsole.is_local?(originating_server)
       console_args.update(
-        :host_name  => host_address,
-        :port       => host_port,
+        :host_name => host_address,
+        :port      => host_port,
       )
     else
       SystemConsole.cleanup_proxy_processes

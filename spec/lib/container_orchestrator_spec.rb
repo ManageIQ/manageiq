@@ -151,12 +151,12 @@ RSpec.describe ContainerOrchestrator do
 
       expect(deployment_definition.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts)).to include({
                                                                                                                     :mountPath => "/.postgresql",
-        :name      => "pg-root-certificate",
-        :readOnly  => true
+                                                                                                                    :name      => "pg-root-certificate",
+                                                                                                                    :readOnly  => true
                                                                                                                   })
       expect(deployment_definition.fetch_path(:spec, :template, :spec, :volumes)).to include({
                                                                                                :name   => "pg-root-certificate",
-        :secret => {
+                                                                                               :secret => {
           :secretName => "postgresql-secrets",
           :items      => [
             :key  => "rootcertificate",
@@ -173,12 +173,12 @@ RSpec.describe ContainerOrchestrator do
 
       expect(deployment_definition.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts)).to include({
                                                                                                                     :mountPath => "/etc/pki/ca-trust/source/anchors",
-        :name      => "internal-root-certificate",
-        :readOnly  => true
+                                                                                                                    :name      => "internal-root-certificate",
+                                                                                                                    :readOnly  => true
                                                                                                                   })
       expect(deployment_definition.fetch_path(:spec, :template, :spec, :volumes)).to include({
                                                                                                :name   => "internal-root-certificate",
-        :secret => {
+                                                                                               :secret => {
           :secretName => "some-secret-name",
           :items      => [
             :key  => "root_crt",
@@ -192,9 +192,9 @@ RSpec.describe ContainerOrchestrator do
       deployment_definition = subject.send(:deployment_definition, "test")
 
       expect(deployment_definition.fetch_path(:spec, :template, :spec, :affinity, :nodeAffinity, :requiredDuringSchedulingIgnoredDuringExecution, :nodeSelectorTerms, 0, :matchExpressions, 0)).to include({
-                                                                                                                                                                                                             :key => "kubernetes.io/arch",
-        :operator => "In",
-        :values => ["amd64", "arm64"],
+                                                                                                                                                                                                             :key      => "kubernetes.io/arch",
+                                                                                                                                                                                                             :operator => "In",
+                                                                                                                                                                                                             :values   => ["amd64", "arm64"],
                                                                                                                                                                                                            })
     end
   end

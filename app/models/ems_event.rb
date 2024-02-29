@@ -290,11 +290,11 @@ class EmsEvent < EventStream
     event.delete_if { |k,| k.to_s.ends_with?("_ems_ref") && !event_allowed_ems_ref_keys.include?(k.to_s) }
 
     new_event = EmsEvent.create(event) unless EmsEvent.exists?(
-      :event_type  => event[:event_type],
-      :timestamp   => event[:timestamp],
-      :chain_id    => event[:chain_id],
-      :ems_id      => event[:ems_id],
-      :ems_ref     => event[:ems_ref],
+      :event_type => event[:event_type],
+      :timestamp  => event[:timestamp],
+      :chain_id   => event[:chain_id],
+      :ems_id     => event[:ems_id],
+      :ems_ref    => event[:ems_ref],
     )
     new_event.handle_event if new_event
     new_event

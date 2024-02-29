@@ -23,7 +23,7 @@ RSpec.describe MiqReport do
   context 'graph_options' do
     it 'returns a hash with options' do
       expect(MiqReport.graph_options({ :title => "CPU (Mhz)", :type => "Line", :columns => ["col"] })).to include(
-        :type => "Line",
+        :type  => "Line",
         :title => "CPU (Mhz)"
       )
     end

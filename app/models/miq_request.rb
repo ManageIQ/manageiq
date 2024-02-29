@@ -72,12 +72,12 @@ class MiqRequest < ApplicationRecord
   scope :with_requester,      ->(id)         { where(:requester_id => User.in_all_regions(id).select(:id)) }
 
   MODEL_REQUEST_TYPES = {
-    :Automate       => {
+    :Automate => {
       :AutomationRequest => {
         :automation => N_("Automation")
       }
     },
-    :Service        => {
+    :Service  => {
       :MiqProvisionConfiguredSystemRequest => {
         :provision_via_foreman => N_("%{config_mgr_type} Provision") % {:config_mgr_type => ui_lookup(:ui_title => 'foreman')}
       },
@@ -120,7 +120,7 @@ class MiqRequest < ApplicationRecord
   }.freeze
 
   REQUEST_TYPES_BACKEND_ONLY = {
-    :MiqProvisionRequestTemplate              => {:template => "VM Provision Template"},
+    :MiqProvisionRequestTemplate => {:template => "VM Provision Template"},
   }
 
   REQUEST_TYPES = MODEL_REQUEST_TYPES.values.each_with_object(REQUEST_TYPES_BACKEND_ONLY) { |i, h| i.each { |k, v| h[k] = v } }

@@ -1550,9 +1550,9 @@ RSpec.describe VmOrTemplate do
 
     let!(:vm) do
       FactoryBot.create(klass, :storage          => storage,
-                                :ems_id           => ems.try(:id),
-                                :connection_state => connection_state,
-                                :retired          => retired)
+                               :ems_id           => ems.try(:id),
+                               :connection_state => connection_state,
+                               :retired          => retired)
     end
 
     subject { vm.normalized_state }

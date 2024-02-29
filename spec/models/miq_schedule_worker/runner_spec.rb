@@ -238,7 +238,7 @@ RSpec.describe MiqScheduleWorker::Runner do
                                       Tagging VimPerformanceState)
             }
             database_config = {
-              :maintenance        => @database_maintenance,
+              :maintenance => @database_maintenance,
             }
             stub_settings(:database => database_config)
             purging_intervals = {
@@ -367,10 +367,10 @@ RSpec.describe MiqScheduleWorker::Runner do
                 @schedule_worker.schedules_for_all_roles
 
                 first_in_expectations = {
-                  :vmdb_appliance_log_config   => 5,
-                  :status_update               => 5,
-                  :log_status                  => 5,
-                  :log_statistics              => 1
+                  :vmdb_appliance_log_config => 5,
+                  :status_update             => 5,
+                  :log_status                => 5,
+                  :log_statistics            => 1
                 }
 
                 first_in_expectations.each do |tag, expected_minutes|

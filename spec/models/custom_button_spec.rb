@@ -358,10 +358,10 @@ RSpec.describe CustomButton do
 
             expect(CustomButtonEvent.count).to eq(3)
             expect(CustomButtonEvent.find_by(:target_id => vm.id, :target_type => "VmOrTemplate", :source => 'UI')).to have_attributes(
-              :type        => 'CustomButtonEvent',
-              :event_type  => 'button.trigger.start',
-              :user_id     => user.id,
-              :full_data   => a_hash_including(:automate_entry_point => "/SYSTEM/PROCESS/Request")
+              :type       => 'CustomButtonEvent',
+              :event_type => 'button.trigger.start',
+              :user_id    => user.id,
+              :full_data  => a_hash_including(:automate_entry_point => "/SYSTEM/PROCESS/Request")
             )
           end
 
@@ -374,10 +374,10 @@ RSpec.describe CustomButton do
 
             expect(CustomButtonEvent.count).to eq(3)
             expect(CustomButtonEvent.find_by(:target_id => vm.id, :target_type => "VmOrTemplate", :source => 'UI')).to have_attributes(
-              :type        => 'CustomButtonEvent',
-              :event_type  => 'button.trigger.start',
-              :user_id     => user.id,
-              :full_data   => a_hash_including(:automate_entry_point => "/SYSTEM/PROCESS/Request")
+              :type       => 'CustomButtonEvent',
+              :event_type => 'button.trigger.start',
+              :user_id    => user.id,
+              :full_data  => a_hash_including(:automate_entry_point => "/SYSTEM/PROCESS/Request")
             )
           end
         end

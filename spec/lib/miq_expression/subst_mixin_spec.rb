@@ -15,10 +15,10 @@ RSpec.describe MiqExpression::SubstMixin do
       exp =
         {
           "and" =>
-            [
+                   [
               {"=" => {"field" => "ManageIQ::Providers::InfraManager::Vm-active", "value" => "true"}, :token => 1},
               {"or" =>
-                [
+                       [
                   {"=" => {"count" => "ManageIQ::Providers::InfraManager::Vm.advanced_settings", "value" => "1"}, :token => 2},
                   {"=" => {"count" => "ManageIQ::Providers::InfraManager::Vm.storages", "value" => "1"}, :token => 3}
                 ]
@@ -33,7 +33,7 @@ RSpec.describe MiqExpression::SubstMixin do
       exp =
         {
           "and" =>
-            [
+                   [
               {"=" => {"field" => "ManageIQ::Providers::InfraManager::Vm-active", "value" => "true"}, :token => 1},
               {"CONTAINS" => {"tag" => "ManageIQ::Providers::InfraManager::Vm.managed-prov_max_cpu", "value" => "2"}, :token => 2},
               {"CONTAINS" => {"tag" => "ManageIQ::Providers::InfraManager::Vm.managed-prov_max_retirement_days", "value" => "60"}, :token => 3}

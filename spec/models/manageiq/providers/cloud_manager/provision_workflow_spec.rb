@@ -109,7 +109,7 @@ RSpec.describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
     context "floating_ips" do
       it "#get_targets_for_source" do
         fip1 = FactoryBot.create(:floating_ip, :cloud_network_only    => true,
-                                                :ext_management_system => ems.network_manager)
+                                               :ext_management_system => ems.network_manager)
         filtered = workflow.send(:get_targets_for_source, ems, :cloud_filter, FloatingIp,
                                  'floating_ips.available')
         expect(filtered.size).to eq(1)
@@ -171,15 +171,15 @@ RSpec.describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
       @cn1 = FactoryBot.create(:cloud_network, :ext_management_system => ems.network_manager, :cidr => "10.0.0./8")
 
       @cs1 = FactoryBot.create(:cloud_subnet, :cloud_network         => @cn1,
-                                               :availability_zone     => @az1,
-                                               :ext_management_system => ems.network_manager)
+                                              :availability_zone     => @az1,
+                                              :ext_management_system => ems.network_manager)
       @cs2 = FactoryBot.create(:cloud_subnet, :cloud_network         => @cn1,
-                                               :availability_zone     => @az2,
-                                               :ext_management_system => ems.network_manager)
+                                              :availability_zone     => @az2,
+                                              :ext_management_system => ems.network_manager)
       @ip1 = FactoryBot.create(:floating_ip, :cloud_network_only    => true,
-                                              :ext_management_system => ems.network_manager)
+                                             :ext_management_system => ems.network_manager)
       @ip2 = FactoryBot.create(:floating_ip, :cloud_network_only    => false,
-                                              :ext_management_system => ems.network_manager)
+                                             :ext_management_system => ems.network_manager)
     end
 
     context "#allowed_cloud_networks" do

@@ -70,11 +70,11 @@ RSpec.describe(ServiceAnsiblePlaybook) do
   let(:provision_options) do
     {
       :provision_job_options => {
-        :credential => 1,
+        :credential       => 1,
         :vault_credential => 2,
-        :inventory  => 2,
-        :hosts      => "default_host1,default_host2",
-        :extra_vars => {'var1' => 'value1', 'var2' => 'value2', 'pswd' => encrypted_val}
+        :inventory        => 2,
+        :hosts            => "default_host1,default_host2",
+        :extra_vars       => {'var1' => 'value1', 'var2' => 'value2', 'pswd' => encrypted_val}
       }
     }
   end

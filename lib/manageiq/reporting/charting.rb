@@ -15,7 +15,7 @@ module ManageIQ
           :serialized,
           :deserialized,
           :js_load_statement      # javascript statement to reload charts
-        ] => :instance
+        ]                                                                                                                                                                                                                                                                                                                                                                                                                                                                          => :instance
       end
 
       # discovery

@@ -460,14 +460,14 @@ class Service < ApplicationRecord
     }
 
     MiqQueue.submit_job(
-      :service     => "reporting",
-      :class_name  => self.class.name,
-      :instance_id => id,
-      :task_id     => task.id,
+      :service      => "reporting",
+      :class_name   => self.class.name,
+      :instance_id  => id,
+      :task_id      => task.id,
       :miq_task_id  => task.id,
       :miq_callback => cb,
-      :method_name => "generate_chargeback_report",
-      :args        => options
+      :method_name  => "generate_chargeback_report",
+      :args         => options
     )
     _log.info("Added to queue: #{msg}")
     task

@@ -15,7 +15,7 @@ class ContainerOrchestrator
           :template => {
             :metadata => {:name => name, :labels => common_labels.merge(:name => name)},
             :spec     => {
-              :affinity => {
+              :affinity           => {
                 :nodeAffinity => {
                   :requiredDuringSchedulingIgnoredDuringExecution => {
                     :nodeSelectorTerms => [{
@@ -44,7 +44,7 @@ class ContainerOrchestrator
                   {:name => "encryption-key", :readOnly => true, :mountPath => "/run/secrets/manageiq/application"},
                 ]
               }],
-              :volumes => [
+              :volumes            => [
                 {
                   :name   => "database-secret",
                   :secret => {

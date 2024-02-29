@@ -42,7 +42,7 @@ module ManageIQ
 
       def sample_chart(options, _report_theme)
         sample = {
-          :data => {
+          :data     => {
             :axis    => {},
             :tooltip => {},
             :columns => [

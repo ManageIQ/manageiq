@@ -119,7 +119,7 @@ RSpec.describe Notification, :type => :model do
     context 'link_to is set' do
       let(:notification) do
         FactoryBot.create(:notification, :initiator         => user,
-                                          :notification_type => FactoryBot.create(:notification_type, :link_to => 'initiator'))
+                                         :notification_type => FactoryBot.create(:notification_type, :link_to => 'initiator'))
       end
 
       it 'contains the link to the initiator' do

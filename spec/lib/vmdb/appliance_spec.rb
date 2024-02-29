@@ -12,13 +12,13 @@ RSpec.describe Vmdb::Appliance do
             :password => "passw0rd",
             :ldaphost => "my_ldap_host",
           },
-          :database => {
+          :database       => {
             :maintenance => {
               :reindex_schedule => "1 * * * *",
               :reindex_tables   => %w[Metric MiqQueue]
             }
           },
-          :log => {
+          :log            => {
             :secret_filter => secret_filter
           }
         }

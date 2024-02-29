@@ -47,10 +47,10 @@ RSpec.describe Rbac do
                                                             :tenant => siblings_child)])
       end
       let!(:share) do
-        ResourceSharer.new(:user     => user,
-                           :resource => resource_to_be_shared,
-                           :tenants  => tenants,
-                           :features => features,
+        ResourceSharer.new(:user                     => user,
+                           :resource                 => resource_to_be_shared,
+                           :tenants                  => tenants,
+                           :features                 => features,
                            :allow_tenant_inheritance => allow_tenant_inheritance)
       end
       let(:tenants) { [sibling_tenant] }

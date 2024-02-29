@@ -234,7 +234,7 @@ class ExtManagementSystem < ApplicationRecord
            :verify_ssl=,
            :certificate_authority,
            :certificate_authority=,
-           :to => :default_endpoint,
+           :to        => :default_endpoint,
            :allow_nil => true
   delegate :path, :path=, :to => :default_endpoint, :prefix => "endpoint", :allow_nil => true
 

@@ -7,12 +7,12 @@ RSpec.describe ServiceTemplateProvisionRequest do
     context "for cloud and infra providers," do
       def create_request(user, template, prov_options = {})
         FactoryBot.create(:service_template_provision_request, :requester   => user,
-                                                                :description => "request",
-                                                                :tenant_id   => user.current_tenant.id,
-                                                                :source_type => "ServiceTemplate",
-                                                                :source_id   => template.id,
-                                                                :process     => true,
-                                                                :options     => prov_options.merge(:owner_email => user.email))
+                                                               :description => "request",
+                                                               :tenant_id   => user.current_tenant.id,
+                                                               :source_type => "ServiceTemplate",
+                                                               :source_id   => template.id,
+                                                               :process     => true,
+                                                               :options     => prov_options.merge(:owner_email => user.email))
       end
 
       def create_test_request(user, service_template)

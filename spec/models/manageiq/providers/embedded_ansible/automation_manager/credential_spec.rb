@@ -429,12 +429,12 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credenti
       let(:params_to_attrs) { [:password] }
       let(:update_params) do
         {
-          :name           => "Updated Credential",
+          :name => "Updated Credential",
         }
       end
       let(:update_queue_params) do
         {
-          :name           => "Updated Credential",
+          :name => "Updated Credential",
         }
       end
     end

@@ -75,10 +75,10 @@ RSpec.describe ServiceReconfigureTask do
     context "automation entry point available" do
       before do
         FactoryBot.create(:resource_action, :action       => 'Reconfigure',
-                                             :resource     => template,
-                                             :ae_namespace => 'namespace',
-                                             :ae_class     => 'class',
-                                             :ae_instance  => 'instance')
+                                            :resource     => template,
+                                            :ae_namespace => 'namespace',
+                                            :ae_class     => 'class',
+                                            :ae_instance  => 'instance')
       end
 
       it "queues the reconfigure automate entry point" do

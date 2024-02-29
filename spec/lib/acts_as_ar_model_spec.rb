@@ -5,10 +5,10 @@ RSpec.describe ActsAsArModel do
   let(:base_class) do
     Class.new(ActsAsArModel) do
       set_columns_hash(
-        :str              => :string,
-        :int              => :integer,
-        :flt              => :float,
-        :dt               => :datetime,
+        :str => :string,
+        :int => :integer,
+        :flt => :float,
+        :dt  => :datetime,
       )
     end
   end

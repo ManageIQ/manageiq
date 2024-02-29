@@ -244,22 +244,22 @@ RSpec.describe Vm do
 
     expect(vm.drift_states.first.data).to eq({
                                                :class               => "ManageIQ::Providers::Vmware::InfraManager::Vm",
-      :id                  => vm.id,
-      :location            => vm.location,
-      :name                => vm.name,
-      :vendor              => "vmware",
+                                               :id                  => vm.id,
+                                               :location            => vm.location,
+                                               :name                => vm.name,
+                                               :vendor              => "vmware",
 
-      :files               => [],
-      :filesystem_drivers  => [],
-      :groups              => [],
-      :guest_applications  => [],
-      :kernel_drivers      => [],
-      :linux_initprocesses => [],
-      :patches             => [],
-      :registry_items      => [],
-      :tags                => [],
-      :users               => [],
-      :win32_services      => [],
+                                               :files               => [],
+                                               :filesystem_drivers  => [],
+                                               :groups              => [],
+                                               :guest_applications  => [],
+                                               :kernel_drivers      => [],
+                                               :linux_initprocesses => [],
+                                               :patches             => [],
+                                               :registry_items      => [],
+                                               :tags                => [],
+                                               :users               => [],
+                                               :win32_services      => [],
                                              })
   end
 

@@ -107,7 +107,7 @@ class EvmApplication
   def self.servers_status(servers)
     data = servers.collect do |s|
       {
-        "Region"       => s.region_number,
+        "Region"    => s.region_number,
         "Zone"      => s.zone.name,
         "Server"    => (s.name || "UNKNOWN") + (s.is_master ? "*" : ""),
         "Status"    => s.status,
@@ -131,18 +131,18 @@ class EvmApplication
         mb_threshold = w.worker_settings[:memory_threshold]
         simple_type = w.type&.gsub(/(ManageIQ::Providers::|Manager|Worker|Miq)/, '')
         {
-          "Region"       => s.region_number,
-          "Zone"      => s.zone.name,
-          "Type"      => simple_type,
-          "Status"    => w.status.sub("stopping", "stop pending"),
-          "PID"       => w.pid,
-          "SPID"      => w.sql_spid,
-          "Server"    => s.name,
-          "Queue"     => compact_queue_uri(w.queue_name, w.uri),
-          "Started"   => compact_date(w.started_on),
-          "Heartbeat" => compact_date(w.last_heartbeat),
+          "Region"     => s.region_number,
+          "Zone"       => s.zone.name,
+          "Type"       => simple_type,
+          "Status"     => w.status.sub("stopping", "stop pending"),
+          "PID"        => w.pid,
+          "SPID"       => w.sql_spid,
+          "Server"     => s.name,
+          "Queue"      => compact_queue_uri(w.queue_name, w.uri),
+          "Started"    => compact_date(w.started_on),
+          "Heartbeat"  => compact_date(w.last_heartbeat),
           "System UID" => w.system_uid,
-          "MB Usage"  => mb_usage ? "#{mb_usage / 1.megabyte}/#{mb_threshold / 1.megabyte}" : ""
+          "MB Usage"   => mb_usage ? "#{mb_usage / 1.megabyte}/#{mb_threshold / 1.megabyte}" : ""
         }
       end
     end

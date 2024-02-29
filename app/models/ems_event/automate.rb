@@ -32,8 +32,8 @@ class EmsEvent
       return if target.nil? || policy_event.nil? || policy_src.nil?
 
       inputs = {
-        policy_src.class.table_name.to_sym            => policy_src,
-        :ems_event                                    => self
+        policy_src.class.table_name.to_sym => policy_src,
+        :ems_event                         => self
       }
       begin
         MiqEvent.raise_evm_event(target, policy_event, inputs)

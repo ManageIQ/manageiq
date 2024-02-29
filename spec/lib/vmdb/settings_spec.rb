@@ -127,13 +127,13 @@ RSpec.describe Vmdb::Settings do
       _delete = miq_server.settings_changes.create!(:key => "/api/authentication_timeout", :value => "1.hour")
 
       described_class.save!(miq_server,
-                            :api => {
+                            :api          => {
                               :token_ttl              => "2.hours", # Updated
                               :authentication_timeout => default,   # Deleted (back to default)
                             },
                             :drift_states => {
                               :history => {
-                                :keep_drift_states    => "1.hour"   # Added
+                                :keep_drift_states => "1.hour"   # Added
                               }
                             }
                            )
