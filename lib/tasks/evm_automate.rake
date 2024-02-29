@@ -70,10 +70,10 @@ namespace :evm do
     task :usage => :environment do
       puts "The following automate tasks are available"
       puts " Import          - Usage: rake evm:automate:import PREVIEW=true DOMAIN=domain_name " \
-                                "IMPORT_AS=new_domain_name IMPORT_DIR=./model_export|ZIP_FILE=filename|YAML_FILE=filename " \
-                                "SYSTEM=true|false ENABLED=true|false OVERWRITE=true|false"
+           "IMPORT_AS=new_domain_name IMPORT_DIR=./model_export|ZIP_FILE=filename|YAML_FILE=filename " \
+           "SYSTEM=true|false ENABLED=true|false OVERWRITE=true|false"
       puts " Export          - Usage: rake evm:automate:export DOMAIN=domain_name " \
-                               "EXPORT_AS=new_domain_name NAMESPACE=sample CLASS=methods EXPORT_DIR=./model_export|ZIP_FILE=filename|YAML_FILE=filename"
+           "EXPORT_AS=new_domain_name NAMESPACE=sample CLASS=methods EXPORT_DIR=./model_export|ZIP_FILE=filename|YAML_FILE=filename"
       puts " Backup          - Usage: rake evm:automate:backup BACKUP_ZIP_FILE=filename OVERWRITE=false"
       puts " Restore         - Usage: rake evm:automate:restore BACKUP_ZIP_FILE=filename"
       puts " Clear           - Usage: rake evm:automate:clear"

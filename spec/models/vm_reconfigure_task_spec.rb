@@ -43,7 +43,7 @@ RSpec.describe VmReconfigureTask do
     let(:request_options) { {:disk_add => [{"disk_size_in_mb" => "33", "persistent" => "true", "type" => "thin"}.with_indifferent_access]} }
     let(:description_partial) do
       "Add Disks: 1 : #{request.options[:disk_add][0]["disk_size_in_mb"].to_i.megabytes.to_s(:human_size)}, Type: " \
-    "#{request.options[:disk_add][0]["type"]} "
+        "#{request.options[:disk_add][0]["type"]} "
     end
 
     it_behaves_like ".get_description"
@@ -56,8 +56,8 @@ RSpec.describe VmReconfigureTask do
     end
     let(:description_partial) do
       "Add Disks: 2 : #{request.options[:disk_add][0]["disk_size_in_mb"].to_i.megabytes.to_s(:human_size)}, Type: " \
-      "#{request.options[:disk_add][0]["type"]}, #{request.options[:disk_add][1]["disk_size_in_mb"].to_i.megabytes.to_s(:human_size)}, Type: " \
-      "#{request.options[:disk_add][1]["type"]} "
+        "#{request.options[:disk_add][0]["type"]}, #{request.options[:disk_add][1]["disk_size_in_mb"].to_i.megabytes.to_s(:human_size)}, Type: " \
+        "#{request.options[:disk_add][1]["type"]} "
     end
 
     it_behaves_like ".get_description"

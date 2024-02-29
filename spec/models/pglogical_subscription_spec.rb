@@ -363,7 +363,7 @@ RSpec.describe PglogicalSubscription do
       end
 
       expect { described_class.save_all!(to_save) }.to raise_error("Failed to save subscription " \
-        "to test-2.example.com: Error one\nFailed to save subscription to test-4.example.com: Error two")
+                                                                   "to test-2.example.com: Error one\nFailed to save subscription to test-4.example.com: Error two")
     end
   end
 

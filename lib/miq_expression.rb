@@ -295,7 +295,7 @@ class MiqExpression
       check =~ /^check(.*)$/
       mode = $1.downcase
       clause = "<find><search>" + _to_ruby(op_args["search"], context_type, tz) + "</search>" \
-               "<check mode=#{mode}>" + _to_ruby(op_args[check], context_type, tz) + "</check></find>"
+                                                                                  "<check mode=#{mode}>" + _to_ruby(op_args[check], context_type, tz) + "</check></find>"
     when "key exists"
       clause, = operands2rubyvalue(operator, op_args, context_type)
     when "value exists"

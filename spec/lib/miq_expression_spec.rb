@@ -2409,7 +2409,7 @@ RSpec.describe MiqExpression do
                                          "checkall" => {"=" => {"field" => "Vm.advanced_settings-read_only",
                                                                 "value" => "true"}}})
       expect(exp.to_human).to eq('FIND VM and Instance.Advanced Settings : ' \
-        'Name STARTS WITH "X" CHECK ALL Read Only = "true"')
+                                 'Name STARTS WITH "X" CHECK ALL Read Only = "true"')
     end
 
     it "generates a human readable string for a FIND/CHECK expression with alias" do
@@ -2544,7 +2544,7 @@ RSpec.describe MiqExpression do
         exp = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on",
                                            "value" => ["2011-01-10 8:00", "2011-01-10 17:00"]})
         expect(exp.to_human).to eq('VM and Instance : Last Analysis Time ' \
-          'FROM "2011-01-10 8:00" THROUGH "2011-01-10 17:00"')
+                                   'FROM "2011-01-10 8:00" THROUGH "2011-01-10 17:00"')
       end
     end
   end

@@ -111,7 +111,7 @@ class ContainerNode < ApplicationRecord
     return if archived?
 
     _log.info("Disconnecting Node [#{name}] id [#{id}] from EMS [#{ext_management_system.name}]" \
-    "id [#{ext_management_system.id}] ")
+              "id [#{ext_management_system.id}] ")
     self.deleted_on = Time.now.utc
     save
   end

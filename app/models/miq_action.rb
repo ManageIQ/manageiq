@@ -725,7 +725,7 @@ class MiqAction < ApplicationRecord
     end
 
     MiqPolicy.logger.info("MIQ(#{__method__}): Now executing [#{action.description}] of Container Image " \
-                            "[#{rec.name}]")
+                          "[#{rec.name}]")
     rec.scan
   end
 
