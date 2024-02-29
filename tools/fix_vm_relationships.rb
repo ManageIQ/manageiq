@@ -15,7 +15,7 @@ Vm.includes(:all_relationships).each do |v|
     puts "FIXING - #{v.name} - #{err}"
     rels_to_delete += v.all_relationships.to_a.select { |r| r.relationship == "ems_metadata" }
     fixed_vms << v.reload
-  else
+else
     puts "OK     - #{v.name}"
   
 end

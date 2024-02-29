@@ -355,7 +355,7 @@ module ScanningMixin
         elsif items_total.zero?
           # Do not send empty XMLs.  Warn if there is not data at all, or just not items selected.
           _log.warn("Synchronize: No data found for [#{c}].  Items:Total[#{items_total}] Selected[#{items_selected}]  TaskId:[#{ost.taskid}]  VM:[#{name}]")
-          else
+        else
             _log.warn("Synchronize: No data selected for [#{c}].  Items:Total[#{items_total}] Selected[#{items_selected}]  TaskId:[#{ost.taskid}]  VM:[#{name}]")
         end
       end

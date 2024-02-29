@@ -14,7 +14,7 @@ class MiqWorker
 
       container[:imagePullPolicy] = if container_image_tag.include?("latest")
         "Always"
-      else
+                                    else
         "IfNotPresent"
                                     end
 

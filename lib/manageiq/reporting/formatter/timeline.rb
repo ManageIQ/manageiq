@@ -31,7 +31,7 @@ module ManageIQ
           tlfield = mri.timeline[:field].split("-") # Split the table and field
           col = if tlfield.first.include?(".") # If table has a period (from a sub table)
             tlfield.first.split(".").last + "." + tlfield.last # use subtable.field
-          else
+                else
             tlfield.last # Not a subtable, just grab the field name
                 end
 

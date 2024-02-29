@@ -256,7 +256,7 @@ module ManageIQ
           columns = options.mri.table.column_names
           @line_len = if columns.include?("id") # Use 1 less column if "id" is present
             @max_col_width.inject((columns.length - 1) * 3) { |s, e| s + e } + 1
-          else
+                      else
             @max_col_width.inject(columns.length * 3) { |s, e| s + e }
                       end
           "+" + ("-" * (@line_len - 2)) + "+" + CRLF

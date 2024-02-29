@@ -102,7 +102,7 @@ class AssetTagImport
         elsif value.blank?
           _log.info("#{@klass.name}: #{obj.name}, Deleting tag <#{key}> due to blank value")
             attr.delete
-          else
+        else
             _log.info("#{@klass.name}: #{obj.name}, Updating tag <#{key}>, value <#{value}>")
             attr.update_attribute(:value, value)
         end

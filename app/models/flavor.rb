@@ -29,7 +29,7 @@ class Flavor < ApplicationRecord
                 end
               elsif root_disk_size.nil?
                 _("%{name} (%{num_cpus} CPUs, %{memory_gigabytes} GB RAM, Unknown Size Root Disk)")
-                else
+              else
                   _("%{name} (%{num_cpus} CPUs, %{memory_gigabytes} GB RAM, %{root_disk_gigabytes} GB Root Disk)")
               end
     details % {

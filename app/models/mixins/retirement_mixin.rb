@@ -95,7 +95,7 @@ module RetirementMixin
 
       message += if date
         " is scheduled to retire on: [#{retires_on.strftime("%x %R %Z")}]"
-      else
+                 else
         " is no longer scheduled to retire"
                  end
     end
@@ -106,7 +106,7 @@ module RetirementMixin
       self.retirement_warn = warn
       message += if warn
         " has a value for retirement warning days of: [#{retirement_warn}]"
-      else
+                 else
         " has no value for retirement warning days"
                  end
     end

@@ -71,11 +71,11 @@ class VimPerformanceTrend < ActsAsArModel
         row[col_name] = calc_value_at_target(pct_of_limit, trend_data[name])
         row[col_name] = if row[col_name].nil?
           "Unknown"
-        elsif row[col_name] < Time.now.utc
+                        elsif row[col_name] < Time.now.utc
           "--------------"
-        elsif row[col_name] > Time.now.utc + 2.years
+                        elsif row[col_name] > Time.now.utc + 2.years
           "Over 2 Years"
-        else
+                        else
           row[col_name].strftime("%m/%d/%Y")
                         end
       end
@@ -243,7 +243,7 @@ class VimPerformanceTrend < ActsAsArModel
     col_order.each do |c|
       col_headers << if c.ends_with?("_trend_value")
         "#{Dictionary.gettext([options[:trend_db], c].join("."), :type => "column", :notfound => :titleize)} - #{Dictionary.gettext([options[:trend_db], options[:trend_col]].join("."), :type => "column", :notfound => :titleize)}"
-      else
+                     else
         Dictionary.gettext([options[:trend_db], c].join("."), :type => "column", :notfound => :titleize)
                      end
     end

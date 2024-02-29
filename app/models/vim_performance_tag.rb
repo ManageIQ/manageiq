@@ -22,7 +22,7 @@ class VimPerformanceTag < MetricRollup
       tvrecs = build_tag_value_recs(rec, options)
       rec.inside_time_profile = if rec.instance_of?(::VimPerformanceTag)
         tp ? tp.ts_in_profile?(rec.timestamp) : true
-      else
+                                else
         tp ? tp.ts_day_in_profile?(rec.timestamp) : true
                                 end
 

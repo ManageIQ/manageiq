@@ -176,7 +176,7 @@ class MiqAction < ApplicationRecord
 
     phrase = if inputs[:result]
       "for successful policy"
-    else
+             else
       "for failed policy"
              end
     MiqPolicy.logger.info("MIQ(action-invoke) Invoking action [#{description}] #{phrase} [#{inputs[:policy].description}], event: [#{inputs[:event].description}], entity name: [#{rec.name}], entity type: [#{Dictionary.gettext(rec.class.to_s, :type => :model)}], sequence: [#{inputs[:sequence]}], synchronous? [#{inputs[:synchronous]}]")

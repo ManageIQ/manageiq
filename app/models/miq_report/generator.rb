@@ -70,7 +70,7 @@ module MiqReport::Generator
         "GuestDevice"
                             when :"<compare>"
         self.class.name
-      else
+                            else
         ref = db_class.reflection_with_virtual(table.to_sym)
         ref ? ref.class_name : table.singularize.camelize
       end
@@ -764,7 +764,7 @@ end
       assoc_options = if include_has_options
         includes[association].merge(:qualify_attribute_names => full_path,
                                     :only                    => includes[association]["columns"])
-      else
+                      else
         {:qualify_attribute_names => full_path, :only => includes[association]["columns"]}
                       end
 
@@ -806,7 +806,7 @@ end
           association_objects.each do |obj|
             association_records = if ["categories", "managed"].include?(association)
               [obj]
-            else
+                                  else
               build_reportable_data(obj, assoc_options, full_path)
                                   end
             association_records.each do |assoc_record|

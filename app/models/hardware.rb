@@ -79,7 +79,7 @@ class Hardware < ApplicationRecord
     deletes[:disk] = if parent.vendor == "redhat"
       parent.hardware.disks.select(:id, :device_type, :location)
                              .collect { |rec| [rec.id, [rec.device_type, "0:#{rec.location}"]] }
-    else
+                     else
       parent.hardware.disks.select(:id, :device_type, :location)
                              .collect { |rec| [rec.id, [rec.device_type, rec.location]] }
                      end

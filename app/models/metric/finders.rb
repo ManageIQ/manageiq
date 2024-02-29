@@ -29,7 +29,7 @@ module Metric::Finders
 
     scope = if !resource.kind_of?(Array) && !resource.kind_of?(ActiveRecord::Relation)
       resource.send(meth)
-    else
+            else
       klass.where(:resource => resource)
             end
     scope = scope.where(:capture_interval_name => interval_name) if interval_name != "realtime"

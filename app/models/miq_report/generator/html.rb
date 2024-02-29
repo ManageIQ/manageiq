@@ -38,7 +38,7 @@ module MiqReport::Generator::Html
         # Build click thru if string can be created
         output << if clickable_rows && onclick = build_row_onclick(d.data)
           "<tr class='row#{row}' #{onclick}>"
-        else
+                  else
           "<tr class='row#{row}-nocursor'>"
                   end
         row = 1 - row
@@ -112,7 +112,7 @@ module MiqReport::Generator::Html
       donav = "DoNav('/#{controller}/show/#{data_row['id']}');"
       title = if data_row['name']
   "View #{ui_lookup(:model => db)} \"#{data_row['name']}\""
-else
+              else
   "View this #{ui_lookup(:model => db)}"
 end
       onclick = "onclick=\"#{donav}\" onKeyPress=\"#{donav}\" tabindex='0' style='cursor:hand' title='#{title}'"

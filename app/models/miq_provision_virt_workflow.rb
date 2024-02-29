@@ -541,7 +541,7 @@ end
       entry = (h[pathname] ||= {})
         entry[:path] = ou[0]
         entry[:ou] = ou
-      else
+    else
         create_ou_tree(ou, h[pathname] ||= {}, path)
     end
   end

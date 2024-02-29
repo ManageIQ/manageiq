@@ -24,7 +24,7 @@ class FileDepotFtp < FileDepot
         raise _("Error '%{message}', writing to FTP: [%{uri}], Username: [%{id}]") % {:message => err.message.chomp,
                                                                                       :uri     => uri,
                                                                                       :id      => authentication_userid}
-      else
+    else
         file.update(
           :state   => "available",
           :log_uri => destination_file

@@ -260,7 +260,7 @@ class VmOrTemplate < ApplicationRecord
       when :boolean then ActiveRecord::Type::Boolean.new.cast(as.value)
       when :integer then as.value.to_i
       when :float then as.value.to_f
-             else as.value.to_s
+      else as.value.to_s
              end
     end
 
@@ -609,7 +609,7 @@ class VmOrTemplate < ApplicationRecord
       rec = OpenStruct.new(vm.attributes)
       rec.host_name = if vm.host.nil?
         "unknown"
-      else
+                      else
         vm.host.name
                       end
       rec.vm_id = vm.id
@@ -1068,7 +1068,7 @@ class VmOrTemplate < ApplicationRecord
     self.type = corresponding_model.name if (template? && kind_of?(Vm)) || (!template? && kind_of?(MiqTemplate))
     d = if template?
 [/\.vmx$/, ".vmtx", 'never']
-else
+        else
 [/\.vmtx$/, ".vmx", state == 'never' ? 'unknown' : raw_power_state]
 end
     self.location = location.sub(d[0], d[1]) unless location.nil?
@@ -1379,7 +1379,7 @@ end
     operator = options[:operator] || ">"
     operator = if operator.downcase == "increased"
 ">"
-else
+               else
 operator.downcase == "decreased" ? "<" : operator
 end
 

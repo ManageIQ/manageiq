@@ -92,7 +92,7 @@ class DescendantLoader
         # to its parents.
         define_combos = if (container_name = scope_names.pop)
           scoped_name(container_name, name_combinations(scope_names))
-        else
+                        else
           search_combos.dup
                         end
 

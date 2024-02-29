@@ -155,7 +155,7 @@ class MiqSchedule < ApplicationRecord
     # calculate what the next run on time should be
     time = if run_at[:interval][:unit].downcase != "once"
       next_interval_time
-    else
+           else
       last_run_on && (last_run_on > run_at[:start_time]) ? nil : run_at[:start_time]
            end
     time.try(:utc)
@@ -190,7 +190,7 @@ class MiqSchedule < ApplicationRecord
     elsif run_at[:interval][:value].to_i == 1
       _("Run %{interval} starting on %{start_time}") % {:interval   => interval,
                                                           :start_time => start_time}
-      else
+    else
         _("Run %{interval} every %{value} %{unit} starting on %{start_time}") %
                {:interval   => interval,
                 :value      => run_at[:interval][:value],

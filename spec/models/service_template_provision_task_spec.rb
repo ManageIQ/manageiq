@@ -30,7 +30,7 @@ RSpec.describe ServiceTemplateProvisionTask do
     def create_stp(description, state = 'pending', prov_index = nil, scaling_max = nil)
       options = if prov_index && scaling_max
         {:service_resource_id => service_resource_id(prov_index, scaling_max)}
-      else
+                else
         {}
                 end
       FactoryBot.create(:service_template_provision_task,

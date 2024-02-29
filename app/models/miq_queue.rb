@@ -462,7 +462,7 @@ class MiqQueue < ApplicationRecord
         begin
           obj = if (class_name == requester.class.name) && requester.respond_to?(:id) && (instance_id == requester.id)
             requester
-          else
+                else
             obj.find(instance_id)
                 end
         rescue ActiveRecord::RecordNotFound => err

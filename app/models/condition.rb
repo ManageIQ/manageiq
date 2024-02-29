@@ -117,7 +117,7 @@ end
     when "value"
       value = if ref.kind_of?(Hash)
         ref.fetch(tag, "")
-      else
+              else
         ref.nil? ? "" : Tag.list(ref, :ns => tag)
               end
       value = MiqExpression.quote(value, ohash[:type]&.to_sym)

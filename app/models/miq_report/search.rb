@@ -108,7 +108,7 @@ module MiqReport::Search
 
     targets = if options[:parent]
       get_parent_targets(options[:parent], options[:association] || options[:parent_method])
-    else
+              else
       db_class
               end
 

@@ -134,7 +134,7 @@ module Vmdb
         begin
           res = if diag[:cmd].kind_of?(Proc)
             diag[:cmd].call
-          else
+                else
             AwesomeSpawn.run(diag[:cmd], :params => diag[:params]).output
                 end
         rescue => e

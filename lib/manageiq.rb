@@ -7,7 +7,7 @@ module ManageIQ
   def self.env
     @_env ||= if defined?(Rails)
         Rails.env
-      else
+              else
         ActiveSupport::StringInquirer.new(ENV["RAILS_ENV"].presence || ENV["RACK_ENV"].presence || "development")
       end
     
@@ -16,7 +16,7 @@ module ManageIQ
   def self.root
     @_root ||= if defined?(Rails)
         Rails.root
-      else
+               else
         Pathname.new(File.expand_path('..', __dir__))
       end
     
