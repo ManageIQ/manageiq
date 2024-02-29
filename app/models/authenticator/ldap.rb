@@ -131,7 +131,7 @@ module Authenticator
 
     REQUIRED_LDAP_USER_PROXY_KEYS = [:basedn, :bind_dn, :bind_pwd, :ldaphost, :ldapport, :mode]
     def user_proxy_membership(auth, sid)
-      authentication    = config
+      authentication = config
       auth[:bind_dn] ||= authentication[:bind_dn]
       auth[:bind_pwd] ||= authentication[:bind_pwd]
       auth[:ldapport] ||= authentication[:ldapport]

@@ -44,7 +44,7 @@ class MiqAeField < ApplicationRecord
     AVAILABLE_DATATYPES
   end
 
-  class <<self
+  class << self
     alias available_datatypes_for_ui available_datatypes
   end
 

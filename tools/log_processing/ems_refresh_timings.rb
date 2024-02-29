@@ -67,7 +67,7 @@ def parse_refresh_timings(line, targets)
     # Find the most recent refresh target for our ems, since there is
     # only one refresh worker this "has to be" the right one
     # If this changes in the future we'll have to add a PID lookup here
-    refresh_target  = targets[ems].last
+    refresh_target = targets[ems].last
     refresh_target = {
       :target      => "unknown",
       :target_type => "unknown"

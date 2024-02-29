@@ -194,7 +194,7 @@ RSpec.describe MiqAeClass do
       @cls1 = FactoryBot.create(:miq_ae_class, :name => "cls1", :namespace_id => @ns1.id)
       @cls2 = FactoryBot.create(:miq_ae_class, :name => "cls2", :namespace_id => @ns1.id)
 
-      @d2 = FactoryBot.create(:miq_ae_domain, :name => "domain2", :priority  => 2)
+      @d2 = FactoryBot.create(:miq_ae_domain, :name => "domain2", :priority => 2)
       @ns2 = FactoryBot.create(:miq_ae_namespace, :name => "ns2", :parent => @d2)
     end
 

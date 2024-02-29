@@ -434,7 +434,7 @@ class MiqAlert < ApplicationRecord
           {:name => :time_threshold, :description => N_("How Far Back to Check"), :required => true},
           {:name => :freq_threshold, :description => N_("Event Count Threshold"), :required => true, :numeric => true}
         ]},
-      {:name => "event_log_threshold", :description => N_("Event Log Threshold"), :db => ["Vm"], :responds_to_events  => "vm_scan_complete",
+      {:name => "event_log_threshold", :description => N_("Event Log Threshold"), :db => ["Vm"], :responds_to_events => "vm_scan_complete",
         :options => [
           {:name => :event_log_message_filter_type, :description => N_("Message Filter Type"), :values => ["STARTS WITH", "ENDS WITH", "INCLUDES", "REGULAR EXPRESSION"], :required => true},
           {:name => :event_log_message_filter_value, :description => N_("Message Filter"), :required => true},

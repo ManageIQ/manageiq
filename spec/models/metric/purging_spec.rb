@@ -29,7 +29,7 @@ RSpec.describe Metric::Purging do
                                    {"class_name" => described_class.name, "method_name" => "purge_daily"},
           {"class_name" => described_class.name, "method_name" => "purge_hourly"},
           {"class_name" => described_class.name, "method_name" => "purge_realtime"},
-          {"class_name" => "MiqTask", "method_name"=>"destroy_older_by_condition"}
+          {"class_name" => "MiqTask", "method_name" => "destroy_older_by_condition"}
                                  ])
       end
     end

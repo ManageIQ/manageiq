@@ -162,7 +162,7 @@ RSpec.describe MiqReport::Generator do
     end
 
     it "derives include" do
-      rpt = MiqReport.new(:db => "VmOrTemplate", :cols => %w(vendor), :col_order =>%w(host.name vendor))
+      rpt = MiqReport.new(:db => "VmOrTemplate", :cols => %w(vendor), :col_order => %w(host.name vendor))
       expect(rpt.cols_for_report).to match_array(%w(vendor host.name))
     end
 

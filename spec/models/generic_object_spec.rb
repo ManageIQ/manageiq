@@ -213,13 +213,13 @@ RSpec.describe GenericObject do
       end
 
       it 'one array parameter' do
-        options = {:attrs => attrs.merge(:param_1 => %w(p1 p2), :param_1_type=>"Array")}
+        options = {:attrs => attrs.merge(:param_1 => %w(p1 p2), :param_1_type => "Array")}
         expect(MiqAeEngine).to receive(:deliver).with(hash_including(options)).and_return(ws)
         go.my_host(%w(p1 p2))
       end
 
       it 'one hash parameter' do
-        options = {:attrs => attrs.merge(:param_1 => {:p1 => 1, :p2 => 2}, :param_1_type=>"Hash")}
+        options = {:attrs => attrs.merge(:param_1 => {:p1 => 1, :p2 => 2}, :param_1_type => "Hash")}
         expect(MiqAeEngine).to receive(:deliver).with(hash_including(options)).and_return(ws)
         go.my_host(:p1 => 1, :p2 => 2)
       end

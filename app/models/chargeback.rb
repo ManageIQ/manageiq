@@ -250,7 +250,7 @@ class Chargeback < ActsAsArModel
                   when "tenant"    then ["tenant_name"]
                   else                  report_static_cols
                   end
-    rpt.cols      = %w(start_date display_range) + static_cols
+    rpt.cols = %w(start_date display_range) + static_cols
     if group_by == "date-first"
       rpt.col_order = ["display_range"] + static_cols
       rpt.sortby    = (["start_date"] + static_cols)

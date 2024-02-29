@@ -167,7 +167,7 @@ class MiqPolicy < ApplicationRecord
     fail_seq = 0
     action_list.each do |action, opts|
       opts[:qualifier] ||= "failure"
-      opts[:sequence]  = opts[:qualifier].to_s == "success" ? succes_seq += 1 : fail_seq += 1
+      opts[:sequence] = opts[:qualifier].to_s == "success" ? succes_seq += 1 : fail_seq += 1
       add_action_for_event(event, action, opts)
     end
   end

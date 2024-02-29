@@ -147,7 +147,7 @@ class PxeServer < ApplicationRecord
           wim_parser.xml_data["images"].each do |image_hash|
             index   = image_hash["index"]
 
-            image   = current.delete([path, index]) || windows_images.build
+            image = current.delete([path, index]) || windows_images.build
             stats[image.new_record? ? :adds : :updates] += 1
 
             image.update(

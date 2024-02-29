@@ -33,7 +33,7 @@ RSpec.describe VMDB::Util do
     end
 
     it "with host, port, user" do
-      stub_settings_merge(:http_proxy => {:default => {:host     => "1.2.3.4", :port => 4321, :user => "testuser",
+      stub_settings_merge(:http_proxy => {:default => {:host => "1.2.3.4", :port => 4321, :user => "testuser",
                                                  :password => nil}})
       expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4",
                                                                       :port   => 4321, :userinfo => "testuser"))

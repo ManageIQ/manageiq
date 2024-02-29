@@ -129,7 +129,7 @@ class GitWorktree
     entry = {}
     entry[:path] = path
     ENTRY_KEYS.each { |key| entry[key] = default_entry_keys[key] if default_entry_keys.key?(key) }
-    entry[:oid]  = @repo.write(data, :blob)
+    entry[:oid] = @repo.write(data, :blob)
     entry[:mode] ||= DEFAULT_FILE_MODE
     entry[:mtime] ||= Time.now
     current_index.add(entry)

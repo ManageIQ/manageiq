@@ -466,7 +466,7 @@ module AuthenticationMixin
   private
 
   def authentication_check_no_validation(type, options)
-    header  = "type: [#{type.inspect}] for [#{id}] [#{name}]"
+    header = "type: [#{type.inspect}] for [#{id}] [#{name}]"
     status, details =
       if self.missing_credentials?(type)
         [:incomplete, "Missing credentials"]

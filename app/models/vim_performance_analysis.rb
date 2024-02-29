@@ -116,25 +116,25 @@ module VimPerformanceAnalysis
         :used      => {:metric => :max_cpu_usagemhz_rate_average, :mode => :perf_trend},
         :reserved  => {:metric => :cpu_reserve, :mode => :current},
         :allocated => nil,
-        :manual    => {:value =>  nil, :mode => :manual}
+        :manual    => {:value => nil, :mode => :manual}
       },
       :vcpus   => {
         :used      => {:metric => :num_cpu, :mode => :current},
         :reserved  => {:metric => :num_cpu, :mode => :current},
         :allocated => {:metric => :num_cpu, :mode => :current},
-        :manual    => {:value =>  nil, :mode => :manual}
+        :manual    => {:value => nil, :mode => :manual}
       },
       :memory  => {
         :used      => {:metric => :max_derived_memory_used, :mode => :perf_trend},
         :reserved  => {:metric => :memory_reserve, :mode => :current},
         :allocated => {:metric => :ram_size, :mode => :current},
-        :manual    => {:value =>  nil, :mode => :manual}
+        :manual    => {:value => nil, :mode => :manual}
       },
       :storage => {
         :used      => {:metric => :used_disk_storage, :mode => :current},
         :reserved  => {:metric => :provisioned_storage, :mode => :current},
         :allocated => {:metric => :allocated_disk_storage, :mode => :current},
-        :manual    => {:value =>  nil, :mode => :manual}
+        :manual    => {:value => nil, :mode => :manual}
       }
     }
     ##########################################################

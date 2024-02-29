@@ -904,7 +904,7 @@ module Rbac
         vcmeta = MiqFilter.belongsto2object(bfilter)
         next unless vcmeta
 
-        subtree  = vcmeta.subtree
+        subtree = vcmeta.subtree
         clusters += subtree.grep(EmsCluster)
         hosts    += subtree.grep(Host)
       end

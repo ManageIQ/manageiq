@@ -164,7 +164,7 @@ module Spec
         @vm_template = google_template
         m2_small_flavor = FactoryBot.create(:flavor_google, :ems_id => @ems.id, :cloud_subnet_required => false,
                                              :cpus => 4, :cpu_cores => 1, :memory => 1024)
-        create_request(:number_of_vms => 1, :owner_email    => 'user@example.com',
+        create_request(:number_of_vms => 1, :owner_email => 'user@example.com',
                        :src_vm_id      => @vm_template.id,
                        :boot_disk_size => ["10.GB", "10 GB"],
                        :placement_auto => [true, 1],
