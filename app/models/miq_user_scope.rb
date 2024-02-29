@@ -37,7 +37,7 @@ class MiqUserScope
     for_class = filter[klass.to_s.downcase.to_sym]
     result    = send(:"merge_#{filter_type}", all, for_class)
 
-    (result.presence)
+    result.presence
   end
 
   def merge_managed(*args)

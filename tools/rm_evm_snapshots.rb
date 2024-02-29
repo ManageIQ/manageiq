@@ -21,7 +21,7 @@ begin
   puts "Done."
 
   puts "vim.class: #{vim.class}"
-  puts "#{vim.server} is #{(vim.isVirtualCenter? ? 'VC' : 'ESX')}"
+  puts "#{vim.server} is #{vim.isVirtualCenter? ? 'VC' : 'ESX'}"
   puts "API version: #{vim.apiVersion}"
   puts
 

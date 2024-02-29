@@ -358,11 +358,11 @@ class MiqSchedule < ApplicationRecord
         # scheduled start_time and jump there instead of creating thousands of time objects
         # until we've found the first future run time
         missed_intervals = (seconds_since_start / interval_value.send(meth)).to_i
-        while now > (sch_start_time + ((interval_value * missed_intervals).send(meth)))
+        while now > (sch_start_time + (interval_value * missed_intervals).send(meth))
           missed_intervals += 1
         end
 
-        next_time = sch_start_time + ((interval_value * missed_intervals).send(meth))
+        next_time = sch_start_time + (interval_value * missed_intervals).send(meth)
         next_time += interval_value.send(meth) if next_time < now && interval_value
       end
     end

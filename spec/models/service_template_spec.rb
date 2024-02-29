@@ -967,7 +967,7 @@ RSpec.describe ServiceTemplate do
       expect(resource_action_workflow).to receive(:validate_dialog).twice.and_return([])
 
       service_template.order(user, {}, {}, Time.zone.now.utc.to_s)
-      service_template.order(user, {}, {}, (1.hour.from_now).utc.to_s)
+      service_template.order(user, {}, {}, 1.hour.from_now.utc.to_s)
 
       expect(service_template.miq_schedules.length).to eq(2)
     end

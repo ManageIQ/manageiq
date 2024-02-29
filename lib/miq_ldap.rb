@@ -478,7 +478,7 @@ class MiqLdap
     sid << data.ord.to_s
 
     rid = ""
-    (6).downto(1) do |i|
+    6.downto(1) do |i|
       rid += byte2hex(data[i, 1].ord)
     end
     sid << rid.to_i.to_s

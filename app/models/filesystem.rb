@@ -124,7 +124,7 @@ class Filesystem < ApplicationRecord
     return nil unless has_contents?
 
     bom = contents.byteslice(0, 2).bytes
-    if contents_displayable? && ([UTF_16BE_BOM, UTF_16LE_BOM].include?(bom))
+    if contents_displayable? && [UTF_16BE_BOM, UTF_16LE_BOM].include?(bom)
       contents.force_encoding('UTF-16').encode('UTF-8')
     else
       contents

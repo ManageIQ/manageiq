@@ -498,7 +498,7 @@ module AuthenticationMixin
     return nil if cred.nil?
 
     value = cred.public_send(method)
-    (value.presence)
+    value.presence
   end
 
   def available_authentications
