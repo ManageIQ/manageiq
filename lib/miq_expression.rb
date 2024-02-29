@@ -1397,7 +1397,7 @@ class MiqExpression
   def convert_size_in_units_to_integer(exp)
     return if (column_details = col_details[exp.values.first["field"]]).nil?
     # attempt to do conversion only if db type of column is integer and value to compare to is String
-    return unless column_details[:data_type] == :integer && (value = exp.values.first["value"]).class == String
+    return unless column_details[:data_type] == :integer && (value = exp.values.first["value"]).instance_of?(String)
 
     sub_type = column_details[:format_sub_type]
 

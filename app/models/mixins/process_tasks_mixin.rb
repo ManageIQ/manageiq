@@ -78,7 +78,7 @@ module ProcessTasksMixin
           next
         rescue => err
           # Handle specific error case, until we can figure out how it occurs
-          if err.class == ArgumentError && err.message == "cannot interpret as DNS name: nil"
+          if err.instance_of?(ArgumentError) && err.message == "cannot interpret as DNS name: nil"
             $log.error("An error occurred while invoking remote tasks...")
             $log.log_backtrace(err)
             next

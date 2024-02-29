@@ -352,7 +352,7 @@ class GitWorktree
   end
 
   def rebase(commit, merge_index, parent)
-    commit_obj = commit if commit.class == Rugged::Commit
+    commit_obj = commit if commit.instance_of?(Rugged::Commit)
     commit_obj ||= @repo.lookup(commit)
     Rugged::Commit.create(@repo, :author    => commit_obj.author,
                                  :committer => commit_obj.author,
