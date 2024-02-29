@@ -187,9 +187,8 @@ class MiqSchedule < ApplicationRecord
 
     if run_at[:interval][:unit].downcase == "once"
       _("Run %{interval} on %{start_time}") % {:interval => interval, :start_time => start_time}
-    else
-      if run_at[:interval][:value].to_i == 1
-        _("Run %{interval} starting on %{start_time}") % {:interval   => interval,
+    elsif run_at[:interval][:value].to_i == 1
+      _("Run %{interval} starting on %{start_time}") % {:interval   => interval,
                                                           :start_time => start_time}
       else
         return _("Run %{interval} every %{value} %{unit} starting on %{start_time}") %
@@ -197,7 +196,6 @@ class MiqSchedule < ApplicationRecord
                 :value      => run_at[:interval][:value],
                 :unit       => unit,
                 :start_time => start_time}
-      end
     end
   end
 

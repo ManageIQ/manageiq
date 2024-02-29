@@ -204,9 +204,9 @@ module Metric::CiMixin
         matches_in_window += match_history[i]
         _log.info("Matched?: true,  Index: #{i}, Window start index: #{i - recs_in_window}, matches_in_window: #{matches_in_window}, ts: #{rec.timestamp}, #{column}: #{rec.send(column)}") if debug_trace
         return true if matches_in_window >= recs_to_match
-      else
-        _log.info("Matched?: false, Index: #{i}, Window start index: #{i - recs_in_window}, matches_in_window: #{matches_in_window}, ts: #{rec.timestamp}, #{column}: #{rec.send(column)}") if debug_trace
-      end
+      elsif debug_trace
+        _log.info("Matched?: false, Index: #{i}, Window start index: #{i - recs_in_window}, matches_in_window: #{matches_in_window}, ts: #{rec.timestamp}, #{column}: #{rec.send(column)}")
+end
     end
     false
   end

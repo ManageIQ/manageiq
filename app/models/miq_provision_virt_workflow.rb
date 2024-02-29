@@ -25,9 +25,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       @dialogs = get_pre_dialogs if initial_pass && options[:use_pre_dialog] != false
       if @dialogs.nil?
         @dialogs = get_dialogs
-      else
-        @running_pre_dialog = true if options[:use_pre_dialog] != false
-      end
+      elsif options[:use_pre_dialog] != false
+        @running_pre_dialog = true
+end
       normalize_numeric_fields unless @dialogs.nil?
     end
 
@@ -537,14 +537,12 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     type, pathname = idx.split('=')
     if type == "DC"
       create_ou_tree(ou, h, path)
-    else
-      if path.blank?
-        entry = (h[pathname] ||= {})
+    elsif path.blank?
+      entry = (h[pathname] ||= {})
         entry[:path] = ou[0]
         entry[:ou] = ou
       else
         create_ou_tree(ou, h[pathname] ||= {}, path)
-      end
     end
   end
 
@@ -621,9 +619,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
         # Call generic networking method
         update_fields_from_spec_networking(cs_data)
       end
-    else
-      @values[:sysprep_upload_text] = nil if @customize_option == 'file'
-    end
+    elsif @customize_option == 'file'
+      @values[:sysprep_upload_text] = nil
+end
 
     @current_spec = selected_spec
     @custom_spec_override = current_spec_override

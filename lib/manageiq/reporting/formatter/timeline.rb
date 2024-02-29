@@ -83,12 +83,12 @@ module ManageIQ
             # if there is item with current time or greater then use that else, use right most one.
             if format_timezone(etime.to_time, tz, 'raw') >= format_timezone(Time.now, tz, 'raw') && format_timezone(etime.to_time, tz, 'raw') <= format_timezone(mri.extras[:tl_position], tz, 'raw')
               mri.extras[:tl_position] = format_timezone(etime.to_time, tz, 'raw')
-            else
-              mri.extras[:tl_position] = format_timezone(etime.to_time, tz, 'raw') if format_timezone(etime.to_time, tz, 'raw') > format_timezone(mri.extras[:tl_position], tz, 'raw')
-            end
-          else
-            mri.extras[:tl_position] = format_timezone(etime.to_time, tz, 'raw') if format_timezone(etime.to_time, tz, 'raw') > format_timezone(mri.extras[:tl_position], tz, 'raw')
-          end
+            elsif format_timezone(etime.to_time, tz, 'raw') > format_timezone(mri.extras[:tl_position], tz, 'raw')
+              mri.extras[:tl_position] = format_timezone(etime.to_time, tz, 'raw')
+end
+          elsif format_timezone(etime.to_time, tz, 'raw') > format_timezone(mri.extras[:tl_position], tz, 'raw')
+            mri.extras[:tl_position] = format_timezone(etime.to_time, tz, 'raw')
+end
           #     END of TIMELINE TIMEZONE Code
           if row["id"] # Make sure id column is present
             rec = mri.db.constantize.find_by_id(row['id'])

@@ -117,9 +117,8 @@ class ProviderTagMapping
       any_value      = @mappings[[name, type, nil]]   || []
       if !specific_value.empty?
         specific_value.map { |tag_id| emit_specific_reference(tag_id) }
-      else
-        if value.empty?
-          [] # Don't map empty value to any tag.
+      elsif value.empty?
+        []
         else
           # NOTE: if the way we compute `entry_name` changes,
           # consider what will happen to previously created tags.
@@ -130,7 +129,6 @@ class ProviderTagMapping
               :entry_description => value,
             )
           end
-        end
       end
     end
 

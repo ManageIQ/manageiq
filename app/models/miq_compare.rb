@@ -196,10 +196,10 @@ class MiqCompare
 
       if @report.cols.include?(c)
         section, column = :_model_, c.to_sym
-      else
+      elsif c =~ /(.+)\.([^\.]+)$/
+        section, column = $1.to_sym, $2.to_sym
+end
         # Determine the section and column based on the last '.'
-        section, column = $1.to_sym, $2.to_sym if c =~ /(.+)\.([^\.]+)$/
-      end
 
       # See if this section has a key
       if section == :_model_

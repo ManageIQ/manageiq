@@ -57,9 +57,9 @@ class MiqRequestWorkflow
       if @dialogs.nil?
         @dialogs = get_dialogs
         normalize_numeric_fields
-      else
-        @running_pre_dialog = true if options[:use_pre_dialog] != false
-      end
+      elsif options[:use_pre_dialog] != false
+        @running_pre_dialog = true
+end
     end
 
     unless options[:skip_dialog_load] == true
@@ -161,12 +161,10 @@ class MiqRequestWorkflow
                 valid = false
                 next
               end
-            else
-              if value.blank?
-                fld[:error] = "#{required_description(dlg, fld)} is required"
+            elsif value.blank?
+              fld[:error] = "#{required_description(dlg, fld)} is required"
                 valid = false
                 next
-              end
             end
           else
             Array.wrap(fld[:required_method]).each do |method|
@@ -425,11 +423,9 @@ class MiqRequestWorkflow
             selected_key = values[fn]
           elsif f.key?(:default) && f[:values].key?(f[:default])
             selected_key = f[:default]
-          else
-            if f[:values].present?
-              sorted_values = f[:values].sort
+          elsif f[:values].present?
+            sorted_values = f[:values].sort
               selected_key = sorted_values.first.first
-            end
           end
           @values[fn] = [selected_key, f[:values][selected_key]] unless selected_key.nil?
         else
@@ -462,9 +458,9 @@ class MiqRequestWorkflow
       if @values[fn].nil?
         _log.info("set_value_from_list did not matched an item") if partial_key
         @values[fn] = [nil, nil]
-      else
-        _log.info("set_value_from_list matched item value:[#{value}] to item:[#{@values[fn][0]}]") if partial_key
-      end
+      elsif partial_key
+        _log.info("set_value_from_list matched item value:[#{value}] to item:[#{@values[fn][0]}]")
+end
     end
   end
 
@@ -1288,9 +1284,9 @@ class MiqRequestWorkflow
                    [found.id, found.name] if found
                  elsif data_type == :array_integer
                    field_values.keys & set_value
-                 else
-                   [set_value, field_values[set_value]] if field_values.key?(set_value)
-                 end
+                 elsif field_values.key?(set_value)
+                   [set_value, field_values[set_value]]
+end
 
         set_value = apply_result(result, data_type)
       end

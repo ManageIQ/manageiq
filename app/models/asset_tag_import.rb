@@ -100,14 +100,12 @@ class AssetTagImport
               _log.info("#{@klass.name}: #{obj.name}, Adding tag <#{key}>, value <#{value}>")
               new_attrs << {:name => key, :value => value, :source => 'EVM'}
             end
-          else
-            if value.blank?
-              _log.info("#{@klass.name}: #{obj.name}, Deleting tag <#{key}> due to blank value")
+          elsif value.blank?
+            _log.info("#{@klass.name}: #{obj.name}, Deleting tag <#{key}> due to blank value")
               attr.delete
             else
               _log.info("#{@klass.name}: #{obj.name}, Updating tag <#{key}>, value <#{value}>")
               attr.update_attribute(:value, value)
-            end
           end
         end
         obj.custom_attributes.create(new_attrs)

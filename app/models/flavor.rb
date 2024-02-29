@@ -27,12 +27,10 @@ class Flavor < ApplicationRecord
                 else
                   _("%{name} (%{num_cpus} CPU, %{memory_gigabytes} GB RAM, %{root_disk_gigabytes} GB Root Disk)")
                 end
-              else
-                if root_disk_size.nil?
-                  _("%{name} (%{num_cpus} CPUs, %{memory_gigabytes} GB RAM, Unknown Size Root Disk)")
+              elsif root_disk_size.nil?
+                _("%{name} (%{num_cpus} CPUs, %{memory_gigabytes} GB RAM, Unknown Size Root Disk)")
                 else
                   _("%{name} (%{num_cpus} CPUs, %{memory_gigabytes} GB RAM, %{root_disk_gigabytes} GB Root Disk)")
-                end
               end
     details % {
       :name                => name,

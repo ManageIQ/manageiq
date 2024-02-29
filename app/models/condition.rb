@@ -61,9 +61,9 @@ class Condition < ApplicationRecord
         if rec.is_tagged_with?(tag, :ns => expression["ns"])
           result = true if expression["include"] == "any"
           result = false if expression["include"] == "none"
-        else
-          result = false if expression["include"] == "all"
-        end
+        elsif expression["include"] == "all"
+          result = false
+end
       end
     when "tag_expr", "tag_expr_v2", "object"
       expr = case mode

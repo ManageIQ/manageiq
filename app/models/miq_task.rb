@@ -235,9 +235,9 @@ class MiqTask < ApplicationRecord
   def queue_callback(state, status, message, result)
     if status.casecmp(STATUS_OK) == 0
       message = MESSAGE_TASK_COMPLETED_SUCCESSFULLY
-    else
-      message = MESSAGE_TASK_COMPLETED_UNSUCCESSFULLY if message.blank?
-    end
+    elsif message.blank?
+      message = MESSAGE_TASK_COMPLETED_UNSUCCESSFULLY
+end
 
     self.task_results = result unless result.nil?
     update_status(state, status.titleize, message)

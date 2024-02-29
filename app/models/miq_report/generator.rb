@@ -739,9 +739,9 @@ module MiqReport::Generator
     options[:only].each do |a|
       if self.class.is_trend_column?(a)
         attrs[a] = build_calculate_trend_point(rec, a)
-      else
-        attrs[a] = rec.send(a) if rec.respond_to?(a)
-      end
+      elsif rec.respond_to?(a)
+        attrs[a] = rec.send(a)
+end
     end
     attrs = attrs.each_with_object({}) do |(k, v), h|
       h["#{options[:qualify_attribute_names]}.#{k}"] = v

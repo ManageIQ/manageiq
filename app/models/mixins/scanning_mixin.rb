@@ -350,13 +350,11 @@ module ScanningMixin
           _log.info("Starting:  Sending target data for [#{c}] to server.  Size:[#{data.length}]  TaskId:[#{ost.taskid}]  target:[#{name}]")
           save_metadata_op(data, "b64,zlib,xml", ost.taskid)
           _log.info("Completed: Sending target data for [#{c}] to server.  Size:[#{data.length}]  TaskId:[#{ost.taskid}]  target:[#{name}]")
-        else
+        elsif items_total.zero?
           # Do not send empty XMLs.  Warn if there is not data at all, or just not items selected.
-          if items_total.zero?
-            _log.warn("Synchronize: No data found for [#{c}].  Items:Total[#{items_total}] Selected[#{items_selected}]  TaskId:[#{ost.taskid}]  VM:[#{name}]")
+          _log.warn("Synchronize: No data found for [#{c}].  Items:Total[#{items_total}] Selected[#{items_selected}]  TaskId:[#{ost.taskid}]  VM:[#{name}]")
           else
             _log.warn("Synchronize: No data selected for [#{c}].  Items:Total[#{items_total}] Selected[#{items_selected}]  TaskId:[#{ost.taskid}]  VM:[#{name}]")
-          end
         end
       end
     rescue => syncErr

@@ -574,13 +574,11 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
             # passed to opts
             if j.kind_of?(Integer)
               @system_scheduler.unschedule(j)
-            else
-              if j.respond_to?(:tags)
-                if j.tags.any? { |t| t.to_s.starts_with?("miq_schedules_") }
+            elsif j.respond_to?(:tags)
+              if j.tags.any? { |t| t.to_s.starts_with?("miq_schedules_") }
                   _log.info("Removing user schedule with Tags: #{j.tags.inspect}")
                 end
                 j.unschedule
-              end
             end
           end
           @schedules.delete(rs)
