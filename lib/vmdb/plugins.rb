@@ -104,6 +104,13 @@ module Vmdb
       end
     end
 
+    def server_role_paths
+      @server_role_paths ||= filter_map do |engine|
+        file = engine.root.join("config/server_roles.csv")
+        file if file.exist?
+      end
+    end
+
     def systemd_units
       @systemd_units ||= begin
         flat_map { |engine| engine.root.join("systemd").glob("*.*") }
