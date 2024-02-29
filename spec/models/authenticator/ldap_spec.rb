@@ -285,9 +285,9 @@ RSpec.describe Authenticator::Ldap do
             expect(MiqQueue.count).to eq 1
             expect(MiqQueue.first.args.last(2)).to eq(
               ["user_created",
-                {
-                  :event_details => "User creation successful for User: Bob Builderson with ID: bob"
-                }
+               {
+                 :event_details => "User creation successful for User: Bob Builderson with ID: bob"
+               }
               ]
             )
           end
