@@ -1714,7 +1714,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   # deprecated, use unsupported_reason(:action) instead
-  def check_feature_support(message_prefix)
+  def check_feature_support(_message_prefix)
     reason = unsupported_reason(:action)
     [!reason, reason]
   end

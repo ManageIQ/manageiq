@@ -80,7 +80,7 @@ class EvmServer
     end
   end
 
-  def self.start(*args)
+  def self.start(*_args)
     new.start
   end
 

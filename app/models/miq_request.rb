@@ -625,7 +625,7 @@ class MiqRequest < ApplicationRecord
   end
 
   # Helper method to log the request to both the request_logs table and $log
-  def self.request_log(severity, message = nil, resource_id: nil, &block)
+  def self.request_log(severity, message = nil, resource_id: nil)
     formatted_severity = severity.to_s.upcase
     level = Logger.const_get(formatted_severity)
 

@@ -167,7 +167,7 @@ module EmsRefresh
     task_id
   end
 
-  def self.create_refresh_task(ems, targets)
+  def self.create_refresh_task(ems, _targets)
     task_options = {
       :action => "EmsRefresh(#{ems.name}) Refreshing relationships and power states",
       :userid => "system"
