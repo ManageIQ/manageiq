@@ -11,7 +11,7 @@ FactoryBot.define do
       after(:create) do |chargeback_rate_detail, evaluator|
         if evaluator.tiers_params
           evaluator.tiers_params.each do |tier|
-            chargeback_rate_detail.chargeback_tiers << FactoryBot.create(*[:chargeback_tier, tier])
+            chargeback_rate_detail.chargeback_tiers << FactoryBot.create(:chargeback_tier, tier)
           end
         else
           chargeback_rate_detail.chargeback_tiers << FactoryBot.create(:chargeback_tier)
