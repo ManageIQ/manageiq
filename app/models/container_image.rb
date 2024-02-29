@@ -124,7 +124,7 @@ class ContainerImage < ApplicationRecord
   end
 
   def self.disconnect_inv(ids)
-    _log.info "Disconnecting Images [#{ids}]"
+    _log.info("Disconnecting Images [#{ids}]")
     where(:id => ids).update_all(:container_image_registry_id => nil, :deleted_on => Time.now.utc)
   end
 

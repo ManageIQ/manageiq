@@ -67,7 +67,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::OpenstackCredenti
   def self.params_to_attributes(params)
     attrs = super.dup
 
-    if %i[host domain project].any? { |opt| attrs.has_key? opt }
+    if %i[host domain project].any? { |opt| attrs.has_key?(opt) }
       attrs[:options]         ||= {}
       attrs[:options][:host]    = attrs.delete(:host)    if attrs.key?(:host)
       attrs[:options][:domain]  = attrs.delete(:domain)  if attrs.key?(:domain)

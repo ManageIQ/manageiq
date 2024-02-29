@@ -126,7 +126,7 @@ module ManageIQ
               else
                 r[f].to_s
                      end
-              if options.alignment.eql? :center
+              if options.alignment.eql?(:center)
                 line << data.center(@max_col_width[i])
               else
                 align = data.kind_of?(Numeric) ? :rjust : :ljust

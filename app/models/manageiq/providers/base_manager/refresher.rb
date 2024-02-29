@@ -100,7 +100,7 @@ module ManageIQ
 
           Benchmark.realtime_block(:save_inventory) { save_inventory(ems, target, parsed) }
 
-          _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]...Complete"
+          _log.info("#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]...Complete")
         end
       end
 

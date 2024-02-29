@@ -17,7 +17,7 @@ module ActiveRecord
                               else # for Arel::Nodes::Attribute
                                 engine = Arel::Table.engine
                                 collector = Arel::Collectors::SQLString.new
-                                collector = engine.connection.visitor.accept s, collector
+                                collector = engine.connection.visitor.accept(s, collector)
                                 s = collector.value
                               end
                             end

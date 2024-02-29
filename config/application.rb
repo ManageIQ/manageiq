@@ -125,7 +125,7 @@ module Vmdb
     config.autoload_once_paths << Rails.root.join("lib/vmdb/console_methods.rb").to_s
 
     require_relative '../lib/request_started_on_middleware'
-    config.middleware.use RequestStartedOnMiddleware
+    config.middleware.use(RequestStartedOnMiddleware)
 
     # enable to log session id for every request
     # require_relative '../lib/request_log_session_middleware'

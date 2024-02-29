@@ -29,7 +29,7 @@ module ManageIQ
       # called from each ApplicationController instance
       def load_helpers(klass)
         klass.instance_eval do
-          helper ManageIQ::Reporting::Formatter::C3Helper
+          helper(ManageIQ::Reporting::Formatter::C3Helper)
         end
       end
 
