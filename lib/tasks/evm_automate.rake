@@ -236,7 +236,7 @@ namespace :evm do
       zip_file    = ENV.fetch('ZIP_FILE', nil)
       export_dir  = ENV.fetch('EXPORT_DIR', nil)
       yaml_file   = ENV.fetch('YAML_FILE', nil)
-      overwrite   = (ENV['OVERWRITE'] ||= 'false').downcase.==('true')
+      overwrite   = (ENV['OVERWRITE'] ||= 'false').downcase ==('true')
 
       export_options['zip_file'] = zip_file if zip_file
       export_options['export_dir'] = export_dir if export_dir
