@@ -32,8 +32,8 @@ gem "bootsnap",                         ">= 1.8.1",          :require => false #
 gem "bundler",                          "~> 2.1", ">= 2.1.4", "!= 2.2.10", :require => false
 gem "byebug",                                                :require => false
 gem "color",                            "~>1.8"
-gem "connection_pool",                                       :require => false # For Dalli
 gem "config",                           "~>2.2", ">=2.2.3",  :require => false
+gem "connection_pool",                                       :require => false # For Dalli
 gem "dalli",                            "~>3.2.3",           :require => false
 gem "default_value_for",                "~>3.3"
 gem "docker-api",                       "~>1.33.6",          :require => false
@@ -61,9 +61,9 @@ gem "net-ldap",                         "~>0.16.1",          :require => false
 gem "net-ping",                         "~>1.7.4",           :require => false
 gem "openscap",                         "~>0.4.8",           :require => false
 gem "optimist",                         "~>3.0",             :require => false
-gem "psych",                            ">=3.1",             :require => false # 3.1 safe_load changed positional to kwargs like aliases: true: https://github.com/ruby/psych/commit/4d4439d6d0adfcbd211ea295779315f1baa7dadd
 gem "pg",                               ">=1.4.1",           :require => false
 gem "pg-dsn_parser",                    "~>0.1.1",           :require => false
+gem "psych",                            ">=3.1",             :require => false # 3.1 safe_load changed positional to kwargs like aliases: true: https://github.com/ruby/psych/commit/4d4439d6d0adfcbd211ea295779315f1baa7dadd
 gem "query_relation",                   "~>0.1.0",           :require => false
 gem "rack",                             ">=2.2.6.4",         :require => false
 gem "rack-attack",                      "~>6.5.0",           :require => false
