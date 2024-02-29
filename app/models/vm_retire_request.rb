@@ -1,7 +1,7 @@
 class VmRetireRequest < MiqRetireRequest
   TASK_DESCRIPTION  = N_('VM Retire').freeze
   SOURCE_CLASS_NAME = 'Vm'.freeze
-  ACTIVE_STATES     = %w(retired) + base_class::ACTIVE_STATES
+  ACTIVE_STATES     = %w[retired] + base_class::ACTIVE_STATES
 
   default_value_for(:source_id)    { |r| r.get_option(:src_ids) }
   attribute :source_type, :default => SOURCE_CLASS_NAME

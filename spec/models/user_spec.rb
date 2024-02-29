@@ -407,7 +407,7 @@ RSpec.describe User do
       expect(@user.provisioned_storage).to eq(@ram_size.megabyte + @disk_size)
     end
 
-    %w(allocated_memory allocated_vcpu allocated_storage provisioned_storage).each do |vcol|
+    %w[allocated_memory allocated_vcpu allocated_storage provisioned_storage].each do |vcol|
       it "should have virtual column #{vcol} " do
         expect(described_class).to have_virtual_column vcol.to_s, :integer
       end
@@ -786,7 +786,7 @@ RSpec.describe User do
     it "handles multiple columns" do
       a1 = FactoryBot.create(:miq_group, :features => "good")
       a2 = FactoryBot.create(:miq_group, :features => "something")
-      b = FactoryBot.create(:miq_group, :features => %w(good everything))
+      b = FactoryBot.create(:miq_group, :features => %w[good everything])
       c = FactoryBot.create(:miq_group, :features => "everything")
 
       u1 = FactoryBot.create(:user, :miq_groups => [a1])

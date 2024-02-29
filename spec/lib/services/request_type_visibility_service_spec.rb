@@ -6,7 +6,7 @@ describe RequestTypeVisibilityService do
       let(:request_type) { :clone_to_template }
 
       it "returns the values to be hidden" do
-        expect(subject.determine_visibility(request_type)).to eq(:hide => %i(vm_filter vm_auto_start))
+        expect(subject.determine_visibility(request_type)).to eq(:hide => %i[vm_filter vm_auto_start])
       end
     end
 

@@ -70,7 +70,7 @@ RSpec.describe "LogCollection" do
       end
     end
 
-    %w(models dialogs current archive).each do |log_type|
+    %w[models dialogs current archive].each do |log_type|
       context "using a #{log_type} log file" do
         before do
           @fname = "#{log_type}.zip"

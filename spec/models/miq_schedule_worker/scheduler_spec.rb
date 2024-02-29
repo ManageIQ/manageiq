@@ -24,7 +24,7 @@ RSpec.describe MiqScheduleWorker::Scheduler do
         scheduler.schedule_every(schedule_name, 3.hours, :first_in => 1.hour, :tags => [:first, :tag], &work)
         job = rufus_scheduler.jobs.first
         expect(job.next_time).to eq(1.hour.from_now)
-        expect(job.tags).to match_array(%w(first tag))
+        expect(job.tags).to match_array(%w[first tag])
         expect(job.callable).to eq(work)
       end
     end
@@ -76,7 +76,7 @@ RSpec.describe MiqScheduleWorker::Scheduler do
       job = rufus_scheduler.jobs.first
 
       expect(job.rough_frequency).to eq(1.day.to_i)
-      expect(job.tags).to match_array(%w(a b))
+      expect(job.tags).to match_array(%w[a b])
       expect(job.callable).to eq(work)
     end
 

@@ -68,7 +68,7 @@ class MiqExpression::Target
   end
 
   def numeric?
-    %i(fixnum integer decimal float).include?(column_type)
+    %i[fixnum integer decimal float].include?(column_type)
   end
 
   def plural?

@@ -169,24 +169,24 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister::Builder do
 
   it 'can add inventory_object_attributes manually' do
     data = cloud.prepare_data(:tmp, persister, :without_model_class => true) do |builder|
-      builder.add_inventory_attributes(%i(attr1 attr2 attr3))
+      builder.add_inventory_attributes(%i[attr1 attr2 attr3])
     end.to_hash
 
-    expect(data[:inventory_object_attributes]).to match_array(%i(attr1 attr2 attr3))
+    expect(data[:inventory_object_attributes]).to match_array(%i[attr1 attr2 attr3])
   end
 
   it 'can remove inventory_object_attributes' do
     data = cloud.prepare_data(:tmp, persister, :without_model_class => true) do |builder|
-      builder.add_inventory_attributes(%i(attr1 attr2 attr3))
-      builder.remove_inventory_attributes(%i(attr2))
+      builder.add_inventory_attributes(%i[attr1 attr2 attr3])
+      builder.remove_inventory_attributes(%i[attr2])
     end.to_hash
 
-    expect(data[:inventory_object_attributes]).to match_array(%i(attr1 attr3))
+    expect(data[:inventory_object_attributes]).to match_array(%i[attr1 attr3])
   end
 
   it 'can clear all inventory_object_attributes' do
     data = cloud.prepare_data(:vms, persister, :without_sti => true) do |builder|
-      builder.add_inventory_attributes(%i(attr1 attr2 attr3))
+      builder.add_inventory_attributes(%i[attr1 attr2 attr3])
       builder.clear_inventory_attributes!
     end.to_hash
 

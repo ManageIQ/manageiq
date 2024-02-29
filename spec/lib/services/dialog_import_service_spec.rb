@@ -258,7 +258,7 @@ RSpec.describe DialogImportService do
     let(:import_file_upload) do
       double("ImportFileUpload", :id => 123, :uploaded_content => yaml_data)
     end
-    let(:dialogs_to_import) { %w(Test Test2) }
+    let(:dialogs_to_import) { %w[Test Test2] }
 
     before do
       allow(import_file_upload).to receive(:destroy)
@@ -528,7 +528,7 @@ RSpec.describe DialogImportService do
     let(:field1) { instance_double("DialogField", :id => 123, :name => "field1") }
     let(:field2) { instance_double("DialogField", :id => 321, :name => "field2") }
     let(:dialog_fields) { [field1, field2] }
-    let(:association_list) { [{"field1" => %w(responder1 field2)}] }
+    let(:association_list) { [{"field1" => %w[responder1 field2]}] }
 
     it "creates dialog field associations" do
       expect do
@@ -548,13 +548,13 @@ RSpec.describe DialogImportService do
       }
     end
 
-    let(:field1) { {"name" => "field1", "dialog_field_responders" => %w(field2 field3)} }
-    let(:field2) { {"name" => "field2", "dialog_field_responders" => %w(field3)} }
+    let(:field1) { {"name" => "field1", "dialog_field_responders" => %w[field2 field3]} }
+    let(:field2) { {"name" => "field2", "dialog_field_responders" => %w[field3]} }
     let(:field3) { {"name" => "field3", "dialog_field_responders" => []} }
 
     it "creates an association list of ids based on names" do
       expect(dialog_import_service.build_association_list(dialog)).to eq(
-        [{"field1" => %w(field2 field3)}, {"field2" => %w(field3)}]
+        [{"field1" => %w[field2 field3]}, {"field2" => %w[field3]}]
       )
     end
 

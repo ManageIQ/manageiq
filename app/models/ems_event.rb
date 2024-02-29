@@ -282,7 +282,7 @@ class EmsEvent < EventStream
   private
 
   def self.event_allowed_ems_ref_keys
-    %w(vm_ems_ref dest_vm_ems_ref)
+    %w[vm_ems_ref dest_vm_ems_ref]
   end
   private_class_method :event_allowed_ems_ref_keys
 

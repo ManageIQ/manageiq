@@ -192,11 +192,11 @@ class VimPerformanceTrend < ActsAsArModel
       :derived_memory_used       => {:limit_cols => ["derived_memory_available", "derived_memory_reserved"]}
     },
     :ExtManagementSystemPerformance => {
-      :cpu_usagemhz_rate_average => {:limit_cols => %w(derived_cpu_available derived_cpu_reserved)},
+      :cpu_usagemhz_rate_average => {:limit_cols => %w[derived_cpu_available derived_cpu_reserved]},
       :cpu_usage_rate_average    => {},
       :disk_usage_rate_average   => {},
       :net_usage_rate_average    => {},
-      :derived_memory_used       => {:limit_cols => %w(derived_memory_available derived_memory_reserved)}
+      :derived_memory_used       => {:limit_cols => %w[derived_memory_available derived_memory_reserved]}
     },
     :StoragePerformance             => {
       :derived_storage_free   => {:limit_cols => ["derived_storage_total"]},

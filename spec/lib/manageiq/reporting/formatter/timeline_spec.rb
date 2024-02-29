@@ -99,14 +99,14 @@ describe ManageIQ::Reporting::Formatter::TimelineMessage do
     before do
       @report = FactoryBot.create(:miq_report,
                                   :db        => "EventStream",
-                                  :col_order => %w(id name event_type timestamp),
-                                  :headers   => %w(id name event_type timestamp),
+                                  :col_order => %w[id name event_type timestamp],
+                                  :headers   => %w[id name event_type timestamp],
                                   :timeline  => {:field => "EmsEvent-timestamp", :position => "Last"})
       @report.rpt_options = {:categories => {:power    => {:display_name => "Power Activity",
-                                                           :include_set  => %w(VmPoweredOffEvent VmPoweredOnEvent),
+                                                           :include_set  => %w[VmPoweredOffEvent VmPoweredOnEvent],
                                                            :regexes      => []},
                                              :snapshot => {:display_name => "Snapshot Activity",
-                                                           :include_set  => %w(AlarmCreatedEvent AlarmRemovedEvent),
+                                                           :include_set  => %w[AlarmCreatedEvent AlarmRemovedEvent],
                                                            :regexes      => []}}}
 
       data = []
@@ -125,7 +125,7 @@ describe ManageIQ::Reporting::Formatter::TimelineMessage do
       end
 
       @report.table = Ruport::Data::Table.new(
-        :column_names => %w(id name event_type timestamp),
+        :column_names => %w[id name event_type timestamp],
         :data         => data
       )
     end
@@ -166,8 +166,8 @@ describe ManageIQ::Reporting::Formatter::TimelineMessage do
       @report = FactoryBot.create(
         :miq_report,
         :db        => "EventStream",
-        :col_order => %w(id name event_type timestamp),
-        :headers   => %w(id name event_type timestamp),
+        :col_order => %w[id name event_type timestamp],
+        :headers   => %w[id name event_type timestamp],
         :timeline  => {:field => "EmsEvent-timestamp", :position => "Last"}
       )
       @report.rpt_options = {
@@ -179,7 +179,7 @@ describe ManageIQ::Reporting::Formatter::TimelineMessage do
           },
           :snapshot => {
             :display_name => "Snapshot Activity",
-            :include_set  => %w(AlarmCreatedEvent AlarmRemovedEvent),
+            :include_set  => %w[AlarmCreatedEvent AlarmRemovedEvent],
             :regexes      => []
           }
         }
@@ -210,7 +210,7 @@ describe ManageIQ::Reporting::Formatter::TimelineMessage do
       end
 
       @report.table = Ruport::Data::Table.new(
-        :column_names => %w(id name event_type timestamp),
+        :column_names => %w[id name event_type timestamp],
         :data         => data
       )
     end
@@ -251,14 +251,14 @@ describe '#set data for headers that exist in col headers' do
   before do
     @report = FactoryBot.create(:miq_report,
                                 :db        => "EventStream",
-                                :col_order => %w(id name event_type timestamp vm_location),
-                                :headers   => %w(id name event_type timestamp vm_location),
+                                :col_order => %w[id name event_type timestamp vm_location],
+                                :headers   => %w[id name event_type timestamp vm_location],
                                 :timeline  => {:field => "EmsEvent-timestamp", :position => "Last"})
     @report.rpt_options = {:categories => {:power    => {:display_name => "Power Activity",
-                                                         :include_set  => %w(VmPoweredOffEvent VmPoweredOnEvent),
+                                                         :include_set  => %w[VmPoweredOffEvent VmPoweredOnEvent],
                                                          :regexes      => []},
                                            :snapshot => {:display_name => "Snapshot Activity",
-                                                         :include_set  => %w(AlarmCreatedEvent AlarmRemovedEvent),
+                                                         :include_set  => %w[AlarmCreatedEvent AlarmRemovedEvent],
                                                          :regexes      => []}}}
 
     data = [Ruport::Data::Record.new("id"          => stub_ems_event("VmPoweredOffEvent").id,
@@ -268,7 +268,7 @@ describe '#set data for headers that exist in col headers' do
                                      "timestamp"   => Time.zone.now)]
 
     @report.table = Ruport::Data::Table.new(
-      :column_names => %w(id name event_type timestamp vm_location),
+      :column_names => %w[id name event_type timestamp vm_location],
       :data         => data
     )
   end

@@ -263,7 +263,7 @@ RSpec.describe MiqRequest do
         end
 
         describe ".with_reason_like" do
-          let(:reason) { %w(abcd abcde cde) }
+          let(:reason) { %w[abcd abcde cde] }
           subject { described_class.with_reason_like(pattern).count }
 
           before { request.miq_approvals = approvals }

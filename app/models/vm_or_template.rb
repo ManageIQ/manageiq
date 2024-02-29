@@ -56,8 +56,8 @@ class VmOrTemplate < ApplicationRecord
     "unknown"       => "Unknown"
   }
 
-  POWER_OPS = %w(start stop suspend reset shutdown_guest standby_guest reboot_guest)
-  REMOTE_REGION_TASKS = POWER_OPS + %w(retire_now)
+  POWER_OPS = %w[start stop suspend reset shutdown_guest standby_guest reboot_guest]
+  REMOTE_REGION_TASKS = POWER_OPS + %w[retire_now]
 
   validates     :name, :location, :presence => true
   validates                 :vendor, :inclusion => {:in => VENDOR_TYPES.keys}
@@ -438,7 +438,7 @@ class VmOrTemplate < ApplicationRecord
 
     # VM belongs to a storage/repository location
     # TODO: The following never gets run since the invoke tasks invokes it as a job, and only tasks get to this point ?
-    unless %w(scan sync).include?(options[:task])
+    unless %w[scan sync].include?(options[:task])
       task.error("#{vm.name}: There is no owning Host for this VM, '#{options[:task]}' is not allowed")
       return false
     end
@@ -461,7 +461,7 @@ class VmOrTemplate < ApplicationRecord
 
   # override
   def self.task_invoked_by(options)
-    %w(scan sync).include?(options[:task]) ? :job : super
+    %w[scan sync].include?(options[:task]) ? :job : super
   end
   private_class_method :task_invoked_by
 
@@ -1238,7 +1238,7 @@ end
   def normalized_state
     return self["normalized_state"] if has_attribute?("normalized_state")
 
-    %w(archived orphaned template retired disconnected).each do |s|
+    %w[archived orphaned template retired disconnected].each do |s|
       return s if send(:"#{s}?")
     end
     return power_state.downcase unless power_state.nil?
@@ -1663,7 +1663,7 @@ end
     vms.all?(&:reconfigurable?)
   end
 
-  PUBLIC_TEMPLATE_CLASSES = %w(ManageIQ::Providers::Openstack::CloudManager::Template).freeze
+  PUBLIC_TEMPLATE_CLASSES = %w[ManageIQ::Providers::Openstack::CloudManager::Template].freeze
 
   def self.tenant_id_clause(user_or_group)
     template_tenant_ids = MiqTemplate.accessible_tenant_ids(user_or_group, Rbac.accessible_tenant_ids_strategy(MiqTemplate))

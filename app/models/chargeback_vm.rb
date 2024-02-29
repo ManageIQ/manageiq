@@ -34,12 +34,12 @@ class ChargebackVm < Chargeback
     :total_cost               => :float,
   )
 
-  DEFAULT_STORAGE_METRICS = %w(
+  DEFAULT_STORAGE_METRICS = %w[
     storage_allocated_unclassified_metric
     storage_allocated_unclassified_cost
     storage_allocated_metric
     storage_allocated_cost
-  ).freeze
+  ].freeze
 
   cache_with_timeout(:current_volume_types) do
     volume_types = CloudVolume.volume_types
@@ -64,7 +64,7 @@ class ChargebackVm < Chargeback
   # }
   def self.dynamic_columns_for(column_type)
     current_volume_types.each_with_object({}) do |volume_type, result|
-      %i(metric cost rate).collect do |type|
+      %i[metric cost rate].collect do |type|
         result["storage_allocated_#{volume_type || 'unclassified'}_#{type}"] = column_type
       end
     end
@@ -115,7 +115,7 @@ class ChargebackVm < Chargeback
   end
 
   def self.report_static_cols
-    %w(vm_name)
+    %w[vm_name]
   end
 
   def self.sub_metric_columns

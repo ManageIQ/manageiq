@@ -56,8 +56,8 @@ class MiqTask < ApplicationRecord
   scope :with_updated_on_between, ->(from, to) { where("miq_tasks.updated_on BETWEEN ? AND ?", from, to) }
   scope :with_state,              ->(state)    { where(:state => state) }
   scope :finished,                ->           { with_state('Finished') }
-  scope :running,                 ->           { where.not(:state => %w(Finished Waiting_to_start Queued)) }
-  scope :queued,                  ->           { with_state(%w(Waiting_to_start Queued)) }
+  scope :running,                 ->           { where.not(:state => %w[Finished Waiting_to_start Queued]) }
+  scope :queued,                  ->           { with_state(%w[Waiting_to_start Queued]) }
   scope :completed_ok,            ->           { finished.where(:status => 'Ok') }
   scope :completed_warn,          ->           { finished.where(:status => 'Warn') }
   scope :completed_error,         ->           { finished.where(:status => 'Error') }

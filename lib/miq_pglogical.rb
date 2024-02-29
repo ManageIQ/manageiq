@@ -6,7 +6,7 @@ class MiqPglogical
   include ConnectionHandling
 
   PUBLICATION_NAME = 'miq'.freeze
-  ALWAYS_EXCLUDED_TABLES = %w(ar_internal_metadata schema_migrations repl_events repl_monitor repl_nodes).freeze
+  ALWAYS_EXCLUDED_TABLES = %w[ar_internal_metadata schema_migrations repl_events repl_monitor repl_nodes].freeze
 
   # :nodoc:
   #

@@ -2,7 +2,7 @@ class ServiceReconfigureRequest < MiqRequest
   TASK_DESCRIPTION  = N_('Service Reconfigure')
   SOURCE_CLASS_NAME = 'Service'
 
-  validates :request_state, :inclusion => { :in      => %w(pending finished) + ACTIVE_STATES,
+  validates :request_state, :inclusion => { :in      => %w[pending finished] + ACTIVE_STATES,
                                          :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished" }
   validate :must_have_user
   delegate :service_template, :to => :source, :allow_nil => true

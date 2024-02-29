@@ -32,7 +32,7 @@ class MiqReport < ApplicationRecord
 
   validates :name, :title, :db, :rpt_group, :presence => true
   validates :name, :uniqueness_when_changed => true
-  validates    :rpt_type, :inclusion => { :in => %w(Default Custom) }
+  validates    :rpt_type, :inclusion => { :in => %w[Default Custom] }
 
   has_many                  :miq_report_results, :dependent => :destroy
   belongs_to                :time_profile
@@ -55,7 +55,7 @@ class MiqReport < ApplicationRecord
 
   GROUPINGS = [[:min, N_("Minimum"), N_("Minima")], [:avg, N_("Average"), N_("Averages")], [:max, N_("Maximum"), N_("Maxima")], [:total, N_("Total"), N_("Totals")]].freeze
   PIVOTS    = [[:min, "Minimum"], [:avg, "Average"], [:max, "Maximum"], [:total, "Total"]]
-  IMPORT_CLASS_NAMES = %w(MiqReport).freeze
+  IMPORT_CLASS_NAMES = %w[MiqReport].freeze
 
   scope :for_user, lambda { |user|
     if user.report_admin_user?

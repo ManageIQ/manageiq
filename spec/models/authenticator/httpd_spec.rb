@@ -131,7 +131,7 @@ RSpec.describe Authenticator::Httpd do
         :domain    => "example.com"}
     end
 
-    let(:identity_simple) { [user_attrs_simple, %w(mumble bumble bee)] }
+    let(:identity_simple) { [user_attrs_simple, %w[mumble bumble bee]] }
 
     let(:user_attrs_upn) do
       {:username  => "sal@example.com",
@@ -142,7 +142,7 @@ RSpec.describe Authenticator::Httpd do
         :domain    => "example.com"}
     end
 
-    let(:identity_upn) { [user_attrs_upn, %w(mumble bumble bee)] }
+    let(:identity_upn) { [user_attrs_upn, %w[mumble bumble bee]] }
 
     let!(:upn_sal) { FactoryBot.create(:user, :userid => 'sal@example.com') }
 
@@ -652,7 +652,7 @@ RSpec.describe Authenticator::Httpd do
         end
 
         it "should return user attributes hash for valid user" do
-          requested_attrs = %w(mail givenname sn displayname domainname)
+          requested_attrs = %w[mail givenname sn displayname domainname]
 
           jdoe_attrs = [{"mail"        => ["jdoe@example.com"],
                          "givenname"   => ["John"],

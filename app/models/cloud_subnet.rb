@@ -33,7 +33,7 @@ class CloudSubnet < ApplicationRecord
   virtual_column :network_type,     :type => :string
 
   # Define all getters and setters for extra_attributes related virtual columns
-  %i(allocation_pools host_routes ip_version subnetpool_id network_type).each do |action|
+  %i[allocation_pools host_routes ip_version subnetpool_id network_type].each do |action|
     define_method(:"#{action}=") do |value|
       extra_attributes_save(action, value)
     end

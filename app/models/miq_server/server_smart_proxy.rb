@@ -3,7 +3,7 @@ require 'yaml'
 module MiqServer::ServerSmartProxy
   extend ActiveSupport::Concern
 
-  SMART_ROLES = %w(smartproxy smartstate).freeze
+  SMART_ROLES = %w[smartproxy smartstate].freeze
 
   def is_a_proxy?
     self.has_role?(:SmartProxy)

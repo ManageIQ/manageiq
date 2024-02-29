@@ -206,7 +206,7 @@ RSpec.describe MiqProvisionVirtWorkflow do
   end
 
   context "#validate_memory_reservation" do
-    let(:values) { {:vm_memory => %w(1024 1024)} }
+    let(:values) { {:vm_memory => %w[1024 1024]} }
 
     it "no size" do
       expect(workflow.validate_memory_reservation(nil, values, {}, {}, nil)).to be_nil

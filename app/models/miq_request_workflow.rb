@@ -1301,7 +1301,7 @@ end
     case data_type
     when :integer         then value.to_i_with_method
     when :float           then value.to_f
-    when :boolean         then value.to_s.downcase.in?(%w(true t))
+    when :boolean         then value.to_s.downcase.in?(%w[true t])
     when :time            then Time.zone.parse(value)
     when :button          then value # Ignore
     when :array_integer   then Array.wrap(value).map!(&:to_i)

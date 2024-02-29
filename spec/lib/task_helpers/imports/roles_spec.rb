@@ -6,7 +6,7 @@ RSpec.describe TaskHelpers::Imports::Roles do
   let(:role_two_name)   { 'Role Import Test 2' }
 
   before do
-    EvmSpecHelper.seed_specific_product_features(%w(
+    EvmSpecHelper.seed_specific_product_features(%w[
                                                    dashboard
                                                    dashboard_add
                                                    dashboard_view
@@ -17,7 +17,7 @@ RSpec.describe TaskHelpers::Imports::Roles do
                                                    miq_policy
                                                    vm
                                                    about
-                                                 ))
+                                                 ])
   end
 
   describe "#import" do
@@ -71,7 +71,7 @@ RSpec.describe TaskHelpers::Imports::Roles do
     r = MiqUserRole.find_by(:name => role_two_name)
     expect(r.name).to eq(role_two_name)
     expect(r.read_only).to be false
-    expect(r.feature_identifiers).to match_array(%w(dashboard vm))
+    expect(r.feature_identifiers).to match_array(%w[dashboard vm])
     expect(r.settings).to be nil
   end
 end

@@ -322,7 +322,7 @@ RSpec.describe Dialog do
                                    'id'                      => dialog_field.first.id,
                                    'name'                    => dialog_field.first.name,
                                    'dialog_group_id'         => dialog_group.first.id,
-                                   'dialog_field_responders' => %w(dialog_field2)
+                                   'dialog_field_responders' => %w[dialog_field2]
                                  }]},
             {
               'label'         => 'group 2',

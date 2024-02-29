@@ -192,7 +192,7 @@ module Authenticator
       end
     end
 
-    ATTRS_NEEDED = %w(mail givenname sn displayname domainname).freeze
+    ATTRS_NEEDED = %w[mail givenname sn displayname domainname].freeze
 
     def user_attrs_from_external_directory_via_dbus(username)
       return unless username

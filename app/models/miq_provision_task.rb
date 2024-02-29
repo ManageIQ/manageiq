@@ -2,7 +2,7 @@ class MiqProvisionTask < MiqRequestTask
   include MiqProvisionQuotaMixin
   include Tagging
 
-  validates :state, :inclusion => { :in => %w(pending queued active provisioned finished), :message => "should be pending, queued, active, provisioned or finished" }
+  validates :state, :inclusion => { :in => %w[pending queued active provisioned finished], :message => "should be pending, queued, active, provisioned or finished" }
 
   AUTOMATE_DRIVES = true
 

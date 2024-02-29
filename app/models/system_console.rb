@@ -69,7 +69,7 @@ class SystemConsole < ApplicationRecord
 
   def self.cleanup_proxy_processes
     SystemConsole.where.not(:proxy_pid => nil).where(:host_name => local_address).each do |console|
-      next unless %w(websocket_closed ticket_invalid).include?(console.proxy_status)
+      next unless %w[websocket_closed ticket_invalid].include?(console.proxy_status)
 
       kill_proxy_process(console.proxy_pid)
       console.destroy

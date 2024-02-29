@@ -213,8 +213,8 @@ RSpec.describe EvmDatabase do
       expect(handlers.count).to eq(3)
       handlers.select! { |h| h.kind_of?(ManageIQ::PostgresHaAdmin::LogicalReplicationConfigHandler) }
       expect(handlers.count).to eq(2)
-      expect(%w(sub_id_1 sub_id_2)).to include(handlers.first.subscription)
-      expect(%w(sub_id_1 sub_id_2)).to include(handlers.last.subscription)
+      expect(%w[sub_id_1 sub_id_2]).to include(handlers.first.subscription)
+      expect(%w[sub_id_1 sub_id_2]).to include(handlers.last.subscription)
       expect(handlers.first.subscription).not_to eq(handlers.last.subscription)
     end
   end

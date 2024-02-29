@@ -5,7 +5,7 @@ module Authenticator
     end
 
     def self.authenticates_for
-      super + %w(ldaps)
+      super + %w[ldaps]
     end
 
     def self.validate_config(config)

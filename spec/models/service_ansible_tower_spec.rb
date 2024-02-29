@@ -77,8 +77,8 @@ RSpec.describe ServiceAnsibleTower do
         expect(opts).to have_key(:limit)
         expect(opts).to have_key(:extra_vars)
 
-        exposed_miq = %w(api_url api_token service user group X_MIQ_Group request_task request) + control_extras.keys
-        exposed_connection = %w(url token X_MIQ_Group)
+        exposed_miq = %w[api_url api_token service user group X_MIQ_Group request_task request] + control_extras.keys
+        exposed_connection = %w[url token X_MIQ_Group]
         expect(opts[:extra_vars].delete('manageiq').keys).to include(*exposed_miq)
         expect(opts[:extra_vars].delete('manageiq_connection').keys).to include(*exposed_connection)
       end.and_return(double(:raw_job,

@@ -38,7 +38,7 @@ RSpec.describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
 
       expect(customization_template).to eq cloud_init_template.script
       expect(template_hash).to be_a(Hash)
-      %i(id name description).each do |attr|
+      %i[id name description].each do |attr|
         expect(template_hash[attr]).to eq cloud_init_template.send(attr)
       end
     end
@@ -55,7 +55,7 @@ RSpec.describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
 
       expect(customization_template).to eq sysprep_template.script
       expect(template_hash).to be_a(Hash)
-      %i(id name description).each do |attr|
+      %i[id name description].each do |attr|
         expect(template_hash[attr]).to eq sysprep_template.send(attr)
       end
     end

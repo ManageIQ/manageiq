@@ -10,7 +10,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::Provider do
 
   context "DefaultAnsibleObjects concern" do
     context "with no attributes" do
-      %w(organization credential inventory host).each do |obj_name|
+      %w[organization credential inventory host].each do |obj_name|
         it "#default_#{obj_name} returns nil" do
           expect(subject.public_send(:"default_#{obj_name}")).to be_nil
         end
@@ -24,12 +24,12 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::Provider do
 
     context "with attributes saved" do
       before do
-        %w(organization credential inventory host).each do |obj_name|
+        %w[organization credential inventory host].each do |obj_name|
           subject.default_ansible_objects.create(:name => obj_name, :value => obj_name.length)
         end
       end
 
-      %w(organization credential inventory host).each do |obj_name|
+      %w[organization credential inventory host].each do |obj_name|
         it "#default_#{obj_name} returns the saved value" do
           expect(subject.public_send(:"default_#{obj_name}")).to eq(obj_name.length)
         end

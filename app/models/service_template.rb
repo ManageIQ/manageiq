@@ -219,7 +219,7 @@ class ServiceTemplate < ApplicationRecord
     nh['visible'] = nh.delete('display') if nh.key?('display')
 
     nh['options'][:dialog] = service_task.options[:dialog]
-    (nh.keys - Service.column_names + %w(created_at guid service_template_id updated_at id type prov_type)).each { |key| nh.delete(key) }
+    (nh.keys - Service.column_names + %w[created_at guid service_template_id updated_at id type prov_type]).each { |key| nh.delete(key) }
 
     # Hide child services by default
     nh['visible'] = false if parent_svc
@@ -238,7 +238,7 @@ class ServiceTemplate < ApplicationRecord
 
       service_resources.each do |sr|
         nh = sr.attributes.dup
-        %w(id created_at updated_at service_template_id).each { |key| nh.delete(key) }
+        %w[id created_at updated_at service_template_id].each { |key| nh.delete(key) }
         svc.add_resource(sr.resource, nh) unless sr.resource.nil?
       end
     end
@@ -289,7 +289,7 @@ class ServiceTemplate < ApplicationRecord
       scaling_min = child_svc_rsc.scaling_min
       1.upto(scaling_min).each do |scaling_idx|
         nh = parent_service_task.attributes.dup
-        %w(id created_on updated_on type state status message).each { |key| nh.delete(key) }
+        %w[id created_on updated_on type state status message].each { |key| nh.delete(key) }
         nh['options'] = parent_service_task.options.dup
         nh['options'].delete(:child_tasks)
         # Initial Options[:dialog] to an empty hash so we do not pass down dialog values to child services tasks

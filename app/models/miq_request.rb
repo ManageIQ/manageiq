@@ -1,8 +1,8 @@
 class MiqRequest < ApplicationRecord
   extend InterRegionApiMethodRelay
 
-  ACTIVE_STATES = %w(active queued)
-  REQUEST_UNIQUE_KEYS = %w(id state status created_on updated_on type).freeze
+  ACTIVE_STATES = %w[active queued]
+  REQUEST_UNIQUE_KEYS = %w[id state status created_on updated_on type].freeze
 
   CANCEL_STATUS_REQUESTED  = "cancel_requested".freeze
   CANCEL_STATUS_PROCESSING = "canceling".freeze
@@ -30,8 +30,8 @@ class MiqRequest < ApplicationRecord
   attribute :status,  :default => 'Ok'
   attribute :process, :default => true
 
-  validates :approval_state, :inclusion => { :in => %w(pending_approval approved denied), :message => "should be 'pending_approval', 'approved' or 'denied'" }
-  validates :status,         :inclusion => { :in => %w(Ok Warn Error Timeout Denied) }
+  validates :approval_state, :inclusion => { :in => %w[pending_approval approved denied], :message => "should be 'pending_approval', 'approved' or 'denied'" }
+  validates :status,         :inclusion => { :in => %w[Ok Warn Error Timeout Denied] }
 
   validates :initiated_by, :inclusion => {:in => %w[user system]}, :allow_blank => true
   validates :cancelation_status, :inclusion => {:in        => CANCEL_STATUS,
@@ -474,7 +474,7 @@ class MiqRequest < ApplicationRecord
       post_create_request_tasks
     rescue
       _log.log_backtrace($ERROR_INFO) # TODO: Add to Request Logs
-      request_state, status = request_task_created.zero? ? %w(finished Error) : %w(active Warn)
+      request_state, status = request_task_created.zero? ? %w[finished Error] : %w[active Warn]
       update(:request_state => request_state, :status => status, :message => "Error: #{$ERROR_INFO}")
     end
   end

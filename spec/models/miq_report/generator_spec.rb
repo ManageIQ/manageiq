@@ -147,31 +147,31 @@ RSpec.describe MiqReport::Generator do
 
   describe "#cols_for_report" do
     it "uses cols" do
-      rpt = MiqReport.new(:db => "VmOrTemplate", :cols => %w(vendor version name))
-      expect(rpt.cols_for_report).to eq(%w(vendor version name))
+      rpt = MiqReport.new(:db => "VmOrTemplate", :cols => %w[vendor version name])
+      expect(rpt.cols_for_report).to eq(%w[vendor version name])
     end
 
     it "uses include" do
-      rpt = MiqReport.new(:db => "VmOrTemplate", :include => {"host" => {"columns" => %w(name hostname guid)}})
-      expect(rpt.cols_for_report).to eq(%w(host.name host.hostname host.guid))
+      rpt = MiqReport.new(:db => "VmOrTemplate", :include => {"host" => {"columns" => %w[name hostname guid]}})
+      expect(rpt.cols_for_report).to eq(%w[host.name host.hostname host.guid])
     end
 
     it "uses extra_cols" do
       rpt = MiqReport.new(:db => "VmOrTemplate")
-      expect(rpt.cols_for_report(%w(vendor))).to eq(%w(vendor))
+      expect(rpt.cols_for_report(%w[vendor])).to eq(%w[vendor])
     end
 
     it "derives include" do
-      rpt = MiqReport.new(:db => "VmOrTemplate", :cols => %w(vendor), :col_order => %w(host.name vendor))
-      expect(rpt.cols_for_report).to match_array(%w(vendor host.name))
+      rpt = MiqReport.new(:db => "VmOrTemplate", :cols => %w[vendor], :col_order => %w[host.name vendor])
+      expect(rpt.cols_for_report).to match_array(%w[vendor host.name])
     end
 
     it "works with col, col_order and include together" do
       rpt = MiqReport.new(:db        => "VmOrTemplate",
-                          :cols      => %w(vendor),
-                          :col_order => %w(host.name host.hostname vendor),
-                          :include   => {"host" => {"columns" => %w(name hostname)}})
-      expect(rpt.cols_for_report).to match_array(%w(vendor host.name host.hostname))
+                          :cols      => %w[vendor],
+                          :col_order => %w[host.name host.hostname vendor],
+                          :include   => {"host" => {"columns" => %w[name hostname]}})
+      expect(rpt.cols_for_report).to match_array(%w[vendor host.name host.hostname])
     end
   end
 
@@ -184,20 +184,20 @@ RSpec.describe MiqReport::Generator do
 
     it "includes virtual_includes from virtual_attributes that are not sql friendly" do
       rpt = MiqReport.new(:db   => "VmOrTemplate",
-                          :cols => %w(name platform))
+                          :cols => %w[name platform])
       expect(rpt.get_include_for_find).to eq(:platform => {})
     end
 
     it "does not include sql friendly virtual_attributes" do
       rpt = MiqReport.new(:db   => "VmOrTemplate",
-                          :cols => %w(name v_total_snapshots))
+                          :cols => %w[name v_total_snapshots])
       expect(rpt.get_include_for_find).to be_nil
     end
 
     it "uses include and include_as_hash" do
       rpt = MiqReport.new(:db               => "VmOrTemplate",
-                          :cols             => %w(name platform),
-                          :include          => {:host => {:columns => %w(name)}, :storage => {:columns => %w(name)}},
+                          :cols             => %w[name platform],
+                          :include          => {:host => {:columns => %w[name]}, :storage => {:columns => %w[name]}},
                           :include_for_find => {:snapshots => {}})
       expect(rpt.get_include_for_find).to eq(:platform => {}, :host => {}, :storage => {}, :snapshots => {})
     end
@@ -207,7 +207,7 @@ RSpec.describe MiqReport::Generator do
       rpt = MiqReport.new(:db               => "VmOrTemplate",
                           :include          => {},
                           :cols             => %w[name v_datastore_path],
-                          :col_order        => %w(name host.name storage.name),
+                          :col_order        => %w[name host.name storage.name],
                           :include_for_find => {:snapshots => {}})
       expect(rpt.get_include_for_find).to eq(:v_datastore_path => {}, :host => {}, :storage => {}, :snapshots => {})
     end

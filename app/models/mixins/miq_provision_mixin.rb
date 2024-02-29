@@ -193,7 +193,7 @@ module MiqProvisionMixin
       custom_spec_name = custom_spec_name.name unless custom_spec_name.kind_of?(String)
       options = self.options.dup
       workflow do |prov_wf|
-        options[:sysprep_enabled] = %w(fields Specification)
+        options[:sysprep_enabled] = %w[fields Specification]
         prov_wf.init_from_dialog(options)
         prov_wf.get_all_dialogs
         prov_wf.allowed_customization_specs

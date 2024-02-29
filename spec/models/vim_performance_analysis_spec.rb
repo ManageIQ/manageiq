@@ -41,7 +41,7 @@ RSpec.describe VimPerformanceAnalysis do
       ems_cluster
       expect(MetricRollup.count).to be > 0
 
-      cols = %i(id name project provider_id)
+      cols = %i[id name project provider_id]
       # :conditions => ["resource_type = ? and tag_names like ?", tag_klass, "%#{cat}/#{tag}%"]
       options = {:end_date => DateTime.current, :days => 30, :ext_options => {:time_profile => time_profile}}
 

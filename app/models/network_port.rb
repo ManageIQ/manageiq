@@ -51,8 +51,8 @@ class NetworkPort < ApplicationRecord
   end
 
   # Define all getters and setters for extra_attributes related virtual columns
-  %i(binding_virtual_interface_details binding_virtual_nic_type binding_profile extra_dhcp_opts
-     allowed_address_pairs fixed_ips).each do |action|
+  %i[binding_virtual_interface_details binding_virtual_nic_type binding_profile extra_dhcp_opts
+     allowed_address_pairs fixed_ips].each do |action|
     define_method(:"#{action}=") do |value|
      extra_attributes_save(action, value)
    end

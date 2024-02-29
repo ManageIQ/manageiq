@@ -26,7 +26,7 @@ RSpec.describe FixAuth::Cli do
     end
 
     it "should parse database names" do
-      opts = described_class.new.parse(%w(DB1))
+      opts = described_class.new.parse(%w[DB1])
                             .options.slice(:hostname, :username, :password, :hardcode, :database)
       expect(opts).to eq(
         :username => "root",
@@ -35,7 +35,7 @@ RSpec.describe FixAuth::Cli do
     end
 
     it "should parse hardcoded password" do
-      opts = described_class.new.parse(%w(-P hardcoded))
+      opts = described_class.new.parse(%w[-P hardcoded])
                             .options.slice(:hostname, :username, :password, :hardcode, :database)
       expect(opts).to eq(
         :username => "root",
@@ -45,44 +45,44 @@ RSpec.describe FixAuth::Cli do
     end
 
     it "defaults to updating the database" do
-      opts = described_class.new.parse(%w())
+      opts = described_class.new.parse(%w[])
                             .options.slice(:db, :databaseyml, :key)
       expect(opts).to eq(:db => true)
     end
 
     it "doesnt default to database if running another task" do
-      opts = described_class.new.parse(%w(--databaseyml))
+      opts = described_class.new.parse(%w[--databaseyml])
                             .options.slice(:db, :databaseyml, :key)
       expect(opts).to eq(:databaseyml => true)
     end
 
     it "doesnt default to database if running another task 2" do
-      opts = described_class.new.parse(%w(--key))
+      opts = described_class.new.parse(%w[--key])
                             .options.slice(:db, :databaseyml, :key)
       expect(opts).to eq(:key => true)
     end
 
     it "can run all 3 tasks" do
-      opts = described_class.new.parse(%w(--key --db --databaseyml))
+      opts = described_class.new.parse(%w[--key --db --databaseyml])
                             .options.slice(:db, :databaseyml, :key)
       expect(opts).to eq(:db => true, :databaseyml => true, :key => true)
     end
 
     it "parses legacy_keys" do
-      opts = described_class.new.parse(%w(--legacy-key v2.bak))
+      opts = described_class.new.parse(%w[--legacy-key v2.bak])
                             .options.slice(:legacy_key)
       expect(opts).to eq(:legacy_key => "v2.bak")
     end
 
     it "parses without legacy_keys specified" do
-      opts = described_class.new.parse(%w())
+      opts = described_class.new.parse(%w[])
                             .options.slice(:legacy_key)
       expect(opts[:legacy_key]).not_to be
     end
 
     describe "v2" do
       it "exists" do
-        expect { described_class.new.parse(%w(--v2)) }.not_to raise_error
+        expect { described_class.new.parse(%w[--v2]) }.not_to raise_error
       end
     end
   end

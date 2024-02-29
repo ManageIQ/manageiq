@@ -25,7 +25,7 @@ class DialogField < ApplicationRecord
   alias_attribute :order, :position
 
   validates   :name, :presence => true
-  validates :name, :exclusion => {:in      => %w(action controller),
+  validates :name, :exclusion => {:in      => %w[action controller],
                                   :message => "Field Name %{value} is reserved."}
 
   attribute :required, :default => false
@@ -69,7 +69,7 @@ class DialogField < ApplicationRecord
     "DialogFieldRadioButton"     => N_("Radio Button")
   }
 
-  DIALOG_FIELD_DYNAMIC_CLASSES = %w(
+  DIALOG_FIELD_DYNAMIC_CLASSES = %w[
     DialogFieldCheckBox
     DialogFieldDateControl
     DialogFieldDateTimeControl
@@ -77,7 +77,7 @@ class DialogField < ApplicationRecord
     DialogFieldRadioButton
     DialogFieldTextAreaBox
     DialogFieldTextBox
-  )
+  ]
 
   def self.dialog_field_types
     DIALOG_FIELD_TYPES

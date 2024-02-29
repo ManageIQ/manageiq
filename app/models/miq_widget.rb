@@ -8,7 +8,7 @@ class MiqWidget < ApplicationRecord
   attribute :read_only, :default => false
 
   DEFAULT_ROW_COUNT = 5
-  IMPORT_CLASS_NAMES = %w(MiqWidget).freeze
+  IMPORT_CLASS_NAMES = %w[MiqWidget].freeze
 
   belongs_to :resource, :polymorphic => true
   belongs_to :miq_schedule
@@ -21,7 +21,7 @@ class MiqWidget < ApplicationRecord
 
   validates   :title, :description, :presence => true
   validates :description, :uniqueness_when_changed => true
-  VALID_CONTENT_TYPES = %w(report chart rss menu)
+  VALID_CONTENT_TYPES = %w[report chart rss menu]
   validates :content_type, :inclusion => { :in => VALID_CONTENT_TYPES, :message => "should be one of #{VALID_CONTENT_TYPES.join(", ")}" }
 
   serialize :visibility

@@ -2,7 +2,7 @@ class MiqProvisionConfiguredSystemRequest < MiqRequest
   TASK_DESCRIPTION  = N_('Configured System Provisioning')
   SOURCE_CLASS_NAME = 'ConfiguredSystem'
 
-  validates :request_state, :inclusion => { :in => %w(pending finished) + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished" }
+  validates :request_state, :inclusion => { :in => %w[pending finished] + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished" }
   validate               :must_have_user
 
   def host_name

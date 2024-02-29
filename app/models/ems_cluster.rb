@@ -175,7 +175,7 @@ class EmsCluster < ApplicationRecord
 
   # Parent relationship methods
   def parent_folder
-    detect_ancestor(:of_type => "EmsFolder") { |a| !a.kind_of?(Datacenter) && !%w(host vm).include?(a.name) } # TODO: Fix this to use EmsFolder#hidden?
+    detect_ancestor(:of_type => "EmsFolder") { |a| !a.kind_of?(Datacenter) && !%w[host vm].include?(a.name) } # TODO: Fix this to use EmsFolder#hidden?
   end
 
   def parent_datacenter
@@ -238,7 +238,7 @@ class EmsCluster < ApplicationRecord
 
   def effective_resource(resource)
     resource = resource.to_s
-    unless %w(cpu vcpu memory).include?(resource)
+    unless %w[cpu vcpu memory].include?(resource)
       raise ArgumentError, _("Unknown resource %{name}") % {:name => resource.inspect}
     end
 

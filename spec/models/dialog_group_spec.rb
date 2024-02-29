@@ -55,7 +55,7 @@ RSpec.describe DialogGroup do
         dialog_group.update_dialog_fields(updated_fields)
         dialog_group.reload
         expect(dialog_group.dialog_fields.collect(&:resource_action).collect(&:resource_type))
-          .to match_array(%w(DialogField DialogField))
+          .to match_array(%w[DialogField DialogField])
       end
     end
 

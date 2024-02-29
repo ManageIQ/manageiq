@@ -43,7 +43,7 @@ class MiqExpression
     when "not", "!"
       valid?(component[operator])
     when "find"
-      validate_set = Set.new(%w(checkall checkany checkcount search))
+      validate_set = Set.new(%w[checkall checkany checkcount search])
       validate_keys = component[operator].keys.select { |k| validate_set.include?(k) }
       validate_keys.all? { |k| valid?(component[operator][k]) }
     else
@@ -591,11 +591,11 @@ class MiqExpression
 
     operators = exp.keys
     operators.each do |k|
-      if %w(and or).include?(k.to_s.downcase) # and/or atom is an array of atoms
+      if %w[and or].include?(k.to_s.downcase) # and/or atom is an array of atoms
         exp[k].each do |atom|
           evaluate_atoms(atom, obj)
         end
-      elsif %w(not !).include?(k.to_s.downcase) # not atom is a hash expression
+      elsif %w[not !].include?(k.to_s.downcase) # not atom is a hash expression
         evaluate_atoms(exp[k], obj)
       else
         next
@@ -1258,7 +1258,7 @@ class MiqExpression
       end
       return false
     when :boolean
-      unless operator.downcase.include?("null") || %w(true false).include?(value)
+      unless operator.downcase.include?("null") || %w[true false].include?(value)
         return _("Value must be true or false")
       end
 

@@ -7,10 +7,10 @@ RSpec.describe Vmdb::Settings do
       described_class.walk do |key, value, path, owning|
         expect(owning).to be_kind_of(Config::Options)
 
-        if %i(a d e).include?(key)
+        if %i[a d e].include?(key)
           expect(value).to be_kind_of(Config::Options)
           value = value.to_hash
-        elsif %i(i).include?(key)
+        elsif %i[i].include?(key)
           expect(value).to be_kind_of(Array)
           value.each { |v| expect(v).to be_kind_of(Config::Options) }
           value = value.collect(&:to_hash)

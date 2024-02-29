@@ -19,7 +19,7 @@ module MiqReport::Formatting
     function_name = format[:function][:name]
 
     options = format.merge(format[:function]).slice(
-      *%i(delimiter separator precision length tz column format prefix suffix description unit)
+      *%i[delimiter separator precision length tz column format prefix suffix description unit]
 )
 
     [function_name, options]
@@ -241,7 +241,7 @@ module MiqReport::Formatting
   def format_elapsed_time_human(val, _options)
     val = val.to_i
 
-    names = %w(day hour minute second)
+    names = %w[day hour minute second]
 
     days    = (val / 86400)
     hours   = (val / 3600) - (days * 24)

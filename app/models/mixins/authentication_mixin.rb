@@ -74,7 +74,7 @@ module AuthenticationMixin
   end
 
   def supported_auth_attributes
-    %w(userid password)
+    %w[userid password]
   end
 
   def default_authentication_type

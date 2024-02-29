@@ -274,7 +274,7 @@ RSpec.describe MiqPolicy do
   describe ".built_in_policies" do
     it 'creates built in policies' do
       policy = described_class.built_in_policies[0]
-      %w(name description towhat active mode conditions).each do |m|
+      %w[name description towhat active mode conditions].each do |m|
         expect(policy.send(m)).not_to be_nil
       end
       expect(policy.events).not_to                      be_empty

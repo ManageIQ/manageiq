@@ -177,7 +177,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
 
   def before_ae_starts(_options)
     reload
-    if state.to_s.downcase.in?(%w(pending queued))
+    if state.to_s.downcase.in?(%w[pending queued])
       _log.info("Executing #{request_class::TASK_DESCRIPTION} request: [#{description}]")
       update_and_notify_parent(:state => "active", :status => "Ok", :message => "In Process")
     end

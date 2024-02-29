@@ -42,7 +42,7 @@ RSpec.describe MiqLdap do
     end
   end
 
-  let(:users) { %w(rock@mycompany.com smith@mycompany.com will@mycompany.com john@mycompany.com) }
+  let(:users) { %w[rock@mycompany.com smith@mycompany.com will@mycompany.com john@mycompany.com] }
 
   it "gets user information" do
     if @userid

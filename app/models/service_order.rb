@@ -2,8 +2,8 @@ class ServiceOrder < ApplicationRecord
   STATE_CART    = 'cart'.freeze
   STATE_WISH    = 'wish'.freeze
   STATE_ORDERED = 'ordered'.freeze
-  REQUEST_ATTRIBUTES = %w(id name approval_state request_state message
-                          created_on fulfilled_on updated_on placed_on).freeze
+  REQUEST_ATTRIBUTES = %w[id name approval_state request_state message
+                          created_on fulfilled_on updated_on placed_on].freeze
 
   before_create :assign_user
   after_create  :create_order_name

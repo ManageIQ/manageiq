@@ -1,7 +1,7 @@
 class AuditEvent < ApplicationRecord
   validates :event, :status, :message, :severity, :presence => true
-  validates :status, :inclusion => {:in => %w(success failure)}
-  validates :severity, :inclusion => {:in => %w(fatal error warn info debug)}
+  validates :status, :inclusion => {:in => %w[success failure]}
+  validates :severity, :inclusion => {:in => %w[fatal error warn info debug]}
 
   include Purging
 

@@ -6,15 +6,15 @@ class MetricRollup < ApplicationRecord
   include Metric::Common
   include Metric::ChargebackHelper
 
-  CHARGEBACK_METRIC_FIELDS = %w(derived_vm_numvcpus cpu_usagemhz_rate_average
+  CHARGEBACK_METRIC_FIELDS = %w[derived_vm_numvcpus cpu_usagemhz_rate_average
                                 cpu_usage_rate_average disk_usage_rate_average
                                 derived_memory_available derived_memory_used
                                 net_usage_rate_average derived_vm_used_disk_storage
-                                derived_vm_allocated_disk_storage).freeze
+                                derived_vm_allocated_disk_storage].freeze
 
-  METERING_USED_METRIC_FIELDS = %w(cpu_usagemhz_rate_average derived_memory_used net_usage_rate_average).freeze
+  METERING_USED_METRIC_FIELDS = %w[cpu_usagemhz_rate_average derived_memory_used net_usage_rate_average].freeze
 
-  CAPTURE_INTERVAL_NAMES = %w(hourly daily).freeze
+  CAPTURE_INTERVAL_NAMES = %w[hourly daily].freeze
 
   #
   # min_max column getters

@@ -136,7 +136,7 @@ RSpec.describe(ServiceContainerTemplate) do
 
   describe '#check_completed' do
     it 'created container object ends in VMDB' do
-      allow(stack_status).to receive(:normalized_status).and_return(%w(create_complete completed))
+      allow(stack_status).to receive(:normalized_status).and_return(%w[create_complete completed])
       expect(loaded_service.check_completed(action)).to eq([true, nil])
     end
 

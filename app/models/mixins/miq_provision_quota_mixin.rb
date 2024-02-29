@@ -279,8 +279,8 @@ module MiqProvisionQuotaMixin
   def quota_find_active_prov_request(_options)
     MiqRequest.where(
       :approval_state => 'approved',
-      :type           => %w(MiqProvisionRequest ServiceTemplateProvisionRequest),
-      :request_state  => %w(active queued pending),
+      :type           => %w[MiqProvisionRequest ServiceTemplateProvisionRequest],
+      :request_state  => %w[active queued pending],
       :status         => 'Ok',
       :process        => true
     ).where.not(:id => id)
@@ -398,6 +398,6 @@ module MiqProvisionQuotaMixin
 
     request = prov.kind_of?(MiqRequest) ? prov : prov.miq_request
     memory = request.get_option(:vm_memory).to_i
-    %w(amazon openstack google).include?(vendor) ? memory : memory.megabytes
+    %w[amazon openstack google].include?(vendor) ? memory : memory.megabytes
   end
 end

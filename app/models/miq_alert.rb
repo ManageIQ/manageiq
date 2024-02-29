@@ -18,7 +18,7 @@ class MiqAlert < ApplicationRecord
 
   attr_accessor :reserved
 
-  BASE_TABLES = %w(
+  BASE_TABLES = %w[
     Vm
     Host
     Storage
@@ -28,7 +28,7 @@ class MiqAlert < ApplicationRecord
     ContainerNode
     ContainerProject
     PhysicalServer
-  )
+  ]
 
   def self.base_tables
     BASE_TABLES
@@ -36,7 +36,7 @@ class MiqAlert < ApplicationRecord
 
   acts_as_miq_set_member
 
-  ASSIGNMENT_PARENT_ASSOCIATIONS = %i(host ems_cluster ext_management_system my_enterprise physical_server).freeze
+  ASSIGNMENT_PARENT_ASSOCIATIONS = %i[host ems_cluster ext_management_system my_enterprise physical_server].freeze
 
   HOURLY_TIMER_EVENT = "_hourly_timer_"
 
@@ -545,7 +545,7 @@ class MiqAlert < ApplicationRecord
 
   def self.raw_events
     @raw_events ||= expression_by_name("event_threshold")[:options].find { |h| h[:name] == :event_types }[:values] +
-                    %w(datawarehouse_alert)
+                    %w[datawarehouse_alert]
   end
 
   def self.event_alertable?(event)

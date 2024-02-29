@@ -37,10 +37,10 @@ module TaskHelpers
       private
 
       # Tag Categories that are not visible in the UI and should not be imported
-      SPECIAL_TAGS = %w(/managed/folder_path_yellow /managed/folder_path_blue /managed/user/role).freeze
+      SPECIAL_TAGS = %w[/managed/folder_path_yellow /managed/folder_path_blue /managed/user/role].freeze
 
-      UPDATE_CAT_FIELDS = %w(description example_text show perf_by_tag).freeze
-      UPDATE_ENTRY_FIELDS = %w(description name).freeze
+      UPDATE_CAT_FIELDS = %w[description example_text show perf_by_tag].freeze
+      UPDATE_ENTRY_FIELDS = %w[description name].freeze
 
       REGION_NUMBER = MiqRegion.my_region_number.freeze
 

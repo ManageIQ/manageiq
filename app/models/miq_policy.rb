@@ -3,7 +3,7 @@
 class MiqPolicy < ApplicationRecord
   include ReadOnlyMixin
 
-  TOWHAT_APPLIES_TO_CLASSES = %w(ContainerGroup
+  TOWHAT_APPLIES_TO_CLASSES = %w[ContainerGroup
                                  ContainerImage
                                  ContainerNode
                                  ContainerProject
@@ -11,7 +11,7 @@ class MiqPolicy < ApplicationRecord
                                  ExtManagementSystem
                                  Host
                                  PhysicalServer
-                                 Vm).freeze
+                                 Vm].freeze
 
   CONDITION_SUCCESS = N_("Success")
   CONDITION_FAILURE = N_("Failure")
@@ -54,7 +54,7 @@ class MiqPolicy < ApplicationRecord
 
   validates :description, :presence => true, :uniqueness_when_changed => true
   validates :name, :presence => true, :uniqueness_when_changed => true
-  validates :mode, :inclusion => {:in => %w(compliance control)}
+  validates :mode, :inclusion => {:in => %w[compliance control]}
   validates :towhat, :inclusion => {:in      => TOWHAT_APPLIES_TO_CLASSES,
                                      :message => "should be one of #{TOWHAT_APPLIES_TO_CLASSES.join(", ")}"}
 
@@ -105,7 +105,7 @@ class MiqPolicy < ApplicationRecord
     @@built_in_policies.dup
   end
 
-  CLEAN_ATTRS = %w(id guid name created_on updated_on miq_policy_id description)
+  CLEAN_ATTRS = %w[id guid name created_on updated_on miq_policy_id description]
   def self.clean_attrs(attrs)
     CLEAN_ATTRS.each { |a| attrs.delete(a) }
     attrs

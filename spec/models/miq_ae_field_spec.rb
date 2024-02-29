@@ -192,7 +192,7 @@ RSpec.describe MiqAeField do
       @c1.ae_fields.destroy_all
       expect(@c1.reload.ae_fields.length).to eq(0)
 
-      %w(foo bar).each do |datatype|
+      %w[foo bar].each do |datatype|
         f = @c1.ae_fields.build(:name => "fname_#{datatype}", :aetype => "attribute", :datatype => datatype)
         expect(f).not_to be_valid
       end

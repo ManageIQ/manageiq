@@ -48,7 +48,7 @@ RSpec.describe MiqUserRole do
 
   context "testing allows methods" do
     before do
-      EvmSpecHelper.seed_specific_product_features(%w(
+      EvmSpecHelper.seed_specific_product_features(%w[
                                                      dashboard_add
         dashboard_view
         host_compare
@@ -59,7 +59,7 @@ RSpec.describe MiqUserRole do
         vm
         dialog_edit_editor
         rbac_tenant_manage_quotas
-                                                   ))
+                                                   ])
 
       feature1 = MiqProductFeature.find_all_by_identifier("dashboard_admin")
       @role1   = FactoryBot.create(:miq_user_role, :name => "Role1", :miq_product_features => feature1)
@@ -71,7 +71,7 @@ RSpec.describe MiqUserRole do
       @group2  = FactoryBot.create(:miq_group, :description => "Group2", :miq_user_role => @role2)
       @user2   = FactoryBot.create(:user, :userid => "user2", :miq_groups => [@group2])
 
-      feature3 = MiqProductFeature.find_all_by_identifier(%w(host_show_list host_scan host_edit))
+      feature3 = MiqProductFeature.find_all_by_identifier(%w[host_show_list host_scan host_edit])
       @role3   = FactoryBot.create(:miq_user_role, :name => "Role3", :miq_product_features => feature3)
       @group3  = FactoryBot.create(:miq_group, :description => "Group3", :miq_user_role => @role3)
       @user3   = FactoryBot.create(:user, :userid => "user3", :miq_groups => [@group3])
@@ -135,8 +135,8 @@ RSpec.describe MiqUserRole do
     end
 
     it "should return the correct answer calling allows_any? with default scope => :sub" do
-      expect(@role1.allows_any?(:identifiers => %w(dashboard_admin dashboard_add dashboard_view miq_policy))).to eq(true)
-      expect(@role2.allows_any?(:identifiers => %w(dashboard_admin dashboard_add dashboard_view miq_policy))).to eq(true)
+      expect(@role1.allows_any?(:identifiers => %w[dashboard_admin dashboard_add dashboard_view miq_policy])).to eq(true)
+      expect(@role2.allows_any?(:identifiers => %w[dashboard_admin dashboard_add dashboard_view miq_policy])).to eq(true)
       expect(@role3.allows_any?(:identifiers => ["host_view"])).to eq(true)
       expect(@role3.allows_any?(:identifiers => ["vm"])).to eq(false)
       expect(@role3.allows_any?(:identifiers => ["everything"])).to eq(true)
@@ -145,19 +145,19 @@ RSpec.describe MiqUserRole do
 
   describe "#allow?" do
     it "allows everything" do
-      EvmSpecHelper.seed_specific_product_features(%w(everything miq_report))
+      EvmSpecHelper.seed_specific_product_features(%w[everything miq_report])
       user = FactoryBot.create(:user, :features => "everything")
       expect(user.role_allows?(:identifier => "miq_report")).to be_truthy
     end
 
     it "dissallows unentitled" do
-      EvmSpecHelper.seed_specific_product_features(%w(miq_report container_dashboard))
+      EvmSpecHelper.seed_specific_product_features(%w[miq_report container_dashboard])
       user = FactoryBot.create(:user, :features => "container_dashboard")
       expect(user.role_allows?(:identifier => "miq_report")).to be_falsey
     end
 
     it "allows entitled" do
-      EvmSpecHelper.seed_specific_product_features(%w(miq_report))
+      EvmSpecHelper.seed_specific_product_features(%w[miq_report])
       user = FactoryBot.create(:user, :features => "miq_report")
       expect(user.role_allows?(:identifier => "miq_report")).to be_truthy
     end
@@ -167,13 +167,13 @@ RSpec.describe MiqUserRole do
     #   - render_report_csv (H)
 
     it "disallows hidden child with not-entitled parent" do
-      EvmSpecHelper.seed_specific_product_features(%w(miq_report_view render_report_csv container_dashboard))
+      EvmSpecHelper.seed_specific_product_features(%w[miq_report_view render_report_csv container_dashboard])
       user = FactoryBot.create(:user, :features => "container_dashboard")
       expect(user.role_allows?(:identifier => "render_report_csv")).to be_falsey
     end
 
     it "allows hidden child with entitled parent" do
-      EvmSpecHelper.seed_specific_product_features(%w(miq_report_view render_report_csv))
+      EvmSpecHelper.seed_specific_product_features(%w[miq_report_view render_report_csv])
       user = FactoryBot.create(:user, :features => "miq_report_view")
       expect(user.role_allows?(:identifier => "render_report_csv")).to be_truthy
     end
@@ -186,7 +186,7 @@ RSpec.describe MiqUserRole do
 
     it "allows hidden child of not entitled, if a sibling is entitled" do
       EvmSpecHelper.seed_specific_product_features(
-        %w(miq_report_widget_admin widget_refresh widget_edit widget_copy container_dashboard)
+        %w[miq_report_widget_admin widget_refresh widget_edit widget_copy container_dashboard]
       )
       user = FactoryBot.create(:user, :features => "widget_edit")
       expect(user.role_allows?(:identifier => "widget_refresh")).to be_truthy
@@ -194,7 +194,7 @@ RSpec.describe MiqUserRole do
 
     it "disallows hidden child of not entitled, if no sibling is entitled" do
       EvmSpecHelper.seed_specific_product_features(
-        %w(miq_report_widget_admin widget_refresh widget_edit widget_copy container_dashboard)
+        %w[miq_report_widget_admin widget_refresh widget_edit widget_copy container_dashboard]
       )
       user = FactoryBot.create(:user, :features => "container_dashboard")
       expect(user.role_allows?(:identifier => "widget_refresh")).to be_falsey
@@ -205,7 +205,7 @@ RSpec.describe MiqUserRole do
     #   - profile_new (H)
     it "allows hidden child of hidden parent" do
       EvmSpecHelper.seed_specific_product_features(
-        %w(miq_ae_class_explorer miq_ae_namespace_new container_dashboard)
+        %w[miq_ae_class_explorer miq_ae_namespace_new container_dashboard]
       )
       user = FactoryBot.create(:user, :features => "container_dashboard")
       expect(user.role_allows?(:identifier => "miq_ae_namespace_new")).to be_truthy
@@ -340,7 +340,7 @@ RSpec.describe MiqUserRole do
   describe ".with_roles_excluding" do
     it "handles multiple columns" do
       a = FactoryBot.create(:miq_user_role, :features => "good")
-      FactoryBot.create(:miq_user_role, :features => %w(good everything))
+      FactoryBot.create(:miq_user_role, :features => %w[good everything])
       FactoryBot.create(:miq_user_role, :features => "everything")
 
       expect(MiqUserRole.select(:id, :name).with_roles_excluding("everything")).to match_array([a])

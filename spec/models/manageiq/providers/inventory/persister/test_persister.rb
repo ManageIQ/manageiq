@@ -2,11 +2,11 @@ class TestPersister < ManageIQ::Providers::Inventory::Persister
   def initialize_inventory_collections
     ######### Cloud ##########
     # Top level models with direct references for Cloud
-    %i(vms
-       miq_templates).each do |name|
+    %i[vms
+       miq_templates].each do |name|
       add_collection(cloud, name, {}, {:without_sti => true}) do |builder|
         builder.add_properties(
-          :secondary_refs => {:by_name => [:name], :by_uid_ems_and_name => %i(uid_ems name)}
+          :secondary_refs => {:by_name => [:name], :by_uid_ems_and_name => %i[uid_ems name]}
         )
       end
     end
@@ -14,7 +14,7 @@ class TestPersister < ManageIQ::Providers::Inventory::Persister
     add_auth_key_pairs
 
     # Child models with references in the Parent InventoryCollections for Cloud
-    %i(availability_zones
+    %i[availability_zones
        hardwares
        networks
        disks
@@ -22,7 +22,7 @@ class TestPersister < ManageIQ::Providers::Inventory::Persister
        orchestration_stacks
        orchestration_templates
        orchestration_stacks_outputs
-       orchestration_stacks_parameters).each do |name|
+       orchestration_stacks_parameters].each do |name|
       add_collection(cloud, name, {}, {:without_sti => true})
     end
 
@@ -30,10 +30,10 @@ class TestPersister < ManageIQ::Providers::Inventory::Persister
 
     ######### Network ################
     # Top level models with direct references for Network
-    %i(cloud_networks
+    %i[cloud_networks
        cloud_subnets
        security_groups
-       load_balancers).each do |name|
+       load_balancers].each do |name|
       add_collection(network, name, {}, {:without_sti => true}) do |builder|
         builder.add_properties(:parent => manager.network_manager)
       end
@@ -44,7 +44,7 @@ class TestPersister < ManageIQ::Providers::Inventory::Persister
     add_floating_ips
 
     # Child models with references in the Parent InventoryCollections for Network
-    %i(firewall_rules
+    %i[firewall_rules
        cloud_subnet_network_ports
        load_balancer_pools
        load_balancer_pool_members
@@ -52,7 +52,7 @@ class TestPersister < ManageIQ::Providers::Inventory::Persister
        load_balancer_listeners
        load_balancer_listener_pools
        load_balancer_health_checks
-       load_balancer_health_check_members).each do |name|
+       load_balancer_health_check_members].each do |name|
       add_collection(network, name, {}, {:without_sti => true}) do |builder|
         builder.add_properties(:parent => manager.network_manager)
       end
@@ -62,8 +62,8 @@ class TestPersister < ManageIQ::Providers::Inventory::Persister
     add_flavors
 
     ######## Custom processing of Ancestry ##########
-    %i(vm_and_miq_template_ancestry
-       orchestration_stack_ancestry).each do |name|
+    %i[vm_and_miq_template_ancestry
+       orchestration_stack_ancestry].each do |name|
       add_collection(cloud, name, {}, {:without_model_class => true})
     end
   end
@@ -81,7 +81,7 @@ class TestPersister < ManageIQ::Providers::Inventory::Persister
   # Cloud InventoryCollection
   def add_orchestration_stacks_resources
     add_collection(cloud, :orchestration_stacks_resources) do |builder|
-      builder.add_properties(:secondary_refs => {:by_stack_and_ems_ref => %i(stack ems_ref)})
+      builder.add_properties(:secondary_refs => {:by_stack_and_ems_ref => %i[stack ems_ref]})
     end
   end
 
@@ -98,7 +98,7 @@ class TestPersister < ManageIQ::Providers::Inventory::Persister
       builder.add_properties(
         :manager_uuids  => references(:vms) + references(:network_ports) + references(:load_balancers),
         :parent         => manager.network_manager,
-        :secondary_refs => {:by_device => [:device], :by_device_and_name => %i(device name)}
+        :secondary_refs => {:by_device => [:device], :by_device_and_name => %i[device name]}
       )
     end
   end

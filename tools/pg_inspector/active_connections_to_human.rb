@@ -77,11 +77,11 @@ module PgInspector
 
     def filter_activity_for_server(activity)
       activity.select do |k, _v|
-        %w(server_id
+        %w[server_id
            name
            pid
            zone_id
-           zone_name)
+           zone_name]
           .include?(k)
       end
     end
@@ -98,10 +98,10 @@ module PgInspector
 
     def filter_activity_for_worker(activity)
       activity.select do |k, _v|
-        %w(worker_id
+        %w[worker_id
            server_id
            class_name
-           pid)
+           pid]
           .include?(k)
       end
     end
@@ -113,7 +113,7 @@ module PgInspector
 
     def filter_activity_for_connection(activity)
       activity.select do |k, _v|
-        %w(worker_id
+        %w[worker_id
            server_id
            datid
            datname
@@ -129,7 +129,7 @@ module PgInspector
            state
            backend_xid
            backend_xmin
-           query)
+           query]
           .include?(k)
       end
     end
@@ -238,9 +238,9 @@ module PgInspector
     def process_miq_server(server)
       server["server_id"] = server["id"].to_i
       server.select do |k, _v|
-        %w(server_id
+        %w[server_id
            hostname
-           ipaddress)
+           ipaddress]
           .include?(k)
       end
     end

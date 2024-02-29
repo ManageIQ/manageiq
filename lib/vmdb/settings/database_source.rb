@@ -57,7 +57,7 @@ module Vmdb
 
       private
 
-      SETTINGS_HIERARCHY = %w(MiqRegion Zone MiqServer).freeze
+      SETTINGS_HIERARCHY = %w[MiqRegion Zone MiqServer].freeze
 
       def settings_holder
         resource = self.resource

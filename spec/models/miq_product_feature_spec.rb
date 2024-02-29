@@ -24,7 +24,7 @@ RSpec.describe MiqProductFeature do
   #     - widget_refresh (H)
   let(:hierarchical_features) do
     EvmSpecHelper.seed_specific_product_features(
-      %w(miq_report_widget_editor miq_report_widget_admin widget_refresh widget_edit widget_copy container_dashboard)
+      %w[miq_report_widget_editor miq_report_widget_admin widget_refresh widget_edit widget_copy container_dashboard]
     )
   end
 
@@ -141,7 +141,7 @@ RSpec.describe MiqProductFeature do
       it "creates/updates/deletes records" do
         MiqProductFeature.seed_features
 
-        expect(MiqProductFeature.pluck(:identifier)).to match_array %w(everything dialog_new_editor dialog_edit_editor policy_edit_editor)
+        expect(MiqProductFeature.pluck(:identifier)).to match_array %w[everything dialog_new_editor dialog_edit_editor policy_edit_editor]
       end
     end
 
@@ -298,18 +298,18 @@ RSpec.describe MiqProductFeature do
     it "returns only visible features" do
       hierarchical_features
       expect(MiqProductFeature).not_to receive(:sort_children)
-      expect(MiqProductFeature.feature_children("miq_report_widget_admin", false)).to match_array(%w(widget_copy widget_edit))
+      expect(MiqProductFeature.feature_children("miq_report_widget_admin", false)).to match_array(%w[widget_copy widget_edit])
     end
 
     it "returns direct children only" do
       hierarchical_features
-      expect(MiqProductFeature.feature_children("miq_report_widget_editor")).to match_array(%w(miq_report_widget_admin))
+      expect(MiqProductFeature.feature_children("miq_report_widget_editor")).to match_array(%w[miq_report_widget_admin])
     end
 
     it "sorts features" do
       hierarchical_features
       expect(MiqProductFeature).to receive(:sort_children).and_call_original
-      expect(MiqProductFeature.feature_children("miq_report_widget_admin")).to match_array(%w(widget_copy widget_edit))
+      expect(MiqProductFeature.feature_children("miq_report_widget_admin")).to match_array(%w[widget_copy widget_edit])
     end
   end
 
@@ -318,7 +318,7 @@ RSpec.describe MiqProductFeature do
       hierarchical_features
       expect(MiqProductFeature).not_to receive(:sort_children)
       expect(MiqProductFeature.feature_all_children("miq_report_widget_editor", false)).to match_array(
-        %w(widget_copy widget_edit miq_report_widget_admin)
+        %w[widget_copy widget_edit miq_report_widget_admin]
 )
     end
 
@@ -326,7 +326,7 @@ RSpec.describe MiqProductFeature do
       hierarchical_features
       expect(MiqProductFeature).to receive(:sort_children).and_call_original
       expect(MiqProductFeature.feature_all_children("miq_report_widget_editor")).to eq(
-        %w(widget_copy widget_edit miq_report_widget_admin)
+        %w[widget_copy widget_edit miq_report_widget_admin]
 )
     end
   end
@@ -375,9 +375,9 @@ RSpec.describe MiqProductFeature do
       expect { MiqProductFeature.features }.to_not make_database_queries
 
       expect(MiqProductFeature.feature_root).to eq("f1")
-      expect(MiqProductFeature.feature_children("f1")).to match_array(%w(f2 f3))
+      expect(MiqProductFeature.feature_children("f1")).to match_array(%w[f2 f3])
       expect(MiqProductFeature.feature_children("f2")).to match_array([])
-      expect(MiqProductFeature.feature_children("f3")).to match_array(%w(f4 f5))
+      expect(MiqProductFeature.feature_children("f3")).to match_array(%w[f4 f5])
 
       expect(MiqProductFeature.feature_parent("f1")).to be_nil
       expect(MiqProductFeature.feature_parent("f2")).to eq("f1")

@@ -10,7 +10,7 @@ describe NetworkVisibilityService do
       it "adds the network values to the edit values" do
         expect(subject.determine_visibility(sysprep_enabled, supports_pxe, supports_iso, addr_mode)).to eq(
           :hide => [],
-          :edit => %i(addr_mode dns_suffixes dns_servers ip_addr subnet_mask gateway)
+          :edit => %i[addr_mode dns_suffixes dns_servers ip_addr subnet_mask gateway]
         )
       end
     end
@@ -45,8 +45,8 @@ describe NetworkVisibilityService do
 
             it "adds the correct values to the edit and hide values" do
               expect(subject.determine_visibility(sysprep_enabled, supports_pxe, supports_iso, addr_mode)).to eq(
-                :hide => %i(ip_addr subnet_mask gateway),
-                :edit => %i(addr_mode dns_suffixes dns_servers)
+                :hide => %i[ip_addr subnet_mask gateway],
+                :edit => %i[addr_mode dns_suffixes dns_servers]
               )
             end
           end
@@ -119,7 +119,7 @@ describe NetworkVisibilityService do
 
           it "adds the correct values to the hide values" do
             expect(subject.determine_visibility(sysprep_enabled, supports_pxe, supports_iso, addr_mode)).to eq(
-              :hide => %i(addr_mode ip_addr subnet_mask gateway dns_servers dns_suffixes),
+              :hide => %i[addr_mode ip_addr subnet_mask gateway dns_servers dns_suffixes],
               :edit => []
             )
           end

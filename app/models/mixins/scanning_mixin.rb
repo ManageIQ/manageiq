@@ -15,7 +15,7 @@ module ScanningMixin
     end
 
     def default_scan_categories
-      %w(vmconfig accounts software services system profiles)
+      %w[vmconfig accounts software services system profiles]
     end
 
     # Stash metadata before sync.

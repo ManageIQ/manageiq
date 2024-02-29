@@ -200,7 +200,7 @@ RSpec.describe ServiceTemplateOrchestration do
       expect(updated.config_info).to eq(updated_catalog_item_options[:config_info])
       expect(updated.orchestration_template).to eq(new_template)
       expect(updated.orchestration_manager).to eq(new_manager)
-      expect(updated.resource_actions.pluck(:action)).to match_array(%w(Provision Reconfigure))
+      expect(updated.resource_actions.pluck(:action)).to match_array(%w[Provision Reconfigure])
     end
 
     it 'requires both template and manager id' do

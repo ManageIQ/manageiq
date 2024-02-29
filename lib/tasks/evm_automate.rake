@@ -1,5 +1,5 @@
 module EvmAutomate
-  $:.push File.expand_path(Rails.root.join(%w{.. lib util xml}).to_s)
+  $:.push File.expand_path(Rails.root.join(%w[.. lib util xml]).to_s)
 
   def self.log(level, msg)
     $log.send(level, msg)
@@ -135,7 +135,7 @@ namespace :evm do
         end
 
         preview        = ENV['PREVIEW'] ||= 'true'
-        raise 'Preview must be true or false' unless %w{true false}.include?(preview)
+        raise 'Preview must be true or false' unless %w[true false].include?(preview)
 
         mode           = ENV['MODE'] ||= 'add'
         import_as      = ENV.fetch('IMPORT_AS', nil)
@@ -166,9 +166,9 @@ namespace :evm do
           import_options['ref_type'] = ENV['REF_TYPE'] || MiqAeGitImport::BRANCH
           import_options['verify_ssl'] = ENV['VERIFY_SSL'] || OpenSSL::SSL::VERIFY_PEER
         end
-        %w(SYSTEM ENABLED).each do |name|
+        %w[SYSTEM ENABLED].each do |name|
           next unless ENV[name].present?
-          raise "#{name} must be true or false" unless %w(true false).include?(ENV[name])
+          raise "#{name} must be true or false" unless %w[true false].include?(ENV[name])
 
           import_options[name.downcase] = ENV[name]
         end

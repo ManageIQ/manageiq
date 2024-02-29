@@ -397,7 +397,7 @@ class Classification < ApplicationRecord
   end
 
   def export_to_array
-    h = attributes.except(*%w(id tag_id reserved parent_id))
+    h = attributes.except(*%w[id tag_id reserved parent_id])
     h["name"] = name
     h["entries"] = entries.collect(&:export_to_array).flatten if category?
     [h]

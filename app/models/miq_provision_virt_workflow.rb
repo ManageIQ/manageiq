@@ -632,17 +632,17 @@ end
     spec      = cs_data[:spec]
     dialog    = @dialogs.fetch_path(:dialogs, :customize)
 
-    collect_customization_spec_settings(spec, spec_hash, %w(identity guiUnattended),
+    collect_customization_spec_settings(spec, spec_hash, %w[identity guiUnattended],
                                         [:sysprep_timezone, 'timeZone', :sysprep_auto_logon, 'autoLogon', :sysprep_auto_logon_count, 'autoLogonCount'])
 
-    collect_customization_spec_settings(spec, spec_hash, %w(identity identification),
+    collect_customization_spec_settings(spec, spec_hash, %w[identity identification],
                                         [:sysprep_domain_name, 'joinDomain', :sysprep_domain_admin, 'domainAdmin', :sysprep_workgroup_name, 'joinWorkgroup'])
 
     # PATH:[identity][userData][computerName][name] (VimString) = "VI25Test"
-    collect_customization_spec_settings(spec, spec_hash, %w(identity userData),
+    collect_customization_spec_settings(spec, spec_hash, %w[identity userData],
                                         [:sysprep_organization, 'orgName', :sysprep_full_name, 'fullName', :sysprep_product_id, 'productId'])
 
-    collect_customization_spec_settings(spec, spec_hash, %w(identity licenseFilePrintData),
+    collect_customization_spec_settings(spec, spec_hash, %w[identity licenseFilePrintData],
                                         [:sysprep_server_license_mode, 'autoMode', :sysprep_per_server_max_connections, 'autoUsers'])
 
     collect_customization_spec_settings(spec, spec_hash, ['options'],

@@ -127,7 +127,7 @@ RSpec.describe ExtManagementSystem do
   end
 
   it ".ems_infra_discovery_types" do
-    expected_types = %w(rhevm virtualcenter openstack_infra)
+    expected_types = %w[rhevm virtualcenter openstack_infra]
 
     expect(described_class.ems_infra_discovery_types).to match_array(expected_types)
   end
@@ -432,7 +432,7 @@ RSpec.describe ExtManagementSystem do
       expect(@ems.total_vms_suspended).to eq(2)
     end
 
-    %w(total_vms_on total_vms_off total_vms_unknown total_vms_never total_vms_suspended).each do |vcol|
+    %w[total_vms_on total_vms_off total_vms_unknown total_vms_never total_vms_suspended].each do |vcol|
       it "should have virtual column #{vcol} " do
         expect(described_class).to have_virtual_column vcol.to_s, :integer
       end
@@ -763,7 +763,7 @@ RSpec.describe ExtManagementSystem do
 
       result = ExtManagementSystem.inventory_status
       expect(result.size).to eq(2)
-      expect(result[0]).to eq(%w(region zone kind ems hosts vms))
+      expect(result[0]).to eq(%w[region zone kind ems hosts vms])
       expect(result[1][4..-1]).to eq([1, 2])
     end
 
@@ -773,7 +773,7 @@ RSpec.describe ExtManagementSystem do
       FactoryBot.create(:container, :ems_id => ems.id)
       result = ExtManagementSystem.inventory_status
       expect(result.size).to eq(2)
-      expect(result[0]).to eq(%w(region zone kind ems containers))
+      expect(result[0]).to eq(%w[region zone kind ems containers])
       expect(result[1][4..-1]).to eq([2])
     end
   end

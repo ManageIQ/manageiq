@@ -42,7 +42,7 @@ RSpec.describe ServiceOrchestration::ProvisionTagging do
 
         context 'Calls Classification.bulk_reassignment with VM and tag IDs for provision_priority 0' do
           let(:provision_priority) { 0 }
-          let(:tag_ids) { %w(1 11) }
+          let(:tag_ids) { %w[1 11] }
 
           it_behaves_like 'service_orchestration VM tagging'
         end
@@ -59,21 +59,21 @@ RSpec.describe ServiceOrchestration::ProvisionTagging do
 
         context 'Calls Classification.bulk_reassignment with VM and tag IDs for provision_priority 0' do
           let(:provision_priority) { 0 }
-          let(:tag_ids) { %w(1 11) }
+          let(:tag_ids) { %w[1 11] }
 
           it_behaves_like 'service_orchestration VM tagging'
         end
 
         context 'Call Classification.bulk_reassignment with VM and tag IDs for provision_priority 1' do
           let(:provision_priority) { 1 }
-          let(:tag_ids) { %w(1 21 22 23) }
+          let(:tag_ids) { %w[1 21 22 23] }
 
           it_behaves_like 'service_orchestration VM tagging'
         end
 
         context 'Call Classification.bulk_reassignment with VM and tag IDs for provision_priority 2' do
           let(:provision_priority) { 2 }
-          let(:tag_ids) { %w(1) }
+          let(:tag_ids) { %w[1] }
 
           it_behaves_like 'service_orchestration VM tagging'
         end

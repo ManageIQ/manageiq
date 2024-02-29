@@ -100,7 +100,7 @@ RSpec.describe MiqGroup do
     end
 
     it "should return groups by user name with external authentication" do
-      memberships = [%w(foo bar)]
+      memberships = [%w[foo bar]]
 
       allow(@ifp_interface).to receive(:GetUserGroups).with('user').and_return(memberships)
 
@@ -108,8 +108,8 @@ RSpec.describe MiqGroup do
     end
 
     it "should remove FQDN from the groups by user name with external authentication" do
-      ifp_memberships = [%w(foo@fqdn bar@fqdn)]
-      memberships = [%w(foo bar)]
+      ifp_memberships = [%w[foo@fqdn bar@fqdn]]
+      memberships = [%w[foo bar]]
 
       allow(@ifp_interface).to receive(:GetUserGroups).with('user').and_return(ifp_memberships)
 
@@ -126,12 +126,12 @@ RSpec.describe MiqGroup do
                         :normalize       => 'fred flintstone',
                         :bind            => true,
                         :get_user_object => 'user object',
-                        :get_memberships => %w(foo bar))
+                        :get_memberships => %w[foo bar])
       allow(MiqLdap).to receive(:new).and_return(miq_ldap)
     end
 
     it "should return LDAP groups by user name" do
-      expect(MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password')).to eq(%w(foo bar))
+      expect(MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password')).to eq(%w[foo bar])
     end
 
     it "should issue an error message when user name could not be bound to LDAP" do
@@ -211,7 +211,7 @@ RSpec.describe MiqGroup do
       expect(miq_group.provisioned_storage).to eq(ram_size.megabyte + disk_size)
     end
 
-    %w(allocated_memory allocated_vcpu allocated_storage provisioned_storage).each do |vcol|
+    %w[allocated_memory allocated_vcpu allocated_storage provisioned_storage].each do |vcol|
       it "should have virtual column #{vcol} " do
         expect(described_class).to have_virtual_column vcol.to_s, :integer
       end
@@ -585,13 +585,13 @@ RSpec.describe MiqGroup do
     end
 
     it "Returns the expected sui roles" do
-      allow(MiqProductFeature).to receive(:feature_all_children).with('sui').and_return(%w(sui_role_a sui_role_b sui_role_c))
-      %w(sui sui_role_a sui_role_c).each do |ident|
+      allow(MiqProductFeature).to receive(:feature_all_children).with('sui').and_return(%w[sui_role_a sui_role_b sui_role_c])
+      %w[sui sui_role_a sui_role_c].each do |ident|
         allow(role).to receive(:allows?).with(:identifier => ident).and_return(true)
       end
       allow(role).to receive(:allows?).with(:identifier => 'sui_role_b').and_return(false)
 
-      expect(subject.sui_product_features).to eq(%w(sui_role_a sui_role_c))
+      expect(subject.sui_product_features).to eq(%w[sui_role_a sui_role_c])
     end
   end
 
@@ -624,7 +624,7 @@ RSpec.describe MiqGroup do
   describe ".with_roles_excluding" do
     it "handles multiple columns" do
       a = FactoryBot.create(:miq_group, :features => "good")
-      FactoryBot.create(:miq_group, :features => %w(good everything))
+      FactoryBot.create(:miq_group, :features => %w[good everything])
       FactoryBot.create(:miq_group, :features => "everything")
 
       expect(MiqGroup.select(:id, :description).with_roles_excluding("everything")).to match_array([a])
