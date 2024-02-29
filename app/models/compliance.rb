@@ -15,17 +15,16 @@ class Compliance < ApplicationRecord
 
   def self.scan_and_check_compliance_queue(targets, inputs = {})
     Array.wrap(targets).each do |target|
-      if target.kind_of?(Host)
-        # Queue this with the vc-refresher taskid, so that any concurrent ems_refreshes don't clash with this one.
-        MiqQueue.put(
-          :class_name  => name,
-          :method_name => 'scan_and_check_compliance',
-          :args        => [[target.class.name, target.id], inputs],
-          :task_id     => 'vc-refresher',
-          :role        => "ems_inventory",
-          :zone        => target.ext_management_system.try(:my_zone)
-        )
-      end
+      next unless target.kind_of?(Host)
+      # Queue this with the vc-refresher taskid, so that any concurrent ems_refreshes don't clash with this one.
+      MiqQueue.put(
+        :class_name  => name,
+        :method_name => 'scan_and_check_compliance',
+        :args        => [[target.class.name, target.id], inputs],
+        :task_id     => 'vc-refresher',
+        :role        => "ems_inventory",
+        :zone        => target.ext_management_system.try(:my_zone)
+      )
     end
   end
 

@@ -44,11 +44,10 @@ module MiqPolicy::ImportExport
         event_status[:children] ||= []
         e2a[ekey].each do |arr|
           akey, opts = arr
-          unless akey.nil?
-            action, s = actionsHash[akey]
-            actions.push([action, opts])
-            event_status[:children].push(s)
-          end
+          next if akey.nil?
+          action, s = actionsHash[akey]
+          actions.push([action, opts])
+          event_status[:children].push(s)
         end
 
         events.push([event, actions])

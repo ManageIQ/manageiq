@@ -269,12 +269,11 @@ class Storage < ApplicationRecord
     miq_task.lock(:exclusive) do |locked_miq_task|
       locked_miq_task.context_data[:pending].each do |storage_id, qitem_id|
         qitem = MiqQueue.find_by(:id => qitem_id)
-        if qitem.nil?
-          _log.warn("Pending Scan for Storage ID: [#{storage_id}] is missing MiqQueue ID: [#{qitem_id}] - will requeue")
-          locked_miq_task.context_data[:pending].delete(storage_id)
-          locked_miq_task.save!
-          scan_queue(locked_miq_task)
-        end
+        next unless qitem.nil?
+        _log.warn("Pending Scan for Storage ID: [#{storage_id}] is missing MiqQueue ID: [#{qitem_id}] - will requeue")
+        locked_miq_task.context_data[:pending].delete(storage_id)
+        locked_miq_task.save!
+        scan_queue(locked_miq_task)
       end
     end
     scan_queue_watchdog(miq_task.id)
@@ -767,13 +766,12 @@ class Storage < ApplicationRecord
               attrs[col] ||= 0
               vm_attrs[col] ||= 0
 
-              unless val.nil?
-                attrs[col] += val
-                attrs["derived_storage_used_#{mode}".to_sym] += val
-                attrs[:derived_storage_used_managed] += val
-                vm_attrs[col] += val
-                vm_attrs[:derived_storage_used_managed] += val
-              end
+              next if val.nil?
+              attrs[col] += val
+              attrs["derived_storage_used_#{mode}".to_sym] += val
+              attrs[:derived_storage_used_managed] += val
+              vm_attrs[col] += val
+              vm_attrs[:derived_storage_used_managed] += val
             end
 
             vm_perf   = obj_perfs.fetch_path(vm.class.name, vm.id, interval_name, hour)

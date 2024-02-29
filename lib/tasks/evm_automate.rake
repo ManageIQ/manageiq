@@ -167,11 +167,10 @@ namespace :evm do
           import_options['verify_ssl'] = ENV['VERIFY_SSL'] || OpenSSL::SSL::VERIFY_PEER
         end
         %w(SYSTEM ENABLED).each do |name|
-          if ENV[name].present?
-            raise "#{name} must be true or false" unless %w(true false).include?(ENV[name])
+          next unless ENV[name].present?
+          raise "#{name} must be true or false" unless %w(true false).include?(ENV[name])
 
-            import_options[name.downcase] = ENV[name]
-          end
+          import_options[name.downcase] = ENV[name]
         end
         MiqAeImport.new(ENV.fetch('DOMAIN', nil), import_options).import
       rescue => err

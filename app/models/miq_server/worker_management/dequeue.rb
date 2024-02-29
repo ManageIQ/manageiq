@@ -124,14 +124,13 @@ module MiqServer::WorkerManagement::Dequeue
     queue_names = get_worker_count_and_priority_by_queue_name
     @queue_messages_lock.synchronize(:EX) do
       queue_names.each do |queue_name, (wcount, priority)|
-        if prefetch_below_threshold?(queue_name, wcount) || prefetch_stale?(queue_name) || prefetch_has_lower_priority_than_miq_queue?(queue_name)
-          @queue_messages[queue_name] ||= {}
-          @queue_messages[queue_name][:timestamp] = Time.now.utc
-          @queue_messages[queue_name][:messages]  = peek(queue_name, priority, (::Settings.server.prefetch_max_per_worker_dequeue * wcount)).collect do |q|
-            {:id => q.id, :lock_version => q.lock_version, :priority => q.priority, :role => q.role}
-          end
-          _log.info("Fetched #{@queue_messages[queue_name][:messages].length} miq_queue rows for queue_name=#{queue_name}, wcount=#{wcount.inspect}, priority=#{priority.inspect}") if @queue_messages[queue_name][:messages].length > 0
+        next unless prefetch_below_threshold?(queue_name, wcount) || prefetch_stale?(queue_name) || prefetch_has_lower_priority_than_miq_queue?(queue_name)
+        @queue_messages[queue_name] ||= {}
+        @queue_messages[queue_name][:timestamp] = Time.now.utc
+        @queue_messages[queue_name][:messages]  = peek(queue_name, priority, (::Settings.server.prefetch_max_per_worker_dequeue * wcount)).collect do |q|
+          {:id => q.id, :lock_version => q.lock_version, :priority => q.priority, :role => q.role}
         end
+        _log.info("Fetched #{@queue_messages[queue_name][:messages].length} miq_queue rows for queue_name=#{queue_name}, wcount=#{wcount.inspect}, priority=#{priority.inspect}") if @queue_messages[queue_name][:messages].length > 0
       end
     end
   end

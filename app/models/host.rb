@@ -847,12 +847,11 @@ class Host < ApplicationRecord
     self.ssh_permit_root_login = 'yes' if permit_list
     permit_list.each_line do |line|
       la = line.split(' ')
-      if la.length == 2
-        next if la.first[0, 1] == '#'
+      next unless la.length == 2
+      next if la.first[0, 1] == '#'
 
-        self.ssh_permit_root_login = la.last.to_s.downcase
-        break
-      end
+      self.ssh_permit_root_login = la.last.to_s.downcase
+      break
     end
   rescue
     # _log.log_backtrace($!)

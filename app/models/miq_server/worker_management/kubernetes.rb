@@ -141,16 +141,15 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
     [:deployments, :pods].each do |resource|
       getter = "#{resource}_monitor_thread"
       thread = send(getter)
-      if thread.nil? || !thread.alive?
-        if !thread.nil? && thread.status.nil?
-          dead_thread = thread
-          send(:"#{getter}=", nil)
-          _log.info("Waiting for the #{getter} Monitor Thread to exit...")
-          dead_thread.join
-        end
-
-        send(:"#{getter}=", start_kube_monitor(resource))
+      next unless thread.nil? || !thread.alive?
+      if !thread.nil? && thread.status.nil?
+        dead_thread = thread
+        send(:"#{getter}=", nil)
+        _log.info("Waiting for the #{getter} Monitor Thread to exit...")
+        dead_thread.join
       end
+
+      send(:"#{getter}=", start_kube_monitor(resource))
     end
   end
 

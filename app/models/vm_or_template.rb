@@ -615,14 +615,13 @@ class VmOrTemplate < ApplicationRecord
       rec.vm_id = vm.id
       rec.reason = []
       presult = vm.enforce_policy("rsop")
-      if presult[:result] == false
-        presult[:details].each do |p|
-          rec.reason.push(p["description"]) unless p["result"]
-        end
-        if rec.reason != []
-          rec.reason = rec.reason.join(", ")
-          result.push(rec)
-        end
+      next unless presult[:result] == false
+      presult[:details].each do |p|
+        rec.reason.push(p["description"]) unless p["result"]
+      end
+      if rec.reason != []
+        rec.reason = rec.reason.join(", ")
+        result.push(rec)
       end
     end
   end
@@ -856,16 +855,15 @@ class VmOrTemplate < ApplicationRecord
   def ems_host_list
     params = {}
     [ext_management_system, "ems", host, "host"].each_slice(2) do |ems, type|
-      if ems
-        params[type] = {
-          :hostname   => ems.hostname,
-          :ipaddress  => ems.ipaddress,
-          :username   => ems.authentication_userid,
-          :password   => ems.authentication_password_encrypted,
-          :class_name => ems.class.name
-        }
-        params[type][:port] = ems.port if ems.respond_to?(:port) && ems.port.present?
-      end
+      next unless ems
+      params[type] = {
+        :hostname   => ems.hostname,
+        :ipaddress  => ems.ipaddress,
+        :username   => ems.authentication_userid,
+        :password   => ems.authentication_password_encrypted,
+        :class_name => ems.class.name
+      }
+      params[type][:port] = ems.port if ems.respond_to?(:port) && ems.port.present?
     end
     params
   end

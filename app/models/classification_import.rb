@@ -54,11 +54,10 @@ class ClassificationImport
         @verified_data[vms[0].id][line["category"]] ||= []
         entry = nil
         cat.entries.each do |e|
-          if e.description == line["entry"]
-            @verified_data[vms[0].id][line["category"]].push(line["entry"])
-            entry = e
-            break
-          end
+          next unless e.description == line["entry"]
+          @verified_data[vms[0].id][line["category"]].push(line["entry"])
+          entry = e
+          break
         end
         if entry.nil?
           bad += 1
@@ -73,13 +72,12 @@ class ClassificationImport
     @verified_data.each do |id, data|
       data.each do |category, entries|
         cat = Classification.find_by(:description => category)
-        if cat.single_value && entries.length > 1
-          vm = VmOrTemplate.find_by(:id => id)
-          while entries.length > 1
-            e = entries.shift
-            _log.warn("Vm: #{vm.name}, Location: #{vm.location}, Category: #{category}: Multiple values given for single-valued category, value #{e} will be ignored")
-            @errors.add(:singlevaluedcategory, "Vm #{vm.name}, Location: #{vm.location}, Category: #{category}: Multiple values given for single-valued category, value #{e} will be ignored")
-          end
+        next unless cat.single_value && entries.length > 1
+        vm = VmOrTemplate.find_by(:id => id)
+        while entries.length > 1
+          e = entries.shift
+          _log.warn("Vm: #{vm.name}, Location: #{vm.location}, Category: #{category}: Multiple values given for single-valued category, value #{e} will be ignored")
+          @errors.add(:singlevaluedcategory, "Vm #{vm.name}, Location: #{vm.location}, Category: #{category}: Multiple values given for single-valued category, value #{e} will be ignored")
         end
       end
     end
@@ -91,19 +89,17 @@ class ClassificationImport
   def apply
     @verified_data.each do |id, data|
       vm = VmOrTemplate.find_by(:id => id)
-      if vm
-        data.each do |category, entries|
-          cat = Classification.find_by(:description => category)
-          next unless cat
+      next unless vm
+      data.each do |category, entries|
+        cat = Classification.find_by(:description => category)
+        next unless cat
 
-          entries.each do |ent|
-            cat.entries.each do |e|
-              if e.description == ent
-                _log.info("Vm: #{vm.name}, Location: #{vm.location}, Category: #{cat.description}: Applying entry #{ent}")
-                e.assign_entry_to(vm)
-                break
-              end
-            end
+        entries.each do |ent|
+          cat.entries.each do |e|
+            next unless e.description == ent
+            _log.info("Vm: #{vm.name}, Location: #{vm.location}, Category: #{cat.description}: Applying entry #{ent}")
+            e.assign_entry_to(vm)
+            break
           end
         end
       end

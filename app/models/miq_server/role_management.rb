@@ -257,13 +257,12 @@ module MiqServer::RoleManagement
         end
 
         active.each do |s, p|
-          if (inactive.length > 0) && (p > inactive.first.last)
-            s2, p2 = inactive.shift
-            _log.info("Migrating Role <#{role_name}> Active on Server <#{s.name}> with Priority <#{p}> to Server <#{s2.name}> with Priority <#{p2}>")
-            s.deactivate_roles(role_name)
-            s2.activate_roles(role_name)
-            active << [s2, p2]
-          end
+          next unless (inactive.length > 0) && (p > inactive.first.last)
+          s2, p2 = inactive.shift
+          _log.info("Migrating Role <#{role_name}> Active on Server <#{s.name}> with Priority <#{p}> to Server <#{s2.name}> with Priority <#{p2}>")
+          s.deactivate_roles(role_name)
+          s2.activate_roles(role_name)
+          active << [s2, p2]
         end
 
       end

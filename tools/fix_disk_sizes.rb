@@ -49,12 +49,11 @@ ExtManagementSystem.all.each do |e|
       :new => {:size => di[:capacityInKB].kilobytes, :disk_type => (di[:thinProvisioned] == 'true') ? 'thin' : 'thick', :mode => di[:diskMode]},
       :old => {:size => d.size, :disk_type => d.disk_type, :mode => d.mode}
     }
-    if data[:new] != data[:old]
-      # Only nil out 'size_on_disk' if the provision size does not match
-      data[:new][:size_on_disk] = nil if data[:new][:size] != data[:old][:size]
-      changed_disks[d.id] = data
-      d.update(data[:new])
-    end
+    next unless data[:new] != data[:old]
+    # Only nil out 'size_on_disk' if the provision size does not match
+    data[:new][:size_on_disk] = nil if data[:new][:size] != data[:old][:size]
+    changed_disks[d.id] = data
+    d.update(data[:new])
   end
 
   $log.info("#{log_header} Collecting Disk Sizes for disks under ExtManagementSystem name: [#{e.name}], id: [#{e.id}]...Complete")

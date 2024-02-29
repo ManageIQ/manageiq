@@ -129,11 +129,10 @@ class MiqGroup < ApplicationRecord
       group.group_type          = SYSTEM_GROUP
       group.tenant              = root_tenant
 
-      if group.changed?
-        mode = group.new_record? ? "Created" : "Updated"
-        group.save!
-        _log.info("#{mode} Group: #{group.description} with Role: #{user_role.name}")
-      end
+      next unless group.changed?
+      mode = group.new_record? ? "Created" : "Updated"
+      group.save!
+      _log.info("#{mode} Group: #{group.description} with Role: #{user_role.name}")
     end
 
     # find any default tenant groups that do not have a role

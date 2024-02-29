@@ -79,12 +79,11 @@ class MiqAction < ApplicationRecord
       self.options ||= {}
       self.options[:to] ||= ""
       [:from, :to].each do |k|
-        if self.options && self.options[k]
-          next if k == :from && self.options[k].blank? # allow blank from addres, we use the default.
+        next unless self.options && self.options[k]
+        next if k == :from && self.options[k].blank? # allow blank from addres, we use the default.
 
-          match = self.options[k] =~ /^\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z$/i
-          errors.add(k, "must be a valid email address") unless match
-        end
+        match = self.options[k] =~ /^\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z$/i
+        errors.add(k, "must be a valid email address") unless match
       end
     when "tag"
       errors.add("tag", "no tags provided") unless self.options && self.options[:tags]

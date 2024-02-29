@@ -242,11 +242,10 @@ module MiqServer::LogManagement
 
   def delete_active_log_collections
     log_files.each do |lf|
-      if lf.state == 'collecting'
-        _log.info("Deleting #{lf.description}")
-        lf.miq_task&.(:state => 'Finished', :status => 'Error', :message => 'Log Collection Incomplete during Server Startup')
-        lf.destroy
-      end
+      next unless lf.state == 'collecting'
+      _log.info("Deleting #{lf.description}")
+      lf.miq_task&.(:state => 'Finished', :status => 'Error', :message => 'Log Collection Incomplete during Server Startup')
+      lf.destroy
     end
 
     # Since a task is created before a logfile, there's a chance we have a task without a logfile

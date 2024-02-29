@@ -71,25 +71,24 @@ class Volume < ApplicationRecord
       end
 
       nhv = nh[:volume]
-      unless nhv.nil?
-        name = nhv[:name]
-        found = parent.hardware.volumes.where(:name => name).order(:id)
+      next if nhv.nil?
+      name = nhv[:name]
+      found = parent.hardware.volumes.where(:name => name).order(:id)
 
-        # Handle duplicate volume names (Generally only in the case of Windows with blank volume names)
-        if found.length > 1
-          dup_volumes[name] = found.collect(&:id) if dup_volumes[name].nil?
-          found_id = dup_volumes[name].shift
-          found = found.detect { |f| f.id == found_id }
-        else
-          found = found[0]
-        end
-        found.nil? ? new_volumes << nhv : found.update(nhv)
+      # Handle duplicate volume names (Generally only in the case of Windows with blank volume names)
+      if found.length > 1
+        dup_volumes[name] = found.collect(&:id) if dup_volumes[name].nil?
+        found_id = dup_volumes[name].shift
+        found = found.detect { |f| f.id == found_id }
+      else
+        found = found[0]
+      end
+      found.nil? ? new_volumes << nhv : found.update(nhv)
 
-        deletes[:volumes].each_with_index do |ele, i|
-          if ele[1] == name
-            deletes[:volumes].delete_at(i)
-            break
-          end
+      deletes[:volumes].each_with_index do |ele, i|
+        if ele[1] == name
+          deletes[:volumes].delete_at(i)
+          break
         end
       end
     end

@@ -541,17 +541,16 @@ module MiqReport::Generator
     arr = self.cols.each_with_object([]) do |c, a|
       self.extras[:group_by_tag_cols].each do |tc|
         tag = tc[(c.length + 1)..-1]
-        if tc.starts_with?(c)
-          unless tags2desc.key?(tag)
-            if tag == "_none_"
-              tags2desc[tag] = "[None]"
-            else
-              entry = Classification.lookup_by_name([performance[:group_by_category], tag].join("/"))
-              tags2desc[tag] = entry.nil? ? tag.titleize : entry.description
-            end
+        next unless tc.starts_with?(c)
+        unless tags2desc.key?(tag)
+          if tag == "_none_"
+            tags2desc[tag] = "[None]"
+          else
+            entry = Classification.lookup_by_name([performance[:group_by_category], tag].join("/"))
+            tags2desc[tag] = entry.nil? ? tag.titleize : entry.description
           end
-          a << [tc, tags2desc[tag]]
         end
+        a << [tc, tags2desc[tag]]
       end
     end
     arr.sort_by! { |a| a[1] }

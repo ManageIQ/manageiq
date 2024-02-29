@@ -156,24 +156,23 @@ end
 
     if extras && extras[:grouping] && extras[:grouping][group] # See if group key exists
       MiqReport::GROUPINGS.each do |calc| # Add an output row for each group calculation
-        if extras[:grouping][group].key?(calc.first) # Only add a row if there are calcs of this type for this group value
-          grp_output = ""
-          grp_output << "<tr>"
-          grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>#{_(calc.last)}:</td>"
-          col_order.each_with_index do |c, c_idx| # Go through the columns
-            next if c_idx == 0 # Skip first column
+        next unless extras[:grouping][group].key?(calc.first) # Only add a row if there are calcs of this type for this group value
+        grp_output = ""
+        grp_output << "<tr>"
+        grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>#{_(calc.last)}:</td>"
+        col_order.each_with_index do |c, c_idx| # Go through the columns
+          next if c_idx == 0 # Skip first column
 
-            grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>"
-            if extras[:grouping][group].key?(calc.first)
-              grp_output << CGI.escapeHTML(
-                c.split("__").first % [extras[:grouping][group][calc.first][c], {:format => self.col_formats[c_idx] ? self.col_formats[c_idx] : :_default_}]
-              )
-            end
-            grp_output << "</td>"
+          grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>"
+          if extras[:grouping][group].key?(calc.first)
+            grp_output << CGI.escapeHTML(
+              c.split("__").first % [extras[:grouping][group][calc.first][c], {:format => self.col_formats[c_idx] ? self.col_formats[c_idx] : :_default_}]
+            )
           end
-          grp_output << "</tr>"
-          html_rows << grp_output
+          grp_output << "</td>"
         end
+        grp_output << "</tr>"
+        html_rows << grp_output
       end
     end
     html_rows << "<tr><td class='group_spacer' colspan='#{col_count}'>&nbsp;</td></tr>" unless group == :_total_

@@ -27,17 +27,16 @@ begin
 
   vim.virtualMachinesByMor.each_value do |vm|
     miqVm = vim.getVimVmByMor(vm['MOR'])
-    if miqVm.hasSnapshot?(MiqVimVm::EVM_SNAPSHOT_NAME)
-      sso = miqVm.searchSsTree(miqVm.snapshotInfo['rootSnapshotList'], 'name', MiqVimVm::EVM_SNAPSHOT_NAME)
-      unless sso
-        $stderr.puts "#{miqVm.name}: could not determine the MOR of the EVM snapshot. Skipping."
-        next
-      end
-      puts "Deleting EVM snapshot for #{miqVm.name}..."
-      miqVm.removeSnapshot(sso['snapshot'])
-      puts "done."
-      puts
+    next unless miqVm.hasSnapshot?(MiqVimVm::EVM_SNAPSHOT_NAME)
+    sso = miqVm.searchSsTree(miqVm.snapshotInfo['rootSnapshotList'], 'name', MiqVimVm::EVM_SNAPSHOT_NAME)
+    unless sso
+      $stderr.puts "#{miqVm.name}: could not determine the MOR of the EVM snapshot. Skipping."
+      next
     end
+    puts "Deleting EVM snapshot for #{miqVm.name}..."
+    miqVm.removeSnapshot(sso['snapshot'])
+    puts "done."
+    puts
   end
 rescue => err
   puts err

@@ -45,13 +45,12 @@ module AlertMixin
     end
 
     [:source, :event_id, :level, :name].each do |col|
-      if options[col]
-        sel_conj = sel.empty? ? "" : ", "
-        sel << "#{sel_conj}#{col}"
-        conjunction = cond[0].empty? ? "" : " and "
-        cond[0] << "#{conjunction}#{col} = ?"
-        cond << options[col]
-      end
+      next unless options[col]
+      sel_conj = sel.empty? ? "" : ", "
+      sel << "#{sel_conj}#{col}"
+      conjunction = cond[0].empty? ? "" : " and "
+      cond[0] << "#{conjunction}#{col} = ?"
+      cond << options[col]
     end
     return cond, sel
   end
