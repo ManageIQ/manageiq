@@ -154,15 +154,15 @@ RSpec.describe EvmApplication do
       it "displays server status for the local server and its workers" do
         expected_output = <<~SERVER_INFO
           Checking EVM status...
-           #{header(:Region)  } | #{header(:Zone, :ljust)} | Server                   | Status  | PID | SPID | Workers | Version | #{header(:Started, :ljust)  } | #{header(:Heartbeat, :ljust)  } | MB Usage | Roles
-          -#{line_for(:Region)}-|-#{line_for(:Zone)      }-|--------------------------|---------|-----|------|---------|---------|-#{line_for(:Started)        }-|-#{line_for(:Heartbeat)        }-|----------|-------
-           #{pad(rgn, :Region)} | #{local.zone.name      } | #{ local.name } | started |     |      |       1 | 9.9.9.9 | #{local_started_on          } | #{local_heartbeat             } |          |
+           #{header(:Region)} | #{header(:Zone, :ljust)} | Server                   | Status  | PID | SPID | Workers | Version | #{header(:Started, :ljust)} | #{header(:Heartbeat, :ljust)} | MB Usage | Roles
+          -#{line_for(:Region)}-|-#{line_for(:Zone)}-|--------------------------|---------|-----|------|---------|---------|-#{line_for(:Started)}-|-#{line_for(:Heartbeat)}-|----------|-------
+           #{pad(rgn, :Region)} | #{local.zone.name} | #{local.name} | started |     |      |       1 | 9.9.9.9 | #{local_started_on} | #{local_heartbeat} |          |
 
           * marks a master appliance
 
-           #{header(:Region)  } | #{header(:Zone, :ljust)} | Type | Status | #{header(:PID)         } | SPID | Server                   | Queue | Started | Heartbeat | System UID | MB Usage
-          -#{line_for(:Region)}-|-#{line_for(:Zone)      }-|------|--------|-#{line_for(:PID)       }-|------|--------------------------|-------|---------|-----------|------------|----------
-           #{pad(rgn, :Region)} | #{local.zone.name      } | Ui   | ready  | #{pad(ui.pid, :PID)    } |      | #{ local.name } |       |         |           |            |
+           #{header(:Region)} | #{header(:Zone, :ljust)} | Type | Status | #{header(:PID)} | SPID | Server                   | Queue | Started | Heartbeat | System UID | MB Usage
+          -#{line_for(:Region)}-|-#{line_for(:Zone)}-|------|--------|-#{line_for(:PID)}-|------|--------------------------|-------|---------|-----------|------------|----------
+           #{pad(rgn, :Region)} | #{local.zone.name} | Ui   | ready  | #{pad(ui.pid, :PID)} |      | #{local.name} |       |         |           |            |
         SERVER_INFO
 
         expect { EvmApplication.status }.to output(expected_output).to_stdout
@@ -179,19 +179,19 @@ RSpec.describe EvmApplication do
       it "displays server status for the all servers and workers" do
         expected_output = <<~SERVER_INFO
           Checking EVM status...
-           #{header(:Zone, :ljust)               } | Server                    | Status  | Workers | #{header(:Started, :ljust)  } | #{header(:Heartbeat, :ljust).rstrip}
-          -#{line_for(:Zone)                     }-|---------------------------|---------|---------|-#{line_for(:Started)        }-|-#{line_for(:Heartbeat)}-
-           #{pad(local.zone.name, :Zone, :ljust) } | #{ local.name }  | started |       1 | #{local_started_on } | #{local_heartbeat}
-           #{pad(remote.zone.name, :Zone, :ljust)} | #{ remote.name }* | started |       2 | #{remote_started_on } |
+           #{header(:Zone, :ljust)} | Server                    | Status  | Workers | #{header(:Started, :ljust)} | #{header(:Heartbeat, :ljust).rstrip}
+          -#{line_for(:Zone)}-|---------------------------|---------|---------|-#{line_for(:Started)}-|-#{line_for(:Heartbeat)}-
+           #{pad(local.zone.name, :Zone, :ljust)} | #{local.name}  | started |       1 | #{local_started_on} | #{local_heartbeat}
+           #{pad(remote.zone.name, :Zone, :ljust)} | #{remote.name}* | started |       2 | #{remote_started_on} |
 
           All rows have the values: Region=#{rgn}, Version=9.9.9.9
           * marks a master appliance
 
-           #{header(:Zone, :ljust)               } | Type          | Status | #{header(:PID)          } | Server
-          -#{line_for(:Zone)                     }-|---------------|--------|-#{line_for(:PID)        }-|--------------------------
-           #{pad(local.zone.name, :Zone, :ljust) } | Ui            | ready  | #{pad(ui.pid, :PID)     } | #{ local.name }
-           #{pad(remote.zone.name, :Zone, :ljust)} | Base::Refresh | ready  | #{pad(refresh.pid, :PID)} | #{     remote.name     }
-           #{pad(remote.zone.name, :Zone, :ljust)} | Generic       | ready  | #{pad(generic.pid, :PID)} | #{     remote.name     }
+           #{header(:Zone, :ljust)} | Type          | Status | #{header(:PID)} | Server
+          -#{line_for(:Zone)}-|---------------|--------|-#{line_for(:PID)}-|--------------------------
+           #{pad(local.zone.name, :Zone, :ljust)} | Ui            | ready  | #{pad(ui.pid, :PID)} | #{local.name}
+           #{pad(remote.zone.name, :Zone, :ljust)} | Base::Refresh | ready  | #{pad(refresh.pid, :PID)} | #{remote.name}
+           #{pad(remote.zone.name, :Zone, :ljust)} | Generic       | ready  | #{pad(generic.pid, :PID)} | #{remote.name}
 
           All rows have the values: Region=#{rgn}
         SERVER_INFO
