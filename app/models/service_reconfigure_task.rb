@@ -25,7 +25,7 @@ class ServiceReconfigureTask < MiqRequestTask
         :namespace        => ra.ae_namespace,
         :class_name       => ra.ae_class,
         :instance_name    => ra.ae_instance,
-        :automate_message => ra.ae_message.blank? ? 'create' : ra.ae_message,
+        :automate_message => (ra.ae_message.presence || 'create'),
         :attrs            => dialog_values,
         :user_id          => get_user.id,
         :miq_group_id     => get_user.current_group_id,

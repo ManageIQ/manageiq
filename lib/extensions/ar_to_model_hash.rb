@@ -34,7 +34,7 @@ module ToModelHash
 
         ret[:include] = includes.each_with_object({}) do |(k, v), h|
           sub_options = to_model_hash_options_fixup(v)
-          h[k.to_sym] = sub_options.blank? ? nil : sub_options
+          h[k.to_sym] = (sub_options.presence)
         end
       end
 

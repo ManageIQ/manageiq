@@ -62,7 +62,7 @@ module SupportsFeatureMixin
   end
 
   def self.reason_or_default(reason)
-    reason.present? ? reason : _("Feature not available/supported")
+    (reason.presence || _("Feature not available/supported"))
   end
 
   # query instance for the reason why the feature is unsupported

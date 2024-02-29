@@ -400,7 +400,7 @@ module ManageIQ
             label = _('no value') if label.blank?
             add_series(label, series)
           end
-          groups.keys.collect { |k| k.blank? ? _('no value') : k }
+          groups.keys.collect { |k| (k.presence || _('no value')) }
         end
 
         def pie_type?

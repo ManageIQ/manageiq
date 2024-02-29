@@ -91,7 +91,7 @@ class ServiceContainerTemplate < ServiceGeneric
         obj[var_key] = val unless var_key == attr
       end
 
-    params.blank? ? {} : params
+    (params.presence || {})
   end
 
   def project_name(overrides)

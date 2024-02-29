@@ -508,7 +508,7 @@ class MiqRequestWorkflow
   def show_fields(display_flag, field_names, display_field = :display)
     fields do |fn, f, _dn, _d|
       if field_names.include?(fn)
-        flag = f[:display_override].blank? ? display_flag : f[:display_override]
+        flag = (f[:display_override].presence || display_flag)
         f[display_field] = flag
       end
     end

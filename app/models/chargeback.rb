@@ -124,7 +124,7 @@ class Chargeback < ActsAsArModel
       self.tag_name = result_key[:key_object] ? result_key[:key_object].description : _('<Empty>')
     elsif @options[:groupby_label].present?
       label_value = self.class.groupby_label_value(consumption, options[:groupby_label])
-      self.label_name = label_value.present? ? label_value : _('<Empty>')
+      self.label_name = (label_value.presence || _('<Empty>'))
     else
       init_extra_fields(consumption, region)
     end

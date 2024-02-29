@@ -61,7 +61,7 @@ class DialogFieldSortedItem < DialogField
     end
 
     result = automate_hash["values"].to_a
-    result.blank? ? initial_values : result
+    (result.presence || initial_values)
   end
 
   def trigger_automate_value_updates

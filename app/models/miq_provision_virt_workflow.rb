@@ -679,7 +679,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       spec_hash[:subnet_mask]  = adapter['subnetMask'].to_s
       spec_hash[:ip_addr]      = adapter.fetch_path('ip', 'ipAddress').to_s
       # Combine the WINS server fields into 1 comma separated field list
-      spec_hash[:wins_servers] = [adapter['primaryWINS'], adapter['secondaryWINS']].collect { |s| s unless s.blank? }.compact.join(', ')
+      spec_hash[:wins_servers] = [adapter['primaryWINS'], adapter['secondaryWINS']].collect { |s| (s.presence) }.compact.join(', ')
     end
 
     # In Linux, DNS server settings are global, not per adapter

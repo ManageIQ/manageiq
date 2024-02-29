@@ -152,7 +152,7 @@ class PxeServer < ApplicationRecord
 
             image.update(
               :name        => image_hash["name"],
-              :description => image_hash["description"].blank? ? nil : image_hash["description"],
+              :description => (image_hash["description"].presence),
               :path        => path,
               :index       => index
             )

@@ -38,7 +38,7 @@ class SystemConsole < ApplicationRecord
   end
 
   def self.local_address
-    MiqServer.my_server.ipaddress.blank? ? local_address_fallback : MiqServer.my_server.ipaddress
+    (MiqServer.my_server.ipaddress.presence || local_address_fallback)
   end
 
   def self.local_address_fallback
