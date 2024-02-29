@@ -631,7 +631,7 @@ RSpec.describe Rbac::Filterer do
       let(:nonsql_expression) { {"=" => {"field" => "Vm-vendor_display", "value" => "VMware"}} }
       let(:raw_expression)    { nonsql_expression }
       let(:expression)        { MiqExpression.new(raw_expression) }
-      let(:search_attributes) { { :class => "Vm", :filter => expression } }
+      let(:search_attributes) { {:class => "Vm", :filter => expression} }
       let(:results)           { subject.search(search_attributes).first }
 
       before { [owned_vm, other_vm] }
@@ -647,8 +647,8 @@ RSpec.describe Rbac::Filterer do
       end
 
       context "with a partial non-sql filter" do
-        let(:sql_expression) { { "IS EMPTY" => { "field" => "Vm.host-name" } } }
-        let(:raw_expression) { { "AND" => [nonsql_expression, sql_expression] } }
+        let(:sql_expression) { {"IS EMPTY" => {"field" => "Vm.host-name"}} }
+        let(:raw_expression) { {"AND" => [nonsql_expression, sql_expression]} }
 
         it "finds the Vms" do
           expect(results.to_a).to match_array [owned_vm, other_vm]
@@ -702,7 +702,7 @@ RSpec.describe Rbac::Filterer do
 
     context "with a miq_expression filter on vms" do
       let(:expression)        { MiqExpression.new("=" => {"field" => "Vm-vendor", "value" => "vmware"}) }
-      let(:search_attributes) { { :class => "Vm", :filter => expression } }
+      let(:search_attributes) { {:class => "Vm", :filter => expression} }
       let(:results)           { described_class.search(search_attributes).first }
 
       before { [owned_vm, other_vm] }
@@ -733,7 +733,7 @@ RSpec.describe Rbac::Filterer do
 
     context "with :extra_cols on a Service" do
       let(:extra_cols)        { [:owned_by_current_user] }
-      let(:search_attributes) { { :class => "Service", :extra_cols => extra_cols } }
+      let(:search_attributes) { {:class => "Service", :extra_cols => extra_cols} }
       let(:results)           { described_class.search(search_attributes).first }
 
       before { FactoryBot.create :service, :evm_owner => owner_user }
@@ -2665,8 +2665,8 @@ RSpec.describe Rbac::Filterer do
 
     let(:klass)            { VmOrTemplate }
     let(:scope)            { klass.all }
-    let(:include_for_find) { { :miq_server => {} } }
-    let(:exp_includes)     { { :host => {} } }
+    let(:include_for_find) { {:miq_server => {}} }
+    let(:exp_includes)     { {:host => {}} }
 
     it "adds include_for_find .references to the scope" do
       method_args      = [scope, klass, include_for_find, nil]
@@ -2691,7 +2691,7 @@ RSpec.describe Rbac::Filterer do
 
     context "if the include is polymorphic" do
       let(:klass)            { MetricRollup }
-      let(:include_for_find) { { :resource => {} } }
+      let(:include_for_find) { {:resource => {}} }
 
       it "does not add .references to the scope" do
         method_args      = [scope, klass, include_for_find, nil]

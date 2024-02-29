@@ -44,7 +44,7 @@ module MiqConfigSssdLdap
 
     def establish_permission(permission_name)
       LOGGER.debug("Invoked #{self.class}\##{__method__}(#{permission_name})")
-      params = {:P => [permission_name, "on"] }
+      params = {:P => [permission_name, "on"]}
       result = AwesomeSpawn.run("setsebool", :params => params)
       LOGGER.debug("Ran command: #{result.command_line}")
 

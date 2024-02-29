@@ -31,7 +31,7 @@ class User < ApplicationRecord
   has_and_belongs_to_many :miq_groups
   scope :superadmins, lambda {
     joins(:miq_groups => {:miq_user_role => :miq_product_features})
-      .where(:miq_product_features => {:identifier => MiqProductFeature::SUPER_ADMIN_FEATURE })
+      .where(:miq_product_features => {:identifier => MiqProductFeature::SUPER_ADMIN_FEATURE})
   }
 
   virtual_has_many :active_vms, :class_name => "VmOrTemplate"

@@ -689,8 +689,8 @@ RSpec.describe ServiceTemplate do
       template = FactoryBot.create(:service_template)
       request = FactoryBot.create(:service_template_provision_request,
                                   :requester => @user,
-                                  :options   => {:foo => 'bar', :baz => nil })
-      template.create_resource_actions(:provision => { :fqname => @ra.fqname, :dialog_id => dialog.id })
+                                  :options   => {:foo => 'bar', :baz => nil})
+      template.create_resource_actions(:provision => {:fqname => @ra.fqname, :dialog_id => dialog.id})
       add_and_save_service(template, request)
       template.reload
 
@@ -747,7 +747,7 @@ RSpec.describe ServiceTemplate do
       :service_type => 'atomic',
       :prov_type    => 'amazon',
       :display      => 'false',
-      :picture      => { :content => content, :extension => 'jpg' },
+      :picture      => {:content => content, :extension => 'jpg'},
       :description  => 'a description',
       :config_info  => {
         :miq_request_dialog_name => request_dialog.name,
@@ -815,7 +815,7 @@ RSpec.describe ServiceTemplate do
       {
         :name        => 'Updated Template Name',
         :display     => 'false',
-        :picture     => { :content => new_picture_content, :extension => 'jpg' },
+        :picture     => {:content => new_picture_content, :extension => 'jpg'},
         :description => 'a description',
         :config_info => {
           :miq_request_dialog_name => request_dialog.name,
@@ -1091,18 +1091,18 @@ RSpec.describe ServiceTemplate do
     it "only returns generic with no providers" do
       expect(ServiceTemplate.catalog_item_types).to match(
         hash_including('amazon'  => {:description => 'Amazon',  :display => false},
-                       'generic' => {:description => 'Generic', :display => true })
+                       'generic' => {:description => 'Generic', :display => true})
       )
     end
 
     it "returns orchestration template and generic" do
       FactoryBot.create(:orchestration_template)
       expect(ServiceTemplate.catalog_item_types).to match(
-        hash_including('amazon'                => { :description => 'Amazon',
-                                                    :display     => false },
-                       'generic'               => { :description => 'Generic',
-                                                    :display     => true },
-                       'generic_orchestration' => { :description => 'Orchestration',
+        hash_including('amazon'                => {:description => 'Amazon',
+                                                    :display     => false},
+                       'generic'               => {:description => 'Generic',
+                                                    :display     => true},
+                       'generic_orchestration' => {:description => 'Orchestration',
                                                     :display     => true})
       )
     end

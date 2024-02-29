@@ -63,7 +63,7 @@ RSpec.describe(ServiceAnsiblePlaybook) do
     {
       :credential_id => credential_2.id,
       :hosts         => 'host3',
-      'extra_vars'   => { :var1 => 'new_val1', 'pswd' => encrypted_val2 }
+      'extra_vars'   => {:var1 => 'new_val1', 'pswd' => encrypted_val2}
     }
   end
 

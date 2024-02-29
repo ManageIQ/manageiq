@@ -52,7 +52,7 @@ module ManageIQ
             ],
           },
           :miqChart => options[:graph_type],
-          :miq      => { :zoomed => false }
+          :miq      => {:zoomed => false}
         }
         sample[:data][:groups] = [['data1', 'data2', 'data3']] if options[:graph_type].include?('Stacked')
         sample

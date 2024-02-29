@@ -409,7 +409,7 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def self.create_from_options(options)
-    create!(options.except(:config_info).merge(:options => { :config_info => options[:config_info] }))
+    create!(options.except(:config_info).merge(:options => {:config_info => options[:config_info]}))
   end
   private_class_method :create_from_options
 

@@ -1,7 +1,7 @@
 RSpec.describe VMDB::Util do
   context ".http_proxy_uri" do
     it "without config settings" do
-      stub_settings(:http_proxy => { :default => {} })
+      stub_settings(:http_proxy => {:default => {}})
       expect(described_class.http_proxy_uri).to be_nil
     end
 

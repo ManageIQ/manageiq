@@ -754,7 +754,7 @@ RSpec.describe MiqWidget do
       end
 
       it "contents created for one timezone per group with timezone_matters = false" do
-        widget.options = {:timezone_matters => false }
+        widget.options = {:timezone_matters => false}
         widget.queue_generate_content
         MiqQueue.first.deliver
         expect(MiqWidgetContent.count).to eq(1)

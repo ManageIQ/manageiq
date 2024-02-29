@@ -187,7 +187,7 @@ class GenericObject < ApplicationRecord
     @tenant ||= User.current_user.current_tenant
     raise "A user is required to send [#{method_name}] to automate." unless @user
 
-    attrs = { :method_name => method_name }
+    attrs = {:method_name => method_name}
     args.each_with_index do |item, idx|
       attrs["param_#{idx + 1}".to_sym] = item
       attrs["param_#{idx + 1}_type".to_sym] = item.class.name

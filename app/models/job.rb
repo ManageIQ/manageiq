@@ -131,7 +131,7 @@ class Job < ApplicationRecord
   def timeout!
     message = "job timed out after #{Time.now - updated_on} seconds of inactivity.  Inactivity threshold [#{current_job_timeout} seconds]"
     _log.warn("Job: guid: [#{guid}], #{message}, aborting")
-    attributes = { :args => [message, "error"] }
+    attributes = {:args => [message, "error"]}
     MiqQueue.create_with(attributes).put_unless_exists(
       :class_name  => self.class.base_class.name,
       :instance_id => id,

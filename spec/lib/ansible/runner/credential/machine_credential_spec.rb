@@ -117,7 +117,7 @@ RSpec.describe Ansible::Runner::MachineCredential do
         end
 
         it "clobbers existing ssh key unlock keys" do
-          existing_data = { ssh_unlock_key => "hunter2" }
+          existing_data = {ssh_unlock_key => "hunter2"}
           expected_data = {
             "^SSH [pP]assword"    => "secret",
             "^BECOME [pP]assword" => "othersecret",
@@ -131,7 +131,7 @@ RSpec.describe Ansible::Runner::MachineCredential do
 
         it "appends data if not setting ssh_unlock_key" do
           auth.update!(:auth_key_password => nil)
-          existing_data = { ssh_unlock_key => "hunter2" }
+          existing_data = {ssh_unlock_key => "hunter2"}
           added_data    = {
             "^SSH [pP]assword"    => "secret",
             "^BECOME [pP]assword" => "othersecret"

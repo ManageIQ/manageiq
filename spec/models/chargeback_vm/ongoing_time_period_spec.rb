@@ -55,7 +55,7 @@ RSpec.describe ChargebackVm do
                              :single_value => true, :show => true)
     c = FactoryBot.create(:classification, :name => 'prod', :description => 'Production', :parent_id => cat.id)
     chargeback_rate = FactoryBot.create(:chargeback_rate, :detail_params => detail_params)
-    temp = { :cb_rate => chargeback_rate, :tag => [c, 'vm'] }
+    temp = {:cb_rate => chargeback_rate, :tag => [c, 'vm']}
     ChargebackRate.set_assignments(:compute, [temp])
   end
 

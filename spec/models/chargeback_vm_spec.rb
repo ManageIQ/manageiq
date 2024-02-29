@@ -224,7 +224,7 @@ RSpec.describe ChargebackVm do
           let(:parent_classification) { FactoryBot.create(:classification) }
           let(:classification)        { FactoryBot.create(:classification, :parent_id => parent_classification.id) }
 
-          let(:rate_assignment_options) { {:cb_rate => storage_chargeback_rate, :object => MiqEnterprise.first } }
+          let(:rate_assignment_options) { {:cb_rate => storage_chargeback_rate, :object => MiqEnterprise.first} }
           let(:options) { base_options.merge(:interval => 'daily', :tag => nil, :entity_id => resource.id, :include_metrics => false) }
 
           before do
@@ -914,7 +914,7 @@ RSpec.describe ChargebackVm do
 
       context "by owner" do
         let(:user) { FactoryBot.create(:user, :name => 'Test VM Owner', :userid => 'test_user') }
-        let(:options) { {:interval_size => 4, :owner => user.userid, :ext_options => {:tz => 'Eastern Time (US & Canada)'} } }
+        let(:options) { {:interval_size => 4, :owner => user.userid, :ext_options => {:tz => 'Eastern Time (US & Canada)'}} }
         before do
           @vm1.update_attribute(:evm_owner, user)
         end
@@ -1102,7 +1102,7 @@ RSpec.describe ChargebackVm do
 
       before do
         # fix fixed computes cost tier - we are not using variable part
-        detail_params[:chargeback_rate_detail_fixed_compute_cost][:tiers] = [{:fixed_rate => count_hourly_rate.to_s }]
+        detail_params[:chargeback_rate_detail_fixed_compute_cost][:tiers] = [{:fixed_rate => count_hourly_rate.to_s}]
 
         vm.tag_with([classification_1_1.tag.name, classification_2_1.tag.name], :ns => '*')
 

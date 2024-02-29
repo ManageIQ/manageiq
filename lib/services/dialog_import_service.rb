@@ -128,7 +128,7 @@ class DialogImportService
     dialog["dialog_tabs"].flat_map do |tab|
       tab["dialog_groups"].flat_map do |group|
         group["dialog_fields"].flat_map do |field|
-          associations << { field["name"] => field["dialog_field_responders"] } if field["dialog_field_responders"].present?
+          associations << {field["name"] => field["dialog_field_responders"]} if field["dialog_field_responders"].present?
         end
       end
     end

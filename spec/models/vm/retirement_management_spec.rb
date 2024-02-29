@@ -327,7 +327,7 @@ RSpec.describe "VM Retirement Management" do
   it "#raise_retirement_event with user" do
     event_name = 'foo'
     event_hash = {:userid => user, :vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm"}
-    options = {:zone => @zone.name, :user_id => user.id, :group_id => user.current_group_id, :tenant_id => user.current_tenant.id }
+    options = {:zone => @zone.name, :user_id => user.id, :group_id => user.current_group_id, :tenant_id => user.current_tenant.id}
 
     expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, options).once
     @vm.raise_retirement_event(event_name, user)

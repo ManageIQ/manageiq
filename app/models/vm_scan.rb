@@ -129,7 +129,7 @@ class VmScan < Job
   end
 
   def create_scan_args
-    scan_args = { 'ems' => config_ems_list }
+    scan_args = {'ems' => config_ems_list}
 
     # Check if Policy returned scan profiles to use, otherwise use the default profile if available.
     scan_args["vmScanProfiles"] = options[:scan_profiles] || vm.scan_profile_list

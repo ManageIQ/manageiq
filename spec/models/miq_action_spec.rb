@@ -448,7 +448,7 @@ RSpec.describe MiqAction do
 
     let(:miq_server) { EvmSpecHelper.local_miq_server }
     let(:action) { MiqAction.new }
-    let(:inputs) { { :policy => nil, :synchronous => false } }
+    let(:inputs) { {:policy => nil, :synchronous => false} }
 
     let(:q_options) do
       {
@@ -550,8 +550,8 @@ RSpec.describe MiqAction do
     end
 
     let(:request_options) do
-      { :manageiq_extra_vars => { "event_target" => vm.href_slug, "event_name" => event_name },
-        :initiator           => 'control' }
+      {:manageiq_extra_vars => {"event_target" => vm.href_slug, "event_name" => event_name},
+        :initiator           => 'control'}
     end
 
     shared_examples_for "#workflow check" do
@@ -567,30 +567,30 @@ RSpec.describe MiqAction do
 
     context "use event target" do
       let(:action_options) do
-        { :service_template_id => stap.id,
-          :use_event_target    => true }
+        {:service_template_id => stap.id,
+          :use_event_target    => true}
       end
-      let(:dialog_options) { {:hosts => ip1 } }
+      let(:dialog_options) { {:hosts => ip1} }
 
       it_behaves_like "#workflow check"
     end
 
     context "use localhost" do
       let(:action_options) do
-        { :service_template_id => stap.id,
-          :use_localhost       => true }
+        {:service_template_id => stap.id,
+          :use_localhost       => true}
       end
-      let(:dialog_options) { {:hosts => 'localhost' } }
+      let(:dialog_options) { {:hosts => 'localhost'} }
 
       it_behaves_like "#workflow check"
     end
 
     context "use hosts" do
       let(:action_options) do
-        { :service_template_id => stap.id,
-          :hosts               => "ip1, ip2" }
+        {:service_template_id => stap.id,
+          :hosts               => "ip1, ip2"}
       end
-      let(:dialog_options) { {:hosts => 'ip1, ip2' } }
+      let(:dialog_options) { {:hosts => 'ip1, ip2'} }
 
       it_behaves_like "#workflow check"
     end

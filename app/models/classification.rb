@@ -31,7 +31,7 @@ class Classification < ApplicationRecord
   scope :is_category, -> { where(:parent_id => nil) }
   scope :is_entry,    -> { where.not(:parent_id => nil) }
 
-  scope :with_writable_parents, -> { includes(:parent).where(:parents_classifications => { :read_only => false}) }
+  scope :with_writable_parents, -> { includes(:parent).where(:parents_classifications => {:read_only => false}) }
 
   DEFAULT_NAMESPACE = "/managed".freeze
 

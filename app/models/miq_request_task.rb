@@ -28,9 +28,9 @@ class MiqRequestTask < ApplicationRecord
   CANCEL_STATUS_FINISHED   = "canceled".freeze
   CANCEL_STATUS            = [CANCEL_STATUS_REQUESTED, CANCEL_STATUS_PROCESSING, CANCEL_STATUS_FINISHED].freeze
 
-  validates :cancelation_status, :inclusion => { :in        => CANCEL_STATUS,
+  validates :cancelation_status, :inclusion => {:in        => CANCEL_STATUS,
                                                  :allow_nil => true,
-                                                 :message   => "should be one of #{CANCEL_STATUS.join(", ")}" }
+                                                 :message   => "should be one of #{CANCEL_STATUS.join(", ")}"}
 
   def approved?
     if miq_request.class.name.include?('Template') && miq_request_task

@@ -147,7 +147,7 @@ RSpec.describe MiqReport do
                     :rpt_type  => "Custom",
                     :db        => "ManageIQ::Providers::InfraManager::Vm",
                     :cols      => %w[name num_disks],
-                    :include   => { "miq_provision_template" => { "columns" => %w[num_hard_disks] }},
+                    :include   => {"miq_provision_template" => {"columns" => %w[num_hard_disks]}},
                     :col_order => %w[name miq_provision_template.num_hard_disks num_disks],
                     :headers   => ["Name", "Provisioned From Template Number of Hard Disks", "Number of Disks"],
                     :order     => "Ascending")
@@ -288,9 +288,9 @@ RSpec.describe MiqReport do
     end
 
     let(:exp_3) do
-      MiqExpression.new("and" => [{"=" => { "field" => "#{vm_2.type}-active", "value" => "true"}},
-                                  {"or" => [{"IS NOT EMPTY" => { "field" => "#{vm_2.type}-name", "value" => ""}},
-                                            {"IS NOT EMPTY" => { "field" => "#{vm_2.type}-#{virtual_column_key_3}"}}]}])
+      MiqExpression.new("and" => [{"=" => {"field" => "#{vm_2.type}-active", "value" => "true"}},
+                                  {"or" => [{"IS NOT EMPTY" => {"field" => "#{vm_2.type}-name", "value" => ""}},
+                                            {"IS NOT EMPTY" => {"field" => "#{vm_2.type}-#{virtual_column_key_3}"}}]}])
     end
 
     it "generates report with dynamic custom attributes with filtering with field which is not listed in cols" do
@@ -703,7 +703,7 @@ RSpec.describe MiqReport do
 
         before do
           EvmSpecHelper.local_miq_server
-          rollup_params = {:capture_interval_name => 'daily', :time_profile_id => time_profile.id }
+          rollup_params = {:capture_interval_name => 'daily', :time_profile_id => time_profile.id}
           add_metric_rollups_for([vm], first_rollup_timestamp...last_rollup_timestamp, 24.hours, rollup_params)
         end
 
@@ -738,7 +738,7 @@ RSpec.describe MiqReport do
           :title   => "vim_perf_daily.yaml",
           :db      => "VimPerformanceDaily",
           :cols    => %w(timestamp cpu_usagemhz_rate_average max_derived_cpu_available),
-          :include => { "metric_rollup" => {
+          :include => {"metric_rollup" => {
             "columns" => %w(cpu_usagemhz_rate_average_high_over_time_period
                             cpu_usagemhz_rate_average_low_over_time_period
                             derived_memory_used_high_over_time_period
@@ -1060,7 +1060,7 @@ RSpec.describe MiqReport do
   context "chargeback reports" do
     let(:hourly_rate) { 0.01 }
     let(:hourly_variable_tier_rate) { {:variable_rate => hourly_rate.to_s} }
-    let(:detail_params) { {:chargeback_rate_detail_fixed_compute_cost => { :tiers => [hourly_variable_tier_rate] } } }
+    let(:detail_params) { {:chargeback_rate_detail_fixed_compute_cost => {:tiers => [hourly_variable_tier_rate]}} }
     let!(:chargeback_rate) do
       FactoryBot.create(:chargeback_rate, :detail_params => detail_params)
     end
@@ -1068,7 +1068,7 @@ RSpec.describe MiqReport do
       {
         :rpt_group     => "Custom",
         :rpt_type      => "Custom",
-        :include       => { :custom_attributes => {} },
+        :include       => {:custom_attributes => {}},
         :group         => "y",
         :template_type => "report",
       }
@@ -1094,15 +1094,15 @@ RSpec.describe MiqReport do
             :col_order   => ["project_name", "image_name", "display_range", label_report_column],
             :headers     => ["Project Name", "Image Name", "Date Range", nil],
             :sortby      => ["project_name", "image_name", "start_date"],
-            :db_options  => { :rpt_type => "ChargebackContainerImage",
-                              :options  => { :interval            => "daily",
+            :db_options  => {:rpt_type => "ChargebackContainerImage",
+                              :options  => {:interval            => "daily",
                                              :interval_size       => 28,
                                              :end_interval_offset => 1,
                                              :provider_id         => "all",
                                              :entity_id           => "all",
                                              :include_metrics     => true,
                                              :groupby             => "date",
-                                             :groupby_tag         => nil }},
+                                             :groupby_tag         => nil}},
             :col_options => ChargebackContainerImage.report_col_options
           )
         )
@@ -1123,7 +1123,7 @@ RSpec.describe MiqReport do
                                                   :parent_ems_id => ems.id,
                                                   :tag_names     => "")
 
-        ChargebackRate.set_assignments(:compute, [{ :cb_rate => chargeback_rate, :label => [label, "container_image"] }])
+        ChargebackRate.set_assignments(:compute, [{:cb_rate => chargeback_rate, :label => [label, "container_image"]}])
         rpt = report.generate_table(:userid => "admin")
         expect(rpt.keys).to contain_exactly(project_name, :_total_)
         row = rpt[project_name][:row]
@@ -1145,14 +1145,14 @@ RSpec.describe MiqReport do
             :headers     => ["Project Name", "Date Range", nil],
             :sortby      => ["project_name", "start_date"],
             :db_options  => {:rpt_type => "ChargebackContainerProject",
-                             :options  => { :interval            => "daily",
+                             :options  => {:interval            => "daily",
                                             :interval_size       => 28,
                                             :end_interval_offset => 1,
                                             :provider_id         => "all",
                                             :entity_id           => "all",
                                             :include_metrics     => true,
                                             :groupby             => "date",
-                                            :groupby_tag         => nil }},
+                                            :groupby_tag         => nil}},
             :col_options => ChargebackContainerProject.report_col_options
           )
         )
@@ -1170,7 +1170,7 @@ RSpec.describe MiqReport do
                                                     :resource_name => project.name,
                                                     :parent_ems_id => ems.id,
                                                     :tag_names     => "")
-        ChargebackRate.set_assignments(:compute, [{ :cb_rate => chargeback_rate, :object => ems }])
+        ChargebackRate.set_assignments(:compute, [{:cb_rate => chargeback_rate, :object => ems}])
         rpt = report.generate_table(:userid => "admin")
         row = rpt[project_name][:row]
         expect(row[label_report_column]).to eq(label_value)
@@ -1191,7 +1191,7 @@ RSpec.describe MiqReport do
             :headers     => ["Vm Name", "Date Range", nil],
             :sortby      => ["vm_name", "start_date"],
             :db_options  => {:rpt_type => "ChargebackVm",
-                             :options  => { :interval            => "daily",
+                             :options  => {:interval            => "daily",
                                             :interval_size       => 28,
                                             :end_interval_offset => 1,
                                             :provider_id         => "all",

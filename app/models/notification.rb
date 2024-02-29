@@ -82,7 +82,7 @@ class Notification < ApplicationRecord
         Rbac.filtered_object(subject, :user => User.find(subscriber_id)).blank?
       end
     end
-    self.notification_recipients_attributes = subscribers.collect { |id| {:user_id => id } }
+    self.notification_recipients_attributes = subscribers.collect { |id| {:user_id => id} }
   end
 
   def backup_subject_name

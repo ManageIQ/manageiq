@@ -8,33 +8,33 @@ RSpec.describe TaskHelpers::Exports::CustomizationTemplates do
   let(:provision_type2) { "vm" }
 
   let(:content1) do
-    { :name           => template_name,
+    {:name           => template_name,
       :description    => template_desc,
       :script         => template_script,
       :type           => template_type,
       :pxe_image_type => {
         :name => image_type_name1
-      } }
+      }}
   end
 
   let(:content2) do
-    { :name           => template_name,
+    {:name           => template_name,
       :description    => template_desc,
       :script         => template_script,
       :type           => template_type,
       :pxe_image_type => {
         :name           => image_type_name2,
         :provision_type => provision_type2
-      } }
+      }}
   end
 
   let(:content3) do
-    { :name           => template_name,
+    {:name           => template_name,
       :description    => template_desc,
       :script         => template_script,
       :type           => template_type,
       :system         => true,
-      :pxe_image_type => {} }
+      :pxe_image_type => {}}
   end
 
   let(:export_dir) do

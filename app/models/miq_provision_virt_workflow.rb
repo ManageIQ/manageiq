@@ -369,7 +369,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def source_vm_rbac_filter(vms, condition = nil, *extra_cols)
-    opts = { :user => @requester, :conditions => condition }
+    opts = {:user => @requester, :conditions => condition}
     opts[:extra_cols] = extra_cols unless extra_cols.empty?
     MiqSearch.filtered(get_value(@values[:vm_filter]).to_i, VmOrTemplate, vms, opts)
   end

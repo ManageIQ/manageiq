@@ -38,10 +38,10 @@ RSpec.describe DialogTab do
     context 'a collection of dialog groups containing two objects with ids and one without an id' do
       let(:updated_groups) do
         [
-          { 'id'            => dialog_groups.first.id,
+          {'id'            => dialog_groups.first.id,
             'label'         => 'updated_label',
-            'dialog_fields' => [{ 'id' => dialog_fields.first.id}]},
-          { 'id'            => dialog_groups.last.id,
+            'dialog_fields' => [{'id' => dialog_fields.first.id}]},
+          {'id'            => dialog_groups.last.id,
             'label'         => 'updated_label',
             'dialog_fields' => [{'id' => dialog_fields.last.id}]},
           {
@@ -69,7 +69,7 @@ RSpec.describe DialogTab do
     context 'with a dialog group removed from the dialog groups' do
       let(:updated_groups) do
         [
-          { 'id' => dialog_groups.first.id, 'dialog_fields' => []}
+          {'id' => dialog_groups.first.id, 'dialog_fields' => []}
         ]
       end
 

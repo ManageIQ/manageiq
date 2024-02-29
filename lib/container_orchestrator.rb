@@ -125,7 +125,7 @@ class ContainerOrchestrator
 
     Kubeclient::Client.new(
       uri,
-      :auth_options => { :bearer_token_file => TOKEN_FILE },
+      :auth_options => {:bearer_token_file => TOKEN_FILE},
       :ssl_options  => ssl_options
     )
   end

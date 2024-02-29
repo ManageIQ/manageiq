@@ -13,7 +13,7 @@ RSpec.describe EmsEvent do
   context "container events" do
     let(:ems_ref) { "test_ems_ref" }
     let(:ems) { FactoryBot.create(:ems_kubernetes) }
-    let(:event_hash) { { :ems_ref => "event-ref", :ems_id => ems.id, :event_type => "STUFF_HAPPENED" } }
+    let(:event_hash) { {:ems_ref => "event-ref", :ems_id => ems.id, :event_type => "STUFF_HAPPENED"} }
     let(:container_project) { FactoryBot.create(:container_project, :ext_management_system => ems) }
 
     context "on node" do
@@ -76,7 +76,7 @@ RSpec.describe EmsEvent do
     end
 
     context ".process_availability_zone_in_event!" do
-      let(:event_hash) { { :vm_or_template_id => vm.id } }
+      let(:event_hash) { {:vm_or_template_id => vm.id} }
       context "when the event has an availability zone" do
         before do
           event_hash[:availability_zone_ems_ref] = @availability_zone.ems_ref

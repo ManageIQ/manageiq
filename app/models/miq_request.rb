@@ -33,10 +33,10 @@ class MiqRequest < ApplicationRecord
   validates_inclusion_of :approval_state, :in => %w(pending_approval approved denied), :message => "should be 'pending_approval', 'approved' or 'denied'"
   validates_inclusion_of :status,         :in => %w(Ok Warn Error Timeout Denied)
 
-  validates :initiated_by, :inclusion => { :in => %w[user system] }, :allow_blank => true
-  validates :cancelation_status, :inclusion => { :in        => CANCEL_STATUS,
+  validates :initiated_by, :inclusion => {:in => %w[user system]}, :allow_blank => true
+  validates :cancelation_status, :inclusion => {:in        => CANCEL_STATUS,
                                                  :allow_nil => true,
-                                                 :message   => "should be one of #{CANCEL_STATUS.join(", ")}" }
+                                                 :message   => "should be one of #{CANCEL_STATUS.join(", ")}"}
 
   validate :validate_class, :validate_request_type
 

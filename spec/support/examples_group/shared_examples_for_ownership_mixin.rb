@@ -247,9 +247,9 @@ shared_examples_for "OwnershipMixin" do
 
     describe "reporting on ownership" do
       let(:exp_value) { "true" }
-      let(:exp) { { "="=> { "field" => "#{described_class}-owned_by_current_ldap_group", "value" => exp_value } } }
+      let(:exp) { {"="=> {"field" => "#{described_class}-owned_by_current_ldap_group", "value" => exp_value}} }
       let(:report) { MiqReport.new.tap { |r| r.db = described_class.to_s } }
-      let(:search_opts) { { :filter => MiqExpression.new(exp), :per_page => 20 } }
+      let(:search_opts) { {:filter => MiqExpression.new(exp), :per_page => 20} }
 
       before do
         expect(User).to receive(:server_timezone).and_return("UTC")
@@ -276,8 +276,8 @@ shared_examples_for "OwnershipMixin" do
       end
 
       context "searching on owned by the current user" do
-        let(:search_opts) { { :filter => MiqExpression.new(exp), :per_page => 20 } }
-        let(:exp) { { "=" => { "field" => "#{described_class}-owned_by_current_user", "value" => "true" } } }
+        let(:search_opts) { {:filter => MiqExpression.new(exp), :per_page => 20} }
+        let(:exp) { {"=" => {"field" => "#{described_class}-owned_by_current_user", "value" => "true"}} }
 
         it "returns results owned by the user" do
           owned_ids = report.paged_view_search(search_opts).first.map(&:id)
@@ -286,8 +286,8 @@ shared_examples_for "OwnershipMixin" do
       end
 
       context "searching on not owned by the current user" do
-        let(:search_opts) { { :filter => MiqExpression.new(exp), :per_page => 20 } }
-        let(:exp) { { "=" => { "field" => "#{described_class}-owned_by_current_user", "value" => "false" } } }
+        let(:search_opts) { {:filter => MiqExpression.new(exp), :per_page => 20} }
+        let(:exp) { {"=" => {"field" => "#{described_class}-owned_by_current_user", "value" => "false"}} }
 
         it "returns results not owned by the user, but have an owner" do
           owned_ids = report.paged_view_search(search_opts).first.map(&:id)

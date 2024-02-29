@@ -37,7 +37,7 @@ RSpec.describe VimPerformanceTagValue do
       let(:finish_time) { report_run_time - 14.hours }
 
       before do
-        metric_rollup_params = { :tag_names => "environment/dev" }
+        metric_rollup_params = {:tag_names => "environment/dev"}
         add_metric_rollups_for(development_vm, start_time...finish_time, 1.hour, metric_rollup_params)
       end
 

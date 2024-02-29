@@ -94,8 +94,8 @@ class Service < ApplicationRecord
   attribute :lifecycle_state, :default => 'unprovisioned'
   attribute :retired, :default => false
 
-  validates :visible, :inclusion => { :in => [true, false] }
-  validates :retired, :inclusion => { :in => [true, false] }
+  validates :visible, :inclusion => {:in => [true, false]}
+  validates :retired, :inclusion => {:in => [true, false]}
 
   scope :displayed, ->              { where(:visible => true) }
   scope :retired,   ->(bool = true) { where(:retired => bool) }

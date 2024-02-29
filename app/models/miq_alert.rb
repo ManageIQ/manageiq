@@ -11,7 +11,7 @@ class MiqAlert < ApplicationRecord
   validates :description, :presence => true, :uniqueness_when_changed => true, :length => {:maximum => 255}
   validate :validate_automate_expressions
   validate :validate_single_expression
-  validates :severity, :inclusion => { :in => SEVERITIES }
+  validates :severity, :inclusion => {:in => SEVERITIES}
 
   has_many :miq_alert_statuses, :dependent => :destroy
   before_save :set_responds_to_events

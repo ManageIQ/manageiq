@@ -91,7 +91,7 @@ module CustomAttributeMixin
 
   def self.to_human(column)
     col_name, section = column.gsub(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX, '').split(SECTION_SEPARATOR)
-    _("%{section}: %{custom_key}") % { :custom_key => col_name, :section => section.try(:titleize) || DEFAULT_SECTION_NAME}
+    _("%{section}: %{custom_key}") % {:custom_key => col_name, :section => section.try(:titleize) || DEFAULT_SECTION_NAME}
   end
 
   def self.column_name(custom_key)

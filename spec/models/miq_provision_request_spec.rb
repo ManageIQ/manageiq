@@ -25,7 +25,7 @@ RSpec.describe MiqProvisionRequest do
     end
 
     it "fails to retrieve the provision class when the vm does not exist" do
-      expect { described_class.request_task_class_from('options' => {:src_vm_id => -1 }) }.to raise_error(MiqException::MiqProvisionError)
+      expect { described_class.request_task_class_from('options' => {:src_vm_id => -1}) }.to raise_error(MiqException::MiqProvisionError)
     end
   end
 

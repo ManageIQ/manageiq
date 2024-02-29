@@ -103,7 +103,7 @@ RSpec.describe MiqReportResult do
 
       @report_theme = 'miq'
       @show_title   = true
-      @options = MiqReport.graph_options({ :title => "CPU (Mhz)", :type => "Line", :columns => ["col"] })
+      @options = MiqReport.graph_options({:title => "CPU (Mhz)", :type => "Line", :columns => ["col"]})
 
       allow(ManageIQ::Reporting::Charting).to receive(:detect_available_plugin).and_return(ManageIQ::Reporting::C3Charting)
     end
@@ -131,7 +131,7 @@ RSpec.describe MiqReportResult do
       report_result = rpt.build_create_results(:userid => "test")
 
       report_result.report
-      report_result.report.extras[:grouping] = { "extra data" => "not saved" }
+      report_result.report.extras[:grouping] = {"extra data" => "not saved"}
       report_result.save
 
       result_reload = MiqReportResult.last

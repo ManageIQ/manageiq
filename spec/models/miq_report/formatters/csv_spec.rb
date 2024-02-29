@@ -32,7 +32,7 @@ RSpec.describe MiqReport::Formatters::Csv do
 
     context "hidden columns" do
       let(:col_options) do
-        { 'name' => {:hidden => true}, 'file_version' => {:hidden => true} }
+        {'name' => {:hidden => true}, 'file_version' => {:hidden => true}}
       end
 
       let(:csv_output) do

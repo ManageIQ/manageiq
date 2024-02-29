@@ -22,7 +22,7 @@ RSpec.describe VmOrTemplate do
     before { subject }
 
     context "with attrs of template => false, ems_id => nil, host_id => nil" do
-      let(:attrs) { { :template => false, :ems_id => nil, :host_id => nil } }
+      let(:attrs) { {:template => false, :ems_id => nil, :host_id => nil} }
 
       it("is not #registered?")        { expect(subject.registered?).to be false }
       it("is not in registered_vms")   { expect(registered_vms).to_not include subject }
@@ -30,7 +30,7 @@ RSpec.describe VmOrTemplate do
     end
 
     context "with attrs template => false, ems_id => nil, host_id => [ID]" do
-      let(:attrs) { { :template => false, :ems_id => nil, :host_id => host.id } }
+      let(:attrs) { {:template => false, :ems_id => nil, :host_id => host.id} }
 
       it("is #registered?")            { expect(subject.registered?).to be true }
       it("is in registered_vms")       { expect(registered_vms).to include subject }
@@ -38,7 +38,7 @@ RSpec.describe VmOrTemplate do
     end
 
     context "with attrs template => false, ems_id => [ID], host_id => nil" do
-      let(:attrs) { { :template => false, :ems_id => ems.id, :host_id => nil } }
+      let(:attrs) { {:template => false, :ems_id => ems.id, :host_id => nil} }
 
       it("is not #registered?")        { expect(subject.registered?).to be false }
       it("is not in registered_vms")   { expect(registered_vms).to_not include subject }
@@ -46,7 +46,7 @@ RSpec.describe VmOrTemplate do
     end
 
     context "with attrs template => false, ems_id => [ID], host_id => [ID]" do
-      let(:attrs) { { :template => false, :ems_id => ems.id, :host_id => host.id } }
+      let(:attrs) { {:template => false, :ems_id => ems.id, :host_id => host.id} }
 
       it("is #registered?")            { expect(subject.registered?).to be true }
       it("is in registered_vms")       { expect(registered_vms).to include subject }
@@ -54,7 +54,7 @@ RSpec.describe VmOrTemplate do
     end
 
     context "with attrs template => true, ems_id => nil, host_id => nil" do
-      let(:attrs) { { :template => true, :ems_id => nil, :host_id => nil } }
+      let(:attrs) { {:template => true, :ems_id => nil, :host_id => nil} }
 
       it("is not #registered?")        { expect(subject.registered?).to be false }
       it("is not in registered_vms")   { expect(registered_vms).to_not include subject }
@@ -62,7 +62,7 @@ RSpec.describe VmOrTemplate do
     end
 
     context "with attrs if template => true, ems_id => nil, host_id => [ID]" do
-      let(:attrs) { { :template => true, :ems_id => nil, :host_id => host.id } }
+      let(:attrs) { {:template => true, :ems_id => nil, :host_id => host.id} }
 
       it("is not #registered?")        { expect(subject.registered?).to be false }
       it("is not in registered_vms")   { expect(registered_vms).to_not include subject }
@@ -70,7 +70,7 @@ RSpec.describe VmOrTemplate do
     end
 
     context "with attrs if template => true, ems_id => [ID], host_id => nil" do
-      let(:attrs) { { :template => true, :ems_id => ems.id, :host_id => nil } }
+      let(:attrs) { {:template => true, :ems_id => ems.id, :host_id => nil} }
 
       it("is not #registered?")        { expect(subject.registered?).to be false }
       it("is not in registered_vms")   { expect(registered_vms).to_not include subject }
@@ -78,7 +78,7 @@ RSpec.describe VmOrTemplate do
     end
 
     context "with attrs if template => true, ems_id => [ID], host_id => [ID]" do
-      let(:attrs) { { :template => true, :ems_id => ems.id, :host_id => host.id } }
+      let(:attrs) { {:template => true, :ems_id => ems.id, :host_id => host.id} }
 
       it("is #registered?")            { expect(subject.registered?).to be true }
       it("is in registered_vms")       { expect(registered_vms).to include subject }

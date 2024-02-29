@@ -51,9 +51,9 @@ module Spec
           child_options[key] = {:provision_index => index}
         end
 
-        model['top'] = { :type          => 'composite',
+        model['top'] = {:type          => 'composite',
                          :children      => children,
-                         :child_options => child_options }
+                         :child_options => child_options}
 
         build_service_template_tree(model)
       end

@@ -331,7 +331,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
     end
 
     describe "#update_in_provider" do
-      let(:update_params)      { { :scm_branch => "other_branch" } }
+      let(:update_params)      { {:scm_branch => "other_branch"} }
       let(:notify_update_args) { notification_args('update', update_params) }
 
       context "with valid params" do

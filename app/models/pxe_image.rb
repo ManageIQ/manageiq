@@ -49,7 +49,7 @@ class PxeImage < ApplicationRecord
     # arguments from final kernel command line.
     kernel_args = customization_template&.class&.kernel_args(
       pxe_server, self, mac_address
-    ) || { :ks => nil, :ksdevice => nil }
+    ) || {:ks => nil, :ksdevice => nil}
     contents = build_pxe_contents(kernel_args)
 
     pxe_server.write_file(filepath, contents)

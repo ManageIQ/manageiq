@@ -152,7 +152,7 @@ RSpec.describe MiqReport::Generator do
     end
 
     it "uses include" do
-      rpt = MiqReport.new(:db => "VmOrTemplate", :include => {"host" => { "columns" => %w(name hostname guid)}})
+      rpt = MiqReport.new(:db => "VmOrTemplate", :include => {"host" => {"columns" => %w(name hostname guid)}})
       expect(rpt.cols_for_report).to eq(%w(host.name host.hostname host.guid))
     end
 
@@ -170,7 +170,7 @@ RSpec.describe MiqReport::Generator do
       rpt = MiqReport.new(:db        => "VmOrTemplate",
                           :cols      => %w(vendor),
                           :col_order => %w(host.name host.hostname vendor),
-                          :include   => {"host" => { "columns" => %w(name hostname)}})
+                          :include   => {"host" => {"columns" => %w(name hostname)}})
       expect(rpt.cols_for_report).to match_array(%w(vendor host.name host.hostname))
     end
   end

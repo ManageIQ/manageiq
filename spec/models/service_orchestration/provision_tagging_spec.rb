@@ -19,7 +19,7 @@ RSpec.describe ServiceOrchestration::ProvisionTagging do
     let(:vm) { FactoryBot.create(:vm) }
     let(:service) { FactoryBot.build(:service_orchestration, :miq_request_task => miq_request_task) }
     let(:dialog_tag_options) do
-      { :dialog => {
+      {:dialog => {
         'Array::dialog_tag_0_env'     => 'Classification::1',
         'Array::dialog_tag_1_network' => 'Classification::11',
         'Array::dialog_tag_2_dept'    => 'Classification::21,Classification::22,Classification::23'

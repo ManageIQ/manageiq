@@ -46,7 +46,7 @@ RSpec.describe ServiceTemplateAnsibleTower do
     end
 
     it 'accepts a configuration' do
-      catalog_item_options[:config_info] = { :configuration => configuration_script }
+      catalog_item_options[:config_info] = {:configuration => configuration_script}
       service_template = ServiceTemplateAnsibleTower.create_catalog_item(catalog_item_options)
 
       expect(service_template.job_template).to eq(configuration_script)
@@ -115,7 +115,7 @@ RSpec.describe ServiceTemplateAnsibleTower do
       job_template = FactoryBot.create(:configuration_script)
       service_template = FactoryBot.create(:service_template_ansible_tower, :job_template => job_template)
       ra = FactoryBot.create(:resource_action, :action => 'Provision', :fqname => '/a/b/c')
-      service_template.create_resource_actions(:provision => { :fqname => ra.fqname })
+      service_template.create_resource_actions(:provision => {:fqname => ra.fqname})
 
       expected_config_info = {
         :configuration_script_id => job_template.id,

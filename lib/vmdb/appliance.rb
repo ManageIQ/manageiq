@@ -208,8 +208,8 @@ module Vmdb
         {:cmd => "netstat",  :params => [:statistics],                                :msg => "Network statistics"},
         {:cmd => -> { File.read('/etc/hosts') if File.exist?('/etc/hosts') },         :msg => "Hosts file contents"},
         {:cmd => -> { File.read('/etc/fstab') if File.exist?('/etc/fstab') },         :msg => "FStab file contents"},
-        {:cmd => -> { installed_gems },                                               :msg => "Installed Ruby Gems" },
-        {:cmd => -> { installed_rpms },                                               :msg => "Installed RPMs" },
+        {:cmd => -> { installed_gems },                                               :msg => "Installed Ruby Gems"},
+        {:cmd => -> { installed_rpms },                                               :msg => "Installed RPMs"},
       ]
     end
     private_class_method :init_diagnostics
