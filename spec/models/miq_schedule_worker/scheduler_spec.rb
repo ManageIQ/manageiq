@@ -20,7 +20,7 @@ RSpec.describe MiqScheduleWorker::Scheduler do
 
     it "accepts ruby options" do
       Timecop.freeze do
-        work = lambda {}
+        work = -> {}
         scheduler.schedule_every(schedule_name, 3.hours, :first_in => 1.hour, :tags => [:first, :tag], &work)
         job = rufus_scheduler.jobs.first
         expect(job.next_time).to eq(1.hour.from_now)
@@ -71,7 +71,7 @@ RSpec.describe MiqScheduleWorker::Scheduler do
     let(:schedule_name) { "schedule_cron" }
 
     it "returns the job" do
-      work = lambda {}
+      work = -> {}
       scheduler.schedule_cron(schedule_name, "0 0 * * *", :tags => [:a, :b], &work)
       job = rufus_scheduler.jobs.first
 
