@@ -168,9 +168,9 @@ module ManageIQ
 
       loop do
         if (id = scope.order(pk).limit(1).offset(batch_size).pluck(pk).first)
-          total += block.call(scope.where("#{pk} < ?", id))
+          total += yield(scope.where("#{pk} < ?", id))
         else
-          return total += block.call(scope)
+          return total += yield(scope)
         end
       end
     end
