@@ -29,7 +29,6 @@ class Tenant < ApplicationRecord
   has_many :vms, :inverse_of => :tenant
   has_many :miq_templates, :inverse_of => :tenant
   has_many :service_template_catalogs
-  has_many :service_templates
 
   has_many :tenant_quotas
   has_many :miq_groups

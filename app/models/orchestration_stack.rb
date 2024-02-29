@@ -21,8 +21,6 @@ class OrchestrationStack < ApplicationRecord
   belongs_to :tenant
   belongs_to :cloud_tenant
 
-  has_many   :authentication_orchestration_stacks
-  has_many   :authentications, :through => :authentication_orchestration_stacks
   has_many   :parameters, :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackParameter"
   has_many   :outputs,    :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackOutput"
   has_many   :resources,  :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackResource"
