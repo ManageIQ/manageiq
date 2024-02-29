@@ -994,7 +994,7 @@ class VmOrTemplate < ApplicationRecord
     # MiqServer coresident proxy needs to contact the host and provide credentials.
     # Remove any MiqServer instances if we do not have credentials
     rsc = self.scan_via_ems? ? ext_management_system : host
-    proxies.delete_if { |p| p.is_a?(MiqServer) } if rsc && !rsc.authentication_status_ok?
+    proxies.delete_if { |p| p.kind_of?(MiqServer) } if rsc && !rsc.authentication_status_ok?
     _log.debug("proxies2.length = #{proxies.length}")
 
     proxies

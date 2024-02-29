@@ -51,7 +51,7 @@ module Vmdb
       # @param settings (see .walk)
       def walk_passwords(settings)
         walk(settings) do |key, value, _path, owner|
-          yield(key, value, owner) if PASSWORD_FIELDS.any? { |p| key.to_s.include?(p.to_s) } && !(value.is_a?(settings.class) || value.is_a?(Array))
+          yield(key, value, owner) if PASSWORD_FIELDS.any? { |p| key.to_s.include?(p.to_s) } && !(value.kind_of?(settings.class) || value.kind_of?(Array))
         end
       end
 

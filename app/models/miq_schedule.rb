@@ -57,7 +57,7 @@ class MiqSchedule < ApplicationRecord
     val = self[:run_at]
     if val.kind_of?(Hash)
       st = val[:start_time]
-      if st && st.is_a?(String)
+      if st && st.kind_of?(String)
         val[:start_time] = st.to_time(:utc).utc
       end
     end

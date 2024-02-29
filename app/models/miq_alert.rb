@@ -259,7 +259,7 @@ class MiqAlert < ApplicationRecord
     status = miq_alert_statuses.find_or_initialize_by(:resource => target, :event_ems_ref => ems_ref)
     status.result = result
     status.ems_id = target.try(:ems_id)
-    status.ems_id ||= target.id if target.is_a?(ExtManagementSystem)
+    status.ems_id ||= target.id if target.kind_of?(ExtManagementSystem)
     status.description = status_description || description
     status.severity = severity
     status.severity = event_severity if event_severity.present?
