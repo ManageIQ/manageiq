@@ -8,8 +8,8 @@ class OrchestrationTemplate < ApplicationRecord
   has_many :stacks, :class_name => "OrchestrationStack"
   has_one :picture, :dependent => :destroy, :as => :resource, :autosave => true
 
-  attribute :draft, :default => false
-  attribute :orderable, :default => true
+  default_value_for :draft, false
+  default_value_for :orderable, true
 
   validates :md5,
             :uniqueness_when_changed => {:scope => :draft, :message => "of content already exists (content must be unique)"},

@@ -1,5 +1,5 @@
 class ServiceRetireTask < MiqRetireTask
-  attribute :request_type, :default => "service_retire"
+  default_value_for :request_type, "service_retire"
 
   def self.base_model
     ServiceRetireTask

@@ -9,7 +9,7 @@ class ServiceReconfigureRequest < MiqRequest
   virtual_has_one :provision_dialog
 
   default_value_for(:source_id)    { |r| r.get_option(:src_id) }
-  attribute :source_type, :default => SOURCE_CLASS_NAME
+  default_value_for :source_type,  SOURCE_CLASS_NAME
 
   def my_role(_action = nil)
     'ems_operations'

@@ -1,11 +1,10 @@
 class BlacklistedEvent < ApplicationRecord
   belongs_to        :ext_management_system, :foreign_key => "ems_id"
 
-  attribute :enabled, :default => true
-  after_validation  :log_enabling, :if => :enabled_changed?, :unless => :new_record?
-  after_create      :audit_creation
-  after_destroy     :reload_all_server_settings, :audit_deletion
+  default_value_for :enabled, true
   after_save        :reload_all_server_settings
+  after_destroy     :reload_all_server_settings, :audit_deletion
+  after_create      :audit_creation
 
   def audit_deletion
     $audit_log.info("Blacklisted event [#{event_name}] for provider [#{provider_model}] with ID [#{ems_id}] has been deleted by user [#{self.class.current_userid}]")
@@ -15,8 +14,11 @@ class BlacklistedEvent < ApplicationRecord
     $audit_log.info("Creating blacklisted event [#{event_name}] for provider [#{provider_model}] with ID [#{ems_id}] by user [#{self.class.current_userid}]")
   end
 
-  def log_enabling
-    $audit_log.info("Blacklisted event [#{event_name}] for provider [#{provider_model}] with ID [#{ems_id}] had enabled changed to #{enabled} by user [#{self.class.current_userid}]")
+  def enabled=(value)
+    return if enabled == value
+
+    super
+    $audit_log.info("Blacklisted event [#{event_name}] for provider [#{provider_model}] with ID [#{ems_id}] had enabled changed to #{value} by user [#{self.class.current_userid}]")
   end
 
   def self.seed

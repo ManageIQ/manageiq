@@ -29,10 +29,10 @@ class DialogField < ApplicationRecord
   validates :name, :exclusion => {:in      => %w(action controller),
                                   :message => "Field Name %{value} is reserved."}
 
-  attribute :required, :default => false
-  attribute :visible,  :default => true
+  default_value_for :required, false
+  default_value_for(:visible) { true }
   validates :visible, inclusion: { in: [ true, false ] }
-  attribute :load_values_on_init, :default => true
+  default_value_for :load_values_on_init, true
 
   serialize :values
   serialize :values_method_options,   Hash

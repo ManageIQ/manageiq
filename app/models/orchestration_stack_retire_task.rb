@@ -1,5 +1,5 @@
 class OrchestrationStackRetireTask < MiqRetireTask
-  attribute :request_type, :default => "orchestration_stack_retire"
+  default_value_for :request_type, "orchestration_stack_retire"
 
   def self.base_model
     OrchestrationStackRetireTask

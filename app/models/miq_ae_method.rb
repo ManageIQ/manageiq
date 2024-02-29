@@ -5,7 +5,7 @@ class MiqAeMethod < ApplicationRecord
   include MiqAeYamlImportExportMixin
   include RelativePathMixin
 
-  attribute :embedded_methods, :default => -> { [] }
+  default_value_for(:embedded_methods) { [] }
   # switch back to validates :exclusion once rails 6.1 issue is fixed
   # https://github.com/rails/rails/issues/41051
   validate :embedded_methods_not_nil

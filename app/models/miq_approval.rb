@@ -3,7 +3,7 @@ class MiqApproval < ApplicationRecord
   belongs_to :stamper,  :class_name => "User"
   belongs_to :miq_request
 
-  attribute :state, :default => "pending"
+  default_value_for :state, "pending"
 
   def approver=(approver)
     super

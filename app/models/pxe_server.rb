@@ -5,7 +5,7 @@ class PxeServer < ApplicationRecord
 
   alias_attribute :description, :name
 
-  attribute :customization_directory, :default => ""
+  default_value_for :customization_directory, ""
 
   serialize :visibility
 

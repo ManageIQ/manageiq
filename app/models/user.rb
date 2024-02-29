@@ -55,8 +55,9 @@ class User < ApplicationRecord
   alias_method :authenticate_bcrypt, :authenticate
 
   serialize     :settings, Hash   # Implement settings column as a hash
+  default_value_for(:settings) { Hash.new }
 
-  attribute :failed_login_attempts, :default => 0
+  default_value_for :failed_login_attempts, 0
 
   scope :in_all_regions, ->(id) { where(:userid => User.default_scoped.where(:id => id).select(:userid)) }
 

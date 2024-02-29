@@ -4,6 +4,8 @@ class TimeProfile < ApplicationRecord
   DEFAULT_TZ = "UTC".freeze
 
   serialize :profile
+  default_value_for :days,  ALL_DAYS
+  default_value_for :hours, ALL_HOURS
 
   has_many  :miq_reports
   has_many  :metric_rollups
@@ -73,7 +75,7 @@ class TimeProfile < ApplicationRecord
   end
 
   def days
-    profile.fetch(:days, ALL_DAYS)
+    profile[:days]
   end
 
   def days=(arr)
@@ -83,7 +85,7 @@ class TimeProfile < ApplicationRecord
   end
 
   def hours
-    profile.fetch(:hours, ALL_HOURS)
+    profile[:hours]
   end
 
   def hours=(arr)
