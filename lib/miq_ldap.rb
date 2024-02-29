@@ -95,7 +95,7 @@ class MiqLdap
       return selected_host if valid_address
     end
 
-    raise Net::LDAP::Error.new("unable to establish a connection to server")
+    raise Net::LDAP::Error, "unable to establish a connection to server"
   end
 
   def bind(username, password)
