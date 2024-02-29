@@ -162,9 +162,11 @@ module MiqReport::Generator::Html
             next if c_idx == 0 # Skip first column
 
             grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>"
-            grp_output << CGI.escapeHTML(
-              c.split("__").first % [extras[:grouping][group][calc.first][c], {:format => self.col_formats[c_idx] ? self.col_formats[c_idx] : :_default_}]
-            ) if extras[:grouping][group].key?(calc.first)
+            if extras[:grouping][group].key?(calc.first)
+              grp_output << CGI.escapeHTML(
+                c.split("__").first % [extras[:grouping][group][calc.first][c], {:format => self.col_formats[c_idx] ? self.col_formats[c_idx] : :_default_}]
+              )
+            end
             grp_output << "</td>"
           end
           grp_output << "</tr>"

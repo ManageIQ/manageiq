@@ -882,11 +882,13 @@ end
     parse_ws_hardware_fields(:networks, /^network(\d{1,2})$/, values, data) { |n, v, _i| n[:network] = v }
 
     # Check and remove invalid networks specifications
-    values[:networks].delete_if do |d|
-      result = d[:network].blank?
-      _log.warn("Skipping network due to blank name: <#{d.inspect}>") if result == true
-      result
-    end if values[:networks].present?
+    if values[:networks].present?
+      values[:networks].delete_if do |d|
+        result = d[:network].blank?
+        _log.warn("Skipping network due to blank name: <#{d.inspect}>") if result == true
+        result
+      end
+    end
   end
 
   def ws_hardware_scsi_controller_fields(values, data)
@@ -904,11 +906,13 @@ end
     end
 
     # Check and remove invalid disk specifications
-    values[:disk_scsi].delete_if do |d|
-      result = d[:sizeInMB].to_i == 0
-      _log.warn("Skipping disk due to invalid size: <#{d.inspect}>") if result == true
-      result
-    end if values[:disk_scsi].present?
+    if values[:disk_scsi].present?
+      values[:disk_scsi].delete_if do |d|
+        result = d[:sizeInMB].to_i == 0
+        _log.warn("Skipping disk due to invalid size: <#{d.inspect}>") if result == true
+        result
+      end
+    end
   end
 
   def parse_ws_hardware_fields(hw_key, regex_filter, values, data)

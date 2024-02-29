@@ -241,43 +241,47 @@ class MiqAction < ApplicationRecord
     snmp_inputs[trap_id_key] = action.options[:trap_id]
 
     vars = []
-    action.options[:variables].each do |h|
-      value = h[:value]
+    unless action.options[:variables].nil?
+      action.options[:variables].each do |h|
+        value = h[:value]
 
-      value = value.gsub(RE_SUBST) do |_s|
-        # s  is ${anything_in_between}
-        # $1 is   anything_in_between
-        subst = ""
-        what, method = $1.strip.split(".")
+        unless value.nil?
+          value = value.gsub(RE_SUBST) do |_s|
+            # s  is ${anything_in_between}
+            # $1 is   anything_in_between
+            subst = ""
+            what, method = $1.strip.split(".")
 
-        what   = what.strip.downcase   unless what.nil?
-        method = method.strip.downcase unless method.nil?
-        # ${Cause.Description}
-        if what == "cause"
-          if method == "description"
-            subst = "Policy: #{inputs[:policy].description}" if inputs[:policy].kind_of?(MiqPolicy)
-            subst = "Alert: #{inputs[:policy].description}"  if inputs[:policy].kind_of?(MiqAlert)
+            what   = what.strip.downcase   unless what.nil?
+            method = method.strip.downcase unless method.nil?
+            # ${Cause.Description}
+            if what == "cause"
+              if method == "description"
+                subst = "Policy: #{inputs[:policy].description}" if inputs[:policy].kind_of?(MiqPolicy)
+                subst = "Alert: #{inputs[:policy].description}"  if inputs[:policy].kind_of?(MiqAlert)
+              end
+            end
+
+            # ${Object.method}
+            if what == "object"
+              if method == "type"
+                subst = rec.class.to_s
+              elsif method == "ems" && rec.respond_to?(:ext_management_system)
+                ems = rec.ext_management_system
+                subst = "vCenter #{ems.hostname}/#{ems.ipaddress}" unless ems.nil?
+              elsif rec.respond_to?(method)
+                subst = rec.send(method)
+              end
+            end
+
+            subst
           end
         end
 
-        # ${Object.method}
-        if what == "object"
-          if method == "type"
-            subst = rec.class.to_s
-          elsif method == "ems" && rec.respond_to?(:ext_management_system)
-            ems = rec.ext_management_system
-            subst = "vCenter #{ems.hostname}/#{ems.ipaddress}" unless ems.nil?
-          elsif rec.respond_to?(method)
-            subst = rec.send(method)
-          end
-        end
-
-        subst
-      end unless value.nil?
-
-      h[:value] = value
-      vars << h
-    end unless action.options[:variables].nil?
+        h[:value] = value
+        vars << h
+      end
+    end
 
     snmp_inputs[:object_list] = vars
 

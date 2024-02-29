@@ -95,12 +95,14 @@ class GenericMailer < ActionMailer::Base
     when String   # Actual Body
       blob_to_attachment(:attachment => attachment)
     when Hash
-      attachment[:body] ||= begin
-        blob = BinaryBlob.find(attachment.delete(:attachment_id))
-        body = blob.binary unless blob.nil?
-        blob.destroy unless blob.nil?
-        body
-      end if attachment[:attachment_id].kind_of?(Numeric)
+      if attachment[:attachment_id].kind_of?(Numeric)
+        attachment[:body] ||= begin
+          blob = BinaryBlob.find(attachment.delete(:attachment_id))
+          body = blob.binary unless blob.nil?
+          blob.destroy unless blob.nil?
+          body
+        end
+      end
       attachment[:filename] ||= "evm_attachment"
       attachment
     else

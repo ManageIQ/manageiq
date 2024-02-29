@@ -48,12 +48,14 @@ module MiqServer::WorkerManagement::Dequeue
   end
 
   def get_queue_message(pid)
-    @workers_lock.synchronize(:SH) do
-      w = @workers[pid]
+    unless @workers_lock.nil?
+      @workers_lock.synchronize(:SH) do
+        w = @workers[pid]
 
-      msg = get_queue_message_for_worker(w)
-      [msg[:id], msg[:lock_version]] if msg
-    end unless @workers_lock.nil?
+        msg = get_queue_message_for_worker(w)
+        [msg[:id], msg[:lock_version]] if msg
+      end
+    end
   end
 
   def prefetch_stale_threshold
@@ -89,29 +91,33 @@ module MiqServer::WorkerManagement::Dequeue
 
   def get_worker_count_and_priority_by_queue_name
     queue_names = {}
-    @workers_lock.synchronize(:SH) do
-      @workers.each do |_pid, w|
-        next if w[:queue_name].nil?
-        next if w[:class].nil?
-        next unless get_worker_dequeue_method(w[:class]) == :drb
+    unless @workers_lock.nil?
+      @workers_lock.synchronize(:SH) do
+        @workers.each do |_pid, w|
+          next if w[:queue_name].nil?
+          next if w[:class].nil?
+          next unless get_worker_dequeue_method(w[:class]) == :drb
 
-        options = (queue_names[w[:queue_name]] ||= [0, MiqQueue::MAX_PRIORITY])
-        options[0] += 1
-        options[1]  = MiqQueue.lower_priority(get_queue_priority_for_worker(w), options[1])
+          options = (queue_names[w[:queue_name]] ||= [0, MiqQueue::MAX_PRIORITY])
+          options[0] += 1
+          options[1]  = MiqQueue.lower_priority(get_queue_priority_for_worker(w), options[1])
+        end
       end
-    end unless @workers_lock.nil?
+    end
     queue_names
   end
 
   def register_worker(worker_pid, worker_class, queue_name)
     worker_class = worker_class.constantize if worker_class.kind_of?(String)
 
-    @workers_lock.synchronize(:EX) do
-      worker_add(worker_pid)
-      h = @workers[worker_pid]
-      h[:class] ||= worker_class
-      h[:queue_name] ||= queue_name
-    end unless @workers_lock.nil?
+    unless @workers_lock.nil?
+      @workers_lock.synchronize(:EX) do
+        worker_add(worker_pid)
+        h = @workers[worker_pid]
+        h[:class] ||= worker_class
+        h[:queue_name] ||= queue_name
+      end
+    end
   end
 
   def populate_queue_messages

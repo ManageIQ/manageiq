@@ -5,9 +5,11 @@ module MiqServer::WorkerManagement::Monitor::Reason
   NOT_RESPONDING  = :not_responding
 
   def worker_set_monitor_reason(pid, reason)
-    @workers_lock.synchronize(:EX) do
-      @workers[pid][:monitor_reason] = reason if @workers.key?(pid)
-    end unless @workers_lock.nil?
+    unless @workers_lock.nil?
+      @workers_lock.synchronize(:EX) do
+        @workers[pid][:monitor_reason] = reason if @workers.key?(pid)
+      end
+    end
   end
 
   def worker_get_monitor_reason(pid)

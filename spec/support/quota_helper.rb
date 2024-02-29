@@ -3,16 +3,20 @@ module Spec
     module QuotaHelper
       def create_category_and_tag(category, tag)
         cat = Classification.lookup_by_name(category)
-        cat = Classification.create_category!(:name         => category,
-                                              :single_value => false,
-                                              :description  => category) unless cat
-        cat.add_entry(:description  => tag,
-                      :read_only    => "0",
-                      :syntax       => "string",
-                      :name         => tag,
-                      :example_text => nil,
-                      :default      => true,
-                      :single_value => "0") if cat
+        unless cat
+          cat = Classification.create_category!(:name         => category,
+                                                :single_value => false,
+                                                :description  => category)
+        end
+        if cat
+          cat.add_entry(:description  => tag,
+                        :read_only    => "0",
+                        :syntax       => "string",
+                        :name         => tag,
+                        :example_text => nil,
+                        :default      => true,
+                        :single_value => "0")
+        end
       end
 
       def setup_tags

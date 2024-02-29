@@ -179,11 +179,13 @@ class MiqEvent < EventStream
   end
 
   def self.raise_evm_alert_event_queue(target, raw_event, inputs = {})
-    MiqQueue.put_unless_exists(
-      :class_name  => "MiqAlert",
-      :method_name => 'evaluate_alerts',
-      :args        => [[target.class.name, target.id], raw_event, inputs]
-    ) if MiqAlert.alarm_has_alerts?(raw_event)
+    if MiqAlert.alarm_has_alerts?(raw_event)
+      MiqQueue.put_unless_exists(
+        :class_name  => "MiqAlert",
+        :method_name => 'evaluate_alerts',
+        :args        => [[target.class.name, target.id], raw_event, inputs]
+      )
+    end
   end
 
   def self.raise_evm_job_event(target, options = {}, inputs = {}, q_options = {})

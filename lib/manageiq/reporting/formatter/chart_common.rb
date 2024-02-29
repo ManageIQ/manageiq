@@ -391,8 +391,10 @@ module ManageIQ
                      :tooltip => "#{key1} / #{val2}")
             end
 
-            series.push(:value   => other[val2],
-                        :tooltip => "Other / #{val2}") if show_other
+            if show_other
+              series.push(:value   => other[val2],
+                          :tooltip => "Other / #{val2}")
+            end
             label = val2 if val2.kind_of?(String)
             label = label.to_s.gsub(/\\/, ' \ ')
             label = _('no value') if label.blank?

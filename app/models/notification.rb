@@ -101,10 +101,12 @@ class Notification < ApplicationRecord
       next unless value
 
       # Set the link based on the notification_type.link_to
-      result[:link] = {
-        :id    => value.id,
-        :model => value.class.name
-      } if notification_type.link_to.try(:to_sym) == key
+      if notification_type.link_to.try(:to_sym) == key
+        result[:link] = {
+          :id    => value.id,
+          :model => value.class.name
+        }
+      end
 
       result[key] = {
         :text => value.try(:name) || value.try(:description)

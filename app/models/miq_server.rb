@@ -199,11 +199,13 @@ class MiqServer < ApplicationRecord
     Benchmark.realtime_block(:heartbeat)               { heartbeat }         if threshold_exceeded?(:heartbeat_frequency, now)
     Benchmark.realtime_block(:server_dequeue)          { process_miq_queue } if threshold_exceeded?(:server_dequeue_frequency, now)
 
-    Benchmark.realtime_block(:server_monitor) do
-      server_monitor.monitor_servers
-      monitor_server_roles if self.is_master?
-      messaging_health_check
-    end if threshold_exceeded?(:server_monitor_frequency, now)
+    if threshold_exceeded?(:server_monitor_frequency, now)
+      Benchmark.realtime_block(:server_monitor) do
+        server_monitor.monitor_servers
+        monitor_server_roles if self.is_master?
+        messaging_health_check
+      end
+    end
 
     Benchmark.realtime_block(:log_active_servers)      { log_active_servers }                     if threshold_exceeded?(:server_log_frequency, now)
     Benchmark.realtime_block(:role_monitor)            { monitor_active_roles }                   if threshold_exceeded?(:server_role_monitor_frequency, now)

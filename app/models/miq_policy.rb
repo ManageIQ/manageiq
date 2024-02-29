@@ -309,10 +309,12 @@ class MiqPolicy < ApplicationRecord
         policy_hash['result'], policy_hash['conditions'] = resolve_policy_conditions(p, rec)
 
         action_on = policy_hash["result"] == "deny" ? :failure : :success
-        policy_hash["actions"] =
-          p.actions_for_event(event, action_on).uniq.collect do |a|
-            {"id" => a.id, "name" => a.name, "description" => a.description, "result" => policy_hash["result"]}
-          end unless event.nil?
+        unless event.nil?
+          policy_hash["actions"] =
+            p.actions_for_event(event, action_on).uniq.collect do |a|
+              {"id" => a.id, "name" => a.name, "description" => a.description, "result" => policy_hash["result"]}
+            end
+        end
       end
       p.attributes.merge(policy_hash)
     end.compact

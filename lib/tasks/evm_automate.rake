@@ -247,10 +247,14 @@ namespace :evm do
       raise "Must specify the ZIP_FILE or EXPORT_DIR or YAML_FILE to store converted model" if zip_file.nil? && export_dir.nil? && yaml_file.nil?
 
       model_filename = ENV.fetch("FILE", nil)
-      raise "Must specify legacy automation backup file xml to " + \
-            "convert to the new automate model:  - Usage FILE='xml_filename'" if model_filename.nil?
-      raise "Automation file to use for conversion does not " + \
-            "exist: #{model_filename}"  unless File.exist?(model_filename)
+      if model_filename.nil?
+        raise "Must specify legacy automation backup file xml to " + \
+              "convert to the new automate model:  - Usage FILE='xml_filename'"
+      end
+      unless File.exist?(model_filename)
+        raise "Automation file to use for conversion does not " + \
+              "exist: #{model_filename}"
+      end
       puts "Converting the automation model from the xml file: #{model_filename}"
       MiqAeDatastore.convert(model_filename, domain_name, export_options)
       puts "The automate model has been converted from : #{model_filename}"

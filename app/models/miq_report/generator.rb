@@ -555,9 +555,11 @@ module MiqReport::Generator
       end
     end
     arr.sort_by! { |a| a[1] }
-    while arr.first[1] == "[None]"
-      arr.push(arr.shift)
-    end unless arr.blank? || (arr.first[1] == "[None]" && arr.last[1] == "[None]")
+    unless arr.blank? || (arr.first[1] == "[None]" && arr.last[1] == "[None]")
+      while arr.first[1] == "[None]"
+        arr.push(arr.shift)
+      end
+    end
     arr.each do |c, h|
       self.cols.push(c)
       col_order.push(c)
@@ -565,9 +567,11 @@ module MiqReport::Generator
     end
 
     tarr = Array(tags2desc).sort_by { |t| t[1] }
-    while tarr.first[1] == "[None]"
-      tarr.push(tarr.shift)
-    end unless tarr.blank? || (tarr.first[1] == "[None]" && tarr.last[1] == "[None]")
+    unless tarr.blank? || (tarr.first[1] == "[None]" && tarr.last[1] == "[None]")
+      while tarr.first[1] == "[None]"
+        tarr.push(tarr.shift)
+      end
+    end
     self.extras[:group_by_tags] = tarr.collect { |a| a[0] }
     self.extras[:group_by_tag_descriptions] = tarr.collect { |a| a[1] }
   end
@@ -743,9 +747,11 @@ module MiqReport::Generator
         attrs[a] = rec.send(a)
 end
     end
-    attrs = attrs.each_with_object({}) do |(k, v), h|
-      h["#{options[:qualify_attribute_names]}.#{k}"] = v
-    end if options[:qualify_attribute_names]
+    if options[:qualify_attribute_names]
+      attrs = attrs.each_with_object({}) do |(k, v), h|
+        h["#{options[:qualify_attribute_names]}.#{k}"] = v
+      end
+    end
     attrs
   end
 

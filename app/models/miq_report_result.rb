@@ -250,15 +250,17 @@ class MiqReportResult < ApplicationRecord
 
     sync = ::Settings.product.report_sync
 
-    MiqQueue.submit_job(
-      :service     => "reporting",
-      :class_name  => self.class.name,
-      :instance_id => id,
-      :method_name => "_async_generate_result",
-      :msg_timeout => report.queue_timeout,
-      :args        => [task.id, result_type.to_sym, options],
-      :priority    => MiqQueue::HIGH_PRIORITY
-    ) unless sync
+    unless sync
+      MiqQueue.submit_job(
+        :service     => "reporting",
+        :class_name  => self.class.name,
+        :instance_id => id,
+        :method_name => "_async_generate_result",
+        :msg_timeout => report.queue_timeout,
+        :args        => [task.id, result_type.to_sym, options],
+        :priority    => MiqQueue::HIGH_PRIORITY
+      )
+    end
     _async_generate_result(task.id, result_type.to_sym, options) if sync
 
     AuditEvent.success(

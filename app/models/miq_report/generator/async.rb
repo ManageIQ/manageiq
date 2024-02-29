@@ -6,14 +6,16 @@ module MiqReport::Generator::Async
       sync = ::Settings.product.report_sync
 
       task = MiqTask.create(:name => "Generate Reports: #{options[:reports].collect(&:name).inspect}")
-      MiqQueue.submit_job(
-        :service     => "reporting",
-        :class_name  => to_s,
-        :method_name => "_async_generate_tables",
-        :args        => [task.id, options],
-        :priority    => MiqQueue::HIGH_PRIORITY,
-        :msg_timeout => default_queue_timeout.to_i_with_method
-      ) unless sync # Only queued if sync reporting disabled (default)
+      unless sync
+        MiqQueue.submit_job(
+          :service     => "reporting",
+          :class_name  => to_s,
+          :method_name => "_async_generate_tables",
+          :args        => [task.id, options],
+          :priority    => MiqQueue::HIGH_PRIORITY,
+          :msg_timeout => default_queue_timeout.to_i_with_method
+        )
+      end # Only queued if sync reporting disabled (default)
       AuditEvent.success(:event => "generate_tables", :target_class => base_class.name, :userid => options[:userid], :message => "#{task.name}, successfully initiated")
       task.update_status("Queued", "Ok", "Task has been queued")
       _async_generate_tables(task.id, options) if sync # Only runs if sync reporting enabled

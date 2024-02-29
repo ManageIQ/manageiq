@@ -86,9 +86,11 @@ class MiqAeClass < ApplicationRecord
 
     xml.MiqAeClass(xml_attrs) do
       ae_methods.sort_by(&:fqname).each { |m| m.to_export_xml(:builder => xml) }
-      xml.MiqAeSchema do
-        ae_fields.sort_by(&:priority).each { |f| f.to_export_xml(:builder => xml) }
-      end unless ae_fields.empty?
+      unless ae_fields.empty?
+        xml.MiqAeSchema do
+          ae_fields.sort_by(&:priority).each { |f| f.to_export_xml(:builder => xml) }
+        end
+      end
       ae_instances.sort_by(&:fqname).each { |i| i.to_export_xml(:builder => xml) }
     end
   end

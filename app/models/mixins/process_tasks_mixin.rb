@@ -162,12 +162,14 @@ module ProcessTasksMixin
 
     # default implementation, can be overridden
     def invoke_task_local(task, instance, options, args)
-      cb = {
-        :class_name  => task.class.to_s,
-        :instance_id => task.id,
-        :method_name => :queue_callback,
-        :args        => ["Finished"]
-      } if task
+      if task
+        cb = {
+          :class_name  => task.class.to_s,
+          :instance_id => task.id,
+          :method_name => :queue_callback,
+          :args        => ["Finished"]
+        }
+      end
 
       q_hash = {
         :class_name   => name,

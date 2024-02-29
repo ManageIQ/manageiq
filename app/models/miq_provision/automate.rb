@@ -101,19 +101,23 @@ module MiqProvision::Automate
 
     networks = ws.root("networks")
 
-    networks.each do |network|
-      next unless network.kind_of?(Hash)
-      next unless network[:vc_id] == vc_id
-      next unless vlan_name.casecmp(network[:vlan]) == 0
+    if networks.kind_of?(Array)
+      networks.each do |network|
+        next unless network.kind_of?(Hash)
+        next unless network[:vc_id] == vc_id
+        next unless vlan_name.casecmp(network[:vlan]) == 0
 
-      # Remove passwords
-      network[:dhcp_servers].each do |dhcp|
-        domain = dhcp[:domain]
-        domain.delete(:bind_password) if domain.kind_of?(Hash)
-      end if network[:dhcp_servers].kind_of?(Array)
+        # Remove passwords
+        if network[:dhcp_servers].kind_of?(Array)
+          network[:dhcp_servers].each do |dhcp|
+            domain = dhcp[:domain]
+            domain.delete(:bind_password) if domain.kind_of?(Hash)
+          end
+        end
 
-      return network
-    end if networks.kind_of?(Array)
+        return network
+      end
+    end
 
     _log.warn("- No Network matched in Automate Results: #{ws.to_expanded_xml}")
     nil

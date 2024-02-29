@@ -220,11 +220,13 @@ module ScanningMixin
 
     data_dir = Rails.root.join("data/metadata").to_s
     _log.debug("creating #{data_dir}")
-    begin
-      Dir.mkdir(data_dir)
-    rescue Errno::EEXIST
-      # Ignore if the directory was created by another thread.
-    end unless File.exist?(data_dir)
+    unless File.exist?(data_dir)
+      begin
+        Dir.mkdir(data_dir)
+      rescue Errno::EEXIST
+        # Ignore if the directory was created by another thread.
+      end
+    end
     ost.skipConfig = true
     ost.config = OpenStruct.new(
       :dataDir            => data_dir,
