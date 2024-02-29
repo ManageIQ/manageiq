@@ -80,7 +80,7 @@ module Vmdb
     config.assets.version = '1.0'
 
     # Set the manifest file name so that we are sure it gets overwritten on updates
-    config.assets.manifest = Rails.root.join("public/assets/.sprockets-manifest.json").to_s
+    config.assets.manifest = Rails.public_path.join('assets/.sprockets-manifest.json').to_s
 
     # Disable ActionCable's request forgery protection
     # This is basically matching a set of allowed origins which is not good for us
