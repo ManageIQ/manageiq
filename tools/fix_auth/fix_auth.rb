@@ -79,7 +79,7 @@ module FixAuth
     end
 
     def load_rails
-      require File.expand_path("../../../config/application.rb", __FILE__)
+      require File.expand_path('../../config/application.rb', __dir__)
     end
 
     def set_passwords

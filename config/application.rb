@@ -1,5 +1,5 @@
-require File.expand_path('../boot', __FILE__)
-require File.expand_path('../preinitializer', __FILE__)
+require File.expand_path('boot', __dir__)
+require File.expand_path('preinitializer', __dir__)
 require 'rails'
 require 'active_record/railtie'
 require 'action_controller/railtie'
