@@ -661,7 +661,7 @@ class VmOrTemplate < ApplicationRecord
 
   def self.repository_parse_path(path)
     path.gsub!(/\\/, "/")
-    #it's empty string for local type
+    # it's empty string for local type
     storage_name = ""
     # NAS
     relative_path = if path.starts_with?("//")
@@ -670,7 +670,7 @@ class VmOrTemplate < ApplicationRecord
                       # path is a UNC
                       storage_name = path.split("/")[0..3].join("/")
                       path.split("/")[4..path.length].join("/") if path.length > 4
-                    #VMFS
+                    # VMFS
                     elsif path.starts_with?("[")
                       raise _("path, '%{path}', is malformed") % {:path => path} unless path =~ /^\[[^\]].+\].*$/
 

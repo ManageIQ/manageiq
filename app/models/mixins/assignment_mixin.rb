@@ -13,7 +13,7 @@ module AssignmentMixin
   end
   module_function :all_assignments
 
-  included do #:nodoc:
+  included do # :nodoc:
     acts_as_miq_taggable
 
     const_set("ASSIGNMENT_PARENT_ASSOCIATIONS", %i(parent_blue_folders parent_resource_pool host ems_cluster ext_management_system my_enterprise physical_server)) unless const_defined?("ASSIGNMENT_PARENT_ASSOCIATIONS")

@@ -27,7 +27,7 @@ class ProviderTagMapping
         :model_class       => Tag,
         # more than needed to identify, doesn't matter much as we use custom save
         :manager_ref       => [:category_tag_id, :entry_name, :entry_description],
-        #:arel            => Tag.all,
+        # :arel            => Tag.all,
         :custom_save_block => lambda do |_ems, inv_collection|
           # TODO: O(N) queries, optimize.
           inv_collection.each do |inv_object|

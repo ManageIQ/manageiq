@@ -20,7 +20,7 @@ RSpec.describe Vmdb::Settings do
       end
 
       expect(walked).to eq [
-        #key value                       path
+        # key value                       path
         [:a, {:b => 'c'},                [:a]],
         [:b, 'c',                        [:a, :b]],
         [:d, {:e => {:f => 'g'}},        [:d]],

@@ -232,7 +232,7 @@ module ManageIQ
       with_output_buffer { value = yield(*args) }.presence || value
     end
 
-    def with_output_buffer(buf = nil) #:nodoc:
+    def with_output_buffer(buf = nil) # :nodoc:
       unless buf
         buf = ""
         if output_buffer && output_buffer.respond_to?(:encoding)

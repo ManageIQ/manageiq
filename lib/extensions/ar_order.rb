@@ -4,7 +4,7 @@ module ActiveRecord
   module ConnectionAdapters
     module PostgreSQL
       module SchemaStatements
-        def columns_for_distinct(columns, orders) #:nodoc:
+        def columns_for_distinct(columns, orders) # :nodoc:
           order_columns = orders.reject(&:blank?).map { |s|
               # Convert Arel node to string
                             unless s.is_a?(String)
