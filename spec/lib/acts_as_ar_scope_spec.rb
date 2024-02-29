@@ -7,8 +7,8 @@ RSpec.describe ActsAsArScope do
           @vm_ids ||= []
         end
 
-        def self.vm_ids=(new_ids)
-          @vm_ids = new_ids
+        class << self
+          attr_writer :vm_ids
         end
 
         def self.aar_scope
