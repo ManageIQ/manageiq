@@ -114,6 +114,7 @@ class Snapshot < ApplicationRecord
         e.each_recursive do |e1|
           total_size += e1.attributes['size_on_disk'].to_i
           next unless e1.name == "disk"
+
           nh[:disks] << e1.attributes.to_h
 
           # If we do not get a snapshot create time in the header use the file create time

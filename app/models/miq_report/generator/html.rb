@@ -151,6 +151,7 @@ end
     if extras && extras[:grouping] && extras[:grouping][group] # See if group key exists
       MiqReport::GROUPINGS.each do |calc| # Add an output row for each group calculation
         next unless extras[:grouping][group].key?(calc.first) # Only add a row if there are calcs of this type for this group value
+
         grp_output = ""
         grp_output << "<tr>"
         grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>#{_(calc.last)}:</td>"

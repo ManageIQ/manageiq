@@ -72,6 +72,7 @@ class Volume < ApplicationRecord
 
       nhv = nh[:volume]
       next if nhv.nil?
+
       name = nhv[:name]
       found = parent.hardware.volumes.where(:name => name).order(:id)
 

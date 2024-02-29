@@ -50,6 +50,7 @@ ExtManagementSystem.all.each do |e|
       :old => {:size => d.size, :disk_type => d.disk_type, :mode => d.mode}
     }
     next unless data[:new] != data[:old]
+
     # Only nil out 'size_on_disk' if the provision size does not match
     data[:new][:size_on_disk] = nil if data[:new][:size] != data[:old][:size]
     changed_disks[d.id] = data

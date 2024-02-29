@@ -18,6 +18,7 @@ module Metric::LongTermAverages
       :type   => type
     }
     next if AVG_COLS_TO_OVERHEAD_TYPE[col].nil?
+
     AVG_METHODS_WITHOUT_OVERHEAD_INFO[:"#{meth}_without_overhead"] = {
       :column        => col,
       :type          => type,

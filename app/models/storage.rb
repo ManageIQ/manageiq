@@ -268,6 +268,7 @@ class Storage < ApplicationRecord
       locked_miq_task.context_data[:pending].each do |storage_id, qitem_id|
         qitem = MiqQueue.find_by(:id => qitem_id)
         next unless qitem.nil?
+
         _log.warn("Pending Scan for Storage ID: [#{storage_id}] is missing MiqQueue ID: [#{qitem_id}] - will requeue")
         locked_miq_task.context_data[:pending].delete(storage_id)
         locked_miq_task.save!
@@ -765,6 +766,7 @@ class Storage < ApplicationRecord
               vm_attrs[col] ||= 0
 
               next if val.nil?
+
               attrs[col] += val
               attrs["derived_storage_used_#{mode}".to_sym] += val
               attrs[:derived_storage_used_managed] += val

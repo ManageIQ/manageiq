@@ -143,6 +143,7 @@ module MiqConfigSssdLdap
       if (opts[:mode] == "ldap" || opts[:ldap_role] == true) && (opts[:bind_dn].nil? || opts[:bind_pwd].nil?)
         return false
       end
+
       true
     end
 

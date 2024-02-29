@@ -159,6 +159,7 @@ class Job < ApplicationRecord
           if job.miq_server_id && MiqQueue.exists?(:state => %w[dequeue ready], :task_id => job.guid, :class_name => "MiqServer")
             next
           end
+
           job.timeout!
         end
     rescue Exception

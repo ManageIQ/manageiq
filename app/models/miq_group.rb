@@ -130,6 +130,7 @@ class MiqGroup < ApplicationRecord
       group.tenant              = root_tenant
 
       next unless group.changed?
+
       mode = group.new_record? ? "Created" : "Updated"
       group.save!
       _log.info("#{mode} Group: #{group.description} with Role: #{user_role.name}")

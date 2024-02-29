@@ -53,6 +53,7 @@ module ServiceMixin
 
   def delay_type(action)
     return :start_delay if action == :start
+
     :stop_delay if action == :stop
   end
 

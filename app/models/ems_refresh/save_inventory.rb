@@ -223,6 +223,7 @@ module EmsRefresh::SaveInventory
         h[:network][:hardware_id] = hardware.id
       end
       next unless h[:child_devices]
+
       # Save the hardware to force an id if not found
       hardware.save! if hardware.id.nil?
       h[:child_devices].each do |child_device|

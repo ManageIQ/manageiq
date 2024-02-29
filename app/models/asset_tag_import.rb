@@ -70,6 +70,7 @@ class AssetTagImport
 
     @verified_data.each do |id, data|
       next unless data.length > 1
+
       obj = @klass.find_by(:id => id)
       while data.length > 1
         data.shift
@@ -87,6 +88,7 @@ class AssetTagImport
     @verified_data.each do |id, data|
       obj = @klass.find_by(:id => id)
       next unless obj
+
       attrs = obj.miq_custom_attributes
       new_attrs = []
       data[0].each do |key, value|

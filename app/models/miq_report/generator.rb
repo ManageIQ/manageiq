@@ -541,6 +541,7 @@ module MiqReport::Generator
       self.extras[:group_by_tag_cols].each do |tc|
         tag = tc[(c.length + 1)..-1]
         next unless tc.starts_with?(c)
+
         unless tags2desc.key?(tag)
           if tag == "_none_"
             tags2desc[tag] = "[None]"

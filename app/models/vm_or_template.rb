@@ -616,6 +616,7 @@ class VmOrTemplate < ApplicationRecord
       rec.reason = []
       presult = vm.enforce_policy("rsop")
       next unless presult[:result] == false
+
       presult[:details].each do |p|
         rec.reason.push(p["description"]) unless p["result"]
       end
@@ -856,6 +857,7 @@ class VmOrTemplate < ApplicationRecord
     params = {}
     [ext_management_system, "ems", host, "host"].each_slice(2) do |ems, type|
       next unless ems
+
       params[type] = {
         :hostname   => ems.hostname,
         :ipaddress  => ems.ipaddress,

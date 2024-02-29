@@ -142,6 +142,7 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
       getter = "#{resource}_monitor_thread"
       thread = send(getter)
       next unless thread.nil? || !thread.alive?
+
       if !thread.nil? && thread.status.nil?
         dead_thread = thread
         send(:"#{getter}=", nil)

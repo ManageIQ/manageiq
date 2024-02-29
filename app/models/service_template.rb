@@ -275,6 +275,7 @@ class ServiceTemplate < ApplicationRecord
                                                             parent_svc)
       return []
     end
+
     svc = create_service(service_task, parent_svc)
 
     service_task.destination = svc

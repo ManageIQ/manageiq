@@ -16,6 +16,7 @@ class Compliance < ApplicationRecord
   def self.scan_and_check_compliance_queue(targets, inputs = {})
     Array.wrap(targets).each do |target|
       next unless target.kind_of?(Host)
+
       # Queue this with the vc-refresher taskid, so that any concurrent ems_refreshes don't clash with this one.
       MiqQueue.put(
         :class_name  => name,

@@ -28,6 +28,7 @@ begin
   vim.virtualMachinesByMor.each_value do |vm|
     miqVm = vim.getVimVmByMor(vm['MOR'])
     next unless miqVm.hasSnapshot?(MiqVimVm::EVM_SNAPSHOT_NAME)
+
     sso = miqVm.searchSsTree(miqVm.snapshotInfo['rootSnapshotList'], 'name', MiqVimVm::EVM_SNAPSHOT_NAME)
     unless sso
       warn "#{miqVm.name}: could not determine the MOR of the EVM snapshot. Skipping."

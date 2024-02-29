@@ -55,6 +55,7 @@ class ClassificationImport
         entry = nil
         cat.entries.each do |e|
           next unless e.description == line["entry"]
+
           @verified_data[vms[0].id][line["category"]].push(line["entry"])
           entry = e
           break
@@ -73,6 +74,7 @@ class ClassificationImport
       data.each do |category, entries|
         cat = Classification.find_by(:description => category)
         next unless cat.single_value && entries.length > 1
+
         vm = VmOrTemplate.find_by(:id => id)
         while entries.length > 1
           e = entries.shift
@@ -90,6 +92,7 @@ class ClassificationImport
     @verified_data.each do |id, data|
       vm = VmOrTemplate.find_by(:id => id)
       next unless vm
+
       data.each do |category, entries|
         cat = Classification.find_by(:description => category)
         next unless cat
@@ -97,6 +100,7 @@ class ClassificationImport
         entries.each do |ent|
           cat.entries.each do |e|
             next unless e.description == ent
+
             _log.info("Vm: #{vm.name}, Location: #{vm.location}, Category: #{cat.description}: Applying entry #{ent}")
             e.assign_entry_to(vm)
             break

@@ -800,10 +800,12 @@ class MiqAlert < ApplicationRecord
         guid = alert_hash["guid"] || alert_hash[:guid]
         rec = find_by(:guid => guid)
         next unless rec.nil?
+
         alert_hash[:read_only] = true
         alert = create(alert_hash)
         _log.info("Added sample Alert: #{alert.description}")
         next unless action
+
         alert.options ||= {}
         alert.options[:notifications] ||= {}
         alert.options[:notifications][action.action_type.to_sym] = action.options

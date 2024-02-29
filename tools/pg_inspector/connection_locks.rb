@@ -48,6 +48,7 @@ module PgInspector
       connections["connections"].each do |conn|
         conn["blocked_by"] = find_lock_blocking_spid(conn["spid"])
         next if conn["blocked_by"].empty?
+
         some_connection_blocked = true
         puts "Connection #{conn["spid"]} is blocked by #{conn["blocked_by"]}."
         blocked_connections << {conn["spid"] => conn["blocked_by"]}
