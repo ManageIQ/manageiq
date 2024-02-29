@@ -49,7 +49,7 @@ RSpec.describe MiqUserRole do
   context "testing allows methods" do
     before do
       EvmSpecHelper.seed_specific_product_features(%w(
-        dashboard_add
+                                                     dashboard_add
         dashboard_view
         host_compare
         host_edit
@@ -59,7 +59,7 @@ RSpec.describe MiqUserRole do
         vm
         dialog_edit_editor
         rbac_tenant_manage_quotas
-      ))
+                                                   ))
 
       feature1 = MiqProductFeature.find_all_by_identifier("dashboard_admin")
       @role1   = FactoryBot.create(:miq_user_role, :name => "Role1", :miq_product_features => feature1)

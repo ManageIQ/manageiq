@@ -204,10 +204,10 @@ RSpec.describe DialogFieldTagControl do
 
             it "sorts reverse by name converting to integer and adds a blank value to the front" do
               expect(dialog_field.values).to eq([
-                {:id => nil, :name => "<None>", :description => "<None>"},
+                                                  {:id => nil, :name => "<None>", :description => "<None>"},
                 {:id => 321, :name => "2dog", :description => "Dog"},
                 {:id => 312, :name => "1cat", :description => "Cat"}
-              ])
+                                                ])
             end
           end
 
@@ -218,10 +218,10 @@ RSpec.describe DialogFieldTagControl do
 
             it "sorts by name converting to integer and adds a blank value to the front" do
               expect(dialog_field.values).to eq([
-                {:id => nil, :name => "<None>", :description => "<None>"},
+                                                  {:id => nil, :name => "<None>", :description => "<None>"},
                 {:id => 312, :name => "1cat", :description => "Cat"},
                 {:id => 321, :name => "2dog", :description => "Dog"}
-              ])
+                                                ])
             end
           end
         end
@@ -234,10 +234,10 @@ RSpec.describe DialogFieldTagControl do
 
             it "sorts reverse by name and adds a blank value to the front" do
               expect(dialog_field.values).to eq([
-                {:id => nil, :name => "<None>", :description => "<None>"},
+                                                  {:id => nil, :name => "<None>", :description => "<None>"},
                 {:id => 321, :name => "dog", :description => "Dog"},
                 {:id => 312, :name => "cat", :description => "Cat"}
-              ])
+                                                ])
             end
           end
 
@@ -248,10 +248,10 @@ RSpec.describe DialogFieldTagControl do
 
             it "sorts by name and adds a blank value to the front" do
               expect(dialog_field.values).to eq([
-                {:id => nil, :name => "<None>", :description => "<None>"},
+                                                  {:id => nil, :name => "<None>", :description => "<None>"},
                 {:id => 312, :name => "cat", :description => "Cat"},
                 {:id => 321, :name => "dog", :description => "Dog"}
-              ])
+                                                ])
             end
           end
         end
@@ -262,10 +262,10 @@ RSpec.describe DialogFieldTagControl do
 
         it "returns the available tags in whatever order they came in as with a blank value first" do
           expect(dialog_field.values).to eq([
-            {:id => nil, :name => "<None>", :description => "<None>"},
+                                              {:id => nil, :name => "<None>", :description => "<None>"},
             {:id => 321, :name => "dog", :description => "Dog"},
             {:id => 312, :name => "cat", :description => "Cat"},
-          ])
+                                            ])
         end
       end
     end

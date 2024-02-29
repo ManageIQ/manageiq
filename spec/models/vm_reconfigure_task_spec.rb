@@ -88,9 +88,9 @@ RSpec.describe VmReconfigureTask do
   context "Network" do
     let(:request_options) do
       {:network_adapter_add    => [
-        {:cloud_network => 'vApp Network Name', :name => 'VM Name#NIC#2'}.with_indifferent_access,
+         {:cloud_network => 'vApp Network Name', :name => 'VM Name#NIC#2'}.with_indifferent_access,
         {:cloud_network => nil, :name => 'VM Name#NIC#3'}.with_indifferent_access
-      ],
+       ],
        :network_adapter_remove => [{:network => {:name => 'VM Name#NIC#0'}.with_indifferent_access}],
        :network_adapter_edit   => [{:network => "NFS Network", :name => "Network adapter 1"}.with_indifferent_access]}
     end
@@ -102,10 +102,10 @@ RSpec.describe VmReconfigureTask do
   context "CDROM" do
     let(:request_options) do
       {:cdrom_connect    => [
-        {:device_name => "CD/DVD drive 1",
-         :filename    => "[NFS Share] ISO/centos.iso",
-         :storage_id  => 1234}.with_indifferent_access
-      ],
+         {:device_name => "CD/DVD drive 1",
+          :filename    => "[NFS Share] ISO/centos.iso",
+          :storage_id  => 1234}.with_indifferent_access
+       ],
        :cdrom_disconnect => [{:device_name => "CD/DVD drive 2"}.with_indifferent_access]}
     end
     let(:description_partial) { "Attach CD/DVDs: 1, Detach CD/DVDs: 1" }

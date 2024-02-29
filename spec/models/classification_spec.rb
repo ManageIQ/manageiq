@@ -446,17 +446,17 @@ RSpec.describe Classification do
   describe ".seed" do
     before do
       allow(YAML).to receive(:load_file).and_return([
-        {:name         => "cc",
-         :description  => "Cost Center",
-         :example_text => "Cost Center",
-         :read_only    => "0",
-         :syntax       => "string",
-         :show         => true,
-         :default      => true,
-         :single_value => "1",
-         :entries      => [{:description => "Cost Center 001", :name => "001"},
-                           {:description => "Cost Center 002", :name => "002"}]
-        }]
+                                                      {:name         => "cc",
+                                                       :description  => "Cost Center",
+                                                       :example_text => "Cost Center",
+                                                       :read_only    => "0",
+                                                       :syntax       => "string",
+                                                       :show         => true,
+                                                       :default      => true,
+                                                       :single_value => "1",
+                                                       :entries      => [{:description => "Cost Center 001", :name => "001"},
+                                                                         {:description => "Cost Center 002", :name => "002"}]
+                                                      }]
                                                    )
     end
 
