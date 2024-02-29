@@ -1,4 +1,5 @@
 # coding: utf-8
+
 class ProviderTagMapping
   # Performs most of the work of ProviderTagMapping - holds current mappings,
   # computes applicable tags, and creates/finds Tag records - except actually [un]assigning.
