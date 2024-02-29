@@ -169,9 +169,9 @@ class MiqLdap
     seen ||= {:objects => [], :referrals => {}}
     _log.debug("opts: #{opts.inspect}")
 
-    if block_given?
+    if _blk
       opts[:return_result] = false
-      return @ldap.search(opts) { |entry| yield entry if block_given? }
+      return @ldap.search(opts) { |entry| yield entry if _blk }
     else
       result = @ldap.search(opts)
       unless ldap_result_ok?
