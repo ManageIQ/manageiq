@@ -482,7 +482,7 @@ class MiqAction < ApplicationRecord
     info_msg = "MIQ(action_script): Result: #{command_result.output}, rc: #{rc_verbose}"
 
     fail_msg = _("Action script exited with rc=%{rc_value}, error=%{error_text}") %
-      {:rc_value => rc_verbose, :error_text => command_result.error}
+               {:rc_value => rc_verbose, :error_text => command_result.error}
 
     case rc
     when 0  # Success
@@ -822,7 +822,7 @@ class MiqAction < ApplicationRecord
     user = rec.tenant_identity
     unless user
       raise _("A user is needed to raise an action to automate. [%{name}] id:[%{id}] action: [%{description}]") %
-              {:name => rec.class.name, :id => rec.id, :description => action.description}
+            {:name => rec.class.name, :id => rec.id, :description => action.description}
     end
 
     args = {

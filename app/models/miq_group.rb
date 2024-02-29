@@ -121,7 +121,7 @@ class MiqGroup < ApplicationRecord
       if user_role.nil?
         raise StandardError,
               _("Unable to find user_role 'EvmRole-%{role_name}' for group '%{group_name}'") %
-                {:role_name => role_name, :group_name => group_name}
+              {:role_name => role_name, :group_name => group_name}
       end
       group.miq_user_role       = user_role if group.entitlement.try(:miq_user_role_id) != user_role.id
       group.sequence            = index + 1

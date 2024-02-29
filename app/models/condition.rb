@@ -53,7 +53,7 @@ class Condition < ApplicationRecord
     when "tag"
       unless %w(any all none).include?(expression["include"])
         raise _("condition '%{name}', include value \"%{value}\", is invalid. Should be one of \"any, all or none\"") %
-                {:name => name, :value => expression["include"]}
+              {:name => name, :value => expression["include"]}
       end
 
       result = expression["include"] != "any"

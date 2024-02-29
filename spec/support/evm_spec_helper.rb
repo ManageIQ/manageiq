@@ -81,7 +81,7 @@ module EvmSpecHelper
 
     # Marshal dump of Settings loses the config_sources, so we need to compare manually
     current != @settings_backup ||
-      current.instance_variable_get(:@config_sources) != @settings_backup.instance_variable_get(:@config_sources)
+    current.instance_variable_get(:@config_sources) != @settings_backup.instance_variable_get(:@config_sources)
   end
 
   def self.clear_instance_variables(instance)

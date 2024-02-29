@@ -515,7 +515,7 @@ class Storage < ApplicationRecord
       _log.warn(message)
       raise MiqException::MiqUnreachableStorage,
             _("There are no EMSs with valid credentials connected to Storage: [%{name}] in Zone: [%{zone}].") %
-              {:name => name, :zone => MiqServer.my_zone}
+            {:name => name, :zone => MiqServer.my_zone}
     end
 
     ems = ext_management_system

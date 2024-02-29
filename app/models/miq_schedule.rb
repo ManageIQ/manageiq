@@ -193,10 +193,10 @@ class MiqSchedule < ApplicationRecord
                                                           :start_time => start_time}
       else
         return _("Run %{interval} every %{value} %{unit} starting on %{start_time}") %
-                 {:interval   => interval,
-                  :value      => run_at[:interval][:value],
-                  :unit       => unit,
-                  :start_time => start_time}
+               {:interval   => interval,
+                :value      => run_at[:interval][:value],
+                :unit       => unit,
+                :start_time => start_time}
       end
     end
   end
@@ -344,7 +344,7 @@ class MiqSchedule < ApplicationRecord
       meth = rails_interval
       if meth.nil?
         raise _("Schedule: [%{id}] [%{name}], cannot calculate next run with past start_time using: %{path}") %
-                {:id => id, :name => name, :path => run_at.fetch_path(:interval, :unit)}
+              {:id => id, :name => name, :path => run_at.fetch_path(:interval, :unit)}
       end
 
       if meth == :months

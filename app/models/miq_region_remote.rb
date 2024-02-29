@@ -27,7 +27,7 @@ class MiqRegionRemote < ApplicationRecord
             return nil
           else
             return [_("Validation failed because region %{region_name} has already been used") %
-                      {:region_name => region.region}]
+                    {:region_name => region.region}]
           end
         else
           _log.info("Attempting to connection to: #{log_details}...Failed")

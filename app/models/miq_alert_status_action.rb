@@ -17,7 +17,7 @@ class MiqAlertStatusAction < ApplicationRecord
 
   def only_assignee_can_acknowledge
     if ['acknowledge', 'unacknowledge', 'hide', 'show'].include?(action_type) &&
-        miq_alert_status.assignee.try(:id) != user.id
+       miq_alert_status.assignee.try(:id) != user.id
       errors.add(:user, "that is not assigned cannot #{action_type}")
     end
   end

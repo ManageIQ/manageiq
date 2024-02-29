@@ -5,7 +5,7 @@ module Metric::CiMixin::Rollup
                                            when 'hourly', 'historical' then [perf_rollup_parents('hourly'), 'daily']
                                            when 'daily'                then [nil, nil]
                                            else raise ArgumentError, _("invalid interval name %{name}") %
-                                                                       {:name => interval_name}
+                                                                     {:name => interval_name}
                                            end
 
     parents = parent_rollups.to_a.compact.flat_map { |p| [p, interval_name] }

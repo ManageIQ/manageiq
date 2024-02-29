@@ -50,7 +50,7 @@ module Authenticator
       lobj = ldap.get_user_object(username)
       if lobj.nil?
         raise _("Unable to auto-create user because LDAP search returned no data for user: [%{name}]") %
-                {:name => username}
+              {:name => username}
       end
 
       groups = yield lobj

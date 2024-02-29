@@ -9,7 +9,7 @@ module AlertMixin
     allowed_types = %w(STARTS\ WITH ENDS\ WITH INCLUDES REGULAR\ EXPRESSION)
     unless allowed_types.include?(options[:message_filter_type])
       raise _("option :message_filter_type: %{options}, invalid, expected one of %{type}") %
-              {:options => options[:message_filter_type], :type => allowed_types}
+            {:options => options[:message_filter_type], :type => allowed_types}
     end
 
     options.reverse_merge!({:time_threshold => 10.days, :freq_threshold => 2})

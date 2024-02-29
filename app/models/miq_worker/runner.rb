@@ -82,11 +82,11 @@ class MiqWorker::Runner
       drb_uri = server.reload.drb_uri
       if drb_uri.blank?
         raise _("%{log} Blank DRb_URI for MiqServer with ID=[%{number}], NAME=[%{name}], PID=[%{pid_number}], GUID=[%{guid_number}]") %
-          {:log         => log_prefix,
-           :number      => server.id,
-           :name        => server.name,
-           :pid_number  => server.pid,
-           :guid_number => server.guid}
+              {:log         => log_prefix,
+               :number      => server.id,
+               :name        => server.name,
+               :pid_number  => server.pid,
+               :guid_number => server.guid}
       end
       _log.info("#{log_prefix} Initializing DRb Connection to MiqServer with ID=[#{server.id}], NAME=[#{server.name}], PID=[#{server.pid}], GUID=[#{server.guid}] DRb URI=[#{drb_uri}]")
       require 'drb'

@@ -1039,7 +1039,7 @@ class VmOrTemplate < ApplicationRecord
 
     miq_servers = srs.select do |svr|
       (svr.vm_scan_host_affinity? ? host_server_ids.detect { |id| id == svr.id } : host_server_ids.empty?) &&
-      (svr.vm_scan_storage_affinity? ? all_storage_server_ids.detect { |id| id == svr.id } : storage_server_ids.empty?)
+        (svr.vm_scan_storage_affinity? ? all_storage_server_ids.detect { |id| id == svr.id } : storage_server_ids.empty?)
     end
     _log.debug("miq_servers1.length = #{miq_servers.length}")
 

@@ -419,10 +419,10 @@ class MiqPolicy < ApplicationRecord
     towhat = "Vm" if towhat.downcase.match("template")
     plist.keep_if do |p|
       p.mode == mode &&
-      p.towhat == towhat &&
-      policy_for_event?(p, event) &&
-      policy_active?(p) &&
-      policy_applicable?(p, target, inputs)
+        p.towhat == towhat &&
+        policy_for_event?(p, event) &&
+        policy_active?(p) &&
+        policy_applicable?(p, target, inputs)
     end
 
     [profiles, plist]

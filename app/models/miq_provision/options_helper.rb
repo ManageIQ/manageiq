@@ -39,18 +39,18 @@ module MiqProvision::OptionsHelper
     unless ems.supports?(:provisioning)
       raise MiqException::MiqProvisionError,
             _("%{class_name} [%{name}] is attached to <%{ems_class_name}: %{ems_name}> that does not support Provisioning") %
-              {:class_name     => source.class.name,
-               :name           => source.name,
-               :ems_class_name => ems.class.name,
-               :ems_name       => ems.name}
+            {:class_name     => source.class.name,
+             :name           => source.name,
+             :ems_class_name => ems.class.name,
+             :ems_name       => ems.name}
     end
     if ems.missing_credentials?
       raise MiqException::MiqProvisionError,
             _("%{class_name} [%{name}] is attached to <%{ems_class_name}: %{ems_name}> with missing credentials") %
-              {:class_name     => source.class.name,
-               :name           => source.name,
-               :ems_class_name => ems.class.name,
-               :ems_name       => ems.name}
+            {:class_name     => source.class.name,
+             :name           => source.name,
+             :ems_class_name => ems.class.name,
+             :ems_name       => ems.name}
     end
     source
   end

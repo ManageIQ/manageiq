@@ -248,9 +248,9 @@ namespace :evm do
 
       model_filename = ENV["FILE"]
       raise "Must specify legacy automation backup file xml to " + \
-        "convert to the new automate model:  - Usage FILE='xml_filename'" if model_filename.nil?
+            "convert to the new automate model:  - Usage FILE='xml_filename'" if model_filename.nil?
       raise "Automation file to use for conversion does not " + \
-        "exist: #{model_filename}"  unless File.exist?(model_filename)
+            "exist: #{model_filename}"  unless File.exist?(model_filename)
       puts "Converting the automation model from the xml file: #{model_filename}"
       MiqAeDatastore.convert(model_filename, domain_name, export_options)
       puts "The automate model has been converted from : #{model_filename}"
