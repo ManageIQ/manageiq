@@ -44,7 +44,6 @@ RSpec.describe DialogFieldTextBox do
       context "when show_refresh_button is false" do
         let(:show_refresh_button) { false }
 
-
         context "when load_values_on_init is true" do
           let(:load_values_on_init) { true }
 

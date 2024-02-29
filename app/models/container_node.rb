@@ -43,7 +43,6 @@ class ContainerNode < ApplicationRecord
   has_many :miq_alert_statuses, :as => :resource
   delegate :my_zone, :to => :ext_management_system, :allow_nil => true
 
-
   virtual_column :ready_condition_status, :type => :string, :uses => :container_conditions
   virtual_delegate :system_distribution, :to => "operating_system.distribution", :allow_nil => true, :type => :string
   virtual_delegate :kernel_version, :to => :operating_system, :allow_nil => true, :type => :string

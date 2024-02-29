@@ -69,7 +69,6 @@ RSpec.describe MiqGroup do
       end
     end
 
-
     it "should set group type to 'system' " do
       expect(subject.group_type).to eq("system")
     end

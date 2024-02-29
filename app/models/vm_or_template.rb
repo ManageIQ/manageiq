@@ -118,7 +118,6 @@ class VmOrTemplate < ApplicationRecord
   has_many                  :storage_files, :dependent => :destroy
   has_many                  :storage_files_files, -> { where("rsc_type = 'file'") }, :class_name => "StorageFile"
 
-
   # EMS Events
   has_many                  :ems_events, ->(vmt) { unscope(:where => :vm_or_template_id).where(["vm_or_template_id = ? OR dest_vm_or_template_id = ?", vmt.id, vmt.id]).order(:timestamp) },
                             :class_name => "EmsEvent", :inverse_of => :vm_or_template
