@@ -94,7 +94,7 @@ class GenericObjectDefinition < ApplicationRecord
 
   def property_getter(attr, val)
     return type_cast(attr, val) if property_attribute_defined?(attr)
-    return get_objects_of_association(attr, val) if property_association_defined?(attr)
+    get_objects_of_association(attr, val) if property_association_defined?(attr)
   end
 
   def type_cast(attr, value)

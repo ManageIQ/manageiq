@@ -54,11 +54,11 @@ class Snapshot < ApplicationRecord
             end
 
     if value == :system_snapshot
-      return self.is_a_type?(:evm_snapshot)
+      self.is_a_type?(:evm_snapshot)
     elsif value.kind_of?(Regexp)
-      return !!(value =~ name)
+      !!(value =~ name)
     else
-      return name == value
+      name == value
     end
   end
 

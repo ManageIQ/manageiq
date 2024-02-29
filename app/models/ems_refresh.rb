@@ -46,7 +46,7 @@ module EmsRefresh
       queue_merge(ts, ems, opts[:create_task])
     end
 
-    return task_ids if opts[:create_task]
+    task_ids if opts[:create_task]
   end
 
   def self.refresh(target, id = nil)

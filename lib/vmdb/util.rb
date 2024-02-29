@@ -99,7 +99,7 @@ module VMDB
         end
       rescue Exception => e
         _log.error(e.to_s)
-        return []
+        []
       end
     end
 

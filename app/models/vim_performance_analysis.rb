@@ -105,7 +105,7 @@ module VimPerformanceAnalysis
       return target.storages if target.kind_of?(Host)
 
       if target.kind_of?(EmsCluster)
-        return target.hosts.collect(&:storages).flatten.compact
+        target.hosts.collect(&:storages).flatten.compact
       else
         raise _("unable to get storages for %{name}") % {:name => target.class}
       end
@@ -474,12 +474,12 @@ module VimPerformanceAnalysis
     return nil if slope.nil?
 
     begin
-      return Math.slope_y_intercept(timestamp.to_f, slope, yint)
+      Math.slope_y_intercept(timestamp.to_f, slope, yint)
     rescue RangeError
-      return nil
+      nil
     rescue => err
       _log.warn("#{err.message}, calculating trend value")
-      return nil
+      nil
     end
   end
 
@@ -488,12 +488,12 @@ module VimPerformanceAnalysis
     return nil if slope.nil?
 
     begin
-      return Time.at(Math.slope_x_intercept(value.to_f, slope, yint)).utc
+      Time.at(Math.slope_x_intercept(value.to_f, slope, yint)).utc
     rescue RangeError
-      return nil
+      nil
     rescue => err
       _log.warn("#{err.message}, calculating timestamp at trend value")
-      return nil
+      nil
     end
   end
 end # module VimPerformanceAnalysis

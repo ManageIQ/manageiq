@@ -192,7 +192,7 @@ module PgInspector
     end
 
     def to_utc(time_str)
-      return Time.parse(time_str).utc.to_s if time_str
+      Time.parse(time_str).utc.to_s if time_str
     end
 
     def process_miq_activity_application_name(activity)

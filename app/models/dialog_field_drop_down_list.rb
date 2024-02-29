@@ -9,7 +9,7 @@ class DialogFieldDropDownList < DialogFieldSortedItem
   end
 
   def force_multi_value
-    return true if options[:force_multi_value].present? &&
+    true if options[:force_multi_value].present? &&
                    options[:force_multi_value] != "null" &&
                    options[:force_multi_value]
   end

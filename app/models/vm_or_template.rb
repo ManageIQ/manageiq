@@ -256,7 +256,7 @@ class VmOrTemplate < ApplicationRecord
       as = advanced_settings.detect { |setting| setting.name == k }
       return nil if as.nil? || as.value.nil?
 
-      return case t
+      case t
              when :boolean then ActiveRecord::Type::Boolean.new.cast(as.value)
              when :integer then as.value.to_i
              when :float then as.value.to_f
@@ -1310,9 +1310,9 @@ end
   def event_where_clause(assoc = :ems_events)
     case assoc.to_sym
     when :ems_events, :event_streams
-      return ["vm_or_template_id = ? OR dest_vm_or_template_id = ? ", id, id]
+      ["vm_or_template_id = ? OR dest_vm_or_template_id = ? ", id, id]
     when :policy_events
-      return ["target_id = ? and target_class = ? ", id, self.class.base_class.name]
+      ["target_id = ? and target_class = ? ", id, self.class.base_class.name]
     end
   end
 

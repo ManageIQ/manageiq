@@ -100,7 +100,7 @@ class ContainerOrchestrator
       i.matchExpressions&.each { |a| return(a.values) if a.key == "kubernetes.io/arch" }
     end
 
-    return ["amd64"]
+    ["amd64"]
   end
 
   private

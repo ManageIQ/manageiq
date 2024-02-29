@@ -219,7 +219,7 @@ class MiqRequestTask < ApplicationRecord
       _log.error("[#{message}] encountered during #{request_class::TASK_DESCRIPTION}")
       _log.log_backtrace(err)
       update_and_notify_parent(:state => "finished", :status => "Error", :message => message)
-      return
+      nil
     end
   end
 

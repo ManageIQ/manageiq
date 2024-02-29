@@ -113,7 +113,7 @@ class MiqLdap
       end
     rescue Exception => err
       _log.error("Binding to LDAP: Host: [#{@ldap.host}], User: [#{username}], '#{err.message}'")
-      return false
+      false
     end
   end
 
@@ -171,14 +171,14 @@ class MiqLdap
 
     if _blk
       opts[:return_result] = false
-      return @ldap.search(opts) { |entry| yield entry if _blk }
+      @ldap.search(opts) { |entry| yield entry if _blk }
     else
       result = @ldap.search(opts)
       unless ldap_result_ok?
         _log.warn("LDAP Search unsuccessful, '#{@ldap.get_operation_result.message}', Code: [#{@ldap.get_operation_result.code}], Host: [#{@ldap.host}]")
         return []
       end
-      return @follow_referrals ? chase_referrals(result, raw_opts, seen) : result
+      @follow_referrals ? chase_referrals(result, raw_opts, seen) : result
     end
   end
 
@@ -309,20 +309,20 @@ class MiqLdap
     when "samaccountname"
       return "#{@domain_prefix}\\#{username}" if @domain_prefix.present?
 
-      return username
+      username
     when "upn", "userprincipalname"
       return username if @user_suffix.blank?
 
-      return "#{username}@#{@user_suffix}"
+      "#{username}@#{@user_suffix}"
     when "mail"
       username = "#{username}@#{@user_suffix}" unless @user_suffix.blank? || upn?(username)
       dbuser = User.lookup_by_email(username.downcase)
       dbuser ||= User.lookup_by_userid(username.downcase)
       return dbuser.userid if dbuser && dbuser.userid
 
-      return username
+      username
     when "dn"
-      return "#{user_prefix}=#{username},#{@user_suffix}"
+      "#{user_prefix}=#{username},#{@user_suffix}"
     end
   end
 

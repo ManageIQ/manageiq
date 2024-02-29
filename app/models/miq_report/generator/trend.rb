@@ -65,9 +65,9 @@ module MiqReport::Generator::Trend
 
     begin
       val = Math.slope_y_intercept(rec.send(CHART_X_AXIS_COLUMN_ADJUSTED).to_i, @trend_data[col][:slope], @trend_data[col][:yint])
-      return val > 0 ? val : 0
+      val > 0 ? val : 0
     rescue ZeroDivisionError
-      return nil
+      nil
     end
   end
 
@@ -143,25 +143,25 @@ module MiqReport::Generator::Trend
   def calc_value_at_target(limit, trend_data_key, trend_data)
     unknown = _("Trending Down")
     if limit.nil? || trend_data[trend_data_key].nil? || trend_data[trend_data_key][:slope].nil? || trend_data[trend_data_key][:yint].nil? || trend_data[trend_data_key][:slope] <= 0 # can't project with a negative slope value
-      return unknown
+      unknown
     else
       begin
         result = Math.slope_x_intercept(limit, trend_data[trend_data_key][:slope], trend_data[trend_data_key][:yint])
         if result <= 1.year.from_now.to_i
           if Time.at(result).utc <= Time.now.utc
-            return Time.at(result).utc.strftime("%m/%d/%Y")
+            Time.at(result).utc.strftime("%m/%d/%Y")
           else
             options = {:days => ((Time.at(result).utc - Time.now.utc) / 1.day).round, :date => Time.at(result).utc.strftime("%m/%d/%Y"), :timezone => get_time_zone("UTC")}
-            return _("%{days} days, on %{date} (%{timezone})") % options
+            _("%{days} days, on %{date} (%{timezone})") % options
           end
         else
-          return _("after 1 year")
+          _("after 1 year")
         end
       rescue RangeError
-        return unknown
+        unknown
       rescue => err
         _log.warn("#{err.message}, calculating trend limit for column: [#{trend_data_key}]")
-        return unknown
+        unknown
       end
     end
   end

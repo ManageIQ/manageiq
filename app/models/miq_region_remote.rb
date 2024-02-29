@@ -36,7 +36,7 @@ class MiqRegionRemote < ApplicationRecord
       end
     rescue => err
       _log.warn("Attempting to connection to: #{log_details}...Failed with error: '#{err.message}")
-      return [_("Validation failed with error: '%{error_message}") % {:error_message => err.message}]
+      [_("Validation failed with error: '%{error_message}") % {:error_message => err.message}]
     end
   end
 

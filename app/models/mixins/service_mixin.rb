@@ -53,7 +53,7 @@ module ServiceMixin
 
   def delay_type(action)
     return :start_delay if action == :start
-    return :stop_delay if action == :stop
+    :stop_delay if action == :stop
   end
 
   def each_group_resource(grp_idx = nil, &block)

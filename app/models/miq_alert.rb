@@ -231,9 +231,9 @@ class MiqAlert < ApplicationRecord
 
     if statuses_not_expired.count > 0
       _log.info("Skipping re-evaluation of Alert [#{description}] for target: [#{target.name}] with delay_next_evaluation [#{delay_next_evaluation}]")
-      return true
+      true
     else
-      return false
+      false
     end
   end
 
@@ -289,7 +289,7 @@ class MiqAlert < ApplicationRecord
     end
   rescue MiqException::StopAction => err
     _log.error("Stopping action invocation [#{err.message}]")
-    return
+    nil
   rescue MiqException::UnknownActionRc => err
     _log.error("Aborting action invocation [#{err.message}]")
     raise
@@ -374,9 +374,9 @@ class MiqAlert < ApplicationRecord
     raise "unable to evaluate expression: [#{miq_expression.inspect}], unknown format" unless hash_expression
 
     case hash_expression[:mode]
-    when "internal" then return evaluate_internal(target, inputs)
-    when "automate" then return evaluate_in_automate(target, inputs)
-    when "script"   then return evaluate_script
+    when "internal" then evaluate_internal(target, inputs)
+    when "automate" then evaluate_in_automate(target, inputs)
+    when "script"   then evaluate_script
     else                 raise "unable to evaluate expression: [#{hash_expression.inspect}], unknown mode"
     end
   end

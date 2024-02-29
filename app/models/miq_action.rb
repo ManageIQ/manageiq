@@ -881,10 +881,10 @@ class MiqAction < ApplicationRecord
     profile = ScanItemSet.find_by(:name => action.options[:scan_item_set_name])
     if profile
       MiqPolicy.logger.info("MIQ(action_assign_scan_profile): Action [#{action.description}], using analysis profile: [#{profile.description}]")
-      return ScanItem.get_profile(profile.name)
+      ScanItem.get_profile(profile.name)
     else
       MiqPolicy.logger.warn("MIQ(action_assign_scan_profile): Unable to perform action [#{action.description}], unable to find analysis profile: [#{action.options[:scan_item_set_name]}]")
-      return
+      nil
     end
   end
 

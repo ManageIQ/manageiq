@@ -511,9 +511,9 @@ module MiqReport::Generator
         raise _("Column '%{name} does not exist in data") % {:name => col_def[:col_name]}
       end
 
-      return col_def.key?(:function) ? apply_col_function(col_def, data) : data[col_def[:col_name]]
+      col_def.key?(:function) ? apply_col_function(col_def, data) : data[col_def[:col_name]]
     else
-      return col_def
+      col_def
     end
   end
 
@@ -529,7 +529,7 @@ module MiqReport::Generator
 
       col_val = data[col_def[:col_name]] || 0
       pct_val = data[col_def[:pct_col_name]] || 0
-      return pct_val == 0 ? 0 : (col_val / pct_val * 100.0)
+      pct_val == 0 ? 0 : (col_val / pct_val * 100.0)
     else
       raise _("Column function '%{name}' not supported") % {:name => col_def[:function]}
     end

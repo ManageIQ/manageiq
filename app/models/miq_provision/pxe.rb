@@ -40,7 +40,7 @@ module MiqProvision::Pxe
     Integer(32 - Math.log2((IPAddr.new(subnet_mask.to_s, Socket::AF_INET).to_i ^ 0xffffffff) + 1))
   rescue ArgumentError => err
     _log.warn("Cannot convert subnet #{subnet_mask.inspect} to CIDR because #{err.message}")
-    return nil
+    nil
   end
 
   def prepare_customization_template_substitution_options(mac_address = nil)

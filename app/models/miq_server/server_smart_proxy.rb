@@ -97,7 +97,7 @@ module MiqServer::ServerSmartProxy
       _log.error(err.to_s)
       _log.log_backtrace(err, :debug)
       job.signal(:abort_retry, err.to_s, "error", true)
-      return
+      nil
     end
   end
 
@@ -113,7 +113,7 @@ module MiqServer::ServerSmartProxy
       _log.error(err.to_s)
       _log.log_backtrace(err, :debug)
       job.signal(:abort_retry, err.to_s, "error", true)
-      return
+      nil
     end
   end
 

@@ -588,7 +588,7 @@ class Host < ApplicationRecord
     _log.info("for host [#{id}] host saved")
   rescue => err
     _log.log_backtrace(err)
-    return false
+    false
   end
 
   def self.batch_update_authentication(host_ids, creds = {})
@@ -1348,11 +1348,11 @@ class Host < ApplicationRecord
     return values if function.nil?
 
     case function.to_sym
-    when :min, :max then return values.send(function)
+    when :min, :max then values.send(function)
     when :avg
       return 0 if values.length == 0
 
-      return (values.compact.sum / values.length)
+      (values.compact.sum / values.length)
     else
       raise _("Function %{function} is invalid, should be one of :min, :max, :avg or nil") % {:function => function}
     end

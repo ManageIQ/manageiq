@@ -134,16 +134,16 @@ class VimPerformanceTrend < ActsAsArModel
 
   def self.calc_value_at_target(limit, trend_data)
     if trend_data.nil? || trend_data[:slope].nil?
-      return nil
+      nil
     else
       begin
         result = Math.slope_x_intercept(limit, trend_data[:slope], trend_data[:yint])
-        return Time.at(result).utc
+        Time.at(result).utc
       rescue RangeError
-        return nil
+        nil
       rescue => err
         _log.warn("#{err.message}, calculating trend limit for limit=#{limit}, trend_data=#{trend_data.inspect}, intermediate=#{result.inspect}")
-        return nil
+        nil
       end
     end
   end

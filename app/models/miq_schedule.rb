@@ -191,7 +191,7 @@ class MiqSchedule < ApplicationRecord
       _("Run %{interval} starting on %{start_time}") % {:interval   => interval,
                                                           :start_time => start_time}
       else
-        return _("Run %{interval} every %{value} %{unit} starting on %{start_time}") %
+        _("Run %{interval} every %{value} %{unit} starting on %{start_time}") %
                {:interval   => interval,
                 :value      => run_at[:interval][:value],
                 :unit       => unit,
@@ -412,9 +412,9 @@ class MiqSchedule < ApplicationRecord
 
   def v_interval_unit
     if run_at[:interval] && run_at[:interval][:unit]
-      return run_at[:interval][:unit]
+      run_at[:interval][:unit]
     else
-      return nil
+      nil
     end
   end
 

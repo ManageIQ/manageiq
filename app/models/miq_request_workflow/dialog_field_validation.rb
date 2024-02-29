@@ -28,7 +28,7 @@ module MiqRequestWorkflow::DialogFieldValidation
                                                                    :length => fld[:min_length]}
     end
     if fld[:max_length] && value.to_s.length > fld[:max_length]
-      return _("%{name} must not be greater than %{length} characters") % {:name   => required_description(dlg, fld),
+      _("%{name} must not be greater than %{length} characters") % {:name   => required_description(dlg, fld),
                                                                            :length => fld[:max_length]}
     end
   end

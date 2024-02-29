@@ -51,7 +51,7 @@ class ChargeableField < ApplicationRecord
     return 1.0 if fixed?
     return 0 if options.method_for_allocated_metrics != :current_value && consumption.none?(metric, sub_metric)
     return consumption.send(options.method_for_allocated_metrics, metric, sub_metric) if allocated?
-    return consumption.avg(metric) if used?
+    consumption.avg(metric) if used?
   end
 
   def fixed?

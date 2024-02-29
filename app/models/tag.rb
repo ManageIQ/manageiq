@@ -61,7 +61,7 @@ class Tag < ApplicationRecord
   def self.parse(list)
     if list.kind_of?(Array)
       tag_names = list.collect { |tag| tag.try(:to_s) }
-      return tag_names.compact
+      tag_names.compact
     else
       tag_names = []
 
@@ -86,7 +86,7 @@ class Tag < ApplicationRecord
       # delete any blank tag names
       tag_names = tag_names.delete_if(&:empty?)
 
-      return tag_names.uniq
+      tag_names.uniq
     end
   end
 

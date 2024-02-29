@@ -60,7 +60,7 @@ class SystemConsole < ApplicationRecord
 
     Process.detach(pid)
 
-    return [local_address, local_port, pid]
+    [local_address, local_port, pid]
   end
 
   def self.kill_proxy_process(pid)

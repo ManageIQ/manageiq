@@ -86,9 +86,9 @@ class MiqExpression
       when "tag"
         tag = [exp["ns"], exp["tag"]].join("/")
         if exp["include"] == "none"
-          return "Not Tagged With #{tag}"
+          "Not Tagged With #{tag}"
         else
-          return "Tagged With #{tag}"
+          "Tagged With #{tag}"
         end
       when "script"
         if exp["expr"] == "true"
@@ -475,27 +475,27 @@ class MiqExpression
       elsif exp[operator].key?("field")
         Field.parse(exp[operator]["field"]).attribute_supported_by_sql?
       else
-        return false
+        false
       end
     when "includes"
       # Support includes operator using "LIKE" only if first operand is in main table
       if exp[operator].key?("field") && (!exp[operator]["field"].include?(".") || (exp[operator]["field"].include?(".") && exp[operator]["field"].split(".").length == 2))
-        return field_in_sql?(exp[operator]["field"])
+        field_in_sql?(exp[operator]["field"])
       else
         # TODO: Support includes operator for sub-sub-tables
-        return false
+        false
       end
     when "includes any", "includes all", "includes only"
       # Support this only from the main model (for now)
       if exp[operator].keys.include?("field") && exp[operator]["field"].split(".").length == 1
         model, field = exp[operator]["field"].split("-")
         method = "miq_expression_#{operator.downcase.tr(' ', '_')}_#{field}_arel"
-        return model.constantize.respond_to?(method)
+        model.constantize.respond_to?(method)
       else
-        return false
+        false
       end
     when "find", "regular expression matches", "regular expression does not match", "key exists", "value exists"
-      return false
+      false
     else
       # => false if operand is a tag
       return false if exp[operator].keys.include?("tag")
@@ -506,7 +506,7 @@ class MiqExpression
       # => TODO: support count of child relationship
       return false if exp[operator].key?("count")
 
-      return field_in_sql?(exp[operator]["field"]) && value_in_sql?(exp[operator]["value"])
+      field_in_sql?(exp[operator]["field"]) && value_in_sql?(exp[operator]["value"])
     end
   end
 
@@ -1188,15 +1188,15 @@ class MiqExpression
     if ns == "managed"
       cat = field.split("-").last
       catobj = Classification.lookup_by_name(cat)
-      return catobj ? catobj.entries.collect { |e| [e.description, e.name] } : []
+      catobj ? catobj.entries.collect { |e| [e.description, e.name] } : []
     elsif ["user_tag", "user"].include?(ns)
       cat = field.split("-").last
-      return ::Tag.where("name like ?", "/user/#{cat}%").select(:name).collect do |t|
+      ::Tag.where("name like ?", "/user/#{cat}%").select(:name).collect do |t|
         tag_name = t.name.split("/").last
         [tag_name, tag_name]
       end
     else
-      return field
+      field
     end
   end
 
@@ -1219,7 +1219,7 @@ class MiqExpression
 
     case dt
     when :string, :text
-      return false
+      false
     when :integer, :fixnum, :decimal, :float
       return false if send((dt == :float ? :numeric? : :integer?), value)
 
@@ -1232,7 +1232,7 @@ class MiqExpression
         value = "#{value.split(".")[0..-2].join(".")} #{sfx}"
       end
 
-      return _("Value '%{value}' is not a valid %{value_name}") % {:value => value, :value_name => dt_human}
+      _("Value '%{value}' is not a valid %{value_name}") % {:value => value, :value_name => dt_human}
     when :date, :datetime
       return false if operator.downcase.include?("empty")
 
@@ -1256,13 +1256,13 @@ class MiqExpression
         return _("Invalid Date/Time range, %{first_value} comes before %{second_value}") % {:first_value  => values[1],
                                                                                             :second_value => values[0]}
       end
-      return false
+      false
     when :boolean
       unless operator.downcase.include?("null") || %w[true false].include?(value)
         return _("Value must be true or false")
       end
 
-      return false
+      false
     when :regexp
       begin
         Regexp.new(value).match("foo")
@@ -1270,9 +1270,9 @@ class MiqExpression
         return _("Regular expression '%{value}' is invalid, '%{error_message}'") % {:value         => value,
                                                                                     :error_message => err.message}
       end
-      return false
+      false
     else
-      return false
+      false
     end
   end
 
@@ -1305,15 +1305,15 @@ class MiqExpression
     n2 = n.delete(',') # strip out commas
     begin
       Integer(n2)
-      return true
+      true
     rescue
       return false unless n.number_with_method?
 
       begin
         n2 = n.to_f_with_method
-        return (n2.to_i == n2)
+        (n2.to_i == n2)
       rescue
-        return false
+        false
       end
     end
   end
@@ -1323,15 +1323,15 @@ class MiqExpression
     n2 = n.delete(',') # strip out commas
     begin
       Float(n2)
-      return true
+      true
     rescue
       return false unless n.number_with_method?
 
       begin
         n.to_f_with_method
-        return true
+        true
       rescue
-        return false
+        false
       end
     end
   end

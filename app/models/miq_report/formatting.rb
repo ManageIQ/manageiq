@@ -173,15 +173,15 @@ module MiqReport::Formatting
 
     case options[:format]
     when "yes_no"
-      return val == true ? "Yes" : "No"
+      val == true ? "Yes" : "No"
     when "y_n"
-      return val == true ? "Y" : "N"
+      val == true ? "Y" : "N"
     when "t_f"
-      return val == true ? "T" : "F"
+      val == true ? "T" : "F"
     when "pass_fail"
-      return val == true ? "Pass" : "Fail"
+      val == true ? "Pass" : "Fail"
     else
-      return val.to_s.titleize
+      val.to_s.titleize
     end
   end
 
@@ -216,9 +216,9 @@ module MiqReport::Formatting
     end
 
     if options[:description].to_s.include?("Start")
-      return stime.strftime(options[:format])
+      stime.strftime(options[:format])
     else
-      return "(#{stime.strftime(options[:format])} - #{etime.strftime(options[:format])})"
+      "(#{stime.strftime(options[:format])} - #{etime.strftime(options[:format])})"
     end
   end
 

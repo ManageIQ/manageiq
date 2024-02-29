@@ -207,12 +207,12 @@ module ActsAsTaggable
       end
       if [:has_one, :belongs_to].include?(macro)
         value = subject.public_send(relationship).public_send(attr)
-        return object.downcase == value.to_s.downcase
+        object.downcase == value.to_s.downcase
       else
         subject.send(relationship).any? { |o| o.send(attr).to_s == object }
       end
     rescue NoMethodError
-      return false
+      false
     end
   end
 
