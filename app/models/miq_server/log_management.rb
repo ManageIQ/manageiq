@@ -37,7 +37,7 @@ module MiqServer::LogManagement
 
   def last_log_sync_message
     last_log = log_files.order(:updated_on => :desc).first
-    last_log.try(:miq_task).try!(:message)
+    last_log.try(:miq_task)&.message
   end
 
   def include_automate_models_and_dialogs?(value)

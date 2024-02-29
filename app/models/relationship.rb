@@ -40,7 +40,7 @@ class Relationship < ApplicationRecord
   #
 
   def self.resource(relationship)
-    relationship.try!(:resource)
+    relationship&.resource
   end
 
   def self.resources(relationships)

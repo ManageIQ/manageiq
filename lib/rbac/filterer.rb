@@ -646,7 +646,7 @@ module Rbac
     def scope_for_user_role_group(klass, scope, miq_group, user, managed_filters)
       user_or_group = miq_group || user
 
-      if user_or_group.try!(:self_service?) && klass != MiqUserRole
+      if user_or_group&.self_service? && klass != MiqUserRole
         scope.where(:id => klass == User ? user.id : miq_group.id)
       else
         role = user_or_group.miq_user_role
@@ -753,7 +753,7 @@ module Rbac
 
     def lookup_user_group(user, userid, miq_group, miq_group_id)
       user ||= (userid && User.lookup_by_userid(userid)) || User.current_user
-      miq_group_id ||= miq_group.try!(:id)
+      miq_group_id ||= miq_group&.id
       return [user, user.current_group] if user && user.current_group_id.to_s == miq_group_id.to_s
 
       group = if user
@@ -773,7 +773,7 @@ module Rbac
     # for reports, user is currently nil, so use the group filter
     # the user.get_filters delegates to user.current_group anyway
     def lookup_user_filters(miq_group)
-      filters = miq_group.try!(:get_filters).try!(:dup) || {}
+      filters = miq_group&.get_filters&.dup || {}
       filters["managed"] ||= []
       filters["belongsto"] ||= []
       filters

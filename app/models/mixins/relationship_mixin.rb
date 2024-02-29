@@ -176,7 +176,7 @@ module RelationshipMixin
 
   # Returns the relationship of the root of the tree the record is in
   def root_rel
-    rel = relationship.try!(:root)
+    rel = relationship&.root
     # micro-optimization: if the relationship is us, "load" the resource
     rel.resource = self if rel && rel.resource_id == id && rel.resource_type == self.class.base_class.name.to_s
     rel || relationship_for_isolated_root
