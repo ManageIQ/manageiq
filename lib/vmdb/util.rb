@@ -42,7 +42,7 @@ module VMDB
       files.find { |f| f.match(/\/evm\.log/) }
     end
 
-    LOG_TIMESTAMP_REGEX = /\[(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6})\s#/.freeze
+    LOG_TIMESTAMP_REGEX = /\[(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6})\s#/
 
     def self.log_timestamp(str)
       return nil unless str
