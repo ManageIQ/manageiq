@@ -90,7 +90,7 @@ class MiqWorker
     end
 
     def container_image_namespace
-      ENV["CONTAINER_IMAGE_NAMESPACE"]
+      ENV.fetch("CONTAINER_IMAGE_NAMESPACE", nil)
     end
 
     def container_image_name

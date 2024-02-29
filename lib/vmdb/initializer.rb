@@ -1,7 +1,7 @@
 module Vmdb
   module Initializer
     def self.init
-      _log.info("Initializing Application: Program Name: #{$PROGRAM_NAME}, PID: #{Process.pid}, ENV['EVMSERVER']: #{ENV['EVMSERVER']}")
+      _log.info("Initializing Application: Program Name: #{$PROGRAM_NAME}, PID: #{Process.pid}, ENV['EVMSERVER']: #{ENV.fetch('EVMSERVER', nil)}")
       check_db_connectable if perform_db_connectable_check?
 
       # UiWorker called in Development Mode

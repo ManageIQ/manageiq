@@ -36,7 +36,7 @@ if defined?(RSpec)
 
     task :setup_region do
       ENV["REGION"] ||= (rand(99) + 1).to_s # Ensure we have a random, non-0, region
-      puts "** Preparing database with REGION #{ENV["REGION"]}"
+      puts "** Preparing database with REGION #{ENV.fetch("REGION", nil)}"
     end
 
     task :spec_deps => [:initialize, 'evm:compile_sti_loader']

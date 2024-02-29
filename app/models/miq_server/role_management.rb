@@ -52,7 +52,7 @@ module MiqServer::RoleManagement
   end
 
   def ensure_default_roles
-    MiqServer.my_server.add_settings_for_resource(:server => {:role => ENV["MIQ_SERVER_DEFAULT_ROLES"]}) if role.blank? && ENV["MIQ_SERVER_DEFAULT_ROLES"].present?
+    MiqServer.my_server.add_settings_for_resource(:server => {:role => ENV.fetch("MIQ_SERVER_DEFAULT_ROLES", nil)}) if role.blank? && ENV["MIQ_SERVER_DEFAULT_ROLES"].present?
     sync_assigned_roles
   end
 

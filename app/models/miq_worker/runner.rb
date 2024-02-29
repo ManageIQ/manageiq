@@ -523,7 +523,7 @@ class MiqWorker::Runner
   end
 
   def skip_heartbeat?
-    ENV["DISABLE_MIQ_WORKER_HEARTBEAT"]
+    ENV.fetch("DISABLE_MIQ_WORKER_HEARTBEAT", nil)
   end
 
   def warn_about_heartbeat_skipping

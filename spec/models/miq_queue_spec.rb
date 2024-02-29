@@ -1050,7 +1050,7 @@ RSpec.describe MiqQueue do
 
           expect(YAML).not_to receive(:load_file).with(MiqQueue::MESSAGING_CONFIG_FILE)
 
-          expect(ENV["MESSAGING_PASSWORD"]).to be_encrypted
+          expect(ENV.fetch("MESSAGING_PASSWORD", nil)).to be_encrypted
           expect(MiqQueue.send(:messaging_client_options)).to eq(
             :encoding       => "json",
             :host           => "server.example.com",

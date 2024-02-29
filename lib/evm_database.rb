@@ -119,7 +119,7 @@ class EvmDatabase
   end
 
   def self.skip_seeding?
-    ENV['SKIP_SEEDING'] && seeded_primordially?
+    ENV.fetch('SKIP_SEEDING', nil) && seeded_primordially?
   end
   private_class_method :skip_seeding?
 
@@ -150,7 +150,7 @@ class EvmDatabase
   private_class_method :seed_classes
 
   def self.host
-    (ActiveRecord::Base.configurations[ENV['RAILS_ENV']] || {})['host']
+    (ActiveRecord::Base.configurations[ENV.fetch('RAILS_ENV', nil)] || {})['host']
   end
 
   def self.local?

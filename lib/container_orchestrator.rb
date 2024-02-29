@@ -92,7 +92,7 @@ class ContainerOrchestrator
   #       container orchestrator process itself, as it uses environment info
   #       that only the running orchestrator pod will have.
   def my_pod
-    get_pod_by_namespace_and_hostname(my_namespace, ENV["HOSTNAME"])
+    get_pod_by_namespace_and_hostname(my_namespace, ENV.fetch("HOSTNAME", nil))
   end
 
   def my_node_affinity_arch_values
@@ -132,8 +132,8 @@ class ContainerOrchestrator
 
   def manager_uri(path)
     URI::HTTPS.build(
-      :host => ENV["KUBERNETES_SERVICE_HOST"],
-      :port => ENV["KUBERNETES_SERVICE_PORT"],
+      :host => ENV.fetch("KUBERNETES_SERVICE_HOST", nil),
+      :port => ENV.fetch("KUBERNETES_SERVICE_PORT", nil),
       :path => path
     )
   end

@@ -2,7 +2,7 @@ desc "Release a new project version"
 task :release do
   require 'pathname'
 
-  version = ENV["RELEASE_VERSION"]
+  version = ENV.fetch("RELEASE_VERSION", nil)
   if version.nil? || version.empty?
     STDERR.puts "ERROR: You must set the env var RELEASE_VERSION to the proper value."
     exit 1
@@ -72,13 +72,13 @@ namespace :release do
   task :new_branch do
     require 'pathname'
 
-    branch = ENV["RELEASE_BRANCH"]
+    branch = ENV.fetch("RELEASE_BRANCH", nil)
     if branch.nil? || branch.empty?
       STDERR.puts "ERROR: You must set the env var RELEASE_BRANCH to the proper value."
       exit 1
     end
 
-    next_branch = ENV["RELEASE_BRANCH_NEXT"]
+    next_branch = ENV.fetch("RELEASE_BRANCH_NEXT", nil)
     if next_branch.nil? || next_branch.empty?
       STDERR.puts "ERROR: You must set the env var RELEASE_BRANCH_NEXT to the proper value."
       exit 1
@@ -133,13 +133,13 @@ namespace :release do
   task :new_branch_master do
     require 'pathname'
 
-    branch = ENV["RELEASE_BRANCH"]
+    branch = ENV.fetch("RELEASE_BRANCH", nil)
     if branch.nil? || branch.empty?
       STDERR.puts "ERROR: You must set the env var RELEASE_BRANCH to the proper value."
       exit 1
     end
 
-    next_branch = ENV["RELEASE_BRANCH_NEXT"]
+    next_branch = ENV.fetch("RELEASE_BRANCH_NEXT", nil)
     if next_branch.nil? || next_branch.empty?
       STDERR.puts "ERROR: You must set the env var RELEASE_BRANCH_NEXT to the proper value."
       exit 1
@@ -178,7 +178,7 @@ namespace :release do
 
   desc "Generate the Gemfile.lock.release file"
   task :generate_lockfile do
-    branch = ENV["RELEASE_BRANCH"]
+    branch = ENV.fetch("RELEASE_BRANCH", nil)
     if branch.nil? || branch.empty?
       STDERR.puts "ERROR: You must set the env var RELEASE_BRANCH to the proper value."
       exit 1

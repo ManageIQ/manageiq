@@ -693,13 +693,13 @@ class MiqQueue < ApplicationRecord
   private_class_method :optional_values
 
   private_class_method def self.messaging_options_from_env
-    return unless ENV["MESSAGING_HOSTNAME"] && ENV["MESSAGING_PORT"] && ENV["MESSAGING_USERNAME"] && ENV["MESSAGING_PASSWORD"]
+    return unless ENV.fetch("MESSAGING_HOSTNAME", nil) && ENV.fetch("MESSAGING_PORT", nil) && ENV.fetch("MESSAGING_USERNAME", nil) && ENV["MESSAGING_PASSWORD"]
 
     options = {
-      :host           => ENV["MESSAGING_HOSTNAME"],
+      :host           => ENV.fetch("MESSAGING_HOSTNAME", nil),
       :port           => ENV["MESSAGING_PORT"].to_i,
-      :username       => ENV["MESSAGING_USERNAME"],
-      :password       => ENV["MESSAGING_PASSWORD"],
+      :username       => ENV.fetch("MESSAGING_USERNAME", nil),
+      :password       => ENV.fetch("MESSAGING_PASSWORD", nil),
       :protocol       => ENV.fetch("MESSAGING_PROTOCOL", "Kafka"),
       :encoding       => ENV.fetch("MESSAGING_ENCODING", "json"),
       :sasl_mechanism => ENV.fetch("MESSAGING_SASL_MECHANISM", "PLAIN")

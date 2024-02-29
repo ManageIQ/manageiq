@@ -54,7 +54,7 @@ namespace :evm do
 
     desc 'Set the region of the current ManageIQ EVM Database (VMDB)'
     task :region => "evm:db:reset" do
-      region = ENV["REGION"]
+      region = ENV.fetch("REGION", nil)
 
       puts "Initializing region and database..."
       AwesomeSpawn.run!("bin/rails runner", :params => ["MiqDatabase.seed; MiqRegion.seed"])

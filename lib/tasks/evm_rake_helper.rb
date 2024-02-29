@@ -3,8 +3,8 @@ module EvmRakeHelper
   # For some rake tasks, the database.yml may not yet be setup and is not required anyway.
   # Note: Rails will not actually use the configuration and connect until you issue a query.
   def self.with_dummy_database_url_configuration
-    before, ENV["DATABASE_URL"] = ENV["DATABASE_URL"], "postgresql:///not_existing_db?host=/var/lib/postgresql"
-    before_db_check, ENV["PERFORM_DB_CONNECTABLE_CHECK"] = ENV["PERFORM_DB_CONNECTABLE_CHECK"], "false"
+    before, ENV["DATABASE_URL"] = ENV.fetch("DATABASE_URL", nil), "postgresql:///not_existing_db?host=/var/lib/postgresql"
+    before_db_check, ENV["PERFORM_DB_CONNECTABLE_CHECK"] = ENV.fetch("PERFORM_DB_CONNECTABLE_CHECK", nil), "false"
     yield
   ensure
     # ENV['x'] = nil deletes the key because ENV accepts only string values

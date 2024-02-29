@@ -49,7 +49,7 @@ namespace :evm do
       raise 'Must specify a backup zip file' if ENV['BACKUP_ZIP_FILE'].blank?
 
       puts "Datastore backup starting"
-      zip_file = ENV['BACKUP_ZIP_FILE']
+      zip_file = ENV.fetch('BACKUP_ZIP_FILE', nil)
       begin
         MiqAeDatastore.backup('zip_file'  => zip_file,
                               'overwrite' => (ENV['OVERWRITE'].to_s.downcase == 'true'))
@@ -93,7 +93,7 @@ namespace :evm do
 
     desc 'Lists automate classes'
     task :list_class => :environment do
-      namespace      = ENV["NAMESPACE"]
+      namespace      = ENV.fetch("NAMESPACE", nil)
       puts "Listing automate classes#{" in #{namespace}" if namespace}"
       EvmAutomate.list_class(namespace)
     end
@@ -101,12 +101,12 @@ namespace :evm do
     desc 'Export automate model information to a folder or zip file. ENV options DOMAIN,NAMESPACE,CLASS,EXPORT_DIR|ZIP_FILE|YAML_FILE'
     task :export => :environment do
       begin
-        domain = ENV['DOMAIN']
+        domain = ENV.fetch('DOMAIN', nil)
         raise "Must specify domain for export:" if domain.nil?
 
-        zip_file       = ENV['ZIP_FILE']
-        export_dir     = ENV['EXPORT_DIR']
-        yaml_file      = ENV['YAML_FILE']
+        zip_file       = ENV.fetch('ZIP_FILE', nil)
+        export_dir     = ENV.fetch('EXPORT_DIR', nil)
+        yaml_file      = ENV.fetch('YAML_FILE', nil)
         if zip_file.nil? && export_dir.nil? && yaml_file.nil?
           zip_file = "./#{domain}.zip"
           puts "No export location specified. Exporting domain: #{domain} to: #{zip_file}"
@@ -114,8 +114,8 @@ namespace :evm do
         export_options = {'export_dir' => export_dir,
                           'zip_file'   => zip_file,
                           'yaml_file'  => yaml_file,
-                          'namespace'  => ENV['NAMESPACE'],
-                          'class'      => ENV['CLASS'],
+                          'namespace'  => ENV.fetch('NAMESPACE', nil),
+                          'class'      => ENV.fetch('CLASS', nil),
                           'overwrite'  => ENV['OVERWRITE'].to_s.downcase == 'true'}
         export_options['export_as'] = ENV['EXPORT_AS'] if ENV['EXPORT_AS'].present?
         MiqAeExport.new(domain, export_options).export
@@ -138,30 +138,30 @@ namespace :evm do
         raise 'Preview must be true or false' unless %w{true false}.include?(preview)
 
         mode           = ENV['MODE'] ||= 'add'
-        import_as      = ENV['IMPORT_AS']
+        import_as      = ENV.fetch('IMPORT_AS', nil)
         overwrite      = (ENV['OVERWRITE'] ||= 'false').casecmp('true').zero?
         import_options = {'preview'   => (preview.to_s.downcase == 'true'),
                           'mode'      => mode.to_s.downcase,
-                          'namespace' => ENV['NAMESPACE'],
-                          'class'     => ENV['CLASS'],
+                          'namespace' => ENV.fetch('NAMESPACE', nil),
+                          'class'     => ENV.fetch('CLASS', nil),
                           'overwrite' => overwrite,
                           'import_as' => import_as}
         if ENV['ZIP_FILE'].present?
-          puts "Importing automate domain: #{ENV['DOMAIN']} from file #{ENV['ZIP_FILE']}"
+          puts "Importing automate domain: #{ENV.fetch('DOMAIN', nil)} from file #{ENV['ZIP_FILE']}"
           import_options['zip_file'] = ENV['ZIP_FILE']
         elsif ENV['IMPORT_DIR'].present?
-          puts "Importing automate domain: #{ENV['DOMAIN']} from directory #{ENV['IMPORT_DIR']}"
+          puts "Importing automate domain: #{ENV.fetch('DOMAIN', nil)} from directory #{ENV['IMPORT_DIR']}"
           import_options['import_dir'] = ENV['IMPORT_DIR']
         elsif ENV['YAML_FILE'].present?
-          puts "Importing automate domain: #{ENV['DOMAIN']} from file #{ENV['YAML_FILE']}"
+          puts "Importing automate domain: #{ENV.fetch('DOMAIN', nil)} from file #{ENV['YAML_FILE']}"
           import_options['yaml_file'] = ENV['YAML_FILE']
         elsif ENV['GIT_URL'].present?
           puts "Importing automate domain from url #{ENV['GIT_URL']}"
           ENV['DOMAIN'] = nil
           import_options['git_url'] = ENV['GIT_URL']
           import_options['overwrite'] = true
-          import_options['userid'] = ENV['USERID']
-          import_options['password'] = ENV['PASSWORD']
+          import_options['userid'] = ENV.fetch('USERID', nil)
+          import_options['password'] = ENV.fetch('PASSWORD', nil)
           import_options['ref'] = ENV['REF'] || MiqAeGitImport::DEFAULT_BRANCH
           import_options['ref_type'] = ENV['REF_TYPE'] || MiqAeGitImport::BRANCH
           import_options['verify_ssl'] = ENV['VERIFY_SSL'] || OpenSSL::SSL::VERIFY_PEER
@@ -173,7 +173,7 @@ namespace :evm do
             import_options[name.downcase] = ENV[name]
           end
         end
-        MiqAeImport.new(ENV['DOMAIN'], import_options).import
+        MiqAeImport.new(ENV.fetch('DOMAIN', nil), import_options).import
       rescue => err
         STDERR.puts err.backtrace
         STDERR.puts err.message
@@ -193,10 +193,10 @@ namespace :evm do
     task :simulate => :environment do
       begin
         puts "Automate simulation starting"
-        domain         = ENV["DOMAIN"]
-        namespace      = ENV["NAMESPACE"]
-        class_name     = ENV["CLASS"]
-        instance_name  = ENV["INSTANCE"]
+        domain         = ENV.fetch("DOMAIN", nil)
+        namespace      = ENV.fetch("NAMESPACE", nil)
+        class_name     = ENV.fetch("CLASS", nil)
+        instance_name  = ENV.fetch("INSTANCE", nil)
         err_msg = ""
         err_msg << "Must specify automate model domain\n"    if domain.nil?
         err_msg << "Must specify automate model namespace\n" if namespace.nil?
@@ -219,8 +219,8 @@ namespace :evm do
       begin
         raise 'Must specify a backup zip file' if ENV['BACKUP_ZIP_FILE'].blank?
 
-        puts "Importing automate domains from file #{ENV['BACKUP_ZIP_FILE']}"
-        MiqAeDatastore.restore(ENV['BACKUP_ZIP_FILE'])
+        puts "Importing automate domains from file #{ENV.fetch('BACKUP_ZIP_FILE', nil)}"
+        MiqAeDatastore.restore(ENV.fetch('BACKUP_ZIP_FILE', nil))
       rescue => err
         STDERR.puts err.message
         exit(1)
@@ -230,13 +230,13 @@ namespace :evm do
     desc 'Convert the legacy automation model to new format  ENV options FILE,DOMAIN,EXPORT_DIR|ZIP_FILE|YAML_FILE'
     task :convert => :environment do
       puts "Convert automation model from the legacy xml file"
-      domain_name = ENV["DOMAIN"]
+      domain_name = ENV.fetch("DOMAIN", nil)
       raise "Must specify the DOMAIN name to convert as" if domain_name.nil?
 
       export_options = {}
-      zip_file    = ENV['ZIP_FILE']
-      export_dir  = ENV['EXPORT_DIR']
-      yaml_file   = ENV['YAML_FILE']
+      zip_file    = ENV.fetch('ZIP_FILE', nil)
+      export_dir  = ENV.fetch('EXPORT_DIR', nil)
+      yaml_file   = ENV.fetch('YAML_FILE', nil)
       overwrite   = (ENV['OVERWRITE'] ||= 'false').downcase.==('true')
 
       export_options['zip_file'] = zip_file if zip_file
@@ -246,7 +246,7 @@ namespace :evm do
 
       raise "Must specify the ZIP_FILE or EXPORT_DIR or YAML_FILE to store converted model" if zip_file.nil? && export_dir.nil? && yaml_file.nil?
 
-      model_filename = ENV["FILE"]
+      model_filename = ENV.fetch("FILE", nil)
       raise "Must specify legacy automation backup file xml to " + \
             "convert to the new automate model:  - Usage FILE='xml_filename'" if model_filename.nil?
       raise "Automation file to use for conversion does not " + \
