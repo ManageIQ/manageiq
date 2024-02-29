@@ -468,8 +468,8 @@ RSpec.describe MiqRequestWorkflow do
     end
 
     it "returns a detailed formatting message when fail details are defined" do
-      expect(workflow.validate_regex(nil, {}, {}, regex_with_details, value_no_email)).to eq "'/' must be correctly"\
-        " formatted. We are looking for a specific email here."
+      expect(workflow.validate_regex(nil, {}, {}, regex_with_details, value_no_email)).to eq "'/' must be correctly "\
+        "formatted. We are looking for a specific email here."
     end
   end
 

@@ -133,8 +133,8 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
 
     persister.vms.build(vm_data(1))
 
-    expected_error = "Wrong index for key :vm_or_template, all references under this index must point to default :ref"\
-                     " called :manager_ref. Any other :ref is not valid. This applies also to nested lazy links."
+    expected_error = "Wrong index for key :vm_or_template, all references under this index must point to default :ref "\
+                     "called :manager_ref. Any other :ref is not valid. This applies also to nested lazy links."
     expect do
       persister.hardwares.build(hardware_data(1, :vm_or_template => vm_lazy))
     end.to(raise_error(expected_error))
@@ -147,8 +147,8 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
 
     persister.vms.build(vm_data(1))
 
-    expected_error = "Wrong index for key :hardware, all references under this index must point to default :ref called"\
-                     " :manager_ref. Any other :ref is not valid. This applies also to nested lazy links."
+    expected_error = "Wrong index for key :hardware, all references under this index must point to default :ref called "\
+                     ":manager_ref. Any other :ref is not valid. This applies also to nested lazy links."
     expect do
       persister.disks.build(disk_data(1, :hardware => hardware_lazy))
     end.to(raise_error(expected_error))

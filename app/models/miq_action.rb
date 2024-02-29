@@ -713,14 +713,14 @@ class MiqAction < ApplicationRecord
 
   def action_container_image_analyze(action, rec, inputs)
     unless rec.kind_of?(ContainerImage)
-      MiqPolicy.logger.error("MIQ(#{__method__}): Unable to perform action [#{action.description}],"\
-                             " object [#{rec.inspect}] is not a Container Image")
+      MiqPolicy.logger.error("MIQ(#{__method__}): Unable to perform action [#{action.description}], "\
+                             "object [#{rec.inspect}] is not a Container Image")
       return
     end
 
     if inputs[:event].name == "request_containerimage_scan"
-      MiqPolicy.logger.warn("MIQ(#{__method__}): Invoking action [#{action.description}] for event"\
-                            " [#{inputs[:event].description}] would cause infinite loop, skipping")
+      MiqPolicy.logger.warn("MIQ(#{__method__}): Invoking action [#{action.description}] for event "\
+                            "[#{inputs[:event].description}] would cause infinite loop, skipping")
       return
     end
 
