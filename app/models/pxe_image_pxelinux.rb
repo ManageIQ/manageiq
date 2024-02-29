@@ -1,7 +1,7 @@
 class PxeImagePxelinux < PxeImage
   def build_pxe_contents(kernel_args)
     options = super
-    options.insert(0, "initrd=#{initrd} ") unless initrd.blank?
+    options.insert(0, "initrd=#{initrd} ") if initrd.present?
 
     pxe = <<~PXE
       timeout 0
@@ -12,7 +12,7 @@ class PxeImagePxelinux < PxeImage
     PXE
 
     pxe << "   kernel #{kernel}\n" unless kernel.nil?
-    pxe << "   append #{options}\n" unless options.blank?
+    pxe << "   append #{options}\n" if options.present?
     pxe << "\n"
   end
 

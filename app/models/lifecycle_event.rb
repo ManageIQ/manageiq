@@ -7,12 +7,12 @@ class LifecycleEvent < ApplicationRecord
     _log.debug(event_hash.inspect)
 
     # Update the location if not provided by getting the value from the vm
-    event_hash[:location] = vm.path if event_hash[:location].blank? && !vm.blank?
+    event_hash[:location] = vm.path if event_hash[:location].blank? && vm.present?
     event = LifecycleEvent.new(event_hash)
     event.save!
 
     # create the event and link it to a Vm if a vm was found
-    unless vm.blank?
+    if vm.present?
       vm.lifecycle_events << event unless vm.lifecycle_events.include?(event)
     end
   end

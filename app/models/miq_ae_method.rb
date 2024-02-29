@@ -97,7 +97,7 @@ class MiqAeMethod < ApplicationRecord
       next if %w(name language scope location data).include?(cname)
 
       # Process the column
-      xml_attrs[cname.to_sym] = send(cname) unless send(cname).blank?
+      xml_attrs[cname.to_sym] = send(cname) if send(cname).present?
     end
 
     xml.MiqAeMethod(xml_attrs) do

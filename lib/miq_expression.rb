@@ -329,7 +329,7 @@ class MiqExpression
     pexp, seen = prune_exp(pexp, MODE_SQL)
     attrs = {:supported_by_sql => (seen == MODE_SQL)}
     sql = to_arel(pexp, tz).to_sql if pexp.present?
-    incl = includes_for_sql unless sql.blank?
+    incl = includes_for_sql if sql.present?
     [sql, incl, attrs]
   end
 

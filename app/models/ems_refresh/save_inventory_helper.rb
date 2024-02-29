@@ -63,7 +63,7 @@ module EmsRefresh::SaveInventoryHelper
 
     # Delete the items no longer found
     deletes = deletes_index.values
-    unless deletes.blank?
+    if deletes.present?
       ActiveRecord::Base.transaction do
         type = association.proxy_association.reflection.name
         _log.info("[#{type}] Deleting #{log_format_deletes(deletes)}")
@@ -100,7 +100,7 @@ module EmsRefresh::SaveInventoryHelper
       new_records << found
     else
       update!(found, hash, [:id, :type])
-      deletes.delete(found) unless deletes.blank?
+      deletes.delete(found) if deletes.present?
     end
     found
   end

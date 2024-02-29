@@ -81,7 +81,7 @@ class MiqAeClass < ApplicationRecord
       next if %w(name namespace).include?(cname)
 
       # Process the column
-      xml_attrs[cname.to_sym] = send(cname) unless send(cname).blank?
+      xml_attrs[cname.to_sym] = send(cname) if send(cname).present?
     end
 
     xml.MiqAeClass(xml_attrs) do

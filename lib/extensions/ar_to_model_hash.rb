@@ -23,7 +23,7 @@ module ToModelHash
 
       cols  = (options["cols"] || options["columns"] || [])
       cols += (options["key"] || []).compact
-      ret[:columns] = cols.uniq.sort.collect(&:to_sym) unless cols.blank?
+      ret[:columns] = cols.uniq.sort.collect(&:to_sym) if cols.present?
 
       includes = options["include"]
       if includes

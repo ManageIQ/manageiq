@@ -34,7 +34,7 @@ module ScanningMixin
 
       taskid = doc.root.attributes["taskid"]
       _log.info("TaskId = [#{taskid}]")
-      unless taskid.blank?
+      if taskid.present?
         name = begin
           File.basename(doc.root.elements[1].elements[1].attributes["original_filename"], ".*")
         rescue

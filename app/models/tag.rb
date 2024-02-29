@@ -112,7 +112,7 @@ class Tag < ApplicationRecord
       next unless tag.name =~ %r{^#{ns}/(.*)$}i
 
       name = $1.include?(" ") ? "'#{$1}'" : $1
-      list.push(name) unless name.blank?
+      list.push(name) if name.present?
     end
     list
   end

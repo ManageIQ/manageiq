@@ -262,9 +262,9 @@ class MiqAlert < ApplicationRecord
     status.ems_id ||= target.id if target.is_a?(ExtManagementSystem)
     status.description = status_description || description
     status.severity = severity
-    status.severity = event_severity unless event_severity.blank?
-    status.url = url unless url.blank?
-    status.event_ems_ref = ems_ref unless ems_ref.blank?
+    status.severity = event_severity if event_severity.present?
+    status.url = url if url.present?
+    status.event_ems_ref = ems_ref if ems_ref.present?
     status.resolved = resolved
     status.evaluated_on = Time.now.utc
     status.save!

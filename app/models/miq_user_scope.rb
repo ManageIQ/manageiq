@@ -68,8 +68,8 @@ class MiqUserScope
     return if managed.blank? && belongs.blank?
 
     newh = {:view => {}}
-    newh[:view][:managed]   = {:_all_ => managed} unless managed.blank?
-    newh[:view][:belongsto] = {:_all_ => belongs} unless belongs.blank?
+    newh[:view][:managed]   = {:_all_ => managed} if managed.present?
+    newh[:view][:belongsto] = {:_all_ => belongs} if belongs.present?
 
     new(newh)
   end

@@ -339,7 +339,7 @@ class EmsEvent < EventStream
         :vm_ems_ref        => source_event.vm_ems_ref,
         :vm_or_template_id => source_event.vm_or_template_id
       }
-      new_event[:username] = event.username unless event.username.blank?
+      new_event[:username] = event.username if event.username.present?
 
       # Fill in the dest information if we have it
       unless dest_event.nil?

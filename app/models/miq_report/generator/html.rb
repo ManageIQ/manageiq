@@ -149,7 +149,7 @@ module MiqReport::Generator::Html
     if (self.group == 'c') && extras && extras[:grouping] && extras[:grouping][group]
       display_count = _("Count: %{number}") % {:number => extras[:grouping][group][:count]}
     end
-    content << " | #{display_count}" unless display_count.blank?
+    content << " | #{display_count}" if display_count.present?
     html_rows << "<tr><td class='group' colspan='#{col_count}'>#{CGI.escapeHTML(content)}</td></tr>"
 
     if extras && extras[:grouping] && extras[:grouping][group] # See if group key exists

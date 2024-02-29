@@ -171,11 +171,11 @@ module ManageIQ
         def build_document_footer
           mri = options.mri
           tz = mri.get_time_zone(Time.zone.name)
-          if !mri.user_categories.blank? || !mri.categories.blank? || !mri.conditions.nil? || !mri.display_filter.nil?
+          if mri.user_categories.present? || mri.categories.present? || !mri.conditions.nil? || !mri.display_filter.nil?
             output << fit_to_width(@hr)
-            unless mri.user_categories.blank?
+            if mri.user_categories.present?
               user_filters = mri.user_categories.flatten
-              unless user_filters.blank?
+              if user_filters.present?
                 customer_name = Tenant.root_tenant.name
                 user_filter = "User assigned " + customer_name + " Tag filters:"
                 t = user_filter.ljust(@line_len - 2)
@@ -188,9 +188,9 @@ module ManageIQ
               end
             end
 
-            unless mri.categories.blank?
+            if mri.categories.present?
               categories = mri.categories.flatten
-              unless categories.blank?
+              if categories.present?
                 customer_name = Tenant.root_tenant.name
                 customer_name_title = "Report based " + customer_name + " Tag filters:"
                 t = customer_name_title + (" " * (@line_len - customer_name_title.length - 2))

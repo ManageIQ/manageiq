@@ -47,7 +47,7 @@ class VmReconfigureRequest < MiqRequest
 
     # Check if memory value is divisible by 4 and within the allowed limits
     mem = options[:vm_memory]
-    unless mem.blank?
+    if mem.present?
       mem = mem.to_i
       errors << "Memory value must be less than #{limits[:max__vm_memory]} MB.  Current value: #{mem} MB" if mem > limits[:max__vm_memory]
       errors << "Memory value must be greater than #{limits[:min__vm_memory]} MB.  Current value: #{mem} MB" if mem < limits[:min__vm_memory]
@@ -56,7 +56,7 @@ class VmReconfigureRequest < MiqRequest
 
     # Check if cpu value is within the allowed limits
     cpus = options[:number_of_sockets]
-    unless cpus.blank?
+    if cpus.present?
       cpus = cpus.to_i
       errors << "Processor value must be less than #{limits[:max__number_of_sockets]}.  Current value: #{cpus}"    if cpus > limits[:max__number_of_sockets]
       errors << "Processor value must be greater than #{limits[:min__number_of_sockets]}.  Current value: #{cpus}" if cpus < limits[:min__number_of_sockets]
@@ -64,7 +64,7 @@ class VmReconfigureRequest < MiqRequest
 
     # Check if cpu value is within the allowed limits
     cores = options[:cores_per_socket]
-    unless cores.blank?
+    if cores.present?
       cores = cores.to_i
       errors << "The Cores per Socket value must be less than #{limits[:max__cores_per_socket]}.  Current value: #{cores}"    if cores > limits[:max__cores_per_socket]
       errors << "The Cores per Socket value must be greater than #{limits[:min__cores_per_socket]}.  Current value: #{cores}" if cores < limits[:min__cores_per_socket]

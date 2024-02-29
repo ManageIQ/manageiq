@@ -72,7 +72,7 @@ class VmScan < Job
       if prof_policies
         scan_profiles = []
         prof_policies.each { |p| scan_profiles += p[:result] unless p[:result].nil? }
-        options[:scan_profiles] = scan_profiles unless scan_profiles.blank?
+        options[:scan_profiles] = scan_profiles if scan_profiles.present?
         save
       end
     end

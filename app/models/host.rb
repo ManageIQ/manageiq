@@ -876,7 +876,7 @@ class Host < ApplicationRecord
         if ipmi.connected?
           self.power_state = ipmi.power_state
           mac = ipmi.mac_address
-          self.mac_address = mac unless mac.blank?
+          self.mac_address = mac if mac.present?
 
           hw_info = {:manufacturer => ipmi.manufacturer, :model => ipmi.model}
           if hardware.nil?
@@ -1286,7 +1286,7 @@ class Host < ApplicationRecord
 
   def domain
     names = hostname.to_s.split(',').first.to_s.split('.')
-    return names[1..-1].join('.') unless names.blank?
+    return names[1..-1].join('.') if names.present?
 
     nil
   end

@@ -118,17 +118,17 @@ class Snapshot < ApplicationRecord
 
             # If we do not get a snapshot create time in the header use the file create time
             if e.attributes['create_time'].blank? && nh[:create_time].blank?
-              nh[:create_time] = e1.attributes['cdate_on_disk'] unless e1.attributes['cdate_on_disk'].blank?
+              nh[:create_time] = e1.attributes['cdate_on_disk'] if e1.attributes['cdate_on_disk'].present?
             end
           end
         end
 
         nh[:uid] = e.attributes['uid']
-        nh[:parent_uid] = e.attributes['parent'] unless e.attributes['parent'].blank?
+        nh[:parent_uid] = e.attributes['parent'] if e.attributes['parent'].present?
         nh[:name] = e.attributes['displayname']
         nh[:filename] = e.attributes['filename']
         nh[:description] = e.attributes['description']
-        nh[:create_time] = e.attributes['create_time'] unless e.attributes['create_time'].blank?
+        nh[:create_time] = e.attributes['create_time'] if e.attributes['create_time'].present?
         nh[:current] = current == e.attributes['uid'] ? 1 : 0
         nh[:total_size] = total_size
         # We are setting the vm_or_template_id relationship here because the tree relationship

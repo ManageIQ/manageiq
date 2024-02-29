@@ -65,7 +65,7 @@ module Authenticator
       user.userid     = username
       user.first_name = user_attrs[:firstname]
       user.last_name  = user_attrs[:lastname]
-      user.email      = user_attrs[:email] unless user_attrs[:email].blank?
+      user.email      = user_attrs[:email] if user_attrs[:email].present?
       user.name       = user_attrs[:fullname]
       user.name       = "#{user.first_name} #{user.last_name}" if user.name.blank?
       user.name       = user.userid if user.name.blank?

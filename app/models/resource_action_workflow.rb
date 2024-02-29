@@ -36,7 +36,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
 
   def process_request(state)
     result = {:errors => validate_dialog}
-    return result unless result[:errors].blank?
+    return result if result[:errors].present?
 
     values = create_values
     if create_request?(values)
@@ -64,7 +64,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   def create_values
     create_values_hash.tap do |value|
       value[:src_id] = @target.id
-      value[:request_options] = request_options unless request_options.blank?
+      value[:request_options] = request_options if request_options.present?
     end
   end
 

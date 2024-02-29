@@ -59,7 +59,7 @@ module EventMixin
 
   def find_one_event(assoc, order)
     ewc = event_where_clause(assoc)
-    events_assoc_class(assoc).where(ewc).order(order).first unless ewc.blank?
+    events_assoc_class(assoc).where(ewc).order(order).first if ewc.present?
   end
 
   module ClassMethods

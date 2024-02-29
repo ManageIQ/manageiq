@@ -74,11 +74,11 @@ module MiqRequestMixin
       Array.wrap(tag_ids).each do |tag_id|
         tag = Classification.find(tag_id)
         next if category.to_s.casecmp(tag.parent.name) != 0
-        next if !tag_name.blank? && tag_name.to_s.casecmp(tag.name) != 0
+        next if tag_name.present? && tag_name.to_s.casecmp(tag.name) != 0
 
         deletes << tag_id
       end
-      unless deletes.blank?
+      if deletes.present?
         self.tag_ids -= deletes
         update_attribute(:options, options)
       end

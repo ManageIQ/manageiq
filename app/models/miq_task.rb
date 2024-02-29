@@ -229,7 +229,7 @@ class MiqTask < ApplicationRecord
   end
 
   def results_ready?
-    status == STATUS_OK && !task_results.blank?
+    status == STATUS_OK && task_results.present?
   end
 
   def queue_callback(state, status, message, result)

@@ -93,7 +93,7 @@ module Authenticator
       authentication = config.dup
       authentication[:group_memberships_max_depth] ||= DEFAULT_GROUP_MEMBERSHIPS_MAX_DEPTH
 
-      if authentication.key?(:user_proxies) && !authentication[:user_proxies].blank? && authentication.key?(:get_direct_groups) && authentication[:get_direct_groups] == false
+      if authentication.key?(:user_proxies) && authentication[:user_proxies].present? && authentication.key?(:get_direct_groups) && authentication[:get_direct_groups] == false
         _log.info("Skipping getting group memberships directly assigned to user bacause it has been disabled in the configuration")
         groups = []
       else
@@ -123,7 +123,7 @@ module Authenticator
       user.last_name  = ldap.get_attr(lobj, :sn)
       email           = ldap.get_attr(lobj, :mail)
       email           = email.first if email.kind_of?(Array)
-      user.email      = email unless email.blank?
+      user.email      = email if email.present?
       user.name       = ldap.get_attr(lobj, :displayname)
       user.name       = "#{user.first_name} #{user.last_name}" if user.name.blank?
       user.name       = user.userid if user.name.blank?

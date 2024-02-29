@@ -40,25 +40,25 @@ module MiqProvisionVirtWorkflow::DialogFieldValidation
 
   def validate_placement(field, values, dlg, fld, value)
     # check the :placement_auto flag, then make sure the field is not blank
-    return nil unless value.blank?
+    return nil if value.present?
     return nil if get_value(values[:placement_auto]) == true
-    return nil unless get_value(values[field]).blank?
+    return nil if get_value(values[field]).present?
 
     _("%{description} is required") % {:description => required_description(dlg, fld)}
   end
 
   def validate_sysprep_upload(field, values, dlg, fld, value)
-    return nil unless value.blank?
+    return nil if value.present?
     return nil unless get_value(values[:sysprep_enabled]) == 'file'
-    return nil unless get_value(values[field]).blank?
+    return nil if get_value(values[field]).present?
 
     _("%{description} is required") % {:description => required_description(dlg, fld)}
   end
 
   def validate_sysprep_field(field, values, dlg, fld, value)
-    return nil unless value.blank?
+    return nil if value.present?
     return nil unless get_value(values[:sysprep_enabled]) == 'fields'
-    return nil unless get_value(values[field]).blank?
+    return nil if get_value(values[field]).present?
 
     _("%{description} is required") % {:description => required_description(dlg, fld)}
   end

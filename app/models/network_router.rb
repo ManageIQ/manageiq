@@ -57,6 +57,6 @@ class NetworkRouter < ApplicationRecord
   end
 
   def extra_attributes_load(key)
-    self.extra_attributes[key] unless extra_attributes.blank?
+    self.extra_attributes[key] if extra_attributes.present?
   end
 end

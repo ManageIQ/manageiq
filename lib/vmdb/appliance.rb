@@ -106,7 +106,7 @@ module Vmdb
         s.assigned_server_roles.includes(:server_role).each { |r| startup.info("Role: #{r.server_role.name}, Priority: #{r.priority}") }
 
         issue = `cat /etc/issue 2> /dev/null` rescue nil
-        startup.info("OS: #{issue.chomp}") unless issue.blank?
+        startup.info("OS: #{issue.chomp}") if issue.present?
 
         network = get_network
         unless network.empty?
@@ -114,13 +114,13 @@ module Vmdb
           network.each { |k, v| startup.info("#{k}: #{v}") }
         end
         mem = `cat /proc/meminfo 2> /dev/null` rescue nil
-        startup.info("System Memory Information:\n#{mem}") unless mem.blank?
+        startup.info("System Memory Information:\n#{mem}") if mem.present?
 
         cpu = `cat /proc/cpuinfo 2> /dev/null` rescue nil
-        startup.info("CPU Information:\n#{cpu}") unless cpu.blank?
+        startup.info("CPU Information:\n#{cpu}") if cpu.present?
 
         fstab = `cat /etc/fstab 2> /dev/null` rescue nil
-        startup.info("fstab information:\n#{fstab}") unless fstab.blank?
+        startup.info("fstab information:\n#{fstab}") if fstab.present?
       ensure
         startup.close rescue nil
       end
@@ -141,7 +141,7 @@ module Vmdb
           $log.warn("Diagnostics: [#{diag[:msg]}] command [#{diag[:cmd]}] failed with error [#{e}]")
           next # go to next diagnostic command if this one blew up
         end
-        $log.info("Diagnostics: [#{diag[:msg]}]\n#{res}") unless res.blank?
+        $log.info("Diagnostics: [#{diag[:msg]}]\n#{res}") if res.present?
       end
     end
 

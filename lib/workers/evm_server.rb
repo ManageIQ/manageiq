@@ -174,7 +174,7 @@ class EvmServer
       server_hash[:hostname] = config_hash[:hostname] = hostname
     end
 
-    unless mac_address.blank?
+    if mac_address.present?
       server_hash[:mac_address] = mac_address
     end
 
@@ -210,9 +210,9 @@ class EvmServer
   end
 
   def log_server_info
-    _log.info("Server IP Address: #{@current_server.ipaddress}")    unless @current_server.ipaddress.blank?
-    _log.info("Server Hostname: #{@current_server.hostname}")       unless @current_server.hostname.blank?
-    _log.info("Server MAC Address: #{@current_server.mac_address}") unless @current_server.mac_address.blank?
+    _log.info("Server IP Address: #{@current_server.ipaddress}")    if @current_server.ipaddress.present?
+    _log.info("Server Hostname: #{@current_server.hostname}")       if @current_server.hostname.present?
+    _log.info("Server MAC Address: #{@current_server.mac_address}") if @current_server.mac_address.present?
     _log.info("Server GUID: #{MiqServer.my_guid}")
     _log.info("Server Zone: #{MiqServer.my_zone}")
     _log.info("Server Role: #{MiqServer.my_role}")

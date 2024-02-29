@@ -7,7 +7,7 @@ class PrincePdfGenerator < PdfGenerator
   end
 
   def self.available?
-    !executable.blank?
+    executable.present?
   end
 
   def executable

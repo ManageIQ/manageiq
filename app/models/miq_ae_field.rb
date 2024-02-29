@@ -85,11 +85,11 @@ class MiqAeField < ApplicationRecord
       next if %w(name default_value substitute).include?(cname)
 
       # Process the column
-      xml_attrs[cname.to_sym] = send(cname) unless send(cname).blank?
+      xml_attrs[cname.to_sym] = send(cname) if send(cname).present?
     end
 
     xml.MiqAeField(xml_attrs) do
-      xml.text!(default_value) unless default_value.blank?
+      xml.text!(default_value) if default_value.present?
     end
   end
 

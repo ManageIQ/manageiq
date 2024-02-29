@@ -1,6 +1,6 @@
 module MiqReport::Generator::Aggregation
   def build_subtotals(all_dims = false)
-    return unless group == "c" || (!col_options.blank? && col_options.any? { |_c, h| h.key?(:grouping) })
+    return unless group == "c" || (col_options.present? && col_options.any? { |_c, h| h.key?(:grouping) })
     return if     sortby.blank?
 
     grouping_keys = all_dims ? sortby : sortby.first

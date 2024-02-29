@@ -71,11 +71,11 @@ class ResourceAction < ApplicationRecord
 
   def ae_uri
     uri = ae_path
-    unless ae_attributes.blank?
+    if ae_attributes.present?
       uri << "?"
       uri << MiqAeEngine::MiqAeUri.hash2query(ae_attributes)
     end
-    unless ae_message.blank?
+    if ae_message.present?
       uri << "#"
       uri << ae_message
     end

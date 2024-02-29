@@ -408,7 +408,7 @@ class MiqWidget < ApplicationRecord
     users_by_userid = User.in_my_region.where(:userid => grouped_users.values.flatten.uniq).index_by(&:userid)
     grouped_users.each_with_object({}) do |(k, v), h|
       user_objs = users_by_userid.values_at(*v).reject(&:blank?)
-      h[groups_by_id[k]] = user_objs unless user_objs.blank?
+      h[groups_by_id[k]] = user_objs if user_objs.present?
     end
   end
 

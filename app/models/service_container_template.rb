@@ -5,7 +5,7 @@ class ServiceContainerTemplate < ServiceGeneric
   def preprocess(action, new_options = {})
     return unless action == ResourceAction::PROVISION
 
-    unless new_options.blank?
+    if new_options.present?
       _log.info("Override with new options:")
       $log.log_hashes(new_options)
     end

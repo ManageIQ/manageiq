@@ -13,9 +13,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     # Check if the caller passed the source VM as part of the initial call
     if initial_pass == true
       src_vm_id = get_value(@values[:src_vm_id])
-      unless src_vm_id.blank?
+      if src_vm_id.present?
         vm = VmOrTemplate.find_by(:id => src_vm_id)
-        @values[:src_vm_id] = [vm.id, vm.name] unless vm.blank?
+        @values[:src_vm_id] = [vm.id, vm.name] if vm.present?
       end
     end
 
@@ -294,7 +294,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     allowed_tags_and_pre_tags.each_with_object({}) do |cat, hsh|
       children = cat[:children].each_with_object({}) { |value, result| result[value.first] = value.last }
       selected_ids = (children.keys & tag_ids)
-      hsh[cat[:name]] = selected_ids.collect { |t_id| children[t_id][:name] } unless selected_ids.blank?
+      hsh[cat[:name]] = selected_ids.collect { |t_id| children[t_id][:name] } if selected_ids.present?
     end
   end
 
@@ -321,23 +321,23 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     templates = MiqTemplate.non_deprecated.in_my_region
     condition = allowed_template_condition
 
-    unless options[:tag_filters].blank?
+    if options[:tag_filters].present?
       tag_filters = options[:tag_filters].collect(&:to_s)
       selected_tags = (Array.wrap(@values[:vm_tags].presence) + Array.wrap(@values[:pre_dialog_vm_tags].presence)).uniq
       tag_conditions = []
 
       # Collect the filter tags by category
-      unless selected_tags.blank?
+      if selected_tags.present?
         allowed_tags_and_pre_tags.each do |cat|
           if tag_filters.include?(cat[:name])
             children_keys = cat[:children].each_with_object({}) { |t, h| h[t.first] = t.last }
             conditions = (children_keys.keys & selected_tags).collect { |t_id| "#{cat[:name]}/#{children_keys[t_id][:name]}" }
           end
-          tag_conditions << conditions unless conditions.blank?
+          tag_conditions << conditions if conditions.present?
         end
       end
 
-      unless tag_conditions.blank?
+      if tag_conditions.present?
         _log.info("Filtering VM templates with the following tag_filters: <#{tag_conditions.inspect}>")
         templates = templates.where(condition).find_tags_by_grouping(tag_conditions, :ns => "/managed")
       end
@@ -383,7 +383,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     return result if (vm = get_source_vm).blank?
 
     vm.snapshots.each { |ss| result[ss.id.to_s] = ss.current? ? "#{ss.name} (Active)" : ss.name }
-    result["__CURRENT__"] = _(" Use the snapshot that is active at time of provisioning") unless result.blank?
+    result["__CURRENT__"] = _(" Use the snapshot that is active at time of provisioning") if result.present?
     result
   end
 
@@ -785,7 +785,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     data = parse_ws_string(fields)
     ws_values = parse_ws_string(ws_values)
     placement_cluster_name = ws_values[:cluster]
-    unless placement_cluster_name.blank?
+    if placement_cluster_name.present?
       data[:placement_cluster_name] = placement_cluster_name.to_s.downcase
       _log.info("placement_cluster_name:<#{data[:placement_cluster_name].inspect}>")
       data[:data_centers] = EmsCluster.where("lower(name) = ?", data[:placement_cluster_name]).collect(&:v_parent_datacenter)
@@ -888,7 +888,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       result = d[:network].blank?
       _log.warn("Skipping network due to blank name: <#{d.inspect}>") if result == true
       result
-    end unless values[:networks].blank?
+    end if values[:networks].present?
   end
 
   def ws_hardware_scsi_controller_fields(values, data)
@@ -910,7 +910,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       result = d[:sizeInMB].to_i == 0
       _log.warn("Skipping disk due to invalid size: <#{d.inspect}>") if result == true
       result
-    end unless values[:disk_scsi].blank?
+    end if values[:disk_scsi].present?
   end
 
   def parse_ws_hardware_fields(hw_key, regex_filter, values, data)

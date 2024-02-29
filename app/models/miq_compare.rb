@@ -144,7 +144,7 @@ class MiqCompare
   # 'guest_devices' section below it, would create a 'hardware.guest_devices'
   # section in the resultant include.
   def self.build_sections(section, all_sections, full_name = '')
-    return unless section.key?('include') && !section['include'].blank?
+    return unless section.key?('include') && section['include'].present?
 
     section['include'].each do |name, data|
       group = data['group']
@@ -172,7 +172,7 @@ class MiqCompare
     name = name.to_sym
     all_sections[name] = {:fetch => false, :fetched => false, :checked => false}
     all_sections[name][:key] = key.empty? ? key : key.to_sym unless key.nil?
-    all_sections[name][:group] = group unless group.blank?
+    all_sections[name][:group] = group if group.present?
   end
 
   def section_header_text(model)
@@ -550,7 +550,7 @@ class MiqCompare
       new_rec
     end
 
-    _log.error("No record was found for compare object #{@model}, ids: [#{error_recs.join(", ")}]") unless error_recs.blank?
+    _log.error("No record was found for compare object #{@model}, ids: [#{error_recs.join(", ")}]") if error_recs.present?
   end
 
   # Retrieve the record from the source (compare mode)

@@ -153,7 +153,7 @@ class PglogicalSubscription < ActsAsArModel
     attrs = PG::DSNParser.parse(dsn)
     attrs.select! { |k, _v| [:dbname, :host, :user, :port].include?(k) }
     port = attrs.delete(:port)
-    attrs[:port] = port.to_i unless port.blank?
+    attrs[:port] = port.to_i if port.present?
     attrs
   end
   private_class_method :dsn_attributes

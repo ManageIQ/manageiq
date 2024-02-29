@@ -87,7 +87,7 @@ class Vm < VmOrTemplate
       require 'win32/miq-wmi'
       cred = my_zone_obj.auth_user_pwd(:windows_domain)
       ipaddresses.each do |ipaddr|
-        break unless pl.blank?
+        break if pl.present?
 
         _log.info("Running processes for VM:[#{id}:#{name}]  IP:[#{ipaddr}] Logon:[#{cred[0]}]")
         begin

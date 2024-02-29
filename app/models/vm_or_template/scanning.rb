@@ -7,7 +7,7 @@ module VmOrTemplate::Scanning
     j = VmScan.where(:state => 'waiting_to_start')
               .where(:sync_key => guid)
               .pluck(:id)
-    unless j.blank?
+    if j.present?
       _log.info("VM scan job will not be added due to existing scan job waiting to be processed.  VM ID:[#{id}] Name:[#{name}] Guid:[#{guid}]  Existing Job IDs [#{j.join(", ")}]")
       return nil
     end

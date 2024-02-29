@@ -219,7 +219,7 @@ class Condition < ApplicationRecord
   def self.options2hash(opts, rec)
     ref = rec
     ohash = {}
-    unless opts.blank?
+    if opts.present?
       val = nil
       opts.split(",").each do |o|
         attr, val = o.split("=")

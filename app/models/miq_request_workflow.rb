@@ -77,7 +77,7 @@ class MiqRequestWorkflow
       @requester = @requester.clone
       @requester.current_group_by_description = group_description
     end
-    @values.merge!(options) unless options.blank?
+    @values.merge!(options) if options.present?
   end
 
   # Helper method when not using workflow
@@ -328,8 +328,8 @@ class MiqRequestWorkflow
   def normalize_numeric_fields
     fields do |_fn, f, _dn, _d|
       if f[:data_type] == :integer
-        f[:default] = f[:default].to_i_with_method unless f[:default].blank?
-        unless f[:values].blank?
+        f[:default] = f[:default].to_i_with_method if f[:default].present?
+        if f[:values].present?
           keys = f[:values].keys.dup
           keys.each { |k| f[:values][k.to_i_with_method] = f[:values].delete(k) }
         end
@@ -426,7 +426,7 @@ class MiqRequestWorkflow
           elsif f.key?(:default) && f[:values].key?(f[:default])
             selected_key = f[:default]
           else
-            unless f[:values].blank?
+            if f[:values].present?
               sorted_values = f[:values].sort
               selected_key = sorted_values.first.first
             end
@@ -516,7 +516,7 @@ class MiqRequestWorkflow
 
   def retrieve_ldap(_options = {})
     email = get_value(@values[:owner_email])
-    unless email.blank?
+    if email.present?
       l = MiqLdap.new
       if l.bind_with_default == true
         raise _("No information returned for %{email}") % {:email => email} if (d = l.get_user_info(email, "mail")).nil?
@@ -678,7 +678,7 @@ class MiqRequestWorkflow
   def get_pre_dialogs
     pre_dialogs = nil
     pre_dialog_name = dialog_name_from_automate('get_pre_dialog_name')
-    unless pre_dialog_name.blank?
+    if pre_dialog_name.present?
       pre_dialog_name = File.basename(pre_dialog_name, ".rb")
       d = MiqDialog.find_by(:name => pre_dialog_name, :dialog_type => self.class.base_model.name)
       unless d.nil?
@@ -932,7 +932,7 @@ class MiqRequestWorkflow
 
   def find_hosts_for_respool(item, ems_src = nil)
     hosts = find_class_above_ci(item, Host, ems_src)
-    return [hosts] unless hosts.blank?
+    return [hosts] if hosts.present?
 
     cluster = find_cluster_above_ci(item)
     find_hosts_under_ci(cluster)
@@ -1345,7 +1345,7 @@ class MiqRequestWorkflow
   def set_ws_field_value_by_id_or_name(values, dlg_field, data, dialog_name, dlg_fields, data_key = nil, id_klass = nil)
     data_key = dlg_field if data_key.blank?
     if data.key?(data_key)
-      data[data_key] = "#{id_klass}::#{data[data_key]}" unless id_klass.blank?
+      data[data_key] = "#{id_klass}::#{data[data_key]}" if id_klass.present?
       data[dlg_field] = data.delete(data_key)
       set_ws_field_value(values, dlg_field, data, dialog_name, dlg_fields)
     else
@@ -1488,7 +1488,7 @@ class MiqRequestWorkflow
   def ws_schedule_fields(values, _fields, data)
     return if (dlg_fields = get_ws_dialog_fields(dialog_name = :schedule)).nil?
 
-    unless data[:schedule_time].blank?
+    if data[:schedule_time].present?
       values[:schedule_type] = 'schedule'
       [:schedule_time, :retirement_time].each do |key|
         data_type = :time

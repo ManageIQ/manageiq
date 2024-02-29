@@ -307,7 +307,7 @@ class MiqLdap
     user_prefix = "cn" if user_prefix == "dn"
     case user_type
     when "samaccountname"
-      return "#{@domain_prefix}\\#{username}" unless @domain_prefix.blank?
+      return "#{@domain_prefix}\\#{username}" if @domain_prefix.present?
 
       return username
     when "upn", "userprincipalname"
@@ -384,7 +384,7 @@ class MiqLdap
     udata[:sid]          = MiqLdap.get_sid(user)
 
     managers = []
-    user[:manager].each { |m| managers << get(m) } unless user[:manager].blank?
+    user[:manager].each { |m| managers << get(m) } if user[:manager].present?
     udata[:manager]       = managers.empty? ? nil : MiqLdap.get_attr(managers.first, :displayname)
     udata[:manager_phone] = managers.empty? ? nil : MiqLdap.get_attr(managers.first, :telephonenumber)
     udata[:manager_mail]  = managers.empty? ? nil : MiqLdap.get_attr(managers.first, :mail)

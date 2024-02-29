@@ -99,7 +99,7 @@ class MiqAeInstance < ApplicationRecord
       next if %w(name).include?(cname)
 
       # Process the column
-      xml_attrs[cname.to_sym] = send(cname) unless send(cname).blank?
+      xml_attrs[cname.to_sym] = send(cname) if send(cname).present?
     end
 
     xml.MiqAeInstance(xml_attrs) do

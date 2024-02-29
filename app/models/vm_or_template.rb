@@ -864,7 +864,7 @@ class VmOrTemplate < ApplicationRecord
           :password   => ems.authentication_password_encrypted,
           :class_name => ems.class.name
         }
-        params[type][:port] = ems.port if ems.respond_to?(:port) && !ems.port.blank?
+        params[type][:port] = ems.port if ems.respond_to?(:port) && ems.port.present?
       end
     end
     params
