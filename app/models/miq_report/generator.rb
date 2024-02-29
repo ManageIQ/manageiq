@@ -763,12 +763,12 @@ module MiqReport::Generator
       existing_records = data_records.dup
       data_records = []
       full_path = get_full_path(parent_association, association)
-      if include_has_options
-        assoc_options = includes[association].merge(:qualify_attribute_names => full_path,
+      assoc_options = if include_has_options
+        includes[association].merge(:qualify_attribute_names => full_path,
                                                     :only                    => includes[association]["columns"])
       else
-        assoc_options = {:qualify_attribute_names => full_path, :only => includes[association]["columns"]}
-      end
+        {:qualify_attribute_names => full_path, :only => includes[association]["columns"]}
+                      end
 
       if association == "categories" || association == "managed"
         association_objects = []
@@ -806,11 +806,11 @@ module MiqReport::Generator
           data_records << existing_record
         else
           association_objects.each do |obj|
-            if association == "categories" || association == "managed"
-              association_records = [obj]
+            association_records = if association == "categories" || association == "managed"
+              [obj]
             else
-              association_records = build_reportable_data(obj, assoc_options, full_path)
-            end
+              build_reportable_data(obj, assoc_options, full_path)
+                                  end
             association_records.each do |assoc_record|
               data_records << existing_record.merge(assoc_record)
             end

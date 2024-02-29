@@ -24,11 +24,11 @@ module ArPglogicalMigrationHelper
     return unless schema_migrations_ran_exists?
 
     if direction == :up
-      if version == SCHEMA_MIGRATIONS_RAN_MIGRATION
-        to_add = ActiveRecord::SchemaMigration.normalized_versions << version
+      to_add = if version == SCHEMA_MIGRATIONS_RAN_MIGRATION
+        ActiveRecord::SchemaMigration.normalized_versions << version
       else
-        to_add = [version]
-      end
+        [version]
+               end
 
       to_add.each do |v|
         binds = [

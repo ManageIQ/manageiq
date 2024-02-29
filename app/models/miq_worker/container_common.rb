@@ -12,11 +12,11 @@ class MiqWorker
 
       container = definition[:spec][:template][:spec][:containers].first
 
-      if container_image_tag.include?("latest")
-        container[:imagePullPolicy] = "Always"
+      container[:imagePullPolicy] = if container_image_tag.include?("latest")
+        "Always"
       else
-        container[:imagePullPolicy] = "IfNotPresent"
-      end
+        "IfNotPresent"
+                                    end
 
       container[:image] = container_image
       container[:env] << {:name => "WORKER_CLASS_NAME", :value => self.class.name}

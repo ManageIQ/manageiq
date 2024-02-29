@@ -106,11 +106,11 @@ module MiqReport::Search
                                       db_options[:use_sql_view]
                                     end
 
-    if options[:parent]
-      targets = get_parent_targets(options[:parent], options[:association] || options[:parent_method])
+    targets = if options[:parent]
+      get_parent_targets(options[:parent], options[:association] || options[:parent_method])
     else
-      targets = db_class
-    end
+      db_class
+              end
 
     if selected_ids.present?
       targets = targets.first.kind_of?(Integer) ? targets & selected_ids : targets.where(:id => selected_ids)

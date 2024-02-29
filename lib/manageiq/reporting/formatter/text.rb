@@ -18,14 +18,14 @@ module ManageIQ
           mri.table.data.each do |r|
             mri.col_formats ||= [] # Backward compat - create empty array for formats
             mri.col_order.each_with_index do |f, i|
-              unless ["<compare>", "<drift>"].include?(mri.db)
-                data = mri.format(f,
+              data = unless ["<compare>", "<drift>"].include?(mri.db)
+                mri.format(f,
                                   r[f],
                                   :format => mri.col_formats[i] ? mri.col_formats[i] : :_default_,
                                   :tz     => tz)
               else
-                data = r[f].to_s
-              end
+                r[f].to_s
+                     end
               if !@max_col_width[i] || data.length > @max_col_width[i]
                 @max_col_width[i] = data.length
               end
@@ -118,14 +118,14 @@ module ManageIQ
             mri.col_order.each_with_index do |f, i|
               next if mri.column_is_hidden?(f)
 
-              unless ["<compare>", "<drift>"].include?(mri.db)
-                data = mri.format(f,
+              data = unless ["<compare>", "<drift>"].include?(mri.db)
+                mri.format(f,
                                   r[f],
                                   :format => mri.col_formats[i] ? mri.col_formats[i] : :_default_,
                                   :tz     => tz)
               else
-                data = r[f].to_s
-              end
+                r[f].to_s
+                     end
               if options.alignment.eql? :center
                 line << data.center(@max_col_width[i])
               else
@@ -256,11 +256,11 @@ module ManageIQ
         #   "+------------------+"
         def hr
           columns = options.mri.table.column_names
-          if columns.include?("id") # Use 1 less column if "id" is present
-            @line_len = @max_col_width.inject((columns.length - 1) * 3) { |s, e| s + e } + 1
+          @line_len = if columns.include?("id") # Use 1 less column if "id" is present
+            @max_col_width.inject((columns.length - 1) * 3) { |s, e| s + e } + 1
           else
-            @line_len = @max_col_width.inject(columns.length * 3) { |s, e| s + e }
-          end
+            @max_col_width.inject(columns.length * 3) { |s, e| s + e }
+                      end
           "+" + ("-" * (@line_len - 2)) + "+" + CRLF
         end
       end

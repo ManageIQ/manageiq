@@ -113,18 +113,18 @@ class Condition < ApplicationRecord
 
     case mode.downcase
     when "exist"
-      ref.nil? ? value = false : value = ref.is_tagged_with?(tag, :ns => "*")
+      value = ref.nil? ? false : ref.is_tagged_with?(tag, :ns => "*")
     when "value"
-      if ref.kind_of?(Hash)
-        value = ref.fetch(tag, "")
+      value = if ref.kind_of?(Hash)
+        ref.fetch(tag, "")
       else
-        value = ref.nil? ? "" : Tag.list(ref, :ns => tag)
-      end
+        ref.nil? ? "" : Tag.list(ref, :ns => tag)
+              end
       value = MiqExpression.quote(value, ohash[:type]&.to_sym)
     when "count"
-      ref.nil? ? value = 0 : value = ref.tag_list(:ns => tag).length
+      value = ref.nil? ? 0 : ref.tag_list(:ns => tag).length
     when "registry"
-      ref.nil? ? value = "" : value = registry_data(ref, tag, ohash)
+      value = ref.nil? ? "" : registry_data(ref, tag, ohash)
       value = MiqExpression.quote(value, ohash[:type]&.to_sym)
     end
     value

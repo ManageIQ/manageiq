@@ -80,11 +80,11 @@ class VimPerformanceTagValue
       association_type = perf.resource_type
 
       cats_to_process.each do |category|
-        if !perf.tag_names.nil? && perf.tag_names.include?(category)
-          tag_names = perf.tag_names.split(TAG_SEP).select { |t| t.starts_with?(category) }
+        tag_names = if !perf.tag_names.nil? && perf.tag_names.include?(category)
+          perf.tag_names.split(TAG_SEP).select { |t| t.starts_with?(category) }
         else
-          tag_names = ["#{category}/_none_"]
-        end
+          ["#{category}/_none_"]
+                    end
         tag_names.each do |tag|
           next if tag.starts_with?("power_state")
           next if tag.starts_with?("folder_path")

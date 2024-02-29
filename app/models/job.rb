@@ -187,11 +187,11 @@ class Job < ApplicationRecord
     return job.is_active? unless job.nil?
 
     # If Job is NOT found, consider active if timestamp is newer than (now - delay)
-    if timestamp.kind_of?(String)
-      timestamp = timestamp.to_time(:utc)
+    timestamp = if timestamp.kind_of?(String)
+      timestamp.to_time(:utc)
     else
-      timestamp = timestamp.to_time rescue nil
-    end
+      timestamp.to_time rescue nil
+                end
     return false if timestamp.nil?
 
     (timestamp >= job_not_found_delay.seconds.ago)

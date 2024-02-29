@@ -90,11 +90,11 @@ class DescendantLoader
         # will definitely be defined inside the innermost containining
         # scope. We're just not sure how that scope plays out relative
         # to its parents.
-        if (container_name = scope_names.pop)
-          define_combos = scoped_name(container_name, name_combinations(scope_names))
+        define_combos = if (container_name = scope_names.pop)
+          scoped_name(container_name, name_combinations(scope_names))
         else
-          define_combos = search_combos.dup
-        end
+          search_combos.dup
+                        end
 
         [search_combos, define_combos, flatten_name(name), flatten_name(sklass)]
       end.compact

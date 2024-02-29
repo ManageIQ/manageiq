@@ -93,22 +93,22 @@ module RetirementMixin
       date = options[:date].in_time_zone unless options[:date].nil?
       self.retires_on = date
 
-      if date
-        message += " is scheduled to retire on: [#{retires_on.strftime("%x %R %Z")}]"
+      message += if date
+        " is scheduled to retire on: [#{retires_on.strftime("%x %R %Z")}]"
       else
-        message += " is no longer scheduled to retire"
-      end
+        " is no longer scheduled to retire"
+                 end
     end
 
     if options.key?(:warn)
       message += " and" if options.key?(:date)
       warn = options[:warn]
       self.retirement_warn = warn
-      if warn
-        message += " has a value for retirement warning days of: [#{retirement_warn}]"
+      message += if warn
+        " has a value for retirement warning days of: [#{retirement_warn}]"
       else
-        message += " has no value for retirement warning days"
-      end
+        " has no value for retirement warning days"
+                 end
     end
 
     save

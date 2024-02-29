@@ -38,11 +38,11 @@ module MiqReport::Generator::Html
         end
 
         # Build click thru if string can be created
-        if clickable_rows && onclick = build_row_onclick(d.data)
-          output << "<tr class='row#{row}' #{onclick}>"
+        output << if clickable_rows && onclick = build_row_onclick(d.data)
+          "<tr class='row#{row}' #{onclick}>"
         else
-          output << "<tr class='row#{row}-nocursor'>"
-        end
+          "<tr class='row#{row}-nocursor'>"
+                  end
         row = 1 - row
 
         col_order.each_with_index do |c, c_idx|

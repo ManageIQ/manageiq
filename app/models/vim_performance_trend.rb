@@ -71,15 +71,15 @@ class VimPerformanceTrend < ActsAsArModel
         col_name = "limit_pct_value_#{options[:target_pcts].index(pct) + 1}"
         pct_of_limit = (limit * pct * 0.01)
         row[col_name] = calc_value_at_target(pct_of_limit, trend_data[name])
-        if row[col_name].nil?
-          row[col_name] = "Unknown"
+        row[col_name] = if row[col_name].nil?
+          "Unknown"
         elsif row[col_name] < Time.now.utc
-          row[col_name] = "--------------"
+          "--------------"
         elsif row[col_name] > Time.now.utc + 2.years
-          row[col_name] = "Over 2 Years"
+          "Over 2 Years"
         else
-          row[col_name] = row[col_name].strftime("%m/%d/%Y")
-        end
+          row[col_name].strftime("%m/%d/%Y")
+                        end
       end
 
       # Need to exclude records that are outside time profile when calculating range min and max values
@@ -244,11 +244,11 @@ class VimPerformanceTrend < ActsAsArModel
       "slope"
     ]
     col_order.each do |c|
-      if c.ends_with?("_trend_value")
-        col_headers << "#{Dictionary.gettext([options[:trend_db], c].join("."), :type => "column", :notfound => :titleize)} - #{Dictionary.gettext([options[:trend_db], options[:trend_col]].join("."), :type => "column", :notfound => :titleize)}"
+      col_headers << if c.ends_with?("_trend_value")
+        "#{Dictionary.gettext([options[:trend_db], c].join("."), :type => "column", :notfound => :titleize)} - #{Dictionary.gettext([options[:trend_db], options[:trend_col]].join("."), :type => "column", :notfound => :titleize)}"
       else
-        col_headers << Dictionary.gettext([options[:trend_db], c].join("."), :type => "column", :notfound => :titleize)
-      end
+        Dictionary.gettext([options[:trend_db], c].join("."), :type => "column", :notfound => :titleize)
+                     end
     end
 
     if options[:limit_col]

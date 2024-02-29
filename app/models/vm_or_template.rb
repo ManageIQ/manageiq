@@ -607,11 +607,11 @@ class VmOrTemplate < ApplicationRecord
   def self.rss_fails_policy(_name, options)
     order(options[:orderby]).limit(options[:limit_to_count]).each_with_object([]) do |vm, result|
       rec = OpenStruct.new(vm.attributes)
-      if vm.host.nil?
-        rec.host_name = "unknown"
+      rec.host_name = if vm.host.nil?
+        "unknown"
       else
-        rec.host_name = vm.host.name
-      end
+        vm.host.name
+                      end
       rec.vm_id = vm.id
       rec.reason = []
       presult = vm.enforce_policy("rsop")

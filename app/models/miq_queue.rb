@@ -460,11 +460,11 @@ class MiqQueue < ApplicationRecord
 
       if instance_id
         begin
-          if (class_name == requester.class.name) && requester.respond_to?(:id) && (instance_id == requester.id)
-            obj = requester
+          obj = if (class_name == requester.class.name) && requester.respond_to?(:id) && (instance_id == requester.id)
+            requester
           else
-            obj = obj.find(instance_id)
-          end
+            obj.find(instance_id)
+                end
         rescue ActiveRecord::RecordNotFound => err
           _log.warn("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}")
           return STATUS_WARN, nil, nil

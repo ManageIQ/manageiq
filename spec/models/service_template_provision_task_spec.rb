@@ -28,11 +28,11 @@ RSpec.describe ServiceTemplateProvisionTask do
     let(:tracking_label) { "r#{@request.id}_service_template_provision_task_#{@task_0.id}" }
 
     def create_stp(description, state = 'pending', prov_index = nil, scaling_max = nil)
-      if prov_index && scaling_max
-        options = {:service_resource_id => service_resource_id(prov_index, scaling_max)}
+      options = if prov_index && scaling_max
+        {:service_resource_id => service_resource_id(prov_index, scaling_max)}
       else
-        options = {}
-      end
+        {}
+                end
       FactoryBot.create(:service_template_provision_task,
                         :description    => description,
                         :userid         => @admin.userid,

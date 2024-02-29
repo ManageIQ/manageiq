@@ -65,7 +65,7 @@ module MiqPolicyMixin
   end
 
   def passes_policy?(list = nil)
-    list.nil? ? plist = policies : plist = resolve_policies(list)
+    plist = list.nil? ? policies : resolve_policies(list)
     result = true
     plist.each do |policy|
       result = false if policy["result"] == "deny"
