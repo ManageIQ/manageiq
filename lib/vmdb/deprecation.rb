@@ -4,8 +4,8 @@ module Vmdb
       @instance ||= ActiveSupport::Deprecation.new("T-release", "ManageIQ").tap { |d| d.behavior = default_behavior }
     end
 
-    def self.method_missing(method_name, *args, &block)
-      instance.respond_to?(method_name) ? instance.send(method_name, *args, &block) : super
+    def self.method_missing(method_name, ...)
+      instance.respond_to?(method_name) ? instance.send(method_name, ...) : super
     end
 
     def self.respond_to_missing?(method, _include_private = false)
