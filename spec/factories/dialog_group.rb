@@ -9,7 +9,7 @@ FactoryBot.define do
     # skip validate_children callback for general dialog testing
     to_create do |instance|
       class << instance
-        def validate_children; true; end
+        def validate_children() = true
       end
       instance.save!
     end

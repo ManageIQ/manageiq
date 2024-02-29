@@ -2,7 +2,7 @@ RSpec.describe "ar_base_model extension" do
   context "with a test class" do
     let(:test_class) do
       Class.new(ActiveRecord::Base) do
-        def self.name; "TestClass"; end
+        def self.name() = "TestClass"
       end
     end
 
@@ -17,7 +17,7 @@ RSpec.describe "ar_base_model extension" do
     context "with a subclass" do
       let(:test_class_foo) do
         Class.new(test_class) do
-          def self.name; "TestClassFoo"; end
+          def self.name() = "TestClassFoo"
         end
       end
 

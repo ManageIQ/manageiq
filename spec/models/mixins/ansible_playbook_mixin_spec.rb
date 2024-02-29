@@ -1,7 +1,7 @@
 RSpec.describe AnsiblePlaybookMixin do
   let(:test_instance) do
     Class.new(ActiveRecord::Base) do
-      def self.name; "TestClass"; end
+      def self.name() = "TestClass"
       self.table_name = "services"
       include AnsiblePlaybookMixin
     end.new
