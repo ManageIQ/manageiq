@@ -16,9 +16,7 @@ RSpec.describe "Service Filter" do
              "middle"     => {:type    => 'composite', :children => ['vm_service']},
              "vm_service" => {:type    => 'atomic',
                               :request => {:target_name => "fred", :src_vm_id => @src_vm.id,
-                                           :number_of_vms => 1, :requester => @user}
-                             }
-            }
+                                           :number_of_vms => 1, :requester => @user}}}
     build_service_template_tree(model)
   end
 

@@ -344,8 +344,7 @@ RSpec.describe MiqWidget do
                     :zone        => nil,
                     :class_name  => @widget.class.name,
                     :instance_id => @widget.id,
-                    :msg_timeout => 3600
-      }
+                    :msg_timeout => 3600}
     end
 
     it "skips task creation and records warn message if MiqTask for generating widget content exists and not finished" do

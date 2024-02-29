@@ -40,12 +40,10 @@ RSpec.describe DialogTab do
         [
           { 'id'            => dialog_groups.first.id,
             'label'         => 'updated_label',
-            'dialog_fields' => [{ 'id' => dialog_fields.first.id}]
-          },
+            'dialog_fields' => [{ 'id' => dialog_fields.first.id}]},
           { 'id'            => dialog_groups.last.id,
             'label'         => 'updated_label',
-            'dialog_fields' => [{'id' => dialog_fields.last.id}]
-          },
+            'dialog_fields' => [{'id' => dialog_fields.last.id}]},
           {
             'label'         => 'a new label',
             'dialog_fields' => [{'name' => 'field name', 'label' => 'field label'}]

@@ -21,7 +21,8 @@ class ContainerOrchestrator
                     :nodeSelectorTerms => [{
                       :matchExpressions => [
                         {:key => "kubernetes.io/arch", :operator => "In", :values => ContainerOrchestrator.new.my_node_affinity_arch_values}
-                      ]}]
+                      ]
+}]
                   }
                 }
               },

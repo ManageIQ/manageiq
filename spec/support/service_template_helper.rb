@@ -64,8 +64,7 @@ module Spec
         else
           {:type      => 'atomic',
            :prov_type => item.vendor,
-           :request   => {:src_vm_id => item.id, :number_of_vms => 1, :requester => @user}
-          }
+           :request   => {:src_vm_id => item.id, :number_of_vms => 1, :requester => @user}}
         end
       end
 

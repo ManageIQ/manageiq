@@ -215,8 +215,7 @@ class MiqRequest < ApplicationRecord
     )
 
     {'EventStream::event_stream' => event_obj.id,
-     :event_stream_id            => event_obj.id
-    }
+     :event_stream_id            => event_obj.id}
   end
 
   def call_automate_event(event_name, synchronous: false)

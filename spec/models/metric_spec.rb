@@ -227,8 +227,7 @@ RSpec.describe Metric do
                      :column          => "v_pct_cpu_ready_delta_summation",
                      :interval_name   => "hourly",
                      :starting_on     => Time.parse("2011-08-12T20:33:20Z"),
-                     :trend_direction => "none"
-          }
+                     :trend_direction => "none"}
           expect(@ems_cluster.performances_maintains_value_for_duration?(options)).to eq(false)
         end
       end

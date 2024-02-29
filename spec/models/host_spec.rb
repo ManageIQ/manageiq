@@ -315,8 +315,7 @@ RSpec.describe Host do
 
       it "validate remote, then validate default" do
         data = {:default => {:userid => "", :password => ""},
-                :remote  => {:userid => "root", :password => password},
-        }
+                :remote  => {:userid => "root", :password => password},}
         @host.update_authentication(data, :save => false)
         assert_remote_credentials_validated
 

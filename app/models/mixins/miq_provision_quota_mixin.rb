@@ -342,8 +342,7 @@ module MiqProvisionQuotaMixin
                 :class_name => "MiqProvision", :ids => [], :storage_by_id => Hash.new { |k, v| k[v] = 0 },
                 :memory_by_host_id => Hash.new { |k, v| k[v] = 0 }, :cpu_by_host_id => Hash.new { |k, v| k[v] = 0 },
                 :vms_by_storage_id => Hash.new { |k, v| k[v] = [] }
-              }
-             }
+              }}
 
     send(prov_method, options).each do |pr|
       service_request?(pr) ? service_quota_values(pr, result) : vm_quota_values(pr, result)

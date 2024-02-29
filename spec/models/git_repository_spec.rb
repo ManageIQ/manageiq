@@ -42,13 +42,11 @@ RSpec.describe GitRepository do
     let(:info) { {:time => Time.now.utc, :message => "R2D2", :commit_sha => "abcdef"} }
     let(:branch_info_hash) do
       {'b1' => {:time => Time.now.utc, :message => "B1", :commit_sha => "abcdef"},
-       'b2' => {:time => Time.now.utc - 5, :message => "B2", :commit_sha => "123456"}
-      }
+       'b2' => {:time => Time.now.utc - 5, :message => "B2", :commit_sha => "123456"}}
     end
     let(:tag_info_hash) do
       {'t1' => {:time => Time.now.utc, :message => "T1", :commit_sha => "abc12f"},
-       't2' => {:time => Time.now.utc + 5, :message => "T2", :commit_sha => "123456"}
-      }
+       't2' => {:time => Time.now.utc + 5, :message => "T2", :commit_sha => "123456"}}
     end
     let(:repo) { FactoryBot.create(:git_repository, :verify_ssl => verify_ssl) }
     let(:userid) { 'user' }

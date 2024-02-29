@@ -742,7 +742,8 @@ RSpec.describe MiqReport do
             "columns" => %w(cpu_usagemhz_rate_average_high_over_time_period
                             cpu_usagemhz_rate_average_low_over_time_period
                             derived_memory_used_high_over_time_period
-                            derived_memory_used_low_over_time_period)}})
+                            derived_memory_used_low_over_time_period)
+}})
         report.generate_table(:userid => "admin")
       end
 

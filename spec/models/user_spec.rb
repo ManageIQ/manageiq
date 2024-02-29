@@ -231,8 +231,7 @@ RSpec.describe User do
                              :ldap_role => true,
                              :user_suffix => "manageiq.com",
                              :group_memberships_max_depth => 2,
-                             :ldaphost => ["192.168.254.15"]}
-        }
+                             :ldaphost => ["192.168.254.15"]}}
       stub_settings(@auth_config)
       @miq_ldap = double('miq_ldap')
       allow(@miq_ldap).to receive_messages(:bind => false)
