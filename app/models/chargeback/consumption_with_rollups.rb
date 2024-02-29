@@ -228,7 +228,7 @@ class Chargeback
       @tag_filtered_for_rollup_records ||= {}
       @tag_filtered_for_rollup_records[tag_name_filter] ||= @rollup_records.select do |rollup|
           (resource_tag_names(rollup) & [tag_name_filter]).present?
-        end
+      end
       
     end
   end

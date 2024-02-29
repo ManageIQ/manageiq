@@ -33,7 +33,7 @@ FactoryBot.define do
         miq_ae_method_copy
         miq_ae_namespace_edit
       ]
-end
+      end
     end
   end
 

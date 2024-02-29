@@ -75,7 +75,7 @@ module Vmdb
           next unless File.exist?(content_dir.join("roles/requirements.yml"))
 
           [engine, content_dir]
-        end.compact
+      end.compact
       
     end
 

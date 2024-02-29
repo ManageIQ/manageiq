@@ -36,7 +36,7 @@ class Chargeback < ActsAsArModel
           next unless report_col_options.keys.include?("#{chargeable_field.rate_name}_cost")
 
           result["#{chargeable_field.rate_name}_rate"] = :string
-        end
+      end
       
   end
 

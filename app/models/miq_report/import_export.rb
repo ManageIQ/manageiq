@@ -6,7 +6,7 @@ module MiqReport::ImportExport
       @view_paths ||= Vmdb::Plugins.map do |engine|
           path = engine.root.join('product/views')
           path if path.directory?
-        end.compact
+      end.compact
       
     end
 

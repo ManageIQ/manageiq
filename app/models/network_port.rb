@@ -55,7 +55,7 @@ class NetworkPort < ApplicationRecord
      allowed_address_pairs fixed_ips].each do |action|
     define_method(:"#{action}=") do |value|
      extra_attributes_save(action, value)
-   end
+    end
 
    define_method(action) do
      extra_attributes_load(action)
