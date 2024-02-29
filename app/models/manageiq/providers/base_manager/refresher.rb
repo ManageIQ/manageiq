@@ -188,9 +188,10 @@ module ManageIQ
             ems_by_ems_id[t.manager_id] ||= t.manager
             targets_by_ems_id[t.manager_id] << t
           else
-            ems = case
-                  when t.respond_to?(:ext_management_system) then t.ext_management_system
-                  when t.respond_to?(:manager)               then t.manager
+            ems = if t.respond_to?(:ext_management_system)
+ t.ext_management_system
+                  elsif t.respond_to?(:manager)
+ t.manager
                   else                                            t
                   end
             if ems.nil?
