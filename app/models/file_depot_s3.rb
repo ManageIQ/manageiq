@@ -37,7 +37,6 @@ class FileDepotS3 < FileDepot
   end
 
   def verify_credentials(auth_type = nil, options = {})
-
     connection_rescue_block do
       # aws-sdk does Lazy Connections, so call a cheap function
       with_depot_connection(options.merge(:auth_type => auth_type)) do |s3|
