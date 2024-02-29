@@ -327,7 +327,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     scheduler.schedule_every(
       :check_for_timed_out_active_tasks,
       every,
-      :first_at => Time.current + 1.minute
+      :first_at => 1.minute.from_now
     ) do
       enqueue(:check_for_timed_out_active_tasks)
     end
@@ -338,7 +338,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     every = worker_settings[:chargeback_generation_interval]
     at = worker_settings[:chargeback_generation_time_utc]
     time_at = Time.current.strftime("%Y-%m-%d #{at}").to_time(:utc)
-    time_at += 1.day if time_at < Time.current + 1.hour
+    time_at += 1.day if time_at < 1.hour.from_now
     scheduler = scheduler_for(:scheduler)
     scheduler.schedule_every(
       :generate_chargeback_for_service,

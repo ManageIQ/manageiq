@@ -599,7 +599,7 @@ class MiqAction < ApplicationRecord
     target = inputs[:synchronous] ? VmOrTemplate : rec.class
     invoke_or_queue(
       inputs[:synchronous], __method__, "ems_operations", rec.my_zone, target, 'retire',
-      [[rec], :date => Time.zone.now - 1.day],
+      [[rec], :date => 1.day.ago],
       "VM Retire for VM [#{rec.name}]"
 )
   end

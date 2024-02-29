@@ -49,6 +49,6 @@ class DialogFieldDateControl < DialogField
   private
 
   def default_time
-    with_current_user_timezone { Time.zone.now + 1.day }.strftime("%m/%d/%Y")
+    with_current_user_timezone { 1.day.from_now }.strftime("%m/%d/%Y")
   end
 end
