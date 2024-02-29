@@ -214,7 +214,6 @@ class MiqRequestTask < ApplicationRecord
 
       # Process the request
       do_request
-
     rescue => err
       message = "Error: #{err.message}"
       _log.error("[#{message}] encountered during #{request_class::TASK_DESCRIPTION}")

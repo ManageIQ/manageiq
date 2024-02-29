@@ -95,7 +95,6 @@ module Authenticator
           audit_failure(audit.merge(:message => "Authentication failed for userid #{username}#{reason}"))
           raise MiqException::MiqEVMLoginError, fail_message
         end
-
       rescue MiqException::MiqEVMLoginError => err
         _log.warn(err.message)
         raise

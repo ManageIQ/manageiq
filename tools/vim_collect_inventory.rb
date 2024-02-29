@@ -69,7 +69,6 @@ begin
       vim_csm.release if vim_csm rescue nil
     end
   end
-
 ensure
   vim.release unless vim.nil? rescue nil
 end
