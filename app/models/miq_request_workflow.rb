@@ -4,9 +4,6 @@ class MiqRequestWorkflow
   include Vmdb::Logging
   include DialogFieldValidation
 
-  # We rely on MiqRequestWorkflow's descendants to be comprehensive
-  singleton_class.send(:prepend, DescendantLoader::ArDescendantsWithLoader)
-
   attr_accessor :requester, :values, :last_vm_id
   attr_writer :dialogs
 
@@ -1494,3 +1491,5 @@ class MiqRequestWorkflow
     source[:datacenter] ? array.reject { |i| find_datacenter_for_ci(i).id != source[:datacenter].id } : array
   end
 end
+
+DescendantLoader.instance.load_subclasses(MiqRequestWorkflow)
