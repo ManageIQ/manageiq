@@ -1,7 +1,5 @@
 module ManageIQ::Providers
   class ContainerManager < BaseManager
-    include HasMonitoringManagerMixin
-    include HasInfraManagerMixin
     include SupportsFeatureMixin
 
     has_many :container_nodes, -> { active }, # rubocop:disable Rails/HasManyOrHasOneDependent
@@ -55,12 +53,6 @@ module ManageIQ::Providers
     has_many :all_container_images, :foreign_key => :ems_id, :dependent => :destroy, :class_name => "ContainerImage"
     has_many :all_container_nodes, :foreign_key => :ems_id, :dependent => :destroy, :class_name => "ContainerNode"
     has_many :all_container_quotas, :foreign_key => :ems_id, :dependent => :destroy, :class_name => "ContainerQuota"
-
-    has_one :infra_manager,
-            :foreign_key => :parent_ems_id,
-            :class_name  => "ManageIQ::Providers::Kubevirt::InfraManager",
-            :autosave    => true,
-            :dependent   => :destroy
 
     virtual_column :port_show, :type => :string
 
