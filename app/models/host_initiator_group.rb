@@ -110,3 +110,5 @@ class HostInitiatorGroup < ApplicationRecord
     raise NotImplementedError, _("raw_update_host_initiator_group must be implemented in a subclass")
   end
 end
+
+DescendantLoader.instance.load_subclasses(HostInitiatorGroup)

@@ -261,29 +261,6 @@ class DescendantLoader
     end
   end
 
-  module ArDescendantsWithLoader
-    def descendants
-      if Vmdb::Application.instance.initialized? && !defined? @loaded_descendants
-        @loaded_descendants = true
-        DescendantLoader.instance.load_subclasses(self)
-      end
-
-      super
-    end
-
-    # Rails 6.1 added an alias for subclasss to call direct_descendants in:
-    # https://github.com/rails/rails/commit/8f8aa857e084b76b1120edaa9bb9ce03ba1e6a19
-    # We need to get in front of it, like we do for descendants.
-    def subclasses
-      if Vmdb::Application.instance.initialized? && !defined? @loaded_descendants
-        @loaded_descendants = true
-        DescendantLoader.instance.load_subclasses(self)
-      end
-
-      super
-    end
-  end
-
   module AsDependenciesClearWithLoader
     def clear
       DescendantLoader.instance.clear_class_inheritance_relationships
@@ -291,12 +268,6 @@ class DescendantLoader
     end
   end
 end
-
-# Patch Class to support non-AR models in the models directory
-Class.prepend(DescendantLoader::ArDescendantsWithLoader)
-# Patch ActiveRecord specifically to get ahead of ActiveSupport::DescendantsTracker
-#   The patching of Class does not put it in the right place in the ancestors chain
-ActiveRecord::Base.singleton_class.prepend(DescendantLoader::ArDescendantsWithLoader)
 
 at_exit do
   DescendantLoader.instance.save_cache!

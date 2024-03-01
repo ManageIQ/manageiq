@@ -82,3 +82,5 @@ class LoadBalancer < ApplicationRecord
     raise NotImplementedError, _("raw_exists must be implemented in a subclass")
   end
 end
+
+DescendantLoader.instance.load_subclasses(LoadBalancer)

@@ -116,3 +116,5 @@ class ContainerNode < ApplicationRecord
     save
   end
 end
+
+DescendantLoader.instance.load_subclasses(ContainerNode)

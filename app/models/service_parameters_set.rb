@@ -4,3 +4,5 @@ class ServiceParametersSet < ApplicationRecord
 
   has_many :service_instances, :dependent => :nullify
 end
+
+DescendantLoader.instance.load_subclasses(ServiceParametersSet)

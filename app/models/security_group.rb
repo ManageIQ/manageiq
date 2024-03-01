@@ -87,3 +87,5 @@ class SecurityGroup < ApplicationRecord
     raise NotImplementedError, _("raw_delete_security_group must be implemented in a subclass")
   end
 end
+
+DescendantLoader.instance.load_subclasses(SecurityGroup)

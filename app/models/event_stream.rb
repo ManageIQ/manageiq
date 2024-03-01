@@ -112,3 +112,5 @@ class EventStream < ApplicationRecord
     timeline_classes.map { |c| [c.name.to_sym, c.group_names_and_levels] }.to_h
   end
 end
+
+DescendantLoader.instance.load_subclasses(EventStream)

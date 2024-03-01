@@ -27,3 +27,5 @@ class FloatingIp < ApplicationRecord
     n_('Floating IP', 'Floating IPs', number)
   end
 end
+
+DescendantLoader.instance.load_subclasses(FloatingIp)

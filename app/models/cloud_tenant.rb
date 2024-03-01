@@ -191,3 +191,5 @@ class CloudTenant < ApplicationRecord
          .references(:source_tenant, :ext_management_system)
   end
 end
+
+DescendantLoader.instance.load_subclasses(CloudTenant)

@@ -4,3 +4,5 @@ class CloudSubnetNetworkPort < ApplicationRecord
   belongs_to :cloud_subnet
   belongs_to :network_port
 end
+
+DescendantLoader.instance.load_subclasses(CloudSubnetNetworkPort)

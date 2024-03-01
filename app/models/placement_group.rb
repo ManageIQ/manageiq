@@ -85,3 +85,5 @@ class PlacementGroup < ApplicationRecord
     raise NotImplementedError, _("raw_delete_placement_group must be implemented in a subclass")
   end
 end
+
+DescendantLoader.instance.load_subclasses(PlacementGroup)

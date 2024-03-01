@@ -224,3 +224,5 @@ class OrchestrationTemplate < ApplicationRecord
     throw :abort
   end
 end
+
+DescendantLoader.instance.load_subclasses(OrchestrationTemplate)

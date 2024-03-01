@@ -71,3 +71,5 @@ class CustomizationTemplate < ApplicationRecord
     {}
   end
 end
+
+DescendantLoader.instance.load_subclasses(CustomizationTemplate)

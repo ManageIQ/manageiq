@@ -626,3 +626,5 @@ class MiqWorker < ApplicationRecord
 
   private_class_method :nice_increment
 end
+
+DescendantLoader.instance.load_subclasses(MiqWorker)

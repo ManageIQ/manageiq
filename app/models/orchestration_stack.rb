@@ -152,3 +152,5 @@ class OrchestrationStack < ApplicationRecord
     false
   end
 end
+
+DescendantLoader.instance.load_subclasses(OrchestrationStack)

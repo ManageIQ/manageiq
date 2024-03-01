@@ -60,3 +60,5 @@ class NetworkRouter < ApplicationRecord
     self.extra_attributes[key] unless extra_attributes.blank?
   end
 end
+
+DescendantLoader.instance.load_subclasses(NetworkRouter)

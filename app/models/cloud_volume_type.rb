@@ -17,3 +17,5 @@ class CloudVolumeType < ApplicationRecord
     n_('Cloud Volume Type', 'Cloud Volume Types', number)
   end
 end
+
+DescendantLoader.instance.load_subclasses(CloudVolumeType)

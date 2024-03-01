@@ -11,3 +11,5 @@ class SanAddress < ApplicationRecord
     raise NotImplementedError, _("must be implemented in subclass")
   end
 end
+
+DescendantLoader.instance.load_subclasses(SanAddress)

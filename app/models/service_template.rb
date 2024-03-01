@@ -567,3 +567,5 @@ class ServiceTemplate < ApplicationRecord
     self.service_type = service_resources.any? { |st| st.resource_type.in?(['Service', 'ServiceTemplate']) } ? self.class::SERVICE_TYPE_COMPOSITE : self.class::SERVICE_TYPE_ATOMIC
   end
 end
+
+DescendantLoader.instance.load_subclasses(ServiceTemplate)
