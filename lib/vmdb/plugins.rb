@@ -7,8 +7,8 @@ module Vmdb
 
     include Enumerable
 
-    def self.method_missing(m, *args, &block)
-      instance.respond_to?(m) ? instance.send(m, *args, &block) : super
+    def self.method_missing(m, ...)
+      instance.respond_to?(m) ? instance.send(m, ...) : super
     end
 
     def self.respond_to_missing?(*args)

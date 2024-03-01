@@ -164,9 +164,9 @@ module FileDepotMixin
   end
   alias_method :directory_delete, :file_delete
 
-  def file_open(*args, &block)
+  def file_open(...)
     with_depot do
-      mnt.open(*args, &block)
+      mnt.open(...)
     end
   end
 
