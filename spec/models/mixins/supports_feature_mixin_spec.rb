@@ -321,7 +321,7 @@ RSpec.describe SupportsFeatureMixin do
   # this cleans out those values so future runs do not have bogus classes
   # this causes sporadic test failures.
   def cleanup_subclass(parent, children)
-    tracker = ActiveSupport::DescendantsTracker.class_variable_get(:@@direct_descendants)[parent]
+    tracker = ActiveSupport::DescendantsTracker.subclasses(parent)
     tracker&.reject! { |child| children.include?(child) }
   end
 
