@@ -1,3 +1,13 @@
+module ActiveRecord
+  class Base
+    def self.acts_as_miq_taggable
+      has_many :taggings, :as => :taggable, :dependent => :destroy
+      has_many :tags, :through => :taggings
+      include ActsAsTaggable
+    end
+  end
+end
+
 module ActsAsTaggable
   extend ActiveSupport::Concern
 
@@ -20,11 +30,6 @@ module ActsAsTaggable
   end
 
   module ClassMethods
-    def acts_as_miq_taggable
-      has_many :taggings, :as => :taggable, :dependent => :destroy
-      has_many :tags, :through => :taggings
-    end
-
     # @option options :cat [String|nil] optional category for the tags
     # @option options :ns  [String|nil] optional namespace for the tags
 

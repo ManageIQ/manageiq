@@ -6,7 +6,6 @@ class ApplicationRecord < ActiveRecord::Base
   FIXTURE_DIR = Rails.root.join("db/fixtures")
 
   include ActiveRecord::IdRegions
-  include ActsAsTaggable
   include ArRegion
   include ArLock
   include ArNestedCountBy
