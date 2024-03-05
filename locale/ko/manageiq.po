@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2024-01-01 00:17+0000\n"
-"PO-Revision-Date: 2024-01-01 00:17+0000\n"
+"POT-Creation-Date: 2024-03-01 17:14+0000\n"
+"PO-Revision-Date: 2024-03-01 17:14+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -373,9 +373,6 @@ msgstr "%{vm_or_template} \"%{name}\"의 %{action} \"%{item_name}\""
 
 msgid "%{action} \"%{item_name}\" for Switch \"%{name}\""
 msgstr "스위치 \"%{name}\"의 %{action} \"%{item_name}\""
-
-msgid "%{action} cannot be performed on orphaned VM."
-msgstr "%{action}을(를) 고아 VM에서 수행할 수 없습니다."
 
 msgid "%{action} initiated for %{count} %{model} from the %{product} Database"
 msgid_plural ""
@@ -2104,11 +2101,6 @@ msgstr "액세스 키"
 
 msgid "Access Key ID"
 msgstr "액세스 키 ID"
-
-msgid ""
-"Access Key ID and matching Secret Access Key fields are needed to perform "
-"verification of credentials"
-msgstr "인증 정보의 유효성 검증을 수행하려면 액세스 키 ID와 일치하는 시크릿 액세스 키 필드가 필요합니다."
 
 msgid "Access Modes"
 msgstr "액세스 모드"
@@ -6650,32 +6642,17 @@ msgstr "크기 조정 취소"
 msgid "Cancel Simulation to go back to Button details"
 msgstr "시뮬레이션을 취소하고 단추 세부사항으로 되돌아가기"
 
-msgid "Cancel SmartState Docker password change"
-msgstr "SmartState Docker 비밀번호 변경 취소"
-
 msgid "Cancel Task"
 msgstr "태스크 취소"
 
 msgid "Cancel after"
 msgstr "이후에 취소"
 
-msgid "Cancel client key change"
-msgstr "클라이언트 키 변경 취소"
-
 msgid "Cancel operation is not supported for %{class}"
 msgstr "%{class}에 대한 취소 오퍼레이션이 지원되지 않습니다."
 
 msgid "Cancel password change"
 msgstr "비밀번호 변경 취소"
-
-msgid "Cancel private key change"
-msgstr "개인 키 변경 취소"
-
-msgid "Cancel secret access key change"
-msgstr "시크릿 액세스 키 변경 취소"
-
-msgid "Cancel stored token"
-msgstr "저장된 토큰 취소"
 
 msgid "Cancel the load"
 msgstr "로드 취소"
@@ -6815,6 +6792,9 @@ msgstr "사용자 ID %{user_id}을(를) 구문 분석할 수 없음"
 
 msgid "Cannot redirect to \"%{record}\" provider."
 msgstr "\"%{record}\" 제공자로 경로 재지정할 수 없습니다."
+
+msgid "Cannot resize disks of a VM with snapshots"
+msgstr "스냅샷을 사용하여 VM의 디스크 크기를 조정할 수 없음"
 
 msgid "Cannot revert to snapshot while VM is running"
 msgstr "VM이 실행되는 동안 스냅샷으로 되돌릴 수 없음"
@@ -7187,23 +7167,8 @@ msgstr "인프라 제공자의 비밀번호 변경"
 msgid "Change current group"
 msgstr "현재 그룹 변경"
 
-msgid "Change stored SmartState Docker password"
-msgstr "저장된 SmartState Docker 비밀번호 변경"
-
-msgid "Change stored client key"
-msgstr "저장된 클라이언트 키 변경"
-
 msgid "Change stored password"
 msgstr "저장된 비밀번호 변경"
-
-msgid "Change stored private key"
-msgstr "저장된 개인 키 변경"
-
-msgid "Change stored secret access key"
-msgstr "저장된 시크릿 액세스 키 변경"
-
-msgid "Change stored token"
-msgstr "저장된 토큰 변경"
 
 msgid "Changed from previous"
 msgstr "이전에 비해 변경됨"
@@ -7825,9 +7790,6 @@ msgstr "가져올 사용자 정의 변수의 유형을 선택하십시오."
 msgid "Choose transient storage"
 msgstr "임시 스토리지 선택"
 
-msgid "Choose>"
-msgstr "선택>"
-
 msgid "Cidr"
 msgstr "Cidr"
 
@@ -8056,9 +8018,6 @@ msgstr "클라이언트 ID"
 
 msgid "Client Key"
 msgstr "클라이언트 키"
-
-msgid "Client Keys do not match"
-msgstr "클라이언트 키가 일치하지 않습니다."
 
 msgid "Client Once"
 msgstr "클라이언트"
@@ -9938,13 +9897,13 @@ msgid "ConfigurationScriptBase|Payload"
 msgstr "ConfigurationScriptBase|페이로드"
 
 msgid "ConfigurationScriptBase|Payload error"
-msgstr "ConfigurationScriptBase|페이로드 오류"
+msgstr "ConfigurationScriptBase |페이로드 오류"
 
 msgid "ConfigurationScriptBase|Payload type"
 msgstr "ConfigurationScriptBase|페이로드 유형"
 
 msgid "ConfigurationScriptBase|Payload valid"
-msgstr "ConfigurationScriptBase|페이로드 유효"
+msgstr "ConfigurationScriptBase |페이로드 유효"
 
 msgid "ConfigurationScriptBase|Region description"
 msgstr "ConfigurationScriptBase|지역 설명"
@@ -10191,23 +10150,11 @@ msgstr "ConfiguredSystem|공급업체"
 msgid "ConfiguredSystem|Virtual instance ref"
 msgstr "ConfiguredSystem|가상 인스턴스 ref"
 
-msgid "Confirm %{password}"
-msgstr "%{password} 확인"
-
-msgid "Confirm Client Key"
-msgstr "클라이언트 키 확인"
+msgid "Confirm"
+msgstr "확인"
 
 msgid "Confirm Password"
 msgstr "비밀번호 확인"
-
-msgid "Confirm Secret Access Key"
-msgstr "시크릿 액세스 키 확인"
-
-msgid "Confirm SmartState Password"
-msgstr "SmartState 비밀번호 확인"
-
-msgid "Confirm Token"
-msgstr "토큰 확인"
 
 msgid "Confirm password"
 msgstr "비밀번호 확인"
@@ -10257,9 +10204,6 @@ msgstr "콘솔이 지원되지 않음"
 
 msgid "Console protocol %{protocol} is not supported"
 msgstr "콘솔 프로토콜 %{protocol}이(가) 지원되지 않음"
-
-msgid "Console userid and password fields are needed to perform validation."
-msgstr "유효성 검증을 수행하려면 콘솔 사용자 ID와 비밀번호 필드가 필요합니다."
 
 msgid "Console using HTML5"
 msgstr "HTML5를 사용한 콘솔"
@@ -14036,9 +13980,6 @@ msgid "Database Lock"
 msgid_plural "Database Locks"
 msgstr[0] "데이터베이스 잠금"
 
-msgid "Database Name"
-msgstr "데이터베이스 이름"
-
 msgid "Database Server Name"
 msgstr "데이터베이스 서버 이름"
 
@@ -15416,9 +15357,6 @@ msgstr "상세 모드"
 msgid "Detect"
 msgstr "발견"
 
-msgid "Detect Endpoint"
-msgstr "엔드포인트 발견"
-
 msgid "Development"
 msgstr "개발"
 
@@ -15819,9 +15757,6 @@ msgstr "로컬 로그인 사용 안함"
 
 msgid "Disable a Schedule"
 msgstr "스케줄 사용 안함"
-
-msgid "Disable event monitoring."
-msgstr "이벤트 모니터링을 사용 안함으로 설정합니다."
 
 msgid "Disable the selected Schedules"
 msgstr "선택한 스케줄 사용 안함"
@@ -16987,6 +16922,9 @@ msgstr "플랫폼 표시"
 msgid "Display Registry"
 msgstr "레지스트리 표시"
 
+msgid "Display Request Logs"
+msgstr "요청 로그 표시"
+
 msgid "Display Service Catalog"
 msgstr "서비스 카탈로그 표시"
 
@@ -17104,6 +17042,9 @@ msgstr "사용률 데이터 표시"
 msgid "Display on Button"
 msgstr "단추에 표시"
 
+msgid "Display on button"
+msgstr "단추에 표시"
+
 msgid "Display tags"
 msgstr "태그 표시"
 
@@ -17140,9 +17081,6 @@ msgid ""
 "Do you want to promote this Server to primary?  This will replace any existing"
 " primary Server for this Role."
 msgstr "이 서버를 1차로 승격시키시겠습니까?  그러면 이 역할에 대한 기존 1차 서버가 대체됩니다."
-
-msgid "Docker Registry User Name and Password for SmartState Analysis on AWS"
-msgstr "AWS에 대한 SmartState 분석을 위한 Docker 레지스트리 사용자 이름 및 비밀번호"
 
 msgid "Docker Version"
 msgstr "Docker 버전"
@@ -19386,9 +19324,6 @@ msgstr "임베디드 워크플로우"
 msgid "Embedded Workflows Provider"
 msgstr "임베디드 워크플로우 제공자"
 
-msgid "Embededded Workflows"
-msgstr "임베디드 워크플로우"
-
 msgid "Empty Dir Medium Type"
 msgstr "비어 있는 Dir 매체 유형"
 
@@ -19787,13 +19722,6 @@ msgstr "Single Sign-On 사용"
 msgid "Enable a Schedule"
 msgstr "스케줄 사용"
 
-msgid ""
-"Enable event monitoring. Used to automatically resync state when changes are "
-"performed on VMware vCloud Director directly."
-msgstr ""
-"이벤트 모니터링을 사용 가능하게 설정하십시오. VMware vCloud Director에서 직접 변경이 수행될 때 상태를 자동으로 "
-"재동기화하는 데 사용됩니다."
-
 msgid "Enable the selected Schedules"
 msgstr "선택한 스케줄 사용"
 
@@ -19854,14 +19782,14 @@ msgstr "사용 가능하게 설정된 실행 레벨"
 msgid "Enablement"
 msgstr "인에이블먼트"
 
-msgid "Enablement Expression"
-msgstr "인에이블먼트 표현식"
-
 msgid ""
 "Enablement and Visibility expressions can only be configured for buttons with "
 "\"Display for\" (previous tab) set to \"Single\""
 msgstr ""
 "인에이블먼트 및 가시성 표현식은 \"Display for\"(이전 탭)가 \"Single\"로 설정된 단추에 대해서만 구성할 수 있습니다."
+
+msgid "Enablement expression"
+msgstr "인에이블먼트 표현식"
 
 msgid ""
 "Enables defining a URL path prefix for XCCDF file instead of accessing the "
@@ -24133,21 +24061,9 @@ msgstr "호스트 이름(또는 IPv4 또는 IPv6 주소)"
 msgid "Hostname (or IPv4 or IPv6 address:"
 msgstr "호스트 이름(또는 IPv4 또는 IPv6 주소):"
 
-msgid "Hostname or IP address"
-msgstr "호스트 이름 또는 IP 주소"
-
 msgid ""
 "Hostname or IP address which corresponds to your Red Hat Satellite 6 server"
 msgstr "Red Hat Satellite 6 서버에 해당하는 호스트 이름 또는 IP 주소"
-
-msgid "Hostname or IPV4 or IPV6 address"
-msgstr "호스트 이름이나 IPV4 또는 IPV6 주소"
-
-msgid "Hostname or IPv4 or IPv6 address"
-msgstr "호스트 이름이나 IPv4 또는 IPv6 주소"
-
-msgid "Hostname or IPv4/IPv6 address"
-msgstr "호스트 이름 또는 IPv4/IPv6 주소"
 
 msgid "Hosts"
 msgstr "호스트"
@@ -25420,9 +25336,6 @@ msgstr "올바르지 않은 Single Sign-On 인증 정보"
 msgid "Invalid Stack"
 msgstr "올바르지 않은 스택"
 
-msgid "Invalid URL"
-msgstr "올바르지 않은 URL"
-
 msgid "Invalid XML file contents detected."
 msgstr "올바르지 않은 XML 파일 컨텐츠가 발견되었습니다."
 
@@ -25437,9 +25350,6 @@ msgstr "올바르지 않은 인증 정보"
 
 msgid "Invalid button action"
 msgstr "올바르지 않은 단추 조치"
-
-msgid "Invalid button action!"
-msgstr "올바르지 않은 단추 조치입니다!"
 
 msgid "Invalid chart definition"
 msgstr "차트 정의가 올바르지 않습니다."
@@ -25467,9 +25377,6 @@ msgstr "올바르지 않은 입력"
 
 msgid "Invalid input for \"wait_for_task\"."
 msgstr "\"wait_for_task\"에 대한 입력이 올바르지 않습니다."
-
-msgid "Invalid input format, please enter a GUID"
-msgstr "올바르지 않은 입력 형식, GUID를 입력하십시오."
 
 msgid "Invalid or unsupported file depot type."
 msgstr "올바르지 않거나 지원되지 않는 파일 저장소(depot) 유형입니다."
@@ -26737,6 +26644,9 @@ msgstr "플랫폼 [%{os_name}]에 대한 로그온이 지원되지 않음"
 
 msgid "Logout"
 msgstr "로그아웃"
+
+msgid "Logs"
+msgstr "로그"
 
 msgid "Logs for this %{product} Server are not available for viewing"
 msgstr "이 %{product} Server에 대한 로그를 볼 수 없습니다."
@@ -28034,9 +27944,6 @@ msgstr[0] "VM에 대한 측정"
 
 msgid "Metering for VMs"
 msgstr "VM에 대한 측정"
-
-msgid "Method Inputs"
-msgstr "메소드 입력"
 
 msgid "Method for allocated metrics"
 msgstr "할당된 메트릭에 대한 메소드"
@@ -32069,9 +31976,6 @@ msgstr "입력 데이터에서 다중 소스 템플리트를 찾음:<%{data}>"
 msgid "Multiselect"
 msgstr "복수 선택"
 
-msgid "Must be a number (greater than 0)"
-msgstr "숫자여야 함(0보다 큰)"
-
 msgid "Must be a valid IPv4 address"
 msgstr "올바른 IPv4 주소여야 함"
 
@@ -32243,12 +32147,6 @@ msgid "Named scope '%{scope_name}' is not defined for class '%{class_name}'"
 msgstr "이름 지정된 범위 '%{scope_name}'이(가) 클래스 '%{class_name}'에 대해 정의되지 않았습니다."
 
 msgid "Namespace"
-msgstr "네임스페이스"
-
-msgid "Namespace Details"
-msgstr "네임스페이스 세부사항"
-
-msgid "Namespaces"
 msgstr "네임스페이스"
 
 msgid "Naming"
@@ -32858,9 +32756,6 @@ msgstr "수행 안함"
 msgid "Never Verified"
 msgstr "확인 안함"
 
-msgid "New "
-msgstr "새로 작성 "
-
 msgid "New Alert Profile \"%s\" has been successfully queued."
 msgstr "새 경보 프로파일 \"%s\"이(가) 큐에 대기되었습니다."
 
@@ -32905,9 +32800,6 @@ msgstr "새 이름?"
 
 msgid "New object"
 msgstr "새 오브젝트"
-
-msgid "New password"
-msgstr "새 비밀번호"
 
 msgid "New section"
 msgstr "새 섹션"
@@ -33028,9 +32920,6 @@ msgstr "지정된 태그 없음"
 
 msgid "No Associations defined"
 msgstr "정의된 연관이 없음"
-
-msgid "No Attribute/Value Pairs found"
-msgstr "속성/값 쌍을 찾을 수 없음"
 
 msgid "No Attribute/Value Pairs found."
 msgstr "속성/값 쌍을 찾을 수 없습니다."
@@ -33791,9 +33680,6 @@ msgstr "참고: 소유권 변경 가능성으로 인해 일부 항목이 숨겨�
 msgid "Note: Total quota can be restricted by quotas defined at upper levels"
 msgstr "참고: 보다 상위 레벨에 정의된 할당량으로 총 할당량을 제한할 수 있습니다."
 
-msgid "Note: Username must be in the format: name@realm"
-msgstr "참고: 사용자 이름은 다음 형식이어야 함: name@realm"
-
 msgid "Notes"
 msgstr "참고사항"
 
@@ -34075,6 +33961,9 @@ msgstr "오브젝트"
 msgid "Object Attribute"
 msgstr "오브젝트 속성"
 
+msgid "Object Attribute 1"
+msgstr "오브젝트 속성 1"
+
 msgid "Object Attribute Name"
 msgstr "오브젝트 속성 이름"
 
@@ -34129,6 +34018,9 @@ msgstr "오브젝트 유형"
 msgid ""
 "Object attribute must be specified to copy object details for use in a Button"
 msgstr "단추에 사용할 오브젝트 세부사항을 복사하려면 오브젝트 속성을 지정해야 합니다."
+
+msgid "Object info"
+msgstr "오브젝트 정보"
 
 msgid "Object not found: [%{obj_name}]"
 msgstr "오브젝트를 찾을 수 없음: [%{obj_name}]"
@@ -40474,17 +40366,11 @@ msgstr "필수 기능"
 msgid "Required if SSH login is disabled for the Default account."
 msgstr "기본 계정의 SSH 로그인이 사용 안함으로 설정되어 있을 경우에 필요합니다."
 
-msgid "Required information missing"
-msgstr "필수 정보 누락"
-
 msgid "Required key not specified: [%{key}]"
 msgstr "필수 키가 지정되지 않음: [%{key}]"
 
 msgid "Required tag(s): %{names}"
 msgstr "필수 태그: %{names}"
-
-msgid "Required. Used to gather Utilization data."
-msgstr "필수 사항입니다. 사용률 데이터를 수집하는 데 사용됩니다."
 
 msgid "Reserve"
 msgstr "예약"
@@ -41110,12 +40996,6 @@ msgstr "VM 또는 인스턴스 폐기"
 
 msgid "Retire VMs"
 msgstr "VM 폐기"
-
-msgid "Retire not supported because VM is archived"
-msgstr "VM이 아카이브되어 있으므로 폐기가 지원되지 않음"
-
-msgid "Retire not supported because VM is orphaned"
-msgstr "VM이 분리되어 있으므로 폐기가 지원되지 않음"
 
 msgid "Retire selected Orchestration Stacks"
 msgstr "선택한 오케스트레이션 스택 폐기"
@@ -41943,9 +41823,6 @@ msgstr "보조 메뉴"
 msgid "Secret Access Key"
 msgstr "시크릿 액세스 키"
 
-msgid "Secret Access Keys do not match"
-msgstr "시크릿 액세스 키가 일치하지 않습니다."
-
 msgid "Secret Key"
 msgstr "비밀 키"
 
@@ -42281,9 +42158,6 @@ msgstr "모든 요일 선택"
 msgid "Select All Hours"
 msgstr "모든 시간 선택"
 
-msgid "Select Ceilometer if eventing is not enabled on AMQP."
-msgstr "AMQP에서 이벤팅이 사용 가능하게 설정되어 있지 않은 경우 Ceilometer를 선택하십시오."
-
 msgid "Select Classes to copy"
 msgstr "복사할 클래스 선택"
 
@@ -42301,9 +42175,6 @@ msgstr "형식 선택"
 
 msgid "Select Group"
 msgstr "그룹 선택"
-
-msgid "Select Host to validate against"
-msgstr "유효성을 검증할 호스트를 선택하십시오."
 
 msgid "Select Instances to copy"
 msgstr "복사할 인스턴스 선택"
@@ -42798,11 +42669,6 @@ msgid ""
 "Server information, Username and matching password fields are needed to "
 "perform verification of credentials"
 msgstr "인증 정보의 유효성 검증을 수행하려면 서버 정보, 사용자 이름, 일치하는 비밀번호 필드가 필요합니다."
-
-msgid ""
-"Server information, username and private key fields are needed to perform "
-"verification of credentials"
-msgstr "인증 정보의 유효성 검증을 수행하려면 서버 정보, 사용자 이름, 개인 키 필드가 필요합니다."
 
 msgid "Server is Master"
 msgstr "서버가 마스터임"
@@ -44872,15 +44738,6 @@ msgstr "SmartState 분석"
 msgid "SmartState Docker"
 msgstr "SmartState Docker"
 
-msgid "SmartState Docker Password"
-msgstr "SmartState Docker 비밀번호"
-
-msgid "SmartState Docker Passwords do not match"
-msgstr "SmartState Docker 비밀번호가 일치하지 않습니다."
-
-msgid "SmartState Docker User Name"
-msgstr "SmartState Docker 사용자 이름"
-
 msgid "Smartstate Analysis cannot be performed on selected Datastore"
 msgstr "Smartstate 분석을 선택한 데이터 저장소에 대해 수행할 수 없습니다."
 
@@ -46580,6 +46437,9 @@ msgstr "탭 제목"
 msgid "Tab Title must be unique for this group"
 msgstr "이 그룹의 탭 제목이 고유해야 합니다."
 
+msgid "Tab details not found."
+msgstr "탭 세부사항을 찾을 수 없습니다."
+
 msgid "Tabular View"
 msgstr "테이블 보기"
 
@@ -46795,6 +46655,9 @@ msgstr[0] "템플리트 및 이미지"
 msgid "Template is required, please select one from the list"
 msgstr "템플리트는 필수입니다. 목록에서 하나를 선택하십시오."
 
+msgid "Template not orderable"
+msgstr "템플리트를 정렬할 수 없음"
+
 msgid "Template sealing is supported only for non-Windows OS."
 msgstr "Windows 이외의 OS에 대해서만 템플리트 봉인이 지원됩니다."
 
@@ -46821,11 +46684,6 @@ msgstr "테넌트"
 
 msgid "Tenant ID"
 msgstr "테넌트 ID"
-
-msgid ""
-"Tenant ID, Client ID and matching Client Key fields are needed to perform "
-"verification of credentials"
-msgstr "인증 정보의 유효성 검증을 수행하려면 테넌트 ID, 클라이언트 ID, 일치하는 클라이언트 키 필드가 필요합니다."
 
 msgid "Tenant Mapping Enabled"
 msgstr "테넌트 맵핑 사용"
@@ -47146,6 +47004,9 @@ msgstr "VM의 유효한 연결 상태가 없습니다."
 msgid "The VM is a template"
 msgstr "VM이 템플리트입니다."
 
+msgid "The VM is archived"
+msgstr "VM이 아카이브됨"
+
 msgid "The VM is not connected to a Host"
 msgstr "VM이 호스트에 연결되지 않았습니다."
 
@@ -47160,6 +47021,9 @@ msgstr "VM의 전원이 꺼지지 않음"
 
 msgid "The VM is not powered on"
 msgstr "VM의 전원이 켜져 있지 않습니다."
+
+msgid "The VM is orphaned"
+msgstr "VM이 사용되지 않음"
 
 msgid "The VM is powered on"
 msgstr "VM의 전원이 켜져 있습니다."
@@ -47837,9 +47701,6 @@ msgstr "시간 선택기"
 msgid "Timer"
 msgstr "타이머"
 
-msgid "Timer Options"
-msgstr "타이머 옵션"
-
 msgid "Timestamp"
 msgstr "시간소인"
 
@@ -47932,9 +47793,6 @@ msgstr "이 항목에 대한 유지보수 모드 전환?"
 
 msgid "Token"
 msgstr "토큰"
-
-msgid "Tokens do not match"
-msgstr "토큰이 일치하지 않습니다."
 
 msgid "Tools Status"
 msgstr "도구 상태"
@@ -49323,31 +49181,11 @@ msgstr "AWS에 대한 SmartState 분석을 수행하는 데 필요한 Docker 레
 msgid "Used for SSH login."
 msgstr "SSH 로그인에 사용됩니다."
 
-msgid ""
-"Used for VMRC connections to all VMs on this provider. If not set, the VMRC "
-"console access will be disabled for this provider."
-msgstr ""
-"이 제공자의 모든 VM에 대한 VMRC 연결에 사용됩니다. 설정하지 않을 경우 이 제공자에 대한 VMRC 콘솔 액세스가 사용 안함으로 "
-"설정됩니다."
-
 msgid "Used for access to Web Services."
 msgstr "웹 서비스에 액세스하는 데 필요합니다."
 
-msgid "Used to authenticate as a service account against your provider."
-msgstr "제공자에 대해 서비스 계정으로 인증하는 데 사용됩니다."
-
 msgid "Used to authenticate with Nuage AMQP Messaging Bus for event handling."
 msgstr "이벤트 핸들링을 위해 Nuage AMQP 메시징 버스에 인증하는 데 사용됩니다."
-
-msgid ""
-"Used to authenticate with OpenStack AMQP Messaging Bus for event handling. "
-"Configure AMQP if eventing is not enabled on Ceilometer."
-msgstr ""
-"이벤트 핸들링을 위해 OpenStack AMQP 메시징 버스에 인증하는 데 사용됩니다. Ceilometer에서 이벤팅이 사용 가능하게 "
-"설정되어 있지 않은 경우 AMQP를 구성하십시오."
-
-msgid "Used to gather Capacity & Utilization metrics."
-msgstr "용량 & 사용률 메트릭을 수집하는 데 사용됩니다."
 
 msgid "User"
 msgid_plural "Users"
@@ -50517,9 +50355,6 @@ msgstr "Amazon 설정 유효성 검증"
 msgid "Validate the LDAP Settings by binding with the Host"
 msgstr "호스트와 바인딩해서 LDAP 설정 유효성 검증"
 
-msgid "Validate the credentials"
-msgstr "인증 정보 유효성 검증"
-
 msgid "Validate the credentials by logging into the Server"
 msgstr "서버에 로그인하여 인증 정보의 유효성 검증"
 
@@ -50678,9 +50513,6 @@ msgstr "피어 인증서 확인"
 
 msgid "Verify SSL"
 msgstr "SSL 확인"
-
-msgid "Verify TLS Certificates"
-msgstr "TLS 인증서 확인"
 
 msgid "Version"
 msgstr "버전"
@@ -53139,9 +52971,6 @@ msgstr "쓰기 히트(IOPS)"
 msgid "Written (KBps)"
 msgstr "씀(KBps)"
 
-msgid "Wrong hostname format"
-msgstr "잘못된 호스트 이름 형식"
-
 msgid "Wwpn Candidate"
 msgid_plural "Wwpn Candidates"
 msgstr[0] "WWPN 후보"
@@ -53164,7 +52993,7 @@ msgstr "WwpnCandidate|지역 설명"
 msgid "WwpnCandidate|Region number"
 msgstr "WwpnCandidate|지역 번호"
 
-msgid "XML View"
+msgid "Xml View"
 msgstr "XML 보기"
 
 msgid "Year"
@@ -53411,6 +53240,9 @@ msgstr "assigned_company_tag_parent_storage"
 
 msgid "at"
 msgstr "시기"
+
+msgid "attribute_value_pair"
+msgstr "attribute_value_pair"
 
 msgid "auth_validation"
 msgstr "auth_validation"
@@ -53869,9 +53701,6 @@ msgstr "선택됨"
 msgid "has to be unique per provider type"
 msgstr "제공자 유형별로 고유해야 함"
 
-msgid "hawkular URL and API port fields are needed to perform validation."
-msgstr "유효성 검증을 수행하려면 hawkular URL 및 API 포트 필드가 필요합니다."
-
 msgid "host cannot be blank"
 msgstr "호스트가 공백이면 안됩니다."
 
@@ -53962,9 +53791,6 @@ msgstr "인스턴스화가 서브클래스에 구현되어야 합니다."
 msgid "interval '%{interval}' is not supported"
 msgstr "'%{interval}' 간격이 지원되지 않습니다."
 
-msgid "invalid button action"
-msgstr "올바르지 않은 단추 조치"
-
 msgid "invalid interval name %{name}"
 msgstr "올바르지 않은 간격 이름 %{name}"
 
@@ -53989,9 +53815,6 @@ msgstr "작업 템플리트가 설정되지 않음"
 
 msgid "kubevirt"
 msgstr "kubevirt"
-
-msgid "kubevirt URL and API port fields are needed to perform validation."
-msgstr "유효성 검증을 수행하려면 kubevirt URL 및 API 포트 필드가 필요합니다."
 
 msgid "ldap"
 msgstr "LDAP"
@@ -54129,6 +53952,12 @@ msgstr "oVirt 제공자"
 msgid "object %{name} is not one of %{items}"
 msgstr "%{name} 오브젝트가 %{items} 중 하나가 아닙니다."
 
+msgid "object_attribute"
+msgstr "object_attribute"
+
+msgid "object_details"
+msgstr "object_details"
+
 msgid "of %d page"
 msgid_plural "of %d pages"
 msgstr[0] "/ %d 페이지"
@@ -54241,9 +54070,6 @@ msgstr "processor_type"
 
 msgid "prometheus"
 msgstr "prometheus"
-
-msgid "prometheus URL and API port fields are needed to perform validation."
-msgstr "유효성 검증을 수행하려면 prometheus URL 및 API 포트 필드가 필요합니다."
 
 msgid "prov_type cannot be changed"
 msgstr "prov_type을 변경할 수 없음"
@@ -54551,6 +54377,9 @@ msgstr "실행을 사용할 수 없습니다"
 msgid "run must be implemented in a subclass"
 msgstr "실행은 서브 클래스에서 구현되어야 합니다."
 
+msgid "run_button_summary"
+msgstr "run_button_summary"
+
 msgid "run_queue is not enabled"
 msgstr "run_queue를 사용할 수 없습니다"
 
@@ -54815,6 +54644,12 @@ msgstr "최소 지원 PowerVC 릴리스의 값에 형식상 오류가 있음"
 
 msgid "vcpus"
 msgstr "vcpu"
+
+msgid "visibility"
+msgstr "가시성"
+
+msgid "visibility_expression"
+msgstr "visibility_expression"
 
 msgid "vm does not belong to any host"
 msgstr "vm이 어느 호스트에도 속해 있지 않습니다."
