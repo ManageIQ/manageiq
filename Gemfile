@@ -295,7 +295,7 @@ group :development do
   gem "PoParser"
   # ruby_parser is required for i18n string extraction
   gem "ruby_parser",                                         :require => false
-  gem "yard"
+  gem "yard",                           ">= 0.9.36"
 end
 
 group :test do
