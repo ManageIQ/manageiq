@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2024-01-01 00:17+0000\n"
-"PO-Revision-Date: 2024-01-01 00:17+0000\n"
+"POT-Creation-Date: 2024-03-01 17:14+0000\n"
+"PO-Revision-Date: 2024-03-01 17:14+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -371,9 +371,6 @@ msgstr "%{vm_or_template} \"%{name}\" 的 %{action} \"%{item_name}\""
 
 msgid "%{action} \"%{item_name}\" for Switch \"%{name}\""
 msgstr "%{action} 交換器 \"%{name}\" 的 \"%{item_name}\""
-
-msgid "%{action} cannot be performed on orphaned VM."
-msgstr "無法針對孤立 VM 執行 %{action}。"
 
 msgid "%{action} initiated for %{count} %{model} from the %{product} Database"
 msgid_plural ""
@@ -2094,11 +2091,6 @@ msgstr "存取金鑰"
 
 msgid "Access Key ID"
 msgstr "存取金鑰 ID"
-
-msgid ""
-"Access Key ID and matching Secret Access Key fields are needed to perform "
-"verification of credentials"
-msgstr "需要「存取金鑰 ID」和相符的「密碼存取金鑰」欄位才能執行認證驗證"
 
 msgid "Access Modes"
 msgstr "存取模式"
@@ -6632,32 +6624,17 @@ msgstr "取消調整大小"
 msgid "Cancel Simulation to go back to Button details"
 msgstr "取消模擬以回到按鈕詳細資料"
 
-msgid "Cancel SmartState Docker password change"
-msgstr "取消 SmartState Docker 密碼變更"
-
 msgid "Cancel Task"
 msgstr "取消作業"
 
 msgid "Cancel after"
 msgstr "在下列時間之後取消"
 
-msgid "Cancel client key change"
-msgstr "取消用戶端金鑰變更"
-
 msgid "Cancel operation is not supported for %{class}"
 msgstr "%{class} 不支援取消作業"
 
 msgid "Cancel password change"
 msgstr "取消密碼變更"
-
-msgid "Cancel private key change"
-msgstr "取消私密金鑰變更"
-
-msgid "Cancel secret access key change"
-msgstr "取消密碼存取金鑰變更"
-
-msgid "Cancel stored token"
-msgstr "取消儲存的記號"
 
 msgid "Cancel the load"
 msgstr "取消載入"
@@ -6797,6 +6774,9 @@ msgstr "無法剖析使用者 ID %{user_id}"
 
 msgid "Cannot redirect to \"%{record}\" provider."
 msgstr "無法重新導向至 \"%{record}\" 提供者。"
+
+msgid "Cannot resize disks of a VM with snapshots"
+msgstr "無法調整具有 Snapshot 之 VM 的磁碟大小"
 
 msgid "Cannot revert to snapshot while VM is running"
 msgstr "VM 正在執行時無法回復為 Snapshot"
@@ -7167,23 +7147,8 @@ msgstr "變更基礎架構提供者的密碼"
 msgid "Change current group"
 msgstr "變更現行群組"
 
-msgid "Change stored SmartState Docker password"
-msgstr "變更儲存的 SmartState Docker 密碼"
-
-msgid "Change stored client key"
-msgstr "變更儲存的用戶端金鑰"
-
 msgid "Change stored password"
 msgstr "變更儲存的密碼"
-
-msgid "Change stored private key"
-msgstr "變更儲存的私密金鑰"
-
-msgid "Change stored secret access key"
-msgstr "變更儲存的私密金鑰"
-
-msgid "Change stored token"
-msgstr "變更儲存的記號"
 
 msgid "Changed from previous"
 msgstr "已從前一個變更"
@@ -7805,9 +7770,6 @@ msgstr "選擇要匯入的自訂變數類型"
 msgid "Choose transient storage"
 msgstr "選擇暫時性儲存體"
 
-msgid "Choose>"
-msgstr "選擇>"
-
 msgid "Cidr"
 msgstr "Cidr"
 
@@ -8036,9 +7998,6 @@ msgstr "用戶端 ID"
 
 msgid "Client Key"
 msgstr "用戶端金鑰"
-
-msgid "Client Keys do not match"
-msgstr "用戶端金鑰不符"
 
 msgid "Client Once"
 msgstr "用戶端一次"
@@ -9915,13 +9874,13 @@ msgid "ConfigurationScriptBase|Payload"
 msgstr "ConfigurationScriptBase|有效負載"
 
 msgid "ConfigurationScriptBase|Payload error"
-msgstr "ConfigurationScriptBase|有效負載錯誤"
+msgstr "ConfigurationScriptBase |有效負載錯誤"
 
 msgid "ConfigurationScriptBase|Payload type"
 msgstr "ConfigurationScriptBase|有效負載類型"
 
 msgid "ConfigurationScriptBase|Payload valid"
-msgstr "ConfigurationScriptBase|有效負載"
+msgstr "ConfigurationScriptBase |有效負載"
 
 msgid "ConfigurationScriptBase|Region description"
 msgstr "地區說明"
@@ -10168,23 +10127,11 @@ msgstr "供應商"
 msgid "ConfiguredSystem|Virtual instance ref"
 msgstr "虛擬實例參照"
 
-msgid "Confirm %{password}"
-msgstr "確認 %{password}"
-
-msgid "Confirm Client Key"
-msgstr "確認用戶端金鑰"
+msgid "Confirm"
+msgstr "確認"
 
 msgid "Confirm Password"
 msgstr "確認密碼"
-
-msgid "Confirm Secret Access Key"
-msgstr "確認秘密存取金鑰"
-
-msgid "Confirm SmartState Password"
-msgstr "確認 SmartState 密碼"
-
-msgid "Confirm Token"
-msgstr "確認記號"
 
 msgid "Confirm password"
 msgstr "確認密碼"
@@ -10234,9 +10181,6 @@ msgstr "不支援主控台"
 
 msgid "Console protocol %{protocol} is not supported"
 msgstr "不支援主控台通訊協定 %{protocol}"
-
-msgid "Console userid and password fields are needed to perform validation."
-msgstr "需要「主控台使用者 ID」和「密碼」欄位才能執行驗證。"
 
 msgid "Console using HTML5"
 msgstr "使用 HTML5 的主控台"
@@ -14011,9 +13955,6 @@ msgid "Database Lock"
 msgid_plural "Database Locks"
 msgstr[0] "資料庫鎖定數"
 
-msgid "Database Name"
-msgstr "資料庫名稱"
-
 msgid "Database Server Name"
 msgstr "資料庫伺服器名稱"
 
@@ -15390,9 +15331,6 @@ msgstr "詳細資料模式"
 msgid "Detect"
 msgstr "偵測"
 
-msgid "Detect Endpoint"
-msgstr "偵測端點"
-
 msgid "Development"
 msgstr "開發"
 
@@ -15793,9 +15731,6 @@ msgstr "停用本端登入"
 
 msgid "Disable a Schedule"
 msgstr "停用排程"
-
-msgid "Disable event monitoring."
-msgstr "停用事件監視。"
 
 msgid "Disable the selected Schedules"
 msgstr "停用選取的排程"
@@ -16961,6 +16896,9 @@ msgstr "顯示平台"
 msgid "Display Registry"
 msgstr "顯示登錄"
 
+msgid "Display Request Logs"
+msgstr "顯示要求日誌"
+
 msgid "Display Service Catalog"
 msgstr "顯示服務型錄"
 
@@ -17078,6 +17016,9 @@ msgstr "顯示使用率資料"
 msgid "Display on Button"
 msgstr "顯示在按鈕上"
 
+msgid "Display on button"
+msgstr "按鈕顯示"
+
 msgid "Display tags"
 msgstr "顯示標籤"
 
@@ -17114,9 +17055,6 @@ msgid ""
 "Do you want to promote this Server to primary?  This will replace any existing"
 " primary Server for this Role."
 msgstr "您要將此伺服器升級為主要嗎？這會取代此角色的任何現有的主要伺服器。"
-
-msgid "Docker Registry User Name and Password for SmartState Analysis on AWS"
-msgstr "AWS 上 SmartState Analysis 的 Docker 登錄使用者名稱和密碼"
 
 msgid "Docker Version"
 msgstr "Docker 版本"
@@ -19359,9 +19297,6 @@ msgstr "內嵌工作流程"
 msgid "Embedded Workflows Provider"
 msgstr "內嵌的工作流程提供者"
 
-msgid "Embededded Workflows"
-msgstr "內嵌工作流程"
-
 msgid "Empty Dir Medium Type"
 msgstr "空的 DIR 媒體類型"
 
@@ -19760,11 +19695,6 @@ msgstr "啟用單一登入"
 msgid "Enable a Schedule"
 msgstr "啟用排程"
 
-msgid ""
-"Enable event monitoring. Used to automatically resync state when changes are "
-"performed on VMware vCloud Director directly."
-msgstr "啟用事件監視。在 VMware vCloud Director 上執行變更時，用來自動重新同步狀態。"
-
 msgid "Enable the selected Schedules"
 msgstr "啟用選取的排程"
 
@@ -19825,13 +19755,13 @@ msgstr "已啟用執行層次"
 msgid "Enablement"
 msgstr "啟用"
 
-msgid "Enablement Expression"
-msgstr "啟用表示式"
-
 msgid ""
 "Enablement and Visibility expressions can only be configured for buttons with "
 "\"Display for\" (previous tab) set to \"Single\""
 msgstr "啟用和可見性表示式只能針對「顯示對象」（先前的標籤）設為「單個」的按鈕配置"
+
+msgid "Enablement expression"
+msgstr "啟用表示式"
 
 msgid ""
 "Enables defining a URL path prefix for XCCDF file instead of accessing the "
@@ -24098,21 +24028,9 @@ msgstr "主機名稱（或 IPv4 或 IPv6 位址）"
 msgid "Hostname (or IPv4 or IPv6 address:"
 msgstr "主機名稱（或 IPv4 或 IPv6 位址）："
 
-msgid "Hostname or IP address"
-msgstr "主機名稱或 IP 位址"
-
 msgid ""
 "Hostname or IP address which corresponds to your Red Hat Satellite 6 server"
 msgstr "對應於 Red Hat Satellite 6 伺服器的主機名稱或 IP 位址"
-
-msgid "Hostname or IPV4 or IPV6 address"
-msgstr "主機名稱或 IPV4 或 IPV6 位址"
-
-msgid "Hostname or IPv4 or IPv6 address"
-msgstr "主機名稱或 IPv4 或 IPv6 位址"
-
-msgid "Hostname or IPv4/IPv6 address"
-msgstr "主機名稱或 IPv4/IPv6 位址"
 
 msgid "Hosts"
 msgstr "主機"
@@ -25385,9 +25303,6 @@ msgstr "單一登入認證無效"
 msgid "Invalid Stack"
 msgstr "堆疊無效"
 
-msgid "Invalid URL"
-msgstr "無效的 URL"
-
 msgid "Invalid XML file contents detected."
 msgstr "偵測到無效的 XML 檔內容。"
 
@@ -25402,9 +25317,6 @@ msgstr "鑑別認證無效"
 
 msgid "Invalid button action"
 msgstr "按鈕動作無效"
-
-msgid "Invalid button action!"
-msgstr "按鈕動作無效！"
 
 msgid "Invalid chart definition"
 msgstr "圖表定義無效"
@@ -25432,9 +25344,6 @@ msgstr "無效的輸入"
 
 msgid "Invalid input for \"wait_for_task\"."
 msgstr "\"wait_for_task\" 的輸入無效。"
-
-msgid "Invalid input format, please enter a GUID"
-msgstr "輸入格式無效，請輸入 GUID"
 
 msgid "Invalid or unsupported file depot type."
 msgstr "無效或不受支援的檔案保存庫類型。"
@@ -26701,6 +26610,9 @@ msgstr "不支援登入平台 [%{os_name}]"
 
 msgid "Logout"
 msgstr "登出"
+
+msgid "Logs"
+msgstr "日誌"
 
 msgid "Logs for this %{product} Server are not available for viewing"
 msgstr "此 %{product} Server 的日誌無法檢視"
@@ -27994,9 +27906,6 @@ msgstr[0] "VM 計量"
 
 msgid "Metering for VMs"
 msgstr "VM 計量"
-
-msgid "Method Inputs"
-msgstr "方法輸入"
 
 msgid "Method for allocated metrics"
 msgstr "已配置度量值的方法"
@@ -32029,9 +31938,6 @@ msgstr "從輸入資料中找到多個來源範本：<%{data}>"
 msgid "Multiselect"
 msgstr "複選"
 
-msgid "Must be a number (greater than 0)"
-msgstr "必須是數字（大於 0）"
-
 msgid "Must be a valid IPv4 address"
 msgstr "必須是有效的 IPv4 位址"
 
@@ -32202,12 +32108,6 @@ msgid "Named scope '%{scope_name}' is not defined for class '%{class_name}'"
 msgstr "具名範圍 '%{scope_name}' 未定義給類別 '%{class_name}'"
 
 msgid "Namespace"
-msgstr "名稱空間"
-
-msgid "Namespace Details"
-msgstr "名稱空間詳細資料"
-
-msgid "Namespaces"
 msgstr "名稱空間"
 
 msgid "Naming"
@@ -32817,9 +32717,6 @@ msgstr "從未"
 msgid "Never Verified"
 msgstr "永不驗證"
 
-msgid "New "
-msgstr "建立"
-
 msgid "New Alert Profile \"%s\" has been successfully queued."
 msgstr "已順利將新的警示設定檔 \"%s\" 排入佇列。"
 
@@ -32864,9 +32761,6 @@ msgstr "新名稱？"
 
 msgid "New object"
 msgstr "新建物件"
-
-msgid "New password"
-msgstr "新密碼"
 
 msgid "New section"
 msgstr "新建區段"
@@ -32987,9 +32881,6 @@ msgstr "沒有指派任何標籤"
 
 msgid "No Associations defined"
 msgstr "未定義關聯"
-
-msgid "No Attribute/Value Pairs found"
-msgstr "找不到屬性/值配對"
 
 msgid "No Attribute/Value Pairs found."
 msgstr "找不到屬性/值配對。"
@@ -33749,9 +33640,6 @@ msgstr "附註：部分項目可能因所有權變更的可能性而隱藏"
 msgid "Note: Total quota can be restricted by quotas defined at upper levels"
 msgstr "附註：配額總計可透過在上層定義的配額來限制"
 
-msgid "Note: Username must be in the format: name@realm"
-msgstr "附註：使用者名稱的格式必須是：name@realm"
-
 msgid "Notes"
 msgstr "附註"
 
@@ -34033,6 +33921,9 @@ msgstr "物件"
 msgid "Object Attribute"
 msgstr "物件屬性"
 
+msgid "Object Attribute 1"
+msgstr "物件屬性 1"
+
 msgid "Object Attribute Name"
 msgstr "物件屬性名稱"
 
@@ -34087,6 +33978,9 @@ msgstr "物件類型"
 msgid ""
 "Object attribute must be specified to copy object details for use in a Button"
 msgstr "必須指定物件屬性才能複製物件詳細資料以用於按鈕"
+
+msgid "Object info"
+msgstr "物件資訊"
 
 msgid "Object not found: [%{obj_name}]"
 msgstr "找不到物件：[%{obj_name}]"
@@ -40428,17 +40322,11 @@ msgstr "必要功能"
 msgid "Required if SSH login is disabled for the Default account."
 msgstr "如果已針對預設帳戶停用 SSH 登入，則為必要。"
 
-msgid "Required information missing"
-msgstr "遺漏必要的資訊"
-
 msgid "Required key not specified: [%{key}]"
 msgstr "未指定必需的金鑰：[%{key}]"
 
 msgid "Required tag(s): %{names}"
 msgstr "需要的標籤：%{names}"
-
-msgid "Required. Used to gather Utilization data."
-msgstr "必要的。用來收集使用率資料。"
 
 msgid "Reserve"
 msgstr "保留"
@@ -41064,12 +40952,6 @@ msgstr "淘汰 VM 或實例"
 
 msgid "Retire VMs"
 msgstr "淘汰虛擬機器"
-
-msgid "Retire not supported because VM is archived"
-msgstr "不支援淘汰，因為 VM 已保存"
-
-msgid "Retire not supported because VM is orphaned"
-msgstr "不支援淘汰，因為 VM 孤立"
 
 msgid "Retire selected Orchestration Stacks"
 msgstr "淘汰選取的編排堆疊"
@@ -41895,9 +41777,6 @@ msgstr "輔助功能表"
 msgid "Secret Access Key"
 msgstr "秘密存取金鑰"
 
-msgid "Secret Access Keys do not match"
-msgstr "密碼存取金鑰不符"
-
 msgid "Secret Key"
 msgstr "秘密金鑰"
 
@@ -42233,9 +42112,6 @@ msgstr "選取所有日子"
 msgid "Select All Hours"
 msgstr "選取所有小時"
 
-msgid "Select Ceilometer if eventing is not enabled on AMQP."
-msgstr "如果未在 AMQP 上未啟用事件處理，請選取 Ceilometer。"
-
 msgid "Select Classes to copy"
 msgstr "選取要複製的類別"
 
@@ -42253,9 +42129,6 @@ msgstr "選取格式"
 
 msgid "Select Group"
 msgstr "選取群組"
-
-msgid "Select Host to validate against"
-msgstr "選取要驗證的主機"
 
 msgid "Select Instances to copy"
 msgstr "選取要複製的實例"
@@ -42750,11 +42623,6 @@ msgid ""
 "Server information, Username and matching password fields are needed to "
 "perform verification of credentials"
 msgstr "需要伺服器資訊、使用者名稱和相符的密碼欄位才能執行認證驗證"
-
-msgid ""
-"Server information, username and private key fields are needed to perform "
-"verification of credentials"
-msgstr "需要「伺服器資訊」、「使用者名稱」和「私密金鑰」欄位，才能執行認證驗證"
 
 msgid "Server is Master"
 msgstr "伺服器是主要伺服器"
@@ -44824,15 +44692,6 @@ msgstr "SmartState Analysis"
 msgid "SmartState Docker"
 msgstr "SmartState Docker"
 
-msgid "SmartState Docker Password"
-msgstr "SmartState Docker 密碼"
-
-msgid "SmartState Docker Passwords do not match"
-msgstr "SmartState Docker 密碼不符"
-
-msgid "SmartState Docker User Name"
-msgstr "SmartState Docker 使用者名稱"
-
 msgid "Smartstate Analysis cannot be performed on selected Datastore"
 msgstr "無法針對選取的資料儲存庫執行 Smartstate Analysis"
 
@@ -46531,6 +46390,9 @@ msgstr "標籤標題"
 msgid "Tab Title must be unique for this group"
 msgstr "此群組的標籤標題必須是唯一的"
 
+msgid "Tab details not found."
+msgstr "找不到標籤詳細資料。"
+
 msgid "Tabular View"
 msgstr "表狀視圖"
 
@@ -46746,6 +46608,9 @@ msgstr[0] "範本和映像檔"
 msgid "Template is required, please select one from the list"
 msgstr "範本是必要的，請從清單中選取一個範本"
 
+msgid "Template not orderable"
+msgstr "範本無法排序"
+
 msgid "Template sealing is supported only for non-Windows OS."
 msgstr "非 Windows 作業系統僅支援範本密封。"
 
@@ -46772,11 +46637,6 @@ msgstr "租戶"
 
 msgid "Tenant ID"
 msgstr "租戶 ID"
-
-msgid ""
-"Tenant ID, Client ID and matching Client Key fields are needed to perform "
-"verification of credentials"
-msgstr "需要「租戶 ID」、用戶端 ID」和相符的「用戶端金鑰」欄位，才能執行認證驗證"
 
 msgid "Tenant Mapping Enabled"
 msgstr "已啟用租戶對映"
@@ -47095,6 +46955,9 @@ msgstr "VM 沒有有效的連線狀態"
 msgid "The VM is a template"
 msgstr "VM 是範本"
 
+msgid "The VM is archived"
+msgstr "已保存 VM"
+
 msgid "The VM is not connected to a Host"
 msgstr "VM 未連接至主機"
 
@@ -47109,6 +46972,9 @@ msgstr "VM 未關閉電源"
 
 msgid "The VM is not powered on"
 msgstr "VM 未開啟電源"
+
+msgid "The VM is orphaned"
+msgstr "VM 孤立"
 
 msgid "The VM is powered on"
 msgstr "VM 已開啟"
@@ -47786,9 +47652,6 @@ msgstr "時間選取器"
 msgid "Timer"
 msgstr "計時器"
 
-msgid "Timer Options"
-msgstr "計時器選項"
-
 msgid "Timestamp"
 msgstr "時間戳記"
 
@@ -47881,9 +47744,6 @@ msgstr "切換此項目的維護模式？"
 
 msgid "Token"
 msgstr "記號"
-
-msgid "Tokens do not match"
-msgstr "記號不符"
 
 msgid "Tools Status"
 msgstr "工具狀態"
@@ -49272,29 +49132,11 @@ msgstr "用於在 AWS 上執行 SmartState Analysis 時所需的 Docker 登錄�
 msgid "Used for SSH login."
 msgstr "用於 SSH 登入。"
 
-msgid ""
-"Used for VMRC connections to all VMs on this provider. If not set, the VMRC "
-"console access will be disabled for this provider."
-msgstr "用來與此提供者上的所有 VM 建立 VMRC 連線。如果未設定，則會針對此提供者停用 VMRC 主控台存取權。"
-
 msgid "Used for access to Web Services."
 msgstr "用來存取 Web 服務。"
 
-msgid "Used to authenticate as a service account against your provider."
-msgstr "用來作為服務帳戶向提供者鑑別。"
-
 msgid "Used to authenticate with Nuage AMQP Messaging Bus for event handling."
 msgstr "用來向 Nuage AMQP Messaging Bus 進行鑑別以進行事件處理。"
-
-msgid ""
-"Used to authenticate with OpenStack AMQP Messaging Bus for event handling. "
-"Configure AMQP if eventing is not enabled on Ceilometer."
-msgstr ""
-"用來向 OpenStack AMQP Messaging Bus 進行鑑別以進行事件處理。如果未在 Ceilometer 上未啟用事件處理，請配置 AMQP"
-"。"
-
-msgid "Used to gather Capacity & Utilization metrics."
-msgstr "用來收集容量與使用率度量值。"
 
 msgid "User"
 msgid_plural "Users"
@@ -50461,9 +50303,6 @@ msgstr "驗證 Amazon 設定"
 msgid "Validate the LDAP Settings by binding with the Host"
 msgstr "透過與主機連結來驗證 LDAP 設定"
 
-msgid "Validate the credentials"
-msgstr "驗證認證"
-
 msgid "Validate the credentials by logging into the Server"
 msgstr "登入伺服器來驗證認證"
 
@@ -50620,9 +50459,6 @@ msgstr "驗證對等憑證"
 
 msgid "Verify SSL"
 msgstr "驗證 SSL"
-
-msgid "Verify TLS Certificates"
-msgstr "驗證 TLS 憑證"
 
 msgid "Version"
 msgstr "版本"
@@ -53078,9 +52914,6 @@ msgstr "寫入命中 (IOPS)"
 msgid "Written (KBps)"
 msgstr "寫入 (KBps)"
 
-msgid "Wrong hostname format"
-msgstr "主機名稱格式錯誤"
-
 msgid "Wwpn Candidate"
 msgid_plural "Wwpn Candidates"
 msgstr[0] "Wwpn 候選項"
@@ -53103,7 +52936,7 @@ msgstr "Wwpn 候選項|區域說明"
 msgid "WwpnCandidate|Region number"
 msgstr "Wwpn 候選項|區域號碼"
 
-msgid "XML View"
+msgid "Xml View"
 msgstr "XML 視圖"
 
 msgid "Year"
@@ -53350,6 +53183,9 @@ msgstr "assigned_company_tag_parent_storage"
 
 msgid "at"
 msgstr "鎖定時間"
+
+msgid "attribute_value_pair"
+msgstr "attribute_value_pair"
 
 msgid "auth_validation"
 msgstr "auth_validation"
@@ -53804,9 +53640,6 @@ msgstr "已選取。"
 msgid "has to be unique per provider type"
 msgstr "在每個提供者類型中必須是唯一的"
 
-msgid "hawkular URL and API port fields are needed to perform validation."
-msgstr "需要 hawkular URL 和 API 埠欄位才能執行驗證。"
-
 msgid "host cannot be blank"
 msgstr "主機不能為空"
 
@@ -53897,9 +53730,6 @@ msgstr "instantiate 必須在子類別中實作"
 msgid "interval '%{interval}' is not supported"
 msgstr "不支援間隔 '%{interval}'"
 
-msgid "invalid button action"
-msgstr "按鈕動作無效"
-
 msgid "invalid interval name %{name}"
 msgstr "間隔名稱 %{name} 無效"
 
@@ -53924,9 +53754,6 @@ msgstr "未設定工作範本"
 
 msgid "kubevirt"
 msgstr "kubevirt"
-
-msgid "kubevirt URL and API port fields are needed to perform validation."
-msgstr "需要 kubevirt URL 和 API 埠欄位才能執行驗證。"
 
 msgid "ldap"
 msgstr "ldap"
@@ -54064,6 +53891,12 @@ msgstr "oVirt 提供者"
 msgid "object %{name} is not one of %{items}"
 msgstr "物件 %{name} 不是 %{items} 的其中一個"
 
+msgid "object_attribute"
+msgstr "object_attribute"
+
+msgid "object_details"
+msgstr "object_details"
+
 msgid "of %d page"
 msgid_plural "of %d pages"
 msgstr[0] "/%d 頁"
@@ -54176,9 +54009,6 @@ msgstr "processor_type"
 
 msgid "prometheus"
 msgstr "prometheus"
-
-msgid "prometheus URL and API port fields are needed to perform validation."
-msgstr "需要 Promeytheus URL 和 API 埠欄位才能執行驗證。"
 
 msgid "prov_type cannot be changed"
 msgstr "無法變更 prov_type"
@@ -54486,6 +54316,9 @@ msgstr "未啟用執行"
 msgid "run must be implemented in a subclass"
 msgstr "必須在子類別中實作執行"
 
+msgid "run_button_summary"
+msgstr "run_button_summary"
+
 msgid "run_queue is not enabled"
 msgstr "未啟用 run_queue"
 
@@ -54750,6 +54583,12 @@ msgstr "PowerVC 版本支援的最小值形態異常"
 
 msgid "vcpus"
 msgstr "vcpus"
+
+msgid "visibility"
+msgstr "可見性"
+
+msgid "visibility_expression"
+msgstr "visibility_expression"
 
 msgid "vm does not belong to any host"
 msgstr "VM 不屬於任何主機"

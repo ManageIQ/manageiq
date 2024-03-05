@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2024-01-01 00:17+0000\n"
-"PO-Revision-Date: 2024-01-01 00:17+0000\n"
+"POT-Creation-Date: 2024-03-01 17:14+0000\n"
+"PO-Revision-Date: 2024-03-01 17:14+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -373,9 +373,6 @@ msgstr "%{vm_or_template} \"%{name}\" の %{action} \"%{item_name}\""
 
 msgid "%{action} \"%{item_name}\" for Switch \"%{name}\""
 msgstr "スイッチ \"%{name}\" の %{action} \"%{item_name}\""
-
-msgid "%{action} cannot be performed on orphaned VM."
-msgstr "%{action} は孤立した VM では実行できません。"
 
 msgid "%{action} initiated for %{count} %{model} from the %{product} Database"
 msgid_plural ""
@@ -2107,11 +2104,6 @@ msgstr "アクセス鍵"
 
 msgid "Access Key ID"
 msgstr "アクセス鍵 ID"
-
-msgid ""
-"Access Key ID and matching Secret Access Key fields are needed to perform "
-"verification of credentials"
-msgstr "資格情報の確認を行う場合はアクセス鍵 ID フィールドおよび一致する秘密のアクセス鍵フィールドが必要になります。"
 
 msgid "Access Modes"
 msgstr "アクセス・モード"
@@ -6655,32 +6647,17 @@ msgstr "サイズ変更の取り消し"
 msgid "Cancel Simulation to go back to Button details"
 msgstr "シミュレーションを取り消してボタン詳細に戻る"
 
-msgid "Cancel SmartState Docker password change"
-msgstr "SmartState Docker パスワード変更の取り消し"
-
 msgid "Cancel Task"
 msgstr "タスクの取り消し"
 
 msgid "Cancel after"
 msgstr "タイムアウト時間"
 
-msgid "Cancel client key change"
-msgstr "クライアント鍵変更の取り消し"
-
 msgid "Cancel operation is not supported for %{class}"
 msgstr "%{class} の取り消し操作はサポートされていません"
 
 msgid "Cancel password change"
 msgstr "パスワード変更の取り消し"
-
-msgid "Cancel private key change"
-msgstr "秘密鍵の変更を取り消し"
-
-msgid "Cancel secret access key change"
-msgstr "秘密アクセス鍵の変更を取り消し"
-
-msgid "Cancel stored token"
-msgstr "保存済みトークンの取り消し"
 
 msgid "Cancel the load"
 msgstr "ロードの取り消し"
@@ -6820,6 +6797,9 @@ msgstr "ユーザー ID %{user_id} を解析できません"
 
 msgid "Cannot redirect to \"%{record}\" provider."
 msgstr "\"%{record}\" プロバイダーにリダイレクトできません。"
+
+msgid "Cannot resize disks of a VM with snapshots"
+msgstr "スナップショットを使用して VM のディスクをサイズ変更することはできません"
 
 msgid "Cannot revert to snapshot while VM is running"
 msgstr "VM を実行中はスナップショットに戻すことはできません"
@@ -7194,23 +7174,8 @@ msgstr "インフラストラクチャー・プロバイダーのパスワード
 msgid "Change current group"
 msgstr "現在のグループの変更"
 
-msgid "Change stored SmartState Docker password"
-msgstr "保存された SmartState Docker パスワードの変更"
-
-msgid "Change stored client key"
-msgstr "保存されたクライアント鍵の変更"
-
 msgid "Change stored password"
 msgstr "保存されたパスワードの変更"
-
-msgid "Change stored private key"
-msgstr "保存された秘密鍵の変更"
-
-msgid "Change stored secret access key"
-msgstr "保存された秘密アクセス鍵の変更"
-
-msgid "Change stored token"
-msgstr "保存されたトークンの変更"
 
 msgid "Changed from previous"
 msgstr "変更あり"
@@ -7832,9 +7797,6 @@ msgstr "インポートするカスタム変数のタイプを選択します"
 msgid "Choose transient storage"
 msgstr "一時ストレージを選択する"
 
-msgid "Choose>"
-msgstr "選択"
-
 msgid "Cidr"
 msgstr "CIDR"
 
@@ -8063,9 +8025,6 @@ msgstr "クライアント ID"
 
 msgid "Client Key"
 msgstr "クライアント鍵"
-
-msgid "Client Keys do not match"
-msgstr "クライアント鍵が一致しません"
 
 msgid "Client Once"
 msgstr "1 回限りのクライアント証明書の確認要求"
@@ -9921,10 +9880,10 @@ msgid "ConfigurationProfile|Total configured systems"
 msgstr "構成済みシステムの合計"
 
 msgid "ConfigurationScriptBase|Context"
-msgstr "ConfigurationScriptBase|コンテキスト"
+msgstr "ConfigurationScript ベース | コンテキスト"
 
 msgid "ConfigurationScriptBase|Credentials"
-msgstr "ConfigurationScriptBase|資格情報"
+msgstr "ConfigurationScript ベース | 資格情報"
 
 msgid "ConfigurationScriptBase|Description"
 msgstr "説明"
@@ -9939,16 +9898,16 @@ msgid "ConfigurationScriptBase|Name"
 msgstr "名前"
 
 msgid "ConfigurationScriptBase|Output"
-msgstr "ConfigurationScriptBase|出力"
+msgstr "ConfigurationScript ベース | 出力"
 
 msgid "ConfigurationScriptBase|Payload"
-msgstr "ConfigurationScriptBase|ペイロード"
+msgstr "ConfigurationScript ベース | ペイロード"
 
 msgid "ConfigurationScriptBase|Payload error"
 msgstr "ConfigurationScriptBase|ペイロード・エラー"
 
 msgid "ConfigurationScriptBase|Payload type"
-msgstr "ConfigurationScriptBase|ペイロード・タイプ"
+msgstr "ConfigurationScript ベース | ペイロード・タイプ"
 
 msgid "ConfigurationScriptBase|Payload valid"
 msgstr "ConfigurationScriptBase|ペイロード有効"
@@ -9960,10 +9919,10 @@ msgid "ConfigurationScriptBase|Region number"
 msgstr "リージョン番号"
 
 msgid "ConfigurationScriptBase|Run by userid"
-msgstr "ConfigurationScriptBase|ユーザー ID による実行"
+msgstr "ConfigurationScript ベース | ユーザー ID による実行"
 
 msgid "ConfigurationScriptBase|Status"
-msgstr "ConfigurationScriptBase|状況"
+msgstr "ConfigurationScript ベース | 状況"
 
 msgid "ConfigurationScriptBase|Survey spec"
 msgstr "調査仕様"
@@ -10198,23 +10157,11 @@ msgstr "ベンダー"
 msgid "ConfiguredSystem|Virtual instance ref"
 msgstr "仮想インスタンス参照"
 
-msgid "Confirm %{password}"
-msgstr "%{password}の確認"
-
-msgid "Confirm Client Key"
-msgstr "クライアント鍵の確認"
+msgid "Confirm"
+msgstr "確認"
 
 msgid "Confirm Password"
 msgstr "パスワードの確認"
-
-msgid "Confirm Secret Access Key"
-msgstr "秘密アクセス鍵の確認"
-
-msgid "Confirm SmartState Password"
-msgstr "SmartState パスワードの確認"
-
-msgid "Confirm Token"
-msgstr "トークンの確認"
 
 msgid "Confirm password"
 msgstr "パスワードの確認"
@@ -10264,9 +10211,6 @@ msgstr "コンソールはサポートされていません"
 
 msgid "Console protocol %{protocol} is not supported"
 msgstr "コンソール・プロトコル %{protocol} はサポートされていません"
-
-msgid "Console userid and password fields are needed to perform validation."
-msgstr "検証を実行するには、コンソール・ユーザー ID およびパスワードのフィールドが必要です。"
 
 msgid "Console using HTML5"
 msgstr "HTML5 を使用したコンソール"
@@ -14044,9 +13988,6 @@ msgid "Database Lock"
 msgid_plural "Database Locks"
 msgstr[0] "データベース・ロック"
 
-msgid "Database Name"
-msgstr "データベース名"
-
 msgid "Database Server Name"
 msgstr "データベース・サーバー名 (Database Server Name)"
 
@@ -15426,9 +15367,6 @@ msgstr "詳細モード"
 msgid "Detect"
 msgstr "検出"
 
-msgid "Detect Endpoint"
-msgstr "エンドポイントの検出"
-
 msgid "Development"
 msgstr "開発"
 
@@ -15829,9 +15767,6 @@ msgstr "ローカル・ログインの無効化"
 
 msgid "Disable a Schedule"
 msgstr "スケジュールの無効化"
-
-msgid "Disable event monitoring."
-msgstr "イベント監視を無効にします。"
 
 msgid "Disable the selected Schedules"
 msgstr "選択したスケジュールの無効化"
@@ -16997,6 +16932,9 @@ msgstr "プラットフォームの表示"
 msgid "Display Registry"
 msgstr "レジストリーの表示"
 
+msgid "Display Request Logs"
+msgstr "要求ログの表示"
+
 msgid "Display Service Catalog"
 msgstr "サービス・カタログの表示"
 
@@ -17114,6 +17052,9 @@ msgstr "使用状況データの表示"
 msgid "Display on Button"
 msgstr "ボタンに表示"
 
+msgid "Display on button"
+msgstr "表示ボタン"
+
 msgid "Display tags"
 msgstr "表示タグ"
 
@@ -17150,9 +17091,6 @@ msgid ""
 "Do you want to promote this Server to primary?  This will replace any existing"
 " primary Server for this Role."
 msgstr "このサーバーをプライマリーにプロモートしますか?  これを実行すると、このロールの既存プライマリー・サーバーが置き換えられます。"
-
-msgid "Docker Registry User Name and Password for SmartState Analysis on AWS"
-msgstr "AWS での SmartState 分析の Docker レジストリーのユーザー名およびパスワード"
 
 msgid "Docker Version"
 msgstr "Docker バージョン"
@@ -19396,9 +19334,6 @@ msgstr "組み込みワークフロー"
 msgid "Embedded Workflows Provider"
 msgstr "組み込みワークフロー・プロバイダー"
 
-msgid "Embededded Workflows"
-msgstr "組み込みワークフロー"
-
 msgid "Empty Dir Medium Type"
 msgstr "空のディレクトリー・メディアのタイプ"
 
@@ -19797,12 +19732,6 @@ msgstr "シングル・サインオンの有効化"
 msgid "Enable a Schedule"
 msgstr "スケジュールの有効化"
 
-msgid ""
-"Enable event monitoring. Used to automatically resync state when changes are "
-"performed on VMware vCloud Director directly."
-msgstr ""
-"イベント監視を有効にします。VMware vCloud Director で直接変更が行われたときに状態を自動的に再同期するために使用されます。"
-
 msgid "Enable the selected Schedules"
 msgstr "選択したスケジュールの有効化"
 
@@ -19863,13 +19792,13 @@ msgstr "有効にされたラン・レベル"
 msgid "Enablement"
 msgstr "有効化"
 
-msgid "Enablement Expression"
-msgstr "有効化式"
-
 msgid ""
 "Enablement and Visibility expressions can only be configured for buttons with "
 "\"Display for\" (previous tab) set to \"Single\""
 msgstr "有効化および視認性の式は、「表示」(前のタブ) を「単一」に構成したボタンでのみ構成可能です。"
+
+msgid "Enablement expression"
+msgstr "有効化式"
 
 msgid ""
 "Enables defining a URL path prefix for XCCDF file instead of accessing the "
@@ -24147,21 +24076,9 @@ msgstr "ホスト名 (または IPv4/IPv6 アドレス)"
 msgid "Hostname (or IPv4 or IPv6 address:"
 msgstr "ホスト名 (または IPv4 または IPv6 アドレス):"
 
-msgid "Hostname or IP address"
-msgstr "ホスト名または IP アドレス"
-
 msgid ""
 "Hostname or IP address which corresponds to your Red Hat Satellite 6 server"
 msgstr "Red Hat Satellite 6 サーバーに対応するホスト名または IP アドレス"
-
-msgid "Hostname or IPV4 or IPV6 address"
-msgstr "ホスト名または IPV4 か IPV6 のアドレス"
-
-msgid "Hostname or IPv4 or IPv6 address"
-msgstr "ホスト名 または IPv4/IPv6 アドレス"
-
-msgid "Hostname or IPv4/IPv6 address"
-msgstr "ホスト名または IPv4/IPv6 アドレス"
 
 msgid "Hosts"
 msgstr "ホスト"
@@ -25434,9 +25351,6 @@ msgstr "無効なシングル・サインオン資格情報"
 msgid "Invalid Stack"
 msgstr "無効なスタック"
 
-msgid "Invalid URL"
-msgstr "URL が無効です"
-
 msgid "Invalid XML file contents detected."
 msgstr "無効な XML ファイルのコンテンツが検出されました。"
 
@@ -25451,9 +25365,6 @@ msgstr "無効な資格情報"
 
 msgid "Invalid button action"
 msgstr "無効なボタン・アクション"
-
-msgid "Invalid button action!"
-msgstr "無効なボタン・アクションです。"
 
 msgid "Invalid chart definition"
 msgstr "無効なチャート定義"
@@ -25481,9 +25392,6 @@ msgstr "無効な入力"
 
 msgid "Invalid input for \"wait_for_task\"."
 msgstr "\"wait_for_task\" の無効な入力です。"
-
-msgid "Invalid input format, please enter a GUID"
-msgstr "無効な入力形式です。GUID を入力してください。"
 
 msgid "Invalid or unsupported file depot type."
 msgstr "無効かサポートされないファイル・デポ・タイプです。"
@@ -26751,6 +26659,9 @@ msgstr "プラットフォーム [%{os_name}] へのログオンはサポート�
 
 msgid "Logout"
 msgstr "ログアウト"
+
+msgid "Logs"
+msgstr "ログ"
 
 msgid "Logs for this %{product} Server are not available for viewing"
 msgstr "この %{product} サーバーのログは表示できません"
@@ -28048,9 +27959,6 @@ msgstr[0] "VM の測定"
 
 msgid "Metering for VMs"
 msgstr "VM の測定"
-
-msgid "Method Inputs"
-msgstr "メソッドの入力"
 
 msgid "Method for allocated metrics"
 msgstr "割り振られたメトリックのメソッド"
@@ -32083,9 +31991,6 @@ msgstr "複数のソース・テンプレートが入力データから見つか
 msgid "Multiselect"
 msgstr "複数選択"
 
-msgid "Must be a number (greater than 0)"
-msgstr "数値 (1 以上) にする必要があります"
-
 msgid "Must be a valid IPv4 address"
 msgstr "有効な IPv4 アドレスでなければなりません"
 
@@ -32257,12 +32162,6 @@ msgid "Named scope '%{scope_name}' is not defined for class '%{class_name}'"
 msgstr "名前付きスコープ '%{scope_name}' はクラス '%{class_name}' について定義されていません"
 
 msgid "Namespace"
-msgstr "名前空間"
-
-msgid "Namespace Details"
-msgstr "名前空間の詳細"
-
-msgid "Namespaces"
 msgstr "名前空間"
 
 msgid "Naming"
@@ -32872,9 +32771,6 @@ msgstr "なし"
 msgid "Never Verified"
 msgstr "未検証"
 
-msgid "New "
-msgstr "新規"
-
 msgid "New Alert Profile \"%s\" has been successfully queued."
 msgstr "新規アラート・プロファイル「%s」が正常にキューに入れられました。"
 
@@ -32919,9 +32815,6 @@ msgstr "新規の名前?"
 
 msgid "New object"
 msgstr "新規オブジェクト"
-
-msgid "New password"
-msgstr "新しいパスワード"
 
 msgid "New section"
 msgstr "新規セクション"
@@ -33042,9 +32935,6 @@ msgstr "割り当てられたタグはありません"
 
 msgid "No Associations defined"
 msgstr "関連付けが定義されていません"
-
-msgid "No Attribute/Value Pairs found"
-msgstr "属性/値ペアが見つかりませんでした"
 
 msgid "No Attribute/Value Pairs found."
 msgstr "属性/値ペアが見つかりませんでした。"
@@ -33807,9 +33697,6 @@ msgstr "注: 所有権の変更により非表示にされる可能性のある�
 msgid "Note: Total quota can be restricted by quotas defined at upper levels"
 msgstr "注: クォータの合計はより上位のレベルで定義されたクォータによって制限される可能性があります"
 
-msgid "Note: Username must be in the format: name@realm"
-msgstr "注: ユーザー名の形式は name@realm にする必要があります。"
-
 msgid "Notes"
 msgstr "メモ"
 
@@ -34091,6 +33978,9 @@ msgstr "オブジェクト"
 msgid "Object Attribute"
 msgstr "オブジェクト属性"
 
+msgid "Object Attribute 1"
+msgstr "オブジェクト属性 1"
+
 msgid "Object Attribute Name"
 msgstr "オブジェクト属性名"
 
@@ -34145,6 +34035,9 @@ msgstr "オブジェクト・タイプ"
 msgid ""
 "Object attribute must be specified to copy object details for use in a Button"
 msgstr "ボタン内で使用されるオブジェクト詳細をコピーするためにオブジェクト属性を指定する必要があります"
+
+msgid "Object info"
+msgstr "オブジェクト情報"
 
 msgid "Object not found: [%{obj_name}]"
 msgstr "オブジェクトが見つかりません: [%{obj_name}]"
@@ -40493,17 +40386,11 @@ msgstr "必要な機能"
 msgid "Required if SSH login is disabled for the Default account."
 msgstr "SSH ログインがデフォルト・アカウントに対して無効にされている場合に必須です。"
 
-msgid "Required information missing"
-msgstr "要求された情報がありません"
-
 msgid "Required key not specified: [%{key}]"
 msgstr "要求されたキーは指定されていません: [%{key}]"
 
 msgid "Required tag(s): %{names}"
 msgstr "必要なタグ: %{names}"
-
-msgid "Required. Used to gather Utilization data."
-msgstr "必須。使用状況データの収集に使用されます。"
 
 msgid "Reserve"
 msgstr "予約"
@@ -41129,12 +41016,6 @@ msgstr "VM またはインスタンスのリタイヤ"
 
 msgid "Retire VMs"
 msgstr "VM のリタイヤ"
-
-msgid "Retire not supported because VM is archived"
-msgstr "VM がアーカイブされているため、廃止はサポートされません"
-
-msgid "Retire not supported because VM is orphaned"
-msgstr "VM が孤立しているため、廃止はサポートされません"
 
 msgid "Retire selected Orchestration Stacks"
 msgstr "選択したオーケストレーション・スタックのリタイヤ"
@@ -41963,9 +41844,6 @@ msgstr "2 次メニュー"
 msgid "Secret Access Key"
 msgstr "秘密アクセス鍵"
 
-msgid "Secret Access Keys do not match"
-msgstr "秘密アクセス鍵が一致しません"
-
 msgid "Secret Key"
 msgstr "秘密鍵"
 
@@ -42301,9 +42179,6 @@ msgstr "すべての曜日を選択する"
 msgid "Select All Hours"
 msgstr "すべての時間を選択する"
 
-msgid "Select Ceilometer if eventing is not enabled on AMQP."
-msgstr "AMQP で有効にされているものがない場合は Ceilometer を選択します。"
-
 msgid "Select Classes to copy"
 msgstr "コピーするクラスの選択"
 
@@ -42321,9 +42196,6 @@ msgstr "形式の選択"
 
 msgid "Select Group"
 msgstr "グループの選択"
-
-msgid "Select Host to validate against"
-msgstr "検証対象のホストを選択"
 
 msgid "Select Instances to copy"
 msgstr "コピーするインスタンスの選択"
@@ -42819,11 +42691,6 @@ msgid ""
 "Server information, Username and matching password fields are needed to "
 "perform verification of credentials"
 msgstr "サーバー情報、ユーザー名および一致するパスワード・フィールドは資格情報の検証を実行する際に必要です。"
-
-msgid ""
-"Server information, username and private key fields are needed to perform "
-"verification of credentials"
-msgstr "サーバー情報、ユーザー名および秘密鍵フィールドは資格情報の検証を実行する際に必要です。"
 
 msgid "Server is Master"
 msgstr "サーバーはマスターです"
@@ -44893,15 +44760,6 @@ msgstr "Smartstate 分析"
 msgid "SmartState Docker"
 msgstr "SmartState Docker"
 
-msgid "SmartState Docker Password"
-msgstr "SmartState Docker パスワード"
-
-msgid "SmartState Docker Passwords do not match"
-msgstr "SmartState Docker パスワードが一致しません"
-
-msgid "SmartState Docker User Name"
-msgstr "SmartState Docker ユーザー名"
-
 msgid "Smartstate Analysis cannot be performed on selected Datastore"
 msgstr "選択したデータ・ストアで Smartstate 分析を実行できません"
 
@@ -46603,6 +46461,9 @@ msgstr "タブ・タイトル"
 msgid "Tab Title must be unique for this group"
 msgstr "タブ・タイトルはこのグループで一意である必要があります"
 
+msgid "Tab details not found."
+msgstr "タブの詳細が見つかりません。"
+
 msgid "Tabular View"
 msgstr "表形式ビュー"
 
@@ -46818,6 +46679,9 @@ msgstr[0] "テンプレートとイメージ"
 msgid "Template is required, please select one from the list"
 msgstr "テンプレートが必要です。リストから 1 つ選択してください。"
 
+msgid "Template not orderable"
+msgstr "テンプレートを注文できません"
+
 msgid "Template sealing is supported only for non-Windows OS."
 msgstr "テンプレート・シーリングは、Windows 以外の OS でのみサポートされています。"
 
@@ -46844,11 +46708,6 @@ msgstr "テナント"
 
 msgid "Tenant ID"
 msgstr "テナント ID"
-
-msgid ""
-"Tenant ID, Client ID and matching Client Key fields are needed to perform "
-"verification of credentials"
-msgstr "資格情報の確認を行う場合は、テナント ID、クライアント ID、および一致する クライアント鍵 のフィールドが必要になります。"
 
 msgid "Tenant Mapping Enabled"
 msgstr "テナント・マッピングの有効化"
@@ -47168,6 +47027,9 @@ msgstr "VM の接続状態は有効ではありません"
 msgid "The VM is a template"
 msgstr "VM はテンプレートです"
 
+msgid "The VM is archived"
+msgstr "VM はアーカイブされています"
+
 msgid "The VM is not connected to a Host"
 msgstr "VM はホストに接続されていません"
 
@@ -47182,6 +47044,9 @@ msgstr "VM の電源はオフになっていません"
 
 msgid "The VM is not powered on"
 msgstr "VM の電源がオンになっていません"
+
+msgid "The VM is orphaned"
+msgstr "VM は孤立しています"
 
 msgid "The VM is powered on"
 msgstr "VM の電源がオンになっています"
@@ -47861,9 +47726,6 @@ msgstr "タイムピッカー"
 msgid "Timer"
 msgstr "タイマー"
 
-msgid "Timer Options"
-msgstr "タイマー・オプション"
-
 msgid "Timestamp"
 msgstr "タイム・スタンプ"
 
@@ -47956,9 +47818,6 @@ msgstr "この項目のメンテナンス・モードを切り替えますか?"
 
 msgid "Token"
 msgstr "トークン"
-
-msgid "Tokens do not match"
-msgstr "トークンが一致しません"
 
 msgid "Tools Status"
 msgstr "ツールのステータス"
@@ -49347,31 +49206,11 @@ msgstr "AWS での SmartState 分析を実行するために Docker レジスト
 msgid "Used for SSH login."
 msgstr "SSH ログインに使用されます。"
 
-msgid ""
-"Used for VMRC connections to all VMs on this provider. If not set, the VMRC "
-"console access will be disabled for this provider."
-msgstr ""
-"このプロバイダーのすべての VM に対する VMRC 接続に使用されます。設定されていない場合は、このプロバイダーの VMRC コンソールのアクセスが無効"
-"にされます。"
-
 msgid "Used for access to Web Services."
 msgstr "Web サービスへのアクセスに使用されます。"
 
-msgid "Used to authenticate as a service account against your provider."
-msgstr "プロバイダーに対するサービス・アカウントの認証に使用されます。"
-
 msgid "Used to authenticate with Nuage AMQP Messaging Bus for event handling."
 msgstr "イベント処理のために AMQP Messaging Bus による認証に使用されます。"
-
-msgid ""
-"Used to authenticate with OpenStack AMQP Messaging Bus for event handling. "
-"Configure AMQP if eventing is not enabled on Ceilometer."
-msgstr ""
-"OpenStack AMQP メッセージング・バスで認証してイベント処理を行うために使用されます。イベントが Ceilometer で有効でない場合は "
-"AMQP を構成します。"
-
-msgid "Used to gather Capacity & Utilization metrics."
-msgstr "容量 & 使用率メトリックの収集に使用されます。"
 
 msgid "User"
 msgid_plural "Users"
@@ -50540,9 +50379,6 @@ msgstr "Amazon 設定の検証"
 msgid "Validate the LDAP Settings by binding with the Host"
 msgstr "ホストとのバインドにより LDAP 設定を検証"
 
-msgid "Validate the credentials"
-msgstr "資格情報の検証"
-
 msgid "Validate the credentials by logging into the Server"
 msgstr "サーバーにログインして資格情報を検証"
 
@@ -50701,9 +50537,6 @@ msgstr "ピア証明書の検証"
 
 msgid "Verify SSL"
 msgstr "SSL の検証"
-
-msgid "Verify TLS Certificates"
-msgstr "TLS 証明書の確認"
 
 msgid "Version"
 msgstr "バージョン"
@@ -53164,9 +52997,6 @@ msgstr "書き込みヒット (IOPS)"
 msgid "Written (KBps)"
 msgstr "書き込み (KBps)"
 
-msgid "Wrong hostname format"
-msgstr "ホスト名の形式が正しくありません"
-
 msgid "Wwpn Candidate"
 msgid_plural "Wwpn Candidates"
 msgstr[0] "Wwpn Candidates"
@@ -53189,8 +53019,8 @@ msgstr "WwpnCandidate|リージョン詳細"
 msgid "WwpnCandidate|Region number"
 msgstr "WwpnCandidate|リージョン・ナンバー"
 
-msgid "XML View"
-msgstr "XML 表示"
+msgid "Xml View"
+msgstr "XML の表示"
 
 msgid "Year"
 msgstr "年"
@@ -53436,6 +53266,9 @@ msgstr "assigned_company_tag_parent_storage"
 
 msgid "at"
 msgstr "-"
+
+msgid "attribute_value_pair"
+msgstr "attribute_value_pair (属性値ペア)"
 
 msgid "auth_validation"
 msgstr "auth_validation"
@@ -53892,9 +53725,6 @@ msgstr "選択されない限り、利用できません。"
 msgid "has to be unique per provider type"
 msgstr "プロバイダー・タイプごとに固有である必要があります"
 
-msgid "hawkular URL and API port fields are needed to perform validation."
-msgstr "Hawkular URL および API ポート・フィールドは、検証を実行するために必要です。"
-
 msgid "host cannot be blank"
 msgstr "ホストを空白にすることはできません"
 
@@ -53985,9 +53815,6 @@ msgstr "instantiate はサブクラスに実装する必要があります"
 msgid "interval '%{interval}' is not supported"
 msgstr "間隔 '%{interval}' はサポートされていません"
 
-msgid "invalid button action"
-msgstr "無効なボタン・アクション"
-
 msgid "invalid interval name %{name}"
 msgstr "無効な間隔名 %{name}"
 
@@ -54012,9 +53839,6 @@ msgstr "ジョブ・テンプレートが設定されていませんでした"
 
 msgid "kubevirt"
 msgstr "kubevirt"
-
-msgid "kubevirt URL and API port fields are needed to perform validation."
-msgstr "検証を実行するには kubevirt URL および API ポート・フィールドが必要です"
 
 msgid "ldap"
 msgstr "LDAP"
@@ -54152,6 +53976,12 @@ msgstr "oVirt プロバイダー"
 msgid "object %{name} is not one of %{items}"
 msgstr "オブジェクト %{name} は %{items} の 1 つではありません。"
 
+msgid "object_attribute"
+msgstr "オブジェクト属性"
+
+msgid "object_details"
+msgstr "オブジェクトの詳細"
+
 msgid "of %d page"
 msgid_plural "of %d pages"
 msgstr[0] "/ %d ページ"
@@ -54264,9 +54094,6 @@ msgstr "processor_type"
 
 msgid "prometheus"
 msgstr "prometheus"
-
-msgid "prometheus URL and API port fields are needed to perform validation."
-msgstr "検証を実行するには prometheus URL および API ポート・フィールドが必要です"
 
 msgid "prov_type cannot be changed"
 msgstr "prov_type は変更できません"
@@ -54574,6 +54401,9 @@ msgstr "実行が有効になっていません"
 msgid "run must be implemented in a subclass"
 msgstr "実行はサブクラスに実装する必要があります"
 
+msgid "run_button_summary"
+msgstr "実行ボタンの要約"
+
 msgid "run_queue is not enabled"
 msgstr "run_queue が有効になっていません"
 
@@ -54838,6 +54668,12 @@ msgstr "サポートされる PowerVC の最小リリースの値の形式が誤
 
 msgid "vcpus"
 msgstr "vCPU"
+
+msgid "visibility"
+msgstr "可視性"
+
+msgid "visibility_expression"
+msgstr "visibility_expression"
 
 msgid "vm does not belong to any host"
 msgstr "VM はどのホストにも所属していません"
