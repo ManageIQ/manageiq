@@ -1126,7 +1126,7 @@ GEM
       netrc (~> 0.8)
     retriable (3.1.2)
     rexml (3.2.6)
-    ripper_ruby_parser (1.5.1)
+    ripper_ruby_parser (1.11.0)
       sexp_processor (~> 4.10)
     routes_lazy_routes (0.4.3)
       actionpack
@@ -1458,7 +1458,7 @@ DEPENDENCIES
   rake (>= 12.3.3)
   rdoc
   rest-client (~> 2.1.0)
-  ripper_ruby_parser (~> 1.5.1)
+  ripper_ruby_parser (~> 1.11)
   routes_lazy_routes
   rspec-rails (~> 4.0.1)
   ruby-dbus
