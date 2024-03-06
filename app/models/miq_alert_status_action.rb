@@ -4,7 +4,7 @@ class MiqAlertStatusAction < ApplicationRecord
   belongs_to :miq_alert_status
   belongs_to :assignee, :class_name => 'User'
   belongs_to :user
-  validates :action_type, :acceptance => { :accept => ACTION_TYPES }, :presence => true
+  validates :action_type, :acceptance => {:accept => ACTION_TYPES}, :presence => true
   validates :user, :presence => true
   validates :miq_alert_status, :presence => true
   validates :comment, :presence => true, :if => (->(masa) { masa.action_type == 'comment' })

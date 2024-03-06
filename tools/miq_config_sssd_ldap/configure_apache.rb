@@ -6,7 +6,7 @@ module MiqConfigSssdLdap
 
   class ConfigureApache < AuthTemplateFiles
     def configure
-      LOGGER.debug("Invoked #{self.class}\##{__method__} template_dir #{template_dir}")
+      LOGGER.debug("Invoked #{self.class}##{__method__} template_dir #{template_dir}")
       create_files
       update_realm
     end
@@ -14,7 +14,7 @@ module MiqConfigSssdLdap
     private
 
     def create_files
-      LOGGER.debug("Invoked #{self.class}\##{__method__}")
+      LOGGER.debug("Invoked #{self.class}##{__method__}")
 
       begin
         FileUtils.cp("#{template_dir}#{PAM_CONF_DIR}/httpd-auth", "#{PAM_CONF_DIR}/httpd-auth")
@@ -28,7 +28,7 @@ module MiqConfigSssdLdap
     end
 
     def update_realm
-      LOGGER.debug("Invoked #{self.class}\##{__method__}")
+      LOGGER.debug("Invoked #{self.class}##{__method__}")
 
       begin
         miq_ext_auth = File.read("#{HTTPD_CONF_DIR}/manageiq-external-auth.conf")

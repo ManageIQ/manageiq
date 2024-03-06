@@ -1,2 +1,2 @@
-class ManageIQ::Providers::AutomationManager::ConfigurationScript < ::ConfigurationScript
+class ManageIQ::Providers::AutomationManager::ConfigurationScript < ConfigurationScript
 end

@@ -69,12 +69,12 @@ RSpec.describe TaskHelpers::Exports do
 
   describe '.exclude_attributes' do
     let(:all_attributes) do
-      { "id"         => 1,
+      {"id"         => 1,
         "name"       => "EvmRole-super_administrator",
         "read_only"  => true,
         "created_at" => Time.zone.now,
         "updated_at" => Time.zone.now,
-        "settings"   => nil }
+        "settings"   => nil}
     end
 
     it 'removes selected attributes' do

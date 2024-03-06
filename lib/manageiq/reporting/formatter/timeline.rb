@@ -74,6 +74,7 @@ module ManageIQ
           etime = row[col]
           return if etime.nil?                              # Skip nil dates - Sprint 41
           return if !@start_time.nil? && etime < @start_time # Skip if before start time limit
+
           #     START of TIMELINE TIMEZONE Code
           mri.extras[:tl_position] ||= format_timezone(etime.to_time, tz, 'raw')
           if mri.timeline[:position] && mri.timeline[:position] == "First"
@@ -103,7 +104,7 @@ module ManageIQ
               ems_storage = false
               if rec[:ems_id] && ExtManagementSystem.exists?(rec[:ems_id])
                 ems = ExtManagementSystem.find(rec[:ems_id])
-                ems_cloud =  true if ems.kind_of?(EmsCloud)
+                ems_cloud = true if ems.kind_of?(EmsCloud)
                 ems_container = true if ems.kind_of?(::ManageIQ::Providers::ContainerManager)
                 ems_storage = true if ems.kind_of?(::ManageIQ::Providers::StorageManager)
               end
@@ -125,7 +126,7 @@ module ManageIQ
                           end
               end
             else
-              e_title = rec[:name] ? rec[:name] : row[mri.col_order.first].to_s
+              e_title = rec[:name] || row[mri.col_order.first].to_s
             end
           end
           e_title ||= ems ? ems.name : "No VM, Host, or MS"
@@ -173,6 +174,7 @@ module ManageIQ
           col_order.each_with_index do |co, co_idx|
             value = tl_message.message_html(co)
             next if value.to_s.empty? || co == "id"
+
             event_data[co] = {
               :value => value,
               :text  => headers[co_idx]

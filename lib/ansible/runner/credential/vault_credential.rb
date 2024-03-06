@@ -7,7 +7,7 @@ module Ansible
 
       def env_vars
         if auth.vault_password.present?
-          { "ANSIBLE_VAULT_PASSWORD_FILE" => vault_password_file }
+          {"ANSIBLE_VAULT_PASSWORD_FILE" => vault_password_file}
         else
           {}
         end

@@ -318,17 +318,17 @@ RSpec.describe MiqPolicy do
       expect(described_class.create!(:description => 'x')).to have_attributes(
         :towhat => "Vm",
         :active => true,
-        :mode   => "control",
+        :mode   => "control"
       )
     end
 
     it 'allows override of defaults' do
       expect(described_class.create!(
-        :towhat => "Host", :mode => "compliance", :active => false, :description => 'x',
+        :towhat => "Host", :mode => "compliance", :active => false, :description => 'x'
       )).to have_attributes(
         :towhat => "Host",
         :active => false,
-        :mode   => "compliance",
+        :mode   => "compliance"
       )
     end
   end
@@ -340,8 +340,8 @@ RSpec.describe MiqPolicy do
 
     it 'reports invalid towhat' do
       policy = FactoryBot.build(:miq_policy, :towhat => "BobsYourUncle")
-      towhat_error = "should be one of ContainerGroup, ContainerImage, "\
-                     "ContainerNode, ContainerProject, ContainerReplicator, "\
+      towhat_error = "should be one of ContainerGroup, ContainerImage, " \
+                     "ContainerNode, ContainerProject, ContainerReplicator, " \
                      "ExtManagementSystem, Host, PhysicalServer, Vm"
 
       expect(policy).not_to be_valid

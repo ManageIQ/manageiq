@@ -43,6 +43,7 @@ module ActsAsTaggable
       tag_ids = Tag.for_names(tag_names, Tag.get_namespace(options)).pluck(:id)
       if options[:all]
         return none if tag_ids.length != tag_names.length
+
         with_all_tags(tag_ids)
       else
         with_any_tags(tag_ids)
@@ -96,7 +97,7 @@ module ActsAsTaggable
         )
       end)
 
-      define_method("#{attribute_name}_tags") do
+      define_method(:"#{attribute_name}_tags") do
         Tag.filter_ns(tags, namespace)
       end
 
@@ -108,7 +109,7 @@ module ActsAsTaggable
         end
       end
 
-      alias_method "#{plural_attribute_name}?", plural_attribute_name
+      alias_method :"#{plural_attribute_name}?", plural_attribute_name
     end
   end # module SingletonMethods
 
@@ -140,7 +141,8 @@ module ActsAsTaggable
     # Apply new tags
     Tag.transaction do
       Tag.parse(list).each do |name|
-        next if self.is_tagged_with?(name, options)
+        next if is_tagged_with?(name, options)
+
         name = File.join(ns, name)
         tag = Tag.where(:name => name).first_or_create
         tag.taggings.create(:taggable => self)
@@ -157,6 +159,7 @@ module ActsAsTaggable
         name = File.join(ns, name)
         tag = Tag.find_by(:name => name)
         next if tag.nil?
+
         tag.taggings.where(:taggable => self).destroy_all
       end
     end
@@ -175,6 +178,7 @@ module ActsAsTaggable
   def is_tagged_with?(tag, options = {})
     ns = Tag.get_namespace(options)
     return is_vtagged_with?(tag, options) if  ns[0..7] == "/virtual" || tag[0..7] == "/virtual"
+
     # self.tagged_with(options).include?(File.join(ns ,tag))
     Array(tags).include?(File.join(ns, tag))
   end
@@ -185,7 +189,7 @@ module ActsAsTaggable
     subject = self
     parts = File.join(ns, tag.split("/")).split("/")[2..-1] # throw away /virtual
     object = parts.pop
-    object = object.gsub(/%2f/, "/")  unless object.nil? # decode embedded slashes
+    object = object.gsub("%2f", "/")  unless object.nil? # decode embedded slashes
     attr = parts.pop
     begin
       # resolve any intermediate relationships, throw an error if any of them return multiple results
@@ -201,14 +205,14 @@ module ActsAsTaggable
         relationship = "self"
         macro = :has_one
       end
-      if macro == :has_one || macro == :belongs_to
+      if [:has_one, :belongs_to].include?(macro)
         value = subject.public_send(relationship).public_send(attr)
-        return object.downcase == value.to_s.downcase
+        object.downcase == value.to_s.downcase
       else
         subject.send(relationship).any? { |o| o.send(attr).to_s == object }
       end
     rescue NoMethodError
-      return false
+      false
     end
   end
 
@@ -217,7 +221,7 @@ module ActsAsTaggable
     list.each do |inner_list|
       inner_result = false
       inner_list.each do |tag|
-        if self.is_tagged_with?(tag, options)
+        if is_tagged_with?(tag, options)
           inner_result = true
           break
         end

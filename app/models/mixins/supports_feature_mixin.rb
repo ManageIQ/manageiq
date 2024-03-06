@@ -62,7 +62,7 @@ module SupportsFeatureMixin
   end
 
   def self.reason_or_default(reason)
-    reason.present? ? reason : _("Feature not available/supported")
+    (reason.presence || _("Feature not available/supported"))
   end
 
   # query instance for the reason why the feature is unsupported
@@ -180,7 +180,7 @@ module SupportsFeatureMixin
         # defines the method on the instance
         define_method(method_name) do
           unsupported.delete(feature)
-          if block_given?
+          if block
             begin
               result = instance_eval(&block)
               # if no errors yet but result was an error message

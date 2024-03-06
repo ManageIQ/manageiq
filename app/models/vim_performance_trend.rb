@@ -38,27 +38,25 @@ class VimPerformanceTrend < ActsAsArModel
     #   :target_pcts    => [70, 80, 90, 100],
     # }
 
-    options[:limit_col] ? options[:limit_col] : "limit"
+    options[:limit_col] || "limit"
 
     # group data by resource name
-    grouped_objs = perfs.inject({}) do |h, o|
+    grouped_objs = perfs.each_with_object({}) do |o, h|
       name = o.resource.name if o.resource
       h[name] ||= []
       h[name].push(o)
-      h
     end
 
     # calculate trend data for each group
-    trend_data = grouped_objs.inject({}) do |h, group|
+    trend_data = grouped_objs.each_with_object({}) do |group, h|
       name, olist = group
       h[name] = build_trend_data(options[:trend_col], olist)
-      h
     end
 
     # build table data
-    table_data = grouped_objs.inject([]) do |arr, group|
+    grouped_objs.inject([]) do |arr, group|
       name, olist = group
-      olist.sort! { |a, b| a.timestamp <=> b.timestamp }
+      olist.sort_by!(&:timestamp)
       limit   = olist.last.send(options[:limit_col]) if options[:limit_col]
       limit ||= options[:limit_val].to_f
 
@@ -101,7 +99,7 @@ class VimPerformanceTrend < ActsAsArModel
       row[:max_trend_value] = ordered_by_trend_col.last.send(options[:trend_col])
 
       # calculate start/end trend values
-      ordered_by_timestamp  = olist_in_time_profile.sort_by(&:timestamp)
+      ordered_by_timestamp = olist_in_time_profile.sort_by(&:timestamp)
       row[:start_trend_value] = ordered_by_timestamp.first.send(options[:trend_col])
       row[:end_trend_value]   = ordered_by_timestamp.last.send(options[:trend_col])
 
@@ -130,22 +128,20 @@ class VimPerformanceTrend < ActsAsArModel
       # attributes hash is the same for all rows created yet the individual attributes are correct when accessed individually
       arr.push(new(row))
     end
-
-    table_data
   end
 
   def self.calc_value_at_target(limit, trend_data)
     if trend_data.nil? || trend_data[:slope].nil?
-      return nil
+      nil
     else
       begin
         result = Math.slope_x_intercept(limit, trend_data[:slope], trend_data[:yint])
-        return Time.at(result).utc
+        Time.at(result).utc
       rescue RangeError
-        return nil
+        nil
       rescue => err
         _log.warn("#{err.message}, calculating trend limit for limit=#{limit}, trend_data=#{trend_data.inspect}, intermediate=#{result.inspect}")
-        return nil
+        nil
       end
     end
   end
@@ -155,6 +151,7 @@ class VimPerformanceTrend < ActsAsArModel
 
     coordinates = recs.collect do |r|
       next unless r.respond_to?(CHART_X_AXIS_COL) && r.respond_to?(col)
+
       [r.send(CHART_X_AXIS_COL).to_i, r.send(col).to_f]
     end.compact
 
@@ -218,14 +215,14 @@ class VimPerformanceTrend < ActsAsArModel
   end
 
   def self.trend_limit_cols(db, col, interval)
-    col = col.starts_with?("min_", "max_") ? col[4..-1] : col
+    col = col[4..-1] if col.starts_with?("min_", "max_")
     return [] unless TREND_COLS[db.to_sym]
     return [] unless TREND_COLS[db.to_sym][col.to_sym]
     return [] unless TREND_COLS[db.to_sym][col.to_sym][:limit_cols]
-    TREND_COLS[db.to_sym][col.to_sym][:limit_cols].inject([]) do |arr, col|
+
+    TREND_COLS[db.to_sym][col.to_sym][:limit_cols].each_with_object([]) do |col, arr|
       cols = interval == "daily" ? ["max_#{col}"] : [col] # add in max if daily
       cols.each { |c| arr.push([Dictionary.gettext([db, c.to_s].join("."), :type => "column"), c]) }
-      arr
     end
   end
 

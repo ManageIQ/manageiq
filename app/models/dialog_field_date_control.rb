@@ -13,6 +13,7 @@ class DialogFieldDateControl < DialogField
 
   def automate_output_value
     return nil if @value.blank?
+
     Date.parse(@value).iso8601
   end
 
@@ -23,14 +24,15 @@ class DialogFieldDateControl < DialogField
 
   def normalize_automate_values(automate_hash)
     self.class::AUTOMATE_VALUE_FIELDS.each do |key|
-      send("#{key}=", automate_hash[key]) if automate_hash.key?(key)
+      send(:"#{key}=", automate_hash[key]) if automate_hash.key?(key)
     end
 
     return default_time if automate_hash["value"].blank?
+
     begin
-      return DateTime.parse(automate_hash["value"].to_s).iso8601
+      DateTime.parse(automate_hash["value"].to_s).iso8601
     rescue
-      return default_time
+      default_time
     end
   end
 
@@ -47,6 +49,6 @@ class DialogFieldDateControl < DialogField
   private
 
   def default_time
-    with_current_user_timezone { Time.zone.now + 1.day }.strftime("%m/%d/%Y")
+    with_current_user_timezone { 1.day.from_now }.strftime("%m/%d/%Y")
   end
 end

@@ -113,7 +113,7 @@ RSpec.describe DialogFieldSerializer do
               .to eq(expected_serialized_values.merge(
                        "resource_action"         => "serialized resource action",
                        "dialog_field_responders" => dialog_field_responders,
-                       "default_value"           => "automate default value",
+                       "default_value"           => "automate default value"
               ))
           end
         end
@@ -160,7 +160,7 @@ RSpec.describe DialogFieldSerializer do
             .to include(expected_serialized_values.merge(
                           'id'                      => dialog_field.id,
                           'resource_action'         => 'serialized resource action',
-                          'dialog_field_responders' => [],
+                          'dialog_field_responders' => []
             ))
         end
 

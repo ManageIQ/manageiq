@@ -8,6 +8,7 @@ class FirewallRule < ApplicationRecord
 
   def operating_system=(os)
     raise ArgumentError, _("must be an OperatingSystem") unless os.kind_of?(OperatingSystem)
+
     self.resource = os
   end
 
@@ -36,6 +37,7 @@ class FirewallRule < ApplicationRecord
 
       el.each_element { |e| result << e.attributes.to_h }
     end
+
     result
   end
 end

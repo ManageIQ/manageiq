@@ -12,6 +12,7 @@ puts "Gathering method calls..."
 
 method_call_hash = MiqLoggerProcessor.new(logfile).each_with_object({}) do |line, hash|
   next unless line.fq_method
+
   hash[line.fq_method] ||= 0
   hash[line.fq_method] += 1
 end

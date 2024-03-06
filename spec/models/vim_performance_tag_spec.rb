@@ -140,9 +140,9 @@ RSpec.describe VimPerformanceTag do
         results.each do |t|
           ts = t.timestamp.iso8601.to_s
           @classification_entries.each do |entry|
-            expect(@precomputed[ts][entry.to_sym]).to eq(t.send("cpu_usagemhz_rate_average_#{entry}"))
+            expect(@precomputed[ts][entry.to_sym]).to eq(t.send(:"cpu_usagemhz_rate_average_#{entry}"))
           end
-          expect(@precomputed[ts][:none]).to eq(t.send("cpu_usagemhz_rate_average__none_"))
+          expect(@precomputed[ts][:none]).to eq(t.send(:cpu_usagemhz_rate_average__none_))
         end
       end
     end

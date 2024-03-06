@@ -52,6 +52,7 @@ class ServiceTemplateAnsibleTower < ServiceTemplate
     unless config_info[:configuration_script_id] || config_info[:configuration]
       raise _('Must provide configuration_script_id or configuration')
     end
+
     config_info
   end
 
@@ -74,6 +75,7 @@ class ServiceTemplateAnsibleTower < ServiceTemplate
   def validate_update_config_info(options)
     super
     return unless options.key?(:config_info)
+
     self.class.validate_config_info(options)
   end
 

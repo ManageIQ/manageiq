@@ -1,4 +1,4 @@
-$LOAD_PATH << Rails.root.join("tools", "miq_config_sssd_ldap").to_s
+$LOAD_PATH << Rails.root.join("tools/miq_config_sssd_ldap").to_s
 
 require "configure_appliance_settings"
 

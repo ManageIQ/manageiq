@@ -9,7 +9,7 @@ class GitRepository < ApplicationRecord
 
   attr_reader :git_lock
 
-  validates :url, :format => Regexp.union(URI.regexp(%w[http https file ssh]), /\A[-\w:.]+@.*:/), :allow_nil => false
+  validates :url, :format => Regexp.union(URI::DEFAULT_PARSER.make_regexp(%w[http https file ssh]), /\A[-\w:.]+@.*:/), :allow_nil => false
 
   default_value_for :verify_ssl, OpenSSL::SSL::VERIFY_PEER
   validates :verify_ssl, :inclusion => {:in => [OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER]}
@@ -62,6 +62,7 @@ class GitRepository < ApplicationRecord
     ensure_refreshed
     branch = git_branches.detect { |item| item.name == name }
     raise "Branch #{name} not found" unless branch
+
     branch.attributes.slice(*INFO_KEYS)
   end
 
@@ -69,6 +70,7 @@ class GitRepository < ApplicationRecord
     ensure_refreshed
     tag = git_tags.detect { |item| item.name == name }
     raise "Tag #{name} not found" unless tag
+
     tag.attributes.slice(*INFO_KEYS)
   end
 

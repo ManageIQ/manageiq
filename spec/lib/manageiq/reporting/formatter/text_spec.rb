@@ -24,7 +24,7 @@ describe ManageIQ::Reporting::Formatter::Text do
         +--------------------------------------------------------------------+
         |                  #{described_class.format_timezone(Time.zone.now)}                   |
         +--------------------------------------------------------------------+
-        TABLE
+      TABLE
       result.lines.each_with_index do |line, index|
         expect(line.strip).to eq(expected.lines[index].strip)
       end
@@ -45,7 +45,7 @@ describe ManageIQ::Reporting::Formatter::Text do
         +--------------------------------------------------------------------+
         |                  #{described_class.format_timezone(Time.zone.now)}                   |
         +--------------------------------------------------------------------+
-        TABLE
+      TABLE
       result.lines.each_with_index do |line, index|
         expect(line.strip).to eq(expected.lines[index].strip)
       end
@@ -69,7 +69,7 @@ describe ManageIQ::Reporting::Formatter::Text do
         +--------------------------------------------------------------------+
         |                  #{described_class.format_timezone(Time.zone.now)}                   |
         +--------------------------------------------------------------------+
-        TABLE
+      TABLE
       result.lines.each_with_index do |line, index|
         expect(line.strip).to eq(expected.lines[index].strip)
       end

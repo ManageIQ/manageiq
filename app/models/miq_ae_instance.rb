@@ -39,7 +39,7 @@ class MiqAeInstance < ApplicationRecord
 
     val   = ae_values.detect { |v| v.field_id == field.id }
     val ||= ae_values.build(:field_id => field.id)
-    val.send("#{attribute}=", value)
+    val.send(:"#{attribute}=", value)
     val.save!
   end
 
@@ -99,7 +99,7 @@ class MiqAeInstance < ApplicationRecord
       next if %w[name].include?(cname)
 
       # Process the column
-      xml_attrs[cname.to_sym]  = send(cname)   unless send(cname).blank?
+      xml_attrs[cname.to_sym] = send(cname)   if send(cname).present?
     end
 
     xml.MiqAeInstance(xml_attrs) do
@@ -123,8 +123,10 @@ class MiqAeInstance < ApplicationRecord
   def field_value_hash(name)
     field = ae_class.ae_fields.detect { |f| f.name.casecmp(name) == 0 }
     raise "Field #{name} not found in class #{ae_class.fqname}" if field.nil?
+
     value = ae_values.detect { |v| v.field_id == field.id }
     raise "Field #{name} not found in instance #{self.name} in class #{ae_class.fqname}" if value.nil?
+
     value.attributes
   end
 

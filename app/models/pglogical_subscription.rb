@@ -62,6 +62,7 @@ class PglogicalSubscription < ActsAsArModel
     unless errors.empty?
       raise errors.join("\n")
     end
+
     subscription_list
   end
 
@@ -152,7 +153,7 @@ class PglogicalSubscription < ActsAsArModel
     attrs = PG::DSNParser.parse(dsn)
     attrs.select! { |k, _v| [:dbname, :host, :user, :port].include?(k) }
     port = attrs.delete(:port)
-    attrs[:port] = port.to_i unless port.blank?
+    attrs[:port] = port.to_i if port.present?
     attrs
   end
   private_class_method :dsn_attributes
@@ -203,6 +204,7 @@ class PglogicalSubscription < ActsAsArModel
     self.class.with_connection_error_handling { pglogical.drop_subscription(id, true) }
   rescue PG::InternalError => e
     raise unless e.message =~ /could not connect to publisher/ || e.message =~ /replication slot .* does not exist/
+
     connection.transaction do
       disable
       self.class.with_connection_error_handling do
@@ -235,6 +237,7 @@ class PglogicalSubscription < ActsAsArModel
   # sets this instance's password field to the one in the subscription dsn in the database
   def find_password
     return password if password.present?
+
     s = subscription_attributes.symbolize_keys
     dsn_hash = PG::DSNParser.parse(s.delete(:subscription_dsn))
     self.password = dsn_hash[:password]
@@ -289,11 +292,9 @@ class PglogicalSubscription < ActsAsArModel
     with_remote_connection(5.seconds) { |conn| conn.xlog_location }
   end
 
-  def with_remote_connection(connect_timeout = 0)
+  def with_remote_connection(connect_timeout = 0, &block)
     find_password
-    MiqRegionRemote.with_remote_connection(host, port || 5432, user, decrypted_password, dbname, "postgresql", connect_timeout) do |conn|
-      yield conn
-    end
+    MiqRegionRemote.with_remote_connection(host, port || 5432, user, decrypted_password, dbname, "postgresql", connect_timeout, &block)
   end
 
   def with_remote_pglogical_client(connect_timeout = 0)

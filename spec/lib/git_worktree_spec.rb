@@ -26,7 +26,7 @@ RSpec.describe GitWorktree do
     def add_files_to_bare_repo(flist)
       flist.each { |f| @ae_db.add(f, YAML.dump(@default_hash.merge(:fname => f))) }
       @ae_db.save_changes("files added")
-      @ae_db.instance_variable_get('@repo').head.target.oid
+      @ae_db.instance_variable_get(:@repo).head.target.oid
     end
 
     def clone(url, add_options = {})
@@ -179,9 +179,9 @@ RSpec.describe GitWorktree do
       new_db = open_existing_repo
       new_db.add(@conflict_file, YAML.dump(@default_hash.merge(:fname => "second_one")))
       new_db.save_changes("overlapping commit")
-      expect { @ae_db.send(:merge, commit) }.to raise_error { |error|
+      expect { @ae_db.send(:merge, commit) }.to(raise_error do |error|
         expect(error).to be_a(GitWorktreeException::GitConflicts)
-      }
+      end)
     end
 
     it "clone repo" do
@@ -352,20 +352,20 @@ RSpec.describe GitWorktree do
   end
 
   describe "#new" do
-    let(:git_repo_path) { Rails.root.join("spec", "fixtures", "git_repos", "branch_and_tag.git") }
+    let(:git_repo_path) { Rails.root.join("spec/fixtures/git_repos/branch_and_tag.git") }
 
     it "raises an exception if SSH requested, but rugged is not compiled with SSH support" do
       require "rugged"
       expect(Rugged).to receive(:features).and_return([:threads, :https])
 
-      expect {
+      expect do
         GitWorktree.new(:path => git_repo_path, :ssh_private_key => "fake key\nfile content")
-      }.to raise_error(GitWorktreeException::InvalidCredentialType)
+      end.to raise_error(GitWorktreeException::InvalidCredentialType)
     end
   end
 
   describe "#with_remote_options" do
-    let(:git_repo_path) { Rails.root.join("spec", "fixtures", "git_repos", "branch_and_tag.git") }
+    let(:git_repo_path) { Rails.root.join("spec/fixtures/git_repos/branch_and_tag.git") }
 
     subject do
       repo.with_remote_options do |cred_options|

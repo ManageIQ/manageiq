@@ -1,1 +1,1 @@
-::MiqEmsMetricsCollectorWorker = ManageIQ::Providers::BaseManager::MetricsCollectorWorker
+MiqEmsMetricsCollectorWorker = ManageIQ::Providers::BaseManager::MetricsCollectorWorker

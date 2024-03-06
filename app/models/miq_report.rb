@@ -32,7 +32,7 @@ class MiqReport < ApplicationRecord
 
   validates_presence_of     :name, :title, :db, :rpt_group
   validates :name, :uniqueness_when_changed => true
-  validates_inclusion_of    :rpt_type, :in => %w[ Default Custom ]
+  validates_inclusion_of    :rpt_type, :in => %w[Default Custom]
 
   has_many                  :miq_report_results, :dependent => :destroy
   belongs_to                :time_profile
@@ -46,6 +46,7 @@ class MiqReport < ApplicationRecord
 
   alias_attribute :menu_name, :name
   attr_accessor :ext_options
+
   attr_accessor_that_yamls :table, :sub_table, :filter_summary, :extras, :ids, :scoped_association, :html_title, :file_name,
                            :extras, :record_id, :tl_times, :user_categories, :trend_data, :performance, :include_for_find,
                            :report_run_time, :chart
@@ -300,7 +301,7 @@ class MiqReport < ApplicationRecord
     tz = get_time_zone(User.current_user.settings.fetch_path(:display, :timezone).presence || Time.zone)
     row.map do |key, _|
       value = allowed_columns.nil? || allowed_columns&.include?(key) ? format_column(key, row, tz, col_format_hash[key]) : row[key]
-      [key, expand_value_format.present? ? { :value => value, :style_class => get_style_class(key, row, tz) } : value]
+      [key, expand_value_format.present? ? {:value => value, :style_class => get_style_class(key, row, tz)} : value]
     end.to_h
   end
 

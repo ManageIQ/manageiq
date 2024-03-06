@@ -11,7 +11,7 @@ RSpec.describe TaskHelpers::Imports::Reports do
     let(:rpt_db2) { "ChargebackVm" }
     let(:attr_err_file) { "Test_Report_attr_error.yml" }
     let(:runt_err_file) { "Test_Report_runtime_error.yml" }
-    let(:options) { { :source => source, :overwrite => overwrite } }
+    let(:options) { {:source => source, :overwrite => overwrite} }
 
     before do
       FactoryBot.create(:user_admin, :userid => "admin")

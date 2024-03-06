@@ -5,10 +5,11 @@ module EmsRefresh::SaveInventory
 
   def save_vms_inventory(ems, hashes, target = nil)
     return if hashes.nil?
+
     target = ems if target.nil?
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
-    disconnects = if (target.kind_of?(ExtManagementSystem) || target.kind_of?(Host))
+    disconnects = if target.kind_of?(ExtManagementSystem) || target.kind_of?(Host)
                     target.vms_and_templates.reload.to_a
                   elsif target.kind_of?(Vm)
                     [target.ruby_clone]
@@ -125,6 +126,7 @@ module EmsRefresh::SaveInventory
             _log.warn("#{log_header} Processing Vm: [#{name}] failed with error [#{err}]. Skipping Vm.")
           else
             raise if EmsRefresh.debug_failures
+
             _log.error("#{log_header} Processing Vm: [#{name}] failed with error [#{err}]. Skipping Vm.")
             _log.log_backtrace(err)
           end
@@ -179,10 +181,12 @@ module EmsRefresh::SaveInventory
   #
   def save_tags_inventory(object, collection, _target = nil)
     return if collection.nil?
+
     tags = collection.kind_of?(Hash) ? collection[:tags] : collection
     ProviderTagMapping.retag_entity(object, tags)
   rescue => err
     raise if EmsRefresh.debug_failures
+
     _log.error("Auto-tagging failed on #{object.class} [#{object.name}] with error [#{err}].")
     _log.log_backtrace(err)
   end
@@ -200,6 +204,7 @@ module EmsRefresh::SaveInventory
 
   def save_hardware_inventory(parent, hash)
     return if hash.nil?
+
     save_inventory_single(:hardware, parent, hash, [:disks, :guest_devices, :networks, :firmwares])
     parent.save!
   end
@@ -333,6 +338,7 @@ module EmsRefresh::SaveInventory
 
   def save_ems_custom_attributes_inventory(parent, hashes)
     return if hashes.nil?
+
     save_inventory_multi(parent.ems_custom_attributes, hashes, :use_association, [:section, :name])
   end
 

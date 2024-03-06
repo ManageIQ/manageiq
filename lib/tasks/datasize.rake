@@ -2,7 +2,7 @@
 namespace :db do
   desc 'Print data size for entire database'
   task :size => :environment do
-    database_name = ActiveRecord::Base.connection.instance_variable_get("@config")[:database]
+    database_name = ActiveRecord::Base.connection.instance_variable_get(:@config)[:database]
     sql = "SELECT pg_size_pretty(pg_database_size('#{database_name}'));"
     puts ActiveRecord::Base.connection.execute(sql)[0]["pg_size_pretty"]
   end

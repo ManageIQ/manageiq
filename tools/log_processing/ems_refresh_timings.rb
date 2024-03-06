@@ -12,16 +12,16 @@ def parse_args(argv)
   logfiles = []
 
   opts = Optimist.options do
-    banner <<-EOS
-Parse EMS Refreshes from a set of evm.log files and filter on a set of
-provided conditions.
+    banner <<~EOS
+      Parse EMS Refreshes from a set of evm.log files and filter on a set of
+      provided conditions.
 
-Usage:
-  ruby ems_refresh_timings.rb [OPTION]... <FILE>...
+      Usage:
+        ruby ems_refresh_timings.rb [OPTION]... <FILE>...
 
-Options:
-EOS
-    opt :sort_by, 'Column to sort by, options are start_time, end_time, '\
+      Options:
+    EOS
+    opt :sort_by, 'Column to sort by, options are start_time, end_time, ' \
                   'duration, ems, target_type, and target',
         :type => :string, :default => 'start_time'
     opt :target, 'Filter by specific targets, comma separated', :type => :strings
@@ -43,6 +43,7 @@ def filter(hash, opts = {})
   return false unless opts[:target_type].nil? || opts[:target_type].include?(hash[:target_type])
   return false unless opts[:target].nil? || opts[:target].include?(hash[:target])
   return false unless opts[:ems].nil? || opts[:ems].include?(hash[:ems])
+
   true
 end
 
@@ -66,7 +67,7 @@ def parse_refresh_timings(line, targets)
     # Find the most recent refresh target for our ems, since there is
     # only one refresh worker this "has to be" the right one
     # If this changes in the future we'll have to add a PID lookup here
-    refresh_target  = targets[ems].last
+    refresh_target = targets[ems].last
     refresh_target = {
       :target      => "unknown",
       :target_type => "unknown"

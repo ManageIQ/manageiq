@@ -1,5 +1,5 @@
-require File.expand_path('../boot', __FILE__)
-require File.expand_path('../preinitializer', __FILE__)
+require File.expand_path('boot', __dir__)
+require File.expand_path('preinitializer', __dir__)
 require 'rails'
 require 'active_record/railtie'
 require 'action_controller/railtie'
@@ -80,7 +80,7 @@ module Vmdb
     config.assets.version = '1.0'
 
     # Set the manifest file name so that we are sure it gets overwritten on updates
-    config.assets.manifest = Rails.root.join("public/assets/.sprockets-manifest.json").to_s
+    config.assets.manifest = Rails.public_path.join('assets/.sprockets-manifest.json').to_s
 
     # Disable ActionCable's request forgery protection
     # This is basically matching a set of allowed origins which is not good for us
@@ -117,12 +117,12 @@ module Vmdb
     #
     #   https://bugs.ruby-lang.org/issues/14372
     #
-    config.autoload_paths << Rails.root.join("app", "models", "aliases").to_s
-    config.autoload_paths << Rails.root.join("app", "models", "mixins").to_s
+    config.autoload_paths << Rails.root.join("app/models/aliases").to_s
+    config.autoload_paths << Rails.root.join("app/models/mixins").to_s
     config.autoload_paths << Rails.root.join("lib").to_s
-    config.autoload_paths << Rails.root.join("lib", "services").to_s
+    config.autoload_paths << Rails.root.join("lib/services").to_s
 
-    config.autoload_once_paths << Rails.root.join("lib", "vmdb", "console_methods.rb").to_s
+    config.autoload_once_paths << Rails.root.join("lib/vmdb/console_methods.rb").to_s
 
     require_relative '../lib/request_started_on_middleware'
     config.middleware.use RequestStartedOnMiddleware

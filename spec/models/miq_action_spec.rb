@@ -91,7 +91,7 @@ RSpec.describe MiqAction do
 
   context "#raise_automation_event" do
     before do
-      @vm   = FactoryBot.create(:vm_infra)
+      @vm = FactoryBot.create(:vm_infra)
       allow(@vm).to receive(:my_zone).and_return("vm_zone")
       FactoryBot.create(:miq_event_definition, :name => "raise_automation_event")
       FactoryBot.create(:miq_event_definition, :name => "vm_start")
@@ -224,7 +224,7 @@ RSpec.describe MiqAction do
         msg = MiqQueue.first
         expect(msg.class_name).to eq(@vm.class.name)
         expect(msg.method_name).to eq('retire')
-        expect(msg.args).to eq([[@vm], :date => date])
+        expect(msg.args).to eq([[@vm], {:date => date}])
         expect(msg.zone).to eq(zone.name)
       end
     end
@@ -243,7 +243,7 @@ RSpec.describe MiqAction do
     end
 
     it "avoids non container images" do
-      error_message = "MIQ(action_container_image_analyze): Unable to perform action [#{action.description}],"\
+      error_message = "MIQ(action_container_image_analyze): Unable to perform action [#{action.description}]," \
         " object [#{container_image_registry.inspect}] is not a Container Image"
 
       expect(MiqPolicy.logger).to receive(:error).with(error_message)
@@ -251,7 +251,7 @@ RSpec.describe MiqAction do
     end
 
     it "avoids an event loop" do
-      error_message = "MIQ(action_container_image_analyze): Invoking action [#{action.description}] for event"\
+      error_message = "MIQ(action_container_image_analyze): Invoking action [#{action.description}] for event" \
         " [#{event_loop.description}] would cause infinite loop, skipping"
 
       expect(MiqPolicy.logger).to receive(:warn).with(error_message)
@@ -292,7 +292,7 @@ RSpec.describe MiqAction do
   context '.create_default_actions' do
     context 'seeding default actions from a file with 3 csv rows and some comments' do
       before do
-        stub_csv <<-CSV.strip_heredoc
+        stub_csv <<~CSV
           name,description
           audit,Generate Audit Event
           log,Generate log message
@@ -314,7 +314,7 @@ RSpec.describe MiqAction do
 
       context 'when csv was changed and imported again' do
         before do
-          stub_csv <<-CSV.strip_heredoc
+          stub_csv <<~CSV
             name,description
             audit,UPD: Audit Event
             # log,Generate log message
@@ -448,7 +448,7 @@ RSpec.describe MiqAction do
 
     let(:miq_server) { EvmSpecHelper.local_miq_server }
     let(:action) { MiqAction.new }
-    let(:inputs) { { :policy => nil, :synchronous => false } }
+    let(:inputs) { {:policy => nil, :synchronous => false} }
 
     let(:q_options) do
       {
@@ -550,8 +550,8 @@ RSpec.describe MiqAction do
     end
 
     let(:request_options) do
-      { :manageiq_extra_vars => { "event_target" => vm.href_slug, "event_name" => event_name },
-        :initiator           => 'control' }
+      {:manageiq_extra_vars => {"event_target" => vm.href_slug, "event_name" => event_name},
+        :initiator           => 'control'}
     end
 
     shared_examples_for "#workflow check" do
@@ -567,30 +567,30 @@ RSpec.describe MiqAction do
 
     context "use event target" do
       let(:action_options) do
-        { :service_template_id => stap.id,
-          :use_event_target    => true }
+        {:service_template_id => stap.id,
+          :use_event_target    => true}
       end
-      let(:dialog_options) { {:hosts => ip1 } }
+      let(:dialog_options) { {:hosts => ip1} }
 
       it_behaves_like "#workflow check"
     end
 
     context "use localhost" do
       let(:action_options) do
-        { :service_template_id => stap.id,
-          :use_localhost       => true }
+        {:service_template_id => stap.id,
+          :use_localhost       => true}
       end
-      let(:dialog_options) { {:hosts => 'localhost' } }
+      let(:dialog_options) { {:hosts => 'localhost'} }
 
       it_behaves_like "#workflow check"
     end
 
     context "use hosts" do
       let(:action_options) do
-        { :service_template_id => stap.id,
-          :hosts               => "ip1, ip2" }
+        {:service_template_id => stap.id,
+          :hosts               => "ip1, ip2"}
       end
-      let(:dialog_options) { {:hosts => 'ip1, ip2' } }
+      let(:dialog_options) { {:hosts => 'ip1, ip2'} }
 
       it_behaves_like "#workflow check"
     end

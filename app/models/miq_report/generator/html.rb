@@ -20,9 +20,10 @@ module MiqReport::Generator::Html
       save_val = :_undefined_                                 # Hang on to the current group value
       break_label = col_options.fetch_path(sortby[0], :break_label) unless sortby.nil? || col_options.nil? || in_a_widget
       group_text = nil                                        # Optionally override what gets displayed for the group (i.e. Chargeback)
-      use_table = sub_table ? sub_table : table
+      use_table = sub_table || table
       use_table.data.each_with_index do |d, d_idx|
         break if row_limit != 0 && d_idx > row_limit - 1
+
         output = ""
         if ["y", "c"].include?(group) && !sortby.nil? && save_val != d.data[sortby[0]].to_s
           unless d_idx == 0                       # If not the first row, we are at a group break
@@ -148,7 +149,7 @@ module MiqReport::Generator::Html
     if (self.group == 'c') && extras && extras[:grouping] && extras[:grouping][group]
       display_count = _("Count: %{number}") % {:number => extras[:grouping][group][:count]}
     end
-    content << " | #{display_count}" unless display_count.blank?
+    content << " | #{display_count}" if display_count.present?
     html_rows << "<tr><td class='group' colspan='#{col_count}'>#{CGI.escapeHTML(content)}</td></tr>"
 
     if extras && extras[:grouping] && extras[:grouping][group] # See if group key exists
@@ -159,11 +160,12 @@ module MiqReport::Generator::Html
           grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>#{_(calc.last)}:</td>"
           col_order.each_with_index do |c, c_idx|        # Go through the columns
             next if c_idx == 0                                # Skip first column
+
             grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>"
             grp_output << CGI.escapeHTML(
               format(
                 c.split("__").first, extras[:grouping][group][calc.first][c],
-                :format => self.col_formats[c_idx] ? self.col_formats[c_idx] : :_default_
+                :format => self.col_formats[c_idx] || :_default_
               )
             ) if extras[:grouping][group].key?(calc.first)
             grp_output << "</td>"
@@ -182,7 +184,7 @@ module MiqReport::Generator::Html
     return if atoms.nil?
 
     nh = {}
-    row.each { |k, v| nh[col_to_expression_col(k).sub(/-/, ".")] = v } # Convert keys to match expression fields
+    row.each { |k, v| nh[col_to_expression_col(k).sub("-", ".")] = v } # Convert keys to match expression fields
     field = col_to_expression_col(col)
 
     atoms.each do |atom|

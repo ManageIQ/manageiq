@@ -9,7 +9,7 @@ class MiqAlertStatus < ApplicationRecord
   virtual_column :assignee, :type => :string
   virtual_column :hidden, :type => :boolean
 
-  validates :severity, :acceptance => { :accept => SEVERITY_LEVELS }
+  validates :severity, :acceptance => {:accept => SEVERITY_LEVELS}
 
   def assigned?
     assignee_id.present?

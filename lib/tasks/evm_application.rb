@@ -30,7 +30,7 @@ class EvmApplication
   def self.server_state
     MiqServer.my_server.status
   rescue => error
-    :no_db if error.message =~ /Connection refused/i
+    :no_db if /Connection refused/i.match?(error.message)
   end
 
   def self.status(include_remotes = false)
@@ -55,6 +55,7 @@ class EvmApplication
 
   def self.output_status(data, footnote = nil)
     return if data.blank?
+
     duplicate_columns = redundant_columns(data)
     duplicate_columns.delete("Status") # always show status
     puts data.tableize(:columns => (data.first.keys - duplicate_columns.keys))
@@ -71,6 +72,7 @@ class EvmApplication
 
   def self.redundant_columns(data, column_names = nil, dups = {})
     return dups if data.size <= 1
+
     column_names ||= data.first.keys
     column_names.each do |col_header|
       values = data.collect { |row| row[col_header] }.uniq
@@ -82,6 +84,7 @@ class EvmApplication
 
   def self.compact_date(date)
     return "" unless date
+
     date < 1.day.ago ? date.strftime("%Y-%m-%d") : date.strftime("%H:%M:%S%Z")
   end
   private_class_method :compact_date
@@ -178,6 +181,7 @@ class EvmApplication
     return "new_deployment" if context.current_version.zero? || MiqServer.none?
     return "new_replica"    if MiqServer.my_server.nil?
     return "upgrade"        if context.needs_migration?
+
     "redeployment"
   rescue PG::ConnectionBad, ActiveRecord::NoDatabaseError => err
     raise unless err.message.match?(/database "[^"]+" does not exist/)

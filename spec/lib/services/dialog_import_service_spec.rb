@@ -9,7 +9,7 @@ RSpec.describe DialogImportService do
   shared_context "DialogImportService dialog setup" do
     let(:dialog_fields) do
       [{"name" => "FavoriteColor", "label" => "Favorite Color"},
-       {"name" => "dialog_field_2", "dialog_field_responders" => ["dialog_field"] }]
+       {"name" => "dialog_field_2", "dialog_field_responders" => ["dialog_field"]}]
     end
 
     let(:dialog_groups) do

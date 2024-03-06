@@ -59,7 +59,7 @@ RSpec.describe Dialog::OrchestrationTemplateServiceDialog do
                   :parameters => [
                     template_param(:label => 'Param 1'),
                     template_param(:label => 'Param 2')
-                  ],
+                  ]
                 )
               ]
             },
@@ -84,14 +84,14 @@ RSpec.describe Dialog::OrchestrationTemplateServiceDialog do
                   :parameters => [
                     template_param(:label => 'Param 1'),
                     template_param(:label => 'Param 2')
-                  ],
+                  ]
                 ),
                 OrchestrationTemplate::OrchestrationParameterGroup.new(
                   :label      => 'Parameter Group 2',
                   :parameters => [
                     template_param(:label => 'Param 3'),
                     template_param(:label => 'Param 4')
-                  ],
+                  ]
                 )
               ]
             },
@@ -120,7 +120,7 @@ RSpec.describe Dialog::OrchestrationTemplateServiceDialog do
                   :parameters => [
                     template_param(:label => 'Param 3'),
                     template_param(:label => 'Param 4')
-                  ],
+                  ]
                 )
               ]
             },
@@ -146,7 +146,7 @@ RSpec.describe Dialog::OrchestrationTemplateServiceDialog do
                   :parameters => [
                     template_param(:label => 'Param 1'),
                     template_param(:label => 'Param 2')
-                  ],
+                  ]
                 )
               ]
             },
@@ -158,7 +158,7 @@ RSpec.describe Dialog::OrchestrationTemplateServiceDialog do
                   :parameters => [
                     template_param(:label => 'Param 3'),
                     template_param(:label => 'Param 4')
-                  ],
+                  ]
                 )
               ]
             },
@@ -269,7 +269,7 @@ RSpec.describe Dialog::OrchestrationTemplateServiceDialog do
   def assert_stack_group(group)
     expect(group).to have_attributes(
       :label   => "Options",
-      :display => "edit",
+      :display => "edit"
     )
 
     fields = group.dialog_fields

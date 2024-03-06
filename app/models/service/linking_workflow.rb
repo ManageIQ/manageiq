@@ -53,7 +53,7 @@ class Service
 
       found_vms = linking_targets
       not_found_vms = options[:uid_ems_array] - found_vms.pluck(:uid_ems)
-      _log.warn("VMs not found for linking to service ID [#{service.id}], name [#{service.name}]: #{not_found_vms}") unless not_found_vms.blank?
+      _log.warn("VMs not found for linking to service ID [#{service.id}], name [#{service.name}]: #{not_found_vms}") if not_found_vms.present?
 
       service = linking_service
       found_vms.each { |vm| service.add_resource!(vm) }

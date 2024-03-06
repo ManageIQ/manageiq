@@ -1,4 +1,4 @@
-class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job::Status < ::OrchestrationStack::Status
+class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job::Status < OrchestrationStack::Status
   attr_accessor :task_status
 
   # This is a bit confusing, but because the OrchestrationStack::Status doesn't

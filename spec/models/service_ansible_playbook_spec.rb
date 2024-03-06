@@ -21,7 +21,7 @@ RSpec.describe(ServiceAnsiblePlaybook) do
 
   let(:executed_service) do
     FactoryBot.create(:service_ansible_playbook, :options => provision_options).tap do |service|
-      regex = /(#{ResourceAction::PROVISION})|(#{ResourceAction::RETIREMENT})/
+      regex = /(#{ResourceAction::PROVISION})|(#{ResourceAction::RETIREMENT})/o
       allow(service).to receive(:job).with(regex).and_return(runner_job)
     end
   end
@@ -63,7 +63,7 @@ RSpec.describe(ServiceAnsiblePlaybook) do
     {
       :credential_id => credential_2.id,
       :hosts         => 'host3',
-      'extra_vars'   => { :var1 => 'new_val1', 'pswd' => encrypted_val2 }
+      'extra_vars'   => {:var1 => 'new_val1', 'pswd' => encrypted_val2}
     }
   end
 

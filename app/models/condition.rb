@@ -32,7 +32,7 @@ class Condition < ApplicationRecord
 
   def applies_to?(rec, inputs = {})
     rec_model = rec.class.base_model.name
-    rec_model = "Vm" if rec_model.downcase.match("template")
+    rec_model = "Vm" if rec_model.downcase.match?("template")
 
     return false if towhat && rec_model != towhat
     return true  if applies_to_exp.nil?
@@ -165,7 +165,7 @@ class Condition < ApplicationRecord
 
     list = l.collect do |obj|
       value = MiqExpression.quote(obj.send(attr), opts[:type]&.to_sym)
-      value = value.gsub(/\\/, '\&\&') if value.kind_of?(String)
+      value = value.gsub("\\", '\&\&') if value.kind_of?(String)
       e = search.gsub(/<value[^>]*>.+<\/value>/im, value.to_s)
       obj if do_eval(e)
     end.compact
@@ -203,7 +203,7 @@ class Condition < ApplicationRecord
     list.each do |obj|
       opts, _ref = options2hash(raw_opts, obj)
       value = MiqExpression.quote(obj.send(checkattr), opts[:type]&.to_sym)
-      value = value.gsub(/\\/, '\&\&') if value.kind_of?(String)
+      value = value.gsub("\\", '\&\&') if value.kind_of?(String)
       e = check.gsub(/<value[^>]*>.+<\/value>/im, value.to_s)
       MiqPolicy.logger.debug("MIQ(condition-_subst_find): Check Expression after substitution: [#{e}]")
 
@@ -219,7 +219,7 @@ class Condition < ApplicationRecord
   def self.options2hash(opts, rec)
     ref = rec
     ohash = {}
-    unless opts.blank?
+    if opts.present?
       val = nil
       opts.split(",").each do |o|
         attr, val = o.split("=")
@@ -242,7 +242,7 @@ class Condition < ApplicationRecord
   def self.registry_data(ref, name, ohash)
     # <registry>HKLM\Software\Microsoft\Windows\CurrentVersion\explorer\Shell Folders\Common AppData</registry> == 'C:\Documents and Settings\All Users\Application Data'
     # <registry>HKLM\Software\Microsoft\Windows\CurrentVersion\explorer\Shell Folders : Common AppData</registry> == 'C:\Documents and Settings\All Users\Application Data'
-    return nil unless ref.respond_to?("registry_items")
+    return nil unless ref.respond_to?(:registry_items)
 
     registry_items = ref.registry_items
     if ohash[:key_exists]
@@ -295,5 +295,4 @@ class Condition < ApplicationRecord
 
     return c, status
   end
-
 end # class Condition

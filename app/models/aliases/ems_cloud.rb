@@ -1,1 +1,1 @@
-::EmsCloud = ::ManageIQ::Providers::CloudManager
+EmsCloud = ManageIQ::Providers::CloudManager

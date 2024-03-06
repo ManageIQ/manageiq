@@ -10,8 +10,8 @@ module MiqProvision::Service
     svc_guid = get_option(:service_guid)
     sr_id    = get_option(:service_resource_id)
 
-    svc = ::Service.find_by(:guid => svc_guid) unless svc_guid.blank?
-    sr  = ServiceResource.find_by(:id => sr_id) unless sr_id.blank?
+    svc = ::Service.find_by(:guid => svc_guid) if svc_guid.present?
+    sr  = ServiceResource.find_by(:id => sr_id) if sr_id.present?
 
     [svc, sr]
   end

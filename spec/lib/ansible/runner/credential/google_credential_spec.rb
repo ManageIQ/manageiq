@@ -19,7 +19,7 @@ RSpec.describe Ansible::Runner::GoogleCredential do
       {
         :userid   => "manageiq@gmail.com",
         :auth_key => "key_data",
-        :options  => { :project => "google_project" }
+        :options  => {:project => "google_project"}
       }
     end
 

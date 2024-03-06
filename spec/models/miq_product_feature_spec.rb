@@ -33,6 +33,7 @@ RSpec.describe MiqProductFeature do
     expect(pf.keys - described_class::ALLOWED_ATTRIBUTES).to be_empty
     pf.each do |k, v|
       next if k == :hidden
+
       expect(v).not_to be_blank, "Identifier: '#{pf[:identifier]}'  Key: '#{k}' is blank"
     end
   end
@@ -181,7 +182,7 @@ RSpec.describe MiqProductFeature do
 
         it "creates tenant features" do
           features = miq_product_feature_class.tenant_features_in_hash
-          expect(features).to match_array([{ "name" => "Edit (#{root_tenant.name})", "description" => "XXX for tenant #{root_tenant.name}",
+          expect(features).to match_array([{"name" => "Edit (#{root_tenant.name})", "description" => "XXX for tenant #{root_tenant.name}",
                                                "identifier" => "dialog_copy_editor_tenant_#{root_tenant.id}", "tenant_id" => root_tenant.id},
                                            {"name" => "Edit (#{tenant.name})", "description" => "XXX for tenant #{tenant.name}",
                                             "identifier" => "dialog_copy_editor_tenant_#{tenant.id}", "tenant_id" => tenant.id}])
@@ -242,7 +243,7 @@ RSpec.describe MiqProductFeature do
 
           it "add new tenant feature" do
             features = miq_product_feature_class.tenant_features_in_hash
-            expect(features).to match_array([{ "name" => "Edit (#{root_tenant.name})", "description" => "XXX for tenant #{root_tenant.name}",
+            expect(features).to match_array([{"name" => "Edit (#{root_tenant.name})", "description" => "XXX for tenant #{root_tenant.name}",
                                                "identifier" => "dialog_copy_editor_tenant_#{root_tenant.id}", "tenant_id" => root_tenant.id},
                                              {"name" => "Edit (#{tenant.name})", "description" => "XXX for tenant #{tenant.name}",
                                               "identifier" => "dialog_copy_editor_tenant_#{tenant.id}", "tenant_id" => tenant.id},
@@ -280,7 +281,7 @@ RSpec.describe MiqProductFeature do
             it "removes tenant features" do
               features = miq_product_feature_class.tenant_features_in_hash
 
-              expect(features).to match_array([{ "name" => "Edit (#{root_tenant.name})", "description" => "XXX for tenant #{root_tenant.name}",
+              expect(features).to match_array([{"name" => "Edit (#{root_tenant.name})", "description" => "XXX for tenant #{root_tenant.name}",
                                                  "identifier" => "dialog_copy_editor_tenant_#{root_tenant.id}", "tenant_id" => root_tenant.id},
                                                {"name" => "Edit (#{tenant.name})", "description" => "XXX for tenant #{tenant.name}",
                                                 "identifier" => "dialog_copy_editor_tenant_#{tenant.id}", "tenant_id" => tenant.id}])

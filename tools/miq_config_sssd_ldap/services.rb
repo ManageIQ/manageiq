@@ -3,7 +3,7 @@ require 'linux_admin'
 module MiqConfigSssdLdap
   class Services
     def self.restart
-      LOGGER.debug("Invoked #{self.class}\##{__method__}")
+      LOGGER.debug("Invoked #{self.class}##{__method__}")
 
       LOGGER.debug("\nRestarting httpd, if running ...")
       httpd_service = LinuxAdmin::Service.new("httpd")

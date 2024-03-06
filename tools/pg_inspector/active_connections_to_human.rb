@@ -157,6 +157,7 @@ module PgInspector
       elsif old_application_name?(activity) && activity["application_name"].include?(" Server")
         return true
       end
+
       false
     end
 
@@ -166,6 +167,7 @@ module PgInspector
       elsif old_application_name?(activity) && !activity["application_name"].include?(" Server")
         return true
       end
+
       false
     end
 
@@ -190,7 +192,7 @@ module PgInspector
     end
 
     def to_utc(time_str)
-      return Time.parse(time_str).utc.to_s if time_str
+      Time.parse(time_str).utc.to_s if time_str
     end
 
     def process_miq_activity_application_name(activity)
@@ -263,6 +265,7 @@ module PgInspector
     def compress_id(id)
       if $old_version
         return nil if id.nil?
+
         region_number, short_id = split_id(id)
         region_number.zero? ? short_id.to_s : "#{region_number}#{COMPRESSED_ID_SEPARATOR}#{short_id}"
       else
@@ -273,6 +276,7 @@ module PgInspector
     def uncompress_id(id)
       if $old_version
         return nil if id.nil?
+
         id.to_s =~ RE_COMPRESSED_ID ? ($1.to_i * rails_sequence_factor + $2.to_i) : id.to_i
       else
         Class.new.include(ActiveRecord::IdRegions).uncompress_id(id)

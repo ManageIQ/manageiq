@@ -70,6 +70,7 @@ class Zone < ApplicationRecord
       MiqRegion.my_region.update(:maintenance_zone => zone)
     rescue ActiveRecord::RecordInvalid
       raise if zone.errors[:name].blank?
+
       retry
     end
     _log.info("Creating maintenance zone...")
@@ -243,6 +244,7 @@ class Zone < ApplicationRecord
     return _("cannot delete default zone") if name == "default"
     return _("cannot delete maintenance zone") if maintenance?
     return _("zone name '%{name}' is used by a server") % {:name => name} if !MiqEnvironment::Command.is_podified? && miq_servers.present?
+
     _("zone name '%{name}' is used by a provider") % {:name => name} if ext_management_systems.present?
   end
 

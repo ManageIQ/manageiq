@@ -39,7 +39,7 @@ describe ManageIQ::Reporting::Formatter::C3 do
         :dims        => nil,
         :col_formats => nil,
         :col_options => nil,
-        :rpt_options => nil,
+        :rpt_options => nil
       )
 
       report.table = Ruport::Data::Table.new(

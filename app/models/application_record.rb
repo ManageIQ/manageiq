@@ -32,6 +32,7 @@ class ApplicationRecord < ActiveRecord::Base
 
   def self.human_attribute_name(attribute, options = {})
     return super if options.delete(:ui) == true
+
     "#{name}: #{super}"
   end
 end

@@ -5,7 +5,7 @@ if ENV['CI']
 end
 
 ENV["RAILS_ENV"] ||= 'test'
-require File.expand_path("../../config/environment", __FILE__)
+require File.expand_path('../config/environment', __dir__)
 require 'rspec/rails'
 require 'rspec/mocks'
 require 'vcr'
@@ -42,7 +42,7 @@ RSpec.configure do |config|
     YamlPermittedClasses.app_yaml_permitted_classes |= [Ruport::Data::Record, Ruport::Data::Table]
   end
 
-  config.file_fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.file_fixture_path = "#{Rails.root.join("spec/fixtures")}"
   config.use_transactional_fixtures = true
   config.use_instantiated_fixtures  = false
 

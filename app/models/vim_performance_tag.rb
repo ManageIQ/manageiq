@@ -15,11 +15,12 @@ class VimPerformanceTag < MetricRollup
   def self.group_by_tags(recs, options)
     raise _("no category provided") if options[:category].blank?
     raise _("option :cat_model must have a value") unless options[:cat_model]
+
     cat_assoc = Object.const_get(options[:cat_model].to_s).table_name.to_sym
     tp = options.fetch_path(:ext_options, :time_profile)
-    results = recs.inject(:res => [], :tags => [], :tcols => []) do |h, rec|
+    results = recs.each_with_object(:res => [], :tags => [], :tcols => []) do |rec, h|
       tvrecs = build_tag_value_recs(rec, options)
-      if rec.class.name == "VimPerformanceTag"
+      if rec.instance_of?(::VimPerformanceTag)
         rec.inside_time_profile = tp ? tp.ts_in_profile?(rec.timestamp) : true
       else
         rec.inside_time_profile = tp ? tp.ts_day_in_profile?(rec.timestamp) : true
@@ -40,12 +41,11 @@ class VimPerformanceTag < MetricRollup
       end
 
       h[:res].push(rec)
-      h
     end
 
     results[:res].each do |rec|
       # Default nil values in tag cols to 0 for records with timestamp that falls inside the time profile
-      results[:tcols].each { |c| rec.send("#{c}=", 0) if rec.send(c).nil? } if rec.inside_time_profile == true
+      results[:tcols].each { |c| rec.send(:"#{c}=", 0) if rec.send(c).nil? } if rec.inside_time_profile == true
 
       # Fill in missing assos ids
       fill_assoc_ids(rec.timestamp, rec, cat_assoc, results[:tags])
@@ -75,7 +75,7 @@ class VimPerformanceTag < MetricRollup
     tags.each do |t|
       assoc_ids_meth = ["assoc_ids", t].join("_").to_s
       if result.send(assoc_ids_meth).nil?
-        result.send("#{assoc_ids_meth}=", assoc => {:on => []})
+        result.send(:"#{assoc_ids_meth}=", assoc => {:on => []})
       end
     end
   end

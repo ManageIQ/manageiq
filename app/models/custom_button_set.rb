@@ -107,7 +107,7 @@ class CustomButtonSet < ApplicationRecord
   def deep_copy(options)
     raise ArgumentError, "options[:owner] is required" if options[:owner].blank?
 
-    options.each_with_object(dup) { |(k, v), button_set| button_set.send("#{k}=", v) }.tap do |cbs|
+    options.each_with_object(dup) { |(k, v), button_set| button_set.send(:"#{k}=", v) }.tap do |cbs|
       cbs.guid = SecureRandom.uuid
       cbs.name = "#{name}-#{cbs.guid}"
       cbs.set_data[:button_order] = []

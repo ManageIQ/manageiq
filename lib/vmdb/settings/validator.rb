@@ -179,7 +179,7 @@ module Vmdb
           errors << [:port, "\"#{data.port}\", invalid. Should be numeric"]
         end
 
-        if keys.include?(:from) && data.from !~ /^\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z$/i
+        if keys.include?(:from) && data.from !~ /^\A([\w.\-+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z$/i
           valid = false
           errors << [:from, "\"#{data.from}\", invalid. Should be a valid email address"]
         end

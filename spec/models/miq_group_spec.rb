@@ -69,7 +69,6 @@ RSpec.describe MiqGroup do
       end
     end
 
-
     it "should set group type to 'system' " do
       expect(subject.group_type).to eq("system")
     end
@@ -285,9 +284,9 @@ RSpec.describe MiqGroup do
       allow(YAML).to receive(:load_file).with(role_map_path).and_return(role_map)
       allow(YAML).to receive(:load_file).with(filter_map_path).and_call_original
 
-      expect {
+      expect do
         MiqGroup.seed
-      }.to(change { MiqGroup.count })
+      end.to(change { MiqGroup.count })
       expect(MiqGroup.last.name).to eql('EvmRole-test_role')
       expect(MiqGroup.last.sequence).to eql(1)
     end

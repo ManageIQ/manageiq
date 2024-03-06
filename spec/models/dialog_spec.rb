@@ -315,7 +315,7 @@ RSpec.describe Dialog do
           'id'            => dialog_tab.first.id,
           'label'         => 'updated_label',
           'dialog_groups' => [
-            { 'id'            => dialog_group.first.id,
+            {'id'            => dialog_group.first.id,
               'dialog_tab_id' => dialog_tab.first.id,
               'dialog_fields' =>
                                  [{
@@ -323,7 +323,7 @@ RSpec.describe Dialog do
                                    'name'                    => dialog_field.first.name,
                                    'dialog_group_id'         => dialog_group.first.id,
                                    'dialog_field_responders' => %w[dialog_field2]
-                                 }] },
+                                 }]},
             {
               'label'         => 'group 2',
               'dialog_fields' => [{
@@ -372,7 +372,7 @@ RSpec.describe Dialog do
         [
           'id'            => dialog_tab.first.id,
           'dialog_groups' => [
-            { 'id' => dialog_group.first.id, 'dialog_fields' => [{ 'id' => dialog_field.first.id }] }
+            {'id' => dialog_group.first.id, 'dialog_fields' => [{'id' => dialog_field.first.id}]}
           ]
         ]
       end

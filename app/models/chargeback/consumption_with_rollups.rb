@@ -82,6 +82,7 @@ class Chargeback
 
     def sum_of_maxes_from_grouped_values(metric, sub_metric = nil)
       return max(metric, sub_metric) if sub_metric
+
       @grouped_values ||= {}
       grouped_rollups = rollup_records.group_by { |x| x[ChargeableField.col_index(:resource_id)] }
 

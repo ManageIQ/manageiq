@@ -15,10 +15,11 @@ class DialogFieldCheckBox < DialogField
 
   def normalize_automate_values(automate_hash)
     self.class::AUTOMATE_VALUE_FIELDS.each do |key|
-      send("#{key}=", automate_hash[key]) if automate_hash.key?(key)
+      send(:"#{key}=", automate_hash[key]) if automate_hash.key?(key)
     end
 
     return initial_values if automate_hash["value"].blank?
+
     automate_hash["value"].to_s
   end
 

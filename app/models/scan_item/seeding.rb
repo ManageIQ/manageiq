@@ -1,7 +1,7 @@
 module ScanItem::Seeding
   extend ActiveSupport::Concern
 
-  SCAN_ITEMS_DIR = Rails.root.join("product", "scan_items")
+  SCAN_ITEMS_DIR = Rails.root.join("product/scan_items")
 
   # Default ScanItemSets
   SAMPLE_VM_PROFILE    = {:name => "sample",       :description => "VM Sample",    :mode => 'Vm',   :read_only => true}.freeze

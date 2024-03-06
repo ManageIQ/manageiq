@@ -66,7 +66,7 @@ module OwnershipMixin
                   else
                     raise _("Unknown option, '%{name}'") % {:name => k}
                   end
-            obj.send("#{col}=", options[k])
+            obj.send(:"#{col}=", options[k])
           end
           obj.save
         rescue => err

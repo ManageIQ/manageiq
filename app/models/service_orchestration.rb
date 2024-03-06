@@ -83,6 +83,7 @@ class ServiceOrchestration < Service
 
   def indirect_vms
     return [] if orchestration_stack.nil? || orchestration_stack.new_record?
+
     orchestration_stack.indirect_vms
   end
 
@@ -98,11 +99,13 @@ class ServiceOrchestration < Service
 
   def all_vms
     return [] if orchestration_stack.nil? || orchestration_stack.new_record?
+
     orchestration_stack.vms
   end
 
   def add_resource(rsc, _options = {})
     raise "Service Orchestration subclass does not support add_resource for #{rsc.class.name}" unless rsc.try(:valid_service_orchestration_resource)
+
     super
   end
 
@@ -131,6 +134,7 @@ class ServiceOrchestration < Service
   def link_orchestration_template
     # some orchestration stacks do not have associations with their templates in their provider, we can link them here
     return if orchestration_stack.nil? || orchestration_stack.orchestration_template
+
     orchestration_stack.update(:orchestration_template => orchestration_template)
   end
 

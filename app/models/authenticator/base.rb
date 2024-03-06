@@ -19,6 +19,7 @@ module Authenticator
     end
 
     attr_reader :config
+
     def initialize(config)
       @config = config
     end
@@ -41,6 +42,7 @@ module Authenticator
 
     def authorize_user(userid)
       return unless user_authorizable_without_authentication?
+
       authenticate(userid, "", {}, {:require_user => true, :authorize_only => true})
     end
 
@@ -89,11 +91,10 @@ module Authenticator
           audit_success(audit.merge(:message => "Authentication successful for user #{username}"))
         else
           reason = failure_reason(username, request)
-          reason = ": #{reason}" unless reason.blank?
+          reason = ": #{reason}" if reason.present?
           audit_failure(audit.merge(:message => "Authentication failed for userid #{username}#{reason}"))
           raise MiqException::MiqEVMLoginError, fail_message
         end
-
       rescue MiqException::MiqEVMLoginError => err
         _log.warn(err.message)
         raise
@@ -107,6 +108,7 @@ module Authenticator
         if task.nil? || MiqTask.status_error?(task.status) || MiqTask.status_timeout?(task.status)
           raise MiqException::MiqEVMLoginError, fail_message
         end
+
         user_or_taskid = case_insensitive_find_by_userid(task.userid)
       end
 
@@ -279,7 +281,7 @@ module Authenticator
             :instance_id => task.id,
             :method_name => :queue_callback_on_exceptions,
             :args        => ['Finished']
-          },
+          }
         )
       else
         authorize(task.id, username, *args)

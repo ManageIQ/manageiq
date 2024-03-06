@@ -85,6 +85,7 @@ class MiqProductFeature < ApplicationRecord
   def self.feature_all_children(identifier, sort = true)
     children = feature_children(identifier, false)
     return [] if children.empty?
+
     result   = children + children.flat_map { |c| feature_all_children(c, false) }
     sort ? sort_children(result) : result
   end

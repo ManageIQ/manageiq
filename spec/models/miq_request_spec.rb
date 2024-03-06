@@ -160,12 +160,12 @@ RSpec.describe MiqRequest do
           end
 
           it "approval_state denied" do
-            provision_request.approval_state  = 'denied'
+            provision_request.approval_state = 'denied'
             expect(provision_request.request_status).to eq('Error')
           end
 
           it "approval_state pending_approval" do
-            provision_request.approval_state  = 'pending_approval'
+            provision_request.approval_state = 'pending_approval'
             expect(provision_request.request_status).to eq('Unknown')
           end
         end

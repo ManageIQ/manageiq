@@ -63,6 +63,7 @@ module MiqServer::WorkerManagement::Monitor
     miq_workers.each do |w|
       next unless w.is_stopped?
       next unless worker_get_monitor_status(w.pid) == :waiting_for_stop
+
       worker_set_monitor_status(w.pid, nil)
     end
   end

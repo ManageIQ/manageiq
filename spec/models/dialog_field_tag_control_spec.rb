@@ -1,6 +1,7 @@
 RSpec.describe DialogFieldTagControl do
   def add_entry(cat, options)
     raise "entries can only be added to classifications" unless cat.category?
+
     # Inherit from parent classification
     options.merge!(:read_only => cat.read_only, :syntax => cat.syntax, :single_value => cat.single_value, :ns => cat.ns)
     options.merge!(:parent_id => cat.id) # Ugly way to set up a child
@@ -144,7 +145,7 @@ RSpec.describe DialogFieldTagControl do
       it "automate_output_value with multiple values" do
         tags = [Classification.first, Classification.last]
         @df.value = tags.collect(&:id).join(",")
-        expect(@df.automate_output_value.split("\x1F")).to match_array tags.collect { |tag| "#{tag.class.name}::#{tag.id}" }
+        expect(@df.automate_output_value.split("\x1F")).to match_array(tags.collect { |tag| "#{tag.class.name}::#{tag.id}" })
       end
     end
   end

@@ -12,7 +12,7 @@ class Snapshot < ApplicationRecord
   EVM_SNAPSHOT_NAME = "EvmSnapshot".freeze
 
   def after_create_callback
-    MiqEvent.raise_evm_event_queue(vm_or_template, "vm_snapshot_complete", attributes) unless self.is_a_type?(:system_snapshot) || self.not_recently_created?
+    MiqEvent.raise_evm_event_queue(vm_or_template, "vm_snapshot_complete", attributes) unless is_a_type?(:system_snapshot) || not_recently_created?
   end
 
   def self.add_elements(parentObj, xmlNode)
@@ -54,11 +54,11 @@ class Snapshot < ApplicationRecord
             end
 
     if value == :system_snapshot
-      return self.is_a_type?(:evm_snapshot)
+      is_a_type?(:evm_snapshot)
     elsif value.kind_of?(Regexp)
-      return !!(value =~ name)
+      !!(value =~ name)
     else
-      return name == value
+      name == value
     end
   end
 
@@ -87,7 +87,7 @@ class Snapshot < ApplicationRecord
   end
 
   def not_recently_created?
-    !self.recently_created?
+    !recently_created?
   end
 
   def self.xml_to_hashes(xmlNode, vm_or_template_id)
@@ -118,17 +118,17 @@ class Snapshot < ApplicationRecord
 
             # If we do not get a snapshot create time in the header use the file create time
             if e.attributes['create_time'].blank? && nh[:create_time].blank?
-              nh[:create_time] = e1.attributes['cdate_on_disk'] unless e1.attributes['cdate_on_disk'].blank?
+              nh[:create_time] = e1.attributes['cdate_on_disk'] if e1.attributes['cdate_on_disk'].present?
             end
           end
         end
 
         nh[:uid] = e.attributes['uid']
-        nh[:parent_uid] = e.attributes['parent'] unless e.attributes['parent'].blank?
+        nh[:parent_uid] = e.attributes['parent'] if e.attributes['parent'].present?
         nh[:name] = e.attributes['displayname']
         nh[:filename] = e.attributes['filename']
         nh[:description] = e.attributes['description']
-        nh[:create_time] = e.attributes['create_time'] unless e.attributes['create_time'].blank?
+        nh[:create_time] = e.attributes['create_time'] if e.attributes['create_time'].present?
         nh[:current] = current == e.attributes['uid'] ? 1 : 0
         nh[:total_size] = total_size
         # We are setting the vm_or_template_id relationship here because the tree relationship
@@ -165,6 +165,7 @@ class Snapshot < ApplicationRecord
   # we don't skip linking up data because of a format change.  (IE 2009-09-25T20:11:14.000000Z to 2009-09-25T20:11:14.299742Z)
   def self.normalize_ss_uid(uid)
     return uid[0, 20] if !uid.nil? && uid.length == 27 && uid[-1, 1] == 'Z'
+
     uid
   end
   private_class_method :normalize_ss_uid

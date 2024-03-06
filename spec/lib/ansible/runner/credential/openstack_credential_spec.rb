@@ -41,7 +41,7 @@ RSpec.describe Ansible::Runner::OpenstackCredential do
     describe "#env_vars" do
       it "sets OS_CLIENT_CONFIG_FILE" do
         filename = File.join(@base_dir, "os_credentials")
-        expected = { "OS_CLIENT_CONFIG_FILE" => filename }
+        expected = {"OS_CLIENT_CONFIG_FILE" => filename}
         expect(cred.env_vars).to eq(expected)
       end
     end

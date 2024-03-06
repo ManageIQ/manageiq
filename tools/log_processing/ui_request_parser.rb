@@ -11,12 +11,12 @@ logfile = File.expand_path(logfile)
 puts "Gathering requests..."
 
 request_hash = MiqLoggerProcessor.new(logfile).each_with_object({}) do |line, hash|
-  if match = line.match(/Started\s(\w*)\s\"([\/\w\d\.\-]*)\"/)
+  if match = line.match(/Started\s(\w*)\s"([\/\w\d.-]*)"/)
     action, path = match.captures
     hash[action] ||= {}
     hash[action][path] ||= 0
     hash[action][path] += 1
-  elsif match = line[/Processing\sby\s([\d\w\:\.\#\_\-]*)/, 1]
+  elsif match = line[/Processing\sby\s([\d\w:.\#_-]*)/, 1]
     hash["Method"] ||= {}
     hash["Method"][match] ||= 0
     hash["Method"][match] += 1

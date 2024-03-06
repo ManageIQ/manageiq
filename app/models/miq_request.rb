@@ -34,10 +34,10 @@ class MiqRequest < ApplicationRecord
   validates_inclusion_of :approval_state, :in => %w[pending_approval approved denied], :message => "should be 'pending_approval', 'approved' or 'denied'"
   validates_inclusion_of :status,         :in => %w[Ok Warn Error Timeout Denied]
 
-  validates :initiated_by, :inclusion => { :in => %w[user system] }, :allow_blank => true
-  validates :cancelation_status, :inclusion => { :in        => CANCEL_STATUS,
+  validates :initiated_by, :inclusion => {:in => %w[user system]}, :allow_blank => true
+  validates :cancelation_status, :inclusion => {:in        => CANCEL_STATUS,
                                                  :allow_nil => true,
-                                                 :message   => "should be one of #{CANCEL_STATUS.join(", ")}" }
+                                                 :message   => "should be one of #{CANCEL_STATUS.join(", ")}"}
 
   validate :validate_class, :validate_request_type
 
@@ -187,6 +187,7 @@ class MiqRequest < ApplicationRecord
     miq_approvals << build_default_approval if miq_approvals.empty?
 
     return unless requester
+
     self.requester_name ||= requester.name
     self.userid         ||= requester.userid
     self.tenant         ||= requester.current_tenant
@@ -251,7 +252,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def approval_approved
-    unless self.approved?
+    unless approved?
       _log.info("Request: [#{description}] has outstanding approvals")
       return false
     end
@@ -302,6 +303,7 @@ class MiqRequest < ApplicationRecord
 
   def request_status
     return status if self.approval_state == 'approved' && !status.nil?
+
     case self.approval_state
     when 'pending_approval' then 'Unknown'
     when 'denied'           then 'Error'
@@ -320,7 +322,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def approve(userid, reason)
-    first_approval.approve(userid, reason) unless self.approved?
+    first_approval.approve(userid, reason) unless approved?
   end
   api_relay_method(:approve) { |_userid, reason| {:reason => reason} }
   api_relay_method(:deny)    { |_userid, reason| {:reason => reason} }
@@ -550,7 +552,7 @@ class MiqRequest < ApplicationRecord
 
   # Helper method when not using workflow
   def self.update_request(request, values, requester)
-    request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
+    request = MiqRequest.find(request) unless request.kind_of?(MiqRequest)
     request.update_request(values, requester)
   end
 
@@ -576,7 +578,7 @@ class MiqRequest < ApplicationRecord
       :event        => event_name(mode),
       :target_class => self.class::SOURCE_CLASS_NAME,
       :userid       => requester_id,
-      :message      => event_message,
+      :message      => event_message
     )
   end
 
@@ -625,12 +627,13 @@ class MiqRequest < ApplicationRecord
   end
 
   # Helper method to log the request to both the request_logs table and $log
-  def self.request_log(severity, message = nil, resource_id: nil, &block)
+  def self.request_log(severity, message = nil, resource_id: nil)
     formatted_severity = severity.to_s.upcase
     level = Logger.const_get(formatted_severity)
 
     # Partially copied from Logger#add
     return true if level < $log.level
+
     message = yield if message.nil? && block_given?
 
     RequestLog.create(:message => message, :severity => formatted_severity, :resource_id => resource_id) if resource_id

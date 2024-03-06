@@ -41,7 +41,7 @@ RSpec.describe "AR Nested Count By extension" do
     it "should respect nested where, and support individual args (vs an array)" do
       expect(MiqQueue.where(:zone => zone3.name).nested_count_by("role", "state")).to eq(
         "role3" => {MiqQueue::STATE_READY => 1},
-        "role2" => {MiqQueue::STATE_ERROR => 1},
+        "role2" => {MiqQueue::STATE_ERROR => 1}
       )
     end
 
@@ -49,7 +49,7 @@ RSpec.describe "AR Nested Count By extension" do
       expect(MiqQueue.nested_count_by(%w[role state])).to eq(
         "role1" => {"dequeue" => 4, "ready" => 3, "error" => 1},
         "role2" => {"dequeue" => 1, "error" => 1},
-        "role3" => {"ready"   => 1, "warn"  => 1},
+        "role3" => {"ready"   => 1, "warn"  => 1}
       )
     end
   end

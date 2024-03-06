@@ -109,6 +109,7 @@ module FixAuth
   class FixDatabaseYml
     attr_accessor :id
     attr_accessor :yml
+
     include FixAuth::AuthConfigModel
 
     class << self
@@ -121,7 +122,7 @@ module FixAuth
     end
 
     def initialize(options = {})
-      options.each { |n, v| public_send("#{n}=", v) }
+      options.each { |n, v| public_send(:"#{n}=", v) }
     end
 
     def load

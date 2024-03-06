@@ -189,6 +189,7 @@ module Metric::CiMixin::Processing
 
   def normalize_value(value, counter)
     return counter[:rollup] == 'latest' ? nil : 0 if value < 0
+
     value = value.to_f * counter[:precision]
 
     message = nil

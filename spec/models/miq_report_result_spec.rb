@@ -103,7 +103,7 @@ RSpec.describe MiqReportResult do
 
       @report_theme = 'miq'
       @show_title   = true
-      @options = MiqReport.graph_options({ :title => "CPU (Mhz)", :type => "Line", :columns => ["col"] })
+      @options = MiqReport.graph_options({:title => "CPU (Mhz)", :type => "Line", :columns => ["col"]})
 
       allow(ManageIQ::Reporting::Charting).to receive(:detect_available_plugin).and_return(ManageIQ::Reporting::C3Charting)
     end
@@ -131,7 +131,7 @@ RSpec.describe MiqReportResult do
       report_result = rpt.build_create_results(:userid => "test")
 
       report_result.report
-      report_result.report.extras[:grouping] = { "extra data" => "not saved" }
+      report_result.report.extras[:grouping] = {"extra data" => "not saved"}
       report_result.save
 
       result_reload = MiqReportResult.last
@@ -229,16 +229,16 @@ RSpec.describe MiqReportResult do
     end
 
     it "can serialize and deserialize a plain text report" do
-      txt = <<EOF
-+--------------+
-|  Foo Report  |
-+--------------+
-| Foo  | Bar   |
-+--------------+
-| baz  | qux   |
-| quux | corge |
-+--------------+
-EOF
+      txt = <<~EOF
+        +--------------+
+        |  Foo Report  |
+        +--------------+
+        | Foo  | Bar   |
+        +--------------+
+        | baz  | qux   |
+        | quux | corge |
+        +--------------+
+      EOF
       report_result = described_class.new
 
       report_result.report_results = txt

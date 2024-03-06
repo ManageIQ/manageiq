@@ -23,9 +23,9 @@ module TaskHelpers
 
       def pxe_image_type_hash(pxe_image_type)
         if pxe_image_type
-          { :pxe_image_type => pxe_image_type.to_model_hash.reject { |key| EXCLUDE_ATTRS.include?(key) } }
+          {:pxe_image_type => pxe_image_type.to_model_hash.reject { |key| EXCLUDE_ATTRS.include?(key) }}
         else
-          { :pxe_image_type => {} }
+          {:pxe_image_type => {}}
         end
       end
     end

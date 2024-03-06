@@ -4,7 +4,7 @@ class MiqEventDefinition < ApplicationRecord
   validates :name, :uniqueness_when_changed => true,
                    :presence                => true,
                    :allow_nil               => true,
-                   :format                  => {:with    => /\A[a-z0-9_\-]+\z/i,
+                   :format                  => {:with    => /\A[a-z0-9_-]+\z/i,
                                                 :message => "must only contain alpha-numeric, underscore and hyphen characters without spaces"}
   validates_presence_of     :description
 
@@ -101,7 +101,7 @@ class MiqEventDefinition < ApplicationRecord
         eventData.delete("id")
 
         # Remove elements that do not belong in the event table
-        %w[ src_vm_guid dest_vm_guid vm_guid ].each do |field|
+        %w[src_vm_guid dest_vm_guid vm_guid].each do |field|
           eventData.delete(field)
         end
 

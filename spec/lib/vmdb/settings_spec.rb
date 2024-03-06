@@ -20,7 +20,7 @@ RSpec.describe Vmdb::Settings do
       end
 
       expect(walked).to eq [
-        #key value                       path
+        # key value                       path
         [:a, {:b => 'c'},                [:a]],
         [:b, 'c',                        [:a, :b]],
         [:d, {:e => {:f => 'g'}},        [:d]],
@@ -38,7 +38,7 @@ RSpec.describe Vmdb::Settings do
         :hash:
         - &1
           A: *1
-        CONFIG
+      CONFIG
 
       expect { described_class.walk(y) { |_k, _v, _p, _o| } }.not_to raise_error
     end
@@ -695,7 +695,7 @@ RSpec.describe Vmdb::Settings do
       {"api" => {"token_ttl" => "2.minutes"}}.to_yaml
     )
 
-    expect(::Settings.api.token_ttl).to eq("2.minutes")
+    expect(Settings.api.token_ttl).to eq("2.minutes")
   end
 
   it ".validate", :providers_common => true do

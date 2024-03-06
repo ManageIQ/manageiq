@@ -72,7 +72,7 @@ class VmScan < Job
       if prof_policies
         scan_profiles = []
         prof_policies.each { |p| scan_profiles += p[:result] unless p[:result].nil? }
-        options[:scan_profiles] = scan_profiles unless scan_profiles.blank?
+        options[:scan_profiles] = scan_profiles if scan_profiles.present?
         save
       end
     end
@@ -129,7 +129,7 @@ class VmScan < Job
   end
 
   def create_scan_args
-    scan_args = { 'ems' => config_ems_list }
+    scan_args = {'ems' => config_ems_list}
 
     # Check if Policy returned scan profiles to use, otherwise use the default profile if available.
     scan_args["vmScanProfiles"] = options[:scan_profiles] || vm.scan_profile_list
@@ -222,6 +222,7 @@ class VmScan < Job
 
             begin
               raise _("Unable to find Vm") if vm.nil?
+
               inputs = {:vm => vm, :host => vm.host}
               MiqEvent.raise_evm_job_event(vm, {:type => "scan", :suffix => "complete"}, inputs)
             rescue => err
@@ -283,6 +284,7 @@ class VmScan < Job
     if message.to_s.include?("Could not find VM: [") && options[:scan_count].to_i.zero?
       # We may need to skip calling the retry if this method is called twice.
       return if skip_retry == true
+
       options[:scan_count] = options[:scan_count].to_i + 1
       EmsRefresh.refresh(vm)
       vm.reload
@@ -344,5 +346,4 @@ class VmScan < Job
       _log.warn("Failed to log user event with EMS.  Error: [#{err.class.name}]: #{err} Event message [#{user_event}]")
     end
   end
-
 end

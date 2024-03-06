@@ -31,7 +31,7 @@ module Job::StateMachine
       next_state = permitted_transitions[state]
 
       # if current state is not explicitly permitted, is any state (referred by '*') permitted?
-      next_state = permitted_transitions['*'] unless next_state
+      next_state ||= permitted_transitions['*']
       self.state = next_state
     end
     !!next_state

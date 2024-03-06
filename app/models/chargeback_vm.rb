@@ -31,7 +31,7 @@ class ChargebackVm < Chargeback
     :storage_used_cost        => :float,
     :storage_used_metric      => :float,
     :storage_cost             => :float,
-    :total_cost               => :float,
+    :total_cost               => :float
   )
 
   DEFAULT_STORAGE_METRICS = %w[

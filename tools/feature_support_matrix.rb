@@ -66,4 +66,4 @@ end
 matrix = matrix_for(ApplicationRecord)
 csv = CsvVisitor.new
 matrix.accept(csv)
-puts csv.to_s
+puts csv

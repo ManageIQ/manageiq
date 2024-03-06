@@ -106,7 +106,7 @@ RSpec.describe ChargebackRateDetail do
   let(:consumption) { instance_double('Consumption', :hours_in_month => (30.days / 1.hour)) }
 
   it '#hourly_cost' do
-    cvalue   = 42.0
+    cvalue = 42.0
     fixed_rate = 5.0
     variable_rate = 8.26
     tier_start = 0
@@ -167,7 +167,7 @@ RSpec.describe ChargebackRateDetail do
     end
 
     let(:monthly_rate) { FactoryBot.build(:chargeback_rate_detail, :per_time => 'monthly') }
-    let(:weekly_consumption) { Chargeback::ConsumptionWithRollups.new([], Time.current - 1.week, Time.current) }
+    let(:weekly_consumption) { Chargeback::ConsumptionWithRollups.new([], 1.week.ago, Time.current) }
     it 'monhtly rate returns correct hourly(_rate) when consumption slice is weekly' do
       expect(monthly_rate.hourly(rate, weekly_consumption)).to eq(rate / (30.days / 1.hour))
     end

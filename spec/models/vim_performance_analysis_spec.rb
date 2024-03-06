@@ -5,7 +5,7 @@ RSpec.describe VimPerformanceAnalysis do
   let(:time_profile) { FactoryBot.create(:time_profile_with_rollup, :profile => {:tz => "UTC"}) }
   let(:ems) { FactoryBot.create(:ems_vmware) }
 
-  let(:good_day) { DateTime.current - 2.day }
+  let(:good_day) { DateTime.current - 2.days }
   let(:bad_day)  { DateTime.current - 4.months }
   let(:vm1) do
     FactoryBot.create(:vm_vmware, :name => "test_vm", :tags => [tag_good], :ext_management_system => ems).tap do |vm|
@@ -92,7 +92,7 @@ RSpec.describe VimPerformanceAnalysis do
                                             :parent_ems         => vm.ext_management_system,
                                             :parent_storage     => vm.storage,
                                             :resource_name      => vm.name,
-                                            :time_profile       => time_profile,
+                                            :time_profile       => time_profile
                                            )
   end
 end

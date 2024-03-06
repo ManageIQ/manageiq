@@ -167,7 +167,7 @@ RSpec.describe MiqScheduleWorker::Runner do
               @schedule_worker.rufus_add_normal_schedule(options)
 
               jobs = @schedule_worker.instance_variable_get(:@schedules)[:scheduler]
-              expect(jobs).to be_all { |job| job.kind_of?(Rufus::Scheduler::Job) }
+              expect(jobs).to(be_all { |job| job.kind_of?(Rufus::Scheduler::Job) })
             end
           end
         end
@@ -530,8 +530,8 @@ RSpec.describe MiqScheduleWorker::Runner do
     end
 
     def raise_unexpected_job_error(job)
-      raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, "\
-            "last_time=#{job.last_time.inspect}, id=#{job.job_id.inspect}, next=#{job.next_time.inspect}, "\
+      raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, " \
+            "last_time=#{job.last_time.inspect}, id=#{job.job_id.inspect}, next=#{job.next_time.inspect}, " \
             "handler=#{job.handler.inspect}"
     end
   end

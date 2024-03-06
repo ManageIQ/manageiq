@@ -57,7 +57,8 @@ def parse_command_line_option(arg)
     opt, value = arg.split('=')
   else
     raise "No Value Provided for Command Line Option: #{arg.inspect}" unless $ARGV.length > 0
-    opt  = arg
+
+    opt = arg
     value = $ARGV.shift
   end
   return opt, value

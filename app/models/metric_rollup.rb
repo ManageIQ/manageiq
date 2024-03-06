@@ -47,9 +47,9 @@ class MetricRollup < ApplicationRecord
     # This should really be done by subclassing where each subclass can define reservations or
     # changing the reports to allow for optional reservations.
     if val.to_i == 0 && col.to_s =~ /(.+)_reserved$/
-      return send("#{$1}_available")
+      send(:"#{$1}_available")
     else
-      return val
+      val
     end
   end
 
@@ -63,7 +63,7 @@ class MetricRollup < ApplicationRecord
 
   def self.rollups_in_range(resource_type, resource_ids, capture_interval_name, start_date, end_date = nil)
     capture_interval_name ||= 'hourly'
-    end_date = end_date.nil? ? Time.zone.today : end_date
+    end_date = Time.zone.today if end_date.nil?
     metrics = where(:resource_type         => resource_type,
                     :capture_interval_name => capture_interval_name,
                     :timestamp             => start_date.beginning_of_day...end_date.end_of_day)

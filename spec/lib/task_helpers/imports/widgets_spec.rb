@@ -11,7 +11,7 @@ RSpec.describe TaskHelpers::Imports::Widgets do
     let(:widget_cols2) { %w[name power_state] }
     let(:attr_err_file) { "Test_Widget_attr_error.yml" }
     let(:runt_err_file) { "Test_Widget_runtime_error.yml" }
-    let(:options) { { :source => source } }
+    let(:options) { {:source => source} }
 
     before do
       EvmSpecHelper.local_miq_server

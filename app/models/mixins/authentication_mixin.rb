@@ -163,18 +163,21 @@ module AuthenticationMixin
   def auth_user_pwd(type = nil)
     cred = authentication_best_fit(type)
     return nil if cred.nil? || cred.userid.blank?
+
     [cred.userid, cred.password]
   end
 
   def auth_user_token(type = nil)
     cred = authentication_best_fit(type)
     return nil if cred.nil? || cred.userid.blank?
+
     [cred.userid, cred.auth_key]
   end
 
   def auth_user_keypair(type = nil)
     cred = authentication_best_fit(type)
     return nil if cred.nil? || cred.userid.blank?
+
     [cred.userid, cred.auth_key]
   end
 
@@ -186,7 +189,7 @@ module AuthenticationMixin
     @orig_credentials ||= auth_user_pwd || "none"
 
     # Invoke before callback
-    before_update_authentication if self.respond_to?(:before_update_authentication) && options[:save]
+    before_update_authentication if respond_to?(:before_update_authentication) && options[:save]
 
     data.each_pair do |type, value|
       cred = authentication_type(type)
@@ -219,6 +222,7 @@ module AuthenticationMixin
       if value.key?(:userid) && value[:userid].blank?
         current[:new] = nil
         next if options[:save] == false
+
         authentication_delete(type)
         next
       end
@@ -226,7 +230,7 @@ module AuthenticationMixin
       # Update or create
       if cred.nil?
         # FIXME: after we completely move to DDF and revise the REST API for providers, this will probably be something to delete
-        if self.kind_of?(ManageIQ::Providers::Openstack::InfraManager) && value[:auth_key]
+        if kind_of?(ManageIQ::Providers::Openstack::InfraManager) && value[:auth_key]
           # TODO(lsmola) investigate why build throws an exception, that it needs to be subclass of AuthUseridPassword
           cred = ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair.new(:name => "#{self.class.name} #{name}", :authtype => type.to_s,
                                                :resource_id => id, :resource_type => "ExtManagementSystem")
@@ -249,7 +253,7 @@ module AuthenticationMixin
     end
 
     # Invoke callback
-    after_update_authentication if self.respond_to?(:after_update_authentication) && options[:save]
+    after_update_authentication if respond_to?(:after_update_authentication) && options[:save]
     @orig_credentials = nil if options[:save]
   end
 
@@ -261,6 +265,7 @@ module AuthenticationMixin
 
   def authentication_type(type)
     return nil if type.nil?
+
     available_authentications.detect do |a|
       a.authentication_type.to_s == type.to_s
     end
@@ -298,8 +303,8 @@ module AuthenticationMixin
   end
 
   def authentication_check_attributes(types, method_options)
-    role = authentication_check_role if self.respond_to?(:authentication_check_role)
-    zone = my_zone if self.respond_to?(:my_zone)
+    role = authentication_check_role if respond_to?(:authentication_check_role)
+    zone = my_zone if respond_to?(:my_zone)
 
     # FIXME: Via schedule, a message is created with args = [], so all authentications will be checked,
     # while an authentication change will create a message with args [:default] or whatever
@@ -347,6 +352,7 @@ module AuthenticationMixin
 
   def retry_scheduled_authentication_check(auth_type, options)
     return unless options[:attempt]
+
     auth = authentication_best_fit(auth_type)
 
     if auth.try(:retryable_status?)
@@ -400,6 +406,7 @@ module AuthenticationMixin
     unless supports?(:change_password)
       raise MiqException::Error, _("Change Password is not supported for %{class_description} provider") % {:class_description => self.class.description}
     end
+
     if change_password_params_valid?(current_password, new_password)
       raw_change_password(current_password, new_password)
       update_authentication(auth_type => {:userid => authentication_userid, :password => new_password})
@@ -459,9 +466,9 @@ module AuthenticationMixin
   private
 
   def authentication_check_no_validation(type, options)
-    header  = "type: [#{type.inspect}] for [#{id}] [#{name}]"
+    header = "type: [#{type.inspect}] for [#{id}] [#{name}]"
     status, details =
-      if self.missing_credentials?(type)
+      if missing_credentials?(type)
         [:incomplete, "Missing credentials"]
       else
         begin
@@ -491,7 +498,7 @@ module AuthenticationMixin
     return nil if cred.nil?
 
     value = cred.public_send(method)
-    value.blank? ? nil : value
+    value.presence
   end
 
   def available_authentications

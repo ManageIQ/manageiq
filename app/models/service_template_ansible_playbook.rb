@@ -109,6 +109,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
 
   def check_retirement_potential
     return true unless retirement_potential?
+
     error_text = 'Destroy aborted.  Active Services require retirement resources associated with this instance.'
     errors.add(:base, error_text)
     throw :abort
@@ -118,6 +119,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     [:provision, :retirement, :reconfigure].each_with_object({}) do |action, hash|
       info = config_info[action]
       next unless new_dialog_required?(info)
+
       hash[action] = {:dialog_id => create_new_dialog(info[:new_dialog_name], info[:extra_vars], info[:hosts]).id}
     end
   end

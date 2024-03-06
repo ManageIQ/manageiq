@@ -229,7 +229,7 @@ class MiqTask < ApplicationRecord
   end
 
   def results_ready?
-    status == STATUS_OK && !task_results.blank?
+    status == STATUS_OK && task_results.present?
   end
 
   def queue_callback(state, status, message, result)
@@ -255,6 +255,7 @@ class MiqTask < ApplicationRecord
     # support legacy task that saved results in the results column
     return Marshal.load(Base64.decode64(results.split("\n").join)) unless results.nil?
     return miq_report_result.report_results unless miq_report_result.nil?
+
     if binary_blob
       result = binary_blob.data
       return result.kind_of?(String) ? result.force_encoding("UTF-8") : result
@@ -324,6 +325,7 @@ class MiqTask < ApplicationRecord
     options[:timeout] ||= 0
     task = MiqTask.find(task_id)
     return nil if task.nil?
+
     begin
       Timeout.timeout(options[:timeout]) do
         while task.state != STATE_FINISHED
@@ -345,7 +347,7 @@ class MiqTask < ApplicationRecord
     MiqQueue.submit_job(
       :class_name  => name,
       :method_name => "destroy_older_by_condition",
-      :args        => [ts, condition],
+      :args        => [ts, condition]
     )
   end
 
@@ -356,11 +358,12 @@ class MiqTask < ApplicationRecord
 
   def self.delete_by_id(ids)
     return if ids.empty?
+
     _log.info("Queuing deletion of tasks with the following ids: #{ids.inspect}")
     MiqQueue.submit_job(
       :class_name  => name,
       :method_name => "destroy",
-      :args        => [ids],
+      :args        => [ids]
     )
   end
 

@@ -20,6 +20,7 @@ class BottleneckEvent < ApplicationRecord
     future_event_definitions_for_obj(obj).each do |e|
       result = calculate_future_event(obj, e[:definition][:calculation])
       next if result.blank? || result[:timestamp].nil?
+
       # TODO: determine wheter we omit results that are in the past
 
       event = new(e[:definition][:event])
@@ -42,6 +43,7 @@ class BottleneckEvent < ApplicationRecord
   def self.calculate_future_event(obj, options)
     method = "calculate_future_#{options[:name]}"
     raise _("'%{name}', calculation not supported") % {:name => options[:name]} unless respond_to?(method)
+
     send(method, obj, options)
   end
 
@@ -144,6 +146,7 @@ class BottleneckEvent < ApplicationRecord
     recs.inject([]) do |a, r|
       key = [r.resource_type, r.resource_id, r.event_type, r.severity, r.message].join("|")
       next(a) if seen.include?(key)
+
       seen << key
       a << r
     end

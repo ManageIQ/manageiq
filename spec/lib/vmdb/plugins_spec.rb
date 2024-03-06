@@ -14,14 +14,14 @@ RSpec.describe Vmdb::Plugins do
   describe ".plugin_for_class" do
     context "with a class in core" do
       it "returns nil" do
-        expect(described_class.plugin_for_class(::MiqGenericWorker)).to be_nil
+        expect(described_class.plugin_for_class(MiqGenericWorker)).to be_nil
       end
     end
 
     context "with a class in a plugin" do
       it "returns the plugin" do
-        expect(described_class.plugin_for_class(::ApplicationController)).to eq(ManageIQ::UI::Classic::Engine)
-        expect(described_class.plugin_for_class(::Api::BaseController)).to eq(ManageIQ::Api::Engine)
+        expect(described_class.plugin_for_class(ApplicationController)).to eq(ManageIQ::UI::Classic::Engine)
+        expect(described_class.plugin_for_class(Api::BaseController)).to eq(ManageIQ::Api::Engine)
       end
     end
 
@@ -135,12 +135,12 @@ RSpec.describe Vmdb::Plugins do
     before { clear_versions_caches }
     after  { clear_versions_caches }
 
-    def with_temp_dir(options)
+    def with_temp_dir(options, &block)
       Dir.mktmpdir("plugins_spec") do |dir|
         allow(engine).to receive(:root).and_return(Pathname.new(dir))
 
         if options[:symlinked]
-          with_temp_symlink(dir) { |ln| yield ln }
+          with_temp_symlink(dir, &block)
         else
           yield dir
         end

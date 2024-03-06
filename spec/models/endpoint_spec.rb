@@ -79,7 +79,7 @@ RSpec.describe Endpoint do
   context "certificate_authority" do
     # openssl req -x509 -newkey rsa:512 -out cert.pem -nodes, all defaults, twice
     let(:pem1) do
-      <<-EOPEM.strip_heredoc
+      <<~EOPEM
         -----BEGIN CERTIFICATE-----
         MIIBzTCCAXegAwIBAgIJAOgErvCo3YfDMA0GCSqGSIb3DQEBCwUAMEIxCzAJBgNV
         BAYTAlhYMRUwEwYDVQQHDAxEZWZhdWx0IENpdHkxHDAaBgNVBAoME0RlZmF1bHQg
@@ -95,7 +95,7 @@ RSpec.describe Endpoint do
       EOPEM
     end
     let(:pem2) do
-      <<-EOPEM.strip_heredoc
+      <<~EOPEM
         -----BEGIN CERTIFICATE-----
         MIIBzTCCAXegAwIBAgIJAOpKKx6qCHdIMA0GCSqGSIb3DQEBCwUAMEIxCzAJBgNV
         BAYTAlhYMRUwEwYDVQQHDAxEZWZhdWx0IENpdHkxHDAaBgNVBAoME0RlZmF1bHQg
@@ -125,7 +125,7 @@ RSpec.describe Endpoint do
       endpoint.certificate_authority = "NONSENSE"
       expect(endpoint).not_to be_valid
 
-      endpoint.certificate_authority = <<-EOPEM.strip_heredoc
+      endpoint.certificate_authority = <<~EOPEM
         -----BEGIN CERTIFICATE-----
         ValidBase64InvalidCert==
         -----END CERTIFICATE-----

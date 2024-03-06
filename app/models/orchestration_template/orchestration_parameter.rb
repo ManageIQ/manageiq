@@ -32,7 +32,7 @@ class OrchestrationTemplate
 
     def initialize(hash = {})
       @reconfigurable = true
-      hash.each { |key, value| public_send("#{key}=", value) }
+      hash.each { |key, value| public_send(:"#{key}=", value) }
     end
 
     def constraints

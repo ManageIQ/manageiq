@@ -39,8 +39,10 @@ class AutomateWorkspace < ApplicationRecord
     value = fetch_value(object_name, attribute)
     raise ArgumentError, "#{object_name} : Attribute #{attribute} not found" unless value
     raise ArgumentError, "#{object_name} : Attribute #{attribute} invalid type" unless value.kind_of?(String)
+
     match_data = /^password::(.*)/.match(value)
     raise ArgumentError, "Attribute #{attribute} is not a password type" unless match_data
+
     match_data[1]
   end
 

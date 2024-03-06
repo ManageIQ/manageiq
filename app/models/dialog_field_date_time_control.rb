@@ -3,6 +3,7 @@ class DialogFieldDateTimeControl < DialogFieldDateControl
 
   def automate_output_value
     return nil if @value.blank?
+
     with_current_user_timezone { Time.zone.parse(@value).utc.iso8601 }
   end
 
@@ -28,6 +29,6 @@ class DialogFieldDateTimeControl < DialogFieldDateControl
   private
 
   def default_time
-    with_current_user_timezone { Time.zone.now + 1.day }.strftime("%m/%d/%Y %H:%M")
+    with_current_user_timezone { 1.day.from_now }.strftime("%m/%d/%Y %H:%M")
   end
 end

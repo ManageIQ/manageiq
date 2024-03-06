@@ -468,7 +468,7 @@ RSpec.describe MiqRequestWorkflow do
     end
 
     it "returns a detailed formatting message when fail details are defined" do
-      expect(workflow.validate_regex(nil, {}, {}, regex_with_details, value_no_email)).to eq "'/' must be correctly"\
+      expect(workflow.validate_regex(nil, {}, {}, regex_with_details, value_no_email)).to eq "'/' must be correctly" \
         " formatted. We are looking for a specific email here."
     end
   end
@@ -532,8 +532,8 @@ RSpec.describe MiqRequestWorkflow do
       ems_folder.ext_management_system = ems
       attrs = ems_folder.attributes.merge(:object => workflow.ems_folder_to_hash_struct(ems_folder))
       xml_hash = XmlHash::Element.new('EmsFolder', attrs)
-      hash = { ResourcePool => { resource_pool.id => xml_hash } }
-      workflow.instance_variable_set("@ems_xml_nodes", hash)
+      hash = {ResourcePool => {resource_pool.id => xml_hash}}
+      workflow.instance_variable_set(:@ems_xml_nodes, hash)
     end
 
     it "returns nil if :respool is nil" do
@@ -553,8 +553,8 @@ RSpec.describe MiqRequestWorkflow do
       ems_folder.ext_management_system = ems
       attrs = resource_pool.attributes.merge(:object => resource_pool, :ems => ems)
       xml_hash = XmlHash::Element.new('ResourcePool', attrs)
-      hash = { EmsFolder => { ems_folder.id => xml_hash } }
-      workflow.instance_variable_set("@ems_xml_nodes", hash)
+      hash = {EmsFolder => {ems_folder.id => xml_hash}}
+      workflow.instance_variable_set(:@ems_xml_nodes, hash)
     end
 
     it "returns nil if :folder is nil" do
@@ -573,8 +573,8 @@ RSpec.describe MiqRequestWorkflow do
       datacenter.ext_management_system = ems
       attrs = datacenter.attributes.merge(:object => workflow.ems_folder_to_hash_struct(datacenter), :ems => ems)
       xml_hash = XmlHash::Element.new('EmsFolder', attrs)
-      hash = { EmsFolder => { datacenter.id => xml_hash } }
-      workflow.instance_variable_set("@ems_xml_nodes", hash)
+      hash = {EmsFolder => {datacenter.id => xml_hash}}
+      workflow.instance_variable_set(:@ems_xml_nodes, hash)
     end
 
     it "returns a datacenter" do

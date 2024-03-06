@@ -109,7 +109,7 @@ RSpec.describe GenericObjectDefinition do
     let(:definition) do
       FactoryBot.create(:generic_object_definition,
                          :name       => 'test',
-                         :properties => { :attributes => {:status => "string"}})
+                         :properties => {:attributes => {:status => "string"}})
     end
 
     it 'adds a new attribute' do
@@ -136,7 +136,7 @@ RSpec.describe GenericObjectDefinition do
     let(:definition) do
       FactoryBot.create(:generic_object_definition,
                          :name       => 'test',
-                         :properties => { :attributes => {:status => "string"}})
+                         :properties => {:attributes => {:status => "string"}})
     end
 
     it 'does nothing for non-existing attribute' do
@@ -160,7 +160,7 @@ RSpec.describe GenericObjectDefinition do
     let(:definition) do
       FactoryBot.create(:generic_object_definition,
                          :name       => 'test',
-                         :properties => { :methods => %w[method1] })
+                         :properties => {:methods => %w[method1]})
     end
 
     it 'adds a new method' do
@@ -178,7 +178,7 @@ RSpec.describe GenericObjectDefinition do
     let(:definition) do
       FactoryBot.create(:generic_object_definition,
                          :name       => 'test',
-                         :properties => { :methods => %w[method1] })
+                         :properties => {:methods => %w[method1]})
     end
 
     it 'deletes an existing method' do
@@ -196,7 +196,7 @@ RSpec.describe GenericObjectDefinition do
     let(:definition) do
       FactoryBot.create(:generic_object_definition,
                          :name       => 'test',
-                         :properties => { :associations => { :vms => 'Vm' } })
+                         :properties => {:associations => {:vms => 'Vm'}})
     end
 
     it 'adds a new association' do
@@ -261,7 +261,7 @@ RSpec.describe GenericObjectDefinition do
     subject { definition.find_objects(@options) }
 
     it 'finds multiple objects' do
-      @options = { :max_number => 10 }
+      @options = {:max_number => 10}
       expect(subject.size).to eq(2)
     end
 
