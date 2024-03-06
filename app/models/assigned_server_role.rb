@@ -2,8 +2,6 @@ class AssignedServerRole < ApplicationRecord
   belongs_to :miq_server
   belongs_to :server_role
 
-  default_value_for :active, false
-
   delegate :master_supported?, :name, :to => :server_role
 
   HIGH_PRIORITY        = 1

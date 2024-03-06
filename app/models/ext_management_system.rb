@@ -306,8 +306,6 @@ class ExtManagementSystem < ApplicationRecord
   alias_method :clusters, :ems_clusters # Used by web-services to return clusters as the property name
   alias_attribute :to_s, :name
 
-  default_value_for :enabled, true
-
   # Move ems to maintenance zone and backup current one
   # @param orig_zone [Integer] because of zone of child manager can be changed by parent manager's ensure_managers() callback
   #                            we need to specify original zone for children explicitly

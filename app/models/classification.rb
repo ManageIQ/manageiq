@@ -35,11 +35,6 @@ class Classification < ApplicationRecord
 
   DEFAULT_NAMESPACE = "/managed".freeze
 
-  default_value_for :read_only,    false
-  default_value_for :syntax,       "string"
-  default_value_for :single_value, false
-  default_value_for :show,         true
-
   FIXTURE_FILE = FIXTURE_DIR.join("classifications.yml")
 
   def self.hash_all_by_type_and_name(conditions = {})
