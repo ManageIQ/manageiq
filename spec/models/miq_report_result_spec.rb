@@ -261,4 +261,38 @@ EOF
       ])
     end
   end
+
+  describe "#to_pdf" do
+    let(:user)   { FactoryBot.create(:user) }
+    let(:report) { FactoryBot.create(:miq_report, :title => report_title) }
+    let(:report_result) do
+      FactoryBot.create(:miq_report_result, :name => report.title, :miq_report_id => report.id, :report => report, :userid => user.userid)
+    end
+
+    context "with a normal report" do
+      let(:report_title) { "VMs using thin provisioned disks" }
+      let(:pdf_title)    { report_title }
+
+      it "renders the report" do
+        expect(PdfGenerator).to receive(:pdf_from_string).with(<<~EOHTML.chomp, "pdf_report.css")
+          <head><style>@page{size: a4 landscape}@page{margin: 40pt 30pt 40pt 30pt}@page{@top{content: '#{pdf_title}';color:blue}}@page{@bottom-center{font-size: 75%;content: 'Report date: '}}@page{@bottom-right{font-size: 75%;content: 'Page  ' counter(page) ' of  ' counter(pages)}}</style></head><table class="table table-striped table-bordered "><thead><tr><tbody></tbody></table>
+        EOHTML
+
+        report_result.to_pdf
+      end
+    end
+
+    context "with a report with single quotes in the name" do
+      let(:report_title) { "Fred's VMs using thin provisioned disks" }
+      let(:pdf_title)    { "Fred\\'s VMs using thin provisioned disks" }
+
+      it "renders the report" do
+        expect(PdfGenerator).to receive(:pdf_from_string).with(<<~EOHTML.chomp, "pdf_report.css")
+          <head><style>@page{size: a4 landscape}@page{margin: 40pt 30pt 40pt 30pt}@page{@top{content: '#{pdf_title}';color:blue}}@page{@bottom-center{font-size: 75%;content: 'Report date: '}}@page{@bottom-right{font-size: 75%;content: 'Page  ' counter(page) ' of  ' counter(pages)}}</style></head><table class="table table-striped table-bordered "><thead><tr><tbody></tbody></table>
+        EOHTML
+
+        report_result.to_pdf
+      end
+    end
+  end
 end

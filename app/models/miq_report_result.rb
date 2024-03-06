@@ -205,7 +205,7 @@ class MiqReportResult < ApplicationRecord
   def to_pdf
     # Create the pdf header section
     html_string = generate_pdf_header(
-      :title     => name.gsub(/'/, '\\\\\&'), # Escape single quotes
+      :title     => name.gsub("'", "\\\\'"), # Escape single quotes
       :page_size => report.page_size,
       :run_date  => format_timezone(last_run_on, user_timezone, "gtl")
     )
