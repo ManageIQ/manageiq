@@ -25,15 +25,13 @@ def log(msg)
   puts msg
 end
 
-formatter = Class.new.extend(ActionView::Helpers::NumberHelper)
-
 log("Purge Counts")
 dates = {}
 counts = {}
 %w[realtime hourly daily].each do |interval|
   dates[interval]  = opts[interval.to_sym].to_i_with_method.seconds.ago.utc
   counts[interval] = Metric::Purging.purge_count(dates[interval], interval)
-  log("  #{"#{interval.titleize}:".ljust(9)} #{formatter.number_with_delimiter(counts[interval])}")
+  log("  #{"#{interval.titleize}:".ljust(9)} #{ActiveSupport::NumberHelper.number_to_delimited(counts[interval])}")
 end
 puts
 

@@ -144,7 +144,7 @@ module MiqReport::Formatting
 
   def format_bytes_to_human_size(val, options = {})
     helper_options = {}
-    helper_options[:precision] = options[:precision] || 0  # Precision of 0 returns the significant digits
+    helper_options[:precision] = options[:precision] || 0 # Precision of 0 returns the significant digits
     val = ApplicationController.helpers.number_to_human_size(val, helper_options)
     apply_prefix_and_suffix(val, options)
   end
