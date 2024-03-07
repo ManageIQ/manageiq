@@ -29,7 +29,7 @@ RSpec.describe MiqWorker do
     end
 
     before do
-      active_roles = %w(foo bar).map { |rn| FactoryBot.create(:server_role, :name => rn) }
+      active_roles = %w[foo bar].map { |rn| FactoryBot.create(:server_role, :name => rn) }
       @server = EvmSpecHelper.local_miq_server(:active_roles => active_roles)
     end
 
@@ -77,7 +77,7 @@ RSpec.describe MiqWorker do
 
       it "that is a subset of server roles" do
         check_has_required_role(["foo"], true)
-        check_has_required_role(%w(bah foo), true)
+        check_has_required_role(%w[bah foo], true)
       end
 
       it "that is not a subset of server roles" do
@@ -386,13 +386,13 @@ RSpec.describe MiqWorker do
 
     it "include parent entries" do
       expect(capu_worker.config_settings_path).to eq(
-        %i(workers worker_base queue_worker_base ems_metrics_collector_worker ems_metrics_collector_worker_amazon)
+        %i[workers worker_base queue_worker_base ems_metrics_collector_worker ems_metrics_collector_worker_amazon]
       )
     end
 
     it "works for high level entries" do
       expect(MiqEmsMetricsCollectorWorker.config_settings_path).to eq(
-        %i(workers worker_base queue_worker_base ems_metrics_collector_worker)
+        %i[workers worker_base queue_worker_base ems_metrics_collector_worker]
       )
     end
   end

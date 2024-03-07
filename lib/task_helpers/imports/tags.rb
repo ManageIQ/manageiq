@@ -37,10 +37,10 @@ module TaskHelpers
       private
 
       # Tag Categories that are not visible in the UI and should not be imported
-      SPECIAL_TAGS = %w(/managed/folder_path_yellow /managed/folder_path_blue /managed/user/role).freeze
+      SPECIAL_TAGS = %w[/managed/folder_path_yellow /managed/folder_path_blue /managed/user/role].freeze
 
-      UPDATE_CAT_FIELDS = %w(description example_text show perf_by_tag).freeze
-      UPDATE_ENTRY_FIELDS = %w(description name).freeze
+      UPDATE_CAT_FIELDS = %w[description example_text show perf_by_tag].freeze
+      UPDATE_ENTRY_FIELDS = %w[description name].freeze
 
       REGION_NUMBER = MiqRegion.my_region_number.freeze
 
@@ -48,6 +48,7 @@ module TaskHelpers
         tag_categories.each do |tag_category|
           tag = tag_category["ns"] ? "#{tag_category["ns"]}/#{tag_category["name"]}" : "/managed/#{tag_category["name"]}"
           next if SPECIAL_TAGS.include?(tag)
+
           Classification.transaction do
             import_classification(tag_category)
           end
@@ -55,7 +56,7 @@ module TaskHelpers
       end
 
       def import_classification(tag_category)
-        ns = tag_category["ns"] ? tag_category["ns"] : "/managed"
+        ns = tag_category["ns"] || "/managed"
         tag_category["name"] = tag_category["name"].to_s
         tag_category.delete("parent_id")
 
@@ -88,6 +89,7 @@ module TaskHelpers
           end
 
           next if tag_entry.valid?
+
           tag_entry.errors.full_messages.each do |message|
             errors << "Entry #{index}: #{message}"
           end

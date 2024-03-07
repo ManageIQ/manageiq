@@ -84,6 +84,7 @@ module Vmdb
 
     def self.destroy!(resource, keys)
       return if keys.blank?
+
       settings_path = File.join("/", keys.collect(&:to_s))
       resource.settings_changes.where("key LIKE ?", "#{settings_path}%").destroy_all
     end

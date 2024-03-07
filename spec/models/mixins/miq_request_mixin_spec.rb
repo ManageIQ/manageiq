@@ -2,6 +2,7 @@ describe MiqRequestMixin do
   let(:test_class) do
     Class.new do
       attr_accessor :options, :userid
+
       include MiqRequestMixin
 
       def initialize

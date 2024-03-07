@@ -47,8 +47,10 @@ module MiqProvision::Naming
 
     def check_vm_name_uniqueness(fullname, prov_obj)
       return nil if prov_obj.vm_template.nil?
+
       ems = prov_obj.vm_template.ext_management_system
       return nil if ems.nil?
+
       VmOrTemplate.find_by("ems_id = ? and lower(name) = ?", ems.id, fullname.downcase)
     end
   end

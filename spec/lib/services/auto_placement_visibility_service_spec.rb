@@ -7,7 +7,7 @@ describe AutoPlacementVisibilityService do
 
       it "adds values to the field names to hide" do
         expect(subject.determine_visibility(auto_placement)).to eq(
-          :hide => %i(
+          :hide => %i[
             placement_host_name
             placement_ds_name
             host_filter
@@ -17,7 +17,7 @@ describe AutoPlacementVisibilityService do
             rp_filter
             placement_rp_name
             placement_dc_name
-          ),
+          ],
           :edit => []
         )
       end
@@ -29,7 +29,7 @@ describe AutoPlacementVisibilityService do
       it "adds values to the field names to edit" do
         expect(subject.determine_visibility(auto_placement)).to eq(
           :hide => [],
-          :edit => %i(
+          :edit => %i[
             placement_host_name
             placement_ds_name
             host_filter
@@ -39,7 +39,7 @@ describe AutoPlacementVisibilityService do
             rp_filter
             placement_rp_name
             placement_dc_name
-          )
+          ]
         )
       end
     end

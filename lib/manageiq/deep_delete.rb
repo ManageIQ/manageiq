@@ -160,17 +160,17 @@ module ManageIQ
     # in_batches for delete or destroy (not nullify)
     # similar to:
     #   scope.in_batches(of: batch_size, :load => true).destroy_all.count
-    # 
+    #
     # @block takes a subscope and returns a count
-    def batch(scope, batch_size: 1000, &block)
-      pk = scope.primary_key  
+    def batch(scope, batch_size: 1000)
+      pk = scope.primary_key
       total = 0
 
       loop do
         if (id = scope.order(pk).limit(1).offset(batch_size).pluck(pk).first)
-          total += block.call(scope.where("#{pk} < ?", id))
+          total += yield(scope.where("#{pk} < ?", id))
         else
-          return total += block.call(scope)
+          return total += yield(scope)
         end
       end
     end

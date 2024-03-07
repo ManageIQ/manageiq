@@ -9,6 +9,7 @@ module GenericObjectDefinition::ImportExport
       if god["name"].blank? || god["properties"].blank?
         raise _("Incorrect format.")
       end
+
       existing_god = GenericObjectDefinition.find_by(:name => god["name"])
       if existing_god.present?
         if options[:overwrite]

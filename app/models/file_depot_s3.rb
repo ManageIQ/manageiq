@@ -31,12 +31,12 @@ class FileDepotS3 < FileDepot
 
   def with_depot_connection(options = {})
     raise _("no block given") unless block_given?
+
     _log.info("Connecting through #{self.class.name}: [#{name}]")
     yield connect(options)
   end
 
   def verify_credentials(auth_type = nil, options = {})
-
     connection_rescue_block do
       # aws-sdk does Lazy Connections, so call a cheap function
       with_depot_connection(options.merge(:auth_type => auth_type)) do |s3|

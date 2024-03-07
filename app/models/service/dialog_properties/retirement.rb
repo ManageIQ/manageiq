@@ -1,7 +1,7 @@
 class Service
   class DialogProperties
     class Retirement
-      RETIREMENT_WARN_FIELD_NAMES = %w(warn_on warn_in_days warn_in_hours warn_offset_days warn_offset_hours).freeze
+      RETIREMENT_WARN_FIELD_NAMES = %w[warn_on warn_in_days warn_in_hours warn_offset_days warn_offset_hours].freeze
 
       def initialize(options, user)
         @attributes = {}
@@ -87,10 +87,10 @@ class Service
         with_user_timezone { Time.zone.now.utc }
       end
 
-      def with_user_timezone
+      def with_user_timezone(&block)
         user = @user || User.current_user
 
-        user ? user.with_my_timezone { yield } : yield
+        user ? user.with_my_timezone(&block) : yield
       end
     end
   end

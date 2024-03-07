@@ -42,6 +42,7 @@ Host.all.each do |host|
     puts "  pNIC: (None)"
     host.switches.order(Arel.sql("lower(name)")).each do |switch|
       next if found_switches.include?(switch.name)
+
       print_switch("    ", switch)
     end
   end

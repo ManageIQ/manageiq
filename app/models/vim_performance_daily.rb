@@ -79,11 +79,13 @@ class VimPerformanceDaily < MetricRollup
 
       (options[:reflections] || []).each do |assoc|
         next if perf.class.virtual_field?(assoc)
+
         result[key][assoc.to_sym] = perf.send(assoc) if perf.respond_to?(assoc)
       end
     end
 
     return [] if result.empty?
+
     ts_utc = ts.utc.to_time
 
     # Don't bother rolling up values if day is outside of time profile
@@ -120,10 +122,9 @@ class VimPerformanceDaily < MetricRollup
     results.each do |h|
       min_max = h.delete(:min_max)
 
-      h[:min_max] = h.keys.find_all { |k| k.to_s.starts_with?("min", "max") }.inject({}) do |mm, k|
+      h[:min_max] = h.keys.find_all { |k| k.to_s.starts_with?("min", "max") }.each_with_object({}) do |k, mm|
         val = h.delete(k)
         mm[k] = val unless val.nil?
-        mm
       end
       h[:min_max].merge!(min_max) if min_max.kind_of?(Hash)
     end
@@ -138,6 +139,7 @@ class VimPerformanceDaily < MetricRollup
   def self.process_only_cols(recs)
     only_cols = recs.select_values.collect(&:to_sym).presence
     return unless only_cols
+
     only_cols += only_cols.select { |c| c.to_s.starts_with?("min_", "max_") }.collect { |c| c.to_s[4..-1].to_sym }
     only_cols += only_cols.select { |c| c.to_s.starts_with?("abs_") }.collect { |c| c.to_s.split("_")[2..-2].join("_").to_sym }
     if only_cols.detect { |c| c.to_s.starts_with?("v_pct_") }

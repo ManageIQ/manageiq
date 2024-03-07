@@ -17,6 +17,7 @@ module MarshalAutoloader
     raise error
   end
 end
+
 module Marshal
   class << self
     prepend MarshalAutoloader

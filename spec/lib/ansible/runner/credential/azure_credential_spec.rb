@@ -113,7 +113,7 @@ RSpec.describe Ansible::Runner::AzureCredential do
         end
 
         it "adds AWS_SECURITY_TOKEN if present" do
-          auth.update!(:options => { :subscription => "subscription_id" })
+          auth.update!(:options => {:subscription => "subscription_id"})
           expected = {
             "AZURE_AD_USER"         => "manageiq-azure",
             "AZURE_PASSWORD"        => "azure_password",

@@ -2,7 +2,7 @@ module TaskHelpers
   class Exports
     class Tags
       # Tag Categories that are not visible in the UI and should not be exported
-      SPECIAL_TAGS = %w(/managed/folder_path_yellow /managed/folder_path_blue /managed/user/role).freeze
+      SPECIAL_TAGS = %w[/managed/folder_path_yellow /managed/folder_path_blue /managed/user/role].freeze
 
       def export(options = {})
         export_dir = options[:directory]

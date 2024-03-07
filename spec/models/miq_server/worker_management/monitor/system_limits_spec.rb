@@ -9,7 +9,7 @@ RSpec.describe MiqServer do
         :start_algorithm:
           :name: used_swap_percent_lt_value
           :value: 60
-        EOS
+      EOS
                                    )
 
       allow(@server.worker_manager).to receive_messages(:worker_monitor_settings => @monitor_settings)
@@ -35,7 +35,7 @@ RSpec.describe MiqServer do
               :start_algorithm:
                 :name: :used_swap_percent_lt_value
                 :value: 20
-            EOS
+          EOS
                            )
           allow(@server.worker_manager).to receive_messages(:child_worker_settings => child)
 

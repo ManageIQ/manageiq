@@ -1,6 +1,6 @@
 RSpec.describe FirmwareTarget do
-  let(:attrs)       { { :manufacturer => 'manu', :model => 'model' } }
-  let(:other_attrs) { { :manufacturer => 'other-manu', :model => 'other-model' } }
+  let(:attrs)       { {:manufacturer => 'manu', :model => 'model'} }
+  let(:other_attrs) { {:manufacturer => 'other-manu', :model => 'other-model'} }
 
   subject! { FactoryBot.create(:firmware_target, **attrs) }
 

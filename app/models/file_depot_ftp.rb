@@ -46,11 +46,13 @@ class FileDepotFtp < FileDepot
   def verify_credentials(_auth_type = nil, cred_hash = nil)
     res = with_connection(cred_hash, &:last_response)
     raise _("Depot Settings validation failed") unless res
+
     res
   end
 
   def with_connection(cred_hash = nil)
     raise _("no block given") unless block_given?
+
     _log.info("Connecting through #{self.class.name}: [#{name}]")
     begin
       connection = connect(cred_hash)

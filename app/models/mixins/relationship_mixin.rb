@@ -151,6 +151,7 @@ module RelationshipMixin
   def parent_rel(*args)
     rels = parent_rels(*args).take(2)
     raise _("Multiple parents found.") if rels.length > 1
+
     rels.first
   end
 
@@ -160,6 +161,7 @@ module RelationshipMixin
 
     rels = parent_rels(*args).take(2)
     raise _("Multiple parents found.") if rels.length > 1
+
     rels.first.try(:resource)
   end
 
@@ -169,12 +171,13 @@ module RelationshipMixin
 
     rels = parent_ids(*args).take(2)
     raise _("Multiple parents found.") if rels.length > 1
+
     rels.first
   end
 
   # Returns the relationship of the root of the tree the record is in
   def root_rel
-    rel = relationship.try!(:root)
+    rel = relationship&.root
     # micro-optimization: if the relationship is us, "load" the resource
     rel.resource = self if rel && rel.resource_id == id && rel.resource_type == self.class.base_class.name.to_s
     rel || relationship_for_isolated_root
@@ -380,6 +383,7 @@ module RelationshipMixin
     options = args.extract_options!
     rel = relationship(:raise_on_multiple => true)
     return {} if rel.nil?  # TODO: Should this return nil or init_relationship or Relationship.new in a Hash?
+
     Relationship.filter_by_resource_type(rel.descendants, options).arrange
   end
 
@@ -427,6 +431,7 @@ module RelationshipMixin
     options = args.extract_options!
     rel = relationship(:raise_on_multiple => true)
     return {relationship_for_isolated_root => {}} if rel.nil?
+
     Relationship.filter_by_resource_type(rel.subtree, options).arrange
   end
 
@@ -479,6 +484,7 @@ module RelationshipMixin
     if options[:raise_on_multiple]
       rels = relationships.take(2)
       raise _("Multiple relationships found") if rels.length > 1
+
       rels.first
     else
       relationships.first
@@ -553,6 +559,7 @@ module RelationshipMixin
     options = args.extract_options!
     root_id = relationship.try(:root_id)
     return {relationship_for_isolated_root => {}} if root_id.nil?
+
     Relationship.filter_by_resource_type(Relationship.subtree_of(root_id), options).arrange
   end
 
@@ -716,7 +723,7 @@ module RelationshipMixin
     of_type = Array.wrap(options[:of_type])
     all_children_removed = of_type.empty? || (child_types - of_type).empty?
 
-    if self.is_root? && all_children_removed
+    if is_root? && all_children_removed
       remove_all_relationships
     else
       remove_all_relationships(child_rels(*args))

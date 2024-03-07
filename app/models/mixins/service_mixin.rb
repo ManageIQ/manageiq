@@ -53,20 +53,19 @@ module ServiceMixin
 
   def delay_type(action)
     return :start_delay if action == :start
-    return :stop_delay if action == :stop
+
+    :stop_delay if action == :stop
   end
 
-  def each_group_resource(grp_idx = nil)
-    return enum_for(:each_group_resource) unless block_given?
+  def each_group_resource(grp_idx = nil, &block)
+    return enum_for(:each_group_resource) unless block
 
     if children.present? && service_resources.empty?
       children.each do |child|
-        child.service_resources.each { |sr| yield(sr) }
+        child.service_resources.each(&block)
       end
     elsif grp_idx.nil?
-      service_resources.each do |sr|
-        yield(sr)
-      end
+      service_resources.each(&block)
     else
       service_resources.each do |sr|
         yield(sr) if sr.group_idx == grp_idx
@@ -97,6 +96,7 @@ module ServiceMixin
 
   def parent_services(svc = self)
     return svc.ancestors if svc.kind_of?(Service)
+
     srs = ServiceResource.where(:resource => svc)
     srs.collect { |sr| sr.public_send(sr.resource_type.underscore) }.compact
   end
@@ -128,6 +128,7 @@ module ServiceMixin
 
   def circular_reference?(child_svc)
     return true if child_svc == self
+
     if child_svc.kind_of?(Service)
       ancestor_ids.include?(child_svc.id)
     elsif child_svc.kind_of?(ServiceTemplate)
@@ -138,8 +139,10 @@ module ServiceMixin
   def circular_reference_check(child_svc, parent_svc = self)
     return child_svc if child_svc == parent_svc
     return nil unless child_svc.kind_of?(ServiceTemplate)
+
     parent_services(parent_svc).each do |service|
       return(service) if service.id == child_svc.id
+
       result = circular_reference_check(child_svc, service)
       return(result) unless result.nil?
     end

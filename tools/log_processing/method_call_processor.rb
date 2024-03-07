@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-RAILS_ROOT = File.expand_path(File.join(__dir__, %w(.. ..)))
+RAILS_ROOT = File.expand_path(File.join(__dir__, %w[.. ..]))
 require 'manageiq/gems/pending'
 require 'miq_logger_processor'
 
@@ -12,6 +12,7 @@ puts "Gathering method calls..."
 
 method_call_hash = MiqLoggerProcessor.new(logfile).each_with_object({}) do |line, hash|
   next unless line.fq_method
+
   hash[line.fq_method] ||= 0
   hash[line.fq_method] += 1
 end

@@ -5,7 +5,7 @@ class VimPerformanceState < ApplicationRecord
 
     module ClassMethods
       def purge_mode_and_value
-        %w(orphaned resource)
+        %w[orphaned resource]
       end
 
       # remove anything where the resource no longer exists AND

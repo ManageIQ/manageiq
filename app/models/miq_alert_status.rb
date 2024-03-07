@@ -1,5 +1,5 @@
 class MiqAlertStatus < ApplicationRecord
-  SEVERITY_LEVELS = %w(error warning info).freeze
+  SEVERITY_LEVELS = %w[error warning info].freeze
 
   belongs_to :miq_alert
   belongs_to :resource, :polymorphic => true
@@ -9,14 +9,14 @@ class MiqAlertStatus < ApplicationRecord
   virtual_column :assignee, :type => :string
   virtual_column :hidden, :type => :boolean
 
-  validates :severity, :acceptance => { :accept => SEVERITY_LEVELS }
+  validates :severity, :acceptance => {:accept => SEVERITY_LEVELS}
 
   def assigned?
     assignee_id.present?
   end
 
   def hidden?
-    miq_alert_status_actions.where(:action_type => %w(hide show)).last.try(:action_type) == 'hide'
+    miq_alert_status_actions.where(:action_type => %w[hide show]).last.try(:action_type) == 'hide'
   end
 
   def self.display_name(number = 1)

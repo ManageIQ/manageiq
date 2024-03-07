@@ -26,15 +26,15 @@ class NetworkRouter < ApplicationRecord
   serialize :extra_attributes
 
   virtual_column :external_gateway_info, :type => :string # :hash
-  virtual_column :distributed          , :type => :boolean
-  virtual_column :routes               , :type => :string # :array
-  virtual_column :propagating_vgws     , :type => :string # :array
-  virtual_column :main_route_table     , :type => :boolean # :array
-  virtual_column :high_availability    , :type => :boolean
+  virtual_column :distributed, :type => :boolean
+  virtual_column :routes, :type => :string # :array
+  virtual_column :propagating_vgws, :type => :string # :array
+  virtual_column :main_route_table, :type => :boolean # :array
+  virtual_column :high_availability, :type => :boolean
 
   # Define all getters and setters for extra_attributes related virtual columns
-  %i(external_gateway_info distributed routes propagating_vgws main_route_table high_availability).each do |action|
-    define_method("#{action}=") do |value|
+  %i[external_gateway_info distributed routes propagating_vgws main_route_table high_availability].each do |action|
+    define_method(:"#{action}=") do |value|
       extra_attributes_save(action, value)
     end
 
@@ -53,10 +53,10 @@ class NetworkRouter < ApplicationRecord
 
   def extra_attributes_save(key, value)
     self.extra_attributes = {} if extra_attributes.blank?
-    self.extra_attributes[key] = value
+    extra_attributes[key] = value
   end
 
   def extra_attributes_load(key)
-    self.extra_attributes[key] unless extra_attributes.blank?
+    extra_attributes[key] if extra_attributes.present?
   end
 end

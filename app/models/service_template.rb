@@ -192,6 +192,7 @@ class ServiceTemplate < ApplicationRecord
 
   def archive
     raise _("Cannot archive while in use") unless active_requests.empty?
+
     archive!
   end
 
@@ -218,7 +219,7 @@ class ServiceTemplate < ApplicationRecord
     nh['visible'] = nh.delete('display') if nh.key?('display')
 
     nh['options'][:dialog] = service_task.options[:dialog]
-    (nh.keys - Service.column_names + %w(created_at guid service_template_id updated_at id type prov_type)).each { |key| nh.delete(key) }
+    (nh.keys - Service.column_names + %w[created_at guid service_template_id updated_at id type prov_type]).each { |key| nh.delete(key) }
 
     # Hide child services by default
     nh['visible'] = false if parent_svc
@@ -237,7 +238,7 @@ class ServiceTemplate < ApplicationRecord
 
       service_resources.each do |sr|
         nh = sr.attributes.dup
-        %w(id created_at updated_at service_template_id).each { |key| nh.delete(key) }
+        %w[id created_at updated_at service_template_id].each { |key| nh.delete(key) }
         svc.add_resource(sr.resource, nh) unless sr.resource.nil?
       end
     end
@@ -288,7 +289,7 @@ class ServiceTemplate < ApplicationRecord
       scaling_min = child_svc_rsc.scaling_min
       1.upto(scaling_min).each do |scaling_idx|
         nh = parent_service_task.attributes.dup
-        %w(id created_on updated_on type state status message).each { |key| nh.delete(key) }
+        %w[id created_on updated_on type state status message].each { |key| nh.delete(key) }
         nh['options'] = parent_service_task.options.dup
         nh['options'].delete(:child_tasks)
         # Initial Options[:dialog] to an empty hash so we do not pass down dialog values to child services tasks
@@ -297,6 +298,7 @@ class ServiceTemplate < ApplicationRecord
                 !self.class.include_service_template?(parent_service_task,
                                                       child_svc_rsc.resource.id,
                                                       parent_service)
+
         new_task = parent_service_task.class.new(nh)
         new_task.options.merge!(
           :src_id              => child_svc_rsc.resource.id,
@@ -304,7 +306,7 @@ class ServiceTemplate < ApplicationRecord
           :scaling_min         => scaling_min,
           :service_resource_id => child_svc_rsc.id,
           :parent_service_id   => parent_service.id,
-          :parent_task_id      => parent_service_task.id,
+          :parent_task_id      => parent_service_task.id
         )
         new_task.state  = 'pending'
         new_task.status = 'Ok'
@@ -321,6 +323,7 @@ class ServiceTemplate < ApplicationRecord
 
   def set_ownership(service, user)
     return if user.nil?
+
     service.evm_owner = user
     if user.current_group
       $log.info("Setting Service Owning User to Name=#{user.name}, ID=#{user.id}, Group to Name=#{user.current_group.name}, ID=#{user.current_group.id}")
@@ -399,13 +402,14 @@ class ServiceTemplate < ApplicationRecord
     resource_action_list.each do |action|
       ae_endpoint = ae_endpoints[action[:param_key]]
       next unless ae_endpoint
+
       build_resource_action(ae_endpoint, action)
     end
     save!
   end
 
   def self.create_from_options(options)
-    create!(options.except(:config_info).merge(:options => { :config_info => options[:config_info] }))
+    create!(options.except(:config_info).merge(:options => {:config_info => options[:config_info]}))
   end
   private_class_method :create_from_options
 
@@ -414,6 +418,7 @@ class ServiceTemplate < ApplicationRecord
     request_options[:parent_id] = options.delete('param_parent_request_id') unless options['param_parent_request_id'].nil?
     result = order(user, options, request_options)
     raise result[:errors].join(", ") if result[:errors].any?
+
     result[:request]
   end
 
@@ -430,7 +435,7 @@ class ServiceTemplate < ApplicationRecord
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "order",
-      :args        => [user_id, options, request_options],
+      :args        => [user_id, options, request_options]
     )
   end
 
@@ -454,7 +459,7 @@ class ServiceTemplate < ApplicationRecord
           :interval   => {:unit => "once"},
           :start_time => time,
           :tz         => "UTC",
-        },
+        }
       )
       {:schedule => schedule}
     else
@@ -517,6 +522,7 @@ class ServiceTemplate < ApplicationRecord
     if options[:prov_type] && options[:prov_type] != prov_type
       raise _('prov_type cannot be changed')
     end
+
     options[:config_info]
   end
 

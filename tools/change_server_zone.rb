@@ -8,13 +8,13 @@ end
 
 server_id, zone_name = ARGV
 
-server = MiqServer.where(:id => server_id).take
+server = MiqServer.find_by(:id => server_id)
 unless server
   puts "Unable to find server with id [#{server_id}]"
   exit 1
 end
 
-zone = Zone.where(:name => zone_name).take
+zone = Zone.find_by(:name => zone_name)
 unless zone
   puts "Unable to find zone with name [#{zone_name}]"
   exit 1

@@ -13,10 +13,10 @@ module AssignmentMixin
   end
   module_function :all_assignments
 
-  included do  #:nodoc:
+  included do  # :nodoc:
     acts_as_miq_taggable
 
-    const_set("ASSIGNMENT_PARENT_ASSOCIATIONS", %i(parent_blue_folders parent_resource_pool host ems_cluster ext_management_system my_enterprise physical_server)) unless const_defined?("ASSIGNMENT_PARENT_ASSOCIATIONS")
+    const_set(:ASSIGNMENT_PARENT_ASSOCIATIONS, %i[parent_blue_folders parent_resource_pool host ems_cluster ext_management_system my_enterprise physical_server]) unless const_defined?(:ASSIGNMENT_PARENT_ASSOCIATIONS)
 
     cache_with_timeout(:assignments_cached, 1.minute) { assignments }
   end
@@ -50,6 +50,7 @@ module AssignmentMixin
     Array.wrap(objects).each do |obj|
       tag = build_tag_tagging_path(obj, klass)
       next if tag.nil?
+
       tag_add(tag, :ns => namespace)
     end
     reload
@@ -59,6 +60,7 @@ module AssignmentMixin
     Array.wrap(objects).each do |obj|
       tag = build_tag_tagging_path(obj, klass)
       next if tag.nil?
+
       tag_remove(tag, :ns => namespace)
     end
     reload
@@ -169,7 +171,7 @@ module AssignmentMixin
     def assignments
       # Get all assigned, enabled instances for type klass
       records = kind_of?(Class) ? all : self
-      assignment_map = records.each_with_object({}) { |a, h| h[a.id] = a }
+      assignment_map = records.index_by { |a| a.id }
       Tag
         .includes(:taggings).references(:taggings)
         .where("taggings.taggable_type = ? and tags.name like ?", name, "#{namespace}/%")
@@ -204,7 +206,7 @@ module AssignmentMixin
 
       parents.each { |parent| _log.debug("parent id: #{parent.id} class: #{parent.class}") } if parents.kind_of?(Array)
 
-      tlist =  parents.collect { |p| "#{p.class.base_model.name.underscore}/id/#{p.id}" } # Assigned directly to parents
+      tlist = parents.collect { |p| "#{p.class.base_model.name.underscore}/id/#{p.id}" } # Assigned directly to parents
       if options[:tag_list] # Assigned to target (passed in)
         tlist += options[:tag_list]
         _log.debug("Using tag list: #{options[:tag_list].join(', ')}")
@@ -249,6 +251,7 @@ module AssignmentMixin
       "#{obj.class.base_model.name.underscore}/id/#{obj.id}"
     else                                # obj is the id of an instance of <klass>
       raise _("Class must be specified when object is an integer") if klass.nil?
+
       "#{klass.underscore}/id/#{obj}"
     end
   end

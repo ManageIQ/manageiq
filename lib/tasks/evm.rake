@@ -64,6 +64,7 @@ namespace :evm do
   desc "Determine if the configured encryption key is valid"
   task :validate_encryption_key => :environment do
     raise "Invalid encryption key" unless EvmApplication.encryption_key_valid?
+
     puts "Encryption key valid"
   end
 

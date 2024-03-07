@@ -53,7 +53,7 @@ class MiqServer::WorkerManagement
     require 'drb'
     require 'drb/acl'
 
-    acl = ACL.new(%w( deny all allow 127.0.0.1/32 ))
+    acl = ACL.new(%w[deny all allow 127.0.0.1/32])
     DRb.install_acl(acl)
 
     require 'tmpdir'

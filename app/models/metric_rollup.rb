@@ -6,15 +6,15 @@ class MetricRollup < ApplicationRecord
   include Metric::Common
   include Metric::ChargebackHelper
 
-  CHARGEBACK_METRIC_FIELDS = %w(derived_vm_numvcpus cpu_usagemhz_rate_average
+  CHARGEBACK_METRIC_FIELDS = %w[derived_vm_numvcpus cpu_usagemhz_rate_average
                                 cpu_usage_rate_average disk_usage_rate_average
                                 derived_memory_available derived_memory_used
                                 net_usage_rate_average derived_vm_used_disk_storage
-                                derived_vm_allocated_disk_storage).freeze
+                                derived_vm_allocated_disk_storage].freeze
 
-  METERING_USED_METRIC_FIELDS = %w(cpu_usagemhz_rate_average derived_memory_used net_usage_rate_average).freeze
+  METERING_USED_METRIC_FIELDS = %w[cpu_usagemhz_rate_average derived_memory_used net_usage_rate_average].freeze
 
-  CAPTURE_INTERVAL_NAMES = %w(hourly daily).freeze
+  CAPTURE_INTERVAL_NAMES = %w[hourly daily].freeze
 
   #
   # min_max column getters
@@ -47,9 +47,9 @@ class MetricRollup < ApplicationRecord
     # This should really be done by subclassing where each subclass can define reservations or
     # changing the reports to allow for optional reservations.
     if val.to_i == 0 && col.to_s =~ /(.+)_reserved$/
-      return send("#{$1}_available")
+      send(:"#{$1}_available")
     else
-      return val
+      val
     end
   end
 
@@ -63,7 +63,7 @@ class MetricRollup < ApplicationRecord
 
   def self.rollups_in_range(resource_type, resource_ids, capture_interval_name, start_date, end_date = nil)
     capture_interval_name ||= 'hourly'
-    end_date = end_date.nil? ? Time.zone.today : end_date
+    end_date = Time.zone.today if end_date.nil?
     metrics = where(:resource_type         => resource_type,
                     :capture_interval_name => capture_interval_name,
                     :timestamp             => start_date.beginning_of_day...end_date.end_of_day)

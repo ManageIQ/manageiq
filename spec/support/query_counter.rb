@@ -6,7 +6,7 @@ module Spec
         new.count(&block)
       end
 
-      IGNORED_STATEMENTS = %w(CACHE SCHEMA)
+      IGNORED_STATEMENTS = %w[CACHE SCHEMA]
       IGNORED_QUERIES    = /^(?:ROLLBACK|BEGIN|COMMIT|SAVEPOINT|RELEASE)/
 
       def callback(_name, _start, _finish, _id, payload)

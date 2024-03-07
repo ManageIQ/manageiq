@@ -17,7 +17,7 @@ module MiqServer::WorkerManagement::Heartbeat
   end
 
   def clean_heartbeat_files
-    Dir.glob(Rails.root.join("tmp", "*.hb")).each { |f| File.delete(f) }
+    Dir.glob(Rails.root.join("tmp/*.hb")).each { |f| File.delete(f) }
   end
 
   private

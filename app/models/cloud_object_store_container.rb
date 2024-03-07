@@ -41,6 +41,7 @@ class CloudObjectStoreContainer < ApplicationRecord
 
   def self.cloud_object_store_container_create(ems_id, options)
     raise ArgumentError, _("ems_id cannot be nil") if ems_id.nil?
+
     ext_management_system = ExtManagementSystem.find(ems_id)
     raise ArgumentError, _("ext_management_system cannot be found") if ext_management_system.nil?
 

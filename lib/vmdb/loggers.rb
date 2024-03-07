@@ -14,6 +14,7 @@ module Vmdb
   module Loggers
     def self.init
       return if @initialized
+
       create_loggers
       @initialized = true
     end

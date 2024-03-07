@@ -14,7 +14,7 @@ describe LinkedCloneVisibilityService do
           it "adds values to the field names to edit" do
             expect(subject.determine_visibility(provision_type, linked_clone, snapshot_count)).to eq(
               :hide => [],
-              :edit => %i(linked_clone snapshot),
+              :edit => %i[linked_clone snapshot],
               :show => []
             )
           end
@@ -54,7 +54,7 @@ describe LinkedCloneVisibilityService do
 
       it "adds values to the field names to hide" do
         expect(subject.determine_visibility(provision_type, linked_clone, snapshot_count)).to eq(
-          :hide => %i(linked_clone snapshot),
+          :hide => %i[linked_clone snapshot],
           :edit => [],
           :show => []
         )

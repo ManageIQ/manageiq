@@ -22,7 +22,7 @@ RSpec.describe VmOrTemplate do
     before { subject }
 
     context "with attrs of template => false, ems_id => nil, host_id => nil" do
-      let(:attrs) { { :template => false, :ems_id => nil, :host_id => nil } }
+      let(:attrs) { {:template => false, :ems_id => nil, :host_id => nil} }
 
       it("is not #registered?")        { expect(subject.registered?).to be false }
       it("is not in registered_vms")   { expect(registered_vms).to_not include subject }
@@ -30,7 +30,7 @@ RSpec.describe VmOrTemplate do
     end
 
     context "with attrs template => false, ems_id => nil, host_id => [ID]" do
-      let(:attrs) { { :template => false, :ems_id => nil, :host_id => host.id } }
+      let(:attrs) { {:template => false, :ems_id => nil, :host_id => host.id} }
 
       it("is #registered?")            { expect(subject.registered?).to be true }
       it("is in registered_vms")       { expect(registered_vms).to include subject }
@@ -38,7 +38,7 @@ RSpec.describe VmOrTemplate do
     end
 
     context "with attrs template => false, ems_id => [ID], host_id => nil" do
-      let(:attrs) { { :template => false, :ems_id => ems.id, :host_id => nil } }
+      let(:attrs) { {:template => false, :ems_id => ems.id, :host_id => nil} }
 
       it("is not #registered?")        { expect(subject.registered?).to be false }
       it("is not in registered_vms")   { expect(registered_vms).to_not include subject }
@@ -46,7 +46,7 @@ RSpec.describe VmOrTemplate do
     end
 
     context "with attrs template => false, ems_id => [ID], host_id => [ID]" do
-      let(:attrs) { { :template => false, :ems_id => ems.id, :host_id => host.id } }
+      let(:attrs) { {:template => false, :ems_id => ems.id, :host_id => host.id} }
 
       it("is #registered?")            { expect(subject.registered?).to be true }
       it("is in registered_vms")       { expect(registered_vms).to include subject }
@@ -54,7 +54,7 @@ RSpec.describe VmOrTemplate do
     end
 
     context "with attrs template => true, ems_id => nil, host_id => nil" do
-      let(:attrs) { { :template => true, :ems_id => nil, :host_id => nil } }
+      let(:attrs) { {:template => true, :ems_id => nil, :host_id => nil} }
 
       it("is not #registered?")        { expect(subject.registered?).to be false }
       it("is not in registered_vms")   { expect(registered_vms).to_not include subject }
@@ -62,7 +62,7 @@ RSpec.describe VmOrTemplate do
     end
 
     context "with attrs if template => true, ems_id => nil, host_id => [ID]" do
-      let(:attrs) { { :template => true, :ems_id => nil, :host_id => host.id } }
+      let(:attrs) { {:template => true, :ems_id => nil, :host_id => host.id} }
 
       it("is not #registered?")        { expect(subject.registered?).to be false }
       it("is not in registered_vms")   { expect(registered_vms).to_not include subject }
@@ -70,7 +70,7 @@ RSpec.describe VmOrTemplate do
     end
 
     context "with attrs if template => true, ems_id => [ID], host_id => nil" do
-      let(:attrs) { { :template => true, :ems_id => ems.id, :host_id => nil } }
+      let(:attrs) { {:template => true, :ems_id => ems.id, :host_id => nil} }
 
       it("is not #registered?")        { expect(subject.registered?).to be false }
       it("is not in registered_vms")   { expect(registered_vms).to_not include subject }
@@ -78,7 +78,7 @@ RSpec.describe VmOrTemplate do
     end
 
     context "with attrs if template => true, ems_id => [ID], host_id => [ID]" do
-      let(:attrs) { { :template => true, :ems_id => ems.id, :host_id => host.id } }
+      let(:attrs) { {:template => true, :ems_id => ems.id, :host_id => host.id} }
 
       it("is #registered?")            { expect(subject.registered?).to be true }
       it("is in registered_vms")       { expect(registered_vms).to include subject }
@@ -232,8 +232,8 @@ RSpec.describe VmOrTemplate do
 
       it "by IP Address" do
         ipaddress       = "192.268.20.1"
-        hardware        = FactoryBot.create(:hardware,  :vm_or_template_id => @vm.id,       :host     => @host)
-        FactoryBot.create(:network,   :hardware_id       => hardware.id, :ipaddress => ipaddress)
+        hardware        = FactoryBot.create(:hardware,  :vm_or_template_id => @vm.id,       :host => @host)
+        FactoryBot.create(:network,   :hardware_id => hardware.id, :ipaddress => ipaddress)
         event_msg       = "Add EMS Event by IP address"
 
         expect_any_instance_of(VmOrTemplate).to receive(:add_ems_event).with(@event_type, event_msg, @event_timestamp)
@@ -294,7 +294,7 @@ RSpec.describe VmOrTemplate do
         vm_no_host       = FactoryBot.create(:vm_vmware, :name => "vm 2", :location => "/local/path", :uid_ems => "2", :ems_id => 102)
         ipaddress        = "192.268.20.2"
         hardware_no_host = FactoryBot.create(:hardware, :vm_or_template_id => vm_no_host.id)
-        FactoryBot.create(:network,  :hardware_id       => hardware_no_host.id, :ipaddress => ipaddress)
+        FactoryBot.create(:network,  :hardware_id => hardware_no_host.id, :ipaddress => ipaddress)
 
         event_msg = "Add EMS Event by IP address with no host"
         @event_hash[:message]           = event_msg
@@ -311,7 +311,7 @@ RSpec.describe VmOrTemplate do
         vm_no_ems       = FactoryBot.create(:vm_vmware, :name => "vm 3", :location => "/local/path", :host => @host)
         ipaddress       = "192.268.20.3"
         hardware_no_ems = FactoryBot.create(:hardware, :vm_or_template_id => vm_no_ems.id)
-        FactoryBot.create(:network,  :hardware_id       => hardware_no_ems.id, :ipaddress => ipaddress)
+        FactoryBot.create(:network,  :hardware_id => hardware_no_ems.id, :ipaddress => ipaddress)
 
         event_msg = "Add EMS Event by IP address with no ems id"
         @event_hash[:message]           = event_msg
@@ -329,7 +329,7 @@ RSpec.describe VmOrTemplate do
         vm_no_host_no_ems       = FactoryBot.create(:vm_vmware, :name => "vm 4", :location => "/local/path")
         ipaddress               = "192.268.20.4"
         hardware_no_host_no_ems = FactoryBot.create(:hardware, :vm_or_template_id => vm_no_host_no_ems.id)
-        FactoryBot.create(:network,  :hardware_id       => hardware_no_host_no_ems.id, :ipaddress => ipaddress)
+        FactoryBot.create(:network,  :hardware_id => hardware_no_host_no_ems.id, :ipaddress => ipaddress)
 
         event_msg = "Add EMS Event by IP address with no host and no ems id"
         @event_hash[:message]           = event_msg
@@ -345,7 +345,7 @@ RSpec.describe VmOrTemplate do
 
   context "#reconfigured_hardware_value?" do
     before do
-      @vm       =  FactoryBot.create(:vm_vmware)
+      @vm = FactoryBot.create(:vm_vmware)
       FactoryBot.create(:hardware, :vm_or_template_id => @vm.id, :memory_mb => 1024)
       @options = {:hdw_attr => :memory_mb}
     end
@@ -656,7 +656,7 @@ RSpec.describe VmOrTemplate do
 
   context "#supports?(:evacuate)" do
     it "returns false for querying vmware VM if it supports evacuate operation" do
-      vm =  FactoryBot.create(:vm_vmware)
+      vm = FactoryBot.create(:vm_vmware)
       expect(vm.supports?(:evacuate)).to eq(false)
     end
   end
@@ -672,7 +672,7 @@ RSpec.describe VmOrTemplate do
     end
 
     it "returns false for Amazon VM" do
-      vm =  FactoryBot.create(:vm_amazon)
+      vm = FactoryBot.create(:vm_amazon)
       expect(vm.supports?(:smartstate_analysis)).to_not eq(true)
     end
   end

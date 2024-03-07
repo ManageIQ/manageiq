@@ -2,7 +2,7 @@
 require 'bundler/setup'
 require 'optimist'
 
-TYPES = %w(string integer boolean symbol float array).freeze
+TYPES = %w[string integer boolean symbol float array].freeze
 
 opts = Optimist.options(ARGV) do
   banner "USAGE:   #{__FILE__} -s <server id> -p <settings path separated by a /> -v <new value>\n" \

@@ -19,6 +19,7 @@ module Spec
                                                        :service_type => 'atomic')
           item.update(:prov_type => value[:prov_type]) if value[:prov_type].present?
           next if value[:prov_type] && value[:prov_type].starts_with?("generic")
+
           options = value[:request]
           options ||= {}
           options[:dialog] = {}
@@ -34,6 +35,7 @@ module Spec
         hash.each do |name, value|
           next unless value[:type] == "composite"
           next if ServiceTemplate.find_by(:name => name)
+
           build_a_composite(name, hash)
         end
       end
@@ -49,9 +51,9 @@ module Spec
           child_options[key] = {:provision_index => index}
         end
 
-        model['top'] = { :type          => 'composite',
+        model['top'] = {:type          => 'composite',
                          :children      => children,
-                         :child_options => child_options }
+                         :child_options => child_options}
 
         build_service_template_tree(model)
       end
@@ -93,6 +95,7 @@ module Spec
       def build_service_template_request(root_st_name, user, dialog_options = {})
         root = ServiceTemplate.find_by(:name => root_st_name)
         return nil unless root
+
         options = {:src_id => root.id, :target_name => "barney"}.merge(dialog_options)
         FactoryBot.create(:service_template_provision_request,
                            :description    => 'Service Request',

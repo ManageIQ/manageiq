@@ -1,5 +1,5 @@
 class DialogSerializer < Serializer
-  EXCLUDED_ATTRIBUTES = %w(created_at id updated_at)
+  EXCLUDED_ATTRIBUTES = %w[created_at id updated_at]
 
   def initialize(dialog_tab_serializer = DialogTabSerializer.new)
     @dialog_tab_serializer = dialog_tab_serializer

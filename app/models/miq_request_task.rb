@@ -20,7 +20,7 @@ class MiqRequestTask < ApplicationRecord
 
   delegate :request_class, :task_description, :to => :class
 
-  validates_inclusion_of :status, :in => %w( Ok Warn Error Timeout )
+  validates_inclusion_of :status, :in => %w[Ok Warn Error Timeout]
 
   include MiqRequestMixin
   include TenancyMixin
@@ -30,9 +30,9 @@ class MiqRequestTask < ApplicationRecord
   CANCEL_STATUS_FINISHED   = "canceled".freeze
   CANCEL_STATUS            = [CANCEL_STATUS_REQUESTED, CANCEL_STATUS_PROCESSING, CANCEL_STATUS_FINISHED].freeze
 
-  validates :cancelation_status, :inclusion => { :in        => CANCEL_STATUS,
+  validates :cancelation_status, :inclusion => {:in        => CANCEL_STATUS,
                                                  :allow_nil => true,
-                                                 :message   => "should be one of #{CANCEL_STATUS.join(", ")}" }
+                                                 :message   => "should be one of #{CANCEL_STATUS.join(", ")}"}
 
   def approved?
     if miq_request.class.name.include?('Template') && miq_request_task
@@ -124,6 +124,7 @@ class MiqRequestTask < ApplicationRecord
     if request_class::ACTIVE_STATES.include?(state)
       raise _("%{task} request is already being processed") % {:task => request_class::TASK_DESCRIPTION}
     end
+
     task_check_on_execute
   end
 
@@ -215,13 +216,12 @@ class MiqRequestTask < ApplicationRecord
 
       # Process the request
       do_request
-
     rescue => err
       message = "Error: #{err.message}"
       _log.error("[#{message}] encountered during #{request_class::TASK_DESCRIPTION}")
       _log.log_backtrace(err)
       update_and_notify_parent(:state => "finished", :status => "Error", :message => message)
-      return
+      nil
     end
   end
 
@@ -261,7 +261,7 @@ class MiqRequestTask < ApplicationRecord
   end
 
   def valid_states
-    %w(pending finished) + request_class::ACTIVE_STATES
+    %w[pending finished] + request_class::ACTIVE_STATES
   end
 
   def dialog_values

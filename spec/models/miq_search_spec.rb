@@ -158,7 +158,7 @@ RSpec.describe MiqSearch do
 
     before do
       FileUtils.mkdir_p(fixture_dir)
-      FileUtils.cp_r(Rails.root.join('db', 'fixtures', 'miq_searches.yml'), search_yml)
+      FileUtils.cp_r(Rails.root.join("db/fixtures/miq_searches.yml"), search_yml)
       stub_const("MiqSearch::FIXTURE_DIR", fixture_dir)
       described_class.seed
     end

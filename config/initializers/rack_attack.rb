@@ -6,12 +6,12 @@ if defined?(Rails::Server) && !Rails.env.test?
   # to be done manually.
   Rails.application.middleware.use(Rack::Attack)
 
-  api_login_limit  = proc { ::Settings.server.rate_limiting.api_login.limit }
-  api_login_period = proc { ::Settings.server.rate_limiting.api_login.period.to_i_with_method }
-  request_limit    = proc { ::Settings.server.rate_limiting.request.limit }
-  request_period   = proc { ::Settings.server.rate_limiting.request.period.to_i_with_method }
-  ui_login_limit   = proc { ::Settings.server.rate_limiting.ui_login.limit }
-  ui_login_period  = proc { ::Settings.server.rate_limiting.ui_login.period.to_i_with_method }
+  api_login_limit  = proc { Settings.server.rate_limiting.api_login.limit }
+  api_login_period = proc { Settings.server.rate_limiting.api_login.period.to_i_with_method }
+  request_limit    = proc { Settings.server.rate_limiting.request.limit }
+  request_period   = proc { Settings.server.rate_limiting.request.period.to_i_with_method }
+  ui_login_limit   = proc { Settings.server.rate_limiting.ui_login.limit }
+  ui_login_period  = proc { Settings.server.rate_limiting.ui_login.period.to_i_with_method }
 
   # Throttle all requests by IP
   #

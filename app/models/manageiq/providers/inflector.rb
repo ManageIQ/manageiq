@@ -2,12 +2,12 @@ module ManageIQ::Providers::Inflector
   class ObjectNotNamespacedError < StandardError; end
 
   def self.provider_name(class_or_instance)
-    klass = class_or_instance.class == Class ? class_or_instance : class_or_instance.class
+    klass = class_or_instance.instance_of?(Class) ? class_or_instance : class_or_instance.class
     provider_module(klass).name.split('::').last
   end
 
   def self.manager_type(class_or_instance)
-    klass = class_or_instance.class == Class ? class_or_instance : class_or_instance.class
+    klass = class_or_instance.instance_of?(Class) ? class_or_instance : class_or_instance.class
     manager = (klass.name.split('::') - provider_module(klass).name.split('::')).first
     manager.chomp('Manager')
   end

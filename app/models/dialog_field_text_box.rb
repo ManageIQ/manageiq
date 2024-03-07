@@ -9,6 +9,7 @@ class DialogFieldTextBox < DialogField
 
   def value
     return nil if @value.nil?
+
     convert_value_to_type
   end
 
@@ -26,17 +27,19 @@ class DialogFieldTextBox < DialogField
 
   def value_from_dialog_fields(dialog_values)
     value_from_dialog_field = dialog_values[automate_key_name]
-    self.protected? ? ManageIQ::Password.decrypt(value_from_dialog_field) : value_from_dialog_field
+    protected? ? ManageIQ::Password.decrypt(value_from_dialog_field) : value_from_dialog_field
   end
 
   def automate_output_value
     return nil if @value.nil?
-    return ManageIQ::Password.try_encrypt(@value) if self.protected?
+    return ManageIQ::Password.try_encrypt(@value) if protected?
+
     convert_value_to_type
   end
 
   def automate_key_name
-    return "password::#{super}" if self.protected?
+    return "password::#{super}" if protected?
+
     super
   end
 
@@ -50,7 +53,8 @@ class DialogFieldTextBox < DialogField
     rule = validator_rule if validator_type == 'regex'
 
     return unless rule
-    "#{dialog_tab.label}/#{dialog_group.label}/#{label} is invalid" unless @value.to_s =~ /#{rule}/
+
+    "#{dialog_tab.label}/#{dialog_group.label}/#{label} is invalid" unless /#{rule}/.match?(@value.to_s)
   end
 
   def script_error_values
@@ -63,7 +67,7 @@ class DialogFieldTextBox < DialogField
 
   def normalize_automate_values(automate_hash)
     self.class::AUTOMATE_VALUE_FIELDS.each do |key|
-      send("#{key}=", automate_hash[key]) if automate_hash.key?(key)
+      send(:"#{key}=", automate_hash[key]) if automate_hash.key?(key)
     end
 
     automate_hash["value"].to_s.presence || initial_values

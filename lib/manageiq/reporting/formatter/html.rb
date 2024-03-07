@@ -18,6 +18,7 @@ module ManageIQ
 
         def pad(str, len)
           return "".ljust(len) if str.nil?
+
           str = str.slice(0, len) # truncate long strings
           str.ljust(len) # pad with whitespace
         end

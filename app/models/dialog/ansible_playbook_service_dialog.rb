@@ -10,7 +10,7 @@ class Dialog
       Dialog.new(:label => label, :buttons => "submit,cancel").tap do |dialog|
         tab = dialog.dialog_tabs.build(:display => "edit", :label => "Basic Information", :position => 0)
         add_options_group(tab, 0, hosts)
-        unless extra_vars.blank?
+        if extra_vars.present?
           add_variables_group(tab, 1, extra_vars)
         end
         dialog.save!

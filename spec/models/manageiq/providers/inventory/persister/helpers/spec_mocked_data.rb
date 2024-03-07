@@ -42,7 +42,7 @@ module SpecMockedData
         :genealogy_parent      => @image1,
         :key_pairs             => [@key_pair1],
         :location              => 'host_10_10_10_1.com',
-        :ext_management_system => @ems,
+        :ext_management_system => @ems
       )
     )
     @vm12 = FactoryBot.create(
@@ -52,7 +52,7 @@ module SpecMockedData
         :genealogy_parent      => @image1,
         :key_pairs             => [@key_pair1, @key_pair12],
         :location              => 'host_10_10_10_1.com',
-        :ext_management_system => @ems,
+        :ext_management_system => @ems
       )
     )
     @vm2 = FactoryBot.create(
@@ -62,7 +62,7 @@ module SpecMockedData
         :genealogy_parent      => @image2,
         :key_pairs             => [@key_pair2],
         :location              => 'host_10_10_10_2.com',
-        :ext_management_system => @ems,
+        :ext_management_system => @ems
       )
     )
     @vm4 = FactoryBot.create(
@@ -98,38 +98,38 @@ module SpecMockedData
     @disk1 = FactoryBot.create(
       :disk,
       disk_data(1).merge(
-        :hardware => @hardware1,
+        :hardware => @hardware1
       )
     )
     @disk12 = FactoryBot.create(
       :disk,
       disk_data(12).merge(
-        :hardware => @hardware12,
+        :hardware => @hardware12
       )
     )
     @disk13 = FactoryBot.create(
       :disk,
       disk_data(13).merge(
-        :hardware => @hardware12,
+        :hardware => @hardware12
       )
     )
     @disk2 = FactoryBot.create(
       :disk,
       disk_data(2).merge(
-        :hardware => @hardware2,
+        :hardware => @hardware2
       )
     )
 
     @public_network1 = FactoryBot.create(
       :network,
       public_network_data(1).merge(
-        :hardware => @hardware1,
+        :hardware => @hardware1
       )
     )
     @public_network12 = FactoryBot.create(
       :network,
       public_network_data(12).merge(
-        :hardware => @hardware12,
+        :hardware => @hardware12
       )
     )
     @public_network13 = FactoryBot.create(
@@ -142,7 +142,7 @@ module SpecMockedData
     @public_network2 = FactoryBot.create(
       :network,
       public_network_data(2).merge(
-        :hardware => @hardware2,
+        :hardware => @hardware2
       )
     )
 

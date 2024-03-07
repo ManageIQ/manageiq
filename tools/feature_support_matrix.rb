@@ -56,7 +56,7 @@ class CsvVisitor
   def to_s
     headers = @rows.first.headers
     CSV.generate('', :headers => headers) do |csv|
-      header_row = CSV::Row.new(headers, %w(Model) + SupportsFeatureMixin::QUERYABLE_FEATURES.values)
+      header_row = CSV::Row.new(headers, %w[Model] + SupportsFeatureMixin::QUERYABLE_FEATURES.values)
       csv << header_row
       @rows.each { |row| csv << row }
     end
@@ -66,4 +66,4 @@ end
 matrix = matrix_for(ApplicationRecord)
 csv = CsvVisitor.new
 matrix.accept(csv)
-puts csv.to_s
+puts csv

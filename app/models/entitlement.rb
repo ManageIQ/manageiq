@@ -13,6 +13,7 @@ class Entitlement < ApplicationRecord
     return true  unless filters_hash                  # nil ok
     return false unless filters_hash.kind_of?(Hash)   # must be Hash
     return true  if filters_hash.blank?               # {} ok
+
     filters_hash["managed"].present? || filters_hash["belongsto"].present?
   end
 
@@ -65,6 +66,7 @@ class Entitlement < ApplicationRecord
       self.filters["managed"].each do |filter|
         next unless filter.first.starts_with?(category)
         next unless filter.include?(filter_to_remove)
+
         filter.delete(filter_to_remove)
       end
       self.filters["managed"].reject!(&:empty?)

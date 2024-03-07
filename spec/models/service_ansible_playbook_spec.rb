@@ -21,7 +21,7 @@ RSpec.describe(ServiceAnsiblePlaybook) do
 
   let(:executed_service) do
     FactoryBot.create(:service_ansible_playbook, :options => provision_options).tap do |service|
-      regex = /(#{ResourceAction::PROVISION})|(#{ResourceAction::RETIREMENT})/
+      regex = /(#{ResourceAction::PROVISION})|(#{ResourceAction::RETIREMENT})/o
       allow(service).to receive(:job).with(regex).and_return(runner_job)
     end
   end
@@ -63,7 +63,7 @@ RSpec.describe(ServiceAnsiblePlaybook) do
     {
       :credential_id => credential_2.id,
       :hosts         => 'host3',
-      'extra_vars'   => { :var1 => 'new_val1', 'pswd' => encrypted_val2 }
+      'extra_vars'   => {:var1 => 'new_val1', 'pswd' => encrypted_val2}
     }
   end
 
@@ -207,8 +207,8 @@ RSpec.describe(ServiceAnsiblePlaybook) do
     it 'creates an Ansible Runner job' do
       expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job).to receive(:create_job) do |jobtemp, opts|
         expect(jobtemp).to eq(playbook)
-        exposed_miq = %w(api_url api_token service user group X_MIQ_Group request_task request) + control_extras.keys
-        exposed_connection = %w(url token X_MIQ_Group)
+        exposed_miq = %w[api_url api_token service user group X_MIQ_Group request_task request] + control_extras.keys
+        exposed_connection = %w[url token X_MIQ_Group]
         expect(opts[:extra_vars].delete('manageiq').keys).to include(*exposed_miq)
         expect(opts[:extra_vars].delete('manageiq_connection').keys).to include(*exposed_connection)
 

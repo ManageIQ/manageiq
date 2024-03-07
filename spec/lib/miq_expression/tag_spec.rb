@@ -59,7 +59,7 @@ RSpec.describe MiqExpression::Tag do
     it "with model.associations.associations.managed-in_tag" do
       tag = "Vm.service.user.managed-service_level"
       expect(described_class.parse(tag)).to have_attributes(:model        => Vm,
-                                                            :associations => %w(service user),
+                                                            :associations => %w[service user],
                                                             :namespace    => "/managed/service_level")
     end
 

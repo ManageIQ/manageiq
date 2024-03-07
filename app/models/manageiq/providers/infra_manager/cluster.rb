@@ -1,2 +1,2 @@
-class ManageIQ::Providers::InfraManager::Cluster < ::EmsCluster
+class ManageIQ::Providers::InfraManager::Cluster < EmsCluster
 end

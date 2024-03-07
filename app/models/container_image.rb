@@ -60,6 +60,7 @@ class ContainerImage < ApplicationRecord
 
   def full_name
     return docker_id if image_ref && image_ref.start_with?(DOCKER_PULLABLE_PREFIX)
+
     result = ""
     result << "#{container_image_registry.full_name}/" unless container_image_registry.nil?
     result << name
@@ -115,6 +116,7 @@ class ContainerImage < ApplicationRecord
 
   def disconnect_inv
     return if archived?
+
     _log.info("Disconnecting Image [#{name}] id [#{id}] from EMS [#{ext_management_system.name}] id [#{ext_management_system.id}]")
     self.container_image_registry = nil
     self.deleted_on = Time.now.utc

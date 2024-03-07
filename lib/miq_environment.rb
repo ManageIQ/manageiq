@@ -50,11 +50,13 @@ module MiqEnvironment
 
     def self.supports_systemd?
       return @supports_systemd unless @supports_systemd.nil?
+
       @supports_systemd = is_appliance? && !is_container? && supports_command?('systemctl')
     end
 
     def self.supports_nohup_and_backgrounding?
       return @supports_nohup unless @supports_nohup.nil?
+
       @supports_nohup = is_appliance? && supports_command?('nohup')
     end
 
@@ -64,6 +66,7 @@ module MiqEnvironment
 
     def self.is_container?
       return @is_container unless @is_container.nil?
+
       @is_container = ENV["CONTAINER"] == "true"
     end
 
@@ -77,6 +80,7 @@ module MiqEnvironment
 
     def self.is_appliance?
       return @is_appliance unless @is_appliance.nil?
+
       @is_appliance = ENV["APPLIANCE"] == "true"
     end
 
@@ -90,6 +94,7 @@ module MiqEnvironment
 
     def self.is_linux?
       return @is_linux unless @is_linux.nil?
+
       @is_linux = (Sys::Platform::IMPL == :linux)
     end
 

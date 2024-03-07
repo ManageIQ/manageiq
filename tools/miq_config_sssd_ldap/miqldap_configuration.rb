@@ -56,7 +56,7 @@ module MiqConfigSssdLdap
     end
 
     def current_authentication_settings
-      LOGGER.debug("Invoked #{self.class}\##{__method__}")
+      LOGGER.debug("Invoked #{self.class}##{__method__}")
 
       settings = Settings.authentication.to_hash
       LOGGER.debug("Current authentication settings: #{settings}")

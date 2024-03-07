@@ -26,13 +26,13 @@ class VmMigrateTask < MiqRequestTask
 
     new_settings = []
     host_name = req_obj.get_option_last(:placement_host_name)
-    new_settings << "Host: #{host_name}" unless host_name.blank?
+    new_settings << "Host: #{host_name}" if host_name.present?
     respool_name = req_obj.get_option_last(:placement_rp_name)
-    new_settings << "Resource Pool: #{respool_name}" unless respool_name.blank?
+    new_settings << "Resource Pool: #{respool_name}" if respool_name.present?
     folder_name = req_obj.get_option_last(:placement_folder_name)
     new_settings << "Folder: #{folder_name}" if folder_name.present?
     storage = req_obj.get_option_last(:placement_ds_name)
-    new_settings << "Storage: #{storage}" unless storage.blank?
+    new_settings << "Storage: #{storage}" if storage.present?
     "#{request_class::TASK_DESCRIPTION} for: #{name} - #{new_settings.join(", ")}"
   end
 

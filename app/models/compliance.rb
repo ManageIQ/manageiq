@@ -67,11 +67,12 @@ class Compliance < ApplicationRecord
       end
     end
     target_class = target.class.base_model.name.downcase
-    target_class = "vm" if target_class.match("template")
+    target_class = "vm" if target_class.match?("template")
 
     unless target.respond_to?(:compliances)
       raise _("Compliance check not supported for %{class_name} objects") % {:class_name => target.class.name}
     end
+
     check_event = "#{target_class}_compliance_check"
     _log.info("Checking compliance...")
     results = MiqPolicy.enforce_policy(target, check_event)
@@ -88,7 +89,6 @@ class Compliance < ApplicationRecord
     event = results[:result] ? "#{target_class}_compliance_passed" : "#{target_class}_compliance_failed"
     _log.info("Raising EVM Event: #{event}")
     MiqEvent.raise_evm_event_queue(target, event)
-    #
     results[:result]
   end
 

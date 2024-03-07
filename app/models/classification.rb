@@ -31,7 +31,7 @@ class Classification < ApplicationRecord
   scope :is_category, -> { where(:parent_id => nil) }
   scope :is_entry,    -> { where.not(:parent_id => nil) }
 
-  scope :with_writable_parents, -> { includes(:parent).where(:parents_classifications => { :read_only => false}) }
+  scope :with_writable_parents, -> { includes(:parent).where(:parents_classifications => {:read_only => false}) }
 
   DEFAULT_NAMESPACE = "/managed".freeze
 
@@ -223,7 +223,7 @@ class Classification < ApplicationRecord
   end
 
   def self.find_assigned_entries(obj, ns = DEFAULT_NAMESPACE)
-    unless obj.respond_to?("tag_with")
+    unless obj.respond_to?(:tag_with)
       raise _("Class '%{name}' is not eligible for classification") % {:name => obj.class}
     end
 
@@ -268,6 +268,7 @@ class Classification < ApplicationRecord
 
   def add_entry(options)
     raise _("entries can only be added to classifications") unless category?
+
     # Inherit from parent classification
     options.merge!(:read_only => read_only, :syntax => syntax, :single_value => single_value, :ns => ns)
     children.create!(options)
@@ -275,8 +276,9 @@ class Classification < ApplicationRecord
 
   def lookup_by_entry(type)
     raise _("method is only available for an entry") if category?
+
     klass = type.constantize
-    unless klass.respond_to?("find_tagged_with")
+    unless klass.respond_to?(:find_tagged_with)
       raise _("Class '%{type}' is not eligible for classification") % {:type => type}
     end
 
@@ -288,7 +290,7 @@ class Classification < ApplicationRecord
 
   def assign_entry_to(obj, is_request = true)
     raise _("method is only available for an entry") if category?
-    unless obj.respond_to?("tag_with")
+    unless obj.respond_to?(:tag_with)
       raise _("Class '%{name}' is not eligible for classification") % {:name => obj.class}
     end
 
@@ -397,7 +399,7 @@ class Classification < ApplicationRecord
   end
 
   def export_to_array
-    h = attributes.except(*%w(id tag_id reserved parent_id))
+    h = attributes.except(*%w[id tag_id reserved parent_id])
     h["name"] = name
     h["entries"] = entries.collect(&:export_to_array).flatten if category?
     [h]
@@ -467,6 +469,7 @@ class Classification < ApplicationRecord
 
       category = is_category.new(c.except(:entries))
       next unless category.valid? # HACK: Skip seeding if categories aren't valid/unique
+
       _log.info("Creating category #{c[:name]}")
       category.save!
       add_entries_from_hash(category, c[:entries])

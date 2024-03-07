@@ -13,19 +13,19 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                         FROM pg_stat_activity
                        WHERE pid     = #{pid_numeric}
                          AND datname = #{quote(current_database)}
-                      SQL
+    SQL
 
     item = data.first
     if item.nil?
       _log.info("SPID=[#{pid_numeric}] not found")
     else
       _log.info("Sending CANCEL Request for SPID=[#{pid_numeric}], age=[#{item['age']}], query=[#{item['query']}]")
-      result = select(<<-SQL, "Cancel SPID")
+      select(<<-SQL, "Cancel SPID")
                             SELECT pg_cancel_backend(#{pid_numeric})
                             FROM   pg_stat_activity
                             WHERE  datname = #{quote(current_database)}
-                         SQL
-      result
+      SQL
+
     end
   end
 end

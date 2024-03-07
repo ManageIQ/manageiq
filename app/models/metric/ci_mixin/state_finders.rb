@@ -14,7 +14,7 @@ module Metric::CiMixin::StateFinders
   def vim_performance_state_for_ts(ts)
     ts = Time.parse(ts).utc if ts.kind_of?(String)
     ts_iso = ts.utc.iso8601
-    return nil unless self.respond_to?(:vim_performance_states)
+    return nil unless respond_to?(:vim_performance_states)
 
     @states_by_ts ||= {}
     state = @states_by_ts[ts_iso]

@@ -11,7 +11,7 @@ describe PxeIsoVisibilityService do
         it "returns the values to be edit and hidden" do
           expect(subject.determine_visibility(supports_iso, supports_pxe)).to eq(
             :hide => [],
-            :edit => %i(pxe_image_id pxe_server_id iso_image_id)
+            :edit => %i[pxe_image_id pxe_server_id iso_image_id]
           )
         end
       end
@@ -22,7 +22,7 @@ describe PxeIsoVisibilityService do
         it "returns the values to be edit and hidden" do
           expect(subject.determine_visibility(supports_iso, supports_pxe)).to eq(
             :hide => [:iso_image_id],
-            :edit => %i(pxe_image_id pxe_server_id)
+            :edit => %i[pxe_image_id pxe_server_id]
           )
         end
       end
@@ -36,7 +36,7 @@ describe PxeIsoVisibilityService do
 
         it "returns the values to be edit and hidden" do
           expect(subject.determine_visibility(supports_iso, supports_pxe)).to eq(
-            :hide => %i(pxe_image_id pxe_server_id),
+            :hide => %i[pxe_image_id pxe_server_id],
             :edit => [:iso_image_id]
           )
         end
@@ -47,7 +47,7 @@ describe PxeIsoVisibilityService do
 
         it "returns the values to be edit and hidden" do
           expect(subject.determine_visibility(supports_iso, supports_pxe)).to eq(
-            :hide => %i(pxe_image_id pxe_server_id iso_image_id),
+            :hide => %i[pxe_image_id pxe_server_id iso_image_id],
             :edit => []
           )
         end

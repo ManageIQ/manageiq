@@ -31,7 +31,7 @@ class User < ApplicationRecord
   has_and_belongs_to_many :miq_groups
   scope      :superadmins, lambda {
     joins(:miq_groups => {:miq_user_role => :miq_product_features})
-      .where(:miq_product_features => {:identifier => MiqProductFeature::SUPER_ADMIN_FEATURE })
+      .where(:miq_product_features => {:identifier => MiqProductFeature::SUPER_ADMIN_FEATURE})
   }
 
   virtual_has_many :active_vms, :class_name => "VmOrTemplate"
@@ -55,7 +55,7 @@ class User < ApplicationRecord
   alias_method :authenticate_bcrypt, :authenticate
 
   serialize     :settings, Hash   # Implement settings column as a hash
-  default_value_for(:settings) { Hash.new }
+  default_value_for(:settings) { {} }
 
   default_value_for :failed_login_attempts, 0
 
@@ -190,7 +190,7 @@ class User < ApplicationRecord
     end
     if auth.authenticate(userid, oldpwd)
       self.password = newpwd
-      self.save!
+      save!
     end
   end
 
@@ -283,6 +283,7 @@ class User < ApplicationRecord
 
   def self.authorize_user(userid)
     return if userid.blank? || admin?(userid)
+
     authenticator(userid).authorize_user(userid)
   end
 
@@ -326,6 +327,7 @@ class User < ApplicationRecord
     user_groups = miq_group_ids
     user_groups.delete(current_group_id)
     raise _("The user's current group cannot be changed because the user does not belong to any other group") if user_groups.empty?
+
     self.current_group = MiqGroup.find_by(:id => user_groups.first)
     save!
   end
@@ -386,6 +388,7 @@ class User < ApplicationRecord
 
   def self.with_user_group(user, group, &block)
     return yield if user.nil?
+
     user = User.find(user) unless user.kind_of?(User)
     if group && group.kind_of?(MiqGroup)
       user.current_group = group
@@ -445,6 +448,7 @@ class User < ApplicationRecord
     seed_data.each do |user_attributes|
       user_id = user_attributes[:userid]
       next if in_my_region.find_by_userid(user_id)
+
       log_attrs = user_attributes.slice(:name, :userid, :group)
       _log.info("Creating user with parameters #{log_attrs.inspect}")
 

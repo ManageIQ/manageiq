@@ -28,6 +28,7 @@ module Vmdb
 
     def self.proc_for_default_log
       return unless default_log
+
       proc do |message, callstack|
         default_log.warn(message)
         default_log.debug { callstack.join("\n  ") }

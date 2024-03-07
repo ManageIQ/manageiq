@@ -61,7 +61,7 @@ RSpec.describe AssignmentMixin do
 
       expect(test_class.assignments).to eq(
         "vm/tag/managed/environment/test"    => [alert_set],
-        "vm/tag/managed/environment/staging" => [alert_set2],
+        "vm/tag/managed/environment/staging" => [alert_set2]
       )
     end
 

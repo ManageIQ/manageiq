@@ -1,7 +1,7 @@
 class MiqWidget::ContentOptionGenerator
   def generate(group, users, need_timezone = true)
     if group.kind_of?(MiqGroup) && !group.self_service?
-      return "MiqGroup", group.description, nil, need_timezone ? timezones_for_users(users) : %w(UTC)
+      return "MiqGroup", group.description, nil, need_timezone ? timezones_for_users(users) : %w[UTC]
     else
       return "User", group.description, userids_for_users(users), nil
     end

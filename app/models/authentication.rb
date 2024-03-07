@@ -60,7 +60,7 @@ class Authentication < ApplicationRecord
     "incomplete"  => 1,
     "error"       => 2,
     "unreachable" => 2,
-    "invalid"     => 3,
+    "invalid"     => 3
   ).freeze
 
   # Builds a case statement that case be used in a sql ORDER BY.
@@ -79,7 +79,7 @@ class Authentication < ApplicationRecord
     end
   end.else(-1)
 
-  RETRYABLE_STATUS = %w(error unreachable).freeze
+  RETRYABLE_STATUS = %w[error unreachable].freeze
 
   CREDENTIAL_TYPES = {
     :external_credential_types         => 'ManageIQ::Providers::ExternalAutomationManager::Authentication',
@@ -159,11 +159,13 @@ class Authentication < ApplicationRecord
 
   def set_credentials_changed_on
     return unless @auth_changed
+
     self.credentials_changed_on = Time.now.utc
   end
 
   def after_authentication_changed
     return unless @auth_changed
+
     _log.info("[#{resource_type}] [#{resource_id}], previously valid on: [#{last_valid_on}]")
 
     raise_event(:changed)

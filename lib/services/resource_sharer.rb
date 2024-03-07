@@ -1,8 +1,8 @@
 class ResourceSharer
-  WHITELISTED_RESOURCE_TYPES = %w(
+  WHITELISTED_RESOURCE_TYPES = %w[
     VmOrTemplate
     ServiceTemplate
-  ).freeze
+  ].freeze
 
   include ActiveModel::Model
 
@@ -63,6 +63,7 @@ class ResourceSharer
 
   def rbac_visibility
     return unless user && resource
+
     unless Rbac::Filterer.filtered_object(resource, :user => user).present?
       errors.add(:user, "is not authorized to share this resource")
     end
@@ -94,6 +95,7 @@ class ResourceSharer
 
   def valid_tenants
     return unless tenants
+
     unless tenants.respond_to?(:all?) && tenants.all? { |t| t.kind_of?(Tenant) }
       errors.add(:tenants, "must be an array of Tenant objects")
     end

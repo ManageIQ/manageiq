@@ -130,8 +130,7 @@ class MiqWorker
 
     def unit_environment_variables
       # Override this in a child class to add env vars
-      [
-      ]
+      []
     end
   end
 end

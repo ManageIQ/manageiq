@@ -169,7 +169,7 @@ RSpec.describe MiqProvisionVirtWorkflow do
 
   context "#validate email formatting" do
     context "with specific format regex" do
-      let(:regex) { {:required_regex => %r{\A[\w!#$\%&'*+/=?`\{|\}~^-]+(?:\.[\w!#$\%&'*+/=?`\{|\}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\Z}i} }
+      let(:regex) { {:required_regex => %r{\A[\w!#%&'*+/=?`\{|\}~^-]+(?:\.[\w!$%&'*+/=?`\{|\}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\Z}i} }
       let(:value_email) { 'n@test.com' }
       let(:value_no_email) { 'n' }
 
@@ -206,7 +206,7 @@ RSpec.describe MiqProvisionVirtWorkflow do
   end
 
   context "#validate_memory_reservation" do
-    let(:values) { {:vm_memory => %w(1024 1024)} }
+    let(:values) { {:vm_memory => %w[1024 1024]} }
 
     it "no size" do
       expect(workflow.validate_memory_reservation(nil, values, {}, {}, nil)).to be_nil

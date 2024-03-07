@@ -10,7 +10,7 @@ RSpec.describe MiqRequestTask do
 
       it 'accepts an array' do
         expect(task.class).to receive(:dump_array)
-        task.class.dump_obj(%w(1 2 3))
+        task.class.dump_obj(%w[1 2 3])
       end
     end
 

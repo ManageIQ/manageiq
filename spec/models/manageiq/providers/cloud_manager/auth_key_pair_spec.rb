@@ -5,8 +5,8 @@ RSpec.describe ManageIQ::Providers::CloudManager::AuthKeyPair do
 
   context 'create and delete actions' do
     it "has methods" do
-      expect(subject.class.respond_to? :create_key_pair).to be true
-      expect(subject.respond_to? :delete_key_pair).to be true
+      expect(subject.class.respond_to?(:create_key_pair)).to be true
+      expect(subject.respond_to?(:delete_key_pair)).to be true
     end
 
     # TODO(maufart): do we have any special approach to test module methods separately?

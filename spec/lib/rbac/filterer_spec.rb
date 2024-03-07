@@ -371,10 +371,10 @@ RSpec.describe Rbac::Filterer do
         end
       end
 
-      %w(
+      %w[
         automation_manager_authentication ManageIQ::Providers::AutomationManager::Authentication
         embedded_automation_manager_authentication ManageIQ::Providers::EmbeddedAutomationManager::Authentication
-      ).slice(2) do |factory, klass|
+      ].slice(2) do |factory, klass|
         context "searching for instances of #{klass}" do
           let!(:automation_manager_authentication) { FactoryBot.create(factory) }
           automation_manager_authentication.tag_with('/managed/environment/prod', :ns => '*')
@@ -631,7 +631,7 @@ RSpec.describe Rbac::Filterer do
       let(:nonsql_expression) { {"=" => {"field" => "Vm-vendor_display", "value" => "VMware"}} }
       let(:raw_expression)    { nonsql_expression }
       let(:expression)        { MiqExpression.new(raw_expression) }
-      let(:search_attributes) { { :class => "Vm", :filter => expression } }
+      let(:search_attributes) { {:class => "Vm", :filter => expression} }
       let(:results)           { subject.search(search_attributes).first }
 
       before { [owned_vm, other_vm] }
@@ -647,8 +647,8 @@ RSpec.describe Rbac::Filterer do
       end
 
       context "with a partial non-sql filter" do
-        let(:sql_expression) { { "IS EMPTY" => { "field" => "Vm.host-name" } } }
-        let(:raw_expression) { { "AND" => [nonsql_expression, sql_expression] } }
+        let(:sql_expression) { {"IS EMPTY" => {"field" => "Vm.host-name"}} }
+        let(:raw_expression) { {"AND" => [nonsql_expression, sql_expression]} }
 
         it "finds the Vms" do
           expect(results.to_a).to match_array [owned_vm, other_vm]
@@ -656,7 +656,7 @@ RSpec.describe Rbac::Filterer do
         end
 
         it "includes references" do
-          expect(subject).to receive(:include_references).with(anything, ::Vm, nil, {:host => {}})
+          expect(subject).to receive(:include_references).with(anything, Vm, nil, {:host => {}})
                                                          .and_call_original
           expect(subject).to receive(:warn).never
           results
@@ -702,7 +702,7 @@ RSpec.describe Rbac::Filterer do
 
     context "with a miq_expression filter on vms" do
       let(:expression)        { MiqExpression.new("=" => {"field" => "Vm-vendor", "value" => "vmware"}) }
-      let(:search_attributes) { { :class => "Vm", :filter => expression } }
+      let(:search_attributes) { {:class => "Vm", :filter => expression} }
       let(:results)           { described_class.search(search_attributes).first }
 
       before { [owned_vm, other_vm] }
@@ -733,7 +733,7 @@ RSpec.describe Rbac::Filterer do
 
     context "with :extra_cols on a Service" do
       let(:extra_cols)        { [:owned_by_current_user] }
-      let(:search_attributes) { { :class => "Service", :extra_cols => extra_cols } }
+      let(:search_attributes) { {:class => "Service", :extra_cols => extra_cols} }
       let(:results)           { described_class.search(search_attributes).first }
 
       before { FactoryBot.create :service, :evm_owner => owner_user }
@@ -2065,11 +2065,13 @@ RSpec.describe Rbac::Filterer do
           describe ".search" do
             let!(:network_object) do
               return network_manager if network_model == ManageIQ::Providers::NetworkManager
+
               FactoryBot.create(network_model.underscore, :ext_management_system => network_manager)
             end
 
             let!(:network_object_with_different_network_manager) do
               return network_manager_1 if network_model == ManageIQ::Providers::NetworkManager
+
               FactoryBot.create(network_model.underscore,  :ext_management_system => network_manager_1)
             end
 
@@ -2158,7 +2160,7 @@ RSpec.describe Rbac::Filterer do
     end
 
     context 'with network models' do
-      NETWORK_MODELS = %w(
+      NETWORK_MODELS = %w[
         CloudNetwork
         CloudSubnet
         FloatingIp
@@ -2166,7 +2168,7 @@ RSpec.describe Rbac::Filterer do
         NetworkPort
         NetworkRouter
         SecurityGroup
-      ).freeze
+      ].freeze
 
       NETWORK_MODELS.each do |network_model|
         describe ".search" do
@@ -2214,7 +2216,7 @@ RSpec.describe Rbac::Filterer do
           FactoryBot.create(:host, :name => "Host4", :hostname => "host4.local")
         ].each_with_index do |host, i|
           grp = i + 1
-          guest_os = %w(_none_ windows ubuntu windows ubuntu)[grp]
+          guest_os = %w[_none_ windows ubuntu windows ubuntu][grp]
           vm = FactoryBot.build(:vm_vmware, :name => "Test Group #{grp} VM #{i}")
           vm.hardware = FactoryBot.build(:hardware, :cpu_sockets => (grp * 2), :memory_mb => (grp * 1.megabytes), :guest_os => guest_os)
           vm.host = host
@@ -2637,7 +2639,7 @@ RSpec.describe Rbac::Filterer do
       FactoryBot.create(:vm_vmware, :location => "a")
       FactoryBot.create(:vm_vmware, :location => "b")
       FactoryBot.create(:vm_vmware, :location => "a")
-      expect(described_class.filtered(Vm.all.order(:location)).map(&:location)).to eq(%w(a a b))
+      expect(described_class.filtered(Vm.all.order(:location)).map(&:location)).to eq(%w[a a b])
     end
 
     it "returns empty array for out-of-bounds condition when limits cannot be applied in SQL" do
@@ -2664,8 +2666,8 @@ RSpec.describe Rbac::Filterer do
 
     let(:klass)            { VmOrTemplate }
     let(:scope)            { klass.all }
-    let(:include_for_find) { { :miq_server => {} } }
-    let(:exp_includes)     { { :host => {} } }
+    let(:include_for_find) { {:miq_server => {}} }
+    let(:exp_includes)     { {:host => {}} }
 
     it "adds include_for_find .references to the scope" do
       method_args      = [scope, klass, include_for_find, nil]
@@ -2690,7 +2692,7 @@ RSpec.describe Rbac::Filterer do
 
     context "if the include is polymorphic" do
       let(:klass)            { MetricRollup }
-      let(:include_for_find) { { :resource => {} } }
+      let(:include_for_find) { {:resource => {}} }
 
       it "does not add .references to the scope" do
         method_args      = [scope, klass, include_for_find, nil]

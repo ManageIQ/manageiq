@@ -7,11 +7,11 @@ RSpec.describe DialogFieldSortedItem do
         :dynamic             => true,
         :load_values_on_init => load_values_on_init,
         :show_refresh_button => show_refresh_button,
-        :values              => [%w(test test), %w(test2 test2)]
+        :values              => [%w[test test], %w[test2 test2]]
       )
     end
     let(:default_value) { "test2" }
-    let(:automate_values) { [%w(test1 test1), %w(test2 test2), %w(test3 test3)] }
+    let(:automate_values) { [%w[test1 test1], %w[test2 test2], %w[test3 test3]] }
     let(:empty_values) { [[nil, "<None>"]] }
 
     before do
@@ -137,7 +137,7 @@ RSpec.describe DialogFieldSortedItem do
     let(:dialog_field) do
       described_class.new(:default_value => default_value, :dynamic => true)
     end
-    let(:values) { [%w(test test), %w(test2 test2)] }
+    let(:values) { [%w[test test], %w[test2 test2]] }
     let(:default_value) { "test2" }
 
     before do
@@ -160,7 +160,7 @@ RSpec.describe DialogFieldSortedItem do
         :values        => values
       )
     end
-    let(:values) { [%w(test test), %w(abc abc)] }
+    let(:values) { [%w[test test], %w[abc abc]] }
     let(:required) { false }
 
     context "when the field is dynamic" do
@@ -225,23 +225,23 @@ RSpec.describe DialogFieldSortedItem do
             let(:required) { true }
 
             it "returns the values without the first option being a nil option" do
-              expect(dialog_field.values).to eq([%w(test test), %w(abc abc)])
+              expect(dialog_field.values).to eq([%w[test test], %w[abc abc]])
             end
           end
 
           context "when the field is not required" do
             it "returns the values with the first option being a nil 'None' option" do
-              expect(dialog_field.values).to eq([[nil, "<None>"], %w(test test), %w(abc abc)])
+              expect(dialog_field.values).to eq([[nil, "<None>"], %w[test test], %w[abc abc]])
             end
 
             context "when the values are in a seemingly random order" do
-              let(:values) { [%w(3 Three), %w(1 One), %w(2 Two)] }
+              let(:values) { [%w[3 Three], %w[1 One], %w[2 Two]] }
               before do
                 dialog_field.options[:sort_by] = "none"
               end
 
               it "does not attempt to sort them" do
-                expect(dialog_field.values).to eq([[nil, "<None>"], %w(3 Three), %w(1 One), %w(2 Two)])
+                expect(dialog_field.values).to eq([[nil, "<None>"], %w[3 Three], %w[1 One], %w[2 Two]])
               end
             end
           end
@@ -257,7 +257,7 @@ RSpec.describe DialogFieldSortedItem do
 
         context "when there is a default value that matches a value in the values list" do
           let(:default_value) { "2" }
-          let(:values) { [%w(1 1), %w(2 2), %w(3 3)] }
+          let(:values) { [%w[1 1], %w[2 2], %w[3 3]] }
 
           it "sets the default value to the matching value" do
             dialog_field.values
@@ -265,13 +265,13 @@ RSpec.describe DialogFieldSortedItem do
           end
 
           it "returns the values with the first option being a nil 'None' option" do
-            expect(dialog_field.values).to eq([[nil, "<None>"], %w(1 1), %w(2 2), %w(3 3)])
+            expect(dialog_field.values).to eq([[nil, "<None>"], %w[1 1], %w[2 2], %w[3 3]])
           end
         end
 
         context "when there is a default value that does not match a value in the values list" do
           let(:default_value) { "4" }
-          let(:values) { [%w(1 1), %w(2 2), %w(3 3)] }
+          let(:values) { [%w[1 1], %w[2 2], %w[3 3]] }
 
           it "sets the default value to nil" do
             dialog_field.values
@@ -279,7 +279,7 @@ RSpec.describe DialogFieldSortedItem do
           end
 
           it "returns the values with the first option being a nil 'None' option" do
-            expect(dialog_field.values).to eq([[nil, "<None>"], %w(1 1), %w(2 2), %w(3 3)])
+            expect(dialog_field.values).to eq([[nil, "<None>"], %w[1 1], %w[2 2], %w[3 3]])
           end
         end
 
@@ -290,13 +290,13 @@ RSpec.describe DialogFieldSortedItem do
             let(:required) { true }
 
             it "returns the values with the first option being a nil 'Choose' option" do
-              expect(dialog_field.values).to eq([[nil, "<Choose>"], %w(test test), %w(abc abc)])
+              expect(dialog_field.values).to eq([[nil, "<Choose>"], %w[test test], %w[abc abc]])
             end
           end
 
           context "when the field is not required" do
             it "returns the values with the first option being a nil 'None' option" do
-              expect(dialog_field.values).to eq([[nil, "<None>"], %w(test test), %w(abc abc)])
+              expect(dialog_field.values).to eq([[nil, "<None>"], %w[test test], %w[abc abc]])
             end
           end
         end
@@ -306,7 +306,7 @@ RSpec.describe DialogFieldSortedItem do
 
   describe "#get_default_value" do
     let(:dialog_field) { described_class.new(:default_value => default_value, :values => values) }
-    let(:values) { [%w(value1 text1), %w(value2 text2)] }
+    let(:values) { [%w[value1 text1], %w[value2 text2]] }
 
     context "when the default value is set to nil" do
       let(:default_value) { nil }
@@ -408,7 +408,7 @@ RSpec.describe DialogFieldSortedItem do
       it_behaves_like "DialogFieldSortedItem#normalize_automate_values"
 
       it "normalizes the values to an array" do
-        expect(dialog_field.normalize_automate_values(automate_hash)).to eq([%w(lol 123)])
+        expect(dialog_field.normalize_automate_values(automate_hash)).to eq([%w[lol 123]])
       end
     end
   end

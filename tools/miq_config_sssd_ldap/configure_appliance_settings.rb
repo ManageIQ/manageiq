@@ -11,7 +11,7 @@ module MiqConfigSssdLdap
     end
 
     def configure
-      LOGGER.debug("Invoked #{self.class}\##{__method__} initial_settings  #{initial_settings} ")
+      LOGGER.debug("Invoked #{self.class}##{__method__} initial_settings  #{initial_settings} ")
 
       ldap_role = initial_settings[:ldap_role].nil? ? Settings.authentication.ldap_role : initial_settings[:ldap_role]
 

@@ -143,6 +143,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
       heartbeat
       msg = get_message
       break if msg.nil?
+
       deliver_message(msg)
     end
   end
@@ -184,7 +185,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
 
   def miq_messaging_listener_thread
     loop do
-      send("miq_messaging_subscribe_#{@worker.class.miq_messaging_subscribe_mode}") do |msg|
+      send(:"miq_messaging_subscribe_#{@worker.class.miq_messaging_subscribe_mode}") do |msg|
         @message_queue << msg
       end
     rescue => err

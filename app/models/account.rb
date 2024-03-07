@@ -67,7 +67,7 @@ class Account < ApplicationRecord
       nh[:acctid] = nh.delete("#{typeName}id".to_sym)
       nh[:acctid] = nil unless nh[:acctid].respond_to?(:to_int) || nh[:acctid].to_s =~ /^-?[0-9]+$/
       # Convert to signed integer values for acctid
-      nh[:acctid] = [nh[:acctid].to_i].pack("I").unpack("i")[0] unless nh[:acctid].nil?
+      nh[:acctid] = [nh[:acctid].to_i].pack("I").unpack1("i") unless nh[:acctid].nil?
 
       # Find the users for this group / groups for this user
       nh[:members] = []
@@ -93,7 +93,7 @@ class Account < ApplicationRecord
     if accttype == valid_account_type
       yield
     else
-      raise _("Cannot call method '%{caller}' on an Account of type '%{type}'") % {:caller => caller[0][/`.*'/][1..-2],
+      raise _("Cannot call method '%{caller}' on an Account of type '%{type}'") % {:caller => caller(1..1).first[/`.*'/][1..-2],
                                                                                    :type   => accttype}
     end
   end
@@ -136,18 +136,18 @@ class Account < ApplicationRecord
   # FIXME: Why not use .pluralize?
   #
   def members
-    send("#{accttype_opposite}s")
+    send(:"#{accttype_opposite}s")
   end
 
   def add_member(member)
-    send("add_#{accttype_opposite}", member)
+    send(:"add_#{accttype_opposite}", member)
   end
 
   def remove_member(member)
-    send("remove_#{accttype_opposite}", member)
+    send(:"remove_#{accttype_opposite}", member)
   end
 
   def remove_all_members
-    send("remove_all_#{accttype_opposite}s")
+    send(:"remove_all_#{accttype_opposite}s")
   end
 end

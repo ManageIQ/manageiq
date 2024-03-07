@@ -1,1 +1,1 @@
-::VmCloud = ManageIQ::Providers::CloudManager::Vm
+VmCloud = ManageIQ::Providers::CloudManager::Vm

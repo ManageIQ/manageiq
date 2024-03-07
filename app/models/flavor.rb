@@ -79,8 +79,10 @@ class Flavor < ApplicationRecord
 
   def self.create_flavor(ems_id, options)
     raise ArgumentError, _("ems cannot be nil") if ems_id.nil?
+
     ext_management_system = ExtManagementSystem.find(ems_id)
     raise ArgumentError, _("ems cannot be found") if ext_management_system.nil?
+
     klass = ext_management_system.class_by_ems(:Flavor)
     klass.raw_create_flavor(ext_management_system, options)
   end

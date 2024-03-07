@@ -46,7 +46,6 @@ RSpec.describe "VM Snapshotting" do
     end
   end
 
-
   describe ".v_snapshot_newest_name" do
     it "returns value" do
       FactoryBot.create(:snapshot, :create_time => 1.minute.ago, :vm_or_template => vm, :name => "the name")

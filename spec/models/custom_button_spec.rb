@@ -7,13 +7,13 @@ RSpec.describe CustomButton do
 
       context 'by bigint column' do
         it 'orders by memory_shares column' do
-          expect(CustomButton.with_array_order(%w(300 100 200), :applies_to_id).ids).to eq([custom_button_3.id, custom_button_1.id, custom_button_2.id])
+          expect(CustomButton.with_array_order(%w[300 100 200], :applies_to_id).ids).to eq([custom_button_3.id, custom_button_1.id, custom_button_2.id])
         end
       end
 
       context 'by string column' do
         it 'orders by name column' do
-          expect(CustomButton.with_array_order(%w(BBB AAA CCC), :name, :text).ids).to eq([custom_button_2.id, custom_button_1.id, custom_button_3.id])
+          expect(CustomButton.with_array_order(%w[BBB AAA CCC], :name, :text).ids).to eq([custom_button_2.id, custom_button_1.id, custom_button_3.id])
         end
       end
     end
@@ -329,7 +329,7 @@ RSpec.describe CustomButton do
       EvmSpecHelper.local_miq_server(:is_master => true, :zone => Zone.seed)
     end
 
-    %i(invoke invoke_async).each do |method|
+    %i[invoke invoke_async].each do |method|
       describe "##{method}", "publishes CustomButtonEvent(s)" do
         it "with a single VM" do
           Timecop.freeze(Time.now.utc) do

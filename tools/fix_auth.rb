@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
+ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../Gemfile', __dir__)
 require 'bundler/setup' if File.exist?(ENV['BUNDLE_GEMFILE'])
 
 # usage: ruby fix_auth -h
@@ -9,7 +9,7 @@ require 'bundler/setup' if File.exist?(ENV['BUNDLE_GEMFILE'])
 
 if __FILE__ == $PROGRAM_NAME
   $LOAD_PATH.push(File.expand_path(__dir__))
-  $LOAD_PATH.push(File.expand_path(File.join(__dir__, %w(.. lib))))
+  $LOAD_PATH.push(File.expand_path(File.join(__dir__, %w[.. lib])))
 end
 
 require 'active_support/all'

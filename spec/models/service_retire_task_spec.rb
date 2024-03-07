@@ -3,7 +3,7 @@ RSpec.describe ServiceRetireTask do
   let(:vm) { FactoryBot.create(:vm) }
   let(:service) { FactoryBot.create(:service, :lifecycle_state => 'provisioned') }
   let(:miq_request) { FactoryBot.create(:service_retire_request, :requester => user, :source => service) }
-  let(:service_retire_task) { FactoryBot.create(:service_retire_task, :source => service, :miq_request => miq_request, :options => {:src_ids => [service.id] }) }
+  let(:service_retire_task) { FactoryBot.create(:service_retire_task, :source => service, :miq_request => miq_request, :options => {:src_ids => [service.id]}) }
   let(:reason) { "Why Not?" }
   let(:approver) { FactoryBot.create(:user_miq_request_approver) }
   let(:zone) { FactoryBot.create(:zone, :name => "fred") }
@@ -87,29 +87,29 @@ RSpec.describe ServiceRetireTask do
 
       context "ansible playbook service" do
         context "no_with_playbook" do
-          let(:ap_service) { FactoryBot.create(:service_ansible_playbook, :options => {:config_info => {:retirement => {:remove_resources => "no_with_playbook"} }}) }
-          let(:ap_service_retire_task) { FactoryBot.create(:service_retire_task, :source => ap_service, :miq_request => miq_request, :options => {:src_ids => [ap_service.id] }) }
+          let(:ap_service) { FactoryBot.create(:service_ansible_playbook, :options => {:config_info => {:retirement => {:remove_resources => "no_with_playbook"}}}) }
+          let(:ap_service_retire_task) { FactoryBot.create(:service_retire_task, :source => ap_service, :miq_request => miq_request, :options => {:src_ids => [ap_service.id]}) }
 
           it_behaves_like "no_remove_resource"
         end
 
         context "no_without_playbook" do
-          let(:ap_service) { FactoryBot.create(:service_ansible_playbook, :options => {:config_info => {:retirement => {:remove_resources => "no_without_playbook"} }}) }
-          let(:ap_service_retire_task) { FactoryBot.create(:service_retire_task, :source => ap_service, :miq_request => miq_request, :options => {:src_ids => [ap_service.id] }) }
+          let(:ap_service) { FactoryBot.create(:service_ansible_playbook, :options => {:config_info => {:retirement => {:remove_resources => "no_without_playbook"}}}) }
+          let(:ap_service_retire_task) { FactoryBot.create(:service_retire_task, :source => ap_service, :miq_request => miq_request, :options => {:src_ids => [ap_service.id]}) }
 
           it_behaves_like "no_remove_resource"
         end
 
         context "yes_with_playbook" do
-          let(:ap_service) { FactoryBot.create(:service_ansible_playbook, :options => {:config_info => {:retirement => {:remove_resources => "yes_with_playbook"} }}) }
-          let(:ap_service_retire_task) { FactoryBot.create(:service_retire_task, :source => ap_service, :miq_request => miq_request, :options => {:src_ids => [ap_service.id] }) }
+          let(:ap_service) { FactoryBot.create(:service_ansible_playbook, :options => {:config_info => {:retirement => {:remove_resources => "yes_with_playbook"}}}) }
+          let(:ap_service_retire_task) { FactoryBot.create(:service_retire_task, :source => ap_service, :miq_request => miq_request, :options => {:src_ids => [ap_service.id]}) }
 
           it_behaves_like "yes_remove_resource"
         end
 
         context "yes_without_playbook" do
-          let(:ap_service) { FactoryBot.create(:service_ansible_playbook, :options => {:config_info => {:retirement => {:remove_resources => "yes_without_playbook"} }}) }
-          let(:ap_service_retire_task) { FactoryBot.create(:service_retire_task, :source => ap_service, :miq_request => miq_request, :options => {:src_ids => [ap_service.id] }) }
+          let(:ap_service) { FactoryBot.create(:service_ansible_playbook, :options => {:config_info => {:retirement => {:remove_resources => "yes_without_playbook"}}}) }
+          let(:ap_service_retire_task) { FactoryBot.create(:service_retire_task, :source => ap_service, :miq_request => miq_request, :options => {:src_ids => [ap_service.id]}) }
 
           it_behaves_like "yes_remove_resource"
         end
@@ -176,7 +176,7 @@ RSpec.describe ServiceRetireTask do
           s1.add_resource!(FactoryBot.create(:vm_openstack))
           s2.add_resource!(FactoryBot.create(:vm_openstack))
 
-          service_retire_task1 = FactoryBot.create(:service_retire_task, :source => s1, :miq_request => miq_request, :options => {:src_ids => [s1.id, s2.id] })
+          service_retire_task1 = FactoryBot.create(:service_retire_task, :source => s1, :miq_request => miq_request, :options => {:src_ids => [s1.id, s2.id]})
           service_retire_task1.after_request_task_create
 
           expect(VmRetireTask.count).to eq(2)
@@ -200,7 +200,7 @@ RSpec.describe ServiceRetireTask do
         service.add_resource!(FactoryBot.create(:service_template))
         @miq_request = FactoryBot.create(:service_retire_request, :requester => user)
         @miq_request.approve(approver, reason)
-        @service_retire_task = FactoryBot.create(:service_retire_task, :source => service, :miq_request => @miq_request, :options => {:src_ids => [service.id] })
+        @service_retire_task = FactoryBot.create(:service_retire_task, :source => service, :miq_request => @miq_request, :options => {:src_ids => [service.id]})
       end
 
       it "creates subtask for provisioned services but not templates" do

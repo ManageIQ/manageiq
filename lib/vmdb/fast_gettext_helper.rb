@@ -10,7 +10,7 @@ module Vmdb
       FastGettext.available_locales.each do |locale|
         FastGettext.human_available_locales << [human_locale_names[locale] || "locale_name", locale]
       end
-      FastGettext.human_available_locales.sort! { |a, b| a[0] <=> b[0] }
+      FastGettext.human_available_locales.sort_by! { |a| a[0] }
     end
 
     def self.fix_i18n_available_locales

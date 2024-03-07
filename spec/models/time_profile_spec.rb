@@ -288,7 +288,7 @@ RSpec.describe TimeProfile do
       FactoryBot.create(:time_profile, :tz => "tz")
       FactoryBot.create(:time_profile, :tz => "other_tz")
 
-      expect(TimeProfile.all_timezones).to match_array(%w(tz other_tz))
+      expect(TimeProfile.all_timezones).to match_array(%w[tz other_tz])
     end
   end
 

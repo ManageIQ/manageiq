@@ -53,6 +53,7 @@ module Rbac
 
     def user_role_allows_any?(user, **options)
       return false if user.miq_user_role.nil?
+
       user.miq_user_role.allows_any?(**options)
     end
   end

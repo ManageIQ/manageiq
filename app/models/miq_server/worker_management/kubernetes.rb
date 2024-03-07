@@ -127,7 +127,7 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
     Thread.new do
       _log.info("Started new #{resource} monitor thread of #{Thread.list.length} total")
       begin
-        send("monitor_#{resource}")
+        send(:"monitor_#{resource}")
       rescue HTTP::ConnectionError => e
         _log.error("Exiting #{resource} monitor thread due to [#{e.class.name}]: #{e}")
       rescue => e
@@ -144,12 +144,12 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
       if thread.nil? || !thread.alive?
         if !thread.nil? && thread.status.nil?
           dead_thread = thread
-          send("#{getter}=", nil)
+          send(:"#{getter}=", nil)
           _log.info("Waiting for the #{getter} Monitor Thread to exit...")
           dead_thread.join
         end
 
-        send("#{getter}=", start_kube_monitor(resource))
+        send(:"#{getter}=", start_kube_monitor(resource))
       end
     end
   end
@@ -186,18 +186,18 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
   end
 
   def collect_initial(resource = :pods)
-    objects = orchestrator.send("get_#{resource}")
-    objects.each { |p| send("save_#{resource.to_s.singularize}", p) }
+    objects = orchestrator.send(:"get_#{resource}")
+    objects.each { |p| send(:"save_#{resource.to_s.singularize}", p) }
     objects.resourceVersion
   end
 
   def watch_for_events(resource, resource_version)
-    orchestrator.send("watch_#{resource}", resource_version).each do |event|
+    orchestrator.send(:"watch_#{resource}", resource_version).each do |event|
       case event.type.downcase
       when "added", "modified"
-        send("save_#{resource.to_s.singularize}", event.object)
+        send(:"save_#{resource.to_s.singularize}", event.object)
       when "deleted"
-        send("delete_#{resource.to_s.singularize}", event.object)
+        send(:"delete_#{resource.to_s.singularize}", event.object)
       when "error"
         if (status = event.object)
           # ocp 3 appears to return 'ERROR' watch events with the object containing the 410 code and "Gone" reason like below:

@@ -4,7 +4,7 @@ module YamlImportExportMixin
   module ClassMethods
     def export_to_array(list, klass)
       begin
-        klass = klass.kind_of?(Class) ? klass : Object.const_get(klass)
+        klass = Object.const_get(klass) unless klass.kind_of?(Class)
       rescue => err
         _log.error("List: [#{list}], Class: [#{klass}] - #{err.message}")
         return []

@@ -491,9 +491,9 @@ RSpec.describe Classification do
         cat = Classification.is_category.find_by!(:description => "Cost Center")
         allow(YAML).to receive(:load_file).and_call_original
         cat.update!(:name => "new_name")
-        expect {
+        expect do
           2.times.each { Classification.seed }
-        }.to_not raise_error
+        end.to_not raise_error
       end
     end
 

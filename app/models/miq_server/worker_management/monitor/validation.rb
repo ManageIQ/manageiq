@@ -40,6 +40,7 @@ module MiqServer::WorkerManagement::Monitor::Validation
     return false unless usage.kind_of?(Numeric)
     return false unless threshold.kind_of?(Numeric)
     return false unless threshold > 0
+
     usage > threshold
   end
 end

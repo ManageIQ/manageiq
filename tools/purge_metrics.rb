@@ -2,7 +2,7 @@
 require File.expand_path('../config/environment', __dir__)
 require 'optimist'
 
-MODES = %w(count purge)
+MODES = %w[count purge]
 
 ARGV.shift if ARGV[0] == '--' # if invoked with rails runner
 opts = Optimist.options do
@@ -30,7 +30,7 @@ formatter = Class.new.extend(ActionView::Helpers::NumberHelper)
 log("Purge Counts")
 dates = {}
 counts = {}
-%w(realtime hourly daily).each do |interval|
+%w[realtime hourly daily].each do |interval|
   dates[interval]  = opts[interval.to_sym].to_i_with_method.seconds.ago.utc
   counts[interval] = Metric::Purging.purge_count(dates[interval], interval)
   log("  #{"#{interval.titleize}:".ljust(9)} #{formatter.number_with_delimiter(counts[interval])}")
@@ -41,7 +41,7 @@ exit if opts[:mode] != "purge"
 
 log("Purging...")
 require 'ruby-progressbar'
-%w(realtime hourly daily).each do |interval|
+%w[realtime hourly daily].each do |interval|
   pbar = ProgressBar.create(:title => interval.titleize, :total => counts[interval], :autofinish => false)
   if counts[interval] > 0
     Metric::Purging.purge(dates[interval], interval, opts[:window], opts[:limit]) do |count, _|

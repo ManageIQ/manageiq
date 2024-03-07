@@ -7,7 +7,7 @@ describe ServiceTemplateFieldsVisibilityService do
 
       it "adds values to field names to hide" do
         expect(subject.determine_visibility(service_template_request)).to eq(
-          :hide => %i(vm_description schedule_type schedule_time)
+          :hide => %i[vm_description schedule_type schedule_time]
         )
       end
     end

@@ -37,7 +37,7 @@ RSpec.describe MiqConfigSssdLdap::AuthEstablish do
       it 'invokes authconfig with valid parameters' do
         expect(AwesomeSpawn).to receive(:run)
           .with("authconfig",
-                :params => { :ldapserver=        => "bob://hostname:22",
+                :params => {:ldapserver=        => "bob://hostname:22",
                              :ldapbasedn=        => nil,
                              :enablesssd         => nil,
                              :enablesssdauth     => nil,

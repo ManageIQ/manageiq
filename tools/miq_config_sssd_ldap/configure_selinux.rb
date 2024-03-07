@@ -11,7 +11,7 @@ module MiqConfigSssdLdap
     end
 
     def configure
-      LOGGER.debug("Invoked #{self.class}\##{__method__}")
+      LOGGER.debug("Invoked #{self.class}##{__method__}")
       enable_non_standard_ldap_port(initial_settings[:ldapport])
       establish_permission("allow_httpd_mod_auth_pam")
       establish_permission("httpd_dbus_sssd")
@@ -20,7 +20,7 @@ module MiqConfigSssdLdap
     private
 
     def enable_non_standard_ldap_port(port_number)
-      LOGGER.debug("Invoked #{self.class}\##{__method__}(#{port_number})")
+      LOGGER.debug("Invoked #{self.class}##{__method__}(#{port_number})")
       return if %w[389 636].include?(port_number)
 
       params = {
@@ -43,8 +43,8 @@ module MiqConfigSssdLdap
     end
 
     def establish_permission(permission_name)
-      LOGGER.debug("Invoked #{self.class}\##{__method__}(#{permission_name})")
-      params = {:P => [permission_name, "on"] }
+      LOGGER.debug("Invoked #{self.class}##{__method__}(#{permission_name})")
+      params = {:P => [permission_name, "on"]}
       result = AwesomeSpawn.run("setsebool", :params => params)
       LOGGER.debug("Ran command: #{result.command_line}")
 

@@ -8,9 +8,9 @@ module TaskHelpers
         Dir.glob(glob) do |filename|
           $log.info("Importing Widgets from: #{filename}")
 
-          widget_options = { :userid    => 'admin',
+          widget_options = {:userid    => 'admin',
                              :overwrite => options[:overwrite],
-                             :save      => true }
+                             :save      => true}
 
           begin
             widget_fd = File.open(filename, 'r')

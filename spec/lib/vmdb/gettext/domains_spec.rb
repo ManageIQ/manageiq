@@ -1,7 +1,7 @@
 RSpec.describe Vmdb::Gettext::Domains do
   context ".add_domain" do
     let(:name) { "test" }
-    let(:path) { "/dev/null"}
+    let(:path) { "/dev/null" }
 
     it "sets mo_paths" do
       described_class.add_domain(name, path, :mo)

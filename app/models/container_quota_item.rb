@@ -13,6 +13,7 @@ class ContainerQuotaItem < ApplicationRecord
 
   def disconnect_inv
     return if archived?
+
     _log.info("Archiving Container Quota id [#{container_quota_id}] Item [#{resource}]")
     # This allows looking only at ContainerQuotaItem created_at..deleted_on
     # without also checking parent ContaineQuota is active.

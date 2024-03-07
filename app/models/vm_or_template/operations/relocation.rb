@@ -66,6 +66,7 @@ module VmOrTemplate::Operations::Relocation
 
   def move_into_folder(folder_or_id)
     raise _("VM has no EMS, unable to move VM into a new folder") unless ext_management_system
+
     folder = folder_or_id.kind_of?(Integer) ? EmsFolder.find(folder_or_id) : folder_or_id
 
     if parent_blue_folder == folder
@@ -94,6 +95,7 @@ module VmOrTemplate::Operations::Relocation
   def migrate_via_ids(host_id, pool_id = nil, priority = "defaultPriority", state = nil)
     host = Host.find_by(:id => host_id)
     raise _("Host with ID=%{host_id} was not found") % {:host_id => host_id} if host.nil?
+
     pool = pool_id && ResourcePool.find_by(:id => pool_id)
     migrate(host, pool, priority, state)
   end

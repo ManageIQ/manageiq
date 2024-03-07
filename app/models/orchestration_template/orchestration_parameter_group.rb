@@ -5,7 +5,7 @@ class OrchestrationTemplate
     attr_accessor :parameters
 
     def initialize(hash = {})
-      hash.each { |key, value| public_send("#{key}=", value) }
+      hash.each { |key, value| public_send(:"#{key}=", value) }
     end
   end
 end

@@ -72,6 +72,7 @@ class MiqSnmp
     # trap_oid: An ObjectId or String with the OID identifier for this trap.
     trap_oid = inputs[:trap_oid] || inputs['trap_oid']
     raise MiqException::Error, _("MiqSnmp.trap_v2: Ensure that a trap object id is provided") if trap_oid.nil?
+
     trap_oid = subst_oid(trap_oid)
 
     # A list of additional varbinds to send with the trap.
@@ -124,7 +125,7 @@ class MiqSnmp
     return "#{base}#{oid}" if oid[0, 1] == "."
 
     # Need to move these to ManageIQ MIB
-    oid = case oid.downcase
+    case oid.downcase
           when "info"                         then "#{enterprise_oid_string}.1"
           when "warn", "warning"              then "#{enterprise_oid_string}.2"
           when "crit", "critical", "error"    then "#{enterprise_oid_string}.3"
@@ -140,8 +141,6 @@ class MiqSnmp
           when "custom2"                      then "#{base}.10"
           else                                     oid
           end
-
-    oid
   end
   private_class_method :subst_oid
 

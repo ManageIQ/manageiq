@@ -118,8 +118,6 @@ module VmOrTemplate::Operations
     $log.info(user_event)
   end
 
-  private
-
   #
   # UI button validation methods
   #

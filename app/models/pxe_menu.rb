@@ -6,7 +6,8 @@ class PxeMenu < ApplicationRecord
 
   def self.class_from_contents(contents)
     line = contents.to_s.each_line { |l| break l }
-    return PxeMenuIpxe if line =~ /^#!\s*ipxe\s*$/
+    return PxeMenuIpxe if /^#!\s*ipxe\s*$/.match?(line)
+
     PxeMenuPxelinux
   end
 
@@ -23,7 +24,7 @@ class PxeMenu < ApplicationRecord
 
     klass = self.class.class_from_contents(contents)
     if klass != self.class
-      self.save!
+      save!
 
       # If sublass changes type to a different subclass
       pxe_images.destroy_all if self.class != PxeMenu
