@@ -196,6 +196,7 @@ class MiqExpression
     operator = exp.keys.first
     op_args = exp[operator]
     col_name = op_args["field"] if op_args.kind_of?(Hash)
+    field    = op_args["field-field"] if op_args.kind_of?(Hash)
     operator = operator.downcase
 
     case operator
@@ -484,14 +485,14 @@ class MiqExpression
       if exp[operator].key?("tag")
         Tag.parse(exp[operator]["tag"]).reflection_supported_by_sql?
       elsif exp[operator].key?("field")
-        Field.parse(exp[operator]["field"]).attribute_supported_by_sql?
+        exp[operator]["field-field"].attribute_supported_by_sql?
       else
         false
       end
     when "includes"
       # Support includes operator using "LIKE" only if first operand is in main table
       if exp[operator].key?("field") && (!exp[operator]["field"].include?(".") || (exp[operator]["field"].include?(".") && exp[operator]["field"].split(".").length == 2))
-        field_in_sql?(exp[operator]["field"])
+        field_in_sql?(exp[operator]["field"], exp[operator]["field-field"])
       else
         # TODO: Support includes operator for sub-sub-tables
         false
@@ -525,21 +526,10 @@ class MiqExpression
     !Field.is_field?(value) || Field.parse(value).attribute_supported_by_sql?
   end
 
-  def field_in_sql?(field)
-    return false unless attribute_supported_by_sql?(field)
-
-    # => false if excluded by special case defined in preprocess options
-    return false if field_excluded_by_preprocess_options?(field)
-
-    true
+  def field_in_sql?(field, field_field)
+    field_field.attribute_supported_by_sql? &&
+      !field_excluded_by_preprocess_options?(field)
   end
-
-  def attribute_supported_by_sql?(field)
-    return false unless col_details[field]
-
-    col_details[field][:sql_support]
-  end
-  # private attribute_supported_by_sql? -- tests only
 
   def field_excluded_by_preprocess_options?(field)
     col_details[field][:excluded_by_preprocess_options]
@@ -1440,7 +1430,7 @@ class MiqExpression
 
   def to_arel(exp, tz)
     operator = exp.keys.first
-    field = Field.parse(exp[operator]["field"]) if exp[operator].kind_of?(Hash) && exp[operator]["field"]
+    field = exp[operator]["field-field"] if exp[operator].kind_of?(Hash)
     arel_attribute = field&.arel_attribute
     if exp[operator].kind_of?(Hash) && exp[operator]["value"] && Field.is_field?(exp[operator]["value"])
       field_value = Field.parse(exp[operator]["value"])
