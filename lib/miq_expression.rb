@@ -523,18 +523,15 @@ class MiqExpression
   end
 
   def value_in_sql?(value)
-    !Field.is_field?(value) || Field.parse(value).attribute_supported_by_sql?
+    value_field = Field.parse(value)
+    !value_field&.valid? || value_field&.attribute_supported_by_sql?
   end
 
+  # NOTE: dropped cached :exclude_col. needed?
   def field_in_sql?(field, field_field)
     field_field.attribute_supported_by_sql? &&
-      !field_excluded_by_preprocess_options?(field)
+      !field_field.exclude_col_by_preprocess_options?(preprocess_options)
   end
-
-  def field_excluded_by_preprocess_options?(field)
-    col_details[field][:excluded_by_preprocess_options]
-  end
-  private :field_excluded_by_preprocess_options?
 
   def col_details
     @col_details ||= self.class.get_cols_from_expression(exp, preprocess_options)
@@ -1213,8 +1210,8 @@ class MiqExpression
            if field == :count
              :integer
            else
-             col_info = get_col_info(field)
-             [:bytes, :megabytes].include?(col_info[:format_sub_type]) ? :integer : col_info[:data_type]
+             field_field = Target.parse(field)
+             [:bytes, :megabytes].include?(field_field.sub_type) ? :integer : field_field.column_type
            end
          end
 
