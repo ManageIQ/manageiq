@@ -72,3 +72,5 @@ class CloudVolumeBackup < ApplicationRecord
     raise NotImplementedError, _("raw_delete must be implemented in a subclass")
   end
 end
+
+DescendantLoader.instance.load_subclasses(CloudVolumeBackup)

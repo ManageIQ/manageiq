@@ -9,3 +9,5 @@ class ConfigurationLocation < ApplicationRecord
     (parent.try(:path) || []).push(self)
   end
 end
+
+DescendantLoader.instance.load_subclasses(ConfigurationLocation)

@@ -15,3 +15,5 @@ class CloudResourceQuota < ApplicationRecord
     method.to_s.end_with?("_quota_used") ? -1 : super
   end
 end
+
+DescendantLoader.instance.load_subclasses(CloudResourceQuota)

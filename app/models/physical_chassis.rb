@@ -36,3 +36,5 @@ class PhysicalChassis < ApplicationRecord
     ["#{events_table_name(assoc)}.physical_chassis_id = ?", id]
   end
 end
+
+DescendantLoader.instance.load_subclasses(PhysicalChassis)

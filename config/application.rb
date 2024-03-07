@@ -104,8 +104,6 @@ module Vmdb
 
     config.autoload_paths += config.eager_load_paths
 
-    config.autoloader = :zeitwerk
-
     # config.load_defaults 6.1
     # Disable defaults as ActiveRecord::Base.belongs_to_required_by_default = true causes MiqRegion.seed to fail validation on belongs_to maintenance zone
 
@@ -160,6 +158,7 @@ module Vmdb
     # on the top to bottom order of initializer calls in the file.
     # Because this is easy to mess up, keep your initializers in order.
     initializer :load_inflections, :before => :init_vmdb_plugins do
+      require 'vmdb/inflections'
       Vmdb::Inflections.load_inflections
     end
 

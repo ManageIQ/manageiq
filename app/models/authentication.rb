@@ -180,3 +180,5 @@ class Authentication < ApplicationRecord
     end
   end
 end
+
+DescendantLoader.instance.load_subclasses(Authentication)

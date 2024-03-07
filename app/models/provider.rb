@@ -103,3 +103,5 @@ class Provider < ApplicationRecord
     end
   end
 end
+
+DescendantLoader.instance.load_subclasses(Provider)

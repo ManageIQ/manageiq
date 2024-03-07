@@ -18,3 +18,5 @@ class StorageResource < ApplicationRecord
     ext_management_system&.class_by_ems(:StorageResource)
   end
 end
+
+DescendantLoader.instance.load_subclasses(StorageResource)

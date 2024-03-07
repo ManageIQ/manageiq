@@ -83,3 +83,5 @@ class VolumeMapping < ApplicationRecord
     raise NotImplementedError, _("raw_create_volume_mapping must be implemented in a subclass")
   end
 end
+
+DescendantLoader.instance.load_subclasses(VolumeMapping)

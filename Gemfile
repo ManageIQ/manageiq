@@ -18,11 +18,11 @@ def manageiq_plugin(plugin_name)
   end
 end
 
-manageiq_plugin "manageiq-schema"
+gem "manageiq-schema",                 :github => "jrafanie/manageiq-schema", :branch => "allow_rails_7"
 
 # Unmodified gems
 gem "activerecord-session_store",       "~>2.0"
-gem "activerecord-virtual_attributes",  "~>6.1.2"
+gem "activerecord-virtual_attributes", :github => "jrafanie/activerecord-virtual_attributes", :branch => "allow_rails_7"
 gem "acts_as_tree",                     "~>2.7" # acts_as_tree needs to be required so that it loads before ancestry
 gem "ancestry",                         "~>4.1.0",           :require => false
 gem "awesome_spawn",                    "~>1.6",             :require => false
@@ -35,7 +35,7 @@ gem "color",                            "~>1.8"
 gem "connection_pool",                                       :require => false # For Dalli
 gem "config",                           "~>2.2", ">=2.2.3",  :require => false
 gem "dalli",                            "~>3.2.3",           :require => false
-gem "default_value_for",                "~>3.3"
+gem "default_value_for",               :github => "FooBarWidget/default_value_for"
 gem "docker-api",                       "~>1.33.6",          :require => false
 gem "elif",                             "=0.1.0",            :require => false
 gem "fast_gettext",                     "~>2.0.1"
@@ -47,11 +47,11 @@ gem "inventory_refresh",                "~>2.1",             :require => false
 gem "kubeclient",                       "~>4.0",             :require => false # For scaling pods at runtime
 gem "linux_admin",                      "~>2.0", ">=2.0.1",  :require => false
 gem "listen",                           "~>3.2",             :require => false
-gem "manageiq-api-client",              "~>0.3.6",           :require => false
+gem "manageiq-api-client",             :github => "ManageIQ/manageiq-api-client"
 gem "manageiq-loggers",                 "~>1.0", ">=1.1.1",  :require => false
-gem "manageiq-messaging",               "~>1.0", ">=1.4.1",  :require => false
+gem "manageiq-messaging",              :github => "ManageIQ/manageiq-messaging"
 gem "manageiq-password",                "~>1.0",             :require => false
-gem "manageiq-postgres_ha_admin",       "~>3.2",             :require => false
+gem "manageiq-postgres_ha_admin",      :github => "ManageIQ/manageiq-postgres_ha_admin"
 gem "manageiq-ssh-util",                "~>0.1.1",           :require => false
 gem "memoist",                          "~>0.16.0",          :require => false
 gem "money",                            "~>6.13.5",          :require => false
@@ -67,8 +67,8 @@ gem "pg-dsn_parser",                    "~>0.1.1",           :require => false
 gem "query_relation",                   "~>0.1.0",           :require => false
 gem "rack",                             ">=2.2.6.4",         :require => false
 gem "rack-attack",                      "~>6.5.0",           :require => false
-gem "rails",                            "~>6.1.7", ">=6.1.7.7"
-gem "rails-i18n",                       "~>6.x"
+gem "rails",                            "~>7.0.0"
+gem "rails-i18n",                       "~>7.x"
 gem "rake",                             ">=12.3.3",          :require => false
 gem "rest-client",                      "~>2.1.0",           :require => false
 gem "ripper_ruby_parser",               "~>1.11",            :require => false
@@ -302,7 +302,7 @@ group :test do
   gem "brakeman",                       "~>5.4",             :require => false
   gem "bundler-audit",                                       :require => false
   gem "capybara",                       "~>2.5.0",           :require => false
-  gem "db-query-matchers",              "~>0.10.0"
+  gem "db-query-matchers",              "~>0.11.0"
   gem "factory_bot",                    "~>5.1",             :require => false
   gem "simplecov",                      ">=0.21.2",          :require => false
   gem "timecop",                        "~>0.9", "!= 0.9.7", :require => false
@@ -315,3 +315,5 @@ group :development, :test do
   gem "routes_lazy_routes"
   gem "rspec-rails",                    "~>4.0.1"
 end
+
+gem "activerecord-id_regions",                  :github => "ManageIQ/activerecord-id_regions"

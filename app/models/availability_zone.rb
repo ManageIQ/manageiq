@@ -40,3 +40,5 @@ class AvailabilityZone < ApplicationRecord
     ["#{events_table_name(assoc)}.availability_zone_id = ?", id]
   end
 end
+
+DescendantLoader.instance.load_subclasses(AvailabilityZone)

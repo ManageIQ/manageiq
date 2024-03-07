@@ -254,3 +254,5 @@ class MiqAeClass < ApplicationRecord
 
   private_class_method :get_same_instance_from_classes
 end
+
+DescendantLoader.instance.load_subclasses(MiqAeClass)

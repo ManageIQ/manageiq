@@ -32,3 +32,5 @@ class LoadBalancerPoolMember < ApplicationRecord
     end
   end
 end
+
+DescendantLoader.instance.load_subclasses(LoadBalancerPoolMember)

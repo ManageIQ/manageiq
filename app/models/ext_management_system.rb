@@ -1028,3 +1028,5 @@ class ExtManagementSystem < ApplicationRecord
 
   define_method(:allow_duplicate_endpoint_url?) { false }
 end
+
+DescendantLoader.instance.load_subclasses(ExtManagementSystem)

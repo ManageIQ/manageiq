@@ -231,3 +231,5 @@ class Job < ApplicationRecord
     "guid: [#{guid}], userid: [#{self.userid}], name: [#{self.name}], target class: [#{target_class}], target id: [#{target_id}], process type: [#{type}], server id: [#{miq_server_id}], zone: [#{zone}]"
   end
 end # class Job
+
+DescendantLoader.instance.load_subclasses(Job)

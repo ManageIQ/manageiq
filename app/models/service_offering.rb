@@ -4,3 +4,5 @@ class ServiceOffering < ApplicationRecord
   has_many :service_instances, :dependent => :nullify
   has_many :service_parameters_sets, :dependent => :nullify
 end
+
+DescendantLoader.instance.load_subclasses(ServiceOffering)

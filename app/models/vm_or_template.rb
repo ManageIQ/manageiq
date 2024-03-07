@@ -1723,3 +1723,5 @@ class VmOrTemplate < ApplicationRecord
     }.merge(queue_options)
   end
 end
+
+DescendantLoader.instance.load_subclasses(VmOrTemplate)

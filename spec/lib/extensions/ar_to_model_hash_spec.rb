@@ -30,6 +30,7 @@ RSpec.describe ToModelHash do
 
     let(:fixed_options)       { test_vm_class.send(:to_model_hash_options_fixup, @test_to_model_hash_options) }
     let(:mocked_preloader)    { double }
+    let(:rails7)              { !ActiveRecord::Associations::Preloader.instance_methods.include?(:preload) }
 
     require 'active_support/testing/stream'
     include ActiveSupport::Testing::Stream
@@ -66,12 +67,19 @@ RSpec.describe ToModelHash do
 
       # we're testing the preload of associations, skip the recursive .to_model_hash
       allow_any_instance_of(test_vm_class).to receive(:to_model_hash_recursive)
-      allow(ActiveRecord::Associations::Preloader).to receive(:new).and_return(mocked_preloader)
     end
 
     def assert_preloaded(associations)
-      expect(mocked_preloader).to receive(:preload) do |_recs, assocs|
-        expect(assocs).to match_array(associations)
+      if rails7
+        allow(ActiveRecord::Associations::Preloader).to receive(:new)
+          .with(associations: array_including(associations), records: array_including(instance_of(test_vm_class)), scope: nil)
+          .and_return(mocked_preloader)
+        expect(mocked_preloader).to receive(:call)
+      else
+        allow(ActiveRecord::Associations::Preloader).to receive(:new).and_return(mocked_preloader)
+        expect(mocked_preloader).to receive(:preload) do |_recs, assocs|
+          expect(assocs).to match_array(associations)
+        end
       end
 
       test_vm_class.new.to_model_hash(fixed_options)

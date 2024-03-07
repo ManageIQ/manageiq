@@ -136,3 +136,5 @@ class ContainerImage < ApplicationRecord
 
   alias_method :perform_metadata_sync, :sync_stashed_metadata
 end
+
+DescendantLoader.instance.load_subclasses(ContainerImage)

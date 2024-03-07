@@ -94,3 +94,5 @@ class PhysicalServer < ApplicationRecord
     firmware_binary.firmware_targets.find_by(filter).present?
   end
 end
+
+DescendantLoader.instance.load_subclasses(PhysicalServer)

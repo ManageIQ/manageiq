@@ -8,3 +8,5 @@ class ConfigurationTag < ApplicationRecord
 
   validates :name, :presence => true
 end
+
+DescendantLoader.instance.load_subclasses(ConfigurationTag)

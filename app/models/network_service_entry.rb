@@ -15,3 +15,5 @@ class NetworkServiceEntry < ApplicationRecord
     ext_management_system&.class_by_ems(:NetworkServiceEntry)
   end
 end
+
+DescendantLoader.instance.load_subclasses(NetworkServiceEntry)
