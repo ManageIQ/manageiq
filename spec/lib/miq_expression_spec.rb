@@ -3041,25 +3041,25 @@ RSpec.describe MiqExpression do
       context "operation with 'field'" do
         it "returns false if format of field is model.association.association-field" do
           field = "ManageIQ::Providers::InfraManager::Vm.service.user.vms-active"
-          expression = {"CONTAINS" => {"field" => field, "value" => "true"}}
+          expression = {"CONTAINS" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "true"}}
           expect(described_class.new(nil).sql_supports_atom?(expression)).to eq(false)
         end
 
         it "returns false if field belongs to virtual_has_many association" do
           field = "ManageIQ::Providers::InfraManager::Vm.processes-type"
-          expression = {"CONTAINS" => {"field" => field, "value" => "abc"}}
+          expression = {"CONTAINS" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "abc"}}
           expect(described_class.new(nil).sql_supports_atom?(expression)).to eq(false)
         end
 
         it "returns false if field belongs to 'has_many' polymorhic/polymorhic association" do
           field = "ManageIQ::Providers::InfraManager::Vm.advanced_settings-region_number"
-          expression = {"CONTAINS" => {"field" => field, "value" => "1"}}
+          expression = {"CONTAINS" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "1"}}
           expect(described_class.new(nil).sql_supports_atom?(expression)).to eq(false)
         end
 
         it "returns true if field belongs to 'has_many' association" do
           field = "ManageIQ::Providers::InfraManager::Vm.registry_items-name"
-          expression = {"CONTAINS" => {"field" => field, "value" => "abc"}}
+          expression = {"CONTAINS" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "abc"}}
           expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(true)
         end
       end
@@ -3068,31 +3068,31 @@ RSpec.describe MiqExpression do
     context "expression key is 'INCLUDE'" do
       it "returns false for model-virtualfield" do
         field = "ManageIQ::Providers::InfraManager::Vm-v_datastore_path"
-        expression = {"INCLUDES" => {"field" => field, "value" => "abc"}}
+        expression = {"INCLUDES" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "abc"}}
         expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(false)
       end
 
       it "returns true for model-field" do
         field = "ManageIQ::Providers::InfraManager::Vm-location"
-        expression = {"INCLUDES" => {"field" => field, "value" => "abc"}}
+        expression = {"INCLUDES" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "abc"}}
         expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(true)
       end
 
       it "returns false for model.association.virtualfield" do
         field = "ManageIQ::Providers::InfraManager::Vm.ext_management_system-hostname"
-        expression = {"INCLUDES" => {"field" => field, "value" => "abc"}}
+        expression = {"INCLUDES" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "abc"}}
         expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(false)
       end
 
       it "returns true for model.accociation.field" do
         field = "ManageIQ::Providers::InfraManager::Vm.ext_management_system-name"
-        expression = {"INCLUDES" => {"field" => field, "value" => "abc"}}
+        expression = {"INCLUDES" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "abc"}}
         expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(true)
       end
 
       it "returns false if format of field is model.association..association-field" do
         field = "ManageIQ::Providers::InfraManager::Vm.service.miq_request-v_approved_by"
-        expression = {"INCLUDES" => {"field" => field, "value" => "abc"}}
+        expression = {"INCLUDES" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "abc"}}
         expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(false)
       end
     end
@@ -3127,31 +3127,31 @@ RSpec.describe MiqExpression do
 
     it "supports sql for model.association-virtualfield (with arel)" do
       field = "Host.vms-archived"
-      expression = {"=" => {"field" => field, "value" => "true"}}
+      expression = {"=" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "true"}}
       expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(true)
     end
 
     it "does not supports sql for model.association-virtualfield (no arel)" do
       field = "ManageIQ::Providers::InfraManager::Vm.storage-v_used_space"
-      expression = {">=" => {"field" => field, "value" => "50"}}
+      expression = {">=" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "50"}}
       expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(false)
     end
 
     it "returns true for model-field" do
       field = "ManageIQ::Providers::InfraManager::Vm-vendor"
-      expression = {"=" => {"field" => field, "value" => "redhat"}}
+      expression = {"=" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "redhat"}}
       expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(true)
     end
 
     it "returns true for model.assoctiation-field" do
       field = "ManageIQ::Providers::InfraManager::Vm.ext_management_system-name"
-      expression = {"STARTS WITH" => {"field" => field, "value" => "abc"}}
+      expression = {"STARTS WITH" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "abc"}}
       expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(true)
     end
 
     it "returns false if column excluded from processing for adhoc performance metrics" do
       field = "EmsClusterPerformance-cpu_usagemhz_rate_average"
-      expression = {">=" => {"field" => field, "value" => "0"}}
+      expression = {">=" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "0"}}
       obj = described_class.new(expression)
       obj.preprocess_options = {:vim_performance_daily_adhoc => true}
       expect(obj.sql_supports_atom?(expression)).to eq(false)
@@ -3159,7 +3159,7 @@ RSpec.describe MiqExpression do
 
     it "returns true if column is not excluded from processing for adhoc performance metrics" do
       field = "EmsClusterPerformance-derived_cpu_available"
-      expression = {">=" => {"field" => field, "value" => "0"}}
+      expression = {">=" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "0"}}
       obj = described_class.new(expression)
       obj.preprocess_options = {:vim_performance_daily_adhoc => true}
       expect(obj.sql_supports_atom?(expression)).to eq(true)
@@ -3170,31 +3170,31 @@ RSpec.describe MiqExpression do
     it "returns true for model.virtualfield (with sql)" do
       field = "ManageIQ::Providers::InfraManager::Vm-archived"
       expression = {"=" => {"field" => field, "value" => "true"}}
-      expect(described_class.new(expression).field_in_sql?(field)).to eq(true)
+      expect(described_class.new(expression).field_in_sql?(field, MiqExpression::Field.parse(field))).to eq(true)
     end
 
     it "returns false for model.virtualfield (with no sql)" do
       field = "ManageIQ::Providers::InfraManager::Vm-uncommitted_storage"
       expression = {"=" => {"field" => field, "value" => "true"}}
-      expect(described_class.new(expression).field_in_sql?(field)).to eq(false)
+      expect(described_class.new(expression).field_in_sql?(field, MiqExpression::Field.parse(field))).to eq(false)
     end
 
     it "returns false for model.association-virtualfield" do
       field = "ManageIQ::Providers::InfraManager::Vm.storage-v_used_space_percent_of_total"
       expression = {">=" => {"field" => field, "value" => "50"}}
-      expect(described_class.new(expression).field_in_sql?(field)).to eq(false)
+      expect(described_class.new(expression).field_in_sql?(field, MiqExpression::Field.parse(field))).to eq(false)
     end
 
     it "returns true for model-field" do
       field = "ManageIQ::Providers::InfraManager::Vm-vendor"
       expression = {"=" => {"field" => field, "value" => "redhat"}}
-      expect(described_class.new(expression).field_in_sql?(field)).to eq(true)
+      expect(described_class.new(expression).field_in_sql?(field, MiqExpression::Field.parse(field))).to eq(true)
     end
 
     it "returns true for model.association-field" do
       field = "ManageIQ::Providers::InfraManager::Vm.guest_applications-vendor"
       expression = {"CONTAINS" => {"field" => field, "value" => "redhat"}}
-      expect(described_class.new(expression).field_in_sql?(field)).to eq(true)
+      expect(described_class.new(expression).field_in_sql?(field, MiqExpression::Field.parse(field))).to eq(true)
     end
 
     it "returns false if column excluded from processing for adhoc performance metrics" do
@@ -3202,7 +3202,7 @@ RSpec.describe MiqExpression do
       expression = {">=" => {"field" => field, "value" => "0"}}
       obj = described_class.new(expression)
       obj.preprocess_options = {:vim_performance_daily_adhoc => true}
-      expect(obj.field_in_sql?(field)).to eq(false)
+      expect(obj.field_in_sql?(field, MiqExpression::Field.parse(field))).to eq(false)
     end
 
     it "returns true if column not excluded from processing for adhoc performance metrics" do
@@ -3210,7 +3210,7 @@ RSpec.describe MiqExpression do
       expression = {">=" => {"field" => field, "value" => "0"}}
       obj = described_class.new(expression)
       obj.preprocess_options = {:vim_performance_daily_adhoc => true}
-      expect(obj.field_in_sql?(field)).to eq(true)
+      expect(obj.field_in_sql?(field, MiqExpression::Field.parse(field))).to eq(true)
     end
   end
 
