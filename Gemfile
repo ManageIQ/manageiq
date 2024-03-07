@@ -137,6 +137,10 @@ group :cisco_intersight, :manageiq_default do
   manageiq_plugin "manageiq-providers-cisco_intersight"
 end
 
+group :embedded_terraform, :manageiq_default do
+  manageiq_plugin "manageiq-providers-embedded_terraform"
+end
+
 group :foreman, :manageiq_default do
   manageiq_plugin "manageiq-providers-foreman"
 end
