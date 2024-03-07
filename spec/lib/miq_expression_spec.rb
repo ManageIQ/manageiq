@@ -243,9 +243,9 @@ RSpec.describe MiqExpression do
 
   describe "#reduce_exp" do
     let(:sql_field)      { {"=" => {"field" => "Vm-name", "value" => "foo"}.freeze}.freeze }
-    let(:sql_field_out)  { {"=" => {"field" => "Vm-name", "field-field" => MiqExpression::Field.parse("Vm-name"), "value" => "foo"}.freeze}.freeze }
+    let(:sql_field_out)  { {"=" => {"field" => "Vm-name", "field-field" => MiqExpression::Field.parse("Vm-name"), "value" => "foo", "value-field" => nil}.freeze}.freeze }
     let(:ruby_field)     { {"=" => {"field" => "Vm-platform", "value" => "bar"}.freeze}.freeze }
-    let(:ruby_field_out) { {"=" => {"field" => "Vm-platform", "field-field" => MiqExpression::Field.parse("Vm-platform"), "value" => "bar"}.freeze}.freeze }
+    let(:ruby_field_out) { {"=" => {"field" => "Vm-platform", "field-field" => MiqExpression::Field.parse("Vm-platform"), "value" => "bar", "value-field" => nil}.freeze}.freeze }
 
     context "mode: :sql" do
       it "(sql AND ruby) => (sql)" do
@@ -3017,7 +3017,7 @@ RSpec.describe MiqExpression do
     end
   end
 
-  describe "#sql_supports_atom?" do
+  describe "#sql_supports_atom? (private)" do
     context "expression key is 'CONTAINS'" do
       context "operations with 'tag'" do
         it "returns true for tag of the main model" do
@@ -3166,35 +3166,35 @@ RSpec.describe MiqExpression do
     end
   end
 
-  describe "#field_in_sql?" do
+  describe "#field_in_sql? (private)" do
     it "returns true for model.virtualfield (with sql)" do
       field = "ManageIQ::Providers::InfraManager::Vm-archived"
       expression = {"=" => {"field" => field, "value" => "true"}}
-      expect(described_class.new(expression).field_in_sql?(field, MiqExpression::Field.parse(field))).to eq(true)
+      expect(described_class.new(expression).field_in_sql?(MiqExpression::Field.parse(field))).to eq(true)
     end
 
     it "returns false for model.virtualfield (with no sql)" do
       field = "ManageIQ::Providers::InfraManager::Vm-uncommitted_storage"
       expression = {"=" => {"field" => field, "value" => "true"}}
-      expect(described_class.new(expression).field_in_sql?(field, MiqExpression::Field.parse(field))).to eq(false)
+      expect(described_class.new(expression).field_in_sql?(MiqExpression::Field.parse(field))).to eq(false)
     end
 
     it "returns false for model.association-virtualfield" do
       field = "ManageIQ::Providers::InfraManager::Vm.storage-v_used_space_percent_of_total"
       expression = {">=" => {"field" => field, "value" => "50"}}
-      expect(described_class.new(expression).field_in_sql?(field, MiqExpression::Field.parse(field))).to eq(false)
+      expect(described_class.new(expression).field_in_sql?(MiqExpression::Field.parse(field))).to eq(false)
     end
 
     it "returns true for model-field" do
       field = "ManageIQ::Providers::InfraManager::Vm-vendor"
       expression = {"=" => {"field" => field, "value" => "redhat"}}
-      expect(described_class.new(expression).field_in_sql?(field, MiqExpression::Field.parse(field))).to eq(true)
+      expect(described_class.new(expression).field_in_sql?(MiqExpression::Field.parse(field))).to eq(true)
     end
 
     it "returns true for model.association-field" do
       field = "ManageIQ::Providers::InfraManager::Vm.guest_applications-vendor"
       expression = {"CONTAINS" => {"field" => field, "value" => "redhat"}}
-      expect(described_class.new(expression).field_in_sql?(field, MiqExpression::Field.parse(field))).to eq(true)
+      expect(described_class.new(expression).field_in_sql?(MiqExpression::Field.parse(field))).to eq(true)
     end
 
     it "returns false if column excluded from processing for adhoc performance metrics" do
@@ -3202,7 +3202,7 @@ RSpec.describe MiqExpression do
       expression = {">=" => {"field" => field, "value" => "0"}}
       obj = described_class.new(expression)
       obj.preprocess_options = {:vim_performance_daily_adhoc => true}
-      expect(obj.field_in_sql?(field, MiqExpression::Field.parse(field))).to eq(false)
+      expect(obj.field_in_sql?(MiqExpression::Field.parse(field))).to eq(false)
     end
 
     it "returns true if column not excluded from processing for adhoc performance metrics" do
@@ -3210,7 +3210,7 @@ RSpec.describe MiqExpression do
       expression = {">=" => {"field" => field, "value" => "0"}}
       obj = described_class.new(expression)
       obj.preprocess_options = {:vim_performance_daily_adhoc => true}
-      expect(obj.field_in_sql?(field, MiqExpression::Field.parse(field))).to eq(true)
+      expect(obj.field_in_sql?(MiqExpression::Field.parse(field))).to eq(true)
     end
   end
 

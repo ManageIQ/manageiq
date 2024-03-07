@@ -352,6 +352,7 @@ class MiqExpression
       field = operator_values["field"]
       field_field = operator_values["field-field"] = Field.parse(field) if field
       value = operator_values["value"]
+      operator_values["value-field"] = Field.parse(value) if value
 
       # attempt to do conversion only if db type of column is integer and value to compare to is String
       if %w[= != <= >= > <].include?(operator) && field_field&.integer? && value.instance_of?(String)
@@ -492,17 +493,17 @@ class MiqExpression
     when "includes"
       # Support includes operator using "LIKE" only if first operand is in main table
       if exp[operator].key?("field") && (!exp[operator]["field"].include?(".") || (exp[operator]["field"].include?(".") && exp[operator]["field"].split(".").length == 2))
-        field_in_sql?(exp[operator]["field"], exp[operator]["field-field"])
+        field_in_sql?(exp[operator]["field-field"])
       else
         # TODO: Support includes operator for sub-sub-tables
         false
       end
     when "includes any", "includes all", "includes only"
       # Support this only from the main model (for now)
-      if exp[operator].keys.include?("field") && exp[operator]["field"].split(".").length == 1
-        model, field = exp[operator]["field"].split("-")
-        method = "miq_expression_#{operator.downcase.tr(' ', '_')}_#{field}_arel"
-        model.constantize.respond_to?(method)
+      if exp[operator]["field-field"] && exp[operator]["field"]&.split(".")&.length == 1
+        field_field = exp[operator]["field-field"]
+        method = "miq_expression_#{operator.downcase.tr(' ', '_')}_#{field_field.column}_arel"
+        field_field.model.respond_to?(method)
       else
         false
       end
@@ -518,17 +519,16 @@ class MiqExpression
       # => TODO: support count of child relationship
       return false if exp[operator].key?("count")
 
-      field_in_sql?(exp[operator]["field"]) && value_in_sql?(exp[operator]["value"])
+      field_in_sql?(exp[operator]["field-field"]) && value_in_sql?(exp[operator]["value-field"])
     end
   end
 
-  def value_in_sql?(value)
-    value_field = Field.parse(value)
+  def value_in_sql?(value_field)
     !value_field&.valid? || value_field&.attribute_supported_by_sql?
   end
 
   # NOTE: dropped cached :exclude_col. needed?
-  def field_in_sql?(field, field_field)
+  def field_in_sql?(field_field)
     field_field.attribute_supported_by_sql? &&
       !field_field.exclude_col_by_preprocess_options?(preprocess_options)
   end
