@@ -29,10 +29,14 @@ module Vmdb
       Vmdb::Plugins.each { |p| p.try(:apply_logger_config, config) }
     end
 
-    def self.create_logger(log_file_name, logger_class = ManageIQ::Loggers::Base)
-      create_container_logger(log_file_name, logger_class) ||
-        create_journald_logger(log_file_name, logger_class) ||
+    def self.create_logger(log_file_name, logger_class = nil)
+      if MiqEnvironment::Command.is_container?
+        create_container_logger(log_file_name, logger_class)
+      elsif MiqEnvironment::Command.supports_systemd?
+        create_journald_logger(log_file_name, logger_class)
+      else
         create_file_logger(log_file_name, logger_class)
+      end
     end
 
     private_class_method def self.create_loggers
@@ -46,63 +50,51 @@ module Vmdb
     end
 
     private_class_method def self.create_file_logger(log_file, logger_class)
-      log_file = Pathname.new(log_file) if log_file.kind_of?(String)
-      log_file = ManageIQ.root.join("log", log_file) if log_file.try(:dirname).to_s == "."
-      progname = log_file.try(:basename, ".*").to_s
+      log_file = log_path_from_file(log_file)
+      progname = progname_from_file(log_file)
 
+      logger_class ||= ManageIQ::Loggers::Base
       logger_class.new(log_file, :progname => progname)
     end
 
     private_class_method def self.create_container_logger(log_file_name, logger_class)
-      return nil unless (logger = create_raw_container_logger)
-
-      create_wrapper_logger(log_file_name, logger_class, logger)
-    end
-
-    private_class_method def self.create_raw_container_logger
-      return unless ENV["CONTAINER"]
-
       require "manageiq/loggers/container"
-      ManageIQ::Loggers::Container.new
+      logger = ManageIQ::Loggers::Container.new
+
+      progname = progname_from_file(log_file_name)
+      logger.progname = progname
+
+      return logger if logger_class.nil?
+
+      create_wrapper_logger(progname, logger_class, logger)
     end
 
     private_class_method def self.create_journald_logger(log_file_name, logger_class)
-      return nil unless (logger = create_raw_journald_logger)
+      require "manageiq/loggers/journald"
+      logger = ManageIQ::Loggers::Journald.new
 
-      create_wrapper_logger(log_file_name, logger_class, logger)
+      progname = progname_from_file(log_file_name)
+      logger.progname = progname
+
+      return logger if logger_class.nil?
+
+      create_wrapper_logger(progname, logger_class, logger)
     end
 
-    private_class_method def self.create_raw_journald_logger
-      return unless MiqEnvironment::Command.supports_systemd?
-
-      require "manageiq/loggers/journald"
-      ManageIQ::Loggers::Journald.new
-    rescue LoadError
-      nil
+    private_class_method def self.log_path_from_file(log_file)
+      log_file = Pathname.new(log_file) if log_file.kind_of?(String)
+      log_file = ManageIQ.root.join("log", log_file) if log_file.try(:dirname).to_s == "."
+      log_file
     end
 
     private_class_method def self.progname_from_file(log_file_name)
-      File.basename(log_file_name, ".*")
+      log_file = Pathname.new(log_file) if log_file.kind_of?(String)
+      log_file.try(:basename, ".*").to_s
     end
 
-    private_class_method def self.create_wrapper_logger(log_file, logger_class, wrapped_logger)
-      log_file = Pathname.new(log_file) if log_file.kind_of?(String)
-      log_file = ManageIQ.root.join("log", log_file) if log_file.try(:dirname).to_s == "."
-      progname = log_file.try(:basename, ".*").to_s
-
+    private_class_method def self.create_wrapper_logger(progname, logger_class, wrapped_logger)
       logger_class.new(nil, :progname => progname).tap do |logger|
-        # HACK: In order to access the wrapped logger in test, we inject it as an instance var.
-        if Rails.env.test?
-          logger.instance_variable_set(:@wrapped_logger, wrapped_logger)
-
-          def logger.wrapped_logger
-            @wrapped_logger
-          end
-        end
-
         logger.extend(ActiveSupport::Logger.broadcast(wrapped_logger))
-
-        wrapped_logger.progname = progname
       end
     end
 

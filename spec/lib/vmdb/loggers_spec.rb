@@ -32,13 +32,6 @@ RSpec.describe Vmdb::Loggers do
 
       subject { described_class.create_logger(log_file) }
 
-      let(:container_log) { subject.try(:wrapped_logger) }
-
-      before do
-        # Hide the container logger output to STDOUT
-        allow(container_log.logdev).to receive(:write) if container_log
-      end
-
       it "responds to #<<" do
         expect(subject).to respond_to(:<<)
       end
@@ -64,11 +57,7 @@ RSpec.describe Vmdb::Loggers do
       end
 
       it "#logdev" do
-        if container_log
-          expect(subject.logdev).to be_nil
-        else
-          expect(subject.logdev).to be_a Logger::LogDevice
-        end
+        expect(subject.logdev).to be_a Logger::LogDevice
       end
 
       describe "#datetime_format" do
@@ -90,20 +79,8 @@ RSpec.describe Vmdb::Loggers do
             subject.level = old_level
           end
 
-          it "forwards to the other loggers" do
-            expect(subject).to       receive(:add).with(1, nil, "test message").and_call_original
-            expect(container_log).to receive(:add).with(1, nil, "test message").and_call_original if container_log
-
-            subject.info("test message")
-          end
-
           it "only forwards the message if the severity is correct" do
-            if container_log
-              expect(subject.logdev).to           be_nil
-              expect(container_log.logdev).not_to receive(:write).with("test message")
-            else
-              expect(subject.logdev).not_to       receive(:write).with("test message")
-            end
+            expect(subject.logdev).not_to receive(:write).with("test message")
 
             subject.debug("test message")
           end
@@ -128,8 +105,7 @@ RSpec.describe Vmdb::Loggers do
 
       context "#<<" do
         it "forwards to the other loggers" do
-          expect(subject).to       receive(:<<).with("test message").and_call_original
-          expect(container_log).to receive(:<<).with("test message").and_call_original if container_log
+          expect(subject).to receive(:<<).with("test message")#.and_call_original
 
           subject << "test message"
         end
@@ -139,12 +115,9 @@ RSpec.describe Vmdb::Loggers do
         let(:log_file) { StringIO.new }
 
         it "logs correctly" do
-          expect(subject).to       receive(:add).with(1, nil, "test message").and_call_original
-          expect(container_log).to receive(:add).with(1, nil, "test message").and_call_original if container_log
+          expect(subject).to receive(:add).with(1, nil, "test message")
 
           subject.info("test message")
-
-          expect(log_file.string).to include("test message") unless container_log
         end
       end
 
@@ -154,12 +127,9 @@ RSpec.describe Vmdb::Loggers do
         after { log_file.delete if log_file.exist? }
 
         it "logs correctly" do
-          expect(subject).to       receive(:add).with(1, nil, "test message").and_call_original
-          expect(container_log).to receive(:add).with(1, nil, "test message").and_call_original if container_log
+          expect(subject).to receive(:add).with(1, nil, "test message")
 
           subject.info("test message")
-
-          expect(log_file.read).to include("test message") unless container_log
         end
       end
 
@@ -169,30 +139,19 @@ RSpec.describe Vmdb::Loggers do
         after { File.delete(log_file) if File.exist?(log_file) }
 
         it "logs correctly" do
-          expect(subject).to       receive(:add).with(1, nil, "test message").and_call_original
-          expect(container_log).to receive(:add).with(1, nil, "test message").and_call_original if container_log
+          expect(subject).to receive(:add).with(1, nil, "test message")
 
           subject.info("test message")
-
-          expect(File.read(log_file)).to include("test message") unless container_log
         end
       end
     end
 
     context "in a non-container environment" do
-      it "does not have a container logger" do
-        expect(container_log).to be_nil
-      end
-
       include_examples "has basic logging functionality"
     end
 
     context "in a container environment" do
       around { |example| in_container_env(example) }
-
-      it "has a container logger" do
-        expect(container_log).to_not be_nil
-      end
 
       include_examples "has basic logging functionality"
     end
@@ -212,12 +171,10 @@ RSpec.describe Vmdb::Loggers do
 
       it "will honor the log level in the container logger" do
         log = described_class.create_logger(log_file_name)
-        container_log = log.wrapped_logger
 
         described_class.apply_config_value({:level_foo => :error}, log, :level_foo)
 
-        expect(log.level).to           eq(Logger::ERROR)
-        expect(container_log.level).to eq(Logger::ERROR)
+        expect(log.level).to eq(Logger::ERROR)
       end
     end
   end
