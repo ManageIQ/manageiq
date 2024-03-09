@@ -65,8 +65,8 @@ module Metric::CiMixin::StateFinders
       @last_vps_ts = ts
       # we are using a different timestamp
       # clear out relevant associations
-      (VimPerformanceState::ASSOCIATIONS & self.class.reflections.keys.map(&:to_sym)).each do |vps_assoc|
-        association(vps_assoc).reset
+      vim_performance_state_child_associations.each do |_vps_assoc, model_association|
+        association(model_association).reset
       end
     end
 
@@ -74,5 +74,27 @@ module Metric::CiMixin::StateFinders
       MiqPreloader.preload_from_array(self, assoc, vim_performance_state_for_ts(ts).public_send(assoc))
     end
     public_send(assoc)
+  end
+
+  # @returns Hash<name in VimPerformanceState, (virtual?) association name in model>
+  def vim_performance_state_child_associations
+    if defined?(self.class::PERF_ROLLUPS)
+      self.class::PERF_ROLLUPS
+    else
+      VimPerformanceState::ASSOCIATIONS.each_with_object({}) do |assoc, h|
+        method = if assoc == :vms
+                   if is_a?(EmsCluster)
+                     :all_vms_and_templates
+                   elsif is_a?(Service)
+                     :vms
+                   else
+                     :vms_and_templates
+                   end
+                 else
+                   assoc
+                 end        
+        h[assoc] = method if respond_to?(method)
+      end
+    end
   end
 end

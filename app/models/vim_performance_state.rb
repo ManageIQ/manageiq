@@ -197,9 +197,8 @@ class VimPerformanceState < ApplicationRecord
 
   def capture_assoc_ids
     result = {}
-    ASSOCIATIONS.each do |assoc|
-      assoc_recs = fetch_assoc_records(resource, assoc)
-      next if assoc_recs == false
+    resource.vim_performance_state_child_associations.each do |assoc, method|
+      assoc_recs = fetch_assoc_records(resource, method)
 
       has_state = assoc_recs[0] && assoc_recs[0].respond_to?(:state)
 
@@ -222,20 +221,7 @@ class VimPerformanceState < ApplicationRecord
     self.assoc_ids = result.presence
   end
 
-  def fetch_assoc_records(resource, assoc)
-    method = if assoc == :vms
-               if resource.kind_of?(EmsCluster)
-                 :all_vms_and_templates
-               elsif resource.kind_of?(Service)
-                 :vms
-               else
-                 :vms_and_templates
-               end
-             else
-               assoc
-             end
-    return false unless resource.respond_to?(method)
-
+  def fetch_assoc_records(resource, method)
     records = resource.send(method)
     records = records.not_archived_before(timestamp) if records.try(:klass).respond_to?(:not_archived_before)
     records
