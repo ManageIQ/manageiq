@@ -250,7 +250,7 @@ class EmsCluster < ApplicationRecord
   # Metric methods
   #
 
-  PERF_ROLLUP_CHILDREN = [:hosts]
+  PERF_ROLLUP_CHILDREN = [:hosts].freeze
 
   def perf_rollup_parents(interval_name = nil)
     [ext_management_system].compact unless interval_name == 'realtime'

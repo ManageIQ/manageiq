@@ -123,7 +123,7 @@ class HostAggregate < ApplicationRecord
     raise NotImplementedError, _("remove_host must be implemented in a subclass")
   end
 
-  PERF_ROLLUP_CHILDREN = [:vms]
+  PERF_ROLLUP_CHILDREN = [:vms].freeze
 
   def perf_rollup_parents(_interval_name = nil)
     # don't rollup to ext_management_system since that's handled through availability zone
