@@ -26,6 +26,7 @@ class AvailabilityZone < ApplicationRecord
   end
 
   PERF_ROLLUP_CHILDREN = [:vms].freeze
+  PERF_ROLLUPS = {:vms => :vms_and_templates}.freeze
 
   def perf_rollup_parents(interval_name = nil)
     [ext_management_system].compact unless interval_name == 'realtime'

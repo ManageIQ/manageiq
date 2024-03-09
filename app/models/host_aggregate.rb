@@ -124,6 +124,7 @@ class HostAggregate < ApplicationRecord
   end
 
   PERF_ROLLUP_CHILDREN = [:vms].freeze
+  PERF_ROLLUPS = {:vms => :vms_and_templates}.freeze
 
   def perf_rollup_parents(_interval_name = nil)
     # don't rollup to ext_management_system since that's handled through availability zone

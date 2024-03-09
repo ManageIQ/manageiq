@@ -70,18 +70,22 @@ module Metric::CiMixin::StateFinders
       end
     end
 
+    # TODO: do we need to translate vms to proper name / use child_associations hash?
+    # specifically thinking about vms
     if !association(assoc.to_sym).loaded?
       MiqPreloader.preload_from_array(self, assoc, vim_performance_state_for_ts(ts).public_send(assoc))
     end
     public_send(assoc)
   end
 
+  ASSOCIATIONS = [:vms, :hosts, :ems_clusters, :ext_management_systems, :storages, :container_nodes, :container_groups,
+                  :all_container_groups, :containers]
   # @returns Hash<name in VimPerformanceState, (virtual?) association name in model>
   def vim_performance_state_child_associations
-    if defined?(self.class::PERF_ROLLUPS)
+    if defined?(self.class::PERF_ROLLUPS) && false
       self.class::PERF_ROLLUPS
     else
-      VimPerformanceState::ASSOCIATIONS.each_with_object({}) do |assoc, h|
+      ASSOCIATIONS.each_with_object({}) do |assoc, h|
         method = if assoc == :vms
                    if is_a?(EmsCluster)
                      :all_vms_and_templates
@@ -95,6 +99,7 @@ module Metric::CiMixin::StateFinders
                  end        
         h[assoc] = method if respond_to?(method)
       end
+#      self.class::PERF_ROLLUP_CHILDREN.each_with_object({}) { |x, h| h[x] = x }
     end
   end
 end

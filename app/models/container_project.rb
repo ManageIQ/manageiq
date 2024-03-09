@@ -51,6 +51,7 @@ class ContainerProject < ApplicationRecord
   include EventMixin
   include Metric::CiMixin
 
+  # TODO: should this be stored in VimPerformanceState ps as :container_groups?
   PERF_ROLLUP_CHILDREN = [:all_container_groups].freeze
 
   delegate :my_zone, :to => :ext_management_system, :allow_nil => true

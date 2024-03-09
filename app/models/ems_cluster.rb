@@ -251,6 +251,8 @@ class EmsCluster < ApplicationRecord
   #
 
   PERF_ROLLUP_CHILDREN = [:hosts].freeze
+  # TODO: do we need to collect vms for clusters?
+  PERF_ROLLUPS = {:hosts => :hosts, :vms => :all_vms_and_templates}.freeze
 
   def perf_rollup_parents(interval_name = nil)
     [ext_management_system].compact unless interval_name == 'realtime'

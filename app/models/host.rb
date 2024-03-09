@@ -1297,6 +1297,7 @@ class Host < ApplicationRecord
   #
 
   PERF_ROLLUP_CHILDREN = [:vms].freeze
+  PERF_ROLLUPS = {:vms => :vms_and_templates}.freeze
 
   def perf_rollup_parents(interval_name = nil)
     if interval_name == 'realtime'
