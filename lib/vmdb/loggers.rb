@@ -81,10 +81,6 @@ module Vmdb
       nil
     end
 
-    private_class_method def self.progname_from_file(log_file_name)
-      File.basename(log_file_name, ".*")
-    end
-
     private_class_method def self.create_wrapper_logger(log_file, logger_class, wrapped_logger)
       log_file = Pathname.new(log_file) if log_file.kind_of?(String)
       log_file = ManageIQ.root.join("log", log_file) if log_file.try(:dirname).to_s == "."
