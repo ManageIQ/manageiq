@@ -8,6 +8,10 @@ class MiqServer::WorkerManagement::Process < MiqServer::WorkerManagement
     MiqWorker.find_all_starting.to_a
   end
 
+  def sync_stopping_workers
+    MiqWorker.find_all_stopping.to_a
+  end
+
   def monitor_workers
     super
 

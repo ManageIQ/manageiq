@@ -18,6 +18,17 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
     end
   end
 
+  def sync_stopping_workers
+    sync_from_system
+    MiqWorker.find_all_stopping.reject { |w| w.class.rails_worker? }.each do |worker|
+      # If the worker record is "stopping" and the systemd unit is gone then the
+      # worker has successfully exited.
+      next if miq_services_by_unit[worker[:system_uid]].present?
+
+      worker.update!(:status => MiqWorker::STATUS_STOPPED)
+    end
+  end
+
   def cleanup_failed_workers
     super
 

@@ -24,17 +24,16 @@ module MiqServer::WorkerManagement::Monitor::Stop
     worker_set_monitor_status(w.pid, :waiting_for_stop)
     worker_set_monitor_reason(w.pid, monitor_reason)
 
+    w.update(:status => MiqWorker::STATUS_STOPPING)
+
     if w.containerized_worker?
       w.stop_container
     elsif w.systemd_worker?
       w.stop_systemd_worker
+    elsif w.pid
+      Process.kill("TERM", w.pid)
     else
-      w.update(:status => MiqWorker::STATUS_STOPPING)
-      if w.pid
-        Process.kill("TERM", w.pid)
-      else
-        _log.error("Failed to stop worker #{w.inspect}; pid is nil")
-      end
+      _log.error("Failed to stop worker #{w.inspect}; pid is nil")
     end
   end
 end
