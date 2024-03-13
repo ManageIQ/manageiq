@@ -11,6 +11,8 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
       next if worker.class.rails_worker?
 
       systemd_worker = miq_services_by_unit[worker[:system_uid]]
+      next if systemd_worker.nil?
+
       if systemd_worker[:load_state] == "loaded" && systemd_worker[:active_state] == "active" && systemd_worker[:sub_state] == "running"
         worker.update!(:status => "started")
         starting.delete(worker)
