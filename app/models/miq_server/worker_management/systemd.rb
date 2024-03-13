@@ -5,21 +5,17 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
   end
 
   def sync_starting_workers
-    starting = MiqWorker.find_all_starting.to_a
     sync_from_system
-    starting.each do |worker|
+    MiqWorker.find_all_starting.each do |worker|
       next if worker.class.rails_worker?
 
       systemd_worker = miq_services_by_unit[worker[:system_uid]]
       next if systemd_worker.nil?
 
       if systemd_worker[:load_state] == "loaded" && systemd_worker[:active_state] == "active" && systemd_worker[:sub_state] == "running"
-        worker.update!(:status => "started")
-        starting.delete(worker)
+        worker.update!(:status => MiqWorker::STATUS_STARTED)
       end
     end
-
-    starting
   end
 
   def cleanup_failed_workers

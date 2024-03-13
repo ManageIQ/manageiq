@@ -5,7 +5,7 @@ class MiqServer::WorkerManagement
   include Heartbeat
   include Monitor
 
-  attr_reader :my_server
+  attr_reader :my_server, :workers
 
   def self.build(my_server)
     klass = if podified?

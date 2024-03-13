@@ -40,7 +40,10 @@ RSpec.describe MiqServer::WorkerManagement::Monitor do
         allow(MiqWorkerType).to receive(:worker_class_names).and_return(%w[MiqGenericWorker MiqPriorityWorker])
         allow(MiqGenericWorker).to receive(:sync_workers).and_raise
         expect(MiqPriorityWorker).to receive(:sync_workers).and_return(:adds => [123])
-        expect(server.worker_manager.sync_workers).to eq("MiqPriorityWorker"=>{:adds=>[123]})
+
+        server.worker_manager.sync_workers
+
+        expect(server.worker_manager.workers.keys).to include(12345, 123)
       end
     end
   end
