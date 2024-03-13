@@ -23,8 +23,6 @@ module MiqServer::WorkerManagement::Monitor
     # Sync the workers after sync'ing the child worker settings
     sync_workers
 
-    sync_starting_workers
-
     MiqWorker.status_update_all
 
     cleanup_failed_workers
@@ -46,6 +44,8 @@ module MiqServer::WorkerManagement::Monitor
       _log.log_backtrace(error)
       next
     end
+
+    sync_starting_workers
   end
 
   def cleanup_failed_workers

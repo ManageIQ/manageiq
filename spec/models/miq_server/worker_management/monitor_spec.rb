@@ -43,7 +43,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor do
 
         server.worker_manager.sync_workers
 
-        expect(server.worker_manager.workers.keys).to include(12345, 123)
+        expect(server.worker_manager.workers.keys).to include(123)
       end
     end
   end
