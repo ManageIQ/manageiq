@@ -26,6 +26,11 @@ class ActsAsArModel
     []
   end
 
+  # Simulate being a STI table class for proper descendant class loading
+  def self.inheritance_column
+    "type"
+  end
+
   class << self; alias_method :base_model, :base_class; end
 
   #
