@@ -46,6 +46,7 @@ module MiqServer::WorkerManagement::Monitor
     end
 
     sync_starting_workers
+    sync_stopping_workers
   end
 
   def cleanup_failed_workers

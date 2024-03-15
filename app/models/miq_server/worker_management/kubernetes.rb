@@ -32,6 +32,14 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
     end
   end
 
+  def sync_stopping_workers
+    MiqWorker.find_all_stopping.reject { |w| w.class.rails_worker? }.each do |worker|
+      next if get_pod(worker[:system_uid]).present?
+
+      worker.update!(:status => MiqWorker::STATUS_STOPPED)
+    end
+  end
+
   def enough_resource_to_start_worker?(_worker_class)
     true
   end
