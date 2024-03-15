@@ -21,19 +21,15 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
   end
 
   def sync_starting_workers
-    starting = MiqWorker.find_all_starting.to_a
-    starting.each do |worker|
+    MiqWorker.find_all_starting.each do |worker|
       next if worker.class.rails_worker?
 
       worker_pod = get_pod(worker[:system_uid])
       container_status = worker_pod.status.containerStatuses.find { |container| container.name == worker.worker_deployment_name }
       if worker_pod.status.phase == "Running" && container_status.ready && container_status.started
         worker.update!(:status => "started")
-        starting.delete(worker)
       end
     end
-
-    starting
   end
 
   def enough_resource_to_start_worker?(_worker_class)
