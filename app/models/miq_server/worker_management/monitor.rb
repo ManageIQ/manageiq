@@ -37,8 +37,8 @@ module MiqServer::WorkerManagement::Monitor
 
   def sync_workers
     MiqWorkerType.worker_classes.each do |klass|
-      result = klass.sync_workers
-      result[:adds].each { |pid| worker_add(pid) unless pid.nil? }
+      synced_workers = klass.sync_workers
+      synced_workers[:adds].each { |pid| worker_add(pid) unless pid.nil? }
     rescue => error
       _log.error("Failed to sync_workers for class: #{klass.name}: #{error}")
       _log.log_backtrace(error)
