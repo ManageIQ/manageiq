@@ -178,6 +178,15 @@ RSpec.describe Metric::CiMixin::StateFinders do
     end
   end
 
+  describe "#vim_performance_state_child_associations" do
+    it "calculates the values" do
+      expect(AvailabilityZone.new.vim_performance_state_child_associations).to eq(
+        :vms => :vms_and_templates
+      )
+      # TODO: all classes
+    end
+  end
+
   private
 
   def create_vps(parent, timestamp, association = {})

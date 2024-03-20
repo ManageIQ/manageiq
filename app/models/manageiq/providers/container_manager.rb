@@ -60,6 +60,8 @@ module ManageIQ::Providers
     supports     :metrics
     supports     :performance
 
+    PERF_ROLLUP_CHILDREN = [:container_nodes].freeze
+
     class << model_name
       define_method(:route_key) { "ems_containers" }
       define_method(:singular_route_key) { "ems_container" }
