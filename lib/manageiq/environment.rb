@@ -21,7 +21,7 @@ module ManageIQ
       ensure_config_files
 
       puts "== Installing dependencies =="
-      setup_gemfile_lock if ci?
+
       install_bundler(plugin_root)
       bundle_config(plugin_root)
       bundle_update(plugin_root, force: force_bundle_update)
@@ -73,18 +73,6 @@ module ManageIQ
       return if system("which bundle", [:out, :err] => "/dev/null") && system("bundle info bundler", [:out, :err] => "/dev/null", :chdir => root)
 
       system!("gem install bundler -v '#{bundler_version}' --conservative", :chdir => root)
-    end
-
-    def self.setup_gemfile_lock
-      # Gemfile.lock.release only applies to non-master branches and PRs to non-master branches
-      return unless ENV["GITHUB_REPOSITORY_OWNER"] == "ManageIQ" &&
-                    ENV["GITHUB_BASE_REF"] != "master" && # PR to non-master branch
-                    ENV["GITHUB_REF_NAME"] != "master" && # A non-master branch
-                    !ENV["GITHUB_REF_NAME"].to_s.start_with?("dependabot/") # Dependabot makes branches in the core repo
-
-      raise "Missing Gemfile.lock.release" unless APP_ROOT.join("Gemfile.lock.release").file?
-
-      FileUtils.cp(APP_ROOT.join("Gemfile.lock.release"), APP_ROOT.join("Gemfile.lock"))
     end
 
     def self.bundle_config(root = APP_ROOT)

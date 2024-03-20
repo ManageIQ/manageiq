@@ -1,0 +1,12 @@
+#!/usr/bin/env python3
+
+import os
+import re
+
+with open('Gemfile.lock') as f:
+  gemfile_lock = f.read()
+
+gemfile_lock_patched = re.compile("GIT\n  remote: %s/%s\n  revision: .+\n  branch: .+\n" %(os.environ['GITHUB_SERVER_URL'], os.environ['GITHUB_REPOSITORY'])).sub('PATH\n  remote: .\n', gemfile_lock)
+
+with open('Gemfile.lock', 'w') as f:
+  f.write(gemfile_lock_patched)
