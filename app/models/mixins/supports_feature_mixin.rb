@@ -12,21 +12,17 @@
 #
 # To make a feature conditionally supported, pass a block to the +supports+ method.
 # The block is evaluated in the context of the instance.
-# If you call the private method +unsupported_reason_add+ with the feature
-# and a reason, then the feature will be unsupported and the reason will be
+# If a feature is not supported, return a string for the reason. A nil means it is supported
+# Alternatively, calling the private method +unsupported_reason_add+ with the feature
+# and a reason, marks the feature as unsupported, and the reason will be
 # accessible through
 #
 #   instance.unsupported_reason(:feature)
 #
-# The above allows you to call +supports_feature?+ or +supports?(feature) :methods
-# on the Class and Instance
-#
-#   Post.supports_publish?                       # => true
 #   Post.supports?(:publish)                     # => true
-#   Post.new.supports_publish?                   # => true
-#   Post.supports_fake?                          # => false
-#   Post.supports_archive?                       # => true
-#   Post.new(featured: true).supports_archive?   # => false
+#   Post.new.supports?(:publish)                 # => true
+#   Post.supports?(:archive)                     # => true
+#   Post.new(featured: true).supports?(:archive) # => false
 #
 # To get a reason why a feature is unsupported use the +unsupported_reason+ method
 #
@@ -51,18 +47,16 @@
 module SupportsFeatureMixin
   extend ActiveSupport::Concern
 
-  COMMON_FEATURES = %i[create delete destroy refresh_ems update].freeze
-
   # Whenever this mixin is included we define all features as unsupported by default.
   # This way we can query for every feature
   included do
     private_class_method :unsupported
     private_class_method :unsupported_reason_add
-    private_class_method :define_supports_feature_methods
+    class_attribute :supports_features, :instance_writer => false, :default => {}
   end
 
-  def self.reason_or_default(reason)
-    (reason.presence || _("Feature not available/supported"))
+  def self.default_supports_reason
+    _("Feature not available/supported")
   end
 
   # query instance for the reason why the feature is unsupported
@@ -74,22 +68,16 @@ module SupportsFeatureMixin
 
   # query the instance if the feature is supported or not
   def supports?(feature)
-    method_name = "supports_#{feature}?"
-    if respond_to?(method_name)
-      public_send(method_name)
-    else
-      unsupported_reason_add(feature)
-      false
-    end
+    self.class.check_supports(feature.to_sym, :instance => self)
   end
 
   private
 
   # used inside a +supports+ block to add a reason why the feature is not supported
   # just adding a reason will make the feature unsupported
-  def unsupported_reason_add(feature, reason = nil)
+  def unsupported_reason_add(feature, reason)
     feature = feature.to_sym
-    unsupported[feature] = SupportsFeatureMixin.reason_or_default(reason)
+    unsupported[feature] = reason
   end
 
   def unsupported
@@ -99,24 +87,43 @@ module SupportsFeatureMixin
   class_methods do
     # This is the DSL used a class level to define what is supported
     def supports(feature, &block)
-      define_supports_feature_methods(feature, &block)
+      self.supports_features = supports_features.merge(feature.to_sym => block || true)
     end
 
     # supports_not does not take a block, because its never supported
     # and not conditionally supported
     def supports_not(feature, reason: nil)
-      define_supports_feature_methods(feature, :is_supported => false, :reason => reason)
+      self.supports_features = supports_features.merge(feature.to_sym => reason.presence || false)
     end
 
     # query the class if the feature is supported or not
     def supports?(feature)
-      method_name = "supports_#{feature}?"
-      if respond_to?(method_name)
-        public_send(method_name)
-      else
-        unsupported_reason_add(feature)
-        false
+      check_supports(feature.to_sym, :instance => self)
+    end
+
+    def check_supports(feature, instance:)
+      instance.send(:unsupported).delete(feature)
+
+      # undeclared features are not supported
+      value = supports_features[feature.to_sym]
+
+      if value.respond_to?(:call)
+        begin
+          # for class level supports, blocks are not evaluated and assumed to be true
+          result = instance.instance_eval(&value) unless instance.kind_of?(Class)
+          # if no errors yet but result was an error message
+          # then add the error
+          if !instance.send(:unsupported).key?(feature) && result.kind_of?(String)
+            instance.send(:unsupported_reason_add, feature, result)
+          end
+        rescue => e
+          _log.log_backtrace(e)
+          instance.send(:unsupported_reason_add, feature, "Internal Error: #{e.message}")
+        end
+      elsif value != true
+        instance.send(:unsupported_reason_add, feature, value || SupportsFeatureMixin.default_supports_reason)
       end
+      !instance.send(:unsupported).key?(feature)
     end
 
     # all subclasses that are considered for supporting features
@@ -166,46 +173,8 @@ module SupportsFeatureMixin
     end
 
     # use this for making a class not support a feature
-    def unsupported_reason_add(feature, reason = nil)
-      feature = feature.to_sym
-      unsupported[feature] = SupportsFeatureMixin.reason_or_default(reason)
-    end
-
-    def define_supports_feature_methods(feature, is_supported: true, reason: nil, &block)
-      method_name = "supports_#{feature}?"
-      feature = feature.to_sym
-
-      # silence potential redefinition warnings
-      silence_warnings do
-        # defines the method on the instance
-        define_method(method_name) do
-          unsupported.delete(feature)
-          if block
-            begin
-              result = instance_eval(&block)
-              # if no errors yet but result was an error message
-              # then add the error
-              if !unsupported.key?(feature) && result.kind_of?(String)
-                unsupported_reason_add(feature, result)
-              end
-            rescue => e
-              _log.log_backtrace(e)
-              unsupported_reason_add(feature, "Internal Error: #{e.message}")
-            end
-          else
-            unsupported_reason_add(feature, reason) unless is_supported
-          end
-          !unsupported.key?(feature)
-        end
-
-        # defines the method on the class
-        define_singleton_method(method_name) do
-          unsupported.delete(feature)
-          # TODO: durandom - make reason evaluate in class context, to e.g. include the name of a subclass (.to_proc?)
-          unsupported_reason_add(feature, reason) unless is_supported
-          !unsupported.key?(feature)
-        end
-      end
+    def unsupported_reason_add(feature, reason)
+      unsupported[feature.to_sym] = reason
     end
   end
 end
