@@ -101,19 +101,17 @@ module Metric::CiMixin::Capture
 
     _log.info("#{log_header} Capture for #{metrics_capture.log_targets}#{log_time}...")
 
+    new_last_perf_capture_on = Time.new.utc
     start_range = end_range = counters_by_mor = counter_values_by_mor_and_ts = target_ems = nil
     counters_data = {}
     _, t = Benchmark.realtime_block(:total_time) do
-      Benchmark.realtime_block(:capture_state) { VimPerformanceState.capture(metrics_capture.target) }
+      perf_capture_states(metrics_capture.target)
 
       interval_name_for_capture = interval_name == 'historical' ? 'hourly' : interval_name
       counters_by_mor, counter_values_by_mor_and_ts = metrics_capture.perf_collect_metrics(interval_name_for_capture, start_time, end_time)
     end
 
     _log.info("#{log_header} Capture for #{metrics_capture.log_targets}#{log_time}...Complete - Timings: #{t.inspect}")
-
-    # ems lookup cache
-    target_ems = nil
 
     metrics_capture.targets.each do |target|
       counters       = counters_by_mor[target.ems_ref] || {}
@@ -126,15 +124,15 @@ module Metric::CiMixin::Capture
       if start_range.nil?
         _log.info("#{log_header} Skipping processing for #{target.log_target}#{log_time} as no metrics were captured.")
         # Set the last capture on to end_time to prevent forever queueing up the same collection range
-        target.update(:last_perf_capture_on => end_time || Time.now.utc) if interval_name == 'realtime'
+        target.update(:last_perf_capture_on => end_time || new_last_perf_capture_on) if interval_name == 'realtime'
       else
         expected_start_range = target.calculate_gap(interval_name, start_time)
         if expected_start_range && start_range > expected_start_range
           _log.warn("#{log_header} For #{target.log_target}#{log_time}, expected to get data as of [#{expected_start_range}], but got data as of [#{start_range}].")
 
           # Raise ems_performance_gap_detected alert event to enable notification.
-          target_ems ||= target.ext_management_system
-          MiqEvent.raise_evm_alert_event_queue(target_ems, "ems_performance_gap_detected",
+          # NOTE: using parent ext_management_system
+          MiqEvent.raise_evm_alert_event_queue(ext_management_system, "ems_performance_gap_detected",
                                                :resource_class       => target.class.name,
                                                :resource_id          => target.id,
                                                :expected_start_range => expected_start_range,
@@ -177,6 +175,10 @@ module Metric::CiMixin::Capture
         task.save!
       end
     end
+  end
+
+  def perf_capture_states(targets)
+    Benchmark.realtime_block(:capture_state) { VimPerformanceState.capture(targets) }
   end
 
   def perf_capture_state
