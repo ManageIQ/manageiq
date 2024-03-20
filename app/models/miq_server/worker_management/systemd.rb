@@ -29,6 +29,12 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
     end
   end
 
+  def cleanup_orphaned_worker_rows
+  end
+
+  def cleanup_orphaned_workers
+  end
+
   def cleanup_failed_workers
     super
 

@@ -18,6 +18,12 @@ module MiqServer::WorkerManagement::Monitor
     # Cache a list of the native objects backing the miq_workers (e.g.: pods, services, or processes)
     sync_from_system
 
+    # Cleanup any worker rows that don't have running workers
+    cleanup_orphaned_worker_rows
+
+    # Cleanup any workers that don't have corresponding miq_workers rows
+    cleanup_orphaned_workers
+
     sync_monitor
 
     # Sync the workers after sync'ing the child worker settings
@@ -47,6 +53,14 @@ module MiqServer::WorkerManagement::Monitor
 
     sync_starting_workers
     sync_stopping_workers
+  end
+
+  def cleanup_orphaned_worker_rows
+    raise NotImplementedError, "cleanup_orphaned_worker_rows must be implemented in a subclass"
+  end
+
+  def cleanup_orphaned_workers
+    raise NotImplementedError, "cleanup_orphaned_workers must be implemented in a subclass"
   end
 
   def cleanup_failed_workers
