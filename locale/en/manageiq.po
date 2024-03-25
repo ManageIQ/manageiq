@@ -1606,11 +1606,11 @@ msgid_plural "%{task} initiated for %{number} %{models} from the %{product} Data
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../app/models/miq_request.rb:424 ../app/models/miq_request_task.rb
+#: ../app/models/miq_request.rb:426 ../app/models/miq_request_task.rb
 msgid "%{task} request has already been processed"
 msgstr ""
 
-#: ../app/models/miq_request.rb:421 ../app/models/miq_request_task.rb
+#: ../app/models/miq_request.rb:423 ../app/models/miq_request_task.rb
 msgid "%{task} request is already being processed"
 msgstr ""
 
@@ -2423,6 +2423,7 @@ msgid "<By Role>"
 msgstr ""
 
 #: ../app/javascript/components/action-form/action-form.schema.js
+#: ../app/javascript/components/action-form/helper.js
 #: ../app/javascript/components/ansible-credentials-form/ansible-credentials-form.schema.js
 #: ../app/javascript/components/cloud-volume-actions-form/restore-from-backup.schema.js
 #: ../app/javascript/components/cloud-volume-backup-form/cloud-volume-backup-form.schema.js
@@ -2469,7 +2470,7 @@ msgstr ""
 msgid "<Determine at Run Time>"
 msgstr ""
 
-#: ../app/models/chargeback.rb:123 ../app/models/chargeback.rb
+#: ../app/models/chargeback.rb:124 ../app/models/chargeback.rb
 #: ../app/models/miq_report/generator/html.rb
 msgid "<Empty>"
 msgstr ""
@@ -5197,7 +5198,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAlert
 #. TRANSLATORS: en.yml key: dictionary.table.miq_alert
-#: ../app/models/miq_alert.rb:870 ../config/dictionary_strings.rb
+#: ../app/models/miq_alert.rb:869 ../config/dictionary_strings.rb
 #: ../config/dictionary_strings.rb
 msgid "Alert"
 msgid_plural "Alerts"
@@ -5224,7 +5225,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAlertSet
 #. TRANSLATORS: en.yml key: dictionary.table.miq_alert_set
-#: ../app/models/miq_alert_set.rb:67 ../config/dictionary_strings.rb
+#: ../app/models/miq_alert_set.rb:69 ../config/dictionary_strings.rb
 #: ../config/dictionary_strings.rb
 msgid "Alert Profile"
 msgid_plural "Alert Profiles"
@@ -6075,7 +6076,7 @@ msgstr ""
 msgid "Ancestry"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:459 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:456 ../app/models/miq_alert.rb
 msgid "And is Trending"
 msgstr ""
 
@@ -10217,7 +10218,7 @@ msgstr ""
 msgid "Cancel after"
 msgstr ""
 
-#: ../app/models/miq_request.rb:612 ../app/models/miq_request_task.rb
+#: ../app/models/miq_request.rb:614 ../app/models/miq_request_task.rb
 msgid "Cancel operation is not supported for %{class}"
 msgstr ""
 
@@ -21510,7 +21511,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.StorageFile
 #. TRANSLATORS: en.yml key: dictionary.table.storage_file
-#: ../app/models/storage_file.rb:75 ../config/dictionary_strings.rb
+#: ../app/models/storage_file.rb:77 ../config/dictionary_strings.rb
 #: ../config/dictionary_strings.rb
 msgid "Datastore File"
 msgid_plural "Datastore Files"
@@ -21861,7 +21862,7 @@ msgstr ""
 msgid "Debris Size"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:462 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:459 ../app/models/miq_alert.rb
 msgid "Debug Tracing"
 msgstr ""
 
@@ -31420,7 +31421,7 @@ msgstr ""
 msgid "Event Assignment for Policy was saved"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:432 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:429 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Event Count Threshold"
 msgstr ""
@@ -33231,7 +33232,7 @@ msgid "FS Type"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.FileDepotFtp
-#: ../app/models/file_depot_ftp.rb:94 ../config/dictionary_strings.rb
+#: ../app/models/file_depot_ftp.rb:96 ../config/dictionary_strings.rb
 msgid "FTP"
 msgid_plural "FTPs"
 msgstr[0] ""
@@ -33350,7 +33351,7 @@ msgstr ""
 msgid "Field Information"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:461 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:458 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Field Meets Criteria for"
 msgstr ""
@@ -37795,7 +37796,7 @@ msgstr ""
 msgid "Hours (PM)"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:431 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:428 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "How Far Back to Check"
 msgstr ""
@@ -41267,7 +41268,7 @@ msgstr ""
 msgid "Logo Updated At"
 msgstr ""
 
-#: ../app/models/host.rb:641 ../app/models/host.rb
+#: ../app/models/host.rb:645 ../app/models/host.rb
 msgid "Logon to platform [%{os_name}] not supported"
 msgstr ""
 
@@ -43334,7 +43335,7 @@ msgstr ""
 msgid "Message Filter"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:436 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:433 ../app/models/miq_alert.rb
 msgid "Message Filter Type"
 msgstr ""
 
@@ -44767,11 +44768,6 @@ msgstr ""
 #:
 #: ../app/models/manageiq/providers/vmware/infra_manager/vm_or_template_shared/operations/relocation.rb
 msgid "Migrate not supported because VM is orphaned"
-msgstr ""
-
-#:
-#: ../app/models/manageiq/providers/openstack/cloud_manager/vm/operations/relocation.rb
-msgid "Migrate operation is not supported."
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb
@@ -52876,8 +52872,8 @@ msgstr ""
 msgid "Operations Worker for Provider: %{name}"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:457 ../app/models/miq_alert.rb
-#: ../app/models/miq_alert.rb:473 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:454 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:470 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Operator"
 msgstr ""
@@ -55032,7 +55028,7 @@ msgstr[1] ""
 msgid "Performance - VMs"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:456 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:453 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Performance Field"
 msgstr ""
@@ -64069,7 +64065,7 @@ msgid "Safely Remove Volumes"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.FileDepotSmb
-#: ../app/models/file_depot_smb.rb:19 ../config/dictionary_strings.rb
+#: ../app/models/file_depot_smb.rb:20 ../config/dictionary_strings.rb
 msgid "Samba"
 msgid_plural "Sambas"
 msgstr[0] ""
@@ -66100,7 +66096,7 @@ msgid "Service Catalog"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ServiceTemplate
-#: ../app/models/service_template.rb:481 ../config/dictionary_strings.rb
+#: ../app/models/service_template.rb:486 ../config/dictionary_strings.rb
 msgid "Service Catalog Item"
 msgid_plural "Service Catalog Items"
 msgstr[0] ""
@@ -71935,7 +71931,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqTask
 #. TRANSLATORS: en.yml key: dictionary.table.miq_task
-#: ../app/models/miq_task.rb:382 ../config/dictionary_strings.rb
+#: ../app/models/miq_task.rb:385 ../config/dictionary_strings.rb
 #: ../config/dictionary_strings.rb
 msgid "Task"
 msgid_plural "Tasks"
@@ -75239,7 +75235,7 @@ msgstr ""
 msgid "Unsupported log depot protocol: %{protocol}"
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:1573 ../app/models/vm_or_template.rb
+#: ../app/models/vm_or_template.rb:1586 ../app/models/vm_or_template.rb
 msgid "Unsupported property type [%{property}]"
 msgstr ""
 
@@ -77295,7 +77291,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.Vm
 #. TRANSLATORS: en.yml key: dictionary.table.vm
-#: ../app/models/vm.rb:141 ../config/dictionary_strings.rb
+#: ../app/models/vm.rb:142 ../config/dictionary_strings.rb
 #: ../config/dictionary_strings.rb
 msgid "VM and Instance"
 msgid_plural "VMs and Instances"
@@ -77459,7 +77455,7 @@ msgid "VM operations"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.VmOrTemplate
-#: ../app/models/vm_or_template.rb:1689 ../config/dictionary_strings.rb
+#: ../app/models/vm_or_template.rb:1703 ../config/dictionary_strings.rb
 msgid "VM or Template"
 msgid_plural "VMs or Templates"
 msgstr[0] ""
@@ -78095,7 +78091,7 @@ msgstr ""
 msgid "Value Name"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:458 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:455 ../app/models/miq_alert.rb
 msgid "Value Threshold"
 msgstr ""
 
@@ -81597,7 +81593,7 @@ msgid "Whether to use the authorize mechanism"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqWidget
-#: ../app/models/miq_widget.rb:594 ../config/dictionary_strings.rb
+#: ../app/models/miq_widget.rb:600 ../config/dictionary_strings.rb
 msgid "Widget"
 msgid_plural "Widgets"
 msgstr[0] ""
@@ -82258,7 +82254,7 @@ msgstr ""
 msgid "amqp"
 msgstr ""
 
-#: ../app/models/miq_request.rb:426 ../app/models/miq_request_task.rb
+#: ../app/models/miq_request.rb:428 ../app/models/miq_request_task.rb
 msgid "approval is required for %{task}"
 msgstr ""
 
@@ -82935,14 +82931,14 @@ msgstr ""
 msgid "execute must be implemented in a subclass"
 msgstr ""
 
-#: ../lib/miq_expression.rb:134 ../lib/miq_expression.rb
+#: ../lib/miq_expression.rb:136 ../lib/miq_expression.rb
 msgid ""
 "expression malformed,  must contain one of 'checkall', 'checkany', 'checkcount"
 "'"
 msgstr ""
 
 #: ../app/models/cloud_object_store_container.rb
-#: ../app/models/cloud_volume.rb:82 ../app/models/host_initiator.rb
+#: ../app/models/cloud_volume.rb:83 ../app/models/host_initiator.rb
 #: ../app/models/host_initiator_group.rb
 #: ../app/models/physical_storage.rb:77 ../app/models/physical_storage.rb
 #: ../app/models/placement_group.rb:51 ../app/models/storage_service.rb
@@ -83243,7 +83239,7 @@ msgstr ""
 msgid "memory_mb"
 msgstr ""
 
-#: ../app/models/classification.rb:277 ../app/models/classification.rb
+#: ../app/models/classification.rb:278 ../app/models/classification.rb
 msgid "method is only available for an entry"
 msgstr ""
 
@@ -83270,7 +83266,7 @@ msgstr ""
 #: ../app/models/ext_management_system.rb
 #: ../app/models/manageiq/providers/inventory/parser.rb
 #: ../app/models/miq_server/worker_management.rb
-#: ../app/models/miq_worker/runner.rb:287 ../app/models/service_order.rb
+#: ../app/models/miq_worker/runner.rb:291 ../app/models/service_order.rb
 #: ../app/models/vm/operations/guest.rb
 #: ../app/models/vm_or_template/operations/configuration.rb
 #: ../app/models/vm_or_template/operations/power.rb
@@ -83314,7 +83310,7 @@ msgid "new element"
 msgstr ""
 
 #: ../app/models/ext_management_system.rb
-#: ../app/models/ext_management_system.rb:611 ../app/models/provider.rb
+#: ../app/models/ext_management_system.rb:615 ../app/models/provider.rb
 msgid "no Provider credentials defined"
 msgstr ""
 
@@ -83343,7 +83339,8 @@ msgstr ""
 msgid "no credentials defined for %{type} %{name}"
 msgstr ""
 
-#:
+#: ../app/models/manageiq/providers/openstack/network_manager.rb
+#: ../app/models/manageiq/providers/openstack/storage_manager/cinder_manager.rb
 #: ../app/models/manageiq/providers/openstack/storage_manager/swift_manager.rb
 msgid "no parent_manager to ems"
 msgstr ""
@@ -83414,7 +83411,7 @@ msgstr ""
 msgid "open and close options"
 msgstr ""
 
-#: ../lib/miq_expression.rb:314 ../lib/miq_expression.rb
+#: ../lib/miq_expression.rb:319 ../lib/miq_expression.rb
 msgid "operator '%{operator_name}' is not supported"
 msgstr ""
 
@@ -83489,7 +83486,7 @@ msgstr ""
 msgid "password change not allowed when authentication mode is %{name}"
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:666 ../app/models/vm_or_template.rb
+#: ../app/models/vm_or_template.rb:668 ../app/models/vm_or_template.rb
 #: ../app/models/vm_or_template.rb
 msgid "path, '%{path}', is malformed"
 msgstr ""
