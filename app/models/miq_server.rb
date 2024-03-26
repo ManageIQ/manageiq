@@ -596,6 +596,7 @@ class MiqServer < ApplicationRecord
       :arch                    => MiqEnvironment.arch.to_s,
       :services                => {:active => Service.active.count, :inactive => Service.inactive.count},
       :service_catalog_items   => {:active => ServiceTemplate.active.count, :archived => ServiceTemplate.archived.count},
+      :region_count            => MiqRegion.count,
     }
   end
 
