@@ -76,13 +76,8 @@ class Hardware < ApplicationRecord
                    .select(:id, :device_type, :location, :address)
                    .collect { |rec| [rec.id, [rec.device_type, rec.location, rec.address]] }
 
-    if parent.vendor == "redhat"
-      deletes[:disk] = parent.hardware.disks.select(:id, :device_type, :location)
-                     .collect { |rec| [rec.id, [rec.device_type, "0:#{rec.location}"]] }
-    else
-      deletes[:disk] = parent.hardware.disks.select(:id, :device_type, :location)
-                     .collect { |rec| [rec.id, [rec.device_type, rec.location]] }
-    end
+    deletes[:disk] = parent.hardware.disks.select(:id, :device_type, :location)
+                           .collect { |rec| [rec.id, [rec.device_type, rec.location]] }
 
     xmlNode.root.each_recursive do |e|
       begin
