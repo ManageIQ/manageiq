@@ -21,11 +21,15 @@ module EvmSpecHelper
     end
   end
 
-  def self.assign_embedded_ansible_role(miq_server = nil)
+  def self.assign_role(role_name, miq_server: nil, create_options: {})
     MiqRegion.seed
     miq_server ||= local_miq_server
-    role = ServerRole.find_by(:name => "embedded_ansible") || FactoryBot.create(:server_role, :name => 'embedded_ansible', :max_concurrent => 0)
+    role = ServerRole.find_by(:name => role_name) || FactoryBot.create(:server_role, :name => role_name, **create_options)
     miq_server.assign_role(role).update(:active => true)
+  end
+
+  def self.assign_embedded_ansible_role(miq_server = nil)
+    assign_role("embedded_ansible", :miq_server => miq_server, :create_options => {:max_concurrent => 0})
   end
 
   # Clear all EVM caches
