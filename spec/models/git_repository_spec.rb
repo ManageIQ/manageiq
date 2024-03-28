@@ -54,6 +54,12 @@ RSpec.describe GitRepository do
     let(:userid) { 'user' }
     let(:password) { 'password' }
 
+    after do
+      described_class::LOCKFILE_DIR.join(repo.id.to_s).unlink
+    rescue Errno::ENOENT
+      nil
+    end
+
     context "parameter check" do
       let(:args) do
         {
