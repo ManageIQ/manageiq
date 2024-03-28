@@ -63,6 +63,11 @@ module ManageIQ::Providers
             :dependent   => :destroy
 
     virtual_column :port_show, :type => :string
+    virtual_sum    :aggregate_cpu_speed,       :computer_system_hardwares, :aggregate_cpu_speed
+    virtual_sum    :aggregate_cpu_total_cores, :computer_system_hardwares, :cpu_total_cores
+    virtual_sum    :aggregate_disk_capacity,   :computer_system_hardwares, :disk_capacity
+    virtual_sum    :aggregate_memory,          :computer_system_hardwares, :memory_mb
+    virtual_sum    :aggregate_physical_cpus,   :computer_system_hardwares, :cpu_sockets
 
     supports     :authentication_status
     supports     :metrics
