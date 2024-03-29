@@ -26,6 +26,7 @@ module Vm::Operations
     supports :launch_vmrc_console do
       begin
         validate_remote_console_vmrc_support
+        nil
       rescue => err
         _('VM VMRC Console error: %{error}') % {:error => err}
       end
@@ -33,6 +34,7 @@ module Vm::Operations
 
     supports :launch_native_console do
       validate_native_console_support
+      nil
     rescue StandardError => err
       _('VM NATIVE Console error: %{error}') % {:error => err}
     end
