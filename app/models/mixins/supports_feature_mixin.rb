@@ -117,6 +117,27 @@ module SupportsFeatureMixin
       end
     end
 
+    def check_supports(feature, value, instance:)
+      instance.send(:unsupported).delete(feature)
+      if value.respond_to?(:call)
+        begin
+          # for class level supports, blocks are not evaluated and assumed to be true
+          result = instance.instance_eval(&value) unless instance.kind_of?(Class)
+          # if no errors yet but result was an error message
+          # then add the error
+          if !instance.send(:unsupported).key?(feature) && result.kind_of?(String)
+            instance.send(:unsupported_reason_add, feature, result)
+          end
+        rescue => e
+          _log.log_backtrace(e)
+          instance.send(:unsupported_reason_add, feature, "Internal Error: #{e.message}")
+        end
+      elsif value != true
+        instance.send(:unsupported_reason_add, feature, value || SupportsFeatureMixin.default_supports_reason)
+      end
+      !instance.send(:unsupported).key?(feature)
+    end
+
     # all subclasses that are considered for supporting features
     def supported_subclasses
       descendants
@@ -176,33 +197,12 @@ module SupportsFeatureMixin
       silence_warnings do
         # defines the method on the instance
         define_method(method_name) do
-          unsupported.delete(feature)
-          if value.respond_to?(:call)
-            begin
-              result = instance_eval(&value) unless self.kind_of?(Class)
-              # if no errors yet but result was an error message
-              # then add the error
-              if !unsupported.key?(feature) && result.kind_of?(String)
-                unsupported_reason_add(feature, result)
-              end
-            rescue => e
-              _log.log_backtrace(e)
-              unsupported_reason_add(feature, "Internal Error: #{e.message}")
-            end
-          elsif value != true
-            unsupported_reason_add(feature, value || SupportsFeatureMixin.default_supports_reason)
-          end
-          !unsupported.key?(feature)
+          self.class.check_supports(feature, value, instance: self)
         end
 
         # defines the method on the class
         define_singleton_method(method_name) do
-          unsupported.delete(feature)
-          if value.respond_to?(:call)
-          elsif value != true
-            unsupported_reason_add(feature, value || SupportsFeatureMixin.default_supports_reason)
-          end
-          !unsupported.key?(feature)
+          check_supports(feature, value, instance: self)          
         end
       end
     end
