@@ -349,12 +349,12 @@ class MiqExpression
       # op => {"tag"=>"Host.managed-environment", "value"=>"prod"}
       operator_values = operator_values.dup
       field = operator_values["field"]
-      column_details = col_details[field] if field
+      field_field = operator_values["field-field"] = Field.parse(field) if field
       value = operator_values["value"]
 
       # attempt to do conversion only if db type of column is integer and value to compare to is String
-      if %w[= != <= >= > <].include?(operator) && field && column_details && column_details[:data_type] == :integer && value.instance_of?(String)
-        operator_values["value"] = convert_size_in_units_to_integer(field, column_details, value)
+      if %w[= != <= >= > <].include?(operator) && field_field&.integer? && value.instance_of?(String)
+        operator_values["value"] = convert_size_in_units_to_integer(field, field_field.sub_type, value)
       end
     end
     {operator => operator_values}
@@ -1405,8 +1405,8 @@ class MiqExpression
 
   private
 
-  def convert_size_in_units_to_integer(field, column_details, value)
-    case column_details[:format_sub_type]
+  def convert_size_in_units_to_integer(field, sub_type, value)
+    case sub_type
     when :mhz_avg, :hours, :kbps, :kbps_precision_2, :mhz, :elapsed_time, :integer
       value
     when :bytes
