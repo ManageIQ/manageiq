@@ -97,13 +97,13 @@ module SupportsFeatureMixin
   class_methods do
     # This is the DSL used a class level to define what is supported
     def supports(feature, &block)
-      define_supports_feature_methods(feature, &block)
+      define_supports_feature_methods(feature, block || true)
     end
 
     # supports_not does not take a block, because its never supported
     # and not conditionally supported
     def supports_not(feature, reason: nil)
-      define_supports_feature_methods(feature, :is_supported => false, :reason => reason)
+      define_supports_feature_methods(feature, reason || false)
     end
 
     # query the class if the feature is supported or not
@@ -168,7 +168,7 @@ module SupportsFeatureMixin
       unsupported[feature.to_sym] = reason
     end
 
-    def define_supports_feature_methods(feature, is_supported: true, reason: nil, &block)
+    def define_supports_feature_methods(feature, value)
       method_name = "supports_#{feature}?"
       feature = feature.to_sym
 
@@ -177,9 +177,9 @@ module SupportsFeatureMixin
         # defines the method on the instance
         define_method(method_name) do
           unsupported.delete(feature)
-          if block
+          if value.respond_to?(:call)
             begin
-              result = instance_eval(&block)
+              result = instance_eval(&value) unless self.kind_of?(Class)
               # if no errors yet but result was an error message
               # then add the error
               if !unsupported.key?(feature) && result.kind_of?(String)
@@ -189,8 +189,8 @@ module SupportsFeatureMixin
               _log.log_backtrace(e)
               unsupported_reason_add(feature, "Internal Error: #{e.message}")
             end
-          else
-            unsupported_reason_add(feature, reason || SupportsFeatureMixin.default_supports_reason) unless is_supported
+          elsif value != true
+            unsupported_reason_add(feature, value || SupportsFeatureMixin.default_supports_reason)
           end
           !unsupported.key?(feature)
         end
@@ -198,8 +198,10 @@ module SupportsFeatureMixin
         # defines the method on the class
         define_singleton_method(method_name) do
           unsupported.delete(feature)
-          # TODO: durandom - make reason evaluate in class context, to e.g. include the name of a subclass (.to_proc?)
-          unsupported_reason_add(feature, reason || SupportsFeatureMixin.default_supports_reason) unless is_supported
+          if value.respond_to?(:call)
+          elsif value != true
+            unsupported_reason_add(feature, value || SupportsFeatureMixin.default_supports_reason)
+          end
           !unsupported.key?(feature)
         end
       end
