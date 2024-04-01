@@ -5176,9 +5176,9 @@
         :feature_type: control
         :identifier: embedded_configuration_script_source_refresh
       - :name: Edit Tags
-        :description: Edit Tags for the selected Ansible Repositories
+        :description: Edit Tags for the selected Automation Manager Repositories
         :feature_type: control
-        :identifier: ansible_repository_tag
+        :identifier: embedded_configuration_script_source_tag
   - :name: Playbooks
     :description: Everything under Playbooks
     :feature_type: node
@@ -5245,9 +5245,9 @@
         :feature_type: control
         :identifier: embedded_automation_manager_credentials_refresh
       - :name: Edit Tags
-        :description: Edit Tags for the selected Ansible Credentials
+        :description: Edit Tags for the selected Automation Manager Credentials
         :feature_type: control
-        :identifier: ansible_credential_tag
+        :identifier: embedded_automation_manager_credential_tag
 
 # Automation Manager
 - :name: Ansible Tower
