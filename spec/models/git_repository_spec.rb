@@ -72,6 +72,7 @@ RSpec.describe GitRepository do
 
       before do
         EvmSpecHelper.local_miq_server
+        allow(gwt).to receive(:url).and_return(repo.url)
         allow(gwt).to receive(:branches).with(anything).and_return(branch_list)
         allow(gwt).to receive(:tags).with(no_args).and_return(tag_list)
         allow(gwt).to receive(:branch_info) do |name|
@@ -127,23 +128,26 @@ RSpec.describe GitRepository do
         repo.refresh
       end
 
-      it "doesn't send the proxy settings if the repo scheme is not http or https" do
-        proxy_settings = {
-          :git_repository_proxy => {
-            :host   => "example.com",
-            :port   => "3128",
-            :scheme => "http"
+      context "if the repo scheme is not http or https" do
+        let(:repo) { FactoryBot.create(:git_repository, :verify_ssl => verify_ssl, :url => "git@example.com:ManageIQ/manageiq.git") }
+
+        it "doesn't send the proxy settings" do
+          proxy_settings = {
+            :git_repository_proxy => {
+              :host   => "example.com",
+              :port   => "3128",
+              :scheme => "http"
+            }
           }
-        }
-        stub_settings(proxy_settings)
-        expect(GitWorktree).to receive(:new) do |options|
-          expect(options[:proxy_url]).to be_nil
-        end.twice.and_return(gwt)
+          stub_settings(proxy_settings)
+          expect(GitWorktree).to receive(:new) do |options|
+            expect(options[:proxy_url]).to be_nil
+          end.twice.and_return(gwt)
 
-        expect(gwt).to receive(:pull).with(no_args)
+          expect(gwt).to receive(:pull).with(no_args)
 
-        repo.update!(:url => "git@example.com:ManageIQ/manageiq.git")
-        repo.refresh
+          repo.refresh
+        end
       end
 
       context "self signed certifcate" do
@@ -163,6 +167,7 @@ RSpec.describe GitRepository do
 
     it "#refresh" do
       expect(GitWorktree).to receive(:new).with(anything).and_return(gwt)
+      expect(gwt).to receive(:url).and_return(repo.url)
       expect(gwt).to receive(:branches).with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).with(no_args).and_return(tag_list)
       allow(gwt).to receive(:branch_info) do |name|
@@ -183,6 +188,7 @@ RSpec.describe GitRepository do
 
     it "#branch_info" do
       expect(GitWorktree).to receive(:new).twice.with(anything).and_return(gwt)
+      expect(gwt).to receive(:url).and_return(repo.url)
       expect(gwt).to receive(:branches).with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).with(no_args).and_return(tag_list)
       expect(gwt).to receive(:pull).with(no_args)
@@ -200,6 +206,7 @@ RSpec.describe GitRepository do
 
     it "#tag_info" do
       expect(GitWorktree).to receive(:new).twice.with(anything).and_return(gwt)
+      expect(gwt).to receive(:url).and_return(repo.url)
       expect(gwt).to receive(:branches).with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).with(no_args).and_return(tag_list)
       expect(gwt).to receive(:pull).with(no_args)
@@ -217,6 +224,7 @@ RSpec.describe GitRepository do
 
     it "#tag_info missing tag" do
       expect(GitWorktree).to receive(:new).twice.with(anything).and_return(gwt)
+      expect(gwt).to receive(:url).and_return(repo.url)
       expect(gwt).to receive(:branches).with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).with(no_args).and_return(tag_list)
       expect(gwt).to receive(:pull).with(no_args)
@@ -233,6 +241,7 @@ RSpec.describe GitRepository do
 
     it "#branch_info missing branch" do
       expect(GitWorktree).to receive(:new).twice.with(anything).and_return(gwt)
+      expect(gwt).to receive(:url).and_return(repo.url)
       expect(gwt).to receive(:branches).with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).with(no_args).and_return(tag_list)
       expect(gwt).to receive(:pull).with(no_args)
@@ -249,6 +258,7 @@ RSpec.describe GitRepository do
 
     it "#refresh branches deleted" do
       expect(GitWorktree).to receive(:new).twice.with(anything).and_return(gwt)
+      expect(gwt).to receive(:url).twice.and_return(repo.url)
       expect(gwt).to receive(:pull).twice.with(no_args)
       expect(gwt).to receive(:branches).twice.with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).twice.with(no_args).and_return(tag_list)
@@ -269,6 +279,7 @@ RSpec.describe GitRepository do
 
     it "#refresh tags deleted" do
       expect(GitWorktree).to receive(:new).twice.with(anything).and_return(gwt)
+      expect(gwt).to receive(:url).twice.and_return(repo.url)
       expect(gwt).to receive(:pull).twice.with(no_args)
       expect(gwt).to receive(:branches).twice.with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).twice.with(no_args).and_return(tag_list)
