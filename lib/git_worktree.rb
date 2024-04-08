@@ -60,6 +60,14 @@ class GitWorktree
     true
   end
 
+  def url
+    @repo.remotes[@remote_name]&.url
+  end
+
+  def url=(url)
+    lock { @repo.remotes.set_url(@remote_name, url) }
+  end
+
   def branches(where = nil)
     where.nil? ? @repo.branches.each_name.sort : @repo.branches.each_name(where).sort
   end
