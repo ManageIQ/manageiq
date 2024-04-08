@@ -116,16 +116,22 @@ class MiqWorker
     end
 
     def unit_config_file
-      # Override this in a sub-class if the specific instance needs
-      # any additional config
       <<~UNIT_CONFIG_FILE
         [Service]
-        MemoryHigh=#{worker_settings[:memory_threshold].bytes}
-        TimeoutStartSec=#{worker_settings[:starting_timeout]}
-        TimeoutStopSec=#{worker_settings[:stopping_timeout]}
-        WatchdogSec=#{worker_settings[:heartbeat_timeout]}
+        #{unit_config_hash.compact.map { |key, value| "#{key}=#{value}" }.join("\n")}
         #{unit_environment_variables.map { |env_var| "Environment=#{env_var}" }.join("\n")}
       UNIT_CONFIG_FILE
+    end
+
+    # Override this in a sub-class if the specific instance needs
+    # any additional config
+    def unit_config_hash
+      {
+        "MemoryHigh"      => worker_settings[:memory_threshold]&.bytes,
+        "TimeoutStartSec" => worker_settings[:starting_timeout],
+        "TimeoutStopSec"  => worker_settings[:stopping_timeout],
+        "WatchdogSec"     => worker_settings[:heartbeat_timeout]
+      }
     end
 
     def unit_environment_variables
