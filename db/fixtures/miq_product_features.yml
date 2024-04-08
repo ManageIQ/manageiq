@@ -4186,6 +4186,16 @@
       :feature_type: view
       :identifier: cloud_database_flavor_show
 
+# Vm Infra
+- :name: Vm Infras
+  :description: Every thing to Vm infras
+  :feature_type: node
+  :identifier: vm_infra
+  :children:
+  - :name: View
+    :description: View Vm Infras
+    :feature_type: view
+    :identifier: vm_infra_view
 
 # Cloud Network
 - :name: Cloud Networks

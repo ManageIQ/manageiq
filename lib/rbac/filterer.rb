@@ -262,6 +262,8 @@ module Rbac
         if targets.first.kind_of?(Numeric)
           target_ids = targets
           # assume klass is passed in
+        elsif targets.first.kind_of?(Hash)
+          target_ids = targets.first[:objectIds]
         else
           target_ids  = targets.collect(&:id)
           klass       = targets.first.class
@@ -337,7 +339,18 @@ module Rbac
           auth_count = inner_scope.except(:offset, :limit, :order).count(:all)
         end
       end
-      targets = scope
+      
+      if targets.count != 1
+        targets = scope
+      else
+        first_target = targets.first
+      
+        if first_target.is_a?(Hash) && first_target[:objectIds].blank?
+          targets = scope
+        elsif targets.all? { |element| Integer === element }
+          targets = scope
+        end
+      end
 
       unless options[:skip_counts]
         auth_count ||= attrs[:apply_limit_in_sql] && limit ? targets.except(:offset, :limit, :order).count(:all) : targets.length
@@ -367,7 +380,7 @@ module Rbac
       end
 
       # Preserve sort order of incoming target_ids
-      if !target_ids.nil? && !order
+      if !target_ids.nil? && !order && !targets.kind_of?(Array)
         targets = targets.sort_by { |a| target_ids.index(a.id) }
       end
       targets = targets.to_a if targets.kind_of?(Enumerator::Lazy)
@@ -505,7 +518,7 @@ module Rbac
     # So once calc_filtered_ids uses pluck_ids for all, then that filter
     # can converted across to a 100% sql friendly query
     def pluck_ids(targets)
-      targets.pluck(:id) if targets
+      targets&.pluck(:id)
     end
 
     def self_service_ownership_scope?(miq_group, klass)
@@ -589,14 +602,14 @@ module Rbac
     end
 
     def get_belongsto_filter_object_ids(klass, filter)
-      return nil if !BELONGSTO_FILTER_CLASSES.include?(safe_base_class(klass).name) || filter.blank?
+      return nil if BELONGSTO_FILTER_CLASSES.exclude?(safe_base_class(klass).name) || filter.blank?
 
       get_belongsto_matches(filter, rbac_class(klass)).collect(&:id)
     end
 
     def get_managed_filter_object_ids(scope, filter)
       klass = scope.respond_to?(:klass) ? scope.klass : scope
-      return nil if !TAGGABLE_FILTER_CLASSES.include?(safe_base_class(klass).name) || filter.blank?
+      return nil if TAGGABLE_FILTER_CLASSES.exclude?(safe_base_class(klass).name) || filter.blank?
       return scope.where(filter.to_sql.first) if filter.kind_of?(MiqExpression)
 
       scope.find_tags_by_grouping(filter, :ns => '*').reorder(nil)
