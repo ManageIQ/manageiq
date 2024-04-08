@@ -165,25 +165,39 @@ RSpec.describe GitRepository do
       end
     end
 
-    it "#refresh" do
-      expect(GitWorktree).to receive(:new).with(anything).and_return(gwt)
-      expect(gwt).to receive(:url).and_return(repo.url)
-      expect(gwt).to receive(:branches).with(anything).and_return(branch_list)
-      expect(gwt).to receive(:tags).with(no_args).and_return(tag_list)
-      allow(gwt).to receive(:branch_info) do |name|
-        branch_info_hash[name]
-      end
-      allow(gwt).to receive(:tag_info) do |name|
-        tag_info_hash[name]
+    describe "#refresh" do
+      before do
+        expect(GitWorktree).to receive(:new).twice.with(anything).and_return(gwt)
+        expect(gwt).to receive(:url).and_return(repo.url)
+        expect(gwt).to receive(:branches).with(anything).and_return(branch_list)
+        expect(gwt).to receive(:tags).with(no_args).and_return(tag_list)
+        allow(gwt).to receive(:branch_info) do |name|
+          branch_info_hash[name]
+        end
+        allow(gwt).to receive(:tag_info) do |name|
+          tag_info_hash[name]
+        end
+        expect(repo).to receive(:clone_repo_if_missing).once.with(no_args).and_call_original
+        expect(gwt).to receive(:pull).with(no_args)
       end
 
-      expect(repo).to receive(:clone_repo_if_missing).once.with(no_args).and_call_original
-      expect(GitWorktree).to receive(:new).with(anything).and_return(gwt)
-      expect(gwt).to receive(:pull).with(no_args)
+      it "fetches git branches and tags" do
+        repo.refresh
+        expect(repo.git_branches.collect(&:name)).to match_array(branch_list)
+        expect(repo.git_tags.collect(&:name)).to match_array(tag_list)
+      end
 
-      repo.refresh
-      expect(repo.git_branches.collect(&:name)).to match_array(branch_list)
-      expect(repo.git_tags.collect(&:name)).to match_array(tag_list)
+      context "with a different URL from the git_worktree" do
+        let(:new_url) { "git@github.com:ManageIQ/manageiq.git" }
+        it "updates the new url before pull" do
+          repo.update!(:url => new_url)
+          expect(gwt).to receive(:url=).with(new_url)
+
+          repo.refresh
+          expect(repo.git_branches.collect(&:name)).to match_array(branch_list)
+          expect(repo.git_tags.collect(&:name)).to match_array(tag_list)
+        end
+      end
     end
 
     it "#branch_info" do
