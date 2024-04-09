@@ -127,6 +127,6 @@ module PerEmsWorkerMixin
   end
 
   def unit_environment_variables
-    super << "EMS_ID=#{ems_id}"
+    super.merge("EMS_ID" => ems_id)
   end
 end

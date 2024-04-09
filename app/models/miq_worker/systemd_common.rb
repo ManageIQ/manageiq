@@ -118,14 +118,14 @@ class MiqWorker
     def unit_config_file
       <<~UNIT_CONFIG_FILE
         [Service]
-        #{unit_config_hash.compact.map { |key, value| "#{key}=#{value}" }.join("\n")}
-        #{unit_environment_variables.map { |env_var| "Environment=#{env_var}" }.join("\n")}
+        #{unit_settings.compact.map              { |key, value| "#{key}=#{value}" }.join("\n")}
+        #{unit_environment_variables.compact.map { |key, value| "Environment=#{key}=#{value}" }.join("\n")}
       UNIT_CONFIG_FILE
     end
 
     # Override this in a sub-class if the specific instance needs
-    # any additional config
-    def unit_config_hash
+    # any additional configuration settings
+    def unit_settings
       {
         "MemoryHigh"      => worker_settings[:memory_threshold]&.bytes,
         "TimeoutStartSec" => worker_settings[:starting_timeout],
@@ -134,9 +134,9 @@ class MiqWorker
       }
     end
 
+    # Override this in a child class to add environment variables
     def unit_environment_variables
-      # Override this in a child class to add env vars
-      []
+      {}
     end
   end
 end
