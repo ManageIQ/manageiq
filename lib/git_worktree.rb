@@ -263,6 +263,10 @@ class GitWorktree
     end
   end
 
+  def pull
+    lock { fetch_and_merge }
+  end
+
   def with_remote_options
     if @ssh_private_key
       @ssh_private_key_file = Tempfile.new
@@ -326,10 +330,6 @@ class GitWorktree
     with_remote_options do |remote_options|
       @repo.fetch(@remote_name, **remote_options)
     end
-  end
-
-  def pull
-    lock { fetch_and_merge }
   end
 
   def merge_and_push(commit)

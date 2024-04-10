@@ -232,7 +232,7 @@ RSpec.describe GitWorktree do
       expect(c_repo.file_list).to match_array(@ae_db.file_list)
       @ae_db.mv_file_with_new_contents('A/File1.YamL', 'A/File11.YamL', "Hello")
       @ae_db.save_changes("file renamed in master")
-      c_repo.send(:pull)
+      c_repo.pull
       expect(c_repo.file_list).to match_array(@ae_db.file_list)
       FileUtils.rm_rf(dirname) if Dir.exist?(dirname)
     end
@@ -247,14 +247,14 @@ RSpec.describe GitWorktree do
         end
       end
 
-      describe "#pull (private)" do
+      describe "#pull" do
         it "fetches the repo with proxy options" do
           _dir, worktree = clone(@master_url)
           expect(worktree.instance_variable_get(:@repo)).to receive(:fetch).with("origin", hash_including(:proxy_url => proxy_url))
 
           worktree.instance_variable_set(:@proxy_url, proxy_url)
 
-          worktree.send(:pull)
+          worktree.pull
         end
       end
     end
