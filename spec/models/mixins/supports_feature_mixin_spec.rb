@@ -135,6 +135,27 @@ RSpec.describe SupportsFeatureMixin do
       expect(test_inst.supports?(:dynamic_feature)).to be_truthy
     end
 
+    it "instance redirects work properly" do
+      test_class.instance_eval do
+        supports(:dynamic_attr)      { unsupported_reason(:dynamic_operation) }
+        supports(:dynamic_operation) { "unsupported" }
+      end
+
+      child_class = define_model(nil, test_class)
+      child_class.instance_eval do
+        supports(:dynamic_operation) { nil }
+      end
+
+      # parent
+      expect(test_class.new.supports?(:dynamic_operation)).to be_falsey
+      expect(test_class.new.supports?(:dynamic_attr)).to be_falsey
+
+      # child
+      expect(child_class.new.supports?(:dynamic_operation)).to be_truthy
+      expect(child_class.new.supports?(:dynamic_attr)).to be_truthy
+      expect(child_class.new.unsupported_reason(:dynamic_attr)).to eq(nil)
+    end
+
     context "with dynamic child class" do
       let(:child_class) do
         define_model(
