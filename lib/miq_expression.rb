@@ -303,19 +303,16 @@ class MiqExpression
       clause, = operands2rubyvalue(operator, op_args, context_type)
     when "is"
       col_ruby, _value = operands2rubyvalue(operator, {"field" => col_name}, context_type)
-      col_type = Target.parse(col_name).column_type
       value = op_args["value"]
-      clause = if col_type == :date && !RelativeDatetime.relative?(value)
-                 ruby_for_date_compare(col_ruby, col_type, tz, "==", value)
+      clause = if field.date? && !RelativeDatetime.relative?(value)
+                 ruby_for_date_compare(col_ruby, field.column_type, tz, "==", value)
                else
-                 ruby_for_date_compare(col_ruby, col_type, tz, ">=", value, "<=", value)
+                 ruby_for_date_compare(col_ruby, field.column_type, tz, ">=", value, "<=", value)
                end
     when "from"
       col_ruby, _value = operands2rubyvalue(operator, {"field" => col_name}, context_type)
-      col_type = Target.parse(col_name).column_type
-
       start_val, end_val = op_args["value"]
-      clause = ruby_for_date_compare(col_ruby, col_type, tz, ">=", start_val, "<=", end_val)
+      clause = ruby_for_date_compare(col_ruby, field.column_type, tz, ">=", start_val, "<=", end_val)
     else
       raise _("operator '%{operator_name}' is not supported") % {:operator_name => operator.upcase}
     end
@@ -335,31 +332,40 @@ class MiqExpression
   end
 
   def preprocess_exp(exp)
-    operator = exp.keys.first
-    operator_values = exp[operator]
-    case operator.downcase
-    when "and", "or"
-      operator_values = operator_values.map { |atom| preprocess_exp(atom) }
-    when "not", "!"
-      operator_values = preprocess_exp(operator_values)
-    else # field
-      # op => {"regkey"=>"foo", "regval"=>"bar", "value"=>"baz"}
-      # op => {"field" => "foo", "value" => "baz"}
-      # op => {"field" => "<count>, "value" => "0"}
-      # op => {"count" => "Vm.snapshots", "value"=>"1"}
-      # op => {"tag"=>"Host.managed-environment", "value"=>"prod"}
-      operator_values = operator_values.dup
-      field = operator_values["field"]
-      field_field = operator_values["field-field"] = Field.parse(field) if field
-      value = operator_values["value"]
-      operator_values["value-field"] = Field.parse(value) if value
+    exp.each_with_object({}) do |(operator, operator_values), new_exp|
+      next if operator == :token
 
-      # attempt to do conversion only if db type of column is integer and value to compare to is String
-      if %w[= != <= >= > <].include?(operator) && field_field&.integer? && value.instance_of?(String)
-        operator_values["value"] = convert_size_in_units_to_integer(field, field_field.sub_type, value)
-      end
+      new_exp[operator] =
+        case operator.downcase
+        when "and", "or"
+          # "and" => [exp, exp, exp]
+          operator_values.map { |atom| preprocess_exp(atom) }
+        when "not", "!"
+          # "not" => exp
+          preprocess_exp(operator_values)
+        when "find"
+          # "find" => {"search" => exp, "checkall" => exp}
+          operator_values.each_with_object({}) { |(op2, op_values2), hash| hash[op2] = preprocess_exp(op_values2) }
+        else # field
+          # op => {"regkey"=>"foo", "regval"=>"bar", "value"=>"baz"}
+          # op => {"field" => "foo", "value" => "baz"}
+          # op => {"field" => "<count>, "value" => "0"}
+          # op => {"count" => "Vm.snapshots", "value"=>"1"}
+          # op => {"tag"=>"Host.managed-environment", "value"=>"prod"}
+          operator_values = operator_values.dup
+          field = operator_values["field"]
+          field_field = operator_values["field-field"] = Field.parse(field) if field
+          value = operator_values["value"]
+          operator_values["value-field"] = Field.parse(value) if value
+
+          # attempt to do conversion only if db type of column is integer and value to compare to is String
+          if %w[= != <= >= > <].include?(operator) && field_field&.integer? && value.instance_of?(String)
+            operator_values["value"] = convert_size_in_units_to_integer(field, field_field.sub_type, value)
+          end
+
+          operator_values
+        end
     end
-    {operator => operator_values}
   end
 
   # @param operator [String]      operator (i.e.: AND, OR, NOT)
