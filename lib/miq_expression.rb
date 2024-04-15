@@ -1,4 +1,6 @@
 class MiqExpression
+  class InvalidExpression < StandardError; end
+
   # bit array of the types of nodes available/desired
   MODE_NONE = 0
   MODE_RUBY = 1
@@ -35,28 +37,11 @@ class MiqExpression
     @ruby = nil
   end
 
-  def valid?(component = exp)
-    operator = component.keys.first
-    case operator.downcase
-    when "and", "or"
-      component[operator].all?(&method(:valid?))
-    when "not", "!"
-      valid?(component[operator])
-    when "find"
-      validate_set = Set.new(%w[checkall checkany checkcount search])
-      validate_keys = component[operator].keys.select { |k| validate_set.include?(k) }
-      validate_keys.all? { |k| valid?(component[operator][k]) }
-    else
-      if component[operator].key?("field")
-        field = Field.parse(component[operator]["field"])
-        return false if field && !field.valid?
-      end
-      if Field.is_field?(component[operator]["value"])
-        field = Field.parse(component[operator]["value"])
-        return false unless field && field.valid?
-      end
-      true
-    end
+  def valid?
+    preprocess_exp(exp)
+    true
+  rescue InvalidExpression
+    false
   end
 
   def set_tagged_target(model, associations = [])
@@ -180,14 +165,14 @@ class MiqExpression
       nil
     elsif @ruby
       @ruby.dup
-    elsif valid?
+    else
       pexp = preprocess_exp(exp)
       pexp, _ = prune_exp(pexp, MODE_RUBY) if prune_sql
       @ruby = self.class._to_ruby(pexp, context_type, timezone) || true
       @ruby == true ? nil : @ruby.dup
-    else
-      ""
     end
+  rescue InvalidExpression
+    ""
   end
 
   def self._to_ruby(exp, context_type, tz)
@@ -329,6 +314,8 @@ class MiqExpression
     sql = to_arel(pexp, tz).to_sql if pexp.present?
     incl = includes_for_sql if sql.present?
     [sql, incl, attrs]
+  rescue InvalidExpression
+    [nil, nil, {:supported_by_sql => false}]
   end
 
   def preprocess_exp(exp)
@@ -351,12 +338,19 @@ class MiqExpression
           # op => {"field" => "foo", "value" => "baz"}
           # op => {"field" => "<count>, "value" => "0"}
           # op => {"count" => "Vm.snapshots", "value"=>"1"}
+          # op => {"field" => "<count>", "value"=>"1"}
           # op => {"tag"=>"Host.managed-environment", "value"=>"prod"}
           operator_values = operator_values.dup
           field = operator_values["field"]
-          field_field = operator_values["field-field"] = Field.parse(field) if field
+          if field && field != "<count>"
+            field_field = operator_values["field-field"] = Field.parse(field)
+            raise(InvalidExpression, field) unless field_field.valid?
+          end
           value = operator_values["value"]
-          operator_values["value-field"] = Field.parse(value) if value
+          if value
+            value_field = operator_values["value-field"] = Field.parse(value)
+            raise(InvalidExpression, field) if value_field && !value_field.valid?
+          end
 
           # attempt to do conversion only if db type of column is integer and value to compare to is String
           if %w[= != <= >= > <].include?(operator) && field_field&.integer? && value.instance_of?(String)
