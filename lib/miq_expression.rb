@@ -344,7 +344,19 @@ class MiqExpression
       preprocess_exp!(operator_values)
       exp
     else # field
-      convert_size_in_units_to_integer(exp) if %w[= != <= >= > <].include?(operator)
+      # op => {"regkey"=>"foo", "regval"=>"bar", "value"=>"baz"}
+      # op => {"field" => "foo", "value" => "baz"}
+      # op => {"field" => "<count>, "value" => "0"}
+      # op => {"count" => "Vm.snapshots", "value"=>"1"}
+      # op => {"tag"=>"Host.managed-environment", "value"=>"prod"}
+      field = operator_values["field"]
+      column_details = col_details[field] if field
+      value = operator_values["value"]
+
+      # attempt to do conversion only if db type of column is integer and value to compare to is String
+      if %w[= != <= >= > <].include?(operator) && field && column_details && column_details[:data_type] == :integer && value.instance_of?(String)
+        operator_values["value"] = convert_size_in_units_to_integer(field, column_details, value)
+      end
     end
     exp
   end
@@ -1394,24 +1406,19 @@ class MiqExpression
 
   private
 
-  def convert_size_in_units_to_integer(exp)
-    return if (column_details = col_details[exp.values.first["field"]]).nil?
-    # attempt to do conversion only if db type of column is integer and value to compare to is String
-    return unless column_details[:data_type] == :integer && (value = exp.values.first["value"]).instance_of?(String)
-
-    sub_type = column_details[:format_sub_type]
-
-    return if %i[mhz_avg hours kbps kbps_precision_2 mhz elapsed_time].include?(sub_type)
-
-    case sub_type
+  def convert_size_in_units_to_integer(field, column_details, value)
+    case column_details[:format_sub_type]
+    when :mhz_avg, :hours, :kbps, :kbps_precision_2, :mhz, :elapsed_time, :integer
+      value
     when :bytes
-      exp.values.first["value"] = value.to_i_with_method
+      value.to_i_with_method
     when :kilobytes
-      exp.values.first["value"] = value.to_i_with_method / 1_024
+      value.to_i_with_method / 1_024
     when :megabytes, :megabytes_precision_2
-      exp.values.first["value"] = value.to_i_with_method / 1_048_576
+      value.to_i_with_method / 1_048_576
     else
-      _log.warn("No subtype defined for column #{exp.values.first["field"]} in 'miq_report_formats.yml'")
+      _log.warn("No subtype defined for column #{field} in 'miq_report_formats.yml'")
+      value
     end
   end
 
