@@ -20,7 +20,7 @@ ems = if opts[:ems_id].present?
       end
 
 if ems.nil?
-  print "Failed to find EMS [#{opts.key?(:ems_id) ? opts[:ems_id] : opts[:ems_name]}]"
+  print "Failed to find EMS [#{opts.fetch(:ems_id) { opts[:ems_name] }}]"
   exit
 end
 

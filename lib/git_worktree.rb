@@ -373,7 +373,7 @@ class GitWorktree
 
   def process_repo(options)
     if options[:url]
-      clone(options[:url], options.key?(:bare) ? options[:bare] : true)
+      clone(options[:url], options.fetch(:bare, true))
     elsif options[:new]
       create_repo
     else
