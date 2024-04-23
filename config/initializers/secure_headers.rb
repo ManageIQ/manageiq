@@ -15,14 +15,15 @@ if defined?(SecureHeaders)
     # Need google fonts in fonts_src for https://fonts.googleapis.com/css?family=IBM+Plex+Sans+Condensed%7CIBM+Plex+Sans:400,600&display=swap (For carbon-charts download)
     config.csp = {
       :report_only => false,
+      :report_uri  => ["/dashboard/csp_report"],
+
       :default_src => ["'self'"],
-      :frame_src   => ["'self'"],
-      :font_src    => ["'self'", 'https://fonts.gstatic.com', "https://fonts.googleapis.com"],
-      :img_src     => ["'self'", "data:"],
       :connect_src => ["'self'"],
-      :style_src   => ["'unsafe-inline'", "'self'", "https://fonts.googleapis.com", "https://fonts.gstatic.com"],
+      :font_src    => ["'self'", 'https://fonts.gstatic.com', "https://fonts.googleapis.com"],
+      :frame_src   => ["'self'"],
+      :img_src     => ["'self'", "data:"],
       :script_src  => ["'unsafe-eval'", "'unsafe-inline'", "'self'"],
-      :report_uri  => ["/dashboard/csp_report"]
+      :style_src   => ["'unsafe-inline'", "'self'", "https://fonts.googleapis.com", "https://fonts.gstatic.com"]
     }
   end
 end
