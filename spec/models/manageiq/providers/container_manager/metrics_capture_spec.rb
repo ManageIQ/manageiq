@@ -7,7 +7,7 @@ RSpec.describe ManageIQ::Providers::ContainerManager::MetricsCapture do
 
   describe "#perf_capture_all_queue" do
     context "with a provider not supporting metrics capture" do
-      before { stub_supports(ems, :metrics, :supported => false) }
+      before { stub_supports_not(ems, :metrics) }
 
       it "doesn't queue any targets captures" do
         ems.perf_capture_object.perf_capture_all_queue
@@ -17,7 +17,7 @@ RSpec.describe ManageIQ::Providers::ContainerManager::MetricsCapture do
     end
 
     context "with a provider supporting metrics capture" do
-      before { stub_supports(ems, :metrics, :supported => true) }
+      before { stub_supports(ems, :metrics) }
 
       context "with no inventory" do
         it "doesn't queue any targets captures" do
