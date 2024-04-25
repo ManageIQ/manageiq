@@ -20,7 +20,7 @@ class MiqCompare
     @report = report
     @model = Object.const_get(report.db)
 
-    @include = options.key?(:include) ? options[:include] : self.class.sections(report)
+    @include = options.fetch(:include) { self.class.sections(report) }
 
     case @mode
     when :compare

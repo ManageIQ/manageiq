@@ -65,7 +65,7 @@ class VimPerformanceTagValue
     result = {}
     counts = {}
     association_type = nil
-    tag_cols = TAG_COLS.key?(parent_perf.resource_type.to_sym) ? TAG_COLS[parent_perf.resource_type.to_sym] : TAG_COLS[:default]
+    tag_cols = TAG_COLS.fetch(parent_perf.resource_type.to_sym) { TAG_COLS[:default] }
 
     perf_data = {}
     perf_data[:perf_recs] = recs

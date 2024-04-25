@@ -243,7 +243,7 @@ module Rbac
       offset            = options[:offset] || targets.try(:offset_value)
       order             = options[:order]  || targets.try(:order_values)
 
-      prune_sql = options.key?(:prune_sql) ? options[:prune_sql] : true
+      prune_sql         = options.fetch(:prune_sql, true)
 
       user, miq_group, user_filters = get_user_info(options[:user],
                                                     options[:userid],

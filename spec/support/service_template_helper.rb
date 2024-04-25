@@ -80,7 +80,7 @@ module Spec
 
       def link_all_children(item, properties, hash)
         children = properties[:children]
-        child_options = properties.key?(:child_options) ? properties[:child_options] : {}
+        child_options = properties.fetch(:child_options, {})
         children.each do |name|
           child_item = ServiceTemplate.find_by(:name => name) || build_a_composite(name, hash)
           add_st_resource(item, child_item, child_options.fetch(name, {}))
