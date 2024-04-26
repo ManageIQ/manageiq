@@ -3,6 +3,9 @@ class Switch < ApplicationRecord
   include CustomActionsMixin
   extend TenancyCommonMixin
 
+  # Note:
+  #   DistributedVirtualSwitch, PhysicalSwitch references ems through Switch#ems_id
+  #   HostVirtualSwitch references ems through Host
   belongs_to :host, :inverse_of => :host_virtual_switches
   has_one :ext_management_system, :through => :host
 
