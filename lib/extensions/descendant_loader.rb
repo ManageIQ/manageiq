@@ -67,12 +67,11 @@ class DescendantLoader
   # be defined in [depending on runtime details], the name of the class,
   # and the name of its superclass), given a path to a ruby script file.
   module Parser
-    autoload :RipperRubyParser, 'ripper_ruby_parser'
+    autoload :Prism, 'prism'
 
     def classes_in(filename)
-      content = File.read(filename)
       begin
-        parsed = RipperRubyParser::Parser.new.parse(content, filename)
+        parsed = Prism::Translation::RubyParser.parse_file(filename)
       rescue => e
         warn "\nError parsing classes in #{filename}:\n#{e.class.name}: #{e}\n\n"
         raise

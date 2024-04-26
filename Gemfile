@@ -63,6 +63,7 @@ gem "openscap",                         "~>0.4.8",           :require => false
 gem "optimist",                         "~>3.0",             :require => false
 gem "pg",                               ">=1.4.1",           :require => false
 gem "pg-dsn_parser",                    "~>0.1.1",           :require => false
+gem "prism",                            ">=0.25.0",          :require => false # Used by DescendantLoader
 gem "psych",                            ">=3.1",             :require => false # 3.1 safe_load changed positional to kwargs like aliases: true: https://github.com/ruby/psych/commit/4d4439d6d0adfcbd211ea295779315f1baa7dadd
 gem "query_relation",                   "~>0.1.0",           :require => false
 gem "rack",                             ">=2.2.6.4",         :require => false
@@ -71,7 +72,6 @@ gem "rails",                            "~>6.1.7", ">=6.1.7.7"
 gem "rails-i18n",                       "~>6.x"
 gem "rake",                             ">=12.3.3",          :require => false
 gem "rest-client",                      "~>2.1.0",           :require => false
-gem "ripper_ruby_parser",               "~>1.11",            :require => false
 gem "ruby-progressbar",                 "~>1.7.0",           :require => false
 gem "rubyzip",                          "~>2.0.0",           :require => false
 gem "rugged",                           "~>1.5.0",           :require => false
