@@ -67,6 +67,7 @@ class Endpoint < ApplicationRecord
   # Returns a list, to support concatenated PEM certs.
   def parse_certificate_authority
     return [] if certificate_authority.blank?
+
     certificate_authority.split(/(?=-----BEGIN)/).reject(&:blank?).collect do |pem_fragment|
       OpenSSL::X509::Certificate.new(pem_fragment)
     end

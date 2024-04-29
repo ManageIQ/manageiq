@@ -221,8 +221,8 @@ RSpec.describe EmsCluster do
   describe "#event_where_clause" do
     let(:cluster) { FactoryBot.create(:ems_cluster) }
     # just doing one to avoid db random ordering
-    let(:vms) { FactoryBot.create_list(:vm, 1, :ems_cluster => cluster)}
-    let(:hosts) { FactoryBot.create_list(:host, 1, :ems_cluster => cluster)}
+    let(:vms) { FactoryBot.create_list(:vm, 1, :ems_cluster => cluster) }
+    let(:hosts) { FactoryBot.create_list(:host, 1, :ems_cluster => cluster) }
     it "handles empty cluster" do
       expect(cluster.event_where_clause).to eq(["ems_cluster_id = ?", cluster.id])
     end

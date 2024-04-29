@@ -10,9 +10,14 @@ class ServerRole < ApplicationRecord
 
   def self.seed
     server_roles = all.index_by(&:name)
-    CSV.foreach(fixture_path, :headers => true, :skip_lines => /^#/).each do |csv_row|
-      action = csv_row.to_hash
 
+    server_role_paths = [fixture_path] + Vmdb::Plugins.server_role_paths
+
+    csv_rows = server_role_paths.flat_map do |path|
+      CSV.foreach(path, :headers => true, :skip_lines => /^#/).map(&:to_hash)
+    end
+
+    csv_rows.each do |action|
       rec = server_roles[action['name']]
       if rec.nil?
         _log.info("Creating Server Role [#{action['name']}]")
@@ -25,6 +30,7 @@ class ServerRole < ApplicationRecord
         end
       end
     end
+
     @zone_scoped_roles = @region_scoped_roles = nil
   end
 

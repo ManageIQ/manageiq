@@ -16,6 +16,7 @@ class Partition < ApplicationRecord
     # Override volume_group getter to prevent the special physical linkage from coming through
     vg = read_attribute(:volume_group)
     return nil if vg.respond_to?(:starts_with?) && vg.starts_with?(Volume::PHYSICAL_VOLUME_GROUP)
+
     vg
   end
 
@@ -123,6 +124,7 @@ class Partition < ApplicationRecord
 
   def self.partition_type_name(partition_type)
     return PARTITION_TYPE_NAMES[partition_type] if PARTITION_TYPE_NAMES.key?(partition_type)
+
     UNKNOWN_PARTITION_TYPE
   end
 

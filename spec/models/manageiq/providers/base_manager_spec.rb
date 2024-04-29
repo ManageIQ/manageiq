@@ -8,12 +8,12 @@ RSpec.describe ManageIQ::Providers::BaseManager do
       stub_settings_merge(
         :ems => {
           :ems_some_provider => {
-            :blacklisted_event_names => %w(ev1 ev2)
+            :blacklisted_event_names => %w[ev1 ev2]
           }
         }
       )
       allow(described_class).to receive(:provider_name).and_return('SomeProvider')
-      expect(described_class.default_blacklisted_event_names).to eq(%w(ev1 ev2))
+      expect(described_class.default_blacklisted_event_names).to eq(%w[ev1 ev2])
     end
   end
 

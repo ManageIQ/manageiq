@@ -1,6 +1,6 @@
 class CloudTenant < ApplicationRecord
   include CloudTenancyMixin
-  TENANT_MAPPING_ASSOCIATIONS = %i(vms_and_templates).freeze
+  TENANT_MAPPING_ASSOCIATIONS = %i[vms_and_templates].freeze
 
   include NewWithTypeStiMixin
   include CustomActionsMixin

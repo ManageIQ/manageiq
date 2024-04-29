@@ -25,7 +25,7 @@ class PolicyEvent < ApplicationRecord
         :target_class                     => target.class.base_class.name,
         :target_name                      => target.name,
         :chain_id                         => chain_id
-      # TODO: username,
+        # TODO: username,
       )
 
       pe.host_id = target.try(:host)&.id

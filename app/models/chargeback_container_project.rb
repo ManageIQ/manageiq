@@ -15,7 +15,7 @@ class ChargebackContainerProject < Chargeback
     :memory_used_metric    => :float,
     :net_io_used_cost      => :float,
     :net_io_used_metric    => :float,
-    :total_cost            => :float,
+    :total_cost            => :float
   )
 
   def self.build_results_for_report_ChargebackContainerProject(options)
@@ -51,7 +51,7 @@ class ChargebackContainerProject < Chargeback
   end
 
   def self.report_static_cols
-    %w(project_name)
+    %w[project_name]
   end
 
   def self.report_col_options

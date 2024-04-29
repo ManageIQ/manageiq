@@ -29,6 +29,7 @@ class MiqAlertSet < ApplicationRecord
 
   def notes=(data)
     return if data.nil?
+
     self.set_data ||= {}
     self.set_data[:notes] = data[0..511]
   end
@@ -60,6 +61,7 @@ class MiqAlertSet < ApplicationRecord
   def self.seed
     fixture_file = File.join(FIXTURE_DIR, "miq_alert_sets.yml")
     return unless File.exist?(fixture_file)
+
     File.open(fixture_file) { |fd| MiqAlertSet.import_from_yaml(fd, :save => true) }
   end
 

@@ -7,8 +7,8 @@ module Vmdb
 
     include Enumerable
 
-    def self.method_missing(m, *args, &block)
-      instance.respond_to?(m) ? instance.send(m, *args, &block) : super
+    def self.method_missing(m, ...)
+      instance.respond_to?(m) ? instance.send(m, ...) : super
     end
 
     def self.respond_to_missing?(*args)
@@ -80,6 +80,12 @@ module Vmdb
       end
     end
 
+    def embedded_workflows_content
+      @embedded_workflows_content ||= index_with do |engine|
+        engine.root.join("content", "workflows").glob("**/*.asl")
+      end
+    end
+
     def automate_domains
       @automate_domains ||= begin
         require_relative 'plugins/automate_domain'
@@ -90,7 +96,7 @@ module Vmdb
     end
 
     def miq_widgets_content
-      @miq_widgets_content ||= Dir.glob(Rails.root.join("product/dashboard/widgets", "*")) + flat_map { |engine| content_directories(engine, "dashboard/widgets") }
+      @miq_widgets_content ||= Dir.glob(Rails.root.join("product/dashboard/widgets/*")) + flat_map { |engine| content_directories(engine, "dashboard/widgets") }
     end
 
     def provider_plugins
@@ -101,6 +107,13 @@ module Vmdb
       @asset_paths ||= begin
         require_relative 'plugins/asset_path'
         map { |engine| AssetPath.new(engine) if AssetPath.asset_path?(engine) }.compact
+      end
+    end
+
+    def server_role_paths
+      @server_role_paths ||= filter_map do |engine|
+        file = engine.root.join("config/server_roles.csv")
+        file if file.exist?
       end
     end
 

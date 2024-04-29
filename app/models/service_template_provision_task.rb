@@ -15,12 +15,14 @@ class ServiceTemplateProvisionTask < MiqRequestTask
 
   def provision_priority
     return 0 if service_resource.nil?
+
     service_resource.provision_index
   end
 
   def sibling_sequence_run_now?
     return true  if miq_request_task.nil? || miq_request_task.miq_request_tasks.count == 1
     return false if miq_request_task.miq_request_tasks.detect { |t| t.provision_priority < provision_priority && t.state != "finished" }
+
     true
   end
 
@@ -29,6 +31,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
     return true   if parent.nil?
     return false  unless parent.group_sequence_run_now?
     return false  unless sibling_sequence_run_now?
+
     true
   end
 
@@ -105,7 +108,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
       :instance_id    => id,
       :method_name    => "do_post_provision",
       :zone           => my_zone,
-      :deliver_on     => 1.minutes.from_now.utc,
+      :deliver_on     => 1.minute.from_now.utc,
       :tracking_label => tracking_label_id,
       :miq_callback   => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
     )
@@ -160,6 +163,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
 
   def service_resource
     return nil if options[:service_resource_id].blank?
+
     ServiceResource.find_by(:id => options[:service_resource_id])
   end
 
@@ -173,7 +177,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
 
   def before_ae_starts(_options)
     reload
-    if state.to_s.downcase.in?(%w(pending queued))
+    if state.to_s.downcase.in?(%w[pending queued])
       _log.info("Executing #{request_class::TASK_DESCRIPTION} request: [#{description}]")
       update_and_notify_parent(:state => "active", :status => "Ok", :message => "In Process")
     end

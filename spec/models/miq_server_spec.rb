@@ -404,15 +404,19 @@ RSpec.describe MiqServer do
     end
   end
 
-  context ".managed_resources" do
+  context ".audit_details" do
     let(:ems) { FactoryBot.create(:ems_infra) }
     let!(:active_vm) { FactoryBot.create(:vm_infra, :ext_management_system => ems) }
     let!(:archived_vm) { FactoryBot.create(:vm_infra) }
     let!(:active_host) { FactoryBot.create(:host, :ext_management_system => ems) }
     let!(:archived_host) { FactoryBot.create(:host) }
+    let!(:active_service) { FactoryBot.create(:service, :lifecycle_state => "provisioned", :retired => false) }
+    let!(:inactive_service) { FactoryBot.create(:service, :retired => true) }
+    let!(:active_service_template) { FactoryBot.create(:service_template) }
+    let!(:archived_service_template) { FactoryBot.create(:service_template, :deleted_on => Time.now.utc) }
 
-    it "with active and archived vms and hosts" do
-      expect(described_class.managed_resources).to include(:vms => 1, :hosts => 1)
+    it "with active and archived resources" do
+      expect(described_class.audit_details).to include(:vms => 1, :hosts => 1, :services => {:active => 1, :inactive => 1}, :service_catalog_items => {:active => 1, :archived => 1})
     end
   end
 end

@@ -39,6 +39,7 @@ module MiqReport::Generator::Sorting
     # Remove any subtituted values we put in the table earlier
     new_sortby.each_with_index do |sb, idx|
       next if sb_nil_sub[idx].nil?
+
       @table.data.each { |d| d.data[sb] = nil if d.data[sb] == sb_nil_sub[idx] }
     end
   end

@@ -75,13 +75,13 @@ class MiqAeClass < ApplicationRecord
 
     self.class.column_names.each do |cname|
       # Remove any columns that we do not want to export
-      next if %w(id created_on updated_on updated_by).include?(cname) || cname.ends_with?("_id")
+      next if %w[id created_on updated_on updated_by].include?(cname) || cname.ends_with?("_id")
 
       # Skip any columns that we process explicitly
-      next if %w(name namespace).include?(cname)
+      next if %w[name namespace].include?(cname)
 
       # Process the column
-      xml_attrs[cname.to_sym]  = send(cname)   unless send(cname).blank?
+      xml_attrs[cname.to_sym] = send(cname)   if send(cname).present?
     end
 
     xml.MiqAeClass(xml_attrs) do
@@ -93,7 +93,6 @@ class MiqAeClass < ApplicationRecord
     end
   end
 
-
   # my class's fqname is /domain/namespace1/namespace2/class
   def namespace
     return nil if ae_namespace.nil?
@@ -103,6 +102,7 @@ class MiqAeClass < ApplicationRecord
 
   def namespace=(ns)
     raise ArgumentError, "ns cannot be blank" if ns.blank?
+
     self.ae_namespace = MiqAeNamespace.find_or_create_by_fqname(ns)
   end
 
@@ -124,16 +124,20 @@ class MiqAeClass < ApplicationRecord
 
   def self.find_homonymic_instances_across_domains(user, fqname)
     return [] if fqname.blank?
+
     path = MiqAeEngine::MiqAeUri.path(fqname, "miqaedb")
     ns, klass, inst = MiqAeEngine::MiqAePath.split(path)
     return [] if ns.blank? || klass.blank? || inst.blank?
+
     get_same_instance_from_classes(get_sorted_homonym_class_across_domains(user, ns, klass), inst)
   end
 
   def self.find_distinct_instances_across_domains(user, fqname)
     return [] if fqname.blank?
+
     ns, klass = fqname.starts_with?('/') ? parse_fqname(fqname[1..-1]) : parse_fqname(fqname)
     return [] if ns.blank? || klass.blank?
+
     get_unique_instances_from_classes(get_sorted_homonym_class_across_domains(user, ns, klass))
   end
 
@@ -146,6 +150,7 @@ class MiqAeClass < ApplicationRecord
   def field_hash(name)
     field = ae_fields.detect { |f| f.name.casecmp(name) == 0 }
     raise "field #{name} not found in class #{@name}" if field.nil?
+
     field.attributes
   end
 
@@ -193,6 +198,7 @@ class MiqAeClass < ApplicationRecord
   def self.sub_namespaces(ns_obj, ids)
     loop do
       break if ns_obj.nil? || ids.include?("#{ns_obj.class.name}::#{ns_obj.id}")
+
       ids << "#{ns_obj.class.name}::#{ns_obj.id}"
       ns_obj = ns_obj.parent
     end
@@ -211,6 +217,7 @@ class MiqAeClass < ApplicationRecord
       fq_ns = domain + "/" + partial_ns
       ae_ns = MiqAeNamespace.lookup_by_fqname(fq_ns)
       next if ae_ns.nil?
+
       ae_ns.ae_classes.select { |c| File.fnmatch(klass, c.name, File::FNM_CASEFOLD) }
     end.compact.flatten
     if class_array.empty? && ns_obj
@@ -234,8 +241,10 @@ class MiqAeClass < ApplicationRecord
     klass_array.collect do |klass|
       cls = find_by(:id => klass.id)
       next if cls.nil?
+
       cls.ae_instances.sort_by(&:fqname).collect do |inst|
         next if name_set.include?(inst.name)
+
         name_set << inst.name
         inst
       end.compact.flatten
@@ -248,6 +257,7 @@ class MiqAeClass < ApplicationRecord
     klass_array.collect do |klass|
       cls = find_by(:id => klass.id)
       next if cls.nil?
+
       cls.ae_instances.select { |a| File.fnmatch(instance, a.name, File::FNM_CASEFOLD) }
     end.compact.flatten
   end

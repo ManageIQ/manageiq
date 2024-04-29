@@ -94,8 +94,8 @@ class Service < ApplicationRecord
   default_value_for :lifecycle_state, 'unprovisioned'
   default_value_for :retired, false
 
-  validates :visible, :inclusion => { :in => [true, false] }
-  validates :retired, :inclusion => { :in => [true, false] }
+  validates :visible, :inclusion => {:in => [true, false]}
+  validates :retired, :inclusion => {:in => [true, false]}
 
   scope :displayed, ->              { where(:visible => true) }
   scope :retired,   ->(bool = true) { where(:retired => bool) }
@@ -129,12 +129,21 @@ class Service < ApplicationRecord
       'off' if power_states_match?(:stop)
     else
       return 'on' if power_states_match?(:start)
+
       'off' if power_states_match?(:stop)
     end
   end
 
   def power_status
     options[:power_status]
+  end
+
+  def self.active
+    where(:lifecycle_state => ["provisioning", "provisioned"], :retired => false)
+  end
+
+  def self.inactive
+    where(:lifecycle_state => ["unprovisioned", "error_in_provisioning"], :retired => false).or(retired)
   end
 
   def service_id
@@ -282,6 +291,7 @@ class Service < ApplicationRecord
   def update_power_status(action)
     expected_status = "#{action}_complete"
     return true if options[:power_status] == expected_status
+
     options[:power_status] = expected_status
     update(:options => options)
   end
@@ -354,6 +364,7 @@ class Service < ApplicationRecord
 
   def reconfigure_dialog
     return nil unless supports?(:reconfigure)
+
     resource_action = reconfigure_resource_action
     options = {:target => self, :reconfigure => true}
 
@@ -426,7 +437,7 @@ class Service < ApplicationRecord
   end
 
   def chargeback_yaml
-    yaml = YAML.load_file(Rails.root.join('product', 'chargeback', 'chargeback_vm_monthly.yaml'))
+    yaml = YAML.load_file(Rails.root.join("product/chargeback/chargeback_vm_monthly.yaml"))
     yaml["db_options"][:options][:service_id] = id
     yaml["title"] = chargeback_report_name
     yaml

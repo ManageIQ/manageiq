@@ -64,6 +64,7 @@ class MiqApproval < ApplicationRecord
   def user_validate(userid)
     user = userid.kind_of?(User) ? userid : User.lookup_by_userid(userid)
     raise "not authorized" unless authorized?(user)
+
     user
   end
 end

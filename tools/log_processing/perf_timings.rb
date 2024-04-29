@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-RAILS_ROOT = File.expand_path(File.join(__dir__, %w(.. ..)))
+RAILS_ROOT = File.expand_path(File.join(__dir__, %w[.. ..]))
 require 'manageiq/gems/pending'
 require 'miq_logger_processor'
 
@@ -57,6 +57,7 @@ vim_collect_timings = {}
 
 MiqLoggerProcessor.new(logfile).each do |line|
   next unless line =~ /MIQ\((Vm|Host|Storage|EmsCluster|ExtManagementSystem|MiqEnterprise)\.(vim_collect_perf_data|perf_capture_?[a-z]*|perf_process|perf_rollup)\).+Timings:? (\{.+)$/
+
   target, method, timings = $1, $2, $3
 
   target.downcase!
@@ -73,6 +74,7 @@ MiqLoggerProcessor.new(logfile).each do |line|
     unless target == "storage"
       prev_timings = vim_collect_timings.delete(line.pid)
       next if prev_timings.nil?
+
       timings = prev_timings.merge(timings)
     end
 

@@ -36,6 +36,7 @@ fixed = 0
 MiqReportResult.find_each(:batch_size => opts[:batch_size]).with_index do |rr, i|
   begin
     break if opts[:count].positive? && i == opts[:count]
+
     total += 1
 
     next if rr.report.nil? || rr.report.extras.nil?

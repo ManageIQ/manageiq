@@ -2,10 +2,17 @@ require 'sys-uname'
 require 'socket'
 
 module MiqEnvironment
+  def self.arch
+    Sys::Platform::ARCH
+  end
+
   # Return the fully qualified hostname for the local host.
   #
   def self.fully_qualified_domain_name
-    Socket.gethostbyname(Socket.gethostname).first
+    hostname    = Socket.gethostname
+    addrinfo    = Addrinfo.getaddrinfo(hostname, nil, nil, :STREAM).first
+    fqdn, _port = addrinfo.getnameinfo
+    fqdn
   end
 
   # Return the local IP v4 address of the local host
@@ -43,11 +50,13 @@ module MiqEnvironment
 
     def self.supports_systemd?
       return @supports_systemd unless @supports_systemd.nil?
+
       @supports_systemd = is_appliance? && !is_container? && supports_command?('systemctl')
     end
 
     def self.supports_nohup_and_backgrounding?
       return @supports_nohup unless @supports_nohup.nil?
+
       @supports_nohup = is_appliance? && supports_command?('nohup')
     end
 
@@ -57,6 +66,7 @@ module MiqEnvironment
 
     def self.is_container?
       return @is_container unless @is_container.nil?
+
       @is_container = ENV["CONTAINER"] == "true"
     end
 
@@ -70,6 +80,7 @@ module MiqEnvironment
 
     def self.is_appliance?
       return @is_appliance unless @is_appliance.nil?
+
       @is_appliance = ENV["APPLIANCE"] == "true"
     end
 
@@ -83,6 +94,7 @@ module MiqEnvironment
 
     def self.is_linux?
       return @is_linux unless @is_linux.nil?
+
       @is_linux = (Sys::Platform::IMPL == :linux)
     end
 

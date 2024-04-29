@@ -154,8 +154,8 @@ class Tenant < ApplicationRecord
       end
       # Delete any quotas that were not passed in
       tenant_quotas.destroy_missing(updated_keys)
-      # unfortunatly, an extra scope is created in destroy_missing, so we need to reload the records
-      clear_association_cache
+      # unfortunately, an extra scope is created in destroy_missing, so we need to reload the records
+      tenant_quotas.reload
     end
 
     get_quotas
@@ -303,6 +303,7 @@ class Tenant < ApplicationRecord
     data_tenant = []
     all_subtenants.each do |subtenant|
       next unless subtenant.parent_name == name
+
       data_tenant.push(:name => subtenant.name, :id => subtenant.id, :parent => id)
       if subtenant.all_subtenants.count > 0
         data_tenant.concat(subtenant.build_tenant_tree)

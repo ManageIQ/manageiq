@@ -31,7 +31,7 @@ module Vmdb
     # returns formatted time in specified timezone and format
     def format_timezone(time, timezone = Time.zone.name, ftype = "view")
       timezone = timezone.name if timezone.kind_of?(ActiveSupport::TimeZone)   # If a Timezone object comes in, just get the name
-      if !time.blank?
+      if time.present?
         new_time = time.in_time_zone(timezone)
         case ftype
         when "gtl"                                  # for gtl views

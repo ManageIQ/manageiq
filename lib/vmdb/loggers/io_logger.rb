@@ -24,6 +24,7 @@ module Vmdb::Loggers
     def dump_buffer
       @buffer.each_line do |l|
         next if l.empty?
+
         line = [@prefix, l].join(" ").strip
         @logger.send(@level, line)
       end

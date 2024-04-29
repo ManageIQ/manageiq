@@ -70,7 +70,7 @@ module TaskHelpers
                                                    ["Cannot import because there is no :name for :pxe_image_type"])
         end
 
-        if pxe_image_hash.key?(:provision_type) && !%w(vm host).include?(pxe_image_hash[:provision_type])
+        if pxe_image_hash.key?(:provision_type) && !%w[vm host].include?(pxe_image_hash[:provision_type])
           raise CustomizationTemplateYamlError.new("Customization Template error",
                                                    ["Cannot import because :provision_type for :pxe_image_type must be vm or host"])
         end

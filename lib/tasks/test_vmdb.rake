@@ -1,4 +1,4 @@
-require_relative "./evm_test_helper"
+require_relative "evm_test_helper"
 
 if defined?(RSpec) && defined?(RSpec::Core::RakeTask)
 

@@ -13,7 +13,7 @@ module ManageIQ
                 ManageIQ.charts.c3["#{chart_id}"] = chart;
                 miqSparkleOff();
               });
-      EOJ
+            EOJ
         end
 
         def c3chart_local(data, opts = {})
@@ -24,7 +24,7 @@ module ManageIQ
               var data = #{data.to_json};
               var chart = c3.generate(chartData('#{data[:miqChart]}', data, { bindto: "##{chart_id}" }));
               ManageIQ.charts.c3["#{chart_id}"] = chart;
-      EOJ
+            EOJ
         end
       end
     end

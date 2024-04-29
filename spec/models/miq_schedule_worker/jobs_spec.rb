@@ -89,7 +89,7 @@ RSpec.describe MiqScheduleWorker::Jobs do
 
       it "#miq_server_audit_managed_resources" do
         described_class.new.miq_server_audit_managed_resources
-        expect(MiqQueue.where(:method_name => "audit_managed_resources").first).to have_attributes(:queue_name => "miq_server", :server_guid => guid, :zone => zone.name, :priority => MiqQueue::MEDIUM_PRIORITY)
+        expect(MiqQueue.where(:method_name => "report_audit_details").first).to have_attributes(:queue_name => "miq_server", :server_guid => guid, :zone => zone.name, :priority => MiqQueue::MEDIUM_PRIORITY)
       end
 
       it "#miq_server_status_update" do

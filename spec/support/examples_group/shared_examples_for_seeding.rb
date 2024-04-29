@@ -20,7 +20,7 @@ shared_examples_for ".seed called multiple times" do |expected_amount = nil|
 end
 
 shared_examples_for "seeding users with" do |klasses|
-  let(:users) { {'admin' => 'super_administrator' } }
+  let(:users) { {'admin' => 'super_administrator'} }
 
   it "seeds users #{klasses.present? ? 'with' : ''} #{klasses.collect(&:to_s).join(', ')}" do
     klasses.push(User)

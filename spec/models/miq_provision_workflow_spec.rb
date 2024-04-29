@@ -1,4 +1,4 @@
-silence_warnings { MiqProvisionWorkflow.const_set("DIALOGS_VIA_AUTOMATE", false) }
+silence_warnings { MiqProvisionWorkflow.const_set(:DIALOGS_VIA_AUTOMATE, false) }
 
 RSpec.describe MiqProvisionWorkflow do
   let(:admin) { FactoryBot.create(:user_admin) }

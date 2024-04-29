@@ -15,8 +15,8 @@ RSpec.describe MiqAeField do
 
     context "when default_value is blank" do
       let(:expected_xml) do
-        <<-XML
-<MiqAeField name="" substitute="true" display_name="display_name"></MiqAeField>
+        <<~XML
+          <MiqAeField name="" substitute="true" display_name="display_name"></MiqAeField>
         XML
       end
 
@@ -28,8 +28,8 @@ RSpec.describe MiqAeField do
     context "when default_value is not blank" do
       let(:default_value) { "default_value" }
       let(:expected_xml) do
-        <<-XML
-<MiqAeField name="" substitute="true" display_name="display_name">default_value</MiqAeField>
+        <<~XML
+          <MiqAeField name="" substitute="true" display_name="display_name">default_value</MiqAeField>
         XML
       end
 
@@ -141,7 +141,7 @@ RSpec.describe MiqAeField do
     end
 
     it "should set the updated_by field on save" do
-      f1 =  @c1.ae_fields.create(:name => "field")
+      f1 = @c1.ae_fields.create(:name => "field")
       expect(f1.updated_by).to eq('system')
     end
 
@@ -182,7 +182,7 @@ RSpec.describe MiqAeField do
 
     it "should validate datatypes" do
       MiqAeField.available_datatypes.each do |datatype|
-        f = @c1.ae_fields.build(:name => "fname_#{datatype.gsub(/ /,'_')}",
+        f = @c1.ae_fields.build(:name => "fname_#{datatype.tr(' ', '_')}",
                                 :aetype => "attribute", :datatype => datatype)
         expect(f).to be_valid
         expect(f.save!).to be_truthy
@@ -192,7 +192,7 @@ RSpec.describe MiqAeField do
       @c1.ae_fields.destroy_all
       expect(@c1.reload.ae_fields.length).to eq(0)
 
-      %w(foo bar).each do |datatype|
+      %w[foo bar].each do |datatype|
         f = @c1.ae_fields.build(:name => "fname_#{datatype}", :aetype => "attribute", :datatype => datatype)
         expect(f).not_to be_valid
       end

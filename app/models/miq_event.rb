@@ -157,6 +157,7 @@ class MiqEvent < EventStream
 
   def self.normalize_event(event)
     return event if MiqEventDefinition.find_by(:name => event)
+
     "unknown"
   end
 
@@ -194,7 +195,7 @@ class MiqEvent < EventStream
     )
 
     target_model = target.class.base_model.name.downcase
-    target_model = "vm" if target_model.match("template")
+    target_model = "vm" if target_model.match?("template")
 
     base_event = [target_model, options[:type]].join("_")
     evm_event  = [options[:prefix], base_event, options[:suffix]].compact.join("_")
@@ -208,6 +209,7 @@ class MiqEvent < EventStream
     child_event = "#{raw_event}_parent_#{target.class.base_model.name.underscore}"
     child_assocs.each do |assoc|
       next unless target.respond_to?(assoc)
+
       children = target.send(assoc)
       children.each do |child|
         _log.info("Raising Event [#{child_event}] for Child [(#{child.class}) #{child.name}] of Parent [(#{target.class}) #{target.name}]")

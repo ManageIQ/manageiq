@@ -32,7 +32,7 @@ class ServiceAwx < Service
 
   def build_stack_options_from_dialog(dialog_options)
     {:extra_vars => extra_vars_from_dialog(dialog_options)}.tap do |launch_options|
-      launch_options[:limit] = dialog_options['dialog_limit'] unless dialog_options['dialog_limit'].blank?
+      launch_options[:limit] = dialog_options['dialog_limit'] if dialog_options['dialog_limit'].present?
     end
   end
 

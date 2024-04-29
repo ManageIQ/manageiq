@@ -107,16 +107,16 @@ RSpec.describe PxeServer do
       it "without kickstart" do
         @pxe_server.sync_images
         expected_name = @pxe_server.test_full_path_to("#{@pxe_server.pxe_directory}/01-00-19-e3-d7-5b-0e")
-        expected_contents = <<-PXE
-timeout 0
-default Ubuntu-10.10-Desktop-i386-LIVE_BOOT
+        expected_contents = <<~PXE
+          timeout 0
+          default Ubuntu-10.10-Desktop-i386-LIVE_BOOT
 
-label Ubuntu-10.10-Desktop-i386-LIVE_BOOT
-   menu label Ubuntu-10.10-Desktop-i386-LIVE_BOOT
-   kernel ubuntu-10.10-desktop-i386/vmlinuz
-   append initrd=ubuntu-10.10-desktop-i386/initrd.lz vga=normal boot=casper netboot=nfs nfsroot=192.168.252.60:/srv/nfsboot/ubuntu-10.10-desktop-i386 -- quiet
+          label Ubuntu-10.10-Desktop-i386-LIVE_BOOT
+             menu label Ubuntu-10.10-Desktop-i386-LIVE_BOOT
+             kernel ubuntu-10.10-desktop-i386/vmlinuz
+             append initrd=ubuntu-10.10-desktop-i386/initrd.lz vga=normal boot=casper netboot=nfs nfsroot=192.168.252.60:/srv/nfsboot/ubuntu-10.10-desktop-i386 -- quiet
 
-PXE
+        PXE
         image = @pxe_server.pxe_images.find_by(:name => "Ubuntu-10.10-Desktop-i386-LIVE_BOOT")
         begin
           @pxe_server.create_provisioning_files(image, "00:19:e3:d7:5b:0e")
@@ -141,16 +141,16 @@ PXE
         ks_contents = "FOO"
         kickstart = FactoryBot.create(:customization_template_kickstart, :script => ks_contents)
 
-        expected_contents = <<-PXE
-timeout 0
-default Ubuntu-10.10-Desktop-i386-LIVE_BOOT
+        expected_contents = <<~PXE
+          timeout 0
+          default Ubuntu-10.10-Desktop-i386-LIVE_BOOT
 
-label Ubuntu-10.10-Desktop-i386-LIVE_BOOT
-   menu label Ubuntu-10.10-Desktop-i386-LIVE_BOOT
-   kernel ubuntu-10.10-desktop-i386/vmlinuz
-   append initrd=ubuntu-10.10-desktop-i386/initrd.lz vga=normal boot=casper netboot=nfs nfsroot=192.168.252.60:/srv/nfsboot/ubuntu-10.10-desktop-i386 -- quiet ks=#{@pxe_server.access_url}/#{@pxe_server.customization_directory}/#{dashed_mac_address}.ks.cfg ksdevice=00:19:e3:d7:5b:0e
+          label Ubuntu-10.10-Desktop-i386-LIVE_BOOT
+             menu label Ubuntu-10.10-Desktop-i386-LIVE_BOOT
+             kernel ubuntu-10.10-desktop-i386/vmlinuz
+             append initrd=ubuntu-10.10-desktop-i386/initrd.lz vga=normal boot=casper netboot=nfs nfsroot=192.168.252.60:/srv/nfsboot/ubuntu-10.10-desktop-i386 -- quiet ks=#{@pxe_server.access_url}/#{@pxe_server.customization_directory}/#{dashed_mac_address}.ks.cfg ksdevice=00:19:e3:d7:5b:0e
 
-PXE
+        PXE
 
         begin
           @pxe_server.create_provisioning_files(image, "00:19:e3:d7:5b:0e", nil, kickstart)
@@ -163,6 +163,30 @@ PXE
           File.delete(expected_name) if File.exist?(expected_name)
           File.delete(expected_ks_name) if File.exist?(expected_ks_name)
         end
+      end
+    end
+
+    context "#default_pxe_image_for_windows / #default_pxe_image_for_windows=" do
+      before { @pxe_server.sync_images }
+
+      it "when there is no default" do
+        expect(@pxe_server.default_pxe_image_for_windows).to be_nil
+      end
+
+      it "when setting the default" do
+        i = @pxe_server.pxe_images.detect { |pxe_image| pxe_image.name == "ubuntu-10.10-desktop-amd64" }
+        @pxe_server.default_pxe_image_for_windows = i
+
+        expect(@pxe_server.default_pxe_image_for_windows).to eq(i)
+      end
+
+      it "when setting the default with an image not from the collection directly" do
+        i = PxeImage.find_by(:name => "ubuntu-10.10-desktop-amd64")
+
+        @pxe_server.pxe_images.to_a # Preload the collection to ensure it's a different in-memory instance
+        @pxe_server.default_pxe_image_for_windows = i
+
+        expect(@pxe_server.default_pxe_image_for_windows).to eq(i)
       end
     end
   end
@@ -244,12 +268,12 @@ PXE
                                    :initrd         => "http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img"
                                   )
         expected_name = @pxe_server.test_full_path_to("#{@pxe_server.pxe_directory}/00-19-e3-d7-5b-0e")
-        expected_contents = <<-PXE
-#!ipxe
-kernel #{image.kernel} ramdisk_size=10000
-initrd #{image.initrd}
-boot
-PXE
+        expected_contents = <<~PXE
+          #!ipxe
+          kernel #{image.kernel} ramdisk_size=10000
+          initrd #{image.initrd}
+          boot
+        PXE
         begin
           @pxe_server.create_provisioning_files(image, "00:19:e3:d7:5b:0e")
           expect(File.exist?(expected_name)).to be_truthy
@@ -277,12 +301,12 @@ PXE
         ks_contents = "FOO"
         kickstart = FactoryBot.create(:customization_template_kickstart, :script => ks_contents)
 
-        expected_contents = <<-PXE
-#!ipxe
-kernel #{image.kernel} ramdisk_size=10000 ksdevice=00:19:e3:d7:5b:0e ks=#{@pxe_server.access_url}/#{@pxe_server.customization_directory}/#{dashed_mac_address}.ks.cfg
-initrd #{image.initrd}
-boot
-PXE
+        expected_contents = <<~PXE
+          #!ipxe
+          kernel #{image.kernel} ramdisk_size=10000 ksdevice=00:19:e3:d7:5b:0e ks=#{@pxe_server.access_url}/#{@pxe_server.customization_directory}/#{dashed_mac_address}.ks.cfg
+          initrd #{image.initrd}
+          boot
+        PXE
         begin
           @pxe_server.create_provisioning_files(image, "00:19:e3:d7:5b:0e", nil, kickstart)
           expect(File.exist?(expected_name)).to be_truthy

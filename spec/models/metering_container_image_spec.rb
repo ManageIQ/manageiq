@@ -1,6 +1,6 @@
 RSpec.describe MeteringContainerImage do
   include Spec::Support::ChargebackHelper
-  let(:base_options) { {:interval_size => 2, :end_interval_offset => 0, :ext_options => {:tz => 'UTC'} } }
+  let(:base_options) { {:interval_size => 2, :end_interval_offset => 0, :ext_options => {:tz => 'UTC'}} }
   let(:hourly_rate)       { 0.01 }
   let(:count_hourly_rate) { 1.00 }
   let(:starting_date) { Time.parse('2012-09-01 23:59:59Z').utc }

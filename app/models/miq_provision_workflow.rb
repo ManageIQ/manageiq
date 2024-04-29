@@ -34,6 +34,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
              else VmOrTemplate.find_by(:id => source_or_id)
              end
     return nil if source.nil?
+
     source.class.manager_class.provision_workflow_class
   end
 

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2024-01-01 00:17+0000\n"
-"PO-Revision-Date: 2024-01-01 00:17+0000\n"
+"POT-Creation-Date: 2024-03-01 17:14+0000\n"
+"PO-Revision-Date: 2024-03-01 17:14+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -397,9 +397,6 @@ msgstr "%{action} \"%{item_name}\" para %{vm_or_template} \"%{name}\""
 
 msgid "%{action} \"%{item_name}\" for Switch \"%{name}\""
 msgstr "%{action} \"%{item_name}\" para switch \"%{name}\""
-
-msgid "%{action} cannot be performed on orphaned VM."
-msgstr "%{action} no se puede realizar en una máquina virtual huérfana."
 
 msgid "%{action} initiated for %{count} %{model} from the %{product} Database"
 msgid_plural ""
@@ -2332,14 +2329,6 @@ msgstr "Clave de acceso"
 
 msgid "Access Key ID"
 msgstr "ID de llave de acceso"
-
-msgid ""
-"Access Key ID and matching Secret Access Key fields are needed to perform "
-"verification of credentials"
-msgstr ""
-"Es necesario el ID de la Llave de Acceso y la concordancia de los campos de la"
-" Llave Secreta de Acceso para llevar a cabo la verificación de los "
-"credenciales"
 
 msgid "Access Modes"
 msgstr "Modos de acceso"
@@ -7159,32 +7148,17 @@ msgstr "Cancelar redimensionamiento"
 msgid "Cancel Simulation to go back to Button details"
 msgstr "Cancelar simulación para volver a los detalles del botón"
 
-msgid "Cancel SmartState Docker password change"
-msgstr "Cancelar el cambio de contraseña de SmartState Docker"
-
 msgid "Cancel Task"
 msgstr "Cancelar tarea"
 
 msgid "Cancel after"
 msgstr "Cancelar después de"
 
-msgid "Cancel client key change"
-msgstr "Cancelar cambio de clave del cliente"
-
 msgid "Cancel operation is not supported for %{class}"
 msgstr "No se admite la cancelación de la operación para %{class}"
 
 msgid "Cancel password change"
 msgstr "Cancelar cambio de contraseña"
-
-msgid "Cancel private key change"
-msgstr "Cancelar cambio de clave privada"
-
-msgid "Cancel secret access key change"
-msgstr "Cancelar cambio de clave de acceso secreto"
-
-msgid "Cancel stored token"
-msgstr "Cancelar token almacenado"
 
 msgid "Cancel the load"
 msgstr "Cancelar la carga"
@@ -7334,6 +7308,11 @@ msgstr "No se puede analizar el ID de usuario %{user_id}"
 
 msgid "Cannot redirect to \"%{record}\" provider."
 msgstr "No se puede redirigir al proveedor \"%{record}\"."
+
+msgid "Cannot resize disks of a VM with snapshots"
+msgstr ""
+"No se puede cambiar el tamaño de los discos de una máquina virtual con "
+"instantáneas"
 
 msgid "Cannot revert to snapshot while VM is running"
 msgstr ""
@@ -7740,23 +7719,8 @@ msgstr "Cambiar contraseña de proveedores de infraestructura"
 msgid "Change current group"
 msgstr "Cambiar grupo actual"
 
-msgid "Change stored SmartState Docker password"
-msgstr "Cambia contraseña guardada de SmartState Docker"
-
-msgid "Change stored client key"
-msgstr "Cambiar clave de cliente almacenada"
-
 msgid "Change stored password"
 msgstr "Cambiar contraseña almacenada"
-
-msgid "Change stored private key"
-msgstr "Cambiar clave privada almacenada"
-
-msgid "Change stored secret access key"
-msgstr "Cambiar clave de acceso secreto almacenada"
-
-msgid "Change stored token"
-msgstr "Cambiar token almacenado"
 
 msgid "Changed from previous"
 msgstr "Se cambió del anterior."
@@ -8437,9 +8401,6 @@ msgstr "Elija el tipo de variables personalizadas para ser importadas"
 msgid "Choose transient storage"
 msgstr "Elegir almacenamiento transitorio"
 
-msgid "Choose>"
-msgstr "Elija>"
-
 msgid "Cidr"
 msgstr "Cidr"
 
@@ -8669,9 +8630,6 @@ msgstr "ID de cliente"
 
 msgid "Client Key"
 msgstr "Clave de cliente"
-
-msgid "Client Keys do not match"
-msgstr "Las claves de cliente no coinciden."
 
 msgid "Client Once"
 msgstr "Cliente una vez"
@@ -10610,13 +10568,13 @@ msgid "ConfigurationScriptBase|Payload"
 msgstr "ConfigurationScriptBase|Carga útil"
 
 msgid "ConfigurationScriptBase|Payload error"
-msgstr "ConfigurationScriptBase|Error de carga útil"
+msgstr "ConfigurationScriptBase |Error de carga útil"
 
 msgid "ConfigurationScriptBase|Payload type"
 msgstr "ConfigurationScriptBase|Tipo de carga útil"
 
 msgid "ConfigurationScriptBase|Payload valid"
-msgstr "ConfigurationScriptBase|Carga útil válida"
+msgstr "ConfigurationScriptBase |Carga útil válida"
 
 msgid "ConfigurationScriptBase|Region description"
 msgstr "ConfigurationScriptBase|Descripción de la región"
@@ -10870,23 +10828,11 @@ msgstr "ConfiguredSystem|Proveedor"
 msgid "ConfiguredSystem|Virtual instance ref"
 msgstr "Referencia de instancia virtual"
 
-msgid "Confirm %{password}"
-msgstr "Confirmar %{password}"
-
-msgid "Confirm Client Key"
-msgstr "Confirmar clave de cliente"
+msgid "Confirm"
+msgstr "Confirmar"
 
 msgid "Confirm Password"
 msgstr "Confirmar contraseña"
-
-msgid "Confirm Secret Access Key"
-msgstr "Confirmar clave de acceso secreto"
-
-msgid "Confirm SmartState Password"
-msgstr "Confirmar contraseña de SmartState"
-
-msgid "Confirm Token"
-msgstr "Confirmar token"
 
 msgid "Confirm password"
 msgstr "Confirmar contraseña"
@@ -10940,11 +10886,6 @@ msgstr "Consola no compatible"
 
 msgid "Console protocol %{protocol} is not supported"
 msgstr "El protocolo de consola %{protocol} no está soportado"
-
-msgid "Console userid and password fields are needed to perform validation."
-msgstr ""
-"Es necesario que los campos de ID de usuario y contraseña de la consola estén "
-"completos para ejecutar la validación."
 
 msgid "Console using HTML5"
 msgstr "Consola que usa HTML5"
@@ -15085,9 +15026,6 @@ msgid_plural "Database Locks"
 msgstr[0] "Bloqueo de base de datos"
 msgstr[1] "Bloqueos de base de datos"
 
-msgid "Database Name"
-msgstr "Nombre de la base de datos"
-
 msgid "Database Server Name"
 msgstr "Nombre de servidor de base de datos"
 
@@ -16545,9 +16483,6 @@ msgstr "Modo: Detalles"
 msgid "Detect"
 msgstr "Detectar"
 
-msgid "Detect Endpoint"
-msgstr "Detectar punto de conexión"
-
 msgid "Development"
 msgstr "Desarrollo"
 
@@ -16964,9 +16899,6 @@ msgstr "Inhabilitar inicio de sesión local"
 
 msgid "Disable a Schedule"
 msgstr "Inhabilitar un programación"
-
-msgid "Disable event monitoring."
-msgstr "Inhabilitar monitorización de eventos"
 
 msgid "Disable the selected Schedules"
 msgstr "Inhabilitar los programas seleccionados"
@@ -18139,6 +18071,9 @@ msgstr "Mostrar plataforma"
 msgid "Display Registry"
 msgstr "Mostrar registro"
 
+msgid "Display Request Logs"
+msgstr "Visualizar registros de solicitud"
+
 msgid "Display Service Catalog"
 msgstr "Mostrar catálogo de servicios"
 
@@ -18259,6 +18194,9 @@ msgstr "Mostrar datos de utilización"
 msgid "Display on Button"
 msgstr "Mostrar en botón"
 
+msgid "Display on button"
+msgstr "Mostrar en botón"
+
 msgid "Display tags"
 msgstr "Mostrar etiquetas"
 
@@ -18299,11 +18237,6 @@ msgid ""
 msgstr ""
 "¿Desea promover este servidor a primario? Esto reemplazará cualquier servidor "
 "primario existente para este rol."
-
-msgid "Docker Registry User Name and Password for SmartState Analysis on AWS"
-msgstr ""
-"Nombre de usuario y contraseña del registro de Docker para análisis SmartState"
-" en AWS"
 
 msgid "Docker Version"
 msgstr "Versión de Docker"
@@ -20601,9 +20534,6 @@ msgstr "Flujos de trabajo incorporados"
 msgid "Embedded Workflows Provider"
 msgstr "Proveedor de flujos de trabajo incorporados"
 
-msgid "Embededded Workflows"
-msgstr "Flujos de trabajo incorporados"
-
 msgid "Empty Dir Medium Type"
 msgstr "Tipo de medio de dirección vacío"
 
@@ -21017,14 +20947,6 @@ msgstr "Habilitar autenticación única (SSO)"
 msgid "Enable a Schedule"
 msgstr "Habilitar un programa"
 
-msgid ""
-"Enable event monitoring. Used to automatically resync state when changes are "
-"performed on VMware vCloud Director directly."
-msgstr ""
-"Habilitar monitorización de eventos. Utilizado para resincronizar el estado "
-"automáticamente cuando los cambios se realizan directamente en VMware vCloud "
-"Director."
-
 msgid "Enable the selected Schedules"
 msgstr "Habilitar los programas seleccionados"
 
@@ -21085,9 +21007,6 @@ msgstr "Niveles de ejecución habilitados"
 msgid "Enablement"
 msgstr "Activación"
 
-msgid "Enablement Expression"
-msgstr "Expresión de activación"
-
 msgid ""
 "Enablement and Visibility expressions can only be configured for buttons with "
 "\"Display for\" (previous tab) set to \"Single\""
@@ -21095,6 +21014,9 @@ msgstr ""
 "Las expresiones Habilitación y Visibilidad solo se pueden configurar para los "
 "botones con la pestaña \"Mostrar para\" (pestaña anterior) establecida como \""
 "Único\""
+
+msgid "Enablement expression"
+msgstr "Expresión de activación"
 
 msgid ""
 "Enables defining a URL path prefix for XCCDF file instead of accessing the "
@@ -25560,22 +25482,10 @@ msgstr "Nombre de equipo (o dirección IPv4 o IPv6)"
 msgid "Hostname (or IPv4 or IPv6 address:"
 msgstr "Nombre de host (o dirección IPv4 o IPv6:"
 
-msgid "Hostname or IP address"
-msgstr "Nombre de equipo o dirección IP"
-
 msgid ""
 "Hostname or IP address which corresponds to your Red Hat Satellite 6 server"
 msgstr ""
 "Nombre del host o dirección IP que corresponden a Red Hat Satellite 6 Server"
-
-msgid "Hostname or IPV4 or IPV6 address"
-msgstr "Nombre de host o dirección IPV4 o IPV6"
-
-msgid "Hostname or IPv4 or IPv6 address"
-msgstr "Nombre de host o dirección IPv4 o IPv6"
-
-msgid "Hostname or IPv4/IPv6 address"
-msgstr "Nombre de equipo o dirección IPv4/IPv6"
 
 msgid "Hosts"
 msgstr "Hosts"
@@ -26917,9 +26827,6 @@ msgstr "Credenciales SSO incorrectos"
 msgid "Invalid Stack"
 msgstr "Pila no válida"
 
-msgid "Invalid URL"
-msgstr "URL no válida"
-
 msgid "Invalid XML file contents detected."
 msgstr "Se detectó contenido de archivo XML no válido."
 
@@ -26934,9 +26841,6 @@ msgstr "Credenciales de autenticación no válidas"
 
 msgid "Invalid button action"
 msgstr "Acción de botón no válida"
-
-msgid "Invalid button action!"
-msgstr "Acción de botón no válida."
 
 msgid "Invalid chart definition"
 msgstr "Definición de diagrama no válido"
@@ -26966,9 +26870,6 @@ msgstr "Entrada no válida"
 
 msgid "Invalid input for \"wait_for_task\"."
 msgstr "Entrada no válida para \"wait_for_task\"."
-
-msgid "Invalid input format, please enter a GUID"
-msgstr "Formato de entrada no válido, ingrese un GUID"
 
 msgid "Invalid or unsupported file depot type."
 msgstr "Tipo de almacén de archivo no válido o no soportado."
@@ -28284,6 +28185,9 @@ msgstr "No se admite el inicio de sesión en la plataforma [%{os_name}]"
 
 msgid "Logout"
 msgstr "Cerrar sesión"
+
+msgid "Logs"
+msgstr "Logs"
 
 msgid "Logs for this %{product} Server are not available for viewing"
 msgstr "Los registros de este servidor de %{product} no se pueden visualizar"
@@ -29652,9 +29556,6 @@ msgstr[1] "Medición de máquinas virtuales"
 
 msgid "Metering for VMs"
 msgstr "Medición de máquinas virtuales"
-
-msgid "Method Inputs"
-msgstr "Método de entrada"
 
 msgid "Method for allocated metrics"
 msgstr "Método para métrica asignada"
@@ -33800,9 +33701,6 @@ msgstr ""
 msgid "Multiselect"
 msgstr "Selección múltiple"
 
-msgid "Must be a number (greater than 0)"
-msgstr "Debe ser un número (mayor que 0)"
-
 msgid "Must be a valid IPv4 address"
 msgstr "Debe ser una dirección IPv4 válida"
 
@@ -33982,12 +33880,6 @@ msgstr ""
 
 msgid "Namespace"
 msgstr "Espacio de nombre"
-
-msgid "Namespace Details"
-msgstr "Detalles del espacio de nombre"
-
-msgid "Namespaces"
-msgstr "Espacios de nombres"
 
 msgid "Naming"
 msgstr "Definición de nombre"
@@ -34625,9 +34517,6 @@ msgstr "Nunca"
 msgid "Never Verified"
 msgstr "Nunca verificado"
 
-msgid "New "
-msgstr "Nuevo "
-
 msgid "New Alert Profile \"%s\" has been successfully queued."
 msgstr "El nuevo perfil de alerta \"%s\" se ha puesto en cola correctamente."
 
@@ -34672,9 +34561,6 @@ msgstr "¿Nuevo nombre?"
 
 msgid "New object"
 msgstr "Nuevo objeto"
-
-msgid "New password"
-msgstr "Nueva contraseña"
 
 msgid "New section"
 msgstr "Nueva sección"
@@ -34798,9 +34684,6 @@ msgstr "No hay etiquetas asignadas"
 
 msgid "No Associations defined"
 msgstr "No hay asociaciones definidas"
-
-msgid "No Attribute/Value Pairs found"
-msgstr "No se encontraron pares de atributo/valor"
 
 msgid "No Attribute/Value Pairs found."
 msgstr "No se encontraron pares de atributo/valor."
@@ -35649,9 +35532,6 @@ msgstr ""
 "Nota: La cuota total se puede restringir por cuotas definidas en niveles "
 "superiores"
 
-msgid "Note: Username must be in the format: name@realm"
-msgstr "Nota: El nombre del usuario debe estar en el formato: name@realm"
-
 msgid "Notes"
 msgstr "Notas"
 
@@ -35938,6 +35818,9 @@ msgstr "Objeto"
 msgid "Object Attribute"
 msgstr "Atributo del objeto"
 
+msgid "Object Attribute 1"
+msgstr "Atributo de objeto 1"
+
 msgid "Object Attribute Name"
 msgstr "Nombre de atributo del objeto"
 
@@ -35994,6 +35877,9 @@ msgid ""
 msgstr ""
 "El atributo del objeto se debe especificar para copiar los detalles del objeto"
 " para usarlo en un botón"
+
+msgid "Object info"
+msgstr "Información del objeto"
 
 msgid "Object not found: [%{obj_name}]"
 msgstr "No se ha encontrado el objeto: [%{obj_name}]"
@@ -42713,17 +42599,11 @@ msgstr ""
 "Obligatorio, si la conexión SSH está inhabilitada para la cuenta "
 "predeterminada."
 
-msgid "Required information missing"
-msgstr "No se encuentra la información solicitada"
-
 msgid "Required key not specified: [%{key}]"
 msgstr "No se ha especificado la clave necesaria: [%{key}]"
 
 msgid "Required tag(s): %{names}"
 msgstr "Etiquetas necesarias: %{names}"
-
-msgid "Required. Used to gather Utilization data."
-msgstr "Obligatorio. Se utiliza para recopilar datos de utilización."
 
 msgid "Reserve"
 msgstr "Reserva"
@@ -43373,12 +43253,6 @@ msgstr "Retirar máquina virtual o instancia"
 
 msgid "Retire VMs"
 msgstr "Retirar máquinas virtuales"
-
-msgid "Retire not supported because VM is archived"
-msgstr "No se admite la retirada porque la máquina virtual está archivada"
-
-msgid "Retire not supported because VM is orphaned"
-msgstr "No se admite la retirada porque la máquina virtual es huérfana"
 
 msgid "Retire selected Orchestration Stacks"
 msgstr "Retirar las pilas de orquestación seleccionadas"
@@ -44233,9 +44107,6 @@ msgstr "Menú secundario"
 msgid "Secret Access Key"
 msgstr "Llave de acceso secreto"
 
-msgid "Secret Access Keys do not match"
-msgstr "Las claves de acceso secreto no coinciden"
-
 msgid "Secret Key"
 msgstr "Clave secreta"
 
@@ -44582,9 +44453,6 @@ msgstr "Seleccionar todos los días"
 msgid "Select All Hours"
 msgstr "Seleccionar todas las horas"
 
-msgid "Select Ceilometer if eventing is not enabled on AMQP."
-msgstr "Seleccionar Ceilometer si los eventos no están habilitados en AMQP."
-
 msgid "Select Classes to copy"
 msgstr "Seleccionar clases para copiar"
 
@@ -44602,9 +44470,6 @@ msgstr "Seleccionar formato"
 
 msgid "Select Group"
 msgstr "Seleccionar grupo"
-
-msgid "Select Host to validate against"
-msgstr "Seleccione un equipo para validarse"
 
 msgid "Select Instances to copy"
 msgstr "Seleccionar instancias para copiar"
@@ -45125,13 +44990,6 @@ msgstr ""
 "Se necesitan los datos de los campos de información del servidor, nombre de "
 "usuario y confirmación de contraseña para realizar la verificación de las "
 "credenciales"
-
-msgid ""
-"Server information, username and private key fields are needed to perform "
-"verification of credentials"
-msgstr ""
-"Se necesitan los datos de los campos de información del servidor, nombre de "
-"usuario y clave privada para realizar la verificación de las credenciales"
 
 msgid "Server is Master"
 msgstr "El servidor es maestro"
@@ -47290,15 +47148,6 @@ msgstr "Análisis de SmartState"
 msgid "SmartState Docker"
 msgstr "SmartState Docker"
 
-msgid "SmartState Docker Password"
-msgstr "Contraseña de SmartState Docker"
-
-msgid "SmartState Docker Passwords do not match"
-msgstr "Las contraseñas de SmartState Docker no coinciden"
-
-msgid "SmartState Docker User Name"
-msgstr "Nombre de usuario de SmartState Docker"
-
 msgid "Smartstate Analysis cannot be performed on selected Datastore"
 msgstr ""
 "No se puede realizar el análisis de Smartstate en el almacén de datos "
@@ -49081,6 +48930,9 @@ msgstr "Título de la ficha"
 msgid "Tab Title must be unique for this group"
 msgstr "El título de la ficha debe ser único para este grupo"
 
+msgid "Tab details not found."
+msgstr "No se han encontrado los detalles de la pestaña."
+
 msgid "Tabular View"
 msgstr "Vista tabular"
 
@@ -49303,6 +49155,9 @@ msgstr[1] "Plantillas e imágenes"
 msgid "Template is required, please select one from the list"
 msgstr "La plantilla es obligatoria; seleccione una de la lista"
 
+msgid "Template not orderable"
+msgstr "Plantilla no disponible"
+
 msgid "Template sealing is supported only for non-Windows OS."
 msgstr ""
 "El sellado de plantillas sólo está soportado para sistemas operativos que no "
@@ -49331,13 +49186,6 @@ msgstr "Inquilino"
 
 msgid "Tenant ID"
 msgstr "ID de inquilino"
-
-msgid ""
-"Tenant ID, Client ID and matching Client Key fields are needed to perform "
-"verification of credentials"
-msgstr ""
-"Se necesitan los campos ID de inquilino, ID del cliente y Clave del cliente "
-"para realizar la verificación de credenciales"
 
 msgid "Tenant Mapping Enabled"
 msgstr "Asignación de inquilino habilitada"
@@ -49675,6 +49523,9 @@ msgstr "La máquina virtual no tiene un estado de conexión válido."
 msgid "The VM is a template"
 msgstr "La máquina virtual es una plantilla"
 
+msgid "The VM is archived"
+msgstr "La máquina virtual está archivada"
+
 msgid "The VM is not connected to a Host"
 msgstr "La máquina virtual no está conectada a un host"
 
@@ -49689,6 +49540,9 @@ msgstr "La máquina virtual no está desactivada"
 
 msgid "The VM is not powered on"
 msgstr "La máquina virtual no está encendida"
+
+msgid "The VM is orphaned"
+msgstr "La máquina virtual está huérfana"
 
 msgid "The VM is powered on"
 msgstr "La VM está encendida en"
@@ -50446,9 +50300,6 @@ msgstr "Selector de hora"
 msgid "Timer"
 msgstr "Temporizador"
 
-msgid "Timer Options"
-msgstr "Opciones de temporizador"
-
 msgid "Timestamp"
 msgstr "Marca horaria"
 
@@ -50547,9 +50398,6 @@ msgstr "¿Alternar modo de mantenimiento para este ítem?"
 
 msgid "Token"
 msgstr "Token"
-
-msgid "Tokens do not match"
-msgstr "Los tokens no coinciden"
 
 msgid "Tools Status"
 msgstr "Estado de las herramientas"
@@ -52002,36 +51850,13 @@ msgstr ""
 msgid "Used for SSH login."
 msgstr "Se utiliza para el inicio de sesión SSH."
 
-msgid ""
-"Used for VMRC connections to all VMs on this provider. If not set, the VMRC "
-"console access will be disabled for this provider."
-msgstr ""
-"Utilizado para conexiones VMRC con todas las máquinas virtuales en este "
-"proveedor. Si no se han configurado, se desactivará el acceso a la consola de "
-"VMRC para este proveedor."
-
 msgid "Used for access to Web Services."
 msgstr "Usado para acceder a los Servicios Web"
-
-msgid "Used to authenticate as a service account against your provider."
-msgstr ""
-"Utilizado para autenticar como una cuenta de servicio contra su proveedor."
 
 msgid "Used to authenticate with Nuage AMQP Messaging Bus for event handling."
 msgstr ""
 "Utilizado para autenticar con Nuage AMQP Messaging Bus para el manejo de "
 "eventos."
-
-msgid ""
-"Used to authenticate with OpenStack AMQP Messaging Bus for event handling. "
-"Configure AMQP if eventing is not enabled on Ceilometer."
-msgstr ""
-"Utilizado para autenticar con OpenStack AMQP Messaging Bus para manipulación "
-"de eventos. Configurar AMQP si el creador de eventos no está habilitado en el "
-"ceilómetro."
-
-msgid "Used to gather Capacity & Utilization metrics."
-msgstr "Utilizado para obtener las métricas de capacidad y uso."
 
 msgid "User"
 msgid_plural "Users"
@@ -53274,9 +53099,6 @@ msgstr "Validar la configuración de Amazon"
 msgid "Validate the LDAP Settings by binding with the Host"
 msgstr "Validar los valores LDAP enlazando con el host"
 
-msgid "Validate the credentials"
-msgstr "Validar los credenciales"
-
 msgid "Validate the credentials by logging into the Server"
 msgstr "Validar los credenciales para el registro en el Servidor"
 
@@ -53439,9 +53261,6 @@ msgstr "Verificar certificado del mismo nivel"
 
 msgid "Verify SSL"
 msgstr "Verificar SSL"
-
-msgid "Verify TLS Certificates"
-msgstr "Verificar certificados TLS"
 
 msgid "Version"
 msgstr "Versión"
@@ -56101,9 +55920,6 @@ msgstr "Acierto de escritura (IOPS)"
 msgid "Written (KBps)"
 msgstr "Escrito (KBps)"
 
-msgid "Wrong hostname format"
-msgstr "Formato de nombre de host incorrecto"
-
 msgid "Wwpn Candidate"
 msgid_plural "Wwpn Candidates"
 msgstr[0] "WWPN candidato"
@@ -56127,7 +55943,7 @@ msgstr "WwpnCandidate|Descripción de región"
 msgid "WwpnCandidate|Region number"
 msgstr "WwpnCandidate|Número de región"
 
-msgid "XML View"
+msgid "Xml View"
 msgstr "Vista XML"
 
 msgid "Year"
@@ -56386,6 +56202,9 @@ msgstr "assigned_company_tag_parent_storage"
 
 msgid "at"
 msgstr "en"
+
+msgid "attribute_value_pair"
+msgstr "parte_valor_atributo"
 
 msgid "auth_validation"
 msgstr "auth_validation"
@@ -56850,11 +56669,6 @@ msgstr "un campo de clasificación desde la ficha Resumen."
 msgid "has to be unique per provider type"
 msgstr "Debe ser único por tipo de proveedor"
 
-msgid "hawkular URL and API port fields are needed to perform validation."
-msgstr ""
-"Se necesitan los campos de URL de hawkular y puerto de API para realizar la "
-"validación."
-
 msgid "host cannot be blank"
 msgstr "el host no puede estar en blanco"
 
@@ -56947,9 +56761,6 @@ msgstr "instantiate debe implementarse en una subclase"
 msgid "interval '%{interval}' is not supported"
 msgstr "no se admite el intervalo '%{interval}'"
 
-msgid "invalid button action"
-msgstr "acción de botón no válida"
-
 msgid "invalid interval name %{name}"
 msgstr "Nombre de intervalo %{name} no válido"
 
@@ -56975,11 +56786,6 @@ msgstr "la plantilla de tarea no se configuró"
 
 msgid "kubevirt"
 msgstr "kubevirt"
-
-msgid "kubevirt URL and API port fields are needed to perform validation."
-msgstr ""
-"Se necesita la URL de kubevirt y los campos de puerto API para realizar la "
-"validación."
 
 msgid "ldap"
 msgstr "ldap"
@@ -57119,6 +56925,12 @@ msgstr "Proveedor de OVirt"
 msgid "object %{name} is not one of %{items}"
 msgstr "objeto %{name} no es uno de %{items}"
 
+msgid "object_attribute"
+msgstr "atributo_objeto"
+
+msgid "object_details"
+msgstr "detalles_objeto"
+
 msgid "of %d page"
 msgid_plural "of %d pages"
 msgstr[0] "de %d página"
@@ -57236,11 +57048,6 @@ msgstr "processor_type"
 
 msgid "prometheus"
 msgstr "prometheus"
-
-msgid "prometheus URL and API port fields are needed to perform validation."
-msgstr ""
-"Se necesita la URL de Prometheus y los campos de puerto API para realizar la "
-"validación."
 
 msgid "prov_type cannot be changed"
 msgstr "prov_type no se puede modificar"
@@ -57548,6 +57355,9 @@ msgstr "la ejecución no está habilitada"
 msgid "run must be implemented in a subclass"
 msgstr "ejecutar debe implementarse en una subclase"
 
+msgid "run_button_summary"
+msgstr "resumen_botón_ejecutar"
+
 msgid "run_queue is not enabled"
 msgstr "run_queue no está habilitado"
 
@@ -57819,6 +57629,12 @@ msgstr "valor de relase mín. de PowerVC soportado está mal formado"
 
 msgid "vcpus"
 msgstr "Cpu virtuales"
+
+msgid "visibility"
+msgstr "visibilidad"
+
+msgid "visibility_expression"
+msgstr "expresión_visibilidad"
 
 msgid "vm does not belong to any host"
 msgstr "la máquina virtual no pertenece a ningún host"

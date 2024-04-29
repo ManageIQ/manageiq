@@ -32,8 +32,8 @@ gem "bootsnap",                         ">= 1.8.1",          :require => false #
 gem "bundler",                          "~> 2.1", ">= 2.1.4", "!= 2.2.10", :require => false
 gem "byebug",                                                :require => false
 gem "color",                            "~>1.8"
-gem "connection_pool",                                       :require => false # For Dalli
 gem "config",                           "~>2.2", ">=2.2.3",  :require => false
+gem "connection_pool",                                       :require => false # For Dalli
 gem "dalli",                            "~>3.2.3",           :require => false
 gem "default_value_for",                "~>3.3"
 gem "docker-api",                       "~>1.33.6",          :require => false
@@ -61,17 +61,17 @@ gem "net-ldap",                         "~>0.16.1",          :require => false
 gem "net-ping",                         "~>1.7.4",           :require => false
 gem "openscap",                         "~>0.4.8",           :require => false
 gem "optimist",                         "~>3.0",             :require => false
-gem "psych",                            ">=3.1",             :require => false # 3.1 safe_load changed positional to kwargs like aliases: true: https://github.com/ruby/psych/commit/4d4439d6d0adfcbd211ea295779315f1baa7dadd
 gem "pg",                               ">=1.4.1",           :require => false
 gem "pg-dsn_parser",                    "~>0.1.1",           :require => false
+gem "psych",                            ">=3.1",             :require => false # 3.1 safe_load changed positional to kwargs like aliases: true: https://github.com/ruby/psych/commit/4d4439d6d0adfcbd211ea295779315f1baa7dadd
 gem "query_relation",                   "~>0.1.0",           :require => false
 gem "rack",                             ">=2.2.6.4",         :require => false
 gem "rack-attack",                      "~>6.5.0",           :require => false
-gem "rails",                            "~>6.1.7", ">=6.1.7.6"
+gem "rails",                            "~>6.1.7", ">=6.1.7.7"
 gem "rails-i18n",                       "~>6.x"
 gem "rake",                             ">=12.3.3",          :require => false
 gem "rest-client",                      "~>2.1.0",           :require => false
-gem "ripper_ruby_parser",               "~>1.5.1",           :require => false
+gem "ripper_ruby_parser",               "~>1.11",            :require => false
 gem "ruby-progressbar",                 "~>1.7.0",           :require => false
 gem "rubyzip",                          "~>2.0.0",           :require => false
 gem "rugged",                           "~>1.5.0",           :require => false
@@ -257,7 +257,7 @@ group :seed, :manageiq_default do
 end
 
 group :smartstate, :manageiq_default do
-  gem "manageiq-smartstate",            "~>0.8.1",           :require => false
+  gem "manageiq-smartstate",            "~>0.9.0",           :require => false
 end
 
 group :consumption, :manageiq_default do
@@ -289,17 +289,19 @@ group :web_socket, :manageiq_default do
 end
 
 group :appliance, :optional => true do
-  gem "manageiq-appliance_console",     "~>8.1",             :require => false
+  gem "irb",                            "=1.4.1",            :require => false # Locked to same version as the installed RPM rubygem-irb-1.4.1-142.module_el9+787+b20bfeee.noarch so that we don't bundle our own
+  gem "manageiq-appliance_console",     "~>9.0", ">= 9.0.1", :require => false
+  gem "rdoc",                                                :require => false # Needed for rails console
 end
 
 ### Development and test gems are excluded from appliance and container builds to reduce size and license issues
 group :development do
   gem "foreman"
-  gem "manageiq-style",                                      :require => false
+  gem "manageiq-style",                 "~>1.5.0",           :require => false
   gem "PoParser"
   # ruby_parser is required for i18n string extraction
   gem "ruby_parser",                                         :require => false
-  gem "yard"
+  gem "yard",                           ">= 0.9.36"
 end
 
 group :test do

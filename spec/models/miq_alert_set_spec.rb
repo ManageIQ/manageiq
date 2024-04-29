@@ -10,7 +10,7 @@ RSpec.describe MiqAlertSet do
       expect(provider_profile.miq_alerts.first).to have_attributes(
         :guid               => "ea3acd49-9516-4fde-b828-bf68d254c0cf",
         :db                 => "ExtManagementSystem",
-        :responds_to_events => "datawarehouse_alert",
+        :responds_to_events => "datawarehouse_alert"
       )
       node_profile = MiqAlertSet.find_by(:guid => "ff0fb114-be03-4685-bebb-b6ae8f13d7ad")
       expect(node_profile).to have_attributes(:mode => "ContainerNode")
@@ -18,7 +18,7 @@ RSpec.describe MiqAlertSet do
       expect(node_profile.miq_alerts.first).to have_attributes(
         :guid               => "efe9d4f0-9c6f-4c67-80b1-05cd83223349",
         :db                 => "ContainerNode",
-        :responds_to_events => "datawarehouse_alert",
+        :responds_to_events => "datawarehouse_alert"
       )
     end
 
@@ -32,6 +32,7 @@ RSpec.describe MiqAlertSet do
     # Note: can the file you are moving cause sporadic failures in other threads?
     raise "no block given" unless block_given?
     raise "fname is blank" if fname.blank?
+
     tempf = Tempfile.new("temporary_backup")
     begin
       FileUtils.mv(fname, tempf.path)

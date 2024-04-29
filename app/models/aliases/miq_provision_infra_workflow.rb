@@ -1,1 +1,1 @@
-::MiqProvisionInfraWorkflow = ::ManageIQ::Providers::InfraManager::ProvisionWorkflow
+MiqProvisionInfraWorkflow = ManageIQ::Providers::InfraManager::ProvisionWorkflow

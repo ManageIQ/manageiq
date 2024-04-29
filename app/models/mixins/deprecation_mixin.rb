@@ -7,8 +7,8 @@ module DeprecationMixin
     def deprecate_belongs_to(old_belongs_to, new_belongs_to)
       deprecate_attribute_methods(old_belongs_to, new_belongs_to)
       ["_id", "_id=", "_id?"].each do |suffix|
-        define_method("#{old_belongs_to}#{suffix}") do |*args|
-          args.present? ? send("#{new_belongs_to}#{suffix}", *args) : send("#{new_belongs_to}#{suffix}")
+        define_method(:"#{old_belongs_to}#{suffix}") do |*args|
+          args.present? ? send(:"#{new_belongs_to}#{suffix}", *args) : send(:"#{new_belongs_to}#{suffix}")
         end
         Vmdb::Deprecation.deprecate_methods(self, "#{old_belongs_to}#{suffix}" => "#{new_belongs_to}#{suffix}")
       end

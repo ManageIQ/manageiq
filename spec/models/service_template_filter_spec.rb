@@ -24,13 +24,13 @@ RSpec.describe "Service Filter" do
 
   context "#include_service" do
     it "all service templates" do
-      @allowed_service_templates = %w(top middle vm_service)
+      @allowed_service_templates = %w[top middle vm_service]
       @request.create_request_tasks
       expect(@request.miq_request_tasks.count).to eql(5)
     end
 
     it "filter out the atomic service" do
-      @allowed_service_templates = %w(top middle)
+      @allowed_service_templates = %w[top middle]
       @request.create_request_tasks
       expect(@request.miq_request_tasks.count).to eql(2)
     end
@@ -42,7 +42,7 @@ RSpec.describe "Service Filter" do
     end
 
     it "filter out middle service" do
-      @allowed_service_templates = %w(top)
+      @allowed_service_templates = %w[top]
       @request.create_request_tasks
       expect(@request.miq_request_tasks.count).to eql(1)
     end

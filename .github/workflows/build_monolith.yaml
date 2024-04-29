@@ -3,6 +3,7 @@ on:
   repository_dispatch:
     types:
     - build
+  workflow_dispatch:
 jobs:
   build_monolith:
     if: github.repository_owner == 'ManageIQ'

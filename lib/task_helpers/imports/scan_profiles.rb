@@ -37,6 +37,7 @@ module TaskHelpers
 
         items.each do |item|
           next if item['filename']
+
           if item['guid'].nil?
             item['guid'] = SecureRandom.uuid
           end

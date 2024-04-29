@@ -42,7 +42,7 @@ class VimPerformanceTagValue
   }
 
   def initialize(options = {})
-    options.each { |k, v| public_send("#{k}=", v) }
+    options.each { |k, v| public_send(:"#{k}=", v) }
   end
 
   def self.build_from_performance_record(parent_perf, options = {})
@@ -58,13 +58,14 @@ class VimPerformanceTagValue
     ts = parent_perf.timestamp
     children = parent_perf.resource.vim_performance_state_association(ts, assoc).to_a
     return [] if children.empty?
+
     vim_performance_daily = parent_perf.kind_of?(VimPerformanceDaily)
     recs = get_metrics(children, ts, parent_perf.capture_interval_name, vim_performance_daily, options[:category])
 
     result = {}
     counts = {}
     association_type = nil
-    tag_cols = TAG_COLS.key?(parent_perf.resource_type.to_sym) ? TAG_COLS[parent_perf.resource_type.to_sym] : TAG_COLS[:default]
+    tag_cols = TAG_COLS.fetch(parent_perf.resource_type.to_sym) { TAG_COLS[:default] }
 
     perf_data = {}
     perf_data[:perf_recs] = recs
@@ -87,6 +88,7 @@ class VimPerformanceTagValue
         tag_names.each do |tag|
           next if tag.starts_with?("power_state")
           next if tag.starts_with?("folder_path")
+
           tag_cols.each do |c|
             value = perf.send(c)
             c = [c.to_s, tag].join(TAG_SEP).to_sym
@@ -126,7 +128,7 @@ class VimPerformanceTagValue
 
   def self.get_metrics(resources, timestamp, capture_interval_name, vim_performance_daily, category)
     if vim_performance_daily
-      MetricRollup.with_interval_and_time_range("hourly", (timestamp)..(timestamp+1.day)).where(:resource => resources)
+      MetricRollup.with_interval_and_time_range("hourly", timestamp..(timestamp + 1.day)).where(:resource => resources)
           .for_tag_names([[category, ""]]) # append trailing slash
     else
       Metric::Helper.class_for_interval_name(capture_interval_name).where(:resource => resources)
@@ -138,6 +140,7 @@ class VimPerformanceTagValue
 
   def self.tag_cols(name)
     return TAG_COLS[name.to_sym] if TAG_COLS.key?(name.to_sym)
+
     TAG_COLS[:default]
   end
 end # class VimPerformanceTagValue

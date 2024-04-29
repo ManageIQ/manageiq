@@ -51,9 +51,9 @@ class NetworkPort < ApplicationRecord
   end
 
   # Define all getters and setters for extra_attributes related virtual columns
-  %i(binding_virtual_interface_details binding_virtual_nic_type binding_profile extra_dhcp_opts
-     allowed_address_pairs fixed_ips).each do |action|
-	  define_method("#{action}=") do |value|
+  %i[binding_virtual_interface_details binding_virtual_nic_type binding_profile extra_dhcp_opts
+     allowed_address_pairs fixed_ips].each do |action|
+    define_method(:"#{action}=") do |value|
       extra_attributes_save(action, value)
     end
 
@@ -66,10 +66,10 @@ class NetworkPort < ApplicationRecord
 
   def extra_attributes_save(key, value)
     self.extra_attributes = {} if extra_attributes.blank?
-    self.extra_attributes[key] = value
+    extra_attributes[key] = value
   end
 
   def extra_attributes_load(key)
-    self.extra_attributes[key] unless extra_attributes.blank?
+    extra_attributes[key] if extra_attributes.present?
   end
 end

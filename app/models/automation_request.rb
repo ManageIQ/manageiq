@@ -47,6 +47,7 @@ class AutomationRequest < MiqRequest
     unless Zone.where(:name => zone_name).exists?
       raise ArgumentError, _("unknown zone %{zone_name}") % {:zone_name => zone_name}
     end
+
     zone_name
   end
 

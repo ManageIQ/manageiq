@@ -72,7 +72,7 @@ module RemoteConsole
 
     # Determine if the transmitter thread is alive or crashed
     def healthy?
-      %w(run sleep).include?(@transmitter.status)
+      %w[run sleep].include?(@transmitter.status)
     end
 
     private

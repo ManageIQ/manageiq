@@ -16,10 +16,10 @@ module Vmdb::Loggers
 
     class Formatter < ManageIQ::Loggers::Base::Formatter
       def call(severity, datetime, progname, msg)
-        msg = msg.sub(/Bearer(.*?)\"/, 'Bearer [FILTERED] "')
-        msg = msg.sub(/SharedKey(.*?)\"/, 'SharedKey [FILTERED] "')
+        msg = msg.sub(/Bearer(.*?)"/, 'Bearer [FILTERED] "')
+        msg = msg.sub(/SharedKey(.*?)"/, 'SharedKey [FILTERED] "')
         msg = msg.sub(/client_secret=(.*?)&/, "client_secret=[FILTERED]&")
-        msg = msg.sub(/apikey=(.*?)\"/, 'apikey=[FILTERED]"')
+        msg = msg.sub(/apikey=(.*?)"/, 'apikey=[FILTERED]"')
         super(severity, datetime, progname, msg)
       end
     end

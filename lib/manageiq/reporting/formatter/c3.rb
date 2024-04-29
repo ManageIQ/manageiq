@@ -97,6 +97,7 @@ module ManageIQ
             end
 
             return if mri.graph[:columns].blank?
+
             column = grouped_by_tag_category? ? mri.graph[:columns][0].split(/_+/)[0..-2].join('_') : mri.graph[:columns][0]
             format, options = javascript_format(column, nil)
             return unless format
@@ -116,7 +117,7 @@ module ManageIQ
         end
 
         def chart_is_stacked?
-          %w(StackedBar StackedColumn StackedArea).include?(mri.graph[:type])
+          %w[StackedBar StackedColumn StackedArea].include?(mri.graph[:type])
         end
 
         # change structure of chart JSON to performance chart with timeseries data

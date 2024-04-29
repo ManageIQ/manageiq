@@ -2,7 +2,7 @@ module ManageIQ
   module Reporting
     module Formatter
       class TimelineMessage
-        TIMELINE_TIME_COLUMNS = %w(created_on timestamp).freeze
+        TIMELINE_TIME_COLUMNS = %w[created_on timestamp].freeze
 
         def initialize(row, event, flags, db)
           @row, @event, @flags, @db = row, event, flags, db

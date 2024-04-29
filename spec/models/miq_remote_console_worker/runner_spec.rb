@@ -18,6 +18,7 @@ RSpec.describe MiqRemoteConsoleWorker::Runner do
       app.instance_variable_get(:@transmitter).kill
       loop do
         break if !app.instance_variable_get(:@transmitter).alive?
+
         sleep 0.1
       end
       subject.check_internal_thread

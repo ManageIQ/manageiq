@@ -32,6 +32,10 @@ class MiqTemplate < VmOrTemplate
     where(:type => subclasses_supporting(:provisioning).map(&:name)).active
   end
 
+  def self.filter_with_name(name)
+    where(arel_table[:name].matches("%#{name}%"))
+  end
+
   def self.without_volume_templates
     where.not(:type => ["ManageIQ::Providers::Openstack::CloudManager::VolumeTemplate",
                         "ManageIQ::Providers::Openstack::CloudManager::VolumeSnapshotTemplate"])

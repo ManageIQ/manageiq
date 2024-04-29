@@ -181,7 +181,7 @@ class Storage < ApplicationRecord
       :method_name  => 'smartstate_analysis',
       :args         => [miq_task_id],
       :msg_timeout  => self.class.scan_collection_timeout,
-      :miq_callback => cb,
+      :miq_callback => cb
     )
   end
 
@@ -311,7 +311,7 @@ class Storage < ApplicationRecord
   end
 
   def self.create_scan_task(task_name, userid, storages)
-    context_data = {:targets  => storages.collect(&:id).sort, :complete => [], :pending  => {}}
+    context_data = {:targets => storages.collect(&:id).sort, :complete => [], :pending => {}}
     miq_task     = MiqTask.create(
       :name         => task_name,
       :state        => MiqTask::STATE_QUEUED,
@@ -483,6 +483,7 @@ class Storage < ApplicationRecord
 
   def qmessage?(method_name)
     return false if $_miq_worker_current_msg.nil?
+
     ($_miq_worker_current_msg.class_name == self.class.name) && ($_miq_worker_current_msg.instance_id = id) && ($_miq_worker_current_msg.method_name == method_name)
   end
 
@@ -553,9 +554,8 @@ class Storage < ApplicationRecord
     host_ids = hosts.collect(&:id)
     return {} if host_ids.empty?
 
-    Vm.where(:host_id => host_ids).includes(:storage).inject({}) do |h, v|
+    Vm.where(:host_id => host_ids).includes(:storage).each_with_object({}) do |v, h|
       h[File.dirname(v.path)] = v.id
-      h
     end
   end
 
@@ -563,6 +563,7 @@ class Storage < ApplicationRecord
   def self.get_common_refresh_targets(storages)
     storages = Array.wrap(storages)
     return [] if storages.empty?
+
     storages = find(storages) unless storages[0].kind_of?(Storage)
 
     objs = storages.collect do |s|
@@ -737,7 +738,7 @@ class Storage < ApplicationRecord
         ['registered', 'unregistered'].each do |mode|
           attrs["derived_storage_used_#{mode}".to_sym] ||= 0
 
-          send("#{mode}_vms").each do |vm|
+          send(:"#{mode}_vms").each do |vm|
             vm_attrs = {:capture_interval => interval, :resource_name => vm.name}
             vm_attrs[:derived_storage_vm_count_managed] = 1
             vm_attrs["derived_storage_vm_count_#{mode}".to_sym] = 1

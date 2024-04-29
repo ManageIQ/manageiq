@@ -61,7 +61,7 @@ RSpec.describe ServiceTemplateAnsiblePlaybook do
   end
 
   let(:catalog_item_options_three) do
-    changed_items = { :name        => 'test_update_ansible_item',
+    changed_items = {:name        => 'test_update_ansible_item',
                       :description => 'test updated ansible item',
                       :config_info => {
                         :provision => {
@@ -126,7 +126,7 @@ RSpec.describe ServiceTemplateAnsiblePlaybook do
 
     context 'with remove_resources in retirement option' do
       it 'sets the corresponding entry point' do
-        %w(yes_without_playbook no_without_playbook no_with_playbook pre_with_playbook post_with_playbook).each do |opt|
+        %w[yes_without_playbook no_without_playbook no_with_playbook pre_with_playbook post_with_playbook].each do |opt|
           opts = described_class.send(:validate_config_info, :retirement => {:remove_resources => opt})
           expect(opts[:retirement][:fqname]).to eq(described_class.const_get(:RETIREMENT_ENTRY_POINTS)[opt])
         end

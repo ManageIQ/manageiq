@@ -121,6 +121,7 @@ class MiqServer::ServerMonitor
         parent.miq_servers.each do |s|
           next unless s.status == 'started'
           next if     s.is_master?
+
           @last_servers[s.id] = {:last_hb_change => Time.now.utc, :record => s}
         end
 

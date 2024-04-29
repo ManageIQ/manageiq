@@ -26,12 +26,12 @@ class DialogField < ApplicationRecord
   alias_attribute :order, :position
 
   validates_presence_of   :name
-  validates :name, :exclusion => {:in      => %w(action controller),
+  validates :name, :exclusion => {:in      => %w[action controller],
                                   :message => "Field Name %{value} is reserved."}
 
   default_value_for :required, false
   default_value_for(:visible) { true }
-  validates :visible, inclusion: { in: [ true, false ] }
+  validates :visible, inclusion: {in: [true, false]}
   default_value_for :load_values_on_init, true
 
   serialize :values
@@ -70,7 +70,7 @@ class DialogField < ApplicationRecord
     "DialogFieldRadioButton"     => N_("Radio Button")
   }
 
-  DIALOG_FIELD_DYNAMIC_CLASSES = %w(
+  DIALOG_FIELD_DYNAMIC_CLASSES = %w[
     DialogFieldCheckBox
     DialogFieldDateControl
     DialogFieldDateTimeControl
@@ -78,7 +78,7 @@ class DialogField < ApplicationRecord
     DialogFieldRadioButton
     DialogFieldTextAreaBox
     DialogFieldTextBox
-  )
+  ]
 
   def self.dialog_field_types
     DIALOG_FIELD_TYPES
@@ -151,7 +151,7 @@ class DialogField < ApplicationRecord
   def update_dialog_field_responders(id_list)
     dialog_field_responders.destroy_all
 
-    self.dialog_field_responders = available_dialog_field_responders(id_list) unless id_list.blank?
+    self.dialog_field_responders = available_dialog_field_responders(id_list) if id_list.present?
   end
 
   def deep_copy

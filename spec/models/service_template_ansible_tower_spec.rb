@@ -32,7 +32,7 @@ RSpec.describe ServiceTemplateAnsibleTower do
       expect(service_template.name).to eq('Ansible Tower')
       expect(service_template.service_resources.count).to eq(1)
       expect(service_template.dialogs.first).to eq(service_dialog)
-      expect(service_template.resource_actions.pluck(:action)).to match_array(%w(Provision Retirement))
+      expect(service_template.resource_actions.pluck(:action)).to match_array(%w[Provision Retirement])
       expect(service_template.job_template).to eq(configuration_script)
       expect(service_template.config_info).to eq(catalog_item_options[:config_info])
     end
@@ -46,7 +46,7 @@ RSpec.describe ServiceTemplateAnsibleTower do
     end
 
     it 'accepts a configuration' do
-      catalog_item_options[:config_info] = { :configuration => configuration_script }
+      catalog_item_options[:config_info] = {:configuration => configuration_script}
       service_template = ServiceTemplateAnsibleTower.create_catalog_item(catalog_item_options)
 
       expect(service_template.job_template).to eq(configuration_script)
@@ -84,7 +84,7 @@ RSpec.describe ServiceTemplateAnsibleTower do
       expect(updated.name).to eq('Updated Ansible Tower')
       expect(updated.config_info).to eq(updated_catalog_item_options[:config_info])
       expect(updated.job_template).to eq(new_configuration_script)
-      expect(updated.resource_actions.pluck(:action)).to match_array(%w(Provision Reconfigure))
+      expect(updated.resource_actions.pluck(:action)).to match_array(%w[Provision Reconfigure])
     end
 
     it 'requires a configuration or configuration_script_id' do
@@ -115,7 +115,7 @@ RSpec.describe ServiceTemplateAnsibleTower do
       job_template = FactoryBot.create(:configuration_script)
       service_template = FactoryBot.create(:service_template_ansible_tower, :job_template => job_template)
       ra = FactoryBot.create(:resource_action, :action => 'Provision', :fqname => '/a/b/c')
-      service_template.create_resource_actions(:provision => { :fqname => ra.fqname })
+      service_template.create_resource_actions(:provision => {:fqname => ra.fqname})
 
       expected_config_info = {
         :configuration_script_id => job_template.id,

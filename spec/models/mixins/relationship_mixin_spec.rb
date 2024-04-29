@@ -363,7 +363,7 @@ RSpec.describe RelationshipMixin do
       it "#parent=" do
         service6 = ancestry_class.create
         service6.update(:parent => service1)
-        expect(service2.with_relationship_type("custom") { service2.parent=(service6) }).to eq(service6)
+        expect(service2.with_relationship_type("custom") { service2.parent = (service6) }).to eq(service6)
         service2.save!
         expect(service6.with_relationship_type("custom") { service6.child_ids }).to eq([service2.id])
       end

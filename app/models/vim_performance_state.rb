@@ -28,7 +28,7 @@ class VimPerformanceState < ApplicationRecord
     :vm_used_disk_storage
   ].each do |m|
     define_method(m)       { state_data[m] }
-    define_method("#{m}=") { |value| state_data[m] = value }
+    define_method(:"#{m}=") { |value| state_data[m] = value }
   end
 
   # state_data:
@@ -177,6 +177,7 @@ class VimPerformanceState < ApplicationRecord
     if hardware
       self.allocated_disk_types = hardware.disks.each_with_object({}) do |disk, res|
         next if disk.size.nil?
+
         type = disk.backing.try(:volume_type) || 'unclassified'
         res[type] = (res[type] || 0) + disk.size
       end
@@ -189,7 +190,7 @@ class VimPerformanceState < ApplicationRecord
   end
 
   def capture_total(field)
-    return resource.send("aggregate_#{field}") if resource.respond_to?("aggregate_#{field}")
+    return resource.send(:"aggregate_#{field}") if resource.respond_to?(:"aggregate_#{field}")
 
     field == :memory ? hardware.try(:memory_mb) : hardware.try(:aggregate_cpu_speed)
   end
@@ -278,7 +279,7 @@ class VimPerformanceState < ApplicationRecord
   def capture_vm_disk_storage
     if resource.kind_of?(VmOrTemplate)
       [:used_disk, :allocated_disk].each do |type|
-        send("vm_#{type}_storage=", resource.send("#{type}_storage"))
+        send(:"vm_#{type}_storage=", resource.send(:"#{type}_storage"))
       end
     end
   end

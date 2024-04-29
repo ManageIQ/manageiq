@@ -30,7 +30,7 @@ RSpec.describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
     end
 
     it "should retrieve cloud-init templates when cloning" do
-      options = {'key' => 'value' }
+      options = {'key' => 'value'}
 
       result = workflow.allowed_customization_templates(options)
       customization_template = workflow.instance_variable_get(:@values)[:customization_template_script]
@@ -38,13 +38,13 @@ RSpec.describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
 
       expect(customization_template).to eq cloud_init_template.script
       expect(template_hash).to be_a(Hash)
-      %i(id name description).each do |attr|
+      %i[id name description].each do |attr|
         expect(template_hash[attr]).to eq cloud_init_template.send(attr)
       end
     end
 
     it "should retrieve sysprep templates when cloning" do
-      options = {'key' => 'value' }
+      options = {'key' => 'value'}
       allow(sysprep_workflow).to receive(:supports_sysprep?).and_return(true)
       allow(sysprep_workflow).to receive(:load_ar_obj).and_return(template)
       allow(template).to receive(:platform).and_return('windows')
@@ -55,7 +55,7 @@ RSpec.describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
 
       expect(customization_template).to eq sysprep_template.script
       expect(template_hash).to be_a(Hash)
-      %i(id name description).each do |attr|
+      %i[id name description].each do |attr|
         expect(template_hash[attr]).to eq sysprep_template.send(attr)
       end
     end

@@ -160,12 +160,12 @@ RSpec.describe MiqRequest do
           end
 
           it "approval_state denied" do
-            provision_request.approval_state  = 'denied'
+            provision_request.approval_state = 'denied'
             expect(provision_request.request_status).to eq('Error')
           end
 
           it "approval_state pending_approval" do
-            provision_request.approval_state  = 'pending_approval'
+            provision_request.approval_state = 'pending_approval'
             expect(provision_request.request_status).to eq('Unknown')
           end
         end
@@ -263,7 +263,7 @@ RSpec.describe MiqRequest do
         end
 
         describe ".with_reason_like" do
-          let(:reason) { %w(abcd abcde cde) }
+          let(:reason) { %w[abcd abcde cde] }
           subject { described_class.with_reason_like(pattern).count }
 
           before { request.miq_approvals = approvals }

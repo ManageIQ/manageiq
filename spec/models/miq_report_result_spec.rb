@@ -103,7 +103,7 @@ RSpec.describe MiqReportResult do
 
       @report_theme = 'miq'
       @show_title   = true
-      @options = MiqReport.graph_options({ :title => "CPU (Mhz)", :type => "Line", :columns => ["col"] })
+      @options = MiqReport.graph_options({:title => "CPU (Mhz)", :type => "Line", :columns => ["col"]})
 
       allow(ManageIQ::Reporting::Charting).to receive(:detect_available_plugin).and_return(ManageIQ::Reporting::C3Charting)
     end
@@ -131,7 +131,7 @@ RSpec.describe MiqReportResult do
       report_result = rpt.build_create_results(:userid => "test")
 
       report_result.report
-      report_result.report.extras[:grouping] = { "extra data" => "not saved" }
+      report_result.report.extras[:grouping] = {"extra data" => "not saved"}
       report_result.save
 
       result_reload = MiqReportResult.last
@@ -220,7 +220,7 @@ RSpec.describe MiqReportResult do
     end
 
     it "can serialize and deserialize a CSV" do
-      csv = CSV.generate { |c| c << %w(foo bar) << %w(baz qux) }
+      csv = CSV.generate { |c| c << %w[foo bar] << %w[baz qux] }
       report_result = described_class.new
 
       report_result.report_results = csv
@@ -229,16 +229,16 @@ RSpec.describe MiqReportResult do
     end
 
     it "can serialize and deserialize a plain text report" do
-      txt = <<EOF
-+--------------+
-|  Foo Report  |
-+--------------+
-| Foo  | Bar   |
-+--------------+
-| baz  | qux   |
-| quux | corge |
-+--------------+
-EOF
+      txt = <<~EOF
+        +--------------+
+        |  Foo Report  |
+        +--------------+
+        | Foo  | Bar   |
+        +--------------+
+        | baz  | qux   |
+        | quux | corge |
+        +--------------+
+      EOF
       report_result = described_class.new
 
       report_result.report_results = txt
@@ -259,6 +259,40 @@ EOF
         {:userid => u1.userid, :count => 2},
         {:userid => u2.userid, :count => 1}
       ])
+    end
+  end
+
+  describe "#to_pdf" do
+    let(:user)   { FactoryBot.create(:user) }
+    let(:report) { FactoryBot.create(:miq_report, :title => report_title) }
+    let(:report_result) do
+      FactoryBot.create(:miq_report_result, :name => report.title, :miq_report_id => report.id, :report => report, :userid => user.userid)
+    end
+
+    context "with a normal report" do
+      let(:report_title) { "VMs using thin provisioned disks" }
+      let(:pdf_title)    { report_title }
+
+      it "renders the report" do
+        expect(PdfGenerator).to receive(:pdf_from_string).with(<<~EOHTML.chomp, "pdf_report.css")
+          <head><style>@page{size: a4 landscape}@page{margin: 40pt 30pt 40pt 30pt}@page{@top{content: '#{pdf_title}';color:blue}}@page{@bottom-center{font-size: 75%;content: 'Report date: '}}@page{@bottom-right{font-size: 75%;content: 'Page  ' counter(page) ' of  ' counter(pages)}}</style></head><table class="table table-striped table-bordered "><thead><tr><tbody></tbody></table>
+        EOHTML
+
+        report_result.to_pdf
+      end
+    end
+
+    context "with a report with single quotes in the name" do
+      let(:report_title) { "Fred's VMs using thin provisioned disks" }
+      let(:pdf_title)    { "Fred\\'s VMs using thin provisioned disks" }
+
+      it "renders the report" do
+        expect(PdfGenerator).to receive(:pdf_from_string).with(<<~EOHTML.chomp, "pdf_report.css")
+          <head><style>@page{size: a4 landscape}@page{margin: 40pt 30pt 40pt 30pt}@page{@top{content: '#{pdf_title}';color:blue}}@page{@bottom-center{font-size: 75%;content: 'Report date: '}}@page{@bottom-right{font-size: 75%;content: 'Page  ' counter(page) ' of  ' counter(pages)}}</style></head><table class="table table-striped table-bordered "><thead><tr><tbody></tbody></table>
+        EOHTML
+
+        report_result.to_pdf
+      end
     end
   end
 end

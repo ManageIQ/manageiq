@@ -6,7 +6,7 @@ class Picture < ApplicationRecord
 
   virtual_has_one :image_href, :class_name => "String"
 
-  URL_ROOT          = Rails.root.join("public").to_s.freeze
+  URL_ROOT          = Rails.public_path.to_s.freeze
   DEFAULT_DIRECTORY = File.join(URL_ROOT, "pictures").freeze
 
   def self.directory
@@ -50,6 +50,7 @@ class Picture < ApplicationRecord
   def basename
     @basename ||= begin
       raise _("must have a numeric id") unless id.kind_of?(Numeric)
+
       "#{id}.#{extension}"
     end
   end

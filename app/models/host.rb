@@ -405,13 +405,16 @@ class Host < ApplicationRecord
   def arch
     if vmm_product.to_s.include?('ESX')
       return 'x86_64' if vmm_version.to_i >= 4
+
       return 'x86'
     end
 
     return "unknown" unless hardware && !hardware.cpu_type.nil?
+
     cpu = hardware.cpu_type.to_s.downcase
     return cpu if cpu.include?('x86')
     return "x86" if cpu.starts_with?("intel")
+
     "unknown"
   end
 
@@ -566,7 +569,7 @@ class Host < ApplicationRecord
   end
 
   def owning_folder
-    detect_ancestor(:of_type => "EmsFolder") { |a| !a.kind_of?(Datacenter) && !%w(host vm).include?(a.name) }
+    detect_ancestor(:of_type => "EmsFolder") { |a| !a.kind_of?(Datacenter) && !%w[host vm].include?(a.name) }
   end
 
   def parent_datacenter
@@ -585,12 +588,13 @@ class Host < ApplicationRecord
     _log.info("for host [#{id}] host saved")
   rescue => err
     _log.log_backtrace(err)
-    return false
+    false
   end
 
   def self.batch_update_authentication(host_ids, creds = {})
     errors = []
     return true if host_ids.blank?
+
     host_ids.each do |id|
       begin
         host = Host.find(id)
@@ -663,7 +667,7 @@ class Host < ApplicationRecord
 
   def verify_credentials_with_ssh(auth_type = nil, options = {})
     raise MiqException::MiqHostError, _("No credentials defined") if missing_credentials?(auth_type)
-    unless os_image_name =~ /linux_*/
+    unless /linux_*/.match?(os_image_name)
       raise MiqException::MiqHostError, _("Logon to platform [%{os_name}] not supported") % {:os_name => os_image_name}
     end
 
@@ -759,13 +763,16 @@ class Host < ApplicationRecord
       sb = ssu.shell_exec("esxupdate query")
       t = Time.now
       sb.each_line do |line|
-        next if line =~ /-{5,}/ # skip any header/footer rows
+        next if /-{5,}/.match?(line) # skip any header/footer rows
+
         data = line.split(" ")
         # Find the lines we should skip
         begin
           next if data[1, 2].nil?
+
           dhash = {:name => data[0], :vendor => "VMware", :installed_on => Time.parse(data[1, 2].join(" ")).utc}
           next if dhash[:installed_on] - t >= 0
+
           dhash[:description] = data[3..-1].join(" ") unless data[3..-1].nil?
           patches << dhash
         rescue ArgumentError => err
@@ -842,6 +849,7 @@ class Host < ApplicationRecord
       la = line.split(' ')
       if la.length == 2
         next if la.first[0, 1] == '#'
+
         self.ssh_permit_root_login = la.last.to_s.downcase
         break
       end
@@ -868,7 +876,7 @@ class Host < ApplicationRecord
         if ipmi.connected?
           self.power_state = ipmi.power_state
           mac = ipmi.mac_address
-          self.mac_address = mac unless mac.blank?
+          self.mac_address = mac if mac.present?
 
           hw_info = {:manufacturer => ipmi.manufacturer, :model => ipmi.model}
           if hardware.nil?
@@ -886,7 +894,8 @@ class Host < ApplicationRecord
   end
 
   def ipmi_config_valid?(include_mac_addr = false)
-    return false unless (ipmi_address.present? && has_credentials?(:ipmi))
+    return false unless ipmi_address.present? && has_credentials?(:ipmi)
+
     include_mac_addr == true ? mac_address.present? : true
   end
   alias_method :ipmi_enabled, :ipmi_config_valid?
@@ -927,6 +936,7 @@ class Host < ApplicationRecord
 
   def firewall_rules
     return [] if operating_system.nil?
+
     operating_system.firewall_rules
   end
 
@@ -1277,7 +1287,8 @@ class Host < ApplicationRecord
 
   def domain
     names = hostname.to_s.split(',').first.to_s.split('.')
-    return names[1..-1].join('.') unless names.blank?
+    return names[1..-1].join('.') if names.present?
+
     nil
   end
 
@@ -1339,10 +1350,11 @@ class Host < ApplicationRecord
     return values if function.nil?
 
     case function.to_sym
-    when :min, :max then return values.send(function)
+    when :min, :max then values.send(function)
     when :avg
       return 0 if values.length == 0
-      return (values.compact.sum / values.length)
+
+      (values.compact.sum / values.length)
     else
       raise _("Function %{function} is invalid, should be one of :min, :max, :avg or nil") % {:function => function}
     end
@@ -1420,11 +1432,10 @@ class Host < ApplicationRecord
   end
 
   def verbose_supports?(feature, description = nil)
-    supports?(feature).tap do |value|
-      unless value
-        description ||= feature.to_s.humanize(:capitalize => false)
-        _log.warn("Cannot #{description} because <#{unsupported_reason(feature)}>")
-      end
+    if (reason = unsupported_reason(feature))
+      description ||= feature.to_s.humanize(:capitalize => false)
+      _log.warn("Cannot #{description} because <#{reason}>")
     end
+    !reason
   end
 end

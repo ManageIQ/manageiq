@@ -32,7 +32,7 @@ RSpec.describe MiqReport::Formatters::Csv do
 
     context "hidden columns" do
       let(:col_options) do
-        { 'name' => {:hidden => true}, 'file_version' => {:hidden => true} }
+        {'name' => {:hidden => true}, 'file_version' => {:hidden => true}}
       end
 
       let(:csv_output) do
@@ -62,8 +62,8 @@ RSpec.describe MiqReport::Formatters::Csv do
         end
 
         context "first column starts with '#{prefix}' with '(' present" do
-          let(:name_1)     { %Q{#{prefix}HYPERLINK("example.com/vm/B1","Link to B1")}  }
-          let(:csv_name_1) { %Q{"'#{prefix}HYPERLINK(""example.com/vm/B1"",""Link to B1"")"} }
+          let(:name_1)     { %{#{prefix}HYPERLINK("example.com/vm/B1","Link to B1")}  }
+          let(:csv_name_1) { %{"'#{prefix}HYPERLINK(""example.com/vm/B1"",""Link to B1"")"} }
 
           it "escapes the column data" do
             expect(miq_report_filesystem.to_csv).to eq(csv_output)

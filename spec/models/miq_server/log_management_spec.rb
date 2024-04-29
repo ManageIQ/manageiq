@@ -96,32 +96,32 @@ RSpec.describe MiqServer do
 
       it "pg_data_dir set" do
         allow(@miq_server).to receive_messages(:pg_data_dir => '/var/lib/pgsql/data')
-        expected = %w(/var/lib/pgsql/data/*.conf /var/lib/pgsql/data/log/* /etc/manageiq/postgresql.conf.d/*)
+        expected = %w[/var/lib/pgsql/data/*.conf /var/lib/pgsql/data/log/* /etc/manageiq/postgresql.conf.d/*]
         expect(@miq_server.pg_log_patterns.collect(&:to_s)).to match_array expected
       end
     end
 
     it "#current_log_patterns" do
-      stub_settings(:log => {:collection => {:current => {:pattern => %w(/var/log/syslog*)}}})
-      allow(@miq_server).to receive_messages(:pg_log_patterns => %w(/var/lib/pgsql/data/*.conf))
-      expect(@miq_server.current_log_patterns).to match_array %w(/var/log/syslog* /var/lib/pgsql/data/*.conf)
+      stub_settings(:log => {:collection => {:current => {:pattern => %w[/var/log/syslog*]}}})
+      allow(@miq_server).to receive_messages(:pg_log_patterns => %w[/var/lib/pgsql/data/*.conf])
+      expect(@miq_server.current_log_patterns).to match_array %w[/var/log/syslog* /var/lib/pgsql/data/*.conf]
     end
 
     it "#current_log_patterns with pg_logs duplicated in current_log_pattern_configuration" do
       stub_settings(
-        :log => {:collection => {:current => {:pattern => %w(/var/log/syslog* /var/lib/pgsql/data/*.conf)}}})
-      allow(@miq_server).to receive_messages(:pg_log_patterns => %w(/var/lib/pgsql/data/*.conf))
-      expect(@miq_server.current_log_patterns).to match_array %w(/var/log/syslog* /var/lib/pgsql/data/*.conf)
+        :log => {:collection => {:current => {:pattern => %w[/var/log/syslog* /var/lib/pgsql/data/*.conf]}}})
+      allow(@miq_server).to receive_messages(:pg_log_patterns => %w[/var/lib/pgsql/data/*.conf])
+      expect(@miq_server.current_log_patterns).to match_array %w[/var/log/syslog* /var/lib/pgsql/data/*.conf]
     end
 
     context "post current/historical/models/dialogs" do
       let(:task)                      { FactoryBot.create(:miq_task) }
-      let(:compressed_log_patterns)   { [Rails.root.join("log", "evm*.log.gz").to_s] }
-      let(:current_log_patterns)      { [Rails.root.join("log", "evm.log").to_s] }
+      let(:compressed_log_patterns)   { [Rails.root.join("log/evm*.log.gz").to_s] }
+      let(:current_log_patterns)      { [Rails.root.join("log/evm.log").to_s] }
       let(:compressed_evm_log)        { Rails.root.join("evm.log-20180319.gz").to_s }
       let(:log_start)                 { Time.zone.parse("2018-05-11 11:33:12 UTC") }
       let(:log_end)                   { Time.zone.parse("2018-05-11 15:34:16 UTC") }
-      let(:daily_log)                 { Rails.root.join("data", "user", "system", "evm_server_daily.zip").to_s }
+      let(:daily_log)                 { Rails.root.join("data/user/system/evm_server_daily.zip").to_s }
       let(:log_depot)                 { FactoryBot.create(:file_depot) }
       let(:region)                    { MiqRegion.my_region }
       let(:zone)                      { @miq_server.zone }
@@ -134,19 +134,19 @@ RSpec.describe MiqServer do
         allow(@miq_server).to receive(:current_log_patterns).and_return(current_log_patterns)
         allow(@miq_server).to receive(:backup_automate_dialogs)
         allow(@miq_server).to receive(:backup_automate_models)
-        %w(historical_logfile current_logfile).each do |kind|
+        %w[historical_logfile current_logfile].each do |kind|
           logfile = FactoryBot.create(:log_file, :historical => kind == "historical_logfile")
           allow(logfile).to receive(:upload)
           allow(LogFile).to receive(kind).and_return(logfile)
         end
       end
 
-      %w(
+      %w[
         Archive post_historical_logs
         Current post_current_logs
         Models post_automate_models
         Dialogs post_automate_dialogs
-      ).each_slice(2) do |name, method|
+      ].each_slice(2) do |name, method|
         it "##{method}" do
           logfile = nil
 
@@ -186,7 +186,7 @@ RSpec.describe MiqServer do
           expect(task.reload).to have_attributes(
             :message => "#{name} log files from #{@miq_server.name} #{@miq_server.zone.name} MiqServer #{@miq_server.id} are posted",
             :state   => "Active",
-            :status  => "Ok",
+            :status  => "Ok"
           )
         end
       end

@@ -97,7 +97,7 @@ RSpec.describe MiqWidgetSet do
     end
 
     it "works with HashWithIndifferentAccess set_data" do
-      widget_set = MiqWidgetSet.create(:set_data => HashWithIndifferentAccess.new({:col1 => []}))
+      widget_set = MiqWidgetSet.create(:set_data => ActiveSupport::HashWithIndifferentAccess.new({:col1 => []}))
 
       expect(widget_set.errors[:set_data]).to include("One widget must be selected(set_data)")
     end

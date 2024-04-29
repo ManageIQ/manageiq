@@ -26,6 +26,7 @@ class GuestApplication < ApplicationRecord
 
   def v_unique_name
     return name if arch.blank? || arch == "noarch"
+
     "#{name} (#{arch})"
   end
 end

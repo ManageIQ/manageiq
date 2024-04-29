@@ -12,7 +12,7 @@ begin
 
   Vmdb::FastGettextHelper.register_locales
   Vmdb::FastGettextHelper.register_human_localenames
-  gettext_options = %w(--sort-by-msgid --location --no-wrap)
+  gettext_options = %w[--sort-by-msgid --location --no-wrap]
   Rails.application.config.gettext_i18n_rails.msgmerge = gettext_options + ["--no-fuzzy-matching"]
   Rails.application.config.gettext_i18n_rails.xgettext = gettext_options + ["--add-comments=TRANSLATORS"]
 

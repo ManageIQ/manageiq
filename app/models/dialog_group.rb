@@ -39,6 +39,7 @@ class DialogGroup < ApplicationRecord
 
     dialog_fields.each do |df|
       next if df.valid?
+
       df.errors.full_messages.each do |err_msg|
         errors.add(:base, _("Box %{box_label} / %{error_message}") % {:box_label => label, :error_message => err_msg})
       end

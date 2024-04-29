@@ -21,7 +21,7 @@ module ManageIQ
               unless ["<compare>", "<drift>"].include?(mri.db)
                 data = mri.format(f,
                                   r[f],
-                                  :format => mri.col_formats[i] ? mri.col_formats[i] : :_default_,
+                                  :format => mri.col_formats[i] || :_default_,
                                   :tz     => tz)
               else
                 data = r[f].to_s
@@ -56,6 +56,7 @@ module ManageIQ
         def build_document_header
           mri = options.mri
           raise "No settings configured for Table" if mri.table.nil?
+
           calculate_max_col_widths
           @hr = hr
 
@@ -74,6 +75,7 @@ module ManageIQ
           end
 
           return if mri.headers.empty?
+
           c = mri.headers.dup
           # Remove headers of hidden columns
           mri.col_order.each_with_index do |f, i|
@@ -101,9 +103,10 @@ module ManageIQ
           counter = 0
 
           row_limit = mri.rpt_options && mri.rpt_options[:row_limit] ? mri.rpt_options[:row_limit] : 0
-          use_table = mri.sub_table ? mri.sub_table : mri.table
+          use_table = mri.sub_table || mri.table
           use_table.data.each_with_index do |r, d_idx|
             break if row_limit != 0 && d_idx > row_limit - 1
+
             line = []
             line_wrapper = false        # Clear line wrapper flag
             if ["<compare>"].include?(mri.db) && r[0] == "% Match:"
@@ -118,7 +121,7 @@ module ManageIQ
               unless ["<compare>", "<drift>"].include?(mri.db)
                 data = mri.format(f,
                                   r[f],
-                                  :format => mri.col_formats[i] ? mri.col_formats[i] : :_default_,
+                                  :format => mri.col_formats[i] || :_default_,
                                   :tz     => tz)
               else
                 data = r[f].to_s
@@ -168,11 +171,11 @@ module ManageIQ
         def build_document_footer
           mri = options.mri
           tz = mri.get_time_zone(Time.zone.name)
-          if !mri.user_categories.blank? || !mri.categories.blank? || !mri.conditions.nil? || !mri.display_filter.nil?
+          if mri.user_categories.present? || mri.categories.present? || !mri.conditions.nil? || !mri.display_filter.nil?
             output << fit_to_width(@hr)
-            unless mri.user_categories.blank?
+            if mri.user_categories.present?
               user_filters = mri.user_categories.flatten
-              unless user_filters.blank?
+              if user_filters.present?
                 customer_name = Tenant.root_tenant.name
                 user_filter = "User assigned " + customer_name + " Tag filters:"
                 t = user_filter.ljust(@line_len - 2)
@@ -185,9 +188,9 @@ module ManageIQ
               end
             end
 
-            unless mri.categories.blank?
+            if mri.categories.present?
               categories = mri.categories.flatten
-              unless categories.blank?
+              if categories.present?
                 customer_name = Tenant.root_tenant.name
                 customer_name_title = "Report based " + customer_name + " Tag filters:"
                 t = customer_name_title + " " * (@line_len - customer_name_title.length - 2)

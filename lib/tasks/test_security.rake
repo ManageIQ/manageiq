@@ -57,6 +57,7 @@ namespace :test do
 
       require "awesome_spawn"
       cmd = AwesomeSpawn.build_command_line("bundle-audit check", options)
+      puts "** with command line: #{cmd}"
 
       exit $?.exitstatus unless system(cmd)
     end

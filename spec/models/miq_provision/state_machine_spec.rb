@@ -33,7 +33,7 @@ RSpec.describe MiqProvision do
           :flavor_ref      => flavor.ems_ref,
           :image_ref       => template.ems_ref,
           :name            => options[:vm_target_name],
-          :security_groups => [],
+          :security_groups => []
         )
       end
 

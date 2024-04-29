@@ -95,6 +95,7 @@ class ClassificationImport
         data.each do |category, entries|
           cat = Classification.find_by(:description => category)
           next unless cat
+
           entries.each do |ent|
             cat.entries.each do |e|
               if e.description == ent

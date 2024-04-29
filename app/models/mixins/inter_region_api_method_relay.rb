@@ -5,19 +5,19 @@ module InterRegionApiMethodRelay
   MAX_INSTANCE_WAIT     = 1.minute
 
   def self.extended(klass)
-    unless klass.const_defined?("InstanceMethodRelay")
-      instance_relay = klass.const_set("InstanceMethodRelay", Module.new)
+    unless klass.const_defined?(:InstanceMethodRelay)
+      instance_relay = klass.const_set(:InstanceMethodRelay, Module.new)
       klass.prepend(instance_relay)
     end
 
-    unless klass.const_defined?("ClassMethodRelay")
-      class_relay = klass.const_set("ClassMethodRelay", Module.new)
+    unless klass.const_defined?(:ClassMethodRelay)
+      class_relay = klass.const_set(:ClassMethodRelay, Module.new)
       klass.singleton_class.prepend(class_relay)
     end
   end
 
   def api_relay_method(method, action = method)
-    relay = const_get("InstanceMethodRelay")
+    relay = const_get(:InstanceMethodRelay)
     collection_name = collection_for_class
 
     relay.class_eval do
@@ -34,7 +34,7 @@ module InterRegionApiMethodRelay
   end
 
   def api_relay_class_method(method, action = method)
-    relay = const_get("ClassMethodRelay")
+    relay = const_get(:ClassMethodRelay)
     collection_name = collection_for_class
     raise ArgumentError, "A block is required to determine target object region and API arguments" unless block_given?
 
@@ -79,6 +79,7 @@ module InterRegionApiMethodRelay
     case result
     when ManageIQ::API::Client::ActionResult
       raise InterRegionApiMethodRelayError, result.message if result.failed?
+
       result.attributes
     when ManageIQ::API::Client::Resource
       instance_for_resource(result)
@@ -99,6 +100,7 @@ module InterRegionApiMethodRelay
     while wait < MAX_INSTANCE_WAIT
       instance = klass.find_by(:id => resource.id)
       return instance if instance
+
       sleep(wait)
       wait *= 2
     end

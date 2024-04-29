@@ -12,7 +12,7 @@ RSpec.describe ScanItem do
 
       before do
         FileUtils.mkdir_p(scan_item_dir)
-        FileUtils.cp_r(Rails.root.join("product", "scan_items", "scan_item_cat.yaml"), scan_item_dir, :preserve => true)
+        FileUtils.cp_r(Rails.root.join("product/scan_items/scan_item_cat.yaml"), scan_item_dir, :preserve => true)
 
         stub_const("ScanItem::Seeding::SCAN_ITEMS_DIR", scan_item_dir)
         expect(Vmdb::Plugins).to receive(:flat_map).at_least(:once) { [] }
@@ -73,7 +73,7 @@ RSpec.describe ScanItem do
   describe ".seed_files (private)" do
     it "will include files from core" do
       expect(described_class.send(:seed_files)).to include(
-        a_string_starting_with(Rails.root.join("product", "scan_items").to_s)
+        a_string_starting_with(Rails.root.join("product/scan_items").to_s)
       )
     end
 

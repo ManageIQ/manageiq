@@ -129,7 +129,7 @@ RSpec.describe VmdbDatabaseConnection do
       expect(lines.pop).to eq "ACTIVITY_STATS_CSV"
 
       header, *rows = CSV.parse lines.join
-      expect(header).to eq %w(
+      expect(header).to eq %w[
         session_id
         xact_start
         last_request_start_time
@@ -144,7 +144,7 @@ RSpec.describe VmdbDatabaseConnection do
         wait_event
         wait_time_ms
         blocked_by
-      )
+      ]
 
       expect(rows.length).to be > 0
       rows.each do |row|

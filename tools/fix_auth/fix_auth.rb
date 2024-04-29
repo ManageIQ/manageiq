@@ -51,7 +51,7 @@ module FixAuth
     end
 
     def print_dry_run_warning
-      method = caller_locations.first.label
+      method = caller_locations(1..1).first.label
       # Move this message up to `run` if the other methods add dry-run support
       puts "** #{method} is executing in dry-run mode, and no actual changes will be made **" if options[:dry_run]
     end
@@ -79,7 +79,7 @@ module FixAuth
     end
 
     def load_rails
-      require File.expand_path("../../../config/application.rb", __FILE__)
+      require File.expand_path('../../config/application.rb', __dir__)
     end
 
     def set_passwords

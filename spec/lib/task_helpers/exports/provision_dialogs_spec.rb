@@ -41,7 +41,7 @@ RSpec.describe TaskHelpers::Exports::ProvisionDialogs do
   let(:content2) do
     {
       :dialogs => {
-        :buttons => %i(submit cancel)
+        :buttons => %i[submit cancel]
       }
     }
   end

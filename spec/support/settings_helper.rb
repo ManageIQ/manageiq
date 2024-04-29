@@ -31,5 +31,5 @@ def stub_local_settings_file(path, content)
     p == path ? content : orig_io_call.call(p)
   end
 
-  ::Settings.reload!
+  Settings.reload!
 end

@@ -3,7 +3,7 @@
 ## Run pg_inspector using parameters given in local database.yml and v2 key.
 
 if __FILE__ == $PROGRAM_NAME
-  $LOAD_PATH.push(File.expand_path(File.join(__dir__, %w(.. .. lib))))
+  $LOAD_PATH.push(File.expand_path(File.join(__dir__, %w[.. .. lib])))
 end
 
 require 'yaml'

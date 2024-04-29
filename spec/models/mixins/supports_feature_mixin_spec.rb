@@ -33,22 +33,6 @@ RSpec.describe SupportsFeatureMixin do
 
   let(:test_inst) { test_class.new }
 
-  describe "#supports_feature?" do
-    it "defines supports on the instance" do
-      expect(test_inst.supports_std_accept?).to be_truthy
-      expect(test_inst.supports_module_accept?).to be_truthy
-      expect(test_inst.supports_std_denial?).to be_falsey
-    end
-  end
-
-  describe ".supports_feature?" do
-    it "defines supports on the class" do
-      expect(test_class.supports_std_accept?).to be_truthy
-      expect(test_class.supports_module_accept?).to be_truthy
-      expect(test_class.supports_std_denial?).to be_falsey
-    end
-  end
-
   describe ".supports?" do
     it "handles base supports" do
       expect(test_class.supports?(:std_accept)).to be_truthy
@@ -151,6 +135,27 @@ RSpec.describe SupportsFeatureMixin do
       expect(test_inst.supports?(:dynamic_feature)).to be_truthy
     end
 
+    it "instance redirects work properly" do
+      test_class.instance_eval do
+        supports(:dynamic_attr)      { unsupported_reason(:dynamic_operation) }
+        supports(:dynamic_operation) { "unsupported" }
+      end
+
+      child_class = define_model(nil, test_class)
+      child_class.instance_eval do
+        supports(:dynamic_operation) { nil }
+      end
+
+      # parent
+      expect(test_class.new.supports?(:dynamic_operation)).to be_falsey
+      expect(test_class.new.supports?(:dynamic_attr)).to be_falsey
+
+      # child
+      expect(child_class.new.supports?(:dynamic_operation)).to be_truthy
+      expect(child_class.new.supports?(:dynamic_attr)).to be_truthy
+      expect(child_class.new.unsupported_reason(:dynamic_attr)).to eq(nil)
+    end
+
     context "with dynamic child class" do
       let(:child_class) do
         define_model(
@@ -231,10 +236,36 @@ RSpec.describe SupportsFeatureMixin do
     end
 
     it "gives reason when implicit dynamic attrs" do
-      test_class.supports(:implicit_feature) {  "dynamically unsupported" unless attr1 }
+      test_class.supports(:implicit_feature) { "dynamically unsupported" unless attr1 }
       test_inst = test_class.new(:attr1 => false)
 
       expect(test_inst.unsupported_reason(:implicit_feature)).to eq("dynamically unsupported")
+    end
+
+    it "gives reason when chained to a denail with a default reason" do
+      test_class.supports_not :denial_no_reason
+      test_class.supports(:denial_chained) { unsupported_reason(:denial_no_reason) }
+
+      expect(test_inst.unsupported_reason(:denial_chained)).to eq("Feature not available/supported")
+    end
+
+    it "gives reason when chained to a denail with a default reason (checking supported)" do
+      test_class.supports_not :denial_no_reason
+      test_class.supports(:denial_chained) { unsupported_reason(:denial_no_reason) unless supports?(:denial_no_reason) }
+
+      expect(test_inst.unsupported_reason(:denial_chained)).to eq("Feature not available/supported")
+    end
+
+    it "gives no reason when chained to an attribute with success" do
+      test_class.supports(:std_chained) { unsupported_reason(:std_accept) }
+
+      expect(test_inst.unsupported_reason(:std_chained)).to eq(nil)
+    end
+
+    it "gives no reason when chained to an attribute with success (checking supported)" do
+      test_class.supports(:std_chained) { unsupported_reason(:std_accept) unless supports?(:std_accept) }
+
+      expect(test_inst.unsupported_reason(:std_chained)).to eq(nil)
     end
   end
 

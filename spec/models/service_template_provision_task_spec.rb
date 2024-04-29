@@ -16,13 +16,13 @@ RSpec.describe ServiceTemplateProvisionTask do
 
       @request.miq_request_tasks = [@task_0, @task_1, @task_1_1, @task_1_2, @task_2, @task_2_1, @task_3]
       @task_0.miq_request_tasks  = [@task_1, @task_2, @task_3]
-      @task_1.miq_request_task   =  @task_0
+      @task_1.miq_request_task = @task_0
       @task_1.miq_request_tasks  = [@task_1_1, @task_1_2]
       @task_1_1.miq_request_task =  @task_1
       @task_1_2.miq_request_task =  @task_1
       @task_2.miq_request_task   =  @task_0
       @task_2.miq_request_tasks  = [@task_2_1]
-      @task_3.miq_request_task   =  @task_0
+      @task_3.miq_request_task = @task_0
     end
 
     let(:tracking_label) { "r#{@request.id}_service_template_provision_task_#{@task_0.id}" }

@@ -27,6 +27,7 @@ class Session < ApplicationRecord
   def self.purge_one_batch(ttl, batch_size)
     sessions = where("updated_at <= ?", ttl.seconds.ago.utc).limit(batch_size)
     return 0 if sessions.size.zero?
+
     sessions = sessions.reject do |s|
       expires_on = s.raw_data[:expires_on] rescue nil
       expires_on && expires_on >= Time.zone.now

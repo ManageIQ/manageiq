@@ -13,12 +13,13 @@ class ChargebackRateDetailMeasure < ApplicationRecord
 
   def adjust(from_unit, to_unit)
     return 1 if from_unit == to_unit
+
     jumps = units.index(to_unit) - units.index(from_unit)
     BigDecimal(step)**jumps
   end
 
   private def units_same_length
-    unless (units.count == units_display.count)
+    unless units.count == units_display.count
       errors.add("Units Problem", "Units_display length diferent that the units length")
     end
   end

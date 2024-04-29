@@ -181,9 +181,11 @@ class MiqReportResult < ApplicationRecord
   #########################################################################################################
   def self.parse_userid(userid)
     return userid unless userid.to_s.include?("|")
+
     parts = userid.to_s.split("|")
-    return parts[0] if (parts.last == 'adhoc')
-    return parts[1] if (parts.last == 'schedule')
+    return parts[0] if parts.last == 'adhoc'
+    return parts[1] if parts.last == 'schedule'
+
     raise _("Cannot parse userid %{user_id}") % {:user_id => userid.inspect}
   end
 
@@ -205,7 +207,7 @@ class MiqReportResult < ApplicationRecord
   def to_pdf
     # Create the pdf header section
     html_string = generate_pdf_header(
-      :title     => name.gsub(/'/, '\\\\\&'), # Escape single quotes
+      :title     => name.gsub("'", "\\\\'"), # Escape single quotes
       :page_size => report.page_size,
       :run_date  => format_timezone(last_run_on, user_timezone, "gtl")
     )
@@ -362,7 +364,7 @@ class MiqReportResult < ApplicationRecord
       :class_name  => name,
       :method_name => "destroy_all",
       :priority    => MiqQueue::HIGH_PRIORITY,
-      :args        => [["userid IN (?)", userids]],
+      :args        => [["userid IN (?)", userids]]
     )
   end
 

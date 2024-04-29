@@ -13,7 +13,7 @@ RSpec.describe EmsEvent do
   context "container events" do
     let(:ems_ref) { "test_ems_ref" }
     let(:ems) { FactoryBot.create(:ems_kubernetes) }
-    let(:event_hash) { { :ems_ref => "event-ref", :ems_id => ems.id, :event_type => "STUFF_HAPPENED" } }
+    let(:event_hash) { {:ems_ref => "event-ref", :ems_id => ems.id, :event_type => "STUFF_HAPPENED"} }
     let(:container_project) { FactoryBot.create(:container_project, :ext_management_system => ems) }
 
     context "on node" do
@@ -76,7 +76,7 @@ RSpec.describe EmsEvent do
     end
 
     context ".process_availability_zone_in_event!" do
-      let(:event_hash) { { :vm_or_template_id => vm.id } }
+      let(:event_hash) { {:vm_or_template_id => vm.id} }
       context "when the event has an availability zone" do
         before do
           event_hash[:availability_zone_ems_ref] = @availability_zone.ems_ref
@@ -588,7 +588,7 @@ RSpec.describe EmsEvent do
 
       before do
         allow(ems).to receive(:allow_targeted_refresh?).and_return(true)
-        allow(ems.class.const_get('EventTargetParser')).to receive(:new).and_return(target_parser)
+        allow(ems.class.const_get(:EventTargetParser)).to receive(:new).and_return(target_parser)
         expect(target_parser).to receive(:parse).and_return(targets)
       end
 
@@ -624,7 +624,7 @@ RSpec.describe EmsEvent do
   context 'Physical Storage Events' do
     let(:ems)   { FactoryBot.create(:ems_storage) }
     let(:physical_storage) { FactoryBot.create(:physical_storage, :name => "my-storage", :ems_ref => "ems1", :ext_management_system => ems) }
-    let(:event_hash) {
+    let(:event_hash) do
       {
         :event_type               => "physical_storage_alert",
         :ems_ref                  => "1",
@@ -632,7 +632,7 @@ RSpec.describe EmsEvent do
         :ems_id                   => ems.id,
         :message                  => "description"
       }
-    }
+    end
 
     it "test process_physical_storage_in_event!" do
       event = EmsEvent.add(ems.id, event_hash)

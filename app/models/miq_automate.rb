@@ -11,7 +11,7 @@ class MiqAutomate
         :method_name => "_async_datastore_reset",
         :args        => [task.id],
         :priority    => MiqQueue::HIGH_PRIORITY,
-        :msg_timeout => 3600,
+        :msg_timeout => 3600
       )
       task.update_status("Queued", "Ok", "Task has been queued")
     end

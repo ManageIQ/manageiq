@@ -1,7 +1,7 @@
 require 'concurrent/atomic/event'
 require 'util/duplicate_blocker'
 
-class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runner
+class ManageIQ::Providers::BaseManager::EventCatcher::Runner < MiqWorker::Runner
   class EventCatcherHandledException < StandardError
   end
 
@@ -94,6 +94,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
   # Called when there is any change in BlacklistedEvent
   def sync_blacklisted_events
     return unless @ems
+
     filters = @ems.blacklisted_event_names
 
     if @filtered_events.nil? || @filtered_events != filters

@@ -2,7 +2,7 @@ module ArRegion
   extend ActiveSupport::Concern
 
   included do
-    cache_with_timeout(:id_to_miq_region) { Hash.new }
+    cache_with_timeout(:id_to_miq_region) { {} }
   end
 
   module ClassMethods

@@ -69,7 +69,7 @@ RSpec.describe Ansible::Runner::NetworkCredential do
           {
             :userid   => "user",
             :password => "pass",
-            :options  => { :authorize => true }
+            :options  => {:authorize => true}
           }
         end
 
@@ -110,7 +110,7 @@ RSpec.describe Ansible::Runner::NetworkCredential do
       end
 
       context "with an auth_key" do
-        let(:auth_attributes) { { :auth_key => "key_data" } }
+        let(:auth_attributes) { {:auth_key => "key_data"} }
 
         it "writes the network_ssh_key_file" do
           cred.write_config_files
@@ -127,13 +127,13 @@ RSpec.describe Ansible::Runner::NetworkCredential do
       end
 
       context "with authorize set" do
-        let(:ssh_unlock_key) { "^Enter passphrase for [a-zA-Z0-9\-\/]+\/ssh_key_data:" }
+        let(:ssh_unlock_key) { "^Enter passphrase for [a-zA-Z0-9-/]+/ssh_key_data:" }
         let(:auth_attributes) do
           {
             :userid            => "user",
             :password          => "pass",
             :auth_key_password => "key_pass",
-            :options           => { :authorize => true }
+            :options           => {:authorize => true}
           }
         end
 

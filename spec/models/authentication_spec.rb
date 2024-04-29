@@ -26,8 +26,8 @@ RSpec.describe Authentication do
     end
 
     it "should create the authentication events and event sets" do
-      events = %w(ems_auth_changed ems_auth_valid ems_auth_invalid ems_auth_unreachable ems_auth_incomplete ems_auth_error
-                  host_auth_changed host_auth_valid host_auth_invalid host_auth_unreachable host_auth_incomplete host_auth_error)
+      events = %w[ems_auth_changed ems_auth_valid ems_auth_invalid ems_auth_unreachable ems_auth_incomplete ems_auth_error
+                  host_auth_changed host_auth_valid host_auth_invalid host_auth_unreachable host_auth_incomplete host_auth_error]
       events.each { |event| expect(MiqEventDefinition.exists?(:name => event)).to be_truthy }
       expect(MiqEventDefinitionSet.exists?(:name => 'auth_validation')).to be_truthy
     end

@@ -14,7 +14,7 @@ class ChargebackRateDetail < ApplicationRecord
 
   delegate :metric_column_key, :metric_key, :cost_keys, :rate_key, :to => :chargeable_field
 
-  FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric chargeable_field_id sub_metric).freeze
+  FORM_ATTRIBUTES = %i[description per_time per_unit metric group source metric chargeable_field_id sub_metric].freeze
   PER_TIME_TYPES = {
     "hourly"  => N_("Hourly"),
     "daily"   => N_("Daily"),
@@ -27,6 +27,7 @@ class ChargebackRateDetail < ApplicationRecord
   #
   def showback_unit(p_per_unit = nil)
     return '' unless chargeable_field.detail_measure
+
     {'bytes'     => '',
      'kilobytes' => 'KiB',
      'megabytes' => 'MiB',
@@ -144,7 +145,7 @@ class ChargebackRateDetail < ApplicationRecord
   }
 
   def hourly_cost(value, consumption)
-    return 0.0 unless self.enabled?
+    return 0.0 unless enabled?
 
     (fixed_rate, variable_rate) = find_rate(value)
 
@@ -155,16 +156,14 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   def hourly(rate, consumption)
-    hourly_rate = case per_time
-                  when "hourly"  then rate
-                  when "daily"   then rate / 24
-                  when "weekly"  then rate / 24 / 7
-                  when "monthly" then rate / consumption.hours_in_month
-                  when "yearly"  then rate / 24 / 365
-                  else raise "rate time unit of '#{per_time}' not supported"
-                  end
-
-    hourly_rate
+    case per_time
+    when "hourly"  then rate
+    when "daily"   then rate / 24
+    when "weekly"  then rate / 24 / 7
+    when "monthly" then rate / consumption.hours_in_month
+    when "yearly"  then rate / 24 / 365
+    else raise "rate time unit of '#{per_time}' not supported"
+    end
   end
 
   def rate_adjustment
@@ -187,7 +186,7 @@ class ChargebackRateDetail < ApplicationRecord
       s = ""
       chargeback_tiers.each do |tier|
         # Example: Daily @ .02 per MHz from 0.0 to Infinity
-        s += "#{per_time.to_s.capitalize} @ #{tier.fixed_rate} + "\
+        s += "#{per_time.to_s.capitalize} @ #{tier.fixed_rate} + " \
              "#{tier.variable_rate} per #{per_unit_display} from #{tier.start} to #{tier.finish}\n"
       end
       s.chomp
@@ -210,9 +209,9 @@ class ChargebackRateDetail < ApplicationRecord
   def save_tiers(tiers)
     temp = self.class.new(:chargeback_tiers => tiers)
     if temp.contiguous_tiers?
-      self.chargeback_tiers.replace(tiers)
+      chargeback_tiers.replace(tiers)
     else
-      temp.errors.each {|error| errors.add(error.attribute, error.message)}
+      temp.errors.each { |error| errors.add(error.attribute, error.message) }
     end
   end
 
@@ -225,13 +224,13 @@ class ChargebackRateDetail < ApplicationRecord
     tiers = chargeback_tiers
 
     tiers.each_with_index do |tier, index|
-      if single_tier?(tier,tiers)
+      if single_tier?(tier, tiers)
         error = true if !tier.starts_with_zero? || !tier.ends_with_infinity?
-      elsif first_tier?(tier,tiers)
+      elsif first_tier?(tier, tiers)
         error = true if !tier.starts_with_zero? || tier.ends_with_infinity?
-      elsif last_tier?(tier,tiers)
+      elsif last_tier?(tier, tiers)
         error = true if !consecutive_tiers?(tier, tiers[index - 1]) || !tier.ends_with_infinity?
-      elsif middle_tier?(tier,tiers)
+      elsif middle_tier?(tier, tiers)
         error = true if !consecutive_tiers?(tier, tiers[index - 1]) || tier.ends_with_infinity?
       end
 
@@ -259,19 +258,19 @@ class ChargebackRateDetail < ApplicationRecord
     [metric_value, cost]
   end
 
-  def first_tier?(tier,tiers)
+  def first_tier?(tier, tiers)
     tier == tiers.first
   end
 
-  def last_tier?(tier,tiers)
+  def last_tier?(tier, tiers)
     tier == tiers.last
   end
 
-  def single_tier?(tier,tiers)
+  def single_tier?(tier, tiers)
     first_tier?(tier, tiers) && last_tier?(tier, tiers)
   end
 
-  def middle_tier?(tier,tiers)
+  def middle_tier?(tier, tiers)
     !first_tier?(tier, tiers) && !last_tier?(tier, tiers)
   end
 

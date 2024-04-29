@@ -39,7 +39,7 @@ module Vmdb
 
       # also used in update:ui task to determine where to copy config files
       def self.node_root
-        Rails.root.join('vendor', 'node_root')
+        Rails.root.join("vendor/node_root")
       end
     end
   end

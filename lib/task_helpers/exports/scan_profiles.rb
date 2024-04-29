@@ -11,9 +11,9 @@ module TaskHelpers
 
           profile = ScanItem.get_profile(scan_item_set.name).first.dup
 
-          %w(id created_on updated_on).each { |key| profile.delete(key) }
+          %w[id created_on updated_on].each { |key| profile.delete(key) }
           profile['definition'].each do |dd|
-            %w(id created_on updated_on description).each { |key| dd.delete(key) }
+            %w[id created_on updated_on description].each { |key| dd.delete(key) }
           end
 
           scan_profile = profile.to_yaml

@@ -1,23 +1,32 @@
 class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
   def sync_from_system
-    self.miq_services = systemd_services.select { |unit| manageiq_service?(unit) }
-    self.miq_services_by_guid = miq_services.index_by { |w| w[:name].match(/^.+@(?<guid>.+)\.service$/).named_captures["guid"] }
+    self.miq_services         = systemd_services.select { |unit| manageiq_service?(unit) }
+    self.miq_services_by_unit = miq_services.index_by { |w| w[:name] }
   end
 
   def sync_starting_workers
-    starting = MiqWorker.find_all_starting.to_a
     sync_from_system
-    starting.each do |worker|
+    MiqWorker.find_all_starting.each do |worker|
       next if worker.class.rails_worker?
 
-      systemd_worker = miq_services_by_guid[worker[:guid]]
+      systemd_worker = miq_services_by_unit[worker[:system_uid]]
+      next if systemd_worker.nil?
+
       if systemd_worker[:load_state] == "loaded" && systemd_worker[:active_state] == "active" && systemd_worker[:sub_state] == "running"
-        worker.update!(:status => "started")
-        starting.delete(worker)
+        worker.update!(:status => MiqWorker::STATUS_STARTED)
       end
     end
+  end
 
-    starting
+  def sync_stopping_workers
+    sync_from_system
+    MiqWorker.find_all_stopping.reject { |w| w.class.rails_worker? }.each do |worker|
+      # If the worker record is "stopping" and the systemd unit is gone then the
+      # worker has successfully exited.
+      next if miq_services_by_unit[worker[:system_uid]].present?
+
+      worker.update!(:status => MiqWorker::STATUS_STOPPED)
+    end
   end
 
   def cleanup_failed_workers
@@ -36,7 +45,7 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
 
   private
 
-  attr_accessor :miq_services, :miq_services_by_guid
+  attr_accessor :miq_services, :miq_services_by_unit
 
   def systemd_manager
     @systemd_manager ||= begin

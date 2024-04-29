@@ -20,17 +20,15 @@ RSpec.describe "VmScanDispatcherEmbeddedScanSpec" do
                end
 
       if y_resource == :miq_server
-        resource_hsh = vms_in_embedded_scanning.inject({}) do |hsh, target_id|
+        resource_hsh = vms_in_embedded_scanning.each_with_object({}) do |target_id, hsh|
           hsh[target_id] ||= 0
           hsh[target_id] += 1
-          hsh
         end
       else
         vms = VmOrTemplate.where(:id => vms_in_embedded_scanning)
-        resource_hsh = vms.inject({}) do |hsh, v|
+        resource_hsh = vms.each_with_object({}) do |v, hsh|
           hsh[v.send(method)] ||= 0
           hsh[v.send(method)] += 1
-          hsh
         end
       end
 
@@ -54,7 +52,7 @@ RSpec.describe "VmScanDispatcherEmbeddedScanSpec" do
           :storages => storage_count,
           :vms      => vm_count,
           :repo_vms => repo_vm_count,
-          :zone     => zone,
+          :zone     => zone
         )
       end
 

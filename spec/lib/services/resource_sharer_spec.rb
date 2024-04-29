@@ -42,7 +42,7 @@ RSpec.describe ResourceSharer do
         let(:features) { MiqProductFeature.find_by(:identifier => "host") }
         let(:user_allowed_feature) { "service" }
 
-        before { EvmSpecHelper.seed_specific_product_features(%w(host service)) }
+        before { EvmSpecHelper.seed_specific_product_features(%w[host service]) }
 
         it "is invalid" do
           expect(subject).not_to be_valid
@@ -54,7 +54,7 @@ RSpec.describe ResourceSharer do
         let(:features) { MiqProductFeature.find_by(:identifier => "host") }
         let(:user_allowed_feature) { "host_edit" }
 
-        before { EvmSpecHelper.seed_specific_product_features(%w(host)) }
+        before { EvmSpecHelper.seed_specific_product_features(%w[host]) }
 
         it "is invalid" do
           expect(subject).not_to be_valid
@@ -66,7 +66,7 @@ RSpec.describe ResourceSharer do
         let(:features) { MiqProductFeature.find_by(:identifier => "host_edit") }
         let(:user_allowed_feature) { "everything" }
 
-        before { EvmSpecHelper.seed_specific_product_features(%w(host_edit everything)) }
+        before { EvmSpecHelper.seed_specific_product_features(%w[host_edit everything]) }
 
         it "is valid" do
           expect(subject).to be_valid

@@ -203,8 +203,8 @@ RSpec.describe MiqAeInstance do
     end
 
     it "produces the expected xml" do
-      expected_xml = <<-XML
-<MiqAeInstance name=""><ae_value/></MiqAeInstance>
+      expected_xml = <<~XML
+        <MiqAeInstance name=""><ae_value/></MiqAeInstance>
       XML
 
       expect(miq_ae_instance.to_export_xml).to eq(expected_xml.chomp)

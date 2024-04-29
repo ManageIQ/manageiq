@@ -1,6 +1,6 @@
 RSpec::Matchers.define :have_attr_accessor do |field_name|
   match do |object_instance|
-    object_instance.respond_to?(field_name) && object_instance.respond_to?("#{field_name}=")
+    object_instance.respond_to?(field_name) && object_instance.respond_to?(:"#{field_name}=")
   end
 
   failure_message do |object_instance|

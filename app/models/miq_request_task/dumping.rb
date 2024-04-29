@@ -5,7 +5,7 @@ module MiqRequestTask::Dumping
     def dump_obj(obj, prefix = nil, print_obj = STDOUT, print_method = :puts, &block)
       meth = "dump_#{obj.class.name.underscore}".to_sym
 
-      if self.respond_to?(meth)
+      if respond_to?(meth)
         return send(meth, obj, prefix, print_obj, print_method, &block)
       end
 

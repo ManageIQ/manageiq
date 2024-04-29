@@ -19,7 +19,7 @@ class MiqAeWorkspace < ApplicationRecord
     if workspace.varset(uri, value)
       self.setters ||= []
       self.setters << [uri, value]
-      self.save!
+      save!
     end
   end
 
@@ -30,6 +30,7 @@ class MiqAeWorkspace < ApplicationRecord
   def self.workspace_from_token(token)
     ws = MiqAeWorkspace.find_by(:guid => token)
     raise MiqAeException::WorkspaceNotFound, "Workspace Not Found for token=[#{token}]" if ws.nil?
+
     ws
   end
   private_class_method(:workspace_from_token)

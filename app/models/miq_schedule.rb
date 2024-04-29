@@ -57,7 +57,7 @@ class MiqSchedule < ApplicationRecord
     val = self[:run_at]
     if val.kind_of?(Hash)
       st = val[:start_time]
-      if st && String === st
+      if st && st.is_a?(String)
         val[:start_time] = st.to_time(:utc).utc
       end
     end
@@ -127,6 +127,7 @@ class MiqSchedule < ApplicationRecord
     # Let RBAC evaluate the filter's MiqExpression, and return the first value (the target ids)
     my_filter = get_filter
     return [] if my_filter.nil?
+
     Rbac.filtered(resource_type, :filter => my_filter).pluck(:id)
   end
 
@@ -191,7 +192,7 @@ class MiqSchedule < ApplicationRecord
         _("Run %{interval} starting on %{start_time}") % {:interval   => interval,
                                                                  :start_time => start_time}
       else
-        return _("Run %{interval} every %{value} %{unit} starting on %{start_time}") %
+        _("Run %{interval} every %{value} %{unit} starting on %{start_time}") %
                  {:interval   => interval,
                   :value      => run_at[:interval][:value],
                   :unit       => unit,
@@ -319,7 +320,7 @@ class MiqSchedule < ApplicationRecord
   end
 
   def next_interval_time
-    unless self.valid? || errors[:run_at].blank?
+    unless valid? || errors[:run_at].blank?
       _log.warn("Invalid schedule [#{id}] [#{name}]: #{Array.wrap(errors[:run_at]).join(", ")}")
       return nil
     end
@@ -359,11 +360,11 @@ class MiqSchedule < ApplicationRecord
         # scheduled start_time and jump there instead of creating thousands of time objects
         # until we've found the first future run time
         missed_intervals = (seconds_since_start / interval_value.send(meth)).to_i
-        while now > (sch_start_time + ((interval_value * missed_intervals).send(meth)))
+        while now > (sch_start_time + (interval_value * missed_intervals).send(meth))
           missed_intervals += 1
         end
 
-        next_time = sch_start_time + ((interval_value * missed_intervals).send(meth))
+        next_time = sch_start_time + (interval_value * missed_intervals).send(meth)
         next_time += interval_value.send(meth) if next_time < now && interval_value
       end
     end
@@ -384,7 +385,7 @@ class MiqSchedule < ApplicationRecord
   end
 
   def interval
-    unless self.valid? || errors[:run_at].blank?
+    unless valid? || errors[:run_at].blank?
       _log.warn("Invalid schedule [#{id}] [#{name}]: #{Array.wrap(errors[:run_at]).join(", ")}")
       return nil
     end
@@ -413,14 +414,15 @@ class MiqSchedule < ApplicationRecord
 
   def v_interval_unit
     if run_at[:interval] && run_at[:interval][:unit]
-      return run_at[:interval][:unit]
+      run_at[:interval][:unit]
     else
-      return nil
+      nil
     end
   end
 
   def v_zone_name
     return "" if zone.nil?
+
     zone.name
   end
 

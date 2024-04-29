@@ -51,7 +51,8 @@ class ChargeableField < ApplicationRecord
     return 1.0 if fixed?
     return 0 if options.method_for_allocated_metrics != :current_value && consumption.none?(metric, sub_metric)
     return consumption.send(options.method_for_allocated_metrics, metric, sub_metric) if allocated?
-    return consumption.avg(metric) if used?
+
+    consumption.avg(metric) if used?
   end
 
   def fixed?
@@ -75,7 +76,7 @@ class ChargeableField < ApplicationRecord
   # fixed_compute_metric is used in report and calculations
   # TODO: remove and unify with metric_key
   def metric_column_key
-    fixed? ? metric_key.gsub(/\_1|\_2/, '') : metric_key
+    fixed? ? metric_key.gsub(/_1|_2/, '') : metric_key
   end
 
   def cost_keys(sub_metric = nil)
@@ -94,7 +95,7 @@ class ChargeableField < ApplicationRecord
   end
 
   def self.cols_on_metric_rollup
-    (%w(id tag_names resource_id) + chargeable_cols_on_metric_rollup).uniq
+    (%w[id tag_names resource_id] + chargeable_cols_on_metric_rollup).uniq
   end
 
   def self.col_index(column)

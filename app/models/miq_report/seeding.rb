@@ -1,8 +1,8 @@
 module MiqReport::Seeding
   extend ActiveSupport::Concern
 
-  REPORT_DIR  = Rails.root.join("product", "reports").freeze
-  COMPARE_DIR = Rails.root.join("product", "compare").freeze
+  REPORT_DIR  = Rails.root.join("product/reports").freeze
+  COMPARE_DIR = Rails.root.join("product/compare").freeze
 
   module ClassMethods
     def seed

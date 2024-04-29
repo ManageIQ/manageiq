@@ -219,7 +219,7 @@ class DescendantLoader
     def class_inheritance_relationships
       @class_inheritance_relationships ||= begin
         children = Hash.new { |h, k| h[k] = [] }
-        Dir.glob(descendants_paths.map{|path| Pathname.new(path).join('**/*.rb')}) do |file|
+        Dir.glob(descendants_paths.map { |path| Pathname.new(path).join('**/*.rb') }) do |file|
           classes_in(file).each do |search_scopes, define_scopes, name, sklass|
             possible_names = scoped_name(name, define_scopes)
             possible_superklasses = scoped_name(sklass, search_scopes)
@@ -263,7 +263,7 @@ class DescendantLoader
 
   module ArDescendantsWithLoader
     def descendants
-      unless defined? @loaded_descendants
+      if Vmdb::Application.instance.initialized? && !defined? @loaded_descendants
         @loaded_descendants = true
         DescendantLoader.instance.load_subclasses(self)
       end
@@ -275,7 +275,7 @@ class DescendantLoader
     # https://github.com/rails/rails/commit/8f8aa857e084b76b1120edaa9bb9ce03ba1e6a19
     # We need to get in front of it, like we do for descendants.
     def subclasses
-      unless defined? @loaded_descendants
+      if Vmdb::Application.instance.initialized? && !defined? @loaded_descendants
         @loaded_descendants = true
         DescendantLoader.instance.load_subclasses(self)
       end

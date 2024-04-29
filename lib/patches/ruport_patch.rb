@@ -14,7 +14,6 @@ module Ruport::Data
 end
 
 module Ruport
-
   # Handles preventing CSV injection attacks by adding an apostrophe to all
   # fields that could potentially be a formula that executes a function.
   #
@@ -29,8 +28,8 @@ module Ruport
   # just using the raw CSV in a scripting language like Ruby/Python.
   #
   class Formatter::SafeCSV < Formatter::CSV
-    renders :csv, :for => [ Controller::Row,   Controller::Table,
-                            Controller::Group, Controller::Grouping ]
+    renders :csv, :for => [Controller::Row,   Controller::Table,
+                           Controller::Group, Controller::Grouping]
 
     def build_table_body
       data.each do |row|

@@ -1,1 +1,1 @@
-::AutomationManagerConfiguredSystem = ::ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem
+AutomationManagerConfiguredSystem = ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem

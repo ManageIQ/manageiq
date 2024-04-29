@@ -1,6 +1,6 @@
 module Ansible
   class Content
-    PLUGIN_CONTENT_DIR = Rails.root.join("content", "ansible_consolidated").to_s.freeze
+    PLUGIN_CONTENT_DIR = Rails.root.join("content/ansible_consolidated").to_s.freeze
 
     attr_accessor :path
 
@@ -12,7 +12,7 @@ module Ansible
       return true unless requirements_file.exist?
 
       require "awesome_spawn"
-      AwesomeSpawn.run!("ansible-galaxy", :params => ["install", :roles_path= => roles_dir, :role_file= => requirements_file])
+      AwesomeSpawn.run!("ansible-galaxy", :params => ["install", {:roles_path= => roles_dir, :role_file= => requirements_file}])
     end
 
     def self.fetch_plugin_galaxy_roles

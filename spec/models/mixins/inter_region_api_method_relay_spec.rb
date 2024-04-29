@@ -200,9 +200,9 @@ RSpec.describe InterRegionApiMethodRelay do
       end
 
       it "raises if the server doesn't have an ip address" do
-        expect {
+        expect do
           described_class.api_client_connection_for_region(region_number)
-        }.to raise_error("Failed to establish API connection to region #{region_number}")
+        end.to raise_error("Failed to establish API connection to region #{region_number}")
       end
     end
 
@@ -231,9 +231,9 @@ RSpec.describe InterRegionApiMethodRelay do
 
       it "raises when the api result is a failure" do
         expect(api_collection).to receive(action).and_return(api_failure_result)
-        expect {
+        expect do
           described_class.exec_api_call(region, collection_name, action)
-        }.to raise_error(described_class::InterRegionApiMethodRelayError)
+        end.to raise_error(described_class::InterRegionApiMethodRelayError)
       end
 
       it "accepts Hash object as api result" do
@@ -296,16 +296,16 @@ RSpec.describe InterRegionApiMethodRelay do
       expect(api_config).to receive(:klass).with(collection_name).and_return(klass)
       expect(klass).to receive(:find_by).twice.with(:id => 10).and_return(nil, nil)
 
-      expect {
+      expect do
         described_class.instance_for_resource(resource)
-      }.to raise_error(InterRegionApiMethodRelay::InterRegionApiMethodRelayError)
+      end.to raise_error(InterRegionApiMethodRelay::InterRegionApiMethodRelayError)
     end
   end
 
   context "with an invalid class definition" do
     describe "#api_relay_method" do
       it "raises a NotImplementedError if the class does not have an api collection" do
-        expect {
+        expect do
           Class.new do
             extend InterRegionApiMethodRelay
 
@@ -318,13 +318,13 @@ RSpec.describe InterRegionApiMethodRelay do
             end
             api_relay_method :test_instance_method
           end
-        }.to raise_error(NotImplementedError)
+        end.to raise_error(NotImplementedError)
       end
     end
 
     describe "#api_relay_class_method" do
       it "raises a NotImplementedError if the class does not have an api collection" do
-        expect {
+        expect do
           Class.new do
             extend InterRegionApiMethodRelay
 
@@ -338,13 +338,13 @@ RSpec.describe InterRegionApiMethodRelay do
             api_relay_class_method :test_instance_method do
             end
           end
-        }.to raise_error(NotImplementedError)
+        end.to raise_error(NotImplementedError)
       end
 
       it "raises a ArgumentError if no block is defined" do
         allow(Api::CollectionConfig).to receive(:new).and_return(api_config)
         allow(api_config).to receive(:name_for_klass).and_return(collection_name)
-        expect {
+        expect do
           Class.new do
             extend InterRegionApiMethodRelay
 
@@ -357,7 +357,7 @@ RSpec.describe InterRegionApiMethodRelay do
             end
             api_relay_class_method :test_instance_method
           end
-        }.to raise_error(ArgumentError)
+        end.to raise_error(ArgumentError)
       end
     end
   end

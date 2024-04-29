@@ -210,8 +210,8 @@ RSpec.describe ActsAsTaggable do
   end
 
   it "#tag_list" do
-    expect(Host.find_by(:name => "HOST1").tag_list(:ns => "/test", :cat => "tags").split).to match_array %w(red blue yellow)
-    expect(Vm.find_by(:name => "VM1").tag_list(:ns => "/test/tags").split).to match_array %w(red blue yellow)
+    expect(Host.find_by(:name => "HOST1").tag_list(:ns => "/test", :cat => "tags").split).to match_array %w[red blue yellow]
+    expect(Vm.find_by(:name => "VM1").tag_list(:ns => "/test/tags").split).to match_array %w[red blue yellow]
   end
 
   it "#to_tag" do

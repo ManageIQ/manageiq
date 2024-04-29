@@ -119,7 +119,7 @@ RSpec.describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
     end
 
     context "with configuration_script_source_id + playbook_relative_path" do
-      let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {:configuration_script_source_id => css.id, :playbook_relative_path => playbook_relative_path}, %w[192.0.2.0 192.0.2.1], :poll_interval => 5.minutes] }
+      let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {:configuration_script_source_id => css.id, :playbook_relative_path => playbook_relative_path}, %w[192.0.2.0 192.0.2.1], {:poll_interval => 5.minutes}] }
 
       it "will checkout the git repository to a temp dir before proceeding" do
         expect_any_instance_of(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource).to receive(:checkout_git_repository)
@@ -133,7 +133,7 @@ RSpec.describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
     end
 
     context "with neither playbook_path nor a configuration_script_source_id, playbook_relative_path pair" do
-      let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {}, %w[192.0.2.0 192.0.2.1], :poll_interval => 5.minutes] }
+      let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {}, %w[192.0.2.0 192.0.2.1], {:poll_interval => 5.minutes}] }
 
       it "fails" do
         expect(job).to_not receive(:queue_signal).with(:execute)
@@ -143,7 +143,7 @@ RSpec.describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
     end
 
     context "with only configuration_script_source_id" do
-      let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {:configuration_script_source_id => css.id}, %w[192.0.2.0 192.0.2.1], :poll_interval => 5.minutes] }
+      let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {:configuration_script_source_id => css.id}, %w[192.0.2.0 192.0.2.1], {:poll_interval => 5.minutes}] }
 
       it "fails" do
         expect(job).to_not receive(:queue_signal).with(:execute)
@@ -153,7 +153,7 @@ RSpec.describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
     end
 
     context "with only playbook_relative_path" do
-      let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {:playbook_relative_path => playbook_relative_path}, %w[192.0.2.0 192.0.2.1], :poll_interval => 5.minutes] }
+      let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {:playbook_relative_path => playbook_relative_path}, %w[192.0.2.0 192.0.2.1], {:poll_interval => 5.minutes}] }
 
       it "fails" do
         expect(job).to_not receive(:queue_signal).with(:execute)

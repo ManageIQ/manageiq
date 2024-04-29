@@ -14,6 +14,7 @@ FactoryBot.define do
       unless evaluator.values.empty?
         aeinstance.ae_values << aeinstance.ae_class.ae_fields.collect do |field|
           next unless evaluator.values.key?(field.name)
+
           FactoryBot.build(:miq_ae_value, {:field_id => field.id}.merge(evaluator.values[field.name]))
         end
       end

@@ -9,7 +9,7 @@ RSpec.describe "ar_dba extension" do
 
   describe "#xlog_location_diff" do
     it "returns the correct xlog difference" do
-      expect(connection.xlog_location_diff("18/72F84A48", "18/72F615B8")). to eq(144_528)
+      expect(connection.xlog_location_diff("18/72F84A48", "18/72F615B8")).to eq(144_528)
     end
   end
 

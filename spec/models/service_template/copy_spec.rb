@@ -177,7 +177,7 @@ RSpec.describe ServiceTemplate do
 
     context "picture" do
       it "creates a duplicate picture" do
-        service_template.picture = { :content => 'foobar', :extension => 'jpg' }
+        service_template.picture = {:content => 'foobar', :extension => 'jpg'}
         new_template = service_template.template_copy
 
         expect(service_template.picture.id).to_not eq(new_template.picture.id)

@@ -272,7 +272,7 @@ RSpec.describe PglogicalSubscription do
         :host     => "other-host.example.com",
         :dbname   => sub.dbname,
         :user     => sub.user,
-        :password => "p=as\' s\'"
+        :password => "p=as' s'"
       }
 
       expect(pglogical).to receive(:set_subscription_conninfo).with(sub.id, new_dsn)

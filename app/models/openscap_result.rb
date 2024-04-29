@@ -59,6 +59,7 @@ class OpenscapResult < ApplicationRecord
 
   def with_openscap_arf(raw)
     return unless self.class.openscap_available?
+
     begin
       OpenSCAP.oscap_init
       # ARF - nist standardized 'Asset Reporting Format' Full representation if a scap scan result.
@@ -72,6 +73,7 @@ class OpenscapResult < ApplicationRecord
 
   def with_openscap_objects(raw)
     raise "no block given" unless block_given?
+
     with_openscap_arf(raw) do |arf|
       begin
         test_results = arf.test_result

@@ -1,1 +1,1 @@
-::TemplateCloud = ManageIQ::Providers::CloudManager::Template
+TemplateCloud = ManageIQ::Providers::CloudManager::Template

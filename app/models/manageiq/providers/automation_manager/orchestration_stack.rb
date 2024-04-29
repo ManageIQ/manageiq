@@ -1,4 +1,4 @@
-class ManageIQ::Providers::AutomationManager::OrchestrationStack < ::OrchestrationStack
+class ManageIQ::Providers::AutomationManager::OrchestrationStack < OrchestrationStack
   include CiFeatureMixin
 
   def retireable?
