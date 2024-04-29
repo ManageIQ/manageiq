@@ -82,6 +82,7 @@ gem "sync",                             "~>0.5",             :require => false
 gem "sys-filesystem",                   "~>1.4.3"
 gem "terminal",                                              :require => false
 gem "wim_parser",                       "~>1.0",             :require => false
+gem "manageiq-providers-ibm_terraform", :git => "https://github.com/agrare/manageiq-providers-embedded_terraform.git", :branch => "add_opentofu_worker"
 
 # gems to resolve security issues
 # CVE-2021-33621 fixed: ruby 3.1.4 - https://github.com/advisories/GHSA-vc47-6rqg-c7f5
@@ -161,9 +162,9 @@ group :ibm_power_vc, :manageiq_default do
   manageiq_plugin "manageiq-providers-ibm_power_vc"
 end
 
-group :ibm_terraform, :manageiq_default do
-  manageiq_plugin "manageiq-providers-ibm_terraform"
-end
+# group :ibm_terraform, :manageiq_default do
+#   manageiq_plugin "manageiq-providers-ibm_terraform"
+# end
 
 group :kubernetes, :openshift, :manageiq_default do
   manageiq_plugin "manageiq-providers-kubernetes"
