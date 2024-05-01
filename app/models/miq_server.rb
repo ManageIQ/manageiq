@@ -629,6 +629,7 @@ class MiqServer < ApplicationRecord
 
     broker.publish_message(:service => "manageiq.liveness-check", :message => "test message", :payload => {})
     broker.subscribe_messages(:service => "manageiq.liveness-check") { break }
+    broker.close
   rescue => err
     _log.error("Messaging health check failed: #{err}")
     shutdown_and_exit(1)
