@@ -46,17 +46,46 @@ class GenericMailer < ActionMailer::Base
     msg
   end
 
-  def self.deliver_queue(method, options = {})
+  def self.deliver_queue(method, options = {}, queue_options = {})
     return unless MiqRegion.my_region.role_assigned?('notifier')
 
     _log.info("starting: method: #{method} args: #{options} ")
     options[:attachment] &&= attachment_to_blob(options[:attachment])
-    MiqQueue.submit_job(
+
+    queue_options.reverse_merge!(
       :service     => "notifier",
       :class_name  => name,
       :method_name => 'deliver',
       :args        => [method, options]
     )
+
+    MiqQueue.submit_job(**queue_options)
+  end
+
+  def self.deliver_task(method, options = {})
+    msg = "Queued the action: [#{method}]"
+
+    task = MiqTask.create!(:state => MiqTask::STATE_QUEUED, :status => MiqTask::STATUS_OK, :message => msg)
+
+    # Fail the task if there is no server with the notifier role in this region
+    unless MiqRegion.my_region.role_assigned?('notifier')
+      task.error(_("No server with notifier role in region"))
+      return task
+    end
+
+    queue_options = {
+      :miq_task_id  => task.id,
+      :miq_callback => {
+        :class_name  => MiqTask.name,
+        :instance_id => task.id,
+        :method_name => :queue_callback,
+        :args        => ['Finished']
+      }
+    }
+
+    deliver_queue(method, options, queue_options)
+
+    task
   end
 
   def self.attachment_to_blob(attachment, attachment_filename = "evm_attachment")
