@@ -72,7 +72,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-amazon
-  revision: 061f62d31d74c3ef35f2f731314097da44f4db70
+  revision: f56558516f2662cfcc924634b317f109c6d588e6
   branch: radjabov
   specs:
     manageiq-providers-amazon (0.1.0)
@@ -87,7 +87,7 @@ GIT
       aws-sdk-servicecatalog (~> 1.0)
       aws-sdk-sns (~> 1.0)
       aws-sdk-sqs (~> 1.0)
-      net-scp (~> 1.2)
+      net-scp (>= 1.2, < 5)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ansible_tower
@@ -151,11 +151,12 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-google
-  revision: 70c5b64aa3db94c94042643bddd8f6bfb2bbaf0c
+  revision: 75d1f9c91df053f6559159d2f8f9654984b267a9
   branch: radjabov
   specs:
     manageiq-providers-google (0.1.0)
       fog-google (~> 1.23)
+      rbnacl (>= 3.2, < 5.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_cic
@@ -325,13 +326,13 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-schema
-  revision: b555171e0bbe10d3a4b1e46e68070aa53c795ce7
+  revision: 2beeb4d136a3c2bf9737e28cbe293baf20729385
   branch: radjabov
   specs:
     manageiq-schema (0.1.0)
       activerecord-id_regions (~> 0.3.2)
       ancestry
-      linux_admin (~> 2.0)
+      linux_admin (>= 2.0, < 4)
       manageiq-password (>= 1.2.0, < 2)
       more_core_extensions (>= 3.5, < 5)
       pg
@@ -608,6 +609,7 @@ GEM
       dry-initializer (~> 3.0)
       dry-schema (>= 1.12, < 2)
       zeitwerk (~> 2.6)
+    ed25519 (1.3.0)
     elif (0.1.0)
     erubi (1.12.0)
     escape_utils (1.3.0)
@@ -844,11 +846,13 @@ GEM
       recursive-open-struct (~> 1.1, >= 1.1.1)
       rest-client (~> 2.0)
     language_server-protocol (3.17.0.3)
-    linux_admin (2.0.2)
-      awesome_spawn (~> 1.3)
+    linux_admin (3.0.0)
+      awesome_spawn (~> 1.6)
+      bcrypt_pbkdf (>= 1.0, < 2.0)
+      ed25519 (>= 1.2, < 2.0)
       inifile
       more_core_extensions (~> 4.0)
-      net-ssh (~> 4.2.0)
+      net-ssh (~> 7.2.3)
       nokogiri (>= 1.8.5, < 2, != 1.10.2, != 1.10.1, != 1.10.0)
       openscap
     linux_block_device (0.2.1)
@@ -876,21 +880,22 @@ GEM
       json (~> 2.3)
       more_core_extensions
       query_relation
-    manageiq-appliance_console (9.0.1)
+    manageiq-appliance_console (9.0.2)
       activerecord (>= 6.1.7.6)
       activesupport (>= 6.1.7.6)
       awesome_spawn (~> 1.6)
       bcrypt (~> 3.1.10)
       bcrypt_pbkdf (>= 1.0, < 2.0)
+      ed25519 (>= 1.2, < 2.0)
       highline (~> 2.1)
       i18n (>= 0.8)
-      linux_admin (~> 2.0)
+      linux_admin (~> 3.0)
       manageiq-password (< 2)
-      net-scp (~> 1.2.1)
+      net-scp (~> 4.0)
+      net-ssh (~> 7.2)
       optimist (~> 3.0)
       pg
       pg-logical_replication
-      rbnacl (>= 3.2, < 5.0)
     manageiq-loggers (1.1.1)
       activesupport (>= 5.0, < 7.1)
       manageiq-password (< 2)
@@ -918,10 +923,12 @@ GEM
       sys-uname (~> 1.2.1)
       uuidtools (~> 2.1)
       vmware_web_service (~> 3.0)
-    manageiq-ssh-util (0.1.1)
+    manageiq-ssh-util (0.2.0)
       activesupport
-      net-sftp (~> 2.1)
-      net-ssh (~> 4.2)
+      bcrypt_pbkdf (>= 1.0, < 2.0)
+      ed25519 (>= 1.2, < 2.0)
+      net-sftp (~> 4.0)
+      net-ssh (~> 7.2)
     manageiq-style (1.4.0)
       more_core_extensions
       optimist
@@ -972,13 +979,13 @@ GEM
       net-protocol
     net-protocol (0.2.2)
       timeout
-    net-scp (1.2.1)
-      net-ssh (>= 2.6.5)
-    net-sftp (2.1.2)
-      net-ssh (>= 2.6.5)
+    net-scp (4.0.0)
+      net-ssh (>= 2.6.5, < 8.0.0)
+    net-sftp (4.0.0)
+      net-ssh (>= 5.0.0, < 8.0.0)
     net-smtp (0.4.0.1)
       net-protocol
-    net-ssh (4.2.0)
+    net-ssh (7.2.3)
     netrc (0.11.0)
     nio4r (2.7.0)
     nokogiri (1.16.2)
@@ -1388,11 +1395,11 @@ DEPENDENCIES
   irb (= 1.4.1)
   jquery-rjs (= 0.1.1.3)!
   kubeclient (~> 4.0)
-  linux_admin (~> 2.0, >= 2.0.1)
+  linux_admin (~> 3.0)
   listen (~> 3.2)
   manageiq-api!
   manageiq-api-client (~> 0.3.6)
-  manageiq-appliance_console (~> 9.0, >= 9.0.1)
+  manageiq-appliance_console (~> 9.0, >= 9.0.2)
   manageiq-automation_engine!
   manageiq-consumption!
   manageiq-content!
@@ -1431,7 +1438,7 @@ DEPENDENCIES
   manageiq-providers-workflows!
   manageiq-schema!
   manageiq-smartstate (~> 0.9.0)
-  manageiq-ssh-util (~> 0.1.1)
+  manageiq-ssh-util (~> 0.2.0)
   manageiq-style
   manageiq-ui-classic!
   memoist (~> 0.16.0)
