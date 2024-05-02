@@ -45,14 +45,14 @@ gem "hamlit",                           "~>2.11.0"
 gem "inifile",                          "~>3.0",             :require => false
 gem "inventory_refresh",                "~>2.1",             :require => false
 gem "kubeclient",                       "~>4.0",             :require => false # For scaling pods at runtime
-gem "linux_admin",                      "~>2.0", ">=2.0.1",  :require => false
+gem "linux_admin",                      "~>3.0",             :require => false
 gem "listen",                           "~>3.2",             :require => false
 gem "manageiq-api-client",              "~>0.3.6",           :require => false
 gem "manageiq-loggers",                 "~>1.0", ">=1.1.1",  :require => false
 gem "manageiq-messaging",               "~>1.0", ">=1.4.1",  :require => false
 gem "manageiq-password",                "~>1.0",             :require => false
 gem "manageiq-postgres_ha_admin",       "~>3.2",             :require => false
-gem "manageiq-ssh-util",                "~>0.1.1",           :require => false
+gem "manageiq-ssh-util",                "~>0.2.0",           :require => false
 gem "memoist",                          "~>0.16.0",          :require => false
 gem "money",                            "~>6.13.5",          :require => false
 gem "more_core_extensions"                                                     # min version should be set in manageiq-gems-pending, not here
@@ -284,7 +284,7 @@ end
 
 group :appliance, :optional => true do
   gem "irb",                            "=1.4.1",            :require => false # Locked to same version as the installed RPM rubygem-irb-1.4.1-142.module_el9+787+b20bfeee.noarch so that we don't bundle our own
-  gem "manageiq-appliance_console",     "~>9.0", ">= 9.0.1", :require => false
+  gem "manageiq-appliance_console",     "~>9.0", ">= 9.0.2", :require => false
   gem "rdoc",                                                :require => false # Needed for rails console
 end
 
