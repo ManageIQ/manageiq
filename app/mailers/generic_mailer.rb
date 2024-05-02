@@ -52,14 +52,14 @@ class GenericMailer < ActionMailer::Base
     _log.info("starting: method: #{method} args: #{options} ")
     options[:attachment] &&= attachment_to_blob(options[:attachment])
 
-    queue_options.reverse_merge!(
-      :service     => "notifier",
-      :class_name  => name,
-      :method_name => 'deliver',
-      :args        => [method, options]
+    MiqQueue.submit_job(
+      queue_options.reverse_merge(
+        :service     => "notifier",
+        :class_name  => name,
+        :method_name => 'deliver',
+        :args        => [method, options]
+      )
     )
-
-    MiqQueue.submit_job(**queue_options)
   end
 
   def self.deliver_task(method, options = {})
