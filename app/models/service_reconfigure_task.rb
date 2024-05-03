@@ -11,6 +11,10 @@ class ServiceReconfigureTask < MiqRequestTask
     "#{request_class::TASK_DESCRIPTION} for: #{req_obj.source.name}"
   end
 
+  def statemachine_task_status
+    state == "finished" ? status.to_s.downcase : "retry"
+  end
+
   def after_request_task_create
     update(:description => get_description)
   end

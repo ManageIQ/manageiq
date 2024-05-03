@@ -36,6 +36,14 @@ class VmMigrateTask < MiqRequestTask
     "#{request_class::TASK_DESCRIPTION} for: #{name} - #{new_settings.join(", ")}"
   end
 
+  def statemachine_task_status
+    if %w[finished migrated].include?(state)
+      status.to_s.downcase == "error" ? "error" : "ok"
+    else
+      "retry"
+    end
+  end
+
   def after_request_task_create
     update_attribute(:description, get_description)
   end

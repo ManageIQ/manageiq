@@ -9,6 +9,10 @@ class ServiceTemplateProvisionTask < MiqRequestTask
     ServiceTemplateProvisionTask
   end
 
+  def statemachine_task_status
+    %w[finished provisioned].include?(state) ? status.to_s.downcase : "retry"
+  end
+
   def my_zone
     dialog_zone || source.my_zone || MiqServer.my_zone
   end
