@@ -1,4 +1,4 @@
-raise "Ruby versions < 3.0.0 are unsupported!"  if RUBY_VERSION < "3.0.0"
+raise "Ruby versions < 3.0.1 are unsupported!"  if RUBY_VERSION < "3.0.1"
 raise "Ruby versions >= 3.2.0 are unsupported!" if RUBY_VERSION >= "3.2.0"
 
 source 'https://rubygems.org'
@@ -29,7 +29,7 @@ gem "awesome_spawn",                    "~>1.6",             :require => false
 gem "aws-sdk-s3",                       "~>1.0",             :require => false # For FileDepotS3
 gem "bcrypt",                           "~> 3.1.10",         :require => false
 gem "bootsnap",                         ">= 1.8.1",          :require => false # for psych 3.3.2+ / 4 unsafe_load
-gem "bundler",                          "~> 2.1", ">= 2.1.4", "!= 2.2.10", :require => false
+gem "bundler",                          "~> 2.2", ">= 2.2.15", *("!= 2.5.0".."!= 2.5.9"), :require => false
 gem "byebug",                                                :require => false
 gem "color",                            "~>1.8"
 gem "config",                           "~>2.2", ">=2.2.3",  :require => false
