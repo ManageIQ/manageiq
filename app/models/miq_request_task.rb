@@ -141,8 +141,8 @@ class MiqRequestTask < ApplicationRecord
     _log.info("Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
 
     if resource_action&.configuration_script_payload
-      inputs = dialog_values.merge(:request_task_id => id)
-      miq_task_id = resource_action.configuration_script_payload.run(:inputs => inputs, :userid => get_user.userid, :zone => zone, :object => self)
+      workflow = resource_action.configuration_script_payload
+      miq_task_id = workflow.run(:inputs => dialog_values, :userid => get_user.userid, :zone => zone, :object => self)
 
       options[:miq_task_id]                     = miq_task_id
       options[:configuration_script_payload_id] = resource_action.configuration_script_payload.id
