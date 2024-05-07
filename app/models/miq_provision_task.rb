@@ -12,9 +12,9 @@ class MiqProvisionTask < MiqRequestTask
 
   def statemachine_task_status
     if %w[finished provisioned].include?(state)
-      status.to_s.downcase == "error" || vm.nil? ? "error" : "ok"
+      status.to_s.downcase == 'error' ? 'error' : 'ok'
     else
-      "retry"
+      'retry'
     end
   end
 
