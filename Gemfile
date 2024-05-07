@@ -72,6 +72,7 @@ gem "rails",                            "~>6.1.7", ">=6.1.7.7"
 gem "rails-i18n",                       "~>6.x"
 gem "rake",                             ">=12.3.3",          :require => false
 gem "rest-client",                      "~>2.1.0",           :require => false
+gem "ruby_parser",                                           :require => false # Required for i18n string extraction, and DescentdantLoader (via prism)
 gem "ruby-progressbar",                 "~>1.7.0",           :require => false
 gem "rubyzip",                          "~>2.0.0",           :require => false
 gem "rugged",                           "~>1.5.0",           :require => false
@@ -297,8 +298,6 @@ group :development do
   gem "foreman"
   gem "manageiq-style",                 "~>1.5.0",           :require => false
   gem "PoParser"
-  # ruby_parser is required for i18n string extraction
-  gem "ruby_parser",                                         :require => false
   gem "yard",                           ">= 0.9.36"
 end
 
