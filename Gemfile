@@ -49,7 +49,7 @@ gem "linux_admin",                      "~>3.0",             :require => false
 gem "listen",                           "~>3.2",             :require => false
 gem "manageiq-api-client",              "~>0.3.6",           :require => false
 gem "manageiq-loggers",                 "~>1.0", ">=1.1.1",  :require => false
-gem "manageiq-messaging",               "~>1.0", ">=1.4.1",  :require => false
+gem "manageiq-messaging",               "~>1.0", ">=1.4.3",  :require => false
 gem "manageiq-password",                "~>1.0",             :require => false
 gem "manageiq-postgres_ha_admin",       "~>3.2",             :require => false
 gem "manageiq-ssh-util",                "~>0.2.0",           :require => false
@@ -284,7 +284,7 @@ end
 
 group :appliance, :optional => true do
   gem "irb",                            "=1.4.1",            :require => false # Locked to same version as the installed RPM rubygem-irb-1.4.1-142.module_el9+787+b20bfeee.noarch so that we don't bundle our own
-  gem "manageiq-appliance_console",     "~>9.0", ">= 9.0.2", :require => false
+  gem "manageiq-appliance_console",     "~>9.0", ">= 9.0.3", :require => false
   gem "rdoc",                                                :require => false # Needed for rails console
 end
 
