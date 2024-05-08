@@ -1,4 +1,4 @@
-module ExtManagementSystem::SupportsAttribute
+module SupportsAttribute
   extend ActiveSupport::Concern
 
   class_methods do
