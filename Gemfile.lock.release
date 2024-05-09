@@ -880,7 +880,7 @@ GEM
       json (~> 2.3)
       more_core_extensions
       query_relation
-    manageiq-appliance_console (9.0.2)
+    manageiq-appliance_console (9.0.3)
       activerecord (>= 6.1.7.6)
       activesupport (>= 6.1.7.6)
       awesome_spawn (~> 1.6)
@@ -899,8 +899,8 @@ GEM
     manageiq-loggers (1.1.1)
       activesupport (>= 5.0, < 7.1)
       manageiq-password (< 2)
-    manageiq-messaging (1.4.1)
-      activesupport (>= 5.2.4.3, < 7.0)
+    manageiq-messaging (1.4.3)
+      activesupport (>= 5.2.4.3, < 7.1)
       rdkafka (~> 0.8)
       stomp (~> 1.4.4)
     manageiq-password (1.2.0)
@@ -1399,14 +1399,14 @@ DEPENDENCIES
   listen (~> 3.2)
   manageiq-api!
   manageiq-api-client (~> 0.3.6)
-  manageiq-appliance_console (~> 9.0, >= 9.0.2)
+  manageiq-appliance_console (~> 9.0, >= 9.0.3)
   manageiq-automation_engine!
   manageiq-consumption!
   manageiq-content!
   manageiq-decorators!
   manageiq-gems-pending (> 0)!
   manageiq-loggers (~> 1.0, >= 1.1.1)
-  manageiq-messaging (~> 1.0, >= 1.4.1)
+  manageiq-messaging (~> 1.0, >= 1.4.3)
   manageiq-password (~> 1.0)
   manageiq-postgres_ha_admin (~> 3.2)
   manageiq-providers-amazon!
