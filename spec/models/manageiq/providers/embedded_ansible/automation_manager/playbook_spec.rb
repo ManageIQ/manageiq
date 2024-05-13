@@ -41,6 +41,13 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook
       expect(job.options[:verbosity]).to eq(5)
     end
 
+    it "defaults to timeout 1.hour with execution_ttl is not passed" do
+      job = playbook.run
+
+      expect(job).to be_a(ManageIQ::Providers::AnsiblePlaybookWorkflow)
+      expect(job.options[:timeout]).to eq(1.hour)
+    end
+
     it "passes become_enabled to the job when specified" do
       job = playbook.run(:become_enabled => true)
 
