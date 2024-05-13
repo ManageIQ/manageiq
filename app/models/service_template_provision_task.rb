@@ -74,6 +74,21 @@ class ServiceTemplateProvisionTask < MiqRequestTask
     result
   end
 
+  def deliver_queue(*)
+    # If we have a workflow in our resource action, change it to be a generic
+    # CatalogItemInitialization AE entrypoint
+    if resource_action&.configuration_script_payload
+      resource_action.update!(
+        :ae_namespace            => "Service/Provisioning/StateMachines",
+        :ae_class                => "ServiceProvision_Template",
+        :ae_instance             => "CatalogItemInitialization",
+        :configuration_script_id => nil
+      )
+    end
+
+    super
+  end
+
   def after_request_task_create
     update_attribute(:description, get_description)
     create_child_tasks
