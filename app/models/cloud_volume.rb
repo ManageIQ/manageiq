@@ -7,6 +7,7 @@ class CloudVolume < ApplicationRecord
   include CustomActionsMixin
   include EmsRefreshMixin
   include Operations
+  include SupportsAttribute
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ExtManagementSystem"
   belongs_to :availability_zone
@@ -24,11 +25,7 @@ class CloudVolume < ApplicationRecord
   has_many   :host_initiators, :through => :volume_mappings
 
   delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
-  virtual_column :supports_safe_delete, :type => :boolean
-
-  def supports_safe_delete
-    supports?(:safe_delete)
-  end
+  supports_attribute :feature => :safe_delete
 
   acts_as_miq_taggable
 
