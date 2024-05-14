@@ -29,7 +29,7 @@ module MiqPreloader
     else
       # Rails 7+ interface, see rails commit: e3b9779cb701c63012bc1af007c71dc5a888d35a
       # Note, added Array(records) as it could be a single element
-      ActiveRecord::Associations::Preloader.new(records: Array(records), associations: associations, scope: preload_scope).call
+      ActiveRecord::Associations::Preloader.new(records: Array(records), associations: associations, available_records: Array(preload_scope)).call
     end
   end
 

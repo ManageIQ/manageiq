@@ -72,7 +72,7 @@ RSpec.describe ToModelHash do
     def assert_preloaded(associations)
       if rails7
         allow(ActiveRecord::Associations::Preloader).to receive(:new)
-          .with(associations: array_including(associations), records: array_including(instance_of(test_vm_class)), scope: nil)
+          .with(records: kind_of(Array), associations: array_including(associations), available_records: kind_of(Array))
           .and_return(mocked_preloader)
         expect(mocked_preloader).to receive(:call)
       else
