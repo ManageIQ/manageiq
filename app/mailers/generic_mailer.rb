@@ -69,7 +69,7 @@ class GenericMailer < ActionMailer::Base
 
     # Fail the task if there is no server with the notifier role in this region
     unless MiqRegion.my_region.role_assigned?('notifier')
-      task.error(_("No server with notifier role in region"))
+      task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_ERROR, _("No server with notifier role in region"))
       return task
     end
 
