@@ -74,21 +74,6 @@ class ServiceTemplateProvisionTask < MiqRequestTask
     result
   end
 
-  def deliver_queue(*)
-    # If we have a workflow in our resource action, change it to be a generic
-    # CatalogItemInitialization AE entrypoint
-    if resource_action&.configuration_script_payload
-      resource_action.update!(
-        :ae_namespace            => "Service/Provisioning/StateMachines",
-        :ae_class                => "ServiceProvision_Template",
-        :ae_instance             => "CatalogItemInitialization",
-        :configuration_script_id => nil
-      )
-    end
-
-    super
-  end
-
   def after_request_task_create
     update_attribute(:description, get_description)
     create_child_tasks
@@ -153,10 +138,18 @@ class ServiceTemplateProvisionTask < MiqRequestTask
     ra = resource_action
 
     unless ra.nil?
-      args[:namespace]        = ra.ae_namespace if ra.ae_namespace.present?
-      args[:class_name]       = ra.ae_class     if ra.ae_class.present?
-      args[:instance_name]    = ra.ae_instance  if ra.ae_instance.present?
-      args[:automate_message] = ra.ae_message   if ra.ae_message.present?
+      if ra.configuration_script_payload
+        args[:namespace]        = "Service/Provisioning/StateMachines"
+        args[:class_name]       = "ServiceProvision_Template"
+        args[:instance_name]    = "CatalogItemInitialization"
+        args[:automate_message] = nil
+      else
+        args[:namespace]        = ra.ae_namespace if ra.ae_namespace.present?
+        args[:class_name]       = ra.ae_class     if ra.ae_class.present?
+        args[:instance_name]    = ra.ae_instance  if ra.ae_instance.present?
+        args[:automate_message] = ra.ae_message   if ra.ae_message.present?
+      end
+
       args[:attrs].merge!(ra.ae_attributes)
     end
 
