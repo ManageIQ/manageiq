@@ -52,7 +52,7 @@ class GenericMailer < ActionMailer::Base
       queue_options.reverse_merge(
         :service     => "notifier",
         :class_name  => name,
-        :method_name => 'deliver',
+        :method_name => 'deliver!',
         :args        => [method, options]
       )
     )
