@@ -38,7 +38,7 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
   private
 
   def service_options(parent_svc, service_task, template_service_resource)
-    parent_service_task = MiqRequestTask.find(service_task.options[:parent_task_id])
+    parent_service_task = get_parent_task(service_task)
 
     {
       :miq_force_unique_name           => [true, 1],
