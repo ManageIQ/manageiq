@@ -166,7 +166,7 @@ group :ibm_terraform, :manageiq_default do
 end
 
 group :embedded_terraform, :manageiq_default do
-  gem "manageiq-providers-embedded_terraform", :git => "https://github.com/agrare/manageiq-providers-embedded_terraform", :branch => "add_opentofu_worker_container_image"
+  gem "manageiq-providers-embedded_terraform", :git => "https://github.com/sudhir-kelkar/manageiq-providers-embedded_terraform", :branch => "createOpentofuContainerPort"
 end
 
 group :kubernetes, :openshift, :manageiq_default do
