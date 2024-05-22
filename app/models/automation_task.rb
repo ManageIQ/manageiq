@@ -10,6 +10,10 @@ class AutomationTask < MiqRequestTask
     AutomationTask
   end
 
+  def statemachine_task_status
+    state == "finished" ? status.to_s.downcase : "retry"
+  end
+
   def do_request
     args = {}
     args[:object_type]      = self.class.name

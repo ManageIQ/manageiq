@@ -7,7 +7,7 @@ module MiqProvision::StateMachineSpecHelper
 
   def test_poll_destination_in_vmdb
     @test_poll_destination_in_vmdb_setup ||= begin
-      expect(task).to receive(:requeue_phase).twice { requeue_phase }
+      expect(task).to(receive(:requeue_phase).twice { requeue_phase })
       expect(task).to receive(:find_destination_in_vmdb).and_return(nil, nil, vm)
     end
     expect(task.destination).to be_nil
@@ -64,7 +64,7 @@ module MiqProvision::StateMachineSpecHelper
 
   def test_poll_destination_powered_off_in_provider_no_callback
     @test_poll_destination_powered_off_in_provider_no_callback_setup ||= begin
-      expect(task).to receive(:requeue_phase).twice { requeue_phase(__method__) }
+      expect(task).to(receive(:requeue_phase).twice { requeue_phase(__method__) })
     end
 
     skip_post_install_check { call_method }

@@ -1,7 +1,7 @@
 RSpec.describe ChargebackContainerImage do
   include Spec::Support::ChargebackHelper
 
-  let(:base_options) { {:interval_size => 2, :end_interval_offset => 0, :ext_options => {:tz => 'UTC'} } }
+  let(:base_options) { {:interval_size => 2, :end_interval_offset => 0, :ext_options => {:tz => 'UTC'}} }
   let(:hourly_rate)       { 0.01 }
   let(:count_hourly_rate) { 1.00 }
   let(:starting_date) { Time.parse('2012-09-01 23:59:59Z').utc }
@@ -45,7 +45,7 @@ RSpec.describe ChargebackContainerImage do
                                     :limit_memory_bytes => 1.megabytes, :limit_cpu_cores => 1.0)
     cat = FactoryBot.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
     c = FactoryBot.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
-    ChargebackRate.set_assignments(:compute, [{ :cb_rate => chargeback_rate, :tag => [c, "container_image"] }])
+    ChargebackRate.set_assignments(:compute, [{:cb_rate => chargeback_rate, :tag => [c, "container_image"]}])
 
     @tag = c.tag
     @project.tag_with(@tag.name, :ns => '*')
@@ -136,7 +136,7 @@ RSpec.describe ChargebackContainerImage do
     before do
       @image.docker_labels << @label
       @image.save
-      ChargebackRate.set_assignments(:compute, [{ :cb_rate => chargeback_rate, :label => [@label, "container_image"] }])
+      ChargebackRate.set_assignments(:compute, [{:cb_rate => chargeback_rate, :label => [@label, "container_image"]}])
 
       add_metric_rollups_for(@image, month_beginning...month_end, 12.hours, metric_rollup_params)
 
@@ -174,7 +174,7 @@ RSpec.describe ChargebackContainerImage do
         end
       end
 
-      let(:rate_assignment_options) { {:cb_rate => chargeback_rate, :object => MiqEnterprise.first } }
+      let(:rate_assignment_options) { {:cb_rate => chargeback_rate, :object => MiqEnterprise.first} }
 
       before do
         ChargebackRate.set_assignments(:compute, [rate_assignment_options])

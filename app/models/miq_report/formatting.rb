@@ -19,7 +19,7 @@ module MiqReport::Formatting
     function_name = format[:function][:name]
 
     options = format.merge(format[:function]).slice(
-      *%i(delimiter separator precision length tz column format prefix suffix description unit))
+      *%i[delimiter separator precision length tz column format prefix suffix description unit])
 
     [function_name, options]
   end
@@ -104,6 +104,7 @@ module MiqReport::Formatting
 
   def apply_format_precision(value, precision)
     return value if precision.nil? || !(value.kind_of?(Integer) || value.kind_of?(Float))
+
     Kernel.format("%.#{precision}f", value)
   end
 
@@ -135,7 +136,7 @@ module MiqReport::Formatting
     helper_options = {}
     helper_options[:delimiter] = options[:delimiter] if options.key?(:delimiter)
     helper_options[:separator] = options[:separator] if options.key?(:separator)
-    helper_options[:unit] = options [:unit] if options.key?(:unit)
+    helper_options[:unit] = options[:unit] if options.key?(:unit)
     val = apply_format_precision(val, options[:precision])
     val = ApplicationController.helpers.number_to_currency(val, helper_options)
     apply_prefix_and_suffix(val, options)
@@ -171,15 +172,15 @@ module MiqReport::Formatting
 
     case options[:format]
     when "yes_no"
-      return val == true ? "Yes" : "No"
+      val == true ? "Yes" : "No"
     when "y_n"
-      return val == true ? "Y" : "N"
+      val == true ? "Y" : "N"
     when "t_f"
-      return val == true ? "T" : "F"
+      val == true ? "T" : "F"
     when "pass_fail"
-      return val == true ? "Pass" : "Fail"
+      val == true ? "Pass" : "Fail"
     else
-      return val.to_s.titleize
+      val.to_s.titleize
     end
   end
 
@@ -188,6 +189,7 @@ module MiqReport::Formatting
 
     val = val.in_time_zone(options[:tz]) if val.kind_of?(Time) && options[:tz]
     return val if options[:format].nil?
+
     val.strftime(options[:format])
   end
 
@@ -205,22 +207,23 @@ module MiqReport::Formatting
     _col, sfx = col.to_s.split("__") # The suffix (month, quarter, year) defines the range
 
     val = val.in_time_zone(get_time_zone("UTC"))
-    if val.respond_to?("beginning_of_#{sfx}")
-      stime = val.send("beginning_of_#{sfx}")
-      etime = val.send("end_of_#{sfx}")
+    if val.respond_to?(:"beginning_of_#{sfx}")
+      stime = val.send(:"beginning_of_#{sfx}")
+      etime = val.send(:"end_of_#{sfx}")
     else
       stime = etime = val
     end
 
     if options[:description].to_s.include?("Start")
-      return stime.strftime(options[:format])
+      stime.strftime(options[:format])
     else
-      return "(#{stime.strftime(options[:format])} - #{etime.strftime(options[:format])})"
+      "(#{stime.strftime(options[:format])} - #{etime.strftime(options[:format])})"
     end
   end
 
   def format_set(val, options)
     return val unless val.kind_of?(Array)
+
     options[:delimiter] ||= ", "
     val.join(options[:delimiter])
   end
@@ -237,7 +240,7 @@ module MiqReport::Formatting
   def format_elapsed_time_human(val, _options)
     val = val.to_i
 
-    names = %w(day hour minute second)
+    names = %w[day hour minute second]
 
     days    = (val / 86400)
     hours   = (val / 3600) - (days * 24)
@@ -268,6 +271,7 @@ module MiqReport::Formatting
 
   def format_large_number_to_exponential_form(val, _options = {})
     return val if val.to_f < 1.0e+15
+
     val.to_f.to_s
   end
 

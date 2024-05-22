@@ -16,7 +16,7 @@ class PxeServer < ApplicationRecord
 
   has_many :pxe_menus,      :dependent => :destroy
   has_many :pxe_images,     :dependent => :destroy
-  has_many :advertised_pxe_images, -> { where("pxe_menu_id IS NOT NULL") }, :class_name => "PxeImage"
+  has_many :advertised_pxe_images, -> { where.not(pxe_menu_id: nil) }, :class_name => "PxeImage"
   has_many :discovered_pxe_images, -> { where(:pxe_menu_id => nil) }, :class_name => "PxeImage"
   has_many :windows_images, :dependent => :destroy
 
@@ -86,7 +86,7 @@ class PxeServer < ApplicationRecord
     with_depot do
       begin
         file_glob("#{pxe_directory}/*").each do |f|
-          next unless self.file_file?(f)
+          next unless file_file?(f)
 
           relative_path = Pathname.new(f).relative_path_from(Pathname.new(pxe_directory)).to_s
 
@@ -139,7 +139,7 @@ class PxeServer < ApplicationRecord
     with_depot do
       begin
         file_glob("#{windows_images_directory}/*.wim").each do |f|
-          next unless self.file_file?(f)
+          next unless file_file?(f)
 
           path = Pathname.new(f).relative_path_from(Pathname.new(windows_images_directory)).to_s
 
@@ -147,12 +147,12 @@ class PxeServer < ApplicationRecord
           wim_parser.xml_data["images"].each do |image_hash|
             index   = image_hash["index"]
 
-            image   = current.delete([path, index]) || windows_images.build
+            image = current.delete([path, index]) || windows_images.build
             stats[image.new_record? ? :adds : :updates] += 1
 
             image.update(
               :name        => image_hash["name"],
-              :description => image_hash["description"].blank? ? nil : image_hash["description"],
+              :description => image_hash["description"].presence,
               :path        => path,
               :index       => index
             )

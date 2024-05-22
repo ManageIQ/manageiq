@@ -55,7 +55,7 @@ module MiqAeYamlImportExportMixin
   def add_method(class_obj, method_yaml)
     method_attributes = method_yaml.fetch_path('object', 'attributes')
     _log.info("Importing method:    <#{method_attributes['name']}>")
-    fields  = method_yaml.fetch_path('object', 'inputs')
+    fields = method_yaml.fetch_path('object', 'inputs')
     method_attributes['class_id'] = class_obj.id
     MiqAeMethod.new(method_attributes).tap do |method_obj|
       method_obj.inputs = process_fields(fields) unless fields.nil?
@@ -71,6 +71,7 @@ module MiqAeYamlImportExportMixin
     field.each do |fname, value|
       ae_field = instance_obj.ae_class.ae_fields.detect { |f| fname.casecmp(f.name) == 0 }
       raise MiqAeException::FieldNotFound, "Field [#{fname}] not found in MiqAeDatastore" if ae_field.nil?
+
       instance_obj.ae_values << MiqAeValue.new({'ae_field' => ae_field}.merge(value))
     end
   end

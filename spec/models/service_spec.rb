@@ -87,7 +87,7 @@ RSpec.describe Service do
     end
 
     it "#power_states" do
-      expect(@service.power_states).to eq %w(on on on on)
+      expect(@service.power_states).to eq %w[on on on on]
     end
 
     it "#update_progress" do

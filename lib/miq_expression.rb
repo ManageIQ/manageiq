@@ -8,7 +8,7 @@ class MiqExpression
   include Vmdb::Logging
   attr_accessor :exp, :context_type, :preprocess_options
 
-  config = YAML.load(ERB.new(File.read(Rails.root.join("config", "miq_expression.yml"))).result) # rubocop:disable Security/YAMLLoad
+  config = YAML.load(ERB.new(File.read(Rails.root.join("config/miq_expression.yml"))).result) # rubocop:disable Security/YAMLLoad
   BASE_TABLES = config[:base_tables]
   INCLUDE_TABLES = config[:include_tables]
   EXCLUDE_COLUMNS = config[:exclude_columns]
@@ -43,7 +43,7 @@ class MiqExpression
     when "not", "!"
       valid?(component[operator])
     when "find"
-      validate_set = Set.new(%w(checkall checkany checkcount search))
+      validate_set = Set.new(%w[checkall checkany checkcount search])
       validate_keys = component[operator].keys.select { |k| validate_set.include?(k) }
       validate_keys.all? { |k| valid?(component[operator][k]) }
     else
@@ -62,6 +62,7 @@ class MiqExpression
   def set_tagged_target(model, associations = [])
     each_atom(exp) do |atom|
       next unless atom.key?("tag")
+
       tag = Tag.parse(atom["tag"])
       tag.model = model
       tag.associations = associations
@@ -71,6 +72,7 @@ class MiqExpression
 
   def self.proto?
     return @proto if defined?(@proto)
+
     @proto = ::Settings.product.proto
   end
 
@@ -84,9 +86,9 @@ class MiqExpression
       when "tag"
         tag = [exp["ns"], exp["tag"]].join("/")
         if exp["include"] == "none"
-          return "Not Tagged With #{tag}"
+          "Not Tagged With #{tag}"
         else
-          return "Tagged With #{tag}"
+          "Tagged With #{tag}"
         end
       when "script"
         if exp["expr"] == "true"
@@ -132,6 +134,7 @@ class MiqExpression
       check = "checkany" if exp[operator].include?("checkany")
       check = "checkcount" if exp[operator].include?("checkcount")
       raise _("expression malformed,  must contain one of 'checkall', 'checkany', 'checkcount'") unless check
+
       check =~ /^check(.*)$/
       mode = $1.upcase
       clause = "FIND" + " " + _to_human(exp[operator]["search"]) + " CHECK " + mode + " " + _to_human(exp[operator][check], :include_table => false).strip
@@ -269,6 +272,7 @@ class MiqExpression
                    # So we have to trick it by replacing the value with the description.
                    description = MiqExpression.get_entry_details(op_args["tag"]).inject("") do |s, t|
                      break(t.first) if t.last == op_args["value"]
+
                      s
                    end
                    val = op_args["tag"].split(".").last.split("-").join(".")
@@ -287,6 +291,7 @@ class MiqExpression
         op_args[check][op]["field"] = "<count>"
       end
       raise _("expression malformed,  must contain one of 'checkall', 'checkany', 'checkcount'") unless check
+
       check =~ /^check(.*)$/
       mode = $1.downcase
       clause = "<find><search>" + _to_ruby(op_args["search"], context_type, tz) + "</search>" \
@@ -324,7 +329,7 @@ class MiqExpression
     pexp, seen = prune_exp(pexp, MODE_SQL)
     attrs = {:supported_by_sql => (seen == MODE_SQL)}
     sql = to_arel(pexp, tz).to_sql if pexp.present?
-    incl = includes_for_sql unless sql.blank?
+    incl = includes_for_sql if sql.present?
     [sql, incl, attrs]
   end
 
@@ -470,27 +475,27 @@ class MiqExpression
       elsif exp[operator].key?("field")
         Field.parse(exp[operator]["field"]).attribute_supported_by_sql?
       else
-        return false
+        false
       end
     when "includes"
       # Support includes operator using "LIKE" only if first operand is in main table
       if exp[operator].key?("field") && (!exp[operator]["field"].include?(".") || (exp[operator]["field"].include?(".") && exp[operator]["field"].split(".").length == 2))
-        return field_in_sql?(exp[operator]["field"])
+        field_in_sql?(exp[operator]["field"])
       else
         # TODO: Support includes operator for sub-sub-tables
-        return false
+        false
       end
     when "includes any", "includes all", "includes only"
       # Support this only from the main model (for now)
       if exp[operator].keys.include?("field") && exp[operator]["field"].split(".").length == 1
         model, field = exp[operator]["field"].split("-")
         method = "miq_expression_#{operator.downcase.tr(' ', '_')}_#{field}_arel"
-        return model.constantize.respond_to?(method)
+        model.constantize.respond_to?(method)
       else
-        return false
+        false
       end
     when "find", "regular expression matches", "regular expression does not match", "key exists", "value exists"
-      return false
+      false
     else
       # => false if operand is a tag
       return false if exp[operator].keys.include?("tag")
@@ -501,7 +506,7 @@ class MiqExpression
       # => TODO: support count of child relationship
       return false if exp[operator].key?("count")
 
-      return field_in_sql?(exp[operator]["field"]) && value_in_sql?(exp[operator]["value"])
+      field_in_sql?(exp[operator]["field"]) && value_in_sql?(exp[operator]["value"])
     end
   end
 
@@ -520,6 +525,7 @@ class MiqExpression
 
   def attribute_supported_by_sql?(field)
     return false unless col_details[field]
+
     col_details[field][:sql_support]
   end
   # private attribute_supported_by_sql? -- tests only
@@ -580,16 +586,16 @@ class MiqExpression
   end
 
   def self.evaluate_atoms(exp, obj)
-    exp = exp.kind_of?(self) ? copy_hash(exp.exp) : exp
+    exp = copy_hash(exp.exp) if exp.kind_of?(self)
     exp["result"] = new(exp).evaluate(obj)
 
     operators = exp.keys
     operators.each do |k|
-      if %w(and or).include?(k.to_s.downcase) # and/or atom is an array of atoms
+      if %w[and or].include?(k.to_s.downcase) # and/or atom is an array of atoms
         exp[k].each do |atom|
           evaluate_atoms(atom, obj)
         end
-      elsif %w(not !).include?(k.to_s.downcase) # not atom is a hash expression
+      elsif %w[not !].include?(k.to_s.downcase) # not atom is a hash expression
         evaluate_atoms(exp[k], obj)
       else
         next
@@ -664,6 +670,7 @@ class MiqExpression
         elsif first
           first = nil
           next unless options[:include_model] == true
+
           Dictionary.gettext(t, :type => :model, :notfound => :titleize)
         else
           Dictionary.gettext(t, :type => :table, :notfound => :titleize)
@@ -744,9 +751,11 @@ class MiqExpression
       val.to_s.inspect
     when :date
       return "nil" if val.blank? # treat nil value as empty string
+
       "Date.new(#{val.year},#{val.month},#{val.day})"
     when :datetime
       return "nil" if val.blank? # treat nil value as empty string
+
       val = val.utc
       "Time.utc(#{val.year},#{val.month},#{val.day},#{val.hour},#{val.min},#{val.sec})"
     when :integer, :decimal, :fixnum
@@ -796,7 +805,8 @@ class MiqExpression
     case typ&.to_sym
     when :integer, :decimal, :fixnum, :float
       return val.to_i unless val.to_s.number_with_method? || typ == :float
-      if val =~ /^([0-9\.,]+)\.([a-z]+)$/
+
+      if val =~ /^([0-9.,]+)\.([a-z]+)$/
         val, sfx = $1, $2
         if sfx.ends_with?("bytes") && FORMAT_BYTE_SUFFIXES.key?(sfx.to_sym)
           "#{val} #{FORMAT_BYTE_SUFFIXES[sfx.to_sym]}"
@@ -825,12 +835,12 @@ class MiqExpression
   # eval("/" + regexp_string + "/")
   # ```
   def self.re_escape(s)
-    Regexp.escape(s).gsub(/\//, '\/')
+    Regexp.escape(s).gsub("/", '\/')
   end
 
   # Escape any unescaped forward slashes and/or interpolation
   def self.sanitize_regular_expression(string)
-    string.gsub(%r{\\*/}, "\\/").gsub(/\\*#/, "\\\#")
+    string.gsub(%r{\\*/}, "\\/").gsub(/\\*#/, "\\#")
   end
 
   def self.escape_virtual_custom_attribute(attribute)
@@ -897,11 +907,12 @@ class MiqExpression
       result = []
       TAG_CLASSES.invert.each do |name, tc|
         next if tc.constantize.base_class == model.constantize.base_class
+
         path = [model, name].join(".")
         result.concat(tag_details(path, opts))
       end
       @classifications = nil
-      return tags_for_model.concat(result.sort! { |a, b| a.to_s <=> b.to_s })
+      return tags_for_model.concat(result.sort_by!(&:to_s))
     end
 
     relats = get_relats(model)
@@ -911,7 +922,7 @@ class MiqExpression
       @column_cache ||= {}
       key = "#{model}_#{opts[:interval]}_#{opts[:include_model] || false}"
       @column_cache[key] = nil if model == "ChargebackVm"
-      @column_cache[key] ||= get_column_details(relats[:columns], model, model, opts).sort! { |a, b| a.to_s <=> b.to_s }
+      @column_cache[key] ||= get_column_details(relats[:columns], model, model, opts).sort_by!(&:to_s)
       result.concat(@column_cache[key])
 
       unless opts[:disallow_loading_virtual_custom_attributes]
@@ -987,7 +998,7 @@ class MiqExpression
       field = [prefix, opts[:userid]].join("_")
       result.push([value2human(field, opts), field])
     end
-    result.sort! { |a, b| a.to_s <=> b.to_s }
+    result.sort_by!(&:to_s)
   end
 
   def self.get_relats(model)
@@ -1002,7 +1013,7 @@ class MiqExpression
     options = {:include_model => true}.merge(extra_options)
 
     case what.to_sym
-    when :exp_available_fields then
+    when :exp_available_fields
       @miq_adv_search_lists[model.to_s][:exp_available_fields] ||= MiqExpression.model_details(model, options.merge(:typ => "field", :disallow_loading_virtual_custom_attributes => false))
     when :exp_available_counts then @miq_adv_search_lists[model.to_s][:exp_available_counts] ||= MiqExpression.model_details(model, options.merge(:typ => "count"))
     when :exp_available_finds  then @miq_adv_search_lists[model.to_s][:exp_available_finds]  ||= MiqExpression.model_details(model, options.merge(:typ => "find"))
@@ -1074,6 +1085,7 @@ class MiqExpression
               parent[:assoc_path].include?(assoc.to_s.singularize) ||
               parent[:direction] == :up ||
               parent[:multivalue]
+
       seen.push(seen_key)
       result[:reflections][assoc] = build_relats(assoc_class, new_parent, seen)
     end
@@ -1111,6 +1123,7 @@ class MiqExpression
       includes = ["^.*derived_storage.*$", "^timestamp$", "v_date", "v_time", "resource_name"]
       column_names = column_names.collect do |c|
         next(c) if includes.include?(c)
+
         c if includes.detect { |incl| c.match(incl) }
       end.compact
     when base_model.starts_with?("Container")
@@ -1132,6 +1145,7 @@ class MiqExpression
         end
       end
       next unless col
+
       field_class_path = "#{class_path}-#{col}"
       field_assoc_path = "#{assoc_path}-#{col}"
       [value2human(field_class_path, :include_model => include_model), field_assoc_path]
@@ -1140,7 +1154,7 @@ class MiqExpression
 
   def self.get_col_operators(field)
     col_type =
-      if field == :count || field == :regkey
+      if [:count, :regkey].include?(field)
         field
       else
         Target.parse(field.to_s).column_type || :string
@@ -1174,15 +1188,15 @@ class MiqExpression
     if ns == "managed"
       cat = field.split("-").last
       catobj = Classification.lookup_by_name(cat)
-      return catobj ? catobj.entries.collect { |e| [e.description, e.name] } : []
-    elsif ns == "user_tag" || ns == "user"
+      catobj ? catobj.entries.collect { |e| [e.description, e.name] } : []
+    elsif ["user_tag", "user"].include?(ns)
       cat = field.split("-").last
-      return ::Tag.where("name like ?", "/user/#{cat}%").select(:name).collect do |t|
+      ::Tag.where("name like ?", "/user/#{cat}%").select(:name).collect do |t|
         tag_name = t.name.split("/").last
         [tag_name, tag_name]
       end
     else
-      return field
+      field
     end
   end
 
@@ -1205,7 +1219,7 @@ class MiqExpression
 
     case dt
     when :string, :text
-      return false
+      false
     when :integer, :fixnum, :decimal, :float
       return false if send((dt == :float ? :numeric? : :integer?), value)
 
@@ -1218,7 +1232,7 @@ class MiqExpression
         value = "#{value.split(".")[0..-2].join(".")} #{sfx}"
       end
 
-      return _("Value '%{value}' is not a valid %{value_name}") % {:value => value, :value_name => dt_human}
+      _("Value '%{value}' is not a valid %{value_name}") % {:value => value, :value_name => dt_human}
     when :date, :datetime
       return false if operator.downcase.include?("empty")
 
@@ -1228,24 +1242,27 @@ class MiqExpression
 
       values_converted = values.collect do |v|
         return _("Date/Time value must not be blank") if value.blank?
+
         v_cvt = begin
                   RelativeDatetime.normalize(v, "UTC")
                 rescue
                   nil
                 end
         return _("Value '%{value}' is not valid") % {:value => v} if v_cvt.nil?
+
         v_cvt
       end
       if values_converted.length > 1 && values_converted[0] > values_converted[1]
         return _("Invalid Date/Time range, %{first_value} comes before %{second_value}") % {:first_value  => values[1],
                                                                                             :second_value => values[0]}
       end
-      return false
+      false
     when :boolean
-      unless operator.downcase.include?("null") || %w(true false).include?(value)
+      unless operator.downcase.include?("null") || %w[true false].include?(value)
         return _("Value must be true or false")
       end
-      return false
+
+      false
     when :regexp
       begin
         Regexp.new(value).match("foo")
@@ -1253,9 +1270,9 @@ class MiqExpression
         return _("Regular expression '%{value}' is invalid, '%{error_message}'") % {:value         => value,
                                                                                     :error_message => err.message}
       end
-      return false
+      false
     else
-      return false
+      false
     end
   end
 
@@ -1288,14 +1305,15 @@ class MiqExpression
     n2 = n.delete(',') # strip out commas
     begin
       Integer(n2)
-      return true
+      true
     rescue
       return false unless n.number_with_method?
+
       begin
         n2 = n.to_f_with_method
-        return (n2.to_i == n2)
+        (n2.to_i == n2)
       rescue
-        return false
+        false
       end
     end
   end
@@ -1305,14 +1323,15 @@ class MiqExpression
     n2 = n.delete(',') # strip out commas
     begin
       Float(n2)
-      return true
+      true
     rescue
       return false unless n.number_with_method?
+
       begin
         n.to_f_with_method
-        return true
+        true
       rescue
-        return false
+        false
       end
     end
   end
@@ -1320,6 +1339,7 @@ class MiqExpression
   # Is an MiqExpression or an expression hash a quick_search
   def self.quick_search?(exp)
     return exp.quick_search? if exp.kind_of?(self)
+
     _quick_search?(exp)
   end
 
@@ -1334,6 +1354,7 @@ class MiqExpression
       e.any? { |e_exp| _quick_search?(e_exp) }
     when Hash
       return true if e["value"] == :user_input
+
       e.values.any? { |e_exp| _quick_search?(e_exp) }
     else
       false
@@ -1376,7 +1397,7 @@ class MiqExpression
   def convert_size_in_units_to_integer(exp)
     return if (column_details = col_details[exp.values.first["field"]]).nil?
     # attempt to do conversion only if db type of column is integer and value to compare to is String
-    return unless column_details[:data_type] == :integer && (value = exp.values.first["value"]).class == String
+    return unless column_details[:data_type] == :integer && (value = exp.values.first["value"]).instance_of?(String)
 
     sub_type = column_details[:format_sub_type]
 
@@ -1464,16 +1485,20 @@ class MiqExpression
     when "and"
       operands = exp[operator].each_with_object([]) do |operand, result|
         next if operand.blank?
+
         arel = to_arel(operand, tz)
         next if arel.blank?
+
         result << arel
       end
       Arel::Nodes::Grouping.new(Arel::Nodes::And.new(operands))
     when "or"
       operands = exp[operator].each_with_object([]) do |operand, result|
         next if operand.blank?
+
         arel = to_arel(operand, tz)
         next if arel.blank?
+
         result << arel
       end
       first, *rest = operands

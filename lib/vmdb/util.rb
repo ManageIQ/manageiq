@@ -27,13 +27,12 @@ module VMDB
 
     def self.compressed_log_patterns
       # From a log file create an array of strings containing the date patterns
-      log_dir = File.join(Rails.root, "log")
+      log_dir = Rails.root.join("log").to_s
       gz_pattern = File.join(log_dir, "*[0-9][0-9].gz")
-      Dir.glob(gz_pattern).inject([]) do |arr, f|
-        f.match(/.+-(\d+\.gz)/)
+      Dir.glob(gz_pattern).each_with_object([]) do |f, arr|
+        f =~ /.+-(\d+\.gz)/
         name = File.join(log_dir, "*#{$1}")
         arr << name unless $1.nil? || arr.include?(name)
-        arr
       end
     end
 
@@ -43,10 +42,11 @@ module VMDB
       files.find { |f| f.match(/\/evm\.log/) }
     end
 
-    LOG_TIMESTAMP_REGEX = /\[(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6})\s#/.freeze
+    LOG_TIMESTAMP_REGEX = /\[(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6})\s#/
 
     def self.log_timestamp(str)
       return nil unless str
+
       t  = Time.parse(str)
       Time.utc(t.year, t.month, t.day, t.hour, t.min, t.sec, 0)
     end
@@ -83,6 +83,7 @@ module VMDB
           gz.each_line do |line|
             line_count += 1
             next unless line =~ LOG_TIMESTAMP_REGEX
+
             start_time_str ||= $1
             end_time_str     = $1
           end
@@ -98,7 +99,7 @@ module VMDB
         end
       rescue Exception => e
         _log.error(e.to_s)
-        return []
+        []
       end
     end
 
@@ -154,8 +155,7 @@ module VMDB
     def self.zip_entry_from_path(path)
       rails_root_directories = Rails.root.to_s.split("/")
       within_rails_root = path.split("/")[0, rails_root_directories.length] == rails_root_directories
-      entry = within_rails_root ? Pathname.new(path).relative_path_from(Rails.root).to_s : "ROOT#{path}"
-      entry
+      within_rails_root ? Pathname.new(path).relative_path_from(Rails.root).to_s : "ROOT#{path}"
     end
     private_class_method :zip_entry_from_path
 

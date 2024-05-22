@@ -16,7 +16,7 @@ class MiqAeNamespace < ApplicationRecord
            :foreign_key => :namespace_id, :dependent => :destroy, :inverse_of => :ae_namespace
 
   validates :name,
-            :format                  => {:with => /\A[\w\.\-\$]+\z/i, :message => N_("may contain only alphanumeric and _ . - $ characters")},
+            :format                  => {:with => /\A[\w.\-$]+\z/i, :message => N_("may contain only alphanumeric and _ . - $ characters")},
             :presence                => true,
             :uniqueness_when_changed => {:scope => :ancestry, :case_sensitive => false}
 
@@ -59,6 +59,7 @@ class MiqAeNamespace < ApplicationRecord
 
       found = lookup_by_fqname(parts.join('/'), include_classes)
       break unless found.nil?
+
       new_parts.unshift(parts.pop)
     end
 
@@ -72,9 +73,8 @@ class MiqAeNamespace < ApplicationRecord
   # TODO: broken since 2017
   def self.find_tree(find_options = {})
     namespaces = where(find_options)
-    ns_lookup = namespaces.inject({}) do |h, ns|
-      h[ns.id] = ns
-      h
+    ns_lookup = namespaces.index_by do |ns|
+      ns.id
     end
 
     roots = []
@@ -100,11 +100,13 @@ class MiqAeNamespace < ApplicationRecord
     raise ArgumentError, "User not provided to editable?" unless user
     return false if domain? && user.current_tenant.id != tenant_id
     return source == MiqAeDomain::USER_SOURCE if domain?
+
     ancestors.all? { |a| a.editable?(user) }
   end
 
   def ns_fqname
     return nil if fqname == domain_name
+
     fqname.sub(domain_name.to_s, '')
   end
 

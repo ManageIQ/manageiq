@@ -1,4 +1,5 @@
 # coding: utf-8
+
 class ProviderTagMapping
   # Performs most of the work of ProviderTagMapping - holds current mappings,
   # computes applicable tags, and creates/finds Tag records - except actually [un]assigning.
@@ -26,7 +27,7 @@ class ProviderTagMapping
         :model_class       => Tag,
         # more than needed to identify, doesn't matter much as we use custom save
         :manager_ref       => [:category_tag_id, :entry_name, :entry_description],
-        #:arel            => Tag.all,
+        # :arel            => Tag.all,
         :custom_save_block => lambda do |_ems, inv_collection|
           # TODO: O(N) queries, optimize.
           inv_collection.each do |inv_object|
@@ -38,7 +39,7 @@ class ProviderTagMapping
       @specific_tags_collection = ::InventoryRefresh::InventoryCollection.new(
         :name        => :mapped_specific_tags,
         :model_class => Tag,
-        :manager_ref => [:id],
+        :manager_ref => [:id]
       )
     end
 
@@ -126,7 +127,7 @@ class ProviderTagMapping
             emit_tag_reference(
               :category_tag_id   => tag_id,
               :entry_name        => Classification.sanitize_name(value),
-              :entry_description => value,
+              :entry_description => value
             )
           end
         end

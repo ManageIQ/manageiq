@@ -17,16 +17,19 @@ class Volume < ApplicationRecord
     # Override volume_group getter to prevent the special physical linkage from coming through
     vg = read_attribute(:volume_group)
     return nil if vg.respond_to?(:starts_with?) && vg.starts_with?(PHYSICAL_VOLUME_GROUP)
+
     vg
   end
 
   def free_space_percent
     return nil if size.nil? || size == 0 || free_space.nil?
+
     Float(free_space) / size * 100
   end
 
   def used_space_percent
     return nil if size.nil? || size == 0 || used_space.nil?
+
     Float(used_space) / size * 100
   end
 
@@ -156,6 +159,7 @@ class Volume < ApplicationRecord
 
   def self.find_disk_by_controller(parent, controller)
     return parent.hardware.disks.find_by(:controller_type => $1, :location => $2) if controller =~ /^([^0-9]+)([0-9]:[0-9]):[0-9]$/
+
     nil
   end
 end

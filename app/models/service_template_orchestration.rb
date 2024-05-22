@@ -51,6 +51,7 @@ class ServiceTemplateOrchestration < ServiceTemplate
     unless (config_info[:template_id] && config_info[:manager_id]) || (config_info[:template] && config_info[:manager])
       raise _('Must provide both template_id and manager_id or manager and template')
     end
+
     config_info
   end
 
@@ -73,6 +74,7 @@ class ServiceTemplateOrchestration < ServiceTemplate
   def validate_update_config_info(options)
     super
     return unless options.key?(:config_info)
+
     self.class.validate_config_info(options)
   end
 

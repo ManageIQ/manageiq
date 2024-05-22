@@ -1,25 +1,25 @@
 class CustomizationTemplateSysprep < CustomizationTemplate
   DISKPART_FILENAME = "diskpart.txt".freeze
-  DISKPART_CONTENTS = <<-EOF
-select disk 0
-clean
-create partition primary
-select partition 1
-format fs=ntfs label="Windows" quick
-assign letter=c
-active
-exit
-EOF
+  DISKPART_CONTENTS = <<~EOF
+    select disk 0
+    clean
+    create partition primary
+    select partition 1
+    format fs=ntfs label="Windows" quick
+    assign letter=c
+    active
+    exit
+  EOF
 
   IMAGE_BAT_FILENAME = "image.bat".freeze
-  IMAGE_BAT_CONTENTS = <<-EOF
-diskpart /s diskpart.txt
-s:\\<%= evm[:windows_images_directory] %>\\imagex.exe /apply s:\\<%= evm[:windows_images_directory] %>\\<%= evm[:windows_image_path] %> <%= evm[:windows_image_index] %> c:
-copy unattend.xml c:\\windows\\system32\\sysprep\\
-bcdboot c:\\windows /s c:
-s:\\<%= evm[:windows_images_directory] %>\\curl <%= evm[:post_install_callback_url] %>
-wpeutil shutdown
-EOF
+  IMAGE_BAT_CONTENTS = <<~EOF
+    diskpart /s diskpart.txt
+    s:\\<%= evm[:windows_images_directory] %>\\imagex.exe /apply s:\\<%= evm[:windows_images_directory] %>\\<%= evm[:windows_image_path] %> <%= evm[:windows_image_index] %> c:
+    copy unattend.xml c:\\windows\\system32\\sysprep\\
+    bcdboot c:\\windows /s c:
+    s:\\<%= evm[:windows_images_directory] %>\\curl <%= evm[:post_install_callback_url] %>
+    wpeutil shutdown
+  EOF
 
   UNATTEND_FILENAME = "unattend.xml".freeze
 
@@ -38,7 +38,7 @@ EOF
     image_bat_options = substitution_options.merge(
       :windows_images_directory => pxe_server.windows_images_directory.chomp("/").gsub("/", "\\\\"),
       :windows_image_path       => windows_image.path.chomp("/").gsub("/", "\\\\"),
-      :windows_image_index      => windows_image.index,
+      :windows_image_index      => windows_image.index
     )
     image_bat_contents = self.class.substitute_erb(IMAGE_BAT_CONTENTS, image_bat_options)
 

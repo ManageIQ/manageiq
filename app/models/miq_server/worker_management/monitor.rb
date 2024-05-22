@@ -23,8 +23,6 @@ module MiqServer::WorkerManagement::Monitor
     # Sync the workers after sync'ing the child worker settings
     sync_workers
 
-    sync_starting_workers
-
     MiqWorker.status_update_all
 
     cleanup_failed_workers
@@ -38,14 +36,17 @@ module MiqServer::WorkerManagement::Monitor
   end
 
   def sync_workers
-    MiqWorkerType.worker_classes.each_with_object({}) do |klass, result|
-      result[klass.name] = klass.sync_workers
-      result[klass.name][:adds].each { |pid| worker_add(pid) unless pid.nil? }
+    MiqWorkerType.worker_classes.each do |klass|
+      synced_workers = klass.sync_workers
+      synced_workers[:adds].each { |pid| worker_add(pid) unless pid.nil? }
     rescue => error
       _log.error("Failed to sync_workers for class: #{klass.name}: #{error}")
       _log.log_backtrace(error)
       next
     end
+
+    sync_starting_workers
+    sync_stopping_workers
   end
 
   def cleanup_failed_workers
@@ -63,6 +64,7 @@ module MiqServer::WorkerManagement::Monitor
     miq_workers.each do |w|
       next unless w.is_stopped?
       next unless worker_get_monitor_status(w.pid) == :waiting_for_stop
+
       worker_set_monitor_status(w.pid, nil)
     end
   end

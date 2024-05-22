@@ -1,4 +1,4 @@
-class ManageIQ::Providers::CloudManager::Vm < ::Vm
+class ManageIQ::Providers::CloudManager::Vm < Vm
   belongs_to :availability_zone
   belongs_to :flavor
   belongs_to :orchestration_stack

@@ -20,6 +20,7 @@ class AdvancedSetting < ApplicationRecord
 
       el.each_element { |e| result << e.attributes.to_h }
     end
+
     result
   end
 end

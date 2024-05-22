@@ -20,10 +20,10 @@ RSpec.describe FileDepotSwift do
 
     it "should return a merged uri with query strings given an empty port" do
       expect(file_depot_swift.merged_uri(uri, nil)).to eq merged_default_uri
-    end 
+    end
 
     it "should return a merged uri with query strings when given a valid port" do
       expect(file_depot_swift.merged_uri(uri, "5678")).to eq merged_uri
-    end 
+    end
   end
 end

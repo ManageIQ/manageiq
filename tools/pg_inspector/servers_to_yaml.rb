@@ -11,16 +11,16 @@ module PgInspector
 
     def parse_options(args)
       self.options = Optimist.options(args) do
-        banner <<-BANNER
+        banner <<~BANNER
 
-#{HELP_MSG_SHORT}
+          #{HELP_MSG_SHORT}
 
-Use password in PGPASSWORD environment if no password file given.
-The output file will overwrite the previous one with same name after
-successfully dumped.
+          Use password in PGPASSWORD environment if no password file given.
+          The output file will overwrite the previous one with same name after
+          successfully dumped.
 
-Options:
-BANNER
+          Options:
+        BANNER
         opt(:pg_host, "PostgreSQL host name or address",
             :type => :string, :short => "s", :default => "127.0.0.1")
         opt(:port, "PostgreSQL server port",
@@ -67,10 +67,10 @@ BANNER
     end
 
     def table_from_db_conn(conn, table_name)
-      query = <<-SQL
-SELECT *
-FROM #{table_name};
-SQL
+      query = <<~SQL
+        SELECT *
+        FROM #{table_name};
+      SQL
       result = []
       res = conn.exec_params(query)
       res.each do |row|

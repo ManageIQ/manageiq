@@ -8,7 +8,7 @@ RSpec.describe TaskHelpers::Imports::ProvisionDialogs do
   let(:dialog_two_desc) { 'Test2 Sample VM Provisioning Dialog (Template)' }
 
   describe "#import" do
-    let(:options) { { :source => source } }
+    let(:options) { {:source => source} }
 
     describe "when the source is a directory" do
       let(:source) { data_dir }

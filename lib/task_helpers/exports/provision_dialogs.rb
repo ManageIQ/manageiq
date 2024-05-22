@@ -1,7 +1,7 @@
 module TaskHelpers
   class Exports
     class ProvisionDialogs
-      EXCLUDE_ATTRS = %i(file_mtime created_at updated_at id class).freeze
+      EXCLUDE_ATTRS = %i[file_mtime created_at updated_at id class].freeze
       def export(options = {})
         export_dir = options[:directory]
 

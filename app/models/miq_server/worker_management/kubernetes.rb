@@ -21,19 +21,23 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
   end
 
   def sync_starting_workers
-    starting = MiqWorker.find_all_starting.to_a
-    starting.each do |worker|
+    MiqWorker.find_all_starting.each do |worker|
       next if worker.class.rails_worker?
 
       worker_pod = get_pod(worker[:system_uid])
       container_status = worker_pod.status.containerStatuses.find { |container| container.name == worker.worker_deployment_name }
       if worker_pod.status.phase == "Running" && container_status.ready && container_status.started
         worker.update!(:status => "started")
-        starting.delete(worker)
       end
     end
+  end
 
-    starting
+  def sync_stopping_workers
+    MiqWorker.find_all_stopping.reject { |w| w.class.rails_worker? }.each do |worker|
+      next if get_pod(worker[:system_uid]).present?
+
+      worker.update!(:status => MiqWorker::STATUS_STOPPED)
+    end
   end
 
   def enough_resource_to_start_worker?(_worker_class)
@@ -127,7 +131,7 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
     Thread.new do
       _log.info("Started new #{resource} monitor thread of #{Thread.list.length} total")
       begin
-        send("monitor_#{resource}")
+        send(:"monitor_#{resource}")
       rescue HTTP::ConnectionError => e
         _log.error("Exiting #{resource} monitor thread due to [#{e.class.name}]: #{e}")
       rescue => e
@@ -144,12 +148,12 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
       if thread.nil? || !thread.alive?
         if !thread.nil? && thread.status.nil?
           dead_thread = thread
-          send("#{getter}=", nil)
+          send(:"#{getter}=", nil)
           _log.info("Waiting for the #{getter} Monitor Thread to exit...")
           dead_thread.join
         end
 
-        send("#{getter}=", start_kube_monitor(resource))
+        send(:"#{getter}=", start_kube_monitor(resource))
       end
     end
   end
@@ -186,18 +190,18 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
   end
 
   def collect_initial(resource = :pods)
-    objects = orchestrator.send("get_#{resource}")
-    objects.each { |p| send("save_#{resource.to_s.singularize}", p) }
+    objects = orchestrator.send(:"get_#{resource}")
+    objects.each { |p| send(:"save_#{resource.to_s.singularize}", p) }
     objects.resourceVersion
   end
 
   def watch_for_events(resource, resource_version)
-    orchestrator.send("watch_#{resource}", resource_version).each do |event|
+    orchestrator.send(:"watch_#{resource}", resource_version).each do |event|
       case event.type.downcase
       when "added", "modified"
-        send("save_#{resource.to_s.singularize}", event.object)
+        send(:"save_#{resource.to_s.singularize}", event.object)
       when "deleted"
-        send("delete_#{resource.to_s.singularize}", event.object)
+        send(:"delete_#{resource.to_s.singularize}", event.object)
       when "error"
         if (status = event.object)
           # ocp 3 appears to return 'ERROR' watch events with the object containing the 410 code and "Gone" reason like below:

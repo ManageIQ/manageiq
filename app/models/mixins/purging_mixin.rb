@@ -203,6 +203,7 @@ module PurgingMixin
           # pull back ids - will slow performance
           batch_ids = query.pluck(:id)
           break if batch_ids.empty?
+
           current_window = batch_ids.size
         else
           batch_ids = query
@@ -211,6 +212,7 @@ module PurgingMixin
         _log.info("Purging #{current_window} #{table_name.humanize}.")
         count = unscoped.where(:id => batch_ids).delete_all
         break if count == 0
+
         total += count
 
         purge_associated_records(batch_ids) if respond_to?(:purge_associated_records)

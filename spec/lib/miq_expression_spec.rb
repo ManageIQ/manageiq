@@ -3,7 +3,7 @@ RSpec.describe MiqExpression do
     let(:vm) { FactoryBot.create(:vm) }
     let!(:custom_attribute) { FactoryBot.create(:custom_attribute, :name => 'my_attribute_1', :resource => vm) }
     let(:extra_fields) do
-      %w(start_date
+      %w[start_date
          end_date
          interval_name
          display_range
@@ -12,7 +12,7 @@ RSpec.describe MiqExpression do
          label_name
          id
          vm_id
-         vm_name)
+         vm_name]
     end
 
     it 'lists custom attributes in ChargebackVm' do
@@ -463,12 +463,12 @@ RSpec.describe MiqExpression do
 
     it "generates the SQL for an INCLUDES ANY with expression method" do
       sql, * = MiqExpression.new("INCLUDES ANY" => {"field" => "Vm-ipaddresses", "value" => "foo"}).to_sql
-      expected_sql = <<-EXPECTED.strip_heredoc.split("\n").join(" ")
+      expected_sql = <<~EXPECTED.split("\n").join(" ")
         1 = (SELECT 1
         FROM "hardwares"
         INNER JOIN "networks" ON "networks"."hardware_id" = "hardwares"."id"
         WHERE "hardwares"."vm_or_template_id" = "vms"."id"
-        AND (\"networks\".\"ipaddress\" ILIKE '%foo%' OR \"networks\".\"ipv6address\" ILIKE '%foo%')
+        AND ("networks"."ipaddress" ILIKE '%foo%' OR "networks"."ipv6address" ILIKE '%foo%')
         LIMIT 1)
       EXPECTED
       expect(sql).to eq(expected_sql)
@@ -593,7 +593,7 @@ RSpec.describe MiqExpression do
 
     it "generates the SQL for a CONTAINS expression with has_many field" do
       sql, * = MiqExpression.new("CONTAINS" => {"field" => "Vm.guest_applications-name", "value" => "foo"}).to_sql
-      expected = "\"vms\".\"id\" IN (SELECT \"vms\".\"id\" FROM \"vms\" INNER JOIN \"guest_applications\" ON "\
+      expected = "\"vms\".\"id\" IN (SELECT \"vms\".\"id\" FROM \"vms\" INNER JOIN \"guest_applications\" ON " \
                  "\"guest_applications\".\"vm_or_template_id\" = \"vms\".\"id\" WHERE \"guest_applications\".\"name\" = 'foo')"
       expect(sql).to eq(expected)
     end
@@ -790,7 +790,7 @@ RSpec.describe MiqExpression do
         end
 
         it "generates the SQL for a FROM expression with a value of 'Yesterday'/'Today' for a date field" do
-          exp = described_class.new("FROM" => {"field" => "Vm-retires_on", "value" => %w(Yesterday Today)})
+          exp = described_class.new("FROM" => {"field" => "Vm-retires_on", "value" => %w[Yesterday Today]})
           sql, * = exp.to_sql("Asia/Jakarta")
           expect(sql).to eq(%q("vms"."retires_on" BETWEEN '2011-01-10 17:00:00' AND '2011-01-12 16:59:59.999999'))
         end
@@ -1535,7 +1535,7 @@ RSpec.describe MiqExpression do
     end
 
     it "does not escape escaped forward slashes for values in REGULAR EXPRESSION MATCHES expressions" do
-      value = "\/foo\/bar"
+      value = "/foo/bar"
       actual = described_class.new("REGULAR EXPRESSION MATCHES" => {"field" => "Vm-name", "value" => value}).to_ruby
       expected = "<value ref=vm, type=string>/virtual/name</value> =~ /\\/foo\\/bar/"
       expect(actual).to eq(expected)
@@ -1591,7 +1591,7 @@ RSpec.describe MiqExpression do
     end
 
     it "does not escape escaped forward slashes for values in REGULAR EXPRESSION DOES NOT MATCH expressions" do
-      value = "\/foo\/bar"
+      value = "/foo/bar"
       actual = described_class.new("REGULAR EXPRESSION DOES NOT MATCH" => {"field" => "Vm-name", "value" => value}).to_ruby
       expected = "<value ref=vm, type=string>/virtual/name</value> !~ /\\/foo\\/bar/"
       expect(actual).to eq(expected)
@@ -2101,7 +2101,7 @@ RSpec.describe MiqExpression do
         end
 
         it "generates the RUBY for a FROM expression with a value of 'Yesterday'/'Today' for a date field" do
-          exp = described_class.new("FROM" => {"field" => "Vm-retires_on", "value" => %w(Yesterday Today)})
+          exp = described_class.new("FROM" => {"field" => "Vm-retires_on", "value" => %w[Yesterday Today]})
           ruby, * = exp.to_ruby("Asia/Jakarta")
           expect(ruby).to eq("!(val=<value ref=vm, type=datetime>/virtual/retires_on</value>&.to_time).nil? and val >= Time.utc(2011,1,10,17,0,0) and val <= Time.utc(2011,1,12,16,59,59)")
         end
@@ -2408,7 +2408,7 @@ RSpec.describe MiqExpression do
                                                                           "value" => "X"}},
                                          "checkall" => {"=" => {"field" => "Vm.advanced_settings-read_only",
                                                                 "value" => "true"}}})
-      expect(exp.to_human).to eq('FIND VM and Instance.Advanced Settings : '\
+      expect(exp.to_human).to eq('FIND VM and Instance.Advanced Settings : ' \
         'Name STARTS WITH "X" CHECK ALL Read Only = "true"')
     end
 
@@ -2607,7 +2607,7 @@ RSpec.describe MiqExpression do
                                :description  => "Auto Approve - Max CPU",
                                :name         => "prov_max_cpu",
                                :single_value => true,
-                               :show         => true,
+                               :show         => true
                               )
       cat.add_entry(:description  => "1",
                     :read_only    => "0",
@@ -2797,13 +2797,11 @@ RSpec.describe MiqExpression do
       expect(subject).to contain_exactly("=", "!=", "<", "<=", ">=", ">")
     end
 
-=begin
-    # there is no example of fields with fixnum datatype available for expression builder
-    it "returns list of available operations for field type 'fixnum'" do
-      @field = ?
-      expect(subject).to eq(["=", "!=", "<", "<=", ">=", ">", "RUBY"])
-    end
-=end
+    #     # there is no example of fields with fixnum datatype available for expression builder
+    #     it "returns list of available operations for field type 'fixnum'" do
+    #       @field = ?
+    #       expect(subject).to eq(["=", "!=", "<", "<=", ">=", ">", "RUBY"])
+    #     end
 
     it "returns list of available operations for field type 'string_set'" do
       @field = "ManageIQ::Providers::InfraManager::Vm-hostnames"
@@ -2855,7 +2853,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => nil,
         :include                        => {},
         :tag                            => false,
-        :sql_support                    => false,
+        :sql_support                    => false
       )
     end
 
@@ -2868,7 +2866,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => :bytes,
         :include                        => {},
         :tag                            => false,
-        :sql_support                    => false,
+        :sql_support                    => false
       )
     end
 
@@ -2881,7 +2879,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => :boolean,
         :include                        => {},
         :tag                            => false,
-        :sql_support                    => true,
+        :sql_support                    => true
       )
     end
 
@@ -2894,7 +2892,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => nil,
         :include                        => {},
         :tag                            => false,
-        :sql_support                    => false,
+        :sql_support                    => false
       )
     end
 
@@ -2908,7 +2906,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => :string,
         :include                        => {},
         :tag                            => true,
-        :sql_support                    => false,
+        :sql_support                    => false
       )
     end
 
@@ -2921,7 +2919,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => :string,
         :include                        => {},
         :tag                            => true,
-        :sql_support                    => true,
+        :sql_support                    => true
       )
     end
 
@@ -2934,7 +2932,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => :string,
         :include                        => {:host => {}},
         :tag                            => true,
-        :sql_support                    => true,
+        :sql_support                    => true
       )
     end
 
@@ -2947,7 +2945,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => :integer,
         :include                        => {},
         :tag                            => false,
-        :sql_support                    => true,
+        :sql_support                    => true
       )
     end
 
@@ -2960,7 +2958,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => :string,
         :include                        => {:guest_applications => {}},
         :tag                            => false,
-        :sql_support                    => true,
+        :sql_support                    => true
       )
     end
 
@@ -2973,7 +2971,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => :bytes,
         :include                        => {},
         :tag                            => false,
-        :sql_support                    => false,
+        :sql_support                    => false
       )
     end
 
@@ -2986,7 +2984,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => nil,
         :include                        => {},
         :tag                            => false,
-        :sql_support                    => false,
+        :sql_support                    => false
       )
     end
 
@@ -2999,7 +2997,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => nil,
         :include                        => {},
         :tag                            => false,
-        :sql_support                    => false,
+        :sql_support                    => false
       )
     end
 
@@ -3012,7 +3010,7 @@ RSpec.describe MiqExpression do
         :format_sub_type                => :boolean,
         :include                        => {},
         :tag                            => false,
-        :sql_support                    => false,
+        :sql_support                    => false
       )
     end
   end
@@ -3262,7 +3260,7 @@ RSpec.describe MiqExpression do
   end
 
   describe ".operands2rubyvalue" do
-    RSpec.shared_examples :coerces_value_to_integer do |value|
+    RSpec.shared_examples :coerces_value_to_integer do |_value|
       it 'coerces the value to an integer' do
         expect(subject.last).to eq(0)
       end

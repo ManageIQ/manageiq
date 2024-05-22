@@ -31,13 +31,14 @@ class SystemConsole < ApplicationRecord
 
     (port_range_start..port_range_end).each do |port_number|
       return port_number if used_ports[0].nil? || used_ports[0] > port_number
+
       used_ports.shift if used_ports[0] == port_number
     end
     nil
   end
 
   def self.local_address
-    MiqServer.my_server.ipaddress.blank? ? local_address_fallback : MiqServer.my_server.ipaddress
+    (MiqServer.my_server.ipaddress.presence || local_address_fallback)
   end
 
   def self.local_address_fallback
@@ -59,7 +60,7 @@ class SystemConsole < ApplicationRecord
 
     Process.detach(pid)
 
-    return [local_address, local_port, pid]
+    [local_address, local_port, pid]
   end
 
   def self.kill_proxy_process(pid)
@@ -68,7 +69,8 @@ class SystemConsole < ApplicationRecord
 
   def self.cleanup_proxy_processes
     SystemConsole.where.not(:proxy_pid => nil).where(:host_name  => local_address).each do |console|
-      next unless %w(websocket_closed ticket_invalid).include?(console.proxy_status)
+      next unless %w[websocket_closed ticket_invalid].include?(console.proxy_status)
+
       kill_proxy_process(console.proxy_pid)
       console.destroy
     end
@@ -95,7 +97,7 @@ class SystemConsole < ApplicationRecord
     if ::Settings.server.console_proxy_disabled || SystemConsole.is_local?(originating_server)
       console_args.update(
         :host_name  => host_address,
-        :port       => host_port,
+        :port       => host_port
       )
     else
       SystemConsole.cleanup_proxy_processes

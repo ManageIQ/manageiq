@@ -1,5 +1,5 @@
 module EvmAutomate
-  $:.push File.expand_path(File.join(Rails.root, %w{.. lib util xml}))
+  $:.push File.expand_path(Rails.root.join("../lib/util/xml").to_s)
 
   def self.log(level, msg)
     $log.send(level, msg)
@@ -12,6 +12,7 @@ module EvmAutomate
   def self.simulate(domain, namespace, class_name, instance_name)
     user = User.super_admin
     raise "Need a admin user to run simulation" unless user
+
     MiqAeEngine.resolve_automation_object(instance_name,
                                           user,
                                           {},
@@ -35,6 +36,7 @@ module EvmAutomate
   def self.extract_methods(method_folder)
     MiqAeMethod.all.sort_by(&:fqname).each do |m|
       next unless m.location == 'inline'
+
       write_method_data(File.join(method_folder, m.ae_class.fqname), m['name'], m['data'])
     end
   end
@@ -42,10 +44,10 @@ end
 
 namespace :evm do
   namespace :automate do
-
     desc 'Backup all automate domains to a zip file or backup folder.'
     task :backup => :environment do
       raise 'Must specify a backup zip file' if ENV['BACKUP_ZIP_FILE'].blank?
+
       puts "Datastore backup starting"
       zip_file       = ENV['BACKUP_ZIP_FILE']
       begin
@@ -70,7 +72,7 @@ namespace :evm do
       puts " Import          - Usage: rake evm:automate:import PREVIEW=true DOMAIN=domain_name " \
                                 "IMPORT_AS=new_domain_name IMPORT_DIR=./model_export|ZIP_FILE=filename|YAML_FILE=filename " \
                                 "SYSTEM=true|false ENABLED=true|false OVERWRITE=true|false"
-      puts " Export          - Usage: rake evm:automate:export DOMAIN=domain_name "  \
+      puts " Export          - Usage: rake evm:automate:export DOMAIN=domain_name " \
                                "EXPORT_AS=new_domain_name NAMESPACE=sample CLASS=methods EXPORT_DIR=./model_export|ZIP_FILE=filename|YAML_FILE=filename"
       puts " Backup          - Usage: rake evm:automate:backup BACKUP_ZIP_FILE=filename OVERWRITE=false"
       puts " Restore         - Usage: rake evm:automate:restore BACKUP_ZIP_FILE=filename"
@@ -101,6 +103,7 @@ namespace :evm do
       begin
         domain         = ENV['DOMAIN']
         raise "Must specify domain for export:" if domain.nil?
+
         zip_file       = ENV['ZIP_FILE']
         export_dir     = ENV['EXPORT_DIR']
         yaml_file      = ENV['YAML_FILE']
@@ -130,8 +133,10 @@ namespace :evm do
         if ENV['YAML_FILE'].blank? && ENV['IMPORT_DIR'].blank? && ENV['ZIP_FILE'].blank? && ENV['GIT_URL'].blank?
           raise 'Must specify either a directory with exported automate model or a zip file or a http based git url'
         end
+
         preview        = ENV['PREVIEW'] ||= 'true'
-        raise 'Preview must be true or false' unless %w{true false}.include?(preview)
+        raise 'Preview must be true or false' unless %w[true false].include?(preview)
+
         mode           = ENV['MODE'] ||= 'add'
         import_as      = ENV['IMPORT_AS']
         overwrite      = (ENV['OVERWRITE'] ||= 'false').casecmp('true').zero?
@@ -143,13 +148,13 @@ namespace :evm do
                           'import_as' => import_as}
         if ENV['ZIP_FILE'].present?
           puts "Importing automate domain: #{ENV['DOMAIN']} from file #{ENV['ZIP_FILE']}"
-          import_options['zip_file']   = ENV['ZIP_FILE']
+          import_options['zip_file'] = ENV['ZIP_FILE']
         elsif ENV['IMPORT_DIR'].present?
           puts "Importing automate domain: #{ENV['DOMAIN']} from directory #{ENV['IMPORT_DIR']}"
           import_options['import_dir'] = ENV['IMPORT_DIR']
         elsif ENV['YAML_FILE'].present?
           puts "Importing automate domain: #{ENV['DOMAIN']} from file #{ENV['YAML_FILE']}"
-          import_options['yaml_file']   = ENV['YAML_FILE']
+          import_options['yaml_file'] = ENV['YAML_FILE']
         elsif ENV['GIT_URL'].present?
           puts "Importing automate domain from url #{ENV['GIT_URL']}"
           ENV['DOMAIN'] = nil
@@ -161,9 +166,10 @@ namespace :evm do
           import_options['ref_type'] = ENV['REF_TYPE'] || MiqAeGitImport::BRANCH
           import_options['verify_ssl'] = ENV['VERIFY_SSL'] || OpenSSL::SSL::VERIFY_PEER
         end
-        %w(SYSTEM ENABLED).each do |name|
+        %w[SYSTEM ENABLED].each do |name|
           if ENV[name].present?
-            raise "#{name} must be true or false" unless %w(true false).include?(ENV[name])
+            raise "#{name} must be true or false" unless %w[true false].include?(ENV[name])
+
             import_options[name.downcase] = ENV[name]
           end
         end
@@ -212,6 +218,7 @@ namespace :evm do
     task :restore => :environment do
       begin
         raise 'Must specify a backup zip file' if ENV['BACKUP_ZIP_FILE'].blank?
+
         puts "Importing automate domains from file #{ENV['BACKUP_ZIP_FILE']}"
         MiqAeDatastore.restore(ENV['BACKUP_ZIP_FILE'])
       rescue => err
@@ -225,11 +232,12 @@ namespace :evm do
       puts "Convert automation model from the legacy xml file"
       domain_name    = ENV["DOMAIN"]
       raise "Must specify the DOMAIN name to convert as" if domain_name.nil?
+
       export_options = {}
       zip_file    = ENV['ZIP_FILE']
       export_dir  = ENV['EXPORT_DIR']
       yaml_file   = ENV['YAML_FILE']
-      overwrite   =  (ENV['OVERWRITE'] ||= 'false').downcase.==('true')
+      overwrite = (ENV['OVERWRITE'] ||= 'false').downcase == ('true')
 
       export_options['zip_file'] = zip_file if zip_file
       export_options['export_dir'] = export_dir if export_dir

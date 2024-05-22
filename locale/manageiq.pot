@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-01 00:17+0000\n"
-"PO-Revision-Date: 2024-01-01 00:17+0000\n"
+"POT-Creation-Date: 2024-03-15 00:38+0000\n"
+"PO-Revision-Date: 2024-03-15 00:38+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -527,10 +527,6 @@ msgstr ""
 
 #: ../app/controllers/infra_networking_controller.rb
 msgid "%{action} \"%{item_name}\" for Switch \"%{name}\""
-msgstr ""
-
-#: ../app/models/vm_or_template.rb
-msgid "%{action} cannot be performed on orphaned VM."
 msgstr ""
 
 #: ../app/controllers/mixins/ems_common/pause_resume.rb
@@ -1612,11 +1608,11 @@ msgid_plural "%{task} initiated for %{number} %{models} from the %{product} Data
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../app/models/miq_request.rb:424 ../app/models/miq_request_task.rb
+#: ../app/models/miq_request.rb:426 ../app/models/miq_request_task.rb
 msgid "%{task} request has already been processed"
 msgstr ""
 
-#: ../app/models/miq_request.rb:421 ../app/models/miq_request_task.rb
+#: ../app/models/miq_request.rb:423 ../app/models/miq_request_task.rb
 msgid "%{task} request is already being processed"
 msgstr ""
 
@@ -1843,7 +1839,6 @@ msgstr ""
 msgid "* Caution: The value Range end will not be included in the tier."
 msgstr ""
 
-#: ../app/views/ops/_schedule_form_timer.html.haml
 #: ../app/views/report/_schedule_form_timer.html.haml
 msgid "* Changing the Time Zone will reset the Starting Date and Time fields below"
 msgstr ""
@@ -2430,6 +2425,7 @@ msgid "<By Role>"
 msgstr ""
 
 #: ../app/javascript/components/action-form/action-form.schema.js
+#: ../app/javascript/components/action-form/helper.js
 #: ../app/javascript/components/ansible-credentials-form/ansible-credentials-form.schema.js
 #: ../app/javascript/components/cloud-volume-actions-form/restore-from-backup.schema.js
 #: ../app/javascript/components/cloud-volume-backup-form/cloud-volume-backup-form.schema.js
@@ -2476,7 +2472,7 @@ msgstr ""
 msgid "<Determine at Run Time>"
 msgstr ""
 
-#: ../app/models/chargeback.rb:123 ../app/models/chargeback.rb
+#: ../app/models/chargeback.rb:124 ../app/models/chargeback.rb
 #: ../app/models/miq_report/generator/html.rb
 msgid "<Empty>"
 msgstr ""
@@ -2788,7 +2784,6 @@ msgstr ""
 #: ../app/helpers/ems_network_helper/textual_summary.rb
 #: ../app/helpers/ems_physical_infra_helper/textual_summary.rb
 #: ../app/helpers/ems_storage_helper/textual_summary.rb
-#: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
 msgid "API Port"
 msgstr ""
 
@@ -2796,7 +2791,7 @@ msgstr ""
 msgid "API Username"
 msgstr ""
 
-#: ../app/views/ems_infra/_form.html.haml
+#: ../app/models/manageiq/providers/vmware/cloud_manager.rb
 msgid "API Version"
 msgstr ""
 
@@ -2969,14 +2964,9 @@ msgstr ""
 msgid "Access Key"
 msgstr ""
 
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
+#: ../app/models/manageiq/providers/amazon/cloud_manager.rb
+#: ../app/models/manageiq/providers/amazon/container_manager.rb
 msgid "Access Key ID"
-msgstr ""
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid ""
-"Access Key ID and matching Secret Access Key fields are needed to perform veri"
-"fication of credentials"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/PersistentVolume.yaml
@@ -5208,7 +5198,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAlert
 #. TRANSLATORS: en.yml key: dictionary.table.miq_alert
-#: ../app/models/miq_alert.rb:870 ../config/dictionary_strings.rb
+#: ../app/models/miq_alert.rb:869 ../config/dictionary_strings.rb
 #: ../config/dictionary_strings.rb
 msgid "Alert"
 msgid_plural "Alerts"
@@ -5235,7 +5225,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAlertSet
 #. TRANSLATORS: en.yml key: dictionary.table.miq_alert_set
-#: ../app/models/miq_alert_set.rb:67 ../config/dictionary_strings.rb
+#: ../app/models/miq_alert_set.rb:69 ../config/dictionary_strings.rb
 #: ../config/dictionary_strings.rb
 msgid "Alert Profile"
 msgid_plural "Alert Profiles"
@@ -5276,8 +5266,6 @@ msgstr[1] ""
 #: ../app/helpers/textual_mixins/textual_authentications_status.rb
 #: ../app/javascript/oldjs/controllers/container_dashboard/util/dashboard-utils-factory.js
 #: ../app/presenters/menu/default_menu.rb
-#: ../app/views/ems_container/_form.html.haml
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 #: ../app/views/miq_policy_export/_export.html.haml
 #: ../config/yaml_strings.rb
 msgid "Alerts"
@@ -6087,7 +6075,7 @@ msgstr ""
 msgid "Ancestry"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:459 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:456 ../app/models/miq_alert.rb
 msgid "And is Trending"
 msgstr ""
 
@@ -6126,7 +6114,7 @@ msgstr ""
 msgid "Ansible Credentials Refresh"
 msgstr ""
 
-#: ../app/views/shared/buttons/_ab_show.html.haml
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 msgid "Ansible Playbook"
 msgstr ""
 
@@ -6485,7 +6473,6 @@ msgid ""
 "olicy?"
 msgstr ""
 
-#: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
 #: ../app/helpers/settings_tags_tabs_helper.rb
 msgid "Are you sure you want to delete category '%{category_name}'?"
 msgstr ""
@@ -6720,7 +6707,8 @@ msgid_plural "Are you sure you want to permanently delete the following catalog 
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../app/javascript/components/dashboard-widgets/widget-wrapper/helper.jsx
+#:
+#: ../app/javascript/components/dashboard-widgets/widget-remove-modal/index.jsx
 msgid "Are you sure you want to remove %s from the Dashboard?"
 msgstr ""
 
@@ -7130,7 +7118,7 @@ msgstr ""
 msgid "Associations (%{count})"
 msgstr ""
 
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
+#: ../app/models/manageiq/providers/amazon/cloud_manager.rb
 msgid "Assume role ARN"
 msgstr ""
 
@@ -7341,11 +7329,11 @@ msgstr ""
 
 #: ../app/helpers/miq_action_helper.rb
 #: ../app/helpers/settings_schedule_helper.rb
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "Attribute/Value Pairs"
 msgstr ""
@@ -8661,7 +8649,8 @@ msgstr ""
 msgid "Basic Info"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb:102 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:103 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper/orchestration_template_helper.rb
 #: ../app/helpers/condition_helper.rb
 #: ../app/helpers/generic_object_definition_helper.rb
 #: ../app/helpers/miq_action_helper.rb
@@ -8675,6 +8664,8 @@ msgstr ""
 #: ../app/helpers/report_helper/report_information_helper.rb
 #: ../app/helpers/settings_analysis_profile_helper.rb
 #: ../app/helpers/settings_schedule_helper.rb
+#: ../app/helpers/shared_helper/ab_list_helper.rb
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/javascript/components/cloud-volume-actions-form/create-backup.schema.js
@@ -8708,8 +8699,6 @@ msgstr ""
 #: ../app/views/report/_db_show.html.haml
 #: ../app/views/report/_schedule_form.html.haml
 #: ../app/views/report/_widget_form.html.haml
-#: ../app/views/shared/buttons/_ab_list.html.haml
-#: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/cloud_volume_backup/volume_select.html.haml
 #: ../app/views/utilization/_utilization_report.html.haml
 #: ../app/views/vm_common/_config.html.haml
@@ -9215,10 +9204,9 @@ msgstr ""
 msgid "Button Name is required"
 msgstr ""
 
-#:
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
 #: ../app/views/shared/buttons/_ab_options_form.html.haml
-#: ../app/views/shared/buttons/_ab_show.html.haml
 msgid "Button Type"
 msgstr ""
 
@@ -9271,8 +9259,8 @@ msgid "By Host"
 msgstr ""
 
 #: ../app/controllers/application_controller/buttons.rb
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
-#: ../app/views/shared/buttons/_ab_show.html.haml
 msgid "By Role"
 msgstr ""
 
@@ -9302,7 +9290,6 @@ msgid "C & U Data Processors"
 msgstr ""
 
 #: ../app/helpers/textual_summary_helper.rb
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 msgid "C & U Database"
 msgstr ""
 
@@ -10210,10 +10197,6 @@ msgstr ""
 msgid "Cancel Simulation to go back to Button details"
 msgstr ""
 
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "Cancel SmartState Docker password change"
-msgstr ""
-
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Cancel Task"
@@ -10223,29 +10206,12 @@ msgstr ""
 msgid "Cancel after"
 msgstr ""
 
-#: ../app/views/ems_infra/_form.html.haml
-msgid "Cancel client key change"
-msgstr ""
-
-#: ../app/models/miq_request.rb:612 ../app/models/miq_request_task.rb
+#: ../app/models/miq_request.rb:614 ../app/models/miq_request_task.rb
 msgid "Cancel operation is not supported for %{class}"
 msgstr ""
 
 #: src/rbac-forms/formPasswordFragment.jsx
 msgid "Cancel password change"
-msgstr ""
-
-#:
-#: ../app/views/layouts/angular-bootstrap/_auth_keypair_angular_bootstrap.html.haml
-msgid "Cancel private key change"
-msgstr ""
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "Cancel secret access key change"
-msgstr ""
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "Cancel stored token"
 msgstr ""
 
 #: ../app/views/layouts/_adv_search_footer.html.haml
@@ -10429,6 +10395,11 @@ msgstr ""
 
 #: ../app/controllers/restful_redirect_controller.rb
 msgid "Cannot redirect to \"%{record}\" provider."
+msgstr ""
+
+#: ../app/models/manageiq/providers/vmware/cloud_manager/vm.rb
+#: ../app/models/manageiq/providers/vmware/infra_manager/vm.rb
+msgid "Cannot resize disks of a VM with snapshots"
 msgstr ""
 
 #:
@@ -11010,29 +10981,8 @@ msgstr ""
 msgid "Change current group"
 msgstr ""
 
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "Change stored SmartState Docker password"
-msgstr ""
-
-#: ../app/views/ems_infra/_form.html.haml
-msgid "Change stored client key"
-msgstr ""
-
 #: src/rbac-forms/formPasswordFragment.jsx
 msgid "Change stored password"
-msgstr ""
-
-#:
-#: ../app/views/layouts/angular-bootstrap/_auth_keypair_angular_bootstrap.html.haml
-msgid "Change stored private key"
-msgstr ""
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "Change stored secret access key"
-msgstr ""
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "Change stored token"
 msgstr ""
 
 #: ../app/controllers/application_controller/compare.rb
@@ -11772,13 +11722,8 @@ msgstr ""
 #: ../app/views/catalog/_form_resources_info.html.haml
 #: ../app/views/catalog/_form_server_profile_template_options.html.haml
 #: ../app/views/catalog/_st_form.html.haml
-#: ../app/views/ems_container/_form.html.haml
-#: ../app/views/ems_infra/_form.html.haml
-#: ../app/views/ems_physical_infra/_form.html.haml
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 #: ../app/views/layouts/exp_atom/_edit_count.html.haml
 #: ../app/views/layouts/exp_atom/_edit_field.html.haml
 #: ../app/views/layouts/exp_atom/_edit_find.html.haml
@@ -11978,10 +11923,6 @@ msgstr ""
 #:
 #: ../app/javascript/components/pvc-import-image-form/pvc-import-image-form.schema.js
 msgid "Choose transient storage"
-msgstr ""
-
-#: ../app/views/ems_container/_form.html.haml
-msgid "Choose>"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.column.cidr
@@ -12314,16 +12255,12 @@ msgstr ""
 msgid "Client Browser Setting"
 msgstr ""
 
-#: ../app/views/ems_infra/_form.html.haml
+#: ../app/models/manageiq/providers/azure/manager_mixin.rb
 msgid "Client ID"
 msgstr ""
 
-#: ../app/views/ems_infra/_form.html.haml
+#: ../app/models/manageiq/providers/azure/manager_mixin.rb
 msgid "Client Key"
-msgstr ""
-
-#: ../app/views/ems_infra/_form.html.haml
-msgid "Client Keys do not match"
 msgstr ""
 
 #: ../app/mailers/generic_mailer.rb
@@ -12843,7 +12780,7 @@ msgid "Cloud Services"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/CloudSubnet.yaml
-#: ../app/helpers/vm_helper.rb:31 ../config/yaml_strings.rb
+#: ../app/helpers/vm_helper.rb:30 ../config/yaml_strings.rb
 msgid "Cloud Subnet"
 msgstr ""
 
@@ -15839,29 +15776,13 @@ msgstr ""
 msgid "ConfiguredSystem|Virtual instance ref"
 msgstr ""
 
-#: ../app/views/layouts/_auth_credentials.html.haml
-msgid "Confirm %{password}"
-msgstr ""
-
-#: ../app/views/ems_infra/_form.html.haml
-msgid "Confirm Client Key"
+#: ../app/javascript/components/miq-confirm-action-modal/index.jsx
+msgid "Confirm"
 msgstr ""
 
 #: ../app/views/ems_cloud/sync_users.html.haml
 #: ../app/views/ops/_rbac_user_details.html.haml
 msgid "Confirm Password"
-msgstr ""
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "Confirm Secret Access Key"
-msgstr ""
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "Confirm SmartState Password"
-msgstr ""
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "Confirm Token"
 msgstr ""
 
 #: src/rbac-forms/formPasswordFragment.jsx
@@ -15932,10 +15853,6 @@ msgstr ""
 
 #: ../app/controllers/api/vms_controller.rb
 msgid "Console protocol %{protocol} is not supported"
-msgstr ""
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "Console userid and password fields are needed to perform validation."
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -19137,6 +19054,7 @@ msgstr ""
 msgid "Container|State"
 msgstr ""
 
+#: ../app/helpers/catalog_helper/orchestration_template_helper.rb
 #: ../app/helpers/storage_helper/textual_summary.rb
 #: ../app/javascript/components/orchestration-template/orchestration-template-form.schema.js
 #: ../app/views/miq_ae_customization/_old_dialogs_details.html.haml
@@ -19470,7 +19388,8 @@ msgstr ""
 msgid "Copy a Widget"
 msgstr ""
 
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
+#: ../app/models/manageiq/providers/google/container_manager.rb
+#: ../app/models/manageiq/providers/google/manager_mixin.rb
 msgid "Copy and paste the contents of your Service Account JSON file above."
 msgstr ""
 
@@ -19994,6 +19913,7 @@ msgstr ""
 #: ../app/helpers/ansible_credential_helper/textual_summary.rb
 #: ../app/helpers/ansible_playbook_helper/textual_summary.rb
 #: ../app/helpers/ansible_repository_helper/textual_summary.rb
+#: ../app/helpers/catalog_helper/orchestration_template_helper.rb
 #: ../app/helpers/firmware_binary_helper/textual_summary.rb
 #: ../app/helpers/firmware_registry_helper/textual_summary.rb
 #: ../app/helpers/firmware_target_helper/textual_summary.rb
@@ -20003,7 +19923,6 @@ msgstr ""
 #: ../app/helpers/workflow_credential_helper/textual_summary.rb
 #: ../app/helpers/workflow_helper/textual_summary.rb
 #: ../app/helpers/workflow_repository_helper/textual_summary.rb
-#: ../app/views/catalog/_ot_tree_show.html.haml
 #: ../app/views/miq_ae_class/_method_form.html.haml
 #: ../app/views/miq_ae_customization/_dialog_info.html.haml
 #: ../app/views/miq_request/_request.html.haml
@@ -20325,8 +20244,6 @@ msgstr ""
 #: ../app/helpers/application_helper/title.rb
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/presenters/menu/default_menu.rb
-#: ../app/views/ems_infra/_form.html.haml
-#: ../app/views/layouts/_container_auth.html.haml
 #: ../app/views/miq_request/_prov_configured_system_foreman_dialog.html.haml
 #: ../app/views/miq_request/_prov_physical_server_dialog.html.haml
 #: ../app/views/shared/views/_prov_dialog.html.haml
@@ -20516,7 +20433,7 @@ msgstr ""
 
 #. TRANSLATORS: file: product/views/User.yaml
 #: ../app/helpers/settings_users_helper.rb
-#: ../app/helpers/settings_users_helper.rb:38 ../config/yaml_strings.rb
+#: ../app/helpers/settings_users_helper.rb:48 ../config/yaml_strings.rb
 msgid "Current Group"
 msgstr ""
 
@@ -20559,7 +20476,7 @@ msgstr ""
 msgid "Currently Used Space"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb:112 ../app/helpers/report_helper.rb
+#: ../app/helpers/catalog_helper.rb:113 ../app/helpers/report_helper.rb
 #: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
 msgid "Custom"
 msgstr ""
@@ -21260,7 +21177,6 @@ msgid "DRS Migration Threshold"
 msgstr ""
 
 #: ../app/views/layouts/_perf_options.html.haml
-#: ../app/views/ops/_schedule_form_timer.html.haml
 #: ../app/views/report/_form_columns_performance.html.haml
 #: ../app/views/report/_schedule_form_timer.html.haml
 msgid "Daily"
@@ -21414,10 +21330,6 @@ msgid_plural "Database Locks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
-msgid "Database Name"
-msgstr ""
-
 #: ../app/models/manageiq/providers/azure/cloud_manager/cloud_database.rb
 msgid "Database Server Name"
 msgstr ""
@@ -21528,7 +21440,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.StorageFile
 #. TRANSLATORS: en.yml key: dictionary.table.storage_file
-#: ../app/models/storage_file.rb:75 ../config/dictionary_strings.rb
+#: ../app/models/storage_file.rb:77 ../config/dictionary_strings.rb
 #: ../config/dictionary_strings.rb
 msgid "Datastore File"
 msgid_plural "Datastore Files"
@@ -21879,7 +21791,7 @@ msgstr ""
 msgid "Debris Size"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:462 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:459 ../app/models/miq_alert.rb
 msgid "Debug Tracing"
 msgstr ""
 
@@ -21933,10 +21845,8 @@ msgstr ""
 #: ../app/helpers/settings_tags_tabs_helper.rb
 #: ../app/helpers/textual_summary_helper.rb
 #: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
-#: ../app/views/layouts/_container_auth.html.haml
 #: ../app/views/layouts/_edit_form_buttons.html.haml
 #: ../app/views/layouts/_x_edit_buttons.html.haml
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 #: ../app/views/report/_form_styling.html.haml
 #: ../config/yaml_strings.rb
 msgid "Default"
@@ -23619,12 +23529,8 @@ msgstr ""
 msgid "Details Mode"
 msgstr ""
 
-#: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb
 msgid "Detect"
-msgstr ""
-
-#: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
-msgid "Detect Endpoint"
 msgstr ""
 
 #: ../app/controllers/ops_controller.rb
@@ -23698,14 +23604,14 @@ msgstr ""
 msgid "Diagnostics Zone Settings"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb:49 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:50 ../app/helpers/catalog_helper.rb
 #: ../app/helpers/catalog_helper.rb
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
 #: ../app/views/catalog/_form_basic_info.html.haml
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 #: ../app/views/shared/buttons/_ab_options_form.html.haml
-#: ../app/views/shared/buttons/_ab_show.html.haml
 msgid "Dialog"
 msgstr ""
 
@@ -24210,10 +24116,6 @@ msgstr ""
 msgid "Disable a Schedule"
 msgstr ""
 
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "Disable event monitoring."
-msgstr ""
-
 #: ../app/helpers/application_helper/toolbar/miq_report_schedules_center.rb
 #: ../app/helpers/application_helper/toolbar/miq_schedules_center.rb
 msgid "Disable the selected Schedules"
@@ -24225,12 +24127,11 @@ msgid "Disable this Schedule"
 msgstr ""
 
 #: ../app/helpers/host_helper/textual_summary.rb
-#: ../app/views/ems_container/_form.html.haml
 msgid "Disabled"
 msgstr ""
 
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../app/views/shared/buttons/_ab_advanced_form.html.haml
-#: ../app/views/shared/buttons/_ab_show.html.haml
 msgid "Disabled Button Text"
 msgstr ""
 
@@ -26188,6 +26089,11 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Display Request Logs"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Display Service Catalog"
 msgstr ""
 
@@ -26346,10 +26252,9 @@ msgstr ""
 msgid "Display any dashboards"
 msgstr ""
 
-#:
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
 #: ../app/views/shared/buttons/_ab_options_form.html.haml
-#: ../app/views/shared/buttons/_ab_show.html.haml
 msgid "Display for"
 msgstr ""
 
@@ -26384,10 +26289,13 @@ msgstr ""
 
 #: ../app/javascript/components/button-group/group-form.schema.js
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
-#: ../app/views/shared/buttons/_ab_list.html.haml
 #: ../app/views/shared/buttons/_ab_options_form.html.haml
-#: ../app/views/shared/buttons/_ab_show.html.haml
 msgid "Display on Button"
+msgstr ""
+
+#: ../app/helpers/shared_helper/ab_list_helper.rb
+#: ../app/helpers/shared_helper/ab_show_helper.rb
+msgid "Display on button"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -26444,10 +26352,6 @@ msgstr ""
 msgid ""
 "Do you want to promote this Server to primary?  This will replace any existing"
 " primary Server for this Role."
-msgstr ""
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "Docker Registry User Name and Password for SmartState Analysis on AWS"
 msgstr ""
 
 #: ../app/helpers/container_image_helper/textual_summary.rb
@@ -26719,9 +26623,8 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_InfraManager_OrchestrationTemplate.yaml
 #. TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
-#:
+#: ../app/helpers/catalog_helper/orchestration_template_helper.rb
 #: ../app/javascript/components/orchestration-template/orchestration-template-form.schema.js
-#: ../app/views/catalog/_ot_tree_show.html.haml
 #: ../app/views/orchestration_stack/_stack_orchestration_template.html.haml
 #: ../config/yaml_strings.rb
 msgid "Draft"
@@ -29990,6 +29893,7 @@ msgstr ""
 msgid "Embedded Automation Managers"
 msgstr ""
 
+#: ../app/helpers/miq_ae_class_helper.rb
 #: ../app/views/miq_ae_class/_embedded_methods.html.haml
 msgid "Embedded Methods"
 msgstr ""
@@ -30007,20 +29911,16 @@ msgstr ""
 msgid "Embedded Workflow service is not available."
 msgstr ""
 
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_Workflows_AutomationManager_Workflow.yaml
 #: ../app/controllers/workflow_controller.rb
 #: ../app/controllers/workflow_credential_controller.rb
 #: ../app/controllers/workflow_repository_controller.rb
-#: ../app/presenters/menu/default_menu.rb
+#: ../app/presenters/menu/default_menu.rb:212 ../config/yaml_strings.rb
 msgid "Embedded Workflows"
 msgstr ""
 
 #: ../lib/manageiq/providers/workflows/engine.rb
 msgid "Embedded Workflows Provider"
-msgstr ""
-
-#. TRANSLATORS: file: product/views/ManageIQ_Providers_Workflows_AutomationManager_Workflow.yaml
-#: ../config/yaml_strings.rb
-msgid "Embededded Workflows"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.column.empty_dir_medium_type
@@ -30565,12 +30465,6 @@ msgstr ""
 msgid "Enable a Schedule"
 msgstr ""
 
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid ""
-"Enable event monitoring. Used to automatically resync state when changes are p"
-"erformed on VMware vCloud Director directly."
-msgstr ""
-
 #: ../app/helpers/application_helper/toolbar/miq_report_schedules_center.rb
 #: ../app/helpers/application_helper/toolbar/miq_schedules_center.rb
 msgid "Enable the selected Schedules"
@@ -30678,14 +30572,14 @@ msgstr ""
 msgid "Enablement"
 msgstr ""
 
-#: ../app/views/shared/buttons/_ab_show.html.haml
-msgid "Enablement Expression"
-msgstr ""
-
 #: ../app/views/shared/buttons/_ab_advanced_form.html.haml
 msgid ""
 "Enablement and Visibility expressions can only be configured for buttons with "
 "\"Display for\" (previous tab) set to \"Single\""
+msgstr ""
+
+#: ../app/helpers/shared_helper/ab_show_helper.rb
+msgid "Enablement expression"
 msgstr ""
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb
@@ -30752,12 +30646,11 @@ msgstr ""
 msgid "Endpoint"
 msgstr ""
 
-#: ../app/views/layouts/angular-bootstrap/_endpoints_for_url.html.haml
+#: ../app/models/manageiq/providers/cisco_intersight/manager_mixin.rb
 msgid "Endpoint URL"
 msgstr ""
 
 #: ../app/helpers/ems_container_helper/textual_summary.rb
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 msgid "Endpoints"
 msgstr ""
 
@@ -30835,9 +30728,7 @@ msgstr ""
 msgid "Enforced"
 msgstr ""
 
-#: ../app/views/miq_ae_tools/_results_tree.html.haml
-#: ../app/views/miq_ae_tools/_results_uri.html.haml
-#: ../app/views/miq_ae_tools/_results_xml.html.haml
+#: ../app/helpers/miq_ae_tools_helper.rb
 msgid "Enter Automation Simulation options on the left and press Submit."
 msgstr ""
 
@@ -31452,7 +31343,7 @@ msgstr ""
 msgid "Event Assignment for Policy was saved"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:432 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:429 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Event Count Threshold"
 msgstr ""
@@ -31807,9 +31698,7 @@ msgstr ""
 #: ../app/controllers/miq_event_definition_controller.rb
 #: ../app/helpers/miq_policy_helper.rb
 #: ../app/javascript/components/notification-drawer/notification-drawer.jsx
-#: ../app/presenters/menu/default_menu.rb
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-#: ../config/yaml_strings.rb
+#: ../app/presenters/menu/default_menu.rb:172 ../config/yaml_strings.rb
 msgid "Events"
 msgstr ""
 
@@ -33264,7 +33153,7 @@ msgid "FS Type"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.FileDepotFtp
-#: ../app/models/file_depot_ftp.rb:94 ../config/dictionary_strings.rb
+#: ../app/models/file_depot_ftp.rb:96 ../config/dictionary_strings.rb
 msgid "FTP"
 msgid_plural "FTPs"
 msgstr[0] ""
@@ -33324,16 +33213,16 @@ msgstr ""
 msgid "Failures occurred during bulk reassignment."
 msgstr ""
 
-#: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
+#: ../app/models/manageiq/providers/nuage/manager_mixin.rb
 msgid "Fallback Hostname 1"
 msgstr ""
 
-#: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
+#: ../app/models/manageiq/providers/nuage/manager_mixin.rb
 msgid "Fallback Hostname 2"
 msgstr ""
 
+#: ../app/helpers/catalog_helper/orchestration_template_helper.rb
 #: ../app/helpers/report_helper/report_schedule_helper.rb
-#: ../app/views/catalog/_ot_tree_show.html.haml
 #: ../app/views/layouts/_user_input_filter.html.haml
 #: ../app/views/orchestration_stack/_stack_orchestration_template.html.haml
 msgid "False"
@@ -33383,7 +33272,7 @@ msgstr ""
 msgid "Field Information"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:461 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:458 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Field Meets Criteria for"
 msgstr ""
@@ -33661,7 +33550,6 @@ msgstr ""
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
 #: ../app/helpers/settings_schedule_helper.rb
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
-#: ../app/views/ops/_schedule_form_filter.html.haml
 #: ../app/views/report/_schedule_form_filter.html.haml
 #: ../app/views/report/_widget_form_chart.html.haml
 #: ../app/views/report/_widget_form_report.html.haml
@@ -36119,7 +36007,6 @@ msgid "Has an RDM Disk?"
 msgstr ""
 
 #: ../app/helpers/ems_container_helper/textual_summary.rb
-#: ../app/views/ems_container/_form.html.haml
 msgid "Hawkular"
 msgstr ""
 
@@ -36230,7 +36117,7 @@ msgstr ""
 #: ../app/controllers/host_controller.rb
 #: ../app/controllers/miq_action_controller.rb
 #: ../app/controllers/mixins/actions/host_actions/misc.rb
-#: ../app/helpers/catalog_helper.rb:147 ../app/helpers/miq_action_helper.rb
+#: ../app/helpers/catalog_helper.rb:148 ../app/helpers/miq_action_helper.rb
 #: ../app/helpers/miq_alert_helper.rb
 #: ../app/helpers/physical_server_helper/textual_summary.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
@@ -36436,7 +36323,7 @@ msgstr ""
 msgid "Host Connect"
 msgstr ""
 
-#: ../app/views/ems_infra/_form.html.haml
+#: ../app/models/manageiq/providers/vmware/infra_manager.rb
 msgid "Host Default VNC End Port"
 msgstr ""
 
@@ -36444,7 +36331,7 @@ msgstr ""
 msgid "Host Default VNC Port Range"
 msgstr ""
 
-#: ../app/views/ems_infra/_form.html.haml
+#: ../app/models/manageiq/providers/vmware/infra_manager.rb
 msgid "Host Default VNC Start Port"
 msgstr ""
 
@@ -37175,7 +37062,9 @@ msgid_plural "Hostnames"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
+#: ../app/models/manageiq/providers/vmware/cloud_manager.rb
+#: ../app/models/manageiq/providers/vmware/container_manager.rb
+#: ../app/models/manageiq/providers/vmware/infra_manager.rb
 msgid "Hostname (or IPv4 or IPv6 address)"
 msgstr ""
 
@@ -37183,27 +37072,9 @@ msgstr ""
 msgid "Hostname (or IPv4 or IPv6 address:"
 msgstr ""
 
-#: ../app/views/ems_container/_form_fields.html.haml
-#: ../app/views/ems_infra/_form_fields.html.haml
-msgid "Hostname or IP address"
-msgstr ""
-
 #:
 #: ../app/models/manageiq/providers/awx/automation_manager/satellite6_credential.rb
 msgid "Hostname or IP address which corresponds to your Red Hat Satellite 6 server"
-msgstr ""
-
-#: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
-msgid "Hostname or IPV4 or IPV6 address"
-msgstr ""
-
-#: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
-msgid "Hostname or IPv4 or IPv6 address"
-msgstr ""
-
-#: ../app/views/ems_container/_form_fields.html.haml
-#: ../app/views/ems_infra/_form_fields.html.haml
-msgid "Hostname or IPv4/IPv6 address"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/EmsCluster.yaml
@@ -37786,7 +37657,6 @@ msgid "Hour of the Day"
 msgstr ""
 
 #: ../app/views/layouts/_perf_options.html.haml
-#: ../app/views/ops/_schedule_form_timer.html.haml
 #: ../app/views/report/_form_columns_performance.html.haml
 #: ../app/views/report/_schedule_form_timer.html.haml
 msgid "Hourly"
@@ -37818,7 +37688,7 @@ msgstr ""
 msgid "Hours (PM)"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:431 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:428 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "How Far Back to Check"
 msgstr ""
@@ -38253,8 +38123,8 @@ msgstr ""
 
 #. TRANSLATORS: file: product/views/Container.yaml
 #: ../app/helpers/generic_object_definition_helper.rb
-#: ../app/views/shared/buttons/_ab_list.html.haml
-#: ../app/views/shared/buttons/_ab_show.html.haml
+#: ../app/helpers/shared_helper/ab_list_helper.rb
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../config/yaml_strings.rb:720 ../lib/gtl_formatter.rb
 msgid "Image"
 msgstr ""
@@ -38679,7 +38549,7 @@ msgid "Infinity"
 msgstr ""
 
 #: ../app/controllers/miq_alert_controller.rb
-#: ../app/helpers/catalog_helper.rb:192 ../app/helpers/miq_alert_helper.rb
+#: ../app/helpers/catalog_helper.rb:193 ../app/helpers/miq_alert_helper.rb
 #: ../app/javascript/components/data-store-form/data-store-form.schema.js
 #: ../app/views/miq_alert/_form.html.haml
 #: ../app/views/resource_pool/_config.html.haml
@@ -39252,10 +39122,6 @@ msgstr ""
 msgid "Invalid Stack"
 msgstr ""
 
-#: ../app/views/layouts/angular-bootstrap/_endpoints_for_url.html.haml
-msgid "Invalid URL"
-msgstr ""
-
 #: ../app/models/sysprep_file.rb
 msgid "Invalid XML file contents detected."
 msgstr ""
@@ -39273,12 +39139,10 @@ msgstr ""
 msgid "Invalid authentication credentials"
 msgstr ""
 
+#: ../app/controllers/application_controller/explorer.rb
 #: ../app/controllers/mixins/generic_button_mixin.rb
-msgid "Invalid button action"
-msgstr ""
-
 #: ../app/controllers/service_controller.rb
-msgid "Invalid button action!"
+msgid "Invalid button action"
 msgstr ""
 
 #: ../lib/manageiq/reporting/formatter/chart_common.rb
@@ -39315,12 +39179,6 @@ msgstr ""
 
 #: ../app/controllers/application_controller/wait_for_task.rb
 msgid "Invalid input for \"wait_for_task\"."
-msgstr ""
-
-#:
-#: ../app/views/layouts/angular-bootstrap/_auth_credentials_angular_bootstrap.html.haml
-#: ../app/views/static/auth-credentials.html.haml
-msgid "Invalid input format, please enter a GUID"
 msgstr ""
 
 #: ../app/controllers/ops_controller/diagnostics.rb
@@ -39469,7 +39327,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. TRANSLATORS: file: product/views/ServiceTemplate.yaml
-#: ../app/helpers/catalog_helper.rb:111 ../config/yaml_strings.rb
+#: ../app/helpers/catalog_helper.rb:112 ../config/yaml_strings.rb
 msgid "Item Type"
 msgstr ""
 
@@ -39658,7 +39516,6 @@ msgid "Key:"
 msgstr ""
 
 #: ../app/helpers/ems_cloud_helper/textual_summary.rb
-#: ../app/views/ems_infra/_form.html.haml
 msgid "Keystone V3 Domain ID"
 msgstr ""
 
@@ -39683,7 +39540,7 @@ msgstr ""
 msgid "Kind"
 msgstr ""
 
-#: ../app/views/ems_container/_form.html.haml
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb
 msgid "KubeVirt"
 msgstr ""
 
@@ -40477,10 +40334,9 @@ msgstr ""
 msgid "Linux Init Processes"
 msgstr ""
 
-#:
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
 #: ../app/views/shared/buttons/_ab_options_form.html.haml
-#: ../app/views/shared/buttons/_ab_show.html.haml
 msgid "List"
 msgstr ""
 
@@ -41205,7 +41061,6 @@ msgstr ""
 msgid "Logical Resource"
 msgstr ""
 
-#: ../app/views/layouts/_auth_credentials2.html.haml
 #: ../app/views/layouts/login.html.haml
 msgid "Login"
 msgstr ""
@@ -41279,12 +41134,17 @@ msgstr ""
 msgid "Logo Updated At"
 msgstr ""
 
-#: ../app/models/host.rb:641 ../app/models/host.rb
+#: ../app/models/host.rb:645 ../app/models/host.rb
 msgid "Logon to platform [%{os_name}] not supported"
 msgstr ""
 
 #: ../app/presenters/menu/default_menu.rb
 msgid "Logout"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Logs"
 msgstr ""
 
 #: ../app/controllers/miq_ae_tools_controller.rb
@@ -41293,7 +41153,7 @@ msgstr ""
 msgid "Logs for this %{product} Server are not available for viewing"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb:48 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:49 ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/MarkdownPreview/helper.js
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/javascript/components/settings-category-form/schema.js
@@ -42369,7 +42229,7 @@ msgstr ""
 msgid "Max Available"
 msgstr ""
 
-#: ../app/helpers/ops_helper.rb:180 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:191 ../app/helpers/ops_helper.rb
 msgid "Max Concurrent"
 msgstr ""
 
@@ -43316,6 +43176,7 @@ msgstr ""
 #: ../app/helpers/container_helper/textual_summary.rb
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
 #: ../app/helpers/settings_schedule_helper.rb
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../app/helpers/task_details_helper.rb
 #: ../app/javascript/components/data-tables/datastore/helper.js
 #: ../app/javascript/components/data-tables/requests-table/index.jsx
@@ -43326,7 +43187,6 @@ msgstr ""
 #: ../app/views/miq_ae_class/_class_fields.html.haml
 #: ../app/views/miq_policy_export/import.html.haml
 #: ../app/views/miq_request/_ae_prov_show.html.haml
-#: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 #: ../app/views/static/edit_alert_dialog.html.haml
 #: ../config/yaml_strings.rb
@@ -43338,7 +43198,7 @@ msgstr ""
 msgid "Message Filter"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:436 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:433 ../app/models/miq_alert.rb
 msgid "Message Filter Type"
 msgstr ""
 
@@ -43435,10 +43295,6 @@ msgstr[1] ""
 #. TRANSLATORS: en.yml key: dictionary.model.MeteringVm (plural form)
 #: ../config/dictionary_strings.rb
 msgid "Metering for VMs"
-msgstr ""
-
-#: ../app/views/miq_ae_class/_all_tabs.html.haml
-msgid "Method Inputs"
 msgstr ""
 
 #: ../app/views/report/_form_filter_chargeback.html.haml
@@ -44403,8 +44259,6 @@ msgstr ""
 
 #: ../app/helpers/ems_container_helper/textual_summary.rb
 #: ../app/helpers/textual_mixins/textual_authentications_status.rb
-#: ../app/views/ems_container/_form.html.haml
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 msgid "Metrics"
 msgstr ""
 
@@ -44776,11 +44630,6 @@ msgstr ""
 #:
 #: ../app/models/manageiq/providers/vmware/infra_manager/vm_or_template_shared/operations/relocation.rb
 msgid "Migrate not supported because VM is orphaned"
-msgstr ""
-
-#:
-#: ../app/models/manageiq/providers/openstack/cloud_manager/vm/operations/relocation.rb
-msgid "Migrate operation is not supported."
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb
@@ -48828,7 +48677,6 @@ msgstr ""
 msgid "Month of the Year"
 msgstr ""
 
-#: ../app/views/ops/_schedule_form_timer.html.haml
 #: ../app/views/report/_schedule_form_timer.html.haml
 msgid "Monthly"
 msgstr ""
@@ -49040,10 +48888,6 @@ msgstr ""
 
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html
 msgid "Multiselect"
-msgstr ""
-
-#: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
-msgid "Must be a number (greater than 0)"
 msgstr ""
 
 #: ../app/javascript/components/create-nuage-cloud-subnet-form.schema.js
@@ -49317,14 +49161,6 @@ msgstr ""
 
 #: ../app/views/miq_ae_class/_copy_objects_form.html.haml
 msgid "Namespace"
-msgstr ""
-
-#: ../app/views/miq_ae_class/_all_tabs.html.haml
-msgid "Namespace Details"
-msgstr ""
-
-#: ../app/views/miq_ae_class/_all_tabs.html.haml
-msgid "Namespaces"
 msgstr ""
 
 #: ../app/views/shared/views/_prov_dialog.html.haml
@@ -50320,12 +50156,6 @@ msgstr ""
 msgid "Never Verified"
 msgstr ""
 
-#:
-#: ../app/views/layouts/angular-bootstrap/_auth_credentials_angular_bootstrap.html.haml
-#: ../app/views/layouts/angular-bootstrap/_auth_keypair_angular_bootstrap.html.haml
-msgid "New "
-msgstr ""
-
 #: ../app/javascript/components/miq-alert-set-form/index.jsx
 msgid "New Alert Profile \"%s\" has been successfully queued."
 msgstr ""
@@ -50385,10 +50215,6 @@ msgstr ""
 
 #: ../app/helpers/application_helper/import_export_helper.rb
 msgid "New object"
-msgstr ""
-
-#: ../app/javascript/oldjs/components/auth-credentials.js
-msgid "New password"
 msgstr ""
 
 #: ./dist/js/ui-components.js
@@ -50562,11 +50388,7 @@ msgstr ""
 msgid "No Associations defined"
 msgstr ""
 
-#: ../app/helpers/miq_action_helper.rb
-msgid "No Attribute/Value Pairs found"
-msgstr ""
-
-#: ../app/views/shared/buttons/_ab_show.html.haml
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 msgid "No Attribute/Value Pairs found."
 msgstr ""
 
@@ -50710,7 +50532,7 @@ msgstr ""
 msgid "No EMS defined"
 msgstr ""
 
-#: ../app/views/shared/buttons/_ab_show.html.haml
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 msgid "No Enablement Expression defined, this button will be always enabled"
 msgstr ""
 
@@ -50979,7 +50801,7 @@ msgstr ""
 msgid "No Value Found"
 msgstr ""
 
-#: ../app/views/shared/buttons/_ab_show.html.haml
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 msgid "No Visibility Expression defined, this button will be always visible"
 msgstr ""
 
@@ -51663,12 +51485,6 @@ msgstr ""
 msgid "Note: Total quota can be restricted by quotas defined at upper levels"
 msgstr ""
 
-#: ../app/views/layouts/_auth_credentials.html.haml
-#: ../app/views/layouts/angular-bootstrap/_auth_credentials_angular_bootstrap.html.haml
-#: ../app/views/static/auth-credentials.html.haml
-msgid "Note: Username must be in the format: name@realm"
-msgstr ""
-
 #: ../app/helpers/condition_helper.rb
 #: ../app/helpers/miq_alert_set_helper.rb
 #: ../app/helpers/miq_policy_helper.rb
@@ -52001,6 +51817,7 @@ msgid "Number, 2 Decimals (1,234.00)"
 msgstr ""
 
 #: ../app/javascript/components/custom-url-tabs/index.jsx
+#: ../app/javascript/components/dashboard-widgets/widget-remove-modal/index.jsx
 #: ../app/views/static/edit_alert_dialog.html.haml
 msgid "OK"
 msgstr ""
@@ -52093,22 +51910,25 @@ msgid "OVF Templates"
 msgstr ""
 
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
-#: ../app/views/miq_ae_tools/_results_tabs.html.haml
 msgid "Object"
 msgstr ""
 
 #: ../app/helpers/settings_schedule_helper.rb
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "Object Attribute"
 msgstr ""
 
-#: ../app/views/miq_ae_tools/_results_uri.html.haml
+#: ../app/views/layouts/_ae_resolve_options.html.haml
+msgid "Object Attribute 1"
+msgstr ""
+
+#: ../app/helpers/miq_ae_tools_helper.rb
 msgid "Object Attribute Name"
 msgstr ""
 
-#: ../app/views/miq_ae_tools/_results_uri.html.haml
+#: ../app/helpers/miq_ae_tools_helper.rb
 msgid "Object Attribute Type"
 msgstr ""
 
@@ -52120,9 +51940,9 @@ msgstr ""
 
 #: ../app/helpers/miq_action_helper.rb
 #: ../app/helpers/settings_schedule_helper.rb
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "Object Details"
 msgstr ""
@@ -52139,7 +51959,8 @@ msgstr ""
 msgid "Object ID missing for %{field}"
 msgstr ""
 
-#: ../app/views/miq_ae_tools/_results_uri.html.haml
+#:
+#: ../app/javascript/spec/automation-simulation/automation-simulation.spec.js
 msgid "Object Info"
 msgstr ""
 
@@ -52195,6 +52016,10 @@ msgstr ""
 msgid "Object attribute must be specified to copy object details for use in a Button"
 msgstr ""
 
+#: ../app/helpers/miq_ae_tools_helper.rb
+msgid "Object info"
+msgstr ""
+
 #:
 #: ../lib/miq_automation_engine/engine/miq_ae_engine/miq_ae_ansible_method_base.rb
 msgid "Object not found: [%{obj_name}]"
@@ -52238,7 +52063,7 @@ msgstr ""
 msgid "Offline VMs with Snapshots"
 msgstr ""
 
-#:
+#: ../app/javascript/components/miq-confirm-action-modal/index.jsx
 #: ../app/javascript/components/settings-tasks-form/settings-tasks-form.schema.js
 msgid "Ok"
 msgstr ""
@@ -52276,7 +52101,6 @@ msgid "On Shared Storage"
 msgstr ""
 
 #: ../app/javascript/components/schedule-form/helper.js
-#: ../app/views/ops/_schedule_form_timer.html.haml
 #: ../app/views/report/_schedule_form_timer.html.haml
 msgid "Once"
 msgstr ""
@@ -52289,10 +52113,9 @@ msgstr ""
 msgid "One %{model} must be selected to Right-Size Recommendations"
 msgstr ""
 
-#:
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
 #: ../app/views/shared/buttons/_ab_options_form.html.haml
-#: ../app/views/shared/buttons/_ab_show.html.haml
 msgid "One by one"
 msgstr ""
 
@@ -52396,8 +52219,8 @@ msgstr ""
 msgid "Open Remote Console"
 msgstr ""
 
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../app/views/shared/buttons/_ab_options_form.html.haml
-#: ../app/views/shared/buttons/_ab_show.html.haml
 msgid "Open URL"
 msgstr ""
 
@@ -52892,8 +52715,8 @@ msgstr ""
 msgid "Operations Worker for Provider: %{name}"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:457 ../app/models/miq_alert.rb
-#: ../app/models/miq_alert.rb:473 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:454 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:470 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Operator"
 msgstr ""
@@ -54131,7 +53954,8 @@ msgstr ""
 msgid "Password:"
 msgstr ""
 
-#: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
+#: ../app/models/manageiq/providers/vmware/container_manager.rb
+#: ../app/models/manageiq/providers/vmware/infra_manager.rb
 msgid "Paste here the trusted CA certificates, in PEM format."
 msgstr ""
 
@@ -54233,6 +54057,7 @@ msgid "Patch|Vendor"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/GuestApplication.yaml
+#: ../app/helpers/miq_ae_class_helper.rb
 #: ../app/helpers/pxe_helper/textual_summary.rb
 #: ../app/views/miq_ae_class/_embedded_methods.html.haml
 #: ../app/views/pxe/_pxe_server_details.html.haml
@@ -55036,7 +54861,7 @@ msgstr[1] ""
 msgid "Performance - VMs"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:456 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:453 ../app/models/miq_alert.rb
 #: ../app/models/miq_alert.rb
 msgid "Performance Field"
 msgstr ""
@@ -56817,7 +56642,6 @@ msgstr ""
 #. TRANSLATORS: file: product/views/FirewallRule.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
 #: ../app/helpers/container_service_helper/textual_summary.rb
-#: ../app/views/ems_container/_form_fields.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
 #: ../app/views/ops/_settings_server_tab.html.haml
 #: ../config/yaml_strings.rb
@@ -57215,7 +57039,7 @@ msgid "Price / Month"
 msgstr ""
 
 #: ../app/controllers/catalog_controller.rb
-#: ../app/helpers/catalog_helper.rb:52 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:53 ../app/helpers/catalog_helper.rb
 msgid "Price / Month (in %{currency})"
 msgstr ""
 
@@ -57283,7 +57107,7 @@ msgstr ""
 msgid "Print the full report (all rows) or export it as a PDF file"
 msgstr ""
 
-#: ../app/helpers/ops_helper.rb:177 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:188 ../app/helpers/ops_helper.rb
 msgid "Priority"
 msgstr ""
 
@@ -57300,8 +57124,7 @@ msgstr ""
 msgid "Priority Workers"
 msgstr ""
 
-#:
-#: ../app/views/layouts/angular-bootstrap/_auth_keypair_angular_bootstrap.html.haml
+#: ../app/models/manageiq/providers/ovirt/infra_manager.rb
 msgid "Private Key"
 msgstr ""
 
@@ -57639,7 +57462,7 @@ msgstr ""
 msgid "Projects by Quota Items"
 msgstr ""
 
-#: ../app/views/ems_container/_form.html.haml
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb
 msgid "Prometheus"
 msgstr ""
 
@@ -57837,7 +57660,7 @@ msgstr ""
 #: ../app/helpers/ansible_repository_helper/textual_summary.rb
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb
 #: ../app/helpers/automation_manager_configured_system_helper.rb
-#: ../app/helpers/catalog_helper.rb:116 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:117 ../app/helpers/catalog_helper.rb
 #: ../app/helpers/configuration_job_helper/textual_summary.rb
 #: ../app/helpers/configuration_script_helper.rb
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb
@@ -58294,9 +58117,8 @@ msgstr ""
 msgid "Provisioned VMs [%{description}]"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb:125 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:126 ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
-#: ../app/views/layouts/angular/_multi_tab_ansible_form_options.html.haml
 #: ../app/views/service/_svcs_show.html.haml
 msgid "Provisioning"
 msgstr ""
@@ -58376,7 +58198,7 @@ msgstr ""
 msgid "Provisions"
 msgstr ""
 
-#: ../app/views/layouts/angular/_per_provider_settings.html.haml
+#: ../app/models/manageiq/providers/kubernetes/container_manager.rb
 msgid "Proxy"
 msgstr ""
 
@@ -58789,7 +58611,7 @@ msgstr ""
 msgid "RSA Private Key"
 msgstr ""
 
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
+#: ../app/models/manageiq/providers/ovirt/infra_manager.rb
 msgid "RSA key pair"
 msgstr ""
 
@@ -59053,7 +58875,7 @@ msgstr ""
 
 #. TRANSLATORS: file: product/views/MiqGroup.yaml
 #. TRANSLATORS: file: product/views/MiqUserRole.yaml
-#: ../app/views/catalog/_ot_tree_show.html.haml
+#: ../app/helpers/catalog_helper/orchestration_template_helper.rb
 #: ../app/views/orchestration_stack/_stack_orchestration_template.html.haml
 #: ../config/yaml_strings.rb
 msgid "Read Only"
@@ -59130,8 +58952,6 @@ msgid "Real Time Performance"
 msgstr ""
 
 #: ../app/helpers/configured_system_helper/textual_summary.rb
-#: ../app/views/ems_infra/_form_fields.html.haml
-#: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
 msgid "Realm"
 msgstr ""
 
@@ -62154,10 +61974,10 @@ msgstr ""
 
 #: ../app/helpers/miq_action_helper.rb
 #: ../app/helpers/settings_schedule_helper.rb
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "Request"
 msgstr ""
@@ -62453,20 +62273,12 @@ msgstr ""
 msgid "Required if SSH login is disabled for the Default account."
 msgstr ""
 
-#: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
-msgid "Required information missing"
-msgstr ""
-
 #: ../app/models/authenticator/ldap.rb
 msgid "Required key not specified: [%{key}]"
 msgstr ""
 
 #: ../app/models/miq_request_workflow/dialog_field_validation.rb
 msgid "Required tag(s): %{names}"
-msgstr ""
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "Required. Used to gather Utilization data."
 msgstr ""
 
 #: ../config/model_attributes.rb
@@ -63407,14 +63219,6 @@ msgstr ""
 msgid "Retire VMs"
 msgstr ""
 
-#: ../app/models/vm/operations/lifecycle.rb
-msgid "Retire not supported because VM is archived"
-msgstr ""
-
-#: ../app/models/vm/operations/lifecycle.rb
-msgid "Retire not supported because VM is orphaned"
-msgstr ""
-
 #: ../app/helpers/application_helper/toolbar/orchestration_stacks_center.rb
 msgid "Retire selected Orchestration Stacks"
 msgstr ""
@@ -63485,10 +63289,9 @@ msgstr ""
 
 #: ../app/controllers/application_controller/ci_processing.rb
 #: ../app/helpers/application_helper/tasks.rb
-#: ../app/helpers/catalog_helper.rb:127 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:128 ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/javascript/components/workflows/workflow-entry-points.jsx
-#: ../app/views/layouts/angular/_multi_tab_ansible_form_options.html.haml
 #: ../app/views/service/_svcs_show.html.haml
 msgid "Retirement"
 msgstr ""
@@ -63781,7 +63584,6 @@ msgid "Rules"
 msgstr ""
 
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
-#: ../app/views/ops/_schedule_form_timer.html.haml
 #: ../app/views/report/_schedule_form_timer.html.haml
 msgid "Run"
 msgstr ""
@@ -64062,7 +63864,7 @@ msgid "Safely Remove Volumes"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.FileDepotSmb
-#: ../app/models/file_depot_smb.rb:19 ../config/dictionary_strings.rb
+#: ../app/models/file_depot_smb.rb:20 ../config/dictionary_strings.rb
 msgid "Samba"
 msgid_plural "Sambas"
 msgstr[0] ""
@@ -64658,12 +64460,9 @@ msgstr ""
 msgid "Secondary Menu"
 msgstr ""
 
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
+#: ../app/models/manageiq/providers/amazon/cloud_manager.rb
+#: ../app/models/manageiq/providers/amazon/container_manager.rb
 msgid "Secret Access Key"
-msgstr ""
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "Secret Access Keys do not match"
 msgstr ""
 
 #: ../app/views/ops/_settings_authentication_tab.html.haml
@@ -64868,8 +64667,7 @@ msgstr[1] ""
 msgid "Security Policy Rules"
 msgstr ""
 
-#: ../app/views/ems_infra/_form_fields.html.haml
-#: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
+#: ../app/models/manageiq/providers/vmware/cloud_manager.rb
 msgid "Security Protocol"
 msgstr ""
 
@@ -65177,10 +64975,6 @@ msgstr ""
 msgid "Select All Hours"
 msgstr ""
 
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "Select Ceilometer if eventing is not enabled on AMQP."
-msgstr ""
-
 #: ../app/helpers/application_helper/toolbar/miq_ae_namespace_center.rb
 msgid "Select Classes to copy"
 msgstr ""
@@ -65204,10 +64998,6 @@ msgstr ""
 #:
 #: ../app/javascript/components/copy-dashboard-form/copy-dashboard-form.schema.js
 msgid "Select Group"
-msgstr ""
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "Select Host to validate against"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_instances_center.rb
@@ -65724,8 +65514,8 @@ msgstr ""
 msgid "Selected:"
 msgstr ""
 
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../app/views/layouts/_ae_resolve_options.html.haml
-#: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
 msgid "Selection"
 msgstr ""
@@ -65796,7 +65586,7 @@ msgid "Serial Number"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/MiqTask.yaml
-#: ../app/helpers/ops_helper.rb:208 ../app/helpers/task_details_helper.rb
+#: ../app/helpers/ops_helper.rb:219 ../app/helpers/task_details_helper.rb
 #: ../app/helpers/task_details_helper.rb
 #: ../app/javascript/components/provider-dashboard-charts/charts_config.js
 #: ../app/presenters/tree_node/assigned_server_role.rb
@@ -65930,19 +65720,10 @@ msgstr ""
 msgid "Server Stop"
 msgstr ""
 
-#: ../app/javascript/oldjs/components/auth-credentials.js
-#: ../app/views/layouts/angular-bootstrap/_auth_credentials_angular_bootstrap.html.haml
 #: ../app/views/layouts/angular/_form_buttons_verify_angular.html.haml
 msgid ""
 "Server information, Username and matching password fields are needed to perfor"
 "m verification of credentials"
-msgstr ""
-
-#:
-#: ../app/views/layouts/angular-bootstrap/_auth_keypair_angular_bootstrap.html.haml
-msgid ""
-"Server information, username and private key fields are needed to perform veri"
-"fication of credentials"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
@@ -66069,7 +65850,8 @@ msgstr ""
 msgid "Service Account Email Address"
 msgstr ""
 
-#: ../app/views/layouts/angular/_auth_service_account_angular.html.haml
+#: ../app/models/manageiq/providers/google/container_manager.rb
+#: ../app/models/manageiq/providers/google/manager_mixin.rb
 msgid "Service Account JSON"
 msgstr ""
 
@@ -66101,7 +65883,7 @@ msgid "Service Catalog"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ServiceTemplate
-#: ../app/models/service_template.rb:477 ../config/dictionary_strings.rb
+#: ../app/models/service_template.rb:486 ../config/dictionary_strings.rb
 msgid "Service Catalog Item"
 msgid_plural "Service Catalog Items"
 msgstr[0] ""
@@ -67383,7 +67165,6 @@ msgstr ""
 #: ../app/controllers/ops_controller.rb
 #: ../app/javascript/components/zone-form/zone-form.schema.js
 #: ../app/presenters/menu/default_menu.rb
-#: ../app/views/layouts/angular/_per_provider_settings.html.haml
 msgid "Settings"
 msgstr ""
 
@@ -67636,16 +67417,15 @@ msgstr ""
 msgid "Should have privileged access, such as administrator."
 msgstr ""
 
-#:
-#: ../app/views/layouts/angular-bootstrap/_auth_credentials_angular_bootstrap.html.haml
-#: ../app/views/static/auth-credentials.html.haml
+#: ../app/models/manageiq/providers/oracle_cloud/cloud_manager.rb
+#: ../app/models/manageiq/providers/oracle_cloud/container_manager.rb
 msgid "Should have privileged access, such as root or administrator."
 msgstr ""
 
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../app/views/layouts/_perf_options.html.haml
 #: ../app/views/layouts/_role_visibility.html.haml
-#: ../app/views/shared/buttons/_ab_show.html.haml
 msgid "Show"
 msgstr ""
 
@@ -68847,13 +68627,13 @@ msgstr ""
 msgid "Single and List"
 msgstr ""
 
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../app/views/shared/buttons/_ab_options_form.html.haml
-#: ../app/views/shared/buttons/_ab_show.html.haml
 msgid "Single and list"
 msgstr ""
 
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../app/views/shared/buttons/_ab_options_form.html.haml
-#: ../app/views/shared/buttons/_ab_show.html.haml
 msgid "Single entity"
 msgstr ""
 
@@ -69010,20 +68790,7 @@ msgid "SmartState Analysis"
 msgstr ""
 
 #: ../app/helpers/textual_summary_helper.rb
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 msgid "SmartState Docker"
-msgstr ""
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "SmartState Docker Password"
-msgstr ""
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "SmartState Docker Passwords do not match"
-msgstr ""
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "SmartState Docker User Name"
 msgstr ""
 
 #: ../app/models/storage.rb
@@ -69459,11 +69226,6 @@ msgstr ""
 msgid "Source template [%{name}] was not found"
 msgstr ""
 
-#:
-#: ../app/views/layouts/angular-bootstrap/_auth_credentials_angular_bootstrap.html.haml
-#: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
-#: ../app/views/layouts/angular/_auth_service_account_angular.html.haml
-#: ../app/views/static/auth-credentials.html.haml
 #: ../app/views/static/provider_option_field_input.html.haml
 msgid "Spaces are prohibited"
 msgstr ""
@@ -69691,7 +69453,6 @@ msgid "Starting Class must be selected"
 msgstr ""
 
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
-#: ../app/views/ops/_schedule_form_timer.html.haml
 #: ../app/views/report/_schedule_form_timer.html.haml
 msgid "Starting Date"
 msgstr ""
@@ -69711,7 +69472,6 @@ msgid "Starting Process is required"
 msgstr ""
 
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
-#: ../app/views/ops/_schedule_form_timer.html.haml
 #: ../app/views/report/_schedule_form_timer.html.haml
 msgid "Starting Time"
 msgstr ""
@@ -69879,7 +69639,7 @@ msgstr ""
 #: ../app/helpers/ems_network_helper/textual_summary.rb
 #: ../app/helpers/ems_physical_infra_helper/textual_summary.rb
 #: ../app/helpers/ems_storage_helper/textual_summary.rb
-#: ../app/helpers/ops_helper.rb:175 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:186 ../app/helpers/ops_helper.rb
 #: ../app/helpers/ops_helper.rb
 #: ../app/helpers/ops_helper/settings_server_desc_helper.rb
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb
@@ -70827,7 +70587,7 @@ msgstr ""
 msgid "Storing the custom help menu configuration was not successful."
 msgstr ""
 
-#: ../app/models/manageiq/providers/kubernetes/container_manager.rb
+#: ../app/models/manageiq/providers/vmware/infra_manager.rb
 msgid "Streaming refresh not enabled"
 msgstr ""
 
@@ -70897,10 +70657,9 @@ msgstr ""
 msgid "Submit Policy Simulation for the selected VMs"
 msgstr ""
 
-#:
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
 #: ../app/views/shared/buttons/_ab_options_form.html.haml
-#: ../app/views/shared/buttons/_ab_show.html.haml
 msgid "Submit all"
 msgstr ""
 
@@ -71530,7 +71289,7 @@ msgstr ""
 msgid "System/Process"
 msgstr ""
 
-#: ../app/views/shared/buttons/_ab_show.html.haml
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 msgid "System/Process/"
 msgstr ""
 
@@ -71714,6 +71473,10 @@ msgstr ""
 
 #: ../app/controllers/report_controller/dashboards.rb
 msgid "Tab Title must be unique for this group"
+msgstr ""
+
+#: ../app/javascript/components/AutomationSimulation/index.jsx
+msgid "Tab details not found."
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/report_view.rb
@@ -71904,7 +71667,7 @@ msgstr ""
 msgid "Take this item out of Maintenance Mode?"
 msgstr ""
 
-#: ../app/views/shared/buttons/_ab_show.html.haml
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 msgid "Target"
 msgstr ""
 
@@ -72068,6 +71831,10 @@ msgstr[1] ""
 msgid "Template is required, please select one from the list"
 msgstr ""
 
+#: ../app/models/orchestration_template.rb
+msgid "Template not orderable"
+msgstr ""
+
 #:
 #: ../app/models/manageiq/providers/ovirt/infra_manager/provision_workflow.rb
 msgid "Template sealing is supported only for non-Windows OS."
@@ -72141,12 +71908,6 @@ msgstr ""
 #: ../app/models/manageiq/providers/oracle_cloud/cloud_manager.rb
 #: ../app/models/manageiq/providers/oracle_cloud/container_manager.rb
 msgid "Tenant ID"
-msgstr ""
-
-#: ../app/views/ems_infra/_form.html.haml
-msgid ""
-"Tenant ID, Client ID and matching Client Key fields are needed to perform veri"
-"fication of credentials"
 msgstr ""
 
 #: ../app/models/manageiq/providers/openstack/cloud_manager.rb
@@ -72591,12 +72352,17 @@ msgid ""
 " paused"
 msgstr ""
 
-#: ../app/models/vm_or_template/operations.rb
+#:
+#: ../app/models/manageiq/providers/vmware/infra_manager/template/operations.rb
 msgid "The VM does not have a valid connection state"
 msgstr ""
 
 #: ../app/models/vm_or_template/operations.rb
 msgid "The VM is a template"
+msgstr ""
+
+#: ../app/models/vm_or_template/operations.rb
+msgid "The VM is archived"
 msgstr ""
 
 #: ../app/models/vm_or_template/operations.rb
@@ -72607,13 +72373,12 @@ msgstr ""
 msgid "The VM is not connected to a provider"
 msgstr ""
 
-#: ../app/models/vm_or_template/operations.rb
+#:
+#: ../app/models/manageiq/providers/vmware/infra_manager/template/operations.rb
 msgid "The VM is not connected to an active Provider"
 msgstr ""
 
-#:
-#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/vm.rb
-#: ../app/models/manageiq/providers/ibm_cloud/vpc/cloud_manager/vm.rb
+#: ../app/models/manageiq/providers/vmware/infra_manager/vm/operations.rb
 msgid "The VM is not powered off"
 msgstr ""
 
@@ -72622,15 +72387,21 @@ msgstr ""
 msgid "The VM is not powered on"
 msgstr ""
 
-#: ../app/models/vm/operations/power.rb
+#: ../app/models/vm_or_template/operations.rb
+msgid "The VM is orphaned"
+msgstr ""
+
+#: ../app/models/manageiq/providers/vmware/cloud_manager/vm/operations.rb
 msgid "The VM is powered on"
 msgstr ""
 
-#: ../app/models/vm_or_template/operations.rb
+#:
+#: ../app/models/manageiq/providers/vmware/infra_manager/template/operations.rb
 msgid "The VM is retired"
 msgstr ""
 
-#: ../app/models/vm_or_template/operations.rb
+#:
+#: ../app/models/manageiq/providers/vmware/infra_manager/template/operations.rb
 msgid "The VM is terminated"
 msgstr ""
 
@@ -72836,7 +72607,7 @@ msgstr ""
 msgid "The password to use to connect to the Microsoft Azure account"
 msgstr ""
 
-#: ../app/models/manageiq/providers/redhat/infra_manager/vm.rb
+#: ../app/models/manageiq/providers/ovirt/infra_manager/vm.rb
 msgid "The provider does not support reconfigure disks"
 msgstr ""
 
@@ -73281,7 +73052,7 @@ msgstr ""
 msgid "This embedded method is already selected"
 msgstr ""
 
-#: ../app/models/manageiq/providers/redhat/infra_manager/vm.rb
+#: ../app/models/manageiq/providers/ovirt/infra_manager/vm.rb
 msgid "This feature is not supported by the api version of the provider"
 msgstr ""
 
@@ -73435,7 +73206,6 @@ msgstr ""
 
 #: ../app/controllers/application_controller/performance.rb
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
-#: ../app/views/ops/_schedule_form_timer.html.haml
 #: ../app/views/report/_form_filter_chargeback.html.haml
 #: ../app/views/report/_schedule_form_timer.html.haml
 msgid "Time Zone"
@@ -73599,10 +73369,6 @@ msgstr ""
 msgid "Timer"
 msgstr ""
 
-#: ../app/views/ops/_schedule_form_timer.html.haml
-msgid "Timer Options"
-msgstr ""
-
 #: ../app/views/layouts/_drift_history.html.haml
 msgid "Timestamp"
 msgstr ""
@@ -73629,8 +73395,8 @@ msgid "To"
 msgstr ""
 
 #: ../app/controllers/application_controller/buttons.rb
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
-#: ../app/views/shared/buttons/_ab_show.html.haml
 msgid "To All"
 msgstr ""
 
@@ -73732,13 +73498,8 @@ msgstr ""
 msgid "Toggle maintenance mode for this item?"
 msgstr ""
 
-#: ../app/views/layouts/_auth_bearer_token.html.haml
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
+#: ../app/models/manageiq/providers/kubevirt/infra_manager.rb
 msgid "Token"
-msgstr ""
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "Tokens do not match"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.column.tools_status
@@ -74255,7 +74016,8 @@ msgstr ""
 msgid "Tree Small"
 msgstr ""
 
-#: ../app/views/miq_ae_tools/_results_tabs.html.haml
+#: ../app/helpers/miq_ae_tools_helper.rb
+#: ../app/javascript/spec/automation-simulation/automation-simulation.spec.js
 msgid "Tree View"
 msgstr ""
 
@@ -74349,15 +74111,16 @@ msgstr ""
 msgid "Trends for past"
 msgstr ""
 
+#: ../app/helpers/catalog_helper/orchestration_template_helper.rb
 #: ../app/helpers/miq_alert_helper.rb
 #: ../app/helpers/report_helper/report_schedule_helper.rb
-#: ../app/views/catalog/_ot_tree_show.html.haml
 #: ../app/views/layouts/_user_input_filter.html.haml
 #: ../app/views/orchestration_stack/_stack_orchestration_template.html.haml
 msgid "True"
 msgstr ""
 
-#: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
+#: ../app/models/manageiq/providers/vmware/container_manager.rb
+#: ../app/models/manageiq/providers/vmware/infra_manager.rb
 msgid "Trusted CA Certificates"
 msgstr ""
 
@@ -74518,6 +74281,7 @@ msgstr ""
 #: ../app/helpers/security_policy_helper/textual_summary.rb
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb
 #: ../app/helpers/settings_analysis_profile_helper.rb
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/javascript/components/data-tables/button-group-list/helper.js
 #: ../app/javascript/components/data-tables/time-profile-table/helper.js
@@ -74532,9 +74296,6 @@ msgstr ""
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/views/chargeback_rate/_cb_rate_show.html.haml
 #: ../app/views/chargeback_rate/_form.html.haml
-#: ../app/views/ems_container/_form.html.haml
-#: ../app/views/ems_infra/_form.html.haml
-#: ../app/views/ems_physical_infra/_form.html.haml
 #: ../app/views/layouts/_ae_resolve_options.html.haml
 #: ../app/views/miq_ae_class/_angular_method_form.html.haml
 #: ../app/views/miq_ae_class/_class_fields.html.haml
@@ -74547,9 +74308,7 @@ msgstr ""
 #: ../app/views/ops/_settings_replication_tab.html.haml
 #: ../app/views/pxe/_pxe_img_form.html.haml
 #: ../app/views/pxe/_pxe_wimg_form.html.haml
-#: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml
-#: ../app/views/static/ops/log_collection/log_collection.html.haml
 #: ../app/views/vm_common/_disks.html.haml:5 ../config/yaml_strings.rb
 msgid "Type"
 msgstr ""
@@ -74602,10 +74361,10 @@ msgstr ""
 msgid "UNUSED?"
 msgstr ""
 
+#: ../app/helpers/miq_ae_tools_helper.rb
 #: ../app/helpers/pxe_helper/textual_summary.rb
 #: ../app/javascript/components/pxe-servers-form/pxe-server-form.schema.js
 #: ../app/views/layouts/angular-bootstrap/_edit_log_depot_settings_angular_bootstrap.html.haml
-#: ../app/views/miq_ae_tools/_results_uri.html.haml
 msgid "URI"
 msgstr ""
 
@@ -75249,7 +75008,7 @@ msgstr ""
 msgid "Unsupported log depot protocol: %{protocol}"
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:1573 ../app/models/vm_or_template.rb
+#: ../app/models/vm_or_template.rb:1586 ../app/models/vm_or_template.rb
 msgid "Unsupported property type [%{property}]"
 msgstr ""
 
@@ -75369,6 +75128,7 @@ msgstr ""
 #: ../app/helpers/ansible_credential_helper/textual_summary.rb
 #: ../app/helpers/ansible_playbook_helper/textual_summary.rb
 #: ../app/helpers/ansible_repository_helper/textual_summary.rb
+#: ../app/helpers/catalog_helper/orchestration_template_helper.rb
 #: ../app/helpers/firmware_binary_helper/textual_summary.rb
 #: ../app/helpers/firmware_registry_helper/textual_summary.rb
 #: ../app/helpers/firmware_target_helper/textual_summary.rb
@@ -75377,7 +75137,6 @@ msgstr ""
 #: ../app/helpers/workflow_credential_helper/textual_summary.rb
 #: ../app/helpers/workflow_helper/textual_summary.rb
 #: ../app/helpers/workflow_repository_helper/textual_summary.rb
-#: ../app/views/catalog/_ot_tree_show.html.haml
 #: ../app/views/miq_ae_customization/_dialog_info.html.haml
 #: ../app/views/orchestration_stack/_stack_orchestration_template.html.haml
 #: ../config/yaml_strings.rb
@@ -76124,7 +75883,7 @@ msgstr ""
 msgid "Used Storage"
 msgstr ""
 
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
+#: ../app/models/manageiq/providers/amazon/cloud_manager.rb
 msgid ""
 "Used for Docker Registry credentials required to perform SmartState Analysis o"
 "n AWS."
@@ -76134,33 +75893,12 @@ msgstr ""
 msgid "Used for SSH login."
 msgstr ""
 
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid ""
-"Used for VMRC connections to all VMs on this provider. If not set, the VMRC co"
-"nsole access will be disabled for this provider."
-msgstr ""
-
 #: ../app/models/manageiq/providers/vmware/infra_manager/host.rb
 msgid "Used for access to Web Services."
 msgstr ""
 
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "Used to authenticate as a service account against your provider."
-msgstr ""
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
+#: ../app/models/manageiq/providers/nuage/manager_mixin.rb
 msgid "Used to authenticate with Nuage AMQP Messaging Bus for event handling."
-msgstr ""
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid ""
-"Used to authenticate with OpenStack AMQP Messaging Bus for event handling. Con"
-"figure AMQP if eventing is not enabled on Ceilometer."
-msgstr ""
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-#: ../app/views/layouts/angular/_multi_tab_ansible_form_options.html.haml
-msgid "Used to gather Capacity & Utilization metrics."
 msgstr ""
 
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAnsible_AutomationManager_Credential.yaml
@@ -76295,10 +76033,9 @@ msgid "User Role"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/MiqUserRole.yaml
-#:
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js
 #: ../app/views/layouts/_role_visibility.html.haml
-#: ../app/views/shared/buttons/_ab_show.html.haml
 #: ../config/yaml_strings.rb
 msgid "User Roles"
 msgstr ""
@@ -77326,7 +77063,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.Vm
 #. TRANSLATORS: en.yml key: dictionary.table.vm
-#: ../app/models/vm.rb:141 ../config/dictionary_strings.rb
+#: ../app/models/vm.rb:142 ../config/dictionary_strings.rb
 #: ../config/dictionary_strings.rb
 msgid "VM and Instance"
 msgid_plural "VMs and Instances"
@@ -77490,7 +77227,7 @@ msgid "VM operations"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.VmOrTemplate
-#: ../app/models/vm_or_template.rb:1689 ../config/dictionary_strings.rb
+#: ../app/models/vm_or_template.rb:1703 ../config/dictionary_strings.rb
 msgid "VM or Template"
 msgid_plural "VMs or Templates"
 msgstr[0] ""
@@ -77569,7 +77306,6 @@ msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb
 #: ../app/helpers/textual_summary_helper.rb
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 msgid "VMRC Console"
 msgstr ""
 
@@ -78012,13 +77748,11 @@ msgid "Valid"
 msgstr ""
 
 #: ../app/javascript/components/async-credentials/async-credentials.jsx
-#: ../app/views/layouts/_auth_credentials2.html.haml
 #: ../app/views/layouts/_form_buttons_verify.html.haml
 #: ../app/views/layouts/angular/_form_buttons_verify_angular.html.haml
 #: ../app/views/ops/_amazon_verify_button.html.haml
 #: ../app/views/ops/_ldap_verify_button.html.haml
 #: ../app/views/ops/_settings_replication_tab.html.haml
-#: ../app/views/static/auth-credentials.html.haml
 #: ../app/views/static/verify-button.html.haml
 msgid "Validate"
 msgstr ""
@@ -78036,11 +77770,6 @@ msgstr ""
 msgid "Validate the LDAP Settings by binding with the Host"
 msgstr ""
 
-#: ../app/views/layouts/_auth_credentials2.html.haml
-msgid "Validate the credentials"
-msgstr ""
-
-#: ../app/javascript/oldjs/components/auth-credentials.js
 #: ../app/views/layouts/_form_buttons_verify.html.haml
 #: ../app/views/layouts/angular/_form_buttons_verify_angular.html.haml
 msgid "Validate the credentials by logging into the Server"
@@ -78061,7 +77790,6 @@ msgstr ""
 
 #: ../app/javascript/components/async-credentials/async-credentials.jsx
 #: ../app/views/layouts/angular/_form_buttons_verify_angular.html.haml
-#: ../app/views/static/auth-credentials.html.haml
 msgid "Validation Required"
 msgstr ""
 
@@ -78134,7 +77862,7 @@ msgstr ""
 msgid "Value Name"
 msgstr ""
 
-#: ../app/models/miq_alert.rb:458 ../app/models/miq_alert.rb
+#: ../app/models/miq_alert.rb:455 ../app/models/miq_alert.rb
 msgid "Value Threshold"
 msgstr ""
 
@@ -78223,7 +77951,7 @@ msgstr ""
 msgid "Vault"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb:197 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:198 ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 #: ../app/views/miq_ae_class/_method_inputs.html.haml
@@ -78297,10 +78025,6 @@ msgstr ""
 #: ../app/javascript/components/ansible-repository-form/ansible-repository-form.schema.js
 #: ../app/javascript/components/workflow-repository-form/workflow-repository-form.schema.js
 msgid "Verify SSL"
-msgstr ""
-
-#: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
-msgid "Verify TLS Certificates"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/FirmwareBinary.yaml
@@ -79510,8 +79234,6 @@ msgid "Virtual machines added"
 msgstr ""
 
 #: ../app/helpers/ems_container_helper/textual_summary.rb
-#: ../app/views/ems_container/_form.html.haml
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
 msgid "Virtualization"
 msgstr ""
 
@@ -79522,12 +79244,12 @@ msgid "Virtualization Type"
 msgstr ""
 
 #: ../app/helpers/report_helper/report_dashboard_widget_helper.rb
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 #: ../app/views/shared/buttons/_ab_advanced_form.html.haml
-#: ../app/views/shared/buttons/_ab_show.html.haml
 msgid "Visibility"
 msgstr ""
 
-#: ../app/views/shared/buttons/_ab_show.html.haml
+#: ../app/helpers/shared_helper/ab_show_helper.rb
 msgid "Visibility Expression"
 msgstr ""
 
@@ -81591,7 +81313,6 @@ msgstr ""
 msgid "Week of the Year"
 msgstr ""
 
-#: ../app/views/ops/_schedule_form_timer.html.haml
 #: ../app/views/report/_schedule_form_timer.html.haml
 msgid "Weekly"
 msgstr ""
@@ -81635,7 +81356,7 @@ msgid "Whether to use the authorize mechanism"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqWidget
-#: ../app/models/miq_widget.rb:594 ../config/dictionary_strings.rb
+#: ../app/models/miq_widget.rb:600 ../config/dictionary_strings.rb
 msgid "Widget"
 msgid_plural "Widgets"
 msgstr[0] ""
@@ -81934,10 +81655,6 @@ msgstr ""
 msgid "Written (KBps)"
 msgstr ""
 
-#: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml
-msgid "Wrong hostname format"
-msgstr ""
-
 #: ../config/model_display_names.rb
 msgid "Wwpn Candidate"
 msgid_plural "Wwpn Candidates"
@@ -81968,8 +81685,9 @@ msgstr ""
 msgid "WwpnCandidate|Region number"
 msgstr ""
 
-#: ../app/views/miq_ae_tools/_results_tabs.html.haml
-msgid "XML View"
+#: ../app/helpers/miq_ae_tools_helper.rb
+#: ../app/javascript/spec/automation-simulation/automation-simulation.spec.js
+msgid "Xml View"
 msgstr ""
 
 #: ../app/models/miq_report/generator.rb
@@ -82044,12 +81762,7 @@ msgstr ""
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/javascript/components/settings-tasks-form/settings-tasks-form.schema.js
 #: ../app/views/catalog/_form_basic_info.html.haml
-#: ../app/views/ems_container/_form.html.haml
-#: ../app/views/ems_infra/_form.html.haml
-#: ../app/views/ems_physical_infra/_form.html.haml
-#: ../app/views/ops/_all_tabs.html.haml
-#: ../app/views/ops/_schedule_form_filter.html.haml
-#: ../config/yaml_strings.rb
+#: ../app/views/ops/_all_tabs.html.haml:9 ../config/yaml_strings.rb
 msgid "Zone"
 msgstr ""
 
@@ -82300,7 +82013,7 @@ msgstr ""
 msgid "amqp"
 msgstr ""
 
-#: ../app/models/miq_request.rb:426 ../app/models/miq_request_task.rb
+#: ../app/models/miq_request.rb:428 ../app/models/miq_request_task.rb
 msgid "approval is required for %{task}"
 msgstr ""
 
@@ -82331,6 +82044,10 @@ msgstr ""
 
 #: ../app/views/miq_ae_customization/_dialog_sample.html.haml
 msgid "at"
+msgstr ""
+
+#: ../app/helpers/shared_helper/ab_show_helper.rb
+msgid "attribute_value_pair"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
@@ -82803,7 +82520,7 @@ msgstr ""
 
 #: ../app/models/cloud_database.rb
 #: ../app/models/cloud_object_store_container.rb
-#: ../app/models/cloud_volume.rb:81 ../app/models/host_initiator.rb
+#: ../app/models/cloud_volume.rb:80 ../app/models/host_initiator.rb
 #: ../app/models/host_initiator_group.rb
 #: ../app/models/physical_storage.rb:74 ../app/models/physical_storage.rb
 #: ../app/models/placement_group.rb:48 ../app/models/storage_service.rb
@@ -82839,7 +82556,6 @@ msgstr ""
 msgid "event_type must be set in event"
 msgstr ""
 
-#: ../app/views/ops/_schedule_form_timer.html.haml
 #: ../app/views/report/_schedule_form_timer.html.haml
 msgid "every"
 msgstr ""
@@ -82974,7 +82690,7 @@ msgstr ""
 msgid "execute must be implemented in a subclass"
 msgstr ""
 
-#: ../lib/miq_expression.rb:135 ../lib/miq_expression.rb
+#: ../lib/miq_expression.rb:136 ../lib/miq_expression.rb
 msgid ""
 "expression malformed,  must contain one of 'checkall', 'checkany', 'checkcount"
 "'"
@@ -83051,10 +82767,6 @@ msgstr ""
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager.rb
 msgid "has to be unique per provider type"
-msgstr ""
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "hawkular URL and API port fields are needed to perform validation."
 msgstr ""
 
 #: ../app/models/miq_region_remote.rb
@@ -83196,10 +82908,6 @@ msgstr ""
 msgid "interval '%{interval}' is not supported"
 msgstr ""
 
-#: ../app/controllers/application_controller/explorer.rb
-msgid "invalid button action"
-msgstr ""
-
 #: ../app/models/metric/ci_mixin/rollup.rb
 msgid "invalid interval name %{name}"
 msgstr ""
@@ -83233,10 +82941,6 @@ msgstr ""
 
 #: ../app/helpers/ems_container_helper/textual_summary.rb
 msgid "kubevirt"
-msgstr ""
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "kubevirt URL and API port fields are needed to perform validation."
 msgstr ""
 
 #: ../app/views/ops/_ldap_forest_entries.html.haml
@@ -83294,7 +82998,7 @@ msgstr ""
 msgid "memory_mb"
 msgstr ""
 
-#: ../app/models/classification.rb:277 ../app/models/classification.rb
+#: ../app/models/classification.rb:278 ../app/models/classification.rb
 msgid "method is only available for an entry"
 msgstr ""
 
@@ -83321,7 +83025,7 @@ msgstr ""
 #: ../app/models/ext_management_system.rb
 #: ../app/models/manageiq/providers/inventory/parser.rb
 #: ../app/models/miq_server/worker_management.rb
-#: ../app/models/miq_worker/runner.rb:287 ../app/models/service_order.rb
+#: ../app/models/miq_worker/runner.rb:291 ../app/models/service_order.rb
 #: ../app/models/vm/operations/guest.rb
 #: ../app/models/vm_or_template/operations/configuration.rb
 #: ../app/models/vm_or_template/operations/power.rb
@@ -83365,7 +83069,7 @@ msgid "new element"
 msgstr ""
 
 #: ../app/models/ext_management_system.rb
-#: ../app/models/ext_management_system.rb:595 ../app/models/provider.rb
+#: ../app/models/ext_management_system.rb:615 ../app/models/provider.rb
 msgid "no Provider credentials defined"
 msgstr ""
 
@@ -83394,7 +83098,8 @@ msgstr ""
 msgid "no credentials defined for %{type} %{name}"
 msgstr ""
 
-#:
+#: ../app/models/manageiq/providers/openstack/network_manager.rb
+#: ../app/models/manageiq/providers/openstack/storage_manager/cinder_manager.rb
 #: ../app/models/manageiq/providers/openstack/storage_manager/swift_manager.rb
 msgid "no parent_manager to ems"
 msgstr ""
@@ -83439,6 +83144,14 @@ msgstr ""
 msgid "object %{name} is not one of %{items}"
 msgstr ""
 
+#: ../app/helpers/shared_helper/ab_show_helper.rb
+msgid "object_attribute"
+msgstr ""
+
+#: ../app/helpers/shared_helper/ab_show_helper.rb
+msgid "object_details"
+msgstr ""
+
 #: ../app/javascript/components/miq-pagination.jsx
 msgid "of %d page"
 msgid_plural "of %d pages"
@@ -83457,7 +83170,7 @@ msgstr ""
 msgid "open and close options"
 msgstr ""
 
-#: ../lib/miq_expression.rb:315 ../lib/miq_expression.rb
+#: ../lib/miq_expression.rb:319 ../lib/miq_expression.rb
 msgid "operator '%{operator_name}' is not supported"
 msgstr ""
 
@@ -83532,7 +83245,7 @@ msgstr ""
 msgid "password change not allowed when authentication mode is %{name}"
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:666 ../app/models/vm_or_template.rb
+#: ../app/models/vm_or_template.rb:668 ../app/models/vm_or_template.rb
 #: ../app/models/vm_or_template.rb
 msgid "path, '%{path}', is malformed"
 msgstr ""
@@ -83600,10 +83313,6 @@ msgstr ""
 
 #: ../app/helpers/ems_container_helper/textual_summary.rb
 msgid "prometheus"
-msgstr ""
-
-#: ../app/views/layouts/angular/_multi_auth_credentials.html.haml
-msgid "prometheus URL and API port fields are needed to perform validation."
 msgstr ""
 
 #: ../app/models/service_template.rb
@@ -84049,6 +83758,10 @@ msgstr ""
 msgid "run must be implemented in a subclass"
 msgstr ""
 
+#: ../app/helpers/shared_helper/ab_show_helper.rb
+msgid "run_button_summary"
+msgstr ""
+
 #:
 #: ../app/models/manageiq/providers/workflows/automation_manager/workflow_instance.rb
 msgid "run_queue is not enabled"
@@ -84309,7 +84022,7 @@ msgstr ""
 msgid "unknown zone %{zone_name}"
 msgstr ""
 
-#: ../app/helpers/ops_helper.rb:180 ../app/helpers/ops_helper.rb
+#: ../app/helpers/ops_helper.rb:191 ../app/helpers/ops_helper.rb
 msgid "unlimited"
 msgstr ""
 
@@ -84457,6 +84170,14 @@ msgstr ""
 
 #: ../app/views/miq_request/_prov_dialog_cloud_quota.html.haml
 msgid "vcpus"
+msgstr ""
+
+#: ../app/helpers/shared_helper/ab_show_helper.rb
+msgid "visibility"
+msgstr ""
+
+#: ../app/helpers/shared_helper/ab_show_helper.rb
+msgid "visibility_expression"
 msgstr ""
 
 #: ../app/models/vm_or_template.rb

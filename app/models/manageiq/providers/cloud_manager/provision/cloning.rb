@@ -22,7 +22,7 @@ module ManageIQ::Providers::CloudManager::Provision::Cloning
     clone_options[:availability_zone] = dest_availability_zone.ems_ref   if dest_availability_zone
 
     user_data = userdata_payload
-    clone_options[:user_data] = user_data unless user_data.blank?
+    clone_options[:user_data] = user_data if user_data.present?
 
     clone_options
   end

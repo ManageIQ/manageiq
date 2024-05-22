@@ -19,10 +19,10 @@ describe ManageIQ::Reporting::Formatter::C3 do
     it "builds a daily chart with all nils" do
       report = MiqReport.new(
         :db          => "VimPerformanceDaily",
-        :cols        => cols = %w(timestamp cpu_usagemhz_rate_average min_cpu_usagemhz_rate_average max_cpu_usagemhz_rate_average trend_max_cpu_usagemhz_rate_average resource.cpu_usagemhz_rate_average_high_over_time_period resource.cpu_usagemhz_rate_average_low_over_time_period),
+        :cols        => cols = %w[timestamp cpu_usagemhz_rate_average min_cpu_usagemhz_rate_average max_cpu_usagemhz_rate_average trend_max_cpu_usagemhz_rate_average resource.cpu_usagemhz_rate_average_high_over_time_period resource.cpu_usagemhz_rate_average_low_over_time_period],
         :include     => {
           "resource" => {
-            "columns" => %w(cpu_usagemhz_rate_average_high_over_time_period cpu_usagemhz_rate_average_low_over_time_period derived_memory_used_high_over_time_period derived_memory_used_low_over_time_period),
+            "columns" => %w[cpu_usagemhz_rate_average_high_over_time_period cpu_usagemhz_rate_average_low_over_time_period derived_memory_used_high_over_time_period derived_memory_used_low_over_time_period],
           }
         },
         :col_order   => cols,
@@ -32,18 +32,18 @@ describe ManageIQ::Reporting::Formatter::C3 do
         :group       => "n",
         :graph       => {
           :type         => "Line",
-          :columns      => %w(cpu_usagemhz_rate_average min_cpu_usagemhz_rate_average max_cpu_usagemhz_rate_average trend_max_cpu_usagemhz_rate_average resource.cpu_usagemhz_rate_average_high_over_time_period resource.cpu_usagemhz_rate_average_low_over_time_period),
+          :columns      => %w[cpu_usagemhz_rate_average min_cpu_usagemhz_rate_average max_cpu_usagemhz_rate_average trend_max_cpu_usagemhz_rate_average resource.cpu_usagemhz_rate_average_high_over_time_period resource.cpu_usagemhz_rate_average_low_over_time_period],
           :legends      => nil,
           :max_col_size => nil
         },
         :dims        => nil,
         :col_formats => nil,
         :col_options => nil,
-        :rpt_options => nil,
+        :rpt_options => nil
       )
 
       report.table = Ruport::Data::Table.new(
-        :column_names => %w(timestamp cpu_usagemhz_rate_average min_cpu_usagemhz_rate_average max_cpu_usagemhz_rate_average trend_max_cpu_usagemhz_rate_average),
+        :column_names => %w[timestamp cpu_usagemhz_rate_average min_cpu_usagemhz_rate_average max_cpu_usagemhz_rate_average trend_max_cpu_usagemhz_rate_average],
         :data         => [["Sun, 20 Mar 2016 00:00:00 UTC +00:00", 0.0, nil, nil, 0]]
       )
 

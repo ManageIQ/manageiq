@@ -98,7 +98,6 @@ module ActsAsMiqSet
     #       base model class. This is needed so that tagging works properly. Once tagging is reworked
     #       to handle the base model class name this can be removed and real STI can be used.
     def descends_from_active_record?; false; end
-    #
 
     def model_class
       @model_class ||= name[0..-4].constantize

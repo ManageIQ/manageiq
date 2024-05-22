@@ -1,10 +1,8 @@
 # <%= class_name %>
 
 [![CI](https://github.com/ManageIQ/<%= plugin_name %>/actions/workflows/ci.yaml/badge.svg)](https://github.com/ManageIQ/<%= plugin_name %>/actions/workflows/ci.yaml)
-[![Maintainability](https://api.codeclimate.com/v1/badges/<badge_token>/maintainability)](https://codeclimate.com/github/ManageIQ/<%= plugin_name %>/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/<badge_token>/test_coverage)](https://codeclimate.com/github/ManageIQ/<%= plugin_name %>/test_coverage)
-
-[![Chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ManageIQ/<%= plugin_name %>?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Code Climate](https://codeclimate.com/github/ManageIQ/<%= plugin_name %>.svg)](https://codeclimate.com/github/ManageIQ/<%= plugin_name %>)
+[![Test Coverage](https://codeclimate.com/github/ManageIQ/<%= plugin_name %>/badges/coverage.svg)](https://codeclimate.com/github/ManageIQ/<%= plugin_name %>/coverage)
 
 <%= plugin_description %>
 

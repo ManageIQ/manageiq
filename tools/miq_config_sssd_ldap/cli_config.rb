@@ -8,7 +8,7 @@ module MiqConfigSssdLdap
     def parse(args)
       args.shift if args.first == "--" # Handle when called through script/runner
 
-      LOGGER.debug("Invoked #{self.class}\##{__method__}")
+      LOGGER.debug("Invoked #{self.class}##{__method__}")
 
       self.opts = Optimist.options(args) do
         banner "Usage: ruby #{$PROGRAM_NAME} [opts]\n"

@@ -1,2 +1,2 @@
-class ManageIQ::Providers::InfraManager::Storage < ::Storage
+class ManageIQ::Providers::InfraManager::Storage < Storage
 end

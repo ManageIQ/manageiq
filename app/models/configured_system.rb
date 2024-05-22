@@ -82,6 +82,7 @@ class ConfiguredSystem < ApplicationRecord
 
   def counterparts
     return [] unless counterpart
+
     [counterpart] + counterpart.counterparts.where.not(:id => id)
   end
 
@@ -96,6 +97,7 @@ class ConfiguredSystem < ApplicationRecord
   def self.provisionable?(ids)
     cs = ConfiguredSystem.where(:id => ids)
     return false if cs.blank?
+
     cs.all?(&:provisionable?)
   end
 

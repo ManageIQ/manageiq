@@ -1,4 +1,4 @@
-class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
+class ManageIQ::Providers::CloudManager::Template < MiqTemplate
   default_value_for :cloud, true
 
   virtual_column :image?, :type => :boolean
@@ -27,7 +27,7 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
     }
 
     queue_opts = {
-      :class_name  => self.name,
+      :class_name  => name,
       :method_name => 'create_image',
       :role        => 'ems_operations',
       :zone        => ext_management_system.my_zone,
@@ -44,6 +44,7 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
 
   def self.create_image(ems_id, options)
     raise ArgumentError, _("ems cannot be nil") if ems_id.nil?
+
     ext_management_system = ExtManagementSystem.find(ems_id)
     raise ArgumentError, _("ems cannot be found") if ext_management_system.nil?
 

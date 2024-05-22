@@ -6,13 +6,13 @@ module ManageIQ::Util::MemoryLogging
 
   def memory_logger(message, &block)
     debug(message) if block
-    yield if block_given?
+    yield if block
     debug(message)
   end
 
   def memory_logger_with_gc(message, &block)
     debug(message) if block
-    yield if block_given?
+    yield if block
     GC.start
     GC.start
     GC.start

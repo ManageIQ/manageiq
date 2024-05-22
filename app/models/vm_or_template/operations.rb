@@ -118,13 +118,19 @@ module VmOrTemplate::Operations
     $log.info(user_event)
   end
 
-  private
-
   #
   # UI button validation methods
   #
 
   included do
+    supports :action do
+      if orphaned?
+        _("The VM is orphaned")
+      elsif archived?
+        _("The VM is archived")
+      end
+    end
+
     supports :control do
       if retired?
         _('The VM is retired')

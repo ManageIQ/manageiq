@@ -11,7 +11,7 @@ opts = Optimist.options do
   opt :bypass, "Bypass broker usage", :type => :boolean
   opt :dir,    "Output directory",    :default => "."
 end
-Optimist.die :ip, "is an invalid format" unless opts[:ip] =~ /^\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}$/
+Optimist.die :ip, "is an invalid format" unless /^\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}$/.match?(opts[:ip])
 
 def process(accessor, dir)
   puts "Reading #{accessor}..."
@@ -40,7 +40,7 @@ begin
   require 'VMwareWebService/MiqVim'
 
   vim = MiqVim.new(:server => opts[:ip], :username => opts[:user], :password => opts[:pass])
-  VC_ACCESSORS.each do |accessor, type|
+  VC_ACCESSORS.each do |accessor, _type|
     process(accessor, dir) { vim.send(accessor) }
   end
 
@@ -63,12 +63,12 @@ begin
       vim_csm.getAllCustomizationSpecs
     rescue RuntimeError => err
       raise unless err.message.include?("not supported on this system")
+
       []
     ensure
       vim_csm.release if vim_csm rescue nil
     end
   end
-
 ensure
   vim.release unless vim.nil? rescue nil
 end

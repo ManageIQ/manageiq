@@ -8,9 +8,9 @@ module TaskHelpers
         Dir.glob(glob) do |filename|
           $log.info("Importing Reports from: #{filename}")
 
-          report_options = { :userid    => 'admin',
+          report_options = {:userid    => 'admin',
                              :overwrite => options[:overwrite],
-                             :save      => true }
+                             :save      => true}
 
           begin
             report_fd = File.open(filename, 'r')

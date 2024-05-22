@@ -8,6 +8,7 @@ class FileDepotSmb < FileDepot
   def self.validate_settings(settings)
     res = MiqSmbSession.new(settings).verify
     raise _("Depot Settings validation failed with error: %{error}") % {:error => res.last} unless res.first
+
     res
   end
 

@@ -26,7 +26,7 @@ RSpec.describe ManageIQ::Providers::InfraManager::MetricsCapture do
     it "finds enabled targets" do
       targets = described_class.new(nil, ems).capture_ems_targets
       assert_infra_targets_enabled targets
-      expect(targets.map { |t| t.class.name }).to match_array(%w[ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host Storage])
+      expect(targets.map { |t| t.class.name }).to match_array(%w[ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Storage])
     end
 
     it "finds enabled targets excluding storages" do

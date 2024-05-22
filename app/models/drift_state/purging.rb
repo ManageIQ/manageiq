@@ -15,12 +15,12 @@ module DriftState::Purging
     end
 
     def purge_count(mode, value)
-      send("purge_count_by_#{mode}", value)
+      send(:"purge_count_by_#{mode}", value)
     end
 
     # @param mode [:date, :remaining]
     def purge(mode, value, window = nil, &block)
-      send("purge_by_#{mode}", value, window, &block)
+      send(:"purge_by_#{mode}", value, window, &block)
     end
 
     private

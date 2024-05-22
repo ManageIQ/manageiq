@@ -1,4 +1,4 @@
-class ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner < ::Job
+class ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner < Job
   DEFAULT_EXECUTION_TTL = 100.minutes
 
   def minimize_indirect

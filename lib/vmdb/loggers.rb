@@ -14,6 +14,7 @@ module Vmdb
   module Loggers
     def self.init
       return if @initialized
+
       create_loggers
       @initialized = true
     end
@@ -78,10 +79,6 @@ module Vmdb
       ManageIQ::Loggers::Journald.new
     rescue LoadError
       nil
-    end
-
-    private_class_method def self.progname_from_file(log_file_name)
-      File.basename(log_file_name, ".*")
     end
 
     private_class_method def self.create_wrapper_logger(log_file, logger_class, wrapped_logger)

@@ -35,8 +35,8 @@ class CloudNetwork < ApplicationRecord
   virtual_column :qos_policy_id,             :type => :string
 
   # Define all getters and setters for extra_attributes related virtual columns
-  %i(maximum_transmission_unit port_security_enabled qos_policy_id).each do |action|
-	  define_method("#{action}=") do |value|
+  %i[maximum_transmission_unit port_security_enabled qos_policy_id].each do |action|
+    define_method(:"#{action}=") do |value|
       extra_attributes_save(action, value)
     end
 
@@ -109,10 +109,10 @@ class CloudNetwork < ApplicationRecord
 
   def extra_attributes_save(key, value)
     self.extra_attributes = {} if extra_attributes.blank?
-    self.extra_attributes[key] = value
+    extra_attributes[key] = value
   end
 
   def extra_attributes_load(key)
-    self.extra_attributes[key] unless extra_attributes.blank?
+    extra_attributes[key] if extra_attributes.present?
   end
 end

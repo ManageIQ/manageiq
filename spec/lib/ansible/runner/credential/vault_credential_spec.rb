@@ -16,7 +16,7 @@ RSpec.describe Ansible::Runner::VaultCredential do
 
     let(:auth)            { FactoryBot.create(:embedded_ansible_vault_credential, auth_attributes) }
     let(:cred)            { described_class.new(auth.id, @base_dir) }
-    let(:auth_attributes) { { :password => "vault_secret" } }
+    let(:auth_attributes) { {:password => "vault_secret"} }
     let(:vault_filename)  { File.join(@base_dir, "vault_password") }
 
     describe "#command_line" do
@@ -28,7 +28,7 @@ RSpec.describe Ansible::Runner::VaultCredential do
     describe "#env_vars" do
       context "with a password" do
         it "passes --vault-password-file" do
-          expected = { "ANSIBLE_VAULT_PASSWORD_FILE" => vault_filename }
+          expected = {"ANSIBLE_VAULT_PASSWORD_FILE" => vault_filename}
           expect(cred.env_vars).to eq(expected)
         end
       end

@@ -1,1 +1,1 @@
-::EmsPhysicalInfra = ::ManageIQ::Providers::PhysicalInfraManager
+EmsPhysicalInfra = ManageIQ::Providers::PhysicalInfraManager

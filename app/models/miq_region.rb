@@ -122,6 +122,7 @@ class MiqRegion < ApplicationRecord
       else
         id_cols = connection.columns(t).select { |c| c.name.ends_with?("_id") }
         next if id_cols.empty?
+
         conditions = id_cols.collect { |c| "(#{sanitize_sql(region_to_conditions(region, c.name))})" }.join(" OR ")
       end
 
@@ -245,7 +246,7 @@ class MiqRegion < ApplicationRecord
 
   def perf_capture_always
     @perf_capture_always ||= VALID_CAPTURE_ALWAYS_TYPES.each_with_object({}) do |type, h|
-      h[type] = self.is_tagged_with?("capture_enabled", :ns => "/performance/#{type}")
+      h[type] = is_tagged_with?("capture_enabled", :ns => "/performance/#{type}")
     end.freeze
   end
 
@@ -269,7 +270,7 @@ class MiqRegion < ApplicationRecord
     # Set @perf_capture_always since we already know all the answers
     options = options.dup
     (VALID_CAPTURE_ALWAYS_TYPES - options.keys).each do |type|
-      options[type] = self.is_tagged_with?("capture_enabled", :ns => "/performance/#{type}")
+      options[type] = is_tagged_with?("capture_enabled", :ns => "/performance/#{type}")
     end
     @perf_capture_always = options.freeze
   end

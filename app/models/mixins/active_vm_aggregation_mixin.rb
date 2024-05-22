@@ -6,7 +6,7 @@ module ActiveVmAggregationMixin
     virtual_column :allocated_storage,  :type => :integer, :uses => :active_vms
     virtual_column :provisioned_storage, :type => :integer, :uses => :active_vms
 
-    virtual_has_many :active_vms, :class_name => "VmOrTemplate", :uses  => :vms
+    virtual_has_many :active_vms, :class_name => "VmOrTemplate", :uses => :vms
   end
 
   def active_vms

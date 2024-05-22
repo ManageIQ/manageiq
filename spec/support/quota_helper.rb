@@ -3,9 +3,9 @@ module Spec
     module QuotaHelper
       def create_category_and_tag(category, tag)
         cat = Classification.lookup_by_name(category)
-        cat = Classification.create_category!(:name         => category,
+        cat ||= Classification.create_category!(:name         => category,
                                               :single_value => false,
-                                              :description  => category) unless cat
+                                              :description  => category)
         cat.add_entry(:description  => tag,
                       :read_only    => "0",
                       :syntax       => "string",
@@ -136,7 +136,7 @@ module Spec
         create_hardware
         create_vmware_vms
         @reconfigure_request = FactoryBot.create(:vm_reconfigure_request, :requester => @user)
-        @vm_hardware = FactoryBot.build(:hardware, :virtual_hw_version => "07", :cpu_total_cores => 2,\
+        @vm_hardware = FactoryBot.build(:hardware, :virtual_hw_version => "07", :cpu_total_cores => 2,
          :memory_mb => 4096, :cpu_sockets => 2, :cpu_cores_per_socket => 1)
         @vm_vmware = FactoryBot.create(:vm_vmware, :hardware => @vm_hardware)
         @vm_vmware.update(:ems_id => @ems.id)
@@ -230,7 +230,7 @@ module Spec
       def setup_model(vendor = "vmware")
         user_setup
         create_tenant_quota
-        send("#{vendor}_model") unless vendor == 'generic'
+        send(:"#{vendor}_model") unless vendor == 'generic'
       end
     end
   end

@@ -29,6 +29,7 @@ class MiqShortcut < ApplicationRecord
 
     db_data.each do |name, rec|
       next if seed_records_by_name[name]
+
       _log.info("Deleting #{rec.inspect}")
       rec.destroy
     end

@@ -20,10 +20,10 @@ class GenericObjectDefinition < ApplicationRecord
     :time     => N_('Time')
   }.freeze
 
-  FEATURES = %w(attribute association method).freeze
+  FEATURES = %w[attribute association method].freeze
   REG_ATTRIBUTE_NAME = /\A[a-z][a-zA-Z_0-9]*\z/
   REG_METHOD_NAME    = /\A[a-z][a-zA-Z_0-9]*[!?]?\z/
-  ALLOWED_ASSOCIATION_TYPES = (MiqReport.reportable_models + %w(GenericObject)).freeze
+  ALLOWED_ASSOCIATION_TYPES = (MiqReport.reportable_models + %w[GenericObject]).freeze
 
   serialize :properties, Hash
 
@@ -49,15 +49,17 @@ class GenericObjectDefinition < ApplicationRecord
   virtual_total :generic_objects_count, :generic_objects
 
   FEATURES.each do |feature|
-    define_method("property_#{feature}s") do
+    define_method(:"property_#{feature}s") do
       return errors[:properties] if properties_changed? && !valid?
+
       properties["#{feature}s".to_sym]
     end
 
-    define_method("property_#{feature}_defined?") do |attr|
+    define_method(:"property_#{feature}_defined?") do |attr|
       attr = attr.to_s
       return property_methods.include?(attr) if feature == 'method'
-      send("property_#{feature}s").key?(attr)
+
+      send(:"property_#{feature}s").key?(attr)
     end
   end
 
@@ -92,7 +94,8 @@ class GenericObjectDefinition < ApplicationRecord
 
   def property_getter(attr, val)
     return type_cast(attr, val) if property_attribute_defined?(attr)
-    return get_objects_of_association(attr, val) if property_association_defined?(attr)
+
+    get_objects_of_association(attr, val) if property_association_defined?(attr)
   end
 
   def type_cast(attr, value)
@@ -221,6 +224,7 @@ class GenericObjectDefinition < ApplicationRecord
 
   def check_not_in_use
     return true if generic_objects.empty?
+
     errors.add(:base, "Cannot delete the definition while it is referenced by some generic objects")
     throw :abort
   end

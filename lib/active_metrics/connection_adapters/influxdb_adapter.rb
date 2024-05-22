@@ -32,7 +32,7 @@ module ActiveMetrics
         {
           :series    => SERIES,
           :timestamp => (timestamp.to_f * 1000).to_i, # ms precision
-          :values    => { metric_name.to_sym => value },
+          :values    => {metric_name.to_sym => value},
           :tags      => tags.symbolize_keys.merge(
             :resource_type => resource ? resource.class.base_class.name : resource_type,
             :resource_id   => resource ? resource.id : resource_id

@@ -137,7 +137,7 @@ class MiqQueue < ApplicationRecord
       :zone         => Zone.determine_queue_zone(options),
       :state        => STATE_READY,
       :handler_type => nil,
-      :handler_id   => nil,
+      :handler_id   => nil
     )
 
     if Zone.maintenance?(options[:zone])
@@ -526,7 +526,7 @@ class MiqQueue < ApplicationRecord
   def delivered(state, msg, result)
     self.state = state
     _log.info("#{MiqQueue.format_short_log_msg(self)}, State: [#{state}], Delivered in [#{Time.now - delivered_on}] seconds")
-    m_callback(msg, result) unless miq_callback.blank?
+    m_callback(msg, result) if miq_callback.present?
   rescue => err
     _log.error("#{MiqQueue.format_short_log_msg(self)}, #{err.message}")
   ensure
@@ -604,22 +604,22 @@ class MiqQueue < ApplicationRecord
     data = msg.data.nil? ? "" : "#{msg.data.length} bytes"
     args = ManageIQ::Password.sanitize_string(msg.args.inspect)
 
-    "Message id: [#{msg.id}], "                         \
-    "Zone: [#{msg.zone}], "                             \
-    "Role: [#{msg.role}], "                             \
-    "Server: [#{msg.server_guid}], "                    \
-    "MiqTask id: [#{msg.miq_task_id}], "                \
-    "Handler id: [#{handler}], "                        \
-    "Ident: [#{msg.queue_name}], "                      \
-    "Target id: [#{msg.target_id}], "                   \
-    "Instance id: [#{msg.instance_id}], "               \
-    "Task id: [#{msg.task_id}], "                       \
+    "Message id: [#{msg.id}], " \
+    "Zone: [#{msg.zone}], " \
+    "Role: [#{msg.role}], " \
+    "Server: [#{msg.server_guid}], " \
+    "MiqTask id: [#{msg.miq_task_id}], " \
+    "Handler id: [#{handler}], " \
+    "Ident: [#{msg.queue_name}], " \
+    "Target id: [#{msg.target_id}], " \
+    "Instance id: [#{msg.instance_id}], " \
+    "Task id: [#{msg.task_id}], " \
     "Command: [#{msg.class_name}.#{msg.method_name}], " \
-    "Timeout: [#{msg.msg_timeout}], "                   \
-    "Priority: [#{msg.priority}], "                     \
-    "State: [#{msg.state}], "                           \
-    "Deliver On: [#{msg.deliver_on}], "                 \
-    "Data: [#{data}], "                                 \
+    "Timeout: [#{msg.msg_timeout}], " \
+    "Priority: [#{msg.priority}], " \
+    "State: [#{msg.state}], " \
+    "Deliver On: [#{msg.deliver_on}], " \
+    "Data: [#{data}], " \
     "Args: #{args}"
   end
 
@@ -649,7 +649,7 @@ class MiqQueue < ApplicationRecord
     end
   end
 
-  cache_with_timeout(:valid_zone_names, 1.minute) { Hash.new }
+  cache_with_timeout(:valid_zone_names, 1.minute) { {} }
 
   def activate_miq_task(args)
     MiqTask.update_status(miq_task_id, MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, "Task starting") if miq_task_id
@@ -713,7 +713,7 @@ class MiqQueue < ApplicationRecord
     options
   end
 
-  MESSAGING_CONFIG_FILE = Rails.root.join("config", "messaging.yml")
+  MESSAGING_CONFIG_FILE = Rails.root.join("config/messaging.yml")
   private_class_method def self.messaging_options_from_file
     return unless MESSAGING_CONFIG_FILE.file?
 

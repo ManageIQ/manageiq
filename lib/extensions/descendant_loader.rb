@@ -67,12 +67,11 @@ class DescendantLoader
   # be defined in [depending on runtime details], the name of the class,
   # and the name of its superclass), given a path to a ruby script file.
   module Parser
-    autoload :RipperRubyParser, 'ripper_ruby_parser'
+    autoload :Prism, 'prism'
 
     def classes_in(filename)
-      content = File.read(filename)
       begin
-        parsed = RipperRubyParser::Parser.new.parse(content, filename)
+        parsed = Prism::Translation::RubyParser.parse_file(filename)
       rescue => e
         warn "\nError parsing classes in #{filename}:\n#{e.class.name}: #{e}\n\n"
         raise
@@ -219,7 +218,7 @@ class DescendantLoader
     def class_inheritance_relationships
       @class_inheritance_relationships ||= begin
         children = Hash.new { |h, k| h[k] = [] }
-        Dir.glob(descendants_paths.map{|path| Pathname.new(path).join('**/*.rb')}) do |file|
+        Dir.glob(descendants_paths.map { |path| Pathname.new(path).join('**/*.rb') }) do |file|
           classes_in(file).each do |search_scopes, define_scopes, name, sklass|
             possible_names = scoped_name(name, define_scopes)
             possible_superklasses = scoped_name(sklass, search_scopes)

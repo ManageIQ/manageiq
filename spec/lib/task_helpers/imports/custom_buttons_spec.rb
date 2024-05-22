@@ -154,7 +154,7 @@ RSpec.describe TaskHelpers::Imports::CustomButtons do
     expect(cbs.custom_buttons.count).to eq(3)
     expect(cbs.description).to eq(custom_button_set_description)
     expect(cbs.custom_buttons.first.resource_action.ae_namespace).to eq(resource_action_ae_namespace)
-    expect(cbs.custom_buttons.pluck(:userid)).to eq(%w(admin admin admin))
+    expect(cbs.custom_buttons.pluck(:userid)).to eq(%w[admin admin admin])
   end
 
   def assert_imports_only_custom_button_set_one

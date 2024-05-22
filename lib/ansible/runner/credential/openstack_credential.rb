@@ -10,7 +10,7 @@ module Ansible
       #   https://github.com/ansible/awx/blob/1242ee2b/awx/main/models/credential/injectors.py#L70-L96
       #
       def env_vars
-        { "OS_CLIENT_CONFIG_FILE" => os_credentials_file }
+        {"OS_CLIENT_CONFIG_FILE" => os_credentials_file}
       end
 
       def write_config_files

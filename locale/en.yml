@@ -1484,6 +1484,7 @@ en:
       ManageIQ::Providers::Workflows::AutomationManager::ScmCredential:                   Credential (SCM)
       ManageIQ::Providers::Workflows::AutomationManager::WorkflowCredential:              Credential (Workflow)
       ManageIQ::Providers::ExternalAutomationManager:                                     Automation Manager
+      ManageIQ::Providers::ExternalAutomationManager::ConfigurationScript:                Template (Ansible Tower)
       ManageIQ::Providers::AutomationManager::Authentication:                             Credential
       ManageIQ::Providers::AnsibleTower::AutomationManager::AmazonCredential:             Credential (Amazon)
       ManageIQ::Providers::AnsibleTower::AutomationManager::AzureCredential:              Credential (Microsoft Azure)

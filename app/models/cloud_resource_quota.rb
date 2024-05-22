@@ -6,7 +6,7 @@ class CloudResourceQuota < ApplicationRecord
 
   # find the currently used value for this quota
   def used
-    send("#{name}_quota_used")
+    send(:"#{name}_quota_used")
   end
 
   def method_missing(method, *args, &block)

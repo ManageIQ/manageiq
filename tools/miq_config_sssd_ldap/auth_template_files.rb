@@ -13,7 +13,7 @@ module MiqConfigSssdLdap
     attr_reader :initial_settings, :template_dir
 
     def initialize(initial_settings)
-      LOGGER.debug("Invoked #{self.class}\##{__method__}")
+      LOGGER.debug("Invoked #{self.class}##{__method__}")
 
       @initial_settings = initial_settings
 

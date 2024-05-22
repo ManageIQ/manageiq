@@ -7,7 +7,7 @@ RSpec.describe MiqAlert do
       @vm     = FactoryBot.create(:vm_vmware)
 
       MiqAlert.seed
-      @events_to_alerts = MiqAlert.all.inject([]) do |arr, a|
+      @events_to_alerts = MiqAlert.all.each_with_object([]) do |a, arr|
         next(arr) if a.responds_to_events.nil?
         next(arr) unless a.db == "Vm"
 
@@ -19,7 +19,6 @@ RSpec.describe MiqAlert do
           event = e.strip
           arr << [event, a.guid]
         end
-        arr
       end
     end
 

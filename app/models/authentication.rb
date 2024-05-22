@@ -60,7 +60,7 @@ class Authentication < ApplicationRecord
     "incomplete"  => 1,
     "error"       => 2,
     "unreachable" => 2,
-    "invalid"     => 3,
+    "invalid"     => 3
   ).freeze
 
   # Builds a case statement that case be used in a sql ORDER BY.
@@ -79,13 +79,7 @@ class Authentication < ApplicationRecord
     end
   end.else(-1)
 
-  RETRYABLE_STATUS = %w(error unreachable).freeze
-
-  CREDENTIAL_TYPES = {
-    :external_credential_types         => 'ManageIQ::Providers::ExternalAutomationManager::Authentication',
-    :embedded_ansible_credential_types => 'ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential',
-    :workflows_credential_types        => 'ManageIQ::Providers::Workflows::AutomationManager::Credential'
-  }.freeze
+  RETRYABLE_STATUS = %w[error unreachable].freeze
 
   # FIXME: To address problem with url resolution when displayed as a quadicon,
   # but it's not *really* the db_name. Might be more proper to override `to_partial_path`
@@ -142,10 +136,14 @@ class Authentication < ApplicationRecord
     self.attributes = options
   end
 
-  def self.build_credential_options
-    CREDENTIAL_TYPES.each_with_object({}) do |(k, v), hash|
-      hash[k] = v.constantize.descendants.each_with_object({}) do |klass, fields|
-        fields[klass.name] = klass::API_OPTIONS if defined? klass::API_OPTIONS
+  def self.credential_types
+    credential_subclasses = descendants.select { |d| d.try(:credential_type) }.sort_by(&:name)
+
+    credential_subclasses.each_with_object({}) do |klass, credential_hash|
+      credential_hash[klass.credential_type.to_sym] ||= {}
+
+      if defined?(klass::API_OPTIONS)
+        credential_hash[klass.credential_type.to_sym].merge!({klass.name => klass::API_OPTIONS})
       end
     end
   end
@@ -159,11 +157,13 @@ class Authentication < ApplicationRecord
 
   def set_credentials_changed_on
     return unless @auth_changed
+
     self.credentials_changed_on = Time.now.utc
   end
 
   def after_authentication_changed
     return unless @auth_changed
+
     _log.info("[#{resource_type}] [#{resource_id}], previously valid on: [#{last_valid_on}]")
 
     raise_event(:changed)

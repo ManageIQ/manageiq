@@ -19,7 +19,7 @@ RSpec.describe ServiceOrchestration::ProvisionTagging do
     let(:vm) { FactoryBot.create(:vm) }
     let(:service) { FactoryBot.build(:service_orchestration, :miq_request_task => miq_request_task) }
     let(:dialog_tag_options) do
-      { :dialog => {
+      {:dialog => {
         'Array::dialog_tag_0_env'     => 'Classification::1',
         'Array::dialog_tag_1_network' => 'Classification::11',
         'Array::dialog_tag_2_dept'    => 'Classification::21,Classification::22,Classification::23'
@@ -42,7 +42,7 @@ RSpec.describe ServiceOrchestration::ProvisionTagging do
 
         context 'Calls Classification.bulk_reassignment with VM and tag IDs for provision_priority 0' do
           let(:provision_priority) { 0 }
-          let(:tag_ids) { %w(1 11) }
+          let(:tag_ids) { %w[1 11] }
 
           it_behaves_like 'service_orchestration VM tagging'
         end
@@ -59,21 +59,21 @@ RSpec.describe ServiceOrchestration::ProvisionTagging do
 
         context 'Calls Classification.bulk_reassignment with VM and tag IDs for provision_priority 0' do
           let(:provision_priority) { 0 }
-          let(:tag_ids) { %w(1 11) }
+          let(:tag_ids) { %w[1 11] }
 
           it_behaves_like 'service_orchestration VM tagging'
         end
 
         context 'Call Classification.bulk_reassignment with VM and tag IDs for provision_priority 1' do
           let(:provision_priority) { 1 }
-          let(:tag_ids) { %w(1 21 22 23) }
+          let(:tag_ids) { %w[1 21 22 23] }
 
           it_behaves_like 'service_orchestration VM tagging'
         end
 
         context 'Call Classification.bulk_reassignment with VM and tag IDs for provision_priority 2' do
           let(:provision_priority) { 2 }
-          let(:tag_ids) { %w(1) }
+          let(:tag_ids) { %w[1] }
 
           it_behaves_like 'service_orchestration VM tagging'
         end

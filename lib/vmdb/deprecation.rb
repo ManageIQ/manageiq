@@ -1,7 +1,7 @@
 module Vmdb
   class Deprecation
     def self.instance
-      @instance ||= ActiveSupport::Deprecation.new("Spassky", "ManageIQ").tap { |d| d.behavior = default_behavior }
+      @instance ||= ActiveSupport::Deprecation.new("T-release", "ManageIQ").tap { |d| d.behavior = default_behavior }
     end
 
     def self.method_missing(method_name, ...)
@@ -28,6 +28,7 @@ module Vmdb
 
     def self.proc_for_default_log
       return unless default_log
+
       proc do |message, callstack|
         default_log.warn(message)
         default_log.debug { callstack.join("\n  ") }

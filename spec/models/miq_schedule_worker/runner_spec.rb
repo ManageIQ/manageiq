@@ -167,7 +167,7 @@ RSpec.describe MiqScheduleWorker::Runner do
               @schedule_worker.rufus_add_normal_schedule(options)
 
               jobs = @schedule_worker.instance_variable_get(:@schedules)[:scheduler]
-              expect(jobs).to be_all { |job| job.kind_of?(Rufus::Scheduler::Job) }
+              expect(jobs).to(be_all { |job| job.kind_of?(Rufus::Scheduler::Job) })
             end
           end
         end
@@ -230,12 +230,12 @@ RSpec.describe MiqScheduleWorker::Runner do
 
             @database_maintenance = {
               :reindex_schedule => "1 * * * *",
-              :reindex_tables   => %w(Metric MiqQueue MiqWorker),
+              :reindex_tables   => %w[Metric MiqQueue MiqWorker],
               :vacuum_schedule  => "0 2 * * 6",
-              :vacuum_tables    => %w(Vm BinaryBlobPart BinaryBlob CustomizationSpec FirewallRule Host Storage
+              :vacuum_tables    => %w[Vm BinaryBlobPart BinaryBlob CustomizationSpec FirewallRule Host Storage
                                       MiqSchedule EventLog PolicyEvent Snapshot Job Network MiqQueue MiqRequestTask
                                       MiqWorker MiqServer MiqSearch MiqScsiLun MiqScsiTarget StorageFile
-                                      Tagging VimPerformanceState)
+                                      Tagging VimPerformanceState]
             }
             database_config = {
               :maintenance        => @database_maintenance,
@@ -262,14 +262,14 @@ RSpec.describe MiqScheduleWorker::Runner do
               scheduled_jobs.each do |job|
                 while_calling_job(job) do
                   case job.tags
-                  when %w(database_operations database_maintenance_reindex_schedule)
+                  when %w[database_operations database_maintenance_reindex_schedule]
                     expect(job.original).to eq(@database_maintenance[:reindex_schedule])
                     expect(MiqQueue.count).to eq(3)
                     @database_maintenance[:reindex_tables].each do |class_name|
                       message = MiqQueue.where(:class_name => class_name, :method_name => "reindex").first
                       expect(message).to have_attributes(:role => "database_operations", :zone => nil)
                     end
-                  when %w(database_operations database_maintenance_vacuum_schedule)
+                  when %w[database_operations database_maintenance_vacuum_schedule]
                     expect(job.original).to eq(@database_maintenance[:vacuum_schedule])
                     expect(MiqQueue.count).to eq(@database_maintenance[:vacuum_tables].size)
                     @database_maintenance[:vacuum_tables].each do |class_name|
@@ -308,17 +308,17 @@ RSpec.describe MiqScheduleWorker::Runner do
               scheduled_jobs.each do |job|
                 while_calling_job(job) do
                   case job.tags
-                  when %w(database_operations)
+                  when %w[database_operations]
                     expect(job.original).to eq(@metrics_history[:purge_schedule])
                     expect(MiqQueue.count).to eq(2)
-                  when %w(database_operations database_maintenance_reindex_schedule)
+                  when %w[database_operations database_maintenance_reindex_schedule]
                     expect(job.original).to eq(@database_maintenance[:reindex_schedule])
                     expect(MiqQueue.count).to eq(3)
                     @database_maintenance[:reindex_tables].each do |class_name|
                       message = MiqQueue.where(:class_name => class_name, :method_name => "reindex").first
                       expect(message).to have_attributes(:role => "database_operations", :zone => nil)
                     end
-                  when %w(database_operations database_maintenance_vacuum_schedule)
+                  when %w[database_operations database_maintenance_vacuum_schedule]
                     expect(job.original).to eq(@database_maintenance[:vacuum_schedule])
                     expect(MiqQueue.count).to eq(@database_maintenance[:vacuum_tables].size)
                     @database_maintenance[:vacuum_tables].each do |class_name|
@@ -403,10 +403,10 @@ RSpec.describe MiqScheduleWorker::Runner do
 
               while_calling_job(job) do
                 case job.tags
-                when %w(event_stream purge_schedule)
+                when %w[event_stream purge_schedule]
                   messages = MiqQueue.where(:class_name => "EventStream", :method_name => "purge_timer")
                   expect(messages.count).to eq(1)
-                when %w(policy_event purge_schedule)
+                when %w[policy_event purge_schedule]
                   messages = MiqQueue.where(:class_name => "PolicyEvent", :method_name => "purge_timer")
                   expect(messages.count).to eq(1)
                 else
@@ -530,8 +530,8 @@ RSpec.describe MiqScheduleWorker::Runner do
     end
 
     def raise_unexpected_job_error(job)
-      raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, "\
-            "last_time=#{job.last_time.inspect}, id=#{job.job_id.inspect}, next=#{job.next_time.inspect}, "\
+      raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, " \
+            "last_time=#{job.last_time.inspect}, id=#{job.job_id.inspect}, next=#{job.next_time.inspect}, " \
             "handler=#{job.handler.inspect}"
     end
   end

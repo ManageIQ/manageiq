@@ -199,7 +199,7 @@ RSpec.describe "Service Retirement Management" do
     @service.mark_retired
     @service.reload
     expect(@service.retired).to be_truthy
-    expect(@service.retires_on).to be_between(Time.zone.now - 1.hour, Time.zone.now + 1.second)
+    expect(@service.retires_on).to be_between(1.hour.ago, 1.second.from_now)
     expect(@service.retirement_state).to eq("retired")
   end
 

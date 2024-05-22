@@ -241,7 +241,7 @@ FactoryBot.define do
 
   factory :ems_openstack_infra_with_authentication,
           :parent => :ems_openstack_infra do
-    authtype { %w(default amqp) }
+    authtype { %w[default amqp] }
   end
 
   factory :ems_vmware_cloud,
@@ -305,7 +305,7 @@ FactoryBot.define do
 
   factory :ems_openstack_with_authentication,
           :parent => :ems_openstack do
-    authtype { %w(default amqp) }
+    authtype { %w[default amqp] }
   end
 
   factory :ems_openstack_network,
@@ -317,7 +317,6 @@ FactoryBot.define do
           :aliases => ["manageiq/providers/nuage/network_manager"],
           :class   => "ManageIQ::Providers::Nuage::NetworkManager",
           :parent  => :ems_network
-
 
   factory :ems_nsxt_network,
           :aliases => ["manageiq/providers/nsxt/network_manager"],
@@ -382,7 +381,7 @@ FactoryBot.define do
 
   trait(:configuration_workflow) do
     after(:create) do |x|
-      type = (x.type.split("::")[0..2] + %w(AutomationManager ConfigurationWorkflow)).join("::")
+      type = (x.type.split("::")[0..2] + %w[AutomationManager ConfigurationWorkflow]).join("::")
       x.configuration_scripts << FactoryBot.create(:configuration_workflow, :type => type)
     end
   end
@@ -397,9 +396,9 @@ FactoryBot.define do
           :aliases => ["manageiq/providers/embedded_ansible/automation_manager"],
           :class   => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager",
           :parent  => :embedded_automation_manager do
-    provider {
+    provider do
       raise "DO NOT USE!  Use :provider_embedded_ansible and reference the automation_manager from that record"
-    }
+    end
   end
 
   # Leaf classes for provisioning_manager

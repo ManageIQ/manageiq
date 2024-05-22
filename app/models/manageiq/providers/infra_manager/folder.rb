@@ -1,2 +1,2 @@
-class ManageIQ::Providers::InfraManager::Folder < ::EmsFolder
+class ManageIQ::Providers::InfraManager::Folder < EmsFolder
 end

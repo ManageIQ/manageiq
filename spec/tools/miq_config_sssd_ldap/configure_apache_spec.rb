@@ -12,19 +12,19 @@ RSpec.describe MiqConfigSssdLdap::ConfigureApache do
 
   describe '#onfigure' do
     let(:manageiq_pam_conf) do
-      <<-PAM_CONF.strip_heredoc
+      <<~PAM_CONF
         manageiq pam conf data
       PAM_CONF
     end
 
     let(:manageiq_remote_user_conf) do
-      <<-REMOTE_USER_CONF.strip_heredoc
+      <<~REMOTE_USER_CONF
         manageiq remote user conf data
       REMOTE_USER_CONF
     end
 
     let(:manageiq_external_auth_conf) do
-      <<-EXTERNAL_AUTH_KERB_CONF.strip_heredoc
+      <<~EXTERNAL_AUTH_KERB_CONF
         KrbMethodK5Passwd  Off
         KrbAuthRealms      <%= realm %>
         Krb5KeyTab         /etc/http.keytab
@@ -32,7 +32,7 @@ RSpec.describe MiqConfigSssdLdap::ConfigureApache do
     end
 
     let(:expected_manageiq_external_auth_conf) do
-      <<-EXPECTED_EXTERNAL_AUTH_KERB_CONF.strip_heredoc
+      <<~EXPECTED_EXTERNAL_AUTH_KERB_CONF
         KrbMethodK5Passwd  Off
         KrbAuthRealms      bob.your.uncle.com
         Krb5KeyTab         /etc/http.keytab
@@ -40,7 +40,7 @@ RSpec.describe MiqConfigSssdLdap::ConfigureApache do
     end
 
     let(:manageiq_external_auth_gssapi_conf) do
-      <<-EXTERNAL_AUTH_GSSAPI_CONF.strip_heredoc
+      <<~EXTERNAL_AUTH_GSSAPI_CONF
         AuthType           GSSAPI
         AuthName           "GSSAPI Single Sign On Login"
         GssapiCredStore    keytab:/etc/http.keytab

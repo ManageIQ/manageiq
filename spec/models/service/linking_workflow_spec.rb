@@ -51,7 +51,7 @@ RSpec.describe Service::LinkingWorkflow do
   end
 
   context 'state transitions' do
-    %w(start refresh poll_refresh post_refresh finish abort_job cancel error).each do |signal|
+    %w[start refresh poll_refresh post_refresh finish abort_job cancel error].each do |signal|
       shared_examples_for "allows #{signal} signal" do
         it signal.to_s do
           expect(job).to receive(signal.to_sym)
@@ -60,7 +60,7 @@ RSpec.describe Service::LinkingWorkflow do
       end
     end
 
-    %w(start refresh poll_refresh post_refresh).each do |signal|
+    %w[start refresh poll_refresh post_refresh].each do |signal|
       shared_examples_for "doesn't allow #{signal} signal" do
         it signal.to_s do
           expect { job.signal(signal.to_sym) }.to raise_error(RuntimeError, /#{signal} is not permitted at state #{job.state}/)

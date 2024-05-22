@@ -83,6 +83,7 @@ module PgInspector
 
     def connection_spids_blocking_lock(lock)
       return if lock["granted"] == "t"
+
       blocking_locks = blocking_lock_relation(lock).select do |l|
         lock["spid"] != l["spid"] &&
           l["granted"] == "t"

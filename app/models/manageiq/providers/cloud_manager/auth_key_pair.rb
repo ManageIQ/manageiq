@@ -1,4 +1,4 @@
-class ManageIQ::Providers::CloudManager::AuthKeyPair < ::Authentication
+class ManageIQ::Providers::CloudManager::AuthKeyPair < Authentication
   acts_as_miq_taggable
   has_and_belongs_to_many :vms, :join_table => :key_pairs_vms, :foreign_key => :authentication_id
   virtual_belongs_to :ext_management_system, :uses => :resource

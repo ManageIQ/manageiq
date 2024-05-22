@@ -9,8 +9,8 @@ RSpec.describe SysprepFile do
   context "valid inputs" do
     ["INI", "XML"].each do |type|
       context type.to_s do
-        it("allows string")    { expect(described_class.new(send("good_#{type.downcase}"))).to be_kind_of(SysprepFile) }
-        it("allows IO stream") { expect(described_class.new(StringIO.new(send("good_#{type.downcase}")))).to be_kind_of(SysprepFile) }
+        it("allows string")    { expect(described_class.new(send(:"good_#{type.downcase}"))).to be_kind_of(SysprepFile) }
+        it("allows IO stream") { expect(described_class.new(StringIO.new(send(:"good_#{type.downcase}")))).to be_kind_of(SysprepFile) }
       end
     end
   end
