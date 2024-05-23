@@ -138,10 +138,18 @@ class ServiceTemplateProvisionTask < MiqRequestTask
     ra = resource_action
 
     unless ra.nil?
-      args[:namespace]        = ra.ae_namespace if ra.ae_namespace.present?
-      args[:class_name]       = ra.ae_class     if ra.ae_class.present?
-      args[:instance_name]    = ra.ae_instance  if ra.ae_instance.present?
-      args[:automate_message] = ra.ae_message   if ra.ae_message.present?
+      if ra.configuration_script_payload
+        args[:namespace]        = "Service/Provisioning/StateMachines"
+        args[:class_name]       = "ServiceProvision_Template"
+        args[:instance_name]    = "CatalogItemInitialization"
+        args[:automate_message] = nil
+      else
+        args[:namespace]        = ra.ae_namespace if ra.ae_namespace.present?
+        args[:class_name]       = ra.ae_class     if ra.ae_class.present?
+        args[:instance_name]    = ra.ae_instance  if ra.ae_instance.present?
+        args[:automate_message] = ra.ae_message   if ra.ae_message.present?
+      end
+
       args[:attrs].merge!(ra.ae_attributes)
     end
 

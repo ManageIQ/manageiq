@@ -97,6 +97,10 @@ class MiqProvision < MiqProvisionTask
     end
   end
 
+  def workflow_inputs
+    options
+  end
+
   def self.get_description(prov_obj, vm_name)
     request_type = prov_obj.options[:request_type]
     title = case request_type

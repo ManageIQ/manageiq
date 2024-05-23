@@ -140,12 +140,12 @@ class MiqRequestTask < ApplicationRecord
 
     _log.info("Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
 
-    if resource_action&.configuration_script_payload
-      workflow = resource_action.configuration_script_payload
-      miq_task_id = workflow.run(:inputs => dialog_values, :userid => get_user.userid, :zone => zone, :object => self)
+    workflow = ConfigurationScriptPayload.find(options[:configuration_script_payload_id]) if options[:configuration_script_payload_id]
+    if workflow
+      miq_task_id = workflow.run(:inputs => workflow_inputs, :userid => get_user.userid, :zone => zone, :object => self)
 
       options[:miq_task_id]                     = miq_task_id
-      options[:configuration_script_payload_id] = resource_action.configuration_script_payload.id
+      options[:configuration_script_payload_id] = workflow.id
       options[:configuration_script_id]         = MiqTask.find(miq_task_id).context_data[:workflow_instance_id]
       save!
     elsif self.class::AUTOMATE_DRIVES
@@ -263,6 +263,10 @@ class MiqRequestTask < ApplicationRecord
 
   def valid_states
     %w[pending finished] + request_class::ACTIVE_STATES
+  end
+
+  def workflow_inputs
+    dialog_values
   end
 
   def dialog_values
