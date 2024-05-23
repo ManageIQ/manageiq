@@ -18,6 +18,7 @@ class TokenStore
     def read(token, _options = nil)
       record = Session.find_by(:session_id => session_key(token))
       return nil unless record
+
       data = record.raw_data
       if data[:expires_on] > Time.zone.now
         data
@@ -30,6 +31,7 @@ class TokenStore
     def delete(token)
       record = Session.find_by(:session_id => session_key(token))
       return nil unless record
+
       record.destroy!
     end
 

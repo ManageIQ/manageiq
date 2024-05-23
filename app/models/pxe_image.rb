@@ -8,7 +8,7 @@ class PxeImage < ApplicationRecord
   acts_as_miq_taggable
 
   before_validation do
-    if self.default_for_windows_changed? && self.default_for_windows?
+    if default_for_windows_changed? && default_for_windows?
       pxe_server.pxe_images.where(:default_for_windows => true).update_all(:default_for_windows => false)
     end
     true
@@ -49,7 +49,7 @@ class PxeImage < ApplicationRecord
     # arguments from final kernel command line.
     kernel_args = customization_template&.class&.kernel_args(
       pxe_server, self, mac_address
-    ) || { :ks => nil, :ksdevice => nil }
+    ) || {:ks => nil, :ksdevice => nil}
     contents = build_pxe_contents(kernel_args)
 
     pxe_server.write_file(filepath, contents)

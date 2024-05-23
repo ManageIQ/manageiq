@@ -20,7 +20,7 @@ class GenericMailer < ActionMailer::Base
       rcpts.each do |rcpt|
         rcpt.split(',').each do |to|
           options[:to] = to
-          individual =  send(method, options)
+          individual = send(method, options)
           begin
             individual.deliver_now
           rescue Net::SMTPError
@@ -41,22 +41,51 @@ class GenericMailer < ActionMailer::Base
       rescue => e
         _log.error("method: #{method} options: #{options} delivery-error #{e}")
       end
-
     end
 
     msg
   end
 
-  def self.deliver_queue(method, options = {})
+  def self.deliver_queue(method, options = {}, queue_options = {})
     return unless MiqRegion.my_region.role_assigned?('notifier')
+
     _log.info("starting: method: #{method} args: #{options} ")
     options[:attachment] &&= attachment_to_blob(options[:attachment])
+
     MiqQueue.submit_job(
-      :service     => "notifier",
-      :class_name  => name,
-      :method_name => 'deliver',
-      :args        => [method, options],
+      queue_options.reverse_merge(
+        :service     => "notifier",
+        :class_name  => name,
+        :method_name => 'deliver',
+        :args        => [method, options]
+      )
     )
+  end
+
+  def self.deliver_task(method, options = {})
+    msg = "Queued the action: [#{method}]"
+
+    task = MiqTask.create!(:state => MiqTask::STATE_QUEUED, :status => MiqTask::STATUS_OK, :message => msg)
+
+    # Fail the task if there is no server with the notifier role in this region
+    unless MiqRegion.my_region.role_assigned?('notifier')
+      task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_ERROR, _("No server with notifier role in region"))
+      return task
+    end
+
+    queue_options = {
+      :miq_task_id  => task.id,
+      :miq_callback => {
+        :class_name  => MiqTask.name,
+        :instance_id => task.id,
+        :method_name => :queue_callback,
+        :args        => ['Finished']
+      }
+    }
+
+    deliver_queue(method, options, queue_options)
+
+    task
   end
 
   def self.attachment_to_blob(attachment, attachment_filename = "evm_attachment")
@@ -162,6 +191,7 @@ class GenericMailer < ActionMailer::Base
     options[:attachment].each do |a|
       name = a[:filename]
       next if name.nil?
+
       attachments[name] = {:mime_type => a[:content_type], :content => a[:body]}
     end
     mail(:subject => options[:subject], :to => options[:to], :from => options[:from], :cc => options[:cc], :bcc => options[:bcc], :date => options[:sent_on])
@@ -172,7 +202,7 @@ class GenericMailer < ActionMailer::Base
   OPTIONAL_SMTP_KEYS = [:enable_starttls_auto, :openssl_verify_mode]
   def set_mailer_smtp(evm_settings = nil)
     evm_settings ||= ::Settings.smtp
-    am_settings =  {}
+    am_settings = {}
 
     DESTINATION_SMTP_KEYS.each { |key| am_settings[key] = evm_settings[key] }
     am_settings[:address] ||= evm_settings[:host] # vmdb.yml has key :host, ActionMailer expects :address

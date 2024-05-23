@@ -1,4 +1,4 @@
-class ManageIQ::Providers::BaseManager::RefreshWorker::Runner < ::MiqQueueWorkerBase::Runner
+class ManageIQ::Providers::BaseManager::RefreshWorker::Runner < MiqQueueWorkerBase::Runner
   include ProviderWorkerRunnerMixin
 
   def after_initialize

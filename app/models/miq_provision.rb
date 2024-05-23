@@ -38,6 +38,14 @@ class MiqProvision < MiqProvisionTask
     MiqProvision
   end
 
+  def statemachine_task_status
+    if %w[finished provisioned].include?(state)
+      status.to_s.downcase == "error" || vm.nil? ? "error" : "ok"
+    else
+      "retry"
+    end
+  end
+
   def set_template_and_networking
     self.source = get_source
 
@@ -87,6 +95,10 @@ class MiqProvision < MiqProvisionTask
     else
       update_and_notify_parent(:state => "finished", :status => "Error")
     end
+  end
+
+  def workflow_inputs
+    options
   end
 
   def self.get_description(prov_obj, vm_name)

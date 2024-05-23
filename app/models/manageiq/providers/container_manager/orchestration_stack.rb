@@ -1,4 +1,4 @@
-class ManageIQ::Providers::ContainerManager::OrchestrationStack < ::OrchestrationStack
+class ManageIQ::Providers::ContainerManager::OrchestrationStack < OrchestrationStack
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::ContainerManager"
   belongs_to :container_template, :foreign_key => :orchestration_template_id, :class_name => "ContainerTemplate"
 

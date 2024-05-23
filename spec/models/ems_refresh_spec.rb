@@ -62,7 +62,7 @@ RSpec.describe EmsRefresh do
 
     let(:targets) do
       targets = []
-      (0..996).each do |i|
+      997.times do |i|
         targets << InventoryRefresh::Target.load(
           :manager_id  => @ems.id,
           :association => :vms,

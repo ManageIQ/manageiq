@@ -21,30 +21,30 @@ end
 ARGV.shift if ARGV[0] == '--'
 
 opts = Optimist.options do
-  banner <<-EOS
+  banner <<~EOS
 
-Reconstruct provision request parameters based on an existing request
+    Reconstruct provision request parameters based on an existing request
 
-Common Examples\n\t
-Output the hash parameters of a request
+    Common Examples\n\t
+    Output the hash parameters of a request
 
-  #{PROGRAM_STRING} --request-id=3
+      #{PROGRAM_STRING} --request-id=3
 
-Show the hash parameters and the console command needed to rerun a request
+    Show the hash parameters and the console command needed to rerun a request
 
-  #{PROGRAM_STRING} --request-id=3  --console
+      #{PROGRAM_STRING} --request-id=3  --console
 
-Show the hash parameters and rerun the request
+    Show the hash parameters and rerun the request
 
-  #{PROGRAM_STRING} --request-id=3  --run-it
+      #{PROGRAM_STRING} --request-id=3  --run-it
 
-Show a list of 5 recent requests
+    Show a list of 5 recent requests
 
-  #{PROGRAM_STRING} --last-requests
+      #{PROGRAM_STRING} --last-requests
 
-Help! #{PROGRAM_STRING} --help
+    Help! #{PROGRAM_STRING} --help
 
-Usage: #{PROGRAM_STRING} [--options]\n\nOptions:\n\t
+    Usage: #{PROGRAM_STRING} [--options]\n\nOptions:\n\t
 
   EOS
   opt :api_host, "The hostname to run the api call against", :default => 'localhost', :type => :string
@@ -67,7 +67,7 @@ elsif opts[:last_requests_given] && opts[:count]
   Optimist.die :count, "must be greater than 0" if opts[:count] <= 0
 else
   Optimist.die :request_id, "must be a number greater than 0" if opts[:request_id] <= 0
-  Optimist.die :output, "must be either hash or json" unless %w(hash json).include?(opts[:output])
+  Optimist.die :output, "must be either hash or json" unless %w[hash json].include?(opts[:output])
 end
 
 class Tab
@@ -318,6 +318,7 @@ class AutomateHash
   def find_request_options
     @provision_options = MiqProvisionRequest.find_by(:id => @request_id)
     return no_provision_found if @provision_options.nil?
+
     @provision_options
   end
 

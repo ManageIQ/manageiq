@@ -11,6 +11,10 @@ class ServiceReconfigureTask < MiqRequestTask
     "#{request_class::TASK_DESCRIPTION} for: #{req_obj.source.name}"
   end
 
+  def statemachine_task_status
+    state == "finished" ? status.to_s.downcase : "retry"
+  end
+
   def after_request_task_create
     update(:description => get_description)
   end
@@ -25,7 +29,7 @@ class ServiceReconfigureTask < MiqRequestTask
         :namespace        => ra.ae_namespace,
         :class_name       => ra.ae_class,
         :instance_name    => ra.ae_instance,
-        :automate_message => ra.ae_message.blank? ? 'create' : ra.ae_message,
+        :automate_message => (ra.ae_message.presence || 'create'),
         :attrs            => dialog_values,
         :user_id          => get_user.id,
         :miq_group_id     => get_user.current_group_id,

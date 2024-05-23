@@ -17,6 +17,7 @@ module ManageIQ
 
       def options
         return @options if defined?(@options)
+
         @options = Settings.ems_refresh
       end
 
@@ -157,6 +158,7 @@ module ManageIQ
         # Do any post-operations for this EMS
         post_process_refresh_classes.each do |klass|
           next unless klass.respond_to?(:post_refresh_ems)
+
           _log.info("#{log_ems_target} Performing post-refresh operations for #{klass} instances...")
           klass.post_refresh_ems(ems.id, ems_refresh_start_time)
           _log.info("#{log_ems_target} Performing post-refresh operations for #{klass} instances...Complete")

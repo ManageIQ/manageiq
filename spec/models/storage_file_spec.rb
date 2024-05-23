@@ -67,21 +67,21 @@ RSpec.describe StorageFile do
 
     it "marks as a snapshot file for files with extenstion .vmsd and .vmsn" do
       files = []
-      %w(vmsd vmsn).each { |f| files << double(:ext_name => f) }
+      %w[vmsd vmsn].each { |f| files << double(:ext_name => f) }
       result = described_class.split_file_types(files)
       expect(result[:snapshot].size).to eq(2)
     end
 
     it "marks as vm_ram for files with extension .nvram and .vswp" do
       files = []
-      %w(nvram vswp).each { |f| files << double(:ext_name => f) }
+      %w[nvram vswp].each { |f| files << double(:ext_name => f) }
       result = described_class.split_file_types(files)
       expect(result[:vm_ram].size).to eq(2)
     end
 
     it "marks as vm_misc for files with extension .vmx, .vmtx, .vmxf, .log and .hlog" do
       files = []
-      %w(vmx vmtx vmxf log hlog).each { |f| files << double(:ext_name => f) }
+      %w[vmx vmtx vmxf log hlog].each { |f| files << double(:ext_name => f) }
       result = described_class.split_file_types(files)
       expect(result[:vm_misc].size).to eq(5)
     end

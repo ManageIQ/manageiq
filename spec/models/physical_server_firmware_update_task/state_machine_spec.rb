@@ -2,7 +2,7 @@ RSpec.describe PhysicalServerFirmwareUpdateTask do
   let(:server)  { FactoryBot.create(:physical_server) }
   let(:src_ids) { [server.id] }
 
-  subject { described_class.new(:options => { :src_ids => src_ids }) }
+  subject { described_class.new(:options => {:src_ids => src_ids}) }
 
   describe '#run_firmware_update' do
     context 'when ok' do

@@ -29,12 +29,12 @@ RSpec.describe FixAuth::AuthModel do
     end
 
     it "should determine available_columns" do
-      expect(subject.available_columns).to eq(%w(password auth_key))
+      expect(subject.available_columns).to eq(%w[password auth_key])
     end
 
     it "should limit available_columns when not all columns are available" do
-      allow(subject).to receive_messages(:column_names => %w(password id))
-      expect(subject.available_columns).to eq(%w(password))
+      allow(subject).to receive_messages(:column_names => %w[password id])
+      expect(subject.available_columns).to eq(%w[password])
     end
 
     it "should build selection criteria (non selects)" do

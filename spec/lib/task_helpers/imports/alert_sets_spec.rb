@@ -6,7 +6,7 @@ RSpec.describe TaskHelpers::Imports::AlertSets do
   let(:alert_set_two_guid) { "a16168b2-2605-11e7-a475-02420ebf1c88" }
 
   it 'should import all .yaml files in a specified directory' do
-    options = { :source => data_dir }
+    options = {:source => data_dir}
     expect do
       TaskHelpers::Imports::AlertSets.new.import(options)
     end.to_not output.to_stderr
@@ -16,7 +16,7 @@ RSpec.describe TaskHelpers::Imports::AlertSets do
   end
 
   it 'should import a specified alert export file' do
-    options = { :source => "#{data_dir}/#{alert_set_file}" }
+    options = {:source => "#{data_dir}/#{alert_set_file}"}
     expect do
       TaskHelpers::Imports::AlertSets.new.import(options)
     end.to_not output.to_stderr
@@ -26,7 +26,7 @@ RSpec.describe TaskHelpers::Imports::AlertSets do
   end
 
   it 'should fail to import a specified alert file' do
-    options = { :source => "#{data_dir}/#{bad_alert_set_file}" }
+    options = {:source => "#{data_dir}/#{bad_alert_set_file}"}
     expect do
       TaskHelpers::Imports::AlertSets.new.import(options)
     end.to output.to_stderr

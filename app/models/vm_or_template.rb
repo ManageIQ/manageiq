@@ -8,6 +8,7 @@ class VmOrTemplate < ApplicationRecord
   include RetirementMixin
   include ScanningMixin
   include SupportsFeatureMixin
+  include SupportsAttribute
   include EmsRefreshMixin
 
   self.table_name = 'vms'
@@ -20,6 +21,7 @@ class VmOrTemplate < ApplicationRecord
   include Snapshotting
 
   attr_accessor :surrogate_host
+
   @surrogate_host = nil
 
   include ProviderObjectMixin
@@ -55,8 +57,8 @@ class VmOrTemplate < ApplicationRecord
     "unknown"       => "Unknown"
   }
 
-  POWER_OPS = %w(start stop suspend reset shutdown_guest standby_guest reboot_guest)
-  REMOTE_REGION_TASKS = POWER_OPS + %w(retire_now)
+  POWER_OPS = %w[start stop suspend reset shutdown_guest standby_guest reboot_guest]
+  REMOTE_REGION_TASKS = POWER_OPS + %w[retire_now]
 
   validates_presence_of     :name, :location
   validates                 :vendor, :inclusion => {:in => VENDOR_TYPES.keys}
@@ -117,7 +119,6 @@ class VmOrTemplate < ApplicationRecord
 
   has_many                  :storage_files, :dependent => :destroy
   has_many                  :storage_files_files, -> { where("rsc_type = 'file'") }, :class_name => "StorageFile"
-
 
   # EMS Events
   has_many                  :ems_events, ->(vmt) { unscope(:where => :vm_or_template_id).where(["vm_or_template_id = ? OR dest_vm_or_template_id = ?", vmt.id, vmt.id]).order(:timestamp) },
@@ -200,6 +201,11 @@ class VmOrTemplate < ApplicationRecord
   delegate :connect_lans, :disconnect_lans, :to => :hardware, :allow_nil => true
   delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
 
+  supports_attribute :feature => :reconfigure_disks
+  supports_attribute :feature => :reconfigure_disksize
+  supports_attribute :feature => :reconfigure_cdroms
+  supports_attribute :feature => :reconfigure_network_adapters
+
   after_save :save_genealogy_information
 
   scope :active,       ->       { where.not(:ems_id => nil) }
@@ -256,7 +262,7 @@ class VmOrTemplate < ApplicationRecord
       as = advanced_settings.detect { |setting| setting.name == k }
       return nil if as.nil? || as.value.nil?
 
-      return case t
+      case t
              when :boolean then ActiveRecord::Type::Boolean.new.cast(as.value)
              when :integer then as.value.to_i
              when :float then as.value.to_f
@@ -284,6 +290,7 @@ class VmOrTemplate < ApplicationRecord
       define_method(m) do
         return nil if hardware.nil?
         return nil if hardware.hard_disks.length < i
+
         hardware.hard_disks[i - 1].send(k)
       end
 
@@ -341,6 +348,7 @@ class VmOrTemplate < ApplicationRecord
   def registered?
     # TODO: Vmware specific
     return false if template? && ems_id.nil?
+
     host_id.present?
   end
 
@@ -429,14 +437,14 @@ class VmOrTemplate < ApplicationRecord
 
     # VM has no host or storage affiliation
     if vm.storage.nil?
-      task.error("#{vm.name}: There is no owning Host or Datastore for this VM, "\
+      task.error("#{vm.name}: There is no owning Host or Datastore for this VM, " \
                  "'#{options[:task]}' is not allowed")
       return false
     end
 
     # VM belongs to a storage/repository location
     # TODO: The following never gets run since the invoke tasks invokes it as a job, and only tasks get to this point ?
-    unless %w(scan sync).include?(options[:task])
+    unless %w[scan sync].include?(options[:task])
       task.error("#{vm.name}: There is no owning Host for this VM, '#{options[:task]}' is not allowed")
       return false
     end
@@ -449,7 +457,7 @@ class VmOrTemplate < ApplicationRecord
       return false
     end
     if MiqProxy.find(spid).state != "on"                     # Repo scanning host iagent s not running
-      task.error("#{vm.name}: The Default Repository SmartProxy, '#{sp.name}', is not running. "\
+      task.error("#{vm.name}: The Default Repository SmartProxy, '#{sp.name}', is not running. " \
                  "'#{options[:task]}' not attempted")
       return false
     end
@@ -459,18 +467,18 @@ class VmOrTemplate < ApplicationRecord
 
   # override
   def self.task_invoked_by(options)
-    %w(scan sync).include?(options[:task]) ? :job : super
+    %w[scan sync].include?(options[:task]) ? :job : super
   end
   private_class_method :task_invoked_by
 
   # override
   def self.task_arguments(options)
     case options[:task]
-    when "scan", "sync" then
+    when "scan", "sync"
       [options[:userid]]
-    when "remove_snapshot", "revert_to_snapshot" then
+    when "remove_snapshot", "revert_to_snapshot"
       [options[:snap_selected]]
-    when "create_snapshot" then
+    when "create_snapshot"
       [options[:name], options[:description], options[:memory]]
     else
       super
@@ -636,7 +644,7 @@ class VmOrTemplate < ApplicationRecord
   # TODO: Vmware specific URI methods?  Next 3 methods
   def self.location2uri(location, scheme = "file")
     pat = %r{^(file|http|miq)://([^/]*)/(.+)$}
-    unless pat =~ location
+    unless pat&.match?(location)
       # location = scheme<<"://"<<self.myhost.ipaddress<<":1139/"<<location
       location = scheme << ":///" << location
     end
@@ -658,25 +666,27 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def self.repository_parse_path(path)
-    path.gsub!(/\\/, "/")
-    #it's empty string for local type
+    path.tr!("\\", "/")
+    # it's empty string for local type
     storage_name = ""
-                    # NAS
+    # NAS
     relative_path = if path.starts_with?("//")
-                      raise _("path, '%{path}', is malformed") % {:path => path} unless path =~ %r{^//[^/].*/.+$}
+                      raise _("path, '%{path}', is malformed") % {:path => path} unless %r{^//[^/].*/.+$}.match?(path)
+
                       # path is a UNC
                       storage_name = path.split("/")[0..3].join("/")
                       path.split("/")[4..path.length].join("/") if path.length > 4
-                    #VMFS
+                    # VMFS
                     elsif path.starts_with?("[")
-                      raise _("path, '%{path}', is malformed") % {:path => path} unless path =~ /^\[[^\]].+\].*$/
+                      raise _("path, '%{path}', is malformed") % {:path => path} unless /^\[[^\]].+\].*$/.match?(path)
+
                       # path is a VMWare storage name
                       /^\[(.*)\](.*)$/ =~ path
                       storage_name = $1
                       temp_path = $2.strip
                       # Some esx servers add a leading "/".
                       # This needs to be stripped off to allow matching on location
-                      temp_path.sub(/^\//,'')
+                      temp_path.sub(/^\//, '')
                     # local
                     else
                       raise _("path, '%{path}', is malformed") % {:path => path}
@@ -805,6 +815,7 @@ class VmOrTemplate < ApplicationRecord
 
   def under_blue_folder?(folder)
     return false unless folder.kind_of?(EmsFolder)
+
     parent_blue_folders.any? { |f| f == folder }
   end
 
@@ -859,7 +870,7 @@ class VmOrTemplate < ApplicationRecord
           :password   => ems.authentication_password_encrypted,
           :class_name => ems.class.name
         }
-        params[type][:port] = ems.port if ems.respond_to?(:port) && !ems.port.blank?
+        params[type][:port] = ems.port if ems.respond_to?(:port) && ems.port.present?
       end
     end
     params
@@ -969,6 +980,7 @@ class VmOrTemplate < ApplicationRecord
 
   def log_proxies_format_instance(object)
     return 'Nil' if object.nil?
+
     "#{object.class.name}:#{object.id}-#{object.name}:#{object.try(:state)}"
   end
 
@@ -987,8 +999,8 @@ class VmOrTemplate < ApplicationRecord
 
     # MiqServer coresident proxy needs to contact the host and provide credentials.
     # Remove any MiqServer instances if we do not have credentials
-    rsc = self.scan_via_ems? ? ext_management_system : host
-    proxies.delete_if { |p| MiqServer === p } if rsc && !rsc.authentication_status_ok?
+    rsc = scan_via_ems? ? ext_management_system : host
+    proxies.delete_if { |p| p.is_a?(MiqServer) } if rsc && !rsc.authentication_status_ok?
     _log.debug("proxies2.length = #{proxies.length}")
 
     proxies
@@ -1011,7 +1023,7 @@ class VmOrTemplate < ApplicationRecord
     case vendor
     when 'vmware'
       # VM cannot be scanned by server if they are on a repository
-      return [] if storage_id.blank? || self.repository_vm?
+      return [] if storage_id.blank? || repository_vm?
     when 'microsoft'
       return [] if storage_id.blank?
     else
@@ -1058,10 +1070,11 @@ class VmOrTemplate < ApplicationRecord
   # TODO: Vmware specfic
   def template=(val)
     return val unless val ^ template # Only continue if toggling setting
+
     write_attribute(:template, val)
 
-    self.type = corresponding_model.name if (self.template? && self.kind_of?(Vm)) || (!self.template? && self.kind_of?(MiqTemplate))
-    d = self.template? ? [/\.vmx$/, ".vmtx", 'never'] : [/\.vmtx$/, ".vmx", state == 'never' ? 'unknown' : raw_power_state]
+    self.type = corresponding_model.name if (template? && kind_of?(Vm)) || (!template? && kind_of?(MiqTemplate))
+    d = template? ? [/\.vmx$/, ".vmtx", 'never'] : [/\.vmtx$/, ".vmx", state == 'never' ? 'unknown' : raw_power_state]
     self.location = location.sub(d[0], d[1]) unless location.nil?
     self.raw_power_state = d[2]
   end
@@ -1163,6 +1176,7 @@ class VmOrTemplate < ApplicationRecord
     # /rhev/data-center/<datacenter_id>/mastersd/master/vms/<vm_guid>/<vm_guid>.ovf/
     datacenter = parent_datacenter
     return location if datacenter.blank?
+
     File.join('/rhev/data-center', datacenter.uid_ems, 'mastersd/master/vms', uid_ems, location)
   end
 
@@ -1180,7 +1194,7 @@ class VmOrTemplate < ApplicationRecord
       self.previous_state   = raw_power_state
       self.state_changed_on = Time.now.utc
       super
-      self.power_state      = calculate_power_state
+      self.power_state = calculate_power_state
     end
     new_state
   end
@@ -1229,22 +1243,23 @@ class VmOrTemplate < ApplicationRecord
   def normalized_state
     return self["normalized_state"] if has_attribute?("normalized_state")
 
-    %w(archived orphaned template retired disconnected).each do |s|
-      return s if send("#{s}?")
+    %w[archived orphaned template retired disconnected].each do |s|
+      return s if send(:"#{s}?")
     end
     return power_state.downcase unless power_state.nil?
+
     "unknown"
   end
   virtual_attribute :normalized_state, :string, :arel => (lambda do |t|
     t.grouping(
       Arel::Nodes::Case.new
-      .when(arel_table[:archived]).then(Arel.sql("\'archived\'"))
-      .when(arel_table[:orphaned]).then(Arel.sql("\'orphaned\'"))
-      .when(t[:template].eq(t.create_true)).then(Arel.sql("\'template\'"))
-      .when(t[:retired].eq(t.create_true)).then(Arel.sql("\'retired\'"))
-      .when(arel_table[:disconnected]).then(Arel.sql("\'disconnected\'"))
+      .when(arel_table[:archived]).then(Arel.sql("'archived'"))
+      .when(arel_table[:orphaned]).then(Arel.sql("'orphaned'"))
+      .when(t[:template].eq(t.create_true)).then(Arel.sql("'template'"))
+      .when(t[:retired].eq(t.create_true)).then(Arel.sql("'retired'"))
+      .when(arel_table[:disconnected]).then(Arel.sql("'disconnected'"))
       .else(t.lower(
-              t.coalesce([t[:power_state], Arel.sql("\'unknown\'")])
+              t.coalesce([t[:power_state], Arel.sql("'unknown'")])
       ))
     )
   end)
@@ -1261,7 +1276,7 @@ class VmOrTemplate < ApplicationRecord
 
   def classify_with_parent_folder_path(add = true)
     [:blue, :yellow].each do |folder_type|
-      path = send("parent_#{folder_type}_folder_path")
+      path = send(:"parent_#{folder_type}_folder_path")
       next if path.blank?
 
       cat = self.class.folder_category(folder_type)
@@ -1300,9 +1315,9 @@ class VmOrTemplate < ApplicationRecord
   def event_where_clause(assoc = :ems_events)
     case assoc.to_sym
     when :ems_events, :event_streams
-      return ["vm_or_template_id = ? OR dest_vm_or_template_id = ? ", id, id]
+      ["vm_or_template_id = ? OR dest_vm_or_template_id = ? ", id, id]
     when :policy_events
-      return ["target_id = ? and target_class = ? ", id, self.class.base_class.name]
+      ["target_id = ? and target_class = ? ", id, self.class.base_class.name]
     end
   end
 
@@ -1337,7 +1352,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def v_is_a_template
-    self.template?.to_s.capitalize
+    template?.to_s.capitalize
   end
   # technically it is capitalized, but for sorting, not a concern
   # but we do need nil to become false
@@ -1354,6 +1369,7 @@ class VmOrTemplate < ApplicationRecord
     raise _("option :event_types is required")    unless options[:event_types]
     raise _("option :time_threshold is required") unless options[:time_threshold]
     raise _("option :freq_threshold is required") unless options[:freq_threshold]
+
     EmsEvent
       .where(:event_type => options[:event_types])
       .where("vm_or_template_id = :id OR dest_vm_or_template_id = :id", :id => id)
@@ -1454,11 +1470,13 @@ class VmOrTemplate < ApplicationRecord
     return "Unknown" if dlist.empty?
     return "True"    if dlist.all? { |d| d.partitions_aligned == "True" }
     return "False"   if dlist.any? { |d| d.partitions_aligned == "False" }
+
     "Unknown"
   end
 
   def memory_exceeds_current_host_headroom
     return false if host.nil?
+
     (ram_size > host.current_memory_headroom)
   end
 
@@ -1501,6 +1519,7 @@ class VmOrTemplate < ApplicationRecord
 
   def has_active_ems?
     return true unless ext_management_system.nil?
+
     false
   end
 
@@ -1641,10 +1660,11 @@ class VmOrTemplate < ApplicationRecord
   def self.reconfigurable?(ids)
     vms = VmOrTemplate.where(:id => ids)
     return false if vms.blank?
+
     vms.all?(&:reconfigurable?)
   end
 
-  PUBLIC_TEMPLATE_CLASSES = %w(ManageIQ::Providers::Openstack::CloudManager::Template).freeze
+  PUBLIC_TEMPLATE_CLASSES = %w[ManageIQ::Providers::Openstack::CloudManager::Template].freeze
 
   def self.tenant_id_clause(user_or_group)
     template_tenant_ids = MiqTemplate.accessible_tenant_ids(user_or_group, Rbac.accessible_tenant_ids_strategy(MiqTemplate))
@@ -1699,13 +1719,10 @@ class VmOrTemplate < ApplicationRecord
     self.class.calculate_power_state(raw_power_state)
   end
 
-  def check_feature_support(message_prefix)
-    if archived?
-      return [false, nil]
-    elsif orphaned?
-      return [false, _("%{action} cannot be performed on orphaned VM.") % {:action => message_prefix}]
-    end
-    [true, nil]
+  # deprecated, use unsupported_reason(:action) instead
+  def check_feature_support(_message_prefix)
+    reason = unsupported_reason(:action)
+    [!reason, reason]
   end
 
   def create_notification(type, options)

@@ -20,8 +20,8 @@ shared_examples "custom_report_with_custom_attributes" do |base_report, custom_a
       :rpt_group => "Custom",
       :rpt_type  => "Custom",
       :db        => base_report == "Host" ? "Host" : "ManageIQ::Providers::InfraManager::Vm",
-      :include   => {custom_attributes_field.to_s => {"columns" => %w(name value)}},
-      :col_order => %w(miq_custom_attributes.name miq_custom_attributes.value name),
+      :include   => {custom_attributes_field.to_s => {"columns" => %w[name value]}},
+      :col_order => %w[miq_custom_attributes.name miq_custom_attributes.value name],
       :headers   => ["EVM Custom Attribute Name", "EVM Custom Attribute Value", "Name"],
       :order     => "Ascending",
       :sortby    => ["miq_custom_attributes.name"]
@@ -107,10 +107,10 @@ RSpec.describe MiqReport do
 
     let(:report) do
       MiqReport.new(:name => "Custom VM report", :title => "Custom VM report", :rpt_group => "Custom",
-        :rpt_type => "Custom", :db => "Vm", :cols => %w(name),
+        :rpt_type => "Custom", :db => "Vm", :cols => %w[name],
         :conditions => MiqExpression.new("=" => {"regkey" => "HKLM\\SOFTWARE\\WindowsFirewall",
                                                  "regval" => "EnableFirewall", "value" => "0"}),
-        :col_order => %w(name registry_items.data registry_items.name registry_items.value_name),
+        :col_order => %w[name registry_items.data registry_items.name registry_items.value_name],
         :headers   => ["Name", "Registry Data", "Registry Name", "Registry Value Name"],
         :order     => "Ascending")
     end
@@ -147,7 +147,7 @@ RSpec.describe MiqReport do
                     :rpt_type  => "Custom",
                     :db        => "ManageIQ::Providers::InfraManager::Vm",
                     :cols      => %w[name num_disks],
-                    :include   => { "miq_provision_template" => { "columns" => %w[num_hard_disks] }},
+                    :include   => {"miq_provision_template" => {"columns" => %w[num_hard_disks]}},
                     :col_order => %w[name miq_provision_template.num_hard_disks num_disks],
                     :headers   => ["Name", "Provisioned From Template Number of Hard Disks", "Number of Disks"],
                     :order     => "Ascending")
@@ -193,9 +193,9 @@ RSpec.describe MiqReport do
       MiqReport.new(
         :name => "Custom VM report", :title => "Custom VM report", :rpt_group => "Custom", :rpt_type => "Custom",
         :db        => "ManageIQ::Providers::InfraManager::Vm",
-        :cols      => %w(name virtual_custom_attribute_kubernetes_io_hostname virtual_custom_attribute_manageiq_org),
+        :cols      => %w[name virtual_custom_attribute_kubernetes_io_hostname virtual_custom_attribute_manageiq_org],
         :include   => {:custom_attributes => {}},
-        :col_order => %w(name virtual_custom_attribute_kubernetes_io_hostname virtual_custom_attribute_manageiq_org),
+        :col_order => %w[name virtual_custom_attribute_kubernetes_io_hostname virtual_custom_attribute_manageiq_org],
         :headers   => ["Name", custom_column_key_1, custom_column_key_1],
         :order     => "Ascending"
       )
@@ -210,7 +210,7 @@ RSpec.describe MiqReport do
                            "virtual_custom_attribute_CATTR#{CustomAttributeMixin::SECTION_SEPARATOR}docker_labels",
                            "virtual_custom_attribute_CATTR#{CustomAttributeMixin::SECTION_SEPARATOR}labels"],
             :include   => {:custom_attributes => {}},
-            :col_order => %w(name CATTR),
+            :col_order => %w[name CATTR],
             :headers   => ["Name", custom_column_key_1, custom_column_key_1],
             :order     => "Ascending"
         )
@@ -288,9 +288,9 @@ RSpec.describe MiqReport do
     end
 
     let(:exp_3) do
-      MiqExpression.new("and" => [{"=" => { "field" => "#{vm_2.type}-active", "value" => "true"}},
-                                  {"or" => [{"IS NOT EMPTY" => { "field" => "#{vm_2.type}-name", "value" => ""}},
-                                            {"IS NOT EMPTY" => { "field" => "#{vm_2.type}-#{virtual_column_key_3}"}}]}])
+      MiqExpression.new("and" => [{"=" => {"field" => "#{vm_2.type}-active", "value" => "true"}},
+                                  {"or" => [{"IS NOT EMPTY" => {"field" => "#{vm_2.type}-name", "value" => ""}},
+                                            {"IS NOT EMPTY" => {"field" => "#{vm_2.type}-#{virtual_column_key_3}"}}]}])
     end
 
     it "generates report with dynamic custom attributes with filtering with field which is not listed in cols" do
@@ -442,7 +442,7 @@ RSpec.describe MiqReport do
       report = MiqReport.new(:db => "Vm")
       results, attrs = report.paged_view_search(
         :only   => ["name"],
-        :userid => user.userid,
+        :userid => user.userid
       )
       expect(results.length).to eq 1
       expect(results.data.collect(&:name)).to eq [vm1.name]
@@ -466,7 +466,7 @@ RSpec.describe MiqReport do
       vm2.tag_with(tag, :ns => "*")
 
       allow(User).to receive_messages(:server_timezone => "UTC")
-      report = MiqReport.new(:db => "Vm", :sortby => %w(storage.name name), :order => "Ascending", :include => {"storage" => {"columns" => ["name"]}})
+      report = MiqReport.new(:db => "Vm", :sortby => %w[storage.name name], :order => "Ascending", :include => {"storage" => {"columns" => ["name"]}})
       options = {
         :only   => ["name", "storage.name"],
         :userid => user.userid,
@@ -489,9 +489,9 @@ RSpec.describe MiqReport do
       FactoryBot.create(:vm_vmware, :name => "B", :host => FactoryBot.create(:host, :name => "A"))
       FactoryBot.create(:vm_vmware, :name => "A", :host => FactoryBot.create(:host, :name => "B"))
 
-      report = MiqReport.new(:db => "Vm", :sortby => %w(host_name name), :order => "Descending")
+      report = MiqReport.new(:db => "Vm", :sortby => %w[host_name name], :order => "Descending")
       options = {
-        :only => %w(name host_name),
+        :only => %w[name host_name],
         :page => 2,
       }
 
@@ -513,7 +513,7 @@ RSpec.describe MiqReport do
           value: "HA"
       '
 
-      results, _attrs = report.paged_view_search(:only => %w(name host_name), :filter => filter)
+      results, _attrs = report.paged_view_search(:only => %w[name host_name], :filter => filter)
       expect(results.length).to eq 1
       expect(results.data.first["name"]).to eq "VA"
       expect(results.data.first["host_name"]).to eq "HA"
@@ -546,7 +546,7 @@ RSpec.describe MiqReport do
           value: "HA"
       '
 
-      results, attrs = report.paged_view_search(:only => %w(name host_name), :userid => user.userid, :filter => filter)
+      results, attrs = report.paged_view_search(:only => %w[name host_name], :userid => user.userid, :filter => filter)
       expect(results.length).to eq 1
       expect(results.data.first["name"]).to eq "VAA"
       expect(results.data.first["host_name"]).to eq "HAA"
@@ -569,7 +569,7 @@ RSpec.describe MiqReport do
           value: "RPA"
       '
 
-      results, _attrs = report.paged_view_search(:only => %w(name), :filter => filter)
+      results, _attrs = report.paged_view_search(:only => %w[name], :filter => filter)
       expect(results.length).to eq 1
       expect(results.data.first["name"]).to eq "VA"
     end
@@ -582,12 +582,12 @@ RSpec.describe MiqReport do
         :name      => "VMs",
         :title     => "Virtual Machines",
         :db        => "Vm",
-        :cols      => %w(name host_name v_host_vmm_product),
-        :include   => {"host" => {"columns" => %w(name vmm_product)}},
-        :col_order => %w(name host.name host.vmm_product),
+        :cols      => %w[name host_name v_host_vmm_product],
+        :include   => {"host" => {"columns" => %w[name vmm_product]}},
+        :col_order => %w[name host.name host.vmm_product],
         :headers   => ["Name", "Host", "Host VMM Product"],
         :order     => "Ascending",
-        :sortby    => ["host_name"],
+        :sortby    => ["host_name"]
       )
 
       options = {
@@ -596,8 +596,8 @@ RSpec.describe MiqReport do
       }
       results, _attrs = report.paged_view_search(options)
       expect(results.length).to eq 2
-      expect(results.data.collect { |rec| rec.data["host_name"] }).to eq(%w(HA HB))
-      expect(results.data.collect { |rec| rec.data["v_host_vmm_product"] }).to eq(%w(ESX ESX))
+      expect(results.data.collect { |rec| rec.data["host_name"] }).to eq(%w[HA HB])
+      expect(results.data.collect { |rec| rec.data["v_host_vmm_product"] }).to eq(%w[ESX ESX])
     end
   end
 
@@ -703,7 +703,7 @@ RSpec.describe MiqReport do
 
         before do
           EvmSpecHelper.local_miq_server
-          rollup_params = {:capture_interval_name => 'daily', :time_profile_id => time_profile.id }
+          rollup_params = {:capture_interval_name => 'daily', :time_profile_id => time_profile.id}
           add_metric_rollups_for([vm], first_rollup_timestamp...last_rollup_timestamp, 24.hours, rollup_params)
         end
 
@@ -737,12 +737,12 @@ RSpec.describe MiqReport do
         report = MiqReport.new(
           :title   => "vim_perf_daily.yaml",
           :db      => "VimPerformanceDaily",
-          :cols    => %w(timestamp cpu_usagemhz_rate_average max_derived_cpu_available),
-          :include => { "metric_rollup" => {
-            "columns" => %w(cpu_usagemhz_rate_average_high_over_time_period
+          :cols    => %w[timestamp cpu_usagemhz_rate_average max_derived_cpu_available],
+          :include => {"metric_rollup" => {
+            "columns" => %w[cpu_usagemhz_rate_average_high_over_time_period
                             cpu_usagemhz_rate_average_low_over_time_period
                             derived_memory_used_high_over_time_period
-                            derived_memory_used_low_over_time_period)}})
+                            derived_memory_used_low_over_time_period]}})
         report.generate_table(:userid => "admin")
       end
 
@@ -892,8 +892,8 @@ RSpec.describe MiqReport do
     it "uses sort_by if available" do
       report = MiqReport.new(
         :db        => "Host",
-        :cols      => %w(name hostname smart),
-        :col_order => %w(name hostname smart),
+        :cols      => %w[name hostname smart],
+        :col_order => %w[name hostname smart],
         :sortby    => ["hostname"]
       )
       expect(report.sort_col).to eq(1)
@@ -902,8 +902,8 @@ RSpec.describe MiqReport do
     it "falls back to first column" do
       report = MiqReport.new(
         :db        => "Host",
-        :cols      => %w(name hostname smart),
-        :col_order => %w(name hostname smart),
+        :cols      => %w[name hostname smart],
+        :col_order => %w[name hostname smart]
       )
       expect(report.sort_col).to eq(0)
     end
@@ -912,24 +912,24 @@ RSpec.describe MiqReport do
   describe ".cols" do
     it "loads given value" do
       report = MiqReport.new(
-        :cols      => %w(name)
+        :cols      => %w[name]
       )
-      expect(report.cols).to eq(%w(name))
+      expect(report.cols).to eq(%w[name])
     end
 
     it "falls back to col_order" do
       report = MiqReport.new(
-        :col_order => %w(miq_custom_attributes.name miq_custom_attributes.value name)
+        :col_order => %w[miq_custom_attributes.name miq_custom_attributes.value name]
       )
-      expect(report.cols).to eq(%w(name))
+      expect(report.cols).to eq(%w[name])
     end
 
     it "allows manipulation" do
       report = MiqReport.new(
-        :col_order => %w(miq_custom_attributes.name miq_custom_attributes.value name),
+        :col_order => %w[miq_custom_attributes.name miq_custom_attributes.value name]
       )
       report.cols << "name2"
-      expect(report.cols).to eq(%w(name name2))
+      expect(report.cols).to eq(%w[name name2])
     end
   end
 
@@ -960,9 +960,9 @@ RSpec.describe MiqReport do
         :name        => "VMs",
         :title       => "Virtual Machines",
         :db          => "Vm",
-        :cols        => %w(name guid hostname ems_ref vendor),
-        :col_order   => %w(name hostname vendor guid emf_ref),
-        :headers     => %w(Name Host Vendor Guid EMS),
+        :cols        => %w[name guid hostname ems_ref vendor],
+        :col_order   => %w[name hostname vendor guid emf_ref],
+        :headers     => %w[Name Host Vendor Guid EMS],
         :col_options => {"guid" => {:hidden => true}, "ems_ref" => {:hidden => true}}
       )
     end
@@ -1058,7 +1058,7 @@ RSpec.describe MiqReport do
   context "chargeback reports" do
     let(:hourly_rate) { 0.01 }
     let(:hourly_variable_tier_rate) { {:variable_rate => hourly_rate.to_s} }
-    let(:detail_params) { {:chargeback_rate_detail_fixed_compute_cost => { :tiers => [hourly_variable_tier_rate] } } }
+    let(:detail_params) { {:chargeback_rate_detail_fixed_compute_cost => {:tiers => [hourly_variable_tier_rate]}} }
     let!(:chargeback_rate) do
       FactoryBot.create(:chargeback_rate, :detail_params => detail_params)
     end
@@ -1066,7 +1066,7 @@ RSpec.describe MiqReport do
       {
         :rpt_group     => "Custom",
         :rpt_type      => "Custom",
-        :include       => { :custom_attributes => {} },
+        :include       => {:custom_attributes => {}},
         :group         => "y",
         :template_type => "report",
       }
@@ -1092,15 +1092,15 @@ RSpec.describe MiqReport do
             :col_order   => ["project_name", "image_name", "display_range", label_report_column],
             :headers     => ["Project Name", "Image Name", "Date Range", nil],
             :sortby      => ["project_name", "image_name", "start_date"],
-            :db_options  => { :rpt_type => "ChargebackContainerImage",
-                              :options  => { :interval            => "daily",
+            :db_options  => {:rpt_type => "ChargebackContainerImage",
+                              :options  => {:interval            => "daily",
                                              :interval_size       => 28,
                                              :end_interval_offset => 1,
                                              :provider_id         => "all",
                                              :entity_id           => "all",
                                              :include_metrics     => true,
                                              :groupby             => "date",
-                                             :groupby_tag         => nil }},
+                                             :groupby_tag         => nil}},
             :col_options => ChargebackContainerImage.report_col_options
           )
         )
@@ -1121,7 +1121,7 @@ RSpec.describe MiqReport do
                                                   :parent_ems_id => ems.id,
                                                   :tag_names     => "")
 
-        ChargebackRate.set_assignments(:compute, [{ :cb_rate => chargeback_rate, :label => [label, "container_image"] }])
+        ChargebackRate.set_assignments(:compute, [{:cb_rate => chargeback_rate, :label => [label, "container_image"]}])
         rpt = report.generate_table(:userid => "admin")
         expect(rpt.keys).to contain_exactly(project_name, :_total_)
         row = rpt[project_name][:row]
@@ -1143,14 +1143,14 @@ RSpec.describe MiqReport do
             :headers     => ["Project Name", "Date Range", nil],
             :sortby      => ["project_name", "start_date"],
             :db_options  => {:rpt_type => "ChargebackContainerProject",
-                             :options  => { :interval            => "daily",
+                             :options  => {:interval            => "daily",
                                             :interval_size       => 28,
                                             :end_interval_offset => 1,
                                             :provider_id         => "all",
                                             :entity_id           => "all",
                                             :include_metrics     => true,
                                             :groupby             => "date",
-                                            :groupby_tag         => nil }},
+                                            :groupby_tag         => nil}},
             :col_options => ChargebackContainerProject.report_col_options
           )
         )
@@ -1168,7 +1168,7 @@ RSpec.describe MiqReport do
                                                      :resource_name => project.name,
                                                      :parent_ems_id => ems.id,
                                                      :tag_names     => "")
-        ChargebackRate.set_assignments(:compute, [{ :cb_rate => chargeback_rate, :object => ems }])
+        ChargebackRate.set_assignments(:compute, [{:cb_rate => chargeback_rate, :object => ems}])
         rpt = report.generate_table(:userid => "admin")
         row = rpt[project_name][:row]
         expect(row[label_report_column]).to eq(label_value)
@@ -1189,7 +1189,7 @@ RSpec.describe MiqReport do
             :headers     => ["Vm Name", "Date Range", nil],
             :sortby      => ["vm_name", "start_date"],
             :db_options  => {:rpt_type => "ChargebackVm",
-                             :options  => { :interval            => "daily",
+                             :options  => {:interval            => "daily",
                                             :interval_size       => 28,
                                             :end_interval_offset => 1,
                                             :provider_id         => "all",
@@ -1258,7 +1258,7 @@ RSpec.describe MiqReport do
       let(:time_str_hst) { "02/07/19 08:55:03 HST" }
       let(:miq_task) { FactoryBot.create(:miq_task) }
       let(:user) { FactoryBot.create(:user, :settings => {:display => {}}) }
-      let(:report) { FactoryBot.create(:miq_report, :db => "Vm", :cols => %w(last_sync_on)) }
+      let(:report) { FactoryBot.create(:miq_report, :db => "Vm", :cols => %w[last_sync_on]) }
 
       before do
         EvmSpecHelper.local_miq_server

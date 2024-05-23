@@ -2,7 +2,7 @@ RSpec.describe OrchestrationStackRetireTask do
   let(:user) { FactoryBot.create(:user_with_group) }
   let(:orchestration_stack) { FactoryBot.create(:orchestration_stack) }
   let(:miq_request) { FactoryBot.create(:orchestration_stack_retire_request, :requester => user, :source => orchestration_stack) }
-  let(:orchestration_stack_retire_task) { FactoryBot.create(:orchestration_stack_retire_task, :source => orchestration_stack, :miq_request => miq_request, :options => {:src_ids => [orchestration_stack.id] }) }
+  let(:orchestration_stack_retire_task) { FactoryBot.create(:orchestration_stack_retire_task, :source => orchestration_stack, :miq_request => miq_request, :options => {:src_ids => [orchestration_stack.id]}) }
   let(:approver) { FactoryBot.create(:user_miq_request_approver) }
 
   it "should initialize properly" do

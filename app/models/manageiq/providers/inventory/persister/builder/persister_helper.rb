@@ -130,7 +130,7 @@ module ManageIQ::Providers::Inventory::Persister::Builder::PersisterHelper
   private
 
   def add_collection_for_manager(manager_type, collection_name, extra_properties = {}, settings = {}, &block)
-    settings[:parent] ||= send("#{manager_type}_manager")
+    settings[:parent] ||= send(:"#{manager_type}_manager")
 
     builder_class = send(manager_type)
     add_collection(builder_class, collection_name, extra_properties, settings, &block)

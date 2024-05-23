@@ -23,6 +23,7 @@ module Metric::CiMixin
 
   def has_perf_data?
     return @has_perf_data unless @has_perf_data.nil?
+
     @has_perf_data = associated_metrics('hourly').exists?
   end
 
@@ -58,6 +59,7 @@ module Metric::CiMixin
   def performances_maintains_value_for_duration?(options)
     _log.info("options: #{options.inspect}")
     raise _("Argument must be an options hash") unless options.kind_of?(Hash)
+
     column = options[:column]
     value = options[:value].to_f
     duration = options[:duration]
@@ -122,8 +124,8 @@ module Metric::CiMixin
     # Find the record at or near the starting_on timestamp to determine if we need to handle overlap
     rec_at_start_on = total_records.reverse.detect { |r| r.timestamp >= starting_on }
     return false if rec_at_start_on.nil?
+
     start_on_idx = total_records.index { |r| r.timestamp == rec_at_start_on.timestamp }
-    #
     colvalue = rec_at_start_on.send(column)
     if colvalue && colvalue.send(operator, value)
       # If there is a match at the start_on timestamp then we need to check the records going backwards to find the first one that doesnt match.
@@ -211,6 +213,7 @@ module Metric::CiMixin
 
   def get_daily_time_profile_in_my_region_from_tz(tz)
     return if tz.nil?
+
     TimeProfile.in_region(region_id).rollup_daily_metrics.find_all_with_entire_tz.detect { |p| p.tz_or_default == tz }
   end
 

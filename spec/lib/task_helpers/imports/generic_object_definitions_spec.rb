@@ -1,7 +1,7 @@
 RSpec.describe TaskHelpers::Imports::GenericObjectDefinitions do
   describe "#import" do
     let(:data_dir) { File.join(File.expand_path(__dir__), 'data', 'generic_object_definitions') }
-    let(:options) { { :source => source, :overwrite => overwrite } }
+    let(:options) { {:source => source, :overwrite => overwrite} }
     let(:god_name1) { "Apep" }
     let(:god_name2) { "Apophis" }
     let(:god_file1) { "apep.yaml" }
@@ -18,7 +18,7 @@ RSpec.describe TaskHelpers::Imports::GenericObjectDefinitions do
           'created'    => :datetime,
           'retirement' => :datetime
         },
-        :associations => { 'cloud_tenant' => 'CloudTenant' },
+        :associations => {'cloud_tenant' => 'CloudTenant'},
         :methods      => ['kick', 'laugh_at', 'punch', 'parseltongue']
       }
     end

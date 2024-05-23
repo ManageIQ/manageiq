@@ -50,7 +50,7 @@ RSpec.describe DialogFieldRadioButton do
     end
 
     context "when the checked value is in the list of refreshed values" do
-      let(:refreshed_values_from_automate) { [%w(123 123), %w(456 456)] }
+      let(:refreshed_values_from_automate) { [%w[123 123], %w[456 456]] }
 
       it "returns the list of refreshed values and checked value as a hash" do
         expect(dialog_field_radio_button.refresh_json_value("123")).to eq(
@@ -63,7 +63,7 @@ RSpec.describe DialogFieldRadioButton do
     end
 
     context "when the checked value is not in the list of refreshed values" do
-      let(:refreshed_values_from_automate) { [%w(123 123)] }
+      let(:refreshed_values_from_automate) { [%w[123 123]] }
 
       it "returns the list of refreshed values and no checked (default) value as a hash" do
         expect(dialog_field_radio_button.refresh_json_value("321")).to eq(

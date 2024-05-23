@@ -5,12 +5,12 @@ module ActiveRecord
 
     def encode_with(coder)
       super
-      Array(self.class.attrs_that_yaml).each { |attr| coder[attr.to_s] = instance_variable_get("@#{attr}") }
+      Array(self.class.attrs_that_yaml).each { |attr| coder[attr.to_s] = instance_variable_get(:"@#{attr}") }
     end
 
     def init_with(coder)
       super
-      Array(self.class.attrs_that_yaml).each { |attr| instance_variable_set("@#{attr}", coder[attr.to_s]) }
+      Array(self.class.attrs_that_yaml).each { |attr| instance_variable_set(:"@#{attr}", coder[attr.to_s]) }
       self
     end
 
@@ -20,17 +20,17 @@ module ActiveRecord
 
     module ClassMethods
       def attr_accessor_that_yamls(*args)
-        module_eval { attr_accessor *args }
+        module_eval { attr_accessor(*args) }
         append_to_attrs_that_yaml(*args)
       end
 
       def attr_reader_that_yamls(*args)
-        module_eval { attr_reader *args }
+        module_eval { attr_reader(*args) }
         append_to_attrs_that_yaml(*args)
       end
 
       def attr_writer_that_yamls(*args)
-        module_eval { attr_writer *args }
+        module_eval { attr_writer(*args) }
         append_to_attrs_that_yaml(*args)
       end
 

@@ -303,6 +303,7 @@ class Tenant < ApplicationRecord
     data_tenant = []
     all_subtenants.each do |subtenant|
       next unless subtenant.parent_name == name
+
       data_tenant.push(:name => subtenant.name, :id => subtenant.id, :parent => id)
       if subtenant.all_subtenants.count > 0
         data_tenant.concat(subtenant.build_tenant_tree)

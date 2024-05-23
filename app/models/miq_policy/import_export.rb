@@ -1,11 +1,12 @@
 module MiqPolicy::ImportExport
   extend ActiveSupport::Concern
 
-  IMPORT_CLASS_NAMES = %w(MiqPolicy MiqPolicySet MiqAlert).freeze
+  IMPORT_CLASS_NAMES = %w[MiqPolicy MiqPolicySet MiqAlert].freeze
 
   module ClassMethods
     def import_from_hash(policy, options = {})
       raise _("No Policy to Import") if policy.nil?
+
       pe = policy.delete("MiqPolicyContent") { |_k| raise "No contents for Policy == #{policy.inspect}" }
       pc = policy.delete("Condition") || []
 

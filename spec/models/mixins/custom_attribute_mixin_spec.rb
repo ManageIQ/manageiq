@@ -102,7 +102,7 @@ RSpec.describe CustomAttributeMixin do
 
     it "key with a letter followed by a number" do
       test_class.add_custom_attribute("fun4all")
-      expect(test_class.new).to respond_to(:"fun4all")
+      expect(test_class.new).to respond_to(:fun4all)
       expect(test_class.new).to respond_to(:"fun4all=")
     end
 

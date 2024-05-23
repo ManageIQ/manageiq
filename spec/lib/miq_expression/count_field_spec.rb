@@ -34,7 +34,7 @@ RSpec.describe MiqExpression::CountField do
     end
 
     it "can handle multiple associations" do
-      count_field = described_class.new(Vm, %w(hardware disks))
+      count_field = described_class.new(Vm, %w[hardware disks])
       expect(count_field.to_s).to eq("Vm.hardware.disks")
     end
   end

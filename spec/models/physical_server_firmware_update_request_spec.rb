@@ -46,7 +46,7 @@ RSpec.describe PhysicalServerFirmwareUpdateRequest do
   end
 
   describe '.affected_physical_servers' do
-    let(:attrs)   { { 'options' => {:src_ids => src_ids} } }
+    let(:attrs)   { {'options' => {:src_ids => src_ids}} }
     let(:server1) { FactoryBot.create(:physical_server, :ems_id => 1) }
     let(:server2) { FactoryBot.create(:physical_server, :ems_id => 2) }
     let(:server3) { FactoryBot.create(:physical_server, :ems_id => 2) }

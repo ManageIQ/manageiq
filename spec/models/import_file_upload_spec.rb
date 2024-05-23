@@ -61,13 +61,13 @@ RSpec.describe ImportFileUpload do
   describe "#widget_list" do
     before do
       import_file_upload.create_binary_blob(
-        :binary => <<-BINARY
----
-- MiqWidget:
-    title: Widget1
-- MiqWidget:
-    title: widget
-    not_name: test
+        :binary => <<~BINARY
+          ---
+          - MiqWidget:
+              title: Widget1
+          - MiqWidget:
+              title: widget
+              not_name: test
         BINARY
       )
       allow(MiqWidget).to receive(:exists?).with(:title => "widget").and_return(exists?)

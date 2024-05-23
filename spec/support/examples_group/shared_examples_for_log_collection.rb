@@ -1,5 +1,5 @@
 shared_examples_for "Log Collection #synchronize_logs" do |type|
-  let(:instance) { instance_variable_get("@#{type}") }
+  let(:instance) { instance_variable_get(:"@#{type}") }
 
   it "#{type.camelize} no args" do
     expect(LogFile).to receive(:logs_from_server).with(MiqServer.my_server, hash_excluding(:only_current))
@@ -36,11 +36,11 @@ end
 
 shared_examples_for "Log Collection should create 0 tasks and 0 queue items" do
   it "should create 0 unfinished tasks" do
-    expect(MiqTask.where("state != ?", "Finished").count).to eq(0)
+    expect(MiqTask.where.not(state: "Finished").count).to eq(0)
   end
 
   it "should create 0 queue messages" do
-    expect(MiqQueue.where("state not in (?)", %w(ok ready error)).count).to eq(0)
+    expect(MiqQueue.where.not(state: %w[ok ready error]).count).to eq(0)
   end
 end
 

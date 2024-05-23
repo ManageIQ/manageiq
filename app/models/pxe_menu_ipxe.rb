@@ -34,6 +34,7 @@ class PxeMenuIpxe < PxeMenu
       case key
       when :label
         next unless labels.include?(value)
+
         current_item = {:label => value}
       when :kernel
         current_item[:kernel], current_item[:kernel_options] = parse_kernel(value)

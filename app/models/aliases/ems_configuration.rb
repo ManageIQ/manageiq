@@ -1,1 +1,1 @@
-::EmsConfiguration = ::ManageIQ::Providers::ConfigurationManager
+EmsConfiguration = ManageIQ::Providers::ConfigurationManager

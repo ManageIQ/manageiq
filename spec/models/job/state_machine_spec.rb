@@ -2,7 +2,7 @@ RSpec.describe Job, "::StateMachine" do
   subject(:job) do
     # Job is expected to be subclassed by something
     # that implements load_transitions
-    Class.new(described_class) {
+    Class.new(described_class) do
       def load_transitions
         self.state ||= 'initialize'
         {
@@ -14,7 +14,7 @@ RSpec.describe Job, "::StateMachine" do
           :error        => {'*'          => '*'}
         }
       end
-    }.new
+    end.new
   end
 
   it "should transition from one state to another by a signal" do

@@ -19,7 +19,7 @@ RSpec.describe ChargeableField, :type => :model do
     end
 
     it 'returns list of columns for main chargeback metric rollup query' do
-      expected_columns = %w(
+      expected_columns = %w[
         id
         tag_names
         resource_id
@@ -32,7 +32,7 @@ RSpec.describe ChargeableField, :type => :model do
         derived_vm_used_disk_storage
         disk_usage_rate_average
         net_usage_rate_average
-      )
+      ]
 
       expect(described_class.cols_on_metric_rollup).to eq(expected_columns)
     end

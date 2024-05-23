@@ -4,6 +4,7 @@ class VmdbDatabaseLock < ApplicationRecord
 
   def blocking_lock
     return unless granted == false
+
     blocking_lock_relation.where(:granted => true)
       .find_by(['pid != ?', pid])
   end

@@ -14,7 +14,7 @@ RSpec.describe HttpdDBusApi do
     }
   end
 
-  let(:jdoe_user_groups) { %w(evmgroup-super_administrator evmgroup-user) }
+  let(:jdoe_user_groups) { %w[evmgroup-super_administrator evmgroup-user] }
 
   let(:jim_userid)       { "jim" }
   let(:jim_attrs_error)  { "Unable to get attributes for user #{jim_userid} - No such user" }
@@ -25,19 +25,19 @@ RSpec.describe HttpdDBusApi do
     ENV["HTTPD_DBUS_API_SERVICE_PORT"] = "3400"
 
     stub_request(:get, "http://1.2.3.4:3400/api/user_attrs/#{jdoe_userid}")
-      .to_return(:status => 200, :body => { "result" => jdoe_user_attrs }.to_json)
+      .to_return(:status => 200, :body => {"result" => jdoe_user_attrs}.to_json)
 
     stub_request(:get, "http://1.2.3.4:3400/api/user_attrs/#{jdoe_userid}?attributes=givenname,sn")
-      .to_return(:status => 200, :body => { "result" => jdoe_user_attrs.slice("givenname", "sn") }.to_json)
+      .to_return(:status => 200, :body => {"result" => jdoe_user_attrs.slice("givenname", "sn")}.to_json)
 
     stub_request(:get, "http://1.2.3.4:3400/api/user_attrs/#{jim_userid}")
-      .to_return(:status => 400, :body => { "error" => jim_attrs_error }.to_json)
+      .to_return(:status => 400, :body => {"error" => jim_attrs_error}.to_json)
 
     stub_request(:get, "http://1.2.3.4:3400/api/user_groups/#{jdoe_userid}")
-      .to_return(:status => 200, :body => { "result" => jdoe_user_groups }.to_json)
+      .to_return(:status => 200, :body => {"result" => jdoe_user_groups}.to_json)
 
     stub_request(:get, "http://1.2.3.4:3400/api/user_groups/#{jim_userid}")
-      .to_return(:status => 400, :body => { "error" => jim_groups_error }.to_json)
+      .to_return(:status => 400, :body => {"error" => jim_groups_error}.to_json)
   end
 
   context "user_attrs" do
@@ -46,7 +46,7 @@ RSpec.describe HttpdDBusApi do
     end
 
     it "converts attribute list to comma separated attributes parameter" do
-      expect(described_class.new.user_attrs(jdoe_userid, %w(givenname sn)))
+      expect(described_class.new.user_attrs(jdoe_userid, %w[givenname sn]))
         .to match(jdoe_user_attrs.slice("givenname", "sn"))
     end
 

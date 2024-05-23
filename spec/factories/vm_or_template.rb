@@ -53,7 +53,6 @@ FactoryBot.define do
   factory(:template_redhat, :class => "ManageIQ::Providers::Redhat::InfraManager::Template", :parent => :template_infra) { vendor { "redhat" } }
   factory(:template_ovirt, :class => "ManageIQ::Providers::Ovirt::InfraManager::Template", :parent => :template_infra) { vendor { "ovirt" } }
 
-
   factory :template_vmware, :class => "ManageIQ::Providers::Vmware::InfraManager::Template", :parent => "template_infra" do
     location { |x| "[storage] #{x.name}/#{x.name}.vmtx" }
     vendor   { "vmware" }

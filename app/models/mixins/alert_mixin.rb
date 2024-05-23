@@ -6,7 +6,7 @@ module AlertMixin
     raise _("option :message_filter_type is required") unless options[:message_filter_type]
     raise _("option :message_filter_value is required") unless options[:message_filter_value]
 
-    allowed_types = %w(STARTS\ WITH ENDS\ WITH INCLUDES REGULAR\ EXPRESSION)
+    allowed_types = %w[STARTS\ WITH ENDS\ WITH INCLUDES REGULAR\ EXPRESSION]
     unless allowed_types.include?(options[:message_filter_type])
       raise _("option :message_filter_type: %{options}, invalid, expected one of %{type}") %
               {:options => options[:message_filter_type], :type => allowed_types}

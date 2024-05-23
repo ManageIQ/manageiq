@@ -31,7 +31,7 @@ plugins:
   rubocop:
     enabled: true
     config: ".rubocop_cc.yml"
-    channel: rubocop-0-82
+    channel: rubocop-1-56-3
 exclude_patterns:
 - lib/generators/**/templates/
 - node_modules/

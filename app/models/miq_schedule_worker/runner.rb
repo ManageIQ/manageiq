@@ -24,6 +24,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
   def check_dst
     return if @dst == dst?
+
     run_callbacks(:dst_change) do
       reset_dst
     end
@@ -59,7 +60,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
   def scheduler_for(role)
     @schedules[role] ||= []
-    ::MiqScheduleWorker::Scheduler.new(self._log, @schedules[role], @system_scheduler)
+    ::MiqScheduleWorker::Scheduler.new(_log, @schedules[role], @system_scheduler)
   end
 
   def schedules_for_all_roles
@@ -119,6 +120,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
   def schedules_for_scheduler_role
     # These schedules need to run only once in a region per interval, so let the single scheduler role handle them
     return unless schedule_enabled?(:scheduler)
+
     scheduler = scheduler_for(:scheduler)
 
     # Schedule - Check for timed out jobs
@@ -325,7 +327,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     scheduler.schedule_every(
       :check_for_timed_out_active_tasks,
       every,
-      :first_at => Time.current + 1.minute
+      :first_at => 1.minute.from_now
     ) do
       enqueue(:check_for_timed_out_active_tasks)
     end
@@ -336,26 +338,27 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     every = worker_settings[:chargeback_generation_interval]
     at = worker_settings[:chargeback_generation_time_utc]
     time_at = Time.current.strftime("%Y-%m-%d #{at}").to_time(:utc)
-    time_at += 1.day if time_at < Time.current + 1.hour
+    time_at += 1.day if time_at < 1.hour.from_now
     scheduler = scheduler_for(:scheduler)
     scheduler.schedule_every(
       :generate_chargeback_for_service,
       every,
       :first_at => time_at
     ) do
-      enqueue([:generate_chargeback_for_service, :report_source => "Daily scheduler"])
+      enqueue([:generate_chargeback_for_service, {:report_source => "Daily scheduler"}])
     end
   end
 
   def schedules_for_database_operations_role
     return unless schedule_enabled?(:database_operations)
+
     scheduler = scheduler_for(:database_operations)
 
     # Schedule - Database reindexing
     scheduler.schedule_cron(
       :database_maintenance_reindex_timer,
       ::Settings.database.maintenance.reindex_schedule,
-      :tags => %i(database_operations database_maintenance_reindex_schedule),
+      :tags => %i[database_operations database_maintenance_reindex_schedule]
     ) do
       enqueue(:database_maintenance_reindex_timer)
     end
@@ -364,7 +367,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     scheduler.schedule_cron(
       :database_maintenance_vacuum_timer,
       ::Settings.database.maintenance.vacuum_schedule,
-      :tags => %i(database_operations database_maintenance_vacuum_schedule),
+      :tags => %i[database_operations database_maintenance_vacuum_schedule]
     ) do
       enqueue(:database_maintenance_vacuum_timer)
     end
@@ -394,6 +397,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
   def schedules_for_ems_metrics_coordinator_role
     return unless schedule_enabled?("ems_metrics_coordinator")
+
     scheduler = scheduler_for(:ems_metrics_coordinator)
 
     # Schedule - Performance Collection
@@ -412,6 +416,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
   def schedules_for_event_role
     # These schedules need to run by the servers with the event role
     return unless schedule_enabled?(:event)
+
     scheduler = scheduler_for(:event)
 
     # Schedule - Purging of event streams
@@ -549,7 +554,8 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       begin
         added.each do |r|
           m = "schedules_for_#{r}_role"
-          next unless self.respond_to?(m)
+          next unless respond_to?(m)
+
           _log.info("Adding Schedules for Role=[#{r}]")
           send(m)
         end
@@ -559,6 +565,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
         removed.each do |r|
           rs = r.to_sym
           next unless @schedules.key?(rs)
+
           _log.info("Removing Schedules for Role=[#{r}]")
           @schedules[rs].each do |j|
             # In Rufus::Scheduler Version 1, schedule returns a JobID

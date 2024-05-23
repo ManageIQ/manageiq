@@ -40,6 +40,7 @@ class GenericObject < ApplicationRecord
 
   def property_attributes=(options)
     raise "generic_object_definition is nil" unless generic_object_definition
+
     options.keys.each do |k|
       unless property_attribute_defined?(k)
         raise ActiveModel::UnknownAttributeError.new(self, k)
@@ -115,7 +116,7 @@ class GenericObject < ApplicationRecord
     attributes_as_string += ["associations: #{generic_object_definition.property_associations.keys}"]
     attributes_as_string += ["methods: #{property_methods}"]
 
-    prefix = Kernel.instance_method(:inspect).bind(self).call.split(' ', 2).first
+    prefix = Kernel.instance_method(:inspect).bind_call(self).split(' ', 2).first
     "#{prefix} #{attributes_as_string.join(", ")}>"
   end
 
@@ -154,6 +155,7 @@ class GenericObject < ApplicationRecord
 
   def respond_to_missing?(method_name, _include_private = false)
     return true if property_defined?(method_name.to_s.chomp('='))
+
     super
   end
 
@@ -185,7 +187,7 @@ class GenericObject < ApplicationRecord
     @tenant ||= User.current_user.current_tenant
     raise "A user is required to send [#{method_name}] to automate." unless @user
 
-    attrs = { :method_name => method_name }
+    attrs = {:method_name => method_name}
     args.each_with_index do |item, idx|
       attrs["param_#{idx + 1}".to_sym] = item
       attrs["param_#{idx + 1}_type".to_sym] = item.class.name

@@ -132,7 +132,7 @@ RSpec.describe AutomationRequest do
         "request_state"  => "pending",
         "status"         => "Ok",
         "approval_state" => "approved",
-        "userid"         => admin.userid.to_s,
+        "userid"         => admin.userid.to_s
       )
       expect(ar.options).to include(
         :namespace  => "SYSTEM",

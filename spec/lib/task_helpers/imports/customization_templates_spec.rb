@@ -7,7 +7,7 @@ RSpec.describe TaskHelpers::Imports::CustomizationTemplates do
     let(:existing_pit_name) { "RHEL-6" }
     let(:new_pit_name) { "RHEL-7" }
     let(:new_pit_pt) { "vm" }
-    let(:options) { { :source => source } }
+    let(:options) { {:source => source} }
 
     describe "when the source is a directory" do
       let(:source) { data_dir }

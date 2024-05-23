@@ -153,8 +153,8 @@ RSpec.describe MiqAeMethod do
     end
 
     it "produces the expected xml" do
-      expected_xml = <<-XML
-<MiqAeMethod name="" language="" scope="" location=""><![CDATA[the data]]><inputs/></MiqAeMethod>
+      expected_xml = <<~XML
+        <MiqAeMethod name="" language="" scope="" location=""><![CDATA[the data]]><inputs/></MiqAeMethod>
       XML
 
       expect(miq_ae_method.to_export_xml).to eq(expected_xml.chomp)

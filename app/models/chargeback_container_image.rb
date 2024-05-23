@@ -19,7 +19,7 @@ class ChargebackContainerImage < Chargeback
     :memory_allocated_metric    => :float,
     :net_io_used_cost           => :float,
     :net_io_used_metric         => :float,
-    :total_cost                 => :float,
+    :total_cost                 => :float
   )
 
   def self.build_results_for_report_ChargebackContainerImage(options)
@@ -61,7 +61,7 @@ class ChargebackContainerImage < Chargeback
   end
 
   def self.load_custom_attribute_groupby(groupby_label)
-    report_cb_model(self.name).safe_constantize.add_custom_attribute(groupby_label_method(groupby_label))
+    report_cb_model(name).safe_constantize.add_custom_attribute(groupby_label_method(groupby_label))
   end
 
   def self.groupby_label_method(groupby_label)
@@ -92,7 +92,7 @@ class ChargebackContainerImage < Chargeback
   end
 
   def self.report_static_cols
-    %w(project_name image_name)
+    %w[project_name image_name]
   end
 
   def self.report_col_options

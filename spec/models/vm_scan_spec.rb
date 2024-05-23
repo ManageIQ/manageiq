@@ -108,11 +108,11 @@ RSpec.describe VmScan do
       # local zone
       @server1 = EvmSpecHelper.local_miq_server(:has_vix_disk_lib => true)
       @user      = FactoryBot.create(:user_with_group, :userid => "tester")
-      @ems       = FactoryBot.create(:ems_vmware_with_authentication, :name   => "Test EMS", :zone => @server1.zone,
-                                      :tenant                                  => FactoryBot.create(:tenant))
+      @ems       = FactoryBot.create(:ems_vmware_with_authentication, :name => "Test EMS", :zone => @server1.zone,
+                                      :tenant => FactoryBot.create(:tenant))
       @storage   = FactoryBot.create(:storage, :name => "test_storage", :store_type => "VMFS")
       @host      = FactoryBot.create(:host, :name => "test_host", :hostname => "test_host",
-                                      :state       => 'on', :ext_management_system => @ems)
+                                      :state => 'on', :ext_management_system => @ems)
       @vm        = FactoryBot.create(:vm_vmware, :name => "test_vm", :location => "abc/abc.vmx",
                                       :raw_power_state       => 'poweredOn',
                                       :host                  => @host,
@@ -126,7 +126,7 @@ RSpec.describe VmScan do
       @user2     = FactoryBot.create(:user_with_group, :userid => "tester2")
       @storage2  = FactoryBot.create(:storage, :name => "test_storage2", :store_type => "VMFS")
       @host2     = FactoryBot.create(:host, :name => "test_host2", :hostname => "test_host2",
-                                      :state       => 'on', :ext_management_system => @ems)
+                                      :state => 'on', :ext_management_system => @ems)
       @vm2       = FactoryBot.create(:vm_vmware, :name => "test_vm2", :location => "abc2/abc2.vmx",
                                       :raw_power_state       => 'poweredOn',
                                       :host                  => @host2,

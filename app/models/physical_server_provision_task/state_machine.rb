@@ -1,6 +1,7 @@
 module PhysicalServerProvisionTask::StateMachine
   def run_provision
     raise MiqException::MiqProvisionError, "Unable to find #{model_class} with id #{source_id.inspect}" if source.blank?
+
     dump_obj(options, "MIQ(#{self.class.name}##{__method__}) options: ", $log, :info)
     signal :start_provisioning
   end

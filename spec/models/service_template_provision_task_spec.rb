@@ -16,13 +16,13 @@ RSpec.describe ServiceTemplateProvisionTask do
 
       @request.miq_request_tasks = [@task_0, @task_1, @task_1_1, @task_1_2, @task_2, @task_2_1, @task_3]
       @task_0.miq_request_tasks  = [@task_1, @task_2, @task_3]
-      @task_1.miq_request_task   =  @task_0
+      @task_1.miq_request_task = @task_0
       @task_1.miq_request_tasks  = [@task_1_1, @task_1_2]
       @task_1_1.miq_request_task =  @task_1
       @task_1_2.miq_request_task =  @task_1
       @task_2.miq_request_task   =  @task_0
       @task_2.miq_request_tasks  = [@task_2_1]
-      @task_3.miq_request_task   =  @task_0
+      @task_3.miq_request_task = @task_0
     end
 
     let(:tracking_label) { "r#{@request.id}_service_template_provision_task_#{@task_0.id}" }
@@ -121,7 +121,7 @@ RSpec.describe ServiceTemplateProvisionTask do
             zone               = FactoryBot.create(:zone, :name => "special")
             automation_manager = FactoryBot.create(:ems_workflows_automation, :zone => zone)
             payload            = FactoryBot.create(:embedded_workflow, :manager => automation_manager)
-            @task_0.source     = FactoryBot.create(
+            @task_1.source     = FactoryBot.create(
               :service_template_generic,
               :name             => "Provision",
               :resource_actions => [
@@ -129,11 +129,17 @@ RSpec.describe ServiceTemplateProvisionTask do
               ]
             )
 
-            @task_0.deliver_queue
+            @task_1_1.update(
+              :options => {
+                :configuration_script_payload_id => payload.id,
+                :parent_task_id                  => @task_1.id
+              }
+            )
+            @task_1_1.deliver_queue
 
-            expect(@task_0.reload.options.keys).to include(:miq_task_id, :configuration_script_id, :configuration_script_payload_id)
+            expect(@task_1_1.reload.options.keys).to include(:miq_task_id, :configuration_script_id, :configuration_script_payload_id)
 
-            configuration_script = ConfigurationScript.find(@task_0.options[:configuration_script_id])
+            configuration_script = ConfigurationScript.find(@task_1_1.options[:configuration_script_id])
 
             expect(configuration_script).to have_attributes(:manager => automation_manager, :run_by_userid => @admin.userid, :status => "pending")
             expect(MiqQueue.first).to       have_attributes(
@@ -142,7 +148,7 @@ RSpec.describe ServiceTemplateProvisionTask do
               :method_name => "run",
               :queue_name  => "automate",
               :role        => "automate",
-              :args        => [hash_including(:object_type => "ServiceTemplateProvisionTask", :object_id => @task_0.id)]
+              :args        => [hash_including(:object_type => "ServiceTemplateProvisionTask", :object_id => @task_1_1.id)]
             )
           end
         end

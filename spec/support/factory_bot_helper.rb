@@ -41,7 +41,7 @@ FactoryBot.define do
       end
 
       unless evaluator.other_region
-        raise "You need to pass specific region  with :other_region: \n"\
+        raise "You need to pass specific region  with :other_region: \n" \
               "FactoryBot.create(:#{instance.class.to_s.tableize.singularize.to_sym}, :in_other_region, :other_region => <region>) "
       end
 
@@ -52,4 +52,3 @@ FactoryBot.define do
     end
   end
 end
-

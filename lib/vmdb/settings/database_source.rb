@@ -24,6 +24,7 @@ module Vmdb
 
       def self.sources_for(resource)
         return [] if resource.nil?
+
         resource_class = resource == :my_server ? "MiqServer" : resource.class.name
         hierarchy_index = SETTINGS_HIERARCHY.index(resource_class)
         SETTINGS_HIERARCHY[0..hierarchy_index].collect do |class_name|
@@ -37,6 +38,7 @@ module Vmdb
 
       def resource
         return my_server if @resource_instance == :my_server
+
         @resource_instance.reload if @resource_instance.persisted?
         @resource_instance
       end
@@ -55,12 +57,13 @@ module Vmdb
 
       private
 
-      SETTINGS_HIERARCHY = %w(MiqRegion Zone MiqServer).freeze
+      SETTINGS_HIERARCHY = %w[MiqRegion Zone MiqServer].freeze
 
       def settings_holder
         resource = self.resource
         return nil if resource.nil?
         return resource if resource.class.name == settings_holder_class_name
+
         resource.public_send(settings_holder_class_name.underscore)
       end
 

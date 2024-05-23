@@ -13,9 +13,9 @@ namespace :evm do
       when "human"
         details.each_value do |detail|
           puts "#{detail[:name]}:"
-          puts detail
+          puts(detail
             .except(:name)
-            .map { |k, v| "  #{k}: #{v}" }
+            .map { |k, v| "  #{k}: #{v}" })
         end
       else
         raise "Invalid format #{format.inspect}"

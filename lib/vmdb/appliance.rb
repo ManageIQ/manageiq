@@ -3,7 +3,7 @@ require 'linux_admin'
 module Vmdb
   module Appliance
     def self.VERSION
-      @EVM_VERSION ||= File.read(File.join(File.expand_path(Rails.root), "VERSION")).strip
+      @EVM_VERSION ||= File.read(Rails.root.join("VERSION").to_s).strip
     end
 
     def self.BUILD
@@ -15,7 +15,7 @@ module Vmdb
     end
 
     def self.RELEASE
-      release_file = File.join(File.expand_path(Rails.root), "RELEASE")
+      release_file = Rails.root.join("RELEASE").to_s
       File.exist?(release_file) ? File.read(release_file).strip : self.CODENAME
     end
 
@@ -83,11 +83,12 @@ module Vmdb
 
     def self.log_server_identity
       return unless MiqEnvironment::Command.is_appliance?
+
       # this is the request to overwrite a small file in the vmdb/log directory for each time the evm server is restarted.
       # the file must not be named ".log" or it will be removed by logrotate, and it must contain the Server GUID (by which the appliance is known in the vmdb,
       # the build identifier of the appliance as it is being started,  the appliance hostname and the name of the appliance as configured from our configuration screen.
 
-      last_startup_file = Rails.root.join("log", "last_startup.txt")
+      last_startup_file = Rails.root.join("log/last_startup.txt")
       last_startup_file.delete if last_startup_file.exist?
 
       begin
@@ -105,7 +106,7 @@ module Vmdb
         s.assigned_server_roles.includes(:server_role).each { |r| startup.info("Role: #{r.server_role.name}, Priority: #{r.priority}") }
 
         issue = `cat /etc/issue 2> /dev/null` rescue nil
-        startup.info("OS: #{issue.chomp}") unless issue.blank?
+        startup.info("OS: #{issue.chomp}") if issue.present?
 
         network = get_network
         unless network.empty?
@@ -113,13 +114,13 @@ module Vmdb
           network.each { |k, v| startup.info("#{k}: #{v}") }
         end
         mem = `cat /proc/meminfo 2> /dev/null` rescue nil
-        startup.info("System Memory Information:\n#{mem}") unless mem.blank?
+        startup.info("System Memory Information:\n#{mem}") if mem.present?
 
         cpu = `cat /proc/cpuinfo 2> /dev/null` rescue nil
-        startup.info("CPU Information:\n#{cpu}") unless cpu.blank?
+        startup.info("CPU Information:\n#{cpu}") if cpu.present?
 
         fstab = `cat /etc/fstab 2> /dev/null` rescue nil
-        startup.info("fstab information:\n#{fstab}") unless fstab.blank?
+        startup.info("fstab information:\n#{fstab}") if fstab.present?
       ensure
         startup.close rescue nil
       end
@@ -140,12 +141,12 @@ module Vmdb
           $log.warn("Diagnostics: [#{diag[:msg]}] command [#{diag[:cmd]}] failed with error [#{e}]")
           next  # go to next diagnostic command if this one blew up
         end
-        $log.info("Diagnostics: [#{diag[:msg]}]\n#{res}") unless res.blank?
+        $log.info("Diagnostics: [#{diag[:msg]}]\n#{res}") if res.present?
       end
     end
 
     def self.get_build
-      build_file = File.join(File.expand_path(Rails.root), "BUILD")
+      build_file = Rails.root.join("BUILD").to_s
 
       if File.exist?(build_file)
         build = File.read(build_file).strip.split("-").last
@@ -207,8 +208,8 @@ module Vmdb
         {:cmd => "netstat",  :params => [:statistics],                                :msg => "Network statistics"},
         {:cmd => -> { File.read('/etc/hosts') if File.exist?('/etc/hosts') },         :msg => "Hosts file contents"},
         {:cmd => -> { File.read('/etc/fstab') if File.exist?('/etc/fstab') },         :msg => "FStab file contents"},
-        {:cmd => -> { installed_gems },                                               :msg => "Installed Ruby Gems" },
-        {:cmd => -> { installed_rpms },                                               :msg => "Installed RPMs" },
+        {:cmd => -> { installed_gems },                                               :msg => "Installed Ruby Gems"},
+        {:cmd => -> { installed_rpms },                                               :msg => "Installed RPMs"},
       ]
     end
     private_class_method :init_diagnostics

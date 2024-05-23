@@ -44,7 +44,6 @@ RSpec.describe DialogFieldTextBox do
       context "when show_refresh_button is false" do
         let(:show_refresh_button) { false }
 
-
         context "when load_values_on_init is true" do
           let(:load_values_on_init) { true }
 
@@ -109,7 +108,7 @@ RSpec.describe DialogFieldTextBox do
   end
 
   context "dialog field text box with protected field" do
-    let(:df) { FactoryBot.build(:dialog_field_text_box, :label   => 'test field', :name    => 'test field', :options => {:protected => true}) }
+    let(:df) { FactoryBot.build(:dialog_field_text_box, :label => 'test field', :name => 'test field', :options => {:protected => true}) }
 
     it "#protected?" do
       expect(df).to be_protected

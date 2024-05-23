@@ -5,9 +5,9 @@ FactoryBot.define do
     trait :with_methods_attributes_associations do
       properties do
         {
-          :methods      => %w(add_vms remove_vms),
-          :attributes   => { 'powered_on' => 'boolean', 'widget' => 'string' },
-          :associations => { 'vms' => 'Vm', 'services' => 'Service' }
+          :methods      => %w[add_vms remove_vms],
+          :attributes   => {'powered_on' => 'boolean', 'widget' => 'string'},
+          :associations => {'vms' => 'Vm', 'services' => 'Service'}
         }
       end
     end

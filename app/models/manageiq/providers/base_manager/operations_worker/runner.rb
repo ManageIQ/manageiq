@@ -1,4 +1,4 @@
-class ManageIQ::Providers::BaseManager::OperationsWorker::Runner < ::MiqQueueWorkerBase::Runner
+class ManageIQ::Providers::BaseManager::OperationsWorker::Runner < MiqQueueWorkerBase::Runner
   include ProviderWorkerRunnerMixin
 
   def worker_roles

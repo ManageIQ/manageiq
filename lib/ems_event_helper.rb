@@ -3,6 +3,7 @@ class EmsEventHelper
 
   def initialize(event)
     raise ArgumentError, "event must be an EmsEvent" unless event.kind_of?(EmsEvent)
+
     @event = event
   end
 

@@ -46,7 +46,7 @@ module EmsRefresh
       queue_merge(ts, ems, opts[:create_task])
     end
 
-    return task_ids if opts[:create_task]
+    task_ids if opts[:create_task]
   end
 
   def self.refresh(target, id = nil)
@@ -131,7 +131,7 @@ module EmsRefresh
 
     # Items will be naturally serialized since there is a dedicated worker.
     MiqQueue.put_or_update(queue_options) do |msg, item|
-      targets = msg.nil? ? targets : msg.data.concat(targets)
+      targets = msg.data.concat(targets) unless msg.nil?
       targets = uniq_targets(targets)
       obj = targets.select { |t| t.kind_of?(ApplicationRecord) }
       if obj.present?
@@ -167,7 +167,7 @@ module EmsRefresh
     task_id
   end
 
-  def self.create_refresh_task(ems, targets)
+  def self.create_refresh_task(ems, _targets)
     task_options = {
       :action => "EmsRefresh(#{ems.name}) Refreshing relationships and power states",
       :userid => "system"
@@ -220,8 +220,10 @@ module EmsRefresh
 
       [:name, :product_name, :device_name].each do |k|
         next unless d.respond_to?(k)
+
         v = d.send(k)
         next if v.nil?
+
         s << " #{k}: [#{v}]"
         break
       end

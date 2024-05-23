@@ -20,7 +20,7 @@ ems = if opts[:ems_id].present?
       end
 
 if ems.nil?
-  print "Failed to find EMS [#{opts.key?(:ems_id) ? opts[:ems_id] : opts[:ems_name]}]"
+  print "Failed to find EMS [#{opts.fetch(:ems_id) { opts[:ems_name] }}]"
   exit
 end
 
@@ -59,7 +59,7 @@ guest_devices_to_delete.each_slice(opts[:page_size]).with_index do |slice, index
     foreign_key = assoc.join_primary_key
 
     if %i[delete destroy].include?(delete_meth)
-      assoc.klass.where(foreign_key => slice).send("#{delete_meth}_all")
+      assoc.klass.where(foreign_key => slice).send(:"#{delete_meth}_all")
     elsif delete_meth == :nullify
       assoc.klass.where(foreign_key => slice).update_all(foreign_key => nil)
     else

@@ -1,1 +1,1 @@
-::MiqProvisionCloudWorkflow = ::ManageIQ::Providers::CloudManager::ProvisionWorkflow
+MiqProvisionCloudWorkflow = ManageIQ::Providers::CloudManager::ProvisionWorkflow

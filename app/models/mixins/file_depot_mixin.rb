@@ -22,6 +22,7 @@ module FileDepotMixin
       settings["password"] ||= find(settings["id"]).authentication_password if settings["id"]
       res = mnt_instance(settings).verify
       raise _("Connection Settings validation failed with error: %{error}") % {:error => res.last} unless res.first
+
       res
     end
 
@@ -72,7 +73,7 @@ module FileDepotMixin
 
   def validate_depot_credentials
     # This only checks that credentials are present
-    errors.add(:file_depot, "is missing credentials") if self.requires_credentials? && self.missing_credentials?
+    errors.add(:file_depot, "is missing credentials") if requires_credentials? && missing_credentials?
   end
 
   def verify_depot_credentials(_auth_type = nil)
@@ -81,6 +82,7 @@ module FileDepotMixin
 
   def depot_settings(reload = false)
     return @depot_settings if !reload && @depot_settings
+
     @depot_settings = {
       :uri        => uri,
       :uri_prefix => uri_prefix,
@@ -93,6 +95,7 @@ module FileDepotMixin
     raise _("No credentials defined") if requires_credentials? && missing_credentials?
 
     return @mnt if @mnt
+
     @mnt = self.class.mnt_instance(depot_settings)
   end
 
@@ -109,6 +112,7 @@ module FileDepotMixin
   def disconnect_depot
     @connected ||= 0
     return if @connected == 0
+
     mnt.disconnect if @connected == 1
     @connected -= 1
   end

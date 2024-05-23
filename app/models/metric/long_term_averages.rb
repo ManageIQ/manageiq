@@ -54,7 +54,7 @@ module Metric::LongTermAverages
         results[:avg][c] ||= 0
         counts[c] ||= 0
 
-        val =  p.send(c) || 0
+        val = p.send(c) || 0
         vals[c] << val
         val *= 1.0 unless val.nil?
         Metric::Aggregation::Aggregate.average(c, self, results[:avg], counts, val)

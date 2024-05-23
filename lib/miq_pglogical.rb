@@ -6,7 +6,7 @@ class MiqPglogical
   include ConnectionHandling
 
   PUBLICATION_NAME = 'miq'.freeze
-  ALWAYS_EXCLUDED_TABLES = %w(ar_internal_metadata schema_migrations repl_events repl_monitor repl_nodes).freeze
+  ALWAYS_EXCLUDED_TABLES = %w[ar_internal_metadata schema_migrations repl_events repl_monitor repl_nodes].freeze
 
   # :nodoc:
   #
@@ -33,11 +33,13 @@ class MiqPglogical
 
   def configure_provider
     return if provider?
+
     create_replication_set
   end
 
   def destroy_provider
     return unless provider?
+
     self.class.with_connection_error_handling { pglogical.drop_publication(PUBLICATION_NAME) }
   end
 
@@ -95,7 +97,7 @@ class MiqPglogical
   end
 
   def self.excludes
-    YAML.load_file(Rails.root.join("config", "replication_exclude_tables.yml"))[:exclude_tables] | ALWAYS_EXCLUDED_TABLES
+    YAML.load_file(Rails.root.join("config/replication_exclude_tables.yml"))[:exclude_tables] | ALWAYS_EXCLUDED_TABLES
   end
 
   def self.save_global_region(subscriptions_to_save, subscriptions_to_remove)

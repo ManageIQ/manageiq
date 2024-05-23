@@ -7,7 +7,7 @@ class MiqAction < ApplicationRecord
   before_save       :round_if_memory_reconfigured
 
   silence_warnings do
-    const_set("TYPES",
+    const_set(:TYPES,
               "create_snapshot"         => N_("Create a Snapshot"),
               "email"                   => N_("Send an E-mail"),
               "snmp_trap"               => N_("Send an SNMP Trap"),
@@ -27,7 +27,7 @@ class MiqAction < ApplicationRecord
 
   validates :action_type,        :presence => true
   validates :name, :description, :presence => true, :uniqueness_when_changed => true
-  validates_format_of       :name, :with => /\A[a-z0-9_\-]+\z/i,
+  validates_format_of       :name, :with => /\A[a-z0-9_-]+\z/i,
     :allow_nil => true, :message => "must only contain alpha-numeric, underscore and hyphen chatacters without spaces"
 
   acts_as_miq_taggable
@@ -53,7 +53,7 @@ class MiqAction < ApplicationRecord
   }
 
   SH_PREAMBLE = begin
-    preamble = "\#!/bin/sh\n"
+    preamble = "#!/bin/sh\n"
     RC_HASH.each { |k, v| preamble += "#{v}=#{k}\n" }
     preamble
   end
@@ -82,7 +82,8 @@ class MiqAction < ApplicationRecord
       [:from, :to].each do |k|
         if self.options && self.options[k]
           next if k == :from && self.options[k].blank? # allow blank from addres, we use the default.
-          match = self.options[k] =~ /^\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z$/i
+
+          match = self.options[k] =~ /^\A([\w.\-+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z$/i
           errors.add(k, "must be a valid email address") unless match
         end
       end
@@ -129,6 +130,7 @@ class MiqAction < ApplicationRecord
 
       failed.each do |p|
         next unless p.kind_of?(MiqPolicy) # built-in policies are OpenStructs whose actions will be invoked only on success
+
         actions = p.actions_for_event(inputs[:event], :failure).uniq
 
         actions.each do |a|
@@ -169,7 +171,7 @@ class MiqAction < ApplicationRecord
     atype = action_type
     atype = name if atype.nil? || atype == "default"
     method = "action_" + atype
-    unless self.respond_to?(method)
+    unless respond_to?(method)
       MiqPolicy.logger.info("MIQ(action-invoke) '#{name}', not supported")
       return
     end
@@ -187,7 +189,7 @@ class MiqAction < ApplicationRecord
     atype = action_type
     atype ||= name
     method = "action_" + atype
-    unless self.respond_to?(method)
+    unless respond_to?(method)
       MiqPolicy.logger.info("MIQ(action-invoke) '#{name}', not supported")
       return
     end
@@ -219,10 +221,10 @@ class MiqAction < ApplicationRecord
 
   def action_run_ansible_playbook(action, rec, inputs)
     service_template = ServiceTemplate.find(action.options[:service_template_id])
-    dialog_options = { :hosts => target_hosts(action, rec) }
-    request_options = { :manageiq_extra_vars => { 'event_target' => rec.href_slug,
-                                                  'event_name'   => inputs[:event].try(:name) },
-                        :initiator           => 'control' }
+    dialog_options = {:hosts => target_hosts(action, rec)}
+    request_options = {:manageiq_extra_vars => {'event_target' => rec.href_slug,
+                                                  'event_name'   => inputs[:event].try(:name)},
+                        :initiator           => 'control'}
     service_template.provision_request(target_user(rec), dialog_options, request_options)
   end
 
@@ -237,7 +239,7 @@ class MiqAction < ApplicationRecord
     snmp_inputs = {}
     snmp_inputs[:host] = action.options[:host]
     trap_id_key = (snmp_version == 1) ? :specific_trap : :trap_oid
-    snmp_inputs[trap_id_key]  = action.options[:trap_id]
+    snmp_inputs[trap_id_key] = action.options[:trap_id]
 
     vars = []
     action.options[:variables].each do |h|
@@ -439,6 +441,7 @@ class MiqAction < ApplicationRecord
   def self.inheritable_cats
     Classification.in_my_region.categories.inject([]) do |arr, c|
       next(arr) if c.name.starts_with?("folder_path_") || c.entries.empty?
+
       arr << c
     end
   end
@@ -457,7 +460,7 @@ class MiqAction < ApplicationRecord
     Tempfile.open('miq_action', SCRIPT_DIR) do |fd|
       fd.puts ruby_file ? RB_PREAMBLE : SH_PREAMBLE
       fd.puts File.read(filename)
-      fd.chmod(0755)
+      fd.chmod(0o755)
 
       MiqPolicy.logger.info("MIQ(action_script): Executing: [#{filename}]")
 
@@ -594,7 +597,7 @@ class MiqAction < ApplicationRecord
     target = inputs[:synchronous] ? VmOrTemplate : rec.class
     invoke_or_queue(
       inputs[:synchronous], __method__, "ems_operations", rec.my_zone, target, 'retire',
-      [[rec], :date => Time.zone.now - 1.day],
+      [[rec], {:date => 1.day.ago}],
       "VM Retire for VM [#{rec.name}]")
   end
 
@@ -710,18 +713,18 @@ class MiqAction < ApplicationRecord
 
   def action_container_image_analyze(action, rec, inputs)
     unless rec.kind_of?(ContainerImage)
-      MiqPolicy.logger.error("MIQ(#{__method__}): Unable to perform action [#{action.description}],"\
+      MiqPolicy.logger.error("MIQ(#{__method__}): Unable to perform action [#{action.description}]," \
                              " object [#{rec.inspect}] is not a Container Image")
       return
     end
 
     if inputs[:event].name == "request_containerimage_scan"
-      MiqPolicy.logger.warn("MIQ(#{__method__}): Invoking action [#{action.description}] for event"\
+      MiqPolicy.logger.warn("MIQ(#{__method__}): Invoking action [#{action.description}] for event" \
                             " [#{inputs[:event].description}] would cause infinite loop, skipping")
       return
     end
 
-    MiqPolicy.logger.info("MIQ(#{__method__}): Now executing [#{action.description}] of Container Image "\
+    MiqPolicy.logger.info("MIQ(#{__method__}): Now executing [#{action.description}] of Container Image " \
                             "[#{rec.name}]")
     rec.scan
   end
@@ -740,11 +743,11 @@ class MiqAction < ApplicationRecord
     end
 
     if inputs[:synchronous]
-      MiqPolicy.logger.info("MIQ(#{__method__}): Now executing  [#{action.description}] for event "\
+      MiqPolicy.logger.info("MIQ(#{__method__}): Now executing  [#{action.description}] for event " \
                             "[#{inputs[:event].description}]")
       rec.annotate_scan_policy_results(inputs[:policy].name, inputs[:result])
     else
-      MiqPolicy.logger.info("MIQ(#{__method__}): Queueing [#{action.description}] for event "\
+      MiqPolicy.logger.info("MIQ(#{__method__}): Queueing [#{action.description}] for event " \
                             "[#{inputs[:event].description}]")
       MiqQueue.submit_job(
         :service     => "ems_operations",
@@ -753,7 +756,7 @@ class MiqAction < ApplicationRecord
         :method_name => :annotate_scan_policy_results,
         :args        => [inputs[:policy].name, inputs[:result]],
         :instance_id => rec.id,
-        :priority    => MiqQueue::HIGH_PRIORITY,
+        :priority    => MiqQueue::HIGH_PRIORITY
       )
     end
   end
@@ -781,7 +784,7 @@ class MiqAction < ApplicationRecord
         :class_name  => "Host",
         :method_name => "scan_from_queue",
         :instance_id => rec.id,
-        :priority    => MiqQueue::HIGH_PRIORITY,
+        :priority    => MiqQueue::HIGH_PRIORITY
       )
     end
   end
@@ -873,10 +876,10 @@ class MiqAction < ApplicationRecord
     profile = ScanItemSet.find_by(:name => action.options[:scan_item_set_name])
     if profile
       MiqPolicy.logger.info("MIQ(action_assign_scan_profile): Action [#{action.description}], using analysis profile: [#{profile.description}]")
-      return ScanItem.get_profile(profile.name)
+      ScanItem.get_profile(profile.name)
     else
       MiqPolicy.logger.warn("MIQ(action_assign_scan_profile): Unable to perform action [#{action.description}], unable to find analysis profile: [#{action.options[:scan_item_set_name]}]")
-      return
+      nil
     end
   end
 

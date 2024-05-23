@@ -77,6 +77,7 @@ module ArPglogicalMigrationHelper
 
     def wait_for_migration?
       return false unless schema_migrations_ran_class
+
       # We need to unscope here since in_region doesn't override the default scope of in_my_region
       # see https://github.com/ManageIQ/activerecord-id_regions/issues/11
       !schema_migrations_ran_class.unscoped.in_region(region_number).where(:version => version).exists?

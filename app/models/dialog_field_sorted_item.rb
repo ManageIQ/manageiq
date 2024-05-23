@@ -1,5 +1,5 @@
 class DialogFieldSortedItem < DialogField
-  AUTOMATE_VALUE_FIELDS = %w(sort_by sort_order data_type default_value required read_only visible description).freeze
+  AUTOMATE_VALUE_FIELDS = %w[sort_by sort_order data_type default_value required read_only visible description].freeze
 
   def initialize_value_context
     if load_values_on_init
@@ -22,6 +22,7 @@ class DialogFieldSortedItem < DialogField
     unless [:value, :description, :none].include?(value.to_sym)
       raise _("Invalid sort_by type <%{value}> specified.") % {:value => value}
     end
+
     options[:sort_by] = value.to_sym
   end
 
@@ -33,6 +34,7 @@ class DialogFieldSortedItem < DialogField
     unless [:ascending, :descending].include?(value.to_sym)
       raise _("Invalid sort_order type <%{value}> specified.") % {:value => value}
     end
+
     options[:sort_order] = value.to_sym
   end
 
@@ -55,11 +57,11 @@ class DialogFieldSortedItem < DialogField
 
   def normalize_automate_values(automate_hash)
     AUTOMATE_VALUE_FIELDS.each do |key|
-      send("#{key}=", automate_hash[key]) if automate_hash.key?(key)
+      send(:"#{key}=", automate_hash[key]) if automate_hash.key?(key)
     end
 
     result = automate_hash["values"].to_a
-    result.blank? ? initial_values : result
+    (result.presence || initial_values)
   end
 
   def trigger_automate_value_updates
@@ -105,6 +107,7 @@ class DialogFieldSortedItem < DialogField
 
     data_to_sort = data_to_sort.sort_by { |d| d.send(value_position).send(value_modifier) }
     return data_to_sort.reverse! if sort_order == :descending
+
     data_to_sort
   end
 

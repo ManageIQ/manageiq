@@ -95,7 +95,7 @@ RSpec.describe ContainerOrchestrator do
     it "sets database environment variables" do
       stub_const("ENV", ENV.to_h.merge(
         "DATABASE_NAME"     => "vmdb_production",
-        "DATABASE_SSL_MODE" => "verify-full",
+        "DATABASE_SSL_MODE" => "verify-full"
       ))
 
       expect(subject.send(:default_environment)).to include({:name => "DATABASE_SSL_MODE", :value => "verify-full"})
@@ -120,7 +120,7 @@ RSpec.describe ContainerOrchestrator do
       it "sets the messaging env vars" do
         expect(subject.send(:default_environment)).to include(
           {:name => "MEMCACHED_ENABLE_SSL", :value => "true"},
-          {:name => "MEMCACHED_SSL_CA",     :value => "/etc/pki/ca-trust/source/anchors/root.crt"},
+          {:name => "MEMCACHED_SSL_CA",     :value => "/etc/pki/ca-trust/source/anchors/root.crt"}
         )
       end
     end

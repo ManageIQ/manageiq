@@ -9,7 +9,7 @@ class GitRepository < ApplicationRecord
 
   attr_reader :git_lock
 
-  validates :url, :format => Regexp.union(URI.regexp(%w[http https file ssh]), /\A[-\w:.]+@.*:/), :allow_nil => false
+  validates :url, :format => Regexp.union(URI::DEFAULT_PARSER.make_regexp(%w[http https file ssh]), /\A[-\w:.]+@.*:/), :allow_nil => false
 
   default_value_for :verify_ssl, OpenSSL::SSL::VERIFY_PEER
   validates :verify_ssl, :inclusion => {:in => [OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER]}
@@ -18,7 +18,7 @@ class GitRepository < ApplicationRecord
   has_many :git_tags, :dependent => :destroy
   after_destroy :broadcast_repo_dir_delete
 
-  INFO_KEYS = %w(commit_sha commit_message commit_time name).freeze
+  INFO_KEYS = %w[commit_sha commit_message commit_time name].freeze
 
   def self.delete_repo_dir(id, directory_name)
     _log.info("Deleting GitRepository[#{id}] in #{directory_name} for MiqServer[#{MiqServer.my_server.id}]...")
@@ -62,6 +62,7 @@ class GitRepository < ApplicationRecord
     ensure_refreshed
     branch = git_branches.detect { |item| item.name == name }
     raise "Branch #{name} not found" unless branch
+
     branch.attributes.slice(*INFO_KEYS)
   end
 
@@ -69,6 +70,7 @@ class GitRepository < ApplicationRecord
     ensure_refreshed
     tag = git_tags.detect { |item| item.name == name }
     raise "Tag #{name} not found" unless tag
+
     tag.attributes.slice(*INFO_KEYS)
   end
 
@@ -112,7 +114,11 @@ class GitRepository < ApplicationRecord
     with_worktree do |worktree|
       message = "Updating #{url} in #{directory_name}..."
       _log.info(message)
-      worktree.send(:pull)
+      # If the remote url has changed set it to the new url
+      git_transaction { worktree.url = url } if worktree.url != url
+
+      # Fetch and rebase the git worktree
+      worktree.pull
       _log.info("#{message}...Complete")
     end
     @updated_repo = true

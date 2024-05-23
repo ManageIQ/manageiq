@@ -6,7 +6,7 @@ module CustomAttributeMixin
   DEFAULT_SECTION_NAME     = 'Custom Attribute'.freeze
 
   CUSTOM_ATTRIBUTE_INVALID_NAME_WARNING = "A custom attribute name must begin with a letter (a-z, but also letters with diacritical marks and non-Latin letters) or an underscore (_). Subsequent characters can be letters, underscores, digits (0-9), or dollar signs ($)".freeze
-  CUSTOM_ATTRIBUTE_VALID_NAME_REGEXP    = /\A[\p{Alpha}_][\p{Alpha}_\d\$]*\z/
+  CUSTOM_ATTRIBUTE_VALID_NAME_REGEXP    = /\A[\p{Alpha}_][\p{Alpha}_\d$]*\z/
 
   included do
     has_many   :custom_attributes,     :as => :resource, :dependent => :destroy
@@ -50,7 +50,8 @@ module CustomAttributeMixin
 
     def self.add_custom_attribute(custom_attribute)
       return if respond_to?(custom_attribute)
-      ActiveSupport::Deprecation.warn(invalid_custom_attribute_message(custom_attribute)) unless custom_attribute.to_s =~ CUSTOM_ATTRIBUTE_VALID_NAME_REGEXP
+
+      ActiveSupport::Deprecation.warn(invalid_custom_attribute_message(custom_attribute)) unless CUSTOM_ATTRIBUTE_VALID_NAME_REGEXP.match?(custom_attribute.to_s)
 
       ca_sym                 = custom_attribute.to_sym
       without_prefix         = custom_attribute.sub(CUSTOM_ATTRIBUTES_PREFIX, "")
@@ -90,11 +91,12 @@ module CustomAttributeMixin
 
   def self.to_human(column)
     col_name, section = column.gsub(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX, '').split(SECTION_SEPARATOR)
-    _("%{section}: %{custom_key}") % { :custom_key => col_name, :section => section.try(:titleize) || DEFAULT_SECTION_NAME}
+    _("%{section}: %{custom_key}") % {:custom_key => col_name, :section => section.try(:titleize) || DEFAULT_SECTION_NAME}
   end
 
   def self.column_name(custom_key)
     return if custom_key.nil?
+
     CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX + custom_key
   end
 
@@ -112,7 +114,8 @@ module CustomAttributeMixin
 
   def miq_custom_set(key, value)
     return miq_custom_delete(key) if value.blank?
-    ActiveSupport::Deprecation.warn(self.class.invalid_custom_attribute_message(key)) unless key.to_s =~ self.class::CUSTOM_ATTRIBUTE_VALID_NAME_REGEXP
+
+    ActiveSupport::Deprecation.warn(self.class.invalid_custom_attribute_message(key)) unless self.class::CUSTOM_ATTRIBUTE_VALID_NAME_REGEXP.match?(key.to_s)
 
     record = miq_custom_attributes.find_by(:name => key.to_s)
     if record.nil?

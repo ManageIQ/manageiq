@@ -1,1 +1,1 @@
-::MiqEmsOperationsWorker = ManageIQ::Providers::BaseManager::OperationsWorker
+MiqEmsOperationsWorker = ManageIQ::Providers::BaseManager::OperationsWorker

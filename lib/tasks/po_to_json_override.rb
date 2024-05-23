@@ -22,6 +22,7 @@ class PoToJson
 
     values[""][0].split("\n").each do |line|
       next if line.empty?
+
       build_header_for(line)
     end
 

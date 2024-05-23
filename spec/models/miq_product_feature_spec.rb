@@ -24,7 +24,7 @@ RSpec.describe MiqProductFeature do
   #     - widget_refresh (H)
   let(:hierarchical_features) do
     EvmSpecHelper.seed_specific_product_features(
-      %w(miq_report_widget_editor miq_report_widget_admin widget_refresh widget_edit widget_copy container_dashboard)
+      %w[miq_report_widget_editor miq_report_widget_admin widget_refresh widget_edit widget_copy container_dashboard]
     )
   end
 
@@ -33,6 +33,7 @@ RSpec.describe MiqProductFeature do
     expect(pf.keys - described_class::ALLOWED_ATTRIBUTES).to be_empty
     pf.each do |k, v|
       next if k == :hidden
+
       expect(v).not_to be_blank, "Identifier: '#{pf[:identifier]}'  Key: '#{k}' is blank"
     end
   end
@@ -140,7 +141,7 @@ RSpec.describe MiqProductFeature do
       it "creates/updates/deletes records" do
         MiqProductFeature.seed_features
 
-        expect(MiqProductFeature.pluck(:identifier)).to match_array %w(everything dialog_new_editor dialog_edit_editor policy_edit_editor)
+        expect(MiqProductFeature.pluck(:identifier)).to match_array %w[everything dialog_new_editor dialog_edit_editor policy_edit_editor]
       end
     end
 
@@ -181,7 +182,7 @@ RSpec.describe MiqProductFeature do
 
         it "creates tenant features" do
           features = miq_product_feature_class.tenant_features_in_hash
-          expect(features).to match_array([{ "name" => "Edit (#{root_tenant.name})", "description" => "XXX for tenant #{root_tenant.name}",
+          expect(features).to match_array([{"name" => "Edit (#{root_tenant.name})", "description" => "XXX for tenant #{root_tenant.name}",
                                                "identifier" => "dialog_copy_editor_tenant_#{root_tenant.id}", "tenant_id" => root_tenant.id},
                                            {"name" => "Edit (#{tenant.name})", "description" => "XXX for tenant #{tenant.name}",
                                             "identifier" => "dialog_copy_editor_tenant_#{tenant.id}", "tenant_id" => tenant.id}])
@@ -242,7 +243,7 @@ RSpec.describe MiqProductFeature do
 
           it "add new tenant feature" do
             features = miq_product_feature_class.tenant_features_in_hash
-            expect(features).to match_array([{ "name" => "Edit (#{root_tenant.name})", "description" => "XXX for tenant #{root_tenant.name}",
+            expect(features).to match_array([{"name" => "Edit (#{root_tenant.name})", "description" => "XXX for tenant #{root_tenant.name}",
                                                "identifier" => "dialog_copy_editor_tenant_#{root_tenant.id}", "tenant_id" => root_tenant.id},
                                              {"name" => "Edit (#{tenant.name})", "description" => "XXX for tenant #{tenant.name}",
                                               "identifier" => "dialog_copy_editor_tenant_#{tenant.id}", "tenant_id" => tenant.id},
@@ -280,7 +281,7 @@ RSpec.describe MiqProductFeature do
             it "removes tenant features" do
               features = miq_product_feature_class.tenant_features_in_hash
 
-              expect(features).to match_array([{ "name" => "Edit (#{root_tenant.name})", "description" => "XXX for tenant #{root_tenant.name}",
+              expect(features).to match_array([{"name" => "Edit (#{root_tenant.name})", "description" => "XXX for tenant #{root_tenant.name}",
                                                  "identifier" => "dialog_copy_editor_tenant_#{root_tenant.id}", "tenant_id" => root_tenant.id},
                                                {"name" => "Edit (#{tenant.name})", "description" => "XXX for tenant #{tenant.name}",
                                                 "identifier" => "dialog_copy_editor_tenant_#{tenant.id}", "tenant_id" => tenant.id}])
@@ -297,18 +298,18 @@ RSpec.describe MiqProductFeature do
     it "returns only visible features" do
       hierarchical_features
       expect(MiqProductFeature).not_to receive(:sort_children)
-      expect(MiqProductFeature.feature_children("miq_report_widget_admin", false)).to match_array(%w(widget_copy widget_edit))
+      expect(MiqProductFeature.feature_children("miq_report_widget_admin", false)).to match_array(%w[widget_copy widget_edit])
     end
 
     it "returns direct children only" do
       hierarchical_features
-      expect(MiqProductFeature.feature_children("miq_report_widget_editor")).to match_array(%w(miq_report_widget_admin))
+      expect(MiqProductFeature.feature_children("miq_report_widget_editor")).to match_array(%w[miq_report_widget_admin])
     end
 
     it "sorts features" do
       hierarchical_features
       expect(MiqProductFeature).to receive(:sort_children).and_call_original
-      expect(MiqProductFeature.feature_children("miq_report_widget_admin")).to match_array(%w(widget_copy widget_edit))
+      expect(MiqProductFeature.feature_children("miq_report_widget_admin")).to match_array(%w[widget_copy widget_edit])
     end
   end
 
@@ -317,14 +318,14 @@ RSpec.describe MiqProductFeature do
       hierarchical_features
       expect(MiqProductFeature).not_to receive(:sort_children)
       expect(MiqProductFeature.feature_all_children("miq_report_widget_editor", false)).to match_array(
-        %w(widget_copy widget_edit miq_report_widget_admin))
+        %w[widget_copy widget_edit miq_report_widget_admin])
     end
 
     it "returns all visible children sorted" do
       hierarchical_features
       expect(MiqProductFeature).to receive(:sort_children).and_call_original
       expect(MiqProductFeature.feature_all_children("miq_report_widget_editor")).to eq(
-        %w(widget_copy widget_edit miq_report_widget_admin))
+        %w[widget_copy widget_edit miq_report_widget_admin])
     end
   end
 
@@ -372,9 +373,9 @@ RSpec.describe MiqProductFeature do
       expect { MiqProductFeature.features }.to_not make_database_queries
 
       expect(MiqProductFeature.feature_root).to eq("f1")
-      expect(MiqProductFeature.feature_children("f1")).to match_array(%w(f2 f3))
+      expect(MiqProductFeature.feature_children("f1")).to match_array(%w[f2 f3])
       expect(MiqProductFeature.feature_children("f2")).to match_array([])
-      expect(MiqProductFeature.feature_children("f3")).to match_array(%w(f4 f5))
+      expect(MiqProductFeature.feature_children("f3")).to match_array(%w[f4 f5])
 
       expect(MiqProductFeature.feature_parent("f1")).to be_nil
       expect(MiqProductFeature.feature_parent("f2")).to eq("f1")

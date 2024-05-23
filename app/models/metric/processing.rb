@@ -57,6 +57,7 @@ module Metric::Processing
     DERIVED_COLS.each do |col|
       _dummy, group, typ, mode = col.to_s.split("_")
       next if group == "vm" && obj.kind_of?(Service) && typ != "count"
+
       case typ
       when "available"
         # Do not derive "available" values if there haven't been any usage
@@ -155,12 +156,14 @@ module Metric::Processing
     new_perf = klass.new(attrs)
     Metric::Rollup::ROLLUP_COLS.each do |c|
       next if new_perf.send(c).nil? || perf.send(c).nil?
+
       new_perf.send(c.to_s + "=", (new_perf.send(c) + perf.send(c)) / 2)
     end
 
     unless perf.assoc_ids.nil?
       Metric::Rollup::ASSOC_KEYS.each do |assoc|
         next if new_perf.assoc_ids.nil? || new_perf.assoc_ids[assoc].blank? || perf.assoc_ids[assoc].blank?
+
         new_perf.assoc_ids[assoc][:on] ||= []
         new_perf.assoc_ids[assoc][:off] ||= []
         new_perf.assoc_ids[assoc][:on]  = (new_perf.assoc_ids[assoc][:on] + perf.assoc_ids[assoc][:on]).uniq!

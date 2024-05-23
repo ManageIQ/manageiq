@@ -2,8 +2,9 @@ require_relative 'git_worktree_exception'
 
 class GitWorktree
   attr_accessor :name, :email, :base_name
+
   ENTRY_KEYS = [:path, :dev, :ino, :mode, :gid, :uid, :ctime, :mtime]
-  DEFAULT_FILE_MODE = 0100644
+  DEFAULT_FILE_MODE = 0o100644
   LOCK_REFERENCE = 'refs/locks'
 
   def self.checkout_at(url, directory, options = {})
@@ -53,9 +54,18 @@ class GitWorktree
 
   def delete_repo
     return false unless @repo
+
     @repo.close
     FileUtils.rm_rf(@path)
     true
+  end
+
+  def url
+    @repo.remotes[@remote_name]&.url
+  end
+
+  def url=(url)
+    lock { @repo.remotes.set_url(@remote_name, url) }
   end
 
   def branches(where = nil)
@@ -71,12 +81,14 @@ class GitWorktree
   def branch=(name)
     branch = find_branch(name)
     raise GitWorktreeException::BranchMissing, name unless branch
+
     @commit_sha = branch.target.oid
   end
 
   def branch_info(name)
     branch = find_branch(name)
     raise GitWorktreeException::BranchMissing, name unless branch
+
     ref = branch.resolve
     {:time => ref.target.time, :message => ref.target.message, :commit_sha => ref.target.oid}
   end
@@ -92,12 +104,14 @@ class GitWorktree
   def tag=(name)
     tag = find_tag(name)
     raise GitWorktreeException::TagMissing, name unless tag
+
     @commit_sha = tag.target.oid
   end
 
   def tag_info(name)
     tag = find_tag(name)
     raise GitWorktreeException::TagMissing, name unless tag
+
     {:time => tag.target.time, :message => tag.target.message, :commit_sha => tag.target.oid}
   end
 
@@ -123,7 +137,7 @@ class GitWorktree
     entry = {}
     entry[:path] = path
     ENTRY_KEYS.each { |key| entry[key] = default_entry_keys[key] if default_entry_keys.key?(key) }
-    entry[:oid]  = @repo.write(data, :blob)
+    entry[:oid] = @repo.write(data, :blob)
     entry[:mode] ||= DEFAULT_FILE_MODE
     entry[:mtime] ||= Time.now
     current_index.add(entry)
@@ -184,12 +198,14 @@ class GitWorktree
     walker.push(@repo.ref(local_ref).target.oid)
     commit = walker.find { |c| c.diff(:paths => [fname]).size > 0 }
     return {} unless commit
+
     {:updated_on => commit.time.gmtime, :updated_by => commit.author[:name]}
   end
 
   def file_list
     tree = lookup_commit_tree
     return [] unless tree
+
     tree.walk(:preorder).collect { |root, entry| "#{root}#{entry[:name]}" }
   end
 
@@ -215,6 +231,7 @@ class GitWorktree
   def mv_file(old_file, new_file)
     entry = current_index[old_file]
     return unless entry
+
     entry[:path] = new_file
     current_index.add(entry)
     remove(old_file)
@@ -222,6 +239,7 @@ class GitWorktree
 
   def mv_dir(old_dir, new_dir)
     raise GitWorktreeException::DirectoryAlreadyExists, new_dir if find_entry(new_dir)
+
     old_dir = fix_path_mv(old_dir)
     new_dir = fix_path_mv(new_dir)
     updates = current_index.entries.select { |entry| entry[:path].start_with?(old_dir) }
@@ -251,6 +269,10 @@ class GitWorktree
       module_path = File.expand_path(submodule.path, @path)
       GitWorktree.checkout_at(submodule.url, module_path, @options.merge(:commit_sha => submodule.head_oid))
     end
+  end
+
+  def pull
+    lock { fetch_and_merge }
   end
 
   def with_remote_options
@@ -318,10 +340,6 @@ class GitWorktree
     end
   end
 
-  def pull
-    lock { fetch_and_merge }
-  end
-
   def merge_and_push(commit)
     rebase = false
     push_lock do
@@ -346,7 +364,7 @@ class GitWorktree
   end
 
   def rebase(commit, merge_index, parent)
-    commit_obj = commit if commit.class == Rugged::Commit
+    commit_obj = commit if commit.instance_of?(Rugged::Commit)
     commit_obj ||= @repo.lookup(commit)
     Rugged::Commit.create(@repo, :author    => commit_obj.author,
                                  :committer => commit_obj.author,
@@ -363,7 +381,7 @@ class GitWorktree
 
   def process_repo(options)
     if options[:url]
-      clone(options[:url], options.key?(:bare) ? options[:bare] : true)
+      clone(options[:url], options.fetch(:bare, true))
     elsif options[:new]
       create_repo
     else
@@ -403,14 +421,17 @@ class GitWorktree
 
   def get_tree(path)
     return lookup_commit_tree if path.empty?
+
     entry = get_tree_entry(path)
     raise GitWorktreeException::GitEntryMissing, path unless entry
     raise GitWorktreeException::GitEntryNotADirectory, path  unless entry[:type] == :tree
+
     @repo.lookup(entry[:oid])
   end
 
   def lookup_commit_tree
     return nil if !@commit_sha && !@repo.branches['master']
+
     ct = @commit_sha ? @repo.lookup(@commit_sha) : @repo.branches['master'].target
     ct.tree if ct
   end
@@ -433,6 +454,7 @@ class GitWorktree
       unless @repo.empty?
         tree = lookup_commit_tree
         raise ArgumentError, "Cannot locate commit tree" unless tree
+
         @current_tree_oid = tree.oid
         index.read_tree(tree)
       end
@@ -481,6 +503,7 @@ class GitWorktree
       result = []
       delta.diff.each_line do |line|
         next unless line.addition? || line.deletion?
+
         result << "+ #{line.content.to_str}"  if line.addition?
         result << "- #{line.content.to_str}"  if line.deletion?
       end

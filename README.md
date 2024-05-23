@@ -11,7 +11,8 @@
 [![Open Source Helpers](https://www.codetriage.com/manageiq/manageiq/badges/users.svg)](https://www.codetriage.com/manageiq/manageiq)
 
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/4282/badge)](https://www.bestpractices.dev/projects/4282)
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/ManageIQ/manageiq/badge)](https://api.securityscorecards.dev/projects/github.com/ManageIQ/manageiq)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/ManageIQ/manageiq/badge)](https://securityscorecards.dev/viewer/?uri=github.com/ManageIQ/manageiq)
+[![CNCF Landscape](https://img.shields.io/badge/CNCF%20Landscape-5699C6?logo=cncf)](https://landscape.cncf.io/?item=provisioning--automation-configuration--manageiq)
 
 [![Build history for radjabov branch](https://buildstats.info/github/chart/ManageIQ/manageiq?branch=radjabov&buildCount=50&includeBuildsFromPullRequest=false&showstats=false)](https://github.com/ManageIQ/manageiq/actions?query=branch%3Amaster)
 

@@ -11,9 +11,9 @@ module TimezoneMixin
     end
   end
 
-  def with_current_user_timezone
+  def with_current_user_timezone(&block)
     timezone = User.current_user.try(:get_timezone) || self.class.server_timezone
-    with_a_timezone(timezone) { yield }
+    with_a_timezone(timezone, &block)
   end
 
   module ClassMethods

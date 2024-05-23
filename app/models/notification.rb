@@ -16,7 +16,7 @@ class Notification < ApplicationRecord
   before_save :backup_subject_name
 
   serialize :options, Hash
-  default_value_for(:options) { Hash.new }
+  default_value_for(:options) { {} }
 
   validate :complete_bindings
 
@@ -28,8 +28,10 @@ class Notification < ApplicationRecord
 
   def self.emit_for_event(event)
     return unless NotificationType.names.include?(event.event_type)
+
     type = NotificationType.find_by(:name => event.event_type)
     return unless type.enabled?
+
     Notification.create(:notification_type => type,
                         :options           => event.full_data,
                         :subject           => event.target)
@@ -50,6 +52,7 @@ class Notification < ApplicationRecord
 
   def self.notification_text(name, message_params)
     return unless message_params && NotificationType.names.include?(name)
+
     type = NotificationType.find_by(:name => name)
     type.message % message_params
   end
@@ -62,11 +65,12 @@ class Notification < ApplicationRecord
     # 1. Deprecate now
     # 2. Fail validation going forward via errors.add(error_args)
     error_args = [:options, "text bindings for notification_type: '#{notification_type.name}' failed with error: '#{e.message}' with options: '#{options.inspect}' and message #{notification_type.message.inspect}. Next release will not allow a notification without complete bindings."]
-    ActiveSupport::Deprecation.warn(error_args.join(' '), caller_locations[1..-1].reject {|location| location.label.include?("emit_for_event") })
+    ActiveSupport::Deprecation.warn(error_args.join(' '), caller_locations[1..-1].reject { |location| location.label.include?("emit_for_event") })
   end
 
   def emit_message
     return unless ::Settings.server.asynchronous_notifications
+
     notification_recipients.pluck(:id, :user_id).each do |id, user|
       ActionCable.server.broadcast("notifications_#{user}", to_h.merge(:id => id.to_s))
     end
@@ -79,16 +83,17 @@ class Notification < ApplicationRecord
         Rbac.filtered_object(subject, :user => User.find(subscriber_id)).blank?
       end
     end
-    self.notification_recipients_attributes = subscribers.collect { |id| {:user_id => id } }
+    self.notification_recipients_attributes = subscribers.collect { |id| {:user_id => id} }
   end
 
   def backup_subject_name
     return unless subject
+
     backup_name = (subject.try(:name) || subject.try(:description))
 
     # Note, options are read in text_bindings_dynamic and used in text_bindings
     # if the subject is no longer there such as when a vm is deleted.
-    self.options[:subject] = backup_name if backup_name
+    options[:subject] = backup_name if backup_name
   end
 
   def text_bindings

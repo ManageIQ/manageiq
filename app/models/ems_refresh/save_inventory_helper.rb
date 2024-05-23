@@ -2,6 +2,7 @@ module EmsRefresh::SaveInventoryHelper
   class TypedIndex
     attr_accessor :record_index, :key_attribute_types
     attr_accessor :find_key
+
     def initialize(records, find_key)
       # Save the columns associated with the find keys, so we can coerce the hash values during fetch
       if records.first
@@ -62,7 +63,7 @@ module EmsRefresh::SaveInventoryHelper
 
     # Delete the items no longer found
     deletes = deletes_index.values
-    unless deletes.blank?
+    if deletes.present?
       ActiveRecord::Base.transaction do
         type = association.proxy_association.reflection.name
         _log.info("[#{type}] Deleting #{log_format_deletes(deletes)}")
@@ -86,7 +87,7 @@ module EmsRefresh::SaveInventoryHelper
     if child
       update!(child, hash, [:type, *remove_keys])
     else
-      child = parent.send("create_#{type}!", hash.except(*remove_keys))
+      child = parent.send(:"create_#{type}!", hash.except(*remove_keys))
     end
     save_child_inventory(child, hash, child_keys)
   end
@@ -99,7 +100,7 @@ module EmsRefresh::SaveInventoryHelper
       new_records << found
     else
       update!(found, hash, [:id, :type])
-      deletes.delete(found) unless deletes.blank?
+      deletes.delete(found) if deletes.present?
     end
     found
   end
@@ -119,7 +120,7 @@ module EmsRefresh::SaveInventoryHelper
   end
 
   def save_child_inventory(obj, hashes, child_keys, *args)
-    child_keys.each { |k| send("save_#{k}_inventory", obj, hashes[k], *args) if hashes.key?(k) }
+    child_keys.each { |k| send(:"save_#{k}_inventory", obj, hashes[k], *args) if hashes.key?(k) }
   end
 
   def store_ids_for_new_records(records, hashes, keys)

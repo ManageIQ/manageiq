@@ -1,7 +1,7 @@
 class MiqExpression::CountField < MiqExpression::Target
   REGEX = /
 (?<model_name>([[:upper:]][[:alnum:]]*(::)?)+)
-\.(?<associations>[a-z_\.]+)
+\.(?<associations>[a-z_.]+)
 /x
 
   def self.parse(field)

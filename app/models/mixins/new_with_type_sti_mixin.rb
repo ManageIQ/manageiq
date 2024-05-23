@@ -10,6 +10,7 @@ module NewWithTypeStiMixin
         unless klass <= self
           raise _("%{class_name} is not a subclass of %{name}") % {:class_name => klass.name, :name => name}
         end
+
         args.unshift(args.shift.except(inheritance_column.to_sym, inheritance_column.to_s))
         klass.new(*args, &block)
       else
