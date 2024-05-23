@@ -142,7 +142,7 @@ class MiqRequestTask < ApplicationRecord
 
     workflow = ConfigurationScriptPayload.find(options[:configuration_script_payload_id]) if options[:configuration_script_payload_id]
     if workflow
-      miq_task_id = workflow.run(:inputs => dialog_values, :userid => get_user.userid, :zone => zone, :object => self)
+      miq_task_id = workflow.run(:inputs => workflow_inputs, :userid => get_user.userid, :zone => zone, :object => self)
 
       options[:miq_task_id]                     = miq_task_id
       options[:configuration_script_payload_id] = workflow.id
@@ -263,6 +263,10 @@ class MiqRequestTask < ApplicationRecord
 
   def valid_states
     %w[pending finished] + request_class::ACTIVE_STATES
+  end
+
+  def workflow_inputs
+    dialog_values
   end
 
   def dialog_values
