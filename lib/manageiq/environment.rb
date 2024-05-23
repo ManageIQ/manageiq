@@ -80,8 +80,9 @@ module ManageIQ
       return unless ENV["GITHUB_REPOSITORY_OWNER"] == "ManageIQ" &&
                     ENV["GITHUB_BASE_REF"] != "master" && # PR to non-master branch
                     ENV["GITHUB_REF_NAME"] != "master" && # A non-master branch
-                    !ENV["GITHUB_REF_NAME"].to_s.start_with?("dependabot/") && # Dependabot makes branches in the core repo
-                    !ENV["GITHUB_REF_NAME"].to_s.start_with?("renovate/")      # Renovate makes branches in the core repo
+                    !ENV["GITHUB_REF_NAME"].to_s.start_with?("revert-") &&     # GitHub's revert button makes branches in the primary repo
+                    !ENV["GITHUB_REF_NAME"].to_s.start_with?("dependabot/") && # Dependabot makes branches in the primary repo
+                    !ENV["GITHUB_REF_NAME"].to_s.start_with?("renovate/")      # Renovate makes branches in the primary repo
 
       raise "Missing Gemfile.lock.release" unless APP_ROOT.join("Gemfile.lock.release").file?
 
