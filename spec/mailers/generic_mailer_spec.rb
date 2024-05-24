@@ -23,14 +23,14 @@ describe GenericMailer do
         expect(BinaryBlob.count).to eq(0)
         GenericMailer.deliver_queue(:generic_notification, @args)
         expect(BinaryBlob.count).to eq(1)
-        expect(MiqQueue.exists?(:method_name => 'deliver',
+        expect(MiqQueue.exists?(:method_name => 'deliver!',
                                 :class_name  => described_class.name,
                                 :role        => 'notifier')).to be_truthy
       end
 
       it "with automation_notification" do
         GenericMailer.deliver_queue(:automation_notification, @args)
-        expect(MiqQueue.exists?(:method_name => 'deliver',
+        expect(MiqQueue.exists?(:method_name => 'deliver!',
                                 :class_name  => described_class.name,
                                 :role        => 'notifier')).to be_truthy
       end
@@ -48,7 +48,7 @@ describe GenericMailer do
           :message => "Queued the action: [generic_notification]"
         )
         expect(BinaryBlob.count).to eq(1)
-        expect(MiqQueue.exists?(:method_name => 'deliver',
+        expect(MiqQueue.exists?(:method_name => 'deliver!',
                                 :class_name  => described_class.name,
                                 :role        => 'notifier')).to be_truthy
       end
@@ -60,7 +60,7 @@ describe GenericMailer do
           :status  => MiqTask::STATUS_OK,
           :message => "Queued the action: [automation_notification]"
         )
-        expect(MiqQueue.exists?(:method_name => 'deliver',
+        expect(MiqQueue.exists?(:method_name => 'deliver!',
                                 :class_name  => described_class.name,
                                 :role        => 'notifier')).to be_truthy
       end
@@ -92,7 +92,7 @@ describe GenericMailer do
       # raises error when delivered
       msg = @args.merge(:to => 'me@bedrock.gov, you@bedrock.gov')
       notification = GenericMailer.generic_notification(msg)
-      allow(notification).to receive(:deliver_now).and_raise(Net::SMTPFatalError.new("fake_response"))
+      allow(notification).to receive(:deliver_now!).and_raise(Net::SMTPFatalError.new("fake_response"))
 
       # send error msg first...
       expect(GenericMailer)
@@ -106,7 +106,7 @@ describe GenericMailer do
         .and_call_original
 
       # send message
-      GenericMailer.deliver(:generic_notification)
+      GenericMailer.deliver(:generic_notification, msg)
 
       # ensure individual messages were sent
       expect(ActionMailer::Base.deliveries.size).to eq(2)

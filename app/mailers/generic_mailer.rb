@@ -2,19 +2,16 @@ require 'hamlit'
 class GenericMailer < ActionMailer::Base
   include Vmdb::Logging
 
-  def self.deliver(method, options = {})
+  def self.deliver!(method, options = {})
     _log.info("starting: method: #{method} options: #{options} ")
     options[:attachment] &&= blob_to_attachment(options[:attachment])
     options[:sent_on] = Time.now
 
     msg = send(method, options)
     begin
-      msg.deliver_now
-
-    # catch delivery errors if raised,
-    rescue Net::SMTPError => e
+      msg.deliver_now!
+    rescue Net::SMTPError => e # catch delivery errors if raised
       invalid = []
-
       # attempt to resend message to recipients individually
       rcpts = [msg.to].flatten
       rcpts.each do |rcpt|
@@ -22,28 +19,27 @@ class GenericMailer < ActionMailer::Base
           options[:to] = to
           individual = send(method, options)
           begin
-            individual.deliver_now
+            individual.deliver_now!
           rescue Net::SMTPError
             invalid << to
           end
         end
       end
-
       _log.error("method: #{method} options: #{options} delivery-error #{e} recipients #{invalid}")
-
-    # connection errors, and other if raised
-    rescue => e
+    rescue => e # connection errors, and other if raised
       _log.error("method: #{method} delivery-error: #{e} attempting to resend")
 
       # attempt to deliver one more time
-      begin
-        msg.deliver_now
-      rescue => e
-        _log.error("method: #{method} options: #{options} delivery-error #{e}")
-      end
+      msg.deliver_now!
     end
 
     msg
+  end
+
+  def self.deliver(method, options = {})
+    deliver!(method, options)
+  rescue => e # catch delivery errors if raised,
+    _log.error("method: #{method} options: #{options} delivery-error #{e}")
   end
 
   def self.deliver_queue(method, options = {}, queue_options = {})
@@ -56,7 +52,7 @@ class GenericMailer < ActionMailer::Base
       queue_options.reverse_merge(
         :service     => "notifier",
         :class_name  => name,
-        :method_name => 'deliver',
+        :method_name => 'deliver!',
         :args        => [method, options]
       )
     )
