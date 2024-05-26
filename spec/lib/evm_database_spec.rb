@@ -43,11 +43,9 @@ RSpec.describe EvmDatabase do
       expect { described_class.seed(["VmOrTemplate"]) }.to raise_error(ArgumentError, /do not respond to seed/)
     end
 
-    # this spec takes about 30 seconds but is the only check that db:seed won't fail
-    it "doesn't fail" do
-      expect do
-        described_class.seed
-      end.not_to raise_error
+    # this spec takes about 20 seconds but is the only check that db:seed won't fail
+    it "doesn't fail", :providers_common => true do
+      described_class.seed
     end
   end
 
