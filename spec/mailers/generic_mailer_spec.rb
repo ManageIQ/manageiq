@@ -17,28 +17,72 @@ describe GenericMailer do
       @miq_server.save!
     end
 
-    it "call deliver_queue for generic_notification" do
-      @args[:attachment] = [{:content_type => "text/plain", :filename => "generic_mailer_test.txt", :body => "generic_notification with text/plain attachment" * 10}]
-      expect(BinaryBlob.count).to eq(0)
-      GenericMailer.deliver_queue(:generic_notification, @args)
-      expect(BinaryBlob.count).to eq(1)
-      expect(MiqQueue.exists?(:method_name => 'deliver',
-                              :class_name  => described_class.name,
-                              :role        => 'notifier')).to be_truthy
+    describe ".deliver_queue" do
+      it "with generic_notification" do
+        @args[:attachment] = [{:content_type => "text/plain", :filename => "generic_mailer_test.txt", :body => "generic_notification with text/plain attachment" * 10}]
+        expect(BinaryBlob.count).to eq(0)
+        GenericMailer.deliver_queue(:generic_notification, @args)
+        expect(BinaryBlob.count).to eq(1)
+        expect(MiqQueue.exists?(:method_name => 'deliver!',
+                                :class_name  => described_class.name,
+                                :role        => 'notifier')).to be_truthy
+      end
+
+      it "with automation_notification" do
+        GenericMailer.deliver_queue(:automation_notification, @args)
+        expect(MiqQueue.exists?(:method_name => 'deliver!',
+                                :class_name  => described_class.name,
+                                :role        => 'notifier')).to be_truthy
+      end
     end
 
-    it "call deliver_queue for automation_notification" do
-      GenericMailer.deliver_queue(:automation_notification, @args)
-      expect(MiqQueue.exists?(:method_name => 'deliver',
-                              :class_name  => described_class.name,
-                              :role        => 'notifier')).to be_truthy
+    describe ".deliver_task" do
+      it "with generic_notification" do
+        @args[:attachment] = [{:content_type => "text/plain", :filename => "generic_mailer_test.txt", :body => "generic_notification with text/plain attachment" * 10}]
+
+        expect(BinaryBlob.count).to eq(0)
+        task = GenericMailer.deliver_task(:generic_notification, @args)
+        expect(task).to have_attributes(
+          :state   => MiqTask::STATE_QUEUED,
+          :status  => MiqTask::STATUS_OK,
+          :message => "Queued the action: [generic_notification]"
+        )
+        expect(BinaryBlob.count).to eq(1)
+        expect(MiqQueue.exists?(:method_name => 'deliver!',
+                                :class_name  => described_class.name,
+                                :role        => 'notifier')).to be_truthy
+      end
+
+      it "with automation_notification" do
+        task = GenericMailer.deliver_task(:automation_notification, @args)
+        expect(task).to have_attributes(
+          :state   => MiqTask::STATE_QUEUED,
+          :status  => MiqTask::STATUS_OK,
+          :message => "Queued the action: [automation_notification]"
+        )
+        expect(MiqQueue.exists?(:method_name => 'deliver!',
+                                :class_name  => described_class.name,
+                                :role        => 'notifier')).to be_truthy
+      end
     end
   end
 
   context 'without a notifier within a region' do
-    it 'does not queue any mail notifications' do
-      @args[:attachment] = [{:content_type => "text/plain", :filename => "generic_mailer_test.txt", :body => "generic_notification with text/plain attachment" * 10}]
-      expect { GenericMailer.deliver_queue(:generic_notification, @args) }.not_to(change { MiqQueue.count })
+    describe ".deliver_queue" do
+      it 'does not queue any mail notifications' do
+        @args[:attachment] = [{:content_type => "text/plain", :filename => "generic_mailer_test.txt", :body => "generic_notification with text/plain attachment" * 10}]
+        expect { GenericMailer.deliver_queue(:generic_notification, @args) }.not_to(change { MiqQueue.count })
+      end
+    end
+
+    describe ".deliver_task" do
+      it "sets the miq_task to status error" do
+        task = GenericMailer.deliver_task(:generic_notification, @args)
+        expect(task).to have_attributes(
+          :status  => MiqTask::STATUS_ERROR,
+          :message => "No server with notifier role in region"
+        )
+      end
     end
   end
 
@@ -48,7 +92,7 @@ describe GenericMailer do
       # raises error when delivered
       msg = @args.merge(:to => 'me@bedrock.gov, you@bedrock.gov')
       notification = GenericMailer.generic_notification(msg)
-      allow(notification).to receive(:deliver_now).and_raise(Net::SMTPFatalError.new("fake_response"))
+      allow(notification).to receive(:deliver_now!).and_raise(Net::SMTPFatalError.new("fake_response"))
 
       # send error msg first...
       expect(GenericMailer)
@@ -62,7 +106,7 @@ describe GenericMailer do
         .and_call_original
 
       # send message
-      GenericMailer.deliver(:generic_notification)
+      GenericMailer.deliver(:generic_notification, msg)
 
       # ensure individual messages were sent
       expect(ActionMailer::Base.deliveries.size).to eq(2)

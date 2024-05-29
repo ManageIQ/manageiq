@@ -1,4 +1,4 @@
-raise "Ruby versions < 3.0.0 are unsupported!"  if RUBY_VERSION < "3.0.0"
+raise "Ruby versions < 3.0.1 are unsupported!"  if RUBY_VERSION < "3.0.1"
 raise "Ruby versions >= 3.2.0 are unsupported!" if RUBY_VERSION >= "3.2.0"
 
 source 'https://rubygems.org'
@@ -29,7 +29,7 @@ gem "awesome_spawn",                    "~>1.6",             :require => false
 gem "aws-sdk-s3",                       "~>1.0",             :require => false # For FileDepotS3
 gem "bcrypt",                           "~> 3.1.10",         :require => false
 gem "bootsnap",                         ">= 1.8.1",          :require => false # for psych 3.3.2+ / 4 unsafe_load
-gem "bundler",                          "~> 2.1", ">= 2.1.4", "!= 2.2.10", :require => false
+gem "bundler",                          "~> 2.2", ">= 2.2.15", *("!= 2.5.0".."!= 2.5.9"), :require => false
 gem "byebug",                                                :require => false
 gem "color",                            "~>1.8"
 gem "config",                           "~>2.2", ">=2.2.3",  :require => false
@@ -45,14 +45,14 @@ gem "hamlit",                           "~>2.11.0"
 gem "inifile",                          "~>3.0",             :require => false
 gem "inventory_refresh",                "~>2.1",             :require => false
 gem "kubeclient",                       "~>4.0",             :require => false # For scaling pods at runtime
-gem "linux_admin",                      "~>2.0", ">=2.0.1",  :require => false
+gem "linux_admin",                      "~>3.0",             :require => false
 gem "listen",                           "~>3.2",             :require => false
 gem "manageiq-api-client",              "~>0.3.6",           :require => false
 gem "manageiq-loggers",                 "~>1.0", ">=1.1.1",  :require => false
-gem "manageiq-messaging",               "~>1.0", ">=1.4.1",  :require => false
+gem "manageiq-messaging",               "~>1.0", ">=1.4.3",  :require => false
 gem "manageiq-password",                "~>1.0",             :require => false
 gem "manageiq-postgres_ha_admin",       "~>3.2",             :require => false
-gem "manageiq-ssh-util",                "~>0.1.1",           :require => false
+gem "manageiq-ssh-util",                "~>0.2.0",           :require => false
 gem "memoist",                          "~>0.16.0",          :require => false
 gem "money",                            "~>6.13.5",          :require => false
 gem "more_core_extensions"                                                     # min version should be set in manageiq-gems-pending, not here
@@ -63,6 +63,7 @@ gem "openscap",                         "~>0.4.8",           :require => false
 gem "optimist",                         "~>3.0",             :require => false
 gem "pg",                               ">=1.4.1",           :require => false
 gem "pg-dsn_parser",                    "~>0.1.1",           :require => false
+gem "prism",                            ">=0.25.0",          :require => false # Used by DescendantLoader
 gem "psych",                            ">=3.1",             :require => false # 3.1 safe_load changed positional to kwargs like aliases: true: https://github.com/ruby/psych/commit/4d4439d6d0adfcbd211ea295779315f1baa7dadd
 gem "query_relation",                   "~>0.1.0",           :require => false
 gem "rack",                             ">=2.2.6.4",         :require => false
@@ -71,7 +72,7 @@ gem "rails",                            "~>6.1.7", ">=6.1.7.7"
 gem "rails-i18n",                       "~>6.x"
 gem "rake",                             ">=12.3.3",          :require => false
 gem "rest-client",                      "~>2.1.0",           :require => false
-gem "ripper_ruby_parser",               "~>1.11",            :require => false
+gem "ruby_parser",                                           :require => false # Required for i18n string extraction, and DescentdantLoader (via prism)
 gem "ruby-progressbar",                 "~>1.7.0",           :require => false
 gem "rubyzip",                          "~>2.0.0",           :require => false
 gem "rugged",                           "~>1.5.0",           :require => false
@@ -135,6 +136,10 @@ end
 
 group :cisco_intersight, :manageiq_default do
   manageiq_plugin "manageiq-providers-cisco_intersight"
+end
+
+group :embedded_terraform, :manageiq_default do
+  manageiq_plugin "manageiq-providers-embedded_terraform"
 end
 
 group :foreman, :manageiq_default do
@@ -290,7 +295,7 @@ end
 
 group :appliance, :optional => true do
   gem "irb",                            "=1.4.1",            :require => false # Locked to same version as the installed RPM rubygem-irb-1.4.1-142.module_el9+787+b20bfeee.noarch so that we don't bundle our own
-  gem "manageiq-appliance_console",     "~>9.0", ">= 9.0.1", :require => false
+  gem "manageiq-appliance_console",     "~>9.0", ">= 9.0.3", :require => false
   gem "rdoc",                                                :require => false # Needed for rails console
 end
 
@@ -299,8 +304,6 @@ group :development do
   gem "foreman"
   gem "manageiq-style",                 "~>1.5.0",           :require => false
   gem "PoParser"
-  # ruby_parser is required for i18n string extraction
-  gem "ruby_parser",                                         :require => false
   gem "yard",                           ">= 0.9.36"
 end
 

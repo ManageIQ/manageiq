@@ -10,7 +10,7 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
         req_task.miq_request_id = service_task.miq_request.id
         req_task.userid         = service_task.userid
 
-        task_options     = req_task.options.merge(service_options(parent_svc, template_service_resource))
+        task_options     = req_task.options.merge(service_options(parent_svc, service_task, template_service_resource))
         task_options     = task_options.merge(owner_options(service_task))
         req_task.options = task_options
       end
@@ -37,12 +37,15 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
 
   private
 
-  def service_options(parent_svc, template_service_resource)
+  def service_options(parent_svc, service_task, template_service_resource)
+    parent_service_task = get_parent_task(service_task)
+
     {
-      :miq_force_unique_name    => [true, 1],
-      :service_guid             => parent_svc.guid,
-      :service_resource_id      => template_service_resource.id,
-      :service_template_request => false
+      :miq_force_unique_name           => [true, 1],
+      :service_guid                    => parent_svc.guid,
+      :service_resource_id             => template_service_resource.id,
+      :service_template_request        => false,
+      :configuration_script_payload_id => parent_service_task&.resource_action&.configuration_script_payload&.id
     }
   end
 

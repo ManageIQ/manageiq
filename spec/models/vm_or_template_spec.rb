@@ -1,4 +1,6 @@
 RSpec.describe VmOrTemplate do
+  include Spec::Support::SupportsHelper
+
   subject { vm }
 
   include_examples "MiqPolicyMixin"
@@ -720,6 +722,34 @@ RSpec.describe VmOrTemplate do
 
     it "returns true for a valid vm" do
       expect(vm.supports?(:control)).to be_truthy
+    end
+  end
+
+  context "virtual column :supports_reconfigure_network_adapters" do
+    it "returns false if reconfigure_network_adapters is not supported" do
+      ems = FactoryBot.create(:vm_infra)
+      stub_supports_not(ems.class, :reconfigure_network_adapters)
+      expect(ems.supports_reconfigure_network_adapters).to eq(false)
+    end
+
+    it "returns true if reconfigure_network_adapters is supported" do
+      ems = FactoryBot.create(:vm_infra)
+      stub_supports(ems.class, :reconfigure_network_adapters)
+      expect(ems.supports_reconfigure_network_adapters).to eq(true)
+    end
+  end
+
+  context "virtual column :supports_reconfigure_cdroms" do
+    it "returns false if reconfigure_cdroms is not supported" do
+      ems = FactoryBot.create(:vm_infra)
+      stub_supports_not(ems.class, :reconfigure_cdroms)
+      expect(ems.supports_reconfigure_cdroms).to eq(false)
+    end
+
+    it "returns true if reconfigure_cdroms is supported" do
+      ems = FactoryBot.create(:vm_infra)
+      stub_supports(ems.class, :reconfigure_cdroms)
+      expect(ems.supports_reconfigure_cdroms).to eq(true)
     end
   end
 

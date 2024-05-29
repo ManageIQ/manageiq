@@ -8,6 +8,7 @@ class VmOrTemplate < ApplicationRecord
   include RetirementMixin
   include ScanningMixin
   include SupportsFeatureMixin
+  include SupportsAttribute
   include EmsRefreshMixin
 
   self.table_name = 'vms'
@@ -199,6 +200,11 @@ class VmOrTemplate < ApplicationRecord
 
   delegate :connect_lans, :disconnect_lans, :to => :hardware, :allow_nil => true
   delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
+
+  supports_attribute :feature => :reconfigure_disks
+  supports_attribute :feature => :reconfigure_disksize
+  supports_attribute :feature => :reconfigure_cdroms
+  supports_attribute :feature => :reconfigure_network_adapters
 
   after_save :save_genealogy_information
 

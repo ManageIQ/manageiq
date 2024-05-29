@@ -10,6 +10,14 @@ class MiqProvisionTask < MiqRequestTask
     MiqProvisionTask
   end
 
+  def statemachine_task_status
+    if %w[finished provisioned].include?(state)
+      status.to_s.downcase == 'error' ? 'error' : 'ok'
+    else
+      'retry'
+    end
+  end
+
   def do_request
     signal :run_provision
   end

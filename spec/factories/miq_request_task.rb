@@ -37,7 +37,10 @@ FactoryBot.define do
   factory :automation_task, :parent => :miq_request_task, :class => "AutomationTask"
 
   # Services
-  factory :service_reconfigure_task,        :parent => :miq_request_task, :class => "ServiceReconfigureTask"
+  factory :service_reconfigure_task,        :parent => :miq_request_task, :class => "ServiceReconfigureTask" do
+    request_type { 'service_reconfigure' }
+  end
+
   factory :service_template_provision_task, :parent => :miq_request_task, :class => "ServiceTemplateProvisionTask" do
     state        { 'pending' }
     request_type { 'clone_to_service' }

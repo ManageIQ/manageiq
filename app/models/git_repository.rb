@@ -114,6 +114,10 @@ class GitRepository < ApplicationRecord
     with_worktree do |worktree|
       message = "Updating #{url} in #{directory_name}..."
       _log.info(message)
+      # If the remote url has changed set it to the new url
+      git_transaction { worktree.url = url } if worktree.url != url
+
+      # Fetch and rebase the git worktree
       worktree.pull
       _log.info("#{message}...Complete")
     end

@@ -9,6 +9,14 @@ class ServiceRetireTask < MiqRetireTask
     Service
   end
 
+  def statemachine_task_status
+    if state == "finished"
+      status.to_s.downcase == "error" ? "error" : "ok"
+    else
+      "retry"
+    end
+  end
+
   def update_and_notify_parent(*args)
     prev_state = state
     super

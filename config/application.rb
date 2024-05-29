@@ -167,7 +167,7 @@ module Vmdb
       Vmdb::Plugins.init
     end
 
-    initializer :load_vmdb_settings, :before => "active_record.initialize_database" do
+    initializer :load_vmdb_settings, :before => :load_config_initializers do
       Vmdb::Settings.init
       Vmdb::Loggers.apply_config(::Settings.log)
     end
