@@ -276,6 +276,12 @@ group :ui_dependencies do # Added to Bundler.require in config/application.rb
   gem "jquery-rjs",                     "=0.1.1.3",          :source => "https://rubygems.manageiq.org"
 end
 
+group :terraform_runner_dependencies do # Added to Bundler.require in config/application.rb
+  manageiq_plugin "manageiq-decorators"
+  # Modified gems (forked on Github)
+  gem "jquery-rjs",                     "=0.1.1.3",          :source => "https://rubygems.manageiq.org"
+end
+
 group :web_server, :manageiq_default do
   gem "puma",                           "~>6.4", ">=6.4.2"
   gem "ruby-dbus" # For external auth
