@@ -175,6 +175,7 @@ class ContainerOrchestrator
         {:name => "MEMCACHED_SERVICE_NAME",  :value => ENV["MEMCACHED_SERVICE_NAME"]},
         {:name => "WORKER_HEARTBEAT_FILE",   :value => Rails.root.join("tmp/worker.hb").to_s},
         {:name => "WORKER_HEARTBEAT_METHOD", :value => "file"},
+        {:name => "TERRAFORM_RUNNER_URL",    :value => "https://opentofu-runner:6000"},
       ] + database_environment + memcached_environment + messaging_environment
     end
 
