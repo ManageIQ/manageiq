@@ -182,7 +182,7 @@ class ContainerOrchestrator
         {:name => "TERRAFORM_RUNNER_TOKEN", :value => opentofu_runner_token},
       ] + database_environment + memcached_environment + messaging_environment
     end
-
+    
     SECRET_KEY_FILE = "/run/secrets/manageiq/application/encryption_key".freeze
     def opentofu_runner_secret_key
       @opentofu_runner_secret_key ||= File.exist?(file_path) ? File.read(SECRET_KEY_FILE) : "opentofu_runner_key"
@@ -191,9 +191,9 @@ class ContainerOrchestrator
     def opentofu_runner_token
       secret_key = opentofu_runner_secret_key
       payload = {
-        Username: 'opentofu-runner'
+        'Username' => 'opentofu-runner'
       }
-      return JWT.encode(payload, secret_key, 'HS256')
+      JWT.encode(payload, secret_key, 'HS256')
     end
     
     def database_environment
