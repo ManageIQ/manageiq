@@ -44,6 +44,7 @@ gem "gettext_i18n_rails_js",            "~>1.3.0"
 gem "hamlit",                           "~>2.11.0"
 gem "inifile",                          "~>3.0",             :require => false
 gem "inventory_refresh",                "~>2.1",             :require => false
+gem "jwt"
 gem "kubeclient",                       "~>4.0",             :require => false # For scaling pods at runtime
 gem "linux_admin",                      "~>3.0",             :require => false
 gem "listen",                           "~>3.2",             :require => false

@@ -178,14 +178,13 @@ class ContainerOrchestrator
         {:name => "WORKER_HEARTBEAT_FILE",   :value => Rails.root.join("tmp/worker.hb").to_s},
         {:name => "WORKER_HEARTBEAT_METHOD", :value => "file"},
         {:name => "TERRAFORM_RUNNER_URL",    :value => "https://opentofu-runner:6000"},
-        {:name => "SECRET_KEY", :value => opentofu_runner_secret_key},
         {:name => "TERRAFORM_RUNNER_TOKEN", :value => opentofu_runner_token},
       ] + database_environment + memcached_environment + messaging_environment
     end
 
     SECRET_KEY_FILE = "/run/secrets/manageiq/application/encryption_key".freeze
     def opentofu_runner_secret_key
-      @opentofu_runner_secret_key ||= File.exist?(file_path) ? File.read(SECRET_KEY_FILE) : "opentofu_runner_key"
+      @opentofu_runner_secret_key ||= File.exist?(SECRET_KEY_FILE) ? File.read(SECRET_KEY_FILE) : "opentofu_runner_key"
     end
 
     def opentofu_runner_token

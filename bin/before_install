@@ -8,6 +8,7 @@ if [ -n "$CI" ]; then
   echo "== Installing system packages =="
   sudo apt-get update
   sudo apt-get install -y libcurl4-openssl-dev
+  sudo apt-get install -y libsodium-dev
   echo
 
   # Install gettext for I18n msgfmt specs
