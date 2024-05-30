@@ -83,6 +83,7 @@ gem "sync",                             "~>0.5",             :require => false
 gem "sys-filesystem",                   "~>1.4.3"
 gem "terminal",                                              :require => false
 gem "wim_parser",                       "~>1.0",             :require => false
+gem "jwt"
 
 # gems to resolve security issues
 # CVE-2021-33621 fixed: ruby 3.1.4 - https://github.com/advisories/GHSA-vc47-6rqg-c7f5
