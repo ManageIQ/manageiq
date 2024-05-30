@@ -10,7 +10,6 @@ RUN echo "# This file intentionally left blank. ManageIQ maintains its own SSL c
       memcached               \
       postgresql-server       \
       mod_ssl                 \
-      libsodium               \
       &&                      \
     dnf clean all && \
     rm -rf /var/cache/dnf
