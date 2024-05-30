@@ -195,7 +195,7 @@ class ContainerOrchestrator
       }
       JWT.encode(payload, secret_key, 'HS256')
     end
-    
+
     def database_environment
       [
         {:name => "DATABASE_SSL_MODE", :value => ENV["DATABASE_SSL_MODE"]},
