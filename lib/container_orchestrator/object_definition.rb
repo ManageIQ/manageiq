@@ -194,7 +194,7 @@ class ContainerOrchestrator
       @opentofu_runner_secret_key ||= File.exist?(SECRET_KEY_FILE) ? File.read(SECRET_KEY_FILE) : "opentofu_runner_key"
     end
 
-    TERRAFORM_RUNNER_TOKEN_FILE = File.join(Dir.home, "TERRAFORM_RUNNER_TOKEN").freeze
+    TERRAFORM_RUNNER_TOKEN_FILE = Rails.root.join("TERRAFORM_RUNNER_TOKEN").freeze
     def opentofu_runner_token
       secret_key = opentofu_runner_secret_key
       payload = {
