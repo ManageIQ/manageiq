@@ -2427,6 +2427,8 @@ msgstr ""
 #: ../app/javascript/components/ansible-credentials-form/ansible-credentials-form.schema.js
 #: ../app/javascript/components/cloud-volume-actions-form/restore-from-backup.schema.js
 #: ../app/javascript/components/cloud-volume-backup-form/cloud-volume-backup-form.schema.js
+#: ../app/javascript/components/embedded-terraform-credential-mapping-form/embedded-terraform-credential-mapping-form.schema.js
+#: ../app/javascript/components/embedded-terraform-credentials-form/embedded-terraform-credentials-form.schema.js
 #: ../app/javascript/components/evacuate-form/evacuate-form.schema.js
 #: ../app/javascript/components/generic-objects-form/generic-objects-form.schema.js
 #: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js
@@ -2794,8 +2796,18 @@ msgid "API Version"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/amazon_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/amazon_credential.rb
 msgid "AWS Access Key for this credential"
+msgstr ""
+
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/amazon_credential.rb
+msgid "AWS Region"
+msgstr ""
+
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/amazon_credential.rb
+msgid "AWS Region where the provider will operate."
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.FileDepotS3
@@ -2811,7 +2823,7 @@ msgid "AWS S3s"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/amazon_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/amazon_credential.rb
 msgid "AWS Secret Key for this credential"
 msgstr ""
 
@@ -3434,6 +3446,11 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Add Configuration Script"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Add Credentials"
 msgstr ""
 
@@ -3545,6 +3562,7 @@ msgstr ""
 
 #:
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/helper.js
+#: ../app/javascript/components/terraform-template-catalog-form/helper.js
 msgid "Add Key-Value Pair"
 msgstr ""
 
@@ -3645,11 +3663,6 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Add Placement Group"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Add Playbook"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/tenant_center.rb
@@ -3791,6 +3804,11 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Add a Configuration Manager Provider"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Add a Configuration Script Payload"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -3973,11 +3991,6 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Add a Physical Storage"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Add a Playbook"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -4434,6 +4447,7 @@ msgid "Add of Cloud Volume \"%s\" has been successfully queued."
 msgstr ""
 
 #: ../app/javascript/components/ansible-credentials-form/index.jsx
+#: ../app/javascript/components/embedded-terraform-credentials-form/index.jsx
 #: ../app/javascript/components/workflow-credentials-form/index.jsx
 msgid "Add of Credential \"%s\" has been successfully queued."
 msgstr ""
@@ -4477,11 +4491,13 @@ msgid "Add of Provider was cancelled by the user"
 msgstr ""
 
 #: ../app/javascript/components/ansible-repository-form/index.jsx
+#: ../app/javascript/components/embedded-terraform-repository-form/index.jsx
 #: ../app/javascript/components/workflow-repository-form/index.jsx
 msgid "Add of Repository \"%s\" was successfully initiated."
 msgstr ""
 
 #: ../app/javascript/components/ansible-repository-form/index.jsx
+#: ../app/javascript/components/embedded-terraform-repository-form/index.jsx
 #: ../app/javascript/components/workflow-repository-form/index.jsx
 msgid "Add of Repository cancelled by user."
 msgstr ""
@@ -4879,6 +4895,7 @@ msgstr ""
 
 #: ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
 #: ../app/views/catalog/_tenants_tree_show.html.haml
 msgid "Additional Tenants"
 msgstr ""
@@ -5265,6 +5282,7 @@ msgstr[1] ""
 #: ../app/helpers/miq_alert_set_helper.rb
 #: ../app/helpers/textual_mixins/textual_authentications_status.rb
 #: ../app/javascript/oldjs/controllers/container_dashboard/util/dashboard-utils-factory.js
+#: ../app/javascript/spec/miq-alert-set/miq-alert-set.data.js
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/views/miq_policy_export/_export.html.haml
 #: ../config/yaml_strings.rb
@@ -5893,6 +5911,7 @@ msgstr ""
 
 #: ../app/helpers/view_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/helper.js
+#: ../app/javascript/components/terraform-template-catalog-form/helper.js
 #: ../app/javascript/oldjs/controllers/playbook-reusable-code-mixin.js
 msgid "Always"
 msgstr ""
@@ -6110,11 +6129,6 @@ msgstr ""
 msgid "Ansible Access Method"
 msgstr ""
 
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Ansible Credentials Refresh"
-msgstr ""
-
 #: ../app/helpers/shared_helper/ab_show_helper.rb
 msgid "Ansible Playbook"
 msgstr ""
@@ -6122,16 +6136,6 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAnsible_AutomationManager_Playbook.yaml
 #: ../config/yaml_strings.rb
 msgid "Ansible Playbooks"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Ansible Playbooks Refresh"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Ansible Repositories Refresh"
 msgstr ""
 
 #: ../app/views/catalog/_form_basic_info.html.haml
@@ -6975,6 +6979,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ../app/helpers/miq_alert_set_helper.rb
+#: ../app/javascript/spec/miq-alert-set/miq-alert-set.data.js
 msgid "Assigned To"
 msgstr ""
 
@@ -7931,6 +7936,11 @@ msgid_plural "Automation Managers (Ansible Tower)"
 msgstr[0] ""
 msgstr[1] ""
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Automation Manager Repositories Refresh"
+msgstr ""
+
 #: ../app/helpers/application_helper/title.rb
 msgid "Automation Managers"
 msgstr ""
@@ -8491,7 +8501,8 @@ msgstr ""
 msgid "Avg VM Count"
 msgstr ""
 
-#: ../app/models/manageiq/providers/azure/cloud_manager.rb
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/azure_credential.rb
 msgid "Azure"
 msgstr ""
 
@@ -8658,7 +8669,7 @@ msgstr ""
 msgid "Basic Info"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb:103 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb
 #: ../app/helpers/catalog_helper/orchestration_template_helper.rb
 #: ../app/helpers/condition_helper.rb
 #: ../app/helpers/generic_object_definition_helper.rb
@@ -8682,13 +8693,16 @@ msgstr ""
 #: ../app/javascript/components/cloud-volume-actions-form/restore-from-backup.schema.js
 #: ../app/javascript/components/cloud-volume-backup-form/cloud-volume-backup-form.schema.js
 #: ../app/javascript/components/miq-alert-set-form/miq-alert-set-form.schema.js
+#: ../app/javascript/components/miq-custom-tab/helper.js
 #: ../app/javascript/components/pxe-customization-template-form/pxe-customization-template-form.schema.js
 #: ../app/javascript/components/pxe-image-type-form/pxe-image-type-form.schema.js
 #: ../app/javascript/components/pxe-iso-datastore-form/pxe-iso-datastore-form.schema.js
 #: ../app/javascript/components/pxe-iso-image-form/pxe-iso-image-form.schema.js
 #: ../app/javascript/components/pxe-servers-form/pxe-server-form.schema.js
 #: ../app/javascript/components/schedule-form/schedule-form.schema.js
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
 #: ../app/javascript/components/vm-edit-form/vm-edit-form.schema.js
+#: ../app/javascript/spec/miq-alert-set/miq-alert-set.data.js
 #: ../app/views/catalog/_form_basic_info.html.haml
 #: ../app/views/condition/_form.html.haml
 #: ../app/views/miq_ae_customization/_dialog_info.html.haml
@@ -8929,7 +8943,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.ems_block_storage (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.ems_block_storages
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:4042 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:4046 ../config/dictionary_strings.rb
 #: ../config/yaml_strings.rb
 msgid "Block Storage Managers"
 msgstr ""
@@ -9311,6 +9325,11 @@ msgstr ""
 
 #: ../app/controllers/ops_controller/diagnostics.rb
 msgid "C & U Gap Collection successfully initiated"
+msgstr ""
+
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/openstack_credential.rb
+msgid "CA certificate"
 msgstr ""
 
 #: ../app/helpers/textual_mixins/textual_devices.rb
@@ -10386,6 +10405,11 @@ msgstr ""
 msgid "Cannot delete recently active %{log_message}"
 msgstr ""
 
+#:
+#: ../app/models/manageiq/providers/workflows/automation_manager/configuration_script_source.rb
+msgid "Cannot delete the built-in repository"
+msgstr ""
+
 #: ../app/views/layouts/_item.html.haml
 msgid "Cannot display binary content"
 msgstr ""
@@ -10456,6 +10480,11 @@ msgstr ""
 
 #: ../app/models/manageiq/providers/openstack/infra_manager/host.rb
 msgid "Cannot stop. Already off."
+msgstr ""
+
+#:
+#: ../app/models/manageiq/providers/workflows/automation_manager/configuration_script_source.rb
+msgid "Cannot update the built-in repository"
 msgstr ""
 
 #: ../app/controllers/mixins/containers_external_logging_support_mixin.rb
@@ -10777,6 +10806,8 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ServiceTemplate.yaml
 #: ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
+#: ../app/javascript/components/miq-custom-tab/helper.js
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
 #: ../app/views/catalog/_form_basic_info.html.haml
 #: ../config/yaml_strings.rb
 #, fuzzy
@@ -10802,12 +10833,14 @@ msgstr ""
 
 #:
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/index.jsx
+#: ../app/javascript/components/terraform-template-catalog-form/index.jsx
 #: ../app/javascript/oldjs/controllers/catalog/catalog_item_form_controller.js
 msgid "Catalog Item %s was added"
 msgstr ""
 
 #:
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/index.jsx
+#: ../app/javascript/components/terraform-template-catalog-form/index.jsx
 #: ../app/javascript/oldjs/controllers/catalog/catalog_item_form_controller.js
 msgid "Catalog Item %s was saved"
 msgstr ""
@@ -12084,6 +12117,7 @@ msgstr ""
 msgid "Classification|Syntax"
 msgstr ""
 
+#: ../app/javascript/components/filter-provision-instance/index.jsx
 #: ../app/javascript/components/search-bar/index.jsx
 #: ../app/javascript/components/tree-view/selector.jsx
 msgid "Clear"
@@ -12272,7 +12306,13 @@ msgstr ""
 msgid "Client Browser Setting"
 msgstr ""
 
-#: ../app/models/manageiq/providers/azure/manager_mixin.rb
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/openstack_credential.rb
+msgid "Client Certificate"
+msgstr ""
+
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/azure_credential.rb
 msgid "Client ID"
 msgstr ""
 
@@ -12285,7 +12325,7 @@ msgid "Client Once"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/azure_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/azure_credential.rb
 msgid "Client Secret"
 msgstr ""
 
@@ -12446,7 +12486,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_cloud_manager
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_network_manager
 #: ../app/models/manageiq/providers/cloud_manager.rb
-#: ../config/dictionary_strings.rb:4232 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:4236 ../config/dictionary_strings.rb
 msgid "Cloud Manager"
 msgid_plural "Cloud Managers"
 msgstr[0] ""
@@ -12454,7 +12494,7 @@ msgstr[1] ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_cloud_manager (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_network_manager (plural form)
-#: ../config/dictionary_strings.rb:4234 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:4238 ../config/dictionary_strings.rb
 msgid "Cloud Managers"
 msgstr ""
 
@@ -12584,7 +12624,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_openstack_infra_manager_cloud_networks
-#: ../config/dictionary_strings.rb:3284 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3288 ../config/dictionary_strings.rb
 #: ../config/dictionary_strings.rb
 msgid "Cloud Networks (OpenStack)"
 msgstr ""
@@ -12965,7 +13005,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager::CloudTenant (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_openstack_cloud_manager_cloud_tenant
-#: ../config/dictionary_strings.rb:3456 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3460 ../config/dictionary_strings.rb
 msgid "Cloud Tenants (OpenStack)"
 msgstr ""
 
@@ -12976,6 +13016,7 @@ msgstr ""
 
 #:
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 msgid "Cloud Type"
 msgstr ""
@@ -15134,7 +15175,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::ConfigurationManager
 #. TRANSLATORS: en.yml key: dictionary.table.ems_configuration
 #: ../app/models/manageiq/providers/configuration_manager.rb
-#: ../config/dictionary_strings.rb:3122 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3126 ../config/dictionary_strings.rb
 msgid "Configuration Manager"
 msgid_plural "Configuration Managers"
 msgstr[0] ""
@@ -15157,8 +15198,8 @@ msgstr[1] ""
 #. TRANSLATORS: en.yml key: dictionary.table.ems_configuration (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.ems_configurations
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:3124 ../config/dictionary_strings.rb
-#: ../config/dictionary_strings.rb:4062 ../config/yaml_strings.rb
+#: ../config/dictionary_strings.rb:3128 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:4066 ../config/yaml_strings.rb
 msgid "Configuration Managers"
 msgstr ""
 
@@ -15238,6 +15279,16 @@ msgid "Configuration Script Payload"
 msgid_plural "Configuration Script Payloads"
 msgstr[0] ""
 msgstr[1] ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Configuration Script Payload Refresh"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Configuration Scripts"
+msgstr ""
 
 #: ../config/model_display_names.rb
 msgid "Configuration Tag"
@@ -18857,7 +18908,7 @@ msgstr[1] ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::ContainerManager
 #. TRANSLATORS: en.yml key: dictionary.table.ems_container
-#: ../config/dictionary_strings.rb:3222 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3226 ../config/dictionary_strings.rb
 msgid "Containers Provider"
 msgstr ""
 
@@ -19247,7 +19298,7 @@ msgid "Contents Available"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/google_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/google_credential.rb
 msgid "Contents of the PEM file associated with the service account email"
 msgstr ""
 
@@ -19463,6 +19514,7 @@ msgstr ""
 
 #:
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
 #: ../app/views/catalog/_confirmation_modal.html.haml
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 msgid "Copy from Provisioning"
@@ -20111,6 +20163,7 @@ msgid "Creation of new Cloud Tenant was canceled by the user."
 msgstr ""
 
 #: ../app/javascript/components/ansible-credentials-form/index.jsx
+#: ../app/javascript/components/embedded-terraform-credentials-form/index.jsx
 #: ../app/javascript/components/workflow-credentials-form/index.jsx
 msgid "Creation of new Credential was canceled by the user."
 msgstr ""
@@ -20150,6 +20203,8 @@ msgid "Creation timestamp"
 msgstr ""
 
 #: ../app/helpers/ansible_repository_helper/textual_summary.rb
+#: ../app/helpers/catalog_helper.rb
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
 #, fuzzy
 msgid "Credential"
 msgstr ""
@@ -20161,7 +20216,7 @@ msgid ""
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/amazon_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/amazon_credential.rb
 msgid "Credential (Amazon)"
 msgid_plural "Credentials (Amazon)"
 msgstr[0] ""
@@ -20178,9 +20233,23 @@ msgid "Credential (Embedded Workflows)"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/google_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/google_credential.rb
 msgid "Credential (Google)"
 msgid_plural "Credentials (Google)"
+msgstr[0] ""
+msgstr[1] ""
+
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/ibm_classic_infrastructure_credential.rb
+msgid "Credential (IBM Cloud Classic Infrastructure)"
+msgid_plural "Credentials (IBM Cloud Classic Infrastructure)"
+msgstr[0] ""
+msgstr[1] ""
+
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/ibm_cloud_credential.rb
+msgid "Credential (IBM Cloud)"
+msgid_plural "Credentials (IBM Cloud)"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -20192,7 +20261,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/azure_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/azure_credential.rb
 msgid "Credential (Microsoft Azure)"
 msgid_plural "Credentials (Microsoft Azure)"
 msgstr[0] ""
@@ -20206,7 +20275,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/openstack_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/openstack_credential.rb
 msgid "Credential (OpenStack)"
 msgid_plural "Credentials (OpenStack)"
 msgstr[0] ""
@@ -20242,6 +20311,13 @@ msgstr[0] ""
 msgstr[1] ""
 
 #:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/vsphere_credential.rb
+msgid "Credential (VMware vSphere)"
+msgid_plural "Credentials (VMware vSphere)"
+msgstr[0] ""
+msgstr[1] ""
+
+#:
 #: ../app/models/manageiq/providers/awx/automation_manager/vmware_credential.rb
 msgid "Credential (VMware)"
 msgid_plural "Credentials (VMware)"
@@ -20262,15 +20338,21 @@ msgstr[1] ""
 msgid "Credential (Workflow)"
 msgstr ""
 
+#:
+#: ../app/javascript/components/embedded-terraform-credential-mapping-form/embedded-terraform-credential-mapping-form.schema.js
 #: ../app/javascript/components/workflow-credential-mapping-form/helper.js
 #: ../app/javascript/components/workflow-credential-mapping-form/workflow-credential-mapping-form.schema.js
 msgid "Credential Field"
 msgstr ""
 
+#:
+#: ../app/javascript/components/embedded-terraform-credential-mapping-form/index.jsx
 #: ../app/javascript/components/workflow-credential-mapping-form/index.jsx
 msgid "Credential Mapping for \"%s\" was canceled by the user."
 msgstr ""
 
+#:
+#: ../app/javascript/components/embedded-terraform-credential-mapping-form/index.jsx
 #: ../app/javascript/components/workflow-credential-mapping-form/index.jsx
 msgid "Credential Mapping for \"%s\" was saved."
 msgstr ""
@@ -20285,12 +20367,14 @@ msgid "Credential Record"
 msgstr ""
 
 #:
+#: ../app/javascript/components/embedded-terraform-credential-mapping-form/embedded-terraform-credential-mapping-form.schema.js
 #: ../app/javascript/components/workflow-credential-mapping-form/workflow-credential-mapping-form.schema.js
 msgid "Credential Reference"
 msgstr ""
 
 #:
 #: ../app/javascript/components/ansible-credentials-form/ansible-credentials-form.schema.js
+#: ../app/javascript/components/embedded-terraform-credentials-form/embedded-terraform-credentials-form.schema.js
 #: ../app/javascript/components/workflow-credentials-form/workflow-credentials-form.schema.js
 msgid "Credential type"
 msgstr ""
@@ -20411,6 +20495,11 @@ msgstr ""
 
 #: ../app/javascript/components/workflow-credential-mapping-form/helper.js
 msgid "Credentials Identifier"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Credentials Refresh"
 msgstr ""
 
 #: ../app/helpers/application_helper/button/ems_capture_metrics.rb
@@ -20543,7 +20632,7 @@ msgstr ""
 msgid "Currently Used Space"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb:113 ../app/helpers/report_helper.rb
+#: ../app/helpers/catalog_helper.rb:109 ../app/helpers/report_helper.rb
 #: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js
 msgid "Custom"
 msgstr ""
@@ -21182,6 +21271,10 @@ msgstr ""
 
 #: ../config/model_attributes.rb
 msgid "CustomizationTemplate|System"
+msgstr ""
+
+#: ../app/javascript/components/miq-custom-tab/helper.js
+msgid "Customize"
 msgstr ""
 
 #: ../app/views/ops/_settings_help_menu_tab.html.haml
@@ -22165,6 +22258,7 @@ msgstr ""
 #: ../app/helpers/ops_helper/settings_label_tag_mapping_helper.rb
 #: ../app/helpers/ops_helper/settings_tab_helper.rb
 #: ../app/helpers/settings_tags_tabs_helper.rb
+#: ../app/javascript/components/embedded-terraform-credential-mapping-form/embedded-terraform-credential-mapping-form.schema.js
 #: ../app/javascript/components/reconfigure-vm-form/helpers/disk.js
 #: ../app/javascript/components/reconfigure-vm-form/helpers/network.js
 #: ../app/javascript/components/remove-generic-item-modal.jsx
@@ -23581,10 +23675,9 @@ msgstr ""
 msgid "Detailed Description"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb
 #: ../app/helpers/cloud_volume_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
-#: ../app/helpers/utilization_helper.rb
+#: ../app/javascript/components/miq-custom-tab/helper.js
 #: ../app/javascript/components/visual-settings-form/visual-settings-form.schema.js
 #: ../app/views/generic_mailer/policy_action_email.html.haml
 #: ../app/views/generic_mailer/policy_action_email.text.haml
@@ -26335,6 +26428,7 @@ msgstr ""
 #: ../app/helpers/catalog_helper.rb
 #: ../app/helpers/generic_object_definition_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
 #: ../app/views/catalog/_form_basic_info.html.haml
 #: ../config/yaml_strings.rb
 msgid "Display in Catalog"
@@ -26455,7 +26549,7 @@ msgid "Domain Information"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/openstack_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/openstack_credential.rb
 msgid "Domain Name"
 msgstr ""
 
@@ -26946,7 +27040,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.miq_custom_attribute (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.miq_custom_attributes
-#: ../config/dictionary_strings.rb:4212 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:4216 ../config/dictionary_strings.rb
 msgid "EVM Custom Attributes"
 msgstr ""
 
@@ -27266,6 +27360,11 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Edit Configuration Script"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Edit Configured Systems Tags"
 msgstr ""
 
@@ -27455,11 +27554,6 @@ msgstr ""
 
 #: ../app/controllers/physical_storage_controller.rb
 msgid "Edit Physical Storage \"%{name}\""
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Edit Playbook"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -27880,6 +27974,16 @@ msgstr ""
 msgid "Edit Tags for the selected Ansible Tower Providers"
 msgstr ""
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Edit Tags for the selected Automation Manager Credentials"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Edit Tags for the selected Automation Manager Repositories"
+msgstr ""
+
 #: ../app/helpers/application_helper/toolbar/availability_zones_center.rb
 msgid "Edit Tags for the selected Availability Zones"
 msgstr ""
@@ -27896,8 +28000,18 @@ msgstr ""
 msgid "Edit Tags for the selected Cloud Subnets"
 msgstr ""
 
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Edit Tags for the selected Configuration Script Payloads"
+msgstr ""
+
 #: ../app/helpers/application_helper/toolbar/storages_center.rb
 msgid "Edit Tags for the selected Datastores"
+msgstr ""
+
+#:
+#: ../app/helpers/application_helper/toolbar/embedded_terraform_credentials_center.rb
+msgid "Edit Tags for the selected Embedded Terraform Credentials"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/flavors_center.rb
@@ -27982,6 +28096,11 @@ msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/configuration_scripts_center.rb
 msgid "Edit Tags for the selected Templates"
+msgstr ""
+
+#:
+#: ../app/helpers/application_helper/toolbar/embedded_terraform_repositories_center.rb
+msgid "Edit Tags for the selected Terraform Repositories"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/workflow_credentials_center.rb
@@ -28114,6 +28233,16 @@ msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/storage_center.rb
 msgid "Edit Tags for this Datastore"
+msgstr ""
+
+#:
+#: ../app/helpers/application_helper/toolbar/embedded_terraform_credential_center.rb
+msgid "Edit Tags for this Embedded Terraform Credential"
+msgstr ""
+
+#:
+#: ../app/helpers/application_helper/toolbar/embedded_terraform_repository_center.rb
+msgid "Edit Tags for this Embedded Terraform Repository"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/flavor_center.rb
@@ -28633,6 +28762,11 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Edit a Configuration Script Payload"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Edit a Containers Provider"
 msgstr ""
 
@@ -28733,11 +28867,6 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Edit a Physical Storage"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Edit a Playbook"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -29016,6 +29145,7 @@ msgstr ""
 
 #:
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/index.jsx
+#: ../app/javascript/components/terraform-template-catalog-form/index.jsx
 #: ../app/javascript/oldjs/controllers/catalog/catalog_item_form_controller.js
 msgid "Edit of Catalog Item %s was cancelled by the user"
 msgstr ""
@@ -29061,6 +29191,7 @@ msgid "Edit of Cloud Volume \"%{name}\" was cancelled by the user"
 msgstr ""
 
 #: ../app/javascript/components/ansible-credentials-form/index.jsx
+#: ../app/javascript/components/embedded-terraform-credentials-form/index.jsx
 #: ../app/javascript/components/workflow-credentials-form/index.jsx
 msgid "Edit of Credential \"%s\" was canceled by the user."
 msgstr ""
@@ -29186,11 +29317,13 @@ msgid "Edit of Report Menu for role \"%{role}\" was cancelled by the user"
 msgstr ""
 
 #: ../app/javascript/components/ansible-repository-form/index.jsx
+#: ../app/javascript/components/embedded-terraform-repository-form/index.jsx
 #: ../app/javascript/components/workflow-repository-form/index.jsx
 msgid "Edit of Repository \"%s\" cancelled by user."
 msgstr ""
 
 #: ../app/javascript/components/ansible-repository-form/index.jsx
+#: ../app/javascript/components/embedded-terraform-repository-form/index.jsx
 #: ../app/javascript/components/workflow-repository-form/index.jsx
 msgid "Edit of Repository \"%s\" was successfully initiated."
 msgstr ""
@@ -29970,6 +30103,27 @@ msgstr ""
 #: ../app/helpers/miq_ae_class_helper.rb
 #: ../app/views/miq_ae_class/_embedded_methods.html.haml
 msgid "Embedded Methods"
+msgstr ""
+
+#: ../app/controllers/embedded_terraform_credential_controller.rb
+#: ../app/controllers/embedded_terraform_repository_controller.rb
+#: ../app/controllers/embedded_terraform_template_controller.rb
+#: ../lib/manageiq/providers/embedded_terraform/engine.rb
+msgid "Embedded Terraform"
+msgstr ""
+
+#: ../lib/manageiq/providers/embedded_terraform/engine.rb
+msgid "Embedded Terraform Provider"
+msgstr ""
+
+#: ../app/javascript/components/embedded-terraform-repository-form/index.jsx
+msgid "Embedded Terraform Provider not found."
+msgstr ""
+
+#:
+#: ../app/javascript/components/embedded-terraform-credential-mapping-form/index.jsx
+#: ../app/javascript/components/embedded-terraform-credentials-form/index.jsx
+msgid "Embedded Terraform service is not available."
 msgstr ""
 
 #: ../app/controllers/mixins/automation_mixin.rb
@@ -30834,6 +30988,7 @@ msgstr ""
 
 #:
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
 msgid "Enter a new Dialog"
 msgstr ""
 
@@ -30951,6 +31106,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ConfiguredSystem.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_AutomationManager_ConfiguredSystem.yaml
 #: ../app/helpers/configured_system_helper/textual_summary.rb
+#: ../app/javascript/components/miq-custom-tab/helper.js
 #: ../app/views/configuration_profile/show.html.haml
 #: ../config/yaml_strings.rb
 msgid "Environment"
@@ -31227,6 +31383,10 @@ msgstr ""
 msgid "Error loading data:"
 msgstr ""
 
+#: ../app/javascript/spec/notification-message/notification-message.spec.js
+msgid "Error message goes here"
+msgstr ""
+
 #: ../app/controllers/miq_ae_class_controller.rb
 msgid "Error on line %{line_num}: %{err_txt}"
 msgstr ""
@@ -31354,8 +31514,9 @@ msgstr ""
 msgid "Errors in Management Engine can be caused by:"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:200 ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 #: ../app/views/miq_ae_class/_method_inputs.html.haml
 msgid "Escalate Privilege"
@@ -31845,12 +32006,12 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
-msgid "Everything under Ansible"
+msgid "Everything under Auth Key Pairs"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
-msgid "Everything under Auth Key Pairs"
+msgid "Everything under Automation Manager"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -31966,6 +32127,11 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Everything under Configuration Profiles"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Everything under Configuration Scripts"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -32260,11 +32426,6 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
-msgid "Everything under Playbooks"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
 msgid "Everything under Pods"
 msgstr ""
 
@@ -32444,6 +32605,7 @@ msgstr ""
 
 #:
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
 msgid "Existing Dialog"
 msgstr ""
 
@@ -35194,7 +35356,12 @@ msgid "Google"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/google_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/google_credential.rb
+msgid "Google Cloud Region"
+msgstr ""
+
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/google_credential.rb
 msgid "Google Compute Engine"
 msgstr ""
 
@@ -36163,10 +36330,6 @@ msgstr ""
 msgid "Hide Input Parameters"
 msgstr ""
 
-#: ../app/views/miq_request/_pre_prov.html.haml
-msgid "Hide deprecated"
-msgstr ""
-
 #: ../app/helpers/container_image_helper/textual_summary.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
 #: ../app/views/vm_common/_right_size.html.haml
@@ -36217,7 +36380,7 @@ msgstr ""
 #: ../app/controllers/host_controller.rb
 #: ../app/controllers/miq_action_controller.rb
 #: ../app/controllers/mixins/actions/host_actions/misc.rb
-#: ../app/helpers/catalog_helper.rb:148 ../app/helpers/miq_action_helper.rb
+#: ../app/helpers/catalog_helper.rb:144 ../app/helpers/miq_action_helper.rb
 #: ../app/helpers/miq_alert_helper.rb
 #: ../app/helpers/physical_server_helper/textual_summary.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
@@ -36250,7 +36413,7 @@ msgid "Host \"%{name}\": Error during '%{task}': %{message}"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/openstack_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/openstack_credential.rb
 msgid "Host (Authentication URL)"
 msgstr ""
 
@@ -37229,7 +37392,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::InfraManager::Host (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::InfraManager::HostEsx (plural form)
-#: ../config/dictionary_strings.rb:3520 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3524 ../config/dictionary_strings.rb
 msgid "Hosts (Vmware)"
 msgstr ""
 
@@ -37854,6 +38017,11 @@ msgstr ""
 msgid "IBM CIC Provider"
 msgstr ""
 
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/ibm_cloud_credential.rb
+msgid "IBM Cloud"
+msgstr ""
+
 #: ../app/models/manageiq/providers/ibm_cloud/container_manager.rb
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/manager_mixin.rb
 #: ../app/models/manageiq/providers/ibm_cloud/vpc/manager_mixin.rb
@@ -37867,6 +38035,21 @@ msgstr ""
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/inventory/parser/power_virtual_servers.rb
 msgid "IBM Cloud Block-Storage Volume"
+msgstr ""
+
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/ibm_classic_infrastructure_credential.rb
+msgid "IBM Cloud Classic Infrastructure"
+msgstr ""
+
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/ibm_classic_infrastructure_credential.rb
+msgid "IBM Cloud Classic Infrastructure API Key"
+msgstr ""
+
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/ibm_classic_infrastructure_credential.rb
+msgid "IBM Cloud Classic Infrastructure User Name"
 msgstr ""
 
 #: ../app/models/manageiq/providers/ibm_cic/cloud_manager.rb
@@ -38234,7 +38417,7 @@ msgstr ""
 #: ../app/helpers/generic_object_definition_helper.rb
 #: ../app/helpers/shared_helper/ab_list_helper.rb
 #: ../app/helpers/shared_helper/ab_show_helper.rb
-#: ../config/yaml_strings.rb:720 ../lib/gtl_formatter.rb
+#: ../config/yaml_strings.rb:725 ../lib/gtl_formatter.rb
 #, fuzzy
 msgid "Image"
 msgstr ""
@@ -38665,7 +38848,7 @@ msgid "Infinity"
 msgstr ""
 
 #: ../app/controllers/miq_alert_controller.rb
-#: ../app/helpers/catalog_helper.rb:193 ../app/helpers/miq_alert_helper.rb
+#: ../app/helpers/catalog_helper.rb:189 ../app/helpers/miq_alert_helper.rb
 #: ../app/javascript/components/data-store-form/data-store-form.schema.js
 #: ../app/views/miq_alert/_form.html.haml
 #: ../app/views/resource_pool/_config.html.haml
@@ -38675,6 +38858,10 @@ msgstr ""
 
 #: ../app/helpers/storage_helper/textual_summary.rb
 msgid "Information for Registered VMs"
+msgstr ""
+
+#: ../app/javascript/spec/notification-message/notification-message.spec.js
+msgid "Information message goes here"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -38718,7 +38905,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::InfraManager
 #. TRANSLATORS: en.yml key: dictionary.table.ems_infra
-#: ../config/dictionary_strings.rb:3226 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3230 ../config/dictionary_strings.rb
 msgid "Infrastructure Provider"
 msgstr ""
 
@@ -39454,7 +39641,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. TRANSLATORS: file: product/views/ServiceTemplate.yaml
-#: ../app/helpers/catalog_helper.rb:112 ../config/yaml_strings.rb
+#: ../app/helpers/catalog_helper.rb:108 ../config/yaml_strings.rb
 msgid "Item Type"
 msgstr ""
 
@@ -39629,7 +39816,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager::AuthKeyPair
 #. TRANSLATORS: en.yml key: dictionary.table.auth_key_pair_cloud
 #: ../app/models/manageiq/providers/cloud_manager/auth_key_pair.rb
-#: ../config/dictionary_strings.rb:3142 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3146 ../config/dictionary_strings.rb
 msgid "Key Pair"
 msgid_plural "Key Pairs"
 msgstr[0] ""
@@ -41183,8 +41370,9 @@ msgstr ""
 msgid "Logging"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:199 ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 #: ../app/views/miq_ae_class/_method_inputs.html.haml
 msgid "Logging Output"
@@ -41292,6 +41480,7 @@ msgstr ""
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/javascript/components/settings-category-form/schema.js
 #: ../app/javascript/components/settings-company-tags/helper.js
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
 msgid "Long Description"
 msgstr ""
 
@@ -42286,7 +42475,7 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
-msgid "Map Credentials to Workflow"
+msgid "Map Credentials to Configuration Script Payloads"
 msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/workflow_center.rb
@@ -42476,8 +42665,9 @@ msgstr ""
 msgid "Max TTL"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:197 ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 msgid "Max TTL (mins)"
 msgstr ""
@@ -43345,6 +43535,10 @@ msgstr ""
 
 #: ../app/models/miq_alert.rb
 msgid "Message Source"
+msgstr ""
+
+#: ../app/javascript/spec/notification-message/notification-message.spec.js
+msgid "Message goes here"
 msgstr ""
 
 #: ../app/javascript/components/action-form/action-form.schema.js
@@ -48160,6 +48354,7 @@ msgstr ""
 #: ../app/javascript/components/miq-alert-set-form/miq-alert-set-form.schema.js
 #: ../app/javascript/components/reconfigure-vm-form/disk-form-fields.js
 #: ../app/javascript/components/reconfigure-vm-form/helpers/disk.js
+#: ../app/javascript/spec/miq-alert-set/miq-alert-set.data.js
 #: ../app/views/miq_policy/_form.html.haml
 #: ../app/views/ops/_ldap_forest_entries.html.haml
 #: ../app/views/ops/_settings_authentication_tab.html.haml
@@ -48199,6 +48394,7 @@ msgid "Modification of Cloud Volume \"%s\" has been successfully queued."
 msgstr ""
 
 #: ../app/javascript/components/ansible-credentials-form/index.jsx
+#: ../app/javascript/components/embedded-terraform-credentials-form/index.jsx
 #: ../app/javascript/components/workflow-credentials-form/index.jsx
 msgid "Modification of Credential \"%s\" has been successfully queued."
 msgstr ""
@@ -48324,6 +48520,11 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Modify Configuration Manager Providers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "Modify Configuration Script Payloads"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -48524,11 +48725,6 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Modify Physical Storage"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Modify Playbooks"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -49072,6 +49268,10 @@ msgstr ""
 msgid "Must contain only alphanumeric, hyphen, and underscore characters"
 msgstr ""
 
+#: ../app/models/service_template_terraform_template.rb
+msgid "Must provide a configuration_script_payload_id"
+msgstr ""
+
 #: ../app/models/service_template_orchestration.rb
 msgid "Must provide both template_id and manager_id or manager and template"
 msgstr ""
@@ -49272,6 +49472,7 @@ msgid "Name of the Security Policy Rule"
 msgstr ""
 
 #:
+#: ../app/javascript/components/embedded-terraform-credentials-form/embedded-terraform-credentials-form.schema.js
 #: ../app/javascript/components/workflow-credentials-form/workflow-credentials-form.schema.js
 msgid "Name of this credential"
 msgstr ""
@@ -49346,6 +49547,7 @@ msgstr ""
 #: ../app/controllers/host_controller.rb
 #: ../app/helpers/host_helper/textual_summary.rb
 #: ../app/helpers/service_helper/textual_summary.rb
+#: ../app/javascript/components/miq-custom-tab/helper.js
 #: ../app/javascript/components/provider-dashboard-charts/charts_config.js
 #: ../app/javascript/components/reconfigure-vm-form/helpers/network.js
 #: ../app/javascript/components/reconfigure-vm-form/network-form-fields.js
@@ -50302,6 +50504,7 @@ msgstr ""
 #: ../app/helpers/view_helper.rb
 #: ../app/helpers/vm_helper/textual_summary.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/helper.js
+#: ../app/javascript/components/terraform-template-catalog-form/helper.js
 #: ../app/javascript/oldjs/controllers/playbook-reusable-code-mixin.js
 #: ../lib/gtl_formatter.rb
 msgid "Never"
@@ -51198,6 +51401,10 @@ msgstr ""
 msgid "No instances found"
 msgstr ""
 
+#: ../app/javascript/spec/notification-message/notification-message.spec.js
+msgid "No message will be displayed"
+msgstr ""
+
 #: ../app/views/miq_ae_class/_class_methods.html.haml
 msgid "No methods found"
 msgstr ""
@@ -51315,6 +51522,10 @@ msgstr ""
 
 #: ../app/helpers/condition_helper.rb
 msgid "No scope defined, the scope of this condition includes all elements."
+msgstr ""
+
+#: ../app/mailers/generic_mailer.rb
+msgid "No server with notifier role in region"
 msgstr ""
 
 #: ../app/javascript/components/dashboard-widgets/widget-menu/index.jsx
@@ -51647,6 +51858,7 @@ msgstr ""
 #: ../app/helpers/textual_mixins/textual_vmm_info.rb
 #: ../app/javascript/components/miq-alert-set-form/miq-alert-set-form.schema.js
 #: ../app/javascript/components/policy-profile-form/policy-profile-form.schema.js
+#: ../app/javascript/spec/miq-alert-set/miq-alert-set.data.js
 #: ../app/views/condition/_form.html.haml
 #: ../app/views/miq_policy/_form.html.haml
 msgid "Notes"
@@ -52144,7 +52356,7 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.ems_object_storage (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.ems_object_storages
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:4100 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:4104 ../config/dictionary_strings.rb
 #: ../config/yaml_strings.rb
 msgid "Object Storage Managers"
 msgstr ""
@@ -52240,6 +52452,7 @@ msgstr ""
 #: ../app/helpers/view_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/helper.js
 #: ../app/javascript/components/data-tables/datastore/helper.js
+#: ../app/javascript/components/terraform-template-catalog-form/helper.js
 #: ../app/javascript/oldjs/controllers/playbook-reusable-code-mixin.js
 #: ../app/views/miq_ae_class/_class_fields.html.haml
 #: ../app/views/miq_ae_class/_instance_form.html.haml
@@ -52556,7 +52769,7 @@ msgid "OpenStack Swifts"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/openstack_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/openstack_credential.rb
 msgid ""
 "OpenStack domains define administrative boundaries. It is only needed for Keys"
 "tone v3 authentication URLs"
@@ -53023,7 +53236,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack (plural form)
-#: ../config/dictionary_strings.rb:3452 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3456 ../config/dictionary_strings.rb
 msgid "Orchestration Stacks (OpenStack)"
 msgstr ""
 
@@ -53059,7 +53272,7 @@ msgid "Orchestration Template is required, please select one from the list"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
-#: ../app/controllers/catalog_controller.rb:966 ../config/yaml_strings.rb
+#: ../app/controllers/catalog_controller.rb:980 ../config/yaml_strings.rb
 msgid "Orchestration Templates"
 msgstr ""
 
@@ -54068,7 +54281,7 @@ msgid "Password"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/openstack_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/openstack_credential.rb
 msgid "Password (API Key)"
 msgstr ""
 
@@ -55218,7 +55431,7 @@ msgstr[1] ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::PhysicalInfraManager
 #. TRANSLATORS: en.yml key: dictionary.table.ems_physical_infra
-#: ../config/dictionary_strings.rb:3242 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3246 ../config/dictionary_strings.rb
 msgid "Physical Infrastructure Provider"
 msgstr ""
 
@@ -57222,6 +57435,7 @@ msgstr ""
 
 #: ../app/controllers/catalog_controller.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
 msgid "Price / Month"
 msgstr ""
 
@@ -57321,6 +57535,7 @@ msgid "Private SSH Key"
 msgstr ""
 
 #:
+#: ../app/javascript/components/embedded-terraform-credential-mapping-form/embedded-terraform-credential-mapping-form.schema.js
 #: ../app/javascript/components/workflow-credential-mapping-form/workflow-credential-mapping-form.schema.js
 msgid "Private key"
 msgstr ""
@@ -57330,6 +57545,7 @@ msgid "Private key download is unavailable for this keypair."
 msgstr ""
 
 #:
+#: ../app/javascript/components/embedded-terraform-credential-mapping-form/embedded-terraform-credential-mapping-form.schema.js
 #: ../app/javascript/components/workflow-credential-mapping-form/workflow-credential-mapping-form.schema.js
 msgid "Private key passphrase"
 msgstr ""
@@ -57549,7 +57765,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ProductUpdate (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:3756 ../config/yaml_strings.rb
+#: ../config/dictionary_strings.rb:3760 ../config/yaml_strings.rb
 msgid "Product Updates"
 msgstr ""
 
@@ -57584,7 +57800,7 @@ msgid "Project"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/openstack_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/openstack_credential.rb
 msgid "Project (Tenant Name)"
 msgstr ""
 
@@ -57741,8 +57957,8 @@ msgstr ""
 #: ../app/helpers/workflow_credential_helper/textual_summary.rb
 #: ../app/helpers/workflow_helper/textual_summary.rb
 #: ../app/helpers/workflow_repository_helper/textual_summary.rb
+#: ../app/javascript/components/miq-custom-tab/helper.js
 #: ../app/views/configuration_profile/show.html.haml
-#: ../app/views/configuration_script/show.html.haml
 #: ../app/views/ems_configuration/show.html.haml
 #: ../app/views/miq_ae_class/_all_tabs.html.haml
 #: ../app/views/miq_ae_class/_class_form.html.haml
@@ -57819,6 +58035,7 @@ msgstr ""
 
 #. TRANSLATORS: file: product/views/CloudDatabase.yaml
 #. TRANSLATORS: file: product/views/ConfiguredSystem.yaml
+#. TRANSLATORS: file: product/views/Container.yaml
 #. TRANSLATORS: file: product/views/ContainerBuild.yaml
 #. TRANSLATORS: file: product/views/ContainerGroup.yaml
 #. TRANSLATORS: file: product/views/ContainerImage.yaml
@@ -57831,16 +58048,20 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ContainerTemplate.yaml
 #. TRANSLATORS: file: product/views/EmsCluster.yaml
 #. TRANSLATORS: file: product/views/Host.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_AuthKeyPair.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_CloudDatabase.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Template.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Vm.yaml
 #. TRANSLATORS: file: product/views/OrchestrationStack.yaml
 #. TRANSLATORS: file: product/views/PersistentVolume.yaml
+#. TRANSLATORS: file: product/views/PlacementGroup.yaml
 #. TRANSLATORS: file: product/views/PlacementGroup.yml
 #. TRANSLATORS: file: product/views/ProvisionCloudTemplates.yaml
 #. TRANSLATORS: file: product/views/ProvisionInfraTemplates.yaml
+#. TRANSLATORS: file: product/views/ResourcePool.yaml
 #. TRANSLATORS: file: product/views/Storage.yaml
+#. TRANSLATORS: file: product/views/Switch.yaml
 #. TRANSLATORS: file: product/views/VmOrTemplate.yaml
 #: ../app/controllers/application_controller/miq_request_methods.rb
 #: ../app/controllers/mixins/manager_controller_mixin.rb
@@ -57848,7 +58069,7 @@ msgstr ""
 #: ../app/helpers/ansible_repository_helper/textual_summary.rb
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb
 #: ../app/helpers/automation_manager_configured_system_helper.rb
-#: ../app/helpers/catalog_helper.rb:117 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:113 ../app/helpers/catalog_helper.rb
 #: ../app/helpers/configuration_job_helper/textual_summary.rb
 #: ../app/helpers/configuration_script_helper.rb
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb
@@ -58159,10 +58380,6 @@ msgstr ""
 msgid "Provision %{vms_or_templates}"
 msgstr ""
 
-#: ../app/views/miq_request/_pre_prov.html.haml
-msgid "Provision %{what} based on the selected %{type}"
-msgstr ""
-
 #: ../app/helpers/application_helper/toolbar/configured_systems_center.rb
 msgid "Provision Configured Systems"
 msgstr ""
@@ -58307,8 +58524,10 @@ msgstr ""
 msgid "Provisioned VMs [%{description}]"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb:126 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
+#: ../app/javascript/components/miq-custom-tab/helper.js
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
 #: ../app/views/service/_svcs_show.html.haml
 msgid "Provisioning"
 msgstr ""
@@ -58491,6 +58710,10 @@ msgstr ""
 
 #: ../app/helpers/report_helper.rb
 msgid "Purple Text"
+msgstr ""
+
+#: ../app/javascript/components/miq-custom-tab/helper.js
+msgid "Purpose"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -58798,7 +59021,7 @@ msgid "REST API"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/google_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/google_credential.rb
 msgid "RSA Private Key"
 msgstr ""
 
@@ -59516,6 +59739,11 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
+msgid "Refresh Configuration Script Payloads"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
 msgid "Refresh Containers Providers"
 msgstr ""
 
@@ -59564,11 +59792,6 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Refresh Physical Infrastructure Providers"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Refresh Playbooks"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -59676,6 +59899,11 @@ msgstr ""
 msgid "Refresh Selected Ansible Repositories"
 msgstr ""
 
+#:
+#: ../app/helpers/application_helper/toolbar/embedded_terraform_repositories_center.rb
+msgid "Refresh Selected Terraform Repositories"
+msgstr ""
+
 #: ../app/helpers/application_helper/toolbar/workflow_repositories_center.rb
 msgid "Refresh Selected Workflow Repositories"
 msgstr ""
@@ -59709,7 +59937,9 @@ msgstr ""
 msgid "Refresh items and relationships related to this Containers Provider?"
 msgstr ""
 
+#: ../app/controllers/ansible_credential_controller.rb
 #: ../app/controllers/ansible_repository_controller.rb
+#: ../app/controllers/workflow_credential_controller.rb
 #: ../app/controllers/workflow_repository_controller.rb
 msgid "Refresh of Repository \"%{name}\" was successfully initiated."
 msgstr ""
@@ -60114,6 +60344,11 @@ msgstr ""
 msgid "Refresh selected Storage Services"
 msgstr ""
 
+#:
+#: ../app/helpers/application_helper/toolbar/embedded_terraform_repositories_center.rb
+msgid "Refresh selected Terraform Repositories?"
+msgstr ""
+
 #: ../app/helpers/application_helper/toolbar/workflow_repositories_center.rb
 msgid "Refresh selected Workflow Repositories?"
 msgstr ""
@@ -60309,6 +60544,11 @@ msgstr ""
 msgid "Region Description"
 msgstr ""
 
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/openstack_credential.rb
+msgid "Region Name"
+msgstr ""
+
 #. TRANSLATORS: en.yml key: dictionary.column.region_number
 #: ../config/dictionary_strings.rb
 msgid "Region Number"
@@ -60344,8 +60584,8 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.table.miq_region (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.miq_regions
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/dictionary_strings.rb:3638 ../config/dictionary_strings.rb
-#: ../config/dictionary_strings.rb:4268 ../config/yaml_strings.rb
+#: ../config/dictionary_strings.rb:3642 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:4272 ../config/yaml_strings.rb
 msgid "Regions"
 msgstr ""
 
@@ -61407,6 +61647,7 @@ msgstr ""
 
 #:
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 msgid "Remove resources?"
 msgstr ""
@@ -61931,7 +62172,7 @@ msgid "Replicators Count"
 msgstr ""
 
 #: ../app/controllers/optimization_controller.rb
-#: ../app/helpers/utilization_helper.rb
+#: ../app/javascript/components/miq-custom-tab/helper.js
 #, fuzzy
 msgid "Report"
 msgstr ""
@@ -62132,6 +62373,7 @@ msgstr ""
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/helpers/workflow_helper/textual_summary.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 #: ../app/views/miq_ae_class/_method_inputs.html.haml
 #: ../config/yaml_strings.rb
@@ -62152,6 +62394,13 @@ msgstr ""
 #: ../config/dictionary_strings.rb
 msgid "Repository (Embedded Ansible)"
 msgid_plural "Repositories (Embedded Ansible)"
+msgstr[0] ""
+msgstr[1] ""
+
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/configuration_script_source.rb
+msgid "Repository (Embedded Terraform)"
+msgid_plural "Repositories (Embedded Terraform)"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -62250,7 +62499,7 @@ msgstr[1] ""
 msgid "Request ID"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb
+#: ../app/javascript/components/miq-custom-tab/helper.js
 #: ../app/views/catalog/_form_request_info.html.haml
 #: ../app/views/catalog/_sandt_tree_request.html.haml
 msgid "Request Info"
@@ -62428,6 +62677,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/MiqRequest.yaml
 #: ../app/helpers/request_details_helper.rb
+#: ../app/javascript/components/miq-custom-tab/helper.js
 #: ../app/views/miq_request/_request.html.haml:26 ../config/yaml_strings.rb
 msgid "Requester"
 msgstr ""
@@ -63489,8 +63739,10 @@ msgstr ""
 
 #: ../app/controllers/application_controller/ci_processing.rb
 #: ../app/helpers/application_helper/tasks.rb
-#: ../app/helpers/catalog_helper.rb:128 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
+#: ../app/javascript/components/miq-custom-tab/helper.js
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
 #: ../app/javascript/components/workflows/workflow-entry-points.jsx
 #: ../app/views/service/_svcs_show.html.haml
 msgid "Retirement"
@@ -63916,12 +64168,14 @@ msgstr ""
 #: ../app/helpers/ansible_repository_helper/textual_summary.rb
 #: ../app/helpers/workflow_repository_helper/textual_summary.rb
 #: ../app/javascript/components/ansible-repository-form/ansible-repository-form.schema.js
+#: ../app/javascript/components/embedded-terraform-repository-form/embedded-terraform-repository-form.schema.js
 #: ../app/javascript/components/workflow-repository-form/workflow-repository-form.schema.js
 msgid "SCM Branch"
 msgstr ""
 
 #:
 #: ../app/javascript/components/ansible-repository-form/ansible-repository-form.schema.js
+#: ../app/javascript/components/embedded-terraform-repository-form/embedded-terraform-repository-form.schema.js
 #: ../app/javascript/components/workflow-repository-form/workflow-repository-form.schema.js
 msgid "SCM Credentials"
 msgstr ""
@@ -64050,7 +64304,7 @@ msgid "STF"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/amazon_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/amazon_credential.rb
 msgid "STS Token"
 msgstr ""
 
@@ -64515,6 +64769,7 @@ msgid "Scanning"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/MiqSchedule.yaml
+#: ../app/javascript/components/miq-custom-tab/helper.js
 #: ../config/yaml_strings.rb
 #, fuzzy
 msgid "Schedule"
@@ -64609,6 +64864,7 @@ msgstr ""
 msgid "Script"
 msgstr ""
 
+#: ../app/javascript/components/filter-provision-instance/index.jsx
 #: ../app/javascript/components/search-bar/index.jsx
 #, fuzzy
 msgid "Search"
@@ -64640,6 +64896,10 @@ msgstr ""
 
 #: src/report-editor/configure-report-columns.jsx
 msgid "Search selection..."
+msgstr ""
+
+#: ../app/javascript/components/filter-provision-instance/index.jsx
+msgid "Search with name"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqSearch (plural form)
@@ -64883,7 +65143,7 @@ msgid "Security Protocol"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/amazon_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/amazon_credential.rb
 msgid "Security Token Service(STS) Token for this credential"
 msgstr ""
 
@@ -65463,11 +65723,13 @@ msgstr ""
 
 #:
 #: ../app/javascript/components/ansible-repository-form/ansible-repository-form.schema.js
+#: ../app/javascript/components/embedded-terraform-repository-form/embedded-terraform-repository-form.schema.js
 #: ../app/javascript/components/workflow-repository-form/workflow-repository-form.schema.js
 msgid "Select credentials"
 msgstr ""
 
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
 #: ../app/views/catalog/_form_basic_info.html.haml
 msgid "Select currency"
 msgstr ""
@@ -65688,7 +65950,7 @@ msgstr ""
 msgid "Selected Resource Pools"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb
+#: ../app/javascript/components/miq-custom-tab/helper.js
 #: ../app/views/catalog/_form_resources_info.html.haml
 msgid "Selected Resources"
 msgstr ""
@@ -66059,7 +66321,7 @@ msgid "Service Account"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/google_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/google_credential.rb
 msgid "Service Account Email Address"
 msgstr ""
 
@@ -66337,6 +66599,12 @@ msgstr ""
 #: ../config/model_display_names.rb
 msgid "Service Template Tenant"
 msgid_plural "Service Template Tenants"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../config/model_display_names.rb
+msgid "Service Terraform Template"
+msgid_plural "Service Terraform Templates"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -67468,7 +67736,7 @@ msgstr ""
 msgid "Severity must be selected"
 msgstr ""
 
-#: ../config/model_display_names.rb:231 ../config/model_attributes.rb
+#: ../config/model_display_names.rb:232 ../config/model_attributes.rb
 #, fuzzy
 msgid "Share"
 msgid_plural "Shares"
@@ -68266,6 +68534,10 @@ msgstr ""
 
 #: ../app/helpers/ems_cloud_helper/textual_summary.rb
 msgid "Show all Storage Managers"
+msgstr ""
+
+#: ../app/helpers/embedded_terraform_repository_helper/textual_summary.rb
+msgid "Show all Templates"
 msgstr ""
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb
@@ -70887,7 +71159,7 @@ msgstr ""
 msgid "Submit this provisioning request"
 msgstr ""
 
-#: ../config/model_display_names.rb:238 ../config/model_attributes.rb
+#: ../config/model_display_names.rb:239 ../config/model_attributes.rb
 #, fuzzy
 msgid "Subnet"
 msgid_plural "Subnets"
@@ -70971,7 +71243,8 @@ msgstr ""
 msgid "Subscription Credentials validated successfully"
 msgstr ""
 
-#: ../app/models/manageiq/providers/azure_stack/manager_mixin.rb
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/azure_credential.rb
 msgid "Subscription ID"
 msgstr ""
 
@@ -70999,6 +71272,10 @@ msgstr ""
 
 #: ../app/helpers/textual_mixins/textual_metrics_status.rb
 msgid "Success"
+msgstr ""
+
+#: ../app/javascript/spec/notification-message/notification-message.spec.js
+msgid "Success message goes here"
 msgstr ""
 
 #: ../app/views/vm_common/_policy_options.html.haml
@@ -71825,7 +72102,7 @@ msgstr ""
 msgid "Tagged VMs and Instances"
 msgstr ""
 
-#: ../config/model_display_names.rb:243 ../config/model_attributes.rb
+#: ../config/model_display_names.rb:244 ../config/model_attributes.rb
 #, fuzzy
 msgid "Tagging"
 msgid_plural "Taggings"
@@ -71979,17 +72256,11 @@ msgstr ""
 msgid "Tasks for %{name}"
 msgstr ""
 
-#. TRANSLATORS: en.yml key: dictionary.column.template
-#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::InfraManager::Template
-#. TRANSLATORS: en.yml key: dictionary.table.container_template
-#. TRANSLATORS: en.yml key: dictionary.table.template_infra
-#: ../app/models/manageiq/providers/infra_manager/template.rb
-#: ../config/dictionary_strings.rb:1924 ../config/dictionary_strings.rb
-#: ../config/dictionary_strings.rb:4020 ../config/dictionary_strings.rb
+#: ../app/helpers/catalog_helper.rb
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
+#, fuzzy
 msgid "Template"
-msgid_plural "Templates"
-msgstr[0] ""
-msgstr[1] ""
+msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb
@@ -71997,7 +72268,8 @@ msgid "Template %{subject} has been published."
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ConfigurationScript
-#: ../config/dictionary_strings.rb
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::ExternalAutomationManager::ConfigurationScript
+#: ../config/dictionary_strings.rb:2776 ../config/dictionary_strings.rb
 msgid "Template (Ansible Tower)"
 msgstr ""
 
@@ -72077,6 +72349,7 @@ msgstr ""
 #: ../app/controllers/container_template_controller.rb
 #: ../app/controllers/miq_template_controller.rb
 #: ../app/controllers/vm_infra_controller.rb
+#: ../app/helpers/application_helper/title.rb
 #: ../app/helpers/ems_infra_helper/textual_summary.rb
 #: ../app/helpers/host_helper/textual_summary.rb
 #: ../app/presenters/menu/default_menu.rb
@@ -72095,7 +72368,8 @@ msgid "Templates & Images Accordion"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ConfigurationScript (plural form)
-#: ../config/dictionary_strings.rb
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::ExternalAutomationManager::ConfigurationScript (plural form)
+#: ../config/dictionary_strings.rb:2778 ../config/dictionary_strings.rb
 msgid "Templates (Ansible Tower)"
 msgstr ""
 
@@ -72340,6 +72614,10 @@ msgstr ""
 msgid "Terminate the Guest OS on Instances"
 msgstr ""
 
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager.rb
+msgid "Terraform Template"
+msgstr ""
+
 #: ../app/views/ops/_settings_server_tab.html.haml
 msgid "Test E-mail Address"
 msgstr ""
@@ -72385,12 +72663,22 @@ msgid ""
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/azure_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/ibm_classic_infrastructure_credential.rb
+msgid "The API key for IBM Cloud Classic Infrastructure."
+msgstr ""
+
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/ibm_cloud_credential.rb
+msgid "The API key for IBM Cloud."
+msgstr ""
+
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/azure_credential.rb
 msgid "The Client ID for the Microsoft Azure account"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/azure_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/azure_credential.rb
 msgid "The Client Secret for the Microsoft Azure account"
 msgstr ""
 
@@ -72406,6 +72694,7 @@ msgstr ""
 
 #: ../app/helpers/miq_alert_set_helper.rb
 #: ../app/helpers/term_of_service_helper.rb
+#: ../app/javascript/spec/miq-alert-set/miq-alert-set.data.js
 msgid "The Enterprise"
 msgstr ""
 
@@ -72414,7 +72703,7 @@ msgid "The Floating Ip is not connected to an active %{table}"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/google_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/google_credential.rb
 msgid ""
 "The GCE assigned identification. It is constructed as two words followed by a "
 "three digit number, such as: squeamish-ossifrage-123"
@@ -72533,7 +72822,7 @@ msgid "The Storage Object is not connected to an active %{table}"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/embedded_ansible/automation_manager/azure_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/azure_credential.rb
 msgid "The Subscription ID for the Microsoft Azure account"
 msgstr ""
 
@@ -72547,12 +72836,17 @@ msgid "The Template is not connected to an active Provider"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/azure_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/azure_credential.rb
 msgid "The Tenant ID for the Microsoft Azure account"
 msgstr ""
 
 #: ../app/controllers/ems_infra_controller.rb
 msgid "The URL is blank or not a String"
+msgstr ""
+
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/ibm_classic_infrastructure_credential.rb
+msgid "The User Name for IBM Cloud Classic Infrastructure."
 msgstr ""
 
 #:
@@ -72681,6 +72975,11 @@ msgstr[1] ""
 msgid "The check count value must be an integer to commit this expression element"
 msgstr ""
 
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/openstack_credential.rb
+msgid "The client certificate for SSL client authentication."
+msgstr ""
+
 #: ../app/javascript/components/copy-catalog-form/copy-catalog-form.jsx
 msgid "The copied item will not be displayed in the catalog by default"
 msgstr ""
@@ -72690,7 +72989,19 @@ msgid "The current search details have been reset"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/google_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/openstack_credential.rb
+msgid "The custom CA certificate when communicating over SSL"
+msgstr ""
+
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/google_credential.rb
+msgid ""
+"The default region for the resources. If another region is specified on the re"
+"source, it will take precedence."
+msgstr ""
+
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/google_credential.rb
 msgid "The email address assigned to the Google Compute Engine service account"
 msgstr ""
 
@@ -72719,14 +73030,14 @@ msgid "The host to authenticate with"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/openstack_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/openstack_credential.rb
 msgid ""
 "The host to authenticate with. For example, https://openstack.business.com/v2."
 "0"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/vmware_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/vsphere_credential.rb
 msgid "The hostname or IP address of the vCenter Host"
 msgstr ""
 
@@ -72819,7 +73130,7 @@ msgid "The operation %{snapshot_op} on snapshot of %{subject} completed successf
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/openstack_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/openstack_credential.rb
 msgid "The password or API key to use to connect to OpenStack"
 msgstr ""
 
@@ -72835,6 +73146,11 @@ msgstr ""
 
 #: ../app/models/manageiq/providers/ovirt/infra_manager/vm.rb
 msgid "The provider does not support reconfigure disks"
+msgstr ""
+
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/openstack_credential.rb
+msgid "The region to create resources on"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
@@ -73015,7 +73331,7 @@ msgid "The username or password you entered is incorrect."
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/openstack_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/openstack_credential.rb
 msgid "The username to use to connect to OpenStack"
 msgstr ""
 
@@ -73144,6 +73460,7 @@ msgid "This %{klass} is read only and cannot be modified"
 msgstr ""
 
 #: ../app/helpers/miq_action_helper.rb
+#: ../app/javascript/spec/miq-alert-set/miq-alert-set.data.js
 msgid "This Action is not assigned to any Policies."
 msgstr ""
 
@@ -73291,7 +73608,7 @@ msgid "This is a group of events that happened on %s."
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/openstack_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/openstack_credential.rb
 msgid "This is the tenant name. This value is usually the same as the username"
 msgstr ""
 
@@ -74346,6 +74663,11 @@ msgstr ""
 msgid "True"
 msgstr ""
 
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/openstack_credential.rb
+msgid "Trust self-signed SSL certificates ?"
+msgstr ""
+
 #: ../app/models/manageiq/providers/vmware/container_manager.rb
 #: ../app/models/manageiq/providers/vmware/infra_manager.rb
 msgid "Trusted CA Certificates"
@@ -74619,6 +74941,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ExternalAutomationManager.yaml
 #: ../app/helpers/ems_automation_helper.rb
 #: ../app/javascript/components/ansible-repository-form/ansible-repository-form.schema.js
+#: ../app/javascript/components/embedded-terraform-repository-form/embedded-terraform-repository-form.schema.js
 #: ../app/javascript/components/firmware-registry/firmware-registry-form.schema.js
 #: ../app/javascript/components/workflow-repository-form/workflow-repository-form.schema.js
 #: ../app/views/ops/_settings_help_menu_tab.html.haml
@@ -74720,6 +75043,7 @@ msgid "Unable to %{action} %{resource}: %{details}"
 msgstr ""
 
 #: ../app/javascript/components/ansible-repository-form/index.jsx
+#: ../app/javascript/components/embedded-terraform-repository-form/index.jsx
 #: ../app/javascript/components/workflow-repository-form/index.jsx
 msgid "Unable to add Repository \"%s\": %s"
 msgstr ""
@@ -74813,6 +75137,7 @@ msgid "Unable to disassociate Floating IP from Instance \"%{name}\": %{details}"
 msgstr ""
 
 #: ../app/javascript/components/ansible-repository-form/index.jsx
+#: ../app/javascript/components/embedded-terraform-repository-form/index.jsx
 #: ../app/javascript/components/workflow-repository-form/index.jsx
 msgid "Unable to edit Repository \"%s\": %s"
 msgstr ""
@@ -74919,7 +75244,9 @@ msgstr ""
 msgid "Unable to reconfigure Instance \"%{name}\": %{details}"
 msgstr ""
 
+#: ../app/controllers/ansible_credential_controller.rb
 #: ../app/controllers/ansible_repository_controller.rb
+#: ../app/controllers/workflow_credential_controller.rb
 #: ../app/controllers/workflow_repository_controller.rb
 msgid "Unable to refresh Repository \"%{name}\": %{details}"
 msgstr ""
@@ -75080,6 +75407,7 @@ msgstr ""
 
 #: ../app/helpers/dashboard_helper.rb
 #: ../app/helpers/textual_mixins/textual_os_info.rb
+#: ../app/javascript/components/miq-custom-tab/helper.js
 #: ../app/views/pxe/_pxe_img_form.html.haml
 #: ../app/views/pxe/_pxe_wimg_form.html.haml:11 ../lib/gtl_formatter.rb
 msgid "Unknown"
@@ -75235,7 +75563,7 @@ msgstr ""
 msgid "Unsupported log depot protocol: %{protocol}"
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:1586 ../app/models/vm_or_template.rb
+#: ../app/models/vm_or_template.rb:1592 ../app/models/vm_or_template.rb
 msgid "Unsupported property type [%{property}]"
 msgstr ""
 
@@ -76281,6 +76609,10 @@ msgstr ""
 
 #: ../app/helpers/application_helper/button/embedded_ansible.rb
 msgid "User isn't allowed to use the Embedded Ansible provider."
+msgstr ""
+
+#: ../app/helpers/application_helper/button/embedded_terraform.rb
+msgid "User isn't allowed to use the Embedded Terraform provider."
 msgstr ""
 
 #: ../app/helpers/application_helper/button/embedded_workflow.rb
@@ -77455,7 +77787,7 @@ msgid "VM operations"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.VmOrTemplate
-#: ../app/models/vm_or_template.rb:1703 ../config/dictionary_strings.rb
+#: ../app/models/vm_or_template.rb:1709 ../config/dictionary_strings.rb
 msgid "VM or Template"
 msgid_plural "VMs or Templates"
 msgstr[0] ""
@@ -77624,7 +77956,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.Vm (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.vm (plural form)
-#: ../config/dictionary_strings.rb:3852 ../config/dictionary_strings.rb
+#: ../config/dictionary_strings.rb:3856 ../config/dictionary_strings.rb
 msgid "VMs and Instances"
 msgstr ""
 
@@ -77938,6 +78270,11 @@ msgstr ""
 msgid "VMware VM Summary"
 msgstr ""
 
+#:
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/vsphere_credential.rb
+msgid "VMware vSphere"
+msgstr ""
+
 #: ../app/models/manageiq/providers/vmware/infra_manager.rb
 msgid "VNC Console Ports"
 msgstr ""
@@ -78148,6 +78485,7 @@ msgstr ""
 #: ../app/helpers/catalog_helper.rb
 #: ../app/helpers/configuration_script_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
 #: ../app/views/chargeback_rate/_cb_rate_edit_table.html.haml
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 msgid "Variable"
@@ -78172,15 +78510,20 @@ msgstr ""
 
 #: ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 msgid "Variables & Default Values"
+msgstr ""
+
+#: ../app/helpers/configuration_script_helper.rb
+msgid "Variables (%{count})"
 msgstr ""
 
 #: ../app/helpers/service_helper/textual_summary.rb
 msgid "Vault"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb:198 ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 #: ../app/views/miq_ae_class/_method_inputs.html.haml
@@ -78227,9 +78570,10 @@ msgstr ""
 msgid "Vendor and Type"
 msgstr ""
 
-#: ../app/helpers/catalog_helper.rb
+#: ../app/helpers/catalog_helper.rb:201 ../app/helpers/catalog_helper.rb
 #: ../app/helpers/service_helper/textual_summary.rb
 #: ../app/javascript/components/ansible-playbook-edit-catalog-form/schema.js
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 #: ../app/views/miq_ae_class/_method_inputs.html.haml
 msgid "Verbosity"
@@ -78252,6 +78596,7 @@ msgstr ""
 
 #:
 #: ../app/javascript/components/ansible-repository-form/ansible-repository-form.schema.js
+#: ../app/javascript/components/embedded-terraform-repository-form/embedded-terraform-repository-form.schema.js
 #: ../app/javascript/components/workflow-repository-form/workflow-repository-form.schema.js
 msgid "Verify SSL"
 msgstr ""
@@ -78452,6 +78797,11 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "View Configuration Profiles"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#: ../config/yaml_strings.rb
+msgid "View Configuration Script Payloads"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -78822,11 +79172,6 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "View Placement Group"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "View Playbooks"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -80482,6 +80827,22 @@ msgid "VmOrTemplate|Storage name"
 msgstr ""
 
 #: ../config/model_attributes.rb
+msgid "VmOrTemplate|Supports reconfigure cdroms"
+msgstr ""
+
+#: ../config/model_attributes.rb
+msgid "VmOrTemplate|Supports reconfigure disks"
+msgstr ""
+
+#: ../config/model_attributes.rb
+msgid "VmOrTemplate|Supports reconfigure disksize"
+msgstr ""
+
+#: ../config/model_attributes.rb
+msgid "VmOrTemplate|Supports reconfigure network adapters"
+msgstr ""
+
+#: ../config/model_attributes.rb
 msgid "VmOrTemplate|Template"
 msgstr ""
 
@@ -80777,7 +81138,7 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.table.volume_mapping
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/model_display_names.rb:256 ../config/dictionary_strings.rb
+#: ../config/model_display_names.rb:257 ../config/dictionary_strings.rb
 #: ../config/yaml_strings.rb
 #, fuzzy
 msgid "Volume Mapping"
@@ -80941,6 +81302,7 @@ msgstr ""
 #: ../app/helpers/ems_container_helper/textual_summary.rb
 #: ../app/helpers/storage_resource_helper/textual_summary.rb
 #: ../app/helpers/storage_service_helper/textual_summary.rb
+#: ../app/javascript/components/miq-custom-tab/helper.js
 #: ../app/presenters/menu/default_menu.rb
 #: ../app/services/ems_storage_dashboard_service.rb
 #: ../app/views/shared/views/_prov_dialog.html.haml
@@ -81041,6 +81403,10 @@ msgstr ""
 
 #: src/topology/topologyCanvas.jsx
 msgid "Warning"
+msgstr ""
+
+#: ../app/javascript/spec/notification-message/notification-message.spec.js
+msgid "Warning message goes here"
 msgstr ""
 
 #:
@@ -81800,6 +82166,7 @@ msgid "Workflow Class"
 msgstr ""
 
 #:
+#: ../app/javascript/components/embedded-terraform-credential-mapping-form/embedded-terraform-credential-mapping-form.schema.js
 #: ../app/javascript/components/workflow-credential-mapping-form/workflow-credential-mapping-form.schema.js
 msgid "Workflow Credential"
 msgstr ""
@@ -81833,6 +82200,8 @@ msgstr[1] ""
 msgid "Workflow Templates (Ansible Tower)"
 msgstr ""
 
+#:
+#: ../app/javascript/components/embedded-terraform-credential-mapping-form/index.jsx
 #: ../app/javascript/components/workflow-credential-mapping-form/index.jsx
 msgid "Workflow does not have any credentials to map."
 msgstr ""
@@ -82001,6 +82370,7 @@ msgstr ""
 #: ../app/javascript/components/provider-form/index.jsx
 #: ../app/javascript/components/schedule-form/schedule-form-fields.js
 #: ../app/javascript/components/settings-tasks-form/settings-tasks-form.schema.js
+#: ../app/javascript/components/terraform-template-catalog-form/terraform-template-catalog-form.schema.js
 #: ../app/views/catalog/_form_basic_info.html.haml
 #: ../app/views/ops/_all_tabs.html.haml:9 ../config/yaml_strings.rb
 #, fuzzy
@@ -82761,7 +83131,7 @@ msgstr ""
 
 #: ../app/models/cloud_database.rb
 #: ../app/models/cloud_object_store_container.rb
-#: ../app/models/cloud_volume.rb:80 ../app/models/host_initiator.rb
+#: ../app/models/cloud_volume.rb:77 ../app/models/host_initiator.rb
 #: ../app/models/host_initiator_group.rb
 #: ../app/models/physical_storage.rb:74 ../app/models/physical_storage.rb
 #: ../app/models/placement_group.rb:48 ../app/models/storage_service.rb
@@ -82938,7 +83308,7 @@ msgid ""
 msgstr ""
 
 #: ../app/models/cloud_object_store_container.rb
-#: ../app/models/cloud_volume.rb:83 ../app/models/host_initiator.rb
+#: ../app/models/cloud_volume.rb:80 ../app/models/host_initiator.rb
 #: ../app/models/host_initiator_group.rb
 #: ../app/models/physical_storage.rb:77 ../app/models/physical_storage.rb
 #: ../app/models/placement_group.rb:51 ../app/models/storage_service.rb
@@ -83486,7 +83856,7 @@ msgstr ""
 msgid "password change not allowed when authentication mode is %{name}"
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:668 ../app/models/vm_or_template.rb
+#: ../app/models/vm_or_template.rb:674 ../app/models/vm_or_template.rb
 #: ../app/models/vm_or_template.rb
 msgid "path, '%{path}', is malformed"
 msgstr ""
@@ -84348,7 +84718,7 @@ msgid "vCPUs Allocated over Time Period"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/awx/automation_manager/vmware_credential.rb
+#: ../app/models/manageiq/providers/embedded_terraform/automation_manager/vsphere_credential.rb
 msgid "vCenter Host"
 msgstr ""
 
