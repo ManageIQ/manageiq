@@ -64,6 +64,7 @@ class ContainerOrchestrator
                     :secretName => "app-secrets",
                     :items      => [
                       {:key => "encryption-key", :path => "encryption_key"},
+                      {:key => "terraform-runner-token", :path => "token"},
                     ],
                   }
                 }
