@@ -44,6 +44,7 @@ class ContainerOrchestrator
                 :volumeMounts    => [
                   {:name => "database-secret", :readOnly => true, :mountPath => "/run/secrets/postgresql"},
                   {:name => "encryption-key", :readOnly => true, :mountPath => "/run/secrets/manageiq/application"},
+                  {:name => "terraform-runner-token", :readOnly => true, :mountPath => TERRAFORM_RUNNER_TOKEN_FILE},
                 ]
               }],
               :volumes => [
@@ -67,6 +68,13 @@ class ContainerOrchestrator
                     :items      => [
                       {:key => "encryption-key", :path => "encryption_key"},
                     ],
+                  }
+                },
+                {
+                  :name   => "terraform-runner-token",
+                  :hostPath => {
+                    :path => opentofu_runner_token,
+                    :type => "File",
                   }
                 }
               ]
@@ -178,7 +186,6 @@ class ContainerOrchestrator
         {:name => "WORKER_HEARTBEAT_FILE",   :value => Rails.root.join("tmp/worker.hb").to_s},
         {:name => "WORKER_HEARTBEAT_METHOD", :value => "file"},
         {:name => "TERRAFORM_RUNNER_URL",    :value => "https://opentofu-runner:6000"},
-        {:name => "TERRAFORM_RUNNER_TOKEN", :value => opentofu_runner_token},
       ] + database_environment + memcached_environment + messaging_environment
     end
 
@@ -187,12 +194,17 @@ class ContainerOrchestrator
       @opentofu_runner_secret_key ||= File.exist?(SECRET_KEY_FILE) ? File.read(SECRET_KEY_FILE) : "opentofu_runner_key"
     end
 
+    TERRAFORM_RUNNER_TOKEN_FILE = File.join(Dir.home, 'TERRAFORM_RUNNER_TOKEN').freeze
     def opentofu_runner_token
       secret_key = opentofu_runner_secret_key
       payload = {
         'Username' => 'opentofu-runner'
       }
-      JWT.encode(payload, secret_key, 'HS256')
+      jwtToken = JWT.encode(payload, secret_key, 'HS256')
+      File.open(TERRAFORM_RUNNER_TOKEN_FILE, "wb") do |file|
+        file.sync = true
+        file.write(jwtToken)
+      @opentofu_runner_token ||=  TERRAFORM_RUNNER_TOKEN_FILE
     end
 
     def database_environment
