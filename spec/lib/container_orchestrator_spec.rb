@@ -139,8 +139,8 @@ RSpec.describe ContainerOrchestrator do
 
       deployment_definition = subject.send(:deployment_definition, "test")
 
-      expect(deployment_definition.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts).length).to eq(3)
-      expect(deployment_definition.fetch_path(:spec, :template, :spec, :volumes).length).to eq(3)
+      expect(deployment_definition.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts).length).to eq(4)
+      expect(deployment_definition.fetch_path(:spec, :template, :spec, :volumes).length).to eq(4)
     end
 
     it "mounts the database root certificate" do
