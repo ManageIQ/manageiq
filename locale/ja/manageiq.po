@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2024-03-01 17:14+0000\n"
-"PO-Revision-Date: 2024-03-01 17:14+0000\n"
+"POT-Creation-Date: 2024-05-31 16:54+0000\n"
+"PO-Revision-Date: 2024-05-31 16:54+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -2000,6 +2000,12 @@ msgstr "API バージョン"
 msgid "AWS Access Key for this credential"
 msgstr "この資格情報の AWS アクセス鍵"
 
+msgid "AWS Region"
+msgstr "AWS リージョン"
+
+msgid "AWS Region where the provider will operate."
+msgstr "AWS プロバイダーが動作するリージョン。"
+
 msgid "AWS S3"
 msgid_plural "AWS S3"
 msgstr[0] "AWS S3"
@@ -2380,6 +2386,9 @@ msgstr "複合カタログ項目の追加"
 msgid "Add Configuration Manager Provider"
 msgstr "構成マネージャー・プロバイダーの追加"
 
+msgid "Add Configuration Script"
+msgstr "構成スクリプトの追加"
+
 msgid "Add Credentials"
 msgstr "資格情報の追加"
 
@@ -2524,9 +2533,6 @@ msgstr "オーケストレーション・テンプレートの追加"
 msgid "Add Placement Group"
 msgstr "配置グループの追加"
 
-msgid "Add Playbook"
-msgstr "Playbook の追加"
-
 msgid "Add Project to this Tenant"
 msgstr "このテナントへのプロジェクトの追加"
 
@@ -2616,6 +2622,9 @@ msgstr "条件の追加"
 
 msgid "Add a Configuration Manager Provider"
 msgstr "構成マネージャー・プロバイダーの追加"
+
+msgid "Add a Configuration Script Payload"
+msgstr "構成スクリプト・ペイロードの追加"
 
 msgid "Add a Containers Provider"
 msgstr "コンテナー・プロバイダーの追加"
@@ -2736,9 +2745,6 @@ msgstr "物理インフラストラクチャー・プロバイダーの追加"
 
 msgid "Add a Physical Storage"
 msgstr "物理ストレージの追加"
-
-msgid "Add a Playbook"
-msgstr "Playbook の追加"
 
 msgid "Add a Policy"
 msgstr "ポリシーの追加"
@@ -4102,20 +4108,11 @@ msgstr "Ansible"
 msgid "Ansible Access Method"
 msgstr "Ansible アクセス方式"
 
-msgid "Ansible Credentials Refresh"
-msgstr "Ansible 資格情報の更新"
-
 msgid "Ansible Playbook"
 msgstr "Ansible Playbook"
 
 msgid "Ansible Playbooks"
 msgstr "Ansible Playbooks"
-
-msgid "Ansible Playbooks Refresh"
-msgstr "Ansible Playbook の更新"
-
-msgid "Ansible Repositories Refresh"
-msgstr "Ansible リポジトリーの更新"
 
 msgid "Ansible Template"
 msgstr "Ansible テンプレート"
@@ -5314,6 +5311,9 @@ msgid "Automation Manager (Ansible Tower)"
 msgid_plural "Automation Managers (Ansible Tower)"
 msgstr[0] "自動化マネージャー (Ansible Tower)"
 
+msgid "Automation Manager Repositories Refresh"
+msgstr "自動化マネージャー・リポジトリーのリフレッシュ"
+
 msgid "Automation Managers"
 msgstr "自動化マネージャー"
 
@@ -6140,6 +6140,9 @@ msgstr "C & U ギャップ収集"
 msgid "C & U Gap Collection successfully initiated"
 msgstr "C & U ギャップ収集が正常に開始されました"
 
+msgid "CA certificate"
+msgstr "CA 証明書"
+
 msgid "CD-ROM (%{name} %{location}), %{connection}"
 msgstr "CD-ROM (%{name} %{location})、%{connection}"
 
@@ -6780,6 +6783,9 @@ msgstr "現在使用中の %{log_message} は削除できません"
 msgid "Cannot delete recently active %{log_message}"
 msgstr "最近動作していた %{log_message} は削除できません"
 
+msgid "Cannot delete the built-in repository"
+msgstr "組み込みリポジトリーを削除できません"
+
 msgid "Cannot display binary content"
 msgstr "バイナリー・コンテンツを表示できません"
 
@@ -6832,6 +6838,9 @@ msgstr "開始できません。すでにオンの状態です。"
 
 msgid "Cannot stop. Already off."
 msgstr "停止できません。すでにオフの状態です。"
+
+msgid "Cannot update the built-in repository"
+msgstr "組み込みリポジトリーを更新できません"
 
 msgid ""
 "Cannot validate certificate to '%{hostname}. Make sure that you use a "
@@ -8019,6 +8028,9 @@ msgstr "クリックしてこの VM を表示する"
 
 msgid "Client Browser Setting"
 msgstr "クライアント・ブラウザーの設定"
+
+msgid "Client Certificate"
+msgstr "クライアント証明書"
 
 msgid "Client ID"
 msgstr "クライアント ID"
@@ -9733,6 +9745,12 @@ msgstr[0] "構成スクリプト・ベース"
 msgid "Configuration Script Payload"
 msgid_plural "Configuration Script Payloads"
 msgstr[0] "構成スクリプト・ペイロード"
+
+msgid "Configuration Script Payload Refresh"
+msgstr "構成スクリプト・ペイロードのリフレッシュ"
+
+msgid "Configuration Scripts"
+msgstr "構成スクリプト"
 
 msgid "Configuration Tag"
 msgid_plural "Configuration Tags"
@@ -13193,6 +13211,14 @@ msgid "Credential (Google)"
 msgid_plural "Credentials (Google)"
 msgstr[0] "資格情報 (Google)"
 
+msgid "Credential (IBM Cloud Classic Infrastructure)"
+msgid_plural "Credentials (IBM Cloud Classic Infrastructure)"
+msgstr[0] "Credentials (IBM Cloud Classic Infrastructure)"
+
+msgid "Credential (IBM Cloud)"
+msgid_plural "Credentials (IBM Cloud)"
+msgstr[0] "資格情報 (IBM Cloud)"
+
 msgid "Credential (Machine)"
 msgid_plural "Credentials (Machine)"
 msgstr[0] "資格情報 (マシン)"
@@ -13223,6 +13249,10 @@ msgstr[0] "資格情報 (SCM)"
 msgid "Credential (Satellite)"
 msgid_plural "Credentials (Satellite)"
 msgstr[0] "資格情報 (Satellite)"
+
+msgid "Credential (VMware vSphere)"
+msgid_plural "Credentials (VMware vSphere)"
+msgstr[0] "Credentials (VMware vSphere)"
 
 msgid "Credential (VMware)"
 msgid_plural "Credentials (VMware)"
@@ -13315,6 +13345,9 @@ msgstr "資格情報の変更日"
 
 msgid "Credentials Identifier"
 msgstr "資格情報 ID"
+
+msgid "Credentials Refresh"
+msgstr "資格情報の最新表示"
 
 msgid "Credentials must be valid to capture metrics"
 msgstr "メトリックをキャプチャーするには、資格情報が有効である必要があります"
@@ -13850,6 +13883,9 @@ msgstr "スクリプト"
 
 msgid "CustomizationTemplate|System"
 msgstr "システム"
+
+msgid "Customize"
+msgstr "カスタマイズ"
 
 msgid "Customize Help Menu"
 msgstr "ヘルプ・メニューのカスタマイズ"
@@ -17600,6 +17636,9 @@ msgstr "構成マネージャー・プロバイダーの編集"
 msgid "Edit Configuration Profiles Tags"
 msgstr "構成プロファイル・タグの編集"
 
+msgid "Edit Configuration Script"
+msgstr "構成スクリプトの編集"
+
 msgid "Edit Configured Systems Tags"
 msgstr "構成済みシステム・タグの編集"
 
@@ -17722,9 +17761,6 @@ msgstr "PXE イメージの編集"
 
 msgid "Edit Physical Storage \"%{name}\""
 msgstr "物理ストレージ 「%{name}」 を編集する"
-
-msgid "Edit Playbook"
-msgstr "Playbook の編集"
 
 msgid "Edit Policy's Condition assignments"
 msgstr "ポリシーの条件割り当ての編集"
@@ -17915,6 +17951,12 @@ msgstr "選択した Ansible リポジトリー・タグの編集"
 msgid "Edit Tags for the selected Ansible Tower Providers"
 msgstr "選択した Ansible Tower プロバイダーのタグの編集"
 
+msgid "Edit Tags for the selected Automation Manager Credentials"
+msgstr "選択した自動化マネージャー資格情報のタグの編集"
+
+msgid "Edit Tags for the selected Automation Manager Repositories"
+msgstr "選択した自動化マネージャー・リポジトリーのタグの編集"
+
 msgid "Edit Tags for the selected Availability Zones"
 msgstr "選択したアベイラビリティー・ゾーンのタグの編集"
 
@@ -17927,8 +17969,14 @@ msgstr "選択したクラウド・プロバイダーのタグの編集"
 msgid "Edit Tags for the selected Cloud Subnets"
 msgstr "選択されたクラウド・サブネットのタグの編集"
 
+msgid "Edit Tags for the selected Configuration Script Payloads"
+msgstr "選択した構成スクリプト・ペイロードのタグの編集"
+
 msgid "Edit Tags for the selected Datastores"
 msgstr "選択したデータ・ストアのタグの編集"
+
+msgid "Edit Tags for the selected Embedded Terraform Credentials"
+msgstr "選択した組み込み Terraform 資格情報のタグの編集"
 
 msgid "Edit Tags for the selected Flavors"
 msgstr "選択したフレーバーのタグの編集"
@@ -17992,6 +18040,9 @@ msgstr "選択したストレージ・マネージャーのタグの編集"
 
 msgid "Edit Tags for the selected Templates"
 msgstr "選択したテンプレートのタグを編集する"
+
+msgid "Edit Tags for the selected Terraform Repositories"
+msgstr "選択した Terraform リポジトリーのタグの編集"
 
 msgid "Edit Tags for the selected Workflow Credentials"
 msgstr "選択したワークフロー資格情報のタグの編集"
@@ -18085,6 +18136,12 @@ msgstr "このコンテナー・プロバイダーのタグの編集"
 
 msgid "Edit Tags for this Datastore"
 msgstr "このデータ・ストアのタグの編集"
+
+msgid "Edit Tags for this Embedded Terraform Credential"
+msgstr "この組み込み Terraform 資格情報のタグの編集"
+
+msgid "Edit Tags for this Embedded Terraform Repository"
+msgstr "この組み込み Terraform リポジトリーのタグの編集"
 
 msgid "Edit Tags for this Flavor"
 msgstr "このフレーバーのタグの編集"
@@ -18413,6 +18470,9 @@ msgstr "条件の編集"
 msgid "Edit a Configuration Manager Provider"
 msgstr "構成マネージャー・プロバイダーの編集"
 
+msgid "Edit a Configuration Script Payload"
+msgstr "構成スクリプト・ペイロードの編集"
+
 msgid "Edit a Containers Provider"
 msgstr "コンテナー・プロバイダーの編集"
 
@@ -18475,9 +18535,6 @@ msgstr "物理サーバーの編集"
 
 msgid "Edit a Physical Storage"
 msgstr "物理ストレージの編集"
-
-msgid "Edit a Playbook"
-msgstr "Playbook の編集"
 
 msgid "Edit a Policy"
 msgstr "ポリシーの編集"
@@ -19318,6 +19375,18 @@ msgstr "組み込みの自動化マネージャー"
 
 msgid "Embedded Methods"
 msgstr "組み込みメソッド"
+
+msgid "Embedded Terraform"
+msgstr "組み込み Terraform"
+
+msgid "Embedded Terraform Provider"
+msgstr "組み込み Terraform プロバイダー"
+
+msgid "Embedded Terraform Provider not found."
+msgstr "組み込み Terraform プロバイダーが見つかりません。"
+
+msgid "Embedded Terraform service is not available."
+msgstr "組み込み Terraform サービスは使用できません。"
 
 msgid "Embedded Workflow"
 msgstr "組み込みワークフロー"
@@ -20196,6 +20265,9 @@ msgstr "起動時にエラーが発生しました: \"%{task_description}\" %{er
 msgid "Error loading data:"
 msgstr "データのロード中のエラー:"
 
+msgid "Error message goes here"
+msgstr "エラー・メッセージがここに表示されます"
+
 msgid "Error on line %{line_num}: %{err_txt}"
 msgstr "行 %{line_num} のエラー: %{err_txt}"
 
@@ -20619,11 +20691,11 @@ msgstr "コンテナー・アコーディオン下のすべてのアコーディ
 msgid "Everything under All Service Catalogs Accordion"
 msgstr "サービス・カタログ下のすべてのアコーディオン"
 
-msgid "Everything under Ansible"
-msgstr "Ansible 下のすべて"
-
 msgid "Everything under Auth Key Pairs"
 msgstr "認証鍵ペア下のすべて"
+
+msgid "Everything under Automation Manager"
+msgstr "自動化マネージャー下のすべて"
 
 msgid "Everything under Availability Zones"
 msgstr "アベイラビリティー・ゾーン下のすべて"
@@ -20693,6 +20765,9 @@ msgstr "構成マネージャー・プロバイダー下のすべて"
 
 msgid "Everything under Configuration Profiles"
 msgstr "構成プロファイル下のすべて"
+
+msgid "Everything under Configuration Scripts"
+msgstr "構成スクリプト下のすべて"
 
 msgid "Everything under Configured Systems"
 msgstr "構成済みシステム下のすべて"
@@ -20867,9 +20942,6 @@ msgstr "物理スイッチ下のすべて"
 
 msgid "Everything under Pictures"
 msgstr "画像下のすべて"
-
-msgid "Everything under Playbooks"
-msgstr "Playbook 下のすべて"
 
 msgid "Everything under Pods"
 msgstr "ポッド下のすべて"
@@ -22811,6 +22883,9 @@ msgstr "my start ページに移動"
 msgid "Google"
 msgstr "Google"
 
+msgid "Google Cloud Region"
+msgstr "Google Cloud 地域"
+
 msgid "Google Compute Engine"
 msgstr "Google Compute Engine"
 
@@ -23467,9 +23542,6 @@ msgstr "詳細行を非表示にする"
 
 msgid "Hide Input Parameters"
 msgstr "入力パラメーターを非表示にする"
-
-msgid "Hide deprecated"
-msgstr "非推奨項目を非表示にする"
 
 msgid "High"
 msgstr "高"
@@ -24538,6 +24610,9 @@ msgstr "IAM 認証に失敗しました: %{error_code} %{error_message}"
 msgid "IBM CIC Provider"
 msgstr "IBM CIC プロバイダー"
 
+msgid "IBM Cloud"
+msgstr "IBM Cloud"
+
 msgid "IBM Cloud API Key"
 msgstr "IBM Cloud API キー"
 
@@ -24546,6 +24621,15 @@ msgstr "IBM Cloud Activity Tracker インスタンス・サービス・キー"
 
 msgid "IBM Cloud Block-Storage Volume"
 msgstr "IBM Cloud Block-Storage ボリューム"
+
+msgid "IBM Cloud Classic Infrastructure"
+msgstr "IBM Cloud クラシック・インフラストラクチャー"
+
+msgid "IBM Cloud Classic Infrastructure API Key"
+msgstr "IBM Cloud クラシック・インフラストラクチャー API キー"
+
+msgid "IBM Cloud Classic Infrastructure User Name"
+msgstr "IBM Cloud クラシック・インフラストラクチャー・ユーザー名"
 
 msgid "IBM Cloud Infrastructure Center"
 msgstr "IBM Cloud Infrastructure Center"
@@ -25026,6 +25110,9 @@ msgstr "情報"
 
 msgid "Information for Registered VMs"
 msgstr "登録済み VM の情報"
+
+msgid "Information message goes here"
+msgstr "情報メッセージがここに表示されます"
 
 msgid "Infra Providers Dashboard"
 msgstr "インフラ・プロバイダー・ダッシュボード"
@@ -27295,8 +27382,8 @@ msgstr "資格情報のマップ"
 msgid "Map Credentials to \"%{name}\""
 msgstr "資格情報を \"%{name}\" にマップ"
 
-msgid "Map Credentials to Workflow"
-msgstr "資格情報をワークフローにマップ"
+msgid "Map Credentials to Configuration Script Payloads"
+msgstr "構成スクリプト・ペイロードへの資格情報のマップ"
 
 msgid "Map Credentials to this Workflow"
 msgstr "資格情報をこのワークフローにマップ"
@@ -27908,6 +27995,9 @@ msgstr "メッセージ・レベル"
 
 msgid "Message Source"
 msgstr "メッセージ・ソース"
+
+msgid "Message goes here"
+msgstr "メッセージはここにあります"
 
 msgid "Message:"
 msgstr "メッセージ:"
@@ -28951,9 +29041,6 @@ msgstr "VM がブランクであるため、移行することはサポートさ
 
 msgid "Migrate not supported because VM is orphaned"
 msgstr "VM が孤立しているため、移行することはサポートされません"
-
-msgid "Migrate operation is not supported."
-msgstr "移行操作はサポートされていません。"
 
 msgid "Migrate selected Instances"
 msgstr "選択したインスタンスの移行"
@@ -31568,6 +31655,9 @@ msgstr "構成ジョブの変更"
 msgid "Modify Configuration Manager Providers"
 msgstr "構成マネージャー・プロバイダーの変更"
 
+msgid "Modify Configuration Script Payloads"
+msgstr "構成スクリプト・ペイロードの変更"
+
 msgid "Modify Containers"
 msgstr "コンテナーの変更"
 
@@ -31687,9 +31777,6 @@ msgstr "物理サーバーの変更"
 
 msgid "Modify Physical Storage"
 msgstr "物理ストレージの変更"
-
-msgid "Modify Playbooks"
-msgstr "Playbook の変更"
 
 msgid "Modify Policies"
 msgstr "ポリシーの変更"
@@ -32023,6 +32110,9 @@ msgstr "オプションのハッシュで .new を呼び出す必要がありま
 
 msgid "Must contain only alphanumeric, hyphen, and underscore characters"
 msgstr "英数字、ハイフン、および下線文字のみを含める必要があります"
+
+msgid "Must provide a configuration_script_payload_id"
+msgstr "configuration_script_payload_id を指定する必要があります"
 
 msgid "Must provide both template_id and manager_id or manager and template"
 msgstr "template_id および manager_id の両方か、またはマネージャーおよびテンプレートを指定する必要があります。"
@@ -33404,6 +33494,9 @@ msgstr "適用する入力はありません"
 msgid "No instances found"
 msgstr "インスタンスが見つかりません"
 
+msgid "No message will be displayed"
+msgstr "メッセージは表示されません"
+
 msgid "No methods found"
 msgstr "メソッドが見つかりません"
 
@@ -33475,6 +33568,9 @@ msgstr "スキーマが見つかりませんでした"
 
 msgid "No scope defined, the scope of this condition includes all elements."
 msgstr "スコープが定義されていません。この条件のスコープはすべての要素を含みます。"
+
+msgid "No server with notifier role in region"
+msgstr "リージョンに通知機能の役割を持つサーバーがありません"
 
 msgid "No shortcuts are authorized for this user, contact your Administrator"
 msgstr "このユーザーにはショートカットが承認されていません。管理者にお問い合わせください"
@@ -37657,9 +37753,6 @@ msgstr "%{type}のプロビジョニング要求はユーザーにより取り�
 msgid "Provision %{vms_or_templates}"
 msgstr "%{vms_or_templates}のプロビジョニング"
 
-msgid "Provision %{what} based on the selected %{type}"
-msgstr "選択する %{type}をベースとした %{what}のプロビジョニング"
-
 msgid "Provision Configured Systems"
 msgstr "構成済みシステムのプロビジョニング"
 
@@ -37876,6 +37969,9 @@ msgstr "紫色の背景"
 
 msgid "Purple Text"
 msgstr "紫色のテキスト"
+
+msgid "Purpose"
+msgstr "目的"
 
 msgid "Put a Host into Maintenance Mode"
 msgstr "ホストをメンテナンス・モードに設定"
@@ -38530,6 +38626,9 @@ msgstr "クラウド・ボリュームのリフレッシュ"
 msgid "Refresh Configuration Manager Providers"
 msgstr "構成マネージャー・プロバイダーの更新"
 
+msgid "Refresh Configuration Script Payloads"
+msgstr "構成スクリプト・ペイロードの最新表示"
+
 msgid "Refresh Containers Providers"
 msgstr "コンテナー・プロバイダーの更新"
 
@@ -38562,9 +38661,6 @@ msgstr "オブジェクト・ストレージ・マネージャーの更新"
 
 msgid "Refresh Physical Infrastructure Providers"
 msgstr "物理インフラストラクチャー・プロバイダーの更新"
-
-msgid "Refresh Playbooks"
-msgstr "Playbook の更新"
 
 msgid "Refresh Production Log"
 msgstr "プロダクション・ログの更新"
@@ -38613,6 +38709,9 @@ msgstr "リポジトリーの更新"
 
 msgid "Refresh Selected Ansible Repositories"
 msgstr "選択した Ansible リポジトリーの更新"
+
+msgid "Refresh Selected Terraform Repositories"
+msgstr "選択した Terraform リポジトリーの最新表示"
 
 msgid "Refresh Selected Workflow Repositories"
 msgstr "選択したワークフロー・リポジトリーの更新"
@@ -38946,6 +39045,9 @@ msgstr "選択したレポートの更新"
 msgid "Refresh selected Storage Services"
 msgstr "選択したストレージ・サービスの更新"
 
+msgid "Refresh selected Terraform Repositories?"
+msgstr "選択した Terraform リポジトリーを最新表示しますか?"
+
 msgid "Refresh selected Workflow Repositories?"
 msgstr "選択したワークフロー・リポジトリーをリフレッシュしますか?"
 
@@ -39044,6 +39146,9 @@ msgstr "リージョン"
 
 msgid "Region Description"
 msgstr "リージョンの説明"
+
+msgid "Region Name"
+msgstr "領域名"
 
 msgid "Region Number"
 msgstr "リージョン番号"
@@ -40198,6 +40303,10 @@ msgstr ""
 msgid "Repository (Embedded Ansible)"
 msgid_plural "Repositories (Embedded Ansible)"
 msgstr[0] "リポジトリー (組み込み Ansible)"
+
+msgid "Repository (Embedded Terraform)"
+msgid_plural "Repositories (Embedded Terraform)"
+msgstr[0] "リポジトリー (組み込み Terraform)"
 
 msgid "Repository (Embedded Workflows)"
 msgid_plural "Repositories (Embedded Workflows)"
@@ -41825,6 +41934,9 @@ msgstr "検索はスケジュールで参照されているため、削除でき
 msgid "Search selection..."
 msgstr "選択を検索..."
 
+msgid "Search with name"
+msgstr "名前で検索"
+
 msgid "Searches"
 msgstr "検索"
 
@@ -42946,6 +43058,10 @@ msgstr "サービス・タグ"
 msgid "Service Template Tenant"
 msgid_plural "Service Template Tenants"
 msgstr[0] "サービス・テンプレート・テナント"
+
+msgid "Service Terraform Template"
+msgid_plural "Service Terraform Templates"
+msgstr[0] "Service Terraform Templates"
 
 msgid "Service Time (Seconds)"
 msgstr "サービス時間 (秒単位)"
@@ -44271,6 +44387,9 @@ msgstr "すべてのソース仮想マシンを表示"
 
 msgid "Show all Storage Managers"
 msgstr "すべてのストレージ・マネージャーを表示"
+
+msgid "Show all Templates"
+msgstr "すべてのテンプレートを表示"
 
 msgid "Show all Templates in this Cluster"
 msgstr "このクラスターのすべてのテンプレートを表示"
@@ -45993,6 +46112,9 @@ msgstr "サブタイプが必要です。"
 msgid "Success"
 msgstr "成功"
 
+msgid "Success message goes here"
+msgstr "成功メッセージがここに表示されます"
+
 msgid "Successful"
 msgstr "成功"
 
@@ -46641,8 +46763,7 @@ msgid "Tasks for %{name}"
 msgstr "%{name} のタスク"
 
 msgid "Template"
-msgid_plural "Templates"
-msgstr[0] "テンプレート"
+msgstr "テンプレート"
 
 msgid "Template %{subject} has been published."
 msgstr "テンプレート%{subject} が公開されました。"
@@ -46857,6 +46978,9 @@ msgstr "終了"
 msgid "Terminate the Guest OS on Instances"
 msgstr "インスタンスのゲスト OS を終了"
 
+msgid "Terraform Template"
+msgstr "Terraform テンプレート"
+
 msgid "Test E-mail Address"
 msgstr "テスト E メール・アドレス"
 
@@ -46887,6 +47011,12 @@ msgid ""
 "The %{product} Server is still starting. If this message persists, please "
 "contact your %{product} administrator."
 msgstr "%{product}サーバーがまだ起動中です。このメッセージが消えない場合、%{product}管理者にお問い合わせください。"
+
+msgid "The API key for IBM Cloud Classic Infrastructure."
+msgstr "IBM Cloud クラシック・インフラストラクチャーの API キー。"
+
+msgid "The API key for IBM Cloud."
+msgstr "IBM Cloud の API キー。"
 
 msgid "The Client ID for the Microsoft Azure account"
 msgstr "Microsoft Azure アカウントのクライアント ID"
@@ -47004,6 +47134,9 @@ msgstr "Microsoft Azure アカウントのテナント ID"
 msgid "The URL is blank or not a String"
 msgstr "URL が空白であるか文字列以外です"
 
+msgid "The User Name for IBM Cloud Classic Infrastructure."
+msgstr "IBM Cloud クラシック・インフラストラクチャーのユーザー名。"
+
 msgid ""
 "The VM '%{name}' can not be migrated to the same host it is already running on"
 "."
@@ -47095,11 +47228,22 @@ msgid ""
 "The check count value must be an integer to commit this expression element"
 msgstr "この式要素をコミットするために、このチェック・カウント値は整数でなければなりません"
 
+msgid "The client certificate for SSL client authentication."
+msgstr "SSL クライアント認証用のクライアント証明書。"
+
 msgid "The copied item will not be displayed in the catalog by default"
 msgstr "コピーされた項目は、デフォルトでカタログに表示されません"
 
 msgid "The current search details have been reset"
 msgstr "現在の検索詳細がリセットされました"
+
+msgid "The custom CA certificate when communicating over SSL"
+msgstr "SSL を介して通信する場合のカスタム CA 証明書"
+
+msgid ""
+"The default region for the resources. If another region is specified on the "
+"resource, it will take precedence."
+msgstr "リソースのデフォルトのリージョン。 リソースに別の領域が指定されている場合は、その領域が優先されます。"
 
 msgid "The email address assigned to the Google Compute Engine service account"
 msgstr "Google Compute Engine サービス・アカウントに割り当てられる E メール・アドレス"
@@ -47198,6 +47342,9 @@ msgstr "Microsoft Azure アカウントに接続するために使用するパ�
 
 msgid "The provider does not support reconfigure disks"
 msgstr "プロバイダーは再構成ディスクをサポートしません"
+
+msgid "The region to create resources on"
+msgstr "リソースを作成する領域"
 
 msgid "The role %{role_name} has been activated on server %{server_name}"
 msgstr "ロール %{role_name} がサーバー %{server_name} でアクティブにされています"
@@ -48166,6 +48313,9 @@ msgstr "過去のトレンド"
 
 msgid "True"
 msgstr "True"
+
+msgid "Trust self-signed SSL certificates ?"
+msgstr "自己署名 SSL 証明書を信頼しますか?"
 
 msgid "Trusted CA Certificates"
 msgstr "信頼された CA 証明書"
@@ -49302,6 +49452,9 @@ msgstr "ユーザーが作成されました"
 msgid "User isn't allowed to use the Embedded Ansible provider."
 msgstr "ユーザーは組み込み Ansible プロバイダーの使用が許可されていません。"
 
+msgid "User isn't allowed to use the Embedded Terraform provider."
+msgstr "ユーザーは組み込み Terraform プロバイダーの使用を許可されていません。"
+
 msgid "User isn't allowed to use the Embedded Workflows provider."
 msgstr "ユーザーは組み込みワークフロー・プロバイダーの使用を許可されていません。"
 
@@ -50342,6 +50495,9 @@ msgstr "VMware ツール・バージョン"
 msgid "VMware VM Summary"
 msgstr "VMware VM サマリー"
 
+msgid "VMware vSphere"
+msgstr "VMware vSphere"
+
 msgid "VNC Console Ports"
 msgstr "VNC コンソール・ポート"
 
@@ -50491,6 +50647,9 @@ msgstr "変数"
 
 msgid "Variables & Default Values"
 msgstr "変数 & デフォルト値"
+
+msgid "Variables (%{count})"
+msgstr "変数 (%{count})"
 
 msgid "Vault"
 msgstr "ボールト"
@@ -50651,6 +50810,9 @@ msgstr "構成マネージャー・プロバイダーの表示"
 
 msgid "View Configuration Profiles"
 msgstr "構成プロファイルの表示"
+
+msgid "View Configuration Script Payloads"
+msgstr "構成スクリプト・ペイロードの表示"
 
 msgid "View Configured Systems"
 msgstr "構成されたシステムの表示"
@@ -50876,9 +51038,6 @@ msgstr "物理スイッチの表示"
 
 msgid "View Placement Group"
 msgstr "配置グループの表示"
-
-msgid "View Playbooks"
-msgstr "Playbook の表示"
 
 msgid "View Pods"
 msgstr "ポッドの表示"
@@ -52023,6 +52182,18 @@ msgstr "状態の変更"
 msgid "VmOrTemplate|Storage name"
 msgstr "ストレージ名"
 
+msgid "VmOrTemplate|Supports reconfigure cdroms"
+msgstr "VmOr テンプレート | 再構成 cdroms のサポート"
+
+msgid "VmOrTemplate|Supports reconfigure disks"
+msgstr "VmOr テンプレート | 再構成ディスクのサポート"
+
+msgid "VmOrTemplate|Supports reconfigure disksize"
+msgstr "VmOr テンプレート | ディスク・サイズの再構成をサポート"
+
+msgid "VmOrTemplate|Supports reconfigure network adapters"
+msgstr "VmOr テンプレート | ネットワーク・アダプターの再構成をサポート"
+
 msgid "VmOrTemplate|Template"
 msgstr "テンプレート"
 
@@ -52381,6 +52552,9 @@ msgstr "警告"
 
 msgid "Warning"
 msgstr "警告"
+
+msgid "Warning message goes here"
+msgstr "警告メッセージがここに表示されます"
 
 msgid ""
 "Warning: ALL Objects will be permanently removed from the Object Storage "
