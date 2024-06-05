@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2024-03-01 17:14+0000\n"
-"PO-Revision-Date: 2024-03-01 17:14+0000\n"
+"POT-Creation-Date: 2024-05-31 16:54+0000\n"
+"PO-Revision-Date: 2024-05-31 16:54+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -2202,6 +2202,12 @@ msgstr "Versão da API"
 msgid "AWS Access Key for this credential"
 msgstr "Chave de acesso AWS para esta credencial"
 
+msgid "AWS Region"
+msgstr "Região AWS"
+
+msgid "AWS Region where the provider will operate."
+msgstr "Região do AWS na qual o provedor operará."
+
 msgid "AWS S3"
 msgid_plural "AWS S3"
 msgstr[0] "AWS S3"
@@ -2600,6 +2606,9 @@ msgstr "Incluir item do catálogo composto"
 msgid "Add Configuration Manager Provider"
 msgstr "Incluir provedor de gerenciador de configuração"
 
+msgid "Add Configuration Script"
+msgstr "Incluir script de configuração"
+
 msgid "Add Credentials"
 msgstr "Incluir credenciais"
 
@@ -2751,9 +2760,6 @@ msgstr "Incluir modelo de orquestração"
 msgid "Add Placement Group"
 msgstr "Incluir grupo de posicionamento"
 
-msgid "Add Playbook"
-msgstr "Incluir playbook"
-
 msgid "Add Project to this Tenant"
 msgstr "Incluir projeto a este locatário"
 
@@ -2843,6 +2849,9 @@ msgstr "Incluir uma condição:"
 
 msgid "Add a Configuration Manager Provider"
 msgstr "Incluir um provedor de gerenciador de configuração"
+
+msgid "Add a Configuration Script Payload"
+msgstr "Incluir uma carga útil do script de configuração"
 
 msgid "Add a Containers Provider"
 msgstr "Incluir um provedor de contêineres"
@@ -2964,9 +2973,6 @@ msgstr "Incluir um provedor de infraestrutura física"
 
 msgid "Add a Physical Storage"
 msgstr "Incluir um armazenamento físico"
-
-msgid "Add a Playbook"
-msgstr "Incluir um playbook"
 
 msgid "Add a Policy"
 msgstr "Incluir uma política"
@@ -4370,20 +4376,11 @@ msgstr "Ansible"
 msgid "Ansible Access Method"
 msgstr "Método de acesso do Ansible"
 
-msgid "Ansible Credentials Refresh"
-msgstr "Atualização das credenciais do Ansible"
-
 msgid "Ansible Playbook"
 msgstr "Playbook do Ansible"
 
 msgid "Ansible Playbooks"
 msgstr "Playbooks do Ansible"
-
-msgid "Ansible Playbooks Refresh"
-msgstr "Atualização de playbooks do Ansible"
-
-msgid "Ansible Repositories Refresh"
-msgstr "Atualização de repositórios do Ansible"
 
 msgid "Ansible Template"
 msgstr "Modelo do Ansible"
@@ -5648,6 +5645,9 @@ msgid_plural "Automation Managers (Ansible Tower)"
 msgstr[0] "Gerenciador de automação (Ansible Tower)"
 msgstr[1] "Gerenciadores de automação (Ansible Tower)"
 
+msgid "Automation Manager Repositories Refresh"
+msgstr "Atualização de repositórios do Automation Manager"
+
 msgid "Automation Managers"
 msgstr "Gerenciadores de automação"
 
@@ -6508,6 +6508,9 @@ msgstr "Coleta de diferenças de capacidade e utilização"
 msgid "C & U Gap Collection successfully initiated"
 msgstr "Coleta de diferenças de capacidade e utilização iniciada com sucesso"
 
+msgid "CA certificate"
+msgstr "Certificado de autoridade de certificação"
+
 msgid "CD-ROM (%{name} %{location}), %{connection}"
 msgstr "CD-ROM (%{name} %{location}), %{connection}"
 
@@ -7211,6 +7214,9 @@ msgstr "Não é possível excluir o %{log_message} usado atualmente"
 msgid "Cannot delete recently active %{log_message}"
 msgstr "Não é possível excluir o %{log_message} recentemente ativo"
 
+msgid "Cannot delete the built-in repository"
+msgstr "Não é possível excluir o repositório integrado"
+
 msgid "Cannot display binary content"
 msgstr "Não é possível exibir o conteúdo binário"
 
@@ -7269,6 +7275,9 @@ msgstr "Não é possível iniciar. Já está ligado."
 
 msgid "Cannot stop. Already off."
 msgstr "Não é possível parar. Já desligado."
+
+msgid "Cannot update the built-in repository"
+msgstr "Não é possível atualizar o repositório integrado"
 
 msgid ""
 "Cannot validate certificate to '%{hostname}. Make sure that you use a "
@@ -8533,6 +8542,9 @@ msgstr "Clique para visualizar esta máquina virtual"
 
 msgid "Client Browser Setting"
 msgstr "Configuração do navegador do cliente"
+
+msgid "Client Certificate"
+msgstr "Certificado do cliente"
 
 msgid "Client ID"
 msgstr "ID do cliente"
@@ -10300,6 +10312,12 @@ msgid "Configuration Script Payload"
 msgid_plural "Configuration Script Payloads"
 msgstr[0] "Carga útil do script de configuração"
 msgstr[1] "Cargas úteis do script de configuração"
+
+msgid "Configuration Script Payload Refresh"
+msgstr "Atualização da carga útil do script de configuração"
+
+msgid "Configuration Scripts"
+msgstr "Scripts de configuração"
 
 msgid "Configuration Tag"
 msgid_plural "Configuration Tags"
@@ -14074,6 +14092,16 @@ msgid_plural "Credentials (Google)"
 msgstr[0] "Credencial (Google)"
 msgstr[1] "Credenciais (Google)"
 
+msgid "Credential (IBM Cloud Classic Infrastructure)"
+msgid_plural "Credentials (IBM Cloud Classic Infrastructure)"
+msgstr[0] "Credencial (Infraestrutura clássica da IBM Cloud)"
+msgstr[1] "Credenciais (Infraestrutura clássica da IBM Cloud)"
+
+msgid "Credential (IBM Cloud)"
+msgid_plural "Credentials (IBM Cloud)"
+msgstr[0] "Credencial (IBM Cloud)"
+msgstr[1] "Credenciais (IBM Cloud)"
+
 msgid "Credential (Machine)"
 msgid_plural "Credentials (Machine)"
 msgstr[0] "Credencial (Máquina)"
@@ -14111,6 +14139,11 @@ msgid "Credential (Satellite)"
 msgid_plural "Credentials (Satellite)"
 msgstr[0] "Credencial (Satellite)"
 msgstr[1] "Credenciais (Satellite)"
+
+msgid "Credential (VMware vSphere)"
+msgid_plural "Credentials (VMware vSphere)"
+msgstr[0] "Credencial (VMware vSphere)"
+msgstr[1] "Credenciais (VMware vSphere)"
 
 msgid "Credential (VMware)"
 msgid_plural "Credentials (VMware)"
@@ -14205,6 +14238,9 @@ msgstr "Credenciais mudadas em"
 
 msgid "Credentials Identifier"
 msgstr "Identificador de credenciais"
+
+msgid "Credentials Refresh"
+msgstr "Atualização de credenciais"
 
 msgid "Credentials must be valid to capture metrics"
 msgstr "As credenciais devem ser válidas para capturar métricas"
@@ -14760,6 +14796,9 @@ msgstr "CustomizationTemplate|Script"
 
 msgid "CustomizationTemplate|System"
 msgstr "CustomizationTemplate|Sistema"
+
+msgid "Customize"
+msgstr "Customizar"
 
 msgid "Customize Help Menu"
 msgstr "Customização do Menu de ajuda"
@@ -18611,6 +18650,9 @@ msgstr "Editar o provedor do gerenciador de configuração"
 msgid "Edit Configuration Profiles Tags"
 msgstr "Editar as identificações de perfil de configuração"
 
+msgid "Edit Configuration Script"
+msgstr "Editar script de configuração"
+
 msgid "Edit Configured Systems Tags"
 msgstr "Editar tags dos sistemas configurados"
 
@@ -18736,9 +18778,6 @@ msgstr "Editar imagem PXE"
 
 msgid "Edit Physical Storage \"%{name}\""
 msgstr "Editar armazenamento físico \"%{name}\""
-
-msgid "Edit Playbook"
-msgstr "Editar playbook"
 
 msgid "Edit Policy's Condition assignments"
 msgstr "Editar designações de condição da política"
@@ -18929,6 +18968,12 @@ msgstr "Editar tags para os repositórios do Ansible selecionados"
 msgid "Edit Tags for the selected Ansible Tower Providers"
 msgstr "Editar tags para os provedores do Ansible Tower selecionados"
 
+msgid "Edit Tags for the selected Automation Manager Credentials"
+msgstr "Editar tags para as credenciais selecionadas do Automation Manager"
+
+msgid "Edit Tags for the selected Automation Manager Repositories"
+msgstr "Editar tags para os repositórios selecionados do Automation Manager"
+
 msgid "Edit Tags for the selected Availability Zones"
 msgstr "Editar tags para as zonas de disponibilidades selecionadas"
 
@@ -18941,8 +18986,15 @@ msgstr "Editar tags para os provedores em nuvem selecionados"
 msgid "Edit Tags for the selected Cloud Subnets"
 msgstr "Editar tags para as sub-redes em nuvem selecionadas"
 
+msgid "Edit Tags for the selected Configuration Script Payloads"
+msgstr ""
+"Editar tags para as cargas úteis selecionadas do script de configuração"
+
 msgid "Edit Tags for the selected Datastores"
 msgstr "Editar tags para os armazenamentos de dados selecionados"
+
+msgid "Edit Tags for the selected Embedded Terraform Credentials"
+msgstr "Editar tags para as credenciais selecionadas do Terraform integrado"
 
 msgid "Edit Tags for the selected Flavors"
 msgstr "Editar tags para os tipos selecionados"
@@ -19007,6 +19059,9 @@ msgstr "Editar tags para os gerenciadores de armazenamento selecionados"
 
 msgid "Edit Tags for the selected Templates"
 msgstr "Editar tags para os modelos selecionados"
+
+msgid "Edit Tags for the selected Terraform Repositories"
+msgstr "Editar tags para os repositórios selecionados do Terraform"
 
 msgid "Edit Tags for the selected Workflow Credentials"
 msgstr "Editar tags para as credenciais de fluxo de trabalho selecionadas"
@@ -19100,6 +19155,12 @@ msgstr "Editar tags para este provedor de contêineres"
 
 msgid "Edit Tags for this Datastore"
 msgstr "Editar tags para este armazenamento de dados"
+
+msgid "Edit Tags for this Embedded Terraform Credential"
+msgstr "Editar tags para esta credencial do Terraform integrado"
+
+msgid "Edit Tags for this Embedded Terraform Repository"
+msgstr "Editar tags para este repositório do Terraform integrado"
 
 msgid "Edit Tags for this Flavor"
 msgstr "Editar tags para este tipo"
@@ -19428,6 +19489,9 @@ msgstr "Editar uma condição"
 msgid "Edit a Configuration Manager Provider"
 msgstr "Editar um provedor do gerenciador de configuração"
 
+msgid "Edit a Configuration Script Payload"
+msgstr "Editar uma carga útil do script de configuração"
+
 msgid "Edit a Containers Provider"
 msgstr "Editar um provedor de contêineres"
 
@@ -19491,9 +19555,6 @@ msgstr "Editar um servidor físico"
 
 msgid "Edit a Physical Storage"
 msgstr "Editar um armazenamento físico"
-
-msgid "Edit a Playbook"
-msgstr "Editar um playbook"
 
 msgid "Edit a Policy"
 msgstr "Editar uma política"
@@ -20356,6 +20417,18 @@ msgstr "Gerenciadores de automação integrados"
 
 msgid "Embedded Methods"
 msgstr "Métodos integrados"
+
+msgid "Embedded Terraform"
+msgstr "Terraform integrado"
+
+msgid "Embedded Terraform Provider"
+msgstr "Provedor do Terraform integrado"
+
+msgid "Embedded Terraform Provider not found."
+msgstr "Provedor do Terraform integrado não localizado."
+
+msgid "Embedded Terraform service is not available."
+msgstr "O serviço do Terraform integrado não está disponível."
 
 msgid "Embedded Workflow"
 msgstr "Fluxo de trabalho integrado"
@@ -21275,6 +21348,9 @@ msgstr "Erro de ativação: \"%{task_description}\" %{error_message}"
 msgid "Error loading data:"
 msgstr "Erro ao carregar dados:"
 
+msgid "Error message goes here"
+msgstr "A mensagem de erro é inserida aqui"
+
 msgid "Error on line %{line_num}: %{err_txt}"
 msgstr "Erro na linha %{line_num}: %{err_txt}"
 
@@ -21708,11 +21784,11 @@ msgstr "Tudo na sanfona Todos os contêineres"
 msgid "Everything under All Service Catalogs Accordion"
 msgstr "Tudo na sanfona Todos os catálogos de serviço"
 
-msgid "Everything under Ansible"
-msgstr "Tudo em Ansible"
-
 msgid "Everything under Auth Key Pairs"
 msgstr "Tudo em Pares de chaves de aut."
+
+msgid "Everything under Automation Manager"
+msgstr "Tudo no Automation Manager"
 
 msgid "Everything under Availability Zones"
 msgstr "Tudo em Zonas disponíveis"
@@ -21782,6 +21858,9 @@ msgstr "Tudo em provedores do gerenciador de configuração"
 
 msgid "Everything under Configuration Profiles"
 msgstr "Tudo em perfis de configuração"
+
+msgid "Everything under Configuration Scripts"
+msgstr "Tudo em scripts de configuração"
 
 msgid "Everything under Configured Systems"
 msgstr "Tudo em sistemas configurados"
@@ -21956,9 +22035,6 @@ msgstr "Tudo em Comutadores físicos"
 
 msgid "Everything under Pictures"
 msgstr "Tudo em Figuras"
-
-msgid "Everything under Playbooks"
-msgstr "Tudo em Playbooks"
 
 msgid "Everything under Pods"
 msgstr "Tudo em Pods"
@@ -23986,6 +24062,9 @@ msgstr "Ir para minha página inicial"
 msgid "Google"
 msgstr "Google"
 
+msgid "Google Cloud Region"
+msgstr "Região do Google Cloud"
+
 msgid "Google Compute Engine"
 msgstr "Google Compute Engine"
 
@@ -24647,9 +24726,6 @@ msgstr "Ocultar linhas de detalhes"
 
 msgid "Hide Input Parameters"
 msgstr "Ocultar parâmetros de entrada"
-
-msgid "Hide deprecated"
-msgstr "Ocultar descontinuados"
 
 msgid "High"
 msgstr "Alta"
@@ -25774,6 +25850,9 @@ msgstr "Falha na autenticação do IAM: %{error_code} %{error_message}"
 msgid "IBM CIC Provider"
 msgstr "Provedor IBM CIC"
 
+msgid "IBM Cloud"
+msgstr "IBM Cloud"
+
 msgid "IBM Cloud API Key"
 msgstr "Chave API do IBM Cloud"
 
@@ -25782,6 +25861,15 @@ msgstr "Chave de serviço da instância do IBM Cloud Activity Tracker"
 
 msgid "IBM Cloud Block-Storage Volume"
 msgstr "IBM Cloud Block - Volume de armazenamento"
+
+msgid "IBM Cloud Classic Infrastructure"
+msgstr "Infraestrutura clássica IBM Cloud"
+
+msgid "IBM Cloud Classic Infrastructure API Key"
+msgstr "Chave de API da infraestrutura clássica da IBM Cloud"
+
+msgid "IBM Cloud Classic Infrastructure User Name"
+msgstr "Nome do usuário da infraestrutura clássica da IBM Cloud"
 
 msgid "IBM Cloud Infrastructure Center"
 msgstr "IBM Cloud Infrastructure Center"
@@ -26280,6 +26368,9 @@ msgstr "Informação"
 
 msgid "Information for Registered VMs"
 msgstr "Informações para as máquinas virtuais registradas"
+
+msgid "Information message goes here"
+msgstr "A mensagem de informação é inserida aqui"
 
 msgid "Infra Providers Dashboard"
 msgstr "Painel de provedores de infraestrutura."
@@ -28632,8 +28723,8 @@ msgstr "Mapear credenciais"
 msgid "Map Credentials to \"%{name}\""
 msgstr "Mapear credenciais para \"%{name}\""
 
-msgid "Map Credentials to Workflow"
-msgstr "Mapear credenciais para o fluxo de trabalho"
+msgid "Map Credentials to Configuration Script Payloads"
+msgstr "Mapear credenciais para cargas úteis do script de configuração"
 
 msgid "Map Credentials to this Workflow"
 msgstr "Mapear credenciais para este fluxo de trabalho"
@@ -29301,6 +29392,9 @@ msgstr "Nível da mensagem"
 
 msgid "Message Source"
 msgstr "Origem da mensagem"
+
+msgid "Message goes here"
+msgstr "A mensagem é inserida aqui"
 
 msgid "Message:"
 msgstr "Mensagem:"
@@ -30410,9 +30504,6 @@ msgstr "A migração não é suportada porque a VM está em branco"
 
 msgid "Migrate not supported because VM is orphaned"
 msgstr "A migração não é suportada porque a VM está órfã"
-
-msgid "Migrate operation is not supported."
-msgstr "A operação de migração não é suportada."
 
 msgid "Migrate selected Instances"
 msgstr "Migrar instâncias selecionadas"
@@ -33083,6 +33174,9 @@ msgstr "Modificar tarefa de configuração"
 msgid "Modify Configuration Manager Providers"
 msgstr "Modificar os provedores do gerenciador de configuração"
 
+msgid "Modify Configuration Script Payloads"
+msgstr "Modificar cargas úteis do script de configuração"
+
 msgid "Modify Containers"
 msgstr "Modificar contêineres"
 
@@ -33202,9 +33296,6 @@ msgstr "Modificar servidores físicos"
 
 msgid "Modify Physical Storage"
 msgstr "Modificar armazenamento físico"
-
-msgid "Modify Playbooks"
-msgstr "Modificar playbooks"
 
 msgid "Modify Policies"
 msgstr "Modificar políticas"
@@ -33541,6 +33632,9 @@ msgstr "É necessário chamar .new com um hash de opções."
 
 msgid "Must contain only alphanumeric, hyphen, and underscore characters"
 msgstr "Deve conter apenas caracteres alfanuméricos, hífen e sublinhados"
+
+msgid "Must provide a configuration_script_payload_id"
+msgstr "Deve fornecer um configuration_script_payload_id"
 
 msgid "Must provide both template_id and manager_id or manager and template"
 msgstr "É necessário fornecer template_id e manager_id ou gerenciador e modelo"
@@ -35011,6 +35105,9 @@ msgstr "Nenhuma entrada para aplicar"
 msgid "No instances found"
 msgstr "Nenhuma instância encontrada"
 
+msgid "No message will be displayed"
+msgstr "Nenhuma mensagem será exibida"
+
 msgid "No methods found"
 msgstr "Nenhum método encontrado"
 
@@ -35085,6 +35182,9 @@ msgstr "Nenhum esquema encontrado"
 msgid "No scope defined, the scope of this condition includes all elements."
 msgstr ""
 "Nenhum escopo definido, o escopo desta condição inclui todos os elementos."
+
+msgid "No server with notifier role in region"
+msgstr "Nenhum servidor com função de notificador na região"
 
 msgid "No shortcuts are authorized for this user, contact your Administrator"
 msgstr ""
@@ -39414,9 +39514,6 @@ msgstr "A solicitação de provisão do %{type} foi cancelada pelo usuário"
 msgid "Provision %{vms_or_templates}"
 msgstr "Provisionar o %{vms_or_templates}"
 
-msgid "Provision %{what} based on the selected %{type}"
-msgstr "Provisionar o %{what} com base no %{type} selecionado"
-
 msgid "Provision Configured Systems"
 msgstr "Sistemas configurados para provisão"
 
@@ -39641,6 +39738,9 @@ msgstr "Plano de fundo roxo"
 
 msgid "Purple Text"
 msgstr "Texto roxo"
+
+msgid "Purpose"
+msgstr "Propósito"
 
 msgid "Put a Host into Maintenance Mode"
 msgstr "Colocar um host no modo de manutenção"
@@ -40326,6 +40426,9 @@ msgstr "Atualizar volumes de nuvem"
 msgid "Refresh Configuration Manager Providers"
 msgstr "Atualizar os provedores do gerenciador de configurações"
 
+msgid "Refresh Configuration Script Payloads"
+msgstr "Atualizar cargas úteis do script de configuração"
+
 msgid "Refresh Containers Providers"
 msgstr "Atualizar provedores de contêineres"
 
@@ -40360,9 +40463,6 @@ msgstr "Atualizar gerenciadores de armazenamento de objeto"
 
 msgid "Refresh Physical Infrastructure Providers"
 msgstr "Atualizar provedores de infraestrutura física"
-
-msgid "Refresh Playbooks"
-msgstr "Atualizar playbooks"
 
 msgid "Refresh Production Log"
 msgstr "Atualizar log de produção"
@@ -40413,6 +40513,9 @@ msgstr "Atualizar repositórios"
 
 msgid "Refresh Selected Ansible Repositories"
 msgstr "Atualizar repositórios do Ansible selecionados"
+
+msgid "Refresh Selected Terraform Repositories"
+msgstr "Atualizar repositórios selecionados do Terraform"
 
 msgid "Refresh Selected Workflow Repositories"
 msgstr "Atualizar repositórios de fluxo de trabalho selecionados"
@@ -40871,6 +40974,9 @@ msgstr "Atualizar relatórios selecionados"
 msgid "Refresh selected Storage Services"
 msgstr "Atualizar serviços de armazenamento selecionados"
 
+msgid "Refresh selected Terraform Repositories?"
+msgstr "Atualizar repositórios selecionados do Terraform?"
+
 msgid "Refresh selected Workflow Repositories?"
 msgstr "Deseja atualizar os repositórios de fluxo de trabalho selecionados?"
 
@@ -40971,6 +41077,9 @@ msgstr "Região"
 
 msgid "Region Description"
 msgstr "Descrição da região"
+
+msgid "Region Name"
+msgstr "Nome da região"
 
 msgid "Region Number"
 msgstr "Número da região"
@@ -42156,6 +42265,11 @@ msgid "Repository (Embedded Ansible)"
 msgid_plural "Repositories (Embedded Ansible)"
 msgstr[0] "Repositório (Ansible integrado)"
 msgstr[1] "Repositórios (Ansible integrado)"
+
+msgid "Repository (Embedded Terraform)"
+msgid_plural "Repositories (Embedded Terraform)"
+msgstr[0] "Repositório (Terraform integrado)"
+msgstr[1] "Repositórios (Terraform integrado)"
 
 msgid "Repository (Embedded Workflows)"
 msgid_plural "Repositories (Embedded Workflows)"
@@ -43830,6 +43944,9 @@ msgstr "A procura é referenciada em um planejamento e não pode ser excluída"
 msgid "Search selection..."
 msgstr "Procurar seleção..."
 
+msgid "Search with name"
+msgstr "Procurar com nome"
+
 msgid "Searches"
 msgstr "Procuras"
 
@@ -45002,6 +45119,11 @@ msgid "Service Template Tenant"
 msgid_plural "Service Template Tenants"
 msgstr[0] "Locatário de modelo de serviço"
 msgstr[1] "Locatários de Modelo de serviço"
+
+msgid "Service Terraform Template"
+msgid_plural "Service Terraform Templates"
+msgstr[0] "Modelo do Terraform de serviço"
+msgstr[1] "Modelos do Terraform de serviço"
 
 msgid "Service Time (Seconds)"
 msgstr "Tempo de serviço (segundos)"
@@ -46377,6 +46499,9 @@ msgstr "Mostrar todas as máquinas virtuais de origem"
 
 msgid "Show all Storage Managers"
 msgstr "Mostrar todos os gerenciadores de armazenamento"
+
+msgid "Show all Templates"
+msgstr "Mostrar todos os modelos"
 
 msgid "Show all Templates in this Cluster"
 msgstr "Mostrar todos os modelos neste cluster"
@@ -48188,6 +48313,9 @@ msgstr "O subtipo é necessário."
 msgid "Success"
 msgstr "Sucesso"
 
+msgid "Success message goes here"
+msgstr "A mensagem de sucesso é inserida aqui"
+
 msgid "Successful"
 msgstr "Com sucesso"
 
@@ -48851,9 +48979,7 @@ msgid "Tasks for %{name}"
 msgstr "Tarefas do %{name}"
 
 msgid "Template"
-msgid_plural "Templates"
-msgstr[0] "Modelo"
-msgstr[1] "Modelo"
+msgstr "Modelo"
 
 msgid "Template %{subject} has been published."
 msgstr "O modelo%{subject} foi publicado."
@@ -49073,6 +49199,9 @@ msgstr "Finalizar"
 msgid "Terminate the Guest OS on Instances"
 msgstr "Terminar o S.O. convidado nas instâncias"
 
+msgid "Terraform Template"
+msgstr "Modelo do Terraform"
+
 msgid "Test E-mail Address"
 msgstr "Endereço de e-mail do locatário"
 
@@ -49107,6 +49236,12 @@ msgid ""
 msgstr ""
 "O %{product} Server ainda está iniciando. Se esta mensagem persistir, entre em"
 " contato com seu administrador do %{product}."
+
+msgid "The API key for IBM Cloud Classic Infrastructure."
+msgstr "A chave de API para a infraestrutura clássica da IBM Cloud."
+
+msgid "The API key for IBM Cloud."
+msgstr "A chave de API da IBM Cloud."
 
 msgid "The Client ID for the Microsoft Azure account"
 msgstr "O ID do cliente da conta do Microsoft Azure"
@@ -49227,6 +49362,9 @@ msgstr "O ID do locatário da conta do Microsoft Azure"
 msgid "The URL is blank or not a String"
 msgstr "A URL está em branco ou não é uma sequência de caracteres"
 
+msgid "The User Name for IBM Cloud Classic Infrastructure."
+msgstr "O nome do usuário para a infraestrutura clássica da IBM Cloud."
+
 msgid ""
 "The VM '%{name}' can not be migrated to the same host it is already running on"
 "."
@@ -49329,11 +49467,26 @@ msgstr ""
 "O valor da contagem de verificação deve ser um número inteiro para confirmar o"
 " elemento de expressão"
 
+msgid "The client certificate for SSL client authentication."
+msgstr "O certificado de cliente para autenticação de cliente SSL."
+
 msgid "The copied item will not be displayed in the catalog by default"
 msgstr "O item copiado não será exibido no catálogo por padrão"
 
 msgid "The current search details have been reset"
 msgstr "Os detalhes da procura atual foram redefinidos"
+
+msgid "The custom CA certificate when communicating over SSL"
+msgstr ""
+"O certificado de autoridade de certificação customizado ao se comunicar sobre "
+"SSL"
+
+msgid ""
+"The default region for the resources. If another region is specified on the "
+"resource, it will take precedence."
+msgstr ""
+"A região padrão para os recursos. Se uma outra região for especificada no "
+"recurso, ela terá precedência."
 
 msgid "The email address assigned to the Google Compute Engine service account"
 msgstr ""
@@ -49443,6 +49596,9 @@ msgstr "A senha a ser usada para se conectar à conta do Microsoft Azure"
 
 msgid "The provider does not support reconfigure disks"
 msgstr "O provedor não oferece suporte para reconfigurar discos"
+
+msgid "The region to create resources on"
+msgstr "A região na qual criar recursos"
 
 msgid "The role %{role_name} has been activated on server %{server_name}"
 msgstr "A função %{role_name} foi ativada no servidor %{server_name}"
@@ -50458,6 +50614,9 @@ msgstr "Tendências do passado"
 
 msgid "True"
 msgstr "Verdadeiro"
+
+msgid "Trust self-signed SSL certificates ?"
+msgstr "Confiar em certificados SSL autoassinados?"
 
 msgid "Trusted CA Certificates"
 msgstr "Certificados de Autoridade de Certificação Confiáveis"
@@ -51653,6 +51812,10 @@ msgstr "Usuário criado"
 msgid "User isn't allowed to use the Embedded Ansible provider."
 msgstr "O usuário não pode usar o provedor Embedded Ansible."
 
+msgid "User isn't allowed to use the Embedded Terraform provider."
+msgstr ""
+"O usuário não tem permissão para usar o provedor do Terraform integrado."
+
 msgid "User isn't allowed to use the Embedded Workflows provider."
 msgstr ""
 "O usuário não tem permissão para usar o provedor de fluxos de trabalho "
@@ -52748,6 +52911,9 @@ msgstr "Versões das ferramentas VMware"
 msgid "VMware VM Summary"
 msgstr "Resumo de MV VMware"
 
+msgid "VMware vSphere"
+msgstr "VMware vSphere"
+
 msgid "VNC Console Ports"
 msgstr "Portas do console VNC"
 
@@ -52902,6 +53068,9 @@ msgstr "Variáveis"
 
 msgid "Variables & Default Values"
 msgstr "Valores variáveis e padrão"
+
+msgid "Variables (%{count})"
+msgstr "Variáveis (%{count})"
 
 msgid "Vault"
 msgstr "Área segura"
@@ -53062,6 +53231,9 @@ msgstr "Visualizar os provedores do gerenciador de configuração"
 
 msgid "View Configuration Profiles"
 msgstr "Visualizar os perfis de configuração"
+
+msgid "View Configuration Script Payloads"
+msgstr "Visualizar cargas úteis do script de configuração"
 
 msgid "View Configured Systems"
 msgstr "Visualizar sistemas configurados"
@@ -53287,9 +53459,6 @@ msgstr "Visualizar comutador físico"
 
 msgid "View Placement Group"
 msgstr "Visualizar grupo de posicionamento"
-
-msgid "View Playbooks"
-msgstr "Visualizar playbooks"
 
 msgid "View Pods"
 msgstr "Visualizar Pods"
@@ -54469,6 +54638,18 @@ msgstr "VmOrTemplate|Estado mudado em"
 msgid "VmOrTemplate|Storage name"
 msgstr "VmOrTemplate|Nome do armazenamento"
 
+msgid "VmOrTemplate|Supports reconfigure cdroms"
+msgstr "Modelo VmOr|Suporta reconfigurar cdroms"
+
+msgid "VmOrTemplate|Supports reconfigure disks"
+msgstr "Modelo VmOr |Suporta reconfigurar discos"
+
+msgid "VmOrTemplate|Supports reconfigure disksize"
+msgstr "Modelo VmOr |Suporta reconfigurar o tamanho do disco"
+
+msgid "VmOrTemplate|Supports reconfigure network adapters"
+msgstr "Modelo VmOr |Suporta reconfigurar adaptadores de rede"
+
 msgid "VmOrTemplate|Template"
 msgstr "VmOrTemplate|Modelo"
 
@@ -54834,6 +55015,9 @@ msgstr "Aviso"
 
 msgid "Warning"
 msgstr "Aviso"
+
+msgid "Warning message goes here"
+msgstr "A mensagem de aviso é inserida aqui"
 
 msgid ""
 "Warning: ALL Objects will be permanently removed from the Object Storage "

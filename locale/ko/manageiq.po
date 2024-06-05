@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2024-03-01 17:14+0000\n"
-"PO-Revision-Date: 2024-03-01 17:14+0000\n"
+"POT-Creation-Date: 2024-05-31 16:54+0000\n"
+"PO-Revision-Date: 2024-05-31 16:54+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1997,6 +1997,12 @@ msgstr "API 버전"
 msgid "AWS Access Key for this credential"
 msgstr "이 인증 정보에 대한 AWS 액세스 키"
 
+msgid "AWS Region"
+msgstr "AWS 지역"
+
+msgid "AWS Region where the provider will operate."
+msgstr "AWS 제공자가 운영할 지역입니다."
+
 msgid "AWS S3"
 msgid_plural "AWS S3"
 msgstr[0] "AWS S3"
@@ -2377,6 +2383,9 @@ msgstr "컴포지트 카탈로그 항목 추가"
 msgid "Add Configuration Manager Provider"
 msgstr "구성 관리자 제공자 추가"
 
+msgid "Add Configuration Script"
+msgstr "구성 스크립트 추가"
+
 msgid "Add Credentials"
 msgstr "인증 정보 추가"
 
@@ -2521,9 +2530,6 @@ msgstr "오케스트레이션 템플리트 추가"
 msgid "Add Placement Group"
 msgstr "배치 그룹 추가"
 
-msgid "Add Playbook"
-msgstr "플레이북 추가"
-
 msgid "Add Project to this Tenant"
 msgstr "이 테넌트에 프로젝트 추가"
 
@@ -2613,6 +2619,9 @@ msgstr "조건 추가"
 
 msgid "Add a Configuration Manager Provider"
 msgstr "구성 관리자 제공자 추가"
+
+msgid "Add a Configuration Script Payload"
+msgstr "구성 스크립트 페이로드 추가"
 
 msgid "Add a Containers Provider"
 msgstr "컨테이너 제공자 추가"
@@ -2733,9 +2742,6 @@ msgstr "물리적 인프라 제공자 추가"
 
 msgid "Add a Physical Storage"
 msgstr "물리적 스토리지 추가"
-
-msgid "Add a Playbook"
-msgstr "플레이북 추가"
 
 msgid "Add a Policy"
 msgstr "정책 추가"
@@ -4099,20 +4105,11 @@ msgstr "Ansible"
 msgid "Ansible Access Method"
 msgstr "Ansible 액세스 방법"
 
-msgid "Ansible Credentials Refresh"
-msgstr "Ansible 인증 정보 새로 고치기"
-
 msgid "Ansible Playbook"
 msgstr "Ansible 플레이북"
 
 msgid "Ansible Playbooks"
 msgstr "Ansible 플레이북"
-
-msgid "Ansible Playbooks Refresh"
-msgstr "Ansible 플레이북 새로 고치기"
-
-msgid "Ansible Repositories Refresh"
-msgstr "Ansible 저장소 새로 고치기"
 
 msgid "Ansible Template"
 msgstr "Ansible 템플리트"
@@ -5309,6 +5306,9 @@ msgid "Automation Manager (Ansible Tower)"
 msgid_plural "Automation Managers (Ansible Tower)"
 msgstr[0] "자동화 관리자(Ansible Tower)"
 
+msgid "Automation Manager Repositories Refresh"
+msgstr "Automation Manager 저장소 새로 고치기"
+
 msgid "Automation Managers"
 msgstr "자동화 관리자"
 
@@ -6135,6 +6135,9 @@ msgstr "C & U 갭 콜렉션"
 msgid "C & U Gap Collection successfully initiated"
 msgstr "C & U 갭 콜렉션이 정상적으로 시작됨"
 
+msgid "CA certificate"
+msgstr "CA 인증서"
+
 msgid "CD-ROM (%{name} %{location}), %{connection}"
 msgstr "CD-ROM(%{name} %{location}), %{connection}"
 
@@ -6775,6 +6778,9 @@ msgstr "현재 사용되는 %{log_message}을(를) 삭제할 수 없음"
 msgid "Cannot delete recently active %{log_message}"
 msgstr "최근에 활성화된 %{log_message}을(를) 삭제할 수 없음"
 
+msgid "Cannot delete the built-in repository"
+msgstr "내장 저장소를 삭제할 수 없음"
+
 msgid "Cannot display binary content"
 msgstr "2진 컨텐츠를 표시할 수 없음"
 
@@ -6827,6 +6833,9 @@ msgstr "시작할 수 없습니다. 이미 켜져 있습니다."
 
 msgid "Cannot stop. Already off."
 msgstr "중지할 수 없습니다. 이미 꺼져 있습니다."
+
+msgid "Cannot update the built-in repository"
+msgstr "내장 저장소를 업데이트할 수 없음"
 
 msgid ""
 "Cannot validate certificate to '%{hostname}. Make sure that you use a "
@@ -8012,6 +8021,9 @@ msgstr "이 VM을 보려면 클릭하십시오."
 
 msgid "Client Browser Setting"
 msgstr "클라이언트 브라우저 설정"
+
+msgid "Client Certificate"
+msgstr "클라이언트 인증서"
 
 msgid "Client ID"
 msgstr "클라이언트 ID"
@@ -9726,6 +9738,12 @@ msgstr[0] "구성 스크립트 기반"
 msgid "Configuration Script Payload"
 msgid_plural "Configuration Script Payloads"
 msgstr[0] "구성 스크립트 페이로드"
+
+msgid "Configuration Script Payload Refresh"
+msgstr "구성 스크립트 페이로드 새로 고치기"
+
+msgid "Configuration Scripts"
+msgstr "구성 스크립트"
 
 msgid "Configuration Tag"
 msgid_plural "Configuration Tags"
@@ -13185,6 +13203,14 @@ msgid "Credential (Google)"
 msgid_plural "Credentials (Google)"
 msgstr[0] "인증 정보(Google)"
 
+msgid "Credential (IBM Cloud Classic Infrastructure)"
+msgid_plural "Credentials (IBM Cloud Classic Infrastructure)"
+msgstr[0] "Credentials (IBM Cloud Classic Infrastructure)"
+
+msgid "Credential (IBM Cloud)"
+msgid_plural "Credentials (IBM Cloud)"
+msgstr[0] "Credentials (IBM Cloud)"
+
 msgid "Credential (Machine)"
 msgid_plural "Credentials (Machine)"
 msgstr[0] "인증 정보(시스템)"
@@ -13215,6 +13241,10 @@ msgstr[0] "인증 정보(SCM)"
 msgid "Credential (Satellite)"
 msgid_plural "Credentials (Satellite)"
 msgstr[0] "인증 정보(Satellite)"
+
+msgid "Credential (VMware vSphere)"
+msgid_plural "Credentials (VMware vSphere)"
+msgstr[0] "Credentials (VMware vSphere)"
 
 msgid "Credential (VMware)"
 msgid_plural "Credentials (VMware)"
@@ -13307,6 +13337,9 @@ msgstr "인증 정보 변경 날짜"
 
 msgid "Credentials Identifier"
 msgstr "신임 정보 ID"
+
+msgid "Credentials Refresh"
+msgstr "신임 정보 새로 고치기"
 
 msgid "Credentials must be valid to capture metrics"
 msgstr "메트릭을 캡처하려면 인증 정보가 유효해야 합니다."
@@ -13842,6 +13875,9 @@ msgstr "CustomizationTemplate|스크립트"
 
 msgid "CustomizationTemplate|System"
 msgstr "CustomizationTemplate|시스템"
+
+msgid "Customize"
+msgstr "사용자 정의"
 
 msgid "Customize Help Menu"
 msgstr "도움말 메뉴 사용자 정의"
@@ -17590,6 +17626,9 @@ msgstr "구성 관리자 제공자 편집"
 msgid "Edit Configuration Profiles Tags"
 msgstr "구성 프로파일 태그 편집"
 
+msgid "Edit Configuration Script"
+msgstr "구성 스크립트 편집"
+
 msgid "Edit Configured Systems Tags"
 msgstr "구성된 시스템 태그 편집"
 
@@ -17712,9 +17751,6 @@ msgstr "PXE 이미지 편집"
 
 msgid "Edit Physical Storage \"%{name}\""
 msgstr "물리적 스토리지 \"%{name}\" 편집"
-
-msgid "Edit Playbook"
-msgstr "플레이북 편집"
 
 msgid "Edit Policy's Condition assignments"
 msgstr "정책 조건의 지정 편집"
@@ -17905,6 +17941,12 @@ msgstr "선택한 Ansible 저장소의 태그 편집"
 msgid "Edit Tags for the selected Ansible Tower Providers"
 msgstr "선택한 Ansible Tower 저장소의 태그 편집"
 
+msgid "Edit Tags for the selected Automation Manager Credentials"
+msgstr "선택한 Automation Manager 신임 정보의 태그 편집"
+
+msgid "Edit Tags for the selected Automation Manager Repositories"
+msgstr "선택한 Automation Manager 저장소의 태그 편집"
+
 msgid "Edit Tags for the selected Availability Zones"
 msgstr "선택한 가용성 구역의 태그 편집"
 
@@ -17917,8 +17959,14 @@ msgstr "선택한 클라우드 제공자의 태그 편집"
 msgid "Edit Tags for the selected Cloud Subnets"
 msgstr "선택한 클라우드 서브넷의 태그 편집"
 
+msgid "Edit Tags for the selected Configuration Script Payloads"
+msgstr "선택한 구성 스크립트 페이로드의 태그 편집"
+
 msgid "Edit Tags for the selected Datastores"
 msgstr "선택한 데이터 저장소의 태그 편집"
+
+msgid "Edit Tags for the selected Embedded Terraform Credentials"
+msgstr "선택한 임베디드 Terraform 신임 정보의 태그 편집"
 
 msgid "Edit Tags for the selected Flavors"
 msgstr "선택한 플레이버의 태그 편집"
@@ -17982,6 +18030,9 @@ msgstr "선택한 스토리지 관리자의 태그 편집"
 
 msgid "Edit Tags for the selected Templates"
 msgstr "선택된 템플리트에 대한 태그 편집"
+
+msgid "Edit Tags for the selected Terraform Repositories"
+msgstr "선택한 Terraform 저장소의 태그 편집"
 
 msgid "Edit Tags for the selected Workflow Credentials"
 msgstr "선택한 워크플로우 신임 정보의 태그 편집"
@@ -18075,6 +18126,12 @@ msgstr "이 컨테이너 제공자의 태그 편집"
 
 msgid "Edit Tags for this Datastore"
 msgstr "이 데이터 저장소의 태그 편집"
+
+msgid "Edit Tags for this Embedded Terraform Credential"
+msgstr "이 임베디드 Terraform 신임 정보의 태그 편집"
+
+msgid "Edit Tags for this Embedded Terraform Repository"
+msgstr "이 임베디드 Terraform 저장소의 태그 편집"
 
 msgid "Edit Tags for this Flavor"
 msgstr "이 플레이버의 태그 편집"
@@ -18403,6 +18460,9 @@ msgstr "조건 편집"
 msgid "Edit a Configuration Manager Provider"
 msgstr "구성 관리자 제공자 편집"
 
+msgid "Edit a Configuration Script Payload"
+msgstr "구성 스크립트 페이로드 편집"
+
 msgid "Edit a Containers Provider"
 msgstr "컨테이너 제공자 편집"
 
@@ -18465,9 +18525,6 @@ msgstr "물리적 서버 표시"
 
 msgid "Edit a Physical Storage"
 msgstr "물리적 스토리지 편집"
-
-msgid "Edit a Playbook"
-msgstr "플레이북 편집"
 
 msgid "Edit a Policy"
 msgstr "정책 편집"
@@ -19308,6 +19365,18 @@ msgstr "임베디드 자동화 관리자"
 
 msgid "Embedded Methods"
 msgstr "임베디드 메소드"
+
+msgid "Embedded Terraform"
+msgstr "임베디드 Terraform"
+
+msgid "Embedded Terraform Provider"
+msgstr "임베디드 Terraform 제공자"
+
+msgid "Embedded Terraform Provider not found."
+msgstr "임베디드 Terraform 제공자를 찾을 수 없습니다."
+
+msgid "Embedded Terraform service is not available."
+msgstr "임베디드 Terraform 서비스를 사용할 수 없습니다."
 
 msgid "Embedded Workflow"
 msgstr "임베디드 워크플로우"
@@ -20187,6 +20256,9 @@ msgstr "실행 중 오류: \"%{task_description}\" %{error_message}"
 msgid "Error loading data:"
 msgstr "데이터 로드 중 오류:"
 
+msgid "Error message goes here"
+msgstr "오류 메시지가 여기에 표시됩니다."
+
 msgid "Error on line %{line_num}: %{err_txt}"
 msgstr "회선 '%{line_num}'의 오류: %{err_txt}"
 
@@ -20610,11 +20682,11 @@ msgstr "모든 컨테이너 아코디언 아래의 모든 항목"
 msgid "Everything under All Service Catalogs Accordion"
 msgstr "모든 서비스 카탈로그 아코디언 아래의 모든 항목"
 
-msgid "Everything under Ansible"
-msgstr "Ansible 아래의 모든 항목"
-
 msgid "Everything under Auth Key Pairs"
 msgstr "자동 키 쌍 아래의 모든 항목"
+
+msgid "Everything under Automation Manager"
+msgstr "Automation Manager 아래의 모든 항목"
 
 msgid "Everything under Availability Zones"
 msgstr "가용성 구역 아래의 모든 항목"
@@ -20684,6 +20756,9 @@ msgstr "구성 관리자 제공자 아래의 모든 항목"
 
 msgid "Everything under Configuration Profiles"
 msgstr "구성 프로파일 아래의 모든 항목"
+
+msgid "Everything under Configuration Scripts"
+msgstr "구성 스크립트 아래의 모든 항목"
 
 msgid "Everything under Configured Systems"
 msgstr "구성된 시스템 아래의 모든 항목"
@@ -20858,9 +20933,6 @@ msgstr "물리적 스위치 아래의 모든 항목"
 
 msgid "Everything under Pictures"
 msgstr "그림 아래의 모든 항목"
-
-msgid "Everything under Playbooks"
-msgstr "플레이북 아래의 모든 항목"
 
 msgid "Everything under Pods"
 msgstr "팟(Pod) 아래의 모든 항목"
@@ -22801,6 +22873,9 @@ msgstr "내 시작 페이지로 이동"
 msgid "Google"
 msgstr "Google"
 
+msgid "Google Cloud Region"
+msgstr "Google Cloud 지역"
+
 msgid "Google Compute Engine"
 msgstr "Google 컴퓨팅 엔진"
 
@@ -23452,9 +23527,6 @@ msgstr "세부사항 행 숨기기"
 
 msgid "Hide Input Parameters"
 msgstr "입력 매개변수 숨기기"
-
-msgid "Hide deprecated"
-msgstr "더 이상 사용되지 않는 항목 숨기기"
 
 msgid "High"
 msgstr "높음"
@@ -24523,6 +24595,9 @@ msgstr "IAM 인증 실패: %{error_code} %{error_message}"
 msgid "IBM CIC Provider"
 msgstr "IBM CIC 제공자"
 
+msgid "IBM Cloud"
+msgstr "IBM Cloud"
+
 msgid "IBM Cloud API Key"
 msgstr "IBM Cloud API 키"
 
@@ -24531,6 +24606,15 @@ msgstr "IBM Cloud Activity Tracker 인스턴스 서비스 키"
 
 msgid "IBM Cloud Block-Storage Volume"
 msgstr "IBM Cloud Block-Storage 볼륨"
+
+msgid "IBM Cloud Classic Infrastructure"
+msgstr "IBM Cloud 클래식 인프라"
+
+msgid "IBM Cloud Classic Infrastructure API Key"
+msgstr "IBM Cloud 클래식 인프라 API 키"
+
+msgid "IBM Cloud Classic Infrastructure User Name"
+msgstr "IBM Cloud 클래식 인프라 사용자 이름"
 
 msgid "IBM Cloud Infrastructure Center"
 msgstr "IBM Cloud Infrastructure Center"
@@ -25011,6 +25095,9 @@ msgstr "정보"
 
 msgid "Information for Registered VMs"
 msgstr "등록된 VM에 대한 정보"
+
+msgid "Information message goes here"
+msgstr "정보 메시지가 여기에 표시됩니다."
 
 msgid "Infra Providers Dashboard"
 msgstr "인프라 제공자 대시보드"
@@ -27280,8 +27367,8 @@ msgstr "신임 정보 맵핑"
 msgid "Map Credentials to \"%{name}\""
 msgstr "신임 정보를 \"%{name}\"에 맵핑"
 
-msgid "Map Credentials to Workflow"
-msgstr "신임 정보를 워크플로우에 맵핑"
+msgid "Map Credentials to Configuration Script Payloads"
+msgstr "구성 스크립트 페이로드에 신임 정보 맵핑"
 
 msgid "Map Credentials to this Workflow"
 msgstr "신임 정보를 이 워크플로우에 맵핑"
@@ -27893,6 +27980,9 @@ msgstr "메시지 레벨"
 
 msgid "Message Source"
 msgstr "메시지 소스"
+
+msgid "Message goes here"
+msgstr "메시지가 여기에 표시됩니다."
 
 msgid "Message:"
 msgstr "메시지:"
@@ -28936,9 +29026,6 @@ msgstr "VM이 비어 있으므로 마이그레이션이 지원되지 않음"
 
 msgid "Migrate not supported because VM is orphaned"
 msgstr "VM이 분리되어 있으므로 마이그레이션이 지원되지 않음"
-
-msgid "Migrate operation is not supported."
-msgstr "마이그레이션 오퍼레이션이 지원되지 않습니다."
 
 msgid "Migrate selected Instances"
 msgstr "선택한 인스턴스 마이그레이션"
@@ -31553,6 +31640,9 @@ msgstr "구성 작업 수정"
 msgid "Modify Configuration Manager Providers"
 msgstr "구성 관리자 제공자 수정"
 
+msgid "Modify Configuration Script Payloads"
+msgstr "구성 스크립트 페이로드 수정"
+
 msgid "Modify Containers"
 msgstr "컨테이너 수정"
 
@@ -31672,9 +31762,6 @@ msgstr "물리적 서버 수정"
 
 msgid "Modify Physical Storage"
 msgstr "물리적 스토리지 수정"
-
-msgid "Modify Playbooks"
-msgstr "플레이북 수정"
 
 msgid "Modify Policies"
 msgstr "정책 수정"
@@ -32008,6 +32095,9 @@ msgstr "옵션 해시와 함께 .new를 호출해야 합니다."
 
 msgid "Must contain only alphanumeric, hyphen, and underscore characters"
 msgstr "영숫자, 하이픈 및 밑줄 문자만 포함해야 합니다."
+
+msgid "Must provide a configuration_script_payload_id"
+msgstr "configuration_script_payload_id를 제공해야 함"
 
 msgid "Must provide both template_id and manager_id or manager and template"
 msgstr "template_id와 manager_id 또는 관리자와 템플리트를 제공해야 합니다."
@@ -33389,6 +33479,9 @@ msgstr "적용할 입력 없음"
 msgid "No instances found"
 msgstr "인스턴스를 찾을 수 없음"
 
+msgid "No message will be displayed"
+msgstr "메시지가 표시되지 않음"
+
 msgid "No methods found"
 msgstr "메소드를 찾을 수 없음"
 
@@ -33460,6 +33553,9 @@ msgstr "스키마를 찾을 수 없음"
 
 msgid "No scope defined, the scope of this condition includes all elements."
 msgstr "범위가 정의되지 않음, 이 조건의 범위는 모든 요소를 포함합니다."
+
+msgid "No server with notifier role in region"
+msgstr "지역에 알리미 역할이 있는 서버가 없음"
 
 msgid "No shortcuts are authorized for this user, contact your Administrator"
 msgstr "이 사용자에 대해 권한이 부여된 바로 가기가 없음, 관리자에게 문의하십시오."
@@ -37637,9 +37733,6 @@ msgstr "사용자가 %{type} 요청 프로비저닝을 취소했습니다."
 msgid "Provision %{vms_or_templates}"
 msgstr "%{vms_or_templates} 프로비저닝"
 
-msgid "Provision %{what} based on the selected %{type}"
-msgstr "선택된 %{type}에 기반하여 %{what} 프로비저닝"
-
 msgid "Provision Configured Systems"
 msgstr "구성된 시스템 프로비저닝"
 
@@ -37856,6 +37949,9 @@ msgstr "자주색 배경"
 
 msgid "Purple Text"
 msgstr "자주색 텍스트"
+
+msgid "Purpose"
+msgstr "용도"
 
 msgid "Put a Host into Maintenance Mode"
 msgstr "호스트를 유지보수 모드에 두기"
@@ -38510,6 +38606,9 @@ msgstr "클라우드 볼륨 새로 고침"
 msgid "Refresh Configuration Manager Providers"
 msgstr "구성 관리자 제공자 새로 고치기"
 
+msgid "Refresh Configuration Script Payloads"
+msgstr "구성 스크립트 페이로드 새로 고치기"
+
 msgid "Refresh Containers Providers"
 msgstr "컨테이너 제공자 새로 고치기"
 
@@ -38542,9 +38641,6 @@ msgstr "Object Storage 관리자 새로 고치기"
 
 msgid "Refresh Physical Infrastructure Providers"
 msgstr "물리적 인프라 제공자 새로 고치기"
-
-msgid "Refresh Playbooks"
-msgstr "플레이북 새로 고치기"
 
 msgid "Refresh Production Log"
 msgstr "프로덕션 로그 새로 고치기"
@@ -38593,6 +38689,9 @@ msgstr "저장소 새로 고치기"
 
 msgid "Refresh Selected Ansible Repositories"
 msgstr "선택한 Ansible 저장소 새로 고치기"
+
+msgid "Refresh Selected Terraform Repositories"
+msgstr "선택한 Terraform 저장소 새로 고치기"
 
 msgid "Refresh Selected Workflow Repositories"
 msgstr "선택한 워크플로우 저장소 새로 고치기"
@@ -38926,6 +39025,9 @@ msgstr "저장된 보고서 새로 고치기"
 msgid "Refresh selected Storage Services"
 msgstr "선택한 스토리지 서비스 새로 고치기"
 
+msgid "Refresh selected Terraform Repositories?"
+msgstr "선택한 Terraform 저장소를 새로 고치시겠습니까?"
+
 msgid "Refresh selected Workflow Repositories?"
 msgstr "선택한 워크플로우 저장소를 새로 고치시겠습니까?"
 
@@ -39024,6 +39126,9 @@ msgstr "지역"
 
 msgid "Region Description"
 msgstr "지역 설명"
+
+msgid "Region Name"
+msgstr "지역 이름"
 
 msgid "Region Number"
 msgstr "지역 번호"
@@ -40178,6 +40283,10 @@ msgstr ""
 msgid "Repository (Embedded Ansible)"
 msgid_plural "Repositories (Embedded Ansible)"
 msgstr[0] "저장소(임베디드 Ansible)"
+
+msgid "Repository (Embedded Terraform)"
+msgid_plural "Repositories (Embedded Terraform)"
+msgstr[0] "Repositories (Embedded Terraform)"
 
 msgid "Repository (Embedded Workflows)"
 msgid_plural "Repositories (Embedded Workflows)"
@@ -41804,6 +41913,9 @@ msgstr "검색이 스케줄에 참조되어서 검색을 삭제할 수 없습니
 msgid "Search selection..."
 msgstr "선택사항 검색..."
 
+msgid "Search with name"
+msgstr "이름으로 검색"
+
 msgid "Searches"
 msgstr "검색"
 
@@ -42924,6 +43036,10 @@ msgstr "서비스 태그"
 msgid "Service Template Tenant"
 msgid_plural "Service Template Tenants"
 msgstr[0] "서비스 템플리트 테넌트"
+
+msgid "Service Terraform Template"
+msgid_plural "Service Terraform Templates"
+msgstr[0] "Service Terraform Templates"
 
 msgid "Service Time (Seconds)"
 msgstr "서비스 시간(초)"
@@ -44249,6 +44365,9 @@ msgstr "모든 소스 가상 머신 표시"
 
 msgid "Show all Storage Managers"
 msgstr "스토리지 관리자 모두 표시"
+
+msgid "Show all Templates"
+msgstr "템플리트 모두 표시"
 
 msgid "Show all Templates in this Cluster"
 msgstr "이 클러스터의 템플리트 모두 표시"
@@ -45971,6 +46090,9 @@ msgstr "하위 유형은 필수입니다."
 msgid "Success"
 msgstr "성공"
 
+msgid "Success message goes here"
+msgstr "성공 메시지가 여기에 표시됩니다."
+
 msgid "Successful"
 msgstr "성공"
 
@@ -46617,8 +46739,7 @@ msgid "Tasks for %{name}"
 msgstr "%{name}의 태스크"
 
 msgid "Template"
-msgid_plural "Templates"
-msgstr[0] "템플리트"
+msgstr "템플리트"
 
 msgid "Template %{subject} has been published."
 msgstr "%{subject} 템플리트가 공개되었습니다."
@@ -46833,6 +46954,9 @@ msgstr "종료"
 msgid "Terminate the Guest OS on Instances"
 msgstr "인스턴스의 게스트 OS 종료"
 
+msgid "Terraform Template"
+msgstr "Terraform 템플리트"
+
 msgid "Test E-mail Address"
 msgstr "테스트 이메일 주소"
 
@@ -46863,6 +46987,12 @@ msgid ""
 "The %{product} Server is still starting. If this message persists, please "
 "contact your %{product} administrator."
 msgstr "%{product} 서버가 여전히 시작 중입니다. 이 메시지가 지속되면 %{product} 관리자에게 문의하십시오."
+
+msgid "The API key for IBM Cloud Classic Infrastructure."
+msgstr "IBM Cloud 클래식 인프라의 API 키입니다."
+
+msgid "The API key for IBM Cloud."
+msgstr "IBM Cloud의 API 키입니다."
 
 msgid "The Client ID for the Microsoft Azure account"
 msgstr "Microsoft Azure 계정의 클라이언트 ID"
@@ -46981,6 +47111,9 @@ msgstr "Microsoft Azure 계정의 테넌트 ID"
 msgid "The URL is blank or not a String"
 msgstr "URL이 공백이거나 문자열이 아닙니다."
 
+msgid "The User Name for IBM Cloud Classic Infrastructure."
+msgstr "IBM Cloud 클래식 인프라의 사용자 이름입니다."
+
 msgid ""
 "The VM '%{name}' can not be migrated to the same host it is already running on"
 "."
@@ -47070,11 +47203,22 @@ msgid ""
 "The check count value must be an integer to commit this expression element"
 msgstr "이 표현식 요소를 커미트하려면 검사 개수 값이 정수여야 합니다."
 
+msgid "The client certificate for SSL client authentication."
+msgstr "SSL 클라이언트 인증을 위한 클라이언트 인증서입니다."
+
 msgid "The copied item will not be displayed in the catalog by default"
 msgstr "복사된 항목은 기본적으로 카탈로그에 표시되지 않습니다."
 
 msgid "The current search details have been reset"
 msgstr "현재 검색 세부사항이 재설정됨"
+
+msgid "The custom CA certificate when communicating over SSL"
+msgstr "SSL을 통한 통신 시 사용자 정의 CA 인증서"
+
+msgid ""
+"The default region for the resources. If another region is specified on the "
+"resource, it will take precedence."
+msgstr "자원의 기본 지역입니다. 자원에 다른 지역이 지정된 경우에는 우선순위가 높습니다."
 
 msgid "The email address assigned to the Google Compute Engine service account"
 msgstr "Google 컴퓨팅 엔진 서비스 계정에 지정된 이메일 주소"
@@ -47173,6 +47317,9 @@ msgstr "Microsoft Azure 계정에 연결하는 데 사용할 비밀번호"
 
 msgid "The provider does not support reconfigure disks"
 msgstr "제공자가 디스크 재구성을 지원하지 않습니다."
+
+msgid "The region to create resources on"
+msgstr "자원을 작성할 지역"
 
 msgid "The role %{role_name} has been activated on server %{server_name}"
 msgstr "%{role_name} 역할이 서버 %{server_name}에서 활성화되었습니다."
@@ -48141,6 +48288,9 @@ msgstr "과거의 동향"
 
 msgid "True"
 msgstr "True"
+
+msgid "Trust self-signed SSL certificates ?"
+msgstr "자체 서명된 SSL 인증서를 신뢰하시겠습니까?"
 
 msgid "Trusted CA Certificates"
 msgstr "신뢰할 수 있는 CA 인증서"
@@ -49277,6 +49427,9 @@ msgstr "사용자가 작성됨"
 msgid "User isn't allowed to use the Embedded Ansible provider."
 msgstr "사용자가 임베디드 Ansible 제공자를 사용하도록 허용되지 않습니다."
 
+msgid "User isn't allowed to use the Embedded Terraform provider."
+msgstr "사용자가 임베디드 Terraform 제공자를 사용할 수 없습니다."
+
 msgid "User isn't allowed to use the Embedded Workflows provider."
 msgstr "사용자가 임베디드 워크플로우 제공자를 사용할 수 없습니다."
 
@@ -50318,6 +50471,9 @@ msgstr "VMware 도구 버전"
 msgid "VMware VM Summary"
 msgstr "VMware VM 요약"
 
+msgid "VMware vSphere"
+msgstr "VMware vSphere"
+
 msgid "VNC Console Ports"
 msgstr "VNC 콘솔 포트"
 
@@ -50467,6 +50623,9 @@ msgstr "변수"
 
 msgid "Variables & Default Values"
 msgstr "변수 & 기본값"
+
+msgid "Variables (%{count})"
+msgstr "변수(%{count})"
 
 msgid "Vault"
 msgstr "저장소(Vault)"
@@ -50627,6 +50786,9 @@ msgstr "구성 관리자 제공자 보기"
 
 msgid "View Configuration Profiles"
 msgstr "구성 프로파일 보기"
+
+msgid "View Configuration Script Payloads"
+msgstr "구성 스크립트 페이로드 보기"
 
 msgid "View Configured Systems"
 msgstr "구성된 시스템 보기"
@@ -50852,9 +51014,6 @@ msgstr "물리적 스위치 보기"
 
 msgid "View Placement Group"
 msgstr "배치 그룹 보기"
-
-msgid "View Playbooks"
-msgstr "플레이북 보기"
 
 msgid "View Pods"
 msgstr "팟(Pod) 보기"
@@ -51999,6 +52158,18 @@ msgstr "VmOrTemplate|상태 변경일"
 msgid "VmOrTemplate|Storage name"
 msgstr "VmOrTemplate|스토리지 이름"
 
+msgid "VmOrTemplate|Supports reconfigure cdroms"
+msgstr "VmOrTemplate | cdroms 재구성 지원"
+
+msgid "VmOrTemplate|Supports reconfigure disks"
+msgstr "VmOrTemplate | 디스크 재구성 지원"
+
+msgid "VmOrTemplate|Supports reconfigure disksize"
+msgstr "VmOrTemplate | 디스크 크기 재구성 지원"
+
+msgid "VmOrTemplate|Supports reconfigure network adapters"
+msgstr "VmOrTemplate | 네트워크 어댑터 재구성 지원"
+
 msgid "VmOrTemplate|Template"
 msgstr "VmOrTemplate|템플리트"
 
@@ -52355,6 +52526,9 @@ msgstr "경고"
 
 msgid "Warning"
 msgstr "경고"
+
+msgid "Warning message goes here"
+msgstr "경고 메시지가 여기에 표시됩니다."
 
 msgid ""
 "Warning: ALL Objects will be permanently removed from the Object Storage "
