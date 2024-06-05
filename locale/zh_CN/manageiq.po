@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2024-03-01 17:14+0000\n"
-"PO-Revision-Date: 2024-03-01 17:14+0000\n"
+"POT-Creation-Date: 2024-05-31 16:54+0000\n"
+"PO-Revision-Date: 2024-05-31 16:54+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1984,6 +1984,12 @@ msgstr "API 版本"
 msgid "AWS Access Key for this credential"
 msgstr "此凭证的 AWS 访问密钥"
 
+msgid "AWS Region"
+msgstr "AWS 区域"
+
+msgid "AWS Region where the provider will operate."
+msgstr "提供程序将在其中运行的 AWS 区域。"
+
 msgid "AWS S3"
 msgid_plural "AWS S3"
 msgstr[0] "AWS S3"
@@ -2362,6 +2368,9 @@ msgstr "添加复合目录项"
 msgid "Add Configuration Manager Provider"
 msgstr "添加配置管理器提供程序"
 
+msgid "Add Configuration Script"
+msgstr "添加配置脚本"
+
 msgid "Add Credentials"
 msgstr "添加凭证"
 
@@ -2506,9 +2515,6 @@ msgstr "添加编排模板"
 msgid "Add Placement Group"
 msgstr "添加安置组"
 
-msgid "Add Playbook"
-msgstr "添加 Playbook"
-
 msgid "Add Project to this Tenant"
 msgstr "添加项目到此租户"
 
@@ -2598,6 +2604,9 @@ msgstr "添加条件："
 
 msgid "Add a Configuration Manager Provider"
 msgstr "添加配置管理器供应商"
+
+msgid "Add a Configuration Script Payload"
+msgstr "添加配置脚本有效内容"
 
 msgid "Add a Containers Provider"
 msgstr "添加容器供应商"
@@ -2718,9 +2727,6 @@ msgstr "添加物理基础架构供应商"
 
 msgid "Add a Physical Storage"
 msgstr "添加物理存储器"
-
-msgid "Add a Playbook"
-msgstr "添加 Playbook"
 
 msgid "Add a Policy"
 msgstr "添加策略"
@@ -4080,20 +4086,11 @@ msgstr "Ansible"
 msgid "Ansible Access Method"
 msgstr "Ansible 访问方法"
 
-msgid "Ansible Credentials Refresh"
-msgstr "Ansible 凭证刷新"
-
 msgid "Ansible Playbook"
 msgstr "Ansible Playbook"
 
 msgid "Ansible Playbooks"
 msgstr "Ansible Playbook"
-
-msgid "Ansible Playbooks Refresh"
-msgstr "Ansible Playbook 刷新"
-
-msgid "Ansible Repositories Refresh"
-msgstr "Ansible 存储库刷新"
 
 msgid "Ansible Template"
 msgstr "Ansible 模板"
@@ -5289,6 +5286,9 @@ msgid "Automation Manager (Ansible Tower)"
 msgid_plural "Automation Managers (Ansible Tower)"
 msgstr[0] "自动化管理器 (Ansible Tower)"
 
+msgid "Automation Manager Repositories Refresh"
+msgstr "Automation Manager 存储库刷新"
+
 msgid "Automation Managers"
 msgstr "自动化管理者"
 
@@ -6113,6 +6113,9 @@ msgstr "容量和利用率差距收集"
 msgid "C & U Gap Collection successfully initiated"
 msgstr "容量和利用率差距收集已成功启动"
 
+msgid "CA certificate"
+msgstr "CA 证书"
+
 msgid "CD-ROM (%{name} %{location}), %{connection}"
 msgstr "CD-ROM (%{name} %{location})，%{connection}"
 
@@ -6753,6 +6756,9 @@ msgstr "无法删除当前已使用的 %{log_message}"
 msgid "Cannot delete recently active %{log_message}"
 msgstr "无法删除最近活动的 %{log_message}"
 
+msgid "Cannot delete the built-in repository"
+msgstr "无法删除内置存储库"
+
 msgid "Cannot display binary content"
 msgstr "无法显示二进制内容"
 
@@ -6805,6 +6811,9 @@ msgstr "无法启动。已打开。"
 
 msgid "Cannot stop. Already off."
 msgstr "无法关闭。已停止。"
+
+msgid "Cannot update the built-in repository"
+msgstr "无法更新内置存储库"
 
 msgid ""
 "Cannot validate certificate to '%{hostname}. Make sure that you use a "
@@ -7988,6 +7997,9 @@ msgstr "点击以查看此虚拟机"
 
 msgid "Client Browser Setting"
 msgstr "客户端浏览器设置"
+
+msgid "Client Certificate"
+msgstr "客户机证书"
 
 msgid "Client ID"
 msgstr "客户端 ID"
@@ -9700,6 +9712,12 @@ msgstr[0] "配置脚本库"
 msgid "Configuration Script Payload"
 msgid_plural "Configuration Script Payloads"
 msgstr[0] "配置脚本有效内容"
+
+msgid "Configuration Script Payload Refresh"
+msgstr "配置脚本有效内容刷新"
+
+msgid "Configuration Scripts"
+msgstr "配置脚本"
 
 msgid "Configuration Tag"
 msgid_plural "Configuration Tags"
@@ -13156,6 +13174,14 @@ msgid "Credential (Google)"
 msgid_plural "Credentials (Google)"
 msgstr[0] "凭证 (Google)"
 
+msgid "Credential (IBM Cloud Classic Infrastructure)"
+msgid_plural "Credentials (IBM Cloud Classic Infrastructure)"
+msgstr[0] "凭证（IBM Cloud 经典基础架构）"
+
+msgid "Credential (IBM Cloud)"
+msgid_plural "Credentials (IBM Cloud)"
+msgstr[0] "凭证 (IBM Cloud)"
+
 msgid "Credential (Machine)"
 msgid_plural "Credentials (Machine)"
 msgstr[0] "凭证（机器）"
@@ -13186,6 +13212,10 @@ msgstr[0] "凭证 (SCM)"
 msgid "Credential (Satellite)"
 msgid_plural "Credentials (Satellite)"
 msgstr[0] "凭证 (Satellite)"
+
+msgid "Credential (VMware vSphere)"
+msgid_plural "Credentials (VMware vSphere)"
+msgstr[0] "凭证 (VMware vSphere)"
 
 msgid "Credential (VMware)"
 msgid_plural "Credentials (VMware)"
@@ -13278,6 +13308,9 @@ msgstr "凭证更改时间"
 
 msgid "Credentials Identifier"
 msgstr "凭证标识"
+
+msgid "Credentials Refresh"
+msgstr "凭证刷新"
 
 msgid "Credentials must be valid to capture metrics"
 msgstr "凭证必须有效才可以获取指标"
@@ -13813,6 +13846,9 @@ msgstr "脚本"
 
 msgid "CustomizationTemplate|System"
 msgstr "系统"
+
+msgid "Customize"
+msgstr "定制"
 
 msgid "Customize Help Menu"
 msgstr "定制帮助菜单"
@@ -17560,6 +17596,9 @@ msgstr "编辑配置管理器供应商"
 msgid "Edit Configuration Profiles Tags"
 msgstr "编辑配置概要文件标记"
 
+msgid "Edit Configuration Script"
+msgstr "编辑配置脚本"
+
 msgid "Edit Configured Systems Tags"
 msgstr "编辑配置系统标签"
 
@@ -17682,9 +17721,6 @@ msgstr "编辑 PXE 镜像"
 
 msgid "Edit Physical Storage \"%{name}\""
 msgstr "编辑物理存储器 \"%{name}\""
-
-msgid "Edit Playbook"
-msgstr "编辑 Playbook"
 
 msgid "Edit Policy's Condition assignments"
 msgstr "编辑策略的条件分配"
@@ -17875,6 +17911,12 @@ msgstr "为所选的 Ansible 存储库编辑标签"
 msgid "Edit Tags for the selected Ansible Tower Providers"
 msgstr "编辑所选 Ansible Tower 供应商的标签"
 
+msgid "Edit Tags for the selected Automation Manager Credentials"
+msgstr "编辑所选 Automation Manager 凭证的标记"
+
+msgid "Edit Tags for the selected Automation Manager Repositories"
+msgstr "编辑所选 Automation Manager 存储库的标记"
+
 msgid "Edit Tags for the selected Availability Zones"
 msgstr "编辑所选可用性区域的标签"
 
@@ -17887,8 +17929,14 @@ msgstr "为所选云供应商编辑标签"
 msgid "Edit Tags for the selected Cloud Subnets"
 msgstr "为所选云子网编辑标签"
 
+msgid "Edit Tags for the selected Configuration Script Payloads"
+msgstr "编辑所选配置脚本有效内容的标记"
+
 msgid "Edit Tags for the selected Datastores"
 msgstr "为所选数据存储编辑标签"
+
+msgid "Edit Tags for the selected Embedded Terraform Credentials"
+msgstr "编辑所选嵌入式 Terraform 凭证的标记"
 
 msgid "Edit Tags for the selected Flavors"
 msgstr "为所选风格编辑标签"
@@ -17952,6 +18000,9 @@ msgstr "编辑选定存储管理者的标签"
 
 msgid "Edit Tags for the selected Templates"
 msgstr "编辑所选模板的标记"
+
+msgid "Edit Tags for the selected Terraform Repositories"
+msgstr "编辑所选 Terraform 存储库的标记"
 
 msgid "Edit Tags for the selected Workflow Credentials"
 msgstr "编辑所选工作流程凭证的标记"
@@ -18045,6 +18096,12 @@ msgstr "编辑此容器供应商的标签"
 
 msgid "Edit Tags for this Datastore"
 msgstr "编辑此数据库的标签"
+
+msgid "Edit Tags for this Embedded Terraform Credential"
+msgstr "编辑此嵌入式 Terraform 凭证的标记"
+
+msgid "Edit Tags for this Embedded Terraform Repository"
+msgstr "编辑此嵌入式 Terraform 存储库的标记"
 
 msgid "Edit Tags for this Flavor"
 msgstr "编辑此风格的标签"
@@ -18373,6 +18430,9 @@ msgstr "编辑条件"
 msgid "Edit a Configuration Manager Provider"
 msgstr "编辑配置管理器供应商"
 
+msgid "Edit a Configuration Script Payload"
+msgstr "编辑配置脚本有效内容"
+
 msgid "Edit a Containers Provider"
 msgstr "编辑容器供应商"
 
@@ -18435,9 +18495,6 @@ msgstr "编辑物理服务器"
 
 msgid "Edit a Physical Storage"
 msgstr "编辑物理存储器"
-
-msgid "Edit a Playbook"
-msgstr "编辑 Playbook"
 
 msgid "Edit a Policy"
 msgstr "编辑策略"
@@ -19276,6 +19333,18 @@ msgstr "嵌入式自动化管理器"
 
 msgid "Embedded Methods"
 msgstr "嵌入式方法"
+
+msgid "Embedded Terraform"
+msgstr "嵌入式 Terraform"
+
+msgid "Embedded Terraform Provider"
+msgstr "嵌入式 Terraform 提供程序"
+
+msgid "Embedded Terraform Provider not found."
+msgstr "找不到嵌入式 Terraform 提供程序。"
+
+msgid "Embedded Terraform service is not available."
+msgstr "找不到嵌入式 Terraform 提供程序。"
 
 msgid "Embedded Workflow"
 msgstr "嵌入式工作流程"
@@ -20152,6 +20221,9 @@ msgstr "启动时出错：“%{task_description}”%{error_message}"
 msgid "Error loading data:"
 msgstr "加载数据错误："
 
+msgid "Error message goes here"
+msgstr "此处显示错误消息"
+
 msgid "Error on line %{line_num}: %{err_txt}"
 msgstr "第 %{line_num} 行出错：%{err_txt}"
 
@@ -20575,11 +20647,11 @@ msgstr "“所有容器”折叠菜单下的任何内容"
 msgid "Everything under All Service Catalogs Accordion"
 msgstr "“所有服务目录”折叠菜单下的任何内容"
 
-msgid "Everything under Ansible"
-msgstr "Ansible 下的任何内容"
-
 msgid "Everything under Auth Key Pairs"
 msgstr "“认证密钥对”下的任何内容"
+
+msgid "Everything under Automation Manager"
+msgstr "Automation Manager 下的所有内容"
 
 msgid "Everything under Availability Zones"
 msgstr "“可用性区域”下的任何内容"
@@ -20649,6 +20721,9 @@ msgstr "“配置管理器供应商”下的任何内容"
 
 msgid "Everything under Configuration Profiles"
 msgstr "“配置概要文件”下的任何内容"
+
+msgid "Everything under Configuration Scripts"
+msgstr "配置脚本下的所有内容"
 
 msgid "Everything under Configured Systems"
 msgstr "“配置的系统”下的任何内容"
@@ -20823,9 +20898,6 @@ msgstr "物理交换机下的任何内容"
 
 msgid "Everything under Pictures"
 msgstr "'图片' 下的任何内容"
-
-msgid "Everything under Playbooks"
-msgstr "Playbook 下的任何内容"
 
 msgid "Everything under Pods"
 msgstr "'Pod' 下的任何内容"
@@ -22763,6 +22835,9 @@ msgstr "前往我的启动页面"
 msgid "Google"
 msgstr "Google"
 
+msgid "Google Cloud Region"
+msgstr "Google Cloud 区域"
+
 msgid "Google Compute Engine"
 msgstr "Google 计算引擎"
 
@@ -23411,9 +23486,6 @@ msgstr "隐藏详情行"
 
 msgid "Hide Input Parameters"
 msgstr "隐藏输入参数"
-
-msgid "Hide deprecated"
-msgstr "隐藏不推荐的内容"
 
 msgid "High"
 msgstr "高"
@@ -24482,6 +24554,9 @@ msgstr "IAM 认证失败：%{error_code} %{error_message}"
 msgid "IBM CIC Provider"
 msgstr "IBM CIC 提供者"
 
+msgid "IBM Cloud"
+msgstr "IBM Cloud"
+
 msgid "IBM Cloud API Key"
 msgstr "IBM Cloud API 密钥"
 
@@ -24490,6 +24565,15 @@ msgstr "IBM Cloud Activity Tracker 实例服务密钥"
 
 msgid "IBM Cloud Block-Storage Volume"
 msgstr "IBM Cloud 块存储器卷"
+
+msgid "IBM Cloud Classic Infrastructure"
+msgstr "IBM Cloud 经典基础架构"
+
+msgid "IBM Cloud Classic Infrastructure API Key"
+msgstr "IBM Cloud 经典基础架构 API 密钥"
+
+msgid "IBM Cloud Classic Infrastructure User Name"
+msgstr "IBM Cloud 经典基础架构用户名"
 
 msgid "IBM Cloud Infrastructure Center"
 msgstr "IBM Cloud Infrastructure Center"
@@ -24970,6 +25054,9 @@ msgstr "信息"
 
 msgid "Information for Registered VMs"
 msgstr "注册虚拟机的信息"
+
+msgid "Information message goes here"
+msgstr "此处显示参考消息"
 
 msgid "Infra Providers Dashboard"
 msgstr "基础架构供应商仪表板"
@@ -27238,8 +27325,8 @@ msgstr "映射凭证"
 msgid "Map Credentials to \"%{name}\""
 msgstr "将凭证映射到“%{name}”"
 
-msgid "Map Credentials to Workflow"
-msgstr "将凭证映射到工作流程"
+msgid "Map Credentials to Configuration Script Payloads"
+msgstr "将凭证映射到配置脚本有效内容"
 
 msgid "Map Credentials to this Workflow"
 msgstr "将凭证映射到此工作流程"
@@ -27847,6 +27934,9 @@ msgstr "消息等级"
 
 msgid "Message Source"
 msgstr "消息源"
+
+msgid "Message goes here"
+msgstr "此处显示消息"
 
 msgid "Message:"
 msgstr "消息："
@@ -28890,9 +28980,6 @@ msgstr "不支持迁移，因为虚拟机为空白"
 
 msgid "Migrate not supported because VM is orphaned"
 msgstr "不支持迁移，因为虚拟机是孤立项"
-
-msgid "Migrate operation is not supported."
-msgstr "不支持迁移操作。"
 
 msgid "Migrate selected Instances"
 msgstr "迁移所选的实例"
@@ -31507,6 +31594,9 @@ msgstr "修改配置作业"
 msgid "Modify Configuration Manager Providers"
 msgstr "修改配置管理器供应商"
 
+msgid "Modify Configuration Script Payloads"
+msgstr "修改配置脚本有效内容"
+
 msgid "Modify Containers"
 msgstr "修改容器"
 
@@ -31626,9 +31716,6 @@ msgstr "修改物理服务器"
 
 msgid "Modify Physical Storage"
 msgstr "修改物理存储器"
-
-msgid "Modify Playbooks"
-msgstr "修改 Playbook"
 
 msgid "Modify Policies"
 msgstr "修改策略"
@@ -31961,6 +32048,9 @@ msgstr "必须用选项散列调用 .new。"
 
 msgid "Must contain only alphanumeric, hyphen, and underscore characters"
 msgstr "只能包含字母数字、连字符和下划线字符"
+
+msgid "Must provide a configuration_script_payload_id"
+msgstr "必须提供 configuration_script_payload_id"
 
 msgid "Must provide both template_id and manager_id or manager and template"
 msgstr "必须同时提供 template_id 和 manager_id 或者管理者和模板"
@@ -33342,6 +33432,9 @@ msgstr "没有可应用的输入"
 msgid "No instances found"
 msgstr "未找到实例"
 
+msgid "No message will be displayed"
+msgstr "将不显示任何消息"
+
 msgid "No methods found"
 msgstr "未找到方法"
 
@@ -33413,6 +33506,9 @@ msgstr "未找到模式"
 
 msgid "No scope defined, the scope of this condition includes all elements."
 msgstr "没有定义作用域，此条件的作用域涵盖所有元素。"
+
+msgid "No server with notifier role in region"
+msgstr "区域中没有具有通知者角色的服务器"
 
 msgid "No shortcuts are authorized for this user, contact your Administrator"
 msgstr "没有为此用户授权快捷键，请联系您的管理员。"
@@ -37585,9 +37681,6 @@ msgstr "用户已取消供应 %{type} 请求的操作"
 msgid "Provision %{vms_or_templates}"
 msgstr "供应 %{vms_or_templates}"
 
-msgid "Provision %{what} based on the selected %{type}"
-msgstr "根据所选 %{type} 供应 %{what}"
-
 msgid "Provision Configured Systems"
 msgstr "供应已配置的系统"
 
@@ -37804,6 +37897,9 @@ msgstr "紫色背景"
 
 msgid "Purple Text"
 msgstr "紫色文本"
+
+msgid "Purpose"
+msgstr "用途"
 
 msgid "Put a Host into Maintenance Mode"
 msgstr "将主机设置为维护模式"
@@ -38458,6 +38554,9 @@ msgstr "刷新云卷"
 msgid "Refresh Configuration Manager Providers"
 msgstr "刷新配置管理器供应商"
 
+msgid "Refresh Configuration Script Payloads"
+msgstr "刷新配置脚本有效内容"
+
 msgid "Refresh Containers Providers"
 msgstr "刷新容器供应商"
 
@@ -38490,9 +38589,6 @@ msgstr "刷新对象存储管理者"
 
 msgid "Refresh Physical Infrastructure Providers"
 msgstr "刷新物理基础架构供应商"
-
-msgid "Refresh Playbooks"
-msgstr "刷新 Playbook"
 
 msgid "Refresh Production Log"
 msgstr "刷新产品日志"
@@ -38541,6 +38637,9 @@ msgstr "刷新存储库"
 
 msgid "Refresh Selected Ansible Repositories"
 msgstr "刷新所选的 Ansible 存储库"
+
+msgid "Refresh Selected Terraform Repositories"
+msgstr "刷新所选 Terraform 存储库"
 
 msgid "Refresh Selected Workflow Repositories"
 msgstr "刷新所选工作流程存储库"
@@ -38874,6 +38973,9 @@ msgstr "刷新选择的报告"
 msgid "Refresh selected Storage Services"
 msgstr "刷新所选存储服务"
 
+msgid "Refresh selected Terraform Repositories?"
+msgstr "是否刷新所选 Terraform 存储库？"
+
 msgid "Refresh selected Workflow Repositories?"
 msgstr "刷新所选工作流程存储库？"
 
@@ -38972,6 +39074,9 @@ msgstr "区域"
 
 msgid "Region Description"
 msgstr "区域描述"
+
+msgid "Region Name"
+msgstr "区域名称"
 
 msgid "Region Number"
 msgstr "区域编号"
@@ -40125,6 +40230,10 @@ msgstr ""
 msgid "Repository (Embedded Ansible)"
 msgid_plural "Repositories (Embedded Ansible)"
 msgstr[0] "存储库（嵌入式 Ansible）"
+
+msgid "Repository (Embedded Terraform)"
+msgid_plural "Repositories (Embedded Terraform)"
+msgstr[0] "存储库（嵌入式 Terraform）"
 
 msgid "Repository (Embedded Workflows)"
 msgid_plural "Repositories (Embedded Workflows)"
@@ -41749,6 +41858,9 @@ msgstr "时间表里引用了搜索且无法被删除"
 msgid "Search selection..."
 msgstr "搜索选择..."
 
+msgid "Search with name"
+msgstr "使用名称搜索"
+
 msgid "Searches"
 msgstr "搜索"
 
@@ -42869,6 +42981,10 @@ msgstr "服务标签"
 msgid "Service Template Tenant"
 msgid_plural "Service Template Tenants"
 msgstr[0] "服务模板租户"
+
+msgid "Service Terraform Template"
+msgid_plural "Service Terraform Templates"
+msgstr[0] "服务 Terraform 模板"
 
 msgid "Service Time (Seconds)"
 msgstr "服务时间（秒）"
@@ -44194,6 +44310,9 @@ msgstr "显示所有源虚拟机"
 
 msgid "Show all Storage Managers"
 msgstr "显示所有存储管理者"
+
+msgid "Show all Templates"
+msgstr "显示所有模板"
 
 msgid "Show all Templates in this Cluster"
 msgstr "显示此集群中的所有模板"
@@ -45916,6 +46035,9 @@ msgstr "子类型为必填项。"
 msgid "Success"
 msgstr "成功"
 
+msgid "Success message goes here"
+msgstr "此处显示成功消息"
+
 msgid "Successful"
 msgstr "成功"
 
@@ -46563,8 +46685,7 @@ msgid "Tasks for %{name}"
 msgstr "%{name} 的任务"
 
 msgid "Template"
-msgid_plural "Templates"
-msgstr[0] "模板"
+msgstr "模板"
 
 msgid "Template %{subject} has been published."
 msgstr "模板%{subject} 已发布。"
@@ -46779,6 +46900,9 @@ msgstr "终止"
 msgid "Terminate the Guest OS on Instances"
 msgstr "终止实例上的访客操作系统"
 
+msgid "Terraform Template"
+msgstr "Terraform 模板"
+
 msgid "Test E-mail Address"
 msgstr "测试邮件地址"
 
@@ -46809,6 +46933,12 @@ msgid ""
 "The %{product} Server is still starting. If this message persists, please "
 "contact your %{product} administrator."
 msgstr "%{product} 服务器仍在启动。如果这条信息持续存在，请联系您的 %{product} 管理员。"
+
+msgid "The API key for IBM Cloud Classic Infrastructure."
+msgstr "IBM Cloud 经典基础架构的 API 密钥。"
+
+msgid "The API key for IBM Cloud."
+msgstr "IBM Cloud 的 API 密钥。"
 
 msgid "The Client ID for the Microsoft Azure account"
 msgstr "Microsoft Azure 帐户的客户端 ID"
@@ -46925,6 +47055,9 @@ msgstr "Microsoft Azure 帐户的租户 ID"
 msgid "The URL is blank or not a String"
 msgstr "URL 为空或不是一个字符串"
 
+msgid "The User Name for IBM Cloud Classic Infrastructure."
+msgstr "IBM Cloud 经典基础架构的用户名。"
+
 msgid ""
 "The VM '%{name}' can not be migrated to the same host it is already running on"
 "."
@@ -47014,11 +47147,22 @@ msgid ""
 "The check count value must be an integer to commit this expression element"
 msgstr "检查计数值必须是一个整数，才能提交此表达式元素"
 
+msgid "The client certificate for SSL client authentication."
+msgstr "用于 SSL 客户机认证的客户机证书。"
+
 msgid "The copied item will not be displayed in the catalog by default"
 msgstr "缺省情况下复制的项将不会显示在目录中"
 
 msgid "The current search details have been reset"
 msgstr "当前的搜索详情已被重置"
+
+msgid "The custom CA certificate when communicating over SSL"
+msgstr "通过 SSL 进行通信时的定制 CA 证书"
+
+msgid ""
+"The default region for the resources. If another region is specified on the "
+"resource, it will take precedence."
+msgstr "资源的缺省区域。 如果对资源指定了另一个区域，那么将优先选择该区域。"
 
 msgid "The email address assigned to the Google Compute Engine service account"
 msgstr "分配给 Google Compute Engine 服务帐户的电子邮件地址"
@@ -47117,6 +47261,9 @@ msgstr "用于连接 Microsoft Azure 帐户的密码"
 
 msgid "The provider does not support reconfigure disks"
 msgstr "供应商不支持重新配置磁盘"
+
+msgid "The region to create resources on"
+msgstr "要在其中创建资源的区域"
 
 msgid "The role %{role_name} has been activated on server %{server_name}"
 msgstr "角色 %{role_name} 已在服务器 %{server_name} 上激活"
@@ -48085,6 +48232,9 @@ msgstr "过去的趋势"
 
 msgid "True"
 msgstr "True"
+
+msgid "Trust self-signed SSL certificates ?"
+msgstr "是否信任自签名 SSL 证书？"
 
 msgid "Trusted CA Certificates"
 msgstr "受信 CA 证书"
@@ -49221,6 +49371,9 @@ msgstr "已创建用户"
 msgid "User isn't allowed to use the Embedded Ansible provider."
 msgstr "不允许用户使用嵌入式 Ansible 供应商。"
 
+msgid "User isn't allowed to use the Embedded Terraform provider."
+msgstr "不允许用户使用嵌入式 Terraform 提供程序。"
+
 msgid "User isn't allowed to use the Embedded Workflows provider."
 msgstr "不允许用户使用嵌入式工作流程提供程序。"
 
@@ -50259,6 +50412,9 @@ msgstr "VMware 工具版本"
 msgid "VMware VM Summary"
 msgstr "VMware 虚拟机摘要"
 
+msgid "VMware vSphere"
+msgstr "VMware vSphere"
+
 msgid "VNC Console Ports"
 msgstr "VNC 控制台端口"
 
@@ -50408,6 +50564,9 @@ msgstr "变量"
 
 msgid "Variables & Default Values"
 msgstr "变量和缺省值"
+
+msgid "Variables (%{count})"
+msgstr "变量（%{count} 个）"
 
 msgid "Vault"
 msgstr "保险库文件"
@@ -50566,6 +50725,9 @@ msgstr "查看配置管理器供应商"
 
 msgid "View Configuration Profiles"
 msgstr "查看配置概要文件"
+
+msgid "View Configuration Script Payloads"
+msgstr "查看配置脚本有效内容"
 
 msgid "View Configured Systems"
 msgstr "查看配置的系统"
@@ -50791,9 +50953,6 @@ msgstr "查看物理交换机"
 
 msgid "View Placement Group"
 msgstr "查看安置组"
-
-msgid "View Playbooks"
-msgstr "查看 Playbook"
 
 msgid "View Pods"
 msgstr "查看 Pod"
@@ -51938,6 +52097,18 @@ msgstr "状态更改日期"
 msgid "VmOrTemplate|Storage name"
 msgstr "存储名称"
 
+msgid "VmOrTemplate|Supports reconfigure cdroms"
+msgstr "VmOr 模板 | 支持重新配置 cdrom"
+
+msgid "VmOrTemplate|Supports reconfigure disks"
+msgstr "VmOr 模板 | 支持重新配置磁盘"
+
+msgid "VmOrTemplate|Supports reconfigure disksize"
+msgstr "VmOr 模板 | 支持重新配置磁盘大小"
+
+msgid "VmOrTemplate|Supports reconfigure network adapters"
+msgstr "VmOr 模板 | 支持重新配置网络适配器"
+
 msgid "VmOrTemplate|Template"
 msgstr "模板"
 
@@ -52291,6 +52462,9 @@ msgstr "警告"
 
 msgid "Warning"
 msgstr "警告"
+
+msgid "Warning message goes here"
+msgstr "此处显示警告消息"
 
 msgid ""
 "Warning: ALL Objects will be permanently removed from the Object Storage "
