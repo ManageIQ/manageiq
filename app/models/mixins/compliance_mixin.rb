@@ -11,17 +11,15 @@ module ComplianceMixin
 
     supports(:check_compliance) { "No compliance policies assigned" unless has_compliance_policies? }
 
-    virtual_delegate :compliant,
-                     :to        => :last_compliance,
+    virtual_delegate :last_compliance_status,
+                     :to        => "last_compliance.compliant",
                      :type      => :boolean,
                      :allow_nil => true
     virtual_delegate :timestamp,
                      :to        => :last_compliance,
                      :allow_nil => true,
-                     :type      => :datetime
-
-    alias_method :last_compliance_status, :compliant
-    alias_method :last_compliance_timestamp, :timestamp
+                     :type      => :datetime,
+                     :prefix    => true
   end
 
   def check_compliance
