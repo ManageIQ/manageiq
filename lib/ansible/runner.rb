@@ -231,6 +231,12 @@ module Ansible
                    end
 
           res = response(base_dir, ansible_runner_method, result, debug)
+          if !cred_env_vars.empty?
+            command_line = res.instance_variable_get(:@command_line)
+            new_command = "export #{cred_env_vars['ANSIBLE_VAULT_PASSWORD_FILE']} ; #{command_line}"
+            res.instance_variable_set(:@command_line, new_command)
+          end
+          res
         ensure
           # Clean up the tmp dir for the sync method, for async we will clean it up after the job is finished and we've
           # read the output, that will be written into this directory.
