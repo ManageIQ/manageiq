@@ -1,3 +1,16 @@
+def find_rake_task_with_app_namespace_fallback(task_name)
+  begin
+    Rake.application[task_name.to_s]
+  rescue
+    begin
+      Rake.application["app:#{task_name}"]
+    rescue => err
+      # Re-raise the original missing task
+      raise err.cause
+    end
+  end
+end
+
 namespace :locale do
   desc "Extract strings from en.yml and store them in a ruby file for gettext:find"
   task :store_dictionary_strings => :environment do
@@ -289,7 +302,7 @@ namespace :locale do
     end
   end
 
-  desc "Convert PO files from all plugins to JS files"
+  desc "Convert PO files from all plugins to JS files(runnable from app namespace)"
   task "po_to_json" => :environment do
     begin
       require_relative 'gettext_task_override'
@@ -337,7 +350,7 @@ namespace :locale do
       end
 
       # This depends on PoToJson overrides as defined in lib/tasks/po_to_json_override.rb
-      Rake::Task['gettext:po_to_json'].invoke
+      find_rake_task_with_app_namespace_fallback('gettext:po_to_json').invoke
     ensure
       system "rm -rf #{combined_dir}"
     end
