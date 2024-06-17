@@ -29,7 +29,7 @@ class ContainerReplicator < ApplicationRecord
   include EventMixin
   include Metric::CiMixin
 
-  PERF_ROLLUP_CHILDREN = [:container_groups]
+  PERF_ROLLUP_CHILDREN = [:container_groups].freeze
 
   def event_where_clause(assoc = :ems_events)
     case assoc.to_sym
