@@ -374,3 +374,8 @@
   :expires_in: 7.days
   :level: success
   :audience: user
+- :name: generic_superadmin_notification
+  :message: '%{subject}: %{message}'
+  :expires_in: 7.days
+  :level: success
+  :audience: superadmin
