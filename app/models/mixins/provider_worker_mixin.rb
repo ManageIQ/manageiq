@@ -21,5 +21,9 @@ module ProviderWorkerMixin
     def service_base_name
       "manageiq-providers-#{minimal_class_name.underscore.tr("/", "_")}"
     end
+
+    def restart_on_change?
+      false
+    end
   end
 end
