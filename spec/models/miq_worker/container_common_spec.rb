@@ -98,8 +98,8 @@ RSpec.describe MiqWorker::ContainerCommon do
       [
         {:subject => MiqGenericWorker.new, :name => deployment_name_for("generic")},
         {:subject => MiqUiWorker.new,      :name => deployment_name_for("ui")},
-        {:subject => ManageIQ::Providers::Openshift::ContainerManager::EventCatcher.new(:queue_name => "ems_2"), :name => deployment_name_for("openshift-container-event-catcher-2")},
-        {:subject => ManageIQ::Providers::Redhat::InfraManager::MetricsCollectorWorker.new, :name => deployment_name_for("redhat-infra-metrics-collector")}
+        {:subject => ManageIQ::Providers::Openshift::ContainerManager::EventCatcher.new(:queue_name => "ems_2"), :name => deployment_name_for("openshift-container-events-2")},
+        {:subject => ManageIQ::Providers::Redhat::InfraManager::MetricsCollectorWorker.new, :name => deployment_name_for("redhat-infra-metrics")}
       ]
     end
 
@@ -126,17 +126,17 @@ RSpec.describe MiqWorker::ContainerCommon do
 
       it "isn't appended for nil queue_name" do
         subject.queue_name = nil
-        expect(subject.worker_deployment_name[-7..]).to eq("catcher")
+        expect(subject.worker_deployment_name[-6..]).to eq("events")
       end
 
       it "isn't appended for blank queue_name" do
         subject.queue_name = " "
-        expect(subject.worker_deployment_name[-7..]).to eq("catcher")
+        expect(subject.worker_deployment_name[-6..]).to eq("events")
       end
 
       it "isn't appended for invalid queue_name prefix" do
         subject.queue_name = "notems_1"
-        expect(subject.worker_deployment_name[-7..]).to eq("catcher")
+        expect(subject.worker_deployment_name[-6..]).to eq("events")
       end
     end
   end
