@@ -947,8 +947,11 @@
   :read_only: true
   :settings:
     :restrictions:
-      :vms: :user
+      :auth_key_pairs: :user
+      :orchestration_stacks: :user
       :service_templates: :user
+      :services: :user
+      :vms: :user
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
@@ -1134,8 +1137,11 @@
   :read_only: true
   :settings:
     :restrictions:
-      :vms: :user_or_group
+      :auth_key_pairs: :user_or_group
+      :orchestration_stacks: :user_or_group
       :service_templates: :user_or_group
+      :services: :user_or_group
+      :vms: :user_or_group
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
