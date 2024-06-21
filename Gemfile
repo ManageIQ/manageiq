@@ -22,7 +22,7 @@ manageiq_plugin "manageiq-schema"
 
 # Unmodified gems
 gem "activerecord-session_store",       "~>2.0"
-gem "activerecord-virtual_attributes", :github => "jrafanie/activerecord-virtual_attributes", :branch => "allow_rails_7"
+gem "activerecord-virtual_attributes", :github => "jrafanie/activerecord-virtual_attributes", :branch => "rails7_mvp"
 gem "acts_as_tree",                     "~>2.7" # acts_as_tree needs to be required so that it loads before ancestry
 gem "ancestry",                         "~>4.1.0",           :require => false
 gem "awesome_spawn",                    "~>1.6",             :require => false
