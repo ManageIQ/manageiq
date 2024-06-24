@@ -2,6 +2,11 @@ module Authenticator
   class Base
     include Vmdb::Logging
 
+    # Simulate being a STI table class for proper descendant class loading
+    def self.inheritance_column
+      "type"
+    end
+
     def self.validate_config(_config)
       []
     end
