@@ -922,7 +922,7 @@ GEM
       manageiq-password (< 2)
       pg
       pg-dsn_parser (~> 0.1)
-    manageiq-smartstate (0.9.0)
+    manageiq-smartstate (0.10.0)
       activesupport
       awesome_spawn (~> 1.5)
       azure-armrest (~> 0.9)
@@ -1453,7 +1453,7 @@ DEPENDENCIES
   manageiq-providers-vmware!
   manageiq-providers-workflows!
   manageiq-schema!
-  manageiq-smartstate (~> 0.9.0)
+  manageiq-smartstate (~> 0.10.0)
   manageiq-ssh-util (~> 0.2.0)
   manageiq-style (~> 1.5.0)
   manageiq-ui-classic!
