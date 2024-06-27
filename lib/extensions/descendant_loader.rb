@@ -241,6 +241,26 @@ class DescendantLoader
   include Cache
   include Mapper
 
+  EXCLUDED_PARENTS = %w[
+    ApplicationRecord
+    StandardError
+    ApplicationController
+    Api::BaseController
+    BaseController
+    MiqDecorator
+    ApplicationHelper::Toolbar::Override
+    ApplicationHelper::Button::Basic
+    ApplicationHelper::Toolbar::Basic
+    ApplicationHelper::Button::ButtonNewDiscover
+    TreeBuilder
+    TreeNode::Node
+    Node
+  ]
+
+  def excluded_parent?(parent)
+    EXCLUDED_PARENTS.include?(parent.to_s)
+  end
+
   def load_subclasses(parent)
     names_to_load = class_inheritance_relationships[parent.to_s].dup
     while (name = names_to_load.shift)
@@ -261,8 +281,9 @@ class DescendantLoader
   end
 
   module ArDescendantsWithLoader
+    # reload_schema_from_cache __update_callbacks descendants subclasses
     def descendants
-      if Vmdb::Application.instance.initialized? && !defined? @loaded_descendants
+      if Vmdb::Application.instance.initialized? && !defined?(@loaded_descendants) && !DescendantLoader.instance.excluded_parent?(self) && !%w[__update_callbacks].include?(caller_locations.first.base_label)
         @loaded_descendants = true
         DescendantLoader.instance.load_subclasses(self)
       end
@@ -274,7 +295,7 @@ class DescendantLoader
     # https://github.com/rails/rails/commit/8f8aa857e084b76b1120edaa9bb9ce03ba1e6a19
     # We need to get in front of it, like we do for descendants.
     def subclasses
-      if Vmdb::Application.instance.initialized? && !defined? @loaded_descendants
+      if Vmdb::Application.instance.initialized? && !defined?(@loaded_descendants) && !DescendantLoader.instance.excluded_parent?(self) && !%w[descendants reload_schema_from_cache subclasses].include?(caller_locations.first.base_label)
         @loaded_descendants = true
         DescendantLoader.instance.load_subclasses(self)
       end
