@@ -23,6 +23,10 @@ class ContainerNode < ApplicationRecord
   has_many   :container_services, -> { distinct }, :through => :container_groups
   has_many   :container_routes, -> { distinct }, :through => :container_services
   has_many   :container_replicators, -> { distinct }, :through => :container_groups
+  has_many   :annotations, -> { where(:section => "annotations") }, # rubocop:disable Rails/HasManyOrHasOneDependent
+             :class_name => "CustomAttribute",
+             :as         => :resource,
+             :inverse_of => :resource
   has_many   :labels, -> { where(:section => "labels") }, # rubocop:disable Rails/HasManyOrHasOneDependent
              :class_name => "CustomAttribute",
              :as         => :resource,
