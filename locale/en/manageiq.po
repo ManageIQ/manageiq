@@ -11719,7 +11719,7 @@ msgstr ""
 msgid "Child Orchestration Stacks"
 msgstr ""
 
-#: ../app/views/service/_svcs_show.html.haml
+#: ../app/helpers/service_helper.rb
 msgid "Child Services"
 msgstr ""
 
@@ -30118,6 +30118,10 @@ msgstr ""
 
 #: ../app/javascript/components/embedded-terraform-repository-form/index.jsx
 msgid "Embedded Terraform Provider not found."
+msgstr ""
+
+#: ../app/helpers/application_helper/button/embedded_terraform.rb
+msgid "Embedded Terraform Role is not enabled."
 msgstr ""
 
 #:
@@ -56897,16 +56901,7 @@ msgstr ""
 
 #: ../app/controllers/application_controller/policy_support.rb
 #: ../app/helpers/application_helper/title.rb
-#: ../app/helpers/application_helper/toolbar/miq_templates_center.rb
-#: ../app/helpers/application_helper/toolbar/template_clouds_center.rb
-#: ../app/helpers/application_helper/toolbar/template_infras_center.rb
-#: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb
-#: ../app/helpers/application_helper/toolbar/vm_infras_center.rb
-#: ../app/helpers/application_helper/toolbar/vms_center.rb
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb
-#: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb
-#: ../app/helpers/application_helper/toolbar/x_vm_center.rb
-#: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb
 msgid "Policy Simulation"
 msgstr ""
 
@@ -77891,7 +77886,7 @@ msgstr ""
 #: ../app/javascript/components/provider-dashboard-charts/charts_config.js
 #: ../app/services/ems_infra_dashboard_service.rb
 #: ../app/views/ems_infra/scaledown.html.haml
-#: ../app/views/service/_svcs_show.html.haml:38 ../config/yaml_strings.rb
+#: ../app/views/service/_svcs_show.html.haml:29 ../config/yaml_strings.rb
 msgid "VMs"
 msgstr ""
 
@@ -79204,32 +79199,8 @@ msgstr ""
 msgid "View Policy Profiles"
 msgstr ""
 
-#: ../app/helpers/application_helper/toolbar/miq_templates_center.rb
-#: ../app/helpers/application_helper/toolbar/template_infras_center.rb
-msgid "View Policy Simulation for the selected Templates"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/template_clouds_center.rb
-#: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb
-#: ../app/helpers/application_helper/toolbar/vm_infras_center.rb
-#: ../app/helpers/application_helper/toolbar/vms_center.rb
-msgid "View Policy Simulation for the selected items"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb
-msgid "View Policy Simulation for this Image"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb
-msgid "View Policy Simulation for this Instance"
-msgstr ""
-
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb
 msgid "View Policy Simulation for this Template"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/x_vm_center.rb
-msgid "View Policy Simulation for this VM"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -79529,7 +79500,7 @@ msgstr ""
 msgid "View this Schedule"
 msgstr ""
 
-#: ../app/views/service/_svcs_show.html.haml
+#: ../app/helpers/service_helper.rb
 msgid "View this Service"
 msgstr ""
 
