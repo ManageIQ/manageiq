@@ -344,10 +344,10 @@ class Storage < ApplicationRecord
   end
 
   def scan(userid = "system", _role = "ems_operations")
-    unless supports?(:smartstate_analysis)
+    if (reason = unsupported_reason(:smartstate_analysis))
       raise(MiqException::MiqUnsupportedStorage,
             _("Action not supported for Datastore type [%{store_type}], [%{name}] with id: [%{id}] %{error}") %
-              {:store_type => store_type, :name => name, :id => id, :error => unsupported_reason(:smartstate_analysis)})
+              {:store_type => store_type, :name => name, :id => id, :error => reason})
     end
 
     task_name = "SmartState Analysis for [#{name}]"

@@ -246,8 +246,7 @@ class VmScan
         return []
       end
 
-      unless @vm.supports?(:smartstate_analysis)
-        msg = @vm.unsupported_reason(:smartstate_analysis)
+      if (msg = @vm.unsupported_reason(:smartstate_analysis))
         queue_signal(job, {:args => [:abort, msg, "error"]})
         return []
       end
