@@ -120,9 +120,8 @@ RSpec.describe MiqServer::WorkerManagement::Kubernetes do
 
   context "#sync_from_system" do
     context "#ensure_kube_monitors_started" do
-      it "podified, ensures pod monitor started and orphaned rows are removed" do
+      it "podified, ensures pod monitor started" do
         expect(server.worker_manager).to receive(:ensure_kube_monitors_started)
-        expect(server.worker_manager).to receive(:cleanup_orphaned_worker_rows)
         server.worker_manager.sync_from_system
       end
     end
