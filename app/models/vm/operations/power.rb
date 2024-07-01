@@ -7,26 +7,26 @@ module Vm::Operations::Power
     api_relay_method :suspend
 
     supports :suspend do
-      if !supports?(:control)
-        unsupported_reason(:control)
-      elsif !vm_powered_on?
+      if !vm_powered_on?
         _('The VM is not powered on')
+      else
+        unsupported_reason(:control)
       end
     end
 
     supports :start do
-      if !supports?(:control)
-        unsupported_reason(:control)
-      elsif vm_powered_on?
+      if vm_powered_on?
         _('The VM is powered on')
+      else
+        unsupported_reason(:control)
       end
     end
 
     supports :stop do
-      if !supports?(:control)
-        unsupported_reason(:control)
-      elsif !vm_powered_on?
+      if !vm_powered_on?
         _('The VM is not powered on')
+      else
+        unsupported_reason(:control)
       end
     end
   end

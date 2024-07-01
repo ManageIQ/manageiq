@@ -148,10 +148,10 @@ module VmOrTemplate::Operations
     end
 
     supports :vm_control_powered_on do
-      if !supports?(:control)
-        unsupported_reason(:control)
-      elsif current_state != "on"
+      if current_state != "on"
         "The VM is not powered on"
+      else
+        unsupported_reason(:control)
       end
     end
   end
