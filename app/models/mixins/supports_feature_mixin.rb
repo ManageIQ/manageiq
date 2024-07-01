@@ -13,9 +13,7 @@
 # To make a feature conditionally supported, pass a block to the +supports+ method.
 # The block is evaluated in the context of the instance.
 # If a feature is not supported, return a string for the reason. A nil means it is supported
-# Alternatively, calling the private method +unsupported_reason_add+ with the feature
-# and a reason, marks the feature as unsupported, and the reason will be
-# accessible through
+# The reason will be accessible through
 #
 #   instance.unsupported_reason(:feature)
 #
@@ -50,9 +48,7 @@ module SupportsFeatureMixin
   # Whenever this mixin is included we define all features as unsupported by default.
   # This way we can query for every feature
   included do
-    private_class_method :unsupported
-    private_class_method :unsupported_reason_add
-    class_attribute :supports_features, :instance_writer => false, :default => {}
+    class_attribute :supports_features, :instance_writer => false, :instance_reader => false, :default => {}
   end
 
   def self.default_supports_reason
@@ -61,28 +57,15 @@ module SupportsFeatureMixin
 
   # query instance for the reason why the feature is unsupported
   def unsupported_reason(feature)
-    feature = feature.to_sym
-    supports?(feature) unless unsupported.key?(feature)
-    unsupported[feature]
+    self.class.unsupported_reason(feature, :instance => self)
   end
 
   # query the instance if the feature is supported or not
   def supports?(feature)
-    self.class.check_supports(feature.to_sym, :instance => self)
+    !unsupported_reason(feature)
   end
 
   private
-
-  # used inside a +supports+ block to add a reason why the feature is not supported
-  # just adding a reason will make the feature unsupported
-  def unsupported_reason_add(feature, reason)
-    feature = feature.to_sym
-    unsupported[feature] = reason
-  end
-
-  def unsupported
-    @unsupported ||= {}
-  end
 
   class_methods do
     # This is the DSL used a class level to define what is supported
@@ -96,34 +79,26 @@ module SupportsFeatureMixin
       self.supports_features = supports_features.merge(feature.to_sym => reason.presence || false)
     end
 
-    # query the class if the feature is supported or not
     def supports?(feature)
-      check_supports(feature.to_sym, :instance => self)
+      !unsupported_reason(feature)
     end
 
-    def check_supports(feature, instance:)
-      instance.send(:unsupported).delete(feature)
-
+    # query the class if the feature is supported or not
+    def unsupported_reason(feature, instance: self)
       # undeclared features are not supported
       value = supports_features[feature.to_sym]
-
       if value.respond_to?(:call)
         begin
           # for class level supports, blocks are not evaluated and assumed to be true
           result = instance.instance_eval(&value) unless instance.kind_of?(Class)
-          # if no errors yet but result was an error message
-          # then add the error
-          if !instance.send(:unsupported).key?(feature) && result.kind_of?(String)
-            instance.send(:unsupported_reason_add, feature, result)
-          end
+          result if result.kind_of?(String)
         rescue => e
           _log.log_backtrace(e)
-          instance.send(:unsupported_reason_add, feature, "Internal Error: #{e.message}")
+          "Internal Error: #{e.message}"
         end
       elsif value != true
-        instance.send(:unsupported_reason_add, feature, value || SupportsFeatureMixin.default_supports_reason)
+        value || SupportsFeatureMixin.default_supports_reason
       end
-      !instance.send(:unsupported).key?(feature)
     end
 
     # all subclasses that are considered for supporting features
@@ -157,24 +132,6 @@ module SupportsFeatureMixin
     #   Host.providers_supporting(feature) # => [Ems]
     def providers_supporting(feature)
       ExtManagementSystem.where(:type => provider_classes_supporting(feature).map(&:name))
-    end
-
-    # query the class for the reason why something is unsupported
-    def unsupported_reason(feature)
-      feature = feature.to_sym
-      supports?(feature) unless unsupported.key?(feature)
-      unsupported[feature]
-    end
-
-    def unsupported
-      # This is a class variable and it might be modified during runtime
-      # because we do not eager load all classes at boot time, so it needs to be thread safe
-      @unsupported ||= Concurrent::Hash.new
-    end
-
-    # use this for making a class not support a feature
-    def unsupported_reason_add(feature, reason)
-      unsupported[feature.to_sym] = reason
     end
   end
 end
