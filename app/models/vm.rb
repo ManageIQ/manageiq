@@ -118,9 +118,9 @@ class Vm < VmOrTemplate
 
   def supported_consoles
     {
-      :html5   => html5_support,
-      :vmrc    => vmrc_support,
-      :native  => native_support
+      :html5  => support_hash(:html5_console, :launch_html5_console),
+      :vmrc   => support_hash(:vmrc_console, :launch_vmrc_console),
+      :native => support_hash(:native_console, :launch_native_console)
     }
   end
 
@@ -144,27 +144,12 @@ class Vm < VmOrTemplate
 
   private
 
-  def html5_support
+  def support_hash(visible, launch)
+    reason = unsupported_reason(launch)
     {
-      :visible => supports?(:html5_console),
-      :enabled => supports?(:launch_html5_console),
-      :message => unsupported_reason(:launch_html5_console)
-    }
-  end
-
-  def vmrc_support
-    {
-      :visible => supports?(:vmrc_console),
-      :enabled => supports?(:launch_vmrc_console),
-      :message => unsupported_reason(:launch_vmrc_console)
-    }
-  end
-
-  def native_support
-    {
-      :visible => supports?(:native_console),
-      :enabled => supports?(:launch_native_console),
-      :message => unsupported_reason(:launch_native_console)
+      :visible => supports?(visible),
+      :enabled => !reason,
+      :message => reason
     }
   end
 
