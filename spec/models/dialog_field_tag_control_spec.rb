@@ -45,7 +45,7 @@ RSpec.describe DialogFieldTagControl do
     end
 
     it "#automate_key_name" do
-      expect(@df.automate_key_name).to eq("Array::dialog_#{@df.name}")
+      expect(@df.automate_key_name).to eq("dialog_#{@df.name}")
     end
 
     describe "#initialize_with_values" do
@@ -133,19 +133,19 @@ RSpec.describe DialogFieldTagControl do
       end
 
       it "automate_output_value with an empty value" do
-        expect(@df.automate_output_value).to eq("")
+        expect(@df.automate_output_value).to eq([])
       end
 
       it "automate_output_value with an single value" do
         tag = Classification.first
         @df.value = tag.id.to_s
-        expect(@df.automate_output_value).to eq("#{tag.class.name}::#{tag.id}")
+        expect(@df.automate_output_value).to eq([tag.id.to_s])
       end
 
       it "automate_output_value with multiple values" do
         tags = [Classification.first, Classification.last]
         @df.value = tags.collect(&:id).join(",")
-        expect(@df.automate_output_value.split("\x1F")).to match_array(tags.collect { |tag| "#{tag.class.name}::#{tag.id}" })
+        expect(@df.automate_output_value).to match_array(tags.collect { |tag| tag.id.to_s })
       end
     end
   end
