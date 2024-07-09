@@ -313,13 +313,13 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-vmware
-  revision: 3c29ab7c6e51685f6c8a29c7021ce6989ba44c48
+  revision: 97245bb70e9348a5f8c8fcb0eeda7f7e15a81314
   branch: radjabov
   specs:
     manageiq-providers-vmware (0.1.0)
       ffi-vix_disk_lib (~> 1.3, >= 1.3.1)
       fog-vcloud-director (~> 0.3.0)
-      rbvmomi2 (~> 3.7)
+      rbvmomi2 (~> 3.8)
       vmware_web_service (~> 3.3)
       vsphere-automation-sdk (~> 0.4.7)
 
@@ -1116,7 +1116,7 @@ GEM
       ffi (~> 1.0)
     rbnacl (4.0.2)
       ffi
-    rbvmomi2 (3.7.1)
+    rbvmomi2 (3.8.0)
       builder (~> 3.2)
       json (~> 2.3)
       nokogiri (~> 1.12, >= 1.12.5)
