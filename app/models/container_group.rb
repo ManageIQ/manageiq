@@ -17,6 +17,10 @@ class ContainerGroup < ApplicationRecord
   has_many :containers, :dependent => :destroy
   has_many :container_images, -> { distinct }, :through => :containers
   belongs_to  :ext_management_system, :foreign_key => "ems_id"
+  has_many :annotations, -> { where(:section => "annotations") }, # rubocop:disable Rails/HasManyOrHasOneDependent
+           :class_name => "CustomAttribute",
+           :as         => :resource,
+           :inverse_of => :resource
   has_many :labels, -> { where(:section => "labels") }, # rubocop:disable Rails/HasManyOrHasOneDependent
            :class_name => "CustomAttribute",
            :as         => :resource,
