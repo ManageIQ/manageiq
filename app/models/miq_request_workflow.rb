@@ -2,7 +2,7 @@ require 'ostruct'
 
 class MiqRequestWorkflow
   include Vmdb::Logging
-  include DialogFieldValidation
+  # include DialogFieldValidation
 
   # We rely on MiqRequestWorkflow's descendants to be comprehensive
   singleton_class.send(:prepend, DescendantLoader::ArDescendantsWithLoader)
@@ -1535,3 +1535,4 @@ class MiqRequestWorkflow
     source[:datacenter] ? array.reject { |i| find_datacenter_for_ci(i).id != source[:datacenter].id } : array
   end
 end
+require "miq_request_workflow/dialog_field_validation"

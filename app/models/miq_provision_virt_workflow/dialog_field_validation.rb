@@ -1,5 +1,6 @@
 # These methods are available for dialog field validation, do not erase.
-module MiqProvisionVirtWorkflow::DialogFieldValidation
+class MiqProvisionVirtWorkflow
+module DialogFieldValidation
   def default_require_sysprep_enabled(_field, _values, dlg, fld, value)
     if value.blank? || value == "disabled"
       _("%{description} is required") % {:description => required_description(dlg, fld)}
@@ -63,3 +64,5 @@ module MiqProvisionVirtWorkflow::DialogFieldValidation
     _("%{description} is required") % {:description => required_description(dlg, fld)}
   end
 end
+end
+MiqProvisionVirtWorkflow.include(MiqProvisionVirtWorkflow::DialogFieldValidation)
