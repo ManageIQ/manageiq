@@ -20,6 +20,8 @@ module MiqServer::WorkerManagement::Monitor
 
     sync_monitor
 
+    sync_config
+
     # Sync the workers after sync'ing the child worker settings
     sync_workers
 
