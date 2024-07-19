@@ -1,3 +1,5 @@
+# rubocop:disable Rails/RakeEnvironment
+
 namespace :test do
   namespace :security do
     task :setup # NOOP - Stub for consistent CI testing
@@ -18,8 +20,8 @@ namespace :test do
       engine_paths = Vmdb::Plugins.paths.except(ManageIQ::Schema::Engine).values
 
       puts "** Running brakeman in #{app_path}"
-      puts "** with engines:"
-      puts "- #{engine_paths.join("\n- ")}"
+      puts "**   engines:"
+      puts "**   - #{engine_paths.join("\n**   - ")}"
 
       # See all possible options here:
       #   https://brakemanscanner.org/docs/brakeman_as_a_library/#using-options
@@ -27,6 +29,7 @@ namespace :test do
         :app_path     => app_path,
         :engine_paths => engine_paths,
         :quiet        => false,
+        :pager        => false,
         :print_report => true
       }
       if format == "json"
@@ -57,9 +60,46 @@ namespace :test do
 
       require "awesome_spawn"
       cmd = AwesomeSpawn.build_command_line("bundle-audit check", options)
-      puts "** with command line: #{cmd}"
+      puts "**   command: #{cmd}"
 
       exit $?.exitstatus unless system(cmd)
+    end
+
+    task :yarn_audit, :format do |_, args|
+      format = args.fetch(:format, "human")
+
+      require "vmdb/inflections"
+      Vmdb::Inflections.load_inflections
+
+      require "vmdb/plugins"
+      engines = Vmdb::Plugins.ui_plugins
+      engines = engines.select { |e| e.root.to_s == ENGINE_ROOT } if defined?(ENGINE_ROOT)
+
+      FileUtils.rm_f(Rails.root.join("log/yarn-audit*.json"))
+
+      success = engines.map do |engine|
+        name = engine.module_parent.name.underscore.tr("/", "-")
+        puts "\n** Running yarn npm audit for #{name}"
+        path = engine.root
+        puts "**   path:    #{path}"
+
+        params = [:recursive, :no_deprecations, [:environment, "production"]] # TODO: Remove production and check all dependencies
+        options = {:chdir => path}
+        if format == "json"
+          params << :json
+
+          log_file = Rails.root.join("log/yarn-audit-#{name}.json")
+          options[:out] = [log_file, "w"]
+        end
+
+        require "awesome_spawn"
+        cmd = AwesomeSpawn.build_command_line("yarn npm audit", params)
+        puts "**   command: #{cmd}"
+
+        system(cmd, options)
+      end.all?
+
+      exit 1 unless success
     end
   end
 
@@ -71,5 +111,9 @@ namespace :test do
     Rake::Task["#{ns}:bundle_audit"].invoke(format)
     puts
     Rake::Task["#{ns}:brakeman"].invoke(format)
+    puts
+    Rake::Task["#{ns}:yarn_audit"].invoke(format)
   end
 end
+
+# rubocop:enable Rails/RakeEnvironment
