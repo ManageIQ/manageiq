@@ -128,17 +128,27 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
 
   def start_kube_monitor(resource = :pods)
     require 'http'
+    require 'concurrent/atomic/event'
+
+    monitor_started = Concurrent::Event.new
+
     Thread.new do
-      _log.info("Started new #{resource} monitor thread of #{Thread.list.length} total")
+      _log.info("Starting new #{resource} monitor thread of #{Thread.list.length} total")
       begin
-        send(:"monitor_#{resource}")
+        send(:"monitor_#{resource}", monitor_started)
       rescue HTTP::ConnectionError => e
         _log.error("Exiting #{resource} monitor thread due to [#{e.class.name}]: #{e}")
       rescue => e
         _log.error("Exiting #{resource} monitor thread after uncaught error")
         _log.log_backtrace(e)
+      ensure
+        monitor_started.set
       end
     end
+
+    monitor_started.wait
+
+    _log.info("Starting new #{resource} monitor thread...Complete")
   end
 
   def ensure_kube_monitors_started
@@ -170,19 +180,23 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
     @orchestrator ||= ContainerOrchestrator.new
   end
 
-  def monitor_deployments
+  def monitor_deployments(monitor_started)
     loop do
       current_deployments.clear
       resource_version = collect_initial(:deployments)
+
+      monitor_started.set
 
       watch_for_events(:deployments, resource_version)
     end
   end
 
-  def monitor_pods
+  def monitor_pods(monitor_started)
     loop do
       current_pods.clear
       resource_version = collect_initial(:pods)
+
+      monitor_started.set
 
       # watch_for_events doesn't return unless an error caused us to break out of it, so we'll start over again
       watch_for_events(:pods, resource_version)
