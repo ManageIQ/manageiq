@@ -168,8 +168,9 @@ module Vmdb
     end
 
     initializer :load_vmdb_settings, :before => :load_config_initializers do
+      # Setup the Settings constant before the app and engine intializers run.
+      # They could be wrong values since we're not connected to the db yet.
       Vmdb::Settings.init
-      Vmdb::Loggers.apply_config(::Settings.log)
     end
 
     initializer :eager_load_all_the_things, :after => :load_config_initializers do
@@ -187,6 +188,10 @@ module Vmdb
       puts "** #{Vmdb::Appliance.BANNER}" unless Rails.env.production?
 
       YamlPermittedClasses.initialize_app_yaml_permitted_classes
+
+      # Reload Settings to get values from db now that it's safe to autoload
+      ::Settings.reload!
+      Vmdb::Loggers.apply_config(::Settings.log)
     end
 
     console do
