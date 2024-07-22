@@ -6,6 +6,7 @@ module ManageIQ
       end
 
       def session_options
+        require 'miq_memcached'
         super.merge(MiqMemcached.default_client_options).merge(
           :expire_after    => 24.hours,
           :key             => "_vmdb_session",

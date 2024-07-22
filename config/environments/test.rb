@@ -63,6 +63,7 @@ require "minitest"
 require "factory_bot"
 require "timecop"
 require "vcr"
+require "rspec"
 require "webmock/rspec"
 require "capybara"
 
