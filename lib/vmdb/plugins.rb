@@ -103,6 +103,10 @@ module Vmdb
       @provider_plugins ||= select { |engine| engine.name.start_with?("ManageIQ::Providers::") }
     end
 
+    def ui_plugins
+      @ui_plugins ||= select { |engine| engine.root.join("package.json").exist? }
+    end
+
     def asset_paths
       @asset_paths ||= begin
         require_relative 'plugins/asset_path'
