@@ -190,7 +190,7 @@ class MiqExpression
     end
   end
 
-  def self._to_ruby(exp, context_type, tz)
+  def self._to_ruby(exp, context_type, tz, obj_name: :rec)
     return exp unless exp.kind_of?(Hash)
 
     operator = exp.keys.first
@@ -200,29 +200,29 @@ class MiqExpression
 
     case operator
     when "equal", "=", "<", ">", ">=", "<=", "!="
-      operands = operands2rubyvalue(operator, op_args, context_type)
+      operands = operands2rubyvalue(operator, op_args, context_type, :obj_name => obj_name)
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
     when "before"
       col_type = Target.parse(col_name).column_type if col_name
-      col_ruby, _value = operands2rubyvalue(operator, {"field" => col_name}, context_type)
+      col_ruby, _value = operands2rubyvalue(operator, {"field" => col_name}, context_type, :obj_name => obj_name)
       val = op_args["value"]
       clause = ruby_for_date_compare(col_ruby, col_type, tz, "<", val)
     when "after"
       col_type = Target.parse(col_name).column_type if col_name
-      col_ruby, _value = operands2rubyvalue(operator, {"field" => col_name}, context_type)
+      col_ruby, _value = operands2rubyvalue(operator, {"field" => col_name}, context_type, :obj_name => obj_name)
       val = op_args["value"]
       clause = ruby_for_date_compare(col_ruby, col_type, tz, nil, nil, ">", val)
     when "includes all"
-      operands = operands2rubyvalue(operator, op_args, context_type)
+      operands = operands2rubyvalue(operator, op_args, context_type, :obj_name => obj_name)
       clause = "(#{operands[0]} & #{operands[1]}) == #{operands[1]}"
     when "includes any"
-      operands = operands2rubyvalue(operator, op_args, context_type)
+      operands = operands2rubyvalue(operator, op_args, context_type, :obj_name => obj_name)
       clause = "(#{operands[1]} - #{operands[0]}) != #{operands[1]}"
     when "includes only", "limited to"
-      operands = operands2rubyvalue(operator, op_args, context_type)
+      operands = operands2rubyvalue(operator, op_args, context_type, :obj_name => obj_name)
       clause = "(#{operands[0]} - #{operands[1]}) == []"
     when "like", "not like", "starts with", "ends with", "includes"
-      operands = operands2rubyvalue(operator, op_args, context_type)
+      operands = operands2rubyvalue(operator, op_args, context_type, :obj_name => obj_name)
       operands[1] =
         case operator
         when "starts with"
@@ -235,7 +235,7 @@ class MiqExpression
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
       clause = "!(" + clause + ")" if operator == "not like"
     when "regular expression matches", "regular expression does not match"
-      operands = operands2rubyvalue(operator, op_args, context_type)
+      operands = operands2rubyvalue(operator, op_args, context_type, :obj_name => obj_name)
 
       # If it looks like a regular expression, sanitize from forward
       # slashes and interpolation
@@ -255,11 +255,11 @@ class MiqExpression
       end
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
     when "and", "or"
-      clause = "(" + op_args.collect { |operand| _to_ruby(operand, context_type, tz) }.join(" #{normalize_ruby_operator(operator)} ") + ")"
+      clause = "(#{op_args.collect { |operand| _to_ruby(operand, context_type, tz, :obj_name => obj_name) }.join(" #{normalize_ruby_operator(operator)} ")})"
     when "not", "!"
-      clause = normalize_ruby_operator(operator) + "(" + _to_ruby(op_args, context_type, tz) + ")"
+      clause = normalize_ruby_operator(operator) + "(#{_to_ruby(op_args, context_type, tz, :obj_name => obj_name)})"
     when "is null", "is not null", "is empty", "is not empty"
-      operands = operands2rubyvalue(operator, op_args, context_type)
+      operands = operands2rubyvalue(operator, op_args, context_type, :obj_name => obj_name)
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
     when "contains"
       op_args["tag"] ||= col_name
@@ -294,14 +294,14 @@ class MiqExpression
 
       check =~ /^check(.*)$/
       mode = $1.downcase
-      clause = "<find><search>" + _to_ruby(op_args["search"], context_type, tz) + "</search>" \
-               "<check mode=#{mode}>" + _to_ruby(op_args[check], context_type, tz) + "</check></find>"
+      clause = "<find><search>#{_to_ruby(op_args["search"], context_type, tz, :obj_name => nil)}</search>" \
+               "<check mode=#{mode}>#{_to_ruby(op_args[check], context_type, tz, :obj_name => nil)}</check></find>"
     when "key exists"
-      clause, = operands2rubyvalue(operator, op_args, context_type)
+      clause, = operands2rubyvalue(operator, op_args, context_type, :obj_name => obj_name)
     when "value exists"
-      clause, = operands2rubyvalue(operator, op_args, context_type)
+      clause, = operands2rubyvalue(operator, op_args, context_type, :obj_name => obj_name)
     when "is"
-      col_ruby, _value = operands2rubyvalue(operator, {"field" => col_name}, context_type)
+      col_ruby, _value = operands2rubyvalue(operator, {"field" => col_name}, context_type, :obj_name => obj_name)
       col_type = Target.parse(col_name).column_type
       value = op_args["value"]
       clause = if col_type == :date && !RelativeDatetime.relative?(value)
@@ -310,7 +310,7 @@ class MiqExpression
                  ruby_for_date_compare(col_ruby, col_type, tz, ">=", value, "<=", value)
                end
     when "from"
-      col_ruby, _value = operands2rubyvalue(operator, {"field" => col_name}, context_type)
+      col_ruby, _value = operands2rubyvalue(operator, {"field" => col_name}, context_type, :obj_name => obj_name)
       col_type = Target.parse(col_name).column_type
 
       start_val, end_val = op_args["value"]
@@ -703,7 +703,7 @@ class MiqExpression
     end
   end
 
-  def self.operands2rubyvalue(operator, ops, context_type)
+  def self.operands2rubyvalue(operator, ops, context_type, obj_name: nil)
     if ops["field"]
       if ops["field"] == "<count>"
         ["<count>", quote(ops["value"], :integer)]
@@ -711,11 +711,17 @@ class MiqExpression
         target = Target.parse(ops["field"])
         col_type = target.column_type || :string
 
-        [if context_type == "hash"
-           "<value type=#{col_type}>#{ops["field"].split(".").last.split("-").join(".")}</value>"
-         else
-           "<value ref=#{target.model.to_s.downcase}, type=#{col_type}>#{target.tag_path_with}</value>"
-         end, quote_by(operator, ops["value"], col_type)]
+        [
+          if context_type == "hash"
+            "<value type=#{col_type}>#{ops["field"].split(".").last.split("-").join(".")}</value>"
+          elsif obj_name && !virtual_custom_attribute?(target.column) && target.associations.empty?
+            # TODO: handle value for fields with associations (they could be habtm, has_one, has_many, belongs_to)
+            "#{obj_name}.#{target.column}"
+          else
+            "<value ref=#{target.model.to_s.downcase}, type=#{col_type}>#{target.tag_path_with}</value>"
+          end,
+          quote_by(operator, ops["value"], col_type)
+        ]
       end
     elsif ops["count"]
       target = Target.parse(ops["count"])
@@ -833,6 +839,10 @@ class MiqExpression
   # Escape any unescaped forward slashes and/or interpolation
   def self.sanitize_regular_expression(string)
     string.gsub(%r{\\*/}, "\\/").gsub(/\\*#/, "\\#")
+  end
+
+  def self.virtual_custom_attribute?(attribute)
+    attribute.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
   end
 
   def self.escape_virtual_custom_attribute(attribute)
