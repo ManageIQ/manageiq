@@ -575,13 +575,10 @@ class MiqExpression
     }
   end
 
-  def lenient_evaluate(obj, timezone = nil, prune_sql: false)
+  def evaluate(obj, timezone = nil, prune_sql: false, lenient: false)
     ruby_exp = to_ruby(timezone, :prune_sql => prune_sql)
-    ruby_exp.nil? || Condition.subst_matches?(ruby_exp, obj)
-  end
+    return lenient if ruby_exp.nil? && lenient
 
-  def evaluate(obj, tz = nil)
-    ruby_exp = to_ruby(tz)
     Condition.subst_matches?(ruby_exp, obj)
   end
 

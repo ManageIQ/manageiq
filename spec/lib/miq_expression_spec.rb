@@ -1105,7 +1105,7 @@ RSpec.describe MiqExpression do
     end
   end
 
-  describe "#lenient_evaluate" do
+  describe "#evaluate with lenient" do
     describe "integration" do
       it "with a find/checkany expression" do
         host1, host2, host3, host4, host5, host6, host7, host8 = FactoryBot.create_list(:host, 8)
@@ -1122,7 +1122,7 @@ RSpec.describe MiqExpression do
             "checkany" => {"FROM" => {"field" => "Host.vms-last_scan_on",
                                       "value" => ["2011-01-08 17:00", "2011-01-09 23:30:59"]}},
             "search"   => {"IS NOT NULL" => {"field" => "Host.vms-description"}}})
-        result = Host.all.to_a.select { |rec| filter.lenient_evaluate(rec) }
+        result = Host.all.to_a.select { |rec| filter.evaluate(rec, :lenient => true) }
         expect(result).to contain_exactly(host3, host5)
       end
 
@@ -1148,7 +1148,7 @@ RSpec.describe MiqExpression do
                                       "value" => ["2011-01-08 17:00", "2011-01-09 23:30:59"]}},
             "checkall" => {"IS NOT NULL" => {"field" => "Host.vms-description"}}}
         )
-        result = Host.all.to_a.select { |rec| filter.lenient_evaluate(rec) }
+        result = Host.all.to_a.select { |rec| filter.evaluate(rec, :lenient => true) }
         expect(result).to eq([host2])
       end
 
@@ -1156,7 +1156,7 @@ RSpec.describe MiqExpression do
         vm = FactoryBot.create(:vm_vmware)
 
         expect do
-          described_class.new("=" => {"field" => "Vm-destroy", "value" => true}).lenient_evaluate(vm)
+          described_class.new("=" => {"field" => "Vm-destroy", "value" => true}).evaluate(vm, :lenient => true)
         end.not_to change(Vm, :count)
       end
     end
