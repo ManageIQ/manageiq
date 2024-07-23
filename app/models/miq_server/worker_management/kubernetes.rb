@@ -134,7 +134,7 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
 
     monitor_started = Concurrent::Event.new
 
-    Thread.new do
+    thread = Thread.new do
       _log.info("Starting new #{resource} monitor thread of #{Thread.list.length} total")
       begin
         send(:"monitor_#{resource}", monitor_started)
@@ -151,6 +151,8 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
     monitor_started.wait
 
     _log.info("Starting new #{resource} monitor thread...Complete")
+
+    thread
   end
 
   def ensure_kube_monitors_started
