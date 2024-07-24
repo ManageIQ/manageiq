@@ -290,7 +290,7 @@ end
 
 group :appliance, :optional => true do
   gem "irb",                            "=1.4.1",            :require => false # Locked to same version as the installed RPM rubygem-irb-1.4.1-142.module_el9+787+b20bfeee.noarch so that we don't bundle our own
-  gem "manageiq-appliance_console",     "~>9.0", ">= 9.0.3", :require => false
+  gem "manageiq-appliance_console",     "~>9.1",             :require => false
   gem "rdoc",                                                :require => false # Needed for rails console
 end
 
