@@ -23,10 +23,23 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
   def sync_starting_workers
     starting = MiqWorker.find_all_starting
 
+    # Get a list of pods that aren't currently assigned to MiqWorker records
+    pods_without_workers = current_pods.keys - MiqWorker.server_scope.pluck(:system_uid).compact
+
     # Non-rails workers cannot set their own miq_worker record to started once they
     # have finished initializing.  Check for any starting non-rails workers whose
     # pod is running and mark the miq_worker as started.
     starting.reject(&:rails_worker?).each do |worker|
+      # If the current worker doesn't have a system_uid assigned then find the first
+      # pod available for our worker type and link them up.
+      if worker.system_uid.nil?
+        system_uid = pods_without_workers.detect { |pod_name| pod_name.start_with?(worker.worker_deployment_name) }
+        next if system_uid.nil?
+
+        pods_without_workers.delete(system_uid)
+        worker.update!(:system_uid => system_uid)
+      end
+
       worker_pod = current_pods[worker.system_uid]
       next if worker_pod.nil?
 
