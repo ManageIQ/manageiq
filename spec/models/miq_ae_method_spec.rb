@@ -170,4 +170,34 @@ RSpec.describe MiqAeMethod do
     expect(keys.exclude?('options')).to be_truthy
     expect(keys.exclude?('embedded_methods')).to be_truthy
   end
+
+  describe ".name_path_search" do
+    it "matches name" do
+      m1 = FactoryBot.create(:miq_ae_method, "name" => "match", :class_id => sub_class.id)
+      FactoryBot.create(:miq_ae_method, "name" => "nope", :class_id => sys_class.id)
+
+      expect(MiqAeMethod.name_path_search("match")).to eq([m1])
+    end
+
+    it "matches a name with a %" do
+      m1 = FactoryBot.create(:miq_ae_method, "name" => "10_is_bigger", :class_id => sub_class.id)
+      FactoryBot.create(:miq_ae_method, "name" => "nope", :class_id => sys_class.id)
+
+      expect(MiqAeMethod.name_path_search("10%_big")).to eq([m1])
+    end
+
+    it "matches path" do
+      m1 = FactoryBot.create(:miq_ae_method, "name" => "match", :class_id => sub_class.id)
+      FactoryBot.create(:miq_ae_method, "name" => "nope", :class_id => sys_class.id)
+
+      expect(MiqAeMethod.name_path_search(sub_domain.name)).to eq([m1])
+    end
+
+    it "searches all when blank" do
+      m1 = FactoryBot.create(:miq_ae_method, "name" => "match", :class_id => sub_class.id)
+      m2 = FactoryBot.create(:miq_ae_method, "name" => "nope", :class_id => sys_class.id)
+
+      expect(MiqAeMethod.name_path_search(nil)).to match_array([m1, m2])
+    end
+  end
 end
