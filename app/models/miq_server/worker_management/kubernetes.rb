@@ -21,10 +21,8 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
   end
 
   def sync_starting_workers
-    MiqWorker.find_all_starting.each do |worker|
-      next if worker.class.rails_worker?
-
-      worker_pod = current_pods[worker[:system_uid]]
+    MiqWorker.find_all_starting.reject(&:rails_worker?).each do |worker|
+      worker_pod = current_pods[worker.system_uid]
       next if worker_pod.nil?
 
       container_status = worker_pod.status.containerStatuses.find { |container| container.name == worker.worker_deployment_name }
@@ -35,7 +33,7 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
   end
 
   def sync_stopping_workers
-    MiqWorker.find_all_stopping.reject { |w| w.class.rails_worker? }.each do |worker|
+    MiqWorker.find_all_stopping.reject(&:rails_worker?).each do |worker|
       next if current_pods.key?(worker[:system_uid])
 
       worker.update!(:status => MiqWorker::STATUS_STOPPED)

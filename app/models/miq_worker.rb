@@ -71,6 +71,7 @@ class MiqWorker < ApplicationRecord
 
     true
   end
+  delegate :rails_worker?, :to => :class
 
   def self.scalable?
     maximum_workers_count.nil? || maximum_workers_count > 1
