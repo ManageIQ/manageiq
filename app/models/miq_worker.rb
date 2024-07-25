@@ -310,9 +310,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.start_worker(*params)
-    w = containerized_worker? ? init_worker_object(*params) : create_worker_record(*params)
-    w.start
-    w
+    create_worker_record(*params).tap(&:start)
   end
 
   cache_with_timeout(:my_worker) { server_scope.find_by(:guid => my_guid) }
