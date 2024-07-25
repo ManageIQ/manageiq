@@ -270,6 +270,36 @@ RSpec.describe MiqServer::WorkerManagement::Kubernetes do
               expect(server.worker_manager.sync_starting_workers).to include(worker)
             end
           end
+
+          context "with a worker that doesn't have a system_uid yet" do
+            let(:system_uid) { nil }
+
+            context "without a pod" do
+              let(:current_pods) { {} }
+
+              it "returns the worker as still starting" do
+                expect(server.worker_manager.sync_starting_workers).to include(worker)
+              end
+            end
+
+            context "with a pod that is running" do
+              let(:pod_running) { true }
+
+              it "sets the worker's system_uid and marks the worker started" do
+                expect(server.worker_manager.sync_starting_workers).to be_empty
+                expect(worker.reload.system_uid).to eq(pod_name)
+              end
+            end
+
+            context "with a pod that isn't running" do
+              let(:pod_running) { false }
+
+              it "sets the worker's system_uid and but doesn't mark the worker started" do
+                expect(server.worker_manager.sync_starting_workers).to include(worker)
+                expect(worker.reload.system_uid).to eq(pod_name)
+              end
+            end
+          end
         end
       end
     end
