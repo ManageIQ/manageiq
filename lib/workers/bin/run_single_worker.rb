@@ -82,6 +82,7 @@ end
 ENV["DISABLE_MIQ_WORKER_HEARTBEAT"] ||= options[:heartbeat] ? nil : '1'
 
 options[:ems_id] ||= ENV.fetch("EMS_ID", nil)
+options[:guid]   ||= SecureRandom.uuid
 
 if options[:roles].present?
   MiqServer.my_server.server_role_names += options[:roles]
@@ -96,45 +97,21 @@ end
 
 worker_class.preload_for_worker_role if worker_class.respond_to?(:preload_for_worker_role)
 unless options[:dry_run]
-  create_options = {:pid => Process.pid}
-  runner_options = {}
-
-  create_options[:system_uid] = options[:system_uid] if options[:system_uid]
-
-  if options[:ems_id]
-    create_options[:queue_name] = "ems_#{options[:ems_id]}"
-    runner_options[:ems_id]     = options[:ems_id]
-  end
-
-  update_options = create_options.dup
-  # If a guid is provided, raise if it's not found, update otherwise
-  # Because podified needs to create on the first run_single_worker and update after:
-  #  If system_uid is provided, update if found, create if not found.
-  #  TODO:  This is really inconsistent and confusing.  Why can't GUID follow the same rules?
-  worker = if options[:guid]
-             worker_class.find_by!(:guid => options[:guid]).tap do |wrkr|
-               wrkr.update(update_options)
-             end
-           elsif options[:system_uid] && worker = worker_class.find_by(:system_uid => options[:system_uid])
-             worker.update(update_options)
-             worker
-           else
-             worker_class.create_worker_record(create_options)
-           end
+  runner_options = {:guid => options[:guid]}
+  runner_options[:ems_id] = options[:ems_id] if options[:ems_id]
 
   begin
-    runner_options[:guid] = worker.guid
-    $log.info("Starting #{worker.class.name} with runner options #{runner_options}")
-    worker.class::Runner.new(runner_options).tap(&:setup_sigterm_trap).start
+    $log.info("Starting #{worker_class.name} with runner options #{runner_options}")
+    worker_class::Runner.new(runner_options).tap(&:setup_sigterm_trap).start
   rescue SystemExit
     raise
   rescue Exception => err
-    MiqWorker::Runner.safe_log(worker, "An unhandled error has occurred: #{err}\n#{err.backtrace.join("\n")}", :error)
+    #MiqWorker::Runner.safe_log(worker, "An unhandled error has occurred: #{err}\n#{err.backtrace.join("\n")}", :error)
     STDERR.puts("ERROR: An unhandled error has occurred: #{err}. See log for details.") rescue nil
     exit 1
   ensure
-    FileUtils.rm_f(worker.heartbeat_file)
-    $log.info("Deleting worker record for #{worker.class.name}, id #{worker.id}")
-    worker.delete
+    #FileUtils.rm_f(worker.heartbeat_file)
+    $log.info("Deleting worker record for #{worker_class.name}, GUID #{options[:guid]}")
+    #worker.delete
   end
 end
