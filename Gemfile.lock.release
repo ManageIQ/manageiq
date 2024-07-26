@@ -800,9 +800,9 @@ GEM
       optimist (~> 3.0)
       pg
       rbnacl (>= 3.2, < 5.0)
-    manageiq-loggers (0.6.0)
-      activesupport (>= 5.0)
-      manageiq-password (~> 0.1)
+    manageiq-loggers (1.1.1)
+      activesupport (>= 5.0, < 7.1)
+      manageiq-password (< 2)
     manageiq-messaging (1.0.3)
       activesupport (>= 5.2.4.3, < 6.1)
       rdkafka (~> 0.8)
@@ -1198,7 +1198,7 @@ DEPENDENCIES
   manageiq-content!
   manageiq-decorators!
   manageiq-gems-pending (> 0)!
-  manageiq-loggers (~> 0.6.0)
+  manageiq-loggers (~> 1.0, >= 1.1.1)
   manageiq-messaging (~> 1.0)
   manageiq-password (~> 0.3)
   manageiq-postgres_ha_admin (~> 3.1)
