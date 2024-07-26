@@ -118,6 +118,88 @@ RSpec.describe MiqServer::WorkerManagement::Kubernetes do
     end
   end
 
+  context "#save_pod (private)" do
+    it "saves the deployment in #current_deployments" do
+      require 'kubeclient/resource'
+
+      deployment = Kubeclient::Resource.new(
+        :metadata => {
+          :name              => "1-automation",
+          :namespace         => "manageiq",
+          :uid               => "3f4aeff1-e1a5-45bf-8221-2627bfff38c6",
+          :resourceVersion   => "1557249",
+          :generation        => 2,
+          :creationTimestamp => "2024-07-29T19:50:23Z",
+          :labels            => {:app => "manageiq", :"manageiq-orchestrated-by" => "orchestrator-5474db46d9-rfjmn"},
+          :annotations       => {:"deployment.kubernetes.io/revision" => "1"}
+        },
+        :spec     => {:replicas => 1, :selector => {:matchLabels => {:name => "1-automation"}}},
+        :status   => {:observedGeneration => 2, :replicas => 1, :updatedReplicas => 1, :readyReplicas => 1, :availableReplicas => 1}
+      )
+
+      server.worker_manager.send(:save_deployment, deployment)
+
+      expect(server.worker_manager.current_deployments).to have_key("1-automation")
+      expect(server.worker_manager.current_deployments["1-automation"]).to include(:spec => deployment.spec.to_h)
+    end
+  end
+
+  context "#save_deployment (private)" do
+    let(:phase)         { "Running" }
+    let(:ready)         { true }
+    let(:started)       { true }
+    let(:restart_count) { 0 }
+    let(:last_state)    { {} }
+    let(:pod) do
+      require 'kubeclient/resource'
+      Kubeclient::Resource.new(
+        :metadata => {:name => "1-automation-545fbd845-s2pjt", :labels => {:app => "manageiq", :"manageiq-orchestrated-by" => "orchestrator-5474db46d9-rfjmn", :name => "1-automation", :"pod-template-hash" => "545fbd845"}},
+        :spec     => {},
+        :status   => {:phase => phase, :containerStatuses => [{:name => "1-automation", :state => {:running => {:startedAt => "2024-07-29T19:50:25Z"}}, :lastState => last_state, :ready => ready, :restartCount => restart_count, :started => started}]}
+      )
+    end
+
+    it "saves the pod in #current_pods" do
+      server.worker_manager.send(:save_pod, pod)
+
+      expect(server.worker_manager.current_pods).to have_key("1-automation-545fbd845-s2pjt")
+      expect(server.worker_manager.current_pods["1-automation-545fbd845-s2pjt"]).to include(:label_name => "1-automation", :last_state_terminated => false, :container_restarts => 0, :running => true)
+    end
+
+    context "with a pod that is not running" do
+      let(:phase) { "ContainerCreating" }
+
+      it "marks the pod as not running" do
+        server.worker_manager.send(:save_pod, pod)
+
+        expect(server.worker_manager.current_pods).to have_key("1-automation-545fbd845-s2pjt")
+        expect(server.worker_manager.current_pods["1-automation-545fbd845-s2pjt"]).to include(:running => false)
+      end
+    end
+
+    context "with a pod that has a restart count" do
+      let(:restart_count) { 2 }
+
+      it "sets container_restarts" do
+        server.worker_manager.send(:save_pod, pod)
+
+        expect(server.worker_manager.current_pods).to have_key("1-automation-545fbd845-s2pjt")
+        expect(server.worker_manager.current_pods["1-automation-545fbd845-s2pjt"]).to include(:container_restarts => 2)
+      end
+    end
+
+    context "with a lastState of terminated" do
+      let(:last_state) { {:terminated => true} }
+
+      it "sets last_state_terminated to true" do
+        server.worker_manager.send(:save_pod, pod)
+
+        expect(server.worker_manager.current_pods).to have_key("1-automation-545fbd845-s2pjt")
+        expect(server.worker_manager.current_pods["1-automation-545fbd845-s2pjt"]).to include(:last_state_terminated => true)
+      end
+    end
+  end
+
   context "#sync_from_system" do
     context "#ensure_kube_monitors_started" do
       it "podified, ensures pod monitor started and orphaned rows are removed" do
@@ -210,7 +292,7 @@ RSpec.describe MiqServer::WorkerManagement::Kubernetes do
       metadata = double(:name => deployment_name, :labels => double(:name => pod_label))
       state = double(:running => double(:startedAt => started_at))
       last_state = double(:terminated => nil)
-      status = double(:containerStatuses => [double(:state => state, :lastState => last_state, :restartCount => 0)])
+      status = double(:phase => "Running", :containerStatuses => [double(:state => state, :ready => true, :started => true, :lastState => last_state, :restartCount => 0)])
       pods = [double(:metadata => metadata, :status => status)]
       allow(pods).to receive(:resourceVersion).and_return(resource_version)
       pods

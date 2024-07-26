@@ -25,10 +25,7 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
       worker_pod = current_pods[worker.system_uid]
       next if worker_pod.nil?
 
-      container_status = worker_pod.status.containerStatuses.find { |container| container.name == worker.worker_deployment_name }
-      if worker_pod.status.phase == "Running" && container_status.ready && container_status.started
-        worker.update!(:status => "started")
-      end
+      worker.update!(:status => "started") if worker_pod[:running]
     end
   end
 
@@ -253,6 +250,7 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
     ch[:label_name]            = pod.metadata.labels.name
     ch[:last_state_terminated] = pod.status.containerStatuses.any? { |cs| cs.lastState.terminated }
     ch[:container_restarts]    = pod.status.containerStatuses.sum { |cs| cs.restartCount.to_i }
+    ch[:running]               = pod.status.phase == "Running" && pod.status.containerStatuses.all? { |cs| cs.ready && cs.started }
 
     name = pod.metadata.name
     current_pods[name] ||= ch
