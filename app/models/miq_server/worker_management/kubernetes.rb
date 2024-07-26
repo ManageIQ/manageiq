@@ -12,10 +12,6 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
     # we only have to sync the list of pods and deployments once
     ensure_kube_monitors_started if my_server_is_primary?
 
-    # Before syncing the workers check for any orphaned worker rows that don't have
-    # a current pod and delete them
-    cleanup_orphaned_worker_rows
-
     # Update worker deployments with updated settings such as cpu/memory limits
     sync_deployment_settings
   end
@@ -54,6 +50,14 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
         orphaned_rows.destroy_all
       end
     end
+  end
+
+  def cleanup_orphaned_workers
+    orphaned_pods = current_pods.keys - miq_workers.pluck(:system_uid)
+    return if orphaned_pods.empty?
+
+    # TODO destroy orphaned pods
+    orphaned_pods.each { |_pod| }
   end
 
   def cleanup_failed_workers
