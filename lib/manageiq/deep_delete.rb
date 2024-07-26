@@ -168,7 +168,7 @@ module ManageIQ
 
       loop do
         if (id = scope.order(pk).limit(1).offset(batch_size).pluck(pk).first)
-          total += yield(scope.where("#{pk} < ?", id))
+          total += yield(scope.where("#{connection.quote_table_name(pk)} < ?", id))
         else
           return total += yield(scope)
         end
