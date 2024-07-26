@@ -1,52 +1,44 @@
 RSpec.describe MiqAeMethod do
   let(:user) { FactoryBot.create(:user_with_group) }
-  it "should return editable as false if the parent namespace/class is not editable" do
-    n1 = FactoryBot.create(:miq_ae_system_domain, :tenant => user.current_tenant)
-    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
-    f1 = FactoryBot.create(:miq_ae_method,
-                            :class_id => c1.id,
-                            :name     => "foo_method",
-                            :scope    => "instance",
-                            :language => "ruby",
-                            :location => "inline")
-    expect(f1.editable?(user)).to be_falsey
+  let(:sys_domain) { FactoryBot.create(:miq_ae_system_domain) }
+  let(:domain) { FactoryBot.create(:miq_ae_domain) }
+  let(:sub_domain) { FactoryBot.create(:miq_ae_namespace, :parent => domain) }
+
+  let(:sys_class) { FactoryBot.create(:miq_ae_class, :namespace_id => sys_domain.id) }
+  let(:reg_class) { FactoryBot.create(:miq_ae_class, :namespace_id => domain.id) }
+  let(:sub_class) { FactoryBot.create(:miq_ae_class, :namespace_id => sub_domain.id) }
+
+  describe "#editable" do
+    it "should return editable as false if the parent namespace/class is not editable" do
+      f1 = FactoryBot.create(:miq_ae_method,
+                             :class_id => sys_class.id,
+                             :name     => "foo_method")
+      expect(f1.editable?(user)).to be_falsey
+    end
+
+    it "should return editable as true if the parent namespace/class is editable" do
+      f1 = FactoryBot.create(:miq_ae_method,
+                             :class_id => reg_class.id,
+                             :name     => "foo_method")
+      expect(f1.editable?(user)).to be_truthy
+    end
   end
 
-  it "should return editable as true if the parent namespace/class is editable" do
-    n1 = FactoryBot.create(:miq_ae_domain, :tenant => user.current_tenant)
-    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
-    f1 = FactoryBot.create(:miq_ae_method,
-                            :class_id => c1.id,
-                            :name     => "foo_method",
-                            :scope    => "instance",
-                            :language => "ruby",
-                            :location => "inline")
-    expect(f1.editable?(user)).to be_truthy
-  end
+  describe ".lookup_by_class_id_and_name" do
+    it "should lookup method" do
+      f1 = FactoryBot.create(:miq_ae_method,
+                             :class_id => sys_class.id,
+                             :name     => "foo_method")
+      expect(f1.editable?(user)).to be_falsey
 
-  it "should lookup method" do
-    n1 = FactoryBot.create(:miq_ae_system_domain, :tenant => user.current_tenant)
-    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
-    f1 = FactoryBot.create(:miq_ae_method,
-                           :class_id => c1.id,
-                           :name     => "foo_method",
-                           :scope    => "instance",
-                           :language => "ruby",
-                           :location => "inline")
-    expect(f1.editable?(user)).to be_falsey
-
-    expect(MiqAeMethod.lookup_by_class_id_and_name(c1.id, "foo_method")).to eq(f1)
+      expect(MiqAeMethod.lookup_by_class_id_and_name(sys_class.id, "foo_method")).to eq(f1)
+    end
   end
 
   it "doesn’t access database when unchanged model is saved" do
-    n1 = FactoryBot.create(:miq_ae_system_domain, :tenant => user.current_tenant)
-    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     f1 = FactoryBot.create(:miq_ae_method,
-                           :class_id => c1.id,
-                           :name     => "foo_method",
-                           :scope    => "instance",
-                           :language => "ruby",
-                           :location => "inline")
+                           :class_id => reg_class.id,
+                           :name     => "foo_method")
     expect { f1.valid? }.not_to make_database_queries
   end
 
@@ -85,15 +77,13 @@ RSpec.describe MiqAeMethod do
   end
 
   context "#copy" do
-    let(:d2) { FactoryBot.create(:miq_ae_domain, :name => "domain2", :priority => 2) }
-    let(:ns1) { FactoryBot.create(:miq_ae_namespace, :name => "ns1", :parent => @d1) }
-    let(:m1) { FactoryBot.create(:miq_ae_method, :class_id => @cls1.id, :name => "foo_method1", :scope => "instance", :language => "ruby", :location => "inline") }
-    let(:m2) { FactoryBot.create(:miq_ae_method, :class_id => @cls1.id, :name => "foo_method2", :scope => "instance", :language => "ruby", :location => "inline") }
-    before do
-      @d1 = FactoryBot.create(:miq_ae_domain, :name => "domain1", :parent => nil, :priority => 1)
-      @cls1 = FactoryBot.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
-      @ns2 = FactoryBot.create(:miq_ae_namespace, :name => "ns2", :parent => d2)
-    end
+    let(:d1) { FactoryBot.create(:miq_ae_domain, :priority => 1) }
+    let(:d2) { FactoryBot.create(:miq_ae_domain, :priority => 2) }
+    let(:ns1) { FactoryBot.create(:miq_ae_namespace, :parent => d1) }
+    let(:ns2) { FactoryBot.create(:miq_ae_namespace, :parent => d2) }
+    let(:m1) { FactoryBot.create(:miq_ae_method, :class_id => cls1.id, :scope => "instance") }
+    let(:m2) { FactoryBot.create(:miq_ae_method, :class_id => cls1.id, :scope => "instance") }
+    let(:cls1) { FactoryBot.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id) }
 
     it "copies instances under specified namespace" do
       options = {
@@ -109,7 +99,7 @@ RSpec.describe MiqAeMethod do
 
     it "copy instances under same namespace raise error when class exists" do
       options = {
-        :domain             => @d1.name,
+        :domain             => d1.name,
         :namespace          => ns1.fqname,
         :overwrite_location => false,
         :ids                => [m1.id, m2.id]
@@ -120,7 +110,7 @@ RSpec.describe MiqAeMethod do
     it "replaces instances under same namespace when class exists" do
       options = {
         :domain             => d2.name,
-        :namespace          => @ns2.name,
+        :namespace          => ns2.name,
         :overwrite_location => true,
         :ids                => [m1.id, m2.id]
       }
@@ -162,28 +152,16 @@ RSpec.describe MiqAeMethod do
   end
 
   it "#domain" do
-    d1 = FactoryBot.create(:miq_ae_system_domain, :name => 'dom1', :priority => 10)
-    n1 = FactoryBot.create(:miq_ae_namespace, :name => 'ns1', :parent => d1)
-    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     m1 = FactoryBot.create(:miq_ae_method,
-                            :class_id => c1.id,
-                            :name     => "foo_method",
-                            :scope    => "instance",
-                            :language => "ruby",
-                            :location => "inline")
-    expect(m1.domain.name).to eql('dom1')
+                           :class_id => sub_class.id,
+                           :name     => "foo_method")
+    expect(m1.domain).to eql(domain)
   end
 
   it "#to_export_yaml" do
-    d1 = FactoryBot.create(:miq_ae_system_domain, :name => 'dom1', :priority => 10)
-    n1 = FactoryBot.create(:miq_ae_namespace, :name => 'ns1', :parent => d1)
-    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     m1 = FactoryBot.create(:miq_ae_method,
-                            :class_id => c1.id,
-                            :name     => "foo_method",
-                            :scope    => "instance",
-                            :language => "ruby",
-                            :location => "inline")
+                           :class_id => sub_class.id,
+                           :name     => "foo_method")
     result = m1.to_export_yaml
 
     expect(result['name']).to eql('foo_method')
