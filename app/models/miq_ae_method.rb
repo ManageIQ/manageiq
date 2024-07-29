@@ -30,6 +30,12 @@ class MiqAeMethod < ApplicationRecord
   AVAILABLE_SCOPES     = ["class", "instance"]
   validates_inclusion_of  :scope,     :in => AVAILABLE_SCOPES
 
+  # finds by name or namespace. not domain
+  # @param [nil,String] search
+  scope :name_path_search, lambda { |search|
+    search.present? ? where(arel_table[:relative_path].matches("%#{search}%")) : where({})
+  }
+
   def self.available_languages
     AVAILABLE_LANGUAGES
   end
