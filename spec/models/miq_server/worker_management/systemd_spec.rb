@@ -62,7 +62,7 @@ RSpec.describe MiqServer::WorkerManagement::Systemd do
       it "doesn't update the worker record" do
         expect(worker).not_to receive(:update!)
 
-        server.worker_manager.sync_starting_workers
+        expect(server.worker_manager.sync_starting_workers).to be_empty
       end
     end
 
@@ -77,7 +77,7 @@ RSpec.describe MiqServer::WorkerManagement::Systemd do
         it "doesn't update the worker record" do
           expect(worker).not_to receive(:update!)
 
-          server.worker_manager.sync_starting_workers
+          expect(server.worker_manager.sync_starting_workers).to include(worker)
         end
       end
 
@@ -88,7 +88,7 @@ RSpec.describe MiqServer::WorkerManagement::Systemd do
           it "doesn't update the worker record" do
             expect(worker).not_to receive(:update!)
 
-            server.worker_manager.sync_starting_workers
+            expect(server.worker_manager.sync_starting_workers).to include(worker)
           end
         end
 
@@ -106,7 +106,7 @@ RSpec.describe MiqServer::WorkerManagement::Systemd do
             end
 
             it "doesn't update the worker record" do
-              server.worker_manager.sync_starting_workers
+              expect(server.worker_manager.sync_starting_workers).to include(worker)
 
               expect(worker.reload.status).to eq(MiqWorker::STATUS_STARTING)
             end
@@ -125,7 +125,7 @@ RSpec.describe MiqServer::WorkerManagement::Systemd do
             end
 
             it "sets the worker record to started" do
-              server.worker_manager.sync_starting_workers
+              expect(server.worker_manager.sync_starting_workers).to be_empty
 
               expect(worker.reload.status).to eq(MiqWorker::STATUS_STARTED)
             end
@@ -144,7 +144,7 @@ RSpec.describe MiqServer::WorkerManagement::Systemd do
       it "doesn't update the worker record" do
         expect(worker).not_to receive(:update!)
 
-        server.worker_manager.sync_stopping_workers
+        expect(server.worker_manager.sync_stopping_workers).to be_empty
       end
     end
 
@@ -159,7 +159,7 @@ RSpec.describe MiqServer::WorkerManagement::Systemd do
         it "doesn't update the worker record" do
           expect(worker).not_to receive(:update!)
 
-          server.worker_manager.sync_stopping_workers
+          expect(server.worker_manager.sync_stopping_workers).to include(worker)
         end
       end
 
@@ -181,13 +181,13 @@ RSpec.describe MiqServer::WorkerManagement::Systemd do
           it "doesn't update the worker record" do
             expect(worker).not_to receive(:update!)
 
-            server.worker_manager.sync_stopping_workers
+            expect(server.worker_manager.sync_stopping_workers).to include(worker)
           end
         end
 
         context "with a systemd unit that has exited" do
           it "sets the worker record to stopped" do
-            server.worker_manager.sync_stopping_workers
+            expect(server.worker_manager.sync_stopping_workers).to be_empty
 
             expect(worker.reload.status).to eq(MiqWorker::STATUS_STOPPED)
           end
