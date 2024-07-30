@@ -1,24 +1,17 @@
-require 'linux_admin'
-
 module MiqServer::EnvironmentManagement
   extend ActiveSupport::Concern
 
   module ClassMethods
     def get_network_information
       ipaddr = hostname = mac_address = nil
-      begin
-        if MiqEnvironment::Command.is_appliance?
-          eth0 = LinuxAdmin::NetworkInterface.new("eth0")
 
-          ipaddr      = eth0.address || eth0.address6
-          hostname    = LinuxAdmin::Hosts.new.hostname
-          mac_address = eth0.mac_address
-        else
-          ipaddr      = MiqEnvironment.local_ip_address
-          hostname    = MiqEnvironment.fully_qualified_domain_name
-          mac_address = UUIDTools::UUID.mac_address.dup
-        end
-      rescue
+      begin
+        ipaddr      = MiqEnvironment.local_ip_address
+        hostname    = MiqEnvironment.fully_qualified_domain_name
+        mac_address = UUIDTools::UUID.mac_address.dup
+      rescue => err
+        _log.warn("Failed to get network information: #{err}")
+        _log.log_backtrace(err)
       end
 
       [ipaddr, hostname, mac_address]
