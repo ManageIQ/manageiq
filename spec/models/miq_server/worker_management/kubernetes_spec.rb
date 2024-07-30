@@ -210,6 +210,128 @@ RSpec.describe MiqServer::WorkerManagement::Kubernetes do
     end
   end
 
+  describe "#sync_starting_workers" do
+    before { MiqWorkerType.seed }
+
+    context "podified" do
+      let(:rails_worker) { true }
+      let(:pod_name)     { "1-generic-abcd" }
+      let(:pod_running)  { true }
+      let(:worker)       { FactoryBot.create(:miq_generic_worker, :miq_server => server, :status => status, :system_uid => pod_name) }
+      let(:current_pods) { {pod_name => {:label_name => pod_label, :last_state_terminated => false, :container_restarts => 0, :running => pod_running}} }
+
+      before do
+        allow(worker.class).to receive(:rails_worker?).and_return(rails_worker)
+        server.worker_manager.current_pods = current_pods
+      end
+
+      after do
+        server.worker_manager.current_pods.clear
+      end
+
+      context "with no starting workers" do
+        let(:status) { MiqWorker::STATUS_STARTED }
+
+        it "returns an empty array" do
+          expect(server.worker_manager.sync_starting_workers).to be_empty
+        end
+      end
+
+      context "with a starting worker" do
+        let(:status) { MiqWorker::STATUS_STARTING }
+
+        it "returns the starting worker" do
+          expect(server.worker_manager.sync_starting_workers).to include(worker)
+        end
+
+        context "non-rails worker" do
+          let(:rails_worker) { false }
+
+          context "without a pod" do
+            let(:current_pods) { {} }
+
+            it "returns the worker as still starting" do
+              expect(server.worker_manager.sync_starting_workers).to include(worker)
+            end
+          end
+
+          context "with a pod that is running" do
+            let(:pod_running) { true }
+
+            it "marks the worker as running and returns an empty array" do
+              expect(server.worker_manager.sync_starting_workers).to be_empty
+            end
+          end
+
+          context "with a pod that isn't running yet" do
+            let(:pod_running) { false }
+
+            it "returns the starting worker" do
+              expect(server.worker_manager.sync_starting_workers).to include(worker)
+            end
+          end
+        end
+      end
+    end
+  end
+
+  describe "#sync_stopping_workers" do
+    before { MiqWorkerType.seed }
+
+    context "podified" do
+      let(:rails_worker) { true }
+      let(:pod_name)     { "1-generic-abcd" }
+      let(:pod_running)  { true }
+      let(:worker)       { FactoryBot.create(:miq_generic_worker, :miq_server => server, :status => status, :system_uid => pod_name) }
+      let(:current_pods) { {pod_name => {:label_name => pod_label, :last_state_terminated => false, :container_restarts => 0, :running => pod_running}} }
+
+      before do
+        allow(worker.class).to receive(:rails_worker?).and_return(rails_worker)
+        server.worker_manager.current_pods = current_pods
+      end
+
+      after do
+        server.worker_manager.current_pods.clear
+      end
+
+      context "with no stopping workers" do
+        let(:status) { MiqWorker::STATUS_STARTED }
+
+        it "returns an empty array" do
+          expect(server.worker_manager.sync_stopping_workers).to be_empty
+        end
+      end
+
+      context "with a stopping worker" do
+        let(:status) { MiqWorker::STATUS_STOPPING }
+
+        it "returns the stopping worker" do
+          expect(server.worker_manager.sync_stopping_workers).to include(worker)
+        end
+
+        context "non-rails worker" do
+          let(:rails_worker) { false }
+
+          context "without a pod" do
+            let(:current_pods) { {} }
+
+            it "marks the worker as stopped and returns an empty array" do
+              expect(server.worker_manager.sync_stopping_workers).to be_empty
+            end
+          end
+
+          context "with a pod that is still running" do
+            let(:pod_running) { true }
+
+            it "returns the stopping worker" do
+              expect(server.worker_manager.sync_stopping_workers).to include(worker)
+            end
+          end
+        end
+      end
+    end
+  end
+
   context "#cleanup_orphaned_worker_rows" do
     context "podified" do
       let(:server2) { EvmSpecHelper.remote_miq_server }

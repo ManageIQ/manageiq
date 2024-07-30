@@ -21,20 +21,31 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
   end
 
   def sync_starting_workers
-    MiqWorker.find_all_starting.reject(&:rails_worker?).each do |worker|
+    starting = MiqWorker.find_all_starting
+
+    # Non-rails workers cannot set their own miq_worker record to started once they
+    # have finished initializing.  Check for any starting non-rails workers whose
+    # pod is running and mark the miq_worker as started.
+    starting.reject(&:rails_worker?).each do |worker|
       worker_pod = current_pods[worker.system_uid]
       next if worker_pod.nil?
 
-      worker.update!(:status => "started") if worker_pod[:running]
+      worker.update!(:status => MiqWorker::STATUS_STARTED) if worker_pod[:running]
     end
+
+    starting.reload
   end
 
   def sync_stopping_workers
-    MiqWorker.find_all_stopping.reject(&:rails_worker?).each do |worker|
+    stopping = MiqWorker.find_all_stopping
+
+    stopping.reject(&:rails_worker?).each do |worker|
       next if current_pods.key?(worker[:system_uid])
 
       worker.update!(:status => MiqWorker::STATUS_STOPPED)
     end
+
+    stopping.reload
   end
 
   def enough_resource_to_start_worker?(_worker_class)
