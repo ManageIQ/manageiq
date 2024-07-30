@@ -270,6 +270,6 @@ class MiqRequestTask < ApplicationRecord
   end
 
   def dialog_values
-    options[:dialog] || {}
+    {:dialog => options[:dialog] || {}}
   end
 end
