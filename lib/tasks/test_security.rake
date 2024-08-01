@@ -65,6 +65,7 @@ namespace :test do
       exit $?.exitstatus unless system(cmd)
     end
 
+    desc "Run yarn npm audit with the specified report format ('human' or 'json')"
     task :yarn_audit, :format do |_, args|
       format = args.fetch(:format, "human")
 
