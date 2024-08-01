@@ -271,8 +271,8 @@ class GitWorktree
     end
   end
 
-  def pull
-    lock { fetch_and_merge }
+  def pull(prune: true)
+    lock { fetch_and_merge(:prune => prune) }
   end
 
   def with_remote_options
@@ -328,15 +328,20 @@ class GitWorktree
     "refs/heads/#{current_branch}"
   end
 
-  def fetch_and_merge
-    fetch
+  def fetch_and_merge(prune: true)
+    fetch(:prune => prune)
     commit = @repo.ref(upstream_ref).target
     merge(commit)
   end
 
-  def fetch
+  def fetch(prune: true)
     with_remote_options do |remote_options|
-      @repo.fetch(@remote_name, **remote_options)
+      if prune
+        fetch_options = remote_options.merge(:prune => prune)
+        @repo.fetch(@remote_name, **fetch_options)
+      else
+        @repo.fetch(@remote_name, **remote_options)
+      end
     end
   end
 
