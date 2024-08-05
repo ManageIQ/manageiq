@@ -28,6 +28,11 @@ namespace :test do
     rescue TestSecurityHelper::SecurityTestFailed
       exit 1
     end
+
+    desc "Rebuild yarn audit pending list for an engine"
+    task :rebuild_yarn_audit_pending do
+      TestSecurityHelper.rebuild_yarn_audit_pending
+    end
   end
 
   desc "Run all security tests with the specified report format ('human' or 'json')"

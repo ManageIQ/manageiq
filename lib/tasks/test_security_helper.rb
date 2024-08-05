@@ -1,3 +1,5 @@
+# rubocop:disable Rails/Output
+
 class TestSecurityHelper
   class SecurityTestFailed < StandardError; end
 
@@ -99,4 +101,51 @@ class TestSecurityHelper
     yarn_audit(format: format)
     true
   end
+
+  def self.rebuild_yarn_audit_pending
+    raise "Expected to be called from an engine" unless defined?(ENGINE_ROOT)
+
+    require "pathname"
+    require "json"
+    require "more_core_extensions/core_ext/array/tableize"
+
+    yarnrc_yml = Pathname.new(ENGINE_ROOT).join(".yarnrc.yml")
+    yarnrc = yarnrc_yml.readlines
+    start_index = yarnrc.index("npmAuditExcludePackages:\n")
+    end_index = yarnrc[start_index..].index("\n") + start_index
+    yarnrc.slice!(start_index + 1...end_index)
+    yarnrc_yml.write(yarnrc.join)
+
+    output = `yarn npm audit --recursive --no-deprecations --environment production --json`
+
+    lines =
+      output
+      .chomp
+      .lines
+      .map { |l| JSON.parse(l) }
+      .group_by { |h| h["value"] }
+      .transform_keys { |k| "- #{k}\n" }
+      .transform_values do |values|
+        values = values.map do |h|
+          [
+            "pending",
+            h.dig("children", "Severity"),
+            h.dig("children", "URL").sub("https://github.com/advisories/", ""),
+            "#{h["value"]} #{h.dig("children", "Vulnerable Versions")}",
+            "#{h.dig("children", "Tree Versions").join(", ")} brought in by #{h.dig("children", "Dependents").join(", ")}"
+          ]
+        end
+
+        values
+        .tableize(:header => false)
+        .lines
+        .map { |l| l.sub(/^ /, "# ") }
+      end
+      .flatten(2)
+
+    yarnrc.insert(start_index + 1, lines)
+    yarnrc_yml.write(yarnrc.join)
+  end
 end
+
+# rubocop:enable Rails/Output
