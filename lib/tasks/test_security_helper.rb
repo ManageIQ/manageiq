@@ -92,11 +92,15 @@ class TestSecurityHelper
   end
 
   def self.all(format: "human")
-    brakeman(format: format)
-    puts
-    bundle_audit(format: format)
-    puts
-    yarn_audit(format: format)
-    true
+    success = %i[bundle_audit brakeman yarn_audit].map do |suite|
+      public_send(suite, format: format)
+      true
+    rescue SecurityTestFailed
+      false
+    ensure
+      puts
+    end.all?
+
+    raise SecurityTestFailed unless success
   end
 end
