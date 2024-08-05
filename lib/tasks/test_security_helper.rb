@@ -103,20 +103,25 @@ class TestSecurityHelper
   end
 
   def self.rebuild_yarn_audit_pending
-    raise "Expected to be called from an engine" unless defined?(ENGINE_ROOT)
+    if defined?(ENGINE_ROOT)
+      engine_root = ENGINE_ROOT
+    else
+      engine_root = ENV.fetch("ENGINE_ROOT", nil)
+      raise "Expected to be called from an engine" unless engine_root
+    end
 
     require "pathname"
     require "json"
     require "more_core_extensions/core_ext/array/tableize"
 
-    yarnrc_yml = Pathname.new(ENGINE_ROOT).join(".yarnrc.yml")
+    yarnrc_yml = Pathname.new(engine_root).join(".yarnrc.yml")
     yarnrc = yarnrc_yml.readlines
     start_index = yarnrc.index("npmAuditExcludePackages:\n")
     end_index = yarnrc[start_index..].index("\n") + start_index
     yarnrc.slice!(start_index + 1...end_index)
     yarnrc_yml.write(yarnrc.join)
 
-    output = `yarn npm audit --recursive --no-deprecations --environment production --json`
+    output = Dir.chdir(engine_root) { `yarn npm audit --recursive --no-deprecations --environment production --json` }
 
     lines =
       output
