@@ -278,7 +278,7 @@ class DescendantLoader
     #   "xxx/manageiq/app/models/vm_or_template.rb:15:in `<class:VmOrTemplate>'",
     #   "xxx/manageiq/app/models/vm_or_template.rb:6:in `<main>'",
     def descendants
-      if Vmdb::Application.instance.initialized? && !defined?(@loaded_descendants) && %w[__update_callbacks].exclude?(caller_locations(1..1).first.base_label)
+      if Vmdb::Application.instance.initialized? && !defined?(@loaded_descendants) && %w[__update_callbacks].exclude?(caller_locations(1..1).first.base_label) && !Vmdb::Application.reloading
         @loaded_descendants = true
         DescendantLoader.instance.load_subclasses(self)
       end
@@ -327,7 +327,7 @@ class DescendantLoader
     #   "xxx/gems/activesupport-7.0.8.4/lib/active_support/descendants_tracker.rb:89:in `descendants'",
     #   ...
     def subclasses
-      if Vmdb::Application.instance.initialized? && !defined?(@loaded_descendants) && %w[descendants reload_schema_from_cache subclasses].exclude?(caller_locations(1..1).first.base_label)
+      if Vmdb::Application.instance.initialized? && !defined?(@loaded_descendants) && %w[descendants reload_schema_from_cache subclasses].exclude?(caller_locations(1..1).first.base_label) && !Vmdb::Application.reloading
         @loaded_descendants = true
         DescendantLoader.instance.load_subclasses(self)
       end

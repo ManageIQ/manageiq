@@ -33,6 +33,8 @@ end
 
 module Vmdb
   class Application < Rails::Application
+    attr_accessor :reloading
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -191,6 +193,12 @@ module Vmdb
       # Reload Settings to get values from db now that it's safe to autoload
       ::Settings.reload!
       Vmdb::Loggers.apply_config(::Settings.log)
+
+      # The descendant_loader.rb hooks descendants and subclasses to do proper sti loading of
+      # subclasses and descendants. It should not be used when code reload is happening.
+      Vmdb::Application.reloading = false
+      Vmdb::Application.reloader.before_class_unload { Vmdb::Application.reloading = true }
+      Vmdb::Application.reloader.to_complete         { Vmdb::Application.reloading = false }
     end
 
     console do
