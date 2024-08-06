@@ -30,11 +30,7 @@ class YamlPermittedClasses
 
   def self.initialize_app_yaml_permitted_classes
     @initialize_app_yaml_permitted_classes ||= begin
-      if ActiveRecord.respond_to?(:yaml_column_permitted_classes)
-        ActiveRecord.yaml_column_permitted_classes       = YamlPermittedClasses.app_yaml_permitted_classes
-      else
-        ActiveRecord::Base.yaml_column_permitted_classes = YamlPermittedClasses.app_yaml_permitted_classes
-      end
+      ActiveRecord.yaml_column_permitted_classes = YamlPermittedClasses.app_yaml_permitted_classes
       true
     end
   end
