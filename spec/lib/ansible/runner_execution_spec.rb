@@ -3,7 +3,7 @@ RSpec.describe Ansible::Runner do
     pending("ansible-runner executable not available") unless described_class.available?
   end
 
-  DATA_DIRECTORY = Pathname.new(__dir__).join("runner/data")
+  let(:data_directory) { Pathname.new(__dir__).join("runner/data") }
 
   shared_examples_for :executing_playbooks do
     let(:method_under_test) { async ? :run_async : :run }
@@ -11,7 +11,7 @@ RSpec.describe Ansible::Runner do
     let(:extra_vars) { {} }
 
     it "runs a playbook" do
-      playbook = DATA_DIRECTORY.join("hello_world.yml")
+      playbook = data_directory.join("hello_world.yml")
 
       response = Ansible::Runner.public_send(method_under_test, env_vars, extra_vars, playbook)
       response = response.wait(5.seconds) if async
@@ -21,7 +21,7 @@ RSpec.describe Ansible::Runner do
     end
 
     it "runs a playbook with variables in a vars file" do
-      playbook = DATA_DIRECTORY.join("hello_world_vars_file.yml")
+      playbook = data_directory.join("hello_world_vars_file.yml")
 
       response = Ansible::Runner.public_send(method_under_test, env_vars, extra_vars, playbook)
       response = response.wait(5.seconds) if async
@@ -31,7 +31,7 @@ RSpec.describe Ansible::Runner do
     end
 
     it "runs a playbook with vault encrypted variables" do
-      playbook   = DATA_DIRECTORY.join("hello_world_vault_encrypted_vars.yml")
+      playbook   = data_directory.join("hello_world_vault_encrypted_vars.yml")
       credential = FactoryBot.create(:embedded_ansible_vault_credential, :password => "vault")
 
       response = Ansible::Runner.public_send(method_under_test, env_vars, extra_vars, playbook, :credentials => [credential.id])
@@ -42,7 +42,7 @@ RSpec.describe Ansible::Runner do
     end
 
     it "runs a playbook with variables in a vault encrypted vars file" do
-      playbook   = DATA_DIRECTORY.join("hello_world_vault_encrypted_vars_file.yml")
+      playbook   = data_directory.join("hello_world_vault_encrypted_vars_file.yml")
       credential = FactoryBot.create(:embedded_ansible_vault_credential, :password => "vault")
 
       response = Ansible::Runner.public_send(method_under_test, env_vars, extra_vars, playbook, :credentials => [credential.id])
