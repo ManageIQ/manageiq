@@ -1,4 +1,4 @@
-# Note:  The password for `encrypted_msg` is just 'vault'
+# NOTE:  The password for `encrypted_msg` is just 'vault'
 #
 # This playbook is just used for testing vault integration, so when provided
 # with the correct password the message displayed should be:
@@ -24,7 +24,7 @@
 # (NOTE: When running the above, Ctrl-D was required twice for `ansible-vault`
 # to respond.  Most likely due to the '!' character in the base string.)
 #
-- name: Hello World Sample (Vault Encrypted)
+- name: Hello World Sample (Vault Encrypted Vars)
   hosts: localhost
   vars:
     encrypted_msg: !vault |
@@ -35,6 +35,6 @@
       3239396633396466630a616463393237303338633562656664653433633437383161353933303737
       3764
   tasks:
-    - name: Hello Message
-      debug:
-        msg: "{{encrypted_msg}} (NOTE: This message has been encrypted with ansible-vault)"
+  - name: Hello Message
+    debug:
+      msg: "{{encrypted_msg}} (NOTE: This message has been encrypted with ansible-vault)"
