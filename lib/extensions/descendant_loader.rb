@@ -261,8 +261,24 @@ class DescendantLoader
   end
 
   module ArDescendantsWithLoader
+    # Use caution if modifying the list of excluded caller_locations below.
+    # These methods are called very early from rails during code load time,
+    # before the models are even loaded, as documented below.
+    # Ideally, a more resilient conditional can be used in the future.
+    #
+    # Called from __update_callbacks during model load time:
+    #   "xxx/gems/activesupport-7.0.8.4/lib/active_support/callbacks.rb:706:in `__update_callbacks'",
+    #   "xxx/gems/activesupport-7.0.8.4/lib/active_support/callbacks.rb:764:in `set_callback'",
+    #   "xxx/gems/activemodel-7.0.8.4/lib/active_model/validations.rb:172:in `validate'",
+    #   "xxx/gems/activemodel-7.0.8.4/lib/active_model/validations/with.rb:96:in `block in validates_with'",
+    #   "xxx/gems/activemodel-7.0.8.4/lib/active_model/validations/with.rb:85:in `each'",
+    #   "xxx/gems/activemodel-7.0.8.4/lib/active_model/validations/with.rb:85:in `validates_with'",
+    #   "xxx/gems/activemodel-7.0.8.4/lib/active_model/validations/format.rb:109:in `validates_format_of'",
+    #   "xxx/gems/ancestry-4.1.0/lib/ancestry/has_ancestry.rb:30:in `has_ancestry'",
+    #   "xxx/manageiq/app/models/vm_or_template.rb:15:in `<class:VmOrTemplate>'",
+    #   "xxx/manageiq/app/models/vm_or_template.rb:6:in `<main>'",
     def descendants
-      if Vmdb::Application.instance.initialized? && !defined? @loaded_descendants
+      if Vmdb::Application.instance.initialized? && !defined?(@loaded_descendants) && %w[__update_callbacks].exclude?(caller_locations(1..1).first.base_label)
         @loaded_descendants = true
         DescendantLoader.instance.load_subclasses(self)
       end
@@ -270,11 +286,48 @@ class DescendantLoader
       super
     end
 
-    # Rails 6.1 added an alias for subclasss to call direct_descendants in:
-    # https://github.com/rails/rails/commit/8f8aa857e084b76b1120edaa9bb9ce03ba1e6a19
-    # We need to get in front of it, like we do for descendants.
+    # Use caution if modifying the list of excluded caller_locations below.
+    # These methods are called very early from rails during code load time,
+    # before the models are even loaded, as documented below.
+    # Ideally, a more resilient conditional can be used in the future.
+    #
+    # Called from reload_schema_from_cache from virtual column definitions from ar_region from many/all models:
+    #   "xxx/gems/activerecord-7.0.8.4/lib/active_record/model_schema.rb:609:in `reload_schema_from_cache'",
+    #   "xxx/gems/activerecord-7.0.8.4/lib/active_record/timestamp.rb:94:in `reload_schema_from_cache'",
+    #   "xxx/bundler/gems/activerecord-virtual_attributes-2c077434608f/lib/active_record/virtual_attributes.rb:60:in `virtual_attribute'",
+    #   "xxx/bundler/gems/activerecord-virtual_attributes-2c077434608f/lib/active_record/virtual_attributes.rb:55:in `virtual_column'",
+    #   "xxx/manageiq/lib/extensions/ar_region.rb:14:in `block in inherited'",
+    #   "xxx/manageiq/lib/extensions/ar_region.rb:13:in `class_eval'",
+    #   "xxx/manageiq/lib/extensions/ar_region.rb:13:in `inherited'",
+    #   "xxx/manageiq/app/models/vm_or_template.rb:6:in `<main>'",
+    #
+    # Called from subclasses call in descendant_loader after the above callstack:
+    #   "xxx/gems/activesupport-7.0.8.4/lib/active_support/descendants_tracker.rb:83:in `subclasses'",
+    #   "xxx/manageiq/lib/extensions/descendant_loader.rb:313:in `subclasses'",
+    #   "xxx/gems/activerecord-7.0.8.4/lib/active_record/model_schema.rb:609:in `reload_schema_from_cache'",
+    #   ...
+    #
+    # Called from descendants from descendant_loader via  __update_callbacks:
+    #   "xxx/gems/activesupport-7.0.8.4/lib/active_support/descendants_tracker.rb:89:in `descendants'",
+    #   "xxx/manageiq/lib/extensions/descendant_loader.rb:296:in `descendants'",
+    #   "xxx/gems/activesupport-7.0.8.4/lib/active_support/callbacks.rb:706:in `__update_callbacks'",
+    #   "xxx/gems/activesupport-7.0.8.4/lib/active_support/callbacks.rb:764:in `set_callback'",
+    #   "xxx/gems/activemodel-7.0.8.4/lib/active_model/validations.rb:172:in `validate'",
+    #   "xxx/gems/activemodel-7.0.8.4/lib/active_model/validations/with.rb:96:in `block in validates_with'",
+    #   "xxx/gems/activemodel-7.0.8.4/lib/active_model/validations/with.rb:85:in `each'",
+    #   "xxx/gems/activemodel-7.0.8.4/lib/active_model/validations/with.rb:85:in `validates_with'",
+    #   "xxx/gems/activemodel-7.0.8.4/lib/active_model/validations/format.rb:109:in `validates_format_of'",
+    #   "xxx/gems/ancestry-4.1.0/lib/ancestry/has_ancestry.rb:30:in `has_ancestry'",
+    #   "xxx/manageiq/app/models/vm_or_template.rb:15:in `<class:VmOrTemplate>'",
+    #   "xxx/manageiq/app/models/vm_or_template.rb:6:in `<main>'",
+    #
+    # Called from subclasses from above callstack:
+    #   "xxx/gems/activesupport-7.0.8.4/lib/active_support/descendants_tracker.rb:83:in `subclasses'",
+    #   "xxx/manageiq/lib/extensions/descendant_loader.rb:313:in `subclasses'",
+    #   "xxx/gems/activesupport-7.0.8.4/lib/active_support/descendants_tracker.rb:89:in `descendants'",
+    #   ...
     def subclasses
-      if Vmdb::Application.instance.initialized? && !defined? @loaded_descendants
+      if Vmdb::Application.instance.initialized? && !defined?(@loaded_descendants) && %w[descendants reload_schema_from_cache subclasses].exclude?(caller_locations(1..1).first.base_label)
         @loaded_descendants = true
         DescendantLoader.instance.load_subclasses(self)
       end
