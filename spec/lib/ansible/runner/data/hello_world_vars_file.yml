@@ -1,0 +1,6 @@
+- name: Hello World Sample (Vars File)
+  hosts: localhost
+  vars_files:
+  - vars_file.yml
+  tasks:
+  - debug: msg="Hello World! vars_file_1={{ vars_file_1 }}, vars_file_2={{ vars_file_2 }}"
