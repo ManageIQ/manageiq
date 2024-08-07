@@ -121,6 +121,61 @@ RSpec.describe ServiceTemplateProvisionTask do
             zone               = FactoryBot.create(:zone, :name => "special")
             automation_manager = FactoryBot.create(:ems_workflows_automation, :zone => zone)
             payload            = FactoryBot.create(:embedded_workflow, :manager => automation_manager)
+            @task_0.source     = FactoryBot.create(
+              :service_template_generic,
+              :name             => "Provision",
+              :resource_actions => [
+                FactoryBot.create(:resource_action, :action => "Provision", :configuration_script_payload => payload)
+              ]
+            )
+
+            @task_0.deliver_queue
+
+            expect(@task_0.reload.options.keys).to include(:miq_task_id, :configuration_script_id, :configuration_script_payload_id)
+
+            configuration_script = ConfigurationScript.find(@task_0.options[:configuration_script_id])
+
+            expect(configuration_script).to have_attributes(:manager => automation_manager, :run_by_userid => @admin.userid, :status => "pending", :context => hash_including("Execution" => hash_including("Input" => {"dialog" => {}})))
+            expect(MiqQueue.first).to       have_attributes(
+              :instance_id => configuration_script.id,
+              :class_name  => configuration_script.type,
+              :method_name => "run",
+              :queue_name  => "automate",
+              :role        => "automate",
+              :args        => [hash_including(:object_type => "ServiceTemplateProvisionTask", :object_id => @task_0.id)]
+            )
+          end
+
+          context "with dialog_values" do
+            let(:dialog_values) { {:foo => "bar"} }
+            before { @task_0.options[:dialog] = dialog_values }
+
+            it "creates a configuration_script instance" do
+              zone               = FactoryBot.create(:zone, :name => "special")
+              automation_manager = FactoryBot.create(:ems_workflows_automation, :zone => zone)
+              payload            = FactoryBot.create(:embedded_workflow, :manager => automation_manager)
+              @task_0.source     = FactoryBot.create(
+                :service_template_generic,
+                :name             => "Provision",
+                :resource_actions => [
+                  FactoryBot.create(:resource_action, :action => "Provision", :configuration_script_payload => payload)
+                ]
+              )
+
+              @task_0.deliver_queue
+
+              configuration_script = ConfigurationScript.find(@task_0.options[:configuration_script_id])
+
+              expect(configuration_script.context).to include("Execution" => hash_including("Input" => {"dialog" => dialog_values}))
+            end
+          end
+        end
+
+        context "with a configuration_script_payload in options" do
+          it "creates a configuration_script instance" do
+            zone               = FactoryBot.create(:zone, :name => "special")
+            automation_manager = FactoryBot.create(:ems_workflows_automation, :zone => zone)
+            payload            = FactoryBot.create(:embedded_workflow, :manager => automation_manager)
             @task_1.source     = FactoryBot.create(
               :service_template_generic,
               :name             => "Provision",
