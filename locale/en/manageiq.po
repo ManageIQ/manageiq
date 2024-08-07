@@ -3258,7 +3258,6 @@ msgstr ""
 #: ../app/views/chargeback_rate/_cb_rate_edit_table.html.haml
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml
 #: ../app/views/miq_ae_class/_angular_inputs_form.html.haml
-#: ../app/views/miq_ae_class/_embedded_methods.html.haml
 #: ../app/views/ops/_ap_form_file.html.haml
 #: ../app/views/ops/_ap_form_nteventlog.html.haml
 #: ../app/views/ops/_ap_form_registry.html.haml
@@ -3570,7 +3569,7 @@ msgstr ""
 msgid "Add Mapping Rule"
 msgstr ""
 
-#: ../app/views/miq_ae_class/_embedded_methods.html.haml
+#: ../app/javascript/components/AeInlineMethod/index.jsx
 msgid "Add Method"
 msgstr ""
 
@@ -4595,6 +4594,7 @@ msgid "Add of new Dashboard was cancelled by the user"
 msgstr ""
 
 #: ../app/controllers/miq_ae_customization_controller/old_dialogs.rb
+#: ../app/javascript/components/miq-ae-customization/index.jsx
 msgid "Add of new Dialog was cancelled by the user"
 msgstr ""
 
@@ -6104,6 +6104,10 @@ msgstr ""
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/032_Orphaned VMs.yaml
 #: ../config/dictionary_strings.rb:2026 ../config/yaml_strings.rb
 msgid "Annotation"
+msgstr ""
+
+#: ../app/helpers/container_summary_helper.rb
+msgid "Annotations"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.FileDepotFtpAnonymous
@@ -8674,6 +8678,7 @@ msgstr ""
 #: ../app/helpers/condition_helper.rb
 #: ../app/helpers/generic_object_definition_helper.rb
 #: ../app/helpers/miq_action_helper.rb
+#: ../app/helpers/miq_ae_customization_helper.rb
 #: ../app/helpers/miq_alert_set_helper.rb
 #: ../app/helpers/miq_event_definition_helper.rb
 #: ../app/helpers/miq_policy_helper.rb
@@ -8706,7 +8711,6 @@ msgstr ""
 #: ../app/views/catalog/_form_basic_info.html.haml
 #: ../app/views/condition/_form.html.haml
 #: ../app/views/miq_ae_customization/_dialog_info.html.haml
-#: ../app/views/miq_ae_customization/_old_dialogs_details.html.haml
 #: ../app/views/miq_ae_customization/_old_dialogs_form.html.haml
 #: ../app/views/miq_policy/_event_edit.html.haml
 #: ../app/views/miq_policy/_form.html.haml
@@ -10444,6 +10448,10 @@ msgstr ""
 msgid "Cannot revert to snapshot while VM is running"
 msgstr ""
 
+#: ../app/javascript/components/AeInlineMethod/index.jsx
+msgid "Cannot select more than 20 items"
+msgstr ""
+
 #: ../app/models/manageiq/providers/ibm_power_hmc/infra_manager/host.rb
 msgid "Cannot shutdown a host that is not HMC-managed"
 msgstr ""
@@ -11719,7 +11727,7 @@ msgstr ""
 msgid "Child Orchestration Stacks"
 msgstr ""
 
-#: ../app/views/service/_svcs_show.html.haml
+#: ../app/helpers/service_helper.rb
 msgid "Child Services"
 msgstr ""
 
@@ -11779,6 +11787,7 @@ msgstr ""
 #: ../app/views/layouts/exp_atom/_edit_tag.html.haml
 #: ../app/views/layouts/exp_atom/_edit_tags.html.haml
 #: ../app/views/layouts/exp_atom/_editor.html.haml
+#: ../app/views/miq_ae_customization/_old_dialogs_details.html.haml
 #: ../app/views/miq_ae_customization/_old_dialogs_form.html.haml
 #: ../app/views/miq_alert/_alert_builtin_exp.html.haml
 #: ../app/views/miq_alert/_form.html.haml
@@ -12220,7 +12229,6 @@ msgstr ""
 msgid "Click to delete this forest"
 msgstr ""
 
-#: ../app/views/miq_ae_class/_embedded_methods.html.haml
 #: ../app/views/miq_ae_class/_inputs.html.haml
 msgid "Click to delete this input field from method"
 msgstr ""
@@ -19170,9 +19178,10 @@ msgid "Container|State"
 msgstr ""
 
 #: ../app/helpers/catalog_helper/orchestration_template_helper.rb
+#: ../app/helpers/miq_ae_customization_helper.rb
 #: ../app/helpers/storage_helper/textual_summary.rb
+#: ../app/javascript/components/miq-ae-customization/miq-ae-customization-form.schema.js
 #: ../app/javascript/components/orchestration-template/orchestration-template-form.schema.js
-#: ../app/views/miq_ae_customization/_old_dialogs_details.html.haml
 #: ../app/views/miq_ae_customization/_old_dialogs_form.html.haml
 msgid "Content"
 msgstr ""
@@ -23780,6 +23789,14 @@ msgstr ""
 msgid "Dialog"
 msgstr ""
 
+#: ../app/javascript/components/miq-ae-customization/index.jsx
+msgid "Dialog \"${values.name}\" was added"
+msgstr ""
+
+#: ../app/javascript/components/miq-ae-customization/index.jsx
+msgid "Dialog \"${values.name}\" was saved"
+msgstr ""
+
 #: ../app/controllers/miq_ae_customization_controller/dialogs.rb
 msgid "Dialog \"%{name}\""
 msgstr ""
@@ -23886,6 +23903,11 @@ msgid "Dialog Tab"
 msgid_plural "Dialog Tabs"
 msgstr[0] ""
 msgstr[1] ""
+
+#:
+#: ../app/javascript/components/miq-ae-customization/miq-ae-customization-form.schema.js
+msgid "Dialog Type"
+msgstr ""
 
 #: ../app/controllers/miq_ae_customization_controller/old_dialogs.rb
 msgid "Dialog Type must be selected"
@@ -29221,6 +29243,10 @@ msgstr ""
 msgid "Edit of Dashboard Sequence was cancelled by the user"
 msgstr ""
 
+#: ../app/javascript/components/miq-ae-customization/index.jsx
+msgid "Edit of Dialog \"${dialogRecord.name}\" cancelled by the user"
+msgstr ""
+
 #: ../app/controllers/miq_ae_customization_controller/old_dialogs.rb
 msgid "Edit of Dialog \"%{name}\" was cancelled by the user"
 msgstr ""
@@ -30101,7 +30127,7 @@ msgid "Embedded Automation Managers"
 msgstr ""
 
 #: ../app/helpers/miq_ae_class_helper.rb
-#: ../app/views/miq_ae_class/_embedded_methods.html.haml
+#: ../app/javascript/components/AeInlineMethod/index.jsx
 msgid "Embedded Methods"
 msgstr ""
 
@@ -30118,6 +30144,10 @@ msgstr ""
 
 #: ../app/javascript/components/embedded-terraform-repository-form/index.jsx
 msgid "Embedded Terraform Provider not found."
+msgstr ""
+
+#: ../app/helpers/application_helper/button/embedded_terraform.rb
+msgid "Embedded Terraform Role is not enabled."
 msgstr ""
 
 #:
@@ -38524,7 +38554,7 @@ msgid "Image Registries"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/ContainerImage.yaml
-#: ../app/helpers/container_summary_helper.rb:156 ../config/yaml_strings.rb
+#: ../app/helpers/container_summary_helper.rb:160 ../config/yaml_strings.rb
 msgid "Image Registry"
 msgstr ""
 
@@ -39857,10 +39887,6 @@ msgstr ""
 msgid "Kind"
 msgstr ""
 
-#: ../app/models/manageiq/providers/kubernetes/container_manager.rb
-msgid "KubeVirt"
-msgstr ""
-
 #: ../lib/manageiq/providers/kubevirt/engine.rb
 msgid "KubeVirt Provider"
 msgstr ""
@@ -40676,6 +40702,10 @@ msgstr ""
 #:
 #: ../app/javascript/components/visual-settings-form/visual-settings-form.schema.js
 msgid "List View"
+msgstr ""
+
+#: ../app/javascript/components/AeInlineMethod/index.jsx
+msgid "Listing"
 msgstr ""
 
 #: ../app/controllers/mixins/actions/vm_actions/live_migrate.rb
@@ -43630,6 +43660,10 @@ msgstr ""
 
 #: ../app/views/report/_form_filter_chargeback.html.haml
 msgid "Method for allocated metrics"
+msgstr ""
+
+#: ../app/javascript/components/AeInlineMethod/index.jsx
+msgid "Method(s)"
 msgstr ""
 
 #: ../app/helpers/generic_object_definition_helper/textual_summary.rb
@@ -51405,8 +51439,16 @@ msgstr ""
 msgid "No message will be displayed"
 msgstr ""
 
+#: ../app/javascript/components/AeInlineMethod/NamespaceSelector.jsx
+msgid "No methods available"
+msgstr ""
+
 #: ../app/views/miq_ae_class/_class_methods.html.haml
 msgid "No methods found"
+msgstr ""
+
+#: ../app/javascript/components/AeInlineMethod/index.jsx
+msgid "No methods selected"
 msgstr ""
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager.rb
@@ -52184,6 +52226,7 @@ msgstr ""
 msgid "Number, 2 Decimals (1,234.00)"
 msgstr ""
 
+#: ../app/javascript/components/AeInlineMethod/index.jsx
 #: ../app/javascript/components/custom-url-tabs/index.jsx
 #: ../app/javascript/components/dashboard-widgets/widget-remove-modal/index.jsx
 #: ../app/views/static/edit_alert_dialog.html.haml
@@ -52737,6 +52780,10 @@ msgstr ""
 
 #: ../app/models/manageiq/providers/openshift/container_manager.rb
 msgid "OpenShift Template"
+msgstr ""
+
+#: ../app/models/manageiq/providers/kubevirt/infra_manager.rb
+msgid "OpenShift Virtualization / KubeVirt"
 msgstr ""
 
 #: ../app/models/manageiq/providers/openstack/cloud_manager.rb
@@ -54439,7 +54486,6 @@ msgstr ""
 #. TRANSLATORS: file: product/views/GuestApplication.yaml
 #: ../app/helpers/miq_ae_class_helper.rb
 #: ../app/helpers/pxe_helper/textual_summary.rb
-#: ../app/views/miq_ae_class/_embedded_methods.html.haml
 #: ../app/views/pxe/_pxe_server_details.html.haml
 #: ../config/yaml_strings.rb
 msgid "Path"
@@ -56897,16 +56943,7 @@ msgstr ""
 
 #: ../app/controllers/application_controller/policy_support.rb
 #: ../app/helpers/application_helper/title.rb
-#: ../app/helpers/application_helper/toolbar/miq_templates_center.rb
-#: ../app/helpers/application_helper/toolbar/template_clouds_center.rb
-#: ../app/helpers/application_helper/toolbar/template_infras_center.rb
-#: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb
-#: ../app/helpers/application_helper/toolbar/vm_infras_center.rb
-#: ../app/helpers/application_helper/toolbar/vms_center.rb
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb
-#: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb
-#: ../app/helpers/application_helper/toolbar/x_vm_center.rb
-#: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb
 msgid "Policy Simulation"
 msgstr ""
 
@@ -61000,6 +61037,7 @@ msgstr ""
 msgid "Removal of security group was canceled by the user."
 msgstr ""
 
+#: ../app/javascript/components/AeInlineMethod/helper.js
 #: ../app/javascript/components/action-form/action-form.schema.js
 #: ../app/javascript/components/button-group/group-form.schema.js
 #: ../app/javascript/components/catalog-form/catalog-form.schema.js
@@ -61010,7 +61048,6 @@ msgstr ""
 #: ../app/javascript/components/notification-drawer/notification-drawer.jsx
 #: ../app/javascript/components/policy-profile-form/policy-profile-form.schema.js
 #: ../app/javascript/components/subnet-form/subnet-form.schema.js
-#: ../app/views/miq_ae_class/_embedded_methods.html.haml
 #: ../app/views/report/_form_styling.html.haml
 msgid "Remove"
 msgstr ""
@@ -64864,6 +64901,7 @@ msgstr ""
 msgid "Script"
 msgstr ""
 
+#: ../app/javascript/components/AeInlineMethod/FilterNamespace.jsx
 #: ../app/javascript/components/filter-provision-instance/index.jsx
 #: ../app/javascript/components/search-bar/index.jsx
 #, fuzzy
@@ -64896,6 +64934,10 @@ msgstr ""
 
 #: src/report-editor/configure-report-columns.jsx
 msgid "Search selection..."
+msgstr ""
+
+#: ../app/javascript/components/AeInlineMethod/FilterNamespace.jsx
+msgid "Search with Name or Relative path"
 msgstr ""
 
 #: ../app/javascript/components/filter-provision-instance/index.jsx
@@ -65750,6 +65792,10 @@ msgstr ""
 msgid "Select max 3 columns"
 msgstr ""
 
+#: ../app/javascript/components/AeInlineMethod/index.jsx
+msgid "Select methods"
+msgstr ""
+
 #: ../app/views/miq_ae_tools/_import_export.html.haml
 msgid "Select namespaces you wish to import:"
 msgstr ""
@@ -65979,6 +66025,10 @@ msgstr ""
 
 #: ../app/javascript/components/copy-catalog-form/copy-catalog-form.jsx
 msgid "Selected item can not be copied. Because it\\'s Ansible Playbook or not valid."
+msgstr ""
+
+#: ../app/javascript/components/AeInlineMethod/index.jsx
+msgid "Selected methods"
 msgstr ""
 
 #: ../app/javascript/components/button-group/group-form.schema.js
@@ -74881,6 +74931,10 @@ msgstr ""
 msgid "Type missing for %{field}"
 msgstr ""
 
+#: ../app/javascript/components/AeInlineMethod/FilterNamespace.jsx
+msgid "Type to search"
+msgstr ""
+
 #:
 #: ../app/javascript/components/service-request-default/service-request-default.schema.js
 #: ../app/views/miq_ae_class/_instance_form.html.haml
@@ -77891,7 +77945,7 @@ msgstr ""
 #: ../app/javascript/components/provider-dashboard-charts/charts_config.js
 #: ../app/services/ems_infra_dashboard_service.rb
 #: ../app/views/ems_infra/scaledown.html.haml
-#: ../app/views/service/_svcs_show.html.haml:38 ../config/yaml_strings.rb
+#: ../app/views/service/_svcs_show.html.haml:29 ../config/yaml_strings.rb
 msgid "VMs"
 msgstr ""
 
@@ -79204,32 +79258,8 @@ msgstr ""
 msgid "View Policy Profiles"
 msgstr ""
 
-#: ../app/helpers/application_helper/toolbar/miq_templates_center.rb
-#: ../app/helpers/application_helper/toolbar/template_infras_center.rb
-msgid "View Policy Simulation for the selected Templates"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/template_clouds_center.rb
-#: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb
-#: ../app/helpers/application_helper/toolbar/vm_infras_center.rb
-#: ../app/helpers/application_helper/toolbar/vms_center.rb
-msgid "View Policy Simulation for the selected items"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb
-msgid "View Policy Simulation for this Image"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb
-msgid "View Policy Simulation for this Instance"
-msgstr ""
-
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb
 msgid "View Policy Simulation for this Template"
-msgstr ""
-
-#: ../app/helpers/application_helper/toolbar/x_vm_center.rb
-msgid "View Policy Simulation for this VM"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -79529,7 +79559,7 @@ msgstr ""
 msgid "View this Schedule"
 msgstr ""
 
-#: ../app/views/service/_svcs_show.html.haml
+#: ../app/helpers/service_helper.rb
 msgid "View this Service"
 msgstr ""
 
@@ -83292,10 +83322,6 @@ msgstr ""
 msgid "evm_worker_uptime_exceeded"
 msgstr ""
 
-#: ../app/models/manageiq/providers/workflows/automation_manager/workflow.rb
-msgid "execute is not enabled"
-msgstr ""
-
 #:
 #: ../lib/miq_automation_engine/engine/miq_ae_engine/miq_ae_ansible_method_base.rb
 msgid "execute must be implemented in a subclass"
@@ -84360,22 +84386,12 @@ msgstr ""
 msgid "resize value options cannot be nil"
 msgstr ""
 
-#:
-#: ../app/models/manageiq/providers/workflows/automation_manager/workflow_instance.rb
-msgid "run is not enabled"
-msgstr ""
-
 #: ../app/models/configuration_script_payload.rb
 msgid "run must be implemented in a subclass"
 msgstr ""
 
 #: ../app/helpers/shared_helper/ab_show_helper.rb
 msgid "run_button_summary"
-msgstr ""
-
-#:
-#: ../app/models/manageiq/providers/workflows/automation_manager/workflow_instance.rb
-msgid "run_queue is not enabled"
 msgstr ""
 
 #: ../app/controllers/application_controller/performance.rb
