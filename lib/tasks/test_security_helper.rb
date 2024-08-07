@@ -85,7 +85,18 @@ class TestSecurityHelper
       cmd = AwesomeSpawn.build_command_line("yarn npm audit", params)
       puts "**   command: #{cmd}"
 
-      system(cmd, options)
+      system(cmd, options).tap do |audit_success|
+        # If the run failed due to a configuration error, the error message will appear
+        # in the json output, but not in json format, so let's detect and display.
+        if !audit_success && format == "json"
+          begin
+            first_line = log_file.read.lines.first.to_s.chomp
+            JSON.parse(first_line) unless first_line.empty?
+          rescue JSON::ParserError
+            $stderr.puts log_file.read
+          end
+        end
+      end
     end.all?
 
     raise SecurityTestFailed unless success
