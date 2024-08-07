@@ -266,7 +266,7 @@ class MiqRequestTask < ApplicationRecord
   end
 
   def workflow_inputs
-    dialog_values
+    {:dialog => dialog_values}
   end
 
   def dialog_values
