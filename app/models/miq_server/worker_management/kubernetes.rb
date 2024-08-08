@@ -34,10 +34,21 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
       # pod available for our worker type and link them up.
       if worker.system_uid.nil?
         system_uid = pods_without_workers.detect { |pod_name| pod_name.start_with?(worker.worker_deployment_name) }
-        next if system_uid.nil?
-
-        pods_without_workers.delete(system_uid)
-        worker.update!(:system_uid => system_uid)
+        if system_uid
+          # We have found a pod for the current worker record so remove the pod from
+          # the list of pods without workers and set the pod name as the system_uid
+          # for the current worker record.
+          pods_without_workers.delete(system_uid)
+          worker.update!(:system_uid => system_uid)
+        else
+          # If we haven't found a pod for this worker record then we need to check
+          # whether it has been starting for too long and should be marked as
+          # not responding.
+          stop_worker(worker, MiqServer::WorkerManagement::NOT_RESPONDING) if exceeded_heartbeat_threshold?(worker)
+          # Without a valid system_uid we cannot run any further logic in this
+          # loop.
+          next
+        end
       end
 
       worker_pod = current_pods[worker.system_uid]
@@ -67,7 +78,11 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
 
   def cleanup_orphaned_worker_rows
     unless current_pods.empty?
+      # Any worker rows which have a system_uid that is not in the list of
+      # current pod names, and is not starting (aka hasn't had a system_uid set
+      # yet) should be deleted.
       orphaned_rows = miq_workers.where.not(:system_uid => current_pods.keys)
+                                 .where.not(:status => MiqWorker::STATUSES_STARTING)
       unless orphaned_rows.empty?
         _log.warn("Removing orphaned worker rows without corresponding pods: #{orphaned_rows.collect(&:system_uid).inspect}")
         orphaned_rows.destroy_all
