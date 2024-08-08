@@ -6,29 +6,18 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
 
   def sync_starting_workers
     sync_from_system
-    starting = MiqWorker.find_all_starting
-    starting.reject(&:rails_worker?).each do |worker|
-      systemd_worker = miq_services_by_unit[worker[:system_uid]]
-      next if systemd_worker.nil?
+    sync_starting_rails_workers
+    sync_starting_non_rails_workers
 
-      if systemd_worker[:load_state] == "loaded" && systemd_worker[:active_state] == "active" && systemd_worker[:sub_state] == "running"
-        worker.update!(:status => MiqWorker::STATUS_STARTED)
-      end
-    end
-    starting.reload
+    MiqWorker.find_all_starting.to_a
   end
 
   def sync_stopping_workers
     sync_from_system
-    stopping = MiqWorker.find_all_stopping
-    stopping.reject(&:rails_worker?).each do |worker|
-      # If the worker record is "stopping" and the systemd unit is gone then the
-      # worker has successfully exited.
-      next if miq_services_by_unit[worker[:system_uid]].present?
+    sync_stopping_rails_workers
+    sync_stopping_non_rails_workers
 
-      worker.update!(:status => MiqWorker::STATUS_STOPPED)
-    end
-    stopping.reload
+    MiqWorker.find_all_stopping.to_a
   end
 
   def cleanup_failed_workers
@@ -48,6 +37,29 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
   private
 
   attr_accessor :miq_services, :miq_services_by_unit
+
+  def sync_stopping_non_rails_workers
+    stopping = MiqWorker.find_all_stopping
+    stopping.reject(&:rails_worker?).each do |worker|
+      # If the worker record is "stopping" and the systemd unit is gone then the
+      # worker has successfully exited.
+      next if miq_services_by_unit[worker[:system_uid]].present?
+
+      worker.update!(:status => MiqWorker::STATUS_STOPPED)
+    end
+  end
+
+  def sync_starting_non_rails_workers
+    starting = MiqWorker.find_all_starting
+    starting.reject(&:rails_worker?).each do |worker|
+      systemd_worker = miq_services_by_unit[worker[:system_uid]]
+      next if systemd_worker.nil?
+
+      if systemd_worker[:load_state] == "loaded" && systemd_worker[:active_state] == "active" && systemd_worker[:sub_state] == "running"
+        worker.update!(:status => MiqWorker::STATUS_STARTED)
+      end
+    end
+  end
 
   def systemd_manager
     @systemd_manager ||= begin
