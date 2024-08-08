@@ -67,7 +67,7 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
 
   def cleanup_orphaned_worker_rows
     unless current_pods.empty?
-      orphaned_rows = miq_workers.where.not(:system_uid => current_pods.keys)
+      orphaned_rows = miq_workers.where.not(:system_uid => current_pods.keys).where.not(:status => MiqWorker::STATUSES_STARTING)
       unless orphaned_rows.empty?
         _log.warn("Removing orphaned worker rows without corresponding pods: #{orphaned_rows.collect(&:system_uid).inspect}")
         orphaned_rows.destroy_all
