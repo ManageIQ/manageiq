@@ -7,22 +7,18 @@ class MiqServer::WorkerManagement::Process < MiqServer::WorkerManagement
 
   def sync_starting_workers
     sync_from_system
-    starting = MiqWorker.find_all_starting
-    starting.where(:pid => miq_processes_by_pid.keys)
-            .reject(&:rails_worker?)
-            .each { |w| w.update!(:status => MiqWorker::STATUS_STARTED) }
+    sync_starting_rails_workers
+    sync_starting_non_rails_workers
 
-    starting.reload
+    MiqWorker.find_all_starting.to_a
   end
 
   def sync_stopping_workers
     sync_from_system
-    stopping = MiqWorker.find_all_stopping
-    stopping.where(:pid => miq_processes_by_pid.keys)
-            .reject(&:rails_worker?)
-            .each { |w| w.update!(:status => MiqWorker::STATUS_STOPPED) }
+    sync_stopping_rails_workers
+    sync_stopping_non_rails_workers
 
-    stopping.reload
+    MiqWorker.find_all_stopping.to_a
   end
 
   def monitor_workers
@@ -88,4 +84,18 @@ class MiqServer::WorkerManagement::Process < MiqServer::WorkerManagement
   private
 
   attr_accessor :miq_processes, :miq_processes_by_pid
+
+  def sync_starting_non_rails_workers
+    starting = MiqWorker.find_all_starting
+    starting.where(:pid => miq_processes_by_pid.keys)
+            .reject(&:rails_worker?)
+            .each { |w| w.update!(:status => MiqWorker::STATUS_STARTED) }
+  end
+
+  def sync_stopping_non_rails_workers
+    stopping = MiqWorker.find_all_stopping
+    stopping.where(:pid => miq_processes_by_pid.keys)
+            .reject(&:rails_worker?)
+            .each { |w| w.update!(:status => MiqWorker::STATUS_STOPPED) }
+  end
 end
