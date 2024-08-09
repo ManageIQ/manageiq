@@ -225,11 +225,11 @@ class User < ApplicationRecord
     miq_user_role.try(:name)
   end
 
-  def self.authenticator(username = nil)
+  def self.authenticator(username = nil) ##
     Authenticator.for(::Settings.authentication.to_hash, username)
   end
 
-  def self.authenticate(username, password, request = nil, options = {})
+  def self.authenticate(username, password, request = nil, options = {}) ##
     user = authenticator(username).authenticate(username, password, request, options)
     user.try(:link_to_session, request)
 

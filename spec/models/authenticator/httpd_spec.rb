@@ -1,5 +1,5 @@
 RSpec.describe Authenticator::Httpd do
-  subject { Authenticator::Httpd.new(config) }
+  subject { Authenticator::Httpd.new(::Settings.authentication.to_hash) }
 
   let(:config) { {:httpd_role => false} }
   let(:request) do
@@ -21,6 +21,7 @@ RSpec.describe Authenticator::Httpd do
     # dummy_password_for_external_auth hook runs, and it needs to ask
     # Authenticator#uses_stored_password? whether it's allowed to do anything.
 
+    stub_settings_merge(:authentication => config)
     allow(User).to receive(:authenticator).and_return(subject)
 
     EvmSpecHelper.local_miq_server
@@ -718,6 +719,26 @@ RSpec.describe Authenticator::Httpd do
 
         it "handles a comma separated grouplist" do
           expect(subject).to receive(:find_external_identity).with(username, user_attrs, ["wibble@fqdn", "bubble@fqdn"])
+          authenticate
+        end
+      end
+
+      context "using custom delimiter" do
+        let(:config) { {:httpd_role => true, :http_group_delimiters => ",;"} }
+        let(:headers) do
+          super().merge('X-Remote-User-Groups' => 'wibble:wobble@fqdn,bubble@fqdn')
+        end
+        let(:user_attrs) do
+          {:username  => "testuser",
+            :fullname  => "Test User",
+            :firstname => "Alice",
+            :lastname  => "Aardvark",
+            :email     => "testuser@example.com",
+            :domain    => "example.com"}
+        end
+
+        it "handles a group with a colon" do
+          expect(subject).to receive(:find_external_identity).with(username, user_attrs, ["wibble:wobble@fqdn", "bubble@fqdn"])
           authenticate
         end
       end
