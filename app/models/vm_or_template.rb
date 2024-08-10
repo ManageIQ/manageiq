@@ -7,7 +7,6 @@ class VmOrTemplate < ApplicationRecord
   include NewWithTypeStiMixin
   include RetirementMixin
   include ScanningMixin
-  include SupportsFeatureMixin
   include SupportsAttribute
   include EmsRefreshMixin
 

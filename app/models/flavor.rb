@@ -1,7 +1,6 @@
 class Flavor < ApplicationRecord
   include NewWithTypeStiMixin
   include CloudTenancyMixin
-  include SupportsFeatureMixin
 
   acts_as_miq_taggable
 

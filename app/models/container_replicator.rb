@@ -1,7 +1,6 @@
 class ContainerReplicator < ApplicationRecord
   acts_as_miq_taggable
 
-  include SupportsFeatureMixin
   include ComplianceMixin
   include CustomAttributeMixin
   include MiqPolicyMixin

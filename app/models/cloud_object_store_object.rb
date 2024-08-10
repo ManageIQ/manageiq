@@ -9,7 +9,6 @@ class CloudObjectStoreObject < ApplicationRecord
   include ProviderObjectMixin
   include NewWithTypeStiMixin
   include ProcessTasksMixin
-  include SupportsFeatureMixin
 
   include Operations
 

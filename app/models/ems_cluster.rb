@@ -1,5 +1,4 @@
 class EmsCluster < ApplicationRecord
-  include SupportsFeatureMixin
   include NewWithTypeStiMixin
   include EventMixin
   include TenantIdentityMixin

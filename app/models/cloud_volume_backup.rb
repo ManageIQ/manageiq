@@ -1,7 +1,6 @@
 class CloudVolumeBackup < ApplicationRecord
   include NewWithTypeStiMixin
   include ProviderObjectMixin
-  include SupportsFeatureMixin
   include CloudTenancyMixin
 
   acts_as_miq_taggable

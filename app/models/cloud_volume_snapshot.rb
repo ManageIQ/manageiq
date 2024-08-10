@@ -1,7 +1,6 @@
 class CloudVolumeSnapshot < ApplicationRecord
   include NewWithTypeStiMixin
   include ProviderObjectMixin
-  include SupportsFeatureMixin
   include CloudTenancyMixin
   include CustomActionsMixin
   include EmsRefreshMixin

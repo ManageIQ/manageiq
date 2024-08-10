@@ -1,7 +1,5 @@
 module ManageIQ::Providers
   class PhysicalInfraManager < BaseManager
-    include SupportsFeatureMixin
-
     has_many :physical_chassis,  :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
     has_many :physical_racks,    :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
     has_many :physical_servers,  :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system

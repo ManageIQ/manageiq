@@ -3,7 +3,6 @@ class PhysicalServerProfile < ApplicationRecord
 
   include NewWithTypeStiMixin
   include TenantIdentityMixin
-  include SupportsFeatureMixin
   include EventMixin
   include ProviderObjectMixin
   include EmsRefreshMixin

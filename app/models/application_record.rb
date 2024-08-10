@@ -12,6 +12,7 @@ class ApplicationRecord < ActiveRecord::Base
   include ArHrefSlug
   include ToModelHash
   include ArVisibleAttribute
+  include SupportsFeatureMixin
 
   extend ArTableLock
   extend ArReferences
