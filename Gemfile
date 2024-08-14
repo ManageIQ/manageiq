@@ -46,7 +46,7 @@ gem "hamlit",                           "~>2.11.0"
 gem "inifile",                          "~>3.0",             :require => false
 gem "inventory_refresh",                "~>2.1",             :require => false
 gem "kubeclient",                       "~>4.0",             :require => false # For scaling pods at runtime
-gem "linux_admin",                      "~>3.0",             :require => false
+gem "linux_admin",                      ">=3.0", "<5",       :require => false
 gem "listen",                           "~>3.2",             :require => false
 gem "manageiq-api-client",              "~>0.5.0",           :require => false
 gem "manageiq-loggers",                 "~>1.0", ">=1.1.1",  :require => false
