@@ -12,7 +12,7 @@ RSpec.describe PxeMenu do
       label VMware ESXi 4.1-260247
         menu label VMware ESXi 4.1-260247
         kernel VMware-VMvisor-Installer-4.1.0-260247/mboot.c32
-        append VMware-VMvisor-Installer-4.1.0-260247/vmkboot.gz ks=http://192.168.252.60/ks.cfg --- VMware-VMvisor-Installer-4.1.0-260247/vmkernel.gz --- VMware-VMvisor-Installer-4.1.0-260247/sys.vgz --- VMware-VMvisor-Installer-4.1.0-260247/cim.vgz --- VMware-VMvisor-Installer-4.1.0-260247/ienviron.vgz --- VMware-VMvisor-Installer-4.1.0-260247/install.vgz
+        append VMware-VMvisor-Installer-4.1.0-260247/vmkboot.gz inst.ks=http://192.168.252.60/ks.cfg --- VMware-VMvisor-Installer-4.1.0-260247/vmkernel.gz --- VMware-VMvisor-Installer-4.1.0-260247/sys.vgz --- VMware-VMvisor-Installer-4.1.0-260247/cim.vgz --- VMware-VMvisor-Installer-4.1.0-260247/ienviron.vgz --- VMware-VMvisor-Installer-4.1.0-260247/install.vgz
 
       label Ubuntu-10.10-Desktop-i386-LIVE_BOOT
         menu label Ubuntu-10.10-Desktop-i386-LIVE_BOOT
@@ -32,12 +32,12 @@ RSpec.describe PxeMenu do
       label RHEL6
         menu label RHEL6
         kernel rhel6/vmlinuz
-        append initrd=rhel6/initrd.img ramdisk_size=10000 ks=http://192.168.252.60/pxelinux.cfg/01-78-2b-cb-00-f6-6c.ks.cfg ksdevice=78:2b:cb:00:f6:6c
+        append initrd=rhel6/initrd.img ramdisk_size=10000 inst.ks=http://192.168.252.60/pxelinux.cfg/01-78-2b-cb-00-f6-6c.ks.cfg BOOTIF=78:2b:cb:00:f6:6c
 
       label RHEL6.2-Desktop
         menu label RHEL6.2-Desktop
         kernel rhel6.2-desktop/vmlinuz
-        append initrd=rhel6.2-desktop/initrd.img ramdisk_size=10000 ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-desktop.ks.cfg ksdevice=78:2b:cb:00:f6:6c
+        append initrd=rhel6.2-desktop/initrd.img ramdisk_size=10000 inst.ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-desktop.ks.cfg BOOTIF=78:2b:cb:00:f6:6c
 
       label VMware ESXi 5.0.0-381646
         menu label VMware ESXi 5.0.0-381646
@@ -105,13 +105,13 @@ RSpec.describe PxeMenu do
 
       ########## MIQ Desktop Images ##########
       :rhel62dsk
-      kernel http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz ramdisk_size=10000 ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-desktop.ks.cfg ksdevice=00:50:56:91:79:d5
+      kernel http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz ramdisk_size=10000 inst.ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-desktop.ks.cfg BOOTIF=00:50:56:91:79:d5
       initrd http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img
       boot
 
       ########## MIQ Server Images ##########
       :rhel62host
-      kernel http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz ramdisk_size=10000 ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-host.ks.cfg
+      kernel http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz ramdisk_size=10000 inst.ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-host.ks.cfg
       initrd http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img
       boot
 
