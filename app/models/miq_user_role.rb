@@ -11,8 +11,10 @@ class MiqUserRole < ApplicationRecord
   virtual_column :service_template_restriction, :type => :string
 
   validates :name, :presence => true, :uniqueness_when_changed => {:case_sensitive => false}
+  validates :features_with_id, presence: true
 
   serialize :settings
+  serialize :features_with_id
 
   default_value_for :read_only, false
 
