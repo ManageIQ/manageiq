@@ -22,7 +22,7 @@ manageiq_plugin "manageiq-schema"
 
 # Unmodified gems
 gem "activerecord-session_store",       "~>2.0"
-gem "activerecord-virtual_attributes",  "~>6.1.2"
+gem "activerecord-virtual_attributes",  "~>7.0.0"
 gem "acts_as_tree",                     "~>2.7" # acts_as_tree needs to be required so that it loads before ancestry
 gem "ancestry",                         "~>4.1.0",           :require => false
 gem "awesome_spawn",                    "~>1.6",             :require => false
@@ -35,7 +35,7 @@ gem "color",                            "~>1.8"
 gem "config",                           "~>2.2", ">=2.2.3",  :require => false
 gem "connection_pool",                                       :require => false # For Dalli
 gem "dalli",                            "~>3.2.3",           :require => false
-gem "default_value_for",                "~>3.3"
+gem "default_value_for",                "~>4.0"
 gem "docker-api",                       "~>1.33.6",          :require => false
 gem "elif",                             "=0.1.0",            :require => false
 gem "fast_gettext",                     "~>2.0.1"
@@ -46,13 +46,13 @@ gem "hamlit",                           "~>2.11.0"
 gem "inifile",                          "~>3.0",             :require => false
 gem "inventory_refresh",                "~>2.1",             :require => false
 gem "kubeclient",                       "~>4.0",             :require => false # For scaling pods at runtime
-gem "linux_admin",                      "~>3.0",             :require => false
+gem "linux_admin",                      ">=3.0", "<5",       :require => false
 gem "listen",                           "~>3.2",             :require => false
-gem "manageiq-api-client",              "~>0.3.6",           :require => false
+gem "manageiq-api-client",              "~>0.5.0",           :require => false
 gem "manageiq-loggers",                 "~>1.0", ">=1.1.1",  :require => false
 gem "manageiq-messaging",               "~>1.0", ">=1.4.3",  :require => false
 gem "manageiq-password",                "~>1.0",             :require => false
-gem "manageiq-postgres_ha_admin",       "~>3.2",             :require => false
+gem "manageiq-postgres_ha_admin",       "~>3.3",             :require => false
 gem "manageiq-ssh-util",                "~>0.2.0",           :require => false
 gem "memoist",                          "~>0.16.0",          :require => false
 gem "money",                            "~>6.13.5",          :require => false
@@ -69,8 +69,8 @@ gem "psych",                            ">=3.1",             :require => false #
 gem "query_relation",                   "~>0.1.0",           :require => false
 gem "rack",                             ">=2.2.6.4",         :require => false
 gem "rack-attack",                      "~>6.5.0",           :require => false
-gem "rails",                            "~>6.1.7", ">=6.1.7.8"
-gem "rails-i18n",                       "~>6.x"
+gem "rails",                            "~>7.0.8", ">=7.0.8.4"
+gem "rails-i18n",                       "~>7.x"
 gem "rake",                             ">=12.3.3",          :require => false
 gem "rest-client",                      "~>2.1.0",           :require => false
 gem "ruby_parser",                                           :require => false # Required for i18n string extraction, and DescentdantLoader (via prism)
@@ -290,7 +290,7 @@ end
 
 group :appliance, :optional => true do
   gem "irb",                            "=1.4.1",            :require => false # Locked to same version as the installed RPM rubygem-irb-1.4.1-142.module_el9+787+b20bfeee.noarch so that we don't bundle our own
-  gem "manageiq-appliance_console",     "~>9.0", ">= 9.0.3", :require => false
+  gem "manageiq-appliance_console",     "~>9.1", ">=9.1.1",  :require => false
   gem "rdoc",                                                :require => false # Needed for rails console
 end
 
@@ -306,7 +306,7 @@ group :test do
   gem "brakeman",                       "~>5.4",             :require => false
   gem "bundler-audit",                                       :require => false
   gem "capybara",                       "~>2.5.0",           :require => false
-  gem "db-query-matchers",              "~>0.10.0"
+  gem "db-query-matchers",              "~>0.11.0"
   gem "factory_bot",                    "~>5.1",             :require => false
   gem "simplecov",                      ">=0.21.2",          :require => false
   gem "timecop",                        "~>0.9", "!= 0.9.7", :require => false

@@ -105,5 +105,32 @@ module Vmdb
       MiqServer.my_server.activate_roles(*role_names)
       MiqServer.my_server.active_role_names
     end
+
+    def monitor_vmware
+      raise NotImplementedError, "not implemented in production mode" if Rails.env.production?
+
+      require 'VMwareWebService/MiqVim'
+      MiqVim.cacheScope = :cache_scope_core
+      MiqVim.monitor_updates = true
+    end
+
+    # when running rails s, automate can not find
+    # the api server. This sets it up
+    def enable_remote_ui
+      raise NotImplementedError, "not implemented in production mode" if Rails.env.production?
+
+      # essentially disabling the heartbeat since simulate_queue_worker doesn't keep this up to date
+      MiqServer.my_server.update(:last_heartbeat => 1.year.from_now)
+      return if MiqRegion.my_region.remote_ui_miq_server.present?
+
+      # ensure the ip address is setup
+      MiqServer.my_server.update(
+        :hostname                 => "localhost",
+        :ipaddress                => "127.0.0.1",
+        :has_active_userinterface => true
+      )
+
+      raise "remote ui url not set" unless MiqRegion.my_region.remote_ui_miq_server.present?
+    end
   end
 end

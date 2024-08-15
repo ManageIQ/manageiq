@@ -75,7 +75,7 @@ module Vmdb
       end
 
       def resource_queryable?
-        ActiveRecord::Base.connectable? && ::SettingsChange.table_exists?
+        ActiveRecord::Base.connectable? && defined?(::SettingsChange) && ::SettingsChange.table_exists?
       end
     end
   end

@@ -29,7 +29,7 @@ opt_parser = OptionParser.new do |opts|
     options[:guid] = val
   end
 
-  opts.on("-e=ems_id", "--ems-id=ems_id,ems_id", Array, "Provide a list of ems ids (without spaces) to a provider worker. This requires, at least one argument.") do |val|
+  opts.on("-e=ems_id", "--ems-id=ems_id", "Provide a list of ems ids (without spaces) to a provider worker. This requires, at least one argument.") do |val|
     options[:ems_id] = val
   end
 
@@ -81,7 +81,7 @@ end
 # Skip heartbeating with single worker
 ENV["DISABLE_MIQ_WORKER_HEARTBEAT"] ||= options[:heartbeat] ? nil : '1'
 
-options[:ems_id] ||= ENV["EMS_ID"].try(:split, ',')
+options[:ems_id] ||= ENV.fetch("EMS_ID", nil)
 
 if options[:roles].present?
   MiqServer.my_server.server_role_names += options[:roles]
@@ -102,8 +102,8 @@ unless options[:dry_run]
   create_options[:system_uid] = options[:system_uid] if options[:system_uid]
 
   if options[:ems_id]
-    create_options[:queue_name] = options[:ems_id].length == 1 ? "ems_#{options[:ems_id].first}" : options[:ems_id].collect { |id| "ems_#{id}" }
-    runner_options[:ems_id]     = options[:ems_id].length == 1 ? options[:ems_id].first : options[:ems_id].collect { |id| id }
+    create_options[:queue_name] = "ems_#{options[:ems_id]}"
+    runner_options[:ems_id]     = options[:ems_id]
   end
 
   update_options = create_options.dup

@@ -71,6 +71,7 @@ class MiqWorker < ApplicationRecord
 
     true
   end
+  delegate :rails_worker?, :to => :class
 
   def self.scalable?
     maximum_workers_count.nil? || maximum_workers_count > 1
@@ -362,9 +363,8 @@ class MiqWorker < ApplicationRecord
     cmd = "nice -n #{nice_increment} #{cmd}" if ENV["APPLIANCE"]
 
     options = {:guid => guid, :heartbeat => nil}
-    if ems_id
-      options[:ems_id] = ems_id.kind_of?(Array) ? ems_id.join(",") : ems_id
-    end
+    options[:ems_id] = ems_id if ems_id
+
     "#{AwesomeSpawn::CommandLineBuilder.new.build(cmd, options)} #{name}"
   end
 

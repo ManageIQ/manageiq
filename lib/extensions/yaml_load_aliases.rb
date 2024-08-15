@@ -1,3 +1,5 @@
+require 'yaml_permitted_classes'
+
 module YamlLoadAliases
   # Psych 4 aliases load as safe_load.  Some loads happen early, like reading the database.yml so we don't want to load our
   # constants at that time, such as MiqExpression, Ruport, so we have two sets of permitted classes.
