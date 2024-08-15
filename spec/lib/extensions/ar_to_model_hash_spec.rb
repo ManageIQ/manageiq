@@ -66,13 +66,13 @@ RSpec.describe ToModelHash do
 
       # we're testing the preload of associations, skip the recursive .to_model_hash
       allow_any_instance_of(test_vm_class).to receive(:to_model_hash_recursive)
-      allow(ActiveRecord::Associations::Preloader).to receive(:new).and_return(mocked_preloader)
     end
 
     def assert_preloaded(associations)
-      expect(mocked_preloader).to receive(:preload) do |_recs, assocs|
-        expect(assocs).to match_array(associations)
-      end
+      allow(ActiveRecord::Associations::Preloader).to receive(:new)
+        .with(:records => kind_of(Array), :associations => array_including(associations), :available_records => kind_of(Array))
+        .and_return(mocked_preloader)
+      expect(mocked_preloader).to receive(:call)
 
       test_vm_class.new.to_model_hash(fixed_options)
     end

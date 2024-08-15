@@ -22,8 +22,9 @@ module MiqPreloader
   #        Currently an array does not work
   # @return [Array<ActiveRecord::Base>] records
   def self.preload(records, associations, preload_scope = nil)
-    preloader = ActiveRecord::Associations::Preloader.new
-    preloader.preload(records, associations, preload_scope)
+    # Rails 7 changed the interface.  See rails commit: e3b9779cb701c63012bc1af007c71dc5a888d35a
+    # Note, added Array(records) as it could be a single element
+    ActiveRecord::Associations::Preloader.new(:records => Array(records), :associations => associations, :available_records => Array(preload_scope)).call
   end
 
   # for a record, cache results. Also cache the children's links back

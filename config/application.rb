@@ -33,6 +33,8 @@ end
 
 module Vmdb
   class Application < Rails::Application
+    attr_accessor :reloading
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -104,8 +106,6 @@ module Vmdb
 
     config.autoload_paths += config.eager_load_paths
 
-    config.autoloader = :zeitwerk
-
     # config.load_defaults 6.1
     # Disable defaults as ActiveRecord::Base.belongs_to_required_by_default = true causes MiqRegion.seed to fail validation on belongs_to maintenance zone
 
@@ -160,6 +160,7 @@ module Vmdb
     # on the top to bottom order of initializer calls in the file.
     # Because this is easy to mess up, keep your initializers in order.
     initializer :load_inflections, :before => :init_vmdb_plugins do
+      require 'vmdb/inflections'
       Vmdb::Inflections.load_inflections
     end
 
@@ -168,8 +169,9 @@ module Vmdb
     end
 
     initializer :load_vmdb_settings, :before => :load_config_initializers do
+      # Setup the Settings constant before the app and engine intializers run.
+      # They could be wrong values since we're not connected to the db yet.
       Vmdb::Settings.init
-      Vmdb::Loggers.apply_config(::Settings.log)
     end
 
     initializer :eager_load_all_the_things, :after => :load_config_initializers do
@@ -187,6 +189,16 @@ module Vmdb
       puts "** #{Vmdb::Appliance.BANNER}" unless Rails.env.production?
 
       YamlPermittedClasses.initialize_app_yaml_permitted_classes
+
+      # Reload Settings to get values from db now that it's safe to autoload
+      ::Settings.reload!
+      Vmdb::Loggers.apply_config(::Settings.log)
+
+      # The descendant_loader.rb hooks descendants and subclasses to do proper sti loading of
+      # subclasses and descendants. It should not be used when code reload is happening.
+      Vmdb::Application.reloading = false
+      Vmdb::Application.reloader.before_class_unload { Vmdb::Application.reloading = true }
+      Vmdb::Application.reloader.to_complete         { Vmdb::Application.reloading = false }
     end
 
     console do

@@ -1,4 +1,5 @@
 require "manageiq"
+require "vmdb/settings"
 
 module DatabaseConfigurationPatch
   def database_configuration

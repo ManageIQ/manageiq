@@ -3,6 +3,7 @@ FactoryBot.define do
     sequence(:name) { |n| "miq_ae_method#{seq_padded_for_sorting(n)}" }
     language { "ruby" }
     location { "inline" }
+    scope { "instance" }
 
     transient do
       params { {} }

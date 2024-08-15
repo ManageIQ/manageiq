@@ -197,18 +197,18 @@ class Host < ApplicationRecord
 
   # if you change this, please check in on VmWare#start
   supports :start do
-    if !supports?(:ipmi)
-      unsupported_reason(:ipmi)
-    elsif power_state != "off"
+    if power_state != "off"
       _("The Host is not in power state off")
+    else
+      unsupported_reason(:ipmi)
     end
   end
 
   supports :stop do
-    if !supports?(:ipmi)
-      unsupported_reason(:ipmi)
-    elsif power_state != "on"
+    if power_state != "on"
       _("The Host is not in powered on")
+    else
+      unsupported_reason(:ipmi)
     end
   end
 

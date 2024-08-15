@@ -6,9 +6,7 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
 
   def sync_starting_workers
     sync_from_system
-    MiqWorker.find_all_starting.each do |worker|
-      next if worker.class.rails_worker?
-
+    MiqWorker.find_all_starting.reject(&:rails_worker?).each do |worker|
       systemd_worker = miq_services_by_unit[worker[:system_uid]]
       next if systemd_worker.nil?
 
@@ -20,7 +18,7 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
 
   def sync_stopping_workers
     sync_from_system
-    MiqWorker.find_all_stopping.reject { |w| w.class.rails_worker? }.each do |worker|
+    MiqWorker.find_all_stopping.reject(&:rails_worker?).each do |worker|
       # If the worker record is "stopping" and the systemd unit is gone then the
       # worker has successfully exited.
       next if miq_services_by_unit[worker[:system_uid]].present?

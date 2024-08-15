@@ -129,10 +129,11 @@ module PurgingMixin
 
       polymorphic_classes(polymorphic_type_column).each do |klass|
         resource_table = connection.quote_table_name(klass.table_name)
+        q_table_name = connection.quote_table_name(table_name)
 
-        scope = joins("LEFT OUTER JOIN #{resource_table} ON #{table_name}.#{polymorphic_id_column} = #{resource_table}.id")
+        scope = joins("LEFT OUTER JOIN #{resource_table} ON #{q_table_name}.#{polymorphic_id_column} = #{resource_table}.id")
                 .where(resource_table => {:id => nil})
-                .where("#{table_name}.#{connection.quote_column_name(polymorphic_type_column)} = #{connection.quote(klass.name)}")
+                .where("#{q_table_name}.#{connection.quote_column_name(polymorphic_type_column)} = #{connection.quote(klass.name)}")
         total += purge_in_batches(scope, window)
       end
       total

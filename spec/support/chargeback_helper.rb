@@ -40,7 +40,7 @@ module Spec
                        base_values
                      end
 
-            record_values << "(#{values}, '#{time.to_s(:db)}')"
+            record_values << "(#{values}, '#{time.to_fs(:db)}')"
           end
         end
 
