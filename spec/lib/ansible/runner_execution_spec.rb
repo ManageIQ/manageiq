@@ -55,6 +55,23 @@ RSpec.describe Ansible::Runner do
       expect_ansible_runner_success(response)
       expect(response.human_stdout).to include('"msg": "Hello World! vars_file_1=vars_file_1_value, vars_file_2=vars_file_2_value"')
     end
+
+    context "runs a playbook using roles from github" do
+      let(:roles_dir) { data_directory.join("hello_world_with_requirements_github/roles/manageiq.example") }
+
+      after { FileUtils.rm_rf(roles_dir) }
+
+      it do
+        playbook = data_directory.join("hello_world_with_requirements_github/hello_world_with_requirements_github.yml")
+
+        response = Ansible::Runner.public_send(method_under_test, env_vars, extra_vars, playbook)
+        response = response.wait(5.seconds) if async
+
+        expect(roles_dir).to exist
+        expect_ansible_runner_success(response)
+        expect(response.human_stdout).to include('"msg": "Hello World! example_var=\'example var value\'"')
+      end
+    end
   end
 
   describe ".run" do
