@@ -1,14 +1,23 @@
 class MiqServer::WorkerManagement::Process < MiqServer::WorkerManagement
   def sync_from_system
     require "sys/proctable"
-    self.miq_processes = Sys::ProcTable.ps.select { |proc| proc.ppid == my_server.pid }
+    self.miq_processes        = Sys::ProcTable.ps.select { |proc| proc.ppid == my_server.pid }
+    self.miq_processes_by_pid = miq_processes.index_by(&:pid)
   end
 
   def sync_starting_workers
+    sync_from_system
+    sync_starting_rails_workers
+    sync_starting_non_rails_workers
+
     MiqWorker.find_all_starting.to_a
   end
 
   def sync_stopping_workers
+    sync_from_system
+    sync_stopping_rails_workers
+    sync_stopping_non_rails_workers
+
     MiqWorker.find_all_stopping.to_a
   end
 
@@ -74,5 +83,19 @@ class MiqServer::WorkerManagement::Process < MiqServer::WorkerManagement
 
   private
 
-  attr_accessor :miq_processes
+  attr_accessor :miq_processes, :miq_processes_by_pid
+
+  def sync_starting_non_rails_workers
+    starting = MiqWorker.find_all_starting
+    starting.where(:pid => miq_processes_by_pid.keys)
+            .reject(&:rails_worker?)
+            .each { |w| w.update!(:status => MiqWorker::STATUS_STARTED) }
+  end
+
+  def sync_stopping_non_rails_workers
+    stopping = MiqWorker.find_all_stopping
+    stopping.where(:pid => miq_processes_by_pid.keys)
+            .reject(&:rails_worker?)
+            .each { |w| w.update!(:status => MiqWorker::STATUS_STOPPED) }
+  end
 end
