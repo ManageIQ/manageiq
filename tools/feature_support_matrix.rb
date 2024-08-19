@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require File.expand_path('../config/environment', __dir__)
 require 'csv'
+require 'set'
 
 def usage
   <<-USAGE
@@ -22,13 +23,16 @@ FeatureMatrix = Struct.new(:model, :features, :subclasses) do
   end
 end
 
+$all_features = Set.new
+
 def matrix_for(model)
   matrix = FeatureMatrix.new
   matrix.model = model
 
   if model.included_modules.include?(SupportsFeatureMixin)
-    matrix.features = SupportsFeatureMixin::QUERYABLE_FEATURES.keys.each_with_object({}) do |feature, features|
+    matrix.features = model.supports_features.keys.each_with_object({}) do |feature, features|
       features[feature] = model.supports?(feature)
+      $all_features << feature
     end
   end
 
@@ -56,7 +60,7 @@ class CsvVisitor
   def to_s
     headers = @rows.first.headers
     CSV.generate('', :headers => headers) do |csv|
-      header_row = CSV::Row.new(headers, %w[Model] + SupportsFeatureMixin::QUERYABLE_FEATURES.values)
+      header_row = CSV::Row.new(headers, %w[Model] + $all_features.to_a)
       csv << header_row
       @rows.each { |row| csv << row }
     end
