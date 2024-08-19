@@ -1,0 +1,2 @@
+- src: https://github.com/ManageIQ/ansible-manageiq-example
+  name: manageiq.example

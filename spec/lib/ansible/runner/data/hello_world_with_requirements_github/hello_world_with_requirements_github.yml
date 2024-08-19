@@ -1,0 +1,6 @@
+- name: Hello World With Requirements from GitHub
+  hosts: localhost
+  roles:
+  - manageiq.example
+  tasks:
+  - debug: msg="Hello World! example_var='{{ example_var }}'"
