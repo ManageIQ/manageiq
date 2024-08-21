@@ -172,6 +172,17 @@ RSpec.describe Authenticator::Httpd do
       }
     end
 
+    let(:user_attrs) do
+      {
+        :username  => "testuser",
+        :fullname  => "Test User",
+        :firstname => "Alice",
+        :lastname  => "Aardvark",
+        :email     => "testuser@example.com",
+        :domain    => "example.com"
+      }
+    end
+
     context "with user details" do
       let!(:alice) { FactoryBot.create(:user, :userid => 'alice') }
 
@@ -707,14 +718,6 @@ RSpec.describe Authenticator::Httpd do
         let(:headers) do
           super().merge('X-Remote-User-Groups' => 'wibble@fqdn,bubble@fqdn')
         end
-        let(:user_attrs) do
-          {:username  => "testuser",
-            :fullname  => "Test User",
-            :firstname => "Alice",
-            :lastname  => "Aardvark",
-            :email     => "testuser@example.com",
-            :domain    => "example.com"}
-        end
 
         it "handles a comma separated grouplist" do
           expect(subject).to receive(:find_external_identity).with(username, user_attrs, ["wibble@fqdn", "bubble@fqdn"])
@@ -726,14 +729,6 @@ RSpec.describe Authenticator::Httpd do
         let(:config) { {:httpd_role => true} }
         let(:headers) do
           super().merge('X-Remote-User-Groups' => CGI.escape('spécial_char@fqdn:moré@fqdn'))
-        end
-        let(:user_attrs) do
-          {:username  => "testuser",
-            :fullname  => "Test User",
-            :firstname => "Alice",
-            :lastname  => "Aardvark",
-            :email     => "testuser@example.com",
-            :domain    => "example.com"}
         end
 
         it "handles group names with escaped special characters" do
@@ -754,14 +749,6 @@ RSpec.describe Authenticator::Httpd do
             'X-Remote-User-Domain'    => 'example.com',
             'X-Remote-User-Groups'    => nil,
           }
-        end
-        let(:user_attrs) do
-          {:username  => "testuser",
-            :fullname  => "Test User",
-            :firstname => "Alice",
-            :lastname  => "Aardvark",
-            :email     => "testuser@example.com",
-            :domain    => "example.com"}
         end
 
         it "handles nil group names" do
