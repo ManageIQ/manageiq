@@ -90,4 +90,12 @@ class MiqServer::WorkerManagement
     end
     miq_workers.reload
   end
+
+  private
+
+  def sync_starting_rails_workers
+  end
+
+  def sync_stopping_rails_workers
+  end
 end

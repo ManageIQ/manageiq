@@ -10,13 +10,17 @@ RSpec.describe Ansible::Runner do
     let(:env_vars)   { {} }
     let(:extra_vars) { {} }
 
+    def expect_ansible_runner_success(response)
+      expect(response.return_code).to eq(0), "ansible-runner failed with:\n====== STDERR ======\n#{response.stderr}\n\n====== STDOUT ======\n#{response.human_stdout}"
+    end
+
     it "runs a playbook" do
       playbook = data_directory.join("hello_world.yml")
 
       response = Ansible::Runner.public_send(method_under_test, env_vars, extra_vars, playbook)
       response = response.wait(5.seconds) if async
 
-      expect(response.return_code).to eq(0), "ansible-runner failed with:\n#{response.stderr}"
+      expect_ansible_runner_success(response)
       expect(response.human_stdout).to include('"msg": "Hello World!"')
     end
 
@@ -26,7 +30,7 @@ RSpec.describe Ansible::Runner do
       response = Ansible::Runner.public_send(method_under_test, env_vars, extra_vars, playbook)
       response = response.wait(5.seconds) if async
 
-      expect(response.return_code).to eq(0), "ansible-runner failed with:\n#{response.stderr}"
+      expect_ansible_runner_success(response)
       expect(response.human_stdout).to include('"msg": "Hello World! vars_file_1=vars_file_1_value, vars_file_2=vars_file_2_value"')
     end
 
@@ -37,7 +41,7 @@ RSpec.describe Ansible::Runner do
       response = Ansible::Runner.public_send(method_under_test, env_vars, extra_vars, playbook, :credentials => [credential.id])
       response = response.wait(5.seconds) if async
 
-      expect(response.return_code).to eq(0), "ansible-runner failed with:\n#{response.stderr}"
+      expect_ansible_runner_success(response)
       expect(response.human_stdout).to include('"msg": "Hello World! (NOTE: This message has been encrypted with ansible-vault)"')
     end
 
@@ -48,8 +52,25 @@ RSpec.describe Ansible::Runner do
       response = Ansible::Runner.public_send(method_under_test, env_vars, extra_vars, playbook, :credentials => [credential.id])
       response = response.wait(5.seconds) if async
 
-      expect(response.return_code).to eq(0), "ansible-runner failed with:\n#{response.stderr}"
+      expect_ansible_runner_success(response)
       expect(response.human_stdout).to include('"msg": "Hello World! vars_file_1=vars_file_1_value, vars_file_2=vars_file_2_value"')
+    end
+
+    context "runs a playbook using roles from github" do
+      let(:roles_dir) { data_directory.join("hello_world_with_requirements_github/roles/manageiq.example") }
+
+      after { FileUtils.rm_rf(roles_dir) }
+
+      it do
+        playbook = data_directory.join("hello_world_with_requirements_github/hello_world_with_requirements_github.yml")
+
+        response = Ansible::Runner.public_send(method_under_test, env_vars, extra_vars, playbook)
+        response = response.wait(5.seconds) if async
+
+        expect(roles_dir).to exist
+        expect_ansible_runner_success(response)
+        expect(response.human_stdout).to include('"msg": "Hello World! example_var=\'example var value\'"')
+      end
     end
   end
 
