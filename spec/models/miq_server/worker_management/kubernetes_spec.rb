@@ -214,13 +214,16 @@ RSpec.describe MiqServer::WorkerManagement::Kubernetes do
     before { MiqWorkerType.seed }
 
     context "podified" do
-      let(:rails_worker) { true }
-      let(:pod_name)     { "1-generic-abcd" }
-      let(:pod_running)  { true }
-      let(:worker)       { FactoryBot.create(:miq_generic_worker, :miq_server => server, :status => status, :system_uid => pod_name) }
-      let(:current_pods) { {pod_name => {:label_name => pod_label, :last_state_terminated => false, :container_restarts => 0, :running => pod_running}} }
+      let(:rails_worker)   { true }
+      let(:pod_name)       { "#{server.compressed_id}-generic-abcd" }
+      let(:pod_running)    { true }
+      let(:last_heartbeat) { Time.now.utc }
+      let(:worker)         { FactoryBot.create(:miq_generic_worker, :miq_server => server, :status => status, :system_uid => system_uid, :last_heartbeat => last_heartbeat) }
+      let(:system_uid)     { pod_name }
+      let(:current_pods)   { {pod_name => {:label_name => pod_label, :last_state_terminated => false, :container_restarts => 0, :running => pod_running}} }
 
       before do
+        allow(worker.class).to receive(:containerized_worker?).and_return(true)
         allow(worker.class).to receive(:rails_worker?).and_return(rails_worker)
         server.worker_manager.current_pods = current_pods
       end
@@ -268,6 +271,52 @@ RSpec.describe MiqServer::WorkerManagement::Kubernetes do
 
             it "returns the starting worker" do
               expect(server.worker_manager.sync_starting_workers).to include(worker)
+            end
+          end
+
+          context "with a worker that doesn't have a system_uid yet" do
+            let(:system_uid) { nil }
+
+            before { server.worker_manager.sync_config }
+
+            context "without a pod" do
+              let(:current_pods) { {} }
+
+              it "returns the worker as still starting" do
+                expect(server.worker_manager.sync_starting_workers).to include(worker)
+              end
+
+              context "with a worker that has been starting longer than the starting_timeout" do
+                let(:last_heartbeat) { 20.minutes.ago.utc }
+
+                it "marks the worker as not responding" do
+                  # Make sure that #find_worker returns our instance of worker that
+                  # that stubs the #stop_container method.
+                  expect(server.worker_manager).to receive(:find_worker).with(worker).and_return(worker)
+                  expect(worker).to receive(:stop_container)
+
+                  server.worker_manager.sync_starting_workers
+                  expect(worker.reload.status).to eq("stopping")
+                end
+              end
+            end
+
+            context "with a pod that is running" do
+              let(:pod_running) { true }
+
+              it "sets the worker's system_uid and marks the worker started" do
+                expect(server.worker_manager.sync_starting_workers).to be_empty
+                expect(worker.reload.system_uid).to eq(pod_name)
+              end
+            end
+
+            context "with a pod that isn't running" do
+              let(:pod_running) { false }
+
+              it "sets the worker's system_uid and but doesn't mark the worker started" do
+                expect(server.worker_manager.sync_starting_workers).to include(worker)
+                expect(worker.reload.system_uid).to eq(pod_name)
+              end
             end
           end
         end
