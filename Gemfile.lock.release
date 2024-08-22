@@ -326,11 +326,11 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-workflows
-  revision: c0fed2584b607bbb366f4af8a319dcdb56250c81
+  revision: e7dd272c0069375c400f0c6ea234dd95405c2b9b
   branch: radjabov
   specs:
     manageiq-providers-workflows (0.1.0)
-      floe (~> 0.13.0)
+      floe (~> 0.14.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-schema
@@ -674,7 +674,7 @@ GEM
       rake
     ffi-vix_disk_lib (1.3.1)
       ffi
-    floe (0.13.0)
+    floe (0.14.0)
       awesome_spawn (~> 1.6)
       io-wait
       jsonpath (~> 1.1)
