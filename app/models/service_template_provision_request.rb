@@ -57,6 +57,23 @@ class ServiceTemplateProvisionRequest < MiqRequest
 
   def customize_request_task_attributes(req_task_attrs, idx)
     req_task_attrs['options'][:pass] = idx
+
+    # If the service_template that we are provisioning is a "generic" provision
+    # type then we want to execute the request task with embedded_workflows if
+    # the resource_action has a configuration_script_id
+    return if source.prov_type != "generic"
+
+    configuration_script_id = resource_action&.configuration_script_id
+    return if configuration_script_id.nil?
+
+    req_task_attrs['options'][:configuration_script_payload_id] = configuration_script_id
+  end
+
+  def resource_action
+    resource_action_id = options.dig(:workflow_settings, :resource_action_id)
+    return if resource_action_id.nil?
+
+    ResourceAction.find(resource_action_id)
   end
 
   def originating_controller

@@ -129,6 +129,12 @@ RSpec.describe ServiceTemplateProvisionTask do
               ]
             )
 
+            @task_0.update(
+              :options => {
+                :configuration_script_payload_id => payload.id
+              }
+            )
+
             @task_0.deliver_queue
 
             expect(@task_0.reload.options.keys).to include(:miq_task_id, :configuration_script_id, :configuration_script_payload_id)
