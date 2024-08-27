@@ -140,7 +140,8 @@ class MiqRequestTask < ApplicationRecord
 
     _log.info("Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
 
-    workflow = ConfigurationScriptPayload.find(options[:configuration_script_payload_id]) if options[:configuration_script_payload_id]
+    workflow_id = options[:configuration_script_payload_id]
+    workflow    = ConfigurationScriptPayload.find(workflow_id) if workflow_id
     if workflow
       miq_task_id = workflow.run(:inputs => workflow_inputs, :userid => get_user.userid, :zone => zone, :object => self)
 
