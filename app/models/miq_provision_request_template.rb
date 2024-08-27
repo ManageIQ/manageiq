@@ -38,14 +38,12 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
   private
 
   def service_options(parent_svc, service_task, template_service_resource)
-    parent_service_task = get_parent_task(service_task)
-
     {
       :miq_force_unique_name           => [true, 1],
       :service_guid                    => parent_svc.guid,
       :service_resource_id             => template_service_resource.id,
       :service_template_request        => false,
-      :configuration_script_payload_id => parent_service_task&.resource_action&.configuration_script_payload&.id
+      :configuration_script_payload_id => service_task.options&.dig(:parent_configuration_script_payload_id)
     }
   end
 
