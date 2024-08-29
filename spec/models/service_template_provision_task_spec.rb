@@ -141,7 +141,7 @@ RSpec.describe ServiceTemplateProvisionTask do
 
             configuration_script = ConfigurationScript.find(@task_0.options[:configuration_script_id])
 
-            expect(configuration_script).to have_attributes(:manager => automation_manager, :run_by_userid => @admin.userid, :status => "pending")
+            expect(configuration_script).to have_attributes(:manager => automation_manager, :run_by_userid => @admin.userid, :status => "pending", :context => hash_including("Execution" => hash_including("Input" => {"dialog" => {}})))
             expect(MiqQueue.first).to       have_attributes(
               :instance_id => configuration_script.id,
               :class_name  => configuration_script.type,
@@ -150,6 +150,36 @@ RSpec.describe ServiceTemplateProvisionTask do
               :role        => "automate",
               :args        => [hash_including(:object_type => "ServiceTemplateProvisionTask", :object_id => @task_0.id)]
             )
+          end
+
+          context "with dialog_values" do
+            let(:dialog_values) { {"foo" => "bar"} }
+
+            it "creates a configuration_script instance" do
+              zone               = FactoryBot.create(:zone, :name => "special")
+              automation_manager = FactoryBot.create(:ems_workflows_automation, :zone => zone)
+              payload            = FactoryBot.create(:embedded_workflow, :manager => automation_manager)
+              @task_0.source     = FactoryBot.create(
+                :service_template_generic,
+                :name             => "Provision",
+                :resource_actions => [
+                  FactoryBot.create(:resource_action, :action => "Provision", :configuration_script_payload => payload)
+                ]
+              )
+
+              @task_0.update(
+                :options => {
+                  :dialog                          => dialog_values,
+                  :configuration_script_payload_id => payload.id
+                }
+              )
+
+              @task_0.deliver_queue
+
+              configuration_script = ConfigurationScript.find(@task_0.options[:configuration_script_id])
+
+              expect(configuration_script.context).to include("Execution" => hash_including("Input" => {"dialog" => dialog_values}))
+            end
           end
         end
 
