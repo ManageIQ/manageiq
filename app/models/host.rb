@@ -21,6 +21,7 @@ class Host < ApplicationRecord
     "kubevirt"        => "KubeVirt",
     "vmware"          => "VMware",
     "openstack_infra" => "OpenStack Infrastructure",
+    "openshift_infra" => "OpenShift Virtualization",
     "ibm_power_hmc"   => "IBM Power HMC",
     "unknown"         => "Unknown",
     nil               => "Unknown",
