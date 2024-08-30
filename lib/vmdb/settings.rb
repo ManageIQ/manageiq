@@ -27,6 +27,7 @@ module Vmdb
     def self.init
       ::Config.overwrite_arrays = true
       ::Config.merge_nil_values = false
+      warn_on_local_changes
       reset_settings_constant(for_resource(:my_server))
     end
 
@@ -179,6 +180,13 @@ module Vmdb
       end
     end
     private_class_method :local_sources
+
+    def self.warn_on_local_changes
+      local_sources.select { |p| p.end_with?("settings.local.yml") }.each do |path|
+        warn "\e[1;33m** WARN: Local changes are present in #{path}\e[0m" if File.size?(path)
+      end
+    end
+    private_class_method :warn_on_local_changes
 
     def self.replace_magic_values!(settings, resource)
       parent_settings = nil
