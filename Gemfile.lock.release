@@ -53,7 +53,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-gems-pending.git
-  revision: 9984fa6e6f9550588e59b3d1936001e0cbde6799
+  revision: 865dcbb6e5b2dc5c7ed63b1fb817ff0a11850b08
   branch: radjabov
   specs:
     manageiq-gems-pending (0.1.0)
@@ -65,7 +65,7 @@ GIT
       more_core_extensions (~> 4.4)
       net-ftp (~> 0.1.2)
       nokogiri (~> 1.14, >= 1.14.3)
-      rexml (>= 3.3.4)
+      rexml (>= 3.3.6)
       sys-proctable (~> 1.2.5)
       sys-uname (~> 1.2.1)
       win32ole (~> 1.8.8)
@@ -1154,7 +1154,7 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     retriable (3.1.2)
-    rexml (3.3.5)
+    rexml (3.3.6)
       strscan
     routes_lazy_routes (0.4.3)
       actionpack
