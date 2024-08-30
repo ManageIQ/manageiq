@@ -154,15 +154,10 @@
   :url: /vm_infra/explorer?accordion=templates_filter
   :rbac_feature_name: templates_filter_accord
   :startup: true
-- :name: resource_pool_cloud
-  :description: Compute / Clouds / Cloud Resource Pools
-  :url: /resource_pool_cloud/show_list
-  :rbac_feature_name: resource_pool_cloud_show_list
-  :startup: true
-- :name: resource_pool_infra
-  :description: Compute / Infrastructure / Infrastructure Resource Pools
-  :url: /resource_pool_infra/show_list
-  :rbac_feature_name: resource_pool_infra_show_list
+- :name: resource_pools
+  :description: Compute / Infrastructure / Resource Pools
+  :url: /resource_pool/show_list
+  :rbac_feature_name: resource_pool_show_list
   :startup: true
 - :name: storage
   :description: Compute / Infrastructure / Datastores

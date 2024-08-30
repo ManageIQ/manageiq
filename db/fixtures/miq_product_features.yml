@@ -1402,89 +1402,47 @@
       :feature_type: admin
       :identifier: host_provide
 
-# Cloud Resource Pools
-- :name: Cloud Resource Pools
-  :description: Access Everything under Cloud Resource Pools
+# Resource Pools
+- :name: Resource Pools
+  :description: Access Everything under Resource Pools
   :feature_type: node
-  :identifier: resource_pool_cloud
+  :identifier: resource_pool
   :children:
   - :name: View
-    :description: Display Lists of Cloud Resource Pools
+    :description: Display Lists of Resource Pools
     :feature_type: view
-    :identifier: resource_pool_cloud_view
+    :identifier: resource_pool_view
     :children:
     - :name: List
-      :description: Display Lists of Cloud Resource Pools
+      :description: Display Lists of Resource Pools
       :feature_type: view
-      :identifier: resource_pool_cloud_show_list
+      :identifier: resource_pool_show_list
     - :name: Show
-      :description: Display Individual Cloud Resource Pools
+      :description: Display Individual Resource Pools
       :feature_type: view
-      :identifier: resource_pool_cloud_show
+      :identifier: resource_pool_show
   - :name: Operate
-    :description: Perform Operations on Cloud Resource Pools
+    :description: Perform Operations on Resource Pools
     :feature_type: control
-    :identifier: resource_pool_cloud_control
+    :identifier: resource_pool_control
     :children:
     - :name: Edit Tags
-      :description: Edit Tags of Cloud Resource Pools
+      :description: Edit Tags of Resource Pools
       :feature_type: control
-      :identifier: resource_pool_cloud_tag
+      :identifier: resource_pool_tag
     - :name: Manage Policies
-      :description: Manage Policies of Cloud Resource Pools
+      :description: Manage Policies of Resource Pools
       :feature_type: control
-      :identifier: resource_pool_cloud_protect
+      :identifier: resource_pool_protect
   - :name: Modify
-    :description: Modify Cloud Resource Pools
+    :description: Modify Resource Pools
     :feature_type: admin
-    :identifier: resource_pool_cloud_admin
+    :identifier: resource_pool_admin
     :children:
     - :name: Remove
-      :description: Remove Cloud Resource Pools
+      :description: Remove Resource Pools
       :feature_type: admin
-      :identifier: resource_pool_cloud_delete
-
-# Infrastructure Resource Pools
-- :name: Infrastructure Resource Pools
-  :description: Access Everything under Infrastructure Resource Pools
-  :feature_type: node
-  :identifier: resource_pool_infra
-  :children:
-  - :name: View
-    :description: Display Lists of Infrastructure Resource Pools
-    :feature_type: view
-    :identifier: resource_pool_infra_view
-    :children:
-    - :name: List
-      :description: Display Lists of Infrastructure Resource Pools
-      :feature_type: view
-      :identifier: resource_pool_infra_show_list
-    - :name: Show
-      :description: Display Individual Infrastructure Resource Pools
-      :feature_type: view
-      :identifier: resource_pool_infra_show
-  - :name: Operate
-    :description: Perform Operations on Infrastructure Resource Pools
-    :feature_type: control
-    :identifier: resource_pool_infra_control
-    :children:
-    - :name: Edit Tags
-      :description: Edit Tags of Infrastructure Resource Pools
-      :feature_type: control
-      :identifier: resource_pool_infra_tag
-    - :name: Manage Policies
-      :description: Manage Policies of Infrastructure Resource Pools
-      :feature_type: control
-      :identifier: resource_pool_infra_protect
-  - :name: Modify
-    :description: Modify Infrastructure Resource Pools
-    :feature_type: admin
-    :identifier: resource_pool_infra_admin
-    :children:
-    - :name: Remove
-      :description: Remove Infrastructure Resource Pools
-      :feature_type: admin
-      :identifier: resource_pool_infra_delete
+      :identifier: resource_pool_delete
 
 # Datastores
 - :name: Datastores
