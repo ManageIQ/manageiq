@@ -4,6 +4,11 @@ module Authenticator
       'External httpd'
     end
 
+    # @return group delimiter defined in settings
+    def self.group_delimiter
+      ::Settings.authentication.group_delimiter.presence
+    end
+
     def authorize_queue(username, request, options, *_args)
       log_auth_debug("authorize_queue(username=#{username}, options=#{options})")
 
@@ -146,7 +151,8 @@ module Authenticator
         user_headers.each { |k, v| log_auth_debug("  %-24{key} = \"%{val}\"" % {:key => k, :val => v}) }
       end
 
-      groups     = CGI.unescape(user_headers['X-REMOTE-USER-GROUPS'] || '').split(/[;:,]/)
+      delimiter  = self.class.group_delimiter || /[;:,]/
+      groups     = CGI.unescape(user_headers['X-REMOTE-USER-GROUPS'] || '').split(delimiter)
       user_attrs = {:username  => username,
                     :fullname  => user_headers['X-REMOTE-USER-FULLNAME'],
                     :firstname => user_headers['X-REMOTE-USER-FIRSTNAME'],
