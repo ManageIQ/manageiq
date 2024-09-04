@@ -151,7 +151,7 @@ module Authenticator
         user_headers.each { |k, v| log_auth_debug("  %-24{key} = \"%{val}\"" % {:key => k, :val => v}) }
       end
 
-      delimiter  = self.class.group_delimiter || /[;:,]/
+      delimiter  = self.class.group_delimiter || user_headers['X-REMOTE-USER-GROUP-DELIMITER'].presence || /[;:,]/
       groups     = CGI.unescape(user_headers['X-REMOTE-USER-GROUPS'] || '').split(delimiter)
       user_attrs = {:username  => username,
                     :fullname  => user_headers['X-REMOTE-USER-FULLNAME'],
@@ -172,6 +172,7 @@ module Authenticator
         X-REMOTE-USER-EMAIL
         X-REMOTE-USER-DOMAIN
         X-REMOTE-USER-GROUPS
+        X-REMOTE-USER-GROUP-DELIMITER
       ].each_with_object({}) do |k, h|
         h[k] = request.headers[k]&.force_encoding("UTF-8")
       end.delete_nils
