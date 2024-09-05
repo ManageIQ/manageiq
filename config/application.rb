@@ -86,6 +86,10 @@ module Vmdb
 
     # Disable ActionCable's request forgery protection
     # This is basically matching a set of allowed origins which is not good for us
+    # Note, similarly named forgery protections in action controller are set to true
+    # https://github.com/rails/rails/blob/d437ae311f1b9dc40b442e40eb602e020cec4e49/railties/lib/rails/application/configuration.rb#L115C12-L115C69
+    # 5.0 sets: action_controller.forgery_protection_origin_check = true
+    # 5.2 sets: action_controller.default_protect_from_forgery = true
     config.action_cable.disable_request_forgery_protection = false
     # Matching the origin against the HOST header is much more convenient
     config.action_cable.allow_same_origin_as_host = true
@@ -110,8 +114,23 @@ module Vmdb
 
     config.autoload_paths += config.eager_load_paths
 
-    # config.load_defaults 6.1
-    # Disable defaults as ActiveRecord::Base.belongs_to_required_by_default = true causes MiqRegion.seed to fail validation on belongs_to maintenance zone
+    # FYI, this is where load_defaults is defined as of 7.2:
+    # https://github.com/rails/rails/blob/d437ae311f1b9dc40b442e40eb602e020cec4e49/railties/lib/rails/application/configuration.rb#L92
+    config.load_defaults 7.0
+
+    # TODO: this is the only change we had from defaults in 7.0.  See secure_headers.rb.  It's 0 in defaults.
+    config.action_dispatch.default_headers["X-XSS-Protection"] = "1; mode=block"
+
+    # TODO: Find and fixed any deprecated behavior.  Opt in later.
+    config.active_support.remove_deprecated_time_with_zone_name = false
+    config.active_support.disable_to_s_conversion = false
+
+    # TODO: If disabled, causes cross repo test failures in content, ui-classic and amazon provider
+    config.active_record.partial_inserts = true
+
+    # Disable this setting as it causes MiqRegion.seed to fail validation on belongs_to maintenance zone.
+    # TODO: We should fix this so we don't need to carry this override.
+    config.active_record.belongs_to_required_by_default = false
 
     # NOTE:  If you are going to make changes to autoload_paths, please make
     # sure they are all strings.  Rails will push these paths into the
