@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2024-05-31 16:54+0000\n"
-"PO-Revision-Date: 2024-05-31 16:54+0000\n"
+"POT-Creation-Date: 2024-08-30 21:21+0000\n"
+"PO-Revision-Date: 2024-08-30 21:21+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -4095,6 +4095,9 @@ msgstr "トレンド分析 (アップ/ダウン)"
 msgid "Annotation"
 msgstr "注釈"
 
+msgid "Annotations"
+msgstr "アノテーション"
+
 msgid "Anonymous FTP"
 msgid_plural "Anonymous FTPs"
 msgstr[0] "匿名 FTP"
@@ -6809,6 +6812,9 @@ msgstr "スナップショットを使用して VM のディスクをサイズ�
 
 msgid "Cannot revert to snapshot while VM is running"
 msgstr "VM を実行中はスナップショットに戻すことはできません"
+
+msgid "Cannot select more than 20 items"
+msgstr "20以上の項目は選択できない"
 
 msgid "Cannot shutdown a host that is not HMC-managed"
 msgstr "HMC 管理対象ではないホストはシャットダウンできません"
@@ -15451,6 +15457,12 @@ msgstr "診断: ゾーンの設定"
 msgid "Dialog"
 msgstr "ダイアログ"
 
+msgid "Dialog \"${values.name}\" was added"
+msgstr "ダイアログ「${values.name}」が追加されました"
+
+msgid "Dialog \"${values.name}\" was saved"
+msgstr "ダイアログ「${values.name}」が保存されました"
+
 msgid "Dialog \"%{name}\""
 msgstr "ダイアログ \"%{name}\""
 
@@ -15522,6 +15534,9 @@ msgstr "ダイアログ・オプション"
 msgid "Dialog Tab"
 msgid_plural "Dialog Tabs"
 msgstr[0] "ダイアログ・タブ"
+
+msgid "Dialog Type"
+msgstr "ダイアログ・タイプ"
 
 msgid "Dialog Type must be selected"
 msgstr "ダイアログ・タイプを選択してください"
@@ -18769,6 +18784,9 @@ msgstr "ダッシュボード \"%{name}\" の編集はユーザーにより取�
 msgid "Edit of Dashboard Sequence was cancelled by the user"
 msgstr "ダッシュボードの順序の編集はユーザーにより取り消されました"
 
+msgid "Edit of Dialog \"${dialogRecord.name}\" cancelled by the user"
+msgstr "ダイアログ「${dialogRecord.name}」の編集がユーザによってキャンセルされました"
+
 msgid "Edit of Dialog \"%{name}\" was cancelled by the user"
 msgstr "ダイアログ \"%{name}\" の編集はユーザーにより取り消されました"
 
@@ -19384,6 +19402,9 @@ msgstr "組み込み Terraform プロバイダー"
 
 msgid "Embedded Terraform Provider not found."
 msgstr "組み込み Terraform プロバイダーが見つかりません。"
+
+msgid "Embedded Terraform Role is not enabled."
+msgstr "埋め込み Terraform Role が使用不可です。"
 
 msgid "Embedded Terraform service is not available."
 msgstr "組み込み Terraform サービスは使用できません。"
@@ -25717,9 +25738,6 @@ msgstr "1 秒あたりのキロバイト (12,34 KBps)"
 msgid "Kind"
 msgstr "種類"
 
-msgid "KubeVirt"
-msgstr "KubeVirt"
-
 msgid "KubeVirt Provider"
 msgstr "KubeVirt プロバイダー"
 
@@ -26206,6 +26224,9 @@ msgstr "リタイヤしたリスト"
 
 msgid "List View"
 msgstr "リスト表示"
+
+msgid "Listing"
+msgstr "リスト"
 
 msgid "Live Migrate Instances"
 msgstr "インスタンスのライブ・マイグレーション"
@@ -28052,6 +28073,9 @@ msgstr "VM の測定"
 
 msgid "Method for allocated metrics"
 msgstr "割り振られたメトリックのメソッド"
+
+msgid "Method(s)"
+msgstr "メソッド"
 
 msgid "Methods"
 msgstr "メソッド"
@@ -33497,8 +33521,14 @@ msgstr "インスタンスが見つかりません"
 msgid "No message will be displayed"
 msgstr "メッセージは表示されません"
 
+msgid "No methods available"
+msgstr "使用可能なメソッドがありません"
+
 msgid "No methods found"
 msgstr "メソッドが見つかりません"
+
+msgid "No methods selected"
+msgstr "メソッドを選択しない"
 
 msgid "No metrics endpoint has been added"
 msgstr "メトリック・エンドポイントが追加されていません"
@@ -34366,6 +34396,9 @@ msgstr "OpenShift プロバイダー"
 
 msgid "OpenShift Template"
 msgstr "OpenShift テンプレート"
+
+msgid "OpenShift Virtualization / KubeVirt"
+msgstr "OpenShift Virtualization / KubeVirt"
 
 msgid "OpenStack"
 msgstr "OpenStack"
@@ -41934,6 +41967,9 @@ msgstr "検索はスケジュールで参照されているため、削除でき
 msgid "Search selection..."
 msgstr "選択を検索..."
 
+msgid "Search with Name or Relative path"
+msgstr "名前または相対パスで検索"
+
 msgid "Search with name"
 msgstr "名前で検索"
 
@@ -42504,6 +42540,9 @@ msgstr "情報をインポートする既存ドメインの選択:"
 msgid "Select max 3 columns"
 msgstr "最大 3 列を選択"
 
+msgid "Select methods"
+msgstr "メソッドの選択"
+
 msgid "Select namespaces you wish to import:"
 msgstr "インポートする名前空間の選択:"
 
@@ -42663,6 +42702,9 @@ msgstr "セキュリティー・グループの選択した VM の"
 msgid ""
 "Selected item can not be copied. Because it\\'s Ansible Playbook or not valid."
 msgstr "選択した項目はコピーできません。それが Ansible Playbook であるか、無効であるためです。"
+
+msgid "Selected methods"
+msgstr "選択したメソッド"
 
 msgid "Selected:"
 msgstr "選択済み:"
@@ -48383,6 +48425,9 @@ msgstr "タイプ名"
 msgid "Type missing for %{field}"
 msgstr "%{field} のタイプが不明です"
 
+msgid "Type to search"
+msgstr "入力して検索"
+
 msgid "Type:"
 msgstr "タイプ:"
 
@@ -51057,23 +51102,8 @@ msgstr "ポリシー・アラートの表示"
 msgid "View Policy Profiles"
 msgstr "ポリシー・プロファイルの表示"
 
-msgid "View Policy Simulation for the selected Templates"
-msgstr "選択したテンプレートのポリシー・シミュレーションの表示"
-
-msgid "View Policy Simulation for the selected items"
-msgstr "選択した項目のポリシー・シミュレーションの表示"
-
-msgid "View Policy Simulation for this Image"
-msgstr "このイメージのポリシー・シミュレーションの表示"
-
-msgid "View Policy Simulation for this Instance"
-msgstr "このインスタンスのポリシー・シミュレーションの表示"
-
 msgid "View Policy Simulation for this Template"
 msgstr "このテンプレートのポリシー・シミュレーションの表示"
-
-msgid "View Policy Simulation for this VM"
-msgstr "この VM のポリシー・シミュレーションの表示"
 
 msgid "View Policy Simulation of Images"
 msgstr "イメージのポリシー・シミュレーションの表示"
@@ -53843,9 +53873,6 @@ msgstr "evm_worker_stop"
 msgid "evm_worker_uptime_exceeded"
 msgstr "evm_worker_uptime_exceeded"
 
-msgid "execute is not enabled"
-msgstr "実行が有効になっていません"
-
 msgid "execute must be implemented in a subclass"
 msgstr "execute はサブクラスに実装する必要があります"
 
@@ -54569,17 +54596,11 @@ msgstr "request_vm_unregister"
 msgid "resize value options cannot be nil"
 msgstr "サイズ変更値オプションをnilにすることはできません"
 
-msgid "run is not enabled"
-msgstr "実行が有効になっていません"
-
 msgid "run must be implemented in a subclass"
 msgstr "実行はサブクラスに実装する必要があります"
 
 msgid "run_button_summary"
 msgstr "実行ボタンの要約"
-
-msgid "run_queue is not enabled"
-msgstr "run_queue が有効になっていません"
 
 msgid "running"
 msgstr "実行中"

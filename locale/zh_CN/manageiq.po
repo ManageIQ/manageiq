@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2024-05-31 16:54+0000\n"
-"PO-Revision-Date: 2024-05-31 16:54+0000\n"
+"POT-Creation-Date: 2024-08-30 21:21+0000\n"
+"PO-Revision-Date: 2024-08-30 21:21+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -4073,6 +4073,9 @@ msgstr "并趋向于"
 msgid "Annotation"
 msgstr "注解"
 
+msgid "Annotations"
+msgstr "注释"
+
 msgid "Anonymous FTP"
 msgid_plural "Anonymous FTPs"
 msgstr[0] "匿名 FTP"
@@ -6782,6 +6785,9 @@ msgstr "无法调整具有快照的 VM 的磁盘大小"
 
 msgid "Cannot revert to snapshot while VM is running"
 msgstr "虚拟机运行时无法还原为快照"
+
+msgid "Cannot select more than 20 items"
+msgstr "无法选择超过 20 个项"
 
 msgid "Cannot shutdown a host that is not HMC-managed"
 msgstr "无法关闭不受 HMC 管理的主机"
@@ -15411,6 +15417,12 @@ msgstr "诊断区域设置"
 msgid "Dialog"
 msgstr "对话框"
 
+msgid "Dialog \"${values.name}\" was added"
+msgstr "已添加对话框“${values.name}”"
+
+msgid "Dialog \"${values.name}\" was saved"
+msgstr "已保存对话框“${values.name}”"
+
 msgid "Dialog \"%{name}\""
 msgstr "对话框“%{name}”"
 
@@ -15482,6 +15494,9 @@ msgstr "对话框选项"
 msgid "Dialog Tab"
 msgid_plural "Dialog Tabs"
 msgstr[0] "对话框标签"
+
+msgid "Dialog Type"
+msgstr "对话框类型"
 
 msgid "Dialog Type must be selected"
 msgstr "必须选择对话框类型"
@@ -18727,6 +18742,9 @@ msgstr "用户已取消针对仪表板“%{name}”的编辑"
 msgid "Edit of Dashboard Sequence was cancelled by the user"
 msgstr "用户已取消编辑仪表板序列的操作"
 
+msgid "Edit of Dialog \"${dialogRecord.name}\" cancelled by the user"
+msgstr "用户已取消对话框“${dialogRecord.name}”的编辑"
+
 msgid "Edit of Dialog \"%{name}\" was cancelled by the user"
 msgstr "用户已取消针对对话框“%{name}”的编辑"
 
@@ -19342,6 +19360,9 @@ msgstr "嵌入式 Terraform 提供程序"
 
 msgid "Embedded Terraform Provider not found."
 msgstr "找不到嵌入式 Terraform 提供程序。"
+
+msgid "Embedded Terraform Role is not enabled."
+msgstr "未启用嵌入式 Terraform 角色。"
 
 msgid "Embedded Terraform service is not available."
 msgstr "找不到嵌入式 Terraform 提供程序。"
@@ -25660,9 +25681,6 @@ msgstr "每秒千字节数 (12,34 KBps)"
 msgid "Kind"
 msgstr "种类"
 
-msgid "KubeVirt"
-msgstr "KubeVirt"
-
 msgid "KubeVirt Provider"
 msgstr "KubeVirt 供应商"
 
@@ -26149,6 +26167,9 @@ msgstr "已停用的列表"
 
 msgid "List View"
 msgstr "列表视图"
+
+msgid "Listing"
+msgstr "列示"
 
 msgid "Live Migrate Instances"
 msgstr "实时迁移实例"
@@ -27991,6 +28012,9 @@ msgstr "虚拟机计费"
 
 msgid "Method for allocated metrics"
 msgstr "分配度量的方法"
+
+msgid "Method(s)"
+msgstr "方法"
 
 msgid "Methods"
 msgstr "方法"
@@ -33435,8 +33459,14 @@ msgstr "未找到实例"
 msgid "No message will be displayed"
 msgstr "将不显示任何消息"
 
+msgid "No methods available"
+msgstr "无可用的方法"
+
 msgid "No methods found"
 msgstr "未找到方法"
+
+msgid "No methods selected"
+msgstr "未选择任何方法"
 
 msgid "No metrics endpoint has been added"
 msgstr "未添加任何指标端点"
@@ -34296,6 +34326,9 @@ msgstr "OpenShift 提供程序"
 
 msgid "OpenShift Template"
 msgstr "OpenShift 模板"
+
+msgid "OpenShift Virtualization / KubeVirt"
+msgstr "OpenShift Virtualization/KubeVirt"
 
 msgid "OpenStack"
 msgstr "OpenStack"
@@ -41858,6 +41891,9 @@ msgstr "时间表里引用了搜索且无法被删除"
 msgid "Search selection..."
 msgstr "搜索选择..."
 
+msgid "Search with Name or Relative path"
+msgstr "使用名称或相对路径进行搜索"
+
 msgid "Search with name"
 msgstr "使用名称搜索"
 
@@ -42428,6 +42464,9 @@ msgstr "选择要导入的现有域："
 msgid "Select max 3 columns"
 msgstr "选择最多 3 列"
 
+msgid "Select methods"
+msgstr "选择方法"
+
 msgid "Select namespaces you wish to import:"
 msgstr "选择您要导入的名称空间："
 
@@ -42587,6 +42626,9 @@ msgstr "安全组的所选 VM"
 msgid ""
 "Selected item can not be copied. Because it\\'s Ansible Playbook or not valid."
 msgstr "无法复制选中的项目。因为项目是 Ansible Playbook 或者无效。"
+
+msgid "Selected methods"
+msgstr "所选方法"
 
 msgid "Selected:"
 msgstr "已选择的："
@@ -48302,6 +48344,9 @@ msgstr "类型名"
 msgid "Type missing for %{field}"
 msgstr "%{field} 丢失类型"
 
+msgid "Type to search"
+msgstr "输入要搜索的内容"
+
 msgid "Type:"
 msgstr "类型："
 
@@ -50972,23 +51017,8 @@ msgstr "查看策略警报"
 msgid "View Policy Profiles"
 msgstr "查看策略概要文件"
 
-msgid "View Policy Simulation for the selected Templates"
-msgstr "查看所选模板的策略模拟"
-
-msgid "View Policy Simulation for the selected items"
-msgstr "查看所选项的策略模拟"
-
-msgid "View Policy Simulation for this Image"
-msgstr "查看此镜像的策略模拟"
-
-msgid "View Policy Simulation for this Instance"
-msgstr "查看此实例的策略模拟"
-
 msgid "View Policy Simulation for this Template"
 msgstr "查看此模板的策略模拟"
-
-msgid "View Policy Simulation for this VM"
-msgstr "查看此虚拟机的策略模拟"
 
 msgid "View Policy Simulation of Images"
 msgstr "查看镜像的策略模拟"
@@ -53752,9 +53782,6 @@ msgstr "evm_worker_stop"
 msgid "evm_worker_uptime_exceeded"
 msgstr "evm_worker_uptime_exceeded"
 
-msgid "execute is not enabled"
-msgstr "未启用执行"
-
 msgid "execute must be implemented in a subclass"
 msgstr "必须在子类中实现执行"
 
@@ -54478,17 +54505,11 @@ msgstr "request_vm_unregister"
 msgid "resize value options cannot be nil"
 msgstr "调整大小值选项不能为 nil"
 
-msgid "run is not enabled"
-msgstr "未启用运行"
-
 msgid "run must be implemented in a subclass"
 msgstr "必须在子类中实现运行"
 
 msgid "run_button_summary"
 msgstr "run_button_summary"
-
-msgid "run_queue is not enabled"
-msgstr "未启用 run_queue"
 
 msgid "running"
 msgstr "正在运行"

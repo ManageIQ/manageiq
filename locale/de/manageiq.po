@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2024-05-31 16:54+0000\n"
-"PO-Revision-Date: 2024-05-31 16:54+0000\n"
+"POT-Creation-Date: 2024-08-30 21:21+0000\n"
+"PO-Revision-Date: 2024-08-30 21:21+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -4451,6 +4451,9 @@ msgstr "Und ist Trendermittlung"
 msgid "Annotation"
 msgstr "Anmerkung"
 
+msgid "Annotations"
+msgstr "Anmerkungen"
+
 msgid "Anonymous FTP"
 msgid_plural "Anonymous FTPs"
 msgstr[0] "Anonymes FTP-Objekt"
@@ -7323,6 +7326,9 @@ msgstr ""
 
 msgid "Cannot revert to snapshot while VM is running"
 msgstr "Zurücksetzen auf Momentaufnahme nicht möglich, während VM aktiv ist"
+
+msgid "Cannot select more than 20 items"
+msgstr "Es können nicht mehr als 20 Artikel ausgewählt werden"
 
 msgid "Cannot shutdown a host that is not HMC-managed"
 msgstr ""
@@ -16476,6 +16482,12 @@ msgstr "Zoneneinstellungen für Diagnose"
 msgid "Dialog"
 msgstr "Dialog"
 
+msgid "Dialog \"${values.name}\" was added"
+msgstr "Dialog \"${values.name}\" wurde hinzugefügt"
+
+msgid "Dialog \"${values.name}\" was saved"
+msgstr "Dialog \"${values.name}\" wurde gespeichert"
+
 msgid "Dialog \"%{name}\""
 msgstr "Kopieren von Dialog \"%{name}\""
 
@@ -16559,6 +16571,9 @@ msgid "Dialog Tab"
 msgid_plural "Dialog Tabs"
 msgstr[0] "Dialogregisterkarte"
 msgstr[1] "Dialogregisterkarten"
+
+msgid "Dialog Type"
+msgstr "Dialog-Typ"
 
 msgid "Dialog Type must be selected"
 msgstr "Dialogtyp muss ausgewählt werden"
@@ -19879,6 +19894,11 @@ msgstr ""
 msgid "Edit of Dashboard Sequence was cancelled by the user"
 msgstr "Bearbeitung von Dashboardsequenz wurde durch den Benutzer abgebrochen"
 
+msgid "Edit of Dialog \"${dialogRecord.name}\" cancelled by the user"
+msgstr ""
+"Bearbeitung des Dialogs \"${dialogRecord.name}\" durch den Benutzer "
+"abgebrochen"
+
 msgid "Edit of Dialog \"%{name}\" was cancelled by the user"
 msgstr ""
 "Bearbeitung von Dialog \"%{name}\" wurde durch den Benutzer abgebrochen"
@@ -20538,6 +20558,9 @@ msgstr "Embedded Terraform-Provider"
 
 msgid "Embedded Terraform Provider not found."
 msgstr "Embedded Terraform-Provider nicht gefunden."
+
+msgid "Embedded Terraform Role is not enabled."
+msgstr "Die eingebettete Terraform-Rolle ist nicht aktiviert."
 
 msgid "Embedded Terraform service is not available."
 msgstr "Embedded Terraform-Service ist nicht verfügbar."
@@ -27108,9 +27131,6 @@ msgstr "Kilobyte pro Sekunde (12,34 KB/s)"
 msgid "Kind"
 msgstr "Art"
 
-msgid "KubeVirt"
-msgstr "KubeVirt"
-
 msgid "KubeVirt Provider"
 msgstr "KubeVirt-Provider"
 
@@ -27605,6 +27625,9 @@ msgstr "Stillgelegte auflisten"
 
 msgid "List View"
 msgstr "Listenansicht"
+
+msgid "Listing"
+msgstr "Liste"
 
 msgid "Live Migrate Instances"
 msgstr "Livemigrationsinstanzen"
@@ -29559,6 +29582,9 @@ msgstr "Nutzungsmessung für VMs"
 
 msgid "Method for allocated metrics"
 msgstr "Methode für zugeordnete Metriken"
+
+msgid "Method(s)"
+msgstr "Methode(n)"
 
 msgid "Methods"
 msgstr "Methoden"
@@ -35190,8 +35216,14 @@ msgstr "Keine Instanzen gefunden"
 msgid "No message will be displayed"
 msgstr "Es wird keine Nachricht angezeigt"
 
+msgid "No methods available"
+msgstr "Keine Methoden verfügbar"
+
 msgid "No methods found"
 msgstr "Keine Methoden gefunden"
+
+msgid "No methods selected"
+msgstr "Keine Methoden ausgewählt"
 
 msgid "No metrics endpoint has been added"
 msgstr "Es wurde kein Metrikendpunkt hinzugefügt"
@@ -36115,6 +36147,9 @@ msgstr "OpenShift-Provider"
 
 msgid "OpenShift Template"
 msgstr "OpenShift-Vorlage"
+
+msgid "OpenShift Virtualization / KubeVirt"
+msgstr "OpenShift Virtualisierung / KubeVirt"
 
 msgid "OpenStack"
 msgstr "OpenStack"
@@ -44040,6 +44075,9 @@ msgstr ""
 msgid "Search selection..."
 msgstr "Auswahl für Suche..."
 
+msgid "Search with Name or Relative path"
+msgstr "Suche mit Name oder relativem Pfad"
+
 msgid "Search with name"
 msgstr "Suche mit Namen"
 
@@ -44632,6 +44670,9 @@ msgstr "Wählen Sie eine vorhandene Domäne aus, in die importiert werden soll:"
 msgid "Select max 3 columns"
 msgstr "Wählen Sie bis zu 3 Spalten aus"
 
+msgid "Select methods"
+msgstr "Methoden auswählen"
+
 msgid "Select namespaces you wish to import:"
 msgstr "Wählen Sie Namensbereiche aus, die importiert werden sollen:"
 
@@ -44816,6 +44857,9 @@ msgid ""
 msgstr ""
 "Ausgewähltes Element kann nicht kopiert werden. Ursache: Es ist ein Ansible "
 "Playbook oder nicht gültig."
+
+msgid "Selected methods"
+msgstr "Ausgewählte Methoden"
 
 msgid "Selected:"
 msgstr "Ausgewählt:"
@@ -50805,6 +50849,9 @@ msgstr "Typname"
 msgid "Type missing for %{field}"
 msgstr "Typ fehlt für %{field}"
 
+msgid "Type to search"
+msgstr "Suchbegriff eingeben"
+
 msgid "Type:"
 msgstr "Typ:"
 
@@ -53628,23 +53675,8 @@ msgstr "Richtlinienalerts anzeigen"
 msgid "View Policy Profiles"
 msgstr "Richtlinienprofile anzeigen"
 
-msgid "View Policy Simulation for the selected Templates"
-msgstr "Richtliniensimulation für die ausgewählten Vorlagen anzeigen"
-
-msgid "View Policy Simulation for the selected items"
-msgstr "Richtliniensimulation für die ausgewählten Elemente anzeigen"
-
-msgid "View Policy Simulation for this Image"
-msgstr "Richtliniensimulation für dieses Image anzeigen"
-
-msgid "View Policy Simulation for this Instance"
-msgstr "Richtliniensimulation für diese Instanz anzeigen"
-
 msgid "View Policy Simulation for this Template"
 msgstr "Richtliniensimulation für diese Vorlage anzeigen"
-
-msgid "View Policy Simulation for this VM"
-msgstr "Richtliniensimulation für diese VM anzeigen"
 
 msgid "View Policy Simulation of Images"
 msgstr "Richtliniensimulation für Images anzeigen"
@@ -56612,9 +56644,6 @@ msgstr "evm_worker_stop"
 msgid "evm_worker_uptime_exceeded"
 msgstr "evm_worker_uptime_exceeded"
 
-msgid "execute is not enabled"
-msgstr "'execute' ist nicht aktiviert"
-
 msgid "execute must be implemented in a subclass"
 msgstr "'execute' muss in einer Unterklasse implementiert werden"
 
@@ -57397,17 +57426,11 @@ msgstr "request_vm_unregister"
 msgid "resize value options cannot be nil"
 msgstr "Die Optionen für die Größenänderung dürfen nicht null sein"
 
-msgid "run is not enabled"
-msgstr "Ausführung ist nicht aktiviert"
-
 msgid "run must be implemented in a subclass"
 msgstr "Ausführung muss in einer Unterklasse implementiert werden"
 
 msgid "run_button_summary"
 msgstr "run_button_summary"
-
-msgid "run_queue is not enabled"
-msgstr "'run_queue' ist nicht aktiviert"
 
 msgid "running"
 msgstr "Aktiv"
