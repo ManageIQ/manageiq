@@ -70,14 +70,14 @@ module MiqRequestTask::StateMachine
     false
   end
 
-  def requeue_phase(delay = 10)
+  def requeue_phase(delay = 10.seconds)
     mark_execution_servers
     save # Save current phase_context
     MiqQueue.put(
       :class_name     => self.class.name,
       :instance_id    => id,
       :method_name    => phase,
-      :deliver_on     => delay.seconds.from_now.utc,
+      :deliver_on     => delay.from_now.utc,
       :zone           => my_zone,
       :role           => my_role,
       :queue_name     => my_queue_name,
