@@ -139,13 +139,13 @@ RSpec.describe DialogFieldTagControl do
       it "automate_output_value with an single value" do
         tag = Classification.first
         @df.value = tag.id.to_s
-        expect(@df.automate_output_value).to eq([tag.id.to_s])
+        expect(@df.automate_output_value).to eq(["#{tag.class.name}::#{tag.id}"])
       end
 
       it "automate_output_value with multiple values" do
         tags = [Classification.first, Classification.last]
         @df.value = tags.collect(&:id).join(",")
-        expect(@df.automate_output_value).to match_array(tags.collect { |tag| tag.id.to_s })
+        expect(@df.automate_output_value).to match_array(tags.collect { |tag| "#{tag.class.name}::#{tag.id}" })
       end
     end
   end
