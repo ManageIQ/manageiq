@@ -37,6 +37,12 @@ module ManageIQ::Providers::CloudManager::Provision::StateMachine
     phase_context[:clone_task_ref] = start_clone(phase_context[:clone_options])
     phase_context.delete(:clone_options)
     signal :poll_clone_complete
+  rescue Azure::Armrest::BadRequestException => err
+    phase_context[:exception_class]     = err.class.name
+    phase_context[:exception_message]   = err.message
+    phase_context[:exception_backtrace] = err.backtrace
+    phase_context[:error_phase]         = phase
+    signal :clone_failure_cleanup
   end
 
   def poll_clone_complete
