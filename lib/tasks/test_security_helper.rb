@@ -22,11 +22,12 @@ class TestSecurityHelper
     # See all possible options here:
     #   https://brakemanscanner.org/docs/brakeman_as_a_library/#using-options
     options = {
-      :app_path     => app_path,
-      :engine_paths => engine_paths,
-      :quiet        => false,
-      :pager        => false,
-      :print_report => true
+      :app_path        => app_path,
+      :engine_paths    => engine_paths,
+      :pager           => false,
+      :print_report    => true,
+      :quiet           => false,
+      :report_progress => $stderr.tty?
     }
     if format == "json"
       options[:output_files] = [
