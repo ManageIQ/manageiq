@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/ManageIQ/amazon_ssa_support.git
-  revision: 1546ef173e006d5757a2b430931f5f3708aaeef2
+  revision: 977e578c59817820c83b4fdd88d4742556f39662
   branch: radjabov
   specs:
     amazon_ssa_support (0.1.0)
@@ -12,7 +12,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-api
-  revision: 8aa78c8fca3ab6e94d5ed6d367a7d80bc712423f
+  revision: bba128b649f649f90d3e89bd458e878ff7699444
   branch: radjabov
   specs:
     manageiq-api (4.4.0.pre.pre)
@@ -21,7 +21,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-automation_engine
-  revision: 99967f06509dccea2d1c4f1af08060a2c20e1dd1
+  revision: 626df0441c7cc95c86c9ee4ee1ba0f667df7898a
   branch: radjabov
   specs:
     manageiq-automation_engine (0.1.0)
@@ -29,7 +29,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-consumption
-  revision: 7c9d0952cc22e91acda8e2cc7a11f2740102e853
+  revision: 5c2b911e93adb71db97e699a2ebeb21a8235f22b
   branch: radjabov
   specs:
     manageiq-consumption (0.0.1)
@@ -38,7 +38,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-content
-  revision: de4bbb56198169ef71015e665bdb28d6de5c931c
+  revision: ac4d852c6327143e25da1552b9c91c7d826b04d5
   branch: radjabov
   specs:
     manageiq-content (0.1.0)
@@ -46,14 +46,14 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-decorators
-  revision: 89fa2cfd6ae13a5f19eadb0adff0ac30b5398171
+  revision: 450f24b68d1aaa14c9c87cb82f51db5fe150356c
   branch: radjabov
   specs:
     manageiq-decorators (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-gems-pending.git
-  revision: 865dcbb6e5b2dc5c7ed63b1fb817ff0a11850b08
+  revision: a4766f4e57bf4ee5e9215ae2c1da9fe1939bde33
   branch: radjabov
   specs:
     manageiq-gems-pending (0.1.0)
@@ -73,7 +73,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-amazon
-  revision: fd6547996bcf5083eb0611107fb1d0e982c227ea
+  revision: 0206a83cf628021e4942e85c245c74acfff23fce
   branch: radjabov
   specs:
     manageiq-providers-amazon (0.1.0)
@@ -92,7 +92,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ansible_tower
-  revision: d099a9c1eb887f30eb0e8c2db7a8120f5ad72a7d
+  revision: 4ccf3818fbf1359274685ac6d6a7626a2f3b1a50
   branch: radjabov
   specs:
     manageiq-providers-ansible_tower (0.1.0)
@@ -100,7 +100,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-autosde
-  revision: e58fa0aac53c98ed1233c8ba27b3084c1fd6d62f
+  revision: e2e30ba319104087067b17156de58148de2312c4
   branch: radjabov
   specs:
     manageiq-providers-autosde (0.1.0)
@@ -109,7 +109,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-awx
-  revision: e55aea0e758126be3aa2e38054a518e246a80d7e
+  revision: d8ebdf48aa131f96d8ad03e14fe40b4e74353ff8
   branch: radjabov
   specs:
     manageiq-providers-awx (0.1.0)
@@ -117,7 +117,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure
-  revision: 5419a0d0b19be6260ae79559dbcee58fd314b27e
+  revision: f539605b53ae80839a0bb90111be03fe7c2f66de
   branch: radjabov
   specs:
     manageiq-providers-azure (0.1.0)
@@ -125,7 +125,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure_stack
-  revision: 5111e8aeb35e01b3c70784b0634a16d5f8cc46fe
+  revision: 2361ecefd64d74251a117b7f9433c3e2227cd86c
   branch: radjabov
   specs:
     manageiq-providers-azure_stack (0.1.0)
@@ -136,7 +136,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-cisco_intersight
-  revision: fd1ce9aede2e5dba23da236719d0e955b0864105
+  revision: c00601ea9f3dabb13ab27407c554ba7fc9f371b1
   branch: radjabov
   specs:
     manageiq-providers-cisco_intersight (0.1.0)
@@ -144,7 +144,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-embedded_terraform
-  revision: ee46926e7f5def43eb2bcac0921a4e71084c2611
+  revision: 48c8990355844d72e5400acef5a56518c34706e9
   branch: radjabov
   specs:
     manageiq-providers-embedded_terraform (0.1.0)
@@ -152,7 +152,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-foreman
-  revision: 6469279e5d8a71f0a076422cbe797a219fa7cecf
+  revision: eda1d5f929611239dcba7bce207746ede108d534
   branch: radjabov
   specs:
     manageiq-providers-foreman (0.1.0)
@@ -160,7 +160,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-google
-  revision: 79e5a71797d158dae830f42cafedbb9d58e30c94
+  revision: f6aca48f83dd824ceefdf4160c4f4465fbc299d2
   branch: radjabov
   specs:
     manageiq-providers-google (0.1.0)
@@ -169,14 +169,14 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_cic
-  revision: d57faab51028b56a5a4bc627594ccde67f5d5474
+  revision: 6a9bf7bdf91047e5f225153e5aaa7677eae5072f
   branch: radjabov
   specs:
     manageiq-providers-ibm_cic (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_cloud
-  revision: fcd1f83e7aa519fb433cb7a8116c997f09202b82
+  revision: 0bbd8806736c1834fbcc7ecb4b3046211a72b570
   branch: radjabov
   specs:
     manageiq-providers-ibm_cloud (0.1.0)
@@ -194,7 +194,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_power_hmc
-  revision: 2df09102d731947cad7b0f939d662671ca1b3ea4
+  revision: 624920b4e8c5773dfedd7cc852bb6dce61385c88
   branch: radjabov
   specs:
     manageiq-providers-ibm_power_hmc (0.1.0)
@@ -202,21 +202,21 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_power_vc
-  revision: 9692aea9e72664e13fef022304636681cdeaa0a2
+  revision: c79b84ece1e3c7bbccd92f78d7fff387c6a18bfc
   branch: radjabov
   specs:
     manageiq-providers-ibm_power_vc (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_terraform
-  revision: bc3a3496d333cd5ede94512fa834c3684c6dabdb
+  revision: 257f0d501b140e2f0fb3d92bce9de54e5da646e8
   branch: radjabov
   specs:
     manageiq-providers-ibm_terraform (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubernetes
-  revision: 8ddc172eaaf6a45823a52111ccbd7eb099f8d08c
+  revision: f5f9bb508aed04277b2897917e631ca801c61a4b
   branch: radjabov
   specs:
     manageiq-providers-kubernetes (0.1.0)
@@ -227,7 +227,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubevirt
-  revision: 112b81b3f3305cf9f341909e20d741c7b8b1a0e8
+  revision: 1a868e7f89516d608e63c9ee86540fd9d09ec410
   branch: radjabov
   specs:
     manageiq-providers-kubevirt (0.1.0)
@@ -236,7 +236,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-lenovo
-  revision: 5f445aefa578649c219d44e3e5cdda85c3c187ae
+  revision: 0defc8149a4465db2f80ecb7c811022246075695
   branch: radjabov
   specs:
     manageiq-providers-lenovo (0.2.0)
@@ -244,14 +244,14 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nsxt
-  revision: 1a0bd20ddad4c1aa6c61b086a3a0252b480f8081
+  revision: d85c6dc315ff481e98ea2b005e2ec47ca3864ecd
   branch: radjabov
   specs:
     manageiq-providers-nsxt (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nuage
-  revision: d85d1b620e835740627e882bf80f7972350e9b06
+  revision: cebf863eef157c87e39a4f4d56ec8f359d87c2eb
   branch: radjabov
   specs:
     manageiq-providers-nuage (0.1.0)
@@ -259,7 +259,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openshift
-  revision: 9350496088b1b40b197db264f11c0bd73920349c
+  revision: 18764a57968867e3a7c24f9b3cfd26ab30eeca6a
   branch: radjabov
   specs:
     manageiq-providers-openshift (0.1.0)
@@ -267,7 +267,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openstack
-  revision: 7afa8d58a4401273f32762e679566de198951232
+  revision: ebaaddbc6d84b1329689124450c5a44be3c7981a
   branch: radjabov
   specs:
     manageiq-providers-openstack (0.1.0)
@@ -280,7 +280,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-oracle_cloud
-  revision: cef30f3310185d5a8ede9be27426e0a0dcddecf8
+  revision: 73271c3741cad8c1d2a0a06b553e31242d13b4d1
   branch: radjabov
   specs:
     manageiq-providers-oracle_cloud (0.1.0)
@@ -288,7 +288,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ovirt
-  revision: 7651e8587da0650863c9c7930b97470038c2cfbe
+  revision: a9d43afbee6b6e5b6ff02d68a571460e3a43cc4e
   branch: radjabov
   specs:
     manageiq-providers-ovirt (0.1.0)
@@ -297,7 +297,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-red_hat_virtualization
-  revision: 6f800eaf0e57b767eff779bb5e58b01c00e4d8fb
+  revision: edb8f8a20d38070c51688f0df9378d3cb5a4077e
   branch: radjabov
   specs:
     manageiq-providers-red_hat_virtualization (0.1.0)
@@ -306,7 +306,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-redfish
-  revision: fdac6606d177668dad09ba2a7fe722e1a65cfed7
+  revision: cb4d9c8b8fd8432ce83e0aeab68e8f7a0fbf3e2d
   branch: radjabov
   specs:
     manageiq-providers-redfish (0.1.0)
@@ -314,7 +314,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-vmware
-  revision: 5cdae6e4cd5364f23efd0bcd28fb54d1e4d03da0
+  revision: 3bc40b8f8f54b33059524f5eeb32cc923c9df1b0
   branch: radjabov
   specs:
     manageiq-providers-vmware (0.1.0)
@@ -326,7 +326,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-workflows
-  revision: e7dd272c0069375c400f0c6ea234dd95405c2b9b
+  revision: 58722d5a865d32a7d55fed4d4476e2e5376e5e21
   branch: radjabov
   specs:
     manageiq-providers-workflows (0.1.0)
@@ -334,7 +334,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-schema
-  revision: 624d607a550404108c0db081940f5c02d49ac4be
+  revision: c16b8eb56961171df2f1a3716f44c70528dda6bb
   branch: radjabov
   specs:
     manageiq-schema (0.1.0)
@@ -347,7 +347,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-ui-classic
-  revision: f9add044eb0b606163de5569124de6f155da2937
+  revision: 3f613dda8c8e325cedce4e2452301255b19f67d7
   branch: radjabov
   specs:
     manageiq-ui-classic (0.1.0)
