@@ -610,30 +610,6 @@ class VmOrTemplate < ApplicationRecord
     name
   end
 
-  # Generates the contents of the RSS feed that lists VMs that fail policy
-  def self.rss_fails_policy(_name, options)
-    order(options[:orderby]).limit(options[:limit_to_count]).each_with_object([]) do |vm, result|
-      rec = OpenStruct.new(vm.attributes)
-      if vm.host.nil?
-        rec.host_name = "unknown"
-      else
-        rec.host_name = vm.host.name
-      end
-      rec.vm_id = vm.id
-      rec.reason = []
-      presult = vm.enforce_policy("rsop")
-      if presult[:result] == false
-        presult[:details].each do |p|
-          rec.reason.push(p["description"]) unless p["result"]
-        end
-        if rec.reason != []
-          rec.reason = rec.reason.join(", ")
-          result.push(rec)
-        end
-      end
-    end
-  end
-
   def vendor_display
     VENDOR_TYPES[vendor]
   end
