@@ -1915,12 +1915,6 @@
     :hidden: true
     :identifier: timeline_txt
 
-# RSS
-- :name: RSS
-  :description: Everything under RSS
-  :feature_type: node
-  :identifier: rss
-
 # Policy
 - :name: Control
   :description: Control

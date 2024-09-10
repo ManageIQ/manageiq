@@ -82,7 +82,6 @@
   - policy_import_export
   - pxe
   - resource_pool
-  - rss
   - security_group
   - service
   - timeline
@@ -165,7 +164,6 @@
   - resource_pool_show
   - resource_pool_show_list
   - resource_pool_tag
-  - rss
   - service_view
   - storage_show
   - storage_show_list
@@ -263,7 +261,6 @@
   - resource_pool_show
   - resource_pool_show_list
   - resource_pool_tag
-  - rss
   - service_view
   - storage_show
   - storage_show_list
@@ -360,7 +357,6 @@
   - resource_pool_show
   - resource_pool_show_list
   - resource_pool_tag
-  - rss
   - service_view
   - storage_show
   - storage_show_list
@@ -549,7 +545,6 @@
   - resource_pool_show
   - resource_pool_show_list
   - resource_pool_tag
-  - rss
   - service_view
   - storage_delete
   - storage_scan
@@ -648,7 +643,6 @@
   - resource_pool_show
   - resource_pool_show_list
   - resource_pool_tag
-  - rss
   - service_view
   - storage_show
   - storage_show_list
@@ -735,7 +729,6 @@
   - resource_pool_show
   - resource_pool_show_list
   - resource_pool_tag
-  - rss
   - service_view
   - storage_show
   - storage_show_list
@@ -822,7 +815,6 @@
   - resource_pool_show
   - resource_pool_show_list
   - resource_pool_tag
-  - rss
   - service_view
   - storage_show
   - storage_show_list
@@ -912,7 +904,6 @@
   - resource_pool_show
   - resource_pool_show_list
   - resource_pool_tag
-  - rss
   - service_view
   - storage_perf
   - storage_show
@@ -1089,7 +1080,6 @@
   - resource_pool_show
   - resource_pool_show_list
   - resource_pool_tag
-  - rss
   - service_view
   - st_catalog_view
   - st_catalog_edit
@@ -1319,7 +1309,6 @@
   - rbac_tenant
   - rbac_user
   - resource_pool
-  - rss
   - security_group
   - service
   - timeline
@@ -1376,7 +1365,6 @@
   - rbac_tenant_view
   - rbac_tenant_manage_quotas
   - resource_pool
-  - rss
   - security_group
   - service
   - timeline
@@ -1573,7 +1561,6 @@
   - rbac_tenant_view
   - rbac_user_view
   - resource_pool_view
-  - rss
   - security_group_view
   - service_view
   - st_catalog_view
