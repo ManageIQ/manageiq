@@ -27,7 +27,7 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
   end
 
   def cleanup_failed_systemd_services
-    service_names = failed_miq_service_namees
+    service_names = failed_miq_service_names
     return if service_names.empty?
 
     _log.info("Disabling failed unit files: [#{service_names.join(", ")}]")
@@ -104,7 +104,7 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
     miq_services.select { |service| service[:active_state] == "failed" }
   end
 
-  def failed_miq_service_namees
+  def failed_miq_service_names
     failed_miq_services.pluck(:name)
   end
 
