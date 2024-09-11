@@ -32,6 +32,11 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
 
     _log.info("Disabling failed unit files: [#{service_names.join(", ")}]")
     systemd_stop_services(service_names)
+
+    _log.info("Stopping worker records for failed units: [#{service_names.join(", ")}]")
+    MiqWorker.find_current_or_starting.where(:system_uid => service_names).each do |w|
+      w.update!(:status => MiqWorker::STATUS_STOPPED)
+    end
   end
 
   private
