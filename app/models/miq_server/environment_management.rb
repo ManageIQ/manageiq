@@ -3,6 +3,8 @@ module MiqServer::EnvironmentManagement
 
   module ClassMethods
     def get_network_information
+      require "uuidtools"
+
       ipaddr = hostname = mac_address = nil
 
       begin
