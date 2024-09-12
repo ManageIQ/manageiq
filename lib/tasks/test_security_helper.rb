@@ -32,7 +32,8 @@ class TestSecurityHelper
       :pager           => false,
       :print_report    => true,
       :quiet           => false,
-      :report_progress => $stderr.tty?
+      :report_progress => $stderr.tty?,
+      :use_prism       => true,
     }
     if format == "json"
       options[:output_files] = [
