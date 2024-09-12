@@ -1,20 +1,42 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "Cross-Site Request Forgery",
+      "warning_code": 86,
+      "fingerprint": "6301c055d2b1a4bc467bcd405b0ba295893f71df183eae355cd1a8b6c0ed0588",
+      "check_name": "ForgerySetting",
+      "message": "`protect_from_forgery` should be configured with `with: :exception`",
+      "file": "(engine:manageiq-ui-classic) app/controllers/application_controller.rb",
+      "line": 13,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross-site_request_forgery/",
+      "code": "protect_from_forgery(:secret => SecureRandom.hex(64), :except => ([:authenticate, :external_authenticate, :kerberos_authenticate, :saml_login, :initiate_saml_login, :oidc_login, :initiate_oidc_login, :csp_report]), :with => :reset_session)",
+      "render_path": null,
+      "location": {
+        "type": "controller",
+        "controller": "ApplicationController"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "cwe_id": [
+        352
+      ],
+      "note": "This was intentionally changed from :exception to :reset_session in ManageIQ/manageiq-ui-classic#4901"
+    },
+    {
       "warning_type": "Command Injection",
       "warning_code": 14,
-      "fingerprint": "1d1f63511c528d6d28a292a8b3ff2a91b5e0c4104112fb06631a00ca89f03e2f",
+      "fingerprint": "9a58ac820e59b1edb4530e27646edc1f328915a7a356d987397659b48c52239e",
       "check_name": "Execute",
       "message": "Possible command injection",
       "file": "lib/ansible/runner.rb",
-      "line": 409,
+      "line": 422,
       "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
       "code": "`python#{version} -c 'import site; print(\":\".join(site.getsitepackages()))'`",
       "render_path": null,
       "location": {
         "type": "method",
         "class": "Ansible::Runner",
-        "method": "ansible_python_paths_raw"
+        "method": "s(:self).ansible_python_paths_raw"
       },
       "user_input": "version",
       "confidence": "Medium",
@@ -24,6 +46,6 @@
       "note": "This method is safe because it verifies that the version is in the form #.#."
     }
   ],
-  "updated": "2023-03-20 10:30:55 -0400",
-  "brakeman_version": "5.4.1"
+  "updated": "2024-09-11 16:34:41 -0400",
+  "brakeman_version": "6.2.1"
 }

@@ -12,6 +12,11 @@ class TestSecurityHelper
     require Rails.root.join('lib/extensions/brakeman_excludes_patch')
     Brakeman::AppTree.prepend(BrakemanExcludesPatch)
 
+    # Brakeman's fingerprint check does not work properly with engines
+    require "brakeman/warning"
+    require Rails.root.join('lib/extensions/brakeman_fingerprint_patch')
+    Brakeman::Warning.prepend(BrakemanFingerprintPatch)
+
     app_path = Rails.root.to_s
     engine_paths = Vmdb::Plugins.paths.except(ManageIQ::Schema::Engine).values
 
