@@ -312,10 +312,7 @@ namespace :locale do
       Dir.mkdir(combined_dir, 0o700)
       po_files.each do |locale, files|
         files.each do |file|
-          unless system "msgfmt --check #{file}"
-            puts "Fatal error running 'msgfmt --check' on file: #{file}.  Review the output above."
-            exit 1
-          end
+          system("msgfmt --check #{file}", :exception => true)
         end
 
         dir = File.join(combined_dir, locale)
