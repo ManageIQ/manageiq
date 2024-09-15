@@ -27181,16 +27181,6 @@ msgstr ""
 msgid "EVM Zone"
 msgstr ""
 
-#. TRANSLATORS: file: product/dashboard/widgets/rss_newest_hosts.yaml
-#: ../config/yaml_strings.rb
-msgid "EVM: Recently Discovered Hosts"
-msgstr ""
-
-#. TRANSLATORS: file: product/dashboard/widgets/rss_newest_vms.yaml
-#: ../config/yaml_strings.rb
-msgid "EVM: Recently Discovered VMs"
-msgstr ""
-
 #: ../app/controllers/configuration_controller.rb
 #: ../app/helpers/application_helper/toolbar/diagnostics_server_center.rb
 #: ../app/helpers/application_helper/toolbar/diagnostics_zone_center.rb
@@ -32492,11 +32482,6 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Everything under Providers"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "Everything under RSS"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -38951,6 +38936,12 @@ msgstr[1] ""
 msgid "Infrastructure Provider (Microsoft)"
 msgstr ""
 
+#: ../app/models/manageiq/providers/openshift/infra_manager.rb
+msgid "Infrastructure Provider (OpenShift Virtualization)"
+msgid_plural "Infrastructure Providers (OpenShift Virtualization)"
+msgstr[0] ""
+msgstr[1] ""
+
 #: ../app/models/manageiq/providers/openstack/infra_manager.rb
 #, fuzzy
 msgid "Infrastructure Provider (OpenStack)"
@@ -39885,6 +39876,10 @@ msgstr ""
 
 #: ../app/helpers/container_template_helper/textual_summary.rb
 msgid "Kind"
+msgstr ""
+
+#: ../app/models/manageiq/providers/kubevirt/infra_manager.rb
+msgid "KubeVirt"
 msgstr ""
 
 #: ../lib/manageiq/providers/kubevirt/engine.rb
@@ -41486,7 +41481,7 @@ msgstr ""
 msgid "Logo Updated At"
 msgstr ""
 
-#: ../app/models/host.rb:645 ../app/models/host.rb
+#: ../app/models/host.rb:646 ../app/models/host.rb
 msgid "Logon to platform [%{os_name}] not supported"
 msgstr ""
 
@@ -52782,8 +52777,9 @@ msgstr ""
 msgid "OpenShift Template"
 msgstr ""
 
-#: ../app/models/manageiq/providers/kubevirt/infra_manager.rb
-msgid "OpenShift Virtualization / KubeVirt"
+#: ../app/models/manageiq/providers/openshift/container_manager.rb
+#: ../app/models/manageiq/providers/openshift/infra_manager.rb
+msgid "OpenShift Virtualization"
 msgstr ""
 
 #: ../app/models/manageiq/providers/openstack/cloud_manager.rb
@@ -59071,11 +59067,6 @@ msgstr ""
 msgid "RSA or DSA private key to be used instead of password"
 msgstr ""
 
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb
-msgid "RSS"
-msgstr ""
-
 #: ../app/javascript/components/flavor-form/flavor-form.schema.js
 msgid "RXTX factor"
 msgstr ""
@@ -59461,7 +59452,6 @@ msgstr ""
 msgid "Recently Added Hosts"
 msgstr ""
 
-#. TRANSLATORS: file: product/dashboard/widgets/rss_newest_servers.yaml
 #. TRANSLATORS: file: product/reports/190_Configuration Management - Physical Servers/010_Newest Servers.yaml
 #: ../config/yaml_strings.rb
 msgid "Recently Discovered Physical Servers"
@@ -72329,6 +72319,12 @@ msgid_plural "Templates (Kubevirt)"
 msgstr[0] ""
 msgstr[1] ""
 
+#: ../app/models/manageiq/providers/openshift/infra_manager/template.rb
+msgid "Template (OpenShift Virtualization)"
+msgid_plural "Templates (OpenShift Virtualization)"
+msgstr[0] ""
+msgstr[1] ""
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb
 msgid "Template Access Rules"
@@ -75617,7 +75613,7 @@ msgstr ""
 msgid "Unsupported log depot protocol: %{protocol}"
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:1592 ../app/models/vm_or_template.rb
+#: ../app/models/vm_or_template.rb:1569 ../app/models/vm_or_template.rb
 msgid "Unsupported property type [%{property}]"
 msgstr ""
 
@@ -77841,7 +77837,7 @@ msgid "VM operations"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.VmOrTemplate
-#: ../app/models/vm_or_template.rb:1709 ../config/dictionary_strings.rb
+#: ../app/models/vm_or_template.rb:1686 ../config/dictionary_strings.rb
 msgid "VM or Template"
 msgid_plural "VMs or Templates"
 msgstr[0] ""
@@ -79746,6 +79742,12 @@ msgstr[1] ""
 #, fuzzy
 msgid "Virtual Machine (Microsoft)"
 msgstr ""
+
+#: ../app/models/manageiq/providers/openshift/infra_manager/vm.rb
+msgid "Virtual Machine (OpenShift Virtualization)"
+msgid_plural "Virtual Machines (OpenShift Virtualization)"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../app/models/manageiq/providers/redhat/infra_manager/vm.rb
 #, fuzzy
@@ -83882,7 +83884,7 @@ msgstr ""
 msgid "password change not allowed when authentication mode is %{name}"
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:674 ../app/models/vm_or_template.rb
+#: ../app/models/vm_or_template.rb:651 ../app/models/vm_or_template.rb
 #: ../app/models/vm_or_template.rb
 msgid "path, '%{path}', is malformed"
 msgstr ""
