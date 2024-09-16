@@ -1,15 +1,15 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the manageiq package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# This file is distributed under the same license as the manageiq package.
 #, fuzzy
+# SOME DESCRIPTIVE TITLE.
 msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2024-08-30 21:21+0000\n"
-"PO-Revision-Date: 2024-08-30 21:21+0000\n"
+"POT-Creation-Date: 2024-09-11 16:09-0400\n"
+"PO-Revision-Date: 2024-09-11 16:09-0400\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -10591,14 +10591,8 @@ msgstr "ConfigurationScriptBase|Salida"
 msgid "ConfigurationScriptBase|Payload"
 msgstr "ConfigurationScriptBase|Carga útil"
 
-msgid "ConfigurationScriptBase|Payload error"
-msgstr "ConfigurationScriptBase |Error de carga útil"
-
 msgid "ConfigurationScriptBase|Payload type"
 msgstr "ConfigurationScriptBase|Tipo de carga útil"
-
-msgid "ConfigurationScriptBase|Payload valid"
-msgstr "ConfigurationScriptBase |Carga útil válida"
 
 msgid "ConfigurationScriptBase|Region description"
 msgstr "ConfigurationScriptBase|Descripción de la región"
@@ -18677,12 +18671,6 @@ msgstr "Trabajadores de EVM"
 msgid "EVM Zone"
 msgstr "Zona de EVM"
 
-msgid "EVM: Recently Discovered Hosts"
-msgstr "EVM: Hosts descubiertos recientemente"
-
-msgid "EVM: Recently Discovered VMs"
-msgstr "EVM: Máquinas virtuales descubiertas recientemente"
-
 msgid "Edit"
 msgstr "Modificar"
 
@@ -22260,9 +22248,6 @@ msgstr "Todo bajo Perfiles de política"
 
 msgid "Everything under Providers"
 msgstr "Todo bajo Proveedores"
-
-msgid "Everything under RSS"
-msgstr "Todo bajo RSS"
 
 msgid "Everything under Rates"
 msgstr "Todo bajo Tarifas"
@@ -26618,6 +26603,11 @@ msgstr[1] "Proveedores de infraestructura (Kubevirt)"
 msgid "Infrastructure Provider (Microsoft)"
 msgstr "Proveedores de infraestructura (Microsoft)"
 
+msgid "Infrastructure Provider (OpenShift Virtualization)"
+msgid_plural "Infrastructure Providers (OpenShift Virtualization)"
+msgstr[0] "Infrastructure Provider (OpenShift Virtualization)"
+msgstr[1] "Infrastructure Providers (OpenShift Virtualization)"
+
 msgid "Infrastructure Provider (OpenStack)"
 msgid_plural "Infrastructure Providers (OpenStack)"
 msgstr[0] "Proveedor de infraestructura (OpenStack)"
@@ -27229,6 +27219,9 @@ msgstr "Kilobytes por segundo (12,34 KBps)"
 
 msgid "Kind"
 msgstr "Tipo"
+
+msgid "KubeVirt"
+msgstr "KubeVirt"
 
 msgid "KubeVirt Provider"
 msgstr "Proveedor de KubeVirt"
@@ -36261,8 +36254,8 @@ msgstr "Proveedor de OpenShift"
 msgid "OpenShift Template"
 msgstr "Plantilla de OpenShift"
 
-msgid "OpenShift Virtualization / KubeVirt"
-msgstr "OpenShift Virtualización / KubeVirt"
+msgid "OpenShift Virtualization"
+msgstr "Virtualización de OpenShift"
 
 msgid "OpenStack"
 msgstr "OpenStack"
@@ -40216,9 +40209,6 @@ msgstr "Par de claves de RSA"
 
 msgid "RSA or DSA private key to be used instead of password"
 msgstr "Clave privada RSA o DSA para ser usada en vez de una contraseña"
-
-msgid "RSS"
-msgstr "RSS"
 
 msgid "RXTX factor"
 msgstr "Factor RXTX"
@@ -49302,6 +49292,11 @@ msgid_plural "Templates (Kubevirt)"
 msgstr[0] "Plantilla (Kubevirt)"
 msgstr[1] "Plantillas (Kubevirt)"
 
+msgid "Template (OpenShift Virtualization)"
+msgid_plural "Templates (OpenShift Virtualization)"
+msgstr[0] "Template (OpenShift Virtualization)"
+msgstr[1] "Templates (OpenShift Virtualization)"
+
 msgid "Template Access Rules"
 msgstr "Reglas de acceso a plantilla"
 
@@ -54166,6 +54161,11 @@ msgstr[1] "Máquinas virtuales (Kubevirt)"
 
 msgid "Virtual Machine (Microsoft)"
 msgstr "Máquina virtual (Microsoft)"
+
+msgid "Virtual Machine (OpenShift Virtualization)"
+msgid_plural "Virtual Machines (OpenShift Virtualization)"
+msgstr[0] "Virtual Machine (OpenShift Virtualization)"
+msgstr[1] "Virtual Machines (OpenShift Virtualization)"
 
 msgid "Virtual Machine (Red Hat)"
 msgid_plural "Virtual Machines (Red Hat)"
