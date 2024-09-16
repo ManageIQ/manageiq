@@ -1,15 +1,15 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the manageiq package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# This file is distributed under the same license as the manageiq package.
 #, fuzzy
+# SOME DESCRIPTIVE TITLE.
 msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2024-08-30 21:21+0000\n"
-"PO-Revision-Date: 2024-08-30 21:21+0000\n"
+"POT-Creation-Date: 2024-09-11 16:09-0400\n"
+"PO-Revision-Date: 2024-09-11 16:09-0400\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -9893,14 +9893,8 @@ msgstr "ConfigurationScriptBase | 输出"
 msgid "ConfigurationScriptBase|Payload"
 msgstr "ConfigurationScriptBase | 有效内容"
 
-msgid "ConfigurationScriptBase|Payload error"
-msgstr "ConfigurationScriptBase |有效内容错误"
-
 msgid "ConfigurationScriptBase|Payload type"
 msgstr "ConfigurationScriptBase | 有效内容类型"
-
-msgid "ConfigurationScriptBase|Payload valid"
-msgstr "ConfigurationScriptBase |有效内容"
 
 msgid "ConfigurationScriptBase|Region description"
 msgstr "区域说明"
@@ -17482,12 +17476,6 @@ msgstr "EVM 工作程序"
 msgid "EVM Zone"
 msgstr "EVM 区域"
 
-msgid "EVM: Recently Discovered Hosts"
-msgstr "EVM：最近发现的主机"
-
-msgid "EVM: Recently Discovered VMs"
-msgstr "EVM：最近发现的 VM"
-
 msgid "Edit"
 msgstr "编辑"
 
@@ -20943,9 +20931,6 @@ msgstr "“策略概要文件”下的任何内容"
 
 msgid "Everything under Providers"
 msgstr "提供者下的所有内容"
-
-msgid "Everything under RSS"
-msgstr "“RSS”下的任何内容"
 
 msgid "Everything under Rates"
 msgstr "“费率”下的任何内容"
@@ -25108,6 +25093,10 @@ msgstr[0] "基础架构供应商 (Kubevirt)"
 msgid "Infrastructure Provider (Microsoft)"
 msgstr "基础架构提供商 (Microsoft)"
 
+msgid "Infrastructure Provider (OpenShift Virtualization)"
+msgid_plural "Infrastructure Providers (OpenShift Virtualization)"
+msgstr[0] "基础架构提供商（OpenShift 虚拟化）"
+
 msgid "Infrastructure Provider (OpenStack)"
 msgid_plural "Infrastructure Providers (OpenStack)"
 msgstr[0] "基础结构供应商 (OpenStack)"
@@ -25680,6 +25669,9 @@ msgstr "每秒千字节数 (12,34 KBps)"
 
 msgid "Kind"
 msgstr "种类"
+
+msgid "KubeVirt"
+msgstr "KubeVirt"
 
 msgid "KubeVirt Provider"
 msgstr "KubeVirt 供应商"
@@ -34327,8 +34319,8 @@ msgstr "OpenShift 提供程序"
 msgid "OpenShift Template"
 msgstr "OpenShift 模板"
 
-msgid "OpenShift Virtualization / KubeVirt"
-msgstr "OpenShift Virtualization/KubeVirt"
+msgid "OpenShift Virtualization"
+msgstr "OpenShift 虚拟化"
 
 msgid "OpenStack"
 msgstr "OpenStack"
@@ -38149,9 +38141,6 @@ msgstr "RSA 密钥对"
 
 msgid "RSA or DSA private key to be used instead of password"
 msgstr "使用 RSA 或 DSA 专用密钥代替密码"
-
-msgid "RSS"
-msgstr "RSS"
 
 msgid "RXTX factor"
 msgstr "RXTX 因子"
@@ -46739,6 +46728,10 @@ msgid "Template (Kubevirt)"
 msgid_plural "Templates (Kubevirt)"
 msgstr[0] "模板 (Kubevirt)"
 
+msgid "Template (OpenShift Virtualization)"
+msgid_plural "Templates (OpenShift Virtualization)"
+msgstr[0] "模板（OpenShift 虚拟化）"
+
 msgid "Template Access Rules"
 msgstr "模板访问规则"
 
@@ -51335,6 +51328,10 @@ msgstr[0] "虚拟机 (Kubevirt)"
 
 msgid "Virtual Machine (Microsoft)"
 msgstr "虚拟机 (Microsoft)"
+
+msgid "Virtual Machine (OpenShift Virtualization)"
+msgid_plural "Virtual Machines (OpenShift Virtualization)"
+msgstr[0] "虚拟机（OpenShift 虚拟化）"
 
 msgid "Virtual Machine (Red Hat)"
 msgid_plural "Virtual Machines (Red Hat)"

@@ -1,15 +1,15 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the manageiq package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# This file is distributed under the same license as the manageiq package.
 #, fuzzy
+# SOME DESCRIPTIVE TITLE.
 msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2024-08-30 21:21+0000\n"
-"PO-Revision-Date: 2024-08-30 21:21+0000\n"
+"POT-Creation-Date: 2024-09-11 16:09-0400\n"
+"PO-Revision-Date: 2024-09-11 16:09-0400\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -9927,14 +9927,8 @@ msgstr "ConfigurationScript ベース | 出力"
 msgid "ConfigurationScriptBase|Payload"
 msgstr "ConfigurationScript ベース | ペイロード"
 
-msgid "ConfigurationScriptBase|Payload error"
-msgstr "ConfigurationScriptBase|ペイロード・エラー"
-
 msgid "ConfigurationScriptBase|Payload type"
 msgstr "ConfigurationScript ベース | ペイロード・タイプ"
-
-msgid "ConfigurationScriptBase|Payload valid"
-msgstr "ConfigurationScriptBase|ペイロード有効"
 
 msgid "ConfigurationScriptBase|Region description"
 msgstr "リージョンの説明"
@@ -17522,12 +17516,6 @@ msgstr "EVM ワーカー"
 msgid "EVM Zone"
 msgstr "EVM ゾーン"
 
-msgid "EVM: Recently Discovered Hosts"
-msgstr "EVM: 最近ディスカバーされたホスト"
-
-msgid "EVM: Recently Discovered VMs"
-msgstr "EVM: 最近ディスカバーされたVM"
-
 msgid "Edit"
 msgstr "編集"
 
@@ -20987,9 +20975,6 @@ msgstr "ポリシー・プロファイル下のすべて"
 
 msgid "Everything under Providers"
 msgstr "プロバイダー下のすべての内容"
-
-msgid "Everything under RSS"
-msgstr "RSS 下のすべて"
 
 msgid "Everything under Rates"
 msgstr "レート下のすべて"
@@ -25164,6 +25149,10 @@ msgstr[0] "インフラストラクチャー・プロバイダー (Kubevirt)"
 msgid "Infrastructure Provider (Microsoft)"
 msgstr "インフラストラクチャー・プロバイダー (Microsoft)"
 
+msgid "Infrastructure Provider (OpenShift Virtualization)"
+msgid_plural "Infrastructure Providers (OpenShift Virtualization)"
+msgstr[0] "インフラストラクチャー・プロバイダー(OpenShift Virtualization)"
+
 msgid "Infrastructure Provider (OpenStack)"
 msgid_plural "Infrastructure Providers (OpenStack)"
 msgstr[0] "インフラストラクチャー・プロバイダー (OpenStack)"
@@ -25737,6 +25726,9 @@ msgstr "1 秒あたりのキロバイト (12,34 KBps)"
 
 msgid "Kind"
 msgstr "種類"
+
+msgid "KubeVirt"
+msgstr "KubeVirt"
 
 msgid "KubeVirt Provider"
 msgstr "KubeVirt プロバイダー"
@@ -34397,8 +34389,8 @@ msgstr "OpenShift プロバイダー"
 msgid "OpenShift Template"
 msgstr "OpenShift テンプレート"
 
-msgid "OpenShift Virtualization / KubeVirt"
-msgstr "OpenShift Virtualization / KubeVirt"
+msgid "OpenShift Virtualization"
+msgstr "OpenShift Virtualization"
 
 msgid "OpenStack"
 msgstr "OpenStack"
@@ -38221,9 +38213,6 @@ msgstr "RSA 鍵ペア"
 
 msgid "RSA or DSA private key to be used instead of password"
 msgstr "パスワードの代わりに使用される RSA または DSA 秘密鍵"
-
-msgid "RSS"
-msgstr "RSS"
 
 msgid "RXTX factor"
 msgstr "RXTX ファクター"
@@ -46817,6 +46806,10 @@ msgid "Template (Kubevirt)"
 msgid_plural "Templates (Kubevirt)"
 msgstr[0] "テンプレート (Kubevirt)"
 
+msgid "Template (OpenShift Virtualization)"
+msgid_plural "Templates (OpenShift Virtualization)"
+msgstr[0] "テンプレート(OpenShift Virtualization)"
+
 msgid "Template Access Rules"
 msgstr "テンプレート・アクセス・ルール"
 
@@ -51420,6 +51413,10 @@ msgstr[0] "仮想マシン (Kubevirt)"
 
 msgid "Virtual Machine (Microsoft)"
 msgstr "仮想マシン (Microsoft)"
+
+msgid "Virtual Machine (OpenShift Virtualization)"
+msgid_plural "Virtual Machines (OpenShift Virtualization)"
+msgstr[0] "仮想マシン(OpenShift Virtualization)"
 
 msgid "Virtual Machine (Red Hat)"
 msgid_plural "Virtual Machines (Red Hat)"

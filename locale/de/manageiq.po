@@ -1,15 +1,15 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the manageiq package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# This file is distributed under the same license as the manageiq package.
 #, fuzzy
+# SOME DESCRIPTIVE TITLE.
 msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2024-08-30 21:21+0000\n"
-"PO-Revision-Date: 2024-08-30 21:21+0000\n"
+"POT-Creation-Date: 2024-09-11 16:09-0400\n"
+"PO-Revision-Date: 2024-09-11 16:09-0400\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -10587,14 +10587,8 @@ msgstr "ConfigurationScript-Basis|Ausgabe"
 msgid "ConfigurationScriptBase|Payload"
 msgstr "ConfigurationScript-Basis|Nutzdaten"
 
-msgid "ConfigurationScriptBase|Payload error"
-msgstr "ConfigurationScriptBase|Fehler bei Nutzdaten"
-
 msgid "ConfigurationScriptBase|Payload type"
 msgstr "ConfigurationScript-Basis|Nutzdatentyp"
-
-msgid "ConfigurationScriptBase|Payload valid"
-msgstr "ConfigurationScriptBase|Nutzdaten gültig"
 
 msgid "ConfigurationScriptBase|Region description"
 msgstr "Regionsbeschreibung"
@@ -18582,12 +18576,6 @@ msgstr "EVM-Worker"
 msgid "EVM Zone"
 msgstr "EVM-Zone"
 
-msgid "EVM: Recently Discovered Hosts"
-msgstr "EVM: Kürzlich erkannte Hosts"
-
-msgid "EVM: Recently Discovered VMs"
-msgstr "EVM: Kürzlich erkannte VMs"
-
 msgid "Edit"
 msgstr "Bearbeiten"
 
@@ -22199,9 +22187,6 @@ msgstr "Alles unter 'Richtlinienprofile'"
 
 msgid "Everything under Providers"
 msgstr "Alles unter Providern"
-
-msgid "Everything under RSS"
-msgstr "Alles unter 'RSS'"
 
 msgid "Everything under Rates"
 msgstr "Alles unter 'Raten'"
@@ -26520,6 +26505,11 @@ msgstr[1] "Infrastrukturprovider (Kubevirt)"
 msgid "Infrastructure Provider (Microsoft)"
 msgstr "Infrastrukturprovider (Microsoft)"
 
+msgid "Infrastructure Provider (OpenShift Virtualization)"
+msgid_plural "Infrastructure Providers (OpenShift Virtualization)"
+msgstr[0] "Infrastrukturanbieter (OpenShift Virtualization)"
+msgstr[1] "Infrastrukturanbieter (OpenShift Virtualization)"
+
 msgid "Infrastructure Provider (OpenStack)"
 msgid_plural "Infrastructure Providers (OpenStack)"
 msgstr[0] "Infrastruktur-Provider (OpenStack)"
@@ -27130,6 +27120,9 @@ msgstr "Kilobyte pro Sekunde (12,34 KB/s)"
 
 msgid "Kind"
 msgstr "Art"
+
+msgid "KubeVirt"
+msgstr "KubeVirt"
 
 msgid "KubeVirt Provider"
 msgstr "KubeVirt-Provider"
@@ -36148,8 +36141,8 @@ msgstr "OpenShift-Provider"
 msgid "OpenShift Template"
 msgstr "OpenShift-Vorlage"
 
-msgid "OpenShift Virtualization / KubeVirt"
-msgstr "OpenShift Virtualisierung / KubeVirt"
+msgid "OpenShift Virtualization"
+msgstr "OpenShift Virtualization"
 
 msgid "OpenStack"
 msgstr "OpenStack"
@@ -40090,9 +40083,6 @@ msgid "RSA or DSA private key to be used instead of password"
 msgstr ""
 "Privater RSA- oder DSA-Schlüssel, der anstelle des Kennworts verwendet werden "
 "soll"
-
-msgid "RSS"
-msgstr "RSS"
 
 msgid "RXTX factor"
 msgstr "RXTX-Faktor"
@@ -49120,6 +49110,11 @@ msgid_plural "Templates (Kubevirt)"
 msgstr[0] "Vorlage (Kubevirt)"
 msgstr[1] "Vorlagen (Kubevirt)"
 
+msgid "Template (OpenShift Virtualization)"
+msgid_plural "Templates (OpenShift Virtualization)"
+msgstr[0] "Vorlage (OpenShift Virtualization)"
+msgstr[1] "Vorlagen (OpenShift Virtualization)"
+
 msgid "Template Access Rules"
 msgstr "Vorlagenzugriffsregeln"
 
@@ -54000,6 +53995,11 @@ msgstr[1] "Virtuelle Maschinen (Kubevirt)"
 
 msgid "Virtual Machine (Microsoft)"
 msgstr "Virtuelle Maschine (Microsoft)"
+
+msgid "Virtual Machine (OpenShift Virtualization)"
+msgid_plural "Virtual Machines (OpenShift Virtualization)"
+msgstr[0] "Virtuelle Maschine (OpenShift Virtualization)"
+msgstr[1] "Virtuelle Maschinen (OpenShift Virtualization)"
 
 msgid "Virtual Machine (Red Hat)"
 msgid_plural "Virtual Machines (Red Hat)"
