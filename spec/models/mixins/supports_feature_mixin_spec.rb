@@ -1,10 +1,4 @@
 RSpec.describe SupportsFeatureMixin do
-  after do
-    if defined?(@defined_parent_classes)
-      @defined_parent_classes.each { |klass, children| cleanup_subclass(klass, children) }
-    end
-  end
-
   let(:test_class) do
     Class.new do
       attr_accessor :attr1
@@ -338,27 +332,30 @@ RSpec.describe SupportsFeatureMixin do
   private
 
   def define_model(class_name, parent, supporting_values = {})
-    define_supporting_class(class_name, parent, supporting_values) do |r|
-      r.table_name = "vms" if parent.ancestors.include?(ActiveRecord::Base)
-      yield(r) if block_given?
-    end
+    define_supporting_class(class_name, parent, supporting_values)
   end
 
   def define_subclass(module_name, parent, supports_values = {})
     define_supporting_class("#{module_name}::#{parent.name}", parent, supports_values)
   end
 
-  # these descendants are stored in a cache in active support
-  # this cleans out those values so future runs do not have bogus classes
-  # this causes sporadic test failures.
-  def cleanup_subclass(parent, children)
-    tracker = ActiveSupport::DescendantsTracker.subclasses(parent)
-    tracker&.reject! { |child| children.include?(child) }
-  end
-
   def define_supporting_class(class_name, parent, supports_values = {})
     child = Class.new(parent) do
       include SupportsFeatureMixin unless parent.respond_to?(:supports?)
+
+      # ActiveRecord classes need a table. Use vms table (any would work)
+      # This also helps when the active record class does not have a name.
+      self.table_name = "vms" if parent.ancestors.include?(ActiveRecord::Base)
+
+      # We sometimes create a temporary Ems child class (e.g.: Vm)
+      # When the spec finishes and the class is disposed, Ems.subclasses still returns the old class.
+      # It will go away after a few GC cycles, but before then, it causes BlacklistedEvents spec failures.
+      # Adding this method to have those specs work despite the bogus class returned from subclasses.
+      if parent == ExtManagementSystem
+        def self.default_blacklisted_event_names
+          []
+        end
+      end
 
       yield(self) if block_given?
       supports_values.each do |feature, value|
@@ -378,8 +375,6 @@ RSpec.describe SupportsFeatureMixin do
     end
 
     stub_const(class_name, child) if class_name
-    # remember what is subclasses so we can clean up the descendant cache
-    ((@defined_parent_classes ||= {})[parent] ||= []) << child
     child
   end
 end
