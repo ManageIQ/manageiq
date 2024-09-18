@@ -48,7 +48,7 @@ jobs:
         add-paths: |
           locale/manageiq.pot
           locale/en/manageiq.po
-        commit-message: Update English Translations ${{github.event.repository.updated_at}}
+        commit-message: Update English Translations
         branch: update_english_translations
         author: ManageIQ Bot <bot@manageiq.org>
         committer: ManageIQ Bot <bot@manageiq.org>
@@ -56,6 +56,6 @@ jobs:
         assignees: jrafanie
         labels: internationalization
         push-to-fork: miq-bot/manageiq
-        title: Update English Translations ${{github.event.repository.updated_at}}
+        title: Update English Translations
         body: Update the English Translations in the manageiq.po and manageiq.pot files.
         token: ${{ secrets.PR_TOKEN }}
