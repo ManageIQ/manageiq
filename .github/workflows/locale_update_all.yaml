@@ -53,6 +53,7 @@ jobs:
         author: ManageIQ Bot <bot@manageiq.org>
         committer: ManageIQ Bot <bot@manageiq.org>
         delete-branch: true
+        assignees: jrafanie
         labels: internationalization
         push-to-fork: miq-bot/manageiq
         title: Update English Translations ${{github.event.repository.updated_at}}
