@@ -40,12 +40,12 @@ module BrakemanFingerprintPatch
   # are standalone objects.
   def file_string
     engine_path = BrakemanFingerprintPatch.rails_engine_paths.detect { |p| self.file.absolute.start_with?(p) }
-    if engine_path
+    if engine_path.nil? || (Rails.root.to_s.start_with?(engine_path) && self.file.absolute.start_with?(Rails.root.to_s))
+      self.file.relative
+    else
       engine_name = File.basename(engine_path).sub(/-\h+$/, "").sub(/-(?:\d+\.)+\d+$/, "")
       engine_relative = self.file.absolute.sub(engine_path, "")
       "(engine:#{engine_name}) #{engine_relative}"
-    else
-      self.file.relative
     end
   end
 
@@ -65,6 +65,8 @@ module BrakemanFingerprintPatch
   def to_hash(absolute_paths: true)
     super.tap do |h|
       h[:file] = (absolute_paths ? self.file.absolute : file_string)
+      h[:file_rel] = self.file.relative
+      h[:file_abs] = self.file.absolute
     end
   end
 end
