@@ -1,7 +1,7 @@
 raise "Ruby versions < 3.0.1 are unsupported!"  if RUBY_VERSION < "3.0.1"
 warn "Ruby versions >= 3.2.0 are untested!" if RUBY_VERSION >= "3.2.0"
 raise "Ruby versions >= 3.4.0 are unsupported!" if RUBY_VERSION >= "3.4.0"
-
+ruby "~> 3.3.4" # WIP
 source 'https://rubygems.org'
 
 plugin "bundler-inject", "~> 2.0"
