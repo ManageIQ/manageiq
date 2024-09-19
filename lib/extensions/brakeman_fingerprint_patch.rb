@@ -28,7 +28,19 @@
 # the text reporter (CLI output) nor the interactive ignore.
 module BrakemanFingerprintPatch
   def self.rails_engine_paths
-    @rails_engine_paths ||= ::Rails::Engine.subclasses.map { |e| e.root.to_s << "/" }
+    # We sort by the path depth so that if an engine is nested within another
+    # engine then later when we go to remove the engine path, we start with the
+    # "deepest" engine first.
+    #
+    # For example, if we are scanning from manageiq-ui-classic, and there is an
+    # issue in manageiq-api, then the path to the issue will appear like
+    #
+    #   /Users/user/dev/manageiq-ui-classic/vendor/bundle/ruby/3.1.5/bundler/gems/manageiq-api-968f4c010f2f/app/controllers/api/base_controller.rb
+    #
+    # When we replace the engine path, since this issue is in the manageiq-api
+    # engine, we want to replace it with the "deeper" path to manageiq-api and
+    # not the manageiq-ui-classic leading path
+    @rails_engine_paths ||= ::Rails::Engine.subclasses.map { |e| e.root.to_s << "/" }.sort_by { |p| -p.count("/") }
   end
 
   # Removes any leading engine paths if the file is an engine, and replaces with
