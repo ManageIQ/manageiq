@@ -320,6 +320,7 @@ RSpec.describe EvmApplication do
 
     it "returns redeployment otherwise" do
       EvmSpecHelper.local_miq_server
+      expect(ActiveRecord::MigrationContext).to receive(:new).and_return(double(:current_version => 20190712135032, :needs_migration? => false))
       expect(described_class.deployment_status).to eq("redeployment")
     end
   end
