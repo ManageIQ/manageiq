@@ -1,7 +1,6 @@
 class VolumeMapping < ApplicationRecord
   include NewWithTypeStiMixin
   include ProviderObjectMixin
-  include SupportsFeatureMixin
   include CustomActionsMixin
 
   belongs_to :cloud_volume

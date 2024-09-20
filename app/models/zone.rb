@@ -37,7 +37,6 @@ class Zone < ApplicationRecord
 
   include AuthenticationMixin
 
-  include SupportsFeatureMixin
   include Metric::CiMixin
   include AggregationMixin
   include ConfigurationManagementMixin

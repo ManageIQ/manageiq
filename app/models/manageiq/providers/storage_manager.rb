@@ -1,7 +1,5 @@
 module ManageIQ::Providers
   class StorageManager < ManageIQ::Providers::BaseManager
-    include SupportsFeatureMixin
-
     has_many :cloud_tenants, :foreign_key => :ems_id, :dependent => :destroy
     has_many :volume_availability_zones, :class_name => "AvailabilityZone", :foreign_key => :ems_id, :dependent => :destroy
 

@@ -1,7 +1,6 @@
 class ContainerProject < ApplicationRecord
   acts_as_miq_taggable
 
-  include SupportsFeatureMixin
   include CustomAttributeMixin
   include ArchivedMixin
   include MiqPolicyMixin

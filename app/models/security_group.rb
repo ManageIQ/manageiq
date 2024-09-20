@@ -1,6 +1,5 @@
 class SecurityGroup < ApplicationRecord
   include NewWithTypeStiMixin
-  include SupportsFeatureMixin
   include CloudTenancyMixin
   include CustomActionsMixin
 

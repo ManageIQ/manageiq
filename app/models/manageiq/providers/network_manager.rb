@@ -1,7 +1,5 @@
 module ManageIQ::Providers
   class NetworkManager < BaseManager
-    include SupportsFeatureMixin
-
     PROVIDER_NAME = "Network Manager".freeze
 
     class << model_name

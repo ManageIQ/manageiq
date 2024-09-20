@@ -1,5 +1,4 @@
 class HostAggregate < ApplicationRecord
-  include SupportsFeatureMixin
   include NewWithTypeStiMixin
   include Metric::CiMixin
   include EventMixin

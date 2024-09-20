@@ -1,7 +1,6 @@
 class StorageResource < ApplicationRecord
   include NewWithTypeStiMixin
   include ProviderObjectMixin
-  include SupportsFeatureMixin
   include CustomActionsMixin
 
   belongs_to :ext_management_system, :foreign_key => :ems_id

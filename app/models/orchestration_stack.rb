@@ -8,7 +8,6 @@ class OrchestrationStack < ApplicationRecord
   include RetirementMixin
   include TenantIdentityMixin
   include CustomActionsMixin
-  include SupportsFeatureMixin
   include CiFeatureMixin
   include CloudTenancyMixin
   include EmsRefreshMixin

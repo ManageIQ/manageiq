@@ -38,7 +38,6 @@ class Storage < ApplicationRecord
   acts_as_miq_taggable
 
   include FilterableMixin
-  include SupportsFeatureMixin
   include Metric::CiMixin
   include StorageMixin
   include AsyncDeleteMixin

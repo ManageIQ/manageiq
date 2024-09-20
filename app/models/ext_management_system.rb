@@ -1,6 +1,5 @@
 class ExtManagementSystem < ApplicationRecord
   include CustomActionsMixin
-  include SupportsFeatureMixin
   include ExternalUrlMixin
   include VerifyCredentialsMixin
   include SupportsAttribute
@@ -200,7 +199,6 @@ class ExtManagementSystem < ApplicationRecord
   include UuidMixin
   include EmsRefresh::Manager
   include TenancyMixin
-  include SupportsFeatureMixin
   include ComplianceMixin
   include CustomAttributeMixin
 

@@ -1,5 +1,4 @@
 class Container < ApplicationRecord
-  include SupportsFeatureMixin
   include NewWithTypeStiMixin
   include ArchivedMixin
   include Purging

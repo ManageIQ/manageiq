@@ -1,6 +1,5 @@
 class NetworkService < ApplicationRecord
   include NewWithTypeStiMixin
-  include SupportsFeatureMixin
   include CloudTenancyMixin
   include CustomActionsMixin
 

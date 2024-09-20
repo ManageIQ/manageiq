@@ -4,7 +4,6 @@ class PhysicalServer < ApplicationRecord
   include NewWithTypeStiMixin
   include MiqPolicyMixin
   include TenantIdentityMixin
-  include SupportsFeatureMixin
   include EventMixin
   include ProviderObjectMixin
   include ComplianceMixin

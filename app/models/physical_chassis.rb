@@ -1,5 +1,4 @@
 class PhysicalChassis < ApplicationRecord
-  include SupportsFeatureMixin
   include EventMixin
   include EmsRefreshMixin
   include CustomActionsMixin

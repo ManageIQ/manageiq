@@ -1,7 +1,6 @@
 class StorageService < ApplicationRecord
   include NewWithTypeStiMixin
   include ProviderObjectMixin
-  include SupportsFeatureMixin
   include CustomActionsMixin
   include EmsRefreshMixin
 

@@ -57,8 +57,6 @@ class Service < ApplicationRecord
   delegate :provision_dialog, :to => :miq_request, :allow_nil => true
   delegate :user, :to => :miq_request, :allow_nil => true
 
-  include SupportsFeatureMixin
-
   include CiFeatureMixin
   include CustomActionsMixin
   include CustomAttributeMixin

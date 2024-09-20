@@ -1,5 +1,4 @@
 class PhysicalSwitch < Switch
-  include SupportsFeatureMixin
   include EventMixin
   include EmsRefreshMixin
 
