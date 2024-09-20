@@ -14,7 +14,9 @@ if defined?(SecureHeaders)
     #FYI, this was deprecated and disabled in rails 7.  Using content security policy is the desired behavior going forward:
     # https://github.com/rails/rails/commit/1f4714c3f798df227222f531141880b8e1b4170a
     # https://github.com/rails/rails/blob/d437ae311f1b9dc40b442e40eb602e020cec4e49/railties/lib/rails/application/configuration.rb#L227
-    config.x_xss_protection = "1; mode=block"
+    # Disable x-xss-protection as it's being dropped by other big stakeholders for legitimate security reasons:
+    # https://github.com/github/secure_headers/issues/439
+    config.x_xss_protection = "0"
     config.referrer_policy = "no-referrer-when-downgrade"
     # Content-Security-Policy
     # Need google fonts in fonts_src for https://fonts.googleapis.com/css?family=IBM+Plex+Sans+Condensed%7CIBM+Plex+Sans:400,600&display=swap (For carbon-charts download)

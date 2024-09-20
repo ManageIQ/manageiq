@@ -118,9 +118,6 @@ module Vmdb
     # https://github.com/rails/rails/blob/d437ae311f1b9dc40b442e40eb602e020cec4e49/railties/lib/rails/application/configuration.rb#L92
     config.load_defaults 7.0
 
-    # TODO: this is the only change we had from defaults in 7.0.  See secure_headers.rb.  It's 0 in defaults.
-    config.action_dispatch.default_headers["X-XSS-Protection"] = "1; mode=block"
-
     # TODO: Find and fixed any deprecated behavior.  Opt in later.
     config.active_support.remove_deprecated_time_with_zone_name = false
     config.active_support.disable_to_s_conversion = false
