@@ -70,7 +70,7 @@ gem "psych",                            ">=3.1",             :require => false #
 gem "query_relation",                   "~>0.1.0",           :require => false
 gem "rack",                             ">=2.2.6.4",         :require => false
 gem "rack-attack",                      "~>6.5.0",           :require => false
-gem "rails",                            "~>7.0.8", ">=7.0.8.4"
+gem "rails",                            "~>7.1.0"
 gem "rails-i18n",                       "~>7.x"
 gem "rake",                             ">=12.3.3",          :require => false
 gem "rest-client",                      "~>2.1.0",           :require => false
@@ -307,7 +307,7 @@ group :test do
   gem "brakeman",                       "~>6.2",             :require => false
   gem "bundler-audit",                                       :require => false
   gem "capybara",                       "~>2.5.0",           :require => false
-  gem "db-query-matchers",              "~>0.11.0"
+  gem "db-query-matchers",              "~>0.13.0"
   gem "factory_bot",                    "~>5.1",             :require => false
   gem "simplecov",                      ">=0.21.2",          :require => false
   gem "timecop",                        "~>0.9", "!= 0.9.7", :require => false
