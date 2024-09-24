@@ -10,7 +10,7 @@ RSpec.describe ArPglogicalMigrationHelper do
     let(:version) { "1234567890" }
 
     # sanity check - if this is somehow a version we have, these tests will make no sense
-    before { expect(ActiveRecord::SchemaMigration.normalized_versions).not_to include(version) }
+    before { expect(ActiveRecord::Base.connection.schema_migration.normalized_versions).not_to include(version) }
   end
 
   context "with a region seeded" do
@@ -23,7 +23,7 @@ RSpec.describe ArPglogicalMigrationHelper do
         include_context "without the schema_migrations_ran table"
 
         it "does nothing" do
-          expect(ActiveRecord::SchemaMigration).not_to receive(:normalized_versions)
+          expect(ActiveRecord::Base.connection.schema_migration).not_to receive(:normalized_versions)
           described_class.update_local_migrations_ran("12345", :up)
         end
       end
