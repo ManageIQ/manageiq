@@ -44,12 +44,12 @@ class PxeImage < ApplicationRecord
   def create_files_on_server(pxe_server, mac_address, customization_template = nil)
     filepath = self.class.pxe_server_filepath(pxe_server, mac_address)
 
-    # If the customization_template is nil, we set :ks and :ksdevice set to
+    # If the customization_template is nil, we set :"inst.ks" and :BOOTIF set to
     # nil for backwards compatibility. This will remove any ks and ksdevice
     # arguments from final kernel command line.
     kernel_args = customization_template&.class&.kernel_args(
       pxe_server, self, mac_address
-    ) || {:ks => nil, :ksdevice => nil}
+    ) || {:"inst.ks" => nil, :BOOTIF => nil}
     contents = build_pxe_contents(kernel_args)
 
     pxe_server.write_file(filepath, contents)
