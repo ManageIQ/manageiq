@@ -25,7 +25,7 @@ module ArPglogicalMigrationHelper
 
     if direction == :up
       if version == SCHEMA_MIGRATIONS_RAN_MIGRATION
-        to_add = ActiveRecord::SchemaMigration.normalized_versions << version
+        to_add = ActiveRecord::Base.connection.schema_migration.normalized_versions << version
       else
         to_add = [version]
       end
