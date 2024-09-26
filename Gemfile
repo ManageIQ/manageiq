@@ -21,7 +21,10 @@ manageiq_plugin "manageiq-schema"
 
 # Unmodified gems
 gem "activerecord-session_store",       "~>2.0"
-gem "activerecord-virtual_attributes",  "~>7.0.0"
+
+# TODO PR and release
+gem "activerecord-virtual_attributes", :github => "jrafanie/activerecord-virtual_attributes", :branch => "rails71"  # merge and release
+
 gem "acts_as_tree",                     "~>2.7" # acts_as_tree needs to be required so that it loads before ancestry
 gem "ancestry",                         "~>4.1.0",           :require => false
 gem "awesome_spawn",                    "~>1.6",             :require => false
@@ -46,15 +49,15 @@ gem "gettext_i18n_rails",               "~>1.11"
 gem "gettext_i18n_rails_js",            "~>1.3.0"
 gem "hamlit",                           "~>2.11.0"
 gem "inifile",                          "~>3.0",             :require => false
-gem "inventory_refresh",                "~>2.1",             :require => false
+gem 'inventory_refresh',                "~>2.2",             :require => false
 gem "kubeclient",                       "~>4.0",             :require => false # For scaling pods at runtime
 gem "linux_admin",                      ">=3.0", "<5",       :require => false
 gem "listen",                           "~>3.2",             :require => false
-gem "manageiq-api-client",              "~>0.5.0",           :require => false
-gem "manageiq-loggers",                 "~>1.0", ">=1.1.1",  :require => false
-gem "manageiq-messaging",               "~>1.0", ">=1.4.3",  :require => false
+gem "manageiq-api-client",              "~>0.6.0",           :require => false
+gem "manageiq-loggers",                 "~>1.2",             :require => false
+gem "manageiq-messaging",               "~>1.5",             :require => false
 gem "manageiq-password",                "~>1.0",             :require => false
-gem "manageiq-postgres_ha_admin",       "~>3.3",             :require => false
+gem "manageiq-postgres_ha_admin",       "~>3.4",             :require => false
 gem "manageiq-ssh-util",                "~>0.2.0",           :require => false
 gem "memoist",                          "~>0.16.0",          :require => false
 gem "money",                            "~>6.13.5",          :require => false
@@ -229,6 +232,8 @@ end
 
 group :ovirt, :manageiq_default do
   manageiq_plugin "manageiq-providers-ovirt"
+  # Release and bump provider plugin
+  gem 'ovirt_metrics', :github => 'ManageIQ/ovirt_metrics'
 end
 
 group :vmware, :manageiq_default do
@@ -280,7 +285,7 @@ group :ui_dependencies do # Added to Bundler.require in config/application.rb
   manageiq_plugin "manageiq-decorators"
   manageiq_plugin "manageiq-ui-classic"
   # Modified gems (forked on Github)
-  gem "jquery-rjs",                     "=0.1.1.3",          :source => "https://rubygems.manageiq.org"
+  gem "jquery-rjs",                    :github => "ManageIQ/jquery-rjs", :branch => "jquery_rjs_0_1_1"
 end
 
 group :web_server, :manageiq_default do
