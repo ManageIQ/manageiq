@@ -26,6 +26,7 @@ RSpec.describe MiqServer::WorkerManagement::Systemd do
     context "with failed services" do
       let(:service_name) { "manageiq-generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service" }
       let(:units) { [{:name => service_name, :description => "ManageIQ Generic Worker", :load_state => "loaded", :active_state => "failed", :sub_state => "plugged", :job_id => 0, :job_type => "", :job_object_path => "/"}] }
+      let!(:worker) { FactoryBot.create(:miq_generic_worker, :miq_server => server, :status => "creating", :system_uid => service_name) }
 
       it "calls DisableUnitFiles with the service name" do
         expect(systemd_manager).to receive(:StopUnit).with(service_name, "replace")
@@ -33,6 +34,16 @@ RSpec.describe MiqServer::WorkerManagement::Systemd do
         expect(systemd_manager).to receive(:DisableUnitFiles).with([service_name], false)
 
         server.worker_manager.cleanup_failed_systemd_services
+      end
+
+      it "marks any active workers as stopped" do
+        expect(systemd_manager).to receive(:StopUnit).with(service_name, "replace")
+        expect(systemd_manager).to receive(:ResetFailedUnit).with(service_name)
+        expect(systemd_manager).to receive(:DisableUnitFiles).with([service_name], false)
+
+        server.worker_manager.cleanup_failed_systemd_services
+
+        expect(worker.reload.status).to eq("stopped")
       end
     end
   end
