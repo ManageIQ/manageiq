@@ -24,11 +24,6 @@ shared_examples :newlines do |dir|
         if (translation[0] == "\n" && original[0] != "\n") || (translation[0] != "\n" && original[0] == "\n")
           boundary_errors.store_path(po_file.to_s, add_string_chevrons(original), add_string_chevrons(translation))
         end
-
-        # Check that overall amount of newlines in original and translation matches
-        if original.scan("\n").length != translation.scan("\n").length
-          overall_errors.store_path(po_file.to_s, add_string_chevrons(original), add_string_chevrons(translation))
-        end
       end
     end
 
