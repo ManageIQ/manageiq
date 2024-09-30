@@ -5,7 +5,6 @@ class MiqWorker
     def create_container_objects
       ContainerOrchestrator.new.create_deployment(worker_deployment_name) do |definition|
         configure_worker_deployment(definition, 1)
-        definition[:spec][:template][:spec][:containers].first[:env] << {:name => "EMS_ID", :value => self.class.ems_id_from_queue_name(queue_name).to_s}
       end
     end
 
