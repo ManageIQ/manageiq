@@ -772,11 +772,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     values[:vm_tags] = p.ws_tags(tags, :parse_ws_string_v1)
     values[:ws_values] = p.ws_values(additional_values, :parse_ws_string_v1)
 
-    if p.validate(values) == false
-      errors = []
-      p.fields { |_fn, f, _dn, _d| errors << f[:error] unless f[:error].nil? }
-      raise _("Provision failed for the following reasons:\n%{errors}") % {:errors => errors.join("\n")}
-    end
+    p.raise_validate_errors if p.validate(values) == false
 
     p.make_request(nil, values, nil, auto_approve)
   end
