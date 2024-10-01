@@ -1507,9 +1507,9 @@ class MiqRequestWorkflow
   def raise_validate_errors
     errors = []
     fields { |_fn, f, _dn, _d| errors << f[:error] unless f[:error].nil? }
-    err_text = "Provision failed for the following reasons:\n#{errors.join("\n")}"
-    _log.error("<#{err_text}>")
-    raise _("Provision failed for the following reasons:\n%{errors}") % {:errors => errors.join("\n")}
+    err_text = errors.join("\n").insert(0, "\n")
+    _log.error("<Provision failed for the following reasons:#{err_text}>")
+    raise _("Provision failed for the following reasons:%{errors}") % {:errors => err_text}
   end
 
   private
