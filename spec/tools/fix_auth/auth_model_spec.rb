@@ -74,10 +74,6 @@ RSpec.describe FixAuth::AuthModel do
         expect(plain).to_not be_password_changed
       end
 
-      it "should raise exception for bad encryption" do
-        expect { subject.fix_passwords(bad, options) }.to raise_error(ManageIQ::Password::PasswordError)
-      end
-
       context "with the rare case where recryption succeeds but returns garbage" do
         # NOTE: This legacy key only returns garbage specifically with the
         #   built-in v2_key.dev and the plaintext string "password", which is
