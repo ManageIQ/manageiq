@@ -1447,9 +1447,7 @@ class Host < ApplicationRecord
   # Ensure that any passwords are encrypted before putting them onto the queue for any
   # DDF fields which are a password type
   def encrypt_verify_credential_params!(options)
-    # NOTE the API always symbolizes the username/password keys so it is safe
-    # to assume the keys will be symbols until we move to passing the DDF payload in
-    encrypted_columns = Authentication.encrypted_columns.map(&:to_sym)
+    encrypted_columns = Authentication.encrypted_columns
 
     traverse_hash(options) do |value, key_path|
       value.slice(*encrypted_columns).each do |key, val|
