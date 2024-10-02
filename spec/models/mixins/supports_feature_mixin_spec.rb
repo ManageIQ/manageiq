@@ -263,6 +263,14 @@ RSpec.describe SupportsFeatureMixin do
     end
   end
 
+  let(:model) do
+    define_model("Model", ActiveRecord::Base,
+                 :publish => true,
+                 :archive => true,
+                 :delete  => false,
+                 :fake    => 'We keep it real!')
+  end
+
   describe ".subclasses_supporting" do
     it 'detect' do
       define_subclass("ProviderA", model, :fake => true)
@@ -285,14 +293,6 @@ RSpec.describe SupportsFeatureMixin do
     end
   end
 
-  let(:model) do
-    define_model("Model", ActiveRecord::Base,
-                 :publish => true,
-                 :archive => true,
-                 :delete  => false,
-                 :fake    => 'We keep it real!')
-  end
-
   describe ".supporting" do
     it 'detect' do
       ca = define_subclass("ProviderA", model, :fake => true)
@@ -311,17 +311,21 @@ RSpec.describe SupportsFeatureMixin do
 
   describe ".providers_supporting" do
     it 'detect' do
-      providera = define_subclass("ProviderA", ExtManagementSystem)
-      providerb = define_subclass("ProviderB", ExtManagementSystem)
-      providerc = define_subclass("ProviderC", ExtManagementSystem)
+      # providers_supporting directly references the ExtMangementSystem model, so
+      # we stub it to our own model tree instead for testing.
+      stub_const("ExtManagementSystem", model)
+
+      providera = define_subclass("ProviderA", model)
+      providerb = define_subclass("ProviderB", model)
+      providerc = define_subclass("ProviderC", model)
 
       define_subclass(providera.name, model, :fake => true)
       define_subclass(providerb.name, model, :publish => false, :delete => true, :fake => true)
       define_subclass(providerc.name, model, :publish => false, :delete => true, :fake => true)
 
-      FactoryBot.create(:ext_management_system, :type => providera.name, :name => "a1")
-      FactoryBot.create(:ext_management_system, :type => providera.name, :name => "a2")
-      FactoryBot.create(:ext_management_system, :type => providerb.name, :name => "b1")
+      providera.create(:name => "a1")
+      providera.create(:name => "a2")
+      providerb.create(:name => "b1")
 
       expect(model.providers_supporting(:publish).map(&:name)).to match_array(%w[a1 a2])
       expect(model.providers_supporting(:delete).map(&:name)).to eq(%w[b1])
@@ -346,16 +350,6 @@ RSpec.describe SupportsFeatureMixin do
       # ActiveRecord classes need a table. Use vms table (any would work)
       # This also helps when the active record class does not have a name.
       self.table_name = "vms" if parent.ancestors.include?(ActiveRecord::Base)
-
-      # We sometimes create a temporary Ems child class (e.g.: Vm)
-      # When the spec finishes and the class is disposed, Ems.subclasses still returns the old class.
-      # It will go away after a few GC cycles, but before then, it causes BlacklistedEvents spec failures.
-      # Adding this method to have those specs work despite the bogus class returned from subclasses.
-      if parent == ExtManagementSystem
-        def self.default_blacklisted_event_names
-          []
-        end
-      end
 
       yield(self) if block_given?
       supports_values.each do |feature, value|
