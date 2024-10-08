@@ -15,7 +15,7 @@ class Notification < ApplicationRecord
 
   before_save :backup_subject_name
 
-  serialize :options, Hash
+  serialize :options, :type => Hash
   default_value_for(:options) { {} }
 
   validate :complete_bindings

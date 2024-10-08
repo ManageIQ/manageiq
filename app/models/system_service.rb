@@ -6,7 +6,7 @@ class SystemService < ApplicationRecord
   belongs_to :host_service_group
   has_one    :cloud_service, :dependent => :nullify
 
-  serialize :dependencies, Hash
+  serialize :dependencies, :type => Hash
 
   scope :running_systemd_services, -> { where(:systemd_active => 'active', :systemd_sub => 'running') }
   scope :failed_systemd_services, -> { where(:systemd_active => 'failed').or(where(:systemd_sub => 'failed')) }
