@@ -35,10 +35,10 @@ class DialogField < ApplicationRecord
   default_value_for :load_values_on_init, true
 
   serialize :values
-  serialize :values_method_options,   Hash
-  serialize :display_method_options,  Hash
-  serialize :required_method_options, Hash
-  serialize :options,                 Hash
+  serialize :values_method_options,   :type => Hash
+  serialize :display_method_options,  :type => Hash
+  serialize :required_method_options, :type => Hash
+  serialize :options,                 :type => Hash
 
   after_initialize :default_resource_action
 

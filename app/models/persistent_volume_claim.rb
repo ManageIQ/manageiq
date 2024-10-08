@@ -2,9 +2,9 @@ class PersistentVolumeClaim < ApplicationRecord
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   belongs_to :container_project
   has_many :container_volumes
-  serialize :capacity, Hash
-  serialize :requests, Hash
-  serialize :limits, Hash
+  serialize :capacity, :type => Hash
+  serialize :requests, :type => Hash
+  serialize :limits, :type => Hash
 
   virtual_column :storage_capacity, :type => :integer
 

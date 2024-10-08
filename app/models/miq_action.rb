@@ -35,7 +35,7 @@ class MiqAction < ApplicationRecord
 
   has_many :miq_policy_contents
 
-  serialize :options, Hash
+  serialize :options, :type => Hash
 
   # Add a instance method to store the sequence and synchronous values from the policy contents
   attr_accessor :sequence, :synchronous, :reserved

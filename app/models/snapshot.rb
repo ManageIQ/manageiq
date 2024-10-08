@@ -5,7 +5,7 @@ class Snapshot < ApplicationRecord
 
   belongs_to :vm_or_template
 
-  serialize :disks, Array
+  serialize :disks, :type => Array
 
   after_create  :after_create_callback
 

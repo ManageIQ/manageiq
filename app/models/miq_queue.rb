@@ -103,8 +103,8 @@ class MiqQueue < ApplicationRecord
 
   TIMEOUT = 10.minutes
 
-  serialize :args, Array
-  serialize :miq_callback, Hash
+  serialize :args, :type => Array
+  serialize :miq_callback, :type => Hash
 
   validate :validate_zone_name
 

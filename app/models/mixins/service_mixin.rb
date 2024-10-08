@@ -6,7 +6,7 @@ module ServiceMixin
     has_many   :service_resources, -> { order("group_idx ASC") }, :dependent => :destroy
     has_many   :resource_actions, :as => :resource, :dependent => :destroy
 
-    serialize  :options, Hash
+    serialize  :options, :type => Hash
 
     include UuidMixin
     acts_as_miq_taggable

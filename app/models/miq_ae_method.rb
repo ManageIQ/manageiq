@@ -9,7 +9,7 @@ class MiqAeMethod < ApplicationRecord
   # switch back to validates :exclusion once rails 6.1 issue is fixed
   # https://github.com/rails/rails/issues/41051
   validate :embedded_methods_not_nil
-  serialize :options, Hash
+  serialize :options, :type => Hash
   before_validation :set_relative_path
 
   belongs_to :domain, :class_name => "MiqAeDomain", :inverse_of => false
