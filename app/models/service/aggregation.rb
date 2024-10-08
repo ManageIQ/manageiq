@@ -113,7 +113,7 @@ module Service::Aggregation
     def aggregate_hardware_arel(virtual_column_name, aggregation_sql, options = {})
       lambda do |t|
         subtree_services             = Arel::Table.new(:services)
-        subtree_services.table_alias = "#{virtual_column_name}_services"
+        subtree_services.instance_variable_set(:@table_alias, "#{virtual_column_name}_services")
 
         subselect = subtree_services.project(aggregation_sql)
         subselect = base_service_aggregation_join(subselect, subtree_services, options)
