@@ -96,13 +96,20 @@ module Vmdb
           end
         end
 
-        logger.extend(ActiveSupport::Logger.broadcast(wrapped_logger))
+        logger.wrap(wrapped_logger)
+
         if logger.class.const_defined?(:FormatterMixin)
           wrapped_logger.formatter.extend(logger.class.const_get(:FormatterMixin))
         end
 
         wrapped_logger.progname = progname
       end
+    end
+
+    private_class_method def self.wrap(*loggers)
+      loggers.flatten!
+      require 'active_support/broadcast_logger'
+      ActiveSupport::BroadcastLogger.new(*loggers.unshift(self))
     end
 
     private_class_method def self.configure_external_loggers
