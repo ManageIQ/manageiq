@@ -930,7 +930,7 @@ GEM
       manageiq-password (< 2)
       pg
       pg-dsn_parser (~> 0.1)
-    manageiq-smartstate (0.10.0)
+    manageiq-smartstate (0.10.1)
       activesupport
       awesome_spawn (~> 1.5)
       azure-armrest (~> 0.9)
@@ -1075,7 +1075,7 @@ GEM
     psych (4.0.6)
       stringio
     public_suffix (6.0.1)
-    puma (6.4.2)
+    puma (6.4.3)
       nio4r (~> 2.0)
     qpid_proton (0.37.0)
     query_relation (0.1.1)
@@ -1154,8 +1154,7 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     retriable (3.1.2)
-    rexml (3.3.6)
-      strscan
+    rexml (3.3.8)
     routes_lazy_routes (0.4.3)
       actionpack
       railties
@@ -1269,7 +1268,6 @@ GEM
     sshkey (1.8.0)
     stomp (1.4.10)
     stringio (3.1.1)
-    strscan (3.1.0)
     surro-gate (1.0.5)
       concurrent-ruby
     sync (0.5.0)
@@ -1392,7 +1390,7 @@ DEPENDENCIES
   bcrypt (~> 3.1.10)
   bootsnap (>= 1.8.1)
   brakeman (~> 5.4)
-  bundler (~> 2.2, >= 2.2.15, != 2.5.9, != 2.5.8, != 2.5.7, != 2.5.6, != 2.5.5, != 2.5.4, != 2.5.3, != 2.5.2, != 2.5.1, != 2.5.0)
+  bundler (~> 2.2, >= 2.2.15, != 2.5.9, != 2.5.8, != 2.5.7, != 2.5.6, != 2.5.5, != 2.5.4, != 2.5.3, != 2.5.2, != 2.5.19, != 2.5.1, != 2.5.0)
   bundler-audit
   byebug
   capybara (~> 2.5.0)
@@ -1463,7 +1461,7 @@ DEPENDENCIES
   manageiq-providers-vmware!
   manageiq-providers-workflows!
   manageiq-schema!
-  manageiq-smartstate (~> 0.10.0)
+  manageiq-smartstate (~> 0.10.1)
   manageiq-ssh-util (~> 0.2.0)
   manageiq-style (~> 1.5.0)
   manageiq-ui-classic!
@@ -1482,7 +1480,7 @@ DEPENDENCIES
   pg-logical_replication (~> 1.2)
   prism (>= 0.25.0)
   psych (>= 3.1)
-  puma (~> 6.4, >= 6.4.2)
+  puma (~> 6.4, >= 6.4.3)
   qpid_proton (~> 0.37.0)
   query_relation (~> 0.1.0)
   rack (>= 2.2.6.4)
@@ -1522,4 +1520,4 @@ DEPENDENCIES
   yard (>= 0.9.36)
 
 BUNDLED WITH
-   2.5.17
+   2.5.20
