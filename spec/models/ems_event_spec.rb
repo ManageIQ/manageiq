@@ -162,6 +162,7 @@ RSpec.describe EmsEvent do
             :args        => [event_hash],
           }
 
+          expect(MiqQueue).to receive(:messaging_client).with('event_handler').and_return(nil)
           expect(MiqQueue).to receive(:submit_job).with(expected_queue_payload)
 
           described_class.add_queue('add', ems.id, event_hash)
@@ -210,6 +211,7 @@ RSpec.describe EmsEvent do
             :args        => [event_hash],
           }
 
+          expect(MiqQueue).to receive(:messaging_client).with('event_handler').and_return(nil)
           expect(MiqQueue).to receive(:submit_job).with(expected_queue_payload)
 
           described_class.add_queue('add', ems.id, event_hash)
@@ -228,6 +230,7 @@ RSpec.describe EmsEvent do
             :args        => [event_hash],
           }
 
+          expect(MiqQueue).to receive(:messaging_client).with('event_handler').and_return(nil)
           expect(MiqQueue).to receive(:submit_job).with(expected_queue_payload)
 
           described_class.add_queue('add', ems.id, event_hash)
