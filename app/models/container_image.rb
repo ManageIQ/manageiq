@@ -42,8 +42,8 @@ class ContainerImage < ApplicationRecord
   has_many :metrics, :as => :resource, :dependent => :nullify, :inverse_of => :resource
   has_many :vim_performance_states, :as => :resource, :dependent => :nullify, :inverse_of => :resource
 
-  serialize :exposed_ports, Hash
-  serialize :environment_variables, Hash
+  serialize :exposed_ports, :type => Hash
+  serialize :environment_variables, :type => Hash
 
   virtual_column :display_registry, :type => :string
   virtual_total :total_containers, :containers
