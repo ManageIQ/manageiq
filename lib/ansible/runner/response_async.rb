@@ -60,10 +60,10 @@ module Ansible
       # @return [Ansible::Runner::Response] Response object with all details about the Ansible run
       def wait(timeout)
         result = nil
-        # Poll once per second until complete
-        1.upto(timeout) do |t|
+        # Poll every 0.1s until complete
+        (0.1..timeout).step(0.1) do
           result = response
-          result ? break : sleep(1)
+          result ? break : sleep(0.1)
         end
         # If the process is still running, then stop it
         if result.nil?
