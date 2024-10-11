@@ -72,6 +72,14 @@ RSpec.describe Ansible::Runner do
         expect(response.human_stdout).to include('"msg": "Hello World! example_var=\'example var value\'"')
       end
     end
+
+    it "with a payload that fails before running even starts" do
+      playbook = data_directory.join("hello_world.yml")
+
+      expect(AwesomeSpawn).to receive(:run).and_raise(RuntimeError.new("Some failure"))
+
+      expect { Ansible::Runner.public_send(method_under_test, env_vars, extra_vars, playbook) }.to raise_error(RuntimeError, "Some failure")
+    end
   end
 
   describe ".run" do
