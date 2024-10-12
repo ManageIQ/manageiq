@@ -378,26 +378,34 @@ module Ansible
         listener = Listen.to(base_dir, :only => %r{\A#{target_path}\z}) do |modified, added, _removed|
           path_created.set if added.include?(base_dir.join(target_path).to_s) || modified.include?(base_dir.join(target_path).to_s)
         end
-
-        thread = Thread.new do
-          listener.start
-        rescue ArgumentError => err
-          # If the main thread raises an exception immediately it is possible
-          # for the ensure block to call `listener.stop` before this thread
-          # begins its execution resulting in an ArgumentError due to the state
-          # being `:stopped`
-          raise unless err.message.include?("cannot start from state :stopped")
-        end
+        listener.start
+        wait_for_listener_start(listener)
 
         begin
           res = yield
           raise "Timed out waiting for #{target_path}" unless path_created.wait(timeout)
         ensure
           listener.stop
-          thread.join
         end
 
         res
+      end
+
+      # The listen gem creates an internal thread, @run_thread, which on most target systems
+      # is where the actually listening is done. However, on macOS, @run_thread creates a
+      # second thread, @worker_thread, which does the actual listening. It's possible that
+      # although the listener is started, the @worker_thread hasn't actually started yet.
+      # This leaves a window where the target_path we are waiting on can actually be created
+      # before the @worker_thread is started and we "miss" the creation of the target_path.
+      # This method ensures that we won't move on until that thread is ready, further ensuring
+      # we can't miss the creation of the target_path.
+      def wait_for_listener_start(listener)
+        if RbConfig::CONFIG['host_os'].include?("darwin")
+          listener_adapter = listener.instance_variable_get(:@backend).instance_variable_get(:@adapter)
+          until listener_adapter.instance_variable_get(:@worker_thread)&.alive?
+            sleep(0.01) # yield to other threads to allow them to start
+          end
+        end
       end
 
       def python_path
