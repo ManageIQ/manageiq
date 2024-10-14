@@ -14,6 +14,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
     let(:clone_dir)          { Dir.mktmpdir }
     let(:local_repo)         { File.join(clone_dir, "hello_world_local") }
     let(:repo_dir)           { Pathname.new(Dir.mktmpdir) }
+    let(:locks_dir)          { Pathname.new(Dir.mktmpdir) }
     let(:repos)              { Dir.glob(File.join(repo_dir, "*")) }
     let(:repo_dir_structure) { %w[hello_world.yaml] }
 
@@ -26,6 +27,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
 
       GitRepository
       stub_const("GitRepository::GIT_REPO_DIRECTORY", repo_dir)
+      stub_const("GitRepository::LOCKFILE_DIR", locks_dir)
 
       EvmSpecHelper.assign_embedded_ansible_role
     end
@@ -34,6 +36,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
     after do
       FileUtils.rm_rf(repo_dir)
       FileUtils.rm_rf(clone_dir)
+      FileUtils.rm_rf(locks_dir)
     end
 
     def files_in_repository(git_repo_dir)
