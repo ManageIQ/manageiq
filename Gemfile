@@ -38,6 +38,7 @@ gem "connection_pool",                                       :require => false #
 gem "dalli",                            "~>3.2.3",           :require => false
 gem "default_value_for",                "~>4.0"
 gem "docker-api",                       "~>1.33.6",          :require => false
+gem "drb",                              "~>2.2",             :require => false
 gem "elif",                             "=0.1.0",            :require => false
 gem "fast_gettext",                     "~>3.1"
 gem "ffi",                              "< 1.17.0",          :require => false
