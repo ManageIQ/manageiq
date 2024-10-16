@@ -113,7 +113,7 @@ RSpec.describe VmdbDatabaseConnection do
     end
   end
 
-  describe ".log_statistics" do
+  describe ".log_activity" do
     before do
       @buffer = StringIO.new
       class << @buffer
@@ -123,9 +123,9 @@ RSpec.describe VmdbDatabaseConnection do
     end
 
     it "normal" do
-      described_class.log_statistics(@buffer)
+      described_class.log_activity(@buffer)
       lines = @buffer.string.lines
-      expect(lines.shift).to eq "MIQ(VmdbDatabaseConnection.log_statistics) <<-ACTIVITY_STATS_CSV\n"
+      expect(lines.shift).to eq "MIQ(VmdbDatabaseConnection.log_csv) <<-ACTIVITY_STATS_CSV\n"
       expect(lines.pop).to eq "ACTIVITY_STATS_CSV"
 
       header, *rows = CSV.parse lines.join
@@ -154,8 +154,93 @@ RSpec.describe VmdbDatabaseConnection do
 
     it "exception" do
       allow(described_class).to receive(:all).and_raise("FAILURE")
-      described_class.log_statistics(@buffer)
-      expect(@buffer.string.lines.first).to eq("MIQ(VmdbDatabaseConnection.log_statistics) Unable to log stats, 'FAILURE'")
+      described_class.log_activity(@buffer)
+      expect(@buffer.string.lines.first).to eq("MIQ(VmdbDatabaseConnection.log_activity) Unable to log activity, 'FAILURE'")
+    end
+  end
+
+
+  describe ".log_table_size" do
+    before do
+      @buffer = StringIO.new
+      class << @buffer
+        alias_method :info, :write
+        alias_method :warn, :write
+      end
+    end
+
+    it "normal" do
+      described_class.log_table_size(@buffer)
+      lines = @buffer.string.lines
+      expect(lines.shift).to eq "MIQ(VmdbDatabaseConnection.log_csv) <<-TABLE_SIZE_CSV\n"
+      expect(lines.pop).to eq "TABLE_SIZE_CSV"
+
+      header, *rows = CSV.parse lines.join
+      expect(header).to eq %w(
+        table_name
+        rows
+        pages
+        size
+        average_row_size
+      )
+
+      expect(rows.length).to be > 0
+      rows.each do |row|
+        expect(row.first).to be_truthy
+      end
+    end
+
+    it "exception" do
+      allow(ApplicationRecord.connection).to receive(:table_size).and_raise("FAILURE")
+      described_class.log_table_size(@buffer)
+      expect(@buffer.string.lines.first).to eq("MIQ(VmdbDatabaseConnection.log_table_size) Unable to log activity, 'FAILURE'")
+    end
+  end
+
+  describe ".log_table_statistics" do
+    before do
+      @buffer = StringIO.new
+      class << @buffer
+        alias_method :info, :write
+        alias_method :warn, :write
+      end
+    end
+
+    it "normal" do
+      described_class.log_table_statistics(@buffer)
+      lines = @buffer.string.lines
+      expect(lines.shift).to eq "MIQ(VmdbDatabaseConnection.log_csv) <<-TABLE_STATS_CSV\n"
+      expect(lines.pop).to eq "TABLE_STATS_CSV"
+
+      header, *rows = CSV.parse lines.join
+      expect(header).to eq %w(
+        table_name
+        table_scans
+        sequential_rows_read
+        index_scans
+        index_rows_fetched
+        rows_inserted
+        rows_updated
+        rows_deleted
+        rows_hot_updated
+        rows_live
+        rows_dead
+        last_vacuum_date
+        last_autovacuum_date
+        last_analyze_date
+        last_autoanalyze_date
+      )
+
+      expect(rows.length).to be > 0
+      rows.each do |row|
+        expect(row.first).to be_truthy
+      end
+    end
+
+    it "exception" do
+      allow(ApplicationRecord.connection).to receive(:table_statistics).and_raise("FAILURE")
+      described_class.log_table_statistics(@buffer)
+      expect(@buffer.string.lines.first).to eq("MIQ(VmdbDatabaseConnection.log_table_statistics) Unable to log activity, 'FAILURE'")
     end
   end
 end
