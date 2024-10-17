@@ -85,11 +85,22 @@ class ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource 
     raise NotImplementedError, N_("sync must be implemented in a subclass")
   end
 
-  def checkout_git_repository(target_directory)
+  def checkout_git_repository(target_directory = nil)
     return if git_repository.nil?
+
+    target_directory_given = !!target_directory
+    target_directory     ||= Pathname.new(Dir.mktmpdir)
 
     git_repository.update_repo
     git_repository.checkout(scm_branch, target_directory)
+
+    return target_directory unless block_given?
+
+    begin
+      yield target_directory
+    ensure
+      FileUtils.rm_rf(target_directory.to_s) unless target_directory_given
+    end
   end
 
   private
