@@ -55,7 +55,6 @@ RSpec.describe ResourceAction do
         :role        => 'automate',
         :zone        => zone_name,
         :priority    => MiqQueue::HIGH_PRIORITY,
-        :task_id     => "#{ra.class.name.underscore}_#{ra.id}",
         :msg_timeout => 3600
       }
     end
