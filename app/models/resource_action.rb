@@ -90,8 +90,7 @@ class ResourceAction < ApplicationRecord
     else
       MiqAeEngine.deliver_queue(automate_queue_hash(target, dialog_hash_values[:dialog], user, task_id),
                                 :zone     => target.try(:my_zone),
-                                :priority => MiqQueue::HIGH_PRIORITY,
-                                :task_id  => "#{self.class.name.underscore}_#{id}")
+                                :priority => MiqQueue::HIGH_PRIORITY)
     end
   end
 
