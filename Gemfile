@@ -1,7 +1,7 @@
 raise "Ruby versions < 3.0.1 are unsupported!"  if RUBY_VERSION < "3.0.1"
 warn "Ruby versions >= 3.2.0 are untested!" if RUBY_VERSION >= "3.2.0"
 raise "Ruby versions >= 3.4.0 are unsupported!" if RUBY_VERSION >= "3.4.0"
-
+ruby "~> 3.3.4" # WIP
 source 'https://rubygems.org'
 
 plugin "bundler-inject", "~> 2.0"
@@ -274,7 +274,8 @@ end
 
 group :ui_dependencies do # Added to Bundler.require in config/application.rb
   manageiq_plugin "manageiq-decorators"
-  manageiq_plugin "manageiq-ui-classic"
+  gem "manageiq-ui-classic", :git => "https://github.com/kbrock/manageiq-ui-classic", :branch => "ruby3.3"
+  # manageiq_plugin "manageiq-ui-classic"
   # Modified gems (forked on Github)
   gem "jquery-rjs",                     "=0.1.1.3",          :source => "https://rubygems.manageiq.org"
 end
