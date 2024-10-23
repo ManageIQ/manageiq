@@ -40,7 +40,7 @@ RSpec.describe MiqApproval do
     it "with an approver's own request" do
       vm_template = FactoryBot.create(:template_vmware)
       user        = FactoryBot.create(:user_miq_request_approver)
-      request     = FactoryBot.create(:miq_provision_request, :provision_type => 'template', :state => 'pending', :status => 'Ok', :src_vm_id => vm_template.id, :requester => user)
+      request     = FactoryBot.create(:miq_provision_request, :provision_type => 'template', :request_state => 'pending', :status => 'Ok', :src_vm_id => vm_template.id, :requester => user)
       approval    = FactoryBot.create(:miq_approval, :miq_request => request)
 
       expect { approval.approve(user, 'Why Not') }.to_not raise_error
@@ -49,7 +49,7 @@ RSpec.describe MiqApproval do
     it "with an approver's object'" do
       vm_template = FactoryBot.create(:template_vmware)
       user        = FactoryBot.create(:user_miq_request_approver)
-      request     = FactoryBot.create(:miq_provision_request, :provision_type => 'template', :state => 'pending', :status => 'Ok', :src_vm_id => vm_template.id, :requester => user)
+      request     = FactoryBot.create(:miq_provision_request, :provision_type => 'template', :request_state => 'pending', :status => 'Ok', :src_vm_id => vm_template.id, :requester => user)
       approval    = FactoryBot.create(:miq_approval, :miq_request => request)
 
       expect { approval.approve(user, 'Why Not') }.to_not raise_error

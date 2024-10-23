@@ -34,7 +34,7 @@ RSpec.describe ServiceTemplateProvisionRequest do
     it "pending state" do
       @request.update_request_status
       expect(@request.message).to eq("Pending = 4")
-      expect(@request.state).to eq("pending")
+      expect(@request.request_state).to eq("pending")
       expect(@request.status).to eq("Ok")
     end
 
@@ -42,7 +42,7 @@ RSpec.describe ServiceTemplateProvisionRequest do
       @task_1_1.update_and_notify_parent(:state => "queued", :status => "Ok", :message => "Test Message")
       @request.reload
       expect(@request.message).to eq("Pending = 2; Queued = 2")
-      expect(@request.state).to eq("active")
+      expect(@request.request_state).to eq("active")
       expect(@request.status).to eq("Ok")
     end
 
@@ -51,7 +51,7 @@ RSpec.describe ServiceTemplateProvisionRequest do
       @task_2_1.update_and_notify_parent(:state => "queued", :status => "Ok", :message => "Test Message")
       @request.reload
       expect(@request.message).to eq("Queued = 4")
-      expect(@request.state).to eq("queued")
+      expect(@request.request_state).to eq("queued")
       expect(@request.status).to eq("Ok")
     end
 
@@ -59,7 +59,7 @@ RSpec.describe ServiceTemplateProvisionRequest do
       @task_1_1.update_and_notify_parent(:state => "active", :status => "Ok", :message => "Test Message")
       @request.reload
       expect(@request.message).to eq("Active = 2; Pending = 2")
-      expect(@request.state).to eq("active")
+      expect(@request.request_state).to eq("active")
       expect(@request.status).to eq("Ok")
     end
 
@@ -67,7 +67,7 @@ RSpec.describe ServiceTemplateProvisionRequest do
       @task_1_1.update_and_notify_parent(:state => "finished", :status => "Ok", :message => "Test Message")
       @request.reload
       expect(@request.message).to eq("Finished = 1; Pending = 2; Provisioned = 1")
-      expect(@request.state).to eq("active")
+      expect(@request.request_state).to eq("active")
       expect(@request.status).to eq("Ok")
     end
 
@@ -78,7 +78,7 @@ RSpec.describe ServiceTemplateProvisionRequest do
       @task_2_1.update_and_notify_parent(:state => "finished", :status => "Ok", :message => "Test Message")
       @request.reload
       expect(@request.message).to eq("Request complete")
-      expect(@request.state).to eq("finished")
+      expect(@request.request_state).to eq("finished")
       expect(@request.status).to eq("Ok")
     end
 
@@ -86,7 +86,7 @@ RSpec.describe ServiceTemplateProvisionRequest do
       @task_1_1.update_and_notify_parent(:state => "active", :status => "Error", :message => "Error Message")
       @request.reload
       expect(@request.message).to eq("Active = 2; Pending = 2")
-      expect(@request.state).to eq("active")
+      expect(@request.request_state).to eq("active")
       expect(@request.status).to eq("Error")
     end
 
@@ -94,7 +94,7 @@ RSpec.describe ServiceTemplateProvisionRequest do
       @task_1_1.update_and_notify_parent(:state => "finished", :status => "Error", :message => "Error Message")
       @request.reload
       expect(@request.message).to eq("Finished = 2; Pending = 2")
-      expect(@request.state).to eq("active")
+      expect(@request.request_state).to eq("active")
       expect(@request.status).to eq("Error")
     end
 
@@ -103,7 +103,7 @@ RSpec.describe ServiceTemplateProvisionRequest do
       @task_2_1.update_and_notify_parent(:state => "finished", :status => "Error", :message => "Test Message")
       @request.reload
       expect(@request.message).to eq("Request completed with errors")
-      expect(@request.state).to eq("finished")
+      expect(@request.request_state).to eq("finished")
       expect(@request.status).to eq("Error")
     end
 
