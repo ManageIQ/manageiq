@@ -181,7 +181,7 @@ RSpec.describe MiqProvisionRequest do
             @google_user2 = FactoryBot.create(:user_with_email, :miq_groups => [group])
             @google_template = FactoryBot.create(:template_google, :ext_management_system => ems)
             flavor = FactoryBot.create(:flavor_google, :ems_id => ems.id,
-                                        :cpus => 4, :cpu_cores => 1, :memory => 1024)
+                                        :cpu_total_cores => 4, :cpu_cores_per_socket => 1, :memory => 1024)
             prov_options = {:number_of_vms => 1, :src_vm_id => vm_template.id, :boot_disk_size => ["10.GB", "10 GB"],
                             :placement_auto => [true, 1], :instance_type => [flavor.id, flavor.name]}
             2.times { create_request(@google_user1, @google_template, prov_options) }

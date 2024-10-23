@@ -110,7 +110,7 @@ class MiqProvision < MiqProvisionTask
             end
 
     _("%{title} from [%{name}] to [%{vm_name}]") % {:title   => title,
-                                                    :name    => prov_obj.vm_template.name,
+                                                    :name    => prov_obj.source.name,
                                                     :vm_name => vm_name}
   end
 
