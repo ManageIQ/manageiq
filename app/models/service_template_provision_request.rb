@@ -44,7 +44,7 @@ class ServiceTemplateProvisionRequest < MiqRequest
   end
 
   def my_zone
-    @my_zone ||= dialog_zone || service_template.my_zone
+    @my_zone ||= dialog_zone || source.my_zone
   end
 
   def provision_dialog

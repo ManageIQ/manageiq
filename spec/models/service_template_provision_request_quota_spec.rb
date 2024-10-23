@@ -22,7 +22,7 @@ RSpec.describe ServiceTemplateProvisionRequest do
       def create_service_bundle(user, items, options = {})
         build_model_from_vms(items)
         request = build_service_template_request("top", user, :dialog => {"test" => "dialog"})
-        res = request.service_template.service_resources.first.resource.service_resources.first.resource
+        res = request.source.service_resources.first.resource.service_resources.first.resource
         res.options.merge!(options)
         res.save
         request
@@ -76,7 +76,7 @@ RSpec.describe ServiceTemplateProvisionRequest do
 
           it "invalid service_template does not raise error" do
             requests = load_requests
-            requests.first.update(:service_template => nil)
+            requests.first.update(:source => nil)
             expect { request.check_quota(quota_method) }.not_to raise_error
           end
         end
@@ -120,7 +120,7 @@ RSpec.describe ServiceTemplateProvisionRequest do
 
           @google_template = FactoryBot.create(:template_google, :ext_management_system => ems)
           flavor = FactoryBot.create(:flavor_google, :ems_id => ems.id,
-                                      :cpus => 4, :cpu_cores => 1, :memory => 1024)
+                                      :cpu_total_cores => 4, :cpu_cores_per_socket => 1, :memory => 1024)
           @google_prov_options = {:number_of_vms => [1, '1'], :src_vm_id => @google_template.id, :boot_disk_size => ["10.GB", "10 GB"],
                           :placement_auto => [true, 1], :instance_type => [flavor.id, flavor.name]}
           requests = []
