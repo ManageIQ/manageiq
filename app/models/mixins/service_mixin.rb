@@ -6,7 +6,7 @@ module ServiceMixin
     has_many   :service_resources, -> { order("group_idx ASC") }, :dependent => :destroy
     has_many   :resource_actions, :as => :resource, :dependent => :destroy
 
-    serialize  :options, Hash
+    serialize  :options, :type => Hash
 
     include UuidMixin
     acts_as_miq_taggable
@@ -104,7 +104,7 @@ module ServiceMixin
   private
 
   def enforce_single_service_parent(resource)
-    if resource.try(:enforce_single_service_parent?) == true && resource.service
+    if resource.try(:enforce_single_service_parent?) == true && resource.class.reflections[:service] && resource.service
       raise MiqException::Error, _("<%{class_name}> <%{id}>:<%{name}> is already connected to a service.") %
                                  {:class_name => resource.class.name, :id => resource.id, :name => resource.name}
     end

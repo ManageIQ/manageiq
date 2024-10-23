@@ -73,8 +73,8 @@ RSpec.describe Service do
       @vm2 = FactoryBot.create(:vm_vmware)
 
       @service    = FactoryBot.create(:service)
-      @service_c1 = FactoryBot.create(:service, :service => @service)
-      @service_c2 = FactoryBot.create(:service, :service => @service_c1)
+      @service_c1 = FactoryBot.create(:service, :parent => @service)
+      @service_c2 = FactoryBot.create(:service, :parent => @service_c1)
       @service << @vm
       @service_c1 << @vm1
       @service_c2 << @vm1
@@ -426,7 +426,7 @@ RSpec.describe Service do
 
     describe ".queue_chargeback_reports" do
       before do
-        @service_c1 = FactoryBot.create(:service, :service => @service)
+        @service_c1 = FactoryBot.create(:service, :parent => @service)
         @service_c1.name = "Test_Service_2"
         @service_c1 << @vm1
         @service_c1.save
@@ -594,7 +594,7 @@ RSpec.describe Service do
 
     it "returns parent" do
       service = FactoryBot.create(:service)
-      service_c1 = FactoryBot.create(:service, :service => service)
+      service_c1 = FactoryBot.create(:service, :parent => service)
 
       expect(service_c1.parent).to eq(service)
       expect(service_c1.parent_service).to eq(service) # alias
@@ -610,7 +610,7 @@ RSpec.describe Service do
 
     it "has parent" do
       service = FactoryBot.create(:service)
-      service_c1 = FactoryBot.create(:service, :service => service)
+      service_c1 = FactoryBot.create(:service, :parent => service)
 
       expect(service_c1.has_parent).to be_truthy
       expect(service_c1.has_parent?).to be_truthy # alias
@@ -626,7 +626,7 @@ RSpec.describe Service do
 
     it "has root as parent" do
       service = FactoryBot.create(:service)
-      service_c1 = FactoryBot.create(:service, :service => service)
+      service_c1 = FactoryBot.create(:service, :parent => service)
       expect(service_c1.root).to eq(service)
       expect(service_c1.root_service).to eq(service) # alias
     end
@@ -692,8 +692,8 @@ RSpec.describe Service do
     let(:service_with_type) { FactoryBot.create(:service, :type => "thing", :lifecycle_state => 'provisioned') }
     let(:unprovd_service_with_type) { FactoryBot.create(:service, :type => "thing") }
     let(:service_without_type) { FactoryBot.create(:service, :type => nil) }
-    let(:service_with_parent) { FactoryBot.create(:service, :service => FactoryBot.create(:service), :lifecycle_state => 'provisioned') }
-    let(:unprovisioned_service_with_parent) { FactoryBot.create(:service, :service => FactoryBot.create(:service)) }
+    let(:service_with_parent) { FactoryBot.create(:service, :parent => FactoryBot.create(:service), :lifecycle_state => 'provisioned') }
+    let(:unprovisioned_service_with_parent) { FactoryBot.create(:service, :parent => FactoryBot.create(:service)) }
     context "with no parent" do
       context "with type" do
         it "true" do
@@ -817,7 +817,7 @@ RSpec.describe Service do
 
       child_service.remove_from_service(service)
       expect(service.services).to be_blank
-      expect(child_service.service).to be_nil
+      expect(child_service.parent).to be_nil
     end
   end
 
@@ -860,11 +860,11 @@ RSpec.describe Service do
 
   def create_deep_tree
     @service      = FactoryBot.create(:service)
-    @service_c1   = FactoryBot.create(:service, :service => @service)
-    @service_c11  = FactoryBot.create(:service, :service => @service_c1)
-    @service_c12  = FactoryBot.create(:service, :service => @service_c1)
-    @service_c121 = FactoryBot.create(:service, :service => @service_c12)
-    @service_c2   = FactoryBot.create(:service, :service => @service)
+    @service_c1   = FactoryBot.create(:service, :parent => @service)
+    @service_c11  = FactoryBot.create(:service, :parent => @service_c1)
+    @service_c12  = FactoryBot.create(:service, :parent => @service_c1)
+    @service_c121 = FactoryBot.create(:service, :parent => @service_c12)
+    @service_c2   = FactoryBot.create(:service, :parent => @service)
   end
 
   context "custom actions" do

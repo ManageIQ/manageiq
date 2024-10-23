@@ -15,8 +15,8 @@ class ContainerTemplate < ApplicationRecord
            :as         => :resource,
            :inverse_of => :resource
 
-  serialize :objects, Array
-  serialize :object_labels, Hash
+  serialize :objects, :type => Array
+  serialize :object_labels, :type => Hash
 
   acts_as_miq_taggable
 
