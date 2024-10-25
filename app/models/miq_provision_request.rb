@@ -1,8 +1,11 @@
 class MiqProvisionRequest < MiqRequest
-  alias_attribute :vm_template,    :source
   alias_attribute :provision_type, :request_type
-  alias_attribute :miq_provisions, :miq_request_tasks
   alias_attribute :src_vm_id,      :source_id
+
+  alias_method :vm_template,  :source
+  alias_method :vm_template=, :source=
+  alias_method :miq_provisions,  :miq_request_tasks
+  alias_method :miq_provisions=, :miq_request_tasks=
 
   delegate :my_zone, :to => :source
 

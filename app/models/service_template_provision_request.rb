@@ -9,7 +9,8 @@ class ServiceTemplateProvisionRequest < MiqRequest
 
   after_create :process_service_order
 
-  alias_attribute :service_template, :source
+  alias_method :service_template,  :source
+  alias_method :service_template=, :source=
 
   virtual_has_one :picture
   virtual_has_one :service_template
