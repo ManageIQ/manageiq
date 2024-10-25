@@ -22,7 +22,8 @@ class PhysicalSwitch < Switch
            :through     => :connected_components,
            :source      => :managed_entity
 
-  alias_attribute :physical_servers, :connected_physical_servers
+  alias_method :physical_servers,  :connected_physical_servers
+  alias_method :physical_servers=, :connected_physical_servers=
 
   def my_zone
     ems = ext_management_system
