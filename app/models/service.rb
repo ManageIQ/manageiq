@@ -104,7 +104,10 @@ class Service < ApplicationRecord
   supports :retire
 
   alias parent_service parent
-  alias_attribute :service, :parent
+
+  alias_method :service,  :parent
+  alias_method :service=, :parent=
+
   deprecate_attribute :display, :visible, :type => :boolean
   virtual_belongs_to :service
 
