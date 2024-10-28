@@ -319,5 +319,5 @@ end
 group :development, :test do
   gem "parallel_tests",                 "~>4.4", :require => false
   gem "routes_lazy_routes"
-  gem "rspec-rails",                    "~>4.0.1"
+  gem "rspec-rails",                    "~>7.0"
 end
