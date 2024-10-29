@@ -758,7 +758,7 @@ RSpec.describe MiqQueue do
     end
 
     it "supports a Class object for the class name(deprecated)" do
-      expect(ActiveSupport::Deprecation).to receive(:warn).with(/use a String for class_name/, anything)
+      expect(Vmdb::Deprecation).to receive(:warn).with(/use a String for class_name/, anything)
       msg = MiqQueue.put_or_update(:class_name => MiqServer, :instance_id => miq_server.id, :method_name => "my_zone")
 
       status, message, result = msg.deliver
