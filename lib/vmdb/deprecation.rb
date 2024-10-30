@@ -13,6 +13,7 @@ module Vmdb
     end
 
     class << self
+      alias_method :deprecator, :instance
       delegate :silence, :warn, :to => :instance
     end
 
