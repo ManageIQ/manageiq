@@ -348,6 +348,23 @@ RSpec.describe MiqRequestWorkflow do
             expect(workflow.allowed_storages.map(&:id)).to eq([storage_2.id])
           end
         end
+
+        context "with a user with a belongs_to_filter" do
+          before do
+            group = workflow.requester.miq_groups.first
+            group.entitlement = Entitlement.new
+            group.entitlement.set_managed_filters([])
+            group.entitlement.set_belongsto_filters(["/belongsto/ExtManagementSystem|#{ems.name}/EmsFolder|Datacenters"])
+            group.save!
+          end
+
+          it "filters out storages" do
+            allow(workflow).to receive(:get_source_and_targets).and_return(:ems => workflow.ci_to_hash_struct(ems))
+            allow(workflow).to receive(:allowed_hosts_obj).and_return([host])
+
+            expect(workflow.allowed_storages.map(&:id)).to be_empty
+          end
+        end
       end
 
       context "with read-only storages" do

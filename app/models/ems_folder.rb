@@ -18,6 +18,7 @@ class EmsFolder < ApplicationRecord
   virtual_has_many :vms,               :uses => :all_relationships
   virtual_has_many :miq_templates,     :uses => :all_relationships
   virtual_has_many :hosts,             :uses => :all_relationships
+  virtual_has_many :storages,          :uses => :all_relationships
 
   virtual_attribute :folder_path, :string, :uses => :all_relationships
 
