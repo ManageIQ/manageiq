@@ -15,14 +15,14 @@ RSpec.describe MiqWebServerWorkerMixin do
   end
 
   before do
-    @token   = Rails.application.config.secret_key_base
-    @secrets = Rails.application.secrets
+    @token = Rails.application.config.secret_key_base
+    @credentials = Rails.application.credentials
     MiqDatabase.seed
   end
 
   after do
     Rails.application.config.secret_key_base = @token
-    Rails.application.secrets = @secrets
+    Rails.application.credentials = @credentials
   end
 
   it ".configure_secret_token defaults to MiqDatabase session_secret_token" do
@@ -43,8 +43,8 @@ RSpec.describe MiqWebServerWorkerMixin do
   it ".configure_secret_token does not reset secrets when token already configured" do
     existing_value = SecureRandom.hex(64)
     Rails.application.config.secret_key_base = existing_value
-    Rails.application.secrets = nil
-    Rails.application.secrets
+    Rails.application.credentials = nil
+    Rails.application.credentials
 
     test_class.configure_secret_token
     expect(Rails.application.config.secret_key_base).to eq(existing_value)
