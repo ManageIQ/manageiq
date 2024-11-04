@@ -350,19 +350,40 @@ RSpec.describe MiqRequestWorkflow do
         end
 
         context "with a user with a belongs_to_filter" do
+          let(:root_folder) { FactoryBot.create(:ems_folder, :ems_id => ems.id).tap        { |f| f.add_parent(ems) } }
+          let(:datacenter)  { FactoryBot.create(:vmware_datacenter, :ems_id => ems.id).tap { |d| d.add_parent(root_folder) } }
+          let(:storage)     { FactoryBot.create(:storage, :ems_id => ems.id).tap           { |s| s.add_parent(datacenter) } }
+
+          let(:entitlement_filters) { {"managed" => [], "belongsto" => belongsto_filter} }
+          let(:entitlement)         { FactoryBot.create(:entitlement, :filters => entitlement_filters) }
+
           before do
             group = workflow.requester.miq_groups.first
-            group.entitlement = Entitlement.new
-            group.entitlement.set_managed_filters([])
-            group.entitlement.set_belongsto_filters(["/belongsto/ExtManagementSystem|#{ems.name}/EmsFolder|Datacenters"])
+            group.entitlement = entitlement
             group.save!
           end
 
-          it "filters out storages" do
-            allow(workflow).to receive(:get_source_and_targets).and_return(:ems => workflow.ci_to_hash_struct(ems))
-            allow(workflow).to receive(:allowed_hosts_obj).and_return([host])
+          context "with a filter that doesn't include the storage" do
+            let(:datacenter2) { FactoryBot.create(:vmware_datacenter, :ems_id => ems.id).tap { |f| f.add_parent(root_folder) } }
+            let(:belongsto_filter) { ["/belongsto/ExtManagementSystem|#{ems.name}/EmsFolder|#{root_folder.name}/EmsFolder|#{datacenter2.name}"] }
 
-            expect(workflow.allowed_storages.map(&:id)).to be_empty
+            it "filters out storages" do
+              allow(workflow).to receive(:get_source_and_targets).and_return(:ems => workflow.ci_to_hash_struct(ems))
+              allow(workflow).to receive(:allowed_hosts_obj).and_return([host])
+
+              expect(workflow.allowed_storages.map(&:id)).to be_empty
+            end
+          end
+
+          context "with a filter that includes the storage" do
+            let(:belongsto_filter) { ["/belongsto/ExtManagementSystem|#{ems.name}/EmsFolder|#{root_folder.name}/EmsFolder|#{datacenter.name}/Storage|#{storage.name}"] }
+
+            it "returns the storage" do
+              allow(workflow).to receive(:get_source_and_targets).and_return(:ems => workflow.ci_to_hash_struct(ems))
+              allow(workflow).to receive(:allowed_hosts_obj).and_return([host])
+
+              expect(workflow.allowed_storages.map(&:id)).to eq([storage.id])
+            end
           end
         end
       end
