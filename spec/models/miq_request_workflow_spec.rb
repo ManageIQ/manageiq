@@ -354,11 +354,12 @@ RSpec.describe MiqRequestWorkflow do
           let(:datacenter)  { FactoryBot.create(:vmware_datacenter, :ems_id => ems.id).tap { |d| d.add_parent(root_folder) } }
           let(:storage)     { FactoryBot.create(:storage, :ems_id => ems.id).tap           { |s| s.add_parent(datacenter) } }
 
+          let(:entitlement_filters) { {"managed" => [], "belongsto" => belongsto_filter} }
+          let(:entitlement)         { FactoryBot.create(:entitlement, :filters => entitlement_filters) }
+
           before do
             group = workflow.requester.miq_groups.first
-            group.entitlement = Entitlement.new
-            group.entitlement.set_managed_filters([])
-            group.entitlement.set_belongsto_filters(belongsto_filter)
+            group.entitlement = entitlement
             group.save!
           end
 
