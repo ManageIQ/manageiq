@@ -1,5 +1,6 @@
 raise "Ruby versions < 3.0.1 are unsupported!"  if RUBY_VERSION < "3.0.1"
-raise "Ruby versions >= 3.2.0 are unsupported!" if RUBY_VERSION >= "3.2.0"
+warn "Ruby versions >= 3.2.0 are untested!" if RUBY_VERSION >= "3.2.0"
+raise "Ruby versions >= 3.4.0 are unsupported!" if RUBY_VERSION >= "3.4.0"
 
 source 'https://rubygems.org'
 
@@ -37,8 +38,9 @@ gem "connection_pool",                                       :require => false #
 gem "dalli",                            "~>3.2.3",           :require => false
 gem "default_value_for",                "~>4.0"
 gem "docker-api",                       "~>1.33.6",          :require => false
+gem "drb",                              "~>2.2",             :require => false
 gem "elif",                             "=0.1.0",            :require => false
-gem "fast_gettext",                     "~>2.0.1"
+gem "fast_gettext",                     "~>3.1"
 gem "ffi",                              "< 1.17.0",          :require => false
 gem "gettext_i18n_rails",               "~>1.11"
 gem "gettext_i18n_rails_js",            "~>1.3.0"
@@ -303,11 +305,11 @@ group :development do
 end
 
 group :test do
-  gem "brakeman",                       "~>5.4",             :require => false
+  gem "brakeman",                       "~>6.2",             :require => false
   gem "bundler-audit",                                       :require => false
   gem "capybara",                       "~>2.5.0",           :require => false
   gem "db-query-matchers",              "~>0.11.0"
-  gem "factory_bot",                    "~>5.1",             :require => false
+  gem "factory_bot",                    "~>6.5",             :require => false
   gem "simplecov",                      ">=0.21.2",          :require => false
   gem "timecop",                        "~>0.9", "!= 0.9.7", :require => false
   gem "vcr",                            "~>6.1",             :require => false
@@ -317,5 +319,5 @@ end
 group :development, :test do
   gem "parallel_tests",                 "~>4.4", :require => false
   gem "routes_lazy_routes"
-  gem "rspec-rails",                    "~>4.0.1"
+  gem "rspec-rails",                    "~>7.0"
 end

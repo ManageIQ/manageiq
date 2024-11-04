@@ -9,9 +9,9 @@ RSpec.describe FirmwareRegistry::RestApiDepot do
     VCR.turn_on!
   end
 
-  let(:host) { Rails.application.secrets.fwreg_rest_api_depot.try(:[], 'host') || 'host' }
-  let(:user) { Rails.application.secrets.fwreg_rest_api_depot.try(:[], 'userid') || 'username' }
-  let(:pass) { Rails.application.secrets.fwreg_rest_api_depot.try(:[], 'password') || 'password' }
+  let(:host) { Rails.application.credentials.fwreg_rest_api_depot.try(:[], 'host') || 'host' }
+  let(:user) { Rails.application.credentials.fwreg_rest_api_depot.try(:[], 'userid') || 'username' }
+  let(:pass) { Rails.application.credentials.fwreg_rest_api_depot.try(:[], 'password') || 'password' }
   let(:url) { "http://#{host}/images/" }
 
   describe '.fetch_from_remote' do

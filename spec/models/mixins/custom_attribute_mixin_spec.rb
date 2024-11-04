@@ -107,13 +107,13 @@ RSpec.describe CustomAttributeMixin do
     end
 
     it "key with a space(deprecated)" do
-      ActiveSupport::Deprecation.silence { test_class.add_custom_attribute("exit message") }
+      Vmdb::Deprecation.silence { test_class.add_custom_attribute("exit message") }
       expect(test_class.new).to respond_to(:"exit message")
       expect(test_class.new).to respond_to(:"exit message=")
     end
 
     it "key with leading number(deprecated)" do
-      ActiveSupport::Deprecation.silence { test_class.add_custom_attribute("4fun") }
+      Vmdb::Deprecation.silence { test_class.add_custom_attribute("4fun") }
       expect(test_class.new).to respond_to(:"4fun")
       expect(test_class.new).to respond_to(:"4fun=")
     end
@@ -121,7 +121,7 @@ RSpec.describe CustomAttributeMixin do
 
   it "#miq_custom_set with a space(deprecated)" do
     object = test_class.create!
-    ActiveSupport::Deprecation.silence { object.miq_custom_set("hello world", "baz") }
+    Vmdb::Deprecation.silence { object.miq_custom_set("hello world", "baz") }
     ca = CustomAttribute.find_by(:resource_type => test_class.name, :resource_id => object.id)
     expect(ca.name).to  eq("hello world")
     expect(ca.value).to eq("baz")

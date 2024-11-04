@@ -4,7 +4,6 @@ PartOf=manageiq-reporting.target
 WantedBy=manageiq-reporting.target
 [Service]
 WorkingDirectory=/var/www/miq/vmdb
-Environment=BUNDLER_GROUPS=manageiq_default,ui_dependencies
 EnvironmentFile=/etc/default/manageiq*.properties
 ExecStart=/usr/bin/ruby lib/workers/bin/run_single_worker.rb MiqReportingWorker --heartbeat --guid=%i
 User=manageiq

@@ -171,20 +171,6 @@ namespace :locale do
 
   desc "Update all ManageIQ gettext catalogs and merge them into one"
   task "update_all" do
-    def remove_line_numbers(path)
-      puts "Removing line numbers from #{path}"
-
-      # Remove line numbers from source references
-      path.write(
-        path.readlines.map { |l| l.gsub(/^(#.+):[0-9]+\n$/, "\\1\n") }.join
-      )
-
-      # Fix consecutive duplicate comment lines where there were multiple source references to the same file
-      path.write(
-        (path.readlines << nil).each_cons(2).map { |l1, l2| l1.start_with?("#") && l1 == l2 ? nil : l1 }.compact.join
-      )
-    end
-
     Rake::Task['locale:update'].invoke
 
     pot_files = []
@@ -208,22 +194,25 @@ namespace :locale do
       "https://raw.githubusercontent.com/ManageIQ/react-ui-components/#{checkout_branch}/locale/react-ui-components.pot"
     ]
 
-    tmp_dir = Rails.root.join("locale/tmp").to_s
-    Dir.mkdir(tmp_dir, 0o700)
+    tmp_dir = Rails.root.join('locale/tmp')
+    tmp_dir.rmtree if tmp_dir.exist?
+    tmp_dir.mkpath
+
     extra_pots.each do |url|
-      pot_file = "#{tmp_dir}/#{url.split('/')[-1]}"
+      pot_file = tmp_dir.join("#{url.split('/')[-1]}").to_s
       ManageIQ::Environment.system!('curl', '-f', '-o', pot_file, url)
       pot_files << pot_file
     end
 
-    system('rmsgcat', '--sort-by-msgid', '-o', Rails.root.join("locale/manageiq-all.pot").to_s, Rails.root.join("locale/manageiq.pot").to_s, *pot_files)
-    system('mv', '-v', Rails.root.join("locale/manageiq-all.pot").to_s, Rails.root.join("locale/manageiq.pot").to_s)
-    system('rmsgmerge', '--sort-by-msgid', '--no-fuzzy-matching', '-o', Rails.root.join("locale/en/manageiq-all.po").to_s, Rails.root.join("locale/en/manageiq.po").to_s, Rails.root.join("locale/manageiq.pot").to_s)
-    system('mv', '-v', Rails.root.join("locale/en/manageiq-all.po").to_s, Rails.root.join("locale/en/manageiq.po").to_s)
-    system('rm', '-rf', tmp_dir)
+    locale_dir = Rails.root.join("locale")
+    locale_tmp_dir = locale_dir.join("tmp")
 
-    remove_line_numbers(Rails.root.join('locale/manageiq.pot'))
-    remove_line_numbers(Rails.root.join('locale/en/manageiq.po'))
+    system('rmsgcat', '--sort-by-msgid', '--no-all-comments', '-o', locale_tmp_dir.join('manageiq-all.pot').to_s, locale_dir.join('manageiq.pot').to_s, *pot_files)
+    system('mv', '-v', locale_tmp_dir.join('manageiq-all.pot').to_s, locale_dir.join('manageiq.pot').to_s)
+    system('rmsgmerge', '--sort-by-msgid', '--no-location', '--no-fuzzy-matching', '-o', locale_tmp_dir.join('manageiq-all.po').to_s, locale_dir.join('en/manageiq.po').to_s, locale_dir.join('manageiq.pot').to_s)
+    system('mv', '-v', locale_tmp_dir.join('manageiq-all.po').to_s, locale_dir.join('en/manageiq.po').to_s)
+
+    tmp_dir.rmtree
   end
 
   desc "Show changes in gettext strings since last catalog update"
@@ -312,10 +301,7 @@ namespace :locale do
       Dir.mkdir(combined_dir, 0o700)
       po_files.each do |locale, files|
         files.each do |file|
-          unless system "msgfmt --check #{file}"
-            puts "Fatal error running 'msgfmt --check' on file: #{file}.  Review the output above."
-            exit 1
-          end
+          system("msgfmt --check #{file}", :exception => true)
         end
 
         dir = File.join(combined_dir, locale)
@@ -337,7 +323,7 @@ namespace :locale do
       end
 
       # This depends on PoToJson overrides as defined in lib/tasks/po_to_json_override.rb
-      Rake::Task['gettext:po_to_json'].invoke
+      Rake::Task[defined?(ENGINE_ROOT) ? "app:gettext:po_to_json" : "gettext:po_to_json"].invoke
     ensure
       system "rm -rf #{combined_dir}"
     end

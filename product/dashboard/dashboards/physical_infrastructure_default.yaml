@@ -9,5 +9,3 @@ set_data_by_description:
   - chart_server_health
   :col2:
   - chart_server_availability
-  :col3:
-  - rss_newest_servers

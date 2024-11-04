@@ -121,6 +121,13 @@ module Vmdb
     #
     #   https://bugs.ruby-lang.org/issues/14372
     #
+
+    # TODO: Remove this once we move to config.load_defaults 7.0 as this is the default.
+    # Note, rails 7 can read cache format from 6 or 7 so there is no risk if you're running rails 7.
+    # See: https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#new-activesupport-cache-serialization-format
+    warn "Warning: Remove redundant config.active_support.cache_format_version = 7.0 from #{__FILE__}:#{__LINE__ + 1} if using config.load_defaults 7.0" if config.active_support.cache_format_version == 7.0
+    config.active_support.cache_format_version = 7.0
+
     config.autoload_paths << Rails.root.join("app/models/aliases").to_s
     config.autoload_paths << Rails.root.join("app/models/mixins").to_s
     config.autoload_paths << Rails.root.join("lib").to_s

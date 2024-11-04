@@ -1,10 +1,4 @@
 RSpec.describe SupportsFeatureMixin do
-  after do
-    if defined?(@defined_parent_classes)
-      @defined_parent_classes.each { |klass, children| cleanup_subclass(klass, children) }
-    end
-  end
-
   let(:test_class) do
     Class.new do
       attr_accessor :attr1
@@ -269,6 +263,14 @@ RSpec.describe SupportsFeatureMixin do
     end
   end
 
+  let(:model) do
+    define_model("Model", ActiveRecord::Base,
+                 :publish => true,
+                 :archive => true,
+                 :delete  => false,
+                 :fake    => 'We keep it real!')
+  end
+
   describe ".subclasses_supporting" do
     it 'detect' do
       define_subclass("ProviderA", model, :fake => true)
@@ -291,14 +293,6 @@ RSpec.describe SupportsFeatureMixin do
     end
   end
 
-  let(:model) do
-    define_model("Model", ActiveRecord::Base,
-                 :publish => true,
-                 :archive => true,
-                 :delete  => false,
-                 :fake    => 'We keep it real!')
-  end
-
   describe ".supporting" do
     it 'detect' do
       ca = define_subclass("ProviderA", model, :fake => true)
@@ -317,17 +311,21 @@ RSpec.describe SupportsFeatureMixin do
 
   describe ".providers_supporting" do
     it 'detect' do
-      providera = define_subclass("ProviderA", ExtManagementSystem)
-      providerb = define_subclass("ProviderB", ExtManagementSystem)
-      providerc = define_subclass("ProviderC", ExtManagementSystem)
+      # providers_supporting directly references the ExtMangementSystem model, so
+      # we stub it to our own model tree instead for testing.
+      stub_const("ExtManagementSystem", model)
+
+      providera = define_subclass("ProviderA", model)
+      providerb = define_subclass("ProviderB", model)
+      providerc = define_subclass("ProviderC", model)
 
       define_subclass(providera.name, model, :fake => true)
       define_subclass(providerb.name, model, :publish => false, :delete => true, :fake => true)
       define_subclass(providerc.name, model, :publish => false, :delete => true, :fake => true)
 
-      FactoryBot.create(:ext_management_system, :type => providera.name, :name => "a1")
-      FactoryBot.create(:ext_management_system, :type => providera.name, :name => "a2")
-      FactoryBot.create(:ext_management_system, :type => providerb.name, :name => "b1")
+      providera.create(:name => "a1")
+      providera.create(:name => "a2")
+      providerb.create(:name => "b1")
 
       expect(model.providers_supporting(:publish).map(&:name)).to match_array(%w[a1 a2])
       expect(model.providers_supporting(:delete).map(&:name)).to eq(%w[b1])
@@ -338,27 +336,20 @@ RSpec.describe SupportsFeatureMixin do
   private
 
   def define_model(class_name, parent, supporting_values = {})
-    define_supporting_class(class_name, parent, supporting_values) do |r|
-      r.table_name = "vms" if parent.ancestors.include?(ActiveRecord::Base)
-      yield(r) if block_given?
-    end
+    define_supporting_class(class_name, parent, supporting_values)
   end
 
   def define_subclass(module_name, parent, supports_values = {})
     define_supporting_class("#{module_name}::#{parent.name}", parent, supports_values)
   end
 
-  # these descendants are stored in a cache in active support
-  # this cleans out those values so future runs do not have bogus classes
-  # this causes sporadic test failures.
-  def cleanup_subclass(parent, children)
-    tracker = ActiveSupport::DescendantsTracker.subclasses(parent)
-    tracker&.reject! { |child| children.include?(child) }
-  end
-
   def define_supporting_class(class_name, parent, supports_values = {})
     child = Class.new(parent) do
       include SupportsFeatureMixin unless parent.respond_to?(:supports?)
+
+      # ActiveRecord classes need a table. Use vms table (any would work)
+      # This also helps when the active record class does not have a name.
+      self.table_name = "vms" if parent.ancestors.include?(ActiveRecord::Base)
 
       yield(self) if block_given?
       supports_values.each do |feature, value|
@@ -378,8 +369,6 @@ RSpec.describe SupportsFeatureMixin do
     end
 
     stub_const(class_name, child) if class_name
-    # remember what is subclasses so we can clean up the descendant cache
-    ((@defined_parent_classes ||= {})[parent] ||= []) << child
     child
   end
 end

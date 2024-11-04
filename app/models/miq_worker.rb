@@ -379,9 +379,15 @@ class MiqWorker < ApplicationRecord
     self.class.build_command_line(*worker_options.values_at(:guid, :ems_id))
   end
 
+  def environment_variables
+    {
+      "BUNDLER_GROUPS" => self.class.bundler_groups.join(",")
+    }
+  end
+
   def start_runner_via_spawn
     pid = Kernel.spawn(
-      {"BUNDLER_GROUPS" => self.class.bundler_groups.join(",")},
+      environment_variables,
       command_line,
       [:out, :err] => [Rails.root.join("log/evm.log"), "a"]
     )

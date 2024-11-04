@@ -116,10 +116,12 @@ class MiqWorker
     end
 
     def unit_config_file
+      environment = systemd_environment_variables.merge(environment_variables)
+
       <<~UNIT_CONFIG_FILE
         [Service]
-        #{unit_settings.compact.map              { |key, value| "#{key}=#{value}" }.join("\n")}
-        #{unit_environment_variables.compact.map { |key, value| "Environment=#{key}=#{value}" }.join("\n")}
+        #{unit_settings.compact.map { |key, value| "#{key}=#{value}" }.join("\n")}
+        #{environment.compact.map   { |key, value| "Environment=#{key}=#{value}" }.join("\n")}
       UNIT_CONFIG_FILE
     end
 
@@ -135,7 +137,7 @@ class MiqWorker
     end
 
     # Override this in a child class to add environment variables
-    def unit_environment_variables
+    def systemd_environment_variables
       {}
     end
   end
