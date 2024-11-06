@@ -32,6 +32,11 @@ module MiqWebServerWorkerMixin
       return if Rails.application.config.secret_key_base
 
       Rails.application.config.secret_key_base = token
+
+      # To set a secret token after the Rails.application is initialized,
+      # we need to reset the secrets since they are cached:
+      # https://github.com/rails/rails/blob/7-0-stable/railties/lib/rails/application.rb#L392-L404
+      Rails.application.secrets = nil if Rails.version < "7.1"
     end
 
     def rails_server
