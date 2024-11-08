@@ -57,7 +57,7 @@ module FileDepotMixin
       # Strip any leading and trailing whitespace
       uri_str.strip!
 
-      scheme, _userinfo, _host, _port, _registry, _path, _opaque, _query, _fragment = URI.split(URI::DEFAULT_PARSER.escape(uri_str))
+      scheme, _userinfo, _host, _port, _registry, _path, _opaque, _query, _fragment = URI.split(URI::RFC2396_PARSER.escape(uri_str))
       scheme
     end
   end

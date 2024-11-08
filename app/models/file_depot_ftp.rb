@@ -127,7 +127,7 @@ class FileDepotFtp < FileDepot
 
   def base_path
     # uri: "ftp://ftp.example.com/incoming" => #<Pathname:incoming>
-    path = URI(URI::DEFAULT_PARSER.escape(uri)).path
+    path = URI(URI::RFC2396_PARSER.escape(uri)).path
     Pathname.new(path)
   end
 
