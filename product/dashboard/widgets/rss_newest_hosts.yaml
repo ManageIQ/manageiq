@@ -1,0 +1,18 @@
+description: rss_newest_hosts
+title: "EVM: Recently Discovered Hosts"
+content_type: report
+options:
+  :row_count: 5
+visibility:
+  :roles:
+  - _ALL_
+user_id:
+resource_name: Recently Added Hosts
+resource_type: MiqReport
+miq_schedule_options:
+  :run_at:
+    :interval:
+      :value: "1"
+      :unit: hourly
+enabled: true
+read_only: true
