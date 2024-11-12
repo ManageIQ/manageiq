@@ -24,7 +24,6 @@
 BUILD
 ca/root
 certs/v2_key
-config/secrets.yml*
 coverage/
 Gemfile.lock*
 !Gemfile.lock.release
@@ -46,6 +45,23 @@ config/database.yml*
 config/messaging.yml
 config/vmdb.yml.db
 
+# See: EDITOR=vi be rails credentials:edit --help for more information
+# Rails credentials follow the following pattern:
+# If ENV['RAILS_MASTER_KEY'] isn't specified:
+# Global is used:
+#   * config/master.key (plain text encryption key)
+#   * config/credentials.yml.enc (encrypted credentials file)
+# If --environment test, the overrides for that environment is used:
+#   * config/credentials/test.key
+#   * test.yml.enc
+# If we want to commit and share encrypted credentials, we can change the two lines below to:
+#   config/*.key
+#   config/credentials/*.key
+config/credentials*
+config/master.key
+
+# For legacy rails secrets
+config/secrets.yml*
 config/initializers/*.local.rb
 
 config/settings.local.yml
