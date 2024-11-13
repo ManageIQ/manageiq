@@ -2,7 +2,6 @@
 /.yardoc
 /Gemfile.lock
 /_yardoc/
-/config/secrets.yml
 /coverage/
 /doc/
 /pkg/
