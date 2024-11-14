@@ -315,11 +315,11 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-vmware
-  revision: f20ff4bb5ec00364daaba84ce98e42060331ffba
+  revision: db6ab10062e0da67e1faa31cb1f11909597ce374
   branch: radjabov
   specs:
     manageiq-providers-vmware (0.1.0)
-      ffi-vix_disk_lib (~> 1.3, >= 1.3.1)
+      ffi-vix_disk_lib (~> 1.4)
       fog-vcloud-director (~> 0.3.0)
       rbvmomi2 (~> 3.8)
       vmware_web_service (~> 3.3)
@@ -1511,12 +1511,15 @@ DEPENDENCIES
   terminal
   time (~> 0.2.2)
   timecop (~> 0.9, != 0.9.7)
-  uri (>= 0.12.2)
+  uri (~> 0.13.1)
   vcr (~> 6.1)
   webmock (~> 3.7)
   websocket-driver (~> 0.6.3)
   wim_parser (~> 1.0)
   yard (>= 0.9.36)
 
+RUBY VERSION
+   ruby 3.3.6p108
+
 BUNDLED WITH
-   2.5.20
+   2.5.23
