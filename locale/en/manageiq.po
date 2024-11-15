@@ -879,9 +879,6 @@ msgstr ""
 msgid "%{name} (All %{title})"
 msgstr ""
 
-msgid "%{name} (All Generic Objects)"
-msgstr ""
-
 msgid "%{name} (Compliance History - Last %{number} Checks)"
 msgstr ""
 
@@ -12962,9 +12959,6 @@ msgstr ""
 msgid "Copy from provisioning"
 msgstr ""
 
-msgid "Copy object details for use in a Button"
-msgstr ""
-
 msgid "Copy of \"%{dashboard}\" Dashboard"
 msgstr ""
 
@@ -17770,6 +17764,12 @@ msgstr ""
 msgid "EVM Zone"
 msgstr ""
 
+msgid "EVM: Recently Discovered Hosts"
+msgstr ""
+
+msgid "EVM: Recently Discovered VMs"
+msgstr ""
+
 msgid "Edit"
 msgstr ""
 
@@ -19391,9 +19391,6 @@ msgid "Edit this Policy's Event assignments"
 msgstr ""
 
 msgid "Edit this Provider"
-msgstr ""
-
-msgid "Edit this Region"
 msgstr ""
 
 msgid "Edit this Report"
@@ -24206,11 +24203,6 @@ msgid "Host switch"
 msgstr ""
 
 msgid "Host to VM Relationships"
-msgstr ""
-
-msgid ""
-"Host to validate against, Username and matching password fields are needed to "
-"perform verification of credentials"
 msgstr ""
 
 msgid "Host vLANs and vSwitches"
@@ -34525,9 +34517,6 @@ msgstr ""
 msgid "Object Types"
 msgstr ""
 
-msgid "Object attribute must be specified to copy object details for use in a Button"
-msgstr ""
-
 msgid "Object info"
 msgstr ""
 
@@ -35839,19 +35828,6 @@ msgid "Password:"
 msgstr ""
 
 msgid "Paste here the trusted CA certificates, in PEM format."
-msgstr ""
-
-msgid ""
-"Paste is not available, no object information has been copied from the Simulat"
-"ion screen"
-msgstr ""
-
-msgid ""
-"Paste is not available, target class differs from the target class of the obje"
-"ct copied from the Simulation screen"
-msgstr ""
-
-msgid "Paste object details for use in a Button."
 msgstr ""
 
 #, fuzzy
@@ -43304,11 +43280,6 @@ msgstr ""
 msgid "Server Stop"
 msgstr ""
 
-msgid ""
-"Server information, Username and matching password fields are needed to perfor"
-"m verification of credentials"
-msgstr ""
-
 msgid "Server is Master"
 msgstr ""
 
@@ -45686,9 +45657,6 @@ msgid "Source of Security Policy Rules"
 msgstr ""
 
 msgid "Source template [%{name}] was not found"
-msgstr ""
-
-msgid "Spaces are prohibited"
 msgstr ""
 
 msgid "Specific Date and Time"
@@ -51289,9 +51257,6 @@ msgstr ""
 msgid "View All System Image Types"
 msgstr ""
 
-msgid "View Analysis Profiles"
-msgstr ""
-
 msgid "View Availability Zones"
 msgstr ""
 
@@ -51719,9 +51684,6 @@ msgid "View Volume Types"
 msgstr ""
 
 msgid "View Volumes"
-msgstr ""
-
-msgid "View Zones"
 msgstr ""
 
 msgid "View details"
