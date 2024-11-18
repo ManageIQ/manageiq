@@ -39760,7 +39760,7 @@ msgid "Provision Virtual Machines - Select a Template"
 msgstr "Mise à disposition de machines virtuelles - Sélectionner un modèle"
 
 msgid "Provision failed for the following reasons:%{errors}"
-msgstr "La mise à disposition a échoué pour les raisons suivantes :{errors}"
+msgstr "La mise à disposition a échoué pour les raisons suivantes:%{errors}"
 
 msgid "Provision workflow does not contain the expected method <%{method}>"
 msgstr ""
