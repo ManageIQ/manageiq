@@ -14113,7 +14113,7 @@ msgid ""
 "\nClasses updated/added: %{class_stats}\nInstances updated/added: %{"
 "instance_stats}\nMethods updated/added: %{method_stats}"
 msgstr ""
-"成功匯入資料儲存庫。已更新/已新增名稱空間：%{namespace_stats}\n已更新/已新增類別：%{class_stats}\n已更新/已新增實例："
+"成功匯入資料儲存庫。\n已更新/已新增名稱空間：%{namespace_stats}\n已更新/已新增類別：%{class_stats}\n已更新/已新增實例："
 "%{instance_stats}\n已更新/已新增方法：%{method_stats}"
 
 msgid ""
