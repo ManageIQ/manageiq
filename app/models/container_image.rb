@@ -1,7 +1,6 @@
 class ContainerImage < ApplicationRecord
   acts_as_miq_taggable
 
-  include SupportsFeatureMixin
   include ComplianceMixin
   include MiqPolicyMixin
   include ScanningMixin

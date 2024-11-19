@@ -1,12 +1,10 @@
 class ContainerNode < ApplicationRecord
   acts_as_miq_taggable
 
-  include SupportsFeatureMixin
   include ComplianceMixin
   include MiqPolicyMixin
   include NewWithTypeStiMixin
   include TenantIdentityMixin
-  include SupportsFeatureMixin
   include ArchivedMixin
   include CustomActionsMixin
   include Purging

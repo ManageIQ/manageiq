@@ -1,5 +1,4 @@
 class PhysicalRack < ApplicationRecord
-  include SupportsFeatureMixin
   include EmsRefreshMixin
   include CustomActionsMixin
 

@@ -1,6 +1,5 @@
 module ManageIQ::Providers
   class ContainerManager < BaseManager
-    include SupportsFeatureMixin
 
     has_many :container_nodes, -> { active }, # rubocop:disable Rails/HasManyOrHasOneDependent
              :foreign_key => :ems_id,

@@ -23,5 +23,4 @@ class ConfigurationScriptBase < ApplicationRecord
   scope :with_manager, ->(manager_id) { where(:manager_id => manager_id) }
 
   include ProviderObjectMixin
-  include SupportsFeatureMixin
 end
