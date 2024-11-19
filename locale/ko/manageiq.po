@@ -1,15 +1,9 @@
-#
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# This file is distributed under the same license as the manageiq package.
-#, fuzzy
-# SOME DESCRIPTIVE TITLE.
 msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2024-09-11 16:09-0400\n"
-"PO-Revision-Date: 2024-09-11 16:09-0400\n"
+"POT-Creation-Date: 2024-11-15 00:23+0000\n"
+"PO-Revision-Date: 2024-11-15 00:23+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -835,9 +829,6 @@ msgstr "%{name}(%{num_cpus} CPU, %{memory_gigabytes}GB RAM, 알 수 없는 크�
 
 msgid "%{name} (All %{title})"
 msgstr "%{name}(모든 %{title})"
-
-msgid "%{name} (All Generic Objects)"
-msgstr "%{name}(모든 일반 오브젝트)"
 
 msgid "%{name} (Compliance History - Last %{number} Checks)"
 msgstr "%{name}(규제 준수 히스토리 - 최신 %{number} 검사)"
@@ -3958,6 +3949,14 @@ msgstr "허용된 태그"
 
 msgid "Already has an ISO datastore"
 msgstr "이미 ISO 데이터 저장소를 보유함"
+
+msgid ""
+"Alternative URL path for the XCCDF file, where a com.redhat.rhsa-RHEL7."
+"ds.xml.bz2 file is expected. example: http://my_file_server.example.org:3333/"
+"xccdf_files/"
+msgstr ""
+"XCCDF 파일에 대해 com.redhat.rhsa-RHEL7.ds.xml.bz2 파일이 예상되는 대체 URL 경로입니다. 예: http:/"
+"/my_file_server.example.org:3333/xccdf_files/"
 
 msgid "Always"
 msgstr "항상"
@@ -9920,8 +9919,14 @@ msgstr "ConfigurationScriptBase|출력"
 msgid "ConfigurationScriptBase|Payload"
 msgstr "ConfigurationScriptBase|페이로드"
 
+msgid "ConfigurationScriptBase|Payload error"
+msgstr "ConfigurationScriptBase |페이로드 오류"
+
 msgid "ConfigurationScriptBase|Payload type"
 msgstr "ConfigurationScriptBase|페이로드 유형"
+
+msgid "ConfigurationScriptBase|Payload valid"
+msgstr "ConfigurationScriptBase |페이로드 유효"
 
 msgid "ConfigurationScriptBase|Region description"
 msgstr "ConfigurationScriptBase|지역 설명"
@@ -12750,9 +12755,6 @@ msgstr "프로비저닝에서 복사"
 msgid "Copy from provisioning"
 msgstr "프로비저닝에서 복사"
 
-msgid "Copy object details for use in a Button"
-msgstr "단추에 사용할 오브젝트 세부사항 복사"
-
 msgid "Copy of \"%{dashboard}\" Dashboard"
 msgstr "\"%{dashboard}\" 대시보드의 복사"
 
@@ -14139,6 +14141,13 @@ msgstr ""
 "데이터 저장소 가져오기가 정상적으로 완료되었습니다.\n네임스페이스가 업데이트됨/추가됨: %{namespace_stats}\n클래스가 "
 "업데이트됨/추가됨: %{class_stats}\n인스턴스가 업데이트됨/추가됨: %{instance_stats}\n메소드가 업데이트됨/추가됨:"
 " %{method_stats}"
+
+msgid ""
+"Datastore import was successful. Added/Updated %{namespace_stats} Namespaces, "
+"%{class_stats} Classes, %{instance_stats} Instances, %{method_stats} Methods."
+msgstr ""
+"데이터 저장소 가져오기가 정상적으로 완료되었습니다. %{namespace_stats} 네임스페이스, %{class_stats} 클래스, %{"
+"instance_stats} 인스턴스, %{method_stats} 메서드가 추가/업데이트되었습니다."
 
 msgid "Datastore summary for Hosts"
 msgstr "호스트의 데이터 저장소 요약"
@@ -17506,6 +17515,12 @@ msgstr "EVM 작업자"
 msgid "EVM Zone"
 msgstr "EVM 구역"
 
+msgid "EVM: Recently Discovered Hosts"
+msgstr "EVM: 최근에 감지된 호스트"
+
+msgid "EVM: Recently Discovered VMs"
+msgstr "EVM: 최근에 감지된 VM"
+
 msgid "Edit"
 msgstr "편집"
 
@@ -19131,9 +19146,6 @@ msgstr "이 정책의 이벤트 지정 편집"
 msgid "Edit this Provider"
 msgstr "이 제공자 편집"
 
-msgid "Edit this Region"
-msgstr "이 지역 편집"
-
 msgid "Edit this Report"
 msgstr "이 보고서 편집"
 
@@ -19868,24 +19880,6 @@ msgstr ""
 
 msgid "Enablement expression"
 msgstr "인에이블먼트 표현식"
-
-msgid ""
-"Enables defining a URL path prefix for XCCDF file instead of accessing the "
-"default location.\n  example: http://my_file_server.org:3333/xccdf_files/\n  "
-"Expecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
-msgstr ""
-"기본 위치에 액세스하는 대신 XCCDF 파일의 URL 경로 접두부를 정의할 수 있습니다.\n  예: http://"
-"my_file_server.org:3333/xccdf_files/\n여기에 com.redhat.rhsa-RHEL7.ds.xml.bz2 파일이"
-" 있습니다."
-
-msgid ""
-"Enables defining a URL path prefix for XCCDF file instead of accessing the "
-"default location.\nexample: http://my_file_server.org:3333/xccdf_files/"
-"\nExpecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
-msgstr ""
-"기본 위치에 액세스하는 대신 XCCDF 파일의 URL 경로 접두부를 정의할 수 있습니다.\n예: http://"
-"my_file_server.org:3333/xccdf_files/\n여기에 com.redhat.rhsa-RHEL7.ds.xml.bz2 파일이"
-" 있습니다."
 
 msgid "Enclosure Count"
 msgstr "격납장치 개수"
@@ -23900,11 +23894,6 @@ msgstr "호스트 스위치"
 
 msgid "Host to VM Relationships"
 msgstr "호스트 대 VM 관계"
-
-msgid ""
-"Host to validate against, Username and matching password fields are needed to "
-"perform verification of credentials"
-msgstr "유효성 검증할 호스트, 인증 정보의 유효성 검증을 수행하려면 사용자 이름 및 일치하는 비밀번호 필드가 필요합니다."
 
 msgid "Host vLANs and vSwitches"
 msgstr "호스트 vLAN 및 vSwitch"
@@ -34133,10 +34122,6 @@ msgstr "오브젝트 유형"
 msgid "Object Types"
 msgstr "오브젝트 유형"
 
-msgid ""
-"Object attribute must be specified to copy object details for use in a Button"
-msgstr "단추에 사용할 오브젝트 세부사항을 복사하려면 오브젝트 속성을 지정해야 합니다."
-
 msgid "Object info"
 msgstr "오브젝트 정보"
 
@@ -35427,19 +35412,6 @@ msgstr "비밀번호:"
 
 msgid "Paste here the trusted CA certificates, in PEM format."
 msgstr "신뢰할 수 있는 CA 인증서를 PEM 형식으로 여기에 붙여넣으십시오."
-
-msgid ""
-"Paste is not available, no object information has been copied from the "
-"Simulation screen"
-msgstr "붙여넣기를 사용할 수 없음, 시뮬레이션 화면에서 오브젝트 정보가 복사되지 않았습니다."
-
-msgid ""
-"Paste is not available, target class differs from the target class of the "
-"object copied from the Simulation screen"
-msgstr "붙여넣기를 사용할 수 없음, 대상 클래스가 시뮬레이션 화면에서 복사한 오브젝트의 대상 클래스와 다릅니다."
-
-msgid "Paste object details for use in a Button."
-msgstr "단추에 사용할 오브젝트 세부사항 붙여넣기"
 
 msgid "Patch"
 msgid_plural "Patches"
@@ -37819,8 +37791,8 @@ msgstr "이 템플리트를 사용하여 VM 프로비저닝"
 msgid "Provision Virtual Machines - Select a Template"
 msgstr "가상 머신 프로비저닝 - 템플리트 선택"
 
-msgid "Provision failed for the following reasons:\n%{errors}"
-msgstr "다음과 같은 이유로 프로비저닝이 실패했습니다.\n%{errors}"
+msgid "Provision failed for the following reasons:%{errors}"
+msgstr "다음 이유로 프로비저닝하지 못했습니다:%{errors}"
 
 msgid "Provision workflow does not contain the expected method <%{method}>"
 msgstr "프로비저닝 워크플로우에 예상한 메소드 <%{method}>이(가) 포함되지 않았습니다."
@@ -42808,11 +42780,6 @@ msgstr "서버 시작"
 msgid "Server Stop"
 msgstr "서버 중지"
 
-msgid ""
-"Server information, Username and matching password fields are needed to "
-"perform verification of credentials"
-msgstr "인증 정보의 유효성 검증을 수행하려면 서버 정보, 사용자 이름, 일치하는 비밀번호 필드가 필요합니다."
-
 msgid "Server is Master"
 msgstr "서버가 마스터임"
 
@@ -45155,9 +45122,6 @@ msgstr "보안 정책 규칙의 소스"
 
 msgid "Source template [%{name}] was not found"
 msgstr "소스 템플리트 [%{name}]을(를) 찾을 수 없습니다."
-
-msgid "Spaces are prohibited"
-msgstr "공백은 금지됨"
 
 msgid "Specific Date and Time"
 msgstr "특정 날짜 및 시간"
@@ -50335,14 +50299,13 @@ msgid "VMs in EVM that have been deleted from VC"
 msgstr "VC에서 발견된 EVM의 VM"
 
 msgid ""
-"VMs must be scanned from an EVM server whose host is attached to the same\n  "
-"storage as the VM unless overridden via SmartProxy affinity.\n  Please verify "
-"that:\n  1) Direct LUNs are attached to ManageIQ appliance\n  2) Management "
-"Relationship is set for the ManageIQ appliance"
+"VMs must be scanned from an appliances whose host is attached to the same "
+"storage as the VM unless overridden via SmartProxy affinity. Please verify "
+"that direct LUNs are attached to the appliance and that the management "
+"relationship is set for the appliance."
 msgstr ""
-"SmartProxy 선호도를 통해 대체되지 않을 경우 해당 호스트가 VM과 동일한 스토리지에\n  연결되어 있는 EVM 서버에서 VM을 "
-"스캔해야 합니다.\n  다음 내용을 확인하십시오.\n  1) 직접 LUN이 ManageIQ 어플라이언스에 접속됨\n  2) ManageIQ "
-"어플라이언스에 대한 관리 관계가 설정됨"
+"VM은 SmartProxy 선호도로 재정의되지 않는 한, 해당 VM과 동일한 스토리지에 연결된 호스트에 있는 어플라이언스에서 스캔해야 합니다"
+". 어플라이언스에 직접 LUN이 연결되어 있고 어플라이언스에 대한 관리 관계가 설정되어 있는지 확인하십시오."
 
 msgid "VMs not Powered On"
 msgstr "VM의 전원이 켜져 있지 않음"
@@ -50761,9 +50724,6 @@ msgstr "서비스 모두 보기"
 
 msgid "View All System Image Types"
 msgstr "시스템 이미지 유형 모두 보기"
-
-msgid "View Analysis Profiles"
-msgstr "분석 프로파일 보기"
 
 msgid "View Availability Zones"
 msgstr "가용성 구역 보기"
@@ -51193,9 +51153,6 @@ msgstr "볼륨 유형 보기"
 
 msgid "View Volumes"
 msgstr "볼륨 보기"
-
-msgid "View Zones"
-msgstr "구역 보기"
 
 msgid "View details"
 msgstr "세부사항 보기"
