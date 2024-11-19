@@ -96,7 +96,7 @@ class Host < ApplicationRecord
   # Physical server reference
   belongs_to :physical_server, :inverse_of => :host
 
-  serialize :settings, Hash
+  serialize :settings, :type => Hash
 
   deprecate_attribute :address,  :hostname, :type => :string
   alias_attribute     :state,    :power_state

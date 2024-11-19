@@ -4,7 +4,7 @@ class ResourceAction < ApplicationRecord
   belongs_to :configuration_script_payload, :foreign_key => :configuration_script_id
   belongs_to :dialog
 
-  serialize  :ae_attributes, Hash
+  serialize  :ae_attributes, :type => Hash
 
   validate :ensure_configuration_script_or_automate
 

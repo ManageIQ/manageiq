@@ -10,8 +10,8 @@ class MiqRequestTask < ApplicationRecord
   belongs_to :miq_request_task
   belongs_to :tenant
 
-  serialize   :phase_context, Hash
-  serialize   :options,       Hash
+  serialize   :phase_context, :type => Hash
+  serialize   :options,       :type => Hash
 
   default_value_for :phase_context, {}
   default_value_for :options,       {}

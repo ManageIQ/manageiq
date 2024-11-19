@@ -6,7 +6,7 @@ class CustomButton < ApplicationRecord
     order(Arel.sql(order))
   }
 
-  serialize :options, Hash
+  serialize :options, :type => Hash
   serialize :visibility_expression
   serialize :enablement_expression
   serialize :visibility

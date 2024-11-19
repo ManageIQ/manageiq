@@ -2,7 +2,7 @@ class Zone < ApplicationRecord
   validates_presence_of   :name, :description
   validates :name, :unique_within_region => true
 
-  serialize :settings, Hash
+  serialize :settings, :type => Hash
 
   belongs_to :log_file_depot, :class_name => "FileDepot"
 

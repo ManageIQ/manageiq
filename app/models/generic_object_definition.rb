@@ -25,7 +25,7 @@ class GenericObjectDefinition < ApplicationRecord
   REG_METHOD_NAME    = /\A[a-z][a-zA-Z_0-9]*[!?]?\z/
   ALLOWED_ASSOCIATION_TYPES = (MiqReport.reportable_models + %w[GenericObject]).freeze
 
-  serialize :properties, Hash
+  serialize :properties, :type => Hash
 
   include CustomActionsMixin
 

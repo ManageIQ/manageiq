@@ -22,7 +22,7 @@ class MiqRequest < ApplicationRecord
 
   alias_attribute :state, :request_state
 
-  serialize   :options, Hash
+  serialize   :options, :type => Hash
 
   default_value_for(:message)       { |r| "#{r.class::TASK_DESCRIPTION} - Request Created" }
   default_value_for :options,       {}
