@@ -1,15 +1,9 @@
-#
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# This file is distributed under the same license as the manageiq package.
-#, fuzzy
-# SOME DESCRIPTIVE TITLE.
 msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2024-09-11 16:09-0400\n"
-"PO-Revision-Date: 2024-09-11 16:09-0400\n"
+"POT-Creation-Date: 2024-11-15 00:23+0000\n"
+"PO-Revision-Date: 2024-11-15 00:23+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -835,9 +829,6 @@ msgstr "%{name} (%{num_cpus} CPU、 %{memory_gigabytes} GB RAM、不明サイズ
 
 msgid "%{name} (All %{title})"
 msgstr "%{name} (すべての %{title})"
-
-msgid "%{name} (All Generic Objects)"
-msgstr "%{name} (すべての汎用オブジェクト)"
 
 msgid "%{name} (Compliance History - Last %{number} Checks)"
 msgstr "%{name} (コンプライアンス履歴 - 最後の %{number} チェック)"
@@ -3961,6 +3952,14 @@ msgstr "許可されるタグ"
 
 msgid "Already has an ISO datastore"
 msgstr "既に ISO データ・ストアがあります"
+
+msgid ""
+"Alternative URL path for the XCCDF file, where a com.redhat.rhsa-RHEL7."
+"ds.xml.bz2 file is expected. example: http://my_file_server.example.org:3333/"
+"xccdf_files/"
+msgstr ""
+"com.redhat.rhsa-RHEL7.ds.xml.bz2 ファイルが期待される XCCDF ファイルの代替 URL パス。 例: http://"
+"my_file_server.example.org:3333/xccdf_files/"
 
 msgid "Always"
 msgstr "常時"
@@ -9927,8 +9926,14 @@ msgstr "ConfigurationScript ベース | 出力"
 msgid "ConfigurationScriptBase|Payload"
 msgstr "ConfigurationScript ベース | ペイロード"
 
+msgid "ConfigurationScriptBase|Payload error"
+msgstr "ConfigurationScriptBase|ペイロード・エラー"
+
 msgid "ConfigurationScriptBase|Payload type"
 msgstr "ConfigurationScript ベース | ペイロード・タイプ"
+
+msgid "ConfigurationScriptBase|Payload valid"
+msgstr "ConfigurationScriptBase|ペイロード有効"
 
 msgid "ConfigurationScriptBase|Region description"
 msgstr "リージョンの説明"
@@ -12757,9 +12762,6 @@ msgstr "プロビジョニングからのコピー"
 msgid "Copy from provisioning"
 msgstr "プロビジョニングからのコピー"
 
-msgid "Copy object details for use in a Button"
-msgstr "ボタン内で使用されるオブジェクト詳細のコピー"
-
 msgid "Copy of \"%{dashboard}\" Dashboard"
 msgstr "\"%{dashboard}\" ダッシュボードのコピー"
 
@@ -14147,6 +14149,13 @@ msgstr ""
 "データ・ストアが正常にインポートされました。\n名前空間が更新/追加されました: %{namespace_stats}\nクラスが更新/追加されました: %"
 "{class_stats}\nインスタンスが更新/追加されました: %{instance_stats}\nメソッドが更新/追加されました: %{"
 "method_stats}"
+
+msgid ""
+"Datastore import was successful. Added/Updated %{namespace_stats} Namespaces, "
+"%{class_stats} Classes, %{instance_stats} Instances, %{method_stats} Methods."
+msgstr ""
+"データ・ストアが正常にインポートされました。 追加/更新された %{namespace_stats} の名前空間、%{class_stats} クラス、%"
+"{instance_stats} インスタンス、%{method_stats} メソッド。"
 
 msgid "Datastore summary for Hosts"
 msgstr "ホストのデータ・ストア概要"
@@ -17516,6 +17525,12 @@ msgstr "EVM ワーカー"
 msgid "EVM Zone"
 msgstr "EVM ゾーン"
 
+msgid "EVM: Recently Discovered Hosts"
+msgstr "EVM: 最近ディスカバーされたホスト"
+
+msgid "EVM: Recently Discovered VMs"
+msgstr "EVM: 最近ディスカバーされたVM"
+
 msgid "Edit"
 msgstr "編集"
 
@@ -19141,9 +19156,6 @@ msgstr "このポリシーのイベント割り当ての編集"
 msgid "Edit this Provider"
 msgstr "このプロバイダーの編集"
 
-msgid "Edit this Region"
-msgstr "このリージョンの編集"
-
 msgid "Edit this Report"
 msgstr "このレポートの編集"
 
@@ -19877,24 +19889,6 @@ msgstr "有効化および視認性の式は、「表示」(前のタブ) を「
 
 msgid "Enablement expression"
 msgstr "有効化式"
-
-msgid ""
-"Enables defining a URL path prefix for XCCDF file instead of accessing the "
-"default location.\n  example: http://my_file_server.org:3333/xccdf_files/\n  "
-"Expecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
-msgstr ""
-"デフォルトの場所にアクセスするのではなく、XCCDF ファイルの URL パス接頭部を定義できるようにします。\n  例: http://"
-"my_file_server.org:3333/xccdf_files/\n  そこで com.redhat.rhsa-RHEL7.ds.xml.bz2 "
-"ファイルが検出される必要があります。"
-
-msgid ""
-"Enables defining a URL path prefix for XCCDF file instead of accessing the "
-"default location.\nexample: http://my_file_server.org:3333/xccdf_files/"
-"\nExpecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
-msgstr ""
-"デフォルトの場所にアクセスするのではなく、XCCDF ファイルの URL パス接頭部を定義できるようにします。\n例: http://"
-"my_file_server.org:3333/xccdf_files/\nそこで com.redhat.rhsa-RHEL7.ds.xml.bz2 "
-"ファイルが検出される必要があります。"
 
 msgid "Enclosure Count"
 msgstr "エンクロージャー数"
@@ -23915,11 +23909,6 @@ msgstr "ホストのスイッチ"
 
 msgid "Host to VM Relationships"
 msgstr "ホストと VM のリレーションシップ"
-
-msgid ""
-"Host to validate against, Username and matching password fields are needed to "
-"perform verification of credentials"
-msgstr "検証対象のホスト、ユーザー名および一致するパスワード・フィールドが資格情報を確認するために必要です"
 
 msgid "Host vLANs and vSwitches"
 msgstr "ホストの vLAN および vSwitch"
@@ -34147,10 +34136,6 @@ msgstr "オブジェクトのタイプ"
 msgid "Object Types"
 msgstr "オブジェクト・タイプ"
 
-msgid ""
-"Object attribute must be specified to copy object details for use in a Button"
-msgstr "ボタン内で使用されるオブジェクト詳細をコピーするためにオブジェクト属性を指定する必要があります"
-
 msgid "Object info"
 msgstr "オブジェクト情報"
 
@@ -35442,19 +35427,6 @@ msgstr "パスワード:"
 
 msgid "Paste here the trusted CA certificates, in PEM format."
 msgstr "信頼された CA 証明書 ( PEM 形式) をここに貼り付けてください。"
-
-msgid ""
-"Paste is not available, no object information has been copied from the "
-"Simulation screen"
-msgstr "貼り付けはできません。シミュレーション画面からコピーされたオブジェクト情報はありません"
-
-msgid ""
-"Paste is not available, target class differs from the target class of the "
-"object copied from the Simulation screen"
-msgstr "貼り付けはできません。ターゲット・クラスが、シミュレーション画面からコピーされたオブジェクトのものと異なります。"
-
-msgid "Paste object details for use in a Button."
-msgstr "ボタン内で使用されるオブジェクト詳細の貼り付け"
 
 msgid "Patch"
 msgid_plural "Patches"
@@ -37836,8 +37808,8 @@ msgstr "このテンプレートを使用した VM のプロビジョニング"
 msgid "Provision Virtual Machines - Select a Template"
 msgstr "仮想マシンのプロビジョニング - テンプレートを選択してください"
 
-msgid "Provision failed for the following reasons:\n%{errors}"
-msgstr "次の理由によりプロビジョニングに失敗しました:\n%{errors}"
+msgid "Provision failed for the following reasons:%{errors}"
+msgstr "以下の理由でプロビジョニングが失敗しました: %{errors}"
 
 msgid "Provision workflow does not contain the expected method <%{method}>"
 msgstr "プロビジョニング・ワークフローに、期待されるメソッド <%{method}> が含まれません"
@@ -42827,11 +42799,6 @@ msgstr "サーバーが開始します"
 msgid "Server Stop"
 msgstr "サーバーが停止します"
 
-msgid ""
-"Server information, Username and matching password fields are needed to "
-"perform verification of credentials"
-msgstr "サーバー情報、ユーザー名および一致するパスワード・フィールドは資格情報の検証を実行する際に必要です。"
-
 msgid "Server is Master"
 msgstr "サーバーはマスターです"
 
@@ -45174,9 +45141,6 @@ msgstr "セキュリティー・ポリシー・ルールのソース"
 
 msgid "Source template [%{name}] was not found"
 msgstr "ソース・テンプレート [%{name}] が見つかりません"
-
-msgid "Spaces are prohibited"
-msgstr "スペースは禁止されています"
 
 msgid "Specific Date and Time"
 msgstr "特定の日時"
@@ -50356,14 +50320,13 @@ msgid "VMs in EVM that have been deleted from VC"
 msgstr "VC から削除された EVM の VM"
 
 msgid ""
-"VMs must be scanned from an EVM server whose host is attached to the same\n  "
-"storage as the VM unless overridden via SmartProxy affinity.\n  Please verify "
-"that:\n  1) Direct LUNs are attached to ManageIQ appliance\n  2) Management "
-"Relationship is set for the ManageIQ appliance"
+"VMs must be scanned from an appliances whose host is attached to the same "
+"storage as the VM unless overridden via SmartProxy affinity. Please verify "
+"that direct LUNs are attached to the appliance and that the management "
+"relationship is set for the appliance."
 msgstr ""
-"VM は、SmartProxy アフィニティーでオーバーライドされない限り、\n  ホストが VM と同じストレージに割り当てられている EVM サーバー"
-"からスキャンされる必要があります。\n  以下を確認してください。\n  1) ダイレクト LUN が ManageIQ アプライアンスに割り当てられている"
-"\n  2) 管理リレーションシップが ManageIQ アプライアンスに設定されている"
+"VMは、SmartProxy アフィニティを介して上書きされない限り、VM と同じストレージにホストが接続されているアプライアンスからスキャンする必要"
+"があります。 直接 LUN がアプライアンスに接続され、管理関係がアプライアンスに設定されていることを確認します。"
 
 msgid "VMs not Powered On"
 msgstr "VM の電源がオンになっていません"
@@ -50782,9 +50745,6 @@ msgstr "すべてのサービスの表示"
 
 msgid "View All System Image Types"
 msgstr "すべてのシステム・イメージ・タイプの表示"
-
-msgid "View Analysis Profiles"
-msgstr "分析プロファイルの表示"
 
 msgid "View Availability Zones"
 msgstr "アベイラビリティー・ゾーンの表示"
@@ -51214,9 +51174,6 @@ msgstr "ボリューム・タイプの表示"
 
 msgid "View Volumes"
 msgstr "ボリュームの表示"
-
-msgid "View Zones"
-msgstr "ゾーンの表示"
 
 msgid "View details"
 msgstr "詳細を表示"

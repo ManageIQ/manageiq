@@ -1,15 +1,9 @@
-#
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# This file is distributed under the same license as the manageiq package.
-#, fuzzy
-# SOME DESCRIPTIVE TITLE.
 msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2024-09-11 16:09-0400\n"
-"PO-Revision-Date: 2024-09-11 16:09-0400\n"
+"POT-Creation-Date: 2024-11-15 00:23+0000\n"
+"PO-Revision-Date: 2024-11-15 00:23+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -937,9 +931,6 @@ msgstr ""
 
 msgid "%{name} (All %{title})"
 msgstr "%{name} (Ensemble des %{title})"
-
-msgid "%{name} (All Generic Objects)"
-msgstr "%{name} (tous les objets génériques)"
 
 msgid "%{name} (Compliance History - Last %{number} Checks)"
 msgstr "%{name} (Historique de conformité - %{number} dernières vérifications)"
@@ -4275,6 +4266,15 @@ msgstr "Balises autorisées"
 
 msgid "Already has an ISO datastore"
 msgstr "Possède déjà un magasin de données ISO"
+
+msgid ""
+"Alternative URL path for the XCCDF file, where a com.redhat.rhsa-RHEL7."
+"ds.xml.bz2 file is expected. example: http://my_file_server.example.org:3333/"
+"xccdf_files/"
+msgstr ""
+"Chemin d'URL alternatif pour le fichier XCCDF, où un fichier "
+"com.redhat.rhsa-RHEL7.ds.xml.bz2 est attendu. exemple : http://"
+"my_file_server.example.org:3333/xccdf_files/"
 
 msgid "Always"
 msgstr "Toujours"
@@ -10591,8 +10591,14 @@ msgstr "ConfigurationScriptBase | Sortie"
 msgid "ConfigurationScriptBase|Payload"
 msgstr "ConfigurationScriptBase | Contenu"
 
+msgid "ConfigurationScriptBase|Payload error"
+msgstr "ConfigurationScriptBase|Erreur de contenu"
+
 msgid "ConfigurationScriptBase|Payload type"
 msgstr "ConfigurationScriptBase | Type de contenu"
+
+msgid "ConfigurationScriptBase|Payload valid"
+msgstr "ConfigurationScriptBase|Contenu valide"
 
 msgid "ConfigurationScriptBase|Region description"
 msgstr "Description de la région"
@@ -13643,9 +13649,6 @@ msgstr "Copier à partir de la mise à disposition"
 msgid "Copy from provisioning"
 msgstr "Copier à partir de la mise à disposition"
 
-msgid "Copy object details for use in a Button"
-msgstr "Copier les détails d'objet à utiliser dans un bouton"
-
 msgid "Copy of \"%{dashboard}\" Dashboard"
 msgstr "Copie du tableau de bord \"%{dashboard}\""
 
@@ -15117,6 +15120,14 @@ msgstr ""
 "ajoutés : %{namespace_stats}\nClasses mises à jour/ajoutées : %{class_stats}"
 "\nInstances mises à jour/ajoutées : %{instance_stats}\nMéthodes mises à jour/"
 "ajoutées : %{method_stats}"
+
+msgid ""
+"Datastore import was successful. Added/Updated %{namespace_stats} Namespaces, "
+"%{class_stats} Classes, %{instance_stats} Instances, %{method_stats} Methods."
+msgstr ""
+"L'importation du magasin de données a abouti. %{namespace_stats} espaces de "
+"nom, %{class_stats} classes, %{instance_stats} instances, %{method_stats} "
+"méthodes ajouté(e)s/mis(es) à jour."
 
 msgid "Datastore summary for Hosts"
 msgstr "Récapitulatif du magasin de données pour les hôtes"
@@ -18603,6 +18614,12 @@ msgstr "Agents EVM"
 msgid "EVM Zone"
 msgstr "Zone EVM"
 
+msgid "EVM: Recently Discovered Hosts"
+msgstr "EVM : hôtes récemment reconnus"
+
+msgid "EVM: Recently Discovered VMs"
+msgstr "EVM : machines virtuelles récemment reconnues"
+
 msgid "Edit"
 msgstr "Editer"
 
@@ -20311,9 +20328,6 @@ msgstr "Editer les affectations d'événement de cette stratégie"
 msgid "Edit this Provider"
 msgstr "Editer ce fournisseur"
 
-msgid "Edit this Region"
-msgstr "Editer cette région"
-
 msgid "Edit this Report"
 msgstr "Editer ce rapport"
 
@@ -21069,26 +21083,6 @@ msgstr ""
 
 msgid "Enablement expression"
 msgstr "Expression d'activation"
-
-msgid ""
-"Enables defining a URL path prefix for XCCDF file instead of accessing the "
-"default location.\n  example: http://my_file_server.org:3333/xccdf_files/\n  "
-"Expecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
-msgstr ""
-"Permet de définir un préfixe de chemin d'URL pour le fichier XCCDF au lieu "
-"d'accéder à l'emplacement par défaut.\n  Exemple : http://my_file_server.org:"
-"3333/xccdf_files/\n  Le fichier com.redhat.rhsa-RHEL7.ds.xml.bz2 est censé se "
-"trouver là."
-
-msgid ""
-"Enables defining a URL path prefix for XCCDF file instead of accessing the "
-"default location.\nexample: http://my_file_server.org:3333/xccdf_files/"
-"\nExpecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
-msgstr ""
-"Permet de définir un préfixe de chemin d'URL pour le fichier XCCDF au lieu "
-"d'accéder à l'emplacement par défaut.\nExemple : http://my_file_server.org:"
-"3333/xccdf_files/\n  Le fichier com.redhat.rhsa-RHEL7.ds.xml.bz2 est censé se "
-"trouver là."
 
 msgid "Enclosure Count"
 msgstr "Nombre de boîtiers"
@@ -25284,14 +25278,6 @@ msgstr "Commutateur hôte"
 
 msgid "Host to VM Relationships"
 msgstr "Relations hôte/machine virtuelle"
-
-msgid ""
-"Host to validate against, Username and matching password fields are needed to "
-"perform verification of credentials"
-msgstr ""
-"Les zones Hôte à utiliser pour la validation, Nom d'utilisateur et Mot de "
-"passe correspondant sont nécessaires pour effectuer la vérification des "
-"identifiants"
 
 msgid "Host vLANs and vSwitches"
 msgstr "Réseaux locaux virtuels et commutateurs virtuels d'hôte"
@@ -35946,12 +35932,6 @@ msgstr "Type d'objet"
 msgid "Object Types"
 msgstr "Types d'objet"
 
-msgid ""
-"Object attribute must be specified to copy object details for use in a Button"
-msgstr ""
-"L'attribut d'objet doit être spécifié pour permettre la copie des détails de "
-"l'objet à utiliser dans un bouton"
-
 msgid "Object info"
 msgstr "Informations sur l'objet"
 
@@ -37306,23 +37286,6 @@ msgid "Paste here the trusted CA certificates, in PEM format."
 msgstr ""
 "Collez ici les certificats de l'autorité de certification digne de confiance, "
 "au format PEM."
-
-msgid ""
-"Paste is not available, no object information has been copied from the "
-"Simulation screen"
-msgstr ""
-"Collage non disponible ; aucune information sur l'objet n'a été copiée à "
-"partir de l'écran de simulation."
-
-msgid ""
-"Paste is not available, target class differs from the target class of the "
-"object copied from the Simulation screen"
-msgstr ""
-"Collage non disponible ; la classe cible diffère de celle de l'objet copié à "
-"partir de l'écran de simulation."
-
-msgid "Paste object details for use in a Button."
-msgstr "Collez les détails d'objet à utiliser dans un bouton."
 
 msgid "Patch"
 msgid_plural "Patches"
@@ -39793,8 +39756,8 @@ msgstr "Mettre à disposition les machines virtuelles à l'aide de ce modèle"
 msgid "Provision Virtual Machines - Select a Template"
 msgstr "Mise à disposition de machines virtuelles - Sélectionner un modèle"
 
-msgid "Provision failed for the following reasons:\n%{errors}"
-msgstr "La mise à disposition a échoué pour les motifs suivants :\n%{errors}"
+msgid "Provision failed for the following reasons:%{errors}"
+msgstr "La mise à disposition a échoué pour les raisons suivantes:%{errors}"
 
 msgid "Provision workflow does not contain the expected method <%{method}>"
 msgstr ""
@@ -45115,13 +45078,6 @@ msgstr "Démarrage du serveur"
 msgid "Server Stop"
 msgstr "Arrêt du serveur"
 
-msgid ""
-"Server information, Username and matching password fields are needed to "
-"perform verification of credentials"
-msgstr ""
-"Les zones Informations du serveur, Nom d'utilisateur et Mot de passe "
-"correspondant sont nécessaires pour effectuer la vérification des identifiants"
-
 msgid "Server is Master"
 msgstr "Le serveur est maître"
 
@@ -47580,9 +47536,6 @@ msgstr "Source des règles de stratégie de sécurité"
 
 msgid "Source template [%{name}] was not found"
 msgstr "Le modèle source [%{name}] est introuvable"
-
-msgid "Spaces are prohibited"
-msgstr "Les espaces ne sont pas autorisés"
 
 msgid "Specific Date and Time"
 msgstr "Date et heure spécifiques"
@@ -53132,17 +53085,16 @@ msgid "VMs in EVM that have been deleted from VC"
 msgstr "Machines virtuelles dans EVM qui ont été supprimées du centre virtuel"
 
 msgid ""
-"VMs must be scanned from an EVM server whose host is attached to the same\n  "
-"storage as the VM unless overridden via SmartProxy affinity.\n  Please verify "
-"that:\n  1) Direct LUNs are attached to ManageIQ appliance\n  2) Management "
-"Relationship is set for the ManageIQ appliance"
+"VMs must be scanned from an appliances whose host is attached to the same "
+"storage as the VM unless overridden via SmartProxy affinity. Please verify "
+"that direct LUNs are attached to the appliance and that the management "
+"relationship is set for the appliance."
 msgstr ""
-"Les machines virtuelles doivent être analysées à partir d'un serveur EVM dont "
-"l'hôte est associé au même\n  espace de stockage que la machine virtuelle, "
-"sauf si ce réglage est remplacé via une affinité SmartProxy.\n  Veuillez "
-"vérifier que :\n  1) Des numéros d'unité logique directs sont associés à "
-"l'appareil ManageIQ\n  2) La relation de gestion est définie pour l'appareil "
-"ManageIQ"
+"Les machines virtuelles doivent être analysées à partir de dispositifs dont "
+"l'hôte est connecté au même stockage que la machine virtuelle, sauf si "
+"l'affinité SmartProxy le permet. Veuillez vérifier que les numéros d'unité "
+"logique (LUN) sont connectés directement au dispositif et que la relation de "
+"gestion est définie pour le dispositif."
 
 msgid "VMs not Powered On"
 msgstr "Machines virtuelles non mises sous tension"
@@ -53599,9 +53551,6 @@ msgstr "Afficher tous les services"
 msgid "View All System Image Types"
 msgstr "Afficher tous les types d'image système"
 
-msgid "View Analysis Profiles"
-msgstr "Afficher tous les profils d'analyse"
-
 msgid "View Availability Zones"
 msgstr "Afficher les zones de disponibilité"
 
@@ -54030,9 +53979,6 @@ msgstr "Afficher les types de volume"
 
 msgid "View Volumes"
 msgstr "Afficher les volumes"
-
-msgid "View Zones"
-msgstr "Afficher les zones"
 
 msgid "View details"
 msgstr "Afficher les détails"
