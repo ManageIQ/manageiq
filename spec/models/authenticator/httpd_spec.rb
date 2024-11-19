@@ -1,5 +1,5 @@
 RSpec.describe Authenticator::Httpd do
-  subject { Authenticator::Httpd.new(config) }
+  subject { Authenticator::Httpd.new(Settings.authentication.to_hash) }
 
   let(:config) { {:httpd_role => false} }
   let(:request) do
@@ -21,6 +21,7 @@ RSpec.describe Authenticator::Httpd do
     # dummy_password_for_external_auth hook runs, and it needs to ask
     # Authenticator#uses_stored_password? whether it's allowed to do anything.
 
+    stub_settings_merge(:authentication => config)
     allow(User).to receive(:authenticator).and_return(subject)
 
     EvmSpecHelper.local_miq_server
@@ -169,6 +170,17 @@ RSpec.describe Authenticator::Httpd do
         'X-Remote-User-Email'     => 'alice@example.com',
         'X-Remote-User-Domain'    => 'example.com',
         'X-Remote-User-Groups'    => 'wibble@fqdn:bubble@fqdn',
+      }
+    end
+
+    let(:user_attrs) do
+      {
+        :username  => "testuser",
+        :fullname  => "Test User",
+        :firstname => "Alice",
+        :lastname  => "Aardvark",
+        :email     => "testuser@example.com",
+        :domain    => "example.com"
       }
     end
 
@@ -702,22 +714,70 @@ RSpec.describe Authenticator::Httpd do
         end
       end
 
-      context "using a comma separated group list" do
+      context "using default delimiters" do
         let(:config) { {:httpd_role => true} }
         let(:headers) do
           super().merge('X-Remote-User-Groups' => 'wibble@fqdn,bubble@fqdn')
         end
+
+        it "parses group names" do
+          expect(subject).to receive(:find_external_identity).with(username, user_attrs, ["wibble@fqdn", "bubble@fqdn"])
+          authenticate
+        end
+      end
+
+      context "using custom delimiter in settings" do
+        let(:config) { {:httpd_role => true, :group_delimiter => ","} }
+        let(:headers) do
+          super().merge('X-Remote-User-Groups' => 'wibble:wobble@fqdn,hobble;bubble@fqdn')
+        end
+
+        it "parses group names that contain characters from the default delimiters (:)" do
+          expect(subject).to receive(:find_external_identity).with(username, user_attrs, ["wibble:wobble@fqdn", "hobble;bubble@fqdn"])
+          authenticate
+        end
+      end
+
+      context "using custom delimiter in settings (despite a header)" do
+        let(:config) { {:httpd_role => true, :group_delimiter => "|"} }
+        let(:headers) do
+          super().merge('X-Remote-User-Groups' => 'wibble,wobble@fqdn|bubble@fqdn', 'X-Remote-User-Group-Delimiter' => ",")
+        end
         let(:user_attrs) do
-          {:username  => "testuser",
+          {
+            :username  => "testuser",
             :fullname  => "Test User",
             :firstname => "Alice",
             :lastname  => "Aardvark",
             :email     => "testuser@example.com",
-            :domain    => "example.com"}
+            :domain    => "example.com"
+          }
         end
 
-        it "handles a comma separated grouplist" do
-          expect(subject).to receive(:find_external_identity).with(username, user_attrs, ["wibble@fqdn", "bubble@fqdn"])
+        it "parses group names that contain characters from header" do
+          expect(subject).to receive(:find_external_identity).with(username, user_attrs, ["wibble,wobble@fqdn", "bubble@fqdn"])
+          authenticate
+        end
+      end
+
+      context "using header delimiter" do
+        let(:config) { {:httpd_role => true} }
+        let(:headers) do
+          super().merge('X-Remote-User-Groups' => 'wibble:wobble@fqdn,bubble@fqdn', 'X-Remote-User-Group-Delimiter' => ",")
+        end
+        let(:user_attrs) do
+          {
+            :username  => "testuser",
+            :fullname  => "Test User",
+            :firstname => "Alice",
+            :lastname  => "Aardvark",
+            :email     => "testuser@example.com",
+            :domain    => "example.com"
+          }
+        end
+
+        it "parses group names that contain characters from default delimiter" do
+          expect(subject).to receive(:find_external_identity).with(username, user_attrs, ["wibble:wobble@fqdn", "bubble@fqdn"])
           authenticate
         end
       end
@@ -726,14 +786,6 @@ RSpec.describe Authenticator::Httpd do
         let(:config) { {:httpd_role => true} }
         let(:headers) do
           super().merge('X-Remote-User-Groups' => CGI.escape('spécial_char@fqdn:moré@fqdn'))
-        end
-        let(:user_attrs) do
-          {:username  => "testuser",
-            :fullname  => "Test User",
-            :firstname => "Alice",
-            :lastname  => "Aardvark",
-            :email     => "testuser@example.com",
-            :domain    => "example.com"}
         end
 
         it "handles group names with escaped special characters" do
@@ -755,13 +807,26 @@ RSpec.describe Authenticator::Httpd do
             'X-Remote-User-Groups'    => nil,
           }
         end
-        let(:user_attrs) do
-          {:username  => "testuser",
-            :fullname  => "Test User",
-            :firstname => "Alice",
-            :lastname  => "Aardvark",
-            :email     => "testuser@example.com",
-            :domain    => "example.com"}
+
+        it "handles nil group names" do
+          expect(subject).to receive(:find_external_identity).with(username, user_attrs, [])
+          authenticate
+        end
+      end
+
+      context "when there are no group names (but a group header)" do
+        let(:config) { {:httpd_role => true} }
+        let(:headers) do
+          {
+            'X-Remote-User'                 => 'testuser',
+            'X-Remote-User-FullName'        => 'Test User',
+            'X-Remote-User-FirstName'       => 'Alice',
+            'X-Remote-User-LastName'        => 'Aardvark',
+            'X-Remote-User-Email'           => 'testuser@example.com',
+            'X-Remote-User-Domain'          => 'example.com',
+            'X-Remote-User-Groups'          => nil,
+            'X-Remote-User-Group-Delimiter' => nil
+          }
         end
 
         it "handles nil group names" do
