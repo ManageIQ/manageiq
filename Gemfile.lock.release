@@ -906,7 +906,7 @@ GEM
       faraday-follow_redirects
       json (~> 2.3)
       query_relation
-    manageiq-appliance_console (9.1.1)
+    manageiq-appliance_console (10.0.0)
       activerecord (>= 6.1.7.6)
       activesupport (>= 6.1.7.6)
       awesome_spawn (~> 1.6)
@@ -1421,7 +1421,7 @@ DEPENDENCIES
   listen (~> 3.2)
   manageiq-api!
   manageiq-api-client (~> 0.5.0)
-  manageiq-appliance_console (~> 9.1, >= 9.1.1)
+  manageiq-appliance_console (~> 10.0)
   manageiq-automation_engine!
   manageiq-consumption!
   manageiq-content!
