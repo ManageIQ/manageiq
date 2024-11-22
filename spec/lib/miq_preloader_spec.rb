@@ -46,28 +46,21 @@ RSpec.describe MiqPreloader do
       emses = ExtManagementSystem.all.load
       vms   = Vm.where(:ems_id => emses.select(:id))
 
-      # TODO: With rails 7, the query count below increased by 1.
-      # This PR says only the singular associations are preloaded in rails 7:
-      # https://github.com/rails/rails/pull/42654
-      expect { preload(emses, :vms, vms) }.to make_database_queries(:count => 2)
+      expect { preload(emses, :vms, vms) }.to make_database_queries(:count => 1)
       expect { expect(emses.first.vms.size).to eq(2) }.not_to make_database_queries
     end
 
     # original behavior - not calling our code
     it "preloads with an unloaded simple relation" do
       vms = Vm.where(:ems_id => ems.id)
-      vms2 = vms.order(:id).to_a # preloaded vms to be used in tests
+      vms2 = vms.order(:id).load # preloaded vms to be used in tests
 
-      # TODO: With rails 7, the query count below increased by 1.
-      # This PR says only the singular associations are preloaded in rails 7:
-      # https://github.com/rails/rails/pull/42654
-      expect { preload(ems, :vms, vms) }.to make_database_queries(:count => 2)
+      expect { preload(ems, :vms, vms) }.to make_database_queries(:count => 1)
 
       expect { preload(ems, :vms, vms) }.not_to make_database_queries
       expect { expect(ems.vms).to match_array(vms2) }.not_to make_database_queries
 
-      # TODO: With rails 7, the query count below decreased by 1.
-      expect { expect(vms.first.ext_management_system).to eq(ems) }.to make_database_queries(:count => 1)
+      expect { expect(vms.first.ext_management_system).to eq(ems) }.to make_database_queries(:count => 2)
     end
 
     it "preloads with a loaded relation (records is a relation)" do
@@ -75,9 +68,6 @@ RSpec.describe MiqPreloader do
       emses = ExtManagementSystem.all.load
       vms   = Vm.where(:ems_id => emses.select(:id)).load
 
-      # TODO: With rails 7, the query count below increased by 1.
-      # This PR says only the singular associations are preloaded in rails 7:
-      # https://github.com/rails/rails/pull/42654
       expect { preload(emses, :vms, vms) }.to make_database_queries(:count => 1)
 
       expect { preload(emses, :vms, vms) }.not_to make_database_queries
@@ -95,36 +85,6 @@ RSpec.describe MiqPreloader do
       expect { preload(vms, :ext_management_system, emses) }.not_to make_database_queries
       expect { expect(vms.size).to eq(2) }.not_to make_database_queries
       expect { expect(vms.first.ext_management_system).to eq(emses.first) }.not_to make_database_queries
-    end
-
-    it "preloads with an array (records is a relation)" do
-      ems
-      emses = ExtManagementSystem.all.load
-      vms = Vm.where(:ems_id => emses.select(:id)).to_a
-      expect { preload(emses, :vms, vms) }.to make_database_queries(:count => 1)
-
-      expect { preload(emses, :vms, vms) }.not_to make_database_queries
-      expect { expect(emses.first.vms.size).to eq(2) }.not_to make_database_queries
-
-      # TODO: With rails 7, the query count below increased by 1.
-      # This PR says only the singular associations are preloaded in rails 7:
-      # https://github.com/rails/rails/pull/42654
-      expect { expect(vms.first.ext_management_system).to eq(ems) }.to make_database_queries(:count => 1)
-    end
-
-    it "preloads with an array (records is an array)" do
-      ems
-      emses = ExtManagementSystem.all.load.to_a
-      vms   = Vm.where(:ems_id => emses.map(&:id)).to_a
-      expect { preload(emses, :vms, vms) }.to make_database_queries(:count => 1)
-
-      expect { preload(emses, :vms, vms) }.not_to make_database_queries
-      expect { expect(emses.first.vms.size).to eq(2) }.not_to make_database_queries
-
-      # TODO: With rails 7, the query count below increased by 1.
-      # This PR says only the singular associations are preloaded in rails 7:
-      # https://github.com/rails/rails/pull/42654
-      expect { expect(vms.first.ext_management_system).to eq(ems) }.to make_database_queries(:count => 1)
     end
 
     it "preloads a through with a loaded scope" do
