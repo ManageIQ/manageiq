@@ -28,7 +28,7 @@ class OperatingSystem < ApplicationRecord
     ["linux_debian",    %w[debian]],
     ["linux_esx",       %w[vmnixx86 vmwareesxserver esxserver vmwareesxi]],
     ["linux_solaris",   %w[solaris]],
-    ["linux_oracle",    %w[oracle]],
+    ["linux_oracle",    ["oracle", /^ol/]],
     ["linux_photon",    %w[photon]],
     ["linux_generic",   %w[linux]],
     ["unix_aix",        %w[aix vios]],
@@ -79,7 +79,10 @@ class OperatingSystem < ApplicationRecord
     clean_os_name = os_name.downcase.gsub(/[^a-z0-9]/, "")
     OS_MAP.each do |normalized_name, candidate_names|
       candidate_names.each do |candidate|
-        return normalized_name if clean_os_name.include?(candidate)
+        if (candidate.kind_of?(String) && clean_os_name.include?(candidate)) ||
+           (candidate.kind_of?(Regexp) && clean_os_name.match?(candidate))
+          return normalized_name
+        end
       end
     end
     "unknown"
