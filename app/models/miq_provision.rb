@@ -16,10 +16,13 @@ class MiqProvision < MiqProvisionTask
   include StateMachine
   include Tagging
 
-  alias_attribute :miq_provision_request, :miq_request   # Legacy provisioning support
-  alias_attribute :provision_type,        :request_type  # Legacy provisioning support
-  alias_attribute :vm,                    :destination
-  alias_attribute :vm_template,           :source
+  alias_method :miq_provision_request, :miq_request     # Legacy provisioning support
+  alias_method :miq_provision_request=, :miq_request=   # Legacy provisioning support
+  alias_attribute :provision_type,        :request_type # Legacy provisioning support
+  alias_method :vm,                       :destination
+  alias_method :vm=,                      :destination=
+  alias_method :vm_template,              :source
+  alias_method :vm_template=,             :source=
 
   before_create :set_template_and_networking
 
@@ -110,7 +113,7 @@ class MiqProvision < MiqProvisionTask
             end
 
     _("%{title} from [%{name}] to [%{vm_name}]") % {:title   => title,
-                                                    :name    => prov_obj.vm_template.name,
+                                                    :name    => prov_obj.source.name,
                                                     :vm_name => vm_name}
   end
 

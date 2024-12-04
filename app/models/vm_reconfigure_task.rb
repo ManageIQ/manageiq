@@ -1,5 +1,6 @@
 class VmReconfigureTask < MiqRequestTask
-  alias_attribute :vm, :source
+  alias_method :vm,  :source
+  alias_method :vm=, :source=
 
   validate :validate_request_type, :validate_state
 

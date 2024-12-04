@@ -315,13 +315,13 @@ module MiqProvisionQuotaMixin
   end
 
   def service_quota_values(request, result)
-    return unless request.service_template
+    return unless request.source
 
-    request.service_template.service_resources.each do |sr|
-      if request.service_template.service_type == ServiceTemplate::SERVICE_TYPE_COMPOSITE
+    request.source.service_resources.each do |sr|
+      if request.source.service_type == ServiceTemplate::SERVICE_TYPE_COMPOSITE
         bundle_quota_values(sr, result)
       else
-        next if request.service_template.prov_type.starts_with?("generic")
+        next if request.source.prov_type.starts_with?("generic")
 
         vm_quota_values(sr.resource, result)
       end
@@ -372,7 +372,7 @@ module MiqProvisionQuotaMixin
   end
 
   def number_of_cpus(prov, cloud, flavor_obj)
-    num_cpus = flavor_obj.try(:cpus) if cloud
+    num_cpus = flavor_obj.try(:cpu_total_cores) if cloud
     return num_cpus if num_cpus.present?
 
     request = prov.kind_of?(MiqRequest) ? prov : prov.miq_request
