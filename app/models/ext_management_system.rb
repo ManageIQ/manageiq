@@ -653,6 +653,11 @@ class ExtManagementSystem < ApplicationRecord
     task.id
   end
 
+  def self.ems_worker_types
+    MiqWorkerType.worker_class_names.select { |klass_name| klass_name.start_with?(name) }.map(&:constantize)
+  end
+  delegate :ems_worker_types, :to => :class
+
   def ems_workers
     MiqWorker.find_alive.where(:queue_name => queue_name)
   end
@@ -878,6 +883,30 @@ class ExtManagementSystem < ApplicationRecord
     if event_monitor_class && !new_record? && credentials_changed?
       _log.info("EMS: [#{name}], Credentials have changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
       stop_event_monitor_queue
+    end
+  end
+
+  def stop_workers_on_endpoint_change
+    return if new_record?
+    return if default_endpoint.changed.include_none?("hostname", "ipaddress")
+
+    _log.info("EMS: [#{name}], Hostname or IP address has changed, stopping workers.  They will be restarted by the WorkerMonitor.")
+
+    stop_workers_for_ems
+  end
+
+  def stop_workers_on_credential_change
+    return if new_record?
+    return unless credentials_changed?
+
+    _log.info("EMS: [#{name}], Credentials have changed, stopping workers.  They will be restarted by the WorkerMonitor.")
+
+    stop_workers_for_ems
+  end
+
+  def stop_workers_for_ems
+    ems_worker_types.select(&:restart_on_change?).each do |worker_klass|
+      worker_klass.stop_worker_for_ems(self)
     end
   end
 
