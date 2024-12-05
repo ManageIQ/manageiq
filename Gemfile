@@ -31,7 +31,7 @@ gem "bootsnap",                         ">= 1.8.1",          :require => false #
 gem "bundler",                          "~> 2.2", ">= 2.2.15", *("!= 2.5.0".."!= 2.5.9"), "!= 2.5.19", :require => false
 gem "byebug",                                                :require => false
 gem "color",                            "~>1.8"
-gem "config",                           "~>2.2", ">=2.2.3",  :require => false
+gem "config",                           "~>5.1",             :require => false
 gem "connection_pool",                                       :require => false # For Dalli
 gem "dalli",                            "~>3.2.3",           :require => false
 gem "default_value_for",                "~>4.0"
