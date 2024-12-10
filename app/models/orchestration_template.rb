@@ -1,6 +1,5 @@
 require 'digest/md5'
 class OrchestrationTemplate < ApplicationRecord
-  include SupportsFeatureMixin
   include NewWithTypeStiMixin
 
   acts_as_miq_taggable

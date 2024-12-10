@@ -1,6 +1,5 @@
 class ConfigurationProfile < ApplicationRecord
   include NewWithTypeStiMixin
-  include SupportsFeatureMixin
 
   acts_as_miq_taggable
   belongs_to :manager, :class_name => 'ExtManagementSystem'

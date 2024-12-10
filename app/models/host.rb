@@ -6,7 +6,6 @@ require 'metadata/linux/LinuxUtils'
 require 'metadata/ScanProfile/HostScanProfiles'
 
 class Host < ApplicationRecord
-  include SupportsFeatureMixin
   include NewWithTypeStiMixin
   include TenantIdentityMixin
   include DeprecationMixin
