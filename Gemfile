@@ -91,7 +91,7 @@ gem "cgi",  "~> 0.3.5"
 # CVE-2023-28756 fixed: ruby 3.1.4 - https://github.com/advisories/GHSA-fg7x-g82r-94qc
 gem "time", "~> 0.2.2"
 # CVE-2023-36617 https://github.com/advisories/GHSA-hww2-5g85-429m
-gem "uri",  "~> 0.13.1" # Avoid URI 1.0.0 for now due to: https://github.com/ruby/uri/issues/125
+gem "uri", "~>1.0", ">=1.0.1" # Avoid URI 1.0.0 due to: https://github.com/ruby/uri/issues/125
 
 # Custom gem that replaces mime-types in order to redirect mime-types calls to mini_mime
 #   Source is located at https://github.com/ManageIQ/mime-types-redirector
