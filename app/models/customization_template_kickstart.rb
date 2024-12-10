@@ -17,7 +17,7 @@ class CustomizationTemplateKickstart < CustomizationTemplate
         File.join(pxe_server.access_url, pxe_server_filepath(pxe_server, pxe_image, mac_address))
       end
 
-    {:ks => ks_access_path, :ksdevice => mac_address}
+    {:"inst.ks" => ks_access_path, :BOOTIF => mac_address}
   end
 
   def default_filename
