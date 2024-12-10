@@ -9,7 +9,8 @@ class ServiceTemplateProvisionRequest < MiqRequest
 
   after_create :process_service_order
 
-  alias_attribute :service_template, :source
+  alias_method :service_template,  :source
+  alias_method :service_template=, :source=
 
   virtual_has_one :picture
   virtual_has_one :service_template
@@ -44,7 +45,7 @@ class ServiceTemplateProvisionRequest < MiqRequest
   end
 
   def my_zone
-    @my_zone ||= dialog_zone || service_template.my_zone
+    @my_zone ||= dialog_zone || source.my_zone
   end
 
   def provision_dialog
