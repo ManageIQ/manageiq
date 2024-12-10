@@ -1,8 +1,15 @@
 module Spec
   module Shared
     module CassetteSecretsHelper
-      DEFAULT_VCR_SECRETS_PATH = Pathname.new(Dir.pwd).join("config/secrets.defaults.yml")
-      VCR_SECRETS_PATH         = Pathname.new(Dir.pwd).join("config/secrets.yml")
+      def default_vcr_secrets_path
+        Pathname.new(Dir.pwd).join("config/secrets.defaults.yml").tap do |path|
+          raise "Default vcr cassette secrets not found: #{path}! Create this file with placeholder secrets to be used in cassettes to avoid leaking actual secrets." unless path.exist?
+        end
+      end
+
+      def vcr_secrets_path
+        Pathname.new(Dir.pwd).join("config/secrets.yml")
+      end
 
       def load_vcr_secrets(pathname)
         if pathname.exist?
@@ -13,11 +20,11 @@ module Spec
       end
 
       def default_vcr_secrets
-        @default_vcr_secrets ||= load_vcr_secrets(DEFAULT_VCR_SECRETS_PATH)
+        @@default_vcr_secrets ||= load_vcr_secrets(default_vcr_secrets_path)
       end
 
       def vcr_secrets
-        @vcr_secrets ||= load_vcr_secrets(VCR_SECRETS_PATH)
+        @@vcr_secrets ||= load_vcr_secrets(vcr_secrets_path)
       end
 
       def default_vcr_secret_by_key_path(*args)
