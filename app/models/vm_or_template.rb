@@ -61,7 +61,10 @@ class VmOrTemplate < ApplicationRecord
   POWER_OPS = %w[start stop suspend reset shutdown_guest standby_guest reboot_guest]
   REMOTE_REGION_TASKS = POWER_OPS + %w[retire_now]
 
-  validates_presence_of     :name, :location
+  # NOTE: different react forms set a maxLength of 50 or 128
+  validates                 :name, :presence => true,  :length => {:maximum => 128}
+  validates                 :description, :length => {:maximum => 100}
+  validates                 :location, :presence => true
   validates                 :vendor, :inclusion => {:in => VENDOR_TYPES.keys}
 
   has_one                   :operating_system, :dependent => :destroy
