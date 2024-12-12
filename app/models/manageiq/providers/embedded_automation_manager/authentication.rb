@@ -4,7 +4,8 @@ class ManageIQ::Providers::EmbeddedAutomationManager::Authentication < ManageIQ:
   # other models
 
   alias_attribute :manager_id, :resource_id
-  alias_attribute :manager, :resource
+  alias_method :manager, :resource
+  alias_method :manager=, :resource=
 
   after_create :set_manager_ref
 
