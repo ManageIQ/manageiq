@@ -244,7 +244,7 @@ group :v2v, :ui_dependencies do
 end
 
 group :web_server, :manageiq_default do
-  gem "puma",                           "~>4.2"
+  gem "puma",                           "~>6.4"
   gem "responders",                     "~>3.0"
   gem "ruby-dbus" # For external auth
   gem "secure_headers",                 "~>3.9"
