@@ -63,7 +63,7 @@ module EventMixin
 
   module ClassMethods
     def ems_event_filter_column
-      @ems_event_filter_column ||= reflect_on_association(:ems_events).try(:foreign_key) || name.foreign_key
+      @ems_event_filter_column ||= reflect_on_association(:ems_events).try(:foreign_key) || base_model.name.foreign_key
     end
 
     def miq_event_filter_column
