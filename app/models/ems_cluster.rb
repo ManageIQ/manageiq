@@ -182,6 +182,17 @@ class EmsCluster < ApplicationRecord
     detect_ancestor(:of_type => 'EmsFolder') { |a| a.kind_of?(Datacenter) }
   end
 
+  has_many :ems_events,
+            ->(cluster) {
+              where("ems_cluster_id" => cluster.id)
+              # TODO: event_where_clause tacks on additional possibly expensive queries
+              # such as all events for all hosts or vms in the cluster
+              #.or(where("host_id" => host_ids)).
+              #or(where("dest_host_id" => host_ids)).
+              #or(where("vm_or_template_id" => vm_or_template_ids)).
+              #or(where("dest_vm_or_template_id" => vm_or_template_ids))
+            },
+            :class_name => "EmsEvent"
   def event_where_clause(assoc = :ems_events)
     return ["ems_cluster_id = ?", id] if assoc.to_sym == :policy_events
 
