@@ -58,20 +58,26 @@ RSpec.describe EventMixin do
       VmOrTemplate        vm_or_template_id
       Vm                  vm_or_template_id
     ].each_slice(2) do |klass, column|
-      it "#{klass} uses #{column} and target_id and target_type" do
-        obj = FactoryBot.create(klass.tableize.singularize)
-        expect(obj.event_stream_filters["EmsEvent"]).to eq(column => obj.id)
-        expect(obj.event_stream_filters.dig("MiqEvent", "target_id")).to eq(obj.id)
-        expect(obj.event_stream_filters.dig("MiqEvent", "target_type")).to eq(obj.class.base_class.name)
+      klasses = klass.constantize.descendants.collect(&:name).unshift(klass)
+      klasses.each do |klass|
+        it "#{klass} uses #{column} and target_id and target_type" do
+          begin
+            obj = FactoryBot.build(klass.tableize.singularize, :name => "test")
+          rescue NameError
+            skip "Unable to build factory from name: #{klass}, possibly due to inflections"
+          end
+          expect(obj.event_stream_filters["EmsEvent"]).to eq(column => obj.id)
+          expect(obj.event_stream_filters.dig("MiqEvent", "target_id")).to eq(obj.id)
+          expect(obj.event_stream_filters.dig("MiqEvent", "target_type")).to eq(obj.class.base_class.name)
+        end
       end
-
-      it "#{klass} behaves like event_where_clause for ems_events" do
-        obj = FactoryBot.create(klass.tableize.singularize)
-        event = FactoryBot.create(:event_stream, column => obj.id)
-        FactoryBot.create(:event_stream)
-        expect(EventStream.where(obj.event_stream_filters["EmsEvent"]).to_a).to eq([event])
-        expect(EventStream.where(obj.event_where_clause(:ems_events)).to_a).to eq([event])
-      end
+    it "#{klass} behaves like event_where_clause for ems_events" do
+      obj = FactoryBot.create(klass.tableize.singularize)
+      event = FactoryBot.create(:event_stream, column => obj.id)
+      FactoryBot.create(:event_stream)
+      expect(EventStream.where(obj.event_stream_filters["EmsEvent"]).to_a).to eq([event])
+      expect(EventStream.where(obj.event_where_clause(:ems_events)).to_a).to eq([event])
+    end
 
       # # TODO: some classes don't have this implemented or don't have columns for this
       # # Do we consolidate policy events and miq events?
