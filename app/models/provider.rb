@@ -3,7 +3,6 @@ class Provider < ApplicationRecord
   include AuthenticationMixin
   include AsyncDeleteMixin
   include EmsRefresh::Manager
-  include SupportsFeatureMixin
   include TenancyMixin
   include UuidMixin
 

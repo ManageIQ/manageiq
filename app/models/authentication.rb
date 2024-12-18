@@ -2,7 +2,6 @@ class Authentication < ApplicationRecord
   acts_as_miq_taggable
   include ImportExport
   include YamlImportExportMixin
-  include SupportsFeatureMixin
   include NewWithTypeStiMixin
   def self.new(*args, &block)
     if self == Authentication && (args.empty? || args.first.kind_of?(Hash))

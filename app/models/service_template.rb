@@ -1,6 +1,4 @@
 class ServiceTemplate < ApplicationRecord
-  include SupportsFeatureMixin
-
   DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS = 120
 
   GENERIC_ITEM_SUBTYPES = {

@@ -1,8 +1,6 @@
 class PhysicalStorage < ApplicationRecord
-  include SupportsFeatureMixin
   include NewWithTypeStiMixin
   include ProviderObjectMixin
-  include SupportsFeatureMixin
   include CustomActionsMixin
   include EmsRefreshMixin
   include EventMixin

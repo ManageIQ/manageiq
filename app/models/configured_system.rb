@@ -1,6 +1,5 @@
 class ConfiguredSystem < ApplicationRecord
   include NewWithTypeStiMixin
-  include SupportsFeatureMixin
   include CustomAttributeMixin
 
   acts_as_miq_taggable
