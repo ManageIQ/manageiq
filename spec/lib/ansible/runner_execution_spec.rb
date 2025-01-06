@@ -27,7 +27,7 @@ RSpec.describe Ansible::Runner do
     it "runs a playbook with variables in a vars file" do
       playbook = data_directory.join("hello_world_vars_file.yml")
 
-      response = Ansible::Runner.public_send(method_under_test, env_vars, extra_vars, playbook)
+      response = Ansible::Runner.public_send(method_under_test, env_vars, extra_vars, playbook, verbosity: 6)
       response = response.wait(5.seconds) if async
 
       expect_ansible_runner_success(response)
@@ -71,6 +71,18 @@ RSpec.describe Ansible::Runner do
         expect_ansible_runner_success(response)
         expect(response.human_stdout).to include('"msg": "Hello World! example_var=\'example var value\'"')
       end
+    end
+
+    it "runs a playbook in a container" do
+      pending("container_image in async mode is not yet implemented") if async
+
+      playbook = data_directory.join("hello_world.yml")
+
+      response = Ansible::Runner.public_send(method_under_test, env_vars, extra_vars, playbook, :container_image => "ghcr.io/ansible-community/community-ee-base:latest")
+      response = response.wait(5.seconds) if async
+
+      expect_ansible_runner_success(response)
+      expect(response.human_stdout).to include('"msg": "Hello World!"')
     end
 
     it "with a payload that fails before running even starts" do
