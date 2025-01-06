@@ -10,10 +10,6 @@ RSpec.describe Ansible::Runner do
     let(:env_vars)   { {} }
     let(:extra_vars) { {} }
 
-    def expect_ansible_runner_success(response)
-      expect(response.return_code).to eq(0), "ansible-runner failed with:\n====== STDERR ======\n#{response.stderr}\n\n====== STDOUT ======\n#{response.human_stdout}"
-    end
-
     it "runs a playbook" do
       playbook = data_directory.join("hello_world.yml")
 
@@ -56,18 +52,18 @@ RSpec.describe Ansible::Runner do
       expect(response.human_stdout).to include('"msg": "Hello World! vars_file_1=vars_file_1_value, vars_file_2=vars_file_2_value"')
     end
 
-    context "runs a playbook using roles from github" do
-      let(:roles_dir) { data_directory.join("hello_world_with_requirements_github/roles/manageiq.example") }
+    context "with a roles/requirements.yml" do
+      let(:roles_path) { data_directory.join("hello_world_with_requirements_github/roles/manageiq.example") }
 
-      after { FileUtils.rm_rf(roles_dir) }
+      after { FileUtils.rm_rf(roles_path) }
 
-      it do
+      it "runs a playbook using roles from github" do
         playbook = data_directory.join("hello_world_with_requirements_github/hello_world_with_requirements_github.yml")
 
         response = Ansible::Runner.public_send(method_under_test, env_vars, extra_vars, playbook)
         response = response.wait(5.seconds) if async
 
-        expect(roles_dir).to exist
+        expect(roles_path).to exist
         expect_ansible_runner_success(response)
         expect(response.human_stdout).to include('"msg": "Hello World! example_var=\'example var value\'"')
       end
@@ -82,6 +78,29 @@ RSpec.describe Ansible::Runner do
     end
   end
 
+  shared_examples_for :executing_roles do
+    let(:method_under_test) { async ? :run_role_async : :run_role }
+    let(:env_vars)   { {} }
+    let(:extra_vars) { {} }
+
+    let(:roles_path) { Dir.mktmpdir("ansible-runner-roles-test") }
+
+    before do
+      FileUtils.cp(data_directory.join("hello_world_with_requirements_github/roles/requirements.yml"), roles_path)
+      AwesomeSpawn.run!("ansible-galaxy", :params => ["install", {:role_file => "requirements.yml", :roles_path => "."}], :chdir => roles_path)
+    end
+
+    after { FileUtils.rm_rf(roles_path) }
+
+    it "runs a role" do
+      response = Ansible::Runner.public_send(method_under_test, env_vars, extra_vars, "manageiq.example", roles_path: roles_path)
+      response = response.wait(5.seconds) if async
+
+      expect_ansible_runner_success(response)
+      expect(response.human_stdout).to include(%q{"msg": "Hello from manageiq.example role! example_var='example var value'"})
+    end
+  end
+
   describe ".run" do
     let(:async) { false }
     include_examples :executing_playbooks
@@ -90,5 +109,19 @@ RSpec.describe Ansible::Runner do
   describe ".run_async" do
     let(:async) { true }
     include_examples :executing_playbooks
+  end
+
+  describe ".run_role" do
+    let(:async) { false }
+    include_examples :executing_roles
+  end
+
+  describe ".run_role_async" do
+    let(:async) { true }
+    include_examples :executing_roles
+  end
+
+  def expect_ansible_runner_success(response)
+    expect(response.return_code).to eq(0), "ansible-runner failed with:\n====== STDERR ======\n#{response.stderr}\n\n====== STDOUT ======\n#{response.human_stdout}"
   end
 end
