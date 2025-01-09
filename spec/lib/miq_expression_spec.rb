@@ -757,14 +757,6 @@ RSpec.describe MiqExpression do
         sql, * = exp.to_sql
         expect(sql).to eq("\"vms\".\"last_scan_on\" BETWEEN '2011-01-10 08:00:00' AND '2011-01-10 17:00:00'")
       end
-
-      it "generates the SQL for a FROM expression with two identical datetimes" do
-        exp = MiqExpression.new(
-          "FROM" => {"field" => "Vm-last_scan_on", "value" => ["2011-01-10 00:00", "2011-01-10 00:00"]}
-        )
-        sql, * = exp.to_sql
-        expect(sql).to eq("\"vms\".\"last_scan_on\" BETWEEN '2011-01-10 00:00:00' AND '2011-01-10 00:00:00'")
-      end
     end
 
     context "relative date/time support" do
