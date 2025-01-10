@@ -165,17 +165,31 @@ module ManageIQ::Providers
 
           # Fetch IDs of all vms and genealogy_parents, only if genealogy_parent is present
           vms_genealogy_parents = vms_inventory_collection.data.each_with_object({}) do |x, obj|
-            unless x.data[:genealogy_parent].nil?
-              genealogy_parent_id = x.data[:genealogy_parent].load.try(:id)
-              obj[x.id] = genealogy_parent_id if genealogy_parent_id
+            next if x.data[:genealogy_parent].nil?
+
+            genealogy_parent_id = x.data[:genealogy_parent].load.try(:id)
+            next if genealogy_parent_id.nil?
+
+            if genealogy_parent_id == x.id
+              _log.warn("Cannot assign genealogy_parent to same object, ID [#{x.id}]")
+              next
             end
+
+            obj[x.id] = genealogy_parent_id
           end
 
           miq_template_genealogy_parents = miq_templates_inventory_collection.data.each_with_object({}) do |x, obj|
-            unless x.data[:genealogy_parent].nil?
-              genealogy_parent_id = x.data[:genealogy_parent].load.try(:id)
-              obj[x.id] = genealogy_parent_id if genealogy_parent_id
+            next if x.data[:genealogy_parent].nil?
+
+            genealogy_parent_id = x.data[:genealogy_parent].load.try(:id)
+            next if genealogy_parent_id.nil?
+
+            if genealogy_parent_id == x.id
+              _log.warn("Cannot assign genealogy_parent to same object, ID [#{x.id}]")
+              next
             end
+
+            obj[x.id] = genealogy_parent_id
           end
 
           ActiveRecord::Base.transaction do
