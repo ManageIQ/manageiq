@@ -198,7 +198,13 @@ module ManageIQ::Providers
                                                                      .where(:id => vms_genealogy_parents.values).find_each.index_by(&:id)
             vms_inventory_collection.model_class
                                     .where(:id => vms_genealogy_parents.keys).find_each do |vm|
-              vm.update!(:genealogy_parent => parent_miq_templates[vms_genealogy_parents[vm.id]])
+              genealogy_parent = parent_miq_templates[vms_genealogy_parents[vm.id]]
+
+              begin
+                vm.update!(:genealogy_parent => genealogy_parent)
+              rescue ActiveRecord::RecordInvalid => err
+                $log.error("#{err} VM id: [#{vm.id}] ems_ref: [#{vm.ems_ref}] genealogy_parent: id: [#{genealogy_parent.id}] ems_ref: [#{genealogy_parent.ems_ref}]")
+              end
             end
           end
 
@@ -208,7 +214,13 @@ module ManageIQ::Providers
                                                  .where(:id => miq_template_genealogy_parents.values).find_each.index_by(&:id)
             miq_templates_inventory_collection.model_class
                                               .where(:id => miq_template_genealogy_parents.keys).find_each do |miq_template|
-              miq_template.update!(:genealogy_parent => parent_vms[miq_template_genealogy_parents[miq_template.id]])
+              genealogy_parent = parent_vms[miq_template_genealogy_parents[miq_template.id]]
+
+              begin
+                miq_template.update!(:genealogy_parent => genealogy_parent)
+              rescue ActiveRecord::RecordInvalid => err
+                $log.error("#{err} MiqTemplate id: [#{miq_template.id}] ems_ref: [#{miq_template.ems_ref}] genealogy_parent: id: [#{genealogy_parent.id}] ems_ref: [#{genealogy_parent.ems_ref}]")
+              end
             end
           end
         end
