@@ -133,6 +133,10 @@ end
 
 group :azure_stack, :manageiq_default do
   manageiq_plugin "manageiq-providers-azure_stack"
+  gem "azure_mgmt_compute",   "~> 0.22.0.1", :require => false, :source => "https://rubygems.manageiq.org"
+  gem "azure_mgmt_monitor",   "~> 0.19.0.1", :require => false, :source => "https://rubygems.manageiq.org"
+  gem "azure_mgmt_network",   "~> 0.26.1.1", :require => false, :source => "https://rubygems.manageiq.org"
+  gem "azure_mgmt_resources", "~> 0.18.2.1", :require => false, :source => "https://rubygems.manageiq.org"
 end
 
 group :cisco_intersight, :manageiq_default do
