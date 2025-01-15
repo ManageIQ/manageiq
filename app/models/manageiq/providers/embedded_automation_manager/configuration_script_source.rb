@@ -92,7 +92,7 @@ class ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource 
     target_directory     ||= Pathname.new(Dir.mktmpdir)
 
     git_repository.update_repo
-    git_repository.checkout(scm_branch, target_directory)
+    git_repository.checkout(scm_branch, target_directory.to_s)
 
     return target_directory unless block_given?
 
