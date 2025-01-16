@@ -2,6 +2,9 @@ class HostAggregate < ApplicationRecord
   include SupportsFeatureMixin
   include NewWithTypeStiMixin
   include Metric::CiMixin
+
+  # TODO: this model doesn't have an event_where_clause, doesn't have a *_id in event_streams but includes
+  # event mixin.  Track down if we need timeline events for this as they look to not be completely supported yet.
   include EventMixin
   include ProviderObjectMixin
 

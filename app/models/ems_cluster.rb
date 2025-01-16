@@ -204,6 +204,12 @@ class EmsCluster < ApplicationRecord
     cond_params
   end
 
+  # TODO: ems_events already exists as a method but it uses
+  # event_where_clause which tacks on additional possibly expensive queries
+  # such as all events for all hosts or vms in the cluster.
+  # Should we move to looking at ems events specifically for the ems cluster?
+  # like this:
+  #   has_many :ems_events, :foreign_key => :ems_cluster_id
   def ems_events
     ewc = event_where_clause
     return [] if ewc.blank?

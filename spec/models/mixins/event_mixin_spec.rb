@@ -46,26 +46,46 @@ RSpec.describe EventMixin do
     # 2) EmsCluster#event_where_clause does an OR:  ems_cluster_id OR (host_id in ? OR dest_host_id IN ?) OR (vm_or_template in ? OR dest_vm_or_template_id in ?) (for now we just do ems_cluster_id in ems_event_filter)
     # 3) Host#event_where_clause does an OR: host_id OR dest_host_id... right now we only do host_id in ems_event_filter
     # 4) VmOrTemplate#event_where_clause does an OR: vm_or_template_id OR dest_vm_or_template_id, we only do vm_or_template_id in ems_event_filter
+    # 5) The following are tested below in the custom behavior section because they have different setup:
+      # Container           container_id
+      # ContainerGroup      container_group_id
+      # ContainerNode       container_node_id
+      # ContainerProject    container_project_id
+      # ContainerReplicator container_replicator_id
+    # The following classes are missing the event_where_clause and their _id column isn't in event_streams table... fix this by removing event mixin or making it work by adding the column.
+    not_implemented = %w[HostAggregate PhysicalServerProfile]
     %w[
       AvailabilityZone    availability_zone_id
       EmsCluster          ems_cluster_id
       ExtManagementSystem ems_id
       Host                host_id
+      HostAggregate       host_aggregate_id
       PhysicalChassis     physical_chassis_id
       PhysicalServer      physical_server_id
+      PhysicalServerProfile physical_server_profile_id
       PhysicalStorage     physical_storage_id
       PhysicalSwitch      physical_switch_id
       VmOrTemplate        vm_or_template_id
       Vm                  vm_or_template_id
     ].each_slice(2) do |klass, column|
-      it "#{klass} uses #{column} and target_id and target_type" do
-        obj = FactoryBot.create(klass.tableize.singularize)
-        expect(obj.event_stream_filters["EmsEvent"]).to eq(column => obj.id)
-        expect(obj.event_stream_filters.dig("MiqEvent", "target_id")).to eq(obj.id)
-        expect(obj.event_stream_filters.dig("MiqEvent", "target_type")).to eq(obj.class.base_class.name)
+      skip = not_implemented.include?(klass)
+      klasses = klass.constantize.descendants.collect(&:name).unshift(klass)
+      klasses.each do |klass|
+        it "#{klass} uses #{column} and target_id and target_type" do
+          skip("Class: #{klass} hasn't fully implemented timeline events") if skip
+          begin
+            obj = FactoryBot.build(klass.tableize.singularize, :name => "test")
+          rescue NameError
+            skip "Unable to build factory from name: #{klass}, possibly due to inflections"
+          end
+          expect(obj.event_stream_filters["EmsEvent"]).to eq(column => obj.id)
+          expect(obj.event_stream_filters.dig("MiqEvent", "target_id")).to eq(obj.id)
+          expect(obj.event_stream_filters.dig("MiqEvent", "target_type")).to eq(obj.class.base_class.name)
+        end
       end
 
       it "#{klass} behaves like event_where_clause for ems_events" do
+        skip("Class: #{klass} hasn't implemented timeline events.  This could be due to no event_where_clause, ems_events association, and/or _id column in event_streams") if skip
         obj = FactoryBot.create(klass.tableize.singularize)
         event = FactoryBot.create(:event_stream, column => obj.id)
         FactoryBot.create(:event_stream)
