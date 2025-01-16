@@ -9,7 +9,11 @@ class PhysicalSwitch < Switch
   has_one :asset_detail, :as => :resource, :dependent => :destroy, :inverse_of => :resource
   has_one :hardware, :dependent => :destroy, :foreign_key => :switch_id, :inverse_of => :physical_switch
   has_many :physical_network_ports, :dependent => :destroy, :foreign_key => :switch_id
+
+  # TODO: Deprecate event_streams if it makes sense, find callers, and change to use ems_events.  Even though event_streams
+  # have only ever been ems_events in this model, we shouldn't rely on that, so callers should use ems_events.
   has_many :event_streams, :inverse_of => :physical_switch, :dependent => :nullify
+  has_many :ems_events, :inverse_of => :physical_switch, :dependent => :nullify
 
   has_many :connected_components, :through => :physical_network_ports, :source => :connected_computer_system
 
