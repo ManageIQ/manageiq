@@ -57,7 +57,7 @@ module ManageIQ::Providers
     end
 
     def self.default_blacklisted_event_names
-      Array(::Settings.ems["ems_#{provider_name.underscore}"].try(:blacklisted_event_names))
+      Array(::Settings.ems["ems_#{ems_type}"].try(:blacklisted_event_names))
     end
 
     # Returns a description of the options that are stored in "options" field.

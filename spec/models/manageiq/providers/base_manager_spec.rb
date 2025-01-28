@@ -12,7 +12,7 @@ RSpec.describe ManageIQ::Providers::BaseManager do
           }
         }
       )
-      allow(described_class).to receive(:provider_name).and_return('SomeProvider')
+      allow(described_class).to receive(:ems_type).and_return(:some_provider)
       expect(described_class.default_blacklisted_event_names).to eq(%w[ev1 ev2])
     end
   end
