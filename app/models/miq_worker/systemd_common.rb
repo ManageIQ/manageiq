@@ -28,6 +28,8 @@ class MiqWorker
       enable_systemd_unit
       write_unit_settings_file
       start_systemd_unit
+
+      unit_name
     end
 
     def stop_systemd_worker
