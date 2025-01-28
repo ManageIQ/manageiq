@@ -124,6 +124,8 @@ class TestSecurityHelper
     raise SecurityTestFailed unless success
   end
 
+  YARN_AUDIT_SEVERITY_SORT = %w[critical high moderate low info]
+
   def self.rebuild_yarn_audit_pending
     if defined?(ENGINE_ROOT)
       engine_root = ENGINE_ROOT
@@ -164,6 +166,7 @@ class TestSecurityHelper
         end
 
         values
+        .sort_by { |v| YARN_AUDIT_SEVERITY_SORT.index(v[1]) || Float::MAX }
         .tableize(:header => false)
         .lines
         .map { |l| l.sub(/^ /, "# ") }
