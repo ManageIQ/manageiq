@@ -89,7 +89,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < MiqWorker::Runner
   end
 
   def filtered_events
-    @ems.class.default_blacklisted_event_names
+    @ems.filtered_event_names
   end
 
   def stop_event_monitor
