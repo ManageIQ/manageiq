@@ -13,8 +13,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < MiqWorker::Runner
     do_exit("Unable to find instance for EMS ID [#{@cfg[:ems_id]}].", 1) if @ems.nil?
     do_exit("EMS ID [#{@cfg[:ems_id]}] failed authentication check.", 1) unless @ems.authentication_check.first
 
-    @filtered_events = @ems.class.default_blacklisted_event_names
-    _log.info("#{log_prefix} Event Catcher skipping the following events:\n#{@filtered_events.to_a.join("\n")}")
+    _log.info("#{log_prefix} Event Catcher skipping the following events:\n#{filtered_events.to_a.join("\n")}")
 
     configure_event_flooding_prevention if worker_settings.try(:[], :flooding_monitor_enabled)
 
@@ -89,23 +88,8 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < MiqWorker::Runner
     end
   end
 
-  attr_reader :filtered_events
-
-  # Called when there is any change in BlacklistedEvent
-  def sync_blacklisted_events
-    return unless @ems
-
-    filters = @ems.default_blacklisted_event_names
-
-    if @filtered_events.nil? || @filtered_events != filters
-      adds    = filters - @filtered_events
-      deletes = @filtered_events - filters
-
-      @filtered_events = filters
-      _log.info("Synchronizing filtered events: #{filters}")
-      _log.info("   Filtered events added: #{adds}")
-      _log.info("   Filtered events deleted: #{deletes}")
-    end
+  def filtered_events
+    @ems.class.default_blacklisted_event_names
   end
 
   def stop_event_monitor
