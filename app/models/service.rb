@@ -105,11 +105,17 @@ class Service < ApplicationRecord
 
   alias parent_service parent
 
-  alias_method :service,  :parent
-  alias_method :service=, :parent=
-
+  # TODO: virtual alias?
   deprecate_attribute :display, :visible, :type => :boolean
   virtual_belongs_to :service
+
+  def service
+    parent
+  end
+
+  def service=(object)
+    self.parent = object
+  end
 
   def power_states
     vms.map(&:power_state)

@@ -13,6 +13,11 @@ class ResourceGroup < ApplicationRecord
   has_many :network_ports, :dependent => :nullify
   has_many :security_groups, :dependent => :nullify
 
-  alias_method :images, :templates
-  alias_method :images=, :templates=
+  def images
+    templates
+  end
+
+  def images=(objects)
+    self.templates = objects
+  end
 end

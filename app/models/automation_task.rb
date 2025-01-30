@@ -1,7 +1,13 @@
 class AutomationTask < MiqRequestTask
-  alias_method :automation_request, :miq_request
-  alias_method :automation_request=, :miq_request=
   AUTOMATE_DRIVES = false
+
+  def automation_request
+    miq_request
+  end
+
+  def automation_request=(object)
+    self.miq_request = object
+  end
 
   def self.get_description(_request_obj)
     "Automation Task"

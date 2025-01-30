@@ -98,6 +98,7 @@ class Host < ApplicationRecord
 
   serialize :settings, :type => Hash
 
+  # TODO: virtual alias?
   deprecate_attribute :address,  :hostname, :type => :string
   alias_attribute     :state,    :power_state
   alias_attribute     :to_s,     :name
