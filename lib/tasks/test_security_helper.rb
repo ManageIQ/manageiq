@@ -166,7 +166,7 @@ class TestSecurityHelper
         end
 
         values
-        .sort_by { |v| YARN_AUDIT_SEVERITY_SORT.index(v[1]) || Float::MAX }
+        .sort_by { |v| [YARN_AUDIT_SEVERITY_SORT.index(v[1]) || Float::MAX, v[2]] } # Sort by severity, then by the GHSA number, for consistency
         .tableize(:header => false)
         .lines
         .map { |l| l.sub(/^ /, "# ") }
