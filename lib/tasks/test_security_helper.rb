@@ -24,6 +24,14 @@ class TestSecurityHelper
     puts "**   engines:"
     puts "**   - #{engine_paths.join("\n**   - ")}"
 
+    # Brakeman's Gemfile detection does not work properly with engines
+    #   Brakeman detects the Gemfile.lock from the application root directory,
+    #   however when running from an engine the lockfile is in the engine
+    #   directory. So, we copy the Gemfile.lock into the application directory.
+    if defined?(ENGINE_ROOT)
+      FileUtils.cp(File.join(ENGINE_ROOT, "Gemfile.lock"), File.join(app_path, "Gemfile.lock"))
+    end
+
     # See all possible options here:
     #   https://brakemanscanner.org/docs/brakeman_as_a_library/#using-options
     options = {
