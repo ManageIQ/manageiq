@@ -94,4 +94,15 @@ RSpec.describe ArVisibleAttribute do
       end
     end
   end
+
+  context ".all_attribute_names" do
+    it "returns columns" do
+      expect(klass.all_attribute_names).to include("name")
+    end
+
+    it "returns aliases" do
+      klass.alias_attribute :name2, :name
+      expect(klass.all_attribute_names).to include("name2")
+    end
+  end
 end

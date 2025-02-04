@@ -15,10 +15,16 @@ module ArVisibleAttribute
       self.hidden_attribute_names += [attribute.to_s]
     end
 
+    # @return Array[String] name of hidden and attributes visible in the api
+    # This includes both attribute names and column aliases
+    def all_attribute_names
+      attribute_names | (try(:attribute_aliases)&.keys || [])
+    end
+
     # @return Array[String] attribute names that can be advertised in the api and reporting
     # Other attributes are accessible, they are just no longer in our public api (or never were)
     def visible_attribute_names
-      attribute_names - hidden_attribute_names
+      all_attribute_names - hidden_attribute_names
     end
   end
 end
