@@ -305,7 +305,6 @@ class ExtManagementSystem < ApplicationRecord
   virtual_sum :total_cloud_memory, :vms,   :ram_size
 
   alias_method :clusters, :ems_clusters # Used by web-services to return clusters as the property name
-  alias_attribute :to_s, :name
 
   default_value_for :enabled, true
 
@@ -421,6 +420,10 @@ class ExtManagementSystem < ApplicationRecord
     else
       name
     end
+  end
+
+  def to_s
+    name
   end
 
   def self.base_manager
