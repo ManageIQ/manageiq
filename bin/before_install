@@ -20,6 +20,7 @@ if [ -n "$CI" ]; then
   if [ "$GITHUB_REPOSITORY_OWNER" = "ManageIQ" -a "$GITHUB_BASE_REF" != "master" -a "$GITHUB_REF_NAME" != "master" ]; then
     echo "== Setup Gemfile.lock.release =="
     cp -f "$APP_ROOT/Gemfile.lock.release" "$APP_ROOT/Gemfile.lock"
+    cat Gemfile.lock
     echo
   fi
 fi
