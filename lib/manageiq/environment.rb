@@ -21,8 +21,6 @@ module ManageIQ
 
       ensure_config_files
 
-      create_database_user if ENV["CI"]
-
       setup_test_environment(:task_prefix => 'app:', :root => plugin_root) unless ENV["SKIP_TEST_RESET"]
 
       prepare_codeclimate_test_reporter(plugin_root) if ENV["CI"]
@@ -115,10 +113,6 @@ module ManageIQ
     def self.clear_logs_and_temp
       puts "\n== Removing old logs and tempfiles =="
       run_rake_task("log:clear tmp:clear")
-    end
-
-    def self.create_database_user
-      system!(%q(psql -c "CREATE USER root SUPERUSER PASSWORD 'smartvm';" -U postgres))
     end
 
     def self.prepare_codeclimate_test_reporter(root = APP_ROOT)
