@@ -346,6 +346,9 @@ GEM
 GEM
   remote: https://rubygems.org/
   specs:
+    ParseTree (1.1.1)
+    PoParser (0.1.1)
+      parslet
     actioncable (6.0.6.1)
       actionpack (= 6.0.6.1)
       nio4r (~> 2.0)
@@ -433,6 +436,7 @@ GEM
       json (>= 1.2.1)
       oauth
       rest-client (>= 1.6.5)
+    ast (2.4.2)
     autoprefixer-rails (10.3.3.0)
       execjs (~> 2)
     autosde_openapi_client (1.1.8)
@@ -506,10 +510,17 @@ GEM
     bootstrap-sass (3.4.1)
       autoprefixer-rails (>= 5.2.1)
       sassc (>= 2.0.0)
+    brakeman (5.0.4)
     builder (3.2.4)
     bunny (2.1.0)
       amq-protocol (>= 2.0.0)
     byebug (11.1.3)
+    capybara (2.5.0)
+      mime-types (>= 1.16)
+      nokogiri (>= 1.3.3)
+      rack (>= 1.0.0)
+      rack-test (>= 0.5.4)
+      xpath (~> 2.0)
     coffee-rails (5.0.0)
       coffee-script (>= 2.2.0)
       railties (>= 5.2.0)
@@ -522,14 +533,26 @@ GEM
     config (2.2.3)
       deep_merge (~> 1.2, >= 1.2.1)
       dry-validation (~> 1.0, >= 1.0.0)
+    coveralls (0.8.23)
+      json (>= 1.8, < 3)
+      simplecov (~> 0.16.1)
+      term-ansicolor (~> 1.3)
+      thor (>= 0.19.4, < 2.0)
+      tins (~> 1.6)
+    crack (0.3.2)
     crass (1.0.6)
     dalli (2.7.6)
+    db-query-matchers (0.10.0)
+      activesupport (>= 4.0, < 7)
+      rspec (~> 3.0)
     dbus-systemd (1.1.2)
       ruby-dbus (~> 0.14)
     declarative (0.0.20)
     deep_merge (1.2.1)
     default_value_for (3.4.0)
       activerecord (>= 3.2.0, < 7.0)
+    diff-lcs (1.2.5)
+    docile (1.1.5)
     docker-api (1.33.6)
       excon (>= 0.38.0)
       json
@@ -578,6 +601,8 @@ GEM
     event_emitter (0.2.6)
     excon (0.88.0)
     execjs (2.8.1)
+    factory_bot (5.1.2)
+      activesupport (>= 4.2.0)
     faker (1.8.7)
       i18n (>= 0.7)
     faraday (0.17.4)
@@ -624,6 +649,8 @@ GEM
     font-awesome-sass (4.6.2)
       sass (>= 3.2)
     font-fabulous (1.0.5)
+    foreman (0.41.0)
+      thor (>= 0.13.6)
     foreman_api_client (1.0.1)
       apipie-bindings (= 0.0.15)
       rest-client (~> 2.0)
@@ -676,6 +703,9 @@ GEM
       websocket-client-simple (~> 0.3.0)
     high_voltage (3.0.0)
     highline (1.6.21)
+    hoe (1.4.0)
+      rake (>= 0.7.3)
+      rubyforge (>= 0.4.4)
     http (4.4.1)
       addressable (~> 2.3)
       http-cookie (~> 1.0)
@@ -737,6 +767,7 @@ GEM
       more_core_extensions (>= 3.5, < 5)
       pg (> 0)
     ipaddress (0.8.3)
+    jaro_winkler (1.5.6)
     jbuilder (2.11.3)
       activesupport (>= 5.0.0)
     jmespath (1.6.2)
@@ -831,6 +862,12 @@ GEM
       activesupport
       net-sftp (~> 2.1)
       net-ssh (~> 4.2)
+    manageiq-style (1.2.0)
+      more_core_extensions
+      optimist
+      rubocop (~> 0.82.0)
+      rubocop-performance
+      rubocop-rails
     marcel (1.0.2)
     memoist (0.16.2)
     memory_buffer (0.1.0)
@@ -894,6 +931,11 @@ GEM
       activerecord (< 6.1)
       pg
     parallel (1.12.1)
+    parallel_tests (0.3.8)
+      parallel
+    parser (2.7.2.0)
+      ast (~> 2.4.1)
+    parslet (0.9.0)
     patternfly-sass (3.59.5)
       bootstrap-sass (~> 3.4.0)
       font-awesome-sass (~> 4.6.2)
@@ -958,6 +1000,8 @@ GEM
       method_source
       rake (>= 0.8.7)
       thor (>= 0.20.3, < 2.0)
+    rainbow (2.2.2)
+      rake
     rake (13.0.6)
     rb-fsevent (0.11.0)
     rb-inotify (0.10.1)
@@ -993,8 +1037,46 @@ GEM
     rexml (3.3.9)
     ripper_ruby_parser (1.5.1)
       sexp_processor (~> 4.10)
+    rspec (3.10.0)
+      rspec-core (~> 3.10.0)
+      rspec-expectations (~> 3.10.0)
+      rspec-mocks (~> 3.10.0)
+    rspec-core (3.10.2)
+      rspec-support (~> 3.10.0)
+    rspec-expectations (3.10.2)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.10.0)
+    rspec-mocks (3.10.3)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.10.0)
+    rspec-rails (4.0.2)
+      actionpack (>= 4.2)
+      activesupport (>= 4.2)
+      railties (>= 4.2)
+      rspec-core (~> 3.10)
+      rspec-expectations (~> 3.10)
+      rspec-mocks (~> 3.10)
+      rspec-support (~> 3.10)
+    rspec-support (3.10.3)
+    rubocop (0.82.0)
+      jaro_winkler (~> 1.5.1)
+      parallel (~> 1.10)
+      parser (>= 2.7.0.1)
+      rainbow (>= 2.2.2, < 4.0)
+      rexml
+      ruby-progressbar (~> 1.7)
+      unicode-display_width (>= 1.4.0, < 2.0)
+    rubocop-performance (0.0.1)
+      rubocop (>= 0.58.0)
+    rubocop-rails (2.0.1)
+      rack (>= 1.1)
+      rubocop (>= 0.70.0)
     ruby-dbus (0.16.0)
     ruby-progressbar (1.7.5)
+    ruby_parser (1.0.0)
+      ParseTree
+      hoe (>= 1.4.0)
+    rubyforge (0.4.5)
     rubyntlm (0.6.3)
     rubyzip (2.0.0)
     rufus-lru (1.0.7)
@@ -1034,6 +1116,11 @@ GEM
       faraday (>= 0.17.3, < 2.0)
       jwt (>= 1.5, < 3.0)
       multi_json (~> 1.10)
+    simplecov (0.16.1)
+      docile (~> 1.1)
+      json (>= 1.8, < 3)
+      simplecov-html (~> 0.10.0)
+    simplecov-html (0.10.2)
     snmp (1.2.0)
     socksify (1.7.1)
     sprockets (3.7.2)
@@ -1058,13 +1145,17 @@ GEM
       ffi (~> 1.9)
     systemu (2.6.5)
     temple (0.8.2)
+    term-ansicolor (1.3.2)
+      tins (~> 1.0)
     terminal (2.0.0)
       escape_utils (~> 1.0)
     text (1.3.1)
     thor (1.1.0)
     thread_safe (0.3.6)
     tilt (2.0.10)
+    timecop (0.9.10)
     timeliness (0.3.10)
+    tins (1.6.0)
     trailblazer-option (0.1.2)
     transaction-simple (1.4.0.2)
     typhoeus (1.4.0)
@@ -1077,10 +1168,12 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8)
+    unicode-display_width (1.4.1)
     useragent (0.16.10)
     uuid (2.3.9)
       macaddr (~> 1.0)
     uuidtools (2.1.5)
+    vcr (5.0.0)
     vmware_web_service (2.1.1)
       activesupport (>= 5.2.4.3, < 6.1)
       ffi-vix_disk_lib (~> 1.1)
@@ -1113,6 +1206,10 @@ GEM
       addressable
       httpi (~> 2.0)
       nokogiri (>= 1.4.2)
+    webmock (3.7.6)
+      addressable (>= 2.3.6)
+      crack (>= 0.3.2)
+      hashdiff (>= 0.4.0, < 2.0.0)
     webpacker (2.0)
       activesupport (>= 4.2)
       multi_json (~> 1.2)
@@ -1151,6 +1248,9 @@ GEM
       httpclient (~> 2.8.3)
       json-schema (~> 2.8.0)
       uuid (~> 2.3.8)
+    xpath (2.0.0)
+      nokogiri (~> 1.3)
+    yard (0.2.3.5)
     zeitwerk (2.5.1)
 
 PLATFORMS
@@ -1160,6 +1260,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  PoParser
   activerecord-session_store (~> 2.0)
   activerecord-virtual_attributes (~> 3.0.0)
   acts_as_tree (~> 2.7)
@@ -1168,17 +1269,24 @@ DEPENDENCIES
   ancestry (~> 3.0.7)
   aws-sdk-s3 (~> 1.0)
   bcrypt (~> 3.1.10)
+  brakeman (~> 5.0)
   bundler (~> 2.1, >= 2.1.4, < 2.5, != 2.2.10)
   byebug
+  capybara (~> 2.5.0)
   color (~> 1.8)
   config (~> 2.2, >= 2.2.3)
+  coveralls (~> 0.8.23)
   dalli (= 2.7.6)
+  db-query-matchers (~> 0.10.0)
   dbus-systemd (~> 1.1.0)
   default_value_for (~> 3.3)
   docker-api (~> 1.33.6)
   elif (= 0.1.0)
   et-orbi (>= 1.2.2)
+  factory_bot (~> 5.1)
+  faker (~> 1.8)
   fast_gettext (~> 2.0.1)
+  foreman
   gettext_i18n_rails (~> 1.7.2)
   gettext_i18n_rails_js (~> 1.3.0)
   hamlit (~> 2.11.0)
@@ -1227,6 +1335,7 @@ DEPENDENCIES
   manageiq-schema!
   manageiq-smartstate (~> 0.7.0)
   manageiq-ssh-util (~> 0.1.1)
+  manageiq-style (~> 1.2.0)
   manageiq-ui-classic!
   manageiq-v2v!
   memoist (~> 0.16.0)
@@ -1237,6 +1346,7 @@ DEPENDENCIES
   net-ping (~> 1.7.4)
   openscap (~> 0.4.8)
   optimist (~> 3.0)
+  parallel_tests
   pg
   pg-dsn_parser (~> 0.1.0)
   pg-logical_replication (~> 1.2)
@@ -1252,8 +1362,10 @@ DEPENDENCIES
   responders (~> 3.0)
   rest-client (~> 2.1.0)
   ripper_ruby_parser (~> 1.5.1)
+  rspec-rails (~> 4.0.1)
   ruby-dbus
   ruby-progressbar (~> 1.7.0)
+  ruby_parser
   rubyzip (~> 2.0.0)
   rufus-scheduler
   rugged (~> 1.1)
@@ -1268,8 +1380,12 @@ DEPENDENCIES
   sys-filesystem (~> 1.4.5)
   systemd-journal (~> 1.4.2)
   terminal
+  timecop (~> 0.9)
+  vcr (~> 5.0)
+  webmock (~> 3.7)
   websocket-driver (~> 0.6.3)
   wim_parser (~> 1.0)
+  yard
 
 BUNDLED WITH
    2.3.26

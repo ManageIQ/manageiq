@@ -256,37 +256,39 @@ group :web_socket, :manageiq_default do
   gem "websocket-driver",               "~>0.6.3",           :require => false
 end
 
+group :appliance, :optional => true do
+  gem "manageiq-appliance_console",     "~>6.0",             :require => false
+end
+
 ### Start of gems excluded from the appliances.
 # The gems listed below do not need to be packaged until we find it necessary or useful.
 # Only add gems here that we do not need on an appliance.
 #
-unless ENV["APPLIANCE"]
-  group :development do
-    gem "foreman"
-    gem "manageiq-style",               "~>1.2.0",           :require => false
-    gem "PoParser"
-    # ruby_parser is required for i18n string extraction
-    gem "ruby_parser",                                       :require => false
-    gem "yard"
-  end
+group :development do
+  gem "foreman"
+  gem "manageiq-style",                 "~>1.2.0",           :require => false
+  gem "PoParser"
+  # ruby_parser is required for i18n string extraction
+  gem "ruby_parser",                                       :require => false
+  gem "yard"
+end
 
-  group :test do
-    gem "brakeman",                     "~>5.0",             :require => false
-    gem "capybara",                     "~>2.5.0",           :require => false
-    gem "coveralls",                    "~>0.8.23",          :require => false
-    gem "db-query-matchers",            "~>0.10.0"
-    gem "factory_bot",                  "~>5.1",             :require => false
+group :test do
+  gem "brakeman",                       "~>5.0",             :require => false
+  gem "capybara",                       "~>2.5.0",           :require => false
+  gem "coveralls",                      "~>0.8.23",          :require => false
+  gem "db-query-matchers",              "~>0.10.0"
+  gem "factory_bot",                    "~>5.1",             :require => false
 
-    # TODO: faker is used for url generation in git repository factory and the lenovo
-    # provider, via a xclarity_client dependency
-    gem "faker",                        "~>1.8",             :require => false
-    gem "timecop",                      "~>0.9",             :require => false
-    gem "vcr",                          "~>5.0",             :require => false
-    gem "webmock",                      "~>3.7",             :require => false
-  end
+  # TODO: faker is used for url generation in git repository factory and the lenovo
+  # provider, via a xclarity_client dependency
+  gem "faker",                          "~>1.8",             :require => false
+  gem "timecop",                        "~>0.9",             :require => false
+  gem "vcr",                            "~>5.0",             :require => false
+  gem "webmock",                        "~>3.7",             :require => false
+end
 
-  group :development, :test do
-    gem "parallel_tests"
-    gem "rspec-rails",                  "~>4.0.1"
-  end
+group :development, :test do
+  gem "parallel_tests"
+  gem "rspec-rails",                    "~>4.0.1"
 end
