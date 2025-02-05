@@ -74,6 +74,10 @@ gem "rubyzip",                          "~>2.0.0",           :require => false
 gem "rugged",                           "~>1.1",             :require => false
 gem "snmp",                             "~>1.2.0",           :require => false
 gem "sprockets",                        "~>3.7.2",           :require => false
+# stringio is an indirect dependency (part of rails internal gems)
+# CVE-2024-27280
+# resolved in ruby 3.0.7, ruby 3.1.5, and ruby >=3.2
+gem "stringio",                         "~>3.0.3",           :require => false
 gem "sync",                             "~>0.5",             :require => false
 gem "sys-filesystem",                   "~>1.4.5"
 gem "terminal",                                              :require => false

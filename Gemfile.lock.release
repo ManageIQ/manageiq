@@ -1045,6 +1045,7 @@ GEM
       sprockets (>= 3.0.0)
     sshkey (1.8.0)
     stomp (1.4.10)
+    stringio (3.0.9)
     surro-gate (1.0.5)
       concurrent-ruby
     sync (0.5.0)
