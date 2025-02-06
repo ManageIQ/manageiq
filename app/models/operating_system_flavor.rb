@@ -1,6 +1,6 @@
 class OperatingSystemFlavor < ApplicationRecord
   acts_as_miq_taggable
-  belongs_to :provisioning_manager
+  belongs_to :provisioning_manager, :class_name => "ManageIQ::Providers::ProvisioningManager"
 
   has_and_belongs_to_many :customization_scripts
   has_and_belongs_to_many :customization_script_ptables,
