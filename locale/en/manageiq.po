@@ -1138,6 +1138,16 @@ msgstr ""
 msgid "%{protocol} port %{port} to pods on target port:'%{target_port}'"
 msgstr ""
 
+msgid "%{provider_description} Job"
+msgid_plural "%{provider_description} Jobs"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%{provider_description} Workflow Job"
+msgid_plural "%{provider_description} Workflow Jobs"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "%{record_name} has no snapshots"
 msgstr ""
 
@@ -2062,18 +2072,8 @@ msgstr ""
 msgid "AWX"
 msgstr ""
 
-msgid "AWX Job"
-msgid_plural "AWX Jobs"
-msgstr[0] ""
-msgstr[1] ""
-
 msgid "AWX Provider"
 msgstr ""
-
-msgid "AWX Workflow Job"
-msgid_plural "AWX Workflow Jobs"
-msgstr[0] ""
-msgstr[1] ""
 
 msgid "Abandon changes?"
 msgstr ""
@@ -3175,6 +3175,9 @@ msgstr ""
 msgid "Add of new Chargeback Rate was cancelled by the user"
 msgstr ""
 
+msgid "Add of new Class was cancelled by the user"
+msgstr ""
+
 msgid "Add of new Cloud Network was cancelled by the user"
 msgstr ""
 
@@ -4164,6 +4167,12 @@ msgstr ""
 msgid "Ansible Access Method"
 msgstr ""
 
+msgid "Ansible Automation Platform"
+msgstr ""
+
+msgid "Ansible Automation Platform Provider"
+msgstr ""
+
 msgid "Ansible Playbook"
 msgstr ""
 
@@ -4191,9 +4200,6 @@ msgstr ""
 msgid "Ansible Tower Jobs"
 msgstr ""
 
-msgid "Ansible Tower Provider"
-msgstr ""
-
 msgid "Ansible Tower Providers"
 msgstr ""
 
@@ -4202,11 +4208,6 @@ msgstr ""
 
 msgid "Ansible Tower Templates"
 msgstr ""
-
-msgid "Ansible Tower Workflow Job"
-msgid_plural "Ansible Tower Workflow Jobs"
-msgstr[0] ""
-msgstr[1] ""
 
 msgid "Ansible Tower Workflow Template"
 msgstr ""
@@ -5374,11 +5375,14 @@ msgid_plural "Automation Managers (AWX)"
 msgstr[0] ""
 msgstr[1] ""
 
-#, fuzzy
-msgid "Automation Manager (Ansible Tower)"
-msgid_plural "Automation Managers (Ansible Tower)"
+msgid "Automation Manager (Ansible Automation Platform)"
+msgid_plural "Automation Managers (Ansible Automation Platform)"
 msgstr[0] ""
 msgstr[1] ""
+
+#, fuzzy
+msgid "Automation Manager (Ansible Tower)"
+msgstr ""
 
 msgid "Automation Manager Repositories Refresh"
 msgstr ""
@@ -5412,6 +5416,9 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "Automation log downloaded"
+msgstr ""
+
+msgid "Automation simulation has been run"
 msgstr ""
 
 msgid "Automations Tasks"
@@ -7921,6 +7928,12 @@ msgstr ""
 msgid "Class"
 msgstr ""
 
+msgid "Class \"%s\" was added"
+msgstr ""
+
+msgid "Class \"%s\" was saved"
+msgstr ""
+
 msgid "Class '%{name}' is not eligible for classification"
 msgstr ""
 
@@ -10180,13 +10193,8 @@ msgid_plural "Configured Systems"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Configured System (AWX)"
-msgid_plural "Configured Systems (AWX)"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Configured System (Ansible Tower)"
-msgid_plural "Configured Systems (Ansible Tower)"
+msgid "Configured System (%{provider_description})"
+msgid_plural "Configured Systems (%{provider_description})"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -18979,6 +18987,9 @@ msgstr ""
 msgid "Edit of Chargeback Rate \"%{name}\" was cancelled by the user"
 msgstr ""
 
+msgid "Edit of Class \"%s\" cancelled by the user"
+msgstr ""
+
 msgid "Edit of Class Schema Sequence '%{name}'"
 msgstr ""
 
@@ -25924,16 +25935,14 @@ msgstr ""
 msgid "Job Template"
 msgstr ""
 
-msgid "Job Template (AWX)"
-msgid_plural "Job Templates (AWX)"
+msgid "Job Template (%{provider_description})"
+msgid_plural "Job Templates (%{provider_description})"
 msgstr[0] ""
 msgstr[1] ""
 
 #, fuzzy
 msgid "Job Template (Ansible Tower)"
-msgid_plural "Job Templates (Ansible Tower)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr ""
 
 msgid "Job Templates (Ansible Tower)"
 msgstr ""
@@ -32501,6 +32510,9 @@ msgstr ""
 msgid "My Company Categories"
 msgstr ""
 
+msgid "My Company Tags"
+msgstr ""
+
 msgid "My EVM Group"
 msgstr ""
 
@@ -32567,6 +32579,9 @@ msgid "Name has already been taken"
 msgstr ""
 
 msgid "Name is required"
+msgstr ""
+
+msgid "Name may contain only alphanumeric and _ . - characters"
 msgstr ""
 
 msgid "Name must be unique"
@@ -34461,9 +34476,6 @@ msgid "Object"
 msgstr ""
 
 msgid "Object Attribute"
-msgstr ""
-
-msgid "Object Attribute 1"
 msgstr ""
 
 msgid "Object Attribute Name"
@@ -37133,16 +37145,14 @@ msgid ""
 "y importing by skiping this playbook using --skip_playbook pb1, pb2."
 msgstr ""
 
-msgid "Playbook (AWX)"
-msgid_plural "Playbooks (AWX)"
+msgid "Playbook (%{provider_description})"
+msgid_plural "Playbooks (%{provider_description})"
 msgstr[0] ""
 msgstr[1] ""
 
 #, fuzzy
 msgid "Playbook (Ansible Tower)"
-msgid_plural "Playbooks (Ansible Tower)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr ""
 
 msgid "Playbook (Embedded Ansible)"
 msgid_plural "Playbooks (Embedded Ansible)"
@@ -53620,16 +53630,14 @@ msgstr ""
 msgid "Workflow Template"
 msgstr ""
 
-msgid "Workflow Template (AWX)"
-msgid_plural "Workflow Templates (AWX)"
+msgid "Workflow Template (%{provider_description})"
+msgid_plural "Workflow Templates (%{provider_description})"
 msgstr[0] ""
 msgstr[1] ""
 
 #, fuzzy
 msgid "Workflow Template (Ansible Tower)"
-msgid_plural "Workflow Templates (Ansible Tower)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr ""
 
 msgid "Workflow Templates (Ansible Tower)"
 msgstr ""
