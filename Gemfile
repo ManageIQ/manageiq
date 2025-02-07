@@ -31,6 +31,7 @@ gem "bundler",                          "~> 2.1", ">= 2.1.4", "!= 2.2.10", "< 2.
 gem "byebug",                                                :require => false
 gem "color",                            "~>1.8"
 gem "config",                           "~>2.2", ">=2.2.3",  :require => false
+gem "cgi",                              "~> 0.1.0", ">= 0.1.0.2", :require => false # CVE-2021-33621 fixed: ruby 2.7.7 - https://github.com/advisories/GHSA-vc47-6rqg-c7f5
 gem "dalli",                            "=2.7.6",            :require => false
 gem "default_value_for",                "~>3.3"
 gem "docker-api",                       "~>1.33.6",          :require => false
@@ -74,13 +75,12 @@ gem "rubyzip",                          "~>2.0.0",           :require => false
 gem "rugged",                           "~>1.1",             :require => false
 gem "snmp",                             "~>1.2.0",           :require => false
 gem "sprockets",                        "~>3.7.2",           :require => false
-# stringio is an indirect dependency (part of rails internal gems)
-# CVE-2024-27280
-# resolved in ruby 3.0.7, ruby 3.1.5, and ruby >=3.2
-gem "stringio",                         "~>3.0.3",           :require => false
+gem "stringio",                         "~>3.0.3",           :require => false # indirect dependency CVE-2024-27280 (resolved in ruby 3.0.7, ruby 3.1.5, and ruby >=3.2)
 gem "sync",                             "~>0.5",             :require => false
 gem "sys-filesystem",                   "~>1.4.5"
 gem "terminal",                                              :require => false
+gem "time",                             "~> 0.1.1"                             # CVE-2023-28756 fixed: ruby 3.0.6 - https://github.com/advisories/GHSA-fg7x-g82r-94qc
+gem "uri",                              "~> 0.10.0", ">= 0.10.0.3"             # CVE-2023-28755 CVE-2023-36617 https://github.com/advisories/GHSA-hww2-5g85-429m
 gem "wim_parser",                       "~>1.0",             :require => false
 
 # Custom gem that replaces mime-types in order to redirect mime-types calls to mini_mime
