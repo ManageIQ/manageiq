@@ -176,6 +176,8 @@ namespace :release do
     puts
   end
 
+  # usage:
+  #   RELEASE_BRANCH=morphy UPDATE_GEMS="json" be rake release:generate_lockfile
   desc "Generate the Gemfile.lock.release file"
   task :generate_lockfile do
     branch = ENV["RELEASE_BRANCH"]
@@ -191,9 +193,11 @@ namespace :release do
     # Ensure that local and global bundler.d is not enabled
     local_bundler_d  = root.join("bundler.d")
     global_bundler_d = Pathname.new(Dir.home).join(".bundler.d")
-    if (local_bundler_d.exist? && local_bundler_d.glob("*.rb").any?) ||
-       (global_bundler_d.exist? && global_bundler_d.glob("*.rb").any?)
+    bundler_inject_files = local_bundler_d.glob("*.rb") + global_bundler_d.glob("*.rb")
+
+    if bundler_inject_files.any?
       STDERR.puts "ERROR: You cannot run generate_lockfile with bundler-inject files present."
+      STDERR.puts "files found: #{bundler_inject_files.join(", ")}"
       exit 1
     end
 
