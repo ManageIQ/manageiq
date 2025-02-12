@@ -56,9 +56,10 @@ module ManageIQ::Providers
       VMDB::Util.http_proxy(ems_type.try(:to_sym)) || VMDB::Util.http_proxy
     end
 
-    def self.default_blacklisted_event_names
-      Array(::Settings.ems["ems_#{provider_name.underscore}"].try(:blacklisted_event_names))
+    def self.filtered_event_names
+      Array(::Settings.ems["ems_#{ems_type}"].try(:blacklisted_event_names))
     end
+    delegate :filtered_event_names, :to => :class
 
     # Returns a description of the options that are stored in "options" field.
     def self.options_description

@@ -266,7 +266,6 @@ class MiqWorker::Runner
     Vmdb::Settings.reload!
     @my_zone ||= MiqServer.my_zone
     sync_worker_settings
-    sync_blacklisted_events
     after_sync_config
 
     _log.info("ID [#{@worker.id}], PID [#{Process.pid}], GUID [#{@worker.guid}], Zone [#{@my_zone}], Active Roles [#{@active_roles.join(',')}], Assigned Roles [#{MiqServer.my_role}], Configuration:")
@@ -400,9 +399,6 @@ class MiqWorker::Runner
   end
 
   def before_exit(_message, _exit_code)
-  end
-
-  def sync_blacklisted_events
   end
 
   #
