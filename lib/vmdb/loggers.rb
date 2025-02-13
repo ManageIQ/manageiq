@@ -86,23 +86,8 @@ module Vmdb
       log_file = ManageIQ.root.join("log", log_file) if log_file.try(:dirname).to_s == "."
       progname = log_file.try(:basename, ".*").to_s
 
-      logger_class.new(nil, :progname => progname).tap do |logger|
-        # HACK: In order to access the wrapped logger in test, we inject it as an instance var.
-        if Rails.env.test?
-          logger.instance_variable_set(:@wrapped_logger, wrapped_logger)
-
-          def logger.wrapped_logger
-            @wrapped_logger
-          end
-        end
-
-        logger.extend(ActiveSupport::Logger.broadcast(wrapped_logger))
-        if logger.class.const_defined?(:FormatterMixin)
-          wrapped_logger.formatter.extend(logger.class.const_get(:FormatterMixin))
-        end
-
-        wrapped_logger.progname = progname
-      end
+      logger = logger_class.new(nil, :progname => progname)
+      logger.wrap(wrapped_logger).tap { |broadcaster| broadcaster.progname = progname }
     end
 
     private_class_method def self.configure_external_loggers

@@ -32,7 +32,7 @@ RSpec.describe Vmdb::Loggers do
 
       subject { described_class.create_logger(log_file) }
 
-      let(:container_log) { subject.try(:wrapped_logger) }
+      let(:container_log) { subject.try(:broadcasts).try(:last) }
 
       before do
         # Hide the container logger output to STDOUT
@@ -65,7 +65,8 @@ RSpec.describe Vmdb::Loggers do
 
       it "#logdev" do
         if container_log
-          expect(subject.logdev).to be_nil
+          expect(subject.broadcasts.first.logdev).to be_nil
+          expect(container_log.logdev).to be_a Logger::LogDevice
         else
           expect(subject.logdev).to be_a Logger::LogDevice
         end
@@ -73,7 +74,12 @@ RSpec.describe Vmdb::Loggers do
 
       describe "#datetime_format" do
         it "return nil" do
-          expect(subject.datetime_format).to be nil
+          if container_log
+            expect(subject.datetime_format.first).to be nil
+            expect(subject.datetime_format.last).to be nil
+          else
+            expect(subject.datetime_format).to be nil
+          end
         end
 
         it "does not raise an error" do
@@ -91,15 +97,18 @@ RSpec.describe Vmdb::Loggers do
           end
 
           it "forwards to the other loggers" do
-            expect(subject).to       receive(:add).with(1, nil, "test message").and_call_original
-            expect(container_log).to receive(:add).with(1, nil, "test message").and_call_original if container_log
-
+            if container_log
+              expect(subject.broadcasts.first).to receive(:add).with(1, nil, "test message").and_call_original
+              expect(subject.broadcasts.last).to receive(:add).with(1, nil, "test message").and_call_original
+            else
+              expect(subject).to receive(:add).with(1, nil, "test message").and_call_original
+            end
             subject.info("test message")
           end
 
           it "only forwards the message if the severity is correct" do
             if container_log
-              expect(subject.logdev).to           be_nil
+              expect(subject.broadcasts.first.logdev).to be_nil
               expect(container_log.logdev).not_to receive(:write).with("test message")
             else
               expect(subject.logdev).not_to       receive(:write).with("test message")
@@ -139,8 +148,12 @@ RSpec.describe Vmdb::Loggers do
         let(:log_file) { StringIO.new }
 
         it "logs correctly" do
-          expect(subject).to       receive(:add).with(1, nil, "test message").and_call_original
-          expect(container_log).to receive(:add).with(1, nil, "test message").and_call_original if container_log
+          if container_log
+            expect(subject.broadcasts.first).to receive(:add).with(1, nil, "test message").and_call_original
+            expect(subject.broadcasts.last).to receive(:add).with(1, nil, "test message").and_call_original
+          else
+            expect(subject).to receive(:add).with(1, nil, "test message").and_call_original
+          end
 
           subject.info("test message")
 
@@ -154,8 +167,12 @@ RSpec.describe Vmdb::Loggers do
         after { log_file.delete if log_file.exist? }
 
         it "logs correctly" do
-          expect(subject).to       receive(:add).with(1, nil, "test message").and_call_original
-          expect(container_log).to receive(:add).with(1, nil, "test message").and_call_original if container_log
+          if container_log
+            expect(subject.broadcasts.first).to receive(:add).with(1, nil, "test message").and_call_original
+            expect(subject.broadcasts.last).to receive(:add).with(1, nil, "test message").and_call_original
+          else
+            expect(subject).to receive(:add).with(1, nil, "test message").and_call_original
+          end
 
           subject.info("test message")
 
@@ -169,9 +186,12 @@ RSpec.describe Vmdb::Loggers do
         after { File.delete(log_file) if File.exist?(log_file) }
 
         it "logs correctly" do
-          expect(subject).to       receive(:add).with(1, nil, "test message").and_call_original
-          expect(container_log).to receive(:add).with(1, nil, "test message").and_call_original if container_log
-
+          if container_log
+            expect(subject.broadcasts.first).to receive(:add).with(1, nil, "test message").and_call_original
+            expect(subject.broadcasts.last).to receive(:add).with(1, nil, "test message").and_call_original
+          else
+            expect(subject).to receive(:add).with(1, nil, "test message").and_call_original
+          end
           subject.info("test message")
 
           expect(File.read(log_file)).to include("test message") unless container_log
@@ -212,12 +232,15 @@ RSpec.describe Vmdb::Loggers do
 
       it "will honor the log level in the container logger" do
         log = described_class.create_logger(log_file_name)
-        container_log = log.wrapped_logger
+        container_log = log.broadcasts.last
 
         described_class.apply_config_value({:level_foo => :error}, log, :level_foo)
-
         expect(log.level).to           eq(Logger::ERROR)
         expect(container_log.level).to eq(Logger::ERROR)
+
+        described_class.apply_config_value({:level_foo => :debug}, log, :level_foo)
+        expect(log.level).to           eq(Logger::DEBUG)
+        expect(container_log.level).to eq(Logger::DEBUG)
       end
     end
   end
