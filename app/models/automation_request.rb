@@ -1,11 +1,17 @@
 class AutomationRequest < MiqRequest
-  alias_attribute :automation_tasks, :miq_request_tasks
-
   TASK_DESCRIPTION  = N_('Automation Request')
   DEFAULT_NAMESPACE = "SYSTEM"
   DEFAULT_CLASS     = "PROCESS"
   DEFAULT_INSTANCE  = "AUTOMATION_REQUEST"
   SOURCE_CLASS_NAME = nil
+
+  def automation_tasks
+    miq_request_tasks
+  end
+
+  def automation_tasks=(objects)
+    self.miq_request_tasks = objects
+  end
 
   ##############################################
   # uri_parts:  instance=IIII|message=MMMM or any subset thereof

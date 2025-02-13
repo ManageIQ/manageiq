@@ -21,7 +21,9 @@ module DeprecationMixin
     end
 
     def deprecate_attribute_methods(old_attribute, new_attribute)
-      alias_attribute old_attribute, new_attribute
+      define_method(old_attribute) { self.send(new_attribute) }
+      define_method("#{old_attribute}=") { |object| self.send("#{new_attribute}=", object) }
+      define_method("#{old_attribute}?") { self.send("#{new_attribute}?") }
       ["", "=", "?"].each { |suffix| Vmdb::Deprecation.deprecate_methods(self, "#{old_attribute}#{suffix}" => "#{new_attribute}#{suffix}") }
     end
   end

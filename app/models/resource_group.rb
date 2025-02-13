@@ -1,6 +1,5 @@
 class ResourceGroup < ApplicationRecord
   acts_as_miq_taggable
-  alias_attribute :images, :templates
 
   belongs_to :ext_management_system, :foreign_key => :ems_id
 
@@ -13,4 +12,12 @@ class ResourceGroup < ApplicationRecord
   has_many :cloud_networks, :dependent => :nullify
   has_many :network_ports, :dependent => :nullify
   has_many :security_groups, :dependent => :nullify
+
+  def images
+    templates
+  end
+
+  def images=(objects)
+    self.templates = objects
+  end
 end

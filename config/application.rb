@@ -91,10 +91,6 @@ module Vmdb
     config.action_cable.allow_same_origin_as_host = true
     config.action_cable.mount_path = '/ws/notifications'
 
-    # In Rails 6.1+, Active Record provides a new internal API for connection management
-    # and the legacy connection handling is deprecated.
-    config.active_record.legacy_connection_handling = false
-
     # Rails 6.1.7+ has a protection to not lookup values by a large number.
     # A lookup/comparison with a large number (bigger than bigint)
     # needs to cast the db column to a double/numeric.
@@ -134,6 +130,8 @@ module Vmdb
     config.autoload_paths << Rails.root.join("lib/services").to_s
 
     config.autoload_once_paths << Rails.root.join("lib/vmdb/console_methods.rb").to_s
+
+    config.active_record.default_column_serializer = YAML if Rails.version >= "7.1"
 
     require_relative '../lib/request_started_on_middleware'
     config.middleware.use RequestStartedOnMiddleware

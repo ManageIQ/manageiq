@@ -9,8 +9,6 @@ class ServiceTemplateProvisionRequest < MiqRequest
 
   after_create :process_service_order
 
-  alias_attribute :service_template, :source
-
   virtual_has_one :picture
   virtual_has_one :service_template
   virtual_has_one :provision_dialog
@@ -24,6 +22,14 @@ class ServiceTemplateProvisionRequest < MiqRequest
 
   alias_method :user, :get_user
   include MiqProvisionQuotaMixin
+
+  def service_template
+    source
+  end
+
+  def service_template=(object)
+    self.source = object
+  end
 
   def process_service_order
     if cancel_requested?

@@ -4,6 +4,7 @@ class MiqSchedule < ApplicationRecord
   include Filters
 
   include YamlImportExportMixin
+  # TODO: towhat is a virtual alias?
   deprecate_attribute :towhat, :resource_type, :type => :string
 
   validates :name, :uniqueness_when_changed => {:scope => [:userid, :resource_type]}

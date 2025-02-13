@@ -52,7 +52,6 @@ class TenantQuota < ApplicationRecord
   scope :templates_allocated, -> { where(:name => :templates_allocated) }
 
   virtual_column :name, :type => :string
-  virtual_column :total, :type => :integer
   virtual_column :used, :type => :float
   virtual_column :allocated, :type => :float
   virtual_column :available, :type => :float

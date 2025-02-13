@@ -4,8 +4,6 @@ class ManageIQ::Providers::EmbeddedAutomationManager::Authentication < ManageIQ:
   # other models
 
   alias_attribute :manager_id, :resource_id
-  alias_attribute :manager, :resource
-
   after_create :set_manager_ref
 
   supports :create
@@ -15,6 +13,14 @@ class ManageIQ::Providers::EmbeddedAutomationManager::Authentication < ManageIQ:
   COMMON_ATTRIBUTES = {}.freeze
   EXTRA_ATTRIBUTES = {}.freeze
   API_ATTRIBUTES = COMMON_ATTRIBUTES.merge(EXTRA_ATTRIBUTES).freeze
+
+  def manager
+    resource
+  end
+
+  def manager=(object)
+    self.resource = object
+  end
 
   def self.display_name(number = 1)
     n_('Credential', 'Credentials', number)
