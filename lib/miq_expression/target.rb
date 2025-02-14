@@ -63,6 +63,10 @@ class MiqExpression::Target
     column_type == :decimal
   end
 
+  def integer?
+    column_type == :integer
+  end
+
   def tag?
     false
   end
