@@ -112,7 +112,7 @@ module Vmdb
 
     # FYI, this is where load_defaults is defined as of 7.2:
     # https://github.com/rails/rails/blob/d437ae311f1b9dc40b442e40eb602e020cec4e49/railties/lib/rails/application/configuration.rb#L92
-    config.load_defaults 7.0
+    config.load_defaults 7.1
 
     # TODO: this is the only change we had from defaults in 7.0.  See secure_headers.rb.  It's 0 in defaults.
     config.action_dispatch.default_headers["X-XSS-Protection"] = "1; mode=block"
@@ -128,6 +128,10 @@ module Vmdb
     # TODO: We should fix this so we don't need to carry this override.
     config.active_record.belongs_to_required_by_default = false
 
+    # TODO: Rails 7.1 default overridden to fix loading scanning_operations_mixin, dialog_import_service
+    # manageiq/providers/infra_manager/template, dialog_field_importer, workers/event_catcher
+    config.add_autoload_paths_to_load_path = true
+
     # NOTE:  If you are going to make changes to autoload_paths, please make
     # sure they are all strings.  Rails will push these paths into the
     # $LOAD_PATH.
@@ -136,12 +140,6 @@ module Vmdb
     #
     #   https://bugs.ruby-lang.org/issues/14372
     #
-
-    # TODO: Remove this once we move to config.load_defaults 7.0 as this is the default.
-    # Note, rails 7 can read cache format from 6 or 7 so there is no risk if you're running rails 7.
-    # See: https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#new-activesupport-cache-serialization-format
-    warn "Warning: Remove redundant config.active_support.cache_format_version = 7.0 from #{__FILE__}:#{__LINE__ + 1} if using config.load_defaults 7.0" if config.active_support.cache_format_version == 7.0
-    config.active_support.cache_format_version = 7.0
 
     config.autoload_paths << Rails.root.join("app/models/aliases").to_s
     config.autoload_paths << Rails.root.join("app/models/mixins").to_s
