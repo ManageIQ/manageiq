@@ -51,7 +51,6 @@ class MiqRequest < ApplicationRecord
   virtual_column  :v_workflow_class,     :type => :string,   :uses => :workflow
   virtual_column  :request_type_display, :type => :string
   virtual_column  :resource_type,        :type => :string
-  virtual_column  :state,                :type => :string
 
   delegate :allowed_tags,                :to => :workflow,   :prefix => :v,  :allow_nil => true
   delegate :class,                       :to => :workflow,   :prefix => :v_workflow

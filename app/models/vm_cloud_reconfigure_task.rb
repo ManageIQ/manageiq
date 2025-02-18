@@ -1,6 +1,4 @@
 class VmCloudReconfigureTask < MiqRequestTask
-  alias_attribute :vm, :source
-
   validate :validate_request_type, :validate_state
 
   AUTOMATE_DRIVES = false
@@ -23,6 +21,14 @@ class VmCloudReconfigureTask < MiqRequestTask
       name = req_obj.source.name
     end
     "#{request_class::TASK_DESCRIPTION} for: #{name}"
+  end
+
+  def vm
+    source
+  end
+
+  def vm=(object)
+    self.source = object
   end
 
   def after_request_task_create

@@ -1,6 +1,13 @@
 class VmRetireTask < MiqRetireTask
-  alias_attribute :vm, :source
   default_value_for :request_type, "vm_retire"
+
+  def vm
+    source
+  end
+
+  def vm=(object)
+    self.source = object
+  end
 
   def self.base_model
     VmRetireTask

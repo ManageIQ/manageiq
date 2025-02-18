@@ -104,9 +104,17 @@ class Service < ApplicationRecord
   supports :retire
 
   alias parent_service parent
-  alias_attribute :service, :parent
+
   deprecate_attribute :display, :visible, :type => :boolean
   virtual_belongs_to :service
+
+  def service
+    parent
+  end
+
+  def service=(object)
+    self.parent = object
+  end
 
   def power_states
     vms.map(&:power_state)

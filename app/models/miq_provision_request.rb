@@ -1,7 +1,5 @@
 class MiqProvisionRequest < MiqRequest
-  alias_attribute :vm_template,    :source
   alias_attribute :provision_type, :request_type
-  alias_attribute :miq_provisions, :miq_request_tasks
   alias_attribute :src_vm_id,      :source_id
 
   delegate :my_zone, :to => :source
@@ -20,10 +18,24 @@ class MiqProvisionRequest < MiqRequest
   default_value_for(:source_id)    { |r| r.get_option(:src_vm_id) || r.get_option(:source_id) }
   default_value_for :source_type,  "VmOrTemplate"
 
-  virtual_column :provision_type, :type => :string
-
   include MiqProvisionMixin
   include MiqProvisionQuotaMixin
+
+  def vm_template
+    source
+  end
+
+  def vm_template=(object)
+    self.source = object
+  end
+
+  def miq_provisions
+    miq_request_tasks
+  end
+
+  def miq_provisions=(objects)
+    self.miq_request_tasks = objects
+  end
 
   def self.request_task_class_from(attribs)
     source_id = MiqRequestMixin.get_option(:src_vm_id, nil, attribs['options'])

@@ -1,9 +1,15 @@
 class VmReconfigureTask < MiqRequestTask
-  alias_attribute :vm, :source
-
   validate :validate_request_type, :validate_state
 
   AUTOMATE_DRIVES = false
+
+  def vm
+    source
+  end
+
+  def vm=(object)
+    self.source = object
+  end
 
   def self.base_model
     VmReconfigureTask
