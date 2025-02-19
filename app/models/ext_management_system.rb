@@ -117,7 +117,6 @@ class ExtManagementSystem < ApplicationRecord
   has_many :ems_events, -> { order("timestamp") }, :class_name => "EmsEvent", :foreign_key => "ems_id", :inverse_of => :ext_management_system
   has_many :policy_events, -> { order("timestamp") }, :class_name => "PolicyEvent", :foreign_key => "ems_id"
   has_many :generated_events, -> { order("timestamp") }, :class_name => "EmsEvent", :foreign_key => "generating_ems_id", :inverse_of => :generating_ems
-  has_many :blacklisted_events, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
 
   has_many :vms_and_templates_advanced_settings, :through => :vms_and_templates, :source => :advanced_settings
   has_many :service_instances, :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
@@ -882,17 +881,6 @@ class ExtManagementSystem < ApplicationRecord
       _log.info("EMS: [#{name}], Credentials have changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
       stop_event_monitor_queue
     end
-  end
-
-  def blacklisted_event_names
-    (
-      self.class.blacklisted_events.where(:enabled => true).pluck(:event_name) +
-      blacklisted_events.where(:enabled => true).pluck(:event_name)
-    ).uniq.sort
-  end
-
-  def self.blacklisted_events
-    BlacklistedEvent.where(:provider_model => name, :ems_id => nil)
   end
 
   ###################################

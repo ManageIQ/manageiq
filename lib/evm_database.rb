@@ -32,7 +32,6 @@ class EvmDatabase
     ChargebackRate
     ServiceTemplateCatalog
 
-    BlacklistedEvent
     Classification
     CustomizationTemplate
     Dialog

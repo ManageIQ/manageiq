@@ -1,7 +1,7 @@
 RSpec.describe ManageIQ::Providers::BaseManager do
-  context ".default_blacklisted_event_names" do
+  context ".filtered_event_names" do
     it 'returns an empty array for the base class' do
-      expect(described_class.default_blacklisted_event_names).to eq([])
+      expect(described_class.filtered_event_names).to eq([])
     end
 
     it 'returns the provider event if configured' do
@@ -12,8 +12,8 @@ RSpec.describe ManageIQ::Providers::BaseManager do
           }
         }
       )
-      allow(described_class).to receive(:provider_name).and_return('SomeProvider')
-      expect(described_class.default_blacklisted_event_names).to eq(%w[ev1 ev2])
+      allow(described_class).to receive(:ems_type).and_return(:some_provider)
+      expect(described_class.filtered_event_names).to eq(%w[ev1 ev2])
     end
   end
 
