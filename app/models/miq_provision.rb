@@ -29,6 +29,7 @@ class MiqProvision < MiqProvisionTask
   CLONE_SYNCHRONOUS     = false
   CLONE_TIME_LIMIT      = 4.hours
 
+  # Legacy provisioning support
   def miq_provision_request
     miq_request
   end
