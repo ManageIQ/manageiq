@@ -10,6 +10,15 @@ if defined?(SecureHeaders)
     config.x_content_type_options = "nosniff"
     # X-XSS-Protection
     # X-Permitted-Cross-Domain-Policies
+
+    # TODO: This was deprecated and disabled in rails 7.  Using content security policy is the desired behavior going forward:
+    # https://github.com/rails/rails/commit/1f4714c3f798df227222f531141880b8e1b4170a
+    # https://github.com/rails/rails/blob/d437ae311f1b9dc40b442e40eb602e020cec4e49/railties/lib/rails/application/configuration.rb#L227
+    # Once we remove unsafe-inline, then we can set this to the default, 0. Since we still use unsafe-inline, we still use X-XSS-Protection.
+    # From: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection
+    # "The HTTP X-XSS-Protection response header was a feature of Internet Explorer, Chrome and Safari that stopped pages from loading when
+    # they detected reflected cross-site scripting (XSS) attacks. These protections are largely unnecessary in modern browsers when sites
+    # implement a strong Content-Security-Policy that disables the use of inline JavaScript ('unsafe-inline')."
     config.x_xss_protection = "1; mode=block"
     config.referrer_policy = "no-referrer-when-downgrade"
     # Content-Security-Policy

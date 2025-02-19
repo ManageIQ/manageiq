@@ -86,14 +86,14 @@ module Vmdb
 
     # Disable ActionCable's request forgery protection
     # This is basically matching a set of allowed origins which is not good for us
+    # Note, similarly named forgery protections in action controller are set to true
+    # https://github.com/rails/rails/blob/d437ae311f1b9dc40b442e40eb602e020cec4e49/railties/lib/rails/application/configuration.rb#L115C12-L115C69
+    # 5.0 sets: action_controller.forgery_protection_origin_check = true
+    # 5.2 sets: action_controller.default_protect_from_forgery = true
     config.action_cable.disable_request_forgery_protection = false
     # Matching the origin against the HOST header is much more convenient
     config.action_cable.allow_same_origin_as_host = true
     config.action_cable.mount_path = '/ws/notifications'
-
-    # In Rails 6.1+, Active Record provides a new internal API for connection management
-    # and the legacy connection handling is deprecated.
-    config.active_record.legacy_connection_handling = false
 
     # Rails 6.1.7+ has a protection to not lookup values by a large number.
     # A lookup/comparison with a large number (bigger than bigint)
@@ -110,8 +110,27 @@ module Vmdb
 
     config.autoload_paths += config.eager_load_paths
 
-    # config.load_defaults 6.1
-    # Disable defaults as ActiveRecord::Base.belongs_to_required_by_default = true causes MiqRegion.seed to fail validation on belongs_to maintenance zone
+    # FYI, this is where load_defaults is defined as of 7.2:
+    # https://github.com/rails/rails/blob/d437ae311f1b9dc40b442e40eb602e020cec4e49/railties/lib/rails/application/configuration.rb#L92
+    config.load_defaults 7.1
+
+    # TODO: this is the only change we had from defaults in 7.0.  See secure_headers.rb.  It's 0 in defaults.
+    config.action_dispatch.default_headers["X-XSS-Protection"] = "1; mode=block"
+
+    # TODO: Find and fix any deprecated behavior.  Opt in later.
+    config.active_support.remove_deprecated_time_with_zone_name = false
+    config.active_support.disable_to_s_conversion = false
+
+    # TODO: If disabled, causes cross repo test failures in content, ui-classic and amazon provider
+    config.active_record.partial_inserts = true
+
+    # Disable this setting as it causes MiqRegion.seed to fail validation on belongs_to maintenance zone.
+    # TODO: We should fix this so we don't need to carry this override.
+    config.active_record.belongs_to_required_by_default = false
+
+    # TODO: Rails 7.1 default overridden to fix loading scanning_operations_mixin, dialog_import_service
+    # manageiq/providers/infra_manager/template, dialog_field_importer, workers/event_catcher
+    config.add_autoload_paths_to_load_path = true
 
     # NOTE:  If you are going to make changes to autoload_paths, please make
     # sure they are all strings.  Rails will push these paths into the
@@ -122,18 +141,14 @@ module Vmdb
     #   https://bugs.ruby-lang.org/issues/14372
     #
 
-    # TODO: Remove this once we move to config.load_defaults 7.0 as this is the default.
-    # Note, rails 7 can read cache format from 6 or 7 so there is no risk if you're running rails 7.
-    # See: https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#new-activesupport-cache-serialization-format
-    warn "Warning: Remove redundant config.active_support.cache_format_version = 7.0 from #{__FILE__}:#{__LINE__ + 1} if using config.load_defaults 7.0" if config.active_support.cache_format_version == 7.0
-    config.active_support.cache_format_version = 7.0
-
     config.autoload_paths << Rails.root.join("app/models/aliases").to_s
     config.autoload_paths << Rails.root.join("app/models/mixins").to_s
     config.autoload_paths << Rails.root.join("lib").to_s
     config.autoload_paths << Rails.root.join("lib/services").to_s
 
     config.autoload_once_paths << Rails.root.join("lib/vmdb/console_methods.rb").to_s
+
+    config.active_record.default_column_serializer = YAML if Rails.version >= "7.1"
 
     require_relative '../lib/request_started_on_middleware'
     config.middleware.use RequestStartedOnMiddleware

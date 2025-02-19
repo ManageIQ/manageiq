@@ -112,9 +112,7 @@ module Service::Aggregation
     #   the aggregate column, which returns an Arel statement when called
     def aggregate_hardware_arel(virtual_column_name, aggregation_sql, options = {})
       lambda do |t|
-        subtree_services             = Arel::Table.new(:services)
-        subtree_services.table_alias = "#{virtual_column_name}_services"
-
+        subtree_services = Arel::Table.new(:services, :as => "#{virtual_column_name}_services")
         subselect = subtree_services.project(aggregation_sql)
         subselect = base_service_aggregation_join(subselect, subtree_services, options)
         join_on_disks(subselect) if options[:include_disks]

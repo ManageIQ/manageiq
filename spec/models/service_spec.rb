@@ -204,15 +204,25 @@ RSpec.describe Service do
     end
 
     describe "#v_total_vms" do
+      # @service -> [@vm]
+      #   \
+      #    @service_c1 -> [@vm1]
+      #      \
+      #       @service_c2 -> [@vm1, @vm2]
       it "sql" do
-        service = Service.select(:id, :v_total_vms).find_by(:id => @service.id)
-        expect(service.v_total_vms).to eq 4
-        expect(service.attribute_present?(:v_total_vms)).to eq true
+        # TODO: This is how rails 7.0 worked... not sure why v_total_vms is 1 for @service_c1!
+        [@service, 4, @service_c1, 1, @service_c2, 2].each_slice(2) do |expected, count|
+          actual = Service.select(:id, :v_total_vms).find_by(:id => expected.id)
+          expect(actual.v_total_vms).to eq count
+          expect(actual.attribute_present?(:v_total_vms)).to eq true
+        end
       end
 
       it "ruby" do
-        expect(@service.v_total_vms).to eq 4
-        expect(@service.attribute_present?(:v_total_vms)).to eq false
+        [@service, 4, @service_c1, 3, @service_c2, 2].each_slice(2) do |expected, count|
+          expect(expected.v_total_vms).to eq count
+          expect(expected.attribute_present?(:v_total_vms)).to eq false
+        end
       end
     end
 
