@@ -2428,6 +2428,11 @@ RSpec.describe MiqExpression do
       expect(exp.to_human).to eq("VM and Instance.Hardware.Volumes : Free Space Percent > 75")
     end
 
+    it "generates a human readable string for a float FIELD value expression" do
+      exp = MiqExpression.new(">" => {"field" => "Vm.hardware.volumes-free_space_percent", "value" => 75.0})
+      expect(exp.to_human).to eq("VM and Instance.Hardware.Volumes : Free Space Percent > 75.0")
+    end
+
     it "generates a human readable string for a symbol FIELD value expression" do
       exp = MiqExpression.new(">" => {"field" => "Vm-allocated_disk_storage", "value" => :"5.megabytes"})
       expect(exp.to_human).to eq("VM and Instance : Allocated Disk Storage > 5 MB")

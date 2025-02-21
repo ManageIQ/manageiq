@@ -805,17 +805,13 @@ class MiqExpression
     case typ&.to_sym
     when :integer, :decimal, :fixnum, :float
       return val if val.kind_of?(Numeric)
-      return val.to_i unless val.to_s.number_with_method? || typ == :float
+      return val.to_i unless val.to_s.number_with_method?
 
-      if val.to_s =~ /^([0-9.,]+)\.([a-z]+)$/
-        val, sfx = $1, $2
-        if sfx.ends_with?("bytes") && FORMAT_BYTE_SUFFIXES.key?(sfx.to_sym)
-          "#{val} #{FORMAT_BYTE_SUFFIXES[sfx.to_sym]}"
-        else
-          "#{val} #{sfx.titleize}"
-        end
+      val, sfx = String::NUMBER_WITH_METHOD_REGEX.match(val.to_s).captures
+      if sfx.ends_with?("bytes") && FORMAT_BYTE_SUFFIXES.key?(sfx.to_sym)
+        "#{val} #{FORMAT_BYTE_SUFFIXES[sfx.to_sym]}"
       else
-        val
+        "#{val} #{sfx.titleize}"
       end
     when :string, :date, :datetime, nil
       "\"#{val}\""
