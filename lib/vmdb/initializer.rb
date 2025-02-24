@@ -12,11 +12,18 @@ module Vmdb
         MiqServer.my_server.starting_server_record
         MiqServer.my_server.update(:status => "started")
       end
+    end
 
-      # Rails console needs session store configured
-      if defined?(Rails::Console)
-        MiqUiWorker.preload_for_console
+    def self.init_secret_token
+      return if Rails.application.config.secret_key_base
+
+      token = if ActiveRecord::Base.connectable? && MiqDatabase.table_exists? && MiqDatabase.any?
+        MiqDatabase.first.session_secret_token
+      else
+        SecureRandom.hex(64)
       end
+
+      Rails.application.config.secret_key_base = token
     end
 
     private_class_method def self.log_db_connectable

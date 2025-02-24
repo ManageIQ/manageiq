@@ -12,7 +12,6 @@ module MiqWebServerRunnerMixin
     # The heartbeating will be done in a separate thread
     worker_thread = Thread.new { super }
 
-    worker.class.configure_secret_token
     start_rails_server(worker.rails_server_options)
 
     # when puma exits allow the heartbeat thread to exit cleanly using #do_exit
