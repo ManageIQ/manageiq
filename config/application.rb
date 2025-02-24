@@ -209,6 +209,11 @@ module Vmdb
       end
     end
 
+    # Run after code is eager loaded so we can autoload MiqDatabase and ApplicationRecord
+    initializer :init_secret_token, :after => :eager_load! do
+      Vmdb::Initializer.init_secret_token
+    end
+
     config.after_initialize do
       Vmdb::Initializer.init
       ActiveRecord::Base.connection_pool.release_connection

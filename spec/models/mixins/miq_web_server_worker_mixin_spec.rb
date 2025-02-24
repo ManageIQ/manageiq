@@ -14,43 +14,6 @@ RSpec.describe MiqWebServerWorkerMixin do
     end
   end
 
-  before do
-    @token = Rails.application.secret_key_base
-    MiqDatabase.seed
-  end
-
-  after do
-    Rails.application.config.secret_key_base = @token
-    Rails.application.secrets = nil if Rails.version < "7.1"
-  end
-
-  it ".configure_secret_token defaults to MiqDatabase session_secret_token" do
-    Rails.application.config.secret_key_base = nil
-
-    test_class.configure_secret_token
-    expect(Rails.application.secret_key_base).to eq(MiqDatabase.first.session_secret_token)
-    expect(Rails.application.config.secret_key_base).to eq(MiqDatabase.first.session_secret_token)
-  end
-
-  it ".configure_secret_token accepts an input token" do
-    Rails.application.config.secret_key_base = nil
-
-    token = SecureRandom.hex(64)
-    test_class.configure_secret_token(token)
-    expect(Rails.application.secret_key_base).to eq(token)
-    expect(Rails.application.config.secret_key_base).to eq(token)
-  end
-
-  it ".configure_secret_token does not reset secrets when token already configured" do
-    existing_value = SecureRandom.hex(64)
-    Rails.application.config.secret_key_base = existing_value
-    Rails.application.secrets = nil if Rails.version < "7.1"
-
-    test_class.configure_secret_token
-    expect(Rails.application.secret_key_base).to eq(existing_value)
-    expect(Rails.application.config.secret_key_base).to eq(existing_value)
-  end
-
   it "#rails_server_options" do
     w = FactoryBot.create(:miq_ui_worker, :uri => "http://127.0.0.1:3000")
     expect(w.rails_server_options).to include(
