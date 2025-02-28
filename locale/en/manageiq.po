@@ -5917,35 +5917,6 @@ msgstr ""
 msgid "Bind failed for user %{user_name}"
 msgstr ""
 
-msgid "Blacklisted Event"
-msgid_plural "Blacklisted Events"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Blacklisted event"
-msgstr ""
-
-msgid "BlacklistedEvent|Enabled"
-msgstr ""
-
-msgid "BlacklistedEvent|Event name"
-msgstr ""
-
-msgid "BlacklistedEvent|Href slug"
-msgstr ""
-
-msgid "BlacklistedEvent|Provider model"
-msgstr ""
-
-msgid "BlacklistedEvent|Region description"
-msgstr ""
-
-msgid "BlacklistedEvent|Region number"
-msgstr ""
-
-msgid "BlacklistedEvent|System"
-msgstr ""
-
 msgid "Blade Slot Count"
 msgstr ""
 
@@ -22558,9 +22529,6 @@ msgstr ""
 msgid "Flavor|Cloud subnet required"
 msgstr ""
 
-msgid "Flavor|Cpu cores"
-msgstr ""
-
 msgid "Flavor|Cpu cores per socket"
 msgstr ""
 
@@ -22568,9 +22536,6 @@ msgid "Flavor|Cpu sockets"
 msgstr ""
 
 msgid "Flavor|Cpu total cores"
-msgstr ""
-
-msgid "Flavor|Cpus"
 msgstr ""
 
 msgid "Flavor|Description"
@@ -24492,9 +24457,6 @@ msgid "Hosts: Compare Template"
 msgstr ""
 
 msgid "Hosts: Date brought under Management for Last Week"
-msgstr ""
-
-msgid "Host|Address"
 msgstr ""
 
 msgid "Host|Admin disabled"
@@ -31268,9 +31230,6 @@ msgstr ""
 msgid "MiqRequest|Stamped on"
 msgstr ""
 
-msgid "MiqRequest|State"
-msgstr ""
-
 msgid "MiqRequest|Status"
 msgstr ""
 
@@ -31335,9 +31294,6 @@ msgid "MiqSchedule|Run at"
 msgstr ""
 
 msgid "MiqSchedule|Sched action"
-msgstr ""
-
-msgid "MiqSchedule|Towhat"
 msgstr ""
 
 msgid "MiqSchedule|Userid"
@@ -43977,9 +43933,6 @@ msgstr ""
 msgid "Service|Description"
 msgstr ""
 
-msgid "Service|Display"
-msgstr ""
-
 msgid "Service|Evm owner email"
 msgstr ""
 
@@ -47408,9 +47361,6 @@ msgid "TenantQuota|Region description"
 msgstr ""
 
 msgid "TenantQuota|Region number"
-msgstr ""
-
-msgid "TenantQuota|Total"
 msgstr ""
 
 msgid "TenantQuota|Unit"
