@@ -1210,7 +1210,7 @@ GEM
     rufus-lru (1.0.7)
     rufus-scheduler (3.9.2)
       fugit (~> 1.1, >= 1.11.1)
-    rugged (1.5.1)
+    rugged (1.9.0)
     ruport (1.8.0)
       prawn (~> 2.4.0)
       prawn-table (~> 0.2.0)
@@ -1494,7 +1494,7 @@ DEPENDENCIES
   ruby_parser
   rubyzip (~> 2.0.0)
   rufus-scheduler
-  rugged (~> 1.5.0)
+  rugged (~> 1.9)
   ruport (~> 1.8.0)
   sd_notify (~> 0.1.0)
   secure_headers (~> 3.9)
