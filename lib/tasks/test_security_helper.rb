@@ -4,6 +4,9 @@ class TestSecurityHelper
   class SecurityTestFailed < StandardError; end
 
   def self.brakeman(format: "human")
+    args = ARGV.drop_while { |arg| arg != "--" }.drop(1)
+    interactive_ignore = (args & %w[-I --interactive-ignore]).any?
+
     require "vmdb/plugins"
     require "brakeman"
 
@@ -43,11 +46,18 @@ class TestSecurityHelper
       :report_progress => $stderr.tty?,
       :use_prism       => true,
     }
-    if format == "json"
+    case format
+    when "json"
+      raise ArgumentError, "cannot pass --interactive-ignore with json output" if interactive_ignore
+
       options[:output_files] = [
         Rails.root.join("log/brakeman.json").to_s,
         Rails.root.join("log/brakeman.log").to_s
       ]
+    when "human"
+      options[:interactive_ignore] = true if interactive_ignore
+    else
+      raise ArgumentError, "Unknown format #{format.inspect}"
     end
 
     tracker = Brakeman.run(options)
