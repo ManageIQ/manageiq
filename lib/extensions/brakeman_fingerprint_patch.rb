@@ -77,8 +77,6 @@ module BrakemanFingerprintPatch
   def to_hash(absolute_paths: true)
     super.tap do |h|
       h[:file] = (absolute_paths ? self.file.absolute : file_string)
-      h[:file_rel] = self.file.relative
-      h[:file_abs] = self.file.absolute
     end
   end
 end
