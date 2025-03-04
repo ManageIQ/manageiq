@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2024-11-15 00:23+0000\n"
-"PO-Revision-Date: 2024-11-15 00:23+0000\n"
+"POT-Creation-Date: 2025-02-28 14:08+0000\n"
+"PO-Revision-Date: 2025-02-28 14:08+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1211,6 +1211,16 @@ msgid "%{protocol} port %{port} to pods on target port:'%{target_port}'"
 msgstr ""
 "%{protocol} puerto %{port} a pods en puerto de destino:'%{target_port}'"
 
+msgid "%{provider_description} Job"
+msgid_plural "%{provider_description} Jobs"
+msgstr[0] "Trabajo de %{provider_description}"
+msgstr[1] "Trabajos de %{provider_description}"
+
+msgid "%{provider_description} Workflow Job"
+msgid_plural "%{provider_description} Workflow Jobs"
+msgstr[0] "Trabajo de flujo de trabajo de %{provider_description}"
+msgstr[1] "Trabajos de flujo de trabajo de %{provider_description}"
+
 msgid "%{record_name} has no snapshots"
 msgstr "%{record_name} no tiene instantáneas"
 
@@ -2233,18 +2243,8 @@ msgstr "Clave secreta de AWS para esta credencial"
 msgid "AWX"
 msgstr "AWX"
 
-msgid "AWX Job"
-msgid_plural "AWX Jobs"
-msgstr[0] "Trabajo de AWX"
-msgstr[1] "Trabajos de AWX"
-
 msgid "AWX Provider"
 msgstr "Proveedor de AWX"
-
-msgid "AWX Workflow Job"
-msgid_plural "AWX Workflow Jobs"
-msgstr[0] "Trabajo de flujo de trabajo de AWX"
-msgstr[1] "Trabajos de flujo de trabajo de AWX"
 
 msgid "Abandon changes?"
 msgstr "¿Abandonar los cambios?"
@@ -3398,6 +3398,9 @@ msgid "Add of new Chargeback Rate was cancelled by the user"
 msgstr ""
 "El proceso de Añadir nueva Tarifa de anulación fue cancelado por el usuario"
 
+msgid "Add of new Class was cancelled by the user"
+msgstr "El usuario ha cancelado la adición de una nueva clase"
+
 msgid "Add of new Cloud Network was cancelled by the user"
 msgstr "El usuario canceló la adición de una nueva red de nube"
 
@@ -4439,6 +4442,12 @@ msgstr "Ansible"
 msgid "Ansible Access Method"
 msgstr "Método de acceso de Ansible"
 
+msgid "Ansible Automation Platform"
+msgstr "Ansible Automation Platform"
+
+msgid "Ansible Automation Platform Provider"
+msgstr "Proveedor de Ansible Automation Platform"
+
 msgid "Ansible Playbook"
 msgstr "Ansible Playbook"
 
@@ -4466,9 +4475,6 @@ msgstr "Plantilla de tareas de Ansible Tower"
 msgid "Ansible Tower Jobs"
 msgstr "Tareas de Ansible Tower"
 
-msgid "Ansible Tower Provider"
-msgstr "Proveedor de Ansible Tower"
-
 msgid "Ansible Tower Providers"
 msgstr "Proveedores Ansible Tower"
 
@@ -4477,11 +4483,6 @@ msgstr "Plantilla de Ansible Tower"
 
 msgid "Ansible Tower Templates"
 msgstr "Plantillas de Ansible Tower"
-
-msgid "Ansible Tower Workflow Job"
-msgid_plural "Ansible Tower Workflow Jobs"
-msgstr[0] "Trabajo de flujo de trabajo de Ansible Tower"
-msgstr[1] "Trabajos de flujo de trabajo de Ansible Tower"
 
 msgid "Ansible Tower Workflow Template"
 msgstr "Plantilla de flujo de trabajo de Ansible Tower"
@@ -5716,10 +5717,13 @@ msgid_plural "Automation Managers (AWX)"
 msgstr[0] "Gestor de automatización (AWX)"
 msgstr[1] "Gestores de automatización (AWX)"
 
+msgid "Automation Manager (Ansible Automation Platform)"
+msgid_plural "Automation Managers (Ansible Automation Platform)"
+msgstr[0] "Gestor de automatización (Ansible Automation Platform)"
+msgstr[1] "Gestores de automatización (Ansible Automation Platform)"
+
 msgid "Automation Manager (Ansible Tower)"
-msgid_plural "Automation Managers (Ansible Tower)"
-msgstr[0] "Gestor de automatización (Ansible Tower)"
-msgstr[1] "Gestores de automatización (Ansible Tower)"
+msgstr "Administradores de automatización (Ansible Tower)"
 
 msgid "Automation Manager Repositories Refresh"
 msgstr "Renovación de repositorios de Automation Manager"
@@ -5754,6 +5758,9 @@ msgstr[1] "Espacios de trabajo de automatización"
 
 msgid "Automation log downloaded"
 msgstr "Registro de automatización descargado"
+
+msgid "Automation simulation has been run"
+msgstr "Se ha ejecutado la simulación de automatización"
 
 msgid "Automations Tasks"
 msgstr "Automatización de Tareas"
@@ -6277,35 +6284,6 @@ msgstr "Contraseña de enlace"
 
 msgid "Bind failed for user %{user_name}"
 msgstr "El enlace ha fallado para el usuario %{user_name}"
-
-msgid "Blacklisted Event"
-msgid_plural "Blacklisted Events"
-msgstr[0] "Eventos en \\\"Lista Negra\\\""
-msgstr[1] "Eventos en \\\"Lista Negra\\\""
-
-msgid "Blacklisted event"
-msgstr "Evento en \\\"Lista Negra\\\""
-
-msgid "BlacklistedEvent|Enabled"
-msgstr "BlacklistedEvent|Activado"
-
-msgid "BlacklistedEvent|Event name"
-msgstr "BlacklistedEvent|Nombre del evento"
-
-msgid "BlacklistedEvent|Href slug"
-msgstr "BlacklistedEvent|Href slug"
-
-msgid "BlacklistedEvent|Provider model"
-msgstr "BlacklistedEvent|Modelo del proveedor"
-
-msgid "BlacklistedEvent|Region description"
-msgstr "BlacklistedEvent|Descripción de región"
-
-msgid "BlacklistedEvent|Region number"
-msgstr "BlacklistedEvent|Número de región"
-
-msgid "BlacklistedEvent|System"
-msgstr "BlacklistedEvent|Sistema"
 
 msgid "Blade Slot Count"
 msgstr "Conteo de ranuras blade"
@@ -8444,6 +8422,12 @@ msgstr "Nombre de reclamación"
 
 msgid "Class"
 msgstr "Clase"
+
+msgid "Class \"%s\" was added"
+msgstr "Se ha añadido la clase \"%s\""
+
+msgid "Class \"%s\" was saved"
+msgstr "Se ha guardado la clase \"%s\""
 
 msgid "Class '%{name}' is not eligible for classification"
 msgstr "La clase '%{name}' no es apta para la clasificación"
@@ -10689,15 +10673,10 @@ msgid_plural "Configured Systems"
 msgstr[0] "Sistemas configurados"
 msgstr[1] "Sistemas configurados"
 
-msgid "Configured System (AWX)"
-msgid_plural "Configured Systems (AWX)"
-msgstr[0] "Sistema configurado (AWX)"
-msgstr[1] "Sistemas configurados (AWX)"
-
-msgid "Configured System (Ansible Tower)"
-msgid_plural "Configured Systems (Ansible Tower)"
-msgstr[0] "Sistema configurado (Ansible Tower)"
-msgstr[1] "Sistemas configurados (Ansible Tower)"
+msgid "Configured System (%{provider_description})"
+msgid_plural "Configured Systems (%{provider_description})"
+msgstr[0] "Sistema configurado (%{provider_description})"
+msgstr[1] "Sistemas configurados (%{provider_description})"
 
 msgid "Configured System (Foreman)"
 msgid_plural "Configured Systems (Foreman)"
@@ -15203,8 +15182,8 @@ msgid ""
 "%{class_stats} Classes, %{instance_stats} Instances, %{method_stats} Methods."
 msgstr ""
 "El almacén de datos se ha importado correctamente. Añadido/Actualizado %{"
-"namespace_stats} Espacios de nombres, %{class_stats} Clases, %{instance_stats} "
-"Instancias, %{method_stats} Métodos."
+"namespace_stats} Espacios de nombres, %{class_stats} Clases, %{instance_stats}"
+" Instancias, %{method_stats} Métodos."
 
 msgid "Datastore summary for Hosts"
 msgstr "Resumen del almacén de datos para los hosts"
@@ -19930,6 +19909,9 @@ msgstr "El usuario ha cancelado la edición de la categoría \"%{name}\""
 msgid "Edit of Chargeback Rate \"%{name}\" was cancelled by the user"
 msgstr "El usuario ha cancelado la edición de tarifa de Chargeback \"%{name}\""
 
+msgid "Edit of Class \"%s\" cancelled by the user"
+msgstr "El usuario ha cancelado la edición de la clase \"%s\""
+
 msgid "Edit of Class Schema Sequence '%{name}'"
 msgstr "Adición de la secuencia del esquema de clase '%{name}'"
 
@@ -23628,9 +23610,6 @@ msgstr "Bloquear solo basado en almacenamiento"
 msgid "Flavor|Cloud subnet required"
 msgstr "Subred de nube obligatoria"
 
-msgid "Flavor|Cpu cores"
-msgstr "Núcleos de CPU"
-
 msgid "Flavor|Cpu cores per socket"
 msgstr "Flavor|Núcleos de CPU por socket"
 
@@ -23639,9 +23618,6 @@ msgstr "Flavor|Sockets de CPU"
 
 msgid "Flavor|Cpu total cores"
 msgstr "Flavor|Núcleos de CPU totales"
-
-msgid "Flavor|Cpus"
-msgstr "CPU"
 
 msgid "Flavor|Description"
 msgstr "Descripción"
@@ -25602,9 +25578,6 @@ msgstr "Hosts: plantilla de comparación"
 msgid "Hosts: Date brought under Management for Last Week"
 msgstr "Hosts: Fecha de entrega a la Administración para la última semana"
 
-msgid "Host|Address"
-msgstr "Host|Dirección"
-
 msgid "Host|Admin disabled"
 msgstr "Admin. inhabilitado"
 
@@ -27081,15 +27054,13 @@ msgstr "Tarea"
 msgid "Job Template"
 msgstr "Plantilla de tareas"
 
-msgid "Job Template (AWX)"
-msgid_plural "Job Templates (AWX)"
-msgstr[0] "Plantilla de trabajo (AWX)"
-msgstr[1] "Plantillas de trabajo (AWX)"
+msgid "Job Template (%{provider_description})"
+msgid_plural "Job Templates (%{provider_description})"
+msgstr[0] "Plantilla de trabajo (%{provider_description})"
+msgstr[1] "Plantillas de trabajos (%{provider_description})"
 
 msgid "Job Template (Ansible Tower)"
-msgid_plural "Job Templates (Ansible Tower)"
-msgstr[0] "Plantilla de trabajo (Ansible Tower)"
-msgstr[1] "Plantillas de trabajo (Ansible Tower)"
+msgstr "Plantillas de tareas (Ansible Tower)"
 
 msgid "Job Templates (Ansible Tower)"
 msgstr "Plantillas de tareas (Ansible Tower)"
@@ -32604,9 +32575,6 @@ msgstr "Tipo de fuente"
 msgid "MiqRequest|Stamped on"
 msgstr "Fecha de marca"
 
-msgid "MiqRequest|State"
-msgstr "Condición"
-
 msgid "MiqRequest|Status"
 msgstr "Estado"
 
@@ -32672,9 +32640,6 @@ msgstr "Ejecutado en"
 
 msgid "MiqSchedule|Sched action"
 msgstr "Acción de programación"
-
-msgid "MiqSchedule|Towhat"
-msgstr "A qué"
 
 msgid "MiqSchedule|Userid"
 msgstr "ID de usuario"
@@ -33875,6 +33840,9 @@ msgstr "Debe especificar nuevos valores de redimensionamiento"
 msgid "My Company Categories"
 msgstr "Mis categorías de empresa"
 
+msgid "My Company Tags"
+msgstr "Etiquetas de mi empresa"
+
 msgid "My EVM Group"
 msgstr "Mi Grupo de EVM"
 
@@ -33943,6 +33911,9 @@ msgstr "Ya se obtuvo el nombre"
 
 msgid "Name is required"
 msgstr "El nombre es obligatorio"
+
+msgid "Name may contain only alphanumeric and _ . - characters"
+msgstr "El nombre solo puede contener caracteres alfanuméricos y _ . -_"
 
 msgid "Name must be unique"
 msgstr "El nombre debe ser exclusivo"
@@ -35932,9 +35903,6 @@ msgstr "Objeto"
 
 msgid "Object Attribute"
 msgstr "Atributo del objeto"
-
-msgid "Object Attribute 1"
-msgstr "Atributo de objeto 1"
 
 msgid "Object Attribute Name"
 msgstr "Nombre de atributo del objeto"
@@ -38626,15 +38594,13 @@ msgstr ""
 "repositorio, esta importación nunca se ejecutará correctamente, puede intentar"
 " la importación omitiendo este playbook con --skip_playbook pb1, pb2."
 
-msgid "Playbook (AWX)"
-msgid_plural "Playbooks (AWX)"
-msgstr[0] "Playbook (AWX)"
-msgstr[1] "Playbooks (AWX)"
+msgid "Playbook (%{provider_description})"
+msgid_plural "Playbooks (%{provider_description})"
+msgstr[0] "Playbook (%{provider_description})"
+msgstr[1] "Playbooks (%{provider_description})"
 
 msgid "Playbook (Ansible Tower)"
-msgid_plural "Playbooks (Ansible Tower)"
-msgstr[0] "Playbook (Ansible Tower)"
-msgstr[1] "Playbooks (Ansible Tower)"
+msgstr "Playbook (Ansible Tower)"
 
 msgid "Playbook (Embedded Ansible)"
 msgid_plural "Playbooks (Embedded Ansible)"
@@ -39789,7 +39755,7 @@ msgid "Provision Virtual Machines - Select a Template"
 msgstr "Aprovisionar máquinas virtuales - Seleccionar una plantilla"
 
 msgid "Provision failed for the following reasons:%{errors}"
-msgstr "El aprovisionamiento ha fallado por las razones siguientes:%{errors}"
+msgstr "El aprovisionamiento ha fallado por las razones siguientes: %{errors}"
 
 msgid "Provision workflow does not contain the expected method <%{method}>"
 msgstr ""
@@ -45787,9 +45753,6 @@ msgstr "Service|Uso bajo de memoria derivada durante un período"
 msgid "Service|Description"
 msgstr "Descripción"
 
-msgid "Service|Display"
-msgstr "Servicio|Visualización"
-
 msgid "Service|Evm owner email"
 msgstr "Correo electrónico del propietario de Evm"
 
@@ -49352,9 +49315,6 @@ msgstr "Descripción de la región"
 
 msgid "TenantQuota|Region number"
 msgstr "Número de región"
-
-msgid "TenantQuota|Total"
-msgstr "Total"
 
 msgid "TenantQuota|Unit"
 msgstr "Unidad"
@@ -56037,15 +55997,13 @@ msgstr "Estados de flujo de trabajo"
 msgid "Workflow Template"
 msgstr "Plantilla de flujo de trabajo"
 
-msgid "Workflow Template (AWX)"
-msgid_plural "Workflow Templates (AWX)"
-msgstr[0] "Plantilla de flujo de trabajo (AWX)"
-msgstr[1] "Plantillas de flujo de trabajo (AWX)"
+msgid "Workflow Template (%{provider_description})"
+msgid_plural "Workflow Templates (%{provider_description})"
+msgstr[0] "Plantilla de flujo de trabajo (%{provider_description})"
+msgstr[1] "Plantillas de flujo de trabajo (%{provider_description})"
 
 msgid "Workflow Template (Ansible Tower)"
-msgid_plural "Workflow Templates (Ansible Tower)"
-msgstr[0] "Plantilla de flujo de trabajo (Ansible Tower)"
-msgstr[1] "Plantillas de flujo de trabajo (Ansible Tower)"
+msgstr "Plantillas de flujo de trabajo (Ansible Tower)"
 
 msgid "Workflow Templates (Ansible Tower)"
 msgstr "Plantillas de flujo de trabajo (Ansible Tower)"
