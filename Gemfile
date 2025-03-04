@@ -86,10 +86,10 @@ gem "terminal",                                              :require => false
 gem "wim_parser",                       "~>1.0",             :require => false
 
 # gems to resolve security issues
-# CVE-2023-28756 fixed: ruby 3.1.4 - https://github.com/advisories/GHSA-fg7x-g82r-94qc
-gem "time", "~> 0.2.2"
-# CVE-2023-36617 https://github.com/advisories/GHSA-hww2-5g85-429m
-gem "uri",  "~> 0.13.1" # Avoid URI 1.0.0 for now due to: https://github.com/ruby/uri/issues/125
+gem "cgi",  "~> 0.4.2"  # CVE-2025-27219: https://github.com/advisories/GHSA-gh9q-2xrm-x6qv
+gem "time", "~> 0.2.2"  # CVE-2023-28756: https://github.com/advisories/GHSA-fg7x-g82r-94qc; ruby 3.1.4+
+gem "uri",  "~> 0.13.2" # CVE-2025-27221: https://github.com/advisories/GHSA-22h5-pq3x-2gf2
+                        # Avoid URI 1.0.0 for now due to: https://github.com/ruby/uri/issues/125
 
 # Custom gem that replaces mime-types in order to redirect mime-types calls to mini_mime
 #   Source is located at https://github.com/ManageIQ/mime-types-redirector
