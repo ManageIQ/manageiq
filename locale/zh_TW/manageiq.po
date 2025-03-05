@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2024-11-15 00:23+0000\n"
-"PO-Revision-Date: 2024-11-15 00:23+0000\n"
+"POT-Creation-Date: 2025-02-28 14:08+0000\n"
+"PO-Revision-Date: 2025-02-28 14:08+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1065,6 +1065,14 @@ msgstr ""
 msgid "%{protocol} port %{port} to pods on target port:'%{target_port}'"
 msgstr "%{protocol} 埠 %{port} 至目標埠上的 Pod：'%{target_port}'"
 
+msgid "%{provider_description} Job"
+msgid_plural "%{provider_description} Jobs"
+msgstr[0] "%{provider_description} 工作"
+
+msgid "%{provider_description} Workflow Job"
+msgid_plural "%{provider_description} Workflow Jobs"
+msgstr[0] "%{provider_description} 工作流程工作"
+
 msgid "%{record_name} has no snapshots"
 msgstr "%{record_name} 沒有 Snapshot"
 
@@ -1997,16 +2005,8 @@ msgstr "此認證的 AWS 秘密金鑰"
 msgid "AWX"
 msgstr "AWX"
 
-msgid "AWX Job"
-msgid_plural "AWX Jobs"
-msgstr[0] "AWX Jobs"
-
 msgid "AWX Provider"
 msgstr "AWX 提供者"
-
-msgid "AWX Workflow Job"
-msgid_plural "AWX Workflow Jobs"
-msgstr[0] "AWX Workflow Jobs"
 
 msgid "Abandon changes?"
 msgstr "放棄變更？"
@@ -3107,6 +3107,9 @@ msgstr "使用者已取消新增「種類」"
 msgid "Add of new Chargeback Rate was cancelled by the user"
 msgstr "使用者已取消新增「計費費率」"
 
+msgid "Add of new Class was cancelled by the user"
+msgstr "使用者取消新增類別"
+
 msgid "Add of new Cloud Network was cancelled by the user"
 msgstr "使用者已取消新增「雲端網路」"
 
@@ -4091,6 +4094,12 @@ msgstr "Ansible"
 msgid "Ansible Access Method"
 msgstr "Ansible 存取方法"
 
+msgid "Ansible Automation Platform"
+msgstr "Ansible 自動化平台"
+
+msgid "Ansible Automation Platform Provider"
+msgstr "Ansible 自動化平台供應商"
+
 msgid "Ansible Playbook"
 msgstr "可用的 Playbook"
 
@@ -4118,9 +4127,6 @@ msgstr "Ansible Tower 工作範本"
 msgid "Ansible Tower Jobs"
 msgstr "Ansible Tower 工作"
 
-msgid "Ansible Tower Provider"
-msgstr "Ansible Tower 提供者"
-
 msgid "Ansible Tower Providers"
 msgstr "Ansible Tower 提供者"
 
@@ -4129,10 +4135,6 @@ msgstr "Ansible Tower 範本"
 
 msgid "Ansible Tower Templates"
 msgstr "Ansible Tower 範本"
-
-msgid "Ansible Tower Workflow Job"
-msgid_plural "Ansible Tower Workflow Jobs"
-msgstr[0] "Ansible Tower 工作流程工作"
 
 msgid "Ansible Tower Workflow Template"
 msgstr "Ansible Tower 工作流程範本"
@@ -5287,9 +5289,12 @@ msgid "Automation Manager (AWX)"
 msgid_plural "Automation Managers (AWX)"
 msgstr[0] "Automation Managers (AWX)"
 
+msgid "Automation Manager (Ansible Automation Platform)"
+msgid_plural "Automation Managers (Ansible Automation Platform)"
+msgstr[0] "自動化管理程式（Ansible 自動化平台）"
+
 msgid "Automation Manager (Ansible Tower)"
-msgid_plural "Automation Managers (Ansible Tower)"
-msgstr[0] "自動化管理程式 (Ansible Tower)"
+msgstr "自動化管理程式 (Ansible Tower)"
 
 msgid "Automation Manager Repositories Refresh"
 msgstr "Automation Manager 儲存庫重新整理"
@@ -5322,6 +5327,9 @@ msgstr[0] "自動化工作區"
 
 msgid "Automation log downloaded"
 msgstr "已下載自動化日誌"
+
+msgid "Automation simulation has been run"
+msgstr "已執行自動化模擬"
 
 msgid "Automations Tasks"
 msgstr "自動化作業"
@@ -5813,34 +5821,6 @@ msgstr "連結密碼"
 
 msgid "Bind failed for user %{user_name}"
 msgstr "針對使用者 %{user_name} 的連結失敗"
-
-msgid "Blacklisted Event"
-msgid_plural "Blacklisted Events"
-msgstr[0] "黑名單事件"
-
-msgid "Blacklisted event"
-msgstr "列入黑名單的事件"
-
-msgid "BlacklistedEvent|Enabled"
-msgstr "已啟用"
-
-msgid "BlacklistedEvent|Event name"
-msgstr "事件名稱"
-
-msgid "BlacklistedEvent|Href slug"
-msgstr "Href Slug"
-
-msgid "BlacklistedEvent|Provider model"
-msgstr "提供者模型"
-
-msgid "BlacklistedEvent|Region description"
-msgstr "地區說明"
-
-msgid "BlacklistedEvent|Region number"
-msgstr "地區號碼"
-
-msgid "BlacklistedEvent|System"
-msgstr "系統"
 
 msgid "Blade Slot Count"
 msgstr "刀鋒伺服器插槽計數"
@@ -7811,6 +7791,12 @@ msgstr "要求名稱"
 
 msgid "Class"
 msgstr "類別"
+
+msgid "Class \"%s\" was added"
+msgstr "新增類別 \"%s\""
+
+msgid "Class \"%s\" was saved"
+msgstr "類別 \"%s\" 已儲存"
 
 msgid "Class '%{name}' is not eligible for classification"
 msgstr "類別 '%{name}' 不適合進行分類"
@@ -9993,13 +9979,9 @@ msgid "Configured System"
 msgid_plural "Configured Systems"
 msgstr[0] "配置系統"
 
-msgid "Configured System (AWX)"
-msgid_plural "Configured Systems (AWX)"
-msgstr[0] "Configured Systems (AWX)"
-
-msgid "Configured System (Ansible Tower)"
-msgid_plural "Configured Systems (Ansible Tower)"
-msgstr[0] "配置的系統 (Ansible Tower)"
+msgid "Configured System (%{provider_description})"
+msgid_plural "Configured Systems (%{provider_description})"
+msgstr[0] "已配置的系統 (%{provider_description})"
 
 msgid "Configured System (Foreman)"
 msgid_plural "Configured Systems (Foreman)"
@@ -14113,8 +14095,8 @@ msgid ""
 "\nClasses updated/added: %{class_stats}\nInstances updated/added: %{"
 "instance_stats}\nMethods updated/added: %{method_stats}"
 msgstr ""
-"成功匯入資料儲存庫。\n已更新/已新增名稱空間：%{namespace_stats}\n已更新/已新增類別：%{class_stats}\n已更新/已新增實例："
-"%{instance_stats}\n已更新/已新增方法：%{method_stats}"
+"成功匯入資料儲存庫。\n已更新/已新增名稱空間：%{namespace_stats}\n已更新/已新增類別：%{class_stats}\n已更新/"
+"已新增實例：%{instance_stats}\n已更新/已新增方法：%{method_stats}"
 
 msgid ""
 "Datastore import was successful. Added/Updated %{namespace_stats} Namespaces, "
@@ -18705,6 +18687,9 @@ msgstr "使用者已取消編輯種類 \"%{name}\""
 msgid "Edit of Chargeback Rate \"%{name}\" was cancelled by the user"
 msgstr "使用者已取消編輯計費費率 \"%{name}\""
 
+msgid "Edit of Class \"%s\" cancelled by the user"
+msgstr "使用者取消編輯類別 \"%s\""
+
 msgid "Edit of Class Schema Sequence '%{name}'"
 msgstr "編輯類別綱目序列 '%{name}'"
 
@@ -22241,9 +22226,6 @@ msgstr "僅限區塊儲存體型"
 msgid "Flavor|Cloud subnet required"
 msgstr "雲端子網路為必要"
 
-msgid "Flavor|Cpu cores"
-msgstr "CPU 核心"
-
 msgid "Flavor|Cpu cores per socket"
 msgstr "特性|每個 Socket 的 CPU 核心數"
 
@@ -22252,9 +22234,6 @@ msgstr "特性|Cpu Socket"
 
 msgid "Flavor|Cpu total cores"
 msgstr "特性|CPU 核心總數"
-
-msgid "Flavor|Cpus"
-msgstr "Cpu"
 
 msgid "Flavor|Description"
 msgstr "說明"
@@ -24143,9 +24122,6 @@ msgstr "主機：比較範本"
 msgid "Hosts: Date brought under Management for Last Week"
 msgstr "主機：上週提交管理的日期"
 
-msgid "Host|Address"
-msgstr "位址"
-
 msgid "Host|Admin disabled"
 msgstr "管理已停用"
 
@@ -25548,13 +25524,12 @@ msgstr "工作 (Job)"
 msgid "Job Template"
 msgstr "工作範本"
 
-msgid "Job Template (AWX)"
-msgid_plural "Job Templates (AWX)"
-msgstr[0] "Job Templates (AWX)"
+msgid "Job Template (%{provider_description})"
+msgid_plural "Job Templates (%{provider_description})"
+msgstr[0] "工作範本 (%{provider_description})"
 
 msgid "Job Template (Ansible Tower)"
-msgid_plural "Job Templates (Ansible Tower)"
-msgstr[0] "工作範本 (Ansible Tower)"
+msgstr "工作範本 (Ansible Tower)"
 
 msgid "Job Templates (Ansible Tower)"
 msgstr "工作範本 (Ansible Tower)"
@@ -30860,9 +30835,6 @@ msgstr "來源類型"
 msgid "MiqRequest|Stamped on"
 msgstr "戳記時間"
 
-msgid "MiqRequest|State"
-msgstr "狀態"
-
 msgid "MiqRequest|Status"
 msgstr "狀態"
 
@@ -30928,9 +30900,6 @@ msgstr "執行時間"
 
 msgid "MiqSchedule|Sched action"
 msgstr "排定的動作"
-
-msgid "MiqSchedule|Towhat"
-msgstr "內容"
 
 msgid "MiqSchedule|Userid"
 msgstr "使用者 ID"
@@ -32103,6 +32072,9 @@ msgstr "必須指定新的調整大小值/秒"
 msgid "My Company Categories"
 msgstr "我的公司種類"
 
+msgid "My Company Tags"
+msgstr "我的公司標籤"
+
 msgid "My EVM Group"
 msgstr "我的 EVM 群組"
 
@@ -32169,6 +32141,9 @@ msgstr "已取得名稱"
 
 msgid "Name is required"
 msgstr "「名稱」是必要的"
+
+msgid "Name may contain only alphanumeric and _ . - characters"
+msgstr "名稱只能包含英數和 _ . - 字元"
 
 msgid "Name must be unique"
 msgstr "名稱必須唯一。"
@@ -34029,9 +34004,6 @@ msgstr "物件"
 
 msgid "Object Attribute"
 msgstr "物件屬性"
-
-msgid "Object Attribute 1"
-msgstr "物件屬性 1"
 
 msgid "Object Attribute Name"
 msgstr "物件屬性名稱"
@@ -36634,13 +36606,12 @@ msgstr ""
 "或是變更分支或標籤，然後重試匯入；如果 playbook 不存在於儲存庫中，則此匯入永遠不會成功，您可以透過使用 --skip_playbook pb1, "
 "pb2 跳過此 playbook 來嘗試匯入。"
 
-msgid "Playbook (AWX)"
-msgid_plural "Playbooks (AWX)"
-msgstr[0] "Playbooks (AWX)"
+msgid "Playbook (%{provider_description})"
+msgid_plural "Playbooks (%{provider_description})"
+msgstr[0] "教戰手冊 (%{provider_description})"
 
 msgid "Playbook (Ansible Tower)"
-msgid_plural "Playbooks (Ansible Tower)"
-msgstr[0] "Playbook (Ansible Tower)"
+msgstr "教戰手冊 (Ansible Tower)"
 
 msgid "Playbook (Embedded Ansible)"
 msgid_plural "Playbooks (Embedded Ansible)"
@@ -43406,9 +43377,6 @@ msgstr "時段內的衍生記憶體使用率較低"
 msgid "Service|Description"
 msgstr "說明"
 
-msgid "Service|Display"
-msgstr "顯示"
-
 msgid "Service|Evm owner email"
 msgstr "Evm 擁有者電子郵件"
 
@@ -46802,9 +46770,6 @@ msgstr "地區說明"
 
 msgid "TenantQuota|Region number"
 msgstr "地區號碼"
-
-msgid "TenantQuota|Total"
-msgstr "總計"
 
 msgid "TenantQuota|Unit"
 msgstr "單位"
@@ -53028,13 +52993,12 @@ msgstr "工作流程狀態"
 msgid "Workflow Template"
 msgstr "工作流程範本"
 
-msgid "Workflow Template (AWX)"
-msgid_plural "Workflow Templates (AWX)"
-msgstr[0] "Workflow Templates (AWX)"
+msgid "Workflow Template (%{provider_description})"
+msgid_plural "Workflow Templates (%{provider_description})"
+msgstr[0] "工作流程範本 (%{provider_description})"
 
 msgid "Workflow Template (Ansible Tower)"
-msgid_plural "Workflow Templates (Ansible Tower)"
-msgstr[0] "工作流程範本 (Ansible Tower)"
+msgstr "工作流程範本 (Ansible Tower)"
 
 msgid "Workflow Templates (Ansible Tower)"
 msgstr "工作流程範本 (Ansible Tower)"

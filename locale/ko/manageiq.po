@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2024-11-15 00:23+0000\n"
-"PO-Revision-Date: 2024-11-15 00:23+0000\n"
+"POT-Creation-Date: 2025-02-28 14:08+0000\n"
+"PO-Revision-Date: 2025-02-28 14:08+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1071,6 +1071,14 @@ msgstr ""
 msgid "%{protocol} port %{port} to pods on target port:'%{target_port}'"
 msgstr "대상 포트의 팟(Pod)에 대한 %{protocol} 포트 %{port}:'%{target_port}'"
 
+msgid "%{provider_description} Job"
+msgid_plural "%{provider_description} Jobs"
+msgstr[0] "%{provider_description} 작업"
+
+msgid "%{provider_description} Workflow Job"
+msgid_plural "%{provider_description} Workflow Jobs"
+msgstr[0] "%{provider_description} 워크플로우 작업"
+
 msgid "%{record_name} has no snapshots"
 msgstr "%{record_name}에 스냅샷이 없습니다."
 
@@ -2007,16 +2015,8 @@ msgstr "이 인증 정보에 대한 AWS 비밀 키"
 msgid "AWX"
 msgstr "AWX"
 
-msgid "AWX Job"
-msgid_plural "AWX Jobs"
-msgstr[0] "AWX 작업"
-
 msgid "AWX Provider"
 msgstr "AWX 제공자"
-
-msgid "AWX Workflow Job"
-msgid_plural "AWX Workflow Jobs"
-msgstr[0] "AWX 워크플로우 작업"
 
 msgid "Abandon changes?"
 msgstr "변경사항 포기?"
@@ -3119,6 +3119,9 @@ msgstr "사용자가 새 카테고리 추가를 취소했습니다."
 msgid "Add of new Chargeback Rate was cancelled by the user"
 msgstr "사용자가 새 비용 상환율 추가를 취소했습니다."
 
+msgid "Add of new Class was cancelled by the user"
+msgstr "사용자가 새로운 클래스 추가를 취소했습니다."
+
 msgid "Add of new Cloud Network was cancelled by the user"
 msgstr "사용자가 새 클라우드 네트워크 추가를 취소했습니다."
 
@@ -4107,6 +4110,12 @@ msgstr "Ansible"
 msgid "Ansible Access Method"
 msgstr "Ansible 액세스 방법"
 
+msgid "Ansible Automation Platform"
+msgstr "Ansible Automation Platform"
+
+msgid "Ansible Automation Platform Provider"
+msgstr "Ansible Automation Platform 제공업체"
+
 msgid "Ansible Playbook"
 msgstr "Ansible 플레이북"
 
@@ -4134,9 +4143,6 @@ msgstr "Ansible Tower 작업 템플리트"
 msgid "Ansible Tower Jobs"
 msgstr "Ansible Tower 작업"
 
-msgid "Ansible Tower Provider"
-msgstr "Ansible Tower 제공자"
-
 msgid "Ansible Tower Providers"
 msgstr "Ansible Tower 제공자"
 
@@ -4145,10 +4151,6 @@ msgstr "Ansible Tower 템플리트"
 
 msgid "Ansible Tower Templates"
 msgstr "Ansible Tower 템플리트"
-
-msgid "Ansible Tower Workflow Job"
-msgid_plural "Ansible Tower Workflow Jobs"
-msgstr[0] "Ansible Tower 워크플로우 작업"
 
 msgid "Ansible Tower Workflow Template"
 msgstr "Ansible Tower 워크플로우 템플리트"
@@ -5304,9 +5306,12 @@ msgid "Automation Manager (AWX)"
 msgid_plural "Automation Managers (AWX)"
 msgstr[0] "Automation Managers(AWX)"
 
+msgid "Automation Manager (Ansible Automation Platform)"
+msgid_plural "Automation Managers (Ansible Automation Platform)"
+msgstr[0] "Automation Managers(Ansible Automation Platform)"
+
 msgid "Automation Manager (Ansible Tower)"
-msgid_plural "Automation Managers (Ansible Tower)"
-msgstr[0] "자동화 관리자(Ansible Tower)"
+msgstr "자동화 관리자(Ansible Tower)"
 
 msgid "Automation Manager Repositories Refresh"
 msgstr "Automation Manager 저장소 새로 고치기"
@@ -5339,6 +5344,9 @@ msgstr[0] "자동화 작업공간"
 
 msgid "Automation log downloaded"
 msgstr "자동화 로그가 다운로드됨"
+
+msgid "Automation simulation has been run"
+msgstr "자동화 시뮬레이션이 실행됨"
 
 msgid "Automations Tasks"
 msgstr "자동화 태스크"
@@ -5831,34 +5839,6 @@ msgstr "바인드 비밀번호"
 
 msgid "Bind failed for user %{user_name}"
 msgstr "사용자 %{user_name}에 대한 바인드 실패"
-
-msgid "Blacklisted Event"
-msgid_plural "Blacklisted Events"
-msgstr[0] "블랙리스트의 이벤트"
-
-msgid "Blacklisted event"
-msgstr "블랙리스트의 이벤트"
-
-msgid "BlacklistedEvent|Enabled"
-msgstr "BlacklistedEvent|사용"
-
-msgid "BlacklistedEvent|Event name"
-msgstr "BlacklistedEvent|이벤트 이름"
-
-msgid "BlacklistedEvent|Href slug"
-msgstr "BlacklistedEvent|Href slug"
-
-msgid "BlacklistedEvent|Provider model"
-msgstr "BlacklistedEvent|제공자 모델"
-
-msgid "BlacklistedEvent|Region description"
-msgstr "BlacklistedEvent|지역 설명"
-
-msgid "BlacklistedEvent|Region number"
-msgstr "BlacklistedEvent|지역 번호"
-
-msgid "BlacklistedEvent|System"
-msgstr "BlacklistedEvent|시스템"
 
 msgid "Blade Slot Count"
 msgstr "블레이드 슬롯 개수"
@@ -7831,6 +7811,12 @@ msgstr "청구 이름"
 
 msgid "Class"
 msgstr "클래스"
+
+msgid "Class \"%s\" was added"
+msgstr "\"%s\" 클래스가 추가됨"
+
+msgid "Class \"%s\" was saved"
+msgstr "\"%s\" 클래스가 저장됨"
 
 msgid "Class '%{name}' is not eligible for classification"
 msgstr "'%{name}' 클래스가 분류에 적합하지 않습니다."
@@ -10016,13 +10002,9 @@ msgid "Configured System"
 msgid_plural "Configured Systems"
 msgstr[0] "구성된 시스템"
 
-msgid "Configured System (AWX)"
-msgid_plural "Configured Systems (AWX)"
-msgstr[0] "구성된 시스템(AWX)"
-
-msgid "Configured System (Ansible Tower)"
-msgid_plural "Configured Systems (Ansible Tower)"
-msgstr[0] "구성된 시스템(Ansible Tower)"
+msgid "Configured System (%{provider_description})"
+msgid_plural "Configured Systems (%{provider_description})"
+msgstr[0] "구성된 시스템(%{provider_description})"
 
 msgid "Configured System (Foreman)"
 msgid_plural "Configured Systems (Foreman)"
@@ -18732,6 +18714,9 @@ msgstr "사용자가 카테고리 \"%{name}\"의 편집을 취소했습니다."
 msgid "Edit of Chargeback Rate \"%{name}\" was cancelled by the user"
 msgstr "사용자가 비용 상환율 \"%{name}\"의 편집을 취소했습니다."
 
+msgid "Edit of Class \"%s\" cancelled by the user"
+msgstr "사용자가 \"%s\" 클래스 편집 취소"
+
 msgid "Edit of Class Schema Sequence '%{name}'"
 msgstr "클래스 스키마 순서 '%{name}' 편집"
 
@@ -22270,9 +22255,6 @@ msgstr "플레이버|Block Storage 기반만"
 msgid "Flavor|Cloud subnet required"
 msgstr "플레이버|클라우드 서브넷 필수"
 
-msgid "Flavor|Cpu cores"
-msgstr "플레이버|Cpu 코어"
-
 msgid "Flavor|Cpu cores per socket"
 msgstr "Flavor|소켓당 CPU 코어 수"
 
@@ -22281,9 +22263,6 @@ msgstr "Flavor|CPU 소켓"
 
 msgid "Flavor|Cpu total cores"
 msgstr "Flavor|CPU 총 코어 수"
-
-msgid "Flavor|Cpus"
-msgstr "플레이버|Cpu"
 
 msgid "Flavor|Description"
 msgstr "플레이버|설명"
@@ -24174,9 +24153,6 @@ msgstr "호스트: 비교 템플리트"
 msgid "Hosts: Date brought under Management for Last Week"
 msgstr "호스트: 지난 주 관리의 날짜를 가져옴"
 
-msgid "Host|Address"
-msgstr "호스트|주소"
-
 msgid "Host|Admin disabled"
 msgstr "호스트|관리 사용 안함"
 
@@ -25579,13 +25555,12 @@ msgstr "작업"
 msgid "Job Template"
 msgstr "작업 템플리트"
 
-msgid "Job Template (AWX)"
-msgid_plural "Job Templates (AWX)"
-msgstr[0] "작업 템플리트(AWX)"
+msgid "Job Template (%{provider_description})"
+msgid_plural "Job Templates (%{provider_description})"
+msgstr[0] "작업 템플리트(%{provider_description} )"
 
 msgid "Job Template (Ansible Tower)"
-msgid_plural "Job Templates (Ansible Tower)"
-msgstr[0] "작업 템플리트(Ansible Tower)"
+msgstr "작업 템플리트(Ansible Tower)"
 
 msgid "Job Templates (Ansible Tower)"
 msgstr "작업 템플리트(Ansible Tower)"
@@ -30896,9 +30871,6 @@ msgstr "MiqRequest|소스 유형"
 msgid "MiqRequest|Stamped on"
 msgstr "MiqRequest|소인이 찍힌 시점"
 
-msgid "MiqRequest|State"
-msgstr "MiqRequest|상태"
-
 msgid "MiqRequest|Status"
 msgstr "MiqRequest|상태"
 
@@ -30964,9 +30936,6 @@ msgstr "MiqSchedule|실행 시점"
 
 msgid "MiqSchedule|Sched action"
 msgstr "MiqSchedule|Sched 조치"
-
-msgid "MiqSchedule|Towhat"
-msgstr "MiqSchedule|Towhat"
 
 msgid "MiqSchedule|Userid"
 msgstr "MiqSchedule|사용자 ID"
@@ -32140,6 +32109,9 @@ msgstr "새 크기 조정 값을 지정해야 함"
 msgid "My Company Categories"
 msgstr "내 회사 카테고리"
 
+msgid "My Company Tags"
+msgstr "내 회사 태그"
+
 msgid "My EVM Group"
 msgstr "내 EVM 그룹"
 
@@ -32206,6 +32178,9 @@ msgstr "이름이 이미 사용 중임"
 
 msgid "Name is required"
 msgstr "이름은 필수입니다."
+
+msgid "Name may contain only alphanumeric and _ . - characters"
+msgstr "이름은 영숫자와 _. - 문자로만 구성될 수 있습니다."
 
 msgid "Name must be unique"
 msgstr "이름은 고유해야 함"
@@ -34067,9 +34042,6 @@ msgstr "오브젝트"
 
 msgid "Object Attribute"
 msgstr "오브젝트 속성"
-
-msgid "Object Attribute 1"
-msgstr "오브젝트 속성 1"
 
 msgid "Object Attribute Name"
 msgstr "오브젝트 속성 이름"
@@ -36675,13 +36647,12 @@ msgstr ""
 "또는 태그를 변경한 후 가져오기를 재시도할 수 있습니다. 플레이북이 저장소에 없으면 가져오기에 실패합니다. --skip_playbook "
 "pb1, pb2를 사용해서 이 플레이북을 건너뛰어 가져오기를 시도할 수 있습니다."
 
-msgid "Playbook (AWX)"
-msgid_plural "Playbooks (AWX)"
-msgstr[0] "플레이북(AWX)"
+msgid "Playbook (%{provider_description})"
+msgid_plural "Playbooks (%{provider_description})"
+msgstr[0] "Playbooks(%{provider_description})"
 
 msgid "Playbook (Ansible Tower)"
-msgid_plural "Playbooks (Ansible Tower)"
-msgstr[0] "플레이북(Ansible Tower)"
+msgstr "플레이북(Ansible Tower)"
 
 msgid "Playbook (Embedded Ansible)"
 msgid_plural "Playbooks (Embedded Ansible)"
@@ -43450,9 +43421,6 @@ msgstr "서비스|기간 중 사용한 파생 메모리 낮음"
 msgid "Service|Description"
 msgstr "서비스|설명"
 
-msgid "Service|Display"
-msgstr "서비스|표시"
-
 msgid "Service|Evm owner email"
 msgstr "서비스|Evm 소유자 이메일"
 
@@ -46847,9 +46815,6 @@ msgstr "TenantQuota|지역 설명"
 
 msgid "TenantQuota|Region number"
 msgstr "TenantQuota|지역 번호"
-
-msgid "TenantQuota|Total"
-msgstr "TenantQuota|총계"
 
 msgid "TenantQuota|Unit"
 msgstr "TenantQuota|단위"
@@ -53082,13 +53047,12 @@ msgstr "워크플로우 상태"
 msgid "Workflow Template"
 msgstr "워크플로 템플리트"
 
-msgid "Workflow Template (AWX)"
-msgid_plural "Workflow Templates (AWX)"
-msgstr[0] "워크플로우 템플리트(AWX)"
+msgid "Workflow Template (%{provider_description})"
+msgid_plural "Workflow Templates (%{provider_description})"
+msgstr[0] "워크플로우 템플리트(%{provider_description})"
 
 msgid "Workflow Template (Ansible Tower)"
-msgid_plural "Workflow Templates (Ansible Tower)"
-msgstr[0] "워크플로우 템플리트(Ansible Tower)"
+msgstr "워크플로우 템플리트(Ansible Tower)"
 
 msgid "Workflow Templates (Ansible Tower)"
 msgstr "워크플로우 템플리트(Ansible Tower)"
