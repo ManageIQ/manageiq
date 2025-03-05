@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2024-11-15 00:23+0000\n"
-"PO-Revision-Date: 2024-11-15 00:23+0000\n"
+"POT-Creation-Date: 2025-02-28 14:08+0000\n"
+"PO-Revision-Date: 2025-02-28 14:08+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1071,6 +1071,14 @@ msgstr ""
 msgid "%{protocol} port %{port} to pods on target port:'%{target_port}'"
 msgstr "ターゲット・ポート'%{target_port}' のポッドの %{protocol}ポート %{port}"
 
+msgid "%{provider_description} Job"
+msgid_plural "%{provider_description} Jobs"
+msgstr[0] "%{provider_description} Jobs"
+
+msgid "%{provider_description} Workflow Job"
+msgid_plural "%{provider_description} Workflow Jobs"
+msgstr[0] "%{provider_description} Workflow Jobs"
+
 msgid "%{record_name} has no snapshots"
 msgstr "%{record_name}にはスナップショットはありません"
 
@@ -2010,16 +2018,8 @@ msgstr "この資格情報の AWS 秘密鍵"
 msgid "AWX"
 msgstr "AWX"
 
-msgid "AWX Job"
-msgid_plural "AWX Jobs"
-msgstr[0] "AWX Jobs"
-
 msgid "AWX Provider"
 msgstr "AWX プロバイダー"
-
-msgid "AWX Workflow Job"
-msgid_plural "AWX Workflow Jobs"
-msgstr[0] "AWX Workflow Jobs"
 
 msgid "Abandon changes?"
 msgstr "変更を破棄しますか?"
@@ -3122,6 +3122,9 @@ msgstr "新規カテゴリーの追加はユーザーにより取り消されま
 msgid "Add of new Chargeback Rate was cancelled by the user"
 msgstr "新規チャージバック・レートの追加はユーザーにより取り消されました"
 
+msgid "Add of new Class was cancelled by the user"
+msgstr "ユーザーにより新規クラスの追加がキャンセルされました"
+
 msgid "Add of new Cloud Network was cancelled by the user"
 msgstr "新規クラウド・ネットワークの追加はユーザーにより取り消されました"
 
@@ -4110,6 +4113,12 @@ msgstr "Ansible"
 msgid "Ansible Access Method"
 msgstr "Ansible アクセス方式"
 
+msgid "Ansible Automation Platform"
+msgstr "Ansible Automation Platform"
+
+msgid "Ansible Automation Platform Provider"
+msgstr "Ansible Automation Platform Provider"
+
 msgid "Ansible Playbook"
 msgstr "Ansible Playbook"
 
@@ -4137,9 +4146,6 @@ msgstr "Ansible Tower ジョブ・テンプレート"
 msgid "Ansible Tower Jobs"
 msgstr "Ansible Tower ジョブ"
 
-msgid "Ansible Tower Provider"
-msgstr "Ansible Tower プロバイダー"
-
 msgid "Ansible Tower Providers"
 msgstr "Ansible Tower プロバイダー"
 
@@ -4148,10 +4154,6 @@ msgstr "Ansible Tower テンプレート"
 
 msgid "Ansible Tower Templates"
 msgstr "Ansible Tower テンプレート"
-
-msgid "Ansible Tower Workflow Job"
-msgid_plural "Ansible Tower Workflow Jobs"
-msgstr[0] "Ansible Tower ワークフロー・ジョブ"
 
 msgid "Ansible Tower Workflow Template"
 msgstr "Ansible Tower ワークフロー・テンプレート"
@@ -5309,9 +5311,12 @@ msgid "Automation Manager (AWX)"
 msgid_plural "Automation Managers (AWX)"
 msgstr[0] "Automation Managers (AWX)"
 
+msgid "Automation Manager (Ansible Automation Platform)"
+msgid_plural "Automation Managers (Ansible Automation Platform)"
+msgstr[0] "Automation Managers (Ansible Automation Platform)"
+
 msgid "Automation Manager (Ansible Tower)"
-msgid_plural "Automation Managers (Ansible Tower)"
-msgstr[0] "自動化マネージャー (Ansible Tower)"
+msgstr "自動化マネージャー (Ansible Tower)"
 
 msgid "Automation Manager Repositories Refresh"
 msgstr "自動化マネージャー・リポジトリーのリフレッシュ"
@@ -5344,6 +5349,9 @@ msgstr[0] "自動化ワークスペース"
 
 msgid "Automation log downloaded"
 msgstr "自動化ログをダウンロードしました"
+
+msgid "Automation simulation has been run"
+msgstr "自動化シミュレーションが実行されました"
 
 msgid "Automations Tasks"
 msgstr "自動化タスク"
@@ -5836,34 +5844,6 @@ msgstr "バインド・パスワード"
 
 msgid "Bind failed for user %{user_name}"
 msgstr "ユーザー %{user_name} のバインドに失敗しました"
-
-msgid "Blacklisted Event"
-msgid_plural "Blacklisted Events"
-msgstr[0] "ブラックリスト・イベント"
-
-msgid "Blacklisted event"
-msgstr "ブラックリストに記載されたイベント"
-
-msgid "BlacklistedEvent|Enabled"
-msgstr "有効"
-
-msgid "BlacklistedEvent|Event name"
-msgstr "イベント名"
-
-msgid "BlacklistedEvent|Href slug"
-msgstr "href スラグ"
-
-msgid "BlacklistedEvent|Provider model"
-msgstr "プロバイダー・モデル"
-
-msgid "BlacklistedEvent|Region description"
-msgstr "リージョンの説明"
-
-msgid "BlacklistedEvent|Region number"
-msgstr "リージョン番号"
-
-msgid "BlacklistedEvent|System"
-msgstr "システム"
 
 msgid "Blade Slot Count"
 msgstr "ブレード・スロット数"
@@ -7838,6 +7818,12 @@ msgstr "要求名"
 
 msgid "Class"
 msgstr "クラス"
+
+msgid "Class \"%s\" was added"
+msgstr "クラス「%s」が追加されました"
+
+msgid "Class \"%s\" was saved"
+msgstr "クラス「%s」が保存されました"
 
 msgid "Class '%{name}' is not eligible for classification"
 msgstr "クラス '%{name}' は分類対象にはなりません"
@@ -10023,13 +10009,9 @@ msgid "Configured System"
 msgid_plural "Configured Systems"
 msgstr[0] "構成済みシステム"
 
-msgid "Configured System (AWX)"
-msgid_plural "Configured Systems (AWX)"
-msgstr[0] "Configured Systems (AWX)"
-
-msgid "Configured System (Ansible Tower)"
-msgid_plural "Configured Systems (Ansible Tower)"
-msgstr[0] "構成済みシステム (Ansible Tower)"
+msgid "Configured System (%{provider_description})"
+msgid_plural "Configured Systems (%{provider_description})"
+msgstr[0] "Configured Systems (%{provider_description})"
 
 msgid "Configured System (Foreman)"
 msgid_plural "Configured Systems (Foreman)"
@@ -18742,6 +18724,9 @@ msgstr "カタログ \"%{name}\" の編集はユーザーにより取り消さ�
 msgid "Edit of Chargeback Rate \"%{name}\" was cancelled by the user"
 msgstr "チャージバック・レート \"%{name}\" の編集はユーザーにより取り消されました"
 
+msgid "Edit of Class \"%s\" cancelled by the user"
+msgstr "ユーザーがクラス「%s」の編集がキャンセルされました"
+
 msgid "Edit of Class Schema Sequence '%{name}'"
 msgstr "クラス・スキーマの順序 '%{name}' の編集"
 
@@ -22280,9 +22265,6 @@ msgstr "ブロック・ストレージ・ベースのみ"
 msgid "Flavor|Cloud subnet required"
 msgstr "クラウド・サブネットが必要"
 
-msgid "Flavor|Cpu cores"
-msgstr "CPU コア"
-
 msgid "Flavor|Cpu cores per socket"
 msgstr "ソケット当たりの Flavor|Cpu コア数"
 
@@ -22291,9 +22273,6 @@ msgstr "Flavor|Cpu ソケット"
 
 msgid "Flavor|Cpu total cores"
 msgstr "Flavor|Cpu の合計コア数"
-
-msgid "Flavor|Cpus"
-msgstr "CPU"
 
 msgid "Flavor|Description"
 msgstr "説明"
@@ -24189,9 +24168,6 @@ msgstr "ホスト: 比較テンプレート"
 msgid "Hosts: Date brought under Management for Last Week"
 msgstr "ホスト: 管理対象となった先週の日付"
 
-msgid "Host|Address"
-msgstr "アドレス"
-
 msgid "Host|Admin disabled"
 msgstr "管理者の無効化"
 
@@ -25594,13 +25570,12 @@ msgstr "ジョブ"
 msgid "Job Template"
 msgstr "ジョブ・テンプレート"
 
-msgid "Job Template (AWX)"
-msgid_plural "Job Templates (AWX)"
-msgstr[0] "Job Templates (AWX)"
+msgid "Job Template (%{provider_description})"
+msgid_plural "Job Templates (%{provider_description})"
+msgstr[0] "Job Templates (%{provider_description})"
 
 msgid "Job Template (Ansible Tower)"
-msgid_plural "Job Templates (Ansible Tower)"
-msgstr[0] "ジョブ・テンプレート (Ansible Tower)"
+msgstr "ジョブ・テンプレート (Ansible Tower)"
 
 msgid "Job Templates (Ansible Tower)"
 msgstr "ジョブ・テンプレート (Ansible Tower)"
@@ -30911,9 +30886,6 @@ msgstr "ソース・タイプ"
 msgid "MiqRequest|Stamped on"
 msgstr "スタンプ日"
 
-msgid "MiqRequest|State"
-msgstr "状態"
-
 msgid "MiqRequest|Status"
 msgstr "ステータス"
 
@@ -30979,9 +30951,6 @@ msgstr "実行時刻"
 
 msgid "MiqSchedule|Sched action"
 msgstr "スケジュールされたアクション"
-
-msgid "MiqSchedule|Towhat"
-msgstr "対象"
 
 msgid "MiqSchedule|Userid"
 msgstr "ユーザー ID"
@@ -32155,6 +32124,9 @@ msgstr "新しいサイズ変更値を指定する必要があります"
 msgid "My Company Categories"
 msgstr "私の企業カテゴリー"
 
+msgid "My Company Tags"
+msgstr "マイ・カンパニー・タグ"
+
 msgid "My EVM Group"
 msgstr "マイ EVM グループ"
 
@@ -32221,6 +32193,9 @@ msgstr "名前はすでに使用されています"
 
 msgid "Name is required"
 msgstr "名前が必要です。"
+
+msgid "Name may contain only alphanumeric and _ . - characters"
+msgstr "名前には英数字と _ . - 文字のみを使用できます"
 
 msgid "Name must be unique"
 msgstr "名前は一意でなければなりません"
@@ -34084,9 +34059,6 @@ msgstr "オブジェクト"
 
 msgid "Object Attribute"
 msgstr "オブジェクト属性"
-
-msgid "Object Attribute 1"
-msgstr "オブジェクト属性 1"
 
 msgid "Object Attribute Name"
 msgstr "オブジェクト属性名"
@@ -36693,13 +36665,12 @@ msgstr ""
 "するか、ブランチまたはタグを変更してインポートを再試行できます。Playbook がリポジトリーに存在しない場合、このインポートが成功することはありません。"
 "--skip_playbook pb1, pb2 を使用してこの Playbook をスキップし、インポートを試すことができます。"
 
-msgid "Playbook (AWX)"
-msgid_plural "Playbooks (AWX)"
-msgstr[0] "Playbooks (AWX)"
+msgid "Playbook (%{provider_description})"
+msgid_plural "Playbooks (%{provider_description})"
+msgstr[0] "Playbooks (%{provider_description})"
 
 msgid "Playbook (Ansible Tower)"
-msgid_plural "Playbooks (Ansible Tower)"
-msgstr[0] "Playbook (Ansible Tower)"
+msgstr "Playbook (Ansible Tower)"
 
 msgid "Playbook (Embedded Ansible)"
 msgid_plural "Playbooks (Embedded Ansible)"
@@ -43472,9 +43443,6 @@ msgstr "一定期間の使用中派生メモリー  (低)"
 msgid "Service|Description"
 msgstr "説明"
 
-msgid "Service|Display"
-msgstr "表示"
-
 msgid "Service|Evm owner email"
 msgstr "EVM  所有者 E メール"
 
@@ -46871,9 +46839,6 @@ msgstr "リージョンの説明"
 
 msgid "TenantQuota|Region number"
 msgstr "リージョン番号"
-
-msgid "TenantQuota|Total"
-msgstr "合計"
 
 msgid "TenantQuota|Unit"
 msgstr "単位"
@@ -53108,13 +53073,12 @@ msgstr "ワークフローの状態"
 msgid "Workflow Template"
 msgstr "ワークフロー・テンプレート"
 
-msgid "Workflow Template (AWX)"
-msgid_plural "Workflow Templates (AWX)"
-msgstr[0] "Workflow Templates (AWX)"
+msgid "Workflow Template (%{provider_description})"
+msgid_plural "Workflow Templates (%{provider_description})"
+msgstr[0] "Workflow Templates (%{provider_description})"
 
 msgid "Workflow Template (Ansible Tower)"
-msgid_plural "Workflow Templates (Ansible Tower)"
-msgstr[0] "ワークフロー・テンプレート (Ansible Tower)"
+msgstr "ワークフロー・テンプレート (Ansible Tower)"
 
 msgid "Workflow Templates (Ansible Tower)"
 msgstr "ワークフロー・テンプレート (Ansible Tower)"

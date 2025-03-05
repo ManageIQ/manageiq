@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2024-11-15 00:23+0000\n"
-"PO-Revision-Date: 2024-11-15 00:23+0000\n"
+"POT-Creation-Date: 2025-02-28 14:08+0000\n"
+"PO-Revision-Date: 2025-02-28 14:08+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1204,6 +1204,16 @@ msgstr ""
 msgid "%{protocol} port %{port} to pods on target port:'%{target_port}'"
 msgstr "%{protocol} port %{port} vers pods sur port cible:'%{target_port}'"
 
+msgid "%{provider_description} Job"
+msgid_plural "%{provider_description} Jobs"
+msgstr[0] "%{provider_description} Job"
+msgstr[1] "%{provider_description} Jobs"
+
+msgid "%{provider_description} Workflow Job"
+msgid_plural "%{provider_description} Workflow Jobs"
+msgstr[0] "%{provider_description} Workflow Job"
+msgstr[1] "%{provider_description} Workflow Jobs"
+
 msgid "%{record_name} has no snapshots"
 msgstr "%{record_name} ne comporte pas de clichés"
 
@@ -2242,18 +2252,8 @@ msgstr "Clé secrète AWS pour cet identifiant"
 msgid "AWX"
 msgstr "AWX"
 
-msgid "AWX Job"
-msgid_plural "AWX Jobs"
-msgstr[0] "AWX Job"
-msgstr[1] "AWX Jobs"
-
 msgid "AWX Provider"
 msgstr "Fournisseur AWX"
-
-msgid "AWX Workflow Job"
-msgid_plural "AWX Workflow Jobs"
-msgstr[0] "AWX Workflow Job"
-msgstr[1] "AWX Workflow Jobs"
 
 msgid "Abandon changes?"
 msgstr "Abandonner les changements ?"
@@ -3398,6 +3398,9 @@ msgid "Add of new Chargeback Rate was cancelled by the user"
 msgstr ""
 "L'ajout d'un nouveau taux de rétrofacturation a été annulé par l'utilisateur"
 
+msgid "Add of new Class was cancelled by the user"
+msgstr "L'ajout d'une nouvelle classe a été annulé par l'utilisateur"
+
 msgid "Add of new Cloud Network was cancelled by the user"
 msgstr "L'ajout d'un nouveau réseau cloud a été annulé par l'utilisateur"
 
@@ -4436,6 +4439,12 @@ msgstr "Ansible"
 msgid "Ansible Access Method"
 msgstr "Méthode d'accès Ansible"
 
+msgid "Ansible Automation Platform"
+msgstr "Ansible Automation Platform"
+
+msgid "Ansible Automation Platform Provider"
+msgstr "Fournisseur Ansible Automation Platform"
+
 msgid "Ansible Playbook"
 msgstr "Playbook Ansible"
 
@@ -4463,9 +4472,6 @@ msgstr "Modèle de travail Ansible Tower"
 msgid "Ansible Tower Jobs"
 msgstr "Travaux Ansible Tower"
 
-msgid "Ansible Tower Provider"
-msgstr "Fournisseur Ansible Tower"
-
 msgid "Ansible Tower Providers"
 msgstr "Fournisseurs Ansible Tower"
 
@@ -4474,11 +4480,6 @@ msgstr "Modèle Ansible Tower"
 
 msgid "Ansible Tower Templates"
 msgstr "Modèles Ansible Tower"
-
-msgid "Ansible Tower Workflow Job"
-msgid_plural "Ansible Tower Workflow Jobs"
-msgstr[0] "Travail de flux de travaux Ansible Tower"
-msgstr[1] "Travaux de flux de travaux Ansible Tower"
 
 msgid "Ansible Tower Workflow Template"
 msgstr "Modèle de flux de travaux Ansible Tower"
@@ -5696,10 +5697,13 @@ msgid_plural "Automation Managers (AWX)"
 msgstr[0] "Automation Manager (AWX)"
 msgstr[1] "Automation Managers (AWX)"
 
+msgid "Automation Manager (Ansible Automation Platform)"
+msgid_plural "Automation Managers (Ansible Automation Platform)"
+msgstr[0] "Automation Manager (Ansible Automation Platform)"
+msgstr[1] "Automation Managers (Ansible Automation Platform)"
+
 msgid "Automation Manager (Ansible Tower)"
-msgid_plural "Automation Managers (Ansible Tower)"
-msgstr[0] "Gestionnaire d'automatisation (Ansible Tower)"
-msgstr[1] "Gestionnaires d'automatisation (Ansible Tower)"
+msgstr "Automation Manager (Ansible Tower)"
 
 msgid "Automation Manager Repositories Refresh"
 msgstr "Actualisation des référentiels du gestionnaire d'automatisation"
@@ -5734,6 +5738,9 @@ msgstr[1] "Espaces de travail d'automatisation"
 
 msgid "Automation log downloaded"
 msgstr "Journal d'automatisation téléchargé"
+
+msgid "Automation simulation has been run"
+msgstr "La simulation d'automatisation a été exécutée"
 
 msgid "Automations Tasks"
 msgstr "Tâches d'automatisation"
@@ -6247,35 +6254,6 @@ msgstr "Mot de passe de liaison"
 
 msgid "Bind failed for user %{user_name}"
 msgstr "Echec de la liaison pour l'utilisateur %{user_name}"
-
-msgid "Blacklisted Event"
-msgid_plural "Blacklisted Events"
-msgstr[0] "Evénement placé sur liste noire"
-msgstr[1] "Evénements placés sur liste noire"
-
-msgid "Blacklisted event"
-msgstr "Evénement placé sur liste noire"
-
-msgid "BlacklistedEvent|Enabled"
-msgstr "Activé"
-
-msgid "BlacklistedEvent|Event name"
-msgstr "Nom d'événement"
-
-msgid "BlacklistedEvent|Href slug"
-msgstr "Identifiant URL HREF"
-
-msgid "BlacklistedEvent|Provider model"
-msgstr "Modèle de fournisseur"
-
-msgid "BlacklistedEvent|Region description"
-msgstr "Description de la région"
-
-msgid "BlacklistedEvent|Region number"
-msgstr "Numéro de la région"
-
-msgid "BlacklistedEvent|System"
-msgstr "Système"
 
 msgid "Blade Slot Count"
 msgstr "Nombre d'emplacements de serveur Blade"
@@ -8437,6 +8415,12 @@ msgstr "Nom de la demande"
 
 msgid "Class"
 msgstr "Classe"
+
+msgid "Class \"%s\" was added"
+msgstr "La classe %s a été ajoutée"
+
+msgid "Class \"%s\" was saved"
+msgstr "La classe %s a été sauvegardée"
 
 msgid "Class '%{name}' is not eligible for classification"
 msgstr "La classe '%{name}' n'est pas éligible pour la classification"
@@ -10689,15 +10673,10 @@ msgid_plural "Configured Systems"
 msgstr[0] "Système configuré"
 msgstr[1] "Systèmes configurés"
 
-msgid "Configured System (AWX)"
-msgid_plural "Configured Systems (AWX)"
-msgstr[0] "Configured System (AWX)"
-msgstr[1] "Configured Systems (AWX)"
-
-msgid "Configured System (Ansible Tower)"
-msgid_plural "Configured Systems (Ansible Tower)"
-msgstr[0] "Système configuré (Ansible Tower)"
-msgstr[1] "Systèmes configurés (Ansible Tower)"
+msgid "Configured System (%{provider_description})"
+msgid_plural "Configured Systems (%{provider_description})"
+msgstr[0] "Système configuré (%{provider_description})"
+msgstr[1] "Systèmes configurés (%{provider_description})"
 
 msgid "Configured System (Foreman)"
 msgid_plural "Configured Systems (Foreman)"
@@ -19876,6 +19855,9 @@ msgstr ""
 "L'édition du taux de rétrofacturation \"%{name}\" a été annulée par "
 "l'utilisateur"
 
+msgid "Edit of Class \"%s\" cancelled by the user"
+msgstr "Modification de la classe \"%s\" annulée par l'utilisateur"
+
 msgid "Edit of Class Schema Sequence '%{name}'"
 msgstr "Edition de la séquence des schémas de classe '%{name}'"
 
@@ -23591,9 +23573,6 @@ msgstr "Basé sur un stockage par blocs uniquement"
 msgid "Flavor|Cloud subnet required"
 msgstr "Sous-réseau cloud obligatoire"
 
-msgid "Flavor|Cpu cores"
-msgstr "Coeurs d'UC"
-
 msgid "Flavor|Cpu cores per socket"
 msgstr "Flavor | Coeurs d'unité centrale par socket"
 
@@ -23602,9 +23581,6 @@ msgstr "Flavor | Sockets d'unité centrale"
 
 msgid "Flavor|Cpu total cores"
 msgstr "Flavor | Nombre total de coeurs d'unité centrale"
-
-msgid "Flavor|Cpus"
-msgstr "UC"
 
 msgid "Flavor|Description"
 msgstr "Description"
@@ -25575,9 +25551,6 @@ msgstr "Hôtes : Modèle de comparaison"
 msgid "Hosts: Date brought under Management for Last Week"
 msgstr "Hôtes : Date de mise en gestion pour la semaine dernière"
 
-msgid "Host|Address"
-msgstr "Adresse"
-
 msgid "Host|Admin disabled"
 msgstr "Admin désactivé"
 
@@ -27054,15 +27027,13 @@ msgstr "Travail"
 msgid "Job Template"
 msgstr "Modèle de travail"
 
-msgid "Job Template (AWX)"
-msgid_plural "Job Templates (AWX)"
-msgstr[0] "Job Template (AWX)"
-msgstr[1] "Job Templates (AWX)"
+msgid "Job Template (%{provider_description})"
+msgid_plural "Job Templates (%{provider_description})"
+msgstr[0] "Job Template (%{provider_description})"
+msgstr[1] "Job Templates (%{provider_description})"
 
 msgid "Job Template (Ansible Tower)"
-msgid_plural "Job Templates (Ansible Tower)"
-msgstr[0] "Modèle de travail (Ansible Tower)"
-msgstr[1] "Modèles de travaux (Ansible Tower)"
+msgstr "Job Template (Ansible Tower)"
 
 msgid "Job Templates (Ansible Tower)"
 msgstr "Modèles de travail (Ansible Tower)"
@@ -32528,9 +32499,6 @@ msgstr "Type de source"
 msgid "MiqRequest|Stamped on"
 msgstr "Date de signature"
 
-msgid "MiqRequest|State"
-msgstr "Etat"
-
 msgid "MiqRequest|Status"
 msgstr "Statut"
 
@@ -32596,9 +32564,6 @@ msgstr "Exécution"
 
 msgid "MiqSchedule|Sched action"
 msgstr "Action planifiée"
-
-msgid "MiqSchedule|Towhat"
-msgstr "Application"
 
 msgid "MiqSchedule|Userid"
 msgstr "ID utilisateur"
@@ -33801,6 +33766,9 @@ msgstr ""
 msgid "My Company Categories"
 msgstr "Catégories de ma société"
 
+msgid "My Company Tags"
+msgstr "Balises Ma société"
+
 msgid "My EVM Group"
 msgstr "Mon groupe EVM"
 
@@ -33870,6 +33838,9 @@ msgstr "Le nom a déjà été saisi"
 
 msgid "Name is required"
 msgstr "Le nom est obligatoire"
+
+msgid "Name may contain only alphanumeric and _ . - characters"
+msgstr "Le nom ne peut contenir que des caractères alphanumériques et _ . -"
 
 msgid "Name must be unique"
 msgstr "Le nom doit être unique"
@@ -35880,9 +35851,6 @@ msgstr "Objet"
 
 msgid "Object Attribute"
 msgstr "Attribut d'objet"
-
-msgid "Object Attribute 1"
-msgstr "Attribut d'objet 1"
 
 msgid "Object Attribute Name"
 msgstr "Nom d'attribut d'objet"
@@ -38592,15 +38560,13 @@ msgstr ""
 "pouvez essayer d'importer en ignorant ce playbook à l'aide de --skip_playbook "
 "pb1, pb2."
 
-msgid "Playbook (AWX)"
-msgid_plural "Playbooks (AWX)"
-msgstr[0] "Playbook (AWX)"
-msgstr[1] "Playbooks (AWX)"
+msgid "Playbook (%{provider_description})"
+msgid_plural "Playbooks (%{provider_description})"
+msgstr[0] "Playbook (%{provider_description})"
+msgstr[1] "Playbooks (%{provider_description})"
 
 msgid "Playbook (Ansible Tower)"
-msgid_plural "Playbooks (Ansible Tower)"
-msgstr[0] "Playbook (Ansible Tower)"
-msgstr[1] "Playbooks (Ansible Tower)"
+msgstr "Playbook (Ansible Tower)"
 
 msgid "Playbook (Embedded Ansible)"
 msgid_plural "Playbooks (Embedded Ansible)"
@@ -39760,7 +39726,7 @@ msgid "Provision Virtual Machines - Select a Template"
 msgstr "Mise à disposition de machines virtuelles - Sélectionner un modèle"
 
 msgid "Provision failed for the following reasons:%{errors}"
-msgstr "La mise à disposition a échoué pour les raisons suivantes:%{errors}"
+msgstr "La mise à disposition a échoué pour les raisons suivantes :%{errors}"
 
 msgid "Provision workflow does not contain the expected method <%{method}>"
 msgstr ""
@@ -45767,9 +45733,6 @@ msgstr "Mémoire dérivée utilisée - Taux bas sur la période"
 msgid "Service|Description"
 msgstr "Description"
 
-msgid "Service|Display"
-msgstr "Affichage"
-
 msgid "Service|Evm owner email"
 msgstr "Adresse électronique de propriétaire EVM"
 
@@ -49349,9 +49312,6 @@ msgstr "Description de la région"
 
 msgid "TenantQuota|Region number"
 msgstr "Numéro de la région"
-
-msgid "TenantQuota|Total"
-msgstr "Total"
 
 msgid "TenantQuota|Unit"
 msgstr "Unité"
@@ -56117,15 +56077,13 @@ msgstr "États de flux de travaux"
 msgid "Workflow Template"
 msgstr "Modèle de flux de travaux"
 
-msgid "Workflow Template (AWX)"
-msgid_plural "Workflow Templates (AWX)"
-msgstr[0] "Workflow Template (AWX)"
-msgstr[1] "Workflow Templates (AWX)"
+msgid "Workflow Template (%{provider_description})"
+msgid_plural "Workflow Templates (%{provider_description})"
+msgstr[0] "Workflow Template (%{provider_description})"
+msgstr[1] "Workflow Templates (%{provider_description})"
 
 msgid "Workflow Template (Ansible Tower)"
-msgid_plural "Workflow Templates (Ansible Tower)"
-msgstr[0] "Modèle de flux de travaux (Ansible Tower)"
-msgstr[1] "Modèles de flux de travaux (Ansible Tower)"
+msgstr "Workflow Template (Ansible Tower)"
 
 msgid "Workflow Templates (Ansible Tower)"
 msgstr "Modèles de flux de travaux (Ansible Tower)"
