@@ -1391,6 +1391,7 @@ DEPENDENCIES
   bundler-audit
   byebug
   capybara (~> 2.5.0)
+  cgi (~> 0.4.2)
   color (~> 1.8)
   config (~> 5.1)
   connection_pool
@@ -1509,7 +1510,7 @@ DEPENDENCIES
   terminal
   time (~> 0.2.2)
   timecop (~> 0.9, != 0.9.7)
-  uri (~> 0.13.1)
+  uri (~> 0.13.2)
   vcr (~> 6.1)
   webmock (~> 3.7)
   websocket-driver (~> 0.6.3)
