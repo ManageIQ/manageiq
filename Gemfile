@@ -67,7 +67,7 @@ gem "pg-dsn_parser",                    "~>0.1.1",           :require => false
 gem "prism",                            ">=0.25.0",          :require => false # Used by DescendantLoader
 gem "psych",                            ">=3.1",             :require => false # 3.1 safe_load changed positional to kwargs like aliases: true: https://github.com/ruby/psych/commit/4d4439d6d0adfcbd211ea295779315f1baa7dadd
 gem "query_relation",                   "~>0.1.0",           :require => false
-gem "rack",                             ">=2.2.6.4",         :require => false
+gem "rack",                             ">=2.2.12",          :require => false
 gem "rack-attack",                      "~>6.5.0",           :require => false
 gem "rails",                            "~>7.1.5", ">=7.1.5.1"
 gem "rails-i18n",                       "~>7.x"
