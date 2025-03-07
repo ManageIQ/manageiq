@@ -336,6 +336,13 @@ RSpec.describe MiqReport do
     expect(after.table).to eq(fake_ruport_data_table)
   end
 
+  it "serializes (marshall/dump) special columns" do
+    before = MiqReport.new.tap { |r| r.extras = {:working => true} }
+    # reports are put into session[:view]. ensure when it comes out of the session, we don't loose values
+    after = Marshal.load(Marshal.dump(before))
+    expect(after.extras).to eq(before.extras)
+  end
+
   it '.get_expressions_by_model' do
     FactoryBot.create(:miq_report, :conditions => nil)
     rep_nil = FactoryBot.create(:miq_report)

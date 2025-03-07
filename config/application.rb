@@ -113,6 +113,8 @@ module Vmdb
     # FYI, this is where load_defaults is defined as of 7.2:
     # https://github.com/rails/rails/blob/d437ae311f1b9dc40b442e40eb602e020cec4e49/railties/lib/rails/application/configuration.rb#L92
     config.load_defaults 7.1
+    # ensure MiqReport#extras will marshal/dump back out. 7.1 is default (and has better performance)
+    config.active_record.marshalling_format_version = 6.1
 
     # TODO: this is the only change we had from defaults in 7.0.  See secure_headers.rb.  It's 0 in defaults.
     config.action_dispatch.default_headers["X-XSS-Protection"] = "1; mode=block"
