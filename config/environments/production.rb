@@ -81,4 +81,7 @@ Vmdb::Application.configure do
   config.action_controller.allow_forgery_protection = true
 
   config.assets.css_compressor = :sass
+
+  # Don't raise exceptions on missing assets
+  config.assets.unknown_asset_fallback = true
 end
