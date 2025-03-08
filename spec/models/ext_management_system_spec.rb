@@ -804,4 +804,12 @@ RSpec.describe ExtManagementSystem do
       expect(ems.supports_create_security_group).to be(true)
     end
   end
+
+  describe "#image_name", :providers_common => true do
+    described_class.concrete_subclasses.each do |klass|
+      it "has a vendor asset for #{klass.ems_type}" do
+        expect(ActionController::Base.helpers.asset_path("svg/vendor-#{klass.new.image_name}.svg")).to_not be_blank
+      end
+    end
+  end
 end
