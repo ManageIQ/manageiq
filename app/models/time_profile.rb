@@ -7,6 +7,8 @@ class TimeProfile < ApplicationRecord
   default_value_for :days,  ALL_DAYS
   default_value_for :hours, ALL_HOURS
 
+  validates :description, :length => {:maximum => 128}
+
   has_many  :miq_reports
   has_many  :metric_rollups
 

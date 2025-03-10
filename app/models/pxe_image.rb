@@ -5,6 +5,8 @@ class PxeImage < ApplicationRecord
 
   has_many :customization_templates, :through => :pxe_image_type
 
+  validates :name, :length => {:maximum => 255}
+
   acts_as_miq_taggable
 
   before_validation do
