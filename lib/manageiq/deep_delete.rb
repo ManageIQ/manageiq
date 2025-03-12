@@ -19,7 +19,6 @@ module ManageIQ
       "ResourcePools"       => 1,
       # MonitorManager => ExtManagementSystem
       "ExtManagementSystem" => 1,
-      # ContainerManager#monitoring_manager (apply_orphan_strategy?)
       # MonitorManager#endpoints: endpoint_destroyed (using this/destroy_queue instead of dependent => destroy)
       # ContainerManager#persistent_volumes (?)
       # InfraManager#orchestration_templates (check_not_in_use (before destroy)

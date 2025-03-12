@@ -11,7 +11,6 @@ module ManageIQ
         "configuration" => "ConfigurationManager",
         "container"     => "ContainerManager",
         "infra"         => "InfraManager",
-        "monitoring"    => "MonitoringManager",
         "network"       => "NetworkManager",
         "physical"      => "PhysicalInfraManager",
         "provisioning"  => "ProvisioningManager",
