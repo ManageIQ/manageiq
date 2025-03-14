@@ -37,5 +37,19 @@ RSpec.describe Vmdb::Initializer do
       expect(Rails.application.secret_key_base).to eq(existing_value)
       expect(Rails.application.config.secret_key_base).to eq(existing_value)
     end
+
+    it "uses random hex when MiqDatabase is seeded with invalid session_secret_token" do
+      MiqDatabase.seed.tap do |d|
+        d.session_secret_token_encrypted = "xxx"
+        d.save!(validate: false)
+      end
+      Rails.application.config.secret_key_base = nil
+      Rails.application.secrets = nil
+      expect(described_class).to receive(:log_error_and_tty_aware_warn).at_least(:once)
+
+      described_class.init_secret_token
+      expect(Rails.application.secret_key_base).to match(/^\h{128}$/)
+      expect(Rails.application.config.secret_key_base).to match(/^\h{128}$/)
+    end
   end
 end
