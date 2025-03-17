@@ -1117,6 +1117,9 @@ msgstr[1] ""
 msgid "%{object_types} under %{datastore_or_provider} \"%{provider_or_datastore_name}\""
 msgstr ""
 
+msgid "%{product_name} API Group Not found"
+msgstr ""
+
 msgid "%{product_name} HTML5 Remote Console"
 msgstr ""
 
@@ -33681,6 +33684,9 @@ msgstr ""
 msgid "No Value Found"
 msgstr ""
 
+msgid "No Virtual Machine defined in template"
+msgstr ""
+
 msgid "No Visibility Expression defined, this button will be always visible"
 msgstr ""
 
@@ -49163,6 +49169,9 @@ msgstr ""
 msgid "Unattended GUI"
 msgstr ""
 
+msgid "Unauthorized"
+msgstr ""
+
 msgid "Unauthorized object or action"
 msgstr ""
 
@@ -49281,6 +49290,9 @@ msgid "Unnamed Section"
 msgstr ""
 
 msgid "Unnamed Tab"
+msgstr ""
+
+msgid "Unreachable"
 msgstr ""
 
 msgid "Unregistered VMs"
@@ -51904,6 +51916,9 @@ msgid "Virtualization"
 msgstr ""
 
 msgid "Virtualization Type"
+msgstr ""
+
+msgid "Virtualization not enabled"
 msgstr ""
 
 msgid "Visibility"
