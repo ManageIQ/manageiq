@@ -28,6 +28,42 @@ RSpec.describe MiqReportResult do
       ]
     end
 
+    context "#purge_by_date" do
+      before do
+        MiqReportResult.all.each do |r|
+          r.binary_blob = FactoryBot.create(:binary_blob)
+          r.miq_report_result_details << FactoryBot.create(:MiqReportResultDetail)
+          r.save!
+        end
+      end
+
+      it "deletes rows and associated table rows" do
+        MiqReportResult.purge_by_date(Time.now + 1.day)
+
+        expect(MiqReportResult.count).to eq 0
+        expect(MiqReportResultDetail.count).to eq 0
+        expect(BinaryBlob.count).to eq 0
+      end
+
+      it "deletes each batch and associated records atomically" do
+        initial_count = MiqReportResult.count
+
+        # simulate an error purging associated records
+        allow(MiqReportResult).to receive(:purge_associated_records).and_raise
+
+        begin
+          MiqReportResult.purge_by_date(Time.now + 1.day)
+        rescue
+          # Ignore the error, we only care that it failed
+        end
+
+        # No rows are deleted if a batch failed, causing no orphans.
+        expect(MiqReportResult.count).to eq initial_count
+        expect(MiqReportResultDetail.count).to eq initial_count
+        expect(BinaryBlob.count).to eq initial_count
+      end
+    end
+
     context "#purge_mode_and_value" do
       it "with date" do
         settings.store_path(:reporting, :history, :keep_reports, "1.day")

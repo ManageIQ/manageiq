@@ -200,23 +200,28 @@ module PurgingMixin
           query = query.limit(current_window)
         end
 
-        if respond_to?(:purge_associated_records)
-          # pull back ids - will slow performance
-          batch_ids = query.pluck(:id)
-          break if batch_ids.empty?
+        count = 0
 
-          current_window = batch_ids.size
-        else
-          batch_ids = query
+        # Purge each batch with their associated records
+        # in a transaction to avoid leaving orphaned references.
+        transaction do
+          if respond_to?(:purge_associated_records)
+            # pull back ids - will slow performance
+            batch_ids = query.pluck(:id)
+            current_window = batch_ids.size
+          else
+            batch_ids = query
+          end
+
+          _log.info("Purging #{current_window} #{table_name.humanize}.")
+          count = unscoped.where(:id => batch_ids).delete_all
+
+          purge_associated_records(batch_ids) if respond_to?(:purge_associated_records)
+          total += count
         end
 
-        _log.info("Purging #{current_window} #{table_name.humanize}.")
-        count = unscoped.where(:id => batch_ids).delete_all
+        # break out of the batch loop when a batch delete results in 0 rows deleted
         break if count == 0
-
-        total += count
-
-        purge_associated_records(batch_ids) if respond_to?(:purge_associated_records)
 
         yield(count, total) if block_given?
         break if count < window || (total_limit && (total_limit <= total))
