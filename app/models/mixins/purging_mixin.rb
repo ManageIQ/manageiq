@@ -63,11 +63,12 @@ module PurgingMixin
       purge_queue(*purge_mode_and_value)
     end
 
-    def purge_queue(mode, value = nil)
+    def purge_queue(mode, *values)
+      values = [nil] if values.empty?
       MiqQueue.submit_job(
         :class_name  => name,
         :method_name => "purge_by_#{mode}",
-        :args        => [value]
+        :args        => values
       )
     end
 
@@ -115,6 +116,14 @@ module PurgingMixin
       _log.info("Purging orphans in #{table_name.humanize}...")
       total = purge_orphans(fk_name, window)
       _log.info("Purging orphans in #{table_name.humanize}...Complete - Deleted #{total} records")
+      total
+    end
+
+    # purging by date uses indexes and should be quicker
+    # This allows us to get the lower hanging fruit then the remaining ones
+    def purge_by_date_and_orphaned(older_than, fk_name, window = purge_window_size)
+      total = purge_by_date(older_than, window)
+      total += purge_by_orphaned(fk_name, window)
       total
     end
 

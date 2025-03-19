@@ -31,11 +31,11 @@ RSpec.describe VimPerformanceState do
         stub_settings_merge(:vim_performance_states => {:history => {:keep_states => "6.months"}})
         described_class.purge_timer
 
-        expect(MiqQueue.count).to eq(2)
-        q1, q2 = MiqQueue.order(:id).to_a
-        expect(q1).to have_attributes(:class_name => described_class.name, :method_name => "purge_by_orphaned", :args => ["resource"])
-        expect(q2).to have_attributes(:class_name => described_class.name, :method_name => "purge_by_date")
-        expect(q2.args.first).to be_within(2.days).of 6.months.ago.utc
+        expect(MiqQueue.count).to eq(1)
+        q = MiqQueue.first
+        expect(q).to have_attributes(:class_name => described_class.name, :method_name => "purge_by_date_and_orphaned")
+        expect(q.args.first).to be_within(2.days).of 6.months.ago.utc
+        expect(q.args.last).to eq("resource")
       end
     end
   end
