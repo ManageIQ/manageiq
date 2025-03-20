@@ -6,7 +6,7 @@ class ContainerService < ApplicationRecord
 
   belongs_to  :ext_management_system, :foreign_key => "ems_id"
   has_and_belongs_to_many :container_groups, :join_table => :container_groups_container_services
-  has_many :container_routes
+  has_many :container_routes # delete to be handled by refresh
   has_many :container_service_port_configs, :dependent => :destroy
   belongs_to :container_project
   has_many :annotations, -> { where(:section => "annotations") }, # rubocop:disable Rails/HasManyOrHasOneDependent

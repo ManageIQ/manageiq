@@ -9,7 +9,7 @@ class ContainerBuild < ApplicationRecord
            :as         => :resource,
            :inverse_of => :resource
 
-  has_many :container_build_pods
+  has_many :container_build_pods # delete to be handled by refresh
 
   acts_as_miq_taggable
 end
