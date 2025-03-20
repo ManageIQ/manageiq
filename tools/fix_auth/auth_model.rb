@@ -102,8 +102,8 @@ module FixAuth
 
         puts "fixing #{table_name}.#{available_columns.join(", ")}" unless options[:silent]
         processed = 0
+        records_changed = 0
         errors = 0
-        would_make_changes = false
         contenders.each do |r|
           begin
             fix_passwords(r, options)
@@ -113,7 +113,7 @@ module FixAuth
                 display_column(r, column, options)
               end
             end
-            would_make_changes ||= r.changed?
+            records_changed += 1 if r.changed?
             r.save! if !options[:dry_run] && r.changed?
             processed += 1
           rescue ArgumentError # undefined class/module
@@ -127,9 +127,8 @@ module FixAuth
             puts "processed #{processed} with #{errors} errors"
           end
         end
-        puts "#{options[:dry_run] ? "viewed" : "processed"} #{processed} records" unless options[:silent]
+        puts "#{records_changed} of #{processed} records #{options[:dry_run] ? 'would change (dry run enabled)' : 'changed'}" unless options[:silent]
         puts "found #{errors} errors" if errors > 0 && !options[:silent]
-        puts "** This was executed in dry-run, and no actual changes will be made to #{table_name} **" if would_make_changes && options[:dry_run]
       end
 
       def clean_up
