@@ -29,9 +29,15 @@ module FixAuth
         opt :allow_failures, "Run through all records, even with errors", :type => :boolean, :short => nil, :default => false
       end
 
-      options[:database] = args.first || "vmdb_production"
       # default to updating the db
       options[:db] = true if !options[:key] && !options[:databaseyml]
+
+      # When converting the database, require database name
+      # When RAILS_ENV specified (aka on the appliance) default to production db
+      Optimist::die "please specify a database as an argument" if args.empty? && ENV["RAILS_ENV"].nil? && options[:db]
+
+      # default to updating 
+      options[:database] = args.first || "vmdb_production"
       self.options = options.delete_if { |_n, v| v.blank? }
       self
     end
