@@ -11,8 +11,7 @@ class VimPerformanceState < ApplicationRecord
       # remove anything where the resource no longer exists AND
       # remove anything older than a certain date
       def purge_timer
-        purge_queue(:orphaned, "resource")
-        purge_queue(:date, purge_date)
+        purge_queue(:date_and_orphaned, purge_date, "resource")
       end
 
       def purge_window_size
