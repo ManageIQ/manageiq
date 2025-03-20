@@ -84,9 +84,9 @@ module PurgingMixin
     end
 
     def purge_by_date(older_than, window = nil, &block)
-      _log.info("Purging #{table_name.humanize} older than [#{older_than}]...")
+      _log.info("Purging #{table_name} older than [#{older_than}]...")
       total = purge_in_batches(purge_scope(older_than), window || purge_window_size, &block)
-      _log.info("Purging #{table_name.humanize} older than [#{older_than}]...Complete - Deleted #{total} records")
+      _log.info("Purging #{table_name} older than [#{older_than}]...Complete - Deleted #{total} records")
       total
     end
 
@@ -98,23 +98,23 @@ module PurgingMixin
     # @param [Integer] window number of records to delete in a batch
     # @return [Integer] number of records deleted
     def purge_by_remaining(remaining, window = nil, &block)
-      _log.info("Purging #{table_name.humanize} older than last #{remaining} results...")
+      _log.info("Purging #{table_name} older than last #{remaining} results...")
       total = purge_in_batches(purge_ids_for_remaining(remaining), window || purge_window_size, &block)
-      _log.info("Purging #{table_name.humanize} older than last #{remaining} results...Complete - Deleted #{total} records")
+      _log.info("Purging #{table_name} older than last #{remaining} results...Complete - Deleted #{total} records")
       total
     end
 
     def purge_by_scope(older_than = nil, window = nil, &block)
-      _log.info("Purging #{table_name.humanize}...")
+      _log.info("Purging #{table_name}...")
       total = purge_in_batches(purge_scope(older_than), window || purge_window_size, &block)
-      _log.info("Purging #{table_name.humanize}...Complete - Deleted #{total} records")
+      _log.info("Purging #{table_name}...Complete - Deleted #{total} records")
       total
     end
 
     def purge_by_orphaned(fk_name, window = purge_window_size)
-      _log.info("Purging orphans in #{table_name.humanize}...")
+      _log.info("Purging orphans in #{table_name}...")
       total = purge_orphans(fk_name, window)
-      _log.info("Purging orphans in #{table_name.humanize}...Complete - Deleted #{total} records")
+      _log.info("Purging orphans in #{table_name}...Complete - Deleted #{total} records")
       total
     end
 
@@ -200,7 +200,7 @@ module PurgingMixin
           query = query.limit(current_window)
         end
 
-        _log.info("Purging #{current_window} #{table_name.humanize}.")
+        _log.info("Purging #{current_window} #{table_name}.")
         if respond_to?(:purge_associated_records)
           # pull back ids - will slow performance
           batch_ids = query.pluck(:id)
