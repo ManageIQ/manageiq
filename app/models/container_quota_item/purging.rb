@@ -3,6 +3,9 @@ class ContainerQuotaItem < ApplicationRecord
     extend ActiveSupport::Concern
     include PurgingMixin
 
+    # According to 022e15256fd07fa7bf5b3ade7ce16b13daa87b84
+    # This is necessary because ContainerQuotaItem may be archived due to edits
+    # to parent ContainerQuota that is still alive.
     module ClassMethods
       def purge_date
         ::Settings.container_entities.history.keep_archived_quotas.to_i_with_method.seconds.ago.utc
