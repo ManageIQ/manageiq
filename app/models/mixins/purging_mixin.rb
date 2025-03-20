@@ -63,11 +63,12 @@ module PurgingMixin
       purge_queue(*purge_mode_and_value)
     end
 
-    def purge_queue(mode, value = nil)
+    def purge_queue(mode, value = nil, callback = nil)
       MiqQueue.submit_job(
-        :class_name  => name,
-        :method_name => "purge_by_#{mode}",
-        :args        => [value]
+        :class_name   => name,
+        :method_name  => "purge_by_#{mode}",
+        :args         => [value],
+        :miq_callback => callback
       )
     end
 

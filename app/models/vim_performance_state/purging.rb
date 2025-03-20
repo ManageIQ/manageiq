@@ -8,11 +8,16 @@ class VimPerformanceState < ApplicationRecord
         %w[orphaned resource]
       end
 
-      # remove anything where the resource no longer exists AND
-      # remove anything older than a certain date
+      # remove anything older than a certain date AND
+      # remove anything where the resource no longer exists
+      # Use a callback to ensure :date is run first, before
+      # :orphaned and not concurrently.
       def purge_timer
+        purge_queue(:date, purge_date, {class_name => name, :method_name => :purge_callback})
+      end
+
+      def purge_callback(*_unused)
         purge_queue(:orphaned, "resource")
-        purge_queue(:date, purge_date)
       end
 
       def purge_window_size
