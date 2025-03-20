@@ -7,8 +7,9 @@ module FixAuth
     def parse(args, env = {})
       args.shift if args.first == "--" # Handle when called through script/runner
       self.options = Optimist.options(args) do
-        banner "Usage: ruby #{$PROGRAM_NAME} [options] database [...]\n" \
-               "       ruby #{$PROGRAM_NAME} [options] -P new_password database [...] to replace all passwords"
+        banner "Usage: #{File.basename($PROGRAM_NAME)} [options] database            # to migrate from a different or lost key\n" \
+               "       #{File.basename($PROGRAM_NAME)} -P new_password --databaseyml # to fix database.yml\n" \
+               "       #{File.basename($PROGRAM_NAME)} --key                         # to generate a new certs/v2_key "
 
         opt :verbose,  "Verbose",           :short => "v"
         opt :dry_run,  "Dry Run",           :short => "d"
@@ -16,15 +17,15 @@ module FixAuth
         opt :port,     "Database Port",     :type => :integer, :default => 5432
         opt :username, "Database Username", :type => :string,  :short => "U", :default => (env['PGUSER'] || "root")
         opt :password, "Database Password", :type => :string,  :short => "p", :default => env['PGPASSWORD']
-        opt :hardcode, "Password to use for all passwords",     :type => :string, :short => "P"
-        opt :invalid,  "Password to use for invalid passwords", :type => :string, :short => "i"
-        opt :key,      "Generate key",      :type => :boolean, :short => "k"
+        opt :hardcode, "Password used to replace all passwords", :type => :string, :short => "P"
+        opt :invalid,  "Password used to replace non-decryptable passwords", :type => :string, :short => "i"
+        opt :key,      "Generate encryption key", :type => :boolean, :short => "k"
         opt :v2,       "ignored, available for backwards compatibility", :type => :boolean, :short => "f"
         opt :root,     "Rails Root",        :type => :string,  :short => "r",
             :default => (env['RAILS_ROOT'] || File.expand_path(File.join(File.dirname(__FILE__), %w[.. ..])))
-        opt :databaseyml, "Rewrite database.yml", :type => :boolean, :short => "y", :default => false
+        opt :databaseyml, "Fix database.yml", :type => :boolean, :short => "y", :default => false
         opt :db,       "Upgrade database",  :type => :boolean, :short => 'x', :default => false
-        opt :legacy_key, "Legacy Key",      :type => :string, :short => "K"
+        opt :legacy_key, "Key used to decrypt old passwords when migrating to new key", :type => :string, :short => "K"
         opt :allow_failures, "Run through all records, even with errors", :type => :boolean, :short => nil, :default => false
       end
 
