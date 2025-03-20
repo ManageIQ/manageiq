@@ -20,6 +20,10 @@ class ContainerQuota < ApplicationRecord
         ContainerQuotaScope.where(:container_quota_id => ids).delete_all
         ContainerQuotaItem.where(:container_quota_id => ids).delete_all
       end
+
+      def purge_method
+        :destroy
+      end
     end
   end
 end
