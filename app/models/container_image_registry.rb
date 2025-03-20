@@ -2,7 +2,7 @@ class ContainerImageRegistry < ApplicationRecord
   belongs_to :ext_management_system, :foreign_key => "ems_id"
 
   # Associated with images in the registry.
-  has_many :container_images, :dependent => :nullify
+  has_many :container_images # Destroy will be handled by purger
   has_many :containers, :through => :container_images
   has_many :container_groups, :through => :container_images
 
