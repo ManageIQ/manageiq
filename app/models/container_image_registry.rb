@@ -8,7 +8,7 @@ class ContainerImageRegistry < ApplicationRecord
 
   # Associated with serving the registry itself - for openshift's internal
   # image registry. These will be empty for external registries.
-  has_many :container_services
+  has_many :container_services, :dependent => :destroy
   has_many :service_container_groups, :through => :container_services, :as => :container_groups
 
   acts_as_miq_taggable
