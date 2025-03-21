@@ -9,6 +9,7 @@ class MiqAlert < ApplicationRecord
   serialize :options
 
   validates :description, :presence => true, :uniqueness_when_changed => true, :length => {:maximum => 255}
+  validates :name, :length => {:maximum => 512}
   validate :validate_automate_expressions
   validate :validate_single_expression
   validates :severity, :inclusion => {:in => SEVERITIES}
