@@ -15,6 +15,10 @@ class ContainerProject < ApplicationRecord
       def purge_scope(older_than)
         where(arel_table[:deleted_on].lteq(older_than))
       end
+
+      def purge_method
+        :destroy
+      end
     end
   end
 end

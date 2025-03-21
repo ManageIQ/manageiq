@@ -55,6 +55,10 @@ module PurgingMixin
   extend ActiveSupport::Concern
 
   module ClassMethods
+    def purge_method
+      :delete
+    end
+
     def purge_mode_and_value
       [:date, purge_date]
     end
@@ -223,7 +227,8 @@ module PurgingMixin
           batch_ids = query
         end
 
-        count = unscoped.where(:id => batch_ids).delete_all
+        batch_records = unscoped.where(:id => batch_ids)
+        count = purge_method == :destroy ? batch_records.destroy_all.count : batch_records.delete_all
         break if count == 0
 
         total += count

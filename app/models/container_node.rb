@@ -44,7 +44,7 @@ class ContainerNode < ApplicationRecord
   has_many :metrics, :as => :resource
   has_many :metric_rollups, :as => :resource
   has_many :vim_performance_states, :as => :resource
-  has_many :miq_alert_statuses, :as => :resource
+  has_many :miq_alert_statuses, :as => :resource, :dependent => :destroy
   delegate :my_zone, :to => :ext_management_system, :allow_nil => true
 
   virtual_column :ready_condition_status, :type => :string, :uses => :container_conditions
