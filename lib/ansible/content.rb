@@ -1,6 +1,6 @@
 module Ansible
   class Content
-    PLUGIN_CONTENT_DIR = Rails.root.join("content/ansible_consolidated").to_s.freeze
+    PLUGIN_CONTENT_DIR = Rails.root.join("content/ansible_consolidated").freeze
 
     attr_accessor :path
 
@@ -33,11 +33,13 @@ module Ansible
     def self.consolidate_plugin_content(dir = PLUGIN_CONTENT_DIR)
       require "vmdb/plugins"
 
+      roles_dir = dir.join("roles")
       FileUtils.rm_rf(dir)
-      FileUtils.mkdir_p(dir)
+      FileUtils.mkdir_p(roles_dir)
 
       Vmdb::Plugins.ansible_content.each do |content|
-        FileUtils.cp_r(Dir.glob("#{content.path}/*"), dir)
+        new(content.path).fetch_galaxy_roles
+        FileUtils.cp_r(Dir.glob(content.path.join("roles/*/")), roles_dir)
       end
     end
 
