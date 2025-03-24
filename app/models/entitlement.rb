@@ -25,7 +25,7 @@ class Entitlement < ApplicationRecord
   end
 
   def self.remove_tag_from_all_managed_filters(tag)
-    find_each do |entitlement|
+    where.not(:filters => nil).find_each do |entitlement|
       entitlement.remove_tag_from_managed_filter(tag)
       entitlement.save if entitlement.filters_changed?
     end
