@@ -228,7 +228,17 @@ module PurgingMixin
         end
 
         batch_records = unscoped.where(:id => batch_ids)
-        count = purge_method == :destroy ? batch_records.destroy_all.count : batch_records.delete_all
+        count =
+          if purge_method == :destroy
+            destroyed = batch_records.destroy_all
+            destroyed.detect { |d| !d.destroyed? }.tap do |failed|
+              raise "failed removing record: #{failed.class.name} with id: #{failed.id} with error: #{failed.errors.full_messages}" if failed
+            end
+
+            destroyed.count
+          else
+            batch_records.delete_all
+          end
         break if count == 0
 
         total += count
