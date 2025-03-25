@@ -149,11 +149,12 @@ RSpec.describe Tag do
     end
   end
 
-  describe "#destroy" do
+  describe "tag changes" do
     let(:miq_group)       { FactoryBot.create(:miq_group, :entitlement => Entitlement.create!) }
     let(:other_miq_group) { FactoryBot.create(:miq_group, :entitlement => Entitlement.create!) }
     let(:filters)         { [["/managed/prov_max_memory/test"], ["/managed/my_name/test"]] }
     let(:tag)             { FactoryBot.create(:tag, :name => "/managed/my_name/test") }
+    let(:new_name)        { "/managed/my_name/new_name" }
 
     before do
       miq_group.entitlement.set_managed_filters(filters)
@@ -161,7 +162,14 @@ RSpec.describe Tag do
       [miq_group, other_miq_group].each(&:save)
     end
 
-    it "destroys tag and remove it from all groups's managed filters" do
+    it "name changed will update all group's managed filters" do
+      tag.update(:name => new_name)
+
+      expected_filters = [["/managed/prov_max_memory/test"], [new_name]]
+      MiqGroup.all.each { |group| expect(group.get_managed_filters).to match_array(expected_filters) }
+    end
+
+    it "#destroy tag and remove it from all groups's managed filters" do
       tag.destroy
 
       expected_filters = [["/managed/prov_max_memory/test"]]
@@ -169,23 +177,42 @@ RSpec.describe Tag do
       expect(Tag.all).to be_empty
     end
 
-    it "removing a tag will only remove it from entitlement filters in the tag's region" do
-      tag
-      other_region           = ApplicationRecord.my_region_number + 1
-      other_region_tag       = FactoryBot.create(:tag, :name => "/managed/my_name/test", :id => ApplicationRecord.id_in_region(1, other_region))
-      other_region_miq_group = FactoryBot.create(:miq_group, :entitlement => Entitlement.create!, :id => ApplicationRecord.id_in_region(1, other_region))
-      other_region_miq_group.entitlement.set_managed_filters(filters)
-      other_region_miq_group.save
+    context "in multiple regions" do
+      let(:other_region) { ApplicationRecord.my_region_number + 1 }
+      let(:other_region_tag) { FactoryBot.create(:tag, :name => "/managed/my_name/test", :id => ApplicationRecord.id_in_region(1, other_region)) }
+      let(:other_region_miq_group) { FactoryBot.create(:miq_group, :entitlement => Entitlement.create!, :id => ApplicationRecord.id_in_region(1, other_region)) }
 
-      other_region_tag.destroy
+      before do
+        tag
+        other_region_miq_group.entitlement.set_managed_filters(filters)
+        other_region_miq_group.save
+      end
 
-      # tag and filters from other region are deleted and updated
-      Tag.in_region(other_region) { expect(Tag.all).to be_empty }
-      MiqGroup.in_region(other_region) { MiqGroup.all.each { |group| expect(group.get_managed_filters).to be_empty } }
+      it "#destroy tag will only remove it from entitlement filters in the tag's region" do
+        other_region_tag.destroy
 
-      # current region tag/filters are not changed
-      expect(Tag.pluck(:id)).to eq([tag.id])
-      MiqGroup.all.each { |group| expect(group.get_managed_filters).to match_array(filters) }
+        # tag and filters from other region are deleted and updated
+        Tag.in_region(other_region) { expect(Tag.all).to be_empty }
+        MiqGroup.in_region(other_region) { MiqGroup.all.each { |group| expect(group.get_managed_filters).to be_empty } }
+
+        # current region tag/filters are not changed
+        expect(Tag.pluck(:id)).to eq([tag.id])
+        MiqGroup.all.each { |group| expect(group.get_managed_filters).to match_array(filters) }
+      end
+
+      it "name changed will only change it from entitlement filters in the tag's region" do
+        expected_filters = [["/managed/prov_max_memory/test"], [new_name]]
+        tag.update(:name => new_name)
+        Tag.in_region(other_region) { other_region_tag.update(:name => new_name) }
+
+        # tag and filters from other region are updated
+        Tag.in_region(other_region) { expect(Tag.all.pluck(:name)).to match_array([tag.name, new_name]) }
+        MiqGroup.in_region(other_region) { MiqGroup.all.each { |group| expect(group.get_managed_filters).to be_empty } }
+
+        # current region tag/filters are not changed
+        expect(Tag.pluck(:name)).to match_array([tag.name])
+        MiqGroup.all.each { |group| expect(group.get_managed_filters).to match_array(expected_filters) }
+      end
     end
   end
 end

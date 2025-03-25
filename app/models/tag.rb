@@ -6,6 +6,7 @@ class Tag < ApplicationRecord
 
   has_many :provider_tag_mappings
 
+  after_update :update_managed_filters_on_name_change, if: :saved_change_to_name?
   before_destroy :remove_from_managed_filters
 
   # Note those scopes exclude Tags that don't have a Classification.
@@ -159,6 +160,9 @@ class Tag < ApplicationRecord
   end
 
   private
+  def update_managed_filters_on_name_change
+    Entitlement.with_region(self.class.id_to_region(id)) { Entitlement.update_managed_filters_on_name_change(name_previously_was, name) }
+  end
 
   def remove_from_managed_filters
     Entitlement.with_region(self.class.id_to_region(id)) { Entitlement.remove_tag_from_all_managed_filters(name) }
