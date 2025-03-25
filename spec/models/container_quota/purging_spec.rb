@@ -58,6 +58,12 @@ RSpec.describe ContainerQuota do
         # This quota item is itself due for purging, but not as part of ContainerQuota::Purging.
         assert_unpurged_ids(ContainerQuotaItem, @new_quota_old_item.id)
       end
+
+      it "purges associated rows" do
+        described_class.purge(deleted_date)
+        expect(@old_quota.container_quota_scopes.count).to eq(0)
+        expect(@old_quota.all_container_quota_items.count).to eq(0)
+      end
     end
   end
 end

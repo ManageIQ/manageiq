@@ -25,7 +25,7 @@ RSpec.describe ContainerProject do
       let(:new_container_project) { FactoryBot.create(:container_project, :deleted_on => deleted_date + 1.day) }
 
       before do
-        FactoryBot.create(:container_project, :deleted_on => deleted_date - 1.day)
+        @old_container_project = FactoryBot.create(:container_project, :deleted_on => deleted_date - 1.day)
         FactoryBot.create(:container_project, :deleted_on => deleted_date)
         new_container_project
       end
@@ -42,6 +42,12 @@ RSpec.describe ContainerProject do
       it "with a window" do
         described_class.purge(deleted_date, 1)
         assert_unpurged_ids([new_container_project.id])
+      end
+
+      it "purges associated rows" do
+        @old_container_project.miq_alert_statuses << FactoryBot.create(:miq_alert_status)
+        described_class.purge(deleted_date)
+        expect(@old_container_project.miq_alert_statuses.count).to eq(0)
       end
     end
   end

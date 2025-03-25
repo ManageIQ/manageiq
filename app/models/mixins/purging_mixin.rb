@@ -55,6 +55,10 @@ module PurgingMixin
   extend ActiveSupport::Concern
 
   module ClassMethods
+    def purge_method
+      :delete
+    end
+
     def purge_mode_and_value
       [:date, purge_date]
     end
@@ -223,7 +227,8 @@ module PurgingMixin
           batch_ids = query
         end
 
-        count = unscoped.where(:id => batch_ids).delete_all
+        batch_records = unscoped.where(:id => batch_ids)
+        count = purge_one_batch(batch_records)
         break if count == 0
 
         total += count
@@ -232,6 +237,19 @@ module PurgingMixin
         break if count < window || (total_limit && (total_limit <= total))
       end
       total
+    end
+
+    def purge_one_batch(scope)
+      if purge_method == :destroy
+        destroyed = scope.destroy_all
+        destroyed.detect { |d| !d.destroyed? }.tap do |failed|
+          raise "failed removing record: #{failed.class.name} with id: #{failed.id} with error: #{failed.errors.full_messages}" if failed
+        end
+
+        destroyed.count
+      else
+        scope.delete_all
+      end
     end
   end
 end

@@ -38,9 +38,9 @@ class ContainerImage < ApplicationRecord
            :inverse_of => :resource
   has_one :last_scan_result, :class_name => "ScanResult", :as => :resource, :dependent => :destroy, :autosave => true
 
-  has_many :metric_rollups, :as => :resource, :dependent => :nullify, :inverse_of => :resource
-  has_many :metrics, :as => :resource, :dependent => :nullify, :inverse_of => :resource
-  has_many :vim_performance_states, :as => :resource, :dependent => :nullify, :inverse_of => :resource
+  has_many :metric_rollups, :as => :resource, :inverse_of => :resource         # Destroy will be handled by purger
+  has_many :metrics, :as => :resource, :inverse_of => :resource                # Destroy will be handled by purger
+  has_many :vim_performance_states, :as => :resource, :inverse_of => :resource # Destroy will be handled by purger
 
   serialize :exposed_ports, :type => Hash
   serialize :environment_variables, :type => Hash

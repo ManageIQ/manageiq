@@ -10,22 +10,22 @@ class ContainerProject < ApplicationRecord
   include Purging
   belongs_to :ext_management_system, :class_name => "ManageIQ::Providers::ContainerManager", :foreign_key => "ems_id", :inverse_of => :container_projects
   has_many :container_groups, -> { active }, :inverse_of => :container_project
-  has_many :container_routes
-  has_many :container_replicators
-  has_many :container_services
+  has_many :container_routes      # delete to be handled by refresh
+  has_many :container_replicators # delete to be handled by refresh
+  has_many :container_services    # delete to be handled by refresh
   has_many :containers, :through => :container_groups
   has_many :container_images, -> { distinct }, :through => :container_groups
   has_many :container_nodes, -> { distinct }, :through => :container_groups
   has_many :container_quotas, -> { active }, :inverse_of => :container_project
   has_many :container_quota_scopes, :through => :container_quotas
   has_many :container_quota_items, :through => :container_quotas
-  has_many :container_limits
+  has_many :container_limits      # delete to be handled by refresh
   has_many :container_limit_items, :through => :container_limits
-  has_many :container_builds
-  has_many :container_templates
+  has_many :container_builds      # delete to be handled by refresh
+  has_many :container_templates   # delete to be handled by refresh
   has_many :all_container_groups, :class_name => "ContainerGroup", :inverse_of => :container_project
   has_many :archived_container_groups, -> { archived }, :class_name => "ContainerGroup"
-  has_many :persistent_volume_claims
+  has_many :persistent_volume_claims # claims are removed by the container_volume when it's removed
   has_many :miq_alert_statuses, :as => :resource, :dependent => :destroy
   has_many :computer_systems, :through => :container_nodes
 
