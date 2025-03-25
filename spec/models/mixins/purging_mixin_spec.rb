@@ -1,7 +1,7 @@
 RSpec.describe PurgingMixin do
   let(:example_class) { PolicyEvent }
   let(:purge_date) { 2.weeks.ago }
-  purge_by_delete_classes, purge_by_destroy_classes = ActiveRecord::Base.descendants.select { |m| m.ancestors.include?(PurgingMixin) && m.base_model == m }.partition { |m| m.purge_method == :delete }
+  purge_by_delete_classes, purge_by_destroy_classes = ActiveRecord::Base.descendants.select { |m| m.ancestors.include?(PurgingMixin) && m.base_model? }.partition { |m| m.purge_method == :delete }
 
   purge_by_delete_classes.each do |klass|
     it "#{klass}.purge_method is delete" do
