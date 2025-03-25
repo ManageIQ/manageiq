@@ -42,6 +42,14 @@ RSpec.describe Container do
         described_class.purge(deleted_date, 1)
         assert_unpurged_ids(@new_container.id)
       end
+
+      it "purges associated rows" do
+        @old_container.container_env_vars << FactoryBot.create(:container_env_var)
+        @old_container.container_port_configs << FactoryBot.create(:container_port_config)
+        described_class.purge(deleted_date)
+        expect(@old_container.container_env_vars.count).to eq(0)
+        expect(@old_container.container_port_configs.count).to eq(0)
+      end
     end
   end
 end

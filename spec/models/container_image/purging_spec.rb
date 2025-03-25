@@ -42,6 +42,15 @@ RSpec.describe ContainerImage do
         described_class.purge(deleted_date, 1)
         assert_unpurged_ids(@new_container_image.id)
       end
+
+      it "purges associated rows" do
+        @old_container_image.guest_applications << FactoryBot.create(:guest_application)
+        @old_container_image.custom_attributes << FactoryBot.create(:custom_attribute)
+        described_class.purge(deleted_date)
+        expect(@old_container_image.guest_applications.count).to eq(0)
+        expect(@old_container_image.custom_attributes.count).to eq(0)
+      end
+
     end
   end
 end

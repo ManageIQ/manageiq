@@ -42,6 +42,14 @@ RSpec.describe ContainerGroup do
         described_class.purge(deleted_date, 1)
         assert_unpurged_ids(@new_container_group.id)
       end
+
+      it "purges associated rows" do
+        @old_container_group.container_conditions << FactoryBot.create(:container_condition)
+        @old_container_group.custom_attributes << FactoryBot.create(:custom_attribute)
+        described_class.purge(deleted_date)
+        expect(@old_container_group.container_conditions.count).to eq(0)
+        expect(@old_container_group.custom_attributes.count).to eq(0)
+      end
     end
   end
 end
