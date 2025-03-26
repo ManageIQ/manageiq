@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-28 14:08+0000\n"
-"PO-Revision-Date: 2025-02-28 14:08+0000\n"
+"POT-Creation-Date: 2025-03-17 16:33+0000\n"
+"PO-Revision-Date: 2025-03-17 16:33+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -1111,6 +1111,9 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "%{object_types} under %{datastore_or_provider} \"%{provider_or_datastore_name}\""
+msgstr ""
+
+msgid "%{product_name} API Group Not found"
 msgstr ""
 
 msgid "%{product_name} HTML5 Remote Console"
@@ -33520,6 +33523,9 @@ msgstr ""
 msgid "No Value Found"
 msgstr ""
 
+msgid "No Virtual Machine defined in template"
+msgstr ""
+
 msgid "No Visibility Expression defined, this button will be always visible"
 msgstr ""
 
@@ -48929,6 +48935,9 @@ msgstr ""
 msgid "Unattended GUI"
 msgstr ""
 
+msgid "Unauthorized"
+msgstr ""
+
 msgid "Unauthorized object or action"
 msgstr ""
 
@@ -49047,6 +49056,9 @@ msgid "Unnamed Section"
 msgstr ""
 
 msgid "Unnamed Tab"
+msgstr ""
+
+msgid "Unreachable"
 msgstr ""
 
 msgid "Unregistered VMs"
@@ -51664,6 +51676,9 @@ msgid "Virtualization"
 msgstr ""
 
 msgid "Virtualization Type"
+msgstr ""
+
+msgid "Virtualization not enabled"
 msgstr ""
 
 msgid "Visibility"
