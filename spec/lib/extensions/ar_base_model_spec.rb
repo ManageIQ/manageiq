@@ -1,33 +1,38 @@
 RSpec.describe "ar_base_model extension" do
-  context "with a test class" do
-    let(:test_class) do
-      Class.new(ActiveRecord::Base) do
-        def self.name; "TestClass"; end
-      end
+  before do
+    class TestClass < ActiveRecord::Base; end
+    class TestClassSub1 < TestClass; end
+    class TestClassSub2 < TestClass
+      def self.base_model; TestClassSub2; end
     end
+    class TestClassSub2Sub2A < TestClassSub2; end
+  end
 
-    it ".base_model" do
-      expect(test_class.base_model).to eq(test_class)
-    end
+  after do
+    Object.send(:remove_const, :TestClassSub2Sub2A)
+    Object.send(:remove_const, :TestClassSub2)
+    Object.send(:remove_const, :TestClassSub1)
+    Object.send(:remove_const, :TestClass)
+  end
 
-    it ".model_suffix" do
-      expect(test_class.model_suffix).to eq("")
-    end
+  it ".base_model" do
+    expect(TestClass.base_model).to          eq(TestClass)
+    expect(TestClassSub1.base_model).to      eq(TestClass)
+    expect(TestClassSub2.base_model).to      eq(TestClassSub2)
+    expect(TestClassSub2Sub2A.base_model).to eq(TestClassSub2)
+  end
 
-    context "with a subclass" do
-      let(:test_class_foo) do
-        Class.new(test_class) do
-          def self.name; "TestClassFoo"; end
-        end
-      end
+  it ".base_model?" do
+    expect(TestClass.base_model?).to          eq(true)
+    expect(TestClassSub1.base_model?).to      eq(false)
+    expect(TestClassSub2.base_model?).to      eq(true)
+    expect(TestClassSub2Sub2A.base_model?).to eq(false)
+  end
 
-      it ".base_model" do
-        expect(test_class_foo.base_model).to eq(test_class)
-      end
-
-      it ".model_suffix" do
-        expect(test_class_foo.model_suffix).to eq("Foo")
-      end
-    end
+  it ".model_suffix" do
+    expect(TestClass.model_suffix).to          eq("")
+    expect(TestClassSub1.model_suffix).to      eq("Sub1")
+    expect(TestClassSub2.model_suffix).to      eq("")
+    expect(TestClassSub2Sub2A.model_suffix).to eq("Sub2A")
   end
 end
