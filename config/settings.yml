@@ -871,7 +871,7 @@
   :type: kafka
 :miq_request:
   :history:
-    :purge_window_size: 2000
+    :purge_window_size: 500
     :keep_miq_requests: 6.months
 :notifications:
   :history:
