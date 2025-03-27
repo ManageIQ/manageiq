@@ -1,7 +1,7 @@
 class MiqRequest < ApplicationRecord
   extend InterRegionApiMethodRelay
 
-  include_concern 'Purging'
+  include Purging
   ACTIVE_STATES = %w[active queued]
   REQUEST_UNIQUE_KEYS = %w[id state status created_on updated_on type].freeze
 
