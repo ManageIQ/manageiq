@@ -255,6 +255,14 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue(:notification_purge_timer)
     end
 
+    # Schedule - Purging of MiqRequests
+    scheduler.schedule_every(
+      :miq_request_purge_timer,
+      worker_settings[:miq_request_purge_interval]
+    ) do
+      enqueue(:miq_request_purge_timer)
+    end
+
     # Schedule - Purging of tasks
     scheduler.schedule_every(
       :task_purge_timer,
