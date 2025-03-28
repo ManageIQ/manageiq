@@ -15,7 +15,6 @@
       :event:
         :event_type: CpuUsage
         :severity: 1
-        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format(context[:limit_attr_value], :format_mhz_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
       :calculation:
         :limit_pct: 100
         :days: 30
@@ -37,7 +36,6 @@
       :event:
         :event_type: CpuUsage
         :severity: 1
-        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format(context[:limit_attr_value], :format_mhz_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
       :calculation:
         :limit_pct: 90
         :days: 30
@@ -59,7 +57,6 @@
       :event:
         :event_type: CpuUsage
         :severity: 2
-        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format(context[:limit_attr_value], :format_mhz_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
       :calculation:
         :limit_pct: 75
         :days: 30
@@ -81,7 +78,6 @@
       :event:
         :event_type: CpuUsage
         :severity: 3
-        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format(context[:limit_attr_value], :format_mhz_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
       :calculation:
         :limit_pct: 50
         :days: 30
@@ -103,7 +99,6 @@
       :event:
         :event_type: MemoryUsage
         :severity: 1
-        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format((context[:limit_attr_value] * 1024 * 1024), :format_bytes_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
       :calculation:
         :limit_pct: 100
         :days: 30
@@ -125,7 +120,6 @@
       :event:
         :event_type: MemoryUsage
         :severity: 1
-        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format((context[:limit_attr_value] * 1024 * 1024), :format_bytes_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
       :calculation:
         :limit_pct: 90
         :days: 30
@@ -147,7 +141,6 @@
       :event:
         :event_type: MemoryUsage
         :severity: 2
-        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format((context[:limit_attr_value] * 1024 * 1024), :format_bytes_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
       :calculation:
         :limit_pct: 75
         :days: 30
@@ -169,7 +162,6 @@
       :event:
         :event_type: MemoryUsage
         :severity: 3
-        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format((context[:limit_attr_value] * 1024 * 1024), :format_bytes_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
       :calculation:
         :limit_pct: 50
         :days: 30
@@ -192,7 +184,6 @@
       :event:
         :event_type: DiskUsage
         :severity: 1
-        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format(context[:limit_attr_value], :format_bytes_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
       :calculation:
         :limit_pct: 100
         :days: 30
@@ -215,7 +206,6 @@
       :event:
         :event_type: DiskUsage
         :severity: 1
-        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format(context[:limit_attr_value], :format_bytes_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
       :calculation:
         :limit_pct: 90
         :days: 30
@@ -238,7 +228,6 @@
       :event:
         :event_type: DiskUsage
         :severity: 2
-        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format(context[:limit_attr_value], :format_bytes_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
       :calculation:
         :limit_pct: 75
         :days: 30
@@ -261,7 +250,6 @@
       :event:
         :event_type: DiskUsage
         :severity: 3
-        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format(context[:limit_attr_value], :format_bytes_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
       :calculation:
         :limit_pct: 50
         :days: 30
