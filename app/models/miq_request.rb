@@ -19,7 +19,7 @@ class MiqRequest < ApplicationRecord
   has_many   :miq_approvals,     :dependent   => :destroy
   has_many   :miq_request_tasks, :dependent   => :destroy
 
-  has_many   :request_logs, :foreign_key => :resource_id, :dependent => :destroy
+  has_many   :request_logs, :foreign_key => :resource_id, :dependent => :delete_all
 
   alias_attribute :state, :request_state
 

@@ -16,11 +16,6 @@ class MiqRequest
         MiqRequest.where(arel_table[:created_on].lt(older_than))
       end
 
-      # this is MiqRequest#destroy hook (defined by relationships on MiqRequest)
-      def purge_associated_records(ids)
-        RequestLog.where(:resource_id => ids).delete_all
-      end
-
       def purge_method
         :destroy
       end
