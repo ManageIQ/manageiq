@@ -134,8 +134,15 @@ module PurgingMixin
     private
 
     def purge_orphans(fk_name, window)
-      # For now, this only supports polymorphic references
-      # We don't currently have a situation where a table with a regular reference needs to be purged
+      reflection = reflect_on_association(fk_name)
+      if reflection.polymorphic?
+        purge_polymorphic_orphans(fk_name, window)
+      else
+        purge_non_polymorphic_orphans(fk_name, window, reflection.klass)
+      end
+    end
+
+    def purge_polymorphic_orphans(fk_name, window)
       polymorphic_type_column = "#{fk_name}_type"
       polymorphic_id_column   = connection.quote_column_name("#{fk_name}_id")
       total = 0
@@ -150,6 +157,16 @@ module PurgingMixin
         total += purge_in_batches(scope, window)
       end
       total
+    end
+
+    def purge_non_polymorphic_orphans(fk_name, window, reflection_klass)
+      resource_table = connection.quote_table_name(reflection_klass.table_name)
+      assoc_id = connection.quote_column_name("#{fk_name}_id")
+      q_table_name = connection.quote_table_name(table_name)
+
+      scope = joins("LEFT OUTER JOIN #{resource_table} ON #{q_table_name}.#{assoc_id} = #{resource_table}.id")
+              .where(resource_table => {:id => nil})
+      purge_in_batches(scope, window)
     end
 
     def polymorphic_classes(polymorphic_type_column)
