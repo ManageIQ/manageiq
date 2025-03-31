@@ -116,7 +116,8 @@ module FixAuth
             records_changed += 1 if r.changed?
             r.save! if !options[:dry_run] && r.changed?
             processed += 1
-          rescue ArgumentError # undefined class/module
+          rescue ArgumentError, # undefined class/module
+                 ManageIQ::Password::PasswordError
             errors += 1
             unless options[:allow_failures]
               STDERR.puts "unable to fix #{r.class.table_name}:#{r.id}" unless options[:silent]
