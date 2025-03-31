@@ -2,18 +2,18 @@
   "ignored_warnings": [
     {
       "warning_type": "Unmaintained Dependency",
-      "warning_code": 123,
-      "fingerprint": "870fa4a5cfd770898e1b7a159368b4210fe366634512563f9fb1c1cbbfef1d78",
+      "warning_code": 121,
+      "fingerprint": "9a3951031616a07c8e02c86652f537e92c08685da97f5ec2b12d5d3602b55bb8",
       "check_name": "EOLRuby",
-      "message": "Support for Ruby 3.1.6 ends on 2025-03-31",
+      "message": "Support for Ruby 3.1.7 ended on 2025-03-31",
       "file": "Gemfile.lock",
-      "line": 1518,
+      "line": 1492,
       "link": "https://brakemanscanner.org/docs/warning_types/unmaintained_dependency/",
       "code": null,
       "render_path": null,
       "location": null,
       "user_input": null,
-      "confidence": "Medium",
+      "confidence": "High",
       "cwe_id": [
         1104
       ],
@@ -43,6 +43,6 @@
       "note": "This method is safe because it verifies that the version is in the form #.#."
     }
   ],
-  "updated": "2025-03-03 17:36:11 -0500",
+  "updated": "2025-03-31 10:21:49 -0400",
   "brakeman_version": "6.2.2"
 }
