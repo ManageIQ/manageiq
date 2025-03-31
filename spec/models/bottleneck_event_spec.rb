@@ -140,4 +140,178 @@ RSpec.describe BottleneckEvent do
       end
     end
   end
+
+  describe ".generate_future_events" do
+    before do
+      EvmSpecHelper.local_miq_server
+      MiqEventDefinition.seed_default_definitions(MiqEventDefinition.all.group_by(&:name))
+    end
+
+    let(:resource) { FactoryBot.create(:host_vmware) }
+    let(:time_profile) { FactoryBot.create(:time_profile_utc) }
+
+    it "generates CpuUsage projections" do
+      # Generate 30 days of metrics with a gently rising slope
+      30.times do |i|
+        FactoryBot.create(:metric_rollup_host_daily,
+          :resource     => resource,
+          :timestamp    => i.days.ago.beginning_of_day,
+          :time_profile => time_profile,
+          :min_max      => {
+            :max_cpu_usagemhz_rate_average => 3_000 - i * 100,
+            :max_derived_cpu_available     => 5_000
+          }
+        )
+      end
+
+      described_class.generate_future_events(resource)
+
+      events = described_class.order(:id).to_a
+      expect(events).to match_array([
+        have_attributes(
+          :timestamp  => be_within(0.01).of(20.days.from_now.beginning_of_day),
+          :resource   => resource,
+          :event_type => "CpuUsage",
+          :severity   => 1,
+          :future     => true,
+          :message    => "CPU - Peak Usage Rate for Collected Intervals (MHz) is projected to reach 5 GHz (100% of CPU Max Total MHz)"
+        ),
+        have_attributes(
+          :timestamp  => be_within(0.01).of(15.days.from_now.beginning_of_day),
+          :resource   => resource,
+          :event_type => "CpuUsage",
+          :severity   => 1,
+          :future     => true,
+          :message    => "CPU - Peak Usage Rate for Collected Intervals (MHz) is projected to reach 4.5 GHz (90% of CPU Max Total MHz)"
+        ),
+        have_attributes(
+          :timestamp  => be_within(0.01).of(7.days.from_now.middle_of_day),
+          :resource   => resource,
+          :event_type => "CpuUsage",
+          :severity   => 2,
+          :future     => true,
+          :message    => "CPU - Peak Usage Rate for Collected Intervals (MHz) is projected to reach 3.8 GHz (75% of CPU Max Total MHz)"
+        ),
+        have_attributes(
+          :timestamp  => be_within(0.01).of(5.days.ago.beginning_of_day),
+          :resource   => resource,
+          :event_type => "CpuUsage",
+          :severity   => 3,
+          :future     => true,
+          :message    => "CPU - Peak Usage Rate for Collected Intervals (MHz) is projected to reach 2.5 GHz (50% of CPU Max Total MHz)"
+        )
+      ])
+    end
+
+    it "generates MemoryUsage projections" do
+      # Generate 30 days of metrics with a gently rising slope
+      30.times do |i|
+        FactoryBot.create(:metric_rollup_host_daily,
+          :resource     => resource,
+          :timestamp    => i.days.ago.beginning_of_day,
+          :time_profile => time_profile,
+          :min_max      => {
+            :max_derived_memory_used      => 300_000 - i * 10_000,
+            :max_derived_memory_available => 500_000
+          }
+        )
+      end
+
+      described_class.generate_future_events(resource)
+
+      events = described_class.order(:id).to_a
+      expect(events).to match_array([
+        have_attributes(
+          :timestamp  => be_within(0.01).of(20.days.from_now.beginning_of_day),
+          :resource   => resource,
+          :event_type => "MemoryUsage",
+          :severity   => 1,
+          :future     => true,
+          :message    => "Memory - Peak Aggregate Used for Child VMs for Collected Intervals (MB) is projected to reach 488.3 GB (100% of Memory Max Total)"
+        ),
+        have_attributes(
+          :timestamp  => be_within(0.01).of(15.days.from_now.beginning_of_day),
+          :resource   => resource,
+          :event_type => "MemoryUsage",
+          :severity   => 1,
+          :future     => true,
+          :message    => "Memory - Peak Aggregate Used for Child VMs for Collected Intervals (MB) is projected to reach 439.5 GB (90% of Memory Max Total)"
+        ),
+        have_attributes(
+          :timestamp  => be_within(0.01).of(7.days.from_now.middle_of_day),
+          :resource   => resource,
+          :event_type => "MemoryUsage",
+          :severity   => 2,
+          :future     => true,
+          :message    => "Memory - Peak Aggregate Used for Child VMs for Collected Intervals (MB) is projected to reach 366.2 GB (75% of Memory Max Total)"
+        ),
+        have_attributes(
+          :timestamp  => be_within(0.01).of(5.days.ago.beginning_of_day),
+          :resource   => resource,
+          :event_type => "MemoryUsage",
+          :severity   => 3,
+          :future     => true,
+          :message    => "Memory - Peak Aggregate Used for Child VMs for Collected Intervals (MB) is projected to reach 244.1 GB (50% of Memory Max Total)"
+        )
+      ])
+    end
+
+    it "generates DiskUsage projections" do
+      # Generate 30 days of metrics with a gently rising slope
+      30.times do |i|
+        FactoryBot.create(:metric_rollup_host_daily,
+          :resource     => resource,
+          :timestamp    => i.days.ago.beginning_of_day,
+          :time_profile => time_profile,
+          :derived_storage_total => 500_000_000_000,
+          :derived_storage_free => 500_000_000_000 - (300_000_000_000 - i * 10_000_000_000)
+        )
+        FactoryBot.create(:metric_rollup_host_hr,
+          :resource     => resource,
+          :timestamp    => i.days.ago.beginning_of_day,
+          :time_profile => time_profile,
+          :derived_storage_total => 500_000_000_000,
+          :derived_storage_free => 500_000_000_000 - (300_000_000_000 - i * 10_000_000_000)
+        )
+      end
+
+      described_class.generate_future_events(resource)
+
+      events = described_class.order(:id).to_a
+      expect(events).to match_array([
+        have_attributes(
+          :timestamp  => be_within(0.01).of(20.days.from_now.beginning_of_day),
+          :resource   => resource,
+          :event_type => "DiskUsage",
+          :severity   => 1,
+          :future     => true,
+          :message    => "Disk Space Max Used is projected to reach 465.7 GB (100% of Capacity - Total Space (B))"
+        ),
+        have_attributes(
+          :timestamp  => be_within(0.01).of(15.days.from_now.beginning_of_day),
+          :resource   => resource,
+          :event_type => "DiskUsage",
+          :severity   => 1,
+          :future     => true,
+          :message    => "Disk Space Max Used is projected to reach 419.1 GB (90% of Capacity - Total Space (B))"
+        ),
+        have_attributes(
+          :timestamp  => be_within(0.01).of(7.days.from_now.middle_of_day),
+          :resource   => resource,
+          :event_type => "DiskUsage",
+          :severity   => 2,
+          :future     => true,
+          :message    => "Disk Space Max Used is projected to reach 349.2 GB (75% of Capacity - Total Space (B))"
+        ),
+        have_attributes(
+          :timestamp  => be_within(0.01).of(5.days.ago.beginning_of_day),
+          :resource   => resource,
+          :event_type => "DiskUsage",
+          :severity   => 3,
+          :future     => true,
+          :message    => "Disk Space Max Used is projected to reach 232.8 GB (50% of Capacity - Total Space (B))"
+        )
+      ])
+    end
+  end
 end
