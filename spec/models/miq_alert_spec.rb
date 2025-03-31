@@ -1,4 +1,16 @@
 RSpec.describe MiqAlert do
+  describe ".seed" do
+    it "sets responds_to_events for automate_expressions with dynamic values" do
+      MiqAlert.seed
+
+      alert = MiqAlert.find_by(:description => "VM Power On > 2 in last 15 min")
+      expect(alert.responds_to_events).to eq("PowerOnVM_Task_Complete")
+
+      alert = MiqAlert.find_by(:description => "VM Memory Balloon > 250 in last 10 min")
+      expect(alert.responds_to_events).to eq("vm_perf_complete")
+    end
+  end
+
   context "With single server with a single generic worker with the notifier role," do
     before do
       ServerRole.seed
