@@ -798,18 +798,24 @@ class MiqAlert < ApplicationRecord
 
       alist.each do |alert_hash|
         guid = alert_hash["guid"] || alert_hash[:guid]
-        rec = find_by(:guid => guid)
-        if rec.nil?
-          alert_hash[:read_only] = true
-          alert = create(alert_hash)
-          _log.info("Added sample Alert: #{alert.description}")
-          if action
-            alert.options ||= {}
-            alert.options[:notifications] ||= {}
-            alert.options[:notifications][action.action_type.to_sym] = action.options
-            alert.save
-          end
+        alert_hash[:read_only] = true
+
+        alert = find_by(:guid => guid)
+        if alert.nil?
+          alert = new(alert_hash)
+          _log.info("Adding sample Alert: #{alert.description}")
+        else
+          alert.attributes = alert_hash
+          _log.info("Updating sample Alert: #{alert.description}")
         end
+
+        if action
+          alert.options ||= {}
+          alert.options[:notifications] ||= {}
+          alert.options[:notifications][action.action_type.to_sym] = action.options
+        end
+
+        alert.save!
       end
     end
   end
