@@ -422,7 +422,7 @@ class MiqAlert < ApplicationRecord
           {:name => :ems_id, :description => N_("Management System")},
           {:name => :ems_alarm_mor, :description => N_("Alarm")}
         ]},
-      {:name => "event_threshold", :description => N_("Event Threshold"), :db => ["Vm"], :responds_to_events => '#{hash_expression[:options][:event_types]}',
+      {:name => "event_threshold", :description => N_("Event Threshold"), :db => ["Vm"], :responds_to_events => '#{hash_expression[:options][:event_types].join(",")}',
         :options => [
           {:name => :event_types, :description => N_("Event to Check"), :values => ["CloneVM_Task", "CloneVM_Task_Complete", "DrsVmPoweredOnEvent", "MarkAsTemplate_Complete", "MigrateVM_Task", "PowerOnVM_Task_Complete", "ReconfigVM_Task_Complete", "ResetVM_Task_Complete", "ShutdownGuest_Complete", "SuspendVM_Task_Complete", "UnregisterVM_Complete", "VmPoweredOffEvent", "RelocateVM_Task_Complete"]},
           {:name => :time_threshold, :description => N_("How Far Back to Check"), :required => true},

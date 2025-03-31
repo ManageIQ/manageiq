@@ -372,12 +372,12 @@ RSpec.describe MiqAlert do
     end
 
     let(:vm_alert_set) do
-      alert = FactoryBot.create(:miq_alert_vm, :responds_to_events => "xxx|vm_perf_complete|zzz")
+      alert = FactoryBot.create(:miq_alert_vm, :responds_to_events => "xxx,vm_perf_complete,zzz")
       FactoryBot.create(:miq_alert_set_vm, :alerts => [alert])
     end
 
     let(:host_alert_set) do
-      alert = FactoryBot.create(:miq_alert_host, :responds_to_events => "xxx|host_perf_complete|zzz")
+      alert = FactoryBot.create(:miq_alert_host, :responds_to_events => "xxx,host_perf_complete,zzz")
       FactoryBot.create(:miq_alert_set_host, :alerts => [alert])
     end
 
