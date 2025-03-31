@@ -21,7 +21,7 @@ class BottleneckEvent < ApplicationRecord
       result = calculate_future_event(obj, e[:definition][:calculation])
       next if result.blank? || result[:timestamp].nil?
 
-      # TODO: determine wheter we omit results that are in the past
+      # TODO: determine whether we omit results that are in the past
 
       event = new(e[:definition][:event])
       event.future        = true
@@ -29,7 +29,7 @@ class BottleneckEvent < ApplicationRecord
       event.resource_name = obj.name if obj.respond_to?(:name)
       event.timestamp     = result.delete(:timestamp)
       event.context_data  = e[:definition].merge(result)
-      event.message       = event.substitute(event.message)
+      event.message       = build_event_message(event.context_data)
       if event.save
         adds += 1
       else
@@ -47,6 +47,25 @@ class BottleneckEvent < ApplicationRecord
     send(method, obj, options)
   end
 
+  def self.build_event_message(context)
+    value =
+      case context[:event][:event_type]
+      when "CpuUsage"
+        MiqReport.new.format_mhz_to_human_size(context[:limit_attr_value], :precision => 1)
+      when "MemoryUsage"
+        MiqReport.new.format_bytes_to_human_size(context[:limit_attr_value].megabytes, :precision => 1)
+      when "DiskUsage"
+        MiqReport.new.format_bytes_to_human_size(context[:limit_attr_value], :precision => 1)
+      end
+
+    "%{trend_attr} is projected to reach %{limit_value} (%{limit_pct}%% of %{limit_attr})" % {
+      :trend_attr  => Dictionary.gettext(context[:calculation][:trend_attr].to_s, :type => "column"),
+      :limit_value => value,
+      :limit_pct   => context[:calculation][:limit_pct],
+      :limit_attr  => Dictionary.gettext(context[:calculation][:limit_attr].to_s, :type => "column")
+    }
+  end
+
   def self.event_definitions(event_type)
     @event_definitions ||= {}
     @event_definitions[event_type] ||= MiqEventDefinition.where(:event_type => event_type).to_a
@@ -61,26 +80,10 @@ class BottleneckEvent < ApplicationRecord
     where(:resource => obj, :future => true).delete_all
   end
 
-  def context
-    context_data
-  end
-
-  def dictionary(col)
-    Dictionary.gettext(col.to_s, :type => "column")
-  end
-
-  def format(value, method, options = {})
-    MiqReport.new.send(method, value, options)
-  end
-
-  def substitute(str)
-    eval("result = \"#{str}\"")
-  end
-
   # Future event calculation methods
   def self.calculate_future_trend_to_limit(obj, options)
     # => Returns: {
-    # =>  :timestamp => timstamp when trend line meets limit,
+    # =>  :timestamp => timestamp when trend line meets limit,
     # =>  :trend_attr_value => value of trend attr at timestamp,
     # =>  :limit_attr_value => value of limit attr
     # => }
