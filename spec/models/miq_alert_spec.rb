@@ -1,4 +1,16 @@
 RSpec.describe MiqAlert do
+  describe ".seed" do
+    it "sets responds_to_events for automate_expressions with dynamic values" do
+      MiqAlert.seed
+
+      alert = MiqAlert.find_by(:description => "VM Power On > 2 in last 15 min")
+      expect(alert.responds_to_events).to eq("PowerOnVM_Task_Complete")
+
+      alert = MiqAlert.find_by(:description => "VM Memory Balloon > 250 in last 10 min")
+      expect(alert.responds_to_events).to eq("vm_perf_complete")
+    end
+  end
+
   context "With single server with a single generic worker with the notifier role," do
     before do
       ServerRole.seed
@@ -372,12 +384,12 @@ RSpec.describe MiqAlert do
     end
 
     let(:vm_alert_set) do
-      alert = FactoryBot.create(:miq_alert_vm, :responds_to_events => "xxx|vm_perf_complete|zzz")
+      alert = FactoryBot.create(:miq_alert_vm, :responds_to_events => "xxx,vm_perf_complete,zzz")
       FactoryBot.create(:miq_alert_set_vm, :alerts => [alert])
     end
 
     let(:host_alert_set) do
-      alert = FactoryBot.create(:miq_alert_host, :responds_to_events => "xxx|host_perf_complete|zzz")
+      alert = FactoryBot.create(:miq_alert_host, :responds_to_events => "xxx,host_perf_complete,zzz")
       FactoryBot.create(:miq_alert_set_host, :alerts => [alert])
     end
 
