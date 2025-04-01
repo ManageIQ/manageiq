@@ -417,12 +417,12 @@ class MiqAlert < ApplicationRecord
   def self.automate_expressions
     @automate_expressions ||= [
       {:name => "nothing", :description => N_(" Nothing"), :db => BASE_TABLES, :options => []},
-      {:name => "ems_alarm", :description => N_("VMware Alarm"), :db => ["Vm", "Host", "EmsCluster"], :responds_to_events => 'AlarmStatusChangedEvent_#{hash_expression[:options][:ems_id]}_#{hash_expression[:options][:ems_alarm_mor]}',
+      {:name => "ems_alarm", :description => N_("VMware Alarm"), :db => ["Vm", "Host", "EmsCluster"], :responds_to_events => :ems_alarm,
         :options => [
           {:name => :ems_id, :description => N_("Management System")},
           {:name => :ems_alarm_mor, :description => N_("Alarm")}
         ]},
-      {:name => "event_threshold", :description => N_("Event Threshold"), :db => ["Vm"], :responds_to_events => '#{hash_expression[:options][:event_types]}',
+      {:name => "event_threshold", :description => N_("Event Threshold"), :db => ["Vm"], :responds_to_events => :event_threshold,
         :options => [
           {:name => :event_types, :description => N_("Event to Check"), :values => ["CloneVM_Task", "CloneVM_Task_Complete", "DrsVmPoweredOnEvent", "MarkAsTemplate_Complete", "MigrateVM_Task", "PowerOnVM_Task_Complete", "ReconfigVM_Task_Complete", "ResetVM_Task_Complete", "ShutdownGuest_Complete", "SuspendVM_Task_Complete", "UnregisterVM_Complete", "VmPoweredOffEvent", "RelocateVM_Task_Complete"]},
           {:name => :time_threshold, :description => N_("How Far Back to Check"), :required => true},
@@ -448,7 +448,7 @@ class MiqAlert < ApplicationRecord
           {:name => :time_threshold, :description => N_("How Far Back to Check"), :required => true},
           {:name => :freq_threshold, :description => N_("Event Count Threshold"), :required => true, :numeric => true}
         ]},
-      {:name => "realtime_performance", :description => N_("Real Time Performance"), :db => (dbs = ["Vm", "Host", "EmsCluster"]), :responds_to_events => '#{db.underscore}_perf_complete',
+      {:name => "realtime_performance", :description => N_("Real Time Performance"), :db => (dbs = ["Vm", "Host", "EmsCluster"]), :responds_to_events => :realtime_performance,
         :options => [
           {:name => :perf_column, :description => N_("Performance Field"), :values => rt_perf_model_details(dbs)},
           {:name => :operator, :description => N_("Operator"), :values => [">", ">=", "<", "<=", "="]},
@@ -560,11 +560,20 @@ class MiqAlert < ApplicationRecord
     return nil if miq_expression || hash_expression.nil? || hash_expression[:eval_method] == "nothing"
 
     options = self.class.expression_by_name(hash_expression[:eval_method])
-    options && substitute(options[:responds_to_events])
+    options && evaluate_responds_to_events(options[:responds_to_events])
   end
 
-  def substitute(str)
-    eval("result = \"#{str}\"")
+  private def evaluate_responds_to_events(responds_to_events_value)
+    case responds_to_events_value
+    when :ems_alarm
+      "AlarmStatusChangedEvent_#{hash_expression[:options][:ems_id]}_#{hash_expression[:options][:ems_alarm_mor]}"
+    when :event_threshold
+      hash_expression[:options][:event_types].join(",")
+    when :realtime_performance
+      "#{db.underscore}_perf_complete"
+    else
+      responds_to_events_value
+    end
   end
 
   def evaluate_in_automate(target, inputs = {})
@@ -798,18 +807,24 @@ class MiqAlert < ApplicationRecord
 
       alist.each do |alert_hash|
         guid = alert_hash["guid"] || alert_hash[:guid]
-        rec = find_by(:guid => guid)
-        if rec.nil?
-          alert_hash[:read_only] = true
-          alert = create(alert_hash)
-          _log.info("Added sample Alert: #{alert.description}")
-          if action
-            alert.options ||= {}
-            alert.options[:notifications] ||= {}
-            alert.options[:notifications][action.action_type.to_sym] = action.options
-            alert.save
-          end
+        alert_hash[:read_only] = true
+
+        alert = find_by(:guid => guid)
+        if alert.nil?
+          alert = new(alert_hash)
+          _log.info("Adding sample Alert: #{alert.description}")
+        else
+          alert.attributes = alert_hash
+          _log.info("Updating sample Alert: #{alert.description}")
         end
+
+        if action
+          alert.options ||= {}
+          alert.options[:notifications] ||= {}
+          alert.options[:notifications][action.action_type.to_sym] = action.options
+        end
+
+        alert.save!
       end
     end
   end
