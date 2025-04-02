@@ -17,7 +17,7 @@ require File.expand_path('../config/environment', __dir__)
 def purge_by_orphaned(klass, fk, window, purge_mode)
   klass.include PurgingMixin
   klass.define_method(:purge_method) { :destroy }
-  klass.purge_by_orphaned(fk, window, purge_mode).tap { |total| puts "#{purge_mode == :count ? 'Would purge' : 'Purged'}: #{klass}: #{total} rows" }
+  klass.purge_by_orphaned(fk, window, purge_mode)
 end
 
 CLASSES_TO_PURGE = [
@@ -32,13 +32,24 @@ CLASSES_TO_PURGE = [
   SecurityContext,       :resource,          1000
 ]
 
+puts "\nNote: Count mode was provided.  No changes are being made.  Use --mode purge to purge the rows.\n" if purge_mode == :count
+puts
+results = [["Class", purge_mode == :count ? "Orphan Count" : "Purged Rows"]]
 _result, bm = Benchmark.realtime_block("TotalTime") do
+
   CLASSES_TO_PURGE.each_slice(3) do |klass, fk, window|
     Benchmark.realtime_block(klass.name) do
-      purge_by_orphaned(klass, fk, window, purge_mode)
+      print "Purging #{klass.name}..."
+      purge_by_orphaned(klass, fk, window, purge_mode).tap { |result| results << [klass, result] }
+      puts "Done!"
     end
   end
   nil
 end
-puts "Timing by model:"
-pp bm
+puts "\nResults:\n\n"
+
+puts results.tableize
+puts
+
+puts "Timing by class:\n\n"
+puts bm.transform_values { |v| v.round(6) }.to_a.unshift(["Model", "Time (s)"]).tableize
