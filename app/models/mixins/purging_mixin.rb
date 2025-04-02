@@ -116,10 +116,10 @@ module PurgingMixin
       total
     end
 
-    def purge_by_orphaned(fk_name, window = purge_window_size)
+    def purge_by_orphaned(fk_name, window = purge_window_size, purge_mode = :purge)
       _log.info("Purging orphans in #{table_name}...")
-      total = purge_orphans(fk_name, window)
-      _log.info("Purging orphans in #{table_name}...Complete - Deleted #{total} records")
+      total = purge_orphans(fk_name, window, purge_mode)
+      _log.info("Purging orphans in #{table_name}...Complete - #{purge_mode.to_sym == :count ? 'Would delete' : 'Deleted'} #{total} records")
       total
     end
 
@@ -133,23 +133,38 @@ module PurgingMixin
 
     private
 
-    def purge_orphans(fk_name, window)
-      # For now, this only supports polymorphic references
-      # We don't currently have a situation where a table with a regular reference needs to be purged
+    def purge_orphans(fk_name, window, purge_mode = :purge)
+      reflection = reflect_on_association(fk_name)
+      scopes = reflection.polymorphic? ? polymorphic_orphan_scopes(fk_name) : non_polymorphic_orphan_scopes(fk_name, reflection.klass)
+
+      if purge_mode.to_sym == :count
+        scopes.sum(&:count)
+      else
+        scopes.sum { |s| purge_in_batches(s, window) }
+      end
+    end
+
+    def polymorphic_orphan_scopes(fk_name)
       polymorphic_type_column = "#{fk_name}_type"
       polymorphic_id_column   = connection.quote_column_name("#{fk_name}_id")
-      total = 0
 
-      polymorphic_classes(polymorphic_type_column).each do |klass|
+      polymorphic_classes(polymorphic_type_column).collect do |klass|
         resource_table = connection.quote_table_name(klass.table_name)
         q_table_name = connection.quote_table_name(table_name)
 
-        scope = joins("LEFT OUTER JOIN #{resource_table} ON #{q_table_name}.#{polymorphic_id_column} = #{resource_table}.id")
-                .where(resource_table => {:id => nil})
-                .where("#{q_table_name}.#{connection.quote_column_name(polymorphic_type_column)} = #{connection.quote(klass.name)}")
-        total += purge_in_batches(scope, window)
+        joins("LEFT OUTER JOIN #{resource_table} ON #{q_table_name}.#{polymorphic_id_column} = #{resource_table}.id")
+          .where(resource_table => {:id => nil})
+          .where("#{q_table_name}.#{connection.quote_column_name(polymorphic_type_column)} = #{connection.quote(klass.name)}")
       end
-      total
+    end
+
+    def non_polymorphic_orphan_scopes(fk_name, reflection_klass)
+      resource_table = connection.quote_table_name(reflection_klass.table_name)
+      assoc_id = connection.quote_column_name("#{fk_name}_id")
+      q_table_name = connection.quote_table_name(table_name)
+
+      [joins("LEFT OUTER JOIN #{resource_table} ON #{q_table_name}.#{assoc_id} = #{resource_table}.id")
+        .where(resource_table => {:id => nil})]
     end
 
     def polymorphic_classes(polymorphic_type_column)
