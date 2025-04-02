@@ -24,7 +24,7 @@ class MiqGroup < ApplicationRecord
 
   validates :description, :presence => true, :unique_within_region => {:match_case => false}
   validate :validate_default_tenant, :on => :update, :if => :tenant_id_changed?
-  before_destroy :ensure_can_be_destroyed
+  before_destroy :ensure_can_be_destroyed, :destroy_subscribed_widget_sets
   after_destroy :reset_current_group_for_users
 
   # For REST API compatibility only; Don't use otherwise!
@@ -340,6 +340,10 @@ class MiqGroup < ApplicationRecord
 
   def current_user_group?
     id == current_user_group.try(:id)
+  end
+
+  def destroy_subscribed_widget_sets
+    MiqWidgetSet.where(:group_id => id).destroy_all
   end
 
   def ensure_can_be_destroyed
