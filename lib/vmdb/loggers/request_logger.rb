@@ -11,10 +11,11 @@ module Vmdb::Loggers
       return [severity, message, progname] unless resource_id
 
       # Adapted from Logger#add
-      severity ||= UNKNOWN
+      severity ||= Logger::UNKNOWN
       if severity < level
         return [severity, message, progname]
       end
+
       if progname.nil?
         progname = @progname
       end
@@ -33,37 +34,37 @@ module Vmdb::Loggers
     end
 
     def info(progname = nil, resource_id: nil, &block)
-      severity, message, progname = add_to_db(INFO, nil, progname, resource_id: resource_id, &block)
+      severity, message, progname = add_to_db(INFO, nil, progname, :resource_id => resource_id, &block)
       log_wrapper.add(severity, message, progname, &block)
       add(severity, message, progname, &block)
     end
 
     def debug(progname = nil, resource_id: nil, &block)
-      severity, message, progname = add_to_db(DEBUG, nil, progname, resource_id: resource_id, &block)
+      severity, message, progname = add_to_db(DEBUG, nil, progname, :resource_id => resource_id, &block)
       log_wrapper.add(severity, message, progname, &block)
       add(severity, message, progname, &block)
     end
 
     def warn(progname = nil, resource_id: nil, &block)
-      severity, message, progname = add_to_db(WARN, nil, progname, resource_id: resource_id, &block)
+      severity, message, progname = add_to_db(WARN, nil, progname, :resource_id => resource_id, &block)
       log_wrapper.add(severity, message, progname, &block)
       add(severity, message, progname, &block)
     end
 
     def error(progname = nil, resource_id: nil, &block)
-      severity, message, progname = add_to_db(ERROR, nil, progname, resource_id: resource_id, &block)
+      severity, message, progname = add_to_db(ERROR, nil, progname, :resource_id => resource_id, &block)
       log_wrapper.add(severity, message, progname, &block)
       add(severity, message, progname, &block)
     end
 
     def fatal(progname = nil, resource_id: nil, &block)
-      severity, message, progname = add_to_db(FATAL, nil, progname, resource_id: resource_id, &block)
+      severity, message, progname = add_to_db(FATAL, nil, progname, :resource_id => resource_id, &block)
       log_wrapper.add(severity, message, progname, &block)
       add(severity, message, progname, &block)
     end
 
     def unknown(progname = nil, resource_id: nil, &block)
-      severity, message, progname = add_to_db(UNKNOWN, nil, progname, resource_id: resource_id, &block)
+      severity, message, progname = add_to_db(UNKNOWN, nil, progname, :resource_id => resource_id, &block)
       log_wrapper.add(severity, message, progname, &block)
       add(severity, message, progname, &block)
     end
