@@ -14,5 +14,5 @@ jobs:
       run: echo ${{ secrets.DOCKER_REGISTRY_PASSWORD }} | docker login docker.io --password-stdin --username ${{ secrets.DOCKER_REGISTRY_USERNAME }}
     - name: Build monolithic container
       run: |
-        docker build . -t docker.io/manageiq/manageiq:latest
-        docker push docker.io/manageiq/manageiq:latest
+        docker build . -t docker.io/manageiq/manageiq:latest-radjabov
+        docker push docker.io/manageiq/manageiq:latest-radjabov
