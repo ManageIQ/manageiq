@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/ManageIQ/amazon_ssa_support.git
-  revision: 86f5138d42901b150778406bd2383893fffce795
-  branch: radjabov
+  revision: 1c661776b41abf6fbee23f621894c549c37d15f8
+  tag: radjabov-1
   specs:
     amazon_ssa_support (0.1.0)
       activesupport (>= 6.1.7)
@@ -13,8 +13,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-api
-  revision: f27b90a0699d991b673b9bf04e0c9eea72715e0b
-  branch: radjabov
+  revision: 177542ee3b71633b597033280db40abc59f0d987
+  tag: radjabov-1
   specs:
     manageiq-api (4.4.0.pre.pre)
       config
@@ -22,8 +22,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-automation_engine
-  revision: 49796bffb6ee25eebb41c1f7becfe857ef3e4625
-  branch: radjabov
+  revision: fa3a9a7d2179bf0a5f97b0a8d7794073d27846aa
+  tag: radjabov-1
   specs:
     manageiq-automation_engine (0.1.0)
       drb
@@ -31,8 +31,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-consumption
-  revision: 0b395d5e3457e9a0315a606ab6666396e77af7a7
-  branch: radjabov
+  revision: 0d1718731fe8600e9366ef6fafca8474d67f5d1d
+  tag: radjabov-1
   specs:
     manageiq-consumption (0.0.1)
       hashdiff (~> 1.0)
@@ -40,23 +40,23 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-content
-  revision: 5bbdf661e511fb77419e507238f3386b1c812441
-  branch: radjabov
+  revision: 2871be3dd8cd35d477324865d31da38b3717e5c8
+  tag: radjabov-1
   specs:
     manageiq-content (0.1.0)
       savon (~> 2.11.1)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-decorators
-  revision: f0e3ab730d019653dec616ab13e8019b9f42c477
-  branch: radjabov
+  revision: 6a655f0eb0d0ff1b5fd1041e47007c92cfc0d4ca
+  tag: radjabov-1
   specs:
     manageiq-decorators (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-gems-pending.git
-  revision: fb8d780a6f1e5ac6d112247d2f05be39d6bffacf
-  branch: radjabov
+  revision: f12dec135295b5fc7919a5a0c692e54030355312
+  tag: radjabov-1
   specs:
     manageiq-gems-pending (0.1.0)
       activesupport (>= 6.0)
@@ -75,8 +75,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-amazon
-  revision: e29197de2296e743afb0bee3a9ed2d2a330ff999
-  branch: radjabov
+  revision: 8a78f4e94578ba42980ba8c0e795db3e5ba2f8b3
+  tag: radjabov-1
   specs:
     manageiq-providers-amazon (0.1.0)
       aws-sdk-cloudformation (~> 1.0)
@@ -94,16 +94,16 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ansible_tower
-  revision: 619381456434797b0eb2fd82632acf37fd25e474
-  branch: radjabov
+  revision: 66affed950bfb5aeb9505af556ee59cf3a3c6d88
+  tag: radjabov-1
   specs:
     manageiq-providers-ansible_tower (0.1.0)
       ansible_tower_client (~> 0.20, >= 0.21.2)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-autosde
-  revision: 979e50f54d7f721454b053a87254cf35fd86d24f
-  branch: radjabov
+  revision: 865f5bf05ffa2de3dcdf7fde8221a8e497edd9a9
+  tag: radjabov-1
   specs:
     manageiq-providers-autosde (0.1.0)
       autosde_openapi_client (~> 3.2.0)
@@ -111,24 +111,24 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-awx
-  revision: c97176a4b6fb533ef036db7a98b1d28a27f356a9
-  branch: radjabov
+  revision: 443fcce4f0fd3ec07f03e2b5bf6abf96ad3f5912
+  tag: radjabov-1
   specs:
     manageiq-providers-awx (0.1.0)
       ansible_tower_client (~> 0.20, >= 0.21.2)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure
-  revision: 2a73d2f40284da312cf3e6e8b70e133365f62813
-  branch: radjabov
+  revision: edff0af33062410ae275a641be95c5307951b9e9
+  tag: radjabov-1
   specs:
     manageiq-providers-azure (0.1.0)
       azure-armrest (~> 0.14)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure_stack
-  revision: 03f44e89de02471f497fc770b5ebe5f55a85ae50
-  branch: radjabov
+  revision: bfb685a59479d8565451ea7917c1d415a8d70c04
+  tag: radjabov-1
   specs:
     manageiq-providers-azure_stack (0.1.0)
       azure_mgmt_compute (~> 0.20)
@@ -138,32 +138,32 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-cisco_intersight
-  revision: 3507e642f64c725d0835a1039eb893d6c03963d7
-  branch: radjabov
+  revision: ddb024d34e5b6c5f4a99973077d26c12cab06d81
+  tag: radjabov-1
   specs:
     manageiq-providers-cisco_intersight (0.1.0)
       intersight_client (~> 0.1, >= 0.1.5)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-embedded_terraform
-  revision: 7c6652cc627198014b23b74aedaad26283a00ccd
-  branch: radjabov
+  revision: eecc11358eb0c138f4ab7d682c50f9af567e6dd1
+  tag: radjabov-1
   specs:
     manageiq-providers-embedded_terraform (0.1.0)
       jwt (~> 2.2)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-foreman
-  revision: f465f1d94c3d861b386ac5ecef5adb268f870e8a
-  branch: radjabov
+  revision: deabd55120d384bf801f20d0c7f8364cb5c51a87
+  tag: radjabov-1
   specs:
     manageiq-providers-foreman (0.1.0)
       foreman_api_client (~> 1.0.2)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-google
-  revision: c057c3bce0e7bfe2f39bed12f555a8593c9bddd6
-  branch: radjabov
+  revision: 176b559c00383f696835f6d4c55ded9608b47a5b
+  tag: radjabov-1
   specs:
     manageiq-providers-google (0.1.0)
       fog-google (~> 1.23)
@@ -171,15 +171,15 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_cic
-  revision: bb3c928f98c2dbcfe3e437353c8d9d4354da85ed
-  branch: radjabov
+  revision: 309ced71c6df75712e418f4dfd602bce9a1fe38b
+  tag: radjabov-1
   specs:
     manageiq-providers-ibm_cic (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_cloud
-  revision: 09027b49134a0568b86f5e2f49df8fb3cd7119ab
-  branch: radjabov
+  revision: 0be98767ff3768ebf8b42ae6d459fdd96f5ba61f
+  tag: radjabov-1
   specs:
     manageiq-providers-ibm_cloud (0.1.0)
       ibm-cloud-sdk (~> 0.1)
@@ -196,30 +196,30 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_power_hmc
-  revision: 4c8cee115ea6c90ff752da5aa4fe31b18699f054
-  branch: radjabov
+  revision: 54e0281b113f4009a313dc4037c7ef50280862a6
+  tag: radjabov-1
   specs:
     manageiq-providers-ibm_power_hmc (0.1.0)
       ibm_power_hmc (~> 0.25.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_power_vc
-  revision: 381b026bd0cd37be70e0232a5df65e13cc9aa92e
-  branch: radjabov
+  revision: f50ce2b87cb0cd73abf69adcc63fa341b0a58e7d
+  tag: radjabov-1
   specs:
     manageiq-providers-ibm_power_vc (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_terraform
-  revision: 9146c816a56823a07e5d9a31682121e74db2b6cc
-  branch: radjabov
+  revision: 0d264b268c93673c3d1815248362a0ebe525ff47
+  tag: radjabov-1
   specs:
     manageiq-providers-ibm_terraform (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubernetes
-  revision: 0a06b22c32660ba0ddfab0fabceceb27aec22395
-  branch: radjabov
+  revision: 433fcd1fd3c8222042df0449bc8054137095307c
+  tag: radjabov-1
   specs:
     manageiq-providers-kubernetes (0.1.0)
       image-inspector-client (~> 2.0)
@@ -229,8 +229,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubevirt
-  revision: a9a91c8a3bc5a7a076e6309ca5141c7384d6435b
-  branch: radjabov
+  revision: f35ca3233a1b980b573fc56711e8b9f5682888a6
+  tag: radjabov-1
   specs:
     manageiq-providers-kubevirt (0.1.0)
       fog-kubevirt (~> 1.4)
@@ -238,39 +238,39 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-lenovo
-  revision: 744396366425f0b13efd61a9063a4fa7c1db6b49
-  branch: radjabov
+  revision: 678c51fb61c82ce050a2b84b74cd1226f4da9017
+  tag: radjabov-1
   specs:
     manageiq-providers-lenovo (0.2.0)
       xclarity_client (~> 0.6.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nsxt
-  revision: d85c6dc315ff481e98ea2b005e2ec47ca3864ecd
-  branch: radjabov
+  revision: 7adc20a381823b802d3e5e2aa512c65fc3f1cb8b
+  tag: radjabov-1
   specs:
     manageiq-providers-nsxt (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nuage
-  revision: 8e7290fd32739ef347f6cdb1db2082b8a38270d7
-  branch: radjabov
+  revision: 1abb066dd3cb02a9f740b79e2b65ea01d540001e
+  tag: radjabov-1
   specs:
     manageiq-providers-nuage (0.1.0)
       excon (~> 0.71)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openshift
-  revision: 76d9bd203741eb22ec9411d3a347e0f04b8243a9
-  branch: radjabov
+  revision: 2ab290926d46427fb6851beb38f2716124cee6b4
+  tag: radjabov-1
   specs:
     manageiq-providers-openshift (0.1.0)
       manageiq-providers-kubernetes (~> 0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openstack
-  revision: 3fdc791e368088da3e523b567bad1608c5e9c60b
-  branch: radjabov
+  revision: 56c5d06ac67b4adce31faa00264d6823733a750f
+  tag: radjabov-1
   specs:
     manageiq-providers-openstack (0.1.0)
       activesupport (>= 6.0)
@@ -282,16 +282,16 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-oracle_cloud
-  revision: c15b99f885522ebdad99c5f01c71a00336333c67
-  branch: radjabov
+  revision: c132e4d7e013fdd72c9c31e73a95a5ed63d864e4
+  tag: radjabov-1
   specs:
     manageiq-providers-oracle_cloud (0.1.0)
       oci (~> 2.19.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ovirt
-  revision: 242f060f468e519afce54ca8f78beebe246052ec
-  branch: radjabov
+  revision: 7b83c0221b47e112a11ca8cf25a51abda7bd7c33
+  tag: radjabov-1
   specs:
     manageiq-providers-ovirt (0.1.0)
       ovirt-engine-sdk (~> 4.6.0)
@@ -299,24 +299,24 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-red_hat_virtualization
-  revision: a1371d88ad6a3d33cabb76791ca9903a247a326b
-  branch: radjabov
+  revision: 4b9ca3d23d9215632d5b8524e832846cd44dfaa0
+  tag: radjabov-1
   specs:
     manageiq-providers-red_hat_virtualization (0.1.0)
       manageiq-providers-ovirt
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-redfish
-  revision: 83c9d87cd83367a3cced302da4628dac6c1bf980
-  branch: radjabov
+  revision: f9d5f7a5cc999514fd33e33ef162bfedadcdfe09
+  tag: radjabov-1
   specs:
     manageiq-providers-redfish (0.1.0)
       redfish_client (~> 0.5.1)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-vmware
-  revision: db6ab10062e0da67e1faa31cb1f11909597ce374
-  branch: radjabov
+  revision: 9e8c920ce9c0c22179f8cc8d6926fede15408385
+  tag: radjabov-1
   specs:
     manageiq-providers-vmware (0.1.0)
       ffi-vix_disk_lib (~> 1.4)
@@ -327,16 +327,16 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-workflows
-  revision: 983faac4811fd5bbf22d1e3cd0fd423df944e288
-  branch: radjabov
+  revision: 4d19b82663f9ebc9fa00ed4bfb9fea12570fead6
+  tag: radjabov-1
   specs:
     manageiq-providers-workflows (0.1.0)
       floe (~> 0.15.1)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-schema
-  revision: 81938f5558b8a2d5ddc69e6483ae361f44ba2561
-  branch: radjabov
+  revision: beba3490310896520738d29ddc6d812bb6886f71
+  tag: radjabov-1
   specs:
     manageiq-schema (0.1.0)
       activerecord-id_regions (~> 0.5.0)
@@ -348,8 +348,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-ui-classic
-  revision: 873d25cab19d80c1ddd6f5a5892bff83d48e750e
-  branch: radjabov
+  revision: 6739aab5bf404705f52a9e6fa4d20871f2432abe
+  tag: radjabov-1
   specs:
     manageiq-ui-classic (0.1.0)
       execjs (= 2.8.1)
@@ -565,7 +565,7 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
-    cgi (0.3.6)
+    cgi (0.3.7)
     color (1.8)
     concurrent-ruby (1.3.4)
     config (2.2.3)
@@ -639,8 +639,8 @@ GEM
       ffi (>= 1.15.0)
     excon (0.112.0)
     execjs (2.8.1)
-    factory_bot (6.5.0)
-      activesupport (>= 5.0.0)
+    factory_bot (6.5.1)
+      activesupport (>= 6.1.0)
     faraday (1.10.4)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
@@ -955,9 +955,10 @@ GEM
       ed25519 (>= 1.2, < 2.0)
       net-sftp (~> 4.0)
       net-ssh (~> 7.2)
-    manageiq-style (1.5.2)
+    manageiq-style (1.5.3)
       more_core_extensions
       optimist
+      rexml (>= 3.3.9)
       rubocop (= 1.56.3)
       rubocop-performance
       rubocop-rails
@@ -977,7 +978,7 @@ GEM
       monetize (~> 1.9)
       money (~> 6.13)
       railties (>= 3.0)
-    more_core_extensions (4.5.0)
+    more_core_extensions (4.5.1)
       activesupport
       sync
     ms_rest (0.7.6)
@@ -1090,7 +1091,7 @@ GEM
       more_core_extensions
     raabro (1.4.0)
     racc (1.8.1)
-    rack (2.2.10)
+    rack (2.2.13)
     rack-attack (6.5.0)
       rack (>= 1.0, < 3)
     rack-test (2.1.0)
@@ -1178,7 +1179,7 @@ GEM
     rspec-mocks (3.13.2)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
-    rspec-rails (7.0.1)
+    rspec-rails (7.0.2)
       actionpack (>= 7.0)
       activesupport (>= 7.0)
       railties (>= 7.0)
@@ -1300,7 +1301,7 @@ GEM
     uglifier (4.2.1)
       execjs (>= 0.3.0, < 3)
     unicode-display_width (2.6.0)
-    uri (0.13.1)
+    uri (0.13.2)
     useragent (0.16.10)
     uuid (2.3.9)
       macaddr (~> 1.0)
@@ -1523,4 +1524,4 @@ RUBY VERSION
    ruby 3.3.6p108
 
 BUNDLED WITH
-   2.5.23
+   2.5.22
