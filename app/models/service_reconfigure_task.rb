@@ -36,6 +36,8 @@ class ServiceReconfigureTask < MiqRequestTask
         :tenant_id        => get_user.current_tenant.id
       }
 
+      MiqAeEngine.set_automation_attributes_from_objects(source, args[:attrs])
+
       MiqQueue.put(
         :class_name     => 'MiqAeEngine',
         :method_name    => 'deliver',
@@ -44,7 +46,7 @@ class ServiceReconfigureTask < MiqRequestTask
         :zone           => zone,
         :tracking_label => tracking_label_id
       )
-      update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
+      update_and_notify_parent(:state => "pending", :status => "Ok", :message => "Automation Starting")
     else
       update_and_notify_parent(:state   => "finished",
                                :status  => "Ok",
