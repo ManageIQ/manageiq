@@ -90,7 +90,7 @@ RSpec.describe ServiceReconfigureTask do
           :class_name       => 'class',
           :instance_name    => 'instance',
           :automate_message => 'create',
-          :attrs            => task.options[:dialog].merge("request" => task.request_type),
+          :attrs            => task.options[:dialog].merge("request" => task.request_type, "Service::service" => service.id),
           :user_id          => user.id,
           :miq_group_id     => user.current_group_id,
           :tenant_id        => user.current_tenant.id,
