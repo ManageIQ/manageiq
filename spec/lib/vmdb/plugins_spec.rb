@@ -164,7 +164,7 @@ RSpec.describe Vmdb::Plugins do
 
         Dir.chdir(dir) do
           `
-          git init &&
+          git init --initial-branch master &&
           touch foo  && git add -A && git commit -m "Added foo" --no-gpg-sign &&
           touch foo2 && git add -A && git commit -m "Added foo2" --no-gpg-sign
           `
