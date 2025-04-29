@@ -1,6 +1,6 @@
 RSpec.describe Ansible::Runner do
   before do
-    pending("ansible-runner executable not available") unless described_class.available?
+    skip("ansible-runner executable not available") unless described_class.available?
   end
 
   let(:data_directory) { Pathname.new(__dir__).join("runner/data") }
