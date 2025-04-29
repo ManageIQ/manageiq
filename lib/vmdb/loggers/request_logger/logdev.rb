@@ -12,6 +12,13 @@ module Vmdb::Loggers
 
         RequestLog.create(:message => message, :severity => severity, :resource_id => resource_id)
       end
+
+      def close
+      end
+
+      def reopen(_log = nil)
+        self
+      end
     end
   end
 end
