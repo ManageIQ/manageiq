@@ -69,7 +69,7 @@ gem "psych",                            ">=3.1",             :require => false #
 gem "query_relation",                   "~>0.1.0",           :require => false
 gem "rack",                             ">=2.2.13",          :require => false
 gem "rack-attack",                      "~>6.5.0",           :require => false
-gem "rails",                            "~>7.1.5", ">=7.1.5.1"
+gem "rails",                            "~>7.2.0"
 gem "rails-i18n",                       "~>7.x"
 gem "rake",                             ">=12.3.3",          :require => false
 gem "rest-client",                      "~>2.1.0",           :require => false
@@ -291,7 +291,7 @@ group :web_socket, :manageiq_default do
 end
 
 group :appliance, :optional => true do
-  gem "irb",                            "=1.4.1",            :require => false # Locked to same version as the installed RPM rubygem-irb-1.4.1-142.module_el9+787+b20bfeee.noarch so that we don't bundle our own
+  gem "irb",                            ">=1.4.1",           :require => false # Locked to same version as the installed RPM rubygem-irb-1.4.1-142.module_el9+787+b20bfeee.noarch so that we don't bundle our own
   gem "manageiq-appliance_console",     "~>10.0",            :require => false
   gem "rdoc",                                                :require => false # Needed for rails console
 end
