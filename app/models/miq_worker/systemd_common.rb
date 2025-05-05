@@ -18,6 +18,11 @@ class MiqWorker
       def systemd_unit_dir
         Pathname.new("/lib/systemd/system")
       end
+
+      def unit_name(instance)
+        "#{service_base_name}@#{instance}.service"
+      end
+      alias_method :system_uid, :unit_name
     end
 
     def unit_name
