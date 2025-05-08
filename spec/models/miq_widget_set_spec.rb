@@ -103,6 +103,20 @@ RSpec.describe MiqWidgetSet do
     end
   end
 
+  it "group and owner associated to a deleted group" do
+    @ws_group.update(:group => group)
+    user.destroy
+    group.destroy!
+    expect(MiqWidgetSet.count).to eq(0)
+  end
+
+  it "group associated to a deleted group, nil owner" do
+    @ws_group.update!(:group => group, :owner => nil)
+    user.destroy
+    group.destroy!
+    expect(MiqWidgetSet.count).to eq(0)
+  end
+
   it "when a group dashboard is deleted" do
     expect(MiqWidgetSet.count).to eq(1)
     @ws_group.destroy
