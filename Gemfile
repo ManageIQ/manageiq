@@ -205,6 +205,10 @@ group :red_hat_virtualization, :manageiq_default do
   manageiq_plugin "manageiq-providers-red_hat_virtualization"
 end
 
+group :terraform_enterprise, :manageiq_default do
+  manageiq_plugin "manageiq-providers-terraform_enterprise"
+end
+
 group :qpid_proton, :optional => true do
   gem "qpid_proton",                    "~>0.37.0",          :require => false
 end
