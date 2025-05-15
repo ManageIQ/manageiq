@@ -1117,6 +1117,9 @@ msgstr[1] ""
 msgid "%{object_types} under %{datastore_or_provider} \"%{provider_or_datastore_name}\""
 msgstr ""
 
+msgid "%{product_name} API Group Not found"
+msgstr ""
+
 msgid "%{product_name} HTML5 Remote Console"
 msgstr ""
 
@@ -6041,6 +6044,9 @@ msgid "Box %{box_label} / %{error_message}"
 msgstr ""
 
 msgid "Box %{box_label} must have at least one Element"
+msgstr ""
+
+msgid "Branch"
 msgstr ""
 
 msgid "Branch/Tag"
@@ -31862,9 +31868,6 @@ msgstr ""
 msgid "Missing credentials"
 msgstr ""
 
-msgid "Missing monitoring instance id"
-msgstr ""
-
 msgid "Modal"
 msgstr ""
 
@@ -33383,13 +33386,7 @@ msgstr ""
 msgid "No Assigned Tags"
 msgstr ""
 
-msgid "No Associations defined"
-msgstr ""
-
 msgid "No Attribute/Value Pairs found."
-msgstr ""
-
-msgid "No Attributes defined"
 msgstr ""
 
 msgid "No Automate Domain were selected to be marked as %{action}"
@@ -33521,9 +33518,6 @@ msgid "No Infrastructure Provider that supports VM provisioning added"
 msgstr ""
 
 msgid "No Items found."
-msgstr ""
-
-msgid "No Methods defined"
 msgstr ""
 
 msgid "No My Company Tags are assigned"
@@ -33679,6 +33673,9 @@ msgid "No VMs match the selection criteria"
 msgstr ""
 
 msgid "No Value Found"
+msgstr ""
+
+msgid "No Virtual Machine defined in template"
 msgstr ""
 
 msgid "No Visibility Expression defined, this button will be always visible"
@@ -49163,6 +49160,9 @@ msgstr ""
 msgid "Unattended GUI"
 msgstr ""
 
+msgid "Unauthorized"
+msgstr ""
+
 msgid "Unauthorized object or action"
 msgstr ""
 
@@ -49281,6 +49281,9 @@ msgid "Unnamed Section"
 msgstr ""
 
 msgid "Unnamed Tab"
+msgstr ""
+
+msgid "Unreachable"
 msgstr ""
 
 msgid "Unregistered VMs"
@@ -51904,6 +51907,9 @@ msgid "Virtualization"
 msgstr ""
 
 msgid "Virtualization Type"
+msgstr ""
+
+msgid "Virtualization not enabled"
 msgstr ""
 
 msgid "Visibility"
