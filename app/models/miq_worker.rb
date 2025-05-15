@@ -5,7 +5,6 @@ class MiqWorker < ApplicationRecord
   include SystemdCommon
   include UuidMixin
 
-  after_initialize :set_system_uid
   before_destroy   :error_out_tasks_with_active_queue_message, :log_destroy_of_worker_messages
 
   belongs_to :miq_server
@@ -310,9 +309,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.start_worker(*params)
-    w = containerized_worker? ? init_worker_object(*params) : create_worker_record(*params)
-    w.start
-    w
+    create_worker_record(*params).tap(&:start)
   end
 
   cache_with_timeout(:my_worker) { server_scope.find_by(:guid => my_guid) }
@@ -353,6 +350,7 @@ class MiqWorker < ApplicationRecord
 
   def start_runner_via_container
     create_container_objects
+    nil # We don't know the pod name/system_uid until after it is started
   end
 
   def self.build_command_line(guid, ems_id = nil)
@@ -396,8 +394,8 @@ class MiqWorker < ApplicationRecord
   end
 
   def start
-    self.pid = start_runner
-    save if !containerized_worker? && !systemd_worker?
+    self.system_uid = start_runner
+    save!
 
     msg = "Worker started: ID [#{id}], PID [#{pid}], GUID [#{guid}]"
     MiqEvent.raise_evm_event_queue(miq_server || MiqServer.my_server, "evm_worker_start", :event_details => msg, :type => self.class.name)
@@ -501,10 +499,6 @@ class MiqWorker < ApplicationRecord
       _log.warn("Message id: [#{m.id}] Setting state to 'error'")
       m.delivered_in_error('Clean Active Messages')
     end
-  end
-
-  private def set_system_uid
-    self.system_uid = unit_name if systemd_worker?
   end
 
   private def error_out_tasks_with_active_queue_message
