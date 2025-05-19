@@ -1517,6 +1517,9 @@ en:
       ManageIQ::Providers::Awx::AutomationManager::ConfigurationWorkflow:                 Workflow Template (AWX)
       ManageIQ::Providers::Awx::AutomationManager::Playbook:                              Playbook (AWX)
       ManageIQ::Providers::Awx::AutomationManager::Job:                                   Job (AWX)
+      ManageIQ::Providers::TerraformEnterprise::AutomationManager:                        AutomationManager (Terraform Enterprise)
+      ManageIQ::Providers::TerraformEnterprise::AutomationManager::ConfigurationScript:   Workspace (Terraform Enterprise)
+      ManageIQ::Providers::TerraformEnterprise::AutomationManager::OrchestrationStack:    Run (Terraform Enterprise)
       ManageIQ::Providers::Foreman::ConfigurationManager:                                 Configuration Manager (Foreman)
       ManageIQ::Providers::ConfigurationManager:                                          Configuration Manager
       ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem:             Configured System
