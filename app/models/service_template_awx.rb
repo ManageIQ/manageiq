@@ -1,5 +1,6 @@
 class ServiceTemplateAwx < ServiceTemplate
   include ServiceConfigurationMixin
+  include ServiceTemplateAutomationMixin
 
   before_update :remove_invalid_resource
 
