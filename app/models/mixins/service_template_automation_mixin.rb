@@ -10,4 +10,6 @@ module ServiceTemplateAutomationMixin
       @automation_manager_klass ||= "ManageIQ::Providers::#{name.sub("ServiceTemplate", "")}::AutomationManager".constantize
     end
   end
+
+  delegate :available_managers, :to => :class
 end
