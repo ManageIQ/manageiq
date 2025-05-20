@@ -171,7 +171,7 @@ class TestSecurityHelper
       .lines
       .map { |l| JSON.parse(l) }
       .group_by { |h| h["value"] }
-      .transform_keys { |k| "- #{k}\n" }
+      .transform_keys { |k| "  - #{k}\n" }
       .transform_values do |values|
         values = values.map do |h|
           [
@@ -187,7 +187,7 @@ class TestSecurityHelper
         .sort_by { |v| [YARN_AUDIT_SEVERITY_SORT.index(v[1]) || Float::MAX, v[2]] } # Sort by severity, then by the GHSA number, for consistency
         .tableize(:header => false)
         .lines
-        .map { |l| l.sub(/^ /, "# ") }
+        .map { |l| l.sub(/^ /, "  # ") }
       end
       .flatten(2)
 
