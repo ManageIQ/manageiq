@@ -59,3 +59,15 @@ jobs:
         title: Update English Translations
         body: Update the English Translations in the manageiq.po and manageiq.pot files.
         token: ${{ secrets.PR_TOKEN }}
+  on_failure:
+    needs: locale_update_all
+    if: always() && github.repository_owner == 'ManageIQ' && needs.locale_update_all.result != 'success'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Notify on failure
+      uses: slackapi/slack-github-action@v2
+      with:
+        webhook: ${{ secrets.GHA_STATUS_SLACK_WEBHOOK_URL }}
+        webhook-type: incoming-webhook
+        payload: |
+          text: ":red_circle: *GitHub Actions workflow ${{ needs.locale_update_all.result }}*\n${{ github.workflow_ref }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
