@@ -383,13 +383,18 @@ msgid_plural "%{amount} %{objects} Being Tagged"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "%{amount} Ansible Tower Job Being Tagged"
-msgid_plural "%{amount} Ansible Tower Jobs Being Tagged"
+msgid "%{amount} Automation Job Being Tagged"
+msgid_plural "%{amount} Automation Jobs Being Tagged"
 msgstr[0] ""
 msgstr[1] ""
 
 msgid "%{amount} Automation Manager (Ansible Tower) Being Tagged"
 msgid_plural "%{amount} Automation Managers (Ansible Tower) Being Tagged"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%{amount} Automation Template Being Tagged"
+msgid_plural "%{amount} Automation Templates Being Tagged"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -640,11 +645,6 @@ msgstr[1] ""
 
 msgid "%{amount} Switch Being Tagged"
 msgid_plural "%{amount} Switches Being Tagged"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "%{amount} Template (Ansible Tower) Being Tagged"
-msgid_plural "%{amount} Templates (Ansible Tower) Being Tagged"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -1115,6 +1115,9 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "%{object_types} under %{datastore_or_provider} \"%{provider_or_datastore_name}\""
+msgstr ""
+
+msgid "%{product_name} API Group Not found"
 msgstr ""
 
 msgid "%{product_name} HTML5 Remote Console"
@@ -3718,7 +3721,7 @@ msgstr ""
 msgid "All Alerts"
 msgstr ""
 
-msgid "All Ansible Tower Configured Systems"
+msgid "All Automation Configured Systems"
 msgstr ""
 
 msgid "All Catalog Items"
@@ -4188,9 +4191,6 @@ msgstr ""
 msgid "Ansible Tower Configured System"
 msgstr ""
 
-msgid "Ansible Tower Configured Systems"
-msgstr ""
-
 msgid "Ansible Tower Job"
 msgstr ""
 
@@ -4409,7 +4409,7 @@ msgstr ""
 msgid "Are you sure you want to delete the following Ansible Tower Provider?"
 msgstr ""
 
-msgid "Are you sure you want to delete the following Ansible Tower Providers?"
+msgid "Are you sure you want to delete the following Automation Providers?"
 msgstr ""
 
 msgid "Are you sure you want to delete the following Button Group?"
@@ -5356,6 +5356,9 @@ msgstr ""
 msgid "Automation"
 msgstr ""
 
+msgid "Automation Configured Systems"
+msgstr ""
+
 msgid "Automation Engine"
 msgstr ""
 
@@ -5367,9 +5370,16 @@ msgid_plural "Automation Fields"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Automation Job"
+msgstr ""
+
+msgid "Automation Jobs"
+msgstr ""
+
 msgid "Automation Manager"
 msgstr ""
 
+#, fuzzy
 msgid "Automation Manager (AWX)"
 msgid_plural "Automation Managers (AWX)"
 msgstr[0] ""
@@ -5388,6 +5398,9 @@ msgid "Automation Manager Repositories Refresh"
 msgstr ""
 
 msgid "Automation Managers"
+msgstr ""
+
+msgid "Automation Managers (AWX)"
 msgstr ""
 
 msgid "Automation Managers (Ansible Tower)"
@@ -5419,6 +5432,12 @@ msgid "Automation log downloaded"
 msgstr ""
 
 msgid "Automation simulation has been run"
+msgstr ""
+
+msgid "AutomationManager (Terraform Enterprise)"
+msgstr ""
+
+msgid "AutomationManagers (Terraform Enterprise)"
 msgstr ""
 
 msgid "Automations Tasks"
@@ -6041,6 +6060,9 @@ msgid "Box %{box_label} / %{error_message}"
 msgstr ""
 
 msgid "Box %{box_label} must have at least one Element"
+msgstr ""
+
+msgid "Branch"
 msgstr ""
 
 msgid "Branch/Tag"
@@ -14721,9 +14743,6 @@ msgstr ""
 msgid "Delete Ansible Tower Provider"
 msgstr ""
 
-msgid "Delete Ansible Tower Providers"
-msgstr ""
-
 msgid "Delete Automate Class"
 msgstr ""
 
@@ -14737,6 +14756,9 @@ msgid "Delete Automate Method"
 msgstr ""
 
 msgid "Delete Automate Namespace"
+msgstr ""
+
+msgid "Delete Automation Providers"
 msgstr ""
 
 msgid "Delete Backing"
@@ -18184,13 +18206,13 @@ msgstr ""
 msgid "Edit Tags for the selected Ansible Repositories"
 msgstr ""
 
-msgid "Edit Tags for the selected Ansible Tower Providers"
-msgstr ""
-
 msgid "Edit Tags for the selected Automation Manager Credentials"
 msgstr ""
 
 msgid "Edit Tags for the selected Automation Manager Repositories"
+msgstr ""
+
+msgid "Edit Tags for the selected Automation Providers"
 msgstr ""
 
 msgid "Edit Tags for the selected Availability Zones"
@@ -25894,6 +25916,9 @@ msgstr ""
 msgid "Job"
 msgstr ""
 
+msgid "Job (AWX)"
+msgstr ""
+
 msgid "Job Template"
 msgstr ""
 
@@ -25902,14 +25927,23 @@ msgid_plural "Job Templates (%{provider_description})"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Job Template (AWX)"
+msgstr ""
+
 #, fuzzy
 msgid "Job Template (Ansible Tower)"
+msgstr ""
+
+msgid "Job Templates (AWX)"
 msgstr ""
 
 msgid "Job Templates (Ansible Tower)"
 msgstr ""
 
 msgid "Jobs"
+msgstr ""
+
+msgid "Jobs (AWX)"
 msgstr ""
 
 msgid "Job|Agent message"
@@ -31862,9 +31896,6 @@ msgstr ""
 msgid "Missing credentials"
 msgstr ""
 
-msgid "Missing monitoring instance id"
-msgstr ""
-
 msgid "Modal"
 msgstr ""
 
@@ -33383,13 +33414,7 @@ msgstr ""
 msgid "No Assigned Tags"
 msgstr ""
 
-msgid "No Associations defined"
-msgstr ""
-
 msgid "No Attribute/Value Pairs found."
-msgstr ""
-
-msgid "No Attributes defined"
 msgstr ""
 
 msgid "No Automate Domain were selected to be marked as %{action}"
@@ -33521,9 +33546,6 @@ msgid "No Infrastructure Provider that supports VM provisioning added"
 msgstr ""
 
 msgid "No Items found."
-msgstr ""
-
-msgid "No Methods defined"
 msgstr ""
 
 msgid "No My Company Tags are assigned"
@@ -33679,6 +33701,9 @@ msgid "No VMs match the selection criteria"
 msgstr ""
 
 msgid "No Value Found"
+msgstr ""
+
+msgid "No Virtual Machine defined in template"
 msgstr ""
 
 msgid "No Visibility Expression defined, this button will be always visible"
@@ -37106,6 +37131,9 @@ msgid_plural "Playbooks (%{provider_description})"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Playbook (AWX)"
+msgstr ""
+
 #, fuzzy
 msgid "Playbook (Ansible Tower)"
 msgstr ""
@@ -37119,6 +37147,9 @@ msgid "Playbook Catalog Item"
 msgstr ""
 
 msgid "Playbooks"
+msgstr ""
+
+msgid "Playbooks (AWX)"
 msgstr ""
 
 msgid "Playbooks (Ansible Tower)"
@@ -41781,6 +41812,14 @@ msgstr ""
 msgid "Run %{interval} starting on %{start_time}"
 msgstr ""
 
+msgid "Run (%{provider_description})"
+msgid_plural "Runs (%{provider_description})"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Run (Terraform Enterprise)"
+msgstr ""
+
 msgid "Run Ansible Playbook"
 msgstr ""
 
@@ -41838,6 +41877,9 @@ msgid "Running VMs"
 msgstr ""
 
 msgid "Running system services of %{name}"
+msgstr ""
+
+msgid "Runs (Terraform Enterprise)"
 msgstr ""
 
 msgid "Runtime Version"
@@ -47250,9 +47292,6 @@ msgstr ""
 msgid "Template %{subject} has been published."
 msgstr ""
 
-msgid "Template (Ansible Tower)"
-msgstr ""
-
 msgid "Template (Kubevirt)"
 msgid_plural "Templates (Kubevirt)"
 msgstr[0] ""
@@ -47302,9 +47341,6 @@ msgid "Templates & Images"
 msgstr ""
 
 msgid "Templates & Images Accordion"
-msgstr ""
-
-msgid "Templates (Ansible Tower)"
 msgstr ""
 
 msgid "Templates Accordion"
@@ -47463,6 +47499,9 @@ msgid "Terminate"
 msgstr ""
 
 msgid "Terminate the Guest OS on Instances"
+msgstr ""
+
+msgid "Terraform Enterprise Provider"
 msgstr ""
 
 msgid "Terraform Template"
@@ -49163,6 +49202,9 @@ msgstr ""
 msgid "Unattended GUI"
 msgstr ""
 
+msgid "Unauthorized"
+msgstr ""
+
 msgid "Unauthorized object or action"
 msgstr ""
 
@@ -49281,6 +49323,9 @@ msgid "Unnamed Section"
 msgstr ""
 
 msgid "Unnamed Tab"
+msgstr ""
+
+msgid "Unreachable"
 msgstr ""
 
 msgid "Unregistered VMs"
@@ -51906,6 +51951,9 @@ msgstr ""
 msgid "Virtualization Type"
 msgstr ""
 
+msgid "Virtualization not enabled"
+msgstr ""
+
 msgid "Visibility"
 msgstr ""
 
@@ -53585,8 +53633,14 @@ msgid_plural "Workflow Templates (%{provider_description})"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Workflow Template (AWX)"
+msgstr ""
+
 #, fuzzy
 msgid "Workflow Template (Ansible Tower)"
+msgstr ""
+
+msgid "Workflow Templates (AWX)"
 msgstr ""
 
 msgid "Workflow Templates (Ansible Tower)"
@@ -53611,6 +53665,17 @@ msgid "Workloads"
 msgstr ""
 
 msgid "Workloads Views"
+msgstr ""
+
+msgid "Workspace (%{provider_description})"
+msgid_plural "Workspaces (%{provider_description})"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Workspace (Terraform Enterprise)"
+msgstr ""
+
+msgid "Workspaces (Terraform Enterprise)"
 msgstr ""
 
 msgid "Wrap this expression element with a NOT"
