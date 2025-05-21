@@ -899,7 +899,7 @@ GEM
       optimist (~> 3.0)
       pg
       pg-logical_replication
-    manageiq-loggers (1.2.0)
+    manageiq-loggers (1.2.1)
       activesupport (>= 5.0)
       manageiq-password (< 2)
     manageiq-messaging (1.5.0)
@@ -1426,7 +1426,7 @@ DEPENDENCIES
   manageiq-content!
   manageiq-decorators!
   manageiq-gems-pending (> 0)!
-  manageiq-loggers (~> 1.2)
+  manageiq-loggers (~> 1.2, >= 1.2.1)
   manageiq-messaging (~> 1.5)
   manageiq-password (~> 1.0)
   manageiq-postgres_ha_admin (~> 3.4)
