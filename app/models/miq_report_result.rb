@@ -348,15 +348,6 @@ class MiqReportResult < ApplicationRecord
     result_type.to_sym == :html ? html_rows : report_results
   end
 
-  def self.counts_by_userid
-    where("userid NOT LIKE 'widget%'").select("userid, COUNT(id) as count").group("userid")
-      .collect { |rr| {:userid => rr.userid, :count => rr.count.to_i} }
-  end
-
-  def self.orphaned_counts_by_userid
-    counts_by_userid.reject { |h| User.exists?(:userid => h[:userid]) }
-  end
-
   def self.delete_by_userid(userids)
     userids = Array.wrap(userids.presence)
     _log.info("Queuing deletion of report results for the following user ids: #{userids.inspect}")

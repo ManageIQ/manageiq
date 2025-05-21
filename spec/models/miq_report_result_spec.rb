@@ -247,21 +247,6 @@ RSpec.describe MiqReportResult do
     end
   end
 
-  describe ".counts_by_userid" do
-    it "fetches counts" do
-      u1 = FactoryBot.create(:user)
-      u2 = FactoryBot.create(:user)
-      FactoryBot.create(:miq_report_result, :userid => u1.userid)
-      FactoryBot.create(:miq_report_result, :userid => u1.userid)
-      FactoryBot.create(:miq_report_result, :userid => u2.userid)
-
-      expect(MiqReportResult.counts_by_userid).to match_array([
-        {:userid => u1.userid, :count => 2},
-        {:userid => u2.userid, :count => 1}
-      ])
-    end
-  end
-
   describe "#to_pdf" do
     let(:user)   { FactoryBot.create(:user) }
     let(:report) { FactoryBot.create(:miq_report, :title => report_title) }
