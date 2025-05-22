@@ -25,6 +25,7 @@ module CustomAttributeMixin
       define_method(getter) do
         miq_custom_get(custom_str)
       end
+      # NOTE: the other custom attributes use arel, and the getter uses has_attribute?()
       virtual_column getter, :type => :string  # uses not set since miq_custom_get re-queries
 
       define_method(setter) do |value|
@@ -58,7 +59,7 @@ module CustomAttributeMixin
       name_val, section      = without_prefix.split(SECTION_SEPARATOR)
       ca_arel                = custom_attribute_arel(name_val, section)
 
-      virtual_column(ca_sym, :type => :string, :uses => :custom_attributes, :arel => ca_arel)
+      virtual_attribute ca_sym, :string, :uses => :custom_attributes, :arel => ca_arel
 
       define_method(ca_sym) do
         return self[custom_attribute] if has_attribute?(custom_attribute)
