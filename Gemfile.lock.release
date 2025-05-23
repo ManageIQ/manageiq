@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/ManageIQ/amazon_ssa_support.git
-  revision: c8e93d7d7036ccbf1559c46f4b26d554189c6307
+  revision: 8f77cec250b66834d3eab81cdd3c335df8ebd43a
   branch: spassky
   specs:
     amazon_ssa_support (0.1.0)
@@ -13,7 +13,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-api
-  revision: 521a355416834b74e9e142ca400857d353d8c3cc
+  revision: af79b3643cf4c416db51236235eb59a17bf4ce47
   branch: spassky
   specs:
     manageiq-api (4.4.0.pre.pre)
@@ -22,7 +22,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-automation_engine
-  revision: 6671856011b44b9641e2baaee9ae7ad184735365
+  revision: bb4aba54b5f03b899a6484ef2840c9f5c0dba86f
   branch: spassky
   specs:
     manageiq-automation_engine (0.1.0)
@@ -31,7 +31,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-consumption
-  revision: 10666477f3cd5e4e36f49662fc30850ec6abcf63
+  revision: 4bb29b33677caafbe602f5eec4383ad47e2f874f
   branch: spassky
   specs:
     manageiq-consumption (0.0.1)
@@ -40,7 +40,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-content
-  revision: 91b687ffd0d071b5ce8547b0c0b310d500f1833c
+  revision: 709d4b926d050ac834e47129c46a26ba86b119f8
   branch: spassky
   specs:
     manageiq-content (0.1.0)
@@ -48,14 +48,14 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-decorators
-  revision: a5fc456319df46ced361dd24c61a5bdae6bbcb4c
+  revision: 63a57d44ebca69135610e51fcff7304f117b76e9
   branch: spassky
   specs:
     manageiq-decorators (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-gems-pending.git
-  revision: df8339568bbaf337c80b35dea87cd1c2f93ef1e7
+  revision: 703b4a56f7b57ac6ea83e026c5775bd90a476305
   branch: spassky
   specs:
     manageiq-gems-pending (0.1.0)
@@ -75,7 +75,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-amazon
-  revision: 8cb4f8e7a8a00977dd11dbfab132accf39af4d50
+  revision: c6b9753db6509de754443dce5740873c4536395e
   branch: spassky
   specs:
     manageiq-providers-amazon (0.1.0)
@@ -94,7 +94,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ansible_tower
-  revision: 449d2ea22f084c494af52e0d1d41ebc77833b252
+  revision: 1b46c1fa78cad838224912f4808ddf40e7a7a0c8
   branch: spassky
   specs:
     manageiq-providers-ansible_tower (0.1.0)
@@ -102,7 +102,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-autosde
-  revision: 7bd7e6950a4176731bdb31d5bdcbab7d324d7ea5
+  revision: a97933020b5e4e8b15029825479146a801c01e69
   branch: spassky
   specs:
     manageiq-providers-autosde (0.1.0)
@@ -111,7 +111,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-awx
-  revision: c4fdcb9f387d2a32b30d05d04916b42e57037f23
+  revision: c2ca7f9f24ec90cbed2ccb87922709c36b7d7250
   branch: spassky
   specs:
     manageiq-providers-awx (0.1.0)
@@ -119,7 +119,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure
-  revision: 6a7a377dc541fe39e6422bb61880a55c9d6efe7b
+  revision: 4e92d4b4ad5d0692922899d4d0a8030c3b44d58d
   branch: spassky
   specs:
     manageiq-providers-azure (0.1.0)
@@ -127,7 +127,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure_stack
-  revision: d46d1724e136d127577c8de653df1d4017cbcfe3
+  revision: 9041b32b076d28c193144358bee987bedac83018
   branch: spassky
   specs:
     manageiq-providers-azure_stack (0.1.0)
@@ -138,7 +138,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-cisco_intersight
-  revision: 39e282aeb5b02fd5264821240ba23ea1667e6f0a
+  revision: bf445e56aa54d78ee95616be6e0eb448bd9f3ea3
   branch: spassky
   specs:
     manageiq-providers-cisco_intersight (0.1.0)
@@ -146,7 +146,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-embedded_terraform
-  revision: 8fece4c5cfccf59d622b875b00a5cb5176b1c7f2
+  revision: 1ff8ca820e56cb7b6291326059570284ccd7fe7c
   branch: spassky
   specs:
     manageiq-providers-embedded_terraform (0.1.0)
@@ -154,7 +154,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-foreman
-  revision: e86fb50ccb5b7bde2e71f29231ecefa592fbf43b
+  revision: 1c6727087b642be61ced333561adc6d76d7b2bb0
   branch: spassky
   specs:
     manageiq-providers-foreman (0.1.0)
@@ -162,23 +162,23 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-google
-  revision: f9d85da8ebff6c31da5f0b0ee19d44c3bc402456
+  revision: 7ff7132282d74a6dc6b6ffbd4b55ea9b7065b1e2
   branch: spassky
   specs:
     manageiq-providers-google (0.1.0)
-      fog-google (~> 1.23)
+      fog-google (~> 1.25)
       rbnacl (>= 3.2, < 5.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_cic
-  revision: fdc6932e8d26f791d2e361362ead19e834a161e3
+  revision: 2679a0727a84b7a555133eddc59ce65ef1fc6778
   branch: spassky
   specs:
     manageiq-providers-ibm_cic (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_cloud
-  revision: cce1bf2fb0c006271d4f8fb044622e032614d884
+  revision: 3fc38036d5408b77d8b3734bc0af32dc2f00f874
   branch: spassky
   specs:
     manageiq-providers-ibm_cloud (0.1.0)
@@ -196,7 +196,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_power_hmc
-  revision: e38e9080c7e3e17e17779f25ecb065be02df5706
+  revision: f10bf88bb9effe1add34e7650ab64659eaf84c45
   branch: spassky
   specs:
     manageiq-providers-ibm_power_hmc (0.1.0)
@@ -204,21 +204,21 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_power_vc
-  revision: 10c3aedd5fdffa561ba0ca05cc125ef6633c4bf0
+  revision: 4529333d783b6ab966912d833d3add5b049041a0
   branch: spassky
   specs:
     manageiq-providers-ibm_power_vc (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_terraform
-  revision: e6064c67547aa0afcc59bd239d0534171c0f5fab
+  revision: c120eb7733560937f15497d64730e9e5c1a48ecd
   branch: spassky
   specs:
     manageiq-providers-ibm_terraform (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubernetes
-  revision: b0cf96ba88f52ec1f4afbef6fa3d2554caa7182a
+  revision: ab7c24213a6a002001d53e57ef8c7f19cacd371a
   branch: spassky
   specs:
     manageiq-providers-kubernetes (0.1.0)
@@ -229,16 +229,16 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubevirt
-  revision: a0466966892703127f393053f076b01b1730da23
+  revision: e6da5387412417aa93aae2e5496794a4ba5b84fa
   branch: spassky
   specs:
     manageiq-providers-kubevirt (0.1.0)
-      fog-kubevirt (~> 1.4)
+      kubevirt (~> 0.1.0)
       manageiq-providers-kubernetes (~> 0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-lenovo
-  revision: 67af98e2cc032a5cbd9ef47eb5e627028c92d7c6
+  revision: bd463cdb39b2248c7b051d88529b2bb62c28b54c
   branch: spassky
   specs:
     manageiq-providers-lenovo (0.2.0)
@@ -246,14 +246,14 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nsxt
-  revision: 911a2b06c902d897fc48586f6b055e8f30848db8
+  revision: 764dc135d8bee60999f71cb59559691cded70d79
   branch: spassky
   specs:
     manageiq-providers-nsxt (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nuage
-  revision: 295f8201b5308c08cb7a88cdd4f74dbe6f466482
+  revision: 55bd91fdfec12d9334a281a30c63408b60baa45e
   branch: spassky
   specs:
     manageiq-providers-nuage (0.1.0)
@@ -261,7 +261,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openshift
-  revision: 3d6fd8fdd2ace382a1dd5373bc725ffba36890f6
+  revision: c48ad06267fc55693510cc018fa97d73b744d929
   branch: spassky
   specs:
     manageiq-providers-openshift (0.1.0)
@@ -269,7 +269,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openstack
-  revision: 05ee4ad94fd7b4f23820b04a36b5742c40791e03
+  revision: e59bcb23ed204ab6afaa72d5503abcba9cc364f5
   branch: spassky
   specs:
     manageiq-providers-openstack (0.1.0)
@@ -282,7 +282,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-oracle_cloud
-  revision: d245fa67548a5c2cfb17cece83ec049673dea397
+  revision: 3063d0b4f2a1fd27e2dbb3ccba2c1dbc871a0237
   branch: spassky
   specs:
     manageiq-providers-oracle_cloud (0.1.0)
@@ -290,7 +290,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ovirt
-  revision: 6829018075157399f21571a298c329b2844bdee4
+  revision: 1f5dd5a790435c7f0efd8503fda4778ff2722cea
   branch: spassky
   specs:
     manageiq-providers-ovirt (0.1.0)
@@ -299,7 +299,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-red_hat_virtualization
-  revision: 19171828feb615134747bd55563629a3cc0f9c31
+  revision: f449e1865315ec142241c97927921c223e4452c6
   branch: spassky
   specs:
     manageiq-providers-red_hat_virtualization (0.1.0)
@@ -307,15 +307,23 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-redfish
-  revision: 0a0b5df1fdabed87ea8362bd8cc423dfc86dc0ae
+  revision: 85cd9f8cae3ef31e8a7233c7b2112ce37a00c320
   branch: spassky
   specs:
     manageiq-providers-redfish (0.1.0)
       redfish_client (~> 0.5.1)
 
 GIT
+  remote: https://github.com/ManageIQ/manageiq-providers-terraform_enterprise
+  revision: 00b05810e2ee17f8df9635f864839cccbcfb883f
+  branch: spassky
+  specs:
+    manageiq-providers-terraform_enterprise (0.1.0)
+      faraday (> 1.0, < 3.0)
+
+GIT
   remote: https://github.com/ManageIQ/manageiq-providers-vmware
-  revision: ed619cfbde183aa54d417bf79b465e36f6ae140e
+  revision: b0e2e595ff5bd305ea97f560fe4041124006758c
   branch: spassky
   specs:
     manageiq-providers-vmware (0.1.0)
@@ -327,15 +335,15 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-workflows
-  revision: f194fabac7f5193dc14c7d9db22693e0596f230c
+  revision: b7bd3f22c41a7018fb3eff2626e7bd34a3cb6b99
   branch: spassky
   specs:
     manageiq-providers-workflows (0.1.0)
-      floe (~> 0.15.1)
+      floe (~> 0.16.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-schema
-  revision: d7b731eb2b792feb8ec39ef0c8bbccb882803247
+  revision: 40dbb1f4a7f4fcfbb7f2162bb7858db5de499e9b
   branch: spassky
   specs:
     manageiq-schema (0.1.0)
@@ -349,7 +357,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-ui-classic
-  revision: 19601950b64671ed8bb7d7404ba326a419e07b2d
+  revision: de67f9d9f6a602191ae7d7e2cff2a8a40a2b6952
   branch: spassky
   specs:
     manageiq-ui-classic (0.1.0)
@@ -447,13 +455,12 @@ GEM
       activerecord (>= 7.0.8, < 8.0)
       activesupport (>= 7.0.8, < 8.0)
       pg
-    activerecord-session_store (2.1.0)
-      actionpack (>= 6.1)
-      activerecord (>= 6.1)
+    activerecord-session_store (2.2.0)
+      actionpack (>= 7.0)
+      activerecord (>= 7.0)
       cgi (>= 0.3.6)
-      multi_json (~> 1.11, >= 1.11.2)
       rack (>= 2.0.8, < 4)
-      railties (>= 6.1)
+      railties (>= 7.0)
     activerecord-virtual_attributes (7.1.0)
       activerecord (~> 7.0, >= 7.0.8.7)
       concurrent-ruby (< 1.3.5)
@@ -485,7 +492,7 @@ GEM
       gyoku (>= 0.4.0)
       nokogiri
     american_date (1.3.0)
-    amq-protocol (2.3.3)
+    amq-protocol (2.3.4)
     ancestry (4.1.0)
       activerecord (>= 5.2.6)
     ansible_tower_client (0.21.3)
@@ -497,50 +504,51 @@ GEM
       json (>= 1.2.1)
       oauth
       rest-client (>= 1.6.5, < 3.0.0)
-    ast (2.4.2)
+    ast (2.4.3)
     autosde_openapi_client (3.2.14)
       typhoeus (~> 1.0, >= 1.0.1)
     awesome_spawn (1.6.0)
-    aws-eventstream (1.3.1)
-    aws-partitions (1.1055.0)
-    aws-sdk-cloudformation (1.127.0)
+    aws-eventstream (1.3.2)
+    aws-partitions (1.1106.0)
+    aws-sdk-cloudformation (1.131.0)
       aws-sdk-core (~> 3, >= 3.216.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-cloudwatch (1.111.0)
+    aws-sdk-cloudwatch (1.115.0)
       aws-sdk-core (~> 3, >= 3.216.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-core (3.219.0)
+    aws-sdk-core (3.224.0)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
       aws-sigv4 (~> 1.9)
       base64
       jmespath (~> 1, >= 1.6.1)
-    aws-sdk-ec2 (1.507.0)
+      logger
+    aws-sdk-ec2 (1.526.0)
       aws-sdk-core (~> 3, >= 3.216.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-elasticloadbalancing (1.71.0)
+    aws-sdk-elasticloadbalancing (1.74.0)
       aws-sdk-core (~> 3, >= 3.216.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-iam (1.118.0)
+    aws-sdk-iam (1.122.0)
       aws-sdk-core (~> 3, >= 3.216.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-kms (1.99.0)
+    aws-sdk-kms (1.101.0)
       aws-sdk-core (~> 3, >= 3.216.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-rds (1.271.0)
+    aws-sdk-rds (1.277.0)
       aws-sdk-core (~> 3, >= 3.216.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-s3 (1.182.0)
+    aws-sdk-s3 (1.186.1)
       aws-sdk-core (~> 3, >= 3.216.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
-    aws-sdk-servicecatalog (1.110.0)
+    aws-sdk-servicecatalog (1.114.0)
       aws-sdk-core (~> 3, >= 3.216.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-sns (1.96.0)
+    aws-sdk-sns (1.99.0)
       aws-sdk-core (~> 3, >= 3.216.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-sqs (1.93.0)
+    aws-sdk-sqs (1.95.0)
       aws-sdk-core (~> 3, >= 3.216.0)
       aws-sigv4 (~> 1.5)
     aws-sigv4 (1.11.0)
@@ -564,7 +572,7 @@ GEM
     benchmark (0.4.0)
     bigdecimal (3.1.9)
     binary_struct (2.1.0)
-    bootsnap (1.18.4)
+    bootsnap (1.18.6)
       msgpack (~> 1.2)
     brakeman (6.2.2)
       racc
@@ -574,7 +582,7 @@ GEM
       thor (~> 1.0)
     bunny (2.1.0)
       amq-protocol (>= 2.0.0)
-    byebug (11.1.3)
+    byebug (12.0.0)
     capybara (2.5.0)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
@@ -587,12 +595,12 @@ GEM
     config (5.5.2)
       deep_merge (~> 1.2, >= 1.2.1)
       ostruct
-    connection_pool (2.5.0)
+    connection_pool (2.5.3)
     crack (1.0.0)
       bigdecimal
       rexml
     crass (1.0.6)
-    csv (3.3.2)
+    csv (3.3.4)
     dalli (3.2.8)
     date (3.4.1)
     db-query-matchers (0.13.0)
@@ -604,15 +612,16 @@ GEM
     deep_merge (1.2.2)
     default_value_for (4.1.1)
       activerecord (>= 6.1, < 8.1)
-    diff-lcs (1.6.0)
+    diff-lcs (1.6.2)
     docile (1.4.1)
     docker-api (1.33.6)
       excon (>= 0.38.0)
       json
     domain_name (0.6.20240107)
-    drb (2.2.1)
-    ed25519 (1.3.0)
+    drb (2.2.3)
+    ed25519 (1.4.0)
     elif (0.1.0)
+    erb (5.0.1)
     erubi (1.13.1)
     escape_utils (1.3.0)
     et-orbi (1.2.11)
@@ -661,21 +670,22 @@ GEM
       rake
     ffi-vix_disk_lib (1.4.0)
       ffi
-    floe (0.15.1)
+    floe (0.16.0)
       awesome_spawn (~> 1.6)
       io-wait
+      json (~> 2.10)
       jsonpath (~> 1.1)
       kubeclient (~> 4.7)
       optimist (~> 3.0)
       parslet (~> 2.0)
-    fog-core (2.4.0)
+    fog-core (2.5.0)
       builder
       excon (~> 0.71)
       formatador (>= 0.2, < 2.0)
       mime-types
-    fog-google (1.24.1)
+    fog-google (1.25.0)
       addressable (>= 2.7.0)
-      fog-core (< 2.5)
+      fog-core (~> 2.5)
       fog-json (~> 1.2)
       fog-xml (~> 0.1.0)
       google-apis-compute_v1 (~> 0.53)
@@ -689,10 +699,7 @@ GEM
     fog-json (1.2.0)
       fog-core
       multi_json (~> 1.10)
-    fog-kubevirt (1.4.0)
-      fog-core (~> 2.1)
-      kubeclient (>= 4.9.3, < 5.0.0)
-    fog-openstack (1.1.4)
+    fog-openstack (1.1.5)
       fog-core (~> 2.1)
       fog-json (>= 1.0)
     fog-vcloud-director (0.3.1)
@@ -725,9 +732,9 @@ GEM
       rails (>= 3.2.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-apis-compute_v1 (0.114.0)
+    google-apis-compute_v1 (0.121.0)
       google-apis-core (>= 0.15.0, < 2.a)
-    google-apis-core (0.16.0)
+    google-apis-core (0.18.0)
       addressable (~> 2.5, >= 2.5.1)
       googleauth (~> 1.9)
       httpclient (>= 2.8.3, < 3.a)
@@ -735,22 +742,22 @@ GEM
       mutex_m
       representable (~> 3.0)
       retriable (>= 2.0, < 4.a)
-    google-apis-dns_v1 (0.45.0)
+    google-apis-dns_v1 (0.48.0)
       google-apis-core (>= 0.15.0, < 2.a)
-    google-apis-iamcredentials_v1 (0.22.0)
+    google-apis-iamcredentials_v1 (0.24.0)
       google-apis-core (>= 0.15.0, < 2.a)
-    google-apis-monitoring_v3 (0.73.0)
+    google-apis-monitoring_v3 (0.79.0)
       google-apis-core (>= 0.15.0, < 2.a)
-    google-apis-pubsub_v1 (0.58.0)
+    google-apis-pubsub_v1 (0.62.0)
       google-apis-core (>= 0.15.0, < 2.a)
-    google-apis-sqladmin_v1beta4 (0.77.0)
+    google-apis-sqladmin_v1beta4 (0.85.0)
       google-apis-core (>= 0.15.0, < 2.a)
-    google-apis-storage_v1 (0.49.0)
+    google-apis-storage_v1 (0.51.0)
       google-apis-core (>= 0.15.0, < 2.a)
     google-cloud-env (2.2.1)
       faraday (>= 1.0, < 3.a)
-    google-logging-utils (0.1.0)
-    googleauth (1.13.1)
+    google-logging-utils (0.2.0)
+    googleauth (1.14.0)
       faraday (>= 1.0, < 3.a)
       google-cloud-env (~> 2.2)
       google-logging-utils (~> 0.1)
@@ -765,7 +772,7 @@ GEM
       temple (>= 0.8.2)
       thor
       tilt
-    hashdiff (1.1.2)
+    hashdiff (1.2.0)
     hashie (5.0.0)
     high_voltage (3.0.0)
     highline (2.1.0)
@@ -779,7 +786,7 @@ GEM
     http-cookie (1.0.8)
       domain_name (~> 0.5)
     http-form_data (2.3.0)
-    httparty (0.22.0)
+    httparty (0.23.1)
       csv
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
@@ -836,7 +843,7 @@ GEM
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
-    json (2.10.2)
+    json (2.12.2)
     json-schema (2.8.1)
       addressable (>= 2.4)
     jsonpath (1.1.5)
@@ -848,7 +855,9 @@ GEM
       jsonpath (~> 1.0)
       recursive-open-struct (~> 1.1, >= 1.1.1)
       rest-client (~> 2.0)
-    language_server-protocol (3.17.0.4)
+    kubevirt (0.1.0)
+      typhoeus (~> 1.0, >= 1.0.1)
+    language_server-protocol (3.17.0.5)
     linux_admin (4.0.0)
       awesome_spawn (~> 1.6)
       bcrypt_pbkdf (>= 1.0, < 2.0)
@@ -862,12 +871,12 @@ GEM
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    llhttp-ffi (0.5.0)
+    llhttp-ffi (0.5.1)
       ffi-compiler (~> 1.0)
       rake (~> 13.0)
     locale (2.1.4)
-    logger (1.6.6)
-    loofah (2.24.0)
+    logger (1.7.0)
+    loofah (2.24.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     macaddr (1.7.2)
@@ -883,7 +892,7 @@ GEM
       faraday-follow_redirects
       json (~> 2.3)
       query_relation
-    manageiq-appliance_console (10.0.1)
+    manageiq-appliance_console (10.0.2)
       activerecord (>= 6.1.7.6)
       activesupport (>= 6.1.7.6)
       awesome_spawn (~> 1.6)
@@ -913,7 +922,7 @@ GEM
       manageiq-password (< 2)
       pg
       pg-dsn_parser (~> 0.1)
-    manageiq-smartstate (0.11.0)
+    manageiq-smartstate (0.11.1)
       activesupport (>= 7.0.8, < 8.0)
       awesome_spawn (~> 1.5)
       azure-armrest (~> 0.9)
@@ -944,8 +953,8 @@ GEM
     memoist (0.16.2)
     memory_buffer (0.1.0)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.8)
-    minitest (5.25.4)
+    mini_portile2 (2.8.9)
+    minitest (5.25.5)
     monetize (1.13.0)
       money (~> 6.12)
     money (6.13.8)
@@ -969,14 +978,14 @@ GEM
       ms_rest (~> 0.7.6)
     msgpack (1.8.0)
     multi_json (1.15.0)
-    multi_xml (0.7.1)
+    multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
     mutex_m (0.3.0)
     net-ftp (0.1.4)
       net-protocol
       time
-    net-imap (0.5.6)
+    net-imap (0.5.8)
       date
       net-protocol
     net-ldap (0.16.3)
@@ -994,24 +1003,24 @@ GEM
     net-ssh (7.2.3)
     netrc (0.11.0)
     nio4r (2.7.4)
-    nokogiri (1.18.7)
+    nokogiri (1.18.8)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.18.7-aarch64-linux-gnu)
+    nokogiri (1.18.8-aarch64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.18.7-aarch64-linux-musl)
+    nokogiri (1.18.8-aarch64-linux-musl)
       racc (~> 1.4)
-    nokogiri (1.18.7-arm-linux-gnu)
+    nokogiri (1.18.8-arm-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.18.7-arm-linux-musl)
+    nokogiri (1.18.8-arm-linux-musl)
       racc (~> 1.4)
-    nokogiri (1.18.7-arm64-darwin)
+    nokogiri (1.18.8-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.18.7-x86_64-darwin)
+    nokogiri (1.18.8-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.18.7-x86_64-linux-gnu)
+    nokogiri (1.18.8-x86_64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.18.7-x86_64-linux-musl)
+    nokogiri (1.18.8-x86_64-linux-musl)
       racc (~> 1.4)
     nori (2.7.1)
       bigdecimal
@@ -1028,7 +1037,7 @@ GEM
       psych (>= 3.1.0, < 5.0.0)
     openscap (0.4.9)
       ffi (>= 1.0.9)
-    optimist (3.2.0)
+    optimist (3.2.1)
     os (1.1.4)
     ostruct (0.6.1)
     ovirt-engine-sdk (4.6.0)
@@ -1036,10 +1045,10 @@ GEM
     ovirt_metrics (3.2.0)
       activerecord (>= 6.0)
       pg
-    parallel (1.26.3)
-    parallel_tests (4.9.1)
+    parallel (1.27.0)
+    parallel_tests (4.10.1)
       parallel
-    parser (3.3.7.1)
+    parser (3.3.8.0)
       ast (~> 2.4.1)
       racc
     parslet (2.0.0)
@@ -1058,12 +1067,12 @@ GEM
     prime (0.1.3)
       forwardable
       singleton
-    prism (1.3.0)
+    prism (1.4.0)
     prometheus-api-client (0.6.2)
       faraday (>= 0.9, < 2.0.0)
     psych (4.0.6)
       stringio
-    public_suffix (6.0.1)
+    public_suffix (6.0.2)
     puma (6.6.0)
       nio4r (~> 2.0)
     qpid_proton (0.37.0)
@@ -1072,7 +1081,7 @@ GEM
       more_core_extensions
     raabro (1.4.0)
     racc (1.8.1)
-    rack (2.2.13)
+    rack (2.2.16)
     rack-attack (6.5.0)
       rack (>= 1.0, < 3)
     rack-session (1.0.2)
@@ -1096,7 +1105,7 @@ GEM
       activesupport (= 7.1.5.1)
       bundler (>= 1.15.0)
       railties (= 7.1.5.1)
-    rails-dom-testing (2.2.0)
+    rails-dom-testing (2.3.0)
       activesupport (>= 5.0.0)
       minitest
       nokogiri (>= 1.6)
@@ -1130,7 +1139,8 @@ GEM
       ffi (~> 1.15)
       mini_portile2 (~> 2.6)
       rake (> 12)
-    rdoc (6.12.0)
+    rdoc (6.14.0)
+      erb
       psych (>= 4.0.0)
     recursive-open-struct (1.3.1)
       ostruct
@@ -1138,7 +1148,7 @@ GEM
       excon (~> 0.71)
       server_sent_events (~> 0.1)
     regexp_parser (2.10.0)
-    reline (0.6.0)
+    reline (0.6.1)
       io-console (~> 0.5)
     representable (3.2.0)
       declarative (< 0.1.0)
@@ -1162,10 +1172,10 @@ GEM
       rspec-mocks (~> 3.13.0)
     rspec-core (3.13.3)
       rspec-support (~> 3.13.0)
-    rspec-expectations (3.13.3)
+    rspec-expectations (3.13.4)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
-    rspec-mocks (3.13.2)
+    rspec-mocks (3.13.4)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-rails (7.1.1)
@@ -1176,7 +1186,7 @@ GEM
       rspec-expectations (~> 3.13)
       rspec-mocks (~> 3.13)
       rspec-support (~> 3.13)
-    rspec-support (3.13.2)
+    rspec-support (3.13.3)
     rubocop (1.56.3)
       base64 (~> 0.1.1)
       json (~> 2.3)
@@ -1189,8 +1199,9 @@ GEM
       rubocop-ast (>= 1.28.1, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 3.0)
-    rubocop-ast (1.38.1)
-      parser (>= 3.3.1.0)
+    rubocop-ast (1.44.1)
+      parser (>= 3.3.7.2)
+      prism (~> 1.4)
     rubocop-performance (1.23.1)
       rubocop (>= 1.48.1, < 2.0)
       rubocop-ast (>= 1.31.1, < 2.0)
@@ -1199,7 +1210,8 @@ GEM
       rack (>= 1.1)
       rubocop (>= 1.52.0, < 2.0)
       rubocop-ast (>= 1.31.1, < 2.0)
-    ruby-dbus (0.24.0)
+    ruby-dbus (0.25.0)
+      logger
       rexml
     ruby-progressbar (1.7.5)
     ruby2_keywords (0.0.5)
@@ -1228,7 +1240,7 @@ GEM
     securerandom (0.4.1)
     server_sent_events (0.1.3)
     sexp_processor (4.17.3)
-    signet (0.19.0)
+    signet (0.20.0)
       addressable (~> 2.8)
       faraday (>= 0.17.5, < 3.a)
       jwt (>= 1.5, < 3.0)
@@ -1241,9 +1253,9 @@ GEM
     simplecov-html (0.13.1)
     simplecov_json_formatter (0.1.4)
     singleton (0.3.0)
-    snaky_hash (2.0.1)
-      hashie
-      version_gem (~> 1.1, >= 1.1.1)
+    snaky_hash (2.0.3)
+      hashie (>= 0.1.0, < 6)
+      version_gem (>= 1.1.8, < 3)
     snmp (1.2.0)
     socksify (1.7.1)
     sprockets (3.7.5)
@@ -1256,7 +1268,7 @@ GEM
       sprockets (>= 3.0.0)
     sshkey (1.8.0)
     stomp (1.4.10)
-    stringio (3.1.5)
+    stringio (3.1.7)
     surro-gate (1.0.5)
       concurrent-ruby
     sync (0.5.0)
@@ -1298,7 +1310,7 @@ GEM
     uuidtools (2.2.0)
     vcr (6.3.1)
       base64
-    version_gem (1.1.6)
+    version_gem (1.1.8)
     vmware_web_service (3.4.0)
       ffi-vix_disk_lib (~> 1.1)
       handsoap (~> 0.2.5)
@@ -1330,7 +1342,7 @@ GEM
       addressable
       httpi (~> 2.0)
       nokogiri (>= 1.4.2)
-    webmock (3.25.0)
+    webmock (3.25.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
@@ -1355,7 +1367,7 @@ GEM
     xpath (2.1.0)
       nokogiri (~> 1.3)
     yard (0.9.37)
-    zeitwerk (2.7.2)
+    zeitwerk (2.7.3)
 
 PLATFORMS
   aarch64-linux-gnu
@@ -1420,7 +1432,7 @@ DEPENDENCIES
   listen (~> 3.2)
   manageiq-api!
   manageiq-api-client (~> 0.6.0)
-  manageiq-appliance_console (~> 10.0)
+  manageiq-appliance_console (~> 10.0, >= 10.0.2)
   manageiq-automation_engine!
   manageiq-consumption!
   manageiq-content!
@@ -1456,10 +1468,11 @@ DEPENDENCIES
   manageiq-providers-ovirt!
   manageiq-providers-red_hat_virtualization!
   manageiq-providers-redfish!
+  manageiq-providers-terraform_enterprise!
   manageiq-providers-vmware!
   manageiq-providers-workflows!
   manageiq-schema!
-  manageiq-smartstate (~> 0.11.0)
+  manageiq-smartstate (~> 0.11.1)
   manageiq-ssh-util (~> 0.2.0)
   manageiq-style (~> 1.5.0)
   manageiq-ui-classic!
@@ -1481,7 +1494,7 @@ DEPENDENCIES
   puma (~> 6.4, >= 6.4.3)
   qpid_proton (~> 0.37.0)
   query_relation (~> 0.1.0)
-  rack (>= 2.2.12)
+  rack (>= 2.2.13)
   rack-attack (~> 6.5.0)
   rails (~> 7.1.5, >= 7.1.5.1)
   rails-i18n (~> 7.x)
