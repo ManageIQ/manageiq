@@ -1,6 +1,7 @@
 RSpec.describe MiqPreloader do
   # implied vms (simple association)
   let(:ems) { FactoryBot.create(:ems_infra).tap { |ems| FactoryBot.create_list(:vm, 2, :ext_management_system => ems) } }
+  let(:zone) { FactoryBot.create(:zone) }
 
   # implied container_nodes (through association)
   let(:image) do
@@ -98,6 +99,19 @@ RSpec.describe MiqPreloader do
       expect { expect(image.container_nodes).to eq(nodes) }.not_to make_database_queries
       # TODO: not_to make_database_queries
       expect { expect(nodes.first.container_images).to eq([image]) }.to make_database_queries(:count => 1)
+    end
+
+    it "preloads association array" do
+      host = FactoryBot.create(:host_vmware) # infra
+      FactoryBot.create_list(:vm, 2, :ext_management_system => FactoryBot.create(:ems_infra, :zone => zone), :host => host)
+      emses = ExtManagementSystem.all
+
+      # 4: ems, zones, vms, hosts
+      expect { preload(emses, [:zone, :vms => :host]) }.to make_database_queries(:count => 4)
+
+      expect { expect(emses.first.vms.size).to eq(2) }.not_to make_database_queries
+      expect { expect(emses.first.vms.first.host).to eq(host) }.not_to make_database_queries
+      expect { expect(emses.first.zone).to eq(zone) }.not_to make_database_queries
     end
 
     def preload(*args, **kwargs)

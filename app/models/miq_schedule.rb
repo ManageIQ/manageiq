@@ -93,7 +93,7 @@ class MiqSchedule < ApplicationRecord
 
       _log.info("Queueing start of schedule id: [#{id}] [#{sched.name}] [#{sched.resource_type}] [#{method}]...complete")
       msg
-    elsif sched.resource.respond_to?(method)
+    elsif sched.resource.respond_to?(method, true)
       sched.resource.send(method, *sched.sched_action[:args])
       sched.update(:last_run_on => Time.now.utc)
     else

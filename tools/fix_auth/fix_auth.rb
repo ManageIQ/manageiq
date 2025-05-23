@@ -67,6 +67,9 @@ module FixAuth
         ActiveRecord::Base.logger = Logger.new("#{options[:root]}/log/fix_auth.log")
         ActiveRecord::Base.establish_connection(db_attributes(database))
       end
+
+      puts "processing database: #{options[:database]}"
+
       models.each do |model|
         model.run(run_options)
       end

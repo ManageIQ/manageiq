@@ -67,7 +67,7 @@ gem "pg-dsn_parser",                    "~>0.1.1",           :require => false
 gem "prism",                            ">=0.25.0",          :require => false # Used by DescendantLoader
 gem "psych",                            ">=3.1",             :require => false # 3.1 safe_load changed positional to kwargs like aliases: true: https://github.com/ruby/psych/commit/4d4439d6d0adfcbd211ea295779315f1baa7dadd
 gem "query_relation",                   "~>0.1.0",           :require => false
-gem "rack",                             ">=2.2.12",          :require => false
+gem "rack",                             ">=2.2.13",          :require => false
 gem "rack-attack",                      "~>6.5.0",           :require => false
 gem "rails",                            "~>7.1.5", ">=7.1.5.1"
 gem "rails-i18n",                       "~>7.x"
@@ -205,6 +205,10 @@ group :red_hat_virtualization, :manageiq_default do
   manageiq_plugin "manageiq-providers-red_hat_virtualization"
 end
 
+group :terraform_enterprise, :manageiq_default do
+  manageiq_plugin "manageiq-providers-terraform_enterprise"
+end
+
 group :qpid_proton, :optional => true do
   gem "qpid_proton",                    "~>0.37.0",          :require => false
 end
@@ -265,7 +269,7 @@ group :seed, :manageiq_default do
 end
 
 group :smartstate, :manageiq_default do
-  gem "manageiq-smartstate",            "~>0.11.0",           :require => false
+  gem "manageiq-smartstate",            "~>0.11.1",           :require => false
 end
 
 group :consumption, :manageiq_default do
@@ -291,9 +295,9 @@ group :web_socket, :manageiq_default do
 end
 
 group :appliance, :optional => true do
-  gem "irb",                            "=1.4.1",            :require => false # Locked to same version as the installed RPM rubygem-irb-1.4.1-142.module_el9+787+b20bfeee.noarch so that we don't bundle our own
-  gem "manageiq-appliance_console",     "~>10.0",            :require => false
-  gem "rdoc",                                                :require => false # Needed for rails console
+  gem "irb",                            "=1.4.1",             :require => false # Locked to same version as the installed RPM rubygem-irb-1.4.1-142.module_el9+787+b20bfeee.noarch so that we don't bundle our own
+  gem "manageiq-appliance_console",     "~>10.0", ">=10.0.2", :require => false
+  gem "rdoc",                                                 :require => false # Needed for rails console
 end
 
 ### Development and test gems are excluded from appliance and container builds to reduce size and license issues

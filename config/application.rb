@@ -114,6 +114,7 @@ module Vmdb
     # https://github.com/rails/rails/blob/d437ae311f1b9dc40b442e40eb602e020cec4e49/railties/lib/rails/application/configuration.rb#L92
     config.load_defaults 7.1
     # ensure MiqReport#extras will marshal/dump back out. 7.1 is default (and has better performance)
+    # See for probable culprit https://www.github.com/rails/rails/pull/47747
     config.active_record.marshalling_format_version = 6.1
 
     # TODO: this is the only change we had from defaults in 7.0.  See secure_headers.rb.  It's 0 in defaults.

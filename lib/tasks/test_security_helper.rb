@@ -4,6 +4,9 @@ class TestSecurityHelper
   class SecurityTestFailed < StandardError; end
 
   def self.brakeman(format: "human")
+    args = ARGV.drop_while { |arg| arg != "--" }.drop(1)
+    interactive_ignore = (args & %w[-I --interactive-ignore]).any?
+
     require "vmdb/plugins"
     require "brakeman"
 
@@ -43,11 +46,18 @@ class TestSecurityHelper
       :report_progress => $stderr.tty?,
       :use_prism       => true,
     }
-    if format == "json"
+    case format
+    when "json"
+      raise ArgumentError, "cannot pass --interactive-ignore with json output" if interactive_ignore
+
       options[:output_files] = [
         Rails.root.join("log/brakeman.json").to_s,
         Rails.root.join("log/brakeman.log").to_s
       ]
+    when "human"
+      options[:interactive_ignore] = true if interactive_ignore
+    else
+      raise ArgumentError, "Unknown format #{format.inspect}"
     end
 
     tracker = Brakeman.run(options)
@@ -161,7 +171,7 @@ class TestSecurityHelper
       .lines
       .map { |l| JSON.parse(l) }
       .group_by { |h| h["value"] }
-      .transform_keys { |k| "- #{k}\n" }
+      .transform_keys { |k| "  - #{k}\n" }
       .transform_values do |values|
         values = values.map do |h|
           [
@@ -177,7 +187,7 @@ class TestSecurityHelper
         .sort_by { |v| [YARN_AUDIT_SEVERITY_SORT.index(v[1]) || Float::MAX, v[2]] } # Sort by severity, then by the GHSA number, for consistency
         .tableize(:header => false)
         .lines
-        .map { |l| l.sub(/^ /, "# ") }
+        .map { |l| l.sub(/^ /, "  # ") }
       end
       .flatten(2)
 

@@ -38,11 +38,16 @@ RSpec.describe ExtManagementSystem do
     end
   end
 
-  it ".model_name_from_emstype" do
+  describe ".model_name_from_emstype" do
     described_class.concrete_subclasses.each do |klass|
-      expect(described_class.model_name_from_emstype(klass.ems_type)).to eq(klass.name)
+      it "has a model name for #{klass.ems_type}", :providers_common => true do
+        expect(described_class.model_name_from_emstype(klass.ems_type)).to eq(klass.name)
+      end
     end
-    expect(described_class.model_name_from_emstype('foo')).to be_nil
+
+    it "handles unknown model names" do
+      expect(described_class.model_name_from_emstype('foo')).to be_nil
+    end
   end
 
   describe ".types" do
@@ -802,6 +807,14 @@ RSpec.describe ExtManagementSystem do
     it "detects security group for provider" do
       ems = FactoryBot.build(:ems_openstack_network)
       expect(ems.supports_create_security_group).to be(true)
+    end
+  end
+
+  describe "#image_name", :providers_common => true do
+    described_class.concrete_subclasses.each do |klass|
+      it "has a vendor asset for #{klass.ems_type}" do
+        expect(ActionController::Base.helpers.asset_path("svg/vendor-#{klass.new.image_name}.svg")).to_not be_blank
+      end
     end
   end
 end

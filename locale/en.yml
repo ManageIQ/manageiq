@@ -1412,7 +1412,7 @@ en:
       CustomButton:                   Button
       CustomButtonSet:                Button Group
       ConfigurationProfile:           Configuration Profiles
-      ConfigurationScript:            Template (Ansible Tower)
+      ConfigurationScript:            Template
       ConfigurationScriptSource:      Repository
       ConfiguredSystem:               Configured Systems
       Container:                      Container
@@ -1484,7 +1484,8 @@ en:
       ManageIQ::Providers::Workflows::AutomationManager::ScmCredential:                   Credential (SCM)
       ManageIQ::Providers::Workflows::AutomationManager::WorkflowCredential:              Credential (Workflow)
       ManageIQ::Providers::ExternalAutomationManager:                                     Automation Manager
-      ManageIQ::Providers::ExternalAutomationManager::ConfigurationScript:                Template (Ansible Tower)
+      ManageIQ::Providers::ExternalAutomationManager::ConfigurationScript:                Template
+      ManageIQ::Providers::ExternalAutomationManager::OrchestrationStack:                 Automation Job
       ManageIQ::Providers::AutomationManager::Authentication:                             Credential
       ManageIQ::Providers::AnsibleTower::AutomationManager::AmazonCredential:             Credential (Amazon)
       ManageIQ::Providers::AnsibleTower::AutomationManager::AzureCredential:              Credential (Microsoft Azure)
@@ -1500,6 +1501,25 @@ en:
       ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript:          Job Template (Ansible Tower)
       ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationWorkflow:        Workflow Template (Ansible Tower)
       ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook:                     Playbook (Ansible Tower)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::Job:                          Job (Ansible Tower)
+      ManageIQ::Providers::Awx::AutomationManager::AmazonCredential:                      Credential (Amazon)
+      ManageIQ::Providers::Awx::AutomationManager::AzureCredential:                       Credential (Microsoft Azure)
+      ManageIQ::Providers::Awx::AutomationManager::GoogleCredential:                      Credential (Google)
+      ManageIQ::Providers::Awx::AutomationManager::MachineCredential:                     Credential (Machine)
+      ManageIQ::Providers::Awx::AutomationManager::NetworkCredential:                     Credential (Network)
+      ManageIQ::Providers::Awx::AutomationManager::OpenstackCredential:                   Credential (OpenStack)
+      ManageIQ::Providers::Awx::AutomationManager::RackspaceCredential:                   Credential (Rackspace)
+      ManageIQ::Providers::Awx::AutomationManager::Satellite6Credential:                  Credential (Satellite)
+      ManageIQ::Providers::Awx::AutomationManager::ScmCredential:                         Credential (SCM)
+      ManageIQ::Providers::Awx::AutomationManager::VmwareCredential:                      Credential (VMware)
+      ManageIQ::Providers::Awx::AutomationManager:                                        Automation Manager (AWX)
+      ManageIQ::Providers::Awx::AutomationManager::ConfigurationScript:                   Job Template (AWX)
+      ManageIQ::Providers::Awx::AutomationManager::ConfigurationWorkflow:                 Workflow Template (AWX)
+      ManageIQ::Providers::Awx::AutomationManager::Playbook:                              Playbook (AWX)
+      ManageIQ::Providers::Awx::AutomationManager::Job:                                   Job (AWX)
+      ManageIQ::Providers::TerraformEnterprise::AutomationManager:                        AutomationManager (Terraform Enterprise)
+      ManageIQ::Providers::TerraformEnterprise::AutomationManager::ConfigurationScript:   Workspace (Terraform Enterprise)
+      ManageIQ::Providers::TerraformEnterprise::AutomationManager::OrchestrationStack:    Run (Terraform Enterprise)
       ManageIQ::Providers::Foreman::ConfigurationManager:                                 Configuration Manager (Foreman)
       ManageIQ::Providers::ConfigurationManager:                                          Configuration Manager
       ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem:             Configured System

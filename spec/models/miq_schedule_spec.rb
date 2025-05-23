@@ -741,15 +741,18 @@ RSpec.describe MiqSchedule do
         end
 
         it "and responds to the method with arguments" do
+          cluster = FactoryBot.create(:ems_cluster)
+          resource.update!(:ems_cluster => cluster)
+
           schedule = FactoryBot.create(
             :miq_schedule,
             :resource     => resource,
-            :sched_action => {:method => "raise_cluster_event", :args => ["abc", 123]}
+            :sched_action => {:method => "raise_cluster_event", :args => [cluster.id, "abc"]}
           )
 
-          expect_any_instance_of(Host).to receive("raise_cluster_event").once.with("abc", 123)
+          expect_any_instance_of(Host).to receive("raise_cluster_event").with(cluster.id, "abc").once
 
-          MiqSchedule.queue_scheduled_work(schedule.id, nil, "abc", nil)
+          MiqSchedule.queue_scheduled_work(schedule.id, nil, nil, nil)
         end
       end
     end

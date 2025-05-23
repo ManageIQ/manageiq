@@ -165,10 +165,6 @@ class MiqRegion < ApplicationRecord
     ext_management_systems.select { |e| e.kind_of?(ManageIQ::Providers::DatawarehouseManager) }
   end
 
-  def ems_monitors
-    ext_management_systems.select { |e| e.kind_of?(ManageIQ::Providers::MonitoringManager) }
-  end
-
   def ems_configproviders
     ext_management_systems.select { |e| e.kind_of?(ManageIQ::Providers::ConfigurationManager) }
   end

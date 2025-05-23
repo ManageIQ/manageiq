@@ -336,9 +336,9 @@ RSpec.describe MiqReport do
     expect(after.table).to eq(fake_ruport_data_table)
   end
 
-  it "serializes (marshall/dump) special columns" do
+  it "serializes (marshal/dump) special columns" do
     before = MiqReport.new.tap { |r| r.extras = {:working => true} }
-    # reports are put into session[:view]. ensure when it comes out of the session, we don't loose values
+    # reports are put into session[:view]. ensure when it comes out of the session, we don't lose values
     after = Marshal.load(Marshal.dump(before))
     expect(after.extras).to eq(before.extras)
   end
