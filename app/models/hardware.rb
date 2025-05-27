@@ -109,6 +109,7 @@ class Hardware < ApplicationRecord
   end)
 
   def v_pct_free_disk_space
+    return self["v_pct_free_disk_space"] if has_attribute?("v_pct_free_disk_space")
     return nil if disk_free_space.nil? || disk_capacity.nil? || disk_capacity.zero?
 
     (disk_free_space.to_f / disk_capacity * 100).round(2)
@@ -121,6 +122,8 @@ class Hardware < ApplicationRecord
   end)
 
   def v_pct_used_disk_space
+    return self["v_pct_used_disk_space"] if has_attribute?("v_pct_used_disk_space")
+
     percent_free = v_pct_free_disk_space
     100 - percent_free if percent_free
   end
