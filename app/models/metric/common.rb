@@ -18,7 +18,7 @@ module Metric::Common
     serialize :assoc_ids
     serialize :min_max   # TODO: Move this to MetricRollup
 
-    virtual_column :v_derived_storage_used, :type => :float, :arel => (lambda do |t|
+    virtual_attribute :v_derived_storage_used, :float, :arel => (lambda do |t|
       t.grouping(t[:derived_storage_total] - t[:derived_storage_free])
     end)
 
