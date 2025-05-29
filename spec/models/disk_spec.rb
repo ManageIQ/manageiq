@@ -39,6 +39,11 @@ RSpec.describe Disk do
         disk.save!
         expect(virtual_column_sql_value(Disk, "used_disk_storage")).to eq(1024)
       end
+
+      it "brings back the attribute" do
+        disk.save!
+        expect(described_class.select(:used_disk_storage).find(disk.id).used_disk_storage).to eq(1024)
+      end
     end
   end
 end

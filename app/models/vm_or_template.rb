@@ -1181,6 +1181,8 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def archived?
+    return self["archived"] if  has_attribute?("archived")
+
     ems_id.nil? && storage_id.nil?
   end
   alias_method :archived, :archived?
@@ -1189,6 +1191,8 @@ class VmOrTemplate < ApplicationRecord
   end)
 
   def orphaned?
+    return self["orphaned"] if  has_attribute?("orphaned")
+
     ems_id.nil? && !storage_id.nil?
   end
   alias_method :orphaned, :orphaned?
@@ -1197,6 +1201,8 @@ class VmOrTemplate < ApplicationRecord
   end)
 
   def active?
+    return self["active"] if  has_attribute?("active")
+
     !archived? && !orphaned? && !retired? && !template?
   end
   alias_method :active, :active?

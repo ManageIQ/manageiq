@@ -7,10 +7,26 @@ RSpec.describe Metric::Common do
                       )
   end
 
+  describe "#v_date" do
+    it "returns the timestamp in YYYY/MM format" do
+      ts = Time.now
+      m = Metric.new(:timestamp => ts)
+      expect(m.v_date).to eq(ts)
+    end
+  end
+
   describe "#v_month" do
     it "returns the timestamp in YYYY/MM format" do
       m = Metric.new(:timestamp => Time.zone.parse("2015-01-01"))
       expect(m.v_month).to eq("2015/01")
+    end
+  end
+
+  describe "#v_time" do
+    it "returns the timestamp in YYYY/MM format" do
+      ts = Time.now
+      m = Metric.new(:timestamp => ts)
+      expect(m.v_time).to eq(ts)
     end
   end
 
