@@ -1164,6 +1164,11 @@ RSpec.describe VmOrTemplate do
       expect(vm).not_to be_active
       expect(virtual_column_sql_value(VmOrTemplate, "active")).to be false
     end
+
+    it "select the attribute" do
+      vm.update(:ext_management_system => ems)
+      expect(VmOrTemplate.select(:id, :active).find(vm.id)).to be_active
+    end
   end
 
   describe ".archived" do
@@ -1191,6 +1196,11 @@ RSpec.describe VmOrTemplate do
       expect(vm).not_to be_archived
       vm.ext_management_system = nil
     end
+
+    it "select the attribute" do
+      vm.update(:ext_management_system => nil, :storage => nil)
+      expect(VmOrTemplate.select(:id, :archived).find(vm.id)).to be_archived
+    end
   end
 
   describe ".orphaned" do
@@ -1216,6 +1226,11 @@ RSpec.describe VmOrTemplate do
       vm.update(:ext_management_system => ems, :storage => storage)
       expect(vm).not_to be_orphaned
       expect(virtual_column_sql_value(VmOrTemplate, "orphaned")).to be false
+    end
+
+    it "select the attribute" do
+      vm.update(:ext_management_system => nil, :storage => storage)
+      expect(VmOrTemplate.select(:id, :orphaned).find(vm.id)).to be_orphaned
     end
   end
 
