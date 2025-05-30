@@ -335,6 +335,12 @@ RSpec.describe MiqExpression do
       it "!(sql AND ruby) => (!(sql) OR !(ruby)) => !(sql AND ruby)" do
         expect(ruby_pruned_exp("NOT" => {"AND" => [sql_field, ruby_field.clone]})).to eq("NOT" => {"AND" => [sql_field, ruby_field]})
       end
+
+      it "(sql) => return empty ruby expression" do
+        exp1 = {"=" => {"field" => "Vm-name", "value" => "abc"}}
+        ruby = MiqExpression.new(exp1).to_ruby(:prune_sql => true)
+        expect(ruby).to be_nil
+      end
     end
   end
 
@@ -1097,7 +1103,7 @@ RSpec.describe MiqExpression do
     end
   end
 
-  describe "#lenient_evaluate" do
+  describe "#evaluate (was lenient)" do
     describe "integration" do
       it "with a find/checkany expression" do
         host1, host2, host3, host4, host5, host6, host7, host8 = FactoryBot.create_list(:host, 8)
@@ -1114,7 +1120,7 @@ RSpec.describe MiqExpression do
             "checkany" => {"FROM" => {"field" => "Host.vms-last_scan_on",
                                       "value" => ["2011-01-08 17:00", "2011-01-09 23:30:59"]}},
             "search"   => {"IS NOT NULL" => {"field" => "Host.vms-description"}}})
-        result = Host.all.to_a.select { |rec| filter.lenient_evaluate(rec) }
+        result = Host.all.to_a.select { |rec| filter.evaluate(rec) }
         expect(result).to contain_exactly(host3, host5)
       end
 
@@ -1140,7 +1146,7 @@ RSpec.describe MiqExpression do
                                       "value" => ["2011-01-08 17:00", "2011-01-09 23:30:59"]}},
             "checkall" => {"IS NOT NULL" => {"field" => "Host.vms-description"}}}
         )
-        result = Host.all.to_a.select { |rec| filter.lenient_evaluate(rec) }
+        result = Host.all.to_a.select { |rec| filter.evaluate(rec) }
         expect(result).to eq([host2])
       end
 
@@ -1148,8 +1154,19 @@ RSpec.describe MiqExpression do
         vm = FactoryBot.create(:vm_vmware)
 
         expect do
-          described_class.new("=" => {"field" => "Vm-destroy", "value" => true}).lenient_evaluate(vm)
+          described_class.new("=" => {"field" => "Vm-destroy", "value" => true}).evaluate(vm)
         end.not_to change(Vm, :count)
+      end
+
+      it "handles empty ruby expression" do
+        # expression becomes part of sql and not part of ruby
+        # so although this does not match, it should return true
+        # 1. if it did not respect prune_sql - fail
+        # 2. if it freaked because expression is nil - fail
+        miqe = described_class.new("=" => {"field" => "Vm-name", "value" => "abc"})
+
+        vm = FactoryBot.create(:vm_vmware, :name => "def")
+        expect(miqe.evaluate(vm, :prune_sql => true)).to eq(true)
       end
     end
   end
