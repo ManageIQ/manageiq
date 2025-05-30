@@ -919,7 +919,7 @@ module Rbac
     end
 
     def matches_search_filters?(obj, filter, timezone, prune_sql: true)
-      filter.nil? || filter.lenient_evaluate(obj, timezone, :prune_sql => prune_sql)
+      filter.nil? || filter.evaluate(obj, timezone, :prune_sql => prune_sql)
     end
   end
 end
