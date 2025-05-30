@@ -121,7 +121,7 @@ module EvmSpecHelper
   end
 
   def self.remote_miq_server(attrs = {})
-    Tenant.root_tenant || Tenant.create!(:use_config_for_attributes => false)
+    Tenant.root_tenant || Tenant.seed
 
     FactoryBot.create(:miq_server, attrs)
   end
