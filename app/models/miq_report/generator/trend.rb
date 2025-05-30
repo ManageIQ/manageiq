@@ -52,7 +52,7 @@ module MiqReport::Generator::Trend
 
     if conditions
       tz = User.lookup_by_userid(options[:userid]).get_timezone if options[:userid]
-      results = results.reject { |obj| conditions.lenient_evaluate(obj, tz) }
+      results = results.reject { |obj| conditions.evaluate(obj, tz) }
     end
     results = results[0...options[:limit]] if options[:limit]
     [results]
