@@ -1045,7 +1045,6 @@ en:
       uri_or_queue_name: Uri Or Queue Name
       uri: Uri
       url: URL
-      use_config_for_attributes: Use Config For Attributes
       used: Used
       used_storage: Used Storage
       user_assigned_os: User Assigned Os
