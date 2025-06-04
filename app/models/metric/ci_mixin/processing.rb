@@ -14,67 +14,68 @@ module Metric::CiMixin::Processing
     _log.info("#{log_header} Processing for #{log_specific_targets(resources)}, for range [#{start_time} - #{end_time}]...")
 
     _dummy, t = Benchmark.realtime_block(:total_time) do
-      # Take the raw metrics and create hashes out of them
-      rt_rows = {}
-
-      counters_data.each do |resource, data|
-        process_counter_values(resource, data, interval_name, rt_rows) ## rt_rows changes
-      end
-
+      rt_rows = process_counter_values(counters_data, interval_name)
       parameters = convert_metrics(resources, interval_name, start_time, end_time, rt_rows)
       write_metrics(parameters)
-      update_and_publish_metrics(interval_orig, start_time, end_time, resources, rt_rows)
+      update_last_perf_capture_on(resources, end_time)
+      raise_perf_complete_alerts(resources)
+      rollup_to_parent_metrics(resources, interval_orig, start_time, end_time)
+      publish_metrics(rt_rows) if syndicate_metrics?
     end
     _log.info("#{log_header} Processing for #{log_specific_targets(resources)}, for range [#{start_time} - #{end_time}]...Complete - Timings: #{t.inspect}")
   end
 
-  def process_counter_values(resource, data, interval_name, rt_rows)
-    log_header = "[#{interval_name}]"
+  private
 
-    counters       = data[:counters]
-    counter_values = data[:counter_values]
+  def process_counter_values(counters_data, interval_name)
+    counters_data.each_with_object({}) do |(resource, data), rt_rows|
+      log_header = "[#{interval_name}]"
 
-    Benchmark.realtime_block(:process_counter_values) do
-      counter_values.each do |ts, cv|
-        ts = Metric::Helper.nearest_realtime_timestamp(ts) if interval_name == 'realtime'
+      counters       = data[:counters]
+      counter_values = data[:counter_values]
 
-        col_vals = {}
-        cv.each do |counter_id, value|
-          counter = counters[counter_id]
-          next if counter.nil? || counter[:capture_interval_name] != interval_name
+      Benchmark.realtime_block(:process_counter_values) do
+        counter_values.each do |ts, cv|
+          ts = Metric::Helper.nearest_realtime_timestamp(ts) if interval_name == 'realtime'
 
-          col = counter[:counter_key].to_sym
-          unless Metric.column_names_symbols.include?(col)
-            _log.debug("#{log_header} Column [#{col}] is not defined, skipping")
-            next
-          end
+          col_vals = {}
+          cv.each do |counter_id, value|
+            counter = counters[counter_id]
+            next if counter.nil? || counter[:capture_interval_name] != interval_name
 
-          col_vals.store_path(col, counter[:instance], [value, counter])
-        end
-
-        col_vals.each do |col, values_by_instance|
-          # If there are multiple instances for a column, use the aggregate
-          #   instance, if available, otherwise roll it up ourselves.
-          value, counter = values_by_instance[""]
-          if value.nil?
-            value = 0
-            counter = nil
-            values_by_instance.each_value do |v, c|
-              value += v
-              counter = c
+            col = counter[:counter_key].to_sym
+            unless Metric.column_names_symbols.include?(col)
+              _log.debug("#{log_header} Column [#{col}] is not defined, skipping")
+              next
             end
+
+            col_vals.store_path(col, counter[:instance], [value, counter])
           end
 
-          # Create hashes for the rows
-          rt = (rt_rows[[ts, resource]] ||= {
-            :capture_interval_name => interval_name,
-            :capture_interval      => counter[:capture_interval],
-            :resource              => resource,
-            :resource_name         => resource.name,
-            :timestamp             => ts
-          })
-          rt[col], message = normalize_value(value, counter)
-          _log.warn("#{log_header} #{log_target} Timestamp: [#{ts}], Column [#{col}]: '#{message}'") if message
+          col_vals.each do |col, values_by_instance|
+            # If there are multiple instances for a column, use the aggregate
+            #   instance, if available, otherwise roll it up ourselves.
+            value, counter = values_by_instance[""]
+            if value.nil?
+              value = 0
+              counter = nil
+              values_by_instance.each_value do |v, c|
+                value += v
+                counter = c
+              end
+            end
+
+            # Create hashes for the rows
+            rt = (rt_rows[[ts, resource]] ||= {
+              :capture_interval_name => interval_name,
+              :capture_interval      => counter[:capture_interval],
+              :resource              => resource,
+              :resource_name         => resource.name,
+              :timestamp             => ts
+            })
+            rt[col], message = normalize_value(value, counter)
+            _log.warn("#{log_header} #{log_target} Timestamp: [#{ts}], Column [#{col}]: '#{message}'") if message
+          end
         end
       end
     end
@@ -95,24 +96,27 @@ module Metric::CiMixin::Processing
     ActiveMetrics::Base.connection.write_multiple(parameters)
   end
 
-  def update_and_publish_metrics(interval_orig, start_time, end_time, resources, rt_rows)
+  def update_last_perf_capture_on(resources, end_time)
     resources.each do |resource|
       resource.update_attribute(:last_perf_capture_on, end_time) if resource.last_perf_capture_on.nil? || resource.last_perf_capture_on.utc.iso8601 < end_time
     end
+  end
 
-    # Raise <class>_perf_complete alert event if realtime so alerts can be evaluated.
+  def raise_perf_complete_alerts(resources)
     resources.each do |resource|
       MiqEvent.raise_evm_alert_event_queue(resource, MiqEvent.event_name_for_target(resource, "perf_complete"))
     end
-
-    resources.each do |resource|
-      resource.perf_rollup_to_parents(interval_orig, start_time, end_time)
-    end
-
-    publish_metrics(rt_rows) if syndicate_metrics?
   end
 
-  private
+  def rollup_to_parent_metrics(resources, interval_orig, start_time, end_time)
+    # Raise <class>_perf_complete alert event if realtime so alerts can be evaluated.
+    # all resources are the same class and ems as each other
+    # NOTE: using parent ext_management_system
+    zone = ext_management_system.my_zone
+    resources.each do |resource|
+      resource.perf_rollup_to_parents(interval_orig, start_time, end_time, :zone => zone)
+    end
+  end
 
   def transform_parameters_row_per_metric(_resources, interval_name, _start_time, _end_time, rt_rows)
     rt_rows.flat_map do |(ts, _resource), rt|
