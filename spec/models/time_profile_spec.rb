@@ -4,78 +4,212 @@ RSpec.describe TimeProfile do
     @ems    = FactoryBot.create(:ems_vmware, :zone => @server.zone)
   end
 
-  it "will default to the correct profile values" do
-    t = TimeProfile.new
-    expect(t.days).to eq(TimeProfile::ALL_DAYS)
-    expect(t.hours).to eq(TimeProfile::ALL_HOURS)
-    expect(t.tz).to be_nil
+  describe ".new" do
+    it "will default to the correct profile values" do
+      t = TimeProfile.new
+      expect(t.days).to eq(TimeProfile::ALL_DAYS)
+      expect(t.hours).to eq(TimeProfile::ALL_HOURS)
+      expect(t.tz).to be_nil
+    end
+
+    it "with days" do
+      t = TimeProfile.new(:days => [0, 1, 2])
+      expect(t.days).to eq([0, 1, 2])
+      expect(t.hours).to eq(TimeProfile::ALL_HOURS)
+      expect(t.tz).to be_nil
+    end
+
+    it "with hours" do
+      t = TimeProfile.new(:hours => [0, 1, 2, 3])
+      expect(t.days).to eq(TimeProfile::ALL_DAYS)
+      expect(t.hours).to eq([0, 1, 2, 3])
+      expect(t.tz).to be_nil
+    end
+
+    it "with tz" do
+      t = TimeProfile.new(:tz => "Auckland")
+      expect(t.days).to eq(TimeProfile::ALL_DAYS)
+      expect(t.hours).to eq(TimeProfile::ALL_HOURS)
+      expect(t.tz).to eq("Auckland")
+    end
+
+    it "with a partial profile" do
+      t = TimeProfile.new(:profile => {:days => [0, 1, 2]})
+      expect(t.days).to eq([0, 1, 2])
+      expect(t.hours).to eq(TimeProfile::ALL_HOURS)
+      expect(t.tz).to be_nil
+    end
+
+    it "with a complete profile" do
+      t = TimeProfile.new(:profile => {:days => [0, 1, 2], :hours => [0, 1, 2, 3], :tz => "Auckland"})
+      expect(t.days).to eq([0, 1, 2])
+      expect(t.hours).to eq([0, 1, 2, 3])
+      expect(t.tz).to eq("Auckland")
+    end
   end
 
-  describe "Test profile= with days" do
-    let(:time_profile) { FactoryBot.create(:time_profile) }
-    before { time_profile.profile = data }
+  describe ".create" do
+    it "will default to the correct profile values" do
+      t = TimeProfile.create!
+      expect(t.days).to eq(TimeProfile::ALL_DAYS)
+      expect(t.hours).to eq(TimeProfile::ALL_HOURS)
+      expect(t.tz).to be_nil
+    end
 
-    context "with symbol keys" do
-      let(:data) { {:days => [0, 1, 2, 3]} }
+    it "with days" do
+      t = TimeProfile.create!(:days => [0, 1, 2])
+      expect(t.days).to eq([0, 1, 2])
+      expect(t.hours).to eq(TimeProfile::ALL_HOURS)
+      expect(t.tz).to be_nil
+    end
+
+    it "with hours" do
+      t = TimeProfile.create!(:hours => [0, 1, 2, 3])
+      expect(t.days).to eq(TimeProfile::ALL_DAYS)
+      expect(t.hours).to eq([0, 1, 2, 3])
+      expect(t.tz).to be_nil
+    end
+
+    it "with tz" do
+      t = TimeProfile.create!(:tz => "Auckland")
+      expect(t.days).to eq(TimeProfile::ALL_DAYS)
+      expect(t.hours).to eq(TimeProfile::ALL_HOURS)
+      expect(t.tz).to eq("Auckland")
+    end
+
+    it "with a partial profile" do
+      t = TimeProfile.create!(:profile => {:days => [0, 1, 2]})
+      expect(t.days).to eq([0, 1, 2])
+      expect(t.hours).to eq(TimeProfile::ALL_HOURS)
+      expect(t.tz).to be_nil
+    end
+
+    it "with a complete profile" do
+      t = TimeProfile.create!(:profile => {:days => [0, 1, 2], :hours => [0, 1, 2, 3], :tz => "Auckland"})
+      expect(t.days).to eq([0, 1, 2])
+      expect(t.hours).to eq([0, 1, 2, 3])
+      expect(t.tz).to eq("Auckland")
+    end
+  end
+
+  describe "#profile=" do
+    let(:time_profile) { FactoryBot.create(:time_profile) }
+    before { time_profile.profile = profile }
+
+    context "with days as symbol keys" do
+      let(:profile) { {:days => [0, 1, 2, 3]} }
       it "returns the correct days" do
         expect(time_profile.days).to eq([0, 1, 2, 3])
       end
     end
 
-    context "with string keys" do
-      let(:data) { {"days" => [0, 1, 2, 3]} }
+    context "with days as string keys" do
+      let(:profile) { {"days" => [0, 1, 2, 3]} }
       it "returns the correct days" do
         expect(time_profile.days).to eq([0, 1, 2, 3])
       end
     end
-  end
 
-  describe "Test profile= with hours" do
-    let(:time_profile) { FactoryBot.create(:time_profile) }
-    before { time_profile.profile = data }
+    context "with days as invalid data" do
+      let(:profile) { {:days => [0, 1, 2, "xxx"]} }
+      it "is invalid" do
+        expect(time_profile).to_not be_valid
+        expect { time_profile.save! }.to raise_error(ActiveRecord::RecordInvalid, /Days is invalid/)
+      end
+    end
 
-    context "with symbol keys" do
-      let(:data) { {:hours => [0, 1, 2, 3]} }
+    context "with hours as symbol keys" do
+      let(:profile) { {:hours => [0, 1, 2, 3]} }
       it "returns the correct days" do
         expect(time_profile.hours).to eq([0, 1, 2, 3])
       end
     end
 
-    context "with string keys" do
-      let(:data) { {"hours" => [0, 1, 2, 3]} }
+    context "with hours as string keys" do
+      let(:profile) { {"hours" => [0, 1, 2, 3]} }
       it "returns the correct days" do
         expect(time_profile.hours).to eq([0, 1, 2, 3])
       end
     end
-  end
 
-  describe "Test profile=" do
-    let(:time_profile) { FactoryBot.create(:time_profile) }
-    before { time_profile.profile = data }
-
-    context "with symbol keys" do
-      let(:data) do
-        {
-          :days  => [0, 1, 2, 3, 4],
-          :hours => [0, 1, 2, 5, 6, 8, 9, 10, 11, 12, 19, 20, 21, 22, 23]
-        }
-      end
-      it "returns the correct profile" do
-        expect(time_profile.days).to eq([0, 1, 2, 3, 4])
-        expect(time_profile.hours).to eq([0, 1, 2, 5, 6, 8, 9, 10, 11, 12, 19, 20, 21, 22, 23])
+    context "with hours as invalid data" do
+      let(:profile) { {:hours => [0, 1, 2, 3, "xxx"]} }
+      it "is invalid" do
+        expect(time_profile).to_not be_valid
+        expect { time_profile.save! }.to raise_error(ActiveRecord::RecordInvalid, /Hours is invalid/)
       end
     end
 
-    context "with string keys" do
-      let(:data) do
+    context "with tz as symbol keys" do
+      let(:profile) { {:tz => "Auckland"} }
+      it "returns the correct tz" do
+        expect(time_profile.tz).to eq("Auckland")
+      end
+    end
+
+    context "with tz as string keys" do
+      let(:profile) { {"tz" => "Auckland"} }
+      it "returns the correct tz" do
+        expect(time_profile.tz).to eq("Auckland")
+      end
+    end
+
+    context "with tz as invalid data" do
+      let(:profile) { {:tz => "xxx"} }
+      it "is invalid" do
+        expect(time_profile).to_not be_valid
+        expect { time_profile.save! }.to raise_error(ActiveRecord::RecordInvalid, /Tz is invalid/)
+      end
+    end
+
+    context "with multiple keys as symbol keys" do
+      let(:profile) do
         {
-          "days"  => [0, 1, 2, 3, 4],
-          "hours" => [0, 1, 2, 5, 6, 8, 9, 10, 11, 12, 19, 20, 21, 22, 23]
+          :days  => [0, 1, 2],
+          :hours => [0, 1, 2, 3],
+          :tz    => "Auckland"
         }
       end
       it "returns the correct profile" do
-        expect(time_profile.days).to eq([0, 1, 2, 3, 4])
-        expect(time_profile.hours).to eq([0, 1, 2, 5, 6, 8, 9, 10, 11, 12, 19, 20, 21, 22, 23])
+        expect(time_profile.days).to eq([0, 1, 2])
+        expect(time_profile.hours).to eq([0, 1, 2, 3])
+        expect(time_profile.tz).to eq("Auckland")
+      end
+    end
+
+    context "with multiple keys as string keys" do
+      let(:profile) do
+        {
+          "days"  => [0, 1, 2],
+          "hours" => [0, 1, 2, 3],
+          "tz"    => "Auckland"
+        }
+      end
+      it "returns the correct profile" do
+        expect(time_profile.days).to eq([0, 1, 2])
+        expect(time_profile.hours).to eq([0, 1, 2, 3])
+        expect(time_profile.tz).to eq("Auckland")
+      end
+    end
+
+    context "with ranges" do
+      let(:profile) do
+        {
+          "days"  => (0...3),
+          "hours" => (0..3),
+        }
+      end
+      it "returns the correct profile" do
+        expect(time_profile.days).to eq([0, 1, 2])
+        expect(time_profile.hours).to eq([0, 1, 2, 3])
+      end
+    end
+
+    context "with invalid keys" do
+      let(:profile) { {"xxx" => [0, 1, 2]} }
+      it "is invalid" do
+        expect(time_profile).to_not be_valid
+        expect { time_profile.save! }.to raise_error(ActiveRecord::RecordInvalid, /Profile is invalid/)
       end
     end
   end
@@ -242,16 +376,16 @@ RSpec.describe TimeProfile do
                          :description          => "test1",
                          :profile_type         => "user",
                          :profile_key          => "some_user",
-                         :tz                   => "other_tz",
+                         :tz                   => "Saskatchewan",
                          :rollup_daily_metrics => true)
 
       FactoryBot.create(:time_profile,
                          :description          => "test2",
                          :profile_type         => "user",
                          :profile_key          => "foo",
-                         :tz                   => "foo_tz",
+                         :tz                   => "Auckland",
                          :rollup_daily_metrics => true)
-      tp = TimeProfile.profile_for_user_tz("foo", "foo_tz")
+      tp = TimeProfile.profile_for_user_tz("foo", "Auckland")
       expect(tp.description).to eq("test2")
     end
   end
@@ -284,11 +418,11 @@ RSpec.describe TimeProfile do
 
   describe ".all_timezones" do
     it "works with seeds" do
-      FactoryBot.create(:time_profile, :tz => "tz")
-      FactoryBot.create(:time_profile, :tz => "tz")
-      FactoryBot.create(:time_profile, :tz => "other_tz")
+      FactoryBot.create(:time_profile, :tz => "Auckland")
+      FactoryBot.create(:time_profile, :tz => "Auckland")
+      FactoryBot.create(:time_profile, :tz => "Saskatchewan")
 
-      expect(TimeProfile.all_timezones).to match_array(%w[tz other_tz])
+      expect(TimeProfile.all_timezones).to match_array(%w[Auckland Saskatchewan])
     end
   end
 
@@ -303,21 +437,21 @@ RSpec.describe TimeProfile do
 
   describe ".profile_for_user_tz" do
     it "finds global profiles" do
-      FactoryBot.create(:time_profile_with_rollup, :tz => "good", :profile_type => "global")
-      expect(TimeProfile.profile_for_user_tz(1, "good")).to be_truthy
+      FactoryBot.create(:time_profile_with_rollup, :tz => "Auckland", :profile_type => "global")
+      expect(TimeProfile.profile_for_user_tz(1, "Auckland")).to be_truthy
     end
 
     it "finds user profiles" do
-      FactoryBot.create(:time_profile_with_rollup, :tz => "good", :profile_type => "user", :profile_key => 1)
-      expect(TimeProfile.profile_for_user_tz(1, "good")).to be_truthy
+      FactoryBot.create(:time_profile_with_rollup, :tz => "Auckland", :profile_type => "user", :profile_key => 1)
+      expect(TimeProfile.profile_for_user_tz(1, "Auckland")).to be_truthy
     end
 
-    it "skips invalid records" do
-      FactoryBot.create(:time_profile_with_rollup, :tz => "bad", :profile_type => "global")
-      FactoryBot.create(:time_profile, :tz => "good", :profile_type => "global", :rollup_daily_metrics => false)
-      FactoryBot.create(:time_profile_with_rollup, :tz => "good", :profile_type => "user", :profile_key => "2")
+    it "skips records from other timezones" do
+      FactoryBot.create(:time_profile_with_rollup, :tz => "Saskatchewan", :profile_type => "global")
+      FactoryBot.create(:time_profile, :tz => "Auckland", :profile_type => "global", :rollup_daily_metrics => false)
+      FactoryBot.create(:time_profile_with_rollup, :tz => "Auckland", :profile_type => "user", :profile_key => "2")
 
-      expect(TimeProfile.profile_for_user_tz(1, "good")).not_to be
+      expect(TimeProfile.profile_for_user_tz(1, "Auckland")).not_to be
     end
   end
 
