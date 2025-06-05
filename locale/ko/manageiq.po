@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2025-02-28 14:08+0000\n"
-"PO-Revision-Date: 2025-02-28 14:08+0000\n"
+"POT-Creation-Date: 2025-06-02 13:54+0000\n"
+"PO-Revision-Date: 2025-06-02 13:54+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -380,13 +380,17 @@ msgid "%{amount} %{object} Being Tagged"
 msgid_plural "%{amount} %{objects} Being Tagged"
 msgstr[0] "%{amount}개의 %{objects}에 태그가 지정됨"
 
-msgid "%{amount} Ansible Tower Job Being Tagged"
-msgid_plural "%{amount} Ansible Tower Jobs Being Tagged"
-msgstr[0] "%{amount}개의 Ansible Tower 작업에 태그가 지정됨"
+msgid "%{amount} Automation Job Being Tagged"
+msgid_plural "%{amount} Automation Jobs Being Tagged"
+msgstr[0] "%{amount} Automation Jobs Being Tagged"
 
 msgid "%{amount} Automation Manager (Ansible Tower) Being Tagged"
 msgid_plural "%{amount} Automation Managers (Ansible Tower) Being Tagged"
 msgstr[0] "%{amount}개의 자동화 관리자자(Ansible Tower)에 태그가 지정됨"
+
+msgid "%{amount} Automation Template Being Tagged"
+msgid_plural "%{amount} Automation Templates Being Tagged"
+msgstr[0] "%{amount} Automation Templates Being Tagged"
 
 msgid "%{amount} Availability Zone Being Tagged"
 msgid_plural "%{amount} Availability Zones Being Tagged"
@@ -587,10 +591,6 @@ msgstr[0] "%{amount}개의 스토리지 관리자에 태그가 지정됨"
 msgid "%{amount} Switch Being Tagged"
 msgid_plural "%{amount} Switches Being Tagged"
 msgstr[0] "%{amount}개의 스위치에 태그가 지정됨"
-
-msgid "%{amount} Template (Ansible Tower) Being Tagged"
-msgid_plural "%{amount} Templates (Ansible Tower) Being Tagged"
-msgstr[0] "%{amount}개의 템플리트(Ansible Tower)에 태그가 지정됨"
 
 msgid "%{amount} VM or Template Being Tagged"
 msgid_plural "%{amount} VMs or Templates Being Tagged"
@@ -1045,6 +1045,9 @@ msgid ""
 "\""
 msgstr ""
 "%{datastore_or_provider} \"%{provider_or_datastore_name}\"의 %{object_types}"
+
+msgid "%{product_name} API Group Not found"
+msgstr "%{product_name} API 그룹을 찾을 수 없음"
 
 msgid "%{product_name} HTML5 Remote Console"
 msgstr "%{product_name} HTML5 원격 콘솔"
@@ -1889,6 +1892,15 @@ msgid ""
 msgstr "'%{route_name}'(으)로 이름 지정된 라우트가 외부 로깅 서버에 연결하도록 구성되었지만 서버가 없습니다."
 
 msgid ""
+"A sentinel policy has soft failed for a plan-only run. This is a final state."
+msgstr "계획 전용 실행에 대한 감시 정책이 소프트 실패했습니다. 최종 상태입니다."
+
+msgid ""
+"A sentinel policy has soft failed, and a user can override it to continue the "
+"run."
+msgstr "감시 정책이 소프트 실패했습니다. 사용자가 이를 재정의하여 실행을 계속할 수 있습니다."
+
+msgid ""
 "A server-side error occurred in the provisioning workflow, contact your "
 "administrator. Use the menu or \"instances by Provider\" link to cancel this "
 "workflow."
@@ -1937,6 +1949,9 @@ msgstr "테넌트 기본 그룹을 삭제할 수 없습니다."
 msgid "A tenant with groups associated cannot be deleted."
 msgstr "연관된 그룹이 있는 테넌트를 삭제할 수 없습니다."
 
+msgid "A user has confirmed the plan."
+msgstr "사용자가 계획을 확인했습니다."
+
 msgid ""
 "A user is needed to raise an action to automate. [%{name}] id:[%{id}] action: "
 "[%{description}]"
@@ -1950,6 +1965,9 @@ msgstr "올바른 사용자 ID는 필수입니다."
 
 msgid "A value must be changed or provider stack will not be updated."
 msgstr "값을 변경해야 합니다. 그렇지 않으면 제공자 스택이 업데이트되지 않습니다."
+
+msgid "A workspace admin forcefully canceled the run."
+msgstr "작업공간 관리자가 실행을 강제로 취소했습니다."
 
 msgid "A0 - 841mm x 1189mm"
 msgstr "A0 - 841mm x 1189mm"
@@ -3657,8 +3675,8 @@ msgstr "모든 조치"
 msgid "All Alerts"
 msgstr "모든 경보"
 
-msgid "All Ansible Tower Configured Systems"
-msgstr "모든 Ansible Tower 구성 시스템"
+msgid "All Automation Configured Systems"
+msgstr "모든 자동화 구성 시스템"
 
 msgid "All Catalog Items"
 msgstr "모든 카탈로그 항목"
@@ -4131,9 +4149,6 @@ msgstr "Ansible Tower"
 msgid "Ansible Tower Configured System"
 msgstr "Ansible Tower 구성 시스템"
 
-msgid "Ansible Tower Configured Systems"
-msgstr "Ansible Tower 구성 시스템"
-
 msgid "Ansible Tower Job"
 msgstr "Ansible Tower 작업"
 
@@ -4339,9 +4354,6 @@ msgstr "메소드에서 입력 필드를 삭제하시겠습니까?"
 msgid "Are you sure you want to delete mapping '%{label_name}'?"
 msgstr "'%{label_name}' 맵핑을 삭제하시겠습니까?"
 
-msgid "Are you sure you want to delete orphaned records for user '%{user}'?"
-msgstr "사용자 %{user}에 대한 고아 레코드를 삭제하시겠습니까?"
-
 msgid "Are you sure you want to delete selected Actions?"
 msgstr "선택한 조치를 삭제하시겠습니까?"
 
@@ -4351,8 +4363,8 @@ msgstr "선택한 조건을 삭제하시겠습니까?"
 msgid "Are you sure you want to delete the following Ansible Tower Provider?"
 msgstr "다음 Ansible Tower 제공자를 삭제하시겠습니까?"
 
-msgid "Are you sure you want to delete the following Ansible Tower Providers?"
-msgstr "다음 Ansible Tower 제공자를 삭제하시겠습니까?"
+msgid "Are you sure you want to delete the following Automation Providers?"
+msgstr "다음 자동화 제공자를 삭제하시겠습니까?"
 
 msgid "Are you sure you want to delete the following Button Group?"
 msgstr "다음 단추 그룹을 삭제하시겠습니까?"
@@ -5289,6 +5301,9 @@ msgstr "자동 배치"
 msgid "Automation"
 msgstr "자동화"
 
+msgid "Automation Configured Systems"
+msgstr "자동화 구성 시스템"
+
 msgid "Automation Engine"
 msgstr "자동화 엔진"
 
@@ -5298,6 +5313,12 @@ msgstr "자동화 오류: %{error_message}"
 msgid "Automation Field"
 msgid_plural "Automation Fields"
 msgstr[0] "자동화 필드"
+
+msgid "Automation Job"
+msgstr "자동화 작업"
+
+msgid "Automation Jobs"
+msgstr "자동화 작업"
 
 msgid "Automation Manager"
 msgstr "자동화 관리자"
@@ -5318,6 +5339,9 @@ msgstr "Automation Manager 저장소 새로 고치기"
 
 msgid "Automation Managers"
 msgstr "자동화 관리자"
+
+msgid "Automation Managers (AWX)"
+msgstr "Automation Managers(AWX)"
 
 msgid "Automation Managers (Ansible Tower)"
 msgstr "자동화 관리자(Ansible Tower)"
@@ -5347,6 +5371,12 @@ msgstr "자동화 로그가 다운로드됨"
 
 msgid "Automation simulation has been run"
 msgstr "자동화 시뮬레이션이 실행됨"
+
+msgid "AutomationManager (Terraform Enterprise)"
+msgstr "AutomationManager(Terraform Enterprise)"
+
+msgid "AutomationManagers (Terraform Enterprise)"
+msgstr "AutomationManagers(Terraform Enterprise)"
 
 msgid "Automations Tasks"
 msgstr "자동화 태스크"
@@ -5963,6 +5993,9 @@ msgstr "상자 %{box_label}/%{error_message}"
 
 msgid "Box %{box_label} must have at least one Element"
 msgstr "대화 상자 %{box_label}에 하나 이상의 요소가 있어야 합니다."
+
+msgid "Branch"
+msgstr "분기"
 
 msgid "Branch/Tag"
 msgstr "분기/태그"
@@ -7938,9 +7971,6 @@ msgstr "상대 날짜/시간 형식으로 변경하려면 클릭하십시오."
 msgid "Click to change to a specific Date/Time format"
 msgstr "특정 날짜/시간 형식으로 변경하려면 클릭하십시오."
 
-msgid "Click to delete Orphaned Records for this user"
-msgstr "이 사용자에 대한 고아 레코드를 삭제하려면 클릭하십시오."
-
 msgid "Click to delete this category"
 msgstr "이 카테고리를 삭제하려면 클릭하십시오."
 
@@ -7973,6 +8003,9 @@ msgstr "카탈로그 항목에서 이 리소스를 제거하려면 클릭하십�
 
 msgid "Click to remove this policy"
 msgstr "이 정책을 제거하려면 클릭하십시오."
+
+msgid "Click to select %s"
+msgstr "클릭하여 %s 선택"
 
 msgid "Click to select Provisioning Entry Point"
 msgstr "프로비저닝 시작점을 선택하려면 클릭하십시오."
@@ -14495,9 +14528,6 @@ msgstr "분석 프로파일 삭제"
 msgid "Delete Ansible Tower Provider"
 msgstr "Ansible Tower 제공자 삭제"
 
-msgid "Delete Ansible Tower Providers"
-msgstr "Ansible Tower 제공자 삭제"
-
 msgid "Delete Automate Class"
 msgstr "자동화 클래스 삭제"
 
@@ -14512,6 +14542,9 @@ msgstr "자동화 메소드 삭제"
 
 msgid "Delete Automate Namespace"
 msgstr "자동화 네임스페이스 삭제"
+
+msgid "Delete Automation Providers"
+msgstr "자동화 제공자 삭제"
 
 msgid "Delete Backing"
 msgstr "배후 삭제"
@@ -17938,14 +17971,14 @@ msgstr "선택한 Ansible 플레이북의 태그 편집"
 msgid "Edit Tags for the selected Ansible Repositories"
 msgstr "선택한 Ansible 저장소의 태그 편집"
 
-msgid "Edit Tags for the selected Ansible Tower Providers"
-msgstr "선택한 Ansible Tower 저장소의 태그 편집"
-
 msgid "Edit Tags for the selected Automation Manager Credentials"
 msgstr "선택한 Automation Manager 신임 정보의 태그 편집"
 
 msgid "Edit Tags for the selected Automation Manager Repositories"
 msgstr "선택한 Automation Manager 저장소의 태그 편집"
+
+msgid "Edit Tags for the selected Automation Providers"
+msgstr "선택한 자동화 제공자에 대한 태그 편집"
 
 msgid "Edit Tags for the selected Availability Zones"
 msgstr "선택한 가용성 구역의 태그 편집"
@@ -20173,9 +20206,6 @@ msgstr "'작업자 재시작' 중 오류: %{message}"
 
 msgid "Error during Analysis Affinity save: %{message}"
 msgstr "분석 선호도 저장 중 오류: %{message}"
-
-msgid "Error during Orphaned Records delete for user %{id}: %{message}"
-msgstr "사용자 %{id}에 대한 고아 레코드 삭제 중 오류: %{message}"
 
 msgid "Error during Saved Report delete from the %{product} Database"
 msgid_plural "Error during Saved Reports delete from the %{product} Database"
@@ -23172,6 +23202,17 @@ msgstr "HA 사용"
 msgid "HA Max Failures"
 msgstr "HA 최대 실패"
 
+msgid ""
+"HCP Terraform has fetched the configuration from VCS and the run will continue"
+"."
+msgstr "HCP Terraform이 VCS에서 구성을 페치했으며 실행이 계속됩니다."
+
+msgid "HCP Terraform is queuing the run to start the planning phase."
+msgstr "HCP Terraform이 계획 단계를 시작하기 위해 해당 실행을 큐에 넣고 있습니다."
+
+msgid "HCP Terraform is waiting for its backend services to start the plan."
+msgstr "HCP Terraform은 백엔드 서비스가 계획을 시작하기를 기다리고 있습니다."
+
 msgid "HKLM"
 msgstr "HKLM"
 
@@ -25552,6 +25593,9 @@ msgstr "JSON 파일 형식이 올바르지 않음, '노드'가 누락되었습�
 msgid "Job"
 msgstr "작업"
 
+msgid "Job (AWX)"
+msgstr "작업(AWX)"
+
 msgid "Job Template"
 msgstr "작업 템플리트"
 
@@ -25559,14 +25603,23 @@ msgid "Job Template (%{provider_description})"
 msgid_plural "Job Templates (%{provider_description})"
 msgstr[0] "작업 템플리트(%{provider_description} )"
 
+msgid "Job Template (AWX)"
+msgstr "작업 템플리트(AWX)"
+
 msgid "Job Template (Ansible Tower)"
 msgstr "작업 템플리트(Ansible Tower)"
+
+msgid "Job Templates (AWX)"
+msgstr "작업 템플리트(AWX)"
 
 msgid "Job Templates (Ansible Tower)"
 msgstr "작업 템플리트(Ansible Tower)"
 
 msgid "Jobs"
 msgstr "직업"
+
+msgid "Jobs (AWX)"
+msgstr "작업(AWX)"
 
 msgid "Job|Agent message"
 msgstr "작업|에이전트 메시지"
@@ -28695,9 +28748,6 @@ msgstr "MetricRollup|태그 이름"
 msgid "MetricRollup|Timestamp"
 msgstr "MetricRollup|시간소인"
 
-msgid "MetricRollup|V date"
-msgstr "MetricRollup|V 날짜"
-
 msgid "MetricRollup|V derived cpu reserved pct"
 msgstr "MetricRollup|V 파생 cpu 예약 백분율"
 
@@ -28727,9 +28777,6 @@ msgstr "MetricRollup|V 백분율 cpu 사용 델타 요약"
 
 msgid "MetricRollup|V pct cpu wait delta summation"
 msgstr "MetricRollup|V 백분율 cpu 대기 델타 요약"
-
-msgid "MetricRollup|V time"
-msgstr "MetricRollup|V 시간"
 
 msgid "Metrics"
 msgstr "메트릭"
@@ -28950,9 +28997,6 @@ msgstr "메트릭|태그 이름"
 msgid "Metric|Timestamp"
 msgstr "메트릭|시간소인"
 
-msgid "Metric|V date"
-msgstr "메트릭|V 날짜"
-
 msgid "Metric|V derived cpu reserved pct"
 msgstr "메트릭|V 파생 cpu 예약 백분율"
 
@@ -28982,9 +29026,6 @@ msgstr "메트릭|V 백분율 cpu 사용 델타 요약"
 
 msgid "Metric|V pct cpu wait delta summation"
 msgstr "메트릭|V 백분율 cpu 대기 델타 요약"
-
-msgid "Metric|V time"
-msgstr "메트릭|V 시간"
 
 msgid "Migrate %{vm_or_template}"
 msgstr "%{vm_or_template} 마이그레이션"
@@ -31503,9 +31544,6 @@ msgstr "구성 섹션 %{section_name} 누락"
 msgid "Missing credentials"
 msgstr "인증 정보가 없음"
 
-msgid "Missing monitoring instance id"
-msgstr "모니터링 인스턴스 ID 누락"
-
 msgid "Modal"
 msgstr "모달"
 
@@ -32069,6 +32107,9 @@ msgstr "옵션 해시와 함께 .new를 호출해야 합니다."
 
 msgid "Must contain only alphanumeric, hyphen, and underscore characters"
 msgstr "영숫자, 하이픈 및 밑줄 문자만 포함해야 합니다."
+
+msgid "Must provide a configuration_script_id"
+msgstr "Configuration_script_id를 제공해야 함"
 
 msgid "Must provide a configuration_script_payload_id"
 msgstr "configuration_script_payload_id를 제공해야 함"
@@ -32988,14 +33029,8 @@ msgstr "선택된 경보가 없습니다."
 msgid "No Assigned Tags"
 msgstr "지정된 태그 없음"
 
-msgid "No Associations defined"
-msgstr "정의된 연관이 없음"
-
 msgid "No Attribute/Value Pairs found."
 msgstr "속성/값 쌍을 찾을 수 없습니다."
-
-msgid "No Attributes defined"
-msgstr "정의된 속성이 없음"
 
 msgid "No Automate Domain were selected to be marked as %{action}"
 msgstr "%{action}(으)로 표시할 자동화 도메인이 선택되지 않음"
@@ -33128,9 +33163,6 @@ msgstr "VM 프로비저닝을 지원하는 인프라 제공자가 추가되지 �
 
 msgid "No Items found."
 msgstr "항목을 찾을 수 없습니다."
-
-msgid "No Methods defined"
-msgstr "정의된 메소드가 없음"
 
 msgid "No My Company Tags are assigned"
 msgstr "내 회사 태그가 지정되지 않았습니다."
@@ -33289,6 +33321,9 @@ msgstr "선택 기준에 일치하는 VM이 없습니다."
 
 msgid "No Value Found"
 msgstr "값을 찾을 수 없음"
+
+msgid "No Virtual Machine defined in template"
+msgstr "템플리트에 정의된 가상 머신 없음"
 
 msgid "No Visibility Expression defined, this button will be always visible"
 msgstr "가시성 표현식이 정의되지 않음, 이 단추는 항상 표시 가능합니다."
@@ -34974,12 +35009,6 @@ msgstr "고아 %{models}"
 msgid "Orphaned %{model}"
 msgstr "고아 %{model}"
 
-msgid "Orphaned Data"
-msgstr "고아 데이터"
-
-msgid "Orphaned Records for userid %{id} were successfully deleted"
-msgstr "사용자 ID %{id}에 대한 고아 레코드가 정상적으로 삭제되었습니다."
-
 msgid "Orphaned VMs"
 msgstr "고아 VM"
 
@@ -35490,6 +35519,9 @@ msgstr "피어"
 
 msgid "Peer Mac Address"
 msgstr "피어 Mac 주소"
+
+msgid "Pending"
+msgstr "보류 중"
 
 msgid "Pending Approval"
 msgstr "승인 보류 중"
@@ -36651,6 +36683,9 @@ msgid "Playbook (%{provider_description})"
 msgid_plural "Playbooks (%{provider_description})"
 msgstr[0] "Playbooks(%{provider_description})"
 
+msgid "Playbook (AWX)"
+msgstr "플레이북(AWX)"
+
 msgid "Playbook (Ansible Tower)"
 msgstr "플레이북(Ansible Tower)"
 
@@ -36663,6 +36698,9 @@ msgstr "플레이북 카탈로그 항목"
 
 msgid "Playbooks"
 msgstr "플레이북"
+
+msgid "Playbooks (AWX)"
+msgstr "플레이북(AWX)"
 
 msgid "Playbooks (Ansible Tower)"
 msgstr "플레이북(Ansible Tower)"
@@ -39883,6 +39921,9 @@ msgstr "현재 필터 제거"
 msgid "Remove the tier"
 msgstr "티어 제거"
 
+msgid "Remove this %s"
+msgstr "이 %s 제거"
+
 msgid "Remove this %{title} from the comparison"
 msgstr "이 %{title}을(를) 비교에서 제거"
 
@@ -40162,9 +40203,6 @@ msgstr[0] "보고서 결과"
 msgid "Report Result Detail"
 msgid_plural "Report Result Details"
 msgstr[0] "보고서 결과 세부사항"
-
-msgid "Report Results by User"
-msgstr "사용자별 결과 보고"
 
 msgid "Report Selection"
 msgstr "보고서 선택사항"
@@ -41313,6 +41351,10 @@ msgstr "%{start_time}에서 %{interval} 실행"
 msgid "Run %{interval} starting on %{start_time}"
 msgstr "%{start_time}에서 %{interval} 시작 실행"
 
+msgid "Run (Terraform Enterprise)"
+msgid_plural "Runs (Terraform Enterprise)"
+msgstr[0] "Runs (Terraform Enterprise)"
+
 msgid "Run Ansible Playbook"
 msgstr "Ansible 플레이북 실행"
 
@@ -41370,6 +41412,9 @@ msgstr "실행 중인 VM"
 
 msgid "Running system services of %{name}"
 msgstr "%{name}의 실행 중인 시스템 서비스"
+
+msgid "Runs (Terraform Enterprise)"
+msgstr "Runs (Terraform Enterprise)"
 
 msgid "Runtime Version"
 msgstr "런타임 버전"
@@ -43005,6 +43050,10 @@ msgstr "서비스 태그"
 msgid "Service Template Tenant"
 msgid_plural "Service Template Tenants"
 msgstr[0] "서비스 템플리트 테넌트"
+
+msgid "Service Terraform Enterprise"
+msgid_plural "Service Terraform Enterprises"
+msgstr[0] "Service Terraform Enterprises"
 
 msgid "Service Terraform Template"
 msgid_plural "Service Terraform Templates"
@@ -46707,9 +46756,6 @@ msgstr "템플리트"
 msgid "Template %{subject} has been published."
 msgstr "%{subject} 템플리트가 공개되었습니다."
 
-msgid "Template (Ansible Tower)"
-msgstr "템플리트(Ansible Tower)"
-
 msgid "Template (Kubevirt)"
 msgid_plural "Templates (Kubevirt)"
 msgstr[0] "템플리트(Kubevirt)"
@@ -46757,9 +46803,6 @@ msgstr "템플리트 & 이미지"
 
 msgid "Templates & Images Accordion"
 msgstr "템플리트 & 이미지 아코디언"
-
-msgid "Templates (Ansible Tower)"
-msgstr "템플리트(Ansible Tower)"
 
 msgid "Templates Accordion"
 msgstr "템플리트 아코디언"
@@ -46918,8 +46961,24 @@ msgstr "종료"
 msgid "Terminate the Guest OS on Instances"
 msgstr "인스턴스의 게스트 OS 종료"
 
+msgid "Terraform Enterprise Provider"
+msgstr "Terraform Enterprise 제공자"
+
+msgid "Terraform Enterprise Workspace"
+msgstr "Terraform Enterprise 작업공간"
+
 msgid "Terraform Template"
 msgstr "Terraform 템플리트"
+
+msgid "Terraform Template (Terraform Enterprise)"
+msgid_plural "Terraform Templates (Terraform Enterprise)"
+msgstr[0] "Terraform Templates (Terraform Enterprise)"
+
+msgid "Terraform has applied the changes specified in the plan."
+msgstr "Terraform이 계획에 지정된 변경사항을 적용했습니다."
+
+msgid "Terraform is applying the changes specified in the plan."
+msgstr "Terraform이 계획에 지정된 변경사항을 적용하는 중입니다."
 
 msgid "Test E-mail Address"
 msgstr "테스트 이메일 주소"
@@ -47173,6 +47232,12 @@ msgstr "SSL 클라이언트 인증을 위한 클라이언트 인증서입니다.
 msgid "The copied item will not be displayed in the catalog by default"
 msgstr "복사된 항목은 기본적으로 카탈로그에 표시되지 않습니다."
 
+msgid "The cost estimation phase of a run has completed."
+msgstr "실행의 비용 추정 단계가 완료되었습니다."
+
+msgid "The cost estimation phase of a run is in progress."
+msgstr "실행의 비용 추정 단계가 진행 중입니다."
+
 msgid "The current search details have been reset"
 msgstr "현재 검색 세부사항이 재설정됨"
 
@@ -47279,6 +47344,24 @@ msgstr "Satellite 6에 연결하는 데 사용할 비밀번호"
 msgid "The password to use to connect to the Microsoft Azure account"
 msgstr "Microsoft Azure 계정에 연결하는 데 사용할 비밀번호"
 
+msgid "The planning phase of a run has completed."
+msgstr "실행의 계획 단계가 완료되었습니다."
+
+msgid "The planning phase of a run is in progress."
+msgstr "실행의 계획 단계가 진행 중입니다."
+
+msgid "The post-plan phase of the run has completed."
+msgstr "실행 후 계획 단계가 완료되었습니다."
+
+msgid "The post-plan phase of the run is in progress."
+msgstr "실행의 후속 계획 단계가 진행 중입니다."
+
+msgid "The pre-plan phase of the run has completed."
+msgstr "실행의 사전 계획 단계가 완료되었습니다."
+
+msgid "The pre-plan phase of the run is in progress."
+msgstr "실행의 사전 계획 단계가 진행 중입니다."
+
 msgid "The provider does not support reconfigure disks"
 msgstr "제공자가 디스크 재구성을 지원하지 않습니다."
 
@@ -47290,6 +47373,32 @@ msgstr "%{role_name} 역할이 서버 %{server_name}에서 활성화되었습니
 
 msgid "The role %{role_name} has started activation on server %{server_name}"
 msgstr "%{role_name} 역할이 서버 %{server_name}에서 활성화를 시작했습니다."
+
+msgid "The run has been canceled."
+msgstr "실행이 취소되었습니다."
+
+msgid "The run has been discarded. This is a final state."
+msgstr "실행이 삭제되었습니다. 최종 상태입니다."
+
+msgid "The run has errored. This is a final state."
+msgstr "실행에 오류가 발생했습니다. 최종 상태입니다."
+
+msgid ""
+"The run has finished its planning, checks, and estimates, and can be confirmed"
+" for apply."
+msgstr "실행에 대한 계획, 검사, 추정이 완료되었으며, 적용을 확인할 수 있습니다."
+
+msgid "The run is completed.  This is a final state."
+msgstr "실행이 완료되었습니다.  최종 상태입니다."
+
+msgid ""
+"The run is waiting for HCP Terraform to fetch the configuration from VCS."
+msgstr "해당 실행은 HCP Terraform이 VCS에서 구성을 페치할 때까지 대기 중입니다."
+
+msgid ""
+"The run should start as soon as the backend services that run terraform have "
+"available capacity."
+msgstr "Terraform을 실행하는 백엔드 서비스에 사용 가능한 용량이 생기면 실행이 시작되어야 합니다."
 
 msgid "The selected %{label} is not in the current region"
 msgstr "선택된 %{label}이(가) 현재 지역에 있지 않음"
@@ -47370,6 +47479,12 @@ msgstr "선택한 스냅샷이 영구적으로 삭제됩니다. 선택한 스냅
 msgid ""
 "The selected task no longer exists, Delete all older Tasks was not completed"
 msgstr "선택한 태스크가 더 이상 존재하지 않음, 오래된 태스크 모두 삭제가 완료되지 않았습니다."
+
+msgid "The sentinel policy checking phase of a run has completed."
+msgstr "실행의 감시 정책 확인 단계가 완료되었습니다."
+
+msgid "The sentinel policy checking phase of a run is in progress."
+msgstr "실행의 감시 정책 확인 단계가 진행 중입니다."
 
 msgid ""
 "The server %{name} memory usage %{memory_usage} exceeded limit %{"
@@ -48633,6 +48748,9 @@ msgstr "미지정:"
 msgid "Unattended GUI"
 msgstr "무인 GUI"
 
+msgid "Unauthorized"
+msgstr "권한 없음"
+
 msgid "Unauthorized object or action"
 msgstr "권한이 없는 오브젝트 또는 조치"
 
@@ -48752,6 +48870,9 @@ msgstr "이름 없는 섹션"
 
 msgid "Unnamed Tab"
 msgstr "이름 없는 탭"
+
+msgid "Unreachable"
+msgstr "연결할 수 없음"
 
 msgid "Unregistered VMs"
 msgstr "등록되지 않은 VM"
@@ -51364,6 +51485,9 @@ msgstr "가상화"
 msgid "Virtualization Type"
 msgstr "가상화 유형"
 
+msgid "Virtualization not enabled"
+msgstr "가상화 사용 안함"
+
 msgid "Visibility"
 msgstr "가시성"
 
@@ -53051,8 +53175,14 @@ msgid "Workflow Template (%{provider_description})"
 msgid_plural "Workflow Templates (%{provider_description})"
 msgstr[0] "워크플로우 템플리트(%{provider_description})"
 
+msgid "Workflow Template (AWX)"
+msgstr "워크플로우 템플리트(AWX)"
+
 msgid "Workflow Template (Ansible Tower)"
 msgstr "워크플로우 템플리트(Ansible Tower)"
+
+msgid "Workflow Templates (AWX)"
+msgstr "워크플로우 템플리트(AWX)"
 
 msgid "Workflow Templates (Ansible Tower)"
 msgstr "워크플로우 템플리트(Ansible Tower)"
@@ -53077,6 +53207,13 @@ msgstr "워크로드"
 
 msgid "Workloads Views"
 msgstr "워크로드 보기"
+
+msgid "Workspace (Terraform Enterprise)"
+msgid_plural "Workspaces (Terraform Enterprise)"
+msgstr[0] "Workspaces (Terraform Enterprise)"
+
+msgid "Workspaces (Terraform Enterprise)"
+msgstr "Workspaces (Terraform Enterprise)"
 
 msgid "Wrap this expression element with a NOT"
 msgstr "이 표현식 요소를 NOT으로 랩핑"
