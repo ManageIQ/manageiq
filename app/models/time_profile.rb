@@ -1,17 +1,18 @@
 class TimeProfile < ApplicationRecord
   ALL_DAYS  = (0...7).to_a.freeze
   ALL_HOURS = (0...24).to_a.freeze
+  DEFAULT_PROFILE = {:days => ALL_DAYS, :hours => ALL_HOURS}.freeze
   DEFAULT_TZ = "UTC".freeze
 
   serialize :profile
-  default_value_for :days,  ALL_DAYS
-  default_value_for :hours, ALL_HOURS
+  validate :validate_profile
 
   has_many  :miq_reports
   has_many  :metric_rollups
 
   scope :rollup_daily_metrics, -> { where(:rollup_daily_metrics => true) }
 
+  after_initialize :ensure_default_profile
   after_create :rebuild_daily_metrics_on_create
   after_save   :rebuild_daily_metrics_on_save
 
@@ -53,12 +54,19 @@ class TimeProfile < ApplicationRecord
     days.include?(ts.in_time_zone(tz_or_default(default_tz)).wday)
   end
 
-  def profile
-    super || (self.profile = {})
+  def profile=(value)
+    ensure_default_profile
+    value = profile.merge(value&.symbolize_keys || {})
+    value[:days] = value[:days].to_a
+    value[:hours] = value[:hours].to_a
+    super
   end
 
-  def profile=(value)
-    super(value&.symbolize_keys)
+  def validate_profile
+    errors.add(:profile, :invalid) unless %i[days hours tz].include_all?(profile.keys)
+    errors.add(:hours, :invalid) unless hours.is_a?(Array) && hours.present? && TimeProfile::ALL_HOURS.include_all?(hours)
+    errors.add(:days, :invalid) unless days.is_a?(Array) && days.present? && TimeProfile::ALL_DAYS.include_all?(days)
+    errors.add(:tz, :invalid) if tz && Time.find_zone(tz).nil?
   end
 
   def tz
@@ -66,8 +74,7 @@ class TimeProfile < ApplicationRecord
   end
 
   def tz=(val)
-    profile_will_change! if profile[:tz] != val
-    profile[:tz] = val
+    self.profile = {:tz => val}
   end
 
   def tz_or_default(default_tz = DEFAULT_TZ)
@@ -79,9 +86,7 @@ class TimeProfile < ApplicationRecord
   end
 
   def days=(arr)
-    arr = arr.collect(&:to_i)
-    profile_will_change! if profile[:days] != arr
-    profile[:days] = arr
+    self.profile = {:days => arr.map(&:to_i).uniq}
   end
 
   def hours
@@ -89,9 +94,7 @@ class TimeProfile < ApplicationRecord
   end
 
   def hours=(arr)
-    arr = arr.collect(&:to_i)
-    profile_will_change! if profile[:hours] != arr
-    profile[:hours] = arr
+    self.profile = {:hours => arr.map(&:to_i).uniq}
   end
 
   def entire_tz?
@@ -155,6 +158,10 @@ class TimeProfile < ApplicationRecord
   end
 
   private
+
+  def ensure_default_profile
+    write_attribute(:profile, DEFAULT_PROFILE) if read_attribute(:profile).nil?
+  end
 
   def rebuild_daily_metrics_on_create
     @rebuild_daily_metrics_on_create = true
