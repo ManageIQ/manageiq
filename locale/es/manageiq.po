@@ -1187,7 +1187,7 @@ msgstr ""
 "%{object_types} en %{datastore_or_provider} \"%{provider_or_datastore_name}\""
 
 msgid "%{product_name} API Group Not found"
-msgstr "% {product_name} Grupo de API no encontrado"
+msgstr "%{product_name} Grupo de API no encontrado"
 
 msgid "%{product_name} HTML5 Remote Console"
 msgstr "Consola remota de %{product_name} HTML5"
