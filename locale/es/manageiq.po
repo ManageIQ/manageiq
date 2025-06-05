@@ -423,10 +423,9 @@ msgstr[1] ""
 "%{amount} gestores de automatización (Ansible Tower) que se están etiquetando"
 
 msgid "%{amount} Automation Template Being Tagged"
-msgstr ""
-"{n, plural, other {%'{'amount'}' Automation Templates Being Tagged} one {%' {'"
-"amount'} ' Plantilla de automatización que se está etiquetando} many {%'{'"
-"amount'}' Automation Templates Being Tagged}}"
+msgid_plural "%{amount} Automation Templates Being Tagged"
+msgstr[0] "%{amount} Automation Template Being Tagged"
+msgstr[1] "%{amount} Automation Templates Being Tagged"
 
 msgid "%{amount} Availability Zone Being Tagged"
 msgid_plural "%{amount} Availability Zones Being Tagged"
