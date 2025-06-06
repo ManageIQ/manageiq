@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2025-02-28 14:08+0000\n"
-"PO-Revision-Date: 2025-02-28 14:08+0000\n"
+"POT-Creation-Date: 2025-06-02 13:54+0000\n"
+"PO-Revision-Date: 2025-06-02 13:54+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -378,13 +378,17 @@ msgid "%{amount} %{object} Being Tagged"
 msgid_plural "%{amount} %{objects} Being Tagged"
 msgstr[0] "針對 %{amount} 個%{objects}加上標籤"
 
-msgid "%{amount} Ansible Tower Job Being Tagged"
-msgid_plural "%{amount} Ansible Tower Jobs Being Tagged"
-msgstr[0] "針對 %{amount} 個 Ansible Tower 工作加上標籤"
+msgid "%{amount} Automation Job Being Tagged"
+msgid_plural "%{amount} Automation Jobs Being Tagged"
+msgstr[0] "%{amount} 個自動化工作已標記"
 
 msgid "%{amount} Automation Manager (Ansible Tower) Being Tagged"
 msgid_plural "%{amount} Automation Managers (Ansible Tower) Being Tagged"
 msgstr[0] "針對 %{amount} 個自動化管理程式 (Ansible Tower) 加上標籤"
+
+msgid "%{amount} Automation Template Being Tagged"
+msgid_plural "%{amount} Automation Templates Being Tagged"
+msgstr[0] "%{amount} 個自動化範本已標記"
 
 msgid "%{amount} Availability Zone Being Tagged"
 msgid_plural "%{amount} Availability Zones Being Tagged"
@@ -585,10 +589,6 @@ msgstr[0] "針對 %{amount} 個儲存體管理程式加上標籤"
 msgid "%{amount} Switch Being Tagged"
 msgid_plural "%{amount} Switches Being Tagged"
 msgstr[0] "針對 %{amount} 個交換器加上標籤"
-
-msgid "%{amount} Template (Ansible Tower) Being Tagged"
-msgid_plural "%{amount} Templates (Ansible Tower) Being Tagged"
-msgstr[0] "針對 %{amount} 個範本 (Ansible Tower) 加上標籤"
 
 msgid "%{amount} VM or Template Being Tagged"
 msgid_plural "%{amount} VMs or Templates Being Tagged"
@@ -1040,6 +1040,9 @@ msgid ""
 "\""
 msgstr ""
 "%{datastore_or_provider} \"%{provider_or_datastore_name}\" 下的「%{object_types}」"
+
+msgid "%{product_name} API Group Not found"
+msgstr "找不到 %{product_name} API 群組"
 
 msgid "%{product_name} HTML5 Remote Console"
 msgstr "%{product_name} HTML5 遠端主控台"
@@ -1881,6 +1884,15 @@ msgid ""
 msgstr "已將名為 '%{route_name}' 的路徑配置為連接至外部記載伺服器，但它不存在"
 
 msgid ""
+"A sentinel policy has soft failed for a plan-only run. This is a final state."
+msgstr "僅執行計劃的 Sentinel 原則發生軟性失敗。 這是最後的狀態。"
+
+msgid ""
+"A sentinel policy has soft failed, and a user can override it to continue the "
+"run."
+msgstr "Sentinel 原則已軟性失敗，使用者可以置換它以繼續執行。"
+
+msgid ""
 "A server-side error occurred in the provisioning workflow, contact your "
 "administrator. Use the menu or \"instances by Provider\" link to cancel this "
 "workflow."
@@ -1927,6 +1939,9 @@ msgstr "無法刪除租戶預設群組"
 msgid "A tenant with groups associated cannot be deleted."
 msgstr "無法刪除與群組相關聯的租戶。"
 
+msgid "A user has confirmed the plan."
+msgstr "一位使用者已確認這項計劃。"
+
 msgid ""
 "A user is needed to raise an action to automate. [%{name}] id:[%{id}] action: "
 "[%{description}]"
@@ -1940,6 +1955,9 @@ msgstr "需要有效的使用者 ID"
 
 msgid "A value must be changed or provider stack will not be updated."
 msgstr "必須變更值，否則不會更新提供者堆疊。"
+
+msgid "A workspace admin forcefully canceled the run."
+msgstr "工作區管理者強制取消了執行。"
 
 msgid "A0 - 841mm x 1189mm"
 msgstr "A0 - 841mm x 1189mm"
@@ -3645,8 +3663,8 @@ msgstr "所有動作"
 msgid "All Alerts"
 msgstr "所有警示"
 
-msgid "All Ansible Tower Configured Systems"
-msgstr "所有 Ansible Tower 配置的系統"
+msgid "All Automation Configured Systems"
+msgstr "所有自動化配置系統"
 
 msgid "All Catalog Items"
 msgstr "所有型錄項目"
@@ -4115,9 +4133,6 @@ msgstr "Ansible Tower"
 msgid "Ansible Tower Configured System"
 msgstr "Ansible Tower 配置系統"
 
-msgid "Ansible Tower Configured Systems"
-msgstr "Ansible Tower 配置系統"
-
 msgid "Ansible Tower Job"
 msgstr "Ansible Tower 工作"
 
@@ -4323,9 +4338,6 @@ msgstr "您確定要從方法中刪除輸入欄位嗎？"
 msgid "Are you sure you want to delete mapping '%{label_name}'?"
 msgstr "確定要刪除對映 '%{label_name}' 嗎？"
 
-msgid "Are you sure you want to delete orphaned records for user '%{user}'?"
-msgstr "您確定要刪除使用者 '%{user}'的孤立記錄嗎？"
-
 msgid "Are you sure you want to delete selected Actions?"
 msgstr "您確定要刪除選取的動作嗎？"
 
@@ -4335,8 +4347,8 @@ msgstr "您確定要刪除選取的條件嗎？"
 msgid "Are you sure you want to delete the following Ansible Tower Provider?"
 msgstr "確定要刪除下列 Ansible Tower 提供者嗎？"
 
-msgid "Are you sure you want to delete the following Ansible Tower Providers?"
-msgstr "確定要刪除下列 Ansible Tower 提供者嗎？"
+msgid "Are you sure you want to delete the following Automation Providers?"
+msgstr "您確定要刪除下列自動化提供者嗎？"
 
 msgid "Are you sure you want to delete the following Button Group?"
 msgstr "確定要刪除下列按鈕群組嗎？"
@@ -5272,6 +5284,9 @@ msgstr "自動放置"
 msgid "Automation"
 msgstr "自動化"
 
+msgid "Automation Configured Systems"
+msgstr "自動化配置系統"
+
 msgid "Automation Engine"
 msgstr "自動化引擎"
 
@@ -5281,6 +5296,12 @@ msgstr "自動化錯誤：%{error_message}"
 msgid "Automation Field"
 msgid_plural "Automation Fields"
 msgstr[0] "自動化欄位"
+
+msgid "Automation Job"
+msgstr "自動化工作"
+
+msgid "Automation Jobs"
+msgstr "自動化工作"
 
 msgid "Automation Manager"
 msgstr "自動化管理程式"
@@ -5301,6 +5322,9 @@ msgstr "Automation Manager 儲存庫重新整理"
 
 msgid "Automation Managers"
 msgstr "自動化管理程式"
+
+msgid "Automation Managers (AWX)"
+msgstr "Automation Manager (AWX)"
 
 msgid "Automation Managers (Ansible Tower)"
 msgstr "自動化管理程式 (Ansible Tower)"
@@ -5330,6 +5354,12 @@ msgstr "已下載自動化日誌"
 
 msgid "Automation simulation has been run"
 msgstr "已執行自動化模擬"
+
+msgid "AutomationManager (Terraform Enterprise)"
+msgstr "AutomationManager (Terraform Enterprise)"
+
+msgid "AutomationManagers (Terraform Enterprise)"
+msgstr "AutomationManager (Terraform Enterprise)"
 
 msgid "Automations Tasks"
 msgstr "自動化作業"
@@ -5945,6 +5975,9 @@ msgstr "方框 %{box_label} / %{error_message}"
 
 msgid "Box %{box_label} must have at least one Element"
 msgstr "方框 %{box_label} 必須至少有一個元素"
+
+msgid "Branch"
+msgstr "分支"
 
 msgid "Branch/Tag"
 msgstr "分支/標籤"
@@ -7918,9 +7951,6 @@ msgstr "按一下以變更為相對日期/時間格式"
 msgid "Click to change to a specific Date/Time format"
 msgstr "按一下以變更為特定日期/時間格式"
 
-msgid "Click to delete Orphaned Records for this user"
-msgstr "按一下以刪除此使用者的孤立記錄"
-
 msgid "Click to delete this category"
 msgstr "按一下以刪除此種類"
 
@@ -7953,6 +7983,9 @@ msgstr "按一下以從型錄項目中移除這個資源"
 
 msgid "Click to remove this policy"
 msgstr "按一下以移除此原則"
+
+msgid "Click to select %s"
+msgstr "按一下選取 %s"
 
 msgid "Click to select Provisioning Entry Point"
 msgstr "按一下以選取「供應進入點」"
@@ -14469,9 +14502,6 @@ msgstr "刪除分析設定檔"
 msgid "Delete Ansible Tower Provider"
 msgstr "刪除 Ansible Tower 提供者"
 
-msgid "Delete Ansible Tower Providers"
-msgstr "刪除 Ansible Tower 提供者"
-
 msgid "Delete Automate Class"
 msgstr "刪除自動化類別"
 
@@ -14486,6 +14516,9 @@ msgstr "刪除自動化方法"
 
 msgid "Delete Automate Namespace"
 msgstr "刪除自動化名稱空間"
+
+msgid "Delete Automation Providers"
+msgstr "刪除自動化提供者"
 
 msgid "Delete Backing"
 msgstr "刪除後備"
@@ -17912,14 +17945,14 @@ msgstr "編輯所選 Ansible Playbook 的標籤"
 msgid "Edit Tags for the selected Ansible Repositories"
 msgstr "編輯所選 Ansible 儲存庫的標籤"
 
-msgid "Edit Tags for the selected Ansible Tower Providers"
-msgstr "編輯所選 Ansible Tower Providers 的標籤"
-
 msgid "Edit Tags for the selected Automation Manager Credentials"
 msgstr "編輯所選 Automation Manager 認證的標籤"
 
 msgid "Edit Tags for the selected Automation Manager Repositories"
 msgstr "編輯所選 Automation Manager 儲存庫的標籤"
+
+msgid "Edit Tags for the selected Automation Providers"
+msgstr "編輯已選取自動化提供者的標籤"
 
 msgid "Edit Tags for the selected Availability Zones"
 msgstr "編輯所選可用性區域的標籤"
@@ -20145,9 +20178,6 @@ msgstr "在「工作程式重新啟動」期間發生錯誤：%{message}"
 
 msgid "Error during Analysis Affinity save: %{message}"
 msgstr "分析親緣性儲存期間發生錯誤：%{message}"
-
-msgid "Error during Orphaned Records delete for user %{id}: %{message}"
-msgstr "在刪除使用者 %{id} 的孤立記錄期間發生錯誤：%{message}"
 
 msgid "Error during Saved Report delete from the %{product} Database"
 msgid_plural "Error during Saved Reports delete from the %{product} Database"
@@ -23141,6 +23171,17 @@ msgstr "已啟用 HA"
 msgid "HA Max Failures"
 msgstr "HA 失敗數上限"
 
+msgid ""
+"HCP Terraform has fetched the configuration from VCS and the run will continue"
+"."
+msgstr "HCP Terraform 已從 VCS 提取配置，並將繼續執行。"
+
+msgid "HCP Terraform is queuing the run to start the planning phase."
+msgstr "HCP Terraform 正在將此執行排入佇列，以開始計劃階段。"
+
+msgid "HCP Terraform is waiting for its backend services to start the plan."
+msgstr "HCP Terraform 正在等待其後端服務以啟動計劃。"
+
 msgid "HKLM"
 msgstr "HKLM"
 
@@ -25521,6 +25562,9 @@ msgstr "JSON 檔案格式不正確，遺漏 'nodes'。"
 msgid "Job"
 msgstr "工作 (Job)"
 
+msgid "Job (AWX)"
+msgstr "工作 (AWX)"
+
 msgid "Job Template"
 msgstr "工作範本"
 
@@ -25528,14 +25572,23 @@ msgid "Job Template (%{provider_description})"
 msgid_plural "Job Templates (%{provider_description})"
 msgstr[0] "工作範本 (%{provider_description})"
 
+msgid "Job Template (AWX)"
+msgstr "工作範本 (AWX)"
+
 msgid "Job Template (Ansible Tower)"
 msgstr "工作範本 (Ansible Tower)"
+
+msgid "Job Templates (AWX)"
+msgstr "工作範本 (AWX)"
 
 msgid "Job Templates (Ansible Tower)"
 msgstr "工作範本 (Ansible Tower)"
 
 msgid "Jobs"
 msgstr "工作"
+
+msgid "Jobs (AWX)"
+msgstr "工作 (AWX)"
 
 msgid "Job|Agent message"
 msgstr "代理程式訊息"
@@ -28659,9 +28712,6 @@ msgstr "標籤名稱"
 msgid "MetricRollup|Timestamp"
 msgstr "時間戳記"
 
-msgid "MetricRollup|V date"
-msgstr "V 日期"
-
 msgid "MetricRollup|V derived cpu reserved pct"
 msgstr "V 衍生的 cpu 保留百分比"
 
@@ -28691,9 +28741,6 @@ msgstr "V CPU 已用差異總和百分比"
 
 msgid "MetricRollup|V pct cpu wait delta summation"
 msgstr "V CPU 等待差異總和百分比"
-
-msgid "MetricRollup|V time"
-msgstr "V 時間"
 
 msgid "Metrics"
 msgstr "度量"
@@ -28914,9 +28961,6 @@ msgstr "標籤名稱"
 msgid "Metric|Timestamp"
 msgstr "時間戳記"
 
-msgid "Metric|V date"
-msgstr "V 日期"
-
 msgid "Metric|V derived cpu reserved pct"
 msgstr "V 衍生的 cpu 保留百分比"
 
@@ -28946,9 +28990,6 @@ msgstr "V CPU 已用差異總和百分比"
 
 msgid "Metric|V pct cpu wait delta summation"
 msgstr "V CPU 等待差異總和百分比"
-
-msgid "Metric|V time"
-msgstr "V 時間"
 
 msgid "Migrate %{vm_or_template}"
 msgstr "移轉 %{vm_or_template}"
@@ -31467,9 +31508,6 @@ msgstr "遺漏配置區段 %{section_name}"
 msgid "Missing credentials"
 msgstr "遺漏認證"
 
-msgid "Missing monitoring instance id"
-msgstr "遺漏監視實例 ID"
-
 msgid "Modal"
 msgstr "限制模式"
 
@@ -32032,6 +32070,9 @@ msgstr "必須使用選項 hash 來呼叫 .new。"
 
 msgid "Must contain only alphanumeric, hyphen, and underscore characters"
 msgstr "必須僅包含英數、連字號和底線字元"
+
+msgid "Must provide a configuration_script_id"
+msgstr "必須提供 configuration_script_id"
 
 msgid "Must provide a configuration_script_payload_id"
 msgstr "必須提供 configuration_script_payload_id"
@@ -32951,14 +32992,8 @@ msgstr "未選取警示。"
 msgid "No Assigned Tags"
 msgstr "沒有指派任何標籤"
 
-msgid "No Associations defined"
-msgstr "未定義關聯"
-
 msgid "No Attribute/Value Pairs found."
 msgstr "找不到屬性/值配對。"
-
-msgid "No Attributes defined"
-msgstr "未定義屬性"
 
 msgid "No Automate Domain were selected to be marked as %{action}"
 msgstr "未選取要標示為 %{action} 的「自動化網域」"
@@ -33091,9 +33126,6 @@ msgstr "未新增支援 VM 供應的基礎架構提供者"
 
 msgid "No Items found."
 msgstr "找不到項目。"
-
-msgid "No Methods defined"
-msgstr "未定義方法"
 
 msgid "No My Company Tags are assigned"
 msgstr "未指派我的公司標籤"
@@ -33252,6 +33284,9 @@ msgstr "沒有 VM 符合選取準則"
 
 msgid "No Value Found"
 msgstr "找不到值"
+
+msgid "No Virtual Machine defined in template"
+msgstr "範本中未定義虛擬機器"
 
 msgid "No Visibility Expression defined, this button will be always visible"
 msgstr "未定義可見性表示式，此按鈕一律可見"
@@ -34933,12 +34968,6 @@ msgstr "孤立的 %{models}"
 msgid "Orphaned %{model}"
 msgstr "孤立的 %{model}"
 
-msgid "Orphaned Data"
-msgstr "孤立資料"
-
-msgid "Orphaned Records for userid %{id} were successfully deleted"
-msgstr "已順利刪除使用者 ID %{id} 的孤立記錄"
-
 msgid "Orphaned VMs"
 msgstr "孤立虛擬機器"
 
@@ -35449,6 +35478,9 @@ msgstr "同層級"
 
 msgid "Peer Mac Address"
 msgstr "同層級 MAC 位址"
+
+msgid "Pending"
+msgstr "擱置中"
 
 msgid "Pending Approval"
 msgstr "擱置中的核准"
@@ -36610,6 +36642,9 @@ msgid "Playbook (%{provider_description})"
 msgid_plural "Playbooks (%{provider_description})"
 msgstr[0] "教戰手冊 (%{provider_description})"
 
+msgid "Playbook (AWX)"
+msgstr "教戰手冊 (AWX)"
+
 msgid "Playbook (Ansible Tower)"
 msgstr "教戰手冊 (Ansible Tower)"
 
@@ -36622,6 +36657,9 @@ msgstr "Playbook 型錄項目"
 
 msgid "Playbooks"
 msgstr "教戰手冊"
+
+msgid "Playbooks (AWX)"
+msgstr "Playbooks (AWX)"
 
 msgid "Playbooks (Ansible Tower)"
 msgstr "教戰手冊 (Ansible Tower)"
@@ -39842,6 +39880,9 @@ msgstr "移除現行過濾器"
 msgid "Remove the tier"
 msgstr "移除層級"
 
+msgid "Remove this %s"
+msgstr "移除此 %s"
+
 msgid "Remove this %{title} from the comparison"
 msgstr "從比較中移除這個 %{title}"
 
@@ -40121,9 +40162,6 @@ msgstr[0] "報告結果"
 msgid "Report Result Detail"
 msgid_plural "Report Result Details"
 msgstr[0] "報告結果詳細資料"
-
-msgid "Report Results by User"
-msgstr "依使用者列出的報告結果"
 
 msgid "Report Selection"
 msgstr "選取報告"
@@ -41271,6 +41309,10 @@ msgstr "在 %{start_time} 執行 %{interval}"
 msgid "Run %{interval} starting on %{start_time}"
 msgstr "從 %{start_time} 開始執行 %{interval}"
 
+msgid "Run (Terraform Enterprise)"
+msgid_plural "Runs (Terraform Enterprise)"
+msgstr[0] "執行 (Terraform Enterprise)"
+
 msgid "Run Ansible Playbook"
 msgstr "執行 Ansible Playbook"
 
@@ -41328,6 +41370,9 @@ msgstr "執行中虛擬機器"
 
 msgid "Running system services of %{name}"
 msgstr "執行 %{name} 的系統服務"
+
+msgid "Runs (Terraform Enterprise)"
+msgstr "執行 (Terraform Enterprise)"
 
 msgid "Runtime Version"
 msgstr "執行時期版本"
@@ -42961,6 +43006,10 @@ msgstr "服務標籤"
 msgid "Service Template Tenant"
 msgid_plural "Service Template Tenants"
 msgstr[0] "服務範本租用戶"
+
+msgid "Service Terraform Enterprise"
+msgid_plural "Service Terraform Enterprises"
+msgstr[0] "服務 Terraform Enterprise"
 
 msgid "Service Terraform Template"
 msgid_plural "Service Terraform Templates"
@@ -46662,9 +46711,6 @@ msgstr "範本"
 msgid "Template %{subject} has been published."
 msgstr "已發佈範本 %{subject}。"
 
-msgid "Template (Ansible Tower)"
-msgstr "範本 (Ansible Tower)"
-
 msgid "Template (Kubevirt)"
 msgid_plural "Templates (Kubevirt)"
 msgstr[0] "範本 (Kubevirt)"
@@ -46712,9 +46758,6 @@ msgstr "範本和映像檔"
 
 msgid "Templates & Images Accordion"
 msgstr "範本與映像協定"
-
-msgid "Templates (Ansible Tower)"
-msgstr "範本 (Ansible Tower)"
 
 msgid "Templates Accordion"
 msgstr "範本折疊項目"
@@ -46873,8 +46916,24 @@ msgstr "終止"
 msgid "Terminate the Guest OS on Instances"
 msgstr "終止實例上的來賓作業系統"
 
+msgid "Terraform Enterprise Provider"
+msgstr "Terraform Enterprise 提供者"
+
+msgid "Terraform Enterprise Workspace"
+msgstr "Terraform Enterprise 工作區"
+
 msgid "Terraform Template"
 msgstr "Terraform 範本"
+
+msgid "Terraform Template (Terraform Enterprise)"
+msgid_plural "Terraform Templates (Terraform Enterprise)"
+msgstr[0] "Terraform 範本 (Terraform Enterprise)"
+
+msgid "Terraform has applied the changes specified in the plan."
+msgstr "Terraform 已套用計劃中指定的變更。"
+
+msgid "Terraform is applying the changes specified in the plan."
+msgstr "Terraform 正在套用計劃中指定的變更。"
 
 msgid "Test E-mail Address"
 msgstr "測試電子郵件位址"
@@ -47126,6 +47185,12 @@ msgstr "用於 SSL 用戶端鑑別的用戶端憑證。"
 msgid "The copied item will not be displayed in the catalog by default"
 msgstr "依預設，複製項目將不會顯示在型錄中"
 
+msgid "The cost estimation phase of a run has completed."
+msgstr "執行的成本估計階段已完成。"
+
+msgid "The cost estimation phase of a run is in progress."
+msgstr "執行的成本估計階段正在進行中。"
+
 msgid "The current search details have been reset"
 msgstr "已重設現行搜尋詳細資料"
 
@@ -47232,6 +47297,24 @@ msgstr "用來連接至 Satellite 6 的密碼"
 msgid "The password to use to connect to the Microsoft Azure account"
 msgstr "用來連接至 Microsoft Azure 帳戶的密碼"
 
+msgid "The planning phase of a run has completed."
+msgstr "執行的計劃階段已完成。"
+
+msgid "The planning phase of a run is in progress."
+msgstr "執行的計劃階段正在進行中。"
+
+msgid "The post-plan phase of the run has completed."
+msgstr "執行的後置計劃階段已完成。"
+
+msgid "The post-plan phase of the run is in progress."
+msgstr "執行的後置計劃階段正在進行中。"
+
+msgid "The pre-plan phase of the run has completed."
+msgstr "執行的前置計劃階段已完成。"
+
+msgid "The pre-plan phase of the run is in progress."
+msgstr "執行的前置計劃階段正在進行中。"
+
 msgid "The provider does not support reconfigure disks"
 msgstr "此提供者不支援重新配置磁碟"
 
@@ -47243,6 +47326,32 @@ msgstr "角色 %{role_name} 已在伺服器 %{server_name} 上啟動"
 
 msgid "The role %{role_name} has started activation on server %{server_name}"
 msgstr "角色 %{role_name} 已在伺服器 %{server_name} 開始啟動"
+
+msgid "The run has been canceled."
+msgstr "已取消執行。"
+
+msgid "The run has been discarded. This is a final state."
+msgstr "已捨棄執行。 這是最後的狀態。"
+
+msgid "The run has errored. This is a final state."
+msgstr "執行發生錯誤。 這是最後的狀態。"
+
+msgid ""
+"The run has finished its planning, checks, and estimates, and can be confirmed"
+" for apply."
+msgstr "執行已完成計劃、檢查和估計，可確認套用。"
+
+msgid "The run is completed.  This is a final state."
+msgstr "執行完成。  這是最後的狀態。"
+
+msgid ""
+"The run is waiting for HCP Terraform to fetch the configuration from VCS."
+msgstr "執行正在等待 HCP Terraform 從 VCS 提取配置。"
+
+msgid ""
+"The run should start as soon as the backend services that run terraform have "
+"available capacity."
+msgstr "一旦執行 Terraform 的後端服務具有可用容量時，執行就應該立即開始。"
 
 msgid "The selected %{label} is not in the current region"
 msgstr "選取的 %{label} 不在現行地區中"
@@ -47323,6 +47432,12 @@ msgstr "將永久刪除選取的 Snapshot。您確定要刪除選取的 Snapshot
 msgid ""
 "The selected task no longer exists, Delete all older Tasks was not completed"
 msgstr "選取的作業已不再存在，刪除所有較舊作業未完成"
+
+msgid "The sentinel policy checking phase of a run has completed."
+msgstr "執行的 Sentinel 原則檢查階段已完成。"
+
+msgid "The sentinel policy checking phase of a run is in progress."
+msgstr "執行的 Sentinel 原則檢查階段正在進行中。"
 
 msgid ""
 "The server %{name} memory usage %{memory_usage} exceeded limit %{"
@@ -48586,6 +48701,9 @@ msgstr "已取消指派："
 msgid "Unattended GUI"
 msgstr "自動式 GUI"
 
+msgid "Unauthorized"
+msgstr "未獲授權"
+
 msgid "Unauthorized object or action"
 msgstr "未獲授權的物件或動作"
 
@@ -48705,6 +48823,9 @@ msgstr "未命名區段"
 
 msgid "Unnamed Tab"
 msgstr "未命名標籤"
+
+msgid "Unreachable"
+msgstr "無法連接"
 
 msgid "Unregistered VMs"
 msgstr "已取消登錄的虛擬機器"
@@ -51313,6 +51434,9 @@ msgstr "虛擬化"
 msgid "Virtualization Type"
 msgstr "虛擬化類型"
 
+msgid "Virtualization not enabled"
+msgstr "未啟用虛擬化"
+
 msgid "Visibility"
 msgstr "可見性"
 
@@ -52997,8 +53121,14 @@ msgid "Workflow Template (%{provider_description})"
 msgid_plural "Workflow Templates (%{provider_description})"
 msgstr[0] "工作流程範本 (%{provider_description})"
 
+msgid "Workflow Template (AWX)"
+msgstr "工作流程範本 (AWX)"
+
 msgid "Workflow Template (Ansible Tower)"
 msgstr "工作流程範本 (Ansible Tower)"
+
+msgid "Workflow Templates (AWX)"
+msgstr "工作流程範本 (AWX)"
 
 msgid "Workflow Templates (Ansible Tower)"
 msgstr "工作流程範本 (Ansible Tower)"
@@ -53023,6 +53153,13 @@ msgstr "工作量"
 
 msgid "Workloads Views"
 msgstr "工作量視圖"
+
+msgid "Workspace (Terraform Enterprise)"
+msgid_plural "Workspaces (Terraform Enterprise)"
+msgstr[0] "工作區 (Terraform Enterprise)"
+
+msgid "Workspaces (Terraform Enterprise)"
+msgstr "工作區 (Terraform Enterprise)"
 
 msgid "Wrap this expression element with a NOT"
 msgstr "以 NOT 來包裝這個表示式元素"
