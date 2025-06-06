@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2025-02-28 14:08+0000\n"
-"PO-Revision-Date: 2025-02-28 14:08+0000\n"
+"POT-Creation-Date: 2025-06-02 13:54+0000\n"
+"PO-Revision-Date: 2025-06-02 13:54+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -380,13 +380,17 @@ msgid "%{amount} %{object} Being Tagged"
 msgid_plural "%{amount} %{objects} Being Tagged"
 msgstr[0] "%{amount} %{objects} タグ付けされています"
 
-msgid "%{amount} Ansible Tower Job Being Tagged"
-msgid_plural "%{amount} Ansible Tower Jobs Being Tagged"
-msgstr[0] "%{amount} 個の Ansible Tower ジョブがタグ付けされています"
+msgid "%{amount} Automation Job Being Tagged"
+msgid_plural "%{amount} Automation Jobs Being Tagged"
+msgstr[0] "%{amount} 自動化ジョブはタグ付けされています"
 
 msgid "%{amount} Automation Manager (Ansible Tower) Being Tagged"
 msgid_plural "%{amount} Automation Managers (Ansible Tower) Being Tagged"
 msgstr[0] "%{amount} 個の自動化マネージャー (Ansible Tower) がタグ付けされています"
+
+msgid "%{amount} Automation Template Being Tagged"
+msgid_plural "%{amount} Automation Templates Being Tagged"
+msgstr[0] "%{amount} 自動化ジョブはタグ付けされています"
 
 msgid "%{amount} Availability Zone Being Tagged"
 msgid_plural "%{amount} Availability Zones Being Tagged"
@@ -587,10 +591,6 @@ msgstr[0] "%{amount} 個のストレージ・マネージャーがタグ付け�
 msgid "%{amount} Switch Being Tagged"
 msgid_plural "%{amount} Switches Being Tagged"
 msgstr[0] "%{amount} 個のスイッチがタグ付けされています"
-
-msgid "%{amount} Template (Ansible Tower) Being Tagged"
-msgid_plural "%{amount} Templates (Ansible Tower) Being Tagged"
-msgstr[0] "%{amount} 個のテンプレート (Ansible Tower) がタグ付けされています"
 
 msgid "%{amount} VM or Template Being Tagged"
 msgid_plural "%{amount} VMs or Templates Being Tagged"
@@ -1046,6 +1046,9 @@ msgid ""
 msgstr ""
 "%{datastore_or_provider} \"%{provider_or_datastore_name}\" の下にある %{"
 "object_types}"
+
+msgid "%{product_name} API Group Not found"
+msgstr "%{product_name} APIグループが見つかりません"
 
 msgid "%{product_name} HTML5 Remote Console"
 msgstr "%{product_name} HTML5 リモート・コンソール"
@@ -1889,6 +1892,15 @@ msgid ""
 msgstr "'%{route_name}' という名前のルートは外部ログ・サーバーに接続するように構成されていますが、存在していません。"
 
 msgid ""
+"A sentinel policy has soft failed for a plan-only run. This is a final state."
+msgstr "plan-onlyの実行で、sentinelポリシーがsoft failedになりました。 これが最終状態です。"
+
+msgid ""
+"A sentinel policy has soft failed, and a user can override it to continue the "
+"run."
+msgstr "sentinelポリシーはsoft failedになっており、ユーザーはそれを上書きして実行を継続することができます。"
+
+msgid ""
 "A server-side error occurred in the provisioning workflow, contact your "
 "administrator. Use the menu or \"instances by Provider\" link to cancel this "
 "workflow."
@@ -1939,6 +1951,9 @@ msgstr "テナントのデフォルト・グループは削除できません。
 msgid "A tenant with groups associated cannot be deleted."
 msgstr "グループが関連付けられているテナントは削除できません。"
 
+msgid "A user has confirmed the plan."
+msgstr "ユーザーがこのプランを確定しました。"
+
 msgid ""
 "A user is needed to raise an action to automate. [%{name}] id:[%{id}] action: "
 "[%{description}]"
@@ -1953,6 +1968,9 @@ msgstr "有効なユーザー ID が必要です"
 
 msgid "A value must be changed or provider stack will not be updated."
 msgstr "値を変更する必要があります。そうしないと、プロバイダー・スタックは更新されません。"
+
+msgid "A workspace admin forcefully canceled the run."
+msgstr "ワークスペースの管理者が実行を強制的にキャンセルしました。"
 
 msgid "A0 - 841mm x 1189mm"
 msgstr "A0 - 841mm x 1189mm"
@@ -3660,8 +3678,8 @@ msgstr "すべてのアクション"
 msgid "All Alerts"
 msgstr "すべてのアラート"
 
-msgid "All Ansible Tower Configured Systems"
-msgstr "すべての Ansible Tower 構成済みシステム"
+msgid "All Automation Configured Systems"
+msgstr "すべての自動化構成済みシステム"
 
 msgid "All Catalog Items"
 msgstr "すべてのカタログ項目"
@@ -4134,9 +4152,6 @@ msgstr "Ansible Tower"
 msgid "Ansible Tower Configured System"
 msgstr "Ansible Tower 構成済みシステム"
 
-msgid "Ansible Tower Configured Systems"
-msgstr "Ansible Tower 構成済みシステム"
-
 msgid "Ansible Tower Job"
 msgstr "Ansible Tower ジョブ"
 
@@ -4342,9 +4357,6 @@ msgstr "メソッドから入力フィールドを削除しますか?"
 msgid "Are you sure you want to delete mapping '%{label_name}'?"
 msgstr "マッピング '%{label_name}' を削除しますか?"
 
-msgid "Are you sure you want to delete orphaned records for user '%{user}'?"
-msgstr "ユーザー '%{user}' の孤立したレコードを削除しますか?"
-
 msgid "Are you sure you want to delete selected Actions?"
 msgstr "選択したアクションを削除しますか?"
 
@@ -4354,8 +4366,8 @@ msgstr "選択した条件を削除しますか?"
 msgid "Are you sure you want to delete the following Ansible Tower Provider?"
 msgstr "以下の Ansible Tower プロバイダーを削除しますか?"
 
-msgid "Are you sure you want to delete the following Ansible Tower Providers?"
-msgstr "以下の Ansible Tower プロバイダーを削除しますか?"
+msgid "Are you sure you want to delete the following Automation Providers?"
+msgstr "以下の自動化プロバイダーを削除してもよろしいですか?"
 
 msgid "Are you sure you want to delete the following Button Group?"
 msgstr "以下のボタン・グループを削除しますか?"
@@ -5294,6 +5306,9 @@ msgstr "自動配置"
 msgid "Automation"
 msgstr "自動化"
 
+msgid "Automation Configured Systems"
+msgstr "自動化構成済みシステム"
+
 msgid "Automation Engine"
 msgstr "自動化エンジン"
 
@@ -5303,6 +5318,12 @@ msgstr "自動化エラー: %{error_message}"
 msgid "Automation Field"
 msgid_plural "Automation Fields"
 msgstr[0] "自動化フィールド"
+
+msgid "Automation Job"
+msgstr "自動化ジョブ"
+
+msgid "Automation Jobs"
+msgstr "自動化ジョブ"
 
 msgid "Automation Manager"
 msgstr "自動化マネージャー"
@@ -5323,6 +5344,9 @@ msgstr "自動化マネージャー・リポジトリーのリフレッシュ"
 
 msgid "Automation Managers"
 msgstr "自動化マネージャー"
+
+msgid "Automation Managers (AWX)"
+msgstr "自動化マネージャー (AWX)"
 
 msgid "Automation Managers (Ansible Tower)"
 msgstr "自動化マネージャー (Ansible Tower)"
@@ -5352,6 +5376,12 @@ msgstr "自動化ログをダウンロードしました"
 
 msgid "Automation simulation has been run"
 msgstr "自動化シミュレーションが実行されました"
+
+msgid "AutomationManager (Terraform Enterprise)"
+msgstr "自動化マネージャー (Terraform Enterprise)"
+
+msgid "AutomationManagers (Terraform Enterprise)"
+msgstr "自動化マネージャー (Terraform Enterprise)"
 
 msgid "Automations Tasks"
 msgstr "自動化タスク"
@@ -5968,6 +5998,9 @@ msgstr "ボックス %{box_label} / %{error_message}"
 
 msgid "Box %{box_label} must have at least one Element"
 msgstr "ボックス %{box_label} には 1 つ以上の要素がなければなりません"
+
+msgid "Branch"
+msgstr "ブランチ"
 
 msgid "Branch/Tag"
 msgstr "ブランチ/タグ"
@@ -7945,9 +7978,6 @@ msgstr "クリックして相対的な日付/時間の形式に変更する"
 msgid "Click to change to a specific Date/Time format"
 msgstr "クリックして特定の日付/時間の形式に変更する"
 
-msgid "Click to delete Orphaned Records for this user"
-msgstr "クリックしてこのユーザーの孤立したレコードを削除する"
-
 msgid "Click to delete this category"
 msgstr "クリックしてこのカテゴリーを削除する"
 
@@ -7980,6 +8010,9 @@ msgstr "クリックしてこのリソースをカタログ項目から削除す
 
 msgid "Click to remove this policy"
 msgstr "クリックしてこのポリシーを削除する"
+
+msgid "Click to select %s"
+msgstr "クリックして%sを選択"
 
 msgid "Click to select Provisioning Entry Point"
 msgstr "クリックしてプロビジョニングのエントリー・ポイントを選択する"
@@ -14136,8 +14169,8 @@ msgid ""
 "Datastore import was successful. Added/Updated %{namespace_stats} Namespaces, "
 "%{class_stats} Classes, %{instance_stats} Instances, %{method_stats} Methods."
 msgstr ""
-"データ・ストアが正常にインポートされました。 追加/更新された %{namespace_stats} の名前空間、%{class_stats} クラス、%"
-"{instance_stats} インスタンス、%{method_stats} メソッド。"
+"データ・ストアが正常にインポートされました。 追加/更新された %{namespace_stats} の名前空間、%{class_stats} クラス、%{"
+"instance_stats} インスタンス、%{method_stats} メソッド。"
 
 msgid "Datastore summary for Hosts"
 msgstr "ホストのデータ・ストア概要"
@@ -14503,9 +14536,6 @@ msgstr "分析プロファイルの削除"
 msgid "Delete Ansible Tower Provider"
 msgstr "Ansible Tower プロバイダーの削除"
 
-msgid "Delete Ansible Tower Providers"
-msgstr "Ansible Tower プロバイダーの削除"
-
 msgid "Delete Automate Class"
 msgstr "自動化クラスの削除"
 
@@ -14520,6 +14550,9 @@ msgstr "自動化メソッドの削除"
 
 msgid "Delete Automate Namespace"
 msgstr "自動化名前空間の削除"
+
+msgid "Delete Automation Providers"
+msgstr "自動化プロバイダーの削除"
 
 msgid "Delete Backing"
 msgstr "バッキングの削除"
@@ -17948,14 +17981,14 @@ msgstr "選択した Ansible Playbooks タグの編集"
 msgid "Edit Tags for the selected Ansible Repositories"
 msgstr "選択した Ansible リポジトリー・タグの編集"
 
-msgid "Edit Tags for the selected Ansible Tower Providers"
-msgstr "選択した Ansible Tower プロバイダーのタグの編集"
-
 msgid "Edit Tags for the selected Automation Manager Credentials"
 msgstr "選択した自動化マネージャー資格情報のタグの編集"
 
 msgid "Edit Tags for the selected Automation Manager Repositories"
 msgstr "選択した自動化マネージャー・リポジトリーのタグの編集"
+
+msgid "Edit Tags for the selected Automation Providers"
+msgstr "選択した自動化プロバイダーのタグを編集する"
 
 msgid "Edit Tags for the selected Availability Zones"
 msgstr "選択したアベイラビリティー・ゾーンのタグの編集"
@@ -20182,9 +20215,6 @@ msgstr "'ワーカー再起動' の実行中にエラーが発生しました: %
 
 msgid "Error during Analysis Affinity save: %{message}"
 msgstr "分析アフィニティーの保存時にエラーが発生しました: %{message}"
-
-msgid "Error during Orphaned Records delete for user %{id}: %{message}"
-msgstr "ユーザー %{id} 用の孤立したレコードの削除時のエラー: %{message}"
 
 msgid "Error during Saved Report delete from the %{product} Database"
 msgid_plural "Error during Saved Reports delete from the %{product} Database"
@@ -23182,6 +23212,17 @@ msgstr "HA 有効"
 msgid "HA Max Failures"
 msgstr "HA 不具合の最大値"
 
+msgid ""
+"HCP Terraform has fetched the configuration from VCS and the run will continue"
+"."
+msgstr "HCP TerraformはVCSから構成を取得し、実行は継続されます。"
+
+msgid "HCP Terraform is queuing the run to start the planning phase."
+msgstr "HCP Terraformはプランニング・フェーズを開始するために実行をキューに入れています。"
+
+msgid "HCP Terraform is waiting for its backend services to start the plan."
+msgstr "HCP Terraformはがプランを開始するためのバックエンドサービスの起動を待機中です。"
+
 msgid "HKLM"
 msgstr "HKLM"
 
@@ -25567,6 +25608,9 @@ msgstr "JSON ファイル形式が正しくありません。'nodes' があり�
 msgid "Job"
 msgstr "ジョブ"
 
+msgid "Job (AWX)"
+msgstr "ジョブ (AWX)"
+
 msgid "Job Template"
 msgstr "ジョブ・テンプレート"
 
@@ -25574,14 +25618,23 @@ msgid "Job Template (%{provider_description})"
 msgid_plural "Job Templates (%{provider_description})"
 msgstr[0] "Job Templates (%{provider_description})"
 
+msgid "Job Template (AWX)"
+msgstr "ジョブ・テンプレート (AWX)"
+
 msgid "Job Template (Ansible Tower)"
 msgstr "ジョブ・テンプレート (Ansible Tower)"
+
+msgid "Job Templates (AWX)"
+msgstr "ジョブ・テンプレート (AWX)"
 
 msgid "Job Templates (Ansible Tower)"
 msgstr "ジョブ・テンプレート (Ansible Tower)"
 
 msgid "Jobs"
 msgstr "ジョブ"
+
+msgid "Jobs (AWX)"
+msgstr "ジョブ (AWX)"
 
 msgid "Job|Agent message"
 msgstr "エージェント・メッセージ"
@@ -28710,9 +28763,6 @@ msgstr "タグ名"
 msgid "MetricRollup|Timestamp"
 msgstr "タイム・スタンプ"
 
-msgid "MetricRollup|V date"
-msgstr "日付"
-
 msgid "MetricRollup|V derived cpu reserved pct"
 msgstr "予約済みの派生 CPU の割合"
 
@@ -28742,9 +28792,6 @@ msgstr "CPU 使用デルタ総計の割合"
 
 msgid "MetricRollup|V pct cpu wait delta summation"
 msgstr "CPU 待機デルタ総計の割合"
-
-msgid "MetricRollup|V time"
-msgstr "時間"
 
 msgid "Metrics"
 msgstr "メトリック"
@@ -28965,9 +29012,6 @@ msgstr "タグ名"
 msgid "Metric|Timestamp"
 msgstr "タイム・スタンプ"
 
-msgid "Metric|V date"
-msgstr "日付"
-
 msgid "Metric|V derived cpu reserved pct"
 msgstr "予約済みの派生 CPU の割合"
 
@@ -28997,9 +29041,6 @@ msgstr "CPU 使用デルタ総計の割合"
 
 msgid "Metric|V pct cpu wait delta summation"
 msgstr "CPU 待機デルタ総計の割合"
-
-msgid "Metric|V time"
-msgstr "時間"
 
 msgid "Migrate %{vm_or_template}"
 msgstr "%{vm_or_template}の移行"
@@ -31518,9 +31559,6 @@ msgstr "構成セクション %{section_name} がありません"
 msgid "Missing credentials"
 msgstr "資格情報がありません"
 
-msgid "Missing monitoring instance id"
-msgstr "モニター・インスタンス ID がありません"
-
 msgid "Modal"
 msgstr "モーダル"
 
@@ -32084,6 +32122,9 @@ msgstr "オプションのハッシュで .new を呼び出す必要がありま
 
 msgid "Must contain only alphanumeric, hyphen, and underscore characters"
 msgstr "英数字、ハイフン、および下線文字のみを含める必要があります"
+
+msgid "Must provide a configuration_script_id"
+msgstr "configuration_script_idを指定する必要があります"
 
 msgid "Must provide a configuration_script_payload_id"
 msgstr "configuration_script_payload_id を指定する必要があります"
@@ -33003,14 +33044,8 @@ msgstr "選択したアラートはありません。"
 msgid "No Assigned Tags"
 msgstr "割り当てられたタグはありません"
 
-msgid "No Associations defined"
-msgstr "関連付けが定義されていません"
-
 msgid "No Attribute/Value Pairs found."
 msgstr "属性/値ペアが見つかりませんでした。"
-
-msgid "No Attributes defined"
-msgstr "属性が定義されていません"
 
 msgid "No Automate Domain were selected to be marked as %{action}"
 msgstr "%{action} のマークを付けるために選択した自動化ドメインはありません"
@@ -33143,9 +33178,6 @@ msgstr "VM のプロビジョニングをサポートするインフラストラ
 
 msgid "No Items found."
 msgstr "項目が見つかりませんでした。"
-
-msgid "No Methods defined"
-msgstr "メソッドが定義されていません"
 
 msgid "No My Company Tags are assigned"
 msgstr "My Company タグは割り当てられていません"
@@ -33304,6 +33336,9 @@ msgstr "選択基準に一致する VM はありません"
 
 msgid "No Value Found"
 msgstr "値が見つかりませんでした"
+
+msgid "No Virtual Machine defined in template"
+msgstr "テンプレートに仮想マシンが定義されていません"
 
 msgid "No Visibility Expression defined, this button will be always visible"
 msgstr "表示式が定義されていません。このボタンは常に有効にされます。"
@@ -34992,12 +35027,6 @@ msgstr "孤立 %{models}"
 msgid "Orphaned %{model}"
 msgstr "孤立した %{model}"
 
-msgid "Orphaned Data"
-msgstr "孤立データ"
-
-msgid "Orphaned Records for userid %{id} were successfully deleted"
-msgstr "ユーザー ID  %{id} の孤立したレコードが正常に削除されました"
-
 msgid "Orphaned VMs"
 msgstr "孤立した VM"
 
@@ -35508,6 +35537,9 @@ msgstr "ピア"
 
 msgid "Peer Mac Address"
 msgstr "ピア MAC アドレス"
+
+msgid "Pending"
+msgstr "処理待ち"
 
 msgid "Pending Approval"
 msgstr "承認待ち"
@@ -36669,6 +36701,9 @@ msgid "Playbook (%{provider_description})"
 msgid_plural "Playbooks (%{provider_description})"
 msgstr[0] "Playbooks (%{provider_description})"
 
+msgid "Playbook (AWX)"
+msgstr "プレイブック (AWX)"
+
 msgid "Playbook (Ansible Tower)"
 msgstr "Playbook (Ansible Tower)"
 
@@ -36681,6 +36716,9 @@ msgstr "Playbook のカタログ項目"
 
 msgid "Playbooks"
 msgstr "Playbook"
+
+msgid "Playbooks (AWX)"
+msgstr "Playbooks (AWX)"
 
 msgid "Playbooks (Ansible Tower)"
 msgstr "Playbook (Ansible Tower)"
@@ -39903,6 +39941,9 @@ msgstr "現在のフィルターの削除"
 msgid "Remove the tier"
 msgstr "階層の削除"
 
+msgid "Remove this %s"
+msgstr "この%sを削除"
+
 msgid "Remove this %{title} from the comparison"
 msgstr "比較からこの %{title}を削除"
 
@@ -40182,9 +40223,6 @@ msgstr[0] "結果のレポート"
 msgid "Report Result Detail"
 msgid_plural "Report Result Details"
 msgstr[0] "結果の詳細をレポート"
-
-msgid "Report Results by User"
-msgstr "ユーザー別のレポート結果"
 
 msgid "Report Selection"
 msgstr "レポートの選択"
@@ -41333,6 +41371,10 @@ msgstr "実行: %{interval} (開始時間: %{start_time})"
 msgid "Run %{interval} starting on %{start_time}"
 msgstr "実行: %{interval} (開始時間: %{start_time})"
 
+msgid "Run (Terraform Enterprise)"
+msgid_plural "Runs (Terraform Enterprise)"
+msgstr[0] "実行 (Terraform Enterprise)"
+
 msgid "Run Ansible Playbook"
 msgstr "Ansible Playbook の実行"
 
@@ -41390,6 +41432,9 @@ msgstr "実行中の VM"
 
 msgid "Running system services of %{name}"
 msgstr "%{name} の実行中のシステム・サービス"
+
+msgid "Runs (Terraform Enterprise)"
+msgstr "実行 (Terraform Enterprise)"
 
 msgid "Runtime Version"
 msgstr "ランタイム・バージョン"
@@ -43027,6 +43072,10 @@ msgstr "サービス・タグ"
 msgid "Service Template Tenant"
 msgid_plural "Service Template Tenants"
 msgstr[0] "サービス・テンプレート・テナント"
+
+msgid "Service Terraform Enterprise"
+msgid_plural "Service Terraform Enterprises"
+msgstr[0] "サービスTerraform Enterprises"
 
 msgid "Service Terraform Template"
 msgid_plural "Service Terraform Templates"
@@ -46731,9 +46780,6 @@ msgstr "テンプレート"
 msgid "Template %{subject} has been published."
 msgstr "テンプレート%{subject} が公開されました。"
 
-msgid "Template (Ansible Tower)"
-msgstr "テンプレート (Ansible Tower)"
-
 msgid "Template (Kubevirt)"
 msgid_plural "Templates (Kubevirt)"
 msgstr[0] "テンプレート (Kubevirt)"
@@ -46781,9 +46827,6 @@ msgstr "テンプレート & イメージ"
 
 msgid "Templates & Images Accordion"
 msgstr "テンプレート & イメージ・アコーディオン"
-
-msgid "Templates (Ansible Tower)"
-msgstr "テンプレート (Ansible Tower)"
 
 msgid "Templates Accordion"
 msgstr "テンプレート・アコーディオン"
@@ -46942,8 +46985,24 @@ msgstr "終了"
 msgid "Terminate the Guest OS on Instances"
 msgstr "インスタンスのゲスト OS を終了"
 
+msgid "Terraform Enterprise Provider"
+msgstr "Terraform Enterpriseプロバイダー"
+
+msgid "Terraform Enterprise Workspace"
+msgstr "Terraform Enterpriseワークスペース"
+
 msgid "Terraform Template"
 msgstr "Terraform テンプレート"
+
+msgid "Terraform Template (Terraform Enterprise)"
+msgid_plural "Terraform Templates (Terraform Enterprise)"
+msgstr[0] "Terraformテンプレート (Terraform Enterprise)"
+
+msgid "Terraform has applied the changes specified in the plan."
+msgstr "Terraformはプランで指定された変更を適用しました。"
+
+msgid "Terraform is applying the changes specified in the plan."
+msgstr "Terraformはプランで指定された変更を適用しています。"
 
 msgid "Test E-mail Address"
 msgstr "テスト E メール・アドレス"
@@ -47198,6 +47257,12 @@ msgstr "SSL クライアント認証用のクライアント証明書。"
 msgid "The copied item will not be displayed in the catalog by default"
 msgstr "コピーされた項目は、デフォルトでカタログに表示されません"
 
+msgid "The cost estimation phase of a run has completed."
+msgstr "実行のコスト見積もりフェーズが完了しました。"
+
+msgid "The cost estimation phase of a run is in progress."
+msgstr "実行のコスト見積もりフェーズは進行中です。"
+
 msgid "The current search details have been reset"
 msgstr "現在の検索詳細がリセットされました"
 
@@ -47304,6 +47369,24 @@ msgstr "Satellite 6 に接続するために使用するパスワード"
 msgid "The password to use to connect to the Microsoft Azure account"
 msgstr "Microsoft Azure アカウントに接続するために使用するパスワード"
 
+msgid "The planning phase of a run has completed."
+msgstr "実行の計画フェーズが完了しました。"
+
+msgid "The planning phase of a run is in progress."
+msgstr "実行の計画フェーズは進行中です。"
+
+msgid "The post-plan phase of the run has completed."
+msgstr "実行の計画後フェーズが完了しました。"
+
+msgid "The post-plan phase of the run is in progress."
+msgstr "実行の計画後フェーズは進行中です。"
+
+msgid "The pre-plan phase of the run has completed."
+msgstr "実行の計画前フェーズが完了しました。"
+
+msgid "The pre-plan phase of the run is in progress."
+msgstr "実行の計画前フェーズは進行中です。"
+
 msgid "The provider does not support reconfigure disks"
 msgstr "プロバイダーは再構成ディスクをサポートしません"
 
@@ -47315,6 +47398,32 @@ msgstr "ロール %{role_name} がサーバー %{server_name} でアクティブ
 
 msgid "The role %{role_name} has started activation on server %{server_name}"
 msgstr "ロール %{role_name} がサーバー %{server_name} でアクティブ化を開始しました"
+
+msgid "The run has been canceled."
+msgstr "実行はキャンセルされました。"
+
+msgid "The run has been discarded. This is a final state."
+msgstr "実行は廃棄されました。 これが最終状態です。"
+
+msgid "The run has errored. This is a final state."
+msgstr "実行はエラーになりました。 これが最終状態です。"
+
+msgid ""
+"The run has finished its planning, checks, and estimates, and can be confirmed"
+" for apply."
+msgstr "実行の計画、確認、および見積もりが完了し、適用を確認できるようになりました。"
+
+msgid "The run is completed.  This is a final state."
+msgstr "実行は完了しました。  これが最終状態です。"
+
+msgid ""
+"The run is waiting for HCP Terraform to fetch the configuration from VCS."
+msgstr "実行はHCP TerraformがVCSから設定を取得するのを待機しています。"
+
+msgid ""
+"The run should start as soon as the backend services that run terraform have "
+"available capacity."
+msgstr "Terraformを実行するバックエンド・サービスに空き容量ができ次第、実行は開始されるはずです。"
 
 msgid "The selected %{label} is not in the current region"
 msgstr "選択した %{label}は現在のリージョンにありません"
@@ -47395,6 +47504,12 @@ msgstr "選択したスナップショットは完全に削除されます。選
 msgid ""
 "The selected task no longer exists, Delete all older Tasks was not completed"
 msgstr "選択したタスクは存在しません。古いタスクすべての削除は完了していません。"
+
+msgid "The sentinel policy checking phase of a run has completed."
+msgstr "実行のsentinelポリシー・チェック・フェーズが完了しました。"
+
+msgid "The sentinel policy checking phase of a run is in progress."
+msgstr "実行のsentinelポリシー・チェック・フェーズが進行中です。"
 
 msgid ""
 "The server %{name} memory usage %{memory_usage} exceeded limit %{"
@@ -48658,6 +48773,9 @@ msgstr "未割り当て:"
 msgid "Unattended GUI"
 msgstr "自動 GUI"
 
+msgid "Unauthorized"
+msgstr "認証されていない"
+
 msgid "Unauthorized object or action"
 msgstr "未承認オブジェクトまたはアクション"
 
@@ -48777,6 +48895,9 @@ msgstr "名前なしセクション"
 
 msgid "Unnamed Tab"
 msgstr "名前なしタブ"
+
+msgid "Unreachable"
+msgstr "到達不能"
 
 msgid "Unregistered VMs"
 msgstr "非登録 VM"
@@ -51388,6 +51509,9 @@ msgstr "仮想化"
 msgid "Virtualization Type"
 msgstr "仮想タイプ"
 
+msgid "Virtualization not enabled"
+msgstr "仮想化が有効になっていません"
+
 msgid "Visibility"
 msgstr "表示設定"
 
@@ -53077,8 +53201,14 @@ msgid "Workflow Template (%{provider_description})"
 msgid_plural "Workflow Templates (%{provider_description})"
 msgstr[0] "Workflow Templates (%{provider_description})"
 
+msgid "Workflow Template (AWX)"
+msgstr "ワークフロー・テンプレート (AWX)"
+
 msgid "Workflow Template (Ansible Tower)"
 msgstr "ワークフロー・テンプレート (Ansible Tower)"
+
+msgid "Workflow Templates (AWX)"
+msgstr "ワークフロー・テンプレート (AWX)"
 
 msgid "Workflow Templates (Ansible Tower)"
 msgstr "ワークフロー・テンプレート (Ansible Tower)"
@@ -53103,6 +53233,13 @@ msgstr "ワークロード"
 
 msgid "Workloads Views"
 msgstr "ワークロード・ビュー"
+
+msgid "Workspace (Terraform Enterprise)"
+msgid_plural "Workspaces (Terraform Enterprise)"
+msgstr[0] "ワークスペース (Terraform Enterprise)"
+
+msgid "Workspaces (Terraform Enterprise)"
+msgstr "ワークスペース (Terraform Enterprise)"
 
 msgid "Wrap this expression element with a NOT"
 msgstr "この式要素を NOT でラップ"
