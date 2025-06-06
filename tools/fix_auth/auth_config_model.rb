@@ -9,6 +9,20 @@ module FixAuth
       # true if we want to output the keys as symbols (default: false - output as string keys)
       attr_accessor :symbol_keys
 
+      DEFAULT_PERMITTED_CLASSES = [
+        ActiveSupport::Duration,
+        ActiveSupport::HashWithIndifferentAccess,
+        ActiveSupport::TimeWithZone,
+        ActiveSupport::TimeZone,
+        Date,
+        DateTime,
+        Object,
+        Range,
+        Regexp,
+        Symbol,
+        Time
+      ].freeze
+
       def display_record(r)
         puts "  #{r.id}:"
       end
@@ -16,7 +30,7 @@ module FixAuth
       def display_column(r, column, options)
         puts "    #{column}:"
 
-        hash = r.send(column).kind_of?(Hash) ? r.send(column) : YAML.load(r.send(column))
+        hash = r.send(column).kind_of?(Hash) ? r.send(column) : YAML.safe_load(r.send(column), :aliases => true, :permitted_classes => DEFAULT_PERMITTED_CLASSES)
         traverse_column([], hash, options)
       end
 
@@ -35,7 +49,7 @@ module FixAuth
       end
 
       def recrypt(old_value, options = {})
-        hash = old_value.kind_of?(Hash) ? old_value : YAML.load(old_value)
+        hash = old_value.kind_of?(Hash) ? old_value : YAML.safe_load(old_value, :aliases => true, :permitted_classes => DEFAULT_PERMITTED_CLASSES)
 
         Vmdb::SettingsWalker.walk(hash) do |key, value, _path, owning|
           owning[key] = super(value, options) if password_field?(key) && value.present?
