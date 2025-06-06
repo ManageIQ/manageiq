@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2025-02-28 14:08+0000\n"
-"PO-Revision-Date: 2025-02-28 14:08+0000\n"
+"POT-Creation-Date: 2025-06-02 13:54+0000\n"
+"PO-Revision-Date: 2025-06-02 13:54+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -410,10 +410,10 @@ msgid_plural "%{amount} %{objects} Being Tagged"
 msgstr[0] "%{amount} %{object} en cours de balisage"
 msgstr[1] "%{amount} %{objects} en cours de balisage"
 
-msgid "%{amount} Ansible Tower Job Being Tagged"
-msgid_plural "%{amount} Ansible Tower Jobs Being Tagged"
-msgstr[0] "%{amount} travail Ansible Tower en cours de balisage"
-msgstr[1] "%{amount} travaux Ansible Tower en cours de balisage"
+msgid "%{amount} Automation Job Being Tagged"
+msgid_plural "%{amount} Automation Jobs Being Tagged"
+msgstr[0] "%{amount} Automation Job Being Tagged"
+msgstr[1] "%{amount} Automation Jobs Being Tagged"
 
 msgid "%{amount} Automation Manager (Ansible Tower) Being Tagged"
 msgid_plural "%{amount} Automation Managers (Ansible Tower) Being Tagged"
@@ -421,6 +421,11 @@ msgstr[0] ""
 "%{amount} gestionnaire d'automatisation (Ansible Tower) en cours de balisage"
 msgstr[1] ""
 "%{amount} gestionnaires d'automatisation (Ansible Tower) en cours de balisage"
+
+msgid "%{amount} Automation Template Being Tagged"
+msgid_plural "%{amount} Automation Templates Being Tagged"
+msgstr[0] "%{amount} Automation Template Being Tagged"
+msgstr[1] "%{amount} Automation Templates Being Tagged"
 
 msgid "%{amount} Availability Zone Being Tagged"
 msgid_plural "%{amount} Availability Zones Being Tagged"
@@ -673,11 +678,6 @@ msgid "%{amount} Switch Being Tagged"
 msgid_plural "%{amount} Switches Being Tagged"
 msgstr[0] "%{amount} commutateur en cours de balisage"
 msgstr[1] "%{amount} commutateurs en cours de balisage"
-
-msgid "%{amount} Template (Ansible Tower) Being Tagged"
-msgid_plural "%{amount} Templates (Ansible Tower) Being Tagged"
-msgstr[0] "%{amount} modèle (Ansible Tower) en cours de balisage"
-msgstr[1] "%{amount} modèles (Ansible Tower) en cours de balisage"
 
 msgid "%{amount} VM or Template Being Tagged"
 msgid_plural "%{amount} VMs or Templates Being Tagged"
@@ -1178,6 +1178,9 @@ msgid ""
 msgstr ""
 "%{object_types} sous %{datastore_or_provider} \"%{provider_or_datastore_name}"
 "\""
+
+msgid "%{product_name} API Group Not found"
+msgstr "%{product_name} API Group Not found"
 
 msgid "%{product_name} HTML5 Remote Console"
 msgstr "Console distante HTML5 %{product_name}"
@@ -2112,6 +2115,19 @@ msgstr ""
 "de journalisation externe, mais elle est introuvable"
 
 msgid ""
+"A sentinel policy has soft failed for a plan-only run. This is a final state."
+msgstr ""
+"Une stratégie sentinelle a échoué de manière non critique pour une exécution "
+"de plan uniquement. Il s'agit d'un état final."
+
+msgid ""
+"A sentinel policy has soft failed, and a user can override it to continue the "
+"run."
+msgstr ""
+"Une stratégie sentinelle a échoué de manière non critique, et un utilisateur "
+"peut la remplacer pour poursuivre l'exécution."
+
+msgid ""
 "A server-side error occurred in the provisioning workflow, contact your "
 "administrator. Use the menu or \"instances by Provider\" link to cancel this "
 "workflow."
@@ -2169,6 +2185,9 @@ msgid "A tenant with groups associated cannot be deleted."
 msgstr ""
 "Un locataire auquel des groupes sont associés ne peut pas être supprimé"
 
+msgid "A user has confirmed the plan."
+msgstr "Un utilisateur a confirmé le plan."
+
 msgid ""
 "A user is needed to raise an action to automate. [%{name}] id:[%{id}] action: "
 "[%{description}]"
@@ -2186,6 +2205,9 @@ msgid "A value must be changed or provider stack will not be updated."
 msgstr ""
 "Une valeur doit être changée, sans quoi la pile du fournisseur ne sera pas "
 "mise à jour."
+
+msgid "A workspace admin forcefully canceled the run."
+msgstr "Un administrateur d'espace de travail a annulé de force l'exécution."
 
 msgid "A0 - 841mm x 1189mm"
 msgstr "A0 - 841 mm x 1189 mm"
@@ -3969,8 +3991,8 @@ msgstr "Toutes les actions"
 msgid "All Alerts"
 msgstr "Toutes les alertes"
 
-msgid "All Ansible Tower Configured Systems"
-msgstr "Tous les systèmes configurés pour Ansible Tower"
+msgid "All Automation Configured Systems"
+msgstr "Tous les systèmes configurés pour l'automatisation"
 
 msgid "All Catalog Items"
 msgstr "Tous les éléments de catalogue"
@@ -4460,9 +4482,6 @@ msgstr "Ansible Tower"
 msgid "Ansible Tower Configured System"
 msgstr "Système configuré pour Ansible Tower"
 
-msgid "Ansible Tower Configured Systems"
-msgstr "Systèmes configurés pour Ansible Tower"
-
 msgid "Ansible Tower Job"
 msgstr "Travail Ansible Tower"
 
@@ -4683,11 +4702,6 @@ msgstr "Voulez-vous vraiment supprimer la zone d'entrée de la méthode ?"
 msgid "Are you sure you want to delete mapping '%{label_name}'?"
 msgstr "Voulez-vous vraiment supprimer le mappage '%{label_name}' ?"
 
-msgid "Are you sure you want to delete orphaned records for user '%{user}'?"
-msgstr ""
-"Voulez-vous vraiment supprimer les enregistrements orphelins pour "
-"l'utilisateur '%{user}' ?"
-
 msgid "Are you sure you want to delete selected Actions?"
 msgstr "Voulez-vous vraiment supprimer les actions sélectionnées ?"
 
@@ -4697,9 +4711,10 @@ msgstr "Voulez-vous vraiment supprimer les conditions sélectionnées ?"
 msgid "Are you sure you want to delete the following Ansible Tower Provider?"
 msgstr "Voulez-vous vraiment supprimer le fournisseur Ansible Tower suivant ?"
 
-msgid "Are you sure you want to delete the following Ansible Tower Providers?"
+msgid "Are you sure you want to delete the following Automation Providers?"
 msgstr ""
-"Voulez-vous vraiment supprimer les fournisseurs Ansible Tower suivants ?"
+"Voulez-vous vraiment supprimer les fournisseurs de services d'automatisation "
+"suivants ?"
 
 msgid "Are you sure you want to delete the following Button Group?"
 msgstr "Voulez-vous vraiment supprimer le groupe de boutons suivant ?"
@@ -5678,6 +5693,9 @@ msgstr "Placement automatique"
 msgid "Automation"
 msgstr "Automatisation"
 
+msgid "Automation Configured Systems"
+msgstr "Systèmes configurés pour l'automatisation"
+
 msgid "Automation Engine"
 msgstr "Moteur d'automatisation"
 
@@ -5688,6 +5706,12 @@ msgid "Automation Field"
 msgid_plural "Automation Fields"
 msgstr[0] "Zone d'automatisation"
 msgstr[1] "Zones d'automatisation"
+
+msgid "Automation Job"
+msgstr "Travail d'automatisation"
+
+msgid "Automation Jobs"
+msgstr "Travaux d'automatisation"
 
 msgid "Automation Manager"
 msgstr "Gestionnaire d'automatisation"
@@ -5710,6 +5734,9 @@ msgstr "Actualisation des référentiels du gestionnaire d'automatisation"
 
 msgid "Automation Managers"
 msgstr "Gestionnaires d'automatisation"
+
+msgid "Automation Managers (AWX)"
+msgstr "Automation Managers (AWX)"
 
 msgid "Automation Managers (Ansible Tower)"
 msgstr "Gestionnaires d'automatisation (Ansible Tower)"
@@ -5741,6 +5768,12 @@ msgstr "Journal d'automatisation téléchargé"
 
 msgid "Automation simulation has been run"
 msgstr "La simulation d'automatisation a été exécutée"
+
+msgid "AutomationManager (Terraform Enterprise)"
+msgstr "AutomationManager (Terraform Enterprise)"
+
+msgid "AutomationManagers (Terraform Enterprise)"
+msgstr "AutomationManagers (Terraform Enterprise)"
 
 msgid "Automations Tasks"
 msgstr "Tâches d'automatisation"
@@ -6379,6 +6412,9 @@ msgstr "Zone %{box_label} / %{error_message}"
 
 msgid "Box %{box_label} must have at least one Element"
 msgstr "La zone %{box_label} doit comporter au moins un élément"
+
+msgid "Branch"
+msgstr "Branche"
 
 msgid "Branch/Tag"
 msgstr "Branche/Balise"
@@ -8542,10 +8578,6 @@ msgstr "Cliquez pour basculer vers un format Date/Heure relatif"
 msgid "Click to change to a specific Date/Time format"
 msgstr "Cliquez pour basculer vers un format Date/Heure spécifique"
 
-msgid "Click to delete Orphaned Records for this user"
-msgstr ""
-"Cliquez pour supprimer des enregistrements orphelins pour cet utilisateur"
-
 msgid "Click to delete this category"
 msgstr "Cliquez pour supprimer cette catégorie"
 
@@ -8578,6 +8610,9 @@ msgstr "Cliquez pour retirer cette ressource de l'élément de catalogue"
 
 msgid "Click to remove this policy"
 msgstr "Cliquez pour retirer cette stratégie"
+
+msgid "Click to select %s"
+msgstr "Cliquez pour sélectionner %s"
 
 msgid "Click to select Provisioning Entry Point"
 msgstr "Cliquez pour sélectionner un point d'entrée de mise à disposition"
@@ -15478,9 +15513,6 @@ msgstr "Supprimer le profil d'analyse"
 msgid "Delete Ansible Tower Provider"
 msgstr "Supprimer un fournisseur Ansible Tower"
 
-msgid "Delete Ansible Tower Providers"
-msgstr "Supprimer des fournisseurs Ansible Tower"
-
 msgid "Delete Automate Class"
 msgstr "Supprimer la classe d'automatisation"
 
@@ -15495,6 +15527,9 @@ msgstr "Supprimer une méthode d'automatisation"
 
 msgid "Delete Automate Namespace"
 msgstr "Supprimer un espace de nom d'automatisation"
+
+msgid "Delete Automation Providers"
+msgstr "Supprimer les fournisseurs de services d'automatisation"
 
 msgid "Delete Backing"
 msgstr "Supprimer la sauvegarde"
@@ -19042,9 +19077,6 @@ msgstr "Editer les balises pour les playbooks Ansible sélectionnés"
 msgid "Edit Tags for the selected Ansible Repositories"
 msgstr "Editer les balises pour les référentiels Ansible sélectionnés"
 
-msgid "Edit Tags for the selected Ansible Tower Providers"
-msgstr "Editer les balises pour les fournisseurs Ansible Tower sélectionnés"
-
 msgid "Edit Tags for the selected Automation Manager Credentials"
 msgstr ""
 "Editer les étiquettes pour les données d'identification du gestionnaire "
@@ -19053,6 +19085,11 @@ msgstr ""
 msgid "Edit Tags for the selected Automation Manager Repositories"
 msgstr ""
 "Editer les étiquettes pour les référentiels du gestionnaire d'automatisation "
+"sélectionnés"
+
+msgid "Edit Tags for the selected Automation Providers"
+msgstr ""
+"Modifier les balises pour les fournisseurs de services d'automatisation "
 "sélectionnés"
 
 msgid "Edit Tags for the selected Availability Zones"
@@ -21385,11 +21422,6 @@ msgstr "Erreur lors du redémarrage des agents : %{message}"
 
 msgid "Error during Analysis Affinity save: %{message}"
 msgstr "Erreur lors de la sauvegarde de l'affinité d'analyse : %{message}"
-
-msgid "Error during Orphaned Records delete for user %{id}: %{message}"
-msgstr ""
-"Erreur lors de la suppression des enregistrements orphelins pour l'utilisateur"
-" %{id} : %{message}"
 
 msgid "Error during Saved Report delete from the %{product} Database"
 msgid_plural "Error during Saved Reports delete from the %{product} Database"
@@ -24522,6 +24554,21 @@ msgstr "Haute disponibilité activée"
 msgid "HA Max Failures"
 msgstr "Nb max. d'échecs haute disponibilité"
 
+msgid ""
+"HCP Terraform has fetched the configuration from VCS and the run will continue"
+"."
+msgstr ""
+"HCP Terraform a extrait la configuration à partir de VCS et l'exécution se "
+"poursuit."
+
+msgid "HCP Terraform is queuing the run to start the planning phase."
+msgstr ""
+"HCP Terraform met en file d'attente l'exécution pour démarrer la phase de "
+"planification."
+
+msgid "HCP Terraform is waiting for its backend services to start the plan."
+msgstr "HCP Terraform attend que ses services backend démarrent le plan."
+
 msgid "HKLM"
 msgstr "HKLM"
 
@@ -27024,6 +27071,9 @@ msgstr "Le format de fichier JSON est incorrect ; 'noeuds' manquants."
 msgid "Job"
 msgstr "Travail"
 
+msgid "Job (AWX)"
+msgstr "Job (AWX)"
+
 msgid "Job Template"
 msgstr "Modèle de travail"
 
@@ -27032,14 +27082,23 @@ msgid_plural "Job Templates (%{provider_description})"
 msgstr[0] "Job Template (%{provider_description})"
 msgstr[1] "Job Templates (%{provider_description})"
 
+msgid "Job Template (AWX)"
+msgstr "Job Template (AWX)"
+
 msgid "Job Template (Ansible Tower)"
 msgstr "Job Template (Ansible Tower)"
+
+msgid "Job Templates (AWX)"
+msgstr "Job Templates (AWX)"
 
 msgid "Job Templates (Ansible Tower)"
 msgstr "Modèles de travail (Ansible Tower)"
 
 msgid "Jobs"
 msgstr "Travaux"
+
+msgid "Jobs (AWX)"
+msgstr "Jobs (AWX)"
 
 msgid "Job|Agent message"
 msgstr "Message d'agent"
@@ -30288,9 +30347,6 @@ msgstr "Noms de balise"
 msgid "MetricRollup|Timestamp"
 msgstr "Horodatage"
 
-msgid "MetricRollup|V date"
-msgstr "Date (V)"
-
 msgid "MetricRollup|V derived cpu reserved pct"
 msgstr "% d'UC dérivée réservé (V)"
 
@@ -30320,9 +30376,6 @@ msgstr "% de totalisation de delta d'UC utilisé (V)"
 
 msgid "MetricRollup|V pct cpu wait delta summation"
 msgstr "% de totalisation de delta d'UC à l'état En attente (V)"
-
-msgid "MetricRollup|V time"
-msgstr "Heure (V)"
 
 msgid "Metrics"
 msgstr "Métriques"
@@ -30543,9 +30596,6 @@ msgstr "Noms de balise"
 msgid "Metric|Timestamp"
 msgstr "Horodatage"
 
-msgid "Metric|V date"
-msgstr "Date (V)"
-
 msgid "Metric|V derived cpu reserved pct"
 msgstr "% d'UC dérivée réservé (V)"
 
@@ -30575,9 +30625,6 @@ msgstr "% de totalisation de delta d'UC utilisé (V)"
 
 msgid "Metric|V pct cpu wait delta summation"
 msgstr "% de totalisation de delta d'UC à l'état En attente (V)"
-
-msgid "Metric|V time"
-msgstr "Heure (V)"
 
 msgid "Migrate %{vm_or_template}"
 msgstr "Migrer %{vm_or_template}"
@@ -33136,9 +33183,6 @@ msgstr "Section de configuration %{section_name} manquante"
 msgid "Missing credentials"
 msgstr "Identifiants manquants"
 
-msgid "Missing monitoring instance id"
-msgstr "ID instance de surveillance manquant"
-
 msgid "Modal"
 msgstr "Modal"
 
@@ -33721,6 +33765,9 @@ msgid "Must contain only alphanumeric, hyphen, and underscore characters"
 msgstr ""
 "Doit contenir uniquement des caractères alphanumériques, des traits d'union et"
 " des traits de soulignement"
+
+msgid "Must provide a configuration_script_id"
+msgstr "Un ID de script de configuration doit être fourni"
 
 msgid "Must provide a configuration_script_payload_id"
 msgstr "Vous devez indiquer un ID de contenu de script de configuration"
@@ -34679,14 +34726,8 @@ msgstr "Aucune alerte n'est sélectionnée."
 msgid "No Assigned Tags"
 msgstr "Aucune balise affectée"
 
-msgid "No Associations defined"
-msgstr "Aucune association n'est définie"
-
 msgid "No Attribute/Value Pairs found."
 msgstr "Aucune paire attribut/valeur trouvée."
-
-msgid "No Attributes defined"
-msgstr "Aucun attribut n'est défini"
 
 msgid "No Automate Domain were selected to be marked as %{action}"
 msgstr ""
@@ -34842,9 +34883,6 @@ msgstr ""
 
 msgid "No Items found."
 msgstr "Aucun élément trouvé."
-
-msgid "No Methods defined"
-msgstr "Aucune méthode n'est définie"
 
 msgid "No My Company Tags are assigned"
 msgstr "Aucune balise Ma société n'est affectée"
@@ -35025,6 +35063,9 @@ msgstr "Aucune machine virtuelle ne correspond aux critères sélectionnés"
 
 msgid "No Value Found"
 msgstr "Aucune valeur trouvée"
+
+msgid "No Virtual Machine defined in template"
+msgstr "Aucune machine virtuelle n'est définie dans le modèle"
 
 msgid "No Visibility Expression defined, this button will be always visible"
 msgstr ""
@@ -36837,13 +36878,6 @@ msgstr "%{models} orphelins"
 msgid "Orphaned %{model}"
 msgstr "%{model} orphelins"
 
-msgid "Orphaned Data"
-msgstr "Données orphelines"
-
-msgid "Orphaned Records for userid %{id} were successfully deleted"
-msgstr ""
-"Les enregistrements orphelins de l'ID utilisateur %{id} ont été supprimés"
-
 msgid "Orphaned VMs"
 msgstr "Machines virtuelles orphelines"
 
@@ -37364,6 +37398,9 @@ msgstr "Homologue"
 
 msgid "Peer Mac Address"
 msgstr "Adresse MAC homologue"
+
+msgid "Pending"
+msgstr "En attente"
 
 msgid "Pending Approval"
 msgstr "En attente d'approbation"
@@ -38565,6 +38602,9 @@ msgid_plural "Playbooks (%{provider_description})"
 msgstr[0] "Playbook (%{provider_description})"
 msgstr[1] "Playbooks (%{provider_description})"
 
+msgid "Playbook (AWX)"
+msgstr "Playbook (AWX)"
+
 msgid "Playbook (Ansible Tower)"
 msgstr "Playbook (Ansible Tower)"
 
@@ -38578,6 +38618,9 @@ msgstr "Elément de catalogue playbook"
 
 msgid "Playbooks"
 msgstr "Playbooks"
+
+msgid "Playbooks (AWX)"
+msgstr "Playbooks (AWX)"
 
 msgid "Playbooks (Ansible Tower)"
 msgstr "Playbooks (Ansible Tower)"
@@ -42052,6 +42095,9 @@ msgstr "Retirer le filtre actuel"
 msgid "Remove the tier"
 msgstr "Retirer le niveau"
 
+msgid "Remove this %s"
+msgstr "Supprimer ce %s"
+
 msgid "Remove this %{title} from the comparison"
 msgstr "Retirer ce %{title} de la comparaison"
 
@@ -42339,9 +42385,6 @@ msgid "Report Result Detail"
 msgid_plural "Report Result Details"
 msgstr[0] "Détail du résultat du rapport"
 msgstr[1] "Détails du résultat du rapport"
-
-msgid "Report Results by User"
-msgstr "Résultats de rapport par utilisateur"
 
 msgid "Report Selection"
 msgstr "Sélection de rapport"
@@ -43543,6 +43586,11 @@ msgstr "Exécuter %{interval} sur %{start_time}"
 msgid "Run %{interval} starting on %{start_time}"
 msgstr "Exécuter %{interval} à partir du %{start_time}"
 
+msgid "Run (Terraform Enterprise)"
+msgid_plural "Runs (Terraform Enterprise)"
+msgstr[0] "Run (Terraform Enterprise)"
+msgstr[1] "Runs (Terraform Enterprise)"
+
 msgid "Run Ansible Playbook"
 msgstr "Exécuter un playbook Ansible"
 
@@ -43601,6 +43649,9 @@ msgstr "Machines virtuelles en cours d'exécution"
 
 msgid "Running system services of %{name}"
 msgstr "Exécution des services système de %{name}"
+
+msgid "Runs (Terraform Enterprise)"
+msgstr "Runs (Terraform Enterprise)"
 
 msgid "Runtime Version"
 msgstr "Version d'exécution"
@@ -45316,6 +45367,11 @@ msgid "Service Template Tenant"
 msgid_plural "Service Template Tenants"
 msgstr[0] "Locataire de modèle de service"
 msgstr[1] "Locataires de modèle de service"
+
+msgid "Service Terraform Enterprise"
+msgid_plural "Service Terraform Enterprises"
+msgstr[0] "Service Terraform Enterprise"
+msgstr[1] "Service Terraform Enterprises"
 
 msgid "Service Terraform Template"
 msgid_plural "Service Terraform Templates"
@@ -49197,9 +49253,6 @@ msgstr "Modèle"
 msgid "Template %{subject} has been published."
 msgstr "Le modèle %{subject} a été publié."
 
-msgid "Template (Ansible Tower)"
-msgstr "Modèle (Ansible Tower)"
-
 msgid "Template (Kubevirt)"
 msgid_plural "Templates (Kubevirt)"
 msgstr[0] "Modèle (Kubevirt)"
@@ -49252,9 +49305,6 @@ msgstr "Modèles et images"
 
 msgid "Templates & Images Accordion"
 msgstr "Accordéon Modèles et images"
-
-msgid "Templates (Ansible Tower)"
-msgstr "Modèles (Ansible Tower)"
 
 msgid "Templates Accordion"
 msgstr "Accordéon Modèles"
@@ -49415,8 +49465,25 @@ msgstr "Quitter"
 msgid "Terminate the Guest OS on Instances"
 msgstr "Arrêter le système d'exploitation invité sur des instances"
 
+msgid "Terraform Enterprise Provider"
+msgstr "Terraform Enterprise Provider"
+
+msgid "Terraform Enterprise Workspace"
+msgstr "Terraform Enterprise Workspace"
+
 msgid "Terraform Template"
 msgstr "Modèle Terraform"
+
+msgid "Terraform Template (Terraform Enterprise)"
+msgid_plural "Terraform Templates (Terraform Enterprise)"
+msgstr[0] "Terraform Template (Terraform Enterprise)"
+msgstr[1] "Terraform Templates (Terraform Enterprise)"
+
+msgid "Terraform has applied the changes specified in the plan."
+msgstr "Terraform a appliqué les modifications indiquées dans le plan."
+
+msgid "Terraform is applying the changes specified in the plan."
+msgstr "Terraform applique les modifications indiquées dans le plan."
 
 msgid "Test E-mail Address"
 msgstr "Adresse électronique de test"
@@ -49697,6 +49764,12 @@ msgstr "Certificat client pour l'authentification de client SSL."
 msgid "The copied item will not be displayed in the catalog by default"
 msgstr "L'élément copié ne sera pas affiché dans le catalogue par défaut"
 
+msgid "The cost estimation phase of a run has completed."
+msgstr "La phase d'estimation des coûts d'une exécution est terminée."
+
+msgid "The cost estimation phase of a run is in progress."
+msgstr "La phase d'estimation des coûts d'une exécution est en cours."
+
 msgid "The current search details have been reset"
 msgstr "Les détails de la recherche en cours ont été réinitialisés"
 
@@ -49819,6 +49892,24 @@ msgstr "Mot de passe à utiliser pour la connexion à Satellite 6"
 msgid "The password to use to connect to the Microsoft Azure account"
 msgstr "Mot de passe à utiliser pour la connexion au compte Microsoft Azure"
 
+msgid "The planning phase of a run has completed."
+msgstr "La phase de planification d'une exécution est terminée."
+
+msgid "The planning phase of a run is in progress."
+msgstr "La phase de planification d'une exécution est en cours."
+
+msgid "The post-plan phase of the run has completed."
+msgstr "La phase de post-planification de l'exécution est terminée."
+
+msgid "The post-plan phase of the run is in progress."
+msgstr "La phase de post-planification de l'exécution est en cours."
+
+msgid "The pre-plan phase of the run has completed."
+msgstr "La phase de pré-planification de l'exécution est terminée."
+
+msgid "The pre-plan phase of the run is in progress."
+msgstr "La phase de pré-planification de l'exécution est en cours."
+
 msgid "The provider does not support reconfigure disks"
 msgstr "Le fournisseur ne prend pas en charge la reconfiguration de disques"
 
@@ -49831,6 +49922,37 @@ msgstr "Le rôle %{role_name} a été activé sur le serveur %{server_name}"
 msgid "The role %{role_name} has started activation on server %{server_name}"
 msgstr ""
 "Le rôle %{role_name} a démarré l'activation sur le serveur %{server_name}"
+
+msgid "The run has been canceled."
+msgstr "L'exécution a été annulée."
+
+msgid "The run has been discarded. This is a final state."
+msgstr "L'exécution a été ignorée. Il s'agit d'un état final."
+
+msgid "The run has errored. This is a final state."
+msgstr "L'exécution a échoué. Il s'agit d'un état final."
+
+msgid ""
+"The run has finished its planning, checks, and estimates, and can be confirmed"
+" for apply."
+msgstr ""
+"L'exécution a terminé sa planification, ses vérifications et ses estimations, "
+"et peut être confirmée pour être appliquée."
+
+msgid "The run is completed.  This is a final state."
+msgstr "L'exécution est terminée.  Il s'agit d'un état final."
+
+msgid ""
+"The run is waiting for HCP Terraform to fetch the configuration from VCS."
+msgstr ""
+"L'exécution attend que HCP Terraform extraie la configuration à partir de VCS."
+
+msgid ""
+"The run should start as soon as the backend services that run terraform have "
+"available capacity."
+msgstr ""
+"L'exécution doit démarrer dès que les services backend qui exécutent Terraform"
+" disposent d'une capacité disponible."
 
 msgid "The selected %{label} is not in the current region"
 msgstr "Le %{label} sélectionné n'est pas dans la région actuelle"
@@ -49921,6 +50043,16 @@ msgid ""
 msgstr ""
 "La tâche sélectionnée n'existe plus ; la suppression des toutes les tâches "
 "antérieures n'a pas été effectuée."
+
+msgid "The sentinel policy checking phase of a run has completed."
+msgstr ""
+"La phase de vérification de la stratégie sentinelle d'une exécution est "
+"terminée."
+
+msgid "The sentinel policy checking phase of a run is in progress."
+msgstr ""
+"La phase de vérification de la stratégie sentinelle d'une exécution est en "
+"cours."
 
 msgid ""
 "The server %{name} memory usage %{memory_usage} exceeded limit %{"
@@ -51288,6 +51420,9 @@ msgstr "Non affecté :"
 msgid "Unattended GUI"
 msgstr "Interface graphique automatisée"
 
+msgid "Unauthorized"
+msgstr "Non autorisé"
+
 msgid "Unauthorized object or action"
 msgstr "Objet ou action non autorisé(e)"
 
@@ -51409,6 +51544,9 @@ msgstr "Section sans nom"
 
 msgid "Unnamed Tab"
 msgstr "Onglet sans nom"
+
+msgid "Unreachable"
+msgstr "Inaccessible"
 
 msgid "Unregistered VMs"
 msgstr "Machines virtuelles désenregistrées"
@@ -54199,6 +54337,9 @@ msgstr "Virtualisation"
 msgid "Virtualization Type"
 msgstr "Type de virtualisation"
 
+msgid "Virtualization not enabled"
+msgstr "Virtualisation non activée"
+
 msgid "Visibility"
 msgstr "Visibilité"
 
@@ -56082,8 +56223,14 @@ msgid_plural "Workflow Templates (%{provider_description})"
 msgstr[0] "Workflow Template (%{provider_description})"
 msgstr[1] "Workflow Templates (%{provider_description})"
 
+msgid "Workflow Template (AWX)"
+msgstr "Workflow Template (AWX)"
+
 msgid "Workflow Template (Ansible Tower)"
 msgstr "Workflow Template (Ansible Tower)"
+
+msgid "Workflow Templates (AWX)"
+msgstr "Workflow Templates (AWX)"
 
 msgid "Workflow Templates (Ansible Tower)"
 msgstr "Modèles de flux de travaux (Ansible Tower)"
@@ -56108,6 +56255,14 @@ msgstr "Charges de travail"
 
 msgid "Workloads Views"
 msgstr "Vues Charges de travail"
+
+msgid "Workspace (Terraform Enterprise)"
+msgid_plural "Workspaces (Terraform Enterprise)"
+msgstr[0] "Workspace (Terraform Enterprise)"
+msgstr[1] "Workspaces (Terraform Enterprise)"
+
+msgid "Workspaces (Terraform Enterprise)"
+msgstr "Workspaces (Terraform Enterprise)"
 
 msgid "Wrap this expression element with a NOT"
 msgstr "Encapsuler cet élément d'expression avec un NOT"
