@@ -700,9 +700,9 @@ en:
       mem_swapped_absolute_average: Memory - Swapped Average
       mem_swaptarget_absolute_average: Memory - Swap Target Average
       mem_usage_absolute_average: Memory - Usage of Total Allocated (%)
-      mem_usage_absolute_average_avg_over_time_period: Memeory Usage Absolute Average Avg Over Time Period
-      mem_usage_absolute_average_high_over_time_period: Memeory Usage Absolute Average High Over Time Period
-      mem_usage_absolute_average_low_over_time_period: Memeory Usage Absolute Average Low Over Time Period
+      mem_usage_absolute_average_avg_over_time_period: Memory Usage Absolute Average Avg Over Time Period
+      mem_usage_absolute_average_high_over_time_period: Memory Usage Absolute Average High Over Time Period
+      mem_usage_absolute_average_low_over_time_period: Memory Usage Absolute Average Low Over Time Period
       mem_vmmemctl_absolute_average: Memory - Balloon Average
       mem_vmmemctltarget_absolute_average: Memory - Balloon Target Average
       memory: Memory
