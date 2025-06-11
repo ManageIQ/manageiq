@@ -50,6 +50,7 @@ class VmOrTemplate < ApplicationRecord
     "oracle"          => "Oracle",
     "google"          => "Google",
     "kubevirt"        => "KubeVirt",
+    "nutanix"         => "Nutanix",
     "ibm_cloud"       => "IBM Cloud",
     "ibm_power_vs"    => "IBM Power Systems Virtual Server",
     "ibm_power_vc"    => "IBM PowerVC",
