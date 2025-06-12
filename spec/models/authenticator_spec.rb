@@ -12,6 +12,11 @@ RSpec.describe Authenticator do
       expect(Authenticator.for({:mode => 'ldap'}, 'admin')).to be_a(Authenticator::Database)
       expect(Authenticator.for({:mode => 'httpd'}, 'admin')).to be_a(Authenticator::Database)
     end
+
+    it "instantiates matching class for admin when local_login_disabled is enabled" do
+      stub_settings_merge(:authentication => {:local_login_disabled => true})
+      expect(Authenticator.for({:mode => 'httpd'}, 'admin')).to be_a(Authenticator::Httpd)
+    end
   end
 
   describe '#authorize' do
