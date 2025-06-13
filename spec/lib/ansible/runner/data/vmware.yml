@@ -1,0 +1,9 @@
+- name: Test vmware collection
+  hosts: localhost
+  tasks:
+  - name: Connect to vcenter
+    community.vmware.vmware_vm_info:
+      hostname: 'vcenter_hostname'
+      username: 'vcenter_username'
+      password: 'vcenter_password'
+      validate_certs: false

@@ -5,21 +5,42 @@ RSpec.describe Ansible::Runner do
   let(:tags)       { "tag" }
   let(:result)     { AwesomeSpawn::CommandResult.new("ansible-runner", "output", "", 100, "0") }
 
-  let(:manageiq_venv_path)  { "/var/lib/manageiq/venv/python3.8/site-packages" }
-  let(:ansible_python_path) { "/usr/local/lib64/python3.8/site-packages:/usr/local/lib/python3.8/site-packages:/usr/lib64/python3.8/site-packages:/usr/lib/python3.8/site-packages" }
+  let(:venv_python_path)   { "/var/lib/manageiq/venv/python3.12/site-packages" }
+  let(:venv_bin_path)      { "/var/lib/manageiq/venv/bin" }
+  let(:python_path)        { "/usr/local/lib64/python3.12/site-packages:/usr/local/lib/python3.12/site-packages:/usr/lib64/python3.12/site-packages:/usr/lib/python3.12/site-packages" }
+  let(:system_path)        { "/opt/manageiq/manageiq-gemset/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin" }
+  let(:runner_python_path) { [venv_python_path, python_path].join(":") }
+  let(:runner_path)        { [venv_bin_path, system_path].join(":") }
+  let(:runner_env)         { {"PYTHONPATH" => runner_python_path, "PATH" => runner_path} }
+
+  let(:ansible_version_raw) do
+    <<~EOF
+      ansible [core 2.18.6]
+        config file = None
+        configured module search path = ['/root/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+        ansible python module location = /var/lib/manageiq/venv/lib64/python3.12/site-packages/ansible
+        ansible collection location = /root/.ansible/collections:/usr/share/ansible/collections
+        executable location = /var/lib/manageiq/venv/bin/ansible
+        python version = 3.12.10 (main, Apr  9 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-5)] (/var/lib/manageiq/venv/bin/python3.12)
+        jinja version = 3.1.6
+        libyaml = True
+    EOF
+  end
 
   describe ".available?" do
     before { begin; described_class.remove_instance_variable(:@available); rescue NameError; end }
     after  { begin; described_class.remove_instance_variable(:@available); rescue NameError; end }
 
     it "when available" do
-      expect(described_class).to receive(:system).with(/^which ansible-runner/).and_return(true)
+      expect(described_class).to receive(:runner_env).and_return(runner_env)
+      expect(described_class).to receive(:system).with(runner_env, /^which ansible-runner/).and_return(true)
 
       expect(described_class.available?).to be true
     end
 
     it "when not available" do
-      expect(described_class).to receive(:system).with(/^which ansible-runner/).and_return(false)
+      expect(described_class).to receive(:runner_env).and_return(runner_env)
+      expect(described_class).to receive(:system).with(runner_env, /^which ansible-runner/).and_return(false)
 
       expect(described_class.available?).to be false
     end
@@ -28,7 +49,7 @@ RSpec.describe Ansible::Runner do
   describe ".run" do
     let(:playbook) { "/path/to/my/playbook" }
     before do
-      allow(described_class).to receive(:python_path).and_return(ansible_python_path)
+      allow(described_class).to receive(:runner_env).and_return(runner_env)
 
       allow(described_class).to receive(:wait_for).and_yield
       allow(File).to receive(:exist?).and_call_original
@@ -111,22 +132,25 @@ RSpec.describe Ansible::Runner do
       described_class.run(env_vars, extra_vars, playbook, :become_enabled => true)
     end
 
-    context "without PYTHON_PATH stubbing" do
-      before { described_class.instance_variable_set(:@python_path, nil) }
-      after  { described_class.instance_variable_set(:@python_path, nil) }
+    context "without runner_env stubbing" do
+      before { clear_runner_env_cache }
+      after  { clear_runner_env_cache }
 
-      it "sets PYTHON_PATH correctly" do
-        # Undo stubbing of python_path in this particular test
-        expect(described_class).to receive(:python_path).and_call_original
+      it "calls run with the correct runner environment" do
+        # Undo stubbing of runner_env in this particular test
+        expect(described_class).to receive(:runner_env).and_call_original
 
-        expect(described_class).to receive(:manageiq_venv_path).and_return(manageiq_venv_path)
-        stub_ansible_raw(ansible_exists: true)
+        expect(described_class).to receive(:venv_python_path).and_return(venv_python_path)
+        expect(described_class).to receive(:venv_bin_path).and_return(venv_bin_path)
+        stub_const("ENV", "PATH" => system_path)
+        stub_ansible_raw
 
         expect(AwesomeSpawn).to receive(:run) do |command, options|
           expect(command).to eq("ansible-runner")
-
-          expected_path = [manageiq_venv_path, ansible_python_path].join(File::PATH_SEPARATOR)
-          expect(options[:env]["PYTHONPATH"]).to eq(expected_path)
+          expect(options[:env]).to include({
+            "PYTHONPATH" => runner_python_path,
+            "PATH"       => runner_path,
+          })
         end.and_return(result)
 
         described_class.run(env_vars, extra_vars, playbook, :become_enabled => true)
@@ -165,7 +189,7 @@ RSpec.describe Ansible::Runner do
   describe ".run_async" do
     let(:playbook) { "/path/to/my/playbook" }
     before do
-      allow(described_class).to receive(:python_path).and_return(ansible_python_path)
+      allow(described_class).to receive(:python_path).and_return(python_path)
 
       allow(described_class).to receive(:wait_for).and_yield
       allow(File).to receive(:exist?).and_call_original
@@ -216,7 +240,7 @@ RSpec.describe Ansible::Runner do
     let(:role_name) { "my-custom-role" }
     let(:role_path) { "/path/to/my/roles" }
     before do
-      allow(described_class).to receive(:python_path).and_return(ansible_python_path)
+      allow(described_class).to receive(:python_path).and_return(python_path)
 
       allow(described_class).to receive(:wait_for).and_yield
       allow(File).to receive(:exist?).and_call_original
@@ -275,7 +299,7 @@ RSpec.describe Ansible::Runner do
     let(:role_name) { "my-custom-role" }
     let(:role_path) { "/path/to/my/roles" }
     before do
-      allow(described_class).to receive(:python_path).and_return(ansible_python_path)
+      allow(described_class).to receive(:python_path).and_return(python_path)
 
       allow(described_class).to receive(:wait_for).and_yield
       allow(File).to receive(:exist?).and_call_original
@@ -321,100 +345,99 @@ RSpec.describe Ansible::Runner do
     end
   end
 
-  describe ".python_path (private)" do
-    before { described_class.instance_variable_set(:@python_path, nil) }
-    after  { described_class.instance_variable_set(:@python_path, nil) }
+  describe "#runner_env" do
+    before { clear_runner_env_cache }
+    after  { clear_runner_env_cache }
 
-    it "with manageiq_venv_path valid and ansible_python_version valid" do
-      expect(described_class).to receive(:manageiq_venv_path).and_return(manageiq_venv_path)
-      stub_ansible_raw(ansible_exists: true)
+    describe "PYTHONPATH" do
+      it "with venv_python_path valid and ansible exists" do
+        expect(described_class).to receive(:venv_python_path).and_return(venv_python_path)
+        stub_ansible_raw
 
-      expect(described_class.send(:python_path)).to eq([manageiq_venv_path, ansible_python_path].join(File::PATH_SEPARATOR))
+        expect(described_class.runner_env["PYTHONPATH"]).to eq(runner_python_path)
+      end
+
+      it "with venv_python_path valid and ansible missing" do
+        expect(described_class).to receive(:venv_python_path).and_return(venv_python_path)
+        stub_ansible_raw(ansible_exists: false)
+
+        expect(described_class.runner_env["PYTHONPATH"]).to eq(venv_python_path)
+      end
+
+      it "with venv_python_path missing and ansible exists" do
+        expect(described_class).to receive(:venv_python_path).and_return(nil)
+        stub_ansible_raw
+
+        expect(described_class.runner_env["PYTHONPATH"]).to eq(python_path)
+      end
+
+      it "with venv_python_path missing and ansible_python_version missing" do
+        expect(described_class).to receive(:venv_python_path).and_return(nil)
+        stub_ansible_raw(ansible_exists: false)
+
+        expect(described_class.runner_env).to_not include("PYTHONPATH")
+      end
     end
 
-    it "with manageiq_venv_path valid and ansible_python_version nil" do
-      expect(described_class).to receive(:manageiq_venv_path).and_return(manageiq_venv_path)
-      stub_ansible_raw(ansible_exists: false)
+    describe "PATH" do
+      it "with venv_bin_path valid and PATH valid" do
+        expect(described_class).to receive(:venv_bin_path).at_least(:once).and_return(venv_bin_path)
+        stub_const("ENV", "PATH" => system_path)
 
-      expect(described_class.send(:python_path)).to eq(manageiq_venv_path)
-    end
+        expect(described_class.runner_env["PATH"]).to eq(runner_path)
+      end
 
-    it "with manageiq_venv_path nil and ansible_python_version valid" do
-      expect(described_class).to receive(:manageiq_venv_path).and_return(nil)
-      stub_ansible_raw(ansible_exists: true)
+      it "with venv_bin_path valid and PATH missing" do
+        expect(described_class).to receive(:venv_bin_path).at_least(:once).and_return(venv_bin_path)
+        stub_const("ENV", {})
 
-      expect(described_class.send(:python_path)).to eq(ansible_python_path)
-    end
+        expect(described_class.runner_env["PATH"]).to eq(venv_bin_path)
+      end
 
-    it "with manageiq_venv_path nil and ansible_python_version nil" do
-      expect(described_class).to receive(:manageiq_venv_path).and_return(nil)
-      stub_ansible_raw(ansible_exists: false)
+      it "with venv_bin_path missing and PATH valid" do
+        expect(described_class).to receive(:venv_bin_path).at_least(:once).and_return(nil)
+        stub_const("ENV", "PATH" => system_path)
 
-      expect(described_class.send(:python_path)).to eq("")
+        expect(described_class.runner_env["PATH"]).to eq(system_path)
+      end
+
+      it "with venv_bin_path missing and PATH missing" do
+        expect(described_class).to receive(:venv_bin_path).at_least(:once).and_return(nil)
+        stub_const("ENV", {})
+
+        expect(described_class.runner_env).to_not include("PATH")
+      end
     end
   end
 
-  describe ".ansible_python_paths (private)" do
-    it "with ansible_python_version valid" do
-      expect(described_class).to receive(:ansible_python_version).and_return("3.8")
-      expect(described_class).to receive(:`).with(a_string_including("python3.8 -c")).and_return(ansible_python_path)
+  describe ".ansible_python_path (private)" do
+    it "with ansible_version_raw valid" do
+      expect(described_class).to receive(:ansible_version_raw).and_return(ansible_version_raw)
+      expect(described_class).to receive(:`).with(a_string_including("python3.12 -c")).and_return(python_path)
 
-      expect(described_class.send(:ansible_python_paths)).to eq(
-        [
-          "/usr/local/lib64/python3.8/site-packages",
-          "/usr/local/lib/python3.8/site-packages",
-          "/usr/lib64/python3.8/site-packages",
-          "/usr/lib/python3.8/site-packages"
-        ]
-      )
+      expect(described_class.send(:ansible_python_path)).to eq(python_path)
     end
 
-    it "with ansible_python_version nil" do
-      expect(described_class).to receive(:ansible_python_version).and_return(nil)
-      expect(described_class).to_not receive(:`).with(a_string_including("python3.8 -c"))
+    it "with ansible_version_raw missing" do
+      expect(described_class).to receive(:ansible_version_raw).and_return("")
+      expect(described_class).to_not receive(:`)
 
-      expect(described_class.send(:ansible_python_paths)).to eq([])
+      expect(described_class.send(:ansible_python_path)).to eq(nil)
     end
 
     it "with ansible_python_version hacked" do
       expect(described_class).to receive(:ansible_python_version).and_return("-hacked")
       expect(described_class).to_not receive(:`).with(a_string_including("python-hacked -c"))
 
-      expect { described_class.send(:ansible_python_paths) }.to raise_error(RuntimeError, "ansible python version is not a number: -hacked")
+      expect { described_class.send(:ansible_python_path) }.to raise_error(RuntimeError, "python version is not a number: -hacked")
     end
   end
 
   describe ".ansible_python_version (private)" do
-    it "with ansible using python 3.8" do
-      expect(described_class).to receive(:`).with(a_string_including("ansible --version")).and_return(<<~EOF)
-        ansible [core 2.12.7]
-          config file = /etc/ansible/ansible.cfg
-          configured module search path = ['/root/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
-          ansible python module location = /usr/lib/python3.8/site-packages/ansible
-          ansible collection location = /root/.ansible/collections:/usr/share/ansible/collections
-          executable location = /usr/bin/ansible
-          python version = 3.8.13 (default, Jun 24 2022, 15:27:57) [GCC 8.5.0 20210514 (Red Hat 8.5.0-13)]
-          jinja version = 2.11.3
-          libyaml = True
-      EOF
+    it "when ansible is installed" do
+      expect(described_class).to receive(:`).with(a_string_including("ansible --version")).and_return(ansible_version_raw)
 
-      expect(described_class.send(:ansible_python_version)).to eq("3.8")
-    end
-
-    it "with ansible using python 3.9" do
-      expect(described_class).to receive(:`).with(a_string_including("ansible --version")).and_return(<<~EOF)
-        ansible [core 2.13.4]
-          config file = None
-          configured module search path = ['/Users/root/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
-          ansible python module location = /usr/local/lib/python3.9/site-packages/ansible
-          ansible collection location = /Users/root/.ansible/collections:/usr/share/ansible/collections
-          executable location = /usr/local/bin/ansible
-          python version = 3.9.13 (main, Aug  7 2022, 01:33:23) [Clang 13.1.6 (clang-1316.0.21.2.5)]
-          jinja version = 3.1.2
-          libyaml = True
-      EOF
-
-      expect(described_class.send(:ansible_python_version)).to eq("3.9")
+      expect(described_class.send(:ansible_python_version)).to eq("3.12")
     end
 
     it "when ansible is not installed" do
@@ -432,20 +455,16 @@ RSpec.describe Ansible::Runner do
 
   def stub_ansible_raw(ansible_exists: true)
     if ansible_exists
-      expect(described_class).to receive(:ansible_python_version_raw).and_return(<<~EOF)
-        ansible [core 2.12.7]
-          config file = /etc/ansible/ansible.cfg
-          configured module search path = ['/root/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
-          ansible python module location = /usr/lib/python3.8/site-packages/ansible
-          ansible collection location = /root/.ansible/collections:/usr/share/ansible/collections
-          executable location = /usr/bin/ansible
-          python version = 3.8.13 (default, Jun 24 2022, 15:27:57) [GCC 8.5.0 20210514 (Red Hat 8.5.0-13)]
-          jinja version = 2.11.3
-          libyaml = True
-      EOF
-      expect(described_class).to receive(:ansible_python_paths_raw).and_return(ansible_python_path)
+      expect(described_class).to receive(:ansible_version_raw).and_return(ansible_version_raw)
+      expect(described_class).to receive(:python_path_raw).and_return(python_path)
     else
-      expect(described_class).to receive(:ansible_python_version_raw).and_return("")
+      expect(described_class).to receive(:ansible_version_raw).and_return("")
     end
+  end
+
+  def clear_runner_env_cache
+    begin; described_class.remove_instance_variable(:@runner_env); rescue NameError; end
+    begin; described_class.remove_instance_variable(:@venv_python_path); rescue NameError; end
+    begin; described_class.remove_instance_variable(:@venv_bin_path); rescue NameError; end
   end
 end
