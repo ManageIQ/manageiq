@@ -221,6 +221,8 @@ module Ansible
 
         params = runner_params(base_dir, ansible_runner_method, playbook_or_role_args, verbosity)
 
+        # puts "#{env_vars_hash.map { |k, v| "#{k}=#{v}" }.join(" ")} #{AwesomeSpawn.build_command_line("ansible-runner", params)}"
+
         begin
           fetch_galaxy_roles(playbook_or_role_args)
 
@@ -317,11 +319,11 @@ module Ansible
         return unless playbook_or_role_args[:playbook]
 
         playbook_dir = File.dirname(playbook_or_role_args[:playbook])
-        Ansible::Content.new(playbook_dir).fetch_galaxy_roles
+        Ansible::Content.new(playbook_dir).fetch_galaxy_roles(runner_env)
       end
 
       def runner_env
-        {"PYTHONPATH" => python_path}.delete_nils
+        {"PYTHONPATH" => runner_python_path, "PATH" => runner_path}.compact
       end
 
       def credentials_info(credentials, base_dir)
@@ -408,20 +410,34 @@ module Ansible
         end
       end
 
-      def python_path
-        @python_path ||= [manageiq_venv_path, *ansible_python_paths].compact.join(File::PATH_SEPARATOR)
+      def runner_python_path
+        @runner_python_path ||= [venv_python_path, ansible_python_path].compact.join(File::PATH_SEPARATOR)
       end
 
-      def manageiq_venv_path
-        Dir.glob("/var/lib/manageiq/venv/lib/python*/site-packages").first
+      def runner_path
+        @runner_path ||= [venv_bin_path, ENV["PATH"].presence].compact.join(File::PATH_SEPARATOR)
       end
 
-      def ansible_python_paths
-        ansible_python_paths_raw(ansible_python_version).chomp.split(":")
+      VENV_ROOT = "/var/lib/manageiq/venv".freeze
+
+      def venv_python_path
+        Dir.glob(File.join(VENV_ROOT, "lib/python*/site-packages")).first
+      end
+
+      def venv_bin_path
+        Dir.glob(File.join(VENV_ROOT, "bin")).first
+      end
+
+      def ansible_python_path
+        ansible_python_path_raw(ansible_python_version).presence
+      end
+
+      def ansible_python_version
+        ansible_python_version_raw.match(/python version = (\d+\.\d+)\./)&.captures&.first
       end
 
       # NOTE: This method is ignored by brakeman in the config/brakeman.ignore
-      def ansible_python_paths_raw(version)
+      def ansible_python_path_raw(version)
         return "" if version.blank?
 
         # This check allows us to ignore the brakeman warning about command line injection
@@ -430,12 +446,10 @@ module Ansible
         `python#{version} -c 'import site; print(":".join(site.getsitepackages()))'`.chomp
       end
 
-      def ansible_python_version
-        ansible_python_version_raw.match(/python version = (\d+\.\d+)\./)&.captures&.first
-      end
-
+      # NOTE: This method is ignored by brakeman in the config/brakeman.ignore
       def ansible_python_version_raw
-        `ansible --version 2>/dev/null`.chomp
+        ansible = venv_bin_path ? File.join(venv_bin_path, "ansible") : "ansible"
+        `#{ansible} --version 2>/dev/null`.chomp
       end
     end
   end

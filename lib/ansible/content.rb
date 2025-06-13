@@ -8,11 +8,11 @@ module Ansible
       @path = Pathname.new(path)
     end
 
-    def fetch_galaxy_roles
+    def fetch_galaxy_roles(env = {})
       return true unless requirements_file.exist?
 
       require "awesome_spawn"
-      AwesomeSpawn.run!("ansible-galaxy", :params => ["install", {:roles_path= => roles_dir, :role_file= => requirements_file}])
+      AwesomeSpawn.run!("ansible-galaxy", :env => env, :params => ["install", {:roles_path= => roles_dir, :role_file= => requirements_file}])
     end
 
     def self.fetch_plugin_galaxy_roles
