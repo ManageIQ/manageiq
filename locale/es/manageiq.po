@@ -423,11 +423,9 @@ msgstr[1] ""
 "%{amount} gestores de automatización (Ansible Tower) que se están etiquetando"
 
 msgid "%{amount} Automation Template Being Tagged"
-msgstr ""
-"{n, plural, other {%'{'amount'}' plantillas de automatización se están "
-"etiquetando} one {%' {'amount'} ' plantilla de automatización se está "
-"etiquetando} many {%'{'amount'}' plantillas de automatización se están "
-"etiquetando}}"
+msgid_plural "%{amount} Automation Templates Being Tagged"
+msgstr[0] "%{amount} plantilla de automatización se está etiquetando"
+msgstr[1] "%{amount} plantillas de automatización se están etiquetando"
 
 msgid "%{amount} Availability Zone Being Tagged"
 msgid_plural "%{amount} Availability Zones Being Tagged"
@@ -1188,7 +1186,7 @@ msgstr ""
 "%{object_types} en %{datastore_or_provider} \"%{provider_or_datastore_name}\""
 
 msgid "%{product_name} API Group Not found"
-msgstr "% {product_name} Grupo de API no encontrado"
+msgstr "%{product_name} Grupo de API no encontrado"
 
 msgid "%{product_name} HTML5 Remote Console"
 msgstr "Consola remota de %{product_name} HTML5"
