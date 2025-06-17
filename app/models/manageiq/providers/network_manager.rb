@@ -60,19 +60,15 @@ module ManageIQ::Providers
     has_many :miq_templates,                 -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
     has_many :vms_and_templates,             -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
 
+    virtual_has_many :orchestration_stacks, :through => :parent_manager
+    virtual_has_many :orchestration_stacks_resources, :through => :parent_manager
+    virtual_has_many :direct_orchestration_stacks, :through => :parent_manager
+    virtual_has_many :resource_groups, :through => :parent_manager
+    virtual_has_many :key_pairs, :through => :parent_manager
+
     virtual_total :total_vms, :vms
     virtual_total :total_miq_templates, :miq_templates
     virtual_total :total_vms_and_templates, :vms_and_templates
-
-    # Relationships delegated to parent manager
-    virtual_delegate :orchestration_stacks,
-                     :orchestration_stacks_resources,
-                     :direct_orchestration_stacks,
-                     :resource_groups,
-                     :key_pairs,
-                     :to        => :parent_manager,
-                     :allow_nil => true,
-                     :default   => []
 
     def self.display_name(number = 1)
       n_('Network Manager', 'Network Managers', number)
