@@ -110,6 +110,8 @@ module Vmdb
 
     config.autoload_paths += config.eager_load_paths
 
+    config.paths["config/secrets"] = []
+
     # FYI, this is where load_defaults is defined as of 7.2:
     # https://github.com/rails/rails/blob/d437ae311f1b9dc40b442e40eb602e020cec4e49/railties/lib/rails/application/configuration.rb#L92
     config.load_defaults 7.1
