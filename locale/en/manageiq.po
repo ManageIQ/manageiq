@@ -9474,9 +9474,6 @@ msgstr ""
 msgid "Common Secret"
 msgstr ""
 
-msgid "Company Name"
-msgstr ""
-
 msgid "Company Tag"
 msgstr ""
 
@@ -27937,15 +27934,6 @@ msgstr ""
 msgid "Member Role"
 msgstr ""
 
-msgid "Memeory Usage Absolute Average Avg Over Time Period"
-msgstr ""
-
-msgid "Memeory Usage Absolute Average High Over Time Period"
-msgstr ""
-
-msgid "Memeory Usage Absolute Average Low Over Time Period"
-msgstr ""
-
 msgid "Memory"
 msgstr ""
 
@@ -28298,6 +28286,15 @@ msgid "Memory Usage"
 msgstr ""
 
 msgid "Memory Usage (%)"
+msgstr ""
+
+msgid "Memory Usage Absolute Average Avg Over Time Period"
+msgstr ""
+
+msgid "Memory Usage Absolute Average High Over Time Period"
+msgstr ""
+
+msgid "Memory Usage Absolute Average Low Over Time Period"
 msgstr ""
 
 msgid "Memory Used"
@@ -47502,9 +47499,6 @@ msgstr ""
 msgid "Tenant|Subdomain"
 msgstr ""
 
-msgid "Tenant|Use config for attributes"
-msgstr ""
-
 msgid "Terminate"
 msgstr ""
 
@@ -49854,9 +49848,6 @@ msgid "Usage: Unknown"
 msgstr ""
 
 msgid "Use Alias"
-msgstr ""
-
-msgid "Use Config For Attributes"
 msgstr ""
 
 msgid "Use Custom Brand Image"
