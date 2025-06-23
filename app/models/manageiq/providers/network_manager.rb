@@ -62,9 +62,9 @@ module ManageIQ::Providers
 
     virtual_has_many :orchestration_stacks, :through => :parent_manager
     virtual_has_many :orchestration_stacks_resources, :through => :parent_manager
-    virtual_has_many :direct_orchestration_stacks, :through => :parent_manager
+    virtual_has_many :direct_orchestration_stacks, :through => :parent_manager, :class_name => "OrchestrationStack"
     virtual_has_many :resource_groups, :through => :parent_manager
-    virtual_has_many :key_pairs, :through => :parent_manager
+    virtual_has_many :key_pairs, :through => :parent_manager, :class_name => "ManageIQ::Providers::CloudManager::AuthKeyPair"
 
     virtual_total :total_vms, :vms
     virtual_total :total_miq_templates, :miq_templates
