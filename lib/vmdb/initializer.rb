@@ -15,11 +15,8 @@ module Vmdb
     end
 
     def self.init_secret_token
-      return if Rails.application.config.secret_key_base
-
-      token = session_secret_token || SecureRandom.hex(64)
-
-      Rails.application.config.secret_key_base = token
+      # secret_key_base getter changed in 7.2 to provide a local default if not provided but we ignore it
+      Rails.application.config.secret_key_base = session_secret_token || SecureRandom.hex(64)
     end
 
     private_class_method def self.session_secret_token
