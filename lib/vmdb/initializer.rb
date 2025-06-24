@@ -15,11 +15,23 @@ module Vmdb
     end
 
     def self.init_secret_token
-      return if Rails.application.config.secret_key_base
+      # base will be generated from local file in a different format if nil
+      base = Rails.application.config.secret_key_base
+      db_token = session_secret_token
 
-      token = session_secret_token || SecureRandom.hex(64)
+      # skip if base is already set to db_token
+      return if base == db_token
 
-      Rails.application.config.secret_key_base = token
+      new_token = if db_token.present?
+        # use db_token above all
+        db_token
+      else
+        # generate a new token if base isn't already configured
+        return if base.match(/^\h{128}$/)
+        SecureRandom.hex(64)
+      end
+
+      Rails.application.config.secret_key_base = new_token
     end
 
     private_class_method def self.session_secret_token
