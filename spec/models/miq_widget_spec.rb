@@ -177,6 +177,12 @@ RSpec.describe MiqWidget do
           expect(result[@group1]).to match_array([@user1])
         end
 
+        it 'ignores a group that no longer exists' do
+          @group1.delete
+          result = @widget_report_vendor_and_guest_os.reload.grouped_subscribers
+          expect(result.size).to eq(0)
+        end
+
         it 'ignores the group that has no members' do
           @user1.delete
           result = @widget_report_vendor_and_guest_os.grouped_subscribers
@@ -184,10 +190,11 @@ RSpec.describe MiqWidget do
         end
 
         it 'only returns groups in the current region' do
-          groups = MiqGroup.where(:id => [@group1, @group2])
-          expect(MiqGroup).to receive(:in_my_region).and_return(groups)
-          allow(groups).to receive(:where).and_return(groups)
-          @widget_report_vendor_and_guest_os.grouped_subscribers
+          other_region = FactoryBot.create(:miq_region)
+          other_region_id = ApplicationRecord.id_in_region(MiqGroup.count, other_region.region)
+          FactoryBot.create(:miq_group, :id => other_region_id)
+          result = @widget_report_vendor_and_guest_os.grouped_subscribers
+          expect(result.keys.collect(&:id).sort).to eq([@group1.id])
         end
       end
 
@@ -300,8 +307,8 @@ RSpec.describe MiqWidget do
       MiqReport.seed_report("Top CPU Consumers weekly")
 
       role1 = FactoryBot.create(:miq_user_role, :name => 'EvmRole-support')
-      group1 = FactoryBot.create(:miq_group, :description => "EvmGroup-support", :miq_user_role => role1)
-      user1  = FactoryBot.create(:user, :miq_groups => [group1])
+      @group1 = FactoryBot.create(:miq_group, :description => "EvmGroup-support", :miq_user_role => role1)
+      user1 = FactoryBot.create(:user, :miq_groups => [@group1])
 
       @user2  = FactoryBot.create(:user_admin)
       @group2 = @user2.current_group
@@ -332,7 +339,7 @@ RSpec.describe MiqWidget do
         read_only: true
       ')
 
-      ws1 = FactoryBot.create(:miq_widget_set, :name => "default", :userid => user1.userid, :owner => group1)
+      ws1 = FactoryBot.create(:miq_widget_set, :name => "default", :userid => user1.userid, :owner => @group1)
       ws2 = FactoryBot.create(:miq_widget_set, :name => "default", :userid => @user2.userid, :owner => @group2)
 
       @widget = MiqWidget.sync_from_hash(attrs)
@@ -405,6 +412,17 @@ RSpec.describe MiqWidget do
       task_id = @widget.queue_generate_content
 
       expect(task_id).to be_nil
+    end
+
+    it "does not generate content for a deleted group" do
+      @widget.visibility[:roles] = "_ALL_"
+      @group2.delete
+
+      expect(@widget).to receive(:queue_generate_content_for_users_or_group).with("MiqGroup", @group1.description, any_args).once
+      task_id = @widget.queue_generate_content
+
+      expect(MiqTask.count).to eq(1)
+      expect(task_id).to eq(MiqTask.first.id)
     end
 
     it "does not generate content if content_type of widget is 'menu'" do
