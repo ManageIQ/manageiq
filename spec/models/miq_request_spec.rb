@@ -453,7 +453,11 @@ RSpec.describe MiqRequest do
     let(:ems)      { FactoryBot.create(:ems_vmware_with_authentication) }
     let(:template) { FactoryBot.create(:template_vmware, :ext_management_system => ems) }
     let(:request)  do
-      FactoryBot.create(:miq_provision_request, :requester => fred, :options => @options, :source => template)
+      options = {
+        :src_vm_id     => template.id,
+        :number_of_vms => 3,
+      }
+      FactoryBot.create(:miq_provision_request, :requester => fred, :options => options, :source => template)
     end
 
     before do
@@ -461,11 +465,6 @@ RSpec.describe MiqRequest do
       ae_workspace = double("ae_workspace")
       allow(ae_workspace).to receive(:root).and_return("test_vm")
       allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(ae_workspace)
-
-      @options = {
-        :src_vm_id     => template.id,
-        :number_of_vms => 3,
-      }
     end
 
     it '1 task' do

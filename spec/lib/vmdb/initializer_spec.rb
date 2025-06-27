@@ -1,11 +1,9 @@
 RSpec.describe Vmdb::Initializer do
   describe ".init_secret_token" do
-    before do
-      @token = Rails.application.secret_key_base
-    end
-
-    after do
-      Rails.application.config.secret_key_base = @token
+    around do |example|
+      token = Rails.application.secret_key_base
+      example.run
+      Rails.application.config.secret_key_base = token
       Rails.application.secrets = nil
     end
 

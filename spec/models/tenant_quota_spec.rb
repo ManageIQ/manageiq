@@ -134,6 +134,7 @@ RSpec.describe TenantQuota do
   context "formatted tenant quota values" do
     include Spec::Support::QuotaHelper
 
+    # TODO: who set @tenant?
     let(:child_tenant) { FactoryBot.create(:tenant, :parent => @tenant) }
 
     let(:child_tenant_quota_cpu)       { FactoryBot.create(:tenant_quota_cpu, :tenant => child_tenant) }
