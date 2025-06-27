@@ -1,12 +1,13 @@
 RSpec.describe MiqEnvironment do
   context "with linux platform" do
-    before do
-      @old_impl = Sys::Platform::IMPL
+    around do |example|
+      old_impl = Sys::Platform::IMPL
       silence_warnings { Sys::Platform::IMPL = :linux }
-    end
-
-    after do
-      silence_warnings { Sys::Platform::IMPL = @old_impl } if @old_impl
+      begin
+        example.run
+      ensure
+        silence_warnings { Sys::Platform::IMPL = old_impl }
+      end
     end
 
     context "Host Info" do

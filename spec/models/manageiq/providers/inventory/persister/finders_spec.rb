@@ -11,7 +11,7 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
   ######################################################################################################################
   #
   before do
-    @ems = FactoryBot.create(:ems_cloud)
+    @ems = FactoryBot.create(:ems_cloud) # this is used to populate parent
   end
 
   let(:persister) { create_persister }

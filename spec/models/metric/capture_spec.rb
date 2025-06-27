@@ -3,7 +3,6 @@ RSpec.describe Metric::Capture do
 
   before do
     Zone.seed
-    @zone = EvmSpecHelper.local_miq_server.zone
   end
 
   describe ".perf_capture_timer" do
