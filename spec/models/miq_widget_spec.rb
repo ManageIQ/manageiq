@@ -193,8 +193,8 @@ RSpec.describe MiqWidget do
           other_region = FactoryBot.create(:miq_region)
           other_region_id = ApplicationRecord.id_in_region(MiqGroup.count, other_region.region)
           FactoryBot.create(:miq_group, :id => other_region_id)
-          allow(MiqGroup.in_my_region.all).to receive(:where).and_return(MiqGroup.in_my_region.all)
-          @widget_report_vendor_and_guest_os.grouped_subscribers
+          result = @widget_report_vendor_and_guest_os.grouped_subscribers
+          expect(result.keys.collect(&:id).sort).to eq([@group1.id])
         end
       end
 
