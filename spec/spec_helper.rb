@@ -11,6 +11,10 @@ require 'rspec/mocks'
 require 'vcr'
 require 'cgi'
 
+# Set up ENGINE_ROOT if running tests from within a plugin.
+require_relative 'support/prepare_engine_root'
+Spec::Support::PrepareEngineRoot.setup
+
 # Fail tests that try to include stuff in `main`
 require_relative 'support/test_contamination'
 Spec::Support::TestContamination.setup
