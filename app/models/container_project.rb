@@ -110,4 +110,95 @@ class ContainerProject < ApplicationRecord
   def raise_creation_event
     MiqEvent.raise_evm_event(self, 'containerproject_created', {})
   end
+
+  def self.class_by_ems(ext_management_system)
+    ext_management_system&.class_by_ems(:ContainerProject)
+  end
+
+  def self.create_container_project(ems_id, options = {})
+    ems = ExtManagementSystem.find_by(:id => ems_id)
+    raise ArgumentError, _("EMS cannot be nil") if ems.nil?
+
+    klass = ems.class_by_ems(:ContainerProject)
+    klass.raw_create_container_project(ems, options)
+  end
+
+  def self.raw_create_container_project(_ext_management_system, _options = {})
+    raise NotImplementedError, _("raw_create_container_project must be implemented in a subclass")
+  end
+
+  def self.create_container_project_queue(userid, ext_management_system, options = {})
+    task_opts = {
+      :action => "Creating Container Project for user #{userid}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => ext_management_system.class_by_ems(:ContainerProject).name,
+      :method_name => 'create_container_project',
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
+      :zone        => ext_management_system.my_zone,
+      :args        => [ext_management_system.id, options]
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def update_container_project(options = {})
+    raw_update_container_project(options)
+  end
+
+  def raw_update_container_project(_options = {})
+    raise NotImplementedError, _("raw_update_container_project must be implemented in a subclass")
+  end
+
+  def update_container_project_queue(userid, options = {})
+    task_opts = {
+      :action => "Updating Container Project for user #{userid}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'update_container_project',
+      :instance_id => id,
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
+      :zone        => ext_management_system.my_zone,
+      :args        => [options]
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def delete_container_project
+    raw_delete_container_project
+  end
+
+  def delete_container_project_queue(userid)
+    task_opts = {
+      :action => "Deleting Container Project for user #{userid}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'delete_container_project',
+      :instance_id => id,
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
+      :zone        => ext_management_system.my_zone,
+      :args        => []
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def raw_delete_container_project
+    raise NotImplementedError, _("raw_delete_container_project must be implemented in a subclass")
+  end
 end
