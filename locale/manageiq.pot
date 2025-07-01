@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-02 13:54+0000\n"
-"PO-Revision-Date: 2025-06-02 13:54+0000\n"
+"POT-Creation-Date: 2025-07-01 00:24+0000\n"
+"PO-Revision-Date: 2025-07-01 00:24+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -7187,9 +7187,6 @@ msgstr ""
 msgid "Category Selection"
 msgstr ""
 
-msgid "Category Tag Entries"
-msgstr ""
-
 msgid "Category cannot be deleted"
 msgstr ""
 
@@ -8095,9 +8092,6 @@ msgid "Click to view %{name} TenantProject"
 msgstr ""
 
 msgid "Click to view details"
-msgstr ""
-
-msgid "Click to view saved report"
 msgstr ""
 
 msgid "Click to view selected widget"
@@ -9424,9 +9418,6 @@ msgstr ""
 msgid "Common Secret"
 msgstr ""
 
-msgid "Company Name"
-msgstr ""
-
 msgid "Company Tag"
 msgstr ""
 
@@ -10544,6 +10535,11 @@ msgstr[1] ""
 
 msgid "Container Project"
 msgid_plural "Container Projects"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Container Project (OpenShift)"
+msgid_plural "Container Projects (OpenShift)"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -15362,9 +15358,6 @@ msgid "Deploy Server assigned to Server Profile"
 msgstr ""
 
 msgid "Deploy Smartproxy"
-msgstr ""
-
-msgid "Depot Name"
 msgstr ""
 
 msgid "Depot Settings successfuly validated"
@@ -27793,15 +27786,6 @@ msgstr ""
 msgid "Member Role"
 msgstr ""
 
-msgid "Memeory Usage Absolute Average Avg Over Time Period"
-msgstr ""
-
-msgid "Memeory Usage Absolute Average High Over Time Period"
-msgstr ""
-
-msgid "Memeory Usage Absolute Average Low Over Time Period"
-msgstr ""
-
 msgid "Memory"
 msgstr ""
 
@@ -28154,6 +28138,15 @@ msgid "Memory Usage"
 msgstr ""
 
 msgid "Memory Usage (%)"
+msgstr ""
+
+msgid "Memory Usage Absolute Average Avg Over Time Period"
+msgstr ""
+
+msgid "Memory Usage Absolute Average High Over Time Period"
+msgstr ""
+
+msgid "Memory Usage Absolute Average Low Over Time Period"
 msgstr ""
 
 msgid "Memory Used"
@@ -41631,9 +41624,6 @@ msgstr ""
 msgid "Run Now"
 msgstr ""
 
-msgid "Run On"
-msgstr ""
-
 msgid "Run a selected Report"
 msgstr ""
 
@@ -41893,9 +41883,6 @@ msgid "Saved Report \"%{time}\" not found, Schedule may have failed"
 msgstr ""
 
 msgid "Saved Report no longer exists"
-msgstr ""
-
-msgid "Saved Report: %{report_name}"
 msgstr ""
 
 msgid "Saved Reports"
@@ -47267,9 +47254,6 @@ msgstr ""
 msgid "Tenant|Subdomain"
 msgstr ""
 
-msgid "Tenant|Use config for attributes"
-msgstr ""
-
 msgid "Terminate"
 msgstr ""
 
@@ -49620,9 +49604,6 @@ msgstr ""
 msgid "Use Alias"
 msgstr ""
 
-msgid "Use Config For Attributes"
-msgstr ""
-
 msgid "Use Custom Brand Image"
 msgstr ""
 
@@ -51148,9 +51129,6 @@ msgstr ""
 msgid "View Clusters"
 msgstr ""
 
-msgid "View Compute Rates"
-msgstr ""
-
 msgid "View Conditions"
 msgstr ""
 
@@ -51475,9 +51453,6 @@ msgstr ""
 msgid "View Storage Managers"
 msgstr ""
 
-msgid "View Storage Rates"
-msgstr ""
-
 msgid "View Storage Resources"
 msgstr ""
 
@@ -51587,9 +51562,6 @@ msgid "View this Policy Profile"
 msgstr ""
 
 msgid "View this Project"
-msgstr ""
-
-msgid "View this Report"
 msgstr ""
 
 msgid "View this Role"
