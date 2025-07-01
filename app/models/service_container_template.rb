@@ -100,8 +100,8 @@ class ServiceContainerTemplate < ServiceGeneric
     existing_name = overrides.delete(:existing_project_name) || dialog_options['dialog_existing_project_name']
     new_project_name = overrides.delete(:new_project_name) || dialog_options['dialog_new_project_name']
 
-    create_project(new_project_name) if new_project_name
-    project_name = new_project_name || existing_name
+    create_project(new_project_name) if new_project_name.present?
+    project_name = new_project_name.presence || existing_name
 
     raise _("A project is required for the container template provisioning") unless project_name
 

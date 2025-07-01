@@ -8,9 +8,10 @@ class Disk < ApplicationRecord
   virtual_column :allocated_space_percent,     :type => :float,   :uses => :allocated_space
   virtual_column :unallocated_space,           :type => :integer, :uses => :allocated_space
   virtual_column :unallocated_space_percent,   :type => :float,   :uses => :unallocated_space
+  # TODO: add arel
   virtual_column :used_percent_of_provisioned, :type => :float
   virtual_column :partitions_aligned,          :type => :string,  :uses => {:partitions => :aligned}
-  virtual_column :used_disk_storage, :type => :integer, :arel => (lambda do |t|
+  virtual_attribute :used_disk_storage, :integer, :arel => (lambda do |t|
     t.grouping(t.coalesce([t[:size_on_disk], t[:size], 0]))
   end)
 
@@ -94,6 +95,8 @@ class Disk < ApplicationRecord
   end
 
   def used_disk_storage
+    return self["used_disk_storage"] if has_attribute?("used_disk_storage")
+
     size_on_disk || size || 0
   end
 end

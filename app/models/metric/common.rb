@@ -18,7 +18,7 @@ module Metric::Common
     serialize :assoc_ids
     serialize :min_max   # TODO: Move this to MetricRollup
 
-    virtual_column :v_derived_storage_used, :type => :float, :arel => (lambda do |t|
+    virtual_attribute :v_derived_storage_used, :float, :arel => (lambda do |t|
       t.grouping(t[:derived_storage_total] - t[:derived_storage_free])
     end)
 
@@ -34,9 +34,9 @@ module Metric::Common
 
     attr_accessor :inside_time_profile, :time_profile_adjusted_timestamp
 
-    virtual_column :v_date,  :type => :datetime
+    alias_attribute :v_date, :timestamp
     virtual_column :v_month, :type => :string
-    virtual_column :v_time,  :type => :datetime
+    alias_attribute :v_time, :timestamp
 
     virtual_column :v_derived_vm_count,             :type => :integer
     virtual_column :v_derived_host_count,           :type => :integer
@@ -99,16 +99,8 @@ module Metric::Common
     (raw_val * 1000.0).round / 10.0
   end
 
-  def v_date
-    timestamp
-  end
-
   def v_month
     timestamp.strftime("%Y/%m")
-  end
-
-  def v_time
-    timestamp
   end
 
   def v_derived_vm_count

@@ -397,8 +397,13 @@ class MiqWidget < ApplicationRecord
 
   def grouped_users_by_id
     id_groups = Hash.new { |h, k| h[k] = [] }
+    group_ids = MiqGroup.in_my_region.pluck(:id)
     memberof.compact.each_with_object(id_groups) do |ws, h|
-      h[ws.group_id] << ws.userid unless ws.userid.blank? || ws.group_id.blank?
+      next if ws.userid.blank?
+      next if ws.group_id.blank?
+      next unless group_ids.include?(ws.group_id)
+
+      h[ws.group_id] << ws.userid
     end
   end
 
