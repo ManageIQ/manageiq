@@ -136,7 +136,6 @@ class ContainerProject < ApplicationRecord
     queue_opts = {
       :class_name  => ext_management_system.class_by_ems(:ContainerProject).name,
       :method_name => 'create_container_project',
-      :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',
       :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :zone        => ext_management_system.my_zone,
@@ -164,7 +163,6 @@ class ContainerProject < ApplicationRecord
       :class_name  => self.class.name,
       :method_name => 'update_container_project',
       :instance_id => id,
-      :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',
       :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :zone        => ext_management_system.my_zone,
@@ -188,7 +186,6 @@ class ContainerProject < ApplicationRecord
       :class_name  => self.class.name,
       :method_name => 'delete_container_project',
       :instance_id => id,
-      :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',
       :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :zone        => ext_management_system.my_zone,
