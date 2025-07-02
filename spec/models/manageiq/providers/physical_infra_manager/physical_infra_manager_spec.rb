@@ -1,8 +1,4 @@
 RSpec.describe ManageIQ::Providers::PhysicalInfraManager do
-  before :all do
-    @auth = {:user => 'admin', :pass => 'smartvm', :host => 'localhost', :port => '3000'}
-  end
-
   it 'will count physical servers' do
     ps = FactoryBot.create(:physical_server)
     pim = FactoryBot.create(:ems_physical_infra,
