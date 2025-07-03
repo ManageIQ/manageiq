@@ -25,6 +25,9 @@ class MiqRequest < ApplicationRecord
 
   serialize   :options, :type => Hash
 
+  after_create :notify_admin_on_request
+  after_update :send_user_approval_notification
+
   default_value_for(:message)       { |r| "#{r.class::TASK_DESCRIPTION} - Request Created" }
   default_value_for :options,       {}
   default_value_for :request_state, 'pending'
@@ -679,4 +682,64 @@ class MiqRequest < ApplicationRecord
 
     call_automate_event_queue("request_updated")
   end
+
+  def notify_admin_on_request
+    Rails.logger.info("Running notify_admin_on_request")
+    request = MiqRequest.find_by(id: self.id)
+    admin_email = User.in_my_region
+                  .joins(:miq_groups)
+                  .where(:miq_groups => { :description => "EvmGroup-super_administrator" })
+                  .pluck(:email)
+                  .compact
+                  .first || "admin@xaasio.com"
+    return unless admin_email.present?
+    requester_email = self.options[:owner_email] || self.requester.email || self.options[:dialog]["dialog_Email"]
+    description = self.message.to_s.split(' - ').first
+
+    req_id = self.service_order_id || self.source_id
+
+    subject = "New Service Request - Request ID #{req_id} "
+    body = "User #{requester_email} submitted a request for #{description}"
+
+    GenericMailer.deliver_queue(:new_catalog_request_notification, {
+      :to      => admin_email,
+      :from    => "support@xaasio.com",
+      :subject => subject,
+      :body    => body,
+      :description => description,
+      :requester_email => requester_email,
+      :id => self.id
+    })
+  end
+
+  def send_user_approval_notification
+    return unless saved_change_to_approval_state?
+    return unless %w[approved denied].include?(self.approval_state)
+    
+    user_email = self.options&.dig(:owner_email) || self.options&.dig(:dialog, "dialog_Email") || self.requester&.email
+
+    return unless user_email
+
+    req_id = self.service_order_id || self.source_id
+    subject = "Request ID #{req_id}- Service request has been #{self.approval_state}"
+    body = "Your service request has been #{self.approval_state}."
+
+    description = self.message.to_s.split(' - ').first
+    requester_name = self.requester_name || self.requester.name
+
+    GenericMailer.deliver_queue(:catalog_request_approved, {
+      :to      => user_email,
+      :from    => "support@xaasio.com",
+      :subject => subject,
+      :body    => body,
+      :description => description,
+      :requester_name => requester_name,
+      :approval_state => self.approval_state,
+      :id => self.id
+    })
+    
+
+  end
+
+
 end

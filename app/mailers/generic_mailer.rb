@@ -2,6 +2,37 @@ require 'hamlit'
 class GenericMailer < ActionMailer::Base
   include Vmdb::Logging
 
+  def catalog_request_approved(options)
+    set_mailer_smtp
+
+    @requester_name = options[:requester_name]
+    @description    = options[:description]
+    @approval_state = options[:approval_state]
+    @id = options[:id]
+
+    mail(
+      :to      => options[:to],
+      :from    => options[:from] || Settings.smtp.from,
+      :subject => options[:subject],
+      :date    => options[:sent_on] || Time.zone.now
+    )
+  end
+
+  def new_catalog_request_notification(options)
+    set_mailer_smtp
+
+    @requester_email = options[:requester_email]
+    @description     = options[:description]
+    @id = options[:id]
+
+    mail(
+      :to      => options[:to],
+      :from    => options[:from] || Settings.smtp.from,
+      :subject => options[:subject],
+      :date    => options[:sent_on] || Time.zone.now
+    )
+  end
+
   def self.deliver!(method, options = {})
     _log.info("starting: method: #{method} options: #{options} ")
     options[:attachment] &&= blob_to_attachment(options[:attachment])
