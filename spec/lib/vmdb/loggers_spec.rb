@@ -116,6 +116,18 @@ RSpec.describe Vmdb::Loggers do
 
             subject.debug("test message")
           end
+
+          it "forwards the progname" do
+            expected_progname = log_file_name.chomp(".log")
+
+            if container_log
+              expect(container_log.logdev).to receive(:write).with(a_string_including("\"service\":\"#{expected_progname}\""))
+            else
+              expect(subject.logdev).to receive(:write).with(a_string_including(expected_progname))
+            end
+
+            subject.info("test message")
+          end
         end
       end
 

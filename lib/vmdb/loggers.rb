@@ -54,29 +54,29 @@ module Vmdb
     end
 
     private_class_method def self.create_container_logger(log_file_name, logger_class)
-      return nil unless (logger = create_raw_container_logger)
+      return nil unless (logger = create_raw_container_logger(log_file_name))
 
       create_wrapper_logger(log_file_name, logger_class, logger)
     end
 
-    private_class_method def self.create_raw_container_logger
+    private_class_method def self.create_raw_container_logger(log_file_name)
       return unless ENV["CONTAINER"]
 
       require "manageiq/loggers/container"
-      ManageIQ::Loggers::Container.new
+      ManageIQ::Loggers::Container.new(:progname => log_file_to_prog_name(log_file_name))
     end
 
     private_class_method def self.create_journald_logger(log_file_name, logger_class)
-      return nil unless (logger = create_raw_journald_logger)
+      return nil unless (logger = create_raw_journald_logger(log_file_name))
 
       create_wrapper_logger(log_file_name, logger_class, logger)
     end
 
-    private_class_method def self.create_raw_journald_logger
+    private_class_method def self.create_raw_journald_logger(log_file_name)
       return unless MiqEnvironment::Command.supports_systemd?
 
       require "manageiq/loggers/journald"
-      ManageIQ::Loggers::Journald.new
+      ManageIQ::Loggers::Journald.new(:progname => log_file_to_prog_name(log_file_name))
     rescue LoadError
       nil
     end
@@ -128,6 +128,10 @@ module Vmdb
       # Put back the utf-8 encoding which is the default for most rails libraries
       # after opening it as binary and getting rid of the invalid UTF8 byte sequences
       results.join("\n").force_encoding("utf-8")
+    end
+
+    private_class_method def self.log_file_to_prog_name(log_file)
+      log_file.chomp(".log") if log_file.kind_of?(String)
     end
   end
 end
