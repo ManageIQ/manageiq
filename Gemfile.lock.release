@@ -357,7 +357,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-ui-classic
-  revision: de67f9d9f6a602191ae7d7e2cff2a8a40a2b6952
+  revision: 7e3a1288c786062629f74b66ed0d19dad095cd2b
   branch: spassky
   specs:
     manageiq-ui-classic (0.1.0)
