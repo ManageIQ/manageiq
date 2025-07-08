@@ -1,0 +1,9 @@
+#!/bin/bash
+set -e
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.." &>/dev/null && pwd
+
+set -x
+bundle exec rake test:verify_no_db_access_loading_rails_environment
+bundle exec rake test:verify_connectable_with_valid_database
+bundle exec rake test:verify_not_connectable_with_invalid_database
