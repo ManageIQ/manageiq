@@ -29,10 +29,13 @@ module Vmdb
       Vmdb::Plugins.each { |p| p.try(:apply_logger_config, config) }
     end
 
-    def self.create_logger(log_file_name, logger_class = ManageIQ::Loggers::Base)
-      create_container_logger(log_file_name, logger_class) ||
-        create_journald_logger(log_file_name, logger_class) ||
-        create_file_logger(log_file_name, logger_class)
+    def self.create_logger(log_file, logger_class = ManageIQ::Loggers::Base)
+      log_file = Pathname.new(log_file)              if log_file.kind_of?(String)
+      log_file = ManageIQ.root.join("log", log_file) if log_file.try(:dirname).to_s == "."
+
+      create_container_logger(log_file, logger_class) ||
+        create_journald_logger(log_file, logger_class) ||
+        create_file_logger(log_file, logger_class)
     end
 
     private_class_method def self.create_loggers
@@ -46,11 +49,7 @@ module Vmdb
     end
 
     private_class_method def self.create_file_logger(log_file, logger_class)
-      log_file = Pathname.new(log_file) if log_file.kind_of?(String)
-      log_file = ManageIQ.root.join("log", log_file) if log_file.try(:dirname).to_s == "."
-      progname = log_file.try(:basename, ".*").to_s
-
-      logger_class.new(log_file, :progname => progname)
+      logger_class.new(log_file, :progname => log_file_to_prog_name(log_file))
     end
 
     private_class_method def self.create_container_logger(log_file_name, logger_class)
@@ -82,9 +81,7 @@ module Vmdb
     end
 
     private_class_method def self.create_wrapper_logger(log_file, logger_class, wrapped_logger)
-      log_file = Pathname.new(log_file) if log_file.kind_of?(String)
-      log_file = ManageIQ.root.join("log", log_file) if log_file.try(:dirname).to_s == "."
-      progname = log_file.try(:basename, ".*").to_s
+      progname = log_file_to_prog_name(log_file)
 
       logger = logger_class.new(nil, :progname => progname)
       logger.wrap(wrapped_logger).tap { |broadcaster| broadcaster.progname = progname }
@@ -131,7 +128,7 @@ module Vmdb
     end
 
     private_class_method def self.log_file_to_prog_name(log_file)
-      log_file.chomp(".log") if log_file.kind_of?(String)
+      log_file.try(:basename, ".*").to_s
     end
   end
 end
