@@ -27,9 +27,11 @@ module ActiveRecord
       _log.info("Completed Vacuuming of table #{table_name} with result #{result.result_status}")
     end
 
+    CONNECTIVITY_ERRORS = [ActiveRecord::ConnectionNotEstablished, ActiveRecord::DatabaseConnectionError, ActiveRecord::NoDatabaseError, PG::ConnectionBad].freeze
+
     def self.connectable?
       with_connection { |conn| conn.connect! && conn.connected? }
-    rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::DatabaseConnectionError, ActiveRecord::NoDatabaseError, PG::ConnectionBad
+    rescue *CONNECTIVITY_ERRORS
       false
     end
   end

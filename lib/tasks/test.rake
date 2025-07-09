@@ -22,7 +22,7 @@ if defined?(RSpec)
         begin
           puts "** Confirming rails environment does not connect to the database"
           Rake::Task['environment'].invoke
-        rescue ActiveRecord::DatabaseConnectionError, ActiveRecord::NoDatabaseError
+        rescue *ActiveRecord::Base::CONNECTIVITY_ERRORS
           STDERR.write "\e[31;1mDetected Rails environment trying to connect to the database!  Check the backtrace for an initializer trying to access the database.\n\n\e[0m"
           raise
         end
