@@ -116,6 +116,18 @@ RSpec.describe Vmdb::Loggers do
 
             subject.debug("test message")
           end
+
+          it "logs the correct progname" do
+            expected_progname = log_file_name.chomp(".log")
+
+            if container_log
+              expect(container_log.logdev).to receive(:write).with(a_string_including("\"service\":\"#{expected_progname}\""))
+            else
+              expect(subject.logdev).to receive(:write).with(a_string_including(expected_progname))
+            end
+
+            subject.info("test message")
+          end
         end
       end
 
@@ -178,6 +190,18 @@ RSpec.describe Vmdb::Loggers do
 
           expect(log_file.read).to include("test message") unless container_log
         end
+
+        it "logs the correct progname" do
+          expected_progname = "logger_pathname"
+
+          if container_log
+            expect(container_log.logdev).to receive(:write).with(a_string_including("\"service\":\"#{expected_progname}\""))
+          else
+            expect(subject.logdev).to receive(:write).with(a_string_including(expected_progname))
+          end
+
+          subject.info("test message")
+        end
       end
 
       context "with a full path String" do
@@ -195,6 +219,18 @@ RSpec.describe Vmdb::Loggers do
           subject.info("test message")
 
           expect(File.read(log_file)).to include("test message") unless container_log
+        end
+
+        it "logs the correct progname" do
+          expected_progname = "logger_string"
+
+          if container_log
+            expect(container_log.logdev).to receive(:write).with(a_string_including("\"service\":\"#{expected_progname}\""))
+          else
+            expect(subject.logdev).to receive(:write).with(a_string_including(expected_progname))
+          end
+
+          subject.info("test message")
         end
       end
     end
