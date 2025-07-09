@@ -13,7 +13,7 @@ if defined?(RSpec)
     end
 
     desc "Verifies that the rails environment does not require DB access"
-    task :verify_no_db_access_loading_rails_environment do
+    task :verify_no_db_access_loading_rails_environment => :initialize do
       if Rake::Task['environment'].already_invoked
         raise "Failed to verify database access when loading rails because the 'environment' rake task has already been invoked!"
       end
@@ -22,10 +22,30 @@ if defined?(RSpec)
         begin
           puts "** Confirming rails environment does not connect to the database"
           Rake::Task['environment'].invoke
-        rescue ActiveRecord::NoDatabaseError
-          STDERR.write "Detected Rails environment trying to connect to the database!  Check the backtrace for an initializer trying to access the database.\n\n"
+        rescue *ActiveRecord::Base::CONNECTIVITY_ERRORS
+          STDERR.write "\e[31;1mDetected Rails environment trying to connect to the database!  Check the backtrace for an initializer trying to access the database.\n\n\e[0m"
           raise
         end
+      end
+    end
+
+    desc "Verifies that a valid database is connectable"
+    task :verify_connectable_with_valid_database => :initialize do
+      puts "** Confirming valid database is connectable"
+      Rake::Task['environment'].invoke
+      raise "\e[31;1mExpected valid database to be connectable!\e[0m" unless ActiveRecord::Base.connectable?
+    end
+
+    desc "Verifies that an invalid database is not connectable"
+    task :verify_not_connectable_with_invalid_database => :initialize do
+      if Rake::Task['environment'].already_invoked
+        raise "\e[31;1mFailed to verify database access when loading rails because the 'environment' rake task has already been invoked!\e[0m"
+      end
+
+      EvmRakeHelper.with_dummy_database_url_configuration do
+        puts "** Confirming invalid database is not connectable"
+        Rake::Task['environment'].invoke
+        raise "\e[31;1mExpected invalid database to not be connectable!\e[0m" if ActiveRecord::Base.connectable?
       end
     end
 
