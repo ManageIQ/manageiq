@@ -7209,9 +7209,6 @@ msgstr ""
 msgid "Category Selection"
 msgstr ""
 
-msgid "Category Tag Entries"
-msgstr ""
-
 msgid "Category cannot be deleted"
 msgstr ""
 
@@ -8119,9 +8116,6 @@ msgid "Click to view %{name} TenantProject"
 msgstr ""
 
 msgid "Click to view details"
-msgstr ""
-
-msgid "Click to view saved report"
 msgstr ""
 
 msgid "Click to view selected widget"
@@ -9474,9 +9468,6 @@ msgstr ""
 msgid "Common Secret"
 msgstr ""
 
-msgid "Company Name"
-msgstr ""
-
 msgid "Company Tag"
 msgstr ""
 
@@ -10610,6 +10601,16 @@ msgid_plural "Container Projects"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Container Project (Kubernetes)"
+msgid_plural "Container Projects (Kubernetes)"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Container Project (OpenShift)"
+msgid_plural "Container Projects (OpenShift)"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Container Project Compliance Check"
 msgstr ""
 
@@ -10803,6 +10804,9 @@ msgid "Container port config"
 msgstr ""
 
 msgid "Container project"
+msgstr ""
+
+msgid "Container project '%{project_name}' already exists"
 msgstr ""
 
 msgid "Container quota"
@@ -15442,9 +15446,6 @@ msgstr ""
 msgid "Deploy Smartproxy"
 msgstr ""
 
-msgid "Depot Name"
-msgstr ""
-
 msgid "Depot Settings successfuly validated"
 msgstr ""
 
@@ -17681,6 +17682,9 @@ msgid "EMS IP Address"
 msgstr ""
 
 msgid "EMS Name"
+msgstr ""
+
+msgid "EMS cannot be nil"
 msgstr ""
 
 msgid "ESX Logs"
@@ -27937,15 +27941,6 @@ msgstr ""
 msgid "Member Role"
 msgstr ""
 
-msgid "Memeory Usage Absolute Average Avg Over Time Period"
-msgstr ""
-
-msgid "Memeory Usage Absolute Average High Over Time Period"
-msgstr ""
-
-msgid "Memeory Usage Absolute Average Low Over Time Period"
-msgstr ""
-
 msgid "Memory"
 msgstr ""
 
@@ -28298,6 +28293,15 @@ msgid "Memory Usage"
 msgstr ""
 
 msgid "Memory Usage (%)"
+msgstr ""
+
+msgid "Memory Usage Absolute Average Avg Over Time Period"
+msgstr ""
+
+msgid "Memory Usage Absolute Average High Over Time Period"
+msgstr ""
+
+msgid "Memory Usage Absolute Average Low Over Time Period"
 msgstr ""
 
 msgid "Memory Used"
@@ -32480,6 +32484,9 @@ msgstr ""
 msgid "Must specify a floating_ip"
 msgstr ""
 
+msgid "Must specify a name for the container project"
+msgstr ""
+
 msgid "Must specify a new_description"
 msgstr ""
 
@@ -32581,7 +32588,15 @@ msgstr ""
 msgid "Name may contain only alphanumeric and _ . - characters"
 msgstr ""
 
+msgid "Name must be no more than 63 characters"
+msgstr ""
+
 msgid "Name must be unique"
+msgstr ""
+
+msgid ""
+"Name must consist of lower case alphanumeric characters or '-', start with an "
+"alphanumeric character, and end with an alphanumeric character"
 msgstr ""
 
 msgid "Name of the Cloud Network"
@@ -41840,9 +41855,6 @@ msgstr ""
 msgid "Run Now"
 msgstr ""
 
-msgid "Run On"
-msgstr ""
-
 msgid "Run a selected Report"
 msgstr ""
 
@@ -42102,9 +42114,6 @@ msgid "Saved Report \"%{time}\" not found, Schedule may have failed"
 msgstr ""
 
 msgid "Saved Report no longer exists"
-msgstr ""
-
-msgid "Saved Report: %{report_name}"
 msgstr ""
 
 msgid "Saved Reports"
@@ -47502,9 +47511,6 @@ msgstr ""
 msgid "Tenant|Subdomain"
 msgstr ""
 
-msgid "Tenant|Use config for attributes"
-msgstr ""
-
 msgid "Terminate"
 msgstr ""
 
@@ -49856,9 +49862,6 @@ msgstr ""
 msgid "Use Alias"
 msgstr ""
 
-msgid "Use Config For Attributes"
-msgstr ""
-
 msgid "Use Custom Brand Image"
 msgstr ""
 
@@ -51386,9 +51389,6 @@ msgstr ""
 msgid "View Clusters"
 msgstr ""
 
-msgid "View Compute Rates"
-msgstr ""
-
 msgid "View Conditions"
 msgstr ""
 
@@ -51713,9 +51713,6 @@ msgstr ""
 msgid "View Storage Managers"
 msgstr ""
 
-msgid "View Storage Rates"
-msgstr ""
-
 msgid "View Storage Resources"
 msgstr ""
 
@@ -51825,9 +51822,6 @@ msgid "View this Policy Profile"
 msgstr ""
 
 msgid "View this Project"
-msgstr ""
-
-msgid "View this Report"
 msgstr ""
 
 msgid "View this Role"
@@ -54889,6 +54883,9 @@ msgstr ""
 msgid "raw_create_cloud_tenant must be implemented in a subclass"
 msgstr ""
 
+msgid "raw_create_container_project must be implemented in a subclass"
+msgstr ""
+
 msgid "raw_create_host_initiator must be implemented in a subclass"
 msgstr ""
 
@@ -54929,6 +54926,9 @@ msgid "raw_delete_cloud_subnet must be implemented in a subclass"
 msgstr ""
 
 msgid "raw_delete_cloud_tenant must be implemented in a subclass"
+msgstr ""
+
+msgid "raw_delete_container_project must be implemented in a subclass"
 msgstr ""
 
 msgid "raw_delete_flavor must be implemented in a subclass"
@@ -55010,6 +55010,9 @@ msgid "raw_update_cloud_network must be implemented in a subclass"
 msgstr ""
 
 msgid "raw_update_cloud_tenant must be implemented in a subclass"
+msgstr ""
+
+msgid "raw_update_container_project must be implemented in a subclass"
 msgstr ""
 
 msgid "raw_update_host_initiator_group must be implemented in a subclass"
