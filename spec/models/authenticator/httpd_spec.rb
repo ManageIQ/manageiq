@@ -645,18 +645,18 @@ RSpec.describe Authenticator::Httpd do
       end
 
       describe ".user_attrs_from_external_directory_via_dbus" do
+        let(:ifp_interface) { double('ifp_interface') }
         before do
           require "dbus"
           sysbus = double('sysbus')
           ifp_service = double('ifp_service')
           ifp_object  = double('ifp_object')
-          @ifp_interface = double('ifp_interface')
 
           allow(DBus).to receive(:system_bus).and_return(sysbus)
           allow(sysbus).to receive(:[]).with("org.freedesktop.sssd.infopipe").and_return(ifp_service)
           allow(ifp_service).to receive(:object).with("/org/freedesktop/sssd/infopipe").and_return(ifp_object)
           allow(ifp_object).to receive(:introspect)
-          allow(ifp_object).to receive(:[]).with("org.freedesktop.sssd.infopipe").and_return(@ifp_interface)
+          allow(ifp_object).to receive(:[]).with("org.freedesktop.sssd.infopipe").and_return(ifp_interface)
         end
 
         it "should return nil for unspecified user" do
@@ -678,7 +678,7 @@ RSpec.describe Authenticator::Httpd do
                                  "displayname" => "John Doe",
                                  "domainname"  => "example.com"}
 
-          allow(@ifp_interface).to receive(:GetUserAttr).with('jdoe', requested_attrs).and_return(jdoe_attrs)
+          allow(ifp_interface).to receive(:GetUserAttr).with('jdoe', requested_attrs).and_return(jdoe_attrs)
 
           expect(subject.send(:user_attrs_from_external_directory_via_dbus, 'jdoe')).to eq(expected_jdoe_attrs)
         end
