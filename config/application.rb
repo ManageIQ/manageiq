@@ -148,7 +148,8 @@ module Vmdb
 
     config.autoload_once_paths << Rails.root.join("lib/vmdb/console_methods.rb").to_s
 
-    config.active_record.default_column_serializer = YAML if Rails.version >= "7.1"
+    # Starting in rails 7.1, the default is unset(nil) so we set it to YAML.
+    config.active_record.default_column_serializer = YAML
 
     require_relative '../lib/request_started_on_middleware'
     config.middleware.use RequestStartedOnMiddleware
