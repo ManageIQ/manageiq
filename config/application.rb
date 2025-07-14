@@ -120,10 +120,6 @@ module Vmdb
     # TODO: this is the only change we had from defaults in 7.0.  See secure_headers.rb.  It's 0 in defaults.
     config.action_dispatch.default_headers["X-XSS-Protection"] = "1; mode=block"
 
-    # TODO: Find and fix any deprecated behavior.  Opt in later.
-    config.active_support.remove_deprecated_time_with_zone_name = false
-    config.active_support.disable_to_s_conversion = false
-
     # TODO: If disabled, causes cross repo test failures in content, ui-classic and amazon provider
     config.active_record.partial_inserts = true
 
