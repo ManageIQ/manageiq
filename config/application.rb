@@ -96,6 +96,7 @@ module Vmdb
     config.action_cable.mount_path = '/ws/notifications'
 
     # Rails 6.1.7+ has a protection to not lookup values by a large number.
+    # This is still true in rails 7.2!
     # A lookup/comparison with a large number (bigger than bigint)
     # needs to cast the db column to a double/numeric.
     # and that casting skips the index and forces a table scan
