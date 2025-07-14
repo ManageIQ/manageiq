@@ -132,21 +132,12 @@ module Vmdb
     # manageiq/providers/infra_manager/template, dialog_field_importer, workers/event_catcher
     config.add_autoload_paths_to_load_path = true
 
-    # NOTE:  If you are going to make changes to autoload_paths, please make
-    # sure they are all strings.  Rails will push these paths into the
-    # $LOAD_PATH.
-    #
-    # More info can be found in the ruby-lang bug:
-    #
-    #   https://bugs.ruby-lang.org/issues/14372
-    #
+    config.autoload_paths << Rails.root.join("app/models/aliases")
+    config.autoload_paths << Rails.root.join("app/models/mixins")
+    config.autoload_paths << Rails.root.join("lib")
+    config.autoload_paths << Rails.root.join("lib/services")
 
-    config.autoload_paths << Rails.root.join("app/models/aliases").to_s
-    config.autoload_paths << Rails.root.join("app/models/mixins").to_s
-    config.autoload_paths << Rails.root.join("lib").to_s
-    config.autoload_paths << Rails.root.join("lib/services").to_s
-
-    config.autoload_once_paths << Rails.root.join("lib/vmdb/console_methods.rb").to_s
+    config.autoload_once_paths << Rails.root.join("lib/vmdb/console_methods.rb")
 
     # Starting in rails 7.1, the default is unset(nil) so we set it to YAML.
     config.active_record.default_column_serializer = YAML
