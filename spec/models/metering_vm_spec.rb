@@ -69,15 +69,15 @@ RSpec.describe MeteringVm do
     end
 
     context 'for any virtual machine' do
+      let(:tag) { Tag.find_by(:name => "/managed/environment/prod") }
       before do
         cat = FactoryBot.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
         FactoryBot.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
-        @tag = Tag.find_by(:name => "/managed/environment/prod")
       end
 
       let!(:vm1) do
         FactoryBot.create(:vm_infra, :hardware => hardware, :created_on => report_run_time - 1.day).tap do |vm|
-          vm.tag_with(@tag.name, :ns => '*')
+          vm.tag_with(tag.name, :ns => '*')
           stub_supports(vm, :capture)
         end
       end
