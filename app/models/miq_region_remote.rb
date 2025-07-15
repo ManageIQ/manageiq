@@ -79,7 +79,7 @@ class MiqRegionRemote < ApplicationRecord
     return host, port, username, password, database, adapter
   end
 
-  def self.with_remote_connection(host, port, username, password, database, adapter, connect_timeout = 0)
+  def self.with_remote_connection(host, port, username, password, database, adapter, connect_timeout = 0, &block)
     # Don't allow accidental connections to localhost.  A blank host will
     # connect to localhost, so don't allow that at all.
     host = host.to_s.strip
@@ -103,8 +103,7 @@ class MiqRegionRemote < ApplicationRecord
         :database        => database,
         :connect_timeout => connect_timeout
       }.delete_blanks)
-      conn = pool.connection
-      yield conn
+      pool.with_connection { |conn| block.call(conn) }
     ensure
       remove_connection
     end
