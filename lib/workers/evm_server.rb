@@ -144,8 +144,7 @@ class EvmServer
   end
 
   def validate_database
-    # Remove the connection and establish a new one since reconnect! doesn't always play nice with SSL postgresql connections
-    ActiveRecord::Base.establish_connection(ActiveRecord::Base.remove_connection)
+    ActiveRecord::Base.ssl_postgresql_friendly_reconnect
 
     # Log the Versions
     _log.info("Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], version: [#{ActiveRecord::Base.connection.database_version_details}]") if ActiveRecord::Base.connection.respond_to?(:database_version_details)
