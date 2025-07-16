@@ -144,7 +144,7 @@ class EvmServer
   end
 
   def validate_database
-    ActiveRecord::Base.ssl_postgresql_friendly_reconnect
+    ActiveRecord::Base.postgresql_ssl_friendly_base_reconnect
 
     # Log the Versions
     _log.info("Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], version: [#{ActiveRecord::Base.connection.database_version_details}]") if ActiveRecord::Base.connection.respond_to?(:database_version_details)
