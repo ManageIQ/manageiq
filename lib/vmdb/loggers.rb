@@ -29,10 +29,13 @@ module Vmdb
       Vmdb::Plugins.each { |p| p.try(:apply_logger_config, config) }
     end
 
-    def self.create_logger(log_file_name, logger_class = ManageIQ::Loggers::Base)
-      create_container_logger(log_file_name, logger_class) ||
-        create_journald_logger(log_file_name, logger_class) ||
-        create_file_logger(log_file_name, logger_class)
+    def self.create_logger(log_file, logger_class = ManageIQ::Loggers::Base)
+      log_file = Pathname.new(log_file)              if log_file.kind_of?(String)
+      log_file = ManageIQ.root.join("log", log_file) if log_file.try(:dirname).to_s == "."
+
+      create_container_logger(log_file, logger_class) ||
+        create_journald_logger(log_file, logger_class) ||
+        create_file_logger(log_file, logger_class)
     end
 
     private_class_method def self.create_loggers
@@ -46,45 +49,39 @@ module Vmdb
     end
 
     private_class_method def self.create_file_logger(log_file, logger_class)
-      log_file = Pathname.new(log_file) if log_file.kind_of?(String)
-      log_file = ManageIQ.root.join("log", log_file) if log_file.try(:dirname).to_s == "."
-      progname = log_file.try(:basename, ".*").to_s
-
-      logger_class.new(log_file, :progname => progname)
+      logger_class.new(log_file, :progname => log_file_to_prog_name(log_file))
     end
 
     private_class_method def self.create_container_logger(log_file_name, logger_class)
-      return nil unless (logger = create_raw_container_logger)
+      return nil unless (logger = create_raw_container_logger(log_file_name))
 
       create_wrapper_logger(log_file_name, logger_class, logger)
     end
 
-    private_class_method def self.create_raw_container_logger
+    private_class_method def self.create_raw_container_logger(log_file_name)
       return unless ENV["CONTAINER"]
 
       require "manageiq/loggers/container"
-      ManageIQ::Loggers::Container.new
+      ManageIQ::Loggers::Container.new(:progname => log_file_to_prog_name(log_file_name))
     end
 
     private_class_method def self.create_journald_logger(log_file_name, logger_class)
-      return nil unless (logger = create_raw_journald_logger)
+      return nil unless (logger = create_raw_journald_logger(log_file_name))
 
       create_wrapper_logger(log_file_name, logger_class, logger)
     end
 
-    private_class_method def self.create_raw_journald_logger
+    private_class_method def self.create_raw_journald_logger(log_file_name)
       return unless MiqEnvironment::Command.supports_systemd?
 
       require "manageiq/loggers/journald"
-      ManageIQ::Loggers::Journald.new
+      ManageIQ::Loggers::Journald.new(:progname => log_file_to_prog_name(log_file_name))
     rescue LoadError
       nil
     end
 
     private_class_method def self.create_wrapper_logger(log_file, logger_class, wrapped_logger)
-      log_file = Pathname.new(log_file) if log_file.kind_of?(String)
-      log_file = ManageIQ.root.join("log", log_file) if log_file.try(:dirname).to_s == "."
-      progname = log_file.try(:basename, ".*").to_s
+      progname = log_file_to_prog_name(log_file)
 
       logger = logger_class.new(nil, :progname => progname)
       logger.wrap(wrapped_logger).tap { |broadcaster| broadcaster.progname = progname }
@@ -128,6 +125,10 @@ module Vmdb
       # Put back the utf-8 encoding which is the default for most rails libraries
       # after opening it as binary and getting rid of the invalid UTF8 byte sequences
       results.join("\n").force_encoding("utf-8")
+    end
+
+    private_class_method def self.log_file_to_prog_name(log_file)
+      log_file.try(:basename, ".*").to_s
     end
   end
 end

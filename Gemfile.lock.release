@@ -621,6 +621,7 @@ GEM
     drb (2.2.3)
     ed25519 (1.4.0)
     elif (0.1.0)
+    erb (5.0.2)
     erubi (1.13.1)
     escape_utils (1.3.0)
     et-orbi (1.2.11)
@@ -830,10 +831,12 @@ GEM
       activerecord (>= 7.0.8, < 8.0)
       more_core_extensions (>= 3.5, < 5)
       pg (> 0)
-    io-console (0.8.0)
+    io-console (0.8.1)
     io-wait (0.3.1)
-    irb (1.4.1)
-      reline (>= 0.3.0)
+    irb (1.15.2)
+      pp (>= 0.6.0)
+      rdoc (>= 4.0.0)
+      reline (>= 0.4.2)
     jbuilder (2.13.0)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
@@ -1058,11 +1061,14 @@ GEM
       pg
     po_to_json (2.0.0)
       json (>= 1.6.0)
+    pp (0.6.2)
+      prettyprint
     prawn (2.4.0)
       pdf-core (~> 0.9.0)
       ttfunk (~> 1.7)
     prawn-table (0.2.2)
       prawn (>= 1.3.0, < 3.0.0)
+    prettyprint (0.2.0)
     prime (0.1.3)
       forwardable
       singleton
@@ -1138,6 +1144,9 @@ GEM
       ffi (~> 1.15)
       mini_portile2 (~> 2.6)
       rake (> 12)
+    rdoc (6.14.2)
+      erb
+      psych (>= 4.0.0)
     recursive-open-struct (1.3.1)
       ostruct
     redfish_client (0.5.4)
