@@ -53,7 +53,7 @@ class TokenStore
       {
         :namespace  => "MIQ:TOKENS:#{namespace.upcase}",
         :expires_in => token_ttl,
-        :pool_size  => 10,
+        :pool       => {:size => 10} # runs through ActiveSupport::Cache::MemCacheStore, it expects pool key with size/timeout key/values in 7.2
       }
     )
   end
