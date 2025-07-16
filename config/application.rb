@@ -96,6 +96,7 @@ module Vmdb
     config.action_cable.mount_path = '/ws/notifications'
 
     # Rails 6.1.7+ has a protection to not lookup values by a large number.
+    # This is still true in rails 7.2!
     # A lookup/comparison with a large number (bigger than bigint)
     # needs to cast the db column to a double/numeric.
     # and that casting skips the index and forces a table scan
@@ -119,10 +120,6 @@ module Vmdb
 
     # TODO: this is the only change we had from defaults in 7.0.  See secure_headers.rb.  It's 0 in defaults.
     config.action_dispatch.default_headers["X-XSS-Protection"] = "1; mode=block"
-
-    # TODO: Find and fix any deprecated behavior.  Opt in later.
-    config.active_support.remove_deprecated_time_with_zone_name = false
-    config.active_support.disable_to_s_conversion = false
 
     # TODO: If disabled, causes cross repo test failures in content, ui-classic and amazon provider
     config.active_record.partial_inserts = true
@@ -151,7 +148,8 @@ module Vmdb
 
     config.autoload_once_paths << Rails.root.join("lib/vmdb/console_methods.rb").to_s
 
-    config.active_record.default_column_serializer = YAML if Rails.version >= "7.1"
+    # Starting in rails 7.1, the default is unset(nil) so we set it to YAML.
+    config.active_record.default_column_serializer = YAML
 
     require_relative '../lib/request_started_on_middleware'
     config.middleware.use RequestStartedOnMiddleware
