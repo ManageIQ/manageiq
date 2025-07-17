@@ -50,7 +50,7 @@ gem "linux_admin",                      ">=3.0", "<5",       :require => false
 gem "listen",                           "~>3.2",             :require => false
 gem "manageiq-api-client",              "~>0.6.0",           :require => false
 gem "manageiq-loggers",                 "~>1.2", ">= 1.2.1", :require => false
-gem "manageiq-messaging",               "~>1.5",             :require => false
+gem "manageiq-messaging",               "~>2.0",             :require => false
 gem "manageiq-password",                "~>1.0",             :require => false
 gem "manageiq-postgres_ha_admin",       "~>3.4",             :require => false
 gem "manageiq-ssh-util",                "~>0.2.0",           :require => false
