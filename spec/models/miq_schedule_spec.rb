@@ -757,4 +757,24 @@ RSpec.describe MiqSchedule do
       end
     end
   end
+
+  describe "#target_ids" do
+    let(:resource) { FactoryBot.create(:host) }
+
+    it "fetches targets" do
+      miqe = MiqExpression.new("=" => {"field" => "Host-id", "value" => resource.id})
+      sch = FactoryBot.create(:miq_schedule, :resource => resource, :filter => miqe)
+
+      expect(sch.get_filter.exp).to eq(miqe.exp)
+      expect(sch.target_ids).to eq([resource.id])
+    end
+
+    it "handles invalid targets" do
+      miqe = MiqExpression.new("=" => {"field" => "Host.id", "value" => resource.id})
+      sch = FactoryBot.create(:miq_schedule, :resource => resource, :filter => miqe)
+
+      expect(sch.get_filter.exp).to eq(miqe.exp)
+      expect(sch.target_ids).to eq([])
+    end
+  end
 end
