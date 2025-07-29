@@ -49,9 +49,13 @@ class MiqExpression
       validate_keys.all? { |k| valid?(operator_args[k]) }
     else
       if operator_args.key?("field")
-        field = Field.parse(operator_args["field"])
-        return false if field && !field.valid?
+        # For parent operator "checkcount", can use "field" => "<count>" (which would blow up Field.parse)
+        unless operator_args["field"] == "<count>"
+          field = Field.parse(operator_args["field"])
+          return false unless field&.valid?
+        end
       end
+      # Note: by definition, is_field? ensures field.valid? - need to fix
       if Field.is_field?(operator_args["value"])
         field = Field.parse(operator_args["value"])
         return false unless field && field.valid?
@@ -289,6 +293,7 @@ class MiqExpression
       if op_args.include?("checkcount")
         check = "checkcount"
         op = op_args[check].keys.first
+        # force "field" => "<count>"
         op_args[check][op]["field"] = "<count>"
       end
       raise _("expression malformed,  must contain one of 'checkall', 'checkany', 'checkcount'") unless check

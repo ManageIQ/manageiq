@@ -91,6 +91,10 @@ RSpec.describe MiqExpression::Field do
       expect(described_class.parse(tag)).to be_nil
     end
 
+    it "doesn't parse bad text" do
+      expect(MiqExpression::Field.parse("Vm.name")).to be_nil
+    end
+
     it 'parses field with numbers in association' do
       field = 'Vm.win32_services-dependencies'
       expect(described_class.parse(field)).to have_attributes(:model        => Vm,
