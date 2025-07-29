@@ -37,22 +37,27 @@ class MiqExpression
 
   def valid?(component = exp)
     operator = component.keys.first
+    operator_args = component[operator]
     case operator.downcase
     when "and", "or"
-      component[operator].all?(&method(:valid?))
+      operator_args.all?(&method(:valid?))
     when "not", "!"
-      valid?(component[operator])
+      valid?(operator_args)
     when "find"
       validate_set = Set.new(%w[checkall checkany checkcount search])
-      validate_keys = component[operator].keys.select { |k| validate_set.include?(k) }
-      validate_keys.all? { |k| valid?(component[operator][k]) }
+      validate_keys = operator_args.keys.select { |k| validate_set.include?(k) }
+      validate_keys.all? { |k| valid?(operator_args[k]) }
     else
-      if component[operator].key?("field")
-        field = Field.parse(component[operator]["field"])
-        return false if field && !field.valid?
+      if operator_args.key?("field")
+        # For parent operator "checkcount", can use "field" => "<count>" (which would blow up Field.parse)
+        unless operator_args["field"] == "<count>"
+          field = Field.parse(operator_args["field"])
+          return false unless field&.valid?
+        end
       end
-      if Field.is_field?(component[operator]["value"])
-        field = Field.parse(component[operator]["value"])
+      # Note: by definition, is_field? ensures field.valid? - need to fix
+      if Field.is_field?(operator_args["value"])
+        field = Field.parse(operator_args["value"])
         return false unless field && field.valid?
       end
       true
@@ -288,6 +293,7 @@ class MiqExpression
       if op_args.include?("checkcount")
         check = "checkcount"
         op = op_args[check].keys.first
+        # force "field" => "<count>"
         op_args[check][op]["field"] = "<count>"
       end
       raise _("expression malformed,  must contain one of 'checkall', 'checkany', 'checkcount'") unless check
