@@ -175,8 +175,7 @@ class EvmApplication
 
   def self.deployment_status
     migration_dir  = Rails.application.config.paths["db/migrate"]
-    migration_conn = ActiveRecord::Base.connection_pool.schema_migration
-    context        = ActiveRecord::MigrationContext.new(migration_dir, migration_conn)
+    context        = ActiveRecord::MigrationContext.new(migration_dir)
 
     return "new_deployment" if context.current_version.zero? || MiqServer.none?
     return "new_replica"    if MiqServer.my_server.nil?
