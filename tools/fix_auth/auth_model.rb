@@ -131,10 +131,6 @@ module FixAuth
         puts "#{records_changed} of #{processed} records #{options[:dry_run] ? 'would change (dry run enabled)' : 'changed'}" unless options[:silent]
         puts "found #{errors} errors" if errors > 0 && !options[:silent]
       end
-
-      def clean_up
-        clear_active_connections!
-      end
     end
   end
 end
