@@ -16,6 +16,18 @@ module ManageIQ
           :value_max_bytes => 10.megabytes
         )
       end
+
+      def enable_rack_session_debug_logger
+        return if Rails.env.production?
+
+        puts "** Enabling rack session debug logger"
+        rack_session_class_to_prepend.prepend(ManageIQ::Session::RackSessionDalliLogger)
+      end
+
+      def rack_session_class_to_prepend
+        require 'rack/session/dalli'
+        ::Rack::Session::Dalli
+      end
     end
   end
 end
