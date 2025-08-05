@@ -925,7 +925,7 @@ GEM
       more_core_extensions
     raabro (1.4.0)
     racc (1.6.0)
-    rack (2.2.13)
+    rack (2.2.17)
     rack-attack (6.5.0)
       rack (>= 1.0, < 3)
     rack-test (1.1.0)
@@ -1249,7 +1249,7 @@ DEPENDENCIES
   puma (~> 6.4)
   qpid_proton (~> 0.30.0)
   query_relation (~> 0.1.0)
-  rack (~> 2.2, >= 2.2.13)
+  rack (~> 2.2, >= 2.2.14)
   rack-attack (~> 6.5.0)
   rails (~> 6.0.4, >= 6.0.5.1)
   rails-i18n (~> 6.x)

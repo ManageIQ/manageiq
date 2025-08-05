@@ -63,7 +63,7 @@ gem "pg",                                                    :require => false
 gem "pg-dsn_parser",                    "~>0.1.0",           :require => false
 gem "psych",                            "~>3.1",             :require => false # This can be dropped once we drop ruby 2.5
 gem "query_relation",                   "~>0.1.0",           :require => false
-gem "rack",                             "~>2.2", ">=2.2.13", :require => false # indirect dependency for CVE-2025-27610 (among others)
+gem "rack",                             "~>2.2", ">=2.2.14", :require => false # indirect dependency for CVE-2025-46727 (among others)
 gem "rack-attack",                      "~>6.5.0",           :require => false
 gem "rails",                            "~>6.0.4", ">=6.0.5.1"
 gem "rails-i18n",                       "~>6.x"
