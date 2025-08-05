@@ -12,7 +12,6 @@ module MiqWebServerRunnerMixin
     # The heartbeating will be done in a separate thread
     worker_thread = Thread.new { super }
 
-    Rack::Attack.enabled = true unless Rails.env.test?
     start_rails_server(worker.rails_server_options)
 
     # when puma exits allow the heartbeat thread to exit cleanly using #do_exit
@@ -23,6 +22,7 @@ module MiqWebServerRunnerMixin
     require 'rails/command'
     require 'rails/commands/server/server_command'
 
+    ManageIQ::RackAttack.enable
     _log.info("With options: #{options.except(:app).inspect}")
     Rails::Server.new(options).tap do |server|
       Dir.chdir(Vmdb::Application.root)
