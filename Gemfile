@@ -80,7 +80,7 @@ gem "sync",                             "~>0.5",             :require => false
 gem "sys-filesystem",                   "~>1.4.5"
 gem "terminal",                                              :require => false
 gem "time",                             "~> 0.1.1"                             # CVE-2023-28756 fixed: ruby 3.0.6 - https://github.com/advisories/GHSA-fg7x-g82r-94qc
-gem "uri",                              "~> 0.10.0", ">= 0.10.0.3"             # CVE-2023-28755 CVE-2023-36617 https://github.com/advisories/GHSA-hww2-5g85-429m
+gem "uri",                              "~> 0.11.3"                            # CVE-2025-27221 https://github.com/advisories/GHSA-22h5-pq3x-2gf2
 gem "wim_parser",                       "~>1.0",             :require => false
 
 # Custom gem that replaces mime-types in order to redirect mime-types calls to mini_mime

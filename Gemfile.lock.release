@@ -1080,7 +1080,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8)
-    uri (0.10.3)
+    uri (0.11.3)
     useragent (0.16.10)
     uuid (2.3.9)
       macaddr (~> 1.0)
@@ -1275,7 +1275,7 @@ DEPENDENCIES
   systemd-journal (~> 1.4.2)
   terminal
   time (~> 0.1.1)
-  uri (~> 0.10.0, >= 0.10.0.3)
+  uri (~> 0.11.3)
   websocket-driver (~> 0.6.3)
   wim_parser (~> 1.0)
 
