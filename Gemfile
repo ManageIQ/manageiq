@@ -31,7 +31,7 @@ gem "bundler",                          "~> 2.1", ">= 2.1.4", "!= 2.2.10", "< 2.
 gem "byebug",                                                :require => false
 gem "color",                            "~>1.8"
 gem "config",                           "~>2.2", ">=2.2.3",  :require => false
-gem "cgi",                              "~> 0.1.0", ">= 0.1.0.2", :require => false # CVE-2021-33621 fixed: ruby 2.7.7 - https://github.com/advisories/GHSA-vc47-6rqg-c7f5
+gem "cgi",                              "~> 0.3.5.1",        :require => false # CVE-2025-27220 https://github.com/advisories/GHSA-mhwm-jh88-3gjf
 gem "dalli",                            "=2.7.6",            :require => false
 gem "default_value_for",                "~>3.3"
 gem "docker-api",                       "~>1.33.6",          :require => false
