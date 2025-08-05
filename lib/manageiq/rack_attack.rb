@@ -3,7 +3,7 @@ require 'rack/attack'
 module ManageIQ
   module RackAttack
     def self.enable
-      if !Rails.env.test?
+      if !Rails.env.test? && ENV.fetch("CYPRESS", nil) != "true"
         Rack::Attack.enabled = true
         puts "** Enabling Rack Attack"
       end
