@@ -8,6 +8,7 @@ module Vmdb
       #   * command line(rails server)
       #   * debugger
       if defined?(Rails::Server)
+        ManageIQ::RackAttack.enable
         MiqUiWorker.preload_for_worker_role
         MiqServer.my_server.starting_server_record
         MiqServer.my_server.update(:status => "started")
