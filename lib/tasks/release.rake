@@ -184,7 +184,8 @@ namespace :release do
     puts
   end
 
-  desc "Generate the Gemfile.lock.release file"
+  # usage:
+  #   RELEASE_BRANCH=morphy UPDATE_GEMS="json" be rake release:generate_lockfile  desc "Generate the Gemfile.lock.release file"
   task :generate_lockfile do
     branch = ENV["RELEASE_BRANCH"]
     if branch.nil? || branch.empty?

@@ -31,7 +31,7 @@ gem "bundler",                          "~> 2.1", ">= 2.1.4", "!= 2.2.10", "< 2.
 gem "byebug",                                                :require => false
 gem "color",                            "~>1.8"
 gem "config",                           "~>2.2", ">=2.2.3",  :require => false
-gem "cgi",                              "~> 0.1.0", ">= 0.1.0.2", :require => false # CVE-2021-33621 fixed: ruby 2.7.7 - https://github.com/advisories/GHSA-vc47-6rqg-c7f5
+gem "cgi",                              "~> 0.3.5.1",        :require => false # CVE-2025-27220 https://github.com/advisories/GHSA-mhwm-jh88-3gjf
 gem "dalli",                            "=2.7.6",            :require => false
 gem "default_value_for",                "~>3.3"
 gem "docker-api",                       "~>1.33.6",          :require => false
@@ -63,7 +63,7 @@ gem "pg",                                                    :require => false
 gem "pg-dsn_parser",                    "~>0.1.0",           :require => false
 gem "psych",                            "~>3.1",             :require => false # This can be dropped once we drop ruby 2.5
 gem "query_relation",                   "~>0.1.0",           :require => false
-gem "rack",                             "~>2.2", ">=2.2.13", :require => false # indirect dependency for CVE-2025-27610 (among others)
+gem "rack",                             "~>2.2", ">=2.2.14", :require => false # indirect dependency for CVE-2025-46727 (among others)
 gem "rack-attack",                      "~>6.5.0",           :require => false
 gem "rails",                            "~>6.0.4", ">=6.0.5.1"
 gem "rails-i18n",                       "~>6.x"
@@ -80,7 +80,7 @@ gem "sync",                             "~>0.5",             :require => false
 gem "sys-filesystem",                   "~>1.4.5"
 gem "terminal",                                              :require => false
 gem "time",                             "~> 0.1.1"                             # CVE-2023-28756 fixed: ruby 3.0.6 - https://github.com/advisories/GHSA-fg7x-g82r-94qc
-gem "uri",                              "~> 0.10.0", ">= 0.10.0.3"             # CVE-2023-28755 CVE-2023-36617 https://github.com/advisories/GHSA-hww2-5g85-429m
+gem "uri",                              "~> 0.11.3"                            # CVE-2025-27221 https://github.com/advisories/GHSA-22h5-pq3x-2gf2
 gem "wim_parser",                       "~>1.0",             :require => false
 
 # Custom gem that replaces mime-types in order to redirect mime-types calls to mini_mime
