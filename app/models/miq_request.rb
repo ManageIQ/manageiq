@@ -82,6 +82,9 @@ class MiqRequest < ApplicationRecord
       :MiqProvisionConfiguredSystemRequest => {
         :provision_via_foreman => N_("%{config_mgr_type} Provision") % {:config_mgr_type => ui_lookup(:ui_title => 'foreman')}
       },
+      :MiqProvisionConfigurationScriptRequest => {
+        :provision_via_terraform_enterprise => N_("Terraform Enterprise Provision")
+      },
       :MiqProvisionRequest                 => {
         :template          => N_("VM Provision"),
         :clone_to_vm       => N_("VM Clone"),

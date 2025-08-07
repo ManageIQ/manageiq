@@ -15,6 +15,7 @@ RSpec.describe MiqRequest do
         :ServiceRetireRequest                     => {:service_retire                  => "Service Retire"},
         :OrchestrationStackRetireRequest          => {:orchestration_stack_retire      => "Orchestration Stack Retire"},
         :AutomationRequest                        => {:automation                      => "Automation"},
+        :MiqProvisionConfigurationScriptRequest   => {:provision_via_terraform_enterprise=>"Terraform Enterprise Provision"},
         :ServiceTemplateProvisionRequest          => {:clone_to_service                => "Service Provision"},
         :ServiceReconfigureRequest                => {:service_reconfigure             => "Service Reconfigure"},
         :PhysicalServerProvisionRequest           => {:provision_physical_server       => "Physical Server Provision"},
