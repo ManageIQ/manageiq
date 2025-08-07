@@ -7,3 +7,6 @@ end
 
 require 'et-orbi'
 EtOrbi::EoTime.prepend(AddActiveSupportDurationToEoTime)
+if EtOrbi::VERSION > "1.2.2"
+  warn "EtOrbi monkey patch may no longer be necessary"
+end
