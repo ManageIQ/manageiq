@@ -7,6 +7,7 @@ end
 
 require 'et-orbi'
 EtOrbi::EoTime.prepend(EtOrbiAsDuration)
-if EtOrbi::VERSION > "1.2.2"
-  warn "EtOrbi monkey patch may no longer be necessary"
+
+if Gem::Version.new(EtOrbi::VERSION) > "1.2.11"
+  warn "EtOrbiAsDuration monkey patch may no longer be necessary"
 end
