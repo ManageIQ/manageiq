@@ -1,4 +1,4 @@
-module AddActiveSupportDurationToEoTime
+module EtOrbiAsDuration
   def inc(t, dir = 1)
     t = t.to_i if t.kind_of?(ActiveSupport::Duration)
     super(t, dir)
@@ -6,7 +6,7 @@ module AddActiveSupportDurationToEoTime
 end
 
 require 'et-orbi'
-EtOrbi::EoTime.prepend(AddActiveSupportDurationToEoTime)
+EtOrbi::EoTime.prepend(EtOrbiAsDuration)
 if EtOrbi::VERSION > "1.2.2"
   warn "EtOrbi monkey patch may no longer be necessary"
 end
