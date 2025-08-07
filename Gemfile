@@ -220,10 +220,8 @@ group :rest_api, :manageiq_default do
 end
 
 group :scheduler, :manageiq_default do
-  gem "rufus-scheduler"
+  gem "rufus-scheduler", ">=3.9.2" # CVE-2024-43380
 end
-# rufus has et-orbi dependency, v1.2.2 has patch for ConvertTimeToEoTime that we need
-gem "et-orbi",                          ">= 1.2.2"
 
 group :seed, :manageiq_default do
   manageiq_plugin "manageiq-content"

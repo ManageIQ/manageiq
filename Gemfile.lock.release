@@ -572,7 +572,7 @@ GEM
     erubi (1.10.0)
     erubis (2.7.0)
     escape_utils (1.2.1)
-    et-orbi (1.2.6)
+    et-orbi (1.2.11)
       tzinfo
     ethon (0.15.0)
       ffi (>= 1.15.0)
@@ -629,8 +629,8 @@ GEM
       apipie-bindings (= 0.0.15)
       rest-client (~> 2.0)
     formatador (0.3.0)
-    fugit (1.5.2)
-      et-orbi (~> 1.1, >= 1.1.8)
+    fugit (1.11.1)
+      et-orbi (~> 1, >= 1.2.11)
       raabro (~> 1.4)
     gettext (3.4.1)
       locale (>= 2.0.5)
@@ -999,8 +999,8 @@ GEM
     rubyntlm (0.6.3)
     rubyzip (2.0.0)
     rufus-lru (1.0.7)
-    rufus-scheduler (3.8.1)
-      fugit (~> 1.1, >= 1.1.6)
+    rufus-scheduler (3.9.2)
+      fugit (~> 1.1, >= 1.11.1)
     rugged (1.2.0)
     sass (3.7.4)
       sass-listen (~> 4.0.0)
@@ -1182,7 +1182,6 @@ DEPENDENCIES
   default_value_for (~> 3.3)
   docker-api (~> 1.33.6)
   elif (= 0.1.0)
-  et-orbi (>= 1.2.2)
   fast_gettext (~> 2.0.1)
   gettext_i18n_rails (~> 1.7.2)
   gettext_i18n_rails_js (~> 1.3.0)
@@ -1260,7 +1259,7 @@ DEPENDENCIES
   ruby-dbus
   ruby-progressbar (~> 1.7.0)
   rubyzip (~> 2.0.0)
-  rufus-scheduler
+  rufus-scheduler (>= 3.9.2)
   rugged (~> 1.1)
   ruport (= 1.7.0.3)!
   sd_notify (~> 0.1.0)
