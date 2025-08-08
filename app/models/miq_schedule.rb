@@ -126,7 +126,10 @@ class MiqSchedule < ApplicationRecord
   def target_ids
     # Let RBAC evaluate the filter's MiqExpression, and return the first value (the target ids)
     my_filter = get_filter
-    return [] if my_filter.nil?
+    if my_filter.nil? || !my_filter.valid?
+      _log.warn("[#{name}] Filter is #{my_filter.nil? ? "empty" : "invalid"}")
+      return []
+    end
 
     Rbac.filtered(resource_type, :filter => my_filter).pluck(:id)
   end
