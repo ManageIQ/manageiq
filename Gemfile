@@ -261,6 +261,7 @@ end
 
 group :scheduler, :manageiq_default do
   gem "rufus-scheduler", ">=3.9.2" # CVE-2024-43380
+  gem "et-orbi", ">= 1.3" # indirect of rufus-scheduler
 end
 
 group :seed, :manageiq_default do
