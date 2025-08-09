@@ -89,6 +89,12 @@ RSpec.describe MiqExpression do
       expect(expression).to be_valid
     end
 
+    # in the future, we may decide to allow this. A few people had these in the database
+    it "returns false for an invalid flat expression (dot attribute)" do
+      expression = described_class.new("=" => {"field" => "MiqWidget.id", "value" => 5})
+      expect(expression).not_to be_valid
+    end
+
     it "returns false for an invalid flat expression" do
       expression = described_class.new("=" => {"field" => "Vm-destroy", "value" => true})
       expect(expression).not_to be_valid
