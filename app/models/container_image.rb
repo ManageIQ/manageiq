@@ -45,7 +45,7 @@ class ContainerImage < ApplicationRecord
   serialize :exposed_ports, :type => Hash
   serialize :environment_variables, :type => Hash
 
-  virtual_column :display_registry, :type => :string
+  virtual_delegate :display_registry, :to => "container_image_registry.full_name", :allow_nil => true, :type => :string
   virtual_total :total_containers, :containers
 
   after_create :raise_creation_event
@@ -83,10 +83,6 @@ class ContainerImage < ApplicationRecord
 
   # The guid is required by the smart analysis infrastructure
   alias_method :guid, :docker_id
-
-  def display_registry
-    container_image_registry.present? ? container_image_registry.full_name : _("Unknown image source")
-  end
 
   def scan(userid = "system")
     ext_management_system.scan_job_create(self, userid)

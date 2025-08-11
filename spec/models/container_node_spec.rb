@@ -47,10 +47,13 @@ RSpec.describe ContainerNode do
       expect(subject.ready_condition_status).to eq("None")
     end
 
-    it "finds container conditions" do
+    it "finds ready container conditions" do
       FactoryBot.create(:container_conditions, :name => "Ready", :container_entity => subject, :status => "Great")
       FactoryBot.create(:container_conditions, :name => "Other", :container_entity => subject, :status => "Not Good")
       expect(subject.ready_condition_status).to eq("Great")
+
+      subj = described_class.where(:id => subject.id)
+      expect(subj.select(:ready_condition_status).first.ready_condition_status).to eq("Great")
     end
   end
 

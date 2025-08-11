@@ -48,12 +48,9 @@ class ContainerNode < ApplicationRecord
   delegate :my_zone, :to => :ext_management_system, :allow_nil => true
 
   virtual_column :ready_condition_status, :type => :string, :uses => :container_conditions
+  virtual_delegate :status, :prefix => true, :to => :ready_condition, :allow_nil => true, :default => "None", :type => :string
   virtual_delegate :system_distribution, :to => "operating_system.distribution", :allow_nil => true, :type => :string
   virtual_delegate :kernel_version, :to => :operating_system, :allow_nil => true, :type => :string
-
-  def ready_condition_status
-    ready_condition.try(:status) || 'None'
-  end
 
   include EventMixin
   include Metric::CiMixin

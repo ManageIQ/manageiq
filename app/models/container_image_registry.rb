@@ -12,9 +12,18 @@ class ContainerImageRegistry < ApplicationRecord
   has_many :service_container_groups, :through => :container_services, :as => :container_groups
 
   acts_as_miq_taggable
-  virtual_column :full_name, :type => :string
+  virtual_attribute :full_name, :string, :arel => (lambda do |t|
+    t.grouping(Arel::Nodes::Case.new
+                                .when(t[:port].eq(nil)).then(t[:host])
+                                .when(t[:port].eq("")).then(t[:host])
+                                .else(Arel::Nodes::NamedFunction.new('CONCAT', [t[:host], Arel.sql("':'"), t[:port]])))
+  end)
 
   def full_name
-    port.present? ? "#{host}:#{port}" : host
+    if has_attribute?("full_name")
+      self["full_name"]
+    else
+      port.present? ? "#{host}:#{port}" : host
+    end
   end
 end
