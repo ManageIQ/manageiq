@@ -47,7 +47,7 @@ RSpec.describe "VmScanDispatcherEmbeddedScanSpec" do
         allow_any_instance_of(MiqServer).to receive_messages(:is_a_proxy? => true)
         allow_any_instance_of(MiqServer).to receive_messages(:has_active_role? => true)
 
-        @hosts, @proxies, @storages, @vms, @repo_vms = build_entities(
+        _hosts, _proxies, _storages, @vms, _repo_vms = build_entities(
           :hosts    => host_count,
           :storages => storage_count,
           :vms      => vm_count,
@@ -58,7 +58,7 @@ RSpec.describe "VmScanDispatcherEmbeddedScanSpec" do
 
       context "and a scan job for each vm" do
         before do
-          @jobs = @vms.collect(&:raw_scan)
+          _jobs = @vms.collect(&:raw_scan)
         end
 
         context "and embedded scans on ems" do

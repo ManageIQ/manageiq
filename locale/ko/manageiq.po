@@ -382,7 +382,7 @@ msgstr[0] "%{amount}개의 %{objects}에 태그가 지정됨"
 
 msgid "%{amount} Automation Job Being Tagged"
 msgid_plural "%{amount} Automation Jobs Being Tagged"
-msgstr[0] "%{amount} Automation Jobs Being Tagged"
+msgstr[0] "%{amount} 자동화 작업 태그 지정 중"
 
 msgid "%{amount} Automation Manager (Ansible Tower) Being Tagged"
 msgid_plural "%{amount} Automation Managers (Ansible Tower) Being Tagged"
@@ -390,7 +390,7 @@ msgstr[0] "%{amount}개의 자동화 관리자자(Ansible Tower)에 태그가 �
 
 msgid "%{amount} Automation Template Being Tagged"
 msgid_plural "%{amount} Automation Templates Being Tagged"
-msgstr[0] "%{amount} Automation Templates Being Tagged"
+msgstr[0] "%{amount} 자동화 템플리트 태그 지정 중"
 
 msgid "%{amount} Availability Zone Being Tagged"
 msgid_plural "%{amount} Availability Zones Being Tagged"
@@ -41353,7 +41353,7 @@ msgstr "%{start_time}에서 %{interval} 시작 실행"
 
 msgid "Run (Terraform Enterprise)"
 msgid_plural "Runs (Terraform Enterprise)"
-msgstr[0] "Runs (Terraform Enterprise)"
+msgstr[0] "실행(Terraform Enterprise)"
 
 msgid "Run Ansible Playbook"
 msgstr "Ansible 플레이북 실행"
@@ -41414,7 +41414,7 @@ msgid "Running system services of %{name}"
 msgstr "%{name}의 실행 중인 시스템 서비스"
 
 msgid "Runs (Terraform Enterprise)"
-msgstr "Runs (Terraform Enterprise)"
+msgstr "실행(Terraform Enterprise)"
 
 msgid "Runtime Version"
 msgstr "런타임 버전"
@@ -46972,7 +46972,7 @@ msgstr "Terraform 템플리트"
 
 msgid "Terraform Template (Terraform Enterprise)"
 msgid_plural "Terraform Templates (Terraform Enterprise)"
-msgstr[0] "Terraform Templates (Terraform Enterprise)"
+msgstr[0] "Terraform 템플리트(Terraform Enterprise)"
 
 msgid "Terraform has applied the changes specified in the plan."
 msgstr "Terraform이 계획에 지정된 변경사항을 적용했습니다."
@@ -53210,10 +53210,10 @@ msgstr "워크로드 보기"
 
 msgid "Workspace (Terraform Enterprise)"
 msgid_plural "Workspaces (Terraform Enterprise)"
-msgstr[0] "Workspaces (Terraform Enterprise)"
+msgstr[0] "작업공간(Terraform Enterprise)"
 
 msgid "Workspaces (Terraform Enterprise)"
-msgstr "Workspaces (Terraform Enterprise)"
+msgstr "작업공간(Terraform Enterprise)"
 
 msgid "Wrap this expression element with a NOT"
 msgstr "이 표현식 요소를 NOT으로 랩핑"

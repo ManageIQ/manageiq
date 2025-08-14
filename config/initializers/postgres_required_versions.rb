@@ -1,5 +1,5 @@
 ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.prepend(Module.new do
-  def initialize(*args)
+  def configure_connection(*args)
     super
     check_version if respond_to?(:check_version)
   end

@@ -402,8 +402,8 @@ msgstr[1] "Aggiunta di tag a %{amount} %{objects}"
 
 msgid "%{amount} Automation Job Being Tagged"
 msgid_plural "%{amount} Automation Jobs Being Tagged"
-msgstr[0] "%{amount} Automation Job Being Tagged"
-msgstr[1] "%{amount} Automation Jobs Being Tagged"
+msgstr[0] "%{amount} Lavoro di automazione da contrassegnare"
+msgstr[1] "%{amount} Lavori di automazione da contrassegnare"
 
 msgid "%{amount} Automation Manager (Ansible Tower) Being Tagged"
 msgid_plural "%{amount} Automation Managers (Ansible Tower) Being Tagged"
@@ -412,8 +412,8 @@ msgstr[1] "Aggiunta di tag a %{amount} gestori automazione (Ansible Tower)"
 
 msgid "%{amount} Automation Template Being Tagged"
 msgid_plural "%{amount} Automation Templates Being Tagged"
-msgstr[0] "%{amount} Automation Template Being Tagged"
-msgstr[1] "%{amount} Automation Templates Being Tagged"
+msgstr[0] "%{amount} Modello di automazione da contrassegnare"
+msgstr[1] "%{amount} Modelli di automazione da contrassegnare"
 
 msgid "%{amount} Availability Zone Being Tagged"
 msgid_plural "%{amount} Availability Zones Being Tagged"
@@ -43304,8 +43304,8 @@ msgstr "Eseguire %{interval} a partire da %{start_time}"
 
 msgid "Run (Terraform Enterprise)"
 msgid_plural "Runs (Terraform Enterprise)"
-msgstr[0] "Esegui (Terraform Enterprise)"
-msgstr[1] "Esegue (Terraform Enterprise)"
+msgstr[0] "Esecuzione (Terraform Enterprise)"
+msgstr[1] "Esecuzioni (Terraform Enterprise)"
 
 msgid "Run Ansible Playbook"
 msgstr "Esegui playbook Ansible"
@@ -45079,8 +45079,8 @@ msgstr[1] "Tenant del modello di servizio"
 
 msgid "Service Terraform Enterprise"
 msgid_plural "Service Terraform Enterprises"
-msgstr[0] "Service Terraform Enterprise"
-msgstr[1] "Service Terraform Enterprises"
+msgstr[0] "Servizio Terraform Enterprise"
+msgstr[1] "Servizi Terraform Enterprise"
 
 msgid "Service Terraform Template"
 msgid_plural "Service Terraform Templates"

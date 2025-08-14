@@ -23,7 +23,7 @@ class TestSecurityHelper
     app_path = Rails.root.to_s
     engine_paths = Vmdb::Plugins.paths.except(ManageIQ::Schema::Engine).values
 
-    puts "** Running brakeman in #{app_path}"
+    puts "** Running brakeman in #{app_path}#{" (interactive ignore)" if interactive_ignore}"
     puts "**   engines:"
     puts "**   - #{engine_paths.join("\n**   - ")}"
 

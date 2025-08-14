@@ -14,8 +14,6 @@
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/ManageIQ/manageiq/badge)](https://securityscorecards.dev/viewer/?uri=github.com/ManageIQ/manageiq)
 [![CNCF Landscape](https://img.shields.io/badge/CNCF%20Landscape-5699C6?logo=cncf)](https://landscape.cncf.io/?item=provisioning--automation-configuration--manageiq)
 
-[![Build history for spassky branch](https://buildstats.info/github/chart/ManageIQ/manageiq?branch=spassky&buildCount=50&includeBuildsFromPullRequest=false&showstats=false)](https://github.com/ManageIQ/manageiq/actions?query=branch%3Amaster)
-
 ## Discover, Optimize, and Control your Hybrid IT
 
 ### Manage containers, virtual machines, networks, and storage from a single platform

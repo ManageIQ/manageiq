@@ -220,9 +220,7 @@ class MiqServer < ApplicationRecord
 
     begin
       _log.info("Reconnecting to database after error...")
-      # Remove the connection and establish a new one since reconnect! doesn't always play nice with SSL postgresql connections
-      spec_name = ActiveRecord::Base.connection_specification_name
-      ActiveRecord::Base.establish_connection(ActiveRecord::Base.remove_connection(spec_name))
+      ActiveRecord::Base.postgresql_ssl_friendly_base_reconnect
     rescue Exception => err
       _log.error("#{err.message}, during reconnect!")
     else
