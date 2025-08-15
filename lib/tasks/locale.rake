@@ -215,6 +215,17 @@ namespace :locale do
     tmp_dir.rmtree
   end
 
+  task :update_all_action => :update_all do
+    # Undo the changes in files we don't care about
+    system('git status --porcelain | cut -d" " -f3 | grep -v locale/en/manageiq.po | grep -v locale/manageiq.pot | xargs git checkout --')
+
+    # See if the only changes are the dates
+    diff = `git diff --ignore-matching-lines "POT-Creation-Date:" --ignore-matching-lines "PO-Revision-Date:" locale/manageiq.pot locale/manageiq.pot`.chomp
+    if diff.empty?
+      system('git checkout -- locale/manageiq.pot locale/manageiq.pot')
+    end
+  end
+
   desc "Show changes in gettext strings since last catalog update"
   task "report_changes", [:verbose] do |_t, args|
     require 'poparser'
