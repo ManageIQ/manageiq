@@ -4,8 +4,6 @@ RSpec.describe MiqProvisionConfiguredSystemRequest do
   let(:request)           { FactoryBot.create(:miq_provision_configured_system_request, :requester => admin, :options => {:src_configured_system_ids => [configured_system.id]}) }
   let(:vm_amazon)         { FactoryBot.create(:vm_amazon) }
 
-  before { @zone1 = EvmSpecHelper.local_miq_server.zone }
-
   it("#my_role should be 'ems_operations'") { expect(request.my_role).to eq('ems_operations') }
   it("#originating_controller should be 'configured_system'") { expect(request.originating_controller).to eq('configured_system') }
   it("#src_configured_systems from options hash src_ids") { expect(request.src_configured_systems.first).to eq(configured_system) }
@@ -43,9 +41,10 @@ RSpec.describe MiqProvisionConfiguredSystemRequest do
   end
 
   context '#my_zone' do
+    let!(:zone1)            { EvmSpecHelper.local_miq_server.zone }
     it "with valid source should have the VM's zone, not the requests zone" do
       expect(request.my_zone).to     eq(configured_system.my_zone)
-      expect(request.my_zone).not_to eq(@zone1.name)
+      expect(request.my_zone).not_to eq(zone1.name)
     end
   end
 

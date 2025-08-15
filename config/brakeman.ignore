@@ -1,6 +1,29 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "57a67fd8c12d36c64fa21e5e7a93eeb6eac1f6fd4e6a1666f98c503574c46360",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "lib/ansible/runner.rb",
+      "line": 451,
+      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "`#{(File.join(venv_bin_path, \"ansible\") or \"ansible\")} --version 2>/dev/null`",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Ansible::Runner",
+        "method": "s(:self).ansible_version_raw"
+      },
+      "user_input": "File.join(venv_bin_path, \"ansible\")",
+      "confidence": "Medium",
+      "cwe_id": [
+        77
+      ],
+      "note": "This method is safe because it only uses hardcoded paths, which cannot be changed by user input."
+    },
+    {
       "warning_type": "Unmaintained Dependency",
       "warning_code": 121,
       "fingerprint": "9a3951031616a07c8e02c86652f537e92c08685da97f5ec2b12d5d3602b55bb8",
@@ -22,18 +45,18 @@
     {
       "warning_type": "Command Injection",
       "warning_code": 14,
-      "fingerprint": "9a58ac820e59b1edb4530e27646edc1f328915a7a356d987397659b48c52239e",
+      "fingerprint": "c3234e1d86168cb0ac61761b99bdbbf493491fe9b1b5f808889c46e17a6aa781",
       "check_name": "Execute",
       "message": "Possible command injection",
       "file": "lib/ansible/runner.rb",
-      "line": 430,
+      "line": 445,
       "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
       "code": "`python#{version} -c 'import site; print(\":\".join(site.getsitepackages()))'`",
       "render_path": null,
       "location": {
         "type": "method",
         "class": "Ansible::Runner",
-        "method": "s(:self).ansible_python_paths_raw"
+        "method": "s(:self).python_path_raw"
       },
       "user_input": "version",
       "confidence": "Medium",
@@ -43,6 +66,6 @@
       "note": "This method is safe because it verifies that the version is in the form #.#."
     }
   ],
-  "updated": "2025-03-31 10:21:49 -0400",
+  "updated": "2025-06-16 22:28:03 -0400",
   "brakeman_version": "6.2.2"
 }

@@ -4,7 +4,8 @@ end
 
 shared_examples :newlines do |dir|
   it "translations honor newlines" do
-    boundary_errors = {}
+    string_ends = {}
+    string_starts = {}
     overall_errors = {}
 
     Pathname.glob(File.join(dir, "**", "*.po")).each do |po_file|
@@ -17,12 +18,12 @@ shared_examples :newlines do |dir|
 
         # Check newlines at string ends
         if (translation[-1] == "\n" && original[-1] != "\n") || (translation[-1] != "\n" && original[-1] == "\n")
-          boundary_errors.store_path(po_file.to_s, add_string_chevrons(original), add_string_chevrons(translation))
+          string_ends.store_path(po_file.to_s, add_string_chevrons(original), add_string_chevrons(translation))
         end
 
         # Check newlines at string starts
         if (translation[0] == "\n" && original[0] != "\n") || (translation[0] != "\n" && original[0] == "\n")
-          boundary_errors.store_path(po_file.to_s, add_string_chevrons(original), add_string_chevrons(translation))
+          string_starts.store_path(po_file.to_s, add_string_chevrons(original), add_string_chevrons(translation))
         end
 
         # Check that overall amount of newlines in original and translation matches
@@ -32,21 +33,22 @@ shared_examples :newlines do |dir|
       end
     end
 
-    [['newlines at string boundaries', boundary_errors], ['overall number of newlines', overall_errors]].each do |rule, err|
+    [
+      ['no newlines at string ends', string_ends],
+      ['no newlines at string start', string_starts],
+      ['equal number of overall newlines', overall_errors]
+    ].each do |rule, err|
       next if err.empty?
 
-      puts "The following translation entries do not honor #{rule}:"
+      err_msg = ""
       err.each do |file, file_errors|
-        puts ">> File: #{file}\n", "----------"
+        err_msg << "File: #{file}\n"
         file_errors.each do |original, translation|
-          puts original, translation, "----------"
+          err_msg << "  English:\n    #{original.inspect}\n"
+          err_msg << "  Translation:\n    #{translation.inspect}\n"
         end
-        puts
       end
+      expect(err).to be_empty, "Rule: #{rule} was violated in:\n #{err_msg}"
     end
-
-    expect(boundary_errors).to be_empty
-    # We intentionaly do not expect overall_errors to be empty, since in certain cases it may be desirable
-    # for newlines in translated string not to match its original. We'll still be logging the mismatches above.
   end
 end

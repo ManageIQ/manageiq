@@ -1,6 +1,6 @@
 module Authenticator
   def self.for(config, username = nil)
-    if username == 'admin'
+    if username == 'admin' && !::Settings.authentication.local_login_disabled
       Database.new(config)
     else
       authenticator_class(config[:mode])&.new(config)

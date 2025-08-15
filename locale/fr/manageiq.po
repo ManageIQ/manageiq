@@ -412,8 +412,8 @@ msgstr[1] "%{amount} %{objects} en cours de balisage"
 
 msgid "%{amount} Automation Job Being Tagged"
 msgid_plural "%{amount} Automation Jobs Being Tagged"
-msgstr[0] "%{amount} Automation Job Being Tagged"
-msgstr[1] "%{amount} Automation Jobs Being Tagged"
+msgstr[0] "%{amount} travail d'automatisation en cours de balisage"
+msgstr[1] "%{amount} travaux d'automatisation en cours de balisage"
 
 msgid "%{amount} Automation Manager (Ansible Tower) Being Tagged"
 msgid_plural "%{amount} Automation Managers (Ansible Tower) Being Tagged"
@@ -424,8 +424,8 @@ msgstr[1] ""
 
 msgid "%{amount} Automation Template Being Tagged"
 msgid_plural "%{amount} Automation Templates Being Tagged"
-msgstr[0] "%{amount} Automation Template Being Tagged"
-msgstr[1] "%{amount} Automation Templates Being Tagged"
+msgstr[0] "%{amount} modèle d'automatisation en cours de balisage"
+msgstr[1] "%{amount} modèles d'automatisation en cours de balisage"
 
 msgid "%{amount} Availability Zone Being Tagged"
 msgid_plural "%{amount} Availability Zones Being Tagged"
@@ -1180,7 +1180,7 @@ msgstr ""
 "\""
 
 msgid "%{product_name} API Group Not found"
-msgstr "%{product_name} API Group Not found"
+msgstr "Groupe d'API %{product_name} introuvable"
 
 msgid "%{product_name} HTML5 Remote Console"
 msgstr "Console distante HTML5 %{product_name}"
@@ -5736,7 +5736,7 @@ msgid "Automation Managers"
 msgstr "Gestionnaires d'automatisation"
 
 msgid "Automation Managers (AWX)"
-msgstr "Automation Managers (AWX)"
+msgstr "Gestionnaires d'automatisation (AWX)"
 
 msgid "Automation Managers (Ansible Tower)"
 msgstr "Gestionnaires d'automatisation (Ansible Tower)"
@@ -5770,10 +5770,10 @@ msgid "Automation simulation has been run"
 msgstr "La simulation d'automatisation a été exécutée"
 
 msgid "AutomationManager (Terraform Enterprise)"
-msgstr "AutomationManager (Terraform Enterprise)"
+msgstr "Gestionnaire d'automatisation (Terraform Enterprise)"
 
 msgid "AutomationManagers (Terraform Enterprise)"
-msgstr "AutomationManagers (Terraform Enterprise)"
+msgstr "Gestionnaires d'automatisation (Terraform Enterprise)"
 
 msgid "Automations Tasks"
 msgstr "Tâches d'automatisation"
@@ -27072,7 +27072,7 @@ msgid "Job"
 msgstr "Travail"
 
 msgid "Job (AWX)"
-msgstr "Job (AWX)"
+msgstr "Travail (AWX)"
 
 msgid "Job Template"
 msgstr "Modèle de travail"
@@ -27083,13 +27083,13 @@ msgstr[0] "Job Template (%{provider_description})"
 msgstr[1] "Job Templates (%{provider_description})"
 
 msgid "Job Template (AWX)"
-msgstr "Job Template (AWX)"
+msgstr "Modèle de travail (AWX)"
 
 msgid "Job Template (Ansible Tower)"
 msgstr "Job Template (Ansible Tower)"
 
 msgid "Job Templates (AWX)"
-msgstr "Job Templates (AWX)"
+msgstr "Modèles de travail (AWX)"
 
 msgid "Job Templates (Ansible Tower)"
 msgstr "Modèles de travail (Ansible Tower)"
@@ -27098,7 +27098,7 @@ msgid "Jobs"
 msgstr "Travaux"
 
 msgid "Jobs (AWX)"
-msgstr "Jobs (AWX)"
+msgstr "Travaux (AWX)"
 
 msgid "Job|Agent message"
 msgstr "Message d'agent"
@@ -43588,8 +43588,8 @@ msgstr "Exécuter %{interval} à partir du %{start_time}"
 
 msgid "Run (Terraform Enterprise)"
 msgid_plural "Runs (Terraform Enterprise)"
-msgstr[0] "Run (Terraform Enterprise)"
-msgstr[1] "Runs (Terraform Enterprise)"
+msgstr[0] "Exécution (Terraform Enterprise)"
+msgstr[1] "Exécutions (Terraform Enterprise)"
 
 msgid "Run Ansible Playbook"
 msgstr "Exécuter un playbook Ansible"
@@ -43651,7 +43651,7 @@ msgid "Running system services of %{name}"
 msgstr "Exécution des services système de %{name}"
 
 msgid "Runs (Terraform Enterprise)"
-msgstr "Runs (Terraform Enterprise)"
+msgstr "Exécutions (Terraform Enterprise)"
 
 msgid "Runtime Version"
 msgstr "Version d'exécution"
@@ -49466,18 +49466,18 @@ msgid "Terminate the Guest OS on Instances"
 msgstr "Arrêter le système d'exploitation invité sur des instances"
 
 msgid "Terraform Enterprise Provider"
-msgstr "Terraform Enterprise Provider"
+msgstr "Fournisseur Terraform Enterprise"
 
 msgid "Terraform Enterprise Workspace"
-msgstr "Terraform Enterprise Workspace"
+msgstr "Espace de travail Terraform Enterprise"
 
 msgid "Terraform Template"
 msgstr "Modèle Terraform"
 
 msgid "Terraform Template (Terraform Enterprise)"
 msgid_plural "Terraform Templates (Terraform Enterprise)"
-msgstr[0] "Terraform Template (Terraform Enterprise)"
-msgstr[1] "Terraform Templates (Terraform Enterprise)"
+msgstr[0] "Modèle Terraform (Terraform Enterprise)"
+msgstr[1] "Modèles Terraform (Terraform Enterprise)"
 
 msgid "Terraform has applied the changes specified in the plan."
 msgstr "Terraform a appliqué les modifications indiquées dans le plan."
@@ -56224,13 +56224,13 @@ msgstr[0] "Workflow Template (%{provider_description})"
 msgstr[1] "Workflow Templates (%{provider_description})"
 
 msgid "Workflow Template (AWX)"
-msgstr "Workflow Template (AWX)"
+msgstr "Modèle de workflow (AWX)"
 
 msgid "Workflow Template (Ansible Tower)"
 msgstr "Workflow Template (Ansible Tower)"
 
 msgid "Workflow Templates (AWX)"
-msgstr "Workflow Templates (AWX)"
+msgstr "Modèles de workflow (AWX)"
 
 msgid "Workflow Templates (Ansible Tower)"
 msgstr "Modèles de flux de travaux (Ansible Tower)"
@@ -56258,11 +56258,11 @@ msgstr "Vues Charges de travail"
 
 msgid "Workspace (Terraform Enterprise)"
 msgid_plural "Workspaces (Terraform Enterprise)"
-msgstr[0] "Workspace (Terraform Enterprise)"
-msgstr[1] "Workspaces (Terraform Enterprise)"
+msgstr[0] "Espace de travail (Terraform Enterprise)"
+msgstr[1] "Espaces de travail (Terraform Enterprise)"
 
 msgid "Workspaces (Terraform Enterprise)"
-msgstr "Workspaces (Terraform Enterprise)"
+msgstr "Espaces de travail (Terraform Enterprise)"
 
 msgid "Wrap this expression element with a NOT"
 msgstr "Encapsuler cet élément d'expression avec un NOT"

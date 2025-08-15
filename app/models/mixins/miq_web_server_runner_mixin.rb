@@ -22,6 +22,7 @@ module MiqWebServerRunnerMixin
     require 'rails/command'
     require 'rails/commands/server/server_command'
 
+    ManageIQ::RackAttack.enable
     _log.info("With options: #{options.except(:app).inspect}")
     Rails::Server.new(options).tap do |server|
       Dir.chdir(Vmdb::Application.root)

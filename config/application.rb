@@ -96,6 +96,7 @@ module Vmdb
     config.action_cable.mount_path = '/ws/notifications'
 
     # Rails 6.1.7+ has a protection to not lookup values by a large number.
+    # This is still true in rails 7.2!
     # A lookup/comparison with a large number (bigger than bigint)
     # needs to cast the db column to a double/numeric.
     # and that casting skips the index and forces a table scan
@@ -112,17 +113,13 @@ module Vmdb
 
     # FYI, this is where load_defaults is defined as of 7.2:
     # https://github.com/rails/rails/blob/d437ae311f1b9dc40b442e40eb602e020cec4e49/railties/lib/rails/application/configuration.rb#L92
-    config.load_defaults 7.1
+    config.load_defaults 7.2
     # ensure MiqReport#extras will marshal/dump back out. 7.1 is default (and has better performance)
     # See for probable culprit https://www.github.com/rails/rails/pull/47747
     config.active_record.marshalling_format_version = 6.1
 
     # TODO: this is the only change we had from defaults in 7.0.  See secure_headers.rb.  It's 0 in defaults.
     config.action_dispatch.default_headers["X-XSS-Protection"] = "1; mode=block"
-
-    # TODO: Find and fix any deprecated behavior.  Opt in later.
-    config.active_support.remove_deprecated_time_with_zone_name = false
-    config.active_support.disable_to_s_conversion = false
 
     # TODO: If disabled, causes cross repo test failures in content, ui-classic and amazon provider
     config.active_record.partial_inserts = true
@@ -135,23 +132,15 @@ module Vmdb
     # manageiq/providers/infra_manager/template, dialog_field_importer, workers/event_catcher
     config.add_autoload_paths_to_load_path = true
 
-    # NOTE:  If you are going to make changes to autoload_paths, please make
-    # sure they are all strings.  Rails will push these paths into the
-    # $LOAD_PATH.
-    #
-    # More info can be found in the ruby-lang bug:
-    #
-    #   https://bugs.ruby-lang.org/issues/14372
-    #
+    config.autoload_paths << Rails.root.join("app/models/aliases")
+    config.autoload_paths << Rails.root.join("app/models/mixins")
+    config.autoload_paths << Rails.root.join("lib")
+    config.autoload_paths << Rails.root.join("lib/services")
 
-    config.autoload_paths << Rails.root.join("app/models/aliases").to_s
-    config.autoload_paths << Rails.root.join("app/models/mixins").to_s
-    config.autoload_paths << Rails.root.join("lib").to_s
-    config.autoload_paths << Rails.root.join("lib/services").to_s
+    config.autoload_once_paths << Rails.root.join("lib/vmdb/console_methods.rb")
 
-    config.autoload_once_paths << Rails.root.join("lib/vmdb/console_methods.rb").to_s
-
-    config.active_record.default_column_serializer = YAML if Rails.version >= "7.1"
+    # Starting in rails 7.1, the default is unset(nil) so we set it to YAML.
+    config.active_record.default_column_serializer = YAML
 
     require_relative '../lib/request_started_on_middleware'
     config.middleware.use RequestStartedOnMiddleware

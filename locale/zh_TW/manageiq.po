@@ -43009,7 +43009,7 @@ msgstr[0] "服務範本租用戶"
 
 msgid "Service Terraform Enterprise"
 msgid_plural "Service Terraform Enterprises"
-msgstr[0] "服務 Terraform Enterprise"
+msgstr[0] "服務程式 Terraform Enterprise"
 
 msgid "Service Terraform Template"
 msgid_plural "Service Terraform Templates"
