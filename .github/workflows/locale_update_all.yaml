@@ -41,7 +41,7 @@ jobs:
     - name: Setup database
       run: bundle exec rake evm:db:reset
     - name: Run locale:update_all
-      run: bundle exec rake locale:update_all
+      run: bundle exec rake locale:update_all_action
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v7
       with:
