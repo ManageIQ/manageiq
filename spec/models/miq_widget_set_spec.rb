@@ -243,7 +243,7 @@ RSpec.describe MiqWidgetSet do
     end
 
     it "raises error if group with passed id does not exist" do
-      expect { MiqWidgetSet.copy_dashboard(@ws_group, name, tab, "9999") }.to raise_error(ActiveRecord::RecordNotFound, "Couldn't find MiqGroup with 'id'=9999")
+      expect { MiqWidgetSet.copy_dashboard(@ws_group, name, tab, "9999") }.to raise_error(ActiveRecord::RecordNotFound, /Couldn't find MiqGroup with 'id'="?9999"?/)
     end
 
     it "copy dashboard and set its owner to the group with passed group_id" do
