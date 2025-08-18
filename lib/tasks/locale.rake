@@ -147,7 +147,7 @@ namespace :locale do
 
   desc "Run store_model_attributes task in i18n environment"
   task "run_store_model_attributes" do
-    system({"RAILS_ENV" => "i18n"}, "bundle exec rake locale:store_model_attributes")
+    abort unless system({"RAILS_ENV" => "i18n"}, "bundle exec rake locale:store_model_attributes")
   end
 
   task "delete_pot_file", :root do |_, args|
