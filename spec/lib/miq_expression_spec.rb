@@ -222,32 +222,34 @@ RSpec.describe MiqExpression do
     end
   end
 
-  describe "#preprocess_exp!" do
+  describe "#preprocess_exp" do
     it "convert size value in units to integer for comparasing operators on integer field" do
       expession_hash = {"=" => {"field" => "Vm-allocated_disk_storage", "value" => "5.megabytes"}}
       expession = MiqExpression.new(expession_hash)
-      exp, _ = expession.preprocess_exp!(expession_hash)
+      exp, _ = expession.preprocess_exp(expession_hash)
       expect(exp.values.first["value"]).to eq("5.megabyte".to_i_with_method)
 
       expession_hash = {">" => {"field" => "Vm-allocated_disk_storage", "value" => "5.kilobytes"}}
       expession = MiqExpression.new(expession_hash)
-      exp, _ = expession.preprocess_exp!(expession_hash)
+      exp, _ = expession.preprocess_exp(expession_hash)
       expect(exp.values.first["value"]).to eq("5.kilobytes".to_i_with_method)
 
       expession_hash = {"<" => {"field" => "Vm-allocated_disk_storage", "value" => "2.terabytes"}}
       expession = MiqExpression.new(expession_hash)
-      exp, _ = expession.preprocess_exp!(expession_hash)
+      exp, _ = expession.preprocess_exp(expession_hash)
       expect(exp.values.first["value"]).to eq(2.terabytes.to_i_with_method)
     end
   end
 
   describe "#reduce_exp" do
-    let(:sql_field)  { {"=" => {"field" => "Vm-name", "value" => "foo"}.freeze}.freeze }
-    let(:ruby_field) { {"=" => {"field" => "Vm-platform", "value" => "bar"}.freeze}.freeze }
+    let(:sql_field)      { {"=" => {"field" => "Vm-name", "value" => "foo"}.freeze}.freeze }
+    let(:sql_field_out)  { {"=" => {"field" => "Vm-name", "field-field" => MiqExpression::Field.parse("Vm-name"), "value" => "foo", "value-field" => nil}.freeze}.freeze }
+    let(:ruby_field)     { {"=" => {"field" => "Vm-platform", "value" => "bar"}.freeze}.freeze }
+    let(:ruby_field_out) { {"=" => {"field" => "Vm-platform", "field-field" => MiqExpression::Field.parse("Vm-platform"), "value" => "bar", "value-field" => nil}.freeze}.freeze }
 
     context "mode: :sql" do
       it "(sql AND ruby) => (sql)" do
-        expect(sql_pruned_exp("AND" => [sql_field, ruby_field.clone])).to eq(sql_field)
+        expect(sql_pruned_exp("AND" => [sql_field, ruby_field.clone])).to eq(sql_field_out)
       end
 
       it "(ruby AND ruby) => ()" do
@@ -255,7 +257,7 @@ RSpec.describe MiqExpression do
       end
 
       it "(sql OR sql) => (sql OR sql)" do
-        expect(sql_pruned_exp("OR" => [sql_field, sql_field])).to eq("OR" => [sql_field, sql_field])
+        expect(sql_pruned_exp("OR" => [sql_field, sql_field])).to eq("OR" => [sql_field_out, sql_field_out])
       end
 
       it "(sql OR ruby) => ()" do
@@ -267,7 +269,7 @@ RSpec.describe MiqExpression do
       end
 
       it "!(sql OR ruby) => (!(sql) AND !(ruby)) => !(sql)" do
-        expect(sql_pruned_exp("NOT" => {"OR" => [sql_field, ruby_field.clone]})).to eq("NOT" => sql_field)
+        expect(sql_pruned_exp("NOT" => {"OR" => [sql_field, ruby_field.clone]})).to eq("NOT" => sql_field_out)
       end
 
       it "!(sql AND ruby) => (!(sql) OR !(ruby)) => nil" do
@@ -281,7 +283,7 @@ RSpec.describe MiqExpression do
       end
 
       it "(ruby) => (ruby)" do
-        expect(ruby_pruned_exp(ruby_field.clone)).to eq(ruby_field)
+        expect(ruby_pruned_exp(ruby_field.clone)).to eq(ruby_field_out)
       end
 
       it "(sql and sql) => ()" do
@@ -289,11 +291,11 @@ RSpec.describe MiqExpression do
       end
 
       it "(sql and ruby) => (ruby)" do
-        expect(ruby_pruned_exp("AND" => [sql_field.clone, ruby_field.clone])).to eq(ruby_field)
+        expect(ruby_pruned_exp("AND" => [sql_field.clone, ruby_field.clone])).to eq(ruby_field_out)
       end
 
       it "(ruby or ruby) => (ruby or ruby)" do
-        expect(ruby_pruned_exp("OR" => [ruby_field.clone, ruby_field.clone])).to eq("OR" => [ruby_field, ruby_field])
+        expect(ruby_pruned_exp("OR" => [ruby_field.clone, ruby_field.clone])).to eq("OR" => [ruby_field_out, ruby_field_out])
       end
 
       it "(sql or sql) => ()" do
@@ -301,25 +303,25 @@ RSpec.describe MiqExpression do
       end
 
       it "(sql or ruby) => (sql or ruby)" do
-        expect(ruby_pruned_exp("OR" => [ruby_field.clone, sql_field.clone])).to eq("OR" => [ruby_field, sql_field])
+        expect(ruby_pruned_exp("OR" => [ruby_field.clone, sql_field.clone])).to eq("OR" => [ruby_field_out, sql_field_out])
       end
 
       it "(ruby or ruby) => (ruby or ruby)" do
-        expect(ruby_pruned_exp("OR" => [ruby_field.clone, ruby_field.clone])).to eq("OR" => [ruby_field, ruby_field])
+        expect(ruby_pruned_exp("OR" => [ruby_field.clone, ruby_field.clone])).to eq("OR" => [ruby_field_out, ruby_field_out])
       end
 
       it "(sql AND sql) or ruby => keep all expressions" do
-        expect(ruby_pruned_exp("OR" => [{"AND" => [sql_field.clone, sql_field.clone]}, ruby_field.clone])).to eq("OR" => [{"AND" => [sql_field, sql_field]}, ruby_field])
+        expect(ruby_pruned_exp("OR" => [{"AND" => [sql_field.clone, sql_field.clone]}, ruby_field.clone])).to eq("OR" => [{"AND" => [sql_field_out, sql_field_out]}, ruby_field_out])
       end
 
       # ensuring that the OR/AND is treating each sub expression independently
       # it was getting this wrong
       it "(sql or sql) and ruby => ruby" do
-        expect(ruby_pruned_exp("AND" => [{"OR" => [sql_field.clone, sql_field.clone]}, ruby_field.clone])).to eq(ruby_field)
+        expect(ruby_pruned_exp("AND" => [{"OR" => [sql_field.clone, sql_field.clone]}, ruby_field.clone])).to eq(ruby_field_out)
       end
 
       it "ruby and (sql or sql) => ruby" do
-        expect(ruby_pruned_exp("AND" => [ruby_field.clone, {"OR" => [sql_field.clone, sql_field.clone]}])).to eq(ruby_field)
+        expect(ruby_pruned_exp("AND" => [ruby_field.clone, {"OR" => [sql_field.clone, sql_field.clone]}])).to eq(ruby_field_out)
       end
 
       it "!(ruby) => keep all expressions" do
@@ -329,11 +331,11 @@ RSpec.describe MiqExpression do
       end
 
       it "!(sql OR ruby) => (!(sql) AND !(ruby)) => !(ruby)" do
-        expect(ruby_pruned_exp("NOT" => {"OR" => [sql_field, ruby_field.clone]})).to eq("NOT" => ruby_field)
+        expect(ruby_pruned_exp("NOT" => {"OR" => [sql_field, ruby_field.clone]})).to eq("NOT" => ruby_field_out)
       end
 
       it "!(sql AND ruby) => (!(sql) OR !(ruby)) => !(sql AND ruby)" do
-        expect(ruby_pruned_exp("NOT" => {"AND" => [sql_field, ruby_field.clone]})).to eq("NOT" => {"AND" => [sql_field, ruby_field]})
+        expect(ruby_pruned_exp("NOT" => {"AND" => [sql_field, ruby_field.clone]})).to eq("NOT" => {"AND" => [sql_field_out, ruby_field_out]})
       end
 
       it "(sql) => return empty ruby expression" do
@@ -3042,7 +3044,7 @@ RSpec.describe MiqExpression do
     end
   end
 
-  describe "#sql_supports_atom?" do
+  describe "#sql_supports_atom? (private)" do
     context "expression key is 'CONTAINS'" do
       context "operations with 'tag'" do
         it "returns true for tag of the main model" do
@@ -3066,25 +3068,25 @@ RSpec.describe MiqExpression do
       context "operation with 'field'" do
         it "returns false if format of field is model.association.association-field" do
           field = "ManageIQ::Providers::InfraManager::Vm.service.user.vms-active"
-          expression = {"CONTAINS" => {"field" => field, "value" => "true"}}
+          expression = {"CONTAINS" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "true"}}
           expect(described_class.new(nil).sql_supports_atom?(expression)).to eq(false)
         end
 
         it "returns false if field belongs to virtual_has_many association" do
           field = "ManageIQ::Providers::InfraManager::Vm.processes-type"
-          expression = {"CONTAINS" => {"field" => field, "value" => "abc"}}
+          expression = {"CONTAINS" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "abc"}}
           expect(described_class.new(nil).sql_supports_atom?(expression)).to eq(false)
         end
 
         it "returns false if field belongs to 'has_many' polymorhic/polymorhic association" do
           field = "ManageIQ::Providers::InfraManager::Vm.advanced_settings-region_number"
-          expression = {"CONTAINS" => {"field" => field, "value" => "1"}}
+          expression = {"CONTAINS" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "1"}}
           expect(described_class.new(nil).sql_supports_atom?(expression)).to eq(false)
         end
 
         it "returns true if field belongs to 'has_many' association" do
           field = "ManageIQ::Providers::InfraManager::Vm.registry_items-name"
-          expression = {"CONTAINS" => {"field" => field, "value" => "abc"}}
+          expression = {"CONTAINS" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "abc"}}
           expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(true)
         end
       end
@@ -3093,31 +3095,31 @@ RSpec.describe MiqExpression do
     context "expression key is 'INCLUDE'" do
       it "returns false for model-virtualfield" do
         field = "ManageIQ::Providers::InfraManager::Vm-v_datastore_path"
-        expression = {"INCLUDES" => {"field" => field, "value" => "abc"}}
+        expression = {"INCLUDES" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "abc"}}
         expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(false)
       end
 
       it "returns true for model-field" do
         field = "ManageIQ::Providers::InfraManager::Vm-location"
-        expression = {"INCLUDES" => {"field" => field, "value" => "abc"}}
+        expression = {"INCLUDES" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "abc"}}
         expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(true)
       end
 
       it "returns false for model.association.virtualfield" do
         field = "ManageIQ::Providers::InfraManager::Vm.ext_management_system-hostname"
-        expression = {"INCLUDES" => {"field" => field, "value" => "abc"}}
+        expression = {"INCLUDES" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "abc"}}
         expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(false)
       end
 
       it "returns true for model.accociation.field" do
         field = "ManageIQ::Providers::InfraManager::Vm.ext_management_system-name"
-        expression = {"INCLUDES" => {"field" => field, "value" => "abc"}}
+        expression = {"INCLUDES" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "abc"}}
         expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(true)
       end
 
       it "returns false if format of field is model.association..association-field" do
         field = "ManageIQ::Providers::InfraManager::Vm.service.miq_request-v_approved_by"
-        expression = {"INCLUDES" => {"field" => field, "value" => "abc"}}
+        expression = {"INCLUDES" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "abc"}}
         expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(false)
       end
     end
@@ -3152,31 +3154,31 @@ RSpec.describe MiqExpression do
 
     it "supports sql for model.association-virtualfield (with arel)" do
       field = "Host.vms-archived"
-      expression = {"=" => {"field" => field, "value" => "true"}}
+      expression = {"=" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "true"}}
       expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(true)
     end
 
     it "does not supports sql for model.association-virtualfield (no arel)" do
       field = "ManageIQ::Providers::InfraManager::Vm.storage-v_used_space"
-      expression = {">=" => {"field" => field, "value" => "50"}}
+      expression = {">=" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "50"}}
       expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(false)
     end
 
     it "returns true for model-field" do
       field = "ManageIQ::Providers::InfraManager::Vm-vendor"
-      expression = {"=" => {"field" => field, "value" => "redhat"}}
+      expression = {"=" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "redhat"}}
       expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(true)
     end
 
     it "returns true for model.assoctiation-field" do
       field = "ManageIQ::Providers::InfraManager::Vm.ext_management_system-name"
-      expression = {"STARTS WITH" => {"field" => field, "value" => "abc"}}
+      expression = {"STARTS WITH" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "abc"}}
       expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(true)
     end
 
     it "returns false if column excluded from processing for adhoc performance metrics" do
       field = "EmsClusterPerformance-cpu_usagemhz_rate_average"
-      expression = {">=" => {"field" => field, "value" => "0"}}
+      expression = {">=" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "0"}}
       obj = described_class.new(expression)
       obj.preprocess_options = {:vim_performance_daily_adhoc => true}
       expect(obj.sql_supports_atom?(expression)).to eq(false)
@@ -3184,42 +3186,42 @@ RSpec.describe MiqExpression do
 
     it "returns true if column is not excluded from processing for adhoc performance metrics" do
       field = "EmsClusterPerformance-derived_cpu_available"
-      expression = {">=" => {"field" => field, "value" => "0"}}
+      expression = {">=" => {"field" => field, "field-field" => MiqExpression::Field.parse(field), "value" => "0"}}
       obj = described_class.new(expression)
       obj.preprocess_options = {:vim_performance_daily_adhoc => true}
       expect(obj.sql_supports_atom?(expression)).to eq(true)
     end
   end
 
-  describe "#field_in_sql?" do
+  describe "#field_in_sql? (private)" do
     it "returns true for model.virtualfield (with sql)" do
       field = "ManageIQ::Providers::InfraManager::Vm-archived"
       expression = {"=" => {"field" => field, "value" => "true"}}
-      expect(described_class.new(expression).field_in_sql?(field)).to eq(true)
+      expect(described_class.new(expression).field_in_sql?(MiqExpression::Field.parse(field))).to eq(true)
     end
 
     it "returns false for model.virtualfield (with no sql)" do
       field = "ManageIQ::Providers::InfraManager::Vm-uncommitted_storage"
       expression = {"=" => {"field" => field, "value" => "true"}}
-      expect(described_class.new(expression).field_in_sql?(field)).to eq(false)
+      expect(described_class.new(expression).field_in_sql?(MiqExpression::Field.parse(field))).to eq(false)
     end
 
     it "returns false for model.association-virtualfield" do
       field = "ManageIQ::Providers::InfraManager::Vm.storage-v_used_space_percent_of_total"
       expression = {">=" => {"field" => field, "value" => "50"}}
-      expect(described_class.new(expression).field_in_sql?(field)).to eq(false)
+      expect(described_class.new(expression).field_in_sql?(MiqExpression::Field.parse(field))).to eq(false)
     end
 
     it "returns true for model-field" do
       field = "ManageIQ::Providers::InfraManager::Vm-vendor"
       expression = {"=" => {"field" => field, "value" => "redhat"}}
-      expect(described_class.new(expression).field_in_sql?(field)).to eq(true)
+      expect(described_class.new(expression).field_in_sql?(MiqExpression::Field.parse(field))).to eq(true)
     end
 
     it "returns true for model.association-field" do
       field = "ManageIQ::Providers::InfraManager::Vm.guest_applications-vendor"
       expression = {"CONTAINS" => {"field" => field, "value" => "redhat"}}
-      expect(described_class.new(expression).field_in_sql?(field)).to eq(true)
+      expect(described_class.new(expression).field_in_sql?(MiqExpression::Field.parse(field))).to eq(true)
     end
 
     it "returns false if column excluded from processing for adhoc performance metrics" do
@@ -3227,7 +3229,7 @@ RSpec.describe MiqExpression do
       expression = {">=" => {"field" => field, "value" => "0"}}
       obj = described_class.new(expression)
       obj.preprocess_options = {:vim_performance_daily_adhoc => true}
-      expect(obj.field_in_sql?(field)).to eq(false)
+      expect(obj.field_in_sql?(MiqExpression::Field.parse(field))).to eq(false)
     end
 
     it "returns true if column not excluded from processing for adhoc performance metrics" do
@@ -3235,7 +3237,7 @@ RSpec.describe MiqExpression do
       expression = {">=" => {"field" => field, "value" => "0"}}
       obj = described_class.new(expression)
       obj.preprocess_options = {:vim_performance_daily_adhoc => true}
-      expect(obj.field_in_sql?(field)).to eq(true)
+      expect(obj.field_in_sql?(MiqExpression::Field.parse(field))).to eq(true)
     end
   end
 
@@ -3521,13 +3523,13 @@ RSpec.describe MiqExpression do
 
   def sql_pruned_exp(input)
     mexp = MiqExpression.new(input)
-    pexp = mexp.preprocess_exp!(mexp.exp.deep_clone)
+    pexp = mexp.preprocess_exp(mexp.exp)
     mexp.prune_exp(pexp, MiqExpression::MODE_SQL).first
   end
 
   def ruby_pruned_exp(input)
     mexp = MiqExpression.new(input)
-    pexp = mexp.preprocess_exp!(mexp.exp.deep_clone)
+    pexp = mexp.preprocess_exp(mexp.exp)
     mexp.prune_exp(pexp, MiqExpression::MODE_RUBY).first
   end
 end

@@ -1,4 +1,6 @@
 class MiqExpression
+  class InvalidExpression < StandardError; end
+
   # bit array of the types of nodes available/desired
   MODE_NONE = 0
   MODE_RUBY = 1
@@ -35,28 +37,11 @@ class MiqExpression
     @ruby = nil
   end
 
-  def valid?(component = exp)
-    operator = component.keys.first
-    case operator.downcase
-    when "and", "or"
-      component[operator].all?(&method(:valid?))
-    when "not", "!"
-      valid?(component[operator])
-    when "find"
-      validate_set = Set.new(%w[checkall checkany checkcount search])
-      validate_keys = component[operator].keys.select { |k| validate_set.include?(k) }
-      validate_keys.all? { |k| valid?(component[operator][k]) }
-    else
-      if component[operator].key?("field")
-        field = Field.parse(component[operator]["field"])
-        return false if field && !field.valid?
-      end
-      if Field.is_field?(component[operator]["value"])
-        field = Field.parse(component[operator]["value"])
-        return false unless field && field.valid?
-      end
-      true
-    end
+  def valid?
+    preprocess_exp(exp)
+    true
+  rescue InvalidExpression
+    false
   end
 
   def set_tagged_target(model, associations = [])
@@ -180,14 +165,14 @@ class MiqExpression
       nil
     elsif @ruby
       @ruby.dup
-    elsif valid?
-      pexp = preprocess_exp!(exp.deep_clone)
+    else
+      pexp = preprocess_exp(exp)
       pexp, _ = prune_exp(pexp, MODE_RUBY) if prune_sql
       @ruby = self.class._to_ruby(pexp, context_type, timezone) || true
       @ruby == true ? nil : @ruby.dup
-    else
-      ""
     end
+  rescue InvalidExpression
+    ""
   end
 
   def self._to_ruby(exp, context_type, tz)
@@ -196,6 +181,7 @@ class MiqExpression
     operator = exp.keys.first
     op_args = exp[operator]
     col_name = op_args["field"] if op_args.kind_of?(Hash)
+    field    = op_args["field-field"] if op_args.kind_of?(Hash)
     operator = operator.downcase
 
     case operator
@@ -302,19 +288,16 @@ class MiqExpression
       clause, = operands2rubyvalue(operator, op_args, context_type)
     when "is"
       col_ruby, _value = operands2rubyvalue(operator, {"field" => col_name}, context_type)
-      col_type = Target.parse(col_name).column_type
       value = op_args["value"]
-      clause = if col_type == :date && !RelativeDatetime.relative?(value)
-                 ruby_for_date_compare(col_ruby, col_type, tz, "==", value)
+      clause = if field.date? && !RelativeDatetime.relative?(value)
+                 ruby_for_date_compare(col_ruby, field.column_type, tz, "==", value)
                else
-                 ruby_for_date_compare(col_ruby, col_type, tz, ">=", value, "<=", value)
+                 ruby_for_date_compare(col_ruby, field.column_type, tz, ">=", value, "<=", value)
                end
     when "from"
       col_ruby, _value = operands2rubyvalue(operator, {"field" => col_name}, context_type)
-      col_type = Target.parse(col_name).column_type
-
       start_val, end_val = op_args["value"]
-      clause = ruby_for_date_compare(col_ruby, col_type, tz, ">=", start_val, "<=", end_val)
+      clause = ruby_for_date_compare(col_ruby, field.column_type, tz, ">=", start_val, "<=", end_val)
     else
       raise _("operator '%{operator_name}' is not supported") % {:operator_name => operator.upcase}
     end
@@ -325,28 +308,58 @@ class MiqExpression
 
   def to_sql(tz = nil)
     tz ||= "UTC"
-    pexp = preprocess_exp!(exp.deep_clone)
+    pexp = preprocess_exp(exp)
     pexp, seen = prune_exp(pexp, MODE_SQL)
     attrs = {:supported_by_sql => (seen == MODE_SQL)}
     sql = to_arel(pexp, tz).to_sql if pexp.present?
     incl = includes_for_sql if sql.present?
     [sql, incl, attrs]
+  rescue InvalidExpression
+    [nil, nil, {:supported_by_sql => false}]
   end
 
-  def preprocess_exp!(exp)
-    exp.delete(:token)
-    operator = exp.keys.first
-    operator_values = exp[operator]
-    case operator.downcase
-    when "and", "or"
-      operator_values.each { |atom| preprocess_exp!(atom) }
-    when "not", "!"
-      preprocess_exp!(operator_values)
-      exp
-    else # field
-      convert_size_in_units_to_integer(exp) if %w[= != <= >= > <].include?(operator)
+  def preprocess_exp(exp)
+    exp.each_with_object({}) do |(operator, operator_values), new_exp|
+      next if operator == :token
+
+      new_exp[operator] =
+        case operator.downcase
+        when "and", "or"
+          # "and" => [exp, exp, exp]
+          operator_values.map { |atom| preprocess_exp(atom) }
+        when "not", "!"
+          # "not" => exp
+          preprocess_exp(operator_values)
+        when "find"
+          # "find" => {"search" => exp, "checkall" => exp}
+          operator_values.each_with_object({}) { |(op2, op_values2), hash| hash[op2] = preprocess_exp(op_values2) }
+        else # field
+          # op => {"regkey"=>"foo", "regval"=>"bar", "value"=>"baz"}
+          # op => {"field" => "foo", "value" => "baz"}
+          # op => {"field" => "<count>, "value" => "0"}
+          # op => {"count" => "Vm.snapshots", "value"=>"1"}
+          # op => {"field" => "<count>", "value"=>"1"}
+          # op => {"tag"=>"Host.managed-environment", "value"=>"prod"}
+          operator_values = operator_values.dup
+          field = operator_values["field"]
+          if field && field != "<count>"
+            field_field = operator_values["field-field"] = Field.parse(field)
+            raise(InvalidExpression, field) unless field_field.valid?
+          end
+          value = operator_values["value"]
+          if value
+            value_field = operator_values["value-field"] = Field.parse(value)
+            raise(InvalidExpression, field) if value_field && !value_field.valid?
+          end
+
+          # attempt to do conversion only if db type of column is integer and value to compare to is String
+          if %w[= != <= >= > <].include?(operator) && field_field&.integer? && value.instance_of?(String)
+            operator_values["value"] = convert_size_in_units_to_integer(field, field_field.sub_type, value)
+          end
+
+          operator_values
+        end
     end
-    exp
   end
 
   # @param operator [String]      operator (i.e.: AND, OR, NOT)
@@ -473,24 +486,24 @@ class MiqExpression
       if exp[operator].key?("tag")
         Tag.parse(exp[operator]["tag"]).reflection_supported_by_sql?
       elsif exp[operator].key?("field")
-        Field.parse(exp[operator]["field"]).attribute_supported_by_sql?
+        exp[operator]["field-field"].attribute_supported_by_sql?
       else
         false
       end
     when "includes"
       # Support includes operator using "LIKE" only if first operand is in main table
       if exp[operator].key?("field") && (!exp[operator]["field"].include?(".") || (exp[operator]["field"].include?(".") && exp[operator]["field"].split(".").length == 2))
-        field_in_sql?(exp[operator]["field"])
+        field_in_sql?(exp[operator]["field-field"])
       else
         # TODO: Support includes operator for sub-sub-tables
         false
       end
     when "includes any", "includes all", "includes only"
       # Support this only from the main model (for now)
-      if exp[operator].keys.include?("field") && exp[operator]["field"].split(".").length == 1
-        model, field = exp[operator]["field"].split("-")
-        method = "miq_expression_#{operator.downcase.tr(' ', '_')}_#{field}_arel"
-        model.constantize.respond_to?(method)
+      if exp[operator]["field-field"] && exp[operator]["field"]&.split(".")&.length == 1
+        field_field = exp[operator]["field-field"]
+        method = "miq_expression_#{operator.downcase.tr(' ', '_')}_#{field_field.column}_arel"
+        field_field.model.respond_to?(method)
       else
         false
       end
@@ -506,34 +519,19 @@ class MiqExpression
       # => TODO: support count of child relationship
       return false if exp[operator].key?("count")
 
-      field_in_sql?(exp[operator]["field"]) && value_in_sql?(exp[operator]["value"])
+      field_in_sql?(exp[operator]["field-field"]) && value_in_sql?(exp[operator]["value-field"])
     end
   end
 
-  def value_in_sql?(value)
-    !Field.is_field?(value) || Field.parse(value).attribute_supported_by_sql?
+  def value_in_sql?(value_field)
+    !value_field&.valid? || value_field&.attribute_supported_by_sql?
   end
 
-  def field_in_sql?(field)
-    return false unless attribute_supported_by_sql?(field)
-
-    # => false if excluded by special case defined in preprocess options
-    return false if field_excluded_by_preprocess_options?(field)
-
-    true
+  # NOTE: dropped cached :exclude_col. needed?
+  def field_in_sql?(field_field)
+    field_field.attribute_supported_by_sql? &&
+      !field_field.exclude_col_by_preprocess_options?(preprocess_options)
   end
-
-  def attribute_supported_by_sql?(field)
-    return false unless col_details[field]
-
-    col_details[field][:sql_support]
-  end
-  # private attribute_supported_by_sql? -- tests only
-
-  def field_excluded_by_preprocess_options?(field)
-    col_details[field][:excluded_by_preprocess_options]
-  end
-  private :field_excluded_by_preprocess_options?
 
   def col_details
     @col_details ||= self.class.get_cols_from_expression(exp, preprocess_options)
@@ -1204,8 +1202,8 @@ class MiqExpression
            if field == :count
              :integer
            else
-             col_info = get_col_info(field)
-             [:bytes, :megabytes].include?(col_info[:format_sub_type]) ? :integer : col_info[:data_type]
+             field_field = Target.parse(field)
+             [:bytes, :megabytes].include?(field_field.sub_type) ? :integer : field_field.column_type
            end
          end
 
@@ -1386,24 +1384,19 @@ class MiqExpression
 
   private
 
-  def convert_size_in_units_to_integer(exp)
-    return if (column_details = col_details[exp.values.first["field"]]).nil?
-    # attempt to do conversion only if db type of column is integer and value to compare to is String
-    return unless column_details[:data_type] == :integer && (value = exp.values.first["value"]).instance_of?(String)
-
-    sub_type = column_details[:format_sub_type]
-
-    return if %i[mhz_avg hours kbps kbps_precision_2 mhz elapsed_time].include?(sub_type)
-
+  def convert_size_in_units_to_integer(field, sub_type, value)
     case sub_type
+    when :mhz_avg, :hours, :kbps, :kbps_precision_2, :mhz, :elapsed_time, :integer
+      value
     when :bytes
-      exp.values.first["value"] = value.to_i_with_method
+      value.to_i_with_method
     when :kilobytes
-      exp.values.first["value"] = value.to_i_with_method / 1_024
+      value.to_i_with_method / 1_024
     when :megabytes, :megabytes_precision_2
-      exp.values.first["value"] = value.to_i_with_method / 1_048_576
+      value.to_i_with_method / 1_048_576
     else
-      _log.warn("No subtype defined for column #{exp.values.first["field"]} in 'miq_report_formats.yml'")
+      _log.warn("No subtype defined for column #{field} in 'miq_report_formats.yml'")
+      value
     end
   end
 
@@ -1426,7 +1419,7 @@ class MiqExpression
 
   def to_arel(exp, tz)
     operator = exp.keys.first
-    field = Field.parse(exp[operator]["field"]) if exp[operator].kind_of?(Hash) && exp[operator]["field"]
+    field = exp[operator]["field-field"] if exp[operator].kind_of?(Hash)
     arel_attribute = field&.arel_attribute
     if exp[operator].kind_of?(Hash) && exp[operator]["value"] && Field.is_field?(exp[operator]["value"])
       field_value = Field.parse(exp[operator]["value"])
