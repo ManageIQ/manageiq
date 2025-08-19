@@ -21,7 +21,7 @@
   :startup: true
 - :name: chargeback_rates
   :description: Overview / Chargeback / Rates
-  :url: /chargeback_rates/show_list
+  :url: /chargeback_rate/show_list
   :rbac_feature_name: chargeback_rates_show_list
   :startup: true
 - :name: chargeback_assignments
@@ -119,11 +119,6 @@
   :url: /auth_key_pair_cloud/show_list
   :rbac_feature_name: auth_key_pair_cloud_show_list
   :startup: true
-- :name: cloud_topology
-  :description: Compute / Clouds / Topology
-  :url: /cloud_topology
-  :rbac_feature_name: cloud_topology_view
-  :startup: true
 - :name: ems_infras
   :description: Compute / Infrastructure / Providers
   :url: /ems_infra
@@ -174,11 +169,6 @@
   :url: /infra_networking/explorer
   :rbac_feature_name: infra_networking
   :startup: true
-- :name: infra_topology
-  :description: Compute / Infrastructure / Topology
-  :url: /infra_topology
-  :rbac_feature_name: infra_topology_view
-  :startup: true
 - :name: physical_infra_overview
   :description: Compute / Physical Infrastructure / Overview
   :url: /physical_infra_overview/show
@@ -214,14 +204,9 @@
   :url: /physical_switch/show_list
   :rbac_feature_name: physical_switch_show_list
   :startup: true
-- :name: physical_infra_topology
-  :description: Compute / Physical Infrastructure / Topology
-  :url: /physical_infra_topology/show
-  :rbac_feature_name: physical_infra_topology
-  :startup: true
 - :name: container_dashboard
   :description: Compute / Containers / Overview
-  :url: /container_dashboard
+  :url: /container_dashboard/show
   :rbac_feature_name: container_dashboard
   :startup: true
 - :name: ems_containers
@@ -289,11 +274,6 @@
   :url: /container_template/show_list
   :rbac_feature_name: container_template_show_list
   :startup: true
-- :name: container_topology
-  :description: Compute / Containers / Topology
-  :url: /container_topology
-  :rbac_feature_name: container_topology_view
-  :startup: true
 - :name: ems_configuration
   :description: Configuration / Providers
   :url: ems_configuration/show_list
@@ -344,19 +324,9 @@
   :url: /network_port/show_list
   :rbac_feature_name: network_port_show_list
   :startup: true
-- :name: load_balancers
-  :description: Networks / Load Balancers
-  :url: /load_balancer/show_list
-  :rbac_feature_name: load_balancer_show_list
-  :startup: true
-- :name: network_topology
-  :description: Networks / Topology
-  :url: /network_topology
-  :rbac_feature_name: network_topology_view
-  :startup: true
 - :name: ems_block_storage
   :description: Storage / Block Storage / Managers
-  :url: /ems_block_storage/show_list
+  :url: /ems_storage/show_list
   :rbac_feature_name: ems_block_storage_show_list
   :startup: true
 - :name: cloud_volumes
@@ -386,7 +356,7 @@
   :startup: true
 - :name: ems_object_storage
   :description: Storage / Object Storage / Managers
-  :url: /ems_object_storage/show_list
+  :url: /ems_storage/show_list
   :rbac_feature_name: ems_object_storage_show_list
   :startup: true
 - :name: cloud_object_store_containers
@@ -513,16 +483,6 @@
   :description: Automation / Automate / Requests
   :url: /miq_request?typ=ae
   :rbac_feature_name: miq_request_show_list
-  :startup: true
-- :name: monitor_alerts_overview
-  :description: Monitor / Alerts / Overview
-  :url: /alerts_overview
-  :rbac_feature_name: monitor_alerts_overview
-  :startup: true
-- :name: monitor_alerts_list
-  :description: Monitor / Alerts / All Alerts
-  :url: /alerts_list
-  :rbac_feature_name: monitor_alerts_list
   :startup: true
 - :name: miq_proxy_tasks
   :description: Settings / Tasks
