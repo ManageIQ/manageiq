@@ -15,7 +15,8 @@ class ContainerGroup < ApplicationRecord
   # :labels, :restart_policy, :dns_policy
 
   has_many :containers, :dependent => :destroy
-  has_many :container_images, -> { distinct }, :through => :containers
+  has_many :running_containers, -> { where(:state => "running") }, :class_name => "Container", :inverse_of => :container_group # rubocop:disable Rails/HasManyOrHasOneDependent
+  has_many :container_images, -> { distinct }, :through => :containers, :inverse_of => :container_group
   belongs_to  :ext_management_system, :foreign_key => "ems_id"
   has_many :annotations, -> { where(:section => "annotations") }, # rubocop:disable Rails/HasManyOrHasOneDependent
            :class_name => "CustomAttribute",
@@ -30,6 +31,7 @@ class ContainerGroup < ApplicationRecord
            :as         => :resource,
            :inverse_of => :resource
   has_many :container_conditions, :class_name => "ContainerCondition", :as => :container_entity, :dependent => :destroy
+  has_one  :ready_condition, -> { where(:name => "Ready") }, :class_name => "ContainerCondition", :as => :container_entity, :inverse_of => :container_entity # rubocop:disable Rails/HasManyOrHasOneDependent
   belongs_to :container_node
   has_and_belongs_to_many :container_services, :join_table => :container_groups_container_services
   belongs_to :container_replicator
@@ -45,29 +47,13 @@ class ContainerGroup < ApplicationRecord
   has_many :vim_performance_states, :as => :resource
   delegate :my_zone, :to => :ext_management_system, :allow_nil => true
 
-  virtual_column :ready_condition_status, :type => :string, :uses => :container_conditions
-  virtual_column :running_containers_summary, :type => :string
+  virtual_delegate :status, :prefix => true, :to => :ready_condition, :allow_nil => true, :default => "None", :type => :string
+  virtual_attribute :running_containers_summary, :integer, :arel => (lambda do |t|
+    t.grouping(Arel::Nodes::NamedFunction.new('CONCAT', [t[:total_running_containers], Arel.sql("'/'"), t[:total_containers]]))
+  end)
 
-  def ready_condition
-    if container_conditions.loaded?
-      container_conditions.detect { |condition| condition.name == "Ready" }
-    else
-      container_conditions.find_by(:name => "Ready")
-    end
-  end
-
-  def ready_condition_status
-    ready_condition.try(:status) || 'None'
-  end
-
-  def container_states_summary
-    containers.group(:state).count.symbolize_keys
-  end
-
-  def running_containers_summary
-    summary = container_states_summary
-    "#{summary[:running] || 0}/#{summary.values.sum}"
-  end
+  virtual_total  :total_containers, :containers
+  virtual_total  :total_running_containers, :running_containers
 
   # validates :restart_policy, :inclusion => { :in => %w(always onFailure never) }
   # validates :dns_policy, :inclusion => { :in => %w(ClusterFirst Default) }
