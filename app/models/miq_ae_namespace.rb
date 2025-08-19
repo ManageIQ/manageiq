@@ -2,6 +2,8 @@ require 'ancestry'
 
 class MiqAeNamespace < ApplicationRecord
   has_ancestry
+  hide_attribute :ancestry
+
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
   include RelativePathMixin

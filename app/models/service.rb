@@ -21,6 +21,7 @@ class Service < ApplicationRecord
   }.freeze
 
   has_ancestry :orphan_strategy => :destroy
+  hide_attribute :ancestry
 
   belongs_to :service_template # Template this service was cloned from
   belongs_to :tenant
