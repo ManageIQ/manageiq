@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2025-06-02 13:54+0000\n"
-"PO-Revision-Date: 2025-06-02 13:54+0000\n"
+"POT-Creation-Date: 2025-08-15 00:24+0000\n"
+"PO-Revision-Date: 2025-08-15 00:24+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -2631,6 +2631,9 @@ msgstr "구성 관리자 제공자 추가"
 
 msgid "Add a Configuration Script Payload"
 msgstr "구성 스크립트 페이로드 추가"
+
+msgid "Add a Container Project"
+msgstr "컨테이너 프로젝트 추가"
 
 msgid "Add a Containers Provider"
 msgstr "컨테이너 제공자 추가"
@@ -7129,9 +7132,6 @@ msgstr "카테고리 정책"
 msgid "Category Selection"
 msgstr "카테고리 선택사항"
 
-msgid "Category Tag Entries"
-msgstr "카테고리 태그 항목"
-
 msgid "Category cannot be deleted"
 msgstr "카테고리를 삭제할 수 없음"
 
@@ -8033,9 +8033,6 @@ msgstr "%{name} 테넌트 프로젝트를 보려면 클릭하십시오."
 
 msgid "Click to view details"
 msgstr "세부사항을 보려면 클릭하십시오."
-
-msgid "Click to view saved report"
-msgstr "저장된 보고서를 보려면 클릭하십시오."
 
 msgid "Click to view selected widget"
 msgstr "선택한 위젯을 보려면 클릭하십시오."
@@ -9334,9 +9331,6 @@ msgstr "공통 읽기 전용"
 msgid "Common Secret"
 msgstr "공통 시크릿"
 
-msgid "Company Name"
-msgstr "회사 이름"
-
 msgid "Company Tag"
 msgstr "회사 태그"
 
@@ -10426,6 +10420,14 @@ msgid "Container Project"
 msgid_plural "Container Projects"
 msgstr[0] "컨테이너 프로젝트"
 
+msgid "Container Project (Kubernetes)"
+msgid_plural "Container Projects (Kubernetes)"
+msgstr[0] "Container Projects (Kubernetes)"
+
+msgid "Container Project (OpenShift)"
+msgid_plural "Container Projects (OpenShift)"
+msgstr[0] "Container Projects (OpenShift)"
+
 msgid "Container Project Compliance Check"
 msgstr "컨테이너 프로젝트 준수 확인"
 
@@ -10595,6 +10597,9 @@ msgstr "컨테이너 포트 구성"
 
 msgid "Container project"
 msgstr "컨테이너 프로젝트"
+
+msgid "Container project '%{project_name}' already exists"
+msgstr "컨테이너 프로젝트 '%{project_name}'은(는) 이미 존재합니다."
 
 msgid "Container quota"
 msgstr "컨테이너 할당량"
@@ -15212,9 +15217,6 @@ msgstr "서버 프로파일에 지정된 서버 배치"
 msgid "Deploy Smartproxy"
 msgstr "스마트 프록시 배치"
 
-msgid "Depot Name"
-msgstr "저장소(Depot) 이름"
-
 msgid "Depot Settings successfuly validated"
 msgstr "저장소(Depot) 설정의 유효성이 정상적으로 검증됨"
 
@@ -17437,6 +17439,9 @@ msgstr "EMS IP 주소"
 msgid "EMS Name"
 msgstr "EMS 이름"
 
+msgid "EMS cannot be nil"
+msgstr "EMS는 nil일 수 없음"
+
 msgid "ESX Logs"
 msgstr "ESX 로그"
 
@@ -18495,6 +18500,9 @@ msgstr "구성 관리자 제공자 편집"
 
 msgid "Edit a Configuration Script Payload"
 msgstr "구성 스크립트 페이로드 편집"
+
+msgid "Edit a Container Project"
+msgstr "컨테이너 프로젝트 편집"
 
 msgid "Edit a Containers Provider"
 msgstr "컨테이너 제공자 편집"
@@ -27574,15 +27582,6 @@ msgstr "메가헤르츠 평균(12.11Mhz)"
 msgid "Member Role"
 msgstr "구성원 역할"
 
-msgid "Memeory Usage Absolute Average Avg Over Time Period"
-msgstr "기간 중 메모리 사용량 절대 평균 평균"
-
-msgid "Memeory Usage Absolute Average High Over Time Period"
-msgstr "기간 중 메모리 사용량 절대 평균 높음"
-
-msgid "Memeory Usage Absolute Average Low Over Time Period"
-msgstr "기간 중 메모리 사용량 절대 평균 낮음"
-
 msgid "Memory"
 msgstr "메모리"
 
@@ -27941,6 +27940,15 @@ msgstr "메모리 사용량"
 
 msgid "Memory Usage (%)"
 msgstr "메모리 사용(%)"
+
+msgid "Memory Usage Absolute Average Avg Over Time Period"
+msgstr "기간별 메모리 사용량 절대 평균"
+
+msgid "Memory Usage Absolute Average High Over Time Period"
+msgstr "기간별 메모리 사용량 절대 평균 최고치"
+
+msgid "Memory Usage Absolute Average Low Over Time Period"
+msgstr "기간별 메모리 사용량 절대 평균 최저치"
 
 msgid "Memory Used"
 msgstr "사용한 메모리"
@@ -31655,6 +31663,9 @@ msgstr "구성 관리자 제공자 수정"
 msgid "Modify Configuration Script Payloads"
 msgstr "구성 스크립트 페이로드 수정"
 
+msgid "Modify Container Projects"
+msgstr "컨테이너 프로젝트 수정"
+
 msgid "Modify Containers"
 msgstr "컨테이너 수정"
 
@@ -32123,6 +32134,9 @@ msgstr "configuration_script_id 또는 구성을 제공해야 합니다."
 msgid "Must specify a floating_ip"
 msgstr "floating_ip를 지정해야 함"
 
+msgid "Must specify a name for the container project"
+msgstr "컨테이너 프로젝트의 이름을 반드시 지정해야 합니다."
+
 msgid "Must specify a new_description"
 msgstr "new_description을 지정해야 함"
 
@@ -32223,8 +32237,16 @@ msgstr "이름은 필수입니다."
 msgid "Name may contain only alphanumeric and _ . - characters"
 msgstr "이름은 영숫자와 _. - 문자로만 구성될 수 있습니다."
 
+msgid "Name must be no more than 63 characters"
+msgstr "이름은 63자 이내여야 함"
+
 msgid "Name must be unique"
 msgstr "이름은 고유해야 함"
+
+msgid ""
+"Name must consist of lower case alphanumeric characters or '-', start with an "
+"alphanumeric character, and end with an alphanumeric character"
+msgstr "이름은 소문자 영숫자 또는 '-'로 구성되어야 하며, 영숫자로 시작하고 영숫자로 끝나야 합니다."
 
 msgid "Name of the Cloud Network"
 msgstr "클라우드 네트워크의 이름"
@@ -39427,6 +39449,9 @@ msgstr "구성 관리자 제공자 제거"
 msgid "Remove Configuration Manager Providers"
 msgstr "구성 관리자 제공자 제거"
 
+msgid "Remove Container Projects"
+msgstr "컨테이너 프로젝트 제거"
+
 msgid "Remove Containers Provider"
 msgstr "컨테이너 제공자 제거"
 
@@ -41370,9 +41395,6 @@ msgstr "실행 시간"
 msgid "Run Now"
 msgstr "지금 실행"
 
-msgid "Run On"
-msgstr "실행 위치"
-
 msgid "Run a selected Report"
 msgstr "선택한 보고서 실행"
 
@@ -41628,9 +41650,6 @@ msgstr "저장된 보고서 \"%{time}\"을(를) 찾을 수 없습니다. 스케�
 
 msgid "Saved Report no longer exists"
 msgstr "저장된 보고서가 더 이상 존재하지 않습니다."
-
-msgid "Saved Report: %{report_name}"
-msgstr "저장된 보고서: %{report_name}"
 
 msgid "Saved Reports"
 msgstr "저장된 보고서"
@@ -43779,6 +43798,12 @@ msgstr "서비스의 폐기 날짜 설정/제거"
 
 msgid "Set/remove retirement date was cancelled by the user"
 msgstr "사용자가 폐기 날짜 설정/제거를 취소했습니다."
+
+msgid "Setting CPUs / Memory not supported for instance_type VMs"
+msgstr "인스턴스 유형 VM에 대해 CPU/메모리 설정이 지원되지 않음"
+
+msgid "Setting instance_type not supported for template VMs"
+msgstr "템플리트 VM에 대해 인스턴스 유형 설정이 지원되지 않음"
 
 msgid "Setting priority is not allowed for the selected item"
 msgstr "선택한 항목에 대해 설정 우선순위가 허용되지 않습니다."
@@ -46952,9 +46977,6 @@ msgstr "테넌트|소스 유형"
 msgid "Tenant|Subdomain"
 msgstr "테넌트|하위 도메인"
 
-msgid "Tenant|Use config for attributes"
-msgstr "테넌트|속성에 대한 구성 사용"
-
 msgid "Terminate"
 msgstr "종료"
 
@@ -49324,9 +49346,6 @@ msgstr "사용: 알 수 없음"
 msgid "Use Alias"
 msgstr "별명 사용"
 
-msgid "Use Config For Attributes"
-msgstr "속성에 대한 구성 사용"
-
 msgid "Use Custom Brand Image"
 msgstr "사용자 정의 브랜드 이미지 사용"
 
@@ -50856,9 +50875,6 @@ msgstr "클라우드 토폴로지 보기"
 msgid "View Clusters"
 msgstr "클러스터 보기"
 
-msgid "View Compute Rates"
-msgstr "컴퓨팅 비율 보기"
-
 msgid "View Conditions"
 msgstr "조건 보기"
 
@@ -51183,9 +51199,6 @@ msgstr "스냅샷 보기"
 msgid "View Storage Managers"
 msgstr "스토리지 관리자 보기"
 
-msgid "View Storage Rates"
-msgstr "스토리지 비율 보기"
-
 msgid "View Storage Resources"
 msgstr "스토리지 리소스 보기"
 
@@ -51296,9 +51309,6 @@ msgstr "이 정책 프로파일 보기"
 
 msgid "View this Project"
 msgstr "이 프로젝트 보기"
-
-msgid "View this Report"
-msgstr "이 보고서 보기"
 
 msgid "View this Role"
 msgstr "이 역할 보기"
@@ -54354,6 +54364,9 @@ msgstr "raw_create_cloud_database는 서브클래스에서 구현되어야 함"
 msgid "raw_create_cloud_tenant must be implemented in a subclass"
 msgstr "raw_create_cloud_tenant가 서브클래스에 구현되어야 합니다."
 
+msgid "raw_create_container_project must be implemented in a subclass"
+msgstr "raw_create_container_project는 서브클래스에서 구현되어야 합니다."
+
 msgid "raw_create_host_initiator must be implemented in a subclass"
 msgstr "raw_create_host_initiator는 서브클래스에 구현되어야 합니다."
 
@@ -54395,6 +54408,9 @@ msgstr "raw_delete_cloud_subnet이 서브클래스에 구현되어야 합니다.
 
 msgid "raw_delete_cloud_tenant must be implemented in a subclass"
 msgstr "raw_delete_cloud_tenant가 서브클래스에 구현되어야 합니다."
+
+msgid "raw_delete_container_project must be implemented in a subclass"
+msgstr "raw_delete_container_project는 서브클래스에서 구현되어야 합니다."
 
 msgid "raw_delete_flavor must be implemented in a subclass"
 msgstr "raw_delete_flavor가 서브클래스에 구현되어야 합니다."
@@ -54476,6 +54492,9 @@ msgstr "raw_update_cloud_network가 서브클래스에 구현되어야 합니다
 
 msgid "raw_update_cloud_tenant must be implemented in a subclass"
 msgstr "raw_update_cloud_tenant가 서브클래스에 구현되어야 합니다."
+
+msgid "raw_update_container_project must be implemented in a subclass"
+msgstr "raw_update_container_project는 서브클래스에서 구현되어야 합니다."
 
 msgid "raw_update_host_initiator_group must be implemented in a subclass"
 msgstr "raw_update_host_initiator_group은 서브 클래스에서 구현되어야 합니다."

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2025-06-02 13:54+0000\n"
-"PO-Revision-Date: 2025-06-02 13:54+0000\n"
+"POT-Creation-Date: 2025-08-15 00:24+0000\n"
+"PO-Revision-Date: 2025-08-15 00:24+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -2893,6 +2893,9 @@ msgstr "Konfigurationsmanager-Provider hinzufügen"
 
 msgid "Add a Configuration Script Payload"
 msgstr "Konfigurationsscript-Nutzdaten hinzufügen"
+
+msgid "Add a Container Project"
+msgstr "Ein Containerprojekt hinzufügen"
 
 msgid "Add a Containers Provider"
 msgstr "Container-Provider hinzufügen"
@@ -7662,9 +7665,6 @@ msgstr "Kategorierichtlinie"
 msgid "Category Selection"
 msgstr "Kategorieauswahl"
 
-msgid "Category Tag Entries"
-msgstr "Kategorietageinträge"
-
 msgid "Category cannot be deleted"
 msgstr "Kategorie kann nicht gelöscht werden"
 
@@ -8636,9 +8636,6 @@ msgstr "Klicken, um das Tenantprojekt %{name} anzuzeigen"
 
 msgid "Click to view details"
 msgstr "Hier klicken, um Details anzuzeigen"
-
-msgid "Click to view saved report"
-msgstr "Hier klicken, um gespeicherten Bericht anzuzeigen"
 
 msgid "Click to view selected widget"
 msgstr "Klicken, um das ausgewählte Widget anzuzeigen"
@@ -9981,9 +9978,6 @@ msgstr "Gemeinsamer Lesezugriff"
 msgid "Common Secret"
 msgstr "Gemeinsamer geheimer Schlüssel"
 
-msgid "Company Name"
-msgstr "Name des Unternehmens"
-
 msgid "Company Tag"
 msgstr "Unternehmenstag"
 
@@ -11124,6 +11118,16 @@ msgid_plural "Container Projects"
 msgstr[0] "Containerprojekt"
 msgstr[1] "Containerprojekte"
 
+msgid "Container Project (Kubernetes)"
+msgid_plural "Container Projects (Kubernetes)"
+msgstr[0] "Container-Projekt (Kubernetes)"
+msgstr[1] "Container-Projekte (Kubernetes)"
+
+msgid "Container Project (OpenShift)"
+msgid_plural "Container Projects (OpenShift)"
+msgstr[0] "Container-Projekt (OpenShift)"
+msgstr[1] "Container-Projekte (OpenShift)"
+
 msgid "Container Project Compliance Check"
 msgstr "Compliance-Prüfung für Containerprojekt"
 
@@ -11310,6 +11314,9 @@ msgstr "Containerportkonfiguration"
 
 msgid "Container project"
 msgstr "Containerprojekt"
+
+msgid "Container project '%{project_name}' already exists"
+msgstr "Containerprojekt '%{project_name}' existiert bereits"
 
 msgid "Container quota"
 msgstr "Containerkontingent"
@@ -16237,9 +16244,6 @@ msgstr "Den Server bereitstellen, der dem Serverprofil zugewiesen ist"
 msgid "Deploy Smartproxy"
 msgstr "SmartProxy bereitstellen"
 
-msgid "Depot Name"
-msgstr "Depotname"
-
 msgid "Depot Settings successfuly validated"
 msgstr "Depoteinstellungen erfolgreich validiert"
 
@@ -18510,6 +18514,9 @@ msgstr "EMS-IP-Adresse"
 msgid "EMS Name"
 msgstr "EMS-Name"
 
+msgid "EMS cannot be nil"
+msgstr "EMS kann nicht 'nil' (null) sein"
+
 msgid "ESX Logs"
 msgstr "ESX-Protokolle"
 
@@ -19580,6 +19587,9 @@ msgstr "Konfigurationsmanager-Provider bearbeiten"
 
 msgid "Edit a Configuration Script Payload"
 msgstr "Nutzdaten eines Konfigurationsscripts bearbeiten"
+
+msgid "Edit a Container Project"
+msgstr "Ein Containerprojekt bearbeiten"
 
 msgid "Edit a Containers Provider"
 msgstr "Container-Provider bearbeiten"
@@ -29028,15 +29038,6 @@ msgstr "Megahertz - Durchschnitt (12,11 MHz)"
 msgid "Member Role"
 msgstr "Mitgliedsrolle"
 
-msgid "Memeory Usage Absolute Average Avg Over Time Period"
-msgstr "Absolute Hauptspeicherbelegung - Mittlerer Durchschnitt für Zeitraum"
-
-msgid "Memeory Usage Absolute Average High Over Time Period"
-msgstr "Absolute Hauptspeicherbelegung - Höchster Durchschnitt für Zeitraum"
-
-msgid "Memeory Usage Absolute Average Low Over Time Period"
-msgstr "Absolute Hauptspeicherbelegung - Niedrigster Durchschnitt für Zeitraum"
-
 msgid "Memory"
 msgstr "Hauptspeicher"
 
@@ -29464,6 +29465,20 @@ msgstr "Hauptspeicherbelegung"
 
 msgid "Memory Usage (%)"
 msgstr "Speicherbelegung (%)"
+
+msgid "Memory Usage Absolute Average Avg Over Time Period"
+msgstr ""
+"Durchschnittlicher absoluter Wert der Speichernutzung über einen bestimmten "
+"Zeitraum"
+
+msgid "Memory Usage Absolute Average High Over Time Period"
+msgstr ""
+"Absoluter durchschnittlicher Höchstwert der Speichernutzung über einen "
+"bestimmten Zeitraum"
+
+msgid "Memory Usage Absolute Average Low Over Time Period"
+msgstr ""
+"Absoluter Durchschnitt der Speichernutzung über einen bestimmten Zeitraum"
 
 msgid "Memory Used"
 msgstr "Belegter Speicher"
@@ -33259,6 +33274,9 @@ msgstr "Konfigurationsmanager-Provider ändern"
 msgid "Modify Configuration Script Payloads"
 msgstr "Nutzdaten des Konfigurationsscripts ändern"
 
+msgid "Modify Container Projects"
+msgstr "Ändern von Containerprojekten"
+
 msgid "Modify Containers"
 msgstr "Container ändern"
 
@@ -33731,6 +33749,9 @@ msgstr "configuration_script_id oder configuration muss angegeben werden"
 msgid "Must specify a floating_ip"
 msgstr "Eine variable IP-Adresse (floating_ip) muss angegeben werden"
 
+msgid "Must specify a name for the container project"
+msgstr "Muss einen Namen für das Containerprojekt festlegen"
+
 msgid "Must specify a new_description"
 msgstr "Eine neue Beschreibung (new_description) muss angegeben werden"
 
@@ -33842,8 +33863,19 @@ msgstr "Name ist erforderlich"
 msgid "Name may contain only alphanumeric and _ . - characters"
 msgstr "Der Name darf nur alphanumerische Zeichen und _ . - enthalten"
 
+msgid "Name must be no more than 63 characters"
+msgstr "Der Name darf nicht mehr als 63 Zeichen umfassen"
+
 msgid "Name must be unique"
 msgstr "Name muss eindeutig sein"
+
+msgid ""
+"Name must consist of lower case alphanumeric characters or '-', start with an "
+"alphanumeric character, and end with an alphanumeric character"
+msgstr ""
+"Der Name muss aus alphanumerischen Kleinbuchstaben oder '-' bestehen, mit "
+"einem alphanumerischen Zeichen beginnen und mit einem alphanumerischen Zeichen"
+" enden"
 
 msgid "Name of the Cloud Network"
 msgstr "Name des Cloudnetzes"
@@ -41474,6 +41506,9 @@ msgstr "Konfigurationsmanager-Provider entfernen"
 msgid "Remove Configuration Manager Providers"
 msgstr "Konfigurationsmanager-Provider entfernen"
 
+msgid "Remove Container Projects"
+msgstr "Container-Projekte entfernen"
+
 msgid "Remove Containers Provider"
 msgstr "Container-Provider entfernen"
 
@@ -43479,9 +43514,6 @@ msgstr "Ausführen um"
 msgid "Run Now"
 msgstr "Jetzt ausführen"
 
-msgid "Run On"
-msgstr "Ausführen am"
-
 msgid "Run a selected Report"
 msgstr "Ausgewählten Bericht ausführen"
 
@@ -43746,9 +43778,6 @@ msgstr ""
 
 msgid "Saved Report no longer exists"
 msgstr "Gespeicherter Bericht ist nicht mehr vorhanden"
-
-msgid "Saved Report: %{report_name}"
-msgstr "Gespeicherter Bericht: %{report_name}"
 
 msgid "Saved Reports"
 msgstr "Gespeicherte Berichte"
@@ -45993,6 +46022,14 @@ msgstr "Stilllegungsdatum für Service festlegen/entfernen"
 msgid "Set/remove retirement date was cancelled by the user"
 msgstr ""
 "Festlegen/Entfernen von Stilllegungsdatum wurde durch den Benutzer abgebrochen"
+
+msgid "Setting CPUs / Memory not supported for instance_type VMs"
+msgstr ""
+"Das Einstellen von CPUs/Speicher wird für instance_type-VMs nicht unterstützt"
+
+msgid "Setting instance_type not supported for template VMs"
+msgstr ""
+"Das Festlegen von instance_type wird für Vorlagen-VMs nicht unterstützt"
 
 msgid "Setting priority is not allowed for the selected item"
 msgstr "Festlegen von Priorität ist für das ausgewählte Element nicht zulässig"
@@ -49281,9 +49318,6 @@ msgstr "Quellentyp"
 msgid "Tenant|Subdomain"
 msgstr "Unterdomäne"
 
-msgid "Tenant|Use config for attributes"
-msgstr "Konfiguration für Attribute verwenden"
-
 msgid "Terminate"
 msgstr "Beenden"
 
@@ -51865,9 +51899,6 @@ msgstr "Nutzung: Unbekannt"
 msgid "Use Alias"
 msgstr "Alias verwenden"
 
-msgid "Use Config For Attributes"
-msgstr "Konfiguration für Attribute verwenden"
-
 msgid "Use Custom Brand Image"
 msgstr "Angepasstes markenkennzeichnendes Bild verwenden"
 
@@ -53462,9 +53493,6 @@ msgstr "Cloudtopologie anzeigen"
 msgid "View Clusters"
 msgstr "Cluster anzeigen"
 
-msgid "View Compute Rates"
-msgstr "Rechenressourcenraten anzeigen"
-
 msgid "View Conditions"
 msgstr "Bedingungen anzeigen"
 
@@ -53789,9 +53817,6 @@ msgstr "Momentaufnahmen anzeigen"
 msgid "View Storage Managers"
 msgstr "Speichermanager anzeigen"
 
-msgid "View Storage Rates"
-msgstr "Speicherraten anzeigen"
-
 msgid "View Storage Resources"
 msgstr "Speicherressourcen anzeigen"
 
@@ -53902,9 +53927,6 @@ msgstr "Dieses Richtlinienprofil anzeigen"
 
 msgid "View this Project"
 msgstr "Dieses Projekt anzeigen"
-
-msgid "View this Report"
-msgstr "Diesen Bericht anzeigen"
 
 msgid "View this Role"
 msgstr "Diese Rolle anzeigen"
@@ -57182,6 +57204,10 @@ msgid "raw_create_cloud_tenant must be implemented in a subclass"
 msgstr ""
 "'raw_create_cloud_tenant' muss in einer Unterklasse implementiert werden"
 
+msgid "raw_create_container_project must be implemented in a subclass"
+msgstr ""
+"raw_create_container_project muss in einer Unterklasse implementiert werden"
+
 msgid "raw_create_host_initiator must be implemented in a subclass"
 msgstr ""
 "'raw_create_host_initiator' muss in einer Unterklasse implementiert werden"
@@ -57233,6 +57259,10 @@ msgstr ""
 msgid "raw_delete_cloud_tenant must be implemented in a subclass"
 msgstr ""
 "'raw_delete_cloud_tenant' muss in einer Unterklasse implementiert werden"
+
+msgid "raw_delete_container_project must be implemented in a subclass"
+msgstr ""
+"raw_delete_container_project muss in einer Unterklasse implementiert werden"
 
 msgid "raw_delete_flavor must be implemented in a subclass"
 msgstr "'raw_delete_flavor' muss in einer Unterklasse implementiert werden"
@@ -57331,6 +57361,10 @@ msgstr ""
 msgid "raw_update_cloud_tenant must be implemented in a subclass"
 msgstr ""
 "'raw_update_cloud_tenant' muss in einer Unterklasse implementiert werden"
+
+msgid "raw_update_container_project must be implemented in a subclass"
+msgstr ""
+"raw_update_container_project muss in einer Unterklasse implementiert werden"
 
 msgid "raw_update_host_initiator_group must be implemented in a subclass"
 msgstr ""

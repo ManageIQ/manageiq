@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2025-06-02 13:54+0000\n"
-"PO-Revision-Date: 2025-06-02 13:54+0000\n"
+"POT-Creation-Date: 2025-08-15 00:24+0000\n"
+"PO-Revision-Date: 2025-08-15 00:24+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1042,7 +1042,7 @@ msgstr ""
 "%{datastore_or_provider}“%{provider_or_datastore_name}”下的 %{object_types}"
 
 msgid "%{product_name} API Group Not found"
-msgstr "%{product_name} 未找到 API 组"
+msgstr "% {product_name} 未找到 API 组"
 
 msgid "%{product_name} HTML5 Remote Console"
 msgstr "%{product_name} HTML5 远程控制台"
@@ -2616,6 +2616,9 @@ msgstr "添加配置管理器供应商"
 
 msgid "Add a Configuration Script Payload"
 msgstr "添加配置脚本有效内容"
+
+msgid "Add a Container Project"
+msgstr "添加容器项目"
 
 msgid "Add a Containers Provider"
 msgstr "添加容器供应商"
@@ -7105,9 +7108,6 @@ msgstr "类别策略"
 msgid "Category Selection"
 msgstr "类别选择"
 
-msgid "Category Tag Entries"
-msgstr "类别标签条目"
-
 msgid "Category cannot be deleted"
 msgstr "无法删除类别"
 
@@ -8009,9 +8009,6 @@ msgstr "点击查看 %{name} 租户项目"
 
 msgid "Click to view details"
 msgstr "点击以查看详情"
-
-msgid "Click to view saved report"
-msgstr "点击以查看已保存的报告"
 
 msgid "Click to view selected widget"
 msgstr "点击以查看所选的窗口小部件"
@@ -9308,9 +9305,6 @@ msgstr "通用只读"
 msgid "Common Secret"
 msgstr "通用密钥"
 
-msgid "Company Name"
-msgstr "公司名称"
-
 msgid "Company Tag"
 msgstr "公司标记"
 
@@ -10399,6 +10393,14 @@ msgid "Container Project"
 msgid_plural "Container Projects"
 msgstr[0] "容器项目"
 
+msgid "Container Project (Kubernetes)"
+msgid_plural "Container Projects (Kubernetes)"
+msgstr[0] "容器项目（Kubernetes）"
+
+msgid "Container Project (OpenShift)"
+msgid_plural "Container Projects (OpenShift)"
+msgstr[0] "容器项目（OpenShift）"
+
 msgid "Container Project Compliance Check"
 msgstr "容器项目合规检查"
 
@@ -10568,6 +10570,9 @@ msgstr "容器端口配置"
 
 msgid "Container project"
 msgstr "容器项目"
+
+msgid "Container project '%{project_name}' already exists"
+msgstr "容器项目\"%{project_name} \"已经存在"
 
 msgid "Container quota"
 msgstr "容器配额"
@@ -15182,9 +15187,6 @@ msgstr "部署分配给服务器概要文件的服务器"
 msgid "Deploy Smartproxy"
 msgstr "部署 Smartproxy"
 
-msgid "Depot Name"
-msgstr "库名称"
-
 msgid "Depot Settings successfuly validated"
 msgstr "已成功验证库设置"
 
@@ -17407,6 +17409,9 @@ msgstr "EMS IP 地址"
 msgid "EMS Name"
 msgstr "EMS 名称"
 
+msgid "EMS cannot be nil"
+msgstr "EMS不能为零"
+
 msgid "ESX Logs"
 msgstr "ESX 日志"
 
@@ -18465,6 +18470,9 @@ msgstr "编辑配置管理器供应商"
 
 msgid "Edit a Configuration Script Payload"
 msgstr "编辑配置脚本有效内容"
+
+msgid "Edit a Container Project"
+msgstr "编辑容器项目"
 
 msgid "Edit a Containers Provider"
 msgstr "编辑容器供应商"
@@ -27530,15 +27538,6 @@ msgstr "平均兆赫 (12.11 Mhz)"
 msgid "Member Role"
 msgstr "成员角色"
 
-msgid "Memeory Usage Absolute Average Avg Over Time Period"
-msgstr "时间周期内内存使用率绝对平均值"
-
-msgid "Memeory Usage Absolute Average High Over Time Period"
-msgstr "时间周期内内存使用率绝对平均最高值"
-
-msgid "Memeory Usage Absolute Average Low Over Time Period"
-msgstr "时间周期内内存使用率绝对平均最低值"
-
 msgid "Memory"
 msgstr "内存"
 
@@ -27897,6 +27896,15 @@ msgstr "内存使用率"
 
 msgid "Memory Usage (%)"
 msgstr "内存使用率 (%)"
+
+msgid "Memory Usage Absolute Average Avg Over Time Period"
+msgstr "内存使用量在不同时间段的绝对平均值"
+
+msgid "Memory Usage Absolute Average High Over Time Period"
+msgstr "内存使用量在不同时间段的绝对平均高值"
+
+msgid "Memory Usage Absolute Average Low Over Time Period"
+msgstr "内存使用量在不同时间段的绝对平均低值"
 
 msgid "Memory Used"
 msgstr "使用的内存"
@@ -31611,6 +31619,9 @@ msgstr "修改配置管理器供应商"
 msgid "Modify Configuration Script Payloads"
 msgstr "修改配置脚本有效内容"
 
+msgid "Modify Container Projects"
+msgstr "修改容器项目"
+
 msgid "Modify Containers"
 msgstr "修改容器"
 
@@ -32078,6 +32089,9 @@ msgstr "必须提供 configuration_script_id 或配置"
 msgid "Must specify a floating_ip"
 msgstr "必须指定 floating_ip"
 
+msgid "Must specify a name for the container project"
+msgstr "必须为容器项目指定一个名称"
+
 msgid "Must specify a new_description"
 msgstr "必须指定 new_description"
 
@@ -32178,8 +32192,16 @@ msgstr "名称为必填项"
 msgid "Name may contain only alphanumeric and _ . - characters"
 msgstr "名称只能包含字母数字和 _ . - 字符"
 
+msgid "Name must be no more than 63 characters"
+msgstr "名称不得超过63个字符"
+
 msgid "Name must be unique"
 msgstr "名称必须是唯一的"
+
+msgid ""
+"Name must consist of lower case alphanumeric characters or '-', start with an "
+"alphanumeric character, and end with an alphanumeric character"
+msgstr "名称必须由小写字母数字字符或\"-\"组成，以字母数字字符开头，以字母数字字符结尾"
 
 msgid "Name of the Cloud Network"
 msgstr "云网络的名称"
@@ -39377,6 +39399,9 @@ msgstr "移除配置管理器供应商"
 msgid "Remove Configuration Manager Providers"
 msgstr "移除配置管理器供应商"
 
+msgid "Remove Container Projects"
+msgstr "删除容器项目"
+
 msgid "Remove Containers Provider"
 msgstr "移除容器供应商"
 
@@ -41319,9 +41344,6 @@ msgstr "运行时间"
 msgid "Run Now"
 msgstr "立即运行"
 
-msgid "Run On"
-msgstr "运行于"
-
 msgid "Run a selected Report"
 msgstr "运行选择的报告"
 
@@ -41577,9 +41599,6 @@ msgstr "未找到保存的报告“%{time}”，调度可能已失败。"
 
 msgid "Saved Report no longer exists"
 msgstr "已保存的报告不再存在"
-
-msgid "Saved Report: %{report_name}"
-msgstr "已保存报告：%{report_name}"
 
 msgid "Saved Reports"
 msgstr "已保存的报告"
@@ -43726,6 +43745,12 @@ msgstr "设置/移除服务的停用日期"
 
 msgid "Set/remove retirement date was cancelled by the user"
 msgstr "用户已取消设置/移除停用日期的操作"
+
+msgid "Setting CPUs / Memory not supported for instance_type VMs"
+msgstr "instance_type虚拟机不支持设置CPU/内存"
+
+msgid "Setting instance_type not supported for template VMs"
+msgstr "模板虚拟机不支持设置instance_type"
 
 msgid "Setting priority is not allowed for the selected item"
 msgstr "所选的项目不允许设置优先级"
@@ -46900,9 +46925,6 @@ msgstr "源类型"
 msgid "Tenant|Subdomain"
 msgstr "子域"
 
-msgid "Tenant|Use config for attributes"
-msgstr "使用属性配置"
-
 msgid "Terminate"
 msgstr "终止"
 
@@ -49270,9 +49292,6 @@ msgstr "使用量：未知"
 msgid "Use Alias"
 msgstr "使用别名"
 
-msgid "Use Config For Attributes"
-msgstr "使用属性配置"
-
 msgid "Use Custom Brand Image"
 msgstr "使用定制品牌图像"
 
@@ -50798,9 +50817,6 @@ msgstr "查看云拓扑"
 msgid "View Clusters"
 msgstr "查看集群"
 
-msgid "View Compute Rates"
-msgstr "查看计算费率"
-
 msgid "View Conditions"
 msgstr "查看条件"
 
@@ -51125,9 +51141,6 @@ msgstr "查看快照"
 msgid "View Storage Managers"
 msgstr "查看存储管理器"
 
-msgid "View Storage Rates"
-msgstr "查看存储费率"
-
 msgid "View Storage Resources"
 msgstr "查看存储资源"
 
@@ -51238,9 +51251,6 @@ msgstr "查看此策略概要文件"
 
 msgid "View this Project"
 msgstr "查看此项目"
-
-msgid "View this Report"
-msgstr "查看此报告"
 
 msgid "View this Role"
 msgstr "查看此角色"
@@ -54290,6 +54300,9 @@ msgstr "必须在子类中实现 raw_create_cloud_database"
 msgid "raw_create_cloud_tenant must be implemented in a subclass"
 msgstr "必须在子类中使用 raw_create_cloud_tenant"
 
+msgid "raw_create_container_project must be implemented in a subclass"
+msgstr "raw_create_container_project必须在子类中实现"
+
 msgid "raw_create_host_initiator must be implemented in a subclass"
 msgstr "必须在子类中实现 raw_create_host_initiator"
 
@@ -54331,6 +54344,9 @@ msgstr "必须在子类中实现 raw_delete_cloud_subnet"
 
 msgid "raw_delete_cloud_tenant must be implemented in a subclass"
 msgstr "必须在子类中使用 raw_delete_cloud_tenant"
+
+msgid "raw_delete_container_project must be implemented in a subclass"
+msgstr "raw_delete_container_project必须在子类中实现"
 
 msgid "raw_delete_flavor must be implemented in a subclass"
 msgstr "必须在子类中实现 raw_delete_flavor"
@@ -54412,6 +54428,9 @@ msgstr "必须在子类中实现 raw_update_cloud_network"
 
 msgid "raw_update_cloud_tenant must be implemented in a subclass"
 msgstr "必须在子类中使用 raw_update_cloud_tenant"
+
+msgid "raw_update_container_project must be implemented in a subclass"
+msgstr "raw_update_container_project必须在子类中实现"
 
 msgid "raw_update_host_initiator_group must be implemented in a subclass"
 msgstr "必须在子类中实现 raw_update_host_initiator_group"
