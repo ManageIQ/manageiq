@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2025-06-02 13:54+0000\n"
-"PO-Revision-Date: 2025-06-02 13:54+0000\n"
+"POT-Creation-Date: 2025-08-15 00:24+0000\n"
+"PO-Revision-Date: 2025-08-15 00:24+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -2619,6 +2619,9 @@ msgstr "新增配置管理程式提供者"
 
 msgid "Add a Configuration Script Payload"
 msgstr "新增配置 Script 有效負載"
+
+msgid "Add a Container Project"
+msgstr "新增儲存器專案"
 
 msgid "Add a Containers Provider"
 msgstr "新增儲存器提供者"
@@ -7109,9 +7112,6 @@ msgstr "種類原則"
 msgid "Category Selection"
 msgstr "種類選取"
 
-msgid "Category Tag Entries"
-msgstr "種類標籤項目"
-
 msgid "Category cannot be deleted"
 msgstr "無法刪除種類"
 
@@ -8013,9 +8013,6 @@ msgstr "按一下以檢視 %{name} 租戶專案"
 
 msgid "Click to view details"
 msgstr "按一下以檢視詳細資料"
-
-msgid "Click to view saved report"
-msgstr "按一下以檢視儲存的報告"
 
 msgid "Click to view selected widget"
 msgstr "按一下以檢視選取的小組件"
@@ -9312,9 +9309,6 @@ msgstr "僅限一般讀取"
 msgid "Common Secret"
 msgstr "一般密碼"
 
-msgid "Company Name"
-msgstr "公司名稱"
-
 msgid "Company Tag"
 msgstr "公司標籤"
 
@@ -10403,6 +10397,14 @@ msgid "Container Project"
 msgid_plural "Container Projects"
 msgstr[0] "儲存器專案"
 
+msgid "Container Project (Kubernetes)"
+msgid_plural "Container Projects (Kubernetes)"
+msgstr[0] "儲存器專案 (Kubernetes)"
+
+msgid "Container Project (OpenShift)"
+msgid_plural "Container Projects (OpenShift)"
+msgstr[0] "儲存器專案 (OpenShift)"
+
 msgid "Container Project Compliance Check"
 msgstr "儲存器專案相符性檢查"
 
@@ -10572,6 +10574,9 @@ msgstr "儲存器埠配置"
 
 msgid "Container project"
 msgstr "儲存器專案"
+
+msgid "Container project '%{project_name}' already exists"
+msgstr "儲存器專案 '%{project_name}' 已存在"
 
 msgid "Container quota"
 msgstr "儲存器配額"
@@ -15186,9 +15191,6 @@ msgstr "指派給伺服器設定檔的部署伺服器"
 msgid "Deploy Smartproxy"
 msgstr "部署 Smartproxy"
 
-msgid "Depot Name"
-msgstr "保存庫名稱"
-
 msgid "Depot Settings successfuly validated"
 msgstr "已順利驗證保存庫設定"
 
@@ -17411,6 +17413,9 @@ msgstr "EMS IP 位址"
 msgid "EMS Name"
 msgstr "EMS 名稱"
 
+msgid "EMS cannot be nil"
+msgstr "EMS 不可為零"
+
 msgid "ESX Logs"
 msgstr "ESX 日誌"
 
@@ -18469,6 +18474,9 @@ msgstr "編輯配置管理程式提供者"
 
 msgid "Edit a Configuration Script Payload"
 msgstr "編輯配置 Script 有效負載"
+
+msgid "Edit a Container Project"
+msgstr "編輯儲存器專案"
 
 msgid "Edit a Containers Provider"
 msgstr "編輯儲存器提供者"
@@ -27538,15 +27546,6 @@ msgstr "平均兆赫 (12.11 Mhz)"
 msgid "Member Role"
 msgstr "成員角色"
 
-msgid "Memeory Usage Absolute Average Avg Over Time Period"
-msgstr "一段時間的記憶體使用情況絕對平均值"
-
-msgid "Memeory Usage Absolute Average High Over Time Period"
-msgstr "一段時間的記憶體使用情況絕對高平均值"
-
-msgid "Memeory Usage Absolute Average Low Over Time Period"
-msgstr "一段時間的記憶體使用情況絕對低平均值"
-
 msgid "Memory"
 msgstr "記憶體"
 
@@ -27905,6 +27904,15 @@ msgstr "記憶體用量"
 
 msgid "Memory Usage (%)"
 msgstr "記憶體用量 (%)"
+
+msgid "Memory Usage Absolute Average Avg Over Time Period"
+msgstr "時段內記憶體使用量絕對平均值"
+
+msgid "Memory Usage Absolute Average High Over Time Period"
+msgstr "時段內記憶體使用量的絕對平均高值"
+
+msgid "Memory Usage Absolute Average Low Over Time Period"
+msgstr "時段內記憶體使用量絕對平均低值"
 
 msgid "Memory Used"
 msgstr "使用的記憶體"
@@ -31619,6 +31627,9 @@ msgstr "修改配置管理程式提供者"
 msgid "Modify Configuration Script Payloads"
 msgstr "修改配置 Script 有效負載"
 
+msgid "Modify Container Projects"
+msgstr "修改儲存器專案"
+
 msgid "Modify Containers"
 msgstr "修改儲存器"
 
@@ -32086,6 +32097,9 @@ msgstr "必須提供 configuration_script_id 或 configuration"
 msgid "Must specify a floating_ip"
 msgstr "必須指定 floating_ip"
 
+msgid "Must specify a name for the container project"
+msgstr "必須指定儲存器專案的名稱"
+
 msgid "Must specify a new_description"
 msgstr "必須指定 new_description"
 
@@ -32186,8 +32200,16 @@ msgstr "「名稱」是必要的"
 msgid "Name may contain only alphanumeric and _ . - characters"
 msgstr "名稱只能包含英數和 _ . - 字元"
 
+msgid "Name must be no more than 63 characters"
+msgstr "名稱不得超過 63 個字元"
+
 msgid "Name must be unique"
 msgstr "名稱必須唯一。"
+
+msgid ""
+"Name must consist of lower case alphanumeric characters or '-', start with an "
+"alphanumeric character, and end with an alphanumeric character"
+msgstr "名稱必須由小寫英數字元或 '-' 組成，以英數字元開頭，並以英數字元結束"
 
 msgid "Name of the Cloud Network"
 msgstr "雲端網路的名稱"
@@ -39386,6 +39408,9 @@ msgstr "移除配置管理程式提供者"
 msgid "Remove Configuration Manager Providers"
 msgstr "移除配置管理程式提供者"
 
+msgid "Remove Container Projects"
+msgstr "移除儲存器專案"
+
 msgid "Remove Containers Provider"
 msgstr "移除儲存器提供者"
 
@@ -41328,9 +41353,6 @@ msgstr "執行時間"
 msgid "Run Now"
 msgstr "立即執行"
 
-msgid "Run On"
-msgstr "執行於"
-
 msgid "Run a selected Report"
 msgstr "執行選取的報告"
 
@@ -41586,9 +41608,6 @@ msgstr "找不到已儲存的報告 \"%{time}\"，排程可能已失敗"
 
 msgid "Saved Report no longer exists"
 msgstr "已儲存的報告已不再存在"
-
-msgid "Saved Report: %{report_name}"
-msgstr "儲存的報告：%{report_name}"
 
 msgid "Saved Reports"
 msgstr "已儲存報告"
@@ -43735,6 +43754,12 @@ msgstr "設定/移除服務的淘汰日期"
 
 msgid "Set/remove retirement date was cancelled by the user"
 msgstr "使用者已取消設定/移除淘汰日期"
+
+msgid "Setting CPUs / Memory not supported for instance_type VMs"
+msgstr "不支援為 instance_type 虛擬機器設定 CPU / 記憶體"
+
+msgid "Setting instance_type not supported for template VMs"
+msgstr "範本虛擬機器不支援設定 instance_type"
 
 msgid "Setting priority is not allowed for the selected item"
 msgstr "不容許對所選項目進行設定優先順序"
@@ -46907,9 +46932,6 @@ msgstr "來源類型"
 msgid "Tenant|Subdomain"
 msgstr "子網域"
 
-msgid "Tenant|Use config for attributes"
-msgstr "使用屬性配置"
-
 msgid "Terminate"
 msgstr "終止"
 
@@ -49277,9 +49299,6 @@ msgstr "用法：不明"
 msgid "Use Alias"
 msgstr "使用別名"
 
-msgid "Use Config For Attributes"
-msgstr "使用屬性的配置"
-
 msgid "Use Custom Brand Image"
 msgstr "使用自訂品牌形象"
 
@@ -50805,9 +50824,6 @@ msgstr "檢視雲端拓蹼"
 msgid "View Clusters"
 msgstr "檢視叢集"
 
-msgid "View Compute Rates"
-msgstr "檢視計算率"
-
 msgid "View Conditions"
 msgstr "檢視條件"
 
@@ -51132,9 +51148,6 @@ msgstr "檢視 Snapshot"
 msgid "View Storage Managers"
 msgstr "檢視儲存體管理程式"
 
-msgid "View Storage Rates"
-msgstr "檢視儲存體速率"
-
 msgid "View Storage Resources"
 msgstr "檢視儲存體資源"
 
@@ -51245,9 +51258,6 @@ msgstr "檢視此原則設定檔"
 
 msgid "View this Project"
 msgstr "檢視此專案"
-
-msgid "View this Report"
-msgstr "檢視此報告"
 
 msgid "View this Role"
 msgstr "檢視此角色"
@@ -54296,6 +54306,9 @@ msgstr "raw_create_cloud_database 必須在子類別中實作"
 msgid "raw_create_cloud_tenant must be implemented in a subclass"
 msgstr "raw_create_cloud_tenant 必須在子類別中實作"
 
+msgid "raw_create_container_project must be implemented in a subclass"
+msgstr "raw_create_container_project 必須在子類別中實作"
+
 msgid "raw_create_host_initiator must be implemented in a subclass"
 msgstr "raw_create_host_initiator 必須在子類別中實作"
 
@@ -54337,6 +54350,9 @@ msgstr "raw_delete_cloud_subnet 必須在子類別中實作"
 
 msgid "raw_delete_cloud_tenant must be implemented in a subclass"
 msgstr "raw_delete_cloud_tenant 必須在子類別中實作"
+
+msgid "raw_delete_container_project must be implemented in a subclass"
+msgstr "raw_delete_container_project 必須在子類別中實作"
 
 msgid "raw_delete_flavor must be implemented in a subclass"
 msgstr "raw_delete_flavor 必須在子類別中實作"
@@ -54418,6 +54434,9 @@ msgstr "raw_update_cloud_network 必須在子類別中實作"
 
 msgid "raw_update_cloud_tenant must be implemented in a subclass"
 msgstr "raw_update_cloud_tenant 必須在子類別中實作"
+
+msgid "raw_update_container_project must be implemented in a subclass"
+msgstr "raw_update_container_project 必須在子類別中實作"
 
 msgid "raw_update_host_initiator_group must be implemented in a subclass"
 msgstr "raw_update_host_initiator_group 必須在子類別中實作"
