@@ -335,11 +335,11 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-workflows
-  revision: f7a027a999a0b6ddf51b62ed51c536b61bd5b60f
+  revision: b874d4d056c486c9795e0c28c8fd95f3f517af8c
   branch: spassky
   specs:
     manageiq-providers-workflows (0.1.0)
-      floe (~> 0.16.0)
+      floe (~> 0.17.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-schema
@@ -664,8 +664,10 @@ GEM
       rake
     ffi-vix_disk_lib (1.4.0)
       ffi
-    floe (0.16.0)
+    floe (0.17.0)
       awesome_spawn (~> 1.6)
+      faraday
+      faraday-follow_redirects
       io-wait
       json (~> 2.10)
       jsonpath (~> 1.1)
