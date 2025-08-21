@@ -55,16 +55,15 @@ shared_examples :placeholders do |dir|
       end
     end
 
-    if errors.present?
-      errors.each do |file, file_errors|
-        puts ">> #{file}\n"
-        file_errors.each do |original, translation|
-          puts original, translation, ""
-        end
-        puts
+    error_message = ""
+    errors.each do |file, file_errors|
+      error_message << ">> #{file}\n"
+      file_errors.each do |original, translation|
+        error_message << original << "\n" << translation << "\n\n"
       end
     end
-    expect(errors).to be_empty
+    expect(errors).to be_empty, "The following mismatched placeholders were found:\n\n#{error_message}"
+
     expect(incorrect_plurals).to be_empty
   end
 
