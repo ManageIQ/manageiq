@@ -323,6 +323,9 @@ group :test do
 end
 
 group :development, :test do
+  gem "cypress-on-rails",               "~>1.19.0" # This is needed so the railtie can hook into the rails app startup
+  gem "database_cleaner",               "~>2.1"
+  gem "factory_bot_rails"
   gem "parallel_tests",                 "~>4.4", :require => false
   gem "routes_lazy_routes"
   gem "rspec-rails",                    "~>7.0"
