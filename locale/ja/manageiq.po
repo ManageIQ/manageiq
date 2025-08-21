@@ -10606,7 +10606,7 @@ msgid "Container project"
 msgstr "コンテナー・プロジェクト"
 
 msgid "Container project '%{project_name}' already exists"
-msgstr "コンテナ・プロジェクト '% {project_name} ' は既に存在します"
+msgstr "コンテナ・プロジェクト '%{project_name}' は既に存在します"
 
 msgid "Container quota"
 msgstr "コンテナーのクォータ"

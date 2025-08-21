@@ -424,7 +424,7 @@ msgstr[1] ""
 
 msgid "%{amount} Automation Template Being Tagged"
 msgid_plural "%{amount} Automation Templates Being Tagged"
-msgstr[0] "%{amount}  plantilla de automatización se está etiquetando"
+msgstr[0] "%{amount} plantilla de automatización se está etiquetando"
 msgstr[1] "%{amount} plantillas de automatización se están etiquetando"
 
 msgid "%{amount} Availability Zone Being Tagged"

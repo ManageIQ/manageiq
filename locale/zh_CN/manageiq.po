@@ -1042,7 +1042,7 @@ msgstr ""
 "%{datastore_or_provider}“%{provider_or_datastore_name}”下的 %{object_types}"
 
 msgid "%{product_name} API Group Not found"
-msgstr "% {product_name} 未找到 API 组"
+msgstr "%{product_name} 未找到 API 组"
 
 msgid "%{product_name} HTML5 Remote Console"
 msgstr "%{product_name} HTML5 远程控制台"
