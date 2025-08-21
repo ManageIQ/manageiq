@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2025-06-02 13:54+0000\n"
-"PO-Revision-Date: 2025-06-02 13:54+0000\n"
+"POT-Creation-Date: 2025-08-15 00:24+0000\n"
+"PO-Revision-Date: 2025-08-15 00:24+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -2900,6 +2900,9 @@ msgstr "Ajouter un fournisseur de gestionnaire de configuration"
 
 msgid "Add a Configuration Script Payload"
 msgstr "Ajouter un contenu de script de configuration"
+
+msgid "Add a Container Project"
+msgstr "Ajouter un projet de conteneur"
 
 msgid "Add a Containers Provider"
 msgstr "Ajouter un fournisseur de conteneur"
@@ -7664,9 +7667,6 @@ msgstr "Stratégie de catégorie"
 msgid "Category Selection"
 msgstr "Sélection de catégorie"
 
-msgid "Category Tag Entries"
-msgstr "Entrées de balise de la catégorie"
-
 msgid "Category cannot be deleted"
 msgstr "La catégorie ne peut pas être supprimée"
 
@@ -8640,9 +8640,6 @@ msgstr "Cliquez pour afficher le projet de locataire %{name}"
 
 msgid "Click to view details"
 msgstr "Cliquez pour afficher les détails"
-
-msgid "Click to view saved report"
-msgstr "Cliquez pour afficher le rapport sauvegardé"
 
 msgid "Click to view selected widget"
 msgstr "Cliquez pour afficher le widget sélectionné"
@@ -9984,9 +9981,6 @@ msgstr "Lecture seule commune"
 msgid "Common Secret"
 msgstr "Secret commun"
 
-msgid "Company Name"
-msgstr "Nom de société"
-
 msgid "Company Tag"
 msgstr "Balise de société"
 
@@ -11125,6 +11119,16 @@ msgid_plural "Container Projects"
 msgstr[0] "Projet de conteneur"
 msgstr[1] "Projets de conteneur"
 
+msgid "Container Project (Kubernetes)"
+msgid_plural "Container Projects (Kubernetes)"
+msgstr[0] "Projet de conteneur (Kubernetes)"
+msgstr[1] "Projets de conteneur (Kubernetes)"
+
+msgid "Container Project (OpenShift)"
+msgid_plural "Container Projects (OpenShift)"
+msgstr[0] "Projet de conteneur (OpenShift)"
+msgstr[1] "Projets de conteneur (OpenShift)"
+
 msgid "Container Project Compliance Check"
 msgstr "Vérification de conformité du projet de conteneur"
 
@@ -11311,6 +11315,9 @@ msgstr "Configuration de port de conteneur"
 
 msgid "Container project"
 msgstr "Projet de conteneur"
+
+msgid "Container project '%{project_name}' already exists"
+msgstr "Le projet de conteneur '%{project_name}' existe déjà"
 
 msgid "Container quota"
 msgstr "Quota de conteneur"
@@ -16241,9 +16248,6 @@ msgstr "Déployer le serveur affecté au profil de serveur"
 msgid "Deploy Smartproxy"
 msgstr "Déployer Smartproxy"
 
-msgid "Depot Name"
-msgstr "Nom du dépôt"
-
 msgid "Depot Settings successfuly validated"
 msgstr "Les paramètres du dépôt ont été validés"
 
@@ -18535,6 +18539,9 @@ msgstr "Adresse IP EMS"
 msgid "EMS Name"
 msgstr "Nom EMS"
 
+msgid "EMS cannot be nil"
+msgstr "EMS ne peut pas être nul"
+
 msgid "ESX Logs"
 msgstr "Journaux ESX"
 
@@ -19624,6 +19631,9 @@ msgstr "Editer un fournisseur de gestionnaire de configuration"
 
 msgid "Edit a Configuration Script Payload"
 msgstr "Editer un contenu de script de configuration"
+
+msgid "Edit a Container Project"
+msgstr "Éditer un projet de conteneur"
 
 msgid "Edit a Containers Provider"
 msgstr "Editer un fournisseur de conteneur"
@@ -29101,15 +29111,6 @@ msgstr "Mégahertz (12,11 Mhz)"
 msgid "Member Role"
 msgstr "Rôle de membre"
 
-msgid "Memeory Usage Absolute Average Avg Over Time Period"
-msgstr "Moyenne absolue d'utilisation de mémoire - Taux moyen sur la période"
-
-msgid "Memeory Usage Absolute Average High Over Time Period"
-msgstr "Moyenne absolue d'utilisation de mémoire - Taux élevé sur la période"
-
-msgid "Memeory Usage Absolute Average Low Over Time Period"
-msgstr "Moyenne absolue d'utilisation de mémoire - Taux faible sur la période"
-
 msgid "Memory"
 msgstr "Mémoire"
 
@@ -29531,6 +29532,17 @@ msgstr "Utilisation de la mémoire"
 
 msgid "Memory Usage (%)"
 msgstr "Utilisation de la mémoire (%)"
+
+msgid "Memory Usage Absolute Average Avg Over Time Period"
+msgstr "Utilisation moyenne absolue de la mémoire au cours de la période"
+
+msgid "Memory Usage Absolute Average High Over Time Period"
+msgstr ""
+"Utilisation moyenne élevée absolue de la mémoire au cours de la période"
+
+msgid "Memory Usage Absolute Average Low Over Time Period"
+msgstr ""
+"Utilisation moyenne faible absolue de la mémoire au cours de la période"
 
 msgid "Memory Used"
 msgstr "Mémoire - Utilisation"
@@ -33306,6 +33318,9 @@ msgstr "Modifier les fournisseurs de gestionnaire de configuration"
 msgid "Modify Configuration Script Payloads"
 msgstr "Modifier les contenus de script de configuration"
 
+msgid "Modify Container Projects"
+msgstr "Modifier les projets de conteneur"
+
 msgid "Modify Containers"
 msgstr "Modifier les conteneurs"
 
@@ -33782,6 +33797,9 @@ msgstr "configuration_script_id ou configuration doit être fourni"
 msgid "Must specify a floating_ip"
 msgstr "Vous devez spécifier une adresse IP flottante"
 
+msgid "Must specify a name for the container project"
+msgstr "Vous devez indiquer un nom pour le projet de conteneur."
+
 msgid "Must specify a new_description"
 msgstr "Vous devez spécifier une nouvelle description"
 
@@ -33889,8 +33907,19 @@ msgstr "Le nom est obligatoire"
 msgid "Name may contain only alphanumeric and _ . - characters"
 msgstr "Le nom ne peut contenir que des caractères alphanumériques et _ . -"
 
+msgid "Name must be no more than 63 characters"
+msgstr "Le nom ne doit pas comporter plus de 63 caractères"
+
 msgid "Name must be unique"
 msgstr "Le nom doit être unique"
+
+msgid ""
+"Name must consist of lower case alphanumeric characters or '-', start with an "
+"alphanumeric character, and end with an alphanumeric character"
+msgstr ""
+"Le nom doit être composé de caractères alphanumériques minuscules ou de '-', "
+"commencer par un caractère alphanumérique et se terminer par un caractère "
+"alphanumérique"
 
 msgid "Name of the Cloud Network"
 msgstr "Nom du réseau cloud"
@@ -41586,6 +41615,9 @@ msgstr "Retirer un fournisseur de gestionnaire de configuration"
 msgid "Remove Configuration Manager Providers"
 msgstr "Retirer des fournisseurs de gestionnaire de configuration"
 
+msgid "Remove Container Projects"
+msgstr "Supprimer les projets de conteneur"
+
 msgid "Remove Containers Provider"
 msgstr "Retirer un fournisseur de conteneur"
 
@@ -43606,9 +43638,6 @@ msgstr "Exécution"
 msgid "Run Now"
 msgstr "Exécuter maintenant"
 
-msgid "Run On"
-msgstr "Date d'exécution"
-
 msgid "Run a selected Report"
 msgstr "Exécuter un rapport sélectionné"
 
@@ -43874,9 +43903,6 @@ msgstr ""
 
 msgid "Saved Report no longer exists"
 msgstr "Le rapport sauvegardé n'existe plus"
-
-msgid "Saved Report: %{report_name}"
-msgstr "Rapport sauvegardé : %{report_name}"
 
 msgid "Saved Reports"
 msgstr "Rapports sauvegardés"
@@ -46119,6 +46145,16 @@ msgid "Set/remove retirement date was cancelled by the user"
 msgstr ""
 "La définition/le retrait de la date de déclassement a été annulé(e) par "
 "l'utilisateur"
+
+msgid "Setting CPUs / Memory not supported for instance_type VMs"
+msgstr ""
+"Le paramétrage des UC / de la mémoire n'est pas pris en charge pour les "
+"machines virtuelles instance_type."
+
+msgid "Setting instance_type not supported for template VMs"
+msgstr ""
+"La définition de instance-type n'est pas prise en charge pour les modèles de "
+"machines virtuelles."
 
 msgid "Setting priority is not allowed for the selected item"
 msgstr ""
@@ -49456,9 +49492,6 @@ msgstr "Type de source"
 msgid "Tenant|Subdomain"
 msgstr "Sous-domaine"
 
-msgid "Tenant|Use config for attributes"
-msgstr "Utiliser config pour attributs"
-
 msgid "Terminate"
 msgstr "Quitter"
 
@@ -52025,9 +52058,6 @@ msgstr "Utilisation : inconnue"
 msgid "Use Alias"
 msgstr "Utiliser l'alias"
 
-msgid "Use Config For Attributes"
-msgstr "Utiliser la configuration pour les attributs"
-
 msgid "Use Custom Brand Image"
 msgstr "Utiliser une image de marque personnalisée"
 
@@ -53697,9 +53727,6 @@ msgstr "Afficher la topologie de cloud"
 msgid "View Clusters"
 msgstr "Afficher les clusters"
 
-msgid "View Compute Rates"
-msgstr "Afficher les taux de calcul"
-
 msgid "View Conditions"
 msgstr "Afficher les conditions"
 
@@ -54024,9 +54051,6 @@ msgstr "Afficher les clichés"
 msgid "View Storage Managers"
 msgstr "Afficher les gestionnaires de stockage"
 
-msgid "View Storage Rates"
-msgstr "Afficher les taux de stockage"
-
 msgid "View Storage Resources"
 msgstr "Afficher les ressources de stockage"
 
@@ -54137,9 +54161,6 @@ msgstr "Afficher ce profil de stratégie"
 
 msgid "View this Project"
 msgstr "Afficher ce projet"
-
-msgid "View this Report"
-msgstr "Afficher ce rapport"
 
 msgid "View this Role"
 msgstr "Afficher ce rôle"
@@ -57446,6 +57467,9 @@ msgstr "raw_create_cloud_database doit être implémenté dans une sous-classe"
 msgid "raw_create_cloud_tenant must be implemented in a subclass"
 msgstr "raw_create_cloud_tenant doit être implémenté dans une sous-classe"
 
+msgid "raw_create_container_project must be implemented in a subclass"
+msgstr "raw_create_container_project doit être implémenté dans une sous-classe"
+
 msgid "raw_create_host_initiator must be implemented in a subclass"
 msgstr "raw_create_host_initiator doit être implémenté dans une sous-classe"
 
@@ -57488,6 +57512,9 @@ msgstr "raw_delete_cloud_subnet doit être implémenté dans une sous-classe"
 
 msgid "raw_delete_cloud_tenant must be implemented in a subclass"
 msgstr "raw_delete_cloud_tenant doit être implémenté dans une sous-classe"
+
+msgid "raw_delete_container_project must be implemented in a subclass"
+msgstr "raw_delete_container_project doit être implémenté dans une sous-classe"
 
 msgid "raw_delete_flavor must be implemented in a subclass"
 msgstr "raw_delete_flavor doit être implémenté dans une sous-classe"
@@ -57571,6 +57598,9 @@ msgstr "raw_update_cloud_network doit être implémenté dans une sous-classe"
 
 msgid "raw_update_cloud_tenant must be implemented in a subclass"
 msgstr "raw_update_cloud_tenant doit être implémenté dans une sous-classe"
+
+msgid "raw_update_container_project must be implemented in a subclass"
+msgstr "raw_update_container_project doit être implémenté dans une sous-classe"
 
 msgid "raw_update_host_initiator_group must be implemented in a subclass"
 msgstr ""

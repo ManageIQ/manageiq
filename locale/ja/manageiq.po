@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2025-06-02 13:54+0000\n"
-"PO-Revision-Date: 2025-06-02 13:54+0000\n"
+"POT-Creation-Date: 2025-08-15 00:24+0000\n"
+"PO-Revision-Date: 2025-08-15 00:24+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -2634,6 +2634,9 @@ msgstr "構成マネージャー・プロバイダーの追加"
 
 msgid "Add a Configuration Script Payload"
 msgstr "構成スクリプト・ペイロードの追加"
+
+msgid "Add a Container Project"
+msgstr "コンテナ・プロジェクトの追加"
 
 msgid "Add a Containers Provider"
 msgstr "コンテナー・プロバイダーの追加"
@@ -7134,9 +7137,6 @@ msgstr "カテゴリー・ポリシー"
 msgid "Category Selection"
 msgstr "カテゴリーの選択"
 
-msgid "Category Tag Entries"
-msgstr "カテゴリー・タグ・エントリー"
-
 msgid "Category cannot be deleted"
 msgstr "カテゴリーは削除できません"
 
@@ -8040,9 +8040,6 @@ msgstr "クリックして%{name}テナント・プロジェクトを表示す�
 
 msgid "Click to view details"
 msgstr "クリックして詳細を表示する"
-
-msgid "Click to view saved report"
-msgstr "クリックして保存済みのレポートを表示する"
 
 msgid "Click to view selected widget"
 msgstr "クリックして選択したウィジェットを表示する"
@@ -9341,9 +9338,6 @@ msgstr "共通読み取り専用"
 msgid "Common Secret"
 msgstr "共通シークレット"
 
-msgid "Company Name"
-msgstr "会社名"
-
 msgid "Company Tag"
 msgstr "企業タグ"
 
@@ -10433,6 +10427,14 @@ msgid "Container Project"
 msgid_plural "Container Projects"
 msgstr[0] "コンテナー・プロジェクト"
 
+msgid "Container Project (Kubernetes)"
+msgid_plural "Container Projects (Kubernetes)"
+msgstr[0] "Container Projects (Kubernetes)"
+
+msgid "Container Project (OpenShift)"
+msgid_plural "Container Projects (OpenShift)"
+msgstr[0] "Container Projects (OpenShift)"
+
 msgid "Container Project Compliance Check"
 msgstr "コンテナー・プロジェクトの準拠性検査"
 
@@ -10602,6 +10604,9 @@ msgstr "コンテナー・ポート構成"
 
 msgid "Container project"
 msgstr "コンテナー・プロジェクト"
+
+msgid "Container project '%{project_name}' already exists"
+msgstr "コンテナ・プロジェクト '%{project_name}' は既に存在します"
 
 msgid "Container quota"
 msgstr "コンテナーのクォータ"
@@ -15221,9 +15226,6 @@ msgstr "サーバー・プロファイルに割り当てられたサーバーの
 msgid "Deploy Smartproxy"
 msgstr "Smartproxy のデプロイ"
 
-msgid "Depot Name"
-msgstr "デポ名"
-
 msgid "Depot Settings successfuly validated"
 msgstr "デポ設定が正常に検証されました"
 
@@ -17447,6 +17449,9 @@ msgstr "EMS IP アドレス"
 msgid "EMS Name"
 msgstr "EMS 名"
 
+msgid "EMS cannot be nil"
+msgstr "EMS を nil にすることはできません"
+
 msgid "ESX Logs"
 msgstr "ESX ログ"
 
@@ -18505,6 +18510,9 @@ msgstr "構成マネージャー・プロバイダーの編集"
 
 msgid "Edit a Configuration Script Payload"
 msgstr "構成スクリプト・ペイロードの編集"
+
+msgid "Edit a Container Project"
+msgstr "コンテナ・プロジェクトの編集"
 
 msgid "Edit a Containers Provider"
 msgstr "コンテナー・プロバイダーの編集"
@@ -27589,15 +27597,6 @@ msgstr "メガヘルツ平均 (12.11 Mhz)"
 msgid "Member Role"
 msgstr "メンバー・ロール"
 
-msgid "Memeory Usage Absolute Average Avg Over Time Period"
-msgstr "期間中のメモリー使用状況絶対平均値 (平均)"
-
-msgid "Memeory Usage Absolute Average High Over Time Period"
-msgstr "期間中のメモリー使用状況絶対平均値 (高)"
-
-msgid "Memeory Usage Absolute Average Low Over Time Period"
-msgstr "期間中のメモリー使用状況絶対平均値 (低)"
-
 msgid "Memory"
 msgstr "メモリー"
 
@@ -27956,6 +27955,15 @@ msgstr "メモリー使用状況"
 
 msgid "Memory Usage (%)"
 msgstr "メモリー使用状況 (%)"
+
+msgid "Memory Usage Absolute Average Avg Over Time Period"
+msgstr "メモリー使用量　絶対平均値　期間中の平均値"
+
+msgid "Memory Usage Absolute Average High Over Time Period"
+msgstr "メモリー使用量　絶対平均値　期間中の最高値"
+
+msgid "Memory Usage Absolute Average Low Over Time Period"
+msgstr "メモリー使用量　絶対平均値　期間中の最低値"
 
 msgid "Memory Used"
 msgstr "メモリー使用状況"
@@ -31670,6 +31678,9 @@ msgstr "構成マネージャー・プロバイダーの変更"
 msgid "Modify Configuration Script Payloads"
 msgstr "構成スクリプト・ペイロードの変更"
 
+msgid "Modify Container Projects"
+msgstr "コンテナ・プロジェクトの修正"
+
 msgid "Modify Containers"
 msgstr "コンテナーの変更"
 
@@ -32138,6 +32149,9 @@ msgstr "configuration_script_id または構成を指定する必要がありま
 msgid "Must specify a floating_ip"
 msgstr "floating_ipを指定する必要があります"
 
+msgid "Must specify a name for the container project"
+msgstr "コンテナ・プロジェクトの名前を指定する必要があります"
+
 msgid "Must specify a new_description"
 msgstr "new_descriptionを指定する必要があります"
 
@@ -32238,8 +32252,16 @@ msgstr "名前が必要です。"
 msgid "Name may contain only alphanumeric and _ . - characters"
 msgstr "名前には英数字と _ . - 文字のみを使用できます"
 
+msgid "Name must be no more than 63 characters"
+msgstr "氏名は63文字以内にしてください"
+
 msgid "Name must be unique"
 msgstr "名前は一意でなければなりません"
+
+msgid ""
+"Name must consist of lower case alphanumeric characters or '-', start with an "
+"alphanumeric character, and end with an alphanumeric character"
+msgstr "名前は、小文字の英数字または'-'で構成され、英数字で始まり、英数字で終わる必要があります"
 
 msgid "Name of the Cloud Network"
 msgstr "クラウド・ネットワークの名前"
@@ -39447,6 +39469,9 @@ msgstr "構成マネージャー・プロバイダーの削除"
 msgid "Remove Configuration Manager Providers"
 msgstr "構成マネージャー・プロバイダーの削除"
 
+msgid "Remove Container Projects"
+msgstr "コンテナ・プロジェクトの削除"
+
 msgid "Remove Containers Provider"
 msgstr "コンテナー・プロバイダーの削除"
 
@@ -41390,9 +41415,6 @@ msgstr "実行時刻"
 msgid "Run Now"
 msgstr "今すぐ実行"
 
-msgid "Run On"
-msgstr "実行日"
-
 msgid "Run a selected Report"
 msgstr "選択したレポートの実行"
 
@@ -41648,9 +41670,6 @@ msgstr "保存されたレポート \"%{time}\" が見つかりませんでし�
 
 msgid "Saved Report no longer exists"
 msgstr "保存されたレポートが存在しません"
-
-msgid "Saved Report: %{report_name}"
-msgstr "保存済みレポート: %{report_name}"
 
 msgid "Saved Reports"
 msgstr "保存済みのレポート"
@@ -43801,6 +43820,12 @@ msgstr "サービスのリタイヤ日の設定/削除"
 
 msgid "Set/remove retirement date was cancelled by the user"
 msgstr "リタイヤ日の設定/削除はユーザーにより取り消されました"
+
+msgid "Setting CPUs / Memory not supported for instance_type VMs"
+msgstr "instance_typeのVMでは、CPU/メモリーの設定がサポートされません"
+
+msgid "Setting instance_type not supported for template VMs"
+msgstr "テンプレートVMではinstance_typeの設定がサポートされません"
 
 msgid "Setting priority is not allowed for the selected item"
 msgstr "選択した項目は優先順位の設定が許可されていません"
@@ -46976,9 +47001,6 @@ msgstr "ソース・タイプ"
 msgid "Tenant|Subdomain"
 msgstr "サブドメイン"
 
-msgid "Tenant|Use config for attributes"
-msgstr "属性の構成を使用"
-
 msgid "Terminate"
 msgstr "終了"
 
@@ -49349,9 +49371,6 @@ msgstr "使用状況: 不明"
 msgid "Use Alias"
 msgstr "エイリアスの使用"
 
-msgid "Use Config For Attributes"
-msgstr "属性の構成を使用"
-
 msgid "Use Custom Brand Image"
 msgstr "カスタム・ブランド・イメージの使用"
 
@@ -50880,9 +50899,6 @@ msgstr "クラウド・トポロジーの表示"
 msgid "View Clusters"
 msgstr "クラスターの表示"
 
-msgid "View Compute Rates"
-msgstr "コンピュート・レートの表示"
-
 msgid "View Conditions"
 msgstr "条件の表示"
 
@@ -51207,9 +51223,6 @@ msgstr "スナップショットの表示"
 msgid "View Storage Managers"
 msgstr "ストレージ・マネージャーの表示"
 
-msgid "View Storage Rates"
-msgstr "ストレージ・レートの表示"
-
 msgid "View Storage Resources"
 msgstr "ストレージ・リソースの表示"
 
@@ -51320,9 +51333,6 @@ msgstr "このポリシー・プロファイルの表示"
 
 msgid "View this Project"
 msgstr "このプロジェクトの表示"
-
-msgid "View this Report"
-msgstr "このレポートの表示"
 
 msgid "View this Role"
 msgstr "このロールの表示"
@@ -54378,6 +54388,9 @@ msgstr "raw_create_cloud_database はサブクラスに実装する必要があ�
 msgid "raw_create_cloud_tenant must be implemented in a subclass"
 msgstr "raw_create_cloud_tenant はサブクラスに実装する必要があります"
 
+msgid "raw_create_container_project must be implemented in a subclass"
+msgstr "raw_create_container_project はサブクラスで実装しなければなりません"
+
 msgid "raw_create_host_initiator must be implemented in a subclass"
 msgstr "raw_create_host_initiator はサブクラスに実装する必要があります"
 
@@ -54419,6 +54432,9 @@ msgstr "raw_delete_cloud_subnet はサブクラスに実装する必要があり
 
 msgid "raw_delete_cloud_tenant must be implemented in a subclass"
 msgstr "raw_delete_cloud_tenant はサブクラスに実装する必要があります"
+
+msgid "raw_delete_container_project must be implemented in a subclass"
+msgstr "raw_delete_container_project はサブクラスで実装しなければなりません"
 
 msgid "raw_delete_flavor must be implemented in a subclass"
 msgstr "raw_delete_flavor はサブクラスに実装する必要があります"
@@ -54500,6 +54516,9 @@ msgstr "raw_update_cloud_network はサブクラスに実装する必要があ�
 
 msgid "raw_update_cloud_tenant must be implemented in a subclass"
 msgstr "raw_update_cloud_tenant はサブクラスに実装する必要があります"
+
+msgid "raw_update_container_project must be implemented in a subclass"
+msgstr "raw_update_container_project はサブクラスで実装しなければなりません"
 
 msgid "raw_update_host_initiator_group must be implemented in a subclass"
 msgstr "raw_update_host_initiator_group はサブクラスに実装する必要があります"
