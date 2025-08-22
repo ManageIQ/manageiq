@@ -39,7 +39,7 @@ gem "docker-api",                       "~>1.33.6",          :require => false
 gem "drb",                              "~>2.2",             :require => false
 gem "elif",                             "=0.1.0",            :require => false
 gem "fast_gettext",                     "~>3.1"
-gem "ffi",                              "< 1.17.0",          :require => false
+gem "ffi",                              "< 1.17.3",          :require => false
 gem "gettext_i18n_rails",               "~>1.11"
 gem "gettext_i18n_rails_js",            "~>1.3.0"
 gem "hamlit",                           "~>2.11.0"
