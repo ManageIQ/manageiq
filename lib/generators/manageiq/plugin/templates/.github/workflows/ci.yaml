@@ -45,4 +45,4 @@ jobs:
     - name: Report code coverage
       if: "${{ github.ref == 'refs/heads/master' && matrix.ruby-version == '<%= YAML.load_file(Rails.root.join(".github/workflows/ci.yaml")).dig("jobs", "ci", "strategy", "matrix", "ruby-version").max %>' }}"
       continue-on-error: true
-      uses: paambaati/codeclimate-action@v5
+      uses: paambaati/codeclimate-action@v9
