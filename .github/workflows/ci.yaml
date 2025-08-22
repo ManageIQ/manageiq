@@ -56,4 +56,4 @@ jobs:
       if: "${{ github.ref == 'refs/heads/master' && matrix.ruby-version == '3.3' &&
         matrix.test-suite == 'vmdb' }}"
       continue-on-error: true
-      uses: paambaati/codeclimate-action@v5
+      uses: paambaati/codeclimate-action@v9
