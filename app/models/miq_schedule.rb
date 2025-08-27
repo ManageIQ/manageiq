@@ -126,7 +126,10 @@ class MiqSchedule < ApplicationRecord
   def target_ids
     # Let RBAC evaluate the filter's MiqExpression, and return the first value (the target ids)
     my_filter = get_filter
-    return [] if my_filter.nil?
+    if my_filter.nil? || !my_filter.valid?
+      _log.warn("[#{name}] Filter is #{my_filter.nil? ? "empty" : "invalid"}")
+      return []
+    end
 
     Rbac.filtered(resource_type, :filter => my_filter).pluck(:id)
   end
@@ -136,8 +139,8 @@ class MiqSchedule < ApplicationRecord
     return [Object.const_get(resource_type)] if sched_action.kind_of?(Hash) && ALLOWED_CLASS_METHOD_ACTIONS.include?(sched_action[:method])
 
     my_filter = get_filter
-    if my_filter.nil?
-      _log.warn("[#{name}] Filter is empty")
+    if my_filter.nil? || !my_filter.valid?
+      _log.warn("[#{name}] Filter is #{my_filter.nil? ? "empty" : "invalid"}")
       return []
     end
 
