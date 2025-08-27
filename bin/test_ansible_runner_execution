@@ -1,0 +1,48 @@
+#!/bin/bash
+
+set -e
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+if [ "$CONTAINER" == "true" ]; then
+    source ./container_env
+fi
+
+# Ensure bats and its support repos are installed
+if [ ! -x "$(command -v bats)" ]; then
+    if [ "$APPLIANCE" == "true" ]; then
+        echo -e "\033[1;34mInstalling bats...\033[0m"
+        dnf install -y bats
+    else
+        echo -e "\033[1;31mERROR: Unable to find the bats test framework.\033[0m"
+        exit 1
+    fi
+fi
+bats_lib_path=$(echo ${BATS_LIB_PATH:-$HOME/.bats/libs} | cut -d ":" -f 1)
+if [ ! -d "$bats_lib_path/bats-support" ]; then
+    echo -e "\033[1;34mInstalling bats-support...\033[0m"
+    git clone https://github.com/bats-core/bats-support $bats_lib_path/bats-support
+fi
+if [ ! -d "$bats_lib_path/bats-assert" ]; then
+    echo -e "\033[1;34mInstalling bats-assert...\033[0m"
+    git clone https://github.com/bats-core/bats-assert $bats_lib_path/bats-assert
+fi
+
+# Ensure the test files exist. If not, clone from upstream github master
+if [ ! -d "./spec/lib/ansible" ]; then
+    echo -e "\033[1;34mCloning ansible specs...\033[0m"
+    rm -rf /tmp/manageiq
+    git clone --no-checkout --depth=1 --filter=tree:0 https://github.com/ManageIQ/manageiq /tmp/manageiq
+    pushd /tmp/manageiq
+        git sparse-checkout set --no-cone /spec/lib/ansible
+        git checkout
+    popd
+
+    mkdir -p ./spec/lib
+    cp -r /tmp/manageiq/spec/lib/ansible ./spec/lib
+    rm -rf /tmp/manageiq
+fi
+
+# Run the tests
+echo -e "\033[1;34mRunning tests...\033[0m"
+exec bats ./spec/lib/ansible/runner_execution_spec.bats
