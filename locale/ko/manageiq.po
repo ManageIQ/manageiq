@@ -10422,11 +10422,11 @@ msgstr[0] "컨테이너 프로젝트"
 
 msgid "Container Project (Kubernetes)"
 msgid_plural "Container Projects (Kubernetes)"
-msgstr[0] "Container Projects (Kubernetes)"
+msgstr[0] "컨테이너 프로젝트(Kubernetes)"
 
 msgid "Container Project (OpenShift)"
 msgid_plural "Container Projects (OpenShift)"
-msgstr[0] "Container Projects (OpenShift)"
+msgstr[0] "컨테이너 프로젝트(OpenShift)"
 
 msgid "Container Project Compliance Check"
 msgstr "컨테이너 프로젝트 준수 확인"
