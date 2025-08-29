@@ -139,19 +139,19 @@ exec_ansible_runner_role() {
   rails runner "resp = Ansible::Runner.run_role({}, {}, '$1', roles_path: '$ROLES_DIR'); puts resp.human_stdout; exit resp.return_code"
 }
 
-@test "[Ansible::Runner] runs a playbook" {
+@test "[Ansible::Runner#run] runs a playbook" {
   run exec_ansible_runner hello_world.yml
   assert_success
   assert_output --partial '"msg": "Hello World!"'
 }
 
-@test "[Ansible::Runner] runs a playbook with variables in a vars file" {
+@test "[Ansible::Runner#run] runs a playbook with variables in a vars file" {
   run exec_ansible_runner hello_world_vars_file.yml
   assert_success
   assert_output --partial '"msg": "Hello World! vars_file_1=vars_file_1_value, vars_file_2=vars_file_2_value"'
 }
 
-@test "[Ansible::Runner] runs a playbook with vault encrypted variables" {
+@test "[Ansible::Runner#run] runs a playbook with vault encrypted variables" {
   skip "requires database access"
 
   run exec_ansible_runner hello_world_vault_encrypted_vars.yml
@@ -159,7 +159,7 @@ exec_ansible_runner_role() {
   assert_output --partial '"msg": "Hello World! (NOTE: This message has been encrypted with ansible-vault)"'
 }
 
-@test "[Ansible::Runner] runs a playbook with variables in a vault encrypted vars file" {
+@test "[Ansible::Runner#run] runs a playbook with variables in a vault encrypted vars file" {
   skip "requires database access"
 
   run exec_ansible_runner hello_world_vault_encrypted_vars_file.yml
@@ -167,13 +167,13 @@ exec_ansible_runner_role() {
   assert_output --partial '"msg": "Hello World! vars_file_1=vars_file_1_value, vars_file_2=vars_file_2_value"'
 }
 
-@test "[Ansible::Runner] runs a playbook using roles from github" {
+@test "[Ansible::Runner#run] runs a playbook using roles from github" {
   run exec_ansible_runner hello_world_with_requirements_github/hello_world_with_requirements_github.yml
   assert_success
   assert_output --partial '"msg": "Hello World! example_var='\''example var value'\''"'
 }
 
-@test "[Ansible::Runner] runs a role" {
+@test "[Ansible::Runner#run_role] runs a role" {
   setup_roles_dir $ROLES_DIR $DATA_DIR/hello_world_with_requirements_github/roles/requirements.yml
 
   run exec_ansible_runner_role manageiq.example
@@ -181,7 +181,7 @@ exec_ansible_runner_role() {
   assert_output --partial '"msg": "Hello from manageiq.example role! example_var='\''example var value'\''"'
 }
 
-@test "[Ansible::Runner] vmware collection" {
+@test "[Ansible::Runner#run] vmware collection" {
   if [ ! -d /var/lib/manageiq/venv ]; then
     skip "manageiq venv collections are not present"
   fi
@@ -191,12 +191,84 @@ exec_ansible_runner_role() {
   assert_output --partial '"msg": "Unknown error while connecting to vCenter or ESXi API at vcenter_hostname:443 : [Errno -2] Name or service not known"'
 }
 
-@test "[Ansible::Runner] aws collection" {
+@test "[Ansible::Runner#run] aws collection" {
   if [ ! -d /var/lib/manageiq/venv ]; then
     skip "manageiq venv collections are not present"
   fi
 
   run exec_ansible_runner aws.yml
+  assert_failure # We expect to this to fail due to connecting with bad creds
+  assert_output --partial '"msg": "Failed to describe instances: An error occurred (AuthFailure) when calling the DescribeInstances operation: AWS was not able to validate the provided access credentials"'
+}
+
+################################################################################
+
+exec_ansible_runner_async() {
+  rails runner "resp = Ansible::Runner.run_async({}, {}, '$DATA_DIR/$1').wait(5); puts resp.human_stdout; exit resp.return_code"
+}
+
+exec_ansible_runner_role_async() {
+  rails runner "resp = Ansible::Runner.run_role_async({}, {}, '$1', roles_path: '$ROLES_DIR').wait(5); puts resp.human_stdout; exit resp.return_code"
+}
+
+@test "[Ansible::Runner#run_async] runs a playbook" {
+  run exec_ansible_runner_async hello_world.yml
+  assert_success
+  assert_output --partial '"msg": "Hello World!"'
+}
+
+@test "[Ansible::Runner#run_async] runs a playbook with variables in a vars file" {
+  run exec_ansible_runner_async hello_world_vars_file.yml
+  assert_success
+  assert_output --partial '"msg": "Hello World! vars_file_1=vars_file_1_value, vars_file_2=vars_file_2_value"'
+}
+
+@test "[Ansible::Runner#run_async] runs a playbook with vault encrypted variables" {
+  skip "requires database access"
+
+  run exec_ansible_runner_async hello_world_vault_encrypted_vars.yml
+  assert_success
+  assert_output --partial '"msg": "Hello World! (NOTE: This message has been encrypted with ansible-vault)"'
+}
+
+@test "[Ansible::Runner#run_async] runs a playbook with variables in a vault encrypted vars file" {
+  skip "requires database access"
+
+  run exec_ansible_runner_async hello_world_vault_encrypted_vars_file.yml
+  assert_success
+  assert_output --partial '"msg": "Hello World! vars_file_1=vars_file_1_value, vars_file_2=vars_file_2_value"'
+}
+
+@test "[Ansible::Runner#run_async] runs a playbook using roles from github" {
+  run exec_ansible_runner_async hello_world_with_requirements_github/hello_world_with_requirements_github.yml
+  assert_success
+  assert_output --partial '"msg": "Hello World! example_var='\''example var value'\''"'
+}
+
+@test "[Ansible::Runner#run_role_async] runs a role" {
+  setup_roles_dir $ROLES_DIR $DATA_DIR/hello_world_with_requirements_github/roles/requirements.yml
+
+  run exec_ansible_runner_role_async manageiq.example
+  assert_success
+  assert_output --partial '"msg": "Hello from manageiq.example role! example_var='\''example var value'\''"'
+}
+
+@test "[Ansible::Runner#run_async] vmware collection" {
+  if [ ! -d /var/lib/manageiq/venv ]; then
+    skip "manageiq venv collections are not present"
+  fi
+
+  run exec_ansible_runner_async vmware.yml
+  assert_failure # We expect to this to fail due to connecting to an unknown vcenter
+  assert_output --partial '"msg": "Unknown error while connecting to vCenter or ESXi API at vcenter_hostname:443 : [Errno -2] Name or service not known"'
+}
+
+@test "[Ansible::Runner#run_async] aws collection" {
+  if [ ! -d /var/lib/manageiq/venv ]; then
+    skip "manageiq venv collections are not present"
+  fi
+
+  run exec_ansible_runner_async aws.yml
   assert_failure # We expect to this to fail due to connecting with bad creds
   assert_output --partial '"msg": "Failed to describe instances: An error occurred (AuthFailure) when calling the DescribeInstances operation: AWS was not able to validate the provided access credentials"'
 }
