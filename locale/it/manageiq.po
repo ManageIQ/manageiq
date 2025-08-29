@@ -2870,7 +2870,7 @@ msgid "Add a Configuration Script Payload"
 msgstr "Aggiungi un payload dello script di configurazione"
 
 msgid "Add a Container Project"
-msgstr "Aggiungere un Container Project"
+msgstr "Aggiungere un progetto contenitore"
 
 msgid "Add a Containers Provider"
 msgstr "Aggiungi un provider contenitori"
@@ -11030,13 +11030,13 @@ msgstr[1] "Progetti contenitore"
 
 msgid "Container Project (Kubernetes)"
 msgid_plural "Container Projects (Kubernetes)"
-msgstr[0] "Container Project (Kubernetes)"
-msgstr[1] "Container Projects (Kubernetes)"
+msgstr[0] "Progetto contenitore (Kubernetes)"
+msgstr[1] "Progetti contenitore (Kubernetes)"
 
 msgid "Container Project (OpenShift)"
 msgid_plural "Container Projects (OpenShift)"
-msgstr[0] "Container Project (OpenShift)"
-msgstr[1] "Container Projects (OpenShift)"
+msgstr[0] "Progetti contenitore (OpenShift)"
+msgstr[1] "Progetti contenitore (OpenShift)"
 
 msgid "Container Project Compliance Check"
 msgstr "Controllo di conformità del progetto contenitore"
@@ -33152,7 +33152,7 @@ msgid "Modify Configuration Script Payloads"
 msgstr "Modifica payload dello script di configurazione"
 
 msgid "Modify Container Projects"
-msgstr "Modificare i progetti dei contenitori"
+msgstr "Modificare i progetti contenitori"
 
 msgid "Modify Containers"
 msgstr "Modifica contenitori"
@@ -33625,7 +33625,7 @@ msgid "Must specify a floating_ip"
 msgstr "È necessario specificare un floating_ip"
 
 msgid "Must specify a name for the container project"
-msgstr "Deve specificare un nome per il progetto del contenitore"
+msgstr "Deve specificare un nome per il progetto contenitore"
 
 msgid "Must specify a new_description"
 msgstr "È necessario specificare una nuova_descrizione"
@@ -41348,7 +41348,7 @@ msgid "Remove Configuration Manager Providers"
 msgstr "Rimuovi provider gestore configurazione"
 
 msgid "Remove Container Projects"
-msgstr "Rimuovere i progetti di contenitori"
+msgstr "Rimuovere i progetti contenitori"
 
 msgid "Remove Containers Provider"
 msgstr "Rimuovi Provider Contenitori"
