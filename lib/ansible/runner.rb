@@ -163,6 +163,21 @@ module Ansible
         run_in_queue("run_role", user_id, queue_opts, [env_vars, extra_vars, role_name, kwargs])
       end
 
+      # Executes ansible-runner within the venv.
+      #
+      # Prefer the various run_* methods unless you need to run the ansible-runner command directly.
+      #
+      # @param env [Hash] Hash that will be passed as environment variables to ansible-runner
+      # @param params [Hash,Array] Command line parameters to pass to ansible-runner
+      # @return [AwesomeSpawn::CommandResult] Result of the ansible-runner command
+      def raw_execute(env: {}, params:)
+        env = env.merge(runner_env)
+
+        # puts "#{env.map { |k, v| "#{k}=#{v}" }.join(" ")} #{AwesomeSpawn.build_command_line("ansible-runner", params)}"
+
+        AwesomeSpawn.run("ansible-runner", :env => env, :params => params)
+      end
+
       private
 
       # Run a method on self class, via queue, executed by generic worker
@@ -219,7 +234,7 @@ module Ansible
         end
         command_line_hash.merge!(cred_command_line)
 
-        env_vars_hash   = env_vars.merge(cred_env_vars).merge(runner_env)
+        env_vars_hash   = env_vars.merge(cred_env_vars)
         extra_vars_hash = extra_vars.merge(cred_extra_vars)
 
         create_hosts_file(base_dir, hosts)
@@ -228,15 +243,13 @@ module Ansible
 
         params = runner_params(base_dir, ansible_runner_method, playbook_or_role_args, verbosity)
 
-        # puts "#{env_vars_hash.map { |k, v| "#{k}=#{v}" }.join(" ")} #{AwesomeSpawn.build_command_line("ansible-runner", params)}"
-
         begin
           fetch_galaxy_roles(playbook_or_role_args)
 
           result = if async?(ansible_runner_method)
-                     wait_for(base_dir, "pid") { AwesomeSpawn.run("ansible-runner", :env => env_vars_hash, :params => params) }
+                     wait_for(base_dir, "pid") { raw_execute(:env => env_vars_hash, :params => params) }
                    else
-                     AwesomeSpawn.run("ansible-runner", :env => env_vars_hash, :params => params)
+                     raw_execute(:env => env_vars_hash, :params => params)
                    end
 
           res = response(base_dir, ansible_runner_method, result, debug)

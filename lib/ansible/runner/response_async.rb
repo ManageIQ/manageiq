@@ -23,12 +23,12 @@ module Ansible
 
       # @return [Boolean] true if the ansible job is still running, false when it's finished
       def running?
-        AwesomeSpawn.run("ansible-runner", :params => ["is-alive", base_dir, :json, {:ident => "result"}]).success?
+        Ansible::Runner.raw_execute(:params => ["is-alive", base_dir, :json, {:ident => "result"}]).success?
       end
 
       # Stops the running Ansible job
       def stop
-        AwesomeSpawn.run("ansible-runner", :params => ["stop", base_dir, :json, {:ident => "result"}])
+        Ansible::Runner.raw_execute(:params => ["stop", base_dir, :json, {:ident => "result"}])
       end
 
       # @return [Ansible::Runner::Response, NilClass] Response object with all details about the Ansible run, or nil
