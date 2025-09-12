@@ -41,7 +41,7 @@ gem "elif",                             "=0.1.0",            :require => false
 gem "fast_gettext",                     "~>3.1"
 gem "ffi",                              "< 1.17.0",          :require => false # Locked down due to build issue assertion failure on 1.17.3
 gem "gettext_i18n_rails",               "~>1.11"
-gem "gettext_i18n_rails_js",            "~>1.4.0"
+gem "gettext_i18n_rails_js",            "~>2.1.0"
 gem "hamlit",                           "~>2.11.0"
 gem "inifile",                          "~>3.0",             :require => false
 gem "inventory_refresh",                "~>2.2",             :require => false
