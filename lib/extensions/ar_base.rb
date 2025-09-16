@@ -35,8 +35,12 @@ module ActiveRecord
 
     CONNECTIVITY_ERRORS = [ActiveRecord::ConnectionNotEstablished, ActiveRecord::DatabaseConnectionError, ActiveRecord::NoDatabaseError, PG::ConnectionBad].freeze
 
-    def self.connectable?
+    def self.connectable!
       with_connection { |conn| conn.connect! && conn.connected? }
+    end
+
+    def self.connectable?
+      connectable!
     rescue *CONNECTIVITY_ERRORS
       false
     end
