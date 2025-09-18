@@ -83,6 +83,23 @@ module ManageIQ::Providers
       includes(:parent_manager).find_by(:parent_managers_ext_management_systems => {:name => name})
     end
 
+    def create_cloud_network_queue(userid, options = {})
+      task_opts = {
+        :action => "creating Cloud Network for user #{userid}",
+        :userid => userid
+      }
+      queue_opts = {
+        :class_name  => self.class.name,
+        :method_name => 'create_cloud_network',
+        :instance_id => id,
+        :role        => 'ems_operations',
+        :queue_name  => queue_name_for_ems_operations,
+        :zone        => my_zone,
+        :args        => [options]
+      }
+      MiqTask.generic_action_with_callback(task_opts, queue_opts)
+    end
+
     def create_cloud_subnet_queue(userid, options = {})
       task_opts = {
         :action => "creating Cloud Subnet for user #{userid}",
@@ -93,6 +110,92 @@ module ManageIQ::Providers
         :method_name => 'create_cloud_subnet',
         :instance_id => id,
         :role        => 'ems_operations',
+        :queue_name  => queue_name_for_ems_operations,
+        :zone        => my_zone,
+        :args        => [options]
+      }
+      MiqTask.generic_action_with_callback(task_opts, queue_opts)
+    end
+
+    def create_network_router_queue(userid, options = {})
+      task_opts = {
+        :action => "creating Network Router for user #{userid}",
+        :userid => userid
+      }
+      queue_opts = {
+        :class_name  => self.class.name,
+        :method_name => 'create_network_router',
+        :instance_id => id,
+        :role        => 'ems_operations',
+        :queue_name  => queue_name_for_ems_operations,
+        :zone        => my_zone,
+        :args        => [options]
+      }
+      MiqTask.generic_action_with_callback(task_opts, queue_opts)
+    end
+
+    def create_floating_ip_queue(userid, options = {})
+      task_opts = {
+        :action => "creating Floating IP for user #{userid}",
+        :userid => userid
+      }
+      queue_opts = {
+        :class_name  => self.class.name,
+        :method_name => 'create_floating_ip',
+        :instance_id => id,
+        :role        => 'ems_operations',
+        :queue_name  => queue_name_for_ems_operations,
+        :zone        => my_zone,
+        :args        => [options]
+      }
+      MiqTask.generic_action_with_callback(task_opts, queue_opts)
+    end
+
+    def create_security_group_queue(userid, options = {})
+      task_opts = {
+        :action => "creating Security Group for user #{userid}",
+        :userid => userid
+      }
+      queue_opts = {
+        :class_name  => self.class.name,
+        :method_name => 'create_security_group',
+        :instance_id => id,
+        :role        => 'ems_operations',
+        :queue_name  => queue_name_for_ems_operations,
+        :zone        => my_zone,
+        :args        => [options]
+      }
+      MiqTask.generic_action_with_callback(task_opts, queue_opts)
+    end
+
+    def create_security_policy_queue(userid, options = {})
+      task_opts = {
+        :action => "creating Security Policy for user #{userid}",
+        :userid => userid
+      }
+      queue_opts = {
+        :class_name  => self.class.name,
+        :method_name => 'create_security_policy',
+        :instance_id => id,
+        :role        => 'ems_operations',
+        :queue_name  => queue_name_for_ems_operations,
+        :zone        => my_zone,
+        :args        => [options]
+      }
+      MiqTask.generic_action_with_callback(task_opts, queue_opts)
+    end
+
+    def create_security_policy_rule_queue(userid, options = {})
+      task_opts = {
+        :action => "creating Security Policy Rule for user #{userid}",
+        :userid => userid
+      }
+      queue_opts = {
+        :class_name  => self.class.name,
+        :method_name => 'create_security_policy_rule',
+        :instance_id => id,
+        :role        => 'ems_operations',
+        :queue_name  => queue_name_for_ems_operations,
         :zone        => my_zone,
         :args        => [options]
       }
