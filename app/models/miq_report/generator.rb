@@ -115,19 +115,37 @@ module MiqReport::Generator
     include_as_hash(invent_report_includes)
   end
 
-  # would like this format to go away
+  # converts col_order and sortby (both arrays of column names) to an include hash
+  # this is used when the user does not specify :include in the report
+  #
+  # would like this the hash format to go away
   # will go away when we drop build_reportable_data
   def invent_report_includes
-    return {} unless col_order
+    ret = {}
+    col_order&.each do |col|
+      next unless col.include?(".")
 
-    col_order.each_with_object({}) do |col, ret|
+      *rels, column = col.split(".")
+      if col =~ /managed\./
+        rels.pop # drop managed (we want that to be an array)
+        (rels.inject(ret) { |h, rel| h[rel] ||= {} }["managed"] ||= []) << column
+      elsif col !~ /virtual_custom/
+        (rels.inject(ret) { |h, rel| h[rel] ||= {} }["columns"] ||= []) << column
+      end
+    end
+
+    Array(sortby).each do |col|
       next unless col.include?(".")
 
       *rels, column = col.split(".")
       if col !~ /managed\./ && col !~ /virtual_custom/
-        (rels.inject(ret) { |h, rel| h[rel] ||= {} }["columns"] ||= []) << column
+        dest = (rels.inject(ret) { |h, rel| h[rel] ||= {} }["columns"] ||= [])
+        # typically we're sorting by a column already in the select. so don't double add it
+        dest << column unless dest.include?(column)
       end
     end
+
+    ret
   end
 
   def include_as_hash(includes = include, klass = db_class, klass_cols = cols)

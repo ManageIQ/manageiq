@@ -473,7 +473,7 @@ RSpec.describe MiqReport do
       vm2.tag_with(tag, :ns => "*")
 
       allow(User).to receive_messages(:server_timezone => "UTC")
-      report = MiqReport.new(:db => "Vm", :sortby => %w[storage.name name], :order => "Ascending", :include => {"storage" => {"columns" => ["name"]}})
+      report = MiqReport.new(:db => "Vm", :sortby => %w[storage.name name], :order => "Ascending")
       options = {
         :only   => ["name", "storage.name"],
         :userid => user.userid,
