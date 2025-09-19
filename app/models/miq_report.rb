@@ -321,8 +321,12 @@ class MiqReport < ApplicationRecord
     [result_set_filtered, result_set_filtered.count]
   end
 
-  def self.default_use_sql_view
-    ::Settings.reporting.use_sql_view
+  def self.default_use_sql_view(db_options = nil)
+    if db_options.nil? || db_options[:use_sql_view].nil?
+      ::Settings.reporting.use_sql_view
+    else
+      db_options[:use_sql_view]
+    end
   end
 
   private
