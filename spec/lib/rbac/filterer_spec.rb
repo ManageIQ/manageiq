@@ -663,8 +663,8 @@ RSpec.describe Rbac::Filterer do
         end
       end
 
-      context "with :include_for_find" do
-        let(:include_search) { search_attributes.merge(:include_for_find => {:evm_owner => {}}) }
+      context "with :include_for_find and references" do
+        let(:include_search) { search_attributes.merge(:include_for_find => {:evm_owner => {}}, :references => {:evm_owner => {}}) }
         let(:results)        { subject.search(include_search).first }
 
         it "finds the Vms" do
@@ -700,6 +700,23 @@ RSpec.describe Rbac::Filterer do
       end
     end
 
+    context "with a miq_expression filter on a belongs_to" do
+      let(:host1) { FactoryBot.create(:host, :name => "Host1") }
+      let(:host2) { FactoryBot.create(:host, :name => "Host2") }
+      let(:vms1)  { FactoryBot.create_list(:vm, 2, :host => host1) }
+      let(:vms2)  { FactoryBot.create_list(:vm, 1, :host => host2) }
+      let(:expression)        { MiqExpression.new("=" => {"field" => "Vm.host-name", "value" => host1.name}) }
+      let(:search_attributes) { {:class => "Vm", :filter => expression} }
+      let(:results)           { described_class.search(search_attributes).first }
+
+      it "finds the Vms" do
+        vms1
+        vms2
+        expect(results.to_a).to match_array(vms1)
+        expect(results.count).to eq vms1.size
+      end
+    end
+
     context "with a miq_expression filter on vms" do
       let(:expression)        { MiqExpression.new("=" => {"field" => "Vm-vendor", "value" => "vmware"}) }
       let(:search_attributes) { {:class => "Vm", :filter => expression} }
@@ -717,7 +734,7 @@ RSpec.describe Rbac::Filterer do
       end
 
       context "with :include_for_find" do
-        let(:include_search) { search_attributes.merge(:include_for_find => {:evm_owner => {}}) }
+        let(:include_search) { search_attributes.merge(:include_for_find => {:evm_owner => {}}, :references => {:evm_owner => {}}) }
         let(:results)        { described_class.search(include_search).first }
 
         it "finds the Service" do
@@ -747,7 +764,7 @@ RSpec.describe Rbac::Filterer do
       end
 
       context "with :include_for_find" do
-        let(:include_search) { search_attributes.merge(:include_for_find => {:evm_owner => {}}) }
+        let(:include_search) { search_attributes.merge(:include_for_find => {:evm_owner => {}}, :references => {:evm_owner => {}}) }
         let(:results)        { described_class.search(include_search).first }
 
         it "finds the Service" do
@@ -1187,10 +1204,12 @@ RSpec.describe Rbac::Filterer do
                                  :references       => @include
         end.to raise_error(Rbac::PolymorphicError)
 
-        expect do
-          described_class.search :class            => "MetricRollup",
-                                 :include_for_find => @include
-        end.to raise_error(Rbac::PolymorphicError)
+        # this code assumes we default references = include. It passes if this is false
+        # commenting out because we are testing not defaulting this anymore
+        # expect do
+        #   described_class.search :class            => "MetricRollup",
+        #                          :include_for_find => @include
+        # end.to raise_error(Rbac::PolymorphicError)
       end
 
       it "does not raise an error when a polymorphic reflection is only included" do

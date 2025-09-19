@@ -203,7 +203,7 @@ module Rbac
     # @option options :where_clause  [] same as conditions. used in one place. would like to remove
     # @option options :sub_filter    [Nil|Array<String>] ui advanced search filter
     # @option options :include_for_find [Array<Symbol>, Hash{Symbol => Symbol,Hash,Array}] models included but not in query
-    # @option options :references   [Array<Symbol>], models used by select and where. If not passed, uses include_for_find instead
+    # @option options :references   [Array<Symbol>], models used by select and where.
     # @option options :filter       [MiqExpression] (optional)
 
     # @option options :user         [User]     (default: current_user)
@@ -236,7 +236,7 @@ module Rbac
       where_clause      = options[:where_clause]
       sub_filter        = options[:sub_filter]
       include_for_find  = options[:include_for_find]
-      references        = options.fetch(:references) { include_for_find }
+      references        = options[:references]
       search_filter     = options[:filter]
 
       limit             = options[:limit]  || targets.try(:limit_value)
