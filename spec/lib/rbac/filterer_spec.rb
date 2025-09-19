@@ -1203,16 +1203,14 @@ RSpec.describe Rbac::Filterer do
                                  :include_for_find => @include,
                                  :references       => @include
         end.to raise_error(Rbac::PolymorphicError)
-
-        # this code assumes we default references = include. It passes if this is false
-        # commenting out because we are testing not defaulting this anymore
-        # expect do
-        #   described_class.search :class            => "MetricRollup",
-        #                          :include_for_find => @include
-        # end.to raise_error(Rbac::PolymorphicError)
       end
 
       it "does not raise an error when a polymorphic reflection is only included" do
+        expect do
+          described_class.search :class            => "MetricRollup",
+                                 :include_for_find => @include
+        end.not_to raise_error
+
         # NOTE:  if references is passed in, but is blank, then it is fine
         expect do
           described_class.search :class            => "MetricRollup",
