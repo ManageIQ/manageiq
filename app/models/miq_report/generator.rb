@@ -80,39 +80,52 @@ module MiqReport::Generator
     @table2class[table]
   end
 
+  # Used for scope.includes(get_include_for_find)
+  # this includes the :tags association
   def get_include_for_find
-    get_include.deep_merge(include_for_find || {}).presence
+    get_include(:include_tags => true).deep_merge(include_for_find || {}).presence
   end
 
-  def get_include
-    include_as_hash(include.presence || invent_report_includes)
+  # Used for scope.references() => :get_include
+  # References do not include the :tags association. (they are not in the select query)
+  def get_include(include_tags: false)
+    include_as_hash(include.presence || invent_report_includes, :include_tags => include_tags)
   end
 
-  def polymorphic_includes
+  # determine all includes that are polymorphic for includes and references
+  # these are removed from the includes and references since we can't preload polymorphic associations
+  private def polymorphic_includes
     @polymorphic_includes ||= begin
-      top_level_rels = Array(get_include.try(:keys)) + Array(get_include_for_find.try(:keys))
+      top_level_rels = Array(get_include(:include_tags => true).try(:keys)) + Array(get_include_for_find.try(:keys))
 
       top_level_rels.uniq.each_with_object([]) do |assoc, polymorphic_rels|
         reflection = db_class.reflect_on_association(assoc)
-        polymorphic_rels << assoc if reflection && reflection.polymorphic?
+        polymorphic_rels << assoc.to_sym if reflection && reflection.polymorphic?
       end
     end
   end
 
+  # used for includes(get_include_for_find_rbac)
   def get_include_for_find_rbac
     polymorphic_includes.each_with_object(get_include_for_find.dup) do |key, includes|
       includes.delete(key)
     end
   end
 
+  # used for references(get_include_rbac)
   def get_include_rbac
     polymorphic_includes.each_with_object(get_include.dup) do |key, includes|
       includes.delete(key)
     end
   end
 
-  def invent_includes
-    include_as_hash(invent_report_includes)
+  # Please use get_include instead
+  # Or for mega granularity, use invent_report_includes
+  #
+  # This is used by report_sanity_checker since it compares invented to defined includes
+  # report_sanity_checker mostly deals with includes, so using tag reference by default
+  def invent_includes(include_tags: true)
+    include_as_hash(invent_report_includes, :include_tags => include_tags)
   end
 
   # converts col_order and sortby (both arrays of column names) to an include hash
@@ -122,33 +135,20 @@ module MiqReport::Generator
   # will go away when we drop build_reportable_data
   def invent_report_includes
     ret = {}
-    col_order&.each do |col|
+    (Array(col_order) + Array(sortby)).each_with_object({}) do |col, ret|
       next unless col.include?(".")
+      next if col =~ /virtual_custom/
 
       *rels, column = col.split(".")
-      if col =~ /managed\./
-        rels.pop # drop managed (we want that to be an array)
-        (rels.inject(ret) { |h, rel| h[rel] ||= {} }["managed"] ||= []) << column
-      elsif col !~ /virtual_custom/
-        (rels.inject(ret) { |h, rel| h[rel] ||= {} }["columns"] ||= []) << column
-      end
-    end
-
-    Array(sortby).each do |col|
-      next unless col.include?(".")
-
-      *rels, column = col.split(".")
-      if col !~ /managed\./ && col !~ /virtual_custom/
-        dest = (rels.inject(ret) { |h, rel| h[rel] ||= {} }["columns"] ||= [])
-        # typically we're sorting by a column already in the select. so don't double add it
-        dest << column unless dest.include?(column)
-      end
-    end
-
-    ret
+      dest = rels.inject(ret) { |h, rel| (h["include"] ||= {})[rel] ||= {} }["columns"] ||= []
+      # sortby tends to be a duplicate
+      dest << column unless dest.include?(column)
+    end["include"]
   end
 
-  def include_as_hash(includes = include, klass = db_class, klass_cols = cols)
+  # generates a rails hash that can be used in scope.includes()
+  # @param include_tags [Boolean] true to include tags. includes() likes tags, while references() does not.
+  def include_as_hash(includes = include, klass = db_class, klass_cols = cols, include_tags: true)
     result = {}
     if klass_cols && klass && klass.respond_to?(:virtual_attribute?)
       klass_cols.each do |c|
@@ -159,13 +159,17 @@ module MiqReport::Generator
     if includes.kind_of?(Hash)
       includes.each do |k, v|
         k = k.to_sym
+        v ||= {}
         if k == :managed
-          result[:tags] = {}
+          # TODO: Is there a way to just include specific tags?
+          result[:tags] = {} if include_tags
         else
           assoc_reflection = klass.reflect_on_association(k)
           assoc_klass = (assoc_reflection.options[:polymorphic] ? k : assoc_reflection.klass) if assoc_reflection
 
-          result[k] = include_as_hash(v && v["include"], assoc_klass, v && v["columns"])
+          child = include_as_hash(v["include"], assoc_klass, v["columns"], :include_tags => include_tags)
+          # prune out managed entries (non columns) when tagging is disabled
+          result[k] = child if v["columns"].present? || child.present?
         end
       end
     elsif includes.kind_of?(Array)

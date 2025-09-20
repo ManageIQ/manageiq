@@ -141,15 +141,9 @@ RSpec.describe MiqReport do
     end
 
     let(:report) do
-      MiqReport.new(:name      => "Custom VM report",
-                    :title     => "Custom VM report",
-                    :rpt_group => "Custom",
-                    :rpt_type  => "Custom",
-                    :db        => "ManageIQ::Providers::InfraManager::Vm",
+      MiqReport.new(:db        => "ManageIQ::Providers::InfraManager::Vm",
                     :cols      => %w[name num_disks],
-                    :include   => {"miq_provision_template" => {"columns" => %w[num_hard_disks]}},
                     :col_order => %w[name miq_provision_template.num_hard_disks num_disks],
-                    :headers   => ["Name", "Provisioned From Template Number of Hard Disks", "Number of Disks"],
                     :order     => "Ascending")
     end
 

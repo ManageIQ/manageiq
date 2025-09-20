@@ -82,6 +82,7 @@ RSpec.describe MiqExpression::Tag do
       expect(described_class.parse(tag)).to be_nil
     end
 
+    # is this still valid?
     it "supports managed-tag (no model)" do
       tag = "managed-service_level"
       expect(described_class.parse(tag)).to have_attributes(:model        => nil,

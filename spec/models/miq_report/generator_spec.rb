@@ -197,7 +197,7 @@ RSpec.describe MiqReport::Generator do
     it "uses include and include_as_hash" do
       rpt = MiqReport.new(:db               => "VmOrTemplate",
                           :cols             => %w[name platform],
-                          :include          => {:host => {:columns => %w[name]}, :storage => {:columns => %w[name]}},
+                          :include          => {"host" => {"columns" => %w[name]}, "storage" => {"columns" => %w[name]}},
                           :include_for_find => {:snapshots => {}})
       expect(rpt.get_include_for_find).to eq(:platform => {}, :host => {}, :storage => {}, :snapshots => {})
     end
@@ -218,6 +218,18 @@ RSpec.describe MiqReport::Generator do
                           :col_order        => %w[name v_datastore_path host.name storage.name],
                           :include_for_find => {:snapshots => {}})
       expect(rpt.get_include_for_find).to eq(:v_datastore_path => {}, :host => {}, :storage => {}, :snapshots => {})
+    end
+
+    it "uses col_order to add taggings" do
+      rpt = MiqReport.new(:db               => "VmOrTemplate",
+                          :col_order        => %w[name host.name managed.tag1])
+      expect(rpt.get_include_for_find).to eq(:host => {}, :tags => {})
+    end
+
+    it "uses multi leveled col_order" do
+      rpt = MiqReport.new(:db               => "VmOrTemplate",
+                          :col_order        => %w[name host.name ems_cluster.managed.tag2])
+      expect(rpt.get_include_for_find).to eq(:host => {}, :ems_cluster => {:tags => {}})
     end
   end
 
@@ -243,7 +255,7 @@ RSpec.describe MiqReport::Generator do
     it "uses include and include_as_hash" do
       rpt = MiqReport.new(:db               => "VmOrTemplate",
                           :cols             => %w[name platform],
-                          :include          => {:host => {:columns => %w[name]}, :storage => {:columns => %w[name]}},
+                          :include          => {"host" => {"columns" => %w[name]}, "storage" => {"columns" => %w[name]}},
                           :include_for_find => {:snapshots => {}})
       expect(rpt.get_include).to eq(:platform => {}, :host => {}, :storage => {})
     end
@@ -264,6 +276,31 @@ RSpec.describe MiqReport::Generator do
                           :col_order        => %w[name v_datastore_path host.name storage.name],
                           :include_for_find => {:snapshots => {}})
       expect(rpt.get_include).to eq(:v_datastore_path => {}, :host => {}, :storage => {})
+    end
+
+    it "uses col_order but doesn't add taggings" do
+      rpt = MiqReport.new(:db               => "VmOrTemplate",
+                          :col_order        => %w[name host.name managed.tag1])
+      expect(rpt.get_include).to eq(:host => {})
+    end
+
+    it "uses multi leveled col_order" do
+      rpt = MiqReport.new(:db               => "VmOrTemplate",
+                          :col_order        => %w[name host.name ems_cluster.managed.tag2])
+      #TODO: just tag, should we mention ems_cluster at all?
+      expect(rpt.get_include).to eq(:host => {})
+    end
+
+    it "uses multi leveled col_order" do
+      rpt = MiqReport.new(:db               => "VmOrTemplate",
+                          :col_order        => %w[name host.name ems_cluster.name ems_cluster.managed.tag2])
+      expect(rpt.get_include).to eq(:host => {}, :ems_cluster => {})
+    end
+
+    it "uses multi leveled col_order" do
+      rpt = MiqReport.new(:db               => "VmOrTemplate",
+                          :col_order        => %w[name host.ems_cluster.name])
+      expect(rpt.get_include).to eq(:host => {:ems_cluster => {}})
     end
   end
 
