@@ -194,6 +194,10 @@ group :nuage, :manageiq_default do
   manageiq_plugin "manageiq-providers-nuage"
 end
 
+group :nutanix, :manageiq_default do
+  manageiq_plugin "manageiq-providers-nutanix"
+end
+
 group :oracle_cloud, :manageiq_default do
   manageiq_plugin "manageiq-providers-oracle_cloud"
 end
