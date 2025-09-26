@@ -173,8 +173,8 @@ module AssignmentMixin
       records = kind_of?(Class) ? all : self
       assignment_map = records.index_by { |a| a.id }
       Tag
-        .includes(:taggings).references(:taggings)
-        .where("taggings.taggable_type = ? and tags.name like ?", name, "#{namespace}/%")
+        .eager_load(:taggings).where(:taggings => {:taggable_type => name})
+        .where("tags.name like ?", "#{namespace}/%")
         .each_with_object(Hash.new { |h, k| h[k] = [] }) do |tag, ret|
           tag.taggings.each do |tagging|
             tag_name = Tag.filter_ns([tag], namespace).first
