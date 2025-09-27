@@ -28,9 +28,10 @@ ActiveRecord::Base.transaction do
   condition_for_mapped_tags = ProviderTagMapping::TAG_PREFIXES.map { "tags.name LIKE ?" }.join(' OR ')
   tag_values = ProviderTagMapping::TAG_PREFIXES.map { |x| "#{x}%:%" }
 
+  # TODO: do we want eager_load, or left join these
   Classification.where.not(:id => Classification.region_to_range) # only other regions(not current, we expected that current region is global)
                 .is_category
-                .includes(:tag, :children).references(:tag, :children)
+                .eager_load(:tag, :children)
                 .where(condition_for_mapped_tags, *tag_values) # only mapped categories
                 .find_each do |category|
     new_parent_category = Classification.in_my_region.find_by(:description => category.description)
