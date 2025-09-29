@@ -1,6 +1,4 @@
 module Rbac
-  class PolymorphicError < ArgumentError; end
-
   class Filterer
     # This list is used to detemine whether RBAC, based on assigned tags, should be applied for a class in a search that is based on the class.
     # Classes should be added to this list ONLY after:
@@ -326,8 +324,8 @@ module Rbac
         inner_scope = scope.except(:select, :includes, :references, :eager_load, :preload)
         # similar to include_references but using joins
         # TODO: optimization: Can we remove these from the outer query?
-        inner_scope = add_joins(klass, inner_scope, references)
-        inner_scope = add_joins(klass, inner_scope, exp_includes)
+        inner_scope = add_joins(klass, inner_scope, klass.prune_references(references))
+        inner_scope = add_joins(klass, inner_scope, klass.prune_references(exp_includes))
         if inner_scope.order_values.present?
           inner_scope = apply_select(klass, inner_scope, select_from_order_columns(inner_scope.order_values))
         end
@@ -375,8 +373,6 @@ module Rbac
       targets = targets.to_a if targets.kind_of?(Enumerator::Lazy)
 
       return targets, attrs
-    rescue ActiveRecord::EagerLoadPolymorphicError
-      raise Rbac::PolymorphicError
     end
 
     def is_sti?(klass)
@@ -428,7 +424,7 @@ module Rbac
 
     def include_references(scope, klass, includes, references, exp_includes)
       if scope.respond_to?(:eager_load)
-        scope.eager_load(references || []).eager_load(exp_includes || []).preload(includes)
+        scope.eager_load(klass.prune_references(references)).eager_load(exp_includes || []).preload(includes)
       else
         # TODO: add eager_load/preload support to QueryRelation/ActsAsArModel
         # Then drop this if block and includes_to_references
@@ -441,6 +437,9 @@ module Rbac
     def add_joins(klass, scope, includes)
       return scope unless includes
 
+      # NOTE: We should be pre-pruning polymorphic out of here. So they shouldn't come in
+      #       either way, want a distinct for collections (to safeguard has_many values).
+      # NOTE: This does not recurse, so not a complete implementation for pruning/distinct
       includes = Array(includes) unless includes.kind_of?(Enumerable)
       includes.each do |association, value|
         reflection = klass.reflect_on_association(association)

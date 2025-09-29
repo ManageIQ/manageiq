@@ -88,29 +88,6 @@ module MiqReport::Generator
     include_as_hash(include.presence || invent_report_includes)
   end
 
-  def polymorphic_includes
-    @polymorphic_includes ||= begin
-      top_level_rels = Array(get_include.try(:keys)) + Array(get_include_for_find.try(:keys))
-
-      top_level_rels.uniq.each_with_object([]) do |assoc, polymorphic_rels|
-        reflection = db_class.reflect_on_association(assoc)
-        polymorphic_rels << assoc if reflection && reflection.polymorphic?
-      end
-    end
-  end
-
-  def get_include_for_find_rbac
-    polymorphic_includes.each_with_object(get_include_for_find.dup) do |key, includes|
-      includes.delete(key)
-    end
-  end
-
-  def get_include_rbac
-    polymorphic_includes.each_with_object(get_include.dup) do |key, includes|
-      includes.delete(key)
-    end
-  end
-
   def invent_includes
     include_as_hash(invent_report_includes)
   end
@@ -291,7 +268,7 @@ module MiqReport::Generator
                             .where(options[:where_clause])
                             .where(:timestamp => performance_report_time_range)
                             .preload(get_include_for_find)
-                            .eager_load(get_include)
+                            .eager_load(db_class.prune_references(get_include))
                             .limit(options[:limit])
     results = Rbac.filtered(results, :class        => db,
                                      :filter       => conditions,
@@ -306,7 +283,7 @@ module MiqReport::Generator
                       .where(where_clause)
                       .where(options[:where_clause])
                       .preload(get_include_for_find)
-                      .eager_load(get_include)
+                      .eager_load(db_class.prune_references(get_include))
                       .limit(options[:limit])
 
     # Rbac will only add miq_expression for hourly report. It will not work properly for daily because many values are rolled up from hourly.
@@ -339,8 +316,8 @@ module MiqReport::Generator
     rbac_opts = options.merge(
       :targets          => targets,
       :filter           => conditions,
-      :include_for_find => get_include_for_find_rbac,
-      :references       => get_include_rbac,
+      :include_for_find => get_include_for_find,
+      :references       => get_include,
       :skip_counts      => true
     )
 

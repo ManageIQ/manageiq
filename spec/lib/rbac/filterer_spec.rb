@@ -1169,51 +1169,28 @@ RSpec.describe Rbac::Filterer do
         }
       end
 
-      # NOTE:  Think long and hard before you consider removing this test.
-      # Many-a-hours wasted here determining this bug that resulted in
-      # re-adding this test again.
+      # We've had an on and off again success with polymorphics (first documented in 2015 by Greg Tanzillo)
+      # references().includes() with polymorphic does not work
+      # now that we've converted to preload and eager_load, this is no longer an issue
       #
-      # 2nd NOTE:  I did think (and wrote the above comment as well), however,
-      # now it seems we DO NOT SUPPORT polymorphic code, since we removed it
-      # here:
+      # Since we've been so mix and match, please leave this test in here
       #
-      #   https://github.com/ManageIQ/manageiq/commit/8cc2277b
-      #
-      # That said, we should make sure this is erroring and no other callers
-      # are trying to do this (example:  MiqReport), so make sure this raises
-      # an error to inform the caller that fixing needs to happen.
-      #
-      it "raises an error when a polymorphic reflection is included and referenced" do
-        # NOTE: Fails if :references is passed with a value, or with no key,
-        # which it uses :include_for_find as the default.
+      it "does not raises an error when a polymorphic reflection is included and referenced" do
+        # We currently do this, though TBH/ this is not valid. You should not be able to pass a polymorphic to references
+        # would be better if we changed the callers to search/filter so they don't pass invalid values into references
         expect do
           described_class.search :class            => "MetricRollup",
                                  :include_for_find => @include,
                                  :references       => @include
-        end.to raise_error(Rbac::PolymorphicError)
+        end.not_to raise_error
 
-        expect do
-          described_class.search :class            => "MetricRollup",
-                                 :include_for_find => @include
-        end.to raise_error(Rbac::PolymorphicError)
-      end
-
-      it "does not raise an error when a polymorphic reflection is only included" do
-        # NOTE:  if references is passed in, but is blank, then doesn't override and is fine
+        # NOTE:  if references is passed in, but is blank, then doesn't default and is fine
         expect do
           described_class.search :class            => "MetricRollup",
                                  :include_for_find => @include,
                                  :references       => {}
         end.not_to raise_error
 
-        expect do
-          described_class.search :class            => "MetricRollup",
-                                 :include_for_find => @include,
-                                 :references       => nil
-        end.not_to raise_error
-
-        # ensure going forward that polymorphics can be passed as references
-        # this has been broken and fixed many times. Please don't remove
         expect do
           described_class.search :class            => "MetricRollup",
                                  :include_for_find => @include,
@@ -2607,9 +2584,6 @@ RSpec.describe Rbac::Filterer do
       end
 
       it "handles polymorphic" do
-        # NOTE: will undo this pending soon
-        pending "expose another polymorphic includes issue"
-
         EvmSpecHelper.local_miq_server
 
         resource = FactoryBot.create(:host_vmware)
@@ -2782,7 +2756,7 @@ RSpec.describe Rbac::Filterer do
         resulting_scope  = subject.send(:include_references, *method_args)
 
         expect(resulting_scope.preload_values).to eq([include_for_find])
-        expect(resulting_scope.eager_load_values).to eq([include_for_find])
+        expect(resulting_scope.eager_load_values).to eq([])
       end
     end
 
@@ -2795,7 +2769,7 @@ RSpec.describe Rbac::Filterer do
         resulting_scope  = subject.send(:include_references, *method_args)
 
         expect(resulting_scope.preload_values).to eq([include_for_find])
-        expect(resulting_scope.eager_load_values).to eq([include_for_find])
+        expect(resulting_scope.eager_load_values).to eq([{:host => {}}])
       end
     end
 
@@ -2808,7 +2782,7 @@ RSpec.describe Rbac::Filterer do
         resulting_scope  = subject.send(:include_references, *method_args)
 
         expect(resulting_scope.preload_values).to eq([include_for_find])
-        expect(resulting_scope.eager_load_values).to eq([include_for_find])
+        expect(resulting_scope.eager_load_values).to eq([])
       end
     end
 
@@ -2821,7 +2795,46 @@ RSpec.describe Rbac::Filterer do
         resulting_scope  = subject.send(:include_references, *method_args)
 
         expect(resulting_scope.preload_values).to eq([include_for_find])
-        expect(resulting_scope.eager_load_values).to eq([include_for_find])
+        expect(resulting_scope.eager_load_values).to eq([])
+      end
+    end
+
+    context "if the include is taggings" do
+      let(:klass)            { Vm }
+      let(:include_for_find) { {:host => {:taggings => {}}} }
+
+      it "does not add taggings to the scope" do
+        method_args      = [scope, klass, include_for_find, include_for_find, nil]
+        resulting_scope  = subject.send(:include_references, *method_args)
+
+        expect(resulting_scope.eager_load_values).to eq([{:host => {}}])
+        expect(resulting_scope.preload_values).to eq([include_for_find])
+      end
+    end
+
+    context "if the include is a virtual association" do
+      let(:klass)            { Vm }
+      let(:include_for_find) { {:processes => {}} }
+
+      it "does not add taggings to the scope" do
+        method_args      = [scope, klass, include_for_find, include_for_find, nil]
+        resulting_scope  = subject.send(:include_references, *method_args)
+
+        expect(resulting_scope.eager_load_values).to eq([])
+        expect(resulting_scope.preload_values).to eq([include_for_find])
+      end
+    end
+
+    context "if the include is a virtual attribute" do
+      let(:klass)            { Vm }
+      let(:include_for_find) { {:hostnames => {}} }
+
+      it "does not add taggings to the scope" do
+        method_args      = [scope, klass, include_for_find, include_for_find, nil]
+        resulting_scope  = subject.send(:include_references, *method_args)
+
+        expect(resulting_scope.eager_load_values).to eq([])
+        expect(resulting_scope.preload_values).to eq([include_for_find])
       end
     end
   end
