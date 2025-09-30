@@ -437,10 +437,20 @@ module Rbac
         reflection = klass.reflect_on_association(association)
         if reflection && !reflection.polymorphic?
           scope = value ? scope.left_outer_joins(association => value) : scope.left_outer_joins(association)
-          scope = scope.distinct if reflection.try(:collection?)
         end
       end
+      scope = scope.distinct if !scope.distinct_value && is_collection?(klass, includes)
       scope
+    end
+
+    def is_collection?(klass, includes)
+      return false unless includes.present?
+
+      Array(includes).each do |association, value|
+        reflection = klass.reflect_on_association(association)
+        return true if reflection&.collection? || !reflection.polymorphic? && is_collection?(reflection.klass, value)
+      end
+      false
     end
 
     def filtered(objects, options = {})
