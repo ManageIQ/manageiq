@@ -55,7 +55,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-gems-pending.git
-  revision: b924c7cd86d37f803b7bce14aa2bea7644d6a3ad
+  revision: c5bc0bc9a32d22e2c7b7e3ca4df28b034ad7018f
   branch: spassky
   specs:
     manageiq-gems-pending (0.1.0)
@@ -67,7 +67,7 @@ GIT
       more_core_extensions (~> 4.5)
       net-ftp (~> 0.1.2)
       nokogiri (~> 1.14, >= 1.14.3)
-      rexml (>= 3.3.6)
+      rexml (>= 3.4.4)
       sys-proctable (~> 1.2.5)
       sys-uname (~> 1.2.1)
       win32ole (~> 1.8.8)
@@ -260,6 +260,16 @@ GIT
       excon (~> 0.71)
 
 GIT
+  remote: https://github.com/ManageIQ/manageiq-providers-nutanix
+  revision: 4c96091fd6ce5e6c75f0fbf64887a8d0cfa79800
+  branch: spassky
+  specs:
+    manageiq-providers-nutanix (0.1.0)
+      nutanix_clustermgmt (~> 0.1)
+      nutanix_vmm (~> 0.1)
+      nutanix_volumes (~> 0.1)
+
+GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openshift
   revision: 3a2c6bdb418d37110c8b632c041c819f844ab104
   branch: spassky
@@ -343,7 +353,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-schema
-  revision: a1d90ec54ef8ca7d7aeabda54a2d7a86b3a19b8a
+  revision: 6882e8cc9ff3f5a22a26aa2434a34ff9b09831ac
   branch: spassky
   specs:
     manageiq-schema (0.1.0)
@@ -941,11 +951,11 @@ GEM
       ed25519 (>= 1.2, < 2.0)
       net-sftp (~> 4.0)
       net-ssh (~> 7.2)
-    manageiq-style (1.5.6)
+    manageiq-style (1.5.7)
       more_core_extensions
       optimist
       rack (>= 2.2.17, < 4)
-      rexml (>= 3.3.9)
+      rexml (>= 3.4.4)
       rubocop (= 1.56.3)
       rubocop-ast (~> 1.40.0)
       rubocop-performance
@@ -1025,6 +1035,12 @@ GEM
       racc (~> 1.4)
     nori (2.7.1)
       bigdecimal
+    nutanix_clustermgmt (0.1.1)
+      typhoeus (~> 1.0, >= 1.0.1)
+    nutanix_vmm (0.1.0)
+      typhoeus (~> 1.0, >= 1.0.1)
+    nutanix_volumes (0.1.0)
+      typhoeus (~> 1.0, >= 1.0.1)
     oauth (1.1.0)
       oauth-tty (~> 1.0, >= 1.0.1)
       snaky_hash (~> 2.0)
@@ -1091,7 +1107,7 @@ GEM
       more_core_extensions
     raabro (1.4.0)
     racc (1.8.1)
-    rack (2.2.17)
+    rack (2.2.18)
     rack-attack (6.5.0)
       rack (>= 1.0, < 3)
     rack-session (1.0.2)
@@ -1186,7 +1202,7 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     retriable (3.1.2)
-    rexml (3.4.1)
+    rexml (3.4.4)
     routes_lazy_routes (0.4.3)
       actionpack
       railties
@@ -1487,6 +1503,7 @@ DEPENDENCIES
   manageiq-providers-lenovo!
   manageiq-providers-nsxt!
   manageiq-providers-nuage!
+  manageiq-providers-nutanix!
   manageiq-providers-openshift!
   manageiq-providers-openstack!
   manageiq-providers-oracle_cloud!
@@ -1519,7 +1536,7 @@ DEPENDENCIES
   puma (~> 6.4, >= 6.4.3)
   qpid_proton (~> 0.37.0)
   query_relation (~> 0.1.0)
-  rack (>= 2.2.14)
+  rack (>= 2.2.18)
   rack-attack (~> 6.5.0)
   rails (~> 7.2.0, >= 7.2.2.1)
   rails-i18n (~> 7.x)
