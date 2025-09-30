@@ -325,7 +325,10 @@ module Rbac
       #
       if inline_view?(options, scope)
         inner_scope = scope.except(:select, :includes, :references)
-        scope.includes_values.each { |hash| inner_scope = add_joins(klass, inner_scope, hash) }
+        # similar to include_references but using joins
+        # TODO: optimization: Can we remove these from the outer query?
+        inner_scope = add_joins(klass, inner_scope, references)
+        inner_scope = add_joins(klass, inner_scope, exp_includes)
         if inner_scope.order_values.present?
           inner_scope = apply_select(klass, inner_scope, select_from_order_columns(inner_scope.order_values))
         end
