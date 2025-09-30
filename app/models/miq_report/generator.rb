@@ -290,8 +290,8 @@ module MiqReport::Generator
                             .where(where_clause)
                             .where(options[:where_clause])
                             .where(:timestamp => performance_report_time_range)
-                            .includes(get_include_for_find)
-                            .references(db_class.includes_to_references(get_include))
+                            .preload(get_include_for_find)
+                            .eager_load(get_include)
                             .limit(options[:limit])
     results = Rbac.filtered(results, :class        => db,
                                      :filter       => conditions,
@@ -305,8 +305,8 @@ module MiqReport::Generator
     results = db_class.with_interval_and_time_range(interval, performance_report_time_range)
                       .where(where_clause)
                       .where(options[:where_clause])
-                      .includes(get_include_for_find)
-                      .references(db_class.includes_to_references(get_include))
+                      .preload(get_include_for_find)
+                      .eager_load(get_include)
                       .limit(options[:limit])
 
     # Rbac will only add miq_expression for hourly report. It will not work properly for daily because many values are rolled up from hourly.
