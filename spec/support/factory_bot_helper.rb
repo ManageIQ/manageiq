@@ -27,7 +27,10 @@ Rails::Engine.subclasses.select { |e| e.name.starts_with?("ManageIQ::Providers")
   FactoryBot.definition_file_paths << File.join(engine.root, 'spec', 'factories')
 end
 
-FactoryBot.find_definitions
+# find_definitions is not reentrant, so call reload to reset things before it calls find_definitions.
+# Other code, such as factory bot rails, may have already registered factories, so we can't assume we're the first to call
+# find_definitions.
+FactoryBot.reload
 
 FactoryBot.define do
   trait :other_region do
