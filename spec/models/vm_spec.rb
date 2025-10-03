@@ -49,39 +49,48 @@ RSpec.describe Vm do
   end
 
   context ".find_all_by_mac_address_and_hostname_and_ipaddress" do
-    before do
-      @hardware1 = FactoryBot.create(:hardware)
-      @vm1 = FactoryBot.create(:vm_vmware, :hardware => @hardware1)
-
-      @hardware2 = FactoryBot.create(:hardware)
-      @vm2 = FactoryBot.create(:vm_vmware, :hardware => @hardware2)
-    end
+    let(:vm1) { FactoryBot.create(:vm_vmware, :hardware => FactoryBot.create(:hardware)) }
+    let(:vm2) { FactoryBot.create(:vm_vmware, :hardware => FactoryBot.create(:hardware)) }
 
     it "mac_address" do
       address = "ABCDEFG"
-      guest_device = FactoryBot.create(:guest_device, :address => address, :device_type => "ethernet")
-      @hardware1.guest_devices << guest_device
+      vm1.hardware.guest_devices << FactoryBot.create(:guest_device, :address => address, :device_type => "ethernet")
+      vm2
 
-      expect(described_class.find_all_by_mac_address_and_hostname_and_ipaddress(address, nil, nil))
-        .to eql([@vm1])
+      expect do
+        expect(described_class.find_all_by_mac_address_and_hostname_and_ipaddress(address, nil, nil)).to eq([vm1])
+      end.to make_database_queries(:count => 1)
     end
 
     it "hostname" do
       hostname = "ABCDEFG"
-      network = FactoryBot.create(:network, :hostname => hostname)
-      @hardware1.networks << network
+      vm1.hardware.networks << FactoryBot.create(:network, :hostname => hostname)
+      vm2
 
-      expect(described_class.find_all_by_mac_address_and_hostname_and_ipaddress(nil, hostname, nil))
-        .to eql([@vm1])
+      expect do
+        expect(described_class.find_all_by_mac_address_and_hostname_and_ipaddress(nil, hostname, nil)).to eq([vm1])
+      end.to make_database_queries(:count => 1)
     end
 
     it "ipaddress" do
       ipaddress = "127.0.0.1"
-      network = FactoryBot.create(:network, :ipaddress => ipaddress)
-      @hardware1.networks << network
+      vm1.hardware.networks << FactoryBot.create(:network, :ipaddress => ipaddress)
+      vm2
 
-      expect(described_class.find_all_by_mac_address_and_hostname_and_ipaddress(nil, nil, ipaddress))
-        .to eql([@vm1])
+      expect do
+        expect(described_class.find_all_by_mac_address_and_hostname_and_ipaddress(nil, nil, ipaddress)).to eq([vm1])
+      end.to make_database_queries(:count => 1)
+    end
+
+    it "hostname and ipaddress" do
+      hostname = "ABCDEFG"
+      ipaddress = "127.0.0.1"
+      vm1.hardware.networks << FactoryBot.create(:network, :hostname => hostname, :ipaddress => ipaddress)
+      vm2
+
+      expect do
+        expect(described_class.find_all_by_mac_address_and_hostname_and_ipaddress(nil, hostname, nil)).to eq([vm1])
+      end.to make_database_queries(:count => 1)
     end
 
     it "returns an empty list when all are blank" do
