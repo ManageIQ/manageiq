@@ -196,35 +196,15 @@ class EvmServer
   end
 
   def find_vms_by_mac_address_and_hostname_and_ipaddress(mac_address, hostname, ipaddress)
-    return [] if mac_address.blank? && hostname.blank? && ipaddress.blank?
+    return Vm.none if mac_address.blank? && hostname.blank? && ipaddress.blank?
 
-    include = [:vm_or_template]
-    references = []
-    conds = [["hardwares.vm_or_template_id IS NOT NULL"]]
-    if mac_address
-      conds[0] << "guest_devices.address = ?"
-      conds << mac_address
-      include << :nics
-      references << :guest_devices
-    end
-    if hostname
-      conds[0] << "networks.hostname = ?"
-      conds << hostname
-      include << :networks
-      references << :networks
-    end
-    if ipaddress
-      conds[0] << "networks.ipaddress = ?"
-      conds << ipaddress
-      include << :networks
-      references << :networks
-    end
-    conds[0] = "(#{conds[0].join(" AND ")})"
+    scope = Vm
+    # NOTE: nics are guest devices with an extra where()
+    scope = scope.joins(:hardware => :nics).where(:guest_devices => {:address => mac_address}) if mac_address
+    scope = scope.joins(:hardware => :networks).where(:networks => {:hostname => hostname}) if hostname
+    scope = scope.joins(:hardware => :networks).where(:networks => {:ipaddress => ipaddress}) if ipaddress
 
-    Hardware.includes(include.uniq)
-            .references(references.uniq)
-            .where(conds)
-            .map(&:vm_or_template).select { |vm| vm.kind_of?(Vm) }
+    scope
   end
 
   def reset_server_runtime_info
