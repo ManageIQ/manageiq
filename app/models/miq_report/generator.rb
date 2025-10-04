@@ -88,29 +88,6 @@ module MiqReport::Generator
     include_as_hash(include.presence || invent_report_includes)
   end
 
-  def polymorphic_includes
-    @polymorphic_includes ||= begin
-      top_level_rels = Array(get_include.try(:keys)) + Array(get_include_for_find.try(:keys))
-
-      top_level_rels.uniq.each_with_object([]) do |assoc, polymorphic_rels|
-        reflection = db_class.reflect_on_association(assoc)
-        polymorphic_rels << assoc if reflection && reflection.polymorphic?
-      end
-    end
-  end
-
-  def get_include_for_find_rbac
-    polymorphic_includes.each_with_object(get_include_for_find.dup) do |key, includes|
-      includes.delete(key)
-    end
-  end
-
-  def get_include_rbac
-    polymorphic_includes.each_with_object(get_include.dup) do |key, includes|
-      includes.delete(key)
-    end
-  end
-
   def invent_includes
     include_as_hash(invent_report_includes)
   end
@@ -118,16 +95,15 @@ module MiqReport::Generator
   # would like this format to go away
   # will go away when we drop build_reportable_data
   def invent_report_includes
-    return {} unless col_order
-
-    col_order.each_with_object({}) do |col, ret|
+    (Array(col_order) + Array(sortby)).each_with_object({}) do |col, ret|
       next unless col.include?(".")
+      next if col =~ /virtual_custom/
 
       *rels, column = col.split(".")
-      if col !~ /managed\./ && col !~ /virtual_custom/
-        (rels.inject(ret) { |h, rel| h[rel] ||= {} }["columns"] ||= []) << column
-      end
-    end
+      dest = rels.inject(ret) { |h, rel| (h["include"] ||= {})[rel] ||= {} }["columns"] ||= []
+      # sortby tends to be a duplicate. So suppress duplicates for all
+      dest << column unless dest.include?(column)
+    end["include"]
   end
 
   def include_as_hash(includes = include, klass = db_class, klass_cols = cols)
@@ -290,8 +266,8 @@ module MiqReport::Generator
                             .where(where_clause)
                             .where(options[:where_clause])
                             .where(:timestamp => performance_report_time_range)
-                            .includes(get_include_for_find)
-                            .references(db_class.includes_to_references(get_include))
+                            .preload(get_include_for_find)
+                            .eager_load(db_class.prune_references(get_include))
                             .limit(options[:limit])
     results = Rbac.filtered(results, :class        => db,
                                      :filter       => conditions,
@@ -305,8 +281,8 @@ module MiqReport::Generator
     results = db_class.with_interval_and_time_range(interval, performance_report_time_range)
                       .where(where_clause)
                       .where(options[:where_clause])
-                      .includes(get_include_for_find)
-                      .references(db_class.includes_to_references(get_include))
+                      .preload(get_include_for_find)
+                      .eager_load(db_class.prune_references(get_include))
                       .limit(options[:limit])
 
     # Rbac will only add miq_expression for hourly report. It will not work properly for daily because many values are rolled up from hourly.
@@ -339,8 +315,8 @@ module MiqReport::Generator
     rbac_opts = options.merge(
       :targets          => targets,
       :filter           => conditions,
-      :include_for_find => get_include_for_find_rbac,
-      :references       => get_include_rbac,
+      :include_for_find => get_include_for_find,
+      :references       => get_include,
       :skip_counts      => true
     )
 

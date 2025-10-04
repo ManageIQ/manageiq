@@ -642,7 +642,7 @@ RSpec.describe Rbac::Filterer do
       end
 
       it "does not add references without includes" do
-        expect(subject).to receive(:include_references).with(anything, Vm, nil, nil).and_call_original
+        expect(subject).to receive(:include_references).with(anything, Vm, nil, nil, nil).and_call_original
         results
       end
 
@@ -656,7 +656,7 @@ RSpec.describe Rbac::Filterer do
         end
 
         it "includes references" do
-          expect(subject).to receive(:include_references).with(anything, Vm, nil, {:host => {}})
+          expect(subject).to receive(:include_references).with(anything, Vm, nil, nil, {:host => {}})
                                                          .and_call_original
           expect(subject).to receive(:warn).never
           results
@@ -673,7 +673,7 @@ RSpec.describe Rbac::Filterer do
         end
 
         it "does not add references since there isn't a SQL filter" do
-          expect(subject).to receive(:include_references).with(anything, Vm, {:evm_owner => {}}, nil).and_call_original
+          expect(subject).to receive(:include_references).with(anything, Vm, {:evm_owner => {}}, {:evm_owner => {}}, nil).and_call_original
           results
         end
 
@@ -682,7 +682,7 @@ RSpec.describe Rbac::Filterer do
           let(:results)           { subject.search(search_with_where).first }
 
           it "will try to skip references to begin with" do
-            expect(subject).to receive(:include_references).with(anything, Vm, {:evm_owner => {}}, nil).and_call_original
+            expect(subject).to receive(:include_references).with(anything, Vm, {:evm_owner => {}}, {:evm_owner => {}}, nil).and_call_original
             results
           end
 
@@ -692,7 +692,7 @@ RSpec.describe Rbac::Filterer do
             let(:results)     { subject.search(null_search).first }
 
             it "will not try to skip references" do
-              expect(subject).to receive(:include_references).with(anything, Vm, {:evm_owner => {}}, nil).and_call_original
+              expect(subject).to receive(:include_references).with(anything, Vm, {:evm_owner => {}}, {:evm_owner => {}}, nil).and_call_original
               results
             end
           end
@@ -726,15 +726,16 @@ RSpec.describe Rbac::Filterer do
         end
 
         it "adds references" do
-          expect(results.references_values).to match_array %w[users]
+          expect(results.eager_load_values).to eq([:evm_owner => {}])
         end
       end
     end
 
     context "with :extra_cols on a Service" do
+      subject { described_class.new }
       let(:extra_cols)        { [:owned_by_current_user] }
       let(:search_attributes) { {:class => "Service", :extra_cols => extra_cols} }
-      let(:results)           { described_class.search(search_attributes).first }
+      let(:results)           { subject.search(search_attributes).first }
 
       before { FactoryBot.create :service, :evm_owner => owner_user }
 
@@ -743,19 +744,23 @@ RSpec.describe Rbac::Filterer do
       end
 
       it "does not add references with no includes" do
-        expect(results.references_values).to eq []
+        expect(subject).to receive(:include_references).with(anything, Service, nil, nil, nil).and_call_original
+        results
       end
 
       context "with :include_for_find" do
-        let(:include_search) { search_attributes.merge(:include_for_find => {:evm_owner => {}}) }
-        let(:results)        { described_class.search(include_search).first }
+        subject { described_class.new }
+        let(:include_for_find) { {:evm_owner => {}} }
+        let(:include_search)   { search_attributes.merge(:include_for_find => include_for_find) }
+        let(:results)          { subject.search(include_search).first }
 
         it "finds the Service" do
           expect(results.first.attributes["owned_by_current_user"]).to be false
         end
 
         it "adds references" do
-          expect(results.references_values).to match_array %w[users]
+          expect(subject).to receive(:include_references).with(anything, Service, include_for_find, include_for_find, nil).and_call_original
+          results
         end
       end
     end
@@ -1164,37 +1169,22 @@ RSpec.describe Rbac::Filterer do
         }
       end
 
-      # NOTE:  Think long and hard before you consider removing this test.
-      # Many-a-hours wasted here determining this bug that resulted in
-      # re-adding this test again.
+      # We've had an on and off again success with polymorphics (first documented in 2015 by Greg Tanzillo)
+      # references().includes() with polymorphic does not work
+      # now that we've converted to preload and eager_load, this is no longer an issue
       #
-      # 2nd NOTE:  I did think (and wrote the above comment as well), however,
-      # now it seems we DO NOT SUPPORT polymorphic code, since we removed it
-      # here:
+      # Since we've been so mix and match, please leave this test in here
       #
-      #   https://github.com/ManageIQ/manageiq/commit/8cc2277b
-      #
-      # That said, we should make sure this is erroring and no other callers
-      # are trying to do this (example:  MiqReport), so make sure this raises
-      # an error to inform the caller that fixing needs to happen.
-      #
-      it "raises an error when a polymorphic reflection is included and referenced" do
-        # NOTE: Fails if :references is passed with a value, or with no key,
-        # which it uses :include_for_find as the default.
+      it "does not raises an error when a polymorphic reflection is included and referenced" do
+        # We currently do this, though TBH/ this is not valid. You should not be able to pass a polymorphic to references
+        # would be better if we changed the callers to search/filter so they don't pass invalid values into references
         expect do
           described_class.search :class            => "MetricRollup",
                                  :include_for_find => @include,
                                  :references       => @include
-        end.to raise_error(Rbac::PolymorphicError)
+        end.not_to raise_error
 
-        expect do
-          described_class.search :class            => "MetricRollup",
-                                 :include_for_find => @include
-        end.to raise_error(Rbac::PolymorphicError)
-      end
-
-      it "does not raise an error when a polymorphic reflection is only included" do
-        # NOTE:  if references is passed in, but is blank, then it is fine
+        # NOTE:  if references is passed in, but is blank, then doesn't default and is fine
         expect do
           described_class.search :class            => "MetricRollup",
                                  :include_for_find => @include,
@@ -1204,7 +1194,7 @@ RSpec.describe Rbac::Filterer do
         expect do
           described_class.search :class            => "MetricRollup",
                                  :include_for_find => @include,
-                                 :references       => nil
+                                 :references       => :parent_host
         end.not_to raise_error
       end
     end
@@ -2569,6 +2559,57 @@ RSpec.describe Rbac::Filterer do
         expect(attrs[:auth_count]).to eq(3)
         expect(recs.map(&:id)).to eq(vms.map(&:id))
       end
+
+      it "remembers distinct (non-tagged version)" do
+        # create vms with many disks. so a missing distinct would return 3*3 => 9
+        # dropping tags was causing issues. so manually running through that one
+        vms = FactoryBot.create_list(:vm_infra, 3, :miq_group => tagged_group)
+        vms.each do |vm|
+          # used by rbac filter
+          vm.tag_with("/managed/environment/prod", :ns => "*")
+          hw = FactoryBot.create(:hardware, :cpu_sockets => 4, :memory_mb => 3.megabytes, :vm => vm)
+          FactoryBot.create_list(:disk, 3, :device_type => "disk", :size => 10_000, :hardware_id => hw.id)
+        end
+
+        recs, attrs = Rbac.search(:targets          => Vm,
+                                  :include_for_find => {:ext_management_system => {}, :hardware => {:disks => {}}},
+                                  :extra_cols       => %w[ram_size_in_bytes],
+                                  :use_sql_view     => true,
+                                  :limit            => 20,
+                                  :user             => User.super_admin,
+                                  :order            => :updated_on)
+
+        expect(attrs[:auth_count]).to eq(3)
+        expect(recs.map(&:id)).to eq(vms.map(&:id))
+      end
+
+      it "handles polymorphic" do
+        EvmSpecHelper.local_miq_server
+
+        resource = FactoryBot.create(:host_vmware)
+        time_profile = FactoryBot.create(:time_profile_utc)
+
+        # Generate 2 days of metrics with a gently rising slope
+        2.times do |i|
+          FactoryBot.create(:metric_rollup_host_daily,
+            :resource     => resource,
+            :timestamp    => i.days.ago.beginning_of_day,
+            :time_profile => time_profile,
+            :min_max      => {
+              :max_cpu_usagemhz_rate_average => 3_000 - i * 100,
+              :max_derived_cpu_available     => 5_000
+            }
+          )
+        end
+
+        recs, attrs = Rbac.search(:targets          => MetricRollup,
+                                  :include_for_find => {:resource => {}, :parent_host => {}},
+                                  :extra_cols       => [:v_derived_storage_used],
+                                  :use_sql_view     => true,
+                                  :limit            => 20,
+                                  :order            => :id)
+        expect(attrs[:auth_count]).to eq(2)
+      end
     end
   end
 
@@ -2670,24 +2711,40 @@ RSpec.describe Rbac::Filterer do
     let(:exp_includes)     { {:host => {}} }
 
     it "adds include_for_find .references to the scope" do
-      method_args      = [scope, klass, include_for_find, nil]
+      method_args      = [scope, klass, include_for_find, include_for_find, nil]
       resulting_scope  = subject.send(:include_references, *method_args)
 
-      expect(resulting_scope.references_values).to eq(%w[miq_servers])
+      expect(resulting_scope.preload_values).to eq([include_for_find])
+      expect(resulting_scope.eager_load_values).to eq([include_for_find])
     end
 
     it "adds exp_includes .references to the scope" do
-      method_args      = [scope, klass, nil, exp_includes]
+      method_args      = [scope, klass, nil, nil, exp_includes]
       resulting_scope  = subject.send(:include_references, *method_args)
 
-      expect(resulting_scope.references_values).to eq(%w[hosts])
+      expect(resulting_scope.preload_values).to eq([])
+      expect(resulting_scope.eager_load_values).to eq([exp_includes])
     end
 
     it "adds include_for_find and exp_includes .references to the scope" do
-      method_args      = [scope, klass, include_for_find, exp_includes]
+      method_args      = [scope, klass, include_for_find, include_for_find, exp_includes]
       resulting_scope  = subject.send(:include_references, *method_args)
 
-      expect(resulting_scope.references_values).to eq(%w[miq_servers hosts])
+      expect(resulting_scope.preload_values).to eq([include_for_find])
+      expect(resulting_scope.eager_load_values).to match_array([exp_includes, include_for_find])
+    end
+
+    context "if the include is an array" do
+      let(:include_for_find) { [:miq_server] }
+      let(:exp_includes)     { [:host] }
+
+      it "adds include_for_find and exp_includes .references to the scope" do
+        method_args      = [scope, klass, include_for_find, include_for_find, exp_includes]
+        resulting_scope  = subject.send(:include_references, *method_args)
+
+        expect(resulting_scope.preload_values).to match_array([:miq_server])
+        expect(resulting_scope.eager_load_values).to match_array([:miq_server, :host])
+      end
     end
 
     context "if the include is polymorphic" do
@@ -2695,10 +2752,89 @@ RSpec.describe Rbac::Filterer do
       let(:include_for_find) { {:resource => {}} }
 
       it "does not add .references to the scope" do
-        method_args      = [scope, klass, include_for_find, nil]
+        method_args      = [scope, klass, include_for_find, include_for_find, nil]
         resulting_scope  = subject.send(:include_references, *method_args)
 
-        expect(resulting_scope.references_values).to eq([])
+        expect(resulting_scope.preload_values).to eq([include_for_find])
+        expect(resulting_scope.eager_load_values).to eq([])
+      end
+    end
+
+    context "if the include is taggings" do
+      let(:klass)            { Vm }
+      let(:include_for_find) { {:host => {:taggings => {}}} }
+
+      it "does not add taggings to the scope" do
+        method_args      = [scope, klass, include_for_find, include_for_find, nil]
+        resulting_scope  = subject.send(:include_references, *method_args)
+
+        expect(resulting_scope.preload_values).to eq([include_for_find])
+        expect(resulting_scope.eager_load_values).to eq([{:host => {}}])
+      end
+    end
+
+    context "if the include is a virtual association" do
+      let(:klass)            { Vm }
+      let(:include_for_find) { {:processes => {}} }
+
+      it "does not add taggings to the scope" do
+        method_args      = [scope, klass, include_for_find, include_for_find, nil]
+        resulting_scope  = subject.send(:include_references, *method_args)
+
+        expect(resulting_scope.preload_values).to eq([include_for_find])
+        expect(resulting_scope.eager_load_values).to eq([])
+      end
+    end
+
+    context "if the include is a virtual attribute" do
+      let(:klass)            { Vm }
+      let(:include_for_find) { {:hostnames => {}} }
+
+      it "does not add taggings to the scope" do
+        method_args      = [scope, klass, include_for_find, include_for_find, nil]
+        resulting_scope  = subject.send(:include_references, *method_args)
+
+        expect(resulting_scope.preload_values).to eq([include_for_find])
+        expect(resulting_scope.eager_load_values).to eq([])
+      end
+    end
+
+    context "if the include is taggings" do
+      let(:klass)            { Vm }
+      let(:include_for_find) { {:host => {:taggings => {}}} }
+
+      it "does not add taggings to the scope" do
+        method_args      = [scope, klass, include_for_find, include_for_find, nil]
+        resulting_scope  = subject.send(:include_references, *method_args)
+
+        expect(resulting_scope.eager_load_values).to eq([{:host => {}}])
+        expect(resulting_scope.preload_values).to eq([include_for_find])
+      end
+    end
+
+    context "if the include is a virtual association" do
+      let(:klass)            { Vm }
+      let(:include_for_find) { {:processes => {}} }
+
+      it "does not add taggings to the scope" do
+        method_args      = [scope, klass, include_for_find, include_for_find, nil]
+        resulting_scope  = subject.send(:include_references, *method_args)
+
+        expect(resulting_scope.eager_load_values).to eq([])
+        expect(resulting_scope.preload_values).to eq([include_for_find])
+      end
+    end
+
+    context "if the include is a virtual attribute" do
+      let(:klass)            { Vm }
+      let(:include_for_find) { {:hostnames => {}} }
+
+      it "does not add taggings to the scope" do
+        method_args      = [scope, klass, include_for_find, include_for_find, nil]
+        resulting_scope  = subject.send(:include_references, *method_args)
+
+        expect(resulting_scope.eager_load_values).to eq([])
+        expect(resulting_scope.preload_values).to eq([include_for_find])
       end
     end
   end

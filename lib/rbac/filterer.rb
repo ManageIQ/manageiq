@@ -1,6 +1,4 @@
 module Rbac
-  class PolymorphicError < ArgumentError; end
-
   class Filterer
     # This list is used to detemine whether RBAC, based on assigned tags, should be applied for a class in a search that is based on the class.
     # Classes should be added to this list ONLY after:
@@ -296,10 +294,9 @@ module Rbac
       scope = scope.except(:offset, :limit, :order)
       scope = scope_targets(klass, scope, user_filters, user, miq_group)
               .where(conditions).where(sub_filter).where(where_clause).where(exp_sql).where(ids_clause)
-              .includes(include_for_find).includes(exp_includes)
               .order(order)
 
-      scope = include_references(scope, klass, references, exp_includes)
+      scope = include_references(scope, klass, include_for_find, references, exp_includes)
       scope = scope.limit(limit).offset(offset) if attrs[:apply_limit_in_sql]
 
       #      SELECT col1, (SELECT "abc") AS virtual_col
@@ -324,8 +321,11 @@ module Rbac
       #        Hence auth_count calculated from inner_scope.
       #
       if inline_view?(options, scope)
-        inner_scope = scope.except(:select, :includes, :references)
-        scope.includes_values.each { |hash| inner_scope = add_joins(klass, inner_scope, hash) }
+        inner_scope = scope.except(:select, :includes, :references, :eager_load, :preload)
+        # similar to include_references but using joins
+        # TODO: optimization: Can we remove these from the outer query?
+        inner_scope = add_joins(klass, inner_scope, klass.prune_references(references))
+        inner_scope = add_joins(klass, inner_scope, klass.prune_references(exp_includes))
         if inner_scope.order_values.present?
           inner_scope = apply_select(klass, inner_scope, select_from_order_columns(inner_scope.order_values))
         end
@@ -373,8 +373,6 @@ module Rbac
       targets = targets.to_a if targets.kind_of?(Enumerator::Lazy)
 
       return targets, attrs
-    rescue ActiveRecord::EagerLoadPolymorphicError
-      raise Rbac::PolymorphicError
     end
 
     def is_sti?(klass)
@@ -424,23 +422,43 @@ module Rbac
       end
     end
 
-    def include_references(scope, klass, references, exp_includes)
-      scope.references(klass.includes_to_references(references)).references(klass.includes_to_references(exp_includes))
+    def include_references(scope, klass, includes, references, exp_includes)
+      if scope.respond_to?(:eager_load)
+        scope.eager_load(klass.prune_references(references)).eager_load(exp_includes || []).preload(includes)
+      else
+        # TODO: add eager_load/preload support to QueryRelation/ActsAsArModel
+        # Then drop this if block and includes_to_references
+        scope.references(klass.includes_to_references(references)).references(klass.includes_to_references(exp_includes))
+            .includes(includes).includes(exp_includes)
+      end
     end
 
     # @param includes [Array, Hash]
     def add_joins(klass, scope, includes)
       return scope unless includes
 
+      # NOTE: We should be pre-pruning polymorphic out of here. So they shouldn't come in
+      #       either way, want a distinct for collections (to safeguard has_many values).
+      # NOTE: This does not recurse, so not a complete implementation for pruning/distinct
       includes = Array(includes) unless includes.kind_of?(Enumerable)
       includes.each do |association, value|
         reflection = klass.reflect_on_association(association)
         if reflection && !reflection.polymorphic?
           scope = value ? scope.left_outer_joins(association => value) : scope.left_outer_joins(association)
-          scope = scope.distinct if reflection.try(:collection?)
         end
       end
+      scope = scope.distinct if !scope.distinct_value && is_collection?(klass, includes)
       scope
+    end
+
+    def is_collection?(klass, includes)
+      return false unless includes.present?
+
+      Array(includes).each do |association, value|
+        reflection = klass.reflect_on_association(association)
+        return true if reflection&.collection? || !reflection.polymorphic? && is_collection?(reflection.klass, value)
+      end
+      false
     end
 
     def filtered(objects, options = {})
