@@ -89,7 +89,7 @@ RSpec.describe Vm do
       vm2
 
       expect do
-        expect(described_class.find_all_by_mac_address_and_hostname_and_ipaddress(nil, hostname, nil)).to eq([vm1])
+        expect(described_class.find_all_by_mac_address_and_hostname_and_ipaddress(nil, hostname, ipaddress)).to eq([vm1])
       end.to make_database_queries(:count => 1)
     end
 
