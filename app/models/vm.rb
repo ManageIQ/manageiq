@@ -45,35 +45,20 @@ class Vm < VmOrTemplate
   end
 
   def self.find_all_by_mac_address_and_hostname_and_ipaddress(mac_address, hostname, ipaddress)
-    return [] if mac_address.blank? && hostname.blank? && ipaddress.blank?
+    return Vm.none if mac_address.blank? && hostname.blank? && ipaddress.blank?
 
-    include = [:vm_or_template]
-    references = []
-    conds = [["hardwares.vm_or_template_id IS NOT NULL"]]
+    scope = Hardware.preload(:vm_or_template).where.not(:vm_or_template_id => nil)
     if mac_address
-      conds[0] << "guest_devices.address = ?"
-      conds << mac_address
-      include << :nics
-      references << :guest_devices
+      scope = scope.where(:guest_devices => {:address => mac_address}).preload(:nics).joins(:guest_devices)
     end
     if hostname
-      conds[0] << "networks.hostname = ?"
-      conds << hostname
-      include << :networks
-      references << :networks
+      scope = scope.where(:networks => {:hostname => hostname}).preload(:networks).joins(:networks)
     end
     if ipaddress
-      conds[0] << "networks.ipaddress = ?"
-      conds << ipaddress
-      include << :networks
-      references << :networks
+      scope = scope.where(:networks => {:ipaddress => ipaddress}).preload(:networks).joins(:networks)
     end
-    conds[0] = "(#{conds[0].join(" AND ")})"
 
-    Hardware.includes(include.uniq)
-            .references(references.uniq)
-            .where(conds)
-            .map(&:vm_or_template).select { |vm| vm.kind_of?(Vm) }
+    scope.map(&:vm_or_template).select { |vm| vm.kind_of?(Vm) }
   end
 
   def running_processes
