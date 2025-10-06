@@ -198,6 +198,46 @@ describe EvmServer do
   let(:vm2) { FactoryBot.create(:vm_vmware, :hardware => FactoryBot.create(:hardware, :networks => [vm2_network])) }
   let(:vm3) { FactoryBot.create(:vm_vmware, :hardware => FactoryBot.create(:hardware, :guest_devices => [vm3_device])) }
 
+  describe "#set_local_vserver_vm (private)" do
+    let!(:miq_server) { EvmSpecHelper.local_miq_server }
+    let(:evm_server) { EvmServer.new }
+
+    # Basically stock, just ensure podified environment doesn't modify this test.
+    before { allow(evm_server).to receive(:servers_from_db).and_return([miq_server]) }
+
+    it "handles no matching servers" do
+      vm1
+      vm2
+
+      # sets evm_server.current_server
+      evm_server.send(:impersonate_server, miq_server)
+      evm_server.send(:set_local_server_vm)
+      expect(miq_server.reload.vm_id).to eq(nil)
+    end
+
+    it "finds local server (by mac_address)" do
+      vm1
+      vm2
+      miq_server.update(:hostname => vm1_network.hostname)
+
+      evm_server.send(:impersonate_server, miq_server)
+      evm_server.send(:set_local_server_vm)
+      expect(miq_server.reload.vm_id).to eq(vm1.id)
+    end
+
+    it "finds multiple servers" do
+      vm1
+      vm2
+      vm3
+
+      miq_server.update(:hostname => vm1_network.hostname, :ipaddress => vm2_network.ipaddress)
+
+      evm_server.send(:impersonate_server, miq_server)
+      evm_server.send(:set_local_server_vm)
+      expect(miq_server.reload.vm_id).to eq(nil)
+    end
+  end
+
   context "#find_vms_by_mac_address_and_hostname_and_ipaddress (private)" do
     subject { described_class.new }
 

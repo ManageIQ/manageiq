@@ -186,11 +186,11 @@ class EvmServer
 
   def set_local_server_vm
     if @current_server.vm_id.nil?
-      vms = Vm.find_vms_by_mac_address_and_hostname_and_ipaddress(@current_server.mac_address, @current_server.hostname, @current_server.ipaddress)
-      if vms.length > 1
-        _log.warn("Found multiple Vms that may represent this MiqServer: #{vms.collect(&:id).sort.inspect}")
-      elsif vms.length == 1
-        @current_server.update(:vm_id => vms.first.id)
+      vm_ids = find_vms_by_mac_address_and_hostname_and_ipaddress(@current_server.mac_address, @current_server.hostname, @current_server.ipaddress).pluck(:id)
+      if vm_ids.length > 1
+        _log.warn("Found multiple Vms that may represent this MiqServer: #{vm_ids.sort.inspect}")
+      elsif vm_ids.length == 1
+        @current_server.update(:vm_id => vm_ids.first)
       end
     end
   end
