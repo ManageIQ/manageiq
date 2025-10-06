@@ -99,13 +99,13 @@ module MiqReport::Generator
     end
   end
 
-  def get_include_for_find_rbac
+  def get_ar_includes
     polymorphic_includes.each_with_object(get_include_for_find.dup) do |key, includes|
       includes.delete(key)
     end
   end
 
-  def get_include_rbac
+  def get_ar_references
     polymorphic_includes.each_with_object(get_include.dup) do |key, includes|
       includes.delete(key)
     end
@@ -290,8 +290,8 @@ module MiqReport::Generator
                             .where(where_clause)
                             .where(options[:where_clause])
                             .where(:timestamp => performance_report_time_range)
-                            .preload(get_include_for_find)
-                            .eager_load(get_include)
+                            .preload(get_ar_includes)
+                            .eager_load(get_ar_references)
                             .limit(options[:limit])
     results = Rbac.filtered(results, :class        => db,
                                      :filter       => conditions,
@@ -305,8 +305,8 @@ module MiqReport::Generator
     results = db_class.with_interval_and_time_range(interval, performance_report_time_range)
                       .where(where_clause)
                       .where(options[:where_clause])
-                      .preload(get_include_for_find)
-                      .eager_load(get_include)
+                      .preload(get_ar_includes)
+                      .eager_load(get_ar_references)
                       .limit(options[:limit])
 
     # Rbac will only add miq_expression for hourly report. It will not work properly for daily because many values are rolled up from hourly.
@@ -339,8 +339,8 @@ module MiqReport::Generator
     rbac_opts = options.merge(
       :targets          => targets,
       :filter           => conditions,
-      :include_for_find => get_include_for_find_rbac,
-      :references       => get_include_rbac,
+      :include_for_find => get_ar_includes,
+      :references       => get_ar_references,
       :skip_counts      => true
     )
 
