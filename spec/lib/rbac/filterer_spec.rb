@@ -2548,7 +2548,7 @@ RSpec.describe Rbac::Filterer do
         expect(recs.map(&:id)).to eq(expected_order.reverse.map(&:id))
       end
 
-      it "remembers distinct" do
+      it "remembers distinct (tagged version)" do
         # create vms with many disks. so a missing distinct would return 3*3 => 9
         vms = FactoryBot.create_list(:vm_infra, 3, :miq_group => tagged_group)
         vms.each do |vm|
@@ -2568,6 +2568,57 @@ RSpec.describe Rbac::Filterer do
 
         expect(attrs[:auth_count]).to eq(3)
         expect(recs.map(&:id)).to eq(vms.map(&:id))
+      end
+
+      it "remembers distinct (non-tagged version)" do
+        # create vms with many disks. so a missing distinct would return 3*3 => 9
+        # dropping tags was causing issues. so manually running through that one
+        vms = FactoryBot.create_list(:vm_infra, 3, :miq_group => tagged_group)
+        vms.each do |vm|
+          # used by rbac filter
+          vm.tag_with("/managed/environment/prod", :ns => "*")
+          hw = FactoryBot.create(:hardware, :cpu_sockets => 4, :memory_mb => 3.megabytes, :vm => vm)
+          FactoryBot.create_list(:disk, 3, :device_type => "disk", :size => 10_000, :hardware_id => hw.id)
+        end
+
+        recs, attrs = Rbac.search(:targets          => Vm,
+                                  :include_for_find => {:ext_management_system => {}, :hardware => {:disks => {}}},
+                                  :extra_cols       => %w[ram_size_in_bytes],
+                                  :use_sql_view     => true,
+                                  :limit            => 20,
+                                  :user             => User.super_admin,
+                                  :order            => :updated_on)
+
+        expect(attrs[:auth_count]).to eq(3)
+        expect(recs.map(&:id)).to eq(vms.map(&:id))
+      end
+
+      it "handles polymorphic" do
+        EvmSpecHelper.local_miq_server
+
+        resource = FactoryBot.create(:host_vmware)
+        time_profile = FactoryBot.create(:time_profile_utc)
+
+        # Generate 2 days of metrics with a gently rising slope
+        2.times do |i|
+          FactoryBot.create(:metric_rollup_host_daily,
+            :resource     => resource,
+            :timestamp    => i.days.ago.beginning_of_day,
+            :time_profile => time_profile,
+            :min_max      => {
+              :max_cpu_usagemhz_rate_average => 3_000 - i * 100,
+              :max_derived_cpu_available     => 5_000
+            }
+          )
+        end
+
+        recs, attrs = Rbac.search(:targets          => MetricRollup,
+                                  :include_for_find => {:resource => {}, :parent_host => {}},
+                                  :extra_cols       => [:v_derived_storage_used],
+                                  :use_sql_view     => true,
+                                  :limit            => 20,
+                                  :order            => :id)
+        expect(attrs[:auth_count]).to eq(2)
       end
     end
   end
