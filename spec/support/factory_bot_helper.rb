@@ -19,8 +19,8 @@ end
 
 require 'factory_bot'
 
-# In case we are running as an engine, the factories are located in the dummy app
-FactoryBot.definition_file_paths << 'spec/manageiq/spec/factories'
+# In case we are running as an engine, the factories are located in the Rails application
+FactoryBot.definition_file_paths << Rails.root.join('spec/factories')
 
 # Also, add factories from provider gems until miq codebase does not use any provider specific factories anymore
 Rails::Engine.subclasses.select { |e| e.name.starts_with?("ManageIQ::Providers") }.each do |engine|
