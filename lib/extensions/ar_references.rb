@@ -1,20 +1,24 @@
 module ArReferences
-  # Given a nested hash of associations (used by includes)
-  #   convert into an array of table names (used by references)
-  # If given an array of table names, will output the same array
-  def includes_to_references(inc)
-    return [] unless inc
+  # Tags bring back too many rows, since we can not limit on the particular tag
+  # So dont require them (meaning we don't join to the taggings table)
+  SKIP_TABLES = [:tags, :taggings].freeze
 
-    inc = Array(inc) unless inc.kind_of?(Hash)
-    inc.flat_map do |n, v|
-      if (ref = reflect_on_association(n.to_sym)) && !ref.polymorphic?
-        n_table = ref.table_name
-        v_tables = v ? ref.klass.try(:includes_to_references, v) : []
-        [n_table] + v_tables
-      elsif reflection_with_virtual(n.to_sym) # ignore polymorphic and virtual attribute
-        []
-      else # it is probably a table name - keep it
-        n
+  # Given a nested hash of associations (used by includes, preload, and eager_load)
+  #   prune out polymorphic, and references to tags
+  def prune_references(inc)
+    return {} unless inc
+
+    inc = Array(inc) unless inc.kind_of?(Hash) || inc.kind_of?(Array)
+    inc.each_with_object({}) do |(n, v), ret|
+      n = n.to_sym
+      if (ref = reflect_on_association(n))
+        if !ref.polymorphic? && !SKIP_TABLES.include?(n)
+          ret[n] = (v.present? && ref.klass.try(:prune_references, v)) || {}
+        end
+      # ignore virtual collections and virtual attribute
+      elsif !reflection_with_virtual(n) && !virtual_attribute?(n)
+        # Think this is an error. letting it slide (assuming it will throw an error elsewhere)
+        ret[n] = {}
       end
     end
   end

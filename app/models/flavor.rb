@@ -43,9 +43,9 @@ class Flavor < ApplicationRecord
     ext_management_system&.class_by_ems(:Flavor)
   end
 
+  # NOTE: tenant (source_tenant) is far away, so it brings back a lot of models. can we use left_joins instead?
   def self.tenant_joins_clause(scope)
-    scope.includes(:cloud_tenants => "source_tenant", :ext_management_system => {})
-         .references(:cloud_tenants, :tenants, :ext_management_system)
+    scope.left_outer_joins(:cloud_tenants => "source_tenant", :ext_management_system => {})
   end
 
   # Create a flavor as a queued task and return the task id. The queue name and
