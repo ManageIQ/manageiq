@@ -642,7 +642,7 @@ RSpec.describe Rbac::Filterer do
       end
 
       it "does not add references without includes" do
-        expect(subject).to receive(:include_references).with(anything, Vm, nil, nil).and_call_original
+        expect(subject).to receive(:include_references).with(anything, Vm, nil, nil, nil).and_call_original
         results
       end
 
@@ -656,7 +656,7 @@ RSpec.describe Rbac::Filterer do
         end
 
         it "includes references" do
-          expect(subject).to receive(:include_references).with(anything, Vm, nil, {:host => {}})
+          expect(subject).to receive(:include_references).with(anything, Vm, nil, nil, {:host => {}})
                                                          .and_call_original
           expect(subject).to receive(:warn).never
           results
@@ -673,7 +673,7 @@ RSpec.describe Rbac::Filterer do
         end
 
         it "does not add references since there isn't a SQL filter" do
-          expect(subject).to receive(:include_references).with(anything, Vm, {:evm_owner => {}}, nil).and_call_original
+          expect(subject).to receive(:include_references).with(anything, Vm, {:evm_owner => {}}, {:evm_owner => {}}, nil).and_call_original
           results
         end
 
@@ -682,7 +682,7 @@ RSpec.describe Rbac::Filterer do
           let(:results)           { subject.search(search_with_where).first }
 
           it "will try to skip references to begin with" do
-            expect(subject).to receive(:include_references).with(anything, Vm, {:evm_owner => {}}, nil).and_call_original
+            expect(subject).to receive(:include_references).with(anything, Vm, {:evm_owner => {}}, {:evm_owner => {}}, nil).and_call_original
             results
           end
 
@@ -692,7 +692,7 @@ RSpec.describe Rbac::Filterer do
             let(:results)     { subject.search(null_search).first }
 
             it "will not try to skip references" do
-              expect(subject).to receive(:include_references).with(anything, Vm, {:evm_owner => {}}, nil).and_call_original
+              expect(subject).to receive(:include_references).with(anything, Vm, {:evm_owner => {}}, {:evm_owner => {}}, nil).and_call_original
               results
             end
           end
@@ -732,9 +732,10 @@ RSpec.describe Rbac::Filterer do
     end
 
     context "with :extra_cols on a Service" do
+      subject { described_class.new }
       let(:extra_cols)        { [:owned_by_current_user] }
       let(:search_attributes) { {:class => "Service", :extra_cols => extra_cols} }
-      let(:results)           { described_class.search(search_attributes).first }
+      let(:results)           { subject.search(search_attributes).first }
 
       before { FactoryBot.create :service, :evm_owner => owner_user }
 
@@ -743,19 +744,23 @@ RSpec.describe Rbac::Filterer do
       end
 
       it "does not add references with no includes" do
-        expect(results.references_values).to eq []
+        expect(subject).to receive(:include_references).with(anything, Service, nil, nil, nil).and_call_original
+        results
       end
 
       context "with :include_for_find" do
-        let(:include_search) { search_attributes.merge(:include_for_find => {:evm_owner => {}}) }
-        let(:results)        { described_class.search(include_search).first }
+        subject { described_class.new }
+        let(:include_for_find) { {:evm_owner => {}} }
+        let(:include_search)   { search_attributes.merge(:include_for_find => include_for_find) }
+        let(:results)          { subject.search(include_search).first }
 
         it "finds the Service" do
           expect(results.first.attributes["owned_by_current_user"]).to be false
         end
 
         it "adds references" do
-          expect(results.references_values).to match_array %w[users]
+          expect(subject).to receive(:include_references).with(anything, Service, include_for_find, include_for_find, nil).and_call_original
+          results
         end
       end
     end
@@ -1190,6 +1195,14 @@ RSpec.describe Rbac::Filterer do
         expect do
           described_class.search :class            => "MetricRollup",
                                  :include_for_find => @include
+        end.to raise_error(Rbac::PolymorphicError)
+
+        # Bug in ActiveRecord is surfaced here
+        # Any references value causes an issue (even though the references is not polymorphic)
+        expect do
+          described_class.search :class            => "MetricRollup",
+                                 :include_for_find => @include,
+                                 :references       => :parent_host
         end.to raise_error(Rbac::PolymorphicError)
       end
 
@@ -2721,24 +2734,40 @@ RSpec.describe Rbac::Filterer do
     let(:exp_includes)     { {:host => {}} }
 
     it "adds include_for_find .references to the scope" do
-      method_args      = [scope, klass, include_for_find, nil]
+      method_args      = [scope, klass, include_for_find, include_for_find, nil]
       resulting_scope  = subject.send(:include_references, *method_args)
 
+      expect(resulting_scope.includes_values).to eq([include_for_find])
       expect(resulting_scope.references_values).to eq(%w[miq_servers])
     end
 
     it "adds exp_includes .references to the scope" do
-      method_args      = [scope, klass, nil, exp_includes]
+      method_args      = [scope, klass, nil, nil, exp_includes]
       resulting_scope  = subject.send(:include_references, *method_args)
 
+      expect(resulting_scope.includes_values).to eq([exp_includes])
       expect(resulting_scope.references_values).to eq(%w[hosts])
     end
 
     it "adds include_for_find and exp_includes .references to the scope" do
-      method_args      = [scope, klass, include_for_find, exp_includes]
+      method_args      = [scope, klass, include_for_find, include_for_find, exp_includes]
       resulting_scope  = subject.send(:include_references, *method_args)
 
+      expect(resulting_scope.includes_values).to match_array([include_for_find, exp_includes])
       expect(resulting_scope.references_values).to eq(%w[miq_servers hosts])
+    end
+
+    context "if the include is an array" do
+      let(:include_for_find) { [:miq_server] }
+      let(:exp_includes)     { [:host] }
+
+      it "adds include_for_find and exp_includes .references to the scope" do
+        method_args      = [scope, klass, include_for_find, include_for_find, exp_includes]
+        resulting_scope  = subject.send(:include_references, *method_args)
+
+        expect(resulting_scope.includes_values).to match_array([:miq_server, :host])
+        expect(resulting_scope.references_values).to match_array(%w[hosts miq_servers])
+      end
     end
 
     context "if the include is polymorphic" do
@@ -2746,9 +2775,10 @@ RSpec.describe Rbac::Filterer do
       let(:include_for_find) { {:resource => {}} }
 
       it "does not add .references to the scope" do
-        method_args      = [scope, klass, include_for_find, nil]
+        method_args      = [scope, klass, include_for_find, include_for_find, nil]
         resulting_scope  = subject.send(:include_references, *method_args)
 
+        expect(resulting_scope.includes_values).to eq([include_for_find])
         expect(resulting_scope.references_values).to eq([])
       end
     end

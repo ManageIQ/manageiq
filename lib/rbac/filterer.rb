@@ -296,10 +296,9 @@ module Rbac
       scope = scope.except(:offset, :limit, :order)
       scope = scope_targets(klass, scope, user_filters, user, miq_group)
               .where(conditions).where(sub_filter).where(where_clause).where(exp_sql).where(ids_clause)
-              .includes(include_for_find).includes(exp_includes)
               .order(order)
 
-      scope = include_references(scope, klass, references, exp_includes)
+      scope = include_references(scope, klass, include_for_find, references, exp_includes)
       scope = scope.limit(limit).offset(offset) if attrs[:apply_limit_in_sql]
 
       #      SELECT col1, (SELECT "abc") AS virtual_col
@@ -427,8 +426,9 @@ module Rbac
       end
     end
 
-    def include_references(scope, klass, references, exp_includes)
+    def include_references(scope, klass, includes, references, exp_includes)
       scope.references(klass.includes_to_references(references)).references(klass.includes_to_references(exp_includes))
+           .includes(includes).includes(exp_includes)
     end
 
     # @param includes [Array, Hash]
