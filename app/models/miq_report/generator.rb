@@ -88,27 +88,12 @@ module MiqReport::Generator
     include_as_hash(include.presence || invent_report_includes)
   end
 
-  def polymorphic_includes
-    @polymorphic_includes ||= begin
-      top_level_rels = Array(get_include.try(:keys)) + Array(get_include_for_find.try(:keys))
-
-      top_level_rels.uniq.each_with_object([]) do |assoc, polymorphic_rels|
-        reflection = db_class.reflect_on_association(assoc)
-        polymorphic_rels << assoc if reflection && reflection.polymorphic?
-      end
-    end
-  end
-
   def get_ar_includes
-    polymorphic_includes.each_with_object(get_include_for_find.dup) do |key, includes|
-      includes.delete(key)
-    end
+    include_for_find
   end
 
   def get_ar_references
-    polymorphic_includes.each_with_object(get_include.dup) do |key, includes|
-      includes.delete(key)
-    end
+    db_class.prune_references(get_include)
   end
 
   def invent_includes

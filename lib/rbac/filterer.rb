@@ -325,12 +325,15 @@ module Rbac
       if inline_view?(options, scope)
         inner_scope = scope.except(:select, :includes, :references, :eager_load, :preload)
         # similar to include_references but using joins
-        # TODO: optimization: Can we remove these from the outer query?
+        # TODO: optimization: Can we remove these references from the outer query?
+        #       To do this, we may need to introduce join() to complete the triad: include/reference/join
         inner_scope = add_joins(klass, inner_scope, references)
+        # TODO: do we want to klass.prune_references(exp_includes)? (see also include_references)
         inner_scope = add_joins(klass, inner_scope, exp_includes)
         if inner_scope.order_values.present?
           inner_scope = apply_select(klass, inner_scope, select_from_order_columns(inner_scope.order_values))
         end
+        # TODO: Convert from(inner_scope.to_sql) to from(inner_scope)
         scope = scope.from(Arel.sql("(#{inner_scope.to_sql})").as(scope.table_name))
                      .except(:offset, :limit, :where)
 
@@ -428,6 +431,7 @@ module Rbac
 
     def include_references(scope, klass, includes, references, exp_includes)
       if scope.respond_to?(:eager_load)
+        # TODO: do we want to klass.prune_references(exp_includes)? (see same comment for inline_view? section)
         scope.eager_load(references || {}).eager_load(exp_includes || {}).preload(includes)
       else
         # This is the AAAR / QueryRelation branch
@@ -440,6 +444,8 @@ module Rbac
     def add_joins(klass, scope, includes)
       return scope unless includes
 
+      # NOTE: We should be pre-pruning polymorphic out of here, since they shouldn't be in references.
+      # TODO: do we want to be less lenient? i.e.: raise PolymorphicError if reflection&.polymorphic?
       includes = Array(includes) unless includes.kind_of?(Enumerable)
       includes.each do |association, value|
         reflection = klass.reflect_on_association(association)
@@ -447,6 +453,7 @@ module Rbac
           scope = value ? scope.left_outer_joins(association => value) : scope.left_outer_joins(association)
         end
       end
+      # This adds a DISTINCT to safeguard "JOIN has_many" screwing up the LIMIT.
       scope = scope.distinct if !scope.distinct_value && is_collection?(klass, includes)
       scope
     end

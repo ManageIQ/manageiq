@@ -1169,29 +1169,21 @@ RSpec.describe Rbac::Filterer do
         }
       end
 
-      # NOTE:  Think long and hard before you consider removing this test.
-      # Many-a-hours wasted here determining this bug that resulted in
-      # re-adding this test again.
+      # We've had an on and off again success with polymorphics (first documented in 2015 by Greg Tanzillo)
+      # references().includes() with polymorphic does not work
+      # now that we've converted to preload and eager_load, this is no longer an issue
       #
-      # 2nd NOTE:  I did think (and wrote the above comment as well), however,
-      # now it seems we DO NOT SUPPORT polymorphic code, since we removed it
-      # here:
-      #
-      #   https://github.com/ManageIQ/manageiq/commit/8cc2277b
-      #
-      # That said, we should make sure this is erroring and no other callers
-      # are trying to do this (example:  MiqReport), so make sure this raises
-      # an error to inform the caller that fixing needs to happen.
+      # Since we've been so mix and match, please leave this test in here
       #
       it "raises an error when a polymorphic reflection is included and referenced" do
-        # NOTE: Fails if :references is passed with a value, or with no key,
-        # which it uses :include_for_find as the default.
+        # This is not valid. You should not be able to pass a polymorphic to references
         expect do
           described_class.search :class            => "MetricRollup",
                                  :include_for_find => @include,
                                  :references       => @include
         end.to raise_error(Rbac::PolymorphicError)
 
+        # defaults to includes when no :references passed in
         expect do
           described_class.search :class            => "MetricRollup",
                                  :include_for_find => @include
@@ -1199,21 +1191,20 @@ RSpec.describe Rbac::Filterer do
       end
 
       it "does not raise an error when a polymorphic reflection is only included" do
-        # NOTE:  if references is passed in, but is blank, then doesn't override and is fine
+        expect do
+          described_class.search :class            => "MetricRollup",
+                                 :include_for_find => @include,
+                                 :references       => MetricRollup.prune_references(@include)
+        end.not_to raise_error
+
+        # NOTE:  if a nil or blank references is passed in, then it doesn't default to the include_for_find and is fine
         expect do
           described_class.search :class            => "MetricRollup",
                                  :include_for_find => @include,
                                  :references       => {}
         end.not_to raise_error
 
-        expect do
-          described_class.search :class            => "MetricRollup",
-                                 :include_for_find => @include,
-                                 :references       => nil
-        end.not_to raise_error
-
-        # ensure going forward that polymorphics can be passed as references
-        # this has been broken and fixed many times. Please don't remove
+        # Any references with a polymorphic in the includes (and a supported references value should work. (it wasn't working before)
         expect do
           described_class.search :class            => "MetricRollup",
                                  :include_for_find => @include,
@@ -2627,6 +2618,7 @@ RSpec.describe Rbac::Filterer do
 
         recs, attrs = Rbac.search(:targets          => MetricRollup,
                                   :include_for_find => {:resource => {}, :parent_host => {}},
+                                  :references       => MetricRollup.prune_references({:resource => {}, :parent_host => {}}),
                                   :extra_cols       => [:v_derived_storage_used],
                                   :use_sql_view     => true,
                                   :limit            => 20,
@@ -2767,19 +2759,6 @@ RSpec.describe Rbac::Filterer do
 
         expect(resulting_scope.preload_values).to match_array([:miq_server])
         expect(resulting_scope.eager_load_values).to match_array([:miq_server, :host])
-      end
-    end
-
-    context "if the include is polymorphic" do
-      let(:klass)            { MetricRollup }
-      let(:include_for_find) { {:resource => {}} }
-
-      it "does not add .references to the scope" do
-        method_args      = [scope, klass, include_for_find, include_for_find, nil]
-        resulting_scope  = subject.send(:include_references, *method_args)
-
-        expect(resulting_scope.preload_values).to eq([include_for_find])
-        expect(resulting_scope.eager_load_values).to eq([include_for_find])
       end
     end
   end
