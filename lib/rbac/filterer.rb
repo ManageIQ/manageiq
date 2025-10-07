@@ -323,7 +323,7 @@ module Rbac
       #        Hence auth_count calculated from inner_scope.
       #
       if inline_view?(options, scope)
-        inner_scope = scope.except(:select, :includes, :references)
+        inner_scope = scope.except(:select, :includes, :references, :eager_load, :preload)
         # similar to include_references but using joins
         # TODO: optimization: Can we remove these from the outer query?
         inner_scope = add_joins(klass, inner_scope, references)
@@ -427,8 +427,13 @@ module Rbac
     end
 
     def include_references(scope, klass, includes, references, exp_includes)
-      scope.references(klass.includes_to_references(references)).references(klass.includes_to_references(exp_includes))
-           .includes(includes).includes(exp_includes)
+      if scope.respond_to?(:eager_load)
+        scope.eager_load(references || {}).eager_load(exp_includes || {}).preload(includes)
+      else
+        # This is the AAAR / QueryRelation branch
+        # TODO: drop this fallback once https://github.com/ManageIQ/query_relation/pull/43 is merged
+        scope.references(references || {}).references(exp_includes || {}).includes(includes)
+      end
     end
 
     # @param includes [Array, Hash]

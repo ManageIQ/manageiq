@@ -726,7 +726,7 @@ RSpec.describe Rbac::Filterer do
         end
 
         it "adds references" do
-          expect(results.references_values).to match_array %w[users]
+          expect(results.eager_load_values).to eq([:evm_owner => {}])
         end
       end
     end
@@ -1196,18 +1196,10 @@ RSpec.describe Rbac::Filterer do
           described_class.search :class            => "MetricRollup",
                                  :include_for_find => @include
         end.to raise_error(Rbac::PolymorphicError)
-
-        # Bug in ActiveRecord is surfaced here
-        # Any references value causes an issue (even though the references is not polymorphic)
-        expect do
-          described_class.search :class            => "MetricRollup",
-                                 :include_for_find => @include,
-                                 :references       => :parent_host
-        end.to raise_error(Rbac::PolymorphicError)
       end
 
       it "does not raise an error when a polymorphic reflection is only included" do
-        # NOTE:  if references is passed in, but is blank, then it is fine
+        # NOTE:  if references is passed in, but is blank, then doesn't override and is fine
         expect do
           described_class.search :class            => "MetricRollup",
                                  :include_for_find => @include,
@@ -1218,6 +1210,14 @@ RSpec.describe Rbac::Filterer do
           described_class.search :class            => "MetricRollup",
                                  :include_for_find => @include,
                                  :references       => nil
+        end.not_to raise_error
+
+        # ensure going forward that polymorphics can be passed as references
+        # this has been broken and fixed many times. Please don't remove
+        expect do
+          described_class.search :class            => "MetricRollup",
+                                 :include_for_find => @include,
+                                 :references       => :parent_host
         end.not_to raise_error
       end
     end
@@ -2737,24 +2737,24 @@ RSpec.describe Rbac::Filterer do
       method_args      = [scope, klass, include_for_find, include_for_find, nil]
       resulting_scope  = subject.send(:include_references, *method_args)
 
-      expect(resulting_scope.includes_values).to eq([include_for_find])
-      expect(resulting_scope.references_values).to eq(%w[miq_servers])
+      expect(resulting_scope.preload_values).to eq([include_for_find])
+      expect(resulting_scope.eager_load_values).to eq([include_for_find])
     end
 
     it "adds exp_includes .references to the scope" do
       method_args      = [scope, klass, nil, nil, exp_includes]
       resulting_scope  = subject.send(:include_references, *method_args)
 
-      expect(resulting_scope.includes_values).to eq([exp_includes])
-      expect(resulting_scope.references_values).to eq(%w[hosts])
+      expect(resulting_scope.preload_values).to eq([])
+      expect(resulting_scope.eager_load_values).to eq([exp_includes])
     end
 
     it "adds include_for_find and exp_includes .references to the scope" do
       method_args      = [scope, klass, include_for_find, include_for_find, exp_includes]
       resulting_scope  = subject.send(:include_references, *method_args)
 
-      expect(resulting_scope.includes_values).to match_array([include_for_find, exp_includes])
-      expect(resulting_scope.references_values).to eq(%w[miq_servers hosts])
+      expect(resulting_scope.preload_values).to eq([include_for_find])
+      expect(resulting_scope.eager_load_values).to match_array([exp_includes, include_for_find])
     end
 
     context "if the include is an array" do
@@ -2765,8 +2765,8 @@ RSpec.describe Rbac::Filterer do
         method_args      = [scope, klass, include_for_find, include_for_find, exp_includes]
         resulting_scope  = subject.send(:include_references, *method_args)
 
-        expect(resulting_scope.includes_values).to match_array([:miq_server, :host])
-        expect(resulting_scope.references_values).to match_array(%w[hosts miq_servers])
+        expect(resulting_scope.preload_values).to match_array([:miq_server])
+        expect(resulting_scope.eager_load_values).to match_array([:miq_server, :host])
       end
     end
 
@@ -2778,8 +2778,8 @@ RSpec.describe Rbac::Filterer do
         method_args      = [scope, klass, include_for_find, include_for_find, nil]
         resulting_scope  = subject.send(:include_references, *method_args)
 
-        expect(resulting_scope.includes_values).to eq([include_for_find])
-        expect(resulting_scope.references_values).to eq([])
+        expect(resulting_scope.preload_values).to eq([include_for_find])
+        expect(resulting_scope.eager_load_values).to eq([include_for_find])
       end
     end
   end
