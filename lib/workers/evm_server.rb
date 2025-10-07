@@ -186,13 +186,45 @@ class EvmServer
 
   def set_local_server_vm
     if @current_server.vm_id.nil?
-      vms = Vm.find_all_by_mac_address_and_hostname_and_ipaddress(@current_server.mac_address, @current_server.hostname, @current_server.ipaddress)
+      vms = Vm.find_vms_by_mac_address_and_hostname_and_ipaddress(@current_server.mac_address, @current_server.hostname, @current_server.ipaddress)
       if vms.length > 1
         _log.warn("Found multiple Vms that may represent this MiqServer: #{vms.collect(&:id).sort.inspect}")
       elsif vms.length == 1
         @current_server.update(:vm_id => vms.first.id)
       end
     end
+  end
+
+  def find_vms_by_mac_address_and_hostname_and_ipaddress(mac_address, hostname, ipaddress)
+    return [] if mac_address.blank? && hostname.blank? && ipaddress.blank?
+
+    include = [:vm_or_template]
+    references = []
+    conds = [["hardwares.vm_or_template_id IS NOT NULL"]]
+    if mac_address
+      conds[0] << "guest_devices.address = ?"
+      conds << mac_address
+      include << :nics
+      references << :guest_devices
+    end
+    if hostname
+      conds[0] << "networks.hostname = ?"
+      conds << hostname
+      include << :networks
+      references << :networks
+    end
+    if ipaddress
+      conds[0] << "networks.ipaddress = ?"
+      conds << ipaddress
+      include << :networks
+      references << :networks
+    end
+    conds[0] = "(#{conds[0].join(" AND ")})"
+
+    Hardware.includes(include.uniq)
+            .references(references.uniq)
+            .where(conds)
+            .map(&:vm_or_template).select { |vm| vm.kind_of?(Vm) }
   end
 
   def reset_server_runtime_info
