@@ -124,7 +124,8 @@ class MiqRequest < ApplicationRecord
   }.freeze
 
   REQUEST_TYPES_BACKEND_ONLY = {
-    :MiqProvisionRequestTemplate              => {:template            => "VM Provision Template"},
+    :MiqProvisionRequestTemplate                    => {:template            => "VM Provision Template"},
+    :MiqProvisionConfigurationScriptRequestTemplate => {:provision_via_automation_manager => "Configuration Script Template"}
   }
 
   REQUEST_TYPES = MODEL_REQUEST_TYPES.values.each_with_object(REQUEST_TYPES_BACKEND_ONLY) { |i, h| i.each { |k, v| h[k] = v } }
