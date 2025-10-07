@@ -86,7 +86,7 @@ module MiqReport::Search
     self.display_filter = options.delete(:display_filter_hash)  if options[:display_filter_hash]
     self.display_filter = options.delete(:display_filter_block) if options[:display_filter_block]
 
-    includes = get_include_for_find
+    includes = get_ar_includes
     self.extras ||= {}
     if extras[:target_ids_for_paging] && db_class.column_names.include?('id')
       return get_cached_page(limited_ids(limit, offset), includes, options)
@@ -97,7 +97,7 @@ module MiqReport::Search
     search_options = options.merge(:class            => db,
                                    :conditions       => conditions,
                                    :include_for_find => includes,
-                                   :references       => get_include
+                                   :references       => get_ar_references
                                   )
     search_options.merge!(:limit => limit, :offset => offset, :order => order) if order
     search_options[:extra_cols] = va_sql_cols if va_sql_cols.present?
