@@ -166,10 +166,7 @@ module ActsAsTaggable
   end
 
   def tagged_with(options = {})
-    tagging = Tagging.arel_table
-    query = Tag.includes(:taggings).references(:taggings)
-    query = query.where(tagging[:taggable_type].eq(self.class.base_class.name))
-    query = query.where(tagging[:taggable_id].eq(id))
+    query = Tag.eager_load(:taggings).where(:taggings => {:taggable_type => self.class.base_class.name, :taggable_id => id})
     ns    = Tag.get_namespace(options)
     query = query.where(Tag.arel_table[:name].matches("#{ns}%")) if ns
     query

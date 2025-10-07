@@ -31,6 +31,7 @@ class Classification < ApplicationRecord
   scope :is_category, -> { where(:parent_id => nil) }
   scope :is_entry,    -> { where.not(:parent_id => nil) }
 
+  # TODO: move over to joins(:parent) or preload(:parent) - need something that works well with load()
   scope :with_writable_parents, -> { includes(:parent).where(:parents_classifications => {:read_only => false}) }
 
   DEFAULT_NAMESPACE = "/managed".freeze
@@ -211,13 +212,13 @@ class Classification < ApplicationRecord
   end
 
   def self.categories(region_id = my_region_number, ns = DEFAULT_NAMESPACE)
-    cats = is_category.in_region(region_id).includes(:tag, :children)
+    cats = is_category.in_region(region_id).preload(:tag, :children)
     cats.select { |c| c.ns == ns }
   end
 
   def self.category_names_for_perf_by_tag(region_id = my_region_number, ns = DEFAULT_NAMESPACE)
     in_region(region_id).is_category.where(:perf_by_tag => true)
-      .includes(:tag)
+      .preload(:tag)
       .collect { |c| c.name if c.tag2ns(c.tag.name) == ns }
       .compact
   end
@@ -513,7 +514,7 @@ class Classification < ApplicationRecord
   def validate_uniqueness_on_tag_name
     tag_name = Classification.name2tag(name, parent, ns)
     exist_scope = Classification.default_scoped
-                                .includes(:tag)
+                                .left_outer_joins(:tag)
                                 .where(:tags => {:name => tag_name})
                                 .merge(Tag.in_region(region_id))
     exist_scope = exist_scope.where.not(:id => id) unless new_record?

@@ -221,8 +221,7 @@ module AssignmentMixin
       # look for alert_set running off of tags (not individual tags)
       # TODO: we may need to change taggings-related code to use base_model too
       tlist = Tagging.where("tags.name like '/managed/%'")
-                     .where(:taggable => parents)
-                     .references(:tag).includes(:tag).map do |t|
+                     .where(:taggable => parents).eager_load(:tag).map do |t|
         "#{tag_class(t.taggable_type)}/tag#{t.tag.name}"
       end
 
