@@ -186,13 +186,25 @@ class EvmServer
 
   def set_local_server_vm
     if @current_server.vm_id.nil?
-      vms = Vm.find_all_by_mac_address_and_hostname_and_ipaddress(@current_server.mac_address, @current_server.hostname, @current_server.ipaddress)
-      if vms.length > 1
-        _log.warn("Found multiple Vms that may represent this MiqServer: #{vms.collect(&:id).sort.inspect}")
-      elsif vms.length == 1
-        @current_server.update(:vm_id => vms.first.id)
+      vm_ids = find_vms_by_mac_address_and_hostname_and_ipaddress(@current_server.mac_address, @current_server.hostname, @current_server.ipaddress).pluck(:id)
+      if vm_ids.length > 1
+        _log.warn("Found multiple Vms that may represent this MiqServer: #{vm_ids.sort.inspect}")
+      elsif vm_ids.length == 1
+        @current_server.update(:vm_id => vm_ids.first)
       end
     end
+  end
+
+  def find_vms_by_mac_address_and_hostname_and_ipaddress(mac_address, hostname, ipaddress)
+    return Vm.none if mac_address.blank? && hostname.blank? && ipaddress.blank?
+
+    scope = Vm
+    # NOTE: nics are guest devices with an extra where()
+    scope = scope.joins(:hardware => :nics).where(:guest_devices => {:address => mac_address}) if mac_address
+    scope = scope.joins(:hardware => :networks).where(:networks => {:hostname => hostname}) if hostname
+    scope = scope.joins(:hardware => :networks).where(:networks => {:ipaddress => ipaddress}) if ipaddress
+
+    scope
   end
 
   def reset_server_runtime_info
