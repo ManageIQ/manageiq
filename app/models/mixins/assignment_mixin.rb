@@ -173,8 +173,8 @@ module AssignmentMixin
       records = kind_of?(Class) ? all : self
       assignment_map = records.index_by { |a| a.id }
       Tag
-        .includes(:taggings).references(:taggings)
-        .where("taggings.taggable_type = ? and tags.name like ?", name, "#{namespace}/%")
+        .eager_load(:taggings).where(:taggings => {:taggable_type => name})
+        .where("tags.name like ?", "#{namespace}/%")
         .each_with_object(Hash.new { |h, k| h[k] = [] }) do |tag, ret|
           tag.taggings.each do |tagging|
             tag_name = Tag.filter_ns([tag], namespace).first
@@ -221,8 +221,7 @@ module AssignmentMixin
       # look for alert_set running off of tags (not individual tags)
       # TODO: we may need to change taggings-related code to use base_model too
       tlist = Tagging.where("tags.name like '/managed/%'")
-                     .where(:taggable => parents)
-                     .references(:tag).includes(:tag).map do |t|
+                     .where(:taggable => parents).eager_load(:tag).map do |t|
         "#{tag_class(t.taggable_type)}/tag#{t.tag.name}"
       end
 
