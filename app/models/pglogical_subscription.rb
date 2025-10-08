@@ -16,22 +16,20 @@ class PglogicalSubscription < ActsAsArModel
     :provider_region_name => :string
   )
 
-  def self.find(*args)
-    case args.first
+  def self.search(mode, args)
+    case mode
     when :all then find_all
-    when :first, :last then find_one(args.first)
-    else find_id(args.first)
+    when :first, :last then find_one(mode)
+    else find_id(mode)
     end
   end
 
   def self.lookup_by_id(to_find)
-    find(to_find)
+    find_id(to_find)
   rescue ActiveRecord::RecordNotFound
     nil
   end
-
   singleton_class.send(:alias_method, :find_by_id, :lookup_by_id)
-  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_id => :lookup_by_id)
 
   def save!(reload_failover_monitor = true)
     assert_different_region!
@@ -73,7 +71,7 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def self.delete_all(list = nil)
-    (list.nil? ? find(:all) : list)&.each { |sub| sub.delete(false) }
+    (list.nil? ? all : list)&.each { |sub| sub.delete(false) }
     EvmDatabase.restart_failover_monitor_service_queue
     nil
   end
@@ -189,7 +187,7 @@ class PglogicalSubscription < ActsAsArModel
     subscriptions.each do |s|
       return new(subscription_to_columns(s)) if s.symbolize_keys[:subscription_name] == to_find
     end
-    raise ActiveRecord::RecordNotFound, "Coundn't find subscription with id #{to_find}"
+    raise ActiveRecord::RecordNotFound, "Couldn't find subscription with id #{to_find}"
   end
   private_class_method :find_id
 

@@ -118,42 +118,35 @@ RSpec.describe PglogicalSubscription do
       expect(actual_attrs).to match_array(expected_attrs)
     end
 
-    it "supports find(:all) with records" do
-      with_records
-      actual_attrs = described_class.find(:all).map(&:attributes)
-      expect(actual_attrs).to match_array(expected_attrs)
-    end
-
     it "retrieves no records with no records" do
       with_no_records
       expect(described_class.all).to be_empty
-      expect(described_class.find(:all)).to be_empty
     end
   end
 
   describe ".first" do
     it "retrieves the first record with records" do
       with_records
-      rec = described_class.find(:first)
+      rec = described_class.first
       expect(rec.attributes).to eq(expected_attrs.first)
     end
 
     it "returns nil with no records" do
       with_no_records
-      expect(described_class.find(:first)).to be_nil
+      expect(described_class.first).to be_nil
     end
   end
 
   describe ".last" do
     it "retrieves the last record with :last" do
       with_records
-      rec = described_class.find(:last)
+      rec = described_class.last
       expect(rec.attributes).to eq(expected_attrs.last)
     end
 
     it "returns nil with :last" do
       with_no_records
-      expect(described_class.find(:last)).to be_nil
+      expect(described_class.last).to be_nil
     end
   end
 
@@ -264,7 +257,7 @@ RSpec.describe PglogicalSubscription do
       with_records
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
 
-      sub = described_class.find(:first)
+      sub = described_class.first
       sub.host = "other-host.example.com"
       allow(sub).to receive(:assert_different_region!)
 
@@ -289,7 +282,7 @@ RSpec.describe PglogicalSubscription do
     end
 
     it "deletes all subscriptions if no parameter passed" do
-      allow(described_class).to receive(:find).with(:all).and_return([subscription1, subscription2])
+      allow(described_class).to receive(:search).with(:all, {}).and_return([subscription1, subscription2])
       expect(subscription1).to receive(:delete)
       expect(subscription2).to receive(:delete)
       described_class.delete_all
@@ -368,7 +361,7 @@ RSpec.describe PglogicalSubscription do
   end
 
   describe "#delete" do
-    let(:sub) { described_class.find(:first) }
+    let(:sub) { described_class.first }
 
     it "drops the subscription" do
       allow(pglogical).to receive(:subscriptions).and_return([subscriptions.first], [])
@@ -444,7 +437,7 @@ RSpec.describe PglogicalSubscription do
     it "validates existing subscriptions with new parameters" do
       allow(pglogical).to receive(:subscriptions).and_return([subscriptions.first])
 
-      sub = described_class.find(:first)
+      sub = described_class.first
       expect(sub.host).to eq "example.com"
       expect(sub.port).to be_blank
       expect(sub.user).to eq "root"

@@ -1,3 +1,5 @@
+require 'query_relation'
+
 class ActsAsArModel
   include Vmdb::Logging
   include ArVisibleAttribute
@@ -121,6 +123,7 @@ class ActsAsArModel
   include ActiveRecord::VirtualAttributes::VirtualFields
 
   include AttributeBag
+  extend QueryRelation::Queryable
 
   def self.instances_are_derived?
     true
@@ -146,59 +149,49 @@ class ActsAsArModel
   #
   # Find routines
   #
-  def self.find(*_args)
-    raise NotImplementedError, _("find must be implemented in a subclass")
+  def self.find(mode_or_id, *args)
+    if %i[all first last].include?(mode_or_id)
+      Vmdb::Deprecation.warn("find(:#{mode_or_id}) is deprecated (use #{mode_or_id} instead)")
+      search(mode_or_id, from_legacy_options(args.extract_options!))
+    else
+      lookup_by_id(mode_or_id, *args).tap do |record|
+        raise ActiveRecord::RecordNotFound, "Couldn't find #{self} with id=#{mode_or_id}" if record.nil?
+      end
+    end
   end
 
-  # This method is called by QueryRelation upon executing the query.
-  #   Since it will receive non-legacy search options, we need to convert
-  #   them to handle the legacy find.
-  def self.search(mode, options = {})
-    find(mode, to_legacy_options(options))
+  def self.search(mode, options)
+    raise NotImplementedError, "must be defined in a subclass"
   end
-  private_class_method :search
 
-  def self.to_legacy_options(options)
+  def self.from_legacy_options(options)
     {
-      :conditions => options[:where],
-      :include    => options[:includes],
-      :limit      => options[:limit],
-      :order      => options[:order],
-      :offset     => options[:offset],
-      :select     => options[:select],
-      :group      => options[:group],
+      :where    => options[:conditions],
+      :includes => options[:include],
+      :limit    => options[:limit],
+      :order    => options[:order],
+      :offset   => options[:offset],
+      :select   => options[:select],
+      :group    => options[:group],
     }.delete_blanks
   end
-  private_class_method :to_legacy_options
-
-  def self.all(*args)
-    require 'query_relation'
-    QueryRelation.new(self, *args)
-  end
-
-  def self.first(*args)
-    find(:first, *args)
-  end
-
-  def self.last(*args)
-    find(:last, *args)
-  end
-
-  def self.count(*args)
-    all(*args).count
-  end
+  private_class_method :from_legacy_options
 
   def self.find_by_id(*id)
     options = id.extract_options!
-    options[:conditions] = {:id => id.first}
-    first(options)
+    options[:where] = {:id => id.first}
+    search(:first, options)
   end
+
+  singleton_class.send(:alias_method, :lookup_by_id, :find_by_id)
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_id => :lookup_by_id)
 
   def self.find_all_by_id(*ids)
     options = ids.extract_options!
-    options[:conditions] = {:id => ids.flatten}
-    all(options)
+    options[:where] = {:id => ids.flatten}
+    search(:all, options)
   end
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_all_by_id => "use where(:id => ids) instead")
 
   #
   # Methods pulled from ActiveRecord 2.3.8
