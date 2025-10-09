@@ -9,7 +9,7 @@ class ActsAsArScope < ActsAsArModel
 
     delegate :klass, :to => :aar_scope, :prefix => true
     delegate :table_name, :reflections, :to => :aar_scope_klass
-    delegate :_virtual_columns_hash, :virtual_reflections, :to => :aar_scope_klass
+    delegate :virtual_reflections, :to => :aar_scope_klass
   end
 
   def self.aar_scope
