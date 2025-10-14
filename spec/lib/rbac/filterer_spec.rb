@@ -2660,7 +2660,7 @@ RSpec.describe Rbac::Filterer do
     end
 
     it "support aaarm object" do
-      expect(VimPerformanceTrend).to receive(:find).with(:all, {:include => {:a => {}}}).and_return([:good])
+      expect(VimPerformanceTrend).to receive(:search).with(:all, {:includes => {:a => {}}, :references => {:a => {}}}).and_return([:good])
       expect(described_class.filtered(VimPerformanceTrend, :include_for_find => {:a => {}}).to_a).to match_array([:good])
     end
 

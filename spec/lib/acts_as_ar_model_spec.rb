@@ -55,35 +55,133 @@ RSpec.describe ActsAsArModel do
   end
 
   describe ".all" do
-    it "chains through active query" do
-      expect(base_class).to receive(:find).with(:all, {}).and_return([])
+    it "comes from QueryRelation" do
+      expect(base_class).to receive(:search).with(:all, {}).and_return([])
       expect(base_class.all.to_a).to eq([])
     end
 
-    it "supports where (as an example)" do
-      expect(base_class).to receive(:find).with(:all, {:conditions => {:id => 5}}).and_return([])
+    it "supports where from QueryRelation (as an example)" do
+      expect(base_class).to receive(:search).with(:all, {:where => {:id => 5}}).and_return([])
       expect(base_class.all.where(:id => 5).to_a).to eq([])
     end
   end
 
   describe ".first" do
-    it "chains through active query" do
-      expect(base_class).to receive(:find).with(:first).and_return(nil)
+    it "comes from QueryRelation" do
+      expect(base_class).to receive(:search).with(:first, {}).and_return(nil)
       expect(base_class.first).to eq(nil)
     end
   end
 
   describe ".last" do
-    it "chains through active query" do
-      expect(base_class).to receive(:find).with(:last).and_return(nil)
+    it "comes from QueryRelation" do
+      expect(base_class).to receive(:search).with(:last, {}).and_return(nil)
       expect(base_class.last).to eq(nil)
     end
   end
 
   describe ".count" do
-    it "chains through active query" do
-      expect(base_class).to receive(:find).with(:all, {}).and_return([])
+    it "comes from QueryRelation" do
+      expect(base_class).to receive(:search).with(:all, {}).and_return([])
       expect(base_class.count).to eq(0)
+    end
+  end
+
+  describe ".find (deprecated)" do
+    around do |example|
+      Vmdb::Deprecation.silence do
+        example.run
+      end
+    end
+
+    describe "find(:all)" do
+      it "chains through QueryRelation" do
+        expect(base_class).to receive(:search).with(:all, {}).and_return([])
+        expect(base_class.find(:all).to_a).to eq([])
+      end
+
+      it "supports :conditions legacy option (as an example)" do
+        expect(base_class).to receive(:search).with(:all, {:where => {:id => 5}}).and_return([])
+        expect(base_class.find(:all, :conditions => {:id => 5}).to_a).to eq([])
+      end
+    end
+
+    describe "find(:first)" do
+      it "chains through QueryRelation" do
+        expect(base_class).to receive(:search).with(:first, {}).and_return(nil)
+        expect(base_class.find(:first)).to eq(nil)
+      end
+    end
+
+    describe ".find(:last)" do
+      it "chains through QueryRelation" do
+        expect(base_class).to receive(:search).with(:last, {}).and_return(nil)
+        expect(base_class.find(:last)).to eq(nil)
+      end
+    end
+  end
+
+  describe ".find" do
+    it "finds a record by id" do
+      expected = Object.new
+      expect(base_class).to receive(:search).with(:first, {:where => {:id => 5}}).and_return(expected)
+      expect(base_class.find(5)).to eq(expected)
+    end
+
+    it "raises when not found" do
+      expect(base_class).to receive(:search).with(:first, {:where => {:id => 5}}).and_return(nil)
+      expect { base_class.find(5) }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
+  describe ".lookup_by_id" do
+    it "finds a record by id" do
+      expected = Object.new
+      expect(base_class).to receive(:search).with(:first, {:where => {:id => 5}}).and_return(expected)
+      expect(base_class.lookup_by_id(5)).to eq(expected)
+    end
+
+    it "returns nil when not found" do
+      expect(base_class).to receive(:search).with(:first, {:where => {:id => 5}}).and_return(nil)
+      expect(base_class.lookup_by_id(5)).to be_nil
+    end
+  end
+
+  describe ".find_by_id (deprecated)" do
+    around do |example|
+      Vmdb::Deprecation.silence do
+        example.run
+      end
+    end
+
+    it "finds a record by id" do
+      expected = Object.new
+      expect(base_class).to receive(:search).with(:first, {:where => {:id => 5}}).and_return(expected)
+      expect(base_class.find_by_id(5)).to eq(expected)
+    end
+
+    it "returns nil when not found" do
+      expect(base_class).to receive(:search).with(:first, {:where => {:id => 5}}).and_return(nil)
+      expect(base_class.find_by_id(5)).to be_nil
+    end
+  end
+
+  describe ".find_all_by_id (deprecated)" do
+    around do |example|
+      Vmdb::Deprecation.silence do
+        example.run
+      end
+    end
+
+    it "finds record by ids" do
+      expected = [Object.new, Object.new]
+      expect(base_class).to receive(:search).with(:all, {:where => {:id => [5, 6]}}).and_return(expected)
+      expect(base_class.find_all_by_id(5, 6)).to eq(expected)
+    end
+
+    it "returns empty Array when none found" do
+      expect(base_class).to receive(:search).with(:all, {:where => {:id => [5, 6]}}).and_return([])
+      expect(base_class.find_all_by_id(5, 6)).to eq([])
     end
   end
 end
