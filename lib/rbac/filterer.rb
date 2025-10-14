@@ -429,15 +429,11 @@ module Rbac
       end
     end
 
+    # NOTE: for ActsAsArModel, scope will be a QueryRelation
+    #       for ActsAsArScope, scope will be a standard AR scope
     def include_references(scope, klass, includes, references, exp_includes)
-      if scope.respond_to?(:eager_load)
-        # TODO: do we want to klass.prune_references(exp_includes)? (see same comment for inline_view? section)
-        scope.eager_load(references || {}).eager_load(exp_includes || {}).preload(includes)
-      else
-        # This is the AAAR / QueryRelation branch
-        # TODO: drop this fallback once https://github.com/ManageIQ/query_relation/pull/43 is merged
-        scope.references(references || {}).references(exp_includes || {}).includes(includes)
-      end
+      # TODO: do we want to klass.prune_references(exp_includes)? (see same comment for inline_view? section)
+      scope.eager_load(references || {}).eager_load(exp_includes || {}).preload(includes)
     end
 
     # @param includes [Array, Hash]
