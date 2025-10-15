@@ -1,8 +1,7 @@
-# this is an extension to act as ar_model
-# this allows a developer to formulate results as a scope
-# all other behavior is handled from there
+# This is a form of an AR Model. But the distinction is this is a model based upon an ActiveRecord scope (aar_scope)
+# Essentially, this delegates all calls to the scope.
+# It may be easier to understand by looking at an implementation like InfraManager::VmOrTemplate
 class ActsAsArScope < ActsAsArModel
-  # user required to add aar_scope
   class << self
     # Standard query methods are delegated to the core active record classes
     delegate :includes, :references, :eager_load, :preload, :limit, :order, :offset, :select, :where, :to => :aar_scope
@@ -11,6 +10,10 @@ class ActsAsArScope < ActsAsArModel
     delegate :klass, :to => :aar_scope, :prefix => true
     delegate :table_name, :reflections, :to => :aar_scope_klass
     delegate :_virtual_columns_hash, :virtual_reflections, :to => :aar_scope_klass
+  end
+
+  def self.aar_scope
+    raise NotImplementedError, _("find must be implemented in a subclass")
   end
 
   def self.all(*args)
