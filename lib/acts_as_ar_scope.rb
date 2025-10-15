@@ -4,7 +4,8 @@
 class ActsAsArScope < ActsAsArModel
   # user required to add aar_scope
   class << self
-    delegate :includes, :references, :limit, :order, :offset, :select, :where, :to => :aar_scope
+    # Standard query methods are delegated to the core active record classes
+    delegate :includes, :references, :eager_load, :preload, :limit, :order, :offset, :select, :where, :to => :aar_scope
     delegate :find, :first, :last, :find_by_id, :find_by, :count, :to => :aar_scope
 
     delegate :klass, :to => :aar_scope, :prefix => true
