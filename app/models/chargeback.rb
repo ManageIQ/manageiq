@@ -1,3 +1,4 @@
+# NOTE: Does not implement any search functionality. Implements ActAsArModel to be useable for reports
 class Chargeback < ActsAsArModel
   set_columns_hash( # Fields common to any chargeback type
     :start_date             => :datetime,
