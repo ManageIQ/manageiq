@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-15 00:24+0000\n"
-"PO-Revision-Date: 2025-08-15 00:24+0000\n"
+"POT-Creation-Date: 2025-10-15 00:25+0000\n"
+"PO-Revision-Date: 2025-10-15 00:25+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -1793,9 +1793,6 @@ msgid "<%{class_name}> <%{id}>:<%{name}> is already connected to a service."
 msgstr ""
 
 msgid "<<<Nothing>>>"
-msgstr ""
-
-msgid "<All>"
 msgstr ""
 
 msgid "<Archived>"
@@ -20230,6 +20227,9 @@ msgstr ""
 msgid "Entity"
 msgstr ""
 
+msgid "Entity is required"
+msgstr ""
+
 msgid "Entity:"
 msgstr ""
 
@@ -23778,6 +23778,11 @@ msgstr ""
 
 msgid "Host (Microsoft)"
 msgstr ""
+
+msgid "Host (Nutanix)"
+msgid_plural "Hosts (Nutanix)"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Host (OpenStack)"
 msgid_plural "Hosts (OpenStack)"
@@ -34266,6 +34271,9 @@ msgid "Number of VMs by Type"
 msgstr ""
 
 msgid "Number, 2 Decimals (1,234.00)"
+msgstr ""
+
+msgid "Nutanix Provider"
 msgstr ""
 
 msgid "OK"
@@ -51743,6 +51751,11 @@ msgstr[1] ""
 
 msgid "Virtual Machine (Microsoft)"
 msgstr ""
+
+msgid "Virtual Machine (Nutanix)"
+msgid_plural "Virtual Machines (Nutanix)"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Virtual Machine (OpenShift Virtualization)"
 msgid_plural "Virtual Machines (OpenShift Virtualization)"

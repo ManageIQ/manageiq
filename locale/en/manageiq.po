@@ -1799,9 +1799,6 @@ msgstr ""
 msgid "<<<Nothing>>>"
 msgstr ""
 
-msgid "<All>"
-msgstr ""
-
 msgid "<Archived>"
 msgstr ""
 
@@ -20314,6 +20311,9 @@ msgstr ""
 msgid "Entity"
 msgstr ""
 
+msgid "Entity is required"
+msgstr ""
+
 msgid "Entity:"
 msgstr ""
 
@@ -23886,6 +23886,11 @@ msgstr ""
 #, fuzzy
 msgid "Host (Microsoft)"
 msgstr ""
+
+msgid "Host (Nutanix)"
+msgid_plural "Hosts (Nutanix)"
+msgstr[0] ""
+msgstr[1] ""
 
 #, fuzzy
 msgid "Host (OpenStack)"
@@ -34429,6 +34434,9 @@ msgid "Number of VMs by Type"
 msgstr ""
 
 msgid "Number, 2 Decimals (1,234.00)"
+msgstr ""
+
+msgid "Nutanix Provider"
 msgstr ""
 
 msgid "OK"
@@ -51983,6 +51991,11 @@ msgstr[1] ""
 #, fuzzy
 msgid "Virtual Machine (Microsoft)"
 msgstr ""
+
+msgid "Virtual Machine (Nutanix)"
+msgid_plural "Virtual Machines (Nutanix)"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Virtual Machine (OpenShift Virtualization)"
 msgid_plural "Virtual Machines (OpenShift Virtualization)"
