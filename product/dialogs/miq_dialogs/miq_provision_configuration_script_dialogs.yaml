@@ -153,10 +153,10 @@
     :service:
       :description: Catalog
       :fields:
-        :source_id:
+        :src_configuration_script_id:
           :values_from:
             :method: :allowed_configuration_scripts
-          :description: Workspaces
+          :description: Configuration Script
           :required: true
           :notes:
           :display: :show
