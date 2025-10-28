@@ -323,7 +323,7 @@ group :test do
 end
 
 group :development, :test do
-  gem "cypress-on-rails",               "~>1.19.0", :require => false # Dependency is needed in the rails app.  It's required in ui-classic engine.rb.
+  gem "cypress-on-rails",               "~>1.20.0", :require => false # Dependency is needed in the rails app.  It's required in ui-classic engine.rb.
   gem "database_cleaner",               "~>2.1",    :require => false # Used by cypress-on-rails.
   gem "factory_bot_rails",              "~>6.5.1",  :require => false # Used by cypress-on-rails.
 
