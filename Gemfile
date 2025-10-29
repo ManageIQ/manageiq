@@ -69,7 +69,7 @@ gem "psych",                            ">=3.1",             :require => false #
 gem "query_relation",                   "~>0.2.0",           :require => false
 gem "rack",                             ">=2.2.20",          :require => false # https://github.com/advisories/GHSA-6xw4-3v39-52mm https://github.com/advisories/GHSA-6xw4-3v39-52mm https://github.com/advisories/GHSA-6xw4-3v39-52mm https://github.com/advisories/GHSA-6xw4-3v39-52mm https://github.com/advisories/GHSA-6xw4-3v39-52mm https://github.com/advisories/GHSA-6xw4-3v39-52mm
 gem "rack-attack",                      "~>6.5.0",           :require => false
-gem "rails",                            "~>7.2.0", ">= 7.2.2.1"
+gem "rails",                            "~>7.2.3"
 gem "rails-i18n",                       "~>7.x"
 gem "rake",                             ">=12.3.3",          :require => false
 gem "rest-client",                      "~>2.1.0",           :require => false
