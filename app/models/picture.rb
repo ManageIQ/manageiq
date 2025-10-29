@@ -66,4 +66,8 @@ class Picture < ApplicationRecord
   def image_href
     url_path
   end
+
+  def as_json(options = {})
+    super(options.merge(except: :content))
+  end
 end
