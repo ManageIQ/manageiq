@@ -159,7 +159,7 @@
           :description: Configuration Script
           :required: true
           :notes:
-          :display: :show
+          :display: :edit
           :data_type: :integer
           :notes_display: :show
       :display: :show
