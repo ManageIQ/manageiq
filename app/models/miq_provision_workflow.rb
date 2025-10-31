@@ -18,7 +18,9 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
     vendor = find_matching_constant("ManageIQ::Providers::#{platform}") ? platform : platform.classify
 
     class_names  = ["MiqProvision#{vendor}Workflow"]
-    class_names += %w[CloudManager InfraManager AutomationManager].map { |manager_class| "ManageIQ::Providers::#{vendor}::#{manager_class}::ProvisionWorkflow"}
+    class_names += ManageIQ::Providers::BaseManager
+      .manager_type_names
+      .map { |manager_type| "ManageIQ::Providers::#{vendor}::#{manager_type}::ProvisionWorkflow"}
 
     class_names.each do |klass|
       result = find_matching_constant(klass)
