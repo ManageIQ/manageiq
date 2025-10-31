@@ -5,7 +5,6 @@ class FileDepot < ApplicationRecord
   include YamlImportExportMixin
 
   has_many              :miq_schedules, :dependent => :nullify
-  has_many              :miq_servers,   :dependent => :nullify, :foreign_key => :log_file_depot_id
   has_many              :log_files
   validates_presence_of :uri
 
@@ -21,10 +20,6 @@ class FileDepot < ApplicationRecord
 
   def self.requires_credentials?
     true
-  end
-
-  def requires_support_case?
-    false
   end
 
   def upload_file(file)

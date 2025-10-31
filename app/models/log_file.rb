@@ -77,54 +77,6 @@ class LogFile < ApplicationRecord
     klass.new(legacy_depot_hash).exist?(log_uri)
   end
 
-  # main UI method to call to request logs from a server
-  def self.logs_from_server(*args)
-    options = args.extract_options!
-    userid  = args[0] || "system"
-
-    # If no server provided, use the MiqServer receiving this request
-    server = args[1] || MiqServer.my_server
-
-    # All server types who provide logs must implement the following instance methods:
-    #   - my_zone:     which returns the zone in which they reside
-    #   - who_am_i:    which returns a log friendly string of the server's class and id
-    [:my_zone, :who_am_i].each { |meth| raise "#{meth} not implemented for #{server.class.name}" unless server.respond_to?(meth) }
-    zone     = server.my_zone
-    resource = server.who_am_i
-
-    _log.info("Queueing the request by userid: [#{userid}] for logs from server: [#{resource}]")
-
-    begin
-      # Create the task for the UI to check
-      task = MiqTask.create(:name => "Zipped log retrieval for [#{resource}]", :userid => userid, :miq_server_id => server.id)
-
-      # callback only on exceptions.. ie, on errors... second level callback will set status to finished
-      cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
-
-      # Queue the async fetch of the logs from the server - specifying a timeout, the zone to process this request, and a callback
-      options = options.merge(:taskid => task.id, :klass => server.class.name, :id => server.id)
-
-      MiqQueue.put(
-        :class_name   => name,
-        :method_name  => "_request_logs",
-        :args         => [options],
-        :zone         => zone,
-        :miq_callback => cb,
-        :msg_timeout  => LOG_REQUEST_TIMEOUT,
-        :priority     => MiqQueue::HIGH_PRIORITY
-      )
-    rescue => err
-      task.queue_callback_on_exceptions('Finished', 'error', err.to_s, nil) if task
-      raise
-    else
-      # return task id to the UI
-      msg = "Queued the request for logs from server: [#{resource}]"
-      task.update_status("Queued", "Ok", msg)
-      _log.info("Task: [#{task.id}] #{msg}")
-      task.id
-    end
-  end
-
   def self.historical_logfile
     empty_logfile(true)
   end
@@ -137,14 +89,6 @@ class LogFile < ApplicationRecord
     LogFile.create(:state       => "collecting",
                    :historical  => historical,
                    :description => "Default logfile")
-  end
-
-  def self.ping_timeout
-    ::Settings.log.collection.ping_depot_timeout
-  end
-
-  def self.do_ping?
-    ::Settings.log.collection.ping_depot == true
   end
 
   def upload_log_file_ftp
@@ -222,51 +166,4 @@ class LogFile < ApplicationRecord
       :password => file_depot.authentication_password,
     }
   end
-
-  def self._request_logs(options)
-    taskid = options[:taskid]
-    klass  = options.delete(:klass).to_s
-    id     = options.delete(:id)
-
-    log_header = "Task: [#{taskid}]"
-
-    server   = Object.const_get(klass).find(id)
-    resource = server.who_am_i
-
-    # server must implement an instance method: started_on? which returns whether the server is started
-    unless server.respond_to?(:started?)
-      raise MiqException::Error, _("started? not implemented for %{server_name}") % {:server_name => server.class.name}
-    end
-
-    unless server.started?
-      if server.respond_to?(:name)
-        raise MiqException::Error,
-              _("Log request failed since [%{resource} %{server_name}] is not started") % {:resource    => resource,
-                                                                                           :server_name => server.name}
-      else
-        raise MiqException::Error,
-              _("Log request failed since [%{resource}] is not started") % {:resource => resource}
-      end
-    end
-
-    task = MiqTask.find(taskid)
-
-    msg = "Requesting logs from server: [#{resource}]"
-    _log.info("#{log_header} #{msg}")
-    task.update_status("Active", "Ok", msg)
-
-    cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
-    unless server.respond_to?(:_post_my_logs)
-      raise MiqException::Error,
-            _("_post_my_logs not implemented for %{server_name}") % {:server_name => server.class.name}
-    end
-    options = options.merge(:callback => cb, :timeout => LOG_REQUEST_TIMEOUT)
-    server._post_my_logs(options)
-
-    msg = "Requested logs from: [#{resource}]"
-    _log.info("#{log_header} #{msg}")
-    task.update_status("Queued", "Ok", msg)
-  end
-
-  private_class_method :_request_logs
 end
