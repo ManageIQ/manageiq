@@ -14,4 +14,7 @@ class MiqProvisionConfigurationScriptWorkflow < MiqProvisionWorkflow
   def self.request_class
     MiqProvisionConfigurationScriptRequest
   end
+
+  def get_source_and_targets(_refresh = false)
+  end
 end

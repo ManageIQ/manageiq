@@ -15,11 +15,19 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
   # @return [Constant] A scoped provider constant name.
   #
   def self.class_for_platform(platform)
-    classy = find_matching_constant("ManageIQ::Providers::#{platform}") ? platform : platform.classify
+    vendor = find_matching_constant("ManageIQ::Providers::#{platform}") ? platform : platform.classify
 
-    find_matching_constant("MiqProvision#{classy}Workflow") ||
-      find_matching_constant("ManageIQ::Providers::#{classy}::CloudManager::ProvisionWorkflow") ||
-      find_matching_constant("ManageIQ::Providers::#{classy}::InfraManager::ProvisionWorkflow")
+    class_names  = ["MiqProvision#{vendor}Workflow"]
+    class_names += ManageIQ::Providers::BaseManager
+      .manager_type_names
+      .map { |manager_type| "ManageIQ::Providers::#{vendor}::#{manager_type}::ProvisionWorkflow"}
+
+    class_names.each do |klass|
+      result = find_matching_constant(klass)
+      return result unless result.nil?
+    end
+
+    nil
   end
 
   def self.find_matching_constant(string)
