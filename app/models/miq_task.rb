@@ -30,7 +30,6 @@ class MiqTask < ApplicationRecord
   MESSAGE_TASK_COMPLETED_SUCCESSFULLY   = 'Task completed successfully'.freeze
   MESSAGE_TASK_COMPLETED_UNSUCCESSFULLY = 'Task did not complete successfully'.freeze
 
-  has_one :log_file, :dependent => :destroy
   has_one :binary_blob, :as => :resource, :dependent => :destroy
   has_one :miq_report_result
   has_one :job, :dependent => :destroy

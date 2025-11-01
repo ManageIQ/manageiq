@@ -37,7 +37,6 @@ gem "dalli",                            "~>3.2.3",           :require => false
 gem "default_value_for",                "~>4.0"
 gem "docker-api",                       "~>1.33.6",          :require => false
 gem "drb",                              "~>2.2",             :require => false
-gem "elif",                             "=0.1.0",            :require => false
 gem "fast_gettext",                     "~>3.1"
 gem "ffi",                              "< 1.17.0",          :require => false # Locked down due to build issue assertion failure on 1.17.3
 gem "gettext_i18n_rails",               "~>1.11"
@@ -75,7 +74,6 @@ gem "rake",                             ">=12.3.3",          :require => false
 gem "rest-client",                      "~>2.1.0",           :require => false
 gem "ruby_parser",                                           :require => false # Required for i18n string extraction, and DescentdantLoader (via prism)
 gem "ruby-progressbar",                 "~>1.7.0",           :require => false
-gem "rubyzip",                          "~>2.0.0",           :require => false
 gem "rugged",                           "~>1.9",             :require => false
 gem "ruport",                           "~>1.8.0"
 gem "snmp",                             "~>1.2.0",           :require => false
