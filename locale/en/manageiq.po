@@ -1799,9 +1799,6 @@ msgstr ""
 msgid "<<<Nothing>>>"
 msgstr ""
 
-msgid "<All>"
-msgstr ""
-
 msgid "<Archived>"
 msgstr ""
 
@@ -5406,6 +5403,12 @@ msgstr[1] ""
 
 #, fuzzy
 msgid "Automation Manager (Ansible Tower)"
+msgstr ""
+
+msgid "Automation Manager Provision"
+msgstr ""
+
+msgid "Automation Manager Provisioning"
 msgstr ""
 
 msgid "Automation Manager Repositories Refresh"
@@ -15449,6 +15452,9 @@ msgstr ""
 msgid "Deploy Smartproxy"
 msgstr ""
 
+msgid "Depot Settings successfully validated"
+msgstr ""
+
 msgid "Depot Settings successfuly validated"
 msgstr ""
 
@@ -20314,6 +20320,9 @@ msgstr ""
 msgid "Entity"
 msgstr ""
 
+msgid "Entity is required"
+msgstr ""
+
 msgid "Entity:"
 msgstr ""
 
@@ -23886,6 +23895,11 @@ msgstr ""
 #, fuzzy
 msgid "Host (Microsoft)"
 msgstr ""
+
+msgid "Host (Nutanix)"
+msgid_plural "Hosts (Nutanix)"
+msgstr[0] ""
+msgstr[1] ""
 
 #, fuzzy
 msgid "Host (OpenStack)"
@@ -34431,6 +34445,9 @@ msgstr ""
 msgid "Number, 2 Decimals (1,234.00)"
 msgstr ""
 
+msgid "Nutanix Provider"
+msgstr ""
+
 msgid "OK"
 msgstr ""
 
@@ -35577,6 +35594,9 @@ msgid "PVM Instance"
 msgstr ""
 
 msgid "PXE"
+msgstr ""
+
+msgid "PXE Credentials successfully validated"
 msgstr ""
 
 msgid "PXE Credentials successfuly validated"
@@ -38230,6 +38250,11 @@ msgid "Provision %{type} Request was cancelled by the user"
 msgstr ""
 
 msgid "Provision %{vms_or_templates}"
+msgstr ""
+
+msgid ""
+"Provision ConfigurationScript Request Templates do not support the execute met"
+"hod."
 msgstr ""
 
 msgid "Provision Configured Systems"
@@ -47541,6 +47566,9 @@ msgstr ""
 msgid "Terraform Enterprise Workspace"
 msgstr ""
 
+msgid "Terraform Enterprise Workspace Provision"
+msgstr ""
+
 msgid "Terraform Template"
 msgstr ""
 
@@ -51983,6 +52011,11 @@ msgstr[1] ""
 #, fuzzy
 msgid "Virtual Machine (Microsoft)"
 msgstr ""
+
+msgid "Virtual Machine (Nutanix)"
+msgid_plural "Virtual Machines (Nutanix)"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Virtual Machine (OpenShift Virtualization)"
 msgid_plural "Virtual Machines (OpenShift Virtualization)"
