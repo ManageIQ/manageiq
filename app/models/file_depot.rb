@@ -4,11 +4,9 @@ class FileDepot < ApplicationRecord
   include ImportExport
   include YamlImportExportMixin
 
-  has_many              :miq_schedules, :dependent => :nullify
-  has_many              :log_files
-  validates_presence_of :uri
+  has_many :miq_schedules, :dependent => :nullify
 
-  attr_accessor         :file
+  validates_presence_of :uri
 
   def self.supported_depots
     descendants.each_with_object({}) { |klass, hash| hash[klass.name] = klass.display_name }
@@ -20,10 +18,6 @@ class FileDepot < ApplicationRecord
 
   def self.requires_credentials?
     true
-  end
-
-  def upload_file(file)
-    @file = file
   end
 
   def merged_uri(uri, _api_port)
