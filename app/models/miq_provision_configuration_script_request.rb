@@ -4,13 +4,13 @@ class MiqProvisionConfigurationScriptRequest < MiqRequest
   TASK_DESCRIPTION  = N_('Automation Manager Provisioning')
   SOURCE_CLASS_NAME = 'ConfigurationScript'
 
-  default_value_for(:source_id)   { |r| r.get_option(:source_id) }
+  default_value_for(:source_id)   { |r| r.get_option(:src_configuration_script_id) }
   default_value_for :source_type, "ConfigurationScript"
   validates :source, :presence => true
   validate  :must_have_user
 
   def self.request_task_class_from(attribs)
-    source_id = MiqRequestMixin.get_option(:source_id, nil, attribs['options'])
+    source_id = MiqRequestMixin.get_option(:src_configuration_script_id, nil, attribs['options'])
     configuration_script = ::ConfigurationScript.find_by(:id => source_id)
     return if configuration_script.nil?
 

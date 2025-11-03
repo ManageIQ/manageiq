@@ -10,6 +10,8 @@ class ConfigurationScriptBase < ApplicationRecord
   belongs_to :parent,               :class_name => "ConfigurationScriptBase"
   belongs_to :miq_task
 
+  delegate :name, :to => :manager, :prefix => true
+
   has_many   :children,
              :class_name  => "ConfigurationScriptBase",
              :foreign_key => "parent_id",
