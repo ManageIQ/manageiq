@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :ext_management_system,
-          :class   => "ManageIQ::Providers::Vmware::InfraManager" do
+          :class   => "ManageIQ::Providers::DummyProvider::InfraManager" do
     # The provider has to be set before the hostname/ipaddress sequences as in some cases these attributes
     # might be delegated to the provider. As the attributes are being set based on the order in this file,
     # it is important to keep this line at the beginning of the factory.
@@ -75,38 +75,31 @@ FactoryBot.define do
   # using leaf classes...
   factory :ems_infra,
           :aliases => ["manageiq/providers/infra_manager"],
-          :class   => "ManageIQ::Providers::Vmware::InfraManager",
+          :class   => "ManageIQ::Providers::DummyProvider::InfraManager",
           :parent  => :ext_management_system
 
   factory :ems_physical_infra,
           :aliases => ["manageiq/providers/physical_infra_manager"],
-          :class   => "ManageIQ::Providers::Redfish::PhysicalInfraManager",
+          :class   => "ManageIQ::Providers::DummyProvider::PhysicalInfraManager",
           :parent  => :ext_management_system
 
   factory(:ems_cloud,
           :aliases => ["manageiq/providers/cloud_manager"],
-          :class   => "ManageIQ::Providers::Amazon::CloudManager",
+          :class   => "ManageIQ::Providers::DummyProvider::CloudManager",
           :parent  => :ext_management_system) do
     provider_region { "us-east-1" }
   end
 
   factory :ems_network,
           :aliases => ["manageiq/providers/network_manager"],
-          :class   => "ManageIQ::Providers::Openstack::NetworkManager",
+          :class   => "ManageIQ::Providers::DummyProvider::NetworkManager",
           :parent  => :ext_management_system do
     parent_manager { FactoryBot.create(:ext_management_system) }
   end
 
   factory :ems_storage,
           :aliases => ["manageiq/providers/storage_manager"],
-          :class   => "ManageIQ::Providers::Openstack::StorageManager::SwiftManager",
-          :parent  => :ext_management_system do
-    parent_manager { FactoryBot.create(:ext_management_system) }
-  end
-
-  factory :ems_cinder,
-          :aliases => ["manageiq/providers/storage_manager/cinder_manager"],
-          :class   => "ManageIQ::Providers::Openstack::StorageManager::CinderManager",
+          :class   => "ManageIQ::Providers::DummyProvider::StorageManager",
           :parent  => :ext_management_system do
     parent_manager { FactoryBot.create(:ext_management_system) }
   end
@@ -118,21 +111,14 @@ FactoryBot.define do
     parent_manager { FactoryBot.create(:ext_management_system) }
   end
 
-  factory :ems_swift,
-          :aliases => ["manageiq/providers/storage_manager/swift_manager"],
-          :class   => "ManageIQ::Providers::Openstack::StorageManager::SwiftManager",
-          :parent  => :ext_management_system do
-    parent_manager { FactoryBot.create(:ext_management_system) }
-  end
-
   factory :ems_container,
           :aliases => ["manageiq/providers/container_manager"],
-          :class   => "ManageIQ::Providers::Openshift::ContainerManager",
+          :class   => "ManageIQ::Providers::DummyProvider::ContainerManager",
           :parent  => :ext_management_system
 
   factory :configuration_manager,
           :aliases => ["manageiq/providers/configuration_manager"],
-          :class   => "ManageIQ::Providers::Foreman::ConfigurationManager",
+          :class   => "ManageIQ::Providers::DummyProvider::ConfigurationManager",
           :parent  => :ext_management_system do
     provider :factory => :provider_foreman
   end
@@ -141,12 +127,12 @@ FactoryBot.define do
 
   factory :automation_manager,
           :aliases => ["manageiq/providers/automation_manager"],
-          :class   => "ManageIQ::Providers::Awx::AutomationManager",
+          :class   => "ManageIQ::Providers::DummyProvider::AutomationManager",
           :parent  => :ext_management_system
 
   factory :provisioning_manager,
           :aliases => ["manageiq/providers/provisioning_manager"],
-          :class   => "ManageIQ::Providers::Foreman::ProvisioningManager",
+          :class   => "ManageIQ::Providers::DummyProvider::ProvisioningManager",
           :parent  => :ext_management_system do
     provider :factory => :provider_foreman
   end
