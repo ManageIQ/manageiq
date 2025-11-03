@@ -330,4 +330,5 @@ group :development, :test do
   gem "parallel_tests",                 "~>4.4",    :require => false
   gem "routes_lazy_routes"
   gem "rspec-rails",                    "~>7.0"
+  manageiq_plugin "manageiq-providers-dummy_provider"
 end
