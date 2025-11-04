@@ -4,8 +4,6 @@ class FileDepot < ApplicationRecord
   include ImportExport
   include YamlImportExportMixin
 
-  has_many :miq_schedules, :dependent => :nullify
-
   validates_presence_of :uri
 
   def self.supported_depots
