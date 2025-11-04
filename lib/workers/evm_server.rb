@@ -129,8 +129,6 @@ class EvmServer
 
     MiqServer.startup!
 
-    @current_server.delete_active_log_collections_queue
-
     start_workers
 
     @current_server.update(:status => "started")
