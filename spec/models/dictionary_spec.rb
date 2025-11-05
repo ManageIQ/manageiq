@@ -16,7 +16,7 @@ RSpec.describe Dictionary do
       it("and a nested key")      { expect(described_class.gettext("availability_zone.total_vms")).to eq("Total Instances") }
     end
 
-    it("with :type option") { expect(described_class.gettext("FileDepotFtp", :type => "model")).to eq("FTP") }
+    it("with :type option") { expect(described_class.gettext("FileDepotNfs", :type => "model")).to eq("NFS") }
 
     context "with :notfound option" do
       it("and plain text")  { expect(described_class.gettext("abc",     :notfound => :titleize)).to eq("Abc") }

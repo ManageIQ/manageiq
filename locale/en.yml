@@ -1435,8 +1435,6 @@ en:
       EmsFolder:                      Folder
       ExtManagementSystem:            Provider
       ExtManagementSystemPerformance: Performance - Provider
-      FileDepotFtp:                   FTP
-      FileDepotFtpAnonymous:          Anonymous FTP
       FileDepotNfs:                   NFS
       FileDepotS3:                    AWS S3
       FileDepotSwift:                 OpenStack Swift
@@ -1568,7 +1566,7 @@ en:
       ManageIQ::Providers::Vmware::CloudManager:                                          Cloud Provider (VMware vCloud)
       ManageIQ::Providers::IbmCic::CloudManager:                                          Cloud Provider (IBM CIC)
       ManageIQ::Providers::IbmCloud::VPC::CloudManager:                                   Cloud Provider (IBM Cloud VPC)
-      ManageIQ::Providers::AzureStack::CloudManager:                                      Cloud Provider (Microsoft Azure Stack)                          
+      ManageIQ::Providers::AzureStack::CloudManager:                                      Cloud Provider (Microsoft Azure Stack)
       ManageIQ::Providers::IbmCloud::PowerVirtualServers::CloudManager:                   Cloud Provider (IBM Cloud Power Systems Virtual Servers)
       ManageIQ::Providers::IbmPowerVc::CloudManager:                                      Cloud Provider (IBM PowerVC)
       ManageIQ::Providers::OracleCloud::CloudManager:                                     Cloud Provider (Oracle Cloud)

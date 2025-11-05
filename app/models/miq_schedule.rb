@@ -16,7 +16,6 @@ class MiqSchedule < ApplicationRecord
   virtual_column :v_zone_name,     :type => :string, :uses => :zone
   virtual_column :next_run_on,     :type => :datetime
 
-  belongs_to :file_depot
   belongs_to :miq_search
   belongs_to :resource, :polymorphic => true
   belongs_to :zone
@@ -299,26 +298,6 @@ class MiqSchedule < ApplicationRecord
         errors.add(:run_at, "run_at is missing :value, run_at: [#{run_at.inspect}]") if run_at[:interval][:unit].to_s.downcase != "once" && run_at[:interval][:value].nil?
         errors.add(:run_at, "run_at interval: [#{run_at[:interval][:unit]}] is not a valid interval") unless VALID_INTERVAL_UNITS.include?(run_at[:interval][:unit])
       end
-    end
-  end
-
-  def verify_file_depot(params)  # TODO: This logic belongs in the UI, not sure where
-    depot_class                = FileDepot.supported_protocols[params[:uri_prefix]]
-    depot                      = file_depot.class.name == depot_class ? file_depot : build_file_depot(:type => depot_class)
-    depot.name                 = params[:name]
-    uri                        = params[:uri]
-    api_port                   = params[:swift_api_port]
-    depot.aws_region           = params[:aws_region]
-    depot.openstack_region     = params[:openstack_region]
-    depot.keystone_api_version = params[:keystone_api_version]
-    depot.v3_domain_ident      = params[:v3_domain_ident]
-    depot.security_protocol    = params[:security_protocol]
-    depot.uri                  = api_port.blank? ? uri : depot.merged_uri(URI(uri), api_port)
-    if params[:save]
-      file_depot.save!
-      file_depot.update_authentication(:default => {:userid => params[:username], :password => params[:password]}) if (params[:username] || params[:password]) && depot.class.requires_credentials?
-    elsif depot.class.requires_credentials?
-      depot.verify_credentials(nil, params)
     end
   end
 
