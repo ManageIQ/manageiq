@@ -20,7 +20,8 @@ class ServiceTemplate < ApplicationRecord
                                   :fqname,
                                   :configuration_template,
                                   :configuration_template_id,
-                                  :configuration_template_type].freeze
+                                  :configuration_template_type,
+                                  :configuration_script_id].freeze
 
   include CustomActionsMixin
   include ServiceMixin

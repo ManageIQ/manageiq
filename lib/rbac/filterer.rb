@@ -2,7 +2,7 @@ module Rbac
   class PolymorphicError < ArgumentError; end
 
   class Filterer
-    # This list is used to detemine whether RBAC, based on assigned tags, should be applied for a class in a search that is based on the class.
+    # This list is used to determine whether RBAC, based on assigned tags, should be applied for a class in a search that is based on the class.
     # Classes should be added to this list ONLY after:
     # 1. Tagging has been enabled in the UI
     # 2. Class contains acts_as_miq_taggable
@@ -356,7 +356,7 @@ module Rbac
         targets = targets.lazy.select { |obj| matches_search_filters?(obj, search_filter, tz, :prune_sql => prune_sql) }
         unless options[:skip_counts]
           # use to_a to run filters once. otherwise will filter for:
-          # length, (possible) pagination ids, and final taget results
+          # length, (possible) pagination ids, and final target results
           targets    = targets.to_a
           auth_count = targets.length
         end
@@ -429,15 +429,11 @@ module Rbac
       end
     end
 
+    # NOTE: for ActsAsArModel, scope will be a QueryRelation
+    #       for ActsAsArScope, scope will be a standard AR scope
     def include_references(scope, klass, includes, references, exp_includes)
-      if scope.respond_to?(:eager_load)
-        # TODO: do we want to klass.prune_references(exp_includes)? (see same comment for inline_view? section)
-        scope.eager_load(references || {}).eager_load(exp_includes || {}).preload(includes)
-      else
-        # This is the AAAR / QueryRelation branch
-        # TODO: drop this fallback once https://github.com/ManageIQ/query_relation/pull/43 is merged
-        scope.references(references || {}).references(exp_includes || {}).includes(includes)
-      end
+      # TODO: do we want to klass.prune_references(exp_includes)? (see same comment for inline_view? section)
+      scope.eager_load(references || {}).eager_load(exp_includes || {}).preload(includes)
     end
 
     # @param includes [Array, Hash]
@@ -494,7 +490,7 @@ module Rbac
 
     # get the base class for a class
     #
-    # rbac_class().nil? checks are there to avoid promoting to a base class when the child class is supported by base class is not
+    # rbac_class().nil? checks are there to avoid promoting to a base class when the child class is supported but base class is not
     # Read: child: MiqAeDomain (supported) to base: MiqAeNamespace (not supported)
     def rbac_base_class(klass)
       if klass.respond_to?(:base_class) && rbac_class(klass).nil? && rbac_class(klass.base_class)
@@ -565,7 +561,7 @@ module Rbac
     #            filter                  = u_union_d_union_b_and_m INTERSECTION tenant_filter_ids
     #
     # a nil as input for any field means it DOES NOT apply the operation(INTERSECTION, UNION)
-    # a nil as output means there is not filter
+    # a nil as output means there is no filter
     #
     # @param u_filtered_ids [nil|Array<Integer>] self service user owned objects
     # @param b_filtered_ids [nil|Array<Integer>] objects that belong to parent

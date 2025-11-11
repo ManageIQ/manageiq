@@ -171,7 +171,6 @@ RSpec.describe MiqWidget::ImportExport do
               userid: system
               prod_default: system
               adhoc:
-              file_depot_id:
               resource_id:
       YAML
 
@@ -203,7 +202,6 @@ RSpec.describe MiqWidget::ImportExport do
         :userid        => "system",
         :prod_default  => "system",
         :adhoc         => nil,
-        :file_depot_id => nil,
         :resource_id   => nil
       )
 

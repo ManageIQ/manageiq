@@ -18,7 +18,6 @@ class MiqTask
 
       def purge_associated_records(ids)
         Job.where(:miq_task_id => ids).delete_all
-        LogFile.where(:miq_task_id => ids).delete_all
         BinaryBlob.where(:resource_type => 'MiqTask', :resource_id => ids).delete_all
       end
     end

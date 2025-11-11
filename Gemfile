@@ -37,9 +37,8 @@ gem "dalli",                            "~>3.2.3",           :require => false
 gem "default_value_for",                "~>4.0"
 gem "docker-api",                       "~>1.33.6",          :require => false
 gem "drb",                              "~>2.2",             :require => false
-gem "elif",                             "=0.1.0",            :require => false
 gem "fast_gettext",                     "~>3.1"
-gem "ffi",                              "< 1.17.0",          :require => false
+gem "ffi",                              "< 1.17.0",          :require => false # Locked down due to build issue assertion failure on 1.17.3
 gem "gettext_i18n_rails",               "~>1.11"
 gem "gettext_i18n_rails_js",            "~>1.3.0"
 gem "hamlit",                           "~>2.11.0"
@@ -57,7 +56,6 @@ gem "manageiq-ssh-util",                "~>0.2.0",           :require => false
 gem "memoist",                          "~>0.16.0",          :require => false
 gem "money",                            "~>6.13.5",          :require => false
 gem "more_core_extensions"                                                     # min version should be set in manageiq-gems-pending, not here
-gem "net-ftp",                          "~>0.1.2",           :require => false
 gem "net-ldap",                         "~>0.16.1",          :require => false
 gem "net-ping",                         "~>1.7.4",           :require => false
 gem "openscap",                         "~>0.4.8",           :require => false
@@ -66,16 +64,15 @@ gem "pg",                               ">=1.4.1",           :require => false
 gem "pg-dsn_parser",                    "~>0.1.1",           :require => false
 gem "prism",                            ">=0.25.0",          :require => false # Used by DescendantLoader
 gem "psych",                            ">=3.1",             :require => false # 3.1 safe_load changed positional to kwargs like aliases: true: https://github.com/ruby/psych/commit/4d4439d6d0adfcbd211ea295779315f1baa7dadd
-gem "query_relation",                   "~>0.1.0",           :require => false
-gem "rack",                             ">=2.2.19",          :require => false # CVE-2025-61772 https://github.com/rack/rack/security/advisories/GHSA-wpv5-97wm-hp9c
+gem "query_relation",                   "~>0.2.0",           :require => false
+gem "rack",                             ">=2.2.20",          :require => false # https://github.com/advisories/GHSA-6xw4-3v39-52mm https://github.com/advisories/GHSA-6xw4-3v39-52mm https://github.com/advisories/GHSA-6xw4-3v39-52mm https://github.com/advisories/GHSA-6xw4-3v39-52mm https://github.com/advisories/GHSA-6xw4-3v39-52mm https://github.com/advisories/GHSA-6xw4-3v39-52mm
 gem "rack-attack",                      "~>6.5.0",           :require => false
-gem "rails",                            "~>7.2.0", ">= 7.2.2.1"
+gem "rails",                            "~>7.2.3"
 gem "rails-i18n",                       "~>7.x"
 gem "rake",                             ">=12.3.3",          :require => false
 gem "rest-client",                      "~>2.1.0",           :require => false
 gem "ruby_parser",                                           :require => false # Required for i18n string extraction, and DescentdantLoader (via prism)
 gem "ruby-progressbar",                 "~>1.7.0",           :require => false
-gem "rubyzip",                          "~>2.0.0",           :require => false
 gem "rugged",                           "~>1.9",             :require => false
 gem "ruport",                           "~>1.8.0"
 gem "snmp",                             "~>1.2.0",           :require => false
@@ -88,7 +85,7 @@ gem "wim_parser",                       "~>1.0",             :require => false
 # gems to resolve security issues
 gem "cgi",  "~> 0.4.2"  # CVE-2025-27219: https://github.com/advisories/GHSA-gh9q-2xrm-x6qv
 gem "time", "~> 0.2.2"  # CVE-2023-28756: https://github.com/advisories/GHSA-fg7x-g82r-94qc; ruby 3.1.4+
-gem "uri",  "~> 0.13.2" # CVE-2025-27221: https://github.com/advisories/GHSA-22h5-pq3x-2gf2
+gem "uri",  "~> 0.13.3" # CVE-2025-61594: https://www.ruby-lang.org/en/news/2025/10/07/uri-cve-2025-61594/
                         # Avoid URI 1.0.0 for now due to: https://github.com/ruby/uri/issues/125
 gem "thor", ">= 1.4.0"   # CVE-2025-54314: https://github.com/advisories/GHSA-mqcp-p2hv-vw6x
 
@@ -313,8 +310,8 @@ end
 group :test do
   gem "brakeman",                       "~>6.2",             :require => false
   gem "bundler-audit",                                       :require => false
-  gem "capybara",                       "~>2.5.0",           :require => false
-  gem "db-query-matchers",              "~>0.13.0"
+  gem "capybara",                       "~>2.18.0",           :require => false
+  gem "db-query-matchers",              "~>0.15.0"
   gem "factory_bot",                    "~>6.5",             :require => false
   gem "simplecov",                      ">=0.21.2",          :require => false
   gem "timecop",                        "~>0.9", "!= 0.9.7", :require => false
@@ -323,7 +320,11 @@ group :test do
 end
 
 group :development, :test do
-  gem "parallel_tests",                 "~>4.4", :require => false
+  gem "cypress-on-rails",               "~>1.20.0", :require => false # Dependency is needed in the rails app.  It's required in ui-classic engine.rb.
+  gem "database_cleaner",               "~>2.1",    :require => false # Used by cypress-on-rails.
+  gem "factory_bot_rails",              "~>6.5.1",  :require => false # Used by cypress-on-rails.
+
+  gem "parallel_tests",                 "~>4.4",    :require => false
   gem "routes_lazy_routes"
   gem "rspec-rails",                    "~>7.0"
 end

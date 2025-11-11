@@ -35,7 +35,7 @@ jobs:
       PGPASSWORD: smartvm
       CC_TEST_REPORTER_ID: "${{ secrets.CC_TEST_REPORTER_ID }}"
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Set up system
       run: bin/before_install
     - name: Set up Ruby
@@ -47,7 +47,7 @@ jobs:
     - name: Prepare tests
       run: bin/setup
     - name: Run database connectivity tests
-      if: ${{ matrix.test-suite == 'vmdb' }}
+      if: "${{ matrix.test-suite == 'vmdb' }}"
       run: bin/test_database_connectivity
     - name: Run tests
       run: bundle exec rake
@@ -55,4 +55,4 @@ jobs:
       if: "${{ github.ref == 'refs/heads/master' && matrix.ruby-version == '3.3' &&
         matrix.test-suite == 'vmdb' }}"
       continue-on-error: true
-      uses: paambaati/codeclimate-action@v5
+      uses: paambaati/codeclimate-action@v9

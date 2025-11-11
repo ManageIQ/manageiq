@@ -27,7 +27,7 @@ jobs:
       SKIP_TEST_RESET: true
       SKIP_DATABASE_SETUP: true
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Set up system
       run: bin/before_install
     - name: Set up Ruby
@@ -41,7 +41,7 @@ jobs:
     - name: Setup database
       run: bundle exec rake evm:db:reset
     - name: Run locale:update_all
-      run: bundle exec rake locale:update_all
+      run: bundle exec rake locale:update_all_action
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v7
       with:
