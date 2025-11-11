@@ -1,7 +1,7 @@
 require 'uri'
 require 'mount/miq_generic_mount_session'
 
-module FileDepotMixin
+module PxeServer::FileDepotMixin
   extend ActiveSupport::Concern
   SUPPORTED_DEPOTS = {
     'smb'   => 'Samba',
