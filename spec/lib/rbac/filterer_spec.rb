@@ -2659,9 +2659,30 @@ RSpec.describe Rbac::Filterer do
       expect(described_class.filtered(Vm.where(:location => "good"))).to match_array(matched_vms)
     end
 
-    it "support aaarm object" do
-      expect(VimPerformanceTrend).to receive(:find).with(:all, {:include => {:a => {}}}).and_return([:good])
-      expect(described_class.filtered(VimPerformanceTrend, :include_for_find => {:a => {}}).to_a).to match_array([:good])
+    it "support ActsAsArModel object" do
+      expect(PglogicalSubscription).to receive(:find).with(:all, {:include => {:a => {}}}).and_return([:good])
+      expect(described_class.filtered(PglogicalSubscription, :include_for_find => {:a => {}}).to_a).to match_array([:good])
+    end
+
+    it "supports ActsAsArScope object all target" do
+      all_vms
+
+      klass = ManageIQ::Providers::InfraManager::VmOrTemplate
+      expect(klass).to receive(:all).and_call_original
+      expect(described_class.filtered(klass, :include_for_find => {:host => {}})).to match_array(all_vms)
+    end
+
+    it "supports ActsAsArScope object scoping" do
+      all_vms
+      filter = MiqExpression.new("=" => {"field" => "Vm-location", "value" => "good"})
+      expect(described_class.filtered(ManageIQ::Providers::InfraManager::VmOrTemplate, :filter => filter)).to match_array(matched_vms)
+    end
+
+    it "understands ActsAsArScope includes (invalid)" do
+      klass = ManageIQ::Providers::InfraManager::VmOrTemplate
+      expect {
+        expect(described_class.filtered(klass, :include_for_find => {:missing_association => {}}).to_a).to eq(VmOrTemplate.new)
+      }.to raise_error(ActiveRecord::ConfigurationError)
     end
 
     # it returns objects too

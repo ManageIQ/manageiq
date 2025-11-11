@@ -549,9 +549,9 @@ RSpec.describe Vmdb::Settings do
     end
 
     it "with database changes on an Array" do
-      server.settings_changes.create!(:key => "/log/collection/current/pattern", :value => ["*.log"])
+      server.settings_changes.create!(:key => "/storage/debris/filters/ext_name", :value => ["xxx"])
       settings = Vmdb::Settings.for_resource(server)
-      expect(settings.log.collection.current.pattern).to eq ["*.log"]
+      expect(settings.storage.debris.filters.ext_name).to eq ["xxx"]
     end
 
     it "can load settings on each level from Region -> Zone -> Server hierarchy" do

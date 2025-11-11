@@ -1,3 +1,4 @@
+# NOTE: Does not implement any search functionality. Implements ActAsArModel to be useable for reports
 class VimPerformanceTrend < ActsAsArModel
   set_columns_hash(
     :resource_name      => :string,

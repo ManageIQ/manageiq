@@ -19,15 +19,23 @@ end
 
 require 'factory_bot'
 
-# In case we are running as an engine, the factories are located in the dummy app
-FactoryBot.definition_file_paths << 'spec/manageiq/spec/factories'
+# In case we are running as an engine, the factories are located in the Rails application
+FactoryBot.definition_file_paths << Rails.root.join('spec/factories')
 
 # Also, add factories from provider gems until miq codebase does not use any provider specific factories anymore
 Rails::Engine.subclasses.select { |e| e.name.starts_with?("ManageIQ::Providers") }.each do |engine|
-  FactoryBot.definition_file_paths << File.join(engine.root, 'spec', 'factories')
+  FactoryBot.definition_file_paths << engine.root.join('spec', 'factories')
 end
 
-FactoryBot.find_definitions
+# Prefer setting the definition_file_paths and call FactoryBot.reload, which will recreate the configuration
+# and call find_definitions.
+#
+# find_definitions is not reentrant, so a second call will lead to loading already registered factories.
+# Other code, such as factory bot rails, may have already registered factories, so we can't assume
+# we're the first to call find_definitions.
+FactoryBot.definition_file_paths = FactoryBot.definition_file_paths.uniq
+
+FactoryBot.reload
 
 FactoryBot.define do
   trait :other_region do

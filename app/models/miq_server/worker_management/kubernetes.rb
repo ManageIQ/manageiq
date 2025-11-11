@@ -172,7 +172,7 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
       _log.info("Starting new #{resource} monitor thread of #{Thread.list.length} total")
       begin
         send(:"monitor_#{resource}", monitor_started)
-      rescue HTTP::ConnectionError => e
+      rescue HTTP::ConnectionError, Kubeclient::HttpError => e
         _log.error("Exiting #{resource} monitor thread due to [#{e.class.name}]: #{e}")
       rescue => e
         _log.error("Exiting #{resource} monitor thread after uncaught error")

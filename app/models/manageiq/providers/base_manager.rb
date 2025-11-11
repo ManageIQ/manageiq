@@ -19,6 +19,11 @@ module ManageIQ::Providers
     end
     delegate :catalog_types, :to => :class
 
+    # Return the names of all of the manager types e.g.: InfraManager, CloudManager, etc...
+    def self.manager_type_names
+      @manager_types ||= subclasses.map { |k| k.name.gsub("ManageIQ::Providers::", "") }
+    end
+
     def refresher
       self.class::Refresher
     end
