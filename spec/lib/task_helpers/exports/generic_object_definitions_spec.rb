@@ -28,7 +28,7 @@ RSpec.describe TaskHelpers::Exports::GenericObjectDefinitions do
       expect(god2_yaml.first["GenericObjectDefinition"]["name"]).to eq(@god2.name)
       expect(god2_yaml.first["GenericObjectDefinition"]["description"]).to eq(nil)
       expect(god2_yaml.first["GenericObjectDefinition"]["properties"]).to eq(
-        :attributes => {}, :associations => {}, :methods => []
+        :attributes => {}, :attribute_constraints=>{}, :associations => {}, :methods => []
       )
     end
   end

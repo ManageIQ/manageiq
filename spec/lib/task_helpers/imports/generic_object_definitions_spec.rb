@@ -18,6 +18,7 @@ RSpec.describe TaskHelpers::Imports::GenericObjectDefinitions do
           'created'    => :datetime,
           'retirement' => :datetime
         },
+        :attribute_constraints => {},
         :associations => {'cloud_tenant' => 'CloudTenant'},
         :methods      => ['kick', 'laugh_at', 'punch', 'parseltongue']
       }
