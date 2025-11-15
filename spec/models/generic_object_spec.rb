@@ -385,4 +385,406 @@ RSpec.describe GenericObject do
       end
     end
   end
+
+  describe 'attribute constraint validation' do
+    let(:definition_with_constraints) do
+      FactoryBot.create(
+        :generic_object_definition,
+        :name       => 'product_definition',
+        :properties => {
+          :attributes            => {
+            :product_name => :string,
+            :sku          => :string,
+            :email        => :string,
+            :status       => :string,
+            :priority     => :integer,
+            :quantity     => :integer,
+            :price        => :float,
+            :discount     => :float,
+            :is_active    => :boolean,
+            :description  => :string
+          },
+          :attribute_constraints => {
+            :product_name => {:required => true, :min_length => 3, :max_length => 50},
+            :sku          => {:required => true, :format => /\A[A-Z]{3}-\d{6}\z/},
+            :email        => {:format => /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i},
+            :status       => {:required => true, :enum => ['active', 'inactive', 'pending']},
+            :priority     => {:enum => [1, 2, 3, 4, 5]},
+            :quantity     => {:min => 0, :max => 1000},
+            :price        => {:required => true, :min => 0.0, :max => 99999.99},
+            :discount     => {:min => 0.0, :max => 100.0},
+            :is_active    => {:required => true},
+            :description  => {:max_length => 500}
+          },
+          :associations          => {},
+          :methods               => []
+        }
+      )
+    end
+
+    context 'required constraint' do
+      it 'validates required string attribute is present' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => 'Product1',
+          :sku                       => 'ABC-123456',
+          :status                    => 'active',
+          :price                     => 100.0,
+          :is_active                 => true
+        )
+        expect(obj).to be_valid
+      end
+
+      it 'fails validation when required string attribute is nil' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => nil,
+          :sku                       => 'ABC-123456',
+          :status                    => 'active',
+          :price                     => 100.0,
+          :is_active                 => true
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include("attribute 'product_name' is required")
+      end
+
+      it 'fails validation when required string attribute is empty' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => '  ',
+          :sku                       => 'ABC-123456',
+          :status                    => 'active',
+          :price                     => 100.0,
+          :is_active                 => true
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include("attribute 'product_name' is required")
+      end
+
+      it 'fails validation when required boolean attribute is nil' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => 'Product1',
+          :sku                       => 'ABC-123456',
+          :status                    => 'active',
+          :price                     => 100.0,
+          :is_active                 => nil
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include("attribute 'is_active' is required")
+      end
+    end
+
+    context 'min/max constraint' do
+      it 'validates integer within range' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => 'Product1',
+          :sku                       => 'ABC-123456',
+          :status                    => 'active',
+          :price                     => 100.0,
+          :is_active                 => true,
+          :quantity                  => 500
+        )
+        expect(obj).to be_valid
+      end
+
+      it 'fails validation when integer is below minimum' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => 'Product1',
+          :sku                       => 'ABC-123456',
+          :status                    => 'active',
+          :price                     => 100.0,
+          :is_active                 => true,
+          :quantity                  => -1
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include("attribute 'quantity' must be greater than or equal to 0")
+      end
+
+      it 'fails validation when integer is above maximum' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => 'Product1',
+          :sku                       => 'ABC-123456',
+          :status                    => 'active',
+          :price                     => 100.0,
+          :is_active                 => true,
+          :quantity                  => 1001
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include("attribute 'quantity' must be less than or equal to 1000")
+      end
+
+      it 'validates float within range' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => 'Product1',
+          :sku                       => 'ABC-123456',
+          :status                    => 'active',
+          :price                     => 100.0,
+          :is_active                 => true,
+          :discount                  => 50.0
+        )
+        expect(obj).to be_valid
+      end
+
+      it 'fails validation when float is below minimum' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => 'Product1',
+          :sku                       => 'ABC-123456',
+          :status                    => 'active',
+          :price                     => -1.0,
+          :is_active                 => true
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include("attribute 'price' must be greater than or equal to 0.0")
+      end
+
+      it 'fails validation when float is above maximum' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => 'Product1',
+          :sku                       => 'ABC-123456',
+          :status                    => 'active',
+          :price                     => 100000.0,
+          :is_active                 => true
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include("attribute 'price' must be less than or equal to 99999.99")
+      end
+    end
+
+    context 'min_length/max_length constraint' do
+      it 'validates string within length range' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => 'Product1',
+          :sku                       => 'ABC-123456',
+          :status                    => 'active',
+          :price                     => 100.0,
+          :is_active                 => true
+        )
+        expect(obj).to be_valid
+      end
+
+      it 'fails validation when string is too short' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => 'AB',
+          :sku                       => 'ABC-123456',
+          :status                    => 'active',
+          :price                     => 100.0,
+          :is_active                 => true
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include("attribute 'product_name' must be at least 3 characters long")
+      end
+
+      it 'fails validation when string is too long' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => 'A' * 51,
+          :sku                       => 'ABC-123456',
+          :status                    => 'active',
+          :price                     => 100.0,
+          :is_active                 => true
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include("attribute 'product_name' must be at most 50 characters long")
+      end
+
+      it 'validates max_length only constraint' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => 'Product1',
+          :sku                       => 'ABC-123456',
+          :status                    => 'active',
+          :price                     => 100.0,
+          :is_active                 => true,
+          :description               => 'A' * 500
+        )
+        expect(obj).to be_valid
+      end
+
+      it 'fails validation when string exceeds max_length' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => 'Product1',
+          :sku                       => 'ABC-123456',
+          :status                    => 'active',
+          :price                     => 100.0,
+          :is_active                 => true,
+          :description               => 'A' * 501
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include("attribute 'description' must be at most 500 characters long")
+      end
+    end
+
+    context 'enum constraint' do
+      it 'validates string value in enum' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => 'Product1',
+          :sku                       => 'ABC-123456',
+          :status                    => 'active',
+          :price                     => 100.0,
+          :is_active                 => true
+        )
+        expect(obj).to be_valid
+      end
+
+      it 'fails validation when string value not in enum' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => 'Product1',
+          :sku                       => 'ABC-123456',
+          :status                    => 'deleted',
+          :price                     => 100.0,
+          :is_active                 => true
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include("attribute 'status' must be one of: active, inactive, pending")
+      end
+
+      it 'validates integer value in enum' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => 'Product1',
+          :sku                       => 'ABC-123456',
+          :status                    => 'active',
+          :price                     => 100.0,
+          :is_active                 => true,
+          :priority                  => 3
+        )
+        expect(obj).to be_valid
+      end
+
+      it 'fails validation when integer value not in enum' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => 'Product1',
+          :sku                       => 'ABC-123456',
+          :status                    => 'active',
+          :price                     => 100.0,
+          :is_active                 => true,
+          :priority                  => 10
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include("attribute 'priority' must be one of: 1, 2, 3, 4, 5")
+      end
+    end
+
+    context 'format constraint' do
+      it 'validates string matching format' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => 'Product1',
+          :sku                       => 'ABC-123456',
+          :status                    => 'active',
+          :price                     => 100.0,
+          :is_active                 => true,
+          :email                     => 'test@example.com'
+        )
+        expect(obj).to be_valid
+      end
+
+      it 'fails validation when string does not match format' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => 'Product1',
+          :sku                       => 'invalid-sku',
+          :status                    => 'active',
+          :price                     => 100.0,
+          :is_active                 => true
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include("attribute 'sku' format is invalid")
+      end
+
+      it 'fails validation when email format is invalid' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => 'Product1',
+          :sku                       => 'ABC-123456',
+          :status                    => 'active',
+          :price                     => 100.0,
+          :is_active                 => true,
+          :email                     => 'invalid-email'
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include("attribute 'email' format is invalid")
+      end
+    end
+
+    context 'multiple constraint violations' do
+      it 'reports all validation errors' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => 'AB',
+          :sku                       => 'invalid',
+          :status                    => 'deleted',
+          :price                     => -10.0,
+          :is_active                 => nil
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties].size).to be >= 5
+      end
+    end
+
+    context 'updating existing object' do
+      it 'validates constraints on update' do
+        obj = GenericObject.create!(
+          :generic_object_definition => definition_with_constraints,
+          :name                      => 'TestObject',
+          :product_name              => 'Product1',
+          :sku                       => 'ABC-123456',
+          :status                    => 'active',
+          :price                     => 100.0,
+          :is_active                 => true
+        )
+
+        obj.price = -50.0
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include("attribute 'price' must be greater than or equal to 0.0")
+      end
+    end
+
+    context 'without constraints' do
+      it 'does not validate when no constraints are defined' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition,
+          :name                      => 'Test',
+          :max_number                => -100
+        )
+        expect(obj).to be_valid
+      end
+    end
+  end
 end

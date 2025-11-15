@@ -11,6 +11,7 @@ class GenericObject < ApplicationRecord
   has_many :custom_button_events, :foreign_key => :target_id, :dependent => :destroy
 
   validates :name, :presence => true
+  validate :validate_property_attribute_constraints
 
   delegate :property_attribute_defined?,
            :property_defined?,
@@ -210,6 +211,60 @@ class GenericObject < ApplicationRecord
   def remove_go_from_all_related_services
     ServiceResource.where(:resource => self).each do |resource|
       remove_from_service(resource.service) if resource.service
+    end
+  end
+
+  def validate_property_attribute_constraints
+    return unless generic_object_definition
+
+    constraints = generic_object_definition.properties[:attribute_constraints] || {}
+    
+    constraints.each do |attr_name, attr_constraints|
+      # Get value from properties hash (where custom attributes are stored)
+      value = properties[attr_name]
+      
+      # Skip validation if attribute is not set (nil) unless it's required
+      next if value.nil? && !attr_constraints[:required]
+      
+      attr_constraints.each do |constraint_type, constraint_value|
+        validate_constraint(attr_name, value, constraint_type, constraint_value)
+      end
+    end
+  end
+
+  def validate_constraint(attr_name, value, constraint_type, constraint_value)
+    case constraint_type
+    when :required
+      if constraint_value && (value.nil? || (value.is_a?(String) && value.strip.empty?))
+        errors.add(:properties, "attribute '#{attr_name}' is required")
+      end
+    when :min
+      if value.present? && value < constraint_value
+        errors.add(:properties, "attribute '#{attr_name}' must be greater than or equal to #{constraint_value}")
+      end
+    when :max
+      if value.present? && value > constraint_value
+        errors.add(:properties, "attribute '#{attr_name}' must be less than or equal to #{constraint_value}")
+      end
+    when :min_length
+      if value.present? && value.to_s.length < constraint_value
+        errors.add(:properties, "attribute '#{attr_name}' must be at least #{constraint_value} characters long")
+      end
+    when :max_length
+      if value.present? && value.to_s.length > constraint_value
+        errors.add(:properties, "attribute '#{attr_name}' must be at most #{constraint_value} characters long")
+      end
+    when :enum
+      if value.present? && !constraint_value.include?(value)
+        errors.add(:properties, "attribute '#{attr_name}' must be one of: #{constraint_value.join(', ')}")
+      end
+    when :format
+      if value.present?
+        regex = constraint_value.is_a?(Regexp) ? constraint_value : Regexp.new(constraint_value)
+        unless regex.match?(value.to_s)
+          errors.add(:properties, "attribute '#{attr_name}' format is invalid")
+        end
+      end
     end
   end
 end
