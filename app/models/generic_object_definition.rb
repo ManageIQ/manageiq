@@ -20,7 +20,7 @@ class GenericObjectDefinition < ApplicationRecord
     :time     => N_('Time')
   }.freeze
 
-  FEATURES = %w[attribute association method].freeze
+  FEATURES = %w[attribute attribute_constraint association method].freeze
   REG_ATTRIBUTE_NAME = /\A[a-z][a-zA-Z_0-9]*\z/
   REG_METHOD_NAME    = /\A[a-z][a-zA-Z_0-9]*[!?]?\z/
   ALLOWED_ASSOCIATION_TYPES = (MiqReport.reportable_models + %w[GenericObject]).freeze
@@ -103,12 +103,13 @@ class GenericObjectDefinition < ApplicationRecord
   end
 
   def properties=(props)
-    props.reverse_merge!(:attributes => {}, :associations => {}, :methods => [])
+    props.reverse_merge!(:attributes => {}, :attribute_constraints => {}, :associations => {}, :methods => [])
     super
   end
 
-  def add_property_attribute(name, type)
+  def add_property_attribute(name, type, constraints = {})
     properties[:attributes][name.to_s] = type.to_sym
+    properties[:attribute_constraints][name.to_s] = constraints if constraints.present?
     save!
   end
 
@@ -117,8 +118,22 @@ class GenericObjectDefinition < ApplicationRecord
       generic_objects.find_each { |o| o.delete_property(name) }
 
       properties[:attributes].delete(name.to_s)
+      properties[:attribute_constraints].delete(name.to_s)
       save!
     end
+  end
+
+  def add_property_attribute_constraint(name, constraint)
+    name = attribute_name.to_s
+    raise "attribute [#{name}] is not defined" unless property_attribute_defined?(name)
+
+    properties[:attribute_constraints][name.to_s] = constraint
+    save!
+  end
+
+  def delete_property_attribute_constraint(name)
+    properties[:attribute_constraints].delete(name.to_s)
+    save!
   end
 
   def add_property_association(name, type)
@@ -230,6 +245,6 @@ class GenericObjectDefinition < ApplicationRecord
   end
 
   def set_default_properties
-    self.properties = {:attributes => {}, :associations => {}, :methods => []} unless properties.present?
+    self.properties = {:attributes => {}, :attribute_constraints => {}, :associations => {}, :methods => []} unless properties.present?
   end
 end
