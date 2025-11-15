@@ -32,7 +32,7 @@ RSpec.describe TaskHelpers::Imports::GenericObjectDefinitions do
         expect do
           TaskHelpers::Imports::GenericObjectDefinitions.new.import(options)
         end.to_not output.to_stderr
-        expect(GenericObjectDefinition.all.count).to eq(2)
+        expect(GenericObjectDefinition.all.count).to eq(3)
         assert_test_god_one_present
         assert_test_god_two_present
       end
@@ -103,6 +103,66 @@ RSpec.describe TaskHelpers::Imports::GenericObjectDefinitions do
             TaskHelpers::Imports::GenericObjectDefinitions.new.import(options)
           end.to output(/unknown attribute 'invalid_attribute'/).to_stderr
         end
+      end
+    end
+
+    describe "when the source file has attribute constraints" do
+      let(:source) { "#{data_dir}/god_with_attr_constraints.yaml" }
+      let(:overwrite) { true }
+
+      it 'imports generic object definition with attribute constraints' do
+        expect do
+          TaskHelpers::Imports::GenericObjectDefinitions.new.import(options)
+        end.to_not output.to_stderr
+        
+        god = GenericObjectDefinition.find_by(:name => 'ProductDefinition')
+        expect(god).to be_present
+        expect(god.description).to eq('Product definition with comprehensive attribute constraints')
+        
+        # Verify attributes
+        expect(god.properties[:attributes]).to include(
+          'name' => :string,
+          'sku' => :string,
+          'email' => :string,
+          'status' => :string,
+          'priority' => :integer,
+          'quantity' => :integer,
+          'price' => :float,
+          'discount' => :float,
+          'is_active' => :boolean
+        )
+        
+        # Verify attribute constraints
+        expect(god.properties[:attribute_constraints]).to be_present
+        expect(god.properties[:attribute_constraints]['name']).to include(
+          :required => true,
+          :min_length => 3,
+          :max_length => 100
+        )
+        expect(god.properties[:attribute_constraints]['sku']).to include(
+          :required => true,
+          :format => /\A[A-Z]{3}-\d{6}\z/
+        )
+        expect(god.properties[:attribute_constraints]['status']).to include(
+          :required => true,
+          :enum => ['active', 'inactive', 'pending', 'archived']
+        )
+        expect(god.properties[:attribute_constraints]['priority']).to include(
+          :required => true,
+          :enum => [1, 2, 3, 4, 5]
+        )
+        expect(god.properties[:attribute_constraints]['quantity']).to include(
+          :min => 0,
+          :max => 10000
+        )
+        expect(god.properties[:attribute_constraints]['price']).to include(
+          :required => true,
+          :min => 0.0,
+          :max => 999999.99
+        )
+        expect(god.properties[:attribute_constraints]['is_active']).to include(
+          :required => true
+        )
       end
     end
   end
