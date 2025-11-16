@@ -22,6 +22,7 @@ class GenericObjectDefinition < ApplicationRecord
 
   CONSTRAINT_TYPES = {
     :required   => [:boolean, :datetime, :float, :integer, :string, :time],
+    :default    => [:boolean, :datetime, :float, :integer, :string, :time],
     :min        => [:integer, :float, :datetime, :time],
     :max        => [:integer, :float, :datetime, :time],
     :min_length => [:string],
@@ -270,6 +271,8 @@ class GenericObjectDefinition < ApplicationRecord
       unless [true, false].include?(value)
         errors.add(:properties, "constraint 'required' must be true or false for attribute [#{attr_name}]")
       end
+    when :default
+      validate_default_value(attr_name, attr_type, value)
     when :min, :max
       if attr_type == :integer && !value.is_a?(Integer)
         errors.add(:properties, "constraint '#{constraint_type}' must be an integer for attribute [#{attr_name}]")
@@ -340,6 +343,36 @@ class GenericObjectDefinition < ApplicationRecord
   end
 
   private
+
+  def validate_default_value(attr_name, attr_type, value)
+    # Type check based on attribute type
+    case attr_type
+    when :boolean
+      unless [true, false].include?(value)
+        errors.add(:properties, "default value for attribute [#{attr_name}] must be a boolean")
+      end
+    when :integer
+      unless value.is_a?(Integer)
+        errors.add(:properties, "default value for attribute [#{attr_name}] must be an integer")
+      end
+    when :float
+      unless value.is_a?(Numeric)
+        errors.add(:properties, "default value for attribute [#{attr_name}] must be a number")
+      end
+    when :string
+      unless value.is_a?(String)
+        errors.add(:properties, "default value for attribute [#{attr_name}] must be a string")
+      end
+    when :datetime
+      unless value.is_a?(String) || value.is_a?(Time) || value.is_a?(DateTime)
+        errors.add(:properties, "default value for attribute [#{attr_name}] must be a valid datetime")
+      end
+    when :time
+      unless value.is_a?(String) || value.is_a?(Time)
+        errors.add(:properties, "default value for attribute [#{attr_name}] must be a valid time")
+      end
+    end
+  end
 
   def validate_enum_constraint(attr_name, attr_type, value)
     unless value.is_a?(Array) && value.any?
