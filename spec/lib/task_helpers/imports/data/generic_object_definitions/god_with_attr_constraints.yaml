@@ -25,6 +25,7 @@
         description:
           :min_length: 10
           :max_length: 500
+          :default: "No description provided"
         sku:
           :required: true
           :format: !ruby/regexp '/\A[A-Z]{3}-\d{6}\z/'
@@ -37,6 +38,7 @@
           - inactive
           - pending
           - archived
+          :default: pending
         priority:
           :required: true
           :enum:
@@ -45,9 +47,11 @@
           - 3
           - 4
           - 5
+          :default: 3
         quantity:
           :min: 0
           :max: 10000
+          :default: 0
         price:
           :required: true
           :min: 0.0
@@ -55,8 +59,10 @@
         discount:
           :min: 0.0
           :max: 100.0
+          :default: 0.0
         is_active:
           :required: true
+          :default: true
       :associations:
         vms: Vm
         cloud_tenant: CloudTenant

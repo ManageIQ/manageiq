@@ -11,6 +11,7 @@ class GenericObject < ApplicationRecord
   has_many :custom_button_events, :foreign_key => :target_id, :dependent => :destroy
 
   validates :name, :presence => true
+  before_validation :apply_default_values
   validate :validate_property_attribute_constraints
 
   delegate :property_attribute_defined?,
@@ -214,6 +215,23 @@ class GenericObject < ApplicationRecord
     end
   end
 
+  def apply_default_values
+    return unless generic_object_definition
+
+    constraints = generic_object_definition.properties[:attribute_constraints] || {}
+    
+    constraints.each do |attr_name, attr_constraints|
+      # Only apply default if attribute is not set and has a default value
+      if properties[attr_name].nil? && attr_constraints.key?(:default)
+        default_value = attr_constraints[:default]
+        # Type cast the default value
+        if property_attribute_defined?(attr_name)
+          properties[attr_name] = type_cast(attr_name, default_value)
+        end
+      end
+    end
+  end
+
   def validate_property_attribute_constraints
     return unless generic_object_definition
 
@@ -227,6 +245,8 @@ class GenericObject < ApplicationRecord
       next if value.nil? && !attr_constraints[:required]
       
       attr_constraints.each do |constraint_type, constraint_value|
+        # Skip default constraint in validation (it's applied in before_validation)
+        next if constraint_type == :default
         validate_constraint(attr_name, value, constraint_type, constraint_value)
       end
     end

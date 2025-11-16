@@ -844,5 +844,106 @@ RSpec.describe GenericObjectDefinition do
         expect(testdef.properties[:attribute_constraints]).to eq({})
       end
     end
+
+    context 'default value constraint' do
+      it 'accepts default value for string attribute' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:status => :string},
+            :attribute_constraints => {:status => {:default => 'pending'}}
+          }
+        )
+        expect(testdef).to be_valid
+      end
+
+      it 'accepts default value for integer attribute' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:priority => :integer},
+            :attribute_constraints => {:priority => {:default => 1}}
+          }
+        )
+        expect(testdef).to be_valid
+      end
+
+      it 'accepts default value for float attribute' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:price => :float},
+            :attribute_constraints => {:price => {:default => 0.0}}
+          }
+        )
+        expect(testdef).to be_valid
+      end
+
+      it 'accepts default value for boolean attribute' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:active => :boolean},
+            :attribute_constraints => {:active => {:default => false}}
+          }
+        )
+        expect(testdef).to be_valid
+      end
+
+      it 'rejects non-string default value for string attribute' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:status => :string},
+            :attribute_constraints => {:status => {:default => 123}}
+          }
+        )
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /default value for attribute .* must be a string/)
+      end
+
+      it 'rejects non-integer default value for integer attribute' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:priority => :integer},
+            :attribute_constraints => {:priority => {:default => "one"}}
+          }
+        )
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /default value for attribute .* must be an integer/)
+      end
+
+      it 'rejects non-numeric default value for float attribute' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:price => :float},
+            :attribute_constraints => {:price => {:default => "zero"}}
+          }
+        )
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /default value for attribute .* must be a number/)
+      end
+
+      it 'rejects non-boolean default value for boolean attribute' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:active => :boolean},
+            :attribute_constraints => {:active => {:default => "yes"}}
+          }
+        )
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /default value for attribute .* must be a boolean/)
+      end
+
+      it 'accepts default value with other constraints' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:status => :string},
+            :attribute_constraints => {:status => {:default => 'pending', :enum => ['pending', 'active', 'inactive']}}
+          }
+        )
+        expect(testdef).to be_valid
+      end
+    end
   end
 end

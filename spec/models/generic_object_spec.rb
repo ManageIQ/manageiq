@@ -786,5 +786,114 @@ RSpec.describe GenericObject do
         expect(obj).to be_valid
       end
     end
+
+    context 'default value constraint' do
+      let(:definition_with_defaults) do
+        FactoryBot.create(
+          :generic_object_definition,
+          :name       => 'product_with_defaults',
+          :properties => {
+            :attributes            => {
+              :status      => :string,
+              :priority    => :integer,
+              :discount    => :float,
+              :is_active   => :boolean,
+              :description => :string
+            },
+            :attribute_constraints => {
+              :status      => {:default => 'pending', :enum => ['pending', 'active', 'inactive']},
+              :priority    => {:default => 3},
+              :discount    => {:default => 0.0},
+              :is_active   => {:default => true},
+              :description => {:default => 'No description'}
+            },
+            :associations          => {},
+            :methods               => []
+          }
+        )
+      end
+
+      it 'applies default value for string attribute when not provided' do
+        obj = GenericObject.create!(
+          :generic_object_definition => definition_with_defaults,
+          :name                      => 'TestObject'
+        )
+        expect(obj.status).to eq('pending')
+      end
+
+      it 'applies default value for integer attribute when not provided' do
+        obj = GenericObject.create!(
+          :generic_object_definition => definition_with_defaults,
+          :name                      => 'TestObject'
+        )
+        expect(obj.priority).to eq(3)
+      end
+
+      it 'applies default value for float attribute when not provided' do
+        obj = GenericObject.create!(
+          :generic_object_definition => definition_with_defaults,
+          :name                      => 'TestObject'
+        )
+        expect(obj.discount).to eq(0.0)
+      end
+
+      it 'applies default value for boolean attribute when not provided' do
+        obj = GenericObject.create!(
+          :generic_object_definition => definition_with_defaults,
+          :name                      => 'TestObject'
+        )
+        expect(obj.is_active).to eq(true)
+      end
+
+      it 'does not override explicitly provided value with default' do
+        obj = GenericObject.create!(
+          :generic_object_definition => definition_with_defaults,
+          :name                      => 'TestObject',
+          :status                    => 'active',
+          :priority                  => 5,
+          :discount                  => 10.0,
+          :is_active                 => false
+        )
+        expect(obj.status).to eq('active')
+        expect(obj.priority).to eq(5)
+        expect(obj.discount).to eq(10.0)
+        expect(obj.is_active).to eq(false)
+      end
+
+      it 'applies multiple default values at once' do
+        obj = GenericObject.create!(
+          :generic_object_definition => definition_with_defaults,
+          :name                      => 'TestObject'
+        )
+        expect(obj.status).to eq('pending')
+        expect(obj.priority).to eq(3)
+        expect(obj.discount).to eq(0.0)
+        expect(obj.is_active).to eq(true)
+        expect(obj.description).to eq('No description')
+      end
+
+      it 'applies default value on update when attribute is nil' do
+        obj = GenericObject.create!(
+          :generic_object_definition => definition_with_defaults,
+          :name                      => 'TestObject',
+          :status                    => 'active'
+        )
+        expect(obj.status).to eq('active')
+        
+        obj.status = nil
+        obj.save!
+        expect(obj.reload.status).to eq('pending')
+      end
+
+      it 'validates default value against other constraints' do
+        obj = GenericObject.create!(
+          :generic_object_definition => definition_with_defaults,
+          :name                      => 'TestObject'
+        )
+        # Default status is 'pending' which is in the enum
+        expect(obj).to be_valid
+        expect(obj.status).to eq('pending')
+      end
+    end
   end
 end
