@@ -17,6 +17,10 @@
         created_at: :datetime
         updated_at: :datetime
         scheduled_time: :time
+        settings: :hash
+        metadata: :hash
+        labels: :array
+        categories: :array
       :attribute_constraints:
         name:
           :required: true
@@ -63,6 +67,32 @@
         is_active:
           :required: true
           :default: true
+        settings:
+          :required: true
+          :required_keys:
+          - theme
+          - language
+          :allowed_keys:
+          - theme
+          - language
+          - timezone
+          - notifications
+          :default:
+            theme: light
+            language: en
+        metadata:
+          :default: {}
+        labels:
+          :required: true
+          :min_items: 1
+          :max_items: 10
+          :unique_items: true
+          :default:
+          - untagged
+        categories:
+          :min_items: 0
+          :max_items: 5
+          :default: []
       :associations:
         vms: Vm
         cloud_tenant: CloudTenant
@@ -70,3 +100,5 @@
       - calculate_total
       - apply_discount
       - validate_stock
+
+# Made with Bob

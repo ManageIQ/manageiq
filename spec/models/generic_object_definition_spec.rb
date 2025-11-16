@@ -945,5 +945,256 @@ RSpec.describe GenericObjectDefinition do
         expect(testdef).to be_valid
       end
     end
+
+    context 'Hash attribute type' do
+      it 'accepts hash attribute type' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {:attributes => {:config => :hash}}
+        )
+        expect(testdef).to be_valid
+      end
+
+      it 'accepts hash with required_keys constraint' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:config => :hash},
+            :attribute_constraints => {:config => {:required_keys => ['theme', 'language']}}
+          }
+        )
+        expect(testdef).to be_valid
+      end
+
+      it 'accepts hash with allowed_keys constraint' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:config => :hash},
+            :attribute_constraints => {:config => {:allowed_keys => ['theme', 'language', 'timezone']}}
+          }
+        )
+        expect(testdef).to be_valid
+      end
+
+      it 'accepts hash with both required_keys and allowed_keys constraints' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:config => :hash},
+            :attribute_constraints => {:config => {:required_keys => ['theme'], :allowed_keys => ['theme', 'language', 'timezone']}}
+          }
+        )
+        expect(testdef).to be_valid
+      end
+
+      it 'accepts hash default value' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:config => :hash},
+            :attribute_constraints => {:config => {:default => {'theme' => 'light'}}}
+          }
+        )
+        expect(testdef).to be_valid
+      end
+
+      it 'accepts empty hash as default value' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:metadata => :hash},
+            :attribute_constraints => {:metadata => {:default => {}}}
+          }
+        )
+        expect(testdef).to be_valid
+      end
+
+      it 'rejects non-hash default value' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:config => :hash},
+            :attribute_constraints => {:config => {:default => ['not', 'a', 'hash']}}
+          }
+        )
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /must be a Hash/)
+      end
+
+      it 'rejects non-array value for required_keys constraint' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:config => :hash},
+            :attribute_constraints => {:config => {:required_keys => 'theme'}}
+          }
+        )
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /must be an array of strings/)
+      end
+
+      it 'rejects non-array value for allowed_keys constraint' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:config => :hash},
+            :attribute_constraints => {:config => {:allowed_keys => 'theme'}}
+          }
+        )
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /must be an array of strings/)
+      end
+
+      it 'rejects min constraint on hash attribute' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:config => :hash},
+            :attribute_constraints => {:config => {:min => 1}}
+          }
+        )
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /is not applicable to attribute type/)
+      end
+    end
+
+    context 'Array attribute type' do
+      it 'accepts array attribute type' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {:attributes => {:tags => :array}}
+        )
+        expect(testdef).to be_valid
+      end
+
+      it 'accepts array with min_items constraint' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:tags => :array},
+            :attribute_constraints => {:tags => {:min_items => 1}}
+          }
+        )
+        expect(testdef).to be_valid
+      end
+
+      it 'accepts array with max_items constraint' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:tags => :array},
+            :attribute_constraints => {:tags => {:max_items => 10}}
+          }
+        )
+        expect(testdef).to be_valid
+      end
+
+      it 'accepts array with unique_items constraint' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:tags => :array},
+            :attribute_constraints => {:tags => {:unique_items => true}}
+          }
+        )
+        expect(testdef).to be_valid
+      end
+
+      it 'accepts array with all constraints' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:tags => :array},
+            :attribute_constraints => {:tags => {:min_items => 1, :max_items => 5, :unique_items => true}}
+          }
+        )
+        expect(testdef).to be_valid
+      end
+
+      it 'accepts array default value' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:tags => :array},
+            :attribute_constraints => {:tags => {:default => ['untagged']}}
+          }
+        )
+        expect(testdef).to be_valid
+      end
+
+      it 'accepts empty array as default value' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:categories => :array},
+            :attribute_constraints => {:categories => {:default => []}}
+          }
+        )
+        expect(testdef).to be_valid
+      end
+
+      it 'rejects non-array default value' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:tags => :array},
+            :attribute_constraints => {:tags => {:default => 'not an array'}}
+          }
+        )
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /must be an Array/)
+      end
+
+      it 'rejects non-integer value for min_items constraint' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:tags => :array},
+            :attribute_constraints => {:tags => {:min_items => 'one'}}
+          }
+        )
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /must be a non-negative integer/)
+      end
+
+      it 'rejects negative value for min_items constraint' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:tags => :array},
+            :attribute_constraints => {:tags => {:min_items => -1}}
+          }
+        )
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /must be a non-negative integer/)
+      end
+
+      it 'rejects non-integer value for max_items constraint' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:tags => :array},
+            :attribute_constraints => {:tags => {:max_items => 'ten'}}
+          }
+        )
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /must be a non-negative integer/)
+      end
+
+      it 'rejects non-boolean value for unique_items constraint' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:tags => :array},
+            :attribute_constraints => {:tags => {:unique_items => 'yes'}}
+          }
+        )
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /must be true or false/)
+      end
+
+      it 'rejects min_length constraint on array attribute' do
+        testdef = described_class.new(
+          :name       => 'test',
+          :properties => {
+            :attributes            => {:tags => :array},
+            :attribute_constraints => {:tags => {:min_length => 3}}
+          }
+        )
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /is not applicable to attribute type/)
+      end
+    end
   end
 end

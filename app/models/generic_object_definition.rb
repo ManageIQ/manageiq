@@ -8,7 +8,9 @@ class GenericObjectDefinition < ApplicationRecord
     :float    => ActiveModel::Type::Float.new,
     :integer  => ActiveModel::Type::Integer.new,
     :string   => ActiveModel::Type::String.new,
-    :time     => ActiveModel::Type::Time.new
+    :time     => ActiveModel::Type::Time.new,
+    :hash     => ActiveRecord::Type::Json.new,
+    :array    => ActiveRecord::Type::Json.new
   }.freeze
 
   TYPE_NAMES = {
@@ -17,18 +19,25 @@ class GenericObjectDefinition < ApplicationRecord
     :float    => N_('Float'),
     :integer  => N_('Integer'),
     :string   => N_('String'),
-    :time     => N_('Time')
+    :time     => N_('Time'),
+    :hash     => N_('Hash'),
+    :array    => N_('Array')
   }.freeze
 
   CONSTRAINT_TYPES = {
-    :required   => [:boolean, :datetime, :float, :integer, :string, :time],
-    :default    => [:boolean, :datetime, :float, :integer, :string, :time],
-    :min        => [:integer, :float, :datetime, :time],
-    :max        => [:integer, :float, :datetime, :time],
-    :min_length => [:string],
-    :max_length => [:string],
-    :enum       => [:integer, :string],
-    :format     => [:string]
+    :required      => [:boolean, :datetime, :float, :integer, :string, :time, :hash, :array],
+    :default       => [:boolean, :datetime, :float, :integer, :string, :time, :hash, :array],
+    :min           => [:integer, :float, :datetime, :time],
+    :max           => [:integer, :float, :datetime, :time],
+    :min_length    => [:string],
+    :max_length    => [:string],
+    :enum          => [:integer, :string],
+    :format        => [:string],
+    :min_items     => [:array],
+    :max_items     => [:array],
+    :unique_items  => [:array],
+    :required_keys => [:hash],
+    :allowed_keys  => [:hash]
   }.freeze
 
   FEATURES = %w[attribute attribute_constraint association method].freeze
@@ -291,6 +300,18 @@ class GenericObjectDefinition < ApplicationRecord
       unless value.is_a?(Regexp) || (value.is_a?(String) && valid_regex?(value))
         errors.add(:properties, "constraint 'format' must be a valid regular expression for attribute [#{attr_name}]")
       end
+    when :min_items, :max_items
+      unless value.is_a?(Integer) && value >= 0
+        errors.add(:properties, "constraint '#{constraint_type}' must be a non-negative integer for attribute [#{attr_name}]")
+      end
+    when :unique_items
+      unless [true, false].include?(value)
+        errors.add(:properties, "constraint 'unique_items' must be true or false for attribute [#{attr_name}]")
+      end
+    when :required_keys, :allowed_keys
+      unless value.is_a?(Array) && value.all? { |k| k.is_a?(String) || k.is_a?(Symbol) }
+        errors.add(:properties, "constraint '#{constraint_type}' must be an array of strings/symbols for attribute [#{attr_name}]")
+      end
     end
   end
 
@@ -370,6 +391,14 @@ class GenericObjectDefinition < ApplicationRecord
     when :time
       unless value.is_a?(String) || value.is_a?(Time)
         errors.add(:properties, "default value for attribute [#{attr_name}] must be a valid time")
+      end
+    when :hash
+      unless value.is_a?(Hash)
+        errors.add(:properties, "default value for attribute [#{attr_name}] must be a Hash")
+      end
+    when :array
+      unless value.is_a?(Array)
+        errors.add(:properties, "default value for attribute [#{attr_name}] must be an Array")
       end
     end
   end

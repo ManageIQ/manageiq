@@ -236,13 +236,26 @@ class GenericObject < ApplicationRecord
     return unless generic_object_definition
 
     constraints = generic_object_definition.properties[:attribute_constraints] || {}
+    attributes = generic_object_definition.properties[:attributes] || {}
     
     constraints.each do |attr_name, attr_constraints|
       # Get value from properties hash (where custom attributes are stored)
       value = properties[attr_name]
+      attr_type = attributes[attr_name]
       
       # Skip validation if attribute is not set (nil) unless it's required
       next if value.nil? && !attr_constraints[:required]
+      
+      # Type checking for Hash and Array
+      if attr_type == :hash && value.present? && !value.is_a?(Hash)
+        errors.add(:properties, "attribute '#{attr_name}' must be a Hash")
+        next
+      end
+      
+      if attr_type == :array && value.present? && !value.is_a?(Array)
+        errors.add(:properties, "attribute '#{attr_name}' must be an Array")
+        next
+      end
       
       attr_constraints.each do |constraint_type, constraint_value|
         # Skip default constraint in validation (it's applied in before_validation)
@@ -283,6 +296,32 @@ class GenericObject < ApplicationRecord
         regex = constraint_value.is_a?(Regexp) ? constraint_value : Regexp.new(constraint_value)
         unless regex.match?(value.to_s)
           errors.add(:properties, "attribute '#{attr_name}' format is invalid")
+        end
+      end
+    when :min_items
+      if value.is_a?(Array) && value.size < constraint_value
+        errors.add(:properties, "attribute '#{attr_name}' must have at least #{constraint_value} items")
+      end
+    when :max_items
+      if value.is_a?(Array) && value.size > constraint_value
+        errors.add(:properties, "attribute '#{attr_name}' must have at most #{constraint_value} items")
+      end
+    when :unique_items
+      if constraint_value && value.is_a?(Array) && value.uniq.size != value.size
+        errors.add(:properties, "attribute '#{attr_name}' must have unique items")
+      end
+    when :required_keys
+      if value.is_a?(Hash)
+        missing_keys = constraint_value.map(&:to_s) - value.keys.map(&:to_s)
+        if missing_keys.any?
+          errors.add(:properties, "attribute '#{attr_name}' is missing required keys: #{missing_keys.join(', ')}")
+        end
+      end
+    when :allowed_keys
+      if value.is_a?(Hash)
+        extra_keys = value.keys.map(&:to_s) - constraint_value.map(&:to_s)
+        if extra_keys.any?
+          errors.add(:properties, "attribute '#{attr_name}' has disallowed keys: #{extra_keys.join(', ')}")
         end
       end
     end

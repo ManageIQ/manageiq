@@ -895,5 +895,309 @@ RSpec.describe GenericObject do
         expect(obj.status).to eq('pending')
       end
     end
+
+    context 'Hash attribute validation' do
+      let(:definition_with_hash) do
+        FactoryBot.create(
+          :generic_object_definition,
+          :name       => 'app_definition',
+          :properties => {
+            :attributes            => {
+              :settings => :hash,
+              :metadata => :hash
+            },
+            :attribute_constraints => {
+              :settings => {
+                :required      => true,
+                :required_keys => ['theme', 'language'],
+                :allowed_keys  => ['theme', 'language', 'timezone'],
+                :default       => {'theme' => 'light', 'language' => 'en'}
+              },
+              :metadata => {
+                :default => {}
+              }
+            }
+          }
+        )
+      end
+
+      it 'accepts valid hash' do
+        obj = GenericObject.create!(
+          :generic_object_definition => definition_with_hash,
+          :name                      => 'TestApp',
+          :settings                  => {'theme' => 'dark', 'language' => 'en'}
+        )
+        expect(obj.settings).to eq({'theme' => 'dark', 'language' => 'en'})
+      end
+
+      it 'applies hash default value' do
+        obj = GenericObject.create!(
+          :generic_object_definition => definition_with_hash,
+          :name                      => 'TestApp'
+        )
+        expect(obj.settings).to eq({'theme' => 'light', 'language' => 'en'})
+      end
+
+      it 'applies empty hash default value' do
+        obj = GenericObject.create!(
+          :generic_object_definition => definition_with_hash,
+          :name                      => 'TestApp'
+        )
+        expect(obj.metadata).to eq({})
+      end
+
+      it 'validates required keys' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_hash,
+          :name                      => 'TestApp',
+          :settings                  => {'theme' => 'dark'}
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include(/missing required keys: language/)
+      end
+
+      it 'validates multiple missing required keys' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_hash,
+          :name                      => 'TestApp',
+          :settings                  => {}
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include(/missing required keys:/)
+      end
+
+      it 'validates allowed keys' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_hash,
+          :name                      => 'TestApp',
+          :settings                  => {'theme' => 'dark', 'language' => 'en', 'invalid_key' => 'value'}
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include(/disallowed keys: invalid_key/)
+      end
+
+      it 'validates multiple disallowed keys' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_hash,
+          :name                      => 'TestApp',
+          :settings                  => {'theme' => 'dark', 'language' => 'en', 'key1' => 'v1', 'key2' => 'v2'}
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include(/disallowed keys:/)
+      end
+
+      it 'accepts hash with all allowed keys' do
+        obj = GenericObject.create!(
+          :generic_object_definition => definition_with_hash,
+          :name                      => 'TestApp',
+          :settings                  => {'theme' => 'dark', 'language' => 'en', 'timezone' => 'UTC'}
+        )
+        expect(obj).to be_valid
+      end
+
+      it 'fails validation when hash attribute receives non-hash value' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_hash,
+          :name                      => 'TestApp',
+          :settings                  => ['not', 'a', 'hash']
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include("attribute 'settings' must be a Hash")
+      end
+
+      it 'accepts hash with symbol keys' do
+        obj = GenericObject.create!(
+          :generic_object_definition => definition_with_hash,
+          :name                      => 'TestApp',
+          :settings                  => {:theme => 'dark', :language => 'en'}
+        )
+        expect(obj).to be_valid
+      end
+    end
+
+    context 'Array attribute validation' do
+      let(:definition_with_array) do
+        FactoryBot.create(
+          :generic_object_definition,
+          :name       => 'task_definition',
+          :properties => {
+            :attributes            => {
+              :labels     => :array,
+              :categories => :array
+            },
+            :attribute_constraints => {
+              :labels     => {
+                :required     => true,
+                :min_items    => 1,
+                :max_items    => 5,
+                :unique_items => true,
+                :default      => ['untagged']
+              },
+              :categories => {
+                :default => []
+              }
+            }
+          }
+        )
+      end
+
+      it 'accepts valid array' do
+        obj = GenericObject.create!(
+          :generic_object_definition => definition_with_array,
+          :name                      => 'TestTask',
+          :labels                    => ['urgent', 'customer']
+        )
+        expect(obj.labels).to eq(['urgent', 'customer'])
+      end
+
+      it 'applies array default value' do
+        obj = GenericObject.create!(
+          :generic_object_definition => definition_with_array,
+          :name                      => 'TestTask'
+        )
+        expect(obj.labels).to eq(['untagged'])
+      end
+
+      it 'applies empty array default value' do
+        obj = GenericObject.create!(
+          :generic_object_definition => definition_with_array,
+          :name                      => 'TestTask'
+        )
+        expect(obj.categories).to eq([])
+      end
+
+      it 'validates min_items' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_array,
+          :name                      => 'TestTask',
+          :labels                    => []
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include("attribute 'labels' must have at least 1 items")
+      end
+
+      it 'validates max_items' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_array,
+          :name                      => 'TestTask',
+          :labels                    => ['a', 'b', 'c', 'd', 'e', 'f']
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include("attribute 'labels' must have at most 5 items")
+      end
+
+      it 'validates unique_items' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_array,
+          :name                      => 'TestTask',
+          :labels                    => ['urgent', 'urgent', 'customer']
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include("attribute 'labels' must have unique items")
+      end
+
+      it 'accepts array with unique items' do
+        obj = GenericObject.create!(
+          :generic_object_definition => definition_with_array,
+          :name                      => 'TestTask',
+          :labels                    => ['urgent', 'customer', 'high-priority']
+        )
+        expect(obj).to be_valid
+      end
+
+      it 'accepts array at min_items boundary' do
+        obj = GenericObject.create!(
+          :generic_object_definition => definition_with_array,
+          :name                      => 'TestTask',
+          :labels                    => ['single']
+        )
+        expect(obj).to be_valid
+      end
+
+      it 'accepts array at max_items boundary' do
+        obj = GenericObject.create!(
+          :generic_object_definition => definition_with_array,
+          :name                      => 'TestTask',
+          :labels                    => ['a', 'b', 'c', 'd', 'e']
+        )
+        expect(obj).to be_valid
+      end
+
+      it 'fails validation when array attribute receives non-array value' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_array,
+          :name                      => 'TestTask',
+          :labels                    => 'not an array'
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties]).to include("attribute 'labels' must be an Array")
+      end
+
+      it 'accepts array with mixed types' do
+        obj = GenericObject.create!(
+          :generic_object_definition => definition_with_array,
+          :name                      => 'TestTask',
+          :labels                    => ['string', 123, true]
+        )
+        expect(obj).to be_valid
+      end
+    end
+
+    context 'Hash and Array combined' do
+      let(:definition_with_both) do
+        FactoryBot.create(
+          :generic_object_definition,
+          :name       => 'complex_definition',
+          :properties => {
+            :attributes            => {
+              :config => :hash,
+              :labels => :array
+            },
+            :attribute_constraints => {
+              :config => {
+                :required_keys => ['name'],
+                :default       => {'name' => 'default'}
+              },
+              :labels => {
+                :min_items => 1,
+                :default   => ['default']
+              }
+            }
+          }
+        )
+      end
+
+      it 'validates both hash and array constraints' do
+        obj = GenericObject.create!(
+          :generic_object_definition => definition_with_both,
+          :name                      => 'TestObject',
+          :config                    => {'name' => 'test', 'value' => 123},
+          :labels                    => ['tag1', 'tag2']
+        )
+        expect(obj).to be_valid
+        expect(obj.config).to eq({'name' => 'test', 'value' => 123})
+        expect(obj.labels).to eq(['tag1', 'tag2'])
+      end
+
+      it 'applies defaults for both hash and array' do
+        obj = GenericObject.create!(
+          :generic_object_definition => definition_with_both,
+          :name                      => 'TestObject'
+        )
+        expect(obj.config).to eq({'name' => 'default'})
+        expect(obj.labels).to eq(['default'])
+      end
+
+      it 'reports errors for both hash and array violations' do
+        obj = GenericObject.new(
+          :generic_object_definition => definition_with_both,
+          :name                      => 'TestObject',
+          :config                    => {},
+          :labels                    => []
+        )
+        expect(obj).not_to be_valid
+        expect(obj.errors[:properties].size).to be >= 2
+      end
+    end
   end
 end
