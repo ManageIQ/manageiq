@@ -347,6 +347,9 @@ msgstr ""
 msgid "%s has been successfully removed."
 msgstr ""
 
+msgid "%s has no snapshots"
+msgstr ""
+
 msgid "%s logged out, redirecting to the login page"
 msgstr ""
 
@@ -1089,6 +1092,9 @@ msgid_plural "%{number} Weeks"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "%{number} bytes"
+msgstr ""
+
 msgid "%{number} core"
 msgid_plural "%{number} cores"
 msgstr[0] ""
@@ -1150,9 +1156,6 @@ msgid "%{provider_description} Workflow Job"
 msgid_plural "%{provider_description} Workflow Jobs"
 msgstr[0] ""
 msgstr[1] ""
-
-msgid "%{record_name} has no snapshots"
-msgstr ""
 
 msgid "%{record} - \"%{button_text}\""
 msgstr ""
@@ -1305,10 +1308,10 @@ msgstr ""
 msgid "'Unassigned Button Group' can not be edited"
 msgstr ""
 
-msgid "(%{number} bytes)"
+msgid "(%{value}) * Overallocated"
 msgstr ""
 
-msgid "(%{value}) * Overallocated"
+msgid "(Active)"
 msgstr ""
 
 msgid "(Check All)"
@@ -1799,9 +1802,6 @@ msgstr ""
 msgid "<<<Nothing>>>"
 msgstr ""
 
-msgid "<All>"
-msgstr ""
-
 msgid "<Archived>"
 msgstr ""
 
@@ -1827,9 +1827,6 @@ msgid "<Empty>"
 msgstr ""
 
 msgid "<New Entry>"
-msgstr ""
-
-msgid "<No Depot>"
 msgstr ""
 
 msgid "<No Event configured>"
@@ -4173,14 +4170,6 @@ msgstr ""
 msgid "Annotations"
 msgstr ""
 
-msgid "Anonymous FTP"
-msgid_plural "Anonymous FTPs"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Anonymous FTPs"
-msgstr ""
-
 msgid "Ansible"
 msgstr ""
 
@@ -5406,6 +5395,12 @@ msgstr[1] ""
 
 #, fuzzy
 msgid "Automation Manager (Ansible Tower)"
+msgstr ""
+
+msgid "Automation Manager Provision"
+msgstr ""
+
+msgid "Automation Manager Provisioning"
 msgstr ""
 
 msgid "Automation Manager Repositories Refresh"
@@ -6846,12 +6841,6 @@ msgstr ""
 msgid "Cannot call method '%{caller}' on an Account of type '%{type}'"
 msgstr ""
 
-msgid "Cannot collect current logs unless the Server is started"
-msgstr ""
-
-msgid "Cannot collect current logs unless there are started Servers in the Zone"
-msgstr ""
-
 msgid "Cannot connect service with nil ID."
 msgstr ""
 
@@ -6919,14 +6908,6 @@ msgid "Cannot start a host that is already powered on"
 msgstr ""
 
 msgid "Cannot start a host that is not HMC-managed"
-msgstr ""
-
-msgid ""
-"Cannot start log collection, a log collection is already in progress within th"
-"is scope"
-msgstr ""
-
-msgid "Cannot start log collection, requires a started server"
 msgstr ""
 
 msgid "Cannot start. Already on."
@@ -9345,43 +9326,16 @@ msgstr ""
 msgid "Collect"
 msgstr ""
 
-msgid "Collect All Logs"
-msgstr ""
-
 msgid "Collect Contents?"
 msgstr ""
 
-msgid "Collect Current Logs"
-msgstr ""
-
-msgid "Collect Logs"
-msgstr ""
-
 msgid "Collect Running Processes"
-msgstr ""
-
-msgid "Collect all logs"
-msgstr ""
-
-msgid "Collect all logs from the selected Server"
-msgstr ""
-
-msgid "Collect all logs from the selected Zone"
-msgstr ""
-
-msgid "Collect current logs"
 msgstr ""
 
 msgid "Collect for All Clusters"
 msgstr ""
 
 msgid "Collect for All Datastores"
-msgstr ""
-
-msgid "Collect the current logs from the selected Server"
-msgstr ""
-
-msgid "Collect the current logs from the selected Zone"
 msgstr ""
 
 msgid "Collected On"
@@ -15449,12 +15403,6 @@ msgstr ""
 msgid "Deploy Smartproxy"
 msgstr ""
 
-msgid "Depot Settings successfuly validated"
-msgstr ""
-
-msgid "Depot Settings validation failed"
-msgstr ""
-
 msgid "Depot Settings validation failed with error: %{error}"
 msgstr ""
 
@@ -18002,12 +17950,6 @@ msgstr ""
 msgid "Edit Job Templates Tags"
 msgstr ""
 
-msgid "Edit Log Depot Settings"
-msgstr ""
-
-msgid "Edit Log Depot settings was cancelled by the user"
-msgstr ""
-
 msgid "Edit Management Engine Relationship"
 msgstr ""
 
@@ -19238,12 +19180,6 @@ msgstr ""
 msgid "Edit tags for this Key Pair"
 msgstr ""
 
-msgid "Edit the Log Depot settings for the selected Server"
-msgstr ""
-
-msgid "Edit the Log Depot settings for the selected Zone"
-msgstr ""
-
 msgid "Edit the original Request"
 msgstr ""
 
@@ -19551,12 +19487,6 @@ msgid "Editing EVM Group \"%{name}\""
 msgstr ""
 
 msgid "Editing Group \"%{name}\""
-msgstr ""
-
-msgid "Editing Log Depot Settings for %s: %s"
-msgstr ""
-
-msgid "Editing Log Depot settings"
 msgstr ""
 
 msgid "Editing PXE Server \"%{name}\""
@@ -20256,9 +20186,6 @@ msgstr ""
 msgid "Enter Standby Mode"
 msgstr ""
 
-msgid "Enter Support Case:"
-msgstr ""
-
 msgid "Enter a comma separated list of IP or DNS names"
 msgstr ""
 
@@ -20314,6 +20241,9 @@ msgstr ""
 msgid "Entity"
 msgstr ""
 
+msgid "Entity is required"
+msgstr ""
+
 msgid "Entity:"
 msgstr ""
 
@@ -20354,9 +20284,6 @@ msgid "Ephemeral Disk Size"
 msgstr ""
 
 msgid "Error"
-msgstr ""
-
-msgid "Error '%{message}', writing to FTP: [%{uri}], Username: [%{id}]"
 msgstr ""
 
 msgid "Error Generating Report"
@@ -20426,9 +20353,6 @@ msgid "Error during 'Resource Add': %{error_message}"
 msgstr ""
 
 msgid "Error during 'Save Tags': %{error_message}"
-msgstr ""
-
-msgid "Error during 'Save': %{message}"
 msgstr ""
 
 msgid "Error during 'Validate': %{error_message}"
@@ -21881,14 +21805,6 @@ msgstr ""
 msgid "FS Type"
 msgstr ""
 
-msgid "FTP"
-msgid_plural "FTPs"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "FTPs"
-msgstr ""
-
 msgid "Fail If No Peer Cert"
 msgstr ""
 
@@ -22057,9 +21973,6 @@ msgid "FileDepot|Region number"
 msgstr ""
 
 msgid "FileDepot|Security protocol"
-msgstr ""
-
-msgid "FileDepot|Support case"
 msgstr ""
 
 msgid "FileDepot|Uri"
@@ -23886,6 +23799,11 @@ msgstr ""
 #, fuzzy
 msgid "Host (Microsoft)"
 msgstr ""
+
+msgid "Host (Nutanix)"
+msgid_plural "Hosts (Nutanix)"
+msgstr[0] ""
+msgstr[1] ""
 
 #, fuzzy
 msgid "Host (OpenStack)"
@@ -25789,6 +25707,9 @@ msgstr ""
 msgid "Invalid Stack"
 msgstr ""
 
+msgid "Invalid Workflow"
+msgstr ""
+
 msgid "Invalid XML file contents detected."
 msgstr ""
 
@@ -25829,9 +25750,6 @@ msgid "Invalid input"
 msgstr ""
 
 msgid "Invalid input for \"wait_for_task\"."
-msgstr ""
-
-msgid "Invalid or unsupported file depot type."
 msgstr ""
 
 msgid "Invalid parameters: %{params}"
@@ -26336,9 +26254,6 @@ msgid "Last Known Datastore Path"
 msgstr ""
 
 msgid "Last Known Size"
-msgstr ""
-
-msgid "Last Log Collection"
 msgstr ""
 
 msgid "Last Logoff"
@@ -26967,23 +26882,6 @@ msgstr ""
 msgid "Log"
 msgstr ""
 
-msgid "Log Depot Settings were saved"
-msgstr ""
-
-msgid "Log Depot Settings were validated"
-msgstr ""
-
-msgid "Log Depot URI"
-msgstr ""
-
-msgid "Log Depot settings not configured"
-msgstr ""
-
-msgid "Log File"
-msgid_plural "Log Files"
-msgstr[0] ""
-msgstr[1] ""
-
 msgid "Log In"
 msgstr ""
 
@@ -26994,81 +26892,6 @@ msgid "Log Level"
 msgstr ""
 
 msgid "Log Wrap Size must be numeric and greater than zero"
-msgstr ""
-
-msgid "Log collection error returned: %{error_message}"
-msgstr ""
-
-msgid "Log collection for %{product} %{object_type} %{name} has been initiated"
-msgstr ""
-
-msgid "Log collection is already in progress for one or more Servers in this Zone"
-msgstr ""
-
-msgid "Log collection is already in progress for this Server"
-msgstr ""
-
-msgid "Log collection requires the Log Depot settings to be configured"
-msgstr ""
-
-msgid "Log depot settings not configured"
-msgstr ""
-
-msgid "Log file"
-msgstr ""
-
-msgid "Log request failed since [%{resource} %{server_name}] is not started"
-msgstr ""
-
-msgid "Log request failed since [%{resource}] is not started"
-msgstr ""
-
-msgid "LogFile local_file is nil"
-msgstr ""
-
-msgid "LogFile local_file: [%{file_name}] does not exist!"
-msgstr ""
-
-msgid "LogFile|Created on"
-msgstr ""
-
-msgid "LogFile|Description"
-msgstr ""
-
-msgid "LogFile|Historical"
-msgstr ""
-
-msgid "LogFile|Href slug"
-msgstr ""
-
-msgid "LogFile|Local file"
-msgstr ""
-
-msgid "LogFile|Log uri"
-msgstr ""
-
-msgid "LogFile|Logging ended on"
-msgstr ""
-
-msgid "LogFile|Logging started on"
-msgstr ""
-
-msgid "LogFile|Name"
-msgstr ""
-
-msgid "LogFile|Region description"
-msgstr ""
-
-msgid "LogFile|Region number"
-msgstr ""
-
-msgid "LogFile|Resource type"
-msgstr ""
-
-msgid "LogFile|State"
-msgstr ""
-
-msgid "LogFile|Updated on"
 msgstr ""
 
 msgid "Logging"
@@ -32478,10 +32301,10 @@ msgstr ""
 msgid "Must contain only alphanumeric, hyphen, and underscore characters"
 msgstr ""
 
-msgid "Must provide a configuration_script_id"
+msgid "Must provide a configuration_script_payload_id"
 msgstr ""
 
-msgid "Must provide a configuration_script_payload_id"
+msgid "Must provide a src_configuration_script_id"
 msgstr ""
 
 msgid "Must provide both template_id and manager_id or manager and template"
@@ -34431,6 +34254,9 @@ msgstr ""
 msgid "Number, 2 Decimals (1,234.00)"
 msgstr ""
 
+msgid "Nutanix Provider"
+msgstr ""
+
 msgid "OK"
 msgstr ""
 
@@ -35579,7 +35405,7 @@ msgstr ""
 msgid "PXE"
 msgstr ""
 
-msgid "PXE Credentials successfuly validated"
+msgid "PXE Credentials successfully validated"
 msgstr ""
 
 msgid "PXE Directory"
@@ -38230,6 +38056,11 @@ msgid "Provision %{type} Request was cancelled by the user"
 msgstr ""
 
 msgid "Provision %{vms_or_templates}"
+msgstr ""
+
+msgid ""
+"Provision ConfigurationScript Request Templates do not support the execute met"
+"hod."
 msgstr ""
 
 msgid "Provision Configured Systems"
@@ -42812,6 +42643,9 @@ msgstr ""
 msgid "Select Entry Point %{entry_point}"
 msgstr ""
 
+msgid "Select Entry Point Instance"
+msgstr ""
+
 msgid "Select Format"
 msgstr ""
 
@@ -46734,9 +46568,6 @@ msgstr ""
 msgid "Super Administrator can not be copied"
 msgstr ""
 
-msgid "Support Case must be provided to collect logs"
-msgstr ""
-
 msgid "Support contact"
 msgstr ""
 
@@ -47541,6 +47372,9 @@ msgstr ""
 msgid "Terraform Enterprise Workspace"
 msgstr ""
 
+msgid "Terraform Enterprise Workspace Provision"
+msgstr ""
+
 msgid "Terraform Template"
 msgstr ""
 
@@ -48271,9 +48105,6 @@ msgid "This Widget content generation is already running or queued up"
 msgstr ""
 
 msgid "This Year"
-msgstr ""
-
-msgid "This Zone do not have Log Depot settings configured, collection not allowed"
 msgstr ""
 
 msgid ""
@@ -49453,9 +49284,6 @@ msgid "Unsupported endpoint"
 msgstr ""
 
 msgid "Unsupported interval '%{interval}'"
-msgstr ""
-
-msgid "Unsupported log depot protocol: %{protocol}"
 msgstr ""
 
 msgid "Unsupported property type [%{property}]"
@@ -51984,6 +51812,11 @@ msgstr[1] ""
 msgid "Virtual Machine (Microsoft)"
 msgstr ""
 
+msgid "Virtual Machine (Nutanix)"
+msgid_plural "Virtual Machines (Nutanix)"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Virtual Machine (OpenShift Virtualization)"
 msgid_plural "Virtual Machines (OpenShift Virtualization)"
 msgstr[0] ""
@@ -53743,6 +53576,9 @@ msgstr ""
 msgid "Workflow max. timeout"
 msgstr ""
 
+msgid "Workflow name"
+msgstr ""
+
 msgid "Workflows"
 msgstr ""
 
@@ -54007,9 +53843,6 @@ msgid "[Region: %{description} [%{region}]]"
 msgstr ""
 
 msgid "[Unassigned Buttons]"
-msgstr ""
-
-msgid "_post_my_logs not implemented for %{server_name}"
 msgstr ""
 
 msgid "accept_all_eula is required for content library item deployment."
@@ -55238,9 +55071,6 @@ msgid "size of %{name} id [%{number}] is incorrect"
 msgstr ""
 
 msgid "sort field from Summary tab "
-msgstr ""
-
-msgid "started? not implemented for %{server_name}"
 msgstr ""
 
 msgid "stopped"
