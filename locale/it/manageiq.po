@@ -1137,7 +1137,7 @@ msgstr[0] "%{number} Settimana"
 msgstr[1] "%{number} Settimane"
 
 msgid "%{number} bytes"
-msgstr "% {number} byte"
+msgstr "%{number} byte"
 
 msgid "%{number} core"
 msgid_plural "%{number} cores"
