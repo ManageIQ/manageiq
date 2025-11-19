@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2025-08-15 00:24+0000\n"
-"PO-Revision-Date: 2025-08-15 00:24+0000\n"
+"POT-Creation-Date: 2025-11-13 21:57+0000\n"
+"PO-Revision-Date: 2025-11-13 21:57+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -367,6 +367,9 @@ msgstr "%s se ha añadido correctamente."
 
 msgid "%s has been successfully removed."
 msgstr "%s se ha eliminado correctamente."
+
+msgid "%s has no snapshots"
+msgstr "%s no tiene ninguna instantánea"
 
 msgid "%s logged out, redirecting to the login page"
 msgstr ""
@@ -1154,6 +1157,9 @@ msgid_plural "%{number} Weeks"
 msgstr[0] "%{number} Semana"
 msgstr[1] "%{number} Semanas"
 
+msgid "%{number} bytes"
+msgstr "%{number} bytes"
+
 msgid "%{number} core"
 msgid_plural "%{number} cores"
 msgstr[0] "%{number} núcleo"
@@ -1223,9 +1229,6 @@ msgid "%{provider_description} Workflow Job"
 msgid_plural "%{provider_description} Workflow Jobs"
 msgstr[0] "Trabajo de flujo de trabajo de %{provider_description}"
 msgstr[1] "Trabajos de flujo de trabajo de %{provider_description}"
-
-msgid "%{record_name} has no snapshots"
-msgstr "%{record_name} no tiene instantáneas"
 
 msgid "%{record} - \"%{button_text}\""
 msgstr "%{record} - \"%{button_text}\""
@@ -1391,11 +1394,11 @@ msgstr "El reinicio del trabajador '%{type}' se ha iniciado correctamente"
 msgid "'Unassigned Button Group' can not be edited"
 msgstr "El 'grupo de botones sin asignar' no se puede editar"
 
-msgid "(%{number} bytes)"
-msgstr "(%{number} bytes)"
-
 msgid "(%{value}) * Overallocated"
 msgstr "(%{value}) * Sobreasignado"
+
+msgid "(Active)"
+msgstr "(Activo)"
 
 msgid "(Check All)"
 msgstr "(Marcar todo)"
@@ -1947,9 +1950,6 @@ msgstr "<%{class_name}> <%{id}>:<%{name}> ya se ha conectado a un servicio."
 msgid "<<<Nothing>>>"
 msgstr "<<<Nada>>>"
 
-msgid "<All>"
-msgstr "<Todos>"
-
 msgid "<Archived>"
 msgstr "<Archivado>"
 
@@ -1976,9 +1976,6 @@ msgstr "<Vacío>"
 
 msgid "<New Entry>"
 msgstr "<Nueva entrada>"
-
-msgid "<No Depot>"
-msgstr "<Sin depósito>"
 
 msgid "<No Event configured>"
 msgstr "<No hay ningún evento configurado>"
@@ -4454,14 +4451,6 @@ msgstr "Anotación"
 msgid "Annotations"
 msgstr "Anotaciones"
 
-msgid "Anonymous FTP"
-msgid_plural "Anonymous FTPs"
-msgstr[0] "FTP anónimo"
-msgstr[1] "FTP anónimos"
-
-msgid "Anonymous FTPs"
-msgstr "FTP anónimos"
-
 msgid "Ansible"
 msgstr "Ansible"
 
@@ -5751,6 +5740,12 @@ msgstr[1] "Gestores de automatización (Ansible Automation Platform)"
 
 msgid "Automation Manager (Ansible Tower)"
 msgstr "Administradores de automatización (Ansible Tower)"
+
+msgid "Automation Manager Provision"
+msgstr "Suministro del gestor de automatización"
+
+msgid "Automation Manager Provisioning"
+msgstr "Suministro del gestor de automatización"
 
 msgid "Automation Manager Repositories Refresh"
 msgstr "Renovación de repositorios de Automation Manager"
@@ -7279,17 +7274,6 @@ msgid "Cannot call method '%{caller}' on an Account of type '%{type}'"
 msgstr ""
 "No se puede llamar al método '%{caller}' en una cuenta de tipo '%{type}'"
 
-msgid "Cannot collect current logs unless the Server is started"
-msgstr ""
-"No se pueden recopilar los registros actuales a menos que se inicie el "
-"servidor"
-
-msgid ""
-"Cannot collect current logs unless there are started Servers in the Zone"
-msgstr ""
-"No se pueden recopilar los registros actuales a menos que se servidores en la "
-"zona"
-
 msgid "Cannot connect service with nil ID."
 msgstr "No se puede conectar el servicio con ID nulo."
 
@@ -7361,18 +7345,6 @@ msgstr "No se puede iniciar un host que ya esté encendido"
 
 msgid "Cannot start a host that is not HMC-managed"
 msgstr "No se puede iniciar un host que no esté gestionado por HMC"
-
-msgid ""
-"Cannot start log collection, a log collection is already in progress within "
-"this scope"
-msgstr ""
-"No se puede comenzar el registro de datos, ya existe uno en progreso en ese "
-"entorno"
-
-msgid "Cannot start log collection, requires a started server"
-msgstr ""
-"No se puede comenzar el registro de datos, se requiere un servidor "
-"ejecutándose"
 
 msgid "Cannot start. Already on."
 msgstr "No se puede iniciar. Ya está encendida."
@@ -9856,44 +9828,17 @@ msgstr "Contraer todo"
 msgid "Collect"
 msgstr "Recopilar"
 
-msgid "Collect All Logs"
-msgstr "Recopilar todos los registros"
-
 msgid "Collect Contents?"
 msgstr "¿Recopilar contenido?"
 
-msgid "Collect Current Logs"
-msgstr "Recopilar registros actuales"
-
-msgid "Collect Logs"
-msgstr "Recopilar registros"
-
 msgid "Collect Running Processes"
 msgstr "Recopilar procesos de ejecución"
-
-msgid "Collect all logs"
-msgstr "Recopilar todos los registros"
-
-msgid "Collect all logs from the selected Server"
-msgstr "Recopilar todos los registros del servidor seleccionado"
-
-msgid "Collect all logs from the selected Zone"
-msgstr "Recopilar todos los registros de la zona seleccionada"
-
-msgid "Collect current logs"
-msgstr "Recopilar registros actuales"
 
 msgid "Collect for All Clusters"
 msgstr "Recopilar para todos los clústeres"
 
 msgid "Collect for All Datastores"
 msgstr "Recopilar para todos los almacenes de datos"
-
-msgid "Collect the current logs from the selected Server"
-msgstr "Recopilar los registros actuales del servidor seleccionado"
-
-msgid "Collect the current logs from the selected Zone"
-msgstr "Recopilar los registros actuales de la zona seleccionada"
 
 msgid "Collected On"
 msgstr "Recopilado el"
@@ -16339,12 +16284,6 @@ msgstr "Desplegar servidor asignado al perfil de servidor"
 msgid "Deploy Smartproxy"
 msgstr "Implementar Smartproxy"
 
-msgid "Depot Settings successfuly validated"
-msgstr "La configuración del almacén se validó correctamente."
-
-msgid "Depot Settings validation failed"
-msgstr "Error en la validación de la configuración del almacén"
-
 msgid "Depot Settings validation failed with error: %{error}"
 msgstr ""
 "Ha fallado la validación de la configuración del almacén con el error: %{error"
@@ -18927,13 +18866,6 @@ msgstr "Modificar etiquetas de instancias"
 msgid "Edit Job Templates Tags"
 msgstr "Modificar etiquetas de plantillas de tareas"
 
-msgid "Edit Log Depot Settings"
-msgstr "Modificar configuración del almacén de registro"
-
-msgid "Edit Log Depot settings was cancelled by the user"
-msgstr ""
-"Edición de las opciones del almacén de registros cancelada por el usuario"
-
 msgid "Edit Management Engine Relationship"
 msgstr "Modificar relación del motor de gestión"
 
@@ -20209,15 +20141,6 @@ msgstr "Editar etiquetas para este tipo de volumen de nube"
 msgid "Edit tags for this Key Pair"
 msgstr "Modificar etiquetas para este par de claves"
 
-msgid "Edit the Log Depot settings for the selected Server"
-msgstr ""
-"Modificar la configuración del almacén de registro para el servidor "
-"seleccionado"
-
-msgid "Edit the Log Depot settings for the selected Zone"
-msgstr ""
-"Modificar la configuración del almacén de registro para la zona seleccionada"
-
 msgid "Edit the original Request"
 msgstr "Modificar la solicitud original"
 
@@ -20526,12 +20449,6 @@ msgstr "Edición del grupo de EVM \"%{name}\""
 
 msgid "Editing Group \"%{name}\""
 msgstr "Edición del grupo \"%{name}\""
-
-msgid "Editing Log Depot Settings for %s: %s"
-msgstr "Editando valores del almacén de registro para %s: %s"
-
-msgid "Editing Log Depot settings"
-msgstr "Editando configuración del almacén de registro"
 
 msgid "Editing PXE Server \"%{name}\""
 msgstr "Edición del servidor PXE \"%{name}\""
@@ -21250,9 +21167,6 @@ msgstr "Ingresar fecha de retiro como"
 msgid "Enter Standby Mode"
 msgstr "Ingresar en el modo de espera"
 
-msgid "Enter Support Case:"
-msgstr "Ingresar caso de soporte:"
-
 msgid "Enter a comma separated list of IP or DNS names"
 msgstr "Ingresar una lista de IP o nombres de DNS separados por comas"
 
@@ -21309,6 +21223,9 @@ msgstr "Número de región"
 msgid "Entity"
 msgstr "Entidad"
 
+msgid "Entity is required"
+msgstr "La entidad es obligatoria"
+
 msgid "Entity:"
 msgstr "Entidad:"
 
@@ -21350,10 +21267,6 @@ msgstr "Tamaño de disco efímero"
 
 msgid "Error"
 msgstr "Error"
-
-msgid "Error '%{message}', writing to FTP: [%{uri}], Username: [%{id}]"
-msgstr ""
-"Error '%{message}', al escribir en FTP: [%{uri}], Nombre de usuario: [%{id}]"
 
 msgid "Error Generating Report"
 msgstr "Error al generar el informe"
@@ -21430,9 +21343,6 @@ msgstr "Error durante operación 'añadir recurso': %{error_message}"
 
 msgid "Error during 'Save Tags': %{error_message}"
 msgstr "Error durante operación 'guardar etiquetas': %{error_message}"
-
-msgid "Error during 'Save': %{message}"
-msgstr "Error durante operación 'guardar': %{message}"
 
 msgid "Error during 'Validate': %{error_message}"
 msgstr "Error durante operación 'validar': %{error_message}"
@@ -22956,14 +22866,6 @@ msgstr "FRU"
 msgid "FS Type"
 msgstr "Tipo de FS"
 
-msgid "FTP"
-msgid_plural "FTPs"
-msgstr[0] "FTP"
-msgstr[1] "FTP"
-
-msgid "FTPs"
-msgstr "FTP"
-
 msgid "Fail If No Peer Cert"
 msgstr "Error si no hay certificado del mismo nivel"
 
@@ -23143,9 +23045,6 @@ msgstr "Número de región"
 
 msgid "FileDepot|Security protocol"
 msgstr "FileDepot|Protocolo de seguridad"
-
-msgid "FileDepot|Support case"
-msgstr "Caso de soporte"
 
 msgid "FileDepot|Uri"
 msgstr "URI"
@@ -24989,6 +24888,11 @@ msgstr "Host (URL de autenticación)"
 
 msgid "Host (Microsoft)"
 msgstr "Hosts (Microsoft)"
+
+msgid "Host (Nutanix)"
+msgid_plural "Hosts (Nutanix)"
+msgstr[0] "Host (Nutanix)"
+msgstr[1] "Hosts (Nutanix)"
 
 msgid "Host (OpenStack)"
 msgid_plural "Hosts (OpenStack)"
@@ -26948,6 +26852,9 @@ msgstr "Credenciales SSO incorrectos"
 msgid "Invalid Stack"
 msgstr "Pila no válida"
 
+msgid "Invalid Workflow"
+msgstr "Flujo de trabajo no válido"
+
 msgid "Invalid XML file contents detected."
 msgstr "Se detectó contenido de archivo XML no válido."
 
@@ -26991,9 +26898,6 @@ msgstr "Entrada no válida"
 
 msgid "Invalid input for \"wait_for_task\"."
 msgstr "Entrada no válida para \"wait_for_task\"."
-
-msgid "Invalid or unsupported file depot type."
-msgstr "Tipo de almacén de archivo no válido o no soportado."
 
 msgid "Invalid parameters: %{params}"
 msgstr "Parámetros no válidos: %{params}"
@@ -27502,9 +27406,6 @@ msgstr "Última ruta de almacén de datos conocida"
 
 msgid "Last Known Size"
 msgstr "Último tamaño conocido"
-
-msgid "Last Log Collection"
-msgstr "Última recopilación del registro"
 
 msgid "Last Logoff"
 msgstr "Último cierre de sesión"
@@ -28141,23 +28042,6 @@ msgstr "Umbral de bloqueo"
 msgid "Log"
 msgstr "Registro"
 
-msgid "Log Depot Settings were saved"
-msgstr "Se guardaron las opciones del almacén de Log"
-
-msgid "Log Depot Settings were validated"
-msgstr "Las opciones del almacén de registros fue validada"
-
-msgid "Log Depot URI"
-msgstr "URI del almacén de registros"
-
-msgid "Log Depot settings not configured"
-msgstr "No se realizó la configuración del almacén de registros"
-
-msgid "Log File"
-msgid_plural "Log Files"
-msgstr[0] "Archivo de registro"
-msgstr[1] "Archivos de registro"
-
 msgid "Log In"
 msgstr "Iniciar sesión"
 
@@ -28169,90 +28053,6 @@ msgstr "Nivel de registro"
 
 msgid "Log Wrap Size must be numeric and greater than zero"
 msgstr "El tamaño de ajuste del registro debe ser numérico y mayor que cero."
-
-msgid "Log collection error returned: %{error_message}"
-msgstr "Error de recopilación de registro devuelto: %{error_message}"
-
-msgid "Log collection for %{product} %{object_type} %{name} has been initiated"
-msgstr ""
-"Se ha iniciado la recopilación de registro para %{product} %{object_type} %{"
-"name}"
-
-msgid ""
-"Log collection is already in progress for one or more Servers in this Zone"
-msgstr ""
-"La recopilación del registro ya está en curso para uno o más servidores en "
-"esta zona"
-
-msgid "Log collection is already in progress for this Server"
-msgstr "La recopilación del registro ya está en curso para este servidor"
-
-msgid "Log collection requires the Log Depot settings to be configured"
-msgstr ""
-"La recopilación del registro requiere la configuración del almacén de registro"
-
-msgid "Log depot settings not configured"
-msgstr "No se realizó la configuración del almacén de registros"
-
-msgid "Log file"
-msgstr "Archivo de registro"
-
-msgid "Log request failed since [%{resource} %{server_name}] is not started"
-msgstr ""
-"Error en la solicitud de registro dado que [%{resource} %{server_name}] no se "
-"ha iniciado"
-
-msgid "Log request failed since [%{resource}] is not started"
-msgstr ""
-"Error en la solicitud de registro dado que [%{resource}] no se ha iniciado"
-
-msgid "LogFile local_file is nil"
-msgstr "LogFile local_file es nulo"
-
-msgid "LogFile local_file: [%{file_name}] does not exist!"
-msgstr "LogFile local_file: [%{file_name}] no existe"
-
-msgid "LogFile|Created on"
-msgstr "Fecha de creación"
-
-msgid "LogFile|Description"
-msgstr "Descripción"
-
-msgid "LogFile|Historical"
-msgstr "Histórico"
-
-msgid "LogFile|Href slug"
-msgstr "LogFile|Href slug"
-
-msgid "LogFile|Local file"
-msgstr "Archivo local"
-
-msgid "LogFile|Log uri"
-msgstr "URI del registro"
-
-msgid "LogFile|Logging ended on"
-msgstr "Fecha de finalización del registro"
-
-msgid "LogFile|Logging started on"
-msgstr "Fecha de inicio del registro"
-
-msgid "LogFile|Name"
-msgstr "Nombre"
-
-msgid "LogFile|Region description"
-msgstr "Descripción de la región"
-
-msgid "LogFile|Region number"
-msgstr "Número de región"
-
-msgid "LogFile|Resource type"
-msgstr "Tipo de recurso"
-
-msgid "LogFile|State"
-msgstr "Estado"
-
-msgid "LogFile|Updated on"
-msgstr "Fecha de actualización"
 
 msgid "Logging"
 msgstr "Registro"
@@ -33855,11 +33655,11 @@ msgstr "Debe llamar .new con un hash de opciones."
 msgid "Must contain only alphanumeric, hyphen, and underscore characters"
 msgstr "Debe contener solo caracteres alfanuméricos, de subrayado y guiones"
 
-msgid "Must provide a configuration_script_id"
-msgstr "Debe proporcionar un configuration_script_id"
-
 msgid "Must provide a configuration_script_payload_id"
 msgstr "Debe proporcionar un configuration_script_payload_id"
+
+msgid "Must provide a src_configuration_script_id"
+msgstr "Debe proporcionar un src_configuration_script_id"
 
 msgid "Must provide both template_id and manager_id or manager and template"
 msgstr "Debe proporcionar template_id y manager_id o manager y template"
@@ -35907,6 +35707,9 @@ msgstr "Número de máquinas virtuales por tipo"
 msgid "Number, 2 Decimals (1,234.00)"
 msgstr "Número, 2 decimales (1,234.00)"
 
+msgid "Nutanix Provider"
+msgstr "Proveedor de Nutanix"
+
 msgid "OK"
 msgstr "Aceptar"
 
@@ -37083,8 +36886,8 @@ msgstr "Instancia de PVM"
 msgid "PXE"
 msgstr "PXE"
 
-msgid "PXE Credentials successfuly validated"
-msgstr "Credenciales de PXE validadas con éxito"
+msgid "PXE Credentials successfully validated"
+msgstr "Credenciales de PXE validadas correctamente"
 
 msgid "PXE Directory"
 msgstr "Directorio de PXE"
@@ -39752,6 +39555,13 @@ msgstr "El usuario ha cancelado la solicitud de aprovisionamiento %{type}"
 
 msgid "Provision %{vms_or_templates}"
 msgstr "Aprovisionar %{vms_or_templates}"
+
+msgid ""
+"Provision ConfigurationScript Request Templates do not support the execute "
+"method."
+msgstr ""
+"El suministro de plantillas de solicitud de ConfigurationScript no admite el "
+"método de ejecución."
 
 msgid "Provision Configured Systems"
 msgstr "Aprovisionar sistemas configurados"
@@ -44614,6 +44424,9 @@ msgstr "Seleccionar flujo de trabajo incorporado - Punto de entrada %s"
 msgid "Select Entry Point %{entry_point}"
 msgstr "Seleccionar punto de entrada %{entry_point}"
 
+msgid "Select Entry Point Instance"
+msgstr "Seleccionar instancia de punto de entrada"
+
 msgid "Select Format"
 msgstr "Seleccionar formato"
 
@@ -48689,9 +48502,6 @@ msgstr "Domingo"
 msgid "Super Administrator can not be copied"
 msgstr "No se puede copiar al superadministrador"
 
-msgid "Support Case must be provided to collect logs"
-msgstr "Se debe suministrar el caso de asistencia para recopilar registros"
-
 msgid "Support contact"
 msgstr "Contacto de asistencia"
 
@@ -49500,6 +49310,9 @@ msgstr "Proveedor de Terraform Enterprise"
 
 msgid "Terraform Enterprise Workspace"
 msgstr "Espacio de trabajo de Terraform Enterprise"
+
+msgid "Terraform Enterprise Workspace Provision"
+msgstr "Suministro del espacio de trabajo de Terraform Enterprise"
 
 msgid "Terraform Template"
 msgstr "Plantilla de Terraform"
@@ -50335,12 +50148,6 @@ msgstr ""
 
 msgid "This Year"
 msgstr "Este año"
-
-msgid ""
-"This Zone do not have Log Depot settings configured, collection not allowed"
-msgstr ""
-"Esta zona no tiene establecida la configuración del almacén de registro, la "
-"recolección no está permitida"
 
 msgid ""
 "This element should be removed and recreated or you can report the error to "
@@ -51585,9 +51392,6 @@ msgstr "Punto final no soportado"
 
 msgid "Unsupported interval '%{interval}'"
 msgstr "Intervalo no compatible '%{interval}'"
-
-msgid "Unsupported log depot protocol: %{protocol}"
-msgstr "Protocolo del almacén de registro no soportado: %{protocol}"
 
 msgid "Unsupported property type [%{property}]"
 msgstr "Tipo de propiedad no compatible [%{property}]"
@@ -54223,6 +54027,11 @@ msgstr[1] "Máquinas virtuales (Kubevirt)"
 msgid "Virtual Machine (Microsoft)"
 msgstr "Máquina virtual (Microsoft)"
 
+msgid "Virtual Machine (Nutanix)"
+msgid_plural "Virtual Machines (Nutanix)"
+msgstr[0] "Máquina virtual (Nutanix)"
+msgstr[1] "Máquinas virtuales (Nutanix)"
+
 msgid "Virtual Machine (OpenShift Virtualization)"
 msgid_plural "Virtual Machines (OpenShift Virtualization)"
 msgstr[0] "Virtual Machine (OpenShift Virtualization)"
@@ -56177,6 +55986,9 @@ msgstr "El flujo de trabajo no tiene ninguna credencial que correlacionar."
 msgid "Workflow max. timeout"
 msgstr "Tiempo de espera máximo del flujo de trabajo"
 
+msgid "Workflow name"
+msgstr "Nombre de flujo de trabajo"
+
 msgid "Workflows"
 msgstr "Flujos de trabajo"
 
@@ -56452,9 +56264,6 @@ msgstr "[Región: %{description} [%{region}]]"
 
 msgid "[Unassigned Buttons]"
 msgstr "[Botones no asignados]"
-
-msgid "_post_my_logs not implemented for %{server_name}"
-msgstr "_post_my_logs no implementado para %{server_name}"
 
 msgid "accept_all_eula is required for content library item deployment."
 msgstr ""
@@ -57706,9 +57515,6 @@ msgstr "tamaño de %{name} id [%{number}] es incorrecto"
 
 msgid "sort field from Summary tab "
 msgstr "se haya seleccionado "
-
-msgid "started? not implemented for %{server_name}"
-msgstr "¿iniciado? no implementado para %{server_name}"
 
 msgid "stopped"
 msgstr "detenido"
