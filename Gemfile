@@ -66,7 +66,7 @@ gem "prism",                            ">=0.25.0",          :require => false #
 gem "psych",                            ">=3.1",             :require => false # 3.1 safe_load changed positional to kwargs like aliases: true: https://github.com/ruby/psych/commit/4d4439d6d0adfcbd211ea295779315f1baa7dadd
 gem "query_relation",                   "~>0.2.0",           :require => false
 gem "rack",                             ">=2.2.20",          :require => false # https://github.com/advisories/GHSA-6xw4-3v39-52mm https://github.com/advisories/GHSA-6xw4-3v39-52mm https://github.com/advisories/GHSA-6xw4-3v39-52mm https://github.com/advisories/GHSA-6xw4-3v39-52mm https://github.com/advisories/GHSA-6xw4-3v39-52mm https://github.com/advisories/GHSA-6xw4-3v39-52mm
-gem "rack-attack",                      "~>6.5.0",           :require => false
+gem "rack-attack",                      "~>6.8.0",           :require => false
 gem "rails",                            "~>7.2.3"
 gem "rails-i18n",                       "~>7.x"
 gem "rake",                             ">=12.3.3",          :require => false
