@@ -32,4 +32,9 @@ FactoryBot.define do
     name        { "miq_provision_configured_system_foreman_dialogs" }
     dialog_type { "MiqProvisionConfiguredSystemWorkflow" }
   end
+
+  factory :miq_provision_configuration_script_dialog, :parent => :miq_dialog do
+    name        { "miq_provision_configuration_script_dialogs" }
+    dialog_type { "MiqProvisionConfigurationScriptWorkflow" }
+  end
 end
