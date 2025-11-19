@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2025-08-15 00:24+0000\n"
-"PO-Revision-Date: 2025-08-15 00:24+0000\n"
+"POT-Creation-Date: 2025-11-13 21:57+0000\n"
+"PO-Revision-Date: 2025-11-13 21:57+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -345,6 +345,9 @@ msgstr "%s が正常に追加されました。"
 
 msgid "%s has been successfully removed."
 msgstr "%s が正常に削除されました。"
+
+msgid "%s has no snapshots"
+msgstr "%sにはスナップショットがありません"
 
 msgid "%s logged out, redirecting to the login page"
 msgstr "%s がログアウトしています。ログイン・ページへリダイレクトします。"
@@ -1020,6 +1023,9 @@ msgid "%{number} Week"
 msgid_plural "%{number} Weeks"
 msgstr[0] "%{number} 週"
 
+msgid "%{number} bytes"
+msgstr "%{number}バイト"
+
 msgid "%{number} core"
 msgid_plural "%{number} cores"
 msgstr[0] "%{number} 個のコア"
@@ -1081,9 +1087,6 @@ msgstr[0] "%{provider_description} Jobs"
 msgid "%{provider_description} Workflow Job"
 msgid_plural "%{provider_description} Workflow Jobs"
 msgstr[0] "%{provider_description} Workflow Jobs"
-
-msgid "%{record_name} has no snapshots"
-msgstr "%{record_name}にはスナップショットはありません"
 
 msgid "%{record} - \"%{button_text}\""
 msgstr "%{record} - \"%{button_text}\""
@@ -1235,11 +1238,11 @@ msgstr "'%{type}'ワーカーの再起動が正常に開始されました"
 msgid "'Unassigned Button Group' can not be edited"
 msgstr "「未割り当てボタン・グループ」は編集できません"
 
-msgid "(%{number} bytes)"
-msgstr "(%{number} バイト)"
-
 msgid "(%{value}) * Overallocated"
 msgstr "(%{value}) * 割振超過"
+
+msgid "(Active)"
+msgstr "(アクティブ)"
 
 msgid "(Check All)"
 msgstr "(すべて選択)"
@@ -1739,9 +1742,6 @@ msgstr "<%{class_name}> <%{id}>:<%{name}> はすでにサービスに接続さ�
 msgid "<<<Nothing>>>"
 msgstr "<<<なし>>>"
 
-msgid "<All>"
-msgstr "<すべて>"
-
 msgid "<Archived>"
 msgstr "<アーカイブ>"
 
@@ -1768,9 +1768,6 @@ msgstr "<空欄>"
 
 msgid "<New Entry>"
 msgstr "<新規エントリー>"
-
-msgid "<No Depot>"
-msgstr "<デポなし>"
 
 msgid "<No Event configured>"
 msgstr "<イベントが構成されていません>"
@@ -4121,13 +4118,6 @@ msgstr "注釈"
 msgid "Annotations"
 msgstr "アノテーション"
 
-msgid "Anonymous FTP"
-msgid_plural "Anonymous FTPs"
-msgstr[0] "匿名 FTP"
-
-msgid "Anonymous FTPs"
-msgstr "匿名 FTP"
-
 msgid "Ansible"
 msgstr "Ansible"
 
@@ -5341,6 +5331,12 @@ msgstr[0] "Automation Managers (Ansible Automation Platform)"
 
 msgid "Automation Manager (Ansible Tower)"
 msgstr "自動化マネージャー (Ansible Tower)"
+
+msgid "Automation Manager Provision"
+msgstr "自動化マネージャーのプロビジョン"
+
+msgid "Automation Manager Provisioning"
+msgstr "自動化マネージャーのプロビジョニング"
 
 msgid "Automation Manager Repositories Refresh"
 msgstr "自動化マネージャー・リポジトリーのリフレッシュ"
@@ -6770,13 +6766,6 @@ msgstr "使用中はアーカイブできません"
 msgid "Cannot call method '%{caller}' on an Account of type '%{type}'"
 msgstr "タイプ '%{type}' のアカウントにあるメソッド '%{caller}' を呼び出せません"
 
-msgid "Cannot collect current logs unless the Server is started"
-msgstr "サーバーが起動していないと現在のログを収集できません"
-
-msgid ""
-"Cannot collect current logs unless there are started Servers in the Zone"
-msgstr "ゾーンに起動したサーバーがないと現在のログを収集できません"
-
 msgid "Cannot connect service with nil ID."
 msgstr "ID なしではサービスに接続できません。"
 
@@ -6845,14 +6834,6 @@ msgstr "既に電源がオンになっているホストを開始することは
 
 msgid "Cannot start a host that is not HMC-managed"
 msgstr "HMC 管理対象ではないホストは開始できません"
-
-msgid ""
-"Cannot start log collection, a log collection is already in progress within "
-"this scope"
-msgstr "ログ収集を開始できません。このスコープのログ収集がすでに進行中です"
-
-msgid "Cannot start log collection, requires a started server"
-msgstr "ログ収集を開始できません。サーバーの起動が必要です"
 
 msgid "Cannot start. Already on."
 msgstr "開始できません。すでにオンの状態です。"
@@ -9212,44 +9193,17 @@ msgstr "すべて折り畳む"
 msgid "Collect"
 msgstr "収集"
 
-msgid "Collect All Logs"
-msgstr "すべてのログの収集"
-
 msgid "Collect Contents?"
 msgstr "コンテンツを収集しますか?"
 
-msgid "Collect Current Logs"
-msgstr "現在のログの収集"
-
-msgid "Collect Logs"
-msgstr "ログの収集"
-
 msgid "Collect Running Processes"
 msgstr "実行中プロセスの収集"
-
-msgid "Collect all logs"
-msgstr "すべてのログの収集"
-
-msgid "Collect all logs from the selected Server"
-msgstr "選択したサーバーからすべてのログを収集"
-
-msgid "Collect all logs from the selected Zone"
-msgstr "選択したゾーンからすべてのログを収集"
-
-msgid "Collect current logs"
-msgstr "現在のログの収集"
 
 msgid "Collect for All Clusters"
 msgstr "すべてのクラスターを収集"
 
 msgid "Collect for All Datastores"
 msgstr "すべてのデータ・ストアを収集"
-
-msgid "Collect the current logs from the selected Server"
-msgstr "選択したサーバーから現在のログを収集"
-
-msgid "Collect the current logs from the selected Zone"
-msgstr "選択したゾーンから現在のログを収集"
 
 msgid "Collected On"
 msgstr "収集日:"
@@ -15226,12 +15180,6 @@ msgstr "サーバー・プロファイルに割り当てられたサーバーの
 msgid "Deploy Smartproxy"
 msgstr "Smartproxy のデプロイ"
 
-msgid "Depot Settings successfuly validated"
-msgstr "デポ設定が正常に検証されました"
-
-msgid "Depot Settings validation failed"
-msgstr "デポ設定の検証に失敗しました"
-
 msgid "Depot Settings validation failed with error: %{error}"
 msgstr "デポ設定の検証はエラーを出して失敗しました: %{error}"
 
@@ -17764,12 +17712,6 @@ msgstr "インスタンス・タグの編集"
 msgid "Edit Job Templates Tags"
 msgstr "ジョブ・テンプレート・タグの編集"
 
-msgid "Edit Log Depot Settings"
-msgstr "ログ・デポ設定の編集"
-
-msgid "Edit Log Depot settings was cancelled by the user"
-msgstr "ログ・デポ設定の編集はユーザーにより取り消されました"
-
 msgid "Edit Management Engine Relationship"
 msgstr "管理エンジン・リレーションシップの編集"
 
@@ -19002,12 +18944,6 @@ msgstr "このクラウド・ボリューム・タイプのタグの編集"
 msgid "Edit tags for this Key Pair"
 msgstr "この鍵ペアのタグの編集"
 
-msgid "Edit the Log Depot settings for the selected Server"
-msgstr "選択したサーバーのログ・デポ設定の編集"
-
-msgid "Edit the Log Depot settings for the selected Zone"
-msgstr "選択したゾーンのログ・デポ設定の編集"
-
 msgid "Edit the original Request"
 msgstr "元の要求の編集"
 
@@ -19316,12 +19252,6 @@ msgstr "EVM グループ \"%{name}\" の編集"
 
 msgid "Editing Group \"%{name}\""
 msgstr "グループ \"%{name}\" の編集中"
-
-msgid "Editing Log Depot Settings for %s: %s"
-msgstr "%s: %sのログ・デポ設定の編集"
-
-msgid "Editing Log Depot settings"
-msgstr "ログ・デポ設定の編集"
 
 msgid "Editing PXE Server \"%{name}\""
 msgstr "PXE サーバー \"%{name}\" の編集"
@@ -20018,9 +19948,6 @@ msgstr "リタイヤ日の入力"
 msgid "Enter Standby Mode"
 msgstr "スタンバイ・モードの開始"
 
-msgid "Enter Support Case:"
-msgstr "サポート・ケースの入力"
-
 msgid "Enter a comma separated list of IP or DNS names"
 msgstr "IP または DNS 名のコンマ区切りのリストを入力"
 
@@ -20074,6 +20001,9 @@ msgstr "リージョン番号"
 msgid "Entity"
 msgstr "エンティティー"
 
+msgid "Entity is required"
+msgstr "エンティティーは必須です"
+
 msgid "Entity:"
 msgstr "エンティティー:"
 
@@ -20115,9 +20045,6 @@ msgstr "一時ディスク・サイズ"
 
 msgid "Error"
 msgstr "エラー"
-
-msgid "Error '%{message}', writing to FTP: [%{uri}], Username: [%{id}]"
-msgstr "エラー '%{message}'、FTP への書き込み: [%{uri}]、ユーザー名: [%{id}]"
 
 msgid "Error Generating Report"
 msgstr "レポートの生成中にエラーが発生しました"
@@ -20187,9 +20114,6 @@ msgstr "'リソース追加' の実行中にエラーが発生しました: %{er
 
 msgid "Error during 'Save Tags': %{error_message}"
 msgstr "'タグの保存' の実行中にエラーが発生しました: %{error_message}"
-
-msgid "Error during 'Save': %{message}"
-msgstr "'保存' の実行中にエラーが発生しました: %{message}"
 
 msgid "Error during 'Validate': %{error_message}"
 msgstr "'検証' の実行中にエラーが発生しました: %{error_message}"
@@ -21633,13 +21557,6 @@ msgstr "FRU"
 msgid "FS Type"
 msgstr "FS タイプ"
 
-msgid "FTP"
-msgid_plural "FTPs"
-msgstr[0] "FTP"
-
-msgid "FTPs"
-msgstr "FTP"
-
 msgid "Fail If No Peer Cert"
 msgstr "ピア証明書がない場合は失敗"
 
@@ -21811,9 +21728,6 @@ msgstr "リージョン番号"
 
 msgid "FileDepot|Security protocol"
 msgstr "セキュリティー・プロトコル"
-
-msgid "FileDepot|Support case"
-msgstr "ケースのサポート"
 
 msgid "FileDepot|Uri"
 msgstr "URI"
@@ -23607,6 +23521,10 @@ msgstr "ホスト (認証 URL)"
 
 msgid "Host (Microsoft)"
 msgstr "ホスト (Microsoft)"
+
+msgid "Host (Nutanix)"
+msgid_plural "Hosts (Nutanix)"
+msgstr[0] "ホスト(Nutanix)"
 
 msgid "Host (OpenStack)"
 msgid_plural "Hosts (OpenStack)"
@@ -25462,6 +25380,9 @@ msgstr "無効なシングル・サインオン資格情報"
 msgid "Invalid Stack"
 msgstr "無効なスタック"
 
+msgid "Invalid Workflow"
+msgstr "無効なワークフロー"
+
 msgid "Invalid XML file contents detected."
 msgstr "無効な XML ファイルのコンテンツが検出されました。"
 
@@ -25503,9 +25424,6 @@ msgstr "無効な入力"
 
 msgid "Invalid input for \"wait_for_task\"."
 msgstr "\"wait_for_task\" の無効な入力です。"
-
-msgid "Invalid or unsupported file depot type."
-msgstr "無効かサポートされないファイル・デポ・タイプです。"
 
 msgid "Invalid parameters: %{params}"
 msgstr "無効なパラメーター:%{params}"
@@ -26004,9 +25922,6 @@ msgstr "既知の最終データ・ストア・パス"
 
 msgid "Last Known Size"
 msgstr "既知の最終サイズ"
-
-msgid "Last Log Collection"
-msgstr "最終ログ収集"
 
 msgid "Last Logoff"
 msgstr "最終ログオフ"
@@ -26619,22 +26534,6 @@ msgstr "ロックアウトのしきい値"
 msgid "Log"
 msgstr "ログ"
 
-msgid "Log Depot Settings were saved"
-msgstr "ログ・デポ設定が保存されました"
-
-msgid "Log Depot Settings were validated"
-msgstr "ログ・デポ設定が検証されました"
-
-msgid "Log Depot URI"
-msgstr "ログ・デポ URI"
-
-msgid "Log Depot settings not configured"
-msgstr "ログ・デポ設定が構成されていません"
-
-msgid "Log File"
-msgid_plural "Log Files"
-msgstr[0] "ログ・ファイル"
-
 msgid "Log In"
 msgstr "ログイン"
 
@@ -26646,82 +26545,6 @@ msgstr "ログ・レベル"
 
 msgid "Log Wrap Size must be numeric and greater than zero"
 msgstr "ログ・ラップ・サイズは数値で、ゼロより大きい値である必要があります"
-
-msgid "Log collection error returned: %{error_message}"
-msgstr "ログ収集のエラーが返されました: %{error_message}"
-
-msgid "Log collection for %{product} %{object_type} %{name} has been initiated"
-msgstr "%{product} %{object_type} %{name} のログ収集が開始されました"
-
-msgid ""
-"Log collection is already in progress for one or more Servers in this Zone"
-msgstr "ログ収集はこのゾーンの 1 つ以上のサービスについてすでに進行中です"
-
-msgid "Log collection is already in progress for this Server"
-msgstr "このサーバーのログ収集はすでに進行中です"
-
-msgid "Log collection requires the Log Depot settings to be configured"
-msgstr "ログ収集にはログ・デポ設定を構成する必要があります"
-
-msgid "Log depot settings not configured"
-msgstr "ログ・デポ設定が構成されていません"
-
-msgid "Log file"
-msgstr "ログ・ファイル"
-
-msgid "Log request failed since [%{resource} %{server_name}] is not started"
-msgstr "ログ要求は、[%{resource} %{server_name}] が起動していないので失敗しました"
-
-msgid "Log request failed since [%{resource}] is not started"
-msgstr "ログ要求は、[%{resource}] が起動していないので失敗しました"
-
-msgid "LogFile local_file is nil"
-msgstr "LogFile local_file は nil です"
-
-msgid "LogFile local_file: [%{file_name}] does not exist!"
-msgstr "LogFile local_file: [%{file_name}] は存在しません。"
-
-msgid "LogFile|Created on"
-msgstr "作成"
-
-msgid "LogFile|Description"
-msgstr "説明"
-
-msgid "LogFile|Historical"
-msgstr "履歴"
-
-msgid "LogFile|Href slug"
-msgstr "href スラグ"
-
-msgid "LogFile|Local file"
-msgstr "ローカル・ファイル"
-
-msgid "LogFile|Log uri"
-msgstr "ログ URI"
-
-msgid "LogFile|Logging ended on"
-msgstr "ログ終了日"
-
-msgid "LogFile|Logging started on"
-msgstr "ログ開始日"
-
-msgid "LogFile|Name"
-msgstr "名前"
-
-msgid "LogFile|Region description"
-msgstr "リージョンの説明"
-
-msgid "LogFile|Region number"
-msgstr "リージョン番号"
-
-msgid "LogFile|Resource type"
-msgstr "リソース・タイプ"
-
-msgid "LogFile|State"
-msgstr "状態"
-
-msgid "LogFile|Updated on"
-msgstr "更新"
 
 msgid "Logging"
 msgstr "ログ"
@@ -32134,11 +31957,11 @@ msgstr "オプションのハッシュで .new を呼び出す必要がありま
 msgid "Must contain only alphanumeric, hyphen, and underscore characters"
 msgstr "英数字、ハイフン、および下線文字のみを含める必要があります"
 
-msgid "Must provide a configuration_script_id"
-msgstr "configuration_script_idを指定する必要があります"
-
 msgid "Must provide a configuration_script_payload_id"
 msgstr "configuration_script_payload_id を指定する必要があります"
+
+msgid "Must provide a src_configuration_script_id"
+msgstr "src_configuration_script_idを指定する必要があります"
 
 msgid "Must provide both template_id and manager_id or manager and template"
 msgstr "template_id および manager_id の両方か、またはマネージャーおよびテンプレートを指定する必要があります。"
@@ -34056,6 +33879,9 @@ msgstr "タイプ別の VM 数"
 msgid "Number, 2 Decimals (1,234.00)"
 msgstr "数値、小数点第二位 (1,234.00)"
 
+msgid "Nutanix Provider"
+msgstr "Nutanixプロバイダー"
+
 msgid "OK"
 msgstr "OK"
 
@@ -35191,8 +35017,8 @@ msgstr "PVM インスタンス"
 msgid "PXE"
 msgstr "PXE"
 
-msgid "PXE Credentials successfuly validated"
-msgstr "PXE 資格情報が正常に検証されました"
+msgid "PXE Credentials successfully validated"
+msgstr "PXE資格情報の検証に成功しました"
 
 msgid "PXE Directory"
 msgstr "PXE ディレクトリー"
@@ -37780,6 +37606,11 @@ msgstr "%{type}のプロビジョニング要求はユーザーにより取り�
 
 msgid "Provision %{vms_or_templates}"
 msgstr "%{vms_or_templates}のプロビジョニング"
+
+msgid ""
+"Provision ConfigurationScript Request Templates do not support the execute "
+"method."
+msgstr "プロビジョンConfigurationScriptリクエスト・テンプレートは、実行メソッドをサポートしていません。"
 
 msgid "Provision Configured Systems"
 msgstr "構成済みシステムのプロビジョニング"
@@ -42335,6 +42166,9 @@ msgstr "組み込みワークフローの選択- %sエントリー・ポイン�
 msgid "Select Entry Point %{entry_point}"
 msgstr "エントリー・ポイント %{entry_point} の選択"
 
+msgid "Select Entry Point Instance"
+msgstr "エントリー・ポイント・インスタンスを選択"
+
 msgid "Select Format"
 msgstr "形式の選択"
 
@@ -46216,9 +46050,6 @@ msgstr "日曜日"
 msgid "Super Administrator can not be copied"
 msgstr "スーパー管理者をコピーできません"
 
-msgid "Support Case must be provided to collect logs"
-msgstr "ログを収集するにはサポート・ケースを提供する必要があります"
-
 msgid "Support contact"
 msgstr "サポートのお問い合わせ先"
 
@@ -47013,6 +46844,9 @@ msgstr "Terraform Enterpriseプロバイダー"
 msgid "Terraform Enterprise Workspace"
 msgstr "Terraform Enterpriseワークスペース"
 
+msgid "Terraform Enterprise Workspace Provision"
+msgstr "Terraform Enterpriseワークスペースのプロビジョン"
+
 msgid "Terraform Template"
 msgstr "Terraform テンプレート"
 
@@ -47758,10 +47592,6 @@ msgstr "このウィジェットのコンテンツ生成はすでに実行中か
 
 msgid "This Year"
 msgstr "今年"
-
-msgid ""
-"This Zone do not have Log Depot settings configured, collection not allowed"
-msgstr "このゾーンにはログ・デポ設定が構成されていないため、収集は許可されません"
 
 msgid ""
 "This element should be removed and recreated or you can report the error to "
@@ -48944,9 +48774,6 @@ msgstr "サポートされないエンドポイント"
 
 msgid "Unsupported interval '%{interval}'"
 msgstr "サポートされない間隔 '%{interval}'"
-
-msgid "Unsupported log depot protocol: %{protocol}"
-msgstr "サポートされないログ・デポ・プロトコル: %{protocol}"
 
 msgid "Unsupported property type [%{property}]"
 msgstr "サポートされないプロパティー・タイプ [%{property}]"
@@ -51467,6 +51294,10 @@ msgstr[0] "仮想マシン (Kubevirt)"
 msgid "Virtual Machine (Microsoft)"
 msgstr "仮想マシン (Microsoft)"
 
+msgid "Virtual Machine (Nutanix)"
+msgid_plural "Virtual Machines (Nutanix)"
+msgstr[0] "仮想マシン(Nutanix)"
+
 msgid "Virtual Machine (OpenShift Virtualization)"
 msgid_plural "Virtual Machines (OpenShift Virtualization)"
 msgstr[0] "仮想マシン(OpenShift Virtualization)"
@@ -53229,6 +53060,9 @@ msgstr "ワークフローにはマップする資格情報がありません。
 msgid "Workflow max. timeout"
 msgstr "ワークフローの最大 タイムアウト"
 
+msgid "Workflow name"
+msgstr "ワークフロー名"
+
 msgid "Workflows"
 msgstr "ワークフロー"
 
@@ -53493,9 +53327,6 @@ msgstr "[リージョン: %{description} [%{region}]]"
 
 msgid "[Unassigned Buttons]"
 msgstr "[未割り当てボタン]"
-
-msgid "_post_my_logs not implemented for %{server_name}"
-msgstr "%{server_name}の _post_my_logs が実装されていません"
 
 msgid "accept_all_eula is required for content library item deployment."
 msgstr "コンテンツ・ライブラリー項目のデプロイメントには、accept_all_eula が必要です。"
@@ -54726,9 +54557,6 @@ msgstr "%{name} id [%{number}] のサイズが正しくありません"
 
 msgid "sort field from Summary tab "
 msgstr "サマリー・タブのソート・フィールドが"
-
-msgid "started? not implemented for %{server_name}"
-msgstr "起動されましたか? %{server_name} に対して実装されていません"
 
 msgid "stopped"
 msgstr "停止"

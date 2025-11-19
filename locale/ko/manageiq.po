@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2025-08-15 00:24+0000\n"
-"PO-Revision-Date: 2025-08-15 00:24+0000\n"
+"POT-Creation-Date: 2025-11-13 21:57+0000\n"
+"PO-Revision-Date: 2025-11-13 21:57+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -345,6 +345,9 @@ msgstr "%s이(가) 추가되었습니다."
 
 msgid "%s has been successfully removed."
 msgstr "%s이(가) 제거되었습니다."
+
+msgid "%s has no snapshots"
+msgstr "%s에는 스냅샷이 없음"
 
 msgid "%s logged out, redirecting to the login page"
 msgstr "%s이(가) 로그아웃됨, 로그인 페이지로 경로 재지정 중"
@@ -1020,6 +1023,9 @@ msgid "%{number} Week"
 msgid_plural "%{number} Weeks"
 msgstr[0] "%{number}주"
 
+msgid "%{number} bytes"
+msgstr "%{number}바이트"
+
 msgid "%{number} core"
 msgid_plural "%{number} cores"
 msgstr[0] "%{number}개의 코어"
@@ -1081,9 +1087,6 @@ msgstr[0] "%{provider_description} 작업"
 msgid "%{provider_description} Workflow Job"
 msgid_plural "%{provider_description} Workflow Jobs"
 msgstr[0] "%{provider_description} 워크플로우 작업"
-
-msgid "%{record_name} has no snapshots"
-msgstr "%{record_name}에 스냅샷이 없습니다."
 
 msgid "%{record} - \"%{button_text}\""
 msgstr "%{record} - \"%{button_text}\""
@@ -1235,11 +1238,11 @@ msgstr "'%{type} 작업자 재시작이 정상적으로 시작됨"
 msgid "'Unassigned Button Group' can not be edited"
 msgstr "'미지정 단추 그룹'은 편집할 수 없음"
 
-msgid "(%{number} bytes)"
-msgstr "(%{number}바이트)"
-
 msgid "(%{value}) * Overallocated"
 msgstr "(%{value}) * 초과 할당됨"
+
+msgid "(Active)"
+msgstr "(활성)"
 
 msgid "(Check All)"
 msgstr "(모두 선택)"
@@ -1739,9 +1742,6 @@ msgstr "<%{class_name}> <%{id}>:<%{name}>이(가) 서비스에 이미 연결되�
 msgid "<<<Nothing>>>"
 msgstr "<<<없음>>>"
 
-msgid "<All>"
-msgstr "<모두>"
-
 msgid "<Archived>"
 msgstr "<아카이브됨>"
 
@@ -1768,9 +1768,6 @@ msgstr "<비어 있음>"
 
 msgid "<New Entry>"
 msgstr "<새 항목>"
-
-msgid "<No Depot>"
-msgstr "<저장소(Depot) 없음>"
 
 msgid "<No Event configured>"
 msgstr "<구성된 이벤트 없음>"
@@ -4118,13 +4115,6 @@ msgstr "어노테이션"
 msgid "Annotations"
 msgstr "어노테이션"
 
-msgid "Anonymous FTP"
-msgid_plural "Anonymous FTPs"
-msgstr[0] "익명 FTP"
-
-msgid "Anonymous FTPs"
-msgstr "익명 FTP"
-
 msgid "Ansible"
 msgstr "Ansible"
 
@@ -5336,6 +5326,12 @@ msgstr[0] "Automation Managers(Ansible Automation Platform)"
 
 msgid "Automation Manager (Ansible Tower)"
 msgstr "자동화 관리자(Ansible Tower)"
+
+msgid "Automation Manager Provision"
+msgstr "자동화 관리자 프로비저닝"
+
+msgid "Automation Manager Provisioning"
+msgstr "자동화 관리자 프로비저닝"
 
 msgid "Automation Manager Repositories Refresh"
 msgstr "Automation Manager 저장소 새로 고치기"
@@ -6765,13 +6761,6 @@ msgstr "사용 중인 동안에는 아카이브할 수 없음"
 msgid "Cannot call method '%{caller}' on an Account of type '%{type}'"
 msgstr "'%{type}' 유형의 계정에서 '%{caller}' 메소드를 호출할 수 없습니다."
 
-msgid "Cannot collect current logs unless the Server is started"
-msgstr "서버가 시작되지 않으면 현재 로그를 수집할 수 없습니다."
-
-msgid ""
-"Cannot collect current logs unless there are started Servers in the Zone"
-msgstr "구역에 시작된 서버가 없으면 현재 로그를 수집할 수 없습니다."
-
 msgid "Cannot connect service with nil ID."
 msgstr "빈 ID의 서비스에 연결할 수 없습니다."
 
@@ -6840,14 +6829,6 @@ msgstr "이미 전원이 켜져 있는 호스트를 시작할 수 없음"
 
 msgid "Cannot start a host that is not HMC-managed"
 msgstr "HMC에서 관리하지 않는 호스트를 시작할 수 없음"
-
-msgid ""
-"Cannot start log collection, a log collection is already in progress within "
-"this scope"
-msgstr "로그 콜렉션을 시작할 수 없음, 로그 콜렉션이 이 범위 내에서 이미 진행 중입니다."
-
-msgid "Cannot start log collection, requires a started server"
-msgstr "로그 콜렉션을 시작할 수 없음, 시작된 서버가 필요합니다."
 
 msgid "Cannot start. Already on."
 msgstr "시작할 수 없습니다. 이미 켜져 있습니다."
@@ -9205,44 +9186,17 @@ msgstr "모두 접기"
 msgid "Collect"
 msgstr "수집"
 
-msgid "Collect All Logs"
-msgstr "모든 로그 수집"
-
 msgid "Collect Contents?"
 msgstr "컨텐츠 수집?"
 
-msgid "Collect Current Logs"
-msgstr "현재 로그 수집"
-
-msgid "Collect Logs"
-msgstr "로그 수집"
-
 msgid "Collect Running Processes"
 msgstr "실행 프로세스 수집"
-
-msgid "Collect all logs"
-msgstr "모든 로그 수집"
-
-msgid "Collect all logs from the selected Server"
-msgstr "선택한 서버에서 모든 로그 수집"
-
-msgid "Collect all logs from the selected Zone"
-msgstr "선택한 구역에서 모든 로그 수집"
-
-msgid "Collect current logs"
-msgstr "현재 로그 수집"
 
 msgid "Collect for All Clusters"
 msgstr "모든 클러스터에 대해 수집"
 
 msgid "Collect for All Datastores"
 msgstr "모든 데이터 저장소에 대해 수집"
-
-msgid "Collect the current logs from the selected Server"
-msgstr "선택한 서버에서 현재 로그 수집"
-
-msgid "Collect the current logs from the selected Zone"
-msgstr "선택한 구역에서 현재 로그 수집"
 
 msgid "Collected On"
 msgstr "수집일"
@@ -15217,12 +15171,6 @@ msgstr "서버 프로파일에 지정된 서버 배치"
 msgid "Deploy Smartproxy"
 msgstr "스마트 프록시 배치"
 
-msgid "Depot Settings successfuly validated"
-msgstr "저장소(Depot) 설정의 유효성이 정상적으로 검증됨"
-
-msgid "Depot Settings validation failed"
-msgstr "저장소(Depot) 설정 유효성 검증 실패"
-
 msgid "Depot Settings validation failed with error: %{error}"
 msgstr "저장소(Depot) 설정 유효성 검증이 다음 오류로 실패함: %{error}"
 
@@ -17754,12 +17702,6 @@ msgstr "인스턴스 태그 편집"
 msgid "Edit Job Templates Tags"
 msgstr "작업 템플리트 태그 편집"
 
-msgid "Edit Log Depot Settings"
-msgstr "로그 저장소(Depot) 설정 편집"
-
-msgid "Edit Log Depot settings was cancelled by the user"
-msgstr "사용자가 로그 저장소(Depot) 설정의 편집을 취소했습니다."
-
 msgid "Edit Management Engine Relationship"
 msgstr "관리 엔진 관계 편집"
 
@@ -18992,12 +18934,6 @@ msgstr "이 클라우드 볼륨 유형의 태그 편집"
 msgid "Edit tags for this Key Pair"
 msgstr "이 키 쌍의 태그 편집"
 
-msgid "Edit the Log Depot settings for the selected Server"
-msgstr "선택한 서버에 대한 로그 저장소(Depot) 설정 편집"
-
-msgid "Edit the Log Depot settings for the selected Zone"
-msgstr "선택한 구역에 대한 로그 저장소(Depot) 설정 편집"
-
 msgid "Edit the original Request"
 msgstr "원래 요청 편집"
 
@@ -19306,12 +19242,6 @@ msgstr "EVM 그룹 \"%{name}\" 편집"
 
 msgid "Editing Group \"%{name}\""
 msgstr "그룹 \"%{name}\" 편집"
-
-msgid "Editing Log Depot Settings for %s: %s"
-msgstr "%s에 대한 로그 저장소 설정 편집: %s"
-
-msgid "Editing Log Depot settings"
-msgstr "로그 저장소(Depot) 설정 편집"
 
 msgid "Editing PXE Server \"%{name}\""
 msgstr "PXE 서버 \"%{name}\" 편집"
@@ -20009,9 +19939,6 @@ msgstr "폐기 날짜 입력"
 msgid "Enter Standby Mode"
 msgstr "대기 모드 진입"
 
-msgid "Enter Support Case:"
-msgstr "지원 케이스 입력:"
-
 msgid "Enter a comma separated list of IP or DNS names"
 msgstr "IP 또는 DNS 이름의 쉼표로 구분된 목록을 입력하십시오."
 
@@ -20065,6 +19992,9 @@ msgstr "인타이틀먼트|지역 번호"
 msgid "Entity"
 msgstr "엔티티"
 
+msgid "Entity is required"
+msgstr "엔티티는 필수"
+
 msgid "Entity:"
 msgstr "엔티티:"
 
@@ -20106,9 +20036,6 @@ msgstr "단기 가상 디스크 크기"
 
 msgid "Error"
 msgstr "오류"
-
-msgid "Error '%{message}', writing to FTP: [%{uri}], Username: [%{id}]"
-msgstr "오류 '%{message}', FTP에 쓰는 중: [%{uri}], 사용자 이름: [%{id}]"
 
 msgid "Error Generating Report"
 msgstr "보고서 생성 중 오류"
@@ -20178,9 +20105,6 @@ msgstr "'리소스 추가' 중 오류: %{error_message}"
 
 msgid "Error during 'Save Tags': %{error_message}"
 msgstr "'태그 저장' 중 오류: %{error_message}"
-
-msgid "Error during 'Save': %{message}"
-msgstr "'저장' 중 오류: %{message}"
 
 msgid "Error during 'Validate': %{error_message}"
 msgstr "'유효성 검증' 중 오류: %{error_message}"
@@ -21624,13 +21548,6 @@ msgstr "FRU"
 msgid "FS Type"
 msgstr "FS 유형"
 
-msgid "FTP"
-msgid_plural "FTPs"
-msgstr[0] "FTP"
-
-msgid "FTPs"
-msgstr "FTP"
-
 msgid "Fail If No Peer Cert"
 msgstr "피어 인증서가 없는 경우 실패"
 
@@ -21801,9 +21718,6 @@ msgstr "FileDepot|지역 번호"
 
 msgid "FileDepot|Security protocol"
 msgstr "FileDepot|보안 프로토콜"
-
-msgid "FileDepot|Support case"
-msgstr "FileDepot|대소문자 지원"
 
 msgid "FileDepot|Uri"
 msgstr "FileDepot|Uri"
@@ -23592,6 +23506,10 @@ msgstr "호스트(인증 URL)"
 
 msgid "Host (Microsoft)"
 msgstr "호스트(Microsoft)"
+
+msgid "Host (Nutanix)"
+msgid_plural "Hosts (Nutanix)"
+msgstr[0] "Hosts (Nutanix)"
 
 msgid "Host (OpenStack)"
 msgid_plural "Hosts (OpenStack)"
@@ -25447,6 +25365,9 @@ msgstr "올바르지 않은 Single Sign-On 인증 정보"
 msgid "Invalid Stack"
 msgstr "올바르지 않은 스택"
 
+msgid "Invalid Workflow"
+msgstr "올바르지 않은 워크플로우"
+
 msgid "Invalid XML file contents detected."
 msgstr "올바르지 않은 XML 파일 컨텐츠가 발견되었습니다."
 
@@ -25488,9 +25409,6 @@ msgstr "올바르지 않은 입력"
 
 msgid "Invalid input for \"wait_for_task\"."
 msgstr "\"wait_for_task\"에 대한 입력이 올바르지 않습니다."
-
-msgid "Invalid or unsupported file depot type."
-msgstr "올바르지 않거나 지원되지 않는 파일 저장소(depot) 유형입니다."
 
 msgid "Invalid parameters: %{params}"
 msgstr "올바르지 않은 매개변수: %{params}"
@@ -25989,9 +25907,6 @@ msgstr "마지막 알려진 데이터 저장소 경로"
 
 msgid "Last Known Size"
 msgstr "마지막 알려진 크기"
-
-msgid "Last Log Collection"
-msgstr "마지막 로그 수집"
 
 msgid "Last Logoff"
 msgstr "마지막 로그오프"
@@ -26604,22 +26519,6 @@ msgstr "잠금 임계값"
 msgid "Log"
 msgstr "로그"
 
-msgid "Log Depot Settings were saved"
-msgstr "로그 저장소(Depot) 설정이 저장되었습니다."
-
-msgid "Log Depot Settings were validated"
-msgstr "로그 저장소(Depot) 설정의 유효성이 검증되었습니다."
-
-msgid "Log Depot URI"
-msgstr "로그 저장소(Depot) URI"
-
-msgid "Log Depot settings not configured"
-msgstr "로그 저장소(Depot) 설정이 구성되지 않음"
-
-msgid "Log File"
-msgid_plural "Log Files"
-msgstr[0] "로그 파일"
-
 msgid "Log In"
 msgstr "로그인"
 
@@ -26631,82 +26530,6 @@ msgstr "로그 레벨"
 
 msgid "Log Wrap Size must be numeric and greater than zero"
 msgstr "로그 랩 크기는 0보다 큰 숫자여야 합니다."
-
-msgid "Log collection error returned: %{error_message}"
-msgstr "로그 콜렉션 오류가 리턴됨: %{error_message}"
-
-msgid "Log collection for %{product} %{object_type} %{name} has been initiated"
-msgstr "%{product} %{object_type} %{name}에 대한 로그 콜렉션이 시작되었습니다."
-
-msgid ""
-"Log collection is already in progress for one or more Servers in this Zone"
-msgstr "이 구역의 하나 이상의 서버에 대한 로그 수집이 이미 진행 중입니다."
-
-msgid "Log collection is already in progress for this Server"
-msgstr "이 서버에 대한 로그 수집이 이미 진행 중입니다."
-
-msgid "Log collection requires the Log Depot settings to be configured"
-msgstr "로그를 수집하려면 로그 저장소(Depot) 설정을 구성해야 합니다."
-
-msgid "Log depot settings not configured"
-msgstr "로그 저장소(depot) 설정이 구성되지 않음"
-
-msgid "Log file"
-msgstr "로그 파일"
-
-msgid "Log request failed since [%{resource} %{server_name}] is not started"
-msgstr "[%{resource} %{server_name}]이(가) 시작되지 않아서 로그 요청이 실패함"
-
-msgid "Log request failed since [%{resource}] is not started"
-msgstr "[%{resource}]이(가) 시작되지 않아서 로그 요청이 실패함"
-
-msgid "LogFile local_file is nil"
-msgstr "LogFile local_file이 0입니다."
-
-msgid "LogFile local_file: [%{file_name}] does not exist!"
-msgstr "LogFile local_file: [%{file_name}]이(가) 존재하지 않습니다!"
-
-msgid "LogFile|Created on"
-msgstr "LogFile|작성일"
-
-msgid "LogFile|Description"
-msgstr "LogFile|설명"
-
-msgid "LogFile|Historical"
-msgstr "LogFile|히스토리"
-
-msgid "LogFile|Href slug"
-msgstr "LogFile|Href slug"
-
-msgid "LogFile|Local file"
-msgstr "LogFile|로컬 파일"
-
-msgid "LogFile|Log uri"
-msgstr "LogFile|로그 uri"
-
-msgid "LogFile|Logging ended on"
-msgstr "LogFile|로깅 종료일"
-
-msgid "LogFile|Logging started on"
-msgstr "LogFile|로깅 시작일"
-
-msgid "LogFile|Name"
-msgstr "LogFile|이름"
-
-msgid "LogFile|Region description"
-msgstr "LogFile|지역 설명"
-
-msgid "LogFile|Region number"
-msgstr "LogFile|지역 번호"
-
-msgid "LogFile|Resource type"
-msgstr "LogFile|리소스 유형"
-
-msgid "LogFile|State"
-msgstr "LogFile|상태"
-
-msgid "LogFile|Updated on"
-msgstr "LogFile|업데이트 날짜"
 
 msgid "Logging"
 msgstr "로깅"
@@ -32119,11 +31942,11 @@ msgstr "옵션 해시와 함께 .new를 호출해야 합니다."
 msgid "Must contain only alphanumeric, hyphen, and underscore characters"
 msgstr "영숫자, 하이픈 및 밑줄 문자만 포함해야 합니다."
 
-msgid "Must provide a configuration_script_id"
-msgstr "Configuration_script_id를 제공해야 함"
-
 msgid "Must provide a configuration_script_payload_id"
 msgstr "configuration_script_payload_id를 제공해야 함"
+
+msgid "Must provide a src_configuration_script_id"
+msgstr "src_configuration_script_id를 제공해야 함"
 
 msgid "Must provide both template_id and manager_id or manager and template"
 msgstr "template_id와 manager_id 또는 관리자와 템플리트를 제공해야 합니다."
@@ -34039,6 +33862,9 @@ msgstr "유형별 VM 수"
 msgid "Number, 2 Decimals (1,234.00)"
 msgstr "숫자, 2개 10진수(1,234.00)"
 
+msgid "Nutanix Provider"
+msgstr "Nutanix 제공자"
+
 msgid "OK"
 msgstr "확인"
 
@@ -35173,8 +34999,8 @@ msgstr "PVM 인스턴스"
 msgid "PXE"
 msgstr "PXE"
 
-msgid "PXE Credentials successfuly validated"
-msgstr "PXE 인증 정보의 유효성이 정상적으로 검증됨"
+msgid "PXE Credentials successfully validated"
+msgstr "PXE 신임 정보 유효성 검증 성공"
 
 msgid "PXE Directory"
 msgstr "PXE 디렉토리"
@@ -37760,6 +37586,11 @@ msgstr "사용자가 %{type} 요청 프로비저닝을 취소했습니다."
 
 msgid "Provision %{vms_or_templates}"
 msgstr "%{vms_or_templates} 프로비저닝"
+
+msgid ""
+"Provision ConfigurationScript Request Templates do not support the execute "
+"method."
+msgstr "프로비저닝 ConfigurationScript 요청 템플리트는 실행 메소드를 지원하지 않습니다."
 
 msgid "Provision Configured Systems"
 msgstr "구성된 시스템 프로비저닝"
@@ -42314,6 +42145,9 @@ msgstr "임베디드 워크플로우 선택 - %s 엔트리포인트"
 msgid "Select Entry Point %{entry_point}"
 msgstr "시작점 %{entry_point} 선택"
 
+msgid "Select Entry Point Instance"
+msgstr "엔트리포인트 인스턴스 선택"
+
 msgid "Select Format"
 msgstr "형식 선택"
 
@@ -46194,9 +46028,6 @@ msgstr "일요일"
 msgid "Super Administrator can not be copied"
 msgstr "수퍼 관리자를 복사할 수 없습니다."
 
-msgid "Support Case must be provided to collect logs"
-msgstr "로그를 수집하려면 지원 케이스를 제공해야 합니다."
-
 msgid "Support contact"
 msgstr "지원 담당자"
 
@@ -46989,6 +46820,9 @@ msgstr "Terraform Enterprise 제공자"
 msgid "Terraform Enterprise Workspace"
 msgstr "Terraform Enterprise 작업공간"
 
+msgid "Terraform Enterprise Workspace Provision"
+msgstr "Terraform 엔터프라이즈 작업공간 프로비저닝"
+
 msgid "Terraform Template"
 msgstr "Terraform 템플리트"
 
@@ -47733,10 +47567,6 @@ msgstr "위젯 컨텐츠 생성이 이미 실행 중이거나 큐에 대기되�
 
 msgid "This Year"
 msgstr "올해"
-
-msgid ""
-"This Zone do not have Log Depot settings configured, collection not allowed"
-msgstr "이 구역에는 로그 저장소(Depot) 설정이 구성되어 있지 않음, 수집이 허용되지 않습니다."
 
 msgid ""
 "This element should be removed and recreated or you can report the error to "
@@ -48919,9 +48749,6 @@ msgstr "지원되지 않는 엔드포인트"
 
 msgid "Unsupported interval '%{interval}'"
 msgstr "지원되지 않는 간격 '%{interval}'"
-
-msgid "Unsupported log depot protocol: %{protocol}"
-msgstr "지원되지 않는 로그 저장소(Depot) 프로토콜: %{protocol}"
 
 msgid "Unsupported property type [%{property}]"
 msgstr "지원되지 않는 특성 유형 [%{property}]"
@@ -51443,6 +51270,10 @@ msgstr[0] "가상 머신(Kubevirt)"
 msgid "Virtual Machine (Microsoft)"
 msgstr "가상 머신(Microsoft)"
 
+msgid "Virtual Machine (Nutanix)"
+msgid_plural "Virtual Machines (Nutanix)"
+msgstr[0] "Virtual Machines (Nutanix)"
+
 msgid "Virtual Machine (OpenShift Virtualization)"
 msgid_plural "Virtual Machines (OpenShift Virtualization)"
 msgstr[0] "Virtual Machines (OpenShift Virtualization)"
@@ -53203,6 +53034,9 @@ msgstr "워크플로우에 맵핑할 신임 정보가 없습니다."
 msgid "Workflow max. timeout"
 msgstr "워크플로우 최대 제한시간"
 
+msgid "Workflow name"
+msgstr "워크플로우 이름"
+
 msgid "Workflows"
 msgstr "워크플로우"
 
@@ -53467,9 +53301,6 @@ msgstr "[지역: %{description} [%{region}]]"
 
 msgid "[Unassigned Buttons]"
 msgstr "[미지정 단추]"
-
-msgid "_post_my_logs not implemented for %{server_name}"
-msgstr "_post_my_logs가 %{server_name}에 대해 구현되지 않음"
 
 msgid "accept_all_eula is required for content library item deployment."
 msgstr "accept_all_eula는 컨텐츠 라이브러리 항목 배치에 필수입니다."
@@ -54702,9 +54533,6 @@ msgstr "%{name} ID의 크기 [%{number}]이(가) 올바르지 않습니다."
 
 msgid "sort field from Summary tab "
 msgstr "요약 탭의 정렬 필드 "
-
-msgid "started? not implemented for %{server_name}"
-msgstr "시작됨? %{server_name}에 대해 구현되지 않음"
 
 msgid "stopped"
 msgstr "중지됨"

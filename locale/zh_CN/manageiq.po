@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2025-08-15 00:24+0000\n"
-"PO-Revision-Date: 2025-08-15 00:24+0000\n"
+"POT-Creation-Date: 2025-11-13 21:57+0000\n"
+"PO-Revision-Date: 2025-11-13 21:57+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -343,6 +343,9 @@ msgstr "已成功添加 %s。"
 
 msgid "%s has been successfully removed."
 msgstr "已成功移除 %s。"
+
+msgid "%s has no snapshots"
+msgstr "%s 无快照"
 
 msgid "%s logged out, redirecting to the login page"
 msgstr "%s 已注销，重新返回到登录页面"
@@ -1015,6 +1018,9 @@ msgid "%{number} Week"
 msgid_plural "%{number} Weeks"
 msgstr[0] "%{number} 周"
 
+msgid "%{number} bytes"
+msgstr "%{number} 字节"
+
 msgid "%{number} core"
 msgid_plural "%{number} cores"
 msgstr[0] "%{number} 个核心"
@@ -1074,9 +1080,6 @@ msgstr[0] "%{provider_description} 作业"
 msgid "%{provider_description} Workflow Job"
 msgid_plural "%{provider_description} Workflow Jobs"
 msgstr[0] "%{provider_description} 工作流程作业"
-
-msgid "%{record_name} has no snapshots"
-msgstr "%{record_name} 没有快照"
 
 msgid "%{record} - \"%{button_text}\""
 msgstr "%{record} - \"%{button_text}\""
@@ -1228,11 +1231,11 @@ msgstr "启动“%{type}”工作程序重启成功"
 msgid "'Unassigned Button Group' can not be edited"
 msgstr "“未分配的按钮组”不能编辑"
 
-msgid "(%{number} bytes)"
-msgstr "（%{number} 字节）"
-
 msgid "(%{value}) * Overallocated"
 msgstr "(%{value}) * 过度分配"
+
+msgid "(Active)"
+msgstr "（活动）"
 
 msgid "(Check All)"
 msgstr "（全部勾选）"
@@ -1728,9 +1731,6 @@ msgstr "<%{class_name}> <%{id}>:<%{name}> 已连接到一个服务。"
 msgid "<<<Nothing>>>"
 msgstr "<<<无>>>"
 
-msgid "<All>"
-msgstr "<全部>"
-
 msgid "<Archived>"
 msgstr "<已归档的>"
 
@@ -1757,9 +1757,6 @@ msgstr "<空>"
 
 msgid "<New Entry>"
 msgstr "<新建条目>"
-
-msgid "<No Depot>"
-msgstr "<没有库>"
 
 msgid "<No Event configured>"
 msgstr "<没有配置事件>"
@@ -4099,13 +4096,6 @@ msgstr "注解"
 msgid "Annotations"
 msgstr "注释"
 
-msgid "Anonymous FTP"
-msgid_plural "Anonymous FTPs"
-msgstr[0] "匿名 FTP"
-
-msgid "Anonymous FTPs"
-msgstr "匿名 FTP"
-
 msgid "Ansible"
 msgstr "Ansible"
 
@@ -5316,6 +5306,12 @@ msgstr[0] "自动化管理器 (Ansible Automation Platform)"
 
 msgid "Automation Manager (Ansible Tower)"
 msgstr "自动化管理器 (Ansible Tower)"
+
+msgid "Automation Manager Provision"
+msgstr "自动化管理器配置"
+
+msgid "Automation Manager Provisioning"
+msgstr "自动化管理器部署"
 
 msgid "Automation Manager Repositories Refresh"
 msgstr "Automation Manager 存储库刷新"
@@ -6743,13 +6739,6 @@ msgstr "使用期间无法存档"
 msgid "Cannot call method '%{caller}' on an Account of type '%{type}'"
 msgstr "对类型为“%{type}”的帐户不能调用“%{caller}”"
 
-msgid "Cannot collect current logs unless the Server is started"
-msgstr "无法收集当前日志，除非启动服务器"
-
-msgid ""
-"Cannot collect current logs unless there are started Servers in the Zone"
-msgstr "无法收集当前日志，除非区域中存在已启动的服务器"
-
 msgid "Cannot connect service with nil ID."
 msgstr "不能使用 nil ID 连接服务。"
 
@@ -6818,14 +6807,6 @@ msgstr "无法启动已打开电源的主机"
 
 msgid "Cannot start a host that is not HMC-managed"
 msgstr "无法启动不受 HMC 管理的主机"
-
-msgid ""
-"Cannot start log collection, a log collection is already in progress within "
-"this scope"
-msgstr "无法启动日志收集，此作用域里已在进行日志收集。"
-
-msgid "Cannot start log collection, requires a started server"
-msgstr "无法启动日志采集，需要已启动的服务器"
 
 msgid "Cannot start. Already on."
 msgstr "无法启动。已打开。"
@@ -9179,44 +9160,17 @@ msgstr "全部折叠"
 msgid "Collect"
 msgstr "收集"
 
-msgid "Collect All Logs"
-msgstr "收集所有日志"
-
 msgid "Collect Contents?"
 msgstr "收集内容？"
 
-msgid "Collect Current Logs"
-msgstr "收集当前日志"
-
-msgid "Collect Logs"
-msgstr "收集日志"
-
 msgid "Collect Running Processes"
 msgstr "收集运行进程"
-
-msgid "Collect all logs"
-msgstr "收集所有日志"
-
-msgid "Collect all logs from the selected Server"
-msgstr "从所选的服务器收集所有日志"
-
-msgid "Collect all logs from the selected Zone"
-msgstr "从所选的区中收集所有日志"
-
-msgid "Collect current logs"
-msgstr "收集当前日志"
 
 msgid "Collect for All Clusters"
 msgstr "收集所有集群"
 
 msgid "Collect for All Datastores"
 msgstr "为所有数据存储收集"
-
-msgid "Collect the current logs from the selected Server"
-msgstr "从所选的服务器中收集当前日志"
-
-msgid "Collect the current logs from the selected Zone"
-msgstr "从所选的区中收集当前日志"
 
 msgid "Collected On"
 msgstr "收集日期"
@@ -15187,12 +15141,6 @@ msgstr "部署分配给服务器概要文件的服务器"
 msgid "Deploy Smartproxy"
 msgstr "部署 Smartproxy"
 
-msgid "Depot Settings successfuly validated"
-msgstr "已成功验证库设置"
-
-msgid "Depot Settings validation failed"
-msgstr "日志设置验证失败"
-
 msgid "Depot Settings validation failed with error: %{error}"
 msgstr "库设置验证失败，错误为：%{error}"
 
@@ -17724,12 +17672,6 @@ msgstr "编辑实例标签"
 msgid "Edit Job Templates Tags"
 msgstr "编辑作业模板标记"
 
-msgid "Edit Log Depot Settings"
-msgstr "编辑日志库设置"
-
-msgid "Edit Log Depot settings was cancelled by the user"
-msgstr "用户已取消编辑日志库设置的操作"
-
 msgid "Edit Management Engine Relationship"
 msgstr "编辑管理引擎关系"
 
@@ -18960,12 +18902,6 @@ msgstr "编辑此云卷类型的标签"
 msgid "Edit tags for this Key Pair"
 msgstr "编辑此密钥对的标签"
 
-msgid "Edit the Log Depot settings for the selected Server"
-msgstr "为所选服务器编辑日志库设置"
-
-msgid "Edit the Log Depot settings for the selected Zone"
-msgstr "为所选的区编辑日志库设置"
-
 msgid "Edit the original Request"
 msgstr "编辑原始请求"
 
@@ -19274,12 +19210,6 @@ msgstr "正在编辑 EVM 组“%{name}”"
 
 msgid "Editing Group \"%{name}\""
 msgstr "正在编辑组“%{name}”"
-
-msgid "Editing Log Depot Settings for %s: %s"
-msgstr "编辑以下%s的日志库设置：%s"
-
-msgid "Editing Log Depot settings"
-msgstr "编辑日志库设置"
 
 msgid "Editing PXE Server \"%{name}\""
 msgstr "正在编辑 PXE 服务器“%{name}”"
@@ -19976,9 +19906,6 @@ msgstr "输入停用日期"
 msgid "Enter Standby Mode"
 msgstr "进入待机模式"
 
-msgid "Enter Support Case:"
-msgstr "输入支持用例："
-
 msgid "Enter a comma separated list of IP or DNS names"
 msgstr "输入以逗号分隔的 IP 或 DNS 名称列表"
 
@@ -20032,6 +19959,9 @@ msgstr "区域编号"
 msgid "Entity"
 msgstr "实体"
 
+msgid "Entity is required"
+msgstr "需要实体"
+
 msgid "Entity:"
 msgstr "实体："
 
@@ -20073,9 +20003,6 @@ msgstr "临时磁盘大小"
 
 msgid "Error"
 msgstr "错误"
-
-msgid "Error '%{message}', writing to FTP: [%{uri}], Username: [%{id}]"
-msgstr "错误“%{message}”，写入 FTP：[%{uri}]，用户名：[%{id}]"
 
 msgid "Error Generating Report"
 msgstr "产生报告出错"
@@ -20145,9 +20072,6 @@ msgstr "“资源添加”期间出错：%{error_message}"
 
 msgid "Error during 'Save Tags': %{error_message}"
 msgstr "“保存标记”期间出错：%{error_message}"
-
-msgid "Error during 'Save': %{message}"
-msgstr "“保存”期间出错：%{message}"
 
 msgid "Error during 'Validate': %{error_message}"
 msgstr "“验证”期间出错：%{error_message}"
@@ -21591,13 +21515,6 @@ msgstr "FRU"
 msgid "FS Type"
 msgstr "FS 类型"
 
-msgid "FTP"
-msgid_plural "FTPs"
-msgstr[0] "FTP"
-
-msgid "FTPs"
-msgstr "FTP"
-
 msgid "Fail If No Peer Cert"
 msgstr "如果没有对等证书，则失败"
 
@@ -21767,9 +21684,6 @@ msgstr "区域编号"
 
 msgid "FileDepot|Security protocol"
 msgstr "安全协议"
-
-msgid "FileDepot|Support case"
-msgstr "支持用例"
 
 msgid "FileDepot|Uri"
 msgstr "Uri"
@@ -23553,6 +23467,10 @@ msgstr "主机 (身份验证 URL)"
 
 msgid "Host (Microsoft)"
 msgstr "主机 (Microsoft)"
+
+msgid "Host (Nutanix)"
+msgid_plural "Hosts (Nutanix)"
+msgstr[0] "主机 (Nutanix)"
 
 msgid "Host (OpenStack)"
 msgid_plural "Hosts (OpenStack)"
@@ -25408,6 +25326,9 @@ msgstr "无效的单点登录凭证"
 msgid "Invalid Stack"
 msgstr "无效堆栈"
 
+msgid "Invalid Workflow"
+msgstr "无效工作流"
+
 msgid "Invalid XML file contents detected."
 msgstr "发现无效的 XML 文件内容。"
 
@@ -25449,9 +25370,6 @@ msgstr "无效的输入"
 
 msgid "Invalid input for \"wait_for_task\"."
 msgstr "“wait_for_task”的输入无效。"
-
-msgid "Invalid or unsupported file depot type."
-msgstr "无效或不支持的文件库类型。"
 
 msgid "Invalid parameters: %{params}"
 msgstr "无效参数：%{params}"
@@ -25949,9 +25867,6 @@ msgstr "最后已知数据存储路径"
 
 msgid "Last Known Size"
 msgstr "最后已知大小"
-
-msgid "Last Log Collection"
-msgstr "最近的日志采集"
 
 msgid "Last Logoff"
 msgstr "最后注销"
@@ -26564,22 +26479,6 @@ msgstr "锁定的阈值"
 msgid "Log"
 msgstr "日志"
 
-msgid "Log Depot Settings were saved"
-msgstr "日志库设置已保存"
-
-msgid "Log Depot Settings were validated"
-msgstr "日志库设置已验证"
-
-msgid "Log Depot URI"
-msgstr "日志库 URI"
-
-msgid "Log Depot settings not configured"
-msgstr "日志库设置未配置"
-
-msgid "Log File"
-msgid_plural "Log Files"
-msgstr[0] "日志文件"
-
 msgid "Log In"
 msgstr "登录"
 
@@ -26591,82 +26490,6 @@ msgstr "日志级别"
 
 msgid "Log Wrap Size must be numeric and greater than zero"
 msgstr "日志包装大小必须是数字且大于 0"
-
-msgid "Log collection error returned: %{error_message}"
-msgstr "日志收集错误返回：%{error_message}"
-
-msgid "Log collection for %{product} %{object_type} %{name} has been initiated"
-msgstr "%{product} %{object_type} %{name} 日志收集已启动"
-
-msgid ""
-"Log collection is already in progress for one or more Servers in this Zone"
-msgstr "已经在对该区域中的一个或多个服务器收集日志"
-
-msgid "Log collection is already in progress for this Server"
-msgstr "已经在为此服务器收集日志"
-
-msgid "Log collection requires the Log Depot settings to be configured"
-msgstr "日志收集要求配置日志库设置"
-
-msgid "Log depot settings not configured"
-msgstr "日志库设置未配置"
-
-msgid "Log file"
-msgstr "日志文件"
-
-msgid "Log request failed since [%{resource} %{server_name}] is not started"
-msgstr "因为 [%{resource} %{server_name}] 未启动，日志请求失败"
-
-msgid "Log request failed since [%{resource}] is not started"
-msgstr "因为 [%{resource}] 未启动，日志请求失败"
-
-msgid "LogFile local_file is nil"
-msgstr "日志文件 local_file 为空"
-
-msgid "LogFile local_file: [%{file_name}] does not exist!"
-msgstr "日志文件 local_file：[%{file_name}] 不存在！"
-
-msgid "LogFile|Created on"
-msgstr "创建时间"
-
-msgid "LogFile|Description"
-msgstr "描述"
-
-msgid "LogFile|Historical"
-msgstr "历史的"
-
-msgid "LogFile|Href slug"
-msgstr "Href slug"
-
-msgid "LogFile|Local file"
-msgstr "本地文件"
-
-msgid "LogFile|Log uri"
-msgstr "日志 uri"
-
-msgid "LogFile|Logging ended on"
-msgstr "日志记录结束于"
-
-msgid "LogFile|Logging started on"
-msgstr "日志记录开始于"
-
-msgid "LogFile|Name"
-msgstr "名称"
-
-msgid "LogFile|Region description"
-msgstr "区域描述"
-
-msgid "LogFile|Region number"
-msgstr "区域编号"
-
-msgid "LogFile|Resource type"
-msgstr "资源类型"
-
-msgid "LogFile|State"
-msgstr "状态"
-
-msgid "LogFile|Updated on"
-msgstr "更新时间"
 
 msgid "Logging"
 msgstr "日志记录"
@@ -32074,11 +31897,11 @@ msgstr "必须用选项散列调用 .new。"
 msgid "Must contain only alphanumeric, hyphen, and underscore characters"
 msgstr "只能包含字母数字、连字符和下划线字符"
 
-msgid "Must provide a configuration_script_id"
-msgstr "必须提供一个 configuration_script_id"
-
 msgid "Must provide a configuration_script_payload_id"
 msgstr "必须提供 configuration_script_payload_id"
+
+msgid "Must provide a src_configuration_script_id"
+msgstr "必须提供 src_configuration_script_id"
 
 msgid "Must provide both template_id and manager_id or manager and template"
 msgstr "必须同时提供 template_id 和 manager_id 或者管理者和模板"
@@ -33992,6 +33815,9 @@ msgstr "虚拟机数量（按类型）"
 msgid "Number, 2 Decimals (1,234.00)"
 msgstr "数字，2 位小数 (1,234.00)"
 
+msgid "Nutanix Provider"
+msgstr "Nutanix 提供商"
+
 msgid "OK"
 msgstr "确定"
 
@@ -35123,8 +34949,8 @@ msgstr "PVM 实例"
 msgid "PXE"
 msgstr "PXE"
 
-msgid "PXE Credentials successfuly validated"
-msgstr "已成功验证 PXE 凭证"
+msgid "PXE Credentials successfully validated"
+msgstr "成功验证 PXE 凭证"
 
 msgid "PXE Directory"
 msgstr "PXE 目录"
@@ -37710,6 +37536,11 @@ msgstr "用户已取消供应 %{type} 请求的操作"
 
 msgid "Provision %{vms_or_templates}"
 msgstr "供应 %{vms_or_templates}"
+
+msgid ""
+"Provision ConfigurationScript Request Templates do not support the execute "
+"method."
+msgstr "配置 ConfigurationScript 请求模板不支持执行方法。"
 
 msgid "Provision Configured Systems"
 msgstr "供应已配置的系统"
@@ -42261,6 +42092,9 @@ msgstr "选择嵌入式工作流程 - %s 入口点"
 msgid "Select Entry Point %{entry_point}"
 msgstr "选择入口点 %{entry_point}"
 
+msgid "Select Entry Point Instance"
+msgstr "选择入口点实例"
+
 msgid "Select Format"
 msgstr "选择格式"
 
@@ -46141,9 +45975,6 @@ msgstr "周日"
 msgid "Super Administrator can not be copied"
 msgstr "无法复制超级管理员"
 
-msgid "Support Case must be provided to collect logs"
-msgstr "必须提供支持用例来收集日志信息"
-
 msgid "Support contact"
 msgstr "支持联系人"
 
@@ -46937,6 +46768,9 @@ msgstr "Terraform Enterprise 提供程序"
 msgid "Terraform Enterprise Workspace"
 msgstr "Terraform Enterprise 工作区"
 
+msgid "Terraform Enterprise Workspace Provision"
+msgstr "Terraform 企业工作空间配置"
+
 msgid "Terraform Template"
 msgstr "Terraform 模板"
 
@@ -47679,10 +47513,6 @@ msgstr "该窗口小部件内容生成已经在运行，或在队列中"
 
 msgid "This Year"
 msgstr "今年"
-
-msgid ""
-"This Zone do not have Log Depot settings configured, collection not allowed"
-msgstr "该区域没有配置日志库设置，不允许收集"
 
 msgid ""
 "This element should be removed and recreated or you can report the error to "
@@ -48865,9 +48695,6 @@ msgstr "不支持的端点"
 
 msgid "Unsupported interval '%{interval}'"
 msgstr "不支持的间隔“%{interval}”"
-
-msgid "Unsupported log depot protocol: %{protocol}"
-msgstr "不受支持的日志库协议：%{protocol}"
 
 msgid "Unsupported property type [%{property}]"
 msgstr "不支持的属性类型 [%{property}]"
@@ -51385,6 +51212,10 @@ msgstr[0] "虚拟机 (Kubevirt)"
 msgid "Virtual Machine (Microsoft)"
 msgstr "虚拟机 (Microsoft)"
 
+msgid "Virtual Machine (Nutanix)"
+msgid_plural "Virtual Machines (Nutanix)"
+msgstr[0] "虚拟机 (Nutanix)"
+
 msgid "Virtual Machine (OpenShift Virtualization)"
 msgid_plural "Virtual Machines (OpenShift Virtualization)"
 msgstr[0] "虚拟机（OpenShift 虚拟化）"
@@ -53142,6 +52973,9 @@ msgstr "工作流程没有任何要映射的凭证。"
 msgid "Workflow max. timeout"
 msgstr "工作流程最大值超时"
 
+msgid "Workflow name"
+msgstr "工作流名称"
+
 msgid "Workflows"
 msgstr "工作流程"
 
@@ -53406,9 +53240,6 @@ msgstr "[区域：%{description} [%{region}]]"
 
 msgid "[Unassigned Buttons]"
 msgstr "[未分配的按钮]"
-
-msgid "_post_my_logs not implemented for %{server_name}"
-msgstr "未针对 %{server_name} 实现 _post_my_logs"
 
 msgid "accept_all_eula is required for content library item deployment."
 msgstr "内容库项部署需要 accept_all_eula。"
@@ -54638,9 +54469,6 @@ msgstr "%{name} 标识 [%{number}] 的大小不正确"
 
 msgid "sort field from Summary tab "
 msgstr "“摘要”选项卡中的排序字段"
-
-msgid "started? not implemented for %{server_name}"
-msgstr "已启动？未针对 %{server_name} 实现"
 
 msgid "stopped"
 msgstr "已停止"
