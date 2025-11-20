@@ -19,9 +19,12 @@ module Service::RetirementManagement
     end
   end
 
+  def retirement_resource_action
+    service_template&.resource_actions&.find_by(:action => 'Retirement')
+  end
+
   def automate_retirement_entrypoint
-    r = service_template.resource_actions.detect { |ra| ra.action == 'Retirement' } unless service_template.nil?
-    state_machine_entry_point = r.try(:fqname)
+    state_machine_entry_point = retirement_resource_action&.fqname
     $log.info("get_retirement_entrypoint returning state machine entry point: #{state_machine_entry_point}")
     state_machine_entry_point
   end
