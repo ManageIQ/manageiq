@@ -72,9 +72,15 @@ class ServiceRetireTask < MiqRetireTask
         :parent_service_id   => parent_service.id,
         :parent_task_id      => parent_task.id
       )
+
+      workflow_id = parent_service.retirement_resource_action&.configuration_script_id
+      task.options[:configuration_script_payload_id] = workflow_id if workflow_id
+
       task.request_type = task_type.name.underscore[0..-6]
-      task.source = svc_rsc.resource
+      task.source       = svc_rsc.resource
+
       parent_task.miq_request_tasks << task
+
       task.save!
     end
   end
