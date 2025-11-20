@@ -1,7 +1,8 @@
 RSpec.describe ServiceRetireTask do
   let(:user) { FactoryBot.create(:user_with_group) }
   let(:vm) { FactoryBot.create(:vm) }
-  let(:service) { FactoryBot.create(:service, :lifecycle_state => 'provisioned') }
+  let(:st)      { FactoryBot.create(:service_template) }
+  let(:service) { FactoryBot.create(:service, :service_template => st, :lifecycle_state => 'provisioned') }
   let(:miq_request) { FactoryBot.create(:service_retire_request, :requester => user, :source => service) }
   let(:service_retire_task) { FactoryBot.create(:service_retire_task, :source => service, :miq_request => miq_request, :options => {:src_ids => [service.id]}) }
   let(:reason) { "Why Not?" }
@@ -158,6 +159,21 @@ RSpec.describe ServiceRetireTask do
         expect(service_retire_task.description).to eq("Service Retire for: #{service.name}")
         expect(VmRetireTask.count).to eq(1)
         expect(ServiceRetireTask.count).to eq(1)
+      end
+
+      context "with an embedded workflow retire entrypoint" do
+        let(:retire_workflow) { FactoryBot.create(:configuration_script_payload) }
+
+        it "sets configuration_script_payload_id if a workflow is selected" do
+          User.seed
+          st.resource_actions.create!(:action => "Retirement", :configuration_script_id => retire_workflow.id)
+
+          service.add_resource!(FactoryBot.create(:vm_openstack))
+          service_retire_task.after_request_task_create
+
+          expect(VmRetireTask.count).to eq(1)
+          expect(VmRetireTask.first).to have_attributes(:options => {:configuration_script_payload_id => retire_workflow.id})
+        end
       end
 
       it "does not create vm retire subtask for retired vm" do
