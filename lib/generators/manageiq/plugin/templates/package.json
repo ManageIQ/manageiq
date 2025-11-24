@@ -16,6 +16,5 @@
   "engines": {
     "node": "<%= node_version %>",
     "npm": "<%= npm_version %>"
-  },
-  "packageManager": "<%= package_manager %>"
+  }
 }
