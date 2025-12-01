@@ -2086,6 +2086,9 @@ msgstr ""
 msgid "AWX"
 msgstr ""
 
+msgid "AWX Job Template Provision"
+msgstr ""
+
 msgid "AWX Provider"
 msgstr ""
 
