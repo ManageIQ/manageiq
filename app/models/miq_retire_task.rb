@@ -14,6 +14,10 @@ class MiqRetireTask < MiqRequestTask
     _("%{request_description} for: %{request_source}") % {:request_description => _(request_class::TASK_DESCRIPTION), :request_source => name}
   end
 
+  def do_request
+    signal :run_retire
+  end
+
   def deliver_to_automate(req_type = request_type, zone = nil)
     args = {
       :object_type   => self.class.name,
