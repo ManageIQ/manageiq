@@ -1,4 +1,6 @@
 class MiqRetireTask < MiqRequestTask
+  include StateMachine
+
   validate :validate_request_type, :validate_state
 
   AUTOMATE_DRIVES = true

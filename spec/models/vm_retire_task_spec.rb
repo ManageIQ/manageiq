@@ -108,7 +108,7 @@ RSpec.describe VmRetireTask do
         expect(vm_retire_task.reload).to have_attributes(
           :state   => "finished",
           :status  => "Error",
-          :message => "VM already retired"
+          :message => "Vm already retired"
         )
       end
     end
@@ -121,7 +121,7 @@ RSpec.describe VmRetireTask do
         expect(vm_retire_task.reload).to have_attributes(
           :state   => "finished",
           :status  => "Error",
-          :message => "VM already in the process of being retired"
+          :message => "Vm already in the process of being retired"
         )
       end
     end
