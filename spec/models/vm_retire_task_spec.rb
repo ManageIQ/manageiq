@@ -83,10 +83,10 @@ RSpec.describe VmRetireTask do
   describe "#start_retirement" do
     before do
       NotificationType.seed
-      expect(vm_retire_task).to receive(:finish_retirement)
     end
 
     it "creates a vm_retiring notification" do
+      expect(vm_retire_task).to receive(:finish_retirement)
       vm_retire_task.signal(:start_retirement)
 
       vm_retiring_notifications = Notification.of_type(:vm_retiring)
@@ -95,8 +95,35 @@ RSpec.describe VmRetireTask do
     end
 
     it "start the vm retirement process" do
+      expect(vm_retire_task).to receive(:finish_retirement)
       vm_retire_task.signal(:start_retirement)
       expect(vm.reload.retirement_state).to eq("retiring")
+    end
+
+    context "with a retired vm" do
+      let(:vm) { FactoryBot.create(:vm, :retirement_state => "retired", :retired => true) }
+
+      it "fails the retirement" do
+        vm_retire_task.signal(:start_retirement)
+        expect(vm_retire_task.reload).to have_attributes(
+          :state   => "finished",
+          :status  => "Error",
+          :message => "VM already retired"
+        )
+      end
+    end
+
+    context "with a retiring vm" do
+      let(:vm) { FactoryBot.create(:vm, :retirement_state => "retiring") }
+
+      it "fails the retirement" do
+        vm_retire_task.signal(:start_retirement)
+        expect(vm_retire_task.reload).to have_attributes(
+          :state   => "finished",
+          :status  => "Error",
+          :message => "VM already in the process of being retired"
+        )
+      end
     end
   end
 
