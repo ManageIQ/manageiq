@@ -29,6 +29,14 @@ module VmRetireTask::StateMachine
   end
 
   def start_retirement
+    if vm.retired?
+      _log.error("VM:<#{vm.name} on Provider:<#{vm.ext_management_system&.name}> is already retired")
+      fail!("VM already retired")
+    elsif vm.retiring?
+      _log.error("VM:<#{vm.name} on Provider:<#{vm.ext_management_system&.name}> in the process of being retired")
+      fail!("VM already in the process of being retired")
+    end
+
     Notification.create!(:type => :vm_retiring, :subject => vm)
     vm.start_retirement
     signal :finish_retirement
@@ -43,5 +51,10 @@ module VmRetireTask::StateMachine
   def finish
     mark_execution_servers
     update_and_notify_parent(:state => 'finished')
+  end
+
+  def fail!(message)
+    update_and_notify_parent(:state => "finished", :status => "Error", :message => message)
+    signal :finish
   end
 end
