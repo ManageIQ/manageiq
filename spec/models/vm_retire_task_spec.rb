@@ -81,9 +81,7 @@ RSpec.describe VmRetireTask do
   end
 
   describe "#start_retirement" do
-    before do
-      NotificationType.seed
-    end
+    before { NotificationType.seed }
 
     it "creates a vm_retiring notification" do
       expect(vm_retire_task).to receive(:finish_retirement)
