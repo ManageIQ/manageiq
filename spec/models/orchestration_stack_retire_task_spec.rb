@@ -30,4 +30,23 @@ RSpec.describe OrchestrationStackRetireTask do
       expect(OrchestrationStackRetireTask.get_description(miq_request)).to eq("OrchestrationStack Retire for: #{orchestration_stack.name}")
     end
   end
+
+  describe "#run_retire" do
+    before { NotificationType.seed }
+
+    it "creates notifications" do
+      orchestration_stack_retire_task.run_retire
+      expect(Notification.count).to eq(2)
+      expect(Notification.of_type(:orchestration_stack_retiring).first.subject).to eq(orchestration_stack)
+      expect(Notification.of_type(:orchestration_stack_retired).first.subject).to eq(orchestration_stack)
+    end
+
+    it "retires the stack" do
+      orchestration_stack_retire_task.run_retire
+      expect(orchestration_stack.reload).to have_attributes(
+        :retirement_state => "retired",
+        :retired          => true
+      )
+    end
+  end
 end
