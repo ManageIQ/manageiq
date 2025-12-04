@@ -107,7 +107,7 @@ class MiqWorker
 
     def worker_deployment_name
       @worker_deployment_name ||= begin
-        deployment_name = abbreviated_class_name.dup.chomp("Worker").sub("Manager", "").sub(/^Miq/, "")
+        deployment_name = ultra_minimal_class_name
         deployment_name << "-#{ApplicationRecord.split_id(ems_id).last}" if respond_to?(:ems_id) && ems_id.present?
         "#{deployment_prefix}#{deployment_name.underscore.dasherize.tr("/", "-")}"
       end
