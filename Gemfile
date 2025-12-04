@@ -32,7 +32,7 @@ gem "bundler",                          "~> 2.2", ">= 2.2.15", *("!= 2.5.0".."!=
 gem "byebug",                                                :require => false
 gem "color",                            "~>1.8"
 gem "config",                           "~>2.2", ">=2.2.3",  :require => false
-gem "connection_pool",                                       :require => false # For Dalli
+gem "connection_pool",                  "~>2.5",             :require => false # For Dalli
 gem "concurrent-ruby",                  "< 1.3.5",           :require => false # Temporary pin down as concurrent-ruby 1.3.5 breaks Rails 7.0, and rails-core doesn't
                                                                                # plan to ship a new 7.0 to fix it. See https://github.com/rails/rails/pull/54264
 gem "dalli",                            "~>3.2.3",           :require => false
