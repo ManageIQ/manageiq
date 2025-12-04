@@ -32,7 +32,12 @@ RSpec.describe OrchestrationStackRetireTask do
   end
 
   describe "#run_retire" do
-    before { NotificationType.seed }
+    before do
+      NotificationType.seed
+      expect(orchestration_stack).to receive(:raw_exists?).and_return(true)
+      expect(orchestration_stack).to receive(:raw_delete_stack)
+      expect(orchestration_stack).to receive(:normalized_live_status).and_return("delete_complete")
+    end
 
     it "creates notifications" do
       orchestration_stack_retire_task.run_retire
