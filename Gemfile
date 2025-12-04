@@ -32,7 +32,7 @@ gem "bundler",                          "~> 2.2", ">= 2.2.15", *("!= 2.5.0".."!=
 gem "byebug",                                                :require => false
 gem "color",                            "~>1.8"
 gem "config",                           "~>5.1",             :require => false
-gem "connection_pool",                                       :require => false # For Dalli
+gem "connection_pool",                  "~>2.5",             :require => false # For Dalli
 gem "dalli",                            "~>3.2.3",           :require => false
 gem "default_value_for",                "~>4.0"
 gem "docker-api",                       "~>1.33.6",          :require => false
