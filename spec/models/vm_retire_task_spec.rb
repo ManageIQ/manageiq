@@ -212,4 +212,26 @@ RSpec.describe VmRetireTask do
       expect(vm.retired?).to be_truthy
     end
   end
+
+  describe "#delete_from_vmdb" do
+    context "with options delete_from_vmdb=true" do
+      let(:task_options) { {:src_ids => [vm.id], :delete_from_vmdb => true} }
+
+      it "deletes the vm from vmdb" do
+        vm_retire_task.signal(:delete_from_vmdb)
+
+        expect(vm).to be_deleted
+      end
+    end
+
+    context "with options delete_from_vmdb=false" do
+      let(:task_options) { {:src_ids => [vm.id], :delete_from_vmdb => false} }
+
+      it "does not delete the vm from vmdb" do
+        vm_retire_task.signal(:delete_from_vmdb)
+
+        expect(vm).not_to be_deleted
+      end
+    end
+  end
 end

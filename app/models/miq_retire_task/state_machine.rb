@@ -32,6 +32,11 @@ module MiqRetireTask::StateMachine
   end
 
   def delete_from_vmdb
+    if options[:delete_from_vmdb]
+      _log.info("Removing #{self.class.model_being_retired} from VMDB")
+      source.destroy
+    end
+
     signal :finish
   end
 

@@ -60,6 +60,6 @@ module VmRetireTask::StateMachine
   end
 
   def log_prefix
-    "VM:<#{vm.name}> on Provider:<#{vm.ext_management_system&.name}>"
+    "VM:<#{vm.name}>"
   end
 end
