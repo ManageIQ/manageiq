@@ -1,9 +1,11 @@
 RSpec.describe VmRetireTask do
   let(:user) { FactoryBot.create(:user_with_group) }
-  let(:vm) { FactoryBot.create(:vm, :raw_power_state => power_state) }
+  let(:ems)  { FactoryBot.create(:ext_management_system) }
+  let(:vm)   { FactoryBot.create(:vm, :ext_management_system => ems, :raw_power_state => power_state) }
   let!(:miq_server) { EvmSpecHelper.local_miq_server }
   let(:miq_request) { FactoryBot.create(:vm_retire_request, :requester => user) }
-  let(:vm_retire_task) { FactoryBot.create(:vm_retire_task, :source => vm, :miq_request => miq_request, :options => {:src_ids => [vm.id]}) }
+  let(:vm_retire_task) { FactoryBot.create(:vm_retire_task, :source => vm, :miq_request => miq_request, :options => task_options) }
+  let(:task_options)   { {:src_ids => [vm.id]} }
   let(:approver) { FactoryBot.create(:user_miq_request_approver) }
   let(:power_state) { "unknown" }
 
@@ -84,7 +86,7 @@ RSpec.describe VmRetireTask do
     before { NotificationType.seed }
 
     it "creates a vm_retiring notification" do
-      expect(vm_retire_task).to receive(:finish_retirement)
+      expect(vm_retire_task).to receive(:remove_from_provider)
       vm_retire_task.signal(:start_retirement)
 
       vm_retiring_notifications = Notification.of_type(:vm_retiring)
@@ -93,7 +95,7 @@ RSpec.describe VmRetireTask do
     end
 
     it "start the vm retirement process" do
-      expect(vm_retire_task).to receive(:finish_retirement)
+      expect(vm_retire_task).to receive(:remove_from_provider)
       vm_retire_task.signal(:start_retirement)
       expect(vm.reload.retirement_state).to eq("retiring")
     end
@@ -121,6 +123,69 @@ RSpec.describe VmRetireTask do
           :status  => "Error",
           :message => "Vm already in the process of being retired"
         )
+      end
+    end
+  end
+
+  describe "#remove_from_provider" do
+    context "with removal_type=remove_from_disk" do
+      let(:task_options) { {:src_ids => [vm.id], :removal_type => "remove_from_disk"} }
+
+      it "doesn't delete from disk if we didn't provision it" do
+        expect(vm).not_to receive(:vm_destroy)
+        expect(vm_retire_task).to receive(:check_removed_from_provider)
+        vm_retire_task.signal(:remove_from_provider)
+      end
+
+      context "with tag lifecycle retire_full" do
+        before { vm.tag_with("retire_full", :ns => "/managed/lifecycle") }
+
+        it "calls remove_from_disk" do
+          expect(vm).to receive(:vm_destroy)
+          expect(vm_retire_task).to receive(:check_removed_from_provider)
+          vm_retire_task.signal(:remove_from_provider)
+        end
+      end
+    end
+
+    context "with removal_type=unregister" do
+      let(:task_options) { {:src_ids => [vm.id], :removal_type => "unregister"} }
+
+      it "calls unregister" do
+        expect(vm).to receive(:unregister)
+        expect(vm_retire_task).to receive(:check_removed_from_provider)
+        vm_retire_task.signal(:remove_from_provider)
+      end
+    end
+
+    context "with missing removal_type" do
+      it "raises an exception" do
+        vm_retire_task.signal(:remove_from_provider)
+        expect(vm_retire_task.reload).to have_attributes(
+          :state   => "finished",
+          :status  => "Error",
+          :message => "Unknown retirement type"
+        )
+      end
+    end
+  end
+
+  describe "#check_removed_from_provider" do
+    context "with an active vm" do
+      it "queues a refresh and requeues the state" do
+        expect(vm_retire_task).not_to receive(:finish_retirement)
+        vm_retire_task.signal(:check_removed_from_provider)
+        expect(vm_retire_task.reload.phase).to eq("check_removed_from_provider")
+        expect(MiqQueue.first).to have_attributes(:class_name => described_class.name, :method_name => "check_removed_from_provider")
+      end
+    end
+
+    context "with an archived vm" do
+      let(:vm) { FactoryBot.create(:vm, :ext_management_system => nil, :raw_power_state => power_state) }
+
+      it "signals finish_retirement" do
+        expect(vm_retire_task).to receive(:finish_retirement)
+        vm_retire_task.signal(:check_removed_from_provider)
       end
     end
   end
