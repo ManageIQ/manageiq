@@ -159,6 +159,11 @@
   :expires_in: 24.hours
   :level: :warning
   :audience: global
+- :name: orchestration_stack_retiring
+  :message: Orchestration Stack %{subject} has started retirement.
+  :expires_in: 7.days
+  :level: :success
+  :audience: tenant
 - :name: orchestration_stack_retired
   :message: Orchestration Stack %{subject} has been retired.
   :expires_in: 7.days
