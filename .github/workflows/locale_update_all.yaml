@@ -1,9 +1,11 @@
-name: "Locale Update All"
-
+name: Locale Update All
 on:
   schedule:
-  - cron: '0 0 1,15 * *'
+  - cron: 0 0 1,15 * *
   workflow_dispatch:
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
@@ -17,7 +19,7 @@ jobs:
           POSTGRESQL_USER: root
           POSTGRESQL_PASSWORD: smartvm
           POSTGRESQL_DATABASE: vmdb_i18n
-        options: --health-cmd pg_isready --health-interval 2s --health-timeout 5s --health-retries 5
+        options: "--health-cmd pg_isready --health-interval 2s --health-timeout 5s --health-retries 5"
         ports:
         - 5432:5432
     env:
@@ -33,7 +35,7 @@ jobs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: "3.3"
+        ruby-version: '3.3'
         bundler-cache: true
       timeout-minutes: 30
     - name: Prepare dependencies
@@ -58,7 +60,7 @@ jobs:
         push-to-fork: miq-bot/manageiq
         title: Update English Translations
         body: Update the English Translations in the manageiq.po and manageiq.pot files.
-        token: ${{ secrets.PR_TOKEN }}
+        token: "${{ secrets.PR_TOKEN }}"
   on_failure:
     needs: locale_update_all
     if: always() && github.repository_owner == 'ManageIQ' && needs.locale_update_all.result != 'success'
@@ -67,7 +69,6 @@ jobs:
     - name: Notify on failure
       uses: slackapi/slack-github-action@v2
       with:
-        webhook: ${{ secrets.GHA_STATUS_SLACK_WEBHOOK_URL }}
+        webhook: "${{ secrets.GHA_STATUS_SLACK_WEBHOOK_URL }}"
         webhook-type: incoming-webhook
-        payload: |
-          text: ":red_circle: *GitHub Actions workflow ${{ needs.locale_update_all.result }}*\n${{ github.workflow_ref }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        payload: 'text: ":red_circle: *GitHub Actions workflow ${{ needs.locale_update_all.result }}*\n${{ github.workflow_ref }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"'

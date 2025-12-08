@@ -1,11 +1,16 @@
----
 name: CI
 on:
-  push:
   pull_request:
-  workflow_dispatch:
+  push:
+    branches-ignore:
+    - dependabot/*
+    - renovate/*
   schedule:
   - cron: 0 0 * * *
+  workflow_dispatch:
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
@@ -14,7 +19,6 @@ jobs:
     strategy:
       matrix:
         ruby-version:
-        - '3.1'
         - '3.3'
         test-suite:
         - vmdb
@@ -26,15 +30,13 @@ jobs:
           POSTGRESQL_USER: root
           POSTGRESQL_PASSWORD: smartvm
           POSTGRESQL_DATABASE: vmdb_test
-        options: "--health-cmd pg_isready --health-interval 2s --health-timeout 5s
-          --health-retries 5"
+        options: "--health-cmd pg_isready --health-interval 2s --health-timeout 5s --health-retries 5"
         ports:
         - 5432:5432
     env:
       TEST_SUITE: "${{ matrix.test-suite }}"
       PGHOST: localhost
       PGPASSWORD: smartvm
-      CC_TEST_REPORTER_ID: "${{ secrets.CC_TEST_REPORTER_ID }}"
     steps:
     - uses: actions/checkout@v6
     - name: Set up system
@@ -52,8 +54,3 @@ jobs:
       run: bin/test_database_connectivity
     - name: Run tests
       run: bundle exec rake
-    - name: Report code coverage
-      if: "${{ github.ref == 'refs/heads/master' && matrix.ruby-version == '3.3' &&
-        matrix.test-suite == 'vmdb' }}"
-      continue-on-error: true
-      uses: paambaati/codeclimate-action@v9
