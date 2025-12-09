@@ -4,6 +4,11 @@ on:
     types:
     - build
   workflow_dispatch:
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+permissions:
+  contents: read
 jobs:
   build_monolith:
     if: github.repository_owner == 'ManageIQ'
