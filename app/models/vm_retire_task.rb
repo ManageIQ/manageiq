@@ -1,4 +1,6 @@
 class VmRetireTask < MiqRetireTask
+  include StateMachine
+
   default_value_for :request_type, "vm_retire"
 
   def vm
