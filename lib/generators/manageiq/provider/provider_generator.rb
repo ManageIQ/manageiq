@@ -113,7 +113,6 @@ module ManageIQ
       append_file 'spec/spec_helper.rb', <<~VCR
 
         VCR.configure do |config|
-          config.ignore_hosts 'codeclimate.com' if ENV['CI']
           config.cassette_library_dir = File.join(#{class_name}::Engine.root, 'spec/vcr_cassettes')
 
           VcrSecrets.define_all_cassette_placeholders(config, :#{provider_name})
