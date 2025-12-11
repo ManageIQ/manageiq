@@ -25,12 +25,10 @@ module ManageIQ
 
     def create_plugin_files
       template "%plugin_name%.gemspec"
-      template ".codeclimate.yml"
       template ".gitignore"
       template ".rspec"
       template ".rspec_ci"
       template ".rubocop.yml"
-      template ".rubocop_cc.yml"
       template ".rubocop_local.yml", :skip => true
       template ".github/workflows/ci.yaml"
       template ".whitesource"
