@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         ruby-version:
-<%= YAML.load_file(Rails.root.join(".github/workflows/ci.yaml")).dig("jobs", "ci", "strategy", "matrix", "ruby-version").to_a.map { |r| "- '#{r}'".indent(8) }.join("\n") %>
+        <%= ruby_versions.to_yaml[3..].indent(8).strip %>
     services:
       postgres:
         image: manageiq/postgresql:13

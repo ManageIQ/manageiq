@@ -136,6 +136,18 @@ module ManageIQ
       @plugin_description ||= "#{plugin_short_name.titleize} plugin for #{Vmdb::Appliance.PRODUCT_NAME}."
     end
 
+    def ruby_versions
+      @ruby_versions ||= core_ci_yaml.dig("jobs", "ci", "strategy", "matrix", "ruby-version").to_a
+    end
+
+    def core_ci_yaml
+      @core_ci_yaml ||= YAML.load_file(core_ci_yaml_path)
+    end
+
+    def core_ci_yaml_path
+      Rails.root.join(".github/workflows/ci.yaml")
+    end
+
     def node_version
       @node_version ||= package_json.dig("engines", "node")
     end
