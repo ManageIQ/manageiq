@@ -1,8 +1,6 @@
 # <%= class_name %>
 
 [![CI](https://github.com/ManageIQ/<%= plugin_name %>/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/ManageIQ/<%= plugin_name %>/actions/workflows/ci.yaml)
-[![Code Climate](https://codeclimate.com/github/ManageIQ/<%= plugin_name %>.svg)](https://codeclimate.com/github/ManageIQ/<%= plugin_name %>)
-[![Test Coverage](https://codeclimate.com/github/ManageIQ/<%= plugin_name %>/badges/coverage.svg)](https://codeclimate.com/github/ManageIQ/<%= plugin_name %>/coverage)
 
 <%= plugin_description %>
 
