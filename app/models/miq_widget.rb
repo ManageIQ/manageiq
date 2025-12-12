@@ -412,6 +412,8 @@ class MiqWidget < ApplicationRecord
     groups_by_id    = MiqGroup.in_my_region.where(:id => grouped_users.keys).index_by(&:id)
     users_by_userid = User.in_my_region.where(:userid => grouped_users.values.flatten.uniq).index_by(&:userid)
     grouped_users.each_with_object({}) do |(k, v), h|
+      next unless groups_by_id.key?(k) # Make sure the group associated with a widget set / dashboard hasn't been removed
+
       user_objs = users_by_userid.values_at(*v).reject(&:blank?)
       h[groups_by_id[k]] = user_objs if user_objs.present?
     end
