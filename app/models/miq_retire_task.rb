@@ -1,5 +1,6 @@
 class MiqRetireTask < MiqRequestTask
   include StateMachine
+  include ConfigurationScriptContextSourceDetailsMixin
 
   validate :validate_request_type, :validate_state
 

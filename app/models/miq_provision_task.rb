@@ -1,6 +1,7 @@
 class MiqProvisionTask < MiqRequestTask
   include MiqProvisionQuotaMixin
   include Tagging
+  include ConfigurationScriptContextSourceDetailsMixin
 
   validates_inclusion_of :state, :in => %w[pending queued active provisioned finished], :message => "should be pending, queued, active, provisioned or finished"
 

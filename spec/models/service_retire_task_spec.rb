@@ -166,21 +166,72 @@ RSpec.describe ServiceRetireTask do
         let(:retire_workflow) { FactoryBot.create(:configuration_script_payload) }
         let(:miq_task)        { FactoryBot.create(:miq_task, :context_data => context_data) }
         let(:context_data)    { {:workflow_instance_id => retire_workflow_instance.id} }
+        let(:vm)              { FactoryBot.create(:vm_openstack) }
 
         before do
           User.seed
           allow(ConfigurationScriptPayload).to receive(:find).with(retire_workflow.id).and_return(retire_workflow)
+          st.resource_actions.create!(:action => "Retirement", :configuration_script_id => retire_workflow.id)
+          service.add_resource!(vm)
         end
 
         it "sets configuration_script_payload_id if a workflow is selected" do
-          st.resource_actions.create!(:action => "Retirement", :configuration_script_id => retire_workflow.id)
-          service.add_resource!(FactoryBot.create(:vm_openstack))
-
           expect(retire_workflow).to receive(:run).and_return(miq_task.id)
+
           service_retire_task.after_request_task_create
 
           expect(VmRetireTask.count).to eq(1)
           expect(VmRetireTask.first.options).to include(:configuration_script_payload_id => retire_workflow.id)
+        end
+
+        it "passes in object details to workflow execution context" do
+          expect(retire_workflow)
+            .to receive(:run)
+            .with(
+              hash_including(
+                :execution_context => hash_including(
+                  :_object_details => {
+                    :id      => vm.id,
+                    :name    => vm.name,
+                    :ems_ref => vm.ems_ref,
+                    :service => {:id => service.id, :name => service.name}
+                  }
+                )
+              )
+            )
+            .and_return(miq_task.id)
+
+          service_retire_task.after_request_task_create
+        end
+
+        context "with active webservices" do
+          let(:ip)          { "1.2.3.4" }
+          let!(:web_server) { FactoryBot.create(:miq_server, :has_active_webservices => true, :ipaddress => ip) }
+
+          it "includes object and service href" do
+            expect(retire_workflow)
+              .to receive(:run)
+              .with(
+                hash_including(
+                  :execution_context => hash_including(
+                    :_object_details => {
+                      :id      => vm.id,
+                      :name    => vm.name,
+                      :ems_ref => vm.ems_ref,
+                      :href    => "https://#{ip}/instances/#{vm.id}",
+                      :service => {
+                        :id   => service.id,
+                        :name => service.name,
+                        :href => "https://#{ip}/services/#{service.id}"
+                      }
+                    }
+                  )
+                )
+              )
+              .and_return(miq_task.id)
+
+            service_retire_task.after_request_task_create
+          end
         end
       end
 
