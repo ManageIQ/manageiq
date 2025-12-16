@@ -1,6 +1,7 @@
 RSpec.describe OrchestrationStackRetireTask do
   let(:user) { FactoryBot.create(:user_with_group) }
   let(:orchestration_stack) { FactoryBot.create(:orchestration_stack) }
+  let!(:miq_server) { EvmSpecHelper.local_miq_server }
   let(:miq_request) { FactoryBot.create(:orchestration_stack_retire_request, :requester => user, :source => orchestration_stack) }
   let(:orchestration_stack_retire_task) { FactoryBot.create(:orchestration_stack_retire_task, :source => orchestration_stack, :miq_request => miq_request, :options => {:src_ids => [orchestration_stack.id]}) }
   let(:approver) { FactoryBot.create(:user_miq_request_approver) }
@@ -28,6 +29,30 @@ RSpec.describe OrchestrationStackRetireTask do
   describe "#self.get_description" do
     it "returns a description based upon the source service name" do
       expect(OrchestrationStackRetireTask.get_description(miq_request)).to eq("OrchestrationStack Retire for: #{orchestration_stack.name}")
+    end
+  end
+
+  describe "#run_retire" do
+    before do
+      NotificationType.seed
+      expect(orchestration_stack).to receive(:raw_exists?).and_return(true)
+      expect(orchestration_stack).to receive(:raw_delete_stack)
+      expect(orchestration_stack).to receive(:normalized_live_status).and_return("delete_complete")
+    end
+
+    it "creates notifications" do
+      orchestration_stack_retire_task.run_retire
+      expect(Notification.count).to eq(2)
+      expect(Notification.of_type(:orchestration_stack_retiring).first.subject).to eq(orchestration_stack)
+      expect(Notification.of_type(:orchestration_stack_retired).first.subject).to eq(orchestration_stack)
+    end
+
+    it "retires the stack" do
+      orchestration_stack_retire_task.run_retire
+      expect(orchestration_stack.reload).to have_attributes(
+        :retirement_state => "retired",
+        :retired          => true
+      )
     end
   end
 end
