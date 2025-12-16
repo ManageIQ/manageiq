@@ -29,20 +29,12 @@ module VmRetireTask::StateMachine
   end
 
   def remove_from_provider
-    case options[:removal_type]
-    when "remove_from_disk"
-      if vm.miq_provision || vm.is_tagged_with?("retire_full", :ns => "/managed/lifecycle")
-        _log.info("#{log_prefix} Removing from disk...")
-        vm.vm_destroy
-      else
-        _log.info("#{log_prefix} was not provisioned by us, not removing from disk")
-      end
-    when "unregister"
+    if options.fetch(:remove_from_provider_storage, true)
+      _log.info("#{log_prefix} Removing from storage...")
+      vm.vm_destroy
+    else
       _log.info("#{log_prefix} Unregistering...")
       vm.unregister
-    else
-      _log.error("#{log_prefix} Unknown retirement type [#{options[:removal_type]}]")
-      return fail!("Unknown retirement type")
     end
 
     signal :check_removed_from_provider

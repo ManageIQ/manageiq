@@ -14,7 +14,13 @@ module MiqRetireTask::StateMachine
 
     create_retiring_notification!
     source.start_retirement
-    signal :remove_from_provider
+
+    # Default to remove the source from the provider
+    if options.fetch(:remove_from_provider, true)
+      signal :remove_from_provider
+    else
+      signal :finish_retirement
+    end
   end
 
   def remove_from_provider
@@ -28,12 +34,12 @@ module MiqRetireTask::StateMachine
   def finish_retirement
     source.finish_retirement
     create_retired_notification!
-    signal :delete_from_vmdb
+    signal :remove_from_inventory
   end
 
-  def delete_from_vmdb
-    if options[:delete_from_vmdb]
-      _log.info("Removing #{self.class.model_being_retired} from VMDB")
+  def remove_from_inventory
+    if options.fetch(:remove_from_inventory, false)
+      _log.info("Removing #{self.class.model_being_retired} from Inventory")
       source.destroy
     end
 

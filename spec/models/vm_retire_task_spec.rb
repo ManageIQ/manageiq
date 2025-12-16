@@ -100,6 +100,17 @@ RSpec.describe VmRetireTask do
       expect(vm.reload.retirement_state).to eq("retiring")
     end
 
+    context "with remove_from_provider=false" do
+      let(:task_options) { {:src_ids => [vm.id], :remove_from_provider => false} }
+
+      it "finishes retirement without removing from provider" do
+        expect(vm_retire_task).not_to receive(:remove_from_provider)
+        expect(vm_retire_task).to     receive(:finish_retirement)
+
+        vm_retire_task.signal(:start_retirement)
+      end
+    end
+
     context "with a retired vm" do
       let(:vm) { FactoryBot.create(:vm, :retirement_state => "retired", :retired => true) }
 
@@ -128,28 +139,18 @@ RSpec.describe VmRetireTask do
   end
 
   describe "#remove_from_provider" do
-    context "with removal_type=remove_from_disk" do
-      let(:task_options) { {:src_ids => [vm.id], :removal_type => "remove_from_disk"} }
+    context "with remove_from_provider_storage=true" do
+      let(:task_options) { {:src_ids => [vm.id], :remove_from_provider_storage => true} }
 
-      it "doesn't delete from disk if we didn't provision it" do
-        expect(vm).not_to receive(:vm_destroy)
+      it "calls remove_from_disk" do
+        expect(vm).to receive(:vm_destroy)
         expect(vm_retire_task).to receive(:check_removed_from_provider)
         vm_retire_task.signal(:remove_from_provider)
       end
-
-      context "with tag lifecycle retire_full" do
-        before { vm.tag_with("retire_full", :ns => "/managed/lifecycle") }
-
-        it "calls remove_from_disk" do
-          expect(vm).to receive(:vm_destroy)
-          expect(vm_retire_task).to receive(:check_removed_from_provider)
-          vm_retire_task.signal(:remove_from_provider)
-        end
-      end
     end
 
-    context "with removal_type=unregister" do
-      let(:task_options) { {:src_ids => [vm.id], :removal_type => "unregister"} }
+    context "with remove_from_provider_storage=false" do
+      let(:task_options) { {:src_ids => [vm.id], :remove_from_provider_storage => false} }
 
       it "calls unregister" do
         expect(vm).to receive(:unregister)
@@ -158,14 +159,11 @@ RSpec.describe VmRetireTask do
       end
     end
 
-    context "with missing removal_type" do
-      it "raises an exception" do
+    context "with missing remove_from_provider_storage" do
+      it "defaults to remove from storage" do
+        expect(vm).to receive(:vm_destroy)
+        expect(vm_retire_task).to receive(:check_removed_from_provider)
         vm_retire_task.signal(:remove_from_provider)
-        expect(vm_retire_task.reload).to have_attributes(
-          :state   => "finished",
-          :status  => "Error",
-          :message => "Unknown retirement type"
-        )
       end
     end
   end
@@ -213,22 +211,30 @@ RSpec.describe VmRetireTask do
     end
   end
 
-  describe "#delete_from_vmdb" do
-    context "with options delete_from_vmdb=true" do
-      let(:task_options) { {:src_ids => [vm.id], :delete_from_vmdb => true} }
+  describe "#remove_from_inventory" do
+    context "with missing option remove_from_inventory" do
+      it "defaults to not remove from inventory" do
+        vm_retire_task.signal(:remove_from_inventory)
 
-      it "deletes the vm from vmdb" do
-        vm_retire_task.signal(:delete_from_vmdb)
+        expect(vm).not_to be_deleted
+      end
+    end
+
+    context "with options remove_from_inventory=true" do
+      let(:task_options) { {:src_ids => [vm.id], :remove_from_inventory => true} }
+
+      it "deletes the vm from inventory" do
+        vm_retire_task.signal(:remove_from_inventory)
 
         expect(vm).to be_deleted
       end
     end
 
-    context "with options delete_from_vmdb=false" do
-      let(:task_options) { {:src_ids => [vm.id], :delete_from_vmdb => false} }
+    context "with options remove_from_inventory=false" do
+      let(:task_options) { {:src_ids => [vm.id], :remove_from_inventory => false} }
 
-      it "does not delete the vm from vmdb" do
-        vm_retire_task.signal(:delete_from_vmdb)
+      it "does not delete the vm from inventory" do
+        vm_retire_task.signal(:remove_from_inventory)
 
         expect(vm).not_to be_deleted
       end
