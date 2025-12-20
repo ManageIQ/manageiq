@@ -6,8 +6,8 @@
 #
 /app/models/manageiq/providers/                 @agrare @fryguy
 /app/models/manageiq/providers/inventory/       @agrare @fryguy
-/app/models                                     @agrare @fryguy @kbrock
-/app/models/authenticator*                      @kbrock
+/app/models                                     @agrare @fryguy
+/app/models/authenticator*                      @fryguy
 /app/models/cloud*                              @agrare
 /app/models/container*                          @agrare
 /app/models/ems_event*                          @agrare
@@ -19,8 +19,8 @@
 /app/models/metric*                             @agrare
 /app/models/miq_ems_metrics_processor_worker*   @agrare
 /app/models/miq_event_handler*                  @agrare
-/app/models/miq_product_feature*                @jeffibm
-/app/models/miq_report*                         @kbrock
+/app/models/miq_product_feature*                @GilbertCherrie
+/app/models/miq_report*                         @jrafanie
 /app/models/miq_schedule*                       @jrafanie
 /app/models/miq_server*                         @jrafanie
 /app/models/miq_template*                       @agrare
@@ -37,4 +37,4 @@
 /lib/generators                                 @agrare
 /lib/manageiq/reporting                         @jrafanie
 /locale/*                                       @jrafanie
-/product/*                                      @jeffibm
+/product/*                                      @GilbertCherrie
