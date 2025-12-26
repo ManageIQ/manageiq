@@ -25,7 +25,7 @@ module Ansible
       # @param verbosity [Integer] ansible-runner verbosity level 0-5
       # @return [Ansible::Runner::ResponseAsync] Response object that we can query for .running?, providing us the
       #         Ansible::Runner::Response object, when the job is finished.
-      def run_async(env_vars, extra_vars, playbook_path, hosts: ["localhost"], credentials: [], verbosity: 0, become_enabled: false)
+      def run_async(env_vars, extra_vars, playbook_path, hosts: ["localhost"], credentials: [], verbosity: 0, become_enabled: false, container_image: nil)
         run_via_cli(hosts,
                     credentials,
                     env_vars,
@@ -33,7 +33,8 @@ module Ansible
                     :ansible_runner_method => "start",
                     :playbook              => playbook_path,
                     :verbosity             => verbosity,
-                    :become_enabled        => become_enabled)
+                    :become_enabled        => become_enabled,
+                    :container_image       => container_image)
       end
 
       # Runs a role directly via ansible-runner, a simple playbook is then automatically created,
@@ -51,7 +52,7 @@ module Ansible
       # @param verbosity [Integer] ansible-runner verbosity level 0-5
       # @return [Ansible::Runner::ResponseAsync] Response object that we can query for .running?, providing us the
       #         Ansible::Runner::Response object, when the job is finished.
-      def run_role_async(env_vars, extra_vars, role_name, roles_path:, role_skip_facts: true, hosts: ["localhost"], credentials: [], verbosity: 0, become_enabled: false)
+      def run_role_async(env_vars, extra_vars, role_name, roles_path:, role_skip_facts: true, hosts: ["localhost"], credentials: [], verbosity: 0, become_enabled: false, container_image: nil)
         run_via_cli(hosts,
                     credentials,
                     env_vars,
@@ -61,7 +62,8 @@ module Ansible
                     :roles_path            => roles_path,
                     :role_skip_facts       => role_skip_facts,
                     :verbosity             => verbosity,
-                    :become_enabled        => become_enabled)
+                    :become_enabled        => become_enabled,
+                    :container_image       => container_image)
       end
 
       # Runs a playbook via ansible-runner, see: https://ansible-runner.readthedocs.io/en/latest/standalone.html#running-playbooks
@@ -75,15 +77,16 @@ module Ansible
       # @param credentials [Array] List of Authentication object ids to provide to the playbook run
       # @param verbosity [Integer] ansible-runner verbosity level 0-5
       # @return [Ansible::Runner::Response] Response object with all details about the ansible run
-      def run(env_vars, extra_vars, playbook_path, tags: nil, hosts: ["localhost"], credentials: [], verbosity: 0, become_enabled: false)
+      def run(env_vars, extra_vars, playbook_path, tags: nil, hosts: ["localhost"], credentials: [], verbosity: 0, become_enabled: false, container_image: nil)
         run_via_cli(hosts,
                     credentials,
                     env_vars,
                     extra_vars,
-                    :tags           => tags,
-                    :playbook       => playbook_path,
-                    :verbosity      => verbosity,
-                    :become_enabled => become_enabled)
+                    :tags            => tags,
+                    :playbook        => playbook_path,
+                    :verbosity       => verbosity,
+                    :become_enabled  => become_enabled,
+                    :container_image => container_image)
       end
 
       # Runs a role directly via ansible-runner, a simple playbook is then automatically created,
@@ -101,7 +104,7 @@ module Ansible
       # @param credentials [Array] List of Authentication object ids to provide to the role run
       # @param verbosity [Integer] ansible-runner verbosity level 0-5
       # @return [Ansible::Runner::Response] Response object with all details about the ansible run
-      def run_role(env_vars, extra_vars, role_name, roles_path:, role_skip_facts: true, tags: nil, hosts: ["localhost"], credentials: [], verbosity: 0, become_enabled: false)
+      def run_role(env_vars, extra_vars, role_name, roles_path:, role_skip_facts: true, tags: nil, hosts: ["localhost"], credentials: [], verbosity: 0, become_enabled: false, container_image: nil)
         run_via_cli(hosts,
                     credentials,
                     env_vars,
@@ -111,7 +114,8 @@ module Ansible
                     :roles_path      => roles_path,
                     :role_skip_facts => role_skip_facts,
                     :verbosity       => verbosity,
-                    :become_enabled  => become_enabled)
+                    :become_enabled  => become_enabled,
+                    :container_image => container_image)
       end
 
       # Runs "run" method via queue
@@ -126,12 +130,13 @@ module Ansible
       # @param credentials [Array] List of Authentication object ids to provide to the playbook run
       # @param verbosity [Integer] ansible-runner verbosity level 0-5
       # @return [BigInt] ID of MiqTask record wrapping the task
-      def run_queue(env_vars, extra_vars, playbook_path, user_id, queue_opts, hosts: ["localhost"], credentials: [], verbosity: 0, become_enabled: false)
+      def run_queue(env_vars, extra_vars, playbook_path, user_id, queue_opts, hosts: ["localhost"], credentials: [], verbosity: 0, become_enabled: false, container_image: nil)
         kwargs = {
-          :hosts          => hosts,
-          :credentials    => credentials,
-          :verbosity      => verbosity,
-          :become_enabled => become_enabled
+          :hosts           => hosts,
+          :credentials     => credentials,
+          :verbosity       => verbosity,
+          :become_enabled  => become_enabled,
+          :container_image => container_image
         }
         run_in_queue("run", user_id, queue_opts, [env_vars, extra_vars, playbook_path, kwargs])
       end
@@ -151,14 +156,15 @@ module Ansible
       # @param credentials [Array] List of Authentication object ids to provide to the role run
       # @param verbosity [Integer] ansible-runner verbosity level 0-5
       # @return [BigInt] ID of MiqTask record wrapping the task
-      def run_role_queue(env_vars, extra_vars, role_name, user_id, queue_opts, roles_path:, role_skip_facts: true, hosts: ["localhost"], credentials: [], verbosity: 0, become_enabled: false)
+      def run_role_queue(env_vars, extra_vars, role_name, user_id, queue_opts, roles_path:, role_skip_facts: true, hosts: ["localhost"], credentials: [], verbosity: 0, become_enabled: false, container_image: nil)
         kwargs = {
           :roles_path      => roles_path,
           :role_skip_facts => role_skip_facts,
           :hosts           => hosts,
           :credentials     => credentials,
           :verbosity       => verbosity,
-          :become_enabled  => become_enabled
+          :become_enabled  => become_enabled,
+          :container_image => container_image
         }
         run_in_queue("run_role", user_id, queue_opts, [env_vars, extra_vars, role_name, kwargs])
       end
@@ -216,7 +222,11 @@ module Ansible
       # @param verbosity [Integer] ansible-runner verbosity level 0-5
       # @param playbook_or_role_args [Hash] Hash that includes the :playbook key or :role keys
       # @return [Ansible::Runner::Response] Response object with all details about the ansible run
-      def run_via_cli(hosts, credentials, env_vars, extra_vars, tags: nil, ansible_runner_method: "run", verbosity: 0, become_enabled: false, **playbook_or_role_args)
+      def run_via_cli(hosts, credentials, env_vars, extra_vars, tags: nil, ansible_runner_method: "run", verbosity: 0, become_enabled: false, container_image: nil, **playbook_or_role_args)
+        if container_image && async?(ansible_runner_method)
+          raise NotImplementedError, "container_image in async mode is not yet implemented"
+        end
+
         # If we are running against only localhost and no other value is set for ansible_connection
         # then assume we don't want to ssh locally
         extra_vars["ansible_connection"] ||= "local" if hosts == ["localhost"]
@@ -240,8 +250,9 @@ module Ansible
         create_hosts_file(base_dir, hosts)
         create_extra_vars_file(base_dir, extra_vars_hash)
         create_cmdline_file(base_dir, command_line_hash)
+        create_project_dir(base_dir, playbook_or_role_args) if container_image
 
-        params = runner_params(base_dir, ansible_runner_method, playbook_or_role_args, verbosity)
+        params = runner_params(base_dir, ansible_runner_method, playbook_or_role_args, verbosity, container_image)
 
         begin
           fetch_galaxy_roles(playbook_or_role_args)
@@ -289,7 +300,7 @@ module Ansible
         ansible_runner_method == "start"
       end
 
-      def runner_params(base_dir, ansible_runner_method, playbook_or_role_args, verbosity)
+      def runner_params(base_dir, ansible_runner_method, playbook_or_role_args, verbosity, container_image)
         runner_args = playbook_or_role_args.dup
 
         runner_args.delete(:roles_path) if runner_args[:roles_path].nil?
@@ -301,6 +312,12 @@ module Ansible
         if playbook
           runner_args[:playbook]    = File.basename(playbook)
           runner_args[:project_dir] = File.dirname(playbook)
+        end
+
+        if container_image
+          runner_args[:process_isolation] = nil
+          runner_args[:container_image] = container_image
+          runner_args[:project_dir] = "/runner/project" # TODO: Default from ansible-runner - try to move towards using this directory across the board
         end
 
         if verbosity.to_i > 0
@@ -381,6 +398,13 @@ module Ansible
         cmd_string    = AwesomeSpawn.build_command_line(nil, cmd_line).lstrip
 
         File.write(cmd_line_file, cmd_string)
+      end
+
+      def create_project_dir(base_dir, playbook_or_role_args)
+        return unless playbook_or_role_args[:playbook] # TODO: Support roles later
+
+        playbook_path = File.dirname(playbook_or_role_args[:playbook])
+        FileUtils.cp_r(playbook_path, File.join(base_dir, "project"))
       end
 
       def env_dir(base_dir)
