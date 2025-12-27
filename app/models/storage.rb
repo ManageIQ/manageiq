@@ -649,7 +649,7 @@ class Storage < ApplicationRecord
   # Metric methods
   #
 
-  PERF_ROLLUP_CHILDREN = [:ext_management_systems]
+  PERF_ROLLUP_CHILDREN = [:ext_management_systems].freeze
 
   def perf_rollup_parents(interval_name = nil)
     [MiqRegion.my_region].compact unless interval_name == 'realtime'
