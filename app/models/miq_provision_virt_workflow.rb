@@ -6,43 +6,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def initialize(values, requester, options = {})
-    initial_pass = values.blank?
-    initial_pass = true if options[:initial_pass] == true
-    instance_var_init(values, requester, options)
+    super
 
-    # Check if the caller passed the source VM as part of the initial call
-    if initial_pass == true
-      src_vm_id = get_value(@values[:src_vm_id])
-      if src_vm_id.present?
-        vm = VmOrTemplate.find_by(:id => src_vm_id)
-        @values[:src_vm_id] = [vm.id, vm.name] if vm.present?
-      end
-    end
-
-    unless options[:skip_dialog_load] == true
-      # If this is the first time we are called the values hash will be empty
-      # Also skip if we are being called from a web-service
-      @dialogs = get_pre_dialogs if initial_pass && options[:use_pre_dialog] != false
-      if @dialogs.nil?
-        @dialogs = get_dialogs
-      else
-        @running_pre_dialog = true if options[:use_pre_dialog] != false
-      end
-      normalize_numeric_fields unless @dialogs.nil?
-    end
-
+    load_source_object if initial_pass?(values, options)
     password_helper(@values, false) # Decrypt passwords in the hash for the UI
-    @last_vm_id = get_value(@values[:src_vm_id]) unless initial_pass == true
-
-    return if options[:skip_dialog_load] == true
-
-    set_default_values
-    update_field_visibility
-
-    if get_value(values[:service_template_request])
-      show_dialog(:requester, :hide, "disabled")
-      show_dialog(:purpose,   :hide, "disabled")
-    end
+    @last_vm_id = get_value(@values[:src_vm_id]) unless initial_pass?(values, options)
   end
 
   def dialog_name_from_automate(message = 'get_dialog_name', extra_attrs = {})
@@ -1139,6 +1107,37 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
           _log.debug("Allowed Template <#{vm.id}:#{vm.name}>  GUID: <#{vm.guid}>  UID_EMS: <#{vm.uid_ems}>")
         end
       end
+    end
+  end
+
+  def self.source_object_class
+    VmOrTemplate
+  end
+
+  def initial_pass?(values, options)
+    (options[:initial_pass] == true) || values.blank?
+  end
+
+  def load_source_object
+    src_vm_id = get_value(@values[:src_vm_id])
+    if src_vm_id.present?
+      vm = self.class.source_object_class.find_by(:id => src_vm_id)
+      @values[:src_vm_id] = [vm.id, vm.name] if vm.present?
+    end
+  end
+
+  def initialize_dialogs(values, options)
+    @dialogs = get_pre_dialogs if initial_pass?(values, options) && options[:use_pre_dialog] != false
+
+    super
+  end
+
+  def configure_dialogs(values, options)
+    super
+
+    if get_value(values[:service_template_request])
+      show_dialog(:requester, :hide, "disabled")
+      show_dialog(:purpose,   :hide, "disabled")
     end
   end
 end
