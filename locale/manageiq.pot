@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-13 21:57+0000\n"
-"PO-Revision-Date: 2025-11-13 21:57+0000\n"
+"POT-Creation-Date: 2026-01-01 00:21+0000\n"
+"PO-Revision-Date: 2026-01-01 00:21+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -2080,6 +2080,9 @@ msgid "AWS Secret Key for this credential"
 msgstr ""
 
 msgid "AWX"
+msgstr ""
+
+msgid "AWX Job Template Provision"
 msgstr ""
 
 msgid "AWX Provider"
@@ -6181,12 +6184,6 @@ msgid "By Host"
 msgstr ""
 
 msgid "By Role"
-msgstr ""
-
-msgid "By Username %{username} %{created_on}"
-msgstr ""
-
-msgid "By Username %{username} %{updated_on}"
 msgstr ""
 
 msgid "C & U Collection"
@@ -13176,6 +13173,9 @@ msgid "Create new Snapshots"
 msgstr ""
 
 msgid "Created"
+msgstr ""
+
+msgid "Created By"
 msgstr ""
 
 msgid "Created On"
@@ -26214,6 +26214,12 @@ msgstr ""
 msgid "Last Updated"
 msgstr ""
 
+msgid "Last Updated By"
+msgstr ""
+
+msgid "Last Updated On"
+msgstr ""
+
 msgid "Last Valid On"
 msgstr ""
 
@@ -34723,6 +34729,9 @@ msgid "Orchestration Stack"
 msgstr ""
 
 msgid "Orchestration Stack %{subject} has been retired."
+msgstr ""
+
+msgid "Orchestration Stack %{subject} has started retirement."
 msgstr ""
 
 msgid "Orchestration Stack (Amazon)"
