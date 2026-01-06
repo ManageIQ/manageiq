@@ -261,13 +261,13 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nutanix
-  revision: 4c96091fd6ce5e6c75f0fbf64887a8d0cfa79800
+  revision: 7ac368e18b98b8219522d1b9a4cdbb347129f4c4
   branch: spassky
   specs:
     manageiq-providers-nutanix (0.1.0)
-      nutanix_clustermgmt (~> 0.1)
-      nutanix_vmm (~> 0.1)
-      nutanix_volumes (~> 0.1)
+      nutanix_clustermgmt (~> 0.1.0)
+      nutanix_vmm (~> 0.1.0)
+      nutanix_volumes (~> 0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openshift
