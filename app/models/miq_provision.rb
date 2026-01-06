@@ -117,7 +117,7 @@ class MiqProvision < MiqProvisionTask
     end
   end
 
-  def workflow_inputs
+  def configuration_script_inputs
     options
   end
 
