@@ -75,18 +75,18 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-amazon
-  revision: 343eefeadbbb70436bbd899a80ff10c773e90ad1
+  revision: aaccb2a9da0dca2b5f03f74009b692728bd3f9d2
   branch: spassky
   specs:
     manageiq-providers-amazon (0.1.0)
       aws-sdk-cloudformation (~> 1.0)
-      aws-sdk-cloudwatch (~> 1.0)
+      aws-sdk-cloudwatch (~> 1.125.0)
       aws-sdk-core (~> 3.114)
       aws-sdk-ec2 (~> 1.0)
       aws-sdk-elasticloadbalancing (~> 1.0)
       aws-sdk-iam (~> 1.0)
       aws-sdk-rds (~> 1.0)
-      aws-sdk-s3 (~> 1.0, >= 1.96.1)
+      aws-sdk-s3 (~> 1.0, >= 1.208.0)
       aws-sdk-servicecatalog (~> 1.0)
       aws-sdk-sns (~> 1.0)
       aws-sdk-sqs (~> 1.0)
@@ -261,13 +261,13 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nutanix
-  revision: 4c96091fd6ce5e6c75f0fbf64887a8d0cfa79800
+  revision: 7ac368e18b98b8219522d1b9a4cdbb347129f4c4
   branch: spassky
   specs:
     manageiq-providers-nutanix (0.1.0)
-      nutanix_clustermgmt (~> 0.1)
-      nutanix_vmm (~> 0.1)
-      nutanix_volumes (~> 0.1)
+      nutanix_clustermgmt (~> 0.1.0)
+      nutanix_vmm (~> 0.1.0)
+      nutanix_volumes (~> 0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openshift
@@ -518,10 +518,10 @@ GEM
     aws-sdk-cloudformation (1.143.0)
       aws-sdk-core (~> 3, >= 3.234.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-cloudwatch (1.124.0)
-      aws-sdk-core (~> 3, >= 3.234.0)
+    aws-sdk-cloudwatch (1.125.0)
+      aws-sdk-core (~> 3, >= 3.239.1)
       aws-sigv4 (~> 1.5)
-    aws-sdk-core (3.237.0)
+    aws-sdk-core (3.239.2)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
       aws-sigv4 (~> 1.9)
@@ -544,7 +544,7 @@ GEM
     aws-sdk-rds (1.297.0)
       aws-sdk-core (~> 3, >= 3.234.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-s3 (1.203.1)
+    aws-sdk-s3 (1.208.0)
       aws-sdk-core (~> 3, >= 3.234.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
@@ -602,7 +602,7 @@ GEM
     config (5.6.1)
       deep_merge (~> 1.2, >= 1.2.1)
       ostruct
-    connection_pool (2.5.4)
+    connection_pool (2.5.5)
     crack (1.0.1)
       bigdecimal
       rexml
@@ -1477,7 +1477,7 @@ DEPENDENCIES
   cgi (~> 0.4.2)
   color (~> 1.8)
   config (~> 5.1)
-  connection_pool
+  connection_pool (~> 2.5)
   cypress-on-rails (~> 1.20.0)
   dalli (~> 3.2.3)
   database_cleaner (~> 2.1)
