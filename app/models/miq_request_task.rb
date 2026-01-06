@@ -143,7 +143,7 @@ class MiqRequestTask < ApplicationRecord
     workflow_id = options[:configuration_script_payload_id]
     workflow    = ConfigurationScriptPayload.find(workflow_id) if workflow_id
     if workflow
-      miq_task_id = workflow.run(:inputs => workflow_inputs, :userid => get_user.userid, :zone => zone, :object => self)
+      miq_task_id = workflow.run(:inputs => workflow_inputs, :userid => get_user.userid, :zone => zone, :object => self, :execution_context => configuration_script_context)
 
       options[:miq_task_id]                     = miq_task_id
       options[:configuration_script_payload_id] = workflow.id
@@ -268,6 +268,10 @@ class MiqRequestTask < ApplicationRecord
 
   def workflow_inputs
     {:dialog => dialog_values}
+  end
+
+  def configuration_script_context
+    {}
   end
 
   def dialog_values
