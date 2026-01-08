@@ -162,11 +162,11 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-google
-  revision: 176b559c00383f696835f6d4c55ded9608b47a5b
+  revision: 22700539a3caee667be974bd07b2ca86b3d3edd6
   branch: radjabov
   specs:
     manageiq-providers-google (0.1.0)
-      fog-google (~> 1.23)
+      fog-google (~> 1.25)
       rbnacl (>= 3.2, < 5.0)
 
 GIT
@@ -686,14 +686,14 @@ GEM
       kubeclient (~> 4.7)
       optimist (~> 3.0)
       parslet (~> 2.0)
-    fog-core (2.4.0)
+    fog-core (2.5.0)
       builder
       excon (~> 0.71)
       formatador (>= 0.2, < 2.0)
       mime-types
-    fog-google (1.24.1)
+    fog-google (1.25.0)
       addressable (>= 2.7.0)
-      fog-core (< 2.5)
+      fog-core (~> 2.5)
       fog-json (~> 1.2)
       fog-xml (~> 0.1.0)
       google-apis-compute_v1 (~> 0.53)
@@ -1524,4 +1524,4 @@ RUBY VERSION
    ruby 3.3.6p108
 
 BUNDLED WITH
-   2.5.22
+   2.7.2
