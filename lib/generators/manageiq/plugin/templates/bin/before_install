@@ -18,3 +18,7 @@ elif [ ! -d "$spec_manageiq" ]; then
   echo "== Cloning manageiq sample app =="
   git clone https://github.com/ManageIQ/manageiq.git --branch master --depth 1 "$spec_manageiq"
 fi
+
+if [ -n "$CI" ]; then
+  $spec_manageiq/bin/ci/setup_plugin_gemfile_lock
+fi
