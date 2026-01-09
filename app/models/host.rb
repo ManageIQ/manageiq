@@ -23,6 +23,7 @@ class Host < ApplicationRecord
     "openstack_infra" => "OpenStack Infrastructure",
     "openshift_infra" => "OpenShift Virtualization",
     "ibm_power_hmc"   => "IBM Power HMC",
+    "proxmox"         => "Proxmox VE",
     "unknown"         => "Unknown",
     nil               => "Unknown",
   }.freeze
