@@ -56,6 +56,7 @@ class VmOrTemplate < ApplicationRecord
     "ibm_power_vc"    => "IBM PowerVC",
     "ibm_power_hmc"   => "IBM Power HMC",
     "ibm_z_vm"        => "IBM Z/VM",
+    "proxmox"         => "Proxmox VE",
     "unknown"         => "Unknown"
   }
 
