@@ -202,6 +202,10 @@ group :oracle_cloud, :manageiq_default do
   manageiq_plugin "manageiq-providers-oracle_cloud"
 end
 
+group :proxmox, :manageiq_default do
+  manageiq_plugin "manageiq-providers-proxmox"
+end
+
 group :redfish, :manageiq_default do
   manageiq_plugin "manageiq-providers-redfish"
 end
