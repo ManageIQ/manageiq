@@ -1,12 +1,12 @@
 #!/bin/bash
 
-PLUGIN_ROOT=$PWD
-APP_ROOT=$PLUGIN_ROOT/spec/manageiq
+ENGINE_ROOT=$PWD
+APP_ROOT=$ENGINE_ROOT/spec/manageiq
 
 # Gemfile.lock.release only applies to non-master branches and PRs to non-master branches
-if [[ "$GITHUB_REPOSITORY_OWNER" = "ManageIQ" && "$GITHUB_BASE_REF" != "master" && "$GITHUB_REF_NAME" != "master" && "$GITHUB_REF_NAME" != "revert-"* && "$GITHUB_REF_NAME" != "dependabot/"* &&    "$GITHUB_REF_NAME" != "renovate/"* ]]; then
+if [[ "$GITHUB_REPOSITORY_OWNER" = "ManageIQ" && "$GITHUB_BASE_REF" != "master" && "$GITHUB_REF_NAME" != "master" && "$GITHUB_REF_NAME" != "revert-"* && "$GITHUB_REF_NAME" != "dependabot/"* && "$GITHUB_REF_NAME" != "renovate/"* ]]; then
   echo "== Copying Gemfile.lock.release =="
-  cp -f "$APP_ROOT/Gemfile.lock.release" "$PLUGIN_ROOT/Gemfile.lock"
+  cp -f "$APP_ROOT/Gemfile.lock.release" "$ENGINE_ROOT/Gemfile.lock"
   echo "== Patching Gemfile.lock for plugin =="
   $APP_ROOT/bin/ci/patch_plugin_gemfile_lock
   echo
