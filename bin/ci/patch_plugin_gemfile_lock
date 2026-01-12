@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+gemfile_lock_release = File.read("Gemfile.lock")
+gemfile_lock_release.gsub!(/GIT\n  remote: #{ENV["GITHUB_SERVER_URL"]}\/#{ENV["GITHUB_REPOSITORY"]}\n  revision: .+\n  branch: .+/, "PATH\n  remote: .\n")
+File.write("Gemfile.lock", gemfile_lock_release)
