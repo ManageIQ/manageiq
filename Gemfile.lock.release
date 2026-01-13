@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/ManageIQ/amazon_ssa_support.git
   revision: 668f482d1ef757eb42f56143050d296aeb81e9a3
-  tag: spassky-1
+  branch: spassky
   specs:
     amazon_ssa_support (0.1.0)
       activesupport (>= 6.1.7)
@@ -14,7 +14,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-api
   revision: a6fdd7cbbad42411277212d1f3bc25a111e104ac
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-api (4.4.0.pre.pre)
       config
@@ -23,7 +23,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-automation_engine
   revision: e64a2e2f792cd47ab1a806ad71c9c50aa8a4402c
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-automation_engine (0.1.0)
       drb
@@ -32,7 +32,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-consumption
   revision: 1f6b67e2f22c9c991815592d50c0db4a46a6f4a3
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-consumption (0.0.1)
       hashdiff (~> 1.0)
@@ -41,7 +41,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-content
   revision: c23427968111a585e2d4540d4e04f9570551259d
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-content (0.1.0)
       savon (~> 2.11.1)
@@ -49,14 +49,14 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-decorators
   revision: 7f51265b7590bb92e9bd2c2ced8e216104e2550f
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-decorators (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-gems-pending.git
   revision: 65bbc15f930c91b40e63c215d135f83b19da11e0
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-gems-pending (0.1.0)
       activesupport (>= 6.0)
@@ -76,7 +76,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-amazon
   revision: aaccb2a9da0dca2b5f03f74009b692728bd3f9d2
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-amazon (0.1.0)
       aws-sdk-cloudformation (~> 1.0)
@@ -95,7 +95,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ansible_tower
   revision: 6f4becf28ebb56a230b6c5d126161c19036c6285
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-ansible_tower (0.1.0)
       ansible_tower_client (~> 0.20, >= 0.21.2)
@@ -103,7 +103,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-autosde
   revision: 363154e851aad72a2ac8acc16c2661631ee668ca
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-autosde (0.1.0)
       autosde_openapi_client (~> 3.2.0)
@@ -112,7 +112,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-awx
   revision: b9305ce225c1af67f5718cd59baabe5ea805d983
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-awx (0.1.0)
       ansible_tower_client (~> 0.20, >= 0.21.2)
@@ -120,7 +120,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure
   revision: 480f8c34c4a17d9141394d133b59a74f20a0d5d8
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-azure (0.1.0)
       azure-armrest (~> 0.14)
@@ -128,7 +128,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure_stack
   revision: 9707a7df5e862f6ce6f389457bedce1ba65fc153
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-azure_stack (0.1.0)
       azure_mgmt_compute (~> 0.22.0.1)
@@ -139,7 +139,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-cisco_intersight
   revision: 3349cbfa931c7edee4510852c883539f854dda26
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-cisco_intersight (0.1.0)
       intersight_client (~> 0.1, >= 0.1.5)
@@ -147,7 +147,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-embedded_terraform
   revision: 1ff150f7b999a4e6b554398df00ed3f30f315d62
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-embedded_terraform (0.1.0)
       jwt (~> 2.2)
@@ -155,7 +155,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-foreman
   revision: d9b6636c9570e6a1620e556743e1ff2f487608e5
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-foreman (0.1.0)
       foreman_api_client (~> 1.1)
@@ -163,7 +163,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-google
   revision: 9f151112d50a943bf0bb9d35c71d16c00365cab7
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-google (0.1.0)
       fog-google (~> 1.25)
@@ -172,14 +172,14 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_cic
   revision: c15615765ee9b5cf44f40e30be6be793a09b5640
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-ibm_cic (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_cloud
   revision: 36653bca1e09161ea6e6628d11e0a38e0a884749
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-ibm_cloud (0.1.0)
       ibm-cloud-sdk (~> 0.1)
@@ -197,7 +197,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_power_hmc
   revision: ad17b42bfe84356d3e7be5b01f6f8eee07546d28
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-ibm_power_hmc (0.1.0)
       ibm_power_hmc (~> 0.25.0)
@@ -205,21 +205,21 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_power_vc
   revision: 40e39e18cf96da6daa6cea59e7f85cca75244843
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-ibm_power_vc (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_terraform
   revision: d77d93a8b8b88363f0337653040cea759a2c8745
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-ibm_terraform (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubernetes
   revision: 0eeb7d32f1dc3d817c38e49233fd9f49b3cb516f
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-kubernetes (0.1.0)
       image-inspector-client (~> 2.0)
@@ -230,7 +230,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubevirt
   revision: db58c81a5e1550f0d42878f577d7f7ad93a0bba2
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-kubevirt (0.1.0)
       kubevirt (~> 0.1.0)
@@ -239,7 +239,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-lenovo
   revision: 6c5431f31b095e1ec12b673fdab540b0c94b82ad
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-lenovo (0.2.0)
       xclarity_client (~> 0.6.0)
@@ -247,14 +247,14 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nsxt
   revision: f66c9779fc672dca8b50f27cd6d97081669ad0eb
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-nsxt (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nuage
   revision: 6500c66cfe07320fd71c538ed0519832385e95cc
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-nuage (0.1.0)
       excon (~> 0.71)
@@ -262,7 +262,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nutanix
   revision: 8fe1bda4bd4b367bda25b3611477ce75bad227bf
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-nutanix (0.1.0)
       nutanix_clustermgmt (~> 0.1.0)
@@ -272,7 +272,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openshift
   revision: ec8a8cd64c552bb2d9ef017ae497a81806ee1ffa
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-openshift (0.1.0)
       manageiq-providers-kubernetes (~> 0.1.0)
@@ -280,7 +280,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openstack
   revision: 769db197a23e80125f7b5595f1e460cdccf17a89
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-openstack (0.1.0)
       activesupport (>= 6.0)
@@ -293,7 +293,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-oracle_cloud
   revision: bee276860655ff144c9c645e572f1629091c263e
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-oracle_cloud (0.1.0)
       oci (~> 2.19.0)
@@ -301,7 +301,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ovirt
   revision: 19baf0b280416b83025ea9c74fd1f8745ef064e8
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-ovirt (0.1.0)
       ovirt-engine-sdk (~> 4.6.1)
@@ -310,7 +310,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-red_hat_virtualization
   revision: 0e15c2c6c48cc3ef2c30b362803c43a66a7acba2
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-red_hat_virtualization (0.1.0)
       manageiq-providers-ovirt
@@ -318,7 +318,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-redfish
   revision: 42d0e8443af53f122798192940974fa5394966c0
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-redfish (0.1.0)
       redfish_client (~> 0.5.1)
@@ -326,7 +326,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-terraform_enterprise
   revision: c5667be397fee7ed8d265450c70e6ac0e6d88709
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-terraform_enterprise (0.1.0)
       faraday (> 1.0, < 3.0)
@@ -334,7 +334,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-vmware
   revision: 3a5221b32c0e85d0725bee1257e2473fb6cb1c38
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-vmware (0.1.0)
       ffi-vix_disk_lib (~> 1.4)
@@ -346,7 +346,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-workflows
   revision: e18ad90ccf887bf7a155f9387004aef282837b9d
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-providers-workflows (0.1.0)
       floe (~> 0.18.0)
@@ -354,7 +354,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-schema
   revision: 156d69192f4f51d040d74dff286725d7e2aa689e
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-schema (0.1.0)
       activerecord-id_regions (~> 0.5.0)
@@ -368,7 +368,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-ui-classic
   revision: 7229f07a989ec63f32c97a3b61d2717546e06375
-  tag: spassky-1
+  branch: spassky
   specs:
     manageiq-ui-classic (0.1.0)
       execjs (= 2.8.1)
