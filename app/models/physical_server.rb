@@ -37,7 +37,7 @@ class PhysicalServer < ApplicationRecord
 
   virtual_column :v_availability, :type => :string, :uses => :host
   virtual_column :v_host_os, :type => :string, :uses => :host
-  virtual_delegate :emstype, :to => "ext_management_system", :allow_nil => true, :type => :string
+  virtual_attribute :emstype, :string, :through => :ext_management_system, :source => :emstype
 
   delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
 

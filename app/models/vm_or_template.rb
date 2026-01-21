@@ -188,17 +188,19 @@ class VmOrTemplate < ApplicationRecord
   virtual_has_one   :service,              :class_name => 'Service'
   virtual_has_one   :parent_resource,      :class_name => "VmOrTemplate"
 
-  virtual_delegate :name, :to => :host, :prefix => true, :allow_nil => true, :type => :string
-  virtual_delegate :name, :to => :storage, :prefix => true, :allow_nil => true, :type => :string
-  virtual_delegate :name, :to => :ems_cluster, :prefix => true, :allow_nil => true, :type => :string
-  virtual_delegate :vmm_product, :to => :host, :prefix => :v_host, :allow_nil => true, :type => :string
-  virtual_delegate :v_pct_free_disk_space, :v_pct_used_disk_space, :to => :hardware, :allow_nil => true, :type => :float
-  virtual_delegate :num_cpu, :to => "hardware.cpu_sockets", :allow_nil => true, :default => 0, :type => :integer
-  virtual_delegate :cpu_total_cores, :cpu_cores_per_socket, :to => :hardware, :allow_nil => true, :default => 0, :type => :integer
-  virtual_delegate :annotation, :to => :hardware, :prefix => "v", :allow_nil => true, :type => :string
-  virtual_delegate :ram_size_in_bytes,                  :to => :hardware, :allow_nil => true, :default => 0, :type => :integer
-  virtual_delegate :mem_cpu,                            :to => "hardware.memory_mb", :allow_nil => true, :default => 0, :type => :integer
-  virtual_delegate :ram_size,                           :to => "hardware.memory_mb", :allow_nil => true, :default => 0, :type => :integer
+  virtual_attribute :host_name, :string, :through => :host, :source => :name
+  virtual_attribute :storage_name, :string, :through => :storage, :source => :name
+  virtual_attribute :ems_cluster_name, :string, :through => :ems_cluster, :source => :name
+  virtual_attribute :v_host_vmm_product, :string, :through => :host, :source => :vmm_product
+  virtual_attribute :v_pct_free_disk_space, :float, :through => :hardware, :source => :v_pct_free_disk_space
+  virtual_attribute :v_pct_used_disk_space, :float, :through => :hardware, :source => :v_pct_used_disk_space
+  virtual_attribute :num_cpu, :integer, :through => :hardware, :source => :cpu_sockets, :default => 0
+  virtual_attribute :cpu_total_cores, :integer, :through => :hardware, :source => :cpu_total_cores, :default => 0
+  virtual_attribute :cpu_cores_per_socket, :integer, :through => :hardware, :source => :cpu_cores_per_socket, :default => 0
+  virtual_attribute :v_annotation, :string, :through => :hardware, :source => :annotation
+  virtual_attribute :ram_size_in_bytes, :integer, :through => :hardware, :source => :ram_size_in_bytes, :default => 0
+  virtual_attribute :mem_cpu, :integer, :through => :hardware, :source => :memory_mb, :default => 0
+  virtual_attribute :ram_size, :integer, :through => :hardware, :source => :memory_mb, :default => 0
 
   delegate :connect_lans, :disconnect_lans, :to => :hardware, :allow_nil => true
   delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
@@ -1411,12 +1413,12 @@ class VmOrTemplate < ApplicationRecord
   # Hardware Disks/Memory storage methods
   #
 
-  virtual_delegate :allocated_disk_storage, :used_disk_storage,
-                   :to => :hardware, :allow_nil => true, :uses => {:hardware => :disks}, :type => :integer
+  virtual_attribute :allocated_disk_storage, :integer, :uses => {:hardware => :disks}, :through => :hardware, :source => :allocated_disk_storage
+  virtual_attribute :used_disk_storage, :integer, :uses => {:hardware => :disks}, :through => :hardware, :source => :used_disk_storage
 
-  virtual_delegate :provisioned_storage, :to => :hardware, :allow_nil => true, :default => 0, :type => :integer
-  virtual_delegate :num_disks, :to => :hardware, :allow_nil => true, :default => 0, :type => :integer, :uses => {:hardware => :disks}
-  virtual_delegate :num_hard_disks, :to => :hardware, :allow_nil => true, :default => 0, :type => :integer, :uses => {:hardware => :hard_disks}
+  virtual_attribute :provisioned_storage, :integer, :through => :hardware, :source => :provisioned_storage, :default => 0
+  virtual_attribute :num_disks, :integer, :uses => {:hardware => :disks}, :through => :hardware, :source => :num_disks, :default => 0
+  virtual_attribute :num_hard_disks, :integer, :uses => {:hardware => :hard_disks}, :through => :hardware, :source => :num_hard_disks, :default => 0
 
   def used_storage
     used_disk_storage.to_i + ram_size_in_bytes

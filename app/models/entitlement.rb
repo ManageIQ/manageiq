@@ -7,7 +7,7 @@ class Entitlement < ApplicationRecord
 
   validate :one_kind_of_managed_filter
 
-  virtual_delegate :name, :to => :miq_user_role, :allow_nil => true, :prefix => true, :type => :string
+  virtual_attribute :miq_user_role_name, :string, :through => :miq_user_role, :source => :name
 
   def self.valid_filters?(filters_hash)
     return true  unless filters_hash                  # nil ok
