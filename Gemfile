@@ -84,10 +84,9 @@ gem "wim_parser",                       "~>1.0",             :require => false
 
 # gems to resolve security issues
 gem "cgi",  "~> 0.4.2"  # CVE-2025-27219: https://github.com/advisories/GHSA-gh9q-2xrm-x6qv
+gem "thor", ">= 1.4.0"  # CVE-2025-54314: https://github.com/advisories/GHSA-mqcp-p2hv-vw6x
 gem "time", "~> 0.2.2"  # CVE-2023-28756: https://github.com/advisories/GHSA-fg7x-g82r-94qc; ruby 3.1.4+
-gem "uri",  "~> 0.13.3" # CVE-2025-61594: https://www.ruby-lang.org/en/news/2025/10/07/uri-cve-2025-61594/
-                        # Avoid URI 1.0.0 for now due to: https://github.com/ruby/uri/issues/125
-gem "thor", ">= 1.4.0"   # CVE-2025-54314: https://github.com/advisories/GHSA-mqcp-p2hv-vw6x
+gem "uri",  "~> 1.0.4"  # CVE-2025-61594: https://www.ruby-lang.org/en/news/2025/10/07/uri-cve-2025-61594/
 
 # Custom gem that replaces mime-types in order to redirect mime-types calls to mini_mime
 #   Source is located at https://github.com/ManageIQ/mime-types-redirector
