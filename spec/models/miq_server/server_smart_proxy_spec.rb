@@ -4,12 +4,16 @@ RSpec.describe "MiqServer::ServerSmartProxy" do
 
   describe "#is_vix_disk?" do
     it "is false without the smartproxy role" do
-      server.update(:has_vix_disk_lib => true)
+      server.capabilities["vix_disk_lib"] = true
+      server.save!
+
       expect(server.is_vix_disk?).to be_falsey
     end
 
     it "is true with smartproxy and vix disk lib" do
-      server.update(:has_vix_disk_lib => true)
+      server.capabilities["vix_disk_lib"] = true
+      server.save!
+
       server.role = "smartproxy"
       server.assigned_server_roles.update(:active => true)
 

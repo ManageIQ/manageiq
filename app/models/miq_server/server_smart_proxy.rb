@@ -14,7 +14,7 @@ module MiqServer::ServerSmartProxy
   end
 
   def is_vix_disk?
-    has_vix_disk_lib? && has_active_role?(:SmartProxy)
+    !!capabilities["vix_disk_lib"] && has_active_role?(:SmartProxy)
   end
 
   def vm_scan_host_affinity?
@@ -89,7 +89,7 @@ module MiqServer::ServerSmartProxy
       ost.config = OpenStruct.new(
         :vmdb               => true,
         :forceFleeceDefault => true,
-        :capabilities       => {:vixDisk => has_vix_disk_lib?}
+        :capabilities       => {:vixDisk => capabilities["vix_disk_lib"]}
       )
 
       target.perform_metadata_scan(ost)
