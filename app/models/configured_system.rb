@@ -35,12 +35,12 @@ class ConfiguredSystem < ApplicationRecord
   delegate :name, :to => :operating_system_flavor,       :prefix => true, :allow_nil => true
   delegate :name, :to => :provider,                      :prefix => true, :allow_nil => true
   delegate :name, :to => :orchestration_stack,           :prefix => true, :allow_nil => true
-  virtual_delegate :name, :to => :inventory_root_group, :prefix => true, :allow_nil => true, :type => :string
+  virtual_attribute :inventory_root_group_name, :string, :through => :inventory_root_group, :source => :name
   delegate :my_zone, :provider, :zone, :to => :manager
   delegate :queue_name_for_ems_operations, :to => :manager, :allow_nil => true
 
-  virtual_delegate :cpu_total_cores, :to => :hardware, :allow_nil => true, :default => 0, :type => :integer
-  virtual_delegate :ram_size, :to => "hardware.memory_mb", :allow_nil => true, :default => 0, :type => :integer
+  virtual_attribute :cpu_total_cores, :integer, :through => :hardware, :source => :cpu_total_cores, :default => 0
+  virtual_attribute :ram_size, :integer, :through => :hardware, :source => :memory_mb, :default => 0
 
   virtual_column  :my_zone,                            :type => :string
   virtual_column  :configuration_architecture_name,    :type => :string

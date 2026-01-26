@@ -50,7 +50,7 @@ if defined?(RSpec)
     end
 
     task :setup_db => [:initialize, :setup_region] do
-      reset_task = defined?(ENGINE_ROOT) ? 'app:evm:db:reset' : 'evm:db:reset'
+      reset_task = defined?(ENGINE_ROOT) ? 'app:db:migrate:reset' : 'db:migrate:reset'
       Rake::Task[reset_task].invoke
     end
 

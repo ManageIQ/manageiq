@@ -59,11 +59,7 @@ module AuthenticationMixin
              :inverse_of => :resource,
              :class_name => "Authentication"
 
-    virtual_delegate :authentication_status,
-                     :to        => "authentication_status_severity_level.status",
-                     :default   => "None",
-                     :type      => :string,
-                     :allow_nil => true
+    virtual_attribute :authentication_status, :string, :through => :authentication_status_severity_level, :source => :status, :default => "None"
 
     def self.authentication_check_schedule
       zone = MiqServer.my_server.zone

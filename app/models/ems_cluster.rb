@@ -49,7 +49,7 @@ class EmsCluster < ApplicationRecord
   include FilterableMixin
 
   include DriftStateMixin
-  virtual_delegate :last_scan_on, :to => "last_drift_state_timestamp_rec.timestamp", :allow_nil => true, :type => :datetime
+  virtual_attribute :last_scan_on, :datetime, :through => :last_drift_state_timestamp_rec, :source => :timestamp
 
   include RelationshipMixin
   self.default_relationship_type = "ems_metadata"

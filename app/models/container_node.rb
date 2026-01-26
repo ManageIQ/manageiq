@@ -48,8 +48,8 @@ class ContainerNode < ApplicationRecord
   delegate :my_zone, :to => :ext_management_system, :allow_nil => true
 
   virtual_column :ready_condition_status, :type => :string, :uses => :container_conditions
-  virtual_delegate :system_distribution, :to => "operating_system.distribution", :allow_nil => true, :type => :string
-  virtual_delegate :kernel_version, :to => :operating_system, :allow_nil => true, :type => :string
+  virtual_attribute :system_distribution, :string, :through => :operating_system, :source => :distribution
+  virtual_attribute :kernel_version, :string, :through => :operating_system, :source => :kernel_version
 
   def ready_condition_status
     ready_condition.try(:status) || 'None'

@@ -30,7 +30,7 @@ class MiqServer < ApplicationRecord
   scope :active_miq_servers, -> { where(:status => STATUSES_ACTIVE) }
   scope :recently_active,    -> { where(:last_heartbeat => 10.minutes.ago.utc..) }
   scope :with_zone_id, ->(zone_id) { where(:zone_id => zone_id) }
-  virtual_delegate :description, :to => :zone, :prefix => true, :allow_nil => true, :type => :string
+  virtual_attribute :zone_description, :string, :through => :zone, :source => :description
 
   validate :validate_zone_not_maintenance?
   validate :zone_unchanged_in_pods, :on => :update
