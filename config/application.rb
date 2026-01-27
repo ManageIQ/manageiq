@@ -111,9 +111,9 @@ module Vmdb
 
     config.autoload_paths += config.eager_load_paths
 
-    # FYI, this is where load_defaults is defined as of 7.2:
-    # https://github.com/rails/rails/blob/d437ae311f1b9dc40b442e40eb602e020cec4e49/railties/lib/rails/application/configuration.rb#L92
-    config.load_defaults 7.2
+    # FYI, this is where load_defaults is defined as of 8.0:
+    # https://github.com/rails/rails/blob/624fe3cdb9ab774ff598af29f408425178da6677/railties/lib/rails/application/configuration.rb#L337-L348
+    config.load_defaults 8.0
     # ensure MiqReport#extras will marshal/dump back out. 7.1 is default (and has better performance)
     # See for probable culprit https://www.github.com/rails/rails/pull/47747
     config.active_record.marshalling_format_version = 6.1
