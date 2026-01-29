@@ -52,7 +52,7 @@ class ManageIQ::Providers::InfraManager::ProvisionWorkflow < MiqProvisionVirtWor
     if result[:folder_id].nil?
       add_target(:placement_dc_name, :datacenter, EmsFolder, result)
     else
-      result[:datacenter] = find_datacenter_for_ci(result[:folder], get_ems_metadata_tree(result))
+      result[:datacenter] = find_datacenter_for_ci(result[:folder], get_ems_metadata_tree(result)) unless result[:folder].nil?
       result[:datacenter_id] = result[:datacenter].id unless result[:datacenter].nil?
     end
 
