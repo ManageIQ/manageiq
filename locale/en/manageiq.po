@@ -2086,6 +2086,12 @@ msgstr ""
 msgid "AWX"
 msgstr ""
 
+msgid "AWX (deprecated)"
+msgstr ""
+
+msgid "AWX Job Template Provision"
+msgstr ""
+
 msgid "AWX Provider"
 msgstr ""
 
@@ -4179,6 +4185,9 @@ msgstr ""
 msgid "Ansible Automation Platform"
 msgstr ""
 
+msgid "Ansible Automation Platform (deprecated)"
+msgstr ""
+
 msgid "Ansible Automation Platform Provider"
 msgstr ""
 
@@ -4201,6 +4210,9 @@ msgid "Ansible Tower Job"
 msgstr ""
 
 msgid "Ansible Tower Job Template"
+msgstr ""
+
+msgid "Ansible Tower Job Template Provision"
 msgstr ""
 
 msgid "Ansible Tower Jobs"
@@ -6200,12 +6212,6 @@ msgid "By Host"
 msgstr ""
 
 msgid "By Role"
-msgstr ""
-
-msgid "By Username %{username} %{created_on}"
-msgstr ""
-
-msgid "By Username %{username} %{updated_on}"
 msgstr ""
 
 msgid "C & U Collection"
@@ -13247,6 +13253,9 @@ msgid "Create new Snapshots"
 msgstr ""
 
 msgid "Created"
+msgstr ""
+
+msgid "Created By"
 msgstr ""
 
 msgid "Created On"
@@ -26352,6 +26361,12 @@ msgstr ""
 msgid "Last Updated"
 msgstr ""
 
+msgid "Last Updated By"
+msgstr ""
+
+msgid "Last Updated On"
+msgstr ""
+
 msgid "Last Valid On"
 msgstr ""
 
@@ -31272,6 +31287,9 @@ msgstr ""
 msgid "MiqServer|Build"
 msgstr ""
 
+msgid "MiqServer|Capabilities"
+msgstr ""
+
 msgid "MiqServer|Cpu time"
 msgstr ""
 
@@ -31294,9 +31312,6 @@ msgid "MiqServer|Has active webservices"
 msgstr ""
 
 msgid "MiqServer|Has policies"
-msgstr ""
-
-msgid "MiqServer|Has vix disk lib"
 msgstr ""
 
 msgid "MiqServer|Hostname"
@@ -34888,6 +34903,9 @@ msgid "Orchestration Stack"
 msgstr ""
 
 msgid "Orchestration Stack %{subject} has been retired."
+msgstr ""
+
+msgid "Orchestration Stack %{subject} has started retirement."
 msgstr ""
 
 #, fuzzy
