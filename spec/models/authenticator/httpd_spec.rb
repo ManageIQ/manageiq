@@ -93,12 +93,17 @@ RSpec.describe Authenticator::Httpd do
       {
         'X-Remote-User'           => 'cheshire',
         'X-Remote-User-FullName'  => 'Cheshire Cat',
-        'X-Remote-User-FirstName' => 'Chechire',
+        'X-Remote-User-FirstName' => 'Cheshire',
         'X-Remote-User-LastName'  => 'Cat',
         'X-Remote-User-Email'     => 'cheshire@example.com',
         'X-Remote-User-Domain'    => 'example.com',
         'X-Remote-User-Groups'    => 'wibble@fqdn:bubble@fqdn',
       }
+    end
+
+    it "finds the user based on the downcased X-Remote-User-Principal header" do
+      headers['X-Remote-User-Principal'] = 'cheshire@EXAMPLE.COM'
+      expect(subject.lookup_by_identity('baduser', request)).to eq(cheshire)
     end
 
     it "Handles missing request parameter" do
@@ -644,7 +649,7 @@ RSpec.describe Authenticator::Httpd do
         end
       end
 
-      describe ".user_attrs_from_external_directory_via_dbus" do
+      context "with dbus mocks" do
         let(:ifp_interface) { double('ifp_interface') }
         before do
           require "dbus"
@@ -659,28 +664,73 @@ RSpec.describe Authenticator::Httpd do
           allow(ifp_object).to receive(:[]).with("org.freedesktop.sssd.infopipe").and_return(ifp_interface)
         end
 
-        it "should return nil for unspecified user" do
-          expect(subject.send(:user_attrs_from_external_directory_via_dbus, nil)).to be_nil
+        describe ".user_attrs_from_external_directory_via_dbus" do
+          it "should return nil for unspecified user" do
+            expect(subject.send(:user_attrs_from_external_directory_via_dbus, nil)).to be_nil
+          end
+
+          it "should return user attributes hash for valid user" do
+            requested_attrs = %w[mail givenname sn displayname domainname krbPrincipalName]
+
+            jdoe_attrs = [{"mail"             => ["jdoe@example.com"],
+                          "givenname"        => ["John"],
+                          "sn"               => ["Doe"],
+                          "displayname"      => ["John Doe"],
+                          "domainname"       => ["ipa.test"],
+                          "krbPrincipalName" => ["jdoe@IPA.TEST"]}]
+
+            expected_jdoe_attrs = {"mail"             => "jdoe@example.com",
+                                  "givenname"        => "John",
+                                  "sn"               => "Doe",
+                                  "displayname"      => "John Doe",
+                                  "domainname"       => "ipa.test",
+                                  "krbPrincipalName" => "jdoe@IPA.TEST"}
+
+            allow(ifp_interface).to receive(:GetUserAttr).with('jdoe', requested_attrs).and_return(jdoe_attrs)
+
+            result = subject.send(:user_attrs_from_external_directory_via_dbus, 'jdoe')
+            expect(result).to eq(expected_jdoe_attrs)
+          end
+
+          it "should handle missing krbPrincipalName gracefully" do
+            requested_attrs = %w[mail givenname sn displayname domainname krbPrincipalName]
+
+            jdoe_attrs = [{"mail"        => ["jdoe@example.com"],
+                          "givenname"   => ["John"],
+                          "sn"          => ["Doe"],
+                          "displayname" => ["John Doe"],
+                          "domainname"  => ["ipa.test"]}]
+
+            expected_jdoe_attrs = {"mail"             => "jdoe@example.com",
+                                  "givenname"        => "John",
+                                  "sn"               => "Doe",
+                                  "displayname"      => "John Doe",
+                                  "domainname"       => "ipa.test",
+                                  "krbPrincipalName" => nil}
+
+            allow(ifp_interface).to receive(:GetUserAttr).with('jdoe', requested_attrs).and_return(jdoe_attrs)
+
+            expect(subject.send(:user_attrs_from_external_directory_via_dbus, 'jdoe')).to eq(expected_jdoe_attrs)
+          end
         end
 
-        it "should return user attributes hash for valid user" do
-          requested_attrs = %w[mail givenname sn displayname domainname]
+        describe "#user_details_from_external_directory" do
+          it "should normalize krbPrincipalName when present" do
+            requested_attrs = %w[mail givenname sn displayname domainname krbPrincipalName]
 
-          jdoe_attrs = [{"mail"        => ["jdoe@example.com"],
-                         "givenname"   => ["John"],
-                         "sn"          => ["Doe"],
-                         "displayname" => ["John Doe"],
-                         "domainname"  => ["example.com"]}]
+            jdoe_attrs = [{"mail"             => ["jdoe@example.com"],
+                          "givenname"        => ["John"],
+                          "sn"               => ["Doe"],
+                          "displayname"      => ["John Doe"],
+                          "domainname"       => ["ipa.test"],
+                          "krbPrincipalName" => ["jdoe@IPA.TEST"]}]
 
-          expected_jdoe_attrs = {"mail"        => "jdoe@example.com",
-                                 "givenname"   => "John",
-                                 "sn"          => "Doe",
-                                 "displayname" => "John Doe",
-                                 "domainname"  => "example.com"}
+            allow(ifp_interface).to receive(:GetUserAttr).with('jdoe', requested_attrs).and_return(jdoe_attrs)
+            allow(MiqGroup).to receive(:get_httpd_groups_by_user).with('jdoe').and_return([])
 
-          allow(ifp_interface).to receive(:GetUserAttr).with('jdoe', requested_attrs).and_return(jdoe_attrs)
-
-          expect(subject.send(:user_attrs_from_external_directory_via_dbus, 'jdoe')).to eq(expected_jdoe_attrs)
+            user_attrs, _groups = subject.send(:user_details_from_external_directory, 'jdoe')
+            expect(user_attrs[:username]).to eq("jdoe@ipa.test")
+          end
         end
       end
     end
