@@ -1,0 +1,3 @@
+Style/GlobalVars:
+  AllowedVariables:
+  - $<%= plugin_short_name %>_log
