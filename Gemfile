@@ -84,6 +84,7 @@ gem "wim_parser",                       "~>1.0",             :require => false
 
 # gems to resolve security issues
 gem "cgi",  "~> 0.5"
+gem "faraday", "~> 2.14", ">= 2.14.1" # CVE-2026-25765: https://github.com/advisories/GHSA-33mh-2634-fwr2
 gem "time", "~> 0.2.2"  # CVE-2023-28756: https://github.com/advisories/GHSA-fg7x-g82r-94qc; ruby 3.1.4+
 gem "uri",  "~> 0.13.3" # CVE-2025-61594: https://www.ruby-lang.org/en/news/2025/10/07/uri-cve-2025-61594/
                         # Avoid URI 1.0.0 for now due to: https://github.com/ruby/uri/issues/125
