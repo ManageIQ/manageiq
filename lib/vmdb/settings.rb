@@ -52,6 +52,10 @@ module Vmdb
       validator(settings).validate
     end
 
+    def self.validate_and_notify_for_resource(settings = ::Settings, resource)
+      validator(settings).validate_and_notify_for_resource(resource)
+    end
+
     def self.valid?
       validator.valid?
     end
@@ -60,7 +64,7 @@ module Vmdb
       new_settings = build_without_local(resource).load!.merge!(hash.deep_symbolize_keys).to_hash
       replace_magic_values!(new_settings, resource)
 
-      valid, errors = validate(new_settings)
+      valid, errors = validate_and_notify_for_resource(new_settings, resource)
       raise ConfigurationInvalid.new(errors) unless valid # rubocop:disable Style/RaiseArgs
 
       parent_settings = parent_settings_without_local(resource).load!.to_hash
