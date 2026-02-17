@@ -14,7 +14,7 @@ label VMware ESXi 4.1-260247
    menu label VMware ESXi 4.1-260247
    menu default
    kernel VMware-VMvisor-Installer-4.1.0-260247/mboot.c32
-   append VMware-VMvisor-Installer-4.1.0-260247/vmkboot.gz ks=http://192.168.252.60/ks.cfg --- VMware-VMvisor-Installer-4.1.0-260247/vmkernel.gz --- VMware-VMvisor-Installer-4.1.0-260247/sys.vgz --- VMware-VMvisor-Installer-4.1.0-260247/cim.vgz --- VMware-VMvisor-Installer-4.1.0-260247/ienviron.vgz --- VMware-VMvisor-Installer-4.1.0-260247/install.vgz
+   append VMware-VMvisor-Installer-4.1.0-260247/vmkboot.gz inst.ks=http://192.168.252.60/ks.cfg --- VMware-VMvisor-Installer-4.1.0-260247/vmkernel.gz --- VMware-VMvisor-Installer-4.1.0-260247/sys.vgz --- VMware-VMvisor-Installer-4.1.0-260247/cim.vgz --- VMware-VMvisor-Installer-4.1.0-260247/ienviron.vgz --- VMware-VMvisor-Installer-4.1.0-260247/install.vgz
 
 label Ubuntu-10.10-Desktop-i386-LIVE_BOOT
    menu label Ubuntu-10.10-Desktop-i386-LIVE_BOOT
