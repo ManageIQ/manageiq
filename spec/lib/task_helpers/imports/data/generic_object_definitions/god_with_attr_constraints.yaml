@@ -1,0 +1,104 @@
+---
+- GenericObjectDefinition:
+    name: ProductDefinition
+    description: Product definition with comprehensive attribute constraints
+    properties:
+      :attributes:
+        name: :string
+        description: :string
+        sku: :string
+        email: :string
+        status: :string
+        priority: :integer
+        quantity: :integer
+        price: :float
+        discount: :float
+        is_active: :boolean
+        created_at: :datetime
+        updated_at: :datetime
+        scheduled_time: :time
+        settings: :hash
+        metadata: :hash
+        labels: :array
+        categories: :array
+      :attribute_constraints:
+        name:
+          :required: true
+          :min_length: 3
+          :max_length: 100
+        description:
+          :min_length: 10
+          :max_length: 500
+          :default: "No description provided"
+        sku:
+          :required: true
+          :format: !ruby/regexp '/\A[A-Z]{3}-\d{6}\z/'
+        email:
+          :format: !ruby/regexp '/\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i'
+        status:
+          :required: true
+          :enum:
+          - active
+          - inactive
+          - pending
+          - archived
+          :default: pending
+        priority:
+          :required: true
+          :enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          :default: 3
+        quantity:
+          :min: 0
+          :max: 10000
+          :default: 0
+        price:
+          :required: true
+          :min: 0.0
+          :max: 999999.99
+        discount:
+          :min: 0.0
+          :max: 100.0
+          :default: 0.0
+        is_active:
+          :required: true
+          :default: true
+        settings:
+          :required: true
+          :required_keys:
+          - theme
+          - language
+          :allowed_keys:
+          - theme
+          - language
+          - timezone
+          - notifications
+          :default:
+            theme: light
+            language: en
+        metadata:
+          :default: {}
+        labels:
+          :required: true
+          :min_items: 1
+          :max_items: 10
+          :unique_items: true
+          :default:
+          - untagged
+        categories:
+          :min_items: 0
+          :max_items: 5
+          :default: []
+      :associations:
+        vms: Vm
+        cloud_tenant: CloudTenant
+      :methods:
+      - calculate_total
+      - apply_discount
+      - validate_stock
+
+# Made with Bob
