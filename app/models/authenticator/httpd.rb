@@ -135,7 +135,7 @@ module Authenticator
 
     def user_details_from_external_directory(username)
       ext_user_attrs = user_attrs_from_external_directory(username)
-      principal_username = ext_user_attrs["krbPrincipalName"] && normalize_username(ext_user_attrs["krbPrincipalName"])
+      principal_username = ext_user_attrs["krbPrincipalName"].presence && normalize_username(ext_user_attrs["krbPrincipalName"])
       user_attrs = {:username  => principal_username || username,
                     :fullname  => ext_user_attrs["displayname"],
                     :firstname => ext_user_attrs["givenname"],
@@ -156,7 +156,7 @@ module Authenticator
 
       delimiter  = self.class.group_delimiter || user_headers['X-REMOTE-USER-GROUP-DELIMITER'].presence || /[;:,]/
       groups     = CGI.unescape(user_headers['X-REMOTE-USER-GROUPS'] || '').split(delimiter)
-      principal_username = user_headers['X-REMOTE-USER-PRINCIPAL'] && normalize_username(user_headers['X-REMOTE-USER-PRINCIPAL'])
+      principal_username = user_headers['X-REMOTE-USER-PRINCIPAL'].presence && normalize_username(user_headers['X-REMOTE-USER-PRINCIPAL'])
       user_attrs = {:username  => principal_username || username,
                     :fullname  => user_headers['X-REMOTE-USER-FULLNAME'],
                     :firstname => user_headers['X-REMOTE-USER-FIRSTNAME'],
