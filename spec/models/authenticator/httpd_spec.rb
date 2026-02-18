@@ -106,6 +106,16 @@ RSpec.describe Authenticator::Httpd do
       expect(subject.lookup_by_identity('baduser', request)).to eq(cheshire)
     end
 
+    it "falls back to X-Remote-User when X-Remote-User-Principal is empty string" do
+      headers['X-Remote-User-Principal'] = ''
+      expect(subject.lookup_by_identity('cheshire', request)).to eq(cheshire)
+    end
+
+    it "falls back to X-Remote-User when X-Remote-User-Principal is whitespace" do
+      headers['X-Remote-User-Principal'] = '   '
+      expect(subject.lookup_by_identity('cheshire', request)).to eq(cheshire)
+    end
+
     it "Handles missing request parameter" do
       expect(subject.lookup_by_identity('alice')).to eq(alice)
     end
@@ -730,6 +740,53 @@ RSpec.describe Authenticator::Httpd do
 
             user_attrs, _groups = subject.send(:user_details_from_external_directory, 'jdoe')
             expect(user_attrs[:username]).to eq("jdoe@ipa.test")
+          end
+
+          it "should fall back to provided username when krbPrincipalName is empty string" do
+            requested_attrs = %w[mail givenname sn displayname domainname krbPrincipalName]
+
+            jdoe_attrs = [{"mail"             => ["jdoe@example.com"],
+                           "givenname"        => ["John"],
+                           "sn"               => ["Doe"],
+                           "displayname"      => ["John Doe"],
+                           "domainname"       => ["ipa.test"],
+                           "krbPrincipalName" => [""]}]
+
+            allow(ifp_interface).to receive(:GetUserAttr).with('jdoe', requested_attrs).and_return(jdoe_attrs)
+            allow(MiqGroup).to receive(:get_httpd_groups_by_user).with('jdoe').and_return([])
+
+            user_attrs, _groups = subject.send(:user_details_from_external_directory, 'jdoe')
+            expect(user_attrs[:username]).to eq("jdoe")
+          end
+
+          context "integration test: multiple login formats produce same normalized username" do
+            let(:expected_normalized_username) { "flast@ipa.test" }
+            let(:requested_attrs) { %w[mail givenname sn displayname domainname krbPrincipalName] }
+            let(:user_attrs_response) do
+              [{"mail"             => ["first.last@example.com"],
+                "givenname"        => ["First"],
+                "sn"               => ["Last"],
+                "displayname"      => ["First Last"],
+                "domainname"       => ["ipa.test"],
+                "krbPrincipalName" => ["flast@IPA.TEST"]}]
+            end
+
+            before do
+              allow(MiqGroup).to receive(:get_httpd_groups_by_user).and_return([])
+            end
+
+            shared_examples "normalizes to principal name" do |login_format|
+              it "normalizes #{login_format}" do
+                allow(ifp_interface).to receive(:GetUserAttr).with(login_format, requested_attrs).and_return(user_attrs_response)
+                user_attrs, _groups = subject.send(:user_details_from_external_directory, login_format)
+                expect(user_attrs[:username]).to eq(expected_normalized_username)
+              end
+            end
+
+            include_examples "normalizes to principal name", "first.last@example.com"
+            include_examples "normalizes to principal name", "flast@IPA.TEST"
+            include_examples "normalizes to principal name", "flast@ipa.test"
+            include_examples "normalizes to principal name", "flast"
           end
         end
       end
