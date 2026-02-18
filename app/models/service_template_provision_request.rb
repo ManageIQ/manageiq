@@ -67,10 +67,11 @@ class ServiceTemplateProvisionRequest < MiqRequest
     configuration_script_id = resource_action&.configuration_script_id
     return if configuration_script_id.nil?
 
-    # If the service_template that we are provisioning is a "generic" provision
-    # type then we want to execute the request task with embedded_workflows if
-    # the resource_action has a configuration_script_id
-    if source.prov_type == "generic"
+    # If we are provisioning a "generic" service_template
+    #   then we want to directly run embedded workflows
+    # Otherwise
+    #   then we want to keep running automate at the top level, and run the embedded workflow as a child task
+    if source.prov_type == "generic" || source.prov_type == "generic_terraform_template"
       req_task_attrs['options'][:configuration_script_payload_id] = configuration_script_id
     else
       req_task_attrs['options'][:parent_configuration_script_payload_id] = configuration_script_id
