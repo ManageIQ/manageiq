@@ -12,25 +12,13 @@ RSpec.describe Authenticator::Httpd do
   let(:username) { request.headers["X-Remote-User"] }
 
   before do
-    # If anything goes looking for the currently configured
-    # Authenticator during any of these tests, we'd really rather they
-    # found the one we're working on.
-    #
-    # This specifically comes up when we auto-create a new user from an
-    # external auth system: they get saved without a password, so User's
-    # dummy_password_for_external_auth hook runs, and it needs to ask
-    # Authenticator#uses_stored_password? whether it's allowed to do anything.
-
+    # Stub authenticator to prevent User.dummy_password_for_external_auth from calling wrong authenticator
     stub_settings_merge(:authentication => config)
     allow(User).to receive(:authenticator).and_return(subject)
-
     EvmSpecHelper.local_miq_server
-  end
 
-  before do
     FactoryBot.create(:miq_group, :description => 'wibble')
     FactoryBot.create(:miq_group, :description => 'wobble')
-
     allow(MiqLdap).to receive(:using_ldap?) { false }
   end
 
