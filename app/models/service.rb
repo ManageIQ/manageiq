@@ -485,7 +485,9 @@ class Service < ApplicationRecord
   # Metric methods
   #
 
-  PERF_ROLLUP_CHILDREN = [:vms]
+  PERF_ROLLUP_CHILDREN = [:vms].freeze
+  # this is not needed, but present to show the deviation from the typical vms association
+  PERF_ROLLUP = {:vms => :vms}.freeze
 
   def perf_rollup_parents(interval_name = nil)
     [] unless interval_name == 'realtime'
