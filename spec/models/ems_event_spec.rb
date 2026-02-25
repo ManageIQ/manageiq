@@ -71,6 +71,7 @@ RSpec.describe EmsEvent do
     let(:vm) { FactoryBot.create(:vm_openstack, :ems_ref => "vm1") }
     before do
       @zone = FactoryBot.create(:small_environment)
+      EvmSpecHelper.local_miq_server(:is_master => true, :zone => @zone)
       @ems  = @zone.ext_management_systems.first
       @availability_zone = FactoryBot.create(:availability_zone_openstack, :ems_ref => "az1")
     end

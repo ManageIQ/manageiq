@@ -328,15 +328,15 @@ RSpec.describe ExtManagementSystem do
     end
 
     it "refresh_all_ems_timer will refresh for all emses in zone1" do
+      EvmSpecHelper.local_miq_server(:is_master => true, :zone => @zone1)
       @ems1 = @zone1.ext_management_systems.first
-      allow(MiqServer).to receive(:my_server).and_return(@zone1.miq_servers.first)
       expect(described_class).to receive(:refresh_ems).with([@ems1.id], true)
       described_class.refresh_all_ems_timer
     end
 
     it "refresh_all_ems_timer will refresh for all emses in zone2" do
       @ems2 = @zone2.ext_management_systems.first
-      allow(MiqServer).to receive(:my_server).and_return(@zone2.miq_servers.first)
+      EvmSpecHelper.local_miq_server(:is_master => true, :zone => @zone2)
       expect(described_class).to receive(:refresh_ems).with([@ems2.id], true)
       described_class.refresh_all_ems_timer
     end
