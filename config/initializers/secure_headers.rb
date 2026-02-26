@@ -28,13 +28,15 @@ if defined?(SecureHeaders)
       :report_uri  => ["/dashboard/csp_report"],
 
       :default_src => ["'self'"],
+      :child_src   => ["'self'"],
       :connect_src => ["'self'"],
       :font_src    => ["'self'", 'https://fonts.gstatic.com', "https://fonts.googleapis.com"],
       :frame_src   => ["'self'"],
       :img_src     => ["'self'", "data:"],
       :object_src  => ["'self'"],
       :script_src  => ["'unsafe-eval'", "'unsafe-inline'", "'self'"],
-      :style_src   => ["'unsafe-inline'", "'self'", "https://fonts.googleapis.com", "https://fonts.gstatic.com"]
+      :style_src   => ["'unsafe-inline'", "'self'", "https://fonts.googleapis.com", "https://fonts.gstatic.com"],
+      :worker_src  => ["'self'"]
     }
   end
 end
