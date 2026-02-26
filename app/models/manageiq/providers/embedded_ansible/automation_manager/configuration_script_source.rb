@@ -16,7 +16,8 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   def sync
     update!(:status => "running")
     transaction do
-      current = configuration_script_payloads.index_by(&:name)
+      current_payloads = configuration_script_payloads.index_by(&:name)
+      current_scripts  = manager.configuration_scripts.where(:name => current_payloads.keys).index_by(&:name)
 
       git_repository.update_repo
       git_repository.with_worktree do |worktree|
@@ -27,7 +28,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
           content = worktree.read_file(filename)
           next unless playbook?(filename, content)
 
-          found = current.delete(filename) || self.class.module_parent::Playbook.new(:configuration_script_source_id => id)
+          found_payload = current_payloads.delete(filename) || self.class.module_parent::Playbook.new(:configuration_script_source_id => id)
 
           attrs = {:name => filename, :manager_id => manager_id}
           unless encrypted_playbook?(content)
@@ -35,13 +36,22 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
             attrs[:payload_type] = "yaml"
           end
 
-          found.update!(attrs)
+          found_payload.update!(attrs)
+
+          found_script = current_scripts.delete(filename) || self.class.module_parent::ConfigurationScript.new(:configuration_script_source_id => id, :parent_id => found_payload.id)
+          found_script.update!(
+            :name       => filename,
+            :manager_id => manager_id,
+            :parent_id  => found_payload.id
+          )
         end
       end
 
-      current.values.each(&:destroy)
+      current_payloads.each_value(&:destroy)
+      current_scripts.each_value(&:destroy)
 
       configuration_script_payloads.reload
+      manager.configuration_scripts.reload
     end
     update!(:status            => "successful",
             :last_updated_on   => Time.zone.now,
