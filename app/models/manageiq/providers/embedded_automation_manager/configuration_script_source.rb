@@ -82,7 +82,33 @@ class ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource 
   end
 
   def sync
-    raise NotImplementedError, N_("sync must be implemented in a subclass")
+    update!(:status => "running")
+
+    transaction do
+      current_payloads = configuration_script_payloads.index_by(&:name)
+      current_scripts  = manager.configuration_scripts.where(:name => current_payloads.keys).index_by(&:name)
+
+      # checkout repo, for sending files to terraform-runner to parse for input/ouput vars.
+      checkout_git_repository do |git_checkout_tempdir|
+        # traverse through files in git-worktree
+        git_repository.with_worktree do |worktree|
+          worktree.ref = scm_branch
+
+          yield current_payloads, current_scripts, git_checkout_tempdir, worktree
+        end
+      end
+
+      current_payloads.each_value(&:destroy)
+      current_scripts.each_value(&:destroy)
+
+      configuration_script_payloads.reload
+      manager.configuration_scripts.reload
+    end
+
+    update!(:status => "successful", :last_updated_on => Time.zone.now, :last_update_error => nil)
+  rescue => error
+    update!(:status => "error", :last_updated_on => Time.zone.now, :last_update_error => format_sync_error(error))
+    raise
   end
 
   def checkout_git_repository(target_directory = nil)
@@ -135,5 +161,9 @@ class ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource 
       :authentication_id => authentication_id,
       :verify_ssl        => verify_ssl
     }
+  end
+
+  def format_sync_error(error)
+    error
   end
 end

@@ -210,10 +210,15 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
         repo.configuration_script_payloads.pluck(:name)
       end
 
+      def configuration_scripts_for(repo)
+        repo.manager.configuration_scripts.where(:name => playbooks_for(repo)).pluck(:name)
+      end
+
       it "finds top level playbooks" do
         record = build_record
 
         expect(playbooks_for(record)).to eq(%w[hello_world.yaml])
+        expect(configuration_scripts_for(record)).to eq(%w[hello_world.yaml])
       end
 
       it "saves the playbook payload" do
@@ -242,6 +247,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
           record           = build_record
 
           expect(playbooks_for(record)).to eq(%w[ansible_project/hello_world.yml])
+          expect(configuration_scripts_for(record)).to eq(%w[ansible_project/hello_world.yml])
         end
       end
 
@@ -262,6 +268,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
           record           = build_record
 
           expect(playbooks_for(record)).to eq(%w[hello_world.yml])
+          expect(configuration_scripts_for(record)).to eq(%w[hello_world.yml])
         end
       end
 
@@ -282,6 +289,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
           record           = build_record
 
           expect(playbooks_for(record)).to match_array(%w[hello_world.yml hello_world.encrypted.yml])
+          expect(configuration_scripts_for(record)).to match_array(%w[hello_world.yml hello_world.encrypted.yml])
         end
       end
 
@@ -308,6 +316,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
           record           = build_record
 
           expect(playbooks_for(record)).to eq(%w[hello_world.yml])
+          expect(configuration_scripts_for(record)).to eq(%w[hello_world.yml])
         end
       end
 

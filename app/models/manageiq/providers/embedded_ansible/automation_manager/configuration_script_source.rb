@@ -14,43 +14,31 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   end
 
   def sync
-    update!(:status => "running")
-    transaction do
-      current = configuration_script_payloads.index_by(&:name)
+    super do |current_payloads, current_scripts, _tempdir, worktree|
+      worktree.blob_list.each do |filename|
+        next unless playbook_dir?(filename)
 
-      git_repository.update_repo
-      git_repository.with_worktree do |worktree|
-        worktree.ref = scm_branch
-        worktree.blob_list.each do |filename|
-          next unless playbook_dir?(filename)
+        content = worktree.read_file(filename)
+        next unless playbook?(filename, content)
 
-          content = worktree.read_file(filename)
-          next unless playbook?(filename, content)
+        found_payload = current_payloads.delete(filename) || self.class.module_parent::Playbook.new(:configuration_script_source_id => id)
 
-          found = current.delete(filename) || self.class.module_parent::Playbook.new(:configuration_script_source_id => id)
-
-          attrs = {:name => filename, :manager_id => manager_id}
-          unless encrypted_playbook?(content)
-            attrs[:payload]      = content
-            attrs[:payload_type] = "yaml"
-          end
-
-          found.update!(attrs)
+        attrs = {:name => filename, :manager_id => manager_id}
+        unless encrypted_playbook?(content)
+          attrs[:payload]      = content
+          attrs[:payload_type] = "yaml"
         end
+
+        found_payload.update!(attrs)
+
+        found_script = current_scripts.delete(filename) || self.class.module_parent::ConfigurationScript.new(:configuration_script_source_id => id, :parent_id => found_payload.id)
+        found_script.update!(
+          :name       => filename,
+          :manager_id => manager_id,
+          :parent_id  => found_payload.id
+        )
       end
-
-      current.values.each(&:destroy)
-
-      configuration_script_payloads.reload
     end
-    update!(:status            => "successful",
-            :last_updated_on   => Time.zone.now,
-            :last_update_error => nil)
-  rescue => error
-    update!(:status            => "error",
-            :last_updated_on   => Time.zone.now,
-            :last_update_error => format_sync_error(error))
-    raise error
   end
 
   def playbooks_in_git_repository
