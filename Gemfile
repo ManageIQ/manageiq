@@ -1,4 +1,4 @@
-ruby ">= 3.1.3", "< 3.5.0"
+ruby ">= 3.3.10", "< 3.5.0"
 warn "Ruby versions >= 3.4.0 are untested!" if RUBY_VERSION >= "3.4.0"
 source 'https://rubygems.org'
 
