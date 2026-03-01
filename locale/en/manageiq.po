@@ -2086,6 +2086,12 @@ msgstr ""
 msgid "AWX"
 msgstr ""
 
+msgid "AWX (deprecated)"
+msgstr ""
+
+msgid "AWX Job Template Provision"
+msgstr ""
+
 msgid "AWX Provider"
 msgstr ""
 
@@ -4097,10 +4103,19 @@ msgstr ""
 msgid "An internal system error."
 msgstr ""
 
+msgid "An unknown OS"
+msgstr ""
+
+msgid "An unknown browser"
+msgstr ""
+
 msgid "An unknown error has occurred calling the API."
 msgstr ""
 
 msgid "An unknown error has occurred."
+msgstr ""
+
+msgid "An unknown version"
 msgstr ""
 
 msgid ""
@@ -4179,6 +4194,9 @@ msgstr ""
 msgid "Ansible Automation Platform"
 msgstr ""
 
+msgid "Ansible Automation Platform (deprecated)"
+msgstr ""
+
 msgid "Ansible Automation Platform Provider"
 msgstr ""
 
@@ -4201,6 +4219,9 @@ msgid "Ansible Tower Job"
 msgstr ""
 
 msgid "Ansible Tower Job Template"
+msgstr ""
+
+msgid "Ansible Tower Job Template Provision"
 msgstr ""
 
 msgid "Ansible Tower Jobs"
@@ -6200,12 +6221,6 @@ msgid "By Host"
 msgstr ""
 
 msgid "By Role"
-msgstr ""
-
-msgid "By Username %{username} %{created_on}"
-msgstr ""
-
-msgid "By Username %{username} %{updated_on}"
 msgstr ""
 
 msgid "C & U Collection"
@@ -13247,6 +13262,9 @@ msgid "Create new Snapshots"
 msgstr ""
 
 msgid "Created"
+msgstr ""
+
+msgid "Created By"
 msgstr ""
 
 msgid "Created On"
@@ -26352,6 +26370,12 @@ msgstr ""
 msgid "Last Updated"
 msgstr ""
 
+msgid "Last Updated By"
+msgstr ""
+
+msgid "Last Updated On"
+msgstr ""
+
 msgid "Last Valid On"
 msgstr ""
 
@@ -28095,6 +28119,12 @@ msgid "Memory Max Total"
 msgstr ""
 
 msgid "Memory Max Used Trend"
+msgstr ""
+
+msgid "Memory Mirroring"
+msgstr ""
+
+msgid "Memory Mirroring capability of the Host."
 msgstr ""
 
 msgid "Memory Reserve"
@@ -31272,6 +31302,9 @@ msgstr ""
 msgid "MiqServer|Build"
 msgstr ""
 
+msgid "MiqServer|Capabilities"
+msgstr ""
+
 msgid "MiqServer|Cpu time"
 msgstr ""
 
@@ -31294,9 +31327,6 @@ msgid "MiqServer|Has active webservices"
 msgstr ""
 
 msgid "MiqServer|Has policies"
-msgstr ""
-
-msgid "MiqServer|Has vix disk lib"
 msgstr ""
 
 msgid "MiqServer|Hostname"
@@ -32343,6 +32373,12 @@ msgstr ""
 msgid "Must specify new resize value/s"
 msgstr ""
 
+msgid "Must start with a letter and contain only letters, numbers, and underscores"
+msgstr ""
+
+msgid "Must start with a letter and contain only letters, numbers, and underscores."
+msgstr ""
+
 msgid "My Company Categories"
 msgstr ""
 
@@ -33128,12 +33164,6 @@ msgid "New Password"
 msgstr ""
 
 msgid "New Section"
-msgstr ""
-
-msgid "New Volume"
-msgstr ""
-
-msgid "New Volume Name"
 msgstr ""
 
 msgid "New Window"
@@ -34888,6 +34918,9 @@ msgid "Orchestration Stack"
 msgstr ""
 
 msgid "Orchestration Stack %{subject} has been retired."
+msgstr ""
+
+msgid "Orchestration Stack %{subject} has started retirement."
 msgstr ""
 
 #, fuzzy
@@ -38209,6 +38242,9 @@ msgstr ""
 msgid "Provisions"
 msgstr ""
 
+msgid "Proxmox Provider"
+msgstr ""
+
 msgid "Proxy"
 msgstr ""
 
@@ -40381,6 +40417,9 @@ msgstr ""
 msgid "Remove this widget"
 msgstr ""
 
+msgid "Remove widget"
+msgstr ""
+
 msgid "Removing all snapshots is currently not supported"
 msgstr ""
 
@@ -40719,9 +40758,6 @@ msgid "Request to Archive Services"
 msgstr ""
 
 msgid "Request to Order Services"
-msgstr ""
-
-msgid "Request to Provision"
 msgstr ""
 
 msgid "Request to Provision Instances"
@@ -45140,6 +45176,12 @@ msgid "Signal"
 msgstr ""
 
 msgid "SignatureMismatch - check your AWS Secret Access Key and signing method"
+msgstr ""
+
+msgid "Simplified Remote Restart"
+msgstr ""
+
+msgid "Simplified Remote Restart Cabaility"
 msgstr ""
 
 msgid "Simplified Remote Restart Capability"
@@ -49928,6 +49970,9 @@ msgstr ""
 msgid "User:"
 msgstr ""
 
+msgid "User: %s"
+msgstr ""
+
 msgid "UserID"
 msgstr ""
 
@@ -54334,6 +54379,9 @@ msgstr ""
 msgid "has been selected."
 msgstr ""
 
+msgid "has to be a valid URL"
+msgstr ""
+
 msgid "has to be unique per provider type"
 msgstr ""
 
@@ -55086,9 +55134,6 @@ msgid "storage_scan_complete"
 msgstr ""
 
 msgid "success"
-msgstr ""
-
-msgid "sync must be implemented in a subclass"
 msgstr ""
 
 msgid "tags"
