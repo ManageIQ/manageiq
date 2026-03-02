@@ -8,7 +8,7 @@ conditions:
 updated_on: 2009-10-19 22:09:11.300000 Z
 order: Ascending
 graph:
-menu_name: "Cluster memory trend  6 months"
+menu_name: "Cluster memory trend 6 months"
 rpt_group: Custom
 priority: 110
 col_order: []
