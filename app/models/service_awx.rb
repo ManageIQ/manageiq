@@ -1,4 +1,4 @@
-class ServiceAwx < Service
+class ServiceAwx < ServiceAutomation
   include AnsibleExtraVarsMixin
   include ServiceConfigurationMixin
   include ServiceOrchestrationOptionsMixin
