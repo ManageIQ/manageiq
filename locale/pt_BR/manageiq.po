@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2025-11-13 21:57+0000\n"
-"PO-Revision-Date: 2025-11-13 21:57+0000\n"
+"POT-Creation-Date: 2026-03-02 15:44+0000\n"
+"PO-Revision-Date: 2026-03-02 15:44+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -2242,6 +2242,12 @@ msgstr "Chave secreta AWS para esta credencial"
 msgid "AWX"
 msgstr "AWX"
 
+msgid "AWX (deprecated)"
+msgstr "AWX (descontinuado)"
+
+msgid "AWX Job Template Provision"
+msgstr "Provisionamento de modelo de tarefa do AWX"
+
 msgid "AWX Provider"
 msgstr "Provedor AWX"
 
@@ -4314,11 +4320,20 @@ msgstr ""
 msgid "An internal system error."
 msgstr "Erro interno do sistema."
 
+msgid "An unknown OS"
+msgstr "Um sistema operacional desconhecido"
+
+msgid "An unknown browser"
+msgstr "Um navegador desconhecido"
+
 msgid "An unknown error has occurred calling the API."
 msgstr "Ocorreu um erro desconhecido ao chamar a API."
 
 msgid "An unknown error has occurred."
 msgstr "Ocorreu um erro desconhecido."
+
+msgid "An unknown version"
+msgstr "Uma versão desconhecida"
 
 msgid ""
 "An updated subscription must point to the same database with which it was "
@@ -4399,6 +4414,9 @@ msgstr "Método de acesso do Ansible"
 msgid "Ansible Automation Platform"
 msgstr "Ansible Automation Platform"
 
+msgid "Ansible Automation Platform (deprecated)"
+msgstr "Ansible Automation Platform (descontinuado)"
+
 msgid "Ansible Automation Platform Provider"
 msgstr "Provedor do Ansible Automation Platform"
 
@@ -4422,6 +4440,9 @@ msgstr "Tarefa do Ansible Tower"
 
 msgid "Ansible Tower Job Template"
 msgstr "Modelo de tarefa do Ansible Tower"
+
+msgid "Ansible Tower Job Template Provision"
+msgstr "Provisionamento de modelo de tarefa Ansible Tower"
 
 msgid "Ansible Tower Jobs"
 msgstr "Tarefas do Ansible Tower"
@@ -6494,12 +6515,6 @@ msgstr "Por Host"
 
 msgid "By Role"
 msgstr "Por função"
-
-msgid "By Username %{username} %{created_on}"
-msgstr "Por nome do usuário %{username} %{created_on}"
-
-msgid "By Username %{username} %{updated_on}"
-msgstr "Por nome do usuário %{username} %{updated_on}"
 
 msgid "C & U Collection"
 msgstr "Coleção de capacidade e utilização"
@@ -13912,6 +13927,9 @@ msgstr "Criar novas capturas instantâneas"
 
 msgid "Created"
 msgstr "Criado"
+
+msgid "Created By"
+msgstr "Criado por"
 
 msgid "Created On"
 msgstr "Criado em"
@@ -27312,6 +27330,12 @@ msgstr "Código de status da última atualização"
 msgid "Last Updated"
 msgstr "Atualizado pela última vez"
 
+msgid "Last Updated By"
+msgstr "Última atualização por"
+
+msgid "Last Updated On"
+msgstr "Última atualização ativada"
+
 msgid "Last Valid On"
 msgstr "Último válido em"
 
@@ -29135,6 +29159,12 @@ msgstr "Memória máx. total"
 
 msgid "Memory Max Used Trend"
 msgstr "Tendência de uso máx. de memória"
+
+msgid "Memory Mirroring"
+msgstr "Espelhamento de memória"
+
+msgid "Memory Mirroring capability of the Host."
+msgstr "Recurso de espelhamento de memória do host."
 
 msgid "Memory Reserve"
 msgstr "Reserva de memória"
@@ -32422,6 +32452,9 @@ msgstr "MiqSearch|Tipo de procura"
 msgid "MiqServer|Build"
 msgstr "MiqServer|Compilação"
 
+msgid "MiqServer|Capabilities"
+msgstr "MiqServer|Capabilities"
+
 msgid "MiqServer|Cpu time"
 msgstr "MiqServer|Tempo da CPU"
 
@@ -32445,9 +32478,6 @@ msgstr "MiqServer|Tem serviços da web ativos"
 
 msgid "MiqServer|Has policies"
 msgstr "MiqServer | Tem políticas"
-
-msgid "MiqServer|Has vix disk lib"
-msgstr "MiqServer | Tem lib de disco vix"
 
 msgid "MiqServer|Hostname"
 msgstr "MiqServer|Nome do host"
@@ -33510,6 +33540,11 @@ msgstr "Deve especificar um proprietário"
 msgid "Must specify new resize value/s"
 msgstr "Deve especificar novos valores de redimensionamento"
 
+msgid ""
+"Must start with a letter and contain only letters, numbers, and underscores"
+msgstr ""
+"Deve começar com uma letra e conter somente letras, números e sublinhados"
+
 msgid "My Company Categories"
 msgstr "Minhas categorias de empresa"
 
@@ -34290,12 +34325,6 @@ msgstr "Nova senha"
 
 msgid "New Section"
 msgstr "Nova seção"
-
-msgid "New Volume"
-msgstr "Novo volume"
-
-msgid "New Volume Name"
-msgstr "Novo nome do volume"
 
 msgid "New Window"
 msgstr "Nova janela"
@@ -36169,6 +36198,10 @@ msgstr "Pilha de orquestração"
 
 msgid "Orchestration Stack %{subject} has been retired."
 msgstr "A Pilha de orquestração %{subject} foi aposentada."
+
+msgid "Orchestration Stack %{subject} has started retirement."
+msgstr ""
+"A pilha de orquestração %{subject} iniciou o processo de descontinuação."
 
 msgid "Orchestration Stack (Amazon)"
 msgid_plural "Orchestration Stacks (Amazon)"
@@ -39509,6 +39542,9 @@ msgstr ""
 msgid "Provisions"
 msgstr "Provisões"
 
+msgid "Proxmox Provider"
+msgstr "Provedor Proxmox"
+
 msgid "Proxy"
 msgstr "Proxy"
 
@@ -41875,6 +41911,9 @@ msgstr "Remover este item do inventário"
 msgid "Remove this widget"
 msgstr "Remover este widget"
 
+msgid "Remove widget"
+msgstr "Remover o widget"
+
 msgid "Removing all snapshots is currently not supported"
 msgstr "Atualmente a remoção de todas as capturas instantâneas não é suportada"
 
@@ -42225,9 +42264,6 @@ msgstr "Solicitação para Serviços de Archive"
 
 msgid "Request to Order Services"
 msgstr "Solicitação para Ordem de Serviços"
-
-msgid "Request to Provision"
-msgstr "Solicitação para provisionar"
 
 msgid "Request to Provision Instances"
 msgstr "Solicitação para Provisionar instâncias"
@@ -46750,6 +46786,12 @@ msgstr ""
 "SignatureMismatch - verifique a chave de acesso de segredo da AWS e o método "
 "de assinatura"
 
+msgid "Simplified Remote Restart"
+msgstr "Reinicialização remota simplificada"
+
+msgid "Simplified Remote Restart Cabaility"
+msgstr "Recurso de reinicialização remota simplificada"
+
 msgid "Simplified Remote Restart Capability"
 msgstr "Recurso de reinicialização remota simplificada"
 
@@ -46979,6 +47021,10 @@ msgstr "Informações da captura instantânea"
 
 msgid "Snapshots"
 msgstr "Capturas instantâneas"
+
+msgid "Snapshotting the memory is only available if the VM is powered on"
+msgstr ""
+"A captura instantânea da memória está disponível apenas se a VM estiver ligada"
 
 msgid "Snapshotting the memory is only available if the VM is powered on."
 msgstr ""
@@ -51769,6 +51815,9 @@ msgstr "O usuário fornecerá o valor"
 msgid "User:"
 msgstr "Usuário:"
 
+msgid "User: %s"
+msgstr "Usuário: %s"
+
 msgid "UserID"
 msgstr "ID de usuário"
 
@@ -56437,6 +56486,9 @@ msgstr "h"
 msgid "has been selected."
 msgstr "foi selecionado."
 
+msgid "has to be a valid URL"
+msgstr "deve ser uma URL válida"
+
 msgid "has to be unique per provider type"
 msgstr "deve ser único por tipo de provedor"
 
@@ -57199,9 +57251,6 @@ msgstr "storage_scan_complete"
 
 msgid "success"
 msgstr "sucesso"
-
-msgid "sync must be implemented in a subclass"
-msgstr "a sincronização deve ser implementada em uma subclasse"
 
 msgid "tags"
 msgstr "marcações"
