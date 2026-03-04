@@ -9133,7 +9133,7 @@ msgstr "集群虚拟机与电源状态关联性"
 msgid "Cluster in Datacenter"
 msgstr "数据中心中的集群"
 
-msgid "Cluster memory trend  6 months"
+msgid "Cluster memory trend 6 months"
 msgstr "集群内存趋势（6 个月）"
 
 msgid "Cluster memory trend based on past 6 months"

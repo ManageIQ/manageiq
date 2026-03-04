@@ -9166,7 +9166,7 @@ msgstr "クラスター VM のアフィニティー (電源状態)"
 msgid "Cluster in Datacenter"
 msgstr "データ・センターのクラスター"
 
-msgid "Cluster memory trend  6 months"
+msgid "Cluster memory trend 6 months"
 msgstr "クラスター・メモリー・トレンド (6 カ月)"
 
 msgid "Cluster memory trend based on past 6 months"

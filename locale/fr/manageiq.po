@@ -9802,7 +9802,7 @@ msgstr "Affinité des machines virtuelles de cluster avec état d'alimentation"
 msgid "Cluster in Datacenter"
 msgstr "Cluster dans centre de données"
 
-msgid "Cluster memory trend  6 months"
+msgid "Cluster memory trend 6 months"
 msgstr "Tendance de mémoire de cluster sur 6 mois"
 
 msgid "Cluster memory trend based on past 6 months"

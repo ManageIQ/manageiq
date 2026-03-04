@@ -9801,7 +9801,7 @@ msgstr "Afinidad de máquinas virtuales con Power State"
 msgid "Cluster in Datacenter"
 msgstr "Clúster en el centro de datos"
 
-msgid "Cluster memory trend  6 months"
+msgid "Cluster memory trend 6 months"
 msgstr "Tendencia de la memoria del clúster por 6 meses"
 
 msgid "Cluster memory trend based on past 6 months"

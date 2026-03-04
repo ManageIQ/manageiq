@@ -9709,7 +9709,7 @@ msgstr "Afinidade das máquinas virtuais do cluster com estado de energia"
 msgid "Cluster in Datacenter"
 msgstr "Cluster no data center"
 
-msgid "Cluster memory trend  6 months"
+msgid "Cluster memory trend 6 months"
 msgstr "Tendência de memória do cluster em seis meses"
 
 msgid "Cluster memory trend based on past 6 months"

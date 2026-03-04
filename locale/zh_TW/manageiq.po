@@ -9137,7 +9137,7 @@ msgstr "含電源狀態的叢集虛擬機器親緣性"
 msgid "Cluster in Datacenter"
 msgstr "資料中心中的叢集"
 
-msgid "Cluster memory trend  6 months"
+msgid "Cluster memory trend 6 months"
 msgstr "最近 6 個月的叢集記憶體趨勢"
 
 msgid "Cluster memory trend based on past 6 months"

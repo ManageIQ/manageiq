@@ -9159,7 +9159,7 @@ msgstr "전원 상태에 대한 클러스터 VM 선호도"
 msgid "Cluster in Datacenter"
 msgstr "데이터 센터의 클러스터"
 
-msgid "Cluster memory trend  6 months"
+msgid "Cluster memory trend 6 months"
 msgstr "클러스터 메모리 동향 6개월"
 
 msgid "Cluster memory trend based on past 6 months"

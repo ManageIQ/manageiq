@@ -9713,7 +9713,7 @@ msgstr "Cluster Affinità VM con Stato Alimentazione"
 msgid "Cluster in Datacenter"
 msgstr "Cluster in Datacenter"
 
-msgid "Cluster memory trend  6 months"
+msgid "Cluster memory trend 6 months"
 msgstr "Tendenza di memoria del cluster 6 mesi"
 
 msgid "Cluster memory trend based on past 6 months"
