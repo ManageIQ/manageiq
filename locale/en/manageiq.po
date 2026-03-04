@@ -9299,7 +9299,7 @@ msgstr ""
 msgid "Cluster in Datacenter"
 msgstr ""
 
-msgid "Cluster memory trend  6 months"
+msgid "Cluster memory trend 6 months"
 msgstr ""
 
 msgid "Cluster memory trend based on past 6 months"

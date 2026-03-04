@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2025-11-13 21:57+0000\n"
-"PO-Revision-Date: 2025-11-13 21:57+0000\n"
+"POT-Creation-Date: 2026-03-02 15:44+0000\n"
+"PO-Revision-Date: 2026-03-02 15:44+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -2243,6 +2243,12 @@ msgstr "Chiave segreta AWS per queste credenziali"
 msgid "AWX"
 msgstr "AWX"
 
+msgid "AWX (deprecated)"
+msgstr "AWX (obsoleto)"
+
+msgid "AWX Job Template Provision"
+msgstr "AWX Modello di fornitura di lavoro"
+
 msgid "AWX Provider"
 msgstr "Provider AWX"
 
@@ -4340,11 +4346,20 @@ msgstr ""
 msgid "An internal system error."
 msgstr "Un errore di sistema interno."
 
+msgid "An unknown OS"
+msgstr "Un sistema operativo sconosciuto"
+
+msgid "An unknown browser"
+msgstr "Browser sconosciuto"
+
 msgid "An unknown error has occurred calling the API."
 msgstr "Si è verificato un errore sconosciuto che chiama l'API."
 
 msgid "An unknown error has occurred."
 msgstr "Si è verificato un errore sconosciuto."
+
+msgid "An unknown version"
+msgstr "Una versione sconosciuta"
 
 msgid ""
 "An updated subscription must point to the same database with which it was "
@@ -4424,6 +4439,9 @@ msgstr "Metodo di accesso Ansible"
 msgid "Ansible Automation Platform"
 msgstr "Ansible Automation Platform"
 
+msgid "Ansible Automation Platform (deprecated)"
+msgstr "Ansible Piattaforma di Automazione (obsoleta)"
+
 msgid "Ansible Automation Platform Provider"
 msgstr "Provider Ansible Automation Platform"
 
@@ -4447,6 +4465,9 @@ msgstr "Lavoro Ansible Tower"
 
 msgid "Ansible Tower Job Template"
 msgstr "Modello di lavoro Ansible Tower"
+
+msgid "Ansible Tower Job Template Provision"
+msgstr "Ansible Modello di fornitura di lavoro a torre"
 
 msgid "Ansible Tower Jobs"
 msgstr "Lavori Ansible Tower"
@@ -6509,12 +6530,6 @@ msgstr "Per host"
 
 msgid "By Role"
 msgstr "Per ruolo"
-
-msgid "By Username %{username} %{created_on}"
-msgstr "Dall'utente con nome %{username} %{created_on}"
-
-msgid "By Username %{username} %{updated_on}"
-msgstr "Dall'utente con nome %{username} %{updated_on}"
 
 msgid "C & U Collection"
 msgstr "Raccolta C & U"
@@ -9698,7 +9713,7 @@ msgstr "Cluster Affinità VM con Stato Alimentazione"
 msgid "Cluster in Datacenter"
 msgstr "Cluster in Datacenter"
 
-msgid "Cluster memory trend  6 months"
+msgid "Cluster memory trend 6 months"
 msgstr "Tendenza di memoria del cluster 6 mesi"
 
 msgid "Cluster memory trend based on past 6 months"
@@ -13862,6 +13877,9 @@ msgstr "Crea nuova Istantanea"
 
 msgid "Created"
 msgstr "Data di creazione"
+
+msgid "Created By"
+msgstr "Creato da"
 
 msgid "Created On"
 msgstr "Data/ora creazione"
@@ -27309,6 +27327,12 @@ msgstr "Ultimo codice di stato aggiornamento"
 msgid "Last Updated"
 msgstr "Ultimo aggiornamento"
 
+msgid "Last Updated By"
+msgstr "Autore ultimo aggiornamento"
+
+msgid "Last Updated On"
+msgstr "Data ultimo aggiornamento"
+
 msgid "Last Valid On"
 msgstr "Ultima validità"
 
@@ -29127,6 +29151,12 @@ msgstr "Totale memoria max"
 
 msgid "Memory Max Used Trend"
 msgstr "Tendenza utilizzo massimo Memoria"
+
+msgid "Memory Mirroring"
+msgstr "Mirroring della memoria"
+
+msgid "Memory Mirroring capability of the Host."
+msgstr "Funzionalità di mirroring della memoria dell'host."
 
 msgid "Memory Reserve"
 msgstr "Riserva di memoria"
@@ -32373,6 +32403,9 @@ msgstr "Tipo di ricerca"
 msgid "MiqServer|Build"
 msgstr "Build"
 
+msgid "MiqServer|Capabilities"
+msgstr "MiqServer|Capabilities"
+
 msgid "MiqServer|Cpu time"
 msgstr "Tempo di Cpu"
 
@@ -32396,9 +32429,6 @@ msgstr "Ha webservices attivi"
 
 msgid "MiqServer|Has policies"
 msgstr "MiqServer|Ha politiche"
-
-msgid "MiqServer|Has vix disk lib"
-msgstr "MiqServer|Ha vix disk lib"
 
 msgid "MiqServer|Hostname"
 msgstr "Nome Host"
@@ -33462,6 +33492,11 @@ msgstr "È necessario specificare un proprietario"
 msgid "Must specify new resize value/s"
 msgstr "È necessario specificare nuovi valori di ridimensionamento"
 
+msgid ""
+"Must start with a letter and contain only letters, numbers, and underscores"
+msgstr ""
+"Deve iniziare con una lettera e contenere solo lettere, numeri e underscore"
+
 msgid "My Company Categories"
 msgstr "Categorie della mia azienda"
 
@@ -34242,12 +34277,6 @@ msgstr "Nuova password"
 
 msgid "New Section"
 msgstr "Nuova sezione"
-
-msgid "New Volume"
-msgstr "Nuovo volume"
-
-msgid "New Volume Name"
-msgstr "Nuovo nome volume"
 
 msgid "New Window"
 msgstr "Nuova finestra"
@@ -36120,6 +36149,10 @@ msgstr "Stack Orchestrazione"
 
 msgid "Orchestration Stack %{subject} has been retired."
 msgstr "Lo stack di orchestrazione %{subject} è stato ritirato."
+
+msgid "Orchestration Stack %{subject} has started retirement."
+msgstr ""
+"Stack di orchestrazione %{subject} ha iniziato la procedura di pensionamento."
 
 msgid "Orchestration Stack (Amazon)"
 msgid_plural "Orchestration Stacks (Amazon)"
@@ -39465,6 +39498,9 @@ msgstr ""
 msgid "Provisions"
 msgstr "Disposizioni"
 
+msgid "Proxmox Provider"
+msgstr "Fornitore Proxmox"
+
 msgid "Proxy"
 msgstr "Proxy"
 
@@ -41821,6 +41857,9 @@ msgstr "Rimuovi questo elemento dall'inventario"
 msgid "Remove this widget"
 msgstr "Rimuovi questo widget"
 
+msgid "Remove widget"
+msgstr "Rimuovi widget"
+
 msgid "Removing all snapshots is currently not supported"
 msgstr "La rimozione di tutte le istantanee non è attualmente supportata"
 
@@ -42172,9 +42211,6 @@ msgstr "Richiesta di archiviazione dei servizi"
 
 msgid "Request to Order Services"
 msgstr "Richiedi ordinamento servizi"
-
-msgid "Request to Provision"
-msgstr "Richiesta di Provisioning"
 
 msgid "Request to Provision Instances"
 msgstr "Richiesta di Provisioning delle istanze"
@@ -46693,6 +46729,12 @@ msgstr ""
 "SignatureMismatch - controllare la chiave di accesso segreta AWS ed il metodo "
 "di firma"
 
+msgid "Simplified Remote Restart"
+msgstr "Riavvio da remoto semplificato"
+
+msgid "Simplified Remote Restart Cabaility"
+msgstr "Funzionalità semplificata di riavvio da remoto"
+
 msgid "Simplified Remote Restart Capability"
 msgstr "Capacità di riavvio remoto semplificata"
 
@@ -46920,6 +46962,10 @@ msgstr "Informazioni istantanee"
 
 msgid "Snapshots"
 msgstr "Istantanee"
+
+msgid "Snapshotting the memory is only available if the VM is powered on"
+msgstr ""
+"La creazione di snapshot della memoria è disponibile solo se la VM è accesa"
 
 msgid "Snapshotting the memory is only available if the VM is powered on."
 msgstr "L'istantanea della memoria è disponibile solo se la VM è accesa."
@@ -51715,6 +51761,9 @@ msgstr "L'utente immetterà il valore"
 msgid "User:"
 msgstr "Utente:"
 
+msgid "User: %s"
+msgstr "Utente: %s"
+
 msgid "UserID"
 msgstr "ID utente"
 
@@ -56382,6 +56431,9 @@ msgstr "h"
 msgid "has been selected."
 msgstr "è stato selezionato."
 
+msgid "has to be a valid URL"
+msgstr "deve essere un URL valido"
+
 msgid "has to be unique per provider type"
 msgstr "deve essere univoco per tipo di provider"
 
@@ -57161,9 +57213,6 @@ msgstr "storage_scan_complete"
 
 msgid "success"
 msgstr "successo"
-
-msgid "sync must be implemented in a subclass"
-msgstr "la sincronizzazione deve essere implementata in una sottoclasse"
 
 msgid "tags"
 msgstr "tag"
