@@ -34474,7 +34474,7 @@ msgid "Orchestration Stack %{subject} has been retired."
 msgstr "已停用编排堆栈 %{subject}。"
 
 msgid "Orchestration Stack %{subject} has started retirement."
-msgstr "编排堆栈% {subject}已启动停用流程。"
+msgstr "编排堆栈% %{subject} 已启动停用流程。"
 
 msgid "Orchestration Stack (Amazon)"
 msgid_plural "Orchestration Stacks (Amazon)"
