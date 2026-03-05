@@ -3,7 +3,9 @@ if defined?(SecureHeaders)
   # - https://github.com/ManageIQ/manageiq-appliance/blob/master/COPY/etc/httpd/conf.d/manageiq-https-application.conf
   # - https://github.com/ManageIQ/manageiq-pods/blob/master/manageiq-operator/pkg/helpers/miq-components/httpd_conf.go
   SecureHeaders::Configuration.default do |config|
-    config.hsts = "max-age=#{20.years.to_i}"
+    # Only set HSTS in development/test where Apache isn't fronting Rails
+    # In production, Apache sets HSTS (see manageiq-https-application.conf line 15)
+    config.hsts = Rails.env.production? ? SecureHeaders::OPT_OUT : "max-age=#{20.years.to_i}"
     # X-Frame-Options
     config.x_frame_options = 'SAMEORIGIN'
     # X-Content-Type-Options
