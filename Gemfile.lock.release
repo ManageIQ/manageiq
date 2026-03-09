@@ -311,7 +311,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-proxmox
-  revision: 6066f3f2b42d894ac61883dce74085e9a5afe17e
+  revision: e1cdc1dfd7ebeb3351c25256e5d7d8c5502d62f2
   branch: tal
   specs:
     manageiq-providers-proxmox (0.1.0)
