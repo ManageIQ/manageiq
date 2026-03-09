@@ -1,8 +1,8 @@
 # ManageIQ
 
-[![CI](https://github.com/ManageIQ/manageiq/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/ManageIQ/manageiq/actions/workflows/ci.yaml)
+[![CI](https://github.com/ManageIQ/manageiq/actions/workflows/ci.yaml/badge.svg?branch=tal)](https://github.com/ManageIQ/manageiq/actions/workflows/ci.yaml)
 [![Codacy](https://api.codacy.com/project/badge/grade/9ffce48ccb924020ae8f9e698048e9a4)](https://www.codacy.com/app/ManageIQ/manageiq)
-[![Coverage Status](https://coveralls.io/repos/ManageIQ/manageiq/badge.svg?branch=master&service=github)](https://coveralls.io/github/ManageIQ/manageiq?branch=master)
+[![Coverage Status](https://coveralls.io/repos/ManageIQ/manageiq/badge.svg?branch=tal&service=github)](https://coveralls.io/github/ManageIQ/manageiq?branch=tal)
 
 [![License](http://img.shields.io/badge/license-APACHE2-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![Chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ManageIQ/manageiq?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
