@@ -54,7 +54,7 @@ gem "manageiq-password",                "~>1.0",             :require => false
 gem "manageiq-postgres_ha_admin",       "~>3.5",             :require => false
 gem "manageiq-ssh-util",                "~>0.2.0",           :require => false
 gem "memoist",                          "~>0.16.0",          :require => false
-gem "money",                            "~>6.13.5",          :require => false
+gem "money",                            "~>6.19.0",          :require => false
 gem "more_core_extensions"                                                     # min version should be set in manageiq-gems-pending, not here
 gem "net-ldap",                         "~>0.16.1",          :require => false
 gem "net-ping",                         "~>1.7.4",           :require => false
