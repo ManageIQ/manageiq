@@ -119,6 +119,17 @@ RSpec.describe Ansible::Runner do
       expect(response.debug).to eq(true)
     end
 
+    it "calls run with container_image support" do
+      expect(AwesomeSpawn).to receive(:run) do |command, options|
+        expect(command).to eq("ansible-runner")
+
+        _method, _dir, _json, args = options[:params]
+        expect(args).to eq(:ident => "result", :playbook => "playbook")
+      end.and_return(result)
+
+      response = described_class.run(env_vars, extra_vars, playbook, container_image: "ghcr.io/ansible-community/community-ee-base:latest")
+    end
+
     it "calls run with become options" do
       expect(AwesomeSpawn).to receive(:run) do |command, options|
         expect(command).to eq("ansible-runner")
@@ -220,6 +231,12 @@ RSpec.describe Ansible::Runner do
 
       runner_result = described_class.run_async(env_vars, extra_vars, playbook)
       expect(runner_result).kind_of?(Ansible::Runner::ResponseAsync)
+    end
+
+    it "raises NotImplementedError for container_image" do
+      expect do
+        described_class.run_async(env_vars, extra_vars, playbook, container_image: "ghcr.io/ansible-community/community-ee-base:latest")
+      end.to raise_error(NotImplementedError)
     end
   end
 
