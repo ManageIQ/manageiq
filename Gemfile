@@ -250,7 +250,7 @@ end
 
 ### shared dependencies
 group :google, :openshift, :manageiq_default do
-  gem "sshkey",                         "~>1.8.0",           :require => false
+  gem "sshkey",                         "~>1.9.0",           :require => false
 end
 
 ### end of provider bundler groups
