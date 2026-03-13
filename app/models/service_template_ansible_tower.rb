@@ -1,6 +1,5 @@
-class ServiceTemplateAnsibleTower < ServiceTemplate
+class ServiceTemplateAnsibleTower < ServiceTemplateAutomation
   include ServiceConfigurationMixin
-  include ServiceTemplateAutomationMixin
 
   before_update :remove_invalid_resource
 
@@ -29,11 +28,6 @@ class ServiceTemplateAnsibleTower < ServiceTemplate
       r.reload if r.persisted?
       r.destroy if r.resource.blank?
     end
-  end
-
-  def create_subtasks(_parent_service_task, _parent_service)
-    # no sub task is needed for this service
-    []
   end
 
   def self.default_provisioning_entry_point(_service_type)
