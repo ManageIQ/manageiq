@@ -14,12 +14,4 @@ class OrchestrationStackRetireTask < MiqRetireTask
   def self.model_being_retired
     OrchestrationStack
   end
-
-  def statemachine_task_status
-    if state == "finished"
-      status.to_s.downcase == "error" ? "error" : "ok"
-    else
-      "retry"
-    end
-  end
 end
