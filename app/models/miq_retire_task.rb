@@ -88,4 +88,12 @@ class MiqRetireTask < MiqRequestTask
   def self.display_name(number = 1)
     n_('Retire Task', 'Retire Tasks', number)
   end
+
+  def statemachine_task_status
+    if state == "finished"
+      status.to_s.downcase == "error" ? "error" : "ok"
+    else
+      "retry"
+    end
+  end
 end
