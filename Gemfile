@@ -78,7 +78,7 @@ gem "ruport",                           "~>1.8.0"
 gem "snmp",                             "~>1.3.0",           :require => false
 gem "sprockets",                        "~>3.7.2",           :require => false
 gem "sync",                             "~>0.5",             :require => false
-gem "sys-filesystem",                   "~>1.4.3"
+gem "sys-filesystem",                   "~>1.5.0"
 gem "terminal",                                              :require => false
 gem "wim_parser",                       "~>1.0",             :require => false
 
