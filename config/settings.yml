@@ -4,24 +4,11 @@
     :keep_events: 6.months
     :purge_window_size: 1000
 :authentication:
-  :basedn:
-  :bind_dn:
-  :bind_pwd:
-  :bind_timeout: 30
   :debug: false
-  :follow_referrals: false
-  :get_direct_groups: true
-  :group_memberships_max_depth: 2
-  :group_attribute: memberof
-  :ldaphost:
-  :ldapport: '389'
   :mode: database
   :group_delimiter:
   :max_failed_login_attempts: 3
   :locked_account_timeout: 2.minutes
-  :search_timeout: 30
-  :user_suffix:
-  :user_type: userprincipalname
   :amazon_key:
   :amazon_secret:
 :binary_blob:
