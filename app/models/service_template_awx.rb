@@ -6,6 +6,15 @@ class ServiceTemplateAwx < ServiceTemplateAutomation
   alias job_template configuration_script
   alias job_template= configuration_script=
 
+  def create_subtasks(_parent_service_task, _parent_service)
+    if prov_type.start_with?("generic_")
+      # no sub task is needed for this service
+      []
+    else
+      super
+    end
+  end
+
   def self.create_catalog_item(options, _auth_user = nil)
     transaction do
       create_from_options(options).tap do |service_template|
@@ -30,11 +39,6 @@ class ServiceTemplateAwx < ServiceTemplateAutomation
     end
   end
 
-  def create_subtasks(_parent_service_task, _parent_service)
-    # no sub task is needed for this service
-    []
-  end
-
   def self.default_provisioning_entry_point(_service_type)
     '/AutomationManagement/AnsibleTower/Service/Provisioning/StateMachines/Provision/CatalogItemInitialization'
   end
@@ -57,7 +61,7 @@ class ServiceTemplateAwx < ServiceTemplateAutomation
   end
 
   def my_zone
-    job_template.manager.try(:my_zone)
+    zone&.name || job_template.manager.try(:my_zone)
   end
 
   private
