@@ -719,6 +719,40 @@ RSpec.describe ServiceTemplate do
     end
   end
 
+  describe '.class_from_prov_type' do
+    it 'returns the correct generic type' do
+      template_class = ServiceTemplate.class_from_prov_type('generic_ansible_tower')
+
+      expect(template_class).to eq(ServiceTemplateAnsibleTower)
+    end
+
+    it 'raises an exception for an invalid generic type' do
+      expect { ServiceTemplate.class_from_prov_type('generic_invalid') }
+        .to raise_error(ArgumentError, /Invalid prov_type/)
+    end
+
+    it 'raises an exception when missing a ServiceTemplate sub-class for a valid prov_type' do
+      expect(described_class).to receive(:all_catalog_item_types).and_return("generic_invalid" => "Invalid but somehow kind of valid")
+      expect { ServiceTemplate.class_from_prov_type('generic_invalid') }
+        .to raise_error(ArgumentError, /Invalid prov_type/)
+    end
+
+    it 'returns the correct non-generic type mapping to ::ServiceTemplate' do
+      template_class = ServiceTemplate.class_from_prov_type('amazon')
+
+      expect(template_class).to eq(ServiceTemplate)
+    end
+
+    it 'returns the correct non-generic type when mapping to a ServiceTemplate subclass' do
+      expect(ServiceTemplate.class_from_prov_type("awx")).to eq(ServiceTemplateAwx)
+    end
+
+    it 'raises an exception for an invalid non-generic type' do
+      expect { ServiceTemplate.class_from_prov_type('invalid') }
+        .to raise_error(ArgumentError, /Invalid prov_type/)
+    end
+  end
+
   let(:user) { FactoryBot.create(:user_with_group) }
   let(:ra1) { FactoryBot.create(:resource_action, :action => 'Provision') }
   let(:ra2) { FactoryBot.create(:resource_action, :action => 'Retirement') }
