@@ -731,6 +731,12 @@ RSpec.describe ServiceTemplate do
         .to raise_error(ArgumentError, /Invalid prov_type/)
     end
 
+    it 'raises an exception when missing a ServiceTemplate sub-class for a valid prov_type' do
+      expect(described_class).to receive(:all_catalog_item_types).and_return("generic_invalid" => "Invalid but somehow kind of valid")
+      expect { ServiceTemplate.class_from_prov_type('generic_invalid') }
+        .to raise_error(ArgumentError, /Invalid prov_type/)
+    end
+
     it 'returns the correct non-generic type mapping to ::ServiceTemplate' do
       template_class = ServiceTemplate.class_from_prov_type('amazon')
 
