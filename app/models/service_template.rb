@@ -145,14 +145,17 @@ class ServiceTemplate < ApplicationRecord
     # class name validity before calling constantize.
     allowed_class_names = descendants.collect(&:name)
 
+    raise ArgumentError, "Invalid prov_type '#{prov_type}'" unless all_catalog_item_types.key?(prov_type)
+
     # If we are given a "generic" provision type then assume that the prov_type
     # maps to a valid class otherwise it is invalid
     #
     # Non-generic provision types however are able to work with the base
     # ServiceTemplate class and thus we cannot raise an exception in this case.
     if prov_type.starts_with?("generic_")
-      class_name = request_type.split('generic_').last
-      raise NameError, _("uninitialized constant") unless allowed_class_names.include?(class_name)
+      generic_type = prov_type.split('generic_').last
+      class_name   = "ServiceTemplate#{generic_type.camelize}"
+      raise ArgumentError, "Invalid prov_type '#{prov_type}'" unless allowed_class_names.include?(class_name)
     else
       class_name = "ServiceTemplate#{prov_type.camelize}"
       class_name = "ServiceTemplate" unless allowed_class_names.include?(class_name)
