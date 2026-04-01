@@ -59,6 +59,10 @@ class ManageIQ::Providers::EmsRefreshWorkflow < Job
     super(*args, :role => role, :priority => priority, :deliver_on => deliver_on)
   end
 
+  def current_job_timeout(_timeout_adjustment = 1)
+    options[:timeout] || super
+  end
+
   alias_method :initializing, :dispatch_start
   alias_method :start,        :run_native_op
   alias_method :finish,       :process_finished
