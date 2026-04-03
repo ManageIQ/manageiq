@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-02 15:44+0000\n"
-"PO-Revision-Date: 2026-03-02 15:44+0000\n"
+"POT-Creation-Date: 2026-04-01 00:30+0000\n"
+"PO-Revision-Date: 2026-04-01 00:30+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -1813,9 +1813,6 @@ msgstr ""
 msgid "<Click on this row to create a new entry>"
 msgstr ""
 
-msgid "<Click on this row to create a new forest>"
-msgstr ""
-
 msgid "<Determine at Run Time>"
 msgstr ""
 
@@ -2128,9 +2125,6 @@ msgid "Absolute Min Derived Memory Used Timestamp"
 msgstr ""
 
 msgid "Absolute Min Derived Memory Used Value"
-msgstr ""
-
-msgid "Accept"
 msgstr ""
 
 msgid "Accept EULA"
@@ -4112,12 +4106,6 @@ msgstr ""
 msgid "An unknown version"
 msgstr ""
 
-msgid ""
-"An updated subscription must point to the same database with which it was orig"
-"inally created. Failure to do so will result in undefined behavior. Do you wan"
-"t to continue?"
-msgstr ""
-
 msgid "Analysis"
 msgstr ""
 
@@ -4406,9 +4394,6 @@ msgid "Are you sure you want to delete category '%{category_name}'?"
 msgstr ""
 
 msgid "Are you sure you want to delete field from schema?"
-msgstr ""
-
-msgid "Are you sure you want to delete forest %{ldaphost} ?"
 msgstr ""
 
 msgid "Are you sure you want to delete input field from method?"
@@ -5826,9 +5811,6 @@ msgstr ""
 msgid "Bad response from %{log}: %{result}"
 msgstr ""
 
-msgid "Base DN"
-msgstr ""
-
 msgid "Base Name"
 msgstr ""
 
@@ -5939,15 +5921,6 @@ msgid "BinaryBlob|Resource type"
 msgstr ""
 
 msgid "BinaryBlob|Size"
-msgstr ""
-
-msgid "Bind DN"
-msgstr ""
-
-msgid "Bind Password"
-msgstr ""
-
-msgid "Bind failed for user %{user_name}"
 msgstr ""
 
 msgid "Blade Slot Count"
@@ -6652,6 +6625,9 @@ msgstr ""
 msgid "CPU Utilization"
 msgstr ""
 
+msgid "CPU hotplug not enabled"
+msgstr ""
+
 msgid "CPU total cores"
 msgstr ""
 
@@ -6878,7 +6854,16 @@ msgstr ""
 msgid "Cannot parse userid %{user_id}"
 msgstr ""
 
+msgid "Cannot reconfigure a template"
+msgstr ""
+
 msgid "Cannot redirect to \"%{record}\" provider."
+msgstr ""
+
+msgid "Cannot reduce CPUs on running VM"
+msgstr ""
+
+msgid "Cannot reduce memory on running VM"
 msgstr ""
 
 msgid "Cannot resize disks of a VM with snapshots"
@@ -8018,9 +8003,6 @@ msgstr ""
 msgid "Click to add a new entry"
 msgstr ""
 
-msgid "Click to add a new forest"
-msgstr ""
-
 msgid "Click to add a new parameter"
 msgstr ""
 
@@ -8039,16 +8021,10 @@ msgstr ""
 msgid "Click to delete this field from schema"
 msgstr ""
 
-msgid "Click to delete this forest"
-msgstr ""
-
 msgid "Click to delete this input field from method"
 msgstr ""
 
 msgid "Click to delete this mapping"
-msgstr ""
-
-msgid "Click to edit this forest"
 msgstr ""
 
 msgid "Click to go this location"
@@ -15277,11 +15253,6 @@ msgstr ""
 msgid "Deleting Volume %{subject} failed: %{error_message}"
 msgstr ""
 
-msgid ""
-"Deleting a subscription will remove all replicated data which originated in th"
-"e selected region. Do you want to continue?"
-msgstr ""
-
 msgid "Deleting all Tasks older than %{date} from the %{product} Database initiated"
 msgstr ""
 
@@ -20399,9 +20370,6 @@ msgstr ""
 msgid "Error requesting data from server"
 msgstr ""
 
-msgid "Error retrieving LDAP info: %{error_message}"
-msgstr ""
-
 msgid "Error returned from %{name} event processing in Automate: %{error_message}"
 msgstr ""
 
@@ -22979,6 +22947,9 @@ msgstr ""
 msgid "Given a set of capabilities, check which attached resources will comply"
 msgstr ""
 
+msgid "Global"
+msgstr ""
+
 msgid "Global Default"
 msgstr ""
 
@@ -23717,6 +23688,11 @@ msgstr[1] ""
 
 msgid "Host (OpenStack)"
 msgid_plural "Hosts (OpenStack)"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Host (Proxmox)"
+msgid_plural "Hosts (Proxmox)"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -24790,6 +24766,9 @@ msgid "IBM Power HMC Provider"
 msgstr ""
 
 msgid "IBM PowerVC"
+msgstr ""
+
+msgid "IBM PowerVC Cloud Provider"
 msgstr ""
 
 msgid "IBM PowerVC Provider"
@@ -25919,23 +25898,6 @@ msgstr ""
 msgid "LDAP Groups for User"
 msgstr ""
 
-msgid "LDAP Host is required"
-msgstr ""
-
-msgid "LDAP Host should be unique"
-msgstr ""
-
-msgid "LDAP Hostname"
-msgstr ""
-
-msgid ""
-"LDAP Hostname and Port fields are needed to perform verification of LDAP Setti"
-"ngs"
-msgstr ""
-
-msgid "LDAP Port"
-msgstr ""
-
 msgid "LDAP Region"
 msgstr ""
 
@@ -25946,9 +25908,6 @@ msgid "LDAP Server"
 msgstr ""
 
 msgid "LDAP Servers"
-msgstr ""
-
-msgid "LDAP Settings validation was successful"
 msgstr ""
 
 msgid "LDAPs"
@@ -26846,9 +26805,6 @@ msgid "Logs for this %{product} Server are not available for viewing"
 msgstr ""
 
 msgid "Long Description"
-msgstr ""
-
-msgid "Lookup"
 msgstr ""
 
 msgid "Low"
@@ -28032,6 +27988,9 @@ msgid "Memory Utilization"
 msgstr ""
 
 msgid "Memory Virtual to Real Ratio"
+msgstr ""
+
+msgid "Memory hotplug requires hotplug=memory and NUMA"
 msgstr ""
 
 msgid "Memory on Disk"
@@ -33585,9 +33544,6 @@ msgid "No icon"
 msgstr ""
 
 msgid "No ids given to process_tasks"
-msgstr ""
-
-msgid "No information returned for %{email}"
 msgstr ""
 
 msgid "No input to apply"
@@ -40628,9 +40584,6 @@ msgstr ""
 msgid "Required if SSH login is disabled for the Default account."
 msgstr ""
 
-msgid "Required key not specified: [%{key}]"
-msgstr ""
-
 msgid "Required tag(s): %{names}"
 msgstr ""
 
@@ -40659,6 +40612,9 @@ msgid "Reset Changes"
 msgstr ""
 
 msgid "Reset Dashboard Widgets"
+msgstr ""
+
+msgid "Reset Dashboard Widgets to the default"
 msgstr ""
 
 msgid "Reset Dashboard Widgets to the defaults"
@@ -43055,6 +43011,11 @@ msgid_plural "Service Ansible Towers"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Service Automation"
+msgid_plural "Service Automations"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Service Awx"
 msgid_plural "Service Awxes"
 msgstr[0] ""
@@ -43108,6 +43069,11 @@ msgstr ""
 
 msgid "Service Display Name"
 msgstr ""
+
+msgid "Service Embedded Terraform"
+msgid_plural "Service Embedded Terraforms"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Service Generic"
 msgid_plural "Service Generics"
@@ -46298,9 +46264,6 @@ msgstr ""
 msgid "Subscription Manager failed to enable repo %{repo_name}"
 msgstr ""
 
-msgid "Subscriptions"
-msgstr ""
-
 msgid "Substitution:"
 msgstr ""
 
@@ -47190,6 +47153,12 @@ msgid_plural "Terraform Templates (Terraform Enterprise)"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Terraform Template (deprecated)"
+msgstr ""
+
+msgid "Terraform Template Provision"
+msgstr ""
+
 msgid "Terraform has applied the changes specified in the plan."
 msgstr ""
 
@@ -47317,6 +47286,9 @@ msgid "The Physical Storage is not connected to an active Manager"
 msgstr ""
 
 msgid "The PowerVM management master of this host is a HMC."
+msgstr ""
+
+msgid "The QEMU guest agent is not running"
 msgstr ""
 
 msgid "The Security Group is not connected to an active %{table}"
@@ -48572,9 +48544,6 @@ msgstr ""
 msgid "Trusted CA Certificates"
 msgstr ""
 
-msgid "Trusted Forest Settings"
-msgstr ""
-
 msgid "Trying to change a read-only widget"
 msgstr ""
 
@@ -48754,11 +48723,6 @@ msgstr ""
 msgid "Unable to attach volume: %{error_message}"
 msgstr ""
 
-msgid ""
-"Unable to auto-create user because LDAP search returned no data for user: [%{n"
-"ame}]"
-msgstr ""
-
 msgid "Unable to create Cloud Network \"%{name}\": %{details}"
 msgstr ""
 
@@ -48837,9 +48801,6 @@ msgstr ""
 msgid "Unable to find task with id: [%{task_id}]"
 msgstr ""
 
-msgid "Unable to find user %{user_name} in directory"
-msgstr ""
-
 msgid "Unable to find user '%{name}'"
 msgstr ""
 
@@ -48906,6 +48867,9 @@ msgstr ""
 msgid "Unable to restore Cloud Volume \"%{name}\": %{details}"
 msgstr ""
 
+msgid "Unable to save replication settings."
+msgstr ""
+
 msgid "Unable to sync data for job with id %{job_id}"
 msgstr ""
 
@@ -48916,6 +48880,9 @@ msgid "Unable to update Cloud Volume \"%{name}\": %{details}"
 msgstr ""
 
 msgid "Unable to update Host Aggregate \"%{name}\": %{details}"
+msgstr ""
+
+msgid "Unable to validate subscription."
 msgstr ""
 
 msgid "Unallocated Space"
@@ -49683,9 +49650,6 @@ msgstr ""
 msgid "User Name"
 msgstr ""
 
-msgid "User Password must be entered to perform LDAP Group Look Up"
-msgstr ""
-
 msgid "User Role"
 msgstr ""
 
@@ -49746,9 +49710,6 @@ msgid "Username (optional):"
 msgstr ""
 
 msgid "Username for this credential"
-msgstr ""
-
-msgid "Username must be entered to perform LDAP Group Look Up"
 msgstr ""
 
 msgid "Username or password is not valid"
@@ -50783,9 +50744,6 @@ msgstr ""
 msgid "Validate the Amazon Settings"
 msgstr ""
 
-msgid "Validate the LDAP Settings by binding with the Host"
-msgstr ""
-
 msgid "Validate the credentials by logging into the Server"
 msgstr ""
 
@@ -50964,13 +50922,7 @@ msgstr ""
 msgid "View"
 msgstr ""
 
-msgid "View %{name} Folder"
-msgstr ""
-
 msgid "View '%{name}' Cluster"
-msgstr ""
-
-msgid "View '%{name}' Folder"
 msgstr ""
 
 msgid "View Alert Definition Profiles"
@@ -51124,9 +51076,6 @@ msgid "View Datastores Clusters"
 msgstr ""
 
 msgid "View Event Streams"
-msgstr ""
-
-msgid "View Examples (read only)' Folder"
 msgstr ""
 
 msgid "View Firmware"
@@ -54250,12 +54199,6 @@ msgstr ""
 msgid "kubevirt"
 msgstr ""
 
-msgid "ldap"
-msgstr ""
-
-msgid "ldaps"
-msgstr ""
-
 msgid "locale_name"
 msgstr ""
 
@@ -54323,6 +54266,9 @@ msgid "must have a numeric id"
 msgstr ""
 
 msgid "must start at zero and not contain any gaps between start and prior end value."
+msgstr ""
+
+msgid "name"
 msgstr ""
 
 msgid "name:[%{session}] to [%{name}]"
