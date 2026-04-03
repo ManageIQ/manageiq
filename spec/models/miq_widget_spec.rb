@@ -936,6 +936,32 @@ RSpec.describe MiqWidget do
       expect(widget.status_message).to eq("message")
     end
   end
+
+  describe "#visibility_values" do
+    it "returns empty array when visibility is not a hash" do
+      widget = FactoryBot.build(:miq_widget, :visibility => nil)
+      expect(widget.visibility_values).to eq([])
+    end
+
+    it "returns role names for role IDs" do
+      role1 = FactoryBot.create(:miq_user_role, :name => 'EvmRole-auditor')
+      role2 = FactoryBot.create(:miq_user_role, :name => 'EvmRole-desktop')
+      widget = FactoryBot.build(:miq_widget, :visibility => {:roles => [role1.id, role2.id]})
+      expect(widget.visibility_values).to match_array(['EvmRole-auditor', 'EvmRole-desktop'])
+    end
+
+    it "returns group descriptions for group IDs" do
+      group1 = FactoryBot.create(:miq_group, :description => 'Group1')
+      group2 = FactoryBot.create(:miq_group, :description => 'Group2')
+      widget = FactoryBot.build(:miq_widget, :visibility => {:groups => [group1.id, group2.id]})
+      expect(widget.visibility_values).to match_array(['Group1', 'Group2'])
+    end
+
+    it "handles special _ALL_ value for roles" do
+      widget = FactoryBot.build(:miq_widget, :visibility => {:roles => ['_ALL_']})
+      expect(widget.visibility_values).to eq([])
+    end
+  end
 end
 
 RSpec::Matchers.define :skip_message do |widget|

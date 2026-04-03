@@ -451,6 +451,21 @@ class MiqWidget < ApplicationRecord
     visibility.kind_of?(Hash) && visibility.key?(key) && (visibility[key].include?(value) || visibility[key].include?("_ALL_"))
   end
 
+  def visibility_values
+    return [] unless visibility.kind_of?(Hash)
+
+    typ = visibility.keys.first
+    values = visibility.values.flatten
+
+    # Convert ids to useful strings for display
+    case typ
+    when :roles
+      MiqUserRole.where(:id => values).pluck(:name)
+    when :groups
+      MiqGroup.where(:id => values).pluck(:description)
+    end
+  end
+
   def self.get_user(user)
     if user.kind_of?(String)
       original = user
