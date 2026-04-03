@@ -187,10 +187,6 @@ group :nsxt, :manageiq_default do
   manageiq_plugin "manageiq-providers-nsxt"
 end
 
-group :nuage, :manageiq_default do
-  manageiq_plugin "manageiq-providers-nuage"
-end
-
 group :nutanix, :manageiq_default do
   manageiq_plugin "manageiq-providers-nutanix"
 end
