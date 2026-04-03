@@ -76,10 +76,6 @@
   description: Server High DB Disk Usage
   event_type: Default
   set_type: evm_operations
-- name: evm_server_db_backup_low_space
-  description: Server Database Backup Insufficient Space
-  event_type: Default
-  set_type: evm_operations
 - name: evm_worker_start
   description: Worker Started
   event_type: Default
