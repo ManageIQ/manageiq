@@ -278,6 +278,7 @@ class ExtManagementSystem < ApplicationRecord
   supports_attribute :feature => :volume_multiattachment
   supports_attribute :feature => :volume_resizing
   supports_attribute :supports_cloud_object_store_container_create, :child_model => "CloudObjectStoreContainer"
+  supports_attribute :supports_cloud_network_create, :child_model => "CloudNetwork"
   supports_attribute :feature => :cinder_volume_types
   supports_attribute :feature => :cloud_subnet_create
   supports_attribute :feature => :cloud_volume
