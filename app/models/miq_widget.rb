@@ -456,6 +456,7 @@ class MiqWidget < ApplicationRecord
 
     typ = visibility.keys.first
     values = visibility.values.flatten
+    return [] if typ.blank? || values.blank?
 
     # Convert ids to useful strings for display
     case typ

@@ -961,6 +961,11 @@ RSpec.describe MiqWidget do
       widget = FactoryBot.build(:miq_widget, :visibility => {:roles => ['_ALL_']})
       expect(widget.visibility_values).to eq([])
     end
+
+    it "handles missing visibility keys" do
+      widget = FactoryBot.build(:miq_widget, :visibility => {})
+      expect(widget.visibility_values).to eq([])
+    end
   end
 end
 
