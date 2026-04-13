@@ -207,6 +207,10 @@ group :red_hat_virtualization, :manageiq_default do
   manageiq_plugin "manageiq-providers-red_hat_virtualization"
 end
 
+group :scvmm, :manageiq_default do
+  manageiq_plugin "manageiq-providers-scvmm"
+end
+
 group :terraform_enterprise, :manageiq_default do
   manageiq_plugin "manageiq-providers-terraform_enterprise"
 end
