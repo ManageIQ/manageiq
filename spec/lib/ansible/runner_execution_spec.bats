@@ -116,7 +116,7 @@ exec_ansible_runner_cli_role() {
 
   run exec_ansible_runner_cli vmware.yml
   assert_failure # We expect to this to fail due to connecting to an unknown vcenter
-  assert_output --partial '"msg": "Unknown error while connecting to vCenter or ESXi API at vcenter_hostname:443 : [Errno -2] Name or service not known"'
+  assert_output --partial '"msg": "Unknown error while connecting to the vCenter or ESXi API at vcenter_hostname:443 : [Errno -2] Name or service not known"'
 }
 
 @test "[ansible-runner] aws collection" {
@@ -188,7 +188,7 @@ exec_ansible_runner_role() {
 
   run exec_ansible_runner vmware.yml
   assert_failure # We expect to this to fail due to connecting to an unknown vcenter
-  assert_output --partial '"msg": "Unknown error while connecting to vCenter or ESXi API at vcenter_hostname:443 : [Errno -2] Name or service not known"'
+  assert_output --partial '"msg": "Unknown error while connecting to the vCenter or ESXi API at vcenter_hostname:443 : [Errno -2] Name or service not known"'
 }
 
 @test "[Ansible::Runner#run] aws collection" {
@@ -260,7 +260,7 @@ exec_ansible_runner_role_async() {
 
   run exec_ansible_runner_async vmware.yml
   assert_failure # We expect to this to fail due to connecting to an unknown vcenter
-  assert_output --partial '"msg": "Unknown error while connecting to vCenter or ESXi API at vcenter_hostname:443 : [Errno -2] Name or service not known"'
+  assert_output --partial '"msg": "Unknown error while connecting to the vCenter or ESXi API at vcenter_hostname:443 : [Errno -2] Name or service not known"'
 }
 
 @test "[Ansible::Runner#run_async] aws collection" {
