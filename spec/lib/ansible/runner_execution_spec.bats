@@ -4,10 +4,17 @@
 # that the real installation is working as expected. It is a duplicate of the tests
 # in runner_execution_spec.rb but without the rspec and rspec-rails overhead.
 #
-# This test requires the Bats test framework to be installed
+# These tests should be run on an appliance or container using
+#
+#   bin/test_ansible_runner_execution
+#
+# which will setup the Bats test framework, plugins, and ensure the test files
+# are present. This can also be used to run locally, but if you prefer to
+# install Bats and the plugins yourself, you can do the following manually:
+#
 #   macOS: brew install bats-core
 #   appliance: dnf install bats
-# as well as the bats-support and bats-assert plugins installed
+#
 #   git clone https://github.com/bats-core/bats-support ~/.bats/libs/bats-support
 #   git clone https://github.com/bats-core/bats-assert ~/.bats/libs/bats-assert
 
