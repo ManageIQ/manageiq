@@ -291,7 +291,7 @@ end
 
 group :web_socket, :manageiq_default do
   gem "surro-gate",                     "~>1.0.6",           :require => false
-  gem "websocket-driver",               "~>0.6.3",           :require => false
+  gem "websocket-driver",               "~>0.8.0",           :require => false
 end
 
 group :appliance, :optional => true do
