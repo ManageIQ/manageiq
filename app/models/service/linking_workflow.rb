@@ -53,6 +53,7 @@ class Service
 
       found_vms = linking_targets
       not_found_vms = options[:uid_ems_array] - found_vms.pluck(:uid_ems)
+
       _log.warn("VMs not found for linking to service ID [#{service.id}], name [#{service.name}]: #{not_found_vms}") if not_found_vms.present?
 
       service = linking_service
@@ -61,6 +62,20 @@ class Service
     rescue => err
       _log.log_backtrace(err)
       signal(:abort, err.message, "error")
+    end
+
+    def refresh_target
+      ems = target_entity
+      return ems unless ems&.allow_targeted_refresh?
+
+      # Create targeted refresh for specific VMs
+      options[:uid_ems_array].map do |uid_ems|
+        InventoryRefresh::Target.new(
+          :manager     => ems,
+          :association => :vms,
+          :manager_ref => {:ems_ref => uid_ems}
+        )
+      end
     end
 
     private
