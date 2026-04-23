@@ -473,15 +473,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     (min..max).each_with_object({}) { |i, h| h[i] = i.to_s }
   end
 
-  def load_test_ous_data
-    return @ldap_ous unless @ldap_ous.nil?
-
-    ous = YAML.load_file("ous.yaml")
-    @ldap_ous = {}
-    ous.each { |ou| @ldap_ous[ou[0].dup] = ou[1].dup }
-    @ldap_ous
-  end
-
   def allowed_organizational_units(_options = {})
     {}
   end
