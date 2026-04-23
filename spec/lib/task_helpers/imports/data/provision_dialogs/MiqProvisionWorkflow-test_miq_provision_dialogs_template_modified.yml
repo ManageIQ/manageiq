@@ -157,14 +157,6 @@
           :display: :edit
           :default: perServer
           :data_type: :string
-        :ldap_ous:
-          :values_from:
-            :method: :allowed_ous_tree
-          :auto_select_single: false
-          :description: LDAP Group
-          :required: false
-          :display: :edit
-          :data_type: :string
         :sysprep_timezone:
           :values_from:
             :method: :get_timezones
