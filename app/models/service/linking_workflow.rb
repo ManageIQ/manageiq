@@ -53,10 +53,10 @@ class Service
 
       found_vms = linking_targets
       not_found_vms = options[:uid_ems_array] - found_vms.pluck(:uid_ems)
+      service = linking_service
 
       _log.warn("VMs not found for linking to service ID [#{service.id}], name [#{service.name}]: #{not_found_vms}") if not_found_vms.present?
 
-      service = linking_service
       found_vms.each { |vm| service.add_resource!(vm) }
       signal(:finish, "linking VMs to service is complete", "ok")
     rescue => err

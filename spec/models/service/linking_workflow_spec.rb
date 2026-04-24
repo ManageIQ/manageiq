@@ -53,6 +53,12 @@ RSpec.describe Service::LinkingWorkflow do
       subject
       expect(service.vms.count).to eq(2)
     end
+
+    it 'finishes even if not all vms are found' do
+      FactoryBot.create(:vm_vmware, :uid_ems => uid_ems_array.first, :ems_id => provider.id)
+      subject
+      expect(service.vms.count).to eq(1)
+    end
   end
 
   context '#refresh_target' do
