@@ -82,6 +82,7 @@ gem "wim_parser",                       "~>1.0",             :require => false
 
 # gems to resolve security issues
 gem "cgi",  "~> 0.5"
+gem "erb",  ">= 6.0.4"  # CVE-2026-41316: https://github.com/advisories/GHSA-q339-8rmv-2mhv; Dependency of irb -> rdoc -> erb
 gem "faraday", "~> 2.14", ">= 2.14.1" # CVE-2026-25765: https://github.com/advisories/GHSA-33mh-2634-fwr2
 gem "uri",  "~> 0.13.3" # CVE-2025-61594: https://www.ruby-lang.org/en/news/2025/10/07/uri-cve-2025-61594/
                         # Avoid URI 1.0.0 for now due to: https://github.com/ruby/uri/issues/125
