@@ -21,14 +21,14 @@ RSpec.describe Service::LinkingWorkflow do
     subject { job.run_native_op }
 
     it 'raises an error if service is not found' do
-      options[:service_id] = 999
-      expect(job).to receive(:signal).with(:abort, "Job [#{job.id}] [#{job.name}] aborted: didn't find service ID: [999] to link to", "error")
+      options[:service_id] = -1
+      expect(job).to receive(:signal).with(:abort, "Job [#{job.id}] [#{job.name}] aborted: didn't find service ID: [-1] to link to", "error")
       subject
     end
 
     it 'raises an error if provider is not found' do
-      options[:target_id] = 999
-      msg = "Job [#{job.id}] [#{job.name}] aborted: didn't find provider class: [#{provider.class.name}] ID: [999] to refresh"
+      options[:target_id] = -1
+      msg = "Job [#{job.id}] [#{job.name}] aborted: didn't find provider class: [#{provider.class.name}] ID: [-1] to refresh"
       expect(job).to receive(:signal).with(:abort, msg, "error")
       subject
     end
@@ -92,7 +92,7 @@ RSpec.describe Service::LinkingWorkflow do
 
     context 'when provider record doesn\'t exist' do
       before do
-        options[:target_id] = 999
+        options[:target_id] = -1
       end
 
       it 'returns nil' do
