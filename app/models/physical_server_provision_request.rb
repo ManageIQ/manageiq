@@ -33,4 +33,14 @@ class PhysicalServerProvisionRequest < MiqRequest
       raise MiqException::MiqProvisionError, "Source PhysicalServer with id [#{source_id}] has no EMS, unable to provision" if source.ext_management_system.nil?
     end
   end
+
+  def self.active_provision_requests
+    PhysicalServerProvisionTask.where(:destination_type => "PhysicalServer")
+                               .joins("INNER JOIN physical_servers ON physical_servers.id = miq_request_tasks.destination_id")
+                               .where.not(:miq_request_id => nil)
+                               .where(:miq_request_id => select(:id))
+                               .where.not(:physical_servers => {:ems_id => nil})
+                               .distinct
+                               .select(:miq_request_id)
+  end
 end
