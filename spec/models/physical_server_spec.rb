@@ -50,4 +50,14 @@ RSpec.describe PhysicalServer do
       end
     end
   end
+
+  describe ".active" do
+    it "returns only servers with ems_id" do
+      active_server = FactoryBot.create(:physical_server, :ems_id => 1)
+      orphaned_server = FactoryBot.create(:physical_server, :ems_id => nil)
+
+      expect(described_class.active).to include(active_server)
+      expect(described_class.active).not_to include(orphaned_server)
+    end
+  end
 end

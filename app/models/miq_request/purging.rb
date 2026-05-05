@@ -38,7 +38,7 @@ class MiqRequest
         old_requests = request_class.where(MiqRequest.arel_table[:created_on].lt(older_than))
 
         if request_class.respond_to?(:active_provision_requests)
-          old_requests.where.not(:id => request_class.active_provision_requests)
+          old_requests.where.not(:id => request_class.active_provision_requests.select(:miq_request_id))
         else
           old_requests.select(:id)
         end

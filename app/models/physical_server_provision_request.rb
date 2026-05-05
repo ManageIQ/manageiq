@@ -35,12 +35,10 @@ class PhysicalServerProvisionRequest < MiqRequest
   end
 
   def self.active_provision_requests
-    PhysicalServerProvisionTask.where(:destination_type => "PhysicalServer")
-                               .joins("INNER JOIN physical_servers ON physical_servers.id = miq_request_tasks.destination_id")
-                               .where.not(:miq_request_id => nil)
+    PhysicalServerProvisionTask.with_destination('PhysicalServer')
+                               .having_request
                                .where(:miq_request_id => select(:id))
-                               .where.not(:physical_servers => {:ems_id => nil})
+                               .merge(PhysicalServer.active)
                                .distinct
-                               .select(:miq_request_id)
   end
 end

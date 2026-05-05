@@ -34,6 +34,7 @@ class PhysicalServer < ApplicationRecord
   has_many :miq_alert_statuses, :as => :resource, :dependent => :destroy, :inverse_of => :resource
 
   scope :with_hosts, -> { where("physical_servers.id in (select hosts.physical_server_id from hosts)") }
+  scope :active, -> { where.not(:ems_id => nil) }
 
   virtual_column :v_availability, :type => :string, :uses => :host
   virtual_column :v_host_os, :type => :string, :uses => :host

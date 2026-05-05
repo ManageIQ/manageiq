@@ -97,11 +97,9 @@ class ServiceTemplateProvisionRequest < MiqRequest
   end
 
   def self.active_provision_requests
-    ServiceTemplateProvisionTask.where(:destination_type => "Service")
-                                .joins("INNER JOIN services ON services.id = miq_request_tasks.destination_id")
-                                .where.not(:miq_request_id => nil)
+    ServiceTemplateProvisionTask.with_destination('Service')
+                                .having_request
                                 .where(:miq_request_id => select(:id))
                                 .distinct
-                                .select(:miq_request_id)
   end
 end

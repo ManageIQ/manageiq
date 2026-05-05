@@ -10,6 +10,13 @@ class MiqRequestTask < ApplicationRecord
   belongs_to :miq_request_task
   belongs_to :tenant
 
+  scope :with_destination, lambda { |type|
+    table_name = type.constantize.table_name
+    where(:destination_type => type)
+      .joins(sanitize_sql_array(["INNER JOIN %s ON %s.id = miq_request_tasks.destination_id", table_name, table_name]))
+  }
+  scope :having_request, -> { where.not(:miq_request_id => nil) }
+
   serialize   :phase_context, :type => Hash
   serialize   :options,       :type => Hash
 

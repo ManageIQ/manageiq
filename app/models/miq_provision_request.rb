@@ -168,12 +168,10 @@ class MiqProvisionRequest < MiqRequest
   end
 
   def self.active_provision_requests
-    MiqProvision.where(:destination_type => "VmOrTemplate")
-                .joins("INNER JOIN vms ON vms.id = miq_request_tasks.destination_id")
-                .where.not(:miq_request_id => nil)
+    MiqProvision.with_destination('VmOrTemplate')
+                .having_request
                 .where(:miq_request_id => select(:id))
-                .where.not(:vms => {:ems_id => nil})
+                .merge(Vm.active)
                 .distinct
-                .select(:miq_request_id)
   end
 end
