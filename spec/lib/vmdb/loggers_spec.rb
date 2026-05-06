@@ -329,6 +329,12 @@ RSpec.describe Vmdb::Loggers do
       expect(described_class.contents(log)).to eq(ascii_log_content)
     end
 
+    it "with ActiveSupport::BroadcastLogger" do
+      log = described_class.send(:create_wrapper_logger, "test", ManageIQ::Loggers::Base, ManageIQ::Loggers::Base.new($stdout))
+
+      expect(described_class.contents(log)).to eq("")
+    end
+
     context "with evm log snippet with invalid utf8 byte sequence data" do
       let(:logfile) { Pathname.new(__dir__).join("data/redundant_utf8_byte_sequence.log") }
 
