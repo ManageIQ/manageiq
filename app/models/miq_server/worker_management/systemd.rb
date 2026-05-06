@@ -86,7 +86,7 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
   end
 
   def systemd_unit_dir
-    Pathname.new("/lib/systemd/system")
+    Pathname.new("/etc/systemd/system")
   end
 
   def manageiq_service?(unit)
