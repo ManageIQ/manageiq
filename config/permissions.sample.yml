@@ -1,0 +1,4 @@
+- ems-type:vmware # Disable VMware provider
+
+- ui-menu:con     # Disable UI Control Menu
+- ui-menu:ansible # Disable UI Automation -> Embedded Ansible Menu
