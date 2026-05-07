@@ -43,6 +43,7 @@ config/cable.yml
 config/cockpit
 config/database.yml*
 config/messaging.yml
+config/permissions.yml
 config/vmdb.yml.db
 
 # See: EDITOR=vi be rails credentials:edit --help for more information
