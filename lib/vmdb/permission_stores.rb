@@ -29,5 +29,9 @@ module Vmdb
     def supported_ems_type?(type)
       can?("ems-type:#{type}")
     end
+
+    def supported_ui_menu?(menu)
+      can?("ui-menu:#{menu}")
+    end
   end
 end
