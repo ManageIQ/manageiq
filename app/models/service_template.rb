@@ -567,11 +567,13 @@ class ServiceTemplate < ApplicationRecord
 
   def construct_config_info
     config_info = {}
-
-    miq_request_resource = service_resources.find_by(:resource_type => 'MiqRequest')
-    config_info.merge!(miq_request_resource.resource.options.compact) if miq_request_resource
-
+    config_info.merge!(miq_request_info)
     config_info.merge!(resource_actions_info)
+  end
+
+  def miq_request_info
+    miq_request = service_resources.find_by(:resource_type => 'MiqRequest')&.resource
+    miq_request&.options&.compact || {}
   end
 
   def resource_actions_info
