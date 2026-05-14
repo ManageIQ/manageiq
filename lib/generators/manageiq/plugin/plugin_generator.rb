@@ -70,6 +70,7 @@ module ManageIQ
         GITIGNORE
 
         inject_into_file ".gitignore", gitignore, :after => "/spec/manageiq\n"
+        template ".gitattributes"
         template ".yarnrc.yml"
         template "package.json"
         template "yarn.lock"
