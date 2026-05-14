@@ -88,13 +88,12 @@ module ArPglogicalMigrationHelper
     end
 
     def restart_subscription
-      c = SubscriptionHelper.establish_connection.connection.raw_connection
-      rep_client = PG::LogicalReplication::Client.new(c)
+      SubscriptionHelper.establish_connection.with_connection do |c|
+        rep_client = PG::LogicalReplication::Client.new(c.raw_connection)
 
-      rep_client.disable_subscription(subscription.id)
-      rep_client.enable_subscription(subscription.id)
-    ensure
-      SubscriptionHelper.remove_connection
+        rep_client.disable_subscription(subscription.id)
+        rep_client.enable_subscription(subscription.id)
+      end
     end
   end
 end

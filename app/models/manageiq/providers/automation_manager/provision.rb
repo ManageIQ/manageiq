@@ -1,4 +1,6 @@
 class ManageIQ::Providers::AutomationManager::Provision < MiqProvisionTask
+  include StateMachine
+
   def self.request_class
     MiqProvisionConfigurationScriptRequest
   end

@@ -4,10 +4,17 @@
 # that the real installation is working as expected. It is a duplicate of the tests
 # in runner_execution_spec.rb but without the rspec and rspec-rails overhead.
 #
-# This test requires the Bats test framework to be installed
+# These tests should be run on an appliance or container using
+#
+#   bin/test_ansible_runner_execution
+#
+# which will setup the Bats test framework, plugins, and ensure the test files
+# are present. This can also be used to run locally, but if you prefer to
+# install Bats and the plugins yourself, you can do the following manually:
+#
 #   macOS: brew install bats-core
 #   appliance: dnf install bats
-# as well as the bats-support and bats-assert plugins installed
+#
 #   git clone https://github.com/bats-core/bats-support ~/.bats/libs/bats-support
 #   git clone https://github.com/bats-core/bats-assert ~/.bats/libs/bats-assert
 
@@ -116,7 +123,7 @@ exec_ansible_runner_cli_role() {
 
   run exec_ansible_runner_cli vmware.yml
   assert_failure # We expect to this to fail due to connecting to an unknown vcenter
-  assert_output --partial '"msg": "Unknown error while connecting to vCenter or ESXi API at vcenter_hostname:443 : [Errno -2] Name or service not known"'
+  assert_output --partial '"msg": "Unknown error while connecting to the vCenter or ESXi API at vcenter_hostname:443 : [Errno -2] Name or service not known"'
 }
 
 @test "[ansible-runner] aws collection" {
@@ -188,7 +195,7 @@ exec_ansible_runner_role() {
 
   run exec_ansible_runner vmware.yml
   assert_failure # We expect to this to fail due to connecting to an unknown vcenter
-  assert_output --partial '"msg": "Unknown error while connecting to vCenter or ESXi API at vcenter_hostname:443 : [Errno -2] Name or service not known"'
+  assert_output --partial '"msg": "Unknown error while connecting to the vCenter or ESXi API at vcenter_hostname:443 : [Errno -2] Name or service not known"'
 }
 
 @test "[Ansible::Runner#run] aws collection" {
@@ -260,7 +267,7 @@ exec_ansible_runner_role_async() {
 
   run exec_ansible_runner_async vmware.yml
   assert_failure # We expect to this to fail due to connecting to an unknown vcenter
-  assert_output --partial '"msg": "Unknown error while connecting to vCenter or ESXi API at vcenter_hostname:443 : [Errno -2] Name or service not known"'
+  assert_output --partial '"msg": "Unknown error while connecting to the vCenter or ESXi API at vcenter_hostname:443 : [Errno -2] Name or service not known"'
 }
 
 @test "[Ansible::Runner#run_async] aws collection" {

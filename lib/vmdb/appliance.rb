@@ -11,7 +11,7 @@ module Vmdb
     end
 
     def self.CODENAME
-      "Tal".freeze
+      "Uhlmann".freeze
     end
 
     def self.RELEASE

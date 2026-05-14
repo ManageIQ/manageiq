@@ -372,19 +372,23 @@ class MiqWidget < ApplicationRecord
   def contents_for_user(user)
     user = self.class.get_user(user)
     timezone = timezone_matters? ? user.get_timezone : "UTC"
-    conditions = {:miq_group_id => user.current_group.id}
-    conditions[:user_id] = user.id
-    conditions[:timezone] = timezone
-    contents = miq_widget_contents.find_by(conditions)
+    group_id = user.current_group.id
 
-    conditions.delete(:user_id)
-    contents ||= miq_widget_contents.find_by(conditions)
+    # Fetch all possible content records in a single query
+    possible_contents = miq_widget_contents.where(:miq_group_id => group_id)
 
+    # Try to find exact match (user + timezone)
+    contents = possible_contents.detect { |c| c.user_id == user.id && c.timezone == timezone }
+
+    # Fallback to group + timezone (no specific user)
+    contents ||= possible_contents.detect { |c| c.user_id.nil? && c.timezone == timezone }
+
+    # Fallback to any timezone for this group
     if contents.nil?
       _log.warn("No contents found for Widget: '#{title}' Group: #{user.current_group.description} in Timezone '#{timezone}'. Attempting to get widget's contents from any Timezone ...")
-      conditions.delete(:timezone)
-      contents = miq_widget_contents.find_by(conditions)
+      contents = possible_contents.detect { |c| c.user_id.nil? }
     end
+
     contents
   end
 

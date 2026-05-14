@@ -1,6 +1,6 @@
 RSpec.describe Service::LinkingWorkflow do
   let(:service)  { FactoryBot.create(:service) }
-  let(:provider) { FactoryBot.create(:ems_vmware) }
+  let(:provider) { FactoryBot.create(:ems_infra) }
   let(:uid_ems_array) { ["423c9963-378c-813f-1dbd-630e464d59d4", "423cf3e2-e319-3953-993f-fd8513db951d"] }
   let(:options) do
     {
@@ -12,18 +12,23 @@ RSpec.describe Service::LinkingWorkflow do
   end
   let(:job) { described_class.create_job(options) }
 
+  before do
+    allow(ExtManagementSystem).to receive(:find_by).and_call_original
+    allow(ExtManagementSystem).to receive(:find_by).with(:id => provider.id).and_return(provider)
+  end
+
   context 'run_native_op' do
     subject { job.run_native_op }
 
     it 'raises an error if service is not found' do
-      options[:service_id] = 999
-      expect(job).to receive(:signal).with(:abort, "Job [#{job.id}] [#{job.name}] aborted: didn't find service ID: [999] to link to", "error")
+      options[:service_id] = -1
+      expect(job).to receive(:signal).with(:abort, "Job [#{job.id}] [#{job.name}] aborted: didn't find service ID: [-1] to link to", "error")
       subject
     end
 
     it 'raises an error if provider is not found' do
-      options[:target_id] = 999
-      msg = "Job [#{job.id}] [#{job.name}] aborted: didn't find provider class: [#{provider.class.name}] ID: [999] to refresh"
+      options[:target_id] = -1
+      msg = "Job [#{job.id}] [#{job.name}] aborted: didn't find provider class: [#{provider.class.name}] ID: [-1] to refresh"
       expect(job).to receive(:signal).with(:abort, msg, "error")
       subject
     end
@@ -47,6 +52,58 @@ RSpec.describe Service::LinkingWorkflow do
       uid_ems_array.each { |uid| FactoryBot.create(:vm_vmware, :uid_ems => uid, :ems_id => provider.id) }
       subject
       expect(service.vms.count).to eq(2)
+    end
+
+    it 'finishes even if not all vms are found' do
+      FactoryBot.create(:vm_vmware, :uid_ems => uid_ems_array.first, :ems_id => provider.id)
+      subject
+      expect(service.vms.count).to eq(1)
+    end
+  end
+
+  context '#refresh_target' do
+    subject { job.refresh_target }
+
+    context 'when provider supports targeted refresh' do
+      before do
+        allow(provider).to receive(:allow_targeted_refresh?).and_return(true)
+      end
+
+      it 'creates InventoryRefresh::Target for each VM UID' do
+        expect(subject).to all(be_a(InventoryRefresh::Target))
+
+        subject.each_with_index do |target, index|
+          expect(target.manager).to eq(provider)
+          expect(target.association).to eq(:vms)
+          expect(target.manager_ref).to eq(:ems_ref => uid_ems_array[index])
+        end
+      end
+
+      it 'handles single VM UID' do
+        options[:uid_ems_array] = ["single-vm-uid"]
+        expect(subject.size).to eq(1)
+        expect(subject.first.manager_ref).to eq(:ems_ref => "single-vm-uid")
+      end
+    end
+
+    context 'when provider does not support targeted refresh' do
+      before do
+        allow(provider).to receive(:allow_targeted_refresh?).and_return(false)
+      end
+
+      it 'returns the EMS provider for full refresh' do
+        expect(subject).to eq(provider)
+      end
+    end
+
+    context 'when provider record doesn\'t exist' do
+      before do
+        options[:target_id] = -1
+      end
+
+      it 'returns nil' do
+        expect(subject).to be_nil
+      end
     end
   end
 

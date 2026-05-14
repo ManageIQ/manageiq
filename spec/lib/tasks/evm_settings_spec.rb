@@ -10,7 +10,6 @@ RSpec.describe "EvmSettings", :type => :rake_task do
         @settings_hash =
           {:authentication => {:mode                 => "database",
                                :httpd_role           => false,
-                               :user_type            => "userprincipalname",
                                :amazon_key           => nil,
                                :oidc_enabled         => false,
                                :saml_enabled         => false,

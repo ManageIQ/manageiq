@@ -16,7 +16,7 @@ class MiqWorker
       end
 
       def systemd_unit_dir
-        Pathname.new("/lib/systemd/system")
+        Pathname.new("/etc/systemd/system")
       end
     end
 

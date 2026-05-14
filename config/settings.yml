@@ -4,24 +4,11 @@
     :keep_events: 6.months
     :purge_window_size: 1000
 :authentication:
-  :basedn:
-  :bind_dn:
-  :bind_pwd:
-  :bind_timeout: 30
   :debug: false
-  :follow_referrals: false
-  :get_direct_groups: true
-  :group_memberships_max_depth: 2
-  :group_attribute: memberof
-  :ldaphost:
-  :ldapport: '389'
   :mode: database
   :group_delimiter:
   :max_failed_login_attempts: 3
   :locked_account_timeout: 2.minutes
-  :search_timeout: 30
-  :user_suffix:
-  :user_type: userprincipalname
   :amazon_key:
   :amazon_secret:
 :binary_blob:
@@ -848,10 +835,6 @@
   :secret_filter: []
 :messaging:
   :type: kafka
-:miq_request:
-  :history:
-    :purge_window_size: 500
-    :keep_miq_requests: 6.months
 :notifications:
   :history:
     :purge_window_size: 1000
@@ -1126,7 +1109,6 @@
       :evm_snapshot_interval: 1.hour
       :job_timeout_interval: 60.seconds
       :log_active_configuration_interval: 1.days
-      :miq_request_purge_interval: 1.week
       :nice_delta: 3
       :notifications_purge_interval: 1.day
       :orchestration_stack_retired_interval: 10.minutes

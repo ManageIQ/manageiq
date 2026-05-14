@@ -206,22 +206,12 @@ RSpec.describe Vmdb::Settings do
       password  = "pa$$word"
       encrypted = ManageIQ::Password.encrypt(password)
 
-      described_class.save!(miq_server,
-        :authentication => {
-          :mode         => "ldap",
-          :ldaphost     => "localhost",
-          :bind_pwd     => password,
-          :user_proxies => [{:bind_pwd => password}]
-        }
-      )
+      described_class.save!(miq_server, :smtp => {:password => password})
 
       miq_server.reload
 
-      change = miq_server.settings_changes.find_by(:key => "/authentication/bind_pwd")
+      change = miq_server.settings_changes.find_by(:key => "/smtp/password")
       expect(change.value).to eq encrypted
-
-      change = miq_server.settings_changes.find_by(:key => "/authentication/user_proxies")
-      expect(change.value).to eq [{:bind_pwd => encrypted}]
     end
 
     it "saving settings for Zone does not change saved Region or Server settings" do
@@ -362,13 +352,13 @@ RSpec.describe Vmdb::Settings do
       password  = "pa$$word"
       encrypted = ManageIQ::Password.encrypt(password)
 
-      data = {:authentication => {:bind_pwd => password}}.to_yaml
+      data = {:smtp => {:password => password}}.to_yaml
       described_class.save_yaml!(miq_server, data)
 
       miq_server.reload
 
       expect(miq_server.settings_changes.count).to eq 1
-      expect(miq_server.settings_changes.first).to have_attributes(:key   => "/authentication/bind_pwd",
+      expect(miq_server.settings_changes.first).to have_attributes(:key   => "/smtp/password",
                                                                    :value => encrypted)
     end
 
@@ -376,13 +366,13 @@ RSpec.describe Vmdb::Settings do
       password  = "pa$$word"
       encrypted = ManageIQ::Password.encrypt(password)
 
-      data = {:authentication => {:bind_pwd => encrypted}}.to_yaml
+      data = {:smtp => {:password => encrypted}}.to_yaml
       described_class.save_yaml!(miq_server, data)
 
       miq_server.reload
 
       expect(miq_server.settings_changes.count).to eq 1
-      expect(miq_server.settings_changes.first).to have_attributes(:key   => "/authentication/bind_pwd",
+      expect(miq_server.settings_changes.first).to have_attributes(:key   => "/smtp/password",
                                                                    :value => encrypted)
     end
 
@@ -680,12 +670,12 @@ RSpec.describe Vmdb::Settings do
       encrypted = ManageIQ::Password.encrypt(password)
 
       miq_server = FactoryBot.create(:miq_server)
-      described_class.save!(miq_server, :authentication => {:bind_pwd => password})
+      described_class.save!(miq_server, :smtp => {:password => password})
 
       yaml = described_class.for_resource_yaml(miq_server)
 
       hash = YAML.load(yaml)
-      expect(hash.fetch_path(:authentication, :bind_pwd)).to eq encrypted
+      expect(hash.fetch_path(:smtp, :password)).to eq encrypted
     end
   end
 

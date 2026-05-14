@@ -15,5 +15,17 @@ RSpec.describe Service do
       end.and_return(double(:signal_start => nil))
       service.add_provider_vms(provider, uid_ems_array)
     end
+
+    it 'sets Job options timeout' do
+      job = service.add_provider_vms(provider, uid_ems_array, :timeout => 600)
+
+      expect(job.current_job_timeout(nil)).to eq(600)
+    end
+
+    it 'defaults to base Job class default timeout' do
+      job = service.add_provider_vms(provider, uid_ems_array)
+
+      expect(job.current_job_timeout(nil)).to eq(Job::DEFAULT_TIMEOUT)
+    end
   end
 end

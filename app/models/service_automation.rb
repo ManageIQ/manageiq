@@ -1,0 +1,2 @@
+class ServiceAutomation < Service
+end

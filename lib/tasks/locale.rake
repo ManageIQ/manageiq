@@ -190,8 +190,7 @@ namespace :locale do
 
     checkout_branch = ENV['BRANCH'].presence || 'master'
     extra_pots = [
-      "https://raw.githubusercontent.com/ManageIQ/ui-components/#{checkout_branch}/locale/ui-components.pot",
-      "https://raw.githubusercontent.com/ManageIQ/react-ui-components/#{checkout_branch}/locale/react-ui-components.pot"
+      "https://raw.githubusercontent.com/ManageIQ/ui-components/#{checkout_branch}/locale/ui-components.pot"
     ]
 
     tmp_dir = Rails.root.join('locale/tmp')

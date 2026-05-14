@@ -70,13 +70,6 @@
           :required: false
           :display: :hide
           :data_type: :string
-        :owner_load_ldap:
-          :pressed:
-            :method: :retrieve_ldap
-          :description: Look Up LDAP Email
-          :required: false
-          :display: :show
-          :data_type: :button
         :owner_manager_phone:
           :description: Phone
           :required: false

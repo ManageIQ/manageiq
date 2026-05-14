@@ -56,11 +56,10 @@ gem "manageiq-ssh-util",                "~>0.2.0",           :require => false
 gem "memoist",                          "~>0.16.0",          :require => false
 gem "money",                            "~>6.13.5",          :require => false
 gem "more_core_extensions"                                                     # min version should be set in manageiq-gems-pending, not here
-gem "net-ldap",                         "~>0.16.1",          :require => false
 gem "net-ping",                         "~>1.7.4",           :require => false
 gem "openscap",                         "~>0.4.8",           :require => false
 gem "optimist",                         "~>3.0",             :require => false
-gem "pg",                               ">=1.4.1",           :require => false
+gem "pg",                               ">=1.6.3.1",         :require => false, :source => "https://rubygems.manageiq.org"
 gem "pg-dsn_parser",                    "~>0.1.1",           :require => false
 gem "prism",                            ">=0.25.0",          :require => false # Used by DescendantLoader
 gem "psych",                            ">=3.1",             :require => false # 3.1 safe_load changed positional to kwargs like aliases: true: https://github.com/ruby/psych/commit/4d4439d6d0adfcbd211ea295779315f1baa7dadd
@@ -72,20 +71,19 @@ gem "rails-i18n",                       "~>8.0.2"
 gem "rake",                             ">=12.3.3",          :require => false
 gem "rest-client",                      "~>2.1.0",           :require => false
 gem "ruby_parser",                                           :require => false # Required for i18n string extraction, and DescentdantLoader (via prism)
-gem "ruby-progressbar",                 "~>1.7.0",           :require => false
+gem "ruby-progressbar",                 "~>1.13.0",           :require => false
 gem "rugged",                           "~>1.9",             :require => false
 gem "ruport",                           "~>1.8.0"
-gem "snmp",                             "~>1.2.0",           :require => false
+gem "snmp",                             "~>1.3.0",           :require => false
 gem "sprockets",                        "~>3.7.2",           :require => false
 gem "sync",                             "~>0.5",             :require => false
-gem "sys-filesystem",                   "~>1.4.3"
 gem "terminal",                                              :require => false
 gem "wim_parser",                       "~>1.0",             :require => false
 
 # gems to resolve security issues
 gem "cgi",  "~> 0.5"
+gem "erb",  ">= 6.0.4"  # CVE-2026-41316: https://github.com/advisories/GHSA-q339-8rmv-2mhv; Dependency of irb -> rdoc -> erb
 gem "faraday", "~> 2.14", ">= 2.14.1" # CVE-2026-25765: https://github.com/advisories/GHSA-33mh-2634-fwr2
-gem "time", "~> 0.2.2"  # CVE-2023-28756: https://github.com/advisories/GHSA-fg7x-g82r-94qc; ruby 3.1.4+
 gem "uri",  "~> 0.13.3" # CVE-2025-61594: https://www.ruby-lang.org/en/news/2025/10/07/uri-cve-2025-61594/
                         # Avoid URI 1.0.0 for now due to: https://github.com/ruby/uri/issues/125
 gem "thor", ">= 1.4.0"   # CVE-2025-54314: https://github.com/advisories/GHSA-mqcp-p2hv-vw6x
@@ -190,10 +188,6 @@ group :nsxt, :manageiq_default do
   manageiq_plugin "manageiq-providers-nsxt"
 end
 
-group :nuage, :manageiq_default do
-  manageiq_plugin "manageiq-providers-nuage"
-end
-
 group :nutanix, :manageiq_default do
   manageiq_plugin "manageiq-providers-nutanix"
 end
@@ -212,6 +206,10 @@ end
 
 group :red_hat_virtualization, :manageiq_default do
   manageiq_plugin "manageiq-providers-red_hat_virtualization"
+end
+
+group :scvmm, :manageiq_default do
+  manageiq_plugin "manageiq-providers-scvmm"
 end
 
 group :terraform_enterprise, :manageiq_default do
@@ -248,11 +246,6 @@ group :workflows, :manageiq_default do
   manageiq_plugin "manageiq-providers-workflows"
 end
 
-### shared dependencies
-group :google, :openshift, :manageiq_default do
-  gem "sshkey",                         "~>1.8.0",           :require => false
-end
-
 ### end of provider bundler groups
 
 group :automate, :seed, :manageiq_default do
@@ -277,7 +270,7 @@ group :seed, :manageiq_default do
 end
 
 group :smartstate, :manageiq_default do
-  gem "manageiq-smartstate",            "~>0.12",            :require => false
+  gem "manageiq-smartstate",            "~>0.13",            :require => false
 end
 
 group :consumption, :manageiq_default do
@@ -303,7 +296,7 @@ group :web_socket, :manageiq_default do
 end
 
 group :appliance, :optional => true do
-  gem "manageiq-appliance_console",     "~>11.1",            :require => false
+  gem "manageiq-appliance_console",     "~>12.0",            :require => false
 end
 
 ### Development and test gems are excluded from appliance and container builds to reduce size and license issues
@@ -331,7 +324,7 @@ group :development, :test do
   gem "database_cleaner",               "~>2.1",    :require => false # Used by cypress-on-rails.
   gem "factory_bot_rails",              "~>6.5.1",  :require => false # Used by cypress-on-rails.
 
-  gem "parallel_tests",                 "~>4.4",    :require => false
+  gem "parallel_tests",                 "~>5.6",    :require => false
   gem "routes_lazy_routes"
   gem "rspec-rails",                    "~>7.0"
 end
