@@ -302,7 +302,7 @@ end
 ### Development and test gems are excluded from appliance and container builds to reduce size and license issues
 group :development do
   gem "foreman"
-  gem "manageiq-style",                 "~>1.5.0",           :require => false
+  gem "manageiq-style",                 "~>1.6", ">=1.6.1",  :require => false
   gem "PoParser"
   gem "yard",                           ">= 0.9.36"
 end
