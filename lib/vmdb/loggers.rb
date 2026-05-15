@@ -107,7 +107,7 @@ module Vmdb
 
     def self.contents(log, last = 1000)
       log = log.instance_variable_get(:@logdev)&.filename.to_s if log.kind_of?(Logger)
-      return "" unless File.file?(log)
+      return "" unless (log.kind_of?(String) || log.kind_of?(Pathname)) && File.file?(log)
 
       if last.nil?
         contents = File.readlines(log, :mode => "rb", :chomp => true)
