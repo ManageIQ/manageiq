@@ -49,7 +49,10 @@ module Vmdb
     end
 
     private_class_method def self.create_file_logger(log_file, logger_class)
-      logger_class.new(log_file, :progname => log_file_to_prog_name(log_file))
+      require "manageiq/loggers/file"
+      logger = ManageIQ::Loggers::File.new(log_file, :progname => log_file_to_prog_name(log_file))
+
+      create_wrapper_logger(log_file, logger_class, logger)
     end
 
     private_class_method def self.create_container_logger(log_file_name, logger_class)
