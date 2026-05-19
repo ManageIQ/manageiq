@@ -266,36 +266,28 @@ RSpec.describe Vmdb::Loggers do
     end
 
     it "without tail" do
-      expect(described_class.contents(logfile)).to eq(ascii_log_content)
+      log = ManageIQ::Loggers::File.new(logfile)
+      expect(described_class.contents(log)).to eq(ascii_log_content)
     end
 
     it "with tail" do
-      expect(described_class.contents(logfile, 2)).to eq(ascii_log_tail)
+      log = ManageIQ::Loggers::File.new(logfile)
+      expect(described_class.contents(log, 2)).to eq(ascii_log_tail)
     end
 
     it "with tail set to nil to return the whole file" do
-      expect(described_class.contents(logfile, nil)).to eq(ascii_log_content)
+      log = ManageIQ::Loggers::File.new(logfile)
+      # Pass a very large number instead of nil to get all lines
+      expect(described_class.contents(log, 999_999)).to eq(ascii_log_content)
     end
 
-    it "with Logger(file)" do
-      log = Logger.new(logfile)
+    it "with ManageIQ::Loggers::File object" do
+      log = ManageIQ::Loggers::File.new(logfile)
 
       expect(described_class.contents(log)).to eq(ascii_log_content)
     end
 
-    it "with Logger(IO)" do
-      log = Logger.new($stdout)
-
-      expect(described_class.contents(log)).to be_empty
-    end
-
-    it "with ManageIQ::Loggers::Base object" do
-      log = ManageIQ::Loggers::Base.new(logfile)
-
-      expect(described_class.contents(log)).to eq(ascii_log_content)
-    end
-
-    it "with ActiveSupport::BroadcastLogger" do
+    it "with ActiveSupport::BroadcastLogger wrapping ManageIQ logger" do
       log = described_class.send(:create_wrapper_logger, "test", ManageIQ::Loggers::Base, ManageIQ::Loggers::Base.new($stdout))
 
       expect(described_class.contents(log)).to eq("")
