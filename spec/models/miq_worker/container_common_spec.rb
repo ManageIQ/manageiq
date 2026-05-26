@@ -75,7 +75,27 @@ RSpec.describe MiqWorker::ContainerCommon do
       expect(kubeclient).to receive(:create_deployment) do |deployment|
         expect(deployment.fetch_path(:spec, :template, :spec, :containers, 0, :ports)).to match_array([{:containerPort => 3000}, {:containerPort => 4000}])
         expect(deployment.fetch_path(:spec, :template, :spec, :containers, 0, :livenessProbe)).to eq(:httpGet => {:path => "/ping", :port => 4000}, :initialDelaySeconds => 240, :periodSeconds => 15, :timeoutSeconds => 10)
-        expect(deployment.fetch_path(:spec, :template, :spec, :containers, 0, :readinessProbe)).to eq(:httpGet => {:path => "/ping", :port => 4000}, :initialDelaySeconds => 60, :timeoutSeconds => 3)
+        expect(deployment.fetch_path(:spec, :template, :spec, :containers, 0, :readinessProbe)).to eq(:httpGet => {:path => "/ping", :port => 4000}, :initialDelaySeconds => 60, :timeoutSeconds => 600)
+      end
+
+      worker = MiqWebServiceWorker.new
+      expect(worker).to receive(:scale_deployment)
+      worker.create_container_objects
+    end
+
+    it "Service workers respect custom starting_timeout setting" do
+      stub_settings_merge(:workers => {:worker_base => {:web_service_worker => {:starting_timeout => 120}}})
+
+      container_orchestrator = ContainerOrchestrator.new
+      expect(container_orchestrator).to receive(:my_node_affinity_arch_values).and_return(["amd64", "arm64"])
+      kubeclient = double("Kubeclient::Client")
+
+      allow(ContainerOrchestrator).to receive(:new).and_return(container_orchestrator)
+      expect(container_orchestrator).to receive(:my_namespace).and_return("my-namespace")
+      expect(container_orchestrator).to receive(:raw_connect).and_return(kubeclient)
+
+      expect(kubeclient).to receive(:create_deployment) do |deployment|
+        expect(deployment.fetch_path(:spec, :template, :spec, :containers, 0, :readinessProbe, :timeoutSeconds)).to eq(120)
       end
 
       worker = MiqWebServiceWorker.new
