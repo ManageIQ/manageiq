@@ -131,4 +131,17 @@ RSpec.describe MiqScheduleWorker::Jobs do
       end
     end
   end
+
+  describe "#request_log_purge_timer" do
+    it "queues RequestLog.purge_timer" do
+      allow(MiqServer).to receive(:my_zone)
+      described_class.new.request_log_purge_timer
+      expect(MiqQueue.first).to have_attributes(
+        :class_name  => "RequestLog",
+        :method_name => "purge_timer",
+        :zone        => nil,
+        :priority    => MiqQueue::MEDIUM_PRIORITY
+      )
+    end
+  end
 end
