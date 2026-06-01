@@ -896,7 +896,7 @@ GEM
       addressable (>= 2.4)
     jsonpath (1.1.5)
       multi_json
-    jwt (2.10.2)
+    jwt (2.10.3)
       base64
     kubeclient (4.13.0)
       http (>= 3.0, < 6.0)
