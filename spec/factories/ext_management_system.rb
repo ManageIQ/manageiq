@@ -335,6 +335,20 @@ FactoryBot.define do
           :class   => "ManageIQ::Providers::Google::NetworkManager",
           :parent  => :ems_network
 
+  factory :ems_oracle_cloud_with_authentication,
+          :aliases => ["manageiq/providers/oracle_cloud/cloud_manager_with_auth"],
+          :class   => "ManageIQ::Providers::OracleCloud::CloudManager",
+          :parent  => :ems_cloud do
+    after(:create) do |ems|
+      ems.authentications << FactoryBot.create(
+        :authentication,
+        :userid     => "ocid1.user.oc1..aaaaaaaafakeuserid",
+        :auth_key   => "fake-private-key-for-testing",
+        :public_key => "fake-public-key-for-testing"
+      )
+    end
+  end
+
   # Leaf classes for ems_container
 
   factory :ems_kubernetes,
