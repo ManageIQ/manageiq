@@ -1150,7 +1150,7 @@ msgstr[0] "%{number} Woche"
 msgstr[1] "%{number} Wochen"
 
 msgid "%{number} bytes"
-msgstr "% {number} Bytes"
+msgstr "%{number} Bytes"
 
 msgid "%{number} core"
 msgid_plural "%{number} cores"
