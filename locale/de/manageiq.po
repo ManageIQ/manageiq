@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2026-03-02 15:44+0000\n"
-"PO-Revision-Date: 2026-03-02 15:44+0000\n"
+"POT-Creation-Date: 2026-06-01 14:37+0000\n"
+"PO-Revision-Date: 2026-06-01 14:37+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -363,9 +363,6 @@ msgstr "%s-Speicher"
 msgid "%s Entries"
 msgstr "%s Einträge"
 
-msgid "%s Tags"
-msgstr "Tags für %s"
-
 msgid "%s has been successfully added."
 msgstr "%s wurde erfolgreich hinzugefügt."
 
@@ -374,6 +371,9 @@ msgstr "%s wurde erfolgreich entfernt."
 
 msgid "%s has no snapshots"
 msgstr "%s hat keine Snapshots"
+
+msgid "%s is used by another field"
+msgstr "%s wird von einem anderen Feld verwendet"
 
 msgid "%s logged out, redirecting to the login page"
 msgstr "%s abgemeldet, Umleitung zur Anmeldeseite"
@@ -1150,7 +1150,7 @@ msgstr[0] "%{number} Woche"
 msgstr[1] "%{number} Wochen"
 
 msgid "%{number} bytes"
-msgstr "%{number} Bytes"
+msgstr "% {number} Bytes"
 
 msgid "%{number} core"
 msgid_plural "%{number} cores"
@@ -1955,14 +1955,14 @@ msgstr "<Nach Gruppe>"
 msgid "<By Role>"
 msgstr "<Nach Rolle>"
 
+msgid "<Choose one or more Groups>"
+msgstr "<Wählen Sie eine oder mehrere Gruppen aus>"
+
 msgid "<Choose>"
 msgstr "<Auswählen>"
 
 msgid "<Click on this row to create a new entry>"
 msgstr "<Auf diese Zeile klicken, um einen neuen Eintrag zu erstellen>"
-
-msgid "<Click on this row to create a new forest>"
-msgstr "<Auf diese Zeile klicken, um eine neue Gesamtstruktur zu erstellen>"
 
 msgid "<Determine at Run Time>"
 msgstr "<Determine at Run Time>"
@@ -2053,12 +2053,6 @@ msgstr "Ein Tag muss ausgewählt werden"
 
 msgid "A Tenant Category must be selected"
 msgstr "Eine Tenantkategorie muss ausgewählt werden"
-
-msgid "A User must be assigned to a Group"
-msgstr "Ein Benutzer muss einer Gruppe zugeordnet werden"
-
-msgid "A User must be assigned to an allowed Group"
-msgstr "Ein Benutzer muss einer zulässigen Gruppe zugewiesen werden"
 
 msgid "A VM with name: [%{name}] already exists"
 msgstr "Eine VM mit dem Namen [%{name}] ist bereits vorhanden"
@@ -2311,9 +2305,6 @@ msgstr "Absoluter min. abgeleiteter belegter Hauptspeicher - Zeitmarke"
 
 msgid "Absolute Min Derived Memory Used Value"
 msgstr "Absoluter min. abgeleiteter belegter Hauptspeicher - Wert"
-
-msgid "Accept"
-msgstr "Akzeptieren"
 
 msgid "Accept EULA"
 msgstr "Lizenzvereinbarung (EULA) akzeptieren"
@@ -2636,9 +2627,6 @@ msgstr "Katalog hinzufügen"
 msgid "Add Category"
 msgstr "Kategorie hinzufügen"
 
-msgid "Add Cloud Network (NSX-T)"
-msgstr "Cloudnetz hinzufügen (NSX-T)"
-
 msgid "Add Composite Catalog Item"
 msgstr "Kombinierten Katalogeintrag hinzufügen"
 
@@ -2820,9 +2808,6 @@ msgstr "Abschnitt hinzufügen"
 msgid "Add Security Group"
 msgstr "Sicherheitsgruppe hinzufügen"
 
-msgid "Add Security Group (NSX-T)"
-msgstr "Sicherheitsgruppe hinzufügen (NSX-T)"
-
 msgid "Add Security Group to %{model} \"%{name}\""
 msgstr "Hinzufügen von Sicherheitsgruppe zu %{model} \"%{name}\""
 
@@ -2831,15 +2816,6 @@ msgstr "Hinzufügen von Sicherheitsgruppe zu '%{name}'"
 
 msgid "Add Security Group to Instance"
 msgstr "Sicherheitsgruppe zu Instanz hinzufügen"
-
-msgid "Add Security Policy (NSX-T)"
-msgstr "Sicherheitsrichtlinie hinzufügen (NSX-T)"
-
-msgid "Add Security Policy Rule"
-msgstr "Sicherheitsrichtlinienregel hinzufügen"
-
-msgid "Add Security Policy Rule (NSX-T)"
-msgstr "Sicherheitsrichtlinienregel hinzufügen (NSX-T)"
 
 msgid "Add Subscription"
 msgstr "Subskription hinzufügen"
@@ -3125,9 +3101,6 @@ msgstr "Neue Clouddatenbank hinzufügen"
 msgid "Add a new Cloud Network"
 msgstr "Neues Cloudnetz hinzufügen"
 
-msgid "Add a new Cloud Network (NSX-T)"
-msgstr "Neues Cloudnetz hinzufügen (NSX-T)"
-
 msgid "Add a new Cloud Object Store Container"
 msgstr "Neuen Cloud Object Store-Container hinzufügen"
 
@@ -3271,9 +3244,6 @@ msgstr "Untergeordneten Tenant zu diesem Tenant hinzufügen"
 
 msgid "Add folder to selected Accordion"
 msgstr "Ordner zu ausgewähltem Akkordeon hinzufügen"
-
-msgid "Add group"
-msgstr "Gruppe hinzufügen"
 
 msgid "Add new Firmware Registry"
 msgstr "Neue Firmware-Registry hinzufügen"
@@ -3531,6 +3501,9 @@ msgstr ""
 msgid "Add of new System Image Type was cancelled by the user"
 msgstr ""
 "Hinzufügen von neuem Systemimagetyp wurde durch den Benutzer abgebrochen"
+
+msgid "Add of new User was cancelled by the user"
+msgstr "Das Hinzufügen eines neuen Benutzers wurde vom Benutzer abgebrochen"
 
 msgid "Add of new Widget was cancelled by the user"
 msgstr "Hinzufügen von neuem Widget wurde durch den Benutzer abgebrochen"
@@ -4733,9 +4706,6 @@ msgstr "Soll die Kategorie '%{category_name}' gelöscht werden?"
 msgid "Are you sure you want to delete field from schema?"
 msgstr "Soll das Feld aus dem Schema gelöscht werden?"
 
-msgid "Are you sure you want to delete forest %{ldaphost} ?"
-msgstr "Soll die Gesamtstruktur %{ldaphost} gelöscht werden?"
-
 msgid "Are you sure you want to delete input field from method?"
 msgstr "Soll das Eingabefeld aus der Methode gelöscht werden?"
 
@@ -5098,9 +5068,6 @@ msgstr[1] "Zugeordnete Serverrollen"
 
 msgid "Assigned To"
 msgstr "Zugewiesen zu"
-
-msgid "Assigned Value"
-msgstr "Zugeordneter Wert"
 
 msgid "Assigned server role"
 msgstr "Zugeordnete Serverrolle"
@@ -6002,9 +5969,6 @@ msgstr "Verfügbare Alerts:"
 msgid "Available Custom Reports:"
 msgstr "Verfügbare angepasste Berichte:"
 
-msgid "Available Fields"
-msgstr "Verfügbare Felder"
-
 msgid "Available Fields:"
 msgstr "Verfügbare Felder:"
 
@@ -6208,9 +6172,6 @@ msgstr "Falsche Antwort aus %{log}"
 msgid "Bad response from %{log}: %{result}"
 msgstr "Falsche Antwort aus %{log}: %{result}"
 
-msgid "Base DN"
-msgstr "Basis-DN"
-
 msgid "Base Name"
 msgstr "Basisname"
 
@@ -6228,9 +6189,6 @@ msgstr ""
 "Basisname des neuen geklonten Datenträgers. Der Name des geklonten "
 "Datenträgers erhält das Präfix 'clone-' und das Suffix '-#####' (wobei ##### "
 "eine 5-stellige Zufallszahl ist)"
-
-msgid "Base the report on"
-msgstr "Bericht auf Basis von"
 
 msgid "Based On"
 msgstr "Basierend auf"
@@ -6325,15 +6283,6 @@ msgstr "Ressourcentyp"
 
 msgid "BinaryBlob|Size"
 msgstr "Größe"
-
-msgid "Bind DN"
-msgstr "Bindungs-DN"
-
-msgid "Bind Password"
-msgstr "Kennwort für Bindung"
-
-msgid "Bind failed for user %{user_name}"
-msgstr "Binden für Benutzer %{user_name} fehlgeschlagen"
 
 msgid "Blade Slot Count"
 msgstr "Anzahl Bladesteckplätze"
@@ -6630,15 +6579,6 @@ msgstr "CHAP-Benutzername:"
 
 msgid "CIDR"
 msgstr "CIDR"
-
-msgid "CIDR Subnet Mask"
-msgstr "CIDR-Teilnetzmaske"
-
-msgid "CIDR Subnet Mask for the subnet of the Cloud Network"
-msgstr "CIDR-Teilnetzmaske für das Teilnetz des Cloudnetzes"
-
-msgid "CIDR Subnet Mask is required"
-msgstr "Die CIDR-Teilnetzmaske ist erforderlich"
 
 msgid "CPU"
 msgstr "CPU"
@@ -7092,6 +7032,9 @@ msgstr "Genutzte CPU - Tarif"
 msgid "CPU Utilization"
 msgstr "CPU-Auslastung"
 
+msgid "CPU hotplug not enabled"
+msgstr "CPU-Hotplug ist nicht aktiviert"
+
 msgid "CPU total cores"
 msgstr "CPU-Kerne insgesamt"
 
@@ -7119,9 +7062,6 @@ msgstr "CVE-Position"
 msgid "CVEs"
 msgstr "CVEs"
 
-msgid "Calculation"
-msgstr "Berechnung"
-
 msgid "Calculations"
 msgstr "Berechnungen"
 
@@ -7136,9 +7076,6 @@ msgid ""
 msgstr ""
 "Ordner kann nicht gelöscht werden. Mindestens einer der Berichte im "
 "ausgewählten Ordner gehört nicht Ihrer Gruppe."
-
-msgid "Can not edit selected item, Request is missing"
-msgstr "Ausgewählter Eintrag kann nicht bearbeitet werden, Anforderung fehlt"
 
 msgid "Can't access records without an id"
 msgstr "Zugriff auf Datensätze ohne ID nicht möglich"
@@ -7187,9 +7124,6 @@ msgstr "Abbrechen nach"
 
 msgid "Cancel operation is not supported for %{class}"
 msgstr "Abbrechen von Operation wird für %{class} nicht unterstützt"
-
-msgid "Cancel password change"
-msgstr "Kennwortänderung abbrechen"
 
 msgid "Cancel the load"
 msgstr "Laden abbrechen"
@@ -7334,8 +7268,17 @@ msgstr "JSON-Datei kann nicht geparst werden: %{message}"
 msgid "Cannot parse userid %{user_id}"
 msgstr "Benutzer-ID kann nicht geparst werden: %{user_id}"
 
+msgid "Cannot reconfigure a template"
+msgstr "Eine Vorlage kann nicht neu konfiguriert werden"
+
 msgid "Cannot redirect to \"%{record}\" provider."
 msgstr "Umleitung zum \"%{record}\"-Provider ist nicht möglich."
+
+msgid "Cannot reduce CPUs on running VM"
+msgstr "Die Anzahl der CPUs kann bei einer aktiven VM nicht reduziert werden"
+
+msgid "Cannot reduce memory on running VM"
+msgstr "Der Arbeitsspeicher kann bei einer aktiven VM nicht reduziert werden"
 
 msgid "Cannot resize disks of a VM with snapshots"
 msgstr ""
@@ -7726,9 +7669,6 @@ msgstr "Kennwort für Infrastruktur-Provider ändern"
 msgid "Change current group"
 msgstr "Aktuelle Gruppe ändern"
 
-msgid "Change stored password"
-msgstr "Gespeichertes Kennwort ändern"
-
 msgid "Changed from previous"
 msgstr "Geändert zu vorherigen"
 
@@ -8087,12 +8027,6 @@ msgstr "Das Diagramm ist nicht mehr vorhanden."
 msgid "Charts"
 msgstr "Diagramme"
 
-msgid "Charts component has been loaded."
-msgstr "Die Komponente 'Diagramme' wurde geladen."
-
-msgid "Charts tab is not available unless a"
-msgstr "Die Registerkarte 'Diagramme' ist erst verfügbar, nachdem ein"
-
 msgid "Charts tab is not available unless a sort field has been selected"
 msgstr ""
 "Registerkarte 'Diagramme' ist erst verfügbar, wenn das Sortierfeld ausgewählt "
@@ -8240,9 +8174,6 @@ msgstr "Prüfoption"
 msgid "Check Value Error: %{msg}"
 msgstr "Prüfwertfehler: %{msg}"
 
-msgid "Check input"
-msgstr "Eingabe prüfen"
-
 msgid "Checking"
 msgstr "Überprüfen"
 
@@ -8383,9 +8314,6 @@ msgstr "Datei auswählen"
 msgid "Choose one or more Fields"
 msgstr "Mindestens ein Feld auswählen"
 
-msgid "Choose one or more Groups"
-msgstr "Wählen Sie mindestens eine Gruppe aus"
-
 msgid "Choose source image"
 msgstr "Quellenimage auswählen"
 
@@ -8417,12 +8345,6 @@ msgstr[1] "Cinder-Blockspeichermanager (OpenStack)"
 
 msgid "Cinder Block Storage Managers (OpenStack)"
 msgstr "Cinder-Blockspeichermanager (OpenStack)"
-
-msgid "Cird ip"
-msgstr "CIRD-IP"
-
-msgid "Cird ip required"
-msgstr "CIRD-IP erforderlich"
 
 msgid "Cisco Intersight"
 msgstr "Cisco Intersight"
@@ -8550,9 +8472,6 @@ msgstr "Hier klicken, um eine neue Kategorie hinzuzufügen"
 msgid "Click to add a new entry"
 msgstr "Hier klicken, um einen neuen Eintrag hinzuzufügen"
 
-msgid "Click to add a new forest"
-msgstr "Hier klicken, um eine neue Gesamtstruktur hinzuzufügen"
-
 msgid "Click to add a new parameter"
 msgstr "Hier klicken, um einen neuen Parameter hinzuzufügen"
 
@@ -8571,17 +8490,11 @@ msgstr "Hier klicken, um diesen Eintrag zu löschen"
 msgid "Click to delete this field from schema"
 msgstr "Hier klicken, um dieses Feld aus dem Schema zu löschen"
 
-msgid "Click to delete this forest"
-msgstr "Hier klicken, um diese Gesamtstruktur zu löschen"
-
 msgid "Click to delete this input field from method"
 msgstr "Hier klicken, um dieses Eingabefeld aus der Methode zu löschen"
 
 msgid "Click to delete this mapping"
 msgstr "Hier klicken, um diese Zuordnung zu löschen"
-
-msgid "Click to edit this forest"
-msgstr "Hier klicken, um diese Gesamtstruktur zu bearbeiten"
 
 msgid "Click to go this location"
 msgstr "Hier klicken, um zu dieser Position zu wechseln"
@@ -10822,10 +10735,13 @@ msgstr "Referenz für virtuelle Instanz"
 msgid "Confirm"
 msgstr "Bestätigen"
 
-msgid "Confirm Password"
-msgstr "Kennwort bestätigen"
+msgid "Confirm Delete"
+msgstr "Löschen bestätigen"
 
-msgid "Confirm password"
+msgid "Confirm Edit"
+msgstr "Bearbeitung bestätigen"
+
+msgid "Confirm Password"
 msgstr "Kennwort bestätigen"
 
 msgid "Connect"
@@ -13856,9 +13772,6 @@ msgstr "Cloud-Tenant erstellen"
 msgid "Create Display Filter"
 msgstr "Anzeigefilter erstellen"
 
-msgid "Create L3 Cloud Subnet"
-msgstr "L3-Cloudteilnetz erstellen"
-
 msgid "Create New"
 msgstr "Neu erstellen"
 
@@ -14351,9 +14264,6 @@ msgstr "Aktueller Benutzer"
 
 msgid "Current Window"
 msgstr "Aktuelles Fenster"
-
-msgid "Current group"
-msgstr "Aktuelle Gruppe"
 
 msgid "Current group: %s"
 msgstr "Aktuelle Gruppe: %s"
@@ -16246,21 +16156,6 @@ msgstr "Beschreibung (Spaltenname im Bericht)"
 msgid "Description is required"
 msgstr "Beschreibung ist erforderlich"
 
-msgid "Description of the Cloud Network"
-msgstr "Beschreibung des Cloudnetzes"
-
-msgid "Description of the Security Group"
-msgstr "Beschreibung der Sicherheitsgruppe"
-
-msgid "Description of the Security Policy"
-msgstr "Beschreibung der Sicherheitsrichtlinie"
-
-msgid "Description of the Security Policy Rule"
-msgstr "Beschreibung der Sicherheitsrichtlinienregel"
-
-msgid "Description required"
-msgstr "Beschreibung erforderlich"
-
 msgid "Description:"
 msgstr "Beschreibung:"
 
@@ -16302,9 +16197,6 @@ msgstr "Zielports"
 
 msgid "Destination Security Groups"
 msgstr "Zielsicherheitsgruppen"
-
-msgid "Destination Security Groups of the Security Policy Rule"
-msgstr "Zielsicherheitsgruppen der Sicherheitsrichtlinienregel"
 
 msgid "Destination Type"
 msgstr "Zieltyp"
@@ -18427,6 +18319,9 @@ msgstr "DRS-Migrationsschwellenwert"
 msgid "Duplicate"
 msgstr "Duplizieren"
 
+msgid "Duplicate field name found: %s"
+msgstr "Doppelter Feldname gefunden: %s"
+
 msgid "Duplicate orders"
 msgstr "Bestellungen duplizieren"
 
@@ -18552,9 +18447,6 @@ msgstr "EVM-Benutzer"
 
 msgid "EVM User \"%{name}\""
 msgstr "EVM-Benutzer \"%{name}\""
-
-msgid "EVM User Being Tagged"
-msgstr "EVM-Benutzer, der mit Tags versehen wird"
 
 msgid "EVM Users"
 msgstr "EVM-Benutzer"
@@ -18861,12 +18753,6 @@ msgstr "Abschnittsdetails bearbeiten"
 
 msgid "Edit Security Group \"%{name}\""
 msgstr "Bearbeiten von Sicherheitsgruppe \"%{name}\""
-
-msgid "Edit Security Policy (NSX-T)"
-msgstr "Sicherheitsrichtlinie bearbeiten (NSX-T)"
-
-msgid "Edit Security Policy Rule (NSX-T)"
-msgstr "Sicherheitsrichtlinienregel bearbeiten (NSX-T)"
 
 msgid "Edit Selected Automate Namespace/Class"
 msgstr "Ausgewählte(n) Automatisierungsnamensbereiche/-klasse bearbeiten"
@@ -20189,9 +20075,6 @@ msgstr "Diese Klasse bearbeiten"
 msgid "Edit this Cloud Network"
 msgstr "Dieses Cloudnetz bearbeiten"
 
-msgid "Edit this Cloud Network (NSX-T)"
-msgstr "Dieses Cloudnetz bearbeiten (NSX-T)"
-
 msgid "Edit this Cloud Provider"
 msgstr "Diesen Cloud-Provider bearbeiten"
 
@@ -20299,9 +20182,6 @@ msgstr "Diesen Zeitplan bearbeiten"
 
 msgid "Edit this Security Group"
 msgstr "Diese Sicherheitsgruppe bearbeiten"
-
-msgid "Edit this Security Group (NSX-T)"
-msgstr "Diese Sicherheitsgruppe bearbeiten (NSX-T)"
 
 msgid "Edit this Security Policy"
 msgstr "Diese Sicherheitsrichtlinie bearbeiten"
@@ -20488,9 +20368,6 @@ msgstr "Elastic-Blockspeichermanager (Amazon)"
 
 msgid "Email"
 msgstr "E-Mail"
-
-msgid "Email Address"
-msgstr "E-Mail-Adresse"
 
 msgid "Email must be a valid email address"
 msgstr "Als E-Mail muss eine gültige E-Mail-Adresse angegeben werden"
@@ -21152,9 +21029,6 @@ msgstr "Geben Sie eine Tagkategorie zum Zuordnen ein"
 msgid "Entered Time"
 msgstr "Eingegebene Zeit"
 
-msgid "Entered text should match the format:"
-msgstr "Der eingegebene Text muss mit dem folgenden Format übereinstimmen:"
-
 msgid "Enterprise"
 msgstr "Unternehmen"
 
@@ -21421,6 +21295,9 @@ msgstr ""
 msgid "Error launching: \"%{task_description}\" %{error_message}"
 msgstr "Fehler beim Starten: \"%{task_description}\" %{error_message}"
 
+msgid "Error loading content: %s"
+msgstr "Fehler beim Laden des Inhalts: %s"
+
 msgid "Error loading data:"
 msgstr "Fehler beim Laden der Daten:"
 
@@ -21432,9 +21309,6 @@ msgstr "Fehler in Zeile %{line_num}: %{err_txt}"
 
 msgid "Error requesting data from server"
 msgstr "Fehler beim Anfordern von Daten vom Server"
-
-msgid "Error retrieving LDAP info: %{error_message}"
-msgstr "Fehler beim Abrufen von LDAP-Informationen: %{error_message}"
 
 msgid ""
 "Error returned from %{name} event processing in Automate: %{error_message}"
@@ -22581,6 +22455,9 @@ msgstr "Unterstützt Cinder-Datenträgertypen"
 msgid "ExtManagementSystem|Supports cloud database create"
 msgstr "ExtManagementSystem|Unterstützt das Erstellen von Clouddatenbanken"
 
+msgid "ExtManagementSystem|Supports cloud network create"
+msgstr "ExtManagementSystem|Unterstützt das Erstellen von Cloudnetzen"
+
 msgid "ExtManagementSystem|Supports cloud object store container create"
 msgstr "Unterstützt Containererstellung für Cloudobjektspeicher"
 
@@ -22837,12 +22714,6 @@ msgstr "Fehler"
 
 msgid "Failures occurred during bulk reassignment."
 msgstr "Bei der Massenneuzuweisung ist ein Fehler aufgetreten."
-
-msgid "Fallback Hostname 1"
-msgstr "Fallback-Hostname 1"
-
-msgid "Fallback Hostname 2"
-msgstr "Fallback-Hostname 2"
 
 msgid "False"
 msgstr "Falsch"
@@ -23781,12 +23652,6 @@ msgstr "Absender-E-Mail-Adresse"
 msgid "From E-mail Address (leave blank for default)"
 msgstr "E-Mail-Adresse des Absenders (als Standardeinstellung leer lassen)"
 
-msgid "From port"
-msgstr "Ausgangsport"
-
-msgid "From port required"
-msgstr "Ausgangsport erforderlich"
-
 msgid "Fulfilled On"
 msgstr "Erfüllt am"
 
@@ -24081,6 +23946,9 @@ msgstr ""
 "Überprüfen Sie anhand einer Reihe von Funktionen, welche angehängten "
 "Ressourcen kompatibel sind"
 
+msgid "Global"
+msgstr "Global"
+
 msgid "Global Default"
 msgstr "Globaler Standard"
 
@@ -24190,9 +24058,6 @@ msgstr "Nach Bezeichnung gruppieren"
 
 msgid "Group by Tag"
 msgstr "Nach Tag gruppieren"
-
-msgid "Group name required"
-msgstr "Gruppenname erforderlich"
 
 msgid "Groups"
 msgstr "Gruppen"
@@ -24825,7 +24690,9 @@ msgid "Host (Authentication URL)"
 msgstr "Host (Authentifizierungs-URL)"
 
 msgid "Host (Microsoft)"
-msgstr "Host (Microsoft)"
+msgid_plural "Hosts (Microsoft)"
+msgstr[0] "Host (Microsoft)"
+msgstr[1] "Hosts (Microsoft)"
 
 msgid "Host (Nutanix)"
 msgid_plural "Hosts (Nutanix)"
@@ -24836,6 +24703,11 @@ msgid "Host (OpenStack)"
 msgid_plural "Hosts (OpenStack)"
 msgstr[0] "Host (OpenStack)"
 msgstr[1] "Hosts (OpenStack)"
+
+msgid "Host (Proxmox)"
+msgid_plural "Hosts (Proxmox)"
+msgstr[0] "Host (Proxmox)"
+msgstr[1] "Hosts (Proxmox)"
 
 msgid "Host (Redhat)"
 msgid_plural "Hosts (Redhat)"
@@ -25759,6 +25631,9 @@ msgstr "Betriebszustand"
 msgid "Host|Ram size"
 msgstr "RAM-Größe"
 
+msgid "Host|Raw power state"
+msgstr "Host|Roher Betriebszustand"
+
 msgid "Host|Region description"
 msgstr "Regionsbeschreibung"
 
@@ -25950,6 +25825,9 @@ msgstr "IBM Power-HMC-Provider"
 msgid "IBM PowerVC"
 msgstr "IBM PowerVC"
 
+msgid "IBM PowerVC Cloud Provider"
+msgstr "IBM PowerVC Cloud-Anbieter"
+
 msgid "IBM PowerVC Provider"
 msgstr "IBM PowerVC-Provider"
 
@@ -26098,9 +25976,6 @@ msgstr "Symbolfarbe"
 
 msgid "Id"
 msgstr "ID"
-
-msgid "Id required"
-msgstr "ID erforderlich"
 
 msgid "Identification"
 msgstr "Identifikation"
@@ -26447,7 +26322,9 @@ msgstr[0] "Infrastrukturprovider (Kubevirt)"
 msgstr[1] "Infrastrukturprovider (Kubevirt)"
 
 msgid "Infrastructure Provider (Microsoft)"
-msgstr "Infrastrukturprovider (Microsoft)"
+msgid_plural "Infrastructure Providers (Microsoft)"
+msgstr[0] "Infrastrukturprovider (Microsoft)"
+msgstr[1] "Infrastruktur-Provider (Microsoft)"
 
 msgid "Infrastructure Provider (OpenShift Virtualization)"
 msgid_plural "Infrastructure Providers (OpenShift Virtualization)"
@@ -26849,6 +26726,9 @@ msgstr "Ungültiger Typ für Sortieren nach <%{value}> angegeben."
 msgid "Invalid sort_order type <%{value}> specified."
 msgstr "Ungültiger Typ für Sortierreihenfolge <%{value}> angegeben."
 
+msgid "Invalid task response: missing URL"
+msgstr "Ungültige Aufgabenantwort: fehlende URL"
+
 msgid "Invalid user %{owner} specified"
 msgstr "Ungültiger Benutzer (%{owner}) angegeben"
 
@@ -27027,6 +26907,9 @@ msgstr "Kb/s"
 msgid "Keep OVA file on completion"
 msgstr "OVA-Datei nach Abschluss beibehalten"
 
+msgid "Kerberos"
+msgstr "Kerberos"
+
 msgid "Kernel"
 msgstr "Kernel"
 
@@ -27111,25 +26994,6 @@ msgstr "LDAP-Gruppensuche"
 msgid "LDAP Groups for User"
 msgstr "LDAP-Gruppen für Benutzer"
 
-msgid "LDAP Host is required"
-msgstr "LDAP-Host ist erforderlich"
-
-msgid "LDAP Host should be unique"
-msgstr "LDAP-Host muss eindeutig sein"
-
-msgid "LDAP Hostname"
-msgstr "LDAP-Hostname"
-
-msgid ""
-"LDAP Hostname and Port fields are needed to perform verification of LDAP "
-"Settings"
-msgstr ""
-"Felder für LDAP-Hostname und Port werden zur Prüfung von LDAP-Einstellungen "
-"benötigt"
-
-msgid "LDAP Port"
-msgstr "LDAP-Port"
-
 msgid "LDAP Region"
 msgstr "LDAP-Region"
 
@@ -27141,9 +27005,6 @@ msgstr "LDAP-Server"
 
 msgid "LDAP Servers"
 msgstr "LDAP-Server"
-
-msgid "LDAP Settings validation was successful"
-msgstr "Validierung der LDAP-Einstellungen war erfolgreich"
 
 msgid "LDAPs"
 msgstr "LDAPs"
@@ -28055,9 +27916,6 @@ msgstr ""
 
 msgid "Long Description"
 msgstr "Langbeschreibung"
-
-msgid "Lookup"
-msgstr "Suche"
 
 msgid "Low"
 msgstr "Niedrig"
@@ -29329,6 +29187,11 @@ msgstr "Hauptspeicherauslastung"
 msgid "Memory Virtual to Real Ratio"
 msgstr "Relation virtuell/real für Speicher"
 
+msgid "Memory hotplug requires hotplug=memory and NUMA"
+msgstr ""
+"Für das Hotplugging von Arbeitsspeicher sind 'hotplug=memory' und NUMA "
+"erforderlich"
+
 msgid "Memory on Disk"
 msgstr "Speicher auf Platte"
 
@@ -29350,9 +29213,6 @@ msgstr "Hauptspeicher: %{value} MB"
 
 msgid "Menu Name"
 msgstr "Menüname"
-
-msgid "Menu Name is required"
-msgstr "Der Menüname ist erforderlich"
 
 msgid "Menu Shortcuts"
 msgstr "Menüdirektaufrufe"
@@ -30420,6 +30280,9 @@ msgstr "V - CPU-Belegung in Prozent - Deltasumme"
 
 msgid "Metric|V pct cpu wait delta summation"
 msgstr "V - CPU-Wartestatus in Prozent - Deltasumme"
+
+msgid "Microsoft SCVMM Provider"
+msgstr "Microsoft SCVMM-Provider"
 
 msgid "Migrate %{vm_or_template}"
 msgstr "%{vm_or_template} migrieren"
@@ -33531,12 +33394,6 @@ msgstr "Mehrere Quellenvorlagen wurden in den Eingabedaten gefunden: <%{data}>"
 msgid "Multiselect"
 msgstr "Mehrfachauswahl"
 
-msgid "Must be a valid IPv4 address"
-msgstr "Muss eine gültige IPv4-Adresse sein"
-
-msgid "Must be a valid netmask"
-msgstr "Muss eine gültige Netzmaske sein"
-
 msgid "Must be an integer"
 msgstr "Muss eine ganze Zahl sein"
 
@@ -33717,18 +33574,6 @@ msgstr ""
 "einem alphanumerischen Zeichen beginnen und mit einem alphanumerischen Zeichen"
 " enden"
 
-msgid "Name of the Cloud Network"
-msgstr "Name des Cloudnetzes"
-
-msgid "Name of the Security Group"
-msgstr "Name der Sicherheitsgruppe"
-
-msgid "Name of the Security Policy"
-msgstr "Name der Sicherheitsrichtlinie"
-
-msgid "Name of the Security Policy Rule"
-msgstr "Name der Sicherheitsrichtlinienregel"
-
 msgid "Name of this credential"
 msgstr "Name dieses Berechtigungsnachweises"
 
@@ -33783,9 +33628,6 @@ msgid "Neither user or group to be preserved during import were found"
 msgstr ""
 "Weder Benutzer noch Gruppe, der bzw. die beim Import beibehalten werden sollen"
 ", wurde gefunden"
-
-msgid "Netmask"
-msgstr "Netzmaske"
 
 msgid "Network"
 msgstr "Netz"
@@ -34077,9 +33919,6 @@ msgstr[1] "Netzserviceeinträge (NSX-T)"
 
 msgid "Network Services"
 msgstr "Netzservices"
-
-msgid "Network Services of the Security Policy Rule"
-msgstr "Netzservices der Sicherheitsrichtlinienregel"
 
 msgid "Network Subnet Mask"
 msgstr "Netz - Teilnetzmaske"
@@ -34482,9 +34321,6 @@ msgstr "Nächster Hop"
 msgid "No"
 msgstr "Nein"
 
-msgid "No %s Tags have been assigned"
-msgstr "Es wurden keine Tags für %s zugewiesen"
-
 msgid "No %{class_name} object provided"
 msgstr "Kein %{class_name}-Objekt angegeben"
 
@@ -34705,9 +34541,6 @@ msgstr ""
 
 msgid "No Items found."
 msgstr "Keine Elemente gefunden."
-
-msgid "No My Company Tags are assigned"
-msgstr "Keine Tags für eigenes Unternehmen zugewiesen"
 
 msgid "No Ordering Dialog is available"
 msgstr "Kein Bestelldialog verfügbar"
@@ -35064,9 +34897,6 @@ msgstr "Kein Symbol"
 msgid "No ids given to process_tasks"
 msgstr "Keine IDs an 'process_tasks' übergeben"
 
-msgid "No information returned for %{email}"
-msgstr "Keine Informationen zurückgegeben für %{email}"
-
 msgid "No input to apply"
 msgstr "Keine Eingabe zum Anwenden"
 
@@ -35097,14 +34927,8 @@ msgstr "Nicht mehr als 32 %{model} können für 'Vergleichen' ausgewählt werden
 msgid "No notes have been entered."
 msgstr "Es wurden keine Hinweise eingegeben."
 
-msgid "No option found"
-msgstr "Keine Option gefunden"
-
 msgid "No option selected"
 msgstr "Keine Option ausgewählt"
-
-msgid "No options"
-msgstr "Keine Optionen"
 
 msgid "No output available"
 msgstr "Keine Ausgabe verfügbar"
@@ -35207,6 +35031,9 @@ msgstr "Keine Teilnetze, um Schnittstellen zu Router \"%{name}\" zu entfernen"
 
 msgid "No synchronize category specified"
 msgstr "Keine Synchronisationskategorie angegeben"
+
+msgid "No task returned from server"
+msgstr "Vom Server wurde keine Aufgabe zurückgegeben"
 
 msgid "No task were selected to cancel"
 msgstr "Keine Tasks zum Abbrechen ausgewählt"
@@ -35340,9 +35167,6 @@ msgstr "Nicht verwaltet"
 
 msgid "Not a Server"
 msgstr "Kein Server"
-
-msgid "Not a valid network mask"
-msgstr "Keine gültige Netzmaske"
 
 msgid "Not all hosts can be removed from the deployment."
 msgstr "Es können nicht alle Hosts aus der Bereitstellung entfernt werden."
@@ -35510,9 +35334,6 @@ msgstr "Regionsnummer"
 
 msgid "Notification|Subject type"
 msgstr "Betrefftyp"
-
-msgid "Nuage Provider"
-msgstr "Nuage-Provider"
 
 msgid "Number"
 msgstr "Anzahl"
@@ -36806,9 +36627,6 @@ msgstr "PDF"
 msgid "PDF Output"
 msgstr "PDF-Ausgabe"
 
-msgid "PDP Output"
-msgstr "PDP-Ausgabe"
-
 msgid "PID"
 msgstr "PID"
 
@@ -37076,9 +36894,6 @@ msgid "Password used by the authorize mechanism"
 msgstr "Kennwort, das vom Autorisierungsmechanismus verwendet wird"
 
 msgid "Password/Confirm Password do not match"
-msgstr "Kennwort und Bestätigungskennwort stimmen nicht überein"
-
-msgid "Password/Verify Password do not match"
 msgstr "Kennwort und Bestätigungskennwort stimmen nicht überein"
 
 msgid "Password:"
@@ -38480,14 +38295,8 @@ msgstr "Wählen Sie einen Instanztyp oben aus"
 msgid "Please try again"
 msgstr "Versuche es erneut"
 
-msgid "Please, add time field"
-msgstr "Fügen Sie ein Zeitfeld hinzu"
-
 msgid "Please, fill the current_password and new_password fields."
 msgstr "Füllen Sie die Felder 'current_password' und 'new_password' aus."
-
-msgid "Please, select a sort field."
-msgstr "Wählen Sie ein Sortierfeld aus."
 
 msgid "Pod"
 msgstr "Pod"
@@ -39267,12 +39076,6 @@ msgstr "Proportionale Gruppengröße"
 msgid "Protected"
 msgstr "Geschützt"
 
-msgid "Proto"
-msgstr "Proto"
-
-msgid "Proto required"
-msgstr "Proto erforderlich"
-
 msgid "Protocol"
 msgstr "Protokoll"
 
@@ -39647,6 +39450,9 @@ msgstr "Bereitstellungen"
 
 msgid "Proxmox Provider"
 msgstr "Proxmox-Anbieter"
+
+msgid "Proxmox VE"
+msgstr "Proxmox VE"
 
 msgid "Proxy"
 msgstr "Proxy"
@@ -41332,9 +41138,6 @@ msgstr "Katalogeinträge entfernen"
 msgid "Remove Catalogs"
 msgstr "Kataloge entfernen"
 
-msgid "Remove Cloud Network"
-msgstr "Cloudnetz entfernen"
-
 msgid "Remove Cloud Providers"
 msgstr "Cloud-Provider entfernen"
 
@@ -41409,9 +41212,6 @@ msgstr "Generische Objektklassen entfernen"
 
 msgid "Remove Generic Objects"
 msgstr "Generische Objekte entfernen"
-
-msgid "Remove Group"
-msgstr "Gruppe entfernen"
 
 msgid "Remove Host"
 msgstr "Host entfernen"
@@ -41612,18 +41412,6 @@ msgstr "Sicherheitsgruppen entfernen"
 
 msgid "Remove Security Policies"
 msgstr "Sicherheitsrichtlinien entfernen"
-
-msgid "Remove Security Policy"
-msgstr "Sicherheitsrichtlinie entfernen"
-
-msgid "Remove Security Policy (NSX-T)"
-msgstr "Sicherheitsrichtlinie entfernen (NSX-T)"
-
-msgid "Remove Security Policy Rule"
-msgstr "Sicherheitsrichtlinienregel entfernen"
-
-msgid "Remove Security Policy Rule (NSX-T)"
-msgstr "Sicherheitsrichtlinienregel entfernen (NSX-T)"
 
 msgid "Remove Security Policy Rules"
 msgstr "Regeln für Sicherheitsrichtlinien entfernen"
@@ -41978,9 +41766,6 @@ msgstr "Dieses Repository aus Bestand entfernen"
 
 msgid "Remove this Resource Pool from Inventory"
 msgstr "Diesen Ressourcenpool aus Bestand entfernen"
-
-msgid "Remove this Security Group (NSX-T)"
-msgstr "Diese Sicherheitsgruppe entfernen (NSX-T)"
 
 msgid "Remove this Service from Inventory"
 msgstr "Diesen Service aus Bestand entfernen"
@@ -42442,9 +42227,6 @@ msgstr "Erforderliche Funktionalität"
 msgid "Required if SSH login is disabled for the Default account."
 msgstr ""
 "Erforderlich, wenn die SSH-Anmeldung für das Standardkonto inaktiviert ist."
-
-msgid "Required key not specified: [%{key}]"
-msgstr "Erforderlicher Schlüssel nicht angegeben: [%{key}]"
 
 msgid "Required tag(s): %{names}"
 msgstr "Erforderliche(r) Tag(s): %{names}"
@@ -43376,6 +43158,9 @@ msgstr "Auf lokalem Host ausführen"
 msgid "Run on the target of the Policy Event"
 msgstr "Auf dem Ziel des Richtlinienereignisses ausführen"
 
+msgid "Runner Options"
+msgstr "Runner-Optionen"
+
 msgid "Running"
 msgstr "Aktiv"
 
@@ -43444,6 +43229,9 @@ msgstr "SCSI-Ziel %{target}"
 
 msgid "SCSI Target %{target} (%{name})"
 msgstr "SCSI-Ziel %{target} (%{name})"
+
+msgid "SCVMM"
+msgstr "SCVMM"
 
 msgid "SELinux Level"
 msgstr "SELinux-Stufe"
@@ -43925,9 +43713,6 @@ msgid "Search is referenced in a schedule and cannot be deleted"
 msgstr ""
 "Suche wird in einem Zeitplan referenziert und kann nicht gelöscht werden"
 
-msgid "Search selection..."
-msgstr "Auswahl für Suche..."
-
 msgid "Search with Name or Relative path"
 msgstr "Suche mit Name oder relativem Pfad"
 
@@ -44086,29 +43871,11 @@ msgid "Security Token Service(STS) Token for this credential"
 msgstr ""
 "Security Token Service-Token (STS-Token) für diesen Berechtigungsnachweis"
 
-msgid "Security Zone"
-msgstr "Sicherheitszone"
-
-msgid "Security Zone is required"
-msgstr "Die Sicherheitszone ist erforderlich"
-
-msgid "Security Zone of the Cloud Network"
-msgstr "Sicherheitszone des Cloudnetzes"
-
 msgid "Security context"
 msgstr "Sicherheitskontext"
 
 msgid "Security group"
 msgstr "Sicherheitsgruppe"
-
-msgid "Security group description"
-msgstr "Beschreibung der Sicherheitsgruppe"
-
-msgid "Security group name"
-msgstr "Name der Sicherheitsgruppe"
-
-msgid "Security group rules"
-msgstr "Regeln für Sicherheitsgruppe"
 
 msgid "Security policy"
 msgstr "Sicherheitsrichtlinie"
@@ -44317,9 +44084,6 @@ msgstr "Einstiegspunkt %{entry_point} auswählen"
 msgid "Select Entry Point Instance"
 msgstr "Instanzeinstiegspunkt auswählen"
 
-msgid "Select Format"
-msgstr "Format auswählen"
-
 msgid "Select Group"
 msgstr "Gruppe auswählen"
 
@@ -44366,9 +44130,6 @@ msgstr "Hinzuzufügendes Richtlinienprofil auswählen:"
 
 msgid "Select a VM to Submit the Simulation Options"
 msgstr "Wählen Sie eine VM aus, um die Simulationsoptionen zu übergeben"
-
-msgid "Select a customer tag to assign"
-msgstr "Wählen Sie einen Kundentag aus, der zugewiesen werden soll"
 
 msgid "Select a filter to set it as my default"
 msgstr "Wählen Sie einen Filter aus, um ihn als eigenen Standard festzulegen"
@@ -44523,9 +44284,6 @@ msgstr "Wählen Sie die Domäne aus, aus der importiert werden soll:"
 msgid "Select existing domain to import into:"
 msgstr "Wählen Sie eine vorhandene Domäne aus, in die importiert werden soll:"
 
-msgid "Select max 3 columns"
-msgstr "Wählen Sie bis zu 3 Spalten aus"
-
 msgid "Select methods"
 msgstr "Methoden auswählen"
 
@@ -44540,9 +44298,6 @@ msgstr "Wählen Sie einen oder mehrere Benutzer zum Löschen aus"
 
 msgid "Select one or more items to delete"
 msgstr "Wählen Sie ein oder mehrere Elemente zum Löschen aus"
-
-msgid "Select one or more searchable fields..."
-msgstr "Wählen Sie mindestens ein gesuchtes Feld aus..."
 
 msgid "Select only one or consecutive %{member} to move down"
 msgstr ""
@@ -44663,9 +44418,6 @@ msgstr "Ausgewählter Tag"
 msgid "Selected Day Percent Utilization"
 msgstr "Auslastung für ausgewählten Tag in Prozent"
 
-msgid "Selected Fields"
-msgstr "Ausgewählte Felder"
-
 msgid "Selected Fields:"
 msgstr "Ausgewählte Felder:"
 
@@ -44701,12 +44453,6 @@ msgstr "Ausgewählte Vorlageninhalte"
 
 msgid "Selected VM"
 msgstr "Ausgewählte VM"
-
-msgid "Selected VM\\'s"
-msgstr "Ausgewählte VMs"
-
-msgid "Selected VM\\'s of the Security Group"
-msgstr "Ausgewählte VMs der Sicherheitsgruppe"
 
 msgid ""
 "Selected item can not be copied. Because it\\'s Ansible Playbook or not valid."
@@ -44950,6 +44696,11 @@ msgid_plural "Service Ansible Towers"
 msgstr[0] "Service - Ansible Tower"
 msgstr[1] "Service - Ansible Towers"
 
+msgid "Service Automation"
+msgid_plural "Service Automations"
+msgstr[0] "Service Automation"
+msgstr[1] "Service Automations"
+
 msgid "Service Awx"
 msgid_plural "Service Awxes"
 msgstr[0] "Service Awx"
@@ -45003,6 +44754,11 @@ msgstr "Servicedialoge"
 
 msgid "Service Display Name"
 msgstr "Service - Anzeigename"
+
+msgid "Service Embedded Terraform"
+msgid_plural "Service Embedded Terraforms"
+msgstr[0] "Service Embedded Terraform"
+msgstr[1] "Service Embedded Terraforms"
 
 msgid "Service Generic"
 msgid_plural "Service Generics"
@@ -47263,9 +47019,6 @@ msgstr "Geheimer Schlüssel für Quelle"
 msgid "Source Security Groups"
 msgstr "Quellensicherheitsgruppen"
 
-msgid "Source Security Groups of the Security Policy Rule"
-msgstr "Quellensicherheitsgruppen der Sicherheitsrichtlinienregel"
-
 msgid "Source Template"
 msgstr "Quellenvorlage"
 
@@ -48249,9 +48002,6 @@ msgstr "Teilnetz-ID kann nicht 'nil' (null) sein"
 msgid "Subnet Mask"
 msgstr "Teilnetzmaske"
 
-msgid "Subnet Name"
-msgstr "Teilnetzname"
-
 msgid "Subnet Required"
 msgstr "Teilnetz erforderlich"
 
@@ -48295,8 +48045,8 @@ msgid "Subscription Manager failed to enable repo %{repo_name}"
 msgstr ""
 "Der Subskriptionsmanager konnte das Repository %{repo_name} nicht aktivieren"
 
-msgid "Subscriptions"
-msgstr "Subskriptionen"
+msgid "Subscriptions Changed"
+msgstr "Abonnements geändert"
 
 msgid "Substitution:"
 msgstr "Substitution:"
@@ -48642,9 +48392,6 @@ msgstr "Systemtyp:"
 msgid "System console"
 msgstr "Systemkonsole"
 
-msgid "System default (about 1 hour)"
-msgstr "Systemstandardwert (ca. 1 Stunde)"
-
 msgid "System domain import is not supported."
 msgstr "Der Systemdomänenimport wird nicht unterstützt."
 
@@ -48961,6 +48708,15 @@ msgstr "Taskzustand"
 msgid "Task Status"
 msgstr "Taskstatus"
 
+msgid "Task did not complete after %d attempts"
+msgstr "Die Aufgabe wurde nach %d Versuchen nicht abgeschlossen"
+
+msgid "Task failed with server error"
+msgstr "Die Aufgabe ist aufgrund eines Serverfehlers fehlgeschlagen"
+
+msgid "Task failed with status: %s"
+msgstr "Die Aufgabe ist mit folgendem Status fehlgeschlagen: %s"
+
 msgid "Task state"
 msgstr "Taskstatus"
 
@@ -49202,6 +48958,12 @@ msgid_plural "Terraform Templates (Terraform Enterprise)"
 msgstr[0] "Terraform-Vorlage (Terraform Enterprise)"
 msgstr[1] "Terraform-Vorlagen (Terraform Enterprise)"
 
+msgid "Terraform Template (deprecated)"
+msgstr "Terraform-Vorlage (veraltet)"
+
+msgid "Terraform Template Provision"
+msgstr "Bereitstellung von Terraform-Vorlagen"
+
 msgid "Terraform has applied the changes specified in the plan."
 msgstr "Terraform hat die im Plan angegebenen Änderungen vorgenommen."
 
@@ -49312,6 +49074,13 @@ msgid "The IBM VPC instance is being provisioned."
 msgstr "Die IBM VPC-Instanz wird bereitgestellt."
 
 msgid ""
+"The IQN should contain only lower-case letters (a to z), digits (0 to 9), "
+"hyphens (-), periods (.) or colons (:)"
+msgstr ""
+"Der IQN darf nur Kleinbuchstaben (a bis z), Ziffern (0 bis 9), Bindestriche (-"
+"), Punkte (.) oder Doppelpunkte (:) enthalten"
+
+msgid ""
 "The IQN should have the format: iqn.yyyy-mm.naming-authority:unique name"
 msgstr ""
 "Der IQN muss folgendes Format haben: iqn.yyyy-mm.naming-authority:unique name"
@@ -49342,6 +49111,9 @@ msgstr "Der physische Speicher ist nicht mit einem aktiven Manager verbunden"
 
 msgid "The PowerVM management master of this host is a HMC."
 msgstr "Der PowerVM-Management-Master dieses Hosts ist eine HMC."
+
+msgid "The QEMU guest agent is not running"
+msgstr "Der QEMU-Gast-Agent wird nicht ausgeführt"
 
 msgid "The Security Group is not connected to an active %{table}"
 msgstr "Die Sicherheitsgruppe ist nicht mit einer aktiven %{table} verbunden"
@@ -50069,6 +49841,13 @@ msgstr "Dieses Element ist ungültig"
 msgid "This item is not valid and cannot be copied."
 msgstr "Dieses Element ist nicht gültig und kann nicht kopiert werden."
 
+msgid ""
+"This list does not include host initiator groups which have no host initiators"
+" or which are already mapped to the selected volume."
+msgstr ""
+"Diese Liste umfasst keine Host-Initiator-Gruppen, die keine Host-Initiatoren "
+"enthalten oder bereits dem ausgewählten Volume zugeordnet sind."
+
 msgid "This object already exists in the database with the same name"
 msgstr ""
 "Dieses Objekt ist bereits mit demselben Namen in der Datenbank vorhanden"
@@ -50153,9 +49932,6 @@ msgstr "Zeitverzögerung"
 msgid "Time Delay from Now"
 msgstr "Zeitraum ab jetzt"
 
-msgid "Time Format"
-msgstr "Zeitformat"
-
 msgid "Time Profile"
 msgstr "Zeitprofil"
 
@@ -50231,18 +50007,8 @@ msgstr "Zeitverlauf für Ereignisse (stündlich)"
 msgid "Timeline Policy Events Hourly"
 msgstr "Zeitverlauf für Richtlinienereignisse (stündlich)"
 
-msgid "Timeline component has been loaded."
-msgstr "Die Komponente 'Zeitverlauf' wurde geladen."
-
 msgid "Timeline not supported for this region"
 msgstr "Zeitverlauf nicht unterstützt für diese Region"
-
-msgid ""
-"Timeline tab is not available until at least 1 time-field from Columns tab has"
-" been selected."
-msgstr ""
-"Die Registerkarte 'Zeitverlauf' ist erst verfügbar, nachdem mindestens ein "
-"Zeitfeld in der Registerkarte 'Spalten' ausgewählt wurde."
 
 msgid "Timelines"
 msgstr "Zeitverläufe"
@@ -50277,9 +50043,6 @@ msgstr "Zeitzone"
 msgid "Title"
 msgstr "Titel"
 
-msgid "Title is required"
-msgstr "Der Titel ist erforderlich"
-
 msgid "To"
 msgstr "An"
 
@@ -50297,12 +50060,6 @@ msgstr "An E-Mail-Adresse"
 
 msgid "To E-mail Address"
 msgstr "Empfänger-E-Mail-Adresse"
-
-msgid "To port"
-msgstr "Zielport"
-
-msgid "To port required"
-msgstr "Zielport erforderlich"
 
 msgid ""
 "To reset back to the Regions's setting or to delete a setting, set the value "
@@ -50723,9 +50480,6 @@ msgstr "Selbst signierte SSL-Zertifikate als vertrauenswürdig anerkennen?"
 msgid "Trusted CA Certificates"
 msgstr "Vertrauenswürdige CA-Zertifikate"
 
-msgid "Trusted Forest Settings"
-msgstr "Vertrauenswürdige Gesamtstruktureinstellungen"
-
 msgid "Trying to change a read-only widget"
 msgstr "Es wird versucht, ein schreibgeschütztes Widget zu ändern"
 
@@ -50838,6 +50592,22 @@ msgstr "URL kann nur von Schaltflächen für eine Einzelentität geöffnet werde
 msgid "URL has to be HTTPS"
 msgstr "Die URL muss HTTPS sein"
 
+msgid ""
+"URL must include a protocol (http:// or https://) with path or be a valid SSH "
+"path (user@server:path or ssh://user@address:port/path)"
+msgstr ""
+"Die URL muss ein Protokoll (http:// oder https://) mit einem Pfad enthalten "
+"oder ein gültiger SSH-Pfad (user@server:path oder ssh://user@address:port/path"
+") sein"
+
+msgid ""
+"URL must include a protocol (http://, https:// or file://) with path or be a "
+"valid SSH path (user@server:path or ssh://user@address:port/path)"
+msgstr ""
+"Die URL muss ein Protokoll (http://, https:// oder file://) mit einem Pfad "
+"enthalten oder ein gültiger SSH-Pfad (user@server:path oder ssh://user@address"
+":port/path) sein"
+
 msgid "US Executive - 7.25in x 10.5in"
 msgstr "US Executive - 7,25in x 10,5in"
 
@@ -50912,13 +50682,6 @@ msgstr ""
 
 msgid "Unable to attach volume: %{error_message}"
 msgstr "Datenträger kann nicht angehängt werden: %{error_message}"
-
-msgid ""
-"Unable to auto-create user because LDAP search returned no data for user: [%{"
-"name}]"
-msgstr ""
-"Benutzer kann nicht automatisch erstellt werden, weil die LDAP-Suche keine "
-"Daten für den Benutzer zurückgegeben hat: [%{name}]"
 
 msgid "Unable to create Cloud Network \"%{name}\": %{details}"
 msgstr "Cloudnetz \"%{name}\" kann nicht erstellt werden: %{details}"
@@ -51011,9 +50774,6 @@ msgstr "Strategie für VM-Auswahl kann nicht gefunden werden"
 msgid "Unable to find task with id: [%{task_id}]"
 msgstr "Task mit folgender ID kann nicht gefunden werden: [%{task_id}]"
 
-msgid "Unable to find user %{user_name} in directory"
-msgstr "Benutzer %{user_name} im Verzeichnis nicht gefunden"
-
 msgid "Unable to find user '%{name}'"
 msgstr "Benutzer '%{name}' kann nicht gefunden werden"
 
@@ -51100,6 +50860,9 @@ msgid "Unable to restore Cloud Volume \"%{name}\": %{details}"
 msgstr ""
 "Clouddatenträger \"%{name}\" kann nicht wiederhergestellt werden: %{details}"
 
+msgid "Unable to save replication settings."
+msgstr "Die Replikationseinstellungen können nicht gespeichert werden."
+
 msgid "Unable to sync data for job with id %{job_id}"
 msgstr ""
 "Daten für den Job mit der ID %{job_id} können nicht synchronisiert werden."
@@ -51113,6 +50876,9 @@ msgstr ""
 
 msgid "Unable to update Host Aggregate \"%{name}\": %{details}"
 msgstr "Hostaggregat \"%{name}\" kann nicht aktualisiert werden: %{details}"
+
+msgid "Unable to validate subscription."
+msgstr "Das Abonnement konnte nicht validiert werden."
 
 msgid "Unallocated Space"
 msgstr "Nicht zugeordneter Speicherplatz"
@@ -51315,9 +51081,6 @@ msgstr "Aktiv"
 msgid "Update"
 msgstr "Aktualisieren"
 
-msgid "Update Cloud Network"
-msgstr "Cloudnetz aktualisieren"
-
 msgid "Update Firmware of Physical Server"
 msgstr "Firmware des physischen Servers aktualisieren"
 
@@ -51332,12 +51095,6 @@ msgstr "Firmware des physischen Servers aktualisieren"
 
 msgid "Update Physical Servers' Firmware"
 msgstr "Firmware der physischen Server aktualisieren"
-
-msgid "Update Security Group (NSX-T)"
-msgstr "Sicherheitsgruppe aktualisieren (NSX-T)"
-
-msgid "Update Security Policy Rule (NSX-T)"
-msgstr "Sicherheitsrichtlinienregel aktualisieren (NSX-T)"
 
 msgid "Update password"
 msgstr "Kennwort aktualisieren"
@@ -51863,11 +51620,6 @@ msgstr "Wird für SSH-Anmeldung verwendet."
 msgid "Used for access to Web Services."
 msgstr "Für den Zugriff auf Web-Services verwendet."
 
-msgid "Used to authenticate with Nuage AMQP Messaging Bus for event handling."
-msgstr ""
-"Zur Authentifizierung beim Nuage-AMQP-Nachrichtenbus für die "
-"Ereignisverarbeitung verwendet."
-
 msgid "User"
 msgid_plural "Users"
 msgstr[0] "Benutzer"
@@ -51941,10 +51693,6 @@ msgstr "Lokaler Benutzer"
 msgid "User Name"
 msgstr "Benutzername"
 
-msgid "User Password must be entered to perform LDAP Group Look Up"
-msgstr ""
-"Benutzerkennwort muss eingegeben werden, um LDAP-Gruppensuche durchzuführen"
-
 msgid "User Role"
 msgstr "Benutzerrolle"
 
@@ -52010,9 +51758,8 @@ msgstr "Benutzername (optional):"
 msgid "Username for this credential"
 msgstr "Benutzername für diesen Berechtigungsnachweis"
 
-msgid "Username must be entered to perform LDAP Group Look Up"
-msgstr ""
-"Benutzername muss eingegeben werden, um LDAP-Gruppensuche durchzuführen"
+msgid "Username must be in the format: name@realm"
+msgstr "Der Benutzername muss folgendes Format haben: name@realm"
 
 msgid "Username or password is not valid"
 msgstr "Benutzername oder Kennwort ist nicht gültig"
@@ -52368,9 +52115,15 @@ msgstr "VM-NATIVE-Konsole nicht unterstützt"
 msgid "VM Name"
 msgstr "VM-Name"
 
+msgid "VM Name '%{name}' already exists"
+msgstr "Der VM-Name '%{name}' ist bereits vorhanden"
+
 msgid "VM Name already exists, Please select a different VM Name"
 msgstr ""
 "Der VM-Name ist bereits vorhanden. Wählen Sie einen anderen VM-Namen aus."
+
+msgid "VM Name is required"
+msgstr "Der VM-Name ist erforderlich"
 
 msgid "VM Native Console error: %{error}"
 msgstr "Fehler in der nativen VM Konsole: %{error}"
@@ -53062,9 +52815,6 @@ msgstr[1] "VNF Templaten"
 msgid "VNF Templates"
 msgstr "VNF-Vorlagen"
 
-msgid "VPC Id"
-msgstr "VPC-ID"
-
 msgid "VXLAN"
 msgstr "VXLAN"
 
@@ -53080,10 +52830,6 @@ msgstr "Physischen Speicher validieren"
 msgid "Validate the Amazon Settings"
 msgstr "Amazon-Einstellungen validieren"
 
-msgid "Validate the LDAP Settings by binding with the Host"
-msgstr ""
-"Validieren Sie die LDAP-Einstellungen, indem Sie sie mit dem Host binden"
-
 msgid "Validate the credentials by logging into the Server"
 msgstr "Berechtigungsnachweise durch Anmelden beim Server validieren"
 
@@ -53097,6 +52843,9 @@ msgstr "Validierung erfolgt"
 
 msgid "Validation"
 msgstr "Validierung"
+
+msgid "Validation Message"
+msgstr "Validierungsmeldung"
 
 msgid "Validation Required"
 msgstr "Validierung erforderlich"
@@ -53261,26 +53010,11 @@ msgstr "Version"
 msgid "Version / Build"
 msgstr "Version / Build"
 
-msgid "Version 3.2"
-msgstr "Version 3.2"
-
-msgid "Version 4.0"
-msgstr "Version 4.0"
-
-msgid "Version 5.0"
-msgstr "Version 5.0"
-
 msgid "View"
 msgstr "Anzeigen"
 
-msgid "View %{name} Folder"
-msgstr "Ordner %{name} anzeigen"
-
 msgid "View '%{name}' Cluster"
 msgstr "Cluster '%{name}' anzeigen"
-
-msgid "View '%{name}' Folder"
-msgstr "Ordner '%{name}' anzeigen"
 
 msgid "View Alert Definition Profiles"
 msgstr "Alertdefinitionsprofile anzeigen"
@@ -53434,9 +53168,6 @@ msgstr "Datenspeichercluster anzeigen"
 
 msgid "View Event Streams"
 msgstr "Ereignisströme anzeigen"
-
-msgid "View Examples (read only)' Folder"
-msgstr "Ordner 'Beispiele (Lesezugriff)' anzeigen"
 
 msgid "View Firmware"
 msgstr "Firmware anzeigen"
@@ -53924,7 +53655,9 @@ msgstr[0] "Virtuelle Maschine (Kubevirt)"
 msgstr[1] "Virtuelle Maschinen (Kubevirt)"
 
 msgid "Virtual Machine (Microsoft)"
-msgstr "Virtuelle Maschine (Microsoft)"
+msgid_plural "Virtual Machines (Microsoft)"
+msgstr[0] "Virtuelle Maschine (Microsoft)"
+msgstr[1] "Virtuelle Maschinen (Microsoft)"
 
 msgid "Virtual Machine (Nutanix)"
 msgid_plural "Virtual Machines (Nutanix)"
@@ -55107,9 +54840,6 @@ msgstr "Belegter Speicherplatz in Prozent"
 msgid "Volume|Volume group"
 msgstr "Datenträgergruppe"
 
-msgid "Vpc ID"
-msgstr "VPC-ID"
-
 msgid "WINS Server"
 msgstr "WINS-Server"
 
@@ -56160,9 +55890,6 @@ msgstr "'ae_state_max_retries' ist im Feld 'automate' nicht festgelegt"
 msgid "after 1 year"
 msgstr "nach 1 Jahr"
 
-msgid "amqp"
-msgstr "amqp"
-
 msgid "approval is required for %{task}"
 msgstr "Genehmigung erforderlich für %{task}"
 
@@ -56645,9 +56372,6 @@ msgstr "zurückliegend"
 msgid "h"
 msgstr "h"
 
-msgid "has been selected."
-msgstr "ausgewählt wurde."
-
 msgid "has to be a valid URL"
 msgstr "muss eine gültige URL sein"
 
@@ -56772,12 +56496,6 @@ msgstr "Jobvorlage wurde nicht festgelegt"
 msgid "kubevirt"
 msgstr "kubevirt"
 
-msgid "ldap"
-msgstr "ldap"
-
-msgid "ldaps"
-msgstr "ldaps"
-
 msgid "locale_name"
 msgstr "Deutsch"
 
@@ -56849,6 +56567,9 @@ msgid ""
 msgstr ""
 "muss mit null beginnen und darf keine Lücken zwischen dem Anfangswert und dem "
 "vorherigen Endwert enthalten."
+
+msgid "name"
+msgstr "Name"
 
 msgid "name:[%{session}] to [%{name}]"
 msgstr "Name:[%{session}] in [%{name}]"
@@ -57444,9 +57165,6 @@ msgstr "muss nach start_time erfolgen"
 
 msgid "size of %{name} id [%{number}] is incorrect"
 msgstr "Größe von %{name}, ID [%{number}], ist falsch"
-
-msgid "sort field from Summary tab "
-msgstr "Sortierfeld in der Registerkarte 'Zusammenfassung' "
 
 msgid "stopped"
 msgstr "gestoppt"
