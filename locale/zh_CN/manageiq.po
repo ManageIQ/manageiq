@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2026-03-02 15:44+0000\n"
-"PO-Revision-Date: 2026-03-02 15:44+0000\n"
+"POT-Creation-Date: 2026-06-01 14:37+0000\n"
+"PO-Revision-Date: 2026-06-01 14:37+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -335,9 +335,6 @@ msgstr "%s - 内存"
 msgid "%s Entries"
 msgstr "%s 个条目"
 
-msgid "%s Tags"
-msgstr "%s 个标记"
-
 msgid "%s has been successfully added."
 msgstr "已成功添加 %s。"
 
@@ -346,6 +343,9 @@ msgstr "已成功移除 %s。"
 
 msgid "%s has no snapshots"
 msgstr "%s 无快照"
+
+msgid "%s is used by another field"
+msgstr "%s 被另一个字段使用"
 
 msgid "%s logged out, redirecting to the login page"
 msgstr "%s 已注销，重新返回到登录页面"
@@ -1740,14 +1740,14 @@ msgstr "<按组>"
 msgid "<By Role>"
 msgstr "<按角色>"
 
+msgid "<Choose one or more Groups>"
+msgstr "<Choose one or more Groups>"
+
 msgid "<Choose>"
 msgstr "<选择>"
 
 msgid "<Click on this row to create a new entry>"
 msgstr "<点这一行新增一个条目>"
-
-msgid "<Click on this row to create a new forest>"
-msgstr "<单击此行以创建一个新森林"
 
 msgid "<Determine at Run Time>"
 msgstr "<Determine at Run Time>"
@@ -1835,12 +1835,6 @@ msgstr "必须选择一个标签"
 
 msgid "A Tenant Category must be selected"
 msgstr "必须选择一个租户类别"
-
-msgid "A User must be assigned to a Group"
-msgstr "必须将用户分配给组"
-
-msgid "A User must be assigned to an allowed Group"
-msgstr "用户必须分配到允许的组"
 
 msgid "A VM with name: [%{name}] already exists"
 msgstr "名为 [%{name}] 的虚拟机已存在"
@@ -2064,9 +2058,6 @@ msgstr "绝对最小已使用的衍生内存时间戳记"
 
 msgid "Absolute Min Derived Memory Used Value"
 msgstr "绝对最小已使用的衍生内存值"
-
-msgid "Accept"
-msgstr "接受"
 
 msgid "Accept EULA"
 msgstr "接受 EULA"
@@ -2371,9 +2362,6 @@ msgstr "添加目录"
 msgid "Add Category"
 msgstr "添加类别"
 
-msgid "Add Cloud Network (NSX-T)"
-msgstr "添加云网络 (NSX-T)"
-
 msgid "Add Composite Catalog Item"
 msgstr "添加复合目录项"
 
@@ -2545,9 +2533,6 @@ msgstr "添加部分"
 msgid "Add Security Group"
 msgstr "添加安全组"
 
-msgid "Add Security Group (NSX-T)"
-msgstr "添加安全组 (NSX-T)"
-
 msgid "Add Security Group to %{model} \"%{name}\""
 msgstr "将安全组添加至 %{model}“%{name}”"
 
@@ -2556,15 +2541,6 @@ msgstr "向“%{name}”添加安全组"
 
 msgid "Add Security Group to Instance"
 msgstr "添加安全组到实例"
-
-msgid "Add Security Policy (NSX-T)"
-msgstr "添加安全策略 (NSX-T)"
-
-msgid "Add Security Policy Rule"
-msgstr "添加安全策略规则"
-
-msgid "Add Security Policy Rule (NSX-T)"
-msgstr "添加安全策略规则 (NSX-T)"
 
 msgid "Add Subscription"
 msgstr "添加订阅"
@@ -2848,9 +2824,6 @@ msgstr "添加新的云数据库"
 msgid "Add a new Cloud Network"
 msgstr "添加新云网络"
 
-msgid "Add a new Cloud Network (NSX-T)"
-msgstr "添加新的云网络 (NSX-T)"
-
 msgid "Add a new Cloud Object Store Container"
 msgstr "添加新的云对象存储容器"
 
@@ -2994,9 +2967,6 @@ msgstr "添加子租户到此租户"
 
 msgid "Add folder to selected Accordion"
 msgstr "添加文件夹到选中的折叠菜单"
-
-msgid "Add group"
-msgstr "添加组"
 
 msgid "Add new Firmware Registry"
 msgstr "添加新的固件注册表"
@@ -3190,6 +3160,9 @@ msgstr "用户已取消添加新存储服务。"
 
 msgid "Add of new System Image Type was cancelled by the user"
 msgstr "用户已取消添加新系统镜像类型的操作"
+
+msgid "Add of new User was cancelled by the user"
+msgstr "新增用户已被用户取消"
 
 msgid "Add of new Widget was cancelled by the user"
 msgstr "用户已取消添加新窗口小部件的操作"
@@ -4340,9 +4313,6 @@ msgstr "是否确定要删除类别“%{category_name}”？"
 msgid "Are you sure you want to delete field from schema?"
 msgstr "确定要从模式里删除字段吗？"
 
-msgid "Are you sure you want to delete forest %{ldaphost} ?"
-msgstr "确定要删除森林 %{ldaphost} 吗？"
-
 msgid "Are you sure you want to delete input field from method?"
 msgstr "确定要从方法里删除输入字段吗？"
 
@@ -4688,9 +4658,6 @@ msgstr[0] "分配的服务器角色"
 
 msgid "Assigned To"
 msgstr "分配给"
-
-msgid "Assigned Value"
-msgstr "分配的值"
 
 msgid "Assigned server role"
 msgstr "分配的服务器角色"
@@ -5543,9 +5510,6 @@ msgstr "可用的警报："
 msgid "Available Custom Reports:"
 msgstr "可用的定制报告："
 
-msgid "Available Fields"
-msgstr "可用的字段"
-
 msgid "Available Fields:"
 msgstr "可用的字段："
 
@@ -5746,9 +5710,6 @@ msgstr "%{log} 的响应错误"
 msgid "Bad response from %{log}: %{result}"
 msgstr "%{log} 的响应错误：%{result}"
 
-msgid "Base DN"
-msgstr "基本 DN"
-
 msgid "Base Name"
 msgstr "基础名称"
 
@@ -5763,9 +5724,6 @@ msgid ""
 "with 'clone-' and suffixed with '-#####' (where ##### is a 5 digit random "
 "number)"
 msgstr "新克隆的卷的基本名称。 克隆的卷名称将以“clone-”作为前缀，并以“-#####”作为后缀（其中 ##### 是 5 位随机数）"
-
-msgid "Base the report on"
-msgstr "报告基于"
 
 msgid "Based On"
 msgstr "基于"
@@ -5858,15 +5816,6 @@ msgstr "资源类型"
 
 msgid "BinaryBlob|Size"
 msgstr "大小"
-
-msgid "Bind DN"
-msgstr "绑定 DN"
-
-msgid "Bind Password"
-msgstr "绑定密码"
-
-msgid "Bind failed for user %{user_name}"
-msgstr "绑定用户 %{user_name} 失败"
 
 msgid "Blade Slot Count"
 msgstr "刀片槽数量"
@@ -6162,15 +6111,6 @@ msgstr "CHAP 用户名："
 
 msgid "CIDR"
 msgstr "CIDR"
-
-msgid "CIDR Subnet Mask"
-msgstr "CIDR 子网掩码"
-
-msgid "CIDR Subnet Mask for the subnet of the Cloud Network"
-msgstr "云网络的子网的 CIDR 子网掩码"
-
-msgid "CIDR Subnet Mask is required"
-msgstr "CIDR 子网掩码为必填项"
 
 msgid "CPU"
 msgstr "CPU"
@@ -6569,6 +6509,9 @@ msgstr "CPU 使用率"
 msgid "CPU Utilization"
 msgstr "CPU 利用率"
 
+msgid "CPU hotplug not enabled"
+msgstr "CPU 热插拔未启用"
+
 msgid "CPU total cores"
 msgstr "CPU 的核心总数"
 
@@ -6596,9 +6539,6 @@ msgstr "CVE 位置"
 msgid "CVEs"
 msgstr "CVE"
 
-msgid "Calculation"
-msgstr "计算"
-
 msgid "Calculations"
 msgstr "计算"
 
@@ -6609,9 +6549,6 @@ msgid ""
 "Can not delete folder, one or more reports in the selected folder are not "
 "owned by your group"
 msgstr "无法删除文件夹，您的组不拥有所选文件夹里一个或多个报告。"
-
-msgid "Can not edit selected item, Request is missing"
-msgstr "无法编辑选中的项目，请求已丢失"
 
 msgid "Can't access records without an id"
 msgstr "没有标识无法访问记录"
@@ -6660,9 +6597,6 @@ msgstr "多久后取消"
 
 msgid "Cancel operation is not supported for %{class}"
 msgstr "%{class} 不支持取消操作"
-
-msgid "Cancel password change"
-msgstr "取消密码的改变"
 
 msgid "Cancel the load"
 msgstr "取消加载"
@@ -6796,8 +6730,17 @@ msgstr "无法解析 JSON 文件：%{message}"
 msgid "Cannot parse userid %{user_id}"
 msgstr "无法解析用户标识 %{user_id}"
 
+msgid "Cannot reconfigure a template"
+msgstr "无法重新配置模板"
+
 msgid "Cannot redirect to \"%{record}\" provider."
 msgstr "无法重定向到“%{record}”提供程序。"
+
+msgid "Cannot reduce CPUs on running VM"
+msgstr "无法减少运行中 VM 的 CPU"
+
+msgid "Cannot reduce memory on running VM"
+msgstr "无法减少运行中 VM 的内存"
 
 msgid "Cannot resize disks of a VM with snapshots"
 msgstr "无法调整具有快照的 VM 的磁盘大小"
@@ -7166,9 +7109,6 @@ msgstr "更改基础架构供应商的密码"
 msgid "Change current group"
 msgstr "更改当前组"
 
-msgid "Change stored password"
-msgstr "修改保存的密码"
-
 msgid "Changed from previous"
 msgstr "从上一个进行更改"
 
@@ -7507,12 +7447,6 @@ msgstr "图表不再存在"
 msgid "Charts"
 msgstr "图表"
 
-msgid "Charts component has been loaded."
-msgstr "已载入图表组件。"
-
-msgid "Charts tab is not available unless a"
-msgstr "“图表”选项卡不可用，除非"
-
 msgid "Charts tab is not available unless a sort field has been selected"
 msgstr "除非选择了一个排序字段，否则“图表”选项卡不可用"
 
@@ -7629,9 +7563,6 @@ msgstr "检查选项"
 
 msgid "Check Value Error: %{msg}"
 msgstr "检查值错误：%{msg}"
-
-msgid "Check input"
-msgstr "检查输入"
 
 msgid "Checking"
 msgstr "正在检查"
@@ -7765,9 +7696,6 @@ msgstr "选择文件"
 msgid "Choose one or more Fields"
 msgstr "选择一个或多个字段"
 
-msgid "Choose one or more Groups"
-msgstr "选择一个或多个组"
-
 msgid "Choose source image"
 msgstr "选择源映像"
 
@@ -7798,12 +7726,6 @@ msgstr[0] "Cinder 块存储器管理器 (OpenStack)"
 
 msgid "Cinder Block Storage Managers (OpenStack)"
 msgstr "Cinder 块存储器管理器 (OpenStack)"
-
-msgid "Cird ip"
-msgstr "Cird ip"
-
-msgid "Cird ip required"
-msgstr "Cird ip 为必填项"
 
 msgid "Cisco Intersight"
 msgstr "Cisco Intersight"
@@ -7931,9 +7853,6 @@ msgstr "点击以添加新的类别"
 msgid "Click to add a new entry"
 msgstr "点击以添加新的条目"
 
-msgid "Click to add a new forest"
-msgstr "单击以添加新的森林"
-
 msgid "Click to add a new parameter"
 msgstr "点击以添加新的参数"
 
@@ -7952,17 +7871,11 @@ msgstr "点击以删除此条目"
 msgid "Click to delete this field from schema"
 msgstr "单击以从模式中删除此字段"
 
-msgid "Click to delete this forest"
-msgstr "点击以删除此森林"
-
 msgid "Click to delete this input field from method"
 msgstr "点击以从方法里删除此输入字段"
 
 msgid "Click to delete this mapping"
 msgstr "点击删除此映射"
-
-msgid "Click to edit this forest"
-msgstr "单击以编辑此森林"
 
 msgid "Click to go this location"
 msgstr "点击以进入此位置"
@@ -10127,10 +10040,13 @@ msgstr "虚拟实例引用"
 msgid "Confirm"
 msgstr "确认"
 
-msgid "Confirm Password"
-msgstr "确认密码"
+msgid "Confirm Delete"
+msgstr "确认删除"
 
-msgid "Confirm password"
+msgid "Confirm Edit"
+msgstr "确认编辑"
+
+msgid "Confirm Password"
 msgstr "确认密码"
 
 msgid "Connect"
@@ -12935,9 +12851,6 @@ msgstr "创建云租户"
 msgid "Create Display Filter"
 msgstr "创建显示过滤器"
 
-msgid "Create L3 Cloud Subnet"
-msgstr "创建 L3 云子网"
-
 msgid "Create New"
 msgstr "新建"
 
@@ -13381,9 +13294,6 @@ msgstr "当前用户"
 
 msgid "Current Window"
 msgstr "当前窗口"
-
-msgid "Current group"
-msgstr "当前组"
 
 msgid "Current group: %s"
 msgstr "当前组：%s"
@@ -15195,21 +15105,6 @@ msgstr "描述（报告中的列名）"
 msgid "Description is required"
 msgstr "描述为必填项"
 
-msgid "Description of the Cloud Network"
-msgstr "云网络的描述"
-
-msgid "Description of the Security Group"
-msgstr "安全组的描述"
-
-msgid "Description of the Security Policy"
-msgstr "安全策略的描述"
-
-msgid "Description of the Security Policy Rule"
-msgstr "安全策略规则的描述"
-
-msgid "Description required"
-msgstr "描述为必填项"
-
 msgid "Description:"
 msgstr "描述："
 
@@ -15251,9 +15146,6 @@ msgstr "目标端口"
 
 msgid "Destination Security Groups"
 msgstr "目标安全组"
-
-msgid "Destination Security Groups of the Security Policy Rule"
-msgstr "安全策略规则的目标安全组"
 
 msgid "Destination Type"
 msgstr "目标类型"
@@ -17330,6 +17222,9 @@ msgstr "Drs 迁移阈值"
 msgid "Duplicate"
 msgstr "复制"
 
+msgid "Duplicate field name found: %s"
+msgstr "发现重复字段名称：%s"
+
 msgid "Duplicate orders"
 msgstr "复制订单"
 
@@ -17455,9 +17350,6 @@ msgstr "EVM 用户"
 
 msgid "EVM User \"%{name}\""
 msgstr "EVM 用户“%{name}”"
-
-msgid "EVM User Being Tagged"
-msgstr "被标记的 EVM 用户"
 
 msgid "EVM Users"
 msgstr "EVM 用户"
@@ -17761,12 +17653,6 @@ msgstr "编辑部分详细信息"
 
 msgid "Edit Security Group \"%{name}\""
 msgstr "编辑安全组“%{name}”"
-
-msgid "Edit Security Policy (NSX-T)"
-msgstr "编辑安全策略 (NSX-T)"
-
-msgid "Edit Security Policy Rule (NSX-T)"
-msgstr "编辑安全策略规则 (NSX-T)"
 
 msgid "Edit Selected Automate Namespace/Class"
 msgstr "编辑所选 Automate 名称空间/类"
@@ -19001,9 +18887,6 @@ msgstr "编辑此类"
 msgid "Edit this Cloud Network"
 msgstr "编辑此云网络"
 
-msgid "Edit this Cloud Network (NSX-T)"
-msgstr "编辑此云网络 (NSX-T)"
-
 msgid "Edit this Cloud Provider"
 msgstr "编辑此云供应商"
 
@@ -19111,9 +18994,6 @@ msgstr "编辑此调度"
 
 msgid "Edit this Security Group"
 msgstr "编辑此安全组"
-
-msgid "Edit this Security Group (NSX-T)"
-msgstr "编辑此安全组 (NSX-T)"
 
 msgid "Edit this Security Policy"
 msgstr "编辑此安全策略"
@@ -19295,9 +19175,6 @@ msgstr "弹性块存储器管理器 (Amazon)"
 
 msgid "Email"
 msgstr "电子邮件"
-
-msgid "Email Address"
-msgstr "电子邮件地址"
 
 msgid "Email must be a valid email address"
 msgstr "电子邮件必须是有效的电子邮件地址"
@@ -19936,9 +19813,6 @@ msgstr "输入要与之映射的标签类别"
 msgid "Entered Time"
 msgstr "进入时间"
 
-msgid "Entered text should match the format:"
-msgstr "输入的文本应符合以下格式："
-
 msgid "Enterprise"
 msgstr "企业"
 
@@ -20188,6 +20062,9 @@ msgstr "启动定制按钮时出错：未选择任何项目。"
 msgid "Error launching: \"%{task_description}\" %{error_message}"
 msgstr "启动时出错：“%{task_description}”%{error_message}"
 
+msgid "Error loading content: %s"
+msgstr "加载内容时出错：%s"
+
 msgid "Error loading data:"
 msgstr "加载数据错误："
 
@@ -20199,9 +20076,6 @@ msgstr "第 %{line_num} 行出错：%{err_txt}"
 
 msgid "Error requesting data from server"
 msgstr "从服务器请求数据时出错"
-
-msgid "Error retrieving LDAP info: %{error_message}"
-msgstr "检索 LDAP 信息时出错：%{error_message}"
 
 msgid ""
 "Error returned from %{name} event processing in Automate: %{error_message}"
@@ -21316,6 +21190,9 @@ msgstr "支持 cinder 卷类型"
 msgid "ExtManagementSystem|Supports cloud database create"
 msgstr "ExtManagementSystem|支持创建云数据库"
 
+msgid "ExtManagementSystem|Supports cloud network create"
+msgstr "ExtManagementSystem|Supports 云网络创建"
+
 msgid "ExtManagementSystem|Supports cloud object store container create"
 msgstr "支持云对象存储容器创建"
 
@@ -21565,12 +21442,6 @@ msgstr "失败"
 
 msgid "Failures occurred during bulk reassignment."
 msgstr "批量重分配时失败"
-
-msgid "Fallback Hostname 1"
-msgstr "回退主机名 1"
-
-msgid "Fallback Hostname 2"
-msgstr "回退主机名 2"
 
 msgid "False"
 msgstr "False"
@@ -22473,12 +22344,6 @@ msgstr "发件人电子邮件地址"
 msgid "From E-mail Address (leave blank for default)"
 msgstr "发件人电子邮件地址（缺省情况下保留为空白）"
 
-msgid "From port"
-msgstr "来源端口"
-
-msgid "From port required"
-msgstr "来源端口为必填项"
-
 msgid "Fulfilled On"
 msgstr "完成日期"
 
@@ -22759,6 +22624,9 @@ msgstr "GitRepository|验证 SSL"
 msgid "Given a set of capabilities, check which attached resources will comply"
 msgstr "给定一组功能，检查哪些连接的资源符合要求"
 
+msgid "Global"
+msgstr "全局"
+
 msgid "Global Default"
 msgstr "全局缺省值"
 
@@ -22867,9 +22735,6 @@ msgstr "按标签分组"
 
 msgid "Group by Tag"
 msgstr "按标签分组"
-
-msgid "Group name required"
-msgstr "组名称为必填项"
 
 msgid "Groups"
 msgstr "组"
@@ -23484,7 +23349,8 @@ msgid "Host (Authentication URL)"
 msgstr "主机 (身份验证 URL)"
 
 msgid "Host (Microsoft)"
-msgstr "主机 (Microsoft)"
+msgid_plural "Hosts (Microsoft)"
+msgstr[0] "主机 (Microsoft)"
 
 msgid "Host (Nutanix)"
 msgid_plural "Hosts (Nutanix)"
@@ -23493,6 +23359,10 @@ msgstr[0] "主机 (Nutanix)"
 msgid "Host (OpenStack)"
 msgid_plural "Hosts (OpenStack)"
 msgstr[0] "主机 (OpenStack)"
+
+msgid "Host (Proxmox)"
+msgid_plural "Hosts (Proxmox)"
+msgstr[0] "主机 (Proxmox)"
 
 msgid "Host (Redhat)"
 msgid_plural "Hosts (Redhat)"
@@ -24375,6 +24245,9 @@ msgstr "电源状态"
 msgid "Host|Ram size"
 msgstr "RAM 大小"
 
+msgid "Host|Raw power state"
+msgstr "主机|原始电源状态"
+
 msgid "Host|Region description"
 msgstr "区域描述"
 
@@ -24563,6 +24436,9 @@ msgstr "IBM Power HMC 提供者"
 msgid "IBM PowerVC"
 msgstr "IBM PowerVC"
 
+msgid "IBM PowerVC Cloud Provider"
+msgstr "IBM PowerVC 云供应商"
+
 msgid "IBM PowerVC Provider"
 msgstr "IBM PowerVC 提供者"
 
@@ -24706,9 +24582,6 @@ msgstr "图标颜色"
 
 msgid "Id"
 msgstr "标识"
-
-msgid "Id required"
-msgstr "标识为必填项"
 
 msgid "Identification"
 msgstr "标识"
@@ -25043,7 +24916,8 @@ msgid_plural "Infrastructure Providers (Kubevirt)"
 msgstr[0] "基础架构供应商 (Kubevirt)"
 
 msgid "Infrastructure Provider (Microsoft)"
-msgstr "基础架构提供商 (Microsoft)"
+msgid_plural "Infrastructure Providers (Microsoft)"
+msgstr[0] "基础架构供应商 (Microsoft)"
 
 msgid "Infrastructure Provider (OpenShift Virtualization)"
 msgid_plural "Infrastructure Providers (OpenShift Virtualization)"
@@ -25413,6 +25287,9 @@ msgstr "指定了无效的 sort_by 类型 <%{value}>。"
 msgid "Invalid sort_order type <%{value}> specified."
 msgstr "指定了无效 sort_order 类型 <%{value}>。"
 
+msgid "Invalid task response: missing URL"
+msgstr "无效的任务响应：缺少 URL"
+
 msgid "Invalid user %{owner} specified"
 msgstr "指定的用户 %{owner} 无效"
 
@@ -25589,6 +25466,9 @@ msgstr "KBps"
 msgid "Keep OVA file on completion"
 msgstr "完成时保留 OVA 文件"
 
+msgid "Kerberos"
+msgstr "Kerberos"
+
 msgid "Kernel"
 msgstr "内核"
 
@@ -25669,23 +25549,6 @@ msgstr "LDAP 组查找"
 msgid "LDAP Groups for User"
 msgstr "用户的 LDAP 组"
 
-msgid "LDAP Host is required"
-msgstr "需要 LDAP 主机"
-
-msgid "LDAP Host should be unique"
-msgstr "LDAP 主机需要是唯一的"
-
-msgid "LDAP Hostname"
-msgstr "LDAP 主机名"
-
-msgid ""
-"LDAP Hostname and Port fields are needed to perform verification of LDAP "
-"Settings"
-msgstr "执行 LDAP 设置的验证需要“LDAP 主机名”和“端口”字段"
-
-msgid "LDAP Port"
-msgstr "LDAP 端口"
-
 msgid "LDAP Region"
 msgstr "LDAP 区域"
 
@@ -25697,9 +25560,6 @@ msgstr "LDAP 服务器"
 
 msgid "LDAP Servers"
 msgstr "LDAP 服务器"
-
-msgid "LDAP Settings validation was successful"
-msgstr "LDAP 设置验证成功"
 
 msgid "LDAPs"
 msgstr "LDAP"
@@ -26585,9 +26445,6 @@ msgstr "无法查看此 %{product} 服务器的日志"
 
 msgid "Long Description"
 msgstr "长描述"
-
-msgid "Lookup"
-msgstr "查找"
 
 msgid "Low"
 msgstr "低"
@@ -27774,6 +27631,9 @@ msgstr "内存利用率"
 msgid "Memory Virtual to Real Ratio"
 msgstr "虚拟内存与实际内存的比率"
 
+msgid "Memory hotplug requires hotplug=memory and NUMA"
+msgstr "内存热插拔需要配置 hotplug=memory 和 NUMA"
+
 msgid "Memory on Disk"
 msgstr "磁盘上的内存"
 
@@ -27794,9 +27654,6 @@ msgstr "内存：%{value} MB"
 
 msgid "Menu Name"
 msgstr "菜单名称"
-
-msgid "Menu Name is required"
-msgstr "菜单名称为必填项"
 
 msgid "Menu Shortcuts"
 msgstr "菜单快捷键"
@@ -28843,6 +28700,9 @@ msgstr "V CPU 已使用增量总和百分比"
 
 msgid "Metric|V pct cpu wait delta summation"
 msgstr "V CPU 等待增量总和百分比"
+
+msgid "Microsoft SCVMM Provider"
+msgstr "Microsoft SCVMM 供应商"
 
 msgid "Migrate %{vm_or_template}"
 msgstr "迁移 %{vm_or_template}"
@@ -31895,12 +31755,6 @@ msgstr "从输入数据 <%{data}> 找到多个源模板"
 msgid "Multiselect"
 msgstr "多选"
 
-msgid "Must be a valid IPv4 address"
-msgstr "必须为有效 IPv4 地址"
-
-msgid "Must be a valid netmask"
-msgstr "必须为有效网络掩码"
-
 msgid "Must be an integer"
 msgstr "必须是一个整数"
 
@@ -32060,18 +31914,6 @@ msgid ""
 "alphanumeric character, and end with an alphanumeric character"
 msgstr "名称必须由小写字母数字字符或\"-\"组成，以字母数字字符开头，以字母数字字符结尾"
 
-msgid "Name of the Cloud Network"
-msgstr "云网络的名称"
-
-msgid "Name of the Security Group"
-msgstr "安全组的名称"
-
-msgid "Name of the Security Policy"
-msgstr "安全策略的名称"
-
-msgid "Name of the Security Policy Rule"
-msgstr "安全策略规则的名称"
-
 msgid "Name of this credential"
 msgstr "此凭证的名称"
 
@@ -32120,9 +31962,6 @@ msgstr "导航至此映射的物理存储器"
 
 msgid "Neither user or group to be preserved during import were found"
 msgstr "没有找到要在导入期间保存的用户或组"
-
-msgid "Netmask"
-msgstr "网络掩码"
 
 msgid "Network"
 msgstr "网络"
@@ -32391,9 +32230,6 @@ msgstr[0] "网络服务条目 (NSX-T)"
 
 msgid "Network Services"
 msgstr "网络服务"
-
-msgid "Network Services of the Security Policy Rule"
-msgstr "安全策略规则的网络服务"
 
 msgid "Network Subnet Mask"
 msgstr "网络子网掩码"
@@ -32788,9 +32624,6 @@ msgstr "Nexthop"
 msgid "No"
 msgstr "否"
 
-msgid "No %s Tags have been assigned"
-msgstr "没有分配 %s 标签"
-
 msgid "No %{class_name} object provided"
 msgstr "未提供 %{class_name} 对象"
 
@@ -32991,9 +32824,6 @@ msgstr "没有添加支持虚拟机供应的基础架构供应商"
 
 msgid "No Items found."
 msgstr "未找到项目。"
-
-msgid "No My Company Tags are assigned"
-msgstr "没有分配 '我的公司' 标签"
 
 msgid "No Ordering Dialog is available"
 msgstr "没有可用的订购对话框"
@@ -33313,9 +33143,6 @@ msgstr "无图标"
 msgid "No ids given to process_tasks"
 msgstr "没有为 process_tasks 赋予 ID"
 
-msgid "No information returned for %{email}"
-msgstr "%{email} 未返回任何信息"
-
 msgid "No input to apply"
 msgstr "没有可应用的输入"
 
@@ -33346,14 +33173,8 @@ msgstr "不得选择超过 32 个 %{model} 来进行比较"
 msgid "No notes have been entered."
 msgstr "没有输入注记。"
 
-msgid "No option found"
-msgstr "未找到选项"
-
 msgid "No option selected"
 msgstr "未选择任何选项"
-
-msgid "No options"
-msgstr "无选项"
 
 msgid "No output available"
 msgstr "没有可用的输出"
@@ -33441,6 +33262,9 @@ msgstr "没有可用于从路由器“%{name}”移除接口的子网"
 
 msgid "No synchronize category specified"
 msgstr "未指定同步类别"
+
+msgid "No task returned from server"
+msgstr "服务器未返回任何任务"
 
 msgid "No task were selected to cancel"
 msgstr "没有选择要取消的任务"
@@ -33567,9 +33391,6 @@ msgstr "未管理"
 
 msgid "Not a Server"
 msgstr "不是服务器"
-
-msgid "Not a valid network mask"
-msgstr "不是有效的网络掩码"
 
 msgid "Not all hosts can be removed from the deployment."
 msgstr "不能从部署移除所有主机。"
@@ -33718,9 +33539,6 @@ msgstr "区域编号"
 
 msgid "Notification|Subject type"
 msgstr "主题类型"
-
-msgid "Nuage Provider"
-msgstr "Nuage 供应商"
 
 msgid "Number"
 msgstr "数字"
@@ -34474,7 +34292,7 @@ msgid "Orchestration Stack %{subject} has been retired."
 msgstr "已停用编排堆栈 %{subject}。"
 
 msgid "Orchestration Stack %{subject} has started retirement."
-msgstr "编排堆栈% %{subject} 已启动停用流程。"
+msgstr "编排堆栈 %{subject} 已启动停用流程。"
 
 msgid "Orchestration Stack (Amazon)"
 msgid_plural "Orchestration Stacks (Amazon)"
@@ -34968,9 +34786,6 @@ msgstr "PDF"
 msgid "PDF Output"
 msgstr "PDF 输出"
 
-msgid "PDP Output"
-msgstr "PDP 输出"
-
 msgid "PID"
 msgstr "PID"
 
@@ -35233,9 +35048,6 @@ msgstr "授权机制使用的密码"
 
 msgid "Password/Confirm Password do not match"
 msgstr "密码 / 确认密码不匹配"
-
-msgid "Password/Verify Password do not match"
-msgstr "密码/验证密码不匹配"
 
 msgid "Password:"
 msgstr "密码："
@@ -36591,14 +36403,8 @@ msgstr "请从上面选择一个实例类型"
 msgid "Please try again"
 msgstr "请重试"
 
-msgid "Please, add time field"
-msgstr "请添加时间字段"
-
 msgid "Please, fill the current_password and new_password fields."
 msgstr "请填写 current_password 字段和 new_password 字段。"
-
-msgid "Please, select a sort field."
-msgstr "请选择一个排序字段。"
 
 msgid "Pod"
 msgstr "Pod"
@@ -37353,12 +37159,6 @@ msgstr "比例集大小"
 msgid "Protected"
 msgstr "受保护的"
 
-msgid "Proto"
-msgstr "协议"
-
-msgid "Proto required"
-msgstr "协议为必填项"
-
 msgid "Protocol"
 msgstr "协议"
 
@@ -37720,6 +37520,9 @@ msgstr "供应"
 
 msgid "Proxmox Provider"
 msgstr "Proxmox提供商"
+
+msgid "Proxmox VE"
+msgstr "Proxmox VE"
 
 msgid "Proxy"
 msgstr "代理"
@@ -39240,9 +39043,6 @@ msgstr "移除目录项"
 msgid "Remove Catalogs"
 msgstr "移除目录"
 
-msgid "Remove Cloud Network"
-msgstr "移除云网络"
-
 msgid "Remove Cloud Providers"
 msgstr "移除云供应商"
 
@@ -39317,9 +39117,6 @@ msgstr "移除通用对象类"
 
 msgid "Remove Generic Objects"
 msgstr "移除通用对象"
-
-msgid "Remove Group"
-msgstr "移除组"
 
 msgid "Remove Host"
 msgstr "移除主机"
@@ -39511,18 +39308,6 @@ msgstr "移除安全组"
 
 msgid "Remove Security Policies"
 msgstr "移除安全策略"
-
-msgid "Remove Security Policy"
-msgstr "移除安全策略"
-
-msgid "Remove Security Policy (NSX-T)"
-msgstr "移除安全策略 (NSX-T)"
-
-msgid "Remove Security Policy Rule"
-msgstr "移除安全策略规则"
-
-msgid "Remove Security Policy Rule (NSX-T)"
-msgstr "移除安全策略规则 (NSX-T)"
 
 msgid "Remove Security Policy Rules"
 msgstr "移除安全策略规则"
@@ -39877,9 +39662,6 @@ msgstr "从库存中移除此存储库"
 
 msgid "Remove this Resource Pool from Inventory"
 msgstr "从库存移除此资源池"
-
-msgid "Remove this Security Group (NSX-T)"
-msgstr "移除此安全组 (NSX-T)"
 
 msgid "Remove this Service from Inventory"
 msgstr "从库存移除此服务"
@@ -40316,9 +40098,6 @@ msgstr "必需功能"
 
 msgid "Required if SSH login is disabled for the Default account."
 msgstr "如果缺省帐户禁用 SSH 登录，则为必填项。"
-
-msgid "Required key not specified: [%{key}]"
-msgstr "没有指定需要的密钥：[%{key}]"
 
 msgid "Required tag(s): %{names}"
 msgstr "必填标记：%{names}"
@@ -41221,6 +41000,9 @@ msgstr "在本地主机上运行"
 msgid "Run on the target of the Policy Event"
 msgstr "在策略事件的目标上运行"
 
+msgid "Runner Options"
+msgstr "运行器选项"
+
 msgid "Running"
 msgstr "正在运行"
 
@@ -41286,6 +41068,9 @@ msgstr "SCSI 目标 %{target}"
 
 msgid "SCSI Target %{target} (%{name})"
 msgstr "SCSI 目标 %{target} (%{name})"
+
+msgid "SCVMM"
+msgstr "SCVMM"
 
 msgid "SELinux Level"
 msgstr "SELinux 级别"
@@ -41751,9 +41536,6 @@ msgstr "在结果里按名称搜索"
 msgid "Search is referenced in a schedule and cannot be deleted"
 msgstr "时间表里引用了搜索且无法被删除"
 
-msgid "Search selection..."
-msgstr "搜索选择..."
-
 msgid "Search with Name or Relative path"
 msgstr "使用名称或相对路径进行搜索"
 
@@ -41898,29 +41680,11 @@ msgstr "安全协议"
 msgid "Security Token Service(STS) Token for this credential"
 msgstr "此凭证的安全令牌服务 (STS) 令牌"
 
-msgid "Security Zone"
-msgstr "安全区域"
-
-msgid "Security Zone is required"
-msgstr "安全区域为必填项"
-
-msgid "Security Zone of the Cloud Network"
-msgstr "云网络的安全区域"
-
 msgid "Security context"
 msgstr "安全上下文"
 
 msgid "Security group"
 msgstr "安全组"
-
-msgid "Security group description"
-msgstr "安全组说明"
-
-msgid "Security group name"
-msgstr "安全组名称"
-
-msgid "Security group rules"
-msgstr "安全组规则"
 
 msgid "Security policy"
 msgstr "安全策略"
@@ -42129,9 +41893,6 @@ msgstr "选择入口点 %{entry_point}"
 msgid "Select Entry Point Instance"
 msgstr "选择入口点实例"
 
-msgid "Select Format"
-msgstr "选择格式"
-
 msgid "Select Group"
 msgstr "选择组"
 
@@ -42176,9 +41937,6 @@ msgstr "选择要添加的策略概要文件："
 
 msgid "Select a VM to Submit the Simulation Options"
 msgstr "选择虚拟机提交模拟选项"
-
-msgid "Select a customer tag to assign"
-msgstr "选择一个分配的客户标签"
 
 msgid "Select a filter to set it as my default"
 msgstr "选择过滤器以将其设置为我的缺省值"
@@ -42327,9 +42085,6 @@ msgstr "选择您要从中导入的域："
 msgid "Select existing domain to import into:"
 msgstr "选择要导入的现有域："
 
-msgid "Select max 3 columns"
-msgstr "选择最多 3 列"
-
 msgid "Select methods"
 msgstr "选择方法"
 
@@ -42344,9 +42099,6 @@ msgstr "选择一个或多个要删除的用户"
 
 msgid "Select one or more items to delete"
 msgstr "选择一个或多个要删除的项"
-
-msgid "Select one or more searchable fields..."
-msgstr "选择一个或多个可搜索的字段..."
 
 msgid "Select only one or consecutive %{member} to move down"
 msgstr "仅选择要下移的一个或连续的 %{member}"
@@ -42444,9 +42196,6 @@ msgstr "选择的日期"
 msgid "Selected Day Percent Utilization"
 msgstr "选定日期使用率百分比"
 
-msgid "Selected Fields"
-msgstr "选择的字段"
-
 msgid "Selected Fields:"
 msgstr "选择的字段："
 
@@ -42482,12 +42231,6 @@ msgstr "选择的模板内容"
 
 msgid "Selected VM"
 msgstr "选择的虚拟机"
-
-msgid "Selected VM\\'s"
-msgstr "所选 VM"
-
-msgid "Selected VM\\'s of the Security Group"
-msgstr "安全组的所选 VM"
 
 msgid ""
 "Selected item can not be copied. Because it\\'s Ansible Playbook or not valid."
@@ -42722,6 +42465,10 @@ msgid "Service Ansible Tower"
 msgid_plural "Service Ansible Towers"
 msgstr[0] "服务 Ansible Towers"
 
+msgid "Service Automation"
+msgid_plural "Service Automations"
+msgstr[0] "服务自动化"
+
 msgid "Service Awx"
 msgid_plural "Service Awxes"
 msgstr[0] "服务 Awx"
@@ -42772,6 +42519,10 @@ msgstr "服务对话框"
 
 msgid "Service Display Name"
 msgstr "服务显示名称"
+
+msgid "Service Embedded Terraform"
+msgid_plural "Service Embedded Terraforms"
+msgstr[0] "服务嵌入式 Terraform"
 
 msgid "Service Generic"
 msgid_plural "Service Generics"
@@ -44956,9 +44707,6 @@ msgstr "源密钥"
 msgid "Source Security Groups"
 msgstr "源安全组"
 
-msgid "Source Security Groups of the Security Policy Rule"
-msgstr "安全策略规则的源安全组"
-
 msgid "Source Template"
 msgstr "源模板"
 
@@ -45891,9 +45639,6 @@ msgstr "子网 ID 不能为空"
 msgid "Subnet Mask"
 msgstr "子网掩码"
 
-msgid "Subnet Name"
-msgstr "子网名称"
-
 msgid "Subnet Required"
 msgstr "子网为必填项"
 
@@ -45936,8 +45681,8 @@ msgstr "订阅 ID"
 msgid "Subscription Manager failed to enable repo %{repo_name}"
 msgstr "预订管理器未能启用存储库 %{repo_name}"
 
-msgid "Subscriptions"
-msgstr "订阅"
+msgid "Subscriptions Changed"
+msgstr "订阅服务已变更"
 
 msgid "Substitution:"
 msgstr "替换："
@@ -46271,9 +46016,6 @@ msgstr "系统类型："
 msgid "System console"
 msgstr "系统控制台"
 
-msgid "System default (about 1 hour)"
-msgstr "系统缺省值（约 1 小时）"
-
 msgid "System domain import is not supported."
 msgstr "不支持系统域导入。"
 
@@ -46588,6 +46330,15 @@ msgstr "任务状态"
 msgid "Task Status"
 msgstr "任务状态"
 
+msgid "Task did not complete after %d attempts"
+msgstr "经过 %d 次尝试后，任务仍未完成"
+
+msgid "Task failed with server error"
+msgstr "任务因服务器错误而失败"
+
+msgid "Task failed with status: %s"
+msgstr "任务失败，状态为：%s"
+
 msgid "Task state"
 msgstr "任务状态"
 
@@ -46821,6 +46572,12 @@ msgid "Terraform Template (Terraform Enterprise)"
 msgid_plural "Terraform Templates (Terraform Enterprise)"
 msgstr[0] "Terraform 模板 (Terraform Enterprise)"
 
+msgid "Terraform Template (deprecated)"
+msgstr "Terraform 模板（已弃用）"
+
+msgid "Terraform Template Provision"
+msgstr "Terraform 模板配置"
+
 msgid "Terraform has applied the changes specified in the plan."
 msgstr "Terraform 已应用该计划中指定的更改。"
 
@@ -46924,6 +46681,11 @@ msgid "The IBM VPC instance is being provisioned."
 msgstr "正在配置 IBM 个 VPC 实例。"
 
 msgid ""
+"The IQN should contain only lower-case letters (a to z), digits (0 to 9), "
+"hyphens (-), periods (.) or colons (:)"
+msgstr "IQN 仅可包含小写字母（a-z）、数字（0-9）、连字符（-）、句点（.）或冒号（:）"
+
+msgid ""
 "The IQN should have the format: iqn.yyyy-mm.naming-authority:unique name"
 msgstr "IQN 的格式应为 :iqn.yyyy-mm.naming-authority:unique name"
 
@@ -46951,6 +46713,9 @@ msgstr "物理存储器未连接至活动管理器"
 
 msgid "The PowerVM management master of this host is a HMC."
 msgstr "此主机的 PowerVM 管理主项是 HMC。"
+
+msgid "The QEMU guest agent is not running"
+msgstr "QEMU 访客代理未运行"
 
 msgid "The Security Group is not connected to an active %{table}"
 msgstr "安全组没有连接到活动的 %{table}"
@@ -47583,6 +47348,11 @@ msgstr "此项无效"
 msgid "This item is not valid and cannot be copied."
 msgstr "此项无效且无法复制。"
 
+msgid ""
+"This list does not include host initiator groups which have no host initiators"
+" or which are already mapped to the selected volume."
+msgstr "此列表不包括没有主机发起方的主机发起方组，或已映射到所选卷的主机发起方组。"
+
 msgid "This object already exists in the database with the same name"
 msgstr "具有相同名称的对象已存在于数据库里"
 
@@ -47654,9 +47424,6 @@ msgstr "时间延迟"
 
 msgid "Time Delay from Now"
 msgstr "从此刻开始的时间延迟"
-
-msgid "Time Format"
-msgstr "时间格式"
 
 msgid "Time Profile"
 msgstr "时间概要文件"
@@ -47733,16 +47500,8 @@ msgstr "每小时的时间线事件"
 msgid "Timeline Policy Events Hourly"
 msgstr "每小时的时间线策略事件"
 
-msgid "Timeline component has been loaded."
-msgstr "已载入时间线组件。"
-
 msgid "Timeline not supported for this region"
 msgstr "该区域不支持时间线"
-
-msgid ""
-"Timeline tab is not available until at least 1 time-field from Columns tab has"
-" been selected."
-msgstr "在至少选择了“列”选项卡中的一个时间字段之前，“时间线”选项卡不可用。"
 
 msgid "Timelines"
 msgstr "时间线"
@@ -47777,9 +47536,6 @@ msgstr "时区"
 msgid "Title"
 msgstr "标题"
 
-msgid "Title is required"
-msgstr "标题为必填项"
-
 msgid "To"
 msgstr "至"
 
@@ -47797,12 +47553,6 @@ msgstr "收件人电子邮件"
 
 msgid "To E-mail Address"
 msgstr "收件人电子邮件地址"
-
-msgid "To port"
-msgstr "目标端口"
-
-msgid "To port required"
-msgstr "目标端口为必填项"
 
 msgid ""
 "To reset back to the Regions's setting or to delete a setting, set the value "
@@ -48215,9 +47965,6 @@ msgstr "是否信任自签名 SSL 证书？"
 msgid "Trusted CA Certificates"
 msgstr "受信 CA 证书"
 
-msgid "Trusted Forest Settings"
-msgstr "信任的森林设置"
-
 msgid "Trying to change a read-only widget"
 msgstr "尝试更改只读窗口小部件"
 
@@ -48330,6 +48077,20 @@ msgstr "只能通过按钮为单一实体打开 URL"
 msgid "URL has to be HTTPS"
 msgstr "URL 必须为 HTTPS"
 
+msgid ""
+"URL must include a protocol (http:// or https://) with path or be a valid SSH "
+"path (user@server:path or ssh://user@address:port/path)"
+msgstr ""
+"URL 必须包含带路径的协议（http:// 或 https://），或者是有效的 SSH 路径（user@server:path 或 ssh://user"
+"@address:port/path）"
+
+msgid ""
+"URL must include a protocol (http://, https:// or file://) with path or be a "
+"valid SSH path (user@server:path or ssh://user@address:port/path)"
+msgstr ""
+"URL 必须包含带路径的协议（http://、https:// 或 file://），有效的 SSH 路径（user@server:path 或 ssh:/"
+"/user@address:port/path）"
+
 msgid "US Executive - 7.25in x 10.5in"
 msgstr "美国行政 - 7.25in x 10.5in"
 
@@ -48398,11 +48159,6 @@ msgstr "无法将浮动 IP 与实例“%{name}”相关联：%{details}"
 
 msgid "Unable to attach volume: %{error_message}"
 msgstr "无法附加卷：%{error_message}"
-
-msgid ""
-"Unable to auto-create user because LDAP search returned no data for user: [%{"
-"name}]"
-msgstr "无法自动创建用户，因为 LDAP 搜索未向用户 [%{name}] 返回数据"
 
 msgid "Unable to create Cloud Network \"%{name}\": %{details}"
 msgstr "无法创建云网络“%{name}”：%{details}"
@@ -48483,9 +48239,6 @@ msgstr "无法找到虚拟机选择策略"
 msgid "Unable to find task with id: [%{task_id}]"
 msgstr "无法找到标识为 [%{task_id}] 的任务"
 
-msgid "Unable to find user %{user_name} in directory"
-msgstr "在目录中无法找到用户 %{user_name}"
-
 msgid "Unable to find user '%{name}'"
 msgstr "无法找到用户“%{name}”"
 
@@ -48553,6 +48306,9 @@ msgstr "无法移除子网“%{name}”：%{details}"
 msgid "Unable to restore Cloud Volume \"%{name}\": %{details}"
 msgstr "无法复原云卷“%{name}”：%{details}"
 
+msgid "Unable to save replication settings."
+msgstr "无法保存复制设置。"
+
 msgid "Unable to sync data for job with id %{job_id}"
 msgstr "无法为标识为 %{job_id} 的作业同步数据"
 
@@ -48564,6 +48320,9 @@ msgstr "无法更新云卷“%{name}”：%{details}"
 
 msgid "Unable to update Host Aggregate \"%{name}\": %{details}"
 msgstr "无法更新主机聚集“%{name}”：%{details}"
+
+msgid "Unable to validate subscription."
+msgstr "无法验证订阅。"
 
 msgid "Unallocated Space"
 msgstr "未分配的空间"
@@ -48762,9 +48521,6 @@ msgstr "开启"
 msgid "Update"
 msgstr "更新"
 
-msgid "Update Cloud Network"
-msgstr "更新云网络"
-
 msgid "Update Firmware of Physical Server"
 msgstr "更新物理服务器固件"
 
@@ -48779,12 +48535,6 @@ msgstr "更新物理服务器固件"
 
 msgid "Update Physical Servers' Firmware"
 msgstr "更新物理服务器的固件"
-
-msgid "Update Security Group (NSX-T)"
-msgstr "更新安全组 (NSX-T)"
-
-msgid "Update Security Policy Rule (NSX-T)"
-msgstr "更新安全策略规则 (NSX-T)"
 
 msgid "Update password"
 msgstr "更新密码"
@@ -49257,9 +49007,6 @@ msgstr "用于 SSH 登录。"
 msgid "Used for access to Web Services."
 msgstr "用于访问 Web 服务。"
 
-msgid "Used to authenticate with Nuage AMQP Messaging Bus for event handling."
-msgstr "用于认证到 Nuage AMQP 消息传递总线来处理事件。"
-
 msgid "User"
 msgid_plural "Users"
 msgstr[0] "用户"
@@ -49330,9 +49077,6 @@ msgstr "用户本地"
 msgid "User Name"
 msgstr "用户名"
 
-msgid "User Password must be entered to perform LDAP Group Look Up"
-msgstr "执行 LDAP 组查找时需要输入用户密码"
-
 msgid "User Role"
 msgstr "用户角色"
 
@@ -49395,8 +49139,8 @@ msgstr "用户名（可选）："
 msgid "Username for this credential"
 msgstr "此凭证的用户名"
 
-msgid "Username must be entered to perform LDAP Group Look Up"
-msgstr "执行 LDAP 组查找时需要输入用户名"
+msgid "Username must be in the format: name@realm"
+msgstr "用户名的格式必须为：name@realm"
 
 msgid "Username or password is not valid"
 msgstr "用户名或密码无效"
@@ -49752,8 +49496,14 @@ msgstr "VM 本机控制台不受支持"
 msgid "VM Name"
 msgstr "虚拟机名"
 
+msgid "VM Name '%{name}' already exists"
+msgstr "VM 名称 '%{name}' 已存在"
+
 msgid "VM Name already exists, Please select a different VM Name"
 msgstr "VM 名称已存在，请选择其他 VM 名称"
+
+msgid "VM Name is required"
+msgstr "VM 名称是必需的"
 
 msgid "VM Native Console error: %{error}"
 msgstr "VM 本机控制台错误：%{error}"
@@ -50413,9 +50163,6 @@ msgstr[0] "VNF 模板"
 msgid "VNF Templates"
 msgstr "VNF 模板"
 
-msgid "VPC Id"
-msgstr "VPC 标识"
-
 msgid "VXLAN"
 msgstr "VXLAN"
 
@@ -50431,9 +50178,6 @@ msgstr "验证物理存储器"
 msgid "Validate the Amazon Settings"
 msgstr "验证 Amazon 设置"
 
-msgid "Validate the LDAP Settings by binding with the Host"
-msgstr "通过绑定主机验证 LDAP 设置"
-
 msgid "Validate the credentials by logging into the Server"
 msgstr "通过登录服务器验证凭证"
 
@@ -50445,6 +50189,9 @@ msgstr "正在验证"
 
 msgid "Validation"
 msgstr "验证"
+
+msgid "Validation Message"
+msgstr "验证信息"
 
 msgid "Validation Required"
 msgstr "需要验证"
@@ -50600,26 +50347,11 @@ msgstr "版本"
 msgid "Version / Build"
 msgstr "版本 / 构建"
 
-msgid "Version 3.2"
-msgstr "V3.2"
-
-msgid "Version 4.0"
-msgstr "V4.0"
-
-msgid "Version 5.0"
-msgstr "V5.0"
-
 msgid "View"
 msgstr "查看"
 
-msgid "View %{name} Folder"
-msgstr "查看 %{name} 文件夹"
-
 msgid "View '%{name}' Cluster"
 msgstr "查看“%{name}”集群"
-
-msgid "View '%{name}' Folder"
-msgstr "查看“%{name}”文件夹"
 
 msgid "View Alert Definition Profiles"
 msgstr "查看警报定义概要文件"
@@ -50773,9 +50505,6 @@ msgstr "查看数据存储集群"
 
 msgid "View Event Streams"
 msgstr "查看事件流"
-
-msgid "View Examples (read only)' Folder"
-msgstr "查看 Examples（只读）文件夹"
 
 msgid "View Firmware"
 msgstr "查看固件"
@@ -51256,7 +50985,8 @@ msgid_plural "Virtual Machines (Kubevirt)"
 msgstr[0] "虚拟机 (Kubevirt)"
 
 msgid "Virtual Machine (Microsoft)"
-msgstr "虚拟机 (Microsoft)"
+msgid_plural "Virtual Machines (Microsoft)"
+msgstr[0] "虚拟机 (Microsoft)"
 
 msgid "Virtual Machine (Nutanix)"
 msgid_plural "Virtual Machines (Nutanix)"
@@ -52405,9 +52135,6 @@ msgstr "已使用的空间百分比"
 msgid "Volume|Volume group"
 msgstr "卷组"
 
-msgid "Vpc ID"
-msgstr "Vpc 标识"
-
 msgid "WINS Server"
 msgstr "WINS 服务器"
 
@@ -53302,9 +53029,6 @@ msgstr "未在自动化字段中设置 ae_state_max_retries"
 msgid "after 1 year"
 msgstr "1 年后"
 
-msgid "amqp"
-msgstr "amqp"
-
 msgid "approval is required for %{task}"
 msgstr "%{task} 需要核准"
 
@@ -53774,9 +53498,6 @@ msgstr "返回"
 msgid "h"
 msgstr "h"
 
-msgid "has been selected."
-msgstr "已被选定。"
-
 msgid "has to be a valid URL"
 msgstr "必须是有效的URL"
 
@@ -53898,12 +53619,6 @@ msgstr "未设置作业模板"
 msgid "kubevirt"
 msgstr "kubevirt"
 
-msgid "ldap"
-msgstr "ldap"
-
-msgid "ldaps"
-msgstr "ldap"
-
 msgid "locale_name"
 msgstr "简体中文"
 
@@ -53973,6 +53688,9 @@ msgstr "必须是一个数字 id"
 msgid ""
 "must start at zero and not contain any gaps between start and prior end value."
 msgstr "必须从 0 开始，并且在起始和结束值间不能有空隙。"
+
+msgid "name"
+msgstr "名称"
 
 msgid "name:[%{session}] to [%{name}]"
 msgstr "名称：[%{session}] 到 [%{name}]"
@@ -54515,9 +54233,6 @@ msgstr "应在 start_time 之后发生"
 
 msgid "size of %{name} id [%{number}] is incorrect"
 msgstr "%{name} 标识 [%{number}] 的大小不正确"
-
-msgid "sort field from Summary tab "
-msgstr "“摘要”选项卡中的排序字段"
 
 msgid "stopped"
 msgstr "已停止"
