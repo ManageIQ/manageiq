@@ -69,6 +69,15 @@ class TestSecurityHelper
     puts "** Running bundle-audit in #{Dir.pwd}"
 
     options = [:update, :verbose]
+
+    # For engines, use core's configuration file if it exists
+    if defined?(ENGINE_ROOT)
+      config = Rails.root.join(".bundler-audit.yml")
+      if File.exist?(config)
+        options << "--config" << config.to_s
+      end
+    end
+
     if format == "json"
       options << {
         :format => "json",
