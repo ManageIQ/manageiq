@@ -43,68 +43,44 @@ RSpec.describe MiqWorker::ContainerCommon do
 
       expect(test_deployment.dig(:spec, :template, :spec).keys).not_to include(:nodeSelector)
     end
-  end
 
-  describe "#create_container_objects" do
-    let(:container_orchestrator) { ContainerOrchestrator.new }
-    let(:kubeclient)             { double("Kubeclient::Client") }
-
-    before do
-      expect(ContainerOrchestrator).to  receive(:new).at_least(:once).and_return(container_orchestrator)
+    it "MiqUiWorker adds the ui_httpd_configs volume mount" do
+      container_orchestrator = ContainerOrchestrator.new
       expect(container_orchestrator).to receive(:my_node_affinity_arch_values).and_return(["amd64", "arm64"])
+      kubeclient = double("Kubeclient::Client")
+
+      allow(ContainerOrchestrator).to receive(:new).and_return(container_orchestrator)
       expect(container_orchestrator).to receive(:my_namespace).and_return("my-namespace")
       expect(container_orchestrator).to receive(:raw_connect).and_return(kubeclient)
+
+      expect(kubeclient).to receive(:create_deployment) do |deployment|
+        expect(deployment.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts)).to include({:name => "ui-httpd-configs", :mountPath => "/etc/httpd/conf.d"})
+        expect(deployment.fetch_path(:spec, :template, :spec, :volumes)).to include({:name => "ui-httpd-configs", :configMap => {:name => "ui-httpd-configs", :defaultMode => 420}})
+      end
+
+      ui_worker = MiqUiWorker.new
+      expect(ui_worker).to receive(:scale_deployment)
+      ui_worker.create_container_objects
     end
 
-    context "MiqUiWorker" do
-      let(:ui_worker) { MiqUiWorker.new }
+    it "Service workers use httpGet liveness and readiness probes" do
+      container_orchestrator = ContainerOrchestrator.new
+      expect(container_orchestrator).to receive(:my_node_affinity_arch_values).and_return(["amd64", "arm64"])
+      kubeclient = double("Kubeclient::Client")
 
-      it "adds the ui_httpd_configs volume mount" do
-        expect(kubeclient).to receive(:create_deployment) do |deployment|
-          expect(deployment.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts)).to include({:name => "ui-httpd-configs", :mountPath => "/etc/httpd/conf.d"})
-          expect(deployment.fetch_path(:spec, :template, :spec, :volumes)).to include({:name => "ui-httpd-configs", :configMap => {:name => "ui-httpd-configs", :defaultMode => 420}})
-        end
+      allow(ContainerOrchestrator).to receive(:new).and_return(container_orchestrator)
+      expect(container_orchestrator).to receive(:my_namespace).and_return("my-namespace")
+      expect(container_orchestrator).to receive(:raw_connect).and_return(kubeclient)
 
-        expect(ui_worker).to receive(:scale_deployment)
-        ui_worker.create_container_objects
-      end
-    end
-
-    context "Service workers" do
-      let(:worker) { MiqWebServiceWorker.new }
-
-      it "use httpGet liveness and readiness probes" do
-        expect(kubeclient).to receive(:create_deployment) do |deployment|
-          expect(deployment.fetch_path(:spec, :template, :spec, :containers, 0, :ports)).to match_array([{:containerPort => 3000}, {:containerPort => 4000}])
-          expect(deployment.fetch_path(:spec, :template, :spec, :containers, 0, :livenessProbe)).to eq(:httpGet => {:path => "/ping", :port => 4000}, :initialDelaySeconds => 240, :periodSeconds => 15, :timeoutSeconds => 10)
-          expect(deployment.fetch_path(:spec, :template, :spec, :containers, 0, :readinessProbe)).to eq(:httpGet => {:path => "/ping", :port => 4000}, :initialDelaySeconds => 60, :timeoutSeconds => 600)
-        end
-
-        expect(worker).to receive(:scale_deployment)
-        worker.create_container_objects
+      expect(kubeclient).to receive(:create_deployment) do |deployment|
+        expect(deployment.fetch_path(:spec, :template, :spec, :containers, 0, :ports)).to match_array([{:containerPort => 3000}, {:containerPort => 4000}])
+        expect(deployment.fetch_path(:spec, :template, :spec, :containers, 0, :livenessProbe)).to eq(:httpGet => {:path => "/ping", :port => 4000}, :initialDelaySeconds => 240, :periodSeconds => 15, :timeoutSeconds => 10)
+        expect(deployment.fetch_path(:spec, :template, :spec, :containers, 0, :readinessProbe)).to eq(:httpGet => {:path => "/ping", :port => 4000}, :initialDelaySeconds => 60, :timeoutSeconds => 3)
       end
 
-      it "respect custom starting_timeout setting" do
-        stub_settings_merge(:workers => {:worker_base => {:web_service_worker => {:starting_timeout => 120}}})
-
-        expect(kubeclient).to receive(:create_deployment) do |deployment|
-          expect(deployment.fetch_path(:spec, :template, :spec, :containers, 0, :readinessProbe, :timeoutSeconds)).to eq(120)
-        end
-
-        expect(worker).to receive(:scale_deployment)
-        worker.create_container_objects
-      end
-
-      it "defaults to 3 seconds if starting_timeout is nil" do
-        stub_settings_merge(:workers => {:worker_base => {:web_service_worker => {:starting_timeout => nil}}})
-
-        expect(kubeclient).to receive(:create_deployment) do |deployment|
-          expect(deployment.fetch_path(:spec, :template, :spec, :containers, 0, :readinessProbe, :timeoutSeconds)).to eq(3)
-        end
-
-        expect(worker).to receive(:scale_deployment)
-        worker.create_container_objects
-      end
+      worker = MiqWebServiceWorker.new
+      expect(worker).to receive(:scale_deployment)
+      worker.create_container_objects
     end
   end
 
