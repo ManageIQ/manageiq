@@ -380,7 +380,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-ui-classic
-  revision: 9baa52f29bb71df1aacbe5b545d1896601da274d
+  revision: 7e3b16ba7b383552d20dc468e3c70e6e41dd045b
   branch: tal
   specs:
     manageiq-ui-classic (0.1.0)
@@ -948,7 +948,7 @@ GEM
       faraday-follow_redirects
       json (~> 2.3)
       query_relation
-    manageiq-appliance_console (12.0.0)
+    manageiq-appliance_console (12.0.1)
       abbrev
       activerecord (>= 6.1.7.6)
       activesupport (>= 6.1.7.6)
