@@ -73,9 +73,7 @@ class TestSecurityHelper
     # For engines, use core's configuration file if it exists
     if defined?(ENGINE_ROOT)
       config = Rails.root.join(".bundler-audit.yml")
-      if File.exist?(config)
-        options << "--config" << config.to_s
-      end
+      options << {:config => config.to_s} if config.exist?
     end
 
     if format == "json"
