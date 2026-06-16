@@ -217,7 +217,9 @@ group :terraform_enterprise, :manageiq_default do
 end
 
 group :qpid_proton, :optional => true do
-  gem "qpid_proton",                    "~>0.37.0",          :require => false
+  qpid_major, qpid_minor, qpid_point = `egrep 'PN_VERSION_MAJOR|PN_VERSION_MINOR|PN_VERSION_POINT' /usr/include/proton/version.h  | awk '{print $3}'`.split("\n")
+
+  gem "qpid_proton", "~>#{qpid_major}.#{qpid_minor}.#{qpid_point}", :require => false
 end
 
 group :systemd, :optional => true do
