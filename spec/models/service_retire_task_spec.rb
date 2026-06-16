@@ -218,11 +218,11 @@ RSpec.describe ServiceRetireTask do
                       :id      => vm.id,
                       :name    => vm.name,
                       :ems_ref => vm.ems_ref,
-                      :href    => "https://#{ip}/instances/#{vm.id}",
+                      :href    => "https://#{ip}/api/instances/#{vm.id}",
                       :service => {
                         :id   => service.id,
                         :name => service.name,
-                        :href => "https://#{ip}/services/#{service.id}"
+                        :href => "https://#{ip}/api/services/#{service.id}"
                       }
                     }
                   )
