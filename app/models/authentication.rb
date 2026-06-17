@@ -45,6 +45,8 @@ class Authentication < ApplicationRecord
   include OwnershipMixin
   include TenancyMixin
 
+  validates :name, :length => {:maximum => 128}
+
   belongs_to :tenant
 
   # TODO: DELETE ME!!!!
