@@ -10,14 +10,14 @@ RSpec.describe PxeImagePxelinux do
         label #{image.name}
            menu label #{image.description}
            kernel ubuntu-10.10-desktop-i386/vmlinuz
-           append vga=788 -- quiet ks=http://1.1.1.1/ ksdevice=00:00:00:00:00:00
+           append vga=788 -- quiet inst.ks=http://1.1.1.1/ BOOTIF=00:00:00:00:00:00
 
       PXE_MENU
 
-      image.kernel_options += " ks=abc ksdevice="
+      image.kernel_options += " inst.ks=abc BOOTIF="
 
-      expect(image.build_pxe_contents(:ks       => "http://1.1.1.1/",
-                                      :ksdevice => "00:00:00:00:00:00"))
+      expect(image.build_pxe_contents(:"inst.ks" => "http://1.1.1.1/",
+                                      :BOOTIF    => "00:00:00:00:00:00"))
         .to eq(expected_output)
     end
   end

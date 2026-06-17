@@ -43,13 +43,13 @@ RSpec.describe PxeMenuIpxe do
 
       ########## MIQ Desktop Images ##########
       :rhel62dsk
-      kernel http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz ramdisk_size=10000 ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-desktop.ks.cfg ksdevice=00:50:56:91:79:d5
+      kernel http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz ramdisk_size=10000 inst.ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-desktop.ks.cfg BOOTIF=00:50:56:91:79:d5
       initrd http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img
       boot
 
       ########## MIQ Server Images ##########
       :rhel62host
-      kernel http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz ramdisk_size=10000 ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-host.ks.cfg
+      kernel http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz ramdisk_size=10000 inst.ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-host.ks.cfg
       initrd http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img
       boot
 
@@ -70,7 +70,7 @@ RSpec.describe PxeMenuIpxe do
 
       ########## MIQ Server Images ##########
       :rhel62host
-      kernel http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz ramdisk_size=10000 ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-host.ks.cfg
+      kernel http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz ramdisk_size=10000 inst.ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-host.ks.cfg
       initrd http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img
       boot
     PXEMENU
@@ -82,8 +82,8 @@ RSpec.describe PxeMenuIpxe do
   end
 
   it ".parse_kernel" do
-    k = "http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz ramdisk_size=10000 ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-host.ks.cfg ksdevice=00:19:e3:d7:5b:0e"
-    expect(described_class.parse_kernel(k)).to eq(["http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz", "ramdisk_size=10000 ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-host.ks.cfg ksdevice=00:19:e3:d7:5b:0e"])
+    k = "http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz ramdisk_size=10000 inst.ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-host.ks.cfg BOOTIF=00:19:e3:d7:5b:0e"
+    expect(described_class.parse_kernel(k)).to eq(["http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz", "ramdisk_size=10000 inst.ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-host.ks.cfg BOOTIF=00:19:e3:d7:5b:0e"])
   end
 
   context "#synchronize_images" do
