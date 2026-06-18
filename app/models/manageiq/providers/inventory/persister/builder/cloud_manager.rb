@@ -165,17 +165,31 @@ module ManageIQ::Providers
 
           # Fetch IDs of all vms and genealogy_parents, only if genealogy_parent is present
           vms_genealogy_parents = vms_inventory_collection.data.each_with_object({}) do |x, obj|
-            unless x.data[:genealogy_parent].nil?
-              genealogy_parent_id = x.data[:genealogy_parent].load.try(:id)
-              obj[x.id] = genealogy_parent_id if genealogy_parent_id
+            next if x.data[:genealogy_parent].nil?
+
+            genealogy_parent_id = x.data[:genealogy_parent].load.try(:id)
+            next if genealogy_parent_id.nil?
+
+            if genealogy_parent_id == x.id
+              _log.warn("Cannot assign genealogy_parent to same object, ID [#{x.id}]")
+              next
             end
+
+            obj[x.id] = genealogy_parent_id
           end
 
           miq_template_genealogy_parents = miq_templates_inventory_collection.data.each_with_object({}) do |x, obj|
-            unless x.data[:genealogy_parent].nil?
-              genealogy_parent_id = x.data[:genealogy_parent].load.try(:id)
-              obj[x.id] = genealogy_parent_id if genealogy_parent_id
+            next if x.data[:genealogy_parent].nil?
+
+            genealogy_parent_id = x.data[:genealogy_parent].load.try(:id)
+            next if genealogy_parent_id.nil?
+
+            if genealogy_parent_id == x.id
+              _log.warn("Cannot assign genealogy_parent to same object, ID [#{x.id}]")
+              next
             end
+
+            obj[x.id] = genealogy_parent_id
           end
 
           ActiveRecord::Base.transaction do
@@ -184,7 +198,13 @@ module ManageIQ::Providers
                                                                      .where(:id => vms_genealogy_parents.values).find_each.index_by(&:id)
             vms_inventory_collection.model_class
                                     .where(:id => vms_genealogy_parents.keys).find_each do |vm|
-              vm.update!(:genealogy_parent => parent_miq_templates[vms_genealogy_parents[vm.id]])
+              genealogy_parent = parent_miq_templates[vms_genealogy_parents[vm.id]]
+
+              begin
+                vm.update!(:genealogy_parent => genealogy_parent)
+              rescue ActiveRecord::RecordInvalid => err
+                $log.error("#{err} VM id: [#{vm.id}] ems_ref: [#{vm.ems_ref}] genealogy_parent: id: [#{genealogy_parent.id}] ems_ref: [#{genealogy_parent.ems_ref}]")
+              end
             end
           end
 
@@ -194,7 +214,13 @@ module ManageIQ::Providers
                                                  .where(:id => miq_template_genealogy_parents.values).find_each.index_by(&:id)
             miq_templates_inventory_collection.model_class
                                               .where(:id => miq_template_genealogy_parents.keys).find_each do |miq_template|
-              miq_template.update!(:genealogy_parent => parent_vms[miq_template_genealogy_parents[miq_template.id]])
+              genealogy_parent = parent_vms[miq_template_genealogy_parents[miq_template.id]]
+
+              begin
+                miq_template.update!(:genealogy_parent => genealogy_parent)
+              rescue ActiveRecord::RecordInvalid => err
+                $log.error("#{err} MiqTemplate id: [#{miq_template.id}] ems_ref: [#{miq_template.ems_ref}] genealogy_parent: id: [#{genealogy_parent.id}] ems_ref: [#{genealogy_parent.ems_ref}]")
+              end
             end
           end
         end
