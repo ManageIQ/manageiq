@@ -4,6 +4,7 @@ class ServerRole < ApplicationRecord
 
   validates :name, :presence => true, :uniqueness_when_changed => true
 
+  scope :default_roles,  -> { where(:default => true).order(:name) }
   scope :database_roles, -> { where(:role_scope => 'database').order(:name) }
   scope :region_roles,   -> { where(:role_scope => 'region').order(:name) }
   scope :zone_roles,     -> { where(:role_scope => 'zone').order(:name) }
