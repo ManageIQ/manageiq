@@ -1620,10 +1620,6 @@ class VmOrTemplate < ApplicationRecord
     EmsEvent.add(ems_id, event)
   end
 
-  def console_supported?(_type)
-    false
-  end
-
   # Stop certain charts from showing unless the subclass allows
   def non_generic_charts_available?
     false
@@ -1681,8 +1677,6 @@ class VmOrTemplate < ApplicationRecord
     user = User.super_admin.tap { |u| u.current_group = miq_group } if user.nil? || !user.miq_group_ids.include?(miq_group_id)
     user
   end
-
-  supports(:console) { N_("Console not supported") unless console_supported?('spice') || console_supported?('vnc') }
 
   def child_resources
     children
