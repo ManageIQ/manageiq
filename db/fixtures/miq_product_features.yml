@@ -3506,10 +3506,18 @@
         :description: Edit an PXE Image
         :feature_type: admin
         :identifier: pxe_image_edit
+      - :name: Edit PXE Image Tags
+        :description: Edit Tags of PXE Images
+        :feature_type: control
+        :identifier: pxe_image_tag
       - :name: Edit Windows Image
         :description: Edit an Windows Image
         :feature_type: admin
         :identifier: pxe_wimg_edit
+      - :name: Edit Windows Image Tags
+        :description: Edit Tags of Windows Images
+        :feature_type: control
+        :identifier: windows_image_tag
   # Customization Templates
   - :name: Customization Templates
     :description: Everything under Customization Templates
