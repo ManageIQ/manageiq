@@ -2,3 +2,4 @@
 ignore:
 - CVE-2026-47736 # TODO: Remove when puma is upgraded to 7.2.1+ or 8.0.2+; False positive - Only Puma servers using the following non-default config are affected: set_remote_address proxy_protocol: :v1 /  Workaround: * Disable PROXY protocol v1 parsing if it is not required
 - CVE-2026-47737 # TODO: Remove when puma is upgraded to 7.2.1+ or 8.0.2+; False positive - Only deployments that explicitly enable PROXY protocol v1 are affected: set_remote_address proxy_protocol: :v1 / Workaround: * Disable PROXY protocol v1 parsing if it is not required
+- CVE-2026-54163 # TODO: Remove when secure_headers is upgraded to 7.3.0';
