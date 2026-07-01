@@ -48,6 +48,81 @@ RSpec.describe MiqServer::WorkerManagement::Systemd do
     end
   end
 
+  context "#cleanup_dead_systemd_services" do
+    before { server.worker_manager.sync_from_system }
+
+    context "with no dead services" do
+      let(:units) do
+        [
+          {:name => "manageiq-generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service", :description => "ManageIQ Generic Worker", :load_state => "loaded", :active_state => "active", :sub_state => "running", :job_id => 0, :job_type => "", :job_object_path => "/"},
+          {:name => "manageiq-ui@cfe2c489-5c93-4b77-8620-cf6b1d3ec595.service", :description => "ManageIQ UI Worker", :load_state => "loaded", :active_state => "failed", :sub_state => "failed", :job_id => 0, :job_type => "", :job_object_path => "/"}
+        ]
+      end
+
+      it "doesn't call DisableUnitFiles" do
+        expect(systemd_manager).not_to receive(:DisableUnitFiles)
+        server.worker_manager.cleanup_dead_systemd_services
+      end
+    end
+
+    context "with dead services" do
+      let(:service_name) { "manageiq-generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service" }
+      let(:units) do
+        [
+          {:name => service_name, :description => "ManageIQ Generic Worker", :load_state => "loaded", :active_state => "inactive", :sub_state => "dead", :job_id => 0, :job_type => "", :job_object_path => "/"}
+        ]
+      end
+
+      it "calls DisableUnitFiles with the service name" do
+        expect(systemd_manager).to receive(:StopUnit).with(service_name, "replace")
+        expect(systemd_manager).to receive(:ResetFailedUnit).with(service_name)
+        expect(systemd_manager).to receive(:DisableUnitFiles).with([service_name], false)
+
+        server.worker_manager.cleanup_dead_systemd_services
+      end
+    end
+
+    context "with multiple dead services" do
+      let(:service_name_1) { "manageiq-generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service" }
+      let(:service_name_2) { "manageiq-ui@cfe2c489-5c93-4b77-8620-cf6b1d3ec595.service" }
+      let(:units) do
+        [
+          {:name => service_name_1, :description => "ManageIQ Generic Worker", :load_state => "loaded", :active_state => "inactive", :sub_state => "dead", :job_id => 0, :job_type => "", :job_object_path => "/"},
+          {:name => service_name_2, :description => "ManageIQ UI Worker", :load_state => "loaded", :active_state => "inactive", :sub_state => "dead", :job_id => 0, :job_type => "", :job_object_path => "/"}
+        ]
+      end
+
+      it "calls DisableUnitFiles with all dead service names" do
+        expect(systemd_manager).to receive(:StopUnit).with(service_name_1, "replace")
+        expect(systemd_manager).to receive(:ResetFailedUnit).with(service_name_1)
+        expect(systemd_manager).to receive(:StopUnit).with(service_name_2, "replace")
+        expect(systemd_manager).to receive(:ResetFailedUnit).with(service_name_2)
+        expect(systemd_manager).to receive(:DisableUnitFiles).with([service_name_1, service_name_2], false)
+
+        server.worker_manager.cleanup_dead_systemd_services
+      end
+    end
+
+    context "with mixed service states" do
+      let(:dead_service) { "manageiq-generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service" }
+      let(:units) do
+        [
+          {:name => dead_service, :description => "ManageIQ Generic Worker", :load_state => "loaded", :active_state => "inactive", :sub_state => "dead", :job_id => 0, :job_type => "", :job_object_path => "/"},
+          {:name => "manageiq-ui@cfe2c489-5c93-4b77-8620-cf6b1d3ec595.service", :description => "ManageIQ UI Worker", :load_state => "loaded", :active_state => "active", :sub_state => "running", :job_id => 0, :job_type => "", :job_object_path => "/"},
+          {:name => "manageiq-event_catcher@abc123.service", :description => "ManageIQ Event Catcher", :load_state => "loaded", :active_state => "failed", :sub_state => "failed", :job_id => 0, :job_type => "", :job_object_path => "/"}
+        ]
+      end
+
+      it "only disables dead services" do
+        expect(systemd_manager).to receive(:StopUnit).with(dead_service, "replace")
+        expect(systemd_manager).to receive(:ResetFailedUnit).with(dead_service)
+        expect(systemd_manager).to receive(:DisableUnitFiles).with([dead_service], false)
+
+        server.worker_manager.cleanup_dead_systemd_services
+      end
+    end
+  end
+
   context "#sync_from_system" do
     before { server.worker_manager.sync_from_system }
 
