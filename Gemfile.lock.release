@@ -274,13 +274,13 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openstack
-  revision: a86b1303f21fb58c7c6017efdb808591093ebe85
+  revision: 779dba28067722ecf9c62ac169dff26c52407b1f
   branch: tal
   specs:
     manageiq-providers-openstack (0.1.0)
       activesupport (>= 6.0)
       bunny (~> 2.24)
-      excon (~> 0.71)
+      excon (~> 1.5)
       fog-openstack (~> 1.1, >= 1.1.4)
       more_core_extensions (>= 3.2, < 5)
       parallel (~> 1.12)
@@ -320,11 +320,11 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-redfish
-  revision: 1333e2c4320a268d4ad4d7a2ab7d43c12d199638
+  revision: d9cecae2a8e8012bf3238123bbc4e337fffbadc8
   branch: tal
   specs:
     manageiq-providers-redfish (0.1.0)
-      redfish_client (~> 0.5.1)
+      redfish_client (~> 0.8)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-scvmm
@@ -672,7 +672,8 @@ GEM
       ffi (>= 1.15.0)
       logger
     event_stream_parser (1.0.0)
-    excon (0.112.0)
+    excon (1.5.0)
+      logger
     execjs (2.8.1)
     factory_bot (6.6.0)
       activesupport (>= 6.1.0)
@@ -716,9 +717,9 @@ GEM
       kubeclient (~> 4.7)
       optimist (~> 3.0)
       parslet (~> 2.0)
-    fog-core (2.5.0)
+    fog-core (2.6.0)
       builder
-      excon (~> 0.71)
+      excon (~> 1.0)
       formatador (>= 0.2, < 2.0)
       mime-types
     fog-google (1.29.4)
@@ -1240,8 +1241,8 @@ GEM
       tsort
     recursive-open-struct (1.3.1)
       ostruct
-    redfish_client (0.5.4)
-      excon (~> 0.71)
+    redfish_client (0.8.0)
+      excon (>= 0.71, < 2)
       server_sent_events (~> 0.1)
     regexp_parser (2.12.0)
     reline (0.6.3)
