@@ -23,7 +23,12 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
   def cleanup_failed_workers
     super
 
-    cleanup_failed_systemd_services
+    # Cleanup any failed or inactive/dead MIQ services.
+    return unless cleanup_failed_systemd_services || cleanup_dead_systemd_services
+
+    # If we ended up cleaning any failed services from disk instruct
+    # systemd to reload all services from the filesystem.
+    systemd_manager.Reload
   end
 
   def cleanup_failed_systemd_services
@@ -37,6 +42,18 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
     MiqWorker.find_current_or_starting.where(:system_uid => service_names).each do |w|
       w.update!(:status => MiqWorker::STATUS_STOPPED)
     end
+
+    service_names
+  end
+
+  def cleanup_dead_systemd_services
+    service_names = dead_miq_services.pluck(:name)
+    return if service_names.empty?
+
+    _log.info("Disabling inactive (dead) unit files: [#{service_names.join(", ")}]")
+    systemd_stop_services(service_names)
+
+    service_names
   end
 
   private
@@ -107,6 +124,10 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
 
   def failed_miq_services
     miq_services.select { |service| service[:active_state] == "failed" }
+  end
+
+  def dead_miq_services
+    miq_services.select { |s| s[:active_state] == "inactive" && s[:sub_state] == "dead" }
   end
 
   def failed_miq_service_names
