@@ -243,14 +243,19 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
           next if collection.blank?
 
           collection.data.each do |obj|
+            next unless obj.data.key?(relationship_key)
+
             parent = obj.data[relationship_key].try(&:load)
-            next if parent.nil?
 
-            parent_klass = parent.inventory_collection.model_class.base_class
-            child_klass  = collection.model_class.base_class
+            if parent.nil?
+              parent_by_child[collection.model_class][obj.id] = nil
+            else
+              parent_klass = parent.inventory_collection.model_class.base_class
+              child_klass  = collection.model_class.base_class
 
-            children_by_parent[parent_klass][parent.id] << [child_klass, obj.id]
-            parent_by_child[collection.model_class][obj.id] = [parent_klass, parent.id]
+              children_by_parent[parent_klass][parent.id] << [child_klass, obj.id]
+              parent_by_child[collection.model_class][obj.id] = [parent_klass, parent.id]
+            end
           end
         end
 
@@ -266,16 +271,20 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
 
           child_recs.each do |model_class, children_by_id|
             children_by_id.each_value do |child|
-              new_parent_klass, new_parent_id = parent_by_child[model_class][child.id]
+              new_parent_info = parent_by_child[model_class][child.id]
+              new_parent_klass, new_parent_id = new_parent_info if new_parent_info
               prev_parent = child.with_relationship_type(relationship_type) { child.parents(:of_type => parent_type)&.first }
 
-              next if prev_parent && (prev_parent.class.base_class == new_parent_klass && prev_parent.id == new_parent_id)
+              # Skip if parent hasn't changed
+              next if prev_parent && new_parent_info && prev_parent.class.base_class == new_parent_klass && prev_parent.id == new_parent_id
+              # Skip if both are nil
+              next if prev_parent.nil? && new_parent_info.nil?
 
               children_to_remove[prev_parent.class.base_class][prev_parent.id] << child if prev_parent
-              children_to_add[new_parent_klass][new_parent_id] << child
+              children_to_add[new_parent_klass][new_parent_id] << child if new_parent_info
 
               parent_recs_needed[prev_parent.class.base_class] << prev_parent.id if prev_parent
-              parent_recs_needed[new_parent_klass] << new_parent_id
+              parent_recs_needed[new_parent_klass] << new_parent_id if new_parent_info
             end
           end
 
