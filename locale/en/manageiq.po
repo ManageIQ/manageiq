@@ -3216,6 +3216,9 @@ msgstr ""
 msgid "Add of new Report was cancelled by the user"
 msgstr ""
 
+msgid "Add of new Role was cancelled by the user"
+msgstr ""
+
 msgid "Add of new Schedule was cancelled by the user"
 msgstr ""
 
@@ -4040,6 +4043,11 @@ msgstr ""
 msgid "Amazon access key and secret are needed to validate Amazon Settings"
 msgstr ""
 
+msgid ""
+"An Analysis or Virtual Black Box Synchronization for this VM may need to be ru"
+"n."
+msgstr ""
+
 msgid "An Ansible Playbook must be selected"
 msgstr ""
 
@@ -4071,6 +4079,9 @@ msgstr ""
 msgid ""
 "An error occurred while requesting the IBM VPC instance provision. Cannot retr"
 "ieve instance id from returned server response."
+msgstr ""
+
+msgid "An error occurred while saving the role"
 msgstr ""
 
 msgid "An internal system error."
@@ -4852,9 +4863,6 @@ msgid "At least one E-mail recipient must be configured"
 msgstr ""
 
 msgid "At least one Field must be selected"
-msgstr ""
-
-msgid "At least one Product Feature must be selected"
 msgstr ""
 
 msgid "At least one Role must be selected"
@@ -15512,6 +15520,9 @@ msgstr ""
 msgid "Development"
 msgstr ""
 
+msgid "Development Log"
+msgstr ""
+
 msgid "Device Location"
 msgstr ""
 
@@ -17287,9 +17298,6 @@ msgstr ""
 msgid "Domain name change for a system domain import is not supported."
 msgstr ""
 
-msgid "Domains"
-msgstr ""
-
 msgid "Domains:"
 msgstr ""
 
@@ -17411,6 +17419,9 @@ msgid "Download this report in text format"
 msgstr ""
 
 msgid "Draft"
+msgstr ""
+
+msgid "Drag and drop to reorder domains. Higher priority domains are listed first."
 msgstr ""
 
 msgid ""
@@ -18973,6 +18984,9 @@ msgstr ""
 msgid "Edit of Repository \"%s\" was successfully initiated."
 msgstr ""
 
+msgid "Edit of Role was cancelled by the user"
+msgstr ""
+
 msgid "Edit of Schedule \"%{name}\" was cancelled by the user"
 msgstr ""
 
@@ -20363,6 +20377,9 @@ msgstr ""
 msgid "Error returned from %{name} event processing in Automate: %{error_message}"
 msgstr ""
 
+msgid "Error saving priority order"
+msgstr ""
+
 msgid "Error text:"
 msgstr ""
 
@@ -21722,6 +21739,9 @@ msgid "Failed to %{snapshot_op} snapshot of %{subject}: %{error}"
 msgstr ""
 
 msgid "Failed to delete %s %s."
+msgstr ""
+
+msgid "Failed to refresh domain"
 msgstr ""
 
 msgid "Failover"
@@ -27147,6 +27167,9 @@ msgid "Manage the port association of this Floating"
 msgstr ""
 
 msgid "ManageIQ"
+msgstr ""
+
+msgid "ManageIQ Log"
 msgstr ""
 
 msgid "ManageIQ Tag Department"
@@ -33002,6 +33025,9 @@ msgstr ""
 msgid "New Section"
 msgstr ""
 
+msgid "New Tab"
+msgstr ""
+
 msgid "New Window"
 msgstr ""
 
@@ -33523,9 +33549,7 @@ msgstr ""
 msgid "No data available."
 msgstr ""
 
-msgid ""
-"No drift history found, an Analysis or Virtual Black Box Synchronization for t"
-"his VM may need to be run."
+msgid "No drift history found"
 msgstr ""
 
 msgid "No entries found for %s"
@@ -36904,10 +36928,16 @@ msgstr ""
 msgid "Please select a node from the tree to edit."
 msgstr ""
 
+msgid "Please select a pattern"
+msgstr ""
+
 msgid "Please select a type."
 msgstr ""
 
 msgid "Please select an Instance Type from above"
+msgstr ""
+
+msgid "Please select at least one server"
 msgstr ""
 
 msgid "Please try again"
@@ -37607,6 +37637,9 @@ msgid "Product Updates"
 msgstr ""
 
 msgid "Production"
+msgstr ""
+
+msgid "Production Log"
 msgstr ""
 
 msgid "Profile"
@@ -41392,6 +41425,9 @@ msgstr ""
 
 #, fuzzy
 msgid "Role"
+msgstr ""
+
+msgid "Role \"%s\" was saved"
 msgstr ""
 
 msgid "Role \"%{name}\""
@@ -51436,9 +51472,6 @@ msgstr ""
 msgid "View this Orchestration Template in Catalogs"
 msgstr ""
 
-msgid "View this PXE Image"
-msgstr ""
-
 msgid "View this Policy Profile"
 msgstr ""
 
@@ -51461,9 +51494,6 @@ msgid "View this User"
 msgstr ""
 
 msgid "View this Widget"
-msgstr ""
-
-msgid "View this Windows Image"
 msgstr ""
 
 msgid "View this item"
