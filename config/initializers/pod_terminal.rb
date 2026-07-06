@@ -1,1 +1,1 @@
-POD_SESSIONS = {}
+POD_SESSIONS = {}.freeze

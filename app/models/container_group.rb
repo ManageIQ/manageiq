@@ -16,7 +16,7 @@ class ContainerGroup < ApplicationRecord
 
   has_many :containers, :dependent => :destroy
   has_many :container_images, -> { distinct }, :through => :containers
-  belongs_to  :ext_management_system, :foreign_key => "ems_id"
+  belongs_to :ext_management_system, :foreign_key => "ems_id"
   has_many :annotations, -> { where(:section => "annotations") }, # rubocop:disable Rails/HasManyOrHasOneDependent
            :class_name => "CustomAttribute",
            :as         => :resource,
@@ -71,35 +71,34 @@ class ContainerGroup < ApplicationRecord
 
   # validates :restart_policy, :inclusion => { :in => %w(always onFailure never) }
   # validates :dns_policy, :inclusion => { :in => %w(ClusterFirst Default) }
-  
-    def self.class_by_ems(ems)
-      ems&.class_by_ems(:ContainerGroup)
-    end
 
-    def start_terminal_session
-      raw_start_terminal_session
-    end
+  def self.class_by_ems(ems)
+    ems&.class_by_ems(:ContainerGroup)
+  end
 
-    def raw_start_terminal_session
-      raise NotImplementedError, _("raw_start_terminal_session must be implemented in a subclass")
-    end
+  def start_terminal_session
+    raw_start_terminal_session
+  end
 
-    def send_terminal_input(data)
-      raw_send_terminal_input(data)
-    end
+  def raw_start_terminal_session
+    raise NotImplementedError, _("raw_start_terminal_session must be implemented in a subclass")
+  end
 
-    def raw_send_terminal_input(_data)
-      raise NotImplementedError, _("raw_send_terminal_input must be implemented in a subclass")
-    end
+  def send_terminal_input(data)
+    raw_send_terminal_input(data)
+  end
 
-    def stop_terminal_session
-      raw_stop_terminal_session
-    end
+  def raw_send_terminal_input(_data)
+    raise NotImplementedError, _("raw_send_terminal_input must be implemented in a subclass")
+  end
 
-    def raw_stop_terminal_session
-      raise NotImplementedError, _("raw_stop_terminal_session must be implemented in a subclass")
-    end
+  def stop_terminal_session
+    raw_stop_terminal_session
+  end
 
+  def raw_stop_terminal_session
+    raise NotImplementedError, _("raw_stop_terminal_session must be implemented in a subclass")
+  end
 
   include EventMixin
   include Metric::CiMixin
@@ -128,7 +127,7 @@ class ContainerGroup < ApplicationRecord
     {"ems_id" => ext_management_system.id}
   end
 
-  PERF_ROLLUP_CHILDREN = []
+  PERF_ROLLUP_CHILDREN = [].freeze
 
   def perf_rollup_parents(interval_name = nil)
     unless interval_name == 'realtime'
