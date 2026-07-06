@@ -35,7 +35,7 @@ module ManageIQ
       #
       # Key: "rack::attack:#{Time.now.to_i/:period}:logins/ip:#{req.ip}"
       Rack::Attack.throttle('logins/ip', :limit => api_login_limit, :period => api_login_period) do |req|
-        if req.path == "/api/auth" && req.post?
+        if req.path == "/api/auth" && req.get?
           req.ip
         end
       end
