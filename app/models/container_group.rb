@@ -71,6 +71,35 @@ class ContainerGroup < ApplicationRecord
 
   # validates :restart_policy, :inclusion => { :in => %w(always onFailure never) }
   # validates :dns_policy, :inclusion => { :in => %w(ClusterFirst Default) }
+  
+    def self.class_by_ems(ems)
+      ems&.class_by_ems(:ContainerGroup)
+    end
+
+    def start_terminal_session
+      raw_start_terminal_session
+    end
+
+    def raw_start_terminal_session
+      raise NotImplementedError, _("raw_start_terminal_session must be implemented in a subclass")
+    end
+
+    def send_terminal_input(data)
+      raw_send_terminal_input(data)
+    end
+
+    def raw_send_terminal_input(_data)
+      raise NotImplementedError, _("raw_send_terminal_input must be implemented in a subclass")
+    end
+
+    def stop_terminal_session
+      raw_stop_terminal_session
+    end
+
+    def raw_stop_terminal_session
+      raise NotImplementedError, _("raw_stop_terminal_session must be implemented in a subclass")
+    end
+
 
   include EventMixin
   include Metric::CiMixin
