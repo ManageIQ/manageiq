@@ -41,6 +41,16 @@ module ManageIQ
         end
       end
 
+      # Throttle any request that submits Basic credentials by IP address.
+      # Applies login throttle settings to any /api/* endpoint, not just /api/auth.
+      #
+      # Key: "rack::attack:#{Time.now.to_i/:period}:basic_auth/ip:#{req.ip}"
+      Rack::Attack.throttle('basic_auth/ip', :limit => api_login_limit, :period => api_login_period) do |req|
+        if req.env['HTTP_AUTHORIZATION']&.start_with?('Basic')
+          req.ip
+        end
+      end
+
       Rack::Attack.throttle('ui_logins/ip', :limit => ui_login_limit, :period => ui_login_period) do |req|
         if req.path == "/dashboard/authenticate" && req.post?
           req.ip
