@@ -1328,7 +1328,7 @@ GEM
     rufus-lru (1.0.7)
     rufus-scheduler (3.9.2)
       fugit (~> 1.1, >= 1.11.1)
-    rugged (1.9.0)
+    rugged (1.9.4)
     ruport (1.8.0)
       prawn (~> 2.4.0)
       prawn-table (~> 0.2.0)
