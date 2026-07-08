@@ -358,11 +358,11 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-workflows
-  revision: 72b7d103fb65cc79a43e89713f08be18c46482fd
+  revision: 54a89c0b75bf4c7ba8ea555028286c84682b53a7
   branch: tal
   specs:
     manageiq-providers-workflows (0.1.0)
-      floe (~> 0.19.0)
+      floe (~> 0.20.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-schema
@@ -710,12 +710,12 @@ GEM
     ffi-vix_disk_lib (1.4.0)
       ffi
     fiddle (1.1.8)
-    floe (0.19.2)
+    floe (0.20.0)
       activesupport (> 5.2)
       awesome_spawn (~> 1.6)
       faraday
       faraday-follow_redirects
-      io-wait (~> 0.3.6)
+      io-wait (>= 0.3.6, < 0.5.0)
       json (~> 2.10)
       jsonpath (~> 1.1)
       kubeclient (~> 4.7)
@@ -1150,7 +1150,7 @@ GEM
       date
       stringio
     public_suffix (7.0.5)
-    puma (6.6.1)
+    puma (8.0.2)
       nio4r (~> 2.0)
     qpid_proton (0.37.0)
     query_relation (0.2.0)
@@ -1626,7 +1626,7 @@ DEPENDENCIES
   pg-logical_replication (~> 1.2)
   prism (>= 0.25.0)
   psych (>= 3.1)
-  puma (~> 6.4, >= 6.4.3)
+  puma (~> 8.0, >= 8.0.2)
   qpid_proton (~> 0.37.0)
   query_relation (~> 0.2.0)
   rack (>= 2.2.23)
