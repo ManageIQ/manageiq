@@ -26,7 +26,6 @@ if defined?(SecureHeaders)
     # Content-Security-Policy
     # Need google fonts in fonts_src for https://fonts.googleapis.com/css?family=IBM+Plex+Sans+Condensed%7CIBM+Plex+Sans:400,600&display=swap (For carbon-charts download)
     config.csp = {
-      :report_only => false,
       :report_uri  => ["/dashboard/csp_report"],
 
       :base_uri        => ["'self'"],
