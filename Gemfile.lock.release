@@ -1460,7 +1460,8 @@ GEM
       multi_json (~> 1.2)
       railties (>= 4.2)
     webrick (1.9.2)
-    websocket-driver (0.6.5)
+    websocket-driver (0.8.2)
+      base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     wim_parser (1.0.1)
@@ -1657,7 +1658,7 @@ DEPENDENCIES
   uri (~> 0.13.3)
   vcr (~> 6.1)
   webmock (~> 3.7)
-  websocket-driver (~> 0.6.3)
+  websocket-driver (~> 0.8, >= 0.8.2)
   wim_parser (~> 1.0)
   yard (>= 0.9.36)
 
