@@ -3,6 +3,15 @@ if defined?(SecureHeaders)
   # - https://github.com/ManageIQ/manageiq-appliance/blob/master/COPY/etc/httpd/conf.d/manageiq-https-application.conf
   # - https://github.com/ManageIQ/manageiq-pods/blob/master/manageiq-operator/pkg/helpers/miq-components/httpd_conf.go
   SecureHeaders::Configuration.default do |config|
+    # Opt out of secure_headers cookie middleware - we manage session cookie
+    # security ourselves via ManageIQ::Session::AbstractStoreAdapter#session_options:
+    #   same_site: :strict  (always)
+    #   secure:    true     (appliance only, unless ALLOW_INSECURE_SESSION)
+    #   httponly:  true     (appliance only)
+    # The gem's SameSite=Lax default is weaker than our Strict setting.
+    # Note: ws_token (ActionCable auth) is set by JavaScript via document.cookie
+    # and is not subject to this middleware, so it is unaffected either way.
+    config.cookies = SecureHeaders::OPT_OUT
     # Only set HSTS in development/test where Apache isn't fronting Rails
     # In production, Apache sets HSTS (see manageiq-https-application.conf line 15)
     config.hsts = Rails.env.production? ? SecureHeaders::OPT_OUT : "max-age=#{20.years.to_i}"
