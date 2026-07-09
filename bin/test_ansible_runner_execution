@@ -13,6 +13,9 @@ if [ ! -x "$(command -v bats)" ]; then
     if [ "$APPLIANCE" == "true" ]; then
         echo -e "\033[1;34mInstalling bats...\033[0m"
         dnf install -y bats
+    elif [ -n "$CI" ]; then
+        echo -e "\033[1;34mInstalling bats...\033[0m"
+        sudo npm install -g bats
     else
         echo -e "\033[1;31mERROR: Unable to find the bats test framework.\033[0m"
         exit 1
@@ -45,4 +48,9 @@ fi
 
 # Run the tests
 echo -e "\033[1;34mRunning tests...\033[0m"
-exec bats ./spec/lib/ansible/runner_execution_spec.bats
+bats_args=()
+if [ -n "${BATS_FILTER}" ]; then
+    echo -e "\033[1;33mFiltering tests by: ${BATS_FILTER}\033[0m"
+    bats_args+=(--filter "${BATS_FILTER}")
+fi
+exec bats "${bats_args[@]}" ./spec/lib/ansible/runner_execution_spec.bats
