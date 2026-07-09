@@ -30,7 +30,6 @@ if defined?(SecureHeaders)
 
       :base_uri        => ["'self'"],
       :default_src     => ["'self'"],
-      :child_src       => ["'self'"],
       :connect_src     => ["'self'"],
       :font_src        => ["'self'", 'https://fonts.gstatic.com', "https://fonts.googleapis.com"],
       :form_action     => ["'self'"],
