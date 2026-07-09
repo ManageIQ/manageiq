@@ -29,7 +29,7 @@ module RemoteConsole
       # into this method.
       def fetch(length)
         # This callback should be set just once, yielding with the parsed message
-        @driver.on(:message) { |msg| yield(msg.data.pack('C*')) } if @driver.listeners(:message).length.zero?
+        @driver.on(:message) { |msg| yield(msg.data) } if @driver.listeners(:message).length.zero?
 
         data = @sock.read_nonblock(length) # Read from the socket
         @driver.parse(data) # Parse the incoming data, run the callback from above

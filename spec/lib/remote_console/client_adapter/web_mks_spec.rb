@@ -3,7 +3,7 @@ RSpec.describe RemoteConsole::ClientAdapter::WebMKS do
   subject { described_class.new(record, nil) }
 
   before do
-    ssl = double
+    ssl = instance_double(OpenSSL::SSL::SSLSocket)
     allow(OpenSSL::SSL::SSLSocket).to receive(:new).and_return(ssl)
     allow(OpenSSL::X509::Certificate).to receive(:new)
     allow(OpenSSL::PKey::RSA).to receive(:new)
@@ -11,7 +11,7 @@ RSpec.describe RemoteConsole::ClientAdapter::WebMKS do
     allow(ssl).to receive(:sync_close=)
     allow(ssl).to receive(:connect)
 
-    driver = double
+    driver = instance_double(WebSocket::Driver::Client)
     allow(WebSocket::Driver).to receive(:client).and_return(driver)
     allow(driver).to receive(:start)
     allow(driver).to receive(:on)
