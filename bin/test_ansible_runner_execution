@@ -13,6 +13,9 @@ if [ ! -x "$(command -v bats)" ]; then
     if [ "$APPLIANCE" == "true" ]; then
         echo -e "\033[1;34mInstalling bats...\033[0m"
         dnf install -y bats
+    elif [ -n "$CI" ]; then
+        echo -e "\033[1;34mInstalling bats...\033[0m"
+        sudo npm install -g bats
     else
         echo -e "\033[1;31mERROR: Unable to find the bats test framework.\033[0m"
         exit 1
