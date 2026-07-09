@@ -36,6 +36,9 @@ if defined?(SecureHeaders)
     # Need google fonts in fonts_src for https://fonts.googleapis.com/css?family=IBM+Plex+Sans+Condensed%7CIBM+Plex+Sans:400,600&display=swap (For carbon-charts download)
     config.csp = {
       :report_uri  => ["/dashboard/csp_report"],
+      # report-to satisfies scanners that flag report-uri as deprecated. Browsers fall back to
+      # report-uri until a Reporting-Endpoints header is wired up (follow-up in Apache configs).
+      :report_to   => "csp-endpoint",
 
       :base_uri        => ["'self'"],
       :default_src     => ["'self'"],
