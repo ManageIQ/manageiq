@@ -48,4 +48,9 @@ fi
 
 # Run the tests
 echo -e "\033[1;34mRunning tests...\033[0m"
-exec bats ./spec/lib/ansible/runner_execution_spec.bats
+bats_args=()
+if [ -n "${BATS_FILTER}" ]; then
+    echo -e "\033[1;33mFiltering tests by: ${BATS_FILTER}\033[0m"
+    bats_args+=(--filter "${BATS_FILTER}")
+fi
+exec bats "${bats_args[@]}" ./spec/lib/ansible/runner_execution_spec.bats
