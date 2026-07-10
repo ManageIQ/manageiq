@@ -1,7 +1,7 @@
 class MiqProvisionConfigurationScriptRequest < MiqRequest
   delegate :my_zone, :to => :source
 
-  TASK_DESCRIPTION  = N_('Automation Manager Provisioning')
+  TASK_DESCRIPTION  = N_('Automation Provider Provisioning')
   SOURCE_CLASS_NAME = 'ConfigurationScript'
 
   default_value_for(:source_id)   { |r| r.get_option(:src_configuration_script_id) }
