@@ -12,8 +12,11 @@ if defined?(SecureHeaders)
     # Note: ws_token (ActionCable auth) is set by JavaScript via document.cookie
     # and is not subject to this middleware, so it is unaffected either way.
     config.cookies = SecureHeaders::OPT_OUT
-    # Only set HSTS in development/test where Apache isn't fronting Rails
-    # In production, Apache sets HSTS (see manageiq-https-application.conf line 15)
+    # Only set HSTS in development/test where Apache isn't fronting Rails.
+    # In production, Apache sets HSTS at VirtualHost level in all three configs:
+    #   manageiq-appliance: manageiq-https-application.conf
+    #   manageiq-pods: httpdApplicationConf (ingress proxy) and uiHttpdConfig (UI pod)
+    #   product: oidcutils/httpd.go
     config.hsts = Rails.env.production? ? SecureHeaders::OPT_OUT : "max-age=#{20.years.to_i}"
     # X-Frame-Options
     config.x_frame_options = 'SAMEORIGIN'
