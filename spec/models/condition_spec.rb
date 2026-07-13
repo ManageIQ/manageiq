@@ -27,7 +27,7 @@ RSpec.describe Condition do
 
       it "evaluates custom attribute on right side and integer column of VmOrTemplate on left side" do
         condition_to_evaluate = Condition.send(:subst, @filter_2.to_ruby(nil), vm)
-        expect(condition_to_evaluate).to eq('10 > 30')
+        expect(condition_to_evaluate).to eq('rec.memory_reserve > 30')
       end
 
       it "evaluates custom attribute on left side and integer column of VmOrTemplate on right side" do
@@ -216,11 +216,19 @@ RSpec.describe Condition do
 
   describe ".do_eval" do
     it "detects true" do
-      expect(Condition.send(:do_eval, "true")).to be_truthy
+      expect(Condition.send(:do_eval, "true", nil)).to be_truthy
     end
 
     it "detects false" do
-      expect(Condition.send(:do_eval, "false")).not_to be_truthy
+      expect(Condition.send(:do_eval, "false", nil)).not_to be_truthy
+    end
+
+    it "references object passed - happy" do
+      expect(Condition.send(:do_eval, "rec == 1", 1)).to be_truthy
+    end
+
+    it "references object passed - sad" do
+      expect(Condition.send(:do_eval, "rec == 1", 2)).not_to be_truthy
     end
   end
 
