@@ -36,8 +36,9 @@ if defined?(SecureHeaders)
     # Need google fonts in fonts_src for https://fonts.googleapis.com/css?family=IBM+Plex+Sans+Condensed%7CIBM+Plex+Sans:400,600&display=swap (For carbon-charts download)
     config.csp = {
       :report_uri  => ["/dashboard/csp_report"],
-      # report-to satisfies scanners that flag report-uri as deprecated. Browsers fall back to
-      # report-uri until a Reporting-Endpoints header is wired up (follow-up in Apache configs).
+      # report-to enables modern structured CSP reporting. Browsers that support the Reporting API
+      # use this; others fall back to report-uri. The Reporting-Endpoints header that names
+      # csp-endpoint is set by Apache (see manageiq-appliance and manageiq-pods httpd configs).
       :report_to   => "csp-endpoint",
 
       :base_uri        => ["'self'"],
