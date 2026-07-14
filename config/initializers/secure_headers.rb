@@ -3,8 +3,20 @@ if defined?(SecureHeaders)
   # - https://github.com/ManageIQ/manageiq-appliance/blob/master/COPY/etc/httpd/conf.d/manageiq-https-application.conf
   # - https://github.com/ManageIQ/manageiq-pods/blob/master/manageiq-operator/pkg/helpers/miq-components/httpd_conf.go
   SecureHeaders::Configuration.default do |config|
-    # Only set HSTS in development/test where Apache isn't fronting Rails
-    # In production, Apache sets HSTS (see manageiq-https-application.conf line 15)
+    # Opt out of secure_headers cookie middleware - we manage session cookie
+    # security ourselves via ManageIQ::Session::AbstractStoreAdapter#session_options:
+    #   same_site: :strict  (always)
+    #   secure:    true     (appliance only, unless ALLOW_INSECURE_SESSION)
+    #   httponly:  true     (appliance only)
+    # The gem's SameSite=Lax default is weaker than our Strict setting.
+    # Note: ws_token (ActionCable auth) is set by JavaScript via document.cookie
+    # and is not subject to this middleware, so it is unaffected either way.
+    config.cookies = SecureHeaders::OPT_OUT
+    # Only set HSTS in development/test where Apache isn't fronting Rails.
+    # In production, Apache sets HSTS at VirtualHost level in all three configs:
+    #   manageiq-appliance: manageiq-https-application.conf
+    #   manageiq-pods: httpdApplicationConf (ingress proxy) and uiHttpdConfig (UI pod)
+    #   product: oidcutils/httpd.go
     config.hsts = Rails.env.production? ? SecureHeaders::OPT_OUT : "max-age=#{20.years.to_i}"
     # X-Frame-Options
     config.x_frame_options = 'SAMEORIGIN'
@@ -26,12 +38,14 @@ if defined?(SecureHeaders)
     # Content-Security-Policy
     # Need google fonts in fonts_src for https://fonts.googleapis.com/css?family=IBM+Plex+Sans+Condensed%7CIBM+Plex+Sans:400,600&display=swap (For carbon-charts download)
     config.csp = {
-      :report_only => false,
       :report_uri  => ["/dashboard/csp_report"],
+      # report-to enables modern structured CSP reporting. Browsers that support the Reporting API
+      # use this; others fall back to report-uri. The Reporting-Endpoints header that names
+      # csp-endpoint is set by Apache (see manageiq-appliance and manageiq-pods httpd configs).
+      :report_to   => "csp-endpoint",
 
       :base_uri        => ["'self'"],
       :default_src     => ["'self'"],
-      :child_src       => ["'self'"],
       :connect_src     => ["'self'"],
       :font_src        => ["'self'", 'https://fonts.gstatic.com', "https://fonts.googleapis.com"],
       :form_action     => ["'self'"],
