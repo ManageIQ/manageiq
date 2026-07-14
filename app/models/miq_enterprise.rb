@@ -82,7 +82,7 @@ class MiqEnterprise < ApplicationRecord
   # Metric methods
   #
 
-  PERF_ROLLUP_CHILDREN = [:miq_regions]
+  PERF_ROLLUP_CHILDREN = [:miq_regions].freeze
 
   def perf_rollup_parents(_interval_name = nil)
     # No rollup parents
