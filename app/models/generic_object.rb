@@ -11,6 +11,8 @@ class GenericObject < ApplicationRecord
   has_many :custom_button_events, :foreign_key => :target_id, :dependent => :destroy
 
   validates :name, :presence => true
+  before_validation :apply_default_values
+  validate :validate_property_attribute_constraints
 
   delegate :property_attribute_defined?,
            :property_defined?,
@@ -210,6 +212,118 @@ class GenericObject < ApplicationRecord
   def remove_go_from_all_related_services
     ServiceResource.where(:resource => self).each do |resource|
       remove_from_service(resource.service) if resource.service
+    end
+  end
+
+  def apply_default_values
+    return unless generic_object_definition
+
+    constraints = generic_object_definition.properties[:attribute_constraints] || {}
+    
+    constraints.each do |attr_name, attr_constraints|
+      # Only apply default if attribute is not set and has a default value
+      if properties[attr_name].nil? && attr_constraints.key?(:default)
+        default_value = attr_constraints[:default]
+        # Type cast the default value
+        if property_attribute_defined?(attr_name)
+          properties[attr_name] = type_cast(attr_name, default_value)
+        end
+      end
+    end
+  end
+
+  def validate_property_attribute_constraints
+    return unless generic_object_definition
+
+    constraints = generic_object_definition.properties[:attribute_constraints] || {}
+    attributes = generic_object_definition.properties[:attributes] || {}
+    
+    constraints.each do |attr_name, attr_constraints|
+      # Get value from properties hash (where custom attributes are stored)
+      value = properties[attr_name]
+      attr_type = attributes[attr_name]
+      
+      # Skip validation if attribute is not set (nil) unless it's required
+      next if value.nil? && !attr_constraints[:required]
+      
+      # Type checking for Hash and Array
+      if attr_type == :hash && value.present? && !value.is_a?(Hash)
+        errors.add(:properties, "attribute '#{attr_name}' must be a Hash")
+        next
+      end
+      
+      if attr_type == :array && value.present? && !value.is_a?(Array)
+        errors.add(:properties, "attribute '#{attr_name}' must be an Array")
+        next
+      end
+      
+      attr_constraints.each do |constraint_type, constraint_value|
+        # Skip default constraint in validation (it's applied in before_validation)
+        next if constraint_type == :default
+        validate_constraint(attr_name, value, constraint_type, constraint_value)
+      end
+    end
+  end
+
+  def validate_constraint(attr_name, value, constraint_type, constraint_value)
+    case constraint_type
+    when :required
+      if constraint_value && (value.nil? || (value.is_a?(String) && value.strip.empty?))
+        errors.add(:properties, "attribute '#{attr_name}' is required")
+      end
+    when :min
+      if value.present? && value < constraint_value
+        errors.add(:properties, "attribute '#{attr_name}' must be greater than or equal to #{constraint_value}")
+      end
+    when :max
+      if value.present? && value > constraint_value
+        errors.add(:properties, "attribute '#{attr_name}' must be less than or equal to #{constraint_value}")
+      end
+    when :min_length
+      if value.present? && value.to_s.length < constraint_value
+        errors.add(:properties, "attribute '#{attr_name}' must be at least #{constraint_value} characters long")
+      end
+    when :max_length
+      if value.present? && value.to_s.length > constraint_value
+        errors.add(:properties, "attribute '#{attr_name}' must be at most #{constraint_value} characters long")
+      end
+    when :enum
+      if value.present? && !constraint_value.include?(value)
+        errors.add(:properties, "attribute '#{attr_name}' must be one of: #{constraint_value.join(', ')}")
+      end
+    when :format
+      if value.present?
+        regex = constraint_value.is_a?(Regexp) ? constraint_value : Regexp.new(constraint_value)
+        unless regex.match?(value.to_s)
+          errors.add(:properties, "attribute '#{attr_name}' format is invalid")
+        end
+      end
+    when :min_items
+      if value.is_a?(Array) && value.size < constraint_value
+        errors.add(:properties, "attribute '#{attr_name}' must have at least #{constraint_value} items")
+      end
+    when :max_items
+      if value.is_a?(Array) && value.size > constraint_value
+        errors.add(:properties, "attribute '#{attr_name}' must have at most #{constraint_value} items")
+      end
+    when :unique_items
+      if constraint_value && value.is_a?(Array) && value.uniq.size != value.size
+        errors.add(:properties, "attribute '#{attr_name}' must have unique items")
+      end
+    when :required_keys
+      if value.is_a?(Hash)
+        missing_keys = constraint_value.map(&:to_s) - value.keys.map(&:to_s)
+        if missing_keys.any?
+          errors.add(:properties, "attribute '#{attr_name}' is missing required keys: #{missing_keys.join(', ')}")
+        end
+      end
+    when :allowed_keys
+      if value.is_a?(Hash)
+        extra_keys = value.keys.map(&:to_s) - constraint_value.map(&:to_s)
+        if extra_keys.any?
+          errors.add(:properties, "attribute '#{attr_name}' has disallowed keys: #{extra_keys.join(', ')}")
+        end
+      end
     end
   end
 end
