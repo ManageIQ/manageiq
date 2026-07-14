@@ -75,38 +75,31 @@ FactoryBot.define do
   # using leaf classes...
   factory :ems_infra,
           :aliases => ["manageiq/providers/infra_manager"],
-          :class   => "ManageIQ::Providers::Vmware::InfraManager",
+          :class   => "ManageIQ::Providers::InfraManager",
           :parent  => :ext_management_system
 
   factory :ems_physical_infra,
           :aliases => ["manageiq/providers/physical_infra_manager"],
-          :class   => "ManageIQ::Providers::Redfish::PhysicalInfraManager",
+          :class   => "ManageIQ::Providers::PhysicalInfraManager",
           :parent  => :ext_management_system
 
   factory(:ems_cloud,
           :aliases => ["manageiq/providers/cloud_manager"],
-          :class   => "ManageIQ::Providers::Amazon::CloudManager",
+          :class   => "ManageIQ::Providers::CloudManager",
           :parent  => :ext_management_system) do
     provider_region { "us-east-1" }
   end
 
   factory :ems_network,
           :aliases => ["manageiq/providers/network_manager"],
-          :class   => "ManageIQ::Providers::Openstack::NetworkManager",
+          :class   => "ManageIQ::Providers::NetworkManager",
           :parent  => :ext_management_system do
     parent_manager { FactoryBot.create(:ext_management_system) }
   end
 
   factory :ems_storage,
           :aliases => ["manageiq/providers/storage_manager"],
-          :class   => "ManageIQ::Providers::Openstack::StorageManager::SwiftManager",
-          :parent  => :ext_management_system do
-    parent_manager { FactoryBot.create(:ext_management_system) }
-  end
-
-  factory :ems_cinder,
-          :aliases => ["manageiq/providers/storage_manager/cinder_manager"],
-          :class   => "ManageIQ::Providers::Openstack::StorageManager::CinderManager",
+          :class   => "ManageIQ::Providers::StorageManager",
           :parent  => :ext_management_system do
     parent_manager { FactoryBot.create(:ext_management_system) }
   end
@@ -118,7 +111,7 @@ FactoryBot.define do
     parent_manager { FactoryBot.create(:ext_management_system) }
   end
 
-  factory :ems_swift,
+  factory :ems_openstack_swift,
           :aliases => ["manageiq/providers/storage_manager/swift_manager"],
           :class   => "ManageIQ::Providers::Openstack::StorageManager::SwiftManager",
           :parent  => :ext_management_system do
@@ -127,12 +120,12 @@ FactoryBot.define do
 
   factory :ems_container,
           :aliases => ["manageiq/providers/container_manager"],
-          :class   => "ManageIQ::Providers::Openshift::ContainerManager",
+          :class   => "ManageIQ::Providers::ContainerManager",
           :parent  => :ext_management_system
 
   factory :configuration_manager,
           :aliases => ["manageiq/providers/configuration_manager"],
-          :class   => "ManageIQ::Providers::Foreman::ConfigurationManager",
+          :class   => "ManageIQ::Providers::ConfigurationManager",
           :parent  => :ext_management_system do
     provider :factory => :provider_foreman
   end
@@ -141,12 +134,12 @@ FactoryBot.define do
 
   factory :automation_manager,
           :aliases => ["manageiq/providers/automation_manager"],
-          :class   => "ManageIQ::Providers::Awx::AutomationManager",
+          :class   => "ManageIQ::Providers::AutomationManager",
           :parent  => :ext_management_system
 
   factory :provisioning_manager,
           :aliases => ["manageiq/providers/provisioning_manager"],
-          :class   => "ManageIQ::Providers::Foreman::ProvisioningManager",
+          :class   => "ManageIQ::Providers::ProvisioningManager",
           :parent  => :ext_management_system do
     provider :factory => :provider_foreman
   end
