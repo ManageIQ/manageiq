@@ -15,6 +15,8 @@ class CloudVolumeSnapshot < ApplicationRecord
 
   virtual_total :total_based_volumes, :based_volumes
 
+  validates :description, :length => {:maximum => 50}
+
   def self.class_by_ems(ext_management_system)
     ext_management_system&.class_by_ems(:CloudVolumeSnapshot)
   end
