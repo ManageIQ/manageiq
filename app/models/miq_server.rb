@@ -620,9 +620,9 @@ class MiqServer < ApplicationRecord
     broker = MiqQueue.messaging_client("health_check")
     return if broker.nil?
 
-    # CALO-PATCH-MSG-HEALTH-RETRY: tolerate transient broker transport blips before bouncing evm
+    # tolerate transient broker transport blips before bouncing evm
     max_attempts = 3
-    retry_delay = 2  # seconds
+    retry_delay = 2 # seconds
     attempts = 0
 
     begin
@@ -638,7 +638,11 @@ class MiqServer < ApplicationRecord
         shutdown_and_exit(1)
       end
     ensure
-      broker.close rescue nil
+      begin
+        broker.close
+      rescue
+        nil
+      end
     end
   end
 end # class MiqServer
