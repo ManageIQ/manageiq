@@ -622,7 +622,7 @@ class MiqServer < ApplicationRecord
 
     # tolerate transient broker transport blips before bouncing evm
     max_attempts = ::Settings.server.server_messaging_max_attempts
-    retry_delay = ::Settings.server.server_messaging_retry_delay # seconds
+    retry_delay = ::Settings.server.server_messaging_retry_delay.to_i_with_method
     attempts = 0
 
     begin
