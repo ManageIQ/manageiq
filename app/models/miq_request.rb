@@ -82,7 +82,7 @@ class MiqRequest < ApplicationRecord
         :provision_via_foreman => N_("%{config_mgr_type} Provision") % {:config_mgr_type => ui_lookup(:ui_title => 'foreman')}
       },
       :MiqProvisionConfigurationScriptRequest => {
-        :provision_via_automation_manager => N_("Automation Manager Provision")
+        :provision_via_automation_manager => N_("Automation Provider Provision")
       },
       :MiqProvisionRequest                 => {
         :template          => N_("VM Provision"),

@@ -15,7 +15,7 @@ RSpec.describe MiqRequest do
         :ServiceRetireRequest                           => {:service_retire                   => "Service Retire"},
         :OrchestrationStackRetireRequest                => {:orchestration_stack_retire       => "Orchestration Stack Retire"},
         :AutomationRequest                              => {:automation                       => "Automation"},
-        :MiqProvisionConfigurationScriptRequest         => {:provision_via_automation_manager => "Automation Manager Provision"},
+        :MiqProvisionConfigurationScriptRequest         => {:provision_via_automation_manager => "Automation Provider Provision"},
         :MiqProvisionConfigurationScriptRequestTemplate => {:provision_via_automation_manager => "Configuration Script Template"},
         :ServiceTemplateProvisionRequest                => {:clone_to_service                 => "Service Provision"},
         :ServiceReconfigureRequest                      => {:service_reconfigure              => "Service Reconfigure"},

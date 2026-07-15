@@ -1455,9 +1455,9 @@ en:
       LdapRegion:                     LDAP Region
       LdapServer:                     LDAP Server
       LoadBalancer:                   Load Balancer
-      ManageIQ::Providers::AutomationManager:                                             Automation Manager
+      ManageIQ::Providers::AutomationManager:                                             Automation Provider
       ManageIQ::Providers::BaseManager:                                                   Provider
-      ManageIQ::Providers::EmbeddedAutomationManager:                                     Embedded Automation Manager
+      ManageIQ::Providers::EmbeddedAutomationManager:                                     Embedded Automation Provider
       ManageIQ::Providers::EmbeddedAutomationManager::Authentication:                     Credential
       ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource:          Repository
       ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AmazonCredential:          Credential (Amazon)
@@ -1480,7 +1480,7 @@ en:
       ManageIQ::Providers::Workflows::AutomationManager::Credential:                      Credential (Embedded Workflows)
       ManageIQ::Providers::Workflows::AutomationManager::ScmCredential:                   Credential (SCM)
       ManageIQ::Providers::Workflows::AutomationManager::WorkflowCredential:              Credential (Workflow)
-      ManageIQ::Providers::ExternalAutomationManager:                                     Automation Manager
+      ManageIQ::Providers::ExternalAutomationManager:                                     Automation Provider
       ManageIQ::Providers::ExternalAutomationManager::ConfigurationScript:                Template
       ManageIQ::Providers::ExternalAutomationManager::OrchestrationStack:                 Automation Job
       ManageIQ::Providers::AutomationManager::Authentication:                             Credential
@@ -1494,7 +1494,7 @@ en:
       ManageIQ::Providers::AnsibleTower::AutomationManager::Satellite6Credential:         Credential (Satellite)
       ManageIQ::Providers::AnsibleTower::AutomationManager::ScmCredential:                Credential (SCM)
       ManageIQ::Providers::AnsibleTower::AutomationManager::VmwareCredential:             Credential (VMware)
-      ManageIQ::Providers::AnsibleTower::AutomationManager:                               Automation Manager (Ansible Tower)
+      ManageIQ::Providers::AnsibleTower::AutomationManager:                               Automation Provider (Ansible Tower)
       ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript:          Job Template (Ansible Tower)
       ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationWorkflow:        Workflow Template (Ansible Tower)
       ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook:                     Playbook (Ansible Tower)
@@ -1509,7 +1509,7 @@ en:
       ManageIQ::Providers::Awx::AutomationManager::Satellite6Credential:                  Credential (Satellite)
       ManageIQ::Providers::Awx::AutomationManager::ScmCredential:                         Credential (SCM)
       ManageIQ::Providers::Awx::AutomationManager::VmwareCredential:                      Credential (VMware)
-      ManageIQ::Providers::Awx::AutomationManager:                                        Automation Manager (AWX)
+      ManageIQ::Providers::Awx::AutomationManager:                                        Automation Provider (AWX)
       ManageIQ::Providers::Awx::AutomationManager::ConfigurationScript:                   Job Template (AWX)
       ManageIQ::Providers::Awx::AutomationManager::ConfigurationWorkflow:                 Workflow Template (AWX)
       ManageIQ::Providers::Awx::AutomationManager::Playbook:                              Playbook (AWX)
@@ -1759,8 +1759,8 @@ en:
       container_templates:         Templates
       custom_button:               Button
       custom_button_set:           Button Group
-      ems_automation:              Automation Manager
-      ems_automations:             Automation Managers
+      ems_automation:              Automation Provider
+      ems_automations:             Automation Providers
       ems_block_storage:           Block Storage Manager
       ems_block_storages:          Block Storage Managers
       ems_cloud:                   Cloud Provider
