@@ -620,14 +620,25 @@ class MiqServer < ApplicationRecord
     broker = MiqQueue.messaging_client("health_check")
     return if broker.nil?
 
+    # CALO-PATCH-MSG-HEALTH-RETRY: tolerate transient broker transport blips before bouncing evm
+    max_attempts = 3
+    retry_delay = 2  # seconds
+    attempts = 0
+
     begin
-      # Fail health check if list of topics can't be retrieved
       broker.topics
     rescue => err
-      _log.error("Messaging health check failed: #{err}")
-      shutdown_and_exit(1)
+      attempts += 1
+      if attempts < max_attempts
+        _log.warn("Messaging health check attempt #{attempts}/#{max_attempts} failed: #{err}. Retrying in #{retry_delay}s...")
+        sleep(retry_delay)
+        retry
+      else
+        _log.error("Messaging health check failed after #{max_attempts} attempts: #{err}")
+        shutdown_and_exit(1)
+      end
     ensure
-      broker.close
+      broker.close rescue nil
     end
   end
 end # class MiqServer
