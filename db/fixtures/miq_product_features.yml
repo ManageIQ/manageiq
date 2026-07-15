@@ -5128,9 +5128,9 @@
       :feature_type: control
       :identifier: configured_system_console
 
-# Embedded Automation Manager
-- :name: Embedded Automation Manager
-  :description: Everything under Automation Manager
+# Embedded Automation Provider
+- :name: Embedded Automation Provider
+  :description: Everything under Automation Provider
   :feature_type: node
   :identifier: embedded_automation_manager
   :children:
@@ -5161,11 +5161,11 @@
         :feature_type: admin
         :identifier: embedded_configuration_script_source_delete
       - :name: Refresh Repositories
-        :description: Automation Manager Repositories Refresh
+        :description: Automation Provider Repositories Refresh
         :feature_type: control
         :identifier: embedded_configuration_script_source_refresh
       - :name: Edit Tags
-        :description: Edit Tags for the selected Automation Manager Repositories
+        :description: Edit Tags for the selected Automation Provider Repositories
         :feature_type: control
         :identifier: embedded_configuration_script_source_tag
   - :name: Configuration Scripts
@@ -5234,11 +5234,11 @@
         :feature_type: control
         :identifier: embedded_automation_manager_credentials_refresh
       - :name: Edit Tags
-        :description: Edit Tags for the selected Automation Manager Credentials
+        :description: Edit Tags for the selected Automation Provider Credentials
         :feature_type: control
         :identifier: embedded_automation_manager_credential_tag
 
-# Automation Manager
+# Automation Provider
 - :name: Ansible Tower
   :description: Everything under Providers
   :feature_type: node
