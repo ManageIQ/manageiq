@@ -1,0 +1,8 @@
+# This file contains the expected table entries
+tables:
+  my_table:
+    - key1
+    - key2
+  another_table:
+    - key3
+    - key4
