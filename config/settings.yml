@@ -938,6 +938,8 @@
   :server_dequeue_frequency: 5.seconds
   :server_log_frequency: 5.minutes
   :server_log_timings_threshold: 1.second
+  :server_messaging_max_attempts: 3
+  :server_messaging_retry_delay: 2.seconds
   :server_monitor_frequency: 60.seconds
   :server_role_monitor_frequency: 15.seconds
   :session_store: cache
