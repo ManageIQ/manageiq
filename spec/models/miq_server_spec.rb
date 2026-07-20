@@ -419,4 +419,84 @@ RSpec.describe MiqServer do
       expect(described_class.audit_details).to include(:vms => 1, :hosts => 1, :services => {:active => 1, :inactive => 1}, :service_catalog_items => {:active => 1, :archived => 1})
     end
   end
+
+  describe "#messaging_health_check" do
+    let(:broker)     { double("broker") }
+    let(:miq_server) { FactoryBot.create(:miq_server) }
+
+    context "when broker is nil" do
+      before { allow(MiqQueue).to receive(:messaging_client).with("health_check").and_return(nil) }
+
+      it "returns early without error" do
+        expect(miq_server).not_to receive(:shutdown_and_exit)
+        expect { miq_server.send(:messaging_health_check) }.not_to raise_error
+      end
+    end
+
+    context "when broker is available" do
+      before do
+        allow(MiqQueue).to receive(:messaging_client).with("health_check").and_return(broker)
+      end
+
+      it "succeeds on first attempt and closes broker" do
+        expect(broker).to receive(:topics).once
+        expect(broker).to receive(:close).once
+        expect(miq_server).not_to receive(:shutdown_and_exit)
+
+        miq_server.send(:messaging_health_check)
+      end
+
+      it "retries on failure and succeeds on second attempt" do
+        call_count = 0
+        allow(broker).to receive(:topics) do
+          call_count += 1
+          raise "Connection error" if call_count == 1
+        end
+
+        expect(broker).to receive(:close).once
+        expect(miq_server).not_to receive(:shutdown_and_exit)
+        expect(miq_server).to receive(:sleep).with(2).once
+
+        miq_server.send(:messaging_health_check)
+      end
+
+      it "retries on failure and succeeds on third attempt" do
+        call_count = 0
+        allow(broker).to receive(:topics) do
+          call_count += 1
+          raise "connection error" if call_count < 3
+        end
+        expect(broker).to receive(:close).once
+        expect(miq_server).not_to receive(:shutdown_and_exit)
+        expect(miq_server).to receive(:sleep).with(2).twice
+
+        miq_server.send(:messaging_health_check)
+      end
+
+      it "shuts down after max retry attempts" do
+        allow(broker).to receive(:topics).and_raise("Connection error")
+        expect(broker).to receive(:close).once
+        expect(miq_server).to receive(:shutdown_and_exit).with(1)
+        expect(miq_server).to receive(:sleep).with(2).twice
+
+        miq_server.send(:messaging_health_check)
+      end
+
+      it "ignores errors when closing broker" do
+        allow(broker).to receive(:topics)
+        allow(broker).to receive(:close).and_raise("Close error")
+
+        expect { miq_server.send(:messaging_health_check) }.not_to raise_error
+      end
+
+      it "closes broker even when topics raises error" do
+        allow(broker).to receive(:topics).and_raise("Connection error")
+        expect(broker).to receive(:close).once
+        allow(miq_server).to receive(:shutdown_and_exit)
+        allow(miq_server).to receive(:sleep)
+
+        miq_server.send(:messaging_health_check)
+      end
+    end
+  end
 end
