@@ -15,6 +15,10 @@ class VmRetireTask < MiqRetireTask
     VmRetireTask
   end
 
+  def self.request_class
+    VmRetireRequest
+  end
+
   def self.model_being_retired
     Vm
   end
