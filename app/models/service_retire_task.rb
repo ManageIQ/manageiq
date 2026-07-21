@@ -9,6 +9,10 @@ class ServiceRetireTask < MiqRetireTask
     Service
   end
 
+  def self.request_class
+    ServiceRetireRequest
+  end
+
   def update_and_notify_parent(*args)
     prev_state = state
     super

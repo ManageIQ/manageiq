@@ -11,6 +11,10 @@ class OrchestrationStackRetireTask < MiqRetireTask
     OrchestrationStackRetireTask
   end
 
+  def self.request_class
+    OrchestrationStackRetireRequest
+  end
+
   def self.model_being_retired
     OrchestrationStack
   end
