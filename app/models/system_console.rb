@@ -1,4 +1,5 @@
 class SystemConsole < ApplicationRecord
+  belongs_to :container_group
   belongs_to :vm
   belongs_to :user
 
@@ -38,7 +39,7 @@ class SystemConsole < ApplicationRecord
   end
 
   def self.local_address
-    (MiqServer.my_server.ipaddress.presence || local_address_fallback)
+    MiqServer.my_server.ipaddress.presence || local_address_fallback
   end
 
   def self.local_address_fallback
@@ -54,7 +55,7 @@ class SystemConsole < ApplicationRecord
       return nil
     end
 
-    command = AwesomeSpawn::CommandLineBuilder.new.build("/usr/bin/socat", ["TCP-LISTEN:" + local_port + ",fork", "TCP:" + remote_address + ":" + remote_port])
+    command = AwesomeSpawn::CommandLineBuilder.new.build("/usr/bin/socat", ["TCP-LISTEN:#{local_port},fork", "TCP:#{remote_address}:#{remote_port}"])
     _log.info("Running socat proxy command: #{command}")
     pid = spawn(command)
 
@@ -68,7 +69,7 @@ class SystemConsole < ApplicationRecord
   end
 
   def self.cleanup_proxy_processes
-    SystemConsole.where.not(:proxy_pid => nil).where(:host_name  => local_address).each do |console|
+    SystemConsole.where.not(:proxy_pid => nil).where(:host_name => local_address).each do |console|
       next unless %w[websocket_closed ticket_invalid].include?(console.proxy_status)
 
       kill_proxy_process(console.proxy_pid)
@@ -96,8 +97,8 @@ class SystemConsole < ApplicationRecord
 
     if ::Settings.server.console_proxy_disabled || SystemConsole.is_local?(originating_server)
       console_args.update(
-        :host_name  => host_address,
-        :port       => host_port
+        :host_name => host_address,
+        :port      => host_port
       )
     else
       SystemConsole.cleanup_proxy_processes
