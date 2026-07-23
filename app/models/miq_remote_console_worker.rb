@@ -23,7 +23,7 @@ class MiqRemoteConsoleWorker < MiqWorker
     super
 
     definition[:spec][:template][:spec][:containers].first[:volumeMounts] << {:name => "remote-console-httpd-config", :mountPath => "/etc/httpd/conf.d"}
-    definition[:spec][:template][:spec][:volumes] << {:name => "remote-console-httpd-config", :configMap => {:name => "remote-console-httpd-configs", :defaultMode => 420}}
+    definition[:spec][:template][:spec][:volumes] << {:name => "remote-console-httpd-config", :configMap => {:name => "remote-console-httpd-configs", :defaultMode => 0o644}}
 
     if ENV["REMOTE_CONSOLE_SSL_SECRET_NAME"].present?
       definition[:spec][:template][:spec][:containers].first[:volumeMounts] << {:name => "remote-console-httpd-ssl", :mountPath => "/etc/pki/tls"}
