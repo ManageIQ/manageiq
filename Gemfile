@@ -308,7 +308,7 @@ group :development do
 end
 
 group :test do
-  gem "brakeman",                       "~>6.2",             :require => false
+  gem "brakeman",                       "~>8.0",             :require => false
   gem "bundler-audit",                                       :require => false
   gem "capybara",                       "~>2.18.0",          :require => false
   gem "db-query-matchers",              "~>0.15.0"
