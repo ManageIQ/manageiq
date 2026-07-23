@@ -27,6 +27,11 @@ module Vmdb
       arrayin.deep_clone
     end
 
+    # Deep clone an object using Marshal dump/load
+    def copy_object(obj)
+      Marshal.load(Marshal.dump(obj))
+    end
+
     # Had to add timezone methods here, they are being called from models
     # returns formatted time in specified timezone and format
     def format_timezone(time, timezone = Time.zone.name, ftype = "view")
