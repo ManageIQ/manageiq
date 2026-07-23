@@ -62,7 +62,7 @@ RSpec.describe MiqWorker::ContainerCommon do
       it "adds the ui_httpd_configs volume mount" do
         expect(kubeclient).to receive(:create_deployment) do |deployment|
           expect(deployment.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts)).to include({:name => "ui-httpd-configs", :mountPath => "/etc/httpd/conf.d"})
-          expect(deployment.fetch_path(:spec, :template, :spec, :volumes)).to include({:name => "ui-httpd-configs", :configMap => {:name => "ui-httpd-configs", :defaultMode => 420}})
+          expect(deployment.fetch_path(:spec, :template, :spec, :volumes)).to include({:name => "ui-httpd-configs", :configMap => {:name => "ui-httpd-configs", :defaultMode => 0o644}})
         end
 
         expect(ui_worker).to receive(:scale_deployment)
