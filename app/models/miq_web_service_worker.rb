@@ -38,7 +38,7 @@ class MiqWebServiceWorker < MiqWorker
 
     if ENV["API_SSL_SECRET_NAME"].present?
       definition[:spec][:template][:spec][:containers].first[:volumeMounts] << {:name => "api-httpd-ssl", :mountPath => "/etc/pki/tls"}
-      definition[:spec][:template][:spec][:volumes] << {:name => "api-httpd-ssl", :secret => {:secretName => ENV["API_SSL_SECRET_NAME"], :items => [{:key => "api_crt", :path => "certs/server.crt"}, {:key => "api_key", :path => "private/server.key"}], :defaultMode => 400}}
+      definition[:spec][:template][:spec][:volumes] << {:name => "api-httpd-ssl", :secret => {:secretName => ENV["API_SSL_SECRET_NAME"], :items => [{:key => "api_crt", :path => "certs/server.crt"}, {:key => "api_key", :path => "private/server.key"}], :defaultMode => 0o440}}
     end
   end
 end
