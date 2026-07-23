@@ -38,13 +38,16 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
     end
 
     def ext_management_system
-      skip_model_class
-
       add_properties(
         :manager_ref       => %i[guid],
+        :model_class       => ExtManagementSystem,
         :custom_save_block => lambda do |ems, inventory_collection|
-          ems_attrs = inventory_collection.data.first&.attributes
-          ems.update!(ems_attrs) if ems_attrs
+          inventory_object = inventory_collection.data.first
+          if inventory_object
+            ems_attrs = inventory_object.attributes
+            ems.update!(ems_attrs) if ems_attrs.present?
+            inventory_object.id = ems.id
+          end
         end
       )
     end
@@ -246,7 +249,6 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
             next unless obj.data.key?(relationship_key)
 
             parent = obj.data[relationship_key].try(&:load)
-
             if parent.nil?
               parent_by_child[collection.model_class][obj.id] = nil
             else

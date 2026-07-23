@@ -236,19 +236,6 @@ module ManageIQ::Providers
           add_common_default_values
         end
 
-        def root_folder_relationship
-          skip_auto_inventory_attributes
-          skip_model_class
-
-          add_properties(
-            :custom_save_block => root_folder_relationship_save_block
-          )
-
-          add_dependency_attributes(
-            :ems_folders => [persister.collections[:ems_folders]]
-          )
-        end
-
         def parent_blue_folders
           skip_auto_inventory_attributes
           skip_model_class
@@ -282,20 +269,6 @@ module ManageIQ::Providers
         end
 
         private
-
-        def root_folder_relationship_save_block
-          lambda do |ems, inventory_collection|
-            folder_inv_collection = inventory_collection.dependency_attributes[:ems_folders]&.first
-            return if folder_inv_collection.nil?
-
-            # All folders must have a parent except for the root folder
-            root_folder_obj = folder_inv_collection.data.detect { |obj| obj.data[:parent].nil? }
-            return if root_folder_obj.nil?
-
-            root_folder = folder_inv_collection.model_class.find(root_folder_obj.id)
-            root_folder.with_relationship_type(:ems_metadata) { root_folder.parent = ems }
-          end
-        end
 
         def vm_template_infra_shared_properties
           add_inventory_attributes(%i[resource_pool])
