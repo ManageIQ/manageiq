@@ -69,8 +69,6 @@ module RemoteConsole
         )
       end
 
-      private
-
       def setup_ssl
         context = OpenSSL::SSL::SSLContext.new
         context.ssl_version = :SSLv23
