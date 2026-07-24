@@ -16,7 +16,7 @@ class ContainerGroup < ApplicationRecord
 
   has_many :containers, :dependent => :destroy
   has_many :container_images, -> { distinct }, :through => :containers
-  belongs_to :ext_management_system, :foreign_key => "ems_id"
+  belongs_to  :ext_management_system, :foreign_key => "ems_id"
   has_many :annotations, -> { where(:section => "annotations") }, # rubocop:disable Rails/HasManyOrHasOneDependent
            :class_name => "CustomAttribute",
            :as         => :resource,
@@ -99,7 +99,7 @@ class ContainerGroup < ApplicationRecord
     {"ems_id" => ext_management_system.id}
   end
 
-  PERF_ROLLUP_CHILDREN = [].freeze
+  PERF_ROLLUP_CHILDREN = []
 
   def perf_rollup_parents(interval_name = nil)
     unless interval_name == 'realtime'
