@@ -1,4 +1,5 @@
 class SystemConsole < ApplicationRecord
+  belongs_to :container
   belongs_to :vm
   belongs_to :user
 

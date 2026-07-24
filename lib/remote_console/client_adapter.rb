@@ -11,6 +11,8 @@ module RemoteConsole
         WebMKS.new(record, socket)
       when 'webmks-uint8utf8'
         WebMKSLegacy.new(record, socket)
+      when 'kube_exec'
+        KubeExec.new(record, socket)
       else
         raise NotImplementedError, "Support for #{record.protocol} remote consoles is not implemented!"
       end
