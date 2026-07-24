@@ -4508,11 +4508,10 @@
       :description: Check Compliance of Last Known Configuration
       :feature_type: control
       :identifier: container_group_check_compliance
-    - :name: Open Terminal
-      :description: Open Terminal for this Pod
+    - :name: Container Group Console
+      :description: Open a Console for this Container Group
       :feature_type: control
-      :identifier: container_group_terminal
-
+      :identifier: container_group_console
 
 # ContainerNode
 - :name: Nodes

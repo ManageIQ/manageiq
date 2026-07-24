@@ -47,21 +47,21 @@ module RemoteConsole
       private
 
       def bearer_token
-        container_group.ext_management_system.authentication_token('bearer')
+        container.container_group.ext_management_system.authentication_token('bearer')
       end
 
-      def container_group
-        @record.container_group
+      def container
+        @record.container
       end
 
       def path
-        "/api/v1/namespaces/#{container_group.container_project.name}/pods/#{container_group.name}/exec"
+        "/api/v1/namespaces/#{container.container_group.container_project.name}/pods/#{container.container_group.name}/exec"
       end
 
       def query
         URI.encode_www_form(
           :command   => '/bin/sh',
-          :container => container_group.containers.first&.name,
+          :container => container.name,
           :stdin     => true,
           :stdout    => true,
           :stderr    => true,
@@ -69,13 +69,15 @@ module RemoteConsole
         )
       end
 
+      private
+
       def setup_ssl
         context = OpenSSL::SSL::SSLContext.new
         context.ssl_version = :SSLv23
-        context.verify_mode = OpenSSL::SSL::VERIFY_NONE # or VERIFY_PEER + ca_file if your cluster CA should be validated
+        context.verify_mode = OpenSSL::SSL::VERIFY_NONE
         ssl = OpenSSL::SSL::SSLSocket.new(@sock, context)
         ssl.sync_close = true
-        ssl.hostname = @record.host_name if ssl.respond_to?(:hostname=) # SNI
+        ssl.hostname = @record.host_name if ssl.respond_to?(:hostname=)
         ssl
       end
     end
