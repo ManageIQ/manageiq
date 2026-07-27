@@ -72,16 +72,9 @@ module YamlImportExportMixin
     # @return [Array<String>] The array of importing status.
     def import_from_array(input, options = {})
       input.collect do |i|
-        begin
-          klass = Object.const_get(i.keys.first)
-          report = i[klass.to_s]
-        rescue
-          # for the legacy MiqReport
-          klass = MiqReport
-          report = i
-        end
-
-        _, stat = klass.import_from_hash(report.deep_clone, options)
+        klass = Object.const_get(i.keys.first)
+        imported_object = i[klass.to_s]
+        _, stat = klass.import_from_hash(imported_object.deep_clone, options)
         stat
       end
     end
