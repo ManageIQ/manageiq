@@ -251,8 +251,6 @@ class MiqTask < ApplicationRecord
   end
 
   def task_results
-    # support legacy task that saved results in the results column
-    return Marshal.load(Base64.decode64(results.split("\n").join)) unless results.nil?
     return miq_report_result.report_results unless miq_report_result.nil?
 
     if binary_blob
