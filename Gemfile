@@ -310,7 +310,7 @@ end
 group :test do
   gem "brakeman",                       "~>8.0",             :require => false
   gem "bundler-audit",                                       :require => false
-  gem "capybara",                       "~>2.18.0",          :require => false
+  gem "capybara",                       "~>3.40.0",          :require => false
   gem "db-query-matchers",              "~>0.15.0"
   gem "factory_bot",                    "~>6.5",             :require => false
   gem "simplecov",                      ">=0.21.2",          :require => false
