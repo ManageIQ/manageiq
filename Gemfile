@@ -30,7 +30,7 @@ gem "bcrypt",                           "~> 3.1.10",         :require => false
 gem "bootsnap",                         ">= 1.8.1",          :require => false # for psych 3.3.2+ / 4 unsafe_load
 gem "bundler",                          ">= 2.5.20", "< 5",  :require => false
 gem "byebug",                                                :require => false
-gem "color",                            "~>1.8"
+gem "color",                            "~>2.0"
 gem "config",                           "~>5.1",             :require => false
 gem "connection_pool",                  "~>2.5",             :require => false # For Dalli
 gem "dalli",                            "~>3.2.3",           :require => false
