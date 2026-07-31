@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: manageiq/postgresql:13
+        image: manageiq/postgresql:16-el10
         env:
           POSTGRESQL_USER: root
           POSTGRESQL_PASSWORD: smartvm

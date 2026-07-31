@@ -22,7 +22,7 @@ jobs:
         <%= ruby_versions.to_yaml[3..].indent(8).strip %>
     services:
       postgres:
-        image: manageiq/postgresql:13
+        image: manageiq/postgresql:16-el10
         env:
           POSTGRESQL_USER: root
           POSTGRESQL_PASSWORD: smartvm
