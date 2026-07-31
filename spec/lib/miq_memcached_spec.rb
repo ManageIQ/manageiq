@@ -19,11 +19,12 @@ RSpec.describe MiqMemcached do
     context "without SSL" do
       before { stub_const("ENV", ENV.to_h.except("MEMCACHED_ENABLE_SSL")) }
 
-      it "includes socket_max_failures and threadsafe" do
+      it "includes socket_max_failures, threadsafe, and silence_marshal_warning" do
         options = described_class.default_client_options
 
         expect(options[:socket_max_failures]).to eq(5)
         expect(options[:threadsafe]).to be(true)
+        expect(options[:silence_marshal_warning]).to be(true)
       end
 
       it "does not include ssl_context" do
