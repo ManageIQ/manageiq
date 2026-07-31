@@ -1,64 +1,101 @@
 RSpec.describe MiqMemcached do
   describe ".server_address" do
-    it "defaults to Settings.session.memcache_server" do
-      stub_settings_merge(:session => {:memcache_server => "127.0.0.1:11211"})
-      expect(described_class.server_address).to eq("127.0.0.1:11211")
+    it "falls back to Settings when env var is absent" do
+      stub_const("ENV", ENV.to_h.except("MEMCACHED_SERVER"))
+      stub_settings(:session => {:memcache_server => "settingshost:11211"})
+
+      expect(described_class.server_address).to eq("settingshost:11211")
     end
 
-    it "prefers MEMCACHED_SERVER environment variable" do
-      stub_settings_merge(:session => {:memcache_server => "127.0.0.1:11211"})
-      stub_const("ENV", ENV.to_h.merge("MEMCACHED_SERVER" => "memcache.example.com:11211"))
-      expect(described_class.server_address).to eq("memcache.example.com:11211")
+    it "prefers the MEMCACHED_SERVER env var" do
+      stub_const("ENV", ENV.to_h.merge("MEMCACHED_SERVER" => "envhost:11211"))
+      stub_settings(:session => {:memcache_server => "settingshost:11211"})
+
+      expect(described_class.server_address).to eq("envhost:11211")
     end
   end
 
   describe ".default_client_options" do
-    it "includes non-default socket and threadsafe options" do
-      options = described_class.default_client_options
+    context "without SSL" do
+      before { stub_const("ENV", ENV.to_h.except("MEMCACHED_ENABLE_SSL")) }
 
-      expect(options[:socket_max_failures]).to eq(5)
-      expect(options[:threadsafe]).to be(true)
-      expect(options[:ssl_context]).to be_nil
-    end
-
-    context "when MEMCACHED_ENABLE_SSL is set" do
-      it "configures SSL context with hostname verification and peer verification" do
-        stub_const("ENV", ENV.to_h.merge("MEMCACHED_ENABLE_SSL" => "true"))
-
+      it "includes socket_max_failures and threadsafe" do
         options = described_class.default_client_options
-        ssl_context = options[:ssl_context]
 
-        expect(ssl_context).to be_kind_of(OpenSSL::SSL::SSLContext)
-        expect(ssl_context.verify_hostname).to be(true)
-        expect(ssl_context.verify_mode).to eq(OpenSSL::SSL::VERIFY_PEER)
+        expect(options[:socket_max_failures]).to eq(5)
+        expect(options[:threadsafe]).to be(true)
       end
 
-      it "sets ca_file when MEMCACHED_SSL_CA is present" do
-        stub_const("ENV", ENV.to_h.merge("MEMCACHED_ENABLE_SSL" => "true", "MEMCACHED_SSL_CA" => "/path/to/ca.crt"))
+      it "does not include ssl_context" do
+        expect(described_class.default_client_options).not_to have_key(:ssl_context)
+      end
+    end
 
+    context "with SSL enabled" do
+      before do
+        stub_const("ENV", ENV.to_h.merge("MEMCACHED_ENABLE_SSL" => "true").except("MEMCACHED_SSL_CA"))
+      end
+
+      it "includes an ssl_context" do
         options = described_class.default_client_options
-        expect(options[:ssl_context].ca_file).to eq("/path/to/ca.crt")
+
+        expect(options[:ssl_context]).to be_a(OpenSSL::SSL::SSLContext)
+      end
+
+      it "configures VERIFY_PEER and verify_hostname on the ssl_context" do
+        ssl_context = described_class.default_client_options[:ssl_context]
+
+        expect(ssl_context.verify_mode).to eq(OpenSSL::SSL::VERIFY_PEER)
+        expect(ssl_context.verify_hostname).to be(true)
+      end
+
+      context "when MEMCACHED_SSL_CA is set" do
+        let(:ca_file) { Rails.root.join("tmp/test_ca.pem").to_s }
+
+        before do
+          stub_const("ENV", ENV.to_h.merge("MEMCACHED_ENABLE_SSL" => "true", "MEMCACHED_SSL_CA" => ca_file))
+          FileUtils.touch(ca_file)
+        end
+
+        after { FileUtils.rm_f(ca_file) }
+
+        it "sets ca_file on the ssl_context" do
+          expect(described_class.default_client_options[:ssl_context].ca_file).to eq(ca_file)
+        end
       end
     end
   end
 
   describe ".client" do
-    it "passes the configured server and merged options to Dalli::Client" do
-      require 'dalli'
-      stub_settings_merge(:session => {:memcache_server => "127.0.0.1:11211"})
+    before do
+      stub_const("ENV", ENV.to_h.except("MEMCACHED_SERVER", "MEMCACHED_ENABLE_SSL"))
+      stub_settings(:session => {:memcache_server => "localhost:11211"})
+    end
 
-      expect(Dalli::Client).to receive(:new).with(
-        "127.0.0.1:11211",
-        hash_including(
-          :socket_max_failures => 5,
-          :threadsafe          => true,
-          :namespace           => "server_monitor"
-        )
-      ).and_call_original
+    it "returns a Dalli::Client" do
+      expect(described_class.client(:namespace => "test_ns")).to be_a(Dalli::Client)
+    end
 
-      client = described_class.client(:namespace => "server_monitor")
+    it "merges default options into the client" do
+      client = described_class.client(:namespace => "test_ns")
+      options = client.instance_variable_get(:@options)
 
-      expect(client).to be_kind_of(Dalli::Client)
+      expect(options[:socket_max_failures]).to eq(5)
+      expect(options[:threadsafe]).to be(true)
+    end
+
+    it "passes caller-supplied options through to the client" do
+      client = described_class.client(:namespace => "test_ns")
+      options = client.instance_variable_get(:@options)
+
+      expect(options[:namespace]).to eq("test_ns")
+    end
+
+    it "caller options override defaults" do
+      client = described_class.client(:namespace => "test_ns", :socket_max_failures => 99)
+      options = client.instance_variable_get(:@options)
+
+      expect(options[:socket_max_failures]).to eq(99)
     end
   end
 end
