@@ -13,6 +13,8 @@ module RemoteConsole
         WebMKSLegacy.new(record, socket)
       when 'kube_exec'
         KubeExec.new(record, socket)
+      when 'kubevirt_vnc'
+        KubeVirtVnc.new(record, socket)
       else
         raise NotImplementedError, "Support for #{record.protocol} remote consoles is not implemented!"
       end
