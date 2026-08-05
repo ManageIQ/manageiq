@@ -112,7 +112,7 @@ class ServiceRetireTask < MiqRetireTask
   end
 
   def default_retire_task_class(resource_type)
-    (resource_type.base_class.name + "RetireTask").safe_constantize || (resource_type.name.demodulize + "RetireTask").safe_constantize
+    "#{resource_type.base_class.name}RetireTask".safe_constantize || "#{resource_type.name.demodulize}RetireTask".safe_constantize
   end
 
   def derive_request_type(task_type)
