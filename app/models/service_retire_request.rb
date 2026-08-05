@@ -4,4 +4,8 @@ class ServiceRetireRequest < MiqRetireRequest
   ACTIVE_STATES     = %w[retired] + base_class::ACTIVE_STATES
 
   delegate :service_template, :to => :source, :allow_nil => true
+
+  def self.request_task_class_from(_attribs)
+    request_task_class
+  end
 end

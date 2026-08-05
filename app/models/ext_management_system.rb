@@ -442,6 +442,14 @@ class ExtManagementSystem < ApplicationRecord
     self::ProvisionWorkflow
   end
 
+  def self.vm_retire_task_class
+    VmRetireTask
+  end
+
+  def self.orchestration_stack_retire_task_class
+    OrchestrationStackRetireTask
+  end
+
   BELONGS_TO_DESCENDANTS_CLASSES_BY_NAME = {
     'Network Manager' => 'ManageIQ::Providers::NetworkManager'
   }.freeze

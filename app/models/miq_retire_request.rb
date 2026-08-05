@@ -6,4 +6,39 @@ class MiqRetireRequest < MiqRequest
 
   def my_zone
   end
+
+  # Provider-specific task class support
+  def self.request_task_class_from(attribs)
+    source_id = MiqRequestMixin.get_option(:src_ids, nil, attribs["options"])
+    source    = find_source!(source_id)
+    ems_retire_task_class(source) || request_task_class
+  end
+
+  def self.new_request_task(attribs)
+    klass = request_task_class_from(attribs)
+    klass.new(attribs)
+  end
+
+  private_class_method def self.find_source!(source_id)
+    source_class = self::SOURCE_CLASS_NAME.constantize
+    source       = source_class.find_by(:id => source_id)
+    raise "Unable to find #{source_class.name} with id [#{source_id}]" if source.nil?
+
+    source
+  end
+
+  private_class_method def self.ems_retire_task_class(source)
+    ems = source.ext_management_system
+    return nil unless ems
+
+    ems.class.try(retire_task_class_method_name)
+  end
+
+  private_class_method def self.retire_task_class_method_name
+    # Convert source class name to method name
+    # Vm -> vm_retire_task_class
+    # OrchestrationStack -> orchestration_stack_retire_task_class
+    source_class_name = self::SOURCE_CLASS_NAME.underscore
+    "#{source_class_name}_retire_task_class"
+  end
 end
