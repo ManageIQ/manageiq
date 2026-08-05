@@ -4,7 +4,7 @@ class MiqProvisionConfigurationScriptRequestTemplate < MiqProvisionConfiguration
     scaling_min = 1
 
     _log.info("create_tasks_for_service ID #{service_task.id} SCALING : #{scaling_min}")
-    scaling_min.times.collect do |idx|
+    Array.new(scaling_min) do |idx|
       create_request_task(idx) do |req_task|
         req_task.miq_request_id = service_task.miq_request.id
         req_task.userid         = service_task.userid
