@@ -257,6 +257,9 @@ msgstr ""
 msgid "# Pods per Ready Status"
 msgstr ""
 
+msgid "# of Days"
+msgstr ""
+
 msgid "# of Events"
 msgstr ""
 
@@ -391,8 +394,8 @@ msgid_plural "%{amount} Automation Jobs Being Tagged"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "%{amount} Automation Manager (Ansible Tower) Being Tagged"
-msgid_plural "%{amount} Automation Managers (Ansible Tower) Being Tagged"
+msgid "%{amount} Automation Provider (Ansible Tower) Being Tagged"
+msgid_plural "%{amount} Automation Providers (Ansible Tower) Being Tagged"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -730,13 +733,7 @@ msgstr ""
 msgid "%{description} VM Memory is larger than Memory Limit"
 msgstr ""
 
-msgid "%{description} category Scan"
-msgstr ""
-
 msgid "%{description} is required"
-msgstr ""
-
-msgid "%{description} registry Scan"
 msgstr ""
 
 msgid "%{domain_name} (Disabled)"
@@ -2463,6 +2460,18 @@ msgstr ""
 msgid "Add Entry"
 msgstr ""
 
+msgid "Add Event Log"
+msgstr ""
+
+msgid "Add Event Log Entry"
+msgstr ""
+
+msgid "Add File"
+msgstr ""
+
+msgid "Add File Entry"
+msgstr ""
+
 msgid "Add Flavor"
 msgstr ""
 
@@ -2593,6 +2602,9 @@ msgid "Add Provider"
 msgstr ""
 
 msgid "Add Provisioning Dialog"
+msgstr ""
+
+msgid "Add Registry Entry"
 msgstr ""
 
 msgid "Add Repository"
@@ -2880,6 +2892,9 @@ msgstr ""
 msgid "Add a new Action"
 msgstr ""
 
+msgid "Add a new Automation Provider"
+msgstr ""
+
 msgid "Add a new Button"
 msgstr ""
 
@@ -3060,9 +3075,6 @@ msgstr ""
 msgid "Add of Automate Method was cancelled by the user"
 msgstr ""
 
-msgid "Add of Catalog Item was cancelled by the user"
-msgstr ""
-
 msgid "Add of Cloud Database \"%s\" has been successfully queued."
 msgstr ""
 
@@ -3214,6 +3226,9 @@ msgid "Add of new Provider Tag Mapping was cancelled by the user"
 msgstr ""
 
 msgid "Add of new Report was cancelled by the user"
+msgstr ""
+
+msgid "Add of new Role was cancelled by the user"
 msgstr ""
 
 msgid "Add of new Schedule was cancelled by the user"
@@ -4040,6 +4055,11 @@ msgstr ""
 msgid "Amazon access key and secret are needed to validate Amazon Settings"
 msgstr ""
 
+msgid ""
+"An Analysis or Virtual Black Box Synchronization for this VM may need to be ru"
+"n."
+msgstr ""
+
 msgid "An Ansible Playbook must be selected"
 msgstr ""
 
@@ -4060,6 +4080,9 @@ msgid ""
 "%{err_msg}"
 msgstr ""
 
+msgid "An error occurred"
+msgstr ""
+
 msgid ""
 "An error occurred while provisioning the IBM VPC instance. Instance has failed"
 " status. Check the instance in cloud.ibm.com for more information."
@@ -4071,6 +4094,12 @@ msgstr ""
 msgid ""
 "An error occurred while requesting the IBM VPC instance provision. Cannot retr"
 "ieve instance id from returned server response."
+msgstr ""
+
+msgid "An error occurred while saving"
+msgstr ""
+
+msgid "An error occurred while saving the role"
 msgstr ""
 
 msgid "An internal system error."
@@ -4116,10 +4145,10 @@ msgstr ""
 msgid "Analysis Profile \"%{name}\" was saved"
 msgstr ""
 
-msgid "Analysis Profile \"%{name}\": Error during 'update': %{message}"
+msgid "Analysis Profile is required"
 msgstr ""
 
-msgid "Analysis Profile is required"
+msgid "Analysis Profile was saved"
 msgstr ""
 
 msgid "Analysis Profiles"
@@ -4854,9 +4883,6 @@ msgstr ""
 msgid "At least one Field must be selected"
 msgstr ""
 
-msgid "At least one Product Feature must be selected"
-msgstr ""
-
 msgid "At least one Role must be selected"
 msgstr ""
 
@@ -5367,43 +5393,42 @@ msgstr ""
 msgid "Automation Jobs"
 msgstr ""
 
-msgid "Automation Manager"
-msgstr ""
-
-#, fuzzy
-msgid "Automation Manager (AWX)"
-msgid_plural "Automation Managers (AWX)"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "Automation Manager (Ansible Automation Platform)"
-msgid_plural "Automation Managers (Ansible Automation Platform)"
-msgstr[0] ""
-msgstr[1] ""
-
-#, fuzzy
-msgid "Automation Manager (Ansible Tower)"
-msgstr ""
-
-msgid "Automation Manager Provision"
-msgstr ""
-
-msgid "Automation Manager Provisioning"
-msgstr ""
-
-msgid "Automation Manager Repositories Refresh"
-msgstr ""
-
-msgid "Automation Managers"
-msgstr ""
-
-msgid "Automation Managers (AWX)"
-msgstr ""
-
-msgid "Automation Managers (Ansible Tower)"
-msgstr ""
-
 msgid "Automation Method Data"
+msgstr ""
+
+msgid "Automation Provider"
+msgstr ""
+
+#, fuzzy
+msgid "Automation Provider (AWX)"
+msgid_plural "Automation Providers (AWX)"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Automation Provider (Ansible Automation Platform)"
+msgid_plural "Automation Providers (Ansible Automation Platform)"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Automation Provider (Ansible Tower)"
+msgstr ""
+
+msgid "Automation Provider Provision"
+msgstr ""
+
+msgid "Automation Provider Provisioning"
+msgstr ""
+
+msgid "Automation Provider Repositories Refresh"
+msgstr ""
+
+msgid "Automation Providers"
+msgstr ""
+
+msgid "Automation Providers (AWX)"
+msgstr ""
+
+msgid "Automation Providers (Ansible Tower)"
 msgstr ""
 
 msgid "Automation Request"
@@ -12880,6 +12905,9 @@ msgstr ""
 msgid "Copy of %{typ} Request"
 msgstr ""
 
+msgid "Copy of Analysis Profile was cancelled by the user"
+msgstr ""
+
 msgid "Copy of Dashboard was cancelled by the user"
 msgstr ""
 
@@ -15373,6 +15401,9 @@ msgstr ""
 msgid "Descrption"
 msgstr ""
 
+msgid "Deselect All"
+msgstr ""
+
 msgid "Desired"
 msgstr ""
 
@@ -15510,6 +15541,9 @@ msgid "Detect"
 msgstr ""
 
 msgid "Development"
+msgstr ""
+
+msgid "Development Log"
 msgstr ""
 
 msgid "Device Location"
@@ -15684,9 +15718,6 @@ msgid "Dialog has to be set if Display in Catalog is chosen"
 msgstr ""
 
 msgid "Dialog name"
-msgstr ""
-
-msgid "Dialog name already exists"
 msgstr ""
 
 msgid "Dialog needs to have a label"
@@ -17287,9 +17318,6 @@ msgstr ""
 msgid "Domain name change for a system domain import is not supported."
 msgstr ""
 
-msgid "Domains"
-msgstr ""
-
 msgid "Domains:"
 msgstr ""
 
@@ -17411,6 +17439,9 @@ msgid "Download this report in text format"
 msgstr ""
 
 msgid "Draft"
+msgstr ""
+
+msgid "Drag and drop to reorder domains. Higher priority domains are listed first."
 msgstr ""
 
 msgid ""
@@ -17815,6 +17846,9 @@ msgstr ""
 msgid "Edit Event Assignment"
 msgstr ""
 
+msgid "Edit Event Log Entry"
+msgstr ""
+
 msgid "Edit Event cancelled by user"
 msgstr ""
 
@@ -17822,6 +17856,9 @@ msgid "Edit Expression"
 msgstr ""
 
 msgid "Edit Field Details"
+msgstr ""
+
+msgid "Edit File Entry"
 msgstr ""
 
 msgid "Edit Generic Object"
@@ -17887,6 +17924,9 @@ msgstr ""
 msgid "Edit PXE Image"
 msgstr ""
 
+msgid "Edit PXE Image Tags"
+msgstr ""
+
 msgid "Edit Physical Storage \"%{name}\""
 msgstr ""
 
@@ -17906,6 +17946,9 @@ msgid "Edit Provisioning Dialog"
 msgstr ""
 
 msgid "Edit Record Filter"
+msgstr ""
+
+msgid "Edit Registry Entry"
 msgstr ""
 
 msgid "Edit Report Menus"
@@ -18070,10 +18113,10 @@ msgstr ""
 msgid "Edit Tags for the selected Ansible Repositories"
 msgstr ""
 
-msgid "Edit Tags for the selected Automation Manager Credentials"
+msgid "Edit Tags for the selected Automation Provider Credentials"
 msgstr ""
 
-msgid "Edit Tags for the selected Automation Manager Repositories"
+msgid "Edit Tags for the selected Automation Provider Repositories"
 msgstr ""
 
 msgid "Edit Tags for the selected Automation Providers"
@@ -18493,6 +18536,9 @@ msgstr ""
 msgid "Edit Tags of PXE"
 msgstr ""
 
+msgid "Edit Tags of PXE Images"
+msgstr ""
+
 msgid "Edit Tags of PXE Servers"
 msgstr ""
 
@@ -18550,6 +18596,9 @@ msgstr ""
 msgid "Edit Tags of Volumes"
 msgstr ""
 
+msgid "Edit Tags of Windows Images"
+msgstr ""
+
 msgid "Edit Tags selected Pxe Servers"
 msgstr ""
 
@@ -18569,6 +18618,9 @@ msgid "Edit Visuals"
 msgstr ""
 
 msgid "Edit Windows Image"
+msgstr ""
+
+msgid "Edit Windows Image Tags"
 msgstr ""
 
 msgid "Edit a Block Storage Manager"
@@ -18814,7 +18866,7 @@ msgstr ""
 msgid "Edit of Alert Profile \"%s\" was canceled by the user."
 msgstr ""
 
-msgid "Edit of Analysis Profile \"%{name}\" was cancelled by the user"
+msgid "Edit of Analysis Profile was cancelled by the user"
 msgstr ""
 
 msgid "Edit of Automate Class \"%{name}\" was cancelled by the user"
@@ -18928,7 +18980,7 @@ msgstr ""
 msgid "Edit of Orchestration Template %s was cancelled by the user"
 msgstr ""
 
-msgid "Edit of PXE Image \"%{name}\" was cancelled by the user"
+msgid "Edit of PXE Image was cancelled by the user"
 msgstr ""
 
 msgid "Edit of PXE Server %s was cancelled by the user"
@@ -18973,6 +19025,9 @@ msgstr ""
 msgid "Edit of Repository \"%s\" was successfully initiated."
 msgstr ""
 
+msgid "Edit of Role was cancelled by the user"
+msgstr ""
+
 msgid "Edit of Schedule \"%{name}\" was cancelled by the user"
 msgstr ""
 
@@ -18997,7 +19052,7 @@ msgstr ""
 msgid "Edit of Widget \"%{title}\" was cancelled by the user"
 msgstr ""
 
-msgid "Edit of Windows Image \"%{name}\" was cancelled by the user"
+msgid "Edit of Windows Image was cancelled by the user"
 msgstr ""
 
 msgid "Edit of Zone \"%s\" was canceled by the user."
@@ -19474,10 +19529,10 @@ msgstr ""
 msgid "Embedded Automate"
 msgstr ""
 
-msgid "Embedded Automation Manager"
+msgid "Embedded Automation Provider"
 msgstr ""
 
-msgid "Embedded Automation Managers"
+msgid "Embedded Automation Providers"
 msgstr ""
 
 msgid "Embedded Methods"
@@ -20087,6 +20142,30 @@ msgstr ""
 msgid "Enter a new Dialog"
 msgstr ""
 
+msgid "Enter event log name"
+msgstr ""
+
+msgid "Enter file path"
+msgstr ""
+
+msgid "Enter filter message"
+msgstr ""
+
+msgid "Enter level"
+msgstr ""
+
+msgid "Enter number of days"
+msgstr ""
+
+msgid "Enter registry key"
+msgstr ""
+
+msgid "Enter registry value"
+msgstr ""
+
+msgid "Enter source"
+msgstr ""
+
 msgid "Enter tag category to map to"
 msgstr ""
 
@@ -20206,9 +20285,6 @@ msgid "Error during '%{task}': %{message}"
 msgstr ""
 
 msgid "Error during '%{task}': Expression element is required"
-msgstr ""
-
-msgid "Error during '%{title}': %{message}"
 msgstr ""
 
 msgid "Error during 'Add VM to service': %{message}"
@@ -20361,6 +20437,9 @@ msgid "Error requesting data from server"
 msgstr ""
 
 msgid "Error returned from %{name} event processing in Automate: %{error_message}"
+msgstr ""
+
+msgid "Error saving priority order"
 msgstr ""
 
 msgid "Error text:"
@@ -20573,9 +20652,6 @@ msgstr ""
 msgid "Event log"
 msgstr ""
 
-msgid "Event log name is required"
-msgstr ""
-
 msgid "Event name is required"
 msgstr ""
 
@@ -20780,7 +20856,7 @@ msgstr ""
 msgid "Everything under Auth Key Pairs"
 msgstr ""
 
-msgid "Everything under Automation Manager"
+msgid "Everything under Automation Provider"
 msgstr ""
 
 msgid "Everything under Availability Zones"
@@ -21724,6 +21800,9 @@ msgstr ""
 msgid "Failed to delete %s %s."
 msgstr ""
 
+msgid "Failed to refresh domain"
+msgstr ""
+
 msgid "Failover"
 msgstr ""
 
@@ -21798,9 +21877,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "File Entry"
-msgstr ""
-
-msgid "File Entry is required"
 msgstr ""
 
 msgid "File Items"
@@ -25623,9 +25699,6 @@ msgstr ""
 msgid "Invalid chart definition"
 msgstr ""
 
-msgid "Invalid configuration parameters."
-msgstr ""
-
 msgid "Invalid credential_field %{field}, allowed values are %{allowed_fields}"
 msgstr ""
 
@@ -27147,6 +27220,9 @@ msgid "Manage the port association of this Floating"
 msgstr ""
 
 msgid "ManageIQ"
+msgstr ""
+
+msgid "ManageIQ Log"
 msgstr ""
 
 msgid "ManageIQ Tag Department"
@@ -33002,6 +33078,9 @@ msgstr ""
 msgid "New Section"
 msgstr ""
 
+msgid "New Tab"
+msgstr ""
+
 msgid "New Window"
 msgstr ""
 
@@ -33194,9 +33273,6 @@ msgstr ""
 msgid "No Cloud Provider that supports instance provisioning added"
 msgstr ""
 
-msgid "No Clusters found in the current region."
-msgstr ""
-
 msgid "No Compliance Policies Found"
 msgstr ""
 
@@ -33216,9 +33292,6 @@ msgid "No Customization Templates were selected to %{button}"
 msgstr ""
 
 msgid "No Daily data is available"
-msgstr ""
-
-msgid "No Datastores found in the current region."
 msgstr ""
 
 msgid "No Date/Time value specified"
@@ -33523,9 +33596,7 @@ msgstr ""
 msgid "No data available."
 msgstr ""
 
-msgid ""
-"No drift history found, an Analysis or Virtual Black Box Synchronization for t"
-"his VM may need to be run."
+msgid "No drift history found"
 msgstr ""
 
 msgid "No entries found for %s"
@@ -33586,6 +33657,9 @@ msgid "No input to apply"
 msgstr ""
 
 msgid "No instances found"
+msgstr ""
+
+msgid "No items available"
 msgstr ""
 
 msgid "No message will be displayed"
@@ -33847,11 +33921,6 @@ msgid "Note:"
 msgstr ""
 
 msgid "Note: Ansible Playbook based resources can not be added to a Catalog Bundle"
-msgstr ""
-
-msgid ""
-"Note: Collect for All Clusters must be checked to be able to collect C & U dat"
-"a from Cloud Providers such as Red Hat OpenStack or Amazon EC2"
 msgstr ""
 
 msgid "Note: Fields marked with * are required."
@@ -35264,9 +35333,6 @@ msgid "PXE Image"
 msgstr ""
 
 msgid "PXE Image \"%{name}\""
-msgstr ""
-
-msgid "PXE Image \"%{name}\" was saved"
 msgstr ""
 
 msgid "PXE Image Menus"
@@ -36904,10 +36970,16 @@ msgstr ""
 msgid "Please select a node from the tree to edit."
 msgstr ""
 
+msgid "Please select a pattern"
+msgstr ""
+
 msgid "Please select a type."
 msgstr ""
 
 msgid "Please select an Instance Type from above"
+msgstr ""
+
+msgid "Please select at least one server"
 msgstr ""
 
 msgid "Please try again"
@@ -37607,6 +37679,9 @@ msgid "Product Updates"
 msgstr ""
 
 msgid "Production"
+msgstr ""
+
+msgid "Production Log"
 msgstr ""
 
 msgid "Profile"
@@ -39346,9 +39421,6 @@ msgid "Registry Entries"
 msgstr ""
 
 msgid "Registry Entry"
-msgstr ""
-
-msgid "Registry Entry is required"
 msgstr ""
 
 msgid "Registry Hive"
@@ -41394,6 +41466,9 @@ msgstr ""
 msgid "Role"
 msgstr ""
 
+msgid "Role \"%s\" was saved"
+msgstr ""
+
 msgid "Role \"%{name}\""
 msgstr ""
 
@@ -42423,6 +42498,9 @@ msgid "Select"
 msgstr ""
 
 msgid "Select Alerts to be Evaluated"
+msgstr ""
+
+msgid "Select All"
 msgstr ""
 
 msgid "Select All Days"
@@ -50341,11 +50419,6 @@ msgstr[1] ""
 msgid "VM and Instance \"%{name}\" successfully added to Service \"%{to_name}\""
 msgstr ""
 
-msgid ""
-"VM data will be collected for VMs under selected Hosts only. Data is collected"
-" for a Cluster and all of its Hosts when at least one Host is selected."
-msgstr ""
-
 msgid "VM has no %{table}, unable to destroy VM"
 msgstr ""
 
@@ -50874,9 +50947,6 @@ msgid "Variable"
 msgstr ""
 
 msgid "Variable Object ID"
-msgstr ""
-
-msgid "Variable name must be unique"
 msgstr ""
 
 msgid "Variables"
@@ -51436,9 +51506,6 @@ msgstr ""
 msgid "View this Orchestration Template in Catalogs"
 msgstr ""
 
-msgid "View this PXE Image"
-msgstr ""
-
 msgid "View this Policy Profile"
 msgstr ""
 
@@ -51461,9 +51528,6 @@ msgid "View this User"
 msgstr ""
 
 msgid "View this Widget"
-msgstr ""
-
-msgid "View this Windows Image"
 msgstr ""
 
 msgid "View this item"
@@ -53242,9 +53306,6 @@ msgstr ""
 msgid "Windows Image \"%{name}\""
 msgstr ""
 
-msgid "Windows Image \"%{name}\" was saved"
-msgstr ""
-
 msgid "Windows Images"
 msgstr ""
 
@@ -54217,6 +54278,9 @@ msgid "iqn"
 msgid_plural "iqn"
 msgstr[0] ""
 msgstr[1] ""
+
+msgid "item(s) selected"
+msgstr ""
 
 msgid "job template was not set"
 msgstr ""
