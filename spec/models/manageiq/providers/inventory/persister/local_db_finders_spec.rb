@@ -14,7 +14,7 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
   ######################################################################################################################
   #
   before do
-    @ems = FactoryBot.create(:ems_cloud)
+    @ems = FactoryBot.create(:ems_amazon)
   end
 
   before do
