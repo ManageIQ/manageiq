@@ -4508,7 +4508,14 @@
       :description: Check Compliance of Last Known Configuration
       :feature_type: control
       :identifier: container_group_check_compliance
-
+    - :name: Container Group Console
+      :description: Open a Console for this Container Group
+      :feature_type: control
+      :identifier: container_group_console
+    - :name: Kube Exec Console
+      :description: Access Kube Exec Console for Container Group
+      :feature_type: control
+      :identifier: container_group_kube_exec_console
 # ContainerNode
 - :name: Nodes
   :description: Everything under Container Nodes
