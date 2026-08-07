@@ -181,14 +181,14 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_cloud
-  revision: 06bbd7de009f3fb0637e618bc65b9c2f3f27e6ce
+  revision: 89a282cddde73808ec9bce0d81bbfd3aee37d43a
   branch: tal
   specs:
     manageiq-providers-ibm_cloud (0.1.0)
       ibm-cloud-sdk (~> 0.1)
       ibm_cloud_activity_tracker (~> 0.1, >= 0.1.2)
       ibm_cloud_databases (~> 0.1, >= 0.1.1)
-      ibm_cloud_global_tagging (~> 0.1, >= 0.1.2)
+      ibm_cloud_global_tagging (~> 0.1.0, >= 0.1.2)
       ibm_cloud_iam (~> 1.0)
       ibm_cloud_power (~> 3.0)
       ibm_cloud_resource_controller (~> 2.0, >= 2.0.2)
