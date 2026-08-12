@@ -72,7 +72,7 @@ module RemoteConsole
       def setup_ssl
         context = OpenSSL::SSL::SSLContext.new
         context.ssl_version = :SSLv23
-        context.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        context.verify_depth = OpenSSL::SSL::VERIFY_NONE
         ssl = OpenSSL::SSL::SSLSocket.new(@sock, context)
         ssl.sync_close = true
         ssl.hostname = @record.host_name if ssl.respond_to?(:hostname=)
