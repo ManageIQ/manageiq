@@ -52,6 +52,17 @@ RSpec.describe RemoteConsole::ClientAdapter do
           described_class.new(record, nil)
         end
       end
+
+      context "KubeExec" do
+        let(:protocol) { "kube_exec" }
+        let(:ssl) { true }
+
+        it "kube exec socket" do
+          expect(RemoteConsole::ClientAdapter::KubeExec).to receive(:new).with(record, nil)
+
+          described_class.new(record, nil)
+        end
+      end
     end
   end
 end
