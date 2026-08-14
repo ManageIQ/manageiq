@@ -73,10 +73,12 @@ RSpec.describe MiqReport::Generator do
         FactoryBot.create(:template) # filtered out by report.where_clause
         vm = FactoryBot.create(:vm, :vendor => "redhat")
 
+        expect(vm.type).to match(/Vm/)
+
         rpt = FactoryBot.create(
           :miq_report,
           :db           => "VmOrTemplate",
-          :where_clause => ["vms.type = ?", "Vm"],
+          :where_clause => ["vms.type = ?", vm.type],
           :col_order    => %w[id name host.name vendor]
         )
         rpt.generate_table(:userid => @user.userid, :where_clause => {"vms.vendor" => "redhat"})

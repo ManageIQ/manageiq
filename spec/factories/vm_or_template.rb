@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :vm_or_template do
+  factory :vm_or_template, :class => "ManageIQ::Providers::Vmware::InfraManager::Vm" do
     sequence(:name) { |n| "vm_#{seq_padded_for_sorting(n)}" }
     location        { "unknown" }
     uid_ems         { SecureRandom.uuid }
@@ -12,13 +12,13 @@ FactoryBot.define do
     end
   end
 
-  factory :template, :class => "MiqTemplate", :parent => :vm_or_template do
+  factory :template, :class => "ManageIQ::Providers::Vmware::InfraManager::Template", :parent => :vm_or_template do
     sequence(:name) { |n| "template_#{seq_padded_for_sorting(n)}" }
     template        { true }
     raw_power_state { "never" }
   end
 
-  factory(:vm,             :class => "Vm",            :parent => :vm_or_template)
+  factory(:vm,             :class => "ManageIQ::Providers::Vmware::InfraManager::Vm",       :parent => :vm_or_template)
   factory(:vm_cloud,       :class => "VmCloud",       :parent => :vm)       { cloud { true } }
   factory(:vm_infra,       :class => "VmInfra",       :parent => :vm)
   factory(:vm_server,      :class => "VmServer",      :parent => :vm)
@@ -38,7 +38,7 @@ FactoryBot.define do
     vendor { "openstack" }
   end
 
-  factory :miq_template do
+  factory :miq_template, :class => "ManageIQ::Providers::Vmware::InfraManager::Template" do
     name { "ubuntu-16.04-stable" }
     location { "Minneapolis, MN" }
     vendor { "openstack" }
