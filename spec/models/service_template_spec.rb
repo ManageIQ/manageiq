@@ -1194,6 +1194,38 @@ RSpec.describe ServiceTemplate do
       end
     end
   end
+
+  describe "#assign_custom_button" do
+    let(:service_template) { FactoryBot.create(:service_template) }
+    let(:button_1)         { FactoryBot.create(:custom_button, :applies_to_class => "ServiceTemplate", :applies_to_id => service_template.id) }
+    let(:button_2)         { FactoryBot.create(:custom_button, :applies_to_class => "ServiceTemplate", :applies_to_id => service_template.id) }
+
+    it "adds the button key to options[:button_order]" do
+      service_template.assign_custom_button(button_1.id)
+      expect(service_template.reload.options[:button_order]).to eq(["cb-#{button_1.id}"])
+    end
+
+    it "does not add a duplicate key when called twice with the same button" do
+      service_template.assign_custom_button(button_1.id)
+      service_template.assign_custom_button(button_1.id)
+      expect(service_template.reload.options[:button_order]).to eq(["cb-#{button_1.id}"])
+    end
+
+    it "retains both keys when two different buttons are assigned concurrently" do
+      # Simulate two concurrent transactions each reading the original row,
+      # then writing their own updated button_order.
+      st1 = ServiceTemplate.find(service_template.id)
+      st2 = ServiceTemplate.find(service_template.id)
+
+      st1.options[:button_order] = (st1.options[:button_order] || []) | ["cb-#{button_1.id}"]
+      st1.save!
+
+      st2.options[:button_order] = (st2.options[:button_order] || []) | ["cb-#{button_2.id}"]
+      st2.save!
+
+      expect(service_template.reload.options[:button_order]).to include("cb-#{button_2.id}")
+    end
+  end
 end
 
 def add_and_save_service(p, c)
