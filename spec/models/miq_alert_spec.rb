@@ -627,4 +627,48 @@ RSpec.describe MiqAlert do
       expect { alert.valid? }.not_to make_database_queries
     end
   end
+
+  describe "#evaluate_performance" do
+    let(:vm) { FactoryBot.create(:vm_vmware) }
+
+    let(:alert_cpu_75) do
+      FactoryBot.create(
+        :miq_alert_vm,
+        :expression => {
+          :eval_method => "realtime_performance",
+          :mode        => "internal",
+          :options     => {:perf_column => "cpu_usage_rate_average", :value_threshold => 75, :operator => ">"}
+        }
+      )
+    end
+
+    let(:alert_cpu_90) do
+      FactoryBot.create(
+        :miq_alert_vm,
+        :expression => {
+          :eval_method => "realtime_performance",
+          :mode        => "internal",
+          :options     => {:perf_column => "cpu_usage_rate_average", :value_threshold => 90, :operator => ">"}
+        }
+      )
+    end
+
+    it "scopes the alert status lookup by miq_alert_id" do
+      cpu_75_evaluated = 2.minutes.ago.utc
+      cpu_90_evaluated = 30.minutes.ago.utc
+
+      vm.miq_alert_statuses.create!(:miq_alert => alert_cpu_75, :evaluated_on => cpu_75_evaluated, :result => true)
+      vm.miq_alert_statuses.create!(:miq_alert => alert_cpu_90, :evaluated_on => cpu_90_evaluated, :result => true)
+
+      eval_options_75 = {:interval_name => "realtime", :duration => 300, :column => "cpu_usage_rate_average", :value => 75, :operator => ">"}
+      eval_options_90 = {:interval_name => "realtime", :duration => 300, :column => "cpu_usage_rate_average", :value => 90, :operator => ">"}
+
+      allow(vm).to receive(:performances_maintains_value_for_duration?) do |opts|
+        opts[:starting_on] > cpu_75_evaluated
+      end
+
+      expect(alert_cpu_75.evaluate_performance(vm, eval_options_75)).to eq(true)
+      expect(alert_cpu_90.evaluate_performance(vm, eval_options_90)).to eq(false)
+    end
+  end
 end
