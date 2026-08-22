@@ -5908,6 +5908,10 @@
         :description: Edit a VM
         :feature_type: admin
         :identifier: vm_edit
+      - :name: Edit VM Description
+        :description: Edit a VM Description
+        :feature_type: admin
+        :identifier: vm_edit_description
       - :name: Rename VM
         :description: Rename VM
         :feature_type: admin
