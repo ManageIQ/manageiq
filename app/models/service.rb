@@ -87,7 +87,8 @@ class Service < ApplicationRecord
   virtual_column :power_state,  :type => :string
   virtual_column :power_status, :type => :string
 
-  validates :name, :presence => true
+  validates :name, :presence => true, :length => {:maximum => 256}
+  validates :description, :length => {:maximum => 1024}
 
   default_value_for :visible, false
   default_value_for :initiator, 'user'
