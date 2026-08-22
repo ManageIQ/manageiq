@@ -31,7 +31,7 @@ class MiqRegion < ApplicationRecord
 
   alias_method :all_storages,           :storages
 
-  PERF_ROLLUP_CHILDREN = [:ext_management_systems, :storages]
+  PERF_ROLLUP_CHILDREN = [:ext_management_systems, :storages].freeze
 
   def ext_management_systems
     ExtManagementSystem.in_region(region_number)

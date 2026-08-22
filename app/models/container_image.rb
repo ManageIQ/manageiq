@@ -53,6 +53,7 @@ class ContainerImage < ApplicationRecord
   delegate :my_zone, :to => :ext_management_system, :allow_nil => true
 
   PERF_ROLLUP_CHILDREN = [:containers].freeze
+  PERF_ROLLUPS = {:containers => :containers, :image_tag_names => :image_tag_names}.freeze
 
   def perf_rollup_parents(interval_name = nil)
     [] unless interval_name == 'realtime' #  we only process rollups
