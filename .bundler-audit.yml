@@ -1,3 +1,0 @@
----
-ignore:
-- CVE-2026-38969 # TODO: Remove when webrick is released, see: https://github.com/ruby/webrick/issues/198 and https://github.com/ruby/webrick/pull/199; False positive - puma is our configured rails server; webrick is an indirect dev dependency pulled in from: rails → railties → rackup → webrick. It allows running a rails server with a webrick server, which we never do.
