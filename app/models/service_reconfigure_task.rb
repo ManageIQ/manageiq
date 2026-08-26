@@ -1,4 +1,4 @@
-class ServiceReconfigureTask < MiqRequestTask
+class ServiceReconfigureTask < MiqReconfigureTask
   validate :validate_request_type, :validate_state
 
   AUTOMATE_DRIVES = true
