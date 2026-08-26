@@ -49,7 +49,10 @@ module Vmdb
     end
 
     private_class_method def self.create_file_logger(log_file, logger_class)
-      logger_class.new(log_file, :progname => log_file_to_prog_name(log_file))
+      require "manageiq/loggers/file"
+      logger = ManageIQ::Loggers::File.new(log_file, :progname => log_file_to_prog_name(log_file))
+
+      create_wrapper_logger(log_file, logger_class, logger)
     end
 
     private_class_method def self.create_container_logger(log_file_name, logger_class)
@@ -106,25 +109,7 @@ module Vmdb
     end
 
     def self.contents(log, last = 1000)
-      log = log.instance_variable_get(:@logdev)&.filename.to_s if log.kind_of?(Logger)
-      return "" unless (log.kind_of?(String) || log.kind_of?(Pathname)) && File.file?(log)
-
-      if last.nil?
-        contents = File.readlines(log, :mode => "rb", :chomp => true)
-      else
-        require 'util/miq-system'
-        contents = MiqSystem.tail(log, last)
-      end
-      return "" if contents.nil? || contents.empty?
-
-      # Don't return lines containing invalid UTF8 byte sequences
-      results = contents.select do |line|
-        line&.unpack("U*") rescue nil
-      end
-
-      # Put back the utf-8 encoding which is the default for most rails libraries
-      # after opening it as binary and getting rid of the invalid UTF8 byte sequences
-      results.join("\n").force_encoding("utf-8")
+      log.try(:contents, last)&.join("\n") || ""
     end
 
     private_class_method def self.log_file_to_prog_name(log_file)

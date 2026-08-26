@@ -65,7 +65,6 @@ require "timecop"
 require "vcr"
 require "rspec"
 require "webmock/rspec"
-require "capybara"
 
 module AssumeAssetPrecompiledInTest
   def asset_precompiled?(_logical_path)

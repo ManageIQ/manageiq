@@ -118,9 +118,6 @@ module Vmdb
     # See for probable culprit https://www.github.com/rails/rails/pull/47747
     config.active_record.marshalling_format_version = 6.1
 
-    # TODO: this is the only change we had from defaults in 7.0.  See secure_headers.rb.  It's 0 in defaults.
-    config.action_dispatch.default_headers["X-XSS-Protection"] = "1; mode=block"
-
     # TODO: If disabled, causes cross repo test failures in content, ui-classic and amazon provider
     config.active_record.partial_inserts = true
 

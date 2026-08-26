@@ -30,7 +30,6 @@ gem "bcrypt",                           "~> 3.1.10",         :require => false
 gem "bootsnap",                         ">= 1.8.1",          :require => false # for psych 3.3.2+ / 4 unsafe_load
 gem "bundler",                          ">= 2.5.20", "< 5",  :require => false
 gem "byebug",                                                :require => false
-gem "color",                            "~>1.8"
 gem "config",                           "~>5.1",             :require => false
 gem "connection_pool",                  "~>2.5",             :require => false # For Dalli
 gem "dalli",                            "~>3.2.3",           :require => false
@@ -48,7 +47,7 @@ gem "kubeclient",                       "~>4.0",             :require => false #
 gem "linux_admin",                      ">=3.0", "<5",       :require => false
 gem "listen",                           "~>3.2",             :require => false
 gem "manageiq-api-client",              "~>0.7",             :require => false
-gem "manageiq-loggers",                 "~>1.2", ">= 1.2.1", :require => false
+gem "manageiq-loggers",                 "~>2.0",             :require => false
 gem "manageiq-messaging",               "~>2.1",             :require => false
 gem "manageiq-password",                "~>1.0",             :require => false
 gem "manageiq-postgres_ha_admin",       "~>3.5",             :require => false
@@ -128,12 +127,12 @@ end
 
 group :azure_stack, :manageiq_default do
   manageiq_plugin "manageiq-providers-azure_stack"
-  gem "ms_rest",              "~> 0.7.6.1",  :require => false, :source => "https://rubygems.manageiq.org"
-  gem "ms_rest_azure",        "~> 0.12.0.1",  :require => false, :source => "https://rubygems.manageiq.org"
   gem "azure_mgmt_compute",   "~> 0.22.0.1", :require => false, :source => "https://rubygems.manageiq.org"
   gem "azure_mgmt_monitor",   "~> 0.19.0.1", :require => false, :source => "https://rubygems.manageiq.org"
   gem "azure_mgmt_network",   "~> 0.26.1.1", :require => false, :source => "https://rubygems.manageiq.org"
   gem "azure_mgmt_resources", "~> 0.18.2.1", :require => false, :source => "https://rubygems.manageiq.org"
+  gem "ms_rest",              "~> 0.7.6.1",  :require => false, :source => "https://rubygems.manageiq.org"
+  gem "ms_rest_azure",        "~> 0.12.0.1", :require => false, :source => "https://rubygems.manageiq.org"
 end
 
 group :cisco_intersight, :manageiq_default do
@@ -287,7 +286,7 @@ end
 group :web_server, :manageiq_default do
   gem "puma",                           "~>8.0", ">=8.0.2"
   gem "ruby-dbus" # For external auth
-  gem "secure_headers",                 "~>3.9"
+  gem "secure_headers",                 "~>7.3"
 end
 
 group :web_socket, :manageiq_default do
@@ -308,9 +307,8 @@ group :development do
 end
 
 group :test do
-  gem "brakeman",                       "~>6.2",             :require => false
+  gem "brakeman",                       "~>8.0",             :require => false
   gem "bundler-audit",                                       :require => false
-  gem "capybara",                       "~>2.18.0",          :require => false
   gem "db-query-matchers",              "~>0.15.0"
   gem "factory_bot",                    "~>6.5",             :require => false
   gem "simplecov",                      ">=0.21.2",          :require => false

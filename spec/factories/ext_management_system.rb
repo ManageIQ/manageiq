@@ -313,11 +313,6 @@ FactoryBot.define do
           :class   => "ManageIQ::Providers::Openstack::NetworkManager",
           :parent  => :ems_network
 
-  factory :ems_nuage_network,
-          :aliases => ["manageiq/providers/nuage/network_manager"],
-          :class   => "ManageIQ::Providers::Nuage::NetworkManager",
-          :parent  => :ems_network
-
   factory :ems_nsxt_network,
           :aliases => ["manageiq/providers/nsxt/network_manager"],
           :class   => "ManageIQ::Providers::Nsxt::NetworkManager",

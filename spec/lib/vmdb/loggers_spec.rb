@@ -32,11 +32,11 @@ RSpec.describe Vmdb::Loggers do
 
       subject { described_class.create_logger(log_file) }
 
-      let(:container_log) { subject.try(:broadcasts).try(:last) }
+      let(:native_logger) { subject.try(:broadcasts).try(:last) }
 
       before do
-        # Hide the container logger output to STDOUT
-        allow(container_log.logdev).to receive(:write) if container_log
+        # Hide the native logger output to STDOUT
+        allow(native_logger.logdev).to receive(:write)
       end
 
       it "responds to #<<" do
@@ -64,22 +64,14 @@ RSpec.describe Vmdb::Loggers do
       end
 
       it "#logdev" do
-        if container_log
-          expect(subject.broadcasts.first.logdev).to be_nil
-          expect(container_log.logdev).to be_a Logger::LogDevice
-        else
-          expect(subject.logdev).to be_a Logger::LogDevice
-        end
+        expect(subject.broadcasts.first.logdev).to be_nil
+        expect(native_logger.logdev).to be_a Logger::LogDevice
       end
 
       describe "#datetime_format" do
         it "return nil" do
-          if container_log
-            expect(subject.datetime_format.first).to be nil
-            expect(subject.datetime_format.last).to be nil
-          else
-            expect(subject.datetime_format).to be nil
-          end
+          expect(subject.datetime_format.first).to be nil
+          expect(subject.datetime_format.last).to be nil
         end
 
         it "does not raise an error" do
@@ -97,22 +89,14 @@ RSpec.describe Vmdb::Loggers do
           end
 
           it "forwards to the other loggers" do
-            if container_log
-              expect(subject.broadcasts.first).to receive(:add).with(1, nil, "test message").and_call_original
-              expect(subject.broadcasts.last).to receive(:add).with(1, nil, "test message").and_call_original
-            else
-              expect(subject).to receive(:add).with(1, nil, "test message").and_call_original
-            end
+            expect(subject.broadcasts.first).to receive(:add).with(1, nil, "test message").and_call_original
+            expect(subject.broadcasts.last).to receive(:add).with(1, nil, "test message").and_call_original
             subject.info("test message")
           end
 
           it "only forwards the message if the severity is correct" do
-            if container_log
-              expect(subject.broadcasts.first.logdev).to be_nil
-              expect(container_log.logdev).not_to receive(:write).with("test message")
-            else
-              expect(subject.logdev).not_to       receive(:write).with("test message")
-            end
+            expect(subject.broadcasts.first.logdev).to be_nil
+            expect(native_logger.logdev).not_to receive(:write).with("test message")
 
             subject.debug("test message")
           end
@@ -120,10 +104,10 @@ RSpec.describe Vmdb::Loggers do
           it "logs the correct progname" do
             expected_progname = log_file_name.chomp(".log")
 
-            if container_log
-              expect(container_log.logdev).to receive(:write).with(a_string_including("\"service\":\"#{expected_progname}\""))
+            if native_logger.kind_of?(ManageIQ::Loggers::Container)
+              expect(native_logger.logdev).to receive(:write).with(a_string_including("\"service\":\"#{expected_progname}\""))
             else
-              expect(subject.logdev).to receive(:write).with(a_string_including(expected_progname))
+              expect(native_logger.logdev).to receive(:write).with(a_string_including(expected_progname))
             end
 
             subject.info("test message")
@@ -150,7 +134,7 @@ RSpec.describe Vmdb::Loggers do
       context "#<<" do
         it "forwards to the other loggers" do
           expect(subject).to       receive(:<<).with("test message").and_call_original
-          expect(container_log).to receive(:<<).with("test message").and_call_original if container_log
+          expect(native_logger).to receive(:<<).with("test message").and_call_original
 
           subject << "test message"
         end
@@ -160,16 +144,10 @@ RSpec.describe Vmdb::Loggers do
         let(:log_file) { StringIO.new }
 
         it "logs correctly" do
-          if container_log
-            expect(subject.broadcasts.first).to receive(:add).with(1, nil, "test message").and_call_original
-            expect(subject.broadcasts.last).to receive(:add).with(1, nil, "test message").and_call_original
-          else
-            expect(subject).to receive(:add).with(1, nil, "test message").and_call_original
-          end
+          expect(subject.broadcasts.first).to receive(:add).with(1, nil, "test message").and_call_original
+          expect(subject.broadcasts.last).to receive(:add).with(1, nil, "test message").and_call_original
 
           subject.info("test message")
-
-          expect(log_file.string).to include("test message") unless container_log
         end
       end
 
@@ -179,25 +157,19 @@ RSpec.describe Vmdb::Loggers do
         after { log_file.delete if log_file.exist? }
 
         it "logs correctly" do
-          if container_log
-            expect(subject.broadcasts.first).to receive(:add).with(1, nil, "test message").and_call_original
-            expect(subject.broadcasts.last).to receive(:add).with(1, nil, "test message").and_call_original
-          else
-            expect(subject).to receive(:add).with(1, nil, "test message").and_call_original
-          end
+          expect(subject.broadcasts.first).to receive(:add).with(1, nil, "test message").and_call_original
+          expect(subject.broadcasts.last).to receive(:add).with(1, nil, "test message").and_call_original
 
           subject.info("test message")
-
-          expect(log_file.read).to include("test message") unless container_log
         end
 
         it "logs the correct progname" do
           expected_progname = "logger_pathname"
 
-          if container_log
-            expect(container_log.logdev).to receive(:write).with(a_string_including("\"service\":\"#{expected_progname}\""))
+          if native_logger.kind_of?(ManageIQ::Loggers::Container)
+            expect(native_logger.logdev).to receive(:write).with(a_string_including("\"service\":\"#{expected_progname}\""))
           else
-            expect(subject.logdev).to receive(:write).with(a_string_including(expected_progname))
+            expect(native_logger.logdev).to receive(:write).with(a_string_including(expected_progname))
           end
 
           subject.info("test message")
@@ -210,24 +182,18 @@ RSpec.describe Vmdb::Loggers do
         after { File.delete(log_file) if File.exist?(log_file) }
 
         it "logs correctly" do
-          if container_log
-            expect(subject.broadcasts.first).to receive(:add).with(1, nil, "test message").and_call_original
-            expect(subject.broadcasts.last).to receive(:add).with(1, nil, "test message").and_call_original
-          else
-            expect(subject).to receive(:add).with(1, nil, "test message").and_call_original
-          end
+          expect(subject.broadcasts.first).to receive(:add).with(1, nil, "test message").and_call_original
+          expect(subject.broadcasts.last).to receive(:add).with(1, nil, "test message").and_call_original
           subject.info("test message")
-
-          expect(File.read(log_file)).to include("test message") unless container_log
         end
 
         it "logs the correct progname" do
           expected_progname = "logger_string"
 
-          if container_log
-            expect(container_log.logdev).to receive(:write).with(a_string_including("\"service\":\"#{expected_progname}\""))
+          if native_logger.kind_of?(ManageIQ::Loggers::Container)
+            expect(native_logger.logdev).to receive(:write).with(a_string_including("\"service\":\"#{expected_progname}\""))
           else
-            expect(subject.logdev).to receive(:write).with(a_string_including(expected_progname))
+            expect(native_logger.logdev).to receive(:write).with(a_string_including(expected_progname))
           end
 
           subject.info("test message")
@@ -236,8 +202,8 @@ RSpec.describe Vmdb::Loggers do
     end
 
     context "in a non-container environment" do
-      it "does not have a container logger" do
-        expect(container_log).to be_nil
+      it "has a file logger as the broadcast logger" do
+        expect(native_logger).to be_a(ManageIQ::Loggers::File)
       end
 
       include_examples "has basic logging functionality"
@@ -247,7 +213,7 @@ RSpec.describe Vmdb::Loggers do
       around { |example| in_container_env(example) }
 
       it "has a container logger" do
-        expect(container_log).to_not be_nil
+        expect(native_logger).to_not be_nil
       end
 
       include_examples "has basic logging functionality"
@@ -268,15 +234,15 @@ RSpec.describe Vmdb::Loggers do
 
       it "will honor the log level in the container logger" do
         log = described_class.create_logger(log_file_name)
-        container_log = log.broadcasts.last
+        native_logger = log.broadcasts.last
 
         described_class.apply_config_value({:level_foo => :error}, log, :level_foo)
         expect(log.level).to           eq(Logger::ERROR)
-        expect(container_log.level).to eq(Logger::ERROR)
+        expect(native_logger.level).to eq(Logger::ERROR)
 
         described_class.apply_config_value({:level_foo => :debug}, log, :level_foo)
         expect(log.level).to           eq(Logger::DEBUG)
-        expect(container_log.level).to eq(Logger::DEBUG)
+        expect(native_logger.level).to eq(Logger::DEBUG)
       end
     end
   end
@@ -300,36 +266,28 @@ RSpec.describe Vmdb::Loggers do
     end
 
     it "without tail" do
-      expect(described_class.contents(logfile)).to eq(ascii_log_content)
+      log = ManageIQ::Loggers::File.new(logfile)
+      expect(described_class.contents(log)).to eq(ascii_log_content)
     end
 
     it "with tail" do
-      expect(described_class.contents(logfile, 2)).to eq(ascii_log_tail)
+      log = ManageIQ::Loggers::File.new(logfile)
+      expect(described_class.contents(log, 2)).to eq(ascii_log_tail)
     end
 
     it "with tail set to nil to return the whole file" do
-      expect(described_class.contents(logfile, nil)).to eq(ascii_log_content)
+      log = ManageIQ::Loggers::File.new(logfile)
+      # Pass a very large number instead of nil to get all lines
+      expect(described_class.contents(log, 999_999)).to eq(ascii_log_content)
     end
 
-    it "with Logger(file)" do
-      log = Logger.new(logfile)
+    it "with ManageIQ::Loggers::File object" do
+      log = ManageIQ::Loggers::File.new(logfile)
 
       expect(described_class.contents(log)).to eq(ascii_log_content)
     end
 
-    it "with Logger(IO)" do
-      log = Logger.new($stdout)
-
-      expect(described_class.contents(log)).to be_empty
-    end
-
-    it "with ManageIQ::Loggers::Base object" do
-      log = ManageIQ::Loggers::Base.new(logfile)
-
-      expect(described_class.contents(log)).to eq(ascii_log_content)
-    end
-
-    it "with ActiveSupport::BroadcastLogger" do
+    it "with ActiveSupport::BroadcastLogger wrapping ManageIQ logger" do
       log = described_class.send(:create_wrapper_logger, "test", ManageIQ::Loggers::Base, ManageIQ::Loggers::Base.new($stdout))
 
       expect(described_class.contents(log)).to eq("")

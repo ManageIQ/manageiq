@@ -1,20 +1,90 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "Remote Code Execution",
+      "warning_code": 25,
+      "fingerprint": "00c0384c2d70adf918b708c1fac68352b8a594cc8af8c1b4373b90324ae8f67f",
+      "check_name": "Deserialize",
+      "message": "Use of `Marshal.load` may be dangerous",
+      "file": "(engine:manageiq-ui-classic) app/controllers/application_controller/compare.rb",
+      "line": 503,
+      "link": "https://brakemanscanner.org/docs/warning_types/unsafe_deserialization",
+      "code": "Marshal.load(session[:miq_compare])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ApplicationController::Compare",
+        "method": "load_compare_from_session"
+      },
+      "user_input": null,
+      "confidence": "Weak",
+      "cwe_id": [
+        502
+      ],
+      "note": "The usage of Marshal.load in MiqCompare code is safe because the compare object is safely designed to be Marshal loaded. Only the helper methods are used to add/remove sections and ids."
+    },
+    {
+      "warning_type": "Dangerous Eval",
+      "warning_code": 13,
+      "fingerprint": "62fb268ba380c405b5cf3871a4ac5a4d41549e81b4d4f7fd8b94f183070995da",
+      "check_name": "Evaluation",
+      "message": "Dynamic code evaluation",
+      "file": "(engine:manageiq-automation_engine) lib/miq_automation_engine/engine/miq_ae_engine/miq_ae_assertion.rb",
+      "line": 67,
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_eval/",
+      "code": "ISOLATED_BINDING.eval(assertion)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MiqAeEngine::MiqAeAssertion",
+        "method": "self.evaluate"
+      },
+      "user_input": null,
+      "confidence": "Weak",
+      "cwe_id": [
+        913,
+        95
+      ],
+      "note": "This code is safe because it is called after a Prism-based parsing and analysis ensuring only basic literals and comparisons are allowed and is executed in an isolated binding."
+    },
+    {
+      "warning_type": "Remote Code Execution",
+      "warning_code": 25,
+      "fingerprint": "87ff72d55f0cfeaec86187576bc40c69bde710fec3e9f4bcb0e00773667ee684",
+      "check_name": "Deserialize",
+      "message": "Use of `Marshal.load` may be dangerous",
+      "file": "app/models/mixins/scanning_mixin.rb",
+      "line": 24,
+      "link": "https://brakemanscanner.org/docs/warning_types/unsafe_deserialization",
+      "code": "Marshal.load(data_array)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ScanningMixin::ClassMethods",
+        "method": "save_metadata"
+      },
+      "user_input": null,
+      "confidence": "Weak",
+      "cwe_id": [
+        502
+      ],
+      "note": "This usage of Marshal.load is safe because the incoming data_array is only ever called with XML payloads built by the internal scanning tools and not user input."
+    },
+    {
       "warning_type": "Command Injection",
       "warning_code": 14,
-      "fingerprint": "57a67fd8c12d36c64fa21e5e7a93eeb6eac1f6fd4e6a1666f98c503574c46360",
+      "fingerprint": "bf6076072707342e27ea24d30ed2d0e12183017f3ffa21d86f916831ffbe53ec",
       "check_name": "Execute",
       "message": "Possible command injection",
       "file": "lib/ansible/runner.rb",
-      "line": 451,
+      "line": 464,
       "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
       "code": "`#{(File.join(venv_bin_path, \"ansible\") or \"ansible\")} --version 2>/dev/null`",
       "render_path": null,
       "location": {
         "type": "method",
         "class": "Ansible::Runner",
-        "method": "s(:self).ansible_version_raw"
+        "method": "self.ansible_version_raw"
       },
       "user_input": "File.join(venv_bin_path, \"ansible\")",
       "confidence": "Medium",
@@ -24,39 +94,66 @@
       "note": "This method is safe because it only uses hardcoded paths, which cannot be changed by user input."
     },
     {
-      "warning_type": "Unmaintained Dependency",
-      "warning_code": 121,
-      "fingerprint": "9a3951031616a07c8e02c86652f537e92c08685da97f5ec2b12d5d3602b55bb8",
-      "check_name": "EOLRuby",
-      "message": "Support for Ruby 3.1.7 ended on 2025-03-31",
-      "file": "Gemfile.lock",
-      "line": 1492,
-      "link": "https://brakemanscanner.org/docs/warning_types/unmaintained_dependency/",
-      "code": null,
+      "warning_type": "Remote Code Execution",
+      "warning_code": 25,
+      "fingerprint": "cb27a60bfa5d987be8d0d56de1a4d49a11b358e225c6a594e5d41b03191d745d",
+      "check_name": "Deserialize",
+      "message": "Use of `Marshal.load` may be dangerous",
+      "file": "app/models/miq_queue.rb",
+      "line": 128,
+      "link": "https://brakemanscanner.org/docs/warning_types/unsafe_deserialization",
+      "code": "Marshal.load(msg_data)",
       "render_path": null,
-      "location": null,
+      "location": {
+        "type": "method",
+        "class": "MiqQueue",
+        "method": "data"
+      },
       "user_input": null,
-      "confidence": "High",
+      "confidence": "Weak",
       "cwe_id": [
-        1104
+        502
       ],
-      "note": "Ruby 3.1 is only in place as a backup. Ruby 3.3 is the shipped version."
+      "note": "This usage of Marshal.load is safe because msg_data is exclusively written by MiqQueue#data= (which calls Marshal.dump) and by internal model callers that also call Marshal.dump prior to enqueuing. No API or controller exposes this column to external input."
+    },
+    {
+      "warning_type": "Remote Code Execution",
+      "warning_code": 25,
+      "fingerprint": "e72c6f091ead4fdcb9741a336b03e5a4253ce7735a99aaae00f9abfa286e06e2",
+      "check_name": "Deserialize",
+      "message": "Use of `Marshal.load` may be dangerous",
+      "file": "app/models/session.rb",
+      "line": 68,
+      "link": "https://brakemanscanner.org/docs/warning_types/unsafe_deserialization",
+      "code": "Marshal.load(Base64.decode64(data.split(\"\\n\").join))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Session",
+        "method": "raw_data"
+      },
+      "user_input": null,
+      "confidence": "Weak",
+      "cwe_id": [
+        502
+      ],
+      "note": "This usage or Marshal.load is safe because session objects are Base64 encoded Marshal dumps and are controlled by the server."
     },
     {
       "warning_type": "Command Injection",
       "warning_code": 14,
-      "fingerprint": "c3234e1d86168cb0ac61761b99bdbbf493491fe9b1b5f808889c46e17a6aa781",
+      "fingerprint": "fab67f2dd84905cb6b564bf571bfedcdf06b1ebc5d6820896b00fd30a8ffda5d",
       "check_name": "Execute",
       "message": "Possible command injection",
       "file": "lib/ansible/runner.rb",
-      "line": 445,
+      "line": 458,
       "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
       "code": "`python#{version} -c 'import site; print(\":\".join(site.getsitepackages()))'`",
       "render_path": null,
       "location": {
         "type": "method",
         "class": "Ansible::Runner",
-        "method": "s(:self).python_path_raw"
+        "method": "self.python_path_raw"
       },
       "user_input": "version",
       "confidence": "Medium",
@@ -66,6 +163,5 @@
       "note": "This method is safe because it verifies that the version is in the form #.#."
     }
   ],
-  "updated": "2025-06-16 22:28:03 -0400",
-  "brakeman_version": "6.2.2"
+  "brakeman_version": "8.0.5"
 }
