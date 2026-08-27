@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :configuration_script_base do
     sequence(:name) { |n| "Configuration_script_base_#{seq_padded_for_sorting(n)}" }
-    sequence(:manager_ref) { SecureRandom.random_number(100) }
+    sequence(:manager_ref)
     variables { {:instance_ids => ['i-3434']} }
   end
 
