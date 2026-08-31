@@ -857,7 +857,7 @@ RSpec.describe Rbac::Filterer do
         end
       end
 
-      context "with accessible_tenant_ids filtering (strategy = nil aka tenant only)" do
+      context "with accessible_tenant_ids filtering (strategy = :descendant_ids)" do
         it "can see tenant's request task" do
           task = FactoryBot.create(:miq_request_task, :tenant => owner_tenant)
           results = described_class.search(:class => "MiqRequestTask", :miq_group => owner_group).first
@@ -870,10 +870,10 @@ RSpec.describe Rbac::Filterer do
           expect(results).to match_array []
         end
 
-        it "can't see descendant tenant's request task" do
-          _task = FactoryBot.create(:miq_request_task, :tenant => child_tenant)
+        it "can see descendant tenant's request task" do
+          task = FactoryBot.create(:miq_request_task, :tenant => child_tenant)
           results = described_class.search(:class => "MiqRequestTask", :miq_group => owner_group).first
-          expect(results).to match_array []
+          expect(results).to match_array [task]
         end
       end
 
