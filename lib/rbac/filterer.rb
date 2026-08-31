@@ -141,7 +141,7 @@ module Rbac
       'MiqAeNamespace'         => :ancestor_ids,
       'MiqGroup'               => :descendant_ids,
       'MiqRequest'             => :descendant_ids,
-      'MiqRequestTask'         => nil, # tenant only
+      'MiqRequestTask'         => :descendant_ids,
       'MiqTemplate'            => :ancestor_ids,
       'NetworkPort'            => :descendant_ids,
       'NetworkRouter'          => :descendant_ids,
