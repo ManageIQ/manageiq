@@ -18,6 +18,6 @@ class OrchestrationStackReconfigureTask < MiqReconfigureTask
   end
 
   def do_request
-    signal :reconfigure_in_provider
+    signal :run_reconfigure
   end
 end
