@@ -105,7 +105,7 @@ describe ManageIQ::Reporting::Formatter::C3 do
 
     it "has right data" do
       expect(report.chart[:data][:columns][0].count).to eq(report.table.data.count + 1)
-      expect(report.chart[:data][:columns][0]).to eq(["x", "2017-08-19T00:00:00.000Z", "2017-08-20T00:00:00.000Z"])
+      expect(report.chart[:data][:columns][0]).to eq(["x", "08/19", "08/20"])
       expect(report.chart[:data][:columns][1]).to eq(["1", 19_986.0, 205_632.0])
       expect(report.chart[:data][:columns][2]).to eq(["2", 41_584.0, 41_584.0])
     end
@@ -132,7 +132,7 @@ describe ManageIQ::Reporting::Formatter::C3 do
 
     it "has right data" do
       expect(report.chart[:data][:columns][0].count).to eq(report.table.data.count + 1)
-      expect(report.chart[:data][:columns][0]).to eq(["x", "2017-08-19T00:00:00.000Z", "2017-08-20T00:00:00.000Z"])
+      expect(report.chart[:data][:columns][0]).to eq(["x", "08/19", "08/20"])
       expect(report.chart[:data][:columns][1]).to eq(["1", 19_986.0, 205_632.0])
       expect(report.chart[:data][:columns][2]).to eq(["2", 41_584.0, 41_584.0])
     end

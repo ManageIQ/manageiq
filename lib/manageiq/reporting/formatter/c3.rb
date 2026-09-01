@@ -151,18 +151,26 @@ module ManageIQ
           mri.chart[:axis][:x] = {:type => 'timeseries', :tick => {}}
           # set flag for performance chart
           mri.chart[:miq][:performance_chart] = true
-          # this conditions are taken from build_performance_chart_area method from chart_commons.rb
-          if mri.db.include?("Daily") || (mri.where_clause && mri.where_clause.include?("daily"))
-            # set format for parsing
-            mri.chart[:data][:xFormat] = '%m/%d'
-            # set format for labels
-            mri.chart[:axis][:x][:tick][:format] = '%m/%d'
-          elsif mri.extras[:realtime] == true
-            mri.chart[:data][:xFormat] = '%H:%M:%S'
-            mri.chart[:axis][:x][:tick][:format] = '%H:%M:%S'
-          else
-            mri.chart[:data][:xFormat] = '%H:%M'
-            mri.chart[:axis][:x][:tick][:format] = '%H:%M'
+          # these conditions are taken from build_performance_chart_area method from chart_commons.rb
+          fmt = if mri.db.include?("Daily") || (mri.where_clause && mri.where_clause.include?("daily"))
+                  '%m/%d'
+                elsif mri.extras[:realtime] == true
+                  '%H:%M:%S'
+                else
+                  '%H:%M'
+                end
+          # set format for parsing and for axis labels
+          mri.chart[:data][:xFormat] = fmt
+          mri.chart[:axis][:x][:tick][:format] = fmt
+          # The x column contains values that were passed through add_axis_category_text
+          # → slice_legend, which converts Time objects to ISO 8601 strings via .iso8601(3).
+          # Those ISO strings cannot be parsed by C3 using the short xFormat (e.g. '%m/%d').
+          # Re-parse each value and reformat it to match xFormat so C3 can read it.
+          x_col = mri.chart[:data][:columns].first # ['x', "2024-06-17T00:00:00.000Z", ...]
+          x_col.map!.with_index do |v, i|
+            next v if i.zero?
+            time = v.respond_to?(:strftime) ? v : Time.parse(v)
+            time.strftime(fmt)
           end
         end
 
