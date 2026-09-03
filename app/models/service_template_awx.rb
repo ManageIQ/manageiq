@@ -61,7 +61,11 @@ class ServiceTemplateAwx < ServiceTemplateAutomation
   end
 
   def my_zone
-    zone&.name || job_template.manager.try(:my_zone)
+    # Determine the zone from either the Service directly, a ConfigurationScript in the service_resources (deprecated type),
+    # or a MiqRequest in the service_resources.
+    zone&.name ||
+      job_template&.manager.try(:my_zone) ||
+      service_resources.find_by(:resource_type => 'MiqRequest')&.resource&.my_zone
   end
 
   private

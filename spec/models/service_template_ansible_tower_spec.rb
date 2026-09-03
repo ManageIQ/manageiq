@@ -144,5 +144,52 @@ RSpec.describe ServiceTemplateAnsibleTower do
         expect(service_template.my_zone).to eq(nil)
       end
     end
+
+    context 'with an explicit zone set on the service template' do
+      let!(:server_zone) { EvmSpecHelper.local_miq_server.zone }
+      let(:explicit_zone) { FactoryBot.create(:zone, :name => 'explicit_zone') }
+      let(:service_template_with_zone) { FactoryBot.create(:service_template_ansible_tower, :zone => explicit_zone) }
+
+      it 'returns the explicit zone even when it differs from MiqServer.my_zone' do
+        expect(service_template_with_zone.my_zone).to eq(explicit_zone.name)
+        expect(explicit_zone.name).not_to eq(server_zone.name)
+      end
+    end
+
+    context 'with no zone, no job_template, and no MiqRequest in service_resources' do
+      it 'returns nil' do
+        service_template = FactoryBot.create(:service_template_ansible_tower)
+        expect(service_template.my_zone).to be_nil
+      end
+    end
+
+    context 'with a MiqRequest in service_resources' do
+      let!(:zone) { EvmSpecHelper.local_miq_server.zone }
+      let(:miq_request) { FactoryBot.create(:automation_request) }
+      let(:service_template_no_job_template) { FactoryBot.create(:service_template_ansible_tower) }
+
+      before do
+        service_template_no_job_template.service_resources.create!(:resource => miq_request)
+      end
+
+      it 'takes the zone from the MiqRequest' do
+        expect(service_template_no_job_template.my_zone).to eq(zone.name)
+      end
+    end
+
+    context 'with a MiqRequest in service_resources and a job template without a manager' do
+      let!(:zone) { EvmSpecHelper.local_miq_server.zone }
+      let(:job_template_no_manager) { FactoryBot.create(:configuration_script, :manager => nil) }
+      let(:service_template_no_manager) { FactoryBot.create(:service_template_ansible_tower, :job_template => job_template_no_manager) }
+      let(:miq_request) { FactoryBot.create(:automation_request) }
+
+      before do
+        service_template_no_manager.service_resources.create!(:resource => miq_request)
+      end
+
+      it 'falls back to the MiqRequest zone when job_template manager is absent' do
+        expect(service_template_no_manager.my_zone).to eq(zone.name)
+      end
+    end
   end
 end
