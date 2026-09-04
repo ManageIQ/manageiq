@@ -363,7 +363,7 @@ class Service < ApplicationRecord
 
   def validate_reconfigure
     ra = reconfigure_resource_action
-    ra && ra.dialog_id && ra.fqname.present?
+    ra && ra.dialog_id && ( ra.fqname.present? || ra.configuration_script_payload.present? )
   end
 
   def reconfigure_resource_action
