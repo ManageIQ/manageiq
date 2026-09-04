@@ -1,4 +1,4 @@
-class ServiceReconfigureTask < MiqRequestTask
+class ServiceReconfigureTask < MiqReconfigureTask
   validate :validate_request_type, :validate_state
 
   AUTOMATE_DRIVES = true
@@ -17,6 +17,13 @@ class ServiceReconfigureTask < MiqRequestTask
 
   def after_request_task_create
     update(:description => get_description)
+    return if automate_drives?
+
+    # For services that drive reconfigure without Automate (e.g. ServiceEmbeddedTerraform), dispatch per-resource subtasks.
+    Service.where(:id => options[:src_id]).each do |svc|
+      _log.info("Creating reconfigure subtasks for service task <#{self.class.name}:#{id}>, service <#{svc.id}>")
+      create_reconfigure_subtasks(svc, self)
+    end
   end
 
   def deliver_to_automate(req_type = request_type, zone = nil)
@@ -75,6 +82,89 @@ class ServiceReconfigureTask < MiqRequestTask
       update_and_notify_parent(:state   => "finished",
                                :status  => "Error",
                                :message => "#{request_class::TASK_DESCRIPTION} failed")
+    end
+  end
+
+  private
+
+  def automate_drives?
+    source.class.const_defined?(:AUTOMATE_DRIVES) ? source.class::AUTOMATE_DRIVES : true
+  end
+
+  def create_reconfigure_subtasks(parent_service, parent_task)
+    parent_service.service_resources.collect do |svc_rsc|
+      next unless svc_rsc.resource.try(:reconfigurable?)
+      next if svc_rsc.resource.respond_to?(:retired?) && svc_rsc.resource.retired?
+
+      nh = attributes.except("id", "created_on", "updated_on", "type", "state", "status", "message")
+      nh['options'] = options.except(:child_tasks)
+
+      new_task = create_task(svc_rsc, parent_service, nh, parent_task)
+
+      miq_request.miq_request_tasks << new_task
+      new_task.tap(&:deliver_queue)
+    end.compact!
+  end
+
+  def create_task(svc_rsc, parent_service, nh, parent_task)
+    task_type = reconfigure_task_type(svc_rsc.resource)
+    task_type.new(nh).tap do |task|
+      task.options.merge!(
+        :src_ids             => [svc_rsc.resource.id],
+        :service_resource_id => svc_rsc.id,
+        :parent_service_id   => parent_service.id,
+        :parent_task_id      => parent_task.id
+      )
+
+      workflow_id = parent_service.reconfigure_resource_action&.configuration_script_id
+      task.options[:configuration_script_payload_id] = workflow_id if workflow_id
+
+      task.request_type = derive_request_type(task_type)
+      task.source       = svc_rsc.resource
+
+      parent_task.miq_request_tasks << task
+
+      task.save!
+    end
+  end
+
+  private
+
+  def reconfigure_task_type(resource)
+    ems_reconfigure_task_class(resource) || default_reconfigure_task_class(resource.class)
+  end
+
+  def ems_reconfigure_task_class(resource)
+    return nil unless resource.respond_to?(:ext_management_system)
+
+    ems = resource.ext_management_system
+    return nil unless ems
+
+    # Call the appropriate EMS method based on resource type
+    method_name = reconfigure_task_class_method_name(resource.class)
+
+    ems.class.send(method_name)
+  end
+
+  def reconfigure_task_class_method_name(resource_type)
+    # Convert resource class name to method name
+    #?????????? Vm -> vm_reconfigure_task_class
+    # OrchestrationStack -> orchestration_stack_reconfigure_task_class
+    resource_class_name = resource_type.base_model.name.underscore
+    "#{resource_class_name}_reconfigure_task_class"
+  end
+
+  def default_reconfigure_task_class(resource_type)
+    "#{resource_type.base_class.name}ReconfigureTask".safe_constantize || "#{resource_type.name.demodulize}ReconfigureTask".safe_constantize
+  end
+
+   def derive_request_type(task_type)
+    # For provider-specific task classes, use the base model's request_type
+    # e.g., ManageIQ::Providers::EmbeddedTerraform::AutomationManager::Reconfigure -> orchestration_stack_reconfigure
+    if task_type.respond_to?(:base_model) && task_type.base_model != task_type
+      task_type.base_model.name.underscore[0..-6]
+    else
+      task_type.name.underscore[0..-6]
     end
   end
 end
