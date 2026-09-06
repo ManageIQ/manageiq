@@ -1,7 +1,13 @@
 describe ManageIQ::Session::MemoryStoreAdapter do
-  describe "#enable_rack_session_debug_logger" do
-    let(:adapter) { described_class.new }
+  let(:adapter) { described_class.new }
 
+  describe "#type" do
+    it "returns :memory_store" do
+      expect(adapter.type).to eq(:memory_store)
+    end
+  end
+
+  describe "#enable_rack_session_debug_logger" do
     it "returns nil in production environment" do
       allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new("production"))
       expect(adapter.enable_rack_session_debug_logger).to be_nil
