@@ -149,11 +149,12 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-embedded_terraform
-  revision: bcd9fdf73ece130d42676c559f9fc7d3dc66cacf
+  revision: 98d325c4cf7d05e911d38b18562d522b48966381
   branch: tal
   specs:
     manageiq-providers-embedded_terraform (0.1.0)
       jwt (~> 2.2)
+      rubyzip (~> 3.6)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-foreman
