@@ -22,13 +22,13 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-automation_engine
-  revision: 2ec4bd39dd4ed7d3665b65e8352103877d928b0a
+  revision: 3a57be7fcad10618d6327b59f27e34d32cf7de51
   branch: tal
   specs:
     manageiq-automation_engine (0.1.0)
       drb
       prism
-      rubyzip (~> 2.0.0)
+      rubyzip (~> 3.6)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-consumption
@@ -1327,7 +1327,7 @@ GEM
       sexp_processor (~> 4.16)
     rubyntlm (0.6.5)
       base64
-    rubyzip (2.0.0)
+    rubyzip (3.6.0)
     rufus-lru (1.0.7)
     rufus-scheduler (3.9.2)
       fugit (~> 1.1, >= 1.11.1)
