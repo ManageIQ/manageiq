@@ -329,13 +329,12 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-scvmm
-  revision: 14bcc552c3a43e60f2a45ccc9571f99c0505d18f
+  revision: a3eb4c2c55cb81c8505f6d9062dd6d3b0b948c5d
   branch: tal
   specs:
     manageiq-providers-scvmm (0.1.0)
       addressable (~> 2.4)
       winrm
-      winrm-elevated
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-terraform_enterprise
@@ -1476,15 +1475,6 @@ GEM
       nori (~> 2.0, >= 2.7.1)
       rexml (~> 3.0)
       rubyntlm (~> 0.6.0, >= 0.6.3)
-    winrm-elevated (1.2.3)
-      erubi (~> 1.8)
-      winrm (~> 2.0)
-      winrm-fs (~> 1.0)
-    winrm-fs (1.3.5)
-      erubi (~> 1.8)
-      logging (>= 1.6.1, < 3.0)
-      rubyzip (~> 2.0)
-      winrm (~> 2.0)
     xclarity_client (0.8.0)
       faraday (~> 2.0)
       faraday-cookie_jar (~> 0.0.6)
