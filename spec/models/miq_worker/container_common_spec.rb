@@ -131,12 +131,13 @@ RSpec.describe MiqWorker::ContainerCommon do
       test_cases.each { |test| expect(test[:subject].worker_deployment_name).to eq(test[:name]) }
     end
 
-    it "no worker deployment names are over 60 characters", :providers_common => true do
+    it "no worker deployment names are over 63 characters", :providers_common => true do
       # OpenShift does not allow deployment names over 63 characters
-      # We also want to leave some for the ems_id so we compare against 60 to be safe
+      # We also want to leave some room for the compressed region number (e.g. 10r99)
+      #   so we buffer 5 characters
       MiqWorkerType.seed
       MiqWorkerType.pluck(:worker_type).each do |klass|
-        expect(klass.constantize.new.worker_deployment_name.length).to be <= 60
+        expect(klass.constantize.new.worker_deployment_name.length + 5).to be <= 63
       end
     end
 
