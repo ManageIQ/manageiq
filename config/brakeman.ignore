@@ -24,6 +24,25 @@
       "note": "The usage of Marshal.load in MiqCompare code is safe because the compare object is safely designed to be Marshal loaded. Only the helper methods are used to add/remove sections and ids."
     },
     {
+      "warning_type": "Unmaintained Dependency",
+      "warning_code": 122,
+      "fingerprint": "21ab0fe00fdd5899ffc405cff75aadb91b805ee996a614f7e27b08a287e9062d",
+      "check_name": "EOLRails",
+      "message": "Support for Rails 8.0.5.1 ends on 2026-11-07",
+      "file": "Gemfile.lock",
+      "line": 1167,
+      "link": "https://brakemanscanner.org/docs/warning_types/unmaintained_dependency/",
+      "code": null,
+      "render_path": null,
+      "location": null,
+      "user_input": null,
+      "confidence": "Weak",
+      "cwe_id": [
+        1104
+      ],
+      "note": "This is still a supported version for now. We are working on Rails 8.1 for the next release."
+    },
+    {
       "warning_type": "Dangerous Eval",
       "warning_code": 13,
       "fingerprint": "62fb268ba380c405b5cf3871a4ac5a4d41549e81b4d4f7fd8b94f183070995da",
@@ -163,5 +182,5 @@
       "note": "This method is safe because it verifies that the version is in the form #.#."
     }
   ],
-  "brakeman_version": "8.0.5"
+  "brakeman_version": "8.0.6"
 }
