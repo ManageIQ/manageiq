@@ -1,36 +1,36 @@
 module ManageIQ::Providers::Inventory::Persister::Builder::Shared
   extend ActiveSupport::Concern
 
-  included do
-    INVENTORY_RECONNECT_BLOCK = lambda do |inventory_collection, inventory_objects_index, attributes_index|
-      relation = inventory_collection.model_class.where(:ems_id => nil)
+  INVENTORY_RECONNECT_BLOCK = lambda do |inventory_collection, inventory_objects_index, attributes_index|
+    relation = inventory_collection.model_class.where(:ems_id => nil)
 
-      return if relation.count <= 0
+    return if relation.count <= 0
 
-      inventory_objects_index.each_slice(100) do |batch|
-        batch_refs = batch.map(&:first)
-        relation.where(inventory_collection.manager_ref.first => batch_refs).order(:id => :asc).each do |record|
-          index = inventory_collection.object_index_with_keys(inventory_collection.manager_ref_to_cols, record)
+    inventory_objects_index.each_slice(100) do |batch|
+      batch_refs = batch.map(&:first)
+      relation.where(inventory_collection.manager_ref.first => batch_refs).order(:id => :asc).each do |record|
+        index = inventory_collection.object_index_with_keys(inventory_collection.manager_ref_to_cols, record)
 
-          # We need to delete the record from the inventory_objects_index
-          # and attributes_index, otherwise it would be sent for create.
-          inventory_object = inventory_objects_index.delete(index)
-          hash             = attributes_index.delete(index)
+        # We need to delete the record from the inventory_objects_index
+        # and attributes_index, otherwise it would be sent for create.
+        inventory_object = inventory_objects_index.delete(index)
+        hash             = attributes_index.delete(index)
 
-          # Skip if hash is blank, which can happen when having several archived entities with the same ref
-          next unless hash
+        # Skip if hash is blank, which can happen when having several archived entities with the same ref
+        next unless hash
 
-          record.assign_attributes(hash.except(:id, :type))
-          if !inventory_collection.check_changed? || record.changed?
-            record.save!
-            inventory_collection.store_updated_records(record)
-          end
-
-          inventory_object.id = record.id
+        record.assign_attributes(hash.except(:id, :type))
+        if !inventory_collection.check_changed? || record.changed?
+          record.save!
+          inventory_collection.store_updated_records(record)
         end
-      end
-    end.freeze
 
+        inventory_object.id = record.id
+      end
+    end
+  end.freeze
+
+  included do
     def vendor
       ::ManageIQ::Providers::Inflector.provider_name(@persister_class).downcase
     rescue
