@@ -134,11 +134,13 @@ RSpec.describe MiqWorker::ContainerCommon do
     it "no worker deployment names are over 63 characters", :providers_common => true do
       # OpenShift does not allow deployment names over 63 characters
       # We also want to leave some room for the compressed region number (e.g. 10r99)
-      #   so we buffer 5 characters
+      #   so we buffer 6 characters (e.g. 10r99-).
       MiqWorkerType.seed
       MiqWorkerType.pluck(:worker_type).each do |klass|
-        worker_deployment_name = klass.constantize.new.worker_deployment_name
-        expect(worker_deployment_name.length + 5).to be <= 63, "Expected \"#{worker_deployment_name}\".length + 5 <= 63"
+        # Strip off the current miq_server compressed_id prefix so that we can compare the base
+        # worker_deployment_name to a longer compressed_id prefix like 10r99-.
+        worker_deployment_name = klass.constantize.new.worker_deployment_name.split("-", 2).last
+        expect(worker_deployment_name.length + 6).to be <= 63, "Expected \"10r99-#{worker_deployment_name}\".length <= 63"
       end
     end
 
