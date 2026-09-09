@@ -137,7 +137,8 @@ RSpec.describe MiqWorker::ContainerCommon do
       #   so we buffer 5 characters
       MiqWorkerType.seed
       MiqWorkerType.pluck(:worker_type).each do |klass|
-        expect(klass.constantize.new.worker_deployment_name.length + 5).to be <= 63
+        worker_deployment_name = klass.constantize.new.worker_deployment_name
+        expect(worker_deployment_name.length + 5).to be <= 63, "Expected \"#{worker_deployment_name}\".length + 5 <= 63"
       end
     end
 
