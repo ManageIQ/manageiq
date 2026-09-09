@@ -30,6 +30,8 @@ class CloudTenant < ApplicationRecord
   has_many   :flavors, :through => :cloud_tenant_flavors
   has_many   :cloud_volume_types, :through => :ext_management_system
 
+  validates :name, :length => {:maximum => 128}
+
   alias_method :direct_cloud_networks, :cloud_networks
 
   acts_as_miq_taggable

@@ -1,6 +1,6 @@
 class Zone < ApplicationRecord
-  validates_presence_of   :name, :description
-  validates :name, :unique_within_region => true
+  validates :name, :unique_within_region => true, :presence => true, :length => {:maximum => 128}
+  validates :description, :presence => true, :length => {:maximum => 128}
 
   serialize :settings, :type => Hash
 
