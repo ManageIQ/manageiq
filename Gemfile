@@ -42,13 +42,13 @@ gem "gettext_i18n_rails",               "~>1.11"
 gem "gettext_i18n_rails_js",            "~>1.3.0"
 gem "hamlit",                           "~>2.11.0"
 gem "inifile",                          "~>3.0",             :require => false
-gem "inventory_refresh",                "~>2.3",             :require => false
+gem "inventory_refresh",                "~>2.4",             :require => false
 gem "kubeclient",                       "~>4.0",             :require => false # For scaling pods at runtime
 gem "linux_admin",                      ">=3.0", "<5",       :require => false
 gem "listen",                           "~>3.2",             :require => false
 gem "manageiq-api-client",              "~>0.7",             :require => false
 gem "manageiq-loggers",                 "~>2.0",             :require => false
-gem "manageiq-messaging",               "~>2.1",             :require => false
+gem "manageiq-messaging",               "~>2.2",             :require => false
 gem "manageiq-password",                "~>1.0",             :require => false
 gem "manageiq-postgres_ha_admin",       "~>3.5",             :require => false
 gem "manageiq-ssh-util",                "~>0.2.0",           :require => false
@@ -65,8 +65,8 @@ gem "psych",                            ">=3.1",             :require => false #
 gem "query_relation",                   "~>0.2.0",           :require => false
 gem "rack",                             ">=2.2.23",          :require => false
 gem "rack-attack",                      "~>6.8.0",           :require => false
-gem "rails",                            "~>8.0.5", ">=8.0.5.1"
-gem "rails-i18n",                       "~>8.0.2"
+gem "rails",                            "~>8.1.3"
+gem "rails-i18n",                       "~>8.1.0"
 gem "rake",                             ">=12.3.3",          :require => false
 gem "rest-client",                      "~>2.1.0",           :require => false
 gem "ruby_parser",                                           :require => false # Required for i18n string extraction, and DescentdantLoader (via prism)
