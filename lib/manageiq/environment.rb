@@ -85,10 +85,6 @@ module ManageIQ
       else
         system!("bundle update --jobs=3", :chdir => root)
       end
-      return unless ci?
-
-      lockfile_contents = File.read(root.join("Gemfile.lock"))
-      puts "===== Begin Gemfile.lock =====\n\n#{lockfile_contents}\n\n===== End Gemfile.lock ====="
     end
 
     def self.create_database(root = APP_ROOT)
