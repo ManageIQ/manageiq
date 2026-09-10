@@ -105,11 +105,15 @@ class MiqWorker
       "#{MiqServer.my_server.compressed_id}-"
     end
 
+    def deployment_base_name
+      minimal_class_name.sub("Manager", "").underscore.dasherize.tr("/", "-")
+    end
+
     def worker_deployment_name
       @worker_deployment_name ||= begin
-        deployment_name = abbreviated_class_name.dup.chomp("Worker").sub("Manager", "").sub(/^Miq/, "")
+        deployment_name = deployment_base_name.dup
         deployment_name << "-#{ApplicationRecord.split_id(ems_id).last}" if respond_to?(:ems_id) && ems_id.present?
-        "#{deployment_prefix}#{deployment_name.underscore.dasherize.tr("/", "-")}"
+        "#{deployment_prefix}#{deployment_name}"
       end
     end
 
