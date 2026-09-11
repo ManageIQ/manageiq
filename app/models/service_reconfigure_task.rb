@@ -15,6 +15,36 @@ class ServiceReconfigureTask < MiqReconfigureTask
     state == "finished" ? status.to_s.downcase : "retry"
   end
 
+  def update_and_notify_parent(*args)
+    prev_state = state
+    super
+    new_state = state
+
+    # No-op when the state did not change, UNLESS the update explicitly sets
+    # "pending" — tasks are created with state "pending" so the first real
+    # transition (deliver_to_automate) keeps prev_state == "pending".
+    requested_state = args.first.kind_of?(Hash) ? args.first[:state].to_s : nil
+    return if new_state == prev_state && requested_state != "pending"
+
+    svc = source
+    return unless svc.respond_to?(:start_reconfiguration)
+
+    case new_state
+    when "pending", "active"
+      svc.start_reconfiguration
+    when "finished"
+      status.to_s.casecmp("ok").zero? ? svc.finish_reconfiguration : svc.reconfiguration_error
+    end
+  end
+
+  def before_ae_starts(_options)
+    reload
+    if state.to_s.downcase.in?(%w[pending queued])
+      _log.info("Executing #{request_class::TASK_DESCRIPTION} request: [#{description}]")
+      update_and_notify_parent(:state => "active", :status => "Ok", :message => "In Process")
+    end
+  end
+
   def after_request_task_create
     update(:description => get_description)
     return if automate_drives?
@@ -36,7 +66,7 @@ class ServiceReconfigureTask < MiqReconfigureTask
         :namespace        => ra.ae_namespace,
         :class_name       => ra.ae_class,
         :instance_name    => ra.ae_instance,
-        :automate_message => (ra.ae_message.presence || 'create'),
+        :automate_message => ra.ae_message.presence || 'create',
         :attrs            => dialog_values,
         :user_id          => get_user.id,
         :miq_group_id     => get_user.current_group_id,
@@ -148,7 +178,7 @@ class ServiceReconfigureTask < MiqReconfigureTask
 
   def reconfigure_task_class_method_name(resource_type)
     # Convert resource class name to method name
-    #?????????? Vm -> vm_reconfigure_task_class
+    # Vm -> vm_reconfigure_task_class
     # OrchestrationStack -> orchestration_stack_reconfigure_task_class
     resource_class_name = resource_type.base_model.name.underscore
     "#{resource_class_name}_reconfigure_task_class"
@@ -158,7 +188,7 @@ class ServiceReconfigureTask < MiqReconfigureTask
     "#{resource_type.base_class.name}ReconfigureTask".safe_constantize || "#{resource_type.name.demodulize}ReconfigureTask".safe_constantize
   end
 
-   def derive_request_type(task_type)
+  def derive_request_type(task_type)
     # For provider-specific task classes, use the base model's request_type
     # e.g., ManageIQ::Providers::EmbeddedTerraform::AutomationManager::Reconfigure -> orchestration_stack_reconfigure
     if task_type.respond_to?(:base_model) && task_type.base_model != task_type
