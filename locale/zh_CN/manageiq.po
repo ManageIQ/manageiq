@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2026-06-01 14:37+0000\n"
-"PO-Revision-Date: 2026-06-01 14:37+0000\n"
+"POT-Creation-Date: 2026-09-09 00:38+0000\n"
+"PO-Revision-Date: 2026-09-09 00:38+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -21,9 +21,6 @@ msgstr "无法将以下标记添加到 %{class_name} %{id}：%{names}。"
 msgid ""
 "  Unable to remove the following tags from %{class_name} %{id}: %{names}."
 msgstr "无法从 %{class_name} %{id} 移除以下标记：%{names}。"
-
-msgid " # of Days"
-msgstr " 天数"
 
 msgid " %{host_uid_ems} is not a compute node "
 msgstr "%{host_uid_ems} 不是一个计算节点"
@@ -257,6 +254,9 @@ msgstr "%{hostname} 不支持“%{task}”"
 msgid "# Pods per Ready Status"
 msgstr "# 每个就绪状态的 Pod 数"
 
+msgid "# of Days"
+msgstr "天数"
+
 msgid "# of Events"
 msgstr "事件数"
 
@@ -347,6 +347,10 @@ msgstr "%s 无快照"
 msgid "%s is used by another field"
 msgstr "%s 被另一个字段使用"
 
+msgid "%s item selected"
+msgid_plural "%s items selected"
+msgstr[0] "已选择 %s 项"
+
 msgid "%s logged out, redirecting to the login page"
 msgstr "%s 已注销，重新返回到登录页面"
 
@@ -385,9 +389,9 @@ msgid "%{amount} Automation Job Being Tagged"
 msgid_plural "%{amount} Automation Jobs Being Tagged"
 msgstr[0] "%{amount} 正在标记自动化作业"
 
-msgid "%{amount} Automation Manager (Ansible Tower) Being Tagged"
-msgid_plural "%{amount} Automation Managers (Ansible Tower) Being Tagged"
-msgstr[0] "正在标记 %{amount} 个自动化管理器 (Ansible Tower)"
+msgid "%{amount} Automation Provider (Ansible Tower) Being Tagged"
+msgid_plural "%{amount} Automation Providers (Ansible Tower) Being Tagged"
+msgstr[0] "%{amount}自动化服务提供商 (Ansible Tower) 被标记"
 
 msgid "%{amount} Automation Template Being Tagged"
 msgid_plural "%{amount} Automation Templates Being Tagged"
@@ -669,14 +673,8 @@ msgstr "%{description} 保留超过虚拟机内存"
 msgid "%{description} VM Memory is larger than Memory Limit"
 msgstr "%{description} VM 内存大于内存限制"
 
-msgid "%{description} category Scan"
-msgstr "%{description} 类别扫描"
-
 msgid "%{description} is required"
 msgstr "%{description} 为必填项"
-
-msgid "%{description} registry Scan"
-msgstr "%{description} 注册表扫描"
 
 msgid "%{domain_name} (Disabled)"
 msgstr "%{domain_name} （已禁用）"
@@ -1383,9 +1381,8 @@ msgstr "* 策略概要文件只适用于下面的某些项目。"
 msgid "* Primary Server Roles shown as %{bold} text."
 msgstr "* 主服务器角色显示为 %{bold} 文本。"
 
-msgid ""
-"* Recommendations are subject to minimum of CPU: %{cpu} and Memory: %{memory}."
-msgstr "* 推荐值至少需要 %{cpu} 个 CPU 和 %{memory} 内存。"
+msgid "* Recommendations are subject to minimum of CPU: %s and Memory: %s."
+msgstr "* 推荐配置需满足 CPU 最低要求：%s 以及内存最低要求：%s。"
 
 msgid "* Report is not owned by your group so it cannot be removed"
 msgstr "* 您的组不拥有报告，所以它无法被移除。"
@@ -1839,14 +1836,23 @@ msgstr "必须选择一个租户类别"
 msgid "A VM with name: [%{name}] already exists"
 msgstr "名为 [%{name}] 的虚拟机已存在"
 
+msgid "A check field must be chosen for the Find expression element"
+msgstr "必须为查找表达式元素选择一个选项框"
+
 msgid "A check field must be chosen to commit this expression element"
 msgstr "必须选择一个检查字段来提交此表达式元素"
 
 msgid "A condition must contain a valid expression."
 msgstr "条件必须包含有效的表达式"
 
+msgid "A date value must be entered"
+msgstr "必须输入日期值"
+
 msgid "A field must be chosen to commit this expression element"
 msgstr "必须选择一个字段来提交此表达式元素"
+
+msgid "A field must be selected for every expression element"
+msgstr "每个表达式元素都必须选择一个字段"
 
 msgid "A find field must be chosen to commit this expression element"
 msgstr "必须选择一个查找字段来提交此表达式元素"
@@ -1860,8 +1866,14 @@ msgstr "容器模板供应需要项目"
 msgid "A read only group cannot be deleted."
 msgstr "只读组不能被删除。"
 
+msgid "A registry key name must be entered"
+msgstr "必须输入注册表键名称"
+
 msgid "A registry key name must be entered to commit this expression element"
 msgstr "必须输入注册表键名称来提交此表达式元素"
+
+msgid "A registry value name must be entered"
+msgstr "必须输入注册表值名称"
 
 msgid "A registry value name must be entered to commit this expression element"
 msgstr "必须输入注册表值名称来提交此表达式元素"
@@ -1915,6 +1927,9 @@ msgstr "必须选择特定的 %{chargeback}，或者全选"
 msgid "A tag category must be chosen to commit this expression element"
 msgstr "必须选择一个标签类别来提交此表达式元素"
 
+msgid "A tag value must be chosen"
+msgstr "必须选择一个标记值"
+
 msgid "A tag value must be chosen to commit this expression element"
 msgstr "必须选择一个标签值来提交此表达式元素"
 
@@ -1935,14 +1950,23 @@ msgid ""
 "[%{description}]"
 msgstr "需要用户将操作提升为自动执行。[%{name}] 标识：[%{id}] 操作：[%{description}]"
 
+msgid "A valid date must be selected"
+msgstr "必须选择一个有效日期"
+
 msgid "A valid expression must be present"
 msgstr "必须存在有效的表达式"
+
+msgid "A valid time must be selected"
+msgstr "必须选择一个有效时间"
 
 msgid "A valid userid is required"
 msgstr "需要有效的用户标识"
 
 msgid "A value must be changed or provider stack will not be updated."
 msgstr "必须修改值，否则供应商栈无法进行更新。"
+
+msgid "A value must be entered for every expression element"
+msgstr "每个表达式元素都必须输入一个值"
 
 msgid "A workspace admin forcefully canceled the run."
 msgstr "工作区管理员已强行取消此次运行。"
@@ -1988,6 +2012,9 @@ msgstr "API 用户名"
 
 msgid "API Version"
 msgstr "API 版本"
+
+msgid "ATAPI CD-ROM (IDE %s)"
+msgstr "ATAPI CD-ROM (IDE %s)"
 
 msgid "AWS Access Key for this credential"
 msgstr "此凭证的 AWS 访问密钥"
@@ -2097,6 +2124,9 @@ msgstr "访问密钥"
 
 msgid "Access Key ID"
 msgstr "访问密钥 ID"
+
+msgid "Access Kube Exec Console for Container Group"
+msgstr "访问容器组的 Kube Exec 控制台"
 
 msgid "Access Modes"
 msgstr "访问模式"
@@ -2392,6 +2422,18 @@ msgstr "添加磁盘"
 msgid "Add Entry"
 msgstr "添加条目"
 
+msgid "Add Event Log"
+msgstr "添加事件日志"
+
+msgid "Add Event Log Entry"
+msgstr "添加事件日志条目"
+
+msgid "Add File"
+msgstr "添加文件"
+
+msgid "Add File Entry"
+msgstr "添加文件条目"
+
 msgid "Add Flavor"
 msgstr "添加风格"
 
@@ -2524,8 +2566,14 @@ msgstr "添加供应商"
 msgid "Add Provisioning Dialog"
 msgstr "添加供应对话框"
 
+msgid "Add Registry Entry"
+msgstr "添加注册表项"
+
 msgid "Add Repository"
 msgstr "添加存储库"
+
+msgid "Add Rule"
+msgstr "添加规则"
 
 msgid "Add Section"
 msgstr "添加部分"
@@ -2541,6 +2589,9 @@ msgstr "向“%{name}”添加安全组"
 
 msgid "Add Security Group to Instance"
 msgstr "添加安全组到实例"
+
+msgid "Add Sub-Group"
+msgstr "添加子组"
 
 msgid "Add Subscription"
 msgstr "添加订阅"
@@ -2809,6 +2860,9 @@ msgstr "添加网络"
 msgid "Add a new Action"
 msgstr "添加新的操作"
 
+msgid "Add a new Automation Provider"
+msgstr "添加新的自动化服务提供商"
+
 msgid "Add a new Button"
 msgstr "添加新的按钮"
 
@@ -2989,9 +3043,6 @@ msgstr "添加警报概要文件“%s”的操作已成功排队。"
 msgid "Add of Automate Method was cancelled by the user"
 msgstr "用户已取消添加 Automate 方法的操作"
 
-msgid "Add of Catalog Item was cancelled by the user"
-msgstr "用户已取消添加目录项的操作"
-
 msgid "Add of Cloud Database \"%s\" has been successfully queued."
 msgstr "添加云数据库“%s”操作已成功排队。"
 
@@ -3059,9 +3110,6 @@ msgstr "添加操作 \"%s\" 的操作已成功排队。"
 msgid "Add of floating IPs \"%s\" has been successfully queued."
 msgstr "添加浮动 IP \"%s\" 的操作已成功排队。"
 
-msgid "Add of new %{model} Condition was cancelled by the user"
-msgstr "用户已取消添加新 %{model} 条件的操作"
-
 msgid "Add of new %{name} was cancelled by the user"
 msgstr "用户已取消添加新 %{name} 的操作"
 
@@ -3110,6 +3158,9 @@ msgstr "用户已取消添加新云卷的操作"
 msgid "Add of new Cloud Volume was cancelled by the user."
 msgstr "用户已取消添加新云卷的操作。"
 
+msgid "Add of new Condition was cancelled by the user"
+msgstr "用户取消了添加新条件的操作"
+
 msgid "Add of new Custom Button was cancelled by the user"
 msgstr "用户已取消添加新定制按钮的操作"
 
@@ -3145,6 +3196,9 @@ msgstr "用户已取消添加新提供程序标记映射的操作"
 
 msgid "Add of new Report was cancelled by the user"
 msgstr "用户已取消添加新报告的操作"
+
+msgid "Add of new Role was cancelled by the user"
+msgstr "用户取消了添加新角色的操作"
 
 msgid "Add of new Schedule was cancelled by the user"
 msgstr "用户已取消添加新调度的操作"
@@ -3184,9 +3238,6 @@ msgstr "添加此条目"
 
 msgid "Add to Shopping Cart"
 msgstr "添加到购物车"
-
-msgid "Add was cancelled by the user"
-msgstr "用户已取消添加"
 
 msgid "Add widget"
 msgstr "添加窗口小部件"
@@ -3603,6 +3654,9 @@ msgstr "不能删除属于警报概要文件的警报"
 msgid "Alerts to Evaluate"
 msgstr "要评估的警报"
 
+msgid "Alias"
+msgstr "别名"
+
 msgid "All"
 msgstr "全部"
 
@@ -3967,6 +4021,11 @@ msgstr "Amazon 设置验证成功"
 msgid "Amazon access key and secret are needed to validate Amazon Settings"
 msgstr "验证 Amazon 设置需要 Amazon 访问密钥和密钥。"
 
+msgid ""
+"An Analysis or Virtual Black Box Synchronization for this VM may need to be "
+"run."
+msgstr "可能需要针对此 VM 运行分析或虚拟黑盒同步功能。"
+
 msgid "An Ansible Playbook must be selected"
 msgstr "必须选择 Ansible Playbook"
 
@@ -3999,6 +4058,12 @@ msgid ""
 "An error occurred while requesting the IBM VPC instance provision. Cannot "
 "retrieve instance id from returned server response."
 msgstr "请求配置 IBM VPC 实例时发生错误。 无法从返回的服务器响应中检索实例标识。"
+
+msgid "An error occurred while saving"
+msgstr "保存时发生错误"
+
+msgid "An error occurred while saving the role"
+msgstr "保存角色时发生错误"
 
 msgid "An internal system error."
 msgstr "内部系统错误。"
@@ -4042,11 +4107,11 @@ msgstr "分析概要文件“%{name}”"
 msgid "Analysis Profile \"%{name}\" was saved"
 msgstr "已保存分析概要文件“%{name}”"
 
-msgid "Analysis Profile \"%{name}\": Error during 'update': %{message}"
-msgstr "分析概要文件“%{name}”：“更新”期间出错：%{message}"
-
 msgid "Analysis Profile is required"
 msgstr "分析概要文件为必填项"
+
+msgid "Analysis Profile was saved"
+msgstr "已保存分析配置文件"
 
 msgid "Analysis Profiles"
 msgstr "分析概要文件"
@@ -4194,9 +4259,6 @@ msgstr "应用的标签"
 
 msgid "Applies To"
 msgstr "应用目标"
-
-msgid "Applies to is required"
-msgstr "“应用目标”为必填项"
 
 msgid "Apply"
 msgstr "应用"
@@ -4608,9 +4670,6 @@ msgstr "房间"
 msgid "AssetDetail|Serial number"
 msgstr "序列号"
 
-msgid "Assign"
-msgstr "分配"
-
 msgid "Assign Catalog Items"
 msgstr "分配目录项"
 
@@ -4779,9 +4838,6 @@ msgstr "必须至少配置一个电子邮件接收者"
 msgid "At least one Field must be selected"
 msgstr "必须至少选择一个字段"
 
-msgid "At least one Product Feature must be selected"
-msgstr "必须至少选择一个产品特征"
-
 msgid "At least one Role must be selected"
 msgstr "必须至少选择一个角色"
 
@@ -4825,6 +4881,9 @@ msgstr "必须至少选择一个部分"
 
 msgid "At least one task status is required"
 msgstr "至少需要一个任务状态"
+
+msgid "Atom type"
+msgstr "原子类型"
 
 msgid "Attach"
 msgstr "附加"
@@ -5281,40 +5340,40 @@ msgstr "自动化作业"
 msgid "Automation Jobs"
 msgstr "自动化作业"
 
-msgid "Automation Manager"
-msgstr "自动化管理器"
-
-msgid "Automation Manager (AWX)"
-msgid_plural "Automation Managers (AWX)"
-msgstr[0] "自动化管理器 (AWX)"
-
-msgid "Automation Manager (Ansible Automation Platform)"
-msgid_plural "Automation Managers (Ansible Automation Platform)"
-msgstr[0] "自动化管理器 (Ansible Automation Platform)"
-
-msgid "Automation Manager (Ansible Tower)"
-msgstr "自动化管理器 (Ansible Tower)"
-
-msgid "Automation Manager Provision"
-msgstr "自动化管理器配置"
-
-msgid "Automation Manager Provisioning"
-msgstr "自动化管理器部署"
-
-msgid "Automation Manager Repositories Refresh"
-msgstr "Automation Manager 存储库刷新"
-
-msgid "Automation Managers"
-msgstr "自动化管理者"
-
-msgid "Automation Managers (AWX)"
-msgstr "自动化管理器 (AWX)"
-
-msgid "Automation Managers (Ansible Tower)"
-msgstr "自动化管理器 (Ansible Tower)"
-
 msgid "Automation Method Data"
 msgstr "自动化方法数据"
+
+msgid "Automation Provider"
+msgstr "自动化服务提供商"
+
+msgid "Automation Provider (AWX)"
+msgid_plural "Automation Providers (AWX)"
+msgstr[0] "自动化服务提供商 (AWX)"
+
+msgid "Automation Provider (Ansible Automation Platform)"
+msgid_plural "Automation Providers (Ansible Automation Platform)"
+msgstr[0] "自动化服务提供商 (Ansible Automation Platform)"
+
+msgid "Automation Provider (Ansible Tower)"
+msgstr "自动化服务提供商 (Ansible Tower)"
+
+msgid "Automation Provider Provision"
+msgstr "自动化服务提供商配置"
+
+msgid "Automation Provider Provisioning"
+msgstr "自动化服务提供商配置"
+
+msgid "Automation Provider Repositories Refresh"
+msgstr "自动化服务提供商存储库刷新"
+
+msgid "Automation Providers"
+msgstr "自动化服务提供商"
+
+msgid "Automation Providers (AWX)"
+msgstr "自动化服务提供商 (AWX)"
+
+msgid "Automation Providers (Ansible Tower)"
+msgstr "自动化服务提供商 (Ansible Tower)"
 
 msgid "Automation Request"
 msgstr "自动化请求"
@@ -6070,6 +6129,9 @@ msgstr "按主机"
 msgid "By Role"
 msgstr "按角色"
 
+msgid "Bytes"
+msgstr "字节数"
+
 msgid "C & U Collection"
 msgstr "容量和利用率采集"
 
@@ -6096,6 +6158,12 @@ msgstr "CA 证书"
 
 msgid "CD-ROM (%{name} %{location}), %{connection}"
 msgstr "CD-ROM (%{name} %{location})，%{connection}"
+
+msgid "CD-ROM (IDE %s)"
+msgstr "CD-ROM (IDE %s)"
+
+msgid "CD-ROM Image (IDE %s)"
+msgstr "CD-ROM 映像 (IDE %s)"
 
 msgid "CD/DVD Drives"
 msgstr "CD/DVD 驱动"
@@ -7106,9 +7174,6 @@ msgstr "%{class_description} 供应商不支持修改密码"
 msgid "Change Password of Infrastructure Providers"
 msgstr "更改基础架构供应商的密码"
 
-msgid "Change current group"
-msgstr "更改当前组"
-
 msgid "Changed from previous"
 msgstr "从上一个进行更改"
 
@@ -7232,6 +7297,12 @@ msgstr "计费保存报告"
 msgid "Chargeback Tier"
 msgid_plural "Chargeback Tiers"
 msgstr[0] "计费层"
+
+msgid "Chargeback assignments"
+msgstr "退款分配"
+
+msgid "Chargeback assignments saved successfully"
+msgstr "退款分配已成功保存"
 
 msgid "Chargeback for Configured Systems"
 msgid_plural "Chargebacks for Configured Systems"
@@ -7564,6 +7635,15 @@ msgstr "检查选项"
 msgid "Check Value Error: %{msg}"
 msgstr "检查值错误：%{msg}"
 
+msgid "Check field"
+msgstr "复选框"
+
+msgid "Check mode"
+msgstr "检查模式"
+
+msgid "Check operator"
+msgstr "检查运算符"
+
 msgid "Checking"
 msgstr "正在检查"
 
@@ -7596,6 +7676,9 @@ msgstr "选择"
 
 msgid "Choose %{entity}"
 msgstr "选择 %{entity}"
+
+msgid "Choose Assignment Type"
+msgstr "选择分配类型"
 
 msgid "Choose File"
 msgstr "选择文件"
@@ -7648,9 +7731,6 @@ msgstr "从左侧选择要编辑的角色"
 msgid "Choose a Schedule to view from the menus on the left."
 msgstr "从左侧的菜单里选择要查看的调度"
 
-msgid "Choose a Server"
-msgstr "选择服务器"
-
 msgid "Choose a Template"
 msgstr "选择模板"
 
@@ -7662,9 +7742,6 @@ msgstr "选择值"
 
 msgid "Choose a chart type"
 msgstr "选择图表类型"
-
-msgid "Choose a pattern"
-msgstr "选择模式"
 
 msgid "Choose a resource entity and label"
 msgstr "选择资源实体和标签"
@@ -7681,41 +7758,17 @@ msgstr "选择一个租户"
 msgid "Choose an Owner"
 msgstr "选择所有者"
 
-msgid "Choose an element of the scope to edit"
-msgstr "选择作用域的一个元素进行编辑"
-
-msgid "Choose cloud object storage"
-msgstr "选择云对象存储器"
-
-msgid "Choose disk type"
-msgstr "选择磁盘类型"
-
 msgid "Choose file"
 msgstr "选择文件"
 
 msgid "Choose one or more Fields"
 msgstr "选择一个或多个字段"
 
-msgid "Choose source image"
-msgstr "选择源映像"
-
-msgid "Choose source provider"
-msgstr "选择源提供者"
-
-msgid "Choose source provider type"
-msgstr "选择源提供程序类型"
-
-msgid "Choose storage bucket"
-msgstr "选择存储区"
-
 msgid "Choose the branch or tag you would like to import"
 msgstr "选择或分支或您要导入的标签"
 
 msgid "Choose the type of custom variables to be imported"
 msgstr "选择要导入的客户变量类型"
-
-msgid "Choose transient storage"
-msgstr "选择瞬态存储器"
 
 msgid "Cidr"
 msgstr "Cidr"
@@ -9106,6 +9159,9 @@ msgstr "收集日期"
 msgid "Collection Options"
 msgstr "收集选项"
 
+msgid "Colocation Policy"
+msgstr "主机托管策略"
+
 msgid "Column"
 msgstr "列"
 
@@ -9385,11 +9441,11 @@ msgstr "区域编号"
 msgid "Condition"
 msgstr "条件"
 
-msgid "Condition \"%{name}\" was added"
-msgstr "已添加条件“%{name}”"
+msgid "Condition \"%s\" was added"
+msgstr "已添加条件 \"%s\""
 
-msgid "Condition \"%{name}\" was saved"
-msgstr "已保存条件“%{name}”"
+msgid "Condition \"%s\" was saved"
+msgstr "已保存条件 \"%s\""
 
 msgid "Condition Selection"
 msgstr "条件选择"
@@ -9499,9 +9555,6 @@ msgstr "Towhat"
 
 msgid "Condition|Updated on"
 msgstr "更新时间"
-
-msgid "Config Pattern"
-msgstr "配置模式"
 
 msgid "Config Version"
 msgstr "配置版本"
@@ -10148,6 +10201,12 @@ msgstr "容器仪表板"
 msgid "Container Environment Variable"
 msgid_plural "Container Environment Variables"
 msgstr[0] "容器环境变量"
+
+msgid "Container Group Access"
+msgstr "容器组访问权限"
+
+msgid "Container Group Console"
+msgstr "容器组控制台"
 
 msgid "Container Group Name"
 msgstr "容器组名称"
@@ -12650,6 +12709,9 @@ msgstr "复制 %{name}"
 msgid "Copy of %{typ} Request"
 msgstr "复制 %{typ} 请求"
 
+msgid "Copy of Analysis Profile was cancelled by the user"
+msgstr "用户已取消分析配置文件的副本"
+
 msgid "Copy of Dashboard was cancelled by the user"
 msgstr "用户已取消复制仪表板的操作"
 
@@ -13294,9 +13356,6 @@ msgstr "当前用户"
 
 msgid "Current Window"
 msgstr "当前窗口"
-
-msgid "Current group: %s"
-msgstr "当前组：%s"
 
 msgid "Current pods"
 msgstr "当前的 pod"
@@ -14310,9 +14369,6 @@ msgstr "定义表达式"
 msgid "Define New %{table}"
 msgstr "定义新的“%{table}”"
 
-msgid "Define Scope"
-msgstr "定义作用域"
-
 msgid "Define a new Host Initiator"
 msgstr "定义新的主机发起方"
 
@@ -15054,9 +15110,6 @@ msgstr "取决于组"
 msgid "Depends on Service"
 msgstr "取决于服务"
 
-msgid "Deploy"
-msgstr "部署"
-
 msgid "Deploy Server"
 msgstr "部署服务器"
 
@@ -15110,6 +15163,9 @@ msgstr "描述："
 
 msgid "Descrption"
 msgstr "描述"
+
+msgid "Deselect All"
+msgstr "取消选择全部"
 
 msgid "Desired"
 msgstr "期望的"
@@ -15249,6 +15305,9 @@ msgstr "检测"
 
 msgid "Development"
 msgstr "开发"
+
+msgid "Development Log"
+msgstr "开发日志"
 
 msgid "Device Location"
 msgstr "设备位置"
@@ -15410,9 +15469,6 @@ msgstr "如果选择“在目录里显示”，必须设置对话框。"
 
 msgid "Dialog name"
 msgstr "对话框名称"
-
-msgid "Dialog name already exists"
-msgstr "对话框名称已存在"
 
 msgid "Dialog needs to have a label"
 msgstr "对话框需要一个标签"
@@ -16926,6 +16982,9 @@ msgstr "显示"
 msgid "Display in Catalog"
 msgstr "在目录里显示"
 
+msgid "Display label"
+msgstr "显示标签"
+
 msgid "Display metrics"
 msgstr "显示指标"
 
@@ -17010,9 +17069,6 @@ msgstr "域被解锁。"
 
 msgid "Domain name change for a system domain import is not supported."
 msgstr "对于系统域导入不支持域名更改。"
-
-msgid "Domains"
-msgstr "域"
 
 msgid "Domains:"
 msgstr "域："
@@ -17136,6 +17192,10 @@ msgstr "以文本格式下载此报告"
 
 msgid "Draft"
 msgstr "草稿"
+
+msgid ""
+"Drag and drop to reorder domains. Higher priority domains are listed first."
+msgstr "拖放以重新排列域名。 优先级较高的域名会优先列出。"
 
 msgid ""
 "Drag items here to add to the dialog. At least one item is required before "
@@ -17537,6 +17597,9 @@ msgstr "编辑 EVM 服务器关系"
 msgid "Edit Event Assignment"
 msgstr "编辑事件分配"
 
+msgid "Edit Event Log Entry"
+msgstr "编辑事件日志条目"
+
 msgid "Edit Event cancelled by user"
 msgstr "用户已取消编辑事件的操作"
 
@@ -17545,6 +17608,9 @@ msgstr "编辑表达式"
 
 msgid "Edit Field Details"
 msgstr "编辑字段详细信息"
+
+msgid "Edit File Entry"
+msgstr "编辑文件条目"
 
 msgid "Edit Generic Object"
 msgstr "编辑通用对象"
@@ -17609,6 +17675,9 @@ msgstr "编辑编排模板标签"
 msgid "Edit PXE Image"
 msgstr "编辑 PXE 镜像"
 
+msgid "Edit PXE Image Tags"
+msgstr "编辑 PXE 映像标记"
+
 msgid "Edit Physical Storage \"%{name}\""
 msgstr "编辑物理存储器 \"%{name}\""
 
@@ -17630,6 +17699,9 @@ msgstr "编辑供应对话框"
 msgid "Edit Record Filter"
 msgstr "编辑记录过滤器"
 
+msgid "Edit Registry Entry"
+msgstr "编辑注册表项"
+
 msgid "Edit Report Menus"
 msgstr "编辑报告菜单"
 
@@ -17644,9 +17716,6 @@ msgstr "编辑存储库“%{name}”"
 
 msgid "Edit Router \"%{name}\""
 msgstr "编辑路由器“%{name}”"
-
-msgid "Edit Scope"
-msgstr "编辑作用域"
 
 msgid "Edit Section Details"
 msgstr "编辑部分详细信息"
@@ -17792,11 +17861,11 @@ msgstr "为所选的 Ansible Playbook 编辑标签"
 msgid "Edit Tags for the selected Ansible Repositories"
 msgstr "为所选的 Ansible 存储库编辑标签"
 
-msgid "Edit Tags for the selected Automation Manager Credentials"
-msgstr "编辑所选 Automation Manager 凭证的标记"
+msgid "Edit Tags for the selected Automation Provider Credentials"
+msgstr "为所选自动化服务提供商凭证编辑标记"
 
-msgid "Edit Tags for the selected Automation Manager Repositories"
-msgstr "编辑所选 Automation Manager 存储库的标记"
+msgid "Edit Tags for the selected Automation Provider Repositories"
+msgstr "为所选自动化服务提供商存储库编辑标记"
 
 msgid "Edit Tags for the selected Automation Providers"
 msgstr "编辑所选自动化提供程序的标记"
@@ -18215,6 +18284,9 @@ msgstr "编辑编排堆栈的标签"
 msgid "Edit Tags of PXE"
 msgstr "编辑 PXE 标记"
 
+msgid "Edit Tags of PXE Images"
+msgstr "编辑 PXE 映像的标记"
+
 msgid "Edit Tags of PXE Servers"
 msgstr "编辑 PXE 服务器标记"
 
@@ -18272,6 +18344,9 @@ msgstr "编辑卷类型的标签"
 msgid "Edit Tags of Volumes"
 msgstr "编辑卷的标签"
 
+msgid "Edit Tags of Windows Images"
+msgstr "编辑 Windows 映像的标记"
+
 msgid "Edit Tags selected Pxe Servers"
 msgstr "编辑所选 Pxe 服务器的标签"
 
@@ -18292,6 +18367,9 @@ msgstr "编辑 Visuals"
 
 msgid "Edit Windows Image"
 msgstr "编辑 Windows 镜像"
+
+msgid "Edit Windows Image Tags"
+msgstr "编辑 Windows 映像标记"
 
 msgid "Edit a Block Storage Manager"
 msgstr "编辑 Block Storage Manager"
@@ -18506,17 +18584,11 @@ msgstr "编辑分配"
 msgid "Edit assignments for this Alert Profile"
 msgstr "编辑此警报概要文件的分配"
 
-msgid "Edit of \"%s\" was cancelled by the user"
-msgstr "用户已取消编辑“%s”"
-
 msgid "Edit of %s \"%s\" was canceled by the user."
 msgstr "用户已取消 %s“%s”的编辑。"
 
 msgid "Edit of %s \"%s\" was cancelled by the user"
 msgstr "用户已取消针对 %s“%s”的编辑"
-
-msgid "Edit of %{model} Condition \"%{name}\" was cancelled by the user"
-msgstr "用户已取消针对 %{model} 条件“%{name}”的编辑"
 
 msgid "Edit of %{model} Request \"%{name}\" was cancelled by the user"
 msgstr "用户已取消针对 %{model} 请求“%{name}”的编辑"
@@ -18536,8 +18608,8 @@ msgstr "用户已取消针对警报“%{name}”的编辑"
 msgid "Edit of Alert Profile \"%s\" was canceled by the user."
 msgstr "用户已取消编辑警报概要文件 \"%s\"。"
 
-msgid "Edit of Analysis Profile \"%{name}\" was cancelled by the user"
-msgstr "用户已取消针对分析概要文件“%{name}”的编辑"
+msgid "Edit of Analysis Profile was cancelled by the user"
+msgstr "用户已取消对分析配置文件的编辑操作"
 
 msgid "Edit of Automate Class \"%{name}\" was cancelled by the user"
 msgstr "用户已取消针对自动化类“%{name}”的编辑"
@@ -18596,6 +18668,9 @@ msgstr "用户已取消编辑云卷“%s”的操作。"
 msgid "Edit of Cloud Volume \"%{name}\" was cancelled by the user"
 msgstr "用户已取消针对云卷“%{name}”的编辑"
 
+msgid "Edit of Condition \"%s\" was cancelled by the user"
+msgstr "用户已取消对条件 \"%s\" 的编辑操作"
+
 msgid "Edit of Credential \"%s\" was canceled by the user."
 msgstr "用户已取消编辑凭证“%s”的操作。"
 
@@ -18650,8 +18725,8 @@ msgstr "用户已取消编辑名称空间“%s”的操作。"
 msgid "Edit of Orchestration Template %s was cancelled by the user"
 msgstr "编辑编排模板 %s 已被用户取消"
 
-msgid "Edit of PXE Image \"%{name}\" was cancelled by the user"
-msgstr "用户已取消针对 PXE 镜像“%{name}”的编辑"
+msgid "Edit of PXE Image was cancelled by the user"
+msgstr "用户已取消对 PXE 映像的编辑操作"
 
 msgid "Edit of PXE Server %s was cancelled by the user"
 msgstr "用户已取消 PXE 服务器 %s 的编辑"
@@ -18695,6 +18770,9 @@ msgstr "用户已取消编辑存储库 \"%s\"。"
 msgid "Edit of Repository \"%s\" was successfully initiated."
 msgstr "已成功启动对存储库 \"%s\" 的编辑。"
 
+msgid "Edit of Role was cancelled by the user"
+msgstr "用户已取消角色编辑操作"
+
 msgid "Edit of Schedule \"%{name}\" was cancelled by the user"
 msgstr "用户已取消针对调度“%{name}”的编辑"
 
@@ -18719,8 +18797,8 @@ msgstr "用户已取消编辑系统映像类型 \"%s\"。"
 msgid "Edit of Widget \"%{title}\" was cancelled by the user"
 msgstr "用户已取消针对窗口小部件“%{title}”的编辑"
 
-msgid "Edit of Windows Image \"%{name}\" was cancelled by the user"
-msgstr "用户已取消针对 Windows 镜像“%{name}”的编辑"
+msgid "Edit of Windows Image was cancelled by the user"
+msgstr "用户已取消对 Windows 映像的编辑操作"
 
 msgid "Edit of Zone \"%s\" was canceled by the user."
 msgstr "用户已取消编辑区域 \"%s\"。"
@@ -19194,11 +19272,11 @@ msgstr "嵌入式 Ansible 服务不可用。"
 msgid "Embedded Automate"
 msgstr "嵌入式自动化"
 
-msgid "Embedded Automation Manager"
-msgstr "编辑自动化管理器"
+msgid "Embedded Automation Provider"
+msgstr "嵌入式自动化服务提供商"
 
-msgid "Embedded Automation Managers"
-msgstr "嵌入式自动化管理器"
+msgid "Embedded Automation Providers"
+msgstr "嵌入式自动化服务提供商"
 
 msgid "Embedded Methods"
 msgstr "嵌入式方法"
@@ -19804,8 +19882,44 @@ msgstr "进入待机模式"
 msgid "Enter a comma separated list of IP or DNS names"
 msgstr "输入以逗号分隔的 IP 或 DNS 名称列表"
 
+msgid "Enter a list of numbers separated by commas"
+msgstr "输入一组以逗号分隔的数字"
+
+msgid "Enter a list of text strings separated by commas"
+msgstr "输入一组以逗号分隔的文本字符串"
+
 msgid "Enter a new Dialog"
 msgstr "输入新对话框"
+
+msgid "Enter a number"
+msgstr "输入数字"
+
+msgid "Enter a value"
+msgstr "输入值"
+
+msgid "Enter event log name"
+msgstr "输入事件日志名称"
+
+msgid "Enter file path"
+msgstr "输入文件路径"
+
+msgid "Enter filter message"
+msgstr "输入过滤器消息"
+
+msgid "Enter level"
+msgstr "输入级别"
+
+msgid "Enter number of days"
+msgstr "输入天数"
+
+msgid "Enter registry key"
+msgstr "输入注册表键"
+
+msgid "Enter registry value"
+msgstr "输入注册表值"
+
+msgid "Enter source"
+msgstr "输入源"
 
 msgid "Enter tag category to map to"
 msgstr "输入要与之映射的标签类别"
@@ -19815,6 +19929,9 @@ msgstr "进入时间"
 
 msgid "Enterprise"
 msgstr "企业"
+
+msgid "Enterprise ID not found"
+msgstr "未找到企业标识"
 
 msgid "Enterprises"
 msgstr "企业"
@@ -19926,9 +20043,6 @@ msgstr "“%{task}”期间出错：%{message}"
 msgid "Error during '%{task}': Expression element is required"
 msgstr "“%{task}”期间出错：需要表达式元素"
 
-msgid "Error during '%{title}': %{message}"
-msgstr "“%{title}”期间出错：%{message}"
-
 msgid "Error during 'Add VM to service': %{message}"
 msgstr "“向服务添加 VM”期间出错：%{message}"
 
@@ -19952,9 +20066,6 @@ msgstr "“策略导入”期间出错：%{messages}"
 
 msgid "Error during 'Provisioning': %{error_message}"
 msgstr "“供应”期间出错：%{error_message}"
-
-msgid "Error during 'Rate assignments': %{error_message}"
-msgstr "“费率分配”期间出错：%{error_message}"
 
 msgid "Error during 'Remove VM from service': %{message}"
 msgstr "“从服务移除 VM”期间出错：%{message}"
@@ -20071,6 +20182,9 @@ msgstr "加载数据错误："
 msgid "Error message goes here"
 msgstr "此处显示错误消息"
 
+msgid "Error occurred, search filter not applied."
+msgstr "发生错误，未应用搜索过滤器。"
+
 msgid "Error on line %{line_num}: %{err_txt}"
 msgstr "第 %{line_num} 行出错：%{err_txt}"
 
@@ -20080,6 +20194,9 @@ msgstr "从服务器请求数据时出错"
 msgid ""
 "Error returned from %{name} event processing in Automate: %{error_message}"
 msgstr "从自动化中的 %{name} 事件处理返回错误：%{error_message}"
+
+msgid "Error saving priority order"
+msgstr "保存优先级顺序时出错"
 
 msgid "Error text:"
 msgstr "错误文本："
@@ -20287,9 +20404,6 @@ msgstr "事件类型"
 msgid "Event log"
 msgstr "事件日志"
 
-msgid "Event log name is required"
-msgstr "事件日志名称为必填项"
-
 msgid "Event name is required"
 msgstr "事件名称为必填项"
 
@@ -20461,9 +20575,6 @@ msgstr "对于此区域，不支持事件"
 msgid "Events for VM prod_webserver"
 msgstr "虚拟机 prod_webserver 事件"
 
-msgid "Every"
-msgstr "每"
-
 msgid "Everything"
 msgstr "所有内容"
 
@@ -20494,8 +20605,8 @@ msgstr "“所有服务目录”折叠菜单下的任何内容"
 msgid "Everything under Auth Key Pairs"
 msgstr "“认证密钥对”下的任何内容"
 
-msgid "Everything under Automation Manager"
-msgstr "Automation Manager 下的所有内容"
+msgid "Everything under Automation Provider"
+msgstr "自动化服务提供商下的所有内容"
 
 msgid "Everything under Availability Zones"
 msgstr "“可用性区域”下的任何内容"
@@ -20920,8 +21031,14 @@ msgstr "表达式"
 msgid "Expression (Custom)"
 msgstr "表达式（定制 ）"
 
+msgid "Expression Editor"
+msgstr "表达式编辑器"
+
 msgid "Expression Object"
 msgstr "表达式对象"
+
+msgid "Expression incomplete"
+msgstr "表达不完整"
 
 msgid ""
 "Expressions (next tab) can only be configured for buttons with \"Display for\""
@@ -21434,6 +21551,30 @@ msgstr "未能 %{snapshot_op} %{subject} 的快照：%{error}"
 msgid "Failed to delete %s %s."
 msgstr "未能删除 %s %s。"
 
+msgid "Failed to load chargeback data"
+msgstr "无法加载退款数据"
+
+msgid "Failed to load image labels"
+msgstr "无法加载映像标签"
+
+msgid "Failed to load label values"
+msgstr "无法加载标签值"
+
+msgid "Failed to load resources"
+msgstr "装入资源失败"
+
+msgid "Failed to load tag categories"
+msgstr "无法加载标记类别"
+
+msgid "Failed to refresh domain"
+msgstr "无法刷新域名"
+
+msgid "Failed to save C & U collection settings"
+msgstr "无法保存 C & U 集合设置"
+
+msgid "Failed to save chargeback assignments"
+msgstr "无法保存退款分配"
+
 msgid "Failover"
 msgstr "故障转移"
 
@@ -21508,9 +21649,6 @@ msgstr[0] "文件库"
 
 msgid "File Entry"
 msgstr "文件条目"
-
-msgid "File Entry is required"
-msgstr "文件条目为必填项"
 
 msgid "File Items"
 msgstr "文件项"
@@ -21668,9 +21806,6 @@ msgstr "过滤器"
 
 msgid "Filter Expression"
 msgstr "过滤器表达式"
-
-msgid "Filter Item"
-msgstr "过滤项"
 
 msgid "Filter Message"
 msgstr "过滤器消息"
@@ -22210,6 +22345,9 @@ msgstr "状态"
 msgid "Floppy %{name} %{location} %{connection}"
 msgstr "软盘 %{name} %{location} %{connection}"
 
+msgid "Floppy Drive (SIO %s)"
+msgstr "软盘驱动器 (SIO %s)"
+
 msgid "Floppy Drives"
 msgstr "软驱"
 
@@ -22301,6 +22439,14 @@ msgstr "在选择至少 1 个字段前，“格式化”选项卡不可用"
 
 msgid "Found"
 msgstr "已找到"
+
+msgid ""
+"Found under Observability > Monitoring in the IBM Cloud console. The "
+"Monitoring instance must be in the same region as this PowerVS workspace and "
+"configured to receive IBM Power Virtual Server metrics."
+msgstr ""
+"可在 IBM Cloud 控制台的可观测性 > 监控中找到。 监控实例必须与此 PowerVS 工作区位于同一区域，并配置为接收 IBM Power "
+"Virtual Server 指标。"
 
 msgid "Free"
 msgstr "可用"
@@ -22470,6 +22616,9 @@ msgstr "通用对象定义"
 
 msgid "Generic Objects"
 msgstr "通用对象"
+
+msgid "Generic SCSI (%s)"
+msgstr "通用 SCSI (%s)"
 
 msgid "Generic Subtype"
 msgstr "通用子类型"
@@ -22647,9 +22796,6 @@ msgstr "全局搜索："
 
 msgid "Glusterfs Endpoint Name"
 msgstr "Glusterfs 端点名称"
-
-msgid "Go to my start page"
-msgstr "前往我的启动页面"
 
 msgid "Google"
 msgstr "Google"
@@ -22982,9 +23128,6 @@ msgstr "HCP Terraform 正在排队等待运行，以开始规划阶段。"
 msgid "HCP Terraform is waiting for its backend services to start the plan."
 msgstr "HCP Terraform 正在等待后端服务启动计划。"
 
-msgid "HKLM"
-msgstr "HKLM"
-
 msgid "HMC-managed"
 msgstr "HMC 管理的"
 
@@ -23042,6 +23185,12 @@ msgstr "困难"
 
 msgid "Hard Disk"
 msgstr "硬盘"
+
+msgid "Hard Disk (IDE %s)"
+msgstr "硬盘 (IDE %s)"
+
+msgid "Hard Disk (SCSI %s)"
+msgstr "硬盘 (SCSI %s)"
 
 msgid "Hard Reboot"
 msgstr "硬重启"
@@ -23130,6 +23279,12 @@ msgstr "位元"
 msgid "Hardware|Config version"
 msgstr "配置版本"
 
+msgid "Hardware|Cpu available cores"
+msgstr "硬件|CPU 可用核心数"
+
+msgid "Hardware|Cpu configured cores"
+msgstr "硬件|CPU 已配置核心数"
+
 msgid "Hardware|Cpu cores per socket"
 msgstr "每个插槽的 CPU 核心数"
 
@@ -23189,6 +23344,12 @@ msgstr "内存控制台"
 
 msgid "Hardware|Memory mb"
 msgstr "内存 MB"
+
+msgid "Hardware|Memory mb available"
+msgstr "硬件|可用内存 MB"
+
+msgid "Hardware|Memory mb configured"
+msgstr "硬件|已配置内存 MB"
 
 msgid "Hardware|Memory mb minimum"
 msgstr "内存最小值 MB"
@@ -24412,6 +24573,14 @@ msgstr "IBM Cloud Infrastructure Center"
 msgid "IBM Cloud Monitoring Instance GUID"
 msgstr "IBM Cloud Monitoring Instance GUID"
 
+msgid ""
+"IBM Cloud Monitoring is not available for PowerVS region '%{region}'. Ensure "
+"an IBM Cloud Monitoring instance exists in the same region as this PowerVS "
+"workspace."
+msgstr ""
+"IBM Cloud Monitoring 不支持 PowerVS 区域 '%{region}'。 确保 IBM Cloud Monitoring "
+"实例位于与此 PowerVS 工作区相同的区域。"
+
 msgid "IBM Cloud Pak URL"
 msgstr "IBM Cloud Pak URL"
 
@@ -25239,9 +25408,6 @@ msgstr "无效的按钮操作"
 msgid "Invalid chart definition"
 msgstr "无效的图表定义"
 
-msgid "Invalid configuration parameters."
-msgstr "无效的配置参数。"
-
 msgid "Invalid credential_field %{field}, allowed values are %{allowed_fields}"
 msgstr "credential_field %{field} 无效，允许的值为 %{allowed_fields}"
 
@@ -25460,11 +25626,11 @@ msgstr "用户标识"
 msgid "Job|Zone"
 msgstr "区域"
 
+msgid "KB"
+msgstr "KB"
+
 msgid "KBps"
 msgstr "KBps"
-
-msgid "Keep OVA file on completion"
-msgstr "完成时保留 OVA 文件"
 
 msgid "Kerberos"
 msgstr "Kerberos"
@@ -25512,6 +25678,9 @@ msgstr "每秒千字节数 (12,34 KBps)"
 
 msgid "Kind"
 msgstr "种类"
+
+msgid "Kube Exec Console"
+msgstr "Kube Exec 控制台"
 
 msgid "KubeVirt"
 msgstr "KubeVirt"
@@ -25605,6 +25774,9 @@ msgstr "标签"
 
 msgid "Label is required"
 msgstr "标签为必填项"
+
+msgid "Label selections"
+msgstr "标签选择"
 
 msgid "Labeled Container Images"
 msgstr "已加标签的容器映像"
@@ -26315,6 +26487,30 @@ msgstr "LoadBalancer|停用日期"
 msgid "LoadBalancer|Total vms"
 msgstr "VM 总数"
 
+msgid "Loading chargeback data..."
+msgstr "正在加载退款数据..."
+
+msgid "Loading expression fields..."
+msgstr "正在加载表达式字段..."
+
+msgid "Loading image labels..."
+msgstr "正在加载映像标签…"
+
+msgid "Loading label values..."
+msgstr "正在加载标签值..."
+
+msgid "Loading resources..."
+msgstr "正在加载资源..."
+
+msgid "Loading saved label assignments..."
+msgstr "正在加载已保存的标签分配..."
+
+msgid "Loading tag categories..."
+msgstr "正在加载标记类别…"
+
+msgid "Loading..."
+msgstr "正在装入..."
+
 msgid "Local"
 msgstr "本地"
 
@@ -26521,9 +26717,6 @@ msgstr "主要配置"
 
 msgid "Main Info"
 msgstr "主要信息"
-
-msgid "Main Menu"
-msgstr "主菜单"
 
 msgid "Main Route Table"
 msgstr "主路由表"
@@ -26740,6 +26933,9 @@ msgstr "管理此浮动的端口关联"
 
 msgid "ManageIQ"
 msgstr "ManageIQ"
+
+msgid "ManageIQ Log"
+msgstr "ManageIQ 日志"
 
 msgid "ManageIQ Tag Department"
 msgstr "ManageIQ 标签部门"
@@ -31879,6 +32075,9 @@ msgstr "NFS 服务器"
 msgid "NFS Servert"
 msgstr "NFS 服务器"
 
+msgid "NOT"
+msgstr "不"
+
 msgid "NVMe"
 msgstr "NVMe"
 
@@ -32561,6 +32760,9 @@ msgstr "新的密码"
 msgid "New Section"
 msgstr "新部分"
 
+msgid "New Tab"
+msgstr "新建标签页"
+
 msgid "New Window"
 msgstr "新窗口"
 
@@ -32751,9 +32953,6 @@ msgstr "无 Cloud Pak URL"
 msgid "No Cloud Provider that supports instance provisioning added"
 msgstr "没有添加支持实例供应的云供应商"
 
-msgid "No Clusters found in the current region."
-msgstr "在当前区域中没有找到集群。"
-
 msgid "No Compliance Policies Found"
 msgstr "没有找到合规性策略"
 
@@ -32774,9 +32973,6 @@ msgstr "没有选择要 %{button} 的定制模板"
 
 msgid "No Daily data is available"
 msgstr "每日数据不可用"
-
-msgid "No Datastores found in the current region."
-msgstr "在当前区域里没有找到数据存储。"
 
 msgid "No Date/Time value specified"
 msgstr "未指定日期/时间值"
@@ -33084,10 +33280,8 @@ msgstr "没有可用的数据"
 msgid "No data available."
 msgstr "没有可用的数据。"
 
-msgid ""
-"No drift history found, an Analysis or Virtual Black Box Synchronization for "
-"this VM may need to be run."
-msgstr "没有找到偏移历史记录，可能需要运行此虚拟机的分析或虚拟黑盒同步。"
+msgid "No drift history found"
+msgstr "未找到漂移记录"
 
 msgid "No entries found for %s"
 msgstr "找不到 %s 的条目"
@@ -33100,6 +33294,9 @@ msgstr "此 %{model} 没有可用的事件"
 
 msgid "No events available for this Cluster"
 msgstr "此集群没有可用的事件"
+
+msgid "No fields available for this model."
+msgstr "此型号没有可用字段。"
 
 msgid "No fields were moved up"
 msgstr "没有上移字段"
@@ -33148,6 +33345,12 @@ msgstr "没有可应用的输入"
 
 msgid "No instances found"
 msgstr "未找到实例"
+
+msgid "No items available"
+msgstr "没有可用项"
+
+msgid "No label values available for this label key."
+msgstr "此标签键没有可用的标签值。"
 
 msgid "No message will be displayed"
 msgstr "将不显示任何消息"
@@ -33215,6 +33418,9 @@ msgstr "没有设置复制角色"
 msgid "No report data found."
 msgstr "未找到报告数据。"
 
+msgid "No resources available for this assignment type."
+msgstr "此分配类型无可用资源。"
+
 msgid "No saved filters or report filters are available to load"
 msgstr "没有可用的要加载的保存的过滤器或报告过滤器"
 
@@ -33263,6 +33469,9 @@ msgstr "没有可用于从路由器“%{name}”移除接口的子网"
 msgid "No synchronize category specified"
 msgstr "未指定同步类别"
 
+msgid "No tags available for this category."
+msgstr "此类别无可用的标记。"
+
 msgid "No task returned from server"
 msgstr "服务器未返回任何任务"
 
@@ -33271,6 +33480,9 @@ msgstr "没有选择要取消的任务"
 
 msgid "No task were selected to delete"
 msgstr "没有选择要删除的任务"
+
+msgid "No tenants available."
+msgstr "无可用租户。"
 
 msgid "No timer is attached to this Widget, its contents will not be updated."
 msgstr "此窗口小部件没有附加定时器，它的内容不会被更新。"
@@ -33719,9 +33931,6 @@ msgstr "OVF 模板为必填项，请从列表中选择一个"
 msgid "OVF Templates"
 msgstr "OVF 模板"
 
-msgid "Object"
-msgstr "对象"
-
 msgid "Object Attribute"
 msgstr "对象属性"
 
@@ -33921,6 +34130,9 @@ msgstr "打开配置概要文件控制台"
 
 msgid "Open a Configured System console"
 msgstr "打开已配置系统控制台"
+
+msgid "Open a Console for this Container Group"
+msgstr "为此容器组打开控制台"
 
 msgid "Open a VMRC console for VMs"
 msgstr "打开虚拟机的 VMRC 控制台"
@@ -34806,9 +35018,6 @@ msgstr "PXE 镜像"
 
 msgid "PXE Image \"%{name}\""
 msgstr "PXE 镜像“%{name}”"
-
-msgid "PXE Image \"%{name}\" was saved"
-msgstr "已保存 PXE 镜像“%{name}”"
 
 msgid "PXE Image Menus"
 msgstr "PXE 镜像菜单"
@@ -36352,6 +36561,9 @@ msgstr "Playbook（嵌入式 Ansible）"
 msgid "Plays"
 msgstr "Play"
 
+msgid "Please assign at least one rate"
+msgstr "请至少分配一个费率"
+
 msgid "Please contact your administrator for assistance."
 msgstr "请联系您的管理员寻求帮助。"
 
@@ -37086,6 +37298,9 @@ msgstr "产品更新"
 
 msgid "Production"
 msgstr "生产"
+
+msgid "Production Log"
+msgstr "制作日志"
 
 msgid "Profile"
 msgstr "概要文件"
@@ -37862,9 +38077,6 @@ msgstr "费率"
 
 msgid "Rate (in %{currency})"
 msgstr "费率（以 %{currency} 计）"
-
-msgid "Rate Assignments saved"
-msgstr "费率分配已保存"
 
 msgid "Rate Details"
 msgstr "费率详情"
@@ -38834,14 +39046,14 @@ msgstr "注册表"
 msgid "Registry"
 msgstr "注册表"
 
+msgid "Registry Data"
+msgstr "注册表数据"
+
 msgid "Registry Entries"
 msgstr "注册表项"
 
 msgid "Registry Entry"
 msgstr "注册表条目"
-
-msgid "Registry Entry is required"
-msgstr "需要注册表条目"
 
 msgid "Registry Hive"
 msgstr "注册表 Hive"
@@ -40681,9 +40893,6 @@ msgstr "不支持结果类型 %{result_type}"
 msgid "Results"
 msgstr "结果"
 
-msgid "Results %s"
-msgstr "结果 %s"
-
 msgid "Resume"
 msgstr "恢复"
 
@@ -40870,6 +41079,9 @@ msgstr "适当大小推荐"
 
 msgid "Role"
 msgstr "角色"
+
+msgid "Role \"%s\" was saved"
+msgstr "角色 \"%s\" 已保存"
 
 msgid "Role \"%{name}\""
 msgstr "角色“%{name}”"
@@ -41256,6 +41468,15 @@ msgstr "已保存的报告"
 msgid "Saved Reports Accordion"
 msgstr "已保存的报告折叠菜单"
 
+msgid "Saved label assignments"
+msgstr "已保存的标签分配"
+
+msgid "Saved tag assignments"
+msgstr "已保存的标记分配"
+
+msgid "Saving chargeback assignments..."
+msgstr "正在保存退款分配..."
+
 msgid "Savings"
 msgstr "节省量"
 
@@ -41536,6 +41757,9 @@ msgstr "在结果里按名称搜索"
 msgid "Search is referenced in a schedule and cannot be deleted"
 msgstr "时间表里引用了搜索且无法被删除"
 
+msgid "Search operator"
+msgstr "搜索运算符"
+
 msgid "Search with Name or Relative path"
 msgstr "使用名称或相对路径进行搜索"
 
@@ -41554,9 +41778,6 @@ msgstr "二级（显示）过滤器"
 msgid ""
 "Secondary (Display) Filter - Filters the rows based on child table fields"
 msgstr "二级（显示）过滤器 - 基于子表字段过滤记录"
-
-msgid "Secondary Menu"
-msgstr "副菜单"
 
 msgid "Secret Access Key"
 msgstr "访问密钥"
@@ -41872,6 +42093,9 @@ msgstr "选择"
 msgid "Select Alerts to be Evaluated"
 msgstr "选择要评估的警报"
 
+msgid "Select All"
+msgstr "全选"
+
 msgid "Select All Days"
 msgstr "选择所有日期"
 
@@ -42130,9 +42354,6 @@ msgstr "选择图像标签的选项"
 msgid "Select rate"
 msgstr "选择费率"
 
-msgid "Select rate for selections"
-msgstr "为选项选择费率"
-
 msgid ""
 "Select storage resources to attach to the service. The new Volume(s) will be "
 "created on these resources."
@@ -42148,9 +42369,6 @@ msgstr "选择标签类别"
 
 msgid "Select tag value"
 msgstr "选择标签值"
-
-msgid "Select term of service type"
-msgstr "选择服务类型的条款"
 
 msgid ""
 "Select the format type above to apply syntax highlighting for better "
@@ -42171,6 +42389,9 @@ msgstr "选择两个或更多的项进行比较"
 
 msgid "Select up to 10 timestamps for Drift Analysis"
 msgstr "选择最多 10 个时间戳记进行偏移分析"
+
+msgid "Select values"
+msgstr "选择值"
 
 msgid "Selected"
 msgstr "选择的"
@@ -42307,6 +42528,9 @@ msgstr "服务器控制"
 msgid "Server Database Backup Insufficient Space"
 msgstr "服务器数据库备份空间不足"
 
+msgid "Server Error %s"
+msgstr "服务器错误 %s"
+
 msgid "Server Exceeded Memory Limit"
 msgstr "服务器超过内存限制"
 
@@ -42378,6 +42602,9 @@ msgstr "服务器为主服务器"
 
 msgid "Server name"
 msgstr "服务器名称"
+
+msgid "Server not responding"
+msgstr "服务器无响应"
 
 msgid "Server restart is only supported on Linux"
 msgstr "只有 Linux 支持服务器重启"
@@ -44280,6 +44507,21 @@ msgstr "关闭"
 msgid "Shutdown Guest"
 msgstr "关闭访客操作系统"
 
+msgid "Shutdown Guest OS"
+msgstr "关闭客户机操作系统"
+
+msgid "Shutdown Guest OS on the selected items"
+msgstr "关闭所选项的客户机操作系统"
+
+msgid "Shutdown Guest OS on the selected items?"
+msgstr "是否要关闭所选项的客户机操作系统？"
+
+msgid "Shutdown Guest OS on this Instance"
+msgstr "关闭此实例上的客户机操作系统"
+
+msgid "Shutdown Guest OS on this Instance?"
+msgstr "是否要关闭此实例上的客户机操作系统？"
+
 msgid "Shutdown Host"
 msgstr "关闭主机"
 
@@ -45873,6 +46115,12 @@ msgstr "交换机槽数量"
 msgid "Switch Uuid"
 msgstr "交换机 Uuid"
 
+msgid "Switch to relative date format"
+msgstr "切换为相对日期格式"
+
+msgid "Switch to specific date format"
+msgstr "切换为特定日期格式"
+
 msgid "Switch: "
 msgstr "交换机："
 
@@ -46136,6 +46384,9 @@ msgstr "Systemd 负载"
 msgid "Systemd Sub"
 msgstr "Systemd 子"
 
+msgid "TB"
+msgstr "TB"
+
 msgid "TCP"
 msgstr "TCP"
 
@@ -46214,8 +46465,14 @@ msgstr "标签编辑已成功保存"
 msgid "Tag in Dashboard"
 msgstr "仪表板中的标记"
 
+msgid "Tag selections"
+msgstr "标记选择"
+
 msgid "Tag to Apply"
 msgstr "要应用的标签"
+
+msgid "Tag value"
+msgstr "标记值"
 
 msgid "Tagged Clusters"
 msgstr "已标记的集群"
@@ -46426,6 +46683,9 @@ msgstr "租户配额"
 msgid "Tenant Quotas"
 msgstr "租户配额"
 
+msgid "Tenant chargeback assignments"
+msgstr "租户退款分配"
+
 msgid "Tenant mapping is disabled on the Provider"
 msgstr "供应商禁用了租户映射"
 
@@ -46564,6 +46824,11 @@ msgstr "Terraform Enterprise 工作区"
 
 msgid "Terraform Enterprise Workspace Provision"
 msgstr "Terraform 企业工作空间配置"
+
+msgid ""
+"Terraform Runner has been unavailable for %{unavailable} seconds, exceeding "
+"timeout of %{timeout} seconds"
+msgstr "Terraform Runner 不可用状态已达到 %{unavailable} 秒，超过 %{timeout} 秒的超时限制"
 
 msgid "Terraform Template"
 msgstr "Terraform 模板"
@@ -46832,6 +47097,9 @@ msgid "The catalog item is linked to the following services:"
 msgid_plural "The following catalog items are linked to services:"
 msgstr[0] "以下目录项已链接到服务："
 
+msgid "The check count value must be an integer"
+msgstr "检查数量值必须为整数"
+
 msgid ""
 "The check count value must be an integer to commit this expression element"
 msgstr "检查计数值必须是一个整数，才能提交此表达式元素"
@@ -47009,6 +47277,9 @@ msgid ""
 "The run should start as soon as the backend services that run terraform have "
 "available capacity."
 msgstr "一旦运行 terraform 的后端服务有可用容量，此次运行将立即开始。"
+
+msgid "The scope expression is incomplete"
+msgstr "范围表达式不完整"
 
 msgid "The selected %{label} is not in the current region"
 msgstr "选定的 %{label} 不在当前区域内"
@@ -48330,9 +48601,6 @@ msgstr "未分配的空间"
 msgid "Unarchive Services"
 msgstr "取消归档服务"
 
-msgid "Unassign"
-msgstr "取消分配"
-
 msgid "Unassign Server"
 msgstr "取消分配服务器"
 
@@ -48395,9 +48663,6 @@ msgstr "单位"
 
 msgid "Unknown"
 msgstr "未知"
-
-msgid "Unknown API error"
-msgstr "未知的 API 错误"
 
 msgid "Unknown Action"
 msgstr "未知操作"
@@ -49121,11 +49386,11 @@ msgstr "查找的用户"
 msgid "User will input the value"
 msgstr "用户将输入此值"
 
+msgid "User will input value"
+msgstr "用户将输入值"
+
 msgid "User:"
 msgstr "用户："
-
-msgid "User: %s"
-msgstr "用户：%s"
 
 msgid "UserID"
 msgstr "用户标识"
@@ -50285,9 +50550,6 @@ msgstr "变量"
 msgid "Variable Object ID"
 msgstr "变量对象 ID"
 
-msgid "Variable name must be unique"
-msgstr "变量名称必须唯一"
-
 msgid "Variables"
 msgstr "变量"
 
@@ -50349,9 +50611,6 @@ msgstr "版本 / 构建"
 
 msgid "View"
 msgstr "查看"
-
-msgid "View '%{name}' Cluster"
-msgstr "查看“%{name}”集群"
 
 msgid "View Alert Definition Profiles"
 msgstr "查看警报定义概要文件"
@@ -50845,9 +51104,6 @@ msgstr "查看此 MiqServer"
 msgid "View this Orchestration Template in Catalogs"
 msgstr "在目录中查看编排模板"
 
-msgid "View this PXE Image"
-msgstr "查看此 PXE 镜像"
-
 msgid "View this Policy Profile"
 msgstr "查看此策略概要文件"
 
@@ -50871,9 +51127,6 @@ msgstr "查看此用户"
 
 msgid "View this Widget"
 msgstr "查看此窗口小部件"
-
-msgid "View this Windows Image"
-msgstr "查看此 Windows 镜像"
 
 msgid "View this item"
 msgstr "查看此项"
@@ -51037,6 +51290,10 @@ msgstr "虚拟私有云"
 
 msgid "Virtual machines added"
 msgstr "添加的虚拟机"
+
+msgid ""
+"Virtual processors can only be reconfigured on shared processor partitions"
+msgstr "虚拟处理器只能在共享处理器分区中重新配置"
 
 msgid "Virtualization"
 msgstr "虚拟化"
@@ -52642,9 +52899,6 @@ msgstr "Windows 镜像"
 msgid "Windows Image \"%{name}\""
 msgstr "Windows 镜像“%{name}”"
 
-msgid "Windows Image \"%{name}\" was saved"
-msgstr "已保存 Windows 镜像“%{name}”"
-
 msgid "Windows Images"
 msgstr "Windows 镜像"
 
@@ -52742,9 +52996,6 @@ msgstr "工作流模板 (Ansible Tower)"
 
 msgid "Workflow does not have any credentials to map."
 msgstr "工作流程没有任何要映射的凭证。"
-
-msgid "Workflow max. timeout"
-msgstr "工作流程最大值超时"
 
 msgid "Workflow name"
 msgstr "工作流名称"
@@ -54194,15 +54445,6 @@ msgstr "样本"
 
 msgid "secondary, "
 msgstr "次要的，"
-
-msgid "select Rate1"
-msgstr "选择 Rate1"
-
-msgid "select Rate2"
-msgstr "选择 Rate2"
-
-msgid "select rate for saved items"
-msgstr "选择已保存项的费率"
 
 msgid "selected to copy"
 msgstr "选择复制的"
