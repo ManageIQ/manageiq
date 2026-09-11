@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2026-06-01 14:37+0000\n"
-"PO-Revision-Date: 2026-06-01 14:37+0000\n"
+"POT-Creation-Date: 2026-09-09 00:38+0000\n"
+"PO-Revision-Date: 2026-09-09 00:38+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -21,9 +21,6 @@ msgstr "次のタグを %{class_name} %{id} に追加できません: %{names}�
 msgid ""
 "  Unable to remove the following tags from %{class_name} %{id}: %{names}."
 msgstr "次のタグを %{class_name} %{id} から削除できません: %{names}。"
-
-msgid " # of Days"
-msgstr " 日数"
 
 msgid " %{host_uid_ems} is not a compute node "
 msgstr "%{host_uid_ems} はコンピュート・ノードではありません"
@@ -259,6 +256,9 @@ msgstr "\"%{task}\": %{hostname}にはサポートされていません"
 msgid "# Pods per Ready Status"
 msgstr "# ポッド (作動可能ステータス別)"
 
+msgid "# of Days"
+msgstr "日数"
+
 msgid "# of Events"
 msgstr "#イベント数"
 
@@ -349,6 +349,10 @@ msgstr "%sにはスナップショットがありません"
 msgid "%s is used by another field"
 msgstr "%sは別のフィールドで使用されています"
 
+msgid "%s item selected"
+msgid_plural "%s items selected"
+msgstr[0] "%s件の項目が選択されています"
+
 msgid "%s logged out, redirecting to the login page"
 msgstr "%s がログアウトしています。ログイン・ページへリダイレクトします。"
 
@@ -387,9 +391,9 @@ msgid "%{amount} Automation Job Being Tagged"
 msgid_plural "%{amount} Automation Jobs Being Tagged"
 msgstr[0] "%{amount} 自動化ジョブはタグ付けされています"
 
-msgid "%{amount} Automation Manager (Ansible Tower) Being Tagged"
-msgid_plural "%{amount} Automation Managers (Ansible Tower) Being Tagged"
-msgstr[0] "%{amount} 個の自動化マネージャー (Ansible Tower) がタグ付けされています"
+msgid "%{amount} Automation Provider (Ansible Tower) Being Tagged"
+msgid_plural "%{amount} Automation Providers (Ansible Tower) Being Tagged"
+msgstr[0] "タグ付けされている%{amount}自動化プロバイダー(Ansible Tower)"
 
 msgid "%{amount} Automation Template Being Tagged"
 msgid_plural "%{amount} Automation Templates Being Tagged"
@@ -674,14 +678,8 @@ msgstr "%{description} 予約領域が VM メモリーを超えています"
 msgid "%{description} VM Memory is larger than Memory Limit"
 msgstr "%{description}VM メモリーがメモリー上限を超えています"
 
-msgid "%{description} category Scan"
-msgstr "%{description} カテゴリー・スキャン"
-
 msgid "%{description} is required"
 msgstr "%{description} が必要です"
-
-msgid "%{description} registry Scan"
-msgstr "%{description} レジストリー・スキャン"
 
 msgid "%{domain_name} (Disabled)"
 msgstr "%{domain_name} (無効)"
@@ -1394,9 +1392,8 @@ msgstr "* ポリシー・プロファイルは以下の項目の一部にのみ�
 msgid "* Primary Server Roles shown as %{bold} text."
 msgstr "*プライマリー・サーバー・ロールは%{bold}テキストで表示されます。"
 
-msgid ""
-"* Recommendations are subject to minimum of CPU: %{cpu} and Memory: %{memory}."
-msgstr "* 推奨内容には少なくとも CPU ( %{cpu} ) およびメモリー ( %{memory} ) が必要です。"
+msgid "* Recommendations are subject to minimum of CPU: %s and Memory: %s."
+msgstr "*推奨事項には、最小CPU: %sおよび最小メモリー: %sが適用されます。"
 
 msgid "* Report is not owned by your group so it cannot be removed"
 msgstr "* レポートはお使いのグループにより所有されていないため、削除することができません"
@@ -1850,14 +1847,23 @@ msgstr "テナント・カテゴリーを選択してください"
 msgid "A VM with name: [%{name}] already exists"
 msgstr "VM 名: [%{name}] がすでに存在します"
 
+msgid "A check field must be chosen for the Find expression element"
+msgstr "検索式要素には、チェック・フィールドを選択する必要があります"
+
 msgid "A check field must be chosen to commit this expression element"
 msgstr "この式要素をコミットする場合はチェック・フィールドを選択してください。"
 
 msgid "A condition must contain a valid expression."
 msgstr "条件には有効な式が含まれている必要があります。"
 
+msgid "A date value must be entered"
+msgstr "日付値を入力する必要があります"
+
 msgid "A field must be chosen to commit this expression element"
 msgstr "この式要素をコミットする場合はフィールドを選択してください。"
+
+msgid "A field must be selected for every expression element"
+msgstr "すべての式要素に対してフィールドを選択する必要があります"
 
 msgid "A find field must be chosen to commit this expression element"
 msgstr "この式要素をコミットする場合は検索フィールドを選択してください。"
@@ -1871,8 +1877,14 @@ msgstr "プロジェクトがコンテナー・テンプレートのプロビジ
 msgid "A read only group cannot be deleted."
 msgstr "読み取り専用グループは削除できません。"
 
+msgid "A registry key name must be entered"
+msgstr "レジストリ・キー名を入力する必要があります"
+
 msgid "A registry key name must be entered to commit this expression element"
 msgstr "この式要素をコミットする場合はレジストリー・キー名を入力してください。"
+
+msgid "A registry value name must be entered"
+msgstr "レジストリー値名を入力する必要があります"
 
 msgid "A registry value name must be entered to commit this expression element"
 msgstr "この式要素をコミットする場合はレジストリー値名を入力してください。"
@@ -1930,6 +1942,9 @@ msgstr "特定の %{chargeback} またはすべてを選択してください"
 msgid "A tag category must be chosen to commit this expression element"
 msgstr "この式要素をコミットする場合はタグ・カテゴリーを選択してください。"
 
+msgid "A tag value must be chosen"
+msgstr "タグの値を選択する必要があります"
+
 msgid "A tag value must be chosen to commit this expression element"
 msgstr "この式要素をコミットする場合はタグ値を選択してください。"
 
@@ -1951,14 +1966,23 @@ msgid ""
 msgstr ""
 "自動化するアクションを実行するにはユーザーが必要です。[%{name}] id:[%{id}] アクション: [%{description}]"
 
+msgid "A valid date must be selected"
+msgstr "有効な日付を選択する必要があります"
+
 msgid "A valid expression must be present"
 msgstr "有効な式がなければなりません"
+
+msgid "A valid time must be selected"
+msgstr "有効な時刻を選択する必要があります"
 
 msgid "A valid userid is required"
 msgstr "有効なユーザー ID が必要です"
 
 msgid "A value must be changed or provider stack will not be updated."
 msgstr "値を変更する必要があります。そうしないと、プロバイダー・スタックは更新されません。"
+
+msgid "A value must be entered for every expression element"
+msgstr "すべての式要素に値を入力する必要があります"
 
 msgid "A workspace admin forcefully canceled the run."
 msgstr "ワークスペースの管理者が実行を強制的にキャンセルしました。"
@@ -2004,6 +2028,9 @@ msgstr "API ユーザー名"
 
 msgid "API Version"
 msgstr "API バージョン"
+
+msgid "ATAPI CD-ROM (IDE %s)"
+msgstr "ATAPI CD-ROM (IDE %s)"
 
 msgid "AWS Access Key for this credential"
 msgstr "この資格情報の AWS アクセス鍵"
@@ -2113,6 +2140,9 @@ msgstr "アクセス鍵"
 
 msgid "Access Key ID"
 msgstr "アクセス鍵 ID"
+
+msgid "Access Kube Exec Console for Container Group"
+msgstr "コンテナー・グループのKube Execコンソールにアクセス"
 
 msgid "Access Modes"
 msgstr "アクセス・モード"
@@ -2410,6 +2440,18 @@ msgstr "ディスクの追加"
 msgid "Add Entry"
 msgstr "エントリーの追加"
 
+msgid "Add Event Log"
+msgstr "イベント・ログを追加"
+
+msgid "Add Event Log Entry"
+msgstr "イベント・ログ・エントリーを追加"
+
+msgid "Add File"
+msgstr "ファイルを追加"
+
+msgid "Add File Entry"
+msgstr "ファイル・エントリーを追加"
+
 msgid "Add Flavor"
 msgstr "フレーバーの追加"
 
@@ -2542,8 +2584,14 @@ msgstr "プロバイダーの追加"
 msgid "Add Provisioning Dialog"
 msgstr "プロビジョニング・ダイアログの追加"
 
+msgid "Add Registry Entry"
+msgstr "レジストリー・エントリを追加"
+
 msgid "Add Repository"
 msgstr "リポジトリーの追加"
+
+msgid "Add Rule"
+msgstr "ルールを追加"
 
 msgid "Add Section"
 msgstr "セクションの追加"
@@ -2559,6 +2607,9 @@ msgstr "'%{name}' へのセキュリティー・グループの追加"
 
 msgid "Add Security Group to Instance"
 msgstr "インスタンスへのセキュリティー・グループの追加"
+
+msgid "Add Sub-Group"
+msgstr "サブグループを追加"
 
 msgid "Add Subscription"
 msgstr "サブスクリプションの追加"
@@ -2827,6 +2878,9 @@ msgstr "ネットワークの追加"
 msgid "Add a new Action"
 msgstr "新規アクションの追加"
 
+msgid "Add a new Automation Provider"
+msgstr "新しい自動化プロバイダーを追加"
+
 msgid "Add a new Button"
 msgstr "新規ボタンの追加"
 
@@ -3007,9 +3061,6 @@ msgstr "アラート・プロファイル「%s」の追加が正常にキュー�
 msgid "Add of Automate Method was cancelled by the user"
 msgstr "自動化メソッドの追加はユーザーにより取り消されました"
 
-msgid "Add of Catalog Item was cancelled by the user"
-msgstr "カタログ項目の追加はユーザーにより取り消されました"
-
 msgid "Add of Cloud Database \"%s\" has been successfully queued."
 msgstr "クラウド・データベース「%s」の追加が正常にキューに入れられました。"
 
@@ -3077,9 +3128,6 @@ msgstr "アクション「%s」の追加が正常にキューに入れられま�
 msgid "Add of floating IPs \"%s\" has been successfully queued."
 msgstr "フローティング IP「%s」の追加が正常にキューに入れられました。"
 
-msgid "Add of new %{model} Condition was cancelled by the user"
-msgstr "新規 %{model}条件の追加はユーザーにより取り消されました"
-
 msgid "Add of new %{name} was cancelled by the user"
 msgstr "新規 %{name}の追加はユーザーにより取り消されました"
 
@@ -3128,6 +3176,9 @@ msgstr "新規クラウド・ボリュームの追加はユーザーにより取
 msgid "Add of new Cloud Volume was cancelled by the user."
 msgstr "新規クラウド・ボリュームの追加はユーザーにより取り消されました。"
 
+msgid "Add of new Condition was cancelled by the user"
+msgstr "新しい条件の追加はユーザーによってキャンセルされました"
+
 msgid "Add of new Custom Button was cancelled by the user"
 msgstr "新規カスタム・ボタンの追加はユーザーにより取り消されました"
 
@@ -3163,6 +3214,9 @@ msgstr "新規プロバイダー・タグ・マッピングの追加はユーザ
 
 msgid "Add of new Report was cancelled by the user"
 msgstr "新規レポートの追加はユーザーにより取り消されました"
+
+msgid "Add of new Role was cancelled by the user"
+msgstr "新しいロールの追加はユーザーによってキャンセルされました"
 
 msgid "Add of new Schedule was cancelled by the user"
 msgstr "新規スケジュールの追加はユーザーにより取り消されました"
@@ -3202,9 +3256,6 @@ msgstr "このエントリーの追加"
 
 msgid "Add to Shopping Cart"
 msgstr "ショッピング・カートに追加"
-
-msgid "Add was cancelled by the user"
-msgstr "追加はユーザーにより取り消されました"
 
 msgid "Add widget"
 msgstr "ウィジェットの追加"
@@ -3621,6 +3672,9 @@ msgstr "アラート・プロファイルに属するアラートは削除でき
 msgid "Alerts to Evaluate"
 msgstr "評価するアラート"
 
+msgid "Alias"
+msgstr "別名"
+
 msgid "All"
 msgstr "すべて"
 
@@ -3985,6 +4039,11 @@ msgstr "Amazon 設定が正常に検証されました"
 msgid "Amazon access key and secret are needed to validate Amazon Settings"
 msgstr "Amazon アクセス鍵および秘密鍵は Amazon 設定を検証するために必要です"
 
+msgid ""
+"An Analysis or Virtual Black Box Synchronization for this VM may need to be "
+"run."
+msgstr "このVMに対して分析または仮想ブラック・ボックス同期を実行する必要がある場合があります。"
+
 msgid "An Ansible Playbook must be selected"
 msgstr "Ansible Playbook を選択してください"
 
@@ -4019,6 +4078,12 @@ msgid ""
 "An error occurred while requesting the IBM VPC instance provision. Cannot "
 "retrieve instance id from returned server response."
 msgstr "IBM VPC インスタンスのプロビジョンを要求中にエラーが発生しました。 返されたサーバー応答からインスタンス ID を検索できません。"
+
+msgid "An error occurred while saving"
+msgstr "保存中にエラーが発生しました"
+
+msgid "An error occurred while saving the role"
+msgstr "ロールの保存中にエラーが発生しました"
 
 msgid "An internal system error."
 msgstr "内部システム・エラー。"
@@ -4064,11 +4129,11 @@ msgstr "分析プロファイル \"%{name}\""
 msgid "Analysis Profile \"%{name}\" was saved"
 msgstr "分析プロファイル \"%{name}\" が保存されました"
 
-msgid "Analysis Profile \"%{name}\": Error during 'update': %{message}"
-msgstr "分析プロファイル \"%{name}\": 「更新」の実行中にエラーが発生しました: %{message}"
-
 msgid "Analysis Profile is required"
 msgstr "分析プロファイルが必要です"
+
+msgid "Analysis Profile was saved"
+msgstr "分析プロファイルが保存されました"
 
 msgid "Analysis Profiles"
 msgstr "分析プロファイル"
@@ -4216,9 +4281,6 @@ msgstr "適用されるタグ"
 
 msgid "Applies To"
 msgstr "適用対象"
-
-msgid "Applies to is required"
-msgstr "適用対象は必須です"
 
 msgid "Apply"
 msgstr "適用"
@@ -4631,9 +4693,6 @@ msgstr "ルーム"
 msgid "AssetDetail|Serial number"
 msgstr "シリアル番号"
 
-msgid "Assign"
-msgstr "割り当て"
-
 msgid "Assign Catalog Items"
 msgstr "カタログ項目の割り当て"
 
@@ -4802,9 +4861,6 @@ msgstr "E メール受信者を 1 名以上構成してください"
 msgid "At least one Field must be selected"
 msgstr "1 つ以上のフィールドを選択してください"
 
-msgid "At least one Product Feature must be selected"
-msgstr "製品機能を 1 つ以上選択してください"
-
 msgid "At least one Role must be selected"
 msgstr "ロールを 1 つ以上選択してください"
 
@@ -4848,6 +4904,9 @@ msgstr "セクションを 1 つ以上選択してください"
 
 msgid "At least one task status is required"
 msgstr "少なくとも 1 つのタスク状況が必要です"
+
+msgid "Atom type"
+msgstr "アトム・タイプ"
 
 msgid "Attach"
 msgstr "割り当て"
@@ -5306,40 +5365,40 @@ msgstr "自動化ジョブ"
 msgid "Automation Jobs"
 msgstr "自動化ジョブ"
 
-msgid "Automation Manager"
-msgstr "自動化マネージャー"
-
-msgid "Automation Manager (AWX)"
-msgid_plural "Automation Managers (AWX)"
-msgstr[0] "Automation Managers (AWX)"
-
-msgid "Automation Manager (Ansible Automation Platform)"
-msgid_plural "Automation Managers (Ansible Automation Platform)"
-msgstr[0] "Automation Managers (Ansible Automation Platform)"
-
-msgid "Automation Manager (Ansible Tower)"
-msgstr "自動化マネージャー (Ansible Tower)"
-
-msgid "Automation Manager Provision"
-msgstr "自動化マネージャーのプロビジョン"
-
-msgid "Automation Manager Provisioning"
-msgstr "自動化マネージャーのプロビジョニング"
-
-msgid "Automation Manager Repositories Refresh"
-msgstr "自動化マネージャー・リポジトリーのリフレッシュ"
-
-msgid "Automation Managers"
-msgstr "自動化マネージャー"
-
-msgid "Automation Managers (AWX)"
-msgstr "自動化マネージャー (AWX)"
-
-msgid "Automation Managers (Ansible Tower)"
-msgstr "自動化マネージャー (Ansible Tower)"
-
 msgid "Automation Method Data"
 msgstr "自動化メソッド・データ"
+
+msgid "Automation Provider"
+msgstr "自動化プロバイダー"
+
+msgid "Automation Provider (AWX)"
+msgid_plural "Automation Providers (AWX)"
+msgstr[0] "自動化プロバイダー(AWX)"
+
+msgid "Automation Provider (Ansible Automation Platform)"
+msgid_plural "Automation Providers (Ansible Automation Platform)"
+msgstr[0] "自動化プロバイダー(Ansible Automation Platform)"
+
+msgid "Automation Provider (Ansible Tower)"
+msgstr "自動化プロバイダー(Ansible Tower)"
+
+msgid "Automation Provider Provision"
+msgstr "自動化プロバイダーのプロビジョン"
+
+msgid "Automation Provider Provisioning"
+msgstr "自動化プロバイダーのプロビジョニング"
+
+msgid "Automation Provider Repositories Refresh"
+msgstr "自動化プロバイダー・リポジトリーの更新"
+
+msgid "Automation Providers"
+msgstr "自動化プロバイダー"
+
+msgid "Automation Providers (AWX)"
+msgstr "自動化プロバイダー(AWX)"
+
+msgid "Automation Providers (Ansible Tower)"
+msgstr "自動化プロバイダー(Ansible Tower)"
 
 msgid "Automation Request"
 msgstr "自動化要求"
@@ -6097,6 +6156,9 @@ msgstr "ホスト別"
 msgid "By Role"
 msgstr "ロール別"
 
+msgid "Bytes"
+msgstr "バイト数"
+
 msgid "C & U Collection"
 msgstr "C & U 収集"
 
@@ -6123,6 +6185,12 @@ msgstr "CA 証明書"
 
 msgid "CD-ROM (%{name} %{location}), %{connection}"
 msgstr "CD-ROM (%{name} %{location})、%{connection}"
+
+msgid "CD-ROM (IDE %s)"
+msgstr "CD-ROM (IDE %s)"
+
+msgid "CD-ROM Image (IDE %s)"
+msgstr "CD-ROMイメージ(IDE %s)"
 
 msgid "CD/DVD Drives"
 msgstr "CD/DVD ドライブ"
@@ -7137,9 +7205,6 @@ msgstr "%{class_description} プロバイダーではパスワードの変更は
 msgid "Change Password of Infrastructure Providers"
 msgstr "インフラストラクチャー・プロバイダーのパスワード変更"
 
-msgid "Change current group"
-msgstr "現在のグループの変更"
-
 msgid "Changed from previous"
 msgstr "変更あり"
 
@@ -7263,6 +7328,12 @@ msgstr "チャージバックの保存済みレポート"
 msgid "Chargeback Tier"
 msgid_plural "Chargeback Tiers"
 msgstr[0] "チャージバック階層"
+
+msgid "Chargeback assignments"
+msgstr "チャージバックの割り当て"
+
+msgid "Chargeback assignments saved successfully"
+msgstr "チャージバックの割り当てが正常に保存されました"
 
 msgid "Chargeback for Configured Systems"
 msgid_plural "Chargebacks for Configured Systems"
@@ -7595,6 +7666,15 @@ msgstr "チェック・オプション"
 msgid "Check Value Error: %{msg}"
 msgstr "値チェックのエラー: %{msg}"
 
+msgid "Check field"
+msgstr "チェック・フィールド"
+
+msgid "Check mode"
+msgstr "チェック・モード"
+
+msgid "Check operator"
+msgstr "チェック演算子"
+
 msgid "Checking"
 msgstr "検査中"
 
@@ -7627,6 +7707,9 @@ msgstr "選択"
 
 msgid "Choose %{entity}"
 msgstr "%{entity}の選択"
+
+msgid "Choose Assignment Type"
+msgstr "割り当てタイプを選択"
 
 msgid "Choose File"
 msgstr "ファイルを選択する"
@@ -7679,9 +7762,6 @@ msgstr "左側のメニューから編集するロールを選択します。"
 msgid "Choose a Schedule to view from the menus on the left."
 msgstr "左側のメニューから表示するスケジュールを選択します。"
 
-msgid "Choose a Server"
-msgstr "サーバーの選択"
-
 msgid "Choose a Template"
 msgstr "テンプレートの選択"
 
@@ -7693,9 +7773,6 @@ msgstr "値の選択"
 
 msgid "Choose a chart type"
 msgstr "チャート・タイプの選択"
-
-msgid "Choose a pattern"
-msgstr "パターンの選択"
 
 msgid "Choose a resource entity and label"
 msgstr "リソース・エンティティーとラベルを選択してください"
@@ -7712,41 +7789,17 @@ msgstr "テナントの選択"
 msgid "Choose an Owner"
 msgstr "所有者の選択"
 
-msgid "Choose an element of the scope to edit"
-msgstr "編集するスコープの要素を選択"
-
-msgid "Choose cloud object storage"
-msgstr "クラウド・オブジェクト・ストレージの選択"
-
-msgid "Choose disk type"
-msgstr "ディスク・タイプを選択する"
-
 msgid "Choose file"
 msgstr "ファイルの選択"
 
 msgid "Choose one or more Fields"
 msgstr "1 つ以上のフィールドを選択してください"
 
-msgid "Choose source image"
-msgstr "ソース・イメージを選択する"
-
-msgid "Choose source provider"
-msgstr "ソース・プロバイダーを選択する"
-
-msgid "Choose source provider type"
-msgstr "ソース・プロバイダー・タイプの選択"
-
-msgid "Choose storage bucket"
-msgstr "ストレージ・バケットを選択する"
-
 msgid "Choose the branch or tag you would like to import"
 msgstr "インポートするブランチまたはタグを選択"
 
 msgid "Choose the type of custom variables to be imported"
 msgstr "インポートするカスタム変数のタイプを選択します"
-
-msgid "Choose transient storage"
-msgstr "一時ストレージを選択する"
 
 msgid "Cidr"
 msgstr "CIDR"
@@ -9139,6 +9192,9 @@ msgstr "収集日:"
 msgid "Collection Options"
 msgstr "収集オプション"
 
+msgid "Colocation Policy"
+msgstr "コロケーション・ポリシー"
+
 msgid "Column"
 msgstr "列"
 
@@ -9418,11 +9474,11 @@ msgstr "リージョン番号"
 msgid "Condition"
 msgstr "条件"
 
-msgid "Condition \"%{name}\" was added"
-msgstr "条件 \"%{name}\" が追加されました"
+msgid "Condition \"%s\" was added"
+msgstr "条件「%s」が追加されました"
 
-msgid "Condition \"%{name}\" was saved"
-msgstr "条件 \"%{name}\" が保存されました"
+msgid "Condition \"%s\" was saved"
+msgstr "条件「%s」が保存されました"
 
 msgid "Condition Selection"
 msgstr "条件の選択"
@@ -9532,9 +9588,6 @@ msgstr "対象"
 
 msgid "Condition|Updated on"
 msgstr "更新"
-
-msgid "Config Pattern"
-msgstr "構成パターン"
 
 msgid "Config Version"
 msgstr "構成バージョン"
@@ -10182,6 +10235,12 @@ msgstr "コンテナー・ダッシュボード"
 msgid "Container Environment Variable"
 msgid_plural "Container Environment Variables"
 msgstr[0] "コンテナー環境変数"
+
+msgid "Container Group Access"
+msgstr "コンテナー・グループへのアクセス"
+
+msgid "Container Group Console"
+msgstr "コンテナー・グループ・コンソール"
 
 msgid "Container Group Name"
 msgstr "コンテナー・グループ名"
@@ -12685,6 +12744,9 @@ msgstr "%{name}のコピー"
 msgid "Copy of %{typ} Request"
 msgstr "%{typ}の要求のコピー"
 
+msgid "Copy of Analysis Profile was cancelled by the user"
+msgstr "分析プロファイルのコピーはユーザーによってキャンセルされました"
+
 msgid "Copy of Dashboard was cancelled by the user"
 msgstr "ダッシュボードのコピーはユーザーにより取り消されました"
 
@@ -13331,9 +13393,6 @@ msgstr "現在のユーザー"
 
 msgid "Current Window"
 msgstr "現在のウィンドウ"
-
-msgid "Current group: %s"
-msgstr "現行グループ: %s"
 
 msgid "Current pods"
 msgstr "現在のポッド"
@@ -14348,9 +14407,6 @@ msgstr "式の定義"
 msgid "Define New %{table}"
 msgstr "新規%{table}の定義"
 
-msgid "Define Scope"
-msgstr "スコープの定義"
-
 msgid "Define a new Host Initiator"
 msgstr "新規ホスト・イニシエーターの定義"
 
@@ -15093,9 +15149,6 @@ msgstr "グループに依存"
 msgid "Depends on Service"
 msgstr "サービスに依存"
 
-msgid "Deploy"
-msgstr "デプロイ"
-
 msgid "Deploy Server"
 msgstr "サーバーのデプロイ"
 
@@ -15149,6 +15202,9 @@ msgstr "説明:"
 
 msgid "Descrption"
 msgstr "説明"
+
+msgid "Deselect All"
+msgstr "すべての選択を解除"
 
 msgid "Desired"
 msgstr "必要"
@@ -15289,6 +15345,9 @@ msgstr "検出"
 
 msgid "Development"
 msgstr "開発"
+
+msgid "Development Log"
+msgstr "開発ログ"
 
 msgid "Device Location"
 msgstr "デバイスの場所"
@@ -15450,9 +15509,6 @@ msgstr "「カタログ内に表示」が選択されている場合はダイア
 
 msgid "Dialog name"
 msgstr "ダイアログ名"
-
-msgid "Dialog name already exists"
-msgstr "ダイアログ名がすでに存在します"
 
 msgid "Dialog needs to have a label"
 msgstr "ダイアログにはラベルが必要です"
@@ -16966,6 +17022,9 @@ msgstr "表示:"
 msgid "Display in Catalog"
 msgstr "カタログ内に表示"
 
+msgid "Display label"
+msgstr "表示ラベル"
+
 msgid "Display metrics"
 msgstr "メトリックの表示"
 
@@ -17050,9 +17109,6 @@ msgstr "ドメインがロック解除されています。"
 
 msgid "Domain name change for a system domain import is not supported."
 msgstr "システム・ドメイン・インポートのドメイン名の変更はサポートされていません。"
-
-msgid "Domains"
-msgstr "ドメイン"
 
 msgid "Domains:"
 msgstr "ドメイン:"
@@ -17176,6 +17232,10 @@ msgstr "このレポートをテキスト形式でダウンロード"
 
 msgid "Draft"
 msgstr "ドラフト"
+
+msgid ""
+"Drag and drop to reorder domains. Higher priority domains are listed first."
+msgstr "ドメインの順序を変更するには、ドラッグ＆ドロップしてください。 優先度の高いドメインが先に表示されます。"
 
 msgid ""
 "Drag items here to add to the dialog. At least one item is required before "
@@ -17577,6 +17637,9 @@ msgstr "EVM サーバーのリレーションシップの編集"
 msgid "Edit Event Assignment"
 msgstr "イベント割り当ての編集"
 
+msgid "Edit Event Log Entry"
+msgstr "イベント・ログ・エントリーを編集"
+
 msgid "Edit Event cancelled by user"
 msgstr "イベントの編集はユーザーにより取り消されました"
 
@@ -17585,6 +17648,9 @@ msgstr "式の編集"
 
 msgid "Edit Field Details"
 msgstr "フィールドの詳細を編集"
+
+msgid "Edit File Entry"
+msgstr "ファイル・エントリーを編集"
 
 msgid "Edit Generic Object"
 msgstr "汎用オブジェクトの編集"
@@ -17649,6 +17715,9 @@ msgstr "オーケストレーション・テンプレート・タグの編集"
 msgid "Edit PXE Image"
 msgstr "PXE イメージの編集"
 
+msgid "Edit PXE Image Tags"
+msgstr "PXEイメージ・タグを編集"
+
 msgid "Edit Physical Storage \"%{name}\""
 msgstr "物理ストレージ 「%{name}」 を編集する"
 
@@ -17670,6 +17739,9 @@ msgstr "プロビジョニング・ダイアログの編集"
 msgid "Edit Record Filter"
 msgstr "レコード・フィルターの編集"
 
+msgid "Edit Registry Entry"
+msgstr "レジストリー・エントリーを編集"
+
 msgid "Edit Report Menus"
 msgstr "レポート・メニューの編集"
 
@@ -17684,9 +17756,6 @@ msgstr "リポジトリー \"%{name}\" の編集"
 
 msgid "Edit Router \"%{name}\""
 msgstr "ルーター \"%{name}\" の編集"
-
-msgid "Edit Scope"
-msgstr "スコープの編集"
 
 msgid "Edit Section Details"
 msgstr "セクションの詳細を編集"
@@ -17832,11 +17901,11 @@ msgstr "選択した Ansible Playbooks タグの編集"
 msgid "Edit Tags for the selected Ansible Repositories"
 msgstr "選択した Ansible リポジトリー・タグの編集"
 
-msgid "Edit Tags for the selected Automation Manager Credentials"
-msgstr "選択した自動化マネージャー資格情報のタグの編集"
+msgid "Edit Tags for the selected Automation Provider Credentials"
+msgstr "選択した自動化プロバイダー資格情報のタグを編集"
 
-msgid "Edit Tags for the selected Automation Manager Repositories"
-msgstr "選択した自動化マネージャー・リポジトリーのタグの編集"
+msgid "Edit Tags for the selected Automation Provider Repositories"
+msgstr "選択した自動化プロバイダー・リポジトリーのタグを編集"
 
 msgid "Edit Tags for the selected Automation Providers"
 msgstr "選択した自動化プロバイダーのタグを編集する"
@@ -18255,6 +18324,9 @@ msgstr "オーケストレーション・スタックのタグの編集"
 msgid "Edit Tags of PXE"
 msgstr "PXE のタグを編集する"
 
+msgid "Edit Tags of PXE Images"
+msgstr "PXEイメージのタグを編集"
+
 msgid "Edit Tags of PXE Servers"
 msgstr "PXE サーバーのタグを編集する"
 
@@ -18312,6 +18384,9 @@ msgstr "ボリューム・タイプのタグの編集"
 msgid "Edit Tags of Volumes"
 msgstr "ボリュームのタグの編集"
 
+msgid "Edit Tags of Windows Images"
+msgstr "Windowsイメージのタグを編集"
+
 msgid "Edit Tags selected Pxe Servers"
 msgstr "選択した PXE サーバーのタグの編集"
 
@@ -18332,6 +18407,9 @@ msgstr "表示の編集"
 
 msgid "Edit Windows Image"
 msgstr "Windows イメージの編集"
+
+msgid "Edit Windows Image Tags"
+msgstr "Windowsイメージのタグを編集"
 
 msgid "Edit a Block Storage Manager"
 msgstr "Block Storage マネージャーを編集する"
@@ -18548,17 +18626,11 @@ msgstr "割り当ての編集"
 msgid "Edit assignments for this Alert Profile"
 msgstr "このアラート・プロファイルの割り当ての編集"
 
-msgid "Edit of \"%s\" was cancelled by the user"
-msgstr "「%s」の編集はユーザーにより取り消されました"
-
 msgid "Edit of %s \"%s\" was canceled by the user."
 msgstr "%s \"%s\" の編集はユーザーにより取り消されました。"
 
 msgid "Edit of %s \"%s\" was cancelled by the user"
 msgstr "%s \"%s\" の編集はユーザーにより取り消されました"
-
-msgid "Edit of %{model} Condition \"%{name}\" was cancelled by the user"
-msgstr "%{model} 条件 \"%{name}\" の編集はユーザーにより取り消されました"
 
 msgid "Edit of %{model} Request \"%{name}\" was cancelled by the user"
 msgstr "%{model}の要求 \"%{name}\" の編集はユーザーにより取り消されました"
@@ -18578,8 +18650,8 @@ msgstr "アラート \"%{name}\" の編集はユーザーにより取り消さ�
 msgid "Edit of Alert Profile \"%s\" was canceled by the user."
 msgstr "アラート・プロファイル 「%s」の編集はユーザーによって取り消されました。"
 
-msgid "Edit of Analysis Profile \"%{name}\" was cancelled by the user"
-msgstr "分析プロファイル \"%{name}\" の編集はユーザーにより取り消されました"
+msgid "Edit of Analysis Profile was cancelled by the user"
+msgstr "分析プロファイルの編集はユーザーによってキャンセルされました"
 
 msgid "Edit of Automate Class \"%{name}\" was cancelled by the user"
 msgstr "自動化クラス \"%{name}\" の編集はユーザーにより取り消されました"
@@ -18638,6 +18710,9 @@ msgstr "クラウド・ボリューム「%s」の編集はユーザーにより�
 msgid "Edit of Cloud Volume \"%{name}\" was cancelled by the user"
 msgstr "クラウド・ボリューム \"%{name}\" の編集はユーザーにより取り消されました"
 
+msgid "Edit of Condition \"%s\" was cancelled by the user"
+msgstr "条件「%s」の編集はユーザーによってキャンセルされました"
+
 msgid "Edit of Credential \"%s\" was canceled by the user."
 msgstr "資格情報 \"%s\" の編集はユーザーにより取り消されました。"
 
@@ -18692,8 +18767,8 @@ msgstr "名前空間 \"%s\" の編集はユーザーにより取り消されま�
 msgid "Edit of Orchestration Template %s was cancelled by the user"
 msgstr "オーケストレーション・テンプレート %s の編集はユーザーにより取り消されました"
 
-msgid "Edit of PXE Image \"%{name}\" was cancelled by the user"
-msgstr "PXE イメージ \"%{name}\" の編集はユーザーにより取り消されました"
+msgid "Edit of PXE Image was cancelled by the user"
+msgstr "PXEイメージの編集はユーザーによってキャンセルされました"
 
 msgid "Edit of PXE Server %s was cancelled by the user"
 msgstr "PXE サーバー %s の編集はユーザーにより取り消されました"
@@ -18737,6 +18812,9 @@ msgstr "リポジトリー \"%s\" の編集はユーザーにより取り消さ�
 msgid "Edit of Repository \"%s\" was successfully initiated."
 msgstr "リポジトリー \"%s\" の編集が正常に開始されました。"
 
+msgid "Edit of Role was cancelled by the user"
+msgstr "ロールの編集はユーザーによってキャンセルされました"
+
 msgid "Edit of Schedule \"%{name}\" was cancelled by the user"
 msgstr "スケジュール \"%{name}\" の編集はユーザーにより取り消されました"
 
@@ -18761,8 +18839,8 @@ msgstr "システム・イメージ・タイプ 「%s」 の編集はユーザ�
 msgid "Edit of Widget \"%{title}\" was cancelled by the user"
 msgstr "ウィジェット \"%{title}\" の編集はユーザーにより取り消されました"
 
-msgid "Edit of Windows Image \"%{name}\" was cancelled by the user"
-msgstr "Windows イメージ \"%{name}\" の編集はユーザーにより取り消されました"
+msgid "Edit of Windows Image was cancelled by the user"
+msgstr "Windowsイメージの編集はユーザーによってキャンセルされました"
 
 msgid "Edit of Zone \"%s\" was canceled by the user."
 msgstr "ゾーン「%s」 の編集はユーザーによって取り消されました。"
@@ -19236,11 +19314,11 @@ msgstr "組み込み Ansible サービスが利用できません。"
 msgid "Embedded Automate"
 msgstr "組み込み自動化"
 
-msgid "Embedded Automation Manager"
-msgstr "組み込み自動化マネージャー"
+msgid "Embedded Automation Provider"
+msgstr "組み込み自動化プロバイダー"
 
-msgid "Embedded Automation Managers"
-msgstr "組み込みの自動化マネージャー"
+msgid "Embedded Automation Providers"
+msgstr "組み込み自動化プロバイダー"
 
 msgid "Embedded Methods"
 msgstr "組み込みメソッド"
@@ -19846,8 +19924,44 @@ msgstr "スタンバイ・モードの開始"
 msgid "Enter a comma separated list of IP or DNS names"
 msgstr "IP または DNS 名のコンマ区切りのリストを入力"
 
+msgid "Enter a list of numbers separated by commas"
+msgstr "コンマで区切った数値のリストを入力します"
+
+msgid "Enter a list of text strings separated by commas"
+msgstr "コンマで区切ったテキスト文字列のリストを入力します"
+
 msgid "Enter a new Dialog"
 msgstr "新規ダイアログの入力"
+
+msgid "Enter a number"
+msgstr "数値を入力します"
+
+msgid "Enter a value"
+msgstr "値を入力してください"
+
+msgid "Enter event log name"
+msgstr "イベント・ログ名を入力します"
+
+msgid "Enter file path"
+msgstr "ファイル・パスを入力します"
+
+msgid "Enter filter message"
+msgstr "フィルター・メッセージを入力します"
+
+msgid "Enter level"
+msgstr "レベルを入力します"
+
+msgid "Enter number of days"
+msgstr "日数の入力"
+
+msgid "Enter registry key"
+msgstr "レジストリ・キーを入力します"
+
+msgid "Enter registry value"
+msgstr "レジストリー値を入力します"
+
+msgid "Enter source"
+msgstr "ソースを入力します"
 
 msgid "Enter tag category to map to"
 msgstr "マップするタグ・カテゴリーの入力"
@@ -19857,6 +19971,9 @@ msgstr "入力時刻"
 
 msgid "Enterprise"
 msgstr "エンタープライズ"
+
+msgid "Enterprise ID not found"
+msgstr "エンタープライズIDが見つかりません"
 
 msgid "Enterprises"
 msgstr "エンタープライズ"
@@ -19968,9 +20085,6 @@ msgstr "'%{task}' の実行中にエラーが発生しました: %{message}"
 msgid "Error during '%{task}': Expression element is required"
 msgstr "'%{task}' の実行中にエラーが発生しました: 式要素が必要です"
 
-msgid "Error during '%{title}': %{message}"
-msgstr "'%{title}' の実行中にエラーが発生しました: %{message}"
-
 msgid "Error during 'Add VM to service': %{message}"
 msgstr "'サービスへの VM の追加' の実行中にエラーが発生しました: %{message}"
 
@@ -19994,9 +20108,6 @@ msgstr "'ポリシーのインポート' の実行中にエラーが発生しま
 
 msgid "Error during 'Provisioning': %{error_message}"
 msgstr "'プロビジョニング' の実行中にエラーが発生しました: %{error_message}"
-
-msgid "Error during 'Rate assignments': %{error_message}"
-msgstr "'レートの割り当て' の実行中にエラーが発生しました: %{error_message}"
 
 msgid "Error during 'Remove VM from service': %{message}"
 msgstr "'サービスから VM を削除' の実行中にエラーが発生しました: %{message}"
@@ -20113,6 +20224,9 @@ msgstr "データのロード中のエラー:"
 msgid "Error message goes here"
 msgstr "エラー・メッセージがここに表示されます"
 
+msgid "Error occurred, search filter not applied."
+msgstr "エラーが発生したため、検索フィルターは適用されませんでした。"
+
 msgid "Error on line %{line_num}: %{err_txt}"
 msgstr "行 %{line_num} のエラー: %{err_txt}"
 
@@ -20122,6 +20236,9 @@ msgstr "サーバーからのデータの要求時にエラーが発生しまし
 msgid ""
 "Error returned from %{name} event processing in Automate: %{error_message}"
 msgstr "エラーが自動化の %{name} イベント処理から返されました: %{error_message}"
+
+msgid "Error saving priority order"
+msgstr "優先順位の保存中にエラーが発生しました"
 
 msgid "Error text:"
 msgstr "エラー・テキスト:"
@@ -20329,9 +20446,6 @@ msgstr "イベント・タイプ"
 msgid "Event log"
 msgstr "イベント・ログ"
 
-msgid "Event log name is required"
-msgstr "イベント・ログ名が必要です"
-
 msgid "Event name is required"
 msgstr "イベント名が必要です"
 
@@ -20503,9 +20617,6 @@ msgstr "イベントはこの領域ではサポートされていません"
 msgid "Events for VM prod_webserver"
 msgstr "VM prod_webserver のイベント"
 
-msgid "Every"
-msgstr "毎"
-
 msgid "Everything"
 msgstr "すべて"
 
@@ -20536,8 +20647,8 @@ msgstr "サービス・カタログ下のすべてのアコーディオン"
 msgid "Everything under Auth Key Pairs"
 msgstr "認証鍵ペア下のすべて"
 
-msgid "Everything under Automation Manager"
-msgstr "自動化マネージャー下のすべて"
+msgid "Everything under Automation Provider"
+msgstr "自動化プロバイダー配下のすべて"
 
 msgid "Everything under Availability Zones"
 msgstr "アベイラビリティー・ゾーン下のすべて"
@@ -20962,8 +21073,14 @@ msgstr "式"
 msgid "Expression (Custom)"
 msgstr "式 (カスタム)"
 
+msgid "Expression Editor"
+msgstr "式エディター"
+
 msgid "Expression Object"
 msgstr "式オブジェクト"
+
+msgid "Expression incomplete"
+msgstr "式が不完全です"
 
 msgid ""
 "Expressions (next tab) can only be configured for buttons with \"Display for\""
@@ -21476,6 +21593,30 @@ msgstr "%{subject} のスナップショットの %{snapshot_op} の失敗: %{er
 msgid "Failed to delete %s %s."
 msgstr "%s %sの削除に失敗しました。"
 
+msgid "Failed to load chargeback data"
+msgstr "チャージバック・データの読み込みに失敗しました"
+
+msgid "Failed to load image labels"
+msgstr "イメージ・ラベルの読み込みに失敗しました"
+
+msgid "Failed to load label values"
+msgstr "ラベル値の読み込みに失敗しました"
+
+msgid "Failed to load resources"
+msgstr "リソースをロードできませんでした"
+
+msgid "Failed to load tag categories"
+msgstr "タグ・カテゴリーの読み込みに失敗しました"
+
+msgid "Failed to refresh domain"
+msgstr "ドメインの更新に失敗しました"
+
+msgid "Failed to save C & U collection settings"
+msgstr "C & Uコレクション設定の保存に失敗しました"
+
+msgid "Failed to save chargeback assignments"
+msgstr "チャージバック割り当ての保存に失敗しました"
+
 msgid "Failover"
 msgstr "フェイルオーバー"
 
@@ -21550,9 +21691,6 @@ msgstr[0] "ファイル・デポ"
 
 msgid "File Entry"
 msgstr "ファイル・エントリー"
-
-msgid "File Entry is required"
-msgstr "ファイル・エントリーが必要です"
 
 msgid "File Items"
 msgstr "ファイル項目"
@@ -21712,9 +21850,6 @@ msgstr "フィルター"
 
 msgid "Filter Expression"
 msgstr "フィルター式"
-
-msgid "Filter Item"
-msgstr "フィルター項目"
 
 msgid "Filter Message"
 msgstr "メッセージのフィルター"
@@ -22254,6 +22389,9 @@ msgstr "ステータス"
 msgid "Floppy %{name} %{location} %{connection}"
 msgstr "フロッピー %{name} %{location} %{connection}"
 
+msgid "Floppy Drive (SIO %s)"
+msgstr "フロッピー・ドライブ(SIO %s)"
+
 msgid "Floppy Drives"
 msgstr "フロッピー・ドライブ"
 
@@ -22345,6 +22483,15 @@ msgstr "フォーマット・タブは 1 つ以上のフィールドが選択さ
 
 msgid "Found"
 msgstr "見つかりました"
+
+msgid ""
+"Found under Observability > Monitoring in the IBM Cloud console. The "
+"Monitoring instance must be in the same region as this PowerVS workspace and "
+"configured to receive IBM Power Virtual Server metrics."
+msgstr ""
+"IBM Cloudコンソールの「オブザーバビリティー(Observability)」>「モニタリング(Monitoring)」に表示されます。 "
+"モニタリング・インスタンスは、このPowerVSワークスペースと同じリージョンに配置され、IBM Power Virtual Serverのメトリックを受信"
+"するように構成されている必要があります。"
 
 msgid "Free"
 msgstr "空き"
@@ -22516,6 +22663,9 @@ msgstr "汎用オブジェクトの定義"
 
 msgid "Generic Objects"
 msgstr "汎用オブジェクト"
+
+msgid "Generic SCSI (%s)"
+msgstr "汎用SCSI (%s)"
 
 msgid "Generic Subtype"
 msgstr "汎用サブタイプ"
@@ -22693,9 +22843,6 @@ msgstr "グローバル検索:"
 
 msgid "Glusterfs Endpoint Name"
 msgstr "Glusterfs エンドポイント名"
-
-msgid "Go to my start page"
-msgstr "my start ページに移動"
 
 msgid "Google"
 msgstr "Google"
@@ -23028,9 +23175,6 @@ msgstr "HCP Terraformはプランニング・フェーズを開始するため�
 msgid "HCP Terraform is waiting for its backend services to start the plan."
 msgstr "HCP Terraformはがプランを開始するためのバックエンドサービスの起動を待機中です。"
 
-msgid "HKLM"
-msgstr "HKLM"
-
 msgid "HMC-managed"
 msgstr "HMC 管理対象"
 
@@ -23096,6 +23240,12 @@ msgstr "困難"
 
 msgid "Hard Disk"
 msgstr "ハード・ディスク"
+
+msgid "Hard Disk (IDE %s)"
+msgstr "ハード・ディスク(IDE %s)"
+
+msgid "Hard Disk (SCSI %s)"
+msgstr "ハード・ディスク(SCSI %s)"
 
 msgid "Hard Reboot"
 msgstr "ハード・リブート"
@@ -23184,6 +23334,12 @@ msgstr "ビット"
 msgid "Hardware|Config version"
 msgstr "構成バージョン"
 
+msgid "Hardware|Cpu available cores"
+msgstr "ハードウェア｜CPUの使用可能コア数"
+
+msgid "Hardware|Cpu configured cores"
+msgstr "ハードウェア｜CPUの構成済みコア数"
+
 msgid "Hardware|Cpu cores per socket"
 msgstr "ソケットあたりの CPU コア数"
 
@@ -23243,6 +23399,12 @@ msgstr "メモリー・コンソール"
 
 msgid "Hardware|Memory mb"
 msgstr "メモリー (MB)"
+
+msgid "Hardware|Memory mb available"
+msgstr "ハードウェア｜使用可能メモリー(MB)"
+
+msgid "Hardware|Memory mb configured"
+msgstr "ハードウェア｜構成済みメモリー(MB)"
 
 msgid "Hardware|Memory mb minimum"
 msgstr "メモリー (MB) 最小値"
@@ -24466,6 +24628,14 @@ msgstr "IBM Cloud Infrastructure Center"
 msgid "IBM Cloud Monitoring Instance GUID"
 msgstr "IBM Cloud Monitoring Instance GUID"
 
+msgid ""
+"IBM Cloud Monitoring is not available for PowerVS region '%{region}'. Ensure "
+"an IBM Cloud Monitoring instance exists in the same region as this PowerVS "
+"workspace."
+msgstr ""
+"IBM Cloud Monitoringは、PowerVSリージョン「%{region}」では利用できません。 IBM Cloud Monitoring"
+"インスタンスが、このPowerVSワークスペースと同じリージョンに存在することを確認してください。"
+
 msgid "IBM Cloud Pak URL"
 msgstr "IBM Cloud Pak の URL"
 
@@ -25293,9 +25463,6 @@ msgstr "無効なボタン・アクション"
 msgid "Invalid chart definition"
 msgstr "無効なチャート定義"
 
-msgid "Invalid configuration parameters."
-msgstr "無効な構成パラメーター。"
-
 msgid "Invalid credential_field %{field}, allowed values are %{allowed_fields}"
 msgstr "credential_field%{field} が無効です。許可される値は%{allowed_fields} です"
 
@@ -25514,11 +25681,11 @@ msgstr "ユーザー ID"
 msgid "Job|Zone"
 msgstr "ゾーン"
 
+msgid "KB"
+msgstr "KB"
+
 msgid "KBps"
 msgstr "KBps"
-
-msgid "Keep OVA file on completion"
-msgstr "完了時に OVA ファイルを保持する"
 
 msgid "Kerberos"
 msgstr "Kerberos"
@@ -25567,6 +25734,9 @@ msgstr "1 秒あたりのキロバイト (12,34 KBps)"
 
 msgid "Kind"
 msgstr "種類"
+
+msgid "Kube Exec Console"
+msgstr "Kube Execコンソール"
 
 msgid "KubeVirt"
 msgstr "KubeVirt"
@@ -25660,6 +25830,9 @@ msgstr "ラベル"
 
 msgid "Label is required"
 msgstr "ラベルが必要です"
+
+msgid "Label selections"
+msgstr "ラベルの選択"
 
 msgid "Labeled Container Images"
 msgstr "ラベル付きコンテナー・イメージ"
@@ -26370,6 +26543,30 @@ msgstr "リタイヤ日"
 msgid "LoadBalancer|Total vms"
 msgstr "合計 VM"
 
+msgid "Loading chargeback data..."
+msgstr "チャージバック・データを読み込み中..."
+
+msgid "Loading expression fields..."
+msgstr "式フィールドを読み込み中..."
+
+msgid "Loading image labels..."
+msgstr "イメージ・ラベルを読み込み中..."
+
+msgid "Loading label values..."
+msgstr "ラベル値を読み込み中..."
+
+msgid "Loading resources..."
+msgstr "リソースを読み込み中..."
+
+msgid "Loading saved label assignments..."
+msgstr "保存済みのラベル割り当てを読み込み中..."
+
+msgid "Loading tag categories..."
+msgstr "タグ・カテゴリーを読み込み中..."
+
+msgid "Loading..."
+msgstr "ロード中..."
+
 msgid "Local"
 msgstr "ローカル"
 
@@ -26576,9 +26773,6 @@ msgstr "主な構成"
 
 msgid "Main Info"
 msgstr "主な情報"
-
-msgid "Main Menu"
-msgstr "メインメニュー"
 
 msgid "Main Route Table"
 msgstr "メイン・ルート・テーブル"
@@ -26795,6 +26989,9 @@ msgstr "このフローティング IP のポートの関連付けの管理"
 
 msgid "ManageIQ"
 msgstr "ManageIQ"
+
+msgid "ManageIQ Log"
+msgstr "ManageIQログ"
 
 msgid "ManageIQ Tag Department"
 msgstr "ManageIQ タグ (部門別)"
@@ -31939,6 +32136,9 @@ msgstr "NFS サーバー"
 msgid "NFS Servert"
 msgstr "NFS サーバー"
 
+msgid "NOT"
+msgstr "NOT"
+
 msgid "NVMe"
 msgstr "NVMe"
 
@@ -32621,6 +32821,9 @@ msgstr "新規パスワード"
 msgid "New Section"
 msgstr "新規セクション"
 
+msgid "New Tab"
+msgstr "新規タブ"
+
 msgid "New Window"
 msgstr "新しいウィンドウ"
 
@@ -32811,9 +33014,6 @@ msgstr "Cloud Pak の URL がありません"
 msgid "No Cloud Provider that supports instance provisioning added"
 msgstr "インスタンスのプロビジョニングをサポートするクラウド・プロバイダーが追加されていません"
 
-msgid "No Clusters found in the current region."
-msgstr "現在のリージョンにクラスターが見つかりません。"
-
 msgid "No Compliance Policies Found"
 msgstr "コンプライアンス・ポリシーが見つかりませんでした"
 
@@ -32834,9 +33034,6 @@ msgstr "%{button}に選択されているカスタマイズ・テンプレート
 
 msgid "No Daily data is available"
 msgstr "日次データは利用できません。"
-
-msgid "No Datastores found in the current region."
-msgstr "現在のリージョンにデータ・ストアが見つかりません。"
 
 msgid "No Date/Time value specified"
 msgstr "日付/時間が指定されていません"
@@ -33144,10 +33341,8 @@ msgstr "利用可能なデータがありません"
 msgid "No data available."
 msgstr "利用可能なデータがありません。"
 
-msgid ""
-"No drift history found, an Analysis or Virtual Black Box Synchronization for "
-"this VM may need to be run."
-msgstr "ドリフト履歴が見つかりません。この VM 用に分析または仮想ブラック・ボックス同期の実行が必要になる可能性があります。"
+msgid "No drift history found"
+msgstr "ドリフト履歴が見つかりません"
 
 msgid "No entries found for %s"
 msgstr "%s の項目が見つかりません"
@@ -33160,6 +33355,9 @@ msgstr "この %{model}に利用できるイベントはありません"
 
 msgid "No events available for this Cluster"
 msgstr "このクラスターに利用できるイベントはありません"
+
+msgid "No fields available for this model."
+msgstr "このモデルで使用可能なフィールドはありません。"
 
 msgid "No fields were moved up"
 msgstr "上に移動したフィールドはありません"
@@ -33208,6 +33406,12 @@ msgstr "適用する入力はありません"
 
 msgid "No instances found"
 msgstr "インスタンスが見つかりません"
+
+msgid "No items available"
+msgstr "使用可能な項目がありません"
+
+msgid "No label values available for this label key."
+msgstr "このラベル・キーで使用可能なラベル値はありません。"
 
 msgid "No message will be displayed"
 msgstr "メッセージは表示されません"
@@ -33275,6 +33479,9 @@ msgstr "設定されたレプリケーション・ロールはありません"
 msgid "No report data found."
 msgstr "レポート・データが見つかりません。"
 
+msgid "No resources available for this assignment type."
+msgstr "この割り当てタイプで使用可能なリソースはありません。"
+
 msgid "No saved filters or report filters are available to load"
 msgstr "ロードできる保存済みのフィルターやレポート・フィルターがありません。"
 
@@ -33323,6 +33530,9 @@ msgstr "ルーター \"%{name}\" へのインターフェースを削除する�
 msgid "No synchronize category specified"
 msgstr "同期カテゴリーが指定されていません"
 
+msgid "No tags available for this category."
+msgstr "このカテゴリーで使用可能なタグはありません。"
+
 msgid "No task returned from server"
 msgstr "サーバーからタスクが返されませんでした"
 
@@ -33331,6 +33541,9 @@ msgstr "取り消すタスクが選択されていません"
 
 msgid "No task were selected to delete"
 msgstr "削除するタスクが選択されていません"
+
+msgid "No tenants available."
+msgstr "使用可能なテナントはありません。"
 
 msgid "No timer is attached to this Widget, its contents will not be updated."
 msgstr "このウィジェットに接続されたタイマーはありません。このコンテンツは更新されません。"
@@ -33783,9 +33996,6 @@ msgstr "OVF テンプレートが必要です。リストから 1 つ選択し�
 msgid "OVF Templates"
 msgstr "OVF テンプレート"
 
-msgid "Object"
-msgstr "オブジェクト"
-
 msgid "Object Attribute"
 msgstr "オブジェクト属性"
 
@@ -33988,6 +34198,9 @@ msgstr "構成プロファイル・コンソールを開く"
 
 msgid "Open a Configured System console"
 msgstr "構成済みシステム・コンソールを開く"
+
+msgid "Open a Console for this Container Group"
+msgstr "このコンテナー・グループのコンソールを開く"
 
 msgid "Open a VMRC console for VMs"
 msgstr "VM の VMRC コンソールを開く"
@@ -34874,9 +35087,6 @@ msgstr "PXE イメージ"
 
 msgid "PXE Image \"%{name}\""
 msgstr "PXE イメージ \"%{name}\""
-
-msgid "PXE Image \"%{name}\" was saved"
-msgstr "PXE イメージ \"%{name}\" が保存されました"
 
 msgid "PXE Image Menus"
 msgstr "PXE イメージ・メニュー"
@@ -36420,6 +36630,9 @@ msgstr "Playbook (組み込み Ansible)"
 msgid "Plays"
 msgstr "プレイ"
 
+msgid "Please assign at least one rate"
+msgstr "少なくとも1つのレートを割り当ててください"
+
 msgid "Please contact your administrator for assistance."
 msgstr "担当の管理者にお問い合わせください。"
 
@@ -37155,6 +37368,9 @@ msgstr "製品アップデート"
 
 msgid "Production"
 msgstr "プロダクション"
+
+msgid "Production Log"
+msgstr "実動ログ"
 
 msgid "Profile"
 msgstr "プロファイル"
@@ -37932,9 +38148,6 @@ msgstr "レート"
 
 msgid "Rate (in %{currency})"
 msgstr "レート (%{currency} 単位)"
-
-msgid "Rate Assignments saved"
-msgstr "レートの割り当てが保存されました"
 
 msgid "Rate Details"
 msgstr "レートの詳細"
@@ -38904,14 +39117,14 @@ msgstr "レジストリー"
 msgid "Registry"
 msgstr "レジストリー"
 
+msgid "Registry Data"
+msgstr "レジストリー・データ"
+
 msgid "Registry Entries"
 msgstr "レジストリー・エントリー"
 
 msgid "Registry Entry"
 msgstr "レジストリー・エントリー"
-
-msgid "Registry Entry is required"
-msgstr "レジストリー・エントリーが必要です"
 
 msgid "Registry Hive"
 msgstr "レジストリー・ハイブ"
@@ -40752,9 +40965,6 @@ msgstr "結果タイプ %{result_type} がサポートされていません"
 msgid "Results"
 msgstr "結果"
 
-msgid "Results %s"
-msgstr "結果 %s"
-
 msgid "Resume"
 msgstr "再開"
 
@@ -40941,6 +41151,9 @@ msgstr "推奨される適切なサイズ"
 
 msgid "Role"
 msgstr "ロール"
+
+msgid "Role \"%s\" was saved"
+msgstr "ロール「%s」が保存されました"
 
 msgid "Role \"%{name}\""
 msgstr "ロール \"%{name}\""
@@ -41327,6 +41540,15 @@ msgstr "保存済みのレポート"
 msgid "Saved Reports Accordion"
 msgstr "保存されたレポート・アコーディオン"
 
+msgid "Saved label assignments"
+msgstr "保存済みのラベル割り当て"
+
+msgid "Saved tag assignments"
+msgstr "保存済みのタグ割り当て"
+
+msgid "Saving chargeback assignments..."
+msgstr "チャージバック割り当てを保存中..."
+
 msgid "Savings"
 msgstr "節約量"
 
@@ -41610,6 +41832,9 @@ msgstr "結果内の名前で検索"
 msgid "Search is referenced in a schedule and cannot be deleted"
 msgstr "検索はスケジュールで参照されているため、削除できません"
 
+msgid "Search operator"
+msgstr "検索演算子"
+
 msgid "Search with Name or Relative path"
 msgstr "名前または相対パスで検索"
 
@@ -41628,9 +41853,6 @@ msgstr "セカンダリー (表示) フィルター"
 msgid ""
 "Secondary (Display) Filter - Filters the rows based on child table fields"
 msgstr "セカンダリー (表示) フィルター - 子テーブル・フィールドに基づく行のフィルタリング"
-
-msgid "Secondary Menu"
-msgstr "2 次メニュー"
 
 msgid "Secret Access Key"
 msgstr "秘密アクセス鍵"
@@ -41946,6 +42168,9 @@ msgstr "選択"
 msgid "Select Alerts to be Evaluated"
 msgstr "評価するアラートを選択"
 
+msgid "Select All"
+msgstr "すべて選択"
+
 msgid "Select All Days"
 msgstr "すべての曜日を選択する"
 
@@ -42204,9 +42429,6 @@ msgstr "イメージ・ラベルのオプションの選択"
 msgid "Select rate"
 msgstr "レートの選択"
 
-msgid "Select rate for selections"
-msgstr "選択項目のレートの選択"
-
 msgid ""
 "Select storage resources to attach to the service. The new Volume(s) will be "
 "created on these resources."
@@ -42222,9 +42444,6 @@ msgstr "タグ・カテゴリーの選択"
 
 msgid "Select tag value"
 msgstr "タグの値の選択"
-
-msgid "Select term of service type"
-msgstr "サービス・タイプの条件の選択"
 
 msgid ""
 "Select the format type above to apply syntax highlighting for better "
@@ -42245,6 +42464,9 @@ msgstr "比較する 2 つ以上の項目の選択"
 
 msgid "Select up to 10 timestamps for Drift Analysis"
 msgstr "ドリフト分析のために最大 10 個までのタイム・スタンプを選択"
+
+msgid "Select values"
+msgstr "値を選択します"
 
 msgid "Selected"
 msgstr "選択"
@@ -42382,6 +42604,9 @@ msgstr "サーバー制御"
 msgid "Server Database Backup Insufficient Space"
 msgstr "サーバー・データベース・バックアップのスペースが不十分です"
 
+msgid "Server Error %s"
+msgstr "サーバー・エラー%s"
+
 msgid "Server Exceeded Memory Limit"
 msgstr "サーバーがメモリー制限を超えました"
 
@@ -42453,6 +42678,9 @@ msgstr "サーバーはマスターです"
 
 msgid "Server name"
 msgstr "サーバー名"
+
+msgid "Server not responding"
+msgstr "サーバーが応答していません"
 
 msgid "Server restart is only supported on Linux"
 msgstr "サーバーの再起動は Linux でのみサポートされます"
@@ -44355,6 +44583,21 @@ msgstr "シャットダウン"
 msgid "Shutdown Guest"
 msgstr "ゲストのシャットダウン"
 
+msgid "Shutdown Guest OS"
+msgstr "ゲストOSをシャットダウン"
+
+msgid "Shutdown Guest OS on the selected items"
+msgstr "選択した項目のゲストOSをシャットダウン"
+
+msgid "Shutdown Guest OS on the selected items?"
+msgstr "選択した項目のゲストOSをシャットダウンしますか?"
+
+msgid "Shutdown Guest OS on this Instance"
+msgstr "このインスタンスのゲストOSをシャットダウン"
+
+msgid "Shutdown Guest OS on this Instance?"
+msgstr "このインスタンスのゲストOSをシャットダウンしますか?"
+
 msgid "Shutdown Host"
 msgstr "ホストのシャットダウン"
 
@@ -45949,6 +46192,12 @@ msgstr "スイッチ・スロット数"
 msgid "Switch Uuid"
 msgstr "UUID の切り替え"
 
+msgid "Switch to relative date format"
+msgstr "相対日付形式に切り替え"
+
+msgid "Switch to specific date format"
+msgstr "特定の日付形式に切り替え"
+
 msgid "Switch: "
 msgstr "スイッチ:"
 
@@ -46212,6 +46461,9 @@ msgstr "Systemd のロード"
 msgid "Systemd Sub"
 msgstr "Systemd サブ"
 
+msgid "TB"
+msgstr "TB"
+
 msgid "TCP"
 msgstr "TCP"
 
@@ -46290,8 +46542,14 @@ msgstr "タグの編集が正常に保存されました"
 msgid "Tag in Dashboard"
 msgstr "ダッシュボード内のタグ"
 
+msgid "Tag selections"
+msgstr "タグの選択"
+
 msgid "Tag to Apply"
 msgstr "適用するタグ"
+
+msgid "Tag value"
+msgstr "タグ値"
 
 msgid "Tagged Clusters"
 msgstr "タグ付けされたクラスター"
@@ -46502,6 +46760,9 @@ msgstr "テナント・クォータ"
 msgid "Tenant Quotas"
 msgstr "テナント・クォータ"
 
+msgid "Tenant chargeback assignments"
+msgstr "テナント・チャージバック割り当て"
+
 msgid "Tenant mapping is disabled on the Provider"
 msgstr "テナント・マッピングはプロバイダーで無効にされています"
 
@@ -46640,6 +46901,12 @@ msgstr "Terraform Enterpriseワークスペース"
 
 msgid "Terraform Enterprise Workspace Provision"
 msgstr "Terraform Enterpriseワークスペースのプロビジョン"
+
+msgid ""
+"Terraform Runner has been unavailable for %{unavailable} seconds, exceeding "
+"timeout of %{timeout} seconds"
+msgstr ""
+"Terraform Runnerは%{unavailable}秒間利用できない状態であり、タイムアウト時間の%{timeout}秒を超えています"
 
 msgid "Terraform Template"
 msgstr "Terraform テンプレート"
@@ -46911,6 +47178,9 @@ msgid "The catalog item is linked to the following services:"
 msgid_plural "The following catalog items are linked to services:"
 msgstr[0] "以下のカタログ・アイテムがサービスにリンクされています："
 
+msgid "The check count value must be an integer"
+msgstr "チェック数の値は整数である必要があります"
+
 msgid ""
 "The check count value must be an integer to commit this expression element"
 msgstr "この式要素をコミットするために、このチェック・カウント値は整数でなければなりません"
@@ -47088,6 +47358,9 @@ msgid ""
 "The run should start as soon as the backend services that run terraform have "
 "available capacity."
 msgstr "Terraformを実行するバックエンド・サービスに空き容量ができ次第、実行は開始されるはずです。"
+
+msgid "The scope expression is incomplete"
+msgstr "スコープ式が不完全です"
 
 msgid "The selected %{label} is not in the current region"
 msgstr "選択した %{label}は現在のリージョンにありません"
@@ -48409,9 +48682,6 @@ msgstr "未割り振りスペース"
 msgid "Unarchive Services"
 msgstr "サービスのアーカイブ解除"
 
-msgid "Unassign"
-msgstr "割り当て解除"
-
 msgid "Unassign Server"
 msgstr "サーバーの割り当て解除"
 
@@ -48474,9 +48744,6 @@ msgstr "単位"
 
 msgid "Unknown"
 msgstr "不明"
-
-msgid "Unknown API error"
-msgstr "不明な API エラー"
 
 msgid "Unknown Action"
 msgstr "不明なアクション"
@@ -49200,11 +49467,11 @@ msgstr "検索するユーザー"
 msgid "User will input the value"
 msgstr "ユーザーによる値の入力"
 
+msgid "User will input value"
+msgstr "ユーザーが値を入力します"
+
 msgid "User:"
 msgstr "ユーザー:"
-
-msgid "User: %s"
-msgstr "ユーザー: %s"
 
 msgid "UserID"
 msgstr "ユーザー ID"
@@ -50365,9 +50632,6 @@ msgstr "可変"
 msgid "Variable Object ID"
 msgstr "変数オブジェクト ID"
 
-msgid "Variable name must be unique"
-msgstr "変数名は固有でなければなりません"
-
 msgid "Variables"
 msgstr "変数"
 
@@ -50431,9 +50695,6 @@ msgstr "バージョン / ビルド"
 
 msgid "View"
 msgstr "表示"
-
-msgid "View '%{name}' Cluster"
-msgstr "'%{name}' クラスターの表示"
 
 msgid "View Alert Definition Profiles"
 msgstr "アラート定義プロファイルの表示"
@@ -50927,9 +51188,6 @@ msgstr "この Miq サーバーの表示"
 msgid "View this Orchestration Template in Catalogs"
 msgstr "カタログでこのオーケストレーション・テンプレートを表示"
 
-msgid "View this PXE Image"
-msgstr "この PXE イメージの表示"
-
 msgid "View this Policy Profile"
 msgstr "このポリシー・プロファイルの表示"
 
@@ -50953,9 +51211,6 @@ msgstr "このユーザーの表示"
 
 msgid "View this Widget"
 msgstr "このウィジェットの表示"
-
-msgid "View this Windows Image"
-msgstr "この Windows イメージの表示"
 
 msgid "View this item"
 msgstr "この項目の表示"
@@ -51119,6 +51374,10 @@ msgstr "Virtual Private Cloud"
 
 msgid "Virtual machines added"
 msgstr "仮想マシンが追加されました"
+
+msgid ""
+"Virtual processors can only be reconfigured on shared processor partitions"
+msgstr "仮想プロセッサーは、共有プロセッサー・パーティションでのみ再構成できます"
 
 msgid "Virtualization"
 msgstr "仮想化"
@@ -52729,9 +52988,6 @@ msgstr "Windows イメージ"
 msgid "Windows Image \"%{name}\""
 msgstr "Windows イメージ \"%{name}\""
 
-msgid "Windows Image \"%{name}\" was saved"
-msgstr "Windows イメージ \"%{name}\" が保存されました"
-
 msgid "Windows Images"
 msgstr "Windows イメージ"
 
@@ -52829,9 +53085,6 @@ msgstr "ワークフロー・テンプレート (Ansible Tower)"
 
 msgid "Workflow does not have any credentials to map."
 msgstr "ワークフローにはマップする資格情報がありません。"
-
-msgid "Workflow max. timeout"
-msgstr "ワークフローの最大 タイムアウト"
 
 msgid "Workflow name"
 msgstr "ワークフロー名"
@@ -54282,15 +54535,6 @@ msgstr "サンプル"
 
 msgid "secondary, "
 msgstr "セカンダリー、"
-
-msgid "select Rate1"
-msgstr "Rate1を選択"
-
-msgid "select Rate2"
-msgstr "Rate2を選択"
-
-msgid "select rate for saved items"
-msgstr "保存された項目のレートの選択"
 
 msgid "selected to copy"
 msgstr "コピーするために選択"

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2026-06-01 14:37+0000\n"
-"PO-Revision-Date: 2026-06-01 14:37+0000\n"
+"POT-Creation-Date: 2026-09-09 00:38+0000\n"
+"PO-Revision-Date: 2026-09-09 00:38+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -23,9 +23,6 @@ msgid ""
 "  Unable to remove the following tags from %{class_name} %{id}: %{names}."
 msgstr ""
 "  Impossibile rimuovere i seguenti tag da %{class_name} %{id}: %{names}."
-
-msgid " # of Days"
-msgstr " Numero di giorni"
 
 msgid " %{host_uid_ems} is not a compute node "
 msgstr " %{host_uid_ems} non è un nodo di calcolo "
@@ -273,6 +270,9 @@ msgstr "\"%{task}\": non supportato per %{hostname}"
 msgid "# Pods per Ready Status"
 msgstr "# Pod per stato Pronto"
 
+msgid "# of Days"
+msgstr "Numero di giorni"
+
 msgid "# of Events"
 msgstr "N° di eventi"
 
@@ -366,6 +366,11 @@ msgstr "%s non ha istantanee"
 msgid "%s is used by another field"
 msgstr "%s è utilizzato da un altro campo"
 
+msgid "%s item selected"
+msgid_plural "%s items selected"
+msgstr[0] "%s elemento selezionato"
+msgstr[1] "%s elementi selezionati"
+
 msgid "%s logged out, redirecting to the login page"
 msgstr "%s disconnesso, reindirizzamento alla pagina di  accesso"
 
@@ -408,10 +413,14 @@ msgid_plural "%{amount} Automation Jobs Being Tagged"
 msgstr[0] "%{amount} Lavoro di automazione da contrassegnare"
 msgstr[1] "%{amount} Lavori di automazione da contrassegnare"
 
-msgid "%{amount} Automation Manager (Ansible Tower) Being Tagged"
-msgid_plural "%{amount} Automation Managers (Ansible Tower) Being Tagged"
-msgstr[0] "Aggiunta di tag a %{amount} gestore automazione (Ansible Tower)"
-msgstr[1] "Aggiunta di tag a %{amount} gestori automazione (Ansible Tower)"
+msgid "%{amount} Automation Provider (Ansible Tower) Being Tagged"
+msgid_plural "%{amount} Automation Providers (Ansible Tower) Being Tagged"
+msgstr[0] ""
+"%{amount}Il fornitore di soluzioni di automazione (Ansible Tower) viene "
+"taggato"
+msgstr[1] ""
+"%{amount}I fornitori di soluzioni di automazione (Ansible Tower) vengono "
+"taggati"
 
 msgid "%{amount} Automation Template Being Tagged"
 msgid_plural "%{amount} Automation Templates Being Tagged"
@@ -753,14 +762,8 @@ msgstr "Prenotazione di %{description} maggiore della memoria VM"
 msgid "%{description} VM Memory is larger than Memory Limit"
 msgstr "La memoria VM %{description} è maggiore del limite di memoria"
 
-msgid "%{description} category Scan"
-msgstr "Scansione categoria %{description}"
-
 msgid "%{description} is required"
 msgstr "%{description} è obbligatorio"
-
-msgid "%{description} registry Scan"
-msgstr "Scansione registro %{description}"
 
 msgid "%{domain_name} (Disabled)"
 msgstr "%{domain_name} (disabilitato)"
@@ -1137,7 +1140,7 @@ msgstr[0] "%{number} Settimana"
 msgstr[1] "%{number} Settimane"
 
 msgid "%{number} bytes"
-msgstr "%{number} byte"
+msgstr "% {number} byte"
 
 msgid "%{number} core"
 msgid_plural "%{number} cores"
@@ -1558,11 +1561,10 @@ msgstr ""
 msgid "* Primary Server Roles shown as %{bold} text."
 msgstr "* Ruoli del server primario mostrati come testo %{bold}."
 
-msgid ""
-"* Recommendations are subject to minimum of CPU: %{cpu} and Memory: %{memory}."
+msgid "* Recommendations are subject to minimum of CPU: %s and Memory: %s."
 msgstr ""
-"* I suggerimenti sono soggetti alla quantità minima di CPU: %{cpu} e memoria: "
-"%{memory}."
+"* Le raccomandazioni prevedono una CPU minima pari a: %s e una memoria minima "
+"pari a: %s."
 
 msgid "* Report is not owned by your group so it cannot be removed"
 msgstr ""
@@ -2035,6 +2037,11 @@ msgstr "È necessario selezionare una categoria Tenant"
 msgid "A VM with name: [%{name}] already exists"
 msgstr "Già esiste una VM con nome: [%{name}]"
 
+msgid "A check field must be chosen for the Find expression element"
+msgstr ""
+"È necessario selezionare un campo di controllo per l'elemento Trova "
+"espressione"
+
 msgid "A check field must be chosen to commit this expression element"
 msgstr ""
 "È necessario scegliere un campo di verifica per eseguire il commit di questo "
@@ -2043,10 +2050,17 @@ msgstr ""
 msgid "A condition must contain a valid expression."
 msgstr "Una condizione deve contenere un'espressione valida."
 
+msgid "A date value must be entered"
+msgstr "È necessario inserire un valore data"
+
 msgid "A field must be chosen to commit this expression element"
 msgstr ""
 "È necessario scegliere un campo per eseguire il commit di questo elemento "
 "dell'espressione"
+
+msgid "A field must be selected for every expression element"
+msgstr ""
+"È necessario selezionare un campo per ciascun elemento dell'espressione"
 
 msgid "A find field must be chosen to commit this expression element"
 msgstr ""
@@ -2062,10 +2076,16 @@ msgstr "È richiesto un progetto per il provisioning del modello contenitore"
 msgid "A read only group cannot be deleted."
 msgstr "Un gruppo di sola lettura non può essere eliminato."
 
+msgid "A registry key name must be entered"
+msgstr "È necessario inserire il nome di una chiave di registro"
+
 msgid "A registry key name must be entered to commit this expression element"
 msgstr ""
 "È necessario immettere un nome chiave di registro per eseguire il commit di "
 "questo elemento dell'espressione"
+
+msgid "A registry value name must be entered"
+msgstr "È necessario inserire il nome di un valore di registro"
 
 msgid "A registry value name must be entered to commit this expression element"
 msgstr ""
@@ -2134,6 +2154,9 @@ msgstr ""
 "È necessario scegliere un tag per eseguire il commit di questo elemento "
 "dell'espressione"
 
+msgid "A tag value must be chosen"
+msgstr "È necessario selezionare un valore di tag"
+
 msgid "A tag value must be chosen to commit this expression element"
 msgstr ""
 "È necessario scegliere un valore per il tag per eseguire il commit di questo "
@@ -2158,8 +2181,14 @@ msgstr ""
 "È necessario Un utente per generare un'azione di automazione. [%{name}] ID:[%{"
 "id}] azione: [%{description}]"
 
+msgid "A valid date must be selected"
+msgstr "È necessario selezionare una data valida"
+
 msgid "A valid expression must be present"
 msgstr "Deve essere presente un'espressione valida"
+
+msgid "A valid time must be selected"
+msgstr "È necessario selezionare un'ora valida"
 
 msgid "A valid userid is required"
 msgstr "È richiesto un id utente valido"
@@ -2167,6 +2196,9 @@ msgstr "È richiesto un id utente valido"
 msgid "A value must be changed or provider stack will not be updated."
 msgstr ""
 "Un valore deve essere modificato o lo stack del provider non verrà aggiornato."
+
+msgid "A value must be entered for every expression element"
+msgstr "È necessario inserire un valore per ogni elemento dell’espressione"
 
 msgid "A workspace admin forcefully canceled the run."
 msgstr ""
@@ -2213,6 +2245,9 @@ msgstr "Nome utente API"
 
 msgid "API Version"
 msgstr "Versione API"
+
+msgid "ATAPI CD-ROM (IDE %s)"
+msgstr "ATAPI CD-ROM (IDE %s)"
 
 msgid "AWS Access Key for this credential"
 msgstr "Chiave di accesso AWS per queste credenziali"
@@ -2325,6 +2360,9 @@ msgstr "Chiave di accesso"
 
 msgid "Access Key ID"
 msgstr "ID chiave di accesso"
+
+msgid "Access Kube Exec Console for Container Group"
+msgstr "Accedi alla console Kube Exec per il gruppo di contenitori"
 
 msgid "Access Modes"
 msgstr "Modalità di accesso"
@@ -2635,6 +2673,18 @@ msgstr "Aggiungi Dischi"
 msgid "Add Entry"
 msgstr "Aggiungi voce"
 
+msgid "Add Event Log"
+msgstr "Aggiungi log degli eventi"
+
+msgid "Add Event Log Entry"
+msgstr "Aggiungi voce di log degli eventi"
+
+msgid "Add File"
+msgstr "Aggiungi file"
+
+msgid "Add File Entry"
+msgstr "Aggiungi voce di file"
+
 msgid "Add Flavor"
 msgstr "Aggiungi flavor"
 
@@ -2775,8 +2825,14 @@ msgstr "Aggiungi provider"
 msgid "Add Provisioning Dialog"
 msgstr "Aggiungi approvvigionamento finestra di dialogo"
 
+msgid "Add Registry Entry"
+msgstr "Aggiungi voce di registro"
+
 msgid "Add Repository"
 msgstr "Aggiungi repository"
+
+msgid "Add Rule"
+msgstr "Aggiungi regola"
 
 msgid "Add Section"
 msgstr "Aggiungi sezione"
@@ -2792,6 +2848,9 @@ msgstr "Aggiungi gruppo di sicurezza a '%{name}'"
 
 msgid "Add Security Group to Instance"
 msgstr "Aggiungi gruppo di sicurezza all'istanza"
+
+msgid "Add Sub-Group"
+msgstr "Aggiungi sottogruppo"
 
 msgid "Add Subscription"
 msgstr "Aggiungi sottoscrizione"
@@ -3062,6 +3121,9 @@ msgstr "Aggiungi una rete"
 msgid "Add a new Action"
 msgstr "Aggiungi una nuova azione"
 
+msgid "Add a new Automation Provider"
+msgstr "Aggiungi un nuovo fornitore di soluzioni di automazione"
+
 msgid "Add a new Button"
 msgstr "Aggiungi un nuovo pulsante"
 
@@ -3243,9 +3305,6 @@ msgstr ""
 msgid "Add of Automate Method was cancelled by the user"
 msgstr "L'aggiunta del Metodo di Automazione è stata annullata dall'utente"
 
-msgid "Add of Catalog Item was cancelled by the user"
-msgstr "L'aggiunta dell'elemento del catalogo è stata annullata dall'utente"
-
 msgid "Add of Cloud Database \"%s\" has been successfully queued."
 msgstr "L'aggiunta del database cloud \"%s\" è stata accodata correttamente."
 
@@ -3323,10 +3382,6 @@ msgstr "L'aggiunta dell'azione \"%s\" è stata accodata correttamente."
 msgid "Add of floating IPs \"%s\" has been successfully queued."
 msgstr "L'aggiunta di IP mobili \"%s\" è stata accodata correttamente."
 
-msgid "Add of new %{model} Condition was cancelled by the user"
-msgstr ""
-"L'aggiunta della nuova condizione %{model} è stata annullata dall'utente"
-
 msgid "Add of new %{name} was cancelled by the user"
 msgstr "L'aggiunta del nuovo %{name} è stata annullata dall'utente"
 
@@ -3380,6 +3435,9 @@ msgstr "L'aggiunta di un nuovo volume cloud è stata annullata dall'utente"
 msgid "Add of new Cloud Volume was cancelled by the user."
 msgstr "L'aggiunta di un nuovo volume cloud è stata annullata dall'utente."
 
+msgid "Add of new Condition was cancelled by the user"
+msgstr "L'aggiunta di una nuova condizione è stata annullata dall'utente"
+
 msgid "Add of new Custom Button was cancelled by the user"
 msgstr ""
 "L'aggiunta di un nuovo pulsante personalizzato è stata annullata dall'utente"
@@ -3424,6 +3482,9 @@ msgstr "Aggiunta di una nuova associazione tag provider annullata dall'utente"
 msgid "Add of new Report was cancelled by the user"
 msgstr "L'aggiunta del nuovo report è stata annullata dall'utente"
 
+msgid "Add of new Role was cancelled by the user"
+msgstr "L'aggiunta di un nuovo ruolo è stata annullata dall'utente"
+
 msgid "Add of new Schedule was cancelled by the user"
 msgstr "L'aggiunta di una nuova pianificazione è stata annullata dall'utente"
 
@@ -3467,9 +3528,6 @@ msgstr "Aggiungi questa voce"
 
 msgid "Add to Shopping Cart"
 msgstr "Aggiungi al carrello"
-
-msgid "Add was cancelled by the user"
-msgstr "L'aggiunta è stata annullata dall'utente"
 
 msgid "Add widget"
 msgstr "Aggiungi widget"
@@ -3903,6 +3961,9 @@ msgstr ""
 msgid "Alerts to Evaluate"
 msgstr "Avvisi da valutare"
 
+msgid "Alias"
+msgstr "Alias"
+
 msgid "All"
 msgstr "Tutto"
 
@@ -4275,6 +4336,13 @@ msgstr ""
 "La chiave di accesso e il segreto Amazon sono necessari per convalidare le "
 "Impostazioni Amazon"
 
+msgid ""
+"An Analysis or Virtual Black Box Synchronization for this VM may need to be "
+"run."
+msgstr ""
+"Potrebbe essere necessario eseguire un'analisi o una sincronizzazione della "
+"black box virtuale per questa VM."
+
 msgid "An Ansible Playbook must be selected"
 msgstr "Un Playbook Ansible deve essere selezionato"
 
@@ -4315,6 +4383,12 @@ msgstr ""
 "Si è verificato un errore durante la richiesta fi fornitura dell'istanza IBM "
 "VPC. Impossibile richiamare l'id dell'istanza dalla risposta del server "
 "restituita."
+
+msgid "An error occurred while saving"
+msgstr "Si è verificato un errore durante il salvataggio"
+
+msgid "An error occurred while saving the role"
+msgstr "Si è verificato un errore durante il salvataggio del ruolo"
 
 msgid "An internal system error."
 msgstr "Un errore di sistema interno."
@@ -4361,11 +4435,11 @@ msgstr "Profilo di analisi \"%{name}\""
 msgid "Analysis Profile \"%{name}\" was saved"
 msgstr "Il profilo di analisi \"%{name}\" è stato salvato"
 
-msgid "Analysis Profile \"%{name}\": Error during 'update': %{message}"
-msgstr "Profilo di analisi \"%{name}\": Errore durante 'update': %{message}"
-
 msgid "Analysis Profile is required"
 msgstr "Il profilo di analisi è obbligatorio"
+
+msgid "Analysis Profile was saved"
+msgstr "Il profilo di analisi è stato salvato"
 
 msgid "Analysis Profiles"
 msgstr "Profili di analisi"
@@ -4519,9 +4593,6 @@ msgstr "Tag applicato"
 
 msgid "Applies To"
 msgstr "Si applica a"
-
-msgid "Applies to is required"
-msgstr "Il campo Si applica a è obbligatorio"
 
 msgid "Apply"
 msgstr "Applica"
@@ -4959,9 +5030,6 @@ msgstr "Stanza"
 msgid "AssetDetail|Serial number"
 msgstr "Numero di serie"
 
-msgid "Assign"
-msgstr "Assegna"
-
 msgid "Assign Catalog Items"
 msgstr "Assegna Elementi Catalogo"
 
@@ -5136,9 +5204,6 @@ msgstr "È necessario configurare almeno un destinatario dell'email"
 msgid "At least one Field must be selected"
 msgstr "È necessario selezionare almeno un campo"
 
-msgid "At least one Product Feature must be selected"
-msgstr "È necessario selezionare almeno una funzione del prodotto"
-
 msgid "At least one Role must be selected"
 msgstr "È necessario selezionare almeno un ruolo"
 
@@ -5187,6 +5252,9 @@ msgstr "È necessario selezionare almeno una sezione"
 
 msgid "At least one task status is required"
 msgstr "È richiesto almeno uno stato di attività"
+
+msgid "Atom type"
+msgstr "Tipo di atom"
 
 msgid "Attach"
 msgstr "Collega"
@@ -5657,42 +5725,42 @@ msgstr "Lavoro di automazione"
 msgid "Automation Jobs"
 msgstr "Lavori di automazione"
 
-msgid "Automation Manager"
-msgstr "Gestore automazione"
-
-msgid "Automation Manager (AWX)"
-msgid_plural "Automation Managers (AWX)"
-msgstr[0] "Gestore Automazione (AWX)"
-msgstr[1] "Gestori Automazione (AWX)"
-
-msgid "Automation Manager (Ansible Automation Platform)"
-msgid_plural "Automation Managers (Ansible Automation Platform)"
-msgstr[0] "Gestore automazione (Ansible Automation Platform)"
-msgstr[1] "Gestori automazione (Ansible Automation Platform)"
-
-msgid "Automation Manager (Ansible Tower)"
-msgstr "Gestore automazione (Ansible Tower)"
-
-msgid "Automation Manager Provision"
-msgstr "Provisioning di Automation Manager"
-
-msgid "Automation Manager Provisioning"
-msgstr "Provisioning di Automation Manager"
-
-msgid "Automation Manager Repositories Refresh"
-msgstr "Aggiornamento repository Automation Manager"
-
-msgid "Automation Managers"
-msgstr "Gestori Automazione"
-
-msgid "Automation Managers (AWX)"
-msgstr "Gestori Automazione (AWX)"
-
-msgid "Automation Managers (Ansible Tower)"
-msgstr "Gestori Automazione (Ansible Tower)"
-
 msgid "Automation Method Data"
 msgstr "Dati del metodo di automazione"
+
+msgid "Automation Provider"
+msgstr "Fornitore di soluzioni di automazione"
+
+msgid "Automation Provider (AWX)"
+msgid_plural "Automation Providers (AWX)"
+msgstr[0] "Fornitore di soluzioni di automazione (AWX)"
+msgstr[1] "Fornitori di soluzioni di automazione (AWX)"
+
+msgid "Automation Provider (Ansible Automation Platform)"
+msgid_plural "Automation Providers (Ansible Automation Platform)"
+msgstr[0] "Fornitore di soluzioni di automazione (Ansible Automation Platform)"
+msgstr[1] "Fornitori di soluzioni di automazione (Ansible Automation Platform)"
+
+msgid "Automation Provider (Ansible Tower)"
+msgstr "Fornitore di soluzioni di automazione (Ansible Tower)"
+
+msgid "Automation Provider Provision"
+msgstr "Provisioning del fornitore di soluzioni di automazione"
+
+msgid "Automation Provider Provisioning"
+msgstr "Provisioning del fornitore di soluzioni di automazione"
+
+msgid "Automation Provider Repositories Refresh"
+msgstr "Aggiornamento dei repository dei fornitori di soluzioni di automazione"
+
+msgid "Automation Providers"
+msgstr "Fornitori di soluzioni di automazione"
+
+msgid "Automation Providers (AWX)"
+msgstr "Fornitori di soluzioni di automazione (AWX)"
+
+msgid "Automation Providers (Ansible Tower)"
+msgstr "Fornitori di soluzioni di automazione (Ansible Tower)"
 
 msgid "Automation Request"
 msgstr "Richiesta di automazione"
@@ -6480,6 +6548,9 @@ msgstr "Per host"
 msgid "By Role"
 msgstr "Per ruolo"
 
+msgid "Bytes"
+msgstr "Byte"
+
 msgid "C & U Collection"
 msgstr "Raccolta C & U"
 
@@ -6506,6 +6577,12 @@ msgstr "Certificato CA"
 
 msgid "CD-ROM (%{name} %{location}), %{connection}"
 msgstr "CD-ROM (%{name} %{location}), %{connection}"
+
+msgid "CD-ROM (IDE %s)"
+msgstr "CD-ROM (IDE %s)"
+
+msgid "CD-ROM Image (IDE %s)"
+msgstr "Immagine CD-ROM (IDE %s)"
 
 msgid "CD/DVD Drives"
 msgstr "Drive CD/DVD"
@@ -7597,9 +7674,6 @@ msgstr ""
 msgid "Change Password of Infrastructure Providers"
 msgstr "Modifica password dei provider di infrastruttura"
 
-msgid "Change current group"
-msgstr "Modifica gruppo corrente"
-
 msgid "Changed from previous"
 msgstr "Modificato rispetto al precedente"
 
@@ -7739,6 +7813,12 @@ msgid "Chargeback Tier"
 msgid_plural "Chargeback Tiers"
 msgstr[0] "Livello di chargeback"
 msgstr[1] "Livelli di chargeback"
+
+msgid "Chargeback assignments"
+msgstr "Assegnazioni chargeback"
+
+msgid "Chargeback assignments saved successfully"
+msgstr "Le assegnazioni di chargeback sono state salvate correttamente"
 
 msgid "Chargeback for Configured Systems"
 msgid_plural "Chargebacks for Configured Systems"
@@ -8104,6 +8184,15 @@ msgstr "Seleziona opzione"
 msgid "Check Value Error: %{msg}"
 msgstr "Errore Verifica valore: %{msg}"
 
+msgid "Check field"
+msgstr "Controlla campo"
+
+msgid "Check mode"
+msgstr "Controlla modalità"
+
+msgid "Check operator"
+msgstr "Controlla operatore"
+
 msgid "Checking"
 msgstr "Controllo"
 
@@ -8136,6 +8225,9 @@ msgstr "Seleziona"
 
 msgid "Choose %{entity}"
 msgstr "Scegli %{entity}"
+
+msgid "Choose Assignment Type"
+msgstr "Scegli il tipo di assegnazione"
 
 msgid "Choose File"
 msgstr "Scegli file"
@@ -8188,9 +8280,6 @@ msgstr "Scegliere un Ruolo da modificare a sinistra."
 msgid "Choose a Schedule to view from the menus on the left."
 msgstr "Scegliere una pianificazione da visualizzare dai menu a sinistra."
 
-msgid "Choose a Server"
-msgstr "Scegliere un server"
-
 msgid "Choose a Template"
 msgstr "Scegliere un modello"
 
@@ -8202,9 +8291,6 @@ msgstr "Scegli un valore"
 
 msgid "Choose a chart type"
 msgstr "Selezionare un tipo di grafico"
-
-msgid "Choose a pattern"
-msgstr "Scegliere un modello"
 
 msgid "Choose a resource entity and label"
 msgstr "Scegliere un'entità e un'etichetta della risorsa"
@@ -8221,41 +8307,17 @@ msgstr "Scegli un tenant"
 msgid "Choose an Owner"
 msgstr "Scegli un proprietario"
 
-msgid "Choose an element of the scope to edit"
-msgstr "Scegli un elemento dell'ambito da modificare"
-
-msgid "Choose cloud object storage"
-msgstr "Seleziona Cloud Object Storage"
-
-msgid "Choose disk type"
-msgstr "Scegli tipo di disco"
-
 msgid "Choose file"
 msgstr "Scegli file"
 
 msgid "Choose one or more Fields"
 msgstr "Scegliere uno o più campi"
 
-msgid "Choose source image"
-msgstr "Scegli immagine di origine"
-
-msgid "Choose source provider"
-msgstr "Scegli provider di origine"
-
-msgid "Choose source provider type"
-msgstr "Seleziona tipo di provider di origine"
-
-msgid "Choose storage bucket"
-msgstr "Scegli bucket di storage"
-
 msgid "Choose the branch or tag you would like to import"
 msgstr "Selezionare il ramo o il tag che si desidera importare"
 
 msgid "Choose the type of custom variables to be imported"
 msgstr "Scegliere il tipo di variabili personalizzate da importare"
-
-msgid "Choose transient storage"
-msgstr "Scegli storage transitorio"
 
 msgid "Cidr"
 msgstr "Cidr"
@@ -9686,6 +9748,9 @@ msgstr "Raccolto il"
 msgid "Collection Options"
 msgstr "Opzioni di raccolta"
 
+msgid "Colocation Policy"
+msgstr "Politica di collocazione"
+
 msgid "Column"
 msgstr "Colonna"
 
@@ -9968,11 +10033,11 @@ msgstr "Numero Regione"
 msgid "Condition"
 msgstr "Condizione"
 
-msgid "Condition \"%{name}\" was added"
-msgstr "La condizione \"%{name}\" è stata aggiunta"
+msgid "Condition \"%s\" was added"
+msgstr "La condizione \"%s\" è stata aggiunta"
 
-msgid "Condition \"%{name}\" was saved"
-msgstr "La condizione \"%{name}\" è stata salvata"
+msgid "Condition \"%s\" was saved"
+msgstr "La condizione \"%s\" è stata salvata"
 
 msgid "Condition Selection"
 msgstr "Selezione delle condizioni"
@@ -10083,9 +10148,6 @@ msgstr "Towhat"
 
 msgid "Condition|Updated on"
 msgstr "Aggiornato il"
-
-msgid "Config Pattern"
-msgstr "Modello di configurazione"
 
 msgid "Config Version"
 msgstr "Versione configurazione"
@@ -10767,6 +10829,12 @@ msgid "Container Environment Variable"
 msgid_plural "Container Environment Variables"
 msgstr[0] "Variabile d'ambiente contenitore"
 msgstr[1] "Variabili d'ambiente contenitore"
+
+msgid "Container Group Access"
+msgstr "Accesso al gruppo di contenitori"
+
+msgid "Container Group Console"
+msgstr "Console del gruppo di contenitori"
 
 msgid "Container Group Name"
 msgstr "Nome gruppo di contenitori"
@@ -13486,6 +13554,9 @@ msgstr "Copia di %{name}"
 msgid "Copy of %{typ} Request"
 msgstr "Copia della richiesta %{typ}"
 
+msgid "Copy of Analysis Profile was cancelled by the user"
+msgstr "La copia del profilo di analisi è stata annullata dall'utente"
+
 msgid "Copy of Dashboard was cancelled by the user"
 msgstr "La copia del Dashboard è stata annullata dall'utente"
 
@@ -14179,9 +14250,6 @@ msgstr "Utente corrente"
 
 msgid "Current Window"
 msgstr "Finestra corrente"
-
-msgid "Current group: %s"
-msgstr "Gruppo corrente: %s"
 
 msgid "Current pods"
 msgstr "Pod correnti"
@@ -15230,9 +15298,6 @@ msgstr "Definisci Espressione"
 msgid "Define New %{table}"
 msgstr "Definisci nuovo %{table}"
 
-msgid "Define Scope"
-msgstr "Definisci ambito"
-
 msgid "Define a new Host Initiator"
 msgstr "Definisci un nuovo iniziatore host"
 
@@ -16012,9 +16077,6 @@ msgstr "Dipende dal gruppo"
 msgid "Depends on Service"
 msgstr "Dipende dal servizio"
 
-msgid "Deploy"
-msgstr "Distribuisci"
-
 msgid "Deploy Server"
 msgstr "Distribuisci server"
 
@@ -16069,6 +16131,9 @@ msgstr "Descrizione:"
 
 msgid "Descrption"
 msgstr "Descrizione"
+
+msgid "Deselect All"
+msgstr "Deseleziona tutto"
 
 msgid "Desired"
 msgstr "Desiderato"
@@ -16214,6 +16279,9 @@ msgstr "Rileva"
 
 msgid "Development"
 msgstr "Sviluppo"
+
+msgid "Development Log"
+msgstr "Log di sviluppo"
 
 msgid "Device Location"
 msgstr "Posizione dispositivo"
@@ -16395,9 +16463,6 @@ msgstr ""
 
 msgid "Dialog name"
 msgstr "Nome finestra di dialogo"
-
-msgid "Dialog name already exists"
-msgstr "Il nome della finestra di dialogo esiste già"
 
 msgid "Dialog needs to have a label"
 msgstr "La finestra di dialogo deve avere un'etichetta"
@@ -17918,6 +17983,9 @@ msgstr "Visualizzazione per"
 msgid "Display in Catalog"
 msgstr "Visualizza nel Catalogo"
 
+msgid "Display label"
+msgstr "Visualizza etichetta"
+
 msgid "Display metrics"
 msgstr "Visualizza metriche"
 
@@ -18008,9 +18076,6 @@ msgid "Domain name change for a system domain import is not supported."
 msgstr ""
 "La modifica del nome del dominio per un'importazione del dominio del sistema "
 "non è supportata."
-
-msgid "Domains"
-msgstr "Domini"
 
 msgid "Domains:"
 msgstr "Domini:"
@@ -18134,6 +18199,12 @@ msgstr "Scarica questo report in formato testo"
 
 msgid "Draft"
 msgstr "Bozza"
+
+msgid ""
+"Drag and drop to reorder domains. Higher priority domains are listed first."
+msgstr ""
+"Trascina e rilascia per riorganizzare i domini. I domini con la priorità più "
+"alta sono elencati per primi."
 
 msgid ""
 "Drag items here to add to the dialog. At least one item is required before "
@@ -18540,6 +18611,9 @@ msgstr "Modifica la relazione Server EVM"
 msgid "Edit Event Assignment"
 msgstr "Modifica Assegnazione Eventi"
 
+msgid "Edit Event Log Entry"
+msgstr "Modifica voce di log degli eventi"
+
 msgid "Edit Event cancelled by user"
 msgstr "Modifica dell'evento annullata dall'utente"
 
@@ -18548,6 +18622,9 @@ msgstr "Modifica espressione"
 
 msgid "Edit Field Details"
 msgstr "Modifica dettagli campo"
+
+msgid "Edit File Entry"
+msgstr "Modifica voce di file"
 
 msgid "Edit Generic Object"
 msgstr "Modifica Oggetto Generico"
@@ -18614,6 +18691,9 @@ msgstr "Modifica tag modelli di orchestrazione"
 msgid "Edit PXE Image"
 msgstr "Modifica immagine PXE"
 
+msgid "Edit PXE Image Tags"
+msgstr "Modifica tag dell'immagine PXE"
+
 msgid "Edit Physical Storage \"%{name}\""
 msgstr "Modifica spazio fisico di archiviazione \"%{name}\""
 
@@ -18635,6 +18715,9 @@ msgstr "Modifica approvvigionamento finestra di dialogo"
 msgid "Edit Record Filter"
 msgstr "Modifica filtro record"
 
+msgid "Edit Registry Entry"
+msgstr "Modifica voce di registro"
+
 msgid "Edit Report Menus"
 msgstr "Modifica menu report"
 
@@ -18649,9 +18732,6 @@ msgstr "Modifica repository \"%{name}\""
 
 msgid "Edit Router \"%{name}\""
 msgstr "Modifica router \"%{name}\""
-
-msgid "Edit Scope"
-msgstr "Modifica ambito"
 
 msgid "Edit Section Details"
 msgstr "Modifica dettagli sezione"
@@ -18798,11 +18878,15 @@ msgstr "Modifica tag di questo playbook Ansible"
 msgid "Edit Tags for the selected Ansible Repositories"
 msgstr "Modifica tag di questo repository Ansible"
 
-msgid "Edit Tags for the selected Automation Manager Credentials"
-msgstr "Modifica tag per le credenziali Automation Manager selezionate"
+msgid "Edit Tags for the selected Automation Provider Credentials"
+msgstr ""
+"Modifica i tag delle credenziali del fornitore di soluzioni di automazione "
+"selezionato"
 
-msgid "Edit Tags for the selected Automation Manager Repositories"
-msgstr "Modifica tag per i repository Automation Manager selezionati"
+msgid "Edit Tags for the selected Automation Provider Repositories"
+msgstr ""
+"Modifica i tag dei repository del fornitore di soluzioni di automazione "
+"selezionato"
 
 msgid "Edit Tags for the selected Automation Providers"
 msgstr "Modifica tag per i provider di automazione selezionati"
@@ -19221,6 +19305,9 @@ msgstr "Modifica Tag di stack di orchestrazione"
 msgid "Edit Tags of PXE"
 msgstr "Modifica tag di PXE"
 
+msgid "Edit Tags of PXE Images"
+msgstr "Modifica i tag delle immagini PXE"
+
 msgid "Edit Tags of PXE Servers"
 msgstr "Modifica tag di server PXE"
 
@@ -19278,6 +19365,9 @@ msgstr "Modifica tag dei tipi di volume"
 msgid "Edit Tags of Volumes"
 msgstr "Modifica tag dei volumi"
 
+msgid "Edit Tags of Windows Images"
+msgstr "Modifica i tag delle immagini Windows"
+
 msgid "Edit Tags selected Pxe Servers"
 msgstr "Modifica tag per server Pxe selezionati"
 
@@ -19298,6 +19388,9 @@ msgstr "Modifica Visuali"
 
 msgid "Edit Windows Image"
 msgstr "Modifica immagine di Windows"
+
+msgid "Edit Windows Image Tags"
+msgstr "Modifica i tag delle immagini Windows"
 
 msgid "Edit a Block Storage Manager"
 msgstr "Modifica un gestore dello spazio di archiviazione a blocchi"
@@ -19516,19 +19609,11 @@ msgstr "Modifica assegnazioni"
 msgid "Edit assignments for this Alert Profile"
 msgstr "Modifica le assegnazioni per questo profilo di avviso"
 
-msgid "Edit of \"%s\" was cancelled by the user"
-msgstr "La modifica di \"%s\" è stata annullata dall'utente"
-
 msgid "Edit of %s \"%s\" was canceled by the user."
 msgstr "La modifica di %s \"%s\" è stata annullata dall'utente."
 
 msgid "Edit of %s \"%s\" was cancelled by the user"
 msgstr "La modifica di %s \"%s\" è stata annullata dall'utente"
-
-msgid "Edit of %{model} Condition \"%{name}\" was cancelled by the user"
-msgstr ""
-"La modifica della condizione %{model} \"%{name}\" è stata annullata "
-"dall'utente"
 
 msgid "Edit of %{model} Request \"%{name}\" was cancelled by the user"
 msgstr "Modifica della richiesta %{model} \"%{name}\" annullata dall'utente"
@@ -19549,9 +19634,8 @@ msgid "Edit of Alert Profile \"%s\" was canceled by the user."
 msgstr ""
 "La modifica del profilo di avviso \"%s\" è stata annullata dall'utente."
 
-msgid "Edit of Analysis Profile \"%{name}\" was cancelled by the user"
-msgstr ""
-"La modifica del profilo di analisi \"%{name}\" è stata annullata dall'utente"
+msgid "Edit of Analysis Profile was cancelled by the user"
+msgstr "La modifica del profilo di analisi è stata annullata dall'utente"
 
 msgid "Edit of Automate Class \"%{name}\" was cancelled by the user"
 msgstr ""
@@ -19620,6 +19704,9 @@ msgstr "La modifica del Volume Cloud \"%s\" è stata annullata dall'utente."
 msgid "Edit of Cloud Volume \"%{name}\" was cancelled by the user"
 msgstr "La modifica del volume cloud \"%{name}\" è stata annullata dall'utente"
 
+msgid "Edit of Condition \"%s\" was cancelled by the user"
+msgstr "La modifica della condizione \"%s\" è stata annullata dall'utente"
+
 msgid "Edit of Credential \"%s\" was canceled by the user."
 msgstr "La modifica delle credenziali \"%s\" è stata annullata dall'utente."
 
@@ -19687,9 +19774,8 @@ msgid "Edit of Orchestration Template %s was cancelled by the user"
 msgstr ""
 "La modifica del modello di Orchestrazione %s è stata annullata dall'utente"
 
-msgid "Edit of PXE Image \"%{name}\" was cancelled by the user"
-msgstr ""
-"La modifica dell'immagine PXE \"%{name}\" è stata annullata dall'utente"
+msgid "Edit of PXE Image was cancelled by the user"
+msgstr "La modifica dell'immagine PXE è stata annullata dall'utente"
 
 msgid "Edit of PXE Server %s was cancelled by the user"
 msgstr "La modifica del Server PXE%s è stata annullata dall'utente"
@@ -19743,6 +19829,9 @@ msgstr "Modifica del repository \"%s\" annullata dall'utente."
 msgid "Edit of Repository \"%s\" was successfully initiated."
 msgstr "La modifica del repository \"%s\" è stata avviata correttamente."
 
+msgid "Edit of Role was cancelled by the user"
+msgstr "La modifica del ruolo è stata annullata dall'utente"
+
 msgid "Edit of Schedule \"%{name}\" was cancelled by the user"
 msgstr ""
 "La modifica della pianificazione \"%{name}\" è stata annullata dall'utente"
@@ -19776,9 +19865,8 @@ msgstr ""
 msgid "Edit of Widget \"%{title}\" was cancelled by the user"
 msgstr "La modifica del widget \"%{title}\" è stata annullata dall'utente"
 
-msgid "Edit of Windows Image \"%{name}\" was cancelled by the user"
-msgstr ""
-"La modifica dell'immagine Windows \"%{name}\" è stata annullata dall'utente"
+msgid "Edit of Windows Image was cancelled by the user"
+msgstr "La modifica dell'immagine di Windows è stata annullata dall'utente"
 
 msgid "Edit of Zone \"%s\" was canceled by the user."
 msgstr "La modifica della zona \"%s\" è stata annullata dall'utente."
@@ -20257,11 +20345,11 @@ msgstr "Il servizio Ansible incorporato non è disponibile."
 msgid "Embedded Automate"
 msgstr "Automazione integrata"
 
-msgid "Embedded Automation Manager"
-msgstr "Gestore automazione incorporato"
+msgid "Embedded Automation Provider"
+msgstr "Fornitore di soluzioni di automazione integrate"
 
-msgid "Embedded Automation Managers"
-msgstr "Gestori automazione incorporati"
+msgid "Embedded Automation Providers"
+msgstr "Fornitori di soluzioni di automazione integrate"
 
 msgid "Embedded Methods"
 msgstr "Metodi incorporati"
@@ -20895,8 +20983,44 @@ msgstr "Accedi alla modalità in standby"
 msgid "Enter a comma separated list of IP or DNS names"
 msgstr "Immettere un elenco separato da virgole di IP o nomi DNS"
 
+msgid "Enter a list of numbers separated by commas"
+msgstr "Inserisci un elenco di numeri separati da virgole"
+
+msgid "Enter a list of text strings separated by commas"
+msgstr "Inserisci un elenco di stringhe di testo separate da virgole"
+
 msgid "Enter a new Dialog"
 msgstr "Immettere una nuova finestra di dialogo"
+
+msgid "Enter a number"
+msgstr "Immettere un numero"
+
+msgid "Enter a value"
+msgstr "Immettere un valore"
+
+msgid "Enter event log name"
+msgstr "Inserisci il nome del log degli eventi"
+
+msgid "Enter file path"
+msgstr "Inserisci il percorso del file"
+
+msgid "Enter filter message"
+msgstr "Inserisci il messaggio di filtro"
+
+msgid "Enter level"
+msgstr "Inserisci il livello"
+
+msgid "Enter number of days"
+msgstr "Immetti numero di giorni"
+
+msgid "Enter registry key"
+msgstr "Inserisci la chiave di registro"
+
+msgid "Enter registry value"
+msgstr "Inserisci il valore del registro"
+
+msgid "Enter source"
+msgstr "Inserisci origine"
 
 msgid "Enter tag category to map to"
 msgstr "Immettere la categoria di tag a cui associare"
@@ -20906,6 +21030,9 @@ msgstr "Ora di immissione"
 
 msgid "Enterprise"
 msgstr "Enterprise"
+
+msgid "Enterprise ID not found"
+msgstr "ID aziendale non trovato"
 
 msgid "Enterprises"
 msgstr "Aziende"
@@ -21019,9 +21146,6 @@ msgstr "Errore durante '%{task}': %{message}"
 msgid "Error during '%{task}': Expression element is required"
 msgstr "Errore durante '%{task}': l'elemento di espressione è obbligatorio"
 
-msgid "Error during '%{title}': %{message}"
-msgstr "Errore durante '%{title}': %{message}"
-
 msgid "Error during 'Add VM to service': %{message}"
 msgstr "Errore durante 'Add VM to service': %{message}"
 
@@ -21047,9 +21171,6 @@ msgstr "Errore durante 'Policy Import': %{messages}"
 
 msgid "Error during 'Provisioning': %{error_message}"
 msgstr "Errore durante 'Provisioning': %{error_message}"
-
-msgid "Error during 'Rate assignments': %{error_message}"
-msgstr "Errore durante 'Assegnazione tassi': %{error_message}"
 
 msgid "Error during 'Remove VM from service': %{message}"
 msgstr "Errore durante 'Remove VM from service': %{message}"
@@ -21186,6 +21307,9 @@ msgstr "Errore durante il caricamento dei dati:"
 msgid "Error message goes here"
 msgstr "Inserire qui il messaggio di errore"
 
+msgid "Error occurred, search filter not applied."
+msgstr "Si è verificato un errore: il filtro di ricerca non è stato applicato."
+
 msgid "Error on line %{line_num}: %{err_txt}"
 msgstr "Errore alla riga %{line_num}: %{err_txt}"
 
@@ -21197,6 +21321,9 @@ msgid ""
 msgstr ""
 "Errore restituito dall'elaborazione dell'evento %{name} in Automatico: %{"
 "error_message}"
+
+msgid "Error saving priority order"
+msgstr "Errore durante il salvataggio dell'ordine di priorità"
 
 msgid "Error text:"
 msgstr "Testo dell'errore:"
@@ -21414,9 +21541,6 @@ msgstr "Tipi di evento"
 msgid "Event log"
 msgstr "Log eventi"
 
-msgid "Event log name is required"
-msgstr "Il nome del log dell'evento è obbligatorio"
-
 msgid "Event name is required"
 msgstr "Il nome evento è obbligatorio"
 
@@ -21588,9 +21712,6 @@ msgstr "Per questa regione, non sono supportati eventi"
 msgid "Events for VM prod_webserver"
 msgstr "Eventi VC per prod_webserver VM"
 
-msgid "Every"
-msgstr "Ogni"
-
 msgid "Everything"
 msgstr "Tutto"
 
@@ -21621,8 +21742,8 @@ msgstr "Accordion Tutto sotto tutti il Catalogo di Servizi"
 msgid "Everything under Auth Key Pairs"
 msgstr "Tutto sotto Coppie di Chiavi Auth"
 
-msgid "Everything under Automation Manager"
-msgstr "Tutto sotto Automation Manager"
+msgid "Everything under Automation Provider"
+msgstr "Tutto riguardo al fornitore di soluzioni di automazione"
 
 msgid "Everything under Availability Zones"
 msgstr "Tutto sotto Zone di disponibilità"
@@ -22047,8 +22168,14 @@ msgstr "Espressione"
 msgid "Expression (Custom)"
 msgstr "Espressione (personalizzata)"
 
+msgid "Expression Editor"
+msgstr "Editor espressione"
+
 msgid "Expression Object"
 msgstr "Oggetto espressione"
+
+msgid "Expression incomplete"
+msgstr "Espressione incompleta"
 
 msgid ""
 "Expressions (next tab) can only be configured for buttons with \"Display for\""
@@ -22590,6 +22717,30 @@ msgstr ""
 msgid "Failed to delete %s %s."
 msgstr "Eliminazione di %s %s non riuscita."
 
+msgid "Failed to load chargeback data"
+msgstr "Impossibile caricare i dati relativi ai chargeback"
+
+msgid "Failed to load image labels"
+msgstr "Impossibile caricare le etichette delle immagini"
+
+msgid "Failed to load label values"
+msgstr "Impossibile caricare i valori delle etichette"
+
+msgid "Failed to load resources"
+msgstr "Impossibile caricare le risorse"
+
+msgid "Failed to load tag categories"
+msgstr "Impossibile caricare le categorie dei tag"
+
+msgid "Failed to refresh domain"
+msgstr "Impossibile aggiornare il dominio"
+
+msgid "Failed to save C & U collection settings"
+msgstr "Impossibile salvare le impostazioni della raccolta C & U"
+
+msgid "Failed to save chargeback assignments"
+msgstr "Impossibile salvare le assegnazioni dei chargeback"
+
 msgid "Failover"
 msgstr "Failover"
 
@@ -22667,9 +22818,6 @@ msgstr[1] "Depot di file"
 
 msgid "File Entry"
 msgstr "Voce File"
-
-msgid "File Entry is required"
-msgstr "La voce file è obbligatoria"
 
 msgid "File Items"
 msgstr "Elementi File"
@@ -22836,9 +22984,6 @@ msgstr "Filtro"
 
 msgid "Filter Expression"
 msgstr "Espressione filtro"
-
-msgid "Filter Item"
-msgstr "Filtra elemento"
 
 msgid "Filter Message"
 msgstr "Filtra messaggio"
@@ -23396,6 +23541,9 @@ msgstr "Stato"
 msgid "Floppy %{name} %{location} %{connection}"
 msgstr "Floppy %{name} %{location} %{connection}"
 
+msgid "Floppy Drive (SIO %s)"
+msgstr "Unità floppy (SIO %s)"
+
 msgid "Floppy Drives"
 msgstr "Unità Floppy"
 
@@ -23490,6 +23638,16 @@ msgstr ""
 
 msgid "Found"
 msgstr "Trovato"
+
+msgid ""
+"Found under Observability > Monitoring in the IBM Cloud console. The "
+"Monitoring instance must be in the same region as this PowerVS workspace and "
+"configured to receive IBM Power Virtual Server metrics."
+msgstr ""
+"Si trova in Osservabilità > Monitoraggio nella console IBM Cloud. L'istanza di"
+" monitoraggio deve trovarsi nella stessa regione di questo spazio di lavoro "
+"PowerVS ed essere configurata per ricevere le metriche di IBM Power Virtual "
+"Server."
 
 msgid "Free"
 msgstr "Libero"
@@ -23669,6 +23827,9 @@ msgstr "Definizioni di oggetto generico"
 
 msgid "Generic Objects"
 msgstr "Oggetti generici"
+
+msgid "Generic SCSI (%s)"
+msgstr "SCSI generico (%s)"
 
 msgid "Generic Subtype"
 msgstr "Sottotipo generico"
@@ -23851,9 +24012,6 @@ msgstr "Ricerca globale:"
 
 msgid "Glusterfs Endpoint Name"
 msgstr "Nome Endpoint Glusterfs"
-
-msgid "Go to my start page"
-msgstr "Vai alla pagina di avvio"
 
 msgid "Google"
 msgstr "Google"
@@ -24191,9 +24349,6 @@ msgstr ""
 msgid "HCP Terraform is waiting for its backend services to start the plan."
 msgstr "HCP Terraform è in attesa dei servizi di backend per avviare il piano."
 
-msgid "HKLM"
-msgstr "HKLM"
-
 msgid "HMC-managed"
 msgstr "Gestito da HMC"
 
@@ -24261,6 +24416,12 @@ msgstr "Hard"
 
 msgid "Hard Disk"
 msgstr "Disco fisso"
+
+msgid "Hard Disk (IDE %s)"
+msgstr "Disco rigido (IDE %s)"
+
+msgid "Hard Disk (SCSI %s)"
+msgstr "Disco rigido (SCSI %s)"
 
 msgid "Hard Reboot"
 msgstr "Riavvio hard"
@@ -24353,6 +24514,12 @@ msgstr "Bitness"
 msgid "Hardware|Config version"
 msgstr "Versione di configurazione"
 
+msgid "Hardware|Cpu available cores"
+msgstr "Hardware | Core disponibili della CPU"
+
+msgid "Hardware|Cpu configured cores"
+msgstr "Hardware | Core configurati della CPU"
+
 msgid "Hardware|Cpu cores per socket"
 msgstr "Core CPU per socket"
 
@@ -24412,6 +24579,12 @@ msgstr "Console di memoria"
 
 msgid "Hardware|Memory mb"
 msgstr "MB di Memoria"
+
+msgid "Hardware|Memory mb available"
+msgstr "Hardware | MB di memoria disponibili"
+
+msgid "Hardware|Memory mb configured"
+msgstr "Hardware | MB di memoria configurati"
 
 msgid "Hardware|Memory mb minimum"
 msgstr "MB di Memoria minimi"
@@ -25698,6 +25871,15 @@ msgstr "IBM Cloud Infrastructure Center"
 msgid "IBM Cloud Monitoring Instance GUID"
 msgstr "GUID istanza IBM Cloud Monitoring"
 
+msgid ""
+"IBM Cloud Monitoring is not available for PowerVS region '%{region}'. Ensure "
+"an IBM Cloud Monitoring instance exists in the same region as this PowerVS "
+"workspace."
+msgstr ""
+"IBM Cloud Monitoring non è disponibile per la regione PowerVS '%{region}'. "
+"Assicurati che esista un'istanza di IBM Cloud Monitoring nella stessa regione "
+"di questo spazio di lavoro PowerVS."
+
 msgid "IBM Cloud Pak URL"
 msgstr "URL IBM Cloud Pak"
 
@@ -26571,9 +26753,6 @@ msgstr "Azione pulsante non valida"
 msgid "Invalid chart definition"
 msgstr "Definizione grafico non valida"
 
-msgid "Invalid configuration parameters."
-msgstr "Parametri di configurazione non validi."
-
 msgid "Invalid credential_field %{field}, allowed values are %{allowed_fields}"
 msgstr ""
 "Campo credenziali non valido %{field}, i valori consentiti sono %{"
@@ -26798,11 +26977,11 @@ msgstr "ID utente"
 msgid "Job|Zone"
 msgstr "Zona"
 
+msgid "KB"
+msgstr "KB"
+
 msgid "KBps"
 msgstr "KBps"
-
-msgid "Keep OVA file on completion"
-msgstr "Conserva file OVA al completamento"
 
 msgid "Kerberos"
 msgstr "Kerberos"
@@ -26854,6 +27033,9 @@ msgstr "Kilobyte al secondo (12,34 KBps)"
 
 msgid "Kind"
 msgstr "Tipologia"
+
+msgid "Kube Exec Console"
+msgstr "Console Kube Exec"
 
 msgid "KubeVirt"
 msgstr "KubeVirt"
@@ -26947,6 +27129,9 @@ msgstr "Etichetta"
 
 msgid "Label is required"
 msgstr "Etichetta obbligatoria"
+
+msgid "Label selections"
+msgstr "Selezione delle etichette"
 
 msgid "Labeled Container Images"
 msgstr "Immagini contenitore con etichette"
@@ -27682,6 +27867,30 @@ msgstr "Viene ritirato il"
 msgid "LoadBalancer|Total vms"
 msgstr "Totale vm"
 
+msgid "Loading chargeback data..."
+msgstr "Caricamento dei dati relativi ai chargeback..."
+
+msgid "Loading expression fields..."
+msgstr "Caricamento dei campi di espressione..."
+
+msgid "Loading image labels..."
+msgstr "Caricamento delle etichette delle immagini..."
+
+msgid "Loading label values..."
+msgstr "Caricamento dei valori delle etichette..."
+
+msgid "Loading resources..."
+msgstr "Caricamento risorse in corso..."
+
+msgid "Loading saved label assignments..."
+msgstr "Caricamento delle assegnazioni delle etichette salvate..."
+
+msgid "Loading tag categories..."
+msgstr "Caricamento delle categorie dei tag..."
+
+msgid "Loading..."
+msgstr "Caricamento..."
+
 msgid "Local"
 msgstr "Locale"
 
@@ -27894,9 +28103,6 @@ msgstr "configurazione principale"
 
 msgid "Main Info"
 msgstr "Informazioni principali"
-
-msgid "Main Menu"
-msgstr "Menu principale"
 
 msgid "Main Route Table"
 msgstr "Tabella instradamenti principale"
@@ -28116,6 +28322,9 @@ msgstr "Gestire l'associazione porte di questo Floating"
 
 msgid "ManageIQ"
 msgstr "ManageIQ"
+
+msgid "ManageIQ Log"
+msgstr "Log ManageIQ"
 
 msgid "ManageIQ Tag Department"
 msgstr "Reparto tag ManageIQ"
@@ -33404,6 +33613,9 @@ msgstr "Server NFS"
 msgid "NFS Servert"
 msgstr "Server NFS"
 
+msgid "NOT"
+msgstr "NON"
+
 msgid "NVMe"
 msgstr "NVMe"
 
@@ -34114,6 +34326,9 @@ msgstr "Nuova password"
 msgid "New Section"
 msgstr "Nuova sezione"
 
+msgid "New Tab"
+msgstr "Nuova scheda"
+
 msgid "New Window"
 msgstr "Nuova finestra"
 
@@ -34315,9 +34530,6 @@ msgid "No Cloud Provider that supports instance provisioning added"
 msgstr ""
 "Nessun provider cloud che supporta il provisioning dell'istanza aggiunto"
 
-msgid "No Clusters found in the current region."
-msgstr "Nessun cluster trovato nella regione corrente."
-
 msgid "No Compliance Policies Found"
 msgstr "Nessuna Normativa Di Conformità Trovata"
 
@@ -34340,9 +34552,6 @@ msgstr "Nessun modello di personalizzazione selezionato per %{button}"
 
 msgid "No Daily data is available"
 msgstr "Non è disponibile alcun dato giornaliero"
-
-msgid "No Datastores found in the current region."
-msgstr "Nessun Datastore trovato nella regione corrente."
 
 msgid "No Date/Time value specified"
 msgstr "Nessun valore Data/Ora specificato"
@@ -34690,13 +34899,8 @@ msgstr "Dati non disponibili"
 msgid "No data available."
 msgstr "Nessun dato disponibile."
 
-msgid ""
-"No drift history found, an Analysis or Virtual Black Box Synchronization for "
-"this VM may need to be run."
-msgstr ""
-"Non è stata trovata alcuna cronologia di deriva, è possibile che sia "
-"necessario eseguire un'analisi o una sincronizzazione di Virtual Black Box per"
-" questa VM."
+msgid "No drift history found"
+msgstr "Non è stata trovata alcuna cronologia delle deviazioni"
 
 msgid "No entries found for %s"
 msgstr "Nessuna voce trovata per %s"
@@ -34709,6 +34913,9 @@ msgstr "Nessun evento disponibile per questo %{model}"
 
 msgid "No events available for this Cluster"
 msgstr "Nessun evento disponibile per questo Cluster"
+
+msgid "No fields available for this model."
+msgstr "Non sono disponibili campi per questo modello."
 
 msgid "No fields were moved up"
 msgstr "Nessun campo è stato spostato in alto"
@@ -34757,6 +34964,12 @@ msgstr "Nessun input da applicare"
 
 msgid "No instances found"
 msgstr "Nessuna istanza trovata"
+
+msgid "No items available"
+msgstr "Nessun elemento disponibile"
+
+msgid "No label values available for this label key."
+msgstr "Non sono disponibili valori per questa chiave di etichetta."
 
 msgid "No message will be displayed"
 msgstr "Non verrà visualizzato nessun messaggio"
@@ -34825,6 +35038,9 @@ msgstr "Non è stato impostato alcun ruolo di replica"
 msgid "No report data found."
 msgstr "Nessun dato di report trovato."
 
+msgid "No resources available for this assignment type."
+msgstr "Non sono disponibili risorse per questo tipo di assegnazione."
+
 msgid "No saved filters or report filters are available to load"
 msgstr "Non sono disponibili filtri o filtri di report salvati da caricare"
 
@@ -34889,6 +35105,9 @@ msgstr "Nessuna sottorete per rimuovere le interfacce dal router \"%{name}\""
 msgid "No synchronize category specified"
 msgstr "Nessuna categoria di sincronizzazione specificata"
 
+msgid "No tags available for this category."
+msgstr "Non sono disponibili tag per questa categoria."
+
 msgid "No task returned from server"
 msgstr "Il server non ha restituito alcuna attività"
 
@@ -34897,6 +35116,9 @@ msgstr "Nessuna attività è stata selezionata per l'annullamento"
 
 msgid "No task were selected to delete"
 msgstr "Nessuna attività è stata selezionata per l'annullamento"
+
+msgid "No tenants available."
+msgstr "Non sono disponibili tenant."
 
 msgid "No timer is attached to this Widget, its contents will not be updated."
 msgstr ""
@@ -35372,9 +35594,6 @@ msgstr "Il modello OVF è obbligatorio; selezionarne uno dall'elenco"
 msgid "OVF Templates"
 msgstr "Modelli OVF"
 
-msgid "Object"
-msgstr "Oggetto"
-
 msgid "Object Attribute"
 msgstr "Attributo oggetto"
 
@@ -35584,6 +35803,9 @@ msgstr "Apri una console profilo di configurazione"
 
 msgid "Open a Configured System console"
 msgstr "Apri una console sistema configurato"
+
+msgid "Open a Console for this Container Group"
+msgstr "Apri una console per questo gruppo di contenitori"
 
 msgid "Open a VMRC console for VMs"
 msgstr "Apri una console VMRC per le VM"
@@ -36499,9 +36721,6 @@ msgstr "Immagine PXE"
 
 msgid "PXE Image \"%{name}\""
 msgstr "Immagine PXE \"%{name}\""
-
-msgid "PXE Image \"%{name}\" was saved"
-msgstr "L'immagine PXE \"%{name}\" è stata salvata"
 
 msgid "PXE Image Menus"
 msgstr "Menu immagine PXE"
@@ -38086,6 +38305,9 @@ msgstr "Playbook (Ansible incorporato)"
 msgid "Plays"
 msgstr "Riproduce"
 
+msgid "Please assign at least one rate"
+msgstr "Assegna almeno una tariffa"
+
 msgid "Please contact your administrator for assistance."
 msgstr "Contattare l'amministratore per assistenza."
 
@@ -38850,6 +39072,9 @@ msgstr "Aggiornamenti prodotto"
 
 msgid "Production"
 msgstr "Produzione"
+
+msgid "Production Log"
+msgstr "Log di produzione"
 
 msgid "Profile"
 msgstr "Profilo"
@@ -39642,9 +39867,6 @@ msgstr "Tasso"
 
 msgid "Rate (in %{currency})"
 msgstr "Tasso (in %{currency})"
-
-msgid "Rate Assignments saved"
-msgstr "Assegnazioni tassi salvate"
 
 msgid "Rate Details"
 msgstr "Dettagli tasso"
@@ -40769,14 +40991,14 @@ msgstr "Registri"
 msgid "Registry"
 msgstr "Registro"
 
+msgid "Registry Data"
+msgstr "Dati del registro"
+
 msgid "Registry Entries"
 msgstr "Voci del registro"
 
 msgid "Registry Entry"
 msgstr "Voce di registro"
-
-msgid "Registry Entry is required"
-msgstr "La voce di registro è obbligatoria"
 
 msgid "Registry Hive"
 msgstr "Registro Hive"
@@ -42667,9 +42889,6 @@ msgstr "Tipo di risultato %{result_type} non supportato"
 msgid "Results"
 msgstr "Risultati"
 
-msgid "Results %s"
-msgstr "Risultati %s"
-
 msgid "Resume"
 msgstr "Riprendi"
 
@@ -42864,6 +43083,9 @@ msgstr "Raccomandazioni di dimensionamento corretto"
 
 msgid "Role"
 msgstr "Ruolo"
+
+msgid "Role \"%s\" was saved"
+msgstr "Il ruolo \"%s\" è stato salvato"
 
 msgid "Role \"%{name}\""
 msgstr "Ruolo \"%{name}\""
@@ -43262,6 +43484,15 @@ msgstr "Report salvati"
 msgid "Saved Reports Accordion"
 msgstr "Accordion report salvati"
 
+msgid "Saved label assignments"
+msgstr "Assegnazioni di etichette salvate"
+
+msgid "Saved tag assignments"
+msgstr "Assegnazioni di tag salvate"
+
+msgid "Saving chargeback assignments..."
+msgstr "Salvataggio delle assegnazioni di chargeback..."
+
 msgid "Savings"
 msgstr "Risparmi"
 
@@ -43551,6 +43782,9 @@ msgstr "Ricerca per nome all'interno dei risultati"
 msgid "Search is referenced in a schedule and cannot be deleted"
 msgstr "La ricerca è indicata in una pianificazione e non può essere eliminata"
 
+msgid "Search operator"
+msgstr "Operatore di ricerca"
+
 msgid "Search with Name or Relative path"
 msgstr "Cerca con nome o percorso relativo"
 
@@ -43571,9 +43805,6 @@ msgid ""
 msgstr ""
 "Filtro secondario (Visualizzazione) - Filtra le righe in base ai campi della "
 "tabella child"
-
-msgid "Secondary Menu"
-msgstr "Menu secondario"
 
 msgid "Secret Access Key"
 msgstr "Chiave di accesso segreta"
@@ -43909,6 +44140,9 @@ msgstr "Seleziona"
 msgid "Select Alerts to be Evaluated"
 msgstr "Selezionare gli avvisi da valutare"
 
+msgid "Select All"
+msgstr "Seleziona tutto"
+
 msgid "Select All Days"
 msgstr "Seleziona tutti i giorni"
 
@@ -44172,9 +44406,6 @@ msgstr "Seleziona le opzioni per le etichette immagine"
 msgid "Select rate"
 msgstr "Seleziona tariffa"
 
-msgid "Select rate for selections"
-msgstr "Seleziona tariffa per le selezioni"
-
 msgid ""
 "Select storage resources to attach to the service. The new Volume(s) will be "
 "created on these resources."
@@ -44194,9 +44425,6 @@ msgstr "Seleziona categoria tag"
 
 msgid "Select tag value"
 msgstr "Seleziona valore tag"
-
-msgid "Select term of service type"
-msgstr "Seleziona il tipo di termine del servizio"
 
 msgid ""
 "Select the format type above to apply syntax highlighting for better "
@@ -44219,6 +44447,9 @@ msgstr "Seleziona due o più elementi da confrontare"
 
 msgid "Select up to 10 timestamps for Drift Analysis"
 msgstr "Seleziona fino a 10 date/ora per l'analisi Drift"
+
+msgid "Select values"
+msgstr "Seleziona valori"
 
 msgid "Selected"
 msgstr "Selezionato"
@@ -44361,6 +44592,9 @@ msgstr "Controllo server"
 msgid "Server Database Backup Insufficient Space"
 msgstr "Spazio insufficiente per il backup del database del server"
 
+msgid "Server Error %s"
+msgstr "Errore del server %s"
+
 msgid "Server Exceeded Memory Limit"
 msgstr "Limite di memoria del server superato"
 
@@ -44435,6 +44669,9 @@ msgstr "Il server è master"
 
 msgid "Server name"
 msgstr "Nome server"
+
+msgid "Server not responding"
+msgstr "Il server non risponde"
 
 msgid "Server restart is only supported on Linux"
 msgstr "Il riavvio del server è supportato solo su Linux"
@@ -46420,6 +46657,21 @@ msgstr "Arresta"
 msgid "Shutdown Guest"
 msgstr "Arresta Guest"
 
+msgid "Shutdown Guest OS"
+msgstr "Arresta il sistema operativo guest"
+
+msgid "Shutdown Guest OS on the selected items"
+msgstr "Arresta il sistema operativo guest sugli elementi selezionati"
+
+msgid "Shutdown Guest OS on the selected items?"
+msgstr "Arrestare il sistema operativo guest sugli elementi selezionati?"
+
+msgid "Shutdown Guest OS on this Instance"
+msgstr "Arresta il sistema operativo guest su questa istanza"
+
+msgid "Shutdown Guest OS on this Instance?"
+msgstr "Arrestare il sistema operativo guest su questa istanza?"
+
 msgid "Shutdown Host"
 msgstr "Arresta host"
 
@@ -48078,6 +48330,12 @@ msgstr "Numero di alloggiamenti Switch"
 msgid "Switch Uuid"
 msgstr "Scambia Uuid"
 
+msgid "Switch to relative date format"
+msgstr "Passa a un formato di data relativo"
+
+msgid "Switch to specific date format"
+msgstr "Passa a un formato di data specifico"
+
 msgid "Switch: "
 msgstr "Switch: "
 
@@ -48343,6 +48601,9 @@ msgstr "Caricamento sistema"
 msgid "Systemd Sub"
 msgstr "Sistema Sub"
 
+msgid "TB"
+msgstr "TB"
+
 msgid "TCP"
 msgstr "TCP"
 
@@ -48421,8 +48682,14 @@ msgstr "Le modifiche ai tag sono state salvate correttamente"
 msgid "Tag in Dashboard"
 msgstr "Tag nel dashboard"
 
+msgid "Tag selections"
+msgstr "Selezione dei tag"
+
 msgid "Tag to Apply"
 msgstr "Tag da applicare"
+
+msgid "Tag value"
+msgstr "Valore di tag"
 
 msgid "Tagged Clusters"
 msgstr "Cluster con tag"
@@ -48638,6 +48905,9 @@ msgstr "Quota Tenant"
 msgid "Tenant Quotas"
 msgstr "Quote Tenant"
 
+msgid "Tenant chargeback assignments"
+msgstr "Assegnazioni di chargeback dei tenant"
+
 msgid "Tenant mapping is disabled on the Provider"
 msgstr "L'associazione del tenant è disabilitata sul Provider"
 
@@ -48778,6 +49048,13 @@ msgstr "Spazio di lavoro Terraform Enterprise"
 
 msgid "Terraform Enterprise Workspace Provision"
 msgstr "Provisioning dello spazio di lavoro Terraform Enterprise"
+
+msgid ""
+"Terraform Runner has been unavailable for %{unavailable} seconds, exceeding "
+"timeout of %{timeout} seconds"
+msgstr ""
+"Terraform Runner è stato non disponibile per %{unavailable} secondi, superando"
+" il timeout di %{timeout} secondi"
 
 msgid "Terraform Template"
 msgstr "Modello Terraform"
@@ -49070,6 +49347,9 @@ msgid_plural "The following catalog items are linked to services:"
 msgstr[0] "La voce del catalogo è collegata ai seguenti servizi:"
 msgstr[1] "Le seguenti voci di catalogo sono collegate ai servizi:"
 
+msgid "The check count value must be an integer"
+msgstr "Il valore di conteggio dei controlli deve essere un numero intero"
+
 msgid ""
 "The check count value must be an integer to commit this expression element"
 msgstr ""
@@ -49273,6 +49553,9 @@ msgid ""
 msgstr ""
 "L'esecuzione deve iniziare non appena i servizi di backend che eseguono "
 "terraform hanno capacità disponibile."
+
+msgid "The scope expression is incomplete"
+msgstr "L'espressione dell'ambito è incompleta"
 
 msgid "The selected %{label} is not in the current region"
 msgstr "Il %{label} selezionato non si trova nella regione corrente"
@@ -50678,9 +50961,6 @@ msgstr "Spazio non allocato"
 msgid "Unarchive Services"
 msgstr "Annulla archiviazione servizi"
 
-msgid "Unassign"
-msgstr "Annulla assegnazione"
-
 msgid "Unassign Server"
 msgstr "Annulla assegnazione server"
 
@@ -50744,9 +51024,6 @@ msgstr "Unità"
 
 msgid "Unknown"
 msgstr "Sconosciuto"
-
-msgid "Unknown API error"
-msgstr "Errore API sconosciuto"
 
 msgid "Unknown Action"
 msgstr "Azione sconosciuta"
@@ -51500,11 +51777,11 @@ msgstr "Utente da cercare"
 msgid "User will input the value"
 msgstr "L'utente immetterà il valore"
 
+msgid "User will input value"
+msgstr "L'utente inserirà un valore"
+
 msgid "User:"
 msgstr "Utente:"
-
-msgid "User: %s"
-msgstr "Utente: %s"
 
 msgid "UserID"
 msgstr "ID utente"
@@ -52690,9 +52967,6 @@ msgstr "Variabile"
 msgid "Variable Object ID"
 msgstr "ID oggetto variabile"
 
-msgid "Variable name must be unique"
-msgstr "Il nome variabile deve essere univoco"
-
 msgid "Variables"
 msgstr "Variabili"
 
@@ -52756,9 +53030,6 @@ msgstr "Versione / Build"
 
 msgid "View"
 msgstr "Visualizza"
-
-msgid "View '%{name}' Cluster"
-msgstr "Visualizza cluster '%{name}'"
 
 msgid "View Alert Definition Profiles"
 msgstr "Visualizza profili di definizione degli avvisi"
@@ -53252,9 +53523,6 @@ msgstr "Visualizza questo MiqServer"
 msgid "View this Orchestration Template in Catalogs"
 msgstr "Visualizza questo modello di orchestrazione nei cataloghi"
 
-msgid "View this PXE Image"
-msgstr "Visualizza questa immagine PXE"
-
 msgid "View this Policy Profile"
 msgstr "Visualizza questo profilo di politica"
 
@@ -53278,9 +53546,6 @@ msgstr "Visualizza questo utente"
 
 msgid "View this Widget"
 msgstr "Visualizza questo Widget"
-
-msgid "View this Windows Image"
-msgstr "Visualizza questa immagine di Windows"
 
 msgid "View this item"
 msgstr "Visualizza questo elemento"
@@ -53457,6 +53722,12 @@ msgstr "VPC (Virtual Private Cloud)"
 
 msgid "Virtual machines added"
 msgstr "Macchine virtuali aggiunte"
+
+msgid ""
+"Virtual processors can only be reconfigured on shared processor partitions"
+msgstr ""
+"I processori virtuali possono essere riconfigurati solo sulle partizioni di "
+"processore condivise"
 
 msgid "Virtualization"
 msgstr "Virtualizzazione"
@@ -55256,9 +55527,6 @@ msgstr "Immagine di Windows"
 msgid "Windows Image \"%{name}\""
 msgstr "Immagine Windows \"%{name}\""
 
-msgid "Windows Image \"%{name}\" was saved"
-msgstr "L'immagine Windows \"%{name}\" è stata salvata"
-
 msgid "Windows Images"
 msgstr "Immagini Windows"
 
@@ -55358,9 +55626,6 @@ msgstr "Modelli di flusso di lavoro (Ansible Tower)"
 
 msgid "Workflow does not have any credentials to map."
 msgstr "Il flusso di lavoro non ha credenziali da associare."
-
-msgid "Workflow max. timeout"
-msgstr "Timeout massimo del flusso di lavoro"
 
 msgid "Workflow name"
 msgstr "Nome flusso di lavoro"
@@ -56872,15 +57137,6 @@ msgstr "esempio"
 
 msgid "secondary, "
 msgstr "secondario, "
-
-msgid "select Rate1"
-msgstr "seleziona Rate1"
-
-msgid "select Rate2"
-msgstr "seleziona Rate2"
-
-msgid "select rate for saved items"
-msgstr "seleziona tariffa per gli elementi salvati"
 
 msgid "selected to copy"
 msgstr "selezionato da copiare"
