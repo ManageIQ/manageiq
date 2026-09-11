@@ -78,6 +78,7 @@ class Service < ApplicationRecord
   include Operations
   include ResourceLinking
   include RetirementManagement
+  include ReconfigurationManagement
 
   hide_attribute "display"
 

@@ -14,7 +14,7 @@ module OrchestrationStackReconfigureTask::StateMachine
     status, reason = stack.normalized_live_status
 
     case status
-    when "running"
+    when "running", "process initiated"
       stack.queue_refresh
       requeue_phase
     when "create_complete"

@@ -11,6 +11,36 @@ class ServiceReconfigureTask < MiqReconfigureTask
     "#{request_class::TASK_DESCRIPTION} for: #{req_obj.source.name}"
   end
 
+  def update_and_notify_parent(*args)
+    prev_state = state
+    super
+    new_state = state
+
+    # No-op when the state did not change, UNLESS the update explicitly sets
+    # "pending" — tasks are created with state "pending" so the first real
+    # transition (deliver_to_automate) keeps prev_state == "pending".
+    requested_state = args.first.kind_of?(Hash) ? args.first[:state].to_s : nil
+    return if new_state == prev_state && requested_state != "pending"
+
+    svc = source
+    return unless svc.respond_to?(:start_reconfiguration)
+
+    case new_state
+    when "pending", "active"
+      svc.start_reconfiguration
+    when "finished"
+      status.to_s.casecmp("ok").zero? ? svc.finish_reconfiguration : svc.reconfiguration_error
+    end
+  end
+
+  def before_ae_starts(_options)
+    reload
+    return unless state.to_s.downcase.in?(%w[pending queued])
+
+    _log.info("Executing #{request_class::TASK_DESCRIPTION} request: [#{description}]")
+    update_and_notify_parent(:state => "active", :status => "Ok", :message => "In Process")
+  end
+
   def after_request_task_create
     update(:description => get_description)
     return if automate_drives?
@@ -142,7 +172,7 @@ class ServiceReconfigureTask < MiqReconfigureTask
 
   def reconfigure_task_class_method_name(resource_type)
     # Convert resource class name to method name
-    # ?????????? Vm -> vm_reconfigure_task_class
+    # Vm -> vm_reconfigure_task_class
     # OrchestrationStack -> orchestration_stack_reconfigure_task_class
     resource_class_name = resource_type.base_model.name.underscore
     "#{resource_class_name}_reconfigure_task_class"

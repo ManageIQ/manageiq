@@ -33,7 +33,8 @@ RSpec.describe ServiceReconfigureTask do
       expect(task).to receive(:update_and_notify_parent).with(
         :state   => 'finished',
         :status  => 'Ok',
-        :message => 'Service Reconfigure completed')
+        :message => 'Service Reconfigure completed'
+      )
       task.after_ae_delivery('ok')
     end
 
@@ -41,7 +42,8 @@ RSpec.describe ServiceReconfigureTask do
       expect(task).to receive(:update_and_notify_parent).with(
         :state   => 'finished',
         :status  => 'Error',
-        :message => 'Service Reconfigure failed')
+        :message => 'Service Reconfigure failed'
+      )
       task.after_ae_delivery('error')
     end
 
@@ -75,10 +77,10 @@ RSpec.describe ServiceReconfigureTask do
     context "automation entry point available" do
       before do
         FactoryBot.create(:resource_action, :action       => 'Reconfigure',
-                                             :resource     => template,
-                                             :ae_namespace => 'namespace',
-                                             :ae_class     => 'class',
-                                             :ae_instance  => 'instance')
+                                            :resource     => template,
+                                            :ae_namespace => 'namespace',
+                                            :ae_class     => 'class',
+                                            :ae_instance  => 'instance')
       end
 
       it "queues the reconfigure automate entry point" do
@@ -112,7 +114,8 @@ RSpec.describe ServiceReconfigureTask do
         expect(task).to receive(:update_and_notify_parent).with(
           :state   => 'pending',
           :status  => 'Ok',
-          :message => 'Automation Starting')
+          :message => 'Automation Starting'
+        )
         task.deliver_to_automate
       end
     end
@@ -122,8 +125,72 @@ RSpec.describe ServiceReconfigureTask do
         expect(task).to receive(:update_and_notify_parent).with(
           :state   => 'finished',
           :status  => 'Ok',
-          :message => 'Service Reconfigure completed')
+          :message => 'Service Reconfigure completed'
+        )
         task.deliver_to_automate
+      end
+    end
+  end
+
+  describe "#update_and_notify_parent lifecycle state" do
+    before { task } # ensure task is persisted
+
+    context "when state transitions to 'pending'" do
+      it "sets the service lifecycle_state to 'provisioning'" do
+        task.update_and_notify_parent(:state => "pending", :status => "Ok", :message => "Automation Starting")
+        expect(service.reload.lifecycle_state).to eq("provisioning")
+      end
+    end
+
+    context "when state transitions to 'active'" do
+      before { task.update!(:state => "pending") }
+
+      it "sets the service lifecycle_state to 'provisioning'" do
+        task.update_and_notify_parent(:state => "active", :status => "Ok", :message => "In Process")
+        expect(service.reload.lifecycle_state).to eq("provisioning")
+      end
+    end
+
+    context "workflow path via before_ae_starts" do
+      it "transitions task to active and sets service lifecycle_state to 'provisioning'" do
+        task.before_ae_starts({})
+        expect(task.reload.state).to eq("active")
+        expect(service.reload.lifecycle_state).to eq("provisioning")
+      end
+
+      it "is a no-op when task is already active" do
+        task.update!(:state => "active")
+        expect(task).not_to receive(:update_and_notify_parent)
+        task.before_ae_starts({})
+      end
+    end
+
+    context "when state transitions to 'finished' with status 'Ok'" do
+      before { task.update!(:state => "active") }
+
+      it "sets the service lifecycle_state to 'provisioned'" do
+        task.update_and_notify_parent(:state => "finished", :status => "Ok", :message => "Service Reconfigure completed")
+        expect(service.reload.lifecycle_state).to eq("provisioned")
+      end
+    end
+
+    context "when state transitions to 'finished' with status 'Error'" do
+      before { task.update!(:state => "active") }
+
+      it "sets the service lifecycle_state to 'error_in_provisioning'" do
+        task.update_and_notify_parent(:state => "finished", :status => "Error", :message => "Service Reconfigure failed")
+        expect(service.reload.lifecycle_state).to eq("error_in_provisioning")
+      end
+    end
+
+    context "when state does not change" do
+      before { task.update!(:state => "active", :status => "Ok") }
+
+      it "does not update service lifecycle_state" do
+        expect(service).not_to receive(:start_reconfiguration)
+        expect(service).not_to receive(:finish_reconfiguration)
+        expect(service).not_to receive(:reconfiguration_error)
+        task.update_and_notify_parent(:message => "still active")
       end
     end
   end
