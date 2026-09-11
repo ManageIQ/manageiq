@@ -162,15 +162,14 @@ module ManageIQ
           # set format for parsing and for axis labels
           mri.chart[:data][:xFormat] = fmt
           mri.chart[:axis][:x][:tick][:format] = fmt
-          # The x column contains values that were passed through add_axis_category_text
-          # → slice_legend, which converts Time objects to ISO 8601 strings via .iso8601(3).
-          # Those ISO strings cannot be parsed by C3 using the short xFormat (e.g. '%m/%d').
-          # Re-parse each value and reformat it to match xFormat so C3 can read it.
-          x_col = mri.chart[:data][:columns].first # ['x', "2024-06-17T00:00:00.000Z", ...]
-          x_col.map!.with_index do |v, i|
-            next v if i.zero?
-            time = v.respond_to?(:strftime) ? v : Time.parse(v)
-            time.strftime(fmt)
+          # The x column contains ISO 8601 strings produced by slice_legend via .iso8601(3).
+          # C3 cannot parse those with the short '%m/%d' xFormat, so reformat them here.
+          if fmt == '%m/%d'
+            x_col = mri.chart[:data][:columns].first # ['x', "2024-06-17T00:00:00.000Z", ...]
+            x_col.map!.with_index do |v, i|
+              next v if i.zero?
+              Time.parse(v).strftime(fmt)
+            end
           end
         end
 
