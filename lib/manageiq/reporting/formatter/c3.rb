@@ -151,18 +151,25 @@ module ManageIQ
           mri.chart[:axis][:x] = {:type => 'timeseries', :tick => {}}
           # set flag for performance chart
           mri.chart[:miq][:performance_chart] = true
-          # this conditions are taken from build_performance_chart_area method from chart_commons.rb
-          if mri.db.include?("Daily") || (mri.where_clause && mri.where_clause.include?("daily"))
-            # set format for parsing
-            mri.chart[:data][:xFormat] = '%m/%d'
-            # set format for labels
-            mri.chart[:axis][:x][:tick][:format] = '%m/%d'
-          elsif mri.extras[:realtime] == true
-            mri.chart[:data][:xFormat] = '%H:%M:%S'
-            mri.chart[:axis][:x][:tick][:format] = '%H:%M:%S'
-          else
-            mri.chart[:data][:xFormat] = '%H:%M'
-            mri.chart[:axis][:x][:tick][:format] = '%H:%M'
+          # these conditions are taken from build_performance_chart_area method from chart_commons.rb
+          fmt = if mri.db.include?("Daily") || (mri.where_clause && mri.where_clause.include?("daily"))
+                  '%m/%d'
+                elsif mri.extras[:realtime] == true
+                  '%H:%M:%S'
+                else
+                  '%H:%M'
+                end
+          # set format for parsing and for axis labels
+          mri.chart[:data][:xFormat] = fmt
+          mri.chart[:axis][:x][:tick][:format] = fmt
+          # The x column contains ISO 8601 strings produced by slice_legend via .iso8601(3).
+          # C3 cannot parse those with the short '%m/%d' xFormat, so reformat them here.
+          if fmt == '%m/%d'
+            x_col = mri.chart[:data][:columns].first # ['x', "2024-06-17T00:00:00.000Z", ...]
+            x_col.map!.with_index do |v, i|
+              next v if i.zero?
+              Time.parse(v).strftime(fmt)
+            end
           end
         end
 
