@@ -368,12 +368,13 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-schema
-  revision: 906d539c0ec57331a893e560e19e98c59332cbe5
+  revision: 91cc04991071c185ef38fec090f92c898d816249
   branch: tal
   specs:
     manageiq-schema (0.1.0)
       activerecord-id_regions (~> 0.6.0)
       ancestry
+      json (~> 2.0)
       manageiq-password (>= 1.2.0, < 2)
       more_core_extensions (>= 3.5, < 5)
       pg
