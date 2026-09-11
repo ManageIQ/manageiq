@@ -531,4 +531,75 @@ RSpec.describe Storage do
       expect(storage.storage_type_supported_for_ssa?).to eq(true)
     end
   end
+
+  describe "supports :free_space and :uncommitted defaults" do
+    let(:storage) { FactoryBot.build(:storage) }
+
+    it "supports :free_space by default" do
+      expect(storage.supports?(:free_space)).to be(true)
+    end
+
+    it "supports :uncommitted by default" do
+      expect(storage.supports?(:uncommitted)).to be(true)
+    end
+  end
+
+  describe "#used_space_percent_of_total" do
+    context "when :free_space is supported" do
+      let(:storage) { FactoryBot.build(:storage, :total_space => 1000, :free_space => 400) }
+
+      it "returns the used space percentage" do
+        expect(storage.used_space_percent_of_total).to eq(60.0)
+      end
+
+      it "returns nil when total_space is zero" do
+        storage.total_space = 0
+        expect(storage.used_space_percent_of_total).to be_nil
+      end
+    end
+
+    context "when :free_space is not supported" do
+      let(:storage) { FactoryBot.build(:storage, :total_space => 1000, :free_space => 0) }
+
+      before { allow(storage).to receive(:supports?).and_call_original }
+      before { allow(storage).to receive(:supports?).with(:free_space).and_return(false) }
+
+      it "returns nil" do
+        expect(storage.used_space_percent_of_total).to be_nil
+      end
+    end
+  end
+
+  describe "#v_total_provisioned" do
+    context "when both :free_space and :uncommitted are supported" do
+      let(:storage) { FactoryBot.build(:storage, :total_space => 1000, :free_space => 400, :uncommitted => 200) }
+
+      it "returns used_space plus uncommitted" do
+        # used_space = total_space - free_space = 600; uncommitted = 200 => 800
+        expect(storage.v_total_provisioned).to eq(800)
+      end
+    end
+
+    context "when :free_space is not supported" do
+      let(:storage) { FactoryBot.build(:storage, :total_space => 1000, :free_space => 0, :uncommitted => nil) }
+
+      before { allow(storage).to receive(:supports?).and_call_original }
+      before { allow(storage).to receive(:supports?).with(:free_space).and_return(false) }
+
+      it "returns total_space" do
+        expect(storage.v_total_provisioned).to eq(1000)
+      end
+    end
+
+    context "when :uncommitted is not supported" do
+      let(:storage) { FactoryBot.build(:storage, :total_space => 1000, :free_space => 400, :uncommitted => 200) }
+
+      before { allow(storage).to receive(:supports?).and_call_original }
+      before { allow(storage).to receive(:supports?).with(:uncommitted).and_return(false) }
+
+      it "returns total_space" do
+        expect(storage.v_total_provisioned).to eq(1000)
+      end
+    end
+  end
 end

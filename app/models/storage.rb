@@ -70,6 +70,9 @@ class Storage < ApplicationRecord
 
   SUPPORTED_STORAGE_TYPES = %w[VSAN VMFS NAS NFS NFS41 ISCSI DIR FCP CSVFS NTFS GLUSTERFS].freeze
 
+  supports :free_space
+  supports :uncommitted
+
   supports :smartstate_analysis do
     if !ext_management_system&.class&.supports?(:smartstate_analysis)
       _("Smartstate Analysis cannot be performed on selected Datastore")
@@ -581,7 +584,9 @@ class Storage < ApplicationRecord
   alias_method :v_used_space, :used_space
 
   def used_space_percent_of_total
-    total_space.to_i.zero? ? 0.0 : (used_space.to_f / total_space * 1000.0).round / 10.0
+    return nil unless supports?(:free_space) && total_space.to_i > 0
+
+    (used_space.to_f / total_space * 1000.0).round / 10.0
   end
   alias_method :v_used_space_percent_of_total, :used_space_percent_of_total
 
@@ -638,7 +643,11 @@ class Storage < ApplicationRecord
   end
 
   def v_total_provisioned
-    used_space + uncommitted.to_i
+    if supports?(:uncommitted) && supports?(:free_space)
+      used_space + uncommitted.to_i
+    else
+      total_space.to_i
+    end
   end
 
   def v_provisioned_percent_of_total
