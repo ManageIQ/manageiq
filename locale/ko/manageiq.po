@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2026-06-01 14:37+0000\n"
-"PO-Revision-Date: 2026-06-01 14:37+0000\n"
+"POT-Creation-Date: 2026-09-09 00:38+0000\n"
+"PO-Revision-Date: 2026-09-09 00:38+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -21,9 +21,6 @@ msgstr "  %{class_name} %{id}에 다음 태그를 추가할 수 없음: %{names}
 msgid ""
 "  Unable to remove the following tags from %{class_name} %{id}: %{names}."
 msgstr "  %{class_name} %{id}에서 다음 태그를 제거할 수 없음: %{names}."
-
-msgid " # of Days"
-msgstr " 일 수"
 
 msgid " %{host_uid_ems} is not a compute node "
 msgstr " %{host_uid_ems}이(가) 컴퓨팅 노드가 아닙니다. "
@@ -259,6 +256,9 @@ msgstr "\"%{task}\": %{hostname}에 지원되지 않습니다."
 msgid "# Pods per Ready Status"
 msgstr "# Pods per Ready Status"
 
+msgid "# of Days"
+msgstr "일 수"
+
 msgid "# of Events"
 msgstr "이벤트 수"
 
@@ -349,6 +349,10 @@ msgstr "%s에는 스냅샷이 없음"
 msgid "%s is used by another field"
 msgstr "%s은(는) 다른 필드에 의해 사용됩니다."
 
+msgid "%s item selected"
+msgid_plural "%s items selected"
+msgstr[0] "%s개 항목이 선택됨"
+
 msgid "%s logged out, redirecting to the login page"
 msgstr "%s이(가) 로그아웃됨, 로그인 페이지로 경로 재지정 중"
 
@@ -387,9 +391,9 @@ msgid "%{amount} Automation Job Being Tagged"
 msgid_plural "%{amount} Automation Jobs Being Tagged"
 msgstr[0] "%{amount} 자동화 작업 태그 지정 중"
 
-msgid "%{amount} Automation Manager (Ansible Tower) Being Tagged"
-msgid_plural "%{amount} Automation Managers (Ansible Tower) Being Tagged"
-msgstr[0] "%{amount}개의 자동화 관리자자(Ansible Tower)에 태그가 지정됨"
+msgid "%{amount} Automation Provider (Ansible Tower) Being Tagged"
+msgid_plural "%{amount} Automation Providers (Ansible Tower) Being Tagged"
+msgstr[0] "%{amount}태그가 지정된 자동화 제공자(Ansible Tower)"
 
 msgid "%{amount} Automation Template Being Tagged"
 msgid_plural "%{amount} Automation Templates Being Tagged"
@@ -674,14 +678,8 @@ msgstr "%{description} 예약이 VM 메모리보다 더 큽니다."
 msgid "%{description} VM Memory is larger than Memory Limit"
 msgstr "%{description} VM 메모리가 메모리 한계보다 큼"
 
-msgid "%{description} category Scan"
-msgstr "%{description} 카테고리 스캔"
-
 msgid "%{description} is required"
 msgstr "%{description}은(는) 필수입니다."
-
-msgid "%{description} registry Scan"
-msgstr "%{description} 레지스트리 스캔"
 
 msgid "%{domain_name} (Disabled)"
 msgstr "%{domain_name}(사용 안함)"
@@ -1394,9 +1392,8 @@ msgstr "* 정책 프로파일은 아래의 항목 중 일부에만 적용됩니�
 msgid "* Primary Server Roles shown as %{bold} text."
 msgstr "* 1차 서버 역할이 %{bold} 텍스트로 표시됩니다."
 
-msgid ""
-"* Recommendations are subject to minimum of CPU: %{cpu} and Memory: %{memory}."
-msgstr "* 권장사항은 CPU 최소값: %{cpu} 및 메모리: %{memory}에 맞추는 것입니다."
+msgid "* Recommendations are subject to minimum of CPU: %s and Memory: %s."
+msgstr "* 권장 사양은 최소 CPU: %s 및 메모리: %s을(를) 충족해야 합니다."
 
 msgid "* Report is not owned by your group so it cannot be removed"
 msgstr "* 보고서는 그룹에 소유되지 않아서 제거할 수 없습니다."
@@ -1850,14 +1847,23 @@ msgstr "테넌트 카테고리를 선택해야 합니다."
 msgid "A VM with name: [%{name}] already exists"
 msgstr "다음 이름의 VM: [%{name}]이(가) 이미 있습니다."
 
+msgid "A check field must be chosen for the Find expression element"
+msgstr "찾기 표현식 요소에 선택 필드를 반드시 선택해야 합니다."
+
 msgid "A check field must be chosen to commit this expression element"
 msgstr "이 표현식 요소를 커미트하려면 필드 검사를 선택해야 합니다."
 
 msgid "A condition must contain a valid expression."
 msgstr "조건은 올바른 표현식을 포함해야 합니다."
 
+msgid "A date value must be entered"
+msgstr "날짜 값을 입력해야 합니다."
+
 msgid "A field must be chosen to commit this expression element"
 msgstr "이 표현식 요소를 커미트하려면 필드를 선택해야 합니다."
+
+msgid "A field must be selected for every expression element"
+msgstr "모든 표현식 요소에 대해 반드시 필드를 선택해야 합니다."
 
 msgid "A find field must be chosen to commit this expression element"
 msgstr "이 표현식 요소를 커미트하려면 필드 찾기를 선택해야 합니다."
@@ -1871,8 +1877,14 @@ msgstr "컨테이너 템플리트 프로비저닝에 프로젝트가 필요합�
 msgid "A read only group cannot be deleted."
 msgstr "읽기 전용 그룹을 삭제할 수 없습니다."
 
+msgid "A registry key name must be entered"
+msgstr "레지스트리 키 이름을 입력해야 합니다."
+
 msgid "A registry key name must be entered to commit this expression element"
 msgstr "이 표현식 요소를 커미트하려면 레지스트리 키 이름을 입력해야 합니다."
+
+msgid "A registry value name must be entered"
+msgstr "레지스트리 값 이름을 입력해야 합니다."
 
 msgid "A registry value name must be entered to commit this expression element"
 msgstr "이 표현식 요소를 커미트하려면 레지스트리 값 이름을 입력해야 합니다."
@@ -1928,6 +1940,9 @@ msgstr "특정 %{chargeback} 또는 모두를 선택해야 합니다."
 msgid "A tag category must be chosen to commit this expression element"
 msgstr "이 표현식 요소를 커미트하려면 태그 카테고리를 선택해야 합니다."
 
+msgid "A tag value must be chosen"
+msgstr "태그 값을 선택해야 합니다."
+
 msgid "A tag value must be chosen to commit this expression element"
 msgstr "이 표현식 요소를 커미트하려면 태그 값을 선택해야 합니다."
 
@@ -1948,14 +1963,23 @@ msgid ""
 "[%{description}]"
 msgstr "사용자가 자동화 조치를 제기해야 합니다. [%{name}] id: [%{id}] 조치: [%{description}]"
 
+msgid "A valid date must be selected"
+msgstr "유효한 날짜를 선택해야 합니다."
+
 msgid "A valid expression must be present"
 msgstr "유효한 표현식이 있어야 합니다."
+
+msgid "A valid time must be selected"
+msgstr "유효한 시간을 선택해야 합니다."
 
 msgid "A valid userid is required"
 msgstr "올바른 사용자 ID는 필수입니다."
 
 msgid "A value must be changed or provider stack will not be updated."
 msgstr "값을 변경해야 합니다. 그렇지 않으면 제공자 스택이 업데이트되지 않습니다."
+
+msgid "A value must be entered for every expression element"
+msgstr "모든 표현식 요소에 대해 값을 입력해야 합니다."
 
 msgid "A workspace admin forcefully canceled the run."
 msgstr "작업공간 관리자가 실행을 강제로 취소했습니다."
@@ -2001,6 +2025,9 @@ msgstr "API 사용자 이름"
 
 msgid "API Version"
 msgstr "API 버전"
+
+msgid "ATAPI CD-ROM (IDE %s)"
+msgstr "ATAPI CD-ROM(IDE %s)"
 
 msgid "AWS Access Key for this credential"
 msgstr "이 인증 정보에 대한 AWS 액세스 키"
@@ -2110,6 +2137,9 @@ msgstr "액세스 키"
 
 msgid "Access Key ID"
 msgstr "액세스 키 ID"
+
+msgid "Access Kube Exec Console for Container Group"
+msgstr "컨테이너 그룹에 대한 Kube Exec 콘솔 액세스"
 
 msgid "Access Modes"
 msgstr "액세스 모드"
@@ -2407,6 +2437,18 @@ msgstr "디스크 추가"
 msgid "Add Entry"
 msgstr "항목 추가"
 
+msgid "Add Event Log"
+msgstr "이벤트 로그 추가"
+
+msgid "Add Event Log Entry"
+msgstr "이벤트 로그 항목 추가"
+
+msgid "Add File"
+msgstr "파일 추가"
+
+msgid "Add File Entry"
+msgstr "파일 항목 추가"
+
 msgid "Add Flavor"
 msgstr "플레이버 추가"
 
@@ -2539,8 +2581,14 @@ msgstr "제공자 추가"
 msgid "Add Provisioning Dialog"
 msgstr "프로비저닝 대화 상자 추가"
 
+msgid "Add Registry Entry"
+msgstr "레지스트리 항목 추가"
+
 msgid "Add Repository"
 msgstr "저장소 추가"
+
+msgid "Add Rule"
+msgstr "규칙 추가"
 
 msgid "Add Section"
 msgstr "섹션 추가"
@@ -2556,6 +2604,9 @@ msgstr "'%{name}'에 보안 그룹 추가"
 
 msgid "Add Security Group to Instance"
 msgstr "인스턴스에 보안 그룹 추가"
+
+msgid "Add Sub-Group"
+msgstr "하위 그룹 추가"
 
 msgid "Add Subscription"
 msgstr "구독 추가"
@@ -2824,6 +2875,9 @@ msgstr "네트워크 추가"
 msgid "Add a new Action"
 msgstr "새 조치 추가"
 
+msgid "Add a new Automation Provider"
+msgstr "새 자동화 제공자 추가"
+
 msgid "Add a new Button"
 msgstr "새 단추 추가"
 
@@ -3004,9 +3058,6 @@ msgstr "경보 프로파일 \"%s\"의 추가가 큐에 대기되었습니다."
 msgid "Add of Automate Method was cancelled by the user"
 msgstr "사용자가 자동화 메소드 추가를 취소했습니다."
 
-msgid "Add of Catalog Item was cancelled by the user"
-msgstr "사용자가 카탈로그 항목 추가를 취소했습니다."
-
 msgid "Add of Cloud Database \"%s\" has been successfully queued."
 msgstr "클라우드 데이터베이스 \"%s\"의 추가가 큐에 대기되었습니다."
 
@@ -3074,9 +3125,6 @@ msgstr "\"%s\" 조치 추가가 큐에 대기되었습니다."
 msgid "Add of floating IPs \"%s\" has been successfully queued."
 msgstr "유동 IP \"%s\"의 추가가 큐에 대기되었습니다."
 
-msgid "Add of new %{model} Condition was cancelled by the user"
-msgstr "사용자가 새 %{model} 조건 추가를 취소했습니다."
-
 msgid "Add of new %{name} was cancelled by the user"
 msgstr "사용자가 새 %{name} 추가를 취소했습니다."
 
@@ -3125,6 +3173,9 @@ msgstr "사용자가 새 클라우드 볼륨 추가를 취소했습니다."
 msgid "Add of new Cloud Volume was cancelled by the user."
 msgstr "사용자가 새 클라우드 볼륨 추가를 취소했습니다."
 
+msgid "Add of new Condition was cancelled by the user"
+msgstr "사용자가 새 조건 추가를 취소했습니다."
+
 msgid "Add of new Custom Button was cancelled by the user"
 msgstr "사용자가 새 사용자 정의 단추 추가를 취소했습니다."
 
@@ -3160,6 +3211,9 @@ msgstr "사용자가 새 제공자 태그 맵핑 추가를 취소했습니다."
 
 msgid "Add of new Report was cancelled by the user"
 msgstr "사용자가 새 보고서 추가를 취소했습니다."
+
+msgid "Add of new Role was cancelled by the user"
+msgstr "사용자가 새 역할 추가를 취소했습니다."
 
 msgid "Add of new Schedule was cancelled by the user"
 msgstr "사용자가 새 스케줄 추가를 취소했습니다."
@@ -3199,9 +3253,6 @@ msgstr "이 항목 추가"
 
 msgid "Add to Shopping Cart"
 msgstr "장바구니에 추가"
-
-msgid "Add was cancelled by the user"
-msgstr "사용자가 추가를 취소함"
 
 msgid "Add widget"
 msgstr "위젯 추가"
@@ -3618,6 +3669,9 @@ msgstr "경보 프로파일에 속한 경보를 삭제할 수 없습니다."
 msgid "Alerts to Evaluate"
 msgstr "평가할 경보"
 
+msgid "Alias"
+msgstr "별명"
+
 msgid "All"
 msgstr "모두"
 
@@ -3982,6 +4036,11 @@ msgstr "Amazon 설정의 유효성 검증에 성공했습니다."
 msgid "Amazon access key and secret are needed to validate Amazon Settings"
 msgstr "Amazon 설정의 유효성을 검증하려면 Amazon 액세스 키와 시크릿이 필요합니다."
 
+msgid ""
+"An Analysis or Virtual Black Box Synchronization for this VM may need to be "
+"run."
+msgstr "이 VM에 대한 가상 블랙박스 동기화 분석을 실행해야 할 수도 있습니다."
+
 msgid "An Ansible Playbook must be selected"
 msgstr "Ansible 플레이북을 선택해야 합니다."
 
@@ -4017,6 +4076,12 @@ msgid ""
 "retrieve instance id from returned server response."
 msgstr ""
 "IBM VPC 인스턴스 프로비저닝을 요청하는 중에 오류가 발생했습니다. 리턴된 서버 응답에서 인스턴스 ID를 검색할 수 없습니다."
+
+msgid "An error occurred while saving"
+msgstr "저장 중 오류 발생"
+
+msgid "An error occurred while saving the role"
+msgstr "역할 저장 중 오류 발생"
 
 msgid "An internal system error."
 msgstr "내부 시스템 오류"
@@ -4061,11 +4126,11 @@ msgstr "분석 프로파일 \"%{name}\""
 msgid "Analysis Profile \"%{name}\" was saved"
 msgstr "분석 프로파일 \"%{name}\"이(가) 저장되었습니다."
 
-msgid "Analysis Profile \"%{name}\": Error during 'update': %{message}"
-msgstr "분석 프로파일 \"%{name}\": '업데이트' 중 오류: %{message}"
-
 msgid "Analysis Profile is required"
 msgstr "분석 프로파일은 필수입니다."
+
+msgid "Analysis Profile was saved"
+msgstr "분석 프로파일이 저장됨"
 
 msgid "Analysis Profiles"
 msgstr "분석 프로파일"
@@ -4213,9 +4278,6 @@ msgstr "적용된 태그"
 
 msgid "Applies To"
 msgstr "적용 대상"
-
-msgid "Applies to is required"
-msgstr "적용 대상은 필수입니다."
 
 msgid "Apply"
 msgstr "적용"
@@ -4627,9 +4689,6 @@ msgstr "AssetDetail|룸"
 msgid "AssetDetail|Serial number"
 msgstr "AssetDetail|일련 번호"
 
-msgid "Assign"
-msgstr "지정"
-
 msgid "Assign Catalog Items"
 msgstr "카탈로그 항목 지정"
 
@@ -4798,9 +4857,6 @@ msgstr "이메일 수신인을 적어도 하나는 구성해야 합니다."
 msgid "At least one Field must be selected"
 msgstr "하나 이상의 필드를 선택해야 합니다."
 
-msgid "At least one Product Feature must be selected"
-msgstr "하나 이상의 제품 기능을 선택해야 합니다."
-
 msgid "At least one Role must be selected"
 msgstr "하나 이상의 역할을 선택해야 합니다."
 
@@ -4844,6 +4900,9 @@ msgstr "하나 이상의 섹션을 선택해야 합니다."
 
 msgid "At least one task status is required"
 msgstr "하나 이상의 태스크 상태가 필요함"
+
+msgid "Atom type"
+msgstr "원자 유형"
 
 msgid "Attach"
 msgstr "첨부"
@@ -5301,40 +5360,40 @@ msgstr "자동화 작업"
 msgid "Automation Jobs"
 msgstr "자동화 작업"
 
-msgid "Automation Manager"
-msgstr "자동화 관리자"
-
-msgid "Automation Manager (AWX)"
-msgid_plural "Automation Managers (AWX)"
-msgstr[0] "Automation Managers(AWX)"
-
-msgid "Automation Manager (Ansible Automation Platform)"
-msgid_plural "Automation Managers (Ansible Automation Platform)"
-msgstr[0] "Automation Managers(Ansible Automation Platform)"
-
-msgid "Automation Manager (Ansible Tower)"
-msgstr "자동화 관리자(Ansible Tower)"
-
-msgid "Automation Manager Provision"
-msgstr "자동화 관리자 프로비저닝"
-
-msgid "Automation Manager Provisioning"
-msgstr "자동화 관리자 프로비저닝"
-
-msgid "Automation Manager Repositories Refresh"
-msgstr "Automation Manager 저장소 새로 고치기"
-
-msgid "Automation Managers"
-msgstr "자동화 관리자"
-
-msgid "Automation Managers (AWX)"
-msgstr "Automation Managers(AWX)"
-
-msgid "Automation Managers (Ansible Tower)"
-msgstr "자동화 관리자(Ansible Tower)"
-
 msgid "Automation Method Data"
 msgstr "자동화 메소드 데이터"
+
+msgid "Automation Provider"
+msgstr "자동화 제공자"
+
+msgid "Automation Provider (AWX)"
+msgid_plural "Automation Providers (AWX)"
+msgstr[0] "자동화 제공자(AWX)"
+
+msgid "Automation Provider (Ansible Automation Platform)"
+msgid_plural "Automation Providers (Ansible Automation Platform)"
+msgstr[0] "자동화 제공자(Ansible 자동화 플랫폼)"
+
+msgid "Automation Provider (Ansible Tower)"
+msgstr "자동화 제공자(Ansible Tower)"
+
+msgid "Automation Provider Provision"
+msgstr "자동화 제공자 프로비저닝"
+
+msgid "Automation Provider Provisioning"
+msgstr "자동화 제공자 프로비저닝"
+
+msgid "Automation Provider Repositories Refresh"
+msgstr "자동화 제공자 저장소 새로 고침"
+
+msgid "Automation Providers"
+msgstr "자동화 제공자"
+
+msgid "Automation Providers (AWX)"
+msgstr "자동화 제공자(AWX)"
+
+msgid "Automation Providers (Ansible Tower)"
+msgstr "자동화 제공자(Ansible Tower)"
 
 msgid "Automation Request"
 msgstr "자동화 요청"
@@ -6092,6 +6151,9 @@ msgstr "호스트별"
 msgid "By Role"
 msgstr "역할별"
 
+msgid "Bytes"
+msgstr "바이트"
+
 msgid "C & U Collection"
 msgstr "C & U 콜렉션"
 
@@ -6118,6 +6180,12 @@ msgstr "CA 인증서"
 
 msgid "CD-ROM (%{name} %{location}), %{connection}"
 msgstr "CD-ROM(%{name} %{location}), %{connection}"
+
+msgid "CD-ROM (IDE %s)"
+msgstr "CD-ROM(IDE %s)"
+
+msgid "CD-ROM Image (IDE %s)"
+msgstr "CD-ROM 이미지(IDE %s)"
 
 msgid "CD/DVD Drives"
 msgstr "CD/DVD 드라이버"
@@ -7130,9 +7198,6 @@ msgstr "%{class_description} 제공자에 대한 비밀번호 변경이 지원�
 msgid "Change Password of Infrastructure Providers"
 msgstr "인프라 제공자의 비밀번호 변경"
 
-msgid "Change current group"
-msgstr "현재 그룹 변경"
-
 msgid "Changed from previous"
 msgstr "이전에 비해 변경됨"
 
@@ -7256,6 +7321,12 @@ msgstr "비용 상환 절감 보고서"
 msgid "Chargeback Tier"
 msgid_plural "Chargeback Tiers"
 msgstr[0] "비용 상환 티어"
+
+msgid "Chargeback assignments"
+msgstr "비용 청구 지정"
+
+msgid "Chargeback assignments saved successfully"
+msgstr "비용 상환 지정 저장 성공"
 
 msgid "Chargeback for Configured Systems"
 msgid_plural "Chargebacks for Configured Systems"
@@ -7588,6 +7659,15 @@ msgstr "검사 옵션"
 msgid "Check Value Error: %{msg}"
 msgstr "값 검사 오류: %{msg}"
 
+msgid "Check field"
+msgstr "선택 필드"
+
+msgid "Check mode"
+msgstr "검사 모드"
+
+msgid "Check operator"
+msgstr "연산자 확인"
+
 msgid "Checking"
 msgstr "확인 중"
 
@@ -7620,6 +7700,9 @@ msgstr "선택"
 
 msgid "Choose %{entity}"
 msgstr "%{entity} 선택"
+
+msgid "Choose Assignment Type"
+msgstr "지정 유형 선택"
 
 msgid "Choose File"
 msgstr "파일 선택"
@@ -7672,9 +7755,6 @@ msgstr "왼쪽에서 편집할 역할을 선택하십시오."
 msgid "Choose a Schedule to view from the menus on the left."
 msgstr "왼쪽의 메뉴에서 보려는 스케줄을 선택하십시오."
 
-msgid "Choose a Server"
-msgstr "서버 선택"
-
 msgid "Choose a Template"
 msgstr "템플리트 선택"
 
@@ -7686,9 +7766,6 @@ msgstr "값 선택"
 
 msgid "Choose a chart type"
 msgstr "차트 유형 선택"
-
-msgid "Choose a pattern"
-msgstr "패턴 선택"
 
 msgid "Choose a resource entity and label"
 msgstr "리소스 엔티티 및 레이블 선택"
@@ -7705,41 +7782,17 @@ msgstr "테넌트 선택"
 msgid "Choose an Owner"
 msgstr "소유자 선택"
 
-msgid "Choose an element of the scope to edit"
-msgstr "편집할 범위의 요소 선택"
-
-msgid "Choose cloud object storage"
-msgstr "Cloud Object Storage 선택"
-
-msgid "Choose disk type"
-msgstr "디스크 유형 선택"
-
 msgid "Choose file"
 msgstr "파일 선택"
 
 msgid "Choose one or more Fields"
 msgstr "하나 이상의 필드 선택"
 
-msgid "Choose source image"
-msgstr "소스 이미지 선택"
-
-msgid "Choose source provider"
-msgstr "소스 제공자 선택"
-
-msgid "Choose source provider type"
-msgstr "소스 공급자 유형 선택"
-
-msgid "Choose storage bucket"
-msgstr "스토리지 버킷 선택"
-
 msgid "Choose the branch or tag you would like to import"
 msgstr "가져오려는 분기 또는 태그 선택"
 
 msgid "Choose the type of custom variables to be imported"
 msgstr "가져올 사용자 정의 변수의 유형을 선택하십시오."
-
-msgid "Choose transient storage"
-msgstr "임시 스토리지 선택"
 
 msgid "Cidr"
 msgstr "Cidr"
@@ -9132,6 +9185,9 @@ msgstr "수집일"
 msgid "Collection Options"
 msgstr "콜렉션 옵션"
 
+msgid "Colocation Policy"
+msgstr "콜로케이션 정책"
+
 msgid "Column"
 msgstr "열"
 
@@ -9411,11 +9467,11 @@ msgstr "ComputerSystem|지역 번호"
 msgid "Condition"
 msgstr "조건"
 
-msgid "Condition \"%{name}\" was added"
-msgstr "조건 \"%{name}\"이(가) 추가되었습니다."
+msgid "Condition \"%s\" was added"
+msgstr "조건 \"%s\"이(가) 추가됨"
 
-msgid "Condition \"%{name}\" was saved"
-msgstr "조건 \"%{name}\"이(가) 저장되었습니다."
+msgid "Condition \"%s\" was saved"
+msgstr "조건 \"%s\"이(가) 저장됨"
 
 msgid "Condition Selection"
 msgstr "조건 선택사항"
@@ -9525,9 +9581,6 @@ msgstr "조건|Towhat"
 
 msgid "Condition|Updated on"
 msgstr "조건|업데이트 날짜"
-
-msgid "Config Pattern"
-msgstr "구성 패턴"
 
 msgid "Config Version"
 msgstr "구성 버전"
@@ -10175,6 +10228,12 @@ msgstr "컨테이너 대시보드"
 msgid "Container Environment Variable"
 msgid_plural "Container Environment Variables"
 msgstr[0] "컨테이너 환경 변수"
+
+msgid "Container Group Access"
+msgstr "컨테이너 그룹 액세스"
+
+msgid "Container Group Console"
+msgstr "컨테이너 그룹 콘솔"
 
 msgid "Container Group Name"
 msgstr "컨테이너 그룹 이름"
@@ -12678,6 +12737,9 @@ msgstr "%{name} 사본"
 msgid "Copy of %{typ} Request"
 msgstr "%{typ} 요청의 사본"
 
+msgid "Copy of Analysis Profile was cancelled by the user"
+msgstr "사용자가 분석 프로파일 복사를 취소했습니다."
+
 msgid "Copy of Dashboard was cancelled by the user"
 msgstr "사용자가 대시보드 복사를 취소했습니다."
 
@@ -13323,9 +13385,6 @@ msgstr "현재 사용자"
 
 msgid "Current Window"
 msgstr "현재 창"
-
-msgid "Current group: %s"
-msgstr "현재 그룹: %s"
 
 msgid "Current pods"
 msgstr "현재 팟(Pod)"
@@ -14340,9 +14399,6 @@ msgstr "표현식 정의"
 msgid "Define New %{table}"
 msgstr "새 %{table} 정의"
 
-msgid "Define Scope"
-msgstr "범위 정의"
-
 msgid "Define a new Host Initiator"
 msgstr "새 호스트 이니시에이터 정의"
 
@@ -15084,9 +15140,6 @@ msgstr "그룹에 종속"
 msgid "Depends on Service"
 msgstr "서비스에 종속"
 
-msgid "Deploy"
-msgstr "배치"
-
 msgid "Deploy Server"
 msgstr "서버 배치"
 
@@ -15140,6 +15193,9 @@ msgstr "설명:"
 
 msgid "Descrption"
 msgstr "설명"
+
+msgid "Deselect All"
+msgstr "모두 선택 취소"
 
 msgid "Desired"
 msgstr "선호"
@@ -15279,6 +15335,9 @@ msgstr "발견"
 
 msgid "Development"
 msgstr "개발"
+
+msgid "Development Log"
+msgstr "개발 로그"
 
 msgid "Device Location"
 msgstr "디바이스 위치"
@@ -15440,9 +15499,6 @@ msgstr "카탈로그에 표시가 선택된 경우에는 대화 상자를 설정
 
 msgid "Dialog name"
 msgstr "대화 상자 이름"
-
-msgid "Dialog name already exists"
-msgstr "대화 상자 이름이 이미 존재합니다."
 
 msgid "Dialog needs to have a label"
 msgstr "대화 상자에 레이블이 있어야 합니다."
@@ -16956,6 +17012,9 @@ msgstr "Display for"
 msgid "Display in Catalog"
 msgstr "카탈로그에 표시"
 
+msgid "Display label"
+msgstr "레이블 표시"
+
 msgid "Display metrics"
 msgstr "메트릭 표시"
 
@@ -17040,9 +17099,6 @@ msgstr "도메인 잠금이 해제되었습니다."
 
 msgid "Domain name change for a system domain import is not supported."
 msgstr "시스템 도메인 가져오기에 대한 도메인 이름 변경이 지원되지 않습니다."
-
-msgid "Domains"
-msgstr "도메인"
 
 msgid "Domains:"
 msgstr "도메인:"
@@ -17166,6 +17222,10 @@ msgstr "이 보고서를 텍스트 형식으로 다운로드"
 
 msgid "Draft"
 msgstr "초안"
+
+msgid ""
+"Drag and drop to reorder domains. Higher priority domains are listed first."
+msgstr "도메인의 순서를 변경하려면 끌어서 놓으십시오. 우선순위가 높은 도메인이 먼저 나열됩니다."
 
 msgid ""
 "Drag items here to add to the dialog. At least one item is required before "
@@ -17567,6 +17627,9 @@ msgstr "EVM 서버 관계 편집"
 msgid "Edit Event Assignment"
 msgstr "이벤트 지정 편집"
 
+msgid "Edit Event Log Entry"
+msgstr "이벤트 로그 항목 편집"
+
 msgid "Edit Event cancelled by user"
 msgstr "사용자가 이벤트 편집을 취소했습니다."
 
@@ -17575,6 +17638,9 @@ msgstr "표현식 편집"
 
 msgid "Edit Field Details"
 msgstr "필드 세부사항 편집"
+
+msgid "Edit File Entry"
+msgstr "파일 항목 편집"
 
 msgid "Edit Generic Object"
 msgstr "일반 오브젝트 편집"
@@ -17639,6 +17705,9 @@ msgstr "오케스트레이션 템플리트 태그 편집"
 msgid "Edit PXE Image"
 msgstr "PXE 이미지 편집"
 
+msgid "Edit PXE Image Tags"
+msgstr "PXE 이미지 태그 편집"
+
 msgid "Edit Physical Storage \"%{name}\""
 msgstr "물리적 스토리지 \"%{name}\" 편집"
 
@@ -17660,6 +17729,9 @@ msgstr "프로비저닝 대화 상자 편집"
 msgid "Edit Record Filter"
 msgstr "레코드 필터 편집"
 
+msgid "Edit Registry Entry"
+msgstr "레지스트리 항목 편집"
+
 msgid "Edit Report Menus"
 msgstr "보고서 메뉴 편집"
 
@@ -17674,9 +17746,6 @@ msgstr "저장소 \"%{name}\" 편집"
 
 msgid "Edit Router \"%{name}\""
 msgstr "라우터 \"%{name}\" 편집"
-
-msgid "Edit Scope"
-msgstr "범위 편집"
 
 msgid "Edit Section Details"
 msgstr "섹션 세부사항 편집"
@@ -17822,11 +17891,11 @@ msgstr "선택한 Ansible 플레이북의 태그 편집"
 msgid "Edit Tags for the selected Ansible Repositories"
 msgstr "선택한 Ansible 저장소의 태그 편집"
 
-msgid "Edit Tags for the selected Automation Manager Credentials"
-msgstr "선택한 Automation Manager 신임 정보의 태그 편집"
+msgid "Edit Tags for the selected Automation Provider Credentials"
+msgstr "선택한 자동화 제공자 신임 정보의 태그 편집"
 
-msgid "Edit Tags for the selected Automation Manager Repositories"
-msgstr "선택한 Automation Manager 저장소의 태그 편집"
+msgid "Edit Tags for the selected Automation Provider Repositories"
+msgstr "선택한 자동화 제공자 저장소의 태그 편집"
 
 msgid "Edit Tags for the selected Automation Providers"
 msgstr "선택한 자동화 제공자에 대한 태그 편집"
@@ -18245,6 +18314,9 @@ msgstr "오케스트레이션 스택의 태그 편집"
 msgid "Edit Tags of PXE"
 msgstr "PXE의 태그 편집"
 
+msgid "Edit Tags of PXE Images"
+msgstr "PXE 이미지의 태그 편집"
+
 msgid "Edit Tags of PXE Servers"
 msgstr "PXE 서버의 태그 편집"
 
@@ -18302,6 +18374,9 @@ msgstr "볼륨 유형의 태그 편집"
 msgid "Edit Tags of Volumes"
 msgstr "볼륨의 태그 편집"
 
+msgid "Edit Tags of Windows Images"
+msgstr "Windows 이미지의 태그 편집"
+
 msgid "Edit Tags selected Pxe Servers"
 msgstr "선택한 Pxe 서버의 태그 편집"
 
@@ -18322,6 +18397,9 @@ msgstr "비주얼 편집"
 
 msgid "Edit Windows Image"
 msgstr "Windows 이미지 편집"
+
+msgid "Edit Windows Image Tags"
+msgstr "Windows 이미지 태그 편집"
 
 msgid "Edit a Block Storage Manager"
 msgstr "Block Storage 관리자 편집"
@@ -18538,17 +18616,11 @@ msgstr "지정 편집"
 msgid "Edit assignments for this Alert Profile"
 msgstr "이 경보 프로파일에 대한 지정 편집"
 
-msgid "Edit of \"%s\" was cancelled by the user"
-msgstr "사용자가 \"%s\"의 편집을 취소함"
-
 msgid "Edit of %s \"%s\" was canceled by the user."
 msgstr "사용자가 %s \"%s\"의 편집을 취소했습니다."
 
 msgid "Edit of %s \"%s\" was cancelled by the user"
 msgstr "사용자가 %s \"%s\"의 편집을 취소했습니다."
-
-msgid "Edit of %{model} Condition \"%{name}\" was cancelled by the user"
-msgstr "사용자가 %{model} 조건 \"%{name}\"의 편집을 취소했습니다."
 
 msgid "Edit of %{model} Request \"%{name}\" was cancelled by the user"
 msgstr "사용자가 %{model} 요청 \"%{name}\"의 편집을 취소했습니다."
@@ -18568,8 +18640,8 @@ msgstr "사용자가 경보 \"%{name}\"의 편집을 취소했습니다."
 msgid "Edit of Alert Profile \"%s\" was canceled by the user."
 msgstr "사용자가 경보 프로파일 \"%s\"의 편집을 취소했습니다."
 
-msgid "Edit of Analysis Profile \"%{name}\" was cancelled by the user"
-msgstr "사용자가 분석 프로파일 \"%{name}\"의 편집을 취소했습니다."
+msgid "Edit of Analysis Profile was cancelled by the user"
+msgstr "사용자가 분석 프로파일 편집을 취소했습니다."
 
 msgid "Edit of Automate Class \"%{name}\" was cancelled by the user"
 msgstr "사용자가 자동화 클래스 \"%{name}\"의 편집을 취소했습니다."
@@ -18628,6 +18700,9 @@ msgstr "사용자가 클라우드 볼륨 \"%s\"의 편집을 취소했습니다.
 msgid "Edit of Cloud Volume \"%{name}\" was cancelled by the user"
 msgstr "사용자가 클라우드 볼륨 \"%{name}\"의 편집을 취소했습니다."
 
+msgid "Edit of Condition \"%s\" was cancelled by the user"
+msgstr "사용자가 조건 \"%s\"의 편집을 취소했습니다."
+
 msgid "Edit of Credential \"%s\" was canceled by the user."
 msgstr "사용자가 인증 정보 \"%s\"의 편집을 취소했습니다."
 
@@ -18682,8 +18757,8 @@ msgstr "사용자가 네임스페이스 \"%s\"의 편집을 취소했습니다."
 msgid "Edit of Orchestration Template %s was cancelled by the user"
 msgstr "사용자가 오케스트레이션 템플리트 %s의 편집을 취소했습니다."
 
-msgid "Edit of PXE Image \"%{name}\" was cancelled by the user"
-msgstr "사용자가 PXE 이미지 \"%{name}\"의 편집을 취소했습니다."
+msgid "Edit of PXE Image was cancelled by the user"
+msgstr "사용자가 PXE 이미지 편집을 취소했습니다."
 
 msgid "Edit of PXE Server %s was cancelled by the user"
 msgstr "사용자가 PXE 서버 %s의 편집을 취소했습니다."
@@ -18727,6 +18802,9 @@ msgstr "사용자가 \"%s\" 저장소 편집을 취소했습니다."
 msgid "Edit of Repository \"%s\" was successfully initiated."
 msgstr "\"%s\" 저장소 편집이 시작되었습니다."
 
+msgid "Edit of Role was cancelled by the user"
+msgstr "사용자가 역할 편집을 취소했습니다."
+
 msgid "Edit of Schedule \"%{name}\" was cancelled by the user"
 msgstr "사용자가 스케줄 \"%{name}\"의 편집을 취소했습니다."
 
@@ -18751,8 +18829,8 @@ msgstr "사용자가 시스템 이미지 유형 \"%s\"의 편집을 취소했습
 msgid "Edit of Widget \"%{title}\" was cancelled by the user"
 msgstr "사용자가 위젯 \"%{title}\"의 편집을 취소했습니다."
 
-msgid "Edit of Windows Image \"%{name}\" was cancelled by the user"
-msgstr "사용자가 Windows 이미지 \"%{name}\"의 편집을 취소했습니다."
+msgid "Edit of Windows Image was cancelled by the user"
+msgstr "사용자가 Windows 이미지 편집을 취소했습니다."
 
 msgid "Edit of Zone \"%s\" was canceled by the user."
 msgstr "사용자가 \"%s\" 구역 편집을 취소했습니다."
@@ -19226,11 +19304,11 @@ msgstr "임베디드 Ansible 서비스를 사용할 수 없습니다."
 msgid "Embedded Automate"
 msgstr "임베디드 자동화"
 
-msgid "Embedded Automation Manager"
-msgstr "임베디드 자동화 관리자"
+msgid "Embedded Automation Provider"
+msgstr "임베디드 자동화 제공자"
 
-msgid "Embedded Automation Managers"
-msgstr "임베디드 자동화 관리자"
+msgid "Embedded Automation Providers"
+msgstr "임베디드 자동화 제공자"
 
 msgid "Embedded Methods"
 msgstr "임베디드 메소드"
@@ -19837,8 +19915,44 @@ msgstr "대기 모드 진입"
 msgid "Enter a comma separated list of IP or DNS names"
 msgstr "IP 또는 DNS 이름의 쉼표로 구분된 목록을 입력하십시오."
 
+msgid "Enter a list of numbers separated by commas"
+msgstr "쉼표로 구분된 숫자 목록 입력"
+
+msgid "Enter a list of text strings separated by commas"
+msgstr "쉼표로 구분된 텍스트 문자열 목록 입력"
+
 msgid "Enter a new Dialog"
 msgstr "새 대화 상자 입력"
+
+msgid "Enter a number"
+msgstr "숫자 입력"
+
+msgid "Enter a value"
+msgstr "값 입력"
+
+msgid "Enter event log name"
+msgstr "이벤트 로그 이름 입력"
+
+msgid "Enter file path"
+msgstr "파일 경로 입력"
+
+msgid "Enter filter message"
+msgstr "필터 메시지 입력"
+
+msgid "Enter level"
+msgstr "레벨 입력"
+
+msgid "Enter number of days"
+msgstr "일 수 입력"
+
+msgid "Enter registry key"
+msgstr "레지스트리 키 입력"
+
+msgid "Enter registry value"
+msgstr "레지스트리 값 입력"
+
+msgid "Enter source"
+msgstr "소스 입력"
 
 msgid "Enter tag category to map to"
 msgstr "맵핑할 태그 카테고리 입력"
@@ -19848,6 +19962,9 @@ msgstr "입력된 시간"
 
 msgid "Enterprise"
 msgstr "엔터프라이즈"
+
+msgid "Enterprise ID not found"
+msgstr "엔터프라이즈 ID를 찾을 수 없음"
 
 msgid "Enterprises"
 msgstr "엔터프라이즈"
@@ -19959,9 +20076,6 @@ msgstr "'%{task}' 중 오류: %{message}"
 msgid "Error during '%{task}': Expression element is required"
 msgstr "'%{task}' 중 오류: 표현식 요소는 필수입니다."
 
-msgid "Error during '%{title}': %{message}"
-msgstr "'%{title}' 중 오류: %{message}"
-
 msgid "Error during 'Add VM to service': %{message}"
 msgstr "'서비스에 VM 추가' 중 오류: %{message}"
 
@@ -19985,9 +20099,6 @@ msgstr "'정책 가져오기' 중 오류: %{messages}"
 
 msgid "Error during 'Provisioning': %{error_message}"
 msgstr "'프로비저닝' 중 오류: %{error_message}"
-
-msgid "Error during 'Rate assignments': %{error_message}"
-msgstr "'비율 지정' 중 오류: %{error_message}"
 
 msgid "Error during 'Remove VM from service': %{message}"
 msgstr "'서비스에서 VM 제거' 중 오류: %{message}"
@@ -20104,6 +20215,9 @@ msgstr "데이터 로드 중 오류:"
 msgid "Error message goes here"
 msgstr "오류 메시지가 여기에 표시됩니다."
 
+msgid "Error occurred, search filter not applied."
+msgstr "오류 발생, 검색 필터가 적용되지 않았습니다."
+
 msgid "Error on line %{line_num}: %{err_txt}"
 msgstr "회선 '%{line_num}'의 오류: %{err_txt}"
 
@@ -20113,6 +20227,9 @@ msgstr "서버로부터 데이터를 요청하는 중 오류가 발생함"
 msgid ""
 "Error returned from %{name} event processing in Automate: %{error_message}"
 msgstr "자동화의 %{name} 이벤트 처리에서 오류가 리턴됨: %{error_message}"
+
+msgid "Error saving priority order"
+msgstr "우선순위 순서 저장 중 오류 발생"
 
 msgid "Error text:"
 msgstr "오류 텍스트:"
@@ -20320,9 +20437,6 @@ msgstr "이벤트 유형"
 msgid "Event log"
 msgstr "이벤트 로그"
 
-msgid "Event log name is required"
-msgstr "이벤트 로그 이름은 필수입니다."
-
 msgid "Event name is required"
 msgstr "이벤트 이름은 필수입니다."
 
@@ -20494,9 +20608,6 @@ msgstr "이 지역의 경우 이벤트가 지원되지 않음"
 msgid "Events for VM prod_webserver"
 msgstr "VM prod_webserver의 이벤트"
 
-msgid "Every"
-msgstr "모두"
-
 msgid "Everything"
 msgstr "전체"
 
@@ -20527,8 +20638,8 @@ msgstr "모든 서비스 카탈로그 아코디언 아래의 모든 항목"
 msgid "Everything under Auth Key Pairs"
 msgstr "자동 키 쌍 아래의 모든 항목"
 
-msgid "Everything under Automation Manager"
-msgstr "Automation Manager 아래의 모든 항목"
+msgid "Everything under Automation Provider"
+msgstr "자동화 제공자 아래의 모든 항목"
 
 msgid "Everything under Availability Zones"
 msgstr "가용성 구역 아래의 모든 항목"
@@ -20953,8 +21064,14 @@ msgstr "표현식"
 msgid "Expression (Custom)"
 msgstr "표현식(사용자 정의)"
 
+msgid "Expression Editor"
+msgstr "표현식 편집기"
+
 msgid "Expression Object"
 msgstr "표현식 오브젝트"
+
+msgid "Expression incomplete"
+msgstr "표현식이 불완전함"
 
 msgid ""
 "Expressions (next tab) can only be configured for buttons with \"Display for\""
@@ -21467,6 +21584,30 @@ msgstr "%{subject}의 스냅샷 %{snapshot_op} 실패: %{error}"
 msgid "Failed to delete %s %s."
 msgstr "%s %s 삭제에 실패했습니다."
 
+msgid "Failed to load chargeback data"
+msgstr "비용 상환 데이터 로드 실패"
+
+msgid "Failed to load image labels"
+msgstr "이미지 레이블 로드 실패"
+
+msgid "Failed to load label values"
+msgstr "레이블 값 로드 실패"
+
+msgid "Failed to load resources"
+msgstr "리소스 로드 실패"
+
+msgid "Failed to load tag categories"
+msgstr "태그 카테고리 로드 실패"
+
+msgid "Failed to refresh domain"
+msgstr "도메인 새로 고침 실패"
+
+msgid "Failed to save C & U collection settings"
+msgstr "C 및 U 콜렉션 설정 저장 실패"
+
+msgid "Failed to save chargeback assignments"
+msgstr "비용 상환 지정 저장 실패"
+
 msgid "Failover"
 msgstr "장애 복구"
 
@@ -21541,9 +21682,6 @@ msgstr[0] "파일 저장소(Depot)"
 
 msgid "File Entry"
 msgstr "파일 항목"
-
-msgid "File Entry is required"
-msgstr "파일 항목은 필수입니다."
 
 msgid "File Items"
 msgstr "파일 항목"
@@ -21702,9 +21840,6 @@ msgstr "필터"
 
 msgid "Filter Expression"
 msgstr "필터 표현식"
-
-msgid "Filter Item"
-msgstr "필터 항목"
 
 msgid "Filter Message"
 msgstr "필터 메시지"
@@ -22244,6 +22379,9 @@ msgstr "FloatingIp|상태"
 msgid "Floppy %{name} %{location} %{connection}"
 msgstr "플로피 %{name} %{location} %{connection}"
 
+msgid "Floppy Drive (SIO %s)"
+msgstr "플로피 드라이브(SIO %s)"
+
 msgid "Floppy Drives"
 msgstr "플로피 드라이브"
 
@@ -22335,6 +22473,14 @@ msgstr "하나 이상의 필드가 선택될 때까지는 형식화 탭을 사�
 
 msgid "Found"
 msgstr "찾음"
+
+msgid ""
+"Found under Observability > Monitoring in the IBM Cloud console. The "
+"Monitoring instance must be in the same region as this PowerVS workspace and "
+"configured to receive IBM Power Virtual Server metrics."
+msgstr ""
+"IBM Cloud 콘솔의 관측성 > 모니터링에서 찾을 수 있습니다. 모니터링 인스턴스는 이 PowerVS 작업공간과 동일한 지역에 있어야 "
+"하며, IBM Power Virtual Server 메트릭을 수신하도록 구성되어 있어야 합니다."
 
 msgid "Free"
 msgstr "여유 공간"
@@ -22506,6 +22652,9 @@ msgstr "일반 오브젝트 정의"
 
 msgid "Generic Objects"
 msgstr "일반 오브젝트"
+
+msgid "Generic SCSI (%s)"
+msgstr "일반 SCSI(%s)"
 
 msgid "Generic Subtype"
 msgstr "일반 하위 유형"
@@ -22683,9 +22832,6 @@ msgstr "글로벌 검색:"
 
 msgid "Glusterfs Endpoint Name"
 msgstr "Glusterfs 엔드포인트 이름"
-
-msgid "Go to my start page"
-msgstr "내 시작 페이지로 이동"
 
 msgid "Google"
 msgstr "Google"
@@ -23018,9 +23164,6 @@ msgstr "HCP Terraform이 계획 단계를 시작하기 위해 해당 실행을 �
 msgid "HCP Terraform is waiting for its backend services to start the plan."
 msgstr "HCP Terraform은 백엔드 서비스가 계획을 시작하기를 기다리고 있습니다."
 
-msgid "HKLM"
-msgstr "HKLM"
-
 msgid "HMC-managed"
 msgstr "HMC 관리"
 
@@ -23081,6 +23224,12 @@ msgstr "하드"
 
 msgid "Hard Disk"
 msgstr "하드 디스크"
+
+msgid "Hard Disk (IDE %s)"
+msgstr "하드 디스크(IDE %s)"
+
+msgid "Hard Disk (SCSI %s)"
+msgstr "하드 디스크(SCSI %s)"
 
 msgid "Hard Reboot"
 msgstr "하드 재부팅"
@@ -23169,6 +23318,12 @@ msgstr "하드웨어|비트"
 msgid "Hardware|Config version"
 msgstr "하드웨어|구성 버전"
 
+msgid "Hardware|Cpu available cores"
+msgstr "하드웨어|사용 가능한 CPU 코어 수"
+
+msgid "Hardware|Cpu configured cores"
+msgstr "하드웨어|구성된 CPU 코어 수"
+
 msgid "Hardware|Cpu cores per socket"
 msgstr "하드웨어|소켓당 Cpu 코어"
 
@@ -23228,6 +23383,12 @@ msgstr "하드웨어|메모리 콘솔"
 
 msgid "Hardware|Memory mb"
 msgstr "하드웨어|메모리 mb"
+
+msgid "Hardware|Memory mb available"
+msgstr "하드웨어|사용 가능한 메모리(MB)"
+
+msgid "Hardware|Memory mb configured"
+msgstr "하드웨어|구성된 메모리(MB)"
 
 msgid "Hardware|Memory mb minimum"
 msgstr "하드웨어|메모리 mb 최소"
@@ -24451,6 +24612,14 @@ msgstr "IBM Cloud Infrastructure Center"
 msgid "IBM Cloud Monitoring Instance GUID"
 msgstr "IBM Cloud Monitoring 인스턴스 GUID"
 
+msgid ""
+"IBM Cloud Monitoring is not available for PowerVS region '%{region}'. Ensure "
+"an IBM Cloud Monitoring instance exists in the same region as this PowerVS "
+"workspace."
+msgstr ""
+"IBM Cloud Monitoring은 PowerVS 지역 '%{region}'에서 사용할 수 없습니다. 이 PowerVS 작업공간과 동일한"
+" 지역에 IBM Cloud Monitoring 인스턴스가 있는지 확인하십시오."
+
 msgid "IBM Cloud Pak URL"
 msgstr "IBM Cloud Pak URL"
 
@@ -25278,9 +25447,6 @@ msgstr "올바르지 않은 단추 조치"
 msgid "Invalid chart definition"
 msgstr "차트 정의가 올바르지 않습니다."
 
-msgid "Invalid configuration parameters."
-msgstr "구성 매개변수가 올바르지 않습니다."
-
 msgid "Invalid credential_field %{field}, allowed values are %{allowed_fields}"
 msgstr "올바르지 않은 credential_field%{field}입니다. 허용되는 값은%{allowed_fields}입니다."
 
@@ -25499,11 +25665,11 @@ msgstr "작업|사용자 ID"
 msgid "Job|Zone"
 msgstr "작업|구역"
 
+msgid "KB"
+msgstr "KB"
+
 msgid "KBps"
 msgstr "KBps"
-
-msgid "Keep OVA file on completion"
-msgstr "완료 시 OVA 파일 유지"
 
 msgid "Kerberos"
 msgstr "Kerberos"
@@ -25552,6 +25718,9 @@ msgstr "초당 킬로바이트(12,34 KBps)"
 
 msgid "Kind"
 msgstr "유형"
+
+msgid "Kube Exec Console"
+msgstr "Kube Exec 콘솔"
 
 msgid "KubeVirt"
 msgstr "KubeVirt"
@@ -25645,6 +25814,9 @@ msgstr "레이블"
 
 msgid "Label is required"
 msgstr "레이블은 필수입니다."
+
+msgid "Label selections"
+msgstr "레이블 선택사항"
 
 msgid "Labeled Container Images"
 msgstr "레이블이 지정된 컨테이너 이미지"
@@ -26355,6 +26527,30 @@ msgstr "LoadBalancer|폐기일"
 msgid "LoadBalancer|Total vms"
 msgstr "LoadBalancer|vm 총계"
 
+msgid "Loading chargeback data..."
+msgstr "비용 상환 데이터 로드 중..."
+
+msgid "Loading expression fields..."
+msgstr "표현식 필드 로드 중..."
+
+msgid "Loading image labels..."
+msgstr "이미지 레이블 로드 중..."
+
+msgid "Loading label values..."
+msgstr "레이블 값 로드 중..."
+
+msgid "Loading resources..."
+msgstr "자원 로드 중..."
+
+msgid "Loading saved label assignments..."
+msgstr "저장된 레이블 지정 로드 중..."
+
+msgid "Loading tag categories..."
+msgstr "태그 카테고리 로드 중..."
+
+msgid "Loading..."
+msgstr "로드 중..."
+
 msgid "Local"
 msgstr "로컬"
 
@@ -26561,9 +26757,6 @@ msgstr "기본 구성"
 
 msgid "Main Info"
 msgstr "기본 정보"
-
-msgid "Main Menu"
-msgstr "기본 메뉴"
 
 msgid "Main Route Table"
 msgstr "기본 라우트 테이블"
@@ -26780,6 +26973,9 @@ msgstr "이 유동의 포트 연관 관리"
 
 msgid "ManageIQ"
 msgstr "ManageIQ"
+
+msgid "ManageIQ Log"
+msgstr "ManageIQ 로그"
 
 msgid "ManageIQ Tag Department"
 msgstr "ManageIQ 태그 부서"
@@ -31924,6 +32120,9 @@ msgstr "NFS 서버"
 msgid "NFS Servert"
 msgstr "NFS 서버"
 
+msgid "NOT"
+msgstr "아님"
+
 msgid "NVMe"
 msgstr "NVMe"
 
@@ -32606,6 +32805,9 @@ msgstr "새 비밀번호"
 msgid "New Section"
 msgstr "새 섹션"
 
+msgid "New Tab"
+msgstr "새 탭"
+
 msgid "New Window"
 msgstr "새 창"
 
@@ -32796,9 +32998,6 @@ msgstr "Cloud Pak URL 없음"
 msgid "No Cloud Provider that supports instance provisioning added"
 msgstr "인스턴스 프로비저닝을 지원하는 클라우드 제공자가 추가되지 않음"
 
-msgid "No Clusters found in the current region."
-msgstr "현재 지역에서 클러스터를 찾을 수 없습니다."
-
 msgid "No Compliance Policies Found"
 msgstr "규제 준수 정책을 찾을 수 없음"
 
@@ -32819,9 +33018,6 @@ msgstr "%{button}할 사용자 정의 템플리트가 선택되지 않았습니�
 
 msgid "No Daily data is available"
 msgstr "일별 데이터를 사용할 수 없음"
-
-msgid "No Datastores found in the current region."
-msgstr "현재 지역에서 데이터 저장소를 찾을 수 없습니다."
 
 msgid "No Date/Time value specified"
 msgstr "날짜/시간 값이 지정되지 않았습니다."
@@ -33129,10 +33325,8 @@ msgstr "사용 가능한 데이터 없음"
 msgid "No data available."
 msgstr "사용 가능한 데이터가 없습니다."
 
-msgid ""
-"No drift history found, an Analysis or Virtual Black Box Synchronization for "
-"this VM may need to be run."
-msgstr "드리프트 히스토리를 찾을 수 없음, 이 VM에 대한 분석 또는 가상 블랙박스 동기화를 실행해야 할 수 있습니다."
+msgid "No drift history found"
+msgstr "드리프트 히스토리를 찾을 수 없음"
 
 msgid "No entries found for %s"
 msgstr "%s에 대한 항목을 찾을 수 없음"
@@ -33145,6 +33339,9 @@ msgstr "이 %{model}에 사용 가능한 이벤트 없음"
 
 msgid "No events available for this Cluster"
 msgstr "이 클러스터에 사용 가능한 이벤트 없음"
+
+msgid "No fields available for this model."
+msgstr "이 모델에는 사용할 수 있는 필드가 없습니다."
 
 msgid "No fields were moved up"
 msgstr "위로 이동한 필드가 없습니다."
@@ -33193,6 +33390,12 @@ msgstr "적용할 입력 없음"
 
 msgid "No instances found"
 msgstr "인스턴스를 찾을 수 없음"
+
+msgid "No items available"
+msgstr "사용 가능한 항목이 없음"
+
+msgid "No label values available for this label key."
+msgstr "이 레이블 키에 사용할 수 있는 레이블 값이 없습니다."
 
 msgid "No message will be displayed"
 msgstr "메시지가 표시되지 않음"
@@ -33260,6 +33463,9 @@ msgstr "복제 역할이 설정되지 않음"
 msgid "No report data found."
 msgstr "보고서 데이터를 찾을 수 없습니다."
 
+msgid "No resources available for this assignment type."
+msgstr "이 지정 유형에 사용할 수 있는 자원이 없습니다."
+
 msgid "No saved filters or report filters are available to load"
 msgstr "로드 가능한 저장된 필터나 보고서 필터 없음"
 
@@ -33308,6 +33514,9 @@ msgstr "라우터 \"%{name}\"에서 인터페이스를 제거할 서브넷이 �
 msgid "No synchronize category specified"
 msgstr "동기화 카테고리가 지정되지 않음"
 
+msgid "No tags available for this category."
+msgstr "이 카테고리에 사용할 수 있는 태그가 없습니다."
+
 msgid "No task returned from server"
 msgstr "서버에서 리턴된 태스크 없음"
 
@@ -33316,6 +33525,9 @@ msgstr "취소할 태스크가 선택되지 않았습니다."
 
 msgid "No task were selected to delete"
 msgstr "삭제할 태스크가 선택되지 않았습니다."
+
+msgid "No tenants available."
+msgstr "사용 가능한 테넌트가 없습니다."
 
 msgid "No timer is attached to this Widget, its contents will not be updated."
 msgstr "타이머가 이 위젯에 접속되지 않음, 컨텐츠가 업데이트되지 않습니다."
@@ -33766,9 +33978,6 @@ msgstr "OVF 템플리트는 필수입니다. 목록에서 하나를 선택하십
 msgid "OVF Templates"
 msgstr "OVF 템플리트"
 
-msgid "Object"
-msgstr "오브젝트"
-
 msgid "Object Attribute"
 msgstr "오브젝트 속성"
 
@@ -33970,6 +34179,9 @@ msgstr "구성 프로파일 콘솔 열기"
 
 msgid "Open a Configured System console"
 msgstr "구성된 시스템 콘솔 열기"
+
+msgid "Open a Console for this Container Group"
+msgstr "이 컨테이너 그룹의 콘솔 열기"
 
 msgid "Open a VMRC console for VMs"
 msgstr "VM에 대한 VMRC 콘솔 열기"
@@ -34856,9 +35068,6 @@ msgstr "PXE 이미지"
 
 msgid "PXE Image \"%{name}\""
 msgstr "PXE 이미지 \"%{name}\""
-
-msgid "PXE Image \"%{name}\" was saved"
-msgstr "PXE 이미지 \"%{name}\"이(가) 저장되었습니다."
 
 msgid "PXE Image Menus"
 msgstr "PXE 이미지 메뉴"
@@ -36402,6 +36611,9 @@ msgstr "플레이북(임베디드 Ansible)"
 msgid "Plays"
 msgstr "플레이"
 
+msgid "Please assign at least one rate"
+msgstr "하나 이상의 요금을 지정하십시오."
+
 msgid "Please contact your administrator for assistance."
 msgstr "지원을 받으려면 관리자에게 문의하십시오."
 
@@ -37136,6 +37348,9 @@ msgstr "제품 업데이트"
 
 msgid "Production"
 msgstr "프로덕션"
+
+msgid "Production Log"
+msgstr "프로덕션 로그"
 
 msgid "Profile"
 msgstr "프로파일"
@@ -37912,9 +38127,6 @@ msgstr "비율"
 
 msgid "Rate (in %{currency})"
 msgstr "요율(%{currency})"
-
-msgid "Rate Assignments saved"
-msgstr "비율 지정이 저장되었습니다."
 
 msgid "Rate Details"
 msgstr "비율 세부사항"
@@ -38884,14 +39096,14 @@ msgstr "레지스트리"
 msgid "Registry"
 msgstr "레지스트리"
 
+msgid "Registry Data"
+msgstr "레지스트리 데이터"
+
 msgid "Registry Entries"
 msgstr "레지스트리 항목"
 
 msgid "Registry Entry"
 msgstr "레지스트리 항목"
-
-msgid "Registry Entry is required"
-msgstr "레지스트리 항목은 필수입니다."
 
 msgid "Registry Hive"
 msgstr "레지스트리 하이브"
@@ -40732,9 +40944,6 @@ msgstr "결과 유형 %{result_type}이(가) 지원되지 않음"
 msgid "Results"
 msgstr "결과"
 
-msgid "Results %s"
-msgstr "결과 %s"
-
 msgid "Resume"
 msgstr "재개"
 
@@ -40921,6 +41130,9 @@ msgstr "적정 크기 권장사항"
 
 msgid "Role"
 msgstr "역할"
+
+msgid "Role \"%s\" was saved"
+msgstr "역할 \"%s\"이(가) 저장됨"
 
 msgid "Role \"%{name}\""
 msgstr "역할 \"%{name}\""
@@ -41307,6 +41519,15 @@ msgstr "저장된 보고서"
 msgid "Saved Reports Accordion"
 msgstr "저장된 보고서 아코디언"
 
+msgid "Saved label assignments"
+msgstr "저장된 레이블 지정"
+
+msgid "Saved tag assignments"
+msgstr "저장된 태그 지정"
+
+msgid "Saving chargeback assignments..."
+msgstr "비용 상환 지정 저장 중..."
+
 msgid "Savings"
 msgstr "절감"
 
@@ -41589,6 +41810,9 @@ msgstr "결과 내에서 이름별 검색"
 msgid "Search is referenced in a schedule and cannot be deleted"
 msgstr "검색이 스케줄에 참조되어서 검색을 삭제할 수 없습니다."
 
+msgid "Search operator"
+msgstr "검색 연산자"
+
 msgid "Search with Name or Relative path"
 msgstr "이름 또는 상대 경로로 검색"
 
@@ -41607,9 +41831,6 @@ msgstr "보조(표시) 필터"
 msgid ""
 "Secondary (Display) Filter - Filters the rows based on child table fields"
 msgstr "보조(표시) 필터 - 하위 테이블 필드에 기반하여 행을 필터링함"
-
-msgid "Secondary Menu"
-msgstr "보조 메뉴"
 
 msgid "Secret Access Key"
 msgstr "시크릿 액세스 키"
@@ -41925,6 +42146,9 @@ msgstr "선택"
 msgid "Select Alerts to be Evaluated"
 msgstr "평가할 경보 선택"
 
+msgid "Select All"
+msgstr "모두 선택"
+
 msgid "Select All Days"
 msgstr "모든 요일 선택"
 
@@ -42183,9 +42407,6 @@ msgstr "이미지 레이블에 대한 옵션 선택"
 msgid "Select rate"
 msgstr "요금 선택"
 
-msgid "Select rate for selections"
-msgstr "선택에 대한 요금 선택"
-
 msgid ""
 "Select storage resources to attach to the service. The new Volume(s) will be "
 "created on these resources."
@@ -42201,9 +42422,6 @@ msgstr "태그 카테고리 선택"
 
 msgid "Select tag value"
 msgstr "태그 값 선택"
-
-msgid "Select term of service type"
-msgstr "서비스 유형의 기간 선택"
 
 msgid ""
 "Select the format type above to apply syntax highlighting for better "
@@ -42224,6 +42442,9 @@ msgstr "비교할 둘 이상의 항목 선택"
 
 msgid "Select up to 10 timestamps for Drift Analysis"
 msgstr "드리프트 분석을 위한 최대 10개의 시간소인 선택"
+
+msgid "Select values"
+msgstr "값 선택"
 
 msgid "Selected"
 msgstr "선택됨"
@@ -42360,6 +42581,9 @@ msgstr "서버 제어"
 msgid "Server Database Backup Insufficient Space"
 msgstr "서버 데이터베이스 백업 공간이 충분하지 않음"
 
+msgid "Server Error %s"
+msgstr "서버 오류 %s"
+
 msgid "Server Exceeded Memory Limit"
 msgstr "서버 초과된 메모리 한계"
 
@@ -42431,6 +42655,9 @@ msgstr "서버가 마스터임"
 
 msgid "Server name"
 msgstr "서버 이름"
+
+msgid "Server not responding"
+msgstr "서버가 응답하지 않음"
 
 msgid "Server restart is only supported on Linux"
 msgstr "서버 재시작은 Linux에서만 지원됩니다."
@@ -44333,6 +44560,21 @@ msgstr "시스템 종료"
 msgid "Shutdown Guest"
 msgstr "게스트 종료"
 
+msgid "Shutdown Guest OS"
+msgstr "게스트 OS 종료"
+
+msgid "Shutdown Guest OS on the selected items"
+msgstr "선택한 항목에서 게스트 OS 종료"
+
+msgid "Shutdown Guest OS on the selected items?"
+msgstr "선택한 항목에서 게스트 OS를 종료하시겠습니까?"
+
+msgid "Shutdown Guest OS on this Instance"
+msgstr "이 인스턴스에서 게스트 OS 종료"
+
+msgid "Shutdown Guest OS on this Instance?"
+msgstr "이 인스턴스에서 게스트 OS를 종료하시겠습니까?"
+
 msgid "Shutdown Host"
 msgstr "호스트 시스템 종료"
 
@@ -45925,6 +46167,12 @@ msgstr "스위치 슬롯 개수"
 msgid "Switch Uuid"
 msgstr "스위치 Uuid"
 
+msgid "Switch to relative date format"
+msgstr "상대 날짜 형식으로 전환"
+
+msgid "Switch to specific date format"
+msgstr "특정 날짜 형식으로 전환"
+
 msgid "Switch: "
 msgstr "스위치: "
 
@@ -46188,6 +46436,9 @@ msgstr "Systemd 로드"
 msgid "Systemd Sub"
 msgstr "Systemd 서브"
 
+msgid "TB"
+msgstr "TB"
+
 msgid "TCP"
 msgstr "TCP"
 
@@ -46266,8 +46517,14 @@ msgstr "태그 편집이 정상적으로 저장되었습니다."
 msgid "Tag in Dashboard"
 msgstr "대시보드의 태그"
 
+msgid "Tag selections"
+msgstr "태그 선택사항"
+
 msgid "Tag to Apply"
 msgstr "적용할 태그"
+
+msgid "Tag value"
+msgstr "태그 값"
 
 msgid "Tagged Clusters"
 msgstr "태그가 지정된 클러스터"
@@ -46478,6 +46735,9 @@ msgstr "테넌트 할당량"
 msgid "Tenant Quotas"
 msgstr "테넌트 할당량"
 
+msgid "Tenant chargeback assignments"
+msgstr "테넌트 비용 상환 지정"
+
 msgid "Tenant mapping is disabled on the Provider"
 msgstr "제공자에서 테넌트 맵핑이 사용 안함으로 설정되어 있습니다."
 
@@ -46616,6 +46876,12 @@ msgstr "Terraform Enterprise 작업공간"
 
 msgid "Terraform Enterprise Workspace Provision"
 msgstr "Terraform 엔터프라이즈 작업공간 프로비저닝"
+
+msgid ""
+"Terraform Runner has been unavailable for %{unavailable} seconds, exceeding "
+"timeout of %{timeout} seconds"
+msgstr ""
+"Terraform Runner를 %{unavailable}초 동안 사용할 수 없어 %{timeout}초의 제한시간을 초과했습니다."
 
 msgid "Terraform Template"
 msgstr "Terraform 템플리트"
@@ -46886,6 +47152,9 @@ msgid "The catalog item is linked to the following services:"
 msgid_plural "The following catalog items are linked to services:"
 msgstr[0] "다음 카탈로그 항목이 서비스에 링크됩니다."
 
+msgid "The check count value must be an integer"
+msgstr "검사 수 값은 정수여야 함"
+
 msgid ""
 "The check count value must be an integer to commit this expression element"
 msgstr "이 표현식 요소를 커미트하려면 검사 개수 값이 정수여야 합니다."
@@ -47063,6 +47332,9 @@ msgid ""
 "The run should start as soon as the backend services that run terraform have "
 "available capacity."
 msgstr "Terraform을 실행하는 백엔드 서비스에 사용 가능한 용량이 생기면 실행이 시작되어야 합니다."
+
+msgid "The scope expression is incomplete"
+msgstr "범위 표현식이 불완전함"
 
 msgid "The selected %{label} is not in the current region"
 msgstr "선택된 %{label}이(가) 현재 지역에 있지 않음"
@@ -48384,9 +48656,6 @@ msgstr "할당되지 않은 공간"
 msgid "Unarchive Services"
 msgstr "서비스 아카이브 해제"
 
-msgid "Unassign"
-msgstr "지정 해제"
-
 msgid "Unassign Server"
 msgstr "서버 지정 해제"
 
@@ -48449,9 +48718,6 @@ msgstr "단위"
 
 msgid "Unknown"
 msgstr "알 수 없음"
-
-msgid "Unknown API error"
-msgstr "알 수 없는 API 오류"
 
 msgid "Unknown Action"
 msgstr "알 수 없는 조치"
@@ -49175,11 +49441,11 @@ msgstr "검색할 사용자"
 msgid "User will input the value"
 msgstr "사용자가 값을 입력함"
 
+msgid "User will input value"
+msgstr "사용자가 값을 입력합니다."
+
 msgid "User:"
 msgstr "사용자:"
-
-msgid "User: %s"
-msgstr "사용자: %s"
 
 msgid "UserID"
 msgstr "사용자 ID"
@@ -50341,9 +50607,6 @@ msgstr "변수"
 msgid "Variable Object ID"
 msgstr "변수 오브젝트 ID"
 
-msgid "Variable name must be unique"
-msgstr "변수 이름은 고유해야 합니다."
-
 msgid "Variables"
 msgstr "변수"
 
@@ -50407,9 +50670,6 @@ msgstr "버전/빌드"
 
 msgid "View"
 msgstr "보기"
-
-msgid "View '%{name}' Cluster"
-msgstr "'%{name}' 클러스터 보기"
 
 msgid "View Alert Definition Profiles"
 msgstr "경보 정의 프로파일 보기"
@@ -50903,9 +51163,6 @@ msgstr "이 MiqServer 보기"
 msgid "View this Orchestration Template in Catalogs"
 msgstr "카탈로그에서 이 오케스트레이션 템플리트 보기"
 
-msgid "View this PXE Image"
-msgstr "이 PXE 이미지 보기"
-
 msgid "View this Policy Profile"
 msgstr "이 정책 프로파일 보기"
 
@@ -50929,9 +51186,6 @@ msgstr "이 사용자 보기"
 
 msgid "View this Widget"
 msgstr "이 위젯 보기"
-
-msgid "View this Windows Image"
-msgstr "이 Windows 이미지 보기"
 
 msgid "View this item"
 msgstr "이 항목 보기"
@@ -51095,6 +51349,10 @@ msgstr "가상 프라이빗 클라우드"
 
 msgid "Virtual machines added"
 msgstr "가상 머신 추가됨"
+
+msgid ""
+"Virtual processors can only be reconfigured on shared processor partitions"
+msgstr "가상 프로세서는 공유 프로세서 파티션에서만 재구성할 수 있습니다."
 
 msgid "Virtualization"
 msgstr "가상화"
@@ -52703,9 +52961,6 @@ msgstr "Windows 이미지"
 msgid "Windows Image \"%{name}\""
 msgstr "Windows 이미지 \"%{name}\""
 
-msgid "Windows Image \"%{name}\" was saved"
-msgstr "Windows 이미지 \"%{name}\"이(가) 저장되었습니다."
-
 msgid "Windows Images"
 msgstr "Windows 이미지"
 
@@ -52803,9 +53058,6 @@ msgstr "워크플로우 템플리트(Ansible Tower)"
 
 msgid "Workflow does not have any credentials to map."
 msgstr "워크플로우에 맵핑할 신임 정보가 없습니다."
-
-msgid "Workflow max. timeout"
-msgstr "워크플로우 최대 제한시간"
 
 msgid "Workflow name"
 msgstr "워크플로우 이름"
@@ -54258,15 +54510,6 @@ msgstr "샘플"
 
 msgid "secondary, "
 msgstr "보조, "
-
-msgid "select Rate1"
-msgstr "Rate1 선택"
-
-msgid "select Rate2"
-msgstr "Rate2 선택"
-
-msgid "select rate for saved items"
-msgstr "저장된 항목에 대한 요금 선택"
 
 msgid "selected to copy"
 msgstr "복사하도록 선택됨"
