@@ -15,6 +15,7 @@ class PhysicalServer < ApplicationRecord
 
   VENDOR_TYPES = {
     # DB        Displayed
+    "cisco"   => "Cisco",
     "lenovo"  => "Lenovo",
     "unknown" => "Unknown",
     nil       => "Unknown",
