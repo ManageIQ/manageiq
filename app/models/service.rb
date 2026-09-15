@@ -363,8 +363,11 @@ class Service < ApplicationRecord
   end
 
   def validate_reconfigure
+    return false if retired? || retiring? || error_retiring?
+    return false if !(provisioned? || provision_failed?)
+
     ra = reconfigure_resource_action
-    ra && ra.dialog_id && ( ra.fqname.present? || ra.configuration_script_payload.present? )
+    ra&.dialog_id && (ra.fqname.present? || ra.configuration_script_payload.present?)
   end
 
   def reconfigure_resource_action
