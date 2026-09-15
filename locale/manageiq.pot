@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-09 00:38+0000\n"
-"PO-Revision-Date: 2026-09-09 00:38+0000\n"
+"POT-Creation-Date: 2026-09-15 00:26+0000\n"
+"PO-Revision-Date: 2026-09-15 00:26+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -1846,9 +1846,6 @@ msgid "<Nothing>"
 msgstr ""
 
 msgid "<Orphaned>"
-msgstr ""
-
-msgid "<Same as import from>"
 msgstr ""
 
 msgid "<Script error>"
@@ -4334,9 +4331,6 @@ msgid "Apply"
 msgstr ""
 
 msgid "Apply Config Pattern"
-msgstr ""
-
-msgid "Apply Firmware"
 msgstr ""
 
 msgid "Apply sections"
@@ -7980,6 +7974,9 @@ msgstr ""
 msgid "Clear cart"
 msgstr ""
 
+msgid "Clear file"
+msgstr ""
+
 msgid "Clear selected Object Storage Containers"
 msgstr ""
 
@@ -10238,6 +10235,9 @@ msgid "Confirm Edit"
 msgstr ""
 
 msgid "Confirm Password"
+msgstr ""
+
+msgid "Confirm Reset"
 msgstr ""
 
 msgid "Connect"
@@ -13876,7 +13876,9 @@ msgid "Customization Specification [%{name}] does not exist."
 msgstr ""
 
 msgid "Customization Template"
-msgstr ""
+msgid_plural "Customization Templates"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Customization Template \"%s\" was added."
 msgstr ""
@@ -13901,9 +13903,6 @@ msgid "Customization Template Sysprep"
 msgid_plural "Customization Template Syspreps"
 msgstr[0] ""
 msgstr[1] ""
-
-msgid "Customization Template is required"
-msgstr ""
 
 msgid "Customization Template no longer exists"
 msgstr ""
@@ -14248,14 +14247,6 @@ msgid "Datastore does not exist, unable to add disk"
 msgstr ""
 
 msgid "Datastore import was cancelled or is finished"
-msgstr ""
-
-msgid ""
-"Datastore import was successful.\n"
-"Namespaces updated/added: %{namespace_stats}\n"
-"Classes updated/added: %{class_stats}\n"
-"Instances updated/added: %{instance_stats}\n"
-"Methods updated/added: %{method_stats}"
 msgstr ""
 
 msgid ""
@@ -20334,7 +20325,7 @@ msgstr ""
 msgid "Error during repository setup: %{error_message}"
 msgstr ""
 
-msgid "Error during reset: Status [%{status}] Message [%{message}]"
+msgid "Error during reset: %{message}"
 msgstr ""
 
 msgid "Error during sending test email: %{class_name}, %{error_message}"
@@ -21212,9 +21203,6 @@ msgstr ""
 msgid "Export Selected Profiles"
 msgstr ""
 
-msgid "Export all classes and instances"
-msgstr ""
-
 msgid "Export all classes and instances to a file"
 msgstr ""
 
@@ -21753,10 +21741,25 @@ msgstr ""
 msgid "Failed to %{snapshot_op} snapshot of %{subject}: %{error}"
 msgstr ""
 
+msgid "Failed to check task status"
+msgstr ""
+
 msgid "Failed to delete %s %s."
 msgstr ""
 
+msgid "Failed to fetch domains"
+msgstr ""
+
+msgid "Failed to fetch git repository"
+msgstr ""
+
+msgid "Failed to import from git"
+msgstr ""
+
 msgid "Failed to load chargeback data"
+msgstr ""
+
+msgid "Failed to load data"
 msgstr ""
 
 msgid "Failed to load image labels"
@@ -21778,6 +21781,9 @@ msgid "Failed to save C & U collection settings"
 msgstr ""
 
 msgid "Failed to save chargeback assignments"
+msgstr ""
+
+msgid "Failed to submit git URL"
 msgstr ""
 
 msgid "Failover"
@@ -22155,15 +22161,14 @@ msgid "Firmware Binaries"
 msgstr ""
 
 msgid "Firmware Binary"
-msgstr ""
+msgid_plural "Firmware Binaries"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Firmware Binary Firmware Target"
 msgid_plural "Firmware Binary Firmware Targets"
 msgstr[0] ""
 msgstr[1] ""
-
-msgid "Firmware Binary is required"
-msgstr ""
 
 msgid "Firmware Compliance"
 msgstr ""
@@ -22910,6 +22915,9 @@ msgid_plural "Git Branches"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Git Import Disabled"
+msgstr ""
+
 msgid "Git Reference"
 msgid_plural "Git References"
 msgstr[0] ""
@@ -22927,9 +22935,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "Git URL"
-msgstr ""
-
-msgid "Git URL:"
 msgstr ""
 
 msgid "Git based refresh canceled"
@@ -25163,13 +25168,10 @@ msgstr ""
 msgid "Import Cloud Template"
 msgstr ""
 
-msgid "Import Datastore classes"
-msgstr ""
-
 msgid "Import Datastore classes (*.zip)"
 msgstr ""
 
-msgid "Import Datastore via git"
+msgid "Import Datastore via Git"
 msgstr ""
 
 msgid "Import File Upload"
@@ -25201,6 +25203,9 @@ msgstr ""
 msgid "Import cancelled by user"
 msgstr ""
 
+msgid "Import failed"
+msgstr ""
+
 msgid "Import file cannot be empty"
 msgstr ""
 
@@ -25210,7 +25215,16 @@ msgstr ""
 msgid "Import file was uploaded successfully"
 msgstr ""
 
+msgid "Import from Domain"
+msgstr ""
+
+msgid "Import from Git Repository"
+msgstr ""
+
 msgid "Import not available due to conflicts"
+msgstr ""
+
+msgid "Import to Existing Domain"
 msgstr ""
 
 msgid "Import validation complete: %{good_record}, %{bad_record}"
@@ -25228,7 +25242,13 @@ msgstr ""
 msgid "ImportFileUpload|Region number"
 msgstr ""
 
-msgid "Imported from git"
+msgid "Imported %{git_url}@%{branch_or_tag}"
+msgstr ""
+
+msgid "Importing datastore..."
+msgstr ""
+
+msgid "Importing from git..."
 msgstr ""
 
 msgid "In My LDAP Group?"
@@ -26752,10 +26772,16 @@ msgstr ""
 msgid "Loading chargeback data..."
 msgstr ""
 
+msgid "Loading domains..."
+msgstr ""
+
 msgid "Loading expression fields..."
 msgstr ""
 
 msgid "Loading image labels..."
+msgstr ""
+
+msgid "Loading import data..."
 msgstr ""
 
 msgid "Loading label values..."
@@ -33252,6 +33278,9 @@ msgstr ""
 msgid "No Daily data is available"
 msgstr ""
 
+msgid "No Data"
+msgstr ""
+
 msgid "No Date/Time value specified"
 msgstr ""
 
@@ -33259,6 +33288,9 @@ msgid "No Dialog"
 msgstr ""
 
 msgid "No Dialogs were selected for %{task}"
+msgstr ""
+
+msgid "No Domains Available"
 msgstr ""
 
 msgid "No EMS defined"
@@ -33554,7 +33586,13 @@ msgstr ""
 msgid "No data available."
 msgstr ""
 
+msgid "No domains found in the import file"
+msgstr ""
+
 msgid "No drift history found"
+msgstr ""
+
+msgid "No enabled domains available to import to"
 msgstr ""
 
 msgid "No entries found for %s"
@@ -33645,6 +33683,9 @@ msgid "No more than 10 Analyses can be selected for Drift"
 msgstr ""
 
 msgid "No more than 32 %{model} can be selected for Compare"
+msgstr ""
+
+msgid "No namespaces available for the selected domain"
 msgstr ""
 
 msgid "No notes have been entered."
@@ -35300,15 +35341,14 @@ msgid "PXE Directory"
 msgstr ""
 
 msgid "PXE Image"
-msgstr ""
+msgid_plural "PXE Images"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "PXE Image \"%{name}\""
 msgstr ""
 
 msgid "PXE Image Menus"
-msgstr ""
-
-msgid "PXE Image is required"
 msgstr ""
 
 msgid "PXE Images"
@@ -35330,7 +35370,9 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "PXE Server"
-msgstr ""
+msgid_plural "PXE Servers"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "PXE Server \"%{name}\""
 msgstr ""
@@ -35339,9 +35381,6 @@ msgid "PXE Server %s was added"
 msgstr ""
 
 msgid "PXE Server %s was saved"
-msgstr ""
-
-msgid "PXE Server is required"
 msgstr ""
 
 msgid "PXE Server no longer exists"
@@ -35520,9 +35559,6 @@ msgid "Password"
 msgstr ""
 
 msgid "Password (API Key)"
-msgstr ""
-
-msgid "Password (optional):"
 msgstr ""
 
 msgid "Password Complex"
@@ -36928,6 +36964,9 @@ msgid "Please select a type."
 msgstr ""
 
 msgid "Please select an Instance Type from above"
+msgstr ""
+
+msgid "Please select at least one namespace to import"
 msgstr ""
 
 msgid "Please try again"
@@ -40673,10 +40712,13 @@ msgstr ""
 msgid "Reset all Policy Simulation options"
 msgstr ""
 
-msgid "Reset all components in the following domains: %{domains}"
+msgid "Reset all components in the following domains: %s"
 msgstr ""
 
 msgid "Reset all options"
+msgstr ""
+
+msgid "Reset failed"
 msgstr ""
 
 msgid "Reset the filter"
@@ -40704,6 +40746,9 @@ msgid "Reset this item?"
 msgstr ""
 
 msgid "Reset to Default"
+msgstr ""
+
+msgid "Resetting datastore..."
 msgstr ""
 
 msgid "Resides on VM"
@@ -41357,6 +41402,12 @@ msgid "Revert to selected snapshot on Templates"
 msgstr ""
 
 msgid "Revert to selected snapshot on VMs"
+msgstr ""
+
+msgid "Review Datastore Import"
+msgstr ""
+
+msgid "Review Git Import"
 msgstr ""
 
 msgid "Revoke Sessions of Other Users"
@@ -42457,6 +42508,9 @@ msgstr ""
 msgid "Select Methods to copy"
 msgstr ""
 
+msgid "Select Namespaces to Import"
+msgstr ""
+
 msgid "Select Policy Profiles"
 msgstr ""
 
@@ -42469,22 +42523,10 @@ msgstr ""
 msgid "Select Tags to apply"
 msgstr ""
 
-msgid "Select a Customization Template"
-msgstr ""
-
-msgid "Select a Firmware Binary"
-msgstr ""
-
 msgid "Select a Group:"
 msgstr ""
 
 msgid "Select a Host to validate against"
-msgstr ""
-
-msgid "Select a PXE Image"
-msgstr ""
-
-msgid "Select a PXE Server"
 msgstr ""
 
 msgid "Select a Policy Profile to add:"
@@ -42634,16 +42676,7 @@ msgstr ""
 msgid "Select currency: "
 msgstr ""
 
-msgid "Select domain you wish to import from:"
-msgstr ""
-
-msgid "Select existing domain to import into:"
-msgstr ""
-
 msgid "Select methods"
-msgstr ""
-
-msgid "Select namespaces you wish to import:"
 msgstr ""
 
 msgid "Select one or more Groups to delete"
@@ -46313,6 +46346,9 @@ msgid_plural "Successfully deleted Saved Reports from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Successfully found git repository, please choose a branch or tag"
+msgstr ""
+
 msgid "Successfully refreshed!"
 msgstr ""
 
@@ -48208,9 +48244,6 @@ msgstr ""
 msgid "Toggle"
 msgstr ""
 
-msgid "Toggle All/None"
-msgstr ""
-
 msgid "Toggle Fullscreen"
 msgstr ""
 
@@ -49194,10 +49227,16 @@ msgstr ""
 msgid "Upload Script"
 msgstr ""
 
+msgid "Upload file"
+msgstr ""
+
 msgid "Uploaded File '%{filename}'"
 msgstr ""
 
 msgid "Uploaded Image"
+msgstr ""
+
+msgid "Uploading..."
 msgstr ""
 
 msgid "Uptime - Minimum Time Between Startups for Collected Intervals (Seconds)"
@@ -49747,9 +49786,6 @@ msgid "UserID"
 msgstr ""
 
 msgid "Username"
-msgstr ""
-
-msgid "Username (optional):"
 msgstr ""
 
 msgid "Username for this credential"
@@ -52100,6 +52136,12 @@ msgid "VmOrTemplate|Has policies"
 msgstr ""
 
 msgid "VmOrTemplate|Has rdm disk"
+msgstr ""
+
+msgid "VmOrTemplate|Health details"
+msgstr ""
+
+msgid "VmOrTemplate|Health state"
 msgstr ""
 
 msgid "VmOrTemplate|Host name"
