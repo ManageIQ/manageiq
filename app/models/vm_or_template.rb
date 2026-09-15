@@ -60,11 +60,20 @@ class VmOrTemplate < ApplicationRecord
     "unknown"         => "Unknown"
   }
 
+  HEALTH_STATES = {
+    "ok"       => N_("Ok"),
+    "warning"  => N_("Warning"),
+    "error"    => N_("Error"),
+    "critical" => N_("Critical"),
+    "unknown"  => N_("Unknown")
+  }.freeze
+
   POWER_OPS = %w[start stop suspend reset shutdown_guest standby_guest reboot_guest]
   REMOTE_REGION_TASKS = POWER_OPS + %w[retire_now]
 
   validates_presence_of     :name, :location
   validates                 :vendor, :inclusion => {:in => VENDOR_TYPES.keys}
+  validates                 :health_state, :inclusion => {:in => HEALTH_STATES.keys}, :allow_nil => true
 
   has_one                   :operating_system, :dependent => :destroy
   has_one                   :openscap_result, :as => :resource, :dependent => :destroy
