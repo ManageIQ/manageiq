@@ -446,6 +446,10 @@ class ExtManagementSystem < ApplicationRecord
     VmRetireTask
   end
 
+  def self.orchestration_stack_reconfigure_task_class
+    OrchestrationStackReconfigureTask
+  end
+
   def self.orchestration_stack_retire_task_class
     OrchestrationStackRetireTask
   end
