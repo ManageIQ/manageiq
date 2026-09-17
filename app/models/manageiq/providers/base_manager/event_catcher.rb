@@ -3,6 +3,11 @@ class ManageIQ::Providers::BaseManager::EventCatcher < MiqWorker
   include PerEmsWorkerMixin
 
   self.required_roles = ["event"]
+  self.rails_worker = -> { !worker_settings.key?(:rails_worker) || worker_settings[:rails_worker] }
+
+  def self.worker_settings_paths
+    [[:ems, :"ems_#{module_parent.ems_type}"]]
+  end
 
   def friendly_name
     @friendly_name ||= begin
