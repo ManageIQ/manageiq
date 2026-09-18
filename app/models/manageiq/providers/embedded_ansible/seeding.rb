@@ -19,14 +19,6 @@ module ManageIQ::Providers::EmbeddedAnsible::Seeding
         :name     => "#{Vmdb::Appliance.PRODUCT_NAME} Default Credential",
         :resource => manager
       )
-
-      # In production mode, the RPM build takes cares of consolidating all of
-      #   the plugin content, which will not change, so this is unnecessary.
-      # In development mode, changes to content will be reconsolidated on every
-      #   seed for convenience.
-      unless Rails.env.production?
-        Ansible::Content.consolidate_plugin_content
-      end
     end
   end
 end
