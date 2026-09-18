@@ -1057,6 +1057,7 @@
         :memory_threshold: 2.gigabytes
         :nice_delta: 1
         :poll: 1.seconds
+        :rails_worker: true
     :queue_worker_base:
       :defaults:
         :dequeue_method: drb
