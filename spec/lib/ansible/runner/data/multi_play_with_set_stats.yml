@@ -1,0 +1,12 @@
+- name: Play 1
+  hosts: localhost
+  tasks:
+  - debug: msg="Hello from Play 1"
+
+- name: Play 2
+  hosts: localhost
+  tasks:
+  - debug: msg="Hello from Play 2"
+  - set_stats:
+      data:
+        custom_stat_var: "stat_value"

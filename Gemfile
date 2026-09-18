@@ -35,6 +35,7 @@ gem "connection_pool",                  "~>2.5",             :require => false #
 gem "dalli",                            "~>3.2.3",           :require => false
 gem "default_value_for",                "~>4.0"
 gem "docker-api",                       "~>1.33.6",          :require => false
+gem "floe",                             "~>0.21.0",          :require => false
 gem "drb",                              "~>2.2",             :require => false
 gem "fast_gettext",                     "~>3.1"
 gem "ffi",                              "< 1.17.0",          :require => false # Locked down due to build issue assertion failure on 1.17.3
@@ -45,7 +46,6 @@ gem "inifile",                          "~>3.0",             :require => false
 gem "inventory_refresh",                "~>2.3",             :require => false
 gem "kubeclient",                       "~>4.0",             :require => false # For scaling pods at runtime
 gem "linux_admin",                      ">=3.0", "<5",       :require => false
-gem "listen",                           "~>3.2",             :require => false
 gem "manageiq-api-client",              "~>0.7",             :require => false
 gem "manageiq-loggers",                 "~>2.0",             :require => false
 gem "manageiq-messaging",               "~>2.1",             :require => false
