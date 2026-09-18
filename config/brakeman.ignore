@@ -90,29 +90,6 @@
       "note": "This usage of Marshal.load is safe because the incoming data_array is only ever called with XML payloads built by the internal scanning tools and not user input."
     },
     {
-      "warning_type": "Command Injection",
-      "warning_code": 14,
-      "fingerprint": "bf6076072707342e27ea24d30ed2d0e12183017f3ffa21d86f916831ffbe53ec",
-      "check_name": "Execute",
-      "message": "Possible command injection",
-      "file": "lib/ansible/runner.rb",
-      "line": 464,
-      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
-      "code": "`#{(File.join(venv_bin_path, \"ansible\") or \"ansible\")} --version 2>/dev/null`",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Ansible::Runner",
-        "method": "self.ansible_version_raw"
-      },
-      "user_input": "File.join(venv_bin_path, \"ansible\")",
-      "confidence": "Medium",
-      "cwe_id": [
-        77
-      ],
-      "note": "This method is safe because it only uses hardcoded paths, which cannot be changed by user input."
-    },
-    {
       "warning_type": "Remote Code Execution",
       "warning_code": 25,
       "fingerprint": "cb27a60bfa5d987be8d0d56de1a4d49a11b358e225c6a594e5d41b03191d745d",

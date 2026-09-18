@@ -1,85 +1,99 @@
 module Ansible
   class Runner
+    # Async response backed by a Floe container runner.
+    # Implements the running?/stop/response/dump/load interface expected by
+    # AnsibleRunnerWorkflow's poll loop.
     class ResponseAsync
       include Vmdb::Logging
 
-      attr_reader :base_dir, :debug, :ident
+      attr_reader :runner_class, :runner_context, :base_dir, :debug
 
-      # Response object designed for holding full response from ansible-runner
-      #
-      # @param base_dir [String] Base directory containing Runner metadata (project, inventory, etc). ansible-runner
-      #        refers to it as 'private_data_dir'
-      # @param command_line [String] Command line of the ansible-runner run
-      # @param ident [String] An identifier that will be used when generating the artifacts directory and can be used to
-      #        uniquely identify a playbook run. We use unique base dir per run, so this identifier can be static for
-      #        most cases.
-      # @param debug [Boolean] whether or not to delete base_dir after run (for debugging)
-      def initialize(base_dir:, command_line: nil, ident: "result", debug: false)
-        @base_dir     = base_dir
-        @command_line = command_line
-        @ident        = ident
-        @debug        = debug
+      # @param runner_class [String] Fully-qualified class name of the Floe runner
+      #        (e.g. "Floe::ContainerRunner::Docker"). Stored as a string so the
+      #        object survives serialisation to the job context hash.
+      # @param runner_context [Hash] Opaque hash returned by Floe::Runner#run_async!
+      # @param base_dir [String] Path to the ansible-runner private_data_dir that was
+      #        volume-mounted into the container. Cleaned up after the run.
+      # @param debug [Boolean] When true, base_dir is NOT removed after the run
+      def initialize(runner_class:, runner_context:, base_dir:, debug: false)
+        @runner_class   = runner_class
+        @runner_context = runner_context
+        @base_dir       = base_dir
+        @debug          = debug
       end
 
-      # @return [Boolean] true if the ansible job is still running, false when it's finished
+      # @return [Boolean] true if the container is still running
       def running?
-        Ansible::Runner.raw_execute(:params => ["is-alive", base_dir, :json, {:ident => "result"}]).success?
+        runner.status!(runner_context)
+        runner.running?(runner_context)
       end
 
-      # Stops the running Ansible job
+      # Stops the running container and removes the base_dir.
       def stop
-        Ansible::Runner.raw_execute(:params => ["stop", base_dir, :json, {:ident => "result"}])
+        runner.cleanup(runner_context)
+        remove_base_dir
       end
 
-      # @return [Ansible::Runner::Response, NilClass] Response object with all details about the Ansible run, or nil
-      #         if the Ansible is still running
+      # @return [Ansible::Runner::Response, nil] Response when the container has
+      #         finished, nil if it is still running.
       def response
         return if running?
         return @response if @response
 
-        @response = Ansible::Runner::Response.new(:base_dir => base_dir, :ident => ident, :debug => debug)
-        @response.cleanup_filesystem!
+        stdout      = runner.output(runner_context).to_s
+        return_code = runner.success?(runner_context) ? 0 : 1
 
-        @response
+        runner.cleanup(runner_context)
+        remove_base_dir
+
+        @response = Ansible::Runner::Response.new(
+          :return_code => return_code,
+          :stdout      => stdout
+        )
       end
 
-      # Dumps the Ansible::Runner::ResponseAsync into the hash
+      # Blocks until the container finishes, then returns the Response.
       #
-      # @return [Hash] Dumped Ansible::Runner::ResponseAsync object
+      # @param poll_interval [Numeric] seconds to sleep between status checks
+      # @return [Ansible::Runner::Response]
+      def wait(poll_interval: 0.5)
+        sleep(poll_interval) while running?
+        response
+      end
+
+      # Serialises this object to a plain hash so it can be stored in the job
+      # context and later reloaded via .load.
+      #
+      # @return [Hash]
       def dump
         {
-          :base_dir => base_dir,
-          :debug    => debug,
-          :ident    => ident
+          :runner_class   => runner_class,
+          :runner_context => runner_context,
+          :base_dir       => base_dir.to_s,
+          :debug          => debug
         }
       end
 
-      # Waits for the async process to complete or hit the given timeout
+      # Recreates a ResponseAsync from a previously dumped hash.
       #
-      # @param timeout [Integer, ActiveSupport::Duration] Number of seconds to wait for the process to complete
-      # @return [Ansible::Runner::Response] Response object with all details about the Ansible run
-      def wait(timeout)
-        result = nil
-        # Poll every 0.1s until complete
-        (0.1..timeout).step(0.1) do
-          result = response
-          result ? break : sleep(0.1)
-        end
-        # If the process is still running, then stop it
-        if result.nil?
-          stop
-          result = response
-        end
-        result
+      # @param hash [Hash] Value returned by #dump
+      # @return [Ansible::Runner::ResponseAsync]
+      def self.load(hash)
+        new(**hash.transform_keys(&:to_sym))
       end
 
-      # Creates the Ansible::Runner::ResponseAsync object from hash data
-      #
-      # @param hash [Hash] Dumped Ansible::Runner::ResponseAsync object
-      # @return [Ansible::Runner::ResponseAsync] Ansible::Runner::ResponseAsync Object created from hash data
-      def self.load(hash)
-        # Dump dumps a hash and load accepts a hash, so we must expand the hash to kwargs as new expects kwargs
-        new(**hash)
+      private
+
+      def runner
+        @runner ||= runner_class.constantize.new
+      end
+
+      def remove_base_dir
+        return if debug || base_dir.blank?
+
+        FileUtils.remove_entry(base_dir)
+      rescue => err
+        _log.warn("Failed to remove ansible runner base_dir #{base_dir}: #{err}")
       end
     end
   end

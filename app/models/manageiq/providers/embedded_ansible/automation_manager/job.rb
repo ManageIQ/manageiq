@@ -55,7 +55,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
   end
 
   def playbook_set_stats
-    raw_stdout_json.dig(-1, 'event_data', 'artifact_data')
+    Ansible::Runner::Response.parsed_stdout_to_stats(raw_stdout_json)
   end
 
   # Intend to be called by UI to display stdout. The stdout is stored in MiqTask#task_results or #message if error
@@ -116,11 +116,9 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
   end
 
   def update_plays
-    plays = raw_stdout_json.select do |playbook_event|
-      playbook_event["event"] == "playbook_on_play_start"
-    end.collect do |play|
+    plays = Ansible::Runner::Response.parsed_stdout_to_plays(raw_stdout_json).collect do |play|
       {
-        :name              => play["event_data"]["play"],
+        :name              => play.dig("event_data", "play"),
         :resource_status   => play["failed"] ? 'failed' : 'successful',
         :start_time        => play["created"],
         :ems_ref           => play["uuid"],
