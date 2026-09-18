@@ -242,7 +242,7 @@ group :vmware, :manageiq_default do
 end
 
 group :workflows, :manageiq_default do
-  manageiq_plugin "manageiq-providers-workflows"
+  gem "manageiq-providers-workflows", :git => "https://github.com/Fryguy/manageiq-providers-workflows", :branch => "bump_floe"
 end
 
 ### end of provider bundler groups
