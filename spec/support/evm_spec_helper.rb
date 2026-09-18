@@ -45,12 +45,12 @@ module EvmSpecHelper
     clear_instance_variable(MiqProductFeature, :@obj_cache) if defined?(MiqProductFeature)
     clear_instance_variable(MiqQueue, :@messaging_client) if defined?(MiqQueue)
     clear_instance_variable(BottleneckEvent, :@event_definitions) if defined?(BottleneckEvent)
-    clear_instance_variable(MiqWorker, :@rails_worker) if defined?(MiqWorker)
     clear_instance_variable(Tenant, :@root_tenant) if defined?(Tenant)
 
     EventStream.clear_event_groups_cache if defined?(EventStream)
 
     MiqWorker.my_guid = nil
+    clear_instance_variable(MiqWorkerType, :@classes_for_seed) if defined?(MiqWorkerType)
 
     # Clear the thread local variable to prevent test contamination
     User.current_user = nil if defined?(User) && User.respond_to?(:current_user=)

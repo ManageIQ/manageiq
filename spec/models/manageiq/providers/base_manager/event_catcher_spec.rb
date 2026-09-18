@@ -7,6 +7,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::EventCatcher do
       end
     end)
     stub_const("ManageIQ::Providers::TestCloud::CloudManager::EventCatcher", Class.new(described_class))
+    stub_const("ManageIQ::Providers::TestCloud::CloudManager::EventCatcher::Runner", Class.new(ManageIQ::Providers::BaseManager::EventCatcher::Runner))
     ManageIQ::Providers::TestCloud::CloudManager::EventCatcher
   end
 
@@ -18,18 +19,18 @@ RSpec.describe ManageIQ::Providers::BaseManager::EventCatcher do
 
   describe ".rails_worker?" do
     it "defaults to true when the setting is absent" do
-      allow(described_class).to receive(:worker_settings).and_return({})
-      expect(described_class.rails_worker?).to be(true)
+      allow(test_catcher).to receive(:worker_settings).and_return({})
+      expect(test_catcher.rails_worker?).to be(true)
     end
 
     it "returns true when the setting is explicitly true" do
-      allow(described_class).to receive(:worker_settings).and_return(:rails_worker => true)
-      expect(described_class.rails_worker?).to be(true)
+      allow(test_catcher).to receive(:worker_settings).and_return(:rails_worker => true)
+      expect(test_catcher.rails_worker?).to be(true)
     end
 
     it "returns false when the setting is explicitly false" do
-      allow(described_class).to receive(:worker_settings).and_return(:rails_worker => false)
-      expect(described_class.rails_worker?).to be(false)
+      allow(test_catcher).to receive(:worker_settings).and_return(:rails_worker => false)
+      expect(test_catcher.rails_worker?).to be(false)
     end
   end
 end
