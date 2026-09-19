@@ -78,7 +78,12 @@ describe MiqPolicyMixin do
     end
 
     context "task handling of the action" do
-      before { TestModel.class_eval { def perform(*_args, **_kwargs); end } }
+      before do
+        TestModel.class_eval do
+          def perform(*_args, **_kwargs)
+          end
+        end
+      end
 
       it "runs the action and finishes the task" do
         expect(record).to receive(:perform).with("a", :b => 1).once
@@ -146,7 +151,10 @@ describe MiqPolicyMixin do
         $_miq_worker_current_msg = msg
         original = msg.miq_callback
         cb = nil
-        record.policy_prevent_with_task_handoff(:perform) { |c| cb = c; double("event") }
+        record.policy_prevent_with_task_handoff(:perform) do |c|
+          cb = c
+          double("event")
+        end
 
         expect(cb[:method_name]).to eq(:check_policy_prevent_callback)
         expect(msg.miq_callback).to eq(original)
