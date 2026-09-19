@@ -158,6 +158,224 @@ RSpec.describe Vm do
     end
   end
 
+  context "task tracking through check_policy_prevent" do
+    let(:vm_class) { ManageIQ::Providers::Vmware::InfraManager::Vm }
+    let(:raised_options) { [] }
+
+    def prevented_workspace(message, prevented: true)
+      event = double("event_stream", :attributes => {"full_data" => {:policy => {:prevented => prevented}}, "message" => message})
+      MiqAeEngine::MiqAeWorkspaceRuntime.new.tap do |ws|
+        allow(ws).to receive(:get_obj_from_path).with("/").and_return("event_stream" => event)
+      end
+    end
+
+    def stub_policy_event
+      allow(MiqEvent).to receive(:raise_evm_event) do |_target, _event, _inputs, options|
+        raised_options << options
+        double("event")
+      end
+    end
+
+    def automate_callback
+      cb = raised_options.last[:miq_callback]
+      [cb[:args], cb]
+    end
+
+    def run_callback(vm, workspace)
+      args, _cb = automate_callback
+      vm.check_policy_prevent_task_callback(*args, "ok", "msg", workspace)
+    end
+
+    before do
+      Zone.seed
+      EvmSpecHelper.local_miq_server
+      @host = FactoryBot.create(:host_vmware)
+      @vm = FactoryBot.create(:vm_vmware, :host => @host, :miq_group => FactoryBot.create(:miq_group))
+      FactoryBot.create(:miq_event_definition, :name => :request_vm_start)
+      User.super_admin || FactoryBot.create(:user_with_group, :userid => "admin")
+    end
+
+    after { $_miq_worker_current_msg = nil }
+
+    def queue_start
+      Vm.invoke_tasks_local(:task => "start", :invoke_by => :task, :ids => [@vm.id], :userid => "admin")
+      [MiqQueue.first, MiqTask.first]
+    end
+
+    it "keeps the task unfinished until the real work is done (power op)" do
+      msg, task = queue_start
+      expect(msg.class_name).to eq("VmOrTemplate")
+      expect(msg.method_name).to eq("start")
+      expect(msg.miq_task_id).to eq(task.id)
+      expect(msg.miq_callback).to eq(:class_name => "VmOrTemplate", :instance_id => @vm.id, :method_name => :powerops_callback, :args => [task.id])
+      stub_policy_event
+
+      $_miq_worker_current_msg = msg
+      msg.deliver_and_process
+
+      expect(task.reload.state).not_to eq("Finished")
+      args, cb = automate_callback
+      expect(cb[:method_name]).to eq(:check_policy_prevent_task_callback)
+      expect(args).to eq([task.id, :start_queue])
+
+      $_miq_worker_current_msg = nil
+      run_callback(@vm, prevented_workspace(nil, :prevented => false))
+
+      raw = MiqQueue.find_by(:method_name => "raw_start")
+      expect(raw.miq_task_id).to eq(task.id)
+      expect(raw.miq_callback).to include(:class_name => "MiqTask", :method_name => :queue_callback, :instance_id => task.id)
+      expect(task.reload.state).not_to eq("Finished")
+      expect(Thread.current[:policy_prevent_task]).to be_nil
+
+      allow_any_instance_of(vm_class).to receive(:raw_start).and_return("started")
+      raw.deliver_and_process
+      task.reload
+      expect(task.state).to eq("Finished")
+      expect(task.status).to eq("Ok")
+      expect(task.task_results).to eq("started")
+    end
+
+    it "does not persist a cleared callback when the message is retried" do
+      msg, _task = queue_start
+      original = msg.miq_callback
+      stub_policy_event
+
+      $_miq_worker_current_msg = msg
+      msg.deliver
+
+      expect(msg.changed).not_to include("miq_callback")
+      msg.unget
+      expect(MiqQueue.find(msg.id).miq_callback).to eq(original)
+    end
+
+    it "finishes the task with the policy message when prevented" do
+      msg, task = queue_start
+      stub_policy_event
+      $_miq_worker_current_msg = msg
+      msg.deliver_and_process
+      $_miq_worker_current_msg = nil
+
+      ws = prevented_workspace("Policy says no")
+      expect_any_instance_of(vm_class).not_to receive(:start_queue)
+      expect { run_callback(@vm, ws) }.not_to raise_error
+
+      expect(ws).to have_received(:get_obj_from_path).with("/")
+      task.reload
+      expect([task.state, task.status, task.message]).to eq(["Finished", "Error", "Policy says no"])
+      expect(MiqQueue.where(:method_name => "raw_start")).to be_empty
+    end
+
+    it "finishes the task with the policy message when prevented (via the queue callback)" do
+      msg, task = queue_start
+      stub_policy_event
+      $_miq_worker_current_msg = msg
+      msg.deliver_and_process
+      $_miq_worker_current_msg = nil
+
+      _args, cb = automate_callback
+      row = MiqQueue.put(:class_name => @vm.class.name, :instance_id => @vm.id, :method_name => "id", :miq_callback => cb)
+      ws = prevented_workspace("Policy says no")
+      row.delivered("ok", "msg", ws)
+
+      expect(ws).to have_received(:get_obj_from_path).with("/")
+      task.reload
+      expect([task.state, task.status, task.message]).to eq(["Finished", "Error", "Policy says no"])
+      expect(MiqQueue.where(:method_name => "raw_start")).to be_empty
+    end
+
+    it "finishes the task when a synchronous action returns" do
+      ems = FactoryBot.create(:ems_vmware)
+      vm = FactoryBot.create(:vm_vmware, :ext_management_system => ems, :host => @host, :miq_group => FactoryBot.create(:miq_group))
+      FactoryBot.create(:miq_event_definition, :name => :request_vm_shutdown_guest)
+      expect(vm.has_active_ems?).to be(true)
+
+      Vm.invoke_tasks_local(:task => "shutdown_guest", :invoke_by => :task, :ids => [vm.id], :userid => "admin")
+      msg = MiqQueue.first
+      task = MiqTask.first
+      stub_policy_event
+      $_miq_worker_current_msg = msg
+      msg.deliver_and_process
+      $_miq_worker_current_msg = nil
+
+      expect(MiqEvent).to have_received(:raise_evm_event)
+      expect(task.reload.state).not_to eq("Finished")
+
+      expect_any_instance_of(vm_class).to receive(:raw_shutdown_guest).once
+      run_callback(vm, prevented_workspace(nil, :prevented => false))
+
+      task.reload
+      expect([task.state, task.status]).to eq(%w[Finished Ok])
+    end
+
+    it "finishes the task when the queued raw message finishes (shape A)" do
+      Vm.invoke_tasks_local(:task => "create_snapshot", :name => "snap", :description => "d", :memory => false, :invoke_by => :task, :ids => [@vm.id], :userid => "admin")
+      msg = MiqQueue.first
+      task = MiqTask.first
+      FactoryBot.create(:miq_event_definition, :name => :request_vm_create_snapshot)
+      stub_policy_event
+      $_miq_worker_current_msg = msg
+      msg.deliver_and_process
+      $_miq_worker_current_msg = nil
+
+      expect(task.reload.state).not_to eq("Finished")
+      allow_any_instance_of(vm_class).to receive(:raw_create_snapshot)
+      run_callback(@vm, prevented_workspace(nil, :prevented => false))
+
+      raw = MiqQueue.find_by(:method_name => "raw_create_snapshot")
+      expect(raw.miq_task_id).to eq(task.id)
+      expect(raw.args).to eq(["snap", "d", false])
+      expect(task.reload.state).not_to eq("Finished")
+
+      expect_any_instance_of(vm_class).to receive(:raw_create_snapshot).once
+      raw.deliver_and_process
+      expect([task.reload.state, task.status]).to eq(%w[Finished Ok])
+    end
+
+    it "finishes the task with an error when the policy event is not queued (maintenance zone)" do
+      msg, task = queue_start
+      allow(Zone).to receive(:maintenance?).and_return(true)
+
+      $_miq_worker_current_msg = msg
+      msg.deliver_and_process
+
+      expect(MiqQueue.where(:class_name => "MiqAeEngine")).to be_empty
+      task.reload
+      expect([task.state, task.status]).to eq(%w[Finished Error])
+      expect(task.message).to include("not queued")
+      expect(msg.miq_callback).to be_blank
+    end
+
+    it "agrees with MiqQueue.put on whether the policy event is queued" do
+      allow_any_instance_of(MiqServer).to receive(:has_active_role?).and_call_original
+      allow_any_instance_of(MiqServer).to receive(:has_active_role?).with("automate").and_return(true)
+      zone = MiqServer.my_server.zone
+      msg, = queue_start
+      $_miq_worker_current_msg = msg
+
+      expect(@vm.send(:policy_event_queueable?)).to be(true)
+      MiqEvent.raise_evm_event(@vm, :request_vm_start, {}, {})
+      expect(MiqQueue.where(:class_name => "MiqAeEngine").count).to eq(1)
+
+      MiqQueue.where(:class_name => "MiqAeEngine").destroy_all
+      MiqRegion.my_region.update!(:maintenance_zone => zone)
+      expect(@vm.send(:policy_event_queueable?)).to be(false)
+      MiqEvent.raise_evm_event(@vm, :request_vm_start, {}, {})
+      expect(MiqQueue.where(:class_name => "MiqAeEngine").count).to eq(0)
+    end
+
+    it "queues the policy event in a maintenance zone when the automate role is not active (nil zone)" do
+      allow_any_instance_of(MiqServer).to receive(:has_active_role?).and_call_original
+      allow_any_instance_of(MiqServer).to receive(:has_active_role?).with("automate").and_return(false)
+      MiqRegion.my_region.update!(:maintenance_zone => MiqServer.my_server.zone)
+      msg, = queue_start
+      $_miq_worker_current_msg = msg
+
+      expect(@vm.send(:policy_event_queueable?)).to be(true)
+      MiqEvent.raise_evm_event(@vm, :request_vm_start, {}, {})
+      expect(MiqQueue.where(:class_name => "MiqAeEngine").count).to eq(1)
+    end
+  end
+
   context "#scan" do
     before do
       EvmSpecHelper.local_miq_server
