@@ -359,6 +359,18 @@ RSpec.describe Vm do
       MiqEvent.raise_evm_event(@vm, :request_vm_start, {}, {})
       expect(MiqQueue.where(:class_name => "MiqAeEngine").count).to eq(0)
     end
+
+    it "queues the policy event in a maintenance zone when the automate role is not active (nil zone)" do
+      allow_any_instance_of(MiqServer).to receive(:has_active_role?).and_call_original
+      allow_any_instance_of(MiqServer).to receive(:has_active_role?).with("automate").and_return(false)
+      MiqRegion.my_region.update!(:maintenance_zone => MiqServer.my_server.zone)
+      msg, = queue_start
+      $_miq_worker_current_msg = msg
+
+      expect(@vm.send(:policy_event_queueable?)).to be(true)
+      MiqEvent.raise_evm_event(@vm, :request_vm_start, {}, {})
+      expect(MiqQueue.where(:class_name => "MiqAeEngine").count).to eq(1)
+    end
   end
 
   context "#scan" do

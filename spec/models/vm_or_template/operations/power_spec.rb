@@ -55,6 +55,18 @@ RSpec.describe VmOrTemplate::Operations::Power do
       expect(MiqQueue.where(:method_name => "raw_start")).to be_empty
       expect(handoff).to include(:taken => false, :not_queued => true)
     end
+
+    it "finishes the task with an error from the callback when no message was created (maintenance zone)" do
+      vm
+      allow(Zone).to receive(:maintenance?).and_return(true)
+
+      vm.check_policy_prevent_task_callback(task.id, :start_queue, "ok", "msg", nil)
+
+      expect(MiqQueue.where(:method_name => "raw_start")).to be_empty
+      task.reload
+      expect([task.state, task.status, task.message]).to eq(["Finished", "Error", "queue message not created"])
+      expect(Thread.current[:policy_prevent_task]).to be_nil
+    end
   end
 
   context "stop_queue" do
