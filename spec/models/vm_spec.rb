@@ -204,6 +204,9 @@ RSpec.describe Vm do
 
     it "keeps the task unfinished until the real work is done (power op)" do
       msg, task = queue_start
+      expect(msg.class_name).to eq("VmOrTemplate")
+      expect(msg.method_name).to eq("start")
+      expect(msg.miq_task_id).to eq(task.id)
       expect(msg.miq_callback).to eq(:class_name => "VmOrTemplate", :instance_id => @vm.id, :method_name => :powerops_callback, :args => [task.id])
       stub_policy_event
 
