@@ -102,19 +102,144 @@ module MiqPolicyMixin
     }
   end
 
+  # Same as prevent_callback_settings, but the callback also finishes the MiqTask (task_id)
+  # that the in-flight queue message was tracking.
+  def prevent_task_callback_settings(task_id, *cb_method)
+    prevent_callback_settings(*cb_method).merge(:method_name => :check_policy_prevent_task_callback, :args => [task_id, *cb_method])
+  end
+
   def check_policy_prevent_callback(*action, _status, _message, result)
-    prevented = false
-    if result.kind_of?(MiqAeEngine::MiqAeWorkspaceRuntime)
-      event = result.get_obj_from_path("/")['event_stream']
-      data  = event.attributes["full_data"]
-      prevented = data.fetch_path(:policy, :prevented) if data
-    end
+    prevented, message = policy_prevention(result)
 
     if prevented
-      _log.info(event.attributes["message"])
+      _log.info(message)
     else
       kwargs = action.extract_options!
       send(*action, **kwargs)
+    end
+  end
+
+  def check_policy_prevent_task_callback(task_id, *action, _status, _message, result)
+    prevented, message = policy_prevention(result)
+    task = MiqTask.find_by(:id => task_id)
+
+    if prevented
+      _log.info(message)
+      task&.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_ERROR, message.presence || MiqTask::MESSAGE_TASK_COMPLETED_UNSUCCESSFULLY)
+      return
+    end
+
+    kwargs = action.extract_options!
+    return send(*action, **kwargs) if task.nil?
+
+    state = {:key => policy_prevent_task_key, :task_id => task_id, :taken => false, :not_queued => false}
+    Thread.current[:policy_prevent_task] = state
+    begin
+      send(*action, **kwargs)
+    rescue => err
+      task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_ERROR, err.message) unless state[:taken]
+      raise
+    else
+      unless state[:taken]
+        if state[:not_queued]
+          task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_ERROR, "queue message not created")
+        else
+          task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_OK, MiqTask::MESSAGE_TASK_COMPLETED_SUCCESSFULLY)
+        end
+      end
+    ensure
+      Thread.current[:policy_prevent_task] = nil
+    end
+  end
+
+  # Options that let a raw_* queue message finish the task handed over by check_policy_prevent_task_callback.
+  def policy_prevent_task_queue_options(queue_options = {})
+    state = Thread.current[:policy_prevent_task]
+    return {} if state.nil? || state[:taken] || state[:key] != policy_prevent_task_key
+    return {} if queue_options.key?(:miq_task_id) || queue_options.key?(:miq_callback)
+
+    {
+      :miq_task_id  => state[:task_id],
+      :miq_callback => {
+        :class_name  => MiqTask.name,
+        :instance_id => state[:task_id],
+        :method_name => :queue_callback,
+        :args        => ["Finished"]
+      }
+    }
+  end
+
+  def policy_prevent_task_taken!
+    Thread.current[:policy_prevent_task][:taken] = true
+  end
+
+  def policy_prevent_task_not_queued!
+    Thread.current[:policy_prevent_task][:not_queued] = true
+  end
+
+  # Raises the policy event via the block, which is passed the miq_callback to use for the automate job.
+  #
+  # When running inside a queue message that tracks a MiqTask, the task must not be finished by that message
+  # when the action only raised a policy event: the automate job's callback finishes it instead.
+  def policy_prevent_with_task_handoff(*cb_method)
+    task_id = policy_prevent_current_task_id
+    return yield(prevent_callback_settings(*cb_method)) if task_id.nil?
+
+    queued = policy_event_queueable?
+    event = yield(prevent_task_callback_settings(task_id, *cb_method))
+    return event unless event
+
+    unless queued
+      MiqTask.find_by(:id => task_id)&.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_ERROR, "Policy event not queued (zone in maintenance); action not run")
+    end
+
+    msg = policy_prevent_current_msg
+    msg.miq_callback = nil
+    msg.clear_attribute_changes([:miq_callback]) # so that MiqQueue#unget does not persist the cleared callback
+    event
+  end
+
+  private
+
+  def policy_prevention(result)
+    return [false, nil] unless result.kind_of?(MiqAeEngine::MiqAeWorkspaceRuntime)
+
+    event = result.get_obj_from_path("/")['event_stream']
+    data  = event.attributes["full_data"]
+    [data ? data.fetch_path(:policy, :prevented) : false, event.attributes["message"]]
+  end
+
+  def policy_prevent_current_msg
+    $_miq_worker_current_msg
+  end
+
+  def policy_prevent_task_key
+    [self.class.base_class.name, id]
+  end
+
+  # mirrors MiqAeEngine.deliver_queue and MiqQueue.put: no automate message is created in a maintenance zone
+  def policy_event_queueable?
+    zone = MiqServer.my_server.has_active_role?('automate') ? MiqServer.my_zone : nil
+    !Zone.maintenance?(zone)
+  end
+
+  # The task tracked by the queue message being processed, when that message is for this record
+  # and finishes the task through a callback (MiqTask#queue_callback or VmOrTemplate#powerops_callback).
+  def policy_prevent_current_task_id
+    msg = policy_prevent_current_msg
+    return if msg.nil? || msg.miq_task_id.blank? || msg.instance_id != id
+
+    klass = msg.class_name.to_s.safe_constantize
+    return unless klass && kind_of?(klass)
+
+    cb = msg.miq_callback
+    return if cb.blank?
+
+    case cb[:method_name].to_s
+    when "queue_callback"
+      msg.miq_task_id if cb[:class_name] == MiqTask.name && cb[:instance_id] == msg.miq_task_id
+    when "powerops_callback"
+      msg.miq_task_id if cb[:instance_id] == id && cb[:args]&.first == msg.miq_task_id
     end
   end
 

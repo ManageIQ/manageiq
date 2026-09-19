@@ -391,7 +391,12 @@ class VmOrTemplate < ApplicationRecord
 
   def run_command_via_queue(method_name, queue_options = {})
     queue_options[:method_name] = method_name
-    MiqQueue.put(command_queue_options(queue_options))
+    task_options = policy_prevent_task_queue_options(queue_options)
+    msg = MiqQueue.put(command_queue_options(queue_options.reverse_merge(task_options)))
+    if task_options.present?
+      msg ? policy_prevent_task_taken! : policy_prevent_task_not_queued!
+    end
+    msg
   end
 
   def make_retire_request(requester_id)
@@ -421,7 +426,11 @@ class VmOrTemplate < ApplicationRecord
   # cb_method:    the MiqQueue callback method along with the parameters that is called
   #               when automate process is done and the event is not prevented to proceed by policy
   def check_policy_prevent(policy_event, *cb_method)
-    enforce_policy(policy_event, {}, {:miq_callback => prevent_callback_settings(*cb_method)}) unless policy_event.nil?
+    return if policy_event.nil?
+
+    policy_prevent_with_task_handoff(*cb_method) do |miq_callback|
+      enforce_policy(policy_event, {}, {:miq_callback => miq_callback})
+    end
   end
 
   def enforce_policy(event, inputs = {}, options = {})
