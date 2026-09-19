@@ -98,6 +98,20 @@ describe MiqPolicyMixin do
         expect(Thread.current[:policy_prevent_task]).to be_nil
       end
 
+      it "leaves the task to the queued message and re-raises when the action raises after taking the task" do
+        allow(record).to receive(:perform) do
+          record.policy_prevent_task_taken!
+          raise "boom"
+        end
+        expect do
+          record.check_policy_prevent_task_callback(task.id, :perform, "ok", "msg", prevented_workspace(nil, :prevented => false))
+        end.to raise_error("boom")
+
+        expect(task.reload.state).not_to eq("Finished")
+        expect(task.message).not_to eq("boom")
+        expect(Thread.current[:policy_prevent_task]).to be_nil
+      end
+
       it "runs the action when the task is gone" do
         expect(record).to receive(:perform).once
         record.check_policy_prevent_task_callback(-1, :perform, "ok", "msg", prevented_workspace(nil, :prevented => false))
