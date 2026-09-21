@@ -46,7 +46,7 @@ class MiqWorker < ApplicationRecord
   end
 
   class << self
-    attr_writer :workers, :rails_worker
+    attr_writer :workers
   end
 
   def self.bundler_groups
@@ -64,14 +64,6 @@ class MiqWorker < ApplicationRecord
 
     workers_configured_count
   end
-
-  def self.rails_worker?
-    return @rails_worker.call if @rails_worker.kind_of?(Proc)
-    return @rails_worker unless @rails_worker.nil?
-
-    true
-  end
-  delegate :rails_worker?, :to => :class
 
   def self.scalable?
     maximum_workers_count.nil? || maximum_workers_count > 1
@@ -93,10 +85,20 @@ class MiqWorker < ApplicationRecord
     leaf_subclasses | descendants.select { |d| d.try(:acts_as_sti_leaf_class?) }
   end
 
-  class_attribute :default_queue_name, :required_roles, :maximum_workers_count, :include_stopping_workers_on_synchronize, :worker_settings_paths
+  class_attribute :default_queue_name, :required_roles, :maximum_workers_count, :include_stopping_workers_on_synchronize, :worker_settings_paths, :rails_worker
   self.include_stopping_workers_on_synchronize = false
   self.required_roles = []
   self.worker_settings_paths = []
+  self.rails_worker = true
+
+  def self.rails_worker?
+    worker = rails_worker
+    return instance_exec(&worker) if worker.kind_of?(Proc)
+    return worker unless worker.nil?
+
+    true
+  end
+  delegate :rails_worker?, :to => :class
 
   def self.server_scope
     return current_scope if current_scope && current_scope.where_values_hash.include?('miq_server_id')

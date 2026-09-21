@@ -136,14 +136,16 @@ RSpec.describe MiqWorker do
       expect(described_class.rails_worker?).to be_truthy
     end
 
-    it "can be set to false" do
-      described_class.rails_worker = false
-      expect(described_class.rails_worker?).to be_falsey
+    it "can be set to false on a subclass" do
+      subclass = Class.new(described_class)
+      subclass.rails_worker = false
+      expect(subclass.rails_worker?).to be_falsey
     end
 
-    it "can be set to a lambda" do
-      described_class.rails_worker = -> { false }
-      expect(described_class.rails_worker?).to be_falsey
+    it "can be set to a lambda on a subclass" do
+      subclass = Class.new(described_class)
+      subclass.rails_worker = -> { false }
+      expect(subclass.rails_worker?).to be_falsey
     end
   end
 
