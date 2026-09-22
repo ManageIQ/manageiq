@@ -210,7 +210,7 @@ module Ansible
         command_line_hash[:become] = nil if become_enabled
         command_line_hash.merge!(cred_command_line)
 
-        env_vars_hash   = env_vars.merge(cred_env_vars)
+        env_vars_hash   = {"ANSIBLE_FORCE_COLOR" => "true"}.merge(env_vars).merge(cred_env_vars)
         extra_vars_hash = extra_vars.merge(cred_extra_vars)
 
         create_hosts_file(base_dir, hosts)

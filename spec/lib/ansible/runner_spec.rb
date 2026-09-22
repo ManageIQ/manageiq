@@ -49,7 +49,7 @@ RSpec.describe Ansible::Runner do
     it "calls run_async! and writes the required files" do
       expect(docker_runner).to receive(:run_async!) do |resource, env, _secrets, _context, volumes:, command:|
         expect(resource).to eq("docker://#{ee_image}")
-        expect(env).to match(a_hash_including(env_vars))
+        expect(env).to match(a_hash_including("ANSIBLE_FORCE_COLOR" => "true", **env_vars))
         expect(command).to eq(["sh", "-c", "ansible-runner run /runner --ident result --json --playbook playbook.yml"])
 
         vol = volumes.first

@@ -60,7 +60,9 @@ RSpec.describe Ansible::Runner do
     expect(response.stats).to eq("custom_stat_var" => "stat_value")
   end
 
-  def expect_ansible_runner_success(response)
-    expect(response.return_code).to eq(0), "ansible-runner failed with:\n====== STDOUT ======\n#{response.human_stdout}"
+  def expect_ansible_runner_success(response, debug: false)
+    stdout = "====== STDOUT ======\n#{response.human_stdout}"
+    puts stdout if debug # rubocop:disable Rails/Output
+    expect(response.return_code).to eq(0), "ansible-runner failed with:\n#{stdout}"
   end
 end
