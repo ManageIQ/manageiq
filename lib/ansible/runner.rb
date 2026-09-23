@@ -308,13 +308,6 @@ module Ansible
       end
 
       # Resolves and memoizes the Floe container runner class for this deployment.
-      # The result is cached for the lifetime of the process since the runtime
-      # environment does not change.
-      #
-      # - Kubernetes (podified): Floe::ContainerRunner::Kubernetes
-      # - Appliance / container: Floe::ContainerRunner::Podman when available
-      # - Appliance / container: Floe::ContainerRunner::Docker when available
-      # - nil when no supported runtime is detected
       #
       # @return [Class, nil]
       def container_runner_class
@@ -323,9 +316,9 @@ module Ansible
 
           if MiqEnvironment::Command.is_podified?
             Floe::ContainerRunner::Kubernetes
-          elsif system("which podman >/dev/null 2>&1")
+          elsif MiqEnvironment::Command.is_appliance? || MiqEnvironment::Command.supports_command?("podman")
             Floe::ContainerRunner::Podman
-          elsif system("which docker >/dev/null 2>&1")
+          elsif MiqEnvironment::Command.supports_command?("docker")
             Floe::ContainerRunner::Docker
           end
         end

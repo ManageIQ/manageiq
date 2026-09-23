@@ -271,29 +271,33 @@ RSpec.describe Ansible::Runner do
 
     it "returns Floe::ContainerRunner::Podman when podman is available" do
       allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(false)
-      allow(described_class).to receive(:system).with("which podman >/dev/null 2>&1").and_return(true)
+      allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
+      allow(MiqEnvironment::Command).to receive(:supports_command?).with("podman").and_return(true)
       expect(described_class.send(:container_runner_class)).to eq(Floe::ContainerRunner::Podman)
     end
 
     it "returns Floe::ContainerRunner::Docker when only docker is available" do
       allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(false)
-      allow(described_class).to receive(:system).with("which podman >/dev/null 2>&1").and_return(false)
-      allow(described_class).to receive(:system).with("which docker >/dev/null 2>&1").and_return(true)
+      allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
+      allow(MiqEnvironment::Command).to receive(:supports_command?).with("podman").and_return(false)
+      allow(MiqEnvironment::Command).to receive(:supports_command?).with("docker").and_return(true)
       expect(described_class.send(:container_runner_class)).to eq(Floe::ContainerRunner::Docker)
     end
 
     it "returns nil when no runtime is available" do
       allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(false)
-      allow(described_class).to receive(:system).with("which podman >/dev/null 2>&1").and_return(false)
-      allow(described_class).to receive(:system).with("which docker >/dev/null 2>&1").and_return(false)
+      allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
+      allow(MiqEnvironment::Command).to receive(:supports_command?).with("podman").and_return(false)
+      allow(MiqEnvironment::Command).to receive(:supports_command?).with("docker").and_return(false)
       expect(described_class.send(:container_runner_class)).to be_nil
     end
 
     it "memoizes the result" do
       allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(false)
-      allow(described_class).to receive(:system).with("which podman >/dev/null 2>&1").and_return(true)
+      allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
+      allow(MiqEnvironment::Command).to receive(:supports_command?).with("podman").and_return(true)
       2.times { described_class.send(:container_runner_class) }
-      expect(described_class).to have_received(:system).once
+      expect(MiqEnvironment::Command).to have_received(:supports_command?).once
     end
   end
 
