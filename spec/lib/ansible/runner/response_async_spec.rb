@@ -127,7 +127,7 @@ RSpec.describe Ansible::Runner::ResponseAsync do
       dumped   = response_async.dump
       reloaded = described_class.load(dumped)
 
-      expect(reloaded.runner_class).to   eq(runner_class)
+      expect(reloaded.runner_class).to   eq(Floe::ContainerRunner::Docker)
       expect(reloaded.runner_context).to eq(runner_context)
       expect(reloaded.base_dir.to_s).to  eq(base_dir.to_s)
       expect(reloaded.debug).to          eq(false)

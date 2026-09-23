@@ -8,15 +8,14 @@ module Ansible
 
       attr_reader :runner_class, :runner_context, :base_dir, :debug
 
-      # @param runner_class [String] Fully-qualified class name of the Floe runner
-      #        (e.g. "Floe::ContainerRunner::Docker"). Stored as a string so the
-      #        object survives serialisation to the job context hash.
+      # @param runner_class [Class, String] The Floe runner class, or its fully-qualified
+      #        name (e.g. "Floe::ContainerRunner::Docker").
       # @param runner_context [Hash] Opaque hash returned by Floe::Runner#run_async!
       # @param base_dir [String] Path to the ansible-runner private_data_dir that was
       #        volume-mounted into the container. Cleaned up after the run.
       # @param debug [Boolean] When true, base_dir is NOT removed after the run
       def initialize(runner_class:, runner_context:, base_dir:, debug: false)
-        @runner_class   = runner_class
+        @runner_class   = runner_class.is_a?(String) ? runner_class.constantize : runner_class
         @runner_context = runner_context
         @base_dir       = base_dir
         @debug          = debug
@@ -67,7 +66,7 @@ module Ansible
       # @return [Hash]
       def dump
         {
-          :runner_class   => runner_class,
+          :runner_class   => runner_class.name,
           :runner_context => runner_context,
           :base_dir       => base_dir.to_s,
           :debug          => debug
@@ -85,7 +84,7 @@ module Ansible
       private
 
       def runner
-        @runner ||= runner_class.constantize.new
+        @runner ||= runner_class.new
       end
 
       def remove_base_dir

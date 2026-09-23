@@ -239,7 +239,7 @@ module Ansible
         )
 
         response_async = Ansible::Runner::ResponseAsync.new(
-          :runner_class   => runner.class.name,
+          :runner_class   => runner.class,
           :runner_context => runner_context,
           :base_dir       => base_dir,
           :debug          => debug
