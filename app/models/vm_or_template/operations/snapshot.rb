@@ -6,6 +6,11 @@ module VmOrTemplate::Operations::Snapshot
       unsupported_reason(:snapshots) || unsupported_reason(:control)
     end
 
+    supports :rename_snapshot do
+      unsupported_reason(:snapshots) || unsupported_reason(:control) ||
+        (_("No snapshots available for this VM") if snapshots.size <= 0)
+    end
+
     supports :remove_snapshot do
       unsupported_reason(:snapshots) || unsupported_reason(:control) ||
         (_("No snapshots available for this VM") if snapshots.size <= 0)
@@ -15,6 +20,27 @@ module VmOrTemplate::Operations::Snapshot
     supports(:remove_snapshot_by_description) { unsupported_reason(:remove_snapshot) }
     supports(:revert_to_snapshot)             { unsupported_reason(:remove_snapshot) }
     supports_not :snapshots
+  end
+
+  def raw_rename_snapshot(_snapshot_id, _new_name)
+    raise NotImplementedError, _("must be implemented in a subclass")
+  end
+
+  def rename_snapshot(snapshot_id, new_name)
+    raw_rename_snapshot(snapshot_id, new_name)
+  end
+
+  def rename_snapshot_queue(snapshot_id, new_name, task_id = nil)
+    MiqQueue.put_unless_exists(
+      :class_name  => self.class.name,
+      :instance_id => id,
+      :method_name => 'rename_snapshot',
+      :args        => [snapshot_id, new_name],
+      :role        => 'ems_operations',
+      :queue_name  => queue_name_for_ems_operations,
+      :zone        => my_zone,
+      :task_id     => task_id
+    )
   end
 
   def raw_create_snapshot(_name, _desc = nil, _memory)
