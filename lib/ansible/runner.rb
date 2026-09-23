@@ -221,7 +221,7 @@ module Ansible
         image   = Settings.embedded_ansible.execution_environment_image
         runner  = build_container_runner
         command = build_runner_cmd(base_dir, playbook_or_role_args, verbosity)
-        volumes = [{:host_path => base_dir.to_s, :container_path => "/runner", :options => "z"}]
+        volumes = [{:host_path => base_dir.to_s, :container_path => "/runner", :options => runner_volume_options}]
 
         # Build a minimal Floe context carrying only the execution ID needed by
         # the Docker/Podman runner for container labelling.
@@ -331,6 +331,13 @@ module Ansible
         container_runner_class.new
       end
 
+      # Returns the volume mount options string for the ansible-runner base_dir.
+      #
+      # @return [String]
+      def runner_volume_options
+        container_runner_class == Floe::ContainerRunner::Podman ? "z,U" : "z"
+      end
+
       def credentials_info(credentials, base_dir)
         command_line = {}
         env_vars     = {}
@@ -375,13 +382,14 @@ module Ansible
       # Copies playbook/role content into the ansible-runner private data directory so
       # the container can find it under /runner/project or /runner/roles.
       #
-      # For a playbook run, the entire directory containing the playbook is copied into
-      # base_dir/project/, preserving sibling files (vars files, vault files, etc.).
+      # For a playbook run, the contents of the directory containing the playbook are
+      # copied into base_dir/project/, preserving sibling files (vars files, roles/, etc.).
       #
       # For a role run, the roles_path directory is copied into base_dir/roles/.
       def copy_content(base_dir, playbook_or_role_args)
         if (playbook = playbook_or_role_args[:playbook])
-          FileUtils.cp_r(File.dirname(playbook), File.join(base_dir, "project"))
+          project_dir = FileUtils.mkdir_p(File.join(base_dir, "project")).first
+          FileUtils.cp_r(Dir[File.join(File.dirname(playbook), "*")], project_dir)
         elsif (roles_path = playbook_or_role_args[:roles_path])
           FileUtils.cp_r(roles_path, File.join(base_dir, "roles"))
         end
