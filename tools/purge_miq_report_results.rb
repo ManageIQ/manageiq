@@ -31,8 +31,6 @@ def log(msg)
   puts msg
 end
 
-formatter = Class.new.extend(ActionView::Helpers::NumberHelper)
-
 msg = case purge_mode
       when :remaining then "last #{purge_value} results"
       when :date then      "[#{purge_value.iso8601}]"
@@ -40,7 +38,7 @@ msg = case purge_mode
 log("Executing in #{opts[:mode]} mode for report results older than #{msg}")
 
 count = MiqReportResult.purge_count(purge_mode, purge_value)
-log("Purge Count: #{formatter.number_with_delimiter(count)}")
+log("Purge Count: #{ActiveSupport::NumberHelper.number_to_delimited(count)}")
 puts
 
 exit if opts[:mode] != "purge"
