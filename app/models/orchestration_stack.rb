@@ -133,12 +133,12 @@ class OrchestrationStack < ApplicationRecord
     raw_update_stack(template, options)
   end
 
-  def raw_delete_stack
+  def raw_delete_stack(_template, _options = {})
     raise NotImplementedError, _("raw_delete_stack must be implemented in a subclass")
   end
 
-  def delete_stack
-    raw_delete_stack
+  def delete_stack(template, options)
+    raw_delete_stack(template, options)
   end
 
   def raw_status
