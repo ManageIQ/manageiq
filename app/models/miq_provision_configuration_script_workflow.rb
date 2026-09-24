@@ -17,4 +17,13 @@ class MiqProvisionConfigurationScriptWorkflow < MiqProvisionWorkflow
 
   def get_source_and_targets(_refresh = false)
   end
+
+  def make_request(request, values, requester = nil, auto_approve = false)
+    if request
+      request = MiqRequest.find(request) unless request.kind_of?(MiqRequest)
+      request.source_id = get_value(values[:src_configuration_script_id])
+    end
+
+    super
+  end
 end
