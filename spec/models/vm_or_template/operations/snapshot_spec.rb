@@ -8,6 +8,20 @@ RSpec.describe VmOrTemplate::Operations::Snapshot do
   let(:snapshots)  { FactoryBot.create_list(:snapshot, 2, :vm_or_template => vm) }
 
   context "queued methods" do
+    it 'queues as expected in rename_snapshot_queue' do
+      queue = vm.rename_snapshot_queue(snapshots.first.id, "new_name")
+
+      expect(queue).to have_attributes(
+        :class_name  => vm.class.name,
+        :method_name => 'rename_snapshot',
+        :role        => 'ems_operations',
+        :queue_name  => vm.queue_name_for_ems_operations,
+        :zone        => vm.my_zone,
+        :args        => [snapshots.first.id, "new_name"],
+        :task_id     => nil
+      )
+    end
+
     it 'queues as expected in remove_snapshot_queue' do
       queue = vm.remove_snapshot_queue(snapshots.first.id)
 
@@ -53,6 +67,24 @@ RSpec.describe VmOrTemplate::Operations::Snapshot do
         :zone        => ems.my_zone,
         :args        => []
       )
+    end
+  end
+
+  context "supports" do
+    let(:vm_no_snaps) { FactoryBot.create(:vm_vmware, :ext_management_system => ems) }
+
+    it "supports :rename_snapshot when snapshots exist" do
+      expect(vm.supports?(:rename_snapshot)).to be_truthy
+    end
+
+    it "does not support :rename_snapshot when no snapshots exist" do
+      expect(vm_no_snaps.supports?(:rename_snapshot)).to be_falsey
+    end
+  end
+
+  describe "#rename_snapshot" do
+    it "raises NotImplementedError for raw_rename_snapshot on base class" do
+      expect { vm.rename_snapshot(snapshots.first.id, "new_name") }.to raise_error(NotImplementedError)
     end
   end
 end
