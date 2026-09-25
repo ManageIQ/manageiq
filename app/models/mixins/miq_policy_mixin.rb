@@ -132,49 +132,38 @@ module MiqPolicyMixin
     kwargs = action.extract_options!
     return send(*action, **kwargs) if task.nil?
 
-    state = {:key => policy_prevent_task_key, :task_id => task_id, :taken => false, :not_queued => false}
-    Thread.current[:policy_prevent_task] = state
+    # A *_queue action that accepts miq_task_id hands the task to the message it queues,
+    # which finishes the task when that message is processed.
+    handoff = method(action.first).parameters.include?([:key, :miq_task_id])
+    kwargs[:miq_task_id] = task_id if handoff
+
     begin
-      send(*action, **kwargs)
+      result = send(*action, **kwargs)
     rescue => err
-      task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_ERROR, err.message) unless state[:taken]
+      task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_ERROR, err.message)
       raise
-    else
-      unless state[:taken]
-        if state[:not_queued]
-          task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_ERROR, "queue message not created")
-        else
-          task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_OK, MiqTask::MESSAGE_TASK_COMPLETED_SUCCESSFULLY)
-        end
-      end
-    ensure
-      Thread.current[:policy_prevent_task] = nil
+    end
+
+    if handoff && result.nil?
+      task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_ERROR, "queue message not created")
+    elsif !(handoff && result.kind_of?(MiqQueue) && result.miq_task_id == task_id)
+      task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_OK, MiqTask::MESSAGE_TASK_COMPLETED_SUCCESSFULLY)
     end
   end
 
-  # Options that let a raw_* queue message finish the task handed over by check_policy_prevent_task_callback.
-  def policy_prevent_task_queue_options(queue_options = {})
-    state = Thread.current[:policy_prevent_task]
-    return {} if state.nil? || state[:taken] || state[:key] != policy_prevent_task_key
-    return {} if queue_options.key?(:miq_task_id) || queue_options.key?(:miq_callback)
+  # Options that let a raw_* queue message finish the task (task_id) handed over by check_policy_prevent_task_callback.
+  def policy_prevent_task_queue_options(task_id)
+    return {} if task_id.nil?
 
     {
-      :miq_task_id  => state[:task_id],
+      :miq_task_id  => task_id,
       :miq_callback => {
         :class_name  => MiqTask.name,
-        :instance_id => state[:task_id],
+        :instance_id => task_id,
         :method_name => :queue_callback,
         :args        => ["Finished"]
       }
     }
-  end
-
-  def policy_prevent_task_taken!
-    Thread.current[:policy_prevent_task][:taken] = true
-  end
-
-  def policy_prevent_task_not_queued!
-    Thread.current[:policy_prevent_task][:not_queued] = true
   end
 
   # Raises the policy event via the block, which is passed the miq_callback to use for the automate job.
@@ -211,10 +200,6 @@ module MiqPolicyMixin
 
   def policy_prevent_current_msg
     $_miq_worker_current_msg
-  end
-
-  def policy_prevent_task_key
-    [self.class.base_class.name, id]
   end
 
   # mirrors MiqAeEngine.deliver_queue and MiqQueue.put: no automate message is created in a maintenance zone

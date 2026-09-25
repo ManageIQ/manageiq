@@ -21,8 +21,8 @@ module VmOrTemplate::Operations::Snapshot
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
-  def create_snapshot_queue(name, desc = nil, memory)
-    run_command_via_queue("raw_create_snapshot", :args => [name, desc, memory])
+  def create_snapshot_queue(name, desc = nil, memory, miq_task_id: nil)
+    run_command_via_queue("raw_create_snapshot", {:args => [name, desc, memory]}.merge(policy_prevent_task_queue_options(miq_task_id)))
   end
 
   def create_snapshot(name, desc = nil, memory = false)

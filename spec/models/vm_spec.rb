@@ -225,7 +225,6 @@ RSpec.describe Vm do
       expect(raw.miq_task_id).to eq(task.id)
       expect(raw.miq_callback).to include(:class_name => "MiqTask", :method_name => :queue_callback, :instance_id => task.id)
       expect(task.reload.state).not_to eq("Finished")
-      expect(Thread.current[:policy_prevent_task]).to be_nil
 
       allow_any_instance_of(vm_class).to receive(:raw_start).and_return("started")
       raw.deliver_and_process

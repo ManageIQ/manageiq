@@ -90,7 +90,6 @@ describe MiqPolicyMixin do
         record.check_policy_prevent_task_callback(task.id, :perform, "a", {:b => 1}, "ok", "msg", prevented_workspace(nil, :prevented => false))
 
         expect([task.reload.state, task.status]).to eq(%w[Finished Ok])
-        expect(Thread.current[:policy_prevent_task]).to be_nil
       end
 
       it "finishes the task with the error and re-raises when the action raises" do
@@ -100,21 +99,6 @@ describe MiqPolicyMixin do
         end.to raise_error("boom")
 
         expect([task.reload.state, task.status, task.message]).to eq(%w[Finished Error boom])
-        expect(Thread.current[:policy_prevent_task]).to be_nil
-      end
-
-      it "leaves the task to the queued message and re-raises when the action raises after taking the task" do
-        allow(record).to receive(:perform) do
-          record.policy_prevent_task_taken!
-          raise "boom"
-        end
-        expect do
-          record.check_policy_prevent_task_callback(task.id, :perform, "ok", "msg", prevented_workspace(nil, :prevented => false))
-        end.to raise_error("boom")
-
-        expect(task.reload.state).not_to eq("Finished")
-        expect(task.message).not_to eq("boom")
-        expect(Thread.current[:policy_prevent_task]).to be_nil
       end
 
       it "runs the action when the task is gone" do
@@ -122,15 +106,49 @@ describe MiqPolicyMixin do
         record.check_policy_prevent_task_callback(-1, :perform, "ok", "msg", prevented_workspace(nil, :prevented => false))
       end
 
-      it "hands the task to one queue message only" do
-        allow(record).to receive(:perform) do
-          expect(record.policy_prevent_task_queue_options).to include(:miq_task_id => task.id)
-          record.policy_prevent_task_taken!
-          expect(record.policy_prevent_task_queue_options).to eq({})
-        end
-        record.check_policy_prevent_task_callback(task.id, :perform, "ok", "msg", prevented_workspace(nil, :prevented => false))
+      context "when the action queues a message and accepts miq_task_id" do
+        before do
+          TestModel.class_eval do
+            attr_accessor :queue_nothing, :queue_options
 
-        expect(task.reload.state).not_to eq("Finished")
+            def perform_queue(miq_task_id: nil)
+              return if queue_nothing
+
+              MiqQueue.put({:class_name => self.class.name, :instance_id => id, :method_name => "perform"}
+                .merge(policy_prevent_task_queue_options(miq_task_id))
+                .merge(queue_options.to_h))
+            end
+          end
+        end
+
+        it "hands the task to the queued message" do
+          record.check_policy_prevent_task_callback(task.id, :perform_queue, "ok", "msg", prevented_workspace(nil, :prevented => false))
+
+          msg = MiqQueue.find_by(:method_name => "perform")
+          expect(msg.miq_task_id).to eq(task.id)
+          expect(msg.miq_callback).to include(:class_name => "MiqTask", :method_name => :queue_callback, :instance_id => task.id)
+          expect(task.reload.state).not_to eq("Finished")
+        end
+
+        it "finishes the task with an error when no message was created" do
+          record.queue_nothing = true
+          record.check_policy_prevent_task_callback(task.id, :perform_queue, "ok", "msg", prevented_workspace(nil, :prevented => false))
+
+          expect([task.reload.state, task.status, task.message]).to eq(["Finished", "Error", "queue message not created"])
+        end
+
+        it "finishes the task when the queued message tracks another task" do
+          record.queue_options = {:miq_task_id => 0, :miq_callback => nil}
+          record.check_policy_prevent_task_callback(task.id, :perform_queue, "ok", "msg", prevented_workspace(nil, :prevented => false))
+
+          expect(MiqQueue.find_by(:method_name => "perform").miq_task_id).to eq(0)
+          expect([task.reload.state, task.status]).to eq(%w[Finished Ok])
+        end
+      end
+
+      it "builds no task queue options without a task" do
+        expect(record.policy_prevent_task_queue_options(nil)).to eq({})
+        expect(record.policy_prevent_task_queue_options(task.id)).to include(:miq_task_id => task.id)
       end
 
       it "keeps the existing callback behavior when prevented" do

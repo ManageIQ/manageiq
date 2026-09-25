@@ -391,12 +391,7 @@ class VmOrTemplate < ApplicationRecord
 
   def run_command_via_queue(method_name, queue_options = {})
     queue_options[:method_name] = method_name
-    task_options = policy_prevent_task_queue_options(queue_options)
-    msg = MiqQueue.put(command_queue_options(queue_options.reverse_merge(task_options)))
-    if task_options.present?
-      msg ? policy_prevent_task_taken! : policy_prevent_task_not_queued!
-    end
-    msg
+    MiqQueue.put(command_queue_options(queue_options))
   end
 
   def make_retire_request(requester_id)
