@@ -39,6 +39,14 @@ class CustomButtonSet < ApplicationRecord
     end
   end
 
+  def assign_button(button_id)
+    with_lock do
+      self.set_data ||= {}
+      set_data[:button_order] = (set_data[:button_order] || []) | [button_id.to_i]
+      save!
+    end
+  end
+
   def self.find_all_by_class_name(class_name, class_id = nil)
     ordering = ->(o) { [o.set_data[:group_index].to_s, o.name] }
 
