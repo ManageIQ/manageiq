@@ -7,7 +7,7 @@ module Ansible
 
       def env_vars
         if auth.vault_password.present?
-          {"ANSIBLE_VAULT_PASSWORD_FILE" => vault_password_file}
+          {"ANSIBLE_VAULT_PASSWORD_FILE" => "/runner/env/vault_password"}
         else
           {}
         end
@@ -25,7 +25,7 @@ module Ansible
       end
 
       def vault_password_file
-        File.join(base_dir, "vault_password")
+        File.join(env_dir, "vault_password")
       end
     end
   end

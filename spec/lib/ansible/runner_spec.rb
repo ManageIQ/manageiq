@@ -3,183 +3,148 @@ RSpec.describe Ansible::Runner do
   let(:env_vars)   { {"ENV1" => "VAL1", "ENV2" => "VAL2"} }
   let(:extra_vars) { {"id" => uuid} }
   let(:tags)       { "tag" }
-  let(:result)     { AwesomeSpawn::CommandResult.new("ansible-runner", "output", "", 100, "0") }
+  let(:ee_image)   { "docker.io/manageiq/ansible-ee:latest" }
 
-  let(:venv_python_path)   { "/var/lib/manageiq/venv/python3.12/site-packages" }
-  let(:venv_bin_path)      { "/var/lib/manageiq/venv/bin" }
-  let(:python_path)        { "/usr/local/lib64/python3.12/site-packages:/usr/local/lib/python3.12/site-packages:/usr/lib64/python3.12/site-packages:/usr/lib/python3.12/site-packages" }
-  let(:system_path)        { "/opt/manageiq/manageiq-gemset/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin" }
-  let(:runner_python_path) { [venv_python_path, python_path].join(":") }
-  let(:runner_path)        { [venv_bin_path, system_path].join(":") }
-  let(:runner_env)         { {"PYTHONPATH" => runner_python_path, "PATH" => runner_path} }
+  let(:docker_runner) { instance_double(Floe::ContainerRunner::Docker) }
+  let(:runner_context) { {"container_ref" => "floe-ansible-ee-abc123", "container_state" => {"Running" => false, "ExitCode" => 0}} }
 
-  let(:ansible_version_raw) do
-    <<~EOF
-      ansible [core 2.18.6]
-        config file = None
-        configured module search path = ['/root/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
-        ansible python module location = /var/lib/manageiq/venv/lib64/python3.12/site-packages/ansible
-        ansible collection location = /root/.ansible/collections:/usr/share/ansible/collections
-        executable location = /var/lib/manageiq/venv/bin/ansible
-        python version = 3.12.10 (main, Apr  9 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-5)] (/var/lib/manageiq/venv/bin/python3.12)
-        jinja version = 3.1.6
-        libyaml = True
-    EOF
+  before do
+    stub_settings_merge(:embedded_ansible => {:execution_environment_image => ee_image})
+    # Stub both the build_container_runner factory and the direct .new call used
+    # by ResponseAsync#runner so both paths resolve to the same double.
+    allow(described_class).to receive(:build_container_runner).and_return(docker_runner)
+    allow(Floe::ContainerRunner::Docker).to receive(:new).and_return(docker_runner)
+    # Ensure docker_runner.class.name returns the real class name so that
+    # ResponseAsync can constantize it back to Floe::ContainerRunner::Docker.
+    allow(docker_runner).to receive(:class).and_return(Floe::ContainerRunner::Docker)
+    # Unit tests use fake paths that don't exist on disk; skip the actual copy.
+    allow(described_class).to receive(:copy_content)
   end
 
   describe ".available?" do
-    before { begin; described_class.remove_instance_variable(:@available); rescue NameError; end }
-    after  { begin; described_class.remove_instance_variable(:@available); rescue NameError; end }
-
-    it "when available" do
-      expect(described_class).to receive(:runner_env).and_return(runner_env)
-      expect(described_class).to receive(:system).with(runner_env, /^which ansible-runner/).and_return(true)
-
+    it "when execution_environment_image is set" do
+      allow(described_class).to receive(:container_runner_class).and_return(Floe::ContainerRunner::Docker)
       expect(described_class.available?).to be true
     end
 
-    it "when not available" do
-      expect(described_class).to receive(:runner_env).and_return(runner_env)
-      expect(described_class).to receive(:system).with(runner_env, /^which ansible-runner/).and_return(false)
+    it "when execution_environment_image is blank" do
+      stub_settings_merge(:embedded_ansible => {:execution_environment_image => ""})
+      expect(described_class.available?).to be false
+    end
 
+    it "when no container runtime is available" do
+      allow(described_class).to receive(:container_runner_class).and_return(nil)
       expect(described_class.available?).to be false
     end
   end
 
   describe ".run" do
-    let(:playbook) { "/path/to/my/playbook" }
-    before do
-      allow(described_class).to receive(:runner_env).and_return(runner_env)
+    let(:playbook) { "/path/to/my/playbook.yml" }
 
-      allow(described_class).to receive(:wait_for).and_yield
+    before do
       allow(File).to receive(:exist?).and_call_original
       allow(File).to receive(:exist?).with(playbook).and_return(true)
     end
 
-    it "calls run and writes the required files" do
-      expect(AwesomeSpawn).to receive(:run) do |command, options|
-        expect(command).to eq("ansible-runner")
-        expect(options[:env]).to match a_hash_including(env_vars)
+    it "calls run_async! and writes the required files" do
+      expect(docker_runner).to receive(:run_async!) do |resource, env, _secrets, _context, volumes:, command:|
+        expect(resource).to eq("docker://#{ee_image}")
+        expect(env).to match(a_hash_including("ANSIBLE_FORCE_COLOR" => "true", **env_vars))
+        expect(command).to eq(["sh", "-c", "ansible-runner run /runner --ident result --json --playbook playbook.yml"])
 
-        method, dir, json, args = options[:params]
+        vol = volumes.first
+        expect(vol[:container_path]).to eq("/runner")
 
-        expect(method).to eq("run")
-        expect(json).to   eq(:json)
-        expect(args).to   eq(:ident => "result", :playbook => "playbook", :project_dir => "/path/to/my")
-
-        hosts = File.read(File.join(dir, "inventory", "hosts"))
+        base_dir = vol[:host_path]
+        hosts    = File.read(File.join(base_dir, "inventory", "hosts"))
         expect(hosts).to eq("localhost")
 
-        extravars = JSON.parse(File.read(File.join(dir, "env", "extravars")))
+        extravars = JSON.parse(File.read(File.join(base_dir, "env", "extravars")))
         expect(extravars).to eq("id" => uuid, "ansible_connection" => "local")
 
-        expect(File.exist?(File.join(dir, "env", "cmdline"))).to be_falsey
-      end.and_return(result)
+        expect(File.exist?(File.join(base_dir, "env", "cmdline"))).to be_falsey
 
-      expect_galaxy_roles_fetched
+        runner_context
+      end
+
+      expect(docker_runner).to receive(:status!).with(runner_context).at_least(:once)
+      expect(docker_runner).to receive(:running?).with(runner_context).at_least(:once).and_return(false)
+      expect(docker_runner).to receive(:output).with(runner_context).and_return("")
+      expect(docker_runner).to receive(:success?).with(runner_context).and_return(true)
+      expect(docker_runner).to receive(:cleanup).with(runner_context)
 
       described_class.run(env_vars, extra_vars, playbook)
     end
 
-    it "calls launch with expected tag" do
-      expect(AwesomeSpawn).to receive(:run) do |command, options|
-        expect(command).to eq("ansible-runner")
-        expect(options[:env]).to match a_hash_including(env_vars)
-
-        method, dir, json, args = options[:params]
-
-        expect(method).to eq("run")
-        expect(json).to   eq(:json)
-        expect(args).to   eq(:ident => "result", :playbook => "playbook", :project_dir => "/path/to/my")
-
-        hosts = File.read(File.join(dir, "inventory", "hosts"))
-        expect(hosts).to eq("localhost")
-
-        extravars = JSON.parse(File.read(File.join(dir, "env", "extravars")))
-        expect(extravars).to eq("id" => uuid, "ansible_connection" => "local")
-
-        cmdline = File.read(File.join(dir, "env", "cmdline"))
+    it "calls run with expected tag" do
+      expect(docker_runner).to receive(:run_async!) do |_resource, _env, _secrets, _context, volumes:, **|
+        base_dir = volumes.first[:host_path]
+        cmdline  = File.read(File.join(base_dir, "env", "cmdline"))
         expect(cmdline).to eq("--tags #{tags}")
-      end.and_return(result)
+        runner_context
+      end
 
-      expect_galaxy_roles_fetched
+      expect(docker_runner).to receive(:status!).with(runner_context).at_least(:once)
+      expect(docker_runner).to receive(:running?).with(runner_context).at_least(:once).and_return(false)
+      expect(docker_runner).to receive(:output).with(runner_context).and_return("")
+      expect(docker_runner).to receive(:success?).with(runner_context).and_return(true)
+      expect(docker_runner).to receive(:cleanup).with(runner_context)
 
       described_class.run(env_vars, extra_vars, playbook, :tags => tags)
     end
 
-    it "calls run with the correct verbosity (and triggers debug mode)" do
-      expect(AwesomeSpawn).to receive(:run) do |command, options|
-        expect(command).to eq("ansible-runner")
+    it "clamps verbosity at 5 flags in the container command" do
+      expect(docker_runner).to receive(:run_async!) do |_resource, _env, _secrets, _context, command:, **|
+        expect(command.last).to include("-vvvvv")
+        expect(command.last).not_to include("-vvvvvv")
+        runner_context
+      end
 
-        _method, _dir, _json, args = options[:params]
-        expect(args).to eq(:ident => "result", :playbook => "playbook", :project_dir => "/path/to/my", "-vvvvv" => nil)
-      end.and_return(result)
+      expect(docker_runner).to receive(:status!).with(runner_context).at_least(:once)
+      expect(docker_runner).to receive(:running?).with(runner_context).at_least(:once).and_return(false)
+      expect(docker_runner).to receive(:output).with(runner_context).and_return("")
+      expect(docker_runner).to receive(:success?).with(runner_context).and_return(true)
+      expect(docker_runner).to receive(:cleanup).with(runner_context)
 
-      response = described_class.run(env_vars, extra_vars, playbook, :verbosity => 6)
-      expect(response.debug).to eq(true)
+      described_class.run(env_vars, extra_vars, playbook, :verbosity => 6)
     end
 
     it "calls run with become options" do
-      expect(AwesomeSpawn).to receive(:run) do |command, options|
-        expect(command).to eq("ansible-runner")
-
-        _method, dir, _json, _args = options[:params]
-        cmdline = File.read(File.join(dir, "env", "cmdline"))
-
+      expect(docker_runner).to receive(:run_async!) do |_resource, _env, _secrets, _context, volumes:, **|
+        base_dir = volumes.first[:host_path]
+        cmdline  = File.read(File.join(base_dir, "env", "cmdline"))
         expect(cmdline).to eq("--become")
-      end.and_return(result)
+        runner_context
+      end
+
+      expect(docker_runner).to receive(:status!).with(runner_context).at_least(:once)
+      expect(docker_runner).to receive(:running?).with(runner_context).at_least(:once).and_return(false)
+      expect(docker_runner).to receive(:output).with(runner_context).and_return("")
+      expect(docker_runner).to receive(:success?).with(runner_context).and_return(true)
+      expect(docker_runner).to receive(:cleanup).with(runner_context)
 
       described_class.run(env_vars, extra_vars, playbook, :become_enabled => true)
-    end
-
-    context "without runner_env stubbing" do
-      before { clear_runner_env_cache }
-      after  { clear_runner_env_cache }
-
-      it "calls run with the correct runner environment" do
-        # Undo stubbing of runner_env in this particular test
-        expect(described_class).to receive(:runner_env).and_call_original
-
-        expect(described_class).to receive(:venv_python_path).and_return(venv_python_path)
-        expect(described_class).to receive(:venv_bin_path).and_return(venv_bin_path)
-        stub_const("ENV", "PATH" => system_path)
-        stub_ansible_raw
-
-        expect(AwesomeSpawn).to receive(:run) do |command, options|
-          expect(command).to eq("ansible-runner")
-          expect(options[:env]).to include({
-            "PYTHONPATH" => runner_python_path,
-            "PATH"       => runner_path,
-          })
-        end.and_return(result)
-
-        described_class.run(env_vars, extra_vars, playbook, :become_enabled => true)
-      end
     end
 
     context "with special characters" do
       let(:env_vars)   { {"ENV1" => "pa$%w0rd!'"} }
       let(:extra_vars) { {"name" => "john's server"} }
 
-      it "calls launch with expected arguments" do
-        expect(AwesomeSpawn).to receive(:run) do |command, options|
-          expect(command).to eq("ansible-runner")
-          expect(options[:env]).to match a_hash_including(env_vars)
+      it "passes through special character values correctly" do
+        expect(docker_runner).to receive(:run_async!) do |_resource, env, _secrets, _context, volumes:, **|
+          expect(env).to match(a_hash_including(env_vars))
 
-          method, dir, json, args = options[:params]
-
-          expect(method).to eq("run")
-          expect(json).to   eq(:json)
-          expect(args).to   eq(:ident => "result", :playbook => "playbook", :project_dir => "/path/to/my")
-
-          hosts = File.read(File.join(dir, "inventory", "hosts"))
-          expect(hosts).to eq("localhost")
-
-          extravars = JSON.parse(File.read(File.join(dir, "env", "extravars")))
+          base_dir  = volumes.first[:host_path]
+          extravars = JSON.parse(File.read(File.join(base_dir, "env", "extravars")))
           expect(extravars).to eq("name" => "john's server", "ansible_connection" => "local")
-        end.and_return(result)
+          runner_context
+        end
 
-        expect_galaxy_roles_fetched
+        expect(docker_runner).to receive(:status!).with(runner_context).at_least(:once)
+        expect(docker_runner).to receive(:running?).with(runner_context).at_least(:once).and_return(false)
+        expect(docker_runner).to receive(:output).with(runner_context).and_return("")
+        expect(docker_runner).to receive(:success?).with(runner_context).and_return(true)
+        expect(docker_runner).to receive(:cleanup).with(runner_context)
 
         described_class.run(env_vars, extra_vars, playbook)
       end
@@ -187,44 +152,26 @@ RSpec.describe Ansible::Runner do
   end
 
   describe ".run_async" do
-    let(:playbook) { "/path/to/my/playbook" }
-    before do
-      allow(described_class).to receive(:python_path).and_return(python_path)
+    let(:playbook) { "/path/to/my/playbook.yml" }
 
-      allow(described_class).to receive(:wait_for).and_yield
+    before do
       allow(File).to receive(:exist?).and_call_original
       allow(File).to receive(:exist?).with(playbook).and_return(true)
     end
 
-    it "calls ansible-runner with start" do
-      expect(AwesomeSpawn).to receive(:run) do |command, options|
-        expect(command).to eq("ansible-runner")
-        expect(options[:env]).to match a_hash_including(env_vars)
+    it "returns a ResponseAsync without waiting" do
+      expect(docker_runner).to receive(:run_async!) do |_resource, _env, _secrets, _context, command:, **|
+        expect(command.last).to include("--playbook playbook.yml")
+        runner_context
+      end
 
-        method, dir, json, args = options[:params]
-
-        expect(method).to eq("start")
-        expect(json).to   eq(:json)
-        expect(args).to   eq(:ident => "result", :playbook => "playbook", :project_dir => "/path/to/my")
-
-        hosts = File.read(File.join(dir, "inventory", "hosts"))
-        expect(hosts).to eq("localhost")
-
-        extravars = JSON.parse(File.read(File.join(dir, "env", "extravars")))
-        expect(extravars).to eq("id" => uuid, "ansible_connection" => "local")
-
-        expect(File.exist?(File.join(dir, "env", "cmdline"))).to be_falsey
-      end.and_return(result)
-
-      expect_galaxy_roles_fetched
-
-      runner_result = described_class.run_async(env_vars, extra_vars, playbook)
-      expect(runner_result).kind_of?(Ansible::Runner::ResponseAsync)
+      result = described_class.run_async(env_vars, extra_vars, playbook)
+      expect(result).to be_a(Ansible::Runner::ResponseAsync)
     end
   end
 
   describe ".run_queue" do
-    let(:playbook) { "/path/to/my/playbook" }
+    let(:playbook) { "/path/to/my/playbook.yml" }
     let(:zone)     { FactoryBot.create(:zone) }
     let(:user)     { FactoryBot.create(:user) }
 
@@ -239,57 +186,40 @@ RSpec.describe Ansible::Runner do
   describe ".run_role" do
     let(:role_name) { "my-custom-role" }
     let(:role_path) { "/path/to/my/roles" }
-    before do
-      allow(described_class).to receive(:python_path).and_return(python_path)
 
-      allow(described_class).to receive(:wait_for).and_yield
+    before do
       allow(File).to receive(:exist?).and_call_original
       allow(File).to receive(:exist?).with(role_path).and_return(true)
     end
 
-    it "runs ansible-runner with the role" do
-      expect(AwesomeSpawn).to receive(:run) do |command, options|
-        expect(command).to eq("ansible-runner")
-        expect(options[:env]).to match a_hash_including(env_vars)
+    it "passes the role name and roles-path to the container command" do
+      expect(docker_runner).to receive(:run_async!) do |_resource, _env, _secrets, _context, command:, **|
+        expect(command.last).to include("--role #{role_name} --roles-path /runner/roles")
+        runner_context
+      end
 
-        method, dir, json, args = options[:params]
-
-        expect(method).to eq("run")
-        expect(json).to   eq(:json)
-        expect(args).to   eq(:ident => "result", :role => role_name, :roles_path => role_path, :role_skip_facts => nil)
-
-        hosts = File.read(File.join(dir, "inventory", "hosts"))
-        expect(hosts).to eq("localhost")
-
-        extravars = JSON.parse(File.read(File.join(dir, "env", "extravars")))
-        expect(extravars).to eq("id" => uuid, "ansible_connection" => "local")
-
-        expect(File.exist?(File.join(dir, "env", "cmdline"))).to be_falsey
-      end.and_return(result)
+      expect(docker_runner).to receive(:status!).with(runner_context).at_least(:once)
+      expect(docker_runner).to receive(:running?).with(runner_context).at_least(:once).and_return(false)
+      expect(docker_runner).to receive(:output).with(runner_context).and_return("")
+      expect(docker_runner).to receive(:success?).with(runner_context).and_return(true)
+      expect(docker_runner).to receive(:cleanup).with(runner_context)
 
       described_class.run_role(env_vars, extra_vars, role_name, :roles_path => role_path)
     end
 
-    it "runs ansible-runner with role and tag" do
-      expect(AwesomeSpawn).to receive(:run) do |command, options|
-        expect(command).to eq("ansible-runner")
-        expect(options[:env]).to match a_hash_including(env_vars)
-
-        method, dir, json, args = options[:params]
-
-        expect(method).to eq("run")
-        expect(json).to   eq(:json)
-        expect(args).to   eq(:ident => "result", :role => role_name, :roles_path => role_path, :role_skip_facts => nil)
-
-        hosts = File.read(File.join(dir, "inventory", "hosts"))
-        expect(hosts).to eq("localhost")
-
-        extravars = JSON.parse(File.read(File.join(dir, "env", "extravars")))
-        expect(extravars).to eq("id" => uuid, "ansible_connection" => "local")
-
-        cmdline = File.read(File.join(dir, "env", "cmdline"))
+    it "passes tags via cmdline file" do
+      expect(docker_runner).to receive(:run_async!) do |_resource, _env, _secrets, _context, volumes:, **|
+        base_dir = volumes.first[:host_path]
+        cmdline  = File.read(File.join(base_dir, "env", "cmdline"))
         expect(cmdline).to eq("--tags #{tags}")
-      end.and_return(result)
+        runner_context
+      end
+
+      expect(docker_runner).to receive(:status!).with(runner_context).at_least(:once)
+      expect(docker_runner).to receive(:running?).with(runner_context).at_least(:once).and_return(false)
+      expect(docker_runner).to receive(:output).with(runner_context).and_return("")
+      expect(docker_runner).to receive(:success?).with(runner_context).and_return(true)
+      expect(docker_runner).to receive(:cleanup).with(runner_context)
 
       described_class.run_role(env_vars, extra_vars, role_name, :roles_path => role_path, :tags => tags)
     end
@@ -298,35 +228,20 @@ RSpec.describe Ansible::Runner do
   describe ".run_role_async" do
     let(:role_name) { "my-custom-role" }
     let(:role_path) { "/path/to/my/roles" }
-    before do
-      allow(described_class).to receive(:python_path).and_return(python_path)
 
-      allow(described_class).to receive(:wait_for).and_yield
+    before do
       allow(File).to receive(:exist?).and_call_original
       allow(File).to receive(:exist?).with(role_path).and_return(true)
     end
 
-    it "runs ansible-runner with the role" do
-      expect(AwesomeSpawn).to receive(:run) do |command, options|
-        expect(command).to eq("ansible-runner")
-        expect(options[:env]).to match a_hash_including(env_vars)
+    it "returns a ResponseAsync" do
+      expect(docker_runner).to receive(:run_async!) do |_resource, _env, _secrets, _context, command:, **|
+        expect(command.last).to include("--role #{role_name}")
+        runner_context
+      end
 
-        method, dir, json, args = options[:params]
-
-        expect(method).to eq("start")
-        expect(json).to   eq(:json)
-        expect(args).to   eq(:ident => "result", :role => role_name, :roles_path => role_path, :role_skip_facts => nil)
-
-        hosts = File.read(File.join(dir, "inventory", "hosts"))
-        expect(hosts).to eq("localhost")
-
-        extravars = JSON.parse(File.read(File.join(dir, "env", "extravars")))
-        expect(extravars).to eq("id" => uuid, "ansible_connection" => "local")
-
-        expect(File.exist?(File.join(dir, "env", "cmdline"))).to be_falsey
-      end.and_return(result)
-
-      described_class.run_role_async(env_vars, extra_vars, role_name, :roles_path => role_path)
+      result = described_class.run_role_async(env_vars, extra_vars, role_name, :roles_path => role_path)
+      expect(result).to be_a(Ansible::Runner::ResponseAsync)
     end
   end
 
@@ -336,7 +251,7 @@ RSpec.describe Ansible::Runner do
     let(:zone)      { FactoryBot.create(:zone) }
     let(:user)      { FactoryBot.create(:user) }
 
-    it "queues Ansible::Runner.run in the right zone" do
+    it "queues Ansible::Runner.run_role in the right zone" do
       queue_args = {:zone => zone.name}
       described_class.run_role_queue(env_vars, extra_vars, role_name, user.name, queue_args, :roles_path => role_path)
 
@@ -345,126 +260,103 @@ RSpec.describe Ansible::Runner do
     end
   end
 
-  describe "#runner_env" do
-    before { clear_runner_env_cache }
-    after  { clear_runner_env_cache }
+  describe ".container_runner_class (private)" do
+    before { described_class.instance_variable_set(:@container_runner_class, nil) }
+    after  { described_class.instance_variable_set(:@container_runner_class, nil) }
 
-    describe "PYTHONPATH" do
-      it "with venv_python_path valid and ansible exists" do
-        expect(described_class).to receive(:venv_python_path).and_return(venv_python_path)
-        stub_ansible_raw
-
-        expect(described_class.runner_env["PYTHONPATH"]).to eq(runner_python_path)
-      end
-
-      it "with venv_python_path valid and ansible missing" do
-        expect(described_class).to receive(:venv_python_path).and_return(venv_python_path)
-        stub_ansible_raw(ansible_exists: false)
-
-        expect(described_class.runner_env["PYTHONPATH"]).to eq(venv_python_path)
-      end
-
-      it "with venv_python_path missing and ansible exists" do
-        expect(described_class).to receive(:venv_python_path).and_return(nil)
-        stub_ansible_raw
-
-        expect(described_class.runner_env["PYTHONPATH"]).to eq(python_path)
-      end
-
-      it "with venv_python_path missing and ansible_python_version missing" do
-        expect(described_class).to receive(:venv_python_path).and_return(nil)
-        stub_ansible_raw(ansible_exists: false)
-
-        expect(described_class.runner_env).to_not include("PYTHONPATH")
-      end
+    it "returns Floe::ContainerRunner::Kubernetes when podified" do
+      allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
+      expect(described_class.send(:container_runner_class)).to eq(Floe::ContainerRunner::Kubernetes)
     end
 
-    describe "PATH" do
-      it "with venv_bin_path valid and PATH valid" do
-        expect(described_class).to receive(:venv_bin_path).at_least(:once).and_return(venv_bin_path)
-        stub_const("ENV", "PATH" => system_path)
+    it "returns Floe::ContainerRunner::Podman when podman is available" do
+      allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(false)
+      allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
+      allow(MiqEnvironment::Command).to receive(:supports_command?).with("podman").and_return(true)
+      expect(described_class.send(:container_runner_class)).to eq(Floe::ContainerRunner::Podman)
+    end
 
-        expect(described_class.runner_env["PATH"]).to eq(runner_path)
-      end
+    it "returns Floe::ContainerRunner::Docker when only docker is available" do
+      allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(false)
+      allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
+      allow(MiqEnvironment::Command).to receive(:supports_command?).with("podman").and_return(false)
+      allow(MiqEnvironment::Command).to receive(:supports_command?).with("docker").and_return(true)
+      expect(described_class.send(:container_runner_class)).to eq(Floe::ContainerRunner::Docker)
+    end
 
-      it "with venv_bin_path valid and PATH missing" do
-        expect(described_class).to receive(:venv_bin_path).at_least(:once).and_return(venv_bin_path)
-        stub_const("ENV", {})
+    it "returns nil when no runtime is available" do
+      allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(false)
+      allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
+      allow(MiqEnvironment::Command).to receive(:supports_command?).with("podman").and_return(false)
+      allow(MiqEnvironment::Command).to receive(:supports_command?).with("docker").and_return(false)
+      expect(described_class.send(:container_runner_class)).to be_nil
+    end
 
-        expect(described_class.runner_env["PATH"]).to eq(venv_bin_path)
-      end
-
-      it "with venv_bin_path missing and PATH valid" do
-        expect(described_class).to receive(:venv_bin_path).at_least(:once).and_return(nil)
-        stub_const("ENV", "PATH" => system_path)
-
-        expect(described_class.runner_env["PATH"]).to eq(system_path)
-      end
-
-      it "with venv_bin_path missing and PATH missing" do
-        expect(described_class).to receive(:venv_bin_path).at_least(:once).and_return(nil)
-        stub_const("ENV", {})
-
-        expect(described_class.runner_env).to_not include("PATH")
-      end
+    it "memoizes the result" do
+      allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(false)
+      allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
+      allow(MiqEnvironment::Command).to receive(:supports_command?).with("podman").and_return(true)
+      2.times { described_class.send(:container_runner_class) }
+      expect(MiqEnvironment::Command).to have_received(:supports_command?).once
     end
   end
 
-  describe ".ansible_python_path (private)" do
-    it "with ansible_version_raw valid" do
-      expect(described_class).to receive(:ansible_version_raw).and_return(ansible_version_raw)
-      expect(described_class).to receive(:`).with(a_string_including("python3.12 -c")).and_return(python_path)
-
-      expect(described_class.send(:ansible_python_path)).to eq(python_path)
-    end
-
-    it "with ansible_version_raw missing" do
-      expect(described_class).to receive(:ansible_version_raw).and_return("")
-      expect(described_class).to_not receive(:`)
-
-      expect(described_class.send(:ansible_python_path)).to eq(nil)
-    end
-
-    it "with ansible_python_version hacked" do
-      expect(described_class).to receive(:ansible_python_version).and_return("-hacked")
-      expect(described_class).to_not receive(:`).with(a_string_including("python-hacked -c"))
-
-      expect { described_class.send(:ansible_python_path) }.to raise_error(RuntimeError, "python version is not a number: -hacked")
+  describe ".build_container_runner (private)" do
+    it "instantiates the memoized container_runner_class" do
+      allow(described_class).to receive(:build_container_runner).and_call_original
+      allow(described_class).to receive(:container_runner_class).and_return(Floe::ContainerRunner::Docker)
+      allow(Floe::ContainerRunner::Docker).to receive(:new).and_call_original
+      runner = described_class.send(:build_container_runner)
+      expect(runner).to be_a(Floe::ContainerRunner::Docker)
     end
   end
 
-  describe ".ansible_python_version (private)" do
-    it "when ansible is installed" do
-      expect(described_class).to receive(:`).with(a_string_including("ansible --version")).and_return(ansible_version_raw)
+  describe ".build_runner_cmd (private)" do
+    let(:base_dir) { Dir.mktmpdir("ansible-runner-cmd-spec") }
+    after { FileUtils.rm_rf(base_dir) }
 
-      expect(described_class.send(:ansible_python_version)).to eq("3.12")
+    it "builds playbook command" do
+      cmd = described_class.send(:build_runner_cmd, base_dir, {:playbook => "/path/to/my/playbook.yml"}, 0)
+      expect(cmd).to eq(["sh", "-c", "ansible-runner run /runner --ident result --json --playbook playbook.yml"])
     end
 
-    it "when ansible is not installed" do
-      expect(described_class).to receive(:`).with(a_string_including("ansible --version")).and_return("")
+    it "builds playbook command with roles/requirements.yml" do
+      roles_dir = FileUtils.mkdir_p(File.join(base_dir, "project", "roles")).first
+      File.write(File.join(roles_dir, "requirements.yml"), "---\n")
 
-      expect(described_class.send(:ansible_python_version)).to be_nil
+      cmd = described_class.send(:build_runner_cmd, base_dir, {:playbook => "/path/to/my/playbook.yml"}, 0)
+      expect(cmd).to eq(["sh", "-c", "ansible-galaxy install -r /runner/project/roles/requirements.yml -p /runner/project/roles && ansible-runner run /runner --ident result --json --playbook playbook.yml"])
     end
-  end
 
-  def expect_galaxy_roles_fetched
-    content_double = instance_double(Ansible::Content)
-    expect(Ansible::Content).to receive(:new).with("/path/to/my").and_return(content_double)
-    expect(content_double).to receive(:fetch_galaxy_roles)
-  end
+    it "builds playbook command with project requirements.yml" do
+      project_dir = FileUtils.mkdir_p(File.join(base_dir, "project")).first
+      File.write(File.join(project_dir, "requirements.yml"), "---\n")
 
-  def stub_ansible_raw(ansible_exists: true)
-    if ansible_exists
-      expect(described_class).to receive(:ansible_version_raw).and_return(ansible_version_raw)
-      expect(described_class).to receive(:python_path_raw).and_return(python_path)
-    else
-      expect(described_class).to receive(:ansible_version_raw).and_return("")
+      cmd = described_class.send(:build_runner_cmd, base_dir, {:playbook => "/path/to/my/playbook.yml"}, 0)
+      expect(cmd).to eq(["sh", "-c", "ansible-galaxy install -r /runner/project/requirements.yml -p /runner/project/roles && ansible-runner run /runner --ident result --json --playbook playbook.yml"])
     end
-  end
 
-  def clear_runner_env_cache
-    begin; described_class.remove_instance_variable(:@runner_env); rescue NameError; end
-    begin; described_class.remove_instance_variable(:@venv_python_path); rescue NameError; end
-    begin; described_class.remove_instance_variable(:@venv_bin_path); rescue NameError; end
+    it "builds role command" do
+      cmd = described_class.send(:build_runner_cmd, base_dir, {:role => "my-role", :roles_path => "/some/path", :role_skip_facts => true}, 0)
+      expect(cmd).to eq(["sh", "-c", "ansible-runner run /runner --ident result --json --role my-role --roles-path /runner/roles --role-skip-facts"])
+    end
+
+    it "builds role command with roles/requirements.yml" do
+      roles_dir = FileUtils.mkdir_p(File.join(base_dir, "roles")).first
+      File.write(File.join(roles_dir, "requirements.yml"), "---\n")
+
+      cmd = described_class.send(:build_runner_cmd, base_dir, {:role => "my-role", :roles_path => "/some/path", :role_skip_facts => true}, 0)
+      expect(cmd).to eq(["sh", "-c", "ansible-galaxy install -r /runner/roles/requirements.yml -p /runner/roles && ansible-runner run /runner --ident result --json --role my-role --roles-path /runner/roles --role-skip-facts"])
+    end
+
+    it "appends verbosity flags" do
+      cmd = described_class.send(:build_runner_cmd, base_dir, {:playbook => "/path/to/my/playbook.yml"}, 3)
+      expect(cmd.last).to include("-vvv")
+    end
+
+    it "clamps verbosity to 5 flags" do
+      cmd = described_class.send(:build_runner_cmd, base_dir, {:playbook => "/path/to/my/playbook.yml"}, 99)
+      expect(cmd.last).to include("-vvvvv")
+    end
   end
 end

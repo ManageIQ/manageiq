@@ -165,7 +165,13 @@ RSpec.describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
 
   context "#execute" do
     let(:state) { "execute" }
-    let(:response_async) { Ansible::Runner::ResponseAsync.new(:base_dir => "/path/to/results") }
+    let(:response_async) do
+      Ansible::Runner::ResponseAsync.new(
+        :runner_class   => "Floe::ContainerRunner::Docker",
+        :runner_context => {"container_ref" => "floe-ansible-ee-abc123"},
+        :base_dir       => "/path/to/results"
+      )
+    end
 
     it "forwards the options to Ansible::Runner parameters" do
       runner_options = [
@@ -181,14 +187,14 @@ RSpec.describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
         )
       ]
 
-      expect(Ansible::Runner).to receive(:run_via_cli).with(*runner_options).and_return(response_async)
+      expect(Ansible::Runner).to receive(:run_via_container).with(*runner_options).and_return(response_async)
       expect(job).to receive(:queue_signal).with(:poll_runner, :deliver_on => nil)
 
       job.signal(:execute)
     end
 
     it "ansible-runner succeeds" do
-      expect(Ansible::Runner).to receive(:run_via_cli).and_return(response_async)
+      expect(Ansible::Runner).to receive(:run_via_container).and_return(response_async)
       expect(job).to receive(:queue_signal).with(:poll_runner, :deliver_on => nil)
 
       job.signal(:execute)
@@ -197,7 +203,7 @@ RSpec.describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
     end
 
     it "ansible-runner fails" do
-      expect(Ansible::Runner).to receive(:run_via_cli).and_return(nil)
+      expect(Ansible::Runner).to receive(:run_via_container).and_return(nil)
       expect(job).to receive(:queue_signal).with(:abort, "Failed to run ansible playbook", "error", :deliver_on => nil)
 
       job.signal(:execute)
@@ -205,8 +211,14 @@ RSpec.describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
   end
 
   context "#poll_runner" do
-    let(:state)          { "running" }
-    let(:response_async) { Ansible::Runner::ResponseAsync.new(:base_dir => "/path/to/results") }
+    let(:state) { "running" }
+    let(:response_async) do
+      Ansible::Runner::ResponseAsync.new(
+        :runner_class   => "Floe::ContainerRunner::Docker",
+        :runner_context => {"container_ref" => "floe-ansible-ee-abc123"},
+        :base_dir       => "/path/to/results"
+      )
+    end
 
     before do
       allow(Ansible::Runner::ResponseAsync).to receive(:new).and_return(response_async)
@@ -219,7 +231,7 @@ RSpec.describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
     it "ansible-runner completed" do
       expect(response_async).to receive(:running?).and_return(false)
 
-      response = Ansible::Runner::Response.new(:return_code => 0, **response_async.dump)
+      response = Ansible::Runner::Response.new(:return_code => 0, :stdout => "")
       expect(response_async).to receive(:response).and_return(response)
       expect(job).to receive(:queue_signal).with(:post_execute, :deliver_on => nil)
 
