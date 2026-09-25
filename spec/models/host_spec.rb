@@ -159,6 +159,72 @@ RSpec.describe Host do
         status, message, _result = MiqQueue.first.deliver
         MiqQueue.first.delivered(status, message, MiqAeEngine::MiqAeWorkspaceRuntime.new)
       end
+
+      context "with a task tracking the message" do
+        let(:task) { FactoryBot.create(:miq_task, :state => MiqTask::STATE_QUEUED) }
+        let(:raised_options) { [] }
+
+        def prevented_workspace(message, prevented: true)
+          event = double("event_stream", :attributes => {"full_data" => {:policy => {:prevented => prevented}}, "message" => message})
+          MiqAeEngine::MiqAeWorkspaceRuntime.new.tap do |ws|
+            allow(ws).to receive(:get_obj_from_path).with("/").and_return("event_stream" => event)
+          end
+        end
+
+        before do
+          allow(MiqEvent).to receive(:raise_evm_event) do |_target, _event, _inputs, options|
+            raised_options << options
+            double("event")
+          end
+          MiqQueue.delete_all
+          @msg = MiqQueue.put(
+            :class_name   => described_class.name,
+            :instance_id  => @host.id,
+            :method_name  => "start",
+            :miq_task_id  => task.id,
+            :miq_callback => {:class_name => "MiqTask", :instance_id => task.id, :method_name => :queue_callback, :args => ["Finished"]}
+          )
+          $_miq_worker_current_msg = @msg
+          @msg.deliver_and_process
+          $_miq_worker_current_msg = nil
+        end
+
+        after { $_miq_worker_current_msg = nil }
+
+        let(:callback_args) { raised_options.last[:miq_callback][:args] }
+
+        it "does not finish the task when only the policy event was raised" do
+          expect(task.reload.state).not_to eq("Finished")
+          expect(raised_options.last[:miq_callback][:method_name]).to eq(:check_policy_prevent_task_callback)
+          expect(callback_args).to eq([task.id, "ipmi_power_on"])
+        end
+
+        it "finishes the task after the action ran" do
+          expect_any_instance_of(described_class).to receive(:ipmi_power_on).once
+          @host.check_policy_prevent_task_callback(*callback_args, "ok", "msg", prevented_workspace(nil, :prevented => false))
+
+          expect([task.reload.state, task.status]).to eq(%w[Finished Ok])
+        end
+
+        it "finishes the task with the policy message when prevented" do
+          expect_any_instance_of(described_class).not_to receive(:ipmi_power_on)
+          ws = prevented_workspace("Policy says no")
+          @host.check_policy_prevent_task_callback(*callback_args, "ok", "msg", ws)
+
+          expect(ws).to have_received(:get_obj_from_path).with("/")
+          expect([task.reload.state, task.status, task.message]).to eq(["Finished", "Error", "Policy says no"])
+        end
+
+        it "finishes the task with the policy message when prevented (via the queue callback)" do
+          expect_any_instance_of(described_class).not_to receive(:ipmi_power_on)
+          ws = prevented_workspace("Policy says no")
+          row = MiqQueue.put(:class_name => described_class.name, :instance_id => @host.id, :method_name => "id", :miq_callback => raised_options.last[:miq_callback])
+          row.delivered("ok", "msg", ws)
+
+          expect(ws).to have_received(:get_obj_from_path).with("/")
+          expect([task.reload.state, task.status, task.message]).to eq(["Finished", "Error", "Policy says no"])
+        end
+      end
     end
 
     context "with shutdown invalid" do

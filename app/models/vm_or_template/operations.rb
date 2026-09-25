@@ -42,8 +42,8 @@ module VmOrTemplate::Operations
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
-  def unregister_queue
-    run_command_via_queue("raw_unregister")
+  def unregister_queue(miq_task_id: nil)
+    run_command_via_queue("raw_unregister", policy_prevent_task_queue_options(miq_task_id))
   end
 
   def unregister
@@ -56,8 +56,8 @@ module VmOrTemplate::Operations
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
-  def destroy_queue
-    run_command_via_queue("raw_destroy")
+  def destroy_queue(miq_task_id: nil)
+    run_command_via_queue("raw_destroy", policy_prevent_task_queue_options(miq_task_id))
   end
 
   def vm_destroy
