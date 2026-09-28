@@ -50,7 +50,6 @@ module EvmSpecHelper
     EventStream.clear_event_groups_cache if defined?(EventStream)
 
     MiqWorker.my_guid = nil
-    clear_instance_variable(MiqWorkerType, :@classes_for_seed) if defined?(MiqWorkerType)
 
     # Clear the thread local variable to prevent test contamination
     User.current_user = nil if defined?(User) && User.respond_to?(:current_user=)
