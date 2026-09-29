@@ -132,9 +132,9 @@ class ServiceReconfigureTask < MiqReconfigureTask
     end
   end
 
-  def create_task(svc_rsc, parent_service, nh, parent_task)
+  def create_task(svc_rsc, parent_service, attrs_nh, parent_task)
     task_type = reconfigure_task_type(svc_rsc.resource)
-    task_type.new(nh).tap do |task|
+    task_type.new(attrs_nh).tap do |task|
       task.options.merge!(
         :src_ids             => [svc_rsc.resource.id],
         :service_resource_id => svc_rsc.id,

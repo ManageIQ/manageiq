@@ -20,11 +20,11 @@ RSpec.describe OrchestrationStackReconfigureTask do
 
   # child OrchestrationStackReconfigureTask — source is the stack
   let(:task) do
-    OrchestrationStackReconfigureTask.create(:userid          => user.userid,
-                                             :miq_request     => request,
+    OrchestrationStackReconfigureTask.create(:userid           => user.userid,
+                                             :miq_request      => request,
                                              :miq_request_task => parent_task,
-                                             :source          => stack,
-                                             :request_type    => 'orchestration_stack_reconfigure')
+                                             :source           => stack,
+                                             :request_type     => 'orchestration_stack_reconfigure')
   end
 
   describe "#before_ae_starts" do

@@ -1,5 +1,4 @@
 class MiqReconfigureTask < MiqRequestTask
-
   def self.base_model
     MiqReconfigureTask
   end
