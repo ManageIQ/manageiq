@@ -54,7 +54,7 @@ describe MiqPolicyMixin do
       captured
     end
 
-    [:shape_a, :shape_b].each do |shape|
+    %i[shape_a shape_b].each do |shape|
       context "with a #{shape} message" do
         let(:callback) { send(shape) }
 

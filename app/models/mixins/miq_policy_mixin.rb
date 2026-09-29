@@ -134,7 +134,7 @@ module MiqPolicyMixin
 
     # A *_queue action that accepts miq_task_id hands the task to the message it queues,
     # which finishes the task when that message is processed.
-    handoff = method(action.first).parameters.include?([:key, :miq_task_id])
+    handoff = method(action.first).parameters.include?(%i[key miq_task_id])
     kwargs[:miq_task_id] = task_id if handoff
 
     begin
@@ -178,9 +178,7 @@ module MiqPolicyMixin
     event = yield(prevent_task_callback_settings(task_id, *cb_method))
     return event unless event
 
-    unless queued
-      MiqTask.find_by(:id => task_id)&.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_ERROR, "Policy event not queued (zone in maintenance); action not run")
-    end
+    MiqTask.find_by(:id => task_id)&.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_ERROR, "Policy event not queued (zone in maintenance); action not run") unless queued
 
     msg = policy_prevent_current_msg
     msg.miq_callback = nil
