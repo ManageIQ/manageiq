@@ -11,7 +11,7 @@ class ServiceReconfigureTask < MiqReconfigureTask
     "#{request_class::TASK_DESCRIPTION} for: #{req_obj.source.name}"
   end
 
-  def update_and_notify_parent(*args)
+  def update_and_notify_parent(upd_attr)
     prev_state = state
     super
     new_state = state
@@ -19,7 +19,7 @@ class ServiceReconfigureTask < MiqReconfigureTask
     # No-op when the state did not change, UNLESS the update explicitly sets
     # "pending" — tasks are created with state "pending" so the first real
     # transition (deliver_to_automate) keeps prev_state == "pending".
-    requested_state = args.first.kind_of?(Hash) ? args.first[:state].to_s : nil
+    requested_state = upd_attr.kind_of?(Hash) ? upd_attr[:state].to_s : nil
     return if new_state == prev_state && requested_state != "pending"
 
     svc = source
