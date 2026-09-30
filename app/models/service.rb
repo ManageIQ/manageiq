@@ -71,6 +71,7 @@ class Service < ApplicationRecord
   include ProcessTasksMixin
   include ServiceMixin
   include TenancyMixin
+  include ReconfigurationMixin
 
   extend InterRegionApiMethodRelay
 
@@ -78,7 +79,6 @@ class Service < ApplicationRecord
   include Operations
   include ResourceLinking
   include RetirementManagement
-  include ReconfigurationManagement
 
   hide_attribute "display"
 
