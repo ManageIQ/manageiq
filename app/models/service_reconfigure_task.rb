@@ -45,10 +45,13 @@ class ServiceReconfigureTask < MiqReconfigureTask
     update(:description => get_description)
     return if automate_drives?
 
-    # For services that drive reconfigure without Automate (e.g. ServiceEmbeddedTerraform), dispatch per-resource subtasks.
-    Service.where(:id => options[:src_id]).each do |svc|
-      _log.info("Creating reconfigure subtasks for service task <#{self.class.name}:#{id}>, service <#{svc.id}>")
+    # For service that drive reconfigure without Automate (e.g. ServiceEmbeddedTerraform), dispatch subtask.
+    svc = source
+    if svc.present?
+      _log.info("Creating reconfigure subtask for service task <#{self.class.name}:#{id}>, service <#{svc.id}>")
       create_reconfigure_subtasks(svc, self)
+    else
+      _log.warn("Cannot create reconfigure subtask for service task <#{self.class.name}:#{id}>, not found service <#{options[:src_id]}>")
     end
   end
 
