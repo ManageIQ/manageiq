@@ -87,12 +87,12 @@ class Service < ApplicationRecord
                   child_tbl   = Arel::Table.new(:services, :as => "direct_service_children_services")
                   id_cast     = Arel::Nodes::NamedFunction.new("CAST", [t[:id].as("VARCHAR")])
                   child_anc   = Arel::Nodes::Case.new
-                                  .when(t[:ancestry].eq(nil))
-                                  .then(id_cast)
-                                  .else(Arel::Nodes::Concat.new(
-                                          Arel::Nodes::Concat.new(t[:ancestry], Arel.sql("'/'")),
-                                          id_cast
-                                        ))
+                                                 .when(t[:ancestry].eq(nil))
+                                                 .then(id_cast)
+                                                 .else(Arel::Nodes::Concat.new(
+                                                         Arel::Nodes::Concat.new(t[:ancestry], Arel.sql("'/'")),
+                                                         id_cast
+                                                       ))
                   subquery    = child_tbl.project(Arel.star.count)
                                          .where(child_tbl[:ancestry].eq(child_anc))
                   Arel::Nodes::NamedFunction.new("COALESCE", [t.grouping(subquery), Arel.sql("0")])
