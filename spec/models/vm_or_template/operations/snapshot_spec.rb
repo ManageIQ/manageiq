@@ -69,22 +69,4 @@ RSpec.describe VmOrTemplate::Operations::Snapshot do
       )
     end
   end
-
-  context "supports" do
-    let(:vm_no_snaps) { FactoryBot.create(:vm_vmware, :ext_management_system => ems) }
-
-    it "supports :rename_snapshot when snapshots exist" do
-      expect(vm.supports?(:rename_snapshot)).to be_truthy
-    end
-
-    it "does not support :rename_snapshot when no snapshots exist" do
-      expect(vm_no_snaps.supports?(:rename_snapshot)).to be_falsey
-    end
-  end
-
-  describe "#rename_snapshot" do
-    it "raises NotImplementedError for raw_rename_snapshot on base class" do
-      expect { vm.rename_snapshot(snapshots.first.id, "new_name") }.to raise_error(NotImplementedError)
-    end
-  end
 end

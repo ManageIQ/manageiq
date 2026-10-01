@@ -6,10 +6,7 @@ module VmOrTemplate::Operations::Snapshot
       unsupported_reason(:snapshots) || unsupported_reason(:control)
     end
 
-    supports :rename_snapshot do
-      unsupported_reason(:snapshots) || unsupported_reason(:control) ||
-        (_("No snapshots available for this VM") if snapshots.size <= 0)
-    end
+    supports_not :rename_snapshot
 
     supports :remove_snapshot do
       unsupported_reason(:snapshots) || unsupported_reason(:control) ||
@@ -31,7 +28,7 @@ module VmOrTemplate::Operations::Snapshot
   end
 
   def rename_snapshot_queue(snapshot_id, new_name, task_id = nil)
-    MiqQueue.put_unless_exists(
+    MiqQueue.put(
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => 'rename_snapshot',
