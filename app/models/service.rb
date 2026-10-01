@@ -82,6 +82,21 @@ class Service < ApplicationRecord
   hide_attribute "display"
 
   virtual_total :v_total_vms, :vms, :arel => aggregate_hardware_arel("v_total_vms", vms_tbl[:id].count, :skip_hardware => true)
+  virtual_total :v_total_direct_service_children, :direct_service_children,
+                :arel => lambda { |t|
+                  child_tbl   = Arel::Table.new(:services, :as => "direct_service_children_services")
+                  id_cast     = Arel::Nodes::NamedFunction.new("CAST", [t[:id].as("VARCHAR")])
+                  child_anc   = Arel::Nodes::Case.new
+                                  .when(t[:ancestry].eq(nil))
+                                  .then(id_cast)
+                                  .else(Arel::Nodes::Concat.new(
+                                          Arel::Nodes::Concat.new(t[:ancestry], Arel.sql("'/'")),
+                                          id_cast
+                                        ))
+                  subquery    = child_tbl.project(Arel.star.count)
+                                         .where(child_tbl[:ancestry].eq(child_anc))
+                  Arel::Nodes::NamedFunction.new("COALESCE", [t.grouping(subquery), Arel.sql("0")])
+                }
 
   virtual_column :has_parent,   :type => :boolean
   virtual_column :power_state,  :type => :string
