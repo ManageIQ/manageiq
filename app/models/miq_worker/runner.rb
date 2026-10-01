@@ -504,6 +504,7 @@ class MiqWorker::Runner
   def worker_env
     {
       "APP_ROOT"              => Rails.root.to_s,
+      "BUNDLE_GEMFILE"        => Rails.root.join("Gemfile").to_s,
       "GUID"                  => @worker.guid,
       "WORKER_HEARTBEAT_FILE" => @worker.heartbeat_file
     }
