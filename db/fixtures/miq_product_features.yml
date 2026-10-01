@@ -6002,6 +6002,10 @@
           :description: Revert to selected snapshot on VMs
           :feature_type: control
           :identifier: vm_snapshot_revert
+        - :name: Rename Snapshot
+          :description: Rename a snapshot for VMs
+          :feature_type: control
+          :identifier: vm_snapshot_rename
 
   # Templates access rules
   - :name: Template Access Rules
