@@ -548,11 +548,11 @@ RSpec.describe Service do
   describe "#v_total_direct_service_children" do
     # create_deep_tree builds:
     #   @service
-    #   ├── @service_c1
-    #   │   ├── @service_c11
-    #   │   └── @service_c12
-    #   │       └── @service_c121
-    #   └── @service_c2
+    #   +-- @service_c1
+    #   |   +-- @service_c11
+    #   |   +-- @service_c12
+    #   |       +-- @service_c121
+    #   +-- @service_c2
     before { create_deep_tree }
 
     it "sql" do
