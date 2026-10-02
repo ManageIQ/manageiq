@@ -49,6 +49,7 @@ bin/setup
 - Internationalization uses FastGettext/Gettext (`_`, `n_`, `N_`). Translate the literal string first, then interpolate named placeholders. See [`docs/agents/coding.md`](docs/agents/coding.md).
 - HAML: line length max 160, `SpaceInsideHashAttributes: no_space`.
 - YAML: `indent-sequences: false`.
+- Source code and commit messages must use ASCII characters, particularly in comments, unless specifically testing/handling non-ASCII text. Forbidden characters include, but are not limited to: em dash (—), en dash (–), horizontal ellipsis (…), and arrows (→).
 
 ## Architecture
 
