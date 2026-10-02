@@ -32,6 +32,29 @@ lib/workers/bin/run_single_worker.rb <WorkerClassName>
 
 Architecture must not rely on in-process shared state between workers.
 
+## Queue
+
+As ManageIQ is a distributed and scalable product a queue system is used to distribute work to the various workers.  There are at present two queue backend types used:
+
+- **MiqQueue**: A database backed work distribution system
+- **Kafka**: A highly scalable event streaming platform
+
+### MiqQueue
+
+MiqQueue is the queue system used by ManageIQ from the beginning.  It uses a table called `miq_queue` and combined with a number of columns (`queue_name`, `class_name`, `instance_id`, `args`, `zone`, and `role`) is used by Queue workers to get their work items.
+
+The MiqQueue interface is simple: `MiqQueue.put` and `MiqQueue.get` form the core of the MiqQueue interface and are used for submitting work for a worker and for a worker to dequeue a work item respectively.
+Additionally there are some methods which are specific to `MiqQueue` and are not commonly provided by standard queue systems: `put_or_update`, `put_unless_exists`, and `unqueue`.  New invocations of these methods should be avoided at all cost as they make it more difficult to move to a more standard queue backend.
+
+### Kafka
+
+Kafka is a highly scalable event streaming system, allowing for both "queue" and "topic" modes based on the configuration of broadcast groups.
+
+In "queue" mode it operates similar to `MiqQueue` where multiple workers can be listening to a queue but only 1 will receive the message.
+In "topic" mode all workers listening to a queue will receive a message published to the queue.
+
+Currently ManageIQ uses kafka for the ems_events topic, so calls to `EmsEvent.add_queue` will publish the event to a kafka topic if kafka is configured.
+
 ## Plugin / provider model
 
 Provider code (AWS, VMware, OpenStack, etc.) lives in separate gems (e.g. `manageiq-providers-vmware`) loaded as Rails engines at boot. Core models define abstract base classes (e.g. `ExtManagementSystem`, `VmOrTemplate`); providers subclass them. New features added to base classes automatically propagate to all providers.
