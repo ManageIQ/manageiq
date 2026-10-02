@@ -8,6 +8,20 @@ RSpec.describe VmOrTemplate::Operations::Snapshot do
   let(:snapshots)  { FactoryBot.create_list(:snapshot, 2, :vm_or_template => vm) }
 
   context "queued methods" do
+    it 'queues as expected in rename_snapshot_queue' do
+      queue = vm.rename_snapshot_queue(snapshots.first.id, "new_name")
+
+      expect(queue).to have_attributes(
+        :class_name  => vm.class.name,
+        :method_name => 'rename_snapshot',
+        :role        => 'ems_operations',
+        :queue_name  => vm.queue_name_for_ems_operations,
+        :zone        => vm.my_zone,
+        :args        => [snapshots.first.id, "new_name"],
+        :task_id     => nil
+      )
+    end
+
     it 'queues as expected in remove_snapshot_queue' do
       queue = vm.remove_snapshot_queue(snapshots.first.id)
 
