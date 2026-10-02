@@ -77,7 +77,7 @@ Load these when the task requires it — do not load them speculatively:
 
 - **Product features / model names**: [`docs/agents/product.md`](docs/agents/product.md) — providers, resource management, service catalog, policy, automation, RBAC, deployment
 - **Making code changes**: [`docs/agents/coding.md`](docs/agents/coding.md) — non-obvious patterns, loggers, RuboCop, factory helpers
-- **Architecture / design questions**: [`docs/agents/architecture.md`](docs/agents/architecture.md) — RBAC, Settings, ID regions, workers, plugin model
+- **Architecture / design questions**: [`docs/agents/architecture.md`](docs/agents/architecture.md) — RBAC, Settings, ID regions, workers, queue, plugin model
 - **Working with RBAC or authorization**: [`docs/agents/rbac.md`](docs/agents/rbac.md) — data model, filter types, tenancy, feature flags, spec helpers
 - **Writing or modifying specs**: [`docs/agents/testing.md`](docs/agents/testing.md) — RSpec setup, FactoryBot, VCR, spec helpers
 - **Working in a plugin gem**: [`docs/agents/plugins.md`](docs/agents/plugins.md) — repo layout, bin/setup, engine, settings, spec structure
