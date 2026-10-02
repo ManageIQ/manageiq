@@ -545,6 +545,32 @@ RSpec.describe Service do
     end
   end
 
+  describe "#v_total_direct_service_children" do
+    # create_deep_tree builds:
+    #   @service
+    #   +-- @service_c1
+    #   |   +-- @service_c11
+    #   |   +-- @service_c12
+    #   |       +-- @service_c121
+    #   +-- @service_c2
+    before { create_deep_tree }
+
+    it "sql" do
+      [[@service, 2], [@service_c1, 2], [@service_c2, 0]].each do |svc, count|
+        actual = Service.select(:id, :v_total_direct_service_children).find_by(:id => svc.id)
+        expect(actual.v_total_direct_service_children).to eq(count)
+        expect(actual.attribute_present?(:v_total_direct_service_children)).to eq(true)
+      end
+    end
+
+    it "ruby" do
+      [[@service, 2], [@service_c1, 2], [@service_c2, 0]].each do |svc, count|
+        expect(svc.v_total_direct_service_children).to eq(count)
+        expect(svc.attribute_present?(:v_total_direct_service_children)).to eq(false)
+      end
+    end
+  end
+
   describe "#indirect_service_children" do
     it "returns 1 level down children" do
       create_deep_tree

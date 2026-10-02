@@ -82,6 +82,49 @@ class Service < ApplicationRecord
   hide_attribute "display"
 
   virtual_total :v_total_vms, :vms, :arel => aggregate_hardware_arel("v_total_vms", vms_tbl[:id].count, :skip_hardware => true)
+  # Counts the direct (one-level-deep) service children of each service row using the
+  # ancestry gem's path convention.  A child's `ancestry` column equals the parent's
+  # full ancestry path: either just the parent's id (when the parent is a root) or
+  # "<grandparent_path>/<parent_id>" (when the parent itself has ancestors).
+  #
+  # Equivalent SQL (for a root service with id=1):
+  #
+  #   SELECT COALESCE(
+  #     (SELECT COUNT(*)
+  #      FROM   services AS direct_service_children_services
+  #      WHERE  direct_service_children_services.ancestry =
+  #             CASE WHEN services.ancestry IS NULL
+  #                  THEN CAST(services.id AS VARCHAR)
+  #                  ELSE services.ancestry || '/' || CAST(services.id AS VARCHAR)
+  #             END),
+  #     0)
+  virtual_total :v_total_direct_service_children, :direct_service_children,
+                :arel => lambda { |t|
+                  # Alias table used in the correlated subquery to avoid name collisions
+                  child_tbl = Arel::Table.new(:services, :as => "direct_service_children_services")
+
+                  # CAST(services.id AS VARCHAR) - ancestry stores ids as strings
+                  id_as_string = Arel::Nodes::NamedFunction.new("CAST", [t[:id].as("VARCHAR")])
+
+                  # Build the expected ancestry value for a direct child of the current row:
+                  #   root service   -> "<id>"
+                  #   nested service -> "<existing_ancestry>/<id>"
+                  expected_child_ancestry =
+                    Arel::Nodes::Case.new
+                                     .when(t[:ancestry].eq(nil))
+                                     .then(id_as_string)
+                                     .else(Arel::Nodes::Concat.new(
+                                             Arel::Nodes::Concat.new(t[:ancestry], Arel.sql("'/'")),
+                                             id_as_string
+                                           ))
+
+                  # Correlated subquery: COUNT(*) of children whose ancestry matches
+                  count_children = child_tbl.project(Arel.star.count)
+                                            .where(child_tbl[:ancestry].eq(expected_child_ancestry))
+
+                  # Wrap in COALESCE so rows with no children return 0 instead of NULL
+                  Arel::Nodes::NamedFunction.new("COALESCE", [t.grouping(count_children), Arel.sql("0")])
+                }
 
   virtual_column :has_parent,   :type => :boolean
   virtual_column :power_state,  :type => :string
