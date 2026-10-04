@@ -8,7 +8,9 @@ class GenericObjectDefinition < ApplicationRecord
     :float    => ActiveModel::Type::Float.new,
     :integer  => ActiveModel::Type::Integer.new,
     :string   => ActiveModel::Type::String.new,
-    :time     => ActiveModel::Type::Time.new
+    :time     => ActiveModel::Type::Time.new,
+    :hash     => ActiveRecord::Type::Json.new,
+    :array    => ActiveRecord::Type::Json.new
   }.freeze
 
   TYPE_NAMES = {
@@ -17,10 +19,28 @@ class GenericObjectDefinition < ApplicationRecord
     :float    => N_('Float'),
     :integer  => N_('Integer'),
     :string   => N_('String'),
-    :time     => N_('Time')
+    :time     => N_('Time'),
+    :hash     => N_('Hash'),
+    :array    => N_('Array')
   }.freeze
 
-  FEATURES = %w[attribute association method].freeze
+  CONSTRAINT_TYPES = {
+    :required      => [:boolean, :datetime, :float, :integer, :string, :time, :hash, :array],
+    :default       => [:boolean, :datetime, :float, :integer, :string, :time, :hash, :array],
+    :min           => [:integer, :float, :datetime, :time],
+    :max           => [:integer, :float, :datetime, :time],
+    :min_length    => [:string],
+    :max_length    => [:string],
+    :enum          => [:integer, :string],
+    :format        => [:string],
+    :min_items     => [:array],
+    :max_items     => [:array],
+    :unique_items  => [:array],
+    :required_keys => [:hash],
+    :allowed_keys  => [:hash]
+  }.freeze
+
+  FEATURES = %w[attribute attribute_constraint association method].freeze
   REG_ATTRIBUTE_NAME = /\A[a-z][a-zA-Z_0-9]*\z/
   REG_METHOD_NAME    = /\A[a-z][a-zA-Z_0-9]*[!?]?\z/
   ALLOWED_ASSOCIATION_TYPES = (MiqReport.reportable_models + %w[GenericObject]).freeze
@@ -34,6 +54,7 @@ class GenericObjectDefinition < ApplicationRecord
 
   validates :name, :presence => true, :uniqueness_when_changed => true
   validate  :validate_property_attributes,
+            :validate_property_attribute_constraints,
             :validate_property_associations,
             :validate_property_methods,
             :validate_property_name_unique,
@@ -41,6 +62,7 @@ class GenericObjectDefinition < ApplicationRecord
 
   before_validation :set_default_properties
   before_validation :normalize_property_attributes,
+                    :normalize_property_attribute_constraints,
                     :normalize_property_associations,
                     :normalize_property_methods
 
@@ -103,12 +125,13 @@ class GenericObjectDefinition < ApplicationRecord
   end
 
   def properties=(props)
-    props.reverse_merge!(:attributes => {}, :associations => {}, :methods => [])
+    props.reverse_merge!(:attributes => {}, :attribute_constraints => {}, :associations => {}, :methods => [])
     super
   end
 
-  def add_property_attribute(name, type)
+  def add_property_attribute(name, type, constraints = {})
     properties[:attributes][name.to_s] = type.to_sym
+    properties[:attribute_constraints][name.to_s] = constraints if constraints.present?
     save!
   end
 
@@ -117,8 +140,22 @@ class GenericObjectDefinition < ApplicationRecord
       generic_objects.find_each { |o| o.delete_property(name) }
 
       properties[:attributes].delete(name.to_s)
+      properties[:attribute_constraints].delete(name.to_s)
       save!
     end
+  end
+
+  def add_property_attribute_constraint(name, constraint)
+    name = name.to_s
+    raise "attribute [#{name}] is not defined" unless property_attribute_defined?(name)
+
+    properties[:attribute_constraints][name] = constraint
+    save!
+  end
+
+  def delete_property_attribute_constraint(name)
+    properties[:attribute_constraints].delete(name.to_s)
+    save!
   end
 
   def add_property_association(name, type)
@@ -172,6 +209,14 @@ class GenericObjectDefinition < ApplicationRecord
     end
   end
 
+  def normalize_property_attribute_constraints
+    props = properties.symbolize_keys
+
+    properties[:attribute_constraints] = props[:attribute_constraints].each_with_object({}) do |(name, constraints), hash|
+      hash[name.to_s] = constraints
+    end
+  end
+
   def normalize_property_associations
     props = properties.symbolize_keys
 
@@ -190,6 +235,91 @@ class GenericObjectDefinition < ApplicationRecord
       errors.add(:properties, "attribute [#{name}] is not of a recognized type: [#{type}]") unless TYPE_MAP.key?(type.to_sym)
       errors.add(:properties, "invalid attribute name: [#{name}]") unless REG_ATTRIBUTE_NAME.match?(name)
     end
+  end
+
+  def validate_property_attribute_constraints
+    properties[:attribute_constraints].each do |attr_name, constraints|
+      # Check if the attribute exists
+      unless properties[:attributes].key?(attr_name)
+        errors.add(:properties, "constraint defined for non-existent attribute: [#{attr_name}]")
+        next
+      end
+
+      attr_type = properties[:attributes][attr_name].to_sym
+
+      # Validate constraints is a hash
+      unless constraints.is_a?(Hash)
+        errors.add(:properties, "constraints for attribute [#{attr_name}] must be a hash")
+        next
+      end
+
+      constraints.each do |constraint_type, constraint_value|
+        constraint_type_sym = constraint_type.to_sym
+
+        # Check if constraint type is valid
+        unless CONSTRAINT_TYPES.key?(constraint_type_sym)
+          errors.add(:properties, "invalid constraint type [#{constraint_type}] for attribute [#{attr_name}]")
+          next
+        end
+
+        # Check if constraint type is applicable to attribute type
+        unless CONSTRAINT_TYPES[constraint_type_sym].include?(attr_type)
+          errors.add(:properties, "constraint [#{constraint_type}] is not applicable to attribute type [#{attr_type}] for attribute [#{attr_name}]")
+          next
+        end
+
+        # Validate constraint values
+        validate_constraint_value(attr_name, attr_type, constraint_type_sym, constraint_value)
+      end
+    end
+  end
+
+  def validate_constraint_value(attr_name, attr_type, constraint_type, value)
+    case constraint_type
+    when :required
+      unless [true, false].include?(value)
+        errors.add(:properties, "constraint 'required' must be true or false for attribute [#{attr_name}]")
+      end
+    when :default
+      validate_default_value(attr_name, attr_type, value)
+    when :min, :max
+      if attr_type == :integer && !value.is_a?(Integer)
+        errors.add(:properties, "constraint '#{constraint_type}' must be an integer for attribute [#{attr_name}]")
+      elsif attr_type == :float && !value.is_a?(Numeric)
+        errors.add(:properties, "constraint '#{constraint_type}' must be a number for attribute [#{attr_name}]")
+      elsif [:datetime, :time].include?(attr_type) && !value.is_a?(String) && !value.is_a?(Time) && !value.is_a?(DateTime)
+        errors.add(:properties, "constraint '#{constraint_type}' must be a valid time/datetime for attribute [#{attr_name}]")
+      end
+    when :min_length, :max_length
+      unless value.is_a?(Integer) && value > 0
+        errors.add(:properties, "constraint '#{constraint_type}' must be a positive integer for attribute [#{attr_name}]")
+      end
+    when :enum
+      validate_enum_constraint(attr_name, attr_type, value)
+    when :format
+      unless value.is_a?(Regexp) || (value.is_a?(String) && valid_regex?(value))
+        errors.add(:properties, "constraint 'format' must be a valid regular expression for attribute [#{attr_name}]")
+      end
+    when :min_items, :max_items
+      unless value.is_a?(Integer) && value >= 0
+        errors.add(:properties, "constraint '#{constraint_type}' must be a non-negative integer for attribute [#{attr_name}]")
+      end
+    when :unique_items
+      unless [true, false].include?(value)
+        errors.add(:properties, "constraint 'unique_items' must be true or false for attribute [#{attr_name}]")
+      end
+    when :required_keys, :allowed_keys
+      unless value.is_a?(Array) && value.all? { |k| k.is_a?(String) || k.is_a?(Symbol) }
+        errors.add(:properties, "constraint '#{constraint_type}' must be an array of strings/symbols for attribute [#{attr_name}]")
+      end
+    end
+  end
+
+  def valid_regex?(string)
+    Regexp.new(string)
+    true
+  rescue RegexpError
+    false
   end
 
   def validate_property_associations
@@ -230,6 +360,69 @@ class GenericObjectDefinition < ApplicationRecord
   end
 
   def set_default_properties
-    self.properties = {:attributes => {}, :associations => {}, :methods => []} unless properties.present?
+    self.properties = {:attributes => {}, :attribute_constraints => {}, :associations => {}, :methods => []} unless properties.present?
+  end
+
+  private
+
+  def validate_default_value(attr_name, attr_type, value)
+    # Type check based on attribute type
+    case attr_type
+    when :boolean
+      unless [true, false].include?(value)
+        errors.add(:properties, "default value for attribute [#{attr_name}] must be a boolean")
+      end
+    when :integer
+      unless value.is_a?(Integer)
+        errors.add(:properties, "default value for attribute [#{attr_name}] must be an integer")
+      end
+    when :float
+      unless value.is_a?(Numeric)
+        errors.add(:properties, "default value for attribute [#{attr_name}] must be a number")
+      end
+    when :string
+      unless value.is_a?(String)
+        errors.add(:properties, "default value for attribute [#{attr_name}] must be a string")
+      end
+    when :datetime
+      unless value.is_a?(String) || value.is_a?(Time) || value.is_a?(DateTime)
+        errors.add(:properties, "default value for attribute [#{attr_name}] must be a valid datetime")
+      end
+    when :time
+      unless value.is_a?(String) || value.is_a?(Time)
+        errors.add(:properties, "default value for attribute [#{attr_name}] must be a valid time")
+      end
+    when :hash
+      unless value.is_a?(Hash)
+        errors.add(:properties, "default value for attribute [#{attr_name}] must be a Hash")
+      end
+    when :array
+      unless value.is_a?(Array)
+        errors.add(:properties, "default value for attribute [#{attr_name}] must be an Array")
+      end
+    end
+  end
+
+  def validate_enum_constraint(attr_name, attr_type, value)
+    unless value.is_a?(Array) && value.any?
+      errors.add(:properties, "constraint 'enum' must be a non-empty array for attribute [#{attr_name}]")
+      return
+    end
+
+    if value.any?(&:nil?)
+      errors.add(:properties, "constraint 'enum' must not contain nil values for attribute [#{attr_name}]")
+      return
+    end
+
+    if value.uniq.size != value.size
+      errors.add(:properties, "constraint 'enum' contains duplicate values for attribute [#{attr_name}]")
+    end
+
+    # Existing type validation continues...
+    if attr_type == :integer && !value.all? { |v| v.is_a?(Integer) }
+      errors.add(:properties, "constraint 'enum' values must be integers for attribute [#{attr_name}]")
+    elsif attr_type == :string && !value.all? { |v| v.is_a?(String) }
+      errors.add(:properties, "constraint 'enum' values must be strings for attribute [#{attr_name}]")
+    end
   end
 end
