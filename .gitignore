@@ -69,9 +69,6 @@ config/settings.local.yml
 config/settings/*.local.yml
 config/environments/*.local.yml
 
-# content/
-content/ansible_consolidated
-
 # db/
 db/schema.rb
 db/fixtures/ae_datastore/ManageIQ/.manifest.yaml

@@ -1,137 +1,75 @@
 module Ansible
   class Runner
+    # Holds the result of a completed ansible-runner execution.
+    #
+    # Both +return_code+ and +stdout+ are always provided at construction time
+    # from the container runner's exit code and captured STDOUT stream.
+    # There is no filesystem to read from in the container execution model.
     class Response
       include Vmdb::Logging
 
-      attr_reader :base_dir, :command_line, :stderr, :debug, :ident
+      attr_reader :return_code, :stdout
 
-      # @return [String] Stdout that is text, where the human readable part is extracted from the JSON encoded objects
-      def self.parsed_stdout_to_human(parsed_stdout)
-        parsed_stdout.map { |l| l["stdout"] }.join("\n")
+      # @param return_code [Integer] Exit code of the ansible-runner process. 0 = success.
+      # @param stdout [String] Newline-delimited JSON event stream from ansible-runner --json.
+      def initialize(return_code:, stdout:)
+        @return_code = return_code
+        @stdout      = stdout
       end
 
-      # Response object designed for holding full response from ansible-runner
-      #
-      # @param base_dir [String] ansible-runner private_data_dir parameter
-      # @param command_line [String] Command line of the ansible-runner run
-      # @param return_code [Integer] Return code of the ansible-runner run, 0 == ok, others mean failure
-      # @param stdout [String] Stdout from ansible-runner run
-      # @param stderr [String] Stderr from ansible-runner run
-      # @param ident [String] ansible-runner ident parameter
-      # @param debug [Boolean] whether or not to delete base_dir after run (for debugging)
-      def initialize(base_dir:, command_line: nil, return_code: nil, stdout: nil, stderr: nil, ident: "result", debug: false)
-        @base_dir      = base_dir
-        @ident         = ident
-        @command_line  = command_line
-        @return_code   = return_code
-        @stdout        = stdout
-        @parsed_stdout = parse_stdout(stdout) if stdout
-        @stderr        = stderr
-        @debug         = debug
-      end
-
-      # @return [Integer] Return code of the ansible-runner run, 0 == ok, others mean failure
-      def return_code
-        @return_code ||= load_return_code
-      end
-
-      # @return [String] Stdout that is text, where each line should be JSON encoded object
-      def stdout
-        @stdout ||= load_stdout
-      end
-
-      # @return [String] Stdout that is text, where the human readable part is extracted from the JSON encoded objects
-      def human_stdout
-        @human_stdout ||= self.class.parsed_stdout_to_human(parsed_stdout)
-      end
-
-      # @return [Array<Hash>] Array of hashes as individual Ansible plays
+      # @return [Array<Hash>] Parsed array of ansible-runner event objects
       def parsed_stdout
         @parsed_stdout ||= parse_stdout(stdout)
       end
 
-      # Loads needed data from the filesystem and deletes the ansible-runner base dir
-      def cleanup_filesystem!
-        # Load all needed files, before we cleanup the dir
-        return_code
-        stdout
+      # @return [String] Human-readable stdout extracted from the JSON event stream
+      def human_stdout
+        @human_stdout ||= self.class.parsed_stdout_to_human(parsed_stdout)
+      end
 
-        return if debug
+      # @return [Array<Hash>] Parsed event data for each play start event
+      def plays
+        @plays ||= self.class.parsed_stdout_to_plays(parsed_stdout)
+      end
 
-        FileUtils.remove_entry(base_dir)
+      # @return [Hash] Artifact data set via Ansible set_stats
+      def stats
+        @stats ||= self.class.parsed_stdout_to_stats(parsed_stdout)
+      end
+
+      # @param parsed_stdout [Array<Hash>] Array returned by #parsed_stdout
+      # @return [Array<Hash>] Array of playbook_on_play_start events
+      def self.parsed_stdout_to_plays(parsed_stdout)
+        parsed_stdout.select { |e| e["event"] == "playbook_on_play_start" }
+      end
+
+      # @param parsed_stdout [Array<Hash>] Array returned by #parsed_stdout
+      # @return [Hash] Artifact data hash or empty hash if not present
+      def self.parsed_stdout_to_stats(parsed_stdout)
+        stats_event = parsed_stdout.detect { |e| e["event"] == "playbook_on_stats" }
+        stats_event&.dig("event_data", "artifact_data") || {}
+      end
+
+      # @param parsed_stdout [Array<Hash>] Array returned by #parsed_stdout
+      # @return [String] Concatenated human-readable lines
+      def self.parsed_stdout_to_human(parsed_stdout)
+        parsed_stdout.pluck("stdout").join("\n")
       end
 
       private
 
-      # Parses stdout to array of hashes
-      #
-      # @param stdout [String] Stdout that is text, where each line should be JSON encoded object
-      # @return [Array<Hash>] Array of hashes as individual Ansible plays
+      # Parses the newline-delimited JSON stdout stream into an array of hashes
       def parse_stdout(stdout)
-        parsed_stdout = []
-
-        # output is JSON per new line
-        stdout.each_line do |line|
-          # TODO(lsmola) we can remove exception handling when this is fixed
-          # https://github.com/ansible/ansible-runner/issues/89#issuecomment-404236832 , so it fails early if there is
-          # a non json line
-          begin
-            data = JSON.parse(line)
-            parsed_stdout << data if data.kind_of?(Hash)
-          rescue => e
-            _log.warn("Couldn't parse JSON from: #{e}")
+        stdout.each_line.map do |line|
+          data = JSON.parse(line)
+          if data.kind_of?(Hash)
+            data
+          else
+            {"stdout" => line.chomp}
           end
+        rescue JSON::ParserError
+          {"stdout" => line.chomp}
         end
-
-        parsed_stdout
-      end
-
-      # Reads a return code from a file used by ansible-runner
-      #
-      # @return [Integer] Return code of the ansible-runner run, 0 == ok, others mean failure
-      def load_return_code
-        File.read(File.join(base_dir, "artifacts", ident, "rc")).to_i
-      rescue
-        _log.warn("Couldn't find ansible-runner return code in #{base_dir}")
-        1
-      end
-
-      # @return [String] Stdout that is text, where each line should be JSON encoded object
-      def load_stdout
-        "".tap do |stdout|
-          # Dir.glob for all `job_events`, and sort them by the "counter"
-          # integer in the file name, which is the first digit(s) prior to a
-          # '-' in the file.
-          #
-          #   job_events/1-2f97771f-c3d1-4123-8648-d035d48be4e8.json
-          #   job_events/10-6f5dc948-c42f-4f3d-a357-151ec3e0b42e.json
-          #   job_events/11-c0c9fdbe-8a69-4ac8-817b-19b567b514ac.json
-          #   job_events/12-66c5f878-8fdc-4d76-9faf-2b42495a2636.json
-          #   job_events/2-080027c4-9455-90b8-e116-000000000006.json
-          #   job_events/3-080027c4-9455-90b8-e116-00000000000d.json
-          #   ...
-          #
-          # And since `Dir.glob`'s sort order is operating system dependent, we
-          # sort manually by the basename to ensure the proper order, and the
-          # `File.basename` calls are done in a `.sort_by!` up front so they
-          # aren't triggered for each block call in a traditional `.sort!`.
-          #
-          job_event_files = Dir.glob(File.join(base_dir, "artifacts", ident, "job_events", "*.json"))
-                               .sort_by! { |fname| fname.match(%r{job_events/(\d+)})[1].to_i }
-
-          # Read each file and added it to the `stdout` string.
-          #
-          # Also add a newline after each File read if one doesn't already
-          # exist (`ansible-runner` is inconsistent with it's use of new-lines
-          # at the end of files).
-          job_event_files.each do |filename|
-            stdout << File.read(filename)
-            stdout << "\n" unless stdout[-1] == "\n"
-          end
-        end
-      rescue
-        _log.warn("Couldn't find ansible-runner stdout in #{base_dir}")
-        ""
       end
     end
   end

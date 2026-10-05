@@ -1,169 +1,129 @@
 RSpec.describe Ansible::Runner::Response do
-  subject { described_class.new(:base_dir => base_dir, :ident => ident) }
-
-  let(:ident)        { described_class.new(:base_dir => '').ident }
-  let(:base_dir)     { File.expand_path("../../../..", job_events.first.path) } # triggers job_events
-  let(:runner_dir)   { Dir.mktmpdir("runner_run") } # same as base_dir
-  let(:stdout_lines) { "\n" }
-
-  let(:job_events) do
-    stdout_lines.lines.map.with_index do |line, index|
-      filename = File.join(job_events_dir, "#{index + 1}-#{SecureRandom.uuid}.json")
-      File.open(filename, "w") do |file|
-        file.write(line)
-        file
-      end
-    end
-  end
-
-  let(:job_events_dir) do
-    File.join(runner_dir, "artifacts", ident, "job_events").tap do |dir|
-      FileUtils.mkdir_p(dir)
-    end
-  end
-
   let(:good_stdout) do
     <<~LINES
       {"uuid": "d737fa4a", "counter": 1, "stdout": "", "start_line": 0, "end_line": 0}
-      {"uuid": "080027c4", "counter": 2, "stdout": "\\r\\nPLAY [List Variables] **********************************************************", "start_line": 0, "end_line": 2}
+      {"uuid": "080027c4", "counter": 2, "stdout": "\\r\\nPLAY [List Variables] **********************************************************", "start_line": 0, "end_line": 2, "event": "playbook_on_play_start", "event_data": {"play": "List Variables"}}
       {"uuid": "080027c4", "counter": 3, "stdout": "\\r\\nTASK [Gathering Facts] *********************************************************", "start_line": 2, "end_line": 4}
-      {"uuid": "7f4409f5", "counter": 4, "stdout": "", "start_line": 4, "end_line": 4}
+      [WARNING]: This is a warning from ansible
+      {"uuid": "7f4409f5", "counter": 4, "stdout": "ok: [localhost]", "start_line": 4, "end_line": 5, "event": "runner_on_ok", "event_data": {}}
+      {"uuid": "8e3f1a22", "counter": 5, "stdout": "", "start_line": 5, "end_line": 5, "event": "playbook_on_stats", "event_data": {"artifact_data": {"var_a": "val_a"}}}
     LINES
   end
 
   let(:good_stdout_human) do
-    <<~LINES
-
-      \r\nPLAY [List Variables] **********************************************************
-      \r\nTASK [Gathering Facts] *********************************************************
-    LINES
+    [
+      "",
+      "\r\nPLAY [List Variables] **********************************************************",
+      "\r\nTASK [Gathering Facts] *********************************************************",
+      "[WARNING]: This is a warning from ansible",
+      "ok: [localhost]",
+      "",
+    ].join("\n")
   end
 
-  after do
-    FileUtils.rm_rf(runner_dir) if Dir.exist?(runner_dir)
-  end
+  subject { described_class.new(:return_code => 0, :stdout => good_stdout) }
 
-  describe ".parsed_stdout_to_human" do
-    context "with no stdout content" do
-      it "returns an empty string" do
-        expect(described_class.parsed_stdout_to_human([])).to eq("")
-      end
+  describe "#return_code" do
+    it "returns the value passed at construction" do
+      expect(subject.return_code).to eq(0)
     end
 
-    context "with valid stdout (1 JSON object per line)" do
-      it "returns all the content" do
-        parsed_stdout = good_stdout.each_line.map { |l| JSON.parse(l) }
-
-        expect(described_class.parsed_stdout_to_human(parsed_stdout)).to eq(good_stdout_human)
-      end
+    it "returns non-zero for failure" do
+      expect(described_class.new(:return_code => 1, :stdout => "").return_code).to eq(1)
     end
   end
 
   describe "#stdout" do
-    context "with no stdout file" do
-      it "returns an empty string" do
-        subject
-        FileUtils.rm_rf(Dir.glob(File.join(job_events_dir, "*.json")))
-
-        expect(subject.stdout).to eq("")
-      end
-    end
-
-    context "with valid stdout (1 JSON object per line)" do
-      let(:stdout_lines) { good_stdout }
-
-      it "returns all the content" do
-        expect(subject.stdout).to eq(good_stdout)
-      end
-    end
-  end
-
-  describe "#human_stdout" do
-    context "with no stdout file" do
-      it "returns an empty string" do
-        subject
-        FileUtils.rm_rf(Dir.glob(File.join(job_events_dir, "*.json")))
-
-        expect(subject.human_stdout).to eq("")
-      end
-    end
-
-    context "with valid stdout (1 JSON object per line)" do
-      let(:stdout_lines) { good_stdout }
-
-      it "returns all the content" do
-        expect(subject.human_stdout).to eq(good_stdout_human)
-      end
+    it "returns the raw stdout string" do
+      expect(subject.stdout).to eq(good_stdout)
     end
   end
 
   describe "#parsed_stdout" do
-    context "with no stdout file" do
-      it "returns an empty array" do
-        subject
-        FileUtils.rm_rf(Dir.glob(File.join(job_events_dir, "*.json")))
-
-        expect(subject.parsed_stdout).to eq([])
-      end
+    it "returns an array of hashes" do
+      expect(subject.parsed_stdout).to all(be_a(Hash))
     end
 
-    context "with valid stdout (1 JSON object per line)" do
-      let(:stdout_lines) { good_stdout }
-
-      it "returns an array of only hashes" do
-        expect(subject.parsed_stdout.all? { |line| line.kind_of?(Hash) }).to be_truthy
-      end
-
-      it "includes the expected 'stdout' keys" do
-        expect(subject.parsed_stdout[0]['stdout']).to eq("")
-        expect(subject.parsed_stdout[1]['stdout']).to eq("\r\nPLAY [List Variables] **********************************************************")
-        expect(subject.parsed_stdout[2]['stdout']).to eq("\r\nTASK [Gathering Facts] *********************************************************")
-        expect(subject.parsed_stdout[3]['stdout']).to eq("")
-      end
+    it "parses stdout fields from JSON events" do
+      expect(subject.parsed_stdout[0]["stdout"]).to eq("")
+      expect(subject.parsed_stdout[1]["stdout"]).to eq("\r\nPLAY [List Variables] **********************************************************")
+      expect(subject.parsed_stdout[2]["stdout"]).to eq("\r\nTASK [Gathering Facts] *********************************************************")
+      expect(subject.parsed_stdout[4]["stdout"]).to eq("ok: [localhost]")
+      expect(subject.parsed_stdout[5]["stdout"]).to eq("")
     end
 
-    context "with a different :ident provided" do
-      let(:ident)        { 'my_result' }
-      let(:stdout_lines) { good_stdout }
+    it "wraps non-JSON lines from the stream as stdout hashes" do
+      expect(subject.parsed_stdout[3]).to eq("stdout" => "[WARNING]: This is a warning from ansible")
+    end
 
-      it "returns an array of only hashes" do
-        expect(subject.parsed_stdout.all? { |line| line.kind_of?(Hash) }).to be_truthy
-      end
+    it "returns an empty array for empty stdout" do
+      response = described_class.new(:return_code => 0, :stdout => "")
+      expect(response.parsed_stdout).to eq([])
+    end
 
-      it "includes the expected 'stdout' keys" do
-        expect(subject.parsed_stdout[0]['stdout']).to eq("")
-        expect(subject.parsed_stdout[1]['stdout']).to eq("\r\nPLAY [List Variables] **********************************************************")
-        expect(subject.parsed_stdout[2]['stdout']).to eq("\r\nTASK [Gathering Facts] *********************************************************")
-        expect(subject.parsed_stdout[3]['stdout']).to eq("")
-      end
+    it "wraps non-JSON lines mixed with JSON lines" do
+      response = described_class.new(:return_code => 0, :stdout => "not json\n{\"stdout\": \"ok\"}\n")
+      expect(response.parsed_stdout).to eq([{"stdout" => "not json"}, {"stdout" => "ok"}])
     end
   end
 
-  describe "cleanup_filesystem!" do
-    before do
-      expect(subject).to receive(:return_code)
-      expect(subject).to receive(:stdout)
+  describe "#human_stdout" do
+    it "joins the stdout fields from each event" do
+      expect(subject.human_stdout).to eq(good_stdout_human)
     end
 
-    # Required so top level `after` can call `.rm_rf` properly
-    after { allow(FileUtils).to receive(:remove_entry).and_call_original }
+    it "returns an empty string for empty stdout" do
+      response = described_class.new(:return_code => 0, :stdout => "")
+      expect(response.human_stdout).to eq("")
+    end
+  end
 
-    context "without debug" do
-      it "calls FileUtils.remove_entry" do
-        expect(FileUtils).to receive(:remove_entry).with(base_dir)
-
-        subject.cleanup_filesystem!
-      end
+  describe "#plays" do
+    it "returns an array of playbook_on_play_start events" do
+      expect(subject.plays.size).to eq(1)
+      expect(subject.plays.first["event_data"]["play"]).to eq("List Variables")
     end
 
-    context "with debug" do
-      subject { described_class.new(:base_dir => base_dir, :ident => ident, :debug => true) }
+    it "returns an empty array when no play events exist" do
+      response = described_class.new(:return_code => 0, :stdout => "")
+      expect(response.plays).to eq([])
+    end
+  end
 
-      it "does not call FileUtils.remove_entry" do
-        expect(FileUtils).to receive(:remove_entry).with(base_dir).never
+  describe "#stats" do
+    it "returns the artifact_data from the stats event" do
+      expect(subject.stats).to eq("var_a" => "val_a")
+    end
 
-        subject.cleanup_filesystem!
-      end
+    it "returns an empty hash when no stats event exists" do
+      response = described_class.new(:return_code => 0, :stdout => "")
+      expect(response.stats).to eq({})
+    end
+  end
+
+  describe ".parsed_stdout_to_human" do
+    it "joins the stdout fields" do
+      expect(described_class.parsed_stdout_to_human(subject.parsed_stdout)).to eq(good_stdout_human)
+    end
+
+    it "returns an empty string for an empty array" do
+      expect(described_class.parsed_stdout_to_human([])).to eq("")
+    end
+  end
+
+  describe ".parsed_stdout_to_plays" do
+    it "extracts playbook_on_play_start events" do
+      expect(described_class.parsed_stdout_to_plays(subject.parsed_stdout).pluck("event")).to eq(["playbook_on_play_start"])
+    end
+  end
+
+  describe ".parsed_stdout_to_stats" do
+    it "extracts artifact_data from playbook_on_stats event" do
+      expect(described_class.parsed_stdout_to_stats(subject.parsed_stdout)).to eq("var_a" => "val_a")
+    end
+
+    it "returns empty hash when missing" do
+      expect(described_class.parsed_stdout_to_stats([])).to eq({})
     end
   end
 end
