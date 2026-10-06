@@ -1,4 +1,6 @@
 RSpec.describe Service do
+  include Spec::Support::SupportsHelper
+
   include_examples "OwnershipMixin"
 
   context "service events" do
@@ -952,6 +954,7 @@ RSpec.describe Service do
     let(:ra) { FactoryBot.create(:resource_action, :dialog_id => 58, :ae_namespace => "foo", :ae_class => "bar", :ae_instance => "baz", :ae_attributes => {:service_action=>"reconfigure"}) }
 
     before do
+      stub_supports(service, :reconfigure)
       allow(DialogSerializer).to receive(:new).and_return(dialog_serializer)
       allow(dialog_serializer).to receive(:serialize).and_return("serialized_reconfigure_dialog")
       allow(ResourceActionWorkflow).to receive(:new).and_return(workflow)
@@ -969,7 +972,7 @@ RSpec.describe Service do
     end
 
     it "serializes the dialog returned by the workflow with all attributes" do
-      expect(dialog_serializer).to receive(:serialize).with(Array["workflow_dialog"], true)
+      expect(dialog_serializer).to receive(:serialize).with(["workflow_dialog"], true)
       service.reconfigure_dialog
     end
 
