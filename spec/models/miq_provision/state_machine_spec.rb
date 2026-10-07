@@ -88,22 +88,124 @@ RSpec.describe MiqProvision do
         expect(vm.reload.description).to        eq(description)
       end
 
-      it "sets ownership" do
-        group_owner = FactoryBot.create(:miq_group, :description => "desired")
-        group_current = FactoryBot.create(:miq_group, :description => "current")
-        user.update!(:miq_groups => [group_owner, group_current], :current_group => group_current)
-        options[:owner_email] = user.email
-        options[:owner_group] = group_owner.description
-        task.update(:options => options)
+      context "sets ownership" do
+        let(:group_user)  { FactoryBot.create(:miq_group, :description => "user_group") }
+        let(:group_admin) { FactoryBot.create(:miq_group, :description => "admin_group") }
 
-        expect(task).to receive(:mark_as_completed)
+        it "sets the destination group from owner_group" do
+          user.update!(:miq_groups => [group_user, group_admin], :current_group => group_user)
+          options[:owner_email] = user.email
+          options[:owner_group] = group_user.description
+          task.update(:options => options)
 
-        task.signal(:post_create_destination)
+          expect(task).to receive(:mark_as_completed)
+          task.signal(:post_create_destination)
 
-        expect(task.destination.evm_owner).to eq(user)
-        vm.reload
-        expect(vm.evm_owner).to eq(user)
-        expect(vm.miq_group).to eq(group_owner)
+          expect(vm.reload.evm_owner).to eq(user)
+          expect(vm.miq_group).to eq(group_user)
+        end
+
+        it "sets the destination group from owner_group even if the user changed active group to admin" do
+          user.update!(:miq_groups => [group_user, group_admin], :current_group => group_admin)
+          options[:owner_email] = user.email
+          options[:owner_group] = group_user.description
+          task.update(:options => options)
+
+          expect(task).to receive(:mark_as_completed)
+          task.signal(:post_create_destination)
+
+          expect(vm.reload.evm_owner).to eq(user)
+          expect(vm.miq_group).to eq(group_user)
+        end
+
+        it "sets the destination group from owner_group even if the user changed active group to user" do
+          user.update!(:miq_groups => [group_user, group_admin], :current_group => group_user)
+          options[:owner_email] = user.email
+          options[:owner_group] = group_admin.description
+          task.update(:options => options)
+
+          expect(task).to receive(:mark_as_completed)
+          task.signal(:post_create_destination)
+
+          expect(vm.reload.evm_owner).to eq(user)
+          expect(vm.miq_group).to eq(group_admin)
+        end
+
+        # Scenario 2b: owner_email IS present, owner_group is missing, AND requester_group is
+        # also missing (e.g. legacy request or API provisioning that skipped set_request_values).
+        # The user switched their active group to admin after request creation.
+        # get_owner finds the user via owner_email; owner_group is blank so
+        # current_group_by_description is NOT called.  get_user is NOT called because get_owner
+        # returned non-nil.  set_ownership uses user.current_group which is the DB value
+        # (group_admin) -- the WRONG group.
+        # Expected: group_user (the group the request was created in).
+        # Currently broken: group_admin (switched DB group) is stamped instead.
+        it "uses the request-time group when owner_email is present but both owner_group and requester_group are missing and user switched to admin (scenario 2b)" do
+          user.update!(:miq_groups => [group_user, group_admin], :current_group => group_admin)
+          options[:owner_email] = user.email
+          # Neither owner_group nor requester_group is set -- the truly broken case.
+          # The request was created when user was in group_user but nothing records that.
+          task.update(:userid => user.userid, :options => options)
+
+          expect(task).to receive(:mark_as_completed)
+          task.signal(:post_create_destination)
+
+          # NOTE: This currently stamps group_admin (the switched DB group).
+          # With the fix, the request-time group should be resolvable from
+          # requester_group which is always set by set_request_values.
+          expect(vm.reload.evm_owner).to eq(user)
+          expect(vm.miq_group).to eq(group_user)
+        end
+
+        # Scenario 2b (realistic): requester_group IS set (as set_request_values always does),
+        # owner_group is missing, owner_email is present, user switched to admin.
+        # get_owner finds the user via email but skips group override (no owner_group).
+        # However, get_user IS called as cache for lookup_by_lower_email and applies
+        # requester_group.  This path already works because of the cache indirection.
+        # Included here to document that requester_group in options protects this path.
+        it "falls back to requester_group when owner_email is present but owner_group is missing and user switched to admin (scenario 2b with requester_group set)" do
+          user.update!(:miq_groups => [group_user, group_admin], :current_group => group_admin)
+          options[:owner_email] = user.email
+          task.update(:userid => user.userid, :options => options.merge(:requester_group => group_user.description))
+
+          expect(task).to receive(:mark_as_completed)
+          task.signal(:post_create_destination)
+
+          expect(vm.reload.evm_owner).to eq(user)
+          expect(vm.miq_group).to eq(group_user)
+        end
+
+        # Scenario 4b: owner_email IS present, owner_group is missing, requester_group is
+        # also missing, and the user switched their active group to user group after creating
+        # the request in admin group.
+        # Currently broken: group_user (switched DB group) is stamped instead of group_admin.
+        it "uses the request-time group when owner_email is present but both owner_group and requester_group are missing and user switched to user group (scenario 4b)" do
+          user.update!(:miq_groups => [group_user, group_admin], :current_group => group_user)
+          options[:owner_email] = user.email
+          # Neither owner_group nor requester_group is set.
+          task.update(:userid => user.userid, :options => options)
+
+          expect(task).to receive(:mark_as_completed)
+          task.signal(:post_create_destination)
+
+          # NOTE: This currently stamps group_user (the switched DB group).
+          # With the fix the request-time group should come from requester_group.
+          expect(vm.reload.evm_owner).to eq(user)
+          expect(vm.miq_group).to eq(group_admin)
+        end
+
+        # Scenario 5 (no owner_email): get_user is called, which applies requester_group via
+        # current_group_by_description.  This path already works correctly.
+        it "falls back to requester_group when owner_email and owner_group are both missing and user changed active group (scenario 5)" do
+          user.update!(:miq_groups => [group_user, group_admin], :current_group => group_admin)
+          task.update(:userid => user.userid, :options => options.merge(:requester_group => group_user.description))
+
+          expect(task).to receive(:mark_as_completed)
+          task.signal(:post_create_destination)
+
+          expect(vm.reload.evm_owner).to eq(user)
+          expect(vm.miq_group).to eq(group_user)
+        end
       end
 
       context "sets retirement" do
