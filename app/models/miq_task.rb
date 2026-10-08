@@ -61,7 +61,7 @@ class MiqTask < ApplicationRecord
   scope :completed_warn,          ->           { finished.where(:status => 'Warn') }
   scope :completed_error,         ->           { finished.where(:status => 'Error') }
   scope :no_status_selected,      ->           { running.where.not(:status => %(Ok Error Warn)) }
-  scope :with_status_in,          ->(s, *rest) { rest.reduce(MiqTask.send(s)) { |chain, r| chain.or(MiqTask.send(r)) } }
+  scope :with_status_in,          ->(s, *rest) { merge(rest.reduce(MiqTask.unscoped.send(s)) { |chain, r| chain.or(MiqTask.unscoped.send(r)) }) }
 
   def ensure_started
     self.started_on ||= Time.now.utc if state == STATE_ACTIVE
