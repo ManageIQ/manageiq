@@ -56,7 +56,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
     result = error.message.dup
     result << "\n\n"
     result << error.backtrace.join("\n")
-    result.mb_chars.limit(ERROR_MAX_SIZE)
+    result.truncate_bytes(ERROR_MAX_SIZE, :omission => nil)
   end
 
   private

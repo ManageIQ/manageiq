@@ -566,4 +566,25 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
       expect(GitRepository.first.authentication).to be_nil
     end
   end
+
+  describe "#format_sync_error" do
+    let(:source) { FactoryBot.create(:embedded_ansible_configuration_script_source) }
+
+    it "returns the error message and backtrace joined together" do
+      error = RuntimeError.new("something went wrong")
+      allow(error).to receive(:backtrace).and_return(%w[line1 line2])
+
+      expect(source.format_sync_error(error)).to eq("something went wrong\n\nline1\nline2")
+    end
+
+    it "truncates the result to ERROR_MAX_SIZE bytes" do
+      error = RuntimeError.new("big error")
+      allow(error).to receive(:backtrace).and_return(["x" * 1024] * 100)
+
+      result = source.format_sync_error(error)
+
+      expect(result.bytesize).to be <= described_class::ERROR_MAX_SIZE
+      expect(result).to be_valid_encoding
+    end
+  end
 end
