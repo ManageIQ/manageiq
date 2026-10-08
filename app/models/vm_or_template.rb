@@ -430,7 +430,11 @@ class VmOrTemplate < ApplicationRecord
   # cb_method:    the MiqQueue callback method along with the parameters that is called
   #               when automate process is done and the event is not prevented to proceed by policy
   def check_policy_prevent(policy_event, *cb_method)
-    enforce_policy(policy_event, {}, {:miq_callback => prevent_callback_settings(*cb_method)}) unless policy_event.nil?
+    return if policy_event.nil?
+
+    policy_prevent_with_task_handoff(*cb_method) do |miq_callback|
+      enforce_policy(policy_event, {}, {:miq_callback => miq_callback})
+    end
   end
 
   def enforce_policy(event, inputs = {}, options = {})
