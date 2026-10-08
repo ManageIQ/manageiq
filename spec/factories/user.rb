@@ -1,3 +1,7 @@
+require 'bcrypt'
+
+FACTORY_USER_PASSWORD_DIGEST = BCrypt::Password.create("dummy").freeze
+
 FactoryBot.define do
   factory :user do
     transient do
@@ -11,8 +15,7 @@ FactoryBot.define do
     sequence(:userid) { |s| "user#{s}" }
     sequence(:name)   { |s| "Test User #{s}" }
 
-    # encrypted password for "dummy"
-    password_digest { "$2a$10$FTbGT/y/PQ1HvoOoc1FcyuuTtHzfop/uG/mcEAJLYpzmsUIJcGT7W" }
+    password_digest { FACTORY_USER_PASSWORD_DIGEST }
 
     after :build do |u, e|
       if e.miq_groups.blank? && (e.role || e.features)

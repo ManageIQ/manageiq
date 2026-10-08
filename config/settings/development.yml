@@ -1,4 +1,7 @@
 ---
+:authentication:
+  :password_rules:
+    :complexity_min_score: 0
 :log:
   :level_rails: debug
 :webservices:

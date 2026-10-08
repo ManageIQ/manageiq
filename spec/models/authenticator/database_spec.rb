@@ -1,7 +1,7 @@
 RSpec.describe Authenticator::Database do
   subject { Authenticator::Database.new({}) }
-  let!(:alice) { FactoryBot.create(:user, :userid => 'alice', :password => 'secret') }
-  let!(:vincent) { FactoryBot.create(:user, :userid => 'Vincent', :password => 'secret') }
+  let!(:alice) { FactoryBot.create(:user, :userid => 'alice') }
+  let!(:vincent) { FactoryBot.create(:user, :userid => 'Vincent') }
 
   describe '#uses_stored_password?' do
     it "is true" do
@@ -31,7 +31,7 @@ RSpec.describe Authenticator::Database do
     end
 
     let(:username) { 'alice' }
-    let(:password) { 'secret' }
+    let(:password) { 'dummy' }
 
     context "with correct password" do
       it "succeeds" do

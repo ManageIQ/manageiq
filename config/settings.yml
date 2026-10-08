@@ -11,6 +11,9 @@
   :locked_account_timeout: 2.minutes
   :amazon_key:
   :amazon_secret:
+  :password_rules:
+    :complexity_min_score: 3
+    :complexity_extra_words: []
 :binary_blob:
   :keep_orphaned: 1.month
   :purge_window_size: 100

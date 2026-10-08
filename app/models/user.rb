@@ -49,10 +49,15 @@ class User < ApplicationRecord
                                 :allow_nil => true, :message => "must be a valid email address"},
                     :length => {:maximum => 255}
   validates :current_group, :inclusion => {:in => proc { |u| u.miq_groups }, :allow_nil => true, :if => :current_group_id_changed?}
+  validate  :password_complexity, :if => :password
 
   # use authenticate_bcrypt rather than .authenticate to avoid confusion
   # with the class method of the same name (User.authenticate)
   alias_method :authenticate_bcrypt, :authenticate
+
+  # Allows callers (e.g. seed) to bypass password complexity checks for a
+  # single save by setting this transient flag before saving.
+  attr_writer :skip_complexity_check
 
   serialize     :settings, :type => Hash   # Implement settings column as a hash
   default_value_for(:settings) { {} }
@@ -178,6 +183,7 @@ class User < ApplicationRecord
   def dummy_password_for_external_auth
     if password.blank? && password_digest.blank? &&
        !self.class.authenticator(userid).uses_stored_password?
+      self.skip_complexity_check = true
       self.password = "dummy"
     end
   end
@@ -456,7 +462,7 @@ class User < ApplicationRecord
       group = MiqGroup.in_my_region.find_by(:description => group_description)
 
       _log.info("Creating #{user_id} user...")
-      user = create(user_attributes)
+      user = create(user_attributes.merge(:skip_complexity_check => true))
       user.miq_groups = [group] if group
       user.save
       _log.info("Creating #{user_id} user... Complete")
@@ -473,7 +479,27 @@ class User < ApplicationRecord
   end
   private_class_method :seed_data
 
+  MANAGEIQ_DICTIONARY_WORDS = %w[manageiq miq vmdb].freeze
+
   private
+
+  def password_complexity
+    return if @skip_complexity_check
+
+    rules = ::Settings.authentication.password_rules
+    return if rules.complexity_min_score == 0
+
+    require "zxcvbn"
+    tester = Zxcvbn.tester_builder
+                   .add_word_list("manageiq_terms", MANAGEIQ_DICTIONARY_WORDS)
+                   .add_word_list("extra_terms", Array(rules.complexity_extra_words))
+                   .build
+    result = tester.test(password)
+    return unless result.score < rules.complexity_min_score
+
+    details = [result.feedback.warning, *result.feedback.suggestions].compact_blank
+    errors.add(:base, [_("Password is not strong enough"), *details].join("\n"))
+  end
 
   def unlock_queue
     MiqQueue.create_with(:deliver_on => Time.now.utc + ::Settings.authentication.locked_account_timeout.to_i)
