@@ -535,6 +535,26 @@ RSpec.describe MiqTask do
     end
   end
 
+  describe ".with_status_in" do
+    it "does not discard prior scope conditions" do
+      task = FactoryBot.create(:miq_task, :state => 'Finished', :status => 'Ok', :zone => 'East')
+      FactoryBot.create(:miq_task, :state => 'Finished', :status => 'Ok', :zone => 'West')
+
+      results = MiqTask.with_zone('East').with_status_in('completed_ok')
+      expect(results).to eq([task])
+    end
+
+    it "does not discard prior scope conditions when combining multiple statuses" do
+      task_ok   = FactoryBot.create(:miq_task, :state => 'Finished', :status => 'Ok', :zone => 'East')
+      task_warn = FactoryBot.create(:miq_task, :state => 'Finished', :status => 'Warn', :zone => 'East')
+      FactoryBot.create(:miq_task, :state => 'Finished', :status => 'Error', :zone => 'East')
+      FactoryBot.create(:miq_task, :state => 'Finished', :status => 'Ok', :zone => 'West')
+
+      results = MiqTask.with_zone('East').with_status_in('completed_ok', 'completed_warn')
+      expect(results).to match_array([task_ok, task_warn])
+    end
+  end
+
   private
 
   def create_test_task(name, status, updated)
