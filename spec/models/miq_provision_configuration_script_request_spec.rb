@@ -5,10 +5,19 @@ describe MiqProvisionConfigurationScriptRequest do
   let(:request)              { FactoryBot.create(:miq_provision_configuration_script_request, :requester => admin, :options => {:src_configuration_script_id => [configuration_script.id]}) }
 
   describe ".request_task_class_from" do
-    it "retrieves the request task class" do
+    it "retrieves the request task class from src_configuration_script_id" do
       options = {:src_configuration_script_id => configuration_script.id}
 
       expect(described_class.request_task_class_from("options" => options)).to eq(ems.class::Provision)
+    end
+
+    it "retrieves the request task class from src_ems_type" do
+      stub_class = double("manager_class")
+      provision_class = double("provision_class")
+      allow(ExtManagementSystem).to receive(:model_from_emstype).with("embedded_terraform").and_return(stub_class)
+      allow(stub_class).to receive(:provision_class).with(nil).and_return(provision_class)
+
+      expect(described_class.request_task_class_from("options" => {:src_ems_type => "embedded_terraform"})).to eq(provision_class)
     end
   end
 
