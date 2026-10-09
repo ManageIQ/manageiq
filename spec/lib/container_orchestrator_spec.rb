@@ -242,7 +242,7 @@ RSpec.describe ContainerOrchestrator do
       end
 
       it "doesn't raise an exception for an existing object" do
-        error = KubeException.new(500, "deployment config already exists", "")
+        error = Kubeclient::HttpError.new(500, "deployment config already exists", "")
         expect(apps_connection_stub).to receive(:create_deployment).and_raise(error)
 
         expect { subject.create_deployment("test") }.not_to raise_error
@@ -268,7 +268,7 @@ RSpec.describe ContainerOrchestrator do
       end
 
       it "doesn't raise an exception for an existing object" do
-        error = KubeException.new(500, "service already exists", "")
+        error = Kubeclient::HttpError.new(500, "service already exists", "")
         expect(kube_connection_stub).to receive(:create_service).and_raise(error)
 
         expect { subject.create_service("http", {:service => "http"}, 80) }.not_to raise_error
@@ -293,7 +293,7 @@ RSpec.describe ContainerOrchestrator do
       end
 
       it "doesn't raise an exception for an existing object" do
-        error = KubeException.new(500, "secret mysecret already exists", "")
+        error = Kubeclient::HttpError.new(500, "secret mysecret already exists", "")
         expect(kube_connection_stub).to receive(:create_secret).and_raise(error)
 
         expect { subject.create_secret("mysecret", {}) }.not_to raise_error
