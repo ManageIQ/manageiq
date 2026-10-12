@@ -323,6 +323,5 @@ group :development, :test do
   gem "factory_bot_rails",              "~>6.5.1",  :require => false # Used by cypress-on-rails.
 
   gem "parallel_tests",                 "~>5.6",    :require => false
-  gem "routes_lazy_routes"
   gem "rspec-rails",                    "~>7.0"
 end
