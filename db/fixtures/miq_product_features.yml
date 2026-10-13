@@ -242,6 +242,24 @@
   :feature_type: node
   :identifier: catalog
   :children:
+  - :name: Service Catalogs
+    :description: Everything under Service Catalogs
+    :feature_type: node
+    :identifier: catalog_service_template_catalogs
+    :children:
+    - :name: View
+      :description: View Service Catalogs
+      :feature_type: node
+      :identifier: catalog_service_template_catalogs_view
+      :children:
+      - :name: List
+        :description: Display Lists of Service Catalogs
+        :feature_type: view
+        :identifier: catalog_service_template_catalogs_show_list
+      - :name: Show
+        :description: Display Service Catalog
+        :feature_type: view
+        :identifier: catalog_service_template_catalogs_show
   - :name: Catalog Items
     :description: Everything under All Catalog Items Accordion
     :feature_type: node

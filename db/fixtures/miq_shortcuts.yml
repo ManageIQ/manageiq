@@ -34,6 +34,11 @@
   :url: /service/show_list
   :rbac_feature_name: service_show_list
   :startup: true
+- :name: catalog_service_catalogs
+  :description: Services / Catalogs / Service Catalogs
+  :url: /service_template_catalog/show_list
+  :rbac_feature_name: catalog_service_template_catalogs_show_list
+  :startup: true
 - :name: catalogs
   :description: Services / Catalogs
   :url: /catalog/explorer
