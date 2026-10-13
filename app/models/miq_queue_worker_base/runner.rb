@@ -63,14 +63,11 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
   end
 
   def get_message_via_sql
-    loop do
-      msg = MiqQueue.get(
-        :queue_name => @worker.queue_name,
-        :role       => @worker.required_roles.presence,
-        :priority   => @worker.class.queue_priority
-      )
-      return msg unless msg == :stale
-    end
+    MiqQueue.get(
+      :queue_name => @worker.queue_name,
+      :role       => @worker.required_roles.presence,
+      :priority   => @worker.class.queue_priority
+    )
   end
 
   def get_message_via_miq_messaging
