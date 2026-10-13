@@ -25,7 +25,7 @@ module FixAuth
     include FixAuth::AuthModel
     self.table_name = "miq_databases"
     self.password_columns = %w[registration_http_proxy_server registration_http_proxy_password
-                               session_secret_token csrf_secret_token]
+                               session_secret_token csrf_secret_token signing_secret_token]
 
     def self.hardcode(old_value, _new_value)
       super(old_value, SecureRandom.hex(64))
