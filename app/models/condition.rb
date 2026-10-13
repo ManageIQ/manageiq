@@ -82,10 +82,11 @@ class Condition < ApplicationRecord
   # similar to MiqExpression#evaluate
   # @return [Boolean] true if the expression matches the record
   def self.subst_matches?(expr, rec)
-    do_eval(subst(expr, rec))
+    do_eval(subst(expr, rec), rec)
   end
 
-  def self.do_eval(expr)
+  def self.do_eval(expr, rec)
+    # NOTE: rec will be available in the expression
     !!eval(expr)
   end
   private_class_method :do_eval
@@ -167,7 +168,7 @@ class Condition < ApplicationRecord
       value = MiqExpression.quote(obj.send(attr), opts[:type]&.to_sym)
       value = value.gsub("\\", '\&\&') if value.kind_of?(String)
       e = search.gsub(/<value[^>]*>.+<\/value>/im, value.to_s)
-      obj if do_eval(e)
+      obj if do_eval(e, obj)
     end.compact
 
     MiqPolicy.logger.debug("MIQ(condition-_subst_find): Search Expression returned: [#{list.length}] records")
@@ -207,7 +208,7 @@ class Condition < ApplicationRecord
       e = check.gsub(/<value[^>]*>.+<\/value>/im, value.to_s)
       MiqPolicy.logger.debug("MIQ(condition-_subst_find): Check Expression after substitution: [#{e}]")
 
-      result = do_eval(e)
+      result = do_eval(e, obj)
 
       return true if result && checkmode == "any"
       return false if !result && checkmode == "all"
