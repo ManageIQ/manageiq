@@ -7,14 +7,9 @@ APP_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." &>/dev/null && pwd)
 if [ -n "$CI" ]; then
   echo "== Installing system packages =="
   sudo apt-get update
-  sudo apt-get install -y libcurl4-openssl-dev
+  # Install cmake + libssh2-dev so we can build the rugged gem (libgit2 native extension with SSH support)
+  sudo apt-get install -y libcurl4-openssl-dev cmake libssl-dev libssh2-1-dev libzstd-dev
   echo
-
-  if [ -n "$ACT" ]; then
-    # Install cmake so we can build rugged gem
-    sudo apt-get install -y cmake
-    echo
-  fi
 
   if [ "$TEST_SUITE" != "security" ]; then
     # Install gettext for I18n msgfmt specs
