@@ -10,11 +10,13 @@ class MiqProvisionConfigurationScriptRequest < MiqRequest
   validate  :must_have_user
 
   def self.request_task_class_from(attribs)
-    source_id = MiqRequestMixin.get_option(:src_configuration_script_id, nil, attribs['options'])
-    configuration_script = ::ConfigurationScript.find_by(:id => source_id)
-    return if configuration_script.nil?
+    src_ems_type = MiqRequestMixin.get_option(:src_ems_type, nil, attribs['options'])
+    source_id    = MiqRequestMixin.get_option(:src_configuration_script_id, nil, attribs['options'])
 
-    configuration_script.manager.class.provision_class(nil)
+    manager_class   = ExtManagementSystem.model_from_emstype(src_ems_type)            if src_ems_type
+    manager_class ||= ::ConfigurationScript.find_by(:id => source_id)&.manager&.class if source_id
+
+    manager_class&.provision_class(nil)
   end
 
   def self.new_request_task(attribs)
