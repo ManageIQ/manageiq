@@ -11,6 +11,6 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager < ManageIQ::Provid
   end
 
   def self.catalog_types
-    {"generic_ansible_playbook" => N_("Ansible Playbook")}
+    {"generic_ansible_playbook" => N_("Ansible Playbook (deprecated)"), "embedded_ansible" => N_("Ansible Playbook")}
   end
 end
