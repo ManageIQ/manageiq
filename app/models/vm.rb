@@ -14,6 +14,11 @@ class Vm < VmOrTemplate
     Vm
   end
 
+  # Don't tack on `type IN []` query for the top level classes (default scope already filters out the templates)
+  def self.finder_needs_type_condition?
+    self < base_model
+  end
+
   def self.corresponding_model
     if self == Vm
       MiqTemplate
