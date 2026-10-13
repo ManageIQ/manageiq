@@ -45,6 +45,9 @@ class ContainerGroup < ApplicationRecord
   has_many :vim_performance_states, :as => :resource
   delegate :my_zone, :to => :ext_management_system, :allow_nil => true
 
+  # Providers that can fetch pod logs must override this with `supports :logs`
+  supports_not :logs
+
   virtual_column :ready_condition_status, :type => :string, :uses => :container_conditions
   virtual_column :running_containers_summary, :type => :string
 
