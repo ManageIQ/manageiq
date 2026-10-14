@@ -21,7 +21,7 @@ manageiq_plugin "manageiq-schema"
 
 # Unmodified gems
 gem "activerecord-session_store",       "~>2.0"
-gem "activerecord-virtual_attributes",  "~>8.0.0"
+gem "activerecord-virtual_attributes",  "~>8.1.0"
 gem "acts_as_tree",                     "~>2.7" # acts_as_tree needs to be required so that it loads before ancestry
 gem "ancestry",                         "~>4.1.0",           :require => false
 gem "awesome_spawn",                    "~>1.6",             :require => false
@@ -65,7 +65,7 @@ gem "psych",                            ">=3.1",             :require => false #
 gem "query_relation",                   "~>0.2.0",           :require => false
 gem "rack",                             ">=2.2.23",          :require => false
 gem "rack-attack",                      "~>6.8.0",           :require => false
-gem "rails",                            "~>8.1.3"
+gem "rails",                            "~>8.1.4"
 gem "rails-i18n",                       "~>8.1.0"
 gem "rake",                             ">=12.3.3",          :require => false
 gem "rest-client",                      "~>2.1.0",           :require => false
