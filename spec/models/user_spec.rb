@@ -766,4 +766,51 @@ RSpec.describe User do
       expect { user.check_reference }.to throw_symbol(:abort)
     end
   end
+
+  describe "#link_to_session" do
+    let(:user) { FactoryBot.create(:user) }
+
+    it "handles Rack::Session::SessionId objects by extracting private_id" do
+      require 'rack/session/dalli'
+      session_id = Rack::Session::SessionId.new("test_session_id_123")
+      request = double("ActionDispatch::Request", :session_options => {:id => session_id})
+
+      expect { user.link_to_session(request) }.to change(Session, :count).by(1)
+      expect(user.sessions.last.session_id).to eq(session_id.private_id)
+    end
+
+    it "handles plain String session ids" do
+      request = double("ActionDispatch::Request", :session_options => {:id => "plain_session_id_456"})
+
+      expect { user.link_to_session(request) }.to change(Session, :count).by(1)
+      expect(user.sessions.last.session_id).to eq("plain_session_id_456")
+    end
+
+    it "does nothing when request is nil" do
+      expect { user.link_to_session(nil) }.not_to change(Session, :count)
+    end
+
+    it "does nothing when request has no session id" do
+      request = double("ActionDispatch::Request", :session_options => {})
+      expect { user.link_to_session(request) }.not_to change(Session, :count)
+    end
+  end
+
+  describe "#revoke_sessions" do
+    let(:user) { FactoryBot.create(:user) }
+
+    it "destroys user sessions and deletes user tokens across token caches" do
+      session = Session.create!(:session_id => "user_sess_1", :user_id => user.id)
+      token_store = TokenStore.acquire("test_api", 300)
+      token_store.create_user_token("user_tok_1", {:userid => user.userid}, {})
+
+      expect(token_store.read("user_tok_1")).to be_present
+      expect(user.sessions).to include(session)
+
+      user.revoke_sessions
+
+      expect(user.reload.sessions).to be_empty
+      expect(token_store.read("user_tok_1")).to be_nil
+    end
+  end
 end
