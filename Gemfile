@@ -65,7 +65,7 @@ gem "psych",                            ">=3.1",             :require => false #
 gem "query_relation",                   "~>0.2.0",           :require => false
 gem "rack",                             ">=2.2.23",          :require => false
 gem "rack-attack",                      "~>6.8.0",           :require => false
-gem "rails",                            "~>8.1.3"
+gem "rails",                            "~>8.1.4"
 gem "rails-i18n",                       "~>8.1.0"
 gem "rake",                             ">=12.3.3",          :require => false
 gem "rest-client",                      "~>2.1.0",           :require => false
