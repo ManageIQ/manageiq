@@ -128,4 +128,22 @@ RSpec.describe ManageIQ::RackAttack do
       expect(last_response.status).to eq(429)
     end
   end
+
+  describe "cache store compatibility" do
+    it "configures store proxy for ActiveSupport::Cache::MemCacheStore" do
+      require 'active_support/cache/mem_cache_store'
+      Rack::Attack.cache.store = ActiveSupport::Cache::MemCacheStore.new("127.0.0.1:11211")
+
+      expect(Rack::Attack.cache.store).to be_kind_of(Rack::Attack::StoreProxy::MemCacheStoreProxy)
+      expect(Rack::Attack.cache.store).to respond_to(:read, :write, :delete, :increment)
+    end
+
+    it "configures store proxy for Dalli::Client" do
+      require 'dalli'
+      Rack::Attack.cache.store = Dalli::Client.new("127.0.0.1:11211")
+
+      expect(Rack::Attack.cache.store).to be_kind_of(Rack::Attack::StoreProxy::DalliProxy)
+      expect(Rack::Attack.cache.store).to respond_to(:read, :write, :delete, :increment)
+    end
+  end
 end
