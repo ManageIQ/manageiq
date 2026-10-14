@@ -438,6 +438,7 @@ RSpec.describe Service do
 
     describe ".queue_chargeback_reports" do
       before do
+        EvmSpecHelper.assign_role("reporting")
         @service_c1 = FactoryBot.create(:service, :service => @service)
         @service_c1.name = "Test_Service_2"
         @service_c1 << @vm1
@@ -470,6 +471,8 @@ RSpec.describe Service do
     end
 
     describe "#queue_chargeback_report_generation" do
+      before { EvmSpecHelper.assign_role("reporting") }
+
       it "queue request to generate chargeback report" do
         expect(MiqQueue).to receive(:put) do |args|
           expect(args).to include(:class_name  => described_class.name,

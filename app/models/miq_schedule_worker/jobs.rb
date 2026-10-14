@@ -197,6 +197,9 @@ class MiqScheduleWorker::Jobs
   end
 
   def generate_chargeback_for_service(args = {})
+    # Only queue chargeback report generation if the reporting role is enabled for any server in the region.
+    return unless MiqRegion.my_region.role_assigned?("reporting")
+
     queue_work(:class_name => "Service", :method_name => "queue_chargeback_reports", :zone => nil, :args => args)
   end
 
