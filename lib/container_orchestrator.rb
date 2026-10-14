@@ -1,5 +1,4 @@
 autoload(:Kubeclient, 'kubeclient')
-autoload(:KubeException, 'kubeclient')
 
 class ContainerOrchestrator
   include Vmdb::Logging
@@ -25,7 +24,7 @@ class ContainerOrchestrator
     definition = deployment_definition(name)
     yield(definition) if block_given?
     kube_apps_connection.create_deployment(definition)
-  rescue KubeException => e
+  rescue Kubeclient::HttpError => e
     raise unless /already exists/.match?(e.message)
   end
 
@@ -33,7 +32,7 @@ class ContainerOrchestrator
     definition = service_definition(name, selector, port)
     yield(definition) if block_given?
     kube_connection.create_service(definition)
-  rescue KubeException => e
+  rescue Kubeclient::HttpError => e
     raise unless /already exists/.match?(e.message)
   end
 
@@ -41,7 +40,7 @@ class ContainerOrchestrator
     definition = secret_definition(name, data)
     yield(definition) if block_given?
     kube_connection.create_secret(definition)
-  rescue KubeException => e
+  rescue Kubeclient::HttpError => e
     raise unless /already exists/.match?(e.message)
   end
 
@@ -49,19 +48,19 @@ class ContainerOrchestrator
     _log.info("Deleting [#{name}] in namespace: #{my_namespace}")
     scale(name, 0)
     kube_apps_connection.delete_deployment(name, my_namespace)
-  rescue KubeException => e
+  rescue Kubeclient::HttpError => e
     raise unless /not found/.match?(e.message)
   end
 
   def delete_service(name)
     kube_connection.delete_service(name, my_namespace)
-  rescue KubeException => e
+  rescue Kubeclient::HttpError => e
     raise unless /not found/.match?(e.message)
   end
 
   def delete_secret(name)
     kube_connection.delete_secret(name, my_namespace)
-  rescue KubeException => e
+  rescue Kubeclient::HttpError => e
     raise unless /not found/.match?(e.message)
   end
 
