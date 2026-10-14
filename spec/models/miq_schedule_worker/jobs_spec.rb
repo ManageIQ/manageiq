@@ -40,15 +40,29 @@ RSpec.describe MiqScheduleWorker::Jobs do
   end
 
   describe "#generate_chargeback_for_service" do
-    it "queue request to generate Chargeback reports for each service" do
-      allow(MiqServer).to receive(:my_zone)
-      described_class.new.generate_chargeback_for_service(:report_source => "Rspec - Chargeback reports queue")
-      expect(MiqQueue.first).to have_attributes(
-        :class_name  => "Service",
-        :method_name => "queue_chargeback_reports",
-        :args        => [{:report_source => "Rspec - Chargeback reports queue"}],
-        :priority    => MiqQueue::MEDIUM_PRIORITY
-      )
+    let!(:server) { EvmSpecHelper.local_miq_server }
+
+    context "when the reporting role is assigned in the region" do
+      before do
+        EvmSpecHelper.assign_role("reporting", :miq_server => server)
+      end
+
+      it "queues a request to generate Chargeback reports for each service" do
+        described_class.new.generate_chargeback_for_service(:report_source => "Rspec - Chargeback reports queue")
+        expect(MiqQueue.first).to have_attributes(
+          :class_name  => "Service",
+          :method_name => "queue_chargeback_reports",
+          :args        => [{:report_source => "Rspec - Chargeback reports queue"}],
+          :priority    => MiqQueue::MEDIUM_PRIORITY
+        )
+      end
+    end
+
+    context "when the reporting role is not assigned in the region" do
+      it "does not queue any work" do
+        described_class.new.generate_chargeback_for_service(:report_source => "Rspec - Chargeback reports queue")
+        expect(MiqQueue.count).to eq(0)
+      end
     end
   end
 

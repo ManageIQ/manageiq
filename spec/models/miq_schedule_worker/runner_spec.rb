@@ -427,6 +427,7 @@ RSpec.describe MiqScheduleWorker::Runner do
           describe "#schedule_chargeback_report_for_service_daily" do
             before do
               allow(@schedule_worker).to receive(:worker_settings).and_return(:chargeback_generation_interval => 1.day)
+              EvmSpecHelper.assign_role("reporting", :miq_server => @miq_server)
             end
 
             it "queues daily generation of Chargeback report for each service" do
