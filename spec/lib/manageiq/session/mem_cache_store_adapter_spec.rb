@@ -39,6 +39,14 @@ describe ManageIQ::Session::MemCacheStoreAdapter do
       session_middleware = session_class.new(app, adapter.session_options)
 
       expect(session_middleware).to be_kind_of(session_class)
+
+      # Rack session options are stored in default_options by the parent class
+      expect(session_middleware.default_options[:expire_after]).to eq(24.hours)
+      expect(session_middleware.default_options[:namespace]).to eq("MIQ:VMDB")
+
+      # pool_size is consumed to build a ConnectionPool; verify size was accepted
+      expect(session_middleware.data).to be_kind_of(ConnectionPool)
+      expect(session_middleware.data.size).to eq(10)
     end
   end
 

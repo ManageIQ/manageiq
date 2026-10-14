@@ -32,21 +32,25 @@ RSpec.describe TokenStore do
     context "when session_store is memory" do
       before { stub_settings_merge(:server => {:session_store => "memory"}) }
 
-      it "returns an ActiveSupport::Cache::MemoryStore with KeyValueHelpers" do
+      it "returns an ActiveSupport::Cache::MemoryStore with KeyValueHelpers and correct options" do
         store = described_class.acquire("ws", 600)
 
         expect(store).to be_kind_of(ActiveSupport::Cache::MemoryStore)
         expect(store).to be_kind_of(described_class::KeyValueHelpers)
+        expect(store.options[:namespace]).to eq("MIQ:TOKENS:WS")
+        expect(store.options[:expires_in]).to eq(600)
       end
     end
 
     context "when session_store is sql" do
       before { stub_settings_merge(:server => {:session_store => "sql"}) }
 
-      it "returns a TokenStore::SqlStore" do
+      it "returns a TokenStore::SqlStore that namespaces keys under MIQ:TOKENS:UI" do
         store = described_class.acquire("ui", 300)
 
         expect(store).to be_kind_of(TokenStore::SqlStore)
+        store.write("tok1", {:userid => "alice", :expires_on => 1.hour.from_now})
+        expect(Session.find_by(:session_id => "MIQ:TOKENS:UI:tok1")).to be_present
       end
     end
 

@@ -43,8 +43,18 @@ RSpec.describe MiqMemcached do
   end
 
   describe ".client" do
-    it "instantiates a Dalli::Client with merged options" do
+    it "passes the configured server and merged options to Dalli::Client" do
+      require 'dalli'
       stub_settings_merge(:session => {:memcache_server => "127.0.0.1:11211"})
+
+      expect(Dalli::Client).to receive(:new).with(
+        "127.0.0.1:11211",
+        hash_including(
+          :socket_max_failures => 5,
+          :threadsafe          => true,
+          :namespace           => "server_monitor"
+        )
+      ).and_call_original
 
       client = described_class.client(:namespace => "server_monitor")
 
