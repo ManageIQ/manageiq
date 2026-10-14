@@ -4491,6 +4491,10 @@
       :description: Show Capacity & Utilization data of Pods
       :feature_type: view
       :identifier: container_group_perf
+    - :name: Logs
+      :description: Logs of this Pod
+      :feature_type: control
+      :identifier: container_group_logs
   - :name: Operate
     :description: Perform Operations on Pods
     :feature_type: control
