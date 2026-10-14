@@ -495,6 +495,9 @@ class Service < ApplicationRecord
   end
 
   def queue_chargeback_report_generation(options = {})
+    # Only queue chargeback report generation if the reporting role is enabled for any server in the region.
+    raise MiqException::Error, _("Reporting role not enabled") unless MiqRegion.my_region.role_assigned?("reporting")
+
     msg = "Generating chargeback report for `#{self.class.name}` with id #{id}"
     task = MiqTask.create(
       :name    => msg,
