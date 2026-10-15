@@ -229,8 +229,12 @@ class CustomButton < ApplicationRecord
 
   def visible_for_current_user?
     return false unless visibility.key?(:roles)
+    return true if visibility[:roles].include?("_ALL_")
 
-    visibility[:roles].include?(User.current_user.miq_user_role_name) || visibility[:roles].include?("_ALL_")
+    role_id = User.current_user.miq_user_role&.id
+    return false unless role_id
+
+    visibility[:roles].any? { |v| v.to_i == role_id }
   end
 
   def self.get_user(user)
