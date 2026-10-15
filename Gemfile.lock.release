@@ -637,7 +637,8 @@ GEM
     csv (3.3.6)
     cypress-on-rails (1.20.1)
       rack
-    dalli (3.2.8)
+    dalli (3.2.13)
+      logger
     database_cleaner (2.1.0)
       database_cleaner-active_record (>= 2, < 3)
     database_cleaner-active_record (2.2.2)
@@ -1525,7 +1526,7 @@ DEPENDENCIES
   config (~> 5.1)
   connection_pool (~> 2.5)
   cypress-on-rails (~> 1.20.0)
-  dalli (~> 3.2.3)
+  dalli (~> 3.2.13)
   database_cleaner (~> 2.1)
   db-query-matchers (~> 0.15.0)
   dbus-systemd (~> 1.1.0)
