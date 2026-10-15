@@ -258,16 +258,99 @@ RSpec.describe MiqWidget do
     end
 
     context ".available_for_user" do
-      it "by role" do
-        widget_report_vendor_and_guest_os.update(:visibility => {:roles => group2.miq_user_role.name})
+      it "by role id" do
+        widget_report_vendor_and_guest_os.update(:visibility => {:roles => [group2.miq_user_role.id]})
         expect(MiqWidget.available_for_user(user1).count).to eq(1)
         expect(MiqWidget.available_for_user(user2).count).to eq(2)
       end
 
-      it "by group" do
-        widget_report_vendor_and_guest_os.update(:visibility => {:groups => group2.description})
+      it "by group id" do
+        widget_report_vendor_and_guest_os.update(:visibility => {:groups => [group2.id]})
         expect(MiqWidget.available_for_user(user1).count).to eq(1)
         expect(MiqWidget.available_for_user(user2).count).to eq(2)
+      end
+    end
+  end
+
+  describe "#available_for_group? / .available_for_user / .available_for_group" do
+    let(:role)  { FactoryBot.create(:miq_user_role) }
+    let(:group) { FactoryBot.create(:miq_group, :miq_user_role => role) }
+    let(:user)  { FactoryBot.create(:user, :miq_groups => [group]) }
+
+    let!(:widget_role) do
+      FactoryBot.create(:miq_widget, :visibility => {:roles => [role.id]})
+    end
+    let!(:widget_group) do
+      FactoryBot.create(:miq_widget, :visibility => {:groups => [group.id]})
+    end
+    let!(:widget_all) do
+      FactoryBot.create(:miq_widget, :visibility => {:roles => ["_ALL_"]})
+    end
+
+    describe "#available_for_group?" do
+      it "returns true when the group's role id is in visibility[:roles]" do
+        expect(widget_role.available_for_group?(group)).to be(true)
+      end
+
+      it "returns false when the group's role id is not in visibility[:roles]" do
+        other_group = FactoryBot.create(:miq_group)
+        expect(widget_role.available_for_group?(other_group)).to be(false)
+      end
+
+      it "returns true when the group id is in visibility[:groups]" do
+        expect(widget_group.available_for_group?(group)).to be(true)
+      end
+
+      it "returns true for _ALL_ role visibility" do
+        expect(widget_all.available_for_group?(group)).to be(true)
+      end
+    end
+
+    describe ".available_for_user" do
+      it "includes the widget when the user's group role id matches visibility[:roles]" do
+        expect(MiqWidget.available_for_user(user)).to include(widget_role)
+      end
+
+      it "excludes the widget when the user's group role id does not match" do
+        other_group = FactoryBot.create(:miq_group)
+        other_user  = FactoryBot.create(:user, :miq_groups => [other_group])
+        expect(MiqWidget.available_for_user(other_user)).not_to include(widget_role)
+      end
+
+      it "includes the widget when the user's group id matches visibility[:groups]" do
+        expect(MiqWidget.available_for_user(user)).to include(widget_group)
+      end
+    end
+
+    describe ".available_for_group" do
+      it "includes the widget when the group's role id matches visibility[:roles]" do
+        expect(MiqWidget.available_for_group(group)).to include(widget_role)
+      end
+
+      it "excludes the widget when the group's role id does not match" do
+        other_group = FactoryBot.create(:miq_group)
+        expect(MiqWidget.available_for_group(other_group)).not_to include(widget_role)
+      end
+
+      it "includes the widget when the group id matches visibility[:groups]" do
+        expect(MiqWidget.available_for_group(group)).to include(widget_group)
+      end
+    end
+
+    describe "#has_visibility?" do
+      it "returns true when the value is in the visibility array" do
+        widget = FactoryBot.build(:miq_widget, :visibility => {:roles => [role.id]})
+        expect(widget.has_visibility?(:roles, role.id)).to be(true)
+      end
+
+      it "returns false when the value is not in the visibility array" do
+        widget = FactoryBot.build(:miq_widget, :visibility => {:roles => [role.id]})
+        expect(widget.has_visibility?(:roles, role.id + 999)).to be(false)
+      end
+
+      it "returns true for _ALL_ regardless of value" do
+        widget = FactoryBot.build(:miq_widget, :visibility => {:roles => ["_ALL_"]})
+        expect(widget.has_visibility?(:roles, role.id)).to be(true)
       end
     end
   end
@@ -354,6 +437,8 @@ RSpec.describe MiqWidget do
       ws2 = FactoryBot.create(:miq_widget_set, :name => "default", :userid => user2.userid, :owner => group2)
       ws1.add_member(widget)
       ws2.add_member(widget)
+      # visibility uses IDs post-migration; restrict to group2's role only (matches original intent)
+      widget.update(:visibility => {:roles => [group2.miq_user_role.id]})
     end
 
     it "skips task creation and records warn message if MiqTask for generating widget content exists and not finished" do
@@ -384,7 +469,7 @@ RSpec.describe MiqWidget do
     end
 
     it "for a group with visibility" do
-      widget.visibility[:roles] << "EvmRole-support"
+      widget.visibility[:roles] << role1.id
       expect(widget).to receive(:queue_generate_content_for_users_or_group).twice
 
       task_id = widget.queue_generate_content
@@ -405,7 +490,7 @@ RSpec.describe MiqWidget do
 
     it "does not generate content if visibility set to group only and there are no users in that group" do
       widget.visibility.delete(:roles)
-      widget.visibility[:groups] = group2.description
+      widget.visibility[:groups] = [group2.id]
       user2.delete
 
       expect(widget).not_to receive(:queue_generate_content_for_users_or_group)
@@ -437,7 +522,7 @@ RSpec.describe MiqWidget do
 
     it "generate content if visibility set to group only with users in that group" do
       widget.visibility.delete(:roles)
-      widget.visibility[:groups] = group2.description
+      widget.visibility[:groups] = [group2.id]
 
       expect(widget).to receive(:queue_generate_content_for_users_or_group).once
 

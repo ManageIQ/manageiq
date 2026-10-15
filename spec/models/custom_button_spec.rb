@@ -317,6 +317,40 @@ RSpec.describe CustomButton do
     expect { button.copy(:applies_to => service_template2) }.to(change { CustomButton.count }.by(1))
   end
 
+  describe "#visible_for_current_user?" do
+    let(:role)   { FactoryBot.create(:miq_user_role) }
+    let(:group)  { FactoryBot.create(:miq_group, :miq_user_role => role) }
+    let(:user)   { FactoryBot.create(:user, :miq_groups => [group]) }
+
+    subject { FactoryBot.build(:custom_button, :applies_to_class => Vm) }
+
+    it "returns true when visibility[:roles] contains the current user's role id" do
+      subject.visibility = {:roles => [role.id]}
+      User.with_user(user) { expect(subject.visible_for_current_user?).to be(true) }
+    end
+
+    it "returns false when visibility[:roles] does not contain the current user's role id" do
+      other_role = FactoryBot.create(:miq_user_role)
+      subject.visibility = {:roles => [other_role.id]}
+      User.with_user(user) { expect(subject.visible_for_current_user?).to be(false) }
+    end
+
+    it "returns true when visibility[:roles] is ['_ALL_']" do
+      subject.visibility = {:roles => ["_ALL_"]}
+      User.with_user(user) { expect(subject.visible_for_current_user?).to be(true) }
+    end
+
+    it "returns false when visibility does not have a :roles key" do
+      subject.visibility = {}
+      User.with_user(user) { expect(subject.visible_for_current_user?).to be(false) }
+    end
+
+    it "tolerates a legacy string role id" do
+      subject.visibility = {:roles => [role.id.to_s]}
+      User.with_user(user) { expect(subject.visible_for_current_user?).to be(true) }
+    end
+  end
+
   describe "publish custom button event" do
     let(:vm)              { FactoryBot.create(:vm_vmware) }
     let(:vm2)             { FactoryBot.create(:vm_vmware) }
