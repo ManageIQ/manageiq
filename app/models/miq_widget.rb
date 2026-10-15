@@ -424,26 +424,26 @@ class MiqWidget < ApplicationRecord
   def available_for_group?(group)
     return false unless group
 
-    has_visibility?(:roles, group.miq_user_role_name) || has_visibility?(:groups, group.description)
+    has_visibility?(:roles, group.entitlement&.miq_user_role_id) || has_visibility?(:groups, group.id)
   end
 
   def self.available_for_user(user)
     user = get_user(user)
-    role = user.miq_user_role_name
-    group = user.current_group.description
+    role_id = user.current_group&.entitlement&.miq_user_role_id
+    group_id = user.current_group&.id
 
     # Return all widgets that either has this user's role or is allowed for all roles, or has this user's group
     all.select do |w|
-      w.has_visibility?(:roles, role) || w.has_visibility?(:groups, group)
+      w.has_visibility?(:roles, role_id) || w.has_visibility?(:groups, group_id)
     end
   end
 
   def self.available_for_group(group)
     group = get_group(group)
-    role = group.miq_user_role_name
+    role_id = group&.entitlement&.miq_user_role_id
     # Return all widgets that either has this group's role or is allowed for all roles.
     all.select do |w|
-      w.has_visibility?(:roles, role) || w.has_visibility?(:groups, group.description)
+      w.has_visibility?(:roles, role_id) || w.has_visibility?(:groups, group&.id)
     end
   end
 
@@ -452,7 +452,10 @@ class MiqWidget < ApplicationRecord
   end
 
   def has_visibility?(key, value)
-    visibility.kind_of?(Hash) && visibility.key?(key) && (visibility[key].include?(value) || visibility[key].include?("_ALL_"))
+    return false unless visibility.kind_of?(Hash) && visibility.key?(key)
+
+    vals = Array.wrap(visibility[key])
+    vals.include?(value) || vals.include?("_ALL_")
   end
 
   def visibility_values
