@@ -56,8 +56,9 @@ module MiqProvisionMixin
       email = get_option(:owner_email).try(:downcase)
       return if email.blank?
 
+      group = get_option(:owner_group).presence || get_option(:requester_group)
       User.lookup_by_lower_email(email, get_user).tap do |owner|
-        owner.current_group_by_description = get_option(:owner_group) if owner
+        owner.current_group_by_description = group if owner && group
       end
     end
   end
