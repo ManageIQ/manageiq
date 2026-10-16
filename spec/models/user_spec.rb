@@ -51,13 +51,13 @@ RSpec.describe User do
   end
 
   describe "#change_password" do
-    let(:user) { FactoryBot.create(:user, :password => "smartvm") }
+    let(:user) { FactoryBot.create(:user) }
 
     it "should change user password" do
-      password    = user.password
-      newpassword = "newpassword"
-      user.change_password(password, newpassword)
-      expect(user.password).to eq(newpassword)
+      password     = "dummy"
+      new_password = "Tr0ub4dor&3"
+      user.change_password(password, new_password)
+      expect(user.authenticate_bcrypt(new_password)).to eq(user)
     end
 
     it "should raise an error when asked to change user password" do
@@ -175,7 +175,7 @@ RSpec.describe User do
   end
 
   describe '#fail_login!' do
-    let(:user) { FactoryBot.create(:user, :password => "smartvm", :failed_login_attempts => 0) }
+    let(:user) { FactoryBot.create(:user, :failed_login_attempts => 0) }
 
     it 'increases the number of failed login attempts' do
       user.fail_login!
@@ -365,19 +365,20 @@ RSpec.describe User do
   end
 
   context ".authenticate_with_http_basic" do
-    let(:user) { FactoryBot.create(:user, :password => "dummy") }
+    let(:user) { FactoryBot.create(:user) }
+    let(:plaintext_password) { "dummy" }
 
     before do
       EvmSpecHelper.local_miq_server
     end
 
     it "should login with good username/password" do
-      expect(User.authenticate_with_http_basic(user.userid, user.password)).to eq([true, user.userid])
+      expect(User.authenticate_with_http_basic(user.userid, plaintext_password)).to eq([true, user.userid])
     end
 
     it "should fail with bad username" do
       bad_userid = "bad_userid"
-      expect(User.authenticate_with_http_basic(bad_userid, user.password)).to eq([false, bad_userid])
+      expect(User.authenticate_with_http_basic(bad_userid, plaintext_password)).to eq([false, bad_userid])
     end
 
     it "should fail with bad password" do
