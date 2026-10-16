@@ -260,13 +260,15 @@ namespace :locale do
     # extract plugin's yaml strings
     Rake::Task['locale:extract_yaml_strings'].invoke(@engine_root)
 
+    require_relative 'gettext_js_parser_override'
+
     namespace :gettext do
       def locale_path
         @engine_root.join('locale').to_s
       end
 
       def files_to_translate
-        Dir.glob("#{@engine_root}/{app,db,lib,config,locale}/**/*.{rb,erb,haml,slim,rhtml,js,jsx}").sort
+        Dir.glob("#{@engine_root}/{app,db,lib,config,locale}/**/*.{rb,erb,haml,slim,rhtml,js,jsx,ts,tsx}").sort
       end
 
       def text_domain
