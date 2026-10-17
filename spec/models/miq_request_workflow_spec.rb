@@ -518,7 +518,7 @@ RSpec.describe MiqRequestWorkflow do
       expect(request.options[:requester_group]).to eq(workflow.requester.miq_group_description)
     end
 
-    it "doesnt set owner_group" do
+    it "doesnt set owner_group without owner_email" do
       values = {}
       request = workflow.make_request(nil, values)
       expect(request.options[:owner_group]).not_to be
