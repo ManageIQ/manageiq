@@ -3,8 +3,8 @@ module VmOrTemplate::Operations::Power
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
-  def start_queue
-    run_command_via_queue("raw_start")
+  def start_queue(miq_task_id: nil)
+    run_command_via_queue("raw_start", policy_prevent_task_queue_options(miq_task_id))
   end
 
   def start
@@ -15,8 +15,8 @@ module VmOrTemplate::Operations::Power
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
-  def stop_queue
-    run_command_via_queue("raw_stop")
+  def stop_queue(miq_task_id: nil)
+    run_command_via_queue("raw_stop", policy_prevent_task_queue_options(miq_task_id))
   end
 
   def stop
@@ -28,8 +28,8 @@ module VmOrTemplate::Operations::Power
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
-  def suspend_queue
-    run_command_via_queue("raw_suspend")
+  def suspend_queue(miq_task_id: nil)
+    run_command_via_queue("raw_suspend", policy_prevent_task_queue_options(miq_task_id))
   end
 
   def suspend
@@ -41,8 +41,8 @@ module VmOrTemplate::Operations::Power
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
-  def shelve_queue
-    run_command_via_queue("raw_shelve")
+  def shelve_queue(miq_task_id: nil)
+    run_command_via_queue("raw_shelve", policy_prevent_task_queue_options(miq_task_id))
   end
 
   def shelve
@@ -54,8 +54,8 @@ module VmOrTemplate::Operations::Power
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
-  def shelve_offload_queue
-    run_command_via_queue("raw_shelve_offload")
+  def shelve_offload_queue(miq_task_id: nil)
+    run_command_via_queue("raw_shelve_offload", policy_prevent_task_queue_options(miq_task_id))
   end
 
   def shelve_offload
@@ -68,8 +68,8 @@ module VmOrTemplate::Operations::Power
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
-  def pause_queue
-    run_command_via_queue("raw_pause")
+  def pause_queue(miq_task_id: nil)
+    run_command_via_queue("raw_pause", policy_prevent_task_queue_options(miq_task_id))
   end
 
   def pause
