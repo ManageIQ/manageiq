@@ -88,22 +88,84 @@ RSpec.describe MiqProvision do
         expect(vm.reload.description).to        eq(description)
       end
 
-      it "sets ownership" do
-        group_owner = FactoryBot.create(:miq_group, :description => "desired")
-        group_current = FactoryBot.create(:miq_group, :description => "current")
-        user.update!(:miq_groups => [group_owner, group_current], :current_group => group_current)
-        options[:owner_email] = user.email
-        options[:owner_group] = group_owner.description
-        task.update(:options => options)
+      context "sets ownership" do
+        let(:group_user)  { FactoryBot.create(:miq_group, :description => "user_group") }
+        let(:group_admin) { FactoryBot.create(:miq_group, :description => "admin_group") }
 
-        expect(task).to receive(:mark_as_completed)
+        it "sets the destination group from owner_group" do
+          user.update!(:miq_groups => [group_user, group_admin], :current_group => group_user)
+          options[:owner_email] = user.email
+          options[:owner_group] = group_user.description
+          task.update(:options => options)
 
-        task.signal(:post_create_destination)
+          expect(task).to receive(:mark_as_completed)
+          task.signal(:post_create_destination)
 
-        expect(task.destination.evm_owner).to eq(user)
-        vm.reload
-        expect(vm.evm_owner).to eq(user)
-        expect(vm.miq_group).to eq(group_owner)
+          expect(vm.reload.evm_owner).to eq(user)
+          expect(vm.miq_group).to eq(group_user)
+        end
+
+        it "sets the destination group from owner_group even if the user changed active group to admin" do
+          user.update!(:miq_groups => [group_user, group_admin], :current_group => group_admin)
+          options[:owner_email] = user.email
+          options[:owner_group] = group_user.description
+          task.update(:options => options)
+
+          expect(task).to receive(:mark_as_completed)
+          task.signal(:post_create_destination)
+
+          expect(vm.reload.evm_owner).to eq(user)
+          expect(vm.miq_group).to eq(group_user)
+        end
+
+        it "sets the destination group from owner_group even if the user changed active group to user" do
+          user.update!(:miq_groups => [group_user, group_admin], :current_group => group_user)
+          options[:owner_email] = user.email
+          options[:owner_group] = group_admin.description
+          task.update(:options => options)
+
+          expect(task).to receive(:mark_as_completed)
+          task.signal(:post_create_destination)
+
+          expect(vm.reload.evm_owner).to eq(user)
+          expect(vm.miq_group).to eq(group_admin)
+        end
+
+        it "falls back to requester_group when owner_group is absent and the user switched to a different active group before provision" do
+          user.update!(:miq_groups => [group_user, group_admin], :current_group => group_admin)
+          options[:owner_email] = user.email
+          task.update(:userid => user.userid, :options => options.merge(:requester_group => group_user.description))
+
+          expect(task).to receive(:mark_as_completed)
+          task.signal(:post_create_destination)
+
+          expect(vm.reload.evm_owner).to eq(user)
+          expect(vm.miq_group).to eq(group_user)
+        end
+
+        it "falls back to requester_group when owner_group is absent and the user switched to a different active group before provision (reversed groups)" do
+          user.update!(:miq_groups => [group_user, group_admin], :current_group => group_user)
+          options[:owner_email] = user.email
+          task.update(:userid => user.userid, :options => options.merge(:requester_group => group_admin.description))
+
+          expect(task).to receive(:mark_as_completed)
+          task.signal(:post_create_destination)
+
+          expect(vm.reload.evm_owner).to eq(user)
+          expect(vm.miq_group).to eq(group_admin)
+        end
+
+        # No owner_email means get_user is called instead of get_owner.
+        it "falls back to requester_group when neither owner_email nor owner_group is set and the user changed active group before provision" do
+          user.update!(:miq_groups => [group_user, group_admin], :current_group => group_admin)
+          task.update(:userid => user.userid, :options => options.merge(:requester_group => group_user.description))
+
+          expect(task).to receive(:mark_as_completed)
+          task.signal(:post_create_destination)
+
+          expect(vm.reload.evm_owner).to eq(user)
+          expect(vm.miq_group).to eq(group_user)
+        end
       end
 
       context "sets retirement" do
