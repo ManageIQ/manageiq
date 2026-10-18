@@ -1,11 +1,11 @@
 RSpec.describe ManageIQ::DeepDelete do
-  let(:ems) { FactoryBot.create(:ems_container) }
+  let(:ems)       { FactoryBot.create(:ems_container) }
   let(:ems_other) { FactoryBot.create(:ems_container) }
 
   it "calls destroy for objects with ruby callbacks" do
-    expect_any_instance_of(ems.class).to receive(:destroy)
-
     described_class.delete(ems)
+    expect(ems).to be_deleted
+    expect(ems_other).not_to be_deleted
   end
 
   it "deletes Ems#has_many" do
