@@ -184,12 +184,10 @@ RSpec.describe Host do
             :miq_task_id  => task.id,
             :miq_callback => {:class_name => "MiqTask", :instance_id => task.id, :method_name => :queue_callback, :args => ["Finished"]}
           )
-          $_miq_worker_current_msg = @msg
+          allow(MiqPolicyMixin).to receive(:current_queue_msg).and_return(@msg)
           @msg.deliver_and_process
-          $_miq_worker_current_msg = nil
+          allow(MiqPolicyMixin).to receive(:current_queue_msg).and_return(nil)
         end
-
-        after { $_miq_worker_current_msg = nil }
 
         let(:callback_args) { raised_options.last[:miq_callback][:args] }
 
@@ -200,14 +198,14 @@ RSpec.describe Host do
         end
 
         it "finishes the task after the action ran" do
-          expect_any_instance_of(described_class).to receive(:ipmi_power_on).once
+          expect(@host).to receive(:ipmi_power_on).once
           @host.check_policy_prevent_task_callback(*callback_args, "ok", "msg", prevented_workspace(nil, :prevented => false))
 
           expect([task.reload.state, task.status]).to eq(%w[Finished Ok])
         end
 
         it "finishes the task with the policy message when prevented" do
-          expect_any_instance_of(described_class).not_to receive(:ipmi_power_on)
+          expect(@host).not_to receive(:ipmi_power_on)
           ws = prevented_workspace("Policy says no")
           @host.check_policy_prevent_task_callback(*callback_args, "ok", "msg", ws)
 
@@ -216,7 +214,9 @@ RSpec.describe Host do
         end
 
         it "finishes the task with the policy message when prevented (via the queue callback)" do
-          expect_any_instance_of(described_class).not_to receive(:ipmi_power_on)
+          allow(described_class).to receive(:find).and_call_original
+          allow(described_class).to receive(:find).with(@host.id).and_return(@host)
+          expect(@host).not_to receive(:ipmi_power_on)
           ws = prevented_workspace("Policy says no")
           row = MiqQueue.put(:class_name => described_class.name, :instance_id => @host.id, :method_name => "id", :miq_callback => raised_options.last[:miq_callback])
           row.delivered("ok", "msg", ws)

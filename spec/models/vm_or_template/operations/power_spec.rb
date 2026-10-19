@@ -17,7 +17,7 @@ RSpec.describe VmOrTemplate::Operations::Power do
 
     before { EvmSpecHelper.local_miq_server }
 
-    it "puts the task on the raw_start message only" do
+    it "sets the task on the raw_start message only" do
       vm.start_queue(:miq_task_id => task.id)
       vm.stop_queue
 

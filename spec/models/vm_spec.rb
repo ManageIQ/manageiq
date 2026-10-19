@@ -159,7 +159,6 @@ RSpec.describe Vm do
   end
 
   context "task tracking through check_policy_prevent" do
-    let(:vm_class) { ManageIQ::Providers::Vmware::InfraManager::Vm }
     let(:raised_options) { [] }
 
     def prevented_workspace(message, prevented: true)
@@ -195,7 +194,12 @@ RSpec.describe Vm do
       User.super_admin || FactoryBot.create(:user_with_group, :userid => "admin")
     end
 
-    after { $_miq_worker_current_msg = nil }
+    def stub_automate_role(active)
+      server = MiqServer.my_server
+      allow(MiqServer).to receive(:my_server).and_return(server)
+      allow(server).to receive(:has_active_role?).and_call_original
+      allow(server).to receive(:has_active_role?).with("automate").and_return(active)
+    end
 
     def queue_start
       Vm.invoke_tasks_local(:task => "start", :invoke_by => :task, :ids => [@vm.id], :userid => "admin")
@@ -210,7 +214,7 @@ RSpec.describe Vm do
       expect(msg.miq_callback).to eq(:class_name => "VmOrTemplate", :instance_id => @vm.id, :method_name => :powerops_callback, :args => [task.id])
       stub_policy_event
 
-      $_miq_worker_current_msg = msg
+      allow(MiqPolicyMixin).to receive(:current_queue_msg).and_return(msg)
       msg.deliver_and_process
 
       expect(task.reload.state).not_to eq("Finished")
@@ -218,7 +222,7 @@ RSpec.describe Vm do
       expect(cb[:method_name]).to eq(:check_policy_prevent_task_callback)
       expect(args).to eq([task.id, :start_queue])
 
-      $_miq_worker_current_msg = nil
+      allow(MiqPolicyMixin).to receive(:current_queue_msg).and_return(nil)
       run_callback(@vm, prevented_workspace(nil, :prevented => false))
 
       raw = MiqQueue.find_by(:method_name => "raw_start")
@@ -226,8 +230,8 @@ RSpec.describe Vm do
       expect(raw.miq_callback).to include(:class_name => "MiqTask", :method_name => :queue_callback, :instance_id => task.id)
       expect(task.reload.state).not_to eq("Finished")
 
-      allow_any_instance_of(vm_class).to receive(:raw_start).and_return("started")
-      raw.deliver_and_process
+      allow(@vm).to receive(:raw_start).and_return("started")
+      raw.deliver_and_process(@vm)
       task.reload
       expect(task.state).to eq("Finished")
       expect(task.status).to eq("Ok")
@@ -239,7 +243,7 @@ RSpec.describe Vm do
       original = msg.miq_callback
       stub_policy_event
 
-      $_miq_worker_current_msg = msg
+      allow(MiqPolicyMixin).to receive(:current_queue_msg).and_return(msg)
       msg.deliver
 
       expect(msg.changed).not_to include("miq_callback")
@@ -250,12 +254,12 @@ RSpec.describe Vm do
     it "finishes the task with the policy message when prevented" do
       msg, task = queue_start
       stub_policy_event
-      $_miq_worker_current_msg = msg
+      allow(MiqPolicyMixin).to receive(:current_queue_msg).and_return(msg)
       msg.deliver_and_process
-      $_miq_worker_current_msg = nil
+      allow(MiqPolicyMixin).to receive(:current_queue_msg).and_return(nil)
 
       ws = prevented_workspace("Policy says no")
-      expect_any_instance_of(vm_class).not_to receive(:start_queue)
+      expect(@vm).not_to receive(:start_queue)
       expect { run_callback(@vm, ws) }.not_to raise_error
 
       expect(ws).to have_received(:get_obj_from_path).with("/")
@@ -267,9 +271,9 @@ RSpec.describe Vm do
     it "finishes the task with the policy message when prevented (via the queue callback)" do
       msg, task = queue_start
       stub_policy_event
-      $_miq_worker_current_msg = msg
+      allow(MiqPolicyMixin).to receive(:current_queue_msg).and_return(msg)
       msg.deliver_and_process
-      $_miq_worker_current_msg = nil
+      allow(MiqPolicyMixin).to receive(:current_queue_msg).and_return(nil)
 
       _args, cb = automate_callback
       row = MiqQueue.put(:class_name => @vm.class.name, :instance_id => @vm.id, :method_name => "id", :miq_callback => cb)
@@ -292,14 +296,14 @@ RSpec.describe Vm do
       msg = MiqQueue.first
       task = MiqTask.first
       stub_policy_event
-      $_miq_worker_current_msg = msg
+      allow(MiqPolicyMixin).to receive(:current_queue_msg).and_return(msg)
       msg.deliver_and_process
-      $_miq_worker_current_msg = nil
+      allow(MiqPolicyMixin).to receive(:current_queue_msg).and_return(nil)
 
       expect(MiqEvent).to have_received(:raise_evm_event)
       expect(task.reload.state).not_to eq("Finished")
 
-      expect_any_instance_of(vm_class).to receive(:raw_shutdown_guest).once
+      expect(vm).to receive(:raw_shutdown_guest).once
       run_callback(vm, prevented_workspace(nil, :prevented => false))
 
       task.reload
@@ -312,12 +316,12 @@ RSpec.describe Vm do
       task = MiqTask.first
       FactoryBot.create(:miq_event_definition, :name => :request_vm_create_snapshot)
       stub_policy_event
-      $_miq_worker_current_msg = msg
+      allow(MiqPolicyMixin).to receive(:current_queue_msg).and_return(msg)
       msg.deliver_and_process
-      $_miq_worker_current_msg = nil
+      allow(MiqPolicyMixin).to receive(:current_queue_msg).and_return(nil)
 
       expect(task.reload.state).not_to eq("Finished")
-      allow_any_instance_of(vm_class).to receive(:raw_create_snapshot)
+      allow(@vm).to receive(:raw_create_snapshot)
       run_callback(@vm, prevented_workspace(nil, :prevented => false))
 
       raw = MiqQueue.find_by(:method_name => "raw_create_snapshot")
@@ -325,8 +329,8 @@ RSpec.describe Vm do
       expect(raw.args).to eq(["snap", "d", false])
       expect(task.reload.state).not_to eq("Finished")
 
-      expect_any_instance_of(vm_class).to receive(:raw_create_snapshot).once
-      raw.deliver_and_process
+      expect(@vm).to receive(:raw_create_snapshot).once
+      raw.deliver_and_process(@vm)
       expect([task.reload.state, task.status]).to eq(%w[Finished Ok])
     end
 
@@ -334,7 +338,7 @@ RSpec.describe Vm do
       msg, task = queue_start
       allow(Zone).to receive(:maintenance?).and_return(true)
 
-      $_miq_worker_current_msg = msg
+      allow(MiqPolicyMixin).to receive(:current_queue_msg).and_return(msg)
       msg.deliver_and_process
 
       expect(MiqQueue.where(:class_name => "MiqAeEngine")).to be_empty
@@ -345,11 +349,10 @@ RSpec.describe Vm do
     end
 
     it "agrees with MiqQueue.put on whether the policy event is queued" do
-      allow_any_instance_of(MiqServer).to receive(:has_active_role?).and_call_original
-      allow_any_instance_of(MiqServer).to receive(:has_active_role?).with("automate").and_return(true)
+      stub_automate_role(true)
       zone = MiqServer.my_server.zone
       msg, = queue_start
-      $_miq_worker_current_msg = msg
+      allow(MiqPolicyMixin).to receive(:current_queue_msg).and_return(msg)
 
       expect(@vm.send(:policy_event_queueable?)).to be(true)
       MiqEvent.raise_evm_event(@vm, :request_vm_start, {}, {})
@@ -363,11 +366,10 @@ RSpec.describe Vm do
     end
 
     it "queues the policy event in a maintenance zone when the automate role is not active (nil zone)" do
-      allow_any_instance_of(MiqServer).to receive(:has_active_role?).and_call_original
-      allow_any_instance_of(MiqServer).to receive(:has_active_role?).with("automate").and_return(false)
+      stub_automate_role(false)
       MiqRegion.my_region.update!(:maintenance_zone => MiqServer.my_server.zone)
       msg, = queue_start
-      $_miq_worker_current_msg = msg
+      allow(MiqPolicyMixin).to receive(:current_queue_msg).and_return(msg)
 
       expect(@vm.send(:policy_event_queueable?)).to be(true)
       MiqEvent.raise_evm_event(@vm, :request_vm_start, {}, {})

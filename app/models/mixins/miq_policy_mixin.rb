@@ -5,6 +5,11 @@ module MiqPolicyMixin
     tag_attribute :policy, "/miq_policy/assignment"
   end
 
+  # The queue message the current worker is delivering (set by MiqQueueWorkerBase::Runner#deliver_queue_message)
+  def self.current_queue_msg
+    $_miq_worker_current_msg # rubocop:disable Style/GlobalVars
+  end
+
   def add_policy(policy)
     ns = "/miq_policy"
     cat = "assignment/#{policy.class.to_s.underscore}"
@@ -139,7 +144,7 @@ module MiqPolicyMixin
 
     begin
       result = send(*action, **kwargs)
-    rescue => err
+    rescue StandardError => err
       task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_ERROR, err.message)
       raise
     end
@@ -180,7 +185,7 @@ module MiqPolicyMixin
 
     MiqTask.find_by(:id => task_id)&.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_ERROR, "Policy event not queued (zone in maintenance); action not run") unless queued
 
-    msg = policy_prevent_current_msg
+    msg = MiqPolicyMixin.current_queue_msg
     msg.miq_callback = nil
     msg.clear_attribute_changes([:miq_callback]) # so that MiqQueue#unget does not persist the cleared callback
     event
@@ -196,10 +201,6 @@ module MiqPolicyMixin
     [data ? data.fetch_path(:policy, :prevented) : false, event.attributes["message"]]
   end
 
-  def policy_prevent_current_msg
-    $_miq_worker_current_msg
-  end
-
   # mirrors MiqAeEngine.deliver_queue and MiqQueue.put: no automate message is created in a maintenance zone
   def policy_event_queueable?
     zone = MiqServer.my_server.has_active_role?('automate') ? MiqServer.my_zone : nil
@@ -209,7 +210,7 @@ module MiqPolicyMixin
   # The task tracked by the queue message being processed, when that message is for this record
   # and finishes the task through a callback (MiqTask#queue_callback or VmOrTemplate#powerops_callback).
   def policy_prevent_current_task_id
-    msg = policy_prevent_current_msg
+    msg = MiqPolicyMixin.current_queue_msg
     return if msg.nil? || msg.miq_task_id.blank? || msg.instance_id != id
 
     klass = msg.class_name.to_s.safe_constantize

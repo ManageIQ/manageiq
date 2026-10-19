@@ -41,15 +41,13 @@ describe MiqPolicyMixin do
       allow(MiqEvent).to receive(:raise_evm_event).and_return(double("event"))
     end
 
-    after { $_miq_worker_current_msg = nil }
-
     def handoff_callback
       captured = nil
       allow(MiqEvent).to receive(:raise_evm_event) do |_target, _event, _inputs, options|
         captured = options[:miq_callback]
         double("event")
       end
-      $_miq_worker_current_msg = msg
+      allow(MiqPolicyMixin).to receive(:current_queue_msg).and_return(msg)
       record.policy_prevent_with_task_handoff(:perform) { |cb| MiqEvent.raise_evm_event(record, :evt, {}, :miq_callback => cb) }
       captured
     end
@@ -166,7 +164,7 @@ describe MiqPolicyMixin do
 
     context "when the message is not detected as tracking a task" do
       def expect_untouched
-        $_miq_worker_current_msg = msg
+        allow(MiqPolicyMixin).to receive(:current_queue_msg).and_return(msg)
         original = msg.miq_callback
         cb = nil
         record.policy_prevent_with_task_handoff(:perform) do |c|
@@ -179,7 +177,6 @@ describe MiqPolicyMixin do
       end
 
       it "without a current message" do
-        $_miq_worker_current_msg = nil
         expect(record.policy_prevent_with_task_handoff(:perform) { |c| c }).to eq(record.prevent_callback_settings(:perform))
       end
 
@@ -213,7 +210,7 @@ describe MiqPolicyMixin do
       let(:callback) { shape_a }
 
       it "keeps the message callback" do
-        $_miq_worker_current_msg = msg
+        allow(MiqPolicyMixin).to receive(:current_queue_msg).and_return(msg)
         record.policy_prevent_with_task_handoff(:perform) { nil }
 
         expect(msg.miq_callback).to eq(shape_a)
@@ -222,7 +219,7 @@ describe MiqPolicyMixin do
 
     context "when the event is raised but not queued" do
       it "finishes the task with an error and clears the callback" do
-        $_miq_worker_current_msg = msg
+        allow(MiqPolicyMixin).to receive(:current_queue_msg).and_return(msg)
         allow(record).to receive(:policy_event_queueable?).and_return(false)
         record.policy_prevent_with_task_handoff(:perform) { double("event") }
 
