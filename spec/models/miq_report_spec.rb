@@ -1279,7 +1279,7 @@ RSpec.describe MiqReport do
       end
 
       it "uses time zone from user's settings if it is specified" do
-        user.settings[:display][:timezone] = "HST"
+        user.settings[:display][:timezone] = "Hawaii"
         user.save
         report._async_generate_table(miq_task.id, :userid => user.userid)
         miq_report_result_detail = miq_task.miq_report_result.miq_report_result_details.first
