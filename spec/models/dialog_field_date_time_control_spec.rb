@@ -27,7 +27,7 @@ RSpec.describe DialogFieldDateTimeControl do
 
     context "with HST timezone" do
       before do
-        allow(user).to receive(:get_timezone).and_return("HST")
+        allow(user).to receive(:get_timezone).and_return("Hawaii")
       end
 
       it "#automate_output_value" do
