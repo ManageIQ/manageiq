@@ -8,6 +8,8 @@ class ContainerProject < ApplicationRecord
   include TenantIdentityMixin
   include CustomActionsMixin
   include Purging
+  include OwnershipMixin
+
   belongs_to :ext_management_system, :class_name => "ManageIQ::Providers::ContainerManager", :foreign_key => "ems_id", :inverse_of => :container_projects
   has_many :container_groups, -> { active }, :inverse_of => :container_project
   has_many :container_routes      # delete to be handled by refresh

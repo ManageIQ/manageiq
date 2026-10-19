@@ -4901,6 +4901,10 @@
       :description: Edit Tags of Container Projects
       :feature_type: control
       :identifier: container_project_tag
+    - :name: Set Ownership
+      :description: Set Ownership of Container Projects
+      :feature_type: control
+      :identifier: container_project_ownership
   - :name: Modify
     :description: Modify Container Projects
     :feature_type: admin
