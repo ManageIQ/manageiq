@@ -78,6 +78,7 @@ gem "sprockets",                        "~>3.7.2",           :require => false
 gem "sync",                             "~>0.5",             :require => false
 gem "terminal",                                              :require => false
 gem "wim_parser",                       "~>1.0",             :require => false
+gem "zxcvbn-ruby",                      "~>2.0",             :require => false
 
 # gems to resolve security issues
 gem "cgi",  "~> 0.5"
