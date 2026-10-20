@@ -321,7 +321,7 @@ class MiqExpression
       start_val, end_val = op_args["value"]
       clause = ruby_for_date_compare(col_ruby, col_type, tz, ">=", start_val, "<=", end_val)
     else
-      raise _("operator '%{operator_name}' is not supported") % {:operator_name => operator.upcase}
+      raise _("operator '%{operator}' is not supported") % {:operator => operator.upcase}
     end
 
     # puts "clause: #{clause}"
@@ -1539,7 +1539,7 @@ class MiqExpression
       end_val   = RelativeDatetime.normalize(end_val, tz, "end", field.date?)
       arel_attribute.between(start_val..end_val)
     else
-      raise _("operator '%{operator_name}' is not supported") % {:operator_name => operator}
+      raise _("operator '%{operator}' is not supported") % {:operator => operator}
     end
   end
 

@@ -279,7 +279,7 @@ class Classification < ApplicationRecord
 
     klass = type.constantize
     unless klass.respond_to?(:find_tagged_with)
-      raise _("Class '%{type}' is not eligible for classification") % {:type => type}
+      raise _("Class '%{name}' is not eligible for classification") % {:name => type}
     end
 
     klass.find_tagged_with(:any => name, :ns => ns, :cat => parent.name)

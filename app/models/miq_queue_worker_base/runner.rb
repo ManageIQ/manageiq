@@ -57,7 +57,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
         next
       rescue => err
         msg.update_column(:state, MiqQueue::STATUS_ERROR)
-        raise _("%{log} \"%{error}\" attempting to get next message") % {:log => log_prefix, :error => err}
+        raise _("%{log_message} \"%{error}\" attempting to get next message") % {:log_message => log_prefix, :error => err}
       end
     end
   end
