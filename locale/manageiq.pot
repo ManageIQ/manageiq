@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-09 00:38+0000\n"
-"PO-Revision-Date: 2026-09-09 00:38+0000\n"
+"POT-Creation-Date: 2026-10-20 20:41+0000\n"
+"PO-Revision-Date: 2026-10-20 20:41+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -286,6 +286,11 @@ msgstr ""
 msgid "%d (Custom)"
 msgstr ""
 
+msgid "%d Item selected to copy"
+msgid_plural "%d Items selected to copy"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "%d Months Ago"
 msgstr ""
 
@@ -392,8 +397,8 @@ msgid_plural "%{amount} Automation Jobs Being Tagged"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "%{amount} Automation Provider (Ansible Tower) Being Tagged"
-msgid_plural "%{amount} Automation Providers (Ansible Tower) Being Tagged"
+msgid "%{amount} Automation Provider Being Tagged"
+msgid_plural "%{amount} Automation Providers Being Tagged"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -710,9 +715,6 @@ msgid_plural "%{cpu} CPUs"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "%{current_tenant} Tags"
-msgstr ""
-
 msgid "%{date_from} to %{date_to}"
 msgstr ""
 
@@ -729,12 +731,6 @@ msgid "%{description} Reservation is larger than VM Memory"
 msgstr ""
 
 msgid "%{description} VM Memory is larger than Memory Limit"
-msgstr ""
-
-msgid "%{description} is required"
-msgstr ""
-
-msgid "%{domain_name} (Disabled)"
 msgstr ""
 
 msgid "%{domain_name} (Same Domain)"
@@ -772,9 +768,6 @@ msgstr ""
 msgid "%{log_message} \"%{error}\" attempting to get next message"
 msgstr ""
 
-msgid "%{log} \"%{error}\" attempting to get next message"
-msgstr ""
-
 msgid ""
 "%{log} Blank DRb_URI for MiqServer with ID=[%{number}], NAME=[%{name}], PID=[%"
 "{pid_number}], GUID=[%{guid_number}]"
@@ -796,9 +789,6 @@ msgid "%{message}: Task start failed"
 msgstr ""
 
 msgid "%{method_name} is not a valid name to an Ansible operation!"
-msgstr ""
-
-msgid "%{missing_field_name} is required"
 msgstr ""
 
 msgid "%{model} \"%{name}\""
@@ -825,9 +815,6 @@ msgstr ""
 msgid "%{model} \"%{name}\": Error during '%{task}': %{error_message}"
 msgstr ""
 
-msgid "%{model} \"%{name}\": Error during '%{task}': %{error_msg}"
-msgstr ""
-
 msgid "%{model} \"%{name}\": Error during 'Check Compliance': %{error}"
 msgstr ""
 
@@ -841,9 +828,6 @@ msgid "%{model} (%{tag} running %{time})"
 msgstr ""
 
 msgid "%{model} [%{name} - Updated %{time}%{update}]"
-msgstr ""
-
-msgid "%{model} no longer exists"
 msgstr ""
 
 msgid "%{model} search \"%{name}\" was saved"
@@ -946,9 +930,6 @@ msgid ""
 msgstr ""
 
 msgid "%{name} is currently being used in the Display Filter"
-msgstr ""
-
-msgid "%{name} is required"
 msgstr ""
 
 msgid "%{name} is the base"
@@ -1118,6 +1099,9 @@ msgstr[1] ""
 msgid "%{object_types} under %{datastore_or_provider} \"%{provider_or_datastore_name}\""
 msgstr ""
 
+msgid "%{object} no longer exists"
+msgstr ""
+
 msgid "%{product_name} API Group Not found"
 msgstr ""
 
@@ -1153,9 +1137,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "%{record} - \"%{button_text}\""
-msgstr ""
-
-msgid "%{record} no longer exists"
 msgstr ""
 
 msgid "%{request_description} for: %{request_source}"
@@ -1325,9 +1306,6 @@ msgid "(Default: %{email_from})"
 msgstr ""
 
 msgid "(Global)"
-msgstr ""
-
-msgid "(Look up %{authentication_mode_name} Groups)"
 msgstr ""
 
 msgid "(MB) memory"
@@ -1846,9 +1824,6 @@ msgid "<Nothing>"
 msgstr ""
 
 msgid "<Orphaned>"
-msgstr ""
-
-msgid "<Same as import from>"
 msgstr ""
 
 msgid "<Script error>"
@@ -3305,6 +3280,9 @@ msgstr ""
 msgid "Add to Shopping Cart"
 msgstr ""
 
+msgid "Add was cancelled by the user"
+msgstr ""
+
 msgid "Add widget"
 msgstr ""
 
@@ -3315,9 +3293,6 @@ msgid "Adding ESX/ESXi Hosts is not supported"
 msgstr ""
 
 msgid "Adding a new %{model}"
-msgstr ""
-
-msgid "Adding a new %{tenant}"
 msgstr ""
 
 msgid "Adding a new Action"
@@ -4233,6 +4208,9 @@ msgstr ""
 msgid "Ansible Automation Platform Provider"
 msgstr ""
 
+msgid "Ansible Job Template"
+msgstr ""
+
 msgid "Ansible Playbook"
 msgstr ""
 
@@ -4251,25 +4229,16 @@ msgstr ""
 msgid "Ansible Tower Job"
 msgstr ""
 
-msgid "Ansible Tower Job Template"
-msgstr ""
-
 msgid "Ansible Tower Job Template Provision"
 msgstr ""
 
 msgid "Ansible Tower Jobs"
 msgstr ""
 
-msgid "Ansible Tower Providers"
-msgstr ""
-
 msgid "Ansible Tower Template"
 msgstr ""
 
-msgid "Ansible Tower Templates"
-msgstr ""
-
-msgid "Ansible Tower Workflow Template"
+msgid "Ansible Workflow Template"
 msgstr ""
 
 msgid ""
@@ -4457,7 +4426,7 @@ msgstr ""
 msgid "Are you sure you want to delete selected Conditions?"
 msgstr ""
 
-msgid "Are you sure you want to delete the following Ansible Tower Provider?"
+msgid "Are you sure you want to delete the following Automation Provider?"
 msgstr ""
 
 msgid "Are you sure you want to delete the following Automation Providers?"
@@ -4737,6 +4706,9 @@ msgid "AssetDetail|Room"
 msgstr ""
 
 msgid "AssetDetail|Serial number"
+msgstr ""
+
+msgid "Assign"
 msgstr ""
 
 msgid "Assign Catalog Items"
@@ -5319,6 +5291,12 @@ msgstr ""
 msgid "Automate Instance"
 msgstr ""
 
+msgid "Automate Instance \"%s\" was added"
+msgstr ""
+
+msgid "Automate Instance \"%s\" was saved"
+msgstr ""
+
 msgid "Automate Instance \"%{name}\" was added"
 msgstr ""
 
@@ -5460,6 +5438,9 @@ msgid "Automation Simulation has been run"
 msgstr ""
 
 msgid "Automation Tasks"
+msgstr ""
+
+msgid "Automation Templates"
 msgstr ""
 
 msgid "Automation Value"
@@ -7258,6 +7239,9 @@ msgstr ""
 msgid "Change Password of Infrastructure Providers"
 msgstr ""
 
+msgid "Change current group"
+msgstr ""
+
 msgid "Changed from previous"
 msgstr ""
 
@@ -7819,6 +7803,9 @@ msgstr ""
 msgid "Choose a Schedule to view from the menus on the left."
 msgstr ""
 
+msgid "Choose a Server"
+msgstr ""
+
 msgid "Choose a Template"
 msgstr ""
 
@@ -7829,6 +7816,9 @@ msgid "Choose a Value"
 msgstr ""
 
 msgid "Choose a chart type"
+msgstr ""
+
+msgid "Choose a pattern"
 msgstr ""
 
 msgid "Choose a resource entity and label"
@@ -7846,16 +7836,37 @@ msgstr ""
 msgid "Choose an Owner"
 msgstr ""
 
+msgid "Choose cloud object storage"
+msgstr ""
+
+msgid "Choose disk type"
+msgstr ""
+
 msgid "Choose file"
 msgstr ""
 
 msgid "Choose one or more Fields"
 msgstr ""
 
+msgid "Choose source image"
+msgstr ""
+
+msgid "Choose source provider"
+msgstr ""
+
+msgid "Choose source provider type"
+msgstr ""
+
+msgid "Choose storage bucket"
+msgstr ""
+
 msgid "Choose the branch or tag you would like to import"
 msgstr ""
 
 msgid "Choose the type of custom variables to be imported"
+msgstr ""
+
+msgid "Choose transient storage"
 msgstr ""
 
 msgid "Cidr"
@@ -7888,9 +7899,6 @@ msgid "Class \"%s\" was saved"
 msgstr ""
 
 msgid "Class '%{name}' is not eligible for classification"
-msgstr ""
-
-msgid "Class '%{type}' is not eligible for classification"
 msgstr ""
 
 msgid "Class Schema Sequence was saved"
@@ -7978,6 +7986,9 @@ msgid "Clear Script"
 msgstr ""
 
 msgid "Clear cart"
+msgstr ""
+
+msgid "Clear file"
 msgstr ""
 
 msgid "Clear selected Object Storage Containers"
@@ -8762,6 +8773,9 @@ msgstr ""
 msgid "CloudNetwork|Total vms"
 msgstr ""
 
+msgid "CloudNetwork|Uid ems"
+msgstr ""
+
 msgid "CloudNetwork|Vlan transparent"
 msgstr ""
 
@@ -9140,6 +9154,9 @@ msgstr ""
 msgid "CloudVolume|Supports safe delete"
 msgstr ""
 
+msgid "CloudVolume|Uid ems"
+msgstr ""
+
 msgid "CloudVolume|Volume type"
 msgstr ""
 
@@ -9367,10 +9384,7 @@ msgstr ""
 msgid "Compare"
 msgstr ""
 
-msgid "Compare %{name}"
-msgstr ""
-
-msgid "Compare %{vm_or_template}"
+msgid "Compare %{type}"
 msgstr ""
 
 msgid "Compare List of Clusters"
@@ -9676,6 +9690,9 @@ msgid "Condition|Towhat"
 msgstr ""
 
 msgid "Condition|Updated on"
+msgstr ""
+
+msgid "Config Pattern"
 msgstr ""
 
 msgid "Config Version"
@@ -10238,6 +10255,9 @@ msgid "Confirm Edit"
 msgstr ""
 
 msgid "Confirm Password"
+msgstr ""
+
+msgid "Confirm Reset"
 msgstr ""
 
 msgid "Connect"
@@ -12757,9 +12777,6 @@ msgstr ""
 msgid "Copy %{model}"
 msgstr ""
 
-msgid "Copy %{record} was cancelled by the user"
-msgstr ""
-
 msgid "Copy Analysis Profile"
 msgstr ""
 
@@ -12861,10 +12878,7 @@ msgid ""
 "group}\" Group."
 msgstr ""
 
-msgid "Copy of %{description}"
-msgstr ""
-
-msgid "Copy of %{name}"
+msgid "Copy of %{field}"
 msgstr ""
 
 msgid "Copy of %{typ} Request"
@@ -12886,6 +12900,12 @@ msgid "Copy of a Service Catalog Item was successfully saved"
 msgstr ""
 
 msgid "Copy of sample"
+msgstr ""
+
+msgid "Copy operation completed successfully"
+msgstr ""
+
+msgid "Copy operation was cancelled by the user"
 msgstr ""
 
 msgid "Copy original Request"
@@ -13531,7 +13551,13 @@ msgstr ""
 msgid "Current Window"
 msgstr ""
 
+msgid "Current group: %s"
+msgstr ""
+
 msgid "Current pods"
+msgstr ""
+
+msgid "Current processor compatibility mode"
 msgstr ""
 
 msgid "Current user lacks permissions to create a new snapshot for this VM"
@@ -14097,9 +14123,6 @@ msgstr ""
 msgid "Data Type"
 msgstr ""
 
-msgid "Data Type:"
-msgstr ""
-
 msgid "Data View"
 msgstr ""
 
@@ -14248,14 +14271,6 @@ msgid "Datastore does not exist, unable to add disk"
 msgstr ""
 
 msgid "Datastore import was cancelled or is finished"
-msgstr ""
-
-msgid ""
-"Datastore import was successful.\n"
-"Namespaces updated/added: %{namespace_stats}\n"
-"Classes updated/added: %{class_stats}\n"
-"Instances updated/added: %{instance_stats}\n"
-"Methods updated/added: %{method_stats}"
 msgstr ""
 
 msgid ""
@@ -14620,9 +14635,6 @@ msgstr ""
 msgid "Delete Analysis Profile"
 msgstr ""
 
-msgid "Delete Ansible Tower Provider"
-msgstr ""
-
 msgid "Delete Automate Class"
 msgstr ""
 
@@ -14636,6 +14648,9 @@ msgid "Delete Automate Method"
 msgstr ""
 
 msgid "Delete Automate Namespace"
+msgstr ""
+
+msgid "Delete Automation Provider"
 msgstr ""
 
 msgid "Delete Automation Providers"
@@ -15294,6 +15309,9 @@ msgid "Depends on Group"
 msgstr ""
 
 msgid "Depends on Service"
+msgstr ""
+
+msgid "Deploy"
 msgstr ""
 
 msgid "Deploy Server"
@@ -17631,6 +17649,9 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
+msgid "Edit %s"
+msgstr ""
+
 msgid "Edit %s Field"
 msgstr ""
 
@@ -17803,6 +17824,9 @@ msgid "Edit Event cancelled by user"
 msgstr ""
 
 msgid "Edit Expression"
+msgstr ""
+
+msgid "Edit Field"
 msgstr ""
 
 msgid "Edit Field Details"
@@ -17998,6 +18022,9 @@ msgid "Edit Sequence of Automate Schema"
 msgstr ""
 
 msgid "Edit Sequence of Dashboards"
+msgstr ""
+
+msgid "Edit Sequence of User Groups for External Authentication"
 msgstr ""
 
 msgid "Edit Sequence of User Groups for LDAP Look Up"
@@ -18207,7 +18234,7 @@ msgstr ""
 msgid "Edit Tags for this Ansible Repository"
 msgstr ""
 
-msgid "Edit Tags for this Ansible Tower Provider"
+msgid "Edit Tags for this Automation Provider"
 msgstr ""
 
 msgid "Edit Tags for this Availability Zone"
@@ -18783,6 +18810,9 @@ msgstr ""
 msgid "Edit assignments for this Alert Profile"
 msgstr ""
 
+msgid "Edit of \"%s\" was cancelled by the user"
+msgstr ""
+
 msgid "Edit of %s \"%s\" was canceled by the user."
 msgstr ""
 
@@ -18813,7 +18843,7 @@ msgstr ""
 msgid "Edit of Automate Class \"%{name}\" was cancelled by the user"
 msgstr ""
 
-msgid "Edit of Automate Instance \"%{name}\" was cancelled by the user"
+msgid "Edit of Automate Instance \"%s\" was cancelled by the user"
 msgstr ""
 
 msgid "Edit of Automate Method \"%{name}\" was cancelled by the user"
@@ -19329,9 +19359,6 @@ msgstr ""
 msgid "Editing %{record_name}"
 msgstr ""
 
-msgid "Editing %{vm_or_template} \"%{name}\""
-msgstr ""
-
 msgid "Editing Action \"%{name}\""
 msgstr ""
 
@@ -19432,6 +19459,9 @@ msgid "Editing tag mapping from label \"%{name}\""
 msgstr ""
 
 msgid "Editor"
+msgstr ""
+
+msgid "Effective Processor Compatibility Mode"
 msgstr ""
 
 msgid "Either Host Name or Cluster Name is required"
@@ -20230,13 +20260,7 @@ msgstr ""
 msgid "Error details: %{message}"
 msgstr ""
 
-msgid "Error during '%{record} copy': %{error_message}"
-msgstr ""
-
 msgid "Error during '%{task}': %{error_message}"
-msgstr ""
-
-msgid "Error during '%{task}': %{message}"
 msgstr ""
 
 msgid "Error during '%{task}': Expression element is required"
@@ -20249,9 +20273,6 @@ msgid "Error during 'Appliance restart': %{message}"
 msgstr ""
 
 msgid "Error during 'C & U Gap Collection': %{message}"
-msgstr ""
-
-msgid "Error during 'LDAP Group Look Up': %{message}"
 msgstr ""
 
 msgid "Error during 'Orchestration Template Copy': %{error_message}"
@@ -20278,13 +20299,7 @@ msgstr ""
 msgid "Error during 'Validate': %{error_message}"
 msgstr ""
 
-msgid "Error during 'Validate': %{message}"
-msgstr ""
-
 msgid "Error during 'add': %{error_message}"
-msgstr ""
-
-msgid "Error during 'add': %{message}"
 msgstr ""
 
 msgid "Error during 'apply': %{error}"
@@ -20294,9 +20309,6 @@ msgid "Error during 'edit': %{field_name} %{error_message}"
 msgstr ""
 
 msgid "Error during 'save': %{error_message}"
-msgstr ""
-
-msgid "Error during 'save': %{message}"
 msgstr ""
 
 msgid "Error during 'upload': %{message}"
@@ -20322,6 +20334,9 @@ msgstr ""
 msgid "Error during alarms: %{messages}"
 msgstr ""
 
+msgid "Error during copy operation"
+msgstr ""
+
 msgid "Error during deletion: %{error_message}"
 msgstr ""
 
@@ -20334,7 +20349,7 @@ msgstr ""
 msgid "Error during repository setup: %{error_message}"
 msgstr ""
 
-msgid "Error during reset: Status [%{status}] Message [%{message}]"
+msgid "Error during reset: %{message}"
 msgstr ""
 
 msgid "Error during sending test email: %{class_name}, %{error_message}"
@@ -20373,10 +20388,16 @@ msgstr ""
 msgid "Error launching: \"%{task_description}\" %{error_message}"
 msgstr ""
 
+msgid "Error loading automate domains"
+msgstr ""
+
 msgid "Error loading content: %s"
 msgstr ""
 
 msgid "Error loading data:"
+msgstr ""
+
+msgid "Error loading instance data"
 msgstr ""
 
 msgid "Error message goes here"
@@ -20392,6 +20413,9 @@ msgid "Error requesting data from server"
 msgstr ""
 
 msgid "Error returned from %{name} event processing in Automate: %{error_message}"
+msgstr ""
+
+msgid "Error saving instance"
 msgstr ""
 
 msgid "Error saving priority order"
@@ -20775,6 +20799,9 @@ msgid "Events are not supported for this region"
 msgstr ""
 
 msgid "Events for VM prod_webserver"
+msgstr ""
+
+msgid "Every"
 msgstr ""
 
 msgid "Everything"
@@ -21210,9 +21237,6 @@ msgid "Export Selected Policies"
 msgstr ""
 
 msgid "Export Selected Profiles"
-msgstr ""
-
-msgid "Export all classes and instances"
 msgstr ""
 
 msgid "Export all classes and instances to a file"
@@ -21753,10 +21777,25 @@ msgstr ""
 msgid "Failed to %{snapshot_op} snapshot of %{subject}: %{error}"
 msgstr ""
 
+msgid "Failed to check task status"
+msgstr ""
+
 msgid "Failed to delete %s %s."
 msgstr ""
 
+msgid "Failed to fetch domains"
+msgstr ""
+
+msgid "Failed to fetch git repository"
+msgstr ""
+
+msgid "Failed to import from git"
+msgstr ""
+
 msgid "Failed to load chargeback data"
+msgstr ""
+
+msgid "Failed to load data"
 msgstr ""
 
 msgid "Failed to load image labels"
@@ -21778,6 +21817,9 @@ msgid "Failed to save C & U collection settings"
 msgstr ""
 
 msgid "Failed to save chargeback assignments"
+msgstr ""
+
+msgid "Failed to submit git URL"
 msgstr ""
 
 msgid "Failover"
@@ -22012,6 +22054,9 @@ msgid "Filter"
 msgstr ""
 
 msgid "Filter Expression"
+msgstr ""
+
+msgid "Filter Item"
 msgstr ""
 
 msgid "Filter Message"
@@ -22910,6 +22955,9 @@ msgid_plural "Git Branches"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Git Import Disabled"
+msgstr ""
+
 msgid "Git Reference"
 msgid_plural "Git References"
 msgstr[0] ""
@@ -22927,9 +22975,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "Git URL"
-msgstr ""
-
-msgid "Git URL:"
 msgstr ""
 
 msgid "Git based refresh canceled"
@@ -23014,6 +23059,9 @@ msgid "Global search:"
 msgstr ""
 
 msgid "Glusterfs Endpoint Name"
+msgstr ""
+
+msgid "Go to my start page"
 msgstr ""
 
 msgid "Google"
@@ -25163,13 +25211,10 @@ msgstr ""
 msgid "Import Cloud Template"
 msgstr ""
 
-msgid "Import Datastore classes"
-msgstr ""
-
 msgid "Import Datastore classes (*.zip)"
 msgstr ""
 
-msgid "Import Datastore via git"
+msgid "Import Datastore via Git"
 msgstr ""
 
 msgid "Import File Upload"
@@ -25201,6 +25246,9 @@ msgstr ""
 msgid "Import cancelled by user"
 msgstr ""
 
+msgid "Import failed"
+msgstr ""
+
 msgid "Import file cannot be empty"
 msgstr ""
 
@@ -25210,7 +25258,16 @@ msgstr ""
 msgid "Import file was uploaded successfully"
 msgstr ""
 
+msgid "Import from Domain"
+msgstr ""
+
+msgid "Import from Git Repository"
+msgstr ""
+
 msgid "Import not available due to conflicts"
+msgstr ""
+
+msgid "Import to Existing Domain"
 msgstr ""
 
 msgid "Import validation complete: %{good_record}, %{bad_record}"
@@ -25228,7 +25285,13 @@ msgstr ""
 msgid "ImportFileUpload|Region number"
 msgstr ""
 
-msgid "Imported from git"
+msgid "Imported %{git_url}@%{branch_or_tag}"
+msgstr ""
+
+msgid "Importing datastore..."
+msgstr ""
+
+msgid "Importing from git..."
 msgstr ""
 
 msgid "In My LDAP Group?"
@@ -25280,6 +25343,9 @@ msgid "Incremental?"
 msgstr ""
 
 msgid "Index"
+msgstr ""
+
+msgid "Indicates if all volumes must reside in the same storage pool [true, false]"
 msgstr ""
 
 msgid "Infinity"
@@ -25655,6 +25721,9 @@ msgstr ""
 msgid "Invalid chart definition"
 msgstr ""
 
+msgid "Invalid copy action"
+msgstr ""
+
 msgid "Invalid credential_field %{field}, allowed values are %{allowed_fields}"
 msgstr ""
 
@@ -25767,9 +25836,7 @@ msgid "It is not allowed to have more than 20 embedded methods"
 msgstr ""
 
 msgid "Item"
-msgid_plural "Items"
-msgstr[0] ""
-msgstr[1] ""
+msgstr ""
 
 msgid "Item Type"
 msgstr ""
@@ -25881,6 +25948,9 @@ msgstr ""
 msgid "KBps"
 msgstr ""
 
+msgid "Keep OVA file on completion"
+msgstr ""
+
 msgid "Kerberos"
 msgstr ""
 
@@ -25957,15 +26027,6 @@ msgid "LDAP Domains"
 msgstr ""
 
 msgid "LDAP Group"
-msgstr ""
-
-msgid "LDAP Group Look Up"
-msgstr ""
-
-msgid "LDAP Group Lookup"
-msgstr ""
-
-msgid "LDAP Groups for User"
 msgstr ""
 
 msgid "LDAP Region"
@@ -26088,9 +26149,6 @@ msgid "Lan|Updated on"
 msgstr ""
 
 msgid "Last"
-msgstr ""
-
-msgid "Last 1000 lines from server %{name} [%{id}] in zone %{zone}"
 msgstr ""
 
 msgid "Last 1000 lines from server %{server_name} [%{server_id}] in zone %{zone_name}"
@@ -26752,10 +26810,16 @@ msgstr ""
 msgid "Loading chargeback data..."
 msgstr ""
 
+msgid "Loading domains..."
+msgstr ""
+
 msgid "Loading expression fields..."
 msgstr ""
 
 msgid "Loading image labels..."
+msgstr ""
+
+msgid "Loading import data..."
 msgstr ""
 
 msgid "Loading label values..."
@@ -26901,6 +26965,9 @@ msgstr ""
 msgid "Logs for this %{product} Server are not available for viewing"
 msgstr ""
 
+msgid "Logs of this Pod"
+msgstr ""
+
 msgid "Long Description"
 msgstr ""
 
@@ -26979,6 +27046,9 @@ msgid "Main Configuration"
 msgstr ""
 
 msgid "Main Info"
+msgstr ""
+
+msgid "Main Menu"
 msgstr ""
 
 msgid "Main Route Table"
@@ -27677,7 +27747,25 @@ msgstr ""
 msgid "Maximum"
 msgstr ""
 
+msgid "Maximum Memory"
+msgstr ""
+
+msgid "Maximum Memory (GiB)"
+msgstr ""
+
+msgid "Maximum Processors"
+msgstr ""
+
 msgid "Maximum Transmission Unit"
+msgstr ""
+
+msgid "Maximum Virtual Processors"
+msgstr ""
+
+msgid "Maximum amount of memory that can be allocated (in GiB)"
+msgstr ""
+
+msgid "Maximum number of processors that can be allocated"
 msgstr ""
 
 msgid "Md5"
@@ -28034,6 +28122,12 @@ msgid "Memory Mirroring"
 msgstr ""
 
 msgid "Memory Mirroring capability of the Host."
+msgstr ""
+
+msgid "Memory Region Size"
+msgstr ""
+
+msgid "Memory Region Size in MB."
 msgstr ""
 
 msgid "Memory Reserve"
@@ -29165,6 +29259,9 @@ msgstr ""
 msgid "Microsoft SCVMM Provider"
 msgstr ""
 
+msgid "Migratable"
+msgstr ""
+
 msgid "Migrate %{vm_or_template}"
 msgstr ""
 
@@ -29274,6 +29371,24 @@ msgid "Minimize"
 msgstr ""
 
 msgid "Minimum"
+msgstr ""
+
+msgid "Minimum Memory"
+msgstr ""
+
+msgid "Minimum Memory (GiB)"
+msgstr ""
+
+msgid "Minimum Processors"
+msgstr ""
+
+msgid "Minimum Virtual Processors"
+msgstr ""
+
+msgid "Minimum amount of memory that can be allocated (in GiB)"
+msgstr ""
+
+msgid "Minimum number of processors that can be allocated"
 msgstr ""
 
 msgid "Minute"
@@ -32392,6 +32507,9 @@ msgstr ""
 msgid "Namespace"
 msgstr ""
 
+msgid "Namespace tree"
+msgstr ""
+
 msgid "Naming"
 msgstr ""
 
@@ -33126,12 +33244,6 @@ msgstr ""
 msgid "No %{member} selected to set to Synchronous"
 msgstr ""
 
-msgid "No %{member} were selected to move left"
-msgstr ""
-
-msgid "No %{member} were selected to move right"
-msgstr ""
-
 msgid "No %{model} were %{state} %{time}"
 msgstr ""
 
@@ -33252,6 +33364,9 @@ msgstr ""
 msgid "No Daily data is available"
 msgstr ""
 
+msgid "No Data"
+msgstr ""
+
 msgid "No Date/Time value specified"
 msgstr ""
 
@@ -33259,6 +33374,9 @@ msgid "No Dialog"
 msgstr ""
 
 msgid "No Dialogs were selected for %{task}"
+msgstr ""
+
+msgid "No Domains Available"
 msgstr ""
 
 msgid "No EMS defined"
@@ -33554,7 +33672,13 @@ msgstr ""
 msgid "No data available."
 msgstr ""
 
+msgid "No domains found in the import file"
+msgstr ""
+
 msgid "No drift history found"
+msgstr ""
+
+msgid "No enabled domains available to import to"
 msgstr ""
 
 msgid "No entries found for %s"
@@ -33645,6 +33769,9 @@ msgid "No more than 10 Analyses can be selected for Drift"
 msgstr ""
 
 msgid "No more than 32 %{model} can be selected for Compare"
+msgstr ""
+
+msgid "No namespaces available for the selected domain"
 msgstr ""
 
 msgid "No notes have been entered."
@@ -34205,6 +34332,9 @@ msgid "OVF Template is required, please select one from the list"
 msgstr ""
 
 msgid "OVF Templates"
+msgstr ""
+
+msgid "Object"
 msgstr ""
 
 msgid "Object Attribute"
@@ -35522,9 +35652,6 @@ msgstr ""
 msgid "Password (API Key)"
 msgstr ""
 
-msgid "Password (optional):"
-msgstr ""
-
 msgid "Password Complex"
 msgstr ""
 
@@ -35538,6 +35665,9 @@ msgid "Password for privilege escalation method"
 msgstr ""
 
 msgid "Password for this credential"
+msgstr ""
+
+msgid "Password is not strong enough"
 msgstr ""
 
 msgid "Password or Password+One-Time-Password"
@@ -36827,6 +36957,9 @@ msgstr ""
 msgid "PlacementGroup|Region number"
 msgstr ""
 
+msgid "PlacementGroup|Uid ems"
+msgstr ""
+
 msgid "Platform"
 msgstr ""
 
@@ -36924,10 +37057,19 @@ msgstr ""
 msgid "Please select a node from the tree to edit."
 msgstr ""
 
+msgid "Please select a pattern"
+msgstr ""
+
 msgid "Please select a type."
 msgstr ""
 
 msgid "Please select an Instance Type from above"
+msgstr ""
+
+msgid "Please select at least one namespace to import"
+msgstr ""
+
+msgid "Please select at least one server"
 msgstr ""
 
 msgid "Please try again"
@@ -37373,6 +37515,9 @@ msgstr ""
 msgid "Preemptible"
 msgstr ""
 
+msgid "Preferred Processor Compatibility Mode"
+msgstr ""
+
 msgid "Present"
 msgstr ""
 
@@ -37554,6 +37699,9 @@ msgid "Processing units"
 msgstr ""
 
 msgid "Processor"
+msgstr ""
+
+msgid "Processor Compatibility Mode"
 msgstr ""
 
 msgid "Processor Cores Per Socket"
@@ -38668,6 +38816,11 @@ msgstr ""
 
 msgid "Reconfigure Services Options"
 msgstr ""
+
+msgid "Reconfigure Task"
+msgid_plural "Reconfigure Tasks"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Reconfigure VM CPU"
 msgstr ""
@@ -40220,7 +40373,13 @@ msgstr ""
 msgid "Rename Cloud Database"
 msgstr ""
 
+msgid "Rename Snapshot"
+msgstr ""
+
 msgid "Rename VM"
+msgstr ""
+
+msgid "Rename a snapshot for VMs"
 msgstr ""
 
 msgid "Rename this VM"
@@ -40398,6 +40557,9 @@ msgid "Report table is nil"
 msgstr ""
 
 msgid "Reporting Workers"
+msgstr ""
+
+msgid "Reporting role not enabled"
 msgstr ""
 
 msgid "Reports"
@@ -40673,10 +40835,13 @@ msgstr ""
 msgid "Reset all Policy Simulation options"
 msgstr ""
 
-msgid "Reset all components in the following domains: %{domains}"
+msgid "Reset all components in the following domains: %s"
 msgstr ""
 
 msgid "Reset all options"
+msgstr ""
+
+msgid "Reset failed"
 msgstr ""
 
 msgid "Reset the filter"
@@ -40704,6 +40869,9 @@ msgid "Reset this item?"
 msgstr ""
 
 msgid "Reset to Default"
+msgstr ""
+
+msgid "Resetting datastore..."
 msgstr ""
 
 msgid "Resides on VM"
@@ -41204,6 +41372,9 @@ msgstr ""
 msgid "Results"
 msgstr ""
 
+msgid "Results %s"
+msgstr ""
+
 msgid "Resume"
 msgstr ""
 
@@ -41357,6 +41528,12 @@ msgid "Revert to selected snapshot on Templates"
 msgstr ""
 
 msgid "Revert to selected snapshot on VMs"
+msgstr ""
+
+msgid "Review Datastore Import"
+msgstr ""
+
+msgid "Review Git Import"
 msgstr ""
 
 msgid "Revoke Sessions of Other Users"
@@ -42099,6 +42276,9 @@ msgstr ""
 msgid "Secondary (Display) Filter - Filters the rows based on child table fields"
 msgstr ""
 
+msgid "Secondary Menu"
+msgstr ""
+
 msgid "Secret Access Key"
 msgstr ""
 
@@ -42448,6 +42628,9 @@ msgstr ""
 msgid "Select Entry Point Instance"
 msgstr ""
 
+msgid "Select Entry Point Namespace"
+msgstr ""
+
 msgid "Select Group"
 msgstr ""
 
@@ -42455,6 +42638,9 @@ msgid "Select Instances to copy"
 msgstr ""
 
 msgid "Select Methods to copy"
+msgstr ""
+
+msgid "Select Namespaces to Import"
 msgstr ""
 
 msgid "Select Policy Profiles"
@@ -42487,7 +42673,13 @@ msgstr ""
 msgid "Select a PXE Server"
 msgstr ""
 
+msgid "Select a Physical Server"
+msgstr ""
+
 msgid "Select a Policy Profile to add:"
+msgstr ""
+
+msgid "Select a Server Profile"
 msgstr ""
 
 msgid "Select a VM to Submit the Simulation Options"
@@ -42634,16 +42826,7 @@ msgstr ""
 msgid "Select currency: "
 msgstr ""
 
-msgid "Select domain you wish to import from:"
-msgstr ""
-
-msgid "Select existing domain to import into:"
-msgstr ""
-
 msgid "Select methods"
-msgstr ""
-
-msgid "Select namespaces you wish to import:"
 msgstr ""
 
 msgid "Select one or more Groups to delete"
@@ -42653,12 +42836,6 @@ msgid "Select one or more Users to delete"
 msgstr ""
 
 msgid "Select one or more items to delete"
-msgstr ""
-
-msgid "Select only one or consecutive %{member} to move down"
-msgstr ""
-
-msgid "Select only one or consecutive %{member} to move up"
 msgstr ""
 
 msgid "Select only one or consecutive %{name} to move down"
@@ -42788,6 +42965,9 @@ msgid "Selected item can not be copied. Because it\\'s Ansible Playbook or not v
 msgstr ""
 
 msgid "Selected methods"
+msgstr ""
+
+msgid "Selected path:"
 msgstr ""
 
 msgid "Selected:"
@@ -43747,6 +43927,9 @@ msgid "Service|Retirement warn"
 msgstr ""
 
 msgid "Service|Retires on"
+msgstr ""
+
+msgid "Service|V total direct service children"
 msgstr ""
 
 msgid "Service|V total vms"
@@ -45735,6 +45918,9 @@ msgstr ""
 msgid "Storage Pool"
 msgstr ""
 
+msgid "Storage Pool Affinity"
+msgstr ""
+
 msgid "Storage Profile"
 msgstr ""
 
@@ -45791,6 +45977,9 @@ msgid "Storage Used Rate"
 msgstr ""
 
 msgid "Storage file"
+msgstr ""
+
+msgid "Storage pool where the server is deployed"
 msgstr ""
 
 msgid "Storage profile"
@@ -46290,9 +46479,6 @@ msgstr ""
 msgid "Subscriptions Changed"
 msgstr ""
 
-msgid "Substitution:"
-msgstr ""
-
 msgid "Subtype"
 msgstr ""
 
@@ -46312,6 +46498,9 @@ msgid "Successfully deleted Saved Report from the %{product} Database"
 msgid_plural "Successfully deleted Saved Reports from the %{product} Database"
 msgstr[0] ""
 msgstr[1] ""
+
+msgid "Successfully found git repository, please choose a branch or tag"
+msgstr ""
 
 msgid "Successfully refreshed!"
 msgstr ""
@@ -46543,6 +46732,9 @@ msgid "Switch|Uid ems"
 msgstr ""
 
 msgid "Switch|Updated on"
+msgstr ""
+
+msgid "Switch|Virtual bridge mode"
 msgstr ""
 
 msgid "Sync"
@@ -47345,6 +47537,15 @@ msgstr ""
 msgid "The Physical Storage is not connected to an active Manager"
 msgstr ""
 
+msgid "The Pod is no longer active"
+msgstr ""
+
+msgid "The Pod is not associated with a project"
+msgstr ""
+
+msgid "The Pod is not associated with an active provider"
+msgstr ""
+
 msgid "The PowerVM management master of this host is a HMC."
 msgstr ""
 
@@ -47495,6 +47696,9 @@ msgid ""
 "source, it will take precedence."
 msgstr ""
 
+msgid "The effective processor compatibility mode of the VM"
+msgstr ""
+
 msgid "The email address assigned to the Google Compute Engine service account"
 msgstr ""
 
@@ -47604,6 +47808,9 @@ msgid "The pre-plan phase of the run has completed."
 msgstr ""
 
 msgid "The pre-plan phase of the run is in progress."
+msgstr ""
+
+msgid "The preferred processor compatibility mode of the VM"
 msgstr ""
 
 msgid "The provider does not support reconfigure disks"
@@ -48139,9 +48346,6 @@ msgstr ""
 msgid "Timelines for %{table} \"%{name}\""
 msgstr ""
 
-msgid "Timelines for %{virtual_machine} \"%{name}\""
-msgstr ""
-
 msgid "Timeout"
 msgstr ""
 
@@ -48203,12 +48407,6 @@ msgid "Today"
 msgstr ""
 
 msgid "Today (partial)"
-msgstr ""
-
-msgid "Toggle"
-msgstr ""
-
-msgid "Toggle All/None"
 msgstr ""
 
 msgid "Toggle Fullscreen"
@@ -48862,9 +49060,6 @@ msgstr ""
 msgid "Unable to find task with id: [%{task_id}]"
 msgstr ""
 
-msgid "Unable to find user '%{name}'"
-msgstr ""
-
 msgid "Unable to find user '%{user}'"
 msgstr ""
 
@@ -48952,6 +49147,9 @@ msgstr ""
 msgid "Unarchive Services"
 msgstr ""
 
+msgid "Unassign"
+msgstr ""
+
 msgid "Unassign Server"
 msgstr ""
 
@@ -49013,6 +49211,9 @@ msgid "Units"
 msgstr ""
 
 msgid "Unknown"
+msgstr ""
+
+msgid "Unknown API error"
 msgstr ""
 
 msgid "Unknown Action"
@@ -49194,10 +49395,16 @@ msgstr ""
 msgid "Upload Script"
 msgstr ""
 
+msgid "Upload file"
+msgstr ""
+
 msgid "Uploaded File '%{filename}'"
 msgstr ""
 
 msgid "Uploaded Image"
+msgstr ""
+
+msgid "Uploading..."
 msgstr ""
 
 msgid "Uptime - Minimum Time Between Startups for Collected Intervals (Seconds)"
@@ -49672,7 +49879,7 @@ msgstr ""
 msgid "User Group Sequence was saved"
 msgstr ""
 
-msgid "User Group Sequencing for LDAP Look Up:"
+msgid "User Group Sequencing for External Authentication:"
 msgstr ""
 
 msgid "User ID"
@@ -49719,9 +49926,6 @@ msgstr ""
 msgid "User must be defined"
 msgstr ""
 
-msgid "User must be entered to perform LDAP Group Look Up"
-msgstr ""
-
 msgid "User name"
 msgstr ""
 
@@ -49729,9 +49933,6 @@ msgid "User no longer exists"
 msgstr ""
 
 msgid "User script \"%{params}\" upload was successful"
-msgstr ""
-
-msgid "User to Look Up"
 msgstr ""
 
 msgid "User will input the value"
@@ -49743,13 +49944,13 @@ msgstr ""
 msgid "User:"
 msgstr ""
 
+msgid "User: %s"
+msgstr ""
+
 msgid "UserID"
 msgstr ""
 
 msgid "Username"
-msgstr ""
-
-msgid "Username (optional):"
 msgstr ""
 
 msgid "Username for this credential"
@@ -52102,6 +52303,12 @@ msgstr ""
 msgid "VmOrTemplate|Has rdm disk"
 msgstr ""
 
+msgid "VmOrTemplate|Health details"
+msgstr ""
+
+msgid "VmOrTemplate|Health state"
+msgstr ""
+
 msgid "VmOrTemplate|Host name"
 msgstr ""
 
@@ -53177,6 +53384,9 @@ msgid ""
 "ocs/instances/preemptible for more details."
 msgstr ""
 
+msgid "Whether the instance can be migrated [true, false]"
+msgstr ""
+
 msgid "Whether to use the authorize mechanism"
 msgstr ""
 
@@ -53346,6 +53556,9 @@ msgid "Workflow Templates (Ansible Tower)"
 msgstr ""
 
 msgid "Workflow does not have any credentials to map."
+msgstr ""
+
+msgid "Workflow max. timeout"
 msgstr ""
 
 msgid "Workflow name"
@@ -54232,6 +54445,15 @@ msgstr ""
 msgid "m"
 msgstr ""
 
+msgid "maximum amount of memory in MB this partition can be allocated"
+msgstr ""
+
+msgid "maximum number of processors this partition can be assigned"
+msgstr ""
+
+msgid "maximum number of virtual processors this partition can be assigned"
+msgstr ""
+
 msgid "may contain only alphanumeric and _ - characters"
 msgstr ""
 
@@ -54254,6 +54476,15 @@ msgid "memory_mb"
 msgstr ""
 
 msgid "method is only available for an entry"
+msgstr ""
+
+msgid "minimum amount of memory in MB this partition should be allocated"
+msgstr ""
+
+msgid "minimum number of processors this partition should be assigned"
+msgstr ""
+
+msgid "minimum number of virtual processors this partition should be assigned"
 msgstr ""
 
 msgid "minutely"
@@ -54370,9 +54601,6 @@ msgid "on %{date} at %{time}"
 msgstr ""
 
 msgid "open and close options"
-msgstr ""
-
-msgid "operator '%{operator_name}' is not supported"
 msgstr ""
 
 msgid "operator '%{operator}' is not supported"
@@ -54606,6 +54834,9 @@ msgstr ""
 msgid "raw_live_migrate must be implemented in a subclass"
 msgstr ""
 
+msgid "raw_logs must be implemented in a subclass"
+msgstr ""
+
 msgid "raw_remove_security_group must be implemented in a subclass"
 msgstr ""
 
@@ -54793,9 +55024,6 @@ msgid "sample"
 msgstr ""
 
 msgid "secondary, "
-msgstr ""
-
-msgid "selected to copy"
 msgstr ""
 
 msgid "service_process"
