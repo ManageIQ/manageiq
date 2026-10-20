@@ -3,7 +3,9 @@
 if [ -n "$CI" ]; then
   echo "== Installing system packages =="
   sudo apt-get update
-  sudo apt-get install -y libcurl4-openssl-dev
+  sudo apt-get install -y libcurl4-openssl-dev libssh2-1-dev
+  # libjitterentropy3 is only available on resolute/26.04
+  sudo apt-get install -y libjitterentropy3-dev || true
   echo
 fi
 
