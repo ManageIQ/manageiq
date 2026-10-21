@@ -509,6 +509,15 @@ class ServiceTemplate < ApplicationRecord
     zone&.name if atomic?
   end
 
+  def assign_custom_button(button_id)
+    with_lock do
+      self.options ||= {}
+      key = "cb-#{button_id}"
+      options[:button_order] = (options[:button_order] || []) | [key]
+      save!
+    end
+  end
+
   private
 
   def update_service_resources(config_info, auth_user = nil)
