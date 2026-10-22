@@ -5,7 +5,7 @@ RSpec.describe MiqRequest do
   context "CONSTANTS" do
     it "REQUEST_TYPES" do
       expected_request_types = {
-        :MiqProvisionRequest                            => {:template                         => "VM Provision", :clone_to_vm => "VM Clone", :clone_to_template => "VM Publish"},
+        :MiqProvisionRequest                            => {:template                         => "VM Provision", :vm_provision => "VM Provision", :clone_to_vm => "VM Clone", :clone_to_template => "VM Publish"},
         :MiqProvisionRequestTemplate                    => {:template                         => "VM Provision Template"},
         :MiqProvisionConfiguredSystemRequest            => {:provision_via_foreman            => "#{ui_lookup(:ui_title => 'foreman')} Provision"},
         :VmReconfigureRequest                           => {:vm_reconfigure                   => "VM Reconfigure"},

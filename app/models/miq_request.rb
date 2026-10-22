@@ -86,6 +86,7 @@ class MiqRequest < ApplicationRecord
       },
       :MiqProvisionRequest                 => {
         :template          => N_("VM Provision"),
+        :vm_provision      => N_("VM Provision"),
         :clone_to_vm       => N_("VM Clone"),
         :clone_to_template => N_("VM Publish"),
       },
