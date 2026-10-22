@@ -1,3 +1,5 @@
+require "benchmark"
+
 class EvmDatabase
   include Vmdb::Logging
 
