@@ -67,7 +67,7 @@ class VmdbDatabaseConnection < ApplicationRecord
   end
 
   def wait_resource
-    lock = vmdb_database_locks.first
+    lock = vmdb_database_locks.take
     lock && lock.relation
   end
 
