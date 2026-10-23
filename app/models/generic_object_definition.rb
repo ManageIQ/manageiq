@@ -1,15 +1,7 @@
 class GenericObjectDefinition < ApplicationRecord
   include YamlImportExportMixin
   include ImportExport
-
-  TYPE_MAP = {
-    :boolean  => ActiveModel::Type::Boolean.new,
-    :datetime => ActiveModel::Type::DateTime.new,
-    :float    => ActiveModel::Type::Float.new,
-    :integer  => ActiveModel::Type::Integer.new,
-    :string   => ActiveModel::Type::String.new,
-    :time     => ActiveModel::Type::Time.new
-  }.freeze
+  include TypeCastMixin
 
   TYPE_NAMES = {
     :boolean  => N_('Boolean'),
@@ -99,7 +91,7 @@ class GenericObjectDefinition < ApplicationRecord
   end
 
   def type_cast(attr, value)
-    TYPE_MAP.fetch(property_attributes[attr.to_s]).cast(value)
+    cast_to_type(property_attributes[attr.to_s], value)
   end
 
   def properties=(props)
