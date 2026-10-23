@@ -4,7 +4,7 @@ After=memcached.service manageiq-db-ready.service manageiq-messaging-ready.servi
 Wants=memcached.service manageiq-db-ready.service manageiq-messaging-ready.service
 
 [Service]
-WorkingDirectory=/var/www/miq/vmdb
+WorkingDirectory=/usr/lib/manageiq/manageiq
 EnvironmentFile=/etc/default/manageiq*.properties
 Environment=EVMSERVER=true
 ExecStart=/usr/bin/ruby lib/workers/bin/evm_server.rb
