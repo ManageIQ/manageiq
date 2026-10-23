@@ -1032,7 +1032,7 @@ msgstr ""
 "object_types}"
 
 msgid "%{object} no longer exists"
-msgstr "% {object} は存在しません"
+msgstr "%{object} は存在しません"
 
 msgid "%{product_name} API Group Not found"
 msgstr "%{product_name} APIグループが見つかりません"
@@ -9299,7 +9299,7 @@ msgid "Compare"
 msgstr "比較"
 
 msgid "Compare %{type}"
-msgstr "% {type} を比較する"
+msgstr "%{type} を比較する"
 
 msgid "Compare List of Clusters"
 msgstr "クラスターのリストの比較"
@@ -12752,7 +12752,7 @@ msgstr ""
 "\"%{original_name}\" ダッシュボードのコピー: \"%{name}\" は \"%{group}\" グループに正常に保存されました。"
 
 msgid "Copy of %{field}"
-msgstr "% {field} のコピー"
+msgstr "%{field} のコピー"
 
 msgid "Copy of %{typ} Request"
 msgstr "%{typ}の要求のコピー"

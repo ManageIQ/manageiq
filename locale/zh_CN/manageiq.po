@@ -12717,7 +12717,7 @@ msgid ""
 msgstr "复制“%{original_name}”仪表板：“%{name}”已成功保存到“%{group}”组。"
 
 msgid "Copy of %{field}"
-msgstr "% {field} 的副本"
+msgstr "%{field} 的副本"
 
 msgid "Copy of %{typ} Request"
 msgstr "复制 %{typ} 请求"
@@ -34635,7 +34635,7 @@ msgid "Orchestration Stack %{subject} has been retired."
 msgstr "已停用编排堆栈 %{subject}。"
 
 msgid "Orchestration Stack %{subject} has started retirement."
-msgstr "编排堆栈% {subject}已启动停用流程。"
+msgstr "编排堆栈%{subject}已启动停用流程。"
 
 msgid "Orchestration Stack (Amazon)"
 msgid_plural "Orchestration Stacks (Amazon)"
