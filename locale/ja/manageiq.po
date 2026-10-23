@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2026-09-09 00:38+0000\n"
-"PO-Revision-Date: 2026-09-09 00:38+0000\n"
+"POT-Creation-Date: 2026-10-20 20:41+0000\n"
+"PO-Revision-Date: 2026-10-20 20:41+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -292,6 +292,10 @@ msgstr "使用済み (%)"
 msgid "%d (Custom)"
 msgstr "%d (カスタム)"
 
+msgid "%d Item selected to copy"
+msgid_plural "%d Items selected to copy"
+msgstr[0] "コピー対象として選択された項目： %d 件"
+
 msgid "%d Months Ago"
 msgstr "%d カ月前"
 
@@ -391,9 +395,9 @@ msgid "%{amount} Automation Job Being Tagged"
 msgid_plural "%{amount} Automation Jobs Being Tagged"
 msgstr[0] "%{amount} 自動化ジョブはタグ付けされています"
 
-msgid "%{amount} Automation Provider (Ansible Tower) Being Tagged"
-msgid_plural "%{amount} Automation Providers (Ansible Tower) Being Tagged"
-msgstr[0] "タグ付けされている%{amount}自動化プロバイダー(Ansible Tower)"
+msgid "%{amount} Automation Provider Being Tagged"
+msgid_plural "%{amount} Automation Providers Being Tagged"
+msgstr[0] "%{amount} タグ付けされている自動化プロバイダー"
 
 msgid "%{amount} Automation Template Being Tagged"
 msgid_plural "%{amount} Automation Templates Being Tagged"
@@ -657,9 +661,6 @@ msgid "%{cpu} CPU"
 msgid_plural "%{cpu} CPUs"
 msgstr[0] "%{cpu} 個の CPU"
 
-msgid "%{current_tenant} Tags"
-msgstr "%{current_tenant} タグ"
-
 msgid "%{date_from} to %{date_to}"
 msgstr "%{date_from} から %{date_to} まで"
 
@@ -677,12 +678,6 @@ msgstr "%{description} 予約領域が VM メモリーを超えています"
 
 msgid "%{description} VM Memory is larger than Memory Limit"
 msgstr "%{description}VM メモリーがメモリー上限を超えています"
-
-msgid "%{description} is required"
-msgstr "%{description} が必要です"
-
-msgid "%{domain_name} (Disabled)"
-msgstr "%{domain_name} (無効)"
 
 msgid "%{domain_name} (Same Domain)"
 msgstr "%{domain_name} (同一ドメイン)"
@@ -718,9 +713,6 @@ msgstr "%{log_message} \"%{error}\" は次のメッセージのマージを試�
 msgid "%{log_message} \"%{error}\" attempting to get next message"
 msgstr "%{log_message} \"%{error}\" は次のメッセージの取得を試行中"
 
-msgid "%{log} \"%{error}\" attempting to get next message"
-msgstr "%{log} \"%{error}\" は次のメッセージの取得を試行中"
-
 msgid ""
 "%{log} Blank DRb_URI for MiqServer with ID=[%{number}], NAME=[%{name}], PID=[%"
 "{pid_number}], GUID=[%{guid_number}]"
@@ -746,9 +738,6 @@ msgstr "%{message}: タスクの開始に失敗しました"
 msgid "%{method_name} is not a valid name to an Ansible operation!"
 msgstr "%{method_name} は、Ansible 操作に対して有効な名前ではありません。"
 
-msgid "%{missing_field_name} is required"
-msgstr "%{missing_field_name} が必要です"
-
 msgid "%{model} \"%{name}\""
 msgstr "%{model} \"%{name}\""
 
@@ -773,9 +762,6 @@ msgstr "%{model} \"%{name}\": 正常に削除されました"
 msgid "%{model} \"%{name}\": Error during '%{task}': %{error_message}"
 msgstr "%{model} \"%{name}\": '%{task}' の実行中にエラーが発生しました: %{error_message}"
 
-msgid "%{model} \"%{name}\": Error during '%{task}': %{error_msg}"
-msgstr "%{model} \"%{name}\": '%{task}' の実行中にエラーが発生しました: %{error_msg}"
-
 msgid "%{model} \"%{name}\": Error during 'Check Compliance': %{error}"
 msgstr "%{model} \"%{name}\": 「コンプライアンス・チェック」の実行中にエラーが発生しました: %{error}"
 
@@ -790,9 +776,6 @@ msgstr "%{model} (%{tag} 実行中、%{time})"
 
 msgid "%{model} [%{name} - Updated %{time}%{update}]"
 msgstr "%{model} [%{name} - 更新 %{time}%{update}]"
-
-msgid "%{model} no longer exists"
-msgstr "%{model}は存在しません"
 
 msgid "%{model} search \"%{name}\" was saved"
 msgstr "%{model}の検索 \"%{name}\" を保存しました"
@@ -901,9 +884,6 @@ msgstr "%{name}ドメイン: 現在のバージョン - %{version}、利用で�
 
 msgid "%{name} is currently being used in the Display Filter"
 msgstr "%{name}は現在表示フィルターで使用されています"
-
-msgid "%{name} is required"
-msgstr "%{name}が必要です"
 
 msgid "%{name} is the base"
 msgstr "%{name}がベースです"
@@ -1051,6 +1031,9 @@ msgstr ""
 "%{datastore_or_provider} \"%{provider_or_datastore_name}\" の下にある %{"
 "object_types}"
 
+msgid "%{object} no longer exists"
+msgstr "% {object} は存在しません"
+
 msgid "%{product_name} API Group Not found"
 msgstr "%{product_name} APIグループが見つかりません"
 
@@ -1088,9 +1071,6 @@ msgstr[0] "%{provider_description} Workflow Jobs"
 
 msgid "%{record} - \"%{button_text}\""
 msgstr "%{record} - \"%{button_text}\""
-
-msgid "%{record} no longer exists"
-msgstr "%{record}は存在しません"
 
 msgid "%{request_description} for: %{request_source}"
 msgstr "%{request_source} の %{request_description}"
@@ -1259,9 +1239,6 @@ msgstr "(デフォルト: %{email_from})"
 
 msgid "(Global)"
 msgstr "(グローバル)"
-
-msgid "(Look up %{authentication_mode_name} Groups)"
-msgstr "(%{authentication_mode_name}でのグループ検索)"
 
 msgid "(MB) memory"
 msgstr "(MB) メモリー"
@@ -1789,9 +1766,6 @@ msgstr "<なし>"
 
 msgid "<Orphaned>"
 msgstr "<孤立状態>"
-
-msgid "<Same as import from>"
-msgstr "<インポート元と同じ>"
 
 msgid "<Script error>"
 msgstr "<script error=\"\"></script>"
@@ -3257,6 +3231,9 @@ msgstr "このエントリーの追加"
 msgid "Add to Shopping Cart"
 msgstr "ショッピング・カートに追加"
 
+msgid "Add was cancelled by the user"
+msgstr "追加はユーザーにより取り消されました"
+
 msgid "Add widget"
 msgstr "ウィジェットの追加"
 
@@ -3268,9 +3245,6 @@ msgstr "ESX/ESXi ホストの追加はサポートされていません"
 
 msgid "Adding a new %{model}"
 msgstr "新規 %{model}の追加"
-
-msgid "Adding a new %{tenant}"
-msgstr "新規 %{tenant}の追加"
 
 msgid "Adding a new Action"
 msgstr "新規アクションの追加"
@@ -4186,6 +4160,9 @@ msgstr "Ansible Automation Platform (非推奨)"
 msgid "Ansible Automation Platform Provider"
 msgstr "Ansible Automation Platform Provider"
 
+msgid "Ansible Job Template"
+msgstr "Ansible ジョブ・テンプレート"
+
 msgid "Ansible Playbook"
 msgstr "Ansible Playbook"
 
@@ -4204,26 +4181,17 @@ msgstr "Ansible Tower 構成済みシステム"
 msgid "Ansible Tower Job"
 msgstr "Ansible Tower ジョブ"
 
-msgid "Ansible Tower Job Template"
-msgstr "Ansible Tower ジョブ・テンプレート"
-
 msgid "Ansible Tower Job Template Provision"
 msgstr "Ansible Towerジョブ・テンプレートのプロビジョン"
 
 msgid "Ansible Tower Jobs"
 msgstr "Ansible Tower ジョブ"
 
-msgid "Ansible Tower Providers"
-msgstr "Ansible Tower プロバイダー"
-
 msgid "Ansible Tower Template"
 msgstr "Ansible Tower テンプレート"
 
-msgid "Ansible Tower Templates"
-msgstr "Ansible Tower テンプレート"
-
-msgid "Ansible Tower Workflow Template"
-msgstr "Ansible Tower ワークフロー・テンプレート"
+msgid "Ansible Workflow Template"
+msgstr "Ansible ワークフロー・テンプレート"
 
 msgid ""
 "Ansible variables must start with a letter or underscore character, and "
@@ -4409,8 +4377,8 @@ msgstr "選択したアクションを削除しますか?"
 msgid "Are you sure you want to delete selected Conditions?"
 msgstr "選択した条件を削除しますか?"
 
-msgid "Are you sure you want to delete the following Ansible Tower Provider?"
-msgstr "以下の Ansible Tower プロバイダーを削除しますか?"
+msgid "Are you sure you want to delete the following Automation Provider?"
+msgstr "以下の自動化プロバイダーを削除しても本当によろしいですか？"
 
 msgid "Are you sure you want to delete the following Automation Providers?"
 msgstr "以下の自動化プロバイダーを削除してもよろしいですか?"
@@ -4692,6 +4660,9 @@ msgstr "ルーム"
 
 msgid "AssetDetail|Serial number"
 msgstr "シリアル番号"
+
+msgid "Assign"
+msgstr "割り当て"
 
 msgid "Assign Catalog Items"
 msgstr "カタログ項目の割り当て"
@@ -5270,6 +5241,12 @@ msgstr "自動化インポート/エクスポート"
 msgid "Automate Instance"
 msgstr "自動化インスタンス"
 
+msgid "Automate Instance \"%s\" was added"
+msgstr "インスタンス「%s」の自動化が追加されました"
+
+msgid "Automate Instance \"%s\" was saved"
+msgstr "インスタンス「%s」の自動化が保存されました"
+
 msgid "Automate Instance \"%{name}\" was added"
 msgstr "自動化インスタンス \"%{name}\" が追加されました"
 
@@ -5408,6 +5385,9 @@ msgstr "自動化シミュレーションが実行されました"
 
 msgid "Automation Tasks"
 msgstr "自動化タスク"
+
+msgid "Automation Templates"
+msgstr "自動化テンプレート"
 
 msgid "Automation Value"
 msgid_plural "Automation Values"
@@ -7205,6 +7185,9 @@ msgstr "%{class_description} プロバイダーではパスワードの変更は
 msgid "Change Password of Infrastructure Providers"
 msgstr "インフラストラクチャー・プロバイダーのパスワード変更"
 
+msgid "Change current group"
+msgstr "現在のグループの変更"
+
 msgid "Changed from previous"
 msgstr "変更あり"
 
@@ -7762,6 +7745,9 @@ msgstr "左側のメニューから編集するロールを選択します。"
 msgid "Choose a Schedule to view from the menus on the left."
 msgstr "左側のメニューから表示するスケジュールを選択します。"
 
+msgid "Choose a Server"
+msgstr "サーバーの選択"
+
 msgid "Choose a Template"
 msgstr "テンプレートの選択"
 
@@ -7773,6 +7759,9 @@ msgstr "値の選択"
 
 msgid "Choose a chart type"
 msgstr "チャート・タイプの選択"
+
+msgid "Choose a pattern"
+msgstr "パターンの選択"
 
 msgid "Choose a resource entity and label"
 msgstr "リソース・エンティティーとラベルを選択してください"
@@ -7789,17 +7778,38 @@ msgstr "テナントの選択"
 msgid "Choose an Owner"
 msgstr "所有者の選択"
 
+msgid "Choose cloud object storage"
+msgstr "クラウド・オブジェクト・ストレージの選択"
+
+msgid "Choose disk type"
+msgstr "ディスク・タイプを選択する"
+
 msgid "Choose file"
 msgstr "ファイルの選択"
 
 msgid "Choose one or more Fields"
 msgstr "1 つ以上のフィールドを選択してください"
 
+msgid "Choose source image"
+msgstr "ソース・イメージを選択する"
+
+msgid "Choose source provider"
+msgstr "ソース・プロバイダーを選択する"
+
+msgid "Choose source provider type"
+msgstr "ソース・プロバイダー・タイプの選択"
+
+msgid "Choose storage bucket"
+msgstr "ストレージ・バケットを選択する"
+
 msgid "Choose the branch or tag you would like to import"
 msgstr "インポートするブランチまたはタグを選択"
 
 msgid "Choose the type of custom variables to be imported"
 msgstr "インポートするカスタム変数のタイプを選択します"
+
+msgid "Choose transient storage"
+msgstr "一時ストレージを選択する"
 
 msgid "Cidr"
 msgstr "CIDR"
@@ -7831,9 +7841,6 @@ msgstr "クラス「%s」が保存されました"
 
 msgid "Class '%{name}' is not eligible for classification"
 msgstr "クラス '%{name}' は分類対象にはなりません"
-
-msgid "Class '%{type}' is not eligible for classification"
-msgstr "クラス '%{type}' は分類対象にはなりません"
 
 msgid "Class Schema Sequence was saved"
 msgstr "クラス・スキーマの順序が保存されました"
@@ -7921,6 +7928,9 @@ msgstr "スクリプトのクリア"
 
 msgid "Clear cart"
 msgstr "カートから消去"
+
+msgid "Clear file"
+msgstr "ファイルのクリア"
 
 msgid "Clear selected Object Storage Containers"
 msgstr "選択したオブジェクト・ストレージ・コンテナーのクリア"
@@ -8678,6 +8688,9 @@ msgstr "ステータス"
 msgid "CloudNetwork|Total vms"
 msgstr "合計 VM"
 
+msgid "CloudNetwork|Uid ems"
+msgstr "CloudNetwork|Uid ems"
+
 msgid "CloudNetwork|Vlan transparent"
 msgstr "VLAN トランスペアレント"
 
@@ -9056,6 +9069,9 @@ msgstr "ステータス"
 msgid "CloudVolume|Supports safe delete"
 msgstr "安全な削除のサポート"
 
+msgid "CloudVolume|Uid ems"
+msgstr "CloudVolume|Uid ems"
+
 msgid "CloudVolume|Volume type"
 msgstr "ボリューム・タイプ"
 
@@ -9282,11 +9298,8 @@ msgstr "企業タグ"
 msgid "Compare"
 msgstr "比較"
 
-msgid "Compare %{name}"
-msgstr "%{name}の比較"
-
-msgid "Compare %{vm_or_template}"
-msgstr "%{vm_or_template}の比較"
+msgid "Compare %{type}"
+msgstr "% {type} を比較する"
 
 msgid "Compare List of Clusters"
 msgstr "クラスターのリストの比較"
@@ -9588,6 +9601,9 @@ msgstr "対象"
 
 msgid "Condition|Updated on"
 msgstr "更新"
+
+msgid "Config Pattern"
+msgstr "構成パターン"
 
 msgid "Config Version"
 msgstr "構成バージョン"
@@ -10135,6 +10151,9 @@ msgstr "編集の確認"
 
 msgid "Confirm Password"
 msgstr "パスワードの確認"
+
+msgid "Confirm Reset"
+msgstr "リセットの確認"
 
 msgid "Connect"
 msgstr "接続"
@@ -12630,9 +12649,6 @@ msgstr "コピー"
 msgid "Copy %{model}"
 msgstr "%{model}のコピー"
 
-msgid "Copy %{record} was cancelled by the user"
-msgstr "%{record}のコピーはユーザーにより取り消されました"
-
 msgid "Copy Analysis Profile"
 msgstr "分析プロファイルのコピー"
 
@@ -12735,11 +12751,8 @@ msgid ""
 msgstr ""
 "\"%{original_name}\" ダッシュボードのコピー: \"%{name}\" は \"%{group}\" グループに正常に保存されました。"
 
-msgid "Copy of %{description}"
-msgstr "%{description}のコピー"
-
-msgid "Copy of %{name}"
-msgstr "%{name}のコピー"
+msgid "Copy of %{field}"
+msgstr "% {field} のコピー"
 
 msgid "Copy of %{typ} Request"
 msgstr "%{typ}の要求のコピー"
@@ -12761,6 +12774,12 @@ msgstr "サービス・カタログ項目のコピーは正常に保存されま
 
 msgid "Copy of sample"
 msgstr "サンプルのコピー"
+
+msgid "Copy operation completed successfully"
+msgstr "コピー操作が正常に完了しました"
+
+msgid "Copy operation was cancelled by the user"
+msgstr "コピー操作はユーザーによってキャンセルされました"
 
 msgid "Copy original Request"
 msgstr "元の要求のコピー"
@@ -13394,8 +13413,14 @@ msgstr "現在のユーザー"
 msgid "Current Window"
 msgstr "現在のウィンドウ"
 
+msgid "Current group: %s"
+msgstr "現行グループ: %s"
+
 msgid "Current pods"
 msgstr "現在のポッド"
+
+msgid "Current processor compatibility mode"
+msgstr "現在のプロセッサー互換モード"
 
 msgid "Current user lacks permissions to create a new snapshot for this VM"
 msgstr "現行ユーザーにはこの VM の新規スナップショットを作成する権限がありません"
@@ -13952,9 +13977,6 @@ msgstr "データ・ポイント"
 msgid "Data Type"
 msgstr "データ・タイプ"
 
-msgid "Data Type:"
-msgstr "データ・タイプ:"
-
 msgid "Data View"
 msgstr "データ表示"
 
@@ -14101,15 +14123,6 @@ msgstr "データ・ストアが存在せず、ディスクを追加できませ
 
 msgid "Datastore import was cancelled or is finished"
 msgstr "データ・ストアのインポートが取り消されたか、または終了しています"
-
-msgid ""
-"Datastore import was successful.\nNamespaces updated/added: %{namespace_stats}"
-"\nClasses updated/added: %{class_stats}\nInstances updated/added: %{"
-"instance_stats}\nMethods updated/added: %{method_stats}"
-msgstr ""
-"データ・ストアが正常にインポートされました。\n名前空間が更新/追加されました: %{namespace_stats}\nクラスが更新/追加されました: %"
-"{class_stats}\nインスタンスが更新/追加されました: %{instance_stats}\nメソッドが更新/追加されました: %{"
-"method_stats}"
 
 msgid ""
 "Datastore import was successful. Added/Updated %{namespace_stats} Namespaces, "
@@ -14476,9 +14489,6 @@ msgstr "すべてのタスクを削除"
 msgid "Delete Analysis Profile"
 msgstr "分析プロファイルの削除"
 
-msgid "Delete Ansible Tower Provider"
-msgstr "Ansible Tower プロバイダーの削除"
-
 msgid "Delete Automate Class"
 msgstr "自動化クラスの削除"
 
@@ -14493,6 +14503,9 @@ msgstr "自動化メソッドの削除"
 
 msgid "Delete Automate Namespace"
 msgstr "自動化名前空間の削除"
+
+msgid "Delete Automation Provider"
+msgstr "自動プロバイダーを削除する"
 
 msgid "Delete Automation Providers"
 msgstr "自動化プロバイダーの削除"
@@ -15148,6 +15161,9 @@ msgstr "グループに依存"
 
 msgid "Depends on Service"
 msgstr "サービスに依存"
+
+msgid "Deploy"
+msgstr "デプロイ"
 
 msgid "Deploy Server"
 msgstr "サーバーのデプロイ"
@@ -17472,6 +17488,9 @@ msgstr "EVM: 最近ディスカバーされたVM"
 msgid "Edit"
 msgstr "編集"
 
+msgid "Edit %s"
+msgstr "%s の編集"
+
 msgid "Edit %s Field"
 msgstr "%s フィールドの編集"
 
@@ -17645,6 +17664,9 @@ msgstr "イベントの編集はユーザーにより取り消されました"
 
 msgid "Edit Expression"
 msgstr "式の編集"
+
+msgid "Edit Field"
+msgstr "フィールドの編集"
 
 msgid "Edit Field Details"
 msgstr "フィールドの詳細を編集"
@@ -17840,6 +17862,9 @@ msgstr "自動化スキーマの順序の編集"
 
 msgid "Edit Sequence of Dashboards"
 msgstr "ダッシュボードの順序の編集"
+
+msgid "Edit Sequence of User Groups for External Authentication"
+msgstr "外部認証のためのユーザー・グループの順序を編集する"
 
 msgid "Edit Sequence of User Groups for LDAP Look Up"
 msgstr "LDAP 検索でのユーザー・グループの順序の編集"
@@ -18048,8 +18073,8 @@ msgstr "この Ansible Playbook のタグの編集"
 msgid "Edit Tags for this Ansible Repository"
 msgstr "この Ansible リポジトリーのタグを編集"
 
-msgid "Edit Tags for this Ansible Tower Provider"
-msgstr "この Ansible Tower プロバイダーのタグを編集する"
+msgid "Edit Tags for this Automation Provider"
+msgstr "この自動化プロバイダーのタグを編集する"
 
 msgid "Edit Tags for this Availability Zone"
 msgstr "このアベイラビリティー・ゾーンのタグの編集"
@@ -18626,6 +18651,9 @@ msgstr "割り当ての編集"
 msgid "Edit assignments for this Alert Profile"
 msgstr "このアラート・プロファイルの割り当ての編集"
 
+msgid "Edit of \"%s\" was cancelled by the user"
+msgstr "「%s」の編集はユーザーにより取り消されました"
+
 msgid "Edit of %s \"%s\" was canceled by the user."
 msgstr "%s \"%s\" の編集はユーザーにより取り消されました。"
 
@@ -18656,8 +18684,8 @@ msgstr "分析プロファイルの編集はユーザーによってキャンセ
 msgid "Edit of Automate Class \"%{name}\" was cancelled by the user"
 msgstr "自動化クラス \"%{name}\" の編集はユーザーにより取り消されました"
 
-msgid "Edit of Automate Instance \"%{name}\" was cancelled by the user"
-msgstr "自動化インスタンス \"%{name}\" の編集はユーザーにより取り消されました"
+msgid "Edit of Automate Instance \"%s\" was cancelled by the user"
+msgstr "インスタンス「%s」の自動化編集は、ユーザーによってキャンセルされました"
 
 msgid "Edit of Automate Method \"%{name}\" was cancelled by the user"
 msgstr "自動化メソッド \"%{name}\" の編集はユーザーにより取り消されました"
@@ -19172,9 +19200,6 @@ msgstr "%{name} サービス・ダイアログの編集"
 msgid "Editing %{record_name}"
 msgstr "%{record_name}の編集"
 
-msgid "Editing %{vm_or_template} \"%{name}\""
-msgstr "%{vm_or_template} \"%{name}\" の編集"
-
 msgid "Editing Action \"%{name}\""
 msgstr "アクション「%{name}」の編集"
 
@@ -19276,6 +19301,9 @@ msgstr "ラベル \"%{name}\" のタグ・マッピングの編集"
 
 msgid "Editor"
 msgstr "エディター"
+
+msgid "Effective Processor Compatibility Mode"
+msgstr "効果的なプロセッサー互換モード"
 
 msgid "Either Host Name or Cluster Name is required"
 msgstr "ホスト名またはクラスター名が必要です"
@@ -20073,14 +20101,8 @@ msgstr "項目 \"%s\" の削除時のエラー: %s"
 msgid "Error details: %{message}"
 msgstr "エラー詳細: %{message}"
 
-msgid "Error during '%{record} copy': %{error_message}"
-msgstr "'%{record} のコピー' を実行中にエラーが発生しました: %{error_message}"
-
 msgid "Error during '%{task}': %{error_message}"
 msgstr "'%{task}' の実行中にエラーが発生しました: %{error_message}"
-
-msgid "Error during '%{task}': %{message}"
-msgstr "'%{task}' の実行中にエラーが発生しました: %{message}"
 
 msgid "Error during '%{task}': Expression element is required"
 msgstr "'%{task}' の実行中にエラーが発生しました: 式要素が必要です"
@@ -20093,9 +20115,6 @@ msgstr "'アプライアンスの再起動' の実行中にエラーが発生し
 
 msgid "Error during 'C & U Gap Collection': %{message}"
 msgstr "'C & U ギャップ収集' の実行中にエラーが発生しました: %{message}"
-
-msgid "Error during 'LDAP Group Look Up': %{message}"
-msgstr "'LDAP グループ検索' の実行中にエラーが発生しました: %{message}"
 
 msgid "Error during 'Orchestration Template Copy': %{error_message}"
 msgstr "'オーケストレーション・テンプレートのコピー' の実行中にエラーが発生しました: %{error_message}"
@@ -20121,14 +20140,8 @@ msgstr "'タグの保存' の実行中にエラーが発生しました: %{error
 msgid "Error during 'Validate': %{error_message}"
 msgstr "'検証' の実行中にエラーが発生しました: %{error_message}"
 
-msgid "Error during 'Validate': %{message}"
-msgstr "'検証' の実行中にエラーが発生しました: %{message}"
-
 msgid "Error during 'add': %{error_message}"
 msgstr "'追加' の実行中にエラーが発生しました: %{error_message}"
-
-msgid "Error during 'add': %{message}"
-msgstr "'追加' の実行中にエラーが発生しました: %{message}"
 
 msgid "Error during 'apply': %{error}"
 msgstr "'適用' の実行中にエラーが発生しました: %{error}"
@@ -20138,9 +20151,6 @@ msgstr "'編集' の実行中にエラーが発生しました: %{field_name} %{
 
 msgid "Error during 'save': %{error_message}"
 msgstr "'保存' の実行中にエラーが発生しました: %{error_message}"
-
-msgid "Error during 'save': %{message}"
-msgstr "'保存' の実行中にエラーが発生しました: %{message}"
 
 msgid "Error during 'upload': %{message}"
 msgstr "'アップロード' の実行中にエラーが発生しました: %{message}"
@@ -20164,6 +20174,9 @@ msgstr "ユーザー・スクリプト \"%{params}\" ファイルのアップロ
 msgid "Error during alarms: %{messages}"
 msgstr "アラームの実行中にエラーが発生しました: %{messages}"
 
+msgid "Error during copy operation"
+msgstr "コピー処理中にエラーが発生しました"
+
 msgid "Error during deletion: %{error_message}"
 msgstr "削除中にエラーが発生しました: %{error_message}"
 
@@ -20176,8 +20189,8 @@ msgstr "リポジトリーの取り出し中にエラーが発生しました: %
 msgid "Error during repository setup: %{error_message}"
 msgstr "リポジトリーのセットアップ中にエラーが発生しました: %{error_message}"
 
-msgid "Error during reset: Status [%{status}] Message [%{message}]"
-msgstr "リセットの実行中にエラーが発生しました: ステータス [%{status}] メッセージ [%{message}]"
+msgid "Error during reset: %{message}"
+msgstr "リセット中にエラーが発生しました: %{message}"
 
 msgid "Error during sending test email: %{class_name}, %{error_message}"
 msgstr "テスト E メール送信の実行中にエラーが発生しました: %{class_name}、%{error_message}"
@@ -20215,11 +20228,17 @@ msgstr "カスタム・ボタンの起動でエラーが発生しました: 項�
 msgid "Error launching: \"%{task_description}\" %{error_message}"
 msgstr "起動時にエラーが発生しました: \"%{task_description}\" %{error_message}"
 
+msgid "Error loading automate domains"
+msgstr "自動化ドメインの読み込みエラー"
+
 msgid "Error loading content: %s"
 msgstr "コンテンツの読み込み中にエラーが発生しました: %s"
 
 msgid "Error loading data:"
 msgstr "データのロード中のエラー:"
+
+msgid "Error loading instance data"
+msgstr "インスタンス・データのロード・エラー"
 
 msgid "Error message goes here"
 msgstr "エラー・メッセージがここに表示されます"
@@ -20236,6 +20255,9 @@ msgstr "サーバーからのデータの要求時にエラーが発生しまし
 msgid ""
 "Error returned from %{name} event processing in Automate: %{error_message}"
 msgstr "エラーが自動化の %{name} イベント処理から返されました: %{error_message}"
+
+msgid "Error saving instance"
+msgstr "インスタンスの保存に失敗しました"
 
 msgid "Error saving priority order"
 msgstr "優先順位の保存中にエラーが発生しました"
@@ -20616,6 +20638,9 @@ msgstr "イベントはこの領域ではサポートされていません"
 
 msgid "Events for VM prod_webserver"
 msgstr "VM prod_webserver のイベント"
+
+msgid "Every"
+msgstr "毎"
 
 msgid "Everything"
 msgstr "すべて"
@@ -21051,9 +21076,6 @@ msgstr "選択したポリシーのエクスポート"
 
 msgid "Export Selected Profiles"
 msgstr "選択したプロファイルのエクスポート"
-
-msgid "Export all classes and instances"
-msgstr "すべてのクラスとインスタンスのエクスポート"
 
 msgid "Export all classes and instances to a file"
 msgstr "ファイルへのすべてのクラスとインスタンスのエクスポート"
@@ -21590,11 +21612,26 @@ msgstr "%{name} の失敗したシステム・サービス"
 msgid "Failed to %{snapshot_op} snapshot of %{subject}: %{error}"
 msgstr "%{subject} のスナップショットの %{snapshot_op} の失敗: %{error}"
 
+msgid "Failed to check task status"
+msgstr "タスクのステータス確認に失敗しました"
+
 msgid "Failed to delete %s %s."
 msgstr "%s %sの削除に失敗しました。"
 
+msgid "Failed to fetch domains"
+msgstr "ドメインの取得に失敗しました"
+
+msgid "Failed to fetch git repository"
+msgstr "Gitリポジトリーのフェッチに失敗しました"
+
+msgid "Failed to import from git"
+msgstr "Gitからのインポートに失敗しました"
+
 msgid "Failed to load chargeback data"
 msgstr "チャージバック・データの読み込みに失敗しました"
+
+msgid "Failed to load data"
+msgstr "データのロードに失敗しました"
 
 msgid "Failed to load image labels"
 msgstr "イメージ・ラベルの読み込みに失敗しました"
@@ -21616,6 +21653,9 @@ msgstr "C & Uコレクション設定の保存に失敗しました"
 
 msgid "Failed to save chargeback assignments"
 msgstr "チャージバック割り当ての保存に失敗しました"
+
+msgid "Failed to submit git URL"
+msgstr "Git URL の送信に失敗しました"
 
 msgid "Failover"
 msgstr "フェイルオーバー"
@@ -21850,6 +21890,9 @@ msgstr "フィルター"
 
 msgid "Filter Expression"
 msgstr "フィルター式"
+
+msgid "Filter Item"
+msgstr "フィルター項目"
 
 msgid "Filter Message"
 msgstr "メッセージのフィルター"
@@ -22740,6 +22783,9 @@ msgid "Git Branch"
 msgid_plural "Git Branches"
 msgstr[0] "Git ブランチ"
 
+msgid "Git Import Disabled"
+msgstr "Git のインポートが無効になっています"
+
 msgid "Git Reference"
 msgid_plural "Git References"
 msgstr[0] "Git 参照"
@@ -22756,9 +22802,6 @@ msgstr[0] "Git タグ"
 
 msgid "Git URL"
 msgstr "Git URL"
-
-msgid "Git URL:"
-msgstr "Git URL:"
 
 msgid "Git based refresh canceled"
 msgstr "Git ベースの更新が取り消されました"
@@ -22843,6 +22886,9 @@ msgstr "グローバル検索:"
 
 msgid "Glusterfs Endpoint Name"
 msgstr "Glusterfs エンドポイント名"
+
+msgid "Go to my start page"
+msgstr "my start ページに移動"
 
 msgid "Google"
 msgstr "Google"
@@ -24981,14 +25027,11 @@ msgstr "インポート/エクスポート・アコーディオン"
 msgid "Import Cloud Template"
 msgstr "クラウド・テンプレートをインポートする"
 
-msgid "Import Datastore classes"
-msgstr "データ・ストア・クラスのインポート"
-
 msgid "Import Datastore classes (*.zip)"
 msgstr "データ・ストア・クラスのインポート (*.zip)"
 
-msgid "Import Datastore via git"
-msgstr "git でデータ・ストアをインポート"
+msgid "Import Datastore via Git"
+msgstr "Git でデータ・ストアをインポート"
 
 msgid "Import File Upload"
 msgid_plural "Import File Uploads"
@@ -25018,6 +25061,9 @@ msgstr "ウィジェットのインポート"
 msgid "Import cancelled by user"
 msgstr "インポートはユーザーにより取り消されました"
 
+msgid "Import failed"
+msgstr "インポートが失敗しました"
+
 msgid "Import file cannot be empty"
 msgstr "インポート・ファイルは空にすることができません"
 
@@ -25027,8 +25073,17 @@ msgstr "インポート・ファイルのアップロード"
 msgid "Import file was uploaded successfully"
 msgstr "インポート・ファイルが正常にアップロードされました"
 
+msgid "Import from Domain"
+msgstr "ドメインからのインポート"
+
+msgid "Import from Git Repository"
+msgstr "Git リポジトリーからのインポート"
+
 msgid "Import not available due to conflicts"
 msgstr "競合によりインポートを実行できません"
+
+msgid "Import to Existing Domain"
+msgstr "既存のドメインにインポートする"
 
 msgid "Import validation complete: %{good_record}, %{bad_record}"
 msgstr "インポート検証の完了: %{good_record}、%{bad_record}"
@@ -25045,8 +25100,14 @@ msgstr "リージョンの説明"
 msgid "ImportFileUpload|Region number"
 msgstr "リージョン番号"
 
-msgid "Imported from git"
-msgstr "git からインポート"
+msgid "Imported %{git_url}@%{branch_or_tag}"
+msgstr "%{git_url}@%{branch_or_tag} をインポートしました"
+
+msgid "Importing datastore..."
+msgstr "データ・ストアのインポート中..."
+
+msgid "Importing from git..."
+msgstr "Gitからのインポート中..."
 
 msgid "In My LDAP Group?"
 msgstr "マイ LDAP グループ内?"
@@ -25100,6 +25161,10 @@ msgstr "増分バックアップ"
 
 msgid "Index"
 msgstr "インデックス"
+
+msgid ""
+"Indicates if all volumes must reside in the same storage pool [true, false]"
+msgstr "すべてのボリュームを同じストレージ・プールに配置する必要があるかどうかを示します [true, false]"
 
 msgid "Infinity"
 msgstr "無限"
@@ -25463,6 +25528,9 @@ msgstr "無効なボタン・アクション"
 msgid "Invalid chart definition"
 msgstr "無効なチャート定義"
 
+msgid "Invalid copy action"
+msgstr "コピー操作が無効です"
+
 msgid "Invalid credential_field %{field}, allowed values are %{allowed_fields}"
 msgstr "credential_field%{field} が無効です。許可される値は%{allowed_fields} です"
 
@@ -25575,8 +25643,7 @@ msgid "It is not allowed to have more than 20 embedded methods"
 msgstr "20 を超える組み込みメソッドを持つことはできません"
 
 msgid "Item"
-msgid_plural "Items"
-msgstr[0] "項目"
+msgstr "アイテム"
 
 msgid "Item Type"
 msgstr "項目タイプ"
@@ -25687,6 +25754,9 @@ msgstr "KB"
 msgid "KBps"
 msgstr "KBps"
 
+msgid "Keep OVA file on completion"
+msgstr "完了時に OVA ファイルを保持する"
+
 msgid "Kerberos"
 msgstr "Kerberos"
 
@@ -25764,15 +25834,6 @@ msgstr "LDAP ドメイン"
 
 msgid "LDAP Group"
 msgstr "LDAP グループ"
-
-msgid "LDAP Group Look Up"
-msgstr "LDAP グループ検索"
-
-msgid "LDAP Group Lookup"
-msgstr "LDAP グループ検索"
-
-msgid "LDAP Groups for User"
-msgstr "ユーザーの LDAP グループ"
 
 msgid "LDAP Region"
 msgstr "LDAP 領域"
@@ -25894,9 +25955,6 @@ msgstr "更新"
 
 msgid "Last"
 msgstr "最後"
-
-msgid "Last 1000 lines from server %{name} [%{id}] in zone %{zone}"
-msgstr "ゾーン %{zone} にあるサーバー %{name} [%{id}] の最後の 1000 行"
 
 msgid ""
 "Last 1000 lines from server %{server_name} [%{server_id}] in zone %{zone_name}"
@@ -26546,11 +26604,17 @@ msgstr "合計 VM"
 msgid "Loading chargeback data..."
 msgstr "チャージバック・データを読み込み中..."
 
+msgid "Loading domains..."
+msgstr "ドメインを読み込んでいます..."
+
 msgid "Loading expression fields..."
 msgstr "式フィールドを読み込み中..."
 
 msgid "Loading image labels..."
 msgstr "イメージ・ラベルを読み込み中..."
+
+msgid "Loading import data..."
+msgstr "インポート・データの読み込み中..."
 
 msgid "Loading label values..."
 msgstr "ラベル値を読み込み中..."
@@ -26695,6 +26759,9 @@ msgstr "ログ"
 msgid "Logs for this %{product} Server are not available for viewing"
 msgstr "この %{product} サーバーのログは表示できません"
 
+msgid "Logs of this Pod"
+msgstr "このポッドのログ"
+
 msgid "Long Description"
 msgstr "詳細な説明"
 
@@ -26773,6 +26840,9 @@ msgstr "主な構成"
 
 msgid "Main Info"
 msgstr "主な情報"
+
+msgid "Main Menu"
+msgstr "メインメニュー"
 
 msgid "Main Route Table"
 msgstr "メイン・ルート・テーブル"
@@ -27473,8 +27543,26 @@ msgstr "最大化"
 msgid "Maximum"
 msgstr "最大"
 
+msgid "Maximum Memory"
+msgstr "最大メモリー"
+
+msgid "Maximum Memory (GiB)"
+msgstr "最大メモリー（ GiB ）"
+
+msgid "Maximum Processors"
+msgstr "最大プロセッサー数"
+
 msgid "Maximum Transmission Unit"
 msgstr "最大転送単位"
+
+msgid "Maximum Virtual Processors"
+msgstr "最大仮想プロセッサー数"
+
+msgid "Maximum amount of memory that can be allocated (in GiB)"
+msgstr "割り当て可能なメモリーの最大容量（GiB）"
+
+msgid "Maximum number of processors that can be allocated"
+msgstr "割り当て可能なプロセッサーの最大数"
 
 msgid "Md5"
 msgstr "MD5"
@@ -27835,6 +27923,12 @@ msgstr "メモリー・ミラーリング"
 
 msgid "Memory Mirroring capability of the Host."
 msgstr "ホストのメモリー・ミラーリング機能。"
+
+msgid "Memory Region Size"
+msgstr "メモリー領域のサイズ"
+
+msgid "Memory Region Size in MB."
+msgstr "メモリー領域のサイズ（MB）。"
 
 msgid "Memory Reserve"
 msgstr "メモリー予約"
@@ -28960,6 +29054,9 @@ msgstr "CPU 待機デルタ総計の割合"
 msgid "Microsoft SCVMM Provider"
 msgstr "Microsoft SCVMM プロバイダー"
 
+msgid "Migratable"
+msgstr "移行可能"
+
 msgid "Migrate %{vm_or_template}"
 msgstr "%{vm_or_template}の移行"
 
@@ -29070,6 +29167,24 @@ msgstr "最小化"
 
 msgid "Minimum"
 msgstr "最小"
+
+msgid "Minimum Memory"
+msgstr "最小メモリー"
+
+msgid "Minimum Memory (GiB)"
+msgstr "最小メモリー（ GiB ）"
+
+msgid "Minimum Processors"
+msgstr "最小プロセッサー数"
+
+msgid "Minimum Virtual Processors"
+msgstr "最小仮想プロセッサー"
+
+msgid "Minimum amount of memory that can be allocated (in GiB)"
+msgstr "割り当て可能なメモリーの最小量（GiB）"
+
+msgid "Minimum number of processors that can be allocated"
+msgstr "割り当て可能なプロセッサーの最小数"
 
 msgid "Minute"
 msgstr "分"
@@ -32196,6 +32311,9 @@ msgstr "名前付きスコープ '%{scope_name}' はクラス '%{class_name}' �
 msgid "Namespace"
 msgstr "名前空間"
 
+msgid "Namespace tree"
+msgstr "名前空間ツリー"
+
 msgid "Naming"
 msgstr "名前"
 
@@ -32908,12 +33026,6 @@ msgstr "非同期に設定する %{member}が選択されていません"
 msgid "No %{member} selected to set to Synchronous"
 msgstr "同期に設定する %{member}が選択されていません"
 
-msgid "No %{member} were selected to move left"
-msgstr "左に移動する %{member}が選択されていません"
-
-msgid "No %{member} were selected to move right"
-msgstr "右に移動する %{member}が選択されていません"
-
 msgid "No %{model} were %{state} %{time}"
 msgstr "%{model} は %{state} ではありません。 %{time}"
 
@@ -33035,6 +33147,9 @@ msgstr "%{button}に選択されているカスタマイズ・テンプレート
 msgid "No Daily data is available"
 msgstr "日次データは利用できません。"
 
+msgid "No Data"
+msgstr "データがありません"
+
 msgid "No Date/Time value specified"
 msgstr "日付/時間が指定されていません"
 
@@ -33043,6 +33158,9 @@ msgstr "ダイアログなし"
 
 msgid "No Dialogs were selected for %{task}"
 msgstr "ダイアログが %{task} に選択されていません"
+
+msgid "No Domains Available"
+msgstr "利用可能なドメインはありません"
 
 msgid "No EMS defined"
 msgstr "EMS が定義されていません"
@@ -33341,8 +33459,14 @@ msgstr "利用可能なデータがありません"
 msgid "No data available."
 msgstr "利用可能なデータがありません。"
 
+msgid "No domains found in the import file"
+msgstr "インポート・ファイル内にドメインが見つかりませんでした"
+
 msgid "No drift history found"
 msgstr "ドリフト履歴が見つかりません"
+
+msgid "No enabled domains available to import to"
+msgstr "インポート可能な有効なドメインがありません"
 
 msgid "No entries found for %s"
 msgstr "%s の項目が見つかりません"
@@ -33433,6 +33557,9 @@ msgstr "10 を超える分析をドリフト用に選択できません"
 
 msgid "No more than 32 %{model} can be selected for Compare"
 msgstr "32 を超える %{model}を比較用に選択できません"
+
+msgid "No namespaces available for the selected domain"
+msgstr "選択されたドメインには利用可能な名前空間が存在しません。"
 
 msgid "No notes have been entered."
 msgstr "メモが入力されていません。"
@@ -33995,6 +34122,9 @@ msgstr "OVF テンプレートが必要です。リストから 1 つ選択し�
 
 msgid "OVF Templates"
 msgstr "OVF テンプレート"
+
+msgid "Object"
+msgstr "オブジェクト"
 
 msgid "Object Attribute"
 msgstr "オブジェクト属性"
@@ -35300,9 +35430,6 @@ msgstr "パスワード"
 msgid "Password (API Key)"
 msgstr "パスワード (API キー)"
 
-msgid "Password (optional):"
-msgstr "パスワード (オプション):"
-
 msgid "Password Complex"
 msgstr "パスワードの複雑度"
 
@@ -35317,6 +35444,9 @@ msgstr "特権昇格方法に使用するパスワード"
 
 msgid "Password for this credential"
 msgstr "この資格情報のパスワード"
+
+msgid "Password is not strong enough"
+msgstr "パスワードの強度が不十分です"
 
 msgid "Password or Password+One-Time-Password"
 msgstr "パスワードまたはパスワード+ワンタイム・パスワード"
@@ -36576,6 +36706,9 @@ msgstr "PlacementGroup|リージョンの説明"
 msgid "PlacementGroup|Region number"
 msgstr "PlacementGroup|リージョン番号"
 
+msgid "PlacementGroup|Uid ems"
+msgstr "PlacementGroup|Uid ems"
+
 msgid "Platform"
 msgstr "プラットフォーム"
 
@@ -36676,11 +36809,20 @@ msgstr "登録するノードを含む JSON ファイルを選択してくださ
 msgid "Please select a node from the tree to edit."
 msgstr "編集するツリーからノードを選択してください。"
 
+msgid "Please select a pattern"
+msgstr "パターンをお選びください"
+
 msgid "Please select a type."
 msgstr "タイプを選択してください。"
 
 msgid "Please select an Instance Type from above"
 msgstr "上記からインスタンス・タイプを選択してください"
+
+msgid "Please select at least one namespace to import"
+msgstr "インポートする名前空間を、少なくとも1つ選択してください"
+
+msgid "Please select at least one server"
+msgstr "少なくとも1つのサーバーを選択してください"
 
 msgid "Please try again"
 msgstr "再試行してください"
@@ -37118,6 +37260,9 @@ msgstr "パワー・サプライ・スロット数"
 msgid "Preemptible"
 msgstr "プリエンプティブル"
 
+msgid "Preferred Processor Compatibility Mode"
+msgstr "優先プロセッサー互換性モード"
+
 msgid "Present"
 msgstr "あり"
 
@@ -37303,6 +37448,9 @@ msgstr "処理ユニット"
 
 msgid "Processor"
 msgstr "プロセッサー"
+
+msgid "Processor Compatibility Mode"
+msgstr "プロセッサー互換モード"
 
 msgid "Processor Cores Per Socket"
 msgstr "1 ソケットあたりのプロセッサー・コア数"
@@ -38417,6 +38565,10 @@ msgstr "サービスの再構成"
 
 msgid "Reconfigure Services Options"
 msgstr "サービス・オプションの再構成"
+
+msgid "Reconfigure Task"
+msgid_plural "Reconfigure Tasks"
+msgstr[0] "タスクの再設定"
 
 msgid "Reconfigure VM CPU"
 msgstr "VM CPU の再構成"
@@ -39985,8 +40137,14 @@ msgstr "インターフェースの削除はユーザーによって取り消さ
 msgid "Rename Cloud Database"
 msgstr "クラウド・データベースの名前変更"
 
+msgid "Rename Snapshot"
+msgstr "スナップショットの名前変更"
+
 msgid "Rename VM"
 msgstr "VM の名前を変更"
+
+msgid "Rename a snapshot for VMs"
+msgstr "VMのスナップショットの名前を変更する"
 
 msgid "Rename this VM"
 msgstr "この VM の名前を変更"
@@ -40164,6 +40322,9 @@ msgstr "レポート・テーブルが nil です"
 
 msgid "Reporting Workers"
 msgstr "レポート作成ワーカー"
+
+msgid "Reporting role not enabled"
+msgstr "レポート機能が無効になっています"
 
 msgid "Reports"
 msgstr "レポート"
@@ -40434,11 +40595,14 @@ msgstr "ホストのリセット"
 msgid "Reset all Policy Simulation options"
 msgstr "すべてのポリシー・シミュレーションのオプションのリセット"
 
-msgid "Reset all components in the following domains: %{domains}"
-msgstr "以下のドメインのすべてのコンポーネントをリセット: %{domains}"
+msgid "Reset all components in the following domains: %s"
+msgstr "以下のドメイン内のすべてのコンポーネントをリセットしてください： %s"
 
 msgid "Reset all options"
 msgstr "すべてのオプションのリセット"
+
+msgid "Reset failed"
+msgstr "リセットに失敗しました"
 
 msgid "Reset the filter"
 msgstr "フィルターのリセット"
@@ -40466,6 +40630,9 @@ msgstr "この項目をリセットしますか?"
 
 msgid "Reset to Default"
 msgstr "デフォルトにリセット"
+
+msgid "Resetting datastore..."
+msgstr "データ・ストアをリセットしています..."
 
 msgid "Resides on VM"
 msgstr "VM 上に常駐"
@@ -40965,6 +41132,9 @@ msgstr "結果タイプ %{result_type} がサポートされていません"
 msgid "Results"
 msgstr "結果"
 
+msgid "Results %s"
+msgstr "結果 %s"
+
 msgid "Resume"
 msgstr "再開"
 
@@ -41118,6 +41288,12 @@ msgstr "テンプレートの選択したスナップショットに戻す"
 
 msgid "Revert to selected snapshot on VMs"
 msgstr "VM の選択したスナップショットに戻す"
+
+msgid "Review Datastore Import"
+msgstr "データ・ストアのインポートを確認する"
+
+msgid "Review Git Import"
+msgstr "Git インポートの確認"
 
 msgid "Revoke Sessions of Other Users"
 msgstr "他のユーザーのセッションの取り消し"
@@ -41854,6 +42030,9 @@ msgid ""
 "Secondary (Display) Filter - Filters the rows based on child table fields"
 msgstr "セカンダリー (表示) フィルター - 子テーブル・フィールドに基づく行のフィルタリング"
 
+msgid "Secondary Menu"
+msgstr "2 次メニュー"
+
 msgid "Secret Access Key"
 msgstr "秘密アクセス鍵"
 
@@ -42192,6 +42371,9 @@ msgstr "エントリー・ポイント %{entry_point} の選択"
 msgid "Select Entry Point Instance"
 msgstr "エントリー・ポイント・インスタンスを選択"
 
+msgid "Select Entry Point Namespace"
+msgstr "エントリー・ポイントの名前空間を選択"
+
 msgid "Select Group"
 msgstr "グループの選択"
 
@@ -42200,6 +42382,9 @@ msgstr "コピーするインスタンスの選択"
 
 msgid "Select Methods to copy"
 msgstr "コピーするメソッドの選択"
+
+msgid "Select Namespaces to Import"
+msgstr "インポートする名前空間を選択してください"
 
 msgid "Select Policy Profiles"
 msgstr "ポリシー・プロファイルの選択"
@@ -42231,8 +42416,14 @@ msgstr "PXE イメージの選択"
 msgid "Select a PXE Server"
 msgstr "PXE サーバーの選択"
 
+msgid "Select a Physical Server"
+msgstr "物理サーバーを選択してください"
+
 msgid "Select a Policy Profile to add:"
 msgstr "追加するポリシー・プロファイルの選択:"
+
+msgid "Select a Server Profile"
+msgstr "サーバー・プロファイルの選択"
 
 msgid "Select a VM to Submit the Simulation Options"
 msgstr "VM を選択してシミュレーションのオプションを送信"
@@ -42378,17 +42569,8 @@ msgstr "通貨の選択"
 msgid "Select currency: "
 msgstr "通貨の選択:"
 
-msgid "Select domain you wish to import from:"
-msgstr "インポート元となるドメインの選択:"
-
-msgid "Select existing domain to import into:"
-msgstr "情報をインポートする既存ドメインの選択:"
-
 msgid "Select methods"
 msgstr "メソッドの選択"
-
-msgid "Select namespaces you wish to import:"
-msgstr "インポートする名前空間の選択:"
 
 msgid "Select one or more Groups to delete"
 msgstr "1 つ以上のグループを選択して削除"
@@ -42398,12 +42580,6 @@ msgstr "1 名以上のユーザーを選択して削除"
 
 msgid "Select one or more items to delete"
 msgstr "1 つ以上の項目を選択して削除"
-
-msgid "Select only one or consecutive %{member} to move down"
-msgstr "1 つまたは連続する %{member}のみを選択して下に移動する"
-
-msgid "Select only one or consecutive %{member} to move up"
-msgstr "1 つまたは連続する %{member}のみを選択して上に移動する"
 
 msgid "Select only one or consecutive %{name} to move down"
 msgstr "1 つまたは連続する %{name}のみを選択して下に移動する"
@@ -42534,6 +42710,9 @@ msgstr "選択した項目はコピーできません。それが Ansible Playbo
 
 msgid "Selected methods"
 msgstr "選択したメソッド"
+
+msgid "Selected path:"
+msgstr "選択されたパス："
 
 msgid "Selected:"
 msgstr "選択済み:"
@@ -43480,6 +43659,9 @@ msgstr "リタイヤ警告"
 
 msgid "Service|Retires on"
 msgstr "リタイヤ日"
+
+msgid "Service|V total direct service children"
+msgstr "サービス｜直接サービスを受けている子の総数（V）"
 
 msgid "Service|V total vms"
 msgstr "合計 VM"
@@ -45444,6 +45626,9 @@ msgstr "ストレージ名"
 msgid "Storage Pool"
 msgstr "ストレージ・プール"
 
+msgid "Storage Pool Affinity"
+msgstr "ストレージ・プールのアフィニティ"
+
 msgid "Storage Profile"
 msgstr "ストレージ・プロファイル"
 
@@ -45499,6 +45684,9 @@ msgstr "使用中ストレージ・レート"
 
 msgid "Storage file"
 msgstr "ストレージ・ファイル"
+
+msgid "Storage pool where the server is deployed"
+msgstr "サーバーが配置されているストレージ・プール"
 
 msgid "Storage profile"
 msgstr "ストレージ・プロファイル"
@@ -46002,9 +46190,6 @@ msgstr "サブスクリプション・マネージャーは、リポジトリー
 msgid "Subscriptions Changed"
 msgstr "サブスクリプションが変更されました"
 
-msgid "Substitution:"
-msgstr "置換:"
-
 msgid "Subtype"
 msgstr "サブタイプ"
 
@@ -46023,6 +46208,9 @@ msgstr "成功"
 msgid "Successfully deleted Saved Report from the %{product} Database"
 msgid_plural "Successfully deleted Saved Reports from the %{product} Database"
 msgstr[0] "%{product} データベースから、保存されたレポートを正常に削除しました"
+
+msgid "Successfully found git repository, please choose a branch or tag"
+msgstr "Gitリポジトリーが正常に見つかりました。ブランチまたはタグを選択してください"
 
 msgid "Successfully refreshed!"
 msgstr "正常に更新されました。"
@@ -46257,6 +46445,9 @@ msgstr "UID EMS"
 
 msgid "Switch|Updated on"
 msgstr "更新"
+
+msgid "Switch|Virtual bridge mode"
+msgstr "スイッチ｜仮想ブリッジモード"
 
 msgid "Sync"
 msgstr "同期"
@@ -47055,6 +47246,15 @@ msgstr "ネットワークには、それに関連するアクティブな VMI �
 msgid "The Physical Storage is not connected to an active Manager"
 msgstr "物理ストレージがアクティブ・マネージャーに接続されていません"
 
+msgid "The Pod is no longer active"
+msgstr "このポッドは現在、アクティブではありません"
+
+msgid "The Pod is not associated with a project"
+msgstr "このポッドはどのプロジェクトにも関連付けられていません"
+
+msgid "The Pod is not associated with an active provider"
+msgstr "このポッドはアクティブなプロバイダーに関連付けられていません"
+
 msgid "The PowerVM management master of this host is a HMC."
 msgstr "このホストの PowerVM 管理マスターは HMC です。"
 
@@ -47208,6 +47408,9 @@ msgid ""
 "resource, it will take precedence."
 msgstr "リソースのデフォルトのリージョン。 リソースに別の領域が指定されている場合は、その領域が優先されます。"
 
+msgid "The effective processor compatibility mode of the VM"
+msgstr "VM の有効なプロセッサ互換モード"
+
 msgid "The email address assigned to the Google Compute Engine service account"
 msgstr "Google Compute Engine サービス・アカウントに割り当てられる E メール・アドレス"
 
@@ -47320,6 +47523,9 @@ msgstr "実行の計画前フェーズが完了しました。"
 
 msgid "The pre-plan phase of the run is in progress."
 msgstr "実行の計画前フェーズは進行中です。"
+
+msgid "The preferred processor compatibility mode of the VM"
+msgstr "VMの推奨プロセッサ互換モード"
 
 msgid "The provider does not support reconfigure disks"
 msgstr "プロバイダーは再構成ディスクをサポートしません"
@@ -47861,9 +48067,6 @@ msgstr "タイムライン"
 msgid "Timelines for %{table} \"%{name}\""
 msgstr "%{table} \"%{name}\" のタイムライン"
 
-msgid "Timelines for %{virtual_machine} \"%{name}\""
-msgstr "%{virtual_machine} \"%{name}\" のタイムライン"
-
 msgid "Timeout"
 msgstr "タイムアウト"
 
@@ -47926,12 +48129,6 @@ msgstr "今日"
 
 msgid "Today (partial)"
 msgstr "今日 (一部)"
-
-msgid "Toggle"
-msgstr "切り替え"
-
-msgid "Toggle All/None"
-msgstr "すべて/なしを切り替え"
 
 msgid "Toggle Fullscreen"
 msgstr "全面表示を切り換える"
@@ -48591,9 +48788,6 @@ msgstr "VM 選択のストラテジーが見つかりません"
 msgid "Unable to find task with id: [%{task_id}]"
 msgstr "id: [%{task_id}] のタスクが見つかりません"
 
-msgid "Unable to find user '%{name}'"
-msgstr "ユーザー '%{name}' が見つかりません"
-
 msgid "Unable to find user '%{user}'"
 msgstr "ユーザー '%{user}' が見つかりません"
 
@@ -48682,6 +48876,9 @@ msgstr "未割り振りスペース"
 msgid "Unarchive Services"
 msgstr "サービスのアーカイブ解除"
 
+msgid "Unassign"
+msgstr "割り当て解除"
+
 msgid "Unassign Server"
 msgstr "サーバーの割り当て解除"
 
@@ -48744,6 +48941,9 @@ msgstr "単位"
 
 msgid "Unknown"
 msgstr "不明"
+
+msgid "Unknown API error"
+msgstr "不明な API エラー"
 
 msgid "Unknown Action"
 msgstr "不明なアクション"
@@ -48924,11 +49124,17 @@ msgstr "ファイルのアップロード"
 msgid "Upload Script"
 msgstr "スクリプトのアップロード"
 
+msgid "Upload file"
+msgstr "ファイルのアップロード"
+
 msgid "Uploaded File '%{filename}'"
 msgstr "アップロードされたファイル '%{filename}'"
 
 msgid "Uploaded Image"
 msgstr "アップロードされたイメージ"
+
+msgid "Uploading..."
+msgstr "アップロード中..."
 
 msgid ""
 "Uptime - Minimum Time Between Startups for Collected Intervals (Seconds)"
@@ -49402,8 +49608,8 @@ msgstr "ユーザーの期限切れ"
 msgid "User Group Sequence was saved"
 msgstr "ユーザー・グループの順序が保存されました"
 
-msgid "User Group Sequencing for LDAP Look Up:"
-msgstr "LDAP 検索でのユーザー・グループの順序:"
+msgid "User Group Sequencing for External Authentication:"
+msgstr "外部認証のためのユーザー・グループの順序："
 
 msgid "User ID"
 msgstr "ユーザー ID"
@@ -49449,9 +49655,6 @@ msgstr "ユーザーは組み込みワークフロー・プロバイダーの使
 msgid "User must be defined"
 msgstr "ユーザーを定義する必要があります"
 
-msgid "User must be entered to perform LDAP Group Look Up"
-msgstr "LDAP グループ検索を実行するには、ユーザーを入力する必要があります"
-
 msgid "User name"
 msgstr "ユーザー名"
 
@@ -49460,9 +49663,6 @@ msgstr "ユーザーは存在しません"
 
 msgid "User script \"%{params}\" upload was successful"
 msgstr "ユーザー・スクリプト \"%{params}\" のアップロードが正常に実行されました"
-
-msgid "User to Look Up"
-msgstr "検索するユーザー"
 
 msgid "User will input the value"
 msgstr "ユーザーによる値の入力"
@@ -49473,14 +49673,14 @@ msgstr "ユーザーが値を入力します"
 msgid "User:"
 msgstr "ユーザー:"
 
+msgid "User: %s"
+msgstr "ユーザー: %s"
+
 msgid "UserID"
 msgstr "ユーザー ID"
 
 msgid "Username"
 msgstr "ユーザー名"
-
-msgid "Username (optional):"
-msgstr "ユーザー名 (オプション):"
 
 msgid "Username for this credential"
 msgstr "この資格情報のユーザー名"
@@ -51822,6 +52022,12 @@ msgstr "ポリシーを持つ"
 msgid "VmOrTemplate|Has rdm disk"
 msgstr "RDM ディスク"
 
+msgid "VmOrTemplate|Health details"
+msgstr "VmOrTemplate|Health の詳細"
+
+msgid "VmOrTemplate|Health state"
+msgstr "VmOrTemplate|Health 状態"
+
 msgid "VmOrTemplate|Host name"
 msgstr "ホスト名"
 
@@ -52921,6 +53127,9 @@ msgstr ""
 "VM が「プリエンプティブル」かどうかについて。詳細は、https://cloud.google.com/compute/docs/instances/"
 "preemptible を参照してください。"
 
+msgid "Whether the instance can be migrated [true, false]"
+msgstr "インスタンスを移行可能かどうか [true, false]"
+
 msgid "Whether to use the authorize mechanism"
 msgstr "認証メカニズムを使用するかどうか"
 
@@ -53085,6 +53294,9 @@ msgstr "ワークフロー・テンプレート (Ansible Tower)"
 
 msgid "Workflow does not have any credentials to map."
 msgstr "ワークフローにはマップする資格情報がありません。"
+
+msgid "Workflow max. timeout"
+msgstr "ワークフローの最大 タイムアウト"
 
 msgid "Workflow name"
 msgstr "ワークフロー名"
@@ -53972,6 +54184,15 @@ msgstr "login_failed"
 msgid "m"
 msgstr "m"
 
+msgid "maximum amount of memory in MB this partition can be allocated"
+msgstr "このパーティションに割り当て可能なメモリの最大容量（MB単位）"
+
+msgid "maximum number of processors this partition can be assigned"
+msgstr "このパーティションに割り当て可能なプロセッサー数の最大値"
+
+msgid "maximum number of virtual processors this partition can be assigned"
+msgstr "このパーティションに割り当て可能な仮想プロセッサーの最大数"
+
 msgid "may contain only alphanumeric and _ - characters"
 msgstr "英数字と「_」、「-」文字のみを使用できます"
 
@@ -53995,6 +54216,15 @@ msgstr "memory_mb"
 
 msgid "method is only available for an entry"
 msgstr "メソッドはエントリーに対してのみ利用可能です"
+
+msgid "minimum amount of memory in MB this partition should be allocated"
+msgstr "このパーティションに割り当てるべきメモリーの最小容量（MB単位）"
+
+msgid "minimum number of processors this partition should be assigned"
+msgstr "このパーティションに割り当てるべきプロセッサーの最小数"
+
+msgid "minimum number of virtual processors this partition should be assigned"
+msgstr "このパーティションに割り当てる仮想プロセッサーの最小数"
 
 msgid "minutely"
 msgstr "毎分"
@@ -54111,9 +54341,6 @@ msgstr "%{date}、 %{time}"
 
 msgid "open and close options"
 msgstr "オープンおよびクローズ・オプション"
-
-msgid "operator '%{operator_name}' is not supported"
-msgstr "オペレーター '%{operator_name}' はサポートされていません"
 
 msgid "operator '%{operator}' is not supported"
 msgstr "オペレーター '%{operator}' はサポートされていません"
@@ -54347,6 +54574,9 @@ msgstr "raw_exists はサブクラスに実装する必要があります"
 msgid "raw_live_migrate must be implemented in a subclass"
 msgstr "raw_live_migrate はサブクラスに実装する必要があります"
 
+msgid "raw_logs must be implemented in a subclass"
+msgstr "raw_logs はサブクラスで実装する必要があります"
+
 msgid "raw_remove_security_group must be implemented in a subclass"
 msgstr "raw_remove_security_group はサブクラスに実装する必要があります"
 
@@ -54535,9 +54765,6 @@ msgstr "サンプル"
 
 msgid "secondary, "
 msgstr "セカンダリー、"
-
-msgid "selected to copy"
-msgstr "コピーするために選択"
 
 msgid "service_process"
 msgstr "service_process"
