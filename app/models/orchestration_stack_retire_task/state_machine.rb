@@ -12,8 +12,12 @@ module OrchestrationStackRetireTask::StateMachine
 
   def check_removed_from_provider
     status, _reason = stack.normalized_live_status
-    if status == 'not_exist' || status == 'delete_complete'
+
+    case status
+    when 'not_exist', 'delete_complete'
       signal :finish_retirement
+    when /failed$/
+      signal :failed_retirement
     else
       stack.queue_refresh
       requeue_phase
