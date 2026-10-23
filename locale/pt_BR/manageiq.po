@@ -9846,7 +9846,7 @@ msgid "Compare"
 msgstr "Comparar"
 
 msgid "Compare %{type}"
-msgstr "Comparar % {type}"
+msgstr "Comparar %{type}"
 
 msgid "Compare List of Clusters"
 msgstr "Comparar lista de clusters"
@@ -13611,7 +13611,7 @@ msgstr ""
 "sucesso no Grupo \"%{group}\"."
 
 msgid "Copy of %{field}"
-msgstr "Cópia de % {field}"
+msgstr "Cópia de %{field}"
 
 msgid "Copy of %{typ} Request"
 msgstr "Cópia da solicitação %{typ}"

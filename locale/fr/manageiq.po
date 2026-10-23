@@ -1163,7 +1163,7 @@ msgstr ""
 "\""
 
 msgid "%{object} no longer exists"
-msgstr "% {object} n'existe plus"
+msgstr "%{object} n'existe plus"
 
 msgid "%{product_name} API Group Not found"
 msgstr "Groupe d'API %{product_name} introuvable"
@@ -13640,7 +13640,7 @@ msgstr ""
 "dans le groupe \"%{group}\"."
 
 msgid "Copy of %{field}"
-msgstr "Copie de % {field}"
+msgstr "Copie de %{field}"
 
 msgid "Copy of %{typ} Request"
 msgstr "Copie de la demande %{typ}"
