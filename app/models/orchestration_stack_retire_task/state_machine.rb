@@ -23,4 +23,10 @@ module OrchestrationStackRetireTask::StateMachine
       requeue_phase
     end
   end
+
+  def failed_retirement
+    _status, reason = stack.normalized_live_status
+    stack.update(:retirement_state => RetirementMixin::RETIREMENT_ERROR)
+    fail!("#{self.class.model_being_retired} failed to retire, caused by #{reason}")
+  end
 end
