@@ -7,7 +7,9 @@ module TypeCastMixin
     :float    => ActiveModel::Type::Float.new,
     :integer  => ActiveModel::Type::Integer.new,
     :string   => ActiveModel::Type::String.new,
-    :time     => ActiveModel::Type::Time.new
+    :time     => ActiveModel::Type::Time.new,
+    :object   => ActiveRecord::Type::Json.new,
+    :array    => ActiveRecord::Type::Json.new
   }.freeze
 
   private
@@ -16,12 +18,10 @@ module TypeCastMixin
     return nil if value.nil?
 
     case type.to_s
-    when "object", "array"
-      JSON.parse(value)
     when "null"
       nil
     when *TYPE_MAP.keys.map(&:to_s)
-      TYPE_MAP.fetch(type.to_sym).cast(value)
+      TYPE_MAP.fetch(type.to_sym).deserialize(value)
     else
       raise ArgumentError, "unknown type: [#{type}]"
     end
