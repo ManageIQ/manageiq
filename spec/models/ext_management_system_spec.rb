@@ -127,7 +127,7 @@ RSpec.describe ExtManagementSystem do
   end
 
   it "does access database when unchanged model is saved" do
-    r = FactoryBot.create(:ems_vmware)
+    r = FactoryBot.create(:ems_infra)
     expect { r.valid? }.to make_database_queries(:count => 3)
   end
 
@@ -147,13 +147,13 @@ RSpec.describe ExtManagementSystem do
   end
 
   it "validates type" do
-    v = FactoryBot.create(:ems_vmware)
-    e = FactoryBot.create(:ext_management_system)
-    s = FactoryBot.create(:ems_storage)
+    infra   = FactoryBot.create(:ems_infra)
+    network = FactoryBot.create(:ems_network)
+    storage = FactoryBot.create(:ems_storage)
 
-    expect([v.valid?, v.emstype]).to eq([true, 'vmwarews'])
-    expect([e.valid?, e.emstype]).to eq([true, 'vmwarews'])
-    expect([s.valid?, s.emstype]).to eq([true, 'swift'])
+    expect([infra.valid?,   infra.emstype]).to   eq([true, 'dummy_provider_infra'])
+    expect([network.valid?, network.emstype]).to eq([true, 'dummy_provider_network'])
+    expect([storage.valid?, storage.emstype]).to eq([true, 'dummy_provider_storage'])
     expect { ManageIQ::Providers::BaseManager.new(:hostname => "abc", :name => "abc", :zone => FactoryBot.build(:zone)).validate! }.to raise_error(ActiveRecord::RecordInvalid)
     expect { ManageIQ::Providers::InfraManager.new(:hostname => "abc", :name => "abc", :zone => FactoryBot.build(:zone)).validate! }.to raise_error(ActiveRecord::RecordInvalid)
     expect { ManageIQ::Providers::CloudManager.new(:hostname => "abc", :name => "abc", :zone => FactoryBot.build(:zone)).validate! }.to raise_error(ActiveRecord::RecordInvalid)

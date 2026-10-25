@@ -2,7 +2,7 @@ RSpec.describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
   include Spec::Support::WorkflowHelper
 
   let(:admin) { FactoryBot.create(:user_with_group) }
-  let(:ems) { FactoryBot.create(:ems_cloud) }
+  let(:ems) { FactoryBot.create(:ems_amazon) }
   let(:network_manager) { ems.network_manager }
   let(:template) { FactoryBot.create(:miq_template, :name => "template", :ext_management_system => ems) }
 
