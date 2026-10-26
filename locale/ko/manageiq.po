@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2026-09-09 00:38+0000\n"
-"PO-Revision-Date: 2026-09-09 00:38+0000\n"
+"POT-Creation-Date: 2026-10-20 20:41+0000\n"
+"PO-Revision-Date: 2026-10-20 20:41+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -292,6 +292,10 @@ msgstr "사용 %"
 msgid "%d (Custom)"
 msgstr "%d(사용자 정의)"
 
+msgid "%d Item selected to copy"
+msgid_plural "%d Items selected to copy"
+msgstr[0] "복사할 항목 %d개가 선택됨"
+
 msgid "%d Months Ago"
 msgstr "%d개월 전"
 
@@ -391,9 +395,9 @@ msgid "%{amount} Automation Job Being Tagged"
 msgid_plural "%{amount} Automation Jobs Being Tagged"
 msgstr[0] "%{amount} 자동화 작업 태그 지정 중"
 
-msgid "%{amount} Automation Provider (Ansible Tower) Being Tagged"
-msgid_plural "%{amount} Automation Providers (Ansible Tower) Being Tagged"
-msgstr[0] "%{amount}태그가 지정된 자동화 제공자(Ansible Tower)"
+msgid "%{amount} Automation Provider Being Tagged"
+msgid_plural "%{amount} Automation Providers Being Tagged"
+msgstr[0] "%{amount} 자동화 제공자의 태그가 지정됨"
 
 msgid "%{amount} Automation Template Being Tagged"
 msgid_plural "%{amount} Automation Templates Being Tagged"
@@ -657,9 +661,6 @@ msgid "%{cpu} CPU"
 msgid_plural "%{cpu} CPUs"
 msgstr[0] "%{cpu}개의 CPU"
 
-msgid "%{current_tenant} Tags"
-msgstr "%{current_tenant} 태그"
-
 msgid "%{date_from} to %{date_to}"
 msgstr "%{date_from} - %{date_to}"
 
@@ -677,12 +678,6 @@ msgstr "%{description} 예약이 VM 메모리보다 더 큽니다."
 
 msgid "%{description} VM Memory is larger than Memory Limit"
 msgstr "%{description} VM 메모리가 메모리 한계보다 큼"
-
-msgid "%{description} is required"
-msgstr "%{description}은(는) 필수입니다."
-
-msgid "%{domain_name} (Disabled)"
-msgstr "%{domain_name}(사용 안함)"
 
 msgid "%{domain_name} (Same Domain)"
 msgstr "%{domain_name}(동일한 도메인)"
@@ -718,9 +713,6 @@ msgstr "%{log_message} \"%{error}\"이(가) 다음 메시지를 병합하려고 
 msgid "%{log_message} \"%{error}\" attempting to get next message"
 msgstr "%{log_message} \"%{error}\"이(가) 다음 메시지를 가져오려고 시도 중"
 
-msgid "%{log} \"%{error}\" attempting to get next message"
-msgstr "%{log} \"%{error}\"이(가) 다음 메시지를 가져오려고 시도 중"
-
 msgid ""
 "%{log} Blank DRb_URI for MiqServer with ID=[%{number}], NAME=[%{name}], PID=[%"
 "{pid_number}], GUID=[%{guid_number}]"
@@ -746,9 +738,6 @@ msgstr "%{message}: 태스크 시작 실패"
 msgid "%{method_name} is not a valid name to an Ansible operation!"
 msgstr "%{method_name}이(가) Ansible 조작에 올바른 이름이 아닙니다."
 
-msgid "%{missing_field_name} is required"
-msgstr "%{missing_field_name}은(는) 필수입니다."
-
 msgid "%{model} \"%{name}\""
 msgstr "%{model} \"%{name}\""
 
@@ -773,9 +762,6 @@ msgstr "%{model} \"%{name}\": 삭제 성공"
 msgid "%{model} \"%{name}\": Error during '%{task}': %{error_message}"
 msgstr "%{model} \"%{name}\": '%{task}' 중 오류: %{error_message}"
 
-msgid "%{model} \"%{name}\": Error during '%{task}': %{error_msg}"
-msgstr "%{model} \"%{name}\": '%{task}' 중 오류: %{error_msg}"
-
 msgid "%{model} \"%{name}\": Error during 'Check Compliance': %{error}"
 msgstr "%{model} \"%{name}\": '규제 준수 검사' 중 오류: %{error}"
 
@@ -790,9 +776,6 @@ msgstr "%{model}(%{tag}이(가) %{time} 실행 중)"
 
 msgid "%{model} [%{name} - Updated %{time}%{update}]"
 msgstr "%{model} [%{name} - %{time}%{update}] 업데이트됨"
-
-msgid "%{model} no longer exists"
-msgstr "%{model}이(가) 더 이상 존재하지 않습니다."
 
 msgid "%{model} search \"%{name}\" was saved"
 msgstr "%{model} 검색 \"%{name}\"이(가) 저장되었습니다."
@@ -901,9 +884,6 @@ msgstr "%{name} 도메인: 현재 버전 - %{version}, 사용 가능 버전 - %{
 
 msgid "%{name} is currently being used in the Display Filter"
 msgstr "%{name}은(는) 표시 필터에 현재 사용 중입니다."
-
-msgid "%{name} is required"
-msgstr "%{name}은(는) 필수입니다."
 
 msgid "%{name} is the base"
 msgstr "%%{name}이(가) 베이스임"
@@ -1050,6 +1030,9 @@ msgid ""
 msgstr ""
 "%{datastore_or_provider} \"%{provider_or_datastore_name}\"의 %{object_types}"
 
+msgid "%{object} no longer exists"
+msgstr "%{object}이(가) 더 이상 존재하지 않음"
+
 msgid "%{product_name} API Group Not found"
 msgstr "%{product_name} API 그룹을 찾을 수 없음"
 
@@ -1088,9 +1071,6 @@ msgstr[0] "%{provider_description} 워크플로우 작업"
 
 msgid "%{record} - \"%{button_text}\""
 msgstr "%{record} - \"%{button_text}\""
-
-msgid "%{record} no longer exists"
-msgstr "%{record}이(가) 더 이상 존재하지 않습니다."
 
 msgid "%{request_description} for: %{request_source}"
 msgstr "다음에 대한 %{request_description}: %{request_source}"
@@ -1259,9 +1239,6 @@ msgstr "(기본값: %{email_from})"
 
 msgid "(Global)"
 msgstr "(글로벌)"
-
-msgid "(Look up %{authentication_mode_name} Groups)"
-msgstr "(%{authentication_mode_name} 그룹 검색)"
 
 msgid "(MB) memory"
 msgstr "(MB) 메모리"
@@ -1789,9 +1766,6 @@ msgstr "<없음>"
 
 msgid "<Orphaned>"
 msgstr "<고아>"
-
-msgid "<Same as import from>"
-msgstr "<가져오기와 동일>"
 
 msgid "<Script error>"
 msgstr "<script error=\"\"></script>"
@@ -3254,6 +3228,9 @@ msgstr "이 항목 추가"
 msgid "Add to Shopping Cart"
 msgstr "장바구니에 추가"
 
+msgid "Add was cancelled by the user"
+msgstr "사용자가 추가를 취소함"
+
 msgid "Add widget"
 msgstr "위젯 추가"
 
@@ -3265,9 +3242,6 @@ msgstr "ESX/ESXi 호스트 추가가 지원되지 않음"
 
 msgid "Adding a new %{model}"
 msgstr "새 %{model} 추가"
-
-msgid "Adding a new %{tenant}"
-msgstr "새 %{tenant} 추가"
 
 msgid "Adding a new Action"
 msgstr "새 조치 추가"
@@ -4183,6 +4157,9 @@ msgstr "Ansible 자동화 플랫폼(더 이상 사용되지 않음)"
 msgid "Ansible Automation Platform Provider"
 msgstr "Ansible Automation Platform 제공업체"
 
+msgid "Ansible Job Template"
+msgstr "Ansible 작업 템플리트"
+
 msgid "Ansible Playbook"
 msgstr "Ansible 플레이북"
 
@@ -4201,26 +4178,17 @@ msgstr "Ansible Tower 구성 시스템"
 msgid "Ansible Tower Job"
 msgstr "Ansible Tower 작업"
 
-msgid "Ansible Tower Job Template"
-msgstr "Ansible Tower 작업 템플리트"
-
 msgid "Ansible Tower Job Template Provision"
 msgstr "Ansible Tower 작업 템플리트 프로비저닝"
 
 msgid "Ansible Tower Jobs"
 msgstr "Ansible Tower 작업"
 
-msgid "Ansible Tower Providers"
-msgstr "Ansible Tower 제공자"
-
 msgid "Ansible Tower Template"
 msgstr "Ansible Tower 템플리트"
 
-msgid "Ansible Tower Templates"
-msgstr "Ansible Tower 템플리트"
-
-msgid "Ansible Tower Workflow Template"
-msgstr "Ansible Tower 워크플로우 템플리트"
+msgid "Ansible Workflow Template"
+msgstr "Ansible 워크플로우 템플리트"
 
 msgid ""
 "Ansible variables must start with a letter or underscore character, and "
@@ -4406,8 +4374,8 @@ msgstr "선택한 조치를 삭제하시겠습니까?"
 msgid "Are you sure you want to delete selected Conditions?"
 msgstr "선택한 조건을 삭제하시겠습니까?"
 
-msgid "Are you sure you want to delete the following Ansible Tower Provider?"
-msgstr "다음 Ansible Tower 제공자를 삭제하시겠습니까?"
+msgid "Are you sure you want to delete the following Automation Provider?"
+msgstr "다음 자동화 제공자를 삭제하시겠습니까?"
 
 msgid "Are you sure you want to delete the following Automation Providers?"
 msgstr "다음 자동화 제공자를 삭제하시겠습니까?"
@@ -4688,6 +4656,9 @@ msgstr "AssetDetail|룸"
 
 msgid "AssetDetail|Serial number"
 msgstr "AssetDetail|일련 번호"
+
+msgid "Assign"
+msgstr "지정"
 
 msgid "Assign Catalog Items"
 msgstr "카탈로그 항목 지정"
@@ -5265,6 +5236,12 @@ msgstr "자동화 가져오기/내보내기"
 msgid "Automate Instance"
 msgstr "자동화 인스턴스"
 
+msgid "Automate Instance \"%s\" was added"
+msgstr "자동화 인스턴스 \"%s\"이(가) 추가됨"
+
+msgid "Automate Instance \"%s\" was saved"
+msgstr "자동화 인스턴스 \"%s\"이(가) 저장됨"
+
 msgid "Automate Instance \"%{name}\" was added"
 msgstr "자동화 인스턴스 \"%{name}\"이(가) 추가되었습니다."
 
@@ -5403,6 +5380,9 @@ msgstr "자동화 시뮬레이션이 실행됨"
 
 msgid "Automation Tasks"
 msgstr "자동화 태스크"
+
+msgid "Automation Templates"
+msgstr "자동화 템플리트"
 
 msgid "Automation Value"
 msgid_plural "Automation Values"
@@ -7198,6 +7178,9 @@ msgstr "%{class_description} 제공자에 대한 비밀번호 변경이 지원�
 msgid "Change Password of Infrastructure Providers"
 msgstr "인프라 제공자의 비밀번호 변경"
 
+msgid "Change current group"
+msgstr "현재 그룹 변경"
+
 msgid "Changed from previous"
 msgstr "이전에 비해 변경됨"
 
@@ -7755,6 +7738,9 @@ msgstr "왼쪽에서 편집할 역할을 선택하십시오."
 msgid "Choose a Schedule to view from the menus on the left."
 msgstr "왼쪽의 메뉴에서 보려는 스케줄을 선택하십시오."
 
+msgid "Choose a Server"
+msgstr "서버 선택"
+
 msgid "Choose a Template"
 msgstr "템플리트 선택"
 
@@ -7766,6 +7752,9 @@ msgstr "값 선택"
 
 msgid "Choose a chart type"
 msgstr "차트 유형 선택"
+
+msgid "Choose a pattern"
+msgstr "패턴 선택"
 
 msgid "Choose a resource entity and label"
 msgstr "리소스 엔티티 및 레이블 선택"
@@ -7782,17 +7771,38 @@ msgstr "테넌트 선택"
 msgid "Choose an Owner"
 msgstr "소유자 선택"
 
+msgid "Choose cloud object storage"
+msgstr "Cloud Object Storage 선택"
+
+msgid "Choose disk type"
+msgstr "디스크 유형 선택"
+
 msgid "Choose file"
 msgstr "파일 선택"
 
 msgid "Choose one or more Fields"
 msgstr "하나 이상의 필드 선택"
 
+msgid "Choose source image"
+msgstr "소스 이미지 선택"
+
+msgid "Choose source provider"
+msgstr "소스 제공자 선택"
+
+msgid "Choose source provider type"
+msgstr "소스 공급자 유형 선택"
+
+msgid "Choose storage bucket"
+msgstr "스토리지 버킷 선택"
+
 msgid "Choose the branch or tag you would like to import"
 msgstr "가져오려는 분기 또는 태그 선택"
 
 msgid "Choose the type of custom variables to be imported"
 msgstr "가져올 사용자 정의 변수의 유형을 선택하십시오."
+
+msgid "Choose transient storage"
+msgstr "임시 스토리지 선택"
 
 msgid "Cidr"
 msgstr "Cidr"
@@ -7824,9 +7834,6 @@ msgstr "\"%s\" 클래스가 저장됨"
 
 msgid "Class '%{name}' is not eligible for classification"
 msgstr "'%{name}' 클래스가 분류에 적합하지 않습니다."
-
-msgid "Class '%{type}' is not eligible for classification"
-msgstr "'%{type}' 클래스가 분류에 적합하지 않습니다."
 
 msgid "Class Schema Sequence was saved"
 msgstr "클래스 스키마 순서가 저장되었습니다."
@@ -7914,6 +7921,9 @@ msgstr "스크립트 지우기"
 
 msgid "Clear cart"
 msgstr "장바구니 지우기"
+
+msgid "Clear file"
+msgstr "파일 지우기"
 
 msgid "Clear selected Object Storage Containers"
 msgstr "선택한 Object Storage 컨테이너 지우기"
@@ -8671,6 +8681,9 @@ msgstr "CloudNetwork|상태"
 msgid "CloudNetwork|Total vms"
 msgstr "CloudNetwork|vm 총계"
 
+msgid "CloudNetwork|Uid ems"
+msgstr "CloudNetwork|Uid ems"
+
 msgid "CloudNetwork|Vlan transparent"
 msgstr "CloudNetwork|Vlan 투명"
 
@@ -9049,6 +9062,9 @@ msgstr "CloudVolume|상태"
 msgid "CloudVolume|Supports safe delete"
 msgstr "CloudVolume|안전 삭제 지원"
 
+msgid "CloudVolume|Uid ems"
+msgstr "CloudVolume|Uid ems"
+
 msgid "CloudVolume|Volume type"
 msgstr "CloudVolume|볼륨 유형"
 
@@ -9275,11 +9291,8 @@ msgstr "회사 태그"
 msgid "Compare"
 msgstr "비교"
 
-msgid "Compare %{name}"
-msgstr "%{name} 비교"
-
-msgid "Compare %{vm_or_template}"
-msgstr "%{vm_or_template} 비교"
+msgid "Compare %{type}"
+msgstr "%{type} 비교"
 
 msgid "Compare List of Clusters"
 msgstr "클러스터 비교 목록"
@@ -9581,6 +9594,9 @@ msgstr "조건|Towhat"
 
 msgid "Condition|Updated on"
 msgstr "조건|업데이트 날짜"
+
+msgid "Config Pattern"
+msgstr "구성 패턴"
 
 msgid "Config Version"
 msgstr "구성 버전"
@@ -10128,6 +10144,9 @@ msgstr "편집 확인"
 
 msgid "Confirm Password"
 msgstr "비밀번호 확인"
+
+msgid "Confirm Reset"
+msgstr "재설정 확인"
 
 msgid "Connect"
 msgstr "연결"
@@ -12623,9 +12642,6 @@ msgstr "복사"
 msgid "Copy %{model}"
 msgstr "%{model} 복사"
 
-msgid "Copy %{record} was cancelled by the user"
-msgstr "사용자가 %{record} 복사를 취소했습니다."
-
 msgid "Copy Analysis Profile"
 msgstr "분석 프로파일 복사"
 
@@ -12728,11 +12744,8 @@ msgid ""
 msgstr ""
 "\"%{original_name}\" 대시보드의 복사: \"%{name}\"이(가) 정상적으로 \"%{group}\" 그룹에 저장되었습니다."
 
-msgid "Copy of %{description}"
-msgstr "%{description} 사본"
-
-msgid "Copy of %{name}"
-msgstr "%{name} 사본"
+msgid "Copy of %{field}"
+msgstr "%{field}의 사본"
 
 msgid "Copy of %{typ} Request"
 msgstr "%{typ} 요청의 사본"
@@ -12754,6 +12767,12 @@ msgstr "서비스 카탈로그 항목의 사본이 정상적으로 저장되었�
 
 msgid "Copy of sample"
 msgstr "샘플의 사본"
+
+msgid "Copy operation completed successfully"
+msgstr "복사 조작 완료"
+
+msgid "Copy operation was cancelled by the user"
+msgstr "사용자가 복사 조작을 취소함"
 
 msgid "Copy original Request"
 msgstr "원래 요청 복사"
@@ -13386,8 +13405,14 @@ msgstr "현재 사용자"
 msgid "Current Window"
 msgstr "현재 창"
 
+msgid "Current group: %s"
+msgstr "현재 그룹: %s"
+
 msgid "Current pods"
 msgstr "현재 팟(Pod)"
+
+msgid "Current processor compatibility mode"
+msgstr "현재 프로세서 호환성 모드"
 
 msgid "Current user lacks permissions to create a new snapshot for this VM"
 msgstr "현재 사용자에게는 이 VM에 대한 새 스냅샷을 작성할 수 있는 권한이 부족합니다."
@@ -13944,9 +13969,6 @@ msgstr "데이터 점"
 msgid "Data Type"
 msgstr "데이터 유형"
 
-msgid "Data Type:"
-msgstr "데이터 유형:"
-
 msgid "Data View"
 msgstr "데이터 보기"
 
@@ -14093,15 +14115,6 @@ msgstr "데이터 저장소가 없음, 디스크를 추가할 수 없음"
 
 msgid "Datastore import was cancelled or is finished"
 msgstr "데이터 저장소 가져오기가 취소되었거나 완료됩니다."
-
-msgid ""
-"Datastore import was successful.\nNamespaces updated/added: %{namespace_stats}"
-"\nClasses updated/added: %{class_stats}\nInstances updated/added: %{"
-"instance_stats}\nMethods updated/added: %{method_stats}"
-msgstr ""
-"데이터 저장소 가져오기가 정상적으로 완료되었습니다.\n네임스페이스가 업데이트됨/추가됨: %{namespace_stats}\n클래스가 "
-"업데이트됨/추가됨: %{class_stats}\n인스턴스가 업데이트됨/추가됨: %{instance_stats}\n메소드가 업데이트됨/추가됨:"
-" %{method_stats}"
 
 msgid ""
 "Datastore import was successful. Added/Updated %{namespace_stats} Namespaces, "
@@ -14468,9 +14481,6 @@ msgstr "태스크 모두 삭제"
 msgid "Delete Analysis Profile"
 msgstr "분석 프로파일 삭제"
 
-msgid "Delete Ansible Tower Provider"
-msgstr "Ansible Tower 제공자 삭제"
-
 msgid "Delete Automate Class"
 msgstr "자동화 클래스 삭제"
 
@@ -14485,6 +14495,9 @@ msgstr "자동화 메소드 삭제"
 
 msgid "Delete Automate Namespace"
 msgstr "자동화 네임스페이스 삭제"
+
+msgid "Delete Automation Provider"
+msgstr "자동화 제공자 삭제"
 
 msgid "Delete Automation Providers"
 msgstr "자동화 제공자 삭제"
@@ -15139,6 +15152,9 @@ msgstr "그룹에 종속"
 
 msgid "Depends on Service"
 msgstr "서비스에 종속"
+
+msgid "Deploy"
+msgstr "배치"
 
 msgid "Deploy Server"
 msgstr "서버 배치"
@@ -17462,6 +17478,9 @@ msgstr "EVM: 최근에 감지된 VM"
 msgid "Edit"
 msgstr "편집"
 
+msgid "Edit %s"
+msgstr "%s 편집"
+
 msgid "Edit %s Field"
 msgstr "%s 필드 편집"
 
@@ -17635,6 +17654,9 @@ msgstr "사용자가 이벤트 편집을 취소했습니다."
 
 msgid "Edit Expression"
 msgstr "표현식 편집"
+
+msgid "Edit Field"
+msgstr "필드 편집"
 
 msgid "Edit Field Details"
 msgstr "필드 세부사항 편집"
@@ -17830,6 +17852,9 @@ msgstr "자동화 스키마의 순서 편집"
 
 msgid "Edit Sequence of Dashboards"
 msgstr "대시보드의 순서 편집"
+
+msgid "Edit Sequence of User Groups for External Authentication"
+msgstr "외부 인증을 위한 사용자 그룹 시퀀스 편집"
 
 msgid "Edit Sequence of User Groups for LDAP Look Up"
 msgstr "LDAP 검색의 사용자 그룹 순서 편집"
@@ -18038,8 +18063,8 @@ msgstr "이 Ansible 플레이북의 태그 편집"
 msgid "Edit Tags for this Ansible Repository"
 msgstr "이 Ansible 저장소의 태그 편집"
 
-msgid "Edit Tags for this Ansible Tower Provider"
-msgstr "이 Ansible Tower 제공자에 대한 태그 편집"
+msgid "Edit Tags for this Automation Provider"
+msgstr "이 자동화 제공자용 태그 편집"
 
 msgid "Edit Tags for this Availability Zone"
 msgstr "이 가용성 구역의 태그 편집"
@@ -18616,6 +18641,9 @@ msgstr "지정 편집"
 msgid "Edit assignments for this Alert Profile"
 msgstr "이 경보 프로파일에 대한 지정 편집"
 
+msgid "Edit of \"%s\" was cancelled by the user"
+msgstr "사용자가 \"%s\"의 편집을 취소함"
+
 msgid "Edit of %s \"%s\" was canceled by the user."
 msgstr "사용자가 %s \"%s\"의 편집을 취소했습니다."
 
@@ -18646,8 +18674,8 @@ msgstr "사용자가 분석 프로파일 편집을 취소했습니다."
 msgid "Edit of Automate Class \"%{name}\" was cancelled by the user"
 msgstr "사용자가 자동화 클래스 \"%{name}\"의 편집을 취소했습니다."
 
-msgid "Edit of Automate Instance \"%{name}\" was cancelled by the user"
-msgstr "사용자가 자동화 인스턴스 \"%{name}\"의 편집을 취소했습니다."
+msgid "Edit of Automate Instance \"%s\" was cancelled by the user"
+msgstr "자동화 인스턴스 \"%s\"의 편집이 사용자에 의해 취소됨"
 
 msgid "Edit of Automate Method \"%{name}\" was cancelled by the user"
 msgstr "사용자가 자동화 메소드 \"%{name}\"의 편집을 취소했습니다."
@@ -19162,9 +19190,6 @@ msgstr "%{name} 서비스 대화 상자 편집"
 msgid "Editing %{record_name}"
 msgstr "%{record_name} 편집"
 
-msgid "Editing %{vm_or_template} \"%{name}\""
-msgstr "%{vm_or_template} \"%{name}\" 편집"
-
 msgid "Editing Action \"%{name}\""
 msgstr "\"%{name}\" 조치 편집"
 
@@ -19266,6 +19291,9 @@ msgstr "레이블 \"%{name}\"에서 태그 맵핑 편집"
 
 msgid "Editor"
 msgstr "편집자"
+
+msgid "Effective Processor Compatibility Mode"
+msgstr "효율적인 프로세서 호환 모드"
 
 msgid "Either Host Name or Cluster Name is required"
 msgstr "호스트 이름 또는 클러스터 이름은 필수입니다."
@@ -20064,14 +20092,8 @@ msgstr "항목 \"%s\" 삭제 중에 오류 발생: %s"
 msgid "Error details: %{message}"
 msgstr "오류 세부사항: %{message}"
 
-msgid "Error during '%{record} copy': %{error_message}"
-msgstr "'%{record} 복사' 중 오류: %%{error_message}"
-
 msgid "Error during '%{task}': %{error_message}"
 msgstr "'%{task}' 중 오류: %{error_message}"
-
-msgid "Error during '%{task}': %{message}"
-msgstr "'%{task}' 중 오류: %{message}"
 
 msgid "Error during '%{task}': Expression element is required"
 msgstr "'%{task}' 중 오류: 표현식 요소는 필수입니다."
@@ -20084,9 +20106,6 @@ msgstr "'어플라이언스 재시작' 중 오류: %{message}"
 
 msgid "Error during 'C & U Gap Collection': %{message}"
 msgstr "'C & U 갭 콜렉션' 중 오류: %{message}"
-
-msgid "Error during 'LDAP Group Look Up': %{message}"
-msgstr "'LDAP 그룹 검색' 중 오류: %{message}"
 
 msgid "Error during 'Orchestration Template Copy': %{error_message}"
 msgstr "'오케스트레이션 템플리트 복사' 중 오류: %{error_message}"
@@ -20112,14 +20131,8 @@ msgstr "'태그 저장' 중 오류: %{error_message}"
 msgid "Error during 'Validate': %{error_message}"
 msgstr "'유효성 검증' 중 오류: %{error_message}"
 
-msgid "Error during 'Validate': %{message}"
-msgstr "'유효성 검증' 중 오류: %{message}"
-
 msgid "Error during 'add': %{error_message}"
 msgstr "'추가' 중 오류: %{error_message}"
-
-msgid "Error during 'add': %{message}"
-msgstr "'추가' 중 오류: %{message}"
 
 msgid "Error during 'apply': %{error}"
 msgstr "'적용' 중 오류: %{error}"
@@ -20129,9 +20142,6 @@ msgstr "'편집' 중 오류: %{field_name} %{error_message}"
 
 msgid "Error during 'save': %{error_message}"
 msgstr "'저장' 중 오류: %{error_message}"
-
-msgid "Error during 'save': %{message}"
-msgstr "'저장' 중 오류: %{message}"
 
 msgid "Error during 'upload': %{message}"
 msgstr "'업로드' 중 오류: %{message}"
@@ -20155,6 +20165,9 @@ msgstr "사용자 스크립트 \"%{params}\" 파일 업로드 중에 오류 발�
 msgid "Error during alarms: %{messages}"
 msgstr "알람 중 오류: %{messages}"
 
+msgid "Error during copy operation"
+msgstr "복사 조작 중 오류 발생"
+
 msgid "Error during deletion: %{error_message}"
 msgstr "삭제 중 오류: %{error_message}"
 
@@ -20167,8 +20180,8 @@ msgstr "저장소 페치 중 오류: %{message}"
 msgid "Error during repository setup: %{error_message}"
 msgstr "저장소 설정 중 오류: %{error_message}"
 
-msgid "Error during reset: Status [%{status}] Message [%{message}]"
-msgstr "재설정 중 오류: 상태 [%{status}] 메시지 [%{message}]"
+msgid "Error during reset: %{message}"
+msgstr "재설정 중 오류 발생: %{message}"
 
 msgid "Error during sending test email: %{class_name}, %{error_message}"
 msgstr "테스트 이메일을 보내는 중 오류: %{class_name}, %{error_message}"
@@ -20206,11 +20219,17 @@ msgstr "사용자 정의 단추 실행 중 오류: 항목이 선택되지 않았
 msgid "Error launching: \"%{task_description}\" %{error_message}"
 msgstr "실행 중 오류: \"%{task_description}\" %{error_message}"
 
+msgid "Error loading automate domains"
+msgstr "자동화 도메인 로드 중 오류 발생"
+
 msgid "Error loading content: %s"
 msgstr "컨텐츠 로드 중 오류 발생: %s"
 
 msgid "Error loading data:"
 msgstr "데이터 로드 중 오류:"
+
+msgid "Error loading instance data"
+msgstr "인스턴스 데이터 로드 중에 오류 발생"
 
 msgid "Error message goes here"
 msgstr "오류 메시지가 여기에 표시됩니다."
@@ -20227,6 +20246,9 @@ msgstr "서버로부터 데이터를 요청하는 중 오류가 발생함"
 msgid ""
 "Error returned from %{name} event processing in Automate: %{error_message}"
 msgstr "자동화의 %{name} 이벤트 처리에서 오류가 리턴됨: %{error_message}"
+
+msgid "Error saving instance"
+msgstr "인스턴스 저장 중 오류 발생"
 
 msgid "Error saving priority order"
 msgstr "우선순위 순서 저장 중 오류 발생"
@@ -20607,6 +20629,9 @@ msgstr "이 지역의 경우 이벤트가 지원되지 않음"
 
 msgid "Events for VM prod_webserver"
 msgstr "VM prod_webserver의 이벤트"
+
+msgid "Every"
+msgstr "모두"
 
 msgid "Everything"
 msgstr "전체"
@@ -21042,9 +21067,6 @@ msgstr "선택한 정책 내보내기"
 
 msgid "Export Selected Profiles"
 msgstr "선택한 프로파일 내보내기"
-
-msgid "Export all classes and instances"
-msgstr "클래스 및 인스턴스 모두 내보내기"
 
 msgid "Export all classes and instances to a file"
 msgstr "파일에 클래스 및 인스턴스 모두 내보내기"
@@ -21581,11 +21603,26 @@ msgstr "%{name}의 실패한 시스템 서비스"
 msgid "Failed to %{snapshot_op} snapshot of %{subject}: %{error}"
 msgstr "%{subject}의 스냅샷 %{snapshot_op} 실패: %{error}"
 
+msgid "Failed to check task status"
+msgstr "태스크 상태 확인 실패"
+
 msgid "Failed to delete %s %s."
 msgstr "%s %s 삭제에 실패했습니다."
 
+msgid "Failed to fetch domains"
+msgstr "도메인 페치 실패"
+
+msgid "Failed to fetch git repository"
+msgstr "Git 저장소 페치 실패"
+
+msgid "Failed to import from git"
+msgstr "Git에서 가져오기 실패"
+
 msgid "Failed to load chargeback data"
 msgstr "비용 상환 데이터 로드 실패"
+
+msgid "Failed to load data"
+msgstr "데이터 로드 실패"
 
 msgid "Failed to load image labels"
 msgstr "이미지 레이블 로드 실패"
@@ -21607,6 +21644,9 @@ msgstr "C 및 U 콜렉션 설정 저장 실패"
 
 msgid "Failed to save chargeback assignments"
 msgstr "비용 상환 지정 저장 실패"
+
+msgid "Failed to submit git URL"
+msgstr "Git URL 제출 실패"
 
 msgid "Failover"
 msgstr "장애 복구"
@@ -21840,6 +21880,9 @@ msgstr "필터"
 
 msgid "Filter Expression"
 msgstr "필터 표현식"
+
+msgid "Filter Item"
+msgstr "필터 항목"
 
 msgid "Filter Message"
 msgstr "필터 메시지"
@@ -22729,6 +22772,9 @@ msgid "Git Branch"
 msgid_plural "Git Branches"
 msgstr[0] "Git 분기"
 
+msgid "Git Import Disabled"
+msgstr "Git 가져오기 사용 안함"
+
 msgid "Git Reference"
 msgid_plural "Git References"
 msgstr[0] "Git 참조"
@@ -22745,9 +22791,6 @@ msgstr[0] "Git 태그"
 
 msgid "Git URL"
 msgstr "Git URL"
-
-msgid "Git URL:"
-msgstr "Git URL:"
 
 msgid "Git based refresh canceled"
 msgstr "Git 기반 새로 고치기가 최소됨"
@@ -22832,6 +22875,9 @@ msgstr "글로벌 검색:"
 
 msgid "Glusterfs Endpoint Name"
 msgstr "Glusterfs 엔드포인트 이름"
+
+msgid "Go to my start page"
+msgstr "내 시작 페이지로 이동"
 
 msgid "Google"
 msgstr "Google"
@@ -24965,14 +25011,11 @@ msgstr "아코디언 가져오기/내보내기"
 msgid "Import Cloud Template"
 msgstr "클라우드 템플리트 가져오기"
 
-msgid "Import Datastore classes"
-msgstr "데이터 저장소 클래스 가져오기"
-
 msgid "Import Datastore classes (*.zip)"
 msgstr "데이터 저장소 클래스 가져오기(*.zip)"
 
-msgid "Import Datastore via git"
-msgstr "git를 통해 데이터 저장소 가져오기"
+msgid "Import Datastore via Git"
+msgstr "Git를 통해 데이터 저장소 가져오기"
 
 msgid "Import File Upload"
 msgid_plural "Import File Uploads"
@@ -25002,6 +25045,9 @@ msgstr "위젯 가져오기"
 msgid "Import cancelled by user"
 msgstr "사용자가 가져오기를 취소했습니다."
 
+msgid "Import failed"
+msgstr "가져오기 실패"
+
 msgid "Import file cannot be empty"
 msgstr "가져오기 파일이 비어 있으면 안됩니다."
 
@@ -25011,8 +25057,17 @@ msgstr "가져오기 파일 업로드"
 msgid "Import file was uploaded successfully"
 msgstr "가져오기 파일이 정상적으로 업로드되었습니다."
 
+msgid "Import from Domain"
+msgstr "도메인에서 가져오기"
+
+msgid "Import from Git Repository"
+msgstr "Git 저장소에서 가져오기"
+
 msgid "Import not available due to conflicts"
 msgstr "충돌로 인해 가져오기를 사용할 수 없음"
+
+msgid "Import to Existing Domain"
+msgstr "기존 도메인으로 가져오기"
 
 msgid "Import validation complete: %{good_record}, %{bad_record}"
 msgstr "가져오기 유효성 검증 완료: %{good_record}, %{bad_record}"
@@ -25029,8 +25084,14 @@ msgstr "ImportFileUpload|지역 설명"
 msgid "ImportFileUpload|Region number"
 msgstr "ImportFileUpload|지역 번호"
 
-msgid "Imported from git"
-msgstr "git에서 가져옴"
+msgid "Imported %{git_url}@%{branch_or_tag}"
+msgstr "%{git_url}@%{branch_or_tag}을(를) 가져옴"
+
+msgid "Importing datastore..."
+msgstr "데이터 저장소 가져오기 중..."
+
+msgid "Importing from git..."
+msgstr "Git에서 가져오기 중..."
 
 msgid "In My LDAP Group?"
 msgstr "내 LDAP 그룹에?"
@@ -25084,6 +25145,10 @@ msgstr "증분?"
 
 msgid "Index"
 msgstr "인덱스"
+
+msgid ""
+"Indicates if all volumes must reside in the same storage pool [true, false]"
+msgstr "모든 볼륨이 동일한 스토리지 풀에 있어야 하는지 표시[true, false]"
 
 msgid "Infinity"
 msgstr "무한"
@@ -25447,6 +25512,9 @@ msgstr "올바르지 않은 단추 조치"
 msgid "Invalid chart definition"
 msgstr "차트 정의가 올바르지 않습니다."
 
+msgid "Invalid copy action"
+msgstr "복사 조치가 유효하지 않음"
+
 msgid "Invalid credential_field %{field}, allowed values are %{allowed_fields}"
 msgstr "올바르지 않은 credential_field%{field}입니다. 허용되는 값은%{allowed_fields}입니다."
 
@@ -25559,8 +25627,7 @@ msgid "It is not allowed to have more than 20 embedded methods"
 msgstr "20개를 초과한 임베디드 메소드는 허용되지 않습니다."
 
 msgid "Item"
-msgid_plural "Items"
-msgstr[0] "항목"
+msgstr "항목"
 
 msgid "Item Type"
 msgstr "항목 유형"
@@ -25671,6 +25738,9 @@ msgstr "KB"
 msgid "KBps"
 msgstr "KBps"
 
+msgid "Keep OVA file on completion"
+msgstr "완료 시 OVA 파일 유지"
+
 msgid "Kerberos"
 msgstr "Kerberos"
 
@@ -25748,15 +25818,6 @@ msgstr "LDAP 도메인"
 
 msgid "LDAP Group"
 msgstr "LDAP 그룹"
-
-msgid "LDAP Group Look Up"
-msgstr "LDAP 그룹 검색"
-
-msgid "LDAP Group Lookup"
-msgstr "LDAP 그룹 검색"
-
-msgid "LDAP Groups for User"
-msgstr "사용자의 LDAP 그룹"
 
 msgid "LDAP Region"
 msgstr "LDAP 지역"
@@ -25878,9 +25939,6 @@ msgstr "Lan|업데이트 날짜"
 
 msgid "Last"
 msgstr "마지막"
-
-msgid "Last 1000 lines from server %{name} [%{id}] in zone %{zone}"
-msgstr "구역 %{zone}에서 서버 %{name} [%{id}]의 마지막 1000개 행"
 
 msgid ""
 "Last 1000 lines from server %{server_name} [%{server_id}] in zone %{zone_name}"
@@ -26530,11 +26588,17 @@ msgstr "LoadBalancer|vm 총계"
 msgid "Loading chargeback data..."
 msgstr "비용 상환 데이터 로드 중..."
 
+msgid "Loading domains..."
+msgstr "도메인 로드 중..."
+
 msgid "Loading expression fields..."
 msgstr "표현식 필드 로드 중..."
 
 msgid "Loading image labels..."
 msgstr "이미지 레이블 로드 중..."
+
+msgid "Loading import data..."
+msgstr "데이터 가져오기 로드 중..."
 
 msgid "Loading label values..."
 msgstr "레이블 값 로드 중..."
@@ -26679,6 +26743,9 @@ msgstr "로그"
 msgid "Logs for this %{product} Server are not available for viewing"
 msgstr "이 %{product} Server에 대한 로그를 볼 수 없습니다."
 
+msgid "Logs of this Pod"
+msgstr "이 팟(Pod)의 로그"
+
 msgid "Long Description"
 msgstr "자세한 설명"
 
@@ -26757,6 +26824,9 @@ msgstr "기본 구성"
 
 msgid "Main Info"
 msgstr "기본 정보"
+
+msgid "Main Menu"
+msgstr "기본 메뉴"
 
 msgid "Main Route Table"
 msgstr "기본 라우트 테이블"
@@ -27457,8 +27527,26 @@ msgstr "최대화"
 msgid "Maximum"
 msgstr "최대"
 
+msgid "Maximum Memory"
+msgstr "최대 메모리"
+
+msgid "Maximum Memory (GiB)"
+msgstr "최대 메모리(GiB)"
+
+msgid "Maximum Processors"
+msgstr "최대 프로세서 수"
+
 msgid "Maximum Transmission Unit"
 msgstr "최대 전송 단위"
+
+msgid "Maximum Virtual Processors"
+msgstr "최대 가상 프로세서"
+
+msgid "Maximum amount of memory that can be allocated (in GiB)"
+msgstr "할당할 수 있는 최대 메모리 용량(GiB)"
+
+msgid "Maximum number of processors that can be allocated"
+msgstr "할당할 수 있는 프로세서의 최대 개수"
 
 msgid "Md5"
 msgstr "Md5"
@@ -27819,6 +27907,12 @@ msgstr "메모리 미러링"
 
 msgid "Memory Mirroring capability of the Host."
 msgstr "호스트의 메모리 미러링 기능."
+
+msgid "Memory Region Size"
+msgstr "메모리 지역 크기"
+
+msgid "Memory Region Size in MB."
+msgstr "메모리 지역 크기(MB)."
 
 msgid "Memory Reserve"
 msgstr "메모리 예약"
@@ -28944,6 +29038,9 @@ msgstr "메트릭|V 백분율 cpu 대기 델타 요약"
 msgid "Microsoft SCVMM Provider"
 msgstr "Microsoft SCVMM 제공자"
 
+msgid "Migratable"
+msgstr "마이그레이션 가능"
+
 msgid "Migrate %{vm_or_template}"
 msgstr "%{vm_or_template} 마이그레이션"
 
@@ -29054,6 +29151,24 @@ msgstr "최소화"
 
 msgid "Minimum"
 msgstr "최소"
+
+msgid "Minimum Memory"
+msgstr "최소 메모리"
+
+msgid "Minimum Memory (GiB)"
+msgstr "최소 메모리(GiB)"
+
+msgid "Minimum Processors"
+msgstr "최소 프로세서 수"
+
+msgid "Minimum Virtual Processors"
+msgstr "최소 가상 프로세서 수"
+
+msgid "Minimum amount of memory that can be allocated (in GiB)"
+msgstr "할당 가능한 최소 메모리 용량(GiB)"
+
+msgid "Minimum number of processors that can be allocated"
+msgstr "할당 가능한 프로세서의 최소 수"
 
 msgid "Minute"
 msgstr "분"
@@ -32180,6 +32295,9 @@ msgstr "이름 지정된 범위 '%{scope_name}'이(가) 클래스 '%{class_name}
 msgid "Namespace"
 msgstr "네임스페이스"
 
+msgid "Namespace tree"
+msgstr "네임스페이스 트리"
+
 msgid "Naming"
 msgstr "이름 지정"
 
@@ -32892,12 +33010,6 @@ msgstr "비동기로 설정할 %{member}이(가) 선택되지 않음"
 msgid "No %{member} selected to set to Synchronous"
 msgstr "동기로 설정할 %{member}이(가) 선택되지 않음"
 
-msgid "No %{member} were selected to move left"
-msgstr "왼쪽으로 이동시킬 %{member}이(가) 선택되지 않음"
-
-msgid "No %{member} were selected to move right"
-msgstr "오른쪽으로 이동시킬 %{member}이(가) 선택되지 않음"
-
 msgid "No %{model} were %{state} %{time}"
 msgstr "%{model}이(가) %{state} %{time}이(가) 아님"
 
@@ -33019,6 +33131,9 @@ msgstr "%{button}할 사용자 정의 템플리트가 선택되지 않았습니�
 msgid "No Daily data is available"
 msgstr "일별 데이터를 사용할 수 없음"
 
+msgid "No Data"
+msgstr "데이터 없음"
+
 msgid "No Date/Time value specified"
 msgstr "날짜/시간 값이 지정되지 않았습니다."
 
@@ -33027,6 +33142,9 @@ msgstr "대화 상자 없음"
 
 msgid "No Dialogs were selected for %{task}"
 msgstr "%{task}에 대한 대화 상자가 선택되지 않음"
+
+msgid "No Domains Available"
+msgstr "사용 가능한 도메인 없음"
 
 msgid "No EMS defined"
 msgstr "정의된 EMS 없음"
@@ -33325,8 +33443,14 @@ msgstr "사용 가능한 데이터 없음"
 msgid "No data available."
 msgstr "사용 가능한 데이터가 없습니다."
 
+msgid "No domains found in the import file"
+msgstr "가져오기 파일에서 도메인이 발견되지 않음"
+
 msgid "No drift history found"
 msgstr "드리프트 히스토리를 찾을 수 없음"
+
+msgid "No enabled domains available to import to"
+msgstr "가져올 수 있는 사용 가능한 도메인 없음"
 
 msgid "No entries found for %s"
 msgstr "%s에 대한 항목을 찾을 수 없음"
@@ -33417,6 +33541,9 @@ msgstr "드리프트할 분석을 10개 이하로 선택할 수 있음"
 
 msgid "No more than 32 %{model} can be selected for Compare"
 msgstr "비교할 %{model}을(를) 32개 이하로 선택할 수 있음"
+
+msgid "No namespaces available for the selected domain"
+msgstr "선택한 도메인에 사용할 수 있는 네임스페이스 없음"
 
 msgid "No notes have been entered."
 msgstr "참고사항이 입력되지 않았습니다."
@@ -33977,6 +34104,9 @@ msgstr "OVF 템플리트는 필수입니다. 목록에서 하나를 선택하십
 
 msgid "OVF Templates"
 msgstr "OVF 템플리트"
+
+msgid "Object"
+msgstr "오브젝트"
 
 msgid "Object Attribute"
 msgstr "오브젝트 속성"
@@ -35281,9 +35411,6 @@ msgstr "비밀번호"
 msgid "Password (API Key)"
 msgstr "비밀번호(API 키)"
 
-msgid "Password (optional):"
-msgstr "비밀번호(선택사항):"
-
 msgid "Password Complex"
 msgstr "비밀번호 복잡도"
 
@@ -35298,6 +35425,9 @@ msgstr "권한 상승 메소드의 비밀번호"
 
 msgid "Password for this credential"
 msgstr "이 인증 정보의 비밀번호"
+
+msgid "Password is not strong enough"
+msgstr "비밀번호가 충분히 강력하지 않음"
 
 msgid "Password or Password+One-Time-Password"
 msgstr "비밀번호 또는 비밀번호+일회성 비밀번호"
@@ -36557,6 +36687,9 @@ msgstr "PlacementGroup|지역 설명"
 msgid "PlacementGroup|Region number"
 msgstr "PlacementGroup|지역 번호"
 
+msgid "PlacementGroup|Uid ems"
+msgstr "PlacementGroup|Uid ems"
+
 msgid "Platform"
 msgstr "플랫폼"
 
@@ -36656,11 +36789,20 @@ msgstr "등록하려는 노드가 포함된 JSON 파일을 선택하십시오."
 msgid "Please select a node from the tree to edit."
 msgstr "편집하려면 트리에서 노드를 선택하십시오."
 
+msgid "Please select a pattern"
+msgstr "패턴 선택"
+
 msgid "Please select a type."
 msgstr "유형을 선택하십시오."
 
 msgid "Please select an Instance Type from above"
 msgstr "위에서 인스턴스 유형을 선택하십시오."
+
+msgid "Please select at least one namespace to import"
+msgstr "가져올 네임스페이스를 한 개 이상 선택하십시오."
+
+msgid "Please select at least one server"
+msgstr "서버를 하나 이상 선택하십시오."
 
 msgid "Please try again"
 msgstr "다시 시도하십시오."
@@ -37098,6 +37240,9 @@ msgstr "전원 공급 장치 슬롯 개수"
 msgid "Preemptible"
 msgstr "선점 가능"
 
+msgid "Preferred Processor Compatibility Mode"
+msgstr "선호하는 프로세서 호환성 모드"
+
 msgid "Present"
 msgstr "존재함"
 
@@ -37283,6 +37428,9 @@ msgstr "처리 장치"
 
 msgid "Processor"
 msgstr "프로세서"
+
+msgid "Processor Compatibility Mode"
+msgstr "프로세서 호환 모드"
 
 msgid "Processor Cores Per Socket"
 msgstr "프로세서 소켓당 코어"
@@ -38396,6 +38544,10 @@ msgstr "서비스 재구성"
 
 msgid "Reconfigure Services Options"
 msgstr "서비스 옵션 재구성"
+
+msgid "Reconfigure Task"
+msgid_plural "Reconfigure Tasks"
+msgstr[0] "태스크 재구성"
 
 msgid "Reconfigure VM CPU"
 msgstr "VM CPU 재구성"
@@ -39964,8 +40116,14 @@ msgstr "사용자가 인터페이스 제거를 취소했습니다."
 msgid "Rename Cloud Database"
 msgstr "클라우드 데이터베이스 이름 변경"
 
+msgid "Rename Snapshot"
+msgstr "스냅샷 이름 바꾸기"
+
 msgid "Rename VM"
 msgstr "VM 이름 바꾸기"
+
+msgid "Rename a snapshot for VMs"
+msgstr "VM 스냅샷 이름 바꾸기"
 
 msgid "Rename this VM"
 msgstr "이 VM 이름 바꾸기"
@@ -40143,6 +40301,9 @@ msgstr "보고서 테이블이 0입니다."
 
 msgid "Reporting Workers"
 msgstr "보고 작업자"
+
+msgid "Reporting role not enabled"
+msgstr "보고 역할이 사용으로 설정되지 않음"
 
 msgid "Reports"
 msgstr "보고서"
@@ -40413,11 +40574,14 @@ msgstr "호스트 재설정"
 msgid "Reset all Policy Simulation options"
 msgstr "정책 시뮬레이션 옵션 모두 재설정"
 
-msgid "Reset all components in the following domains: %{domains}"
-msgstr "다음 도메인의 모든 컴포넌트 재설정: %{domains}"
+msgid "Reset all components in the following domains: %s"
+msgstr "다음 도메인에서 모든 구성요소 초기화: %s"
 
 msgid "Reset all options"
 msgstr "옵션 모두 재설정"
+
+msgid "Reset failed"
+msgstr "재설정 실패"
 
 msgid "Reset the filter"
 msgstr "필터 재설정"
@@ -40445,6 +40609,9 @@ msgstr "이 항목 재설정?"
 
 msgid "Reset to Default"
 msgstr "기본값으로 재설정"
+
+msgid "Resetting datastore..."
+msgstr "데이터 저장소 재설정 중..."
 
 msgid "Resides on VM"
 msgstr "VM에 상주함"
@@ -40944,6 +41111,9 @@ msgstr "결과 유형 %{result_type}이(가) 지원되지 않음"
 msgid "Results"
 msgstr "결과"
 
+msgid "Results %s"
+msgstr "결과 %s"
+
 msgid "Resume"
 msgstr "재개"
 
@@ -41097,6 +41267,12 @@ msgstr "템플리트의 선택한 스냅샷으로 되돌리기"
 
 msgid "Revert to selected snapshot on VMs"
 msgstr "VM의 선택한 스냅샷으로 되돌리기"
+
+msgid "Review Datastore Import"
+msgstr "데이터 저장소 가져오기 검토"
+
+msgid "Review Git Import"
+msgstr "Git 가져오기 검토"
 
 msgid "Revoke Sessions of Other Users"
 msgstr "다른 사용자의 세션 취소"
@@ -41832,6 +42008,9 @@ msgid ""
 "Secondary (Display) Filter - Filters the rows based on child table fields"
 msgstr "보조(표시) 필터 - 하위 테이블 필드에 기반하여 행을 필터링함"
 
+msgid "Secondary Menu"
+msgstr "보조 메뉴"
+
 msgid "Secret Access Key"
 msgstr "시크릿 액세스 키"
 
@@ -42170,6 +42349,9 @@ msgstr "시작점 %{entry_point} 선택"
 msgid "Select Entry Point Instance"
 msgstr "엔트리포인트 인스턴스 선택"
 
+msgid "Select Entry Point Namespace"
+msgstr "시작점 네임스페이스 선택"
+
 msgid "Select Group"
 msgstr "그룹 선택"
 
@@ -42178,6 +42360,9 @@ msgstr "복사할 인스턴스 선택"
 
 msgid "Select Methods to copy"
 msgstr "복사할 메소드 선택"
+
+msgid "Select Namespaces to Import"
+msgstr "가져올 네임스페이스 선택"
 
 msgid "Select Policy Profiles"
 msgstr "정책 프로파일 선택"
@@ -42209,8 +42394,14 @@ msgstr "PXE 이미지 선택"
 msgid "Select a PXE Server"
 msgstr "PXE 서버 선택"
 
+msgid "Select a Physical Server"
+msgstr "물리적 서버 선택"
+
 msgid "Select a Policy Profile to add:"
 msgstr "추가할 정책 프로파일 선택:"
+
+msgid "Select a Server Profile"
+msgstr "서버 프로파일 선택"
 
 msgid "Select a VM to Submit the Simulation Options"
 msgstr "시뮬레이션 옵션을 제출할 VM 선택"
@@ -42356,17 +42547,8 @@ msgstr "통화 선택"
 msgid "Select currency: "
 msgstr "통화 선택: "
 
-msgid "Select domain you wish to import from:"
-msgstr "가져오려는 도메인 선택:"
-
-msgid "Select existing domain to import into:"
-msgstr "가져올 기존 도메인 선택:"
-
 msgid "Select methods"
 msgstr "메소드 선택"
-
-msgid "Select namespaces you wish to import:"
-msgstr "가져오려는 네임스페이스 선택:"
 
 msgid "Select one or more Groups to delete"
 msgstr "삭제할 하나 이상의 그룹 선택"
@@ -42376,12 +42558,6 @@ msgstr "삭제할 하나 이상의 사용자 선택"
 
 msgid "Select one or more items to delete"
 msgstr "삭제할 하나 이상의 항목 선택"
-
-msgid "Select only one or consecutive %{member} to move down"
-msgstr "아래로 이동시킬 %{member}을(를) 하나만 또는 연속으로 선택하십시오."
-
-msgid "Select only one or consecutive %{member} to move up"
-msgstr "위로 이동시킬 %{member}을(를) 하나만 또는 연속으로 선택하십시오."
 
 msgid "Select only one or consecutive %{name} to move down"
 msgstr "아래로 이동시킬 %{name}을(를) 하나만 또는 연속으로 선택하십시오."
@@ -42512,6 +42688,9 @@ msgstr "선택된 항목을 복사할 수 없습니다. 해당 항목이 Ansible
 
 msgid "Selected methods"
 msgstr "선택한 메소드"
+
+msgid "Selected path:"
+msgstr "선택된 경로:"
 
 msgid "Selected:"
 msgstr "선택됨:"
@@ -43457,6 +43636,9 @@ msgstr "서비스|폐기 경고"
 
 msgid "Service|Retires on"
 msgstr "서비스|폐기일"
+
+msgid "Service|V total direct service children"
+msgstr "서비스|직접 서비스 대상 하위 총수"
 
 msgid "Service|V total vms"
 msgstr "서비스|V vm 총계"
@@ -45421,6 +45603,9 @@ msgstr "스토리지 이름"
 msgid "Storage Pool"
 msgstr "스토리지 풀"
 
+msgid "Storage Pool Affinity"
+msgstr "스토리지 풀 연관관계"
+
 msgid "Storage Profile"
 msgstr "스토리지 프로파일"
 
@@ -45476,6 +45661,9 @@ msgstr "스토리지 사용 비율"
 
 msgid "Storage file"
 msgstr "스토리지 파일"
+
+msgid "Storage pool where the server is deployed"
+msgstr "서버가 배치된 스토리지 풀"
 
 msgid "Storage profile"
 msgstr "스토리지 프로파일"
@@ -45979,9 +46167,6 @@ msgstr "구독 관리자가 repo %{repo_name} 사용에 실패함"
 msgid "Subscriptions Changed"
 msgstr "구독이 변경됨"
 
-msgid "Substitution:"
-msgstr "대체:"
-
 msgid "Subtype"
 msgstr "하위 유형"
 
@@ -46000,6 +46185,9 @@ msgstr "성공"
 msgid "Successfully deleted Saved Report from the %{product} Database"
 msgid_plural "Successfully deleted Saved Reports from the %{product} Database"
 msgstr[0] "%{product} 데이터베이스에서 저장된 보고서가 정상적으로 삭제되었습니다."
+
+msgid "Successfully found git repository, please choose a branch or tag"
+msgstr "Git 저장소를 성공적으로 찾았습니다. 분기 또는 태그를 선택하십시오."
 
 msgid "Successfully refreshed!"
 msgstr "새로 고치기 성공!"
@@ -46232,6 +46420,9 @@ msgstr "스위치|Uid ems"
 
 msgid "Switch|Updated on"
 msgstr "스위치|업데이트 날짜"
+
+msgid "Switch|Virtual bridge mode"
+msgstr "스위치|가상 브릿지 모드"
 
 msgid "Sync"
 msgstr "동기화"
@@ -47031,6 +47222,15 @@ msgstr "네트워크에 관련된 활성 VMI가 있음"
 msgid "The Physical Storage is not connected to an active Manager"
 msgstr "물리적 스토리지가 활성 관리자에 연결되어 있지 않습니다."
 
+msgid "The Pod is no longer active"
+msgstr "해당 팟(Pod)은 활성 상태입니다."
+
+msgid "The Pod is not associated with a project"
+msgstr "해당 팟(Pod)은 프로젝트와 연관되어 있지 않음"
+
+msgid "The Pod is not associated with an active provider"
+msgstr "해당 팟(Pod)은 활성 제공자와 연관되어 있지 않음"
+
 msgid "The PowerVM management master of this host is a HMC."
 msgstr "이 호스트의 PowerVM 관리 마스터는 HMC입니다."
 
@@ -47182,6 +47382,9 @@ msgid ""
 "resource, it will take precedence."
 msgstr "자원의 기본 지역입니다. 자원에 다른 지역이 지정된 경우에는 우선순위가 높습니다."
 
+msgid "The effective processor compatibility mode of the VM"
+msgstr "VM의 효율적인 프로세서 호환 모드"
+
 msgid "The email address assigned to the Google Compute Engine service account"
 msgstr "Google 컴퓨팅 엔진 서비스 계정에 지정된 이메일 주소"
 
@@ -47294,6 +47497,9 @@ msgstr "실행의 사전 계획 단계가 완료되었습니다."
 
 msgid "The pre-plan phase of the run is in progress."
 msgstr "실행의 사전 계획 단계가 진행 중입니다."
+
+msgid "The preferred processor compatibility mode of the VM"
+msgstr "VM의 선호 프로세서 호환성 모드"
 
 msgid "The provider does not support reconfigure disks"
 msgstr "제공자가 디스크 재구성을 지원하지 않습니다."
@@ -47835,9 +48041,6 @@ msgstr "타임라인"
 msgid "Timelines for %{table} \"%{name}\""
 msgstr "%{table} \"%{name}\"의 타임라인"
 
-msgid "Timelines for %{virtual_machine} \"%{name}\""
-msgstr "%{virtual_machine} \"%{name}\"의 타임라인"
-
 msgid "Timeout"
 msgstr "제한시간"
 
@@ -47900,12 +48103,6 @@ msgstr "오늘"
 
 msgid "Today (partial)"
 msgstr "오늘(부분)"
-
-msgid "Toggle"
-msgstr "전환"
-
-msgid "Toggle All/None"
-msgstr "모두/없음 전환"
 
 msgid "Toggle Fullscreen"
 msgstr "전체 화면 전환"
@@ -48565,9 +48762,6 @@ msgstr "VM 선택사항에 대한 전략을 찾을 수 없습니다."
 msgid "Unable to find task with id: [%{task_id}]"
 msgstr "다음 ID의 태스크를 찾을 수 없음: [%{task_id}]"
 
-msgid "Unable to find user '%{name}'"
-msgstr "'%{name}' 사용자를 찾을 수 없음"
-
 msgid "Unable to find user '%{user}'"
 msgstr "'%{user}' 사용자를 찾을 수 없음"
 
@@ -48656,6 +48850,9 @@ msgstr "할당되지 않은 공간"
 msgid "Unarchive Services"
 msgstr "서비스 아카이브 해제"
 
+msgid "Unassign"
+msgstr "지정 해제"
+
 msgid "Unassign Server"
 msgstr "서버 지정 해제"
 
@@ -48718,6 +48915,9 @@ msgstr "단위"
 
 msgid "Unknown"
 msgstr "알 수 없음"
+
+msgid "Unknown API error"
+msgstr "알 수 없는 API 오류"
 
 msgid "Unknown Action"
 msgstr "알 수 없는 조치"
@@ -48898,11 +49098,17 @@ msgstr "파일 업로드"
 msgid "Upload Script"
 msgstr "스크립트 업로드"
 
+msgid "Upload file"
+msgstr "파일 업로드"
+
 msgid "Uploaded File '%{filename}'"
 msgstr "업로드한 파일 '%{filename}'"
 
 msgid "Uploaded Image"
 msgstr "업로드된 이미지"
+
+msgid "Uploading..."
+msgstr "업로드 중..."
 
 msgid ""
 "Uptime - Minimum Time Between Startups for Collected Intervals (Seconds)"
@@ -49376,8 +49582,8 @@ msgstr "사용자가 만료됨"
 msgid "User Group Sequence was saved"
 msgstr "사용자 그룹 순서가 저장되었습니다."
 
-msgid "User Group Sequencing for LDAP Look Up:"
-msgstr "LDAP 검색을 위한 사용자 그룹 순서 지정:"
+msgid "User Group Sequencing for External Authentication:"
+msgstr "외부 인증을 위한 사용자 그룹 시퀀스 지정:"
 
 msgid "User ID"
 msgstr "사용자 ID"
@@ -49423,9 +49629,6 @@ msgstr "사용자가 임베디드 워크플로우 제공자를 사용할 수 없
 msgid "User must be defined"
 msgstr "사용자를 지정해야 합니다."
 
-msgid "User must be entered to perform LDAP Group Look Up"
-msgstr "LDAP 그룹 검색을 수행하려면 사용자를 입력해야 합니다."
-
 msgid "User name"
 msgstr "사용자 이름"
 
@@ -49434,9 +49637,6 @@ msgstr "사용자가 더 이상 존재하지 않습니다."
 
 msgid "User script \"%{params}\" upload was successful"
 msgstr "사용자 스크립트 \"%{params}\" 업로드가 정상적으로 완료되었습니다."
-
-msgid "User to Look Up"
-msgstr "검색할 사용자"
 
 msgid "User will input the value"
 msgstr "사용자가 값을 입력함"
@@ -49447,14 +49647,14 @@ msgstr "사용자가 값을 입력합니다."
 msgid "User:"
 msgstr "사용자:"
 
+msgid "User: %s"
+msgstr "사용자: %s"
+
 msgid "UserID"
 msgstr "사용자 ID"
 
 msgid "Username"
 msgstr "사용자 이름"
-
-msgid "Username (optional):"
-msgstr "사용자 이름(선택사항):"
 
 msgid "Username for this credential"
 msgstr "이 인증 정보의 사용자 이름"
@@ -51797,6 +51997,12 @@ msgstr "VmOrTemplate|정책 있음"
 msgid "VmOrTemplate|Has rdm disk"
 msgstr "VmOrTemplate|rdm 디스크 있음"
 
+msgid "VmOrTemplate|Health details"
+msgstr "VmOrTemplate|Health 세부사항"
+
+msgid "VmOrTemplate|Health state"
+msgstr "VmOrTemplate|Health 상태"
+
 msgid "VmOrTemplate|Host name"
 msgstr "VmOrTemplate|호스트 이름"
 
@@ -52894,6 +53100,9 @@ msgstr ""
 "VM이 '선점 가능'한지 여부입니다. 자세한 내용은 https://cloud.google.com/compute/docs/instances/"
 "preemptible을 참조하십시오."
 
+msgid "Whether the instance can be migrated [true, false]"
+msgstr "인스턴스를 마이그레이션할 수 있는지 여부[true, false]"
+
 msgid "Whether to use the authorize mechanism"
 msgstr "권한 부여 메커니즘을 사용할지 여부"
 
@@ -53058,6 +53267,9 @@ msgstr "워크플로우 템플리트(Ansible Tower)"
 
 msgid "Workflow does not have any credentials to map."
 msgstr "워크플로우에 맵핑할 신임 정보가 없습니다."
+
+msgid "Workflow max. timeout"
+msgstr "워크플로우 최대 제한시간"
 
 msgid "Workflow name"
 msgstr "워크플로우 이름"
@@ -53947,6 +54159,15 @@ msgstr "login_failed"
 msgid "m"
 msgstr "m"
 
+msgid "maximum amount of memory in MB this partition can be allocated"
+msgstr "이 파티션에 할당할 수 있는 최대 메모리 용량(단위: MB)"
+
+msgid "maximum number of processors this partition can be assigned"
+msgstr "이 파티션에 지정할 수 있는 프로세서의 최대 개수"
+
+msgid "maximum number of virtual processors this partition can be assigned"
+msgstr "이 파티션에 지정할 수 있는 가상 프로세서의 최대 수"
+
 msgid "may contain only alphanumeric and _ - characters"
 msgstr "영숫자 및 _ - 문자만 포함할 수 있음"
 
@@ -53970,6 +54191,15 @@ msgstr "memory_mb"
 
 msgid "method is only available for an entry"
 msgstr "메소드는 항목에만 사용 가능합니다."
+
+msgid "minimum amount of memory in MB this partition should be allocated"
+msgstr "이 파티션에 할당해야 하는 최소 메모리 용량(MB)"
+
+msgid "minimum number of processors this partition should be assigned"
+msgstr "이 파티션에 지정해야 하는 최소 프로세서 수"
+
+msgid "minimum number of virtual processors this partition should be assigned"
+msgstr "이 파티션에 지정해야 하는 가상 프로세서의 최소 수"
 
 msgid "minutely"
 msgstr "1분마다"
@@ -54086,9 +54316,6 @@ msgstr "%{time}의 %{date}에"
 
 msgid "open and close options"
 msgstr "옵션 열기 및 닫기"
-
-msgid "operator '%{operator_name}' is not supported"
-msgstr "'%{operator_name}' 연산자가 지원되지 않습니다."
 
 msgid "operator '%{operator}' is not supported"
 msgstr "'%{operator}' 연산자가 지원되지 않습니다."
@@ -54322,6 +54549,9 @@ msgstr "raw_exists가 서브클래스에 구현되어야 합니다."
 msgid "raw_live_migrate must be implemented in a subclass"
 msgstr "raw_live_migrate가 서브클래스에 구현되어야 합니다."
 
+msgid "raw_logs must be implemented in a subclass"
+msgstr "raw_logs는 하위 클래스에서 구현되어야 함"
+
 msgid "raw_remove_security_group must be implemented in a subclass"
 msgstr "raw_remove_security_group이 서브클래스에 구현되어야 합니다."
 
@@ -54510,9 +54740,6 @@ msgstr "샘플"
 
 msgid "secondary, "
 msgstr "보조, "
-
-msgid "selected to copy"
-msgstr "복사하도록 선택됨"
 
 msgid "service_process"
 msgstr "service_process"
