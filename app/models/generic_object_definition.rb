@@ -179,7 +179,7 @@ class GenericObjectDefinition < ApplicationRecord
 
   def validate_property_attributes
     properties[:attributes].each do |name, type|
-      errors.add(:properties, "attribute [#{name}] is not of a recognized type: [#{type}]") unless TYPE_MAP.key?(type.to_sym)
+      errors.add(:properties, "attribute [#{name}] is not of a recognized type: [#{type}]") unless TYPE_MAP_KEYS.include?(type.to_s)
       errors.add(:properties, "invalid attribute name: [#{name}]") unless REG_ATTRIBUTE_NAME.match?(name)
     end
   end
