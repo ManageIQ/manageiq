@@ -382,7 +382,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-ui-classic
-  revision: 8bdd976b209b7563aadd91edc3eb18c0560a09da
+  revision: 1f069e28d465b1037ee31b8f5e2f9fbb3651b1da
   branch: tal
   specs:
     manageiq-ui-classic (0.1.0)
