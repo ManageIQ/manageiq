@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Generated-By: Globalization Pipeline\n"
 "Project-Id-Version: manageiq 1.0.0\n"
-"POT-Creation-Date: 2026-09-09 00:38+0000\n"
-"PO-Revision-Date: 2026-09-09 00:38+0000\n"
+"POT-Creation-Date: 2026-10-20 20:41+0000\n"
+"PO-Revision-Date: 2026-10-20 20:41+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -308,6 +308,11 @@ msgstr "% Usado"
 msgid "%d (Custom)"
 msgstr "%d (Customizado)"
 
+msgid "%d Item selected to copy"
+msgid_plural "%d Items selected to copy"
+msgstr[0] "%d item selecionado para cópia"
+msgstr[1] "%d itens selecionados para cópia"
+
 msgid "%d Months Ago"
 msgstr "%d Meses Atrás"
 
@@ -419,10 +424,10 @@ msgid_plural "%{amount} Automation Jobs Being Tagged"
 msgstr[0] "%{amount} tarefa de automação sendo marcada"
 msgstr[1] "%{amount} tarefas de automação sendo marcadas"
 
-msgid "%{amount} Automation Provider (Ansible Tower) Being Tagged"
-msgid_plural "%{amount} Automation Providers (Ansible Tower) Being Tagged"
-msgstr[0] "%{amount} Provedor de automação (Ansible Tower) sendo marcado"
-msgstr[1] "%{amount} Provedores de automação (Ansible Tower) sendo marcados"
+msgid "%{amount} Automation Provider Being Tagged"
+msgid_plural "%{amount} Automation Providers Being Tagged"
+msgstr[0] "%{amount} Provedor de automação sendo marcado"
+msgstr[1] "%{amount} Provedores de automação sendo marcados"
 
 msgid "%{amount} Automation Template Being Tagged"
 msgid_plural "%{amount} Automation Templates Being Tagged"
@@ -748,9 +753,6 @@ msgid_plural "%{cpu} CPUs"
 msgstr[0] "%{cpu} CPU"
 msgstr[1] "%{cpu} CPUs"
 
-msgid "%{current_tenant} Tags"
-msgstr "Tags %{current_tenant}"
-
 msgid "%{date_from} to %{date_to}"
 msgstr "%{date_from} para %{date_to}"
 
@@ -768,12 +770,6 @@ msgstr "A reserva do %{description} é maior que a Memória da VM"
 
 msgid "%{description} VM Memory is larger than Memory Limit"
 msgstr "%{description} A memória da VM é maior que limite de memória"
-
-msgid "%{description} is required"
-msgstr "%{description} é necessário"
-
-msgid "%{domain_name} (Disabled)"
-msgstr "%{domain_name} (Desativado)"
 
 msgid "%{domain_name} (Same Domain)"
 msgstr "%{domain_name} (Mesmo domínio)"
@@ -810,9 +806,6 @@ msgstr "O %{log_message} \"%{error}\" está tentando mesclar a próxima mensagem
 msgid "%{log_message} \"%{error}\" attempting to get next message"
 msgstr "O %{log_message} \"%{error}\" está tentando obter a próxima mensagem"
 
-msgid "%{log} \"%{error}\" attempting to get next message"
-msgstr "O %{log} \"%{error}\" está tentando obter a próxima mensagem"
-
 msgid ""
 "%{log} Blank DRb_URI for MiqServer with ID=[%{number}], NAME=[%{name}], PID=[%"
 "{pid_number}], GUID=[%{guid_number}]"
@@ -839,9 +832,6 @@ msgstr "%{message}: o início da tarefa falhou"
 msgid "%{method_name} is not a valid name to an Ansible operation!"
 msgstr "%{method_name} não é um nome válido para uma operação do Ansible!"
 
-msgid "%{missing_field_name} is required"
-msgstr "%{missing_field_name} é necessário"
-
 msgid "%{model} \"%{name}\""
 msgstr "%{model} \"%{name}\""
 
@@ -866,9 +856,6 @@ msgstr "%{model} \"%{name}\": exclusão com sucesso"
 msgid "%{model} \"%{name}\": Error during '%{task}': %{error_message}"
 msgstr "%{model} \"%{name}\": Erro durante '%{task}': %{error_message}"
 
-msgid "%{model} \"%{name}\": Error during '%{task}': %{error_msg}"
-msgstr "%{model} \"%{name}\": erro durante '%{task}': %{error_msg}"
-
 msgid "%{model} \"%{name}\": Error during 'Check Compliance': %{error}"
 msgstr "%{model} \"%{name}\": erro durante 'Check Compliance': %{error}"
 
@@ -883,9 +870,6 @@ msgstr "%{model} (o %{tag} executando o %{time})"
 
 msgid "%{model} [%{name} - Updated %{time}%{update}]"
 msgstr "%{model} [%{name} - atualizado %{time}%{update}]"
-
-msgid "%{model} no longer exists"
-msgstr "O %{model} não existe mais"
 
 msgid "%{model} search \"%{name}\" was saved"
 msgstr "A procura do %{model} \"%{name}\" foi salva"
@@ -1002,9 +986,6 @@ msgstr ""
 
 msgid "%{name} is currently being used in the Display Filter"
 msgstr "O %{name} está sendo usado atualmente no filtro de exibição"
-
-msgid "%{name} is required"
-msgstr "%{name} é necessário"
 
 msgid "%{name} is the base"
 msgstr "O %{name} é a base"
@@ -1176,6 +1157,9 @@ msgid ""
 msgstr ""
 "%{object_types} no %{datastore_or_provider} \"%{provider_or_datastore_name}\""
 
+msgid "%{object} no longer exists"
+msgstr "%{object} não existe mais"
+
 msgid "%{product_name} API Group Not found"
 msgstr "Grupo de APIs do %{product_name} não localizado"
 
@@ -1217,9 +1201,6 @@ msgstr[1] "Tarefas de fluxo de trabalho do %{provider_description}"
 
 msgid "%{record} - \"%{button_text}\""
 msgstr "%{record} - \"%{button_text}\""
-
-msgid "%{record} no longer exists"
-msgstr "O %{record} não existe mais"
 
 msgid "%{request_description} for: %{request_source}"
 msgstr "%{request_description} para: %{request_source}"
@@ -1400,9 +1381,6 @@ msgstr "(Padrão: %{email_from})"
 
 msgid "(Global)"
 msgstr "(Global)"
-
-msgid "(Look up %{authentication_mode_name} Groups)"
-msgstr "(Observe os grupos %{authentication_mode_name})"
 
 msgid "(MB) memory"
 msgstr "(MB) de memória"
@@ -1972,9 +1950,6 @@ msgstr "<Nada>"
 
 msgid "<Orphaned>"
 msgstr "<Órfão>"
-
-msgid "<Same as import from>"
-msgstr "<O mesmo que importar de>"
 
 msgid "<Script error>"
 msgstr "<script error=\"\"></script>"
@@ -3498,6 +3473,9 @@ msgstr "Incluir esta entrada"
 msgid "Add to Shopping Cart"
 msgstr "Incluir no carrinho de compras"
 
+msgid "Add was cancelled by the user"
+msgstr "A inclusão foi cancelada pelo usuário"
+
 msgid "Add widget"
 msgstr "Incluir widget"
 
@@ -3509,9 +3487,6 @@ msgstr "A inclusão de hosts ESX/ESXi não é suportada"
 
 msgid "Adding a new %{model}"
 msgstr "Incluindo um Novo %{model}"
-
-msgid "Adding a new %{tenant}"
-msgstr "Incluindo um Novo %{tenant}"
 
 msgid "Adding a new Action"
 msgstr "Incluindo uma nova ação"
@@ -4461,6 +4436,9 @@ msgstr "Ansible Automation Platform (descontinuado)"
 msgid "Ansible Automation Platform Provider"
 msgstr "Provedor do Ansible Automation Platform"
 
+msgid "Ansible Job Template"
+msgstr "Modelo de tarefa do Ansible"
+
 msgid "Ansible Playbook"
 msgstr "Playbook do Ansible"
 
@@ -4479,26 +4457,17 @@ msgstr "Sistema Ansible Tower configurado"
 msgid "Ansible Tower Job"
 msgstr "Tarefa do Ansible Tower"
 
-msgid "Ansible Tower Job Template"
-msgstr "Modelo de tarefa do Ansible Tower"
-
 msgid "Ansible Tower Job Template Provision"
 msgstr "Provisionamento de modelo de tarefa Ansible Tower"
 
 msgid "Ansible Tower Jobs"
 msgstr "Tarefas do Ansible Tower"
 
-msgid "Ansible Tower Providers"
-msgstr "Provedores do Ansible Tower"
-
 msgid "Ansible Tower Template"
 msgstr "Modelo do Ansible Tower"
 
-msgid "Ansible Tower Templates"
-msgstr "Modelos do Ansible Tower"
-
-msgid "Ansible Tower Workflow Template"
-msgstr "Modelo de fluxo de trabalho do Ansible Tower"
+msgid "Ansible Workflow Template"
+msgstr "Modelo de fluxo de trabalho do Ansible"
 
 msgid ""
 "Ansible variables must start with a letter or underscore character, and "
@@ -4697,8 +4666,8 @@ msgstr "Tem certeza de que deseja excluir as ações selecionadas?"
 msgid "Are you sure you want to delete selected Conditions?"
 msgstr "Tem certeza de que deseja excluir as Condições selecionadas?"
 
-msgid "Are you sure you want to delete the following Ansible Tower Provider?"
-msgstr "Tem certeza de que deseja excluir o seguinte Provedor Ansible Tower?"
+msgid "Are you sure you want to delete the following Automation Provider?"
+msgstr "Tem certeza de que deseja excluir o seguinte provedor de automação?"
 
 msgid "Are you sure you want to delete the following Automation Providers?"
 msgstr "Tem certeza de que deseja excluir os provedores de automação a seguir?"
@@ -5005,6 +4974,9 @@ msgstr "AssetDetail|Sala"
 
 msgid "AssetDetail|Serial number"
 msgstr "AssetDetail|Número de série"
+
+msgid "Assign"
+msgstr "Designar"
 
 msgid "Assign Catalog Items"
 msgstr "Designar itens do catálogo"
@@ -5604,6 +5576,12 @@ msgstr "Importação/exportação automatizada"
 msgid "Automate Instance"
 msgstr "Instância de automatização"
 
+msgid "Automate Instance \"%s\" was added"
+msgstr "A instância de automação \"%s\" foi adicionada"
+
+msgid "Automate Instance \"%s\" was saved"
+msgstr "A instância de automação \"%s\" foi salva"
+
 msgid "Automate Instance \"%{name}\" was added"
 msgstr "A instância automatizada \"%{name}\" foi incluída"
 
@@ -5746,6 +5724,9 @@ msgstr "A simulação de automação foi executada"
 
 msgid "Automation Tasks"
 msgstr "Tarefas de automação"
+
+msgid "Automation Templates"
+msgstr "Modelos de automação"
 
 msgid "Automation Value"
 msgid_plural "Automation Values"
@@ -7664,6 +7645,9 @@ msgstr ""
 msgid "Change Password of Infrastructure Providers"
 msgstr "Mudar senha de provedores de infraestrutura"
 
+msgid "Change current group"
+msgstr "Alterar o grupo atual"
+
 msgid "Changed from previous"
 msgstr "Mudado do anterior"
 
@@ -8272,6 +8256,9 @@ msgstr "Escolha uma função para editar à esquerda."
 msgid "Choose a Schedule to view from the menus on the left."
 msgstr "Escolha um planejamento para visualizar nos menus à esquerda."
 
+msgid "Choose a Server"
+msgstr "Escolher um servidor"
+
 msgid "Choose a Template"
 msgstr "Escolher um Modelo"
 
@@ -8283,6 +8270,9 @@ msgstr "Escolha um valor"
 
 msgid "Choose a chart type"
 msgstr "Escolha um tipo de gráfico"
+
+msgid "Choose a pattern"
+msgstr "Escolha um padrão"
 
 msgid "Choose a resource entity and label"
 msgstr "Escolha um rótulo e uma entidade de recurso"
@@ -8299,17 +8289,38 @@ msgstr "Escolha um locatário"
 msgid "Choose an Owner"
 msgstr "Escolha um proprietário"
 
+msgid "Choose cloud object storage"
+msgstr "Escolha Cloud Object Storage"
+
+msgid "Choose disk type"
+msgstr "Escolha o tipo de disco"
+
 msgid "Choose file"
 msgstr "Escolha um arquivo"
 
 msgid "Choose one or more Fields"
 msgstr "Escolher um ou mais campos"
 
+msgid "Choose source image"
+msgstr "Escolha a imagem de origem"
+
+msgid "Choose source provider"
+msgstr "Escolha o provedor de origem"
+
+msgid "Choose source provider type"
+msgstr "Escolha o tipo de provedor de origem"
+
+msgid "Choose storage bucket"
+msgstr "Escolha o bucket de armazenamento"
+
 msgid "Choose the branch or tag you would like to import"
 msgstr "Escolha uma ramificação ou tag que gostaria de importar"
 
 msgid "Choose the type of custom variables to be imported"
 msgstr "Escolha um tipo de variáveis customizadas para ser importado"
+
+msgid "Choose transient storage"
+msgstr "Escolha o armazenamento transiente"
 
 msgid "Cidr"
 msgstr "Cidr"
@@ -8342,9 +8353,6 @@ msgstr "A classe \"%s\" foi salva"
 
 msgid "Class '%{name}' is not eligible for classification"
 msgstr "A classe '%{name}' não é elegível para classificação"
-
-msgid "Class '%{type}' is not eligible for classification"
-msgstr "A classe '%{type}' não é elegível para classificação"
 
 msgid "Class Schema Sequence was saved"
 msgstr "A sequência do esquemas de classes foi salva"
@@ -8432,6 +8440,9 @@ msgstr "Limpar Script"
 
 msgid "Clear cart"
 msgstr "Limpar carrinho de compras"
+
+msgid "Clear file"
+msgstr "Limpar arquivo"
 
 msgid "Clear selected Object Storage Containers"
 msgstr "Limpar contêineres de armazenamento de objetos selecionados"
@@ -9223,6 +9234,9 @@ msgstr "CloudNetwork|Status"
 msgid "CloudNetwork|Total vms"
 msgstr "CloudNetwork|Total de máquinas virtuais"
 
+msgid "CloudNetwork|Uid ems"
+msgstr "CloudNetwork|Uid ems"
+
 msgid "CloudNetwork|Vlan transparent"
 msgstr "CloudNetwork|VLAN transparente"
 
@@ -9601,6 +9615,9 @@ msgstr "CloudVolume|Status"
 msgid "CloudVolume|Supports safe delete"
 msgstr "CloudVolume|suporta exclusão segura"
 
+msgid "CloudVolume|Uid ems"
+msgstr "CloudVolume|Uid ems"
+
 msgid "CloudVolume|Volume type"
 msgstr "CloudVolume|Tipo de volume"
 
@@ -9828,11 +9845,8 @@ msgstr "Tag da empresa"
 msgid "Compare"
 msgstr "Comparar"
 
-msgid "Compare %{name}"
-msgstr "Comparar %{name}"
-
-msgid "Compare %{vm_or_template}"
-msgstr "Comparar o %{vm_or_template}"
+msgid "Compare %{type}"
+msgstr "Comparar %{type}"
 
 msgid "Compare List of Clusters"
 msgstr "Comparar lista de clusters"
@@ -10139,6 +10153,9 @@ msgstr "Condição|Towhat"
 
 msgid "Condition|Updated on"
 msgstr "Condição|Atualizado em"
+
+msgid "Config Pattern"
+msgstr "Padrão de configuração"
 
 msgid "Config Version"
 msgstr "Versão da configuração"
@@ -10709,6 +10726,9 @@ msgstr "Confirmar Edição"
 
 msgid "Confirm Password"
 msgstr "Confirmar senha"
+
+msgid "Confirm Reset"
+msgstr "Confirmar reconfiguração"
 
 msgid "Connect"
 msgstr "Conectar"
@@ -13485,9 +13505,6 @@ msgstr "Copiar"
 msgid "Copy %{model}"
 msgstr "Copiar %{model}"
 
-msgid "Copy %{record} was cancelled by the user"
-msgstr "A cópia %{record} foi cancelada pelo usuário"
-
 msgid "Copy Analysis Profile"
 msgstr "Copiar perfil de análise"
 
@@ -13593,11 +13610,8 @@ msgstr ""
 "A cópia do Painel \"%{original_name}\" Painel: \"%{name}\" foi salva com "
 "sucesso no Grupo \"%{group}\"."
 
-msgid "Copy of %{description}"
-msgstr "Cópia de %{description}"
-
-msgid "Copy of %{name}"
-msgstr "Cópia de %{name}"
+msgid "Copy of %{field}"
+msgstr "Cópia de %{field}"
 
 msgid "Copy of %{typ} Request"
 msgstr "Cópia da solicitação %{typ}"
@@ -13619,6 +13633,12 @@ msgstr "A cópia de um item do catálogo de serviços foi salva com sucesso"
 
 msgid "Copy of sample"
 msgstr "Cópia da amostra"
+
+msgid "Copy operation completed successfully"
+msgstr "A operação de cópia foi realizada com sucesso"
+
+msgid "Copy operation was cancelled by the user"
+msgstr "A operação de cópia foi cancelada pelo usuário"
 
 msgid "Copy original Request"
 msgstr "Copiar solicitação original"
@@ -14286,8 +14306,14 @@ msgstr "Usuário atual"
 msgid "Current Window"
 msgstr "Janela atual"
 
+msgid "Current group: %s"
+msgstr "Grupo atual: %s"
+
 msgid "Current pods"
 msgstr "Pods atuais"
+
+msgid "Current processor compatibility mode"
+msgstr "Modo de compatibilidade do processador atual"
 
 msgid "Current user lacks permissions to create a new snapshot for this VM"
 msgstr ""
@@ -14863,9 +14889,6 @@ msgstr "Pontos de dados"
 msgid "Data Type"
 msgstr "Tipo de dados"
 
-msgid "Data Type:"
-msgstr "Tipo de dados:"
-
 msgid "Data View"
 msgstr "Visualização de Dados"
 
@@ -15023,16 +15046,6 @@ msgstr "O armazenamento de dados não existe. Não é possível incluir o disco"
 
 msgid "Datastore import was cancelled or is finished"
 msgstr "A importação do armazenamento de dados foi cancelada ou encerrada"
-
-msgid ""
-"Datastore import was successful.\nNamespaces updated/added: %{namespace_stats}"
-"\nClasses updated/added: %{class_stats}\nInstances updated/added: %{"
-"instance_stats}\nMethods updated/added: %{method_stats}"
-msgstr ""
-"A importação de armazenamento de dados foi bem-sucedida.\nNamespaces "
-"atualizados/incluídos: %{namespace_stats}\nClasses atualizadas/incluídas: %{"
-"class_stats}\nInstâncias atualizadas/incluídas: %{instance_stats}\nMétodos "
-"atualizados/incluídos: %{method_stats}"
 
 msgid ""
 "Datastore import was successful. Added/Updated %{namespace_stats} Namespaces, "
@@ -15404,9 +15417,6 @@ msgstr "Excluir todas as tarefas"
 msgid "Delete Analysis Profile"
 msgstr "Excluir perfil de análise"
 
-msgid "Delete Ansible Tower Provider"
-msgstr "Excluir o Provedor Ansible Tower"
-
 msgid "Delete Automate Class"
 msgstr "Excluir classe automatizada"
 
@@ -15421,6 +15431,9 @@ msgstr "Excluir método automatizado"
 
 msgid "Delete Automate Namespace"
 msgstr "Excluir namespace automatizado"
+
+msgid "Delete Automation Provider"
+msgstr "Excluir provedor de automação"
 
 msgid "Delete Automation Providers"
 msgstr "Excluir provedores de automação"
@@ -16118,6 +16131,9 @@ msgstr "Depende do grupo"
 
 msgid "Depends on Service"
 msgstr "Depende do serviço"
+
+msgid "Deploy"
+msgstr "Implementar"
 
 msgid "Deploy Server"
 msgstr "Servidor de implementação"
@@ -18484,6 +18500,9 @@ msgstr "EVM: máquinas virtuais descobertas recentemente"
 msgid "Edit"
 msgstr "Edição"
 
+msgid "Edit %s"
+msgstr "Editar %s"
+
 msgid "Edit %s Field"
 msgstr "Editar o campo %s"
 
@@ -18660,6 +18679,9 @@ msgstr "Edição de evento cancelada pelo usuário"
 
 msgid "Edit Expression"
 msgstr "Editar expressão"
+
+msgid "Edit Field"
+msgstr "Editar campo"
 
 msgid "Edit Field Details"
 msgstr "Editar detalhes do campo"
@@ -18857,6 +18879,9 @@ msgstr "Editar sequência do esquema automatizado"
 
 msgid "Edit Sequence of Dashboards"
 msgstr "Editar sequência de painéis"
+
+msgid "Edit Sequence of User Groups for External Authentication"
+msgstr "Editar a sequência de grupos de usuários para autenticação externa"
 
 msgid "Edit Sequence of User Groups for LDAP Look Up"
 msgstr "Editar sequência de grupos de usuários para procura LDAP"
@@ -19067,8 +19092,8 @@ msgstr "Editar tags para este playbook do Ansible"
 msgid "Edit Tags for this Ansible Repository"
 msgstr "Editar tags para este repositório do Ansible"
 
-msgid "Edit Tags for this Ansible Tower Provider"
-msgstr "Editar tags para este Ansible Tower Provider"
+msgid "Edit Tags for this Automation Provider"
+msgstr "Editar tags deste provedor de automação"
 
 msgid "Edit Tags for this Availability Zone"
 msgstr "Editar tags para esta zona de disponibilidade"
@@ -19647,6 +19672,9 @@ msgstr "Editar designações"
 msgid "Edit assignments for this Alert Profile"
 msgstr "Editar designações para este perfil de alerta"
 
+msgid "Edit of \"%s\" was cancelled by the user"
+msgstr "A edição de \"%s\" foi cancelada pelo usuário"
+
 msgid "Edit of %s \"%s\" was canceled by the user."
 msgstr "A edição do %s \"%s\" foi cancelada pelo usuário."
 
@@ -19678,9 +19706,8 @@ msgstr "A edição do perfil de análise foi cancelada pelo usuário"
 msgid "Edit of Automate Class \"%{name}\" was cancelled by the user"
 msgstr "A edição da classe automatizada \"%{name}\" foi cancelada pelo usuário"
 
-msgid "Edit of Automate Instance \"%{name}\" was cancelled by the user"
-msgstr ""
-"A edição da instância de automação \"%{name}\" foi cancelada pelo usuário"
+msgid "Edit of Automate Instance \"%s\" was cancelled by the user"
+msgstr "A edição da instância de automação \"%s\" foi cancelada pelo usuário"
 
 msgid "Edit of Automate Method \"%{name}\" was cancelled by the user"
 msgstr "A edição do Método automatizado \"%{name}\" foi cancelada pelo usuário"
@@ -20212,9 +20239,6 @@ msgstr "Editando o Diálogo de serviço %{name}"
 msgid "Editing %{record_name}"
 msgstr "Editando %{record_name}"
 
-msgid "Editing %{vm_or_template} \"%{name}\""
-msgstr "Editando o %{vm_or_template} \"%{name}\""
-
 msgid "Editing Action \"%{name}\""
 msgstr "Editando a ação \"%{name}\""
 
@@ -20316,6 +20340,9 @@ msgstr "Editando o mapeamento de tag a partir do rótulo \"%{name}\""
 
 msgid "Editor"
 msgstr "Editor"
+
+msgid "Effective Processor Compatibility Mode"
+msgstr "Modo de compatibilidade do processador efetivo"
 
 msgid "Either Host Name or Cluster Name is required"
 msgstr "É obrigatório informar o nome do host ou o nome do cluster"
@@ -21140,14 +21167,8 @@ msgstr "Erro ao excluir o item \"%s\": %s"
 msgid "Error details: %{message}"
 msgstr "Detalhes do erro: %{message}"
 
-msgid "Error during '%{record} copy': %{error_message}"
-msgstr "Erro durante '%{record} copy': %{error_message}"
-
 msgid "Error during '%{task}': %{error_message}"
 msgstr "Erro durante '%{task}': %{error_message}"
-
-msgid "Error during '%{task}': %{message}"
-msgstr "Erro durante '%{task}': %{message}"
 
 msgid "Error during '%{task}': Expression element is required"
 msgstr "Erro durante '%{task}': o elemento de Expressão é necessário"
@@ -21160,9 +21181,6 @@ msgstr "Erro durante 'Appliance restart': %{message}"
 
 msgid "Error during 'C & U Gap Collection': %{message}"
 msgstr "Erro durante 'C & U Gap Collection': %{message}"
-
-msgid "Error during 'LDAP Group Look Up': %{message}"
-msgstr "Erro durante 'LDAP Group Look Up': %{message}"
 
 msgid "Error during 'Orchestration Template Copy': %{error_message}"
 msgstr "Erro durante 'Orchestration Template Copy': %{error_message}"
@@ -21188,14 +21206,8 @@ msgstr "Erro durante 'Save Tags': %{error_message}"
 msgid "Error during 'Validate': %{error_message}"
 msgstr "Erro durante 'Validate': %{error_message}"
 
-msgid "Error during 'Validate': %{message}"
-msgstr "Erro durante 'Validate': %{message}"
-
 msgid "Error during 'add': %{error_message}"
 msgstr "Erro durante 'add': %{error_message}"
-
-msgid "Error during 'add': %{message}"
-msgstr "Erro durante 'add': %{message}"
 
 msgid "Error during 'apply': %{error}"
 msgstr "Erro durante 'apply': %{error}"
@@ -21205,9 +21217,6 @@ msgstr "Erro durante 'edit': %{field_name} %{error_message}"
 
 msgid "Error during 'save': %{error_message}"
 msgstr "Erro durante 'save': %{error_message}"
-
-msgid "Error during 'save': %{message}"
-msgstr "Erro durante 'save': %{message}"
 
 msgid "Error during 'upload': %{message}"
 msgstr "Erro durante 'upload': %{message}"
@@ -21234,6 +21243,9 @@ msgstr ""
 msgid "Error during alarms: %{messages}"
 msgstr "Erro durante os alarmes: %{messages}"
 
+msgid "Error during copy operation"
+msgstr "Erro durante a operação de cópia"
+
 msgid "Error during deletion: %{error_message}"
 msgstr "Erro durante a exclusão: %{error_message}"
 
@@ -21246,9 +21258,8 @@ msgstr "Erro durante a busca do repositório: %{message}"
 msgid "Error during repository setup: %{error_message}"
 msgstr "Erro durante a configuração do repositório: %{error_message}"
 
-msgid "Error during reset: Status [%{status}] Message [%{message}]"
-msgstr ""
-"Erro durante a reconfiguração: Status [%{status}] Mensagem [%{message}]"
+msgid "Error during reset: %{message}"
+msgstr "Erro durante a reconfiguração: %{message}"
 
 msgid "Error during sending test email: %{class_name}, %{error_message}"
 msgstr ""
@@ -21294,11 +21305,17 @@ msgstr "Erro ao ativar o botão customizado: nenhum item foi selecionado."
 msgid "Error launching: \"%{task_description}\" %{error_message}"
 msgstr "Erro de ativação: \"%{task_description}\" %{error_message}"
 
+msgid "Error loading automate domains"
+msgstr "Erro ao carregar os domínios de automação"
+
 msgid "Error loading content: %s"
 msgstr "Erro ao carregar o conteúdo: %s"
 
 msgid "Error loading data:"
 msgstr "Erro ao carregar dados:"
+
+msgid "Error loading instance data"
+msgstr "Erro ao carregar dados de instância"
 
 msgid "Error message goes here"
 msgstr "A mensagem de erro é inserida aqui"
@@ -21317,6 +21334,9 @@ msgid ""
 msgstr ""
 "Erro retornado do processamento do processamento de eventos do %{name} na "
 "Automatização: %{error_message}"
+
+msgid "Error saving instance"
+msgstr "Erro ao salvar a instância"
 
 msgid "Error saving priority order"
 msgstr "Erro ao salvar a ordem de prioridade"
@@ -21705,6 +21725,9 @@ msgstr "Eventos não são suportados para esta região"
 
 msgid "Events for VM prod_webserver"
 msgstr "Eventos de prod_webserver da máquina virtual"
+
+msgid "Every"
+msgstr "Cada"
 
 msgid "Everything"
 msgstr "Tudo"
@@ -22141,9 +22164,6 @@ msgstr "Exportar políticas selecionadas"
 
 msgid "Export Selected Profiles"
 msgstr "Exportar perfis selecionados"
-
-msgid "Export all classes and instances"
-msgstr "Exportar todas as classes e instâncias"
 
 msgid "Export all classes and instances to a file"
 msgstr "Exportar todas as classes e instâncias para um arquivo"
@@ -22720,11 +22740,26 @@ msgstr "Serviços de sistema com falha do %{name}"
 msgid "Failed to %{snapshot_op} snapshot of %{subject}: %{error}"
 msgstr "Falha na captura instantânea %{snapshot_op} do %{subject}: %{error}"
 
+msgid "Failed to check task status"
+msgstr "Falha ao verificar o status da tarefa"
+
 msgid "Failed to delete %s %s."
 msgstr "Falha ao excluir %s %s."
 
+msgid "Failed to fetch domains"
+msgstr "Falha ao buscar os domínios"
+
+msgid "Failed to fetch git repository"
+msgstr "Falha ao buscar o repositório Git"
+
+msgid "Failed to import from git"
+msgstr "Falha na importação do Git"
+
 msgid "Failed to load chargeback data"
 msgstr "Falha ao carregar os dados de chargeback"
+
+msgid "Failed to load data"
+msgstr "Falha ao carregar dados"
 
 msgid "Failed to load image labels"
 msgstr "Falha ao carregar os rótulos de imagem"
@@ -22746,6 +22781,9 @@ msgstr "Falha ao salvar as configurações de coleta de C & U"
 
 msgid "Failed to save chargeback assignments"
 msgstr "Falha ao salvar as designações de chargeback"
+
+msgid "Failed to submit git URL"
+msgstr "Falha ao enviar a URL do Git"
 
 msgid "Failover"
 msgstr "Recuperação de falhas"
@@ -22990,6 +23028,9 @@ msgstr "Filtro"
 
 msgid "Filter Expression"
 msgstr "Filtrar expressão"
+
+msgid "Filter Item"
+msgstr "Filtrar item"
 
 msgid "Filter Message"
 msgstr "Filtrar mensagem"
@@ -23911,6 +23952,9 @@ msgid_plural "Git Branches"
 msgstr[0] "Ramificação Git"
 msgstr[1] "Ramificações Git"
 
+msgid "Git Import Disabled"
+msgstr "Importação do Git desativada"
+
 msgid "Git Reference"
 msgid_plural "Git References"
 msgstr[0] "Referência de Git"
@@ -23929,9 +23973,6 @@ msgstr[1] "Tags Git"
 
 msgid "Git URL"
 msgstr "URL Git"
-
-msgid "Git URL:"
-msgstr "URL de Git:"
 
 msgid "Git based refresh canceled"
 msgstr "Atualização com base em Git cancelada"
@@ -24018,6 +24059,9 @@ msgstr "Procura global:"
 
 msgid "Glusterfs Endpoint Name"
 msgstr "Nome do ponto de extremidade GlusterFS"
+
+msgid "Go to my start page"
+msgstr "Ir para minha página inicial"
 
 msgid "Google"
 msgstr "Google"
@@ -26236,13 +26280,10 @@ msgstr "Sanfona Importar/exportar"
 msgid "Import Cloud Template"
 msgstr "Importar modelo de nuvem"
 
-msgid "Import Datastore classes"
-msgstr "Importar classes do armazenamento de dados"
-
 msgid "Import Datastore classes (*.zip)"
 msgstr "Importar classes do armazenamento de dados (*.zip)"
 
-msgid "Import Datastore via git"
+msgid "Import Datastore via Git"
 msgstr "Importar armazenamento de dados via Git"
 
 msgid "Import File Upload"
@@ -26274,6 +26315,9 @@ msgstr "Importar widgets"
 msgid "Import cancelled by user"
 msgstr "Importação cancelada pelo usuário"
 
+msgid "Import failed"
+msgstr "Falha na importação"
+
 msgid "Import file cannot be empty"
 msgstr "O arquivo de importação não pode estar vazio"
 
@@ -26283,8 +26327,17 @@ msgstr "Upload de arquivo de importação"
 msgid "Import file was uploaded successfully"
 msgstr "O arquivo de importação foi transferido por upload com sucesso"
 
+msgid "Import from Domain"
+msgstr "Importar do domínio"
+
+msgid "Import from Git Repository"
+msgstr "Importar do repositório Git"
+
 msgid "Import not available due to conflicts"
 msgstr "Importação não disponível devido a conflitos"
+
+msgid "Import to Existing Domain"
+msgstr "Importar para um domínio existente"
 
 msgid "Import validation complete: %{good_record}, %{bad_record}"
 msgstr "Validação de importação concluída. %{good_record}, %{bad_record}"
@@ -26301,8 +26354,14 @@ msgstr "ImportFileUpload|Descrição da região"
 msgid "ImportFileUpload|Region number"
 msgstr "ImportFileUpload|Número da região"
 
-msgid "Imported from git"
-msgstr "Importado do Git"
+msgid "Imported %{git_url}@%{branch_or_tag}"
+msgstr "Importado %{git_url}@%{branch_or_tag}"
+
+msgid "Importing datastore..."
+msgstr "Importando o armazenamento de dados..."
+
+msgid "Importing from git..."
+msgstr "Importando do Git..."
 
 msgid "In My LDAP Group?"
 msgstr "Em meu grupo LDAP?"
@@ -26359,6 +26418,12 @@ msgstr "Incremental?"
 
 msgid "Index"
 msgstr "Índice"
+
+msgid ""
+"Indicates if all volumes must reside in the same storage pool [true, false]"
+msgstr ""
+"Indica se todos os volumes devem residir no mesmo conjunto de armazenamento ["
+"true, false]"
 
 msgid "Infinity"
 msgstr "Infinito"
@@ -26755,6 +26820,9 @@ msgstr "Ação inválida do botão"
 msgid "Invalid chart definition"
 msgstr "Definição de gráfico inválida"
 
+msgid "Invalid copy action"
+msgstr "Ação de cópia inválida"
+
 msgid "Invalid credential_field %{field}, allowed values are %{allowed_fields}"
 msgstr ""
 "Credential_field%{field}inválido, os valores permitidos são %{allowed_fields}"
@@ -26868,9 +26936,7 @@ msgid "It is not allowed to have more than 20 embedded methods"
 msgstr "Não é permitido ter mais de 20 métodos integrados"
 
 msgid "Item"
-msgid_plural "Items"
-msgstr[0] "Item"
-msgstr[1] "Itens"
+msgstr "Item"
 
 msgid "Item Type"
 msgstr "Tipo de item"
@@ -26982,6 +27048,9 @@ msgstr "KB"
 msgid "KBps"
 msgstr "KBps"
 
+msgid "Keep OVA file on completion"
+msgstr "Manter arquivo OVA na conclusão"
+
 msgid "Kerberos"
 msgstr "Kerberos"
 
@@ -27061,15 +27130,6 @@ msgstr "Domínios LDAP"
 
 msgid "LDAP Group"
 msgstr "Grupo LDAP"
-
-msgid "LDAP Group Look Up"
-msgstr "Procura no grupo LDAP"
-
-msgid "LDAP Group Lookup"
-msgstr "Procura no grupo LDAP"
-
-msgid "LDAP Groups for User"
-msgstr "Grupos LDAP para usuários"
 
 msgid "LDAP Region"
 msgstr "Região LDAP"
@@ -27192,9 +27252,6 @@ msgstr "Lan|Atualizado em"
 
 msgid "Last"
 msgstr "Último"
-
-msgid "Last 1000 lines from server %{name} [%{id}] in zone %{zone}"
-msgstr "Últimas 1.000 linhas do servidor %{name} [%{id}] na zona %{zone}"
 
 msgid ""
 "Last 1000 lines from server %{server_name} [%{server_id}] in zone %{zone_name}"
@@ -27869,11 +27926,17 @@ msgstr "LoadBalancer|Total de máquinas virtuais"
 msgid "Loading chargeback data..."
 msgstr "Carregando dados de chargeback..."
 
+msgid "Loading domains..."
+msgstr "Carregando domínios..."
+
 msgid "Loading expression fields..."
 msgstr "Carregando campos de expressão..."
 
 msgid "Loading image labels..."
 msgstr "Carregando rótulos de imagem..."
+
+msgid "Loading import data..."
+msgstr "Carregando dados de importação..."
 
 msgid "Loading label values..."
 msgstr "Carregando valores de rótulo..."
@@ -28022,6 +28085,9 @@ msgid "Logs for this %{product} Server are not available for viewing"
 msgstr ""
 "Os Logs para este %{product} Server não estão disponíveis para visualização"
 
+msgid "Logs of this Pod"
+msgstr "Logs deste Pod"
+
 msgid "Long Description"
 msgstr "Descrição longa"
 
@@ -28101,6 +28167,9 @@ msgstr "Configuração principal"
 
 msgid "Main Info"
 msgstr "Informações principais"
+
+msgid "Main Menu"
+msgstr "Menu Main"
 
 msgid "Main Route Table"
 msgstr "Tabela de rotas principal"
@@ -28808,8 +28877,26 @@ msgstr "Maximizar"
 msgid "Maximum"
 msgstr "Máximo"
 
+msgid "Maximum Memory"
+msgstr "Memória máxima"
+
+msgid "Maximum Memory (GiB)"
+msgstr "Memória máxima (GiB)"
+
+msgid "Maximum Processors"
+msgstr "Máximo de processadores"
+
 msgid "Maximum Transmission Unit"
 msgstr "Unidade Máxima de Transmissão"
+
+msgid "Maximum Virtual Processors"
+msgstr "Máximo de processadores virtuais"
+
+msgid "Maximum amount of memory that can be allocated (in GiB)"
+msgstr "Quantidade máxima de memória que pode ser alocada (em GiB)"
+
+msgid "Maximum number of processors that can be allocated"
+msgstr "Número máximo de processadores que podem ser alocados"
 
 msgid "Md5"
 msgstr "Md5"
@@ -29226,6 +29313,12 @@ msgstr "Espelhamento de memória"
 
 msgid "Memory Mirroring capability of the Host."
 msgstr "Recurso de espelhamento de memória do host."
+
+msgid "Memory Region Size"
+msgstr "Tamanho da região de memória"
+
+msgid "Memory Region Size in MB."
+msgstr "Tamanho da região de memória em MB."
 
 msgid "Memory Reserve"
 msgstr "Reserva de memória"
@@ -30417,6 +30510,9 @@ msgstr "Métrica|Adição do delta em espera da porc. de CPU V"
 msgid "Microsoft SCVMM Provider"
 msgstr "Provedor Microsoft SCVMM"
 
+msgid "Migratable"
+msgstr "Migrável"
+
 msgid "Migrate %{vm_or_template}"
 msgstr "Migrar o %{vm_or_template}"
 
@@ -30527,6 +30623,24 @@ msgstr "Minimizar"
 
 msgid "Minimum"
 msgstr "Mínimo"
+
+msgid "Minimum Memory"
+msgstr "Memória Mínima"
+
+msgid "Minimum Memory (GiB)"
+msgstr "Memória mínima (GiB)"
+
+msgid "Minimum Processors"
+msgstr "Mínimos de processadores"
+
+msgid "Minimum Virtual Processors"
+msgstr "Processadores virtuais mínimos"
+
+msgid "Minimum amount of memory that can be allocated (in GiB)"
+msgstr "Quantidade mínima de memória que pode ser alocada (em GiB)"
+
+msgid "Minimum number of processors that can be allocated"
+msgstr "Número mínimo de processadores que podem ser alocados"
 
 msgid "Minute"
 msgstr "Minuto"
@@ -33720,6 +33834,9 @@ msgstr ""
 msgid "Namespace"
 msgstr "Espaço de nomes"
 
+msgid "Namespace tree"
+msgstr "Árvore de namespaces"
+
 msgid "Naming"
 msgstr "Nomenclatura"
 
@@ -34460,12 +34577,6 @@ msgstr ""
 msgid "No %{member} selected to set to Synchronous"
 msgstr "Nenhum %{member} foi selecionado para ser configurado como Synchronous"
 
-msgid "No %{member} were selected to move left"
-msgstr "Nenhum %{member} foi selecionado para ser movido para a esquerda"
-
-msgid "No %{member} were selected to move right"
-msgstr "Nenhum %{member} foi selecionado para ser movido para a direita"
-
 msgid "No %{model} were %{state} %{time}"
 msgstr "Nenhum %{model} foi %{state} %{time}"
 
@@ -34599,6 +34710,9 @@ msgstr "Nenhum Modelo de customização foi selecionado para %{button}"
 msgid "No Daily data is available"
 msgstr "Não há dados Por dia disponíveis"
 
+msgid "No Data"
+msgstr "Sem dados"
+
 msgid "No Date/Time value specified"
 msgstr "Nenhum valor de data/hora especificado"
 
@@ -34607,6 +34721,9 @@ msgstr "Nenhuma caixa de diálogo"
 
 msgid "No Dialogs were selected for %{task}"
 msgstr "Nenhum Diálogo foi selecionado para %{task}"
+
+msgid "No Domains Available"
+msgstr "Nenhum domínio disponível"
 
 msgid "No EMS defined"
 msgstr "Nenhum EMS definido"
@@ -34946,8 +35063,14 @@ msgstr "Não há dados disponíveis"
 msgid "No data available."
 msgstr "Não há dados disponíveis."
 
+msgid "No domains found in the import file"
+msgstr "Nenhum domínio encontrado no arquivo de importação"
+
 msgid "No drift history found"
 msgstr "Nenhum histórico de desvio foi localizado"
+
+msgid "No enabled domains available to import to"
+msgstr "Não há domínios habilitados disponíveis para importação"
 
 msgid "No entries found for %s"
 msgstr "Nenhuma entrada localizada para %s"
@@ -35039,6 +35162,9 @@ msgstr "Não é possível selecionar mais de 10 análises para o desvio"
 
 msgid "No more than 32 %{model} can be selected for Compare"
 msgstr "No máximo 32 %{model} podem ser selecionados para a Comparação"
+
+msgid "No namespaces available for the selected domain"
+msgstr "Não há namespaces disponíveis para o domínio selecionado"
 
 msgid "No notes have been entered."
 msgstr "Nenhuma nota foi inserida."
@@ -35638,6 +35764,9 @@ msgstr "Modelo de OVF é necessário, selecione um na lista"
 
 msgid "OVF Templates"
 msgstr "Modelos OVF"
+
+msgid "Object"
+msgstr "Object"
 
 msgid "Object Attribute"
 msgstr "Atributo do objeto"
@@ -36983,9 +37112,6 @@ msgstr "Senha"
 msgid "Password (API Key)"
 msgstr "Senha (chave de API)"
 
-msgid "Password (optional):"
-msgstr "Senha (opcional):"
-
 msgid "Password Complex"
 msgstr "Senha complexa"
 
@@ -37000,6 +37126,9 @@ msgstr "Senha do método de escalada de privilégio"
 
 msgid "Password for this credential"
 msgstr "Senha desta credencial"
+
+msgid "Password is not strong enough"
+msgstr "A senha não é suficientemente forte"
 
 msgid "Password or Password+One-Time-Password"
 msgstr "Senha ou senha + senha única"
@@ -38293,6 +38422,9 @@ msgstr "PlacementGroup | Descrição da região"
 msgid "PlacementGroup|Region number"
 msgstr "PlacementGroup | Número da região"
 
+msgid "PlacementGroup|Uid ems"
+msgstr "PlacementGroup|Uid ems"
+
 msgid "Platform"
 msgstr "Plataforma"
 
@@ -38399,11 +38531,20 @@ msgstr "Selecione um arquivo JSON contendo os nós que você deseja registrar."
 msgid "Please select a node from the tree to edit."
 msgstr "Selecione um nó da árvore para editar."
 
+msgid "Please select a pattern"
+msgstr "Selecione um padrão"
+
 msgid "Please select a type."
 msgstr "Selecione um tipo."
 
 msgid "Please select an Instance Type from above"
 msgstr "Selecione um tipo de instância acima"
+
+msgid "Please select at least one namespace to import"
+msgstr "Selecione pelo menos um namespace para importar"
+
+msgid "Please select at least one server"
+msgstr "Selecione pelo menos um servidor"
 
 msgid "Please try again"
 msgstr "Tente novamente"
@@ -38848,6 +38989,9 @@ msgstr "Contagem de slot da fonte de alimentação"
 msgid "Preemptible"
 msgstr "Preemptiva"
 
+msgid "Preferred Processor Compatibility Mode"
+msgstr "Modo de compatibilidade do processador preferencial"
+
 msgid "Present"
 msgstr "Apresentar"
 
@@ -39047,6 +39191,9 @@ msgstr "Unidades de processamento"
 
 msgid "Processor"
 msgstr "Process."
+
+msgid "Processor Compatibility Mode"
+msgstr "Modo de compatibilidade do processador"
 
 msgid "Processor Cores Per Socket"
 msgstr "Cores do processador por soquete"
@@ -40203,6 +40350,11 @@ msgstr "Reconfigurar serviços"
 
 msgid "Reconfigure Services Options"
 msgstr "Reconfigurar opções de serviços"
+
+msgid "Reconfigure Task"
+msgid_plural "Reconfigure Tasks"
+msgstr[0] "Reconfigurar tarefa"
+msgstr[1] "Reconfigurar tarefas"
 
 msgid "Reconfigure VM CPU"
 msgstr "Reconfigurar a CPU da VM"
@@ -41923,8 +42075,14 @@ msgstr "A remoção da interface foi cancelada pelo usuário."
 msgid "Rename Cloud Database"
 msgstr "Renomear banco de dados em cloud"
 
+msgid "Rename Snapshot"
+msgstr "Renomear captura instantânea"
+
 msgid "Rename VM"
 msgstr "Renomear a VM"
+
+msgid "Rename a snapshot for VMs"
+msgstr "Renomear uma captura instantânea de VMs"
 
 msgid "Rename this VM"
 msgstr "Renomear esta máquina virtual"
@@ -42113,6 +42271,9 @@ msgstr "A tabela do relatório é nil"
 
 msgid "Reporting Workers"
 msgstr "Trabalhadores de geração de relatório"
+
+msgid "Reporting role not enabled"
+msgstr "Função de relatório não ativada"
 
 msgid "Reports"
 msgstr "Relatórios"
@@ -42395,11 +42556,14 @@ msgstr "Reconfigurar um host"
 msgid "Reset all Policy Simulation options"
 msgstr "Reconfigurar todas as opções de simulação de política"
 
-msgid "Reset all components in the following domains: %{domains}"
-msgstr "Reconfigurar todos os componentes nos domínios a seguir: %{domains}"
+msgid "Reset all components in the following domains: %s"
+msgstr "Reconfigure todos os componentes nos seguintes domínios: %s"
 
 msgid "Reset all options"
 msgstr "Reconfigurar todas as opções"
+
+msgid "Reset failed"
+msgstr "Falha de reconfiguração"
 
 msgid "Reset the filter"
 msgstr "Reconfigurar o filtro"
@@ -42427,6 +42591,9 @@ msgstr "Reconfigurar este item?"
 
 msgid "Reset to Default"
 msgstr "Reconfigurar para Padrão"
+
+msgid "Resetting datastore..."
+msgstr "Reconfigurando armazenamento de dados..."
 
 msgid "Resides on VM"
 msgstr "Reside na máquina virtual"
@@ -42940,6 +43107,9 @@ msgstr "O tipo de resultado %{result_type} não é suportado"
 msgid "Results"
 msgstr "Resultados"
 
+msgid "Results %s"
+msgstr "Resultados %s"
+
 msgid "Resume"
 msgstr "Retomar"
 
@@ -43098,6 +43268,12 @@ msgstr "Reverter para a captura instantânea selecionada em modelos"
 
 msgid "Revert to selected snapshot on VMs"
 msgstr "Reverter para a captura instantânea selecionada em máquinas virtuais"
+
+msgid "Review Datastore Import"
+msgstr "Revisar importação do armazenamento de dados"
+
+msgid "Review Git Import"
+msgstr "Revisar importação do Git"
 
 msgid "Revoke Sessions of Other Users"
 msgstr "Revogar as sessões de outros usuários"
@@ -43857,6 +44033,9 @@ msgstr ""
 "Filtro (de exibição) secundário - filtra as linhas com base nos campos da "
 "tabela filho"
 
+msgid "Secondary Menu"
+msgstr "Menu secundário"
+
 msgid "Secret Access Key"
 msgstr "Chave de acesso secreta"
 
@@ -44206,6 +44385,9 @@ msgstr "Selecionar o ponto de entrada %{entry_point}"
 msgid "Select Entry Point Instance"
 msgstr "Selecionar instância de ponto de entrada"
 
+msgid "Select Entry Point Namespace"
+msgstr "Selecionar namespace do ponto de entrada"
+
 msgid "Select Group"
 msgstr "Selecionar grupo"
 
@@ -44214,6 +44396,9 @@ msgstr "Selecionar instâncias para copiar"
 
 msgid "Select Methods to copy"
 msgstr "Selecionar métodos para copiar"
+
+msgid "Select Namespaces to Import"
+msgstr "Selecionar namespaces para importar"
 
 msgid "Select Policy Profiles"
 msgstr "Selecionar perfis de política"
@@ -44247,8 +44432,14 @@ msgstr "Selecione uma imagem PXE"
 msgid "Select a PXE Server"
 msgstr "Selecione um servidor PXE"
 
+msgid "Select a Physical Server"
+msgstr "Selecionar um servidor físico"
+
 msgid "Select a Policy Profile to add:"
 msgstr "Selecione um perfil de política para incluir:"
+
+msgid "Select a Server Profile"
+msgstr "Selecionar um perfil do servidor"
 
 msgid "Select a VM to Submit the Simulation Options"
 msgstr "Selecionar uma máquina virtual para enviar as opções de simulação"
@@ -44395,17 +44586,8 @@ msgstr "Selecionar moeda"
 msgid "Select currency: "
 msgstr "Selecione a moeda: "
 
-msgid "Select domain you wish to import from:"
-msgstr "Selecione o domínio a partir do qual gostaria de importar:"
-
-msgid "Select existing domain to import into:"
-msgstr "Selecione o domínio existente para o qual importar:"
-
 msgid "Select methods"
 msgstr "Selecionar métodos"
-
-msgid "Select namespaces you wish to import:"
-msgstr "Selecione os namespaces que deseja importar:"
 
 msgid "Select one or more Groups to delete"
 msgstr "Selecione um ou mais grupos para excluir"
@@ -44415,16 +44597,6 @@ msgstr "Selecione um ou mais usuários para excluir"
 
 msgid "Select one or more items to delete"
 msgstr "Selecione um ou mais itens para excluir"
-
-msgid "Select only one or consecutive %{member} to move down"
-msgstr ""
-"Selecione apenas um ou mais %{member} consecutivos para serem movidos para "
-"baixo"
-
-msgid "Select only one or consecutive %{member} to move up"
-msgstr ""
-"Selecione apenas um ou mais %{member} consecutivos para serem movidos para "
-"cima"
 
 msgid "Select only one or consecutive %{name} to move down"
 msgstr "Selecione apenas um ou mais %{name} consecutivos para mover para baixo"
@@ -44565,6 +44737,9 @@ msgstr ""
 
 msgid "Selected methods"
 msgstr "Métodos selecionados"
+
+msgid "Selected path:"
+msgstr "Caminho selecionado:"
 
 msgid "Selected:"
 msgstr "Selecionado:"
@@ -45555,6 +45730,9 @@ msgstr "Serviço|Aviso de desativação"
 
 msgid "Service|Retires on"
 msgstr "Serviço|Data de desativação"
+
+msgid "Service|V total direct service children"
+msgstr "Serviço|Número total de crianças atendidas diretamente"
 
 msgid "Service|V total vms"
 msgstr "Serviço|Total de máquinas virtuais V"
@@ -47605,6 +47783,9 @@ msgstr "Nome do armazenamento"
 msgid "Storage Pool"
 msgstr "Conjunto de armazenamentos"
 
+msgid "Storage Pool Affinity"
+msgstr "Afinidade do conjunto de armazenamentos"
+
 msgid "Storage Profile"
 msgstr "Perfil de armazenamento"
 
@@ -47662,6 +47843,9 @@ msgstr "Taxa usada de armazenamento"
 
 msgid "Storage file"
 msgstr "Arquivo de armazenamento"
+
+msgid "Storage pool where the server is deployed"
+msgstr "Conjunto de armazenamentos onde o servidor está implementado"
 
 msgid "Storage profile"
 msgstr "Perfil de armazenamento"
@@ -48196,9 +48380,6 @@ msgstr "O Subscription Manager falhou ao ativar o repositório %{repo_name}"
 msgid "Subscriptions Changed"
 msgstr "Assinaturas alteradas"
 
-msgid "Substitution:"
-msgstr "Substituição:"
-
 msgid "Subtype"
 msgstr "Subtipo"
 
@@ -48220,6 +48401,11 @@ msgstr[0] ""
 "O relatório salvo foi excluído com sucesso do banco de dados %{product} "
 msgstr[1] ""
 "Os relatórios salvos foram excluídos com sucesso do banco de dados %{product}"
+
+msgid "Successfully found git repository, please choose a branch or tag"
+msgstr ""
+"Repositório Git encontrado com sucesso. Escolha uma ramificação ou "
+"identificação"
 
 msgid "Successfully refreshed!"
 msgstr "Atualizado com sucesso!"
@@ -48462,6 +48648,9 @@ msgstr "Comutador|EMS de Uid"
 
 msgid "Switch|Updated on"
 msgstr "Comutador|Atualizado em"
+
+msgid "Switch|Virtual bridge mode"
+msgstr "Switch | Modo ponte virtual"
 
 msgid "Sync"
 msgstr "Sincronizar"
@@ -49281,6 +49470,15 @@ msgstr "A Rede tem VMIs ativos relacionados a ela"
 msgid "The Physical Storage is not connected to an active Manager"
 msgstr "O Armazenamento físico não está conectado a um Gerenciador ativo"
 
+msgid "The Pod is no longer active"
+msgstr "O Pod não está mais ativo"
+
+msgid "The Pod is not associated with a project"
+msgstr "O Pod não está associado a um projeto"
+
+msgid "The Pod is not associated with an active provider"
+msgstr "O Pod não está associado a nenhum provedor ativo"
+
 msgid "The PowerVM management master of this host is a HMC."
 msgstr "O mestre de gerenciamento do PowerVM deste host é um HMC."
 
@@ -49449,6 +49647,9 @@ msgstr ""
 "A região padrão para os recursos. Se uma outra região for especificada no "
 "recurso, ela terá precedência."
 
+msgid "The effective processor compatibility mode of the VM"
+msgstr "O modo de compatibilidade efetivo do processador da VM"
+
 msgid "The email address assigned to the Google Compute Engine service account"
 msgstr ""
 "O endereço de e-mail designado à conta de serviço do Google Compute Engine"
@@ -49572,6 +49773,9 @@ msgstr "A fase de pré-planejamento da execução foi concluída."
 
 msgid "The pre-plan phase of the run is in progress."
 msgstr "A fase de pré-planejamento da execução está em andamento."
+
+msgid "The preferred processor compatibility mode of the VM"
+msgstr "O modo de compatibilidade de processador preferencial da VM"
 
 msgid "The provider does not support reconfigure disks"
 msgstr "O provedor não oferece suporte para reconfigurar discos"
@@ -50159,9 +50363,6 @@ msgstr "Linhas de tempo"
 msgid "Timelines for %{table} \"%{name}\""
 msgstr "Linhas de tempo para %{table} \"%{name}\""
 
-msgid "Timelines for %{virtual_machine} \"%{name}\""
-msgstr "Linhas de tempo para %{virtual_machine} \"%{name}\""
-
 msgid "Timeout"
 msgstr "Timeout"
 
@@ -50230,12 +50431,6 @@ msgstr "Hoje"
 
 msgid "Today (partial)"
 msgstr "Hoje (parcial)"
-
-msgid "Toggle"
-msgstr "Alternar"
-
-msgid "Toggle All/None"
-msgstr "Ativar tudo/nada"
 
 msgid "Toggle Fullscreen"
 msgstr "Alternar para tela inteira"
@@ -50909,9 +51104,6 @@ msgstr ""
 msgid "Unable to find task with id: [%{task_id}]"
 msgstr "Não é possível localizar a tarefa com o ID: [%{task_id}]"
 
-msgid "Unable to find user '%{name}'"
-msgstr "Não é possível localizar o usuário '%{name}'"
-
 msgid "Unable to find user '%{user}'"
 msgstr "Não é possível localizar o usuário '%{user}'"
 
@@ -51018,6 +51210,9 @@ msgstr "Espaço não alocado"
 msgid "Unarchive Services"
 msgstr "Desarquivar serviços"
 
+msgid "Unassign"
+msgstr "Remover designação"
+
 msgid "Unassign Server"
 msgstr "Remover designação do servidor"
 
@@ -51081,6 +51276,9 @@ msgstr "Unidades"
 
 msgid "Unknown"
 msgstr "Desconhecido"
+
+msgid "Unknown API error"
+msgstr "Erro desconhecido de API"
 
 msgid "Unknown Action"
 msgstr "Ação desconhecida"
@@ -51263,11 +51461,17 @@ msgstr "Fazer upload do Arquivo"
 msgid "Upload Script"
 msgstr "Fazer upload do script"
 
+msgid "Upload file"
+msgstr "Fazer upload de arquivo"
+
 msgid "Uploaded File '%{filename}'"
 msgstr "Arquivo transferido por upload '%{filename}'"
 
 msgid "Uploaded Image"
 msgstr "Imagem transferida por upload"
+
+msgid "Uploading..."
+msgstr "Fazendo upload..."
 
 msgid ""
 "Uptime - Minimum Time Between Startups for Collected Intervals (Seconds)"
@@ -51759,8 +51963,8 @@ msgstr "O usuário expira em"
 msgid "User Group Sequence was saved"
 msgstr "A sequência do grupo de usuários foi salva"
 
-msgid "User Group Sequencing for LDAP Look Up:"
-msgstr "Sequenciamento de grupos de usuários para procura no LDAP:"
+msgid "User Group Sequencing for External Authentication:"
+msgstr "Sequenciamento de Grupos de Usuários para Autenticação Externa:"
 
 msgid "User ID"
 msgstr "ID do usuário"
@@ -51811,9 +52015,6 @@ msgstr ""
 msgid "User must be defined"
 msgstr "O usuário deve ser definido"
 
-msgid "User must be entered to perform LDAP Group Look Up"
-msgstr "Deve-se inserir o usuário para fazer procuras no grupo LDAP"
-
 msgid "User name"
 msgstr "Nome de usuário"
 
@@ -51822,9 +52023,6 @@ msgstr "O usuário não existe mais"
 
 msgid "User script \"%{params}\" upload was successful"
 msgstr "O upload do script do usuário \"%{params}\" foi bem-sucedido"
-
-msgid "User to Look Up"
-msgstr "Usuário a ser procurado"
 
 msgid "User will input the value"
 msgstr "O usuário fornecerá o valor"
@@ -51835,14 +52033,14 @@ msgstr "O usuário inserirá um valor"
 msgid "User:"
 msgstr "Usuário:"
 
+msgid "User: %s"
+msgstr "Usuário: %s"
+
 msgid "UserID"
 msgstr "ID de usuário"
 
 msgid "Username"
 msgstr "Nome de usuário"
-
-msgid "Username (optional):"
-msgstr "Nome de usuário (opcional):"
 
 msgid "Username for this credential"
 msgstr "Nome de usuário desta credencial"
@@ -54263,6 +54461,12 @@ msgstr "VmOrTemplate | Tem políticas"
 msgid "VmOrTemplate|Has rdm disk"
 msgstr "VmOrTemplate|Tem disco RDM"
 
+msgid "VmOrTemplate|Health details"
+msgstr "Detalhes do VmOrTemplate|Health"
+
+msgid "VmOrTemplate|Health state"
+msgstr "Estado do VmOrTemplate|Health"
+
 msgid "VmOrTemplate|Host name"
 msgstr "VmOrTemplate|Nome do host"
 
@@ -55519,6 +55723,9 @@ msgstr ""
 "Se a MV é ou não 'preemptível'. Consulte https://cloud.google.com/compute/docs"
 "/instances/preemptible para obter mais detalhes."
 
+msgid "Whether the instance can be migrated [true, false]"
+msgstr "Se a instância pode ser migrada [true, false]"
+
 msgid "Whether to use the authorize mechanism"
 msgstr "Se deve usar o mecanismo de autorização"
 
@@ -55689,6 +55896,9 @@ msgstr "Modelos de fluxo de trabalho (Ansible Tower)"
 
 msgid "Workflow does not have any credentials to map."
 msgstr "O fluxo de trabalho não tem credenciais para mapear."
+
+msgid "Workflow max. timeout"
+msgstr "Tempo limite máximo de fluxo de trabalho"
 
 msgid "Workflow name"
 msgstr "Nome do fluxo de trabalho"
@@ -56605,6 +56815,19 @@ msgstr "login_failed"
 msgid "m"
 msgstr "m"
 
+msgid "maximum amount of memory in MB this partition can be allocated"
+msgstr ""
+"quantidade máxima de memória, em MB, que pode ser alocada para esta partição"
+
+msgid "maximum number of processors this partition can be assigned"
+msgstr ""
+"número máximo de processadores que podem ser atribuídos a esta partição"
+
+msgid "maximum number of virtual processors this partition can be assigned"
+msgstr ""
+"número máximo de processadores virtuais que podem ser atribuídos a esta "
+"partição"
+
 msgid "may contain only alphanumeric and _ - characters"
 msgstr "pode conter apenas os caracteres alfanuméricos, \"_\" e \"-\""
 
@@ -56628,6 +56851,19 @@ msgstr "memory_mb"
 
 msgid "method is only available for an entry"
 msgstr "O método está disponível somente para uma entrada"
+
+msgid "minimum amount of memory in MB this partition should be allocated"
+msgstr ""
+"quantidade mínima de memória, em MB, que deve ser alocada a esta partição"
+
+msgid "minimum number of processors this partition should be assigned"
+msgstr ""
+"número mínimo de processadores que devem ser atribuídos a esta partição"
+
+msgid "minimum number of virtual processors this partition should be assigned"
+msgstr ""
+"número mínimo de processadores virtuais que devem ser atribuídos a esta "
+"partição"
 
 msgid "minutely"
 msgstr "minuciosamente"
@@ -56747,9 +56983,6 @@ msgstr "em %{date} em %{time}"
 
 msgid "open and close options"
 msgstr "opções de abertura e fechamento"
-
-msgid "operator '%{operator_name}' is not supported"
-msgstr "O operador '%{operator_name}' não é suportado"
 
 msgid "operator '%{operator}' is not supported"
 msgstr "O operador '%{operator}' não é suportado"
@@ -56986,6 +57219,9 @@ msgstr "raw_exists deve ser implementado em uma subclasse"
 msgid "raw_live_migrate must be implemented in a subclass"
 msgstr "raw_live_migrate deve ser implementado em uma subclasse"
 
+msgid "raw_logs must be implemented in a subclass"
+msgstr "raw_logs deve ser implementado em uma subclasse"
+
 msgid "raw_remove_security_group must be implemented in a subclass"
 msgstr "raw_remove_security_group deve ser implementado em uma subclasse"
 
@@ -57174,9 +57410,6 @@ msgstr "amostra"
 
 msgid "secondary, "
 msgstr "secundário, "
-
-msgid "selected to copy"
-msgstr "selecionado para copiar"
 
 msgid "service_process"
 msgstr "service_process"
