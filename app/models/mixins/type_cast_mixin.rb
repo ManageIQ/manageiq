@@ -12,15 +12,17 @@ module TypeCastMixin
     :array    => ActiveRecord::Type::Json.new
   }.freeze
 
+  TYPE_MAP_KEYS = TYPE_MAP.keys
+
   private
 
   def cast_to_type(type, value)
     return nil if value.nil?
 
-    case type.to_s
-    when "null"
+    case type.to_sym
+    when :null
       nil
-    when *TYPE_MAP.keys.map(&:to_s)
+    when *TYPE_MAP_KEYS
       TYPE_MAP.fetch(type.to_sym).deserialize(value)
     else
       raise ArgumentError, "unknown type: [#{type}]"

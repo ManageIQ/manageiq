@@ -6,7 +6,7 @@ class OrchestrationStackOutput < ApplicationRecord
   alias_attribute :name, :key
 
   default_value_for :value_type, "string"
-  validates :value_type, :inclusion => {:in => %w[string integer float object array boolean datetime time null]}
+  validates :value_type, :inclusion => {:in => TYPE_MAP_KEYS.map(&:to_s) + ["null"]}
 
   def parsed_value
     cast_to_type(value_type, value)
