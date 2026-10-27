@@ -1339,7 +1339,7 @@ GEM
     ruport (1.8.0)
       prawn (~> 2.4.0)
       prawn-table (~> 0.2.0)
-    savon (2.17.4)
+    savon (2.17.5)
       akami (~> 1.2)
       builder (>= 2.1.2)
       gyoku (~> 1.2)
