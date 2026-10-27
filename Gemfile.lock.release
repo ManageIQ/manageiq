@@ -705,7 +705,7 @@ GEM
     ffi-vix_disk_lib (1.4.0)
       ffi
     fiddle (1.1.8)
-    floe (0.20.0)
+    floe (0.20.1)
       activesupport (> 5.2)
       awesome_spawn (~> 1.6)
       faraday
