@@ -24,9 +24,16 @@ module OrchestrationStackRetireTask::StateMachine
     end
   end
 
+  def parent_service
+    return @parent_service if defined?(@parent_service)
+
+    @parent_service = Service.find_by(:id => options[:parent_service_id])
+  end
+
   def failed_retirement
     _status, reason = stack.normalized_live_status
     stack.update(:retirement_state => RetirementMixin::RETIREMENT_ERROR)
+    parent_service&.update(:retirement_state => RetirementMixin::RETIREMENT_ERROR)
     fail!("#{self.class.model_being_retired} failed to retire, caused by #{reason}")
   end
 end
