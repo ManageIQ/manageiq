@@ -166,7 +166,7 @@ class MiqAlert < ApplicationRecord
     _log.info("#{log_header} #{log_target}")
 
     enabled_assigned_alerts = assigned_to_target(target, event)
-    _log.warn("#{log_header} #{log_target} Result: No enabled alerts are assigned to target!  Nothing to do.") if enabled_assigned_alerts.empty?
+    _log.info("#{log_header} #{log_target} Result: No enabled alerts are assigned to target!  Nothing to do.") if enabled_assigned_alerts.empty?
 
     enabled_assigned_alerts.each do |a|
       next if a.postpone_evaluation?(target)

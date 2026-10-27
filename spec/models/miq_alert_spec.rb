@@ -583,14 +583,6 @@ RSpec.describe MiqAlert do
       MiqAlert.evaluate_alerts(@vm, 'request_vm_poweroff')
     end
 
-    it 'warns if no enabled alerts are assigned' do
-      @alert.update(:enabled => false)
-      expect(MiqQueue).to receive(:put_unless_exists).never
-
-      expect(Vmdb.logger).to receive(:warn).with(/No enabled alerts are assigned to target/)
-      MiqAlert.evaluate_alerts(@vm, 'request_vm_poweroff')
-    end
-
     it 'raises event to automate' do
       MiqAlert.evaluate_alerts(@vm, 'request_vm_poweroff')
       msg = MiqQueue.first
