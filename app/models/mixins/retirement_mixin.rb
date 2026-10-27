@@ -1,5 +1,6 @@
 module RetirementMixin
   extend ActiveSupport::Concern
+
   RETIREMENT_ERROR = 'error'.freeze
   RETIREMENT_INITIALIZING = 'initializing'.freeze
   RETIREMENT_RETIRED  = 'retired'.freeze
@@ -123,7 +124,7 @@ module RetirementMixin
   end
 
   def retirement_check
-    return if retired? || retiring? || retirement_initialized?
+    return if retired? || retiring? || retirement_initialized? || error_retiring?
 
     requester = system_context_requester
 
@@ -181,16 +182,26 @@ module RetirementMixin
 
     $log.info("Finishing Retirement for [#{name}]")
     requester = retirement_requester
-    mark_retired
-    message = "#{self.class.base_model.name}: [id:<#{id}>, name:<#{name}>] with Retires On value: [#{retires_on.strftime("%x %R %Z")}], has been retired"
-    $log.info("Calling audit event for: #{message} ")
-    raise_audit_event(retired_event_name, message, requester)
-    $log.info("Called audit event for: #{message} ")
+    if error_retiring?
+      mark_error_retiring
+      # TODO: add audit event of error_retiring
+    else
+      mark_retired
+      message = "#{self.class.base_model.name}: [id:<#{id}>, name:<#{name}>] with Retires On value: [#{retires_on.strftime("%x %R %Z")}], has been retired"
+      $log.info("Calling audit event for: #{message} ")
+      raise_audit_event(retired_event_name, message, requester)
+      $log.info("Called audit event for: #{message} ")
+    end
   end
 
   def mark_retired
     self[:retires_on] = Time.zone.now
-    update(:retired => true, :retirement_state => "retired")
+    update(:retired => true, :retirement_state => RETIREMENT_RETIRED)
+  end
+
+  def mark_error_retiring
+    self[:retires_on] = nil
+    update(:retired => false, :retirement_state => RETIREMENT_ERROR)
   end
 
   def start_retirement
