@@ -181,17 +181,19 @@ module RetirementMixin
     raise _("%{name} already retired") % {:name => name} if retired?
 
     $log.info("Finishing Retirement for [#{name}]")
-    requester = retirement_requester
     if error_retiring?
       mark_error_retiring
-      # TODO: add audit event of error_retiring
+      message    = "#{self.class.base_model.name}: [id:<#{id}>, name:<#{name}>] has not been retired, because of error during retirement"
+      event_name = retire_error_event_name
     else
       mark_retired
       message = "#{self.class.base_model.name}: [id:<#{id}>, name:<#{name}>] with Retires On value: [#{retires_on.strftime("%x %R %Z")}], has been retired"
-      $log.info("Calling audit event for: #{message} ")
-      raise_audit_event(retired_event_name, message, requester)
-      $log.info("Called audit event for: #{message} ")
+      event_name = retired_event_name
     end
+    requester = retirement_requester
+    $log.info("Calling audit event for: #{message} ")
+    raise_audit_event(event_name, message, requester)
+    $log.info("Called audit event for: #{message} ")
   end
 
   def mark_retired
@@ -241,6 +243,10 @@ module RetirementMixin
 
   def retired_event_name
     @retired_event_name ||= "#{retirement_event_prefix}_retired".freeze
+  end
+
+  def retire_error_event_name
+    @retire_error_event_name ||= "#{retirement_event_prefix}_retire_error".freeze
   end
 
   def raise_retirement_event(event_name, requester = nil)
