@@ -31,6 +31,11 @@ module MiqRetireTask::StateMachine
     signal :finish_retirement
   end
 
+  def failed_retirement
+    _status, reason = source.normalized_live_status
+    fail!("#{self.class.model_being_retired} failed, caused by #{reason}")
+  end
+
   def finish_retirement
     source.finish_retirement
     create_retired_notification!

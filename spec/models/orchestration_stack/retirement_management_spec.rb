@@ -43,6 +43,14 @@ RSpec.describe "Service Retirement Management" do
         end
       end
 
+      context "when retirement_state is 'error'" do
+        it "does not create a new retirement request" do
+          stack_with_owner.update(:retires_on => Time.zone.today, :retirement_state => 'error')
+          expect(stack_with_owner.class).not_to receive(:make_retire_request)
+          stack_with_owner.retirement_check
+        end
+      end
+
       context "preventing creation of duplicate retirement request" do
         before do
           stack_with_owner.update(:retires_on => Time.zone.today)

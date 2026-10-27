@@ -194,6 +194,21 @@ RSpec.describe "Service Retirement Management" do
     expect(@service.retirement_state).to eq("retired")
   end
 
+  context "#finish_retirement on error" do
+    let(:service_with_retire_error) { FactoryBot.create(:service, :retirement_state => "error") }
+
+    it "not retired" do
+      message = "Service: [id:<#{service_with_retire_error.id}>, name:<#{service_with_retire_error.name}>] has not been retired, because of error during retirement"
+      expect(service_with_retire_error).to receive(:raise_audit_event).with("service_retire_error", message, nil)
+
+      service_with_retire_error.finish_retirement
+
+      expect(service_with_retire_error.retirement_state).to eq("error")
+      expect(service_with_retire_error.retires_on).to be_nil
+      expect(service_with_retire_error.retired).to be_falsey
+    end
+  end
+
   it "#mark_retired" do
     expect(@service.retirement_state).to be_nil
     @service.mark_retired
@@ -201,6 +216,15 @@ RSpec.describe "Service Retirement Management" do
     expect(@service.retired).to be_truthy
     expect(@service.retires_on).to be_between(1.hour.ago, 1.second.from_now)
     expect(@service.retirement_state).to eq("retired")
+  end
+
+  it "#mark_error_retiring" do
+    expect(@service.retirement_state).to be_nil
+    @service.mark_error_retiring
+    @service.reload
+    expect(@service.retired).to be_falsey
+    expect(@service.retires_on).to be_nil
+    expect(@service.retirement_state).to eq("error")
   end
 
   it "#retiring - false" do
