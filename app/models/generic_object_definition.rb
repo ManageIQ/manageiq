@@ -1,15 +1,7 @@
 class GenericObjectDefinition < ApplicationRecord
   include YamlImportExportMixin
   include ImportExport
-
-  TYPE_MAP = {
-    :boolean  => ActiveModel::Type::Boolean.new,
-    :datetime => ActiveModel::Type::DateTime.new,
-    :float    => ActiveModel::Type::Float.new,
-    :integer  => ActiveModel::Type::Integer.new,
-    :string   => ActiveModel::Type::String.new,
-    :time     => ActiveModel::Type::Time.new
-  }.freeze
+  include TypeCastMixin
 
   TYPE_NAMES = {
     :boolean  => N_('Boolean'),
@@ -99,7 +91,7 @@ class GenericObjectDefinition < ApplicationRecord
   end
 
   def type_cast(attr, value)
-    TYPE_MAP.fetch(property_attributes[attr.to_s]).cast(value)
+    cast_to_type(property_attributes[attr.to_s], value)
   end
 
   def properties=(props)
@@ -187,7 +179,7 @@ class GenericObjectDefinition < ApplicationRecord
 
   def validate_property_attributes
     properties[:attributes].each do |name, type|
-      errors.add(:properties, "attribute [#{name}] is not of a recognized type: [#{type}]") unless TYPE_MAP.key?(type.to_sym)
+      errors.add(:properties, "attribute [#{name}] is not of a recognized type: [#{type}]") unless TYPE_MAP_KEYS.include?(type.to_s)
       errors.add(:properties, "invalid attribute name: [#{name}]") unless REG_ATTRIBUTE_NAME.match?(name)
     end
   end
