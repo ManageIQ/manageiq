@@ -911,13 +911,13 @@ GEM
       typhoeus (~> 1.0, >= 1.0.1)
     language_server-protocol (3.17.0.6)
     lint_roller (1.1.0)
-    linux_admin (4.0.0)
+    linux_admin (4.1.0)
       awesome_spawn (~> 1.6)
       bcrypt_pbkdf (>= 1.0, < 2.0)
       ed25519 (>= 1.2, < 2.0)
       inifile
-      more_core_extensions (~> 4.0)
-      net-ssh (~> 7.2.3)
+      more_core_extensions (~> 4.5, >= 4.5.1)
+      net-ssh (~> 7.2, >= 7.2.3)
       nokogiri (>= 1.8.5, < 2, != 1.10.2, != 1.10.1, != 1.10.0)
       openscap
     linux_block_device (0.2.1)
@@ -1057,7 +1057,8 @@ GEM
       net-ssh (>= 5.0.0, < 8.0.0)
     net-smtp (0.5.1)
       net-protocol
-    net-ssh (7.2.3)
+    net-ssh (7.3.8)
+      logger
     netrc (0.11.0)
     nio4r (2.7.5)
     nkf (0.3.0)
