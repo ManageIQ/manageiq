@@ -71,7 +71,7 @@ class CollectAllLogs
   end
 
   def collect_local_logs
-    result = AwesomeSpawn.run!("./collect_current_logs.sh", :chdir => "/var/www/miq/vmdb/tools/collect_logs")
+    result = AwesomeSpawn.run!("./collect_current_logs.sh", :chdir => "/usr/lib/manageiq/manageiq/tools/collect_logs")
 
     FileUtils.mv(log_path(result.output), target_log_dir)
   end
@@ -85,7 +85,7 @@ class CollectAllLogs
 
     ssh = ManageIQ::SSH::Util.new(address, remote_user, remote_password, :use_agent => true, :verbose => :error)
 
-    stdout = ssh.exec("cd /var/www/miq/vmdb/tools/collect_logs && ./collect_current_logs.sh 2>&1")
+    stdout = ssh.exec("cd /usr/lib/manageiq/manageiq/tools/collect_logs && ./collect_current_logs.sh 2>&1")
     log_bundle = log_path(stdout)
 
     ssh.get_file(log_bundle, target_log_dir.join(log_bundle.basename).to_s)
