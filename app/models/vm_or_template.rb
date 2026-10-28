@@ -61,11 +61,14 @@ class VmOrTemplate < ApplicationRecord
   }
 
   HEALTH_STATES = {
-    "ok"       => N_("Ok"),
-    "warning"  => N_("Warning"),
-    "error"    => N_("Error"),
-    "critical" => N_("Critical"),
-    "unknown"  => N_("Unknown")
+    "ok"        => N_("Ok"),
+    "warning"   => N_("Warning"),
+    "error"     => N_("Error"),
+    "critical"  => N_("Critical"),
+    "unknown"   => N_("Unknown"),
+    "attention" => N_("Attention"),
+    "pending"   => N_("Pending"),
+    "info"      => N_("Info")
   }.freeze
 
   POWER_OPS = %w[start stop suspend reset shutdown_guest standby_guest reboot_guest]
