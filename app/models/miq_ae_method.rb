@@ -53,11 +53,12 @@ class MiqAeMethod < ApplicationRecord
   end
 
   # Validate the syntax of the passed in inline ruby code
+  # Returns nil if valid, otherwise an array of [line, text] pairs, one for each error found
   def self.validate_syntax(code_text)
     result = ManageIQ::AutomationEngine::SyntaxChecker.check(code_text)
     return nil if result.valid?
 
-    [[result.error_line, result.error_text]] # Array of arrays for future multi-line support
+    result.errors
   end
 
   # my method's fqname is /domain/namespace1/namespace2/class/method
