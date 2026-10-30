@@ -39,7 +39,7 @@ class CustomButtonSet < ApplicationRecord
     end
   end
 
-  def assign_button(button_id)
+  def add_button(button_id)
     with_lock do
       self.set_data ||= {}
       set_data[:button_order] = (set_data[:button_order] || []) | [button_id.to_i]

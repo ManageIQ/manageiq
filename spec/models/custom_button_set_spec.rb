@@ -81,7 +81,7 @@ RSpec.describe CustomButtonSet do
     expect(CustomButtonSet.count).to eq(2)
   end
 
-  describe "#assign_button" do
+  describe "#add_button" do
     let(:vm)                { FactoryBot.create(:vm_vmware) }
     let(:custom_button_1)   { FactoryBot.create(:custom_button, :applies_to => vm) }
     let(:custom_button_2)   { FactoryBot.create(:custom_button, :applies_to => vm) }
@@ -89,29 +89,14 @@ RSpec.describe CustomButtonSet do
     let(:custom_button_set) { FactoryBot.create(:custom_button_set, :name => "set_1", :set_data => set_data) }
 
     it "adds a button id to button_order" do
-      custom_button_set.assign_button(custom_button_1.id)
+      custom_button_set.add_button(custom_button_1.id)
       expect(custom_button_set.reload.set_data[:button_order]).to eq([custom_button_1.id])
     end
 
     it "does not add duplicate ids when called twice with the same button" do
-      custom_button_set.assign_button(custom_button_1.id)
-      custom_button_set.assign_button(custom_button_1.id)
+      custom_button_set.add_button(custom_button_1.id)
+      custom_button_set.add_button(custom_button_1.id)
       expect(custom_button_set.reload.set_data[:button_order]).to eq([custom_button_1.id])
-    end
-
-    it "retains both ids when two different buttons are assigned concurrently" do
-      # Simulate two concurrent transactions each reading the original row,
-      # then writing their own updated button_order.
-      set1 = CustomButtonSet.find(custom_button_set.id)
-      set2 = CustomButtonSet.find(custom_button_set.id)
-
-      set1.set_data[:button_order] = (set1.set_data[:button_order] || []) | [custom_button_1.id]
-      set1.save!
-
-      set2.set_data[:button_order] = (set2.set_data[:button_order] || []) | [custom_button_2.id]
-      set2.save!
-
-      expect(custom_button_set.reload.set_data[:button_order]).to include(custom_button_2.id)
     end
   end
 

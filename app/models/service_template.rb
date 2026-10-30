@@ -509,7 +509,9 @@ class ServiceTemplate < ApplicationRecord
     zone&.name if atomic?
   end
 
-  def assign_custom_button(button_id)
+  # ServiceTemplate button_order uses prefixed string keys ("cb-N" for buttons,
+  # "cbg-N" for groups) unlike CustomButtonSet which stores integer IDs.
+  def add_custom_button(button_id)
     with_lock do
       self.options ||= {}
       key = "cb-#{button_id}"
