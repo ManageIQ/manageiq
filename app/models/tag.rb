@@ -3,6 +3,7 @@ class Tag < ApplicationRecord
   has_one :classification
   has_one :category, :through => :classification, :source => :parent
   virtual_has_one :categorization, :class_name => "Hash"
+  virtual_attribute :description, :string, :uses => :classification
 
   has_many :provider_tag_mappings
 
@@ -137,6 +138,10 @@ class Tag < ApplicationRecord
 
   def show
     category.try(:show)
+  end
+
+  def description
+    classification&.description
   end
 
   def categorization
