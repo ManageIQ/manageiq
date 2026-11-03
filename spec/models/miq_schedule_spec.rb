@@ -6,11 +6,10 @@ RSpec.describe MiqSchedule do
     let(:miq_group) { FactoryBot.create(:miq_group) }
     let(:options) do
       {
-        :method           => 'generate_widget',
-        :send_email       => true,
-        :email_url_prefix => "/report/show_saved/",
-        :miq_group_id     => miq_group.id,
-        :email            => {
+        :method       => 'generate_widget',
+        :send_email   => true,
+        :miq_group_id => miq_group.id,
+        :email        => {
           :send_if_empty => true,
           :to            => %w[xxx@xxx.com yyy@xxx.com],
           :attach        => [:csv],
