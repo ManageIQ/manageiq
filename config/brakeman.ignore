@@ -71,25 +71,6 @@
       "note": "This usage of Marshal.load is safe because the incoming data_array is only ever called with XML payloads built by the internal scanning tools and not user input."
     },
     {
-      "warning_type": "Unmaintained Dependency",
-      "warning_code": 122,
-      "fingerprint": "98b26f60d776fd41ee6f088c833725145be9aac2d7c5b33780241c273622db42",
-      "check_name": "EOLRails",
-      "message": "Support for Rails 8.0.5.1 ends on 2026-11-07",
-      "file": "Gemfile.lock",
-      "line": 1969,
-      "link": "https://brakemanscanner.org/docs/warning_types/unmaintained_dependency/",
-      "code": null,
-      "render_path": null,
-      "location": null,
-      "user_input": null,
-      "confidence": "Medium",
-      "cwe_id": [
-        1104
-      ],
-      "note": "This is still a supported version for now. We are working on Rails 8.1 for the next release."
-    },
-    {
       "warning_type": "Command Injection",
       "warning_code": 14,
       "fingerprint": "bf6076072707342e27ea24d30ed2d0e12183017f3ffa21d86f916831ffbe53ec",
