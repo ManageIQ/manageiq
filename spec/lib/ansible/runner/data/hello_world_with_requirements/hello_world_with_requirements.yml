@@ -1,0 +1,4 @@
+- name: Hello World With Requirements
+  hosts: localhost
+  tasks:
+  - debug: msg="Hello World! role installed successfully"
