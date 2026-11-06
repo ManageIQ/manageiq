@@ -1,5 +1,6 @@
 module RetirementMixin
   extend ActiveSupport::Concern
+
   RETIREMENT_ERROR = 'error'.freeze
   RETIREMENT_INITIALIZING = 'initializing'.freeze
   RETIREMENT_RETIRED  = 'retired'.freeze
@@ -123,7 +124,7 @@ module RetirementMixin
   end
 
   def retirement_check
-    return if retired? || retiring? || retirement_initialized?
+    return if retired? || retiring? || retirement_initialized? || error_retiring?
 
     requester = system_context_requester
 
@@ -180,17 +181,29 @@ module RetirementMixin
     raise _("%{name} already retired") % {:name => name} if retired?
 
     $log.info("Finishing Retirement for [#{name}]")
+    if error_retiring?
+      mark_error_retiring
+      message    = "#{self.class.base_model.name}: [id:<#{id}>, name:<#{name}>] has not been retired, because of error during retirement"
+      event_name = retire_error_event_name
+    else
+      mark_retired
+      message = "#{self.class.base_model.name}: [id:<#{id}>, name:<#{name}>] with Retires On value: [#{retires_on.strftime("%x %R %Z")}], has been retired"
+      event_name = retired_event_name
+    end
     requester = retirement_requester
-    mark_retired
-    message = "#{self.class.base_model.name}: [id:<#{id}>, name:<#{name}>] with Retires On value: [#{retires_on.strftime("%x %R %Z")}], has been retired"
     $log.info("Calling audit event for: #{message} ")
-    raise_audit_event(retired_event_name, message, requester)
+    raise_audit_event(event_name, message, requester)
     $log.info("Called audit event for: #{message} ")
   end
 
   def mark_retired
     self[:retires_on] = Time.zone.now
-    update(:retired => true, :retirement_state => "retired")
+    update(:retired => true, :retirement_state => RETIREMENT_RETIRED)
+  end
+
+  def mark_error_retiring
+    self[:retires_on] = nil
+    update(:retired => false, :retirement_state => RETIREMENT_ERROR)
   end
 
   def start_retirement
@@ -230,6 +243,10 @@ module RetirementMixin
 
   def retired_event_name
     @retired_event_name ||= "#{retirement_event_prefix}_retired".freeze
+  end
+
+  def retire_error_event_name
+    @retire_error_event_name ||= "#{retirement_event_prefix}_retire_error".freeze
   end
 
   def raise_retirement_event(event_name, requester = nil)
