@@ -295,16 +295,10 @@ msgid_plural "%d Items selected to copy"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "%d Months Ago"
-msgstr ""
-
 msgid "%d New"
 msgid_plural "%d New"
 msgstr[0] ""
 msgstr[1] ""
-
-msgid "%d Weeks Ago"
-msgstr ""
 
 msgid "%d unread notification"
 msgid_plural "%d unread notifications"
@@ -340,7 +334,16 @@ msgstr ""
 msgid "%s - Memory"
 msgstr ""
 
+msgid "%s / %s columns"
+msgstr ""
+
+msgid "%s Chart Preview"
+msgstr ""
+
 msgid "%s Entries"
+msgstr ""
+
+msgid "%s Tags"
 msgstr ""
 
 msgid "%s has been successfully added."
@@ -362,6 +365,14 @@ msgstr[1] ""
 
 msgid "%s logged out, redirecting to the login page"
 msgstr ""
+
+msgid "%s of %s columns selected."
+msgstr ""
+
+msgid "%s rule"
+msgid_plural "%s rules"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "%s: \"%s\" was successfully deleted"
 msgstr ""
@@ -678,12 +689,6 @@ msgstr ""
 msgid "%{button_name} Button not yet implemented"
 msgstr ""
 
-msgid "%{chargeback_interval} Ending with"
-msgstr ""
-
-msgid "%{chargeback_model} and Date"
-msgstr ""
-
 msgid ""
 "%{class_name} [%{name}] is attached to <%{ems_class_name}: %{ems_name}> that d"
 "oes not support Provisioning"
@@ -708,6 +713,11 @@ msgstr ""
 
 msgid "%{count} %{component_type} is in %{health_state} state."
 msgid_plural "%{count} %{component_type} are in %{health_state} state."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "%{count} Hour"
+msgid_plural "%{count} Hours"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -933,9 +943,6 @@ msgid ""
 "version}"
 msgstr ""
 
-msgid "%{name} is currently being used in the Display Filter"
-msgstr ""
-
 msgid "%{name} is the base"
 msgstr ""
 
@@ -1009,21 +1016,8 @@ msgid_plural "%{number} Container Nodes"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "%{number} Day"
-msgid_plural "%{number} Days"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "%{number} Days Ago"
-msgstr ""
-
 msgid "%{number} Host"
 msgid_plural "%{number} Hosts"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "%{number} Hour"
-msgid_plural "%{number} Hours"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -1034,11 +1028,6 @@ msgstr[1] ""
 
 msgid "%{number} Inventory Root Group"
 msgid_plural "%{number} Inventory Root Groups"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "%{number} Month"
-msgid_plural "%{number} Months"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -1064,11 +1053,6 @@ msgstr[1] ""
 
 msgid "%{number} Virtual Machine"
 msgid_plural "%{number} Virtual Machines"
-msgstr[0] ""
-msgstr[1] ""
-
-msgid "%{number} Week"
-msgid_plural "%{number} Weeks"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -1312,6 +1296,9 @@ msgstr ""
 msgid "(Global)"
 msgstr ""
 
+msgid "(Log is empty)"
+msgstr ""
+
 msgid "(MB) memory"
 msgstr ""
 
@@ -1335,9 +1322,6 @@ msgstr ""
 msgid "(missing)"
 msgstr ""
 
-msgid "* Base the report on"
-msgstr ""
-
 msgid "* Cannot be changed while this Alert belongs to an Alert Profile."
 msgstr ""
 
@@ -1357,9 +1341,6 @@ msgstr ""
 msgid ""
 "* Caution: CPU Cores Allocated Metric, CPU Cores Used Metric are not supported"
 " for Chargeback for Vms."
-msgstr ""
-
-msgid "* Caution: Changing these fields will clear all selected values below them!"
 msgstr ""
 
 msgid "* Caution: The value Range end will not be included in the tier."
@@ -1417,14 +1398,6 @@ msgstr ""
 msgid "* Name and Single Value fields cannot be edited after adding a category."
 msgstr ""
 
-msgid "* Performance Interval"
-msgstr ""
-
-msgid ""
-"* Pie and Donut charts are not recommended for small percentages because the l"
-"abels may overlap."
-msgstr ""
-
 msgid "* Policy Profile is only applied to some of the items below."
 msgstr ""
 
@@ -1458,16 +1431,7 @@ msgstr ""
 msgid "* Saving a blank date will remove all retirement dates"
 msgstr ""
 
-msgid "* Select one or more consecutive fields to move up or down."
-msgstr ""
-
 msgid "* Select one or more consecutive groups to move up or down."
-msgstr ""
-
-msgid "* Some charts may not produce desired results with a single sort field"
-msgstr ""
-
-msgid "* Style \"If\" conditions are evaluated top to bottom for each column"
 msgstr ""
 
 msgid "*Only 5000 events shown. Limit date range to avoid \\\"missing\\\" events."
@@ -1502,6 +1466,9 @@ msgstr ""
 msgid "1 Hour"
 msgstr ""
 
+msgid "1 Hour Ago"
+msgstr ""
+
 msgid "1 Instance to be Evacuated"
 msgid_plural "%{amount} Instances to be Evacuated"
 msgstr[0] ""
@@ -1513,6 +1480,9 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "1 Minute"
+msgstr ""
+
+msgid "1 Month"
 msgstr ""
 
 msgid "1 Week"
@@ -1537,6 +1507,12 @@ msgid "12 Hours"
 msgstr ""
 
 msgid "12 Hours Ago"
+msgstr ""
+
+msgid "12 Months"
+msgstr ""
+
+msgid "12 Weeks"
 msgstr ""
 
 msgid "13 Hours Ago"
@@ -1722,6 +1698,9 @@ msgstr ""
 msgid "5 Months"
 msgstr ""
 
+msgid "5 Weeks"
+msgstr ""
+
 msgid "6 Days"
 msgstr ""
 
@@ -1755,7 +1734,13 @@ msgstr ""
 msgid "8 Hours Ago"
 msgstr ""
 
+msgid "8 Weeks"
+msgstr ""
+
 msgid "9 Hours Ago"
+msgstr ""
+
+msgid "9 Months"
 msgstr ""
 
 msgid ":attr required"
@@ -1788,6 +1773,36 @@ msgstr ""
 msgid "<By Role>"
 msgstr ""
 
+msgid "<Choose Categories>"
+msgstr ""
+
+msgid "<Choose Entity>"
+msgstr ""
+
+msgid "<Choose Provider>"
+msgstr ""
+
+msgid "<Choose Values>"
+msgstr ""
+
+msgid "<Choose a Category>"
+msgstr ""
+
+msgid "<Choose a Label>"
+msgstr ""
+
+msgid "<Choose a Project/Tenant>"
+msgstr ""
+
+msgid "<Choose a Role>"
+msgstr ""
+
+msgid "<Choose a Tenant>"
+msgstr ""
+
+msgid "<Choose an Owner>"
+msgstr ""
+
 msgid "<Choose one or more Groups>"
 msgstr ""
 
@@ -1815,9 +1830,6 @@ msgstr ""
 msgid "<No Title>"
 msgstr ""
 
-msgid "<No chart>"
-msgstr ""
-
 msgid "<No notes have been entered for this VM>"
 msgstr ""
 
@@ -1828,6 +1840,9 @@ msgid "<Nothing>"
 msgstr ""
 
 msgid "<Orphaned>"
+msgstr ""
+
+msgid "<Reset to Default>"
 msgstr ""
 
 msgid "<Script error>"
@@ -1857,10 +1872,10 @@ msgstr ""
 msgid "A Group by Tag must be selected"
 msgstr ""
 
-msgid "A Report must be selected"
+msgid "A Provider must be selected"
 msgstr ""
 
-msgid "A Role must be assigned to this Group"
+msgid "A Report must be selected"
 msgstr ""
 
 msgid ""
@@ -1966,7 +1981,16 @@ msgstr ""
 msgid "A single VM"
 msgstr ""
 
+msgid "A sort field is required to use charts. Configure one in the Summary tab."
+msgstr ""
+
+msgid "A sort field is required when a chart type is configured"
+msgstr ""
+
 msgid "A specific %{chargeback} or all must be selected"
+msgstr ""
+
+msgid "A specific Entity or all must be selected"
 msgstr ""
 
 msgid "A tag category must be chosen to commit this expression element"
@@ -2348,6 +2372,9 @@ msgstr ""
 msgid "Action successful"
 msgstr ""
 
+msgid "Action taken when minimum affinity score is not met."
+msgstr ""
+
 msgid "ActionSet"
 msgstr ""
 
@@ -2366,6 +2393,9 @@ msgid ""
 msgstr ""
 
 msgid "Active"
+msgstr ""
+
+msgid "Active Memory Sharing Enabled"
 msgstr ""
 
 msgid "Active Services"
@@ -2575,6 +2605,9 @@ msgstr ""
 msgid "Add New Credential"
 msgstr ""
 
+msgid "Add New Field"
+msgstr ""
+
 msgid "Add New Floating IP"
 msgstr ""
 
@@ -2711,6 +2744,9 @@ msgid "Add a Custom Button for a Generic Object Class"
 msgstr ""
 
 msgid "Add a Dashboard"
+msgstr ""
+
+msgid "Add a Field"
 msgstr ""
 
 msgid "Add a Firewall Rule"
@@ -3067,6 +3103,15 @@ msgstr ""
 msgid "Add child Tenant to this Tenant"
 msgstr ""
 
+msgid "Add columns on the Columns tab to configure styling rules."
+msgstr ""
+
+msgid "Add columns on the Columns tab to configure summary options."
+msgstr ""
+
+msgid "Add columns on the Columns tab, then click Refresh to preview."
+msgstr ""
+
 msgid "Add folder to selected Accordion"
 msgstr ""
 
@@ -3157,9 +3202,6 @@ msgstr ""
 msgid "Add of floating IPs \"%s\" has been successfully queued."
 msgstr ""
 
-msgid "Add of new %{name} was cancelled by the user"
-msgstr ""
-
 msgid "Add of new %{type} Request was cancelled by the user"
 msgstr ""
 
@@ -3208,7 +3250,7 @@ msgstr ""
 msgid "Add of new Condition was cancelled by the user"
 msgstr ""
 
-msgid "Add of new Custom Button was cancelled by the user"
+msgid "Add of new Custom Button was cancelled by the user."
 msgstr ""
 
 msgid "Add of new Customization Template was cancelled by the user"
@@ -3221,6 +3263,9 @@ msgid "Add of new Dialog was cancelled by the user"
 msgstr ""
 
 msgid "Add of new Generic Object Definition was cancelled by the user."
+msgstr ""
+
+msgid "Add of new Group was cancelled by the user"
 msgstr ""
 
 msgid "Add of new ISO Datastore was cancelled by the user"
@@ -3335,9 +3380,6 @@ msgid "Adding a new Catalog Bundle"
 msgstr ""
 
 msgid "Adding a new Category"
-msgstr ""
-
-msgid "Adding a new Class Schema"
 msgstr ""
 
 msgid "Adding a new Customization Template"
@@ -3469,9 +3511,6 @@ msgid "Adminstrative State"
 msgstr ""
 
 msgid "Advanced"
-msgstr ""
-
-msgid "Advanced Options"
 msgstr ""
 
 msgid "Advanced Search"
@@ -3712,9 +3751,6 @@ msgstr ""
 msgid "All"
 msgstr ""
 
-msgid "All %{chargeback_type}"
-msgstr ""
-
 msgid "All %{items}"
 msgstr ""
 
@@ -3808,6 +3844,9 @@ msgid "All EVM Groups"
 msgstr ""
 
 msgid "All Enabled Ports"
+msgstr ""
+
+msgid "All Entities"
 msgstr ""
 
 msgid "All Files"
@@ -4096,6 +4135,9 @@ msgid ""
 "%{err_msg}"
 msgstr ""
 
+msgid "An error occurred while loading the form."
+msgstr ""
+
 msgid ""
 "An error occurred while provisioning the IBM VPC instance. Instance has failed"
 " status. Check the instance in cloud.ibm.com for more information."
@@ -4113,6 +4155,9 @@ msgid "An error occurred while saving"
 msgstr ""
 
 msgid "An error occurred while saving the role"
+msgstr ""
+
+msgid "An error occurred while saving."
 msgstr ""
 
 msgid "An internal system error."
@@ -4333,6 +4378,9 @@ msgstr ""
 msgid "Apply this filter"
 msgstr ""
 
+msgid "Approaching column limit"
+msgstr ""
+
 msgid "Approval"
 msgid_plural "Approvals"
 msgstr[0] ""
@@ -4416,9 +4464,6 @@ msgid ""
 msgstr ""
 
 msgid "Are you sure you want to delete category '%{category_name}'?"
-msgstr ""
-
-msgid "Are you sure you want to delete field from schema?"
 msgstr ""
 
 msgid "Are you sure you want to delete input field from method?"
@@ -4718,6 +4763,9 @@ msgstr ""
 msgid "Assign"
 msgstr ""
 
+msgid "Assign All Resources"
+msgstr ""
+
 msgid "Assign Catalog Items"
 msgstr ""
 
@@ -4833,6 +4881,12 @@ msgstr ""
 msgid "Associated Record IDs"
 msgstr ""
 
+msgid "Associated Resource Group ID"
+msgstr ""
+
+msgid "Associated Resource Group Name"
+msgstr ""
+
 msgid "Associated Server Profile"
 msgstr ""
 
@@ -4887,9 +4941,6 @@ msgstr ""
 msgid "At least one Field must be selected"
 msgstr ""
 
-msgid "At least one Role must be selected"
-msgstr ""
-
 msgid "At least one Selection must be checked"
 msgstr ""
 
@@ -4909,6 +4960,9 @@ msgid "At least one action must be selected to save this Policy Event"
 msgstr ""
 
 msgid "At least one domain should be enabled and unlocked"
+msgstr ""
+
+msgid "At least one field must be selected"
 msgstr ""
 
 msgid "At least one host must be specified for manual mode"
@@ -5644,9 +5698,6 @@ msgstr ""
 msgid "Available Custom Reports:"
 msgstr ""
 
-msgid "Available Fields:"
-msgstr ""
-
 msgid "Available Groups"
 msgstr ""
 
@@ -5672,6 +5723,9 @@ msgid "Available Value"
 msgstr ""
 
 msgid "Available Widgets:"
+msgstr ""
+
+msgid "Available fields"
 msgstr ""
 
 msgid "Available of"
@@ -5862,6 +5916,9 @@ msgid ""
 ")"
 msgstr ""
 
+msgid "Base the report on"
+msgstr ""
+
 msgid "Based On"
 msgstr ""
 
@@ -5875,9 +5932,6 @@ msgid "Basic Information"
 msgstr ""
 
 msgid "Basic Options"
-msgstr ""
-
-msgid "Basic Report Info"
 msgstr ""
 
 msgid "Become Username"
@@ -6016,10 +6070,16 @@ msgstr ""
 msgid "Boolean (Yes/No)"
 msgstr ""
 
+msgid "Boot Mode"
+msgstr ""
+
 msgid "Boot Start"
 msgstr ""
 
 msgid "Boot Time"
+msgstr ""
+
+msgid "Boot mode of the partition."
 msgstr ""
 
 msgid "Bootable"
@@ -6091,6 +6151,9 @@ msgstr ""
 msgid "Branches"
 msgstr ""
 
+msgid "Break Calculations"
+msgstr ""
+
 msgid "Browser"
 msgstr ""
 
@@ -6140,9 +6203,6 @@ msgstr ""
 msgid "Button \"%{name}\""
 msgstr ""
 
-msgid "Button Description is required"
-msgstr ""
-
 #, fuzzy
 msgid "Button Group"
 msgstr ""
@@ -6168,13 +6228,7 @@ msgstr ""
 msgid "Button Groups"
 msgstr ""
 
-msgid "Button Icon must be selected"
-msgstr ""
-
 msgid "Button Name"
-msgstr ""
-
-msgid "Button Name is required"
 msgstr ""
 
 msgid "Button Type"
@@ -6691,7 +6745,7 @@ msgstr ""
 msgid "CVEs"
 msgstr ""
 
-msgid "Calculations"
+msgid "Call Home Enabled"
 msgstr ""
 
 msgid "Can not add label columns when grouping by label"
@@ -6742,9 +6796,6 @@ msgid "Cancel Simulation to go back to Button details"
 msgstr ""
 
 msgid "Cancel Task"
-msgstr ""
-
-msgid "Cancel after"
 msgstr ""
 
 msgid "Cancel operation is not supported for %{class}"
@@ -7263,6 +7314,9 @@ msgstr ""
 msgid "Change current group"
 msgstr ""
 
+msgid "Change model?"
+msgstr ""
+
 msgid "Changed from previous"
 msgstr ""
 
@@ -7285,6 +7339,9 @@ msgid ""
 msgstr ""
 
 msgid "Changing the UI Workers Count will immediately restart the webserver"
+msgstr ""
+
+msgid "Changing the model will clear all selected columns. Continue?"
 msgstr ""
 
 msgid "Changing to remote replication role will remove all current subscriptions"
@@ -7590,13 +7647,10 @@ msgstr ""
 msgid "Chart Options"
 msgstr ""
 
-msgid "Chart Preview (up to 50 rows)"
+msgid "Chart Preview"
 msgstr ""
 
 msgid "Chart Report"
-msgstr ""
-
-msgid "Chart Settings"
 msgstr ""
 
 msgid "Chart Widget \"%{name}\""
@@ -7615,12 +7669,6 @@ msgid "Chart no longer exists"
 msgstr ""
 
 msgid "Charts"
-msgstr ""
-
-msgid "Charts tab is not available unless a sort field has been selected"
-msgstr ""
-
-msgid "Charts tab is not available until at least 1 field has been selected"
 msgstr ""
 
 msgid "Chassis"
@@ -7723,9 +7771,6 @@ msgstr ""
 msgid "Check Count"
 msgstr ""
 
-msgid "Check Option"
-msgstr ""
-
 msgid "Check Value Error: %{msg}"
 msgstr ""
 
@@ -7768,9 +7813,6 @@ msgstr ""
 msgid "Choose"
 msgstr ""
 
-msgid "Choose %{entity}"
-msgstr ""
-
 msgid "Choose Assignment Type"
 msgstr ""
 
@@ -7781,9 +7823,6 @@ msgid "Choose Flavor"
 msgstr ""
 
 msgid "Choose Policies"
-msgstr ""
-
-msgid "Choose Provider"
 msgstr ""
 
 msgid "Choose a %{model} report filter"
@@ -7798,12 +7837,6 @@ msgstr ""
 msgid "Choose a Import/Export type from the menus on the left."
 msgstr ""
 
-msgid "Choose a Label"
-msgstr ""
-
-msgid "Choose a Project/Tenant"
-msgstr ""
-
 msgid "Choose a Provider first"
 msgstr ""
 
@@ -7814,9 +7847,6 @@ msgid "Choose a Report to view from the menus on the left."
 msgstr ""
 
 msgid "Choose a Report to view."
-msgstr ""
-
-msgid "Choose a Role"
 msgstr ""
 
 msgid "Choose a Role to edit from the left."
@@ -7834,12 +7864,6 @@ msgstr ""
 msgid "Choose a Timeline from the menus on the left."
 msgstr ""
 
-msgid "Choose a Value"
-msgstr ""
-
-msgid "Choose a chart type"
-msgstr ""
-
 msgid "Choose a pattern"
 msgstr ""
 
@@ -7852,12 +7876,6 @@ msgstr ""
 msgid "Choose a saved filter or report filter to load"
 msgstr ""
 
-msgid "Choose a tenant"
-msgstr ""
-
-msgid "Choose an Owner"
-msgstr ""
-
 msgid "Choose cloud object storage"
 msgstr ""
 
@@ -7865,9 +7883,6 @@ msgid "Choose disk type"
 msgstr ""
 
 msgid "Choose file"
-msgstr ""
-
-msgid "Choose one or more Fields"
 msgstr ""
 
 msgid "Choose source image"
@@ -7925,9 +7940,6 @@ msgid "Class '%{name}' is not eligible for classification"
 msgstr ""
 
 msgid "Class Schema Sequence was saved"
-msgstr ""
-
-msgid "Class Schema Sequencing:"
 msgstr ""
 
 msgid "Class must be specified when object is an integer"
@@ -8017,6 +8029,9 @@ msgstr ""
 msgid "Clear selected Object Storage Containers"
 msgstr ""
 
+msgid "Click Refresh to preview the current report configuration."
+msgstr ""
+
 msgid "Click on a Host to fetch its settings"
 msgstr ""
 
@@ -8042,9 +8057,6 @@ msgid "Click to delete this category"
 msgstr ""
 
 msgid "Click to delete this entry"
-msgstr ""
-
-msgid "Click to delete this field from schema"
 msgstr ""
 
 msgid "Click to delete this input field from method"
@@ -9370,6 +9382,15 @@ msgstr ""
 msgid "Column function '%{name}' not supported"
 msgstr ""
 
+msgid "Column headers and formatting"
+msgstr ""
+
+msgid "Column limit exceeded"
+msgstr ""
+
+msgid "Column name"
+msgstr ""
+
 msgid "Columns"
 msgstr ""
 
@@ -10135,9 +10156,6 @@ msgstr ""
 msgid "ConfigurationTag|Region number"
 msgstr ""
 
-msgid "Configure Report Columns"
-msgstr ""
-
 #, fuzzy
 msgid "Configured System"
 msgid_plural "Configured Systems"
@@ -10337,6 +10355,9 @@ msgstr ""
 msgid "Connecting"
 msgstr ""
 
+msgid "Connection Monitoring Enabled"
+msgstr ""
+
 msgid "Connection Settings validation failed with error: %{error}"
 msgstr ""
 
@@ -10367,13 +10388,7 @@ msgstr ""
 msgid "Console using VMRC"
 msgstr ""
 
-msgid "Consolidating records will not show detail records in the report."
-msgstr ""
-
-msgid "Consolidation"
-msgstr ""
-
-msgid "Consolidation tab is not available until at least 1 field has been selected"
+msgid "Consolidating records will not show detail records"
 msgstr ""
 
 msgid "Consumption"
@@ -10425,6 +10440,9 @@ msgid "Container Group Access"
 msgstr ""
 
 msgid "Container Group Console"
+msgstr ""
+
+msgid "Container Group Logs"
 msgstr ""
 
 msgid "Container Group Name"
@@ -12951,6 +12969,9 @@ msgstr ""
 msgid "Copy of %{field}"
 msgstr ""
 
+msgid "Copy of %{name}"
+msgstr ""
+
 msgid "Copy of %{typ} Request"
 msgstr ""
 
@@ -13161,9 +13182,6 @@ msgstr ""
 msgid "Create Cloud Tenant"
 msgstr ""
 
-msgid "Create Display Filter"
-msgstr ""
-
 msgid "Create New"
 msgstr ""
 
@@ -13171,9 +13189,6 @@ msgid "Create New %{table}"
 msgstr ""
 
 msgid "Create New Host Aggregate"
-msgstr ""
-
-msgid "Create Record Filter"
 msgstr ""
 
 msgid "Create Service Dialog"
@@ -13615,6 +13630,9 @@ msgstr ""
 msgid "Current Replicas"
 msgstr ""
 
+msgid "Current Secure Boot"
+msgstr ""
+
 msgid "Current Status"
 msgstr ""
 
@@ -13627,10 +13645,28 @@ msgstr ""
 msgid "Current group: %s"
 msgstr ""
 
+msgid "Current keylock position of the partition."
+msgstr ""
+
+msgid "Current migration state of the partition."
+msgstr ""
+
 msgid "Current pods"
 msgstr ""
 
 msgid "Current processor compatibility mode"
+msgstr ""
+
+msgid "Current progress state of the partition."
+msgstr ""
+
+msgid "Current remote restart state of the partition."
+msgstr ""
+
+msgid "Current secure boot setting of the partition."
+msgstr ""
+
+msgid "Current uncapped weight of the partition."
 msgstr ""
 
 msgid "Current user lacks permissions to create a new snapshot for this VM"
@@ -13686,12 +13722,6 @@ msgstr ""
 msgid "Custom Brand Image (Shown on top left of all screens and above login panel)"
 msgstr ""
 
-msgid "Custom Button \"%{name}\" was added"
-msgstr ""
-
-msgid "Custom Button \"%{name}\" was saved"
-msgstr ""
-
 msgid "Custom Button %s has been successfully added under the selected button group."
 msgstr ""
 
@@ -13719,6 +13749,9 @@ msgid "Custom Button Group \"%s\" has been successfully saved."
 msgstr ""
 
 msgid "Custom Button Set %{record_name}"
+msgstr ""
+
+msgid "Custom Button was saved but could not be assigned. Please assign it manually."
 msgstr ""
 
 msgid "Custom Event"
@@ -14104,6 +14137,9 @@ msgstr ""
 msgid "DB option :report must be a %{class_name} object"
 msgstr ""
 
+msgid "DEFAULT"
+msgstr ""
+
 msgid "DHCP"
 msgstr ""
 
@@ -14111,6 +14147,18 @@ msgid "DHCP Enabled"
 msgstr ""
 
 msgid "DHCP Server"
+msgstr ""
+
+msgid "DLPAR IO Capable"
+msgstr ""
+
+msgid "DLPAR Memory Capable"
+msgstr ""
+
+msgid "DLPAR Processor Capable"
+msgstr ""
+
+msgid "DLPAR VIOS Capable"
 msgstr ""
 
 msgid "DNS"
@@ -14138,6 +14186,9 @@ msgid "DRS Migration Threshold"
 msgstr ""
 
 msgid "Daily"
+msgstr ""
+
+msgid "Daily Ending with"
 msgstr ""
 
 msgid "Daily Host Count (Max)"
@@ -14421,10 +14472,10 @@ msgstr ""
 msgid "Date Updated"
 msgstr ""
 
-msgid "Date and %{chargeback_model}"
+msgid "Date brought under Management for Last Week"
 msgstr ""
 
-msgid "Date brought under Management for Last Week"
+msgid "Date of the OS image installed on the partition."
 msgstr ""
 
 msgid "Date/Hour (M/D/Y H AM|PM Z)"
@@ -14506,6 +14557,9 @@ msgid "Decorators"
 msgstr ""
 
 msgid "Dedicated"
+msgstr ""
+
+msgid "Dedicated Processors For Migration"
 msgstr ""
 
 msgid "Dedicated or shared"
@@ -14635,9 +14689,6 @@ msgid "Default value"
 msgstr ""
 
 msgid "Default value is 1"
-msgstr ""
-
-msgid "Define Expression"
 msgstr ""
 
 msgid "Define New %{table}"
@@ -15451,10 +15502,16 @@ msgstr ""
 msgid "Desired"
 msgstr ""
 
+msgid "Desired Uncapped Weight"
+msgstr ""
+
 msgid "Desired access modes"
 msgstr ""
 
 msgid "Desired compatibility mode"
+msgstr ""
+
+msgid "Desired uncapped weight of the partition."
 msgstr ""
 
 msgid "Destination"
@@ -15732,9 +15789,6 @@ msgstr ""
 msgid "Dialog Type must be selected"
 msgstr ""
 
-msgid "Dialog can be opened only by buttons for a single entity"
-msgstr ""
-
 msgid ""
 "Dialog cannot be deleted because it is connected to other components: %{compon"
 "ents}"
@@ -16005,6 +16059,9 @@ msgid "Disable Local Login"
 msgstr ""
 
 msgid "Disable a Schedule"
+msgstr ""
+
+msgid "Disable charting"
 msgstr ""
 
 msgid "Disable the selected Schedules"
@@ -16540,6 +16597,9 @@ msgid "Display Deprecated"
 msgstr ""
 
 msgid "Display Environment Variables for Containers"
+msgstr ""
+
+msgid "Display Filter — filters rows based on child table fields"
 msgstr ""
 
 msgid "Display Hosts Drift"
@@ -17492,11 +17552,19 @@ msgid "Drag and drop to reorder domains. Higher priority domains are listed firs
 msgstr ""
 
 msgid ""
+"Drag and drop to reorder fields. Select multiple consecutive fields using chec"
+"kboxes to drag them together."
+msgstr ""
+
+msgid ""
 "Drag items here to add to the dialog. At least one item is required before sav"
 "ing"
 msgstr ""
 
 msgid "Drag this Shortcut to a new location"
+msgstr ""
+
+msgid "Drag to reorder · click × to remove"
 msgstr ""
 
 msgid "Drag/drop Widget \"%{widget_title}\""
@@ -17887,9 +17955,6 @@ msgstr ""
 msgid "Edit Dialog in the Dialog Editor"
 msgstr ""
 
-msgid "Edit Display Filter"
-msgstr ""
-
 msgid "Edit EVM Server Relationship"
 msgstr ""
 
@@ -17998,10 +18063,10 @@ msgstr ""
 msgid "Edit Provisioning Dialog"
 msgstr ""
 
-msgid "Edit Record Filter"
+msgid "Edit Registry Entry"
 msgstr ""
 
-msgid "Edit Registry Entry"
+msgid "Edit Report \"%{name}\""
 msgstr ""
 
 msgid "Edit Report Menus"
@@ -18901,9 +18966,6 @@ msgstr ""
 msgid "Edit of %{model} Request \"%{name}\" was cancelled by the user"
 msgstr ""
 
-msgid "Edit of %{name} was cancelled by the user"
-msgstr ""
-
 msgid "Edit of %{object_type} %{object_name} is not supported."
 msgstr ""
 
@@ -18926,9 +18988,6 @@ msgid "Edit of Automate Instance \"%s\" was cancelled by the user"
 msgstr ""
 
 msgid "Edit of Automate Method \"%{name}\" was cancelled by the user"
-msgstr ""
-
-msgid "Edit of Button"
 msgstr ""
 
 msgid "Edit of Button Group \"%{name}\" was cancelled by the user"
@@ -18982,10 +19041,10 @@ msgstr ""
 msgid "Edit of Credential \"%s\" was canceled by the user."
 msgstr ""
 
-msgid "Edit of Custom Button \"%{name}\" was cancelled by the user"
+msgid "Edit of Custom Button %s was canceled by the user."
 msgstr ""
 
-msgid "Edit of Custom Button %s was canceled by the user."
+msgid "Edit of Custom Button %s was cancelled by the user."
 msgstr ""
 
 msgid "Edit of Custom Button Group \"%s\" was canceled by the user."
@@ -19010,6 +19069,9 @@ msgid "Edit of Domain \"%s\" was cancelled by user."
 msgstr ""
 
 msgid "Edit of Generic Object Definition \"%s\" was cancelled by the user."
+msgstr ""
+
+msgid "Edit of Group \"%s\" was cancelled by the user"
 msgstr ""
 
 msgid "Edit of Host \"%s\" was cancelled."
@@ -19066,7 +19128,7 @@ msgstr ""
 msgid "Edit of Region was cancelled by the user"
 msgstr ""
 
-msgid "Edit of Report \"%{name}\" was cancelled by the user"
+msgid "Edit of Report \"%s\" was cancelled by the user"
 msgstr ""
 
 msgid "Edit of Report Menu for role \"%{role}\" was cancelled by the user"
@@ -20078,11 +20140,6 @@ msgstr ""
 msgid "Enablement"
 msgstr ""
 
-msgid ""
-"Enablement and Visibility expressions can only be configured for buttons with "
-"\"Display for\" (previous tab) set to \"Single\""
-msgstr ""
-
 msgid "Enablement expression"
 msgstr ""
 
@@ -20175,6 +20232,9 @@ msgid "Enforce a Value"
 msgstr ""
 
 msgid "Enforced"
+msgstr ""
+
+msgid "Enter Automation Simulation options on the left and press Submit"
 msgstr ""
 
 msgid "Enter Automation Simulation options on the left and press Submit."
@@ -20388,9 +20448,6 @@ msgstr ""
 msgid "Error during 'apply': %{error}"
 msgstr ""
 
-msgid "Error during 'edit': %{field_name} %{error_message}"
-msgstr ""
-
 msgid "Error during 'save': %{error_message}"
 msgstr ""
 
@@ -20483,6 +20540,9 @@ msgstr ""
 msgid "Error loading instance data"
 msgstr ""
 
+msgid "Error loading logs"
+msgstr ""
+
 msgid "Error message goes here"
 msgstr ""
 
@@ -20498,10 +20558,16 @@ msgstr ""
 msgid "Error returned from %{name} event processing in Automate: %{error_message}"
 msgstr ""
 
+msgid "Error saving field order"
+msgstr ""
+
 msgid "Error saving instance"
 msgstr ""
 
 msgid "Error saving priority order"
+msgstr ""
+
+msgid "Error saving schema"
 msgstr ""
 
 msgid "Error text:"
@@ -21350,9 +21416,7 @@ msgstr ""
 msgid "Expression incomplete"
 msgstr ""
 
-msgid ""
-"Expressions (next tab) can only be configured for buttons with \"Display for\" s"
-"et to \"Single\""
+msgid "Expression is incomplete or invalid."
 msgstr ""
 
 msgid "Ext Name"
@@ -21874,10 +21938,16 @@ msgstr ""
 msgid "Failed to fetch git repository"
 msgstr ""
 
+msgid "Failed to generate the report preview"
+msgstr ""
+
 msgid "Failed to import from git"
 msgstr ""
 
 msgid "Failed to load chargeback data"
+msgstr ""
+
+msgid "Failed to load chargeback options."
 msgstr ""
 
 msgid "Failed to load data"
@@ -21887,6 +21957,12 @@ msgid "Failed to load image labels"
 msgstr ""
 
 msgid "Failed to load label values"
+msgstr ""
+
+msgid "Failed to load preview data."
+msgstr ""
+
+msgid "Failed to load report data. Please try again."
 msgstr ""
 
 msgid "Failed to load resources"
@@ -21958,18 +22034,19 @@ msgstr ""
 msgid "Field Value Error: %{msg}"
 msgstr ""
 
+msgid "Field selection required"
+msgstr ""
+
 msgid "Fields"
 msgstr ""
 
 msgid "Fields are being refreshed"
 msgstr ""
 
-msgid ""
-"Fields not added: Adding the selected %{count} fields will exceed the maximum "
-"of %{max} fields"
+msgid "Fields to refresh"
 msgstr ""
 
-msgid "Fields to refresh"
+msgid "Fields:"
 msgstr ""
 
 msgid "File"
@@ -22139,7 +22216,7 @@ msgstr ""
 msgid "Filter"
 msgstr ""
 
-msgid "Filter Expression"
+msgid "Filter Expression:"
 msgstr ""
 
 msgid "Filter Item"
@@ -22157,13 +22234,7 @@ msgstr ""
 msgid "Filter options"
 msgstr ""
 
-msgid "Filter tab is not available until Trending Target Limit has been configured"
-msgstr ""
-
-msgid "Filter tab is not available until Trending for field has been selected"
-msgstr ""
-
-msgid "Filter tab is not available until at least 1 field has been selected"
+msgid "Filter tabs"
 msgstr ""
 
 msgid "Filter type must be one of %{filter}"
@@ -22433,7 +22504,7 @@ msgstr ""
 msgid "First"
 msgstr ""
 
-msgid "First %{number}"
+msgid "First %s"
 msgstr ""
 
 msgid "First Drift State Timestamp"
@@ -22792,12 +22863,6 @@ msgstr ""
 msgid "Format on Summary Row"
 msgstr ""
 
-msgid "Formatting"
-msgstr ""
-
-msgid "Formatting tab is not available until at least 1 field has been selected"
-msgstr ""
-
 msgid "Found"
 msgstr ""
 
@@ -22924,12 +22989,6 @@ msgid "Generate Content"
 msgstr ""
 
 msgid "Generate Content for a selected Widget"
-msgstr ""
-
-msgid "Generate Report Preview"
-msgstr ""
-
-msgid "Generate Report preview"
 msgstr ""
 
 msgid "Generate Report: '%{name}'"
@@ -23201,6 +23260,12 @@ msgid_plural "Groups"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Group \"%s\" was added"
+msgstr ""
+
+msgid "Group \"%s\" was saved"
+msgstr ""
+
 msgid "Group Account ID"
 msgstr ""
 
@@ -23237,7 +23302,7 @@ msgstr ""
 msgid "Group Name"
 msgstr ""
 
-msgid "Group Records by up to 3 Columns"
+msgid "Group Records (Consolidation)"
 msgstr ""
 
 msgid "Group Type"
@@ -23246,10 +23311,22 @@ msgstr ""
 msgid "Group by"
 msgstr ""
 
+msgid "Group by Column 1"
+msgstr ""
+
+msgid "Group by Column 2"
+msgstr ""
+
+msgid "Group by Column 3"
+msgstr ""
+
 msgid "Group by Label"
 msgstr ""
 
 msgid "Group by Tag"
+msgstr ""
+
+msgid "Grouped Record Calculations"
 msgstr ""
 
 msgid "Groups"
@@ -23798,6 +23875,9 @@ msgid "Has Active Webservices"
 msgstr ""
 
 msgid "Has Parent"
+msgstr ""
+
+msgid "Has Physical IO"
 msgstr ""
 
 msgid "Has Policies"
@@ -25019,7 +25099,13 @@ msgstr ""
 msgid "ID"
 msgstr ""
 
+msgid "ID of the resource group associated with the partition."
+msgstr ""
+
 msgid "ID within Provider"
+msgstr ""
+
+msgid "INCLUDES"
 msgstr ""
 
 msgid "IOPS"
@@ -25086,6 +25172,12 @@ msgid "IQN"
 msgstr ""
 
 msgid "IQN:"
+msgstr ""
+
+msgid "IS NOT NULL"
+msgstr ""
+
+msgid "IS NULL"
 msgstr ""
 
 msgid "ISCSI"
@@ -25818,6 +25910,9 @@ msgstr ""
 msgid "Introspected"
 msgstr ""
 
+msgid "Intrusion Detection Capable"
+msgstr ""
+
 msgid "Invalid Date specified: %{date}"
 msgstr ""
 
@@ -25876,6 +25971,12 @@ msgid "Invalid input"
 msgstr ""
 
 msgid "Invalid input for \"wait_for_task\"."
+msgstr ""
+
+msgid "Invalid or missing model"
+msgstr ""
+
+msgid "Invalid or non-chargeback model"
 msgstr ""
 
 msgid "Invalid parameters: %{params}"
@@ -26083,6 +26184,9 @@ msgstr ""
 msgid "KBps"
 msgstr ""
 
+msgid "KVM Capable"
+msgstr ""
+
 msgid "Keep OVA file on completion"
 msgstr ""
 
@@ -26115,7 +26219,16 @@ msgstr[1] ""
 msgid "Key Pairs"
 msgstr ""
 
+msgid "Key Store Signed Updates Enabled"
+msgstr ""
+
+msgid "Key Store Signed Updates Without Verification Allowed"
+msgstr ""
+
 msgid "Key:"
+msgstr ""
+
+msgid "Keylock Position"
 msgstr ""
 
 msgid "Keystone V3 Domain ID"
@@ -26292,6 +26405,9 @@ msgid "Last 1000 lines from server %{server_name} [%{server_id}] in zone %{zone_
 msgstr ""
 
 msgid "Last 1000 lines from the Automation log"
+msgstr ""
+
+msgid "Last 2 Days"
 msgstr ""
 
 msgid "Last 24 Hours"
@@ -26495,11 +26611,6 @@ msgstr ""
 msgid "Lease Obtained"
 msgstr ""
 
-msgid ""
-"Leave all options unchecked to show the original column value from the first r"
-"ecord in the group."
-msgstr ""
-
 msgid "Lenovo Provider"
 msgstr ""
 
@@ -26586,6 +26697,9 @@ msgstr ""
 msgid "Linked Clone"
 msgstr ""
 
+msgid "Linux Dynamic Key Secure Boot Enabled"
+msgstr ""
+
 msgid "Linux Init Processes"
 msgstr ""
 
@@ -26611,6 +26725,9 @@ msgid "Live Migrate Instances"
 msgstr ""
 
 msgid "Live Migrating %{models}"
+msgstr ""
+
+msgid "Live Preview"
 msgstr ""
 
 msgid "Live migrating Instance %{instance_name} completed successfully."
@@ -26947,7 +27064,13 @@ msgstr ""
 msgid "LoadBalancer|Total vms"
 msgstr ""
 
+msgid "Loading available fields…"
+msgstr ""
+
 msgid "Loading chargeback data..."
+msgstr ""
+
+msgid "Loading chargeback options…"
 msgstr ""
 
 msgid "Loading domains..."
@@ -26972,6 +27095,9 @@ msgid "Loading saved label assignments..."
 msgstr ""
 
 msgid "Loading tag categories..."
+msgstr ""
+
+msgid "Loading trend fields…"
 msgstr ""
 
 msgid "Loading..."
@@ -27046,6 +27172,12 @@ msgstr ""
 msgid "Logical Resource"
 msgstr ""
 
+msgid "Logical Serial Number"
+msgstr ""
+
+msgid "Logical serial number of the partition."
+msgstr ""
+
 msgid "Login"
 msgstr ""
 
@@ -27100,6 +27232,9 @@ msgid "Logout"
 msgstr ""
 
 msgid "Logs"
+msgstr ""
+
+msgid "Logs for %s"
 msgstr ""
 
 msgid "Logs for this %{product} Server are not available for viewing"
@@ -27890,6 +28025,12 @@ msgstr ""
 msgid "Maximum"
 msgstr ""
 
+msgid "Maximum %s columns allowed"
+msgstr ""
+
+msgid "Maximum %s columns allowed. Please remove some fields."
+msgstr ""
+
 msgid "Maximum Memory"
 msgstr ""
 
@@ -28345,9 +28486,6 @@ msgstr ""
 msgid "Memory: %{value} MB"
 msgstr ""
 
-msgid "Menu Name"
-msgstr ""
-
 msgid "Menu Shortcuts"
 msgstr ""
 
@@ -28358,6 +28496,12 @@ msgid "Menu Widgets"
 msgstr ""
 
 msgid "Menu item label"
+msgstr ""
+
+msgid "Menu name"
+msgstr ""
+
+msgid "Menu name cannot exceed %s characters"
 msgstr ""
 
 msgid "Menus"
@@ -29442,6 +29586,15 @@ msgstr ""
 msgid "Migrate this VM to another Host/Datastore"
 msgstr ""
 
+msgid "Migration State"
+msgstr ""
+
+msgid "Migration Storage VIOS Data Status"
+msgstr ""
+
+msgid "Migration Storage VIOS Data Timestamp"
+msgstr ""
+
 msgid "Min"
 msgstr ""
 
@@ -29517,6 +29670,12 @@ msgstr ""
 msgid "Minimum"
 msgstr ""
 
+msgid "Minimum Affinity Score"
+msgstr ""
+
+msgid "Minimum Affinity Score Action"
+msgstr ""
+
 msgid "Minimum Memory"
 msgstr ""
 
@@ -29527,6 +29686,9 @@ msgid "Minimum Processors"
 msgstr ""
 
 msgid "Minimum Virtual Processors"
+msgstr ""
+
+msgid "Minimum affinity score for the partition."
 msgstr ""
 
 msgid "Minimum amount of memory that can be allocated (in GiB)"
@@ -31936,6 +32098,9 @@ msgstr ""
 msgid "Missing credentials"
 msgstr ""
 
+msgid "Missing report_data parameter"
+msgstr ""
+
 msgid "Modal"
 msgstr ""
 
@@ -32334,6 +32499,9 @@ msgstr ""
 msgid "Monthly Charge view"
 msgstr ""
 
+msgid "Monthly Ending with"
+msgstr ""
+
 msgid "Monthly Host Count per Provider"
 msgstr ""
 
@@ -32383,9 +32551,6 @@ msgid "Move selected VMs to left"
 msgstr ""
 
 msgid "Move selected VMs to right"
-msgstr ""
-
-msgid "Move selected fields %{where}"
 msgstr ""
 
 msgid "Move selected fields down"
@@ -32540,6 +32705,9 @@ msgstr ""
 msgid "Must start with a letter and contain only letters, numbers, and underscores"
 msgstr ""
 
+msgid "My Company"
+msgstr ""
+
 msgid "My Company Categories"
 msgstr ""
 
@@ -32629,6 +32797,9 @@ msgstr ""
 msgid ""
 "Name must consist of lower case alphanumeric characters or '-', start with an "
 "alphanumeric character, and end with an alphanumeric character"
+msgstr ""
+
+msgid "Name of the resource group associated with the partition."
 msgstr ""
 
 msgid "Name of this credential"
@@ -33294,9 +33465,6 @@ msgstr ""
 msgid "New Alert Profile \"%s\" has been successfully queued."
 msgstr ""
 
-msgid "New Field"
-msgstr ""
-
 msgid "New Folder"
 msgstr ""
 
@@ -33417,12 +33585,6 @@ msgstr ""
 msgid "No %{model} were selected for pause"
 msgstr ""
 
-msgid "No %{name} were selected to move down"
-msgstr ""
-
-msgid "No %{name} were selected to move up"
-msgstr ""
-
 msgid "No %{record} were selected for deletion"
 msgstr ""
 
@@ -33487,6 +33649,9 @@ msgid "No Catalogs were selected for deletion"
 msgstr ""
 
 msgid "No Chargeback Rates were selected for deletion"
+msgstr ""
+
+msgid "No Chart"
 msgstr ""
 
 msgid "No Choices Available"
@@ -33833,6 +33998,9 @@ msgstr ""
 msgid "No data available."
 msgstr ""
 
+msgid "No data returned for this report."
+msgstr ""
+
 msgid "No domains found in the import file"
 msgstr ""
 
@@ -33857,7 +34025,7 @@ msgstr ""
 msgid "No fields available for this model."
 msgstr ""
 
-msgid "No fields were moved up"
+msgid "No fields selected yet."
 msgstr ""
 
 msgid "No fields were selected to move bottom"
@@ -33884,6 +34052,9 @@ msgstr ""
 msgid "No filter available"
 msgstr ""
 
+msgid "No filter expression defined."
+msgstr ""
+
 msgid "No filters defined."
 msgstr ""
 
@@ -33906,6 +34077,9 @@ msgid "No instances found"
 msgstr ""
 
 msgid "No items available"
+msgstr ""
+
+msgid "No items available."
 msgstr ""
 
 msgid "No label values available for this label key."
@@ -33936,6 +34110,9 @@ msgid "No namespaces available for the selected domain"
 msgstr ""
 
 msgid "No notes have been entered."
+msgstr ""
+
+msgid "No numeric columns available."
 msgstr ""
 
 msgid "No option selected"
@@ -34178,9 +34355,6 @@ msgstr ""
 msgid "Note"
 msgstr ""
 
-msgid "Note:"
-msgstr ""
-
 msgid "Note: Ansible Playbook based resources can not be added to a Catalog Bundle"
 msgstr ""
 
@@ -34204,9 +34378,6 @@ msgid "Note: No Clusters available."
 msgstr ""
 
 msgid "Note: No Datastores available."
-msgstr ""
-
-msgid "Note: Only Time Profiles with 'Roll Up Performance' set are shown."
 msgstr ""
 
 msgid "Note: Some items might be hidden due to the possibility of an ownership change"
@@ -34313,6 +34484,9 @@ msgid "Notification|Region number"
 msgstr ""
 
 msgid "Notification|Subject type"
+msgstr ""
+
+msgid "Now (partial)"
 msgstr ""
 
 msgid "Number"
@@ -34453,6 +34627,9 @@ msgid "OS Architecture"
 msgstr ""
 
 msgid "OS Build Number"
+msgstr ""
+
+msgid "OS Image Date"
 msgstr ""
 
 msgid "OS Info"
@@ -34657,9 +34834,6 @@ msgstr ""
 msgid ""
 "Only available for VM, Provider, Service, User, Group, Tenant, Cloud Tenant an"
 "d Generic Object with \"Display for\" set to \"Single\""
-msgstr ""
-
-msgid "Only available when \"Display for\" is set to \"Single\""
 msgstr ""
 
 msgid "Only more than 1 Custom Button Groups can be reordered"
@@ -35012,6 +35186,9 @@ msgstr ""
 msgid "OperatingSystem|Version"
 msgstr ""
 
+msgid "Operation In Progress"
+msgstr ""
+
 msgid "Operation not supported"
 msgstr ""
 
@@ -35224,6 +35401,9 @@ msgid "OrchestrationStackOutput|Region number"
 msgstr ""
 
 msgid "OrchestrationStackOutput|Value"
+msgstr ""
+
+msgid "OrchestrationStackOutput|Value type"
 msgstr ""
 
 msgid "OrchestrationStackParameter|Ems ref"
@@ -35519,9 +35699,6 @@ msgstr ""
 msgid "Other VM Files Percent of Used"
 msgstr ""
 
-msgid "Outdated filters were removed from group \"%{name}\""
-msgstr ""
-
 msgid "Outgoing SMTP E-mail Server"
 msgstr ""
 
@@ -35579,7 +35756,7 @@ msgstr ""
 msgid "PDF"
 msgstr ""
 
-msgid "PDF Output"
+msgid "PDF page size"
 msgstr ""
 
 msgid "PID"
@@ -35662,9 +35839,6 @@ msgid "Packages"
 msgstr ""
 
 msgid "Page %{page_number} of %{total_pages}"
-msgstr ""
-
-msgid "Page Size"
 msgstr ""
 
 msgid "Pagination"
@@ -35752,6 +35926,9 @@ msgid "Partition"
 msgstr ""
 
 msgid "Partition ID"
+msgstr ""
+
+msgid "Partition Placement"
 msgstr ""
 
 msgid "Partition Table"
@@ -35971,6 +36148,12 @@ msgstr ""
 msgid "Pending Approval"
 msgstr ""
 
+msgid "Pending Secure Boot"
+msgstr ""
+
+msgid "Pending secure boot setting of the partition."
+msgstr ""
+
 msgid "Per Minute"
 msgstr ""
 
@@ -35981,6 +36164,15 @@ msgid "Per Unit"
 msgstr ""
 
 msgid "Percent"
+msgstr ""
+
+msgid "Percent 1"
+msgstr ""
+
+msgid "Percent 2"
+msgstr ""
+
+msgid "Percent 3"
 msgstr ""
 
 msgid "Percent Used Provisioned Space"
@@ -37098,6 +37290,11 @@ msgstr ""
 msgid "Picture|Resource type"
 msgstr ""
 
+msgid ""
+"Pie and Donut charts are not recommended for small percentages because the lab"
+"els may overlap."
+msgstr ""
+
 msgid "Pin Policy"
 msgstr ""
 
@@ -37121,6 +37318,9 @@ msgid "Placement Groups"
 msgstr ""
 
 msgid "Placement group"
+msgstr ""
+
+msgid "Placement value for the partition."
 msgstr ""
 
 msgid "PlacementGroup"
@@ -37612,6 +37812,9 @@ msgstr ""
 msgid "Power On VM"
 msgstr ""
 
+msgid "Power On With Hypervisor"
+msgstr ""
+
 msgid "Power On a Host"
 msgstr ""
 
@@ -37699,6 +37902,9 @@ msgstr ""
 msgid "PowerVC Server Username"
 msgstr ""
 
+msgid "PowerVM Management Capable"
+msgstr ""
+
 msgid "PowerVS Service GUID"
 msgstr ""
 
@@ -37732,18 +37938,6 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
-msgid "Preview tab is not available until Chargeback Filters has been configured"
-msgstr ""
-
-msgid "Preview tab is not available until Trend Target Limit has been configured"
-msgstr ""
-
-msgid "Preview tab is not available until Trending for field has been selected"
-msgstr ""
-
-msgid "Preview tab is not available until at least 1 field has been selected"
-msgstr ""
-
 msgid "Previous"
 msgstr ""
 
@@ -37771,7 +37965,7 @@ msgstr ""
 msgid "Primary (Record) Filter"
 msgstr ""
 
-msgid "Primary (Record) Filter - Filters the %{model} table records"
+msgid "Primary (Record) Filter — filters the %{model} table records"
 msgstr ""
 
 msgid "Primary IP Address"
@@ -37978,6 +38172,9 @@ msgid "Profile Policies"
 msgstr ""
 
 msgid "Profiles"
+msgstr ""
+
+msgid "Progress State"
 msgstr ""
 
 msgid "Project"
@@ -38690,6 +38887,9 @@ msgstr ""
 msgid "REST API"
 msgstr ""
 
+msgid "RMC OS Shutdown Capable"
+msgstr ""
+
 msgid "RSA Private Key"
 msgstr ""
 
@@ -39078,6 +39278,9 @@ msgstr ""
 msgid "Reconfiguring %{vm_or_template} \"%{name}\""
 msgstr ""
 
+msgid "Record Filter — filters the %{model} table records"
+msgstr ""
+
 msgid "Record ID"
 msgstr ""
 
@@ -39103,6 +39306,9 @@ msgid "Red Text"
 msgstr ""
 
 msgid "Redfish Provider"
+msgstr ""
+
+msgid "Redundant Error Path Reporting Enabled"
 msgstr ""
 
 msgid "Reference"
@@ -39879,6 +40085,9 @@ msgstr ""
 msgid "Remote Region"
 msgstr ""
 
+msgid "Remote Restart State"
+msgstr ""
+
 msgid "Remote Security Group (name - ref)"
 msgstr ""
 
@@ -39892,6 +40101,9 @@ msgid "Removal of security group was canceled by the user."
 msgstr ""
 
 msgid "Remove"
+msgstr ""
+
+msgid "Remove %s"
 msgstr ""
 
 msgid "Remove %{email}"
@@ -40656,12 +40868,6 @@ msgstr ""
 msgid "Report \"%{name}\""
 msgstr ""
 
-msgid "Report \"%{name}\" was added"
-msgstr ""
-
-msgid "Report \"%{name}\" was saved"
-msgstr ""
-
 msgid "Report \"%{name}\": Delete successful"
 msgstr ""
 
@@ -40669,9 +40875,6 @@ msgid "Report \"%{name}\": Error during 'miq_report_delete': %{message}"
 msgstr ""
 
 msgid "Report Admin"
-msgstr ""
-
-msgid "Report Creation Timeout"
 msgstr ""
 
 msgid "Report Filter"
@@ -40695,9 +40898,6 @@ msgstr ""
 msgid "Report Options"
 msgstr ""
 
-msgid "Report Preview (up to 50 rows)"
-msgstr ""
-
 msgid "Report Result"
 msgid_plural "Report Results"
 msgstr[0] ""
@@ -40717,10 +40917,10 @@ msgstr ""
 msgid "Report Widgets"
 msgstr ""
 
-msgid "Report can not be saved unless sort field has been configured for Charts"
+msgid "Report cannot be deleted if it's being used by one or more Widgets"
 msgstr ""
 
-msgid "Report cannot be deleted if it's being used by one or more Widgets"
+msgid "Report creation timeout"
 msgstr ""
 
 msgid "Report date: %{report_date}"
@@ -40750,10 +40950,16 @@ msgstr ""
 msgid "Report preview generation returned: Status [%{status}] Message [%{message}]"
 msgstr ""
 
+msgid "Report preview not found"
+msgstr ""
+
 msgid "Report runs"
 msgstr ""
 
 msgid "Report table is nil"
+msgstr ""
+
+msgid "Report was saved"
 msgstr ""
 
 msgid "Reporting Workers"
@@ -41859,6 +42065,9 @@ msgid ""
 "hem."
 msgstr ""
 
+msgid "Rule %s"
+msgstr ""
+
 msgid "Rule Name"
 msgstr ""
 
@@ -41905,9 +42114,6 @@ msgid "Run an Ansible Playbook"
 msgstr ""
 
 msgid "Run on localhost"
-msgstr ""
-
-msgid "Run on the target of the Policy Event"
 msgstr ""
 
 msgid "Runner Options"
@@ -42461,6 +42667,9 @@ msgstr ""
 msgid "Search Name is required"
 msgstr ""
 
+msgid "Search and select fields..."
+msgstr ""
+
 msgid "Search by Name within results"
 msgstr ""
 
@@ -42483,9 +42692,6 @@ msgid "Second"
 msgstr ""
 
 msgid "Secondary (Display) Filter"
-msgstr ""
-
-msgid "Secondary (Display) Filter - Filters the rows based on child table fields"
 msgstr ""
 
 msgid "Secondary Menu"
@@ -42834,6 +43040,9 @@ msgstr ""
 msgid "Select Classes to copy"
 msgstr ""
 
+msgid "Select Container"
+msgstr ""
+
 msgid "Select Dialogs to import"
 msgstr ""
 
@@ -42903,7 +43112,16 @@ msgstr ""
 msgid "Select a VM to Submit the Simulation Options"
 msgstr ""
 
+msgid "Select a chart type below, or choose \"No Chart\" to disable charting."
+msgstr ""
+
 msgid "Select a filter to set it as my default"
+msgstr ""
+
+msgid "Select a model on the Columns tab to configure chargeback filters."
+msgstr ""
+
+msgid "Select a model on the Columns tab to configure filters."
 msgstr ""
 
 msgid "Select a node on the left to view Utilization information."
@@ -43062,6 +43280,9 @@ msgstr ""
 msgid "Select only one or consecutive %{name} to move up"
 msgstr ""
 
+msgid "Select only one or consecutive Fields to move up"
+msgstr ""
+
 msgid "Select only one or consecutive fields to move down"
 msgstr ""
 
@@ -43143,9 +43364,6 @@ msgstr ""
 msgid "Selected Day Percent Utilization"
 msgstr ""
 
-msgid "Selected Fields:"
-msgstr ""
-
 msgid "Selected Folders"
 msgstr ""
 
@@ -43177,6 +43395,9 @@ msgid "Selected Template Contents"
 msgstr ""
 
 msgid "Selected VM"
+msgstr ""
+
+msgid "Selected fields"
 msgstr ""
 
 msgid "Selected item can not be copied. Because it\\'s Ansible Playbook or not valid."
@@ -45682,9 +45903,6 @@ msgstr ""
 msgid "Sort order"
 msgstr ""
 
-msgid "Sort the Report By"
-msgstr ""
-
 msgid "Source"
 msgstr ""
 
@@ -45766,18 +45984,6 @@ msgstr ""
 msgid ""
 "Specified Resource Pool <%{pool_name}> for Host <%{name}> is invalid, unable t"
 "o migrate VM"
-msgstr ""
-
-msgid "Specify Calculations for Summary Rows"
-msgstr ""
-
-msgid "Specify Calculations of Numeric Values for Grouped Records"
-msgstr ""
-
-msgid "Specify Column Headers and Formats"
-msgstr ""
-
-msgid "Specify Column Styles"
 msgstr ""
 
 msgid "Specify host values"
@@ -45995,6 +46201,9 @@ msgid "Status of Regional Roles for Servers in %{kind} %{description}"
 msgstr ""
 
 msgid "Status of Roles for Servers in %{kind} %{description}"
+msgstr ""
+
+msgid "Status of the migration storage VIOS data."
 msgstr ""
 
 msgid "Stdout"
@@ -46605,6 +46814,9 @@ msgstr ""
 msgid "Style"
 msgstr ""
 
+msgid "Style conditions are evaluated top to bottom for each column"
+msgstr ""
+
 msgid "Styling"
 msgstr ""
 
@@ -46615,9 +46827,6 @@ msgid "Styling for '%{item}', second value is in error: %{message}"
 msgstr ""
 
 msgid "Styling for '%{item}', third value is in error: %{message}"
-msgstr ""
-
-msgid "Styling tab is not available until at least 1 field has been selected"
 msgstr ""
 
 msgid "Sub"
@@ -46776,9 +46985,6 @@ msgid "Summary of VM Create and Deletes"
 msgstr ""
 
 msgid "Summary of all VC Events for VM prod_webserver"
-msgstr ""
-
-msgid "Summary tab is not available until at least 1 field has been selected"
 msgstr ""
 
 msgid "Sunday"
@@ -48263,9 +48469,6 @@ msgstr ""
 msgid "There are no Floating IPs available to this Instance."
 msgstr ""
 
-msgid "There are not tags assigned to this group."
-msgstr ""
-
 msgid ""
 "There is an error in the selected expression element, perhaps it was imported "
 "or edited manually."
@@ -48442,7 +48645,7 @@ msgstr ""
 msgid "This task can not be canceled"
 msgstr ""
 
-msgid "This user is limited to "
+msgid "This user is limited to"
 msgstr ""
 
 msgid "This user is limited to items with the selected tags."
@@ -48501,6 +48704,9 @@ msgid "Time Profile"
 msgstr ""
 
 msgid "Time Profiles"
+msgstr ""
+
+msgid "Time Reference Partition"
 msgstr ""
 
 msgid "Time Stamp"
@@ -48599,10 +48805,16 @@ msgstr ""
 msgid "Timestamp"
 msgstr ""
 
+msgid "Timestamp of the migration storage VIOS data."
+msgstr ""
+
 msgid "Timezone"
 msgstr ""
 
 msgid "Title"
+msgstr ""
+
+msgid "Title cannot exceed %s characters"
 msgstr ""
 
 msgid "To"
@@ -48992,9 +49204,6 @@ msgstr ""
 msgid "Trend Target Limit must be numeric"
 msgstr ""
 
-msgid "Trend Target Limit: Value must be numeric"
-msgstr ""
-
 msgid "Trend Target Percents"
 msgstr ""
 
@@ -49130,9 +49339,6 @@ msgid "URL"
 msgstr ""
 
 msgid "URL (i.e. www.mypage.com)"
-msgstr ""
-
-msgid "URL can be opened only by buttons for a single entity"
 msgstr ""
 
 msgid "URL has to be HTTPS"
@@ -49404,6 +49610,9 @@ msgid "Unauthorized"
 msgstr ""
 
 msgid "Unauthorized object or action"
+msgstr ""
+
+msgid "Uncapped Weight"
 msgstr ""
 
 msgid "Uncommitted"
@@ -51625,6 +51834,12 @@ msgstr ""
 msgid "View Load Balancers"
 msgstr ""
 
+msgid "View Logs"
+msgstr ""
+
+msgid "View Logs for this Container Group"
+msgstr ""
+
 msgid "View Metrics"
 msgstr ""
 
@@ -51722,9 +51937,6 @@ msgid "View Policy Alerts"
 msgstr ""
 
 msgid "View Policy Profiles"
-msgstr ""
-
-msgid "View Policy Simulation for this Template"
 msgstr ""
 
 msgid "View Policy Simulation of Images"
@@ -52091,6 +52303,9 @@ msgid "Virtual Network"
 msgstr ""
 
 msgid "Virtual Private Cloud"
+msgstr ""
+
+msgid "Virtual Service Attention LED"
 msgstr ""
 
 msgid "Virtual machines added"
@@ -53607,6 +53822,9 @@ msgstr ""
 msgid "Weekly"
 msgstr ""
 
+msgid "Weekly Ending with"
+msgstr ""
+
 msgid "Weekly Utilization Overview"
 msgstr ""
 
@@ -53624,12 +53842,81 @@ msgid ""
 "be changed"
 msgstr ""
 
+msgid "Whether Linux dynamic key secure boot is enabled."
+msgstr ""
+
+msgid "Whether active memory sharing is enabled for the partition."
+msgstr ""
+
+msgid "Whether all resources are assigned to the partition."
+msgstr ""
+
+msgid "Whether an operation is currently in progress on the partition."
+msgstr ""
+
+msgid "Whether call home is enabled for the partition."
+msgstr ""
+
+msgid "Whether connection monitoring is enabled."
+msgstr ""
+
+msgid "Whether key store signed updates are enabled."
+msgstr ""
+
+msgid "Whether key store signed updates without verification are allowed."
+msgstr ""
+
 msgid ""
 "Whether or not the VM is 'preemptible'. See https://cloud.google.com/compute/d"
 "ocs/instances/preemptible for more details."
 msgstr ""
 
+msgid "Whether redundant error path reporting is enabled."
+msgstr ""
+
 msgid "Whether the instance can be migrated [true, false]"
+msgstr ""
+
+msgid "Whether the partition has dedicated processors for migration."
+msgstr ""
+
+msgid "Whether the partition has physical IO assigned."
+msgstr ""
+
+msgid "Whether the partition is KVM capable."
+msgstr ""
+
+msgid "Whether the partition is bootable."
+msgstr ""
+
+msgid "Whether the partition is capable of PowerVM management."
+msgstr ""
+
+msgid "Whether the partition is the time reference partition."
+msgstr ""
+
+msgid "Whether the partition powers on with the hypervisor."
+msgstr ""
+
+msgid "Whether the partition supports RMC-initiated OS shutdown."
+msgstr ""
+
+msgid "Whether the partition supports dynamic logical partition IO."
+msgstr ""
+
+msgid "Whether the partition supports dynamic logical partition VIOS."
+msgstr ""
+
+msgid "Whether the partition supports dynamic logical partition memory."
+msgstr ""
+
+msgid "Whether the partition supports dynamic logical partition processors."
+msgstr ""
+
+msgid "Whether the partition supports internal and external intrusion detection."
+msgstr ""
+
+msgid "Whether the virtual service attention LED is on."
 msgstr ""
 
 msgid "Whether to use the authorize mechanism"
@@ -53737,7 +54024,7 @@ msgstr ""
 msgid "WindowsImage|Region number"
 msgstr ""
 
-msgid "Within Above Field, Sort By"
+msgid "Within above field, sort by"
 msgstr ""
 
 msgid "Worker"
@@ -54093,6 +54380,12 @@ msgstr ""
 msgid "after 1 year"
 msgstr ""
 
+msgid "and"
+msgstr ""
+
+msgid "and Date"
+msgstr ""
+
 msgid "approval is required for %{task}"
 msgstr ""
 
@@ -54380,9 +54673,6 @@ msgid "disable"
 msgstr ""
 
 msgid "do not change the outcome of the scope or expression"
-msgstr ""
-
-msgid "down"
 msgstr ""
 
 msgid "eligible_manager_types must be implemented in subclass"
@@ -55354,12 +55644,6 @@ msgstr ""
 msgid "to be determined"
 msgstr ""
 
-msgid "to bottom"
-msgstr ""
-
-msgid "to top"
-msgstr ""
-
 msgid "true"
 msgstr ""
 
@@ -55418,9 +55702,6 @@ msgid "unknown zone %{zone_name}"
 msgstr ""
 
 msgid "unlimited"
-msgstr ""
-
-msgid "up"
 msgstr ""
 
 msgid "update_aggregate must be implemented in a subclass"
