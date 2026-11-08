@@ -8,19 +8,23 @@ describe ManageIQ::Session::MemCacheStoreAdapter do
   end
 
   describe "#session_options" do
-    it "merges default client options with mem_cache_store session options" do
-      stub_settings_merge(:session => {:memcache_server => "127.0.0.1:11211"})
+    before do
+      stub_const("ENV", ENV.to_h.except("MEMCACHED_SERVER", "MEMCACHED_ENABLE_SSL"))
+      stub_settings(:session => {:memcache_server => "localhost:11211"})
+      allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
+    end
 
+    it "returns the expected options" do
       options = adapter.session_options
 
       expect(options[:expire_after]).to eq(24.hours)
       expect(options[:key]).to eq("_vmdb_session")
-      expect(options[:memcache_server]).to eq("127.0.0.1:11211")
+      expect(options[:memcache_server]).to eq("localhost:11211")
       expect(options[:namespace]).to eq("MIQ:VMDB")
       expect(options[:pool_size]).to eq(10)
-      expect(options[:value_max_bytes]).to eq(10.megabytes)
       expect(options[:socket_max_failures]).to eq(5)
       expect(options[:threadsafe]).to be(true)
+      expect(options[:value_max_bytes]).to eq(10.megabytes)
     end
   end
 
