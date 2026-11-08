@@ -81,7 +81,8 @@
   - physical_infra_topology
   - policy_import_export
   - pxe
-  - resource_pool
+  - resource_pool_cloud
+  - resource_pool_infra
   - security_group
   - service
   - timeline
@@ -161,9 +162,12 @@
   - rbac_group_view
   - rbac_group_operate
   - rbac_tenant_view
-  - resource_pool_show
-  - resource_pool_show_list
-  - resource_pool_tag
+  - resource_pool_coud_show
+  - resource_pool_cloud_show_list
+  - resource_pool_cloud_tag
+  - resource_pool_infra_show
+  - resource_pool_infra_show_list
+  - resource_pool_infra_tag
   - service_view
   - storage_show
   - storage_show_list
@@ -258,9 +262,12 @@
   - policy_simulation
   - pxe_image_type_view
   - pxe_server_view
-  - resource_pool_show
-  - resource_pool_show_list
-  - resource_pool_tag
+  - resource_pool_cloud_show
+  - resource_pool_cloud_show_list
+  - resource_pool_cloud_tag
+  - resource_pool_infra_show
+  - resource_pool_infra_show_list
+  - resource_pool_infra_tag
   - service_view
   - storage_show
   - storage_show_list
@@ -354,9 +361,12 @@
   - policy_simulation
   - pxe_image_type_view
   - pxe_server_view
-  - resource_pool_show
-  - resource_pool_show_list
-  - resource_pool_tag
+  - resource_pool_cloud_show
+  - resource_pool_cloud_show_list
+  - resource_pool_cloud_tag
+  - resource_pool_infra_show
+  - resource_pool_infra_show_list
+  - resource_pool_infra_tag
   - service_view
   - storage_show
   - storage_show_list
@@ -542,9 +552,12 @@
   - miq_template_tag
   - miq_template_timeline
   - pxe
-  - resource_pool_show
-  - resource_pool_show_list
-  - resource_pool_tag
+  - resource_pool_cloud_show
+  - resource_pool_cloud_show_list
+  - resource_pool_cloud_tag
+  - resource_pool_infra_show
+  - resource_pool_infra_show_list
+  - resource_pool_infra_tag
   - service_view
   - storage_delete
   - storage_scan
@@ -640,9 +653,12 @@
   - policy_log
   - policy_simulation
   - physical_server_view
-  - resource_pool_show
-  - resource_pool_show_list
-  - resource_pool_tag
+  - resource_pool_cloud_show
+  - resource_pool_cloud_show_list
+  - resource_pool_cloud_tag
+  - resource_pool_infra_show
+  - resource_pool_infra_show_list
+  - resource_pool_infra_tag
   - service_view
   - storage_show
   - storage_show_list
@@ -726,9 +742,12 @@
   - physical_storage_view
   - policy_log
   - policy_simulation
-  - resource_pool_show
-  - resource_pool_show_list
-  - resource_pool_tag
+  - resource_pool_cloud_show
+  - resource_pool_cloud_show_list
+  - resource_pool_cloud_tag
+  - resource_pool_infra_show
+  - resource_pool_infra_show_list
+  - resource_pool_infra_tag
   - service_view
   - storage_show
   - storage_show_list
@@ -812,9 +831,12 @@
   - physical_switch_view
   - physical_server_view
   - physical_storage_view
-  - resource_pool_show
-  - resource_pool_show_list
-  - resource_pool_tag
+  - resource_pool_cloud_show
+  - resource_pool_cloud_show_list
+  - resource_pool_cloud_tag
+  - resource_pool_infra_show
+  - resource_pool_infra_show_list
+  - resource_pool_infra_tag
   - service_view
   - storage_show
   - storage_show_list
@@ -901,9 +923,12 @@
   - physical_server_view
   - physical_storage_view
   - physical_switch_view
-  - resource_pool_show
-  - resource_pool_show_list
-  - resource_pool_tag
+  - resource_pool_cloud_show
+  - resource_pool_cloud_show_list
+  - resource_pool_cloud_tag
+  - resource_pool_infra_show
+  - resource_pool_infra_show_list
+  - resource_pool_infra_tag
   - service_view
   - storage_perf
   - storage_show
@@ -1077,9 +1102,12 @@
   - rbac_group_view
   - rbac_group_operate
   - rbac_tenant_view
-  - resource_pool_show
-  - resource_pool_show_list
-  - resource_pool_tag
+  - resource_pool_cloud_show
+  - resource_pool_cloud_show_list
+  - resource_pool_cloud_tag
+  - resource_pool_infra_show
+  - resource_pool_infra_show_list
+  - resource_pool_infra_tag
   - service_view
   - st_catalog_view
   - st_catalog_edit
@@ -1308,7 +1336,8 @@
   - rbac_role_view
   - rbac_tenant
   - rbac_user
-  - resource_pool
+  - resource_pool_cloud
+  - resource_pool_infra
   - security_group
   - service
   - timeline
@@ -1364,7 +1393,8 @@
   - pxe
   - rbac_tenant_view
   - rbac_tenant_manage_quotas
-  - resource_pool
+  - resource_pool_cloud
+  - resource_pool_infra
   - security_group
   - service
   - timeline
@@ -1560,7 +1590,8 @@
   - rbac_role_view
   - rbac_tenant_view
   - rbac_user_view
-  - resource_pool_view
+  - resource_pool_cloud_view
+  - resource_pool_infra_view
   - security_group_view
   - service_view
   - st_catalog_view
