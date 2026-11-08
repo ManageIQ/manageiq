@@ -1,5 +1,3 @@
-include ActionView::Helpers::NumberHelper
-
 require_dependency 'manageiq/reporting/formatter/report_renderer'
 require_dependency 'manageiq/reporting/formatter/c3'
 require_dependency 'manageiq/reporting/formatter/converter'
