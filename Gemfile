@@ -32,7 +32,7 @@ gem "bundler",                          ">= 2.5.20", "< 5",  :require => false
 gem "byebug",                                                :require => false
 gem "config",                           "~>5.1",             :require => false
 gem "connection_pool",                  "~>2.5",             :require => false # For Dalli
-gem "dalli",                            "~>3.2.13",          :require => false
+gem "dalli",                            "~>3.2.15",          :require => false
 gem "default_value_for",                "~>4.0"
 gem "docker-api",                       "~>1.33.6",          :require => false
 gem "drb",                              "~>2.2",             :require => false
@@ -63,9 +63,9 @@ gem "pg-dsn_parser",                    "~>0.1.1",           :require => false
 gem "prism",                            ">=0.25.0",          :require => false # Used by DescendantLoader
 gem "psych",                            ">=3.1",             :require => false # 3.1 safe_load changed positional to kwargs like aliases: true: https://github.com/ruby/psych/commit/4d4439d6d0adfcbd211ea295779315f1baa7dadd
 gem "query_relation",                   "~>0.2.0",           :require => false
-gem "rack",                             ">=2.2.23",          :require => false
+gem "rack",                             ">=2.2.25",          :require => false
 gem "rack-attack",                      "~>6.8.0",           :require => false
-gem "rails",                            "~>8.0.5", ">=8.0.5.1"
+gem "rails",                            "~>8.0.5", ">=8.0.5.2"
 gem "rails-i18n",                       "~>8.0.2"
 gem "rake",                             ">=12.3.3",          :require => false
 gem "rest-client",                      "~>2.1.0",           :require => false
