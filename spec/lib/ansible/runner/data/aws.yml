@@ -1,8 +1,0 @@
-- name: Test aws collection
-  hosts: localhost
-  tasks:
-  - name: Connect to aws
-    amazon.aws.ec2_instance_info:
-      access_key: 'access_key'
-      secret_key: 'secret_key'
-      region: us-east-1
