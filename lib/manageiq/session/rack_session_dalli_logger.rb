@@ -3,7 +3,7 @@ module ManageIQ
     module RackSessionDalliLogger
       def log_rack_session_access(*args, **_kwargs)
         request = args.first
-        Rails.logger.debug("RackSessionDalliLogger##{caller_locations.first.label.ljust(14, ' ')} id: #{request.request_id} method: #{request.request_method} fullpath: #{request.fullpath}")
+        Rails.logger.debug("RackSessionDalliLogger##{caller_locations.first.base_label.ljust(14, ' ')} id: #{request.request_id} method: #{request.request_method} fullpath: #{request.fullpath}")
       end
 
       def find_session(...)
