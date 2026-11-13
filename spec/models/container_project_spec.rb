@@ -36,4 +36,24 @@ RSpec.describe ContainerProject do
       end.not_to make_database_queries
     end
   end
+
+  describe "ownership" do
+    let(:user) { FactoryBot.create(:user) }
+    let(:group) { FactoryBot.create(:miq_group) }
+    let(:container_project) { FactoryBot.create(:container_project) }
+
+    it "responds to evm_owner and miq_group" do
+      expect(container_project).to respond_to(:evm_owner)
+      expect(container_project).to respond_to(:miq_group)
+    end
+
+    describe ".set_ownership" do
+      it "returns true and persists owner and group" do
+        expect(described_class.set_ownership([container_project.id], :owner => user, :group => group)).to be(true)
+        container_project.reload
+        expect(container_project.evm_owner).to eq(user)
+        expect(container_project.miq_group).to eq(group)
+      end
+    end
+  end
 end
