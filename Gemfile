@@ -1,5 +1,5 @@
 ruby ">= 3.3.1", "< 3.5.0"
-warn "Ruby versions >= 3.4.0 are untested!" if RUBY_VERSION >= "3.4.0"
+warn "Ruby versions >= 3.5.0 are untested!" if RUBY_VERSION >= "3.5.0"
 source 'https://rubygems.org'
 
 plugin "bundler-inject", "~> 2.0"
