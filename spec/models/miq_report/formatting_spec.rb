@@ -43,6 +43,14 @@ RSpec.describe MiqReport, "::Formatting" do
       expect(subject.format_bytes_to_human_size(123, :prefix => "Front ", :suffix => " Back"))
         .to eq("Front 123 Bytes Back")
     end
+
+    it "respects precision" do
+      expect(subject.format_bytes_to_human_size(7822, :precision => 1)).to eq('7.6 KB')
+    end
+
+    it "supports significant digits" do
+      expect(subject.format_bytes_to_human_size(7822)).to eq('7.6 KB')
+    end
   end
 
   describe "#format_model_name" do
