@@ -95,7 +95,7 @@ module Metric::CiMixin::Capture
   # @param metrics_capture [MetricCapture]
   def just_perf_capture(interval_name, start_time, end_time, metrics_capture)
     log_header = "[#{interval_name}]"
-    log_time = ''
+    log_time = +''
     log_time << ", start_time: [#{start_time}]" unless start_time.nil?
     log_time << ", end_time: [#{end_time}]" unless end_time.nil?
 
