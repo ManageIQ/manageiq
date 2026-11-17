@@ -45,7 +45,7 @@ RSpec.describe Ansible::Content do
     it "accepts an env" do
       FileUtils.mkdir(roles_dir)
       FileUtils.touch(roles_requirements)
-      env = {"PYTHONPATH" => "/var/lib/manageiq/venv/python3.12/site-packages", "PATH" => "/var/lib/manageiq/venv/bin"}
+      env = {"PYTHONPATH" => "/usr/lib/manageiq/venv/python3.12/site-packages", "PATH" => "/usr/lib/manageiq/venv/bin"}
 
       expect(AwesomeSpawn).to receive(:run!).with("ansible-galaxy", :env => env, :params => expected_params)
 

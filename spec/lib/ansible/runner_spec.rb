@@ -5,8 +5,8 @@ RSpec.describe Ansible::Runner do
   let(:tags)       { "tag" }
   let(:result)     { AwesomeSpawn::CommandResult.new("ansible-runner", "output", "", 100, "0") }
 
-  let(:venv_python_path)   { "/var/lib/manageiq/venv/python3.12/site-packages" }
-  let(:venv_bin_path)      { "/var/lib/manageiq/venv/bin" }
+  let(:venv_python_path)   { "/usr/lib/manageiq/venv/python3.12/site-packages" }
+  let(:venv_bin_path)      { "/usr/lib/manageiq/venv/bin" }
   let(:python_path)        { "/usr/local/lib64/python3.12/site-packages:/usr/local/lib/python3.12/site-packages:/usr/lib64/python3.12/site-packages:/usr/lib/python3.12/site-packages" }
   let(:system_path)        { "/opt/manageiq/manageiq-gemset/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin" }
   let(:runner_python_path) { [venv_python_path, python_path].join(":") }
@@ -18,10 +18,10 @@ RSpec.describe Ansible::Runner do
       ansible [core 2.18.6]
         config file = None
         configured module search path = ['/root/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
-        ansible python module location = /var/lib/manageiq/venv/lib64/python3.12/site-packages/ansible
+        ansible python module location = /usr/lib/manageiq/venv/lib64/python3.12/site-packages/ansible
         ansible collection location = /root/.ansible/collections:/usr/share/ansible/collections
-        executable location = /var/lib/manageiq/venv/bin/ansible
-        python version = 3.12.10 (main, Apr  9 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-5)] (/var/lib/manageiq/venv/bin/python3.12)
+        executable location = /usr/lib/manageiq/venv/bin/ansible
+        python version = 3.12.10 (main, Apr  9 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-5)] (/usr/lib/manageiq/venv/bin/python3.12)
         jinja version = 3.1.6
         libyaml = True
     EOF
