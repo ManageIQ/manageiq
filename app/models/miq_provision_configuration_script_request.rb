@@ -11,10 +11,16 @@ class MiqProvisionConfigurationScriptRequest < MiqRequest
 
   def self.request_task_class_from(attribs)
     source_id = MiqRequestMixin.get_option(:src_configuration_script_id, nil, attribs['options'])
-    configuration_script = ::ConfigurationScript.find_by(:id => source_id)
-    return if configuration_script.nil?
-
+    configuration_script = source_configuration_script!(source_id)
     configuration_script.manager.class.provision_class(nil)
+  end
+
+  def self.source_configuration_script!(source_id)
+    configuration_script = ::ConfigurationScript.find_by(:id => source_id)
+    raise MiqException::MiqProvisionError, "Unable to find source ConfigurationScript with id [#{source_id}]"                  if configuration_script.nil?
+    raise MiqException::MiqProvisionError, "Source ConfigurationScript with id [#{source_id}] has no EMS, unable to provision" if configuration_script.manager.nil?
+
+    configuration_script
   end
 
   def self.new_request_task(attribs)
