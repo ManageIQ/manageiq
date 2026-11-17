@@ -9,6 +9,7 @@ module TypeCastMixin
     "string"   => ActiveModel::Type::String.new,
     "time"     => ActiveModel::Type::Time.new,
     "object"   => ActiveRecord::Type::Json.new,
+    "hash"     => ActiveRecord::Type::Json.new,
     "array"    => ActiveRecord::Type::Json.new
   }.freeze
 
