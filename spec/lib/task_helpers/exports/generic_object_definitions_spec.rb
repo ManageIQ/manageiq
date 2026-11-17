@@ -28,7 +28,7 @@ RSpec.describe TaskHelpers::Exports::GenericObjectDefinitions do
       expect(god2_yaml.first["GenericObjectDefinition"]["name"]).to eq(@god2.name)
       expect(god2_yaml.first["GenericObjectDefinition"]["description"]).to eq(nil)
       expect(god2_yaml.first["GenericObjectDefinition"]["properties"]).to eq(
-        :attributes => {}, :attribute_constraints=>{}, :associations => {}, :methods => []
+        :attributes => {}, :attribute_constraints => {}, :associations => {}, :methods => []
       )
     end
   end
@@ -60,7 +60,7 @@ RSpec.describe TaskHelpers::Exports::GenericObjectDefinitions do
             'name'     => {:required => true, :min_length => 3, :max_length => 100},
             'sku'      => {:required => true, :format => /\A[A-Z]{3}-\d{6}\z/},
             'priority' => {:enum => [1, 2, 3, 4, 5]},
-            'price'    => {:min => 0.0, :max => 999999.99},
+            'price'    => {:min => 0.0, :max => 999_999.99},
             'active'   => {:required => true}
           },
           :associations          => {},
@@ -72,19 +72,19 @@ RSpec.describe TaskHelpers::Exports::GenericObjectDefinitions do
     it 'exports definition with attribute constraints' do
       TaskHelpers::Exports::GenericObjectDefinitions.new.export(:directory => export_dir)
       expect(Dir[File.join(export_dir, '**', '*')].count { |file| File.file?(file) }).to eq(1)
-      
+
       god_yaml = YAML.load_file(god_filename)
       expect(god_yaml.first["GenericObjectDefinition"]["name"]).to eq(@god.name)
       expect(god_yaml.first["GenericObjectDefinition"]["description"]).to eq(@god.description)
       expect(god_yaml.first["GenericObjectDefinition"]["properties"]).to eq(@god.properties)
-      
+
       # Verify attribute constraints are exported
       exported_constraints = god_yaml.first["GenericObjectDefinition"]["properties"][:attribute_constraints]
       expect(exported_constraints).to be_present
       expect(exported_constraints['name']).to include(:required => true, :min_length => 3, :max_length => 100)
       expect(exported_constraints['sku']).to include(:required => true, :format => /\A[A-Z]{3}-\d{6}\z/)
       expect(exported_constraints['priority']).to include(:enum => [1, 2, 3, 4, 5])
-      expect(exported_constraints['price']).to include(:min => 0.0, :max => 999999.99)
+      expect(exported_constraints['price']).to include(:min => 0.0, :max => 999_999.99)
       expect(exported_constraints['active']).to include(:required => true)
     end
   end

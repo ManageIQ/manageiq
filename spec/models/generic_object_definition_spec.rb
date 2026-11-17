@@ -51,7 +51,7 @@ RSpec.describe GenericObjectDefinition do
       :properties => {
         :attributes   => {:vms => "float", 'server' => 'localhost'},
         :associations => {'vms' => :vm, 'hosts' => :host},
-        :methods      => [:hosts, :some_method]
+        :methods      => %i[hosts some_method]
       }
     )
     expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid)
@@ -108,8 +108,8 @@ RSpec.describe GenericObjectDefinition do
   describe '#add_property_attribute' do
     let(:definition) do
       FactoryBot.create(:generic_object_definition,
-                         :name       => 'test',
-                         :properties => {:attributes => {:status => "string"}})
+                        :name       => 'test',
+                        :properties => {:attributes => {:status => "string"}})
     end
 
     it 'adds a new attribute' do
@@ -135,8 +135,8 @@ RSpec.describe GenericObjectDefinition do
   describe '#delete_property_attribute' do
     let(:definition) do
       FactoryBot.create(:generic_object_definition,
-                         :name       => 'test',
-                         :properties => {:attributes => {:status => "string"}})
+                        :name       => 'test',
+                        :properties => {:attributes => {:status => "string"}})
     end
 
     it 'does nothing for non-existing attribute' do
@@ -159,8 +159,8 @@ RSpec.describe GenericObjectDefinition do
   describe '#add_property_method' do
     let(:definition) do
       FactoryBot.create(:generic_object_definition,
-                         :name       => 'test',
-                         :properties => {:methods => %w[method1]})
+                        :name       => 'test',
+                        :properties => {:methods => %w[method1]})
     end
 
     it 'adds a new method' do
@@ -177,8 +177,8 @@ RSpec.describe GenericObjectDefinition do
   describe '#delete_property_method' do
     let(:definition) do
       FactoryBot.create(:generic_object_definition,
-                         :name       => 'test',
-                         :properties => {:methods => %w[method1]})
+                        :name       => 'test',
+                        :properties => {:methods => %w[method1]})
     end
 
     it 'deletes an existing method' do
@@ -195,8 +195,8 @@ RSpec.describe GenericObjectDefinition do
   describe '#add_property_association' do
     let(:definition) do
       FactoryBot.create(:generic_object_definition,
-                         :name       => 'test',
-                         :properties => {:associations => {:vms => 'Vm'}})
+                        :name       => 'test',
+                        :properties => {:associations => {:vms => 'Vm'}})
     end
 
     it 'adds a new association' do
@@ -227,8 +227,8 @@ RSpec.describe GenericObjectDefinition do
   describe '#delete_property_association' do
     let(:definition) do
       FactoryBot.create(:generic_object_definition,
-                         :name       => 'test',
-                         :properties => {:associations => {:vms => 'Vm'}})
+                        :name       => 'test',
+                        :properties => {:associations => {:vms => 'Vm'}})
     end
 
     it 'deletes an existing association' do
@@ -354,23 +354,23 @@ RSpec.describe GenericObjectDefinition do
 
       before do
         FactoryBot.create(:custom_button,
-                           :name                  => "visible button on Generic Object",
-                           :applies_to_class      => "GenericObject",
-                           :visibility_expression => true_expression_on_generic)
+                          :name                  => "visible button on Generic Object",
+                          :applies_to_class      => "GenericObject",
+                          :visibility_expression => true_expression_on_generic)
         FactoryBot.create(:custom_button,
-                           :name                  => "hidden button on Generic Object",
-                           :applies_to_class      => "GenericObject",
-                           :visibility_expression => false_expression_on_generic)
+                          :name                  => "hidden button on Generic Object",
+                          :applies_to_class      => "GenericObject",
+                          :visibility_expression => false_expression_on_generic)
         FactoryBot.create(:custom_button,
-                           :name                  => "visible button on Generic Object Definition",
-                           :applies_to_class      => "GenericObjectDefinition",
-                           :applies_to_id         => definition.id,
-                           :visibility_expression => true_expression_on_definition)
+                          :name                  => "visible button on Generic Object Definition",
+                          :applies_to_class      => "GenericObjectDefinition",
+                          :applies_to_id         => definition.id,
+                          :visibility_expression => true_expression_on_definition)
         FactoryBot.create(:custom_button,
-                           :name                  => "hidden button on Generic Object Definition",
-                           :applies_to_class      => "GenericObjectDefinition",
-                           :applies_to_id         => definition.id,
-                           :visibility_expression => false_expression_on_definition)
+                          :name                  => "hidden button on Generic Object Definition",
+                          :applies_to_class      => "GenericObjectDefinition",
+                          :applies_to_id         => definition.id,
+                          :visibility_expression => false_expression_on_definition)
       end
 
       it "uses appropriate object: parameter, which is GenericObject or definition for expression evaluation" do
@@ -538,7 +538,7 @@ RSpec.describe GenericObjectDefinition do
           :name       => 'test',
           :properties => {
             :attributes            => {:email => :string},
-            :attribute_constraints => {:email => {:format => /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i}}
+            :attribute_constraints => {:email => {:format => /\A[\w+\-.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/i}}
           }
         )
         expect(testdef).to be_valid
@@ -681,7 +681,7 @@ RSpec.describe GenericObjectDefinition do
           :name       => 'test',
           :properties => {
             :attributes            => {:status => :string},
-            :attribute_constraints => {:status => {:enum => ['active', 'inactive', 'active']}}
+            :attribute_constraints => {:status => {:enum => %w[active inactive active]}}
           }
         )
         expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /constraint 'enum' contains duplicate values/)
@@ -939,7 +939,7 @@ RSpec.describe GenericObjectDefinition do
           :name       => 'test',
           :properties => {
             :attributes            => {:status => :string},
-            :attribute_constraints => {:status => {:default => 'pending', :enum => ['pending', 'active', 'inactive']}}
+            :attribute_constraints => {:status => {:default => 'pending', :enum => %w[pending active inactive]}}
           }
         )
         expect(testdef).to be_valid
@@ -960,7 +960,7 @@ RSpec.describe GenericObjectDefinition do
           :name       => 'test',
           :properties => {
             :attributes            => {:config => :hash},
-            :attribute_constraints => {:config => {:required_keys => ['theme', 'language']}}
+            :attribute_constraints => {:config => {:required_keys => %w[theme language]}}
           }
         )
         expect(testdef).to be_valid
@@ -971,7 +971,7 @@ RSpec.describe GenericObjectDefinition do
           :name       => 'test',
           :properties => {
             :attributes            => {:config => :hash},
-            :attribute_constraints => {:config => {:allowed_keys => ['theme', 'language', 'timezone']}}
+            :attribute_constraints => {:config => {:allowed_keys => %w[theme language timezone]}}
           }
         )
         expect(testdef).to be_valid
@@ -982,7 +982,7 @@ RSpec.describe GenericObjectDefinition do
           :name       => 'test',
           :properties => {
             :attributes            => {:config => :hash},
-            :attribute_constraints => {:config => {:required_keys => ['theme'], :allowed_keys => ['theme', 'language', 'timezone']}}
+            :attribute_constraints => {:config => {:required_keys => ['theme'], :allowed_keys => %w[theme language timezone]}}
           }
         )
         expect(testdef).to be_valid
@@ -1015,7 +1015,7 @@ RSpec.describe GenericObjectDefinition do
           :name       => 'test',
           :properties => {
             :attributes            => {:config => :hash},
-            :attribute_constraints => {:config => {:default => ['not', 'a', 'hash']}}
+            :attribute_constraints => {:config => {:default => %w[not a hash]}}
           }
         )
         expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /must be a Hash/)

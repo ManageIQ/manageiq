@@ -20,7 +20,7 @@ RSpec.describe GenericObject do
           :s_time     => "datetime"
         },
         :associations => {"vms" => "Vm", "hosts" => "Host"},
-        :methods      => %w[my_host  some_method]
+        :methods      => %w[my_host some_method]
       }
     )
   end
@@ -172,7 +172,7 @@ RSpec.describe GenericObject do
   end
 
   describe 'property methods' do
-    let(:ws)   { double("MiqAeWorkspaceRuntime", :root => {"method_result" => "some_return_value"}) }
+    let(:ws) { double("MiqAeWorkspaceRuntime", :root => {"method_result" => "some_return_value"}) }
 
     before { go.ae_user_identity(user) }
 
@@ -407,11 +407,11 @@ RSpec.describe GenericObject do
           :attribute_constraints => {
             :product_name => {:required => true, :min_length => 3, :max_length => 50},
             :sku          => {:required => true, :format => /\A[A-Z]{3}-\d{6}\z/},
-            :email        => {:format => /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i},
-            :status       => {:required => true, :enum => ['active', 'inactive', 'pending']},
+            :email        => {:format => /\A[\w+\-.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/i},
+            :status       => {:required => true, :enum => %w[active inactive pending]},
             :priority     => {:enum => [1, 2, 3, 4, 5]},
             :quantity     => {:min => 0, :max => 1000},
-            :price        => {:required => true, :min => 0.0, :max => 99999.99},
+            :price        => {:required => true, :min => 0.0, :max => 99_999.99},
             :discount     => {:min => 0.0, :max => 100.0},
             :is_active    => {:required => true},
             :description  => {:max_length => 500}
@@ -559,7 +559,7 @@ RSpec.describe GenericObject do
           :product_name              => 'Product1',
           :sku                       => 'ABC-123456',
           :status                    => 'active',
-          :price                     => 100000.0,
+          :price                     => 100_000.0,
           :is_active                 => true
         )
         expect(obj).not_to be_valid
@@ -801,7 +801,7 @@ RSpec.describe GenericObject do
               :description => :string
             },
             :attribute_constraints => {
-              :status      => {:default => 'pending', :enum => ['pending', 'active', 'inactive']},
+              :status      => {:default => 'pending', :enum => %w[pending active inactive]},
               :priority    => {:default => 3},
               :discount    => {:default => 0.0},
               :is_active   => {:default => true},
@@ -879,7 +879,7 @@ RSpec.describe GenericObject do
           :status                    => 'active'
         )
         expect(obj.status).to eq('active')
-        
+
         obj.status = nil
         obj.save!
         expect(obj.reload.status).to eq('pending')
@@ -909,8 +909,8 @@ RSpec.describe GenericObject do
             :attribute_constraints => {
               :settings => {
                 :required      => true,
-                :required_keys => ['theme', 'language'],
-                :allowed_keys  => ['theme', 'language', 'timezone'],
+                :required_keys => %w[theme language],
+                :allowed_keys  => %w[theme language timezone],
                 :default       => {'theme' => 'light', 'language' => 'en'}
               },
               :metadata => {
@@ -999,7 +999,7 @@ RSpec.describe GenericObject do
         obj = GenericObject.new(
           :generic_object_definition => definition_with_hash,
           :name                      => 'TestApp',
-          :settings                  => ['not', 'a', 'hash']
+          :settings                  => 'not a hash'
         )
         expect(obj).not_to be_valid
         expect(obj.errors[:properties]).to include("attribute 'settings' must be a Hash")
@@ -1045,9 +1045,9 @@ RSpec.describe GenericObject do
         obj = GenericObject.create!(
           :generic_object_definition => definition_with_array,
           :name                      => 'TestTask',
-          :labels                    => ['urgent', 'customer']
+          :labels                    => %w[urgent customer]
         )
-        expect(obj.labels).to eq(['urgent', 'customer'])
+        expect(obj.labels).to eq(%w[urgent customer])
       end
 
       it 'applies array default value' do
@@ -1080,7 +1080,7 @@ RSpec.describe GenericObject do
         obj = GenericObject.new(
           :generic_object_definition => definition_with_array,
           :name                      => 'TestTask',
-          :labels                    => ['a', 'b', 'c', 'd', 'e', 'f']
+          :labels                    => %w[a b c d e f]
         )
         expect(obj).not_to be_valid
         expect(obj.errors[:properties]).to include("attribute 'labels' must have at most 5 items")
@@ -1090,7 +1090,7 @@ RSpec.describe GenericObject do
         obj = GenericObject.new(
           :generic_object_definition => definition_with_array,
           :name                      => 'TestTask',
-          :labels                    => ['urgent', 'urgent', 'customer']
+          :labels                    => %w[urgent urgent customer]
         )
         expect(obj).not_to be_valid
         expect(obj.errors[:properties]).to include("attribute 'labels' must have unique items")
@@ -1100,7 +1100,7 @@ RSpec.describe GenericObject do
         obj = GenericObject.create!(
           :generic_object_definition => definition_with_array,
           :name                      => 'TestTask',
-          :labels                    => ['urgent', 'customer', 'high-priority']
+          :labels                    => %w[urgent customer high-priority]
         )
         expect(obj).to be_valid
       end
@@ -1118,7 +1118,7 @@ RSpec.describe GenericObject do
         obj = GenericObject.create!(
           :generic_object_definition => definition_with_array,
           :name                      => 'TestTask',
-          :labels                    => ['a', 'b', 'c', 'd', 'e']
+          :labels                    => %w[a b c d e]
         )
         expect(obj).to be_valid
       end
@@ -1172,11 +1172,11 @@ RSpec.describe GenericObject do
           :generic_object_definition => definition_with_both,
           :name                      => 'TestObject',
           :config                    => {'name' => 'test', 'value' => 123},
-          :labels                    => ['tag1', 'tag2']
+          :labels                    => %w[tag1 tag2]
         )
         expect(obj).to be_valid
         expect(obj.config).to eq({'name' => 'test', 'value' => 123})
-        expect(obj.labels).to eq(['tag1', 'tag2'])
+        expect(obj.labels).to eq(%w[tag1 tag2])
       end
 
       it 'applies defaults for both hash and array' do

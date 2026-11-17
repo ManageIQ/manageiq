@@ -15,19 +15,19 @@ class GenericObjectDefinition < ApplicationRecord
   }.freeze
 
   CONSTRAINT_TYPES = {
-    :required      => [:boolean, :datetime, :float, :integer, :string, :time, :hash, :array],
-    :default       => [:boolean, :datetime, :float, :integer, :string, :time, :hash, :array],
-    :min           => [:integer, :float, :datetime, :time],
-    :max           => [:integer, :float, :datetime, :time],
-    :min_length    => [:string],
-    :max_length    => [:string],
-    :enum          => [:integer, :string],
-    :format        => [:string],
-    :min_items     => [:array],
-    :max_items     => [:array],
-    :unique_items  => [:array],
-    :required_keys => [:hash],
-    :allowed_keys  => [:hash]
+    :required      => %i[boolean datetime float integer string time hash array],
+    :default       => %i[boolean datetime float integer string time hash array],
+    :min           => %i[integer float datetime time],
+    :max           => %i[integer float datetime time],
+    :min_length    => %i[string],
+    :max_length    => %i[string],
+    :enum          => %i[integer string],
+    :format        => %i[string],
+    :min_items     => %i[array],
+    :max_items     => %i[array],
+    :unique_items  => %i[array],
+    :required_keys => %i[hash],
+    :allowed_keys  => %i[hash]
   }.freeze
 
   FEATURES = %w[attribute attribute_constraint association method].freeze
@@ -64,7 +64,7 @@ class GenericObjectDefinition < ApplicationRecord
     define_method(:"property_#{feature}s") do
       return errors[:properties] if properties_changed? && !valid?
 
-      properties["#{feature}s".to_sym]
+      properties[:"#{feature}s"]
     end
 
     define_method(:"property_#{feature}_defined?") do |attr|
@@ -238,7 +238,7 @@ class GenericObjectDefinition < ApplicationRecord
       attr_type = properties[:attributes][attr_name].to_sym
 
       # Validate constraints is a hash
-      unless constraints.is_a?(Hash)
+      unless constraints.kind_of?(Hash)
         errors.add(:properties, "constraints for attribute [#{attr_name}] must be a hash")
         next
       end
@@ -267,41 +267,29 @@ class GenericObjectDefinition < ApplicationRecord
   def validate_constraint_value(attr_name, attr_type, constraint_type, value)
     case constraint_type
     when :required
-      unless [true, false].include?(value)
-        errors.add(:properties, "constraint 'required' must be true or false for attribute [#{attr_name}]")
-      end
+      errors.add(:properties, "constraint 'required' must be true or false for attribute [#{attr_name}]") unless [true, false].include?(value)
     when :default
       validate_default_value(attr_name, attr_type, value)
     when :min, :max
-      if attr_type == :integer && !value.is_a?(Integer)
+      if attr_type == :integer && !value.kind_of?(Integer)
         errors.add(:properties, "constraint '#{constraint_type}' must be an integer for attribute [#{attr_name}]")
-      elsif attr_type == :float && !value.is_a?(Numeric)
+      elsif attr_type == :float && !value.kind_of?(Numeric)
         errors.add(:properties, "constraint '#{constraint_type}' must be a number for attribute [#{attr_name}]")
-      elsif [:datetime, :time].include?(attr_type) && !value.is_a?(String) && !value.is_a?(Time) && !value.is_a?(DateTime)
+      elsif %i[datetime time].include?(attr_type) && !value.kind_of?(String) && !value.kind_of?(Time) && !value.kind_of?(DateTime)
         errors.add(:properties, "constraint '#{constraint_type}' must be a valid time/datetime for attribute [#{attr_name}]")
       end
     when :min_length, :max_length
-      unless value.is_a?(Integer) && value > 0
-        errors.add(:properties, "constraint '#{constraint_type}' must be a positive integer for attribute [#{attr_name}]")
-      end
+      errors.add(:properties, "constraint '#{constraint_type}' must be a positive integer for attribute [#{attr_name}]") unless value.kind_of?(Integer) && value > 0
     when :enum
       validate_enum_constraint(attr_name, attr_type, value)
     when :format
-      unless value.is_a?(Regexp) || (value.is_a?(String) && valid_regex?(value))
-        errors.add(:properties, "constraint 'format' must be a valid regular expression for attribute [#{attr_name}]")
-      end
+      errors.add(:properties, "constraint 'format' must be a valid regular expression for attribute [#{attr_name}]") unless value.kind_of?(Regexp) || (value.kind_of?(String) && valid_regex?(value))
     when :min_items, :max_items
-      unless value.is_a?(Integer) && value >= 0
-        errors.add(:properties, "constraint '#{constraint_type}' must be a non-negative integer for attribute [#{attr_name}]")
-      end
+      errors.add(:properties, "constraint '#{constraint_type}' must be a non-negative integer for attribute [#{attr_name}]") unless value.kind_of?(Integer) && value >= 0
     when :unique_items
-      unless [true, false].include?(value)
-        errors.add(:properties, "constraint 'unique_items' must be true or false for attribute [#{attr_name}]")
-      end
+      errors.add(:properties, "constraint 'unique_items' must be true or false for attribute [#{attr_name}]") unless [true, false].include?(value)
     when :required_keys, :allowed_keys
-      unless value.is_a?(Array) && value.all? { |k| k.is_a?(String) || k.is_a?(Symbol) }
-        errors.add(:properties, "constraint '#{constraint_type}' must be an array of strings/symbols for attribute [#{attr_name}]")
-      end
+      errors.add(:properties, "constraint '#{constraint_type}' must be an array of strings/symbols for attribute [#{attr_name}]") unless value.kind_of?(Array) && value.all? { |k| k.kind_of?(String) || k.kind_of?(Symbol) }
     end
   end
 
@@ -333,9 +321,9 @@ class GenericObjectDefinition < ApplicationRecord
   end
 
   def validate_supported_property_features
-    if properties.keys.any? { |f| !f.to_s.singularize.in?(FEATURES) }
-      errors.add(:properties, "only these features are supported: [#{FEATURES.join(", ")}]")
-    end
+    return unless properties.keys.any? { |f| !f.to_s.singularize.in?(FEATURES) }
+
+    errors.add(:properties, "only these features are supported: [#{FEATURES.join(", ")}]")
   end
 
   def property_keywords
@@ -353,48 +341,30 @@ class GenericObjectDefinition < ApplicationRecord
     self.properties = {:attributes => {}, :attribute_constraints => {}, :associations => {}, :methods => []} if properties.blank?
   end
 
-  private
-
   def validate_default_value(attr_name, attr_type, value)
     # Type check based on attribute type
     case attr_type
     when :boolean
-      unless [true, false].include?(value)
-        errors.add(:properties, "default value for attribute [#{attr_name}] must be a boolean")
-      end
+      errors.add(:properties, "default value for attribute [#{attr_name}] must be a boolean") unless [true, false].include?(value)
     when :integer
-      unless value.is_a?(Integer)
-        errors.add(:properties, "default value for attribute [#{attr_name}] must be an integer")
-      end
+      errors.add(:properties, "default value for attribute [#{attr_name}] must be an integer") unless value.kind_of?(Integer)
     when :float
-      unless value.is_a?(Numeric)
-        errors.add(:properties, "default value for attribute [#{attr_name}] must be a number")
-      end
+      errors.add(:properties, "default value for attribute [#{attr_name}] must be a number") unless value.kind_of?(Numeric)
     when :string
-      unless value.is_a?(String)
-        errors.add(:properties, "default value for attribute [#{attr_name}] must be a string")
-      end
+      errors.add(:properties, "default value for attribute [#{attr_name}] must be a string") unless value.kind_of?(String)
     when :datetime
-      unless value.is_a?(String) || value.is_a?(Time) || value.is_a?(DateTime)
-        errors.add(:properties, "default value for attribute [#{attr_name}] must be a valid datetime")
-      end
+      errors.add(:properties, "default value for attribute [#{attr_name}] must be a valid datetime") unless value.kind_of?(String) || value.kind_of?(Time) || value.kind_of?(DateTime)
     when :time
-      unless value.is_a?(String) || value.is_a?(Time)
-        errors.add(:properties, "default value for attribute [#{attr_name}] must be a valid time")
-      end
+      errors.add(:properties, "default value for attribute [#{attr_name}] must be a valid time") unless value.kind_of?(String) || value.kind_of?(Time)
     when :hash
-      unless value.is_a?(Hash)
-        errors.add(:properties, "default value for attribute [#{attr_name}] must be a Hash")
-      end
+      errors.add(:properties, "default value for attribute [#{attr_name}] must be a Hash") unless value.kind_of?(Hash)
     when :array
-      unless value.is_a?(Array)
-        errors.add(:properties, "default value for attribute [#{attr_name}] must be an Array")
-      end
+      errors.add(:properties, "default value for attribute [#{attr_name}] must be an Array") unless value.kind_of?(Array)
     end
   end
 
   def validate_enum_constraint(attr_name, attr_type, value)
-    unless value.is_a?(Array) && value.any?
+    unless value.kind_of?(Array) && value.any?
       errors.add(:properties, "constraint 'enum' must be a non-empty array for attribute [#{attr_name}]")
       return
     end
@@ -404,13 +374,11 @@ class GenericObjectDefinition < ApplicationRecord
       return
     end
 
-    if value.uniq.size != value.size
-      errors.add(:properties, "constraint 'enum' contains duplicate values for attribute [#{attr_name}]")
-    end
+    errors.add(:properties, "constraint 'enum' contains duplicate values for attribute [#{attr_name}]") if value.uniq.size != value.size
 
-    if attr_type == :integer && !value.all? { |v| v.is_a?(Integer) }
+    if attr_type == :integer && !value.all?(Integer)
       errors.add(:properties, "constraint 'enum' values must be integers for attribute [#{attr_name}]")
-    elsif attr_type == :string && !value.all? { |v| v.is_a?(String) }
+    elsif attr_type == :string && !value.all?(String)
       errors.add(:properties, "constraint 'enum' values must be strings for attribute [#{attr_name}]")
     end
   end
