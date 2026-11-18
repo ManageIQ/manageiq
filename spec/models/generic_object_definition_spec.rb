@@ -563,7 +563,7 @@ RSpec.describe GenericObjectDefinition do
             :attribute_constraints => {:age => {:required => true}}
           }
         )
-        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /constraint defined for non-existent attribute/)
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /Properties constraint defined for non-existent attribute: \[age\]/)
       end
 
       it 'rejects non-hash constraints' do
@@ -574,7 +574,7 @@ RSpec.describe GenericObjectDefinition do
             :attribute_constraints => {:name => "invalid"}
           }
         )
-        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /constraints for attribute .* must be a hash/)
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /Properties constraints for attribute \[name\] must be a hash/)
       end
 
       it 'rejects invalid constraint type' do
@@ -585,7 +585,7 @@ RSpec.describe GenericObjectDefinition do
             :attribute_constraints => {:name => {:invalid_constraint => true}}
           }
         )
-        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /invalid constraint type/)
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /Properties invalid constraint type \[invalid_constraint\] for attribute \[name\]/)
       end
 
       it 'rejects constraint not applicable to attribute type' do
@@ -596,7 +596,7 @@ RSpec.describe GenericObjectDefinition do
             :attribute_constraints => {:flag => {:min_length => 5}}
           }
         )
-        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /constraint .* is not applicable to attribute type/)
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /Properties constraint \[min_length\] is not applicable to attribute type \[boolean\] for attribute \[flag\]/)
       end
 
       it 'rejects non-boolean value for required constraint' do
@@ -607,7 +607,7 @@ RSpec.describe GenericObjectDefinition do
             :attribute_constraints => {:name => {:required => "yes"}}
           }
         )
-        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /constraint 'required' must be true or false/)
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /Properties constraint 'required' must be true or false for attribute \[name\]/)
       end
 
       it 'rejects non-integer value for min constraint on integer attribute' do
@@ -618,7 +618,7 @@ RSpec.describe GenericObjectDefinition do
             :attribute_constraints => {:age => {:min => "zero"}}
           }
         )
-        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /constraint 'min' must be an integer/)
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /Properties constraint 'min' must be an integer for attribute \[age\]/)
       end
 
       it 'rejects non-numeric value for min constraint on float attribute' do
@@ -629,7 +629,7 @@ RSpec.describe GenericObjectDefinition do
             :attribute_constraints => {:price => {:min => "zero"}}
           }
         )
-        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /constraint 'min' must be a number/)
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /Properties constraint 'min' must be a number for attribute \[price\]/)
       end
 
       it 'rejects non-positive integer for min_length constraint' do
@@ -640,7 +640,7 @@ RSpec.describe GenericObjectDefinition do
             :attribute_constraints => {:name => {:min_length => -1}}
           }
         )
-        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /constraint 'min_length' must be a positive integer/)
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /Properties constraint 'min_length' must be a positive integer for attribute \[name\]/)
       end
 
       it 'rejects non-array value for enum constraint' do
@@ -651,7 +651,7 @@ RSpec.describe GenericObjectDefinition do
             :attribute_constraints => {:status => {:enum => "active"}}
           }
         )
-        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /constraint 'enum' must be a non-empty array/)
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /Properties constraint 'enum' must be a non-empty array for attribute \[status\]/)
       end
 
       it 'rejects empty array for enum constraint' do
@@ -662,7 +662,7 @@ RSpec.describe GenericObjectDefinition do
             :attribute_constraints => {:status => {:enum => []}}
           }
         )
-        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /constraint 'enum' must be a non-empty array/)
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /Properties constraint 'enum' must be a non-empty array for attribute \[status\]/)
       end
 
       it 'rejects enum constraint with nil values' do
@@ -673,7 +673,7 @@ RSpec.describe GenericObjectDefinition do
             :attribute_constraints => {:status => {:enum => ['active', nil, 'inactive']}}
           }
         )
-        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /constraint 'enum' must not contain nil values/)
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /Properties constraint 'enum' must not contain nil values for attribute \[status\]/)
       end
 
       it 'rejects enum constraint with duplicate values' do
@@ -684,7 +684,7 @@ RSpec.describe GenericObjectDefinition do
             :attribute_constraints => {:status => {:enum => %w[active inactive active]}}
           }
         )
-        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /constraint 'enum' contains duplicate values/)
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /Properties constraint 'enum' contains duplicate values for attribute \[status\]/)
       end
 
       it 'rejects enum constraint with wrong type values for integer attribute' do
@@ -695,7 +695,7 @@ RSpec.describe GenericObjectDefinition do
             :attribute_constraints => {:priority => {:enum => [1, "2", 3]}}
           }
         )
-        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /constraint 'enum' values must be integers/)
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /Properties constraint 'enum' values must be integers for attribute \[priority\]/)
       end
 
       it 'rejects enum constraint with wrong type values for string attribute' do
@@ -706,7 +706,7 @@ RSpec.describe GenericObjectDefinition do
             :attribute_constraints => {:status => {:enum => ['active', 123, 'inactive']}}
           }
         )
-        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /constraint 'enum' values must be strings/)
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /Properties constraint 'enum' values must be strings for attribute \[status\]/)
       end
 
       it 'rejects invalid regex for format constraint' do
@@ -717,7 +717,7 @@ RSpec.describe GenericObjectDefinition do
             :attribute_constraints => {:code => {:format => '[invalid('}}
           }
         )
-        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /constraint 'format' must be a valid regular expression/)
+        expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid, /Properties constraint 'format' must be a valid regular expression for attribute \[code\]/)
       end
     end
 

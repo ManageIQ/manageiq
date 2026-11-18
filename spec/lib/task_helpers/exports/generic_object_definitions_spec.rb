@@ -8,24 +8,22 @@ RSpec.describe TaskHelpers::Exports::GenericObjectDefinitions do
   end
 
   context 'when there is something to export' do
-    let(:god_filename1) { "#{export_dir}/#{@god1.name}.yaml" }
-    let(:god_filename2) { "#{export_dir}/#{@god2.name}.yaml" }
+    let(:god_filename1) { "#{export_dir}/#{god1.name}.yaml" }
+    let(:god_filename2) { "#{export_dir}/#{god2.name}.yaml" }
 
-    before do
-      @god1 = FactoryBot.create(:generic_object_definition, :with_methods_attributes_associations, :description => 'god_description')
-      @god2 = FactoryBot.create(:generic_object_definition)
-    end
+    let!(:god1) { FactoryBot.create(:generic_object_definition, :with_methods_attributes_associations, :description => 'god_description') }
+    let!(:god2) { FactoryBot.create(:generic_object_definition) }
 
     it 'export all definitions' do
       TaskHelpers::Exports::GenericObjectDefinitions.new.export(:directory => export_dir)
       expect(Dir[File.join(export_dir, '**', '*')].count { |file| File.file?(file) }).to eq(2)
       god1_yaml = YAML.load_file(god_filename1)
-      expect(god1_yaml.first["GenericObjectDefinition"]["name"]).to eq(@god1.name)
-      expect(god1_yaml.first["GenericObjectDefinition"]["description"]).to eq(@god1.description)
-      expect(god1_yaml.first["GenericObjectDefinition"]["properties"]).to eq(@god1.properties)
+      expect(god1_yaml.first["GenericObjectDefinition"]["name"]).to eq(god1.name)
+      expect(god1_yaml.first["GenericObjectDefinition"]["description"]).to eq(god1.description)
+      expect(god1_yaml.first["GenericObjectDefinition"]["properties"]).to eq(god1.properties)
 
       god2_yaml = YAML.load_file(god_filename2)
-      expect(god2_yaml.first["GenericObjectDefinition"]["name"]).to eq(@god2.name)
+      expect(god2_yaml.first["GenericObjectDefinition"]["name"]).to eq(god2.name)
       expect(god2_yaml.first["GenericObjectDefinition"]["description"]).to eq(nil)
       expect(god2_yaml.first["GenericObjectDefinition"]["properties"]).to eq(
         :attributes => {}, :attribute_constraints => {}, :associations => {}, :methods => []
@@ -41,10 +39,10 @@ RSpec.describe TaskHelpers::Exports::GenericObjectDefinitions do
   end
 
   context 'when exporting definitions with attribute constraints' do
-    let(:god_filename) { "#{export_dir}/#{@god.name}.yaml" }
+    let(:god_filename) { "#{export_dir}/#{god.name}.yaml" }
 
-    before do
-      @god = FactoryBot.create(
+    let!(:god) do
+      FactoryBot.create(
         :generic_object_definition,
         :name        => 'ProductDefinition',
         :description => 'Product with constraints',
@@ -74,9 +72,9 @@ RSpec.describe TaskHelpers::Exports::GenericObjectDefinitions do
       expect(Dir[File.join(export_dir, '**', '*')].count { |file| File.file?(file) }).to eq(1)
 
       god_yaml = YAML.load_file(god_filename)
-      expect(god_yaml.first["GenericObjectDefinition"]["name"]).to eq(@god.name)
-      expect(god_yaml.first["GenericObjectDefinition"]["description"]).to eq(@god.description)
-      expect(god_yaml.first["GenericObjectDefinition"]["properties"]).to eq(@god.properties)
+      expect(god_yaml.first["GenericObjectDefinition"]["name"]).to eq(god.name)
+      expect(god_yaml.first["GenericObjectDefinition"]["description"]).to eq(god.description)
+      expect(god_yaml.first["GenericObjectDefinition"]["properties"]).to eq(god.properties)
 
       # Verify attribute constraints are exported
       exported_constraints = god_yaml.first["GenericObjectDefinition"]["properties"][:attribute_constraints]
