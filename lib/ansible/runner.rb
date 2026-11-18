@@ -426,7 +426,7 @@ module Ansible
         end
       end
 
-      VENV_ROOT = "/var/lib/manageiq/venv".freeze
+      VENV_ROOT = "/usr/lib/manageiq/venv".freeze
 
       def venv_python_path
         return @venv_python_path if defined?(@venv_python_path)

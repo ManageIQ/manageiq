@@ -46,7 +46,7 @@ teardown() {
 
 setup_roles_dir() {
   # In prod builds, ansible-galaxy lives in the venv, so set up the PATH temporarily to install the roles
-  PATH="/var/lib/manageiq/venv/bin:$PATH"
+  PATH="/usr/lib/manageiq/venv/bin:$PATH"
 
   roles_path="$1"
   source_role_file="${2:-$1/requirements.yml}"
@@ -63,14 +63,14 @@ setup_roles_dir() {
 ################################################################################
 
 exec_ansible_runner_cli() {
-  PATH="/var/lib/manageiq/venv/bin:$PATH" \
-    PYTHONPATH="/var/lib/manageiq/venv/lib/python${PYTHON_VERSION}/site-packages:/usr/local/lib64/python${PYTHON_VERSION}/site-packages:/usr/local/lib/python${PYTHON_VERSION}/site-packages:/usr/lib64/python${PYTHON_VERSION}/site-packages:/usr/lib/python${PYTHON_VERSION}/site-packages" \
+  PATH="/usr/lib/manageiq/venv/bin:$PATH" \
+    PYTHONPATH="/usr/lib/manageiq/venv/lib/python${PYTHON_VERSION}/site-packages:/usr/local/lib64/python${PYTHON_VERSION}/site-packages:/usr/local/lib/python${PYTHON_VERSION}/site-packages:/usr/lib64/python${PYTHON_VERSION}/site-packages:/usr/lib/python${PYTHON_VERSION}/site-packages" \
     ansible-runner run $TEST_DIR --ident result --playbook $1 --project-dir $DATA_DIR
 }
 
 exec_ansible_runner_cli_role() {
-  PATH="/var/lib/manageiq/venv/bin:$PATH" \
-    PYTHONPATH="/var/lib/manageiq/venv/lib/python${PYTHON_VERSION}/site-packages:/usr/local/lib64/python${PYTHON_VERSION}/site-packages:/usr/local/lib/python${PYTHON_VERSION}/site-packages:/usr/lib64/python${PYTHON_VERSION}/site-packages:/usr/lib/python${PYTHON_VERSION}/site-packages" \
+  PATH="/usr/lib/manageiq/venv/bin:$PATH" \
+    PYTHONPATH="/usr/lib/manageiq/venv/lib/python${PYTHON_VERSION}/site-packages:/usr/local/lib64/python${PYTHON_VERSION}/site-packages:/usr/local/lib/python${PYTHON_VERSION}/site-packages:/usr/lib64/python${PYTHON_VERSION}/site-packages:/usr/lib/python${PYTHON_VERSION}/site-packages" \
     ansible-runner run $TEST_DIR --ident result --role $1 --roles-path $ROLES_DIR --role-skip-facts --hosts localhost
 }
 
@@ -117,7 +117,7 @@ exec_ansible_runner_cli_role() {
 }
 
 @test "[ansible-runner] vmware collection" {
-  if [ ! -d /var/lib/manageiq/venv ]; then
+  if [ ! -d /usr/lib/manageiq/venv ]; then
     skip "manageiq venv collections are not present"
   fi
 
@@ -127,7 +127,7 @@ exec_ansible_runner_cli_role() {
 }
 
 @test "[ansible-runner] aws collection" {
-  if [ ! -d /var/lib/manageiq/venv ]; then
+  if [ ! -d /usr/lib/manageiq/venv ]; then
     skip "manageiq venv collections are not present"
   fi
 
@@ -189,7 +189,7 @@ exec_ansible_runner_role() {
 }
 
 @test "[Ansible::Runner#run] vmware collection" {
-  if [ ! -d /var/lib/manageiq/venv ]; then
+  if [ ! -d /usr/lib/manageiq/venv ]; then
     skip "manageiq venv collections are not present"
   fi
 
@@ -199,7 +199,7 @@ exec_ansible_runner_role() {
 }
 
 @test "[Ansible::Runner#run] aws collection" {
-  if [ ! -d /var/lib/manageiq/venv ]; then
+  if [ ! -d /usr/lib/manageiq/venv ]; then
     skip "manageiq venv collections are not present"
   fi
 
@@ -261,7 +261,7 @@ exec_ansible_runner_role_async() {
 }
 
 @test "[Ansible::Runner#run_async] vmware collection" {
-  if [ ! -d /var/lib/manageiq/venv ]; then
+  if [ ! -d /usr/lib/manageiq/venv ]; then
     skip "manageiq venv collections are not present"
   fi
 
@@ -271,7 +271,7 @@ exec_ansible_runner_role_async() {
 }
 
 @test "[Ansible::Runner#run_async] aws collection" {
-  if [ ! -d /var/lib/manageiq/venv ]; then
+  if [ ! -d /usr/lib/manageiq/venv ]; then
     skip "manageiq venv collections are not present"
   fi
 
