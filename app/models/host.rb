@@ -277,7 +277,9 @@ class Host < ApplicationRecord
   # cb_method: the MiqQueue callback method along with the parameters that is called
   #            when automate process is done and the request is not prevented to proceed by policy
   def check_policy_prevent(event, *cb_method)
-    MiqEvent.raise_evm_event(self, event, {:host => self}, {:miq_callback => prevent_callback_settings(*cb_method)})
+    policy_prevent_with_task_handoff(*cb_method) do |miq_callback|
+      MiqEvent.raise_evm_event(self, event, {:host => self}, {:miq_callback => miq_callback})
+    end
   end
 
   def ipmi_power_on
