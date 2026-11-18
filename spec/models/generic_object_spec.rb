@@ -995,11 +995,21 @@ RSpec.describe GenericObject do
         expect(obj).to be_valid
       end
 
+      it 'raises TypeError when hash attribute receives unacceptable value' do
+        expect do
+          GenericObject.new(
+            :generic_object_definition => definition_with_hash,
+            :name                      => 'TestApp',
+            :settings                  => 'not a hash'
+          )
+        end.to raise_error(TypeError, "unacceptable value for type: [hash]")
+      end
+
       it 'fails validation when hash attribute receives non-hash value' do
         obj = GenericObject.new(
           :generic_object_definition => definition_with_hash,
           :name                      => 'TestApp',
-          :settings                  => 'not a hash'
+          :settings                  => %w[a b c d e]
         )
         expect(obj).not_to be_valid
         expect(obj.errors[:properties]).to include("attribute 'settings' must be a Hash")
@@ -1123,11 +1133,21 @@ RSpec.describe GenericObject do
         expect(obj).to be_valid
       end
 
+      it 'raises TypeError when array attribute receives unacceptable value' do
+        expect do
+          GenericObject.new(
+            :generic_object_definition => definition_with_array,
+            :name                      => 'TestTask',
+            :labels                    => 'not an array'
+          )
+        end.to raise_error(TypeError, "unacceptable value for type: [array]")
+      end
+
       it 'fails validation when array attribute receives non-array value' do
         obj = GenericObject.new(
           :generic_object_definition => definition_with_array,
           :name                      => 'TestTask',
-          :labels                    => 'not an array'
+          :labels                    => {:theme => 'dark', :language => 'en'}
         )
         expect(obj).not_to be_valid
         expect(obj.errors[:properties]).to include("attribute 'labels' must be an Array")

@@ -24,7 +24,11 @@ module TypeCastMixin
     when "null"
       nil
     when *TYPE_MAP_KEYS
-      TYPE_MAP.fetch(type.to_s).deserialize(value)
+      deserialized_val = TYPE_MAP.fetch(type.to_s).deserialize(value)
+
+      raise TypeError, "unacceptable value for type: [#{type}]" if deserialized_val.nil?
+
+      deserialized_val
     else
       raise ArgumentError, "unknown type: [#{type}]"
     end
