@@ -137,7 +137,7 @@ RSpec.describe InterRegionApiMethodRelay do
       end
 
       context "when the subject is nil" do
-        let(:expected) { "[nil, {:do=>\"these things\"}]" }
+        let(:expected) { [nil, post_args].to_s }
         it "calls the original" do
           expect(test_class.test_class_method([nil, post_args])).to eq(expected)
         end

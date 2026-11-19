@@ -30,7 +30,7 @@ class MiqWidget::ReportContent < MiqWidget::ContentGeneration
 
     empty_row = "<tr><td>#{_("No records found")}</td>#{"<td></td>" * (headers.length - 1)}</tr>"
 
-    rows = "<table class='table table-striped table-bordered table-hover'><thead><tr>"
+    rows = +"<table class='table table-striped table-bordered table-hover'><thead><tr>"
     headers.each { |h| rows << "<th>#{h}</th>" }
     rows << "</tr></thead><tbody>"
     rows << (body.presence || empty_row)

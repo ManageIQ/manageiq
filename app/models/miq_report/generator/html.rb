@@ -24,7 +24,7 @@ module MiqReport::Generator::Html
       use_table.data.each_with_index do |d, d_idx|
         break if row_limit != 0 && d_idx > row_limit - 1
 
-        output = ""
+        output = +""
         if ["y", "c"].include?(group) && !sortby.nil? && save_val != d.data[sortby[0]].to_s
           unless d_idx == 0                       # If not the first row, we are at a group break
             unless group_limit && group_counter >= group_limit  # If not past the limit

@@ -101,7 +101,7 @@ class MiqServer::ServerMonitor
     parent = MiqRegion.my_region
     master = parent.find_master_server
 
-    msg = "Checking master MiqServer."
+    msg = +"Checking master MiqServer."
     msg << " There is no master server." if master.nil?
     msg << " time_threshold [#{miq_server_time_threshold.seconds.ago.utc}] last_heartbeat changed [#{@last_master[:last_hb_change]}] last_heartbeat [#{rec.last_heartbeat}]" unless master.nil? || rec.nil?
     _log.debug(msg)

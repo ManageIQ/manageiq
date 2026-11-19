@@ -35,8 +35,8 @@ module AlertMixin
   end
 
   def build_conditions_and_selects(options)
-    cond = [""]
-    sel = "message"
+    cond = [+""]
+    sel = +"message"
     if options[:time_threshold]
       sel_conj = sel.empty? ? "" : ", "
       sel << "#{sel_conj}generated"

@@ -61,7 +61,7 @@ class ContainerImage < ApplicationRecord
   def full_name
     return docker_id if image_ref && image_ref.start_with?(DOCKER_PULLABLE_PREFIX)
 
-    result = ""
+    result = +""
     result << "#{container_image_registry.full_name}/" unless container_image_registry.nil?
     result << name
     result << ":#{tag}" unless tag.nil?

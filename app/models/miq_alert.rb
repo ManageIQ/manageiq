@@ -132,7 +132,7 @@ class MiqAlert < ApplicationRecord
       if alert_ids.empty?
         none
       else
-        msg = "Filtering for enabled alerts"
+        msg = +"Filtering for enabled alerts"
         scope = where(:id => alert_ids, :enabled => true, :db => target.class.base_model.name)
         if event
           scope = scope.where("responds_to_events like ?", "%#{event}%")
