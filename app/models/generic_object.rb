@@ -11,6 +11,8 @@ class GenericObject < ApplicationRecord
   has_many :custom_button_events, :foreign_key => :target_id, :dependent => :destroy
 
   validates :name, :presence => true
+  before_validation :apply_default_values
+  validate :validate_property_attribute_constraints
 
   delegate :property_attribute_defined?,
            :property_defined?,
@@ -42,9 +44,7 @@ class GenericObject < ApplicationRecord
     raise "generic_object_definition is nil" unless generic_object_definition
 
     options.keys.each do |k|
-      unless property_attribute_defined?(k)
-        raise ActiveModel::UnknownAttributeError.new(self, k)
-      end
+      raise ActiveModel::UnknownAttributeError.new(self, k) unless property_attribute_defined?(k)
     end
     options.each { |k, v| _property_setter(k, v) }
   end
@@ -64,7 +64,7 @@ class GenericObject < ApplicationRecord
   def delete_property(name)
     if !property_attribute_defined?(name) && !property_association_defined?(name)
       valid_property_names = generic_object_definition.property_attributes.keys + generic_object_definition.property_associations.keys
-      raise "Invalid property [#{name}]: must be one of #{valid_property_names.join(", ")}"
+      raise _("Invalid property [%{name}]: must be one of %{valid_property_names}") % {:name => name, :valid_property_names => valid_property_names.join(", ")}
     end
 
     _property_getter(name).tap do
@@ -189,8 +189,8 @@ class GenericObject < ApplicationRecord
 
     attrs = {:method_name => method_name}
     args.each_with_index do |item, idx|
-      attrs["param_#{idx + 1}".to_sym] = item
-      attrs["param_#{idx + 1}_type".to_sym] = item.class.name
+      attrs[:"param_#{idx + 1}"] = item
+      attrs[:"param_#{idx + 1}_type"] = item.class.name
     end
 
     options = {
@@ -210,6 +210,93 @@ class GenericObject < ApplicationRecord
   def remove_go_from_all_related_services
     ServiceResource.where(:resource => self).each do |resource|
       remove_from_service(resource.service) if resource.service
+    end
+  end
+
+  def apply_default_values
+    return unless generic_object_definition
+
+    constraints = generic_object_definition.properties[:attribute_constraints] || {}
+
+    constraints.each do |attr_name, attr_constraints|
+      # Only apply default if attribute is not set and has a default value
+      next unless properties[attr_name].nil? && attr_constraints.key?(:default)
+
+      default_value = attr_constraints[:default]
+      # Type cast the default value
+      properties[attr_name] = type_cast(attr_name, default_value) if property_attribute_defined?(attr_name)
+    end
+  end
+
+  def validate_property_attribute_constraints
+    return unless generic_object_definition
+
+    constraints = generic_object_definition.properties[:attribute_constraints] || {}
+    attributes = generic_object_definition.properties[:attributes] || {}
+
+    constraints.each do |attr_name, attr_constraints|
+      # Get value from properties hash (where custom attributes are stored)
+      value = properties[attr_name]
+      attr_type = attributes[attr_name]
+
+      # Skip validation if attribute is not set (nil) unless it's required
+      next if value.nil? && !attr_constraints[:required]
+
+      # Type checking for Hash and Array
+      if attr_type == :hash && value.present? && !value.kind_of?(Hash)
+        errors.add(:properties, _("attribute '%{attr_name}' must be a Hash") % {:attr_name => attr_name})
+        next
+      end
+
+      if attr_type == :array && value.present? && !value.kind_of?(Array)
+        errors.add(:properties, _("attribute '%{attr_name}' must be an Array") % {:attr_name => attr_name})
+        next
+      end
+
+      attr_constraints.each do |constraint_type, constraint_value|
+        # Skip default constraint in validation (it's applied in before_validation)
+        next if constraint_type == :default
+
+        validate_constraint(attr_name, value, constraint_type, constraint_value)
+      end
+    end
+  end
+
+  def validate_constraint(attr_name, value, constraint_type, constraint_value)
+    case constraint_type
+    when :required
+      errors.add(:properties, _("attribute '%{attr_name}' is required") % {:attr_name => attr_name}) if constraint_value && (value.nil? || (value.kind_of?(String) && value.strip.empty?))
+    when :min
+      errors.add(:properties, _("attribute '%{attr_name}' must be greater than or equal to %{constraint_value}") % {:attr_name => attr_name, :constraint_value => constraint_value}) if value.present? && value < constraint_value
+    when :max
+      errors.add(:properties, _("attribute '%{attr_name}' must be less than or equal to %{constraint_value}") % {:attr_name => attr_name, :constraint_value => constraint_value}) if value.present? && value > constraint_value
+    when :min_length
+      errors.add(:properties, _("attribute '%{attr_name}' must be at least %{constraint_value} characters long") % {:attr_name => attr_name, :constraint_value => constraint_value}) if value.present? && value.to_s.length < constraint_value
+    when :max_length
+      errors.add(:properties, _("attribute '%{attr_name}' must be at most %{constraint_value} characters long") % {:attr_name => attr_name, :constraint_value => constraint_value}) if value.present? && value.to_s.length > constraint_value
+    when :enum
+      errors.add(:properties, _("attribute '%{attr_name}' must be one of: %{constraint_values}") % {:attr_name => attr_name, :constraint_values => constraint_value.join(', ')}) if value.present? && constraint_value.exclude?(value)
+    when :format
+      if value.present?
+        regex = constraint_value.kind_of?(Regexp) ? constraint_value : Regexp.new(constraint_value)
+        errors.add(:properties, _("attribute '%{attr_name}' format is invalid") % {:attr_name => attr_name}) unless regex.match?(value.to_s)
+      end
+    when :min_items
+      errors.add(:properties, _("attribute '%{attr_name}' must have at least %{constraint_value} items") % {:attr_name => attr_name, :constraint_value => constraint_value}) if value.kind_of?(Array) && value.size < constraint_value
+    when :max_items
+      errors.add(:properties, _("attribute '%{attr_name}' must have at most %{constraint_value} items") % {:attr_name => attr_name, :constraint_value => constraint_value}) if value.kind_of?(Array) && value.size > constraint_value
+    when :unique_items
+      errors.add(:properties, _("attribute '%{attr_name}' must have unique items") % {:attr_name => attr_name}) if constraint_value && value.kind_of?(Array) && value.uniq.size != value.size
+    when :required_keys
+      if value.kind_of?(Hash)
+        missing_keys = constraint_value.map(&:to_s) - value.keys.map(&:to_s)
+        errors.add(:properties, _("attribute '%{attr_name}' is missing required keys: %{missing_keys}") % {:attr_name => attr_name, :missing_keys => missing_keys.join(', ')}) if missing_keys.any?
+      end
+    when :allowed_keys
+      if value.kind_of?(Hash)
+        extra_keys = value.keys.map(&:to_s) - constraint_value.map(&:to_s)
+        errors.add(:properties, _("attribute '%{attr_name}' has disallowed keys: %{extra_keys}") % {:attr_name => attr_name, :extra_keys => extra_keys.join(', ')}) if extra_keys.any?
+      end
     end
   end
 end
