@@ -64,7 +64,7 @@ class GenericObject < ApplicationRecord
   def delete_property(name)
     if !property_attribute_defined?(name) && !property_association_defined?(name)
       valid_property_names = generic_object_definition.property_attributes.keys + generic_object_definition.property_associations.keys
-      raise "Invalid property [#{name}]: must be one of #{valid_property_names.join(", ")}"
+      raise _("Invalid property [%{name}]: must be one of %{valid_property_names}") % {:name => name, :valid_property_names => valid_property_names.join(", ")}
     end
 
     _property_getter(name).tap do
@@ -244,12 +244,12 @@ class GenericObject < ApplicationRecord
 
       # Type checking for Hash and Array
       if attr_type == :hash && value.present? && !value.kind_of?(Hash)
-        errors.add(:properties, "attribute '#{attr_name}' must be a Hash")
+        errors.add(:properties, _("attribute '%{attr_name}' must be a Hash") % {:attr_name => attr_name})
         next
       end
 
       if attr_type == :array && value.present? && !value.kind_of?(Array)
-        errors.add(:properties, "attribute '#{attr_name}' must be an Array")
+        errors.add(:properties, _("attribute '%{attr_name}' must be an Array") % {:attr_name => attr_name})
         next
       end
 
@@ -265,37 +265,37 @@ class GenericObject < ApplicationRecord
   def validate_constraint(attr_name, value, constraint_type, constraint_value)
     case constraint_type
     when :required
-      errors.add(:properties, "attribute '#{attr_name}' is required") if constraint_value && (value.nil? || (value.kind_of?(String) && value.strip.empty?))
+      errors.add(:properties, _("attribute '%{attr_name}' is required") % {:attr_name => attr_name}) if constraint_value && (value.nil? || (value.kind_of?(String) && value.strip.empty?))
     when :min
-      errors.add(:properties, "attribute '#{attr_name}' must be greater than or equal to #{constraint_value}") if value.present? && value < constraint_value
+      errors.add(:properties, _("attribute '%{attr_name}' must be greater than or equal to %{constraint_value}") % {:attr_name => attr_name, :constraint_value => constraint_value}) if value.present? && value < constraint_value
     when :max
-      errors.add(:properties, "attribute '#{attr_name}' must be less than or equal to #{constraint_value}") if value.present? && value > constraint_value
+      errors.add(:properties, _("attribute '%{attr_name}' must be less than or equal to %{constraint_value}") % {:attr_name => attr_name, :constraint_value => constraint_value}) if value.present? && value > constraint_value
     when :min_length
-      errors.add(:properties, "attribute '#{attr_name}' must be at least #{constraint_value} characters long") if value.present? && value.to_s.length < constraint_value
+      errors.add(:properties, _("attribute '%{attr_name}' must be at least %{constraint_value} characters long") % {:attr_name => attr_name, :constraint_value => constraint_value}) if value.present? && value.to_s.length < constraint_value
     when :max_length
-      errors.add(:properties, "attribute '#{attr_name}' must be at most #{constraint_value} characters long") if value.present? && value.to_s.length > constraint_value
+      errors.add(:properties, _("attribute '%{attr_name}' must be at most %{constraint_value} characters long") % {:attr_name => attr_name, :constraint_value => constraint_value}) if value.present? && value.to_s.length > constraint_value
     when :enum
-      errors.add(:properties, "attribute '#{attr_name}' must be one of: #{constraint_value.join(', ')}") if value.present? && constraint_value.exclude?(value)
+      errors.add(:properties, _("attribute '%{attr_name}' must be one of: %{constraint_values}") % {:attr_name => attr_name, :constraint_values => constraint_value.join(', ')}) if value.present? && constraint_value.exclude?(value)
     when :format
       if value.present?
         regex = constraint_value.kind_of?(Regexp) ? constraint_value : Regexp.new(constraint_value)
-        errors.add(:properties, "attribute '#{attr_name}' format is invalid") unless regex.match?(value.to_s)
+        errors.add(:properties, _("attribute '%{attr_name}' format is invalid") % {:attr_name => attr_name}) unless regex.match?(value.to_s)
       end
     when :min_items
-      errors.add(:properties, "attribute '#{attr_name}' must have at least #{constraint_value} items") if value.kind_of?(Array) && value.size < constraint_value
+      errors.add(:properties, _("attribute '%{attr_name}' must have at least %{constraint_value} items") % {:attr_name => attr_name, :constraint_value => constraint_value}) if value.kind_of?(Array) && value.size < constraint_value
     when :max_items
-      errors.add(:properties, "attribute '#{attr_name}' must have at most #{constraint_value} items") if value.kind_of?(Array) && value.size > constraint_value
+      errors.add(:properties, _("attribute '%{attr_name}' must have at most %{constraint_value} items") % {:attr_name => attr_name, :constraint_value => constraint_value}) if value.kind_of?(Array) && value.size > constraint_value
     when :unique_items
-      errors.add(:properties, "attribute '#{attr_name}' must have unique items") if constraint_value && value.kind_of?(Array) && value.uniq.size != value.size
+      errors.add(:properties, _("attribute '%{attr_name}' must have unique items") % {:attr_name => attr_name}) if constraint_value && value.kind_of?(Array) && value.uniq.size != value.size
     when :required_keys
       if value.kind_of?(Hash)
         missing_keys = constraint_value.map(&:to_s) - value.keys.map(&:to_s)
-        errors.add(:properties, "attribute '#{attr_name}' is missing required keys: #{missing_keys.join(', ')}") if missing_keys.any?
+        errors.add(:properties, _("attribute '%{attr_name}' is missing required keys: %{missing_keys}") % {:attr_name => attr_name, :missing_keys => missing_keys.join(', ')}) if missing_keys.any?
       end
     when :allowed_keys
       if value.kind_of?(Hash)
         extra_keys = value.keys.map(&:to_s) - constraint_value.map(&:to_s)
-        errors.add(:properties, "attribute '#{attr_name}' has disallowed keys: #{extra_keys.join(', ')}") if extra_keys.any?
+        errors.add(:properties, _("attribute '%{attr_name}' has disallowed keys: %{extra_keys}") % {:attr_name => attr_name, :extra_keys => extra_keys.join(', ')}) if extra_keys.any?
       end
     end
   end
