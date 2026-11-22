@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 * Don't dynamically write systemd unit files [(#21120)](https://github.com/ManageIQ/manageiq/pull/21120)
 * Add static systemd unit files for workers [(#20983)](https://github.com/ManageIQ/manageiq/pull/20983)
+* Support relative paths for evm:export --directory [(#20488)](https://github.com/ManageIQ/manageiq/issues/20488)
 
 ### Fixed
 
