@@ -40,6 +40,9 @@ module Rbac
       FloatingIp
       Host
       HostAggregate
+      HpcJob
+      HpcNode
+      HpcQueue
       IsoImage
       Lan
       LoadBalancer
@@ -98,6 +101,9 @@ module Rbac
       EmsFolder
       ExtManagementSystem
       Host
+      HpcJob
+      HpcNode
+      HpcQueue
       ResourcePool
       Storage
       VmOrTemplate
@@ -911,7 +917,10 @@ module Rbac
         ContainerRoute,
         ContainerService,
         ContainerTemplate,
-        ContainerVolume
+        ContainerVolume,
+        HpcJob,
+        HpcNode,
+        HpcQueue
       ]
     end
 

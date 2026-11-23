@@ -10,6 +10,7 @@ module ManageIQ
         "cloud"         => "CloudManager",
         "configuration" => "ConfigurationManager",
         "container"     => "ContainerManager",
+        "hpc"           => "HpcManager",
         "infra"         => "InfraManager",
         "network"       => "NetworkManager",
         "physical"      => "PhysicalInfraManager",

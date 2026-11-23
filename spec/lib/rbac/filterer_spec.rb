@@ -584,6 +584,58 @@ RSpec.describe Rbac::Filterer do
       end
     end
 
+    context "with HpcManagers with user roles" do
+      let(:owned_ems) { FactoryBot.create(:ems_hpc) }
+      let(:other_ems) { FactoryBot.create(:ems_hpc) }
+
+      before do
+        filters = ["/belongsto/ExtManagementSystem|#{owned_ems.name}"]
+
+        owner_group.entitlement = Entitlement.new
+        owner_group.entitlement.set_managed_filters([])
+        owner_group.entitlement.set_belongsto_filters(filters)
+        owner_group.save!
+      end
+
+      {
+        "HpcJob"   => :hpc_job,
+        "HpcNode"  => :hpc_node,
+        "HpcQueue" => :hpc_queue
+      }.each do |object_klass, factory_name|
+        context "with #{object_klass}s" do
+          let(:subklass) { object_klass.constantize }
+          let!(:object1) { FactoryBot.create(factory_name, :ext_management_system => owned_ems) }
+          let!(:object2) { FactoryBot.create(factory_name, :ext_management_system => owned_ems) }
+          let!(:object3) { FactoryBot.create(factory_name, :ext_management_system => other_ems) }
+          let!(:object4) { FactoryBot.create(factory_name, :ext_management_system => other_ems) }
+
+          it "properly filters" do
+            results = described_class.search(:targets => subklass, :userid => owner_user.userid)
+            objects = results.first
+
+            expect(objects.length).to eq(2)
+            expect(objects.to_a).to match_array([object1, object2])
+          end
+
+          it "does not return archived records to belongs-to filtered users" do
+            object2.update!(:deleted_on => Time.now.utc)
+
+            results = described_class.search(:targets => subklass, :userid => owner_user.userid)
+
+            expect(results.first.to_a).to match_array([object1])
+          end
+
+          it "returns only active records with the :active named_scope" do
+            object2.update!(:deleted_on => Time.now.utc)
+
+            results = described_class.search(:targets => subklass, :userid => owner_user.userid, :named_scope => :active)
+
+            expect(results.first.to_a).to match_array([object1])
+          end
+        end
+      end
+    end
+
     context 'when class does not participate in RBAC' do
       before do
         @vm = FactoryBot.create(:vm_vmware, :name => "VM1", :host => @host1, :ext_management_system => @ems)

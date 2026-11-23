@@ -158,4 +158,34 @@ RSpec.describe MiqScheduleWorker::Jobs do
       )
     end
   end
+
+  describe "#archived_entities_purge_timer" do
+    it "queues purge_timer for container models only" do
+      allow(MiqServer).to receive(:my_zone)
+      described_class.new.archived_entities_purge_timer
+
+      expected_classes = %w[
+        Container
+        ContainerNode
+        ContainerGroup
+        ContainerImage
+        ContainerProject
+        ContainerQuota
+        ContainerQuotaItem
+      ]
+
+      expect(MiqQueue.pluck(:class_name)).to match_array(expected_classes)
+      expect(MiqQueue.distinct.pluck(:method_name)).to eq(["purge_timer"])
+    end
+  end
+
+  describe "#hpc_entities_purge_timer" do
+    it "queues purge_timer for HPC models" do
+      allow(MiqServer).to receive(:my_zone)
+      described_class.new.hpc_entities_purge_timer
+
+      expect(MiqQueue.pluck(:class_name)).to match_array(%w[HpcQueue HpcNode HpcJob])
+      expect(MiqQueue.distinct.pluck(:method_name)).to eq(["purge_timer"])
+    end
+  end
 end

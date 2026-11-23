@@ -879,6 +879,10 @@
     :keep_archived_entities: 6.months
     :keep_archived_quotas: 6.months
     :purge_window_size: 1000
+:hpc_entities:
+  :history:
+    :keep_archived_entities: 6.months
+    :purge_window_size: 1000
 :product:
   :name:
   :maindb: ExtManagementSystem
@@ -1106,6 +1110,7 @@
       :audit_managed_resources: 1.days
       :audit_events_purge_interval: 1.day
       :container_entities_purge_interval: 1.day
+      :hpc_entities_purge_interval: 1.day
       :binary_blob_purge_interval: 1.hour
       :authentication_check_interval: 1.hour
       :chargeback_generation_interval: 1.day
