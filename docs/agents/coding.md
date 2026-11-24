@@ -11,7 +11,7 @@
 - **RuboCop base config** comes from the `manageiq-style` gem. Run `bundle exec rubocop` to validate. Do not edit `.rubocop.yml` — use `.rubocop_local.yml` for local overrides.
 - **Factories use padded sequences**: use `seq_padded_for_sorting(n)` when adding sequence-based name attributes to factories. See [`docs/agents/testing.md`](testing.md).
 - **VCR cassettes are strict**: all HTTP in specs must be cassette-recorded or explicitly stubbed. See [`docs/agents/testing.md`](testing.md).
-- **Constantize allowlist**: when converting strings to constants using `constantize` or `safe_constantize`, always pass `:allowlist` with a collection of allowed classes or class names (e.g. `:allowlist => ActiveRecord::Base.descendants` or model-specific subclasses like `Chargeback.descendants` or `CustomButton.button_classes`) to prevent unsafe arbitrary constant resolution.
+- **Constantize allowlist**: when converting user supplied strings to constants using `constantize` or `safe_constantize`, always pass `:allowlist` with a collection of allowed classes or class names (e.g. `:allowlist => ActiveRecord::Base.descendants` or model-specific subclasses like `Chargeback.descendants` or `CustomButton.button_classes`) to prevent unsafe arbitrary constant resolution.
 
 ## Internationalization
 
