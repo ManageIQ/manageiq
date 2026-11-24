@@ -60,6 +60,7 @@ Key non-obvious constraints — read [`docs/agents/architecture.md`](docs/agents
 - **Settings**: read `Settings` at call time; persist via `Vmdb::Settings.save!` or `resource.add_settings_for_resource`.
 - **Workers**: `MiqWorker` subclasses are separate OS processes — no background threads in models.
 - **No HTTP/view/API layer here**: UI changes go in `manageiq-ui-classic`, API changes in `manageiq-api`.
+- **Constantize allowlist**: when converting strings to constants using `constantize` or `safe_constantize`, always pass `:allowlist` to prevent arbitrary constant resolution.
 
 ## Testing
 
