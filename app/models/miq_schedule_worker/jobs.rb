@@ -147,6 +147,12 @@ class MiqScheduleWorker::Jobs
     queue_work(:class_name => "ContainerQuotaItem", :method_name => "purge_timer", :zone => nil)
   end
 
+  def hpc_entities_purge_timer
+    queue_work(:class_name => "HpcQueue", :method_name => "purge_timer", :zone => nil)
+    queue_work(:class_name => "HpcNode", :method_name => "purge_timer", :zone => nil)
+    queue_work(:class_name => "HpcJob", :method_name => "purge_timer", :zone => nil)
+  end
+
   def binary_blob_purge_timer
     queue_work(:class_name => "BinaryBlob", :method_name => "purge_timer", :zone => nil)
   end

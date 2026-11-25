@@ -130,6 +130,11 @@ FactoryBot.define do
           :class   => "ManageIQ::Providers::Openshift::ContainerManager",
           :parent  => :ext_management_system
 
+  factory :ems_hpc,
+          :aliases => ["manageiq/providers/hpc_manager"],
+          :class   => "ManageIQ::Providers::HpcManager",
+          :parent  => :ext_management_system
+
   factory :configuration_manager,
           :aliases => ["manageiq/providers/configuration_manager"],
           :class   => "ManageIQ::Providers::Foreman::ConfigurationManager",

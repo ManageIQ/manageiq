@@ -7152,6 +7152,86 @@
     :feature_type: node
     :identifier: measure
 
+# EmsHpc
+- :name: HPC Providers
+  :description: Everything under HPC Providers
+  :feature_type: node
+  :identifier: ems_hpc
+  :children:
+  - :name: View
+    :description: View HPC Providers
+    :feature_type: view
+    :identifier: ems_hpc_view
+    :children:
+    - :name: List
+      :description: Display List of HPC Providers
+      :feature_type: view
+      :identifier: ems_hpc_show_list
+    - :name: Show
+      :description: Display Individual HPC Providers
+      :feature_type: view
+      :identifier: ems_hpc_show
+
+# HPC Queues
+- :name: HPC Queues
+  :description: Everything under HPC Queues
+  :feature_type: node
+  :identifier: hpc_queue
+  :children:
+  - :name: View
+    :description: View HPC Queues
+    :feature_type: view
+    :identifier: hpc_queue_view
+    :children:
+    - :name: List
+      :description: Display Lists of HPC Queues
+      :feature_type: view
+      :identifier: hpc_queue_show_list
+    - :name: Show
+      :description: Display Individual HPC Queues
+      :feature_type: view
+      :identifier: hpc_queue_show
+
+# HPC Nodes
+- :name: HPC Nodes
+  :description: Everything under HPC Nodes
+  :feature_type: node
+  :identifier: hpc_node
+  :children:
+  - :name: View
+    :description: View HPC Nodes
+    :feature_type: view
+    :identifier: hpc_node_view
+    :children:
+    - :name: List
+      :description: Display Lists of HPC Nodes
+      :feature_type: view
+      :identifier: hpc_node_show_list
+    - :name: Show
+      :description: Display Individual HPC Nodes
+      :feature_type: view
+      :identifier: hpc_node_show
+
+# HPC Jobs
+- :name: HPC Jobs
+  :description: Everything under HPC Jobs
+  :feature_type: node
+  :identifier: hpc_job
+  :children:
+  - :name: View
+    :description: View HPC Jobs
+    :feature_type: view
+    :identifier: hpc_job_view
+    :children:
+    - :name: List
+      :description: Display Lists of HPC Jobs
+      :feature_type: view
+      :identifier: hpc_job_show_list
+    - :name: Show
+      :description: Display Individual HPC Jobs
+      :feature_type: view
+      :identifier: hpc_job_show
+
 # SUI
 - :name: Service UI
   :description: Features for the Service UI

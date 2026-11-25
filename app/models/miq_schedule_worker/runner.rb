@@ -231,6 +231,14 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue(:archived_entities_purge_timer)
     end
 
+    # Schedule - Purging of archived HPC entities
+    scheduler.schedule_every(
+      :hpc_entities_purge_timer,
+      worker_settings[:hpc_entities_purge_interval]
+    ) do
+      enqueue(:hpc_entities_purge_timer)
+    end
+
     # Schedule - Purging of binary blobs
     scheduler.schedule_every(
       :binary_blob_purge_timer,
