@@ -72,7 +72,7 @@ module Vmdb
     #
     # NOTE: This method is ignored by brakeman in the config/brakeman.yml
     def report_build_html_table(report, table_body, breakable = true)
-      html = ''
+      html = +''
       html << "<table class=\"table table-striped table-bordered #{breakable ? '' : 'non-breakable'}\">"
       html << "<thead>"
       html << "<tr>"

@@ -30,6 +30,6 @@ class AuditEvent < ApplicationRecord
   end
 
   def self.source(one_caller_location)
-    "#{File.basename(one_caller_location.path, '.*').classify}.#{one_caller_location.label}"
+    "#{File.basename(one_caller_location.path, '.*').classify}.#{one_caller_location.base_label}"
   end
 end
