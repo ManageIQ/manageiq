@@ -32,7 +32,7 @@ gem "bundler",                          ">= 2.5.20", "< 5",  :require => false
 gem "byebug",                                                :require => false
 gem "config",                           "~>5.1",             :require => false
 gem "connection_pool",                  "~>2.5",             :require => false # For Dalli
-gem "dalli",                            "~>3.2.17",          :require => false
+gem "dalli",                            "~>5.4.0",          :require => false
 gem "default_value_for",                "~>4.0"
 gem "drb",                              "~>2.2",             :require => false
 gem "fast_gettext",                     "~>3.1"
