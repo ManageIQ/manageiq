@@ -1,0 +1,2 @@
+class ServiceTemplateEmbeddedAnsible < ServiceTemplateAutomation
+end
