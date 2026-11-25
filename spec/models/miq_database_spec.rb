@@ -1,7 +1,7 @@
 RSpec.describe MiqDatabase do
   describe ".encrypted_columns" do
     it "returns the encrypted columns" do
-      expected = %w[csrf_secret_token session_secret_token]
+      expected = %w[csrf_secret_token session_secret_token signing_secret_token]
       expect(described_class.encrypted_columns).to match_array(expected)
     end
   end
@@ -20,30 +20,35 @@ RSpec.describe MiqDatabase do
         db = MiqDatabase.seed
         expect(db.csrf_secret_token_encrypted).to be_encrypted
         expect(db.session_secret_token_encrypted).to be_encrypted
+        expect(db.signing_secret_token_encrypted).to be_encrypted
       end
 
       context "existing record" do
         it "will seed nil values" do
           FactoryBot.build(:miq_database,
                             :csrf_secret_token    => nil,
-                            :session_secret_token => nil
+                            :session_secret_token => nil,
+                            :signing_secret_token => nil
                            ).save(:validate => false)
 
           db = MiqDatabase.seed
           expect(db.csrf_secret_token_encrypted).to be_encrypted
           expect(db.session_secret_token_encrypted).to be_encrypted
+          expect(db.signing_secret_token_encrypted).to be_encrypted
         end
 
         it "will not change existing values" do
           FactoryBot.create(:miq_database,
                              :csrf_secret_token    => "abc",
-                             :session_secret_token => "def"
+                             :session_secret_token => "def",
+                             :signing_secret_token => "ghi"
                             )
-          csrf, session, update_repo = MiqDatabase.all.collect { |db| [db.csrf_secret_token, db.session_secret_token] }.first
+          csrf, session, signing = MiqDatabase.all.collect { |db| [db.csrf_secret_token, db.session_secret_token, db.signing_secret_token] }.first
 
           db = MiqDatabase.seed
           expect(db.csrf_secret_token).to eq(csrf)
           expect(db.session_secret_token).to eq(session)
+          expect(db.signing_secret_token).to eq(signing)
         end
       end
     end
