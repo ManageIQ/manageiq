@@ -34,7 +34,6 @@ gem "config",                           "~>5.1",             :require => false
 gem "connection_pool",                  "~>2.5",             :require => false # For Dalli
 gem "dalli",                            "~>3.2.17",          :require => false
 gem "default_value_for",                "~>4.0"
-gem "docker-api",                       "~>1.33.6",          :require => false
 gem "drb",                              "~>2.2",             :require => false
 gem "fast_gettext",                     "~>3.1"
 gem "ffi",                              "< 1.17.0",          :require => false # Locked down due to build issue assertion failure on 1.17.3
@@ -284,14 +283,14 @@ group :ui_dependencies do # Added to Bundler.require in config/application.rb
 end
 
 group :web_server, :manageiq_default do
-  gem "puma",                           "~>8.0", ">=8.0.4"
+  gem "puma",                           "~>8.0", ">=8.0.5"
   gem "ruby-dbus" # For external auth
   gem "secure_headers",                 "~>7.3"
 end
 
 group :web_socket, :manageiq_default do
   gem "surro-gate",                     "~>1.0.6",           :require => false
-  gem "websocket-driver",               "~>0.8", ">=0.8.2",  :require => false
+  gem "websocket-driver",               "~>0.9", ">=0.9.0",  :require => false
 end
 
 group :appliance, :optional => true do
