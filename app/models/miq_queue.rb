@@ -18,6 +18,8 @@ require 'digest'
 #     get: Defaults to "generic" but is typically overridden by the caller (a worker)
 #
 class MiqQueue < ApplicationRecord
+  self.table_name = "miq_queue"
+
   belongs_to :handler, :polymorphic => true
   belongs_to :miq_task
 
