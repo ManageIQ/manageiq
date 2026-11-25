@@ -260,8 +260,6 @@ namespace :locale do
     # extract plugin's yaml strings
     Rake::Task['locale:extract_yaml_strings'].invoke(@engine_root)
 
-    require_relative 'gettext_js_parser_override'
-
     namespace :gettext do
       def locale_path
         @engine_root.join('locale').to_s
