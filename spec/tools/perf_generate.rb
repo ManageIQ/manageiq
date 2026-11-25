@@ -55,8 +55,8 @@ puts <<~EOL
     Realtime from:  #{REALTIME_START.iso8601}
     Hourly from:    #{HOURLY_START.iso8601}
 
-    Number of realtime rows: #{Class.new.extend(ActionView::Helpers::NumberHelper).number_with_delimiter(realtime_count)}
-    Number of hourly rows:   #{Class.new.extend(ActionView::Helpers::NumberHelper).number_with_delimiter(hourly_count)}
+    Number of realtime rows: #{ActiveSupport::NumberHelper.number_to_delimited(realtime_count)}
+    Number of hourly rows:   #{ActiveSupport::NumberHelper.number_to_delimited(hourly_count)}
 
 EOL
 
