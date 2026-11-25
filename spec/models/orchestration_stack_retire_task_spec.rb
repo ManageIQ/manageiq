@@ -55,4 +55,27 @@ RSpec.describe OrchestrationStackRetireTask do
       )
     end
   end
+
+  describe "#run_retire with delete_failed status" do
+    before do
+      NotificationType.seed
+      expect(orchestration_stack).to receive(:raw_exists?).and_return(true)
+      expect(orchestration_stack).to receive(:raw_delete_stack)
+      expect(orchestration_stack).to receive(:normalized_live_status)
+        .twice.and_return(["delete_failed", "Provider stack deletion failed"])
+    end
+
+    it "marks the stack retirement_state as error" do
+      orchestration_stack_retire_task.run_retire
+      expect(orchestration_stack.reload).to have_attributes(:retirement_state => "error")
+    end
+
+    it "marks the task as finished with Error status" do
+      orchestration_stack_retire_task.run_retire
+      expect(orchestration_stack_retire_task.reload).to have_attributes(
+        :state  => "finished",
+        :status => "Error"
+      )
+    end
+  end
 end
