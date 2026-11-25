@@ -84,10 +84,8 @@ gem "zxcvbn-ruby",                      "~>2.0",             :require => false
 gem "cgi",  "~> 0.5"
 gem "erb",  ">= 6.0.4"  # CVE-2026-41316: https://github.com/advisories/GHSA-q339-8rmv-2mhv; Dependency of irb -> rdoc -> erb
 gem "faraday", "~> 2.14", ">= 2.14.2" # CVE-2026-33637: https://github.com/advisories/GHSA-5rv5-xj5j-3484
-gem "uri",  "~> 0.13.3" # CVE-2025-61594: https://www.ruby-lang.org/en/news/2025/10/07/uri-cve-2025-61594/
-                        # Avoid URI 1.0.0 for now due to: https://github.com/ruby/uri/issues/125
-gem "thor", ">= 1.4.0"   # CVE-2025-54314: https://github.com/advisories/GHSA-mqcp-p2hv-vw6x
-
+gem "thor", ">= 1.4.0"  # CVE-2025-54314: https://github.com/advisories/GHSA-mqcp-p2hv-vw6x
+gem "uri",  "~> 1.0.4"  # CVE-2025-61594: https://www.ruby-lang.org/en/news/2025/10/07/uri-cve-2025-61594/
 # Custom gem that replaces mime-types in order to redirect mime-types calls to mini_mime
 #   Source is located at https://github.com/ManageIQ/mime-types-redirector
 gem "mime-types",                       "~>3.0",             :require => false, :source => "https://rubygems.manageiq.org"
