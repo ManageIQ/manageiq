@@ -253,11 +253,11 @@ RSpec.describe RelationshipMixin do
       end
 
       it "#siblings" do
-        expect(service4.with_relationship_type("custom") { service4.siblings }).to contain_exactly(service3, service4)
+        expect(service4.with_relationship_type("custom") { service4.siblings }).to contain_exactly(service3)
       end
 
       it "#sibling_ids" do
-        expect(service4.with_relationship_type("custom") { service4.sibling_ids }).to contain_exactly(service3.id, service4.id)
+        expect(service4.with_relationship_type("custom") { service4.sibling_ids }).to contain_exactly(service3.id)
       end
 
       it "#root" do
