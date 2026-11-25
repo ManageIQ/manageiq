@@ -10,7 +10,7 @@ class GenericObject < ApplicationRecord
   has_one :picture, :through => :generic_object_definition
   has_many :custom_button_events, :foreign_key => :target_id, :dependent => :destroy
 
-  validates :name, :presence => true
+  validates :name, :presence => true, :length => {:maximum => 255}
 
   delegate :property_attribute_defined?,
            :property_defined?,

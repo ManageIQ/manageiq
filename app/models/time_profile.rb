@@ -7,6 +7,8 @@ class TimeProfile < ApplicationRecord
   serialize :profile
   validate :validate_profile
 
+  validates :description, :length => {:maximum => 128}
+
   has_many  :miq_reports
   has_many  :metric_rollups
 
