@@ -39,4 +39,31 @@ module MiqMemcached
     merged_options = default_client_options.merge(options)
     Dalli::Client.new(MiqMemcached.server_address, merged_options)
   end
+
+  # Warn if any configured memcached server is older than the minimum version
+  # supported by Dalli. Dalli only talks the memcached meta protocol, and
+  # ActiveSupport::Cache::MemCacheStore swallows the resulting Dalli errors, so
+  # an unsupported server otherwise fails silently.
+  #
+  # This never raises. Servers that cannot be reached are skipped.
+  #
+  # @return [Boolean] false if an unsupported version was found, true otherwise
+  def self.verify_version
+    require 'dalli'
+
+    minimum   = Gem::Version.new(Dalli::MIN_SUPPORTED_MEMCACHED_VERSION)
+    memcached = client({})
+
+    memcached.version.map do |server, version|
+      next true if version.nil? || Gem::Version.new(version) >= minimum
+
+      $log.warn("memcached server #{server} is version #{version}, but Dalli #{Dalli::VERSION} requires #{minimum} or later. Caching and token storage may fail silently.")
+      false
+    end.all?
+  rescue StandardError => err
+    $log.warn("Unable to verify memcached version: #{err.class}: #{err.message}")
+    true
+  ensure
+    memcached&.close
+  end
 end
