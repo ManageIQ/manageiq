@@ -148,7 +148,7 @@ RSpec.describe PxeServer do
           label Ubuntu-10.10-Desktop-i386-LIVE_BOOT
              menu label Ubuntu-10.10-Desktop-i386-LIVE_BOOT
              kernel ubuntu-10.10-desktop-i386/vmlinuz
-             append initrd=ubuntu-10.10-desktop-i386/initrd.lz vga=normal boot=casper netboot=nfs nfsroot=192.168.252.60:/srv/nfsboot/ubuntu-10.10-desktop-i386 -- quiet ks=#{@pxe_server.access_url}/#{@pxe_server.customization_directory}/#{dashed_mac_address}.ks.cfg ksdevice=00:19:e3:d7:5b:0e
+             append initrd=ubuntu-10.10-desktop-i386/initrd.lz vga=normal boot=casper netboot=nfs nfsroot=192.168.252.60:/srv/nfsboot/ubuntu-10.10-desktop-i386 -- quiet inst.ks=#{@pxe_server.access_url}/#{@pxe_server.customization_directory}/#{dashed_mac_address}.ks.cfg BOOTIF=00:19:e3:d7:5b:0e
 
         PXE
 
@@ -238,7 +238,7 @@ RSpec.describe PxeServer do
     context "#sync_images" do
       before do
         @expected = [
-          ["00-50-56-91-79-d5", "00-50-56-91-79-d5", "http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz", "ramdisk_size=10000 ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-host.ks.cfg ksdevice=00:50:56:91:79:d5"]
+          ["00-50-56-91-79-d5", "00-50-56-91-79-d5", "http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz", "ramdisk_size=10000 inst.ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-host.ks.cfg BOOTIF=00:50:56:91:79:d5"]
         ]
       end
 
@@ -264,7 +264,7 @@ RSpec.describe PxeServer do
         image = FactoryBot.create(:pxe_image_ipxe,
                                    :pxe_server     => @pxe_server,
                                    :kernel         => "http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz",
-                                   :kernel_options => "ramdisk_size=10000 ksdevice=00:50:56:91:79:d5",
+                                   :kernel_options => "ramdisk_size=10000 BOOTIF=00:50:56:91:79:d5",
                                    :initrd         => "http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img"
                                   )
         expected_name = @pxe_server.test_full_path_to("#{@pxe_server.pxe_directory}/00-19-e3-d7-5b-0e")
@@ -294,7 +294,7 @@ RSpec.describe PxeServer do
         image = FactoryBot.create(:pxe_image_ipxe,
                                    :pxe_server     => @pxe_server,
                                    :kernel         => "http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz",
-                                   :kernel_options => "ramdisk_size=10000 ksdevice=00:50:56:91:79:d5",
+                                   :kernel_options => "ramdisk_size=10000 BOOTIF=00:50:56:91:79:d5",
                                    :initrd         => "http://192.168.252.60/ipxe/rhel6.2-desktop/initrd.img"
                                   )
 
@@ -303,7 +303,7 @@ RSpec.describe PxeServer do
 
         expected_contents = <<~PXE
           #!ipxe
-          kernel #{image.kernel} ramdisk_size=10000 ksdevice=00:19:e3:d7:5b:0e ks=#{@pxe_server.access_url}/#{@pxe_server.customization_directory}/#{dashed_mac_address}.ks.cfg
+          kernel #{image.kernel} ramdisk_size=10000 BOOTIF=00:19:e3:d7:5b:0e inst.ks=#{@pxe_server.access_url}/#{@pxe_server.customization_directory}/#{dashed_mac_address}.ks.cfg
           initrd #{image.initrd}
           boot
         PXE
