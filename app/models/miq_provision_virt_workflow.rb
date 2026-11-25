@@ -652,7 +652,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   def source_type
     svm = get_source_vm
     if svm.nil?
-      request_type == :template ? 'template' : 'unknown'
+      [:template, :vm_provision].include?(request_type) ? 'template' : 'unknown'
     else
       svm.template? ? 'template' : 'vm'
     end
