@@ -9,6 +9,8 @@ module MiqWebServerRunnerMixin
   end
 
   def run
+    MiqMemcached.verify_version if ::Settings.server.session_store == "cache"
+
     # The heartbeating will be done in a separate thread
     worker_thread = Thread.new { super }
 
