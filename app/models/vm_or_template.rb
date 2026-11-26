@@ -1738,4 +1738,68 @@ class VmOrTemplate < ApplicationRecord
       :zone        => my_zone,
     }.merge(queue_options)
   end
+
+  def fetch_live_logs(lines = 200)
+    require 'net/http'
+    require 'uri'
+    require 'json'
+    require 'openssl'
+
+    ems = ext_management_system
+    raise "VM is not associated with a provider" unless ems
+
+    vmid = ems_ref.to_s.split("/").last
+    raise "Missing Proxmox VMID" if vmid.blank?
+
+    http = Net::HTTP.new(ems.hostname, ems.port || 8006)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+    # 1. Authenticate to Proxmox API using ManageIQ's stored provider credentials
+    raw_user = ems.authentication_userid.to_s
+    proxmox_user = raw_user.include?("@") ? raw_user : "#{raw_user}@pam"
+
+    auth_req = Net::HTTP::Post.new("/api2/json/access/ticket")
+    auth_req.body = URI.encode_www_form(
+      "username" => proxmox_user,
+      "password" => ems.authentication_password
+    )
+    auth_data = JSON.parse(http.request(auth_req).body)["data"]
+    raise "Proxmox API authentication failed" unless auth_data
+
+    headers = {
+      "Cookie"              => "PVEAuthCookie=#{auth_data['ticket']}",
+      "CSRFPreventionToken" => auth_data["CSRFPreventionToken"],
+      "Content-Type"        => "application/json"
+    }
+
+    # 2. Resolve which Proxmox node currently hosts this VM
+    node = host&.name.presence
+    unless node
+      res_req  = Net::HTTP::Get.new("/api2/json/cluster/resources?type=vm", headers)
+      vm_entry = (JSON.parse(http.request(res_req).body)["data"] || []).detect { |v| v["vmid"].to_s == vmid.to_s }
+      node     = vm_entry&.dig("node")
+    end
+    raise "Unable to determine Proxmox host node for VM #{vmid}" unless node
+
+    # 3. Execute journalctl (with syslog fallback) via QEMU Guest Agent
+    safe_lines = lines.to_i.clamp(1, 2000)
+    cmd = "journalctl -n #{safe_lines} --no-pager 2>/dev/null || tail -n #{safe_lines} /var/log/syslog /var/log/messages 2>/dev/null"
+    exec_req = Net::HTTP::Post.new("/api2/json/nodes/#{node}/qemu/#{vmid}/agent/exec", headers)
+    exec_req.body = {"command" => ["/bin/sh", "-c", cmd]}.to_json
+    exec_body = JSON.parse(http.request(exec_req).body)
+    pid = exec_body.dig("data", "pid")
+    raise(exec_body["errors"].to_s.presence || "Guest agent unavailable (ensure VM is running and QEMU Guest Agent is enabled)") unless pid
+
+    # 4. Poll exec-status until journalctl completes
+    12.times do
+      sleep 0.5
+      status_req = Net::HTTP::Get.new("/api2/json/nodes/#{node}/qemu/#{vmid}/agent/exec-status?pid=#{pid}", headers)
+      data = JSON.parse(http.request(status_req).body)["data"] || {}
+      return data["out-data"].presence || data["err-data"].to_s if data["exited"] == 1
+    end
+
+    raise "Timed out waiting for QEMU Guest Agent response"
+  end
+  public :fetch_live_logs
 end
