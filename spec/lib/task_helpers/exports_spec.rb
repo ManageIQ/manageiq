@@ -1,3 +1,5 @@
+require 'rake'
+
 RSpec.describe TaskHelpers::Exports do
   describe '.safe_filename' do
     it 'should return a filename without spaces' do
@@ -64,6 +66,21 @@ RSpec.describe TaskHelpers::Exports do
     it 'is not writable' do
       File.chmod(0o500, @export_dir)
       expect(TaskHelpers::Exports.validate_directory(@export_dir)).to eq('Destination directory must be writable')
+    end
+  end
+
+  describe '.absolute_directory' do
+    it 'expands a relative directory against the given base directory' do
+      expect(TaskHelpers::Exports.absolute_directory('exports', '/var/www/miq/vmdb/app')).to eq(File.absolute_path('/var/www/miq/vmdb/app/exports'))
+    end
+
+    it 'leaves an absolute directory unchanged' do
+      expect(TaskHelpers::Exports.absolute_directory('/tmp/exports', '/var/www/miq/vmdb/app')).to eq(File.absolute_path('/tmp/exports'))
+    end
+
+    it 'defaults to the directory rake was invoked from' do
+      allow(Rake).to receive(:original_dir).and_return('/var/www/miq/vmdb/app')
+      expect(TaskHelpers::Exports.absolute_directory('exports')).to eq(File.absolute_path('/var/www/miq/vmdb/app/exports'))
     end
   end
 
