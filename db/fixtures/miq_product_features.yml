@@ -31,6 +31,14 @@
   :feature_type: node
   :identifier: vm_infra_explorer
   :children:
+  - :name: Fetch Live VM Logs
+    :description: Fetch live OS logs from VMs via Proxmox Guest Agent
+    :feature_type: view
+    :identifier: vm_fetch_logs
+  - :name: Live OS Logs
+    :description: View live OS logs for VMs
+    :feature_type: view
+    :identifier: vm_live_logs
   - :name: Accordions
     :description: All Accordions under Virtual Machines
     :feature_type: node
